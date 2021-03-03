@@ -29,14 +29,14 @@
         <result column="ENTERPRISE_INVESTOR_TYPE_THIRD" property="enterpriseInvestorTypeThird" jdbcType="CHAR" />
         <result column="ENTERPRISE_SCALE" property="enterpriseScale" jdbcType="CHAR" />
         <result column="LOAN_BASIS_ID" property="loanBasisId" jdbcType="VARCHAR" />
-        <result column="LOAN_PRD_TYPE" property="loanPrdType" jdbcType="CHAR" />
+        <result column="LOAN_PRD_TYPE" property="loanPrdType" jdbcType="VARCHAR" />
         <result column="LOAN_ACTUAL_INVEST" property="loanActualInvest" jdbcType="VARCHAR" />
         <result column="LOAN_VDATE" property="loanVdate" jdbcType="DATE" />
         <result column="LOAN_MDATE" property="loanMdate" jdbcType="DATE" />
         <result column="LOAN_EXTENSION_DUE_DATE" property="loanExtensionDueDate" jdbcType="DATE" />
         <result column="RATE_FIXED" property="rateFixed" jdbcType="VARCHAR" />
         <result column="RATE_LEVEL" property="rateLevel" jdbcType="DECIMAL" />
-        <result column="LOAN_GUARANTEE_MODE" property="loanGuaranteeMode" jdbcType="CHAR" />
+        <result column="LOAN_GUARANTEE_MODE" property="loanGuaranteeMode" jdbcType="VARCHAR" />
         <result column="LOAN_QUALITY" property="loanQuality" jdbcType="CHAR" />
         <result column="LOAN_STATE" property="loanState" jdbcType="CHAR" />
         <result column="LOAN_TRANSFEROR_RATE" property="loanTransferorRate" jdbcType="DECIMAL" />
@@ -49,6 +49,8 @@
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ASSET_UUID ASSET_UUID, ASSET_CODE ASSET_CODE, ASSETS_INVEST ASSETS_INVEST, EACH_PROPORTION EACH_PROPORTION, 
@@ -66,7 +68,8 @@
         RATE_FIXED RATE_FIXED, RATE_LEVEL RATE_LEVEL, LOAN_GUARANTEE_MODE LOAN_GUARANTEE_MODE, 
         LOAN_QUALITY LOAN_QUALITY, LOAN_STATE LOAN_STATE, LOAN_TRANSFEROR_RATE LOAN_TRANSFEROR_RATE, 
         CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        CREATE_DEPT CREATE_DEPT, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, STATUS STATUS, DATA_SOURCE DATA_SOURCE
+        CREATE_DEPT CREATE_DEPT, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, STATUS STATUS, DATA_SOURCE DATA_SOURCE, 
+        FINPROD_ID FINPROD_ID, ASSET_TYPE ASSET_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -107,8 +110,8 @@
             LOAN_QUALITY, LOAN_STATE, LOAN_TRANSFEROR_RATE, 
             CREATE_USER, CREATE_TIME, UPDATE_USER, 
             UPDATE_TIME, CREATE_DEPT, ORG_CODE, 
-            DEPT_CODE, STATUS, DATA_SOURCE
-            )
+            DEPT_CODE, STATUS, DATA_SOURCE, 
+            FINPROD_ID, ASSET_TYPE)
         values (#{assetUuid,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetsInvest,jdbcType=VARCHAR}, 
             #{eachProportion,jdbcType=VARCHAR}, #{loansType,jdbcType=VARCHAR}, #{origCcy,jdbcType=CHAR}, 
             #{origContractAmount,jdbcType=DECIMAL}, #{origContractAmountCny,jdbcType=DECIMAL}, 
@@ -120,14 +123,14 @@
             #{loanContractOrgCity,jdbcType=VARCHAR}, #{loanContractOrgCounty,jdbcType=VARCHAR}, 
             #{enterpriseInvestorTypeFirst,jdbcType=CHAR}, #{enterpriseInvestorTypeSec,jdbcType=CHAR}, 
             #{enterpriseInvestorTypeThird,jdbcType=CHAR}, #{enterpriseScale,jdbcType=CHAR}, 
-            #{loanBasisId,jdbcType=VARCHAR}, #{loanPrdType,jdbcType=CHAR}, #{loanActualInvest,jdbcType=VARCHAR}, 
+            #{loanBasisId,jdbcType=VARCHAR}, #{loanPrdType,jdbcType=VARCHAR}, #{loanActualInvest,jdbcType=VARCHAR}, 
             #{loanVdate,jdbcType=DATE}, #{loanMdate,jdbcType=DATE}, #{loanExtensionDueDate,jdbcType=DATE}, 
-            #{rateFixed,jdbcType=VARCHAR}, #{rateLevel,jdbcType=DECIMAL}, #{loanGuaranteeMode,jdbcType=CHAR}, 
+            #{rateFixed,jdbcType=VARCHAR}, #{rateLevel,jdbcType=DECIMAL}, #{loanGuaranteeMode,jdbcType=VARCHAR}, 
             #{loanQuality,jdbcType=CHAR}, #{loanState,jdbcType=CHAR}, #{loanTransferorRate,jdbcType=DECIMAL}, 
             #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
             #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
-            #{deptCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}
-            )
+            #{deptCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, 
+            #{finprodId,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbLoanDetailInfo" >
         insert into CHB_LOAN_DETAIL_INFO
@@ -273,6 +276,12 @@
             <if test="dataSource != null" >
                 DATA_SOURCE,
             </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="assetUuid != null" >
@@ -357,7 +366,7 @@
                 #{loanBasisId,jdbcType=VARCHAR},
             </if>
             <if test="loanPrdType != null" >
-                #{loanPrdType,jdbcType=CHAR},
+                #{loanPrdType,jdbcType=VARCHAR},
             </if>
             <if test="loanActualInvest != null" >
                 #{loanActualInvest,jdbcType=VARCHAR},
@@ -378,7 +387,7 @@
                 #{rateLevel,jdbcType=DECIMAL},
             </if>
             <if test="loanGuaranteeMode != null" >
-                #{loanGuaranteeMode,jdbcType=CHAR},
+                #{loanGuaranteeMode,jdbcType=VARCHAR},
             </if>
             <if test="loanQuality != null" >
                 #{loanQuality,jdbcType=CHAR},
@@ -416,6 +425,12 @@
             <if test="dataSource != null" >
                 #{dataSource,jdbcType=VARCHAR},
             </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbLoanDetailInfo" >
@@ -428,7 +443,7 @@
         ENTERPRISE_SCALE, LOAN_BASIS_ID, LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST, LOAN_VDATE, LOAN_MDATE, 
         LOAN_EXTENSION_DUE_DATE, RATE_FIXED, RATE_LEVEL, LOAN_GUARANTEE_MODE, LOAN_QUALITY, 
         LOAN_STATE, LOAN_TRANSFEROR_RATE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-        CREATE_DEPT, ORG_CODE, DEPT_CODE, STATUS, DATA_SOURCE)
+        CREATE_DEPT, ORG_CODE, DEPT_CODE, STATUS, DATA_SOURCE, FINPROD_ID, ASSET_TYPE)
         select ASSET_UUID, ASSET_CODE, ASSETS_INVEST, EACH_PROPORTION, 
             LOANS_TYPE, ORIG_CCY, ORIG_CONTRACT_AMOUNT, ORIG_CONTRACT_AMOUNT_CNY, BORROWER_TYPE, 
             BORROWER_ID, INDUSTRY_INFO, BORROWER_NATIONALITY, BORROWER_PROVINCE, BORROWER_CITY, 
@@ -438,7 +453,7 @@
             ENTERPRISE_SCALE, LOAN_BASIS_ID, LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST, LOAN_VDATE, LOAN_MDATE, 
             LOAN_EXTENSION_DUE_DATE, RATE_FIXED, RATE_LEVEL, LOAN_GUARANTEE_MODE, LOAN_QUALITY, 
             LOAN_STATE, LOAN_TRANSFEROR_RATE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            CREATE_DEPT, ORG_CODE, DEPT_CODE, #{status,jdbcType=VARCHAR} STATUS, DATA_SOURCE
+            CREATE_DEPT, ORG_CODE, DEPT_CODE, #{status,jdbcType=VARCHAR} STATUS, DATA_SOURCE, FINPROD_ID, ASSET_TYPE
              from CHB_LOAN_DETAIL_INFO
              where STATUS = 'E' and ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </insert>
@@ -524,7 +539,7 @@
                 LOAN_BASIS_ID = #{loanBasisId,jdbcType=VARCHAR},
             </if>
             <if test="loanPrdType != null" >
-                LOAN_PRD_TYPE = #{loanPrdType,jdbcType=CHAR},
+                LOAN_PRD_TYPE = #{loanPrdType,jdbcType=VARCHAR},
             </if>
             <if test="loanActualInvest != null" >
                 LOAN_ACTUAL_INVEST = #{loanActualInvest,jdbcType=VARCHAR},
@@ -545,7 +560,7 @@
                 RATE_LEVEL = #{rateLevel,jdbcType=DECIMAL},
             </if>
             <if test="loanGuaranteeMode != null" >
-                LOAN_GUARANTEE_MODE = #{loanGuaranteeMode,jdbcType=CHAR},
+                LOAN_GUARANTEE_MODE = #{loanGuaranteeMode,jdbcType=VARCHAR},
             </if>
             <if test="loanQuality != null" >
                 LOAN_QUALITY = #{loanQuality,jdbcType=CHAR},
@@ -573,6 +588,12 @@
             </if>
             <if test="dataSource != null" >
                 DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
             </if>
         </set>
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
@@ -605,14 +626,14 @@
             ENTERPRISE_INVESTOR_TYPE_THIRD = #{enterpriseInvestorTypeThird,jdbcType=CHAR},
             ENTERPRISE_SCALE = #{enterpriseScale,jdbcType=CHAR},
             LOAN_BASIS_ID = #{loanBasisId,jdbcType=VARCHAR},
-            LOAN_PRD_TYPE = #{loanPrdType,jdbcType=CHAR},
+            LOAN_PRD_TYPE = #{loanPrdType,jdbcType=VARCHAR},
             LOAN_ACTUAL_INVEST = #{loanActualInvest,jdbcType=VARCHAR},
             LOAN_VDATE = #{loanVdate,jdbcType=DATE},
             LOAN_MDATE = #{loanMdate,jdbcType=DATE},
             LOAN_EXTENSION_DUE_DATE = #{loanExtensionDueDate,jdbcType=DATE},
             RATE_FIXED = #{rateFixed,jdbcType=VARCHAR},
             RATE_LEVEL = #{rateLevel,jdbcType=DECIMAL},
-            LOAN_GUARANTEE_MODE = #{loanGuaranteeMode,jdbcType=CHAR},
+            LOAN_GUARANTEE_MODE = #{loanGuaranteeMode,jdbcType=VARCHAR},
             LOAN_QUALITY = #{loanQuality,jdbcType=CHAR},
             LOAN_STATE = #{loanState,jdbcType=CHAR},
             LOAN_TRANSFEROR_RATE = #{loanTransferorRate,jdbcType=DECIMAL},
@@ -621,13 +642,15 @@
             ORG_CODE = #{orgCode,jdbcType=VARCHAR},
             DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},
-            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR}
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </update>
 
 
-	<select id="queryChbLoanDetailBatch" resultMap="BaseResultMap">
-		SELECT 
+    <select id="queryChbLoanDetailBatch" resultMap="BaseResultMap">
+		SELECT
 			ASSET_CODE,
 			INDUSTRY_INFO,
 			BORROWER_TYPE,

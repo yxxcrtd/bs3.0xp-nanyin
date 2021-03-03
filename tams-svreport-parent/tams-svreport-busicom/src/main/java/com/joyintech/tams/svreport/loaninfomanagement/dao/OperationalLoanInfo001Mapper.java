@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto;
 
 /**
@@ -65,4 +66,11 @@ public interface OperationalLoanInfo001Mapper {
      * 省市县联动
      */
     List<SelectOptionDto> getAddressSelectOption(Map<String, Object> param);
+    
+    /**
+	 * 查询资产明细
+	 * @param assetCode
+	 * @return
+	 */
+    ChbAssetInfo checkByAssetCode(String assetCode);
 }

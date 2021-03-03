@@ -25,7 +25,8 @@
 		    POS.REGIST_SEQNO registSeqno,
 		    POS.STATUS_DATE as statusDate,
 		    POS.STATUS as status,
-		    POS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+		    POS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		    POS.SUMIT_SEQ as sumitSeq
 		FROM
 		    CHB_BOT_AST_POS_SUB POS
 </sql>								
@@ -114,9 +115,9 @@
              		#{submitFeedbackStatus,jdbcType=VARCHAR}
             	</foreach>	
 		 	</if>
-		 	<if test="sendStatus != null  and sendStatus != ''">
+		 	<!-- <if test="sendStatus != null  and sendStatus != ''">
 				and POS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
-			</if>
+			</if> -->
 			<if test="assetCodeLike != null and assetCodeLike != ''">
 				and upper(POS.ASSET_CODE) like CONCAT(CONCAT('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
@@ -224,8 +225,8 @@
             sub.SEND_STATUS = '03',
             sub.SUBMIT_FEEDBACK_STATUS = '03',
             sub.submit_time = sysdate,
-            sub.UPDATE_TIME = sysdate,
-            sub.STATUS_DATE = sysdate
+            sub.UPDATE_TIME = sysdate
+          <!--  ,sub.STATUS_DATE = sysdate --> 
         </set>
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">

@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -237,6 +238,8 @@ public class PbcPrdAccountSub extends BaseEntity{
     }
     public String getVdate02() {
         return DateUtil.format(vdate,"yyyy-MM-dd");
+    }
+    public String getVdate03() {return DateUtil.format(vdate,"yyyy/M/d");
     }
     /**
      * 资产池起始日期

@@ -57,7 +57,7 @@ $(function() {
                                   && v.sendStatusCode==='01'){
                               table.checkRow(v.LAY_TABLE_INDEX);
                               isChecked = true;
-                              dateCheckMethod();
+                              dateCheckMethod("checkData");
                               return false;
                           }
                       })
@@ -244,59 +244,38 @@ $(function() {
                });
            });
       };
-      
-    //数据检查
-      function dateCheckMethod(){
-          var checkArr=table.getAllCheckedRows();
-          var dataTitle = '<h4 class="modal-title" id="myModalLabel">底层资产持仓信息数据检查 </h4>';
-          var checkUrl = '/chb/botastpositionregist/ChbBotAstPositionRegist001/reportCheck';
-          var param = {};
-          if(checkArr.length === 0) {
-              var sendStatus = $('#sendStatus').val();
-              var status = $('#status').val();
-              if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
-                  Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                  return;
-              }
-              else if(status && status.indexOf('03') > -1){
-                  Joyin.error("只能对数据状态为新建和修改的数据进行数据检查！");
-                  return;
-              }
-              param = getSearchParams();
-              if(!status){
-                  param.status = '01,02'; 
-              }
-              param.isCheck = true;
-              Joyin.ajax('reportCheck',param, function(result){
-                  window.checkResult = result;
-                  Joyin.checkData(dataTitle, checkUrl, getSearchParams());
-              })
-              return ;
-          }       
-           var keyList = [];
-          for(var i=0;i<checkArr.length;i++){
-              keyList.push(checkArr[i].registSeqno);
-              if(checkArr[i].sendStatus !="01"){
-                  Joyin.error("数据检查只能检查未报送数据，请重新选择！");
-                  return;
-              }
-              else if(checkArr[i].status && checkArr[i].status.indexOf('03') > -1){
-                  Joyin.error("选择的报送数据中存在删除状态的数据，请重新选择！");
-                  return;
-              }
-          };
-          Joyin.ajax('reportCheck',{checkKeys:keyList.join(',')}, function(result){
-              window.checkResult = result;
-              Joyin.checkData(dataTitle, checkUrl, {checkKeys: keyList.join(',')});
-          })
-      
-      }
-      $('#ChbBotAstPositionRegist001_btn_checkData').click(dateCheckMethod);
+
+    /**start   中债一二期直连新加  add  by wangzehui  20201012  */
+    /**
+     * 数据检查
+     */
+    $('#ChbBotAstPositionRegist001_btn_checkData').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "checkData";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /**
+     * 报送
+     */
+    $('#ChbBotAstPositionRegist001_btn_submit').click(function () {
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "submitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /**
+     * 重新报送
+     */
+    $('#ChbBotAstPositionRegist001_btn_reSubmit').click(function () {
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "reSubmitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /**end   中债一二期直连新加  add  by wangzehui  20201012  */
       
       /**
        * 报送
        */
-      $('#ChbBotAstPositionRegist001_btn_submit').click(function(){
+      /*$('#ChbBotAstPositionRegist001_btn_submit').click(function(){
           var rows = table.getAllCheckedRows();
           if(rows.length === 0) {
               var sendStatus = $('#sendStatus').val();
@@ -358,7 +337,7 @@ $(function() {
                   Joyin.checkData('<h4 class="modal-title" id="myModalLabel">投资者持有信息数据检查 </h4>', 'sendBeforeCheck', {keyList: JSON.stringify(rows)});
               }
           });
-      });
+      });*/
       
       /**
        * 手工处理

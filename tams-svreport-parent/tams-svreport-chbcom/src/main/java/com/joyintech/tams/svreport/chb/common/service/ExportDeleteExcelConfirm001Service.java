@@ -135,7 +135,7 @@ public class ExportDeleteExcelConfirm001Service extends CommonExportService<ChbD
                             InvestTradeRegist001Dto.class);
                     // 将资产要素转换成导出的删除信息
                     ChbDeleteExcelExportDto deleteInfo = new ChbDeleteExcelExportDto();
-                    convertInvestTradeToDeletList(deleteInfo,investTradeRegList,deleteReason);
+                    convertInvestTradeToDeletList(deleteInfo,investTradeRegList,deleteReason, false);
                     resultParam.put("deleteInfo", deleteInfo);
                 } else  if ("SvrChbAstValueRegist001".equals(pageId)){
                     List<ChbAstValueRegist001Dto> regList = JsonUtils.json2List(keyList,
@@ -289,22 +289,30 @@ public class ExportDeleteExcelConfirm001Service extends CommonExportService<ChbD
      * @param deleteInfo 删除信息
      * @param assetInfoRegList 资产要素登记信息
      * @param deleteReason 删除原因
+     * @param isSearch 是否来自画面查询
      * void
      */
     private void convertInvestTradeToDeletList(ChbDeleteExcelExportDto deleteInfo,
-            List<InvestTradeRegist001Dto> investTradeRegList,String deleteReason) {
+            List<InvestTradeRegist001Dto> investTradeRegList,String deleteReason, boolean isSearch) {
         List<ChbDeleteExcelExportDetailDto> deleteDetailList = new ArrayList<>();
         investTradeRegList.forEach(item -> {
             ChbDeleteExcelExportDetailDto detail = new ChbDeleteExcelExportDetailDto();
             // 第四列：行产品登记编码
             detail.setCol4(item.getProdRegCode());
+            // add by zhangliang 20201101 补充产品申报登记编码 start
+            if (StringUtil.isEmpty(detail.getCol4())){
+                detail.setCol4(item.getProdRegistCode());
+            }
+            // add by zhangliang 20201101 补充产品申报登记编码 end
             // 第五列：行内交易编码
             detail.setCol5(item.getTradeCode());
             // 第六列：资金流动类型
             if (StringUtils.isNotEmpty(item.getCurAssetType())){
+                detail.setCol6(item.getCurAssetType());
+                if (isSearch){
+                    detail.setCol6(SvrDataUtil.getZZDictCodeAndName(DictCode.资金流动类型,item.getCurAssetType()));
+                }
                 //detail.setCol6(item.getCurAssetType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资金流动类型,item.getCurAssetType()));
-                //detail.setCol6(SvrDataUtil.getZZDictCodeAndName(DictCode.资金流动类型,item.getCurAssetType()));
-            	detail.setCol6(item.getCurAssetType());
             }
             // 第七列：行内资产/负债编码
             detail.setCol7(item.getAssetCode());
@@ -537,7 +545,7 @@ public class ExportDeleteExcelConfirm001Service extends CommonExportService<ChbD
             selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, (String) selectParam.get("status")));
             selectParam.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, (String) selectParam.get("sendStatus")));
             List<InvestTradeRegist001Dto> investTradeList = investTradeRegist001Mapper.selectAllData(selectParam);
-            convertInvestTradeToDeletList(deleteInfo,investTradeList,deleteReason);
+            convertInvestTradeToDeletList(deleteInfo,investTradeList,deleteReason, true);
         } else if ("SvrChbAstValueRegist001".equals(pageId)){
             selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, (String) selectParam.get("status")));
             selectParam.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, (String) selectParam.get("sendStatus")));

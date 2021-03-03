@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,6 +43,9 @@ public class ProductReportRegister002Validator implements BeanValidator {
      */
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
+
+	@Autowired
+	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
 	@Override
 	public List<ValidMessage> valid(Object value) {
@@ -417,6 +421,9 @@ public class ProductReportRegister002Validator implements BeanValidator {
         		&& (StringUtil.equals(entity.getRepOperateMode(), "03") || StringUtil.equals(entity.getRepOperateMode(),"04") )) {
             validList.add(new ValidMessage("请输入是否现金管理类"));
         }
+
+		validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
+
 		return validList;
 	}
 

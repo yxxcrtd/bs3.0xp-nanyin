@@ -24,6 +24,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -89,6 +90,11 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
     private ChbCheckRuleoutMapper chbCheckRuleoutMapper;
     @Autowired
     private BeforeSubErrorCheck beforeSubErrorCheck;
+	/**
+	 * 中债基础数据mapper
+	 */
+	@Autowired
+	private BaseMapper baseMapper;
 
 	 /**
      * 个人发行登记
@@ -113,11 +119,11 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
              int legth = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
     		 Page<ProdPersonIssue001Dto> pageList = super.queryForPage(page,legth,()->prodPersonIssue001Mapper.queryForProdPersonIssuePage(param));
     		 // 数据处理
-    	     setResultList(pageList);
+    	     setResultList(pageList.getRoot());
     		 return pageList;
          } else {
         	 Page<ProdPersonIssue001Dto> pageList = queryForPage(ProdPersonIssue001Mapper.class,"queryForProdPersonIssuePage",param);
-        	 setResultList(pageList);
+        	 setResultList(pageList.getRoot());
              return pageList;
          }
         
@@ -125,13 +131,13 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 	
 	/**
 	 * @Description 设置查询结果
-	 * @param pageList
+	 * @param dataList
 	 * @return void
 	 * @version 1.7 2019年5月31日
 	 */
-	private void setResultList(Page<ProdPersonIssue001Dto> pageList){
-		if(!CollectionUtils.isEmpty(pageList.getRoot())){
-			for(ProdPersonIssue001Dto dto : pageList.getRoot()){
+	private void setResultList(List<ProdPersonIssue001Dto> dataList){
+		if(!CollectionUtils.isEmpty(dataList)){
+			for(ProdPersonIssue001Dto dto : dataList){
 				if(!StringUtil.isEmpty(dto.getGradeType())){
 					dto.setGradeType(dto.getGradeType().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.层级类别, dto.getGradeType()));
 				}
@@ -451,17 +457,19 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 		return listArr;
 	}
 	
-	public List<ExcelValidDto> checkData(List<String> checkKeys){
+	public Map<String,Object> checkData(List<String> checkKeys){
 		Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
 		Map<String,ProdPersonIssue001Dto> repmap = new HashMap<String,ProdPersonIssue001Dto>();
+		Map<String,Object> returnMap = new HashMap<>();
 		List<ProdPersonIssue001Dto> issuelist = prodPersonIssue001Mapper.queryExportListByKeys(checkKeys);
+		setResultList(issuelist);
 		repmap = issuelist.stream().collect(Collectors.toMap(ProdPersonIssue001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));
 		List<ExcelValidDto> result = new ArrayList<ExcelValidDto>();
 		List<CheckReport001Dto> resultlist  = new ArrayList<CheckReport001Dto>();
 		// 检查登记表中小于今天所有未报送的数据
 		if(CollectionUtils.isNotEmpty(checkKeys)){
 			// 调用检查方法
-			resultlist.addAll(check());
+			resultlist.addAll(check(null));
 			checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
 			for(String key : checkKeys){
 				if(checkmap.get(key)!=null){
@@ -478,8 +486,10 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 					result.add(exc);
 				}
 			}
+			returnMap.put("excelValidDtoList",result);
 		}
-		return result;
+		returnMap.put("resultList",issuelist);
+		return returnMap;
 	}
 	
 	/**
@@ -488,9 +498,13 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 	 * @return List<CheckReport001Dto>
 	 * @version 1.7 2019年6月24日
 	 */
-	private List<CheckReport001Dto> check(){
+	public List<CheckReport001Dto> check(Date batchDate){
 		// 数据日期为系统时间
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
+		// 供跑批使用
+		if (StringUtil.isNotEmpty(batchDate)){
+			checkdate = batchDate;
+		}
 		// 删除今天所有已检查的数据
 		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(),checkdate);
 		//增加例外情况过滤

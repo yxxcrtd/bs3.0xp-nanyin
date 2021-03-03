@@ -11,28 +11,12 @@
 package com.joyintech.tams.svreport.chb.botastpositionregist.service;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -40,7 +24,6 @@ import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.service.SvrCommonExportService;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
@@ -50,9 +33,20 @@ import com.joyintech.tams.svreport.chb.botastpositionregist.dao.ChbBotAstPosSubH
 import com.joyintech.tams.svreport.chb.botastpositionregist.dao.ChbBotAstPositionRegist001Mapper;
 import com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
-import com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto;
+import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 底层资产持仓信息登记service
@@ -110,6 +104,15 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
     private static final String IS_SUCESS_INVESTORS_CHECK = "01";
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private BeforeSubErrorCheck beforeSubErrorCheck;
+
+	/**
+	 * 中债基础数据mapper
+	 */
+	@Autowired
+	private BaseMapper baseMapper;
 
 	/**
 	 * 查询页面数据
@@ -486,10 +489,12 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 		return keylist;
 	}
 	
-	public List<ExcelValidDto> checkData(List<String> checkKeys){
+	public Map<String,Object> checkData(List<String> checkKeys){
 		Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
 		Map<String,ChbBotAstPositionRegist001Dto> repmap = new HashMap<String,ChbBotAstPositionRegist001Dto>();
+        Map<String,Object> returnMap = new HashMap<>();
 		List<ChbBotAstPositionRegist001Dto> issuelist = chbBotAstPositionRegist001Mapper.selectByRegistNo(checkKeys);
+		dealResultlist(issuelist);
 		repmap = issuelist.stream().collect(Collectors.toMap(ChbBotAstPositionRegist001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));
 		List<ExcelValidDto> result = new ArrayList<ExcelValidDto>();
 		// 查询检查表
@@ -498,7 +503,7 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 		// 检查登记表中小于今天所有未报送的数据
 		if(CollectionUtils.isNotEmpty(checkKeys)){
 			// 调用检查方法
-			resultlist.addAll(check());
+			resultlist.addAll(check(null));
 			checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
 			for(String key : checkKeys){
 				if(checkmap.get(key)!=null){
@@ -515,8 +520,10 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 					result.add(exc);
 				}
 			}
+            returnMap.put("excelValidDtoList",result);
 		}
-		return result;
+        returnMap.put("resultList",issuelist);
+        return returnMap;
 	}
 	
 	
@@ -526,17 +533,25 @@ public class ChbBotAstPositionRegist001Service extends SvrCommonExportService<Ch
 	 * @return List<CheckReport001Dto>
 	 * @version 1.7 2019年6月24日
 	 */
-	private List<CheckReport001Dto> check(){
+	public List<CheckReport001Dto> check(Date batchDate){
 		// 数据日期为系统时间
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
+		// 供跑批使用
+		if (StringUtil.isNotEmpty(batchDate)){
+			checkdate = batchDate;
+		}
 		// 删除今天所有已检查的数据
 		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资管计划底层持仓信息登记.getValue(),checkdate);
 		//增加例外情况过滤
         List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_BOT_AST_POS_SUB);
         Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
                  JoyinCollectors.groupingBy(x -> x.getProdId()));
+		//检查数据
+		List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
+		//报送前强制的错误检查
+		resultList.addAll(beforeSubErrorCheck.checkChbBotAstReg(checkdate,null,mapRuleout));
         //检查数据
-        List<CheckReport001Dto> resultList = beforeSubCheck.checkBotAstReg(checkdate,mapRuleout);
+		resultList.addAll(beforeSubCheck.checkBotAstReg(checkdate,mapRuleout));
         //报错检查异常数据
         int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
 		int batchLastIndex = batchCount;// 每批最后一个的下标

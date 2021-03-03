@@ -353,7 +353,8 @@ public class ViewCompareDetailController extends BaseController {
         String orgIndentifyMark = null;
         if (null != registSeqNo) {
             Map<String, Object> registSeqNoMap = new HashMap<>(2);
-            if(searchParam.get("tableName").equals("CHB_EQU_SUB") || searchParam.get("tableName").equals("CHB_EQUDET_SUB")){
+            if(searchParam.get("tableName").equals("CHB_EQU_SUB") || searchParam.get("tableName").equals("CHB_EQUDET_SUB")
+               || searchParam.get("tableName").equals("CHB_EMPLOYEE_INFO_SUB")){
                 registSeqNoMap.put("field", "SUMIT_SEQ");
             }
             else{
@@ -456,19 +457,6 @@ public class ViewCompareDetailController extends BaseController {
         	});
 		}
         
-        // 产品发行登记：双击产品详细页面，业绩基准利率值放大100倍
-        if (StringUtil.equals(pageId, PageFiledList.产品发行登记.getPageId())) {
-        	dataResultList.forEach(map->{
-        		map.forEach((key, value)->{
-        			if(Arrays.asList(PageFiledList.产品发行登记.getFiledArr()).contains(key) && StringUtil.isNotEmpty(value)
-        					&& BigDecimal.ZERO.compareTo((BigDecimal)value)!=0) {
-        				BigDecimal num = (BigDecimal)value;
-        				map.put(key, num.divide(new BigDecimal(100)));
-        			}
-        		});
-        	});
-		}
-        
         
         // 识别标识变更的情况，用原识别标识查询比较数据
         try {
@@ -561,22 +549,25 @@ public class ViewCompareDetailController extends BaseController {
                 String field = CommonUtil.dealString(StringUtil.lowerCase(key), false);
                 detailList.forEach(detail -> {
                     if (StringUtil.equalsIgnoreCase(detail.getData(), field) || (StringUtil.equals("registBankCode", field) && StringUtil.equals("bankCode", detail.getData()))
-                    		||(StringUtil.equals("identifyType", detail.getData())&&(StringUtil.equals("personalIdentifyType", field)||StringUtil.equals("institutionIdentifyType", field))
-                    				&&StringUtil.isNotEmpty(value))) {
-                    	String v ="";
-                    	if(StringUtil.equals("personalIdentifyType", field)||StringUtil.equals("institutionIdentifyType", field)){
-                            v = getValue(value, field, fields);
-                    	}
-                    	else{
-                            v = getValue(value, detail.getData(), fields);
-                    	}
-                        if (sb.toString().equals("current")) {
-                            detail.setCurrentValue(v);
-                        }
-                        else {
-                            detail.setHasOldValue(true);
-                            detail.setOldValue(v);
-                        }
+                            ||(StringUtil.equals("identifyType", detail.getData())&&(StringUtil.equals("personalIdentifyType", field)||StringUtil.equals("institutionIdentifyType", field))
+                            &&StringUtil.isNotEmpty(value))
+                            // modify by zhangliang 20201215 资产要素登记 委外投资属性特殊处理
+                        || (StringUtil.equals("proProperty1", detail.getData()) && StringUtil.equals("proProperty", field))
+                        ) {
+                            String v ="";
+                            if(StringUtil.equals("personalIdentifyType", field)||StringUtil.equals("institutionIdentifyType", field)){
+                                v = getValue(value, field, fields);
+                            }
+                            else{
+                                v = getValue(value, detail.getData(), fields);
+                            }
+                            if (sb.toString().equals("current")) {
+                                detail.setCurrentValue(v);
+                            }
+                            else {
+                                detail.setHasOldValue(true);
+                                detail.setOldValue(v);
+                            }
                     }
                 });
             });

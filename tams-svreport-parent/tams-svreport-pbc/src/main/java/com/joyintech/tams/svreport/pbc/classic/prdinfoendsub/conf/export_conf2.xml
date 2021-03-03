@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="PbcPrdBaseinfoEndSub002.xls" name="产品终止信息">
+<Workbook filePath="PbcPrdBaseinfoEndSub002.xlsx" name="产品终止信息">
 	<Worksheet javaBean="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub">
 		<Row>
 			<Cell order="1" name="产品代码">pbcProdId</Cell>
-			<Cell order="2" name="产品实际终止日期">mdateStr</Cell>
+			<Cell order="2" name="产品实际终止日期">mdateStr2</Cell>
 			<Cell order="3" name="币种">ccy</Cell>
 			<Cell order="4" name="发行机构实现收入">profit</Cell>
 			<Cell order="5" name="发行机构实现收入折人民币">profitCny</Cell>

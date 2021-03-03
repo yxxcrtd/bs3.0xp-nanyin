@@ -31,11 +31,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.RichTextString;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,8 +41,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.interf.common.dto.InterfLog;
-
-import net.sf.jxls.transformer.XLSTransformer;
 
 public class TisUtil {
 
@@ -66,20 +60,20 @@ public class TisUtil {
 	 * @return
 	 */
 	public static boolean isEmpty(Object str){
-		
+
 		if(str == null || "".equals(str.toString().trim())){
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	/** */
 	/**
 	 * 创建文本文件.
-	 * 
+	 *
 	 * @throws IOException
-	 * 
+	 *
 	 */
 	public static void creatTxtFile(String path) throws IOException {
 		filename = new File(path);
@@ -103,7 +97,7 @@ public class TisUtil {
 	/** */
 	/**
 	 * 读取文本文件.
-	 * 
+	 *
 	 */
 	public static String readTxtFile() {
 		readStr="";
@@ -118,27 +112,27 @@ public class TisUtil {
 				}
 			} catch (IOException e) {
 //				e.printStackTrace();
-	            logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(),e);
 			}
 		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
-            logger.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 		}
 		finally {
-        	try {
-            	if(fileread !=null)
-            		fileread.close();
-            } catch (Exception e) {
-            	logger.error(e.getMessage(),e);
-             }
-        }
+			try {
+				if(fileread !=null)
+					fileread.close();
+			} catch (Exception e) {
+				logger.error(e.getMessage(),e);
+			}
+		}
 
 		return readStr;
 	}
 	/** */
 	/**
 	 * 读取文本文件.
-	 * 
+	 *
 	 */
 	public static String readTxtFile(File file) throws UnsupportedEncodingException {
 		InterfLog log = new InterfLog();
@@ -148,61 +142,61 @@ public class TisUtil {
 		FileInputStream fis=null;
 		InputStreamReader read2=null;
 		try {
-		     fis=new FileInputStream(file);
-			 read2 = new InputStreamReader(fis,"UTF-8");
-			bufread=new BufferedReader(read2);  
+			fis=new FileInputStream(file);
+			read2 = new InputStreamReader(fis,"UTF-8");
+			bufread=new BufferedReader(read2);
 			//bufread = new BufferedReader(fileread);
 			try {
 				while ((read = bufread.readLine()) != null) {
 					readStr = readStr + read + "\r\n";
 				}
-		        log.setTaskStatus(file+"读取文件成功！");
+				log.setTaskStatus(file+"读取文件成功！");
 			} catch (IOException e) {
 //				e.printStackTrace();
-		        log.setTaskStatus(file+"读取文件失败！");
-	            logger.error(e.getMessage(),e);
+				log.setTaskStatus(file+"读取文件失败！");
+				logger.error(e.getMessage(),e);
 			}
 		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
-	        log.setTaskStatus(file+"读取文件失败！");
-            logger.error(e.getMessage(),e);
+			log.setTaskStatus(file+"读取文件失败！");
+			logger.error(e.getMessage(),e);
 		}
 		finally{
-		    if(fis!=null){
-		        try {
-                    fis.close();
-                }
-                catch (IOException e) {
+			if(fis!=null){
+				try {
+					fis.close();
+				}
+				catch (IOException e) {
 //                    e.printStackTrace();
-                    logger.error(e.getMessage(),e);
-                } 
-		    } 
-		    if(read2!=null){
-                try {
-                    read2.close();
-                }
-                catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if(read2!=null){
+				try {
+					read2.close();
+				}
+				catch (IOException e) {
 //                    e.printStackTrace();
-                    logger.error(e.getMessage(),e);
-                } 
-            } 
-		    if(bufread!=null){
-                try {
-                    bufread.close();
-                }
-                catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if(bufread!=null){
+				try {
+					bufread.close();
+				}
+				catch (IOException e) {
 //                    e.printStackTrace();
-                    logger.error(e.getMessage(),e);
-                } 
-            } 
+					logger.error(e.getMessage(),e);
+				}
+			}
 		}
-        log.setTaskStatus(file+"文件内容是:" + "\r\n" + readStr);
+		log.setTaskStatus(file+"文件内容是:" + "\r\n" + readStr);
 		return readStr;
 	}
 	/** */
 	/**
 	 * 写文件.
-	 * 
+	 *
 	 */
 	public static void writeTxtFile(String newStr) throws IOException {
 		InterfLog log = new InterfLog();
@@ -214,10 +208,10 @@ public class TisUtil {
 			o.write(filein.getBytes("GBK"));
 			o.close();
 			log.setTaskStatus("生成文件成功！");
-	        log.setTaskStatus("文件内容是:" + "\r\n" + filein);
+			log.setTaskStatus("文件内容是:" + "\r\n" + filein);
 		} catch (Exception e) {
 //			e.printStackTrace();
-            logger.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 			log.setTaskStatus("生成文件失败！");
 		} finally {
 			if (o != null) {
@@ -229,7 +223,7 @@ public class TisUtil {
 	/** */
 	/**
 	 * 将文件中指定内容的第一行替换为其它内容.
-	 * 
+	 *
 	 * @param oldStr
 	 *            查找内容
 	 * @param replaceStr
@@ -275,114 +269,114 @@ public class TisUtil {
 			pw.close();
 		} catch (IOException e) {
 //			e.printStackTrace();
-            logger.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 		}
 		finally{
-		    if(fis!=null){
-		        try {
-                    fis.close();
-                }
-                catch (IOException e) {
+			if(fis!=null){
+				try {
+					fis.close();
+				}
+				catch (IOException e) {
 //                    e.printStackTrace();
-                    logger.error(e.getMessage(),e);
-                }  
-		    }
-		    if(isr!=null){
-		        try {
-		            isr.close();
-		        }
-		        catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if(isr!=null){
+				try {
+					isr.close();
+				}
+				catch (IOException e) {
 //		            e.printStackTrace();
-		            logger.error(e.getMessage(),e);
-		        }  
-		    }
-		    if(br!=null){
-		        try {
-		            br.close();
-		        }
-		        catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if(br!=null){
+				try {
+					br.close();
+				}
+				catch (IOException e) {
 //		            e.printStackTrace();
-		            logger.error(e.getMessage(),e);
-		        }  
-		    }
-		    if(fos!=null){
-		        try {
-                        fos.close();
-                  }
-             catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if(fos!=null){
+				try {
+					fos.close();
+				}
+				catch (IOException e) {
 //                        e.printStackTrace();
-                 logger.error(e.getMessage(),e);
-                }
-		    }
-		    if(pw!=null){
-		        pw.close();  
-		    }
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if(pw!=null){
+				pw.close();
+			}
 		}
 	}
-	public static String  getBeanToText(Object o) { 
+	public static String  getBeanToText(Object o) {
 		StringBuffer sb=new StringBuffer();
-		try {               
-			if(o != null ) {  
-				Field[] fields = o.getClass().getDeclaredFields();      
-				for (int i = 0; i < fields.length; i++){                           
-					boolean accessFlag = fields[i].isAccessible();                              
-					fields[i].setAccessible(true);                              
-					Object objText = null;                              
-					try {                                  
-						objText = fields[i].get(o);                              
-					}catch (Exception e) {                                  
+		try {
+			if(o != null ) {
+				Field[] fields = o.getClass().getDeclaredFields();
+				for (int i = 0; i < fields.length; i++){
+					boolean accessFlag = fields[i].isAccessible();
+					fields[i].setAccessible(true);
+					Object objText = null;
+					try {
+						objText = fields[i].get(o);
+					}catch (Exception e) {
 //							logger.error("class反射读取失败:", e);
 						logger.error("class反射读取失败:"+e.getMessage(),e);
-					}                              
-					if (objText == null){                                  
-						sb.append("|");                             
-					}else{                                 
+					}
+					if (objText == null){
+						sb.append("|");
+					}else{
 						sb.append(objText.toString()+"|");
-					}                              
+					}
 					fields[i].setAccessible(accessFlag);
 				}
 			}
-		}catch(Exception e) {       
+		}catch(Exception e) {
 			logger.error(e.getMessage(),e);
-//			logger.error("bean转为dom失败:", e);          
+//			logger.error("bean转为dom失败:", e);
 		}
 		return sb.toString()+"\r\n";
 	}
-	  /**
-     * txt生成调用此方法即可
-     * @param list
-     * @param path
-     * @throws IOException 
-     */
-     public static void writeDataToTxtFile(List list,String fpath) throws IOException {
-        creatTxtFile(fpath);
-        StringBuffer sb = new StringBuffer();
-        for(int i =0;i<list.size();i++){
-            sb = sb.append(TisUtil.getBeanToText(list.get(i)));
-       }
-        TisUtil.writeTxtFile(sb.toString().trim());
-    }
+	/**
+	 * txt生成调用此方法即可
+	 * @param list
+	 * @param path
+	 * @throws IOException
+	 */
+	public static void writeDataToTxtFile(List list,String fpath) throws IOException {
+		creatTxtFile(fpath);
+		StringBuffer sb = new StringBuffer();
+		for(int i =0;i<list.size();i++){
+			sb = sb.append(TisUtil.getBeanToText(list.get(i)));
+		}
+		TisUtil.writeTxtFile(sb.toString().trim());
+	}
 
-	  /**
-    * txt生成调用此方法即可
-    * @param list
-    * @param path
-    * @throws IOException 
-    */
-    public static void writeDataToTxtFile(String newStr,String fpath) {
-       try{
-		   creatTxtFile(fpath);
-		   TisUtil.writeTxtFile(newStr.trim());
-	   }catch (Exception e){
-		   logger.error(String.valueOf(e));
-	   }
+	/**
+	 * txt生成调用此方法即可
+	 * @param list
+	 * @param path
+	 * @throws IOException
+	 */
+	public static void writeDataToTxtFile(String newStr,String fpath) {
+		try{
+			creatTxtFile(fpath);
+			TisUtil.writeTxtFile(newStr.trim());
+		}catch (Exception e){
+			logger.error(String.valueOf(e));
+		}
 
-   }
+	}
 
 	/** */
 	/**
 	 * main方法测试
-	 * 
+	 *
 	 * @param s
 	 * @throws IOException
 	 */
@@ -460,8 +454,8 @@ public class TisUtil {
 //		}
 //        return depositfile;
 //    }
-    
-	
+
+
 	@SuppressWarnings("unchecked")
 	public static File createFile(Map<String, Object> paraMap, String exceltemplate, String flieName) {
 		// 模板路径pbc/
@@ -489,6 +483,7 @@ public class TisUtil {
 
 			for (Sheet sheet : wb) {
 				List<HSSFRow> listRows = new ArrayList<HSSFRow>();
+
 				int rownum = sheet.getLastRowNum();
 				for (int i = 0; i <= rownum; i++ ) {
 					HSSFRow row = (HSSFRow)sheet.getRow(i);
@@ -516,7 +511,12 @@ public class TisUtil {
 							if (cellvalue.contains("${") && cellvalue.contains("}")) {
 								replaceData(row.getCell(j), paraMap);
 							}
-							
+							if (cellvalue.contains("!{") && cellvalue.contains("}")) {
+								replaceData2(row.getCell(j), paraMap);
+							}
+							if (cellvalue.contains("@{") && cellvalue.contains("}")) {
+								replaceData3(row.getCell(j), paraMap);
+							}
 							if (cellvalue.contains("#{") && cellvalue.contains("}")) {
 								listRows.add(0, row);
 								break;
@@ -525,11 +525,11 @@ public class TisUtil {
 					}
 				}
 				//for(int index=0;index<listRows.size();index++){
-					//HSSFRow row=listRows.get(index);
-					for (HSSFRow row : listRows) {
+				//HSSFRow row=listRows.get(index);
+				for (HSSFRow row : listRows) {
 					List list = null;
 					for(int index=0;index<row.getLastCellNum();index++){
-					//for (Cell cell : row) {
+						//for (Cell cell : row) {
 						Cell cell=row.getCell(index);
 						if(cell==null){
 							continue;
@@ -543,7 +543,7 @@ public class TisUtil {
 							if (cellvalue.contains("#{") && cellvalue.contains("}")) {
 								String key = cellvalue.substring(cellvalue.indexOf("#{") + 2,
 										cellvalue.indexOf("."));
-								
+
 								if(paraMap.get(key) instanceof List){
 									list = (List)paraMap.get(key);
 									break;
@@ -558,23 +558,33 @@ public class TisUtil {
 										if(!StringUtil.isNotEmpty(value)||value==""){
 											value = "";
 										}
-										
+
 									}else{
 										value = "";
 									}
 									HSSFCell baseCell = (HSSFCell) row.getCell(index);
 									HSSFCell newcell = (HSSFCell) row.createCell(index);
 									copyCell((HSSFWorkbook) wb, baseCell, newcell, true);
-									newcell.setCellValue(value);
-
+                                  if(exceltemplate.contains("Monthreport")){
+									  try {
+										  newcell.setCellValue(Double.parseDouble(value));
+										  if(!exceltemplate.contains("G06")){
+											  newcell.setCellType(baseCell.getCellType());
+										  }
+									  }catch(Exception e){
+										  newcell.setCellValue(value);
+									  }
+								  }else{
+									  newcell.setCellValue(value);
+								  }
 								}else if(paraMap.get(key)==null){
 									insertRow(row, 1);
 									Map<String, Object> value2=new HashMap<String, Object>();
 									insertRow(row, 1);
 
-			                        Row newrow = sheet.createRow(row.getRowNum() + 1);
-										
-			                        
+									Row newrow = sheet.createRow(row.getRowNum() + 1);
+
+
 									for (int i = 0; i < row.getLastCellNum(); i++) {
 										HSSFCell cell2 = (HSSFCell) row.getCell(i);
 										HSSFCell newcell2 = (HSSFCell) newrow.createCell(i);
@@ -630,6 +640,7 @@ public class TisUtil {
 						removeRow(row);
 					}
 				}
+				sheet.setForceFormulaRecalculation(true);
 			}
 
 			File file = new File(outputFilepath);
@@ -637,6 +648,7 @@ public class TisUtil {
 				file.getParentFile().mkdirs();
 			}
 			FileOutputStream outputStream = new FileOutputStream(file);
+
 			wb.write(outputStream);
 			outputStream.flush();
 			outputStream.close();
@@ -660,73 +672,73 @@ public class TisUtil {
 		}
 		return null;
 	}
-	
-    public static String getXmlPath(String filename) {
-        try {
-            String path = Thread.currentThread().getContextClassLoader()
-                    .getResource("").toURI().getPath();
-            path = path.replace('/', '\\'); // 将/换成\
-            path = path.replace("file:", ""); // 去掉file:
-            path = path.substring(1); // 去掉第一个\,如 \D:\JavaWeb...
-            path += "tpl\\" + filename;
-            path = path.replace("report-batch", "report-parent\\report");
-            return path;
-        } catch (URISyntaxException e) {
-        	logger.error(e.getMessage(),e);
-            return null;
-        }
-    }
 
-    public static String getXmlPathLinux(String filename) {
-        try {
-            String path = Thread.currentThread().getContextClassLoader()
-                    .getResource("").toURI().getPath();
-            path += "tpl/" + filename;
-            path = path.replace("file:", ""); // 去掉file:
-            path = path.replace("report-batch", "report-parent/report");
-            return path;
-        } catch (URISyntaxException e) {
-        	logger.error(e.getMessage(),e);
-            return null;
-        }
-    }
-    
-    /** 
-     * 删除指定的Sheet 
-     * @param targetFile  目标文件 
-     * @param sheetName   Sheet名称 
-     */ 
-    public static void deleteSheet(File targetFile,List<String> sheetNameList) { 
-        try (FileInputStream fis = new FileInputStream(targetFile); 
-                HSSFWorkbook wb = new HSSFWorkbook(fis);){ 
-            if(sheetNameList != null && sheetNameList.size() > 0){
-                for(String sheetName : sheetNameList){
-                    //删除Sheet 
-                    wb.removeSheetAt(wb.getSheetIndex(sheetName)); 
-                }
-                fileWrite(targetFile, wb); 
-                fis.close(); 
-            }
-        } catch (Exception e) { 
-        	logger.error(e.getMessage(),e);
-            e.printStackTrace(); 
-        } 
-    }
-    
-    /** 
-     * 写隐藏/删除后的Excel文件 
-     * @param targetFile  目标文件 
-     * @param wb          Excel对象 
-     * @throws Exception 
-     */ 
-    public static void fileWrite(File targetFile,HSSFWorkbook wb) throws Exception{
-        FileOutputStream fileOut = new FileOutputStream(targetFile); 
-        wb.write(fileOut); 
-        fileOut.flush(); 
-        fileOut.close(); 
-    }
+	public static String getXmlPath(String filename) {
+		try {
+			String path = Thread.currentThread().getContextClassLoader()
+					.getResource("").toURI().getPath();
+			path = path.replace('/', '\\'); // 将/换成\
+			path = path.replace("file:", ""); // 去掉file:
+			path = path.substring(1); // 去掉第一个\,如 \D:\JavaWeb...
+			path += "tpl\\" + filename;
+			path = path.replace("report-batch", "report-parent\\report");
+			return path;
+		} catch (URISyntaxException e) {
+			logger.error(e.getMessage(),e);
+			return null;
+		}
+	}
 
-    
+	public static String getXmlPathLinux(String filename) {
+		try {
+			String path = Thread.currentThread().getContextClassLoader()
+					.getResource("").toURI().getPath();
+			path += "tpl/" + filename;
+			path = path.replace("file:", ""); // 去掉file:
+			path = path.replace("report-batch", "report-parent/report");
+			return path;
+		} catch (URISyntaxException e) {
+			logger.error(e.getMessage(),e);
+			return null;
+		}
+	}
+
+	/**
+	 * 删除指定的Sheet
+	 * @param targetFile  目标文件
+	 * @param sheetName   Sheet名称
+	 */
+	public static void deleteSheet(File targetFile,List<String> sheetNameList) {
+		try (FileInputStream fis = new FileInputStream(targetFile);
+			 HSSFWorkbook wb = new HSSFWorkbook(fis);){
+			if(sheetNameList != null && sheetNameList.size() > 0){
+				for(String sheetName : sheetNameList){
+					//删除Sheet
+					wb.removeSheetAt(wb.getSheetIndex(sheetName));
+				}
+				fileWrite(targetFile, wb);
+				fis.close();
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 写隐藏/删除后的Excel文件
+	 * @param targetFile  目标文件
+	 * @param wb          Excel对象
+	 * @throws Exception
+	 */
+	public static void fileWrite(File targetFile,HSSFWorkbook wb) throws Exception{
+		FileOutputStream fileOut = new FileOutputStream(targetFile);
+		wb.write(fileOut);
+		fileOut.flush();
+		fileOut.close();
+	}
+
+
 	private static void replaceData(Cell cell, Map<String, Object> datas) {
 		CellType cellType = cell.getCellType();
 		if (cellType != CellType.STRING) {
@@ -749,14 +761,87 @@ public class TisUtil {
 			//解决两个参数其中一个为空整个字符串返回空值问题，例${PRODSERIES}${FINPRODNAME}  modify by liupeilin 20200301 end
 		}
 
+		//cell.setCellType(CellType.NUMERIC);
 		cell.setCellValue(result);
 
+//
 		if (result.contains("${") && result.contains("}")) {
 			replaceData(cell, datas);
 		}
 
 	}
-	
+
+	private static void replaceData3(Cell cell, Map<String, Object> datas) {
+		CellType cellType = cell.getCellType();
+		if (cellType != CellType.STRING) {
+			return;
+		}
+		String result = cell.getStringCellValue();
+
+		if (!result.contains("@{") || !result.contains("}")) {
+			return;
+		}
+		String key = result.substring(result.indexOf("@{") + 2, result.indexOf("}"));
+		String replaceString = replaceString3(key, datas);
+		if (StringUtil.isNotEmpty(replaceString)) {
+			result = result.replace("@{" + key + "}", replaceString);
+		}
+		else {
+			//解决两个参数其中一个为空整个字符串返回空值问题，例${PRODSERIES}${FINPRODNAME}  modify by liupeilin 20200301 begin
+			//result = "";
+			result = result.replace("@{" + key + "}", replaceString3(key, datas)==null?"":replaceString3(key, datas));
+			//解决两个参数其中一个为空整个字符串返回空值问题，例${PRODSERIES}${FINPRODNAME}  modify by liupeilin 20200301 end
+		}
+
+		//cell.setCellType(CellType.NUMERIC);
+		cell.setCellValue(result);
+
+//
+		if (result.contains("@{") && result.contains("}")) {
+			replaceData(cell, datas);
+		}
+
+	}
+
+	@SuppressWarnings("deprecation")
+	private static void replaceData2(Cell cell, Map<String, Object> datas) {
+		CellType cellType = cell.getCellType();
+		if (cellType != CellType.STRING) {
+			return;
+		}
+		String result = cell.getStringCellValue();
+
+		if (!result.contains("!{") || !result.contains("}")) {
+			return;
+		}
+		String key = result.substring(result.indexOf("!{") + 2, result.indexOf("}"));
+		String replaceString = replaceDecimal(key, datas);
+		if (StringUtil.isNotEmpty(replaceString)) {
+			result = result.replace("!{" + key + "}", replaceDecimal(key, datas));
+		}
+		else {
+			//解决两个参数其中一个为空整个字符串返回空值问题，例${PRODSERIES}${FINPRODNAME}  modify by liupeilin 20200301 begin
+			//result = "";
+			result = result.replace("!{" + key + "}", replaceDecimal(key, datas)==null?"":replaceDecimal(key, datas));
+			//解决两个参数其中一个为空整个字符串返回空值问题，例${PRODSERIES}${FINPRODNAME}  modify by liupeilin 20200301 end
+		}
+
+		if(StringUtil.isNotEmpty(result)){
+			//修改cell的格式，不然公式无法求和
+			//修改之前要先将值清空不然会报错
+			cell.setBlank();
+			cell.setCellType(CellType.NUMERIC);
+			cell.setCellValue(Double.parseDouble(result));
+		}else{
+			cell.setCellValue(result);
+		}
+
+		if (result.contains("!{") && result.contains("}")) {
+			replaceData2(cell, datas);
+		}
+
+	}
+
 	/**
 	 * Remove a row by its index
 	 */
@@ -768,7 +853,7 @@ public class TisUtil {
 			sheet.shiftRows(rowIndex + 1, lastRowNum, number);// 将行号为rowIndex+1一直到行号为lastRowNum的单元格全部上移一行，以便删除rowIndex行
 		}
 	}
-	
+
 	/**
 	 * 复制单元格
 	 *
@@ -816,7 +901,7 @@ public class TisUtil {
 			}
 		}
 	}
-	
+
 	public static void copyNullCell(HSSFWorkbook wb, HSSFCell srcCell, HSSFCell distCell, boolean copyValueFlag) {
 
 		// 评论
@@ -828,8 +913,8 @@ public class TisUtil {
 		distCell.setCellType(srcCellType);
 		distCell.setCellValue(srcCell.getRichStringCellValue());
 	}
-	
-	
+
+
 	private static String replaceString(String key, Map<String, Object> datas) {
 		if(key.contains(".")) {
 			String subKey = key.substring(0, key.indexOf("."));
@@ -839,20 +924,60 @@ public class TisUtil {
 				return replaceString(key.substring(subKey.length()+1), map);
 			}
 		}
-        if(datas.get(key) != null && datas.get(key) instanceof BigDecimal) {
-            DecimalFormat df = new DecimalFormat("#,##0.00#########");
-            return df.format((BigDecimal)datas.get(key));
-        }
-        if(datas.get(key) != null && datas.get(key) instanceof Date) {
-            
-            return DateUtil.format((Date)datas.get(key));
-        }
-        if(datas.get(key) != null && datas.get(key) instanceof Long) {
-            return String.valueOf(datas.get(key));
-        }
+		if(datas.get(key) != null && datas.get(key) instanceof BigDecimal) {
+			DecimalFormat df = new DecimalFormat("#,##0.00#########");
+			return df.format((BigDecimal)datas.get(key));
+		}
+		if(datas.get(key) != null && datas.get(key) instanceof Date) {
+
+			return DateUtil.format((Date)datas.get(key));
+		}
+		if(datas.get(key) != null && datas.get(key) instanceof Long) {
+			return String.valueOf(datas.get(key));
+		}
 		return (String)datas.get(key);
 	}
-	
+
+	private static String replaceString3(String key, Map<String, Object> datas) {
+		if(key.contains(".")) {
+			String subKey = key.substring(0, key.indexOf("."));
+			Object object = datas.get(subKey);
+			if(object != null) {
+				Map<String, Object> map = transBean2Map(object);
+				return replaceString3(key.substring(subKey.length()+1), map);
+			}
+		}
+		if(datas.get(key) != null && datas.get(key) instanceof BigDecimal) {
+			return datas.get(key).toString();
+		}
+		if(datas.get(key) != null && datas.get(key) instanceof Date) {
+
+			return DateUtil.format((Date)datas.get(key));
+		}
+		if(datas.get(key) != null && datas.get(key) instanceof Long) {
+			return String.valueOf(datas.get(key));
+		}
+		return (String)datas.get(key);
+	}
+
+	private static String replaceDecimal(String key, Map<String, Object> datas) {
+		if(key.contains(".")) {
+			String subKey = key.substring(0, key.indexOf("."));
+			Object object = datas.get(subKey);
+			if(object != null) {
+				Map<String, Object> map = transBean2Map(object);
+				return replaceDecimal(key.substring(subKey.length()+1), map);
+			}
+		}
+		if(datas.get(key) != null && datas.get(key) instanceof BigDecimal) {
+			DecimalFormat df = new DecimalFormat("###0.00#########");
+			return df.format((BigDecimal)datas.get(key));
+		}
+		if(datas.get(key) != null && datas.get(key) instanceof Long) {
+			return String.valueOf(datas.get(key));
+		}
+		return (String)datas.get(key);
+	}
 
 	private static void replaceListData(Cell cell, Map<String, Object> datas) {
 		String result = cell.getStringCellValue();
@@ -896,12 +1021,17 @@ public class TisUtil {
 			cell.setCellValue(cellValue.doubleValue());
 		}
 	}
-	
+
 	// Bean --> Map 1: 利用Introspector和PropertyDescriptor 将Bean --> Map
 	public static Map<String, Object> transBean2Map(Object obj) {
 		if (obj == null) {
 			return null;
 		}
+		// add by dubaojun 2020-06-18 青岛银行个性化 start
+		if(obj instanceof Map) {
+			return (Map)obj;
+		}
+		// add by dubaojun 2020-06-18 青岛银行个性化 end
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
@@ -925,7 +1055,7 @@ public class TisUtil {
 		return map;
 
 	}
-	
+
 	/**
 	 * Remove a row by its index
 	 */

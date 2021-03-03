@@ -6,7 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +37,8 @@ import org.slf4j.LoggerFactory;
  */
 public class XlsxToHtml {
 
+
+    private static FormulaEvaluator evaluator;
     /**
      * 日志
      */
@@ -93,7 +97,8 @@ public class XlsxToHtml {
      public static String getExcelInfo(Workbook wb,boolean isWithStyle){
          
          StringBuffer sb = new StringBuffer();
-         for(int i=0;i<3;i++){
+         evaluator=wb.getCreationHelper().createFormulaEvaluator();
+         for(int i=0;i<2;i++){
         	 Sheet sheet = wb.getSheetAt(i);//获取第一个Sheet的内容
              int lastRowNum = sheet.getLastRowNum();
              Map<String, String> map[] = getRowSpanColSpanMap(sheet);
@@ -227,12 +232,19 @@ public class XlsxToHtml {
              }
          } else if (CellType.STRING.equals(cell.getCellType())) {
              result = cell.getRichStringCellValue().toString();
+         } else if (CellType.FORMULA.equals(cell.getCellType())) {
+             double value = evaluator.evaluate(cell).getNumberValue();
+             NumberFormat nf = NumberFormat.getInstance();
+             nf.setGroupingUsed(false);
+             nf.setMaximumFractionDigits(6);
+             nf.getCurrency().getDisplayName();
+             result =  nf.format(value);
          } else {
              result = "";
          }
          return result;  
      }
-     
+
      /**
       * 处理表格样式
       * @param wb

@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.asset.stock.valid;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
@@ -57,6 +58,9 @@ public class FinStockInfoValidator implements BeanValidator {
     
     @Autowired
     MstWorkflowCommonService mstWorkflowCommonService;
+
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
     
     /**
      * {@inheritDoc}
@@ -69,7 +73,7 @@ public class FinStockInfoValidator implements BeanValidator {
     public List<ValidMessage> valid(Object value) {
         FinStockInfoDto dto = (FinStockInfoDto) value;
 
-        ArrayList<ValidMessage> errorList = new ArrayList<>();
+        List<ValidMessage> errorList = new ArrayList<>();
 
             // 判断是否选中数据
            if (StringUtil.equals(dto.getOperateType(), "delete")){//删除时的交易判断
@@ -196,6 +200,7 @@ public class FinStockInfoValidator implements BeanValidator {
 
                    //总股本大于等于流通股本check
                }
+               errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, "1302", ValidMessage.class);
             }
 
         return errorList;

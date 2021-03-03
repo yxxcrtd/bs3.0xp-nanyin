@@ -23,7 +23,10 @@ public class PerProDeclareRegDto extends BaseEntity implements ITableRow{
      * 登记序列
      */
     private String registSeqno;
-
+    /**
+     * 报送流水号
+     */
+    private String sumitSeq;
     /**
      * 产品代码
      */
@@ -2000,19 +2003,27 @@ public class PerProDeclareRegDto extends BaseEntity implements ITableRow{
         this.investFeeRate = investFeeRate;
     }
 
-	public String getFlg1() {
-		return flg1;
+	public String getSumitSeq() {
+		return sumitSeq;
 	}
 
-	public void setFlg1(String flg1) {
-		this.flg1 = flg1;
+	public void setSumitSeq(String sumitSeq) {
+		this.sumitSeq = sumitSeq;
 	}
 
-	public String getFlg2() {
-		return flg2;
-	}
+    public String getFlg1() {
+        return flg1;
+    }
 
-	public void setFlg2(String flg2) {
-		this.flg2 = flg2;
-	}    
+    public void setFlg1(String flg1) {
+        this.flg1 = flg1;
+    }
+
+    public String getFlg2() {
+        return flg2;
+    }
+
+    public void setFlg2(String flg2) {
+        this.flg2 = flg2;
+    }
 }

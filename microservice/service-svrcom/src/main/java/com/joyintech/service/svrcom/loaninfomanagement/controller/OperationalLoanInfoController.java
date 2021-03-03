@@ -18,7 +18,7 @@ import com.joyintech.tams.svreport.loaninfomanagement.service.OperationalLoanInf
  * @author hpp
  *
  */
-@RestController
+@RestController("backOperationalLoanInfoController")
 @RequestMapping("/OperationalLoanInfo")
 public class OperationalLoanInfoController {
 

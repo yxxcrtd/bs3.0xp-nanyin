@@ -1,10 +1,15 @@
 package com.joyintech.tams.svreport.chb.investtradereg.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.dto.ChbInvestTradeSubDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.svreport.chbsd.assetdealsub.service.SdAssetDealRegBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +53,9 @@ public class InvestTradeRegist001Controller extends BaseController{
 	
 	@SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private SdAssetDealRegBatchService sdAssetDealRegBatchService;
 	/**
      * 初始化
      * {@inheritDoc}
@@ -181,7 +189,57 @@ public class InvestTradeRegist001Controller extends BaseController{
      
      @ResponseBody
      @RequestMapping("reportCheck")
-     public List<ExcelValidDto> reportCheck() {
+     public Map<String,Object> reportCheck() {
          return investTradeRegistMService.reportCheck(RequestUtil.getPageParam());
      }
+
+    /**start  中债一二期直连代码  add  by  wangzehui  20201012*/
+
+    /**
+     * 中债直连报送
+     *
+     * @param map
+     *            传入需要报送的主键
+     * @return 反馈信息
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping(value = "/submitChb", method = RequestMethod.POST)
+    public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception{
+
+        List<InvestTradeRegist001Dto> list=new ArrayList<>();
+        // 选择行数据时
+        if (param.containsKey("keyList")) {
+            String keyList = param.get("keyList").toString();
+            try {
+                list = JsonUtils.json2List(keyList,
+                        InvestTradeRegist001Dto.class);
+            }
+            catch (IOException e) {
+                // e.printStackTrace();
+                logger.error(e.getMessage(), e);
+            }
+        }else{
+            Page<InvestTradeRegist001Dto> page = investTradeRegistMService.selectForPage(RequestUtil.getPageParam());
+            if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
+                list = page.getRoot();
+            }
+            //查询数据
+        }
+
+        //报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
+        List<ChbInvestTradeSubDto> dataList = new ArrayList<ChbInvestTradeSubDto>();
+        for(InvestTradeRegist001Dto sdDto:list){
+            ChbInvestTradeSubDto target = new ChbInvestTradeSubDto();
+            BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
+            dataList.add(target);
+        }
+
+        sdAssetDealRegBatchService.sendBatchCommon(dataList);
+
+        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+    }
+
+    /**end  中债一二期直连代码  add  by  wangzehui  2020100910*/
 }

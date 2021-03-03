@@ -3,12 +3,14 @@ package com.joyintech.tams.svreport.chb.proddurationreg.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.svreport.chb.common.SvrDataStatusUtil;
+import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -33,7 +35,6 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
-import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
 import com.joyintech.tams.svreport.chb.proddurationreg.dao.ChbPrdDurationRegMapper;
 import com.joyintech.tams.svreport.chb.proddurationreg.dao.ProdDurationReg001Mapper;
 import com.joyintech.tams.svreport.chb.proddurationreg.dto.ChbPrdDurationDeal;
@@ -48,7 +49,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ProdDurationReg002Service {
+public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -59,6 +60,11 @@ public class ProdDurationReg002Service {
     private ProdDurationReg001Mapper prodDurationReg001Mapper;
 	@Autowired
 	private SqlSessionTemplate template;
+	/**
+     * 入库前校验用Service
+     */
+    @Autowired
+    private ChbCommonCheckService chbCommonCheckService;
 	
 	@Autowired
     private SvrDBUtil svrDBUtil;
@@ -96,6 +102,9 @@ public class ProdDurationReg002Service {
 	        	   dto.setIssuePartyId(data.get(dto.getProdId()));
 	           }
 	   		}
+			// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+    	    dataList = chbCommonCheckService.checkData(dataList, ChbCheckTableInfo.产品存续登记表SUB);
+            // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
     		
 			insertBatch(dataList);
 //			if(totalCount>0){
@@ -174,10 +183,36 @@ public class ProdDurationReg002Service {
 		if (StringUtil.isEmpty(openProdMdateConf)) {
 			openProdMdateConf = "01";
 		}
+		Map<String, Object> pageParam =new HashMap<>();
+		pageParam.put("batchDate",sdf.format(batchDate));
+		pageParam.put("prodIdList",prodIdList);
+		pageParam.put("openProdMdateConf",openProdMdateConf);
+		//季末最后一个自然日期
+		pageParam.put("thisSeasonEnd",thisSeasonEnd(batchDate));
+		//变动类型-变动类型_净值变动
+		pageParam.put("changeType01",DictCodeListExt2.变动类型_净值变动.getValue());
+		//变动类型-变动类型_收益率变动
+		pageParam.put("changeType02",DictCodeListExt2.变动类型_收益率变动.getValue());
+		//产品运作模式=产品运作模式_开放式净值型
+		pageParam.put("opratemode03",DictCodeListExt2.产品运作模式_开放式净值型.getValue());
+		//产品类型
+		pageParam.put("prodtypen",DictCodeListExt2.产品类型_中债_净值型产品.getValue());
 		//开放式产品
-        List<ChbPrdDurationDeal> openList = chbPrdDurationRegMapper.getOpenProdIdsByDealSub(sdf.format(batchDate),prodIdList, openProdMdateConf);
-        //封闭式产品
-        List<ChbPrdDurationDeal> clolist = chbPrdDurationRegMapper.getProdIdsByDealSub(sdf.format(batchDate),prodIdList);
+        List<ChbPrdDurationDeal> openList = chbPrdDurationRegMapper.getOpenProdIdsByDealSub(pageParam);
+
+		Map<String, Object> pageParamCol =new HashMap<>();
+		pageParamCol.put("batchDate",sdf.format(batchDate));
+		pageParamCol.put("prodIdList",prodIdList);
+		//变动类型-变动类型_净值变动
+		pageParamCol.put("changeType01",DictCodeListExt2.变动类型_净值变动.getValue());
+		//变动类型-变动类型_收益率变动
+		pageParamCol.put("changeType02",DictCodeListExt2.变动类型_收益率变动.getValue());
+		//产品运作模式=产品运作模式_封闭式净值型
+		pageParamCol.put("opratemode01",DictCodeListExt2.产品运作模式_封闭式净值型.getValue());
+		//产品类型
+		pageParamCol.put("prodtypen",DictCodeListExt2.产品类型_中债_净值型产品.getValue());
+		//封闭式产品
+        List<ChbPrdDurationDeal> clolist = chbPrdDurationRegMapper.getProdIdsByDealSub(pageParamCol);
         //产品Id集合
         List<ChbPrdDurationDeal> list = new ArrayList<ChbPrdDurationDeal>();
         // 将查询出的开放式与封闭式产品整合
@@ -216,9 +251,13 @@ public class ProdDurationReg002Service {
         		single.getOpenStart();
         		List<String> prdoList=new ArrayList<String>();
         		prdoList.add(single.getProdId());
-        		List<ChbPrdDurationDeal> singleopenList = chbPrdDurationRegMapper.getOpenProdIdsByDealSub(sdf.format(single.getOpenStart()),prdoList, openProdMdateConf);
+				pageParam.put("batchDate",sdf.format(single.getOpenStart()));
+				pageParam.put("prodIdList",prdoList);
+        		List<ChbPrdDurationDeal> singleopenList = chbPrdDurationRegMapper.getOpenProdIdsByDealSub(pageParam);
 		        //封闭式产品
-		        List<ChbPrdDurationDeal> singleclolist = chbPrdDurationRegMapper.getProdIdsByDealSub(sdf.format(single.getOpenStart()),prdoList);
+				pageParamCol.put("batchDate",sdf.format(single.getOpenStart()));
+				pageParamCol.put("prodIdList",prdoList);
+		        List<ChbPrdDurationDeal> singleclolist = chbPrdDurationRegMapper.getProdIdsByDealSub(pageParamCol);
 		      if(!StringUtil.isEmptyList(singleopenList)){
 		    	  if(singleopenList.size()>1){
 		    		  single.setStatus("M");  
@@ -247,6 +286,7 @@ public class ProdDurationReg002Service {
                 chbPrdDurationDeal.setBatchDate(batchDate);
                 // 基本信息处理
                 for (ChbPrdDurationDeal base : listBase) {
+                	// add by zhangliang 后面处理逻辑未报送的需要删除重新生成，所有RegSeq和RegSeq1都要判断 20201115 start
                 	//已报送
                     if (chbPrdDurationDeal.getProdId().equals(base.getProdId())
                         /*&& ChbPrdDurationDeal.getOrgCode().equals(base.getOrgCode())*/
@@ -254,11 +294,13 @@ public class ProdDurationReg002Service {
                         chbPrdDurationDeal.setRegSeq(base.getRegSeq());
                     }
                     //未报送
-                    else if(chbPrdDurationDeal.getProdId().equals(base.getProdId())
+//                    else else
+                    if(chbPrdDurationDeal.getProdId().equals(base.getProdId())
                        /* && ChbPrdDurationDeal.getOrgCode().equals(base.getOrgCode())*/
                         && chbPrdDurationDeal.getOpenEnd().equals(base.getOpenEnd1())){
                         chbPrdDurationDeal.setRegSeq1(base.getRegSeq1());
                     }
+					// add by zhangliang 后面处理逻辑未报送的需要删除重新生成，所有RegSeq和RegSeq1都要判断 20201115 end
                 }
                 // 交易信息处理
                 for (ChbPrdDeal chbPrdDeal : dealList) {
@@ -300,35 +342,37 @@ public class ProdDurationReg002Service {
 		for(ChbPrdDurationDeal model : resultList){
 			result = new ChbPrdDealSub();
 			initChbPrdDealSub(result);
-			boolean  isdel=false;
+
+//			boolean  isdel=false;
 			 // 通用字段操作
-	        if (StringUtil.isNotEmpty(model.getRegSeq())) {
-	        	if (DictCodeListExt1.维护数据状态_删除.getValue().equals(model.getStatus())){
-	        		ChbPrdDealSub ybs= prodDurationReg001Mapper.selectByPrimaryKey(model.getRegSeq());
-	        		result=ybs;
-	        		result.setStatus(DictCodeListExt2.报表数据状态_删除.getValue());
-	        		result.setSubmitFeedbackStatus(null);
-	        		isdel=true;
-	        	} else if (DictCodeListExt1.维护数据状态_修改.getValue().equals(model.getStatus())){
-	        		result.setStatus(DictCodeListExt2.报表数据状态_修改.getValue());
-	        	} else if (DictCodeListExt1.维护数据状态_有效.getValue().equals(model.getStatus())){
-	        		continue;
-	        	} else {
-	        		logger.info("数据维护状态有误，应为：D|A|M!");
-	        		break;
-	        	}
-	        	insertList.add(result);
-	        	delList.add(result);
-	        }
-	        else {
-	        	if (DictCodeListExt1.维护数据状态_删除.getValue().equals(model.getStatus())){
-	        		delList.add(result);
-	        	}else{
-	        		result.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-	        		insertList.add(result); 
-	        		delList.add(result);
-	        	}
-	        }
+//	        if (StringUtil.isNotEmpty(model.getRegSeq())) {
+//	        	if (DictCodeListExt1.维护数据状态_删除.getValue().equals(model.getStatus())){
+//	        		ChbPrdDealSub ybs= prodDurationReg001Mapper.selectByPrimaryKey(model.getRegSeq());
+//	        		result=ybs;
+//	        		result.setStatus(DictCodeListExt2.报表数据状态_删除.getValue());
+//	        		result.setSubmitFeedbackStatus(null);
+//	        		isdel=true;
+//	        	} else if (DictCodeListExt1.维护数据状态_修改.getValue().equals(model.getStatus())){
+//	        		result.setStatus(DictCodeListExt2.报表数据状态_修改.getValue());
+//	        	} else if (DictCodeListExt1.维护数据状态_有效.getValue().equals(model.getStatus())){
+//	        		continue;
+//	        	} else {
+//	        		logger.info("数据维护状态有误，应为：D|A|M!");
+//	        		break;
+//	        	}
+//	        	insertList.add(result);
+//	        	delList.add(result);
+//	        }
+//	        else {
+//	        	if (DictCodeListExt1.维护数据状态_删除.getValue().equals(model.getStatus())){
+//	        		delList.add(result);
+//	        	}else{
+//	        		result.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+//	        		insertList.add(result);
+//	        		delList.add(result);
+//	        	}
+//	        }
+
 			result.setProdId(model.getProdId());
 //	        result.setOrgCode(model.getOrgCode());
 			result.setOrgCode(CommonUtil.getOrgCode());
@@ -356,11 +400,13 @@ public class ProdDurationReg002Service {
 	        else {
 	            result.setRegistSeqno(IDGenerator.generate(36));
 	        }
+			// 报送流水号
+			result.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 	        result.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 	        //生成删除未报送直接用 之前的已报送的详细数据
-	        if(isdel){
-	        	continue;
-	        }
+//	        if(isdel){
+//	        	continue;
+//	        }
 	        // 报价日
 	        Date quotationDate = model.getOpenEnd();
 	        // 存汇率map
@@ -500,14 +546,14 @@ public class ProdDurationReg002Service {
 	            //折算人民币初始净值
 	            result.setCnyOrlValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getOriginalValue(),
 		                model.getOpenEnd(), rateMap));
-	            //折算人民币净值
-	            result.setCnyPrdValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getPrdValue(),
-						model.getOpenEnd(), rateMap));
-	            // 产品累计净值
-	            result.setTotalValue((null == result.getTotalValue()?BigDecimal.ONE:result.getTotalValue()));
-	            // 累计人民币净值
-	            result.setCnyTalValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getTotalValue(),
-						model.getOpenEnd(), rateMap));
+				//折算人民币净值
+				result.setCnyPrdValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getPrdValue(),
+						model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
+				// 产品累计净值
+				result.setTotalValue((null == result.getTotalValue()?BigDecimal.ONE:result.getTotalValue()));
+				// 累计人民币净值
+				result.setCnyTalValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getTotalValue(),
+						model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
 		         
 	        }
 	        
@@ -564,7 +610,7 @@ public class ProdDurationReg002Service {
 	        }else{
 	        	dateList = ChbDeadlineUtil.getChbEndDate(
 	    	            DictCodeListExt2.报表名称_产品存续期登记.getValue(), typeDetail, 
-	    	            DictCodeListExt2.报送数据状态_新建.getValue(),dateMap, model.getOpenEnd());
+	    	            DictCodeListExt2.报送数据状态_新建.getValue(),dateMap, model.getOpenEnd() == null ? batchDate : model.getOpenEnd());
 	        	submitDateMap.put(key, dateList);
 	        }
 	        
@@ -580,17 +626,102 @@ public class ProdDurationReg002Service {
 	        List<ProdDurationReg001Dto> lsitsub=chbPrdDurationRegMapper.selectWanAmt(deal);
 	        if(lsitsub!=null&&lsitsub.size()>0){
 	        	for(ProdDurationReg001Dto  sub:lsitsub){
+	        	    // modify by dubaojun 2020-10-26 每万份份额分红和每万份现金分红保留5位小数 start
 	        		//04 现金分红
-	        		if(sub.getTradeType().equals("04")){
-	        			 result.setCashAmtWan(sub.getCashAmtWan());
+	        		if(sub.getTradeType().equals("04") && sub.getCashAmtWan() != null){
+	        			 result.setCashAmtWan(sub.getCashAmtWan().setScale(5, RoundingMode.HALF_UP));
 	        		}
 	        		//05 红利再投
-	        		if(sub.getTradeType().equals("05")){
-	        			result.setShareAmtWan(sub.getShareAmtWan());
+	        		if(sub.getTradeType().equals("05") && sub.getShareAmtWan() != null){
+	        			result.setShareAmtWan(sub.getShareAmtWan().setScale(5, RoundingMode.HALF_UP));
 	        		}
+                    // modify by dubaojun 2020-10-26 每万份份额分红和每万份现金分红保留5位小数 end
 	        	}
 	        }
 	        /** add 新增每万份份额分红和每万份现金分红  by  dongxiangyang  20200325  end  */
+			// add by zhangliang 20201109 数据流向处理 ===================================start
+			result.setStatus(model.getStatus());
+			ChbPrdDealSub chbPrdDealSub = null;
+			if (StringUtil.isNotEmpty(model.getRegSeq())) {
+				chbPrdDealSub = prodDurationReg001Mapper.selectByPrimaryKey(model.getRegSeq());
+
+			}
+			Map<String, ChbPrdDealSub> handleDataMap = handleDataStatus(result, chbPrdDealSub);
+			if (handleDataMap.containsKey(SvrDataStatusUtil.INSERT_DATA)){
+				insertList.add(handleDataMap.get(SvrDataStatusUtil.INSERT_DATA));
+			}
+			if (handleDataMap.containsKey(SvrDataStatusUtil.DELETE_DATA)){
+				delList.add(handleDataMap.get(SvrDataStatusUtil.DELETE_DATA));
+			}
+			// add by zhangliang 20201109 数据流向处理 ===================================end
+	    }
+		if(!StringUtil.isEmptyList(updateList)){
+			map.put("UPDATE", updateList);
+		}
+		if(!StringUtil.isEmptyList(insertList)){
+			map.put("INSERT", insertList);
+		}
+		if(!StringUtil.isEmptyList(delList)){
+			map.put("DELETE", delList);
+		}
+		return map;
+	}
+	/**
+	 * 汇总逻辑处理
+     * 处理登记信息，金额计算
+     * @param resultList
+     */
+	@SuppressWarnings("deprecation")
+	private HashMap<String,List<ChbPrdDealSub>> calDealDataTotal(Date batchDate,List<ChbPrdDurationDeal> resultList) {
+		List<ChbPrdDealSub> insertList = new ArrayList<ChbPrdDealSub>();
+		List<ChbPrdDealSub> delList = new ArrayList<ChbPrdDealSub>();
+		List<ChbPrdDealSub> updateList = new ArrayList<ChbPrdDealSub>();
+        HashMap<String,List<ChbPrdDealSub>> map = new HashMap<String,List<ChbPrdDealSub>>();
+		ChbPrdDealSub result = null;
+		for(ChbPrdDurationDeal model : resultList){
+			result = new ChbPrdDealSub();
+			initChbPrdDealSub(result);
+//			boolean  isdel=false;
+//			 // 通用字段操作
+//	        if (StringUtil.isNotEmpty(model.getRegSeq())) {
+//	        	if (DictCodeListExt1.维护数据状态_删除.getValue().equals(model.getStatus())){
+//	        		ChbPrdDealSub ybs= prodDurationReg001Mapper.selectByPrimaryKey(model.getRegSeq());
+//	        		result=ybs;
+//	        		result.setStatus(DictCodeListExt2.报表数据状态_删除.getValue());
+//	        		result.setSubmitFeedbackStatus(null);
+//	        		isdel=true;
+//	        	} else if (DictCodeListExt1.维护数据状态_修改.getValue().equals(model.getStatus())){
+//	        		result.setStatus(DictCodeListExt2.报表数据状态_修改.getValue());
+//	        	} else if (DictCodeListExt1.维护数据状态_有效.getValue().equals(model.getStatus())){
+//	        		continue;
+//	        	} else {
+//	        		logger.info("数据维护状态有误，应为：D|A|M!");
+//	        		break;
+//	        	}
+//	        	insertList.add(result);
+//	        	delList.add(result);
+//	        }
+//	        else {
+//	        	if (DictCodeListExt1.维护数据状态_删除.getValue().equals(model.getStatus())){
+//	        		delList.add(result);
+//	        	}else{
+//	        		result.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+//	        		insertList.add(result);
+//	        		delList.add(result);
+//	        	}
+//	        }
+			result.setProdId(model.getProdId());
+//	        result.setOrgCode(model.getOrgCode());
+			result.setOrgCode(CommonUtil.getOrgCode());
+			result.setDeptCode(CommonUtil.getDeptCode());
+			result.setUpdateUser(CommonUtil.getUserName());
+			result.setCreateUser(CommonUtil.getUserName());
+//	        result.setIssuePartyId(model.getRegistBankCode());
+	        result.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+	        result.setProdRegistCode(model.getRegCode());
+	        result.setVdate(DateUtil.format(model.getOpenStart()));
+	        result.setMdate(DateUtil.format(model.getOpenEnd()));//数据日期
+			result.setStatusDate(batchDate);
 			
 			/**
 			 * update by xr  对与开放式产品，开放周期日为取周期结束日，取得确认日处理，
@@ -639,15 +770,17 @@ public class ProdDurationReg002Service {
             	String value = ccyMap.get(chbPrdDeal.getCcy());
             	purAmt = new BigDecimal(value.split(",")[0]);
             	redAmt = new BigDecimal(value.split(",")[1]);
-            	intAmt = new BigDecimal(value.split(",")[2]);	
-                if (DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())) {
-                	
-            		purAmt = purAmt.add(ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
-                    				chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap));
-                }
-                else if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
-                        || DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
-                        || DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())) {
+            	intAmt = new BigDecimal(value.split(",")[2]);
+				if (DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())
+						||DictCodeListExt2.产品存续期登记交易类型_份额增强.getValue().equals(chbPrdDeal.getTradeType())) {
+
+					purAmt = purAmt.add(ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
+							chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap));
+				}
+				else if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
+						|| DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
+						|| DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())
+						||DictCodeListExt2.产品存续期登记交易类型_份额减弱.getValue().equals(chbPrdDeal.getTradeType())) {
             	    if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
             	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
             	    	
@@ -723,14 +856,16 @@ public class ProdDurationReg002Service {
             	
             }else{
             	String value = "";
-            	if (DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())) {
-            		
-            		purAmt = ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
-            	    				chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap);
-               }
-               else if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
-                        || DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
-                        || DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())) {
+				if (DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(chbPrdDeal.getTradeType())
+						||DictCodeListExt2.产品存续期登记交易类型_份额增强.getValue().equals(chbPrdDeal.getTradeType())) {
+
+					purAmt = ChbCcyConvertUtil.changeCnyMoney(chbPrdDeal.getCcy(),
+							chbPrdDeal.getTradePrince(), model.getOpenEnd(), rateMap);
+				}
+				else if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
+						|| DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
+						|| DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())
+						||DictCodeListExt2.产品存续期登记交易类型_份额减弱.getValue().equals(chbPrdDeal.getTradeType())) {
             	   if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
            	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
             		   
@@ -818,9 +953,10 @@ public class ProdDurationReg002Service {
 	            	String value = ccyMap.get(chbPrdDeal.getInterestCcy());
 	            	purAmt = new BigDecimal(value.split(",")[0]);
 	            	redAmt = new BigDecimal(value.split(",")[1]);
-	            	if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
-	            		|| DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
-	                    || DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())){
+					if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(chbPrdDeal.getTradeType())
+							|| DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(chbPrdDeal.getTradeType())
+							|| DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(chbPrdDeal.getTradeType())
+							||DictCodeListExt2.产品存续期登记交易类型_份额减弱.getValue().equals(chbPrdDeal.getTradeType())){
 	            		if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
 		           	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
 		            		redAmt = redAmt.add(null == chbPrdDeal.getIntAmt()?BigDecimal.ZERO:
@@ -968,5 +1104,80 @@ public class ProdDurationReg002Service {
 			listArr.add(sub);
 		}
 		return listArr;
+	}
+	/**
+	 109      * 功能：得到当前季度季末 格式为：xxxx-yy-zz (eg: 2007-12-31)<br>
+	 110      * @return String
+	 111      * @author pure
+	 112      */
+	public static String thisSeasonEnd(Date  date) {
+		String dateString = "";
+		Calendar localTime=Calendar.getInstance();
+		localTime.setTime(date);
+		int   x = localTime.get(Calendar.YEAR);
+		int  y = localTime.get(Calendar.MONTH) + 1;
+		if (y >= 1 && y <= 3) {
+			dateString = x + "-" + "03" + "-" + "31";
+		}
+		if (y >= 4 && y <= 6) {
+			dateString = x + "-" + "06" + "-" + "30";
+		}
+		if (y >= 7 && y <= 9) {
+			dateString = x + "-" + "09" + "-" + "30";
+		}
+		if (y >= 10 && y <= 12) {
+			dateString = x + "-" + "12" + "-" + "31";
+		}
+		return dateString;
+	}
+	
+	@Override
+	public void execute(Date executeDate, List<String> prodList, List<String> assetList, Map<String, List<String>> param) throws BusinessException {
+
+	}
+
+	@Override
+	public <T> boolean compareData(T info, T sub) {
+		String compare1 = JSON.toJSONString(genDto((ChbPrdDealSub)info));
+		String compare2 = JSON.toJSONString(genDto((ChbPrdDealSub)sub));
+		if(!StringUtil.equals(compare1, compare2)){
+			logger.info("业务表对应数据为：{}", compare1);
+			logger.info("登记表对应数据为：{}", compare2);
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	private ChbPrdDealSub genDto(ChbPrdDealSub dto){
+		ChbPrdDealSub genDto = new ChbPrdDealSub();
+		genDto.setProdId(dto.getProdId());
+		genDto.setIssuePartyId(dto.getIssuePartyId());
+		genDto.setProdRegistCode(dto.getProdRegistCode());
+		genDto.setVdate(dto.getVdate());
+		genDto.setMdate(dto.getMdate());
+		genDto.setBankImpInt(dto.getBankImpInt() != null ? dto.getBankImpInt().setScale(2) : null);
+		genDto.setBalanceAmt(dto.getBalanceAmt() != null ? dto.getBalanceAmt().setScale(2) : null);
+		genDto.setNewExpYield(dto.getNewExpYield() != null ? dto.getNewExpYield().setScale(5) : null);
+		genDto.setPurchaseQty(dto.getPurchaseQty() != null ? dto.getPurchaseQty().setScale(5) : null);
+		genDto.setRedeemQty(dto.getRedeemQty() != null ? dto.getRedeemQty().setScale(5) : null);
+		genDto.setPrdQty(dto.getPrdQty() != null ? dto.getPrdQty().setScale(5) : null);
+		genDto.setCcyPurchase(dto.getCcyPurchase());
+		genDto.setOriginalValue(dto.getOriginalValue() != null ? dto.getOriginalValue().setScale(5) : null);
+		genDto.setPrdValue(dto.getPrdValue() != null ? dto.getPrdValue().setScale(5) : null);
+		genDto.setTotalValue(dto.getTotalValue() != null ? dto.getTotalValue().setScale(5) : null);
+		genDto.setValueCcy(dto.getValueCcy());
+		genDto.setCnyOrlValue(dto.getCnyOrlValue() != null ? dto.getCnyOrlValue().setScale(5) : null);
+		genDto.setCnyPrdValue(dto.getCnyPrdValue() != null ? dto.getCnyPrdValue().setScale(5) : null);
+		genDto.setCnyTalValue(dto.getCnyTalValue() != null ? dto.getCnyTalValue().setScale(5) : null);
+		genDto.setReaYield(dto.getReaYield() != null ? dto.getReaYield().setScale(5) : null);
+		genDto.setShareAmtWan(dto.getShareAmtWan() != null ? dto.getShareAmtWan().setScale(5) : null);
+		genDto.setCashAmtWan(dto.getCashAmtWan() != null ? dto.getCashAmtWan().setScale(5) : null);
+		genDto.setOrgCode(dto.getOrgCode());
+		genDto.setRemark(dto.getRemark());
+		genDto.setCreateTime(null);
+		genDto.setUpdateTime(null);
+
+		return genDto;
 	}
 }

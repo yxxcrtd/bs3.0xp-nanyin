@@ -186,6 +186,16 @@ public class ChbPrdEndSubHis {
     private String deptCode;
 
     /**
+     * 报送流水号
+     */
+    private String sumitSeq;
+
+    /**
+     * 产品登记编码
+     */
+    private String prodRegistCode;
+
+    /**
      * 登记序列
      * @return REGIST_SEQNO 登记序列
      */
@@ -743,5 +753,41 @@ public class ChbPrdEndSubHis {
      */
     public void setDeptCode(String deptCode) {
         this.deptCode = deptCode == null ? null : deptCode.trim();
+    }
+
+    /**
+     * 获取 报送流水号
+     * 
+     * @return 报送流水号
+     */
+    public String getSumitSeq() {
+        return sumitSeq;
+    }
+
+    /**
+     * 设置 报送流水号
+     * 
+     * @param sumitSeq 报送流水号
+     */
+    public void setSumitSeq(String sumitSeq) {
+        this.sumitSeq = sumitSeq == null ? null : sumitSeq.trim();
+    }
+
+    /**
+     * 获取 产品登记编码
+     * 
+     * @return 产品登记编码
+     */
+    public String getProdRegistCode() {
+        return prodRegistCode;
+    }
+
+    /**
+     * 设置 产品登记编码
+     * 
+     * @param prodRegistCode 产品登记编码
+     */
+    public void setProdRegistCode(String prodRegistCode) {
+        this.prodRegistCode = prodRegistCode == null ? null : prodRegistCode.trim();
     }
 }

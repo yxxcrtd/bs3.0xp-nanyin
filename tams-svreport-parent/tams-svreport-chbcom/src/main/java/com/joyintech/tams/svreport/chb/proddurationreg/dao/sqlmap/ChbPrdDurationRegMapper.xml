@@ -65,10 +65,12 @@
 		          FROM CHB_PRD_PERIODYIELD YIELD
 		          LEFT JOIN CHB_PRD_OPENSCH OPEN1
 		           ON NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = OPEN1.PROD_ID
-		           <!-- AND YIELD.ORG_CODE = OPEN1.ORG_CODE -->
-		           AND YIELD.CHANGE_DATE  = OPEN1.OPEN_VDATE
-		           AND OPEN1.STATUS != 'D'
+		           <!-- add by dongxiangyang  修改 start -->
+		           AND YIELD.CHANGE_DATE  = OPEN1.OPEN_END
+		           <!-- add by dongxiangyang  修改 end -->
+		         AND OPEN1.STATUS != 'D'
 		           AND OPEN1.PLAN_TYPE = '01'
+		           left join  chb_prd_baseinfo  cinfo  on cinfo.prod_id=YIELD.prod_id
 		         WHERE (to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 		               to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
 		          <!--  AND YIELD.STATUS  = 'E' -->
@@ -78,10 +80,19 @@
 				          #{accountid}
 				       	</foreach>
 			       </if>
-		           /*起息日当天的不报送*/
-		           AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
-		        UNION ALL 
-		        <!--费用 -->
+		     and ( YIELD.CHANG_TYPE=#{changeType02,jdbcType = VARCHAR}
+             or (YIELD.CHANG_TYPE=#{changeType01,jdbcType = VARCHAR} and (
+             (to_char(OPEN1.OPEN_END,'yyyy-MM-dd')=to_char(YIELD.CHANGE_DATE,'yyyy-MM-dd') and cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
+             or  (to_char(YIELD.CHANGE_DATE,'yyyy-MM-dd')=#{thisSeasonEnd,jdbcType = VARCHAR} and cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
+             or  (not exists (select 1 from CHB_PRD_OPENSCH  where prod_id=NVL(YIELD.FPROD_ID,YIELD.PROD_ID))  and exists (select 1  from MST_HOLIDAY where cdate=YIELD.CHANGE_DATE and calendar_id = '01' and is_holiday = '0')
+             and  cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
+             or   cinfo.PRODTYPE=#{prodtypen,jdbcType = VARCHAR} and cinfo.VDATE=YIELD.CHANGE_DATE
+		)))
+		 /*起息日当天的不报送*/
+		/* AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and
+		NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
+		*/ UNION ALL
+		<!--费用 -->
 		        SELECT FEEINFO.ORG_CODE,
 		                FEEINFO.PROD_ID,
     					FEEINFO.FPROD_ID,
@@ -177,7 +188,8 @@
             else YIELD.status
             end status
 			FROM CHB_PRD_PERIODYIELD YIELD
-			WHERE (to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
+		    left join  chb_prd_baseinfo  cinfo  on cinfo.prod_id=YIELD.prod_id
+		    WHERE (to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 			to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
 			<!-- AND YIELD.STATUS  = 'E' -->
             <if test="prodIdList!=null and prodIdList.size()!=0">
@@ -186,9 +198,14 @@
 		          #{accountid}
 		       	</foreach>
 	        </if>
+	        and (YIELD.CHANG_TYPE=#{changeType02,jdbcType = VARCHAR}
+	        or  (YIELD.CHANG_TYPE=#{changeType01,jdbcType = VARCHAR}  and (
+            (to_char(YIELD.CHANGE_DATE-1,'D')='5'  and  cinfo.OPERATE_MODE=#{opratemode01,jdbcType = VARCHAR})/*//封闭净值型产品单位净值只报送周五的*/
+		    or   cinfo.PRODTYPE=#{prodtypen,jdbcType = VARCHAR} and cinfo.VDATE=YIELD.CHANGE_DATE             /*//净值型产品起息日当天的单位净值也需报送*/
+		     )))
 	        /*起息日当天的不报送*/
-		    AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
-			UNION ALL
+/*		    AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
+*/			UNION ALL
 			/**费用**/
 			SELECT FEEINFO.ORG_CODE,
 			FEEINFO.PROD_ID,
@@ -639,6 +656,21 @@
     </foreach>
     ;end;
   </delete> -->
+<delete id="deleteBatchByprodId" parameterType="java.util.List">
+	   begin
+      <foreach collection="resultList" item="item" index="index" separator=";">
+       delete from CHB_PRD_DEAL_SUB
+       where 1 = 1
+        <if test="item.prodId != null" >
+         and PROD_ID = #{item.prodId,jdbcType=VARCHAR} 
+       </if>
+       <if test="item.vdate != null" >
+         and MDATE = #{item.mdate,jdbcType=DATE}
+       </if>
+       and send_status='01'
+      </foreach>
+     ;end;
+    </delete>
   <select id="isLevProd" resultType="java.lang.Integer">
     SELECT 
       COUNT(1)
@@ -697,4 +729,5 @@
 	AND  settdate_DATE=#{payDate, jdbcType = DATE}
 	GROUP BY NVL(FPROD_ID,PROD_ID),trade_type
   </select>
+  
 </mapper>

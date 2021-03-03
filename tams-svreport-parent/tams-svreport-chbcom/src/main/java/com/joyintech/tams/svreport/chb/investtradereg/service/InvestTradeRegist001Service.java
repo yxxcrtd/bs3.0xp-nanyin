@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -29,6 +30,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -105,6 +107,15 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
     
     @Autowired
     private SqlSessionTemplate template;
+	@Autowired
+	private SvrMaptoEntityUtil svrMaptoEntityUtil;
+	private String tableName = "CHB_INVEST_TRADE_SUB";
+
+	/**
+	 * 中债基础数据mapper
+	 */
+	@Autowired
+	private BaseMapper baseMapper;
     
 	public Page<InvestTradeRegist001Dto> selectForPage(Map<String, Object> pageParam) {
 		dealSearchParam(pageParam);
@@ -512,7 +523,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 	 * @see
 	 * @since 1.0
 	 */
-	private void dealDataList(List<InvestTradeRegist001Dto> list, boolean isExport) {
+	public void dealDataList(List<InvestTradeRegist001Dto> list, boolean isExport) {
 		list.forEach(item -> {
             item.setStatusName(SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态,item.getStatus()));
 //            item.setStatus(item.getStatusName());
@@ -530,7 +541,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 			if (item.getEndRate() != null){
 				DecimalFormat df = new DecimalFormat("0.00000");
 				// 到期收益率硬性展示5位小数
-				item.setEndRate(item.getEndRate().multiply(new BigDecimal(100)));
+//				item.setEndRate(item.getEndRate().multiply(new BigDecimal(100)));
 				item.setEndRateString(df.format(item.getEndRate()));
 			}
 			if(StringUtil.isNotEmpty(item.getAssetMethod())) {
@@ -746,10 +757,12 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
      * @return 
      * List<ExcelValidDto>
      */
-    public List<ExcelValidDto> checkData(List<InvestTradeRegist001Dto> checkKeys) {
+    public Map<String,Object> checkData(List<InvestTradeRegist001Dto> checkKeys) {
         Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
         Map<String,InvestTradeRegist001Dto> repmap = new HashMap<String,InvestTradeRegist001Dto>();
+		Map<String,Object> returnMap = new HashMap<>();
         List<InvestTradeRegist001Dto> deallist = investTradeRegist001Mapper.selectDataListByRegList(checkKeys);
+		dealDataList(deallist,false);
         List<ExcelValidDto> result = new ArrayList<ExcelValidDto>();
 //        repmap = deallist.stream().collect(Collectors.toMap(InvestTradeRegist001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));
         repmap = deallist.stream().collect(Collectors.toMap(p->p.getProdId() + GlobalConstant.COMMA + p.getAssetCode(),(p)->p,(key1,key2)->key1));
@@ -758,7 +771,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
         // 检查登记表中小于今天所有未报送的数据
         if(CollectionUtils.isNotEmpty(checkKeys)){
             // 调用检查方法
-            resultlist.addAll(check());
+            resultlist.addAll(check(null));
             // 同一资产同一产品汇总一条
             Map<String,String> showInMap = new HashMap<String,String>();
             checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getUniqueKey,(p)->p,(key1,key2)->key1));
@@ -781,13 +794,15 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
                 }else{
                     ExcelValidDto exc=new ExcelValidDto();
                     exc.setValidKey("产品代码:"+repmap.get(uniqueKey).getProdId()
-                            +"  资产代码:"+repmap.get(uniqueKey).getAssetCode());
+						+ (StringUtil.isNotEmpty(repmap.get(uniqueKey).getAssetCode()) ? (";资产代码:"+repmap.get(uniqueKey).getAssetCode()): ""));
                     exc.setCheckResult("01");
                     result.add(exc);
                 }
             }
-        }
-        return result;
+			returnMap.put("excelValidDtoList",result);
+		}
+		returnMap.put("resultList",deallist);
+		return returnMap;
     }
 
     /**
@@ -796,9 +811,13 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
      * @return List<CheckReport001Dto>
      * @version 1.7 2019年6月24日
      */
-    private List<CheckReport001Dto> check(){
+    public List<CheckReport001Dto> check(Date batchDate){
         // 数据日期为系统时间
         Date checkdate = DateUtil.parse(DateUtil.getSysDate());
+		// 供跑批使用
+		if (StringUtil.isNotEmpty(batchDate)){
+			checkdate = batchDate;
+		}
         // 删除今天所有已检查的数据
         checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),checkdate);
         //增加例外情况过滤

@@ -269,6 +269,5 @@ public interface BaseInformationMapper {
 	 * @return 		String 返回类型
 	 * @throws
 	 */
-	String getAssetInfoCn();
-	
+	Integer selectHeaderNumByChiName(@Param("chiName") String chiName);
 }

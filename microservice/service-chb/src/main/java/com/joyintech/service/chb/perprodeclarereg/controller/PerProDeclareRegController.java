@@ -4,6 +4,7 @@ package com.joyintech.service.chb.perprodeclarereg.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +39,7 @@ public class PerProDeclareRegController{
     */
    @PostMapping("findPage/{page}/{length}")
    public Page<PerProDeclareRegDto> selectForPage(@RequestBody Map<String, Object> param) {
-       Page<PerProDeclareRegDto> page = perProDeclareReg001Service.selectForPage(param);
+       Page<PerProDeclareRegDto> page = perProDeclareReg001Service.selectForPage(param, true);
        return page;
    }
    
@@ -78,5 +79,28 @@ public class PerProDeclareRegController{
 	@PostMapping("selectAllData")
 	public List<PerProDeclareRegDto> selectAllData(@RequestBody Map<String, Object> map){
 		return perProDeclareReg001Service.selectAllData(map);
+	}
+	/**start  中债一二期报送直连  add by  dongxiangyang  20201010*/
+    /**
+     * 报送检查
+     * @return 检查结果
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("submitBeforeCheck")
+    public Map<String,Object> submitBeforeCheck(@RequestBody Map<String,Object> map) {
+        return perProDeclareReg001Service.submitBeforeCheck(map);
+    }
+    
+	/**end  中债一二期报送直连  add by  dongxiangyang  20201010*/
+
+	/**
+	 *  查询行内标识码
+	 * @param map 入参
+	 * @return 行内标识码列表
+	 */
+	@PostMapping("queryProdInsIdList")
+	public List<SelectOptionDto> queryProdInsIdList(@RequestBody Map<String,Object> map){
+		return perProDeclareReg001Service.queryProdInsIdList(map);
 	}
 }

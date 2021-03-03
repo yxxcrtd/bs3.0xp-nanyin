@@ -34,9 +34,9 @@ public enum BatchBeanName {
     投资者报送前检查("3003","checkReportAutoSendCheckService","CheckReportAutoSendCheckMainService","投资者报送前检查"),
     投资者报送数据生成("3004","generateInvestorsHoldInfoAutoSendCBService","GenerateInvestorsHoldInfoAutoSendCBMainService","投资这报送数据生成"),
     投资者报送数据归档("3005","reportDataBackupService","ReportDataBackupMainService","投资者报送数据归档"),
-    债券评级数据接入("3006","svrSecRatingInterfTaskService","SecRatingImpMainService","债券评级数据接入"),
+    债券评级数据接入("3002","svrSecRatingInterfTaskService","SecRatingImpMainService","债券评级数据接入"),
     节假日数据接入("3007","svrHolidayInterfTaskService","HolidayImpMainService","节假日数据接入"),
-    汇率信息数据接入("3008","svrExchangeInterfTaskService","ExchangeImpMainService","汇率信息数据接入"),
+    汇率信息数据接入("3008","svrMstExchangeQuoteInterfTaskService","MstExchangeQuoteImpMainService","汇率信息数据接入"),
     市场机构数据接入("3009","svrMarketOrgInterTaskService","MarketOrgInterImpMainService","市场机构数据接入"),
     交易对手接口数据接入("3010","svrThirdPartyInterfTaskService","ThirdPartyInterfMainService","交易对手接口数据接入"),
     产品基本信息接口数据接入("3011","svrProdInfoInterfTaskService","SvrProdInfoInterfMainService","产品基本信息接口数据接入"),
@@ -85,6 +85,9 @@ public enum BatchBeanName {
 	资产基础指标不穿透数据接入("3082","svrAssetIndexNoBtmInterfTaskService","assetIndexNoBtmImpMainService","资产基础指标不穿透数据接入"),
     投资者明细信息登记手工处理("3067", "equityBusiInfoRegistAutoManualCBService", "equityBusiInfoRegistAutoManualCBMainService","投资者明细信息登记手工处理"),
 	投资者明细信息数据检查批处理("3068", "eqityBusiInfoRegistManualCheckService","equityBusiInfoRegistManualCheckMainService", "投资者明细信息数据检查批处理"),
+
+    // 监管客户组别区域报送数据接入 add by qufangxu at 2021-02-24
+    监管客户组别区域报送数据接入("3003","svrSaleCustSvrreportInterfTastService","saleCustSvrrepportImpMainService","监管客户组别区域报送数据接入"),
 	/**
      * 业务明细数据自动检查报送
      */

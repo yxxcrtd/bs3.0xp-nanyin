@@ -389,9 +389,9 @@ select * from (SELECT t.*,ROWNUM ROW_ID FROM ${tableId} t WHERE
 	    AND STATUS = 'E'
 	</select>
 
-	<select id="getAssetInfoCn" resultType="string">
-		SELECT MGRTABLE_CHI_NAME
+	<select id="selectHeaderNumByChiName" resultType="java.lang.Integer">
+		SELECT HEADER_NUM
 		FROM CHB_MGRTABLE_INFO
-		WHERE MGRTABLE_ID = 'CHB_ASSET_INFO'
+		WHERE MGRTABLE_CHI_NAME = #{chiName}
 	</select>
 </mapper>

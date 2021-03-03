@@ -77,7 +77,10 @@ public class ErrorMessage001Service extends CommonExportService<ErrorMessage001>
     List<ErrorMessage001> infoList = page.getRoot();
     for (ErrorMessage001 info : infoList) {
       info.setStatus(SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, info.getStatus()));
-      info.setInterfType(getInteRemark(info.getInterfType()));
+      // modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 start
+//    info.setInterfType(getInteRemark(info.getInterfType()));
+    info.setInterfType(SysDataUtil.getNameFromDataDict(DictCode.校验接口类型, info.getInterfType()));
+    // modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 end
       info.setCheckResult(SysDataUtil.getNameFromDataDict(DictCode.检查结果, "02"));
     }
     
@@ -91,7 +94,10 @@ public class ErrorMessage001Service extends CommonExportService<ErrorMessage001>
    private void dealResult(List<ErrorMessage001> infoList) {
      for (ErrorMessage001 info : infoList) {
        info.setStatus(SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, info.getStatus()));
-       info.setInterfType(getInteRemark(info.getInterfType()));
+       // modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 start
+//       info.setInterfType(getInteRemark(info.getInterfType()));
+       info.setInterfType(SysDataUtil.getNameFromDataDict(DictCode.校验接口类型, info.getInterfType()));
+       // modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 end
        info.setCheckResult(SysDataUtil.getNameFromDataDict(DictCode.检查结果, "02"));
      }
      

@@ -1,19 +1,18 @@
 package com.joyintech.tams.svreport.chb.prodterminationregist.dao;
 
+import com.joyintech.tams.common.base.entity.ChbPrdDeal;
+import com.joyintech.tams.common.base.entity.ChbPrdFeeDeal;
+import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdForTerminationDto;
+import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto;
+import com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition;
+import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
-import com.joyintech.tams.common.base.entity.ChbPrdDeal;
-import com.joyintech.tams.common.base.entity.ChbPrdFeeDeal;
-import com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition;
-import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
-import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdForTerminationDto;
-import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto;
 
 
 @Repository
@@ -79,6 +78,17 @@ public interface ProdTerminationRegist001Mapper {
      */
     List<ProdForTerminationDto> getProdIdsByEndSub(@Param("batchDate") String date,
                                               @Param("tradType") String tradType,@Param("prodidlist") List<String> prodidlist);
+
+	/**
+     * 获取需要进行批处理的产品及机构集合
+     * @param date 批处理时间
+     * @param tradType 交易类型
+     * @param prodidlist 产品代码集合
+     * @return  机构及产品集合
+     */
+    List<ProdForTerminationDto> getProdIdsByEndSubTotal(@Param("batchDate") String date,
+                                              @Param("tradType") String tradType,@Param("prodidlist") List<String> prodidlist);
+
     /**
      * 
      * 查询产品基本信息
@@ -92,6 +102,21 @@ public interface ProdTerminationRegist001Mapper {
                                                @Param("sendStatus") String sendStatus,
                                                @Param("issuingStatus") String issuingStatus,
                                                @Param("list") List<ProdForTerminationDto> list);
+ 
+    /**
+     * 
+     * 查询产品基本信息
+     * @param tradType 交易类型
+     * @param sendStatus 报送状态
+     * @param issuingStatus 发行状态
+     * @param list 产品id信息
+     * @return 产品基本信息list
+     */
+    List<ProdForTerminationDto> getProdInfoByEndSubTotal(@Param("tradType") String tradType,
+                                               @Param("sendStatus") String sendStatus,
+                                               @Param("issuingStatus") String issuingStatus,
+                                               @Param("list") List<ProdForTerminationDto> list);
+
     /**
      * 获取产品费用信息
      * @param status 数据状态

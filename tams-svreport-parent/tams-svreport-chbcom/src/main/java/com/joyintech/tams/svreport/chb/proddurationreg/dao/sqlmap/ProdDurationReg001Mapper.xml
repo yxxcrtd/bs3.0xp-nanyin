@@ -21,8 +21,8 @@
 		    CPDS.CNY_ORL_VALUE cnyOrlValue,
 		    CPDS.CNY_PRD_VALUE cnyPrdValue,
 		    CPDS.CNY_TAL_VALUE cnyTalValue,
-		    CPDS.REA_YIELD*100 reaYield,
-		    CPDS.NEW_EXP_YIELD*100 newExpYield,
+		    CPDS.REA_YIELD reaYield,
+		    CPDS.NEW_EXP_YIELD newExpYield,
 		    CPDS.BANK_IMP_INT bankImpInt,
 		    TO_CHAR(CPDS.VDATE,'yyyyMMdd') vdate,
 		    TO_CHAR(CPDS.MDATE,'yyyyMMdd') mdate,
@@ -41,10 +41,12 @@
 		    CPDS.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
 		    CPDS.REMARK,
 		    CPDS.SHARE_AMT_WAN shareAmtWan,
-		    CPDS.CASH_AMT_WAN  cashAmtWan
+		    CPDS.CASH_AMT_WAN  cashAmtWan,
+			CPDS.SUMIT_SEQ sumitSeq
 		FROM CHB_PRD_DEAL_SUB CPDS
 		LEFT JOIN CHB_PRD_BASEINFO CPB 
 		ON CPB.PROD_ID = CPDS.PROD_ID
+		AND CPB.ORG_CODE = CPDS.ORG_CODE
 		AND CPB.STATUS = 'E'
 	</sql>
 	<!-- 查询 产品存续期登记表数据-->
@@ -451,8 +453,8 @@
 		REA_YIELD reaYield,
 		NEW_EXP_YIELD newExpYield,
 		BANK_IMP_INT bankImpInt,
-		TO_CHAR(VDATE,'yyyyMMdd') vdate,
-		TO_CHAR(MDATE,'yyyyMMdd') mdate,
+		TO_CHAR(VDATE,'yyyy-MM-dd') vdate,
+		TO_CHAR(MDATE,'yyyy-MM-dd') mdate,
 		PURCHASE_QTY purchaseQty,
 		REDEEM_QTY redeemQty,
 		BALANCE_AMT balanceAmt,
@@ -472,12 +474,15 @@
 		UPDATE_USER updateUser,
 		UPDATE_TIME updateTime,
 		SUBMIT_TIME submitTime,
-		REMARK remark
+		REMARK remark,
+		SHARE_AMT_WAN shareAmtWan,
+		CASH_AMT_WAN  cashAmtWan
 		from CHB_PRD_DEAL_SUB
 		where REGIST_SEQNO=#{registSeqno,jdbcType=VARCHAR}
   </select>
      <select id="selectAllDataByList" resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
 select  
+sub.PROD_REGIST_CODE  registSeqno,
 sub.PROD_REGIST_CODE  prodRegistCode,
 sub.ISSUE_PARTY_ID  issuePartyId,
 sub.ORIGINAL_VALUE  originalValue,
@@ -487,8 +492,8 @@ sub.VALUE_CCY  valueCcy,
 sub.CNY_ORL_VALUE  cnyOrlValue,
 sub.CNY_PRD_VALUE  cnyPrdValue,
 sub.CNY_TAL_VALUE  cnyTalValue,
-sub.REA_YIELD*100   reaYield,
-sub.NEW_EXP_YIELD*100 newExpYield ,
+sub.REA_YIELD   reaYield,
+sub.NEW_EXP_YIELD newExpYield ,
 sub.BANK_IMP_INT  bankImpInt,
 sub.VDATE  vdate,
 sub.MDATE  mdate,
@@ -510,4 +515,20 @@ from CHB_PRD_DEAL_SUB sub
     </if>
     order by sub.SUBMIT_DEADLINE
  </select>
+   <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
+   	select REGIST_SEQNO
+      from CHB_PRD_DEAL_SUB
+      where 
+      <if test="flag == '02'">
+      SEND_STATUS in ('02','03')
+      </if>
+      <if test="flag == '01'">
+      SEND_STATUS = '01'
+      </if>
+      <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+      <!-- PROD_ID = #{item.prodId,jdbcType=VARCHAR}-->
+	  (PROD_ID||TO_CHAR(MDATE,'yyyyMMdd')) = (#{item.prodId,jdbcType=VARCHAR}||#{item.mdate,jdbcType=VARCHAR})
+      </foreach>
+   </select>
+ 
 </mapper>

@@ -33,7 +33,14 @@ public class ProdConstants {
 	public final static String SALETARGET_YBGRKH="03";	//03 一般个人客户
 	public final static String SALETARGET_JRTY="04";	//04 金融同业专属
 	public final static String SALETARGET_GZCJZ="05";	//05 高资产净值客户
-	
+
+	//从母行划转的产品
+	public final static String SALETARGET_CMHHZCP="01";	//01 从母行划转的产品
+
+	//是否养老理财产品
+	public final static String IS_YLLCCP="01";	//01
+
+
 	//期限品种:01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/07 1-3年（含）/08 3年以上
 	public final static String TERMTYPE_U1D="01";	//01 T+0
 	public final static String TERMTYPE_U7D="02";	//02 7天（含）以内
@@ -49,12 +56,18 @@ public class ProdConstants {
 	public final static String DURATIONFLAG_TEMINATION="02";	//02 终止
 	public final static String DURATIONFLAG_PUB="03";	//03 未起息
 	
-	//投资者类别 投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构
+	//投资者类别 投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构/05保险业金融机构/06信托公司/07证券公司/08基金公司/09金融机构资产管理产品
 	public final static String ORDIDENTIFIED_ZRR="01";
 	public final static String ORDIDENTIFIED_FJRJG="02";
 	public final static String ORDIDENTIFIED_YHJRJG="03";
 	public final static String ORDIDENTIFIED_QTJRJG="04";
-	
+	public final static String ORDIDENTIFIED_BXJRJG="05";
+	public final static String ORDIDENTIFIED_XTGS="06";
+	public final static String ORDIDENTIFIED_ZQGS="07";
+	public final static String ORDIDENTIFIED_JJGS="08";
+	public final static String ORDIDENTIFIED_JRJGZCGLCP="09";
+
+
 	//币种
 	public final static String CCY_CNY="CNY";
 	public final static String CCY_USD="USD";

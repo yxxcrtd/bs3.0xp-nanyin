@@ -30,6 +30,13 @@
     <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
     <result column="ORGID" property="orgId" jdbcType="VARCHAR" />
+    <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+      <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
+      <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
+      <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
+      <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
+      <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
+
   </resultMap>
   
    <resultMap id="PlanResultMap" type="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
@@ -158,14 +165,15 @@
       ASSETVALUE_B, INDUSTRY1, IN_ASSET_TYPE, 
       PPPFLAG, MONIT_TYPE, MANAGE_TYPE, 
       IS_GOVERN_FUND1, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, 
-      BONDTOSTOCK_FLAG, RATING,ASSETTYPE2,OLD_ASSET_CODE)
+      BONDTOSTOCK_FLAG, RATING,ASSETTYPE2,OLD_ASSET_CODE,IS_FHXGCP)
     values (#{posuuid,jdbcType=CHAR}, #{bookdate,jdbcType=TIMESTAMP}, #{startdate,jdbcType=TIMESTAMP}, 
       #{enddate,jdbcType=TIMESTAMP}, #{investVariety,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
       #{assettype,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{assetvalueA,jdbcType=DECIMAL}, 
       #{assetvalueB,jdbcType=DECIMAL}, #{industry1,jdbcType=VARCHAR}, #{inAssetType,jdbcType=VARCHAR}, 
       #{pppflag,jdbcType=VARCHAR}, #{monitType,jdbcType=VARCHAR}, #{manageType,jdbcType=VARCHAR}, 
       #{isGovernFund1,jdbcType=VARCHAR}, #{privatefundFlag,jdbcType=VARCHAR}, #{privateprdFlag,jdbcType=VARCHAR}, 
-      #{bondtostockFlag,jdbcType=VARCHAR}, #{rating,jdbcType=VARCHAR},#{assettype2,jdbcType=VARCHAR},#{oldAssetCode,jdbcType=VARCHAR})
+      #{bondtostockFlag,jdbcType=VARCHAR}, #{rating,jdbcType=VARCHAR},#{assettype2,jdbcType=VARCHAR},#{oldAssetCode,jdbcType=VARCHAR}
+      ,#{isFhxgcp,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
     insert into CHB_MONTH_ASSET_POSITION
@@ -418,6 +426,7 @@
 		,decode(info.PRIVATEPRD_FLAG,'01','01',null) PRIVATEPRD_FLAG
 		,decode(info.BONDTOSTOCK_FLAG,'01','01',null) BONDTOSTOCK_FLAG
 		,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
+		,prd.IS_FHXGCP    /**是否合新规*/
 		from CHB_ASSET_POSITION pos
 		left join CHB_ASSET_INFO info
 		on pos.ASSET_CODE=info.ASSET_CODE
@@ -455,7 +464,8 @@
 		decode(info.PPPFLAG,'01','01',null), decode(info.IS_GOVERN_FUND,'01','01',null),
 	    decode(info.PRIVATEFUND_FLAG,'01','01',null), decode(info.PRIVATEPRD_FLAG,'01','01',null),
 	    decode(info.BONDTOSTOCK_FLAG,'01','01',null), 
-		info.MANAGE_TYPE
+		info.MANAGE_TYPE,
+        prd.IS_FHXGCP
   </select>
   
   <select id="selectChlDeal" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
@@ -593,14 +603,33 @@
   <select id="selectByMonthDate" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select 
     sum(POSITION.ASSETVALUE_A) ASSETVALUE_A, sum(POSITION.ASSETVALUE_B) ASSETVALUE_B, 
-    POSITION.ASSETTYPE, nvl(POSITION.INDUSTRY1,'NULL') INDUSTRY1, POSITION.IN_ASSET_TYPE, 
+    POSITION.ASSETTYPE,
+    /*行业分类改造*/
+    case when POSITION.ASSETTYPE2 in ('1201','1210')
+    then  ASSETINFO.INDUSTRY_SHARES
+    when POSITION.ASSETTYPE2 in ('1202','1203','1204','1205','1206','1207','1208','1209','2201','2202','2299','1299')
+    then nvl(ASSETINFO.PRO_INDUSTRY,ASSETINFO.INDUSTRY_PBC)
+    when POSITION.ASSETTYPE2 in ('2101')
+    then ASSETINFO.INDUSTRY
+    else null
+    end INDUSTRY1,
+    /*行业分类改造*/
+    POSITION.IN_ASSET_TYPE,
     POSITION.PPPFLAG, POSITION.MONIT_TYPE, POSITION.MANAGE_TYPE, 
     POSITION.IS_GOVERN_FUND1, POSITION.PRIVATEFUND_FLAG, POSITION.PRIVATEPRD_FLAG, 
     POSITION.BONDTOSTOCK_FLAG, POSITION.RATING,POSITION.ASSETTYPE2,ASSETINFO.ASSET_TYPE3,
     ASSETINFO.BANK_SEC_CAPITAL,
     ASSETINFO.BANK_SEC_PERPETUAL,
     ASSETINFO.BANK_SEC_PREFER,
-    di.institution_code ORGID
+    di.institution_code ORGID,
+    /*G06改造新加字段*/
+    ASSETINFO.BANK_SEC_ZXZQ,
+    ASSETINFO.IS_BZHPJ,
+    ASSETINFO.ISUNLISTED,
+    ASSETINFO.IS_FBZB,
+    ASSETINFO.BANK_SEC_KZZQ,
+    POSITION.IS_FHXGCP
+    /*G06改造新加字段*/
     from CHB_MONTH_ASSET_POSITION POSITION
     LEFT JOIN CHB_ASSET_INFO ASSETINFO
     ON ASSETINFO.ASSET_CODE = POSITION.ASSET_CODE  and     ASSETINFO.status in('E','M')
@@ -619,7 +648,20 @@
     ASSETINFO.BANK_SEC_CAPITAL,
     ASSETINFO.BANK_SEC_PERPETUAL,
     ASSETINFO.BANK_SEC_PREFER,
-    di.institution_code
+    di.institution_code,
+    /*G06改造新加字段*/
+    ASSETINFO.BANK_SEC_ZXZQ,
+    ASSETINFO.IS_BZHPJ,
+    ASSETINFO.ISUNLISTED
+    ,ASSETINFO.IS_FBZB
+    ,ASSETINFO.BANK_SEC_KZZQ
+    /*G06改造新加字段*/
+    ,ASSETINFO.INDUSTRY_SHARES
+    ,ASSETINFO.PRO_INDUSTRY
+    ,ASSETINFO.INDUSTRY_PBC
+    ,ASSETINFO.INDUSTRY
+    ,POSITION.ASSETTYPE2
+    ,POSITION.IS_FHXGCP
   </select>
   <delete id="deleteByDate" parameterType="date" >
     delete from CHB_MONTH_ASSET_POSITION
@@ -791,7 +833,7 @@
 			)
 		SELECT cp.PROD_ID AS prodId
 			, Round(cp.accuqty / ap.TOTAL_NUM * ap.UNINVEST_CASH, 2) AS cashamt
-			, AP.PLAN_ASSET_ID AS oldAssetCode, ci.ccy
+			, AP.PLAN_ASSET_ID AS oldAssetCode, ci.ccy,prd.IS_FHXGCP  isFhxgcp
 		FROM chb_asset_position cp
 			INNER JOIN ap ON ap.PLAN_ASSET_ID = cp.ASSET_CODE
 			LEFT JOIN chb_asset_info ci
@@ -829,6 +871,7 @@
         ,decode(info.PRIVATEPRD_FLAG,'01','01',null) PRIVATEPRD_FLAG
         ,decode(info.BONDTOSTOCK_FLAG,'01','01',null) BONDTOSTOCK_FLAG
         ,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
+        ,prd.IS_FHXGCP    /**是否合新规*/
         from CHB_ASSET_POSITION pos
         left join CHB_ASSET_INFO info
         on pos.ASSET_CODE=info.ASSET_CODE
@@ -883,7 +926,7 @@
         decode(info.PPPFLAG,'01','01',null), decode(info.IS_GOVERN_FUND,'01','01',null),
         decode(info.PRIVATEFUND_FLAG,'01','01',null), decode(info.PRIVATEPRD_FLAG,'01','01',null),
         decode(info.BONDTOSTOCK_FLAG,'01','01',null),
-        info.MANAGE_TYPE
+        info.MANAGE_TYPE,prd.IS_FHXGCP
     </select>
     <select id="selectPlanInfoByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             flushCache="true" useCache="false">

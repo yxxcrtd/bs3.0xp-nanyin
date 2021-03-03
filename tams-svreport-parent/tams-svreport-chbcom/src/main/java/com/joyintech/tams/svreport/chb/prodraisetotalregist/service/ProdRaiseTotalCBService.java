@@ -9,6 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.svreport.chb.common.SvrDataStatusUtil;
+import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +54,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ProdRaiseTotalCBService {
+public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 	/**
      * 日志
      */
@@ -74,6 +79,12 @@ public class ProdRaiseTotalCBService {
     private static final String UNLEGAL_PERSON = "03";
     
     private  String[] special_buyplace = new String[]{"210200","330200","350200","370200","440300"};
+
+    /**
+     * 入库前校验用Service
+     */
+    @Autowired
+    private ChbCommonCheckService chbCommonCheckService;
 	
 	/**
 	 * @Description 募集总量登记生成
@@ -101,7 +112,8 @@ public class ProdRaiseTotalCBService {
         List<ChbPrdPosition> positionlist = new ArrayList<ChbPrdPosition>();
         List<ChbPrdDeal> deallist = new ArrayList<ChbPrdDeal>();
         logger.debug("查询头寸信息开始---------------"+new Date());
-        positionlist=raiseTotalRegist001Mapper.selectPositionData(prodlistsum);
+
+//        positionlist=raiseTotalRegist001Mapper.selectPositionData(prodlistsum);
         deallist=raiseTotalRegist001Mapper.selectDealData(prodlistsum);
         logger.debug("查询头寸信息结束---------------"+new Date());
 		List<RaiseTotalRegist001Dto> prodtotallist = new ArrayList<RaiseTotalRegist001Dto>();
@@ -125,6 +137,9 @@ public class ProdRaiseTotalCBService {
 			List<ChbPrdPosition> posList = new ArrayList<ChbPrdPosition>();
 			List<ChbPrdDeal> deList = new ArrayList<ChbPrdDeal>();
 			total.setProdId(prodid.getProdId());
+			total.setProdRegCode(prodid.getProdRegCode());
+			total.setProdRegistCode(prodid.getProdRegistCode());
+			total.setStatus(prodid.getStatus());
 			//募集结束日
 			if(prodid.getRaiseEnddate()==null){
 				continue;
@@ -146,47 +161,74 @@ public class ProdRaiseTotalCBService {
 			total.setDeallist(deList);
 			prodtotallist.add(total);
 			dataProcess(total, executeDate);
-			if (total.getRegseq() == null) {
-				//没有已报送的
-				if(DictCodeListExt1.发行状态_发行失败.getValue().equals(prodid.getIssuingStatus())
-						||prodid.getStatus()==null||DictCodeListExt2.数据状态_删除.getValue().equals(prodid.getStatus())){
-                    //删除数据(未报送的删除)
-                    deletedtolist.add(total.getProdId());
-					continue;
-				}else{
-					//设置更新状态
-					total.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-					total.setCreateUser(CommonUtil.getUserName());
-                    total.setUpdateUser(CommonUtil.getUserName());
-					insertdtolist.add(total);
-		        	//删除数据(未报送的删除)
-		        	deletedtolist.add(total.getProdId());
+
+			// add by zhangliang 20201109 数据流向处理 ===================================start
+			Map<String, RaiseTotalRegist001Dto> handleDataMap = handleDataStatus(total, regMap.get(total.getProdId()));
+			if (handleDataMap.containsKey(SvrDataStatusUtil.INSERT_DATA)){
+				// 生成删除未报送特殊处理
+				if(StringUtil.equals(handleDataMap.get(SvrDataStatusUtil.INSERT_DATA).getStatus(), DictCodeListExt2.报送数据状态_删除.getValue())){
+					RaiseTotalRegist001Dto	dto = handleDataMap.get(SvrDataStatusUtil.INSERT_DATA);
+					dto.setSubscribeCcyAmt(regMap.get(total.getProdId()).getSubscribeCcyAmt());
+					dto.setSaleAreaAmt(regMap.get(total.getProdId()).getSaleAreaAmt());
+					dto.setTotalAmt(regMap.get(total.getProdId()).getTotalAmt());
+					dto.setIsConsign(regMap.get(total.getProdId()).getIsConsign());
+					dto.setConsignAmt(regMap.get(total.getProdId()).getConsignAmt());
+					dto.setRaiseQty(regMap.get(total.getProdId()).getRaiseQty());
+					insertdtolist.add(dto);
 				}
-			}else {
-				//已有已报送的
-				//设置更新状态
-				//删除数据(未报送的删除)
-	        	deletedtolist.add(total.getProdId());
-				if(DictCodeListExt1.发行状态_发行失败.getValue().equals(prodid.getIssuingStatus())){
-					if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(total.getProdId()).getStatus())){
-                		continue;
-                	}
-					total.setStatus(DictCodeListExt2.报送数据状态_删除.getValue());
-				}else{
-					if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(total.getProdId()).getStatus())){
-						total.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-                	}else if(compareData(regMap.get(total.getProdId()),total)){// 判断要素表数据有没有修改
-                        continue;
-                    }else{
-                    	total.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
-                    }
+				else{
+					insertdtolist.add(handleDataMap.get(SvrDataStatusUtil.INSERT_DATA));
 				}
-                total.setCreateUser(CommonUtil.getUserName());
-                total.setUpdateUser(CommonUtil.getUserName());
-				insertdtolist.add(total);
 			}
+			if (handleDataMap.containsKey(SvrDataStatusUtil.DELETE_DATA)){
+				deletedtolist.add(handleDataMap.get(SvrDataStatusUtil.DELETE_DATA).getProdId());
+			}
+
+//			if (total.getRegseq() == null) {
+//				//没有已报送的
+//				if(DictCodeListExt1.发行状态_发行失败.getValue().equals(prodid.getIssuingStatus())
+//						||prodid.getStatus()==null||DictCodeListExt2.数据状态_删除.getValue().equals(prodid.getStatus())){
+//                    //删除数据(未报送的删除)
+//                    deletedtolist.add(total.getProdId());
+//					continue;
+//				}else{
+//					//设置更新状态
+//					total.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+//					total.setCreateUser(CommonUtil.getUserName());
+//                    total.setUpdateUser(CommonUtil.getUserName());
+//					insertdtolist.add(total);
+//		        	//删除数据(未报送的删除)
+//		        	deletedtolist.add(total.getProdId());
+//				}
+//			}else {
+//				//已有已报送的
+//				//设置更新状态
+//				//删除数据(未报送的删除)
+//	        	deletedtolist.add(total.getProdId());
+//				if(DictCodeListExt1.发行状态_发行失败.getValue().equals(prodid.getIssuingStatus())){
+//					if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(total.getProdId()).getStatus())){
+//                		continue;
+//                	}
+//					total.setStatus(DictCodeListExt2.报送数据状态_删除.getValue());
+//				}else{
+//					if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(total.getProdId()).getStatus())){
+//						total.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+//                	}else if(compareData(regMap.get(total.getProdId()),total)){// 判断要素表数据有没有修改
+//                        continue;
+//                    }else{
+//                    	total.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
+//                    }
+//				}
+//                total.setCreateUser(CommonUtil.getUserName());
+//                total.setUpdateUser(CommonUtil.getUserName());
+//				insertdtolist.add(total);
+//			}
+			// add by zhangliang 20201109 数据流向处理 ===================================end
 			
 		}
+        // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+		insertdtolist = chbCommonCheckService.checkData(insertdtolist, ChbCheckTableInfo.募集总量登记SUB);
+        // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 		if("001".equals(isPsbc)){
 			/**邮储个性化修改 开始**/
 			doUpdateData(insertdtolist);
@@ -325,10 +367,90 @@ public class ProdRaiseTotalCBService {
 						BigDecimal amt = placeMap.get(buyPlace).add(chaAmt);
 						placeMap.put(buyPlace, amt.setScale(2,BigDecimal.ROUND_HALF_UP));
 					}
+
+					// modify by wm start  针对身份去除特殊五个市处理 20200812 合过来
+					if(StringUtil.equals(DictCodeListExt2.销售区域_中债_青岛市.getValue(), buyPlace)){
+						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_山东省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_山东省.getValue());
+						placeMap.put(DictCodeListExt2.销售区域_中债_山东省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+					}
+					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_大连市.getValue(), buyPlace)){
+						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_辽宁省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_辽宁省.getValue());
+						placeMap.put(DictCodeListExt2.销售区域_中债_辽宁省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+					}
+					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_宁波市.getValue(), buyPlace)){
+						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_浙江省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_浙江省.getValue());
+						placeMap.put(DictCodeListExt2.销售区域_中债_浙江省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+					}
+					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_厦门市.getValue(), buyPlace)){
+						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_福建省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_福建省.getValue());
+						placeMap.put(DictCodeListExt2.销售区域_中债_福建省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+					}
+					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_深圳市.getValue(), buyPlace)){
+						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_广东省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_广东省.getValue());
+						placeMap.put(DictCodeListExt2.销售区域_中债_广东省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+					}
+					// modify by wm  end 针对身份去除特殊五个市处理 20200812 合过来
 				}
+				/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
+				if("01".equals(deal.getIsagency())){
+					isagency=true;
+					BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
+					isagencyAmt = isagencyAmt.add(amt);
+				}
+				/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
+
+				/****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", deal.getCustomerType2());
+
+				//数据判断不能为特殊地级市才进行统计
+				if(!StringUtil.equals(DictCodeListExt2.销售区域_中债_青岛市.getValue(), buyPlace)
+					&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_大连市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_宁波市.getValue(), buyPlace)
+							&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_厦门市.getValue(), buyPlace)
+								&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_深圳市.getValue(), buyPlace)) {
+					if (SINGLE_PERSON.equals(customerType)) {
+						//个人
+						singleTotal += deal.getCustCounts().intValue();
+					} else if (LEGAL_PERSON.equals(customerType)) {
+						//法人
+						legalTotal += deal.getCustCounts().intValue();
+					} else if (UNLEGAL_PERSON.equals(customerType)) {
+						//非法人
+						unlegalTotal += deal.getCustCounts().intValue();
+					}
+				}
+				/****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+
+//				singleTotal=singleTotal+(posmodel.getSingletotal()==null?BigDecimal.ZERO:posmodel.getSingletotal()).intValue();
+//				legalTotal=legalTotal+(posmodel.getLegaltotal()==null?BigDecimal.ZERO:posmodel.getLegaltotal()).intValue();
+//				unlegalTotal=unlegalTotal+(posmodel.getUnlegaltotal()==null?BigDecimal.ZERO:posmodel.getUnlegaltotal()).intValue();
+
+
 			}
 		}
-		if(!CollectionUtils.isEmpty(poslist)){
+		/**青岛银行关于客户数的调整   add by  dongxiangyang  20201112 start*/
+		//客户数是否从投资者明细取值,01 是  02 否
+		String IsChbEqudetCount = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_EQUDET_CONUT);
+        if(StringUtil.equals(IsChbEqudetCount, DictCodeList.是否_中债_是.getValue())){
+        	List<RaiseTotalRegist001Dto> countList=raiseTotalRegist001Mapper.getEquCount(dto.getProdId());
+        	if(!CollectionUtils.isEmpty(countList)){
+        		for(RaiseTotalRegist001Dto  countDto:countList){
+        			 //个人
+        			if(StringUtil.equals("01", countDto.getEquType())){
+        				singleTotal=countDto.getEquCount();
+        			}
+        			//法人
+        			else if(StringUtil.equals("02", countDto.getEquType())){
+        				legalTotal=countDto.getEquCount();
+        			}
+        			//非法人
+        			else if(StringUtil.equals("03", countDto.getEquType())){
+        				unlegalTotal=countDto.getEquCount();
+        			}
+        		}
+        	}
+        	
+        }else if(!CollectionUtils.isEmpty(poslist)){
 			for(ChbPrdPosition posmodel : poslist){
 //				BigDecimal chaAmt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getBalanceAmt(), rateMap, exchangeSource);
 //				//实际募集金额
@@ -336,26 +458,26 @@ public class ProdRaiseTotalCBService {
 //				//募集总份额
 //				totQty = totQty.add(posmodel.getBalanceQty());
 				//是否有其他机构代销,代销总金额
-				if(posmodel.getConsignamt()!=null&&posmodel.getConsignamt().compareTo(BigDecimal.ZERO)>0){
-					isagency=true;
-					BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getConsignamt(), rateMap, exchangeSource);
-					isagencyAmt = isagencyAmt.add(amt);
-				}
+//				if(posmodel.getConsignamt()!=null&&posmodel.getConsignamt().compareTo(BigDecimal.ZERO)>0){
+//					isagency=true;
+//					BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getConsignamt(), rateMap, exchangeSource);
+//					isagencyAmt = isagencyAmt.add(amt);
+//				}
 				
-				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", posmodel.getCustomerType2());
-				if(SINGLE_PERSON.equals(customerType)){
-					//个人
-					singleTotal+=posmodel.getCustCounts().intValue();
-				}else if(LEGAL_PERSON.equals(customerType)){
-					//法人
-					legalTotal+=posmodel.getCustCounts().intValue();
-				}else if(UNLEGAL_PERSON.equals(customerType)){
-					//非法人
-					unlegalTotal+=posmodel.getCustCounts().intValue();
-				}
-				singleTotal=singleTotal+(posmodel.getSingletotal()==null?BigDecimal.ZERO:posmodel.getSingletotal()).intValue();
-				legalTotal=legalTotal+(posmodel.getLegaltotal()==null?BigDecimal.ZERO:posmodel.getLegaltotal()).intValue();
-				unlegalTotal=unlegalTotal+(posmodel.getUnlegaltotal()==null?BigDecimal.ZERO:posmodel.getUnlegaltotal()).intValue();
+//				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", posmodel.getCustomerType2());
+//				if(SINGLE_PERSON.equals(customerType)){
+//					//个人
+//					singleTotal+=posmodel.getCustCounts().intValue();
+//				}else if(LEGAL_PERSON.equals(customerType)){
+//					//法人
+//					legalTotal+=posmodel.getCustCounts().intValue();
+//				}else if(UNLEGAL_PERSON.equals(customerType)){
+//					//非法人
+//					unlegalTotal+=posmodel.getCustCounts().intValue();
+//				}
+//				singleTotal=singleTotal+(posmodel.getSingletotal()==null?BigDecimal.ZERO:posmodel.getSingletotal()).intValue();
+//				legalTotal=legalTotal+(posmodel.getLegaltotal()==null?BigDecimal.ZERO:posmodel.getLegaltotal()).intValue();
+//				unlegalTotal=unlegalTotal+(posmodel.getUnlegaltotal()==null?BigDecimal.ZERO:posmodel.getUnlegaltotal()).intValue();
 			}
 		}
 		dto.setSingleTotal(singleTotal==0?0:singleTotal);//个人
@@ -368,7 +490,11 @@ public class ProdRaiseTotalCBService {
 		while (entries.hasNext()) {
 			Map.Entry<String, BigDecimal> entry = entries.next();
 			//格式化处理：110000,北京市,10000000.00;440300,深圳市,4000000.00
-			place.append(entry.getKey()+" ").append(SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债,entry.getKey())+",").append(entry.getValue().toString()).append(";");
+			//金额小于0不统计进去 modify by wm  针对身份去除特殊五个市处理 20200812
+			if(entry.getValue().compareTo(BigDecimal.ZERO)>0){
+				place.append(entry.getKey()+" ").append(SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债,entry.getKey())+",").append(entry.getValue().toString()).append(";");
+			}
+			//金额小于0不统计进去 modify by wm  end
 		}
 		//是否有其他机构代销,代销总金额
 		if(isagency){
@@ -392,6 +518,8 @@ public class ProdRaiseTotalCBService {
 		}
 		dto.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
         dto.setRegistSeqno(IDGenerator.generate(36));
+		// 报送流水号
+		dto.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
         dto.setStatusDate(executeDate);
         
         //发行机构代码取值
@@ -407,11 +535,23 @@ public class ProdRaiseTotalCBService {
 		}
 		return dto;
 	}
-	
+
+	@Override
+	public void execute(Date executeDate, List<String> prodList, List<String> assetList, Map<String, List<String>> param) throws BusinessException {
+
+	}
+
+	@Override
+	public <T> boolean compareData(T info, T sub) {
+		return this.compareData((RaiseTotalRegist001Dto) info, (RaiseTotalRegist001Dto) sub);
+	}
+
 	public boolean compareData(RaiseTotalRegist001Dto dto,RaiseTotalRegist001Dto regdto){
 		RaiseTotalRegist001Dto compare1 = genDto(dto);
 		RaiseTotalRegist001Dto compare2 = genDto(regdto);
-        if(JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))){
+        if(!JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))){
+			logger.info("info:" + JSON.toJSONString(compare1));
+			logger.info("sub:" + JSON.toJSONString(compare2));
             return true;
         }else{
             return false;

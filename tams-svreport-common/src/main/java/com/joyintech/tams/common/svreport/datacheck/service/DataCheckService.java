@@ -17,9 +17,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.joyintech.framework.util.StringUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
@@ -27,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.util.StringUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.CheckConditionMapper;
 import com.joyintech.tams.common.svreport.datacheck.dao.CheckRuleMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckCondition;
@@ -52,22 +53,37 @@ public class DataCheckService {
     
     @Autowired
     private CheckConditionMapper checkConditionMapper;
-    
+    // add by dubaojun 2020-10-23 增加支持校验出错数据不移除的逻辑 start
     /**
      * 根据指定的检查规则，检查数据列表，对于某条数据有一个规则不满足，继续检查其它规则，即每条数据都进行全部规则检查
      * @param listData 被检查的数据列表，错误的数据被移出
      * @param listRules 检查规则
+     * @param removeFlag 校验出错的数据是否移除
      * @return 返回错误的数据
      * @see
      * @since 1.0
      */
     public static List<Map<String, String>> checkDataList(List<Map<String, String>> listData,List<CheckRule> listRules) {
+        return checkDataList(listData, listRules, true);
+    }
+    // add by dubaojun 2020-10-23 增加支持校验出错数据不移除的逻辑 end
+
+    /**
+     * 根据指定的检查规则，检查数据列表，对于某条数据有一个规则不满足，继续检查其它规则，即每条数据都进行全部规则检查
+     * @param listData 被检查的数据列表，错误的数据根据参数removeFlag确定是否移除
+     * @param listRules 检查规则
+     * @param removeFlag 校验出错的数据是否移除
+     * @return 返回错误的数据
+     * @see
+     * @since 1.0
+     */
+    public static List<Map<String, String>> checkDataList(List<Map<String, String>> listData,List<CheckRule> listRules, boolean removeFlag) {
 
         List<Map<String, String>> listError = new ArrayList<Map<String, String>>();
 
         //定义检查类的方法集合：Map<检查类,Map<方法名称,方法>>
         Map<String,Map<String,Method>> mapClassMethod = new HashMap<String,Map<String,Method>>();
-            
+
         Iterator<Map<String, String>> it = listData.iterator();
 
         int i = 1;
@@ -75,7 +91,7 @@ public class DataCheckService {
             boolean legal=true;  //检查结果
             StringBuilder sb = new StringBuilder();  //记录错误信息
             Map<String, String> x = it.next();
-            
+
             for ( CheckRule r : listRules ) {  //循环每个规则
                 Map<String,Method> mapMethod = mapClassMethod.get(r.getCheckclass());
                 if ( mapMethod==null ) {
@@ -94,7 +110,7 @@ public class DataCheckService {
                     }
                     mapClassMethod.put(r.getCheckclass(),mapMethod);
                 }
-                
+
                 // 检查逻辑，如果有前置条件，先检查条件是否满足，如果条件满足，执行数据检查，否则不执行数据检查
                 // 如果没有前置条件，检查数据
                 // 如果有多个前置条件，循环每个条件检查，各条件之间是与的关系
@@ -105,13 +121,17 @@ public class DataCheckService {
                     sbCon.append("条件:");
                     for (CheckCondition c : listConditions) {
                         conCheck = conCheck && checkCondition(x, c, mapMethod);
-                        sbCon.append(c.getRemark()+";");
+                        if (StringUtil.isNotEmpty(c.getRemark()) && !StringUtil.equals(c.getRemark(), "null")){
+                            sbCon.append(c.getRemark()+";");
+                        }
                         if (conCheck == false) { // 条件不满足，不做数据检查
                             break;
                         }
                     }
                     if (conCheck == true) { // 条件满足，做数据检查
-                        sbCon.append("-->");
+                        if (!StringUtil.equals(sbCon.toString(), "条件:")){
+                            sbCon.append("-->");
+                        }
                         boolean b= checkData(x, r, mapMethod);
                         if (b == false) {
                             sb.append(sbCon.toString()+r.getRemark() + "[" + r.getSrcproperty() + "="+x.get(r.getSrcproperty())+"];");
@@ -130,7 +150,9 @@ public class DataCheckService {
                 x.put("ERRMSG", sb.toString());
                 x.put("ERRMSG_ROW",String.valueOf(i));
                 listError.add(x);
-                it.remove();
+                if(removeFlag) {
+                    it.remove();
+                }
             }
             i++;
         } //循环数据结束
@@ -362,8 +384,12 @@ public class DataCheckService {
         // 重复的键
 //        HashSet<String> setDup = new HashSet<String>();
         HashSet<String> set = new HashSet<String>();
-        Iterator<Map<String,String>> it = listData.iterator();
+        // modify by dubaojun 2020-10-15 将Iterator修改为ListIterator，支持取出index start
+        ListIterator<Map<String,String>> it = listData.listIterator();
+        // modify by dubaojun 2020-10-15 将Iterator修改为ListIterator，支持取出index end
         while(it.hasNext()){
+            // modify by dubaojun 2020-10-30 当数据重复时，增加重复数据的字段值 start
+            StringBuilder msgBuilder = new StringBuilder("[");
             Map<String,String> x = it.next();
             String keyString="";
             if ( keys.length>0 ) {
@@ -371,18 +397,27 @@ public class DataCheckService {
                 for (String s : keys) {
                     if (!StringUtil.isEmpty(s)){
                         sb.append(x.get(s)+"|");
+                        msgBuilder.append(s).append("=").append(x.get(s)).append(";");
                     }
                 }
                 keyString = sb.toString();
             }else {
                     JSONObject json=new JSONObject(x);
                     keyString = json.toString();
+                    msgBuilder.append("所有字段重复");
              }
+            msgBuilder.append("]");
+            // modify by dubaojun 2020-10-30 当数据重复时，增加重复数据的字段值 end
             String encodeStr=DigestUtils.md5Hex( keyString + key);
             if ( set.contains(encodeStr)) {
                 // 重复项出现多次只展示一条最新出现的重复项
 //                if (!setDup.contains(encodeStr)){
-                    x.put("ERRMSG","数据重复！");
+                    // modify by dubaojun 2020-10-30 当数据重复时，增加重复数据的字段值 start
+                    x.put("ERRMSG","数据重复！" + msgBuilder.toString());
+                    // modify by dubaojun 2020-10-30 当数据重复时，增加重复数据的字段值 end
+                    // add by dubaojun 2020-10-15 将Iterator修改为ListIterator，支持取出index start
+                    // x.put("ERRMSG_ROW","" + it.previousIndex());
+                    // add by dubaojun 2020-10-15 将Iterator修改为ListIterator，支持取出index end
                     listDup.add(x);
 //                    setDup.add(encodeStr);
 //                }
@@ -607,6 +642,7 @@ public class DataCheckService {
         
         return listResult;
     }
+    
     /**
      * 根据数据类型，读取检查规则
      * @param datatype 数据类型
@@ -727,9 +763,10 @@ public class DataCheckService {
         
         List<CheckRule> listResult = new ArrayList<CheckRule>();
 
-        
-        //List<CheckRule> listRules = checkRuleMapper.selectByDatatype(datatype);
-        List<CheckRule> listRules = checkRuleMapper.selectByDatatypeByTypeAndColumns(datatype, columns);
+        /**业务数据维护   资产要素查询规则  start  by  dongxiangyang   20201024 */
+        List<CheckRule> listRules = checkRuleMapper.selectByDatatype(datatype);
+        /**业务数据维护  资产要素查询规则  end  by  dongxiangyang   20201024 */
+//        List<CheckRule> listRules = checkRuleMapper.selectByDatatypeByTypeAndColumns(datatype, columns);
         for ( CheckRule r:listRules ) {
             if ( r.getCheckclass()==null ) {
                 logger.error("检查规则错误：检查类不能为空!["+r.getCheckruleid()+"]");

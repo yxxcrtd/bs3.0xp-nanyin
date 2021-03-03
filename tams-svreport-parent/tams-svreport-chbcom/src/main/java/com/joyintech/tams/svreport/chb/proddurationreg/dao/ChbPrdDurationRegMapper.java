@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.proddurationreg.dao;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -14,7 +15,9 @@ import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
 import com.joyintech.tams.svreport.chb.proddurationreg.dto.ChbPrdDurationDeal;
 import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
 import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbPrdDurationRegMapper {
 	
 	/**
@@ -25,7 +28,8 @@ public interface ChbPrdDurationRegMapper {
      * @see
      * @since 1.0
      */
-    List<ChbPrdDurationDeal> getProdIdsByDealSub(@Param("batchDate") String batchDate,@Param("prodIdList")List<String> prodIdList);
+//    List<ChbPrdDurationDeal> getProdIdsByDealSub(@Param("batchDate") String batchDate,@Param("prodIdList")List<String> prodIdList);
+	  List<ChbPrdDurationDeal> getProdIdsByDealSub(Map<String, Object> pageParam);
 
     /**
      * 查询满足条件的产品（开放式）
@@ -35,9 +39,10 @@ public interface ChbPrdDurationRegMapper {
      * @see
      * @since 1.0
      */
-    List<ChbPrdDurationDeal> getOpenProdIdsByDealSub(@Param("batchDate") String batchDate,@Param("prodIdList")List<String> prodIdList, @Param("openProdMdateConf") String openProdMdateConf);
-    
-    /**
+//    List<ChbPrdDurationDeal> getOpenProdIdsByDealSub(@Param("batchDate") String batchDate,@Param("prodIdList")List<String> prodIdList, @Param("openProdMdateConf") String openProdMdateConf);
+	List<ChbPrdDurationDeal> getOpenProdIdsByDealSub(Map<String, Object> pageParam);
+
+	/**
      * 获取已报送的信息
      * 
      * @param batchDate 跑批日期
@@ -78,6 +83,8 @@ public interface ChbPrdDurationRegMapper {
 	int insertBatch(@Param("resultList") List<ChbPrdDealSub> resultList);
 
 	int deleteBatch(@Param("resultList") List<ChbPrdDealSub> resultList);
+	
+	int deleteBatchByprodId(@Param("resultList") List<ChbPrdDealSub> resultList);
 
 	int updateBatch(@Param("resultList") List<ChbPrdDealSub> resultList);
 

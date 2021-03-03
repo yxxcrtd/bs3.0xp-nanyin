@@ -262,7 +262,19 @@
     <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
-              
+    <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
+    <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
+    <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
+    <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
+    <result column="CHB_ISSUER_ID" property="chbIssuerId" jdbcType="VARCHAR" />
+    <result column="CHB_MANAGER_ID" property="chbManagerId" jdbcType="VARCHAR" />
+    <result column="CHB_FINANCIER_ID" property="chbFinancierId" jdbcType="VARCHAR" />
+    <result column="PERPETUAL_FLAG" property="perpetualFlag" jdbcType="VARCHAR" />
+    <result column="OPTION_FLAG" property="optionFlag" jdbcType="VARCHAR" />
+    <result column="IS_BJSZQ" property="isBjszq" jdbcType="VARCHAR" />
+    <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
+    <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
+
     </resultMap>
     <resultMap id="PsbcBaseResultMap"
         type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
@@ -2030,9 +2042,30 @@
                 </otherwise>
             </choose>
         </if>
-    </select>
-    <select id="selectAssetByInterfdateBatch" parameterType="map"
-            resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
+    </select> 
+  <select id="selectAssetByInterfdateBatch" parameterType="map" 
+    resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
+    /*add by lingxq 针对投管端【存放标的】新建的标的【资产三级分类】为【活期存放】时,金额元素隐藏，抽数从首次交易里获取金额*/
+     WITH TMP_HQCF as (
+	   SELECT 
+	      SUM(NVL(DECODE(DEAL.PS,'T01',DEAL.PRIN_AMT,-1*DEAL.PRIN_AMT),0)) AS AMT,MIN(DEAL.TRADE_DATE),DEAL.FINPROD_ID
+	   FROM TRD_PRODUCT_DEAL DEAL
+	   
+	   LEFT JOIN REP_ASSET_DEPT ASSET
+	   ON DEAL.FINPROD_ID = ASSET.REP_FINPROD_ID
+	    
+	   LEFT JOIN FIN_PRODUCT INFO
+	   ON INFO.FINPROD_ID=DEAL.FINPROD_ID
+	   
+	   LEFT JOIN FIN_PRODUCT_TYPE INFOTP 
+	   ON NVL(INFO.P_FINPROD_ID,ASSET.REP_FINPROD_ID)=INFOTP.FINPROD_ID
+	   WHERE  DEAL.BUSI_TYPE IN( '03','01','37')
+	   AND INFOTP.TYPE_6='D03'
+	   AND DEAL.TRADE_STATUS = '01'
+	   AND DEAL.IS_CANCEL = 'N'
+	   
+	   GROUP BY DEAL.FINPROD_ID
+	 )
         /*银行存款类资产报送信息*/
         SELECT null ASSET_UUID,
         asset.FINPROD_MARKET_ID asset_code,
@@ -2041,12 +2074,14 @@
         asset.REP_CCY CCY,
         asset.REP_TRADE_MARKET TRADE_MARKET,
         detail.REP_VDATE VDATE,/*起息日*/
-        detail.REP_MDATE MDATE,/*到期日*/
+        NVL(detail.REP_MDATE,DATE'9999-12-31') MDATE,/*到期日*/
         NULL DISCOUNT_YIELD,
         detail.REP_RATE_YEAR ASSET_YIELD,
         detail.REP_BASIS BASIS,
-        detail.REP_PRIN_AMT AMT,/*存款金额*/
-        detail.REP_BANK_NAME BANK_NAME,/*资金存入银行*/
+        NVL(detail.REP_PRIN_AMT,TMP_HQCF.AMT) AMT,/*存款金额*/
+        <!-- modify by zhangliang 20201207 本行存款和本行发行的大额存单，资金存入行必须为空 -->
+        <!-- detail.REP_BANK_NAME BANK_NAME, -->
+        decode(asset.REP_ASSET_TYPE,'1002', null, '1004', null, detail.REP_BANK_NAME) BANK_NAME,/*资金存入银行*/
         detail.REP_IS_STRUCT IS_STRUCT,
         detail.REP_TARGET_TYPE TARGET_TYPE,
         detail.REP_TARGET TARGET,
@@ -2240,8 +2275,19 @@
         null FINANCIAL_COMISSUE,
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
-
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 
         FROM REP_ASSET_BANK_DEPOSIT DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -2254,8 +2300,10 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
-        WHERE 1 =1
-        and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
+        LEFT JOIN TMP_HQCF 
+        on TMP_HQCF.FINPROD_ID = detail.REP_FINPROD_ID
+        WHERE 1 =1 
+        and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->                                               
         and ASSET.IS_REP_TARGET = 'Y'
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -2298,7 +2346,7 @@
         detail.REP_PARTY_TYPE2 PARTY_TYPE2,
         detail.REP_INDUSTRY INDUSTRY,
         detail.REP_INDUSTRY_LEVEL2 INDUSTRY_LEVEL2,
-        detail.REP_REGIST_ORG REGIST_ORG,
+        DECODE(detail.REP_REGIST_ORG,'06','99',detail.REP_REGIST_ORG) REGIST_ORG,
         detail.REP_REGISTORG_COMMENT REGISTORG_COMMENT,
         null RIVAL_PARTY,
         null TARGET_TYPE1,
@@ -2478,10 +2526,23 @@
 		
 		DETAIL.REP_BANK_SEC_PERPETUAL as BANK_SEC_PERPETUAL,
 		
-		NULL BANK_SEC_PREFER 
-		
-		
+		NULL BANK_SEC_PREFER,
+        OTHER.BANK_SEC_KZZQ,
+        OTHER.BANK_SEC_ZXZQ,
+        OTHER.ISUNLISTED,
+        OTHER.IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
+
         FROM REP_ASSET_BOND DETAIL
+        LEFT JOIN REP_ASSET_OTHER OTHER
+        ON DETAIL.REP_FINPROD_ID = OTHER.REP_FINPROD_ID
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
         left join fin_product info
@@ -2730,7 +2791,19 @@
         null FINANCIAL_COMISSUE,
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        NVL(DECODE(mcp.COUNTER_TYPE,'02',mcp.MANAGER_ID,tradeproduct.COUNTER_ID),info.MANAGER) CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 
         FROM REP_ASSET_INTER_LEND DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -2978,7 +3051,19 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        NVL(DECODE(mcp.COUNTER_TYPE,'02',mcp.MANAGER_ID,tradeproduct.COUNTER_ID),info.MANAGER) CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 		
         FROM REP_LIABILITIES DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -2995,8 +3080,8 @@
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
         left join MST_COUNTER_PARTY mcp
-        on tradeproduct.COUNTER_ID=mcp.COUNTER_ID
-        WHERE 1 =1
+        on NVL(tradeproduct.COUNTER_ID, info.ISSUER)=decode(info.ISSUER,null,mcp.COUNTER_ID,mcp.link_id)
+        WHERE 1 =1 
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
         /*根据创建时间、更新时间和接口接入时间接入数据*/
@@ -3047,20 +3132,21 @@
         detail.REP_INTPAY_CYCLE INTPAY_CYCLE,
         detail.REP_REPAY_CMT REPAY_CMT,
         detail.REP_BASIS_TYPE BASIS_TYPE,
-       <!--   case when T22.COEFFICIENT is null then null
-        else case when T22.COEFFICIENT=1 then null
-               else (T22.COEFFICIENT-1)*100
-                end
-        end as FLOAT_FACTOR,  -->
-         case when ASSET.REP_ASSET_TYPE = '2201' then  null
-              when ASSET.REP_ASSET_TYPE = '2202' then  null
-         else
-             case when T22.INT_TYPE = '02' and T22.COEFFICIENT != 1 then
-                 (T22.COEFFICIENT - 1) * 100
-              else null end
-         end as FLOAT_FACTOR,    
-        detail.REP_SPREAD_RATE SPREAD_RATE,
-        detail.REP_FINANCIER FINANCIE,
+        CASE WHEN T21.INT_TYPE = '01' THEN NULL
+        ELSE
+          CASE WHEN T22.COEFFICIENT IS NULL THEN NULL
+          ELSE CASE WHEN T22.COEFFICIENT=1 THEN NULL
+                 ELSE (T22.COEFFICIENT-1)*100
+                  END
+          END 
+        END AS FLOAT_FACTOR,
+        CASE WHEN T21.INT_TYPE = '01' THEN NULL 
+        ELSE detail.REP_SPREAD_RATE/100
+        END SPREAD_RATE,
+        <!-- MODIFY BY ZHANGLIANGz 20201212 START -->
+        <!-- detail.REP_FINANCIER FINANCIE, -->
+        customerinfo.CUSTOMER_NAME FINANCIE,
+        <!-- MODIFY BY ZHANGLIANG 20201212 END -->
         detail.REP_FIN_ORG_CODE FIN_ORG_CODE,
         detail.REP_FCR_GRADE_IN FCR_GRADE_IN,
         detail.REP_FCR_GRADE_OUT FCR_GRADE_OUT,
@@ -3083,7 +3169,9 @@
         detail.REP_CHOSE CHOSE,
         detail.REP_CONDITION_CMM CONDITION_CMM,
         detail.REP_FIN_AREA FIN_AREA,
-        detail.REP_TOTAL_FEE_RATE/100 TOTAL_FEE_RATE,
+        <!-- modify by zhangliang 20201222 融资总费率不需要除以100 -->
+        <!-- detail.REP_TOTAL_FEE_RATE/100 TOTAL_FEE_RATE, -->
+        detail.REP_TOTAL_FEE_RATE TOTAL_FEE_RATE,
         null IS_RIGHT,
         null NOTSTAND_SEC_TYPE,
         null NOTSTAND_SEC_NUM,
@@ -3282,7 +3370,19 @@
         null FINANCIAL_COMISSUE,
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 
         FROM REP_ASSET_CREDIT_NONSTD DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -3543,8 +3643,23 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        OTHER.BANK_SEC_KZZQ,
+        OTHER.BANK_SEC_ZXZQ,
+        OTHER.ISUNLISTED,
+        OTHER.IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
+
         FROM REP_ASSET_AST_BILL DETAIL
+        LEFT JOIN REP_ASSET_OTHER OTHER
+        ON DETAIL.REP_FINPROD_ID = OTHER.REP_FINPROD_ID
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
         left JOIN REP_ASSET_OTHER OTHER
@@ -3774,7 +3889,19 @@
         null FINANCIAL_COMISSUE,
         NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		DETAIL.REP_BANK_SEC_PREFER BANK_SEC_PREFER
+		DETAIL.REP_BANK_SEC_PREFER BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 
         FROM REP_ASSET_EQUITY DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -4006,7 +4133,20 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
+
         FROM REP_ASSET_DERI DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -4235,7 +4375,19 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 		
         FROM REP_ASSET_AST_QDII_SEC DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -4465,7 +4617,19 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 		
         FROM REP_ASSET_AST_QDII_REV DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -4695,7 +4859,19 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 		
         FROM REP_AST_QDII_SHARE DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -4925,7 +5101,19 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 		
         FROM REP_AST_QDII_STRUCT DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -5055,7 +5243,10 @@
         detail.REP_CAP_USE_WAY INVEST_TYPE,
         detail.REP_CAP_USE_INDU CAP_USE_INDU,
         detail.REP_SET_DATE PLAN_SDATE,
-        detail.REP_END_DATE PLAN_EDATE,
+        <!-- modify by zhangliang 20201214 终止日期处理 -->
+        <!-- detail.REP_END_DATE PLAN_EDATE, -->
+        NVL(detail.REP_END_DATE,DATE'9999-12-31') PLAN_EDATE,
+
         detail.REP_PLAN_PROP PRO_PROPERTY,
         detail.REP_MAX_RATE MAX_RATE,
         detail.REP_MIN_RATE MIN_RATE,
@@ -5152,10 +5343,25 @@
         null EQUITY_QUIT,
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
-        DETAIL.REP_FINANCIAL_COMISSUE FINANCIAL_COMISSUE,
+        <!-- 当资产二级分类为“其他资产管理产品”时必填，否则不可填。 add by zhangliang 20201130 -->
+        <!-- 当资产一级分类为“私募基金”时必填，否则不可填。 add by zhangliang 20201130 -->
+        <!-- DETAIL.REP_FINANCIAL_COMISSUE -->
+        decode(asset.REP_ASSET_TYPE, '2612', DETAIL.REP_FINANCIAL_COMISSUE, '2617', DETAIL.REP_FINANCIAL_COMISSUE, '1705', DETAIL.REP_FINANCIAL_COMISSUE, null) FINANCIAL_COMISSUE,
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 
         FROM REP_ASSET_MNG_PLAN DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -5391,7 +5597,20 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
+
         FROM REP_AST_METAL DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -5425,7 +5644,11 @@
         null DISCOUNT_YIELD,
         detail.REP_PROJECT_YIELD_RATE ASSET_YIELD,
         null BASIS,
-        null AMT,
+
+        <!-- modify by zhangliang 20201214 -->
+        <!-- null AMT, -->
+        decode(ASSET.REP_ASSET_TYPE, '1299', DETAIL.REP_MONEY, '1399', DETAIL.REP_MONEY, '1599', DETAIL.REP_MONEY, '2299', DETAIL.REP_MONEY, null) AMT,
+
         null BANK_NAME,
         null IS_STRUCT,
         null TARGET_TYPE,
@@ -5456,7 +5679,10 @@
         null BASIS_TYPE,
         null FLOAT_FACTOR,
         null SPREAD_RATE,
-        detail.REP_FINANCIER FINANCIE,
+        <!-- MODIFY BY ZHANGLIANG 20201212 START -->
+        <!-- detail.REP_FINANCIER FINANCIE, -->
+        customerinfo.CUSTOMER_NAME FINANCIE,
+        <!-- MODIFY BY ZHANGLIANG 20201212 END -->
         detail.REP_FINANCIER_ORG_CODE FIN_ORG_CODE,
         null FCR_GRADE_IN,
         detail.REP_FCR_GRADE_OUT FCR_GRADE_OUT,
@@ -5615,13 +5841,28 @@
         null CREDIT_ORG_CODE,
         null CREDIT_ORG_NAME,
         null EQUITY_QUIT,
-        DETAIL.REP_DEPT_EQUITY DEPT_EQUITY,
+        <!-- modify by zhangliang 1299,1399,1599,2299[资产/负债类别]不为“1399 其他权益类投资”时,必须为空 -->
+        <!-- DETAIL.REP_DEPT_EQUITY DEPT_EQUITY, -->
+        decode(ASSET.REP_ASSET_TYPE, '1299', null, '1599', null, '2299', null, DETAIL.REP_DEPT_EQUITY) DEPT_EQUITY,
+
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 
 
         FROM REP_OTHER_INVEST_TARGET DETAIL
@@ -5854,7 +6095,20 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
+
         FROM REP_AST_OFFBEAT DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -6080,13 +6334,30 @@
         null EQUITY_QUIT,
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
-        DETAIL.REP_FINANCIAL_COMISSUE FINANCIAL_COMISSUE,
-		
+        <!-- 当资产二级分类为“其他资产管理产品”时必填，否则不可填。 add by zhangliang 20201130 -->
+        <!-- 当资产一级分类为“私募基金”时必填，否则不可填。 add by zhangliang 20201130 -->
+        <!-- DETAIL.REP_FINANCIAL_COMISSUE -->
+        decode(asset.REP_ASSET_TYPE, '2612', DETAIL.REP_FINANCIAL_COMISSUE, '2617', DETAIL.REP_FINANCIAL_COMISSUE, '1705', DETAIL.REP_FINANCIAL_COMISSUE, null) FINANCIAL_COMISSUE,
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        OTHER.BANK_SEC_KZZQ,
+        OTHER.BANK_SEC_ZXZQ,
+        OTHER.ISUNLISTED,
+        OTHER.IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 
         FROM REP_FUND DETAIL
+        LEFT JOIN REP_ASSET_OTHER OTHER
+        ON DETAIL.REP_FINPROD_ID = OTHER.REP_FINPROD_ID
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
         left JOIN REP_ASSET_OTHER OTHER
@@ -6218,7 +6489,10 @@
         detail.REP_APPLICATION_MODE INVEST_TYPE,
         detail.REP_CAP_USE_INDU CAP_USE_INDU,
         detail.REP_INVEST_STARTDATE PLAN_SDATE,
-        detail.REP_INVEST_ENDDATE PLAN_EDATE,
+        <!-- modify by zhangliang 20201214 终止日期处理 -->
+        <!-- detail.REP_INVEST_ENDDATE PLAN_EDATE, -->
+        NVL(detail.REP_INVEST_ENDDATE,DATE'9999-12-31') PLAN_EDATE,
+
         detail.REP_TRUST_INVEST_ATTRIBUTE PRO_PROPERTY,
         detail.REP_MAX_EXPECTED_YIELD MAX_RATE,
         detail.REP_MIN_EXPECTED_YIELD MIN_RATE,
@@ -6318,7 +6592,20 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
+
         FROM REP_TRUST_INVEST_MODE DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -6549,7 +6836,19 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 		
         FROM REP_LIABILITIES_OTHER DETAIL
         left JOIN REP_ASSET_DEPT ASSET
@@ -6783,7 +7082,19 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        INFO.ISSUER CHB_ISSUER_ID,
+        NVL(DECODE(MSP.COUNTER_TYPE,'02',MSP.MANAGER_ID,FTP.COUNTER_ID),INFO.MANAGER) CHB_MANAGER_ID,
+        INFO.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN FPTYPE.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 
         FROM FIN_TRADE_PRODUCT FTP
         LEFT JOIN MST_COUNTER_PARTY MSP
@@ -6796,6 +7107,7 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join TRD_PRODUCT_DEAL ftt
                     on  ftt.trade_id = FTP.FINPROD_ID
+	and ftt.trade_status = '01'	
         WHERE FTP.FINPROD_TYPE2 IN ('F11', 'F12', 'F13', 'F14', 'F29', 'F30','F35')
         AND NVL(INFO.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         /*根据创建时间、更新时间和接口接入时间接入数据*/
@@ -7049,7 +7361,19 @@
 		
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
-		NULL BANK_SEC_PREFER
+		NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        NVL(DECODE(mcp.COUNTER_TYPE,'02',mcp.MANAGER_ID,fp.COUNTER_ID),info.MANAGER) CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
 
         FROM fin_trade_product fp
         left join fin_product info
@@ -7067,6 +7391,14 @@
         WHERE 1 = 1
         and fp.branch = 0
         and fp.finprod_type2 in ('F02', 'F03', 'F04', 'F05')
+		   <!-- add by zhangliang 20201210 回购的数据需要排除上面union all 的 REP_ASSET_INTER_LEND信息，以此段sql为准  start-->
+            and not exists (select 1 from REP_ASSET_INTER_LEND repLend
+                                        left JOIN REP_ASSET_DEPT ASSET on repLend.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
+                                        left join fin_product info on info.FINPROD_ID=repLend.REP_FINPROD_ID
+                                        where nvl(info.IS_CHL,'N') = 'N'
+                                        and ASSET.IS_REP_TARGET = 'Y'
+                                        and repLend.rep_finprod_id = fp.FINPROD_ID)
+            <!-- add by zhangliang 20201210 回购的数据需要排除上面union all 的 REP_ASSET_INTER_LEND信息，以此段sql为准  end-->
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(fp.UPDATE_TIME,fp.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -11908,7 +12240,22 @@
 				#{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
 				#{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
 				#{item.bankSecPrefer,jdbcType=VARCHAR}  BANK_SEC_PREFER,
-				#{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL
+				#{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
+                #{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
+                #{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
+                #{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
+                #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
+                <!-- add by zhangliang G06升级字段新增  start -->
+                #{item.chbIssuerId,jdbcType=VARCHAR} CHB_ISSUER_ID,
+                #{item.chbManagerId,jdbcType=VARCHAR} CHB_MANAGER_ID,
+                #{item.chbFinancierId,jdbcType=VARCHAR} CHB_FINANCIER_ID,
+                #{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
+                #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
+                #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
+                #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
+                #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
+                <!-- add by zhangliang G06升级字段新增  end -->
+                ,#{item.privateFlag,jdbcType=VARCHAR} PRIVATE_FLAG
                 from dual
             </foreach>
         ) TEMP
@@ -12117,7 +12464,22 @@
             CII.FINANCIAL_COMISSUE=TEMP.FINANCIAL_COMISSUE,
             CII.BANK_SEC_CAPITAL=TEMP.BANK_SEC_CAPITAL,
             CII.BANK_SEC_PREFER=TEMP.BANK_SEC_PREFER,
-            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL
+            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL,
+            CII.BANK_SEC_KZZQ=TEMP.BANK_SEC_KZZQ,
+            CII.BANK_SEC_ZXZQ=TEMP.BANK_SEC_ZXZQ,
+            CII.ISUNLISTED=TEMP.ISUNLISTED,
+            CII.IS_BZHPJ=TEMP.IS_BZHPJ,
+            <!-- add by zhangliang G06升级字段新增  start -->
+            CII.CHB_ISSUER_ID	=	TEMP.CHB_ISSUER_ID,
+            CII.CHB_MANAGER_ID	=	TEMP.CHB_MANAGER_ID,
+            CII.CHB_FINANCIER_ID	=	TEMP.CHB_FINANCIER_ID,
+            CII.PERPETUAL_FLAG	=	TEMP.PERPETUAL_FLAG,
+            CII.OPTION_FLAG	=	TEMP.OPTION_FLAG,
+            CII.IS_BJSZQ	=	TEMP.IS_BJSZQ,
+            CII.IS_PERPETUAL	=	TEMP.IS_PERPETUAL,
+            CII.IS_FBZB	=	TEMP.IS_FBZB
+            <!-- add by zhangliang G06升级字段新增  end -->
+            ,CII.PRIVATE_FLAG	=	TEMP.PRIVATE_FLAG
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN 
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -12210,7 +12572,23 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL)  
+        BANK_SEC_PERPETUAL,
+        BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ,
+        ISUNLISTED,
+        IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+        CHB_ISSUER_ID,
+        CHB_MANAGER_ID,
+        CHB_FINANCIER_ID,
+        PERPETUAL_FLAG,
+        OPTION_FLAG,
+        IS_BJSZQ,
+        IS_PERPETUAL,
+        IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
+        ,PRIVATE_FLAG
+        )
         values(
             TEMP.ASSET_UUID,
             TEMP.ASSET_CODE,
@@ -12412,7 +12790,22 @@
             TEMP.FINANCIAL_COMISSUE,
             TEMP.BANK_SEC_CAPITAL,
             TEMP.BANK_SEC_PREFER,
-            TEMP.BANK_SEC_PERPETUAL
+            TEMP.BANK_SEC_PERPETUAL,
+            TEMP.BANK_SEC_KZZQ,
+            TEMP.BANK_SEC_ZXZQ,
+            TEMP.ISUNLISTED,
+            TEMP.IS_BZHPJ,
+            <!-- add by zhangliang G06升级字段新增  start -->
+            TEMP.CHB_ISSUER_ID,
+            TEMP.CHB_MANAGER_ID,
+            TEMP.CHB_FINANCIER_ID,
+            TEMP.PERPETUAL_FLAG,
+            TEMP.OPTION_FLAG,
+            TEMP.IS_BJSZQ,
+            TEMP.IS_PERPETUAL,
+            TEMP.IS_FBZB
+            <!-- add by zhangliang G06升级字段新增  end -->
+            ,TEMP.PRIVATE_FLAG
         )
     </insert>
     
@@ -13181,7 +13574,21 @@
 				#{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
 				#{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
 				#{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
-				#{item.bankSecPrefer,jdbcType=VARCHAR} BANK_SEC_PREFER 
+				#{item.bankSecPrefer,jdbcType=VARCHAR} BANK_SEC_PREFER,
+            <!-- G06升级 add by qufangxu at 2021-02-03 -->
+				#{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
+				#{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
+				#{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
+				#{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
+				#{item.chbIssuerId,jdbcType=VARCHAR} chb_ISSUER_ID,
+				#{item.chbManagerId,jdbcType=VARCHAR} chb_MANAGER_ID,
+				#{item.chbFinancierId,jdbcType=VARCHAR} chb_FINANCIER_ID,
+				#{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
+				#{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
+				#{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
+				#{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
+				#{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
+            <!-- G06升级 add by qufangxu at 2021-02-03 -->
             
             from dual
         </foreach>
@@ -13391,8 +13798,22 @@
             CII.FINANCIAL_COMISSUE=TEMP.FINANCIAL_COMISSUE,
             CII.BANK_SEC_CAPITAL=TEMP.BANK_SEC_CAPITAL,
             CII.BANK_SEC_PREFER=TEMP.BANK_SEC_PREFER,
-            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL
-            
+            CII.BANK_SEC_PERPETUAL=TEMP.BANK_SEC_PERPETUAL,
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+            CII.BANK_SEC_KZZQ=TEMP.BANK_SEC_KZZQ,
+            CII.BANK_SEC_ZXZQ=TEMP.BANK_SEC_ZXZQ,
+            CII.ISUNLISTED=TEMP.ISUNLISTED,
+            CII.IS_BZHPJ=TEMP.IS_BZHPJ,
+            CII.CHB_ISSUER_ID=TEMP.CHB_ISSUER_ID,
+            CII.CHB_MANAGER_ID=TEMP.CHB_MANAGER_ID,
+            CII.CHB_FINANCIER_ID=TEMP.CHB_FINANCIER_ID,
+            CII.PERPETUAL_FLAG=TEMP.PERPETUAL_FLAG,
+            CII.OPTION_FLAG=TEMP.OPTION_FLAG,
+            CII.IS_BJSZQ=TEMP.IS_BJSZQ,
+            CII.IS_PERPETUAL=TEMP.IS_PERPETUAL,
+            CII.IS_FBZB=TEMP.IS_FBZB
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -13485,7 +13906,22 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL)
+        BANK_SEC_PERPETUAL,
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+        BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ,
+        ISUNLISTED,
+        IS_BZHPJ,
+        CHB_ISSUER_ID,
+        CHB_MANAGER_ID,
+        CHB_FINANCIER_ID,
+        PERPETUAL_FLAG,
+        OPTION_FLAG,
+        IS_BJSZQ,
+        IS_PERPETUAL,
+        IS_FBZB
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+        )
         values(
         TEMP.ASSET_UUID,
         TEMP.ASSET_CODE,
@@ -13688,7 +14124,21 @@
             TEMP.FINANCIAL_COMISSUE,
             TEMP.BANK_SEC_CAPITAL,
             TEMP.BANK_SEC_PREFER,
-            TEMP.BANK_SEC_PERPETUAL
+            TEMP.BANK_SEC_PERPETUAL,
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
+            TEMP.BANK_SEC_KZZQ,
+            TEMP.BANK_SEC_ZXZQ,
+            TEMP.ISUNLISTED,
+            TEMP.IS_BZHPJ,
+            TEMP.CHB_ISSUER_ID,
+            TEMP.CHB_MANAGER_ID,
+            TEMP.CHB_FINANCIER_ID,
+            TEMP.PERPETUAL_FLAG,
+            TEMP.OPTION_FLAG,
+            TEMP.IS_BJSZQ,
+            TEMP.IS_PERPETUAL,
+            TEMP.IS_FBZB
+        <!-- G06升级 add by qufangxu at 2021-02-03 -->
         )
     </insert>
 
@@ -14418,12 +14868,31 @@
         'F09' ORG_ASSET_TYPE1,/*原资产一级分类*/
         decode(asset.REP_ASSET_TYPE,'1703','N01','1701','N02','1704','N03','1702','N04','1706','N05','1705','N06') ORG_ASSET_TYPE2,/*原资产二级分类*/
         null ORG_ASSET_TYPE3,/*原资产三级分类*/
-        addq.city buy_place/*发行人/融资人所属地区*/
+        addq.city buy_place,/*发行人/融资人所属地区*/
+
+        NULL  BANK_SEC_CAPITAL,
+        NULL BANK_SEC_PERPETUAL,
+        NULL BANK_SEC_PREFER,
+        NULL BANK_SEC_KZZQ,
+        NULL BANK_SEC_ZXZQ,
+        NULL ISUNLISTED,
+        NULL IS_BZHPJ,
+        info.ISSUER CHB_ISSUER_ID,
+        info.MANAGER CHB_MANAGER_ID,
+        info.FINANCIER CHB_FINANCIER_ID,
+        decode(info.IS_SUS, 'Y', '01', 'N', '02', info.IS_SUS) PERPETUAL_FLAG,
+        decode(info.IS_RIGHT, 'Y', '01', 'N', '02', info.IS_RIGHT) OPTION_FLAG,
+        CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
+        NULL IS_PERPETUAL,
+        NULL IS_FBZB
+
         FROM REP_ASSET_MNG_PLAN DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
         left join fin_product info
         on info.FINPROD_ID=detail.REP_FINPROD_ID
+        left join FIN_PRODUCT_TYPE infotp
+        on info.FINPROD_ID = infotp.FINPROD_ID
         left join MST_CUSTOMER_INFO_ADD addq
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
@@ -14437,6 +14906,7 @@
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+        <![CDATA[or NVL(infotp.UPDATE_TIME,infotp.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[OR NVL(CUSTOMERINFO.UPDATE_TIME,CUSTOMERINFO.CREATE_TIME) > #{INTERFDATE,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     </select>

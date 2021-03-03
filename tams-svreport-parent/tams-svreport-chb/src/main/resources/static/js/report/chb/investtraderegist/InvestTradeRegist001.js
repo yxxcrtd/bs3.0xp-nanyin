@@ -61,13 +61,15 @@ $(function() {
               { title: "反馈状态", field: 'submitFeedbackStatus',width:100 ,sortField:'submitFeedbackStatus'},
               { title: "产品代码", field: 'prodId',width:100 ,sortField:'prodId'},
               { title: "产品名称", field: 'prodName',width:100 ,sortField:'prodName'},
-              {title: '产品登记编码', field:'prodRegCode', width:150,sortField:'prodRegCode'},
+              // modify by dubaojun 2020-10-30 产品登记编码导出为空，字段设置有误问题修复 start
+              {title: '产品登记编码', field:'prodRegistCode', width:100,sortField:'prodRegistCode'},
+              // modify by dubaojun 2020-10-30 产品登记编码导出为空，字段设置有误问题修复 end
               {title: "发行机构代码",field:'registBankCode', width:150,sortField:'registBankCode'},
-              {title: '行内交易编码', field:'tradeCode', width:150,sortField:'tradeCode'},
-              {title: '行内资产负债编码', field:'assetCode', width:200,sortField:'assetCode'},
+              {title: '行内交易编码', field:'tradeCode', width:100,sortField:'tradeCode'},
+              {title: '行内资产负债编码', field:'assetCode', width:100,sortField:'assetCode'},
               {title: '币种', field:'ccy', width:100,sortField:'ccy'},
-              {title: '发生金额', field:'amt', width:150, digit:2,type:'money',sortField:'amt'},
-              {title: '折算人民币金额（元）', field:'cnyAmt', digit:2, type:'money',width:200,sortField:'cnyAmt'},
+              {title: '发生金额', field:'amt', width:100, digit:2,type:'money',sortField:'amt'},
+              {title: '折算人民币金额（元）', field:'cnyAmt', digit:2, type:'money',width:100,sortField:'cnyAmt'},
               {title: '数量',field:'num', digit:5, type:'number',width:150,sortField:'num'},
               {title: '资产计量方式',field:'assetMethod',width:150,sortField:'assetMethod'},
               {title: '资金流动类型',field:'curAssetType', width:150,sortField:'curAssetType'},
@@ -77,7 +79,7 @@ $(function() {
               {title: '交易对手方类型',field:'rivalPartyType',width:150,sortField:'rivalPartyType'},
               {title: '单位成交价格（全价）',field:'unitPriceFull', digit:4,type:'money',width:200,sortField:'unitPriceFull'},
               {title: '单位成交价格（净价）',field:'unitPriceNet', digit:4,type:'money',width:200,sortField:'unitPriceNet'},
-              {title: '到期收益率%',field:'endRate',type:'number', digit:5,width:200,sortField:'endRate'},
+              {title: '到期收益率(%)',field:'endRate',type:'number', digit:5,width:200,sortField:'endRate'},
               {title: '成交编号/合同号',field:'contractCode', width:200,sortField:'contractCode'},
               {title: '备注',field:'remark', width:200,sortField:'remark'}
           ]
@@ -258,51 +260,34 @@ $(function() {
          }
           
      });
-  
-     //数据检查
-     $('#InvestTradeRegist001_btn_checkData').click(dateCheckMethod);
-     function dateCheckMethod(){
-         var checkArr=table.getAllCheckedRows();
-         if(checkArr.length === 0) {
-             var sendStatus = $('#submitStatus').val();
-             var status = $('#status').val();
-             if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
-                 Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                 return;
-             }
-             else if(status && status.indexOf('03') > -1){
-                 Joyin.error("只能对数据状态为新建和修改的数据进行报送！");
-                 return;
-             }
-             var paramObj = getSearchParams()
-             if(!status){
-                 paramObj.status = '01,02'; 
-             }
-             Joyin.ajax('reportCheck',paramObj, function(result){
-                 window.checkResult = result;
-                 Joyin.checkData(dataTitle, checkUrl, getSearchParams());
-             })
-             return ;
-         }
-         var keyList = [];
-         for(var i=0;i<checkArr.length;i++){
-             keyList.push(checkArr[i].registSeqno);
-             if(checkArr[i].sendStatus !="01"){
-                 Joyin.error("数据检查只能检查未报送数据，请重新选择！");
-                 return;
-             }
-             else if(checkArr[i].status && checkArr[i].status.indexOf('03') > -1){
-                 Joyin.error("选择的报送数据中存在删除状态的数据，请重新选择！");
-                 return;
-             }
-         };
-         Joyin.ajax('reportCheck',{keyList: JSON.stringify(checkArr)}, function(result){
-             window.checkResult = result;
-             Joyin.checkData(dataTitle, checkUrl, {checkKeys: keyList.join(',')});
-         })
-     
-     }
-         
+
+    /**start   中债一二期直连新加  add  by wangzehui  20201012  */
+    /**
+     * 数据检查
+     */
+    $('#InvestTradeRegist001_btn_checkData').click(function(){
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "checkData";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /**
+     * 报送
+     */
+    $('#InvestTradeRegist001_btn_submit').click(function () {
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "submitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /**
+     * 重新发送
+     */
+    $('#InvestTradeRegist001_btn_reSubmit').click(function () {
+        var paramObj = getSearchParams();
+        paramObj.opertionType = "reSubmitChb";
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /**end   中债一二期直连新加  add  by wangzehui  20201012  */
+
      function init(){
   //			// 报送日期初始化
   //			$('#submitDate').val(searchDataStart + ' - ' + searchDataEnd);

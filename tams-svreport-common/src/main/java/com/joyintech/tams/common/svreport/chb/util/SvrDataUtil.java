@@ -97,6 +97,7 @@ public class SvrDataUtil {
             // 从缓存中获取所有数据字典
             Map<String, DataDict> dataDictMap = CacheUtil.getAllDictCode();
             String code = dictCode.getValue();
+
             if (null != dataDictMap) {
             	DataDict dto = dataDictMap.get(code);
 
@@ -309,5 +310,35 @@ public class SvrDataUtil {
             return result;
     	}
     	return CacheUtil.getAppParamCache(pattern,paramKey);
+    }
+    
+    /**
+     * 获取数据字典List
+     *
+     * @param dictCode 数据字典
+     * @return 数据字典List
+     * @see
+     * @since 1.0
+     */
+    public static List<String> getSysDictDataList(final DictCode dictCode) {
+        List<String> resultList = new ArrayList<String>();
+
+        if (StringUtil.isNotEmpty(dictCode)) {
+            // 从缓存中获取所有数据字典
+            Map<String, DataDict> dataDictMap = CacheUtil.getAllDictCode();;
+
+            String code = dictCode.getValue();
+
+            DataDict dto = dataDictMap.get(code);
+
+            if (null != dto) {
+                List<? extends DataDictItem> items = dto.getItems();
+                for (DataDictItem item : items) {
+                	resultList.add(item.getItemCode());
+                }
+            }
+        }
+
+        return resultList;
     }
 }

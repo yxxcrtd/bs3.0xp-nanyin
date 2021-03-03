@@ -4,6 +4,7 @@ package com.joyintech.tams.svreport.chb.perprodeclarereg.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
@@ -93,5 +94,30 @@ public class PerProDeclareRegMService extends BaseService<PerProDeclareRegDto>{
 	       		Integer.class);
 		
 	}
-	
+	/**statr  中债一二期直连报送功能  add  by  ***  20201010 */
+    /**
+     * 报送检查
+     *
+     * @return 检查结果
+     * @see
+     * @since 1.0
+     */
+    public Map<String,Object> submitBeforeCheck(Map<String, Object> param) {
+    	return restTemplate.postForObject(
+ 	       		SvrServiceApplication.CHB_SERVICE_NAME + "/PerProDeclareReg/submitBeforeCheck", param,
+ 	       	Map.class);
+    }
+    
+	/**end  中债一二期直连报送功能  add  by  ***  20201010 */
+
+	/**
+	 *  查询行内标识码
+	 * @param map 入参
+	 * @return 行内标识码列表
+	 */
+	public List<SelectOptionDto> queryProdInsIdList(Map<String, Object> map) {
+		return restTemplate.postForList(
+				SvrServiceApplication.CHB_SERVICE_NAME + "/PerProDeclareReg/queryProdInsIdList",map,
+				SelectOptionDto.class);
+	}
 }

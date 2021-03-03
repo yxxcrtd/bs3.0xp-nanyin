@@ -1,24 +1,22 @@
 package com.joyintech.tams.svreport.interf.chb.assetinfo.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.MstBondCreditRatingMapper;
+import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
+import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.SvrMstBondCreditRatingMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -33,20 +31,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfDefine;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
-import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
-import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.SvrMstBondCreditRatingMapper;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * @Description 债券评级信息文件接口
@@ -224,11 +220,54 @@ public class SvrSecRatingFileImpService extends FileImpService {
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
 		String remoteDir = "";
 		String result = "";
+		logger.debug("数据转换---开始-----");
+		List<Map<String, String>> listDataConvert = new ArrayList<>();
+		Map<String,String> mapDataConvert = new HashMap<>();
+		for(Map<String, String> mapData : listData){
+			// 债券代码
+			mapDataConvert.put("O_CODE",mapData.get("SECID"));
+			// 评级日期
+			mapDataConvert.put("GRADE_DATE",mapData.get("PUBDATE"));
+			// 评级机构
+			mapDataConvert.put("GRADE_ORG_ID",mapData.get("RATINGORG"));
+			// 评级类型
+			mapDataConvert.put("O_TYPE",mapData.get("RATINGTYPE"));
+			// 长短期
+			mapDataConvert.put("SHORT_LONG_TERM",mapData.get("RATINGSUBTYPE"));
+			// 评级结果
+			mapDataConvert.put("GRADE_RESULT",mapData.get("RATING"));
+			// 评级结果
+			mapDataConvert.put("IS_RECOMMAND",mapData.get("IS_RECOMMAND"));
+			// 创建部门
+			if (StringUtil.isNotBlank(mapData.get("CREATE_DEPT"))){
+				mapDataConvert.put("CREATE_DEPT",mapData.get("CREATE_DEPT"));
+			}
+			// 创建人
+			if (StringUtil.isNotBlank(mapData.get("CREATE_USER"))){
+				mapDataConvert.put("CREATE_USER",mapData.get("CREATE_USER"));
+			}
+			// 创建时间
+			if (StringUtil.isNotBlank(mapData.get("UPDATE_TIME"))){
+				mapDataConvert.put("UPDATE_TIME",mapData.get("UPDATE_TIME"));
+			}
+			// 更新人
+			if (StringUtil.isNotBlank(mapData.get("UPDATE_USER"))){
+				mapDataConvert.put("UPDATE_USER",mapData.get("UPDATE_USER"));
+			}
+			// 更新时间
+			if (StringUtil.isNotBlank(mapData.get("UPDATE_TIME"))){
+				mapDataConvert.put("UPDATE_TIME",mapData.get("UPDATE_TIME"));
+			}
+			// 装入list
+			listDataConvert.add(mapDataConvert);
+		}
+		logger.debug("数据转换---结束-----");
+
 		logger.debug("评级数据检查---开始-----:" +  df.format(new Date()));
 		@SuppressWarnings("unused")
-		List<Map<String, String>> listError = checkData(listData, interfFile.getFilename(), InterfDefine.债券评级数据.getCode(), InterfDefine.债券评级数据.getCode(), null,"SECID","PUBDATE","RATINGORG","RATINGTYPE","RATINGSUBTYPE");
+		List<Map<String, String>> listError = checkData(listDataConvert, interfFile.getFilename(), InterfDefine.债券评级数据.getCode(), InterfDefine.债券评级数据.getCode(), null,"SECID","PUBDATE","RATINGORG","RATINGTYPE","RATINGSUBTYPE");
 		logger.debug("评级数据检查---结束-----:" +  df.format(new Date()));
-		if(CollectionUtils.isEmpty(listData)){
+		if(CollectionUtils.isEmpty(listDataConvert)){
 			return "success";
 		}
 		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.债券评级数据.getCode());
@@ -238,7 +277,7 @@ public class SvrSecRatingFileImpService extends FileImpService {
         }
         String saveFlag = interfConfig.getContentType();
         logger.debug("评级数据入库---开始-----:" +  df.format(new Date()));
-		result = saveData(listData,saveFlag,null);
+		result = saveData(listDataConvert,saveFlag,null);
 		logger.debug("评级数据入库---结束-----:" +  df.format(new Date()));
 		// 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.债券评级数据.getCode());
@@ -301,14 +340,10 @@ public class SvrSecRatingFileImpService extends FileImpService {
 	}
 
 	/**
-     * 将map转换为entity格式
-     * @param dataList 传入的listMap
-     * @param entities 转换后的lis
-     * @param listCloumn 表列名
-     * @param interType 数据来源
-     * @see
-     * @since 1.0
-     */
+	 * 将map转换为entity格式
+	 * @param dataList
+	 * @return
+	 */
     @SuppressWarnings("unused")
 	private List<MstBondCreditRating> convertMapToEntity(List<Map<String, String>> dataList) {
     	List<MstBondCreditRating> rs = new ArrayList<MstBondCreditRating>();
@@ -392,17 +427,15 @@ public class SvrSecRatingFileImpService extends FileImpService {
     }
     
     private List<MstBondCreditRating> dataConversionEntity(List<Map<String, String>> datamapList) {
-    	List<MstBondCreditRating> rs = new ArrayList<MstBondCreditRating>();
+    	List<MstBondCreditRating> rs = new ArrayList<>();
     	for(Map<String, String> map : datamapList){
 			MstBondCreditRating dto = new MstBondCreditRating();
-    		dto.setoCode(map.get("SECID"));//债券代码（市场代码）
-        	dto.setGradeDate(DateUtil.parse(map.get("PUBDATE")));//评级日期
-        	dto.setGradeOrgId(map.get("RATINGORG"));//评级机构
-        	dto.setoType(map.get("RATINGTYPE"));//评级类型,01:主体评级、02:债项评级
-        	dto.setShortLongTerm(map.get("RATINGSUBTYPE"));//长短期,01:短期 02:长期
-        	dto.setGradeResult(map.get("RATING"));//评级结果
-//        	dto.setSecIssueId(map.get("CREATE_DEPT"));//债券发行人
-//        	dto.setInputType(map.get("CREATE_DEPT"));//录入方式
+    		dto.setoCode(map.get("O_CODE"));//债券代码（市场代码）
+        	dto.setGradeDate(DateUtil.parse(map.get("GRADE_DATE")));//评级日期
+        	dto.setGradeOrgId(map.get("GRADE_ORG_ID"));//评级机构
+        	dto.setoType(map.get("O_TYPE"));//评级类型,01:主体评级、02:债项评级
+        	dto.setShortLongTerm(map.get("SHORT_LONG_TERM"));//长短期,01:短期 02:长期
+        	dto.setGradeResult(map.get("GRADE_RESULT"));//评级结果
         	dto.setIsRecommand(map.get("IS_RECOMMAND"));//是否推荐,01是02否
 			if(StringUtils.isNotBlank(map.get("CREATE_DEPT"))){
 				dto.setCreateDept(map.get("CREATE_DEPT"));//创建部门

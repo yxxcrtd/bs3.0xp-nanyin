@@ -85,7 +85,7 @@ $(function(){
                     $(addTableData).each(function(i,v){
                         if(indentifyMark===v.indentifyMark && v.submitStatusName==='未报送'){
                             table.checkRow(v.LAY_TABLE_INDEX);
-                            dateCheckMethod();
+                            dateCheckMethod("checkData");
                             isChecked = true;
                             return false;
                         }
@@ -110,6 +110,7 @@ $(function(){
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100, sortField:'submitFeedbackStatus' },
             { title: "产品登记编码", field: 'prodRegCode',width:200, sortField:'prodRegistCode'},
             { title: "理财产品代码", field: 'prodId' ,width:200, sortField:'prodId'},
+            { title: "产品名称", field: 'prodName' ,width:200, sortField:'prodName'},
             { title: "发行机构代码", field: 'issuePartyId' ,width:200, sortField:'issuePartyId'},
             { title: "募集起始日期", field: 'raiseVdate',type: 'date',width:200, sortField:'raiseVdate' },
             { title: "募集结束日期",field:'raiseEnddate',type: 'date',width:200, sortField:'raiseEnddate'},
@@ -164,7 +165,7 @@ $(function(){
             param = getPageParams();
             param.flag = flag;
             if(flag=="0"){
-            	//param.status="01";
+            	param.status="01";
             	param.submitStatus="01";
             }
             param.exportflag = 'export';
@@ -292,46 +293,41 @@ $(function(){
             Joyin.exportExcel("exportDel",param);
         }
     });
-    //数据检查
-    $('#SvrProdPersonIssue001_btn_checkData').click(dateCheckMethod);
-    function dateCheckMethod(){
-        var checkArr=table.getAllCheckedRows();
-        if(checkArr.length === 0) {
-            var sendStatus = $('#submitStatus').val();
-            var status = $('#status').val();
-            if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
-                Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行数据检查！");
-                return;
-            }
-            else if(status && status.indexOf('03') > -1){
-                Joyin.error("只能对数据状态为新建和修改的数据进行报送！");
-                return;
-            }
-            var paramObj = getPageParams()
-            if(!status){
-                paramObj.status = '01,02'; 
-            }
-            Joyin.ajax('reportCheck',paramObj, function(result){
-                window.checkResult = result;
-                Joyin.checkData(dataTitle, checkUrl, getPageParams());
-            })
-            return ;
-        }
-        var keyList = [];
-        for(var i=0;i<checkArr.length;i++){
-        	keyList.push(checkArr[i].registSeqno);
-            if(checkArr[i].sendStatus !="01"){
-                Joyin.error("数据检查只能检查未报送数据，请重新选择！");
-                return;
-            }
-            else if(checkArr[i].status && checkArr[i].status.indexOf('03') > -1){
-                Joyin.error("选择的报送数据中存在删除状态的数据，请重新选择！");
-                return;
-            }
-        };
-        Joyin.ajax('reportCheck',{checkKeys:keyList.join(',')}, function(result){
-            window.checkResult = result;
-            Joyin.checkData(dataTitle, checkUrl, {checkKeys: keyList.join(',')});
+
+    /*add by zhangliang 20201019 start*/
+    // 数据检查
+    $('#SvrProdPersonIssue001_btn_checkData').click(function(){
+        var paramObj = getPageParams();
+        paramObj.opertionType = "checkData";
+        paramObj.sendStatus = paramObj.submitStatus;
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    // 报送
+    $('#SvrProdPersonIssue001_btn_submitChb').click(function(){
+        var paramObj = getPageParams();
+        paramObj.opertionType = "submitChb";
+        paramObj.sendStatus = paramObj.submitStatus;
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    // 重新报送
+    $('#SvrProdPersonIssue001_btn_reSubmitChb').click(function(){
+        var paramObj = getPageParams();
+        paramObj.opertionType = "reSubmitChb";
+        paramObj.sendStatus = paramObj.submitStatus;
+        chbCommonCheck(table, paramObj, 'reportCheck', dataTitle, 'submitChb');
+    });
+    /*add by zhangliang 20201019 end*/
+
+    /**
+     * 报送发送接口
+     */
+    var submitChb = function(rows){
+        Joyin.confirm("请确认是否要报送选中记录？", function() {
+            layui.layer.open({type:3});
+            Joyin.ajaxJson('submitChb', {keyList: JSON.stringify(rows)}, function() {
+                table.load();
+                layui.layer.closeAll();
+            });
         })
     
     }

@@ -247,6 +247,24 @@ public class SVReportGlobalConstant {
      */
     public static final String SVR_IS_CHL_BTM = "SVR_IS_CHL_BTM";
 
+
+
+    /**
+     * 中债投资接入费用交易是否包含本行  01 包含 02 不含
+     */
+    public static final String SVR_FEE_ORG = "SVR_FEE_ORG";
+
+    /**
+     * 余额计算时单位净值是否要保留5位小数），01：是，02：否
+     */
+    public static final String SVR_QDBK_IS_PRECISION = "SVR_QDBK_IS_PRECISION";
+
+    /**
+     * 募集兑付是否统计红利再投），01：是，02：否
+     */
+    public static final String SVR_RAC_HAS_BOUNS = "SVR_RAC_HAS_BOUNS";
+
+
     /**
      * 发行机构名称add by weiyuqiang 
      */
@@ -352,6 +370,11 @@ public class SVReportGlobalConstant {
      */
     public static final String SVR_IS_SUB_SYSTEM = "SVR_IS_SUB_SYSTEM";
     /**
+     * 系统参数:是否子公司
+     */
+    public static final String SVR_IS_SUBSIDIARY = "SVR_IS_SUBSIDIARY";
+
+    /**
      * 系统参数:是否生成修改\删除未报送（Y:生成，N:不生成）
      */
     public static final String SVR_SUBMIT_ONCHANGE = "SVR_SUBMIT_ONCHANGE";
@@ -403,7 +426,7 @@ public class SVReportGlobalConstant {
     /**
      * 系统类别：01中债一二期,02人行,03中债三期，04信批（可以填多个以，隔开）
      */
-//    public static final String SVR_SYSTEM_TYPE="SVR_SYSTEM_TYPE";
+    public static final String SVR_SYSTEM_TYPE="SVR_SYSTEM_TYPE";
 
     /**
      * 产品登记编码取值主表：01-CHB_PRDRESIST_CODE,02-CHB_PRD_DECLARE_INFO
@@ -527,5 +550,20 @@ public class SVReportGlobalConstant {
     /**
      * 中债投资者明细信息是否直连 01是 02 否*/
     public static final String SVR_IS_SEND_EQUDET = "IS_SEND_EQUDET";
+    
+    /**
+     * 产品汇总信息是否从投资者交易表中汇总 01 是   02 否
+     */
+    public static final String SVR_IS_FROM_PRD_DEAL = "SVR_IS_FROM_PRD_DEAL";
+    
+    /**
+     * 是否走产品汇总交易那套逻辑
+     */
+    public static final String SVR_IS_TOATL_YES_NO = "SVR_IS_TOATL_YES_NO";
 
+    /**
+     * 募集登记客户数是否走投资者明细中取(01:是  02:否)
+     */
+    public static final String SVR_IS_EQUDET_CONUT = "SVR_IS_EQUDET_CONUT";
+    
 }

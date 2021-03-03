@@ -245,6 +245,8 @@ public class PbcPrdBaseinfoEndSub extends BaseEntity {
     public String getMdateStr() {
 		return DateUtil.format(getMdate());
 	}
+
+	public String getMdateStr2(){return DateUtil.format(getMdate(), "yyyy/M/d");}
     
     public String getBasic() {
 		return basic;

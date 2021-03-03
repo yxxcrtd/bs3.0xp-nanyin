@@ -1,36 +1,19 @@
 package com.joyintech.tams.svreport.chb.proddurationreg.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.service.SvrCommonExportService;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
@@ -39,9 +22,19 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
 import com.joyintech.tams.svreport.chb.proddurationreg.dao.ProdDurationReg001Mapper;
 import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
-import com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 产品存续期登记service
@@ -86,6 +79,16 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
      */
     @Value("${application.reportSelectOrDeleteCountForShenFen}")
     public  int reportSelectOrDeleteCountForShenFen;
+
+	@Autowired
+	private SvrMaptoEntityUtil svrMaptoEntityUtil;
+	private String tableName = "CHB_PRD_DEAL_SUB";
+
+	/**
+	 * 中债基础数据mapper
+	 */
+	@Autowired
+	private BaseMapper baseMapper;
 
 	/**
 	 * 查询页面数据
@@ -428,7 +431,7 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 	 * @since 1.0
 	 */
 	@SuppressWarnings("unchecked")
-	public void cancelMannul(Map<String, Object> map) {
+	public String cancelMannul(Map<String, Object> map) {
 		dealSearchParam(map);
 		List<ProdDurationReg001Dto> prodDurationList = new ArrayList<ProdDurationReg001Dto>();
 		//选择的手动处理
@@ -444,6 +447,11 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 			registSeqList.add(m.getRegistSeqno());
 		}
 		if (!StringUtil.isEmptyList(registSeqList)) {
+			//找sub表有没有未报送的数据
+			List<String> unregList = prodDurationReg001Mapper.selectRegistSeqnoList(prodDurationList,"01");
+			if(!CollectionUtils.isEmpty(unregList)){
+				return "fail";
+			}
             // 分批处理
             int maxDataCountOneTime = 300;
             int dataCount = registSeqList.size();
@@ -480,20 +488,22 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
         }
 		// 将履历表中履历号最大的数据挪回登记表
 //		prodDurationReg001Mapper.insertInvestorsHoldInfoRegist(list);
-	}
+		return "success";
+	}	 /**
 	 /**
      * 数据检查
-     * @param param 检查数据的关键字
+     * @param checkKeys 检查数据的关键字
      * @return 检查结果
      * @see
      * @since 1.0
      */
-    public List<ExcelValidDto> checkData(Map<String, Object> param){
+    public Map<String,Object> checkData(Map<String, Object> param){
       
         List<ProdDurationReg001Dto> equityInfoRegistList = new ArrayList<ProdDurationReg001Dto>();
         param.put("submitStatus", DictCodeListExt2.报送状态_未报送.getValue());
         param.put("deptCode", CommonUtil.getDeptCode());
         List<String> keyList = new ArrayList<String>();
+		Map<String,Object> returnMap = new HashMap<>();
         if(param.get("checkKeys")!=null){
         	keyList=StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("checkKeys"));
         	param.put("registList", keyList);
@@ -501,23 +511,33 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
         Map<String,ProdDurationReg001Dto> repmap = new HashMap<String,ProdDurationReg001Dto>();
         dealSearchParam(param);
         equityInfoRegistList= prodDurationReg001Mapper.selectAllData(param);
+		dealResultlist(equityInfoRegistList);
         List<String> checkKeys = new ArrayList<String>();
         List<ExcelValidDto> checkResult = new ArrayList<>();
 		if(CollectionUtils.isNotEmpty(equityInfoRegistList)){
 			repmap = equityInfoRegistList.stream().collect(Collectors.toMap(ProdDurationReg001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));
 			for(ProdDurationReg001Dto dto : equityInfoRegistList){
 				checkKeys.add(dto.getRegistSeqno());
+				// add by zhangliang 此处逻辑处理是因为直连报送时生产的xml文件要求yyyy-MM-dd格式，而导出excel手工报送要求yyyyMMdd格式  start
+				if (StringUtil.isNotEmpty(dto.getVdate())){
+					dto.setVdate(DateUtil.format(DateUtil.parse(dto.getVdate())));
+				}
+				if (StringUtil.isNotEmpty(dto.getMdate())){
+					dto.setMdate(DateUtil.format(DateUtil.parse(dto.getMdate())));
+				}
+				// add by zhangliang 此处逻辑处理是因为直连报送时生产的xml文件要求yyyy-MM-dd格式，而导出excel手工报送要求yyyyMMdd格式  end
 			}
 		}else{
 			if (CollectionUtils.isEmpty(equityInfoRegistList)) {
 	            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据",null));
-	            return checkResult;
+				returnMap.put("excelValidDtoList",checkResult);
+	            return returnMap;
 	        }
 		}
         // 调用检查方法
 		Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
 			if(CollectionUtils.isNotEmpty(checkKeys)){
-				List<CheckReport001Dto> resultlist = check();
+				List<CheckReport001Dto> resultlist = check(null);
 				checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
 				for(String key : checkKeys){
 					if(checkmap.get(key)!=null){
@@ -529,15 +549,15 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 						checkResult.add(exc);
 					} else {
 						ExcelValidDto exc=new ExcelValidDto();
-						exc.setValidKey("产品代码:"+repmap.get(key).getProdId());
+						exc.setValidKey("产品代码:"+repmap.get(key).getProdId() + (StringUtil.isNotEmpty(repmap.get(key).getMdate()) ? ";业务结束日:"+repmap.get(key).getMdate() : ""));
 						exc.setCheckResult("01");
 						checkResult.add(exc);
 					}
 				}
+				returnMap.put("excelValidDtoList",checkResult);
 			}
-		
-        
-        return checkResult;
+		returnMap.put("resultList",equityInfoRegistList);
+		return returnMap;
     }
     /**
 	 * @Description 检查登记表中小于今天所有未报送的数据
@@ -545,9 +565,13 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 	 * @return List<CheckReport001Dto>
 	 * @version 1.7 2019年6月24日
 	 */
-	private List<CheckReport001Dto> check(){
+	public List<CheckReport001Dto> check(Date batchDate){
 		// 数据日期为系统时间
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
+		// 供跑批使用
+		if (StringUtil.isNotEmpty(batchDate)){
+			checkdate = batchDate;
+		}
 		// 删除今天所有已检查的数据
 		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品存续期登记.getValue(),checkdate);
 		//增加例外情况过滤

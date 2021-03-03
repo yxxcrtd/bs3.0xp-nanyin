@@ -3,7 +3,9 @@ package com.joyintech.tams.common.svreport.datacheck.dao;
 import java.util.List;
 
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckCondition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface CheckConditionMapper {
     int insert(CheckCondition record);
 

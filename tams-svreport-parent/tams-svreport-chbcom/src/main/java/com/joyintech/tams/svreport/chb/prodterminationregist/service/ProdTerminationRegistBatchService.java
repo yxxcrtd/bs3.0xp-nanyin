@@ -1,13 +1,29 @@
 package com.joyintech.tams.svreport.chb.prodterminationregist.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.batch.report.common.db.SvrDBUtil;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.constant.BatchBeanName;
+import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
+import com.joyintech.tams.svreport.chb.common.SvrDataStatusUtil;
+import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
+import com.joyintech.tams.svreport.chb.prodterminationregist.dao.ProdTerminationRegist001Mapper;
+import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdForTerminationDto;
+import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto;
+import com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition;
+import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,28 +32,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.joyintech.framework.exception.BusinessException;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseService;
-import com.joyintech.tams.batch.report.common.db.SvrDBUtil;
-import com.joyintech.tams.common.base.entity.ChbPrdDealSub;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.constant.BatchBeanName;
-import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
-import com.joyintech.tams.svreport.chb.prodterminationregist.dao.ProdTerminationRegist001Mapper;
-import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdForTerminationDto;
-import com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto;
-import com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition;
-import com.joyintech.tams.svreport.position.dto.ChbPrdPosition;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 功能:产品终止登记批处理
@@ -49,8 +45,8 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ProdTerminationRegistBatchService extends SvrCBBaseService {
-    
+public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
+
     @Autowired
     private ProdTerminationRegist001Mapper prodTerminationRegist001Mapper;
     
@@ -59,7 +55,11 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
     
 	@Value("${application.reportInsertCount}")
 	public  int reportInsertCount;
-    
+    /**
+     * 入库前校验用Service
+     */
+    @Autowired
+    private ChbCommonCheckService chbCommonCheckService;
 	/**
      * 日志
      */
@@ -157,57 +157,72 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
                     }
                     prodForTerminationDto.setFeePositionList(listFee);
                     prodForTerminationDto.setDealPositionList(listDeal);
-                    
-                    ProdTerminationRegist001Dto result = new ProdTerminationRegist001Dto();
-                	result = dataProcess(prodForTerminationDto, executeDate);
-                	boolean iszero = false;
-                	if(!CollectionUtils.isEmpty(listDeal)){
-                		iszero = isAssetPosZero(listDeal.get(0).getCdate(), prodForTerminationDto.getProdId());
-                	}
-                    if (prodForTerminationDto.getRegSeq() == null) {
-                        //未报送
-                        if(DictCodeListExt2.数据状态_删除.getValue().equals(prodForTerminationDto.getStatus())){
-                        	//删除数据(未报送的删除)
-                            deletelist.add(prodForTerminationDto.getProdId());
-                            continue;
-                        }else{
-                        	// 判断产品持仓,剩余现金是否为零
-                        	if(iszero&&BigDecimal.ZERO.compareTo(balanceQtysum)==0){
-		                        //设置数据状态
-		                        result.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-		                        result.setCreateUser(CommonUtil.getUserName());
-		                        result.setUpdateUser(CommonUtil.getUserName());
-		                        insertlist.add(result);
-                        	}
-                            //删除数据(未报送的删除)
-                            deletelist.add(prodForTerminationDto.getProdId());
-                        }
-                    }else {
-                    	// 删除数据(未报送的删除)
-                        deletelist.add(prodForTerminationDto.getProdId());
-                        // 判断产品持仓,剩余现金是否为零
-                    	if(iszero&&BigDecimal.ZERO.compareTo(balanceQtysum)==0){
-                    		//已报送
-                            //设置数据状态
-                            if(DictCodeListExt2.数据状态_删除.getValue().equals(prodForTerminationDto.getStatus())){
-                            	if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(prodForTerminationDto.getProdId()).getStatus())){
-                            		continue;
-                            	}
-                                result.setStatus(DictCodeListExt2.报送数据状态_删除.getValue());
-                            }else{
-                            	if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(prodForTerminationDto.getProdId()).getStatus())){
-                            		result.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-                            	}else if(compareData(regMap.get(result.getProdId()),result)){// 判断要素表数据有没有修改
-                                    continue;
-                                }else{
-                                	result.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
-                                }
-                            }
-                            result.setCreateUser(CommonUtil.getUserName());
-                            result.setUpdateUser(CommonUtil.getUserName());
-                            insertlist.add(result);
-                    	}
+
+                    ProdTerminationRegist001Dto result = dataProcess(prodForTerminationDto, executeDate);
+
+                    boolean iszero = false;
+                    if(!CollectionUtils.isEmpty(listDeal)){
+                        iszero = isAssetPosZero(listDeal.get(0).getCdate(), prodForTerminationDto.getProdId());
                     }
+
+                    // add by zhangliang 20201109 数据流向处理 ===================================start
+                    Map<String, ProdTerminationRegist001Dto> handleDataMap = handleDataStatus(result, regMap.get(prodForTerminationDto.getProdId()));
+                    if (handleDataMap.containsKey(SvrDataStatusUtil.INSERT_DATA)){
+                        if(iszero&&BigDecimal.ZERO.compareTo(balanceQtysum)==0){
+                            insertlist.add(handleDataMap.get(SvrDataStatusUtil.INSERT_DATA));
+                        }
+                    }
+                    if (handleDataMap.containsKey(SvrDataStatusUtil.DELETE_DATA)){
+                        deletelist.add(handleDataMap.get(SvrDataStatusUtil.DELETE_DATA).getProdId());
+                    }
+
+
+
+//                    if (prodForTerminationDto.getRegSeq() == null) {
+//                        //未报送
+//                        if(DictCodeListExt2.数据状态_删除.getValue().equals(prodForTerminationDto.getStatus())){
+//                        	//删除数据(未报送的删除)
+//                            deletelist.add(prodForTerminationDto.getProdId());
+//                            continue;
+//                        }else{
+//                        	// 判断产品持仓,剩余现金是否为零
+//                        	if(iszero&&BigDecimal.ZERO.compareTo(balanceQtysum)==0){
+//		                        //设置数据状态
+//		                        result.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+//		                        result.setCreateUser(CommonUtil.getUserName());
+//		                        result.setUpdateUser(CommonUtil.getUserName());
+//		                        insertlist.add(result);
+//                        	}
+//                            //删除数据(未报送的删除)
+//                            deletelist.add(prodForTerminationDto.getProdId());
+//                        }
+//                    }else {
+//                    	// 删除数据(未报送的删除)
+//                        deletelist.add(prodForTerminationDto.getProdId());
+//                        // 判断产品持仓,剩余现金是否为零
+//                    	if(iszero&&BigDecimal.ZERO.compareTo(balanceQtysum)==0){
+//                    		//已报送
+//                            //设置数据状态
+//                            if(DictCodeListExt2.数据状态_删除.getValue().equals(prodForTerminationDto.getStatus())){
+//                            	if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(prodForTerminationDto.getProdId()).getStatus())){
+//                            		continue;
+//                            	}
+//                                result.setStatus(DictCodeListExt2.报送数据状态_删除.getValue());
+//                            }else{
+//                            	if(DictCodeListExt2.报送数据状态_删除.getValue().equals(regMap.get(prodForTerminationDto.getProdId()).getStatus())){
+//                            		result.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+//                            	}else if(compareData(regMap.get(result.getProdId()),result)){// 判断要素表数据有没有修改
+//                                    continue;
+//                                }else{
+//                                	result.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
+//                                }
+//                            }
+//                            result.setCreateUser(CommonUtil.getUserName());
+//                            result.setUpdateUser(CommonUtil.getUserName());
+//                            insertlist.add(result);
+//                    	}
+//                    }
+                    // add by zhangliang 20201109 数据流向处理 ===================================end
                 }
             }
         }
@@ -221,7 +236,9 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
 	           }
 	   		}
         
-        
+        // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+        insertlist = chbCommonCheckService.checkData(insertlist, ChbCheckTableInfo.终止登记SUB);
+        // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
         logger.debug("终止登记数据处理--------结束---------");
         int singalCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));
         int deleteCount = deletelist.size();
@@ -268,6 +285,8 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
      */
     public ProdTerminationRegist001Dto dataProcess(ProdForTerminationDto arg0,Date executeDate) {
         ProdTerminationRegist001Dto result = new ProdTerminationRegist001Dto();
+        //初始化金额数据，避免后面check被筛选掉
+        initAmtData(result);
         //汇率来源
         String exchangeSource = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE);
         Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
@@ -346,9 +365,9 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
                 if(DictCodeList.计息基础_A_360.getValue().equals(arg0.getBasic())){
                     basic = new BigDecimal(360);
                 }
-                cusYearYield = result.getCustomProfit().multiply(basic)
+                cusYearYield = result.getCustomProfit().multiply(basic).multiply(new BigDecimal(100))
                         .divide(raiseAmt.multiply(
-                                new BigDecimal(DateUtil.getBetweenDayNumber(arg0.getVdate(),endDate))), 7,
+                                new BigDecimal(DateUtil.getBetweenDayNumber(arg0.getVdate(),endDate))), 5,
                                 BigDecimal.ROUND_HALF_UP);
             }
             result.setCusYearYield(cusYearYield);
@@ -358,9 +377,9 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
             BigDecimal prdYearYield = BigDecimal.ZERO;
             BigDecimal allProfit = result.getCustomProfit().add(result.getProfit());
             if (allProfit.compareTo(BigDecimal.ZERO) != 0) {
-                prdYearYield = result.getCustomProfit().add(result.getProfit()).multiply(basic)
+                prdYearYield = result.getCustomProfit().add(result.getProfit()).multiply(basic).multiply(new BigDecimal(100))
                         .divide(raiseAmt.multiply(
-                                new BigDecimal(DateUtil.getBetweenDayNumber(arg0.getVdate(),endDate))), 7,
+                                new BigDecimal(DateUtil.getBetweenDayNumber(arg0.getVdate(),endDate))), 5,
                                 BigDecimal.ROUND_HALF_UP);
             }
             result.setPrdYearYield(prdYearYield);
@@ -371,8 +390,13 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
         result.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
         //主键
         result.setRegistSeqno(IDGenerator.generate(36));
+        // 报送流水号
+        result.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
         //产品id
         result.setProdId(arg0.getProdId());
+        //产品登记编码
+        result.setProdRegCode(arg0.getRegCode());
+        result.setProdRegistCode(arg0.getProdRegistCode());
         //机构代码
         result.setOrgCode(CommonUtil.getOrgCode());
         //部门代码
@@ -390,9 +414,47 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
             result.setChbSubmitDeadline(dateList.get(0));
             result.setSubmitDeadline(dateList.get(1));
         }
+
+        // add by zhangliang 20201109 数据流向处理 ===================================start
+        result.setStatus(arg0.getStatus());
+        // add by zhangliang 20201109 数据流向处理 ===================================end
         return result;
     }
-    
+
+
+    /**
+     * 
+     * @param result
+     */
+    private void initAmtData(ProdTerminationRegist001Dto result) {
+		//兑付客户收益
+    	result.setCustomProfit(BigDecimal.ZERO);
+    	//兑付客户总金额
+    	result.setCustomAmt(BigDecimal.ZERO);
+    	//兑付总份额
+    	result.setCustomQty(BigDecimal.ZERO);
+    	//本机构托管费
+    	result.setCustFeeIn(BigDecimal.ZERO);
+    	//本机构管理费
+    	result.setManFeeIn(BigDecimal.ZERO);
+    	//本机构销售手续费
+    	result.setCouFeeIn(BigDecimal.ZERO);
+    	//本机构其他产品费用
+    	result.setOtherFeeIn(BigDecimal.ZERO);
+    	//其他机构托管费
+    	result.setCustFeeOut(BigDecimal.ZERO);
+    	//其他机构管理费
+    	result.setManFeeOut(BigDecimal.ZERO);
+    	//其他机构销售手续费
+    	result.setCouFeeOut(BigDecimal.ZERO);
+    	//投资顾问费用
+    	result.setAdvFeeOut(BigDecimal.ZERO);
+    	//其他机构其他产品费用
+    	result.setOtherFeeOut(BigDecimal.ZERO);
+    	//银行收入
+    	result.setProfit(BigDecimal.ZERO);
+	}
+
     /**
      * @Description 判断产品持仓是否为零
      * @param mdate
@@ -428,9 +490,11 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
     }
     
     public boolean compareData(ProdTerminationRegist001Dto dto,ProdTerminationRegist001Dto regdto){
-    	ProdTerminationRegist001Dto compare1 = genDto(dto);
-    	ProdTerminationRegist001Dto compare2 = genDto(regdto);
-        if(JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))){
+        ProdTerminationRegist001Dto compare1 = genDto(dto);
+        ProdTerminationRegist001Dto compare2 = genDto(regdto);
+        if(!JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))){
+            logger.info("info:" + JSON.toJSONString(compare1));
+            logger.info("sub:" + JSON.toJSONString(compare2));
             return true;
         }else{
             return false;
@@ -478,5 +542,9 @@ public class ProdTerminationRegistBatchService extends SvrCBBaseService {
             throw new BusinessException(e);
         }
     }
-	
+
+    @Override
+    public <T> boolean compareData(T info, T sub) {
+        return this.compareData((ProdTerminationRegist001Dto) info, (ProdTerminationRegist001Dto) sub);
+    }
 }

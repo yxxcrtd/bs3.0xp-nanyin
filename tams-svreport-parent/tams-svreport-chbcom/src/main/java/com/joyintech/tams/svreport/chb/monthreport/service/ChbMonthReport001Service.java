@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.constant.DictCodeList;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -369,13 +371,27 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
         Map<String,Object> data = restTemplate.postForObject(
     	                SvrServiceApplication.CHB_SERVICE_NAME + "/ChbMonthReport/createData",selectParam,
     	                Map.class);
-    	String termname = data.get("termname").toString();
-    	String exceltemplate = "Monthreport";
+		// 获取是否子公司(01：是 02：否)
+		String isSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUBSIDIARY);
+		String exceltemplate = "Monthreport";
+		if(isSubSystem != null) {
+			if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())) {
+				exceltemplate="ZMonthreport";
+			}
+		}
+		String termname = data.get("termname").toString();
 	    String fileName = "银行月度报表"+"_"+termname+".xls";
 
 		try {
 			if("G06".equals(selectParam.get("G06"))){
-				 return exportG06MonthReportExcel(data,termname);
+				exceltemplate = "G06Monthreport";
+				if(isSubSystem != null) {
+					if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())) {
+						exceltemplate="ZG06Monthreport";
+					}
+				}
+//				 return exportG06MonthReportExcel(data,termname);
+				fileName="G06月度报表"+"_"+termname+".xls";
 			}
             return exportMonthReportExcel(data,exceltemplate,fileName);
         } catch (IOException e) {   
@@ -470,9 +486,21 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 
 	}
 	public String priview(String pageid,Map<String, Object> selectParam) {
+		// 获取是否子公司(01：是 02：否)
+		String isSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUBSIDIARY);
 		String exceltemplate =  "Monthreport";
+		if(isSubSystem != null) {
+			if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())) {
+				exceltemplate="ZMonthreport";
+			}
+		}
 		if("G06".equals(selectParam.get("G06"))){
 			exceltemplate = "G06Monthreport";
+			if(isSubSystem != null) {
+				if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())) {
+					exceltemplate="ZG06Monthreport";
+				}
+			}
 		}
 		@SuppressWarnings("unchecked")
         Map<String,Object> data = restTemplate.postForObject(
@@ -640,7 +668,18 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 			detail.setProdamount(detail.getProdamount().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
 		if(detail.getProdnetamount()!=null)//本期总募集金额
 			detail.setProdnetamount(detail.getProdnetamount().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
+		/**add by  新增字段     dongxiangyang  start*/
+		if(detail.getProdpayamount()!=null){
+			detail.setProdpayamount(detail.getProdpayamount().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
+		}if(detail.getXgbalance()!=null){
+			detail.setXgbalance(detail.getXgbalance().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
+		}if(detail.getXgbottombalance()!=null){
+			detail.setXgbottombalance(detail.getXgbottombalance().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
+		}
+		/**add by  新增字段     dongxiangyang  end*/
+
 		return detail;
+
 	}
 	
 	public List<ExcelValidDto> checkData(List<String> checkKeys){
@@ -742,6 +781,19 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 			if(detail.getDurationprodcounts()==null){
 				detail.setDurationprodcounts(0);
 			}
+			/**add by  dongxiangyang  新加字段  start*/
+			if(detail.getXgdurationprodcounts()==null){
+				detail.setXgdurationprodcounts(0);
+			}if(detail.getXgbalance()==null){
+				detail.setXgbalance(BigDecimal.ZERO);
+			}if(detail.getXgbottombalance()==null){
+				detail.setXgbottombalance(BigDecimal.ZERO);
+			}
+			if(detail.getProdpayamount()==null){
+				detail.setProdpayamount(BigDecimal.ZERO);
+			}
+			/**add by  dongxiangyang  新加字段  end*/
+
 		} else if("02".equals(isShowZero)){
 			
 			if(detail.getBalance()!=null&&(BigDecimal.ZERO).compareTo(detail.getBalance())==0){
@@ -771,6 +823,21 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 			if(detail.getDurationprodcounts()!=null&&detail.getDurationprodcounts()==0){
 				detail.setDurationprodcounts(null);
 			}
+			/**add by  dongxiangyang  新加字段  start*/
+            if(detail.getXgdurationprodcounts()!=null&&detail.getXgdurationprodcounts()==0){
+				detail.setXgdurationprodcounts(null);
+			}
+            if(detail.getXgbalance()!=null&&(BigDecimal.ZERO).compareTo(detail.getXgbalance())==0){
+				detail.setXgbalance(null);
+			}
+            if(detail.getXgbottombalance()!=null&&(BigDecimal.ZERO).compareTo(detail.getXgbottombalance())==0){
+				detail.setXgbottombalance(null);
+			}
+			if(detail.getProdpayamount()!=null&&(BigDecimal.ZERO).compareTo(detail.getProdpayamount())==0){
+				detail.setProdpayamount(null);
+			}
+			/**add by  dongxiangyang  新加字段  end*/
+
 		}
 	}
  	

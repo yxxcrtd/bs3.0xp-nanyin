@@ -92,4 +92,17 @@
 		where to_char(SENDDATE,'yyyy-MM-dd') = to_char(#{batchTime,jdbcType=DATE},'yyyy-MM-dd')
 				or to_char(UPDATETIME,'yyyy-MM-dd') = to_char(#{batchTime,jdbcType=DATE},'yyyy-MM-dd')
 	</select>
+	
+	<delete id="deleteSaleCustSvrreportOfFx" parameterType="map" >
+    	delete from SALE_CUST_SVRREPORT
+   	 	where to_char(SENDDATE,'yyyy-MM-dd') = to_char(#{batchTime,jdbcType=DATE},'yyyy-MM-dd')
+				or to_char(UPDATETIME,'yyyy-MM-dd') = to_char(#{batchTime,jdbcType=DATE},'yyyy-MM-dd')
+  	</delete>
+  	  
+  	<insert id="insertSaleCustSvrreportHis" parameterType="map">
+  	  insert into SALE_CUST_SVRREPORT_HIS
+  	  	select * from SALE_CUST_SVRREPORT 
+  	  	where to_char(SENDDATE,'yyyy-MM-dd') = to_char(#{batchTime,jdbcType=DATE},'yyyy-MM-dd')
+			  or to_char(UPDATETIME,'yyyy-MM-dd') = to_char(#{batchTime,jdbcType=DATE},'yyyy-MM-dd')
+  	</insert>
 </mapper>

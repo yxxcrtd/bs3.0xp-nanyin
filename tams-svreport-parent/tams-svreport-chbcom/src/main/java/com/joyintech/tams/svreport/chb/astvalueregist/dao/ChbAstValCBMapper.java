@@ -38,7 +38,10 @@ public interface ChbAstValCBMapper {
 	 */
 	List<ChbAstValueSub> queryGenerateList(@Param("generateDate")String generateDate);
 
-	int queryGenerateListAndInsert(@Param("generateDate")String generateDate,@Param("statusDate")Date statusDate,
+	// modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+//	int queryGenerateListAndInsert(@Param("generateDate")String generateDate,@Param("statusDate")Date statusDate,
+//			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline);
+	List<ChbAstValueSub> queryInsertGenerateList(@Param("generateDate")String generateDate,@Param("statusDate")Date statusDate,
 			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline);
 
 	

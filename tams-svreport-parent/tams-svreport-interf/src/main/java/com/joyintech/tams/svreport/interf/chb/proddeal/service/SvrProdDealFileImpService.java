@@ -5,17 +5,16 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.svreport.interf.chb.proddeal.dto.CheckReport001Dto;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -36,9 +35,6 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.ChbPrdDeal;
-import com.joyintech.tams.common.base.entity.ChbPrdFeeDeal;
-import com.joyintech.tams.common.base.entity.ChbTypeMapping;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
@@ -47,7 +43,6 @@ import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
 import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbTypeMappingMapper;
@@ -120,9 +115,10 @@ public class SvrProdDealFileImpService extends FileImpService {
 	private ChbPrdDealInterfMapper chbPrdDealInterfMapper;
 	@Autowired
 	private ProdDealInterfService prodDealInterfService;
-	
+
 	@Autowired
 	private ChbTypeMappingMapper chbTypeMappingMapper;
+
 	 /**
      * mybatis的sqlsession管理核心
      */
@@ -279,6 +275,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 							CommonUtil.getUserName());
 
 					single.setRedemptionFee(BigDecimal.ZERO);
+
+					single.setIssuePartyId(CommonUtil.getUserBank().getRegistBankCode());
+
 					listNE.add(single);
 					//认购数据需要更新要素表存续状态为01 存续，到期数据需要更新02 终止
 					if(DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(single.getTradeType())
@@ -434,13 +433,17 @@ public class SvrProdDealFileImpService extends FileImpService {
 		if("02".equals(inoraboard)) {//境外时，客户一级类型为C06，客户一级类型为C0600
 //			c1 = "C06";
 //			c2 = "C0600";
-			c2 = customerMapJW.get(map.get("cusCode")).getObjdatatypeid();
+
+				c2 = customerMapJW.get(map.get("cusCode")).getObjdatatypeid();
+
 			c1 = null;
 			if (c2 != null && c2.length() > 3) {
 				c1 = c2.substring(0, 3);
 			}
 		}else {//境内时，从映射表取值客户一级类型，客户一级类型
-			c2 = customerMap.get(map.get("cusCode")).getObjdatatypeid();
+
+			  c2 = customerMap.get(map.get("cusCode")).getObjdatatypeid();
+
 			c1 = null;
 			if (c2 != null && c2.length() > 3) {
 				c1 = c2.substring(0, 3);
@@ -482,8 +485,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeCost(new BigDecimal(map.get("prinamt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -499,8 +502,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeCost(new BigDecimal(map.get("sgAmt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -516,8 +519,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setIntAmt(new BigDecimal(map.get("shAmt")).subtract(new BigDecimal(map.get("shPrincipal"))));
 				ibdt.setTradeCost(new BigDecimal(map.get("shPrincipal")));
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -533,8 +536,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setIntAmt(new BigDecimal(map.get("expireAmt")).subtract(new BigDecimal(map.get("expireAmtPrincipal"))));
 				ibdt.setTradeCost(new BigDecimal(map.get("expireAmtPrincipal")));
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -550,8 +553,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeQty(new BigDecimal(map.get("rebonusAmtQty")));
 				ibdt.setTradeCost(new BigDecimal(map.get("rebonusAmt")));
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -567,8 +570,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeQty(BigDecimal.ZERO);
 				ibdt.setTradeCost(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -582,11 +585,11 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeType("14");
 				ibdt.setTradeCost(new BigDecimal(map.get("qtyAddAmt")));
 				ibdt.setTradeQty(new BigDecimal(map.get("qtyAdd")));
-				ibdt.setTradePrince(BigDecimal.ZERO);
+				ibdt.setTradePrince(new BigDecimal(map.get("qtyAddAmt")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -600,11 +603,11 @@ public class SvrProdDealFileImpService extends FileImpService {
 				ibdt.setTradeType("15");
 				ibdt.setTradeCost(new BigDecimal(map.get("qtyMinusPrincipal")));
 				ibdt.setTradeQty(new BigDecimal(map.get("qtyMinus")));
-				ibdt.setTradePrince(BigDecimal.ZERO);
+				ibdt.setTradePrince(new BigDecimal(map.get("qtyMinusPrincipal")));
 				ibdt.setIntAmt(BigDecimal.ZERO);
 				keyVFinal.append(ibdt.getTradeType());
-		    	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
-		    	ibdt.setTradeId(md5Key);
+				String md5Key = DigestUtils.md5Hex(keyVFinal.toString());
+				ibdt.setTradeId(md5Key);
 				deals.add(ibdt);
 			} catch (CloneNotSupportedException e) {
 				logger.error(e.getMessage(), e);
@@ -847,7 +850,28 @@ public class SvrProdDealFileImpService extends FileImpService {
         }
         String saveFlag = interfConfig.getContentType();
         if(!listData.isEmpty()){
+			//1、复制入库处理用的listData（List<map>，用作客户数检查数据。
+			List<Map<String, String>> listdataCheck=listData;
+			String checkDate="";
+
+			for(Map<String, String> map1:listdataCheck){
+				if(map1.get("checkDate")!=null){
+					checkDate=map1.get("checkDate");
+				}
+			}
+        	//设置系统参数
+			String svrCusNumCheck = SvrDataUtil.getSysParam("SAVE_CUS_NUM_CHECK_01");
+            for(int i=0;i<listData.size();i++){
+             if(listData.get(i).containsKey("checkDate")){
+				 listData.remove(i);
+			 }
+			}
         	result=saveData(listData, saveFlag, interfFile.getDataSource());
+			//1、当系统参数设置为【是否做客户数检查 = 01：是】的时候，进行以下处理：
+
+			if(StringUtil.equals("01",svrCusNumCheck)){
+				cusNumChkInterf(listdataCheck,checkDate);
+			}
         }
         // 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.投资者交易信息接口数据.getCode());
@@ -924,4 +948,153 @@ public class SvrProdDealFileImpService extends FileImpService {
         }
         logger.debug("产品交易插入结束--------------" + new Date());
     }
+
+	/**
+	 * 检查客户数方法
+	 * @param listData
+	 * @param checkDate
+	 */
+	public void cusNumChkInterf(List<Map<String, String>> listData,String   checkDate) {
+		//定义返回对象
+		List<CheckReport001Dto> resultList = new ArrayList<>();
+
+
+		//新建对象： map<string 产品ID，产品客户数信息DTO>
+		HashMap<String, ChbPrdCustNumIfo> prdMap = new HashMap<>();
+
+		//新建对象： 产品列表list<Stirng>  对象产品list
+		Set<String> prdList = new HashSet<>();
+
+		//以输入参数.ListData为基础、进行循环处理，生成产品维度的客户数数据
+		for (Map<String, String> map : listData) {
+			//以此条数据的产品代码为Key,进行是否认购数据判断，当此条数据为认购数据的情况下，进行以下处理：
+			if (!StringUtil.isEmpty(map.get("prinamt")) && new BigDecimal(map.get("prinamt")).compareTo(BigDecimal.ZERO) != 0) {
+				BigDecimal cust_counts = new BigDecimal(map.get("saveCusNum"));
+
+				//在【产品信息map】中存在prodDealInterfService
+				if (prdMap.containsKey(map.get("finprodId"))) {
+
+					// 产品信息map.产品客户数信息DTO.持有客户数  + 此条信息的.保有量客户数
+					prdMap.get(map.get("finprodId")).getCustHeldNum().add(cust_counts);
+
+				} else {
+					//在【产品信息map】中不存在
+					//以此条记录的信息，对【产品客户信息DTO】进行设值
+					ChbPrdCustNumIfo custNumIfo = new ChbPrdCustNumIfo();
+					custNumIfo.setPrdCode(map.get("finprodId"));
+					custNumIfo.setInspectionResults(null);
+					custNumIfo.setWarningInformation(null);
+					//custNumIfo.setDataOfDate(map.get());
+					BigDecimal counts = cust_counts;
+					custNumIfo.setCustHeldNum(counts);
+					custNumIfo.setThrCustNum(new BigDecimal("0"));
+					//往产品信息Map中，设值<此条记录的.产品代码，循环中新建的.产品客户信息DTO>
+					prdMap.put(map.get("finprodId"), custNumIfo);
+					//对象产品list.add(此条数据的产品ID）
+					prdList.add(map.get("finprodId"));
+				}
+			}
+		}
+		List<String>  prList=new ArrayList<>();
+        for(String se:prdList){
+			prList.add(se);
+		}
+			//组装一二期客户数信息
+			List<ChbPrdCustNumIfo> lsitOtbch =new ArrayList<ChbPrdCustNumIfo>(prdMap.values());
+
+			// 2、以1中处理【对象产品List】为查询条件，查询三期数据、并进行比较处理
+			List<ChbPrdCustNumIfo> lsitOtbchThree = chbPrdDealInterfMapper.getraiseCustNumThree(prList, com.joyintech.framework.util.DateUtil.parse(checkDate));
+
+			//2.2 、比较一二期 与 三期的客户数
+
+			//a、三期不存在、一二期存在  &&  c、三期存在、一二期存在，但是客户数不一致
+			complareList(lsitOtbchThree, lsitOtbch, com.joyintech.framework.util.DateUtil.parse(checkDate), resultList, false);
+			//b、三期存在，一二期不存在
+			complareList(lsitOtbch, lsitOtbchThree, com.joyintech.framework.util.DateUtil.parse(checkDate), resultList, true);
+
+			//3、检查结果数据、批量入库
+            if(resultList!=null&&resultList.size()>0){
+				int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
+				int batchLastIndex = batchCount;// 每批最后一个的下标
+				for (int index = 0; index < resultList.size();) {
+					if (batchLastIndex > resultList.size() - 1) {
+						batchLastIndex = resultList.size();
+						chbPrdDealInterfMapper.batchInsert(resultList.subList(index, batchLastIndex));
+						break;// 数据删除完毕,退出循环
+					} else {
+						chbPrdDealInterfMapper.batchInsert(resultList.subList(index, batchLastIndex));
+						index = batchLastIndex;// 设置下一批下标
+						batchLastIndex = index + batchCount;
+					}
+				}
+			}
+
+
+	}
+	/**
+	 * 比较2个list中是否相互存在
+	 * otList  一二期的集合     thList  三期的集合
+	 *
+	 * @param otList
+	 * @param thList
+	 * @return
+	 */
+	public void complareList(List<ChbPrdCustNumIfo> otList, List<ChbPrdCustNumIfo> thList, Date checkdate,
+							 List<CheckReport001Dto> returList, boolean flag) {
+		Map<String, ChbPrdCustNumIfo> map = new HashMap<>();
+		//otList 转为map
+		if (otList != null) {
+			map = otList.stream().collect(Collectors.toMap(ChbPrdCustNumIfo::getPrdCode, Function.identity(), (key1, key2) -> key2));
+		}
+		if (thList != null && thList.size() > 0) {
+			for (ChbPrdCustNumIfo cinfo : thList) {
+				if (!map.containsKey(cinfo.getPrdCode())) {
+					CheckReport001Dto dto = new CheckReport001Dto();
+					//检查序列号  自动生成
+					dto.setCheckSeqno(IDGenerator.generate(32));
+					//报表ID=DictCodeListExt2.报表名称_募集总量登记.getValue()
+					dto.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
+					//报表名称
+					dto.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
+					//唯一标识="产品代码:" + 此条记录的.产品代码
+					dto.setValidKey("产品代码" + cinfo.getPrdCode());
+					//检查结果
+					dto.setCheckResult("03");
+					//警告信息
+					if (flag) {
+						dto.setWarnInfo("客户数不一致（批前检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + 0 + "}；");
+					} else {
+						dto.setWarnInfo("客户数不一致（批前检查），三期客户数：{" + 0 + "}、一二期客户数：{" + cinfo.getCustHeldNum() + "}；");
+					}
+					//数据日期
+					dto.setDataTime(checkdate);
+					returList.add(dto);
+				} else {
+					//c、三期存在、一二期存在，但是客户数不一致
+					if (cinfo.getCustHeldNum().compareTo(map.get(cinfo.getPrdCode()).getCustHeldNum()) != 0 &&
+							!flag) {
+						CheckReport001Dto dto = new CheckReport001Dto();
+						//检查序列号  自动生成
+						dto.setCheckSeqno(IDGenerator.generate(32));
+						//报表ID=DictCodeListExt2.报表名称_募集总量登记.getValue()
+						dto.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
+						//报表名称
+						dto.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
+						//唯一标识="产品代码:" + 此条记录的.产品代码
+						dto.setValidKey("产品代码" + cinfo.getPrdCode());
+						//检查结果
+						dto.setCheckResult("03");
+						//警告信息
+						dto.setWarnInfo("客户数不一致（批前检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + map.get(cinfo.getPrdCode()).getCustHeldNum() + "}；");
+						//数据日期
+						dto.setDataTime(checkdate);
+						returList.add(dto);
+					}
+				}
+			}
+
+		}
+
+	}
+
 }

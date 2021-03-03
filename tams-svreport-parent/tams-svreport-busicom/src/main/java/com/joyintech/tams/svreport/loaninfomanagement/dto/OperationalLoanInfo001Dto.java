@@ -44,10 +44,6 @@ public class OperationalLoanInfo001Dto extends ChbLoanDetailInfo implements Proc
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 资产类型
-	 */
-	private String assetType;
 	
 	/**
      * 操作类型
@@ -99,14 +95,6 @@ public class OperationalLoanInfo001Dto extends ChbLoanDetailInfo implements Proc
 
 	public void setSelectedItem(List<OperationalLoanInfo001Dto> selectedItem) {
 		this.selectedItem = selectedItem;
-	}
-
-	public String getAssetType() {
-		return assetType;
-	}
-
-	public void setAssetType(String assetType) {
-		this.assetType = assetType;
 	}
 
 }

@@ -197,8 +197,8 @@
 
 	<result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
 	<result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
-	<result column='PRIN_BASEAMT' property='prinBaseAmt' jdbcType='DECIMAL' />
-	<result column='FMDATE' property='fmDate' jdbcType='TIMESTAMP' />
+	<result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
+	<result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
 	<result column='COUPON_SPECIES' property='couponSpecies' jdbcType='VARCHAR' />
 	<result column='INTEREST_RULE_FLAG' property='interestRuleFlag' jdbcType='VARCHAR' />
 	<result column='INTPAY_RULE' property='intpayRule' jdbcType='VARCHAR' />
@@ -429,8 +429,8 @@
     
    	<result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
 	<result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
-	<result column='PRIN_BASEAMT' property='prinBaseAmt' jdbcType='DECIMAL' />
-	<result column='FMDATE' property='fmDate' jdbcType='TIMESTAMP' />
+	<result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
+	<result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
 	<result column='COUPON_SPECIES' property='couponSpecies' jdbcType='VARCHAR' />
 	<result column='INTEREST_RULE_FLAG' property='interestRuleFlag' jdbcType='VARCHAR' />
 	<result column='INTPAY_RULE' property='intpayRule' jdbcType='VARCHAR' />
@@ -1013,8 +1013,8 @@
         #{capUseInduLevel2,jdbcType=VARCHAR},#{issuePartyName,jdbcType=VARCHAR},
         #{depoType,jdbcType=VARCHAR},
 				#{rivalPartyType,jdbcType=VARCHAR},
-				#{prinBaseAmt,jdbcType=DECIMAL},
-				#{fmDate,jdbcType=TIMESTAMP},
+				#{prinBaseamt,jdbcType=DECIMAL},
+				#{fmdate,jdbcType=TIMESTAMP},
 				#{couponSpecies,jdbcType=VARCHAR},
 				#{interestRuleFlag,jdbcType=VARCHAR},
 				#{intpayRule,jdbcType=VARCHAR},
@@ -3048,8 +3048,8 @@
 			ISSUE_PARTY_NAME		ISSUEPARTYNAME,
 			DEPO_TYPE  depoType,
 			RIVAL_PARTY_TYPE  rivalPartyType,
-			PRIN_BASEAMT  prinBaseAmt,
-			FMDATE  fmDate,
+			PRIN_BASEAMT  prinBaseamt,
+			FMDATE  fmdate,
 			COUPON_SPECIES  couponSpecies,
 			INTEREST_RULE_FLAG  interestRuleFlag,
 			INTPAY_RULE  intpayRule,

@@ -18,10 +18,13 @@
 <body>
 	<div layout:fragment="content">
 		<div class="form-button-area" export="false">
+			<a id="AssetInfoRegist001_btn_checkData" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-datacheck"></i>数据检查</a>
         	<a id="AssetInfoRegist001_btn_manual" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-hand"></i>手工处理</a>
             <a id="AssetInfoRegist001_btn_cancelManual" class="layui-btn layui-btn-sm btn-default">取消手工处理</a>
 			<a id="AssetInfoRegist001_btn_chbexport" class="layui-btn layui-btn-sm btn-export btn-default">导出中债Excel</a>
             <a id="AssetInfoRegist001_btn_exportDel" class="layui-btn layui-btn-sm btn-export btn-default">导出删除Excel</a>
+			<a id="AssetInfoRegist001_btn_submit" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-sent"></i>报送</a>
+			<a id="AssetInfoRegist001_btn_reSubmit" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-sent"></i>重新报送</a>
 		</div>
 		<div class="joyin-form-wrap joyin-filter-form condition-area" line="2">
 			<form class="layui-form" id="searchForm">
@@ -170,7 +173,7 @@
 				<li lay-id="01">本行/他行存款||大额存单</li>
 				<li lay-id="02">拆放同业/买入返售(资产)||同业拆入/卖出回购(负债)</li>
 				<li lay-id="03">债券类资产/理财直接融资工具/同业存单</li>
-				<li lay-id="04">非标准化债权类资产/信贷资产流转项目</li>
+				<li lay-id="04">非标准化债权类资产/新增可投资资产</li>
 				<li lay-id="05">票据类资产/信用证类资产</li>
 				<li lay-id="06">权益类资产</li>
 				<li lay-id="07">金融衍生品</li>
@@ -259,10 +262,12 @@
 			var cny=/*[[${cny}]]*/'';
 			var validKey=/*[[${cny}]]*/'';
 			var submitFeedbackStatus=/*[[${submitFeedbackStatus}]]*/'';
+			var dataTitle = '<h4 class="modal-title" id="myModalLabel">资产要素登记数据检查 </h4>';
 		</script>
 		<script
 			data-th-src="@{/js/report/chb/assetinforegist/AssetInfoRegist001.js}"
 			type="text/javascript"></script>
+		<script data-th-src="@{/js/report/chb/datacheck/totalcheck/ChbCommonCheck.js}" type="text/javascript"></script>
 		<script data-th-src="@{/js/report/report-common.js}"
 			type="text/javascript"></script>
 	</div>

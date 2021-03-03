@@ -12,7 +12,6 @@
 			<artifactId>tams-svreport-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>bcmail-jdk14</artifactId>

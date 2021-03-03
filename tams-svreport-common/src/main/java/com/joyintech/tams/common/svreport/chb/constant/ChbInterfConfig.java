@@ -24,9 +24,9 @@ public enum  ChbInterfConfig {
 	中债交易对手信息接口("CHB_COUNTER_PARTY"),
 	
 	产品要素信息接口("CHB_PRD_BASEINFO"),
-	
+
 	资产基础指标信息接口("CHB_ASSET_INDEX"),
-	
+
 	产品申报信息接口("CHB_PRD_DECLARE"),
 	
 	周期型产品余额接口("CHB_CPROD_BALANCE"),
@@ -36,8 +36,11 @@ public enum  ChbInterfConfig {
 	产品费用头寸接口("CHB_PRDFEE_BASIS_DATA"),
 	
 	产品分红交易接口("CHB_PRD_BONUS_DEAL"),
+
 	产品利率基本信息接口("CHB_PRD_RATE"),
-	资产利率基本信息接口("CHB_ASSET_RATE");
+	资产利率基本信息接口("CHB_ASSET_RATE"),
+	产品汇总交易接口("CHB_PRD_DEAL_TOTAL")
+	;
 	
 	
     /**

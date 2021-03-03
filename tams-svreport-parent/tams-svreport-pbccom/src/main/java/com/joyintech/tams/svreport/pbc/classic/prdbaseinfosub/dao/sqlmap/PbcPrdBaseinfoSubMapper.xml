@@ -747,7 +747,7 @@
 		then to_number(substr(PROD_STAGE,0,4))
 		else PROD_STAGE
 		end PROD_STAGE,
-		PROD_ID,
+		INFO.PROD_ID,
 		RAISE_CCY,
 		CASH_PRIN_CCY,
 		CASH_PROF_CCY,
@@ -798,9 +798,24 @@
 		left join CHB_ORG_REGIST_BANK_CODE cbc on
 		cbc.REGIST_BANK_CODE=info.ISSUE_PARTY_ID
 		and CBC.STATUS='E'
-		
-		where to_char(greatest(nvl(NVL(info.UPDATE_TIME,info.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')),nvl(info.VDATE,to_date('1900-01-01','yyyy-MM-dd')))
-		,'yyyy-MM-dd') = to_char(#{statusDate,jdbcType=DATE},'yyyy-MM-dd')
+
+		/****add by leipeng 人行产品基本信息，人行产品代码一旦生成，修改基本信息数据在重新跑批也不会改变了  start**/
+		LEFT JOIN (
+		select nvl(DEAL.FPROD_ID,DEAL.PROD_ID) PROD_ID, max(UPDATE_TIME) UPDATE_TIME,max(CREATE_TIME) CREATE_TIME
+		from
+		CHB_PRD_DEAL DEAL
+		where  trade_type = '01' and status IN ('E','M')
+		group by DEAL.FPROD_ID,DEAL.PROD_ID
+
+		) DEAL ON INFO.PROD_ID = deal.PROD_ID
+		where to_char(greatest(nvl(NVL(info.UPDATE_TIME, info.CREATE_TIME),
+				to_date('1900-01-01', 'yyyy-MM-dd')),
+				nvl(info.VDATE, to_date('1900-01-01', 'yyyy-MM-dd')),
+				nvl(NVL(DEAL.UPDATE_TIME, DEAL.CREATE_TIME),
+				to_date('1900-01-01', 'yyyy-MM-dd'))),
+				'yyyy-MM-dd') = to_char(#{statusDate,jdbcType=DATE},'yyyy-MM-dd')
+		and deal.PROD_ID is not null
+		/****add by leipeng 人行产品基本信息，人行产品代码一旦生成，修改基本信息数据在重新跑批也不会改变了   end**/
 		and info.fprod_id is null
 		and info.ISSUING_STATUS='01'
 		<if test="prodList !=null  and prodList.size()!=0">
@@ -881,7 +896,10 @@
 			t1.OUT_DEP_NAME outDepName,
 			t1.VDATE vdate,
 			t1.MDATE mdate,
-			t1.ACCOUNT_ID accountId,
+		    <!-- modify by zhangliang 20210220 工单号:YHZGCPB20210129004 start -->
+		    <!-- t1.ACCOUNT_ID accountId, -->
+		    NVL(t3.PBC_CODE, t1.ACCOUNT_ID) accountId,
+		    <!-- modify by zhangliang 20210220 工单号:YHZGCPB20210129004 end -->
 			t1.IS_CONSTRACTE isConstracte,
 			t1.TRANSFER_TYPE transferType,
 			t1.IDENTI_FLAG identiFlag,
@@ -912,6 +930,18 @@
 	            status='E'
 	            AND code_type='01'
 	    )t2 ON t2.inside_prod_id=t1.PROD_ID
+	  <!-- add by zhangliang 20210220 工单号:YHZGCPB20210129004 start -->
+	  LEFT JOIN(
+		  SELECT
+				  inside_prod_id,
+				  pbc_code
+		  FROM
+				pbc_prod_assetpool_code
+		  WHERE
+				status='E'
+		  AND code_type='02'
+	  )t3 ON t3.inside_prod_id=t1.PROD_ID
+	  <!-- add by zhangliang 20210220 工单号:YHZGCPB20210129004 end -->
 	    LEFT JOIN CHB_ORG_REGIST_BANK_CODE CORBC
 	    ON CORBC.REGIST_BANK_CODE = t1.ISSUE_PARTY_ID
 	    LEFT JOIN SYS_INSTITUTION SI

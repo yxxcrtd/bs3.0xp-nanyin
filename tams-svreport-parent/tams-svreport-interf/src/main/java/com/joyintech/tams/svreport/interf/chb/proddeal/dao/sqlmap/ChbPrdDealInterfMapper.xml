@@ -27,7 +27,7 @@
 		DL.SETTLE_DATE AS payDate,
 		DL.SETTLE_DATE AS interestDate,
 		DL.INT_AMT AS intAmt,
-		DL.TRADE_AMT AS
+		nvl(DL.TRADE_AMT,dl.INT_AMT) AS
 		tradePrince,
 		DL.UNIT_INT AS unitBonusAmount,
 		DL.SHARE_AMT AS tradeQty,
@@ -642,5 +642,78 @@
 		TEMP.CUST_COUNTS,
 		TEMP.TRADE_COST,
 		TEMP.ISAGENCY)
+	</insert>
+
+
+	<select id="getraiseCustNumThree" resultType="com.joyintech.tams.common.base.entity.ChbPrdCustNumIfo">
+		SELECT
+		a.ACCOUNT prdCode,
+		count(INDENTIFY_MARK) CustHeldNum
+		from
+		(select
+		distinct
+		ACCOUNT ,
+		INDENTIFY_MARK
+		from CHB_EQUDET
+		WHERE 1=1
+		<if test="prodIdList != null and prodIdList.size() > 0">
+			AND ACCOUNT IN
+			<trim suffixOverrides=" OR ACCOUNT IN ()">
+				<foreach collection='prodIdList' open='(' close=')' index='index'
+						 item='item'>
+					<if test="index != 0">
+						<choose>
+							<when test="index % 1000 == 999">) OR ACCOUNT IN (</when>
+							<otherwise>,</otherwise>
+						</choose>
+					</if>
+					#{item}
+				</foreach>
+			</trim>
+		</if>
+		AND EQUITY_CONF_DATE=#{checkDate,jdbcType=DATE}
+		AND BUSI_TYPE='01'
+		AND STATUS !='D'
+		) a   group by a.ACCOUNT
+	</select>
+
+	<!-- 批量插入 -->
+	<insert id="batchInsert"
+			parameterType="com.joyintech.tams.svreport.interf.chb.proddeal.dto.CheckReport001Dto">
+		insert into CHB_REPORT_CHECK(CHECK_SEQNO,
+		REP_CODE,
+		REP_NAME,
+		VALID_KEY,
+		CHECK_RESULT,
+		ORG_CODE,
+		DATA_TIME,
+		CREATE_DEPT,
+		UPDATE_USER,
+		UPDATE_TIME,
+		CREATE_USER,
+		CREATE_TIME,
+		ERROR_INFO,
+		WARN_INFO,
+		IS_LOGIC_CHECK,
+		REF_SEQNO)
+		<foreach collection="list" item="dto" open=" select * from (select "
+				 close="from dual)" separator="from dual union all select ">
+			#{dto.checkSeqno,jdbcType=VARCHAR},
+			#{dto.repCode,jdbcType=VARCHAR},
+			#{dto.repName,jdbcType=VARCHAR},
+			#{dto.validKey,jdbcType=VARCHAR},
+			#{dto.checkResult,jdbcType=VARCHAR},
+			#{dto.orgCode,jdbcType=VARCHAR},
+			#{dto.dataTime,jdbcType=TIMESTAMP},
+			#{dto.createDept,jdbcType=VARCHAR},
+			#{dto.updateUser,jdbcType=VARCHAR},
+			#{dto.updateTime,jdbcType=TIMESTAMP},
+			#{dto.createUser,jdbcType=VARCHAR},
+			#{dto.createTime,jdbcType=TIMESTAMP},
+			#{dto.errorInfo,jdbcType=VARCHAR},
+			#{dto.warnInfo,jdbcType=VARCHAR},
+			#{dto.isLogicCheck,jdbcType=VARCHAR},
+			#{dto.refseqno,jdbcType=VARCHAR}
+		</foreach>
 	</insert>
 </mapper>

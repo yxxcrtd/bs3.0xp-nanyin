@@ -51,14 +51,27 @@
         UPDATE
             CHB_REG_TIME_POINTS
         SET
-        	UPDATE_SUBMIT_POINT =#{updateSubmitPoint,jdbcType=DECIMAL},
-        	DELETE_SUBMIT_POINT = #{deleteSubmitPoint, jdbcType=DECIMAL},
+            <if test="updateSubmitPoint!='' and updateSubmitPoint !=null">
+                UPDATE_SUBMIT_POINT = #{updateSubmitPoint},
+            </if>
+            <if test="deleteSubmingPoint !='' and deleteSubmingPoint !=null">
+                DELETE_SUBMING_POINT = #{deleteSubmingPoint},
+            </if>
+            <if test="submitPointBond !='' and submitPointBond !=null">
+                SUBMIT_POINT_BOND = #{submitPointBond},
+            </if>
+            <if test="submitPointBank !='' and submitPointBank !=null">
+                SUBMIT_POINT_BANK = #{submitPointBank},
+            </if>
         	UPDATE_USER = #{updateUser, jdbcType=VARCHAR},
         	UPDATE_TIME = #{updateTime, jdbcType=TIMESTAMP}
         WHERE
             STATUS = 'E'
-    		AND ORG_CODE = #{orgCode}
+            <if test="orgCode !='' and orgCode !=null">
+                AND ORG_CODE = #{orgCode}
+            </if>
        		AND REPORT_CODE = #{reportCode}
+       		AND SEQNO = #{seqno}
     </update>
 	<update id="updateAllRegTimePoints" >
         UPDATE

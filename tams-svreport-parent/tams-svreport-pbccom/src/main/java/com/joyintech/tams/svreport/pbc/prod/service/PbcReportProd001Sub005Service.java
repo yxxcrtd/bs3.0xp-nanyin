@@ -170,6 +170,13 @@ public class PbcReportProd001Sub005Service extends PbcReportProdTotalService  {
 				 }
 				 if(DictCodeListExt2.客户二级类型_银行业存款类金融机构.getValue().equals(pos.getCustomerType2())
 				    ||DictCodeListExt2.客户二级类型_银行业非存款类金融机构.getValue().equals(pos.getCustomerType2())
+						 /*****G06升级改造 leipeng 20210128   start**/
+						 ||DictCodeListExt2.客户二级类型_保险业金融机构.getValue().equals(pos.getCustomerType2())
+						 ||DictCodeListExt2.客户二级类型_信托公司.getValue().equals(pos.getCustomerType2())
+						 ||DictCodeListExt2.客户二级类型_证券公司.getValue().equals(pos.getCustomerType2())
+						 ||DictCodeListExt2.客户二级类型_基金公司.getValue().equals(pos.getCustomerType2())
+						 ||DictCodeListExt2.客户二级类型_其他金融机构.getValue().equals(pos.getCustomerType2())
+						 /*****G06升级改造 leipeng 20210128   end**/
 				    ||DictCodeListExt2.客户二级类型_非银行业金融机构.getValue().equals(pos.getCustomerType2())){
 //					 setDetailValue2(line514000,pos.getCcy(),/*pos.getRedamt()*/pos.getRedCost(),rateMap,generateDate,source);
 					 setDetailValueMap(result,deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.TQJYQDF_TQDF_AMT_514000_JRJGST,
@@ -304,7 +311,14 @@ public class PbcReportProd001Sub005Service extends PbcReportProdTotalService  {
 				 }
 				 if(DictCodeListExt2.客户二级类型_银行业存款类金融机构.getValue().equals(pos.getCustomerType2())
 				    ||DictCodeListExt2.客户二级类型_银行业非存款类金融机构.getValue().equals(pos.getCustomerType2())
-				    ||DictCodeListExt2.客户二级类型_非银行业金融机构.getValue().equals(pos.getCustomerType2())){
+						 /*****G06升级改造 leipeng 20210128   start**/
+						 ||DictCodeListExt2.客户二级类型_保险业金融机构.getValue().equals(pos.getCustomerType2())
+						 ||DictCodeListExt2.客户二级类型_信托公司.getValue().equals(pos.getCustomerType2())
+						 ||DictCodeListExt2.客户二级类型_证券公司.getValue().equals(pos.getCustomerType2())
+						 ||DictCodeListExt2.客户二级类型_基金公司.getValue().equals(pos.getCustomerType2())
+						 ||DictCodeListExt2.客户二级类型_其他金融机构.getValue().equals(pos.getCustomerType2())
+						 /*****G06升级改造 leipeng 20210128   end**/
+					||DictCodeListExt2.客户二级类型_非银行业金融机构.getValue().equals(pos.getCustomerType2())){
 //					 setDetailValue2(line514000Sub2,pos.getCcy(),/*pos.getRedamt()*/pos.getRedCost(),rateMap,generateDate,source);
 					 setDetailValueMap(result,deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.TQJYQDF_YQDF_AMT_514000_JRJGST,
 							 	pos.getCcy(),/*pos.getRedamt()*/pos.getRedCost(),rateMap,generateDate,source);

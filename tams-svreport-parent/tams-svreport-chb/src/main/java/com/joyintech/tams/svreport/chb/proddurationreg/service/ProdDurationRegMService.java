@@ -74,10 +74,10 @@ public class ProdDurationRegMService extends BaseService<ProdDurationReg001Dto> 
 	 */
 	@ResponseBody
 	@PostMapping("cancelMannul")
-	public void cancelMannul(Map<String, Object> map) {
-		restTemplate.postForObject(
+	public String cancelMannul(Map<String, Object> map) {
+		return	restTemplate.postForObject(
 	       		SvrServiceApplication.CHB_SERVICE_NAME + "/ProdDurationReg/cancelMannul",map,
-	       		Integer.class);
+	       		String.class);
 	}
 	
 	 /**
@@ -87,9 +87,9 @@ public class ProdDurationRegMService extends BaseService<ProdDurationReg001Dto> 
 	    * @see
 	    * @since 1.0
 	    */
-	   public List<ExcelValidDto> reportCheck(Map<String,Object> map) {
-		   return restTemplate.postForList(
+	   public Map<String,Object> reportCheck(Map<String,Object> map) {
+		   return restTemplate.postForObject(
 		       		SvrServiceApplication.CHB_SERVICE_NAME + "/ProdDurationReg/reportCheck", map,
-		       		ExcelValidDto.class);
+		       		Map.class);
 	   }
 }

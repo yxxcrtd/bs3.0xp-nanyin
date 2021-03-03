@@ -122,20 +122,22 @@ public class PbcMonthProdPositionService  extends BaseService{
         // 计算兑付状态到期日需要修正的
         Integer days = 0;
         String daysStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_PAY_STATUS);
-        String dividendReinvestmentFlag = SvrDataUtil.getSysParam(SVReportGlobalConstant.DIVIDEND_REINVESTMENT_FLAG);
+		String dividendReinvestmentFlag = SvrDataUtil.getSysParam(SVReportGlobalConstant.DIVIDEND_REINVESTMENT_FLAG);
         if (StringUtil.isNotEmpty(daysStr)) {
         	days = Integer.parseInt(daysStr);
         }
-		// 资金募集保留是否四舍五入保留五位,01(截断)，02(四舍五入)
-		String  jsbankStr=SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_JSBK_IS_ROUND);
+		// 募集兑付是否统计红利再投
+		String  hasbouns=SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_RAC_HAS_BOUNS);
+		// 余额计算时单位净值是否要保留5位小数
+		String  isPre=SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_QDBK_IS_PRECISION);
 		
 		
 		String modelType = null;
 		if(CommonUtil.isBAmodel()){
 			modelType = DictCodeList.权限模式_联社模式.getValue();
 		}
-		
-		
+		String jsbankStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.DIVIDEND_REINVESTMENT_FLAG);
+
         if(StringUtil.equals(bankCode, "001")){
            pbcMonthPrdPostionMapper.genPsbcPosition(reportStartDate,reportEndDate, batchDate,prodList,exchangeSource, dividendReinvestmentFlag,jsbankStr);
         }else{
@@ -145,7 +147,7 @@ public class PbcMonthProdPositionService  extends BaseService{
                                                                        exchangeSource,
                                                                        days,
                                                                        dividendReinvestmentFlag,
-				   														jsbankStr);
+				   														jsbankStr,hasbouns,isPre);
         }
         /* 生成人行报表头寸,chenxc updated on 2019-05-09 end */ 
         List<PbcMonthPrdPostionDto> posList =

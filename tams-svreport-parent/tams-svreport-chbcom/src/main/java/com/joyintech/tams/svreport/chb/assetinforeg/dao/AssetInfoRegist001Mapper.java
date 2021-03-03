@@ -278,4 +278,19 @@ public interface AssetInfoRegist001Mapper {
      * int
      */
     int mergeSubStatusList(@Param("newDataList")List<ChbAssetSubStatus> newDataList);
+
+	/**
+     * 根据数据主键查询数据
+     * @param map 查询条件
+     * @return 结果列表
+     * @see
+     * @since 1.0
+     */
+     List<AssetInfoRegist001Dto> selectDataListByRegList(@Param("registList")List<AssetInfoRegist001Dto> keys);
+
+ 	 /**资产要素信息登记自动检查报送查询所有符合的数据
+ 	 * @param param  状态=新建||修改    报送状态=未报送    到期日<=跑披日   
+ 	 * @return
+ 	 */
+ 	List<AssetInfoRegist001Dto> selectAutoAssetInfo(Map<String, Object> param);
 }

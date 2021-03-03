@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.position.dao.ChbPrdPositionMapper" >
   <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.position.dto.ChbPrdPosition" >
-    <result column="CDATE" property="cdate" jdbcType="DATE" />
-    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+	  <result column="CDATE" property="cdate" jdbcType="DATE" />
+	  <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
     <result column="INDENTIFY_MARK" property="indentifyMark" jdbcType="VARCHAR" />
     <result column="CCY" property="ccy" jdbcType="VARCHAR" />
     <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
@@ -26,6 +26,7 @@
     <result column="CUSTQTY" property="custqty" jdbcType="DECIMAL" />
     <result column="RAISEAMT" property="raiseamt" jdbcType="DECIMAL" />
     <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	<result column="VDATE" property="vDate" jdbcType="DATE" />
   </resultMap>
   
   <insert id="insertBatch" parameterType="java.util.List" >
@@ -116,7 +117,8 @@
 			DEAL.INDENTIFY_MARK indentifyMark,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) settdateDate,
 			DEAL.CCY ccy,
-			SUM(NVL(decode(DEAL.TRADE_TYPE,'14',0,'15',0,DEAL.TRADE_PRINCE),0)) tradePrince,
+		  /*SUM(NVL(decode(DEAL.TRADE_TYPE,'14',0,'15',0,DEAL.TRADE_PRINCE),0)) tradePrince,*/
+		  SUM(NVL(DEAL.TRADE_PRINCE,0)) tradePrince,
 			SUM(NVL(DEAL.TRADE_QTY,0))  tradeQty,
 			SUM(NVL(DEAL.INT_AMT,0))  intAmt,
 			INFO.PRODTYPE prodType,
@@ -126,7 +128,8 @@
 			nvl(DEAL.ISAGENCY,'02') isagency,
 			DEAL.BUY_PLACE buyPlace,
 			DEAL.CUSTOMER_TYPE1 customerType1,
-			DEAL.CUSTOMER_TYPE2 customerType2
+			DEAL.CUSTOMER_TYPE2 customerType2,
+			info.vdate
 		FROM CHB_PRD_DEAL DEAL
 		
 		LEFT JOIN CHB_PRD_BASEINFO INFO
@@ -170,7 +173,8 @@
 				 NVL(DEAL.ISAGENCY,'02'),
 				 DEAL.BUY_PLACE,
 				 DEAL.CUSTOMER_TYPE1,
-				 DEAL.CUSTOMER_TYPE2
+				 DEAL.CUSTOMER_TYPE2,
+	  				info.vdate
 	order by NVL(DEAL.FPROD_ID,DEAL.PROD_ID),nvl(DEAL.ISAGENCY,'02')
   </select>
   
@@ -186,9 +190,10 @@
 			POS.BALANCE_QTY,
 			POS.BALANCE_AMT,
 			POS.TOTAL_INTAMT,
-			ORG_CODE,
-			DEPT_CODE,
-			BUY_PLACE,
+			  POS.ORG_CODE,
+			  POS.DEPT_CODE,
+	  		B.VDATE,
+	  		BUY_PLACE,
 			CONSIGN_AMT,
 			CUST_COUNTS,
 			CUSTOMER_TYPE2,
@@ -196,6 +201,8 @@
 			CUSTQTY,
 			RAISEAMT
 		FROM CHB_PRD_POSITION POS
+		/*****产品头寸添加起息日查询   leipeng 20201226**/
+	  LEFT JOIN CHB_PRD_BASEINFO B ON POS.PROD_ID=B.PROD_ID
 		WHERE 1 = 1
 		AND POS.CDATE = #{cdate,jdbcType = DATE}
 		<if test="prodIdList!=null and prodIdList.size()!=0">

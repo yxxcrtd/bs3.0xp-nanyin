@@ -179,7 +179,7 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	/**
 	 * 发行机构主体信用评级
 	 */
-	@DictFormat(DictCode.资产评级)
+	// @DictFormat(DictCode.资产评级)
 	private String partyGrade;
 
 	/**
@@ -267,7 +267,7 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	/**
 	 * 债券信用评级
 	 */
-	@DictFormat(DictCode.资产评级)
+	//@DictFormat(DictCode.资产评级)
 	private String secCreditGradeType;
 	
 	/**
@@ -952,16 +952,16 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	/**
 	 * 份额面值
 	*/
-	private BigDecimal prinBaseAmt;
+	private BigDecimal prinBaseamt;
 	
 	/**
 	 * 法定到期日
 	*/
-	private Date fmDate;
-	private String fmDateStr;
-	public String getFmDateStr(){
-        if (StringUtil.isNotEmpty(this.getFmDate())){
-            return DateUtil.format(this.getFmDate(), DateUtil.DEFAULT_OTHER_FORMAT);
+	private Date fmdate;
+	private String fmdateStr;
+	public String getFmdateStr(){
+        if (StringUtil.isNotEmpty(this.getFmdate())){
+            return DateUtil.format(this.getFmdate(), DateUtil.DEFAULT_OTHER_FORMAT);
         }
         return "";
 	}
@@ -1721,6 +1721,11 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	 * 报送日期
 	 */
 	private Date submitTime;
+
+    /**
+     * 报送流水号
+     */
+    private String sumitSeq;
 
 	/**
 	 * 数据日期
@@ -5188,6 +5193,14 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	 */
 	public void setSubmitTime(Date submitTime) {
 		this.submitTime = submitTime;
+	}
+
+	public String getSumitSeq() {
+		return sumitSeq;
+	}
+
+	public void setSumitSeq(String sumitSeq) {
+		this.sumitSeq = sumitSeq;
 	}
 
 	/**
@@ -8916,10 +8929,10 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	/**
 	 * 份额面值
 	 */
-	public String getPrinBaseAmt04() {
+	public String getPrinBaseamt04() {
 		if (!StringUtil.isBlank(getAssetType())) {
 			if ("04".equals(getAssetType())) {
-				return prinBaseAmt==null?"":df4.format(prinBaseAmt);
+				return prinBaseamt==null?"":df4.format(prinBaseamt);
 			} else {
 				return null;
 			}
@@ -22552,6 +22565,22 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
     		return null;
     	}
     }
+
+	/**
+	 * 投管人
+	 * @return 投管人
+	 */
+	public String getTgr12() {
+		if (!StringUtil.isBlank(getAssetType())){
+			if ("12".equals(getAssetType())){
+				return trusteeId;
+			} else {
+				return null;
+			}
+		} else{
+			return null;
+		}
+	}
     
     /**
      * 起息日
@@ -25891,20 +25920,20 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
   		this.rivalPartyType = rivalPartyType;
   	}
 
-  	public BigDecimal getPrinBaseAmt() {
-  		return prinBaseAmt;
+  	public BigDecimal getPrinBaseamt() {
+  		return prinBaseamt;
   	}
 
-  	public void setPrinBaseAmt(BigDecimal prinBaseAmt) {
-  		this.prinBaseAmt = prinBaseAmt;
+  	public void setPrinBaseamt(BigDecimal prinBaseamt) {
+  		this.prinBaseamt = prinBaseamt;
   	}
 
-  	public Date getFmDate() {
-  		return fmDate;
+  	public Date getFmdate() {
+  		return fmdate;
   	}
 
-  	public void setFmDate(Date fmDate) {
-  		this.fmDate = fmDate;
+  	public void setFmdate(Date fmdate) {
+  		this.fmdate = fmdate;
   	}
 
   	public String getCouponSpecies() {

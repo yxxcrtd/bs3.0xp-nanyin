@@ -25,6 +25,8 @@ public interface InvestTradeRegist001Mapper {
 
     int updateByPrimaryKey(InvestTradeRegist001Dto record);
     
+    int deleteByProdid(@Param("deleteList") List<InvestTradeRegist001Dto> dataList);
+    
     /**
      * @Description 分页查询
      * @param pageParam

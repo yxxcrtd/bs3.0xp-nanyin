@@ -72,10 +72,25 @@ public class RaiseTotalRegistMService  extends BaseService<RaiseTotalRegist001Dt
 	       		String.class);
 	}
 	
-	public List<ExcelValidDto> reportCheck(Map<String, Object> map) {
-		return restTemplate.postForList(
+	public Map<String,Object> reportCheck(Map<String, Object> map) {
+		return restTemplate.postForObject(
 	       		SvrServiceApplication.CHB_SERVICE_NAME + "/RaiseTotalRegist/reportCheck", map,
-	       		ExcelValidDto.class);
+	       		Map.class);
+	}
+	
+    /**
+	 * 中债直连报送
+	 *
+	 * @param map
+	 *            传入需要报送的主键
+	 * @return 反馈信息
+	 * @see
+	 * @since 1.0
+	 */
+	public void doSubmit(Map<String, Object> map) {
+		restTemplate.postForObject(
+	       		SvrServiceApplication.CHB_SERVICE_NAME + "/RaiseTotalRegist/submitChb", map,
+	       		Integer.class);
 	}
 
 }

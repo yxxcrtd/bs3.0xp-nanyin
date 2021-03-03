@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPosSubHis;
 import com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbBotAstPosSubHisMapper {
     int deleteByPrimaryKey(String registSeqno);
 

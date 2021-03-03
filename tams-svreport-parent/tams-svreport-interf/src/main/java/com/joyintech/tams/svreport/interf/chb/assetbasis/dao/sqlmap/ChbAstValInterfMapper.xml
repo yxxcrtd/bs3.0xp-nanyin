@@ -53,6 +53,10 @@
 			from (select 
 			  assetbasis.assetCode,
 			  assetbasis.valueDate valDate,
+
+			  <!-- modify by zhangliang 20201221 资产/负债类别为 “1107 拆放同业”、“1108 买入返售”、“1901 同业拆入”、“1902 卖出回购”  “单位估值（净价）” 写死为 100-->
+			  case when info.ASSET_TYPE2 in ('1107','1108','1901','1902') then 100 else
+
 			  nvl(price.PRICE,1)
           *
              decode(typex.SRCFIELD1,
@@ -65,7 +69,7 @@
              <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  begin-->
              'OPTION', (costAmt+floatingpl),
              <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  end-->
-             decode(assetbasis.valueDate,assetbasis.mdate,100,100*costAmt/posAmt)) unitValNet,
+             decode(assetbasis.valueDate,assetbasis.mdate,100,100*costAmt/posAmt)) end unitValNet,
         nvl(price.PRICE,1)
           *
              decode(typex.SRCFIELD1,
@@ -105,7 +109,10 @@
         left join CHB_TYPE_MAPPING_EX typex on typex.OBJFIELD1 =  info.ORG_ASSET_TYPE1 
                                       	   and ((typex.OBJFIELD2 =  info.ORG_ASSET_TYPE2) or typex.OBJFIELD2 is null)
                                       	   and ((typex.OBJFIELD3 =  info.TRM_FUND_TYPE) or typex.OBJFIELD3 is null)
-                                    	   and typex.MAPPINGCODE='ASSETBASISTYPE'
+                                      	   /***对于债券类资产，需要根据其登记托管机构配置哪些生成估值信息登记 add by leipeng 20210129***/
+											and ((typex.OBJFIELD4 =  info.REGIST_ORG) or typex.OBJFIELD4 is null)
+											/***对于债券类资产，需要根据其登记托管机构配置哪些生成估值信息登记 add by leipeng 20210129***/
+											and typex.MAPPINGCODE='ASSETBASISTYPE'
 				where 1=1 
 				  and (assetbasis.posAmt &lt;&gt; 0 or assetbasis.valueDate=assetbasis.mdate)
 				  and  assetbasis.assetCode is not null

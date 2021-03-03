@@ -5,6 +5,9 @@ import java.util.List;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+@Repository
 public interface ChbCheckRuleoutMapper {
     int deleteByPrimaryKey(String ruleoutid);
 

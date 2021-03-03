@@ -11,6 +11,7 @@
 package com.joyintech.tams.report.common.controller;
 
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.util.CacheUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,8 @@ public class DataCheckResultController extends BaseController {
 
     @Override
     public String init(Model model) {
+        model.addAttribute("opertionType", this.getParam("opertionType"));
+        model.addAttribute("warningCheckIsSend", CacheUtil.getSysParam("CHB_WARNING_CHECKRESULT_IS_SEND"));
         return "report/common/dataCheckResult";
     }
 }

@@ -87,10 +87,10 @@ public class InvestTradeRegistMService extends BaseService<InvestTradeRegist001D
            		SelectOptionDto.class);
      }
 
-    public List<ExcelValidDto> reportCheck(Map<String, Object> pageParam) {
-        return restTemplate.postForList(
+    public Map<String,Object> reportCheck(Map<String, Object> pageParam) {
+        return restTemplate.postForObject(
                 SvrServiceApplication.CHB_SERVICE_NAME + "/InvestTradeRegist/reportCheck", pageParam,
-                ExcelValidDto.class);
-    } 
+                Map.class);
+    }
 
 }

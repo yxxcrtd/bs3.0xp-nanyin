@@ -58,7 +58,7 @@ public class PrdDeclareInfoFileImpService extends AbstractFileImpService{
         for (InterfFile interfFile : fileLists) {
             Map<String, Object> parseResult;
             try {
-            	interfFile.setInterfType(DictCodeListExt2.上游接口文件类型_资管计划底层资产持仓信息.getValue());
+            	interfFile.setInterfType(DictCodeListExt2.上游接口文件类型_产品申报登记信息.getValue());
                 interfFile.setFileType(interfConfig.getContentSrc());
                 parseResult = chbProdDeclareFileImpService.parseFile(interfFile);
                 String parseFailResult = (String) parseResult.get("remoteDir");

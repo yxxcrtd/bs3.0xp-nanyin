@@ -45,7 +45,7 @@ $(function(){
 		Joyin.dialog(JoyinUtil.getLabel("数据源表新建"),
                 basePath + "common/infomanagement/SvrOperationalInfo003/init",
                 "40%", "50%", {pageModel:PAGE_MODEL_NEW},function(){
-                   	SvrOperationalInfo002_table001.reload();
+                	SvrOperationalInfo002_table001.reload();
                 });
 		}
 	);

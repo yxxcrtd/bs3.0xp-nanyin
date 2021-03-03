@@ -26,14 +26,27 @@ $(function() {
  	       return 'full-' + (offset + $('#RegTimePoints001_buttonArea').find('label').height());
     	}(),
         cols: [
+            { title: "流水号", field:'seqno' ,visible : false},
             { title: "报表名称", field:'reportCode'},
             { title: "细分类型", field:'typeDetail'},
             { title: "报送要求说明", field:'submitRequire'},
             { title: "行内报送时点要求", field:'submitPointBond'},
             { title: "监管报送时点要求",field:'submitPointBank'},
-            { title: "更新时间",field: 'updateTime', type:'datetime',width:200}
+            { title: "更新时间",field: 'updateTime', type:'datetime',width:200},
+            { field:'operation', title: '操作', type:'action', buttons: ['edit']}
         ]
     });
+
+    table.bind('click', '.edit', function(data, index) {
+        data.operateType = "edit";
+        data.pageModel="edit";
+        Joyin.dialog(JoyinUtil.getLabel("报送时点修改"),
+            basePath + "/svreport/system/regtimepoints/RegTimePoints002/init",
+            "40%", "70%", {pageModel:"edit",
+                seqno:data.seqno},function(){table.reload();
+        });
+    });
+
     // 查询按钮点击事件
     $('#RegTimePoints001_btn_search').click(function() {
         if($('#RegTimePoints001_searchForm').joyinvalid()) {

@@ -198,8 +198,8 @@
 
 	<result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
 	<result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
-	<result column='PRIN_BASEAMT' property='prinBaseAmt' jdbcType='DECIMAL' />
-	<result column='FMDATE' property='fmDate' jdbcType='TIMESTAMP' />
+	<result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
+	<result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
 	<result column='COUPON_SPECIES' property='couponSpecies' jdbcType='VARCHAR' />
 	<result column='INTEREST_RULE_FLAG' property='interestRuleFlag' jdbcType='VARCHAR' />
 	<result column='INTPAY_RULE' property='intpayRule' jdbcType='VARCHAR' />
@@ -430,8 +430,8 @@
     
    	<result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
 	<result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
-	<result column='PRIN_BASEAMT' property='prinBaseAmt' jdbcType='DECIMAL' />
-	<result column='FMDATE' property='fmDate' jdbcType='TIMESTAMP' />
+	<result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
+	<result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
 	<result column='COUPON_SPECIES' property='couponSpecies' jdbcType='VARCHAR' />
 	<result column='INTEREST_RULE_FLAG' property='interestRuleFlag' jdbcType='VARCHAR' />
 	<result column='INTPAY_RULE' property='intpayRule' jdbcType='VARCHAR' />
@@ -464,6 +464,7 @@
 	<result column='DEPT_EQUITY' property='deptEquity' jdbcType='VARCHAR' />
 	<result column='HOLD_PURPOSE' property='holdPurpose' jdbcType='VARCHAR' />
 	<result column='FINANCIAL_COMISSUE' property='financialComissue' jdbcType='VARCHAR' />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
    
     </resultMap>
 	
@@ -619,7 +620,8 @@
     <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
     <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="VARCHAR" />
     <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
-  </resultMap>
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+      </resultMap>
     <sql id="Base_Column_List_His" >
     REGIST_SEQNO HIS_NO, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE, ASSET_YIELD, 
     BASIS, AMT, BANK_NAME, IS_STRUCT, TARGET_TYPE, TARGET, ASSET_ID, ASSET_NAME, CHB_SECTYPE, 
@@ -678,7 +680,8 @@
         EQUITY_QUIT,
         DEPT_EQUITY,
         HOLD_PURPOSE,
-        FINANCIAL_COMISSUE
+        FINANCIAL_COMISSUE,
+	SUMIT_SEQ
     </sql>
 	
 	<sql id="Base_Column_List">
@@ -777,7 +780,8 @@
         EQUITY_QUIT,
         DEPT_EQUITY,
         HOLD_PURPOSE,
-        FINANCIAL_COMISSUE
+        FINANCIAL_COMISSUE,
+	SUMIT_SEQ
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -794,7 +798,7 @@
 	</delete>
     <insert id="insertBatch"
         parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto">
-        insert into CHB_ASSET_INFO_SUB (REGIST_SEQNO,
+        insert into CHB_ASSET_INFO_SUB (SUMIT_SEQ,REGIST_SEQNO,
         ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE,
@@ -898,7 +902,7 @@
         DEPT_EQUITY,
         HOLD_PURPOSE,
         FINANCIAL_COMISSUE)
-        values (#{registSeqno,jdbcType=CHAR},
+        values (#{sumitSeq,jdbcType=VARCHAR},#{registSeqno,jdbcType=CHAR},
         #{assetCode,jdbcType=VARCHAR},
         #{assetType,jdbcType=VARCHAR},
         #{assetType2,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
@@ -1014,8 +1018,8 @@
         #{capUseInduLevel2,jdbcType=VARCHAR},#{issuePartyName,jdbcType=VARCHAR},
         #{depoType,jdbcType=VARCHAR},
 				#{rivalPartyType,jdbcType=VARCHAR},
-				#{prinBaseAmt,jdbcType=DECIMAL},
-				#{fmDate,jdbcType=TIMESTAMP},
+				#{prinBaseamt,jdbcType=DECIMAL},
+				#{fmdate,jdbcType=TIMESTAMP},
 				#{couponSpecies,jdbcType=VARCHAR},
 				#{interestRuleFlag,jdbcType=VARCHAR},
 				#{intpayRule,jdbcType=VARCHAR},
@@ -1119,7 +1123,7 @@
 		UPDATE_TIME, ORG_CODE, DEPT_CODE,
 		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
 		DATA_SOURCE,
-		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME)
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME, SUMIT_SEQ)
 		values (#{registSeqno,jdbcType=CHAR},
 		#{assetCode,jdbcType=VARCHAR},
 		#{assetType,jdbcType=VARCHAR},
@@ -1233,7 +1237,7 @@
 		#{createDept,jdbcType=VARCHAR},
 		#{dataSource,jdbcType=VARCHAR},
 		#{deleteRes,jdbcType=VARCHAR},#{secCreditGradeType,jdbcType=VARCHAR},
-		#{capUseInduLevel2,jdbcType=VARCHAR},#{issuePartyName,jdbcType=VARCHAR})
+		#{capUseInduLevel2,jdbcType=VARCHAR},#{issuePartyName,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective"
 		parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
@@ -1692,6 +1696,9 @@
             <if test="issuePartyName != null" >
               ISSUE_PARTY_NAME,
             </if>
+	      <if test="sumitSeq != null" >
+	        SUMIT_SEQ,
+	      </if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="registSeqno != null">
@@ -2147,6 +2154,9 @@
             <if test="issuePartyName != null" >
               #{issuePartyName,jdbcType=VARCHAR},
             </if>
+	      <if test="sumitSeq != null" >
+	        #{sumitSeq,jdbcType=VARCHAR},
+	      </if>
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective"
@@ -2608,6 +2618,9 @@
             <if test="issuePartyName != null" >
               ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR},
             </if>
+	      <if test="sumitSeq != null" >
+	        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+	      </if>
 		</set>
 		where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
 	</update>
@@ -2887,7 +2900,8 @@
 		#{deleteRes,jdbcType=VARCHAR},
 		sec_credit_grade_type = #{secCreditGradeType,jdbcType=VARCHAR},
 		CAP_USE_INDU_LEVEL2=#{capUseInduLevel2,jdbcType=VARCHAR},
-        ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR}
+        ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR},
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR}
 		where REGIST_SEQNO =
 		#{registSeqno,jdbcType=CHAR}
 	</update>
@@ -3049,8 +3063,8 @@
 			ISSUE_PARTY_NAME		ISSUEPARTYNAME,
 			DEPO_TYPE  depoType,
 			RIVAL_PARTY_TYPE  rivalPartyType,
-			PRIN_BASEAMT  prinBaseAmt,
-			FMDATE  fmDate,
+			PRIN_BASEAMT  prinBaseamt,
+			FMDATE  fmdate,
 			COUPON_SPECIES  couponSpecies,
 			INTEREST_RULE_FLAG  interestRuleFlag,
 			INTPAY_RULE  intpayRule,
@@ -3082,7 +3096,8 @@
 			EQUITY_QUIT  equityQuit,
 			DEPT_EQUITY  deptEquity,
 			HOLD_PURPOSE  holdPurpose,
-			FINANCIAL_COMISSUE  financialComissue
+			FINANCIAL_COMISSUE  financialComissue,
+			ASSETINFO.SUMIT_SEQ  sumitSeq
 		from CHB_ASSET_INFO_SUB ASSETINFO
 		<where>
 			<if test="assetTypeList != null and assetTypeList.size() > 0">
@@ -3332,8 +3347,8 @@
 		       ASSETINFO.ISSUE_PARTY_NAME       ISSUEPARTYNAME,
 		       ASSETINFO.DEPO_TYPE              depoType,
 		       ASSETINFO.RIVAL_PARTY_TYPE       rivalPartyType,
-		       ASSETINFO.PRIN_BASEAMT           prinBaseAmt,
-		       ASSETINFO.FMDATE                 fmDate,
+		       ASSETINFO.PRIN_BASEAMT           prinBaseamt,
+		       ASSETINFO.FMDATE                 fmdate,
 		       ASSETINFO.COUPON_SPECIES         couponSpecies,
 		       ASSETINFO.INTEREST_RULE_FLAG     interestRuleFlag,
 		       ASSETINFO.INTPAY_RULE            intpayRule,
@@ -3653,8 +3668,8 @@
 	       ASSETINFO.ISSUE_PARTY_NAME       ISSUEPARTYNAME,
 	       ASSETINFO.DEPO_TYPE              depoType,
 	       ASSETINFO.RIVAL_PARTY_TYPE       rivalPartyType,
-	       ASSETINFO.PRIN_BASEAMT           prinBaseAmt,
-	       ASSETINFO.FMDATE                 fmDate,
+	       ASSETINFO.PRIN_BASEAMT           prinBaseamt,
+	       ASSETINFO.FMDATE                 fmdate,
 	       ASSETINFO.COUPON_SPECIES         couponSpecies,
 	       ASSETINFO.INTEREST_RULE_FLAG     interestRuleFlag,
 	       ASSETINFO.INTPAY_RULE            intpayRule,
@@ -4013,8 +4028,8 @@
 		       ASSETINFO.ISSUE_PARTY_NAME       ISSUEPARTYNAME,
 		       ASSETINFO.DEPO_TYPE              depoType,
 		       ASSETINFO.RIVAL_PARTY_TYPE       rivalPartyType,
-		       ASSETINFO.PRIN_BASEAMT           prinBaseAmt,
-		       ASSETINFO.FMDATE                 fmDate,
+		       ASSETINFO.PRIN_BASEAMT           prinBaseamt,
+		       ASSETINFO.FMDATE                 fmdate,
 		       ASSETINFO.COUPON_SPECIES         couponSpecies,
 		       ASSETINFO.INTEREST_RULE_FLAG     interestRuleFlag,
 		       ASSETINFO.INTPAY_RULE            intpayRule,
@@ -4247,8 +4262,8 @@
 	       ASSETINFO.ISSUE_PARTY_NAME       ISSUEPARTYNAME,
 	       ASSETINFO.DEPO_TYPE              depoType,
 	       ASSETINFO.RIVAL_PARTY_TYPE       rivalPartyType,
-	       ASSETINFO.PRIN_BASEAMT           prinBaseAmt,
-	       ASSETINFO.FMDATE                 fmDate,
+	       ASSETINFO.PRIN_BASEAMT           prinBaseamt,
+	       ASSETINFO.FMDATE                 fmdate,
 	       ASSETINFO.COUPON_SPECIES         couponSpecies,
 	       ASSETINFO.INTEREST_RULE_FLAG     interestRuleFlag,
 	       ASSETINFO.INTPAY_RULE            intpayRule,
@@ -4735,7 +4750,7 @@
 		UPDATE_TIME, ORG_CODE, DEPT_CODE,
 		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
 		DATA_SOURCE,
-		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME)
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,SUMIT_SEQ)
 		<foreach collection="insertList" item="item" index="index" separator="union all " >
 		select
 		#{item.registSeqno,jdbcType=CHAR},
@@ -4853,7 +4868,8 @@
 		#{item.deleteRes,jdbcType=VARCHAR},
 		#{item.secCreditGradeType,jdbcType=VARCHAR},
 		#{item.capUseInduLevel2,jdbcType=VARCHAR},
-        #{item.issuePartyName,jdbcType=VARCHAR}
+        #{item.issuePartyName,jdbcType=VARCHAR},
+        #{item.sumitSeq,jdbcType=VARCHAR}
 		from dual
 		</foreach>
 	</insert>
@@ -5335,6 +5351,9 @@
                 <if test="item.issuePartyName != null" >
                   ISSUE_PARTY_NAME = #{item.issuePartyName,jdbcType=VARCHAR},
                 </if>
+                <if test="item.sumitSeq != null" >
+                  SUMIT_SEQ = #{item.sumitSeq,jdbcType=VARCHAR},
+                </if>
 			</set>
 			<!-- where REGIST_SEQNO = #{item.registSeqno,jdbcType=CHAR} -->
 			where asset_code = #{item.assetCode,jdbcType=VARCHAR}
@@ -5508,7 +5527,8 @@
         EQUITY_QUIT,
         DEPT_EQUITY,
         HOLD_PURPOSE,
-        FINANCIAL_COMISSUE
+        FINANCIAL_COMISSUE,
+        SUMIT_SEQ
       )
       select  
         REGIST_SEQNO,
@@ -5574,8 +5594,8 @@
         GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE,
         SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE,
         SUBMIT_TIME, STATUS_DATE, STATUS,
-        CREATE_USER, sysdate CREATE_TIME, UPDATE_USER,
-        sysdate UPDATE_TIME, ORG_CODE, DEPT_CODE,
+        CREATE_USER, nvl(CREATE_TIME,sysdate) CREATE_TIME, UPDATE_USER,
+        nvl(UPDATE_TIME,sysdate) UPDATE_TIME, ORG_CODE, DEPT_CODE,
         SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
         DATA_SOURCE,
         DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,
@@ -5614,7 +5634,8 @@
         EQUITY_QUIT,
         DEPT_EQUITY,
         HOLD_PURPOSE,
-        FINANCIAL_COMISSUE
+        FINANCIAL_COMISSUE,
+        SUMIT_SEQ
       from CHB_ASSET_INFO_SUB
       where 1 =1
       <if test="registList !=null and registList.size()>0">
@@ -5703,7 +5724,44 @@
         UPDATE_TIME, ORG_CODE, DEPT_CODE,
         SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
         DATA_SOURCE,
-        DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME
+        DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,
+        DEPO_TYPE,
+        RIVAL_PARTY_TYPE,
+        PRIN_BASEAMT,
+        FMDATE,
+        COUPON_SPECIES,
+        INTEREST_RULE_FLAG,
+        INTPAY_RULE,
+        FLOAT_FACTOR_FLAG,
+        STRUCT_GRADE,
+        REPAYMENT_TYPE,
+        PERIOD_REPAYMENT_FLAG,
+        BASIC_ASSET_TYPE,
+        EXCESS_PROFIT_RATE,
+        PLEDGE_TYPE,
+        PLEDGE_VALUE,
+        NATURE_GUARANTEE,
+        RELATION_FINAN,
+        CONTAIN_TYPE,
+        EXERCISE_TYPE,
+        EXERCISE_DATE,
+        FIRST_EXERCISE_DATE,
+        EXERCISE_PERIOD,
+        EXERCISE_PRICE,
+        PERPETUAL_CLAUSE_TYPE,
+        DEFERRED_INTEREST_TYPE,
+        DEFERRED_INTEREST_INT,
+        FIRST_REPRCE_DATE,
+        REPRCE_CYCLE,
+        PART_REDEM_FLAG,
+        PART_REDEM_RATE,
+        CREDIT_ORG_CODE,
+        CREDIT_ORG_NAME,
+        EQUITY_QUIT,
+        DEPT_EQUITY,
+        HOLD_PURPOSE,
+        FINANCIAL_COMISSUE,
+        SUMIT_SEQ
       )
       select HIS_NO,
         ASSET_CODE, ASSET_TYPE,
@@ -5772,7 +5830,44 @@
         UPDATE_TIME, ORG_CODE, DEPT_CODE,
         SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
         DATA_SOURCE,
-        DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME
+        DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,
+        DEPO_TYPE,
+        RIVAL_PARTY_TYPE,
+        PRIN_BASEAMT,
+        FMDATE,
+        COUPON_SPECIES,
+        INTEREST_RULE_FLAG,
+        INTPAY_RULE,
+        FLOAT_FACTOR_FLAG,
+        STRUCT_GRADE,
+        REPAYMENT_TYPE,
+        PERIOD_REPAYMENT_FLAG,
+        BASIC_ASSET_TYPE,
+        EXCESS_PROFIT_RATE,
+        PLEDGE_TYPE,
+        PLEDGE_VALUE,
+        NATURE_GUARANTEE,
+        RELATION_FINAN,
+        CONTAIN_TYPE,
+        EXERCISE_TYPE,
+        EXERCISE_DATE,
+        FIRST_EXERCISE_DATE,
+        EXERCISE_PERIOD,
+        EXERCISE_PRICE,
+        PERPETUAL_CLAUSE_TYPE,
+        DEFERRED_INTEREST_TYPE,
+        DEFERRED_INTEREST_INT,
+        FIRST_REPRCE_DATE,
+        REPRCE_CYCLE,
+        PART_REDEM_FLAG,
+        PART_REDEM_RATE,
+        CREDIT_ORG_CODE,
+        CREDIT_ORG_NAME,
+        EQUITY_QUIT,
+        DEPT_EQUITY,
+        HOLD_PURPOSE,
+        FINANCIAL_COMISSUE,
+        SUMIT_SEQ
       from (
           select  HIS_NO,
 	        ASSET_CODE, ASSET_TYPE,
@@ -5842,6 +5937,43 @@
 	        SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
 	        DATA_SOURCE,
 	        DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,
+	        DEPO_TYPE,
+			RIVAL_PARTY_TYPE,
+			PRIN_BASEAMT,
+			FMDATE,
+			COUPON_SPECIES,
+			INTEREST_RULE_FLAG,
+			INTPAY_RULE,
+			FLOAT_FACTOR_FLAG,
+			STRUCT_GRADE,
+			REPAYMENT_TYPE,
+			PERIOD_REPAYMENT_FLAG,
+			BASIC_ASSET_TYPE,
+			EXCESS_PROFIT_RATE,
+			PLEDGE_TYPE,
+			PLEDGE_VALUE,
+			NATURE_GUARANTEE,
+			RELATION_FINAN,
+			CONTAIN_TYPE,
+			EXERCISE_TYPE,
+			EXERCISE_DATE,
+			FIRST_EXERCISE_DATE,
+			EXERCISE_PERIOD,
+			EXERCISE_PRICE,
+			PERPETUAL_CLAUSE_TYPE,
+			DEFERRED_INTEREST_TYPE,
+			DEFERRED_INTEREST_INT,
+			FIRST_REPRCE_DATE,
+			REPRCE_CYCLE,
+			PART_REDEM_FLAG,
+			PART_REDEM_RATE,
+			CREDIT_ORG_CODE,
+			CREDIT_ORG_NAME,
+			EQUITY_QUIT,
+			DEPT_EQUITY,
+			HOLD_PURPOSE,
+			FINANCIAL_COMISSUE,
+			SUMIT_SEQ,
             rank() over (partition by ASSET_CODE order by nvl(update_time,create_time) desc) ranknum
          from CHB_ASSET_INFO_SUB_HIS  his
          <where>

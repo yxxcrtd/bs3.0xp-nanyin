@@ -346,7 +346,7 @@ public class PbcPrdAccountEndSubService001 extends CommonExportService<PbcPrdAcc
             for(PbcPrdAccountEndSub pbcPrdAccountEndSub : list1) {
             	List<PbcPrdAccountEndSub> pbcPrdAccountEndSubList = new ArrayList<PbcPrdAccountEndSub>();
             	if(StringUtils.isNotBlank(pbcPrdAccountEndSub.getPbcAccountId())) {
-               	 exportFileName = "PPE_"+pbcPrdAccountEndSub.getPbcAccountId();
+               	 exportFileName = "PPE-"+pbcPrdAccountEndSub.getPbcAccountId();
             	}
             	pbcPrdAccountEndSubList.add(pbcPrdAccountEndSub);
             	File outFile = makeFile2(
@@ -381,7 +381,7 @@ public class PbcPrdAccountEndSubService001 extends CommonExportService<PbcPrdAcc
         // 当只有一个资产池，只有Excel导出
         for(PbcPrdAccountEndSub pbcPrdAccountEndSub : list1) {
         	if(StringUtils.isNotBlank(pbcPrdAccountEndSub.getPbcAccountId())) {
-            	 exportFileName = "PPE_"+pbcPrdAccountEndSub.getPbcAccountId();
+            	 exportFileName = "PPE-"+pbcPrdAccountEndSub.getPbcAccountId();
         	}
           }
 		File outFile = makeFile2(

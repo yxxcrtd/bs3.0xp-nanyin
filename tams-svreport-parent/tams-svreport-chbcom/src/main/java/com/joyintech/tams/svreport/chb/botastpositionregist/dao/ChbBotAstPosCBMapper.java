@@ -42,7 +42,10 @@ public interface ChbBotAstPosCBMapper {
 	 * @param generateDate
 	 * @return
 	 */
-	int queryGenerateListAndInsert(@Param("generateDate")String generateDate,@Param("ischbbtm")String ischbbtm,@Param("statusDate")Date statusDate,
+    // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+//	int queryGenerateListAndInsert(@Param("generateDate")String generateDate,@Param("ischbbtm")String ischbbtm,@Param("statusDate")Date statusDate,
+//			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline);
+	List<ChbBotAstPositionSub> queryInsertGenerateList(@Param("generateDate")String generateDate,@Param("ischbbtm")String ischbbtm,@Param("statusDate")Date statusDate,
 			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline);
 
 	

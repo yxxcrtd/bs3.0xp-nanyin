@@ -766,6 +766,11 @@ public class ChbAssetInfoSubHisDto {
     private String issuePartyName;
 
     /**
+     * 报送流水号
+     */
+    private String sumitSeq;
+
+    /**
      * 履历番号
      * @return HIS_NO 履历番号
      */
@@ -3179,5 +3184,23 @@ public class ChbAssetInfoSubHisDto {
      */
     public void setIssuePartyName(String issuePartyName) {
         this.issuePartyName = issuePartyName == null ? null : issuePartyName.trim();
+    }
+
+    /**
+     * 获取 报送流水号
+     * 
+     * @return 报送流水号
+     */
+    public String getSumitSeq() {
+        return sumitSeq;
+    }
+
+    /**
+     * 设置 报送流水号
+     * 
+     * @param sumitSeq 报送流水号
+     */
+    public void setSumitSeq(String sumitSeq) {
+        this.sumitSeq = sumitSeq == null ? null : sumitSeq.trim();
     }
 }

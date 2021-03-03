@@ -78,8 +78,8 @@ public class ProdDurationRegController {
 	 * @since 1.0
 	 */
 	@PostMapping("cancelMannul")
-	public void cancelMannul(@RequestBody Map<String, Object> map) {
-		prodDurationReg001Service.cancelMannul(map);
+	public String cancelMannul(@RequestBody Map<String, Object> map) {
+		return prodDurationReg001Service.cancelMannul(map);
 	}
 	
 	@PostMapping("selectAllData")
@@ -99,7 +99,7 @@ public class ProdDurationRegController {
 	    * @since 1.0
 	    */
 	   @PostMapping("reportCheck")
-	   public List<ExcelValidDto> reportCheck(@RequestBody Map<String,Object> map) {
+	   public Map<String,Object> reportCheck(@RequestBody Map<String,Object> map) {
 	       return prodDurationReg001Service.checkData(map);
 	   }
 	

@@ -22,6 +22,10 @@ import com.joyintech.tams.report.common.base.annotate.TableName;
 @TableName("CHB_INVEST_TRADE_SUB")
 public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
     /**
+     * 产品登记编码
+     */
+	private  String  prodRegistCode;
+	/**
      * 登记序号
      */
     private String registSeqno;
@@ -232,6 +236,11 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
      * 报送状态
      */
     private String sendStatus;
+
+    /**
+     * 报送流水号
+     */
+    private String sumitSeq;
 
     /**
      * 报送状态
@@ -929,7 +938,23 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
         this.sendStatus = sendStatus == null ? null : sendStatus.trim();
     }
 
-    /**
+    public String getSumitSeq() {
+		return sumitSeq;
+	}
+
+	public void setSumitSeq(String sumitSeq) {
+		this.sumitSeq = sumitSeq;
+	}
+
+	public void setAssetMethodStr(String assetMethodStr) {
+		this.assetMethodStr = assetMethodStr;
+	}
+
+	public void setRivalPartyTypeStr(String rivalPartyTypeStr) {
+		this.rivalPartyTypeStr = rivalPartyTypeStr;
+	}
+
+	/**
      * 报送反馈状态
      * @return SUBMIT_FEEDBACK_STATUS 报送反馈状态
      */
@@ -1206,6 +1231,26 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
 	public void setRivalPartyTypeNum(String rivalPartyTypeNum) {
 		this.rivalPartyTypeNum = rivalPartyTypeNum;
 	}
-    
-    
+
+	public String getProdRegistCode() {
+		return prodRegistCode;
+	}
+
+	public void setProdRegistCode(String prodRegistCode) {
+		this.prodRegistCode = prodRegistCode;
+	}
+
+
+	private String dealdateStr;
+
+    public String getDealdateStr() {
+    	if(StringUtil.isEmpty(dealdateStr)&&StringUtil.isNotEmpty(dealdate)){
+    		return DateUtil.format(dealdate,"yyyyMMdd");
+    	}
+        return dealdateStr;
+    }
+
+    public void setDealdateStr(String dealdateStr) {
+        this.dealdateStr = dealdateStr;
+    }
 }

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbPrdDealSub;
 import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -16,7 +17,7 @@ import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto
  * @see ProdDurationReg001Mapper
  * @since 1.0
  */
-@Mapper
+@Repository
 public interface ProdDurationReg001Mapper {
 
 	 /**
@@ -109,4 +110,7 @@ public interface ProdDurationReg001Mapper {
    
     ChbPrdDealSub selectByPrimaryKey(String registSeqno);
     List<ProdDurationReg001Dto>   selectAllDataByList(@Param("keyList")List<ProdDurationReg001Dto>  dataList);
+
+    List<String> selectRegistSeqnoList(@Param("list")List<ProdDurationReg001Dto> registSeqList, @Param("flag")String string);
+
 }

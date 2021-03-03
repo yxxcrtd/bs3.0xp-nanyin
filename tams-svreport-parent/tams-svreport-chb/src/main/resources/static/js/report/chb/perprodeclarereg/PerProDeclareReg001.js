@@ -106,6 +106,12 @@ $(function() {
 									visible : false
 								},
 								{
+									title : '产品登记编码',
+									field : 'regCode',
+									width : 200,
+									sortField:'regCode'
+								},
+								{
 									title : '产品代码',
 									field : 'prodId',
 									width : 200, 
@@ -502,95 +508,26 @@ $(function() {
 									title : '操作附件',
 									field : 'operation',
 									type : 'action',
-									width : 150,									
-//									buttons : [  {
-//										text : '&#xe67c;',
-//										clas : 'upload',
-//										title : '上传'
-//
-//									}, {
-//										text : '&#xe640;',
-//										clas : 'delt',
-//										title : '删除'
-//
-//									}, {
-//										text : '&#xe601;',
-//										clas : 'download',
-//										title : '下载'
-//									} , {
-//										text : '&#xe615;',
-//										clas : 'fileView',
-//										title : '查看'
-//									} ] 
-									/*render: function (data, type, row, meta) {
-										debugger;
-						                if (row.flg1 == '01' && row.flg2 == '01'){
-						                    return '<i class="btn layui-icon upload" title="上传">&#xe67c;</i>'
-						                         + '<i class="btn layui-icon delt" title="删除">&#xe640;</i>'
-						                         + '<i class="btn layui-icon download" title="下载">&#xe601;</i>'
-						                         + '<i class="btn layui-icon fileView" title="查看">&#xe615;</i>';
-						                }
-						                else if(row.flg1 == '01' && row.flg2 != '01'){
-						                	return '<i class="btn layui-icon upload" title="上传">&#xe67c;</i>'
-					                             + '<i class="btn layui-icon download" title="下载">&#xe601;</i>'
-					                             + '<i class="btn layui-icon fileView" title="查看">&#xe615;</i>';
-						                }
-						                else if(row.flg1 != '01' && row.flg2 == '01'){						                	  
-						                	return '<i class="btn layui-icon delt" title="删除">&#xe640;</i>'
-					                             + '<i class="btn layui-icon download" title="下载">&#xe601;</i>'
-					                             + '<i class="btn layui-icon fileView" title="查看">&#xe615;</i>';
-						                }
-						                else {						                	  
-						                	return '<i class="btn layui-icon download" title="下载">&#xe601;</i>'
-					                             + '<i class="btn layui-icon fileView" title="查看">&#xe615;</i>';
-						                }
-						            }*/
-									
-									render:function (data,type,row,meta){
-										var buttons='';
-										if (row.flg1 == '01' && row.flg2 == '01'){
-											if(purviewElements.indexOf('_batch')!=-1){
-			                                    buttons += '<i class="btn layui-icon  batch" title="上传" >&#xe67c;</i>';
-											}
-											if(purviewElements.indexOf('_manual')!=-1){
-			                                    buttons += '<i class="btn layui-icon manual" title="下载" >&#xe601;</i>';
-											}
-											if(purviewElements.indexOf('_edit')!=-1){
-			                                    buttons += '<i class="btn layui-icon edit" title="查看" >&#xe615;</i>';
-											}
-											buttons+='<i class="btn layui-icon delt" title="删除">&#xe640;</i>';
-										}
-										else if(row.flg1 == '01' && row.flg2 != '01'){
-											if(purviewElements.indexOf('_batch')!=-1){
-			                                    buttons += '<i class="btn layui-icon  batch" title="上传" >&#xe67c;</i>';
-											}
-											if(purviewElements.indexOf('_manual')!=-1){
-			                                    buttons += '<i class="btn layui-icon manual" title="下载" >&#xe601;</i>';
-											}
-											if(purviewElements.indexOf('_edit')!=-1){
-			                                    buttons += '<i class="btn layui-icon edit" title="查看" >&#xe615;</i>';
-											}
-										}
-										else if(row.flg1 != '01' && row.flg2 == '01'){
-											if(purviewElements.indexOf('_manual')!=-1){
-			                                    buttons += '<i class="btn layui-icon manual" title="下载" >&#xe601;</i>';
-											}
-											if(purviewElements.indexOf('_edit')!=-1){
-			                                    buttons += '<i class="btn layui-icon edit" title="查看" >&#xe615;</i>';
-											}
-											buttons+='<i class="btn layui-icon delt" title="删除">&#xe640;</i>'
-										}
-										else {
-											if(purviewElements.indexOf('_manual')!=-1){
-			                                    buttons += '<i class="btn layui-icon manual" title="下载">&#xe601;</i>';
-											}
-											if(purviewElements.indexOf('_edit')!=-1){
-			                                    buttons += '<i class="btn layui-icon edit" title="查看" >&#xe615;</i>';
-											}
-										}
-										return buttons;
-									}
-								
+									width : 150,
+									buttons : [  {
+										text : '&#xe67c;',
+										clas : 'upload',
+										title : '上传'
+
+									}, {
+										text : '&#xe640;',
+										clas : 'delt',
+										title : '删除'
+
+									}, {
+										text : '&#xe601;',
+										clas : 'download',
+										title : '下载'
+									} , {
+										text : '&#xe615;',
+										clas : 'fileView',
+										title : '查看'
+									} ] 
 								}
 
 						]
@@ -691,9 +628,34 @@ $(function() {
             });
         });
 	};
-	
-
+	/**start   中债一二期直连新加  add  by dongxiangyang  20201009  */
+	// 数据检查
+	$('#SvrPerProDeclareReg001_btn_checkData').click(function(){
+		var paramObj = getSearchParams();
+		paramObj.opertionType = "checkData";
+		paramObj.sendStatus = paramObj.sendStatus;
+		chbCommonCheck(table, paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
+	});
 	/**
+	 * 报送
+	 */
+	$('#SvrPerProDeclareReg001_btn_submit').click(function () {
+		var paramObj = getSearchParams();
+		paramObj.opertionType = "submitChb";
+		chbCommonCheck(table, paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
+	});
+	/**
+	 * 重新报送(只有数据状态为新建、反馈状态为发送失败的数据可以重新报送)
+	 *
+	 */
+	$('#SvrPerProDeclareReg001_btn_reSubmit').click(function () {
+		var paramObj = getSearchParams();
+		paramObj.opertionType = "reSubmitChb";
+		chbCommonCheck(table, paramObj, 'submitBeforeCheck', dataTitle, 'submitChb');
+	});
+	/**end   中债一二期直连新加  add  by dongxiangyang  20201009  */
+	
+    /**
 	 * 手工处理
 	 */
 	$('#SvrPerProDeclareReg001_btn_manual')
@@ -823,7 +785,7 @@ $(function() {
 		
 	}
 	
-	table.bind('click', '.batch', function(data, index) {
+	table.bind('click', '.upload', function(data, index) {
           var p='';
 		if (data.sendStatus != '01') {
 			Joyin.error("只有未报送的记录可以上传！");
@@ -862,7 +824,7 @@ $(function() {
 		
 		
 
-	table.bind('click', '.manual', function(data, index) {
+	table.bind('click', '.download', function(data, index) {
 		if (!data.fileNo || data.fileNo == null) {
 			Joyin.error("未上传附件，不能下载！");
 			return;
@@ -881,7 +843,7 @@ $(function() {
 	
 	
 	
-	table.bind('click', '.edit', function(data, index) {
+	table.bind('click', '.fileView', function(data, index) {
 		
 		$.post('getFileList', {fileNo:data.fileNo}, function(str){
 			  layer.open({
@@ -940,10 +902,38 @@ $(function() {
 	;
 	init();
 
+	/**
+	 * 九大附件批量上传
+	 */
+	var nineFileUpload = function(){
+		Joyin.uploadFile(
+			{
+				exts : 'zip',
+				hideTpl : true
+			} ,
+			function(fileName,param) {
+				// 上传校验
+				Joyin.ajax('nineFileUploadCheck', {fileName : fileName, param : param}, function(result){
+					// 调用上传方法
+					Joyin.ajax('nineFileUpload', {fileName : fileName, param : param}, function() {
+						table.reload();
+					})
+				});
+			}
+		);
+	}
+
 	$(function() {
 		// 绑定按钮事件
 		$('#SvrPerProDeclareReg001_btn_search').click(function() {
 			table.load();
+		});
+
+		/**
+		 * 九大附件批量上传
+		 */
+		$('#SvrPerProDeclareReg001_btn_fileUpload').click(function() {
+			nineFileUpload();
 		});
 	});
 

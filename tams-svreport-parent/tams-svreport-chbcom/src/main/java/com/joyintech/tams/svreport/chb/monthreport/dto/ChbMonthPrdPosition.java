@@ -151,7 +151,80 @@ public class ChbMonthPrdPosition {
      * 机构编号
      */
     private String  institutionCode;
-    
+
+
+    /**
+     * 本期兑付金额
+     * @return
+     */
+    private  BigDecimal  payamtsum;
+
+    /**
+     * 是否母行划转产品
+     * @return
+     */
+    private String    isTransfer;
+
+
+    /**
+     * 是否合规新产品
+     * @return
+     */
+    private   String  isFhxgcp;
+
+    /**
+     * 是否养老理财产品
+     * @return
+     */
+    private   String  isYllccp;
+
+
+    /**
+     * 封闭式产品期限
+     * @return
+     */
+    private   BigDecimal closetermday;
+
+
+    public BigDecimal getPayamtsum() {
+        return payamtsum;
+    }
+
+    public void setPayamtsum(BigDecimal payamtsum) {
+        this.payamtsum = payamtsum;
+    }
+
+    public String getIsTransfer() {
+        return isTransfer;
+    }
+
+    public void setIsTransfer(String isTransfer) {
+        this.isTransfer = isTransfer;
+    }
+
+    public String getIsFhxgcp() {
+        return isFhxgcp;
+    }
+
+    public void setIsFhxgcp(String isFhxgcp) {
+        this.isFhxgcp = isFhxgcp;
+    }
+
+    public String getIsYllccp() {
+        return isYllccp;
+    }
+
+    public void setIsYllccp(String isYllccp) {
+        this.isYllccp = isYllccp;
+    }
+
+    public BigDecimal getClosetermday() {
+        return closetermday;
+    }
+
+    public void setClosetermday(BigDecimal closetermday) {
+        this.closetermday = closetermday;
+    }
 
     public String getInstitutionCode() {
 		return institutionCode;

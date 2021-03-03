@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface MstCounterPartyDtoMapper {
     int deleteByPrimaryKey(String counterId);
 

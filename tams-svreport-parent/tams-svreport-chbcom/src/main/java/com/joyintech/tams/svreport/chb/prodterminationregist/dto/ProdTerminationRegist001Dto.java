@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
@@ -23,11 +24,15 @@ import com.joyintech.tams.report.common.base.annotate.TableName;
 public class ProdTerminationRegist001Dto extends BaseEntity implements ITableRow {
 	
 	private String prodRegCode;
+	private String prodRegistCode;
     /**
      * 登记序列
      */
     private String registSeqno;
-
+    /**
+     * 报送流水号
+     */
+    private String sumitSeq;
     /**
      * 理财产品代码
      */
@@ -796,8 +801,11 @@ public class ProdTerminationRegist001Dto extends BaseEntity implements ITableRow
 	}
     
     public String getMdateStr(){
-    	DateFormat format1 = new SimpleDateFormat("yyyyMMdd");
-    	return format1.format(mdate);
+        // modify by dubaojun 2020-10-31 当mdate为null时报错修复 start
+//    	DateFormat format1 = new SimpleDateFormat("yyyyMMdd");
+//    	return format1.format(mdate);
+        return DateUtil.format(mdate, DateUtil.DEFAULT_OTHER_FORMAT);
+        // modify by dubaojun 2020-10-31 当mdate为null时报错修复 end
     }
 
 	public String getProdRegCode() {
@@ -806,6 +814,22 @@ public class ProdTerminationRegist001Dto extends BaseEntity implements ITableRow
 
 	public void setProdRegCode(String prodRegCode) {
 		this.prodRegCode = prodRegCode;
+	}
+
+	public String getSumitSeq() {
+		return sumitSeq;
+	}
+
+	public void setSumitSeq(String sumitSeq) {
+		this.sumitSeq = sumitSeq;
+	}
+
+	public String getProdRegistCode() {
+		return prodRegistCode;
+	}
+
+	public void setProdRegistCode(String prodRegistCode) {
+		this.prodRegistCode = prodRegistCode;
 	}
     
 }

@@ -317,4 +317,9 @@ public class ReportGlobalConstant {
      * 投资者份额检查不通过是否要报送增加系统参数
      */
     public static final String SYS_PARA_IS_SEND_EQUDET_WHEN_DEVIATION="IS_SEND_EQUDET_WHEN_DEVIATION";
+
+    /**
+     * 中债一二期直连报送每批次处理数据条数
+     */
+    public static final String SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST = "SEND_CB_DATA_COUNT_PER_TIME_FIRST";
 }

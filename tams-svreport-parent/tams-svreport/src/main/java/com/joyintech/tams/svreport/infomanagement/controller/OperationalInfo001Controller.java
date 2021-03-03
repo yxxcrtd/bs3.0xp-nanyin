@@ -252,6 +252,7 @@ public class OperationalInfo001Controller extends BaseController {
 	@RequestMapping("export")
     public ResponseEntity<byte[]> export() {
     	Map<String, Object> param = RequestUtil.getPageParam();
+    	param.put("tableId", (String) param.get("tableName"));
     	return operationalInfoMService.export(param);
     }
 	

@@ -96,6 +96,11 @@ public class ChbMonthFeePosition {
      * 机构编号
      */
     private String  institutionCode;
+
+    /**
+     * 是否养老理财产品
+     */
+    private String isYllccp;
     
 
     public String getInstitutionCode() {
@@ -361,5 +366,13 @@ public class ChbMonthFeePosition {
      */
     public void setConPrdTraget(String conPrdTraget) {
         this.conPrdTraget = conPrdTraget == null ? null : conPrdTraget.trim();
+    }
+
+    public String getIsYllccp() {
+        return isYllccp;
+    }
+
+    public void setIsYllccp(String isYllccp) {
+        this.isYllccp = isYllccp;
     }
 }

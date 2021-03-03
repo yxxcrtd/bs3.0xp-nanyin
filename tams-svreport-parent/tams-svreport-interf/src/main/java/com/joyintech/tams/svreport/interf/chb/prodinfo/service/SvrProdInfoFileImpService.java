@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -310,7 +311,9 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		info.setRaiseEnddate(DateUtil.parse(map.get("RAISE_ENDDATE")));// 募集结束日期
 		info.setTemplateName(map.get("TEMPLATE_NAME"));// 模板名称
 		info.setProdBrand(map.get("PROD_BRAND"));// 产品品牌
-		info.setProdStage(new BigDecimal(map.get("PROD_STAGE")));// 产品期次
+		if (StringUtil.isNotEmpty(map.get("PROD_STAGE"))) {
+			info.setProdStage(new BigDecimal(map.get("PROD_STAGE")));// 产品期次
+		}
 		info.setDesignerName(map.get("DESIGNER_NAME"));// 产品设计人姓名
 		info.setDesignerId(map.get("DESIGNER_ID"));// 产品设计人身份证号
 		info.setApproverName(map.get("APPROVER_NAME"));// 产品审批人姓名
@@ -356,10 +359,14 @@ public class SvrProdInfoFileImpService extends FileImpService {
 //		info.setHighYield(new BigDecimal(map.get("HIGH_YIELD")));
 //		info.setLowYield(new BigDecimal(map.get("LOW_YIELD")));
 		info.setSaleArea(map.get("SALE_AREA"));
-		info.setSaleAmtStr(new BigDecimal(map.get("SALE_AMT_STR")));
+		if (StringUtil.isNotEmpty(map.get("SALE_AMT_STR"))) {
+			info.setSaleAmtStr(new BigDecimal(map.get("SALE_AMT_STR")));
+		}
 		info.setCashPrinCcy(map.get("CASH_PRIN_CCY"));
 		info.setCashProfCcy(map.get("CASH_PROF_CCY"));
-		info.setRaiseAmtPlan(new BigDecimal(map.get("RAISE_AMT_PLAN")));
+		if (StringUtil.isNotEmpty(map.get("RAISE_AMT_PLAN"))) {
+			info.setRaiseAmtPlan(new BigDecimal(map.get("RAISE_AMT_PLAN")));
+		}
 		if (map.get("SALE_FEE_RATE") != null && !"".equals(map.get("SALE_FEE_RATE"))) {
 			info.setSaleFeeRate(new BigDecimal(map.get("SALE_FEE_RATE")));
 		}
@@ -458,6 +465,13 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		info.setBusiAcctNo(map.get("BUSI_ACCT_NO"));
 		// 资金托管账户
 		info.setAcctName(map.get("ACCT_NAME"));
+
+		/**start  by dongxiangyang  新增产品基本信息的三个字段  20210126*/
+        info.setIsTransfer(map.get("IS_TRANSFER"));
+        info.setIsFhxgcp(map.get("IS_FHXGCP"));
+        info.setIsYllccp(map.get("IS_YLLCCP"));
+		/**end  by dongxiangyang  新增产品基本信息的三个字段  20210126*/
+
 		return info;
 
 	}
@@ -577,9 +591,10 @@ public class SvrProdInfoFileImpService extends FileImpService {
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile) {
 //		List<Map<String, String>> listA = 
 		String result="success";
-		checkData(listData, interfFile.getFilename(),
-		InterfDefine.产品基本信息接口数据.getCode(), InterfDefine.产品基本信息接口数据.getCode(),
-		BUSINESSKEY_CHB_PRD_BASEINFO, BUSINESSKEY_CHB_PRD_BASEINFO);
+		checkDataCodeCheck(listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO);
+//		checkData(listData, interfFile.getFilename(),
+//		InterfDefine.产品基本信息接口数据.getCode(), InterfDefine.产品基本信息接口数据.getCode(),
+//		BUSINESSKEY_CHB_PRD_BASEINFO, BUSINESSKEY_CHB_PRD_BASEINFO);
 //		listData.addAll(listA);
 		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.产品基本信息接口数据.getCode());
         if (interfConfig == null){

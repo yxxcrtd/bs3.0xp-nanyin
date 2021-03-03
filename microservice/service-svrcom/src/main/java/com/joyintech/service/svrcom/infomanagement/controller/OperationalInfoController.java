@@ -32,7 +32,7 @@ import com.joyintech.tams.svreport.infomanagement.service.OperationalInfo004Serv
  * @see OperationalInfoController
  * @since 1.0
  */
-@RestController
+@RestController("backOperationalInfoController")
 @RequestMapping("/OperationalInfo")
 public class OperationalInfoController {
 
@@ -145,7 +145,7 @@ public class OperationalInfoController {
      */
     @PostMapping("/queryColumnInfoList")
     public String queryColumnInfoList(@RequestBody Map<String, Object> param){
-        return operationalInfo001Service.queryColumnInfoList(param);
+        return operationalInfo001Service.queryColumnInfoListCache(param);
     }
 
     /**

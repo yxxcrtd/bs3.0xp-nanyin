@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.asset.depo.validator;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -53,6 +54,10 @@ public class FinDepositTargetValidator implements BeanValidator{
      */
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+
     /**
      * {@inheritDoc}
      */
@@ -169,8 +174,13 @@ public class FinDepositTargetValidator implements BeanValidator{
             && DictCodeListExt2.划款方式_一次性划款.getValue().equals(dto.getBussParticipantInfoDto().getBussParticipantInfoDtoList().get(0).getPayType())){
             resultList.add(new ValidMessage("",getMessage("只能使用逐笔划款通道！")));
         }
-         return resultList;
         // add by caiqun 20200727 end  BS-1118【银行模式】【投资交易-存款类标的】新建标的时，选择挂一次性划款通道，提交成功。控制只能选择逐笔划款通道
+
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getType6(), ValidMessage.class);
+        }
+
+        return resultList;
     }
 
 }

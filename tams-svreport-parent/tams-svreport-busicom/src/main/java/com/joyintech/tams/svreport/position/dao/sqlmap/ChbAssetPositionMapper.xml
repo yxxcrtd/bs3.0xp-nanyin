@@ -635,7 +635,10 @@
 		</if>
 		LEFT JOIN CHB_ASSET_INFO ASSETINFO
 		ON ASSETINFO.ASSET_CODE = ASSETBASIS.ASSET_ID
-		WHERE 1 =1 
+		WHERE 1 =1
+        /***资产头寸生成添加了判断资产是否存在  add by leipeng 20210116**/
+		and ASSETINFO.STATUS IN ('E','M')
+        /***资产头寸生成添加了判断资产是否存在  add by leipeng 20210116**/
 		AND ASSETBASIS.STATUS != 'D'/*删除状态数据不统计*/
         AND to_char(ASSETBASIS.VALUE_DATE,'yyyy-MM-dd') = to_char(#{cdate,jdbcType=DATE},'yyyy-MM-dd')
         <if test="prodids !=null and prodids.size()!=0">

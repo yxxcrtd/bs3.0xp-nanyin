@@ -3106,7 +3106,15 @@ public class PbcMonthAssetReportService  extends BaseService{
             // 821200 劣后级 = 821210 住户   +822120 广义政府+822130 非金融企业+822140 银行业存款类金融机构  
             //               +822150 银行业非存款类金融机构 +822160 非银行业金融机构  +822170 特定目的载体 +822180 境外 
             // 821260 非银行业金融机构 :客户二级类型=C0402非银行业金融机构 
-            if (DictCodeListExt2.客户二级类型_非银行业金融机构.getValue().equals(pos.getCustomerType2())) {
+            if (DictCodeListExt2.客户二级类型_非银行业金融机构.getValue().equals(pos.getCustomerType2())
+                    /*****G06升级改造 leipeng 20210128   start**/
+                    ||DictCodeListExt2.客户二级类型_保险业金融机构.getValue().equals(pos.getCustomerType2())
+                    ||DictCodeListExt2.客户二级类型_信托公司.getValue().equals(pos.getCustomerType2())
+                    ||DictCodeListExt2.客户二级类型_证券公司.getValue().equals(pos.getCustomerType2())
+                    ||DictCodeListExt2.客户二级类型_基金公司.getValue().equals(pos.getCustomerType2())
+                    ||DictCodeListExt2.客户二级类型_其他金融机构.getValue().equals(pos.getCustomerType2())
+                    /*****G06升级改造 leipeng 20210128   end**/
+            ) {
             	
             	setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.AMT_821260_FYXYJRJG, 
     					reportType,rateMap, source,null, massageMap,pos.getEndqtysum());

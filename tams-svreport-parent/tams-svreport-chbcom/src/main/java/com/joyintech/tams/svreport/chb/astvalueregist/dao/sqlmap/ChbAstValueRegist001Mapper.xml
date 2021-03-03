@@ -22,7 +22,8 @@
 		    CAVS.REMARK as remark,
 		    CAVS.STATUS_DATE as statusDate,
 		    CAVS.STATUS as status,
-		    CAVS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+		    CAVS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		    CAVS.SUMIT_SEQ as sumitSeq
 		FROM
 		    CHB_AST_VAL_SUB CAVS
 </sql>	
@@ -72,12 +73,13 @@
              		#{submitFeedbackStatus,jdbcType=VARCHAR}
             	</foreach>	
 		 	</if>
-		 	<if test="sendStatus != null  and sendStatus != ''">
+		 	<!-- modify by zhangliang 20201221 上面sendStatusList、statusList已经处理 -->
+		 	<!--<if test="sendStatus != null  and sendStatus != ''">
 				and CAVS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
 			</if>
 			<if test="status != null  and status != ''">
 				and CAVS.STATUS = #{status,jdbcType=VARCHAR}
-			</if>
+			</if>-->
 			<if test="assetCodeLike != null and assetcodelike != ''">
 				and upper(CAVS.ASSET_CODE) like CONCAT(CONCAT('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
@@ -188,12 +190,13 @@
              		#{submitFeedbackStatus,jdbcType=VARCHAR}
             	</foreach>	
 		 	</if>
-		 	<if test="sendStatus != null  and sendStatus != ''">
+			<!-- modify by zhangliang 20201221 上面sendStatusList、statusList已经处理 -->
+		 	<!--<if test="sendStatus != null  and sendStatus != ''">
 				and (CS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR} or cs.send_status is null)
 			</if>
 			<if test="status != null  and status != ''">
 				and CAVS.STATUS = #{status,jdbcType=VARCHAR}
-			</if>
+			</if>-->
 			<if test="assetCodeLike != null and assetcodelike != ''">
 				and upper(CAVS.ASSET_CODE) like CONCAT(CONCAT('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
@@ -287,12 +290,13 @@
 	             		#{submitFeedbackStatus,jdbcType=VARCHAR}
 	            	</foreach>	
 			 	</if>
-			 	<if test="sendStatus != null  and sendStatus != ''">
+				<!-- modify by zhangliang 20201221 上面sendStatusList、statusList已经处理 -->
+			 	<!--<if test="sendStatus != null  and sendStatus != ''">
 					and (CS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}  or cs.send_status is null)
 				</if>
 				<if test="status != null  and status != ''">
 					and CAVS.STATUS = #{status,jdbcType=VARCHAR}
-				</if>
+				</if>-->
 				<if test="assetCodeLike != null and assetcodelike != ''">
 					and upper(CAVS.ASSET_CODE) like CONCAT(CONCAT('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 				</if>
@@ -478,8 +482,9 @@
             sub.SEND_STATUS = '03',
             sub.SUBMIT_FEEDBACK_STATUS = '03',
             sub.submit_time = sysdate,
-            sub.UPDATE_TIME = sysdate,
-            sub.STATUS_DATE = sysdate
+            sub.UPDATE_TIME = sysdate
+            <!-- 去掉更新数据日期 -->
+            <!--,sub.STATUS_DATE = sysdate-->
         </set>
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
@@ -513,7 +518,14 @@
 		#{item,jdbcType=VARCHAR}
 	</foreach>
 	</delete>
-   
+   	<delete id="deleteByAssetCodeList">
+	delete from CHB_AST_VAL_SUB
+	where SEND_STATUS = '01'
+	<foreach collection="assetCodeList" item="item" open="AND ASSET_CODE in ("
+		separator="," close=")">
+		#{item.assetCode,jdbcType=VARCHAR}
+	</foreach>
+	</delete>
    <insert id="insertSeletForSub" parameterType="java.lang.String">
 	insert into CHB_AST_VAL_SUB (
 	REGIST_SEQNO, REGIST_BANK_CODE,

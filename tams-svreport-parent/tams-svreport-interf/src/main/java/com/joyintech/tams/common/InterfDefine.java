@@ -46,7 +46,7 @@ public enum InterfDefine {
     日历管理信息数据("DIS_CALENDAR_MGR","日历管理信息数据"),
     债券评级数据("MST_BOND_CREDIT_RATING","债券评级数据"),
     节假日数据("MST_HOLIDAY","节假日数据"),
-    汇率信息数据("MST_EXCHANGE_QUOTE","汇率信息数据"),
+    汇率信息数据("MST_EXCHARGE_QUOTE","汇率信息数据"),
     市场机构数据("MST_CUSTOMER_INFO","市场机构数据"),
     科目数据("DIS_BOK_SUBJECT","科目数据"),
     每日日终接取收益信息接口数据("CHB_PRD_PERIODYIELD_END_DAY","每日日终接取收益信息接口数据"),
@@ -65,10 +65,9 @@ public enum InterfDefine {
     贷款明细原始合同信息接口("CHB_LOAN_DETAIL_CONTRACT","贷款明细原始合同信息接口"),
     产品费用头寸接口("CHB_PRDFEE_BASIS_DATA","产品费用头寸接口"),
     产品分红交易接口数据("CHB_PRD_BONUS_DEAL","产品分红交易接口数据"),
-    产品利率基本信息接口数据("CHB_PRD_RATE","产品利率基本信息接口数据"),
-    资产利率基本信息接口数据("CHB_ASSET_RATE","资产利率基本信息接口数据"),
-
-
+	监管区域客户组别接口数据("SALE_CUST_SVRREPORT","监管区域客户组别接口数据"),
+	产品利率基本信息接口数据("CHB_PRD_RATE","产品利率基本信息接口数据"),
+    资产利率基本信息接口数据("CHB_ASSET_RATE","资产利率基本信息接口数据")
     ;
     
     /*两个属性*/

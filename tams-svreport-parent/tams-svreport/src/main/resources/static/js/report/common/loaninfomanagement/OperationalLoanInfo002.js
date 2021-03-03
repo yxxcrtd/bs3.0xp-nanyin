@@ -36,49 +36,53 @@
         if (object.assetsInvest) {
             object.assetsInvest = object.assetsInvest.join(';');
         }
-        object.assetType = assetType;
-        
+
         object.operateType = operateType;
         object.pageModel = pageModel;
         //check一下比例         start
-        if(assetType  === 'P06'){
-       	 var eachProportion=object.eachProportion;
-            var assetsInvest=object.assetsInvest;
-            if(eachProportion !== null){
-            var arr=eachProportion.split(':');
-            var assetarr=assetsInvest.split(';');
-            //此时应该包含比例符号
-            if(assetarr.length>1){
-            	if(eachProportion.indexOf(':')<0){
-            		//则格式不正确
-              	  Joyin.alert("各比例字段格式不正确或比例之和不等于100！",7);
-      			   return;        	
-            	}
-            }
-            //各比例输入个数跟基础资产投向分类选择的不一致，请确认！
-            if(arr.length !==assetarr.length){
-            	 Joyin.alert("各比例输入个数跟基础资产投向分类选择的不一致，请确认！",7);
-    			   return;  
-            }
-            	//判断是否为数字
-            	for(var i=0;i<arr.length;i++){
-            		if(isNaN(arr[i])){
-            			Joyin.alert("各比例字段格式不正确或比例之和不等于100！!",7);
-            			 return;
-            		}
-            	}
-            	var  sum=0;
-            	for(var i=0;i<arr.length;i++){
-            		sum=Number(arr[i])+Number(sum);
-            	}
-            	if(sum !== 100){
-            		 Joyin.alert("各比例字段格式不正确或比例之和不等于100！",7);
-            		 return;
-            	}
-            
-            }
-       }
-      
+        if(assetType  === '01'){
+        	 var eachProportion=object.eachProportion;
+             var assetsInvest=object.assetsInvest;
+             if(eachProportion !== null){
+             var arr=eachProportion.split(':');
+             //基础资产投向分类修复 zc add by start
+             if(assetsInvest == null){
+				 Joyin.alert("基础资产投向分类不能为空！",7);
+			 }else {
+				 var assetarr=assetsInvest.split(';');
+			 }
+             //基础资产投向分类修复 zc add by start
+             //此时应该包含比例符号
+             if(assetarr.length>1){
+             	if(eachProportion.indexOf(':')<0){
+             		//则格式不正确
+               	  Joyin.alert("各比例字段格式不正确或比例之和不等于100！",7);
+       			   return;        	
+             	}
+             }
+             //各比例输入个数跟基础资产投向分类选择的不一致，请确认！
+             if(arr.length !==assetarr.length){
+             	 Joyin.alert("各比例输入个数跟基础资产投向分类选择的不一致，请确认！",7);
+     			   return;  
+             }
+             	//判断是否为数字
+             	for(var i=0;i<arr.length;i++){
+             		if(isNaN(arr[i])){
+             			Joyin.alert("各比例字段格式不正确或比例之和不等于100！!",7);
+             			 return;
+             		}
+             	}
+             	var  sum=0;
+             	for(var i=0;i<arr.length;i++){
+             		sum=Number(arr[i])+Number(sum);
+             	}
+             	if(sum !== 100){
+             		 Joyin.alert("各比例字段格式不正确或比例之和不等于100！",7);
+             		 return;
+             	}
+             
+             }
+        }
         //check一下比例         end
         Joyin.ajaxJson("check",object,function(result){
             if(result){
@@ -183,12 +187,12 @@
         }else{
         	$('#enterpriseScale').prop('disabled',false);
         }
-
+    	
     	// 当资产类别 =“除回购和拆借外贷款”时，
     	// 1、借款人类型为“1-住户”时，行业信息联动带出“1-境内个人”，且置灰不允许修改；实际上，行业信息未联动带出且没有置灰。
     	// 2、借款人类型为“6-境外”时，行业信息联动带出“2-非居民”，且置灰不允许修改；实际上，行业信息未联动带出且没有置灰。
     	// 3、当借款人类型为“1-住户、6-境外”时，借款人地区（省）、借款人地区（市）、借款人地区（县）置灰不可填；实际未置灰可填。
-    	if($('#assetType2').val() && 'R02' === $('#assetType2').val()){
+    	if($('#assetType').val() && '02' === $('#assetType').val()){
     		if(borrowerType === SVR_DEPT_TYPE_1){
     			$('#industryInfo').val('1').trigger('change').attr('disabled',true);
     		}else if(borrowerType === SVR_DEPT_TYPE_6){
@@ -252,28 +256,20 @@
     	if(assetCode){
     		Joyin.ajax('queryPbcAssetType', {assetCode : assetCode}, function(result) {
     			assetType = result;
-    			var syqDiv = document.getElementById('syqDiv');
-    			var loannDiv =document.getElementById("loannDiv");
-    			var assetT=document.getElementById("assetT");
-    			var assetT1=document.getElementById("assetT1");
-    			//$('#assetType').attr("value",assetType);
-    			//$('#assetType').val(assetType).trigger('change');
+				var syqDiv = document.getElementById('syqDiv');
+				var loannDiv =document.getElementById("loannDiv");
     	    	if(assetType === 'P06'){
-    	    		$('#assetType1').val(assetType).trigger('change');
-    	    		$('#assetType2').val('').trigger('change');
-    	    		assetT1.style.display="block";
-    	    		assetT.style.display="none";
-    	    		
-    	    		syqDiv.style.display="block";
-    	    		loannDiv.style.display="none";
+    	    		$('#assetType').val("01").trigger('change');
+
+
+					syqDiv.style.display="block";
+					loannDiv.style.display="none";
     	    	}else{
-    	    		$('#assetType2').val(assetType).trigger('change');
-    	    		$('#assetType1').val('').trigger('change');
-    	    		assetT1.style.display="none";
-    	    		assetT.style.display="block";
-    	    		
-    	    		syqDiv.style.display="none";
-    	    		loannDiv.style.display="block";
+					$('#assetType').val("02").trigger('change');
+
+
+					syqDiv.style.display="none";
+					loannDiv.style.display="block";
     	    	}
     		});
     	}

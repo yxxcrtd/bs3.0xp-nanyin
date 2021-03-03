@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
@@ -54,6 +55,9 @@ public class FinBondTargetAssetValidator implements BeanValidator{
 
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
+
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -240,6 +244,11 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             }
 
         }
+
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
+        }
+
         return resultList;
     }
 }

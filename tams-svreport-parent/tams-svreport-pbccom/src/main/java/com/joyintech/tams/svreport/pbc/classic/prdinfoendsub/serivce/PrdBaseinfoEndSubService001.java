@@ -68,7 +68,7 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
 	 */
 	@Autowired
 	private PbcPrdBaseinfoEndSubMapper pbcPrdBaseinfoEndSubMapper;
-	
+
 	/**
 	 * 资产池基本信息service
 	 */
@@ -453,7 +453,7 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
             for(PbcPrdBaseinfoEndSub pbcPrdBaseinfoEndSub : list1) {
             	List<PbcPrdBaseinfoEndSub> pbcPrdBaseinfoEndSubList = new ArrayList<PbcPrdBaseinfoEndSub>();
             	if(StringUtils.isNotBlank(pbcPrdBaseinfoEndSub.getPbcProdId())) {
-               	 exportFileName = "PIE_"+pbcPrdBaseinfoEndSub.getPbcProdId();
+               	 exportFileName = "PEI-"+pbcPrdBaseinfoEndSub.getPbcProdId();
             	}
             	pbcPrdBaseinfoEndSubList.add(pbcPrdBaseinfoEndSub);
             	File outFile = makeFile2(
@@ -488,14 +488,13 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
         // 当只有一个人行产品，只有Excel导出
         for(PbcPrdBaseinfoEndSub pbcPrdBaseinfoEndSub : list1) {
         	if(StringUtils.isNotBlank(pbcPrdBaseinfoEndSub.getPbcProdId())) {
-            	 exportFileName = "PIE_"+pbcPrdBaseinfoEndSub.getPbcProdId();
+            	 exportFileName = "PEI-"+pbcPrdBaseinfoEndSub.getPbcProdId();
         	}
           }
 		File outFile = makeFile2(
 				"/com/joyintech/tams/svreport/pbc/classic/prdinfoendsub/conf/export_conf2.xml", list1,exportFileName,"xls",true);
 		return ExportUtil.export(
-            						 exportFileName +"("
-                                     + DateUtil.format(new Date()) + ")"
+            						 exportFileName
                                      + "." + "xls",
                 outFile, true);
     }

@@ -492,7 +492,7 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 		
 		// 解析成功，对数据list进行处理
 		if (!CollectionUtils.isEmpty(dataList)) {
-//			List<Map<String, String>>  listA = 
+//			List<Map<String, String>>  listA =
 			checkData(dataList, file.getFilename(), InterfDefine.资管计划底层资产持仓接口数据.getCode(),
 							InterfDefine.资管计划底层资产持仓接口数据.getCode(),null, DUPLICATIED_LIST);
 //			dataList.addAll(listA);
