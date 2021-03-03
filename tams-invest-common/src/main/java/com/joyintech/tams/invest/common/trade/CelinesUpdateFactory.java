@@ -29,7 +29,9 @@ import java.util.*;
 
 public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness {
 
+    @Autowired
     CreditLinesDealsMapper creditLinesMapper;
+
     List<CreditLines> carietiesCreList;//品种授信列表
     Boolean flagisNeedOccupyCrePs=false;//根据当前交易方向判断是否需要占用/释放授信
     Boolean flagarrisNeedOccupyCreCounter=false;//是否需要根据交易对手判断是否占用授信
