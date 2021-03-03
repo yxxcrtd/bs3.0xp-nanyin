@@ -11,6 +11,7 @@ function showFeeDetail(secAcctId, ptlId, calcStartDate, calcEndDate, feeType, co
 }
 // 定义函数作用域(立即执行),防止全局变量污染
 $(function() {
+	var flag = true;
 	var isNew = false;//是否是新建（没有预提规则的账户维护费），默认为不是
 	var calcConditionObjBackUp;
 	var cols1 = [{field : 'portFolioName',width:230,title : 'InvestFeePay002.feeTable.portFolioName'
@@ -55,7 +56,8 @@ $(function() {
 						cashId:$('#InvestFeePay002_hidden_cashId').val(),
 						chargeType : $('#InvestFeePay002_hidden_chargeType').val(),
 						org : $('#InvestFeePay002_regTrustOrg').val(),
-						confirmFlag : $('#InvestFeePay002_hidden_operateType').val()
+						confirmFlag : $('#InvestFeePay002_hidden_operateType').val(),
+						flag : flag
 						};
 			}
 		},
@@ -69,36 +71,36 @@ $(function() {
         rowno: true,
 		cols : cols1,
 		addclick: function(row) {
-			if(isNew && $("#InvestFeePay002_feeType").val() == '08'){
-				$('#InvestFeePay002_div_positionStartDate').hide();
-				$('#InvestFeePay002_div_positionEndDate').hide();
-				$('#InvestFeePay002_div_payAmt').hide();
-				$('#InvestFeePay002_div_adjustAmt').hide();
-				$('#InvestFeePay002_div_calculate').hide();
-				feeInfoTable.showColumns([{field:'operation', visible:true}],true);
-				feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
-				feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
-				feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
-				feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
-				feeInfoTable.showColumns([{field:'status', visible:false}],true) ;
-			}else{
-				$('#InvestFeePay002_div_positionStartDate').show();
-				$('#InvestFeePay002_div_positionEndDate').show();
-				$('#InvestFeePay002_div_payAmt').show();
-				$('#InvestFeePay002_div_adjustAmt').show();
-				$('#InvestFeePay002_div_calculate').show();
-				feeInfoTable.showColumns([{field:'operation', visible:false}],true);
-				feeInfoTable.showColumns([{field:'ptlId', visible:false}],true);
-				feeInfoTable.showColumns([{field:'portFolioName', visible:true}],true);
-				feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
-				feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
-				feeInfoTable.showColumns([{field:'status', visible:true}],true);
-				if($("#InvestFeePay002_feeType").val() == '08'){
-					feeInfoTable.showColumns([{field:'status', visible:false}],true);
-				}else{
-					feeInfoTable.showColumns([{field:'status', visible:true}],true);
-				}
-			}
+			// if(isNew && $("#InvestFeePay002_feeType").val() == '08'){
+			// 	$('#InvestFeePay002_div_positionStartDate').hide();
+			// 	$('#InvestFeePay002_div_positionEndDate').hide();
+			// 	$('#InvestFeePay002_div_payAmt').hide();
+			// 	$('#InvestFeePay002_div_adjustAmt').hide();
+			// 	$('#InvestFeePay002_div_calculate').hide();
+			// 	feeInfoTable.showColumns([{field:'operation', visible:true}],true);
+			// 	feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
+			// 	feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
+			// 	feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
+			// 	feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
+			// 	feeInfoTable.showColumns([{field:'status', visible:false}],true) ;
+			// }else{
+			// 	$('#InvestFeePay002_div_positionStartDate').show();
+			// 	$('#InvestFeePay002_div_positionEndDate').show();
+			// 	$('#InvestFeePay002_div_payAmt').show();
+			// 	$('#InvestFeePay002_div_adjustAmt').show();
+			// 	$('#InvestFeePay002_div_calculate').show();
+			// 	feeInfoTable.showColumns([{field:'operation', visible:false}],true);
+			// 	feeInfoTable.showColumns([{field:'ptlId', visible:false}],true);
+			// 	feeInfoTable.showColumns([{field:'portFolioName', visible:true}],true);
+			// 	feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
+			// 	feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
+			// 	feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			// 	if($("#InvestFeePay002_feeType").val() == '08'){
+			// 		feeInfoTable.showColumns([{field:'status', visible:false}],true);
+			// 	}else{
+			// 		feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			// 	}
+			// }
 		},
         editCell : function(value, data, field, cell, column){
         	if (field === "actPayAmt"){
@@ -129,11 +131,11 @@ $(function() {
 		},
         done : function(allData, table){
 			if(isNew && $("#InvestFeePay002_feeType").val() == '08')return;
-			if($("#InvestFeePay002_feeType").val() == '08'){
-				feeInfoTable.showColumns([{field:'status', visible:false}],true);
-			}else{
-				feeInfoTable.showColumns([{field:'status', visible:true}],true);
-			}
+			// if($("#InvestFeePay002_feeType").val() == '08'){
+			// 	feeInfoTable.showColumns([{field:'status', visible:false}],true);
+			// }else{
+			// 	feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			// }
         	var totalAmt = '0';
         	var actPayAmtCurSum = '0';
         	if (allData && allData.length > 0 && !isTodoList && $('#InvestFeePay002_hidden_operateType').val() === 'new'){
@@ -173,36 +175,36 @@ $(function() {
 		}
 		$('#InvestFeePay002_hidden_tradeAmt').val(totalAmt);
 		$('#InvestFeePay002_actPayAmt').val(totalAmt).trigger('change');
-		if(isNew && $("#InvestFeePay002_feeType").val() == '08'){
-			$('#InvestFeePay002_div_positionStartDate').hide();
-			$('#InvestFeePay002_div_positionEndDate').hide();
-			$('#InvestFeePay002_div_payAmt').hide();
-			$('#InvestFeePay002_div_adjustAmt').hide();
-			$('#InvestFeePay002_div_calculate').hide();
-			feeInfoTable.showColumns([{field:'operation', visible:true}],true);
-			feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
-			feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
-			feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
-			feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
-			feeInfoTable.showColumns([{field:'status', visible:false}],true) ;
-		}else{
-			$('#InvestFeePay002_div_positionStartDate').show();
-			$('#InvestFeePay002_div_positionEndDate').show();
-			$('#InvestFeePay002_div_payAmt').show();
-			$('#InvestFeePay002_div_adjustAmt').show();
-			$('#InvestFeePay002_div_calculate').show();
-			feeInfoTable.showColumns([{field:'operation', visible:false}],true);
-			feeInfoTable.showColumns([{field:'ptlId', visible:false}],true);
-			feeInfoTable.showColumns([{field:'portFolioName', visible:true}],true);
-			feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
-			feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
-			feeInfoTable.showColumns([{field:'status', visible:true}],true);
-			if($("#InvestFeePay002_feeType").val() == '08'){
-				feeInfoTable.showColumns([{field:'status', visible:false}],true);
-			}else{
-				feeInfoTable.showColumns([{field:'status', visible:true}],true);
-			}
-		}
+		// if(isNew && $("#InvestFeePay002_feeType").val() == '08'){
+		// 	$('#InvestFeePay002_div_positionStartDate').hide();
+		// 	$('#InvestFeePay002_div_positionEndDate').hide();
+		// 	$('#InvestFeePay002_div_payAmt').hide();
+		// 	$('#InvestFeePay002_div_adjustAmt').hide();
+		// 	$('#InvestFeePay002_div_calculate').hide();
+		// 	feeInfoTable.showColumns([{field:'operation', visible:true}],true);
+		// 	feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
+		// 	feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
+		// 	feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
+		// 	feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
+		// 	feeInfoTable.showColumns([{field:'status', visible:false}],true) ;
+		// }else{
+		// 	$('#InvestFeePay002_div_positionStartDate').show();
+		// 	$('#InvestFeePay002_div_positionEndDate').show();
+		// 	$('#InvestFeePay002_div_payAmt').show();
+		// 	$('#InvestFeePay002_div_adjustAmt').show();
+		// 	$('#InvestFeePay002_div_calculate').show();
+		// 	feeInfoTable.showColumns([{field:'operation', visible:false}],true);
+		// 	feeInfoTable.showColumns([{field:'ptlId', visible:false}],true);
+		// 	feeInfoTable.showColumns([{field:'portFolioName', visible:true}],true);
+		// 	feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
+		// 	feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
+		// 	feeInfoTable.showColumns([{field:'status', visible:true}],true);
+		// 	if($("#InvestFeePay002_feeType").val() == '08'){
+		// 		feeInfoTable.showColumns([{field:'status', visible:false}],true);
+		// 	}else{
+		// 		feeInfoTable.showColumns([{field:'status', visible:true}],true);
+		// 	}
+		// }
 	})
 
 	function feeTypeChangeAction(){
@@ -320,6 +322,7 @@ $(function() {
 		} else {
 			$('#InvestFeePay002_positionStartDate').val('').trigger('change');
 		}
+		flag = false;
 		if(isNew && feeType == '08'){
 			$('#InvestFeePay002_div_positionStartDate').hide();
 			$('#InvestFeePay002_div_positionEndDate').hide();
@@ -327,12 +330,12 @@ $(function() {
 			$('#InvestFeePay002_div_adjustAmt').hide();
 			$('#InvestFeePay002_div_calculate').hide();
 			feeInfoTable.clear();
-			feeInfoTable.showColumns([{field:'operation', visible:true}],true);
-			feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
-			feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
-			feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
-			feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
-			feeInfoTable.showColumns([{field:'status', visible:false}],true) ;
+			feeInfoTable.showColumns([{field:'operation', visible:true}]);
+			feeInfoTable.showColumns([{field:'ptlId', visible:true}]);
+			feeInfoTable.showColumns([{field:'portFolioName', visible:false}]);
+			feeInfoTable.showColumns([{field:'payAmt', visible:false}]);
+			feeInfoTable.showColumns([{field:'adjustAmt', visible:false}]);
+			feeInfoTable.showColumns([{field:'status', visible:false}]) ;
 		}else{
 			$('#InvestFeePay002_div_positionStartDate').show();
 			$('#InvestFeePay002_div_positionEndDate').show();
@@ -340,18 +343,19 @@ $(function() {
 			$('#InvestFeePay002_div_adjustAmt').show();
 			$('#InvestFeePay002_div_calculate').show();
 			feeInfoTable.clear();
-			feeInfoTable.showColumns([{field:'operation', visible:false}],true);
-			feeInfoTable.showColumns([{field:'ptlId', visible:false}],true);
-			feeInfoTable.showColumns([{field:'portFolioName', visible:true}],true);
-			feeInfoTable.showColumns([{field:'payAmt', visible:true}],true);
-			feeInfoTable.showColumns([{field:'adjustAmt', visible:true}],true);
-			feeInfoTable.showColumns([{field:'status', visible:true}],true);
+			feeInfoTable.showColumns([{field:'operation', visible:false}]);
+			feeInfoTable.showColumns([{field:'ptlId', visible:false}]);
+			feeInfoTable.showColumns([{field:'portFolioName', visible:true}]);
+			feeInfoTable.showColumns([{field:'payAmt', visible:true}]);
+			feeInfoTable.showColumns([{field:'adjustAmt', visible:true}]);
+			feeInfoTable.showColumns([{field:'status', visible:true}]);
 			if(feeType == '08'){
-				feeInfoTable.showColumns([{field:'status', visible:false}],true);
+				feeInfoTable.showColumns([{field:'status', visible:false}]);
 			}else{
-				feeInfoTable.showColumns([{field:'status', visible:true}],true);
+				feeInfoTable.showColumns([{field:'status', visible:true}]);
 			}
 		}
+		flag = true;
 	}
 	
 	/**

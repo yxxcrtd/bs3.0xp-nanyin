@@ -329,6 +329,7 @@ public class InvestFeePay002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("queryPayFeeInfoList")
     public List<InvestFeePay003Dto> queryPayFeeInfoList() {
+        if(getParam("flag").equals("false"))return new ArrayList<>();
     	// 待办事项
         if (StringUtil.isNotEmpty(this.getParam(GlobalConstant.WORKFLOW_ID))) {
             ProcessMark pro = investFeePay002Service.getBusinessInfo(
