@@ -909,8 +909,8 @@
       D.SHORT_TERM SHORT_TERM  ,  --<!--  最短持有期限(天)   -->
       D.IS_FREE_REDEM IS_FREE_REDEM  ,  --<!--  最短持有期后是否自由赎回   -->
       case
-      when D.REP_IS_CASH_MANAGE = 'Y' then '01'
-      when D.REP_IS_CASH_MANAGE = 'N' then '02'
+      when NVL(D.REP_IS_CASH_MANAGE, AD.IS_CASH_MANAGE) = 'Y' then '01'
+      when NVL(D.REP_IS_CASH_MANAGE, AD.IS_CASH_MANAGE) = 'N' then '02'
       end as
       CASH_MANA_CATE,  --<!--  是否现金管理类   -->
       D.REP_SALE_AREA SALE_AREA  ,  --<!--  产品销售地区   -->
@@ -942,7 +942,8 @@
       D.REP_INV_TYPE_RAT INV_TYPE_RAT  ,  --<!--  投资资产种类及比例   -->
       D.REP_REMARK REMARK,    --<!--  备注   -->               
 	  nvl(nvl(D.UPDATE_TIME,D.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')) AS UPDATE_TIME    
-      FROM REP_PROD_DECLARE D 
+      FROM REP_PROD_DECLARE D
+      left join FIN_PRODUCT_ADD AD on D.REP_FINPROD_ID = AD.FINPROD_ID
       where nvl(nvl(D.UPDATE_TIME,D.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))> #{updatetime,jdbcType=TIMESTAMP}
     </select>
    <insert id="mergeInfoList"
