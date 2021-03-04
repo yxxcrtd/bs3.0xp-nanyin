@@ -467,17 +467,21 @@ public class MonthReportAssetService {
         for ( ChbBotAstPosition p11:listUnderDeal ) {
             if (p11.getIsfinaplan()==null|| "02".equals(p11.getIsfinaplan()) ) { //不是资管计划
               //计算穿透资产价值
-              	if("01".equals(pos.getMonthReport())){
-            		p11.setAccuamt( p11.getAccuamt().divide(p11.getTotalNum(),18,RoundingMode.HALF_UP).multiply(p11.getPosAmt()) );
-            	}
-            	else{
-            		p11.setAccuamt( p11.getAccuamt().divide(p11.getTotalNum(),18,RoundingMode.HALF_UP).multiply(p11.getPosNum()) );
-            	}
-                
+				if (p11.getTotalNum() != null && p11.getTotalNum().compareTo(BigDecimal.ZERO) != 0){
+					if("01".equals(pos.getMonthReport())){
+						p11.setAccuamt( p11.getAccuamt().divide(p11.getTotalNum(),18,RoundingMode.HALF_UP).multiply(p11.getPosAmt()) );
+					}
+					else{
+						p11.setAccuamt( p11.getAccuamt().divide(p11.getTotalNum(),18,RoundingMode.HALF_UP).multiply(p11.getPosNum()) );
+					}
+				}
+
                 p11.setAccuamt(p11.getAccuamt().setScale(6, RoundingMode.HALF_UP));
                 list.add(p11);
             } else {
-                p11.setAccuamt( p11.getAccuamt().multiply(p11.getPosNum().divide(p11.getTotalNum(),18,RoundingMode.HALF_UP)));
+				if (p11.getTotalNum() != null && p11.getTotalNum().compareTo(BigDecimal.ZERO) != 0){
+					p11.setAccuamt( p11.getAccuamt().multiply(p11.getPosNum().divide(p11.getTotalNum(),18,RoundingMode.HALF_UP)));
+				}
                 p11.setPlanAssetId(p11.getAssetCode());
                 list.addAll(genMonthPlanPosition(p11));
             }
