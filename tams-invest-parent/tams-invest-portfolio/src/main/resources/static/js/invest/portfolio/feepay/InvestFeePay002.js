@@ -278,6 +278,7 @@ $(function() {
 				Joyin.ajax(JoyinUtil.getRealPath('/invest/portfolio/feepay/InvestFeePay002/queryLastPayDate'),
 					{secAcctId : secAcctId, feeType : feeType, operateType:$('#InvestFeePay002_hidden_operateType').val()}, function(result){
 						$('#InvestFeePay002_positionStartDate').val(result).trigger('change');
+						$('#InvestFeePay002_positionStartDate').prop("disabled", true);
 						if (!result || result == 'undefined') {
 							$('#InvestFeePay002_positionStartDate').prop("disabled", false);
 						}

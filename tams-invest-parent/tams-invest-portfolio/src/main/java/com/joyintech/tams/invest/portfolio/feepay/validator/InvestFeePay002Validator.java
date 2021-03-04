@@ -29,6 +29,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.portfolio.feepay.dto.InvestFeePay001Dto;
 import com.joyintech.tams.invest.portfolio.feepay.dto.InvestFeePay002Dto;
 import com.joyintech.tams.invest.portfolio.feepay.dto.InvestFeePay003Dto;
 import com.joyintech.tams.constant.DictCodeList;
@@ -92,6 +93,32 @@ public class InvestFeePay002Validator implements BeanValidator {
                 }
             }
         }
+        //add by  yujiaping 20210304 ZGBSS-702 当登记托管机构，费用类型，计费开始日，证券账户都与有效数据一致时不允许提交 start
+          Map<String, Object> map = new HashMap<>();        
+           map.put("effectStatus", DictCodeListExt1.有效状态_有效.getValue());               
+           map.put("noFlag", DictCodeList.是否_否.getValue());       
+           map.put("TG_BUSI_TYPE", "142");
+          List<InvestFeePay001Dto> effectData = investFeePay002Service.getEffectData(map);
+        if (effectData != null && effectData.size() > 0 && investFeePay002Dto != null){
+            for (InvestFeePay001Dto effectDatum : effectData) {  
+            	if(effectDatum.getRegTrustOrg() == null) {
+            		effectDatum.setRegTrustOrg("");
+            	}
+            	if(effectDatum.getSecAcctId() == null) {
+            		effectDatum.setSecAcctId("");
+            	}
+                            //当登记托管机构，费用类型，计费开始日，证券账户都与有效数据一致时，返回提示信息
+                            if (StringUtil.equals(effectDatum.getFeeType(),investFeePay002Dto.getFeeType())
+                            		&& StringUtil.equals(effectDatum.getRegTrustOrg(),investFeePay002Dto.getRegTrustOrg())
+                           // && StringUtil.equals(String.valueOf(dtos.get("payDate")),String.valueOf(investFeePay002Dto.getPayDate().getTime()))
+                            && StringUtil.equals(String.valueOf(effectDatum.getPositionStartDate()),String.valueOf(investFeePay002Dto.getStartDate()))
+                                    && StringUtil.equals(effectDatum.getSecAcctId(),investFeePay002Dto.getSecAcctId())){
+                                validList.add(new ValidMessage(getMessage("已存在有效数据，请勿重复提交")));
+                                return validList;
+                            }
+                        }                                 
+            }
+        //add by  yujiaping 20210304 ZGBSS-702 当登记托管机构，费用类型，计费开始日，证券账户都与有效数据一致时不允许提交 end
         // 划款指令check
         if (bussTrdTransferOrderService != null) {
             List<ValidMessage> list = bussTrdTransferOrderService.check(

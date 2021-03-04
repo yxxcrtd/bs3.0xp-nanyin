@@ -48,6 +48,10 @@ public class InvestFeePay001Dto extends BaseEntity implements ProcessEntity {
      * 证券账户
      */
     private String secAcctId;
+    /**
+     * 登记托管机构
+     */
+    private String regTrustOrg;
     
     /**
      * 操作类型
@@ -576,5 +580,13 @@ public class InvestFeePay001Dto extends BaseEntity implements ProcessEntity {
     public void setActPayAmt(BigDecimal actPayAmt) {
         this.actPayAmt = actPayAmt;
     }
+
+	public String getRegTrustOrg() {
+		return regTrustOrg;
+	}
+
+	public void setRegTrustOrg(String regTrustOrg) {
+		this.regTrustOrg = regTrustOrg;
+	}
 
 }

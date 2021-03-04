@@ -1409,4 +1409,18 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
                 pageParam, SelectOptionDto.class);
     }
 
+    /**
+     * 查询所有有效的数据进行对比
+     * <功能详细描述>
+     * @param map
+     * @return InvestFeePay001Dto
+     * @see
+     * @since 1.0
+     */
+    public List<InvestFeePay001Dto> getEffectData(Map<String, Object> map) {
+        return restTemplate.postForList(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME +
+                        "/InvestFeePay/getEffectData",map,
+                        InvestFeePay001Dto.class);
+    }
 }
