@@ -1939,6 +1939,7 @@
 	<!-- 无有效状态时的查询 -->
 	<select id="selectForPage" resultType="com.joyintech.service.period.trdqueryduration.dto.TrdQueryDurationDto">
 		SELECT * FROM (
+
         <!--
 		/*流程中数据*/
 		<if test="statusValid == null or statusValid.isEmpty() or statusValid.contains(PAGE_DATE_STATUS03)">
@@ -1946,9 +1947,11 @@
 		</if>
         -->
 
+
 		/*有效数据*/
 		<if test="statusValid == null or statusValid.isEmpty() or statusValid.contains(PAGE_DATE_STATUS05)">
-            <!--
+
+            <!-- 
 			<if test="(statusValid == null or statusValid.isEmpty() or statusValid.contains(PAGE_DATE_STATUS03))
                 or ((busiCode == null or busiCode.isEmpty()) and (statusValid == null or statusValid.isEmpty() or statusValid.contains(PAGE_DATE_STATUS01)))">
 				UNION ALL
@@ -1959,9 +1962,14 @@
 
 		/*撤销数据*/
 		<if test="statusValid == null or statusValid.isEmpty() or statusValid.contains(PAGE_DATE_STATUS06)">
+            <!-- 
 			<if test="(statusValid == null or statusValid.isEmpty()
                 or statusValid.contains(PAGE_DATE_STATUS03)) or ((busiCode == null or busiCode.isEmpty()) and (statusValid == null or statusValid.isEmpty() or statusValid.contains(PAGE_DATE_STATUS01)))
                 or (statusValid == null or statusValid.isEmpty() or statusValid.contains(PAGE_DATE_STATUS05))">
+				UNION ALL
+			</if>
+            -->
+            <if test=" statusValid == null or statusValid.isEmpty() or statusValid.contains(PAGE_DATE_STATUS05)">
 				UNION ALL
 			</if>
 			<include refid="STATUS_VALID_REVOKE"></include>
