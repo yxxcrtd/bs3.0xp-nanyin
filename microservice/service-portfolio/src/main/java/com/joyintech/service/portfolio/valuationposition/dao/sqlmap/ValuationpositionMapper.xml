@@ -87,6 +87,7 @@
 				ELSE 0 END  as		tdyUnitValueSum,
 				t1.BENCHMARK_RATE			as		benchmarkRate,
 				nvl(t3.SEVEN_DAY_RATE,0)	as		yield7,
+				t3.NET_UNIT_VALUE			as		dayPYield,
 				t1.TDY_UNPAID_INTINCEXP	as		tdyUnpaidIntincexp,
 				t1.TDY_UNPAID_PROFIT		as		tdyUnpaidProfit,
 				t1.TOT_BOUNS_AMT 			as 		totBounsAmt,
