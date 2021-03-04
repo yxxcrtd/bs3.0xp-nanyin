@@ -57,6 +57,7 @@ public interface TermStructureOfBusinessAndCostBenefitMapper {
 	 * @return
 	 */
 
+	List<InvestmentBusinessDetailsDto> selectAssetBalanceByInfoOld(Map<String,Object> map);
 	List<InvestmentBusinessDetailsDto> selectAssetBalanceByInfo(Map<String,Object> map);
 
 	/**
@@ -64,13 +65,17 @@ public interface TermStructureOfBusinessAndCostBenefitMapper {
 	 * @param endDate
 	 * @return
 	 */
+	List<InvestmentBusinessDetailsDto> selectAssetRateByInfo1Old(Map<String,Object> map);
 	List<InvestmentBusinessDetailsDto> selectAssetRateByInfo1(Map<String,Object> map);
+
 	/**
 	 * 资金运用的“'平均年化收益水平”公式二
 	 * @param endDate
 	 * @return
 	 */
+	List<InvestmentBusinessDetailsDto> selectAssetRateByInfo2Old(Map<String,Object> map);
 	List<InvestmentBusinessDetailsDto> selectAssetRateByInfo2(Map<String,Object> map);
+
 
 	/**
 	 *资产按照期限统计穿透前期末余额
@@ -78,6 +83,7 @@ public interface TermStructureOfBusinessAndCostBenefitMapper {
 	 * @return
 	 */
 
+	List<InvestmentBusinessDetailsDto> selectNSAssetBalanceByInfoOld(Map<String,Object> map);
 	List<InvestmentBusinessDetailsDto> selectNSAssetBalanceByInfo(Map<String,Object> map);
 
 	/**
@@ -85,13 +91,17 @@ public interface TermStructureOfBusinessAndCostBenefitMapper {
 	 * @param endDate
 	 * @return
 	 */
+	List<InvestmentBusinessDetailsDto> selectNSAssetRateByInfo1Old(Map<String,Object> map);
 	List<InvestmentBusinessDetailsDto> selectNSAssetRateByInfo1(Map<String,Object> map);
+
 	/**
 	 * 资金运用的“'平均年化收益水平”公式二
 	 * @param endDate
 	 * @return
 	 */
+	List<InvestmentBusinessDetailsDto> selectNSAssetRateByInfo2Old(Map<String,Object> map);
 	List<InvestmentBusinessDetailsDto> selectNSAssetRateByInfo2(Map<String,Object> map);
+
 
 	List<InvestmentBusinessDetailsDto> selectIncurDebtsBalanceByInfo(Map<String,Object> map);
 	List<InvestmentBusinessDetailsDto> selectIncurDebtsRateByInfo(Map<String,Object> map);
