@@ -12,6 +12,10 @@ package com.joyintech.tams.invest.trade.lend.controller;
 import javax.validation.Valid;
 
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,10 +46,7 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 拆借投资交易查询
@@ -66,6 +67,9 @@ public class TrdLendInvestTrade001Controller extends BaseController {
      */
     @Autowired
     private TrdLendInvestTrade002Service trdLendInvestTrade002Service;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
 
     @Override
     public String init(Model model) {
@@ -92,7 +96,6 @@ public class TrdLendInvestTrade001Controller extends BaseController {
      *
      * @return excel
      * @throws Exception 异常
-     * @param parameter 页面参数
      * @see
      * @since 1.0
      */
@@ -115,6 +118,18 @@ public class TrdLendInvestTrade001Controller extends BaseController {
     @ResponseBody
     public AjaxResult check(@Valid @RequestBody TrdLendInvestTradeRevokeDto inputDto,
                             BindingResult result) {
+        if(result.hasErrors()){
+            TrdProductDeal trdProductDeal = trdCommonBaseService.selectZCDealByTid(inputDto.getTradeId(), false);
+            // 查询到 卖出的转仓交易  说明 点击的是买入。
+            if(trdProductDeal!=null&& StringUtil.equals(DictCodeList.交易方向_卖出.getValue(),trdProductDeal.getPs())){
+                AjaxResult ajaxResult = new AjaxResult();
+                List<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(new ValidMessage(this.getMessage("内部转仓只能撤销卖出交易,买入自动撤销！")));
+                ajaxResult.setErrorList(errorList);
+                return ajaxResult;
+            }
+        }
+
         return commonCheck(result, inputDto.getOperateType());
     }
 

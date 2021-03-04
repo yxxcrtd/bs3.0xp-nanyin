@@ -206,24 +206,31 @@ public class TrdBondInvestTrade001Controller extends BaseController {
         // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 start
         if (result.getErrorCount() == 0) {
             AjaxResult ajaxResult = new AjaxResult();
-            String confirmMsg = "";
-            String changeLineMark = "<br/>";
 
             //根据交易编号查询另一笔未撤销的转仓交易信息
             String tradeId = inputDto.getTradeId();
-            TrdProductDeal res = trdCommonBaseService.selectZCDeal(tradeId);
-            if(StringUtil.isNotEmpty(res)){
-                confirmMsg = "此交易为转仓交易，撤销后需要将业务编号为["+
-                        res.getTradeId()+"]的反向转仓交易也撤销掉，请确认是否继续？";
-            }else{
-                confirmMsg = "请确认是否撤销？";
-            }
-            if (StringUtil.isNotBlank(confirmMsg)) {
-                ajaxResult.setData(confirmMsg);
-            }
-            if (ajaxResult != null) {
+//            TrdProductDeal res = trdCommonBaseService.selectZCDeal(tradeId);
+//            if(StringUtil.isNotEmpty(res)){
+//                confirmMsg = "此交易为转仓交易，撤销后需要将业务编号为["+
+//                        res.getTradeId()+"]的反向转仓交易也撤销掉，请确认是否继续？";
+//            }else{
+//                confirmMsg = "请确认是否撤销？";
+//            }
+//            if (StringUtil.isNotBlank(confirmMsg)) {
+//                ajaxResult.setData(confirmMsg);
+//            }
+//            if (ajaxResult != null) {
+//                return ajaxResult;
+//            }
+            TrdProductDeal trdProductDeal = trdCommonBaseService.selectZCDealByTid(tradeId, true);
+            // 查询到 卖出的转仓交易  说明 点击的是买入。
+            if(trdProductDeal!=null&& StringUtil.equals(DictCodeList.交易方向_卖出.getValue(),trdProductDeal.getPs())){
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(new ValidMessage(this.getMessage("内部转仓只能撤销卖出交易,买入自动撤销！")));
+                ajaxResult.setErrorList(errorList);
                 return ajaxResult;
             }
+
         }
         // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 end
         return commonCheck(result, inputDto.getOperateType());

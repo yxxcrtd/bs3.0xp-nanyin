@@ -21,6 +21,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
@@ -40,6 +41,7 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -90,6 +92,12 @@ public class TrdFundInvestTrade001Service extends CommonExportService<TrdFundInv
      */
     @Autowired(required = false)
     private BasRiskMathCommService basRiskMathCommService;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private TrdFundInvestTrade002Service trdFundInvestTrade002Service;
 
     // 调用投管接口 add by renping 20190205 start
     /**
@@ -161,6 +169,16 @@ public class TrdFundInvestTrade001Service extends CommonExportService<TrdFundInv
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
         List<BaseTradeProductDealDto> dtoList = restTemplate.getForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/getFinDto?tradId="+
             entity.getTradeId(),BaseTradeProductDealDto.class);
+
+        // 提前查询判断  是否  撤销 并且是 有转仓交易 并且转仓交易方向ps为买入
+        String reverseTradeId = "";
+        if(type == OperationType.REVOKE) {
+            TrdProductDeal reverseTrdProductDeal = trdCommonBaseService.selectZCDealByTid(entity.getTradeId(),false);
+            if (reverseTrdProductDeal != null && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), reverseTrdProductDeal.getPs())) {
+                reverseTradeId = reverseTrdProductDeal.getTradeId();
+            }
+        }
+
 
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         for(BaseTradeProductDealDto btpddto:dtoList){
@@ -303,6 +321,29 @@ public class TrdFundInvestTrade001Service extends CommonExportService<TrdFundInv
             }
         }
         // 调用投管接口 add by renping 20190205 end
+
+        // 自动撤销 卖出对应 的买入转仓记录
+        if(StringUtil.isNotEmpty(reverseTradeId)){
+            List<BaseTradeProductDealDto> reverseDtoList = restTemplate.getForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/getFinDto?tradId="+
+                    reverseTradeId,BaseTradeProductDealDto.class);
+
+            FinProductTradeDto reverseFinProductTradeDto = new FinProductTradeDto();
+            reverseFinProductTradeDto.setBaseTradeProductDealDtos(reverseDtoList);
+            reverseFinProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
+            baseTradeProductDealCommService.execute(reverseFinProductTradeDto);
+
+            Map<String, Object> param = new HashMap<>();
+            param.put("ps", DictCodeList.交易方向_买入.getValue());
+            param.put("tradeId", reverseTradeId);
+            TrdFundInvestTradeDto reverseDto = trdFundInvestTrade002Service.getTrdFundDto(param);
+            reverseDto.setOperateType(type.toString());
+            reverseDto.setWorkflowId(entity.getWorkflowId());
+            reverseDto.setUpdateUser(finProductTradeDto.getUpdateUser());
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/doComplete",
+                    reverseDto,Integer.class);
+
+        }
+
     }
     /**
      * 

@@ -180,6 +180,8 @@ public interface TrdCommonBaseMapper {
      */
     TrdProductDeal selectZCDeal(@Param("tradeId") String tradeId);
 
+    TrdProductDeal selectZCDealByTradeId(@Param("tradeId") String tradeId);
+
     /**
      * 根据交易编号查询已撤销数据条数
      *

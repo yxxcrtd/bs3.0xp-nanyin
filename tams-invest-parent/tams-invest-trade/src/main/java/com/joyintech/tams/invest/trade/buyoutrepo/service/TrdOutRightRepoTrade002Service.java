@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,6 +172,9 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 	@Autowired
     private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
 
+	@Autowired
+	private TrdCommonBaseService trdCommonBaseService;
+
 	@Override
 	public void doInsert(TrdOutRightRepoTrade002Dto entity, OperationType type) {
 		if (!type.equals(OperationType.REVOKE) && !type.equals(OperationType.DELETE)) {
@@ -278,6 +282,16 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 	    
 		entity.setActPortfolioId(entity.getPortfolioId());
 		entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
+
+		// 提前查询判断  是否  撤销 并且是 有转仓交易 并且转仓交易方向ps为买入
+		String reverseTradeId = "";
+
+		TrdProductDeal reverseTrdProductDeal = trdCommonBaseService.selectZCDealByTid(entity.getTradeId(),false);
+		if (reverseTrdProductDeal != null && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), reverseTrdProductDeal.getPs())) {
+			reverseTradeId = reverseTrdProductDeal.getTradeId();
+		}
+
+
 		// 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
 		List<BaseTradeProductDealDto> baseTradeProductDealDtoList = restTemplate
 				.getForList(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/selectTradeInfo?tradeId="
@@ -390,6 +404,16 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 //		investInterfCommDto.setStlPayOrders(entity.getStlPayOrders());
 		investInterfCommService.doInvestInterf(investInterfCommDto);
 		// 调用投管接口 add by wqd 20190218 end
+
+		if(StringUtil.isNotEmpty(reverseTradeId)){
+
+			TrdProductDeal trdProductDeal = new TrdProductDeal();
+			trdProductDeal.setTradeId(reverseTradeId);
+			trdProductDeal.setCancelRemark(entity.getRevokeReason());
+			commonBusinessService.revokeReverseTrade(trdProductDeal,false);
+
+		}
+
 	}
 
 	/**

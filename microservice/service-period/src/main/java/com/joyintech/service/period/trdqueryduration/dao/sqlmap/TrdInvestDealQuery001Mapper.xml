@@ -9,8 +9,14 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+                case 
+                    when order1.trade_id is not null then order1.portfolio_id
+                    else order2.portfolio_id
+                end as portfolioId,
+                case 
+                    when order1.trade_id is not null then order1.portfolio_name
+                    else order2.portfolio_name
+                end as portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -37,6 +43,9 @@
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
+            LEFT JOIN orderTemp order1 ON t1.TOTLE_TRADE_ID = order1.TRADE_ID
+            LEFT JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
 			AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 			AND wtdta.MP_FINPROD_ID IS NULL
@@ -662,8 +671,14 @@
 				T1.TOTLE_TRADE_ID busiCode,
 		        T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+                case 
+                    when order1.trade_id is not null then order1.portfolio_id
+                    else order2.portfolio_id
+                end as portfolioId,
+                case 
+                    when order1.trade_id is not null then order1.portfolio_name
+                    else order2.portfolio_name
+                end as portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -690,6 +705,9 @@
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
+            LEFT JOIN orderTemp order1 ON t1.TOTLE_TRADE_ID = order1.TRADE_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE T1.TRADE_STATUS = #{TRADE_STATUS01}
 			AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 			AND wtdta.MP_FINPROD_ID IS NULL
@@ -1305,8 +1323,14 @@
 				T1.P_TRADE_ID busiCode,
 		        T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+                case 
+                    when order1.trade_id is not null then order1.portfolio_id
+                    else order2.portfolio_id
+                end as portfolioId,
+                case 
+                    when order1.trade_id is not null then order1.portfolio_name
+                    else order2.portfolio_name
+                end as portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1333,6 +1357,9 @@
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
+            LEFT JOIN orderTemp order1 ON t1.TOTLE_TRADE_ID = order1.TRADE_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE T1.TRADE_STATUS = #{TRADE_STATUS03}
 			AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 			AND wtdta.MP_FINPROD_ID IS NULL
@@ -1922,22 +1949,38 @@
 			)
 		</if>
 	</sql>
+
+    <sql id = "orderTemp">
+        with orderTemp as(
+            select  LISTAGG(b.portfolio_name,',') within group(order by b.portfolio_id) portfolio_name,
+                    LISTAGG(b.portfolio_id,',')  within group(order by b.portfolio_id) portfolio_id,
+                a.trade_id
+            from STL_PAY_ORDERS A
+            inner join ptl_portfolio  b on a.portfolio_id = b.portfolio_id
+            group by  a.trade_id
+        )
+    </sql>
+
 	<!--流程中查询 -->
 	<select id="processSelectForPage"
 		resultType="com.joyintech.service.period.trdqueryduration.dto.TrdQueryDurationDto">
+        <include refid="orderTemp"></include>
 		<include refid="STATUS_VALID_PROCESS"></include>
 	</select>
 
 	<!-- 有效查询 -->
 	<select id="validSelectForPage" resultType="com.joyintech.service.period.trdqueryduration.dto.TrdQueryDurationDto">
+        <include refid="orderTemp"></include>
 		<include refid="STATUS_VALID_EFFECTIVE"></include>
 	</select>
 	<!-- 撤销的查询 -->
 	<select id="cancelSelectForPage" resultType="com.joyintech.service.period.trdqueryduration.dto.TrdQueryDurationDto">
+        <include refid="orderTemp"></include>
 		<include refid="STATUS_VALID_REVOKE"></include>
 	</select>
 	<!-- 无有效状态时的查询 -->
 	<select id="selectForPage" resultType="com.joyintech.service.period.trdqueryduration.dto.TrdQueryDurationDto">
+        <include refid="orderTemp"></include>
 		SELECT * FROM (
 
         <!--

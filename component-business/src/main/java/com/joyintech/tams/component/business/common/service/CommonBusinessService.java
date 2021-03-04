@@ -5,13 +5,17 @@
 package com.joyintech.tams.component.business.common.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
+import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +31,6 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
-import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
-import com.joyintech.tams.common.base.entity.FinCashResetPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
-import com.joyintech.tams.common.base.entity.FinProductTypeKey;
-import com.joyintech.tams.common.base.entity.MstExchargeQuote;
-import com.joyintech.tams.common.base.entity.PtlPortfolio;
-import com.joyintech.tams.common.base.entity.StlDvpOrders;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
 import com.joyintech.tams.component.business.common.dao.CommonBusinessMapper;
 import com.joyintech.tams.component.business.common.dto.FinCashResetRuleDto;
 import com.joyintech.tams.constant.DictCode;
@@ -89,6 +82,146 @@ public class CommonBusinessService extends BaseService {
      */
     @Autowired
     private RiskTrialComm riskTrialComm;
+
+
+    /**
+     * 交易产品接口
+     */
+    @Autowired(required = false)
+    private BaseTradeProductDealCommService baseTradeProductDealCommService;
+
+    @Autowired
+    private  BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private PaTrdProductDealMapper paTrdProductDealMapper;
+    @Autowired
+    private PtlTradeMapper ptlTradeMapper;
+
+    @Autowired
+    private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
+
+    /**
+     *
+     * @param trdProductDeal 需要传 tradeId cancelRemark workflowId不传则不删wfl表
+     * @param totleFlag  是否处理totle表
+     */
+    public  void revokeReverseTrade(TrdProductDeal trdProductDeal,boolean totleFlag) {
+        // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
+        String reverseTradeId = trdProductDeal.getTradeId();
+
+        if (reverseTradeId.lastIndexOf('R') == reverseTradeId.length() - 1) {
+            reverseTradeId = reverseTradeId.substring(0, reverseTradeId.length() - 1);
+        }
+
+        List<BaseTradeProductDealDto> baseTradeProductDealDtoList = new ArrayList<>();
+        if (totleFlag) {
+            baseTradeProductDealDtoList  = restTemplate.getForList(
+                    ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/selectTotelTradeInfo?tradeId=" + reverseTradeId,
+                    BaseTradeProductDealDto.class);
+        } else {
+
+            baseTradeProductDealDtoList= restTemplate.getForList(
+                ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/selectTradeInfo?tradeId="
+                        + reverseTradeId,
+                BaseTradeProductDealDto.class);
+        }
+        //如果为null
+        if(CollectionUtils.isEmpty(baseTradeProductDealDtoList)){
+            return;
+        }
+
+        FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
+        finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtoList);
+        finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
+
+        //如果为true 则doRevokeComplete必须要调用
+        // false时  do撤销会调用 新增r数据
+        if(totleFlag) {
+            finProductTradeDto.setNeedSum(true);
+        }
+        baseTradeProductDealCommService.execute(finProductTradeDto);
+
+        if(totleFlag) {
+            Map<String, Object> reverseparams = new HashMap<>();
+            reverseparams.put("workflowId", trdProductDeal.getWorkflowId());
+
+            reverseparams.put("bizCode", reverseTradeId);
+            reverseparams.put("updateUser", SecurityUtil.getLoginUser().getUserName());
+            reverseparams.put("revokeReason", trdProductDeal.getCancelRemark());
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/doRevokeComplete?", reverseparams,
+                    String.class);
+        }
+
+
+        // 额外处理几张表  ptl_trade pa_trd_product_deal  rep_trade 授信等
+
+        if (bussCommonMapperDelegateService != null) {
+            for (BaseTradeProductDealDto dto : baseTradeProductDealDtoList) {
+                String tradeId = dto.getTrdProductDeal()==null?"":dto.getTrdProductDeal().getTradeId();
+                if(StringUtil.isNotEmpty(tradeId)){
+
+                    if(!totleFlag) {
+                        PaTrdProductDeal paTrdProductDeal = bussCommonMapperDelegateService.selectBySinglePrimaryKey(
+                                PaTrdProductDealMapper.class, tradeId, PaTrdProductDeal.class);
+                        paTrdProductDeal.setTradeId(paTrdProductDeal.getTradeId() + "R");
+                        paTrdProductDealMapper.insert(paTrdProductDeal);
+
+                        PtlTrade ptlTrade = new PtlTrade();
+                        ptlTrade.setBusiNo(tradeId);
+                        ptlTrade.setPortfolioId(dto.getActPortfolioId());
+                        ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+                        ptlTrade = bussCommonMapperDelegateService.selectByMultiPrimaryKey(PtlTradeMapper.class, ptlTrade, PtlTrade.class);
+                        ptlTrade.setBusiNo(ptlTrade.getBusiNo() + "R");
+                        ptlTradeMapper.insert(ptlTrade);
+                    }
+                    riskCreditListCommonValidatorService.deleteCredit(tradeId);
+
+                    // 调用基础组件.【交易报送组件】删除交易报送信息
+                    restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/deleteRepTrade",
+                            Arrays.asList(tradeId), Boolean.class);
+                }
+
+            }
+        }
+
+        // 继续调用 组合 和 act组合不一致的情况
+        String portfolioId = "";
+        String parentPortfolioId = "";
+        for (BaseTradeProductDealDto dto : baseTradeProductDealDtoList) {
+            TrdProductDealAdd trdProductDealAdd = dto.getTrdProductDealAdd();
+            if (trdProductDealAdd!=null && StringUtil.isNotEmpty(trdProductDealAdd.getPortfolioId())){
+
+                portfolioId = trdProductDealAdd.getPortfolioId();
+                parentPortfolioId = AllTradeCommonUtil.exchangePortfolio(portfolioId);
+                if (!StringUtil.equals(portfolioId,parentPortfolioId)){
+                    String tradeId = dto.getTrdProductDeal()==null?"":dto.getTrdProductDeal().getTradeId();
+                    if(StringUtil.isNotEmpty(tradeId)) {
+                        PtlTrade ptlTrade = new PtlTrade();
+                        ptlTrade.setBusiNo(tradeId);
+                        ptlTrade.setPortfolioId(parentPortfolioId);
+                        ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+                        ptlTrade = bussCommonMapperDelegateService.selectByMultiPrimaryKey(PtlTradeMapper.class, ptlTrade, PtlTrade.class);
+                        ptlTrade.setBusiNo(ptlTrade.getBusiNo() + "R");
+                        ptlTradeMapper.insert(ptlTrade);
+                    }
+
+                }
+            }
+
+        }
+
+        if(StringUtil.isNotEmpty(portfolioId) && !StringUtil.equals(portfolioId,parentPortfolioId)){
+            String finalParentPortfolioId = parentPortfolioId;
+
+            finProductTradeDto.getBaseTradeProductDealDtos()
+                    .forEach(baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd()
+                            .setPortfolioId(finalParentPortfolioId));
+            baseTradeProductDealCommService.insertPosition(finProductTradeDto);
+        }
+
+    }
+
     /**
      * 现金流代码生成
      *

@@ -234,7 +234,10 @@ public class TrdCommonBaseController {
     @DTXTransaction
     @PostMapping("doRevokeComplete")
     public String doRevokeComplete(@RequestBody Map<String, Object> params) {
-        investPeriodCommonService.deleteByWorkflowId((String) params.get("workflowId"));
+        String workflowId = (String) params.get("workflowId");
+        if(StringUtil.isNotEmpty(workflowId)) {
+            investPeriodCommonService.deleteByWorkflowId(workflowId);
+        }
         TrdFinProductDealTotal trdFinProductDealTotal = investPeriodCommonService.revoke汇总和交易相关表((String) params.get("bizCode"),
                 (String) params.get("updateUser"), (String) params.get("revokeReason"), null, null);
         return Boolean.TRUE.toString();

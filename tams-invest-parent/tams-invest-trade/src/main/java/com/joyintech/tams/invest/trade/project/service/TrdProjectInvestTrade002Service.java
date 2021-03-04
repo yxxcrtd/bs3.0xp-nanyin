@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -160,7 +161,10 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
     private  MstFileCommonService mstFileCommonService;
     @Autowired
     private BaseTradeProductDealMapper baseTradeProductDealMapper;
-    
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
+
     /**
      *	 投管接口共通组件
      */
@@ -532,6 +536,16 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
             ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/selectTotelTradeInfo?tradeId=" + entity.getBizCode(),
             BaseTradeProductDealDto.class);
         //如果是通过通道的交易，也需要撤销带通道的交易编号
+
+
+        // 提前查询判断  是否  撤销 并且是 有转仓交易 并且转仓交易方向ps为买入
+        String reverseTradeId = "";
+
+        TrdProductDeal reverseTrdProductDeal = trdCommonBaseService.selectZCDealByTid(entity.getTradeId(),true);
+        if (reverseTrdProductDeal != null && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), reverseTrdProductDeal.getPs())) {
+            reverseTradeId = reverseTrdProductDeal.getTradeId();
+        }
+
         if(null!=entity.getChlId()){
             List<TrdProductDeal>  chlList=baseTradeProductDealService.selectTrdProductChlDealsByTotalTradeId(entity.getTradeId());//根据交易编号，查询通道交易编号
             if(null!=chlList && chlList.size()>0){
@@ -763,6 +777,14 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         // 调用基础组件.【交易报送组件】删除交易报送信息
         restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/deleteRepTrade",
             Arrays.asList(entity.getBizCode()), Boolean.class);
+
+
+        if(StringUtil.isNotEmpty(reverseTradeId)){
+            TrdProductDeal trdProductDeal = new TrdProductDeal();
+            trdProductDeal.setTradeId(reverseTradeId);
+            trdProductDeal.setCancelRemark(entity.getRevokeReason());
+            commonBusinessService.revokeReverseTrade(trdProductDeal,true);
+        }
 
         // // 一体化对应etliu start
         // // 所有交易生效后调用的共通方法

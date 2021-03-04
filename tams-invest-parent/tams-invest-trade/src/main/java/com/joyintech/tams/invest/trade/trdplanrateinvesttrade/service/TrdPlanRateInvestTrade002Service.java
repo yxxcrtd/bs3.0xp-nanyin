@@ -62,6 +62,7 @@ import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.trdplanrateinvesttrade.dto.TrdPlanRateInvestTradeDto;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -153,6 +154,9 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
 
     @Autowired
     private CommonBusinessService commonBusinessService;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
 
     @Autowired
     private FinProductMapper finProductMapper;
@@ -1391,6 +1395,16 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
             list.add(stlPayOrdersDto);
             entity.setStlPayOrdersList(list);
         }
+
+        // 提前查询判断  是否  撤销 并且是 有转仓交易 并且转仓交易方向ps为买入
+        String reverseTradeId = "";
+        if(type == OperationType.REVOKE) {
+            TrdProductDeal reverseTrdProductDeal = trdCommonBaseService.selectZCDealByTid(entity.getTotleTradeId(),true);
+            if (reverseTrdProductDeal != null && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), reverseTrdProductDeal.getPs())) {
+                reverseTradeId = reverseTrdProductDeal.getTradeId();
+            }
+        }
+
         // TODO Auto-generated method stub
         TrdPlanRateInvestTradeDto dto = new TrdPlanRateInvestTradeDto();
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
@@ -1579,6 +1593,16 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
                 }
                 // 调用投管接口 add by renping 20190205 end
             }
+
+            if(StringUtil.isNotEmpty(reverseTradeId)){
+
+                TrdProductDeal trdProductDeal = new TrdProductDeal();
+                trdProductDeal.setTradeId(reverseTradeId);
+                trdProductDeal.setCancelRemark(entity.getCancelRemark());
+                commonBusinessService.revokeReverseTrade(trdProductDeal,true);
+
+            }
+
         } else {
             dto = this.setEntity(entity);
             dto.getFinProductTradeDto().setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
