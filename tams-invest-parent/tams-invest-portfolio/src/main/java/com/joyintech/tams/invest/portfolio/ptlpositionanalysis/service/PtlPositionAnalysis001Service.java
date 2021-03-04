@@ -138,7 +138,31 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      */
     @Override
     public Page<PtlPositionAnalysis001Dto> selectPageData(Map<String, Object> selectParam) {
-        return selectForExport(selectParam);
+        return selectForExportNew(selectParam);
+    }
+    
+    /**
+     * 导出查询方法
+     *
+     * @param map 画面参数
+     * @return 调用微服务
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public Page<PtlPositionAnalysis001Dto> selectForExportNew(Map<String, Object> map){
+    	if(!StringUtil.isNotEmpty(map.get("prodManager"))) {
+    		List<String> prodManagers = new ArrayList<>();
+    		//产品经理不存在时获取所有符合的产品经理
+    		Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
+            		SelectOptionDto.class);
+    		users.getRoot().stream().forEach(user->prodManagers.add(user.getId()));
+    		map.put("prodManagers",prodManagers);
+    	}
+        Page<PtlPositionAnalysis001Dto> page = restTemplate.postForPage(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/findPageForExportNew",
+                map, PtlPositionAnalysis001Dto.class);
+        return page;
     }
     
     /**

@@ -132,7 +132,23 @@ public class PtlPositionAnalysisController {
     public Page<PtlPositionAnalysis001Dto> selectForExport(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length)
                     throws Exception {
-        return ptlPositionAnalysisService.selectForExport(page, length, param);
+    	return ptlPositionAnalysisService.selectForExport(page, length, param);	
+    }
+    
+    /**
+     * 导出查询方法
+     *
+     * @param param 画面参数
+     * @param page 页码数
+     * @param length 页面长度
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("findPageForExportNew/{page}/{length}")
+    public Page<PtlPositionAnalysis001Dto> selectForExportNew(@RequestBody Map<String, Object> param,
+            @PathVariable("page") int page, @PathVariable("length") int length)
+                    throws Exception {
+    	return ptlPositionAnalysisService.selectForExportNew(page, length, param);	
     }
 
     /**

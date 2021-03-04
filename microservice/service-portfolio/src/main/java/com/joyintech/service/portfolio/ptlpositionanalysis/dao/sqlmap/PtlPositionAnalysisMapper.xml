@@ -2980,4 +2980,186 @@
     <select   id="getTableColumn" resultType="com.joyintech.tams.common.base.entity.TargetDetail">
         select t.COLUMN_NAME taregetCode,t.DATA_TYPE taregetTypeCode from user_tab_columns t where table_name='ASSET_TARGET_DB'
     </select>
+
+    	<!-- 导出数据（ALL） -->
+	<select id="selectForExportALL" resultType="com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis001Dto">
+	    <if test="sex != null and sex == '01'.toString()">
+		<include refid="PTL_DETAIL"></include>
+		</if>
+		<if test="sex != null and sex == '02'.toString()">
+		<include refid="PTL_DETAIL_PIERCE"></include>
+		</if>
+        <if test="sex==null or (sex != '02'.toString() and sex != '01'.toString())">
+        with temp as (select 1 from dual)
+        </if>
+        , rootSelect as (
+		select assetHold1.cdate,assetHold1.portfolioId,assetHold1.portfolioName,null finprodType2,null type5,null finprodMarketId,null finprodAbbr,
+               sum(assetHold1.marketValue) marketValue,
+               sum(assetHold1.dscCostAmt) dscCostAmt,
+               sum(assetHold1.shareAmt) shareAmt,
+               sum(assetHold1.tdyIntincexp) tdyIntincexp,
+               100 tdyAmtRation,
+               0 ystAmtRation,
+               0 monthAmtRation,
+               0 yearAmtRation,
+               '02' hasChildren,
+               CONCAT(nvl(assetHold1.portfolioId,'null'),'') childInfo,
+               'root' parentInfo,
+               null as otherFinprodType2,
+               assetHold1.portfolioName otherPortfolioName
+         from (
+            SELECT
+            assetHold.*,
+            DATAINST.BELONG_INSTITUTION_CODE belongInstitutionCode
+            FROM assetHold
+            LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+            WHERE 1=1
+            <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+                AND DATAINST.INSTITUTION_CODE IN
+                <foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            ) assetHold1
+     group by assetHold1.cdate,assetHold1.portfolioId,assetHold1.portfolioName,assetHold1.belongInstitutionCode
+        )
+        select * from rootSelect
+        union all 
+        select * from(
+        select * from (
+       select assetHold1.cdate,null portfolioId,null portfolioName,assetHold1.finprodType2,null type5,null finprodMarketId,null finprodAbbr,
+              sum(assetHold1.marketValue) marketValue,
+              sum(assetHold1.dscCostAmt) dscCostAmt,
+              sum(assetHold1.shareAmt) shareAmt,
+              sum(assetHold1.tdyIntincexp) tdyIntincexp,
+              sum(assetHold1.tdyAmtRation) tdyAmtRation,
+              sum(assetHold1.ystAmtRation) ystAmtRation,
+              sum(assetHold1.monthAmtRation) monthAmtRation,
+              sum(assetHold1.yearAmtRation) yearAmtRation,
+              '02' hasChildren,
+              CONCAT(CONCAT(assetHold1.portfolioId,'_'),nvl(assetHold1.finprodType2,'null')) childInfo,
+              CONCAT(nvl(assetHold1.portfolioId,'null'),'') parentInfo,
+              assetHold1.finprodType2 as otherFinprodType2,
+              assetHold1.portfolioName otherPortfolioName
+         from (
+         SELECT
+         assetHold.*,
+         DATAINST.BELONG_INSTITUTION_CODE belongInstitutionCode
+         FROM assetHold
+         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+         WHERE 1=1
+         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+             AND DATAINST.INSTITUTION_CODE IN
+             <foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+                 #{item}
+             </foreach>
+         </if>
+         ) assetHold1
+         <where>
+         	CONCAT(nvl(assetHold1.portfolioId,'null'),'') in (select childInfo from rootSelect)
+         </where>
+     group by assetHold1.cdate,assetHold1.portfolioId,assetHold1.portfolioName,assetHold1.finprodType2
+    union all
+       select assetHold1.cdate,null portfolioId,null portfolioName,null finprodType2,assetHold1.type5,assetHold1.finprodMarketId,assetHold1.finprodAbbr,
+              sum(assetHold1.marketValue) marketValue,
+              sum(assetHold1.dscCostAmt) dscCostAmt,
+              sum(assetHold1.shareAmt) shareAmt,
+              sum(assetHold1.tdyIntincexp) tdyIntincexp,
+              sum(assetHold1.tdyAmtRation) tdyAmtRation,
+              sum(assetHold1.ystAmtRation) ystAmtRation,
+              sum(assetHold1.monthAmtRation) monthAmtRation,
+              sum(assetHold1.yearAmtRation) yearAmtRation,
+              '01' hasChildren,
+              CONCAT(CONCAT(nvl(assetHold1.portfolioId,'null'),'_'),CONCAT(CONCAT(nvl(assetHold1.finprodType2,'null'),'_'),assetHold1.type5)) childInfo,
+              CONCAT(CONCAT(assetHold1.portfolioId,'_'),nvl(assetHold1.finprodType2,'null')) parentInfo,
+              assetHold1.finprodType2 as otherFinprodType2,
+              assetHold1.portfolioName otherPortfolioName
+         from (
+         SELECT
+         assetHold.*,
+         DATAINST.BELONG_INSTITUTION_CODE belongInstitutionCode
+         FROM assetHold
+         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+         WHERE 1=1
+         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+             AND DATAINST.INSTITUTION_CODE IN
+             <foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+                 #{item}
+             </foreach>
+         </if>
+         ) assetHold1
+     group by assetHold1.cdate,assetHold1.portfolioId,assetHold1.portfolioName,assetHold1.finprodType2,assetHold1.type5,assetHold1.finprodMarketId,assetHold1.finprodAbbr
+     )A order by A.parentInfo
+     )
+    </select>
+
+    	<select id="selectMessage"
+		resultType="java.util.Map">
+		<if test="sex != null and sex == '01'.toString()">
+		<include refid="PTL_DETAIL"></include>
+		</if>
+		<if test="sex != null and sex == '02'.toString()">
+		<include refid="PTL_DETAIL_PIERCE"></include>
+		</if>
+
+        select sum(marketValue) marketValue,sum(tdyIntincexp) tdyIntincexp,parentInfo
+        from(
+       select sum(assetHold1.marketValue) marketValue,
+              sum(assetHold1.tdyIntincexp) tdyIntincexp,
+              CONCAT(nvl(assetHold1.portfolioId,'null'),'') parentInfo
+         from (
+         SELECT
+         assetHold.*
+         FROM assetHold
+         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+         WHERE 1=1
+         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+             AND DATAINST.INSTITUTION_CODE IN
+             <foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+                 #{item}
+             </foreach>
+         </if>
+         ) assetHold1 
+         <where>
+         	<foreach collection="parentIds" item="item" index="index" open=" CONCAT(nvl(portfolioId,'null'),'') IN (" close=")" separator=",">
+    			<if test="(index % 999) == 998">
+        			null) OR CONCAT(nvl(portfolioId,'null'),'') in (
+    			</if>
+    			#{item,jdbcType=VARCHAR}
+			</foreach>
+         </where>
+         
+     group by cdate,portfolioId,portfolioName,finprodType2
+    union all
+       select sum(assetHold1.marketValue) marketValue,
+              sum(assetHold1.tdyIntincexp) tdyIntincexp,
+              CONCAT(CONCAT(assetHold1.portfolioId,'_'),nvl(assetHold1.finprodType2,'null')) parentInfo
+         from (
+         SELECT
+         assetHold.*
+         FROM assetHold
+         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
+         WHERE 1=1
+         <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+             AND DATAINST.INSTITUTION_CODE IN
+             <foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+                 #{item}
+             </foreach>
+         </if>
+         ) assetHold1
+         
+         <where>
+         	<foreach collection="parentIds" item="item" index="index" open=" CONCAT(CONCAT(assetHold1.portfolioId,'_'),nvl(assetHold1.finprodType2,'null')) IN (" close=")" separator=",">
+    			<if test="(index % 999) == 998">
+        			null) OR CONCAT(CONCAT(assetHold1.portfolioId,'_'),nvl(assetHold1.finprodType2,'null')) in (
+    			</if>
+    			#{item,jdbcType=VARCHAR}
+			</foreach>
+         </where>
+    
+     group by assetHold1.cdate,assetHold1.portfolioId,assetHold1.portfolioName,assetHold1.finprodType2,assetHold1.type5,assetHold1.finprodMarketId,assetHold1.finprodAbbr
+        )
+        group by parentInfo
+	</select>
+
 </mapper>

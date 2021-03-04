@@ -123,4 +123,14 @@ public interface PtlPositionAnalysisMapper {
     List<PtlPositionAnalysis003Dto> getFinpordType(Map<String, Object> pageParam);
 
     List<TargetDetail> getTableColumn();
+    
+    
+
+    /**
+     * 导出改造新增
+     * @param pageParam
+     * @return
+     */
+    List<PtlPositionAnalysis001Dto> selectForExportALL(Map<String, Object> pageParam);    
+    List<Map<String,Object>> selectMessage(Map<String, Object> pageParam);
 }

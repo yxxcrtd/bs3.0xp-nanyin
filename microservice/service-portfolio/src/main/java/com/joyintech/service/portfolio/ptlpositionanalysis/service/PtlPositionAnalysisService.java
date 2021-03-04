@@ -278,15 +278,8 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         return ptlPositionAnalysisMapper.getPortFolioInfo(map);
     }
 
-    /**
-     * 导出查询list。
-     *
-     * @param pageParam pageParam
-     * @return Page类  Page
-     * @throws Exception 异常信息
-     */
-    public Page<PtlPositionAnalysis001Dto> selectForExport(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    
+    private void setParaForExport(Map<String, Object> pageParam) {
         if (StringUtil.isNotEmpty(pageParam.get("portfolioId"))) {
             pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA, (String) pageParam.get("portfolioId")));
         }
@@ -300,7 +293,6 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
             pageParam.put("prodManager", pageParam.get("prodManagers"));
         }
         // add by wangyang1 【吉林银行】 增加 产品经理  end
-        List<PtlPositionAnalysis001Dto> resultList = new ArrayList<>();
         pageParam.put("parentId", "root");
         pageParam.put("cash", "现金");
         // 多级法人改造 add by jingqiongqiong 20200615
@@ -313,6 +305,18 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
             pageParam.put("resourcesTreeInstCodeList",resourcesTreeInstCodeList);
         }
         // 多级法人改造 add by jingqiongqiong 20200615
+    }
+    /**
+     * 导出查询list。
+     *
+     * @param pageParam pageParam
+     * @return Page类  Page
+     * @throws Exception 异常信息
+     */
+    public Page<PtlPositionAnalysis001Dto> selectForExport(int page, int length, Map<String, Object> pageParam)
+            throws Exception {
+    	setParaForExport(pageParam);
+    	List<PtlPositionAnalysis001Dto> resultList = new ArrayList<>();
         Page<PtlPositionAnalysis001Dto> pageRoot = super.queryForPage(page, length, () -> ptlPositionAnalysisMapper.selectForExport(pageParam));
         List<PtlPositionAnalysis001Dto> listRoot = pageRoot.getRoot();
         for (PtlPositionAnalysis001Dto entity : listRoot) {
@@ -365,7 +369,114 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         pageRoot.setRoot(resultList);
         return pageRoot;
     }
-
+    
+    //导出改造
+    public Page<PtlPositionAnalysis001Dto> selectForExportNew(int page, int length, Map<String, Object> pageParam)
+            throws Exception {
+    	//1.初始化查询信息
+    	setParaForExport(pageParam);
+    	List<PtlPositionAnalysis001Dto> resultList = new ArrayList<>();
+    	//2. 获取所有查询
+        List<PtlPositionAnalysis001Dto> listRoot = ptlPositionAnalysisMapper.selectForExportALL(pageParam);
+        //2.1 保存总记录数
+        int records = listRoot.size();
+        //3. 由于查询结果按照parentinfo排序，因此可以设置一个map存储各分组的第一次出现的index
+        int i,j,k;
+        Map<String,Integer> indexMap = new HashMap<>();
+        for(i=0;i<records;i++) {
+        	if(!indexMap.containsKey(listRoot.get(i).getParentInfo())) {
+        		indexMap.put(listRoot.get(i).getParentInfo(), i);
+        	}
+        }
+        //4. 循环获取此次的查询结果
+        //4.1 计算此次查询的范围
+        int startIndex =(page-1)*length;
+        int endIndex = page*length;
+        int thisIndex = -1;
+        //4.2 设置list统计需要汇总的parentid
+        List<String> parentIds = new LinkedList<>();
+        
+        //4.3 循环逐层查询
+        for(i=0;i<records&&StringUtil.equals("root", listRoot.get(i).getParentInfo());i++) {
+        	thisIndex++;
+        	if(thisIndex>=startIndex&&thisIndex<endIndex) {
+        		resultList.add(listRoot.get(i));
+        		parentIds.add(listRoot.get(i).getChildInfo());
+        	}
+        	else if(thisIndex>=endIndex) {
+        		break;
+        	}
+        	//4.3.2 处理第二层
+        	if(indexMap.containsKey(listRoot.get(i).getChildInfo())) {
+        		for(j=indexMap.get(listRoot.get(i).getChildInfo());j<records&&StringUtil.equals(listRoot.get(i).getChildInfo(), listRoot.get(j).getParentInfo());j++) {
+        			thisIndex++;
+        	       	if(thisIndex>=startIndex&&thisIndex<endIndex) {
+                		resultList.add(listRoot.get(j));
+                		parentIds.add(listRoot.get(j).getChildInfo());
+                	}
+        	       	//非本页内容
+        	       	else if(thisIndex>=endIndex) {
+        	       		break;
+        	       	}
+        	       	//4.3.3 处理第3层
+        	       	if(indexMap.containsKey(listRoot.get(j).getChildInfo())) {
+        	       		for(k=indexMap.get(listRoot.get(j).getChildInfo());k<records&&StringUtil.equals(listRoot.get(j).getChildInfo(), listRoot.get(k).getParentInfo());k++) {
+                			thisIndex++;
+                	       	if(thisIndex>=startIndex&&thisIndex<endIndex) {
+                        		resultList.add(listRoot.get(k));
+                        	}
+                	       	//非本页内容
+                	       	else if(thisIndex>=endIndex) {
+                	       		break;
+                	       	}
+        	       		}
+        	       	}
+        		}
+        	}
+        }
+        //5.将临时对象置空,释放内存
+        listRoot = null;
+        indexMap = null;
+        
+        //6.获取需要汇总计算的数据
+        pageParam.put("parentIds", parentIds);
+        List<Map<String,Object>> countDatas = ptlPositionAnalysisMapper.selectMessage(pageParam);
+        //7. 将汇总数据转换为map
+        Map<String,BigDecimal> sumMap = new HashMap<>();
+        for(Map<String,Object> map:countDatas) {
+        	if(StringUtil.isNotEmpty(map.get("PARENTINFO"))){
+        		BigDecimal sum = BigDecimal.ZERO;
+        		if(StringUtil.isNotEmpty(map.get("TDYINTINCEXP"))){
+        			sum = sum.add(new BigDecimal(map.get("TDYINTINCEXP").toString()));
+        		}
+        		if(StringUtil.isNotEmpty(map.get("MARKETVALUE"))){
+        			sum = sum.add(new BigDecimal(map.get("MARKETVALUE").toString()));
+        		}
+        		sumMap.put(map.get("PARENTINFO").toString(), sum);
+        	}
+        }
+        //8.查询结果置空
+        countDatas = null;
+        //9.添加汇总元素
+        for(PtlPositionAnalysis001Dto dto:resultList) {
+        	if(sumMap.containsKey(dto.getParentInfo())) {
+        		countSumAndCalPercentDto(dto,sumMap.get(dto.getParentInfo()));
+        	}
+        }
+        //10.封装返回结果
+        Page<PtlPositionAnalysis001Dto> pageResult = new Page<>();
+        pageResult.setRecords(records);
+        pageResult.setPage(page);
+        pageResult.setRoot(resultList);
+        int total = records/length;
+        if(records%length>0) {
+        	total++;
+        }
+        pageResult.setTotal(total);
+        //11. 返回计算结果
+        return pageResult;
+    }
+    
     //add by xueying 修改导出数据与查询数据不一致问题 20200731
     private void countSumAndCalPercentDto(PtlPositionAnalysis001Dto dto,BigDecimal sum) {
             //总额不能为0
