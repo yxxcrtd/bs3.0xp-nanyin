@@ -1669,6 +1669,7 @@ public class InvestmentsInfoService {
 
 		paraMap.put("execonfig", CacheUtil.getSysParam("SEC_ASSETS_MDATE_CONF").toString());
 		paraMap.put("endDate",endDate);
+		paraMap.put("svrischlbtm", CacheUtil.getSysParam("SVR_IS_CHL_BTM").toString());
 		List<InvestmentBusinessDetailsDto> assetBalanceList =termStructureOfBusinessAndCostBenefitMapper.selectAssetBalanceByInfo(paraMap);
 		paraMap.put("endDate",lastEndDate);
 

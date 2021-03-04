@@ -25,7 +25,10 @@ public class ChbAssetInfoRate extends BaseEntity{
      * 资产类型
      */
     private String finprodType2;
-
+    /**
+     * 资产收益类型
+     */
+    private String profitType;
     /**
      * 变动日期
      */
@@ -287,5 +290,13 @@ public class ChbAssetInfoRate extends BaseEntity{
 
     public void setScino(String scino) {
         this.scino = scino;
+    }
+
+    public String getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(String profitType) {
+        this.profitType = profitType;
     }
 }
