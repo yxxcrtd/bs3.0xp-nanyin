@@ -56,36 +56,36 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 @Transactional(rollbackFor = Exception.class)
 public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 	/**
-     * 日志
-     */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private RaiseTotalRegist001Mapper raiseTotalRegist001Mapper;
 	@Value("${application.reportInsertCount}")
 	public  int reportInsertCount;
-	
-	@Autowired
-    private SvrDBUtil svrDBUtil;
-	/**
-     * 映射service
-     */
-    @Autowired
-    private ChbTypeMappingService chbTypeMappingService;
-    //个人
-    private static final String SINGLE_PERSON = "01";
-    //法人
-    private static final String LEGAL_PERSON = "02";
-    //非法人
-    private static final String UNLEGAL_PERSON = "03";
-    
-    private  String[] special_buyplace = new String[]{"210200","330200","350200","370200","440300"};
 
-    /**
-     * 入库前校验用Service
-     */
-    @Autowired
-    private ChbCommonCheckService chbCommonCheckService;
-	
+	@Autowired
+	private SvrDBUtil svrDBUtil;
+	/**
+	 * 映射service
+	 */
+	@Autowired
+	private ChbTypeMappingService chbTypeMappingService;
+	//个人
+	private static final String SINGLE_PERSON = "01";
+	//法人
+	private static final String LEGAL_PERSON = "02";
+	//非法人
+	private static final String UNLEGAL_PERSON = "03";
+
+	private  String[] special_buyplace = new String[]{"210200","330200","350200","370200","440300"};
+
+	/**
+	 * 入库前校验用Service
+	 */
+	@Autowired
+	private ChbCommonCheckService chbCommonCheckService;
+
 	/**
 	 * @Description 募集总量登记生成
 	 * @param executeDate 跑批日
@@ -96,26 +96,26 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 	public void generateRegistData(Date executeDate,List<String> prodIdList){
 		//获取系统参数是否邮储个性化 001 邮储个性化 
 		String isPsbc=CacheUtil.getSysParam("CUSTOMER_BANK_CODE");
-        //查询所有要生成募集总量登记的产品信息
-        List<RaiseTotalRegist001Dto> prodlistsum = raiseTotalRegist001Mapper.selectRaiseTotallist(DateUtil.format(executeDate),prodIdList);
-        if(CollectionUtils.isEmpty(prodlistsum)){
-        	return;
-        }
-        //查询已登记数据
-        Map<String,RaiseTotalRegist001Dto> regMap = new HashMap<String,RaiseTotalRegist001Dto>();
-        List<RaiseTotalRegist001Dto> reglist = raiseTotalRegist001Mapper.selectRegPerProdList(prodlistsum);
-        if(!CollectionUtils.isEmpty(reglist)){
-            for(RaiseTotalRegist001Dto regdto : reglist){
-                regMap.put(regdto.getProdId(), regdto);
-            }
-        }
-        List<ChbPrdPosition> positionlist = new ArrayList<ChbPrdPosition>();
-        List<ChbPrdDeal> deallist = new ArrayList<ChbPrdDeal>();
-        logger.debug("查询头寸信息开始---------------"+new Date());
+		//查询所有要生成募集总量登记的产品信息
+		List<RaiseTotalRegist001Dto> prodlistsum = raiseTotalRegist001Mapper.selectRaiseTotallist(DateUtil.format(executeDate),prodIdList);
+		if(CollectionUtils.isEmpty(prodlistsum)){
+			return;
+		}
+		//查询已登记数据
+		Map<String,RaiseTotalRegist001Dto> regMap = new HashMap<String,RaiseTotalRegist001Dto>();
+		List<RaiseTotalRegist001Dto> reglist = raiseTotalRegist001Mapper.selectRegPerProdList(prodlistsum);
+		if(!CollectionUtils.isEmpty(reglist)){
+			for(RaiseTotalRegist001Dto regdto : reglist){
+				regMap.put(regdto.getProdId(), regdto);
+			}
+		}
+		List<ChbPrdPosition> positionlist = new ArrayList<ChbPrdPosition>();
+		List<ChbPrdDeal> deallist = new ArrayList<ChbPrdDeal>();
+		logger.debug("查询头寸信息开始---------------"+new Date());
 
 //        positionlist=raiseTotalRegist001Mapper.selectPositionData(prodlistsum);
-        deallist=raiseTotalRegist001Mapper.selectDealData(prodlistsum);
-        logger.debug("查询头寸信息结束---------------"+new Date());
+		deallist=raiseTotalRegist001Mapper.selectDealData(prodlistsum);
+		logger.debug("查询头寸信息结束---------------"+new Date());
 		List<RaiseTotalRegist001Dto> prodtotallist = new ArrayList<RaiseTotalRegist001Dto>();
 		Map<String,RaiseTotalRegist001Dto> prodmap = new HashMap<String,RaiseTotalRegist001Dto>();
 		//判断认购交易是否全为D
@@ -156,7 +156,7 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 					deList.add(deal);
 				}
 			}
-			
+
 			total.setPoslist(posList);
 			total.setDeallist(deList);
 			prodtotallist.add(total);
@@ -224,27 +224,27 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 //				insertdtolist.add(total);
 //			}
 			// add by zhangliang 20201109 数据流向处理 ===================================end
-			
+
 		}
-        // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
+		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
 		insertdtolist = chbCommonCheckService.checkData(insertdtolist, ChbCheckTableInfo.募集总量登记SUB);
-        // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
+		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 		if("001".equals(isPsbc)){
 			/**邮储个性化修改 开始**/
 			doUpdateData(insertdtolist);
 			/**邮储个性化修改 结束**/
 		}
-		
-		
+
+
 		//update by leipeng 插入的数据获取表 内的实际登记编码
-       if(CommonUtil.isBAmodel()){
-           Map<String,String> data = svrDBUtil.getAllRegCode();
-           
-           for (RaiseTotalRegist001Dto dto : insertdtolist) {
-        	   dto.setIssuePartyId(data.get(dto.getProdId()));
-           }
-   		}
-		
+		if(CommonUtil.isBAmodel()){
+			Map<String,String> data = svrDBUtil.getAllRegCode();
+
+			for (RaiseTotalRegist001Dto dto : insertdtolist) {
+				dto.setIssuePartyId(data.get(dto.getProdId()));
+			}
+		}
+
 		logger.debug("募集总量登记数据处理结束---------------");
 		int singalCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));
 		int deleteCount = deletedtolist.size();
@@ -259,9 +259,9 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 					raiseTotalRegist001Mapper.deleteBatch(deletedtolist.subList(0, singalCount));
 					deletedtolist.removeAll(deletedtolist.subList(0, singalCount));
 				}
-                if(!CollectionUtils.isEmpty(deletedtolist)){
-                	raiseTotalRegist001Mapper.deleteBatch(deletedtolist);
-                }
+				if(!CollectionUtils.isEmpty(deletedtolist)){
+					raiseTotalRegist001Mapper.deleteBatch(deletedtolist);
+				}
 			}
 		}
 		if(insertCount>0){
@@ -273,9 +273,9 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 					raiseTotalRegist001Mapper.insertBatch(insertdtolist.subList(0, reportInsertCount));
 					insertdtolist.removeAll(insertdtolist.subList(0, reportInsertCount));
 				}
-                if(!CollectionUtils.isEmpty(insertdtolist)){
-                	raiseTotalRegist001Mapper.insertBatch(insertdtolist);
-                }
+				if(!CollectionUtils.isEmpty(insertdtolist)){
+					raiseTotalRegist001Mapper.insertBatch(insertdtolist);
+				}
 			}
 		}
 		logger.debug("募集总量登记数据入库结束---------------");
@@ -294,21 +294,21 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 				single.setLegalTotal(updateDto.getLegalTotal());
 				single.setUnlegalTotal(updateDto.getUnlegalTotal());
 				single.setSaleAreaAmt(updateDto.getSaleAreaAmt());
-			    single.setIsConsign(updateDto.getIsConsign());
-			    single.setConsignAmt(updateDto.getConsignAmt());
-			    if(updateDto.getConsignAmt()==null&&updateDto.getSaleAreaAmt()!=null) {
-			        String [] xsqys=updateDto.getSaleAreaAmt().split(";");
-			        BigDecimal consignAmt =BigDecimal.ZERO;
-			        for(String  xsqy:xsqys) {
-			            String [] amts= xsqy.split(",");
-			            if(amts.length>=3) {
-			                String amtstr=amts[2];
-			                BigDecimal amt=new BigDecimal(amtstr);
-			                consignAmt= consignAmt.add(amt);
-			            }
-			        }
-			        single.setConsignAmt(consignAmt);
-			    }
+				single.setIsConsign(updateDto.getIsConsign());
+				single.setConsignAmt(updateDto.getConsignAmt());
+				if(updateDto.getConsignAmt()==null&&updateDto.getSaleAreaAmt()!=null) {
+					String [] xsqys=updateDto.getSaleAreaAmt().split(";");
+					BigDecimal consignAmt =BigDecimal.ZERO;
+					for(String  xsqy:xsqys) {
+						String [] amts= xsqy.split(",");
+						if(amts.length>=3) {
+							String amtstr=amts[2];
+							BigDecimal amt=new BigDecimal(amtstr);
+							consignAmt= consignAmt.add(amt);
+						}
+					}
+					single.setConsignAmt(consignAmt);
+				}
 			}
 		}
 	}
@@ -316,7 +316,7 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 	 * @Description 募集总量数据详细处理
 	 * @param RaiseTotalRegist001Dto
 	 * @param executeDate 跑批日
-	 * @param buyPlaceMappingMap 
+	 * @param buyPlaceMappingMap
 	 * @return RaiseTotalRegist001Dto
 	 */
 	public RaiseTotalRegist001Dto dataProcess(RaiseTotalRegist001Dto dto,Date executeDate){
@@ -367,47 +367,56 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 						BigDecimal amt = placeMap.get(buyPlace).add(chaAmt);
 						placeMap.put(buyPlace, amt.setScale(2,BigDecimal.ROUND_HALF_UP));
 					}
+					/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
+					if("01".equals(deal.getIsagency())){
+						isagency=true;
+						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
+						isagencyAmt = isagencyAmt.add(amt);
+					}
+					/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
 
 					// modify by wm start  针对身份去除特殊五个市处理 20200812 合过来
 					if(StringUtil.equals(DictCodeListExt2.销售区域_中债_青岛市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_山东省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_山东省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_山东省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
+						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_大连市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_辽宁省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_辽宁省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_辽宁省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
+						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_宁波市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_浙江省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_浙江省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_浙江省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
+						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_厦门市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_福建省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_福建省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_福建省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
+						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_深圳市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_广东省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_广东省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_广东省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
+						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
+						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					// modify by wm  end 针对身份去除特殊五个市处理 20200812 合过来
 				}
-				/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
-				if("01".equals(deal.getIsagency())){
-					isagency=true;
-					BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
-					isagencyAmt = isagencyAmt.add(amt);
-				}
-				/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
-
 				/****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
 				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", deal.getCustomerType2());
 
 				//数据判断不能为特殊地级市才进行统计
 				if(!StringUtil.equals(DictCodeListExt2.销售区域_中债_青岛市.getValue(), buyPlace)
-					&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_大连市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_大连市.getValue(), buyPlace)
 						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_宁波市.getValue(), buyPlace)
-							&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_厦门市.getValue(), buyPlace)
-								&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_深圳市.getValue(), buyPlace)) {
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_厦门市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_深圳市.getValue(), buyPlace)) {
 					if (SINGLE_PERSON.equals(customerType)) {
 						//个人
 						singleTotal += deal.getCustCounts().intValue();
@@ -431,26 +440,26 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 		/**青岛银行关于客户数的调整   add by  dongxiangyang  20201112 start*/
 		//客户数是否从投资者明细取值,01 是  02 否
 		String IsChbEqudetCount = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_EQUDET_CONUT);
-        if(StringUtil.equals(IsChbEqudetCount, DictCodeList.是否_中债_是.getValue())){
-        	List<RaiseTotalRegist001Dto> countList=raiseTotalRegist001Mapper.getEquCount(dto.getProdId());
-        	if(!CollectionUtils.isEmpty(countList)){
-        		for(RaiseTotalRegist001Dto  countDto:countList){
-        			 //个人
-        			if(StringUtil.equals("01", countDto.getEquType())){
-        				singleTotal=countDto.getEquCount();
-        			}
-        			//法人
-        			else if(StringUtil.equals("02", countDto.getEquType())){
-        				legalTotal=countDto.getEquCount();
-        			}
-        			//非法人
-        			else if(StringUtil.equals("03", countDto.getEquType())){
-        				unlegalTotal=countDto.getEquCount();
-        			}
-        		}
-        	}
-        	
-        }else if(!CollectionUtils.isEmpty(poslist)){
+		if(StringUtil.equals(IsChbEqudetCount, DictCodeList.是否_中债_是.getValue())){
+			List<RaiseTotalRegist001Dto> countList=raiseTotalRegist001Mapper.getEquCount(dto.getProdId());
+			if(!CollectionUtils.isEmpty(countList)){
+				for(RaiseTotalRegist001Dto  countDto:countList){
+					//个人
+					if(StringUtil.equals("01", countDto.getEquType())){
+						singleTotal=countDto.getEquCount();
+					}
+					//法人
+					else if(StringUtil.equals("02", countDto.getEquType())){
+						legalTotal=countDto.getEquCount();
+					}
+					//非法人
+					else if(StringUtil.equals("03", countDto.getEquType())){
+						unlegalTotal=countDto.getEquCount();
+					}
+				}
+			}
+
+		}else if(!CollectionUtils.isEmpty(poslist)){
 			for(ChbPrdPosition posmodel : poslist){
 //				BigDecimal chaAmt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getBalanceAmt(), rateMap, exchangeSource);
 //				//实际募集金额
@@ -463,7 +472,7 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 //					BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getConsignamt(), rateMap, exchangeSource);
 //					isagencyAmt = isagencyAmt.add(amt);
 //				}
-				
+
 //				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", posmodel.getCustomerType2());
 //				if(SINGLE_PERSON.equals(customerType)){
 //					//个人
@@ -517,16 +526,16 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 			dto.setSubscribeCcyAmt(ccyamt.toString().substring(0, ccyamt.length() - 1));//认购币种及金额
 		}
 		dto.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
-        dto.setRegistSeqno(IDGenerator.generate(36));
+		dto.setRegistSeqno(IDGenerator.generate(36));
 		// 报送流水号
 		dto.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-        dto.setStatusDate(executeDate);
-        
-        //发行机构代码取值
-        dto.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+		dto.setStatusDate(executeDate);
+
+		//发行机构代码取值
+		dto.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
 //		 报送截止日生成
 //		当前批次报送时点集合
-        Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+		Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 		List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),
 				DictCodeListExt2.报送数据状态_新建.getValue(),dateMap, dto.getRaiseEnddate());
 		if (!StringUtil.isEmptyList(dateList)) {
@@ -549,14 +558,14 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 	public boolean compareData(RaiseTotalRegist001Dto dto,RaiseTotalRegist001Dto regdto){
 		RaiseTotalRegist001Dto compare1 = genDto(dto);
 		RaiseTotalRegist001Dto compare2 = genDto(regdto);
-        if(!JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))){
+		if(!JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))){
 			logger.info("info:" + JSON.toJSONString(compare1));
 			logger.info("sub:" + JSON.toJSONString(compare2));
-            return true;
-        }else{
-            return false;
-        }
-    }
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 	private RaiseTotalRegist001Dto genDto(RaiseTotalRegist001Dto dto) {
 		RaiseTotalRegist001Dto gendto = new RaiseTotalRegist001Dto();
@@ -571,6 +580,6 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 		gendto.setConsignAmt((dto.getConsignAmt()==null?BigDecimal.ZERO:dto.getConsignAmt()).setScale(2, BigDecimal.ROUND_HALF_UP));
 		return gendto;
 	}
-	
+
 
 }
