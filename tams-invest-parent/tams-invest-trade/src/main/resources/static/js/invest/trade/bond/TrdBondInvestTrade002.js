@@ -2030,7 +2030,15 @@ var table;
                 }
             });
             if(pageModel ==PAGE_MODEL_REFERENCE){
-                if(settleSpeedStr=='01'){
+            //add by yujiaping 20210304 ZGBSS-592债券交易的交易场所为上交所/深交所，交易市场为一级市场时，审批人的待办事项和完成交易详情中不应展示结算费和经手费字段start
+            	var tradeMarket = $('#tradeMarket').val();
+                var tradeMarketMode = $('#tradeMarketMode').val();
+                if((tradeMarket == "03" || tradeMarket == "04") && tradeMarketMode == "01"){                	
+                	$("#settleAmtDiv").hide();
+                	$("#exchangeAmtDiv").hide();
+                }
+            //add by yujiaping 20210304 ZGBSS-592债券交易的交易场所为上交所/深交所，交易市场为一级市场时，审批人的待办事项和完成交易详情中不应展示结算费和经手费字段end
+               if(settleSpeedStr=='01'){
                     $('#settleSpeed').val('0');
                 }else  if(settleSpeedStr=='02'){
                     $('#settleSpeed').val('1');
