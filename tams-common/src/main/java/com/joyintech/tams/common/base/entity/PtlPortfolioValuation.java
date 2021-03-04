@@ -58,6 +58,14 @@ public class PtlPortfolioValuation extends PtlPortfolioValuationKey {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal tdyUnpaidIntincexp;
 
+    
+
+    /**
+     * 万份收益
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal dayPYield;
+
     /**
      * 当日未分配利润
      */
@@ -194,21 +202,21 @@ public class PtlPortfolioValuation extends PtlPortfolioValuationKey {
 //        this.benchmarkRate = benchmarkRate;
 //    }
 //
-//    /**
-//     * 取得 7日年化收益率
-//     * @return 7日年化收益率
-//     */
-//    public BigDecimal getYield7() {
-//        return yield7;
-//    }
-//
-//    /**
-//     * 设置 7日年化收益率
-//     * @param yield7 7日年化收益率
-//     */
-//    public void setYield7(BigDecimal yield7) {
-//        this.yield7 = yield7;
-//    }
+    /**
+     * 取得 7日年化收益率
+     * @return 7日年化收益率
+     */
+    public BigDecimal getYield7() {
+        return yield7;
+    }
+
+    /**
+     * 设置 7日年化收益率
+     * @param yield7 7日年化收益率
+     */
+    public void setYield7(BigDecimal yield7) {
+        this.yield7 = yield7;
+    }
 
     /**
      * 取得 当日应付客户收益
@@ -289,4 +297,19 @@ public class PtlPortfolioValuation extends PtlPortfolioValuationKey {
 //    public void setTdyYield(BigDecimal tdyYield) {
 //        this.tdyYield = tdyYield;
 //    }
+    /**
+     * 取得 万份收益
+     * @return 万份收益
+     */
+    public BigDecimal getDayPYield() {
+        return dayPYield;
+    }
+
+    /**
+     * 设置 万份收益
+     * @param dayPYield 万份收益
+     */
+    public void setDayPYield(BigDecimal dayPYield) {
+        this.dayPYield = dayPYield;
+    }
 }

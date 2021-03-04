@@ -1963,6 +1963,16 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
                 }
             }
         }
+
+        //货币型产品前一日组合估值的七日年化收益率和万份收益取自估值表
+        if(calcFlg == 1 && StringUtil.equals(DictCodeList.收益类型_货币型.getValue(), ptlBaseInfoDto.getProfitType())){
+            for(MockPtlPortfolioValuationDto dto :全量组合估值列表){
+                if(StringUtil.equals(DateUtil.format(dto.getCdate()),计算日期) ){
+                    resultDto.setPreDayPYield(dto.getDayPYield());
+                    resultDto.setPreDaySevenDayRate(dto.getYield7());
+                }    
+            }
+        }
     }
     
     /**
