@@ -973,6 +973,20 @@ public class TrdCommonBaseService extends BaseService {
     }
 
     /**
+     * 根据交易编号查询另一笔未撤销的转仓交易信息
+     * add by hpp 2020-09-17
+     * @param tradeId
+     * @return
+     */
+    public TrdProductDeal selectZCDealByTid(String tradeId,boolean hastotle){
+        if(hastotle) {
+            return trdCommonBaseMapper.selectZCDeal(tradeId);
+        }else{
+           return trdCommonBaseMapper.selectZCDealByTradeId(tradeId);
+        }
+    }
+
+    /**
      * 根据交易编号查询该交易是否已被撤销
      *
      * @param tradeId 交易编号

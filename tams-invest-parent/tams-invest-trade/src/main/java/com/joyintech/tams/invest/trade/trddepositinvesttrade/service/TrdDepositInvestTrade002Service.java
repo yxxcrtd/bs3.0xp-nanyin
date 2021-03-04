@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.trddepositinvesttrade.dto.TrdDepositInvestTrade001Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
@@ -125,6 +126,9 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
 
     // /**
     // * 划款指令表
@@ -808,6 +812,16 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
             list.add(stlPayOrdersDto);
             entity.setStlPayOrdersList(list);
         }
+
+        // 提前查询判断  是否  撤销 并且是 有转仓交易 并且转仓交易方向ps为买入
+        String reverseTradeId = "";
+        if(type == OperationType.REVOKE) {
+            TrdProductDeal reverseTrdProductDeal = trdCommonBaseService.selectZCDealByTid(entity.getTradeId(),false);
+            if (reverseTrdProductDeal != null && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), reverseTrdProductDeal.getPs())) {
+                reverseTradeId = reverseTrdProductDeal.getTradeId();
+            }
+        }
+
         // TODO Auto-generated method stub
         TrdDepositInvestTrade001Dto dto = new TrdDepositInvestTrade001Dto();
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
@@ -1004,6 +1018,15 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
             jasperExecute(entity);
         }
         // 一体化对应etliu end
+
+        if(StringUtil.isNotEmpty(reverseTradeId)){
+
+            TrdProductDeal trdProductDeal = new TrdProductDeal();
+            trdProductDeal.setTradeId(reverseTradeId);
+            trdProductDeal.setCancelRemark(entity.getCancelRemark());
+            commonBusinessService.revokeReverseTrade(trdProductDeal,false);
+
+        }
 
         // 调接口 by 赵东东 20191206 start
         List<String> tradeIds = new ArrayList<String>();

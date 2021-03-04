@@ -71,6 +71,7 @@ import com.joyintech.tams.invest.common.trade.dto.PreTrdCommonDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.interf.service.InterfComponentService;
 import com.joyintech.tams.invest.interf.service.InterfComponentService.OrderCaller;
 import com.joyintech.tams.invest.trade.bond.dto.BaseEtrInvestInfoDto;
@@ -281,6 +282,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
 
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。 {@inheritDoc}
@@ -984,8 +988,23 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         if (entity.getTotleTradeId().lastIndexOf('R') == entity.getTotleTradeId().length() - 1) {
             entity.setTotleTradeId(entity.getTotleTradeId().substring(0, entity.getTotleTradeId().length() - 1));
         }
+        // 提前查询判断  是否  撤销 并且是 有转仓交易 并且转仓交易方向ps为买入
+        String reverseTradeId = "";
+
+        TrdProductDeal reverseTrdProductDeal = trdCommonBaseService.selectZCDealByTid(entity.getTotleTradeId(),true);
+        if (reverseTrdProductDeal != null && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), reverseTrdProductDeal.getPs())) {
+            reverseTradeId = reverseTrdProductDeal.getTradeId();
+        }
+
+        List<String> totleIdList = Arrays.asList(entity.getTotleTradeId());
+
+        // 如果能查到买入的转仓交易  则 同步撤销买入的
+        if(StringUtil.isNotEmpty(reverseTradeId)){
+            totleIdList.add(reverseTradeId);
+        }
+
         List<BaseTradeProductDealDto> baseTradeProductDealDtos = baseTradeProductDealService.selectTotalDeal(
-            Arrays.asList(entity.getTotleTradeId()));
+                totleIdList);
 
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtos) {
@@ -1108,6 +1127,29 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 //        if (null != tradeid && !"".equals(tradeid)){
 //            riskCreditListCommonValidatorService.deleteCredit(tradeid);
 //        }
+
+        // 不为null 同步撤销  另一笔转仓买入的订单
+        if(StringUtil.isNotEmpty(reverseTradeId)){
+
+            Map<String, Object> reverseparams = new HashMap<>();
+            reverseparams.put("workflowId", entity.getWorkflowId());
+            if (reverseTradeId.lastIndexOf('R') == reverseTradeId.length() - 1) {
+                reverseTradeId = reverseTradeId.substring(0, reverseTradeId.length() - 1);
+            }
+            reverseparams.put("bizCode", reverseTradeId);
+            reverseparams.put("updateUser", SecurityUtil.getLoginUser().getUserName());
+            reverseparams.put("revokeReason", entity.getRevokeReason());
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/doRevokeComplete?", reverseparams,
+                    String.class);
+
+            //basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getTotleTradeId());
+
+            // 调用基础组件.【交易报送组件】删除交易报送信息
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/deleteRepTrade",
+                    Arrays.asList(reverseTradeId), Boolean.class);
+
+
+        }
     }
 
     /**
@@ -3588,7 +3630,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     /**
      * 查找买入交易之后的卖出交易
      *
-     * @param map 交易编号
+     * @param tradeId 交易编号
      * @return 债券投资交易信息
      * @see
      * @since 1.0

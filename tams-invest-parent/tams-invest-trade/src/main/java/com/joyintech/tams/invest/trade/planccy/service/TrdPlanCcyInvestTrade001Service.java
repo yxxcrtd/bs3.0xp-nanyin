@@ -21,8 +21,10 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
@@ -41,6 +43,7 @@ import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.planccy.dto.TrdPlanCcyInvestTradeDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -105,6 +108,12 @@ public class TrdPlanCcyInvestTrade001Service extends CommonExportService<TrdPlan
     @Autowired
     private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
 
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private CommonBusinessService commonBusinessService;
+
     /**
      * 撤销审批完成操作
      */
@@ -115,7 +124,15 @@ public class TrdPlanCcyInvestTrade001Service extends CommonExportService<TrdPlan
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
         List<BaseTradeProductDealDto> dtoList = restTemplate.getForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanCcyInvestTrade/getFinDto?tradId="+
             entity.getTradeId(),BaseTradeProductDealDto.class);
-        
+
+        // 提前查询判断  是否  撤销 并且是 有转仓交易 并且转仓交易方向ps为买入
+        String reverseTradeId = "";
+        if(type == OperationType.REVOKE) {
+            TrdProductDeal reverseTrdProductDeal = trdCommonBaseService.selectZCDealByTid(entity.getTradeId(),false);
+            if (reverseTrdProductDeal != null && StringUtil.equals(DictCodeList.交易方向_买入.getValue(), reverseTrdProductDeal.getPs())) {
+                reverseTradeId = reverseTrdProductDeal.getTradeId();
+            }
+        }
         //删除授信占用
         if(StringUtil.equals(entity.getPs(), DictCodeListExt2.交易方向_认购.getValue()) 
         		|| StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购.getValue())) {
@@ -244,6 +261,16 @@ public class TrdPlanCcyInvestTrade001Service extends CommonExportService<TrdPlan
             }
         }
         // 调用投管接口 add by renping 20190205 end
+
+
+        if(StringUtil.isNotEmpty(reverseTradeId)){
+
+            TrdProductDeal trdProductDeal = new TrdProductDeal();
+            trdProductDeal.setTradeId(reverseTradeId);
+            trdProductDeal.setCancelRemark(entity.getCancelRemark());
+            commonBusinessService.revokeReverseTrade(trdProductDeal,false);
+
+        }
     }
     /**
      * 
