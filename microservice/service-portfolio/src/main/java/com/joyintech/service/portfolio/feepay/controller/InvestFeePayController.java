@@ -500,4 +500,9 @@ public class InvestFeePayController {
     public List<SelectOptionDto> getPortFolioName(@RequestBody Map<String,Object> map) {
         return investFeePayService.getPortFolioName(map);
     }
+    
+    @PostMapping("/getEffectData")
+    public List<InvestFeePayDto> getEffectData(@RequestBody Map<String,Object> map){
+        return investFeePayService.getEffectData(map);
+    }
 }

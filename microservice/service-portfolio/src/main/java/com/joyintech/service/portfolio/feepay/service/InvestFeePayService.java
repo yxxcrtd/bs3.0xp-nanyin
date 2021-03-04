@@ -1607,4 +1607,9 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         return list;
     }
     
+    public List<InvestFeePayDto> getEffectData(Map<String, Object> map) {
+        List<InvestFeePayDto> list = investFeePayMapper.getEffectData(map);
+        return list;
+    }
+    
 }

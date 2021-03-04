@@ -400,4 +400,6 @@ public interface InvestFeePayMapper {
     List<SelectOptionDto> getPortFolioName(Map<String, Object> map);
 
     List<InvestFeePayDto> getBusinessData(WflValidInputParameter parameter);
+    
+    List<InvestFeePayDto> getEffectData(Map<String, Object> map);
 }
