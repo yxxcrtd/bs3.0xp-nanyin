@@ -8,13 +8,13 @@
 	  <!-- 债券，项目，存款，计划利率的收益率 -->
 	  select fp.finprod_market_id as assetId ,fp.finprod_type2 as finprodType2,
 	  fp.profit_type as profitType,
-	  f.eff_date as changeDate,
-	  f.rate as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
+	  f.vdate as changeDate,
+	  f.range_yield as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
 	  nvl(f.UPDATE_TIME,f.CREATE_TIME) updatetime,
 	  null tradeId,
 	  null as status,
 	  null scino
-	  from fin_rate_info f
+	  from fin_cash_plan f
 	  left join fin_product fp
 	  on f.finprod_id=fp.finprod_id
 	  left join fin_cash_info cash
@@ -79,12 +79,12 @@
 	  select fi.finprod_id as assetId ,'XJ' as finprodType2,
 	  null as profitType,
 	  fi.eff_date as changeDate,
-	  fi.rate as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
+	  fi.yield as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
 	  nvl(fi.UPDATE_TIME,fi.CREATE_TIME) updatetime,
 	  null tradeId,
 	  null as status,
 	  sci.seq_no scino
-	  from FIN_RATE_INFO fi
+	  from fin_cash_calc_rule fi
 	  left join fin_cash_info cash
 	  on fi.cash_id=cash.cash_id
 	  left join STL_CAPACCT_INFO sci
