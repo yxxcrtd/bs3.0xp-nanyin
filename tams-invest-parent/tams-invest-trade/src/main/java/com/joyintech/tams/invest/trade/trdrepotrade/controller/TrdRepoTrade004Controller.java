@@ -213,6 +213,9 @@ public class TrdRepoTrade004Controller extends BaseController {
         if(StringUtils.isNotBlank(dto.getBussinessCode())){
             model.addAttribute("bussinessCode",dto.getBussinessCode());
         }
+        if(StringUtils.isNotBlank(this.getParam("entrustId"))){
+            model.addAttribute("entrustId",this.getParam("entrustId"));
+        }
         return super.init(model);
     }
 

@@ -32,11 +32,14 @@ import com.joyintech.tams.invest.common.dto.*;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
 
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade004Dto;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -137,6 +140,11 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
      */
     @Autowired(required = false)
     private FileAttachmentProcess fileAttachmentProcess;
+    /**
+     * 共通Service
+     */
+    @Autowired(required = false)
+    private EtrCommonCashPositionDealService etrCommonCashPositionDealService;
     /**
      * 工作流中doComplete
      *
@@ -521,6 +529,40 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
                     }
                 }
             }
+
+        }
+        //质押券置换指令持仓
+        List<EtrSecPositionFlowDto> etrSecPositionFlows = new ArrayList<>();
+        for(PtlSecPositionFlowDto it:lstPtlSecPositionFlowDto){
+            if(StringUtil.isEmpty(input.getEntrustId())){
+                //该交易无指令，即无指令委托持仓
+                continue;
+            }
+            EtrSecPositionFlowDto dto=new EtrSecPositionFlowDto();
+            dto.setSeqno(IDGenerator.generate(32));
+            dto.setPortfolioId(it.getPortfolioId());
+            dto.setSecAcctId(it.getSecAcctId());
+            dto.setFinprodId(it.getFinprodId());
+            dto.setBranch(it.getBranch());
+            dto.setInvAim(it.getInvAim());
+            dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+            dto.setCdate(it.getCdate());
+            dto.setCcy(it.getCcy());
+            dto.setAmount(it.getAmount());
+            dto.setpFinprodId(it.getpFinprodId());
+            dto.setTradeId(it.getTradeId());
+            dto.setCreateUser(it.getCreateUser());
+            dto.setCreateDept(it.getCreateDept());
+            dto.setCreateTime(it.getCreateTime());
+            dto.setUpdateUser(it.getUpdateUser());
+            dto.setUpdateTime(it.getUpdateTime());
+            etrSecPositionFlows.add(dto);
+        }
+        if(null!=etrSecPositionFlows && etrSecPositionFlows.size()>0){
+            // 处理结果
+            EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+            etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+            etrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
 
         }
         if (StringUtil.isEmptyList(lstPtlSecPositionFlowDto)) {
