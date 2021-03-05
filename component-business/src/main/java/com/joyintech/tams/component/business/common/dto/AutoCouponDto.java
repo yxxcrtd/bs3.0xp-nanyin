@@ -66,4 +66,42 @@ public class AutoCouponDto extends FinProduct{
     public void setBasis(String basis) {
         this.basis = basis;
     }
+
+
+    private String type9;
+    private String type10;
+    private String type11;
+    private String type12;
+
+    public String getType9() {
+        return type9;
+    }
+
+    public void setType9(String type9) {
+        this.type9 = type9;
+    }
+
+    public String getType10() {
+        return type10;
+    }
+
+    public void setType10(String type10) {
+        this.type10 = type10;
+    }
+
+    public String getType11() {
+        return type11;
+    }
+
+    public void setType11(String type11) {
+        this.type11 = type11;
+    }
+
+    public String getType12() {
+        return type12;
+    }
+
+    public void setType12(String type12) {
+        this.type12 = type12;
+    }
 }

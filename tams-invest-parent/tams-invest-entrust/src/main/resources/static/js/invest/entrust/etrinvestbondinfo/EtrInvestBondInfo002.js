@@ -493,6 +493,9 @@
                     isautobond = true;
                     data.finvdate = data.vdate;
                     data.finmdate = data.mdate;
+                    data.assetType1 = data.type9;
+                    data.assetType10 = data.type10;
+                    data.assetType11 = data.type11;
                 }
                 // 不为空
                 $('#price').attr("required", false);
