@@ -226,6 +226,11 @@ $(function(){
                 label='买断式回购存续期交易查看';
                 pagePath = "invest/period/trdbuyoutduration/TrdRepoBuyoutDuration002/init";
                 data.pageModel = PAGE_MODEL_REFERENCE;
+                //如果是撤销，需要去除末尾的R start
+                if(data.statusValid == '06'){
+                	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                }
+                //如果是撤销，需要去除末尾的R start
                 data.totleTradeId = data.busiCode;
                 Joyin.dialog(label,basePath+pagePath,
                     "98%", "95%", data, function(){});
