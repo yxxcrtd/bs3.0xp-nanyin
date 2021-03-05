@@ -170,6 +170,10 @@
             row.tradeDate = platDate;
             // 币种：默认人民币
             row.ccy = CCY_CNY;
+            //如果选了组合代码则带出组合代码
+            if($('#portfolioId').val() != null && $('#portfolioId').val() != ''){
+                row.portfolioId = $('#portfolioId').val();    
+            }
         },
         beforeEditCell: function (preVal, field, rowData) {
             // 资产类型不允许编辑
@@ -268,9 +272,10 @@
                         calcYield(rowData);
 
                         mockTradeTable.renderRow(data.LAY_TABLE_INDEX, rowData);
-                    });
-                    if ($('#portfolioId').val() && rowData.finprodId ) {
-                        Joyin.ajaxSync(basePath + 'component/entrust/EtrCommon/findInvAim', {portfolioId: $('#portfolioId').val(), finprodId: rowData.finprodId},
+                    });                   
+                    // component/entrust/EtrCommon/findInvAim
+                    if ($('#portfolioId').val() && rowData.finprodId ) {     
+                        Joyin.ajaxSync(basePath + 'invest/portfolio/ptlmock/PtlMockTest002/findInvAim', {portfolioId: $('#portfolioId').val(), finprodId: rowData.finprodId,type8: rowData.type8},
                             function (result) {
                                 if (result) {
                                     rowData.invAim = result;

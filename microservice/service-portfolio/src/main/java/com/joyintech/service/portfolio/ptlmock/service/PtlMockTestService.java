@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.dao.MockTest002Mapper;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.ptlrealtimevaluation.RealTimeValCommonUtil;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,6 +87,9 @@ public class PtlMockTestService extends BaseService<PtlMockTestDto> {
      */
     @Autowired
     private MockTestNetTrend002Mapper mockTestNetTrendMapper;
+    
+    @Autowired
+    private IPlatformDate iPlateFormDate;
 
     /**
      * 组合代码下拉框选项获取
@@ -269,5 +274,17 @@ public class PtlMockTestService extends BaseService<PtlMockTestDto> {
     public BigDecimal getUsedMockPosition(Map<String, Object> map) {
         map.put("PS_T01",DictCodeList.交易方向_买入.getValue());
         return testMapper.getUsedMockPosition(map);
+    }
+
+
+    /**
+     * 根据组合关联的估值方案查询对应资产的投资目的
+     * @param portfolioId,finprodId
+     * @return 投资目的
+     */
+    public String findInvAim(String portfolioId, String finprodId) {
+        
+        String invAim = testMapper.findInvAimByPortIdAndFinId(portfolioId, finprodId,iPlateFormDate.getSysDateStr());
+        return invAim;
     }
 }

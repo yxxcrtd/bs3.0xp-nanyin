@@ -44,6 +44,7 @@ import com.joyintech.tams.common.base.entity.MstIntRateInfo;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.invest.portfolio.ptlmock.dto.PtlMockTestRiskDto;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
@@ -98,10 +99,6 @@ import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListRsk;
 import com.joyintech.tams.invest.common.asset.dto.AssetCommonInfoDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDetailDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
@@ -2948,5 +2945,24 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
         return restTemplate.postForObject(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlMockTest/getUsedMockPosition", map,
                 BigDecimal.class);
+    }
+
+    /**
+     * 根据组合关联的估值方案查询对应资产的投资目的
+     * @param portfolioId,finprodId
+     * @return 投资目的
+     */
+    public String findInvAim(Map<String, Object> pageParam) {
+        String type = (String) pageParam.get("type8");
+        if (StringUtil.equals(type,DictCodeList.平安资产类型_债券.getValue()) || 
+                StringUtil.equals(type, DictCodeListExt2.平安资产类型_股票.getValue()) || 
+                    StringUtil.equals(type,DictCodeList.平安资产类型_计划类资产_货币型.getValue()) ||
+                        StringUtil.equals(type,DictCodeList.平安资产类型_计划类资产_净值型.getValue())){
+            return restTemplate.getForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME
+                        + "/PtlMockTest/findInvAim/" + pageParam.get("portfolioId") + "/" + pageParam.get("finprodId"),
+                String.class);    
+        } else{
+            return null;    
+        }
     }
 }

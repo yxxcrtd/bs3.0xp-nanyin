@@ -129,4 +129,11 @@ public interface PtlMockTestMapper {
      * @return
      */
     BigDecimal getUsedMockPosition(Map<String, Object> map);
+
+    /**
+     * 根据组合关联的估值方案查询对应资产的投资目的
+     * @param portfolioId,finprodId
+     * @return 投资目的
+     */
+    String findInvAimByPortIdAndFinId(@Param("portfolioId") String portfolioId, @Param("finprodId") String finprodId,@Param("sysdate") String sysdate);
 }

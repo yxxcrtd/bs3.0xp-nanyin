@@ -157,6 +157,15 @@ public class PtlMockTest002Controller extends BaseController {
     }
 
     /**
+     * 根据组合关联的估值方案查询对应资产的投资目的
+     */
+    @ResponseBody
+    @RequestMapping("/findInvAim")
+    public String findInvAim() {
+        return ptlMockTest002Service.findInvAim(RequestUtil.getPageParam());
+    }
+
+    /**
      * 导入数据文件
      *
      * @param fileName 导入的文件名
