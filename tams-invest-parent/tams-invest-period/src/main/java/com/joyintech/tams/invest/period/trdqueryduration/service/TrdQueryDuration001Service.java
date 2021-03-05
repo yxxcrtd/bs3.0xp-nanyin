@@ -133,5 +133,15 @@ public class TrdQueryDuration001Service extends CommonExportService<TrdQueryDura
 		// TODO Auto-generated method stub
 		return selectForPage(selectParam);
 	} 
+	
+	/**
+	 * 获取资产的type6
+	 * @param finprodMarketId
+	 * @return
+	 */
+	public String getType6(String finprodId) {
+		return restTemplate.getForObject(ServiceApplication.PERIOD_SERVICE_NAME
+    			+ "/TrdQueryDuration001/getType6?finprodId=" +finprodId,String.class);				
+	}
 
 }

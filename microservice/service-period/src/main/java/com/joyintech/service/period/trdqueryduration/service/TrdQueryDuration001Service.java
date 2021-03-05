@@ -349,4 +349,13 @@ public class TrdQueryDuration001Service extends BaseService<TrdQueryDurationDto>
 		map.put("portType1", DictCodeListExt1.组合类型_子组合.getValue());
 		return super.queryForPageForSelectReturn(page, length, () -> trdQueryDuration001Mapper.getPortfolioIds(map));
 	}
+	
+	/**
+	 * 获取资产标的Type6
+	 * @param finprodId
+	 * @return
+	 */
+	public String getType6(String finprodId) {
+		return trdQueryDuration001Mapper.getType6(finprodId);
+	}
 }

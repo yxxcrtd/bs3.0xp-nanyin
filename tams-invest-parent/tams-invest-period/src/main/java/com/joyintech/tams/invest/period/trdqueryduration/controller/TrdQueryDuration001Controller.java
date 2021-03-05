@@ -23,6 +23,7 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -37,6 +38,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
@@ -84,6 +86,8 @@ public class TrdQueryDuration001Controller extends BaseController{
 		model.addAttribute("PINAN_ASSET_TYPE_F16", DictCodeListExt2.平安资产类型_利率互换.getValue());
 		model.addAttribute("PINAN_ASSET_TYPE_F17", BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue());
 		model.addAttribute("PINAN_ASSET_TYPE_F18", DictCodeListExt3.平安资产类型_期权.getValue());
+		model.addAttribute("CHANCLE_STATUS",DictCodeListExt1.画面数据状态_撤销.getValue());
+		model.addAttribute("DEPO_ASSET_TYPE_03", DictCodeListExt3.存款类资产类型_活期存放.getValue());
 		List<SelectOptionDto> psList = makeAllFloatRate();
         model.addAttribute("psList", JsonUtils.objectArray2Json(psList.toArray()));
         model.addAttribute("platDate", DateUtil.format(DateUtil.platDateFromCache())+" - "+DateUtil.format(DateUtil.platDateFromCache()));
@@ -189,5 +193,11 @@ public class TrdQueryDuration001Controller extends BaseController{
         return commonCheck(result, dto.getOperateType());
     }
 
+    
+    @ResponseBody
+    @RequestMapping("getType6")
+    public String getType6(@RequestParam("finprodId") String finprodId) {
+    	return trdQueryDuration001Service.getType6(finprodId);
+    }
 
 }
