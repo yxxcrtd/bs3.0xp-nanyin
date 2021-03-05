@@ -44,6 +44,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
     Boolean isdeleteflag;
     // 是否空档期以是否有机构授信判断
     boolean isKDQ = false;
+    String customerid = "";
     //授信共通model，方法返回参数
     CreditLinesDealCommon common =new CreditLinesDealCommon();
     private FinProductCredit finProductCredit;
@@ -248,6 +249,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         //b.处理机构授信、品种授信
         //a的查询结果为0 或者（若有数据  则判断 是否占用主体授信=是 则查询机构授信及机构品种授信）
         List<CreditLines> orgcreLineslist=new ArrayList<CreditLines>();
+        Map<String, Object> mapParm = new HashMap<>();
         // 没有资产/系列授信 || 有资产/系列授信 指令授信是否占用机构授信为是
         if((creLineslist==null || creLineslist.size()==0)||
                 (creLineslist!=null && creLineslist.size()>0 && iscreditflag)) {
@@ -276,7 +278,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 model.setCounterId(counterId);
             }
             //授信参数传值方式修改 start
-            Map<String, Object> mapParm = new HashMap<>();
+
             mapParm.put("dto", model);
             mapParm.put("ps1", DictCodeList.交易方向_买入.getValue());
             mapParm.put("ps4", DictCodeList.交易方向_申购.getValue());
@@ -324,6 +326,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         }
         if (StringUtil.isEmptyList(orgcreLineslist)){
             isKDQ = true;
+            customerid = creditLinesMapper.getCustomerid(mapParm);
         }
         return  orgcreLineslist;
     }
@@ -530,7 +533,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             //华商个性化 算上底层资产占用额度 2020年12月15日 end
             //新增只有买入或申购时候额度监控 by nixiukuan 20191009
             //修复【二级法人-机构授信】当交易额度超过机构授信总额度之后，没有占用授信额度BUG by jqq start
-            if(StringUtil.isNotEmpty(creditLines.getPflsh()) && !creditLines.getPflsh().equals("空档期授信") && ArithmeticUtil.doAdd(hapCreditAmt,pierceAmt).compareTo(creditLines.getCreditAmt())>0 && flagps1 && !isSave){
+            if(StringUtil.isNotEmpty(creditLines.getPflsh()) && !creditLines.getPflsh().startsWith("空档期授信") && ArithmeticUtil.doAdd(hapCreditAmt,pierceAmt).compareTo(creditLines.getCreditAmt())>0 && flagps1 && !isSave){
                 //提示 授信额度不够,并且直接返回提示语，不再进行下次循环
                 isEnoughCreditflag=false;
                 if(Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL"))) {
@@ -647,7 +650,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 // 空档期授信
                 // 空档期占用机构授信
                 CreditLines creditLines = new CreditLines();
-                String customerId = model.getFinprodId();
+                String customerId = customerid;
                 String seqNo = "";
                 if (baseGetBusinessId != null) {
                     BussinessCodeParameter codeParameter = new BussinessCodeParameter();
@@ -680,12 +683,11 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
 //                    creditLines.setCreditFlag("N");
 //                }
                 creditLines.setCreditMstId("0001");
-                customerId = model.getCounterId();
                 creditLines.setCustomerId(customerId);
                 creditLines.setCreditFlag("Y");
                 creditLines.setVdate(model.getTradeDate());
                 creditLines.setMdate(DateUtil.parse("2099-12-31"));
-                creditLines.setPflsh("空档期授信");
+                creditLines.setPflsh("空档期授信"+IDGenerator.generate().substring(0, 30));
                 creditLines.setCreateDept(model.getCreateDept());
                 creditLines.setCreateTime(model.getCreateTime());
                 creditLines.setCreateUser(model.getCreateUser());

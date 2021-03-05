@@ -13,6 +13,7 @@ package com.joyintech.tams.batch.creditPierce.service;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.batch.creditPierce.dao.CreditPierceMapper;
 import com.joyintech.tams.batch.creditPierce.dto.PtlSecPierceValDto;
@@ -26,7 +27,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.trade.CelinesUpdateFactory;
+import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,9 +60,6 @@ public class CreditPierceService {
 
     @Autowired
     private CreditLinesMapper creditMapper;
-
-    @Autowired
-    private CelinesUpdateFactory celinesUpdateFactory;
 
     /**
      * 授信估值穿透数据接入处理
@@ -134,7 +132,8 @@ public class CreditPierceService {
                     dto.setCustomerId(organId);
                     dto.setCdate(currentDate);
                     dto.setCreditMstId("0001");
-                    if(celinesUpdateFactory.isKDQ(dto.getCreditMstId(), dto.getCustomerId(), dto.getCdate(),dto.getInstitutionCode())<=0){
+                    CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
+                    if(ceLinesUpdate.isKDQ(dto.getCreditMstId(), dto.getCustomerId(), dto.getCdate(),"")<=0){
                         CreditLines creditLines = new CreditLines();
                         String customerId = dto.getCustomerId();
                         String seqNo = "";
@@ -174,14 +173,14 @@ public class CreditPierceService {
                         creditLines.setCreditFlag("Y");
                         creditLines.setVdate(dto.getCdate());
                         creditLines.setMdate(DateUtil.parse("2099-12-31"));
-                        creditLines.setPflsh("空档期授信");
+                        creditLines.setPflsh("空档期授信"+IDGenerator.generate().substring(0, 30));
                         creditLines.setCreateDept(dto.getCreateDept());
                         creditLines.setCreateTime(dto.getCreateTime());
                         creditLines.setCreateUser(dto.getCreateUser());
                         creditLines.setUpdateTime(dto.getUpdateTime());
                         creditLines.setUpdateUser(dto.getUpdateUser());
                         creditLines.setInstitutionCode(dto.getInstitutionCode());
-                        creditLines.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(),dto.getInstitutionCode()));
+                        creditLines.setHapCreditAmt(ceLinesUpdate.extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(),dto.getInstitutionCode()));
                         creditMapper.insert(creditLines);
                     }
 //                    dto.setPlanAssetId(ptlSecPierceValutioListMap.get(finprodId).get(0).get);

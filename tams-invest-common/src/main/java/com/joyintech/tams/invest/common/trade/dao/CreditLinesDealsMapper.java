@@ -106,4 +106,11 @@ public interface CreditLinesDealsMapper {
 	 * @return
 	 */
 	int isKDQ(@Param("creditmstid") String creditmstid, @Param("customerid") String customerid, @Param("dealdate") Date dealdate, @Param("orgno") String orgno);
+
+	/**
+	 * 查询应占机构
+	 * @param model
+	 * @return
+	 */
+	String getCustomerid(Map<String,Object> model);
 }
