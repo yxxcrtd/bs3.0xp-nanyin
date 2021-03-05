@@ -397,6 +397,15 @@ public class RepProdDeclare extends BaseEntity {
     private String repFiduciaryDuty;
     
     private String repManageMode;
+    
+    /**
+     * 是否合规新产品
+     */
+    private String isFhxgcp;
+    /**
+     * 是否养老理财产品
+     */
+    private String isYllccp;
 
     /**
      * 取得 金融产品代码
@@ -1624,6 +1633,22 @@ public class RepProdDeclare extends BaseEntity {
 
 	public void setRepManageMode(String repManageMode) {
 		this.repManageMode = repManageMode;
+	}
+
+	public String getIsFhxgcp() {
+		return isFhxgcp;
+	}
+
+	public void setIsFhxgcp(String isFhxgcp) {
+		 this.isFhxgcp = isFhxgcp == null ? null : isFhxgcp.trim();
+	}
+
+	public String getIsYllccp() {
+		return isYllccp;
+	}
+
+	public void setIsYllccp(String isYllccp) {
+		this.isYllccp = isYllccp == null ? null : isYllccp.trim();
 	}
     
 }

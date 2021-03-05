@@ -453,6 +453,9 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
                     fileAttachmentProcess.updateBussinessNo(fileNo, entity.getFinprodId());
                 }
                 //add by tuqirong 2019-03-26 end
+                
+                entity.setIsFhxgcp(entity.getBussRepFinProductInfoDto().getIsFhxgcp());
+                entity.setIsYllccp(entity.getBussRepFinProductInfoDto().getIsYllccp());
                 restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME
                                            + "/FinProductCommon/insertFinProductCommon",
                     entity, Integer.class);
@@ -554,6 +557,8 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
               this.insertOtherData(entity, ptlFlag);  //edit by dongenkuo 20190311 创建组合放在service层，此处注释掉
             }
             else if (type == OperationType.MODIFY) {
+            	entity.setIsFhxgcp(entity.getBussRepFinProductInfoDto().getIsFhxgcp());
+                entity.setIsYllccp(entity.getBussRepFinProductInfoDto().getIsYllccp());
                 restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME
                                            + "/FinProductCommon/updateFinProductCommon",
                     entity, Integer.class);

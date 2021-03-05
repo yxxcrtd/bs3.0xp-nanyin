@@ -466,7 +466,9 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
                     fileAttachmentProcess.updateBussinessNo(fileNo, entity.getFinprodId());
                 }
                 // add by niuqianyu 2019-07-18 end
-
+                
+                entity.setIsFhxgcp(entity.getBussRepFinProductInfoDto().getIsFhxgcp());
+                entity.setIsYllccp(entity.getBussRepFinProductInfoDto().getIsYllccp());
                 restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/insertFinProductCommon",
                     entity, Integer.class);
 
@@ -569,7 +571,8 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
                 }
             }
             else if (type == OperationType.MODIFY) {
-            	
+            	entity.setIsFhxgcp(entity.getBussRepFinProductInfoDto().getIsFhxgcp());
+                entity.setIsYllccp(entity.getBussRepFinProductInfoDto().getIsYllccp());
                 restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/updateFinProductCommon",
                     entity, Integer.class);
 

@@ -117,6 +117,13 @@ public class FinProductBuild002Validator implements BeanValidator {
             validList.add(new ValidMessage("liquidationDate", this.getMessage("BUSS_COM_E_0038",
                 this.getMessage("FinProductBuild002.liquidationDate"))));
         }
+        
+        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsFhxgcp())) {
+            validList.add(new ValidMessage("bussRepFinProductInfoDto.isFhxgcp", getMessage("请输入是否合规新产品")));
+        }
+        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsYllccp())) {
+            validList.add(new ValidMessage("bussRepFinProductInfoDto.isYllccp", getMessage("请输入是否养老理财产品")));
+        }
         //是否现金管理类产品 必填 开放式产品必输
         if (!StringUtil.isNotEmpty(entity.getIsCashManage()) && StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_开放式.getValue())) {
             validList.add(new ValidMessage("isCashManage", this.getMessage("BUSS_COM_E_0038",

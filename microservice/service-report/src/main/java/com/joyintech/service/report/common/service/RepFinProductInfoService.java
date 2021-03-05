@@ -13,10 +13,12 @@ package com.joyintech.service.report.common.service;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.service.report.common.dto.BussRepFinProductInfoDto;
+import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.RepProdDeclareMapper;
 import com.joyintech.tams.common.base.dao.RepProdIssueMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.RepProdDeclare;
 import com.joyintech.tams.common.base.entity.RepProdIssue;
 import com.joyintech.tams.component.base.report.dto.BaseRepFinProductDto;
@@ -67,6 +69,11 @@ public class RepFinProductInfoService {
      */
     @Autowired(required = false)
     private FinProductMapper finProductMapper;
+    /**
+     * {@linkplain}
+     */
+    @Autowired(required = false)
+    private FinProductAddMapper finProductAddMapper;
 
     /**
      * 产品端中债报备信息组件Mapper
@@ -113,6 +120,12 @@ public class RepFinProductInfoService {
         FinProduct finProduct = finProductMapper.selectByPrimaryKey(finprodId);
         if(finProduct!=null){
         	bussRepFinProductInfoDto.setRepManageMode(finProduct.getEntrustType());
+        }
+        //从标的类金融产品附属表获取是否合规新产品、是否养老理财产品
+        FinProductAdd finProductadd = finProductAddMapper.selectByPrimaryKey(finprodId);
+        if(finProductadd!=null){
+        	bussRepFinProductInfoDto.setIsFhxgcp(finProductadd.getIsFhxgcp());
+        	bussRepFinProductInfoDto.setIsYllccp(finProductadd.getIsYllccp());
         }
         return bussRepFinProductInfoDto;
     }

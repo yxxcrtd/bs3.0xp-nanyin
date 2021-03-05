@@ -330,6 +330,15 @@ public class FinProductBuild002Dto extends FinProduct implements ProcessEntity{
     private String isCashManage;
     
     /**
+     * 是否合规新产品
+     */
+    private String isFhxgcp;
+    /**
+     * 是否养老理财产品
+     */
+    private String isYllccp;
+    
+    /**
      * 数据来源
      */
     private String dataSource;
@@ -1573,6 +1582,22 @@ public class FinProductBuild002Dto extends FinProduct implements ProcessEntity{
 
 	public void setPrdDesignName(String prdDesignName) {
 		this.prdDesignName = prdDesignName;
+	}
+
+	public String getIsFhxgcp() {
+		return isFhxgcp;
+	}
+
+	public void setIsFhxgcp(String isFhxgcp) {
+		this.isFhxgcp = isFhxgcp;
+	}
+
+	public String getIsYllccp() {
+		return isYllccp;
+	}
+
+	public void setIsYllccp(String isYllccp) {
+		this.isYllccp = isYllccp;
 	} 
     
 	

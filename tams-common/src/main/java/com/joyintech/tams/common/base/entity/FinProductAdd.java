@@ -151,6 +151,14 @@ public class FinProductAdd extends BaseEntity {
     private String isCashManage;
 
     /**
+     * 是否合规新产品
+     */
+    private String isFhxgcp;
+    /**
+     * 是否养老理财产品
+     */
+    private String isYllccp;
+    /**
      * 产品风险等级
      */
     private String riskLevel;
@@ -1320,5 +1328,21 @@ public class FinProductAdd extends BaseEntity {
     public void setNoFixedTerm(String noFixedTerm) {
         this.noFixedTerm = noFixedTerm == null ? null : noFixedTerm.trim();
     }
+
+	public String getIsFhxgcp() {
+		return isFhxgcp;
+	}
+
+	public void setIsFhxgcp(String isFhxgcp) {
+		this.isFhxgcp = isFhxgcp == null ? null : isFhxgcp.trim();
+	}
+
+	public String getIsYllccp() {
+		return isYllccp;
+	}
+
+	public void setIsYllccp(String isYllccp) {
+		this.isYllccp = isYllccp == null ? null : isYllccp.trim();
+	}
 
 }

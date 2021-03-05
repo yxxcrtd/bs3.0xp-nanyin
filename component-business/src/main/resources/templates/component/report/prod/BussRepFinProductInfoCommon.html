@@ -973,6 +973,38 @@
 							</div>
 						</div>
 						<!--是否收益权转让产品 dgf 20200213 end-->
+						
+						<!--是否合规新产品 yjp 20210305 start-->
+						<div class="form-inline-wrap">
+							<label class="layui-form-label form-label-wrap"
+								   data-th-text="#{BussRepFinProductInfo.isFhxgcp}">是否合规新产品</label>
+							<div class="layui-input-inline input-inline">
+								<select th:name="|${entityName}.isFhxgcp|"
+										th:id="|${entityName}_isFhxgcp|"
+										class="layui-input form-input input-select"
+										data-th-initValue= "${entity?.isFhxgcp}"
+										data-th-placeholder="#{SysCommon.placeholder}"
+										data-th-data-result="${SVR_YES_OR_NO}" required>
+								</select>
+							</div>
+						</div>						
+						<!--是否合规新产品 yjp 20210305 end-->
+						
+						<!--是否养老理财产品 yjp 20210305 start-->
+						<div class="form-inline-wrap">
+							<label class="layui-form-label form-label-wrap"
+								   data-th-text="#{BussRepFinProductInfo.isYllccp}">是否养老理财产品</label>
+							<div class="layui-input-inline input-inline">
+								<select th:name="|${entityName}.isYllccp|"
+										th:id="|${entityName}_isYllccp|"
+										class="layui-input form-input input-select"
+										data-th-initValue= "${entity?.isYllccp}"
+										data-th-placeholder="#{SysCommon.placeholder}"
+										data-th-data-result="${SVR_YES_OR_NO}" required>
+								</select>
+							</div>
+						</div>
+						<!--是否养老理财产品 yjp 20210305 end-->
 					 </div>
                     <div class="layui-form-item">
 						<div class="form-inline-wrap">
