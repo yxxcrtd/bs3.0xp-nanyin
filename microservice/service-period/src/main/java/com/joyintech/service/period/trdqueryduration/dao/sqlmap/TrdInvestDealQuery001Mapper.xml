@@ -205,7 +205,36 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			WHERE T1.BUSI_TYPE = #{COMMON_BUSINESS_TYPETRD11}
 			and T1.TRADE_STATUS =  #{TRADE_STATUS01}
-			<include refid="where_sql" />
+		    <if test="portfolioId != null and !portfolioId.isEmpty()">
+			    <foreach collection="portfolioId" open=" AND T1.PORTFOLIO_ID IN (" item="item" close=")" separator=",">#{item}</foreach>
+		    </if>
+		    <if test="secManageAcctId != null and !secManageAcctId.isEmpty()">
+			    AND T1.SEC_MANAGE_ACCT_ID = #{secManageAcctId}
+		    </if>
+		    <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
+			    AND T4.FINPROD_MARKET_ID = #{finprodMarketId}
+		    </if>
+		    <if test="paBizType != null and !paBizType.isEmpty()">
+			    AND T3.PA_BUSS_TYPE = #{paBizType}
+		    </if>
+		    <if test="tradeDateStart != null and !tradeDateStart.isEmpty()">
+			    AND T1.SETTLE_DATE >= to_date(#{tradeDateStart}, 'yyyy-MM-dd')
+		    </if>
+		    <if test="tradeDateEnd != null and !tradeDateEnd.isEmpty()">
+			    AND T1.SETTLE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
+		    </if>
+		    <if test="chlId != null and !chlId.isEmpty()">
+			    AND FP.FINPROD_ID = #{chlId}
+		    </if>
+		    <if test="finprodType2 != null and !finprodType2.isEmpty()">
+			    AND T5.TYPE_8 = #{finprodType2}
+		    </if>
+		    <if test="portfolioId != null and !portfolioId.isEmpty()">
+			    AND (T2.PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" index= "index"  separator=",">#{item}</foreach> )
+			    or
+			    T2.PARENT_PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" index= "index" separator=",">#{item}</foreach> )
+			    )
+		    </if>
 		ORDER BY T1.TRADE_DATE DESC)
 		union all
 		/*基金流程中*/
@@ -869,7 +898,36 @@
 				and t1.TRADE_STATUS = #{TRADE_STATUS01}
 				and t1.IS_CANCEL = #{YES_OR_NO_N}
 				AND T2.INVEST_YESORNO = 'Y'
-				<include refid="where_sql" />
+    		    <if test="portfolioId != null and !portfolioId.isEmpty()">
+			        <foreach collection="portfolioId" open=" AND T1.PORTFOLIO_ID IN (" item="item" close=")" separator=",">#{item}</foreach>
+		        </if>
+		        <if test="secManageAcctId != null and !secManageAcctId.isEmpty()">
+			        AND T1.SEC_MANAGE_ACCT_ID = #{secManageAcctId}
+		        </if>
+		        <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
+			        AND T4.FINPROD_MARKET_ID = #{finprodMarketId}
+		        </if>
+		        <if test="paBizType != null and !paBizType.isEmpty()">
+			        AND T3.PA_BUSS_TYPE = #{paBizType}
+		        </if>
+		        <if test="tradeDateStart != null and !tradeDateStart.isEmpty()">
+			        AND T1.SETTLE_DATE >= to_date(#{tradeDateStart}, 'yyyy-MM-dd')
+		        </if>
+		        <if test="tradeDateEnd != null and !tradeDateEnd.isEmpty()">
+			        AND T1.SETTLE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
+		        </if>
+		        <if test="chlId != null and !chlId.isEmpty()">
+			        AND FP.FINPROD_ID = #{chlId}
+		        </if>
+		        <if test="finprodType2 != null and !finprodType2.isEmpty()">
+			        AND T5.TYPE_8 = #{finprodType2}
+		        </if>
+		        <if test="portfolioId != null and !portfolioId.isEmpty()">
+			        AND (T2.PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" index= "index"  separator=",">#{item}</foreach> )
+			        or
+			        T2.PARENT_PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" index= "index" separator=",">#{item}</foreach> )
+			        )
+		        </if>
 				ORDER BY T1.TRADE_DATE DESC)
 		union all
 		SELECT * from(
@@ -1519,7 +1577,36 @@
 				T2.INVEST_YESORNO = 'Y' AND T1.BUSI_TYPE = #{COMMON_BUSINESS_TYPETRD11}
 				and t1.TRADE_STATUS = #{TRADE_STATUS03}
 				and t1.IS_CANCEL = #{YES_OR_NO_N}
-				<include refid="where_sql" />
+    		    <if test="portfolioId != null and !portfolioId.isEmpty()">
+			        <foreach collection="portfolioId" open=" AND T1.PORTFOLIO_ID IN (" item="item" close=")" separator=",">#{item}</foreach>
+		        </if>
+		        <if test="secManageAcctId != null and !secManageAcctId.isEmpty()">
+			        AND T1.SEC_MANAGE_ACCT_ID = #{secManageAcctId}
+		        </if>
+		        <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
+			        AND T4.FINPROD_MARKET_ID = #{finprodMarketId}
+		        </if>
+		        <if test="paBizType != null and !paBizType.isEmpty()">
+			        AND T3.PA_BUSS_TYPE = #{paBizType}
+		        </if>
+		        <if test="tradeDateStart != null and !tradeDateStart.isEmpty()">
+			        AND T1.SETTLE_DATE >= to_date(#{tradeDateStart}, 'yyyy-MM-dd')
+		        </if>
+		        <if test="tradeDateEnd != null and !tradeDateEnd.isEmpty()">
+			        AND T1.SETTLE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
+		        </if>
+		        <if test="chlId != null and !chlId.isEmpty()">
+			        AND FP.FINPROD_ID = #{chlId}
+		        </if>
+		        <if test="finprodType2 != null and !finprodType2.isEmpty()">
+			        AND T5.TYPE_8 = #{finprodType2}
+		        </if>
+		        <if test="portfolioId != null and !portfolioId.isEmpty()">
+			        AND (T2.PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" index= "index"  separator=",">#{item}</foreach> )
+			        or
+			        T2.PARENT_PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" index= "index" separator=",">#{item}</foreach> )
+			        )
+		        </if>
 				ORDER BY T1.TRADE_DATE DESC)
 			union all
 			select * from (
