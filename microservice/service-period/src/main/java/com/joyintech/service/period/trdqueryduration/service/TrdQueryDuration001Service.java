@@ -190,9 +190,9 @@ public class TrdQueryDuration001Service extends BaseService<TrdQueryDurationDto>
 		param.put("FINPROD_TYPE_TGF04", DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue());
 
 		// 数据字典缓存.持仓类型.实际持仓
-		param.put("POSITION_TYPE03", DictCodeList.持仓类型_实际.getValue());
-		param.put("FINPROD_TYPE_TGF17", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-		param.put("TRD15", DictCodeList.共通业务类型_项目类资产存续期.getValue());
+		//param.put("POSITION_TYPE03", DictCodeList.持仓类型_实际.getValue());
+		param.put("FINPROD_TYPE_TGF18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+		param.put("TRD17", DictCodeList.共通业务类型_项目类资产存续期.getValue());
 
 		param.put("COMMON_BUSINESS_TYPETRD51", DictCodeListExt2.共通业务类型_债券借贷交易.getValue());
 		param.put("FINPROD_TYPE_TGF29", DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue());
