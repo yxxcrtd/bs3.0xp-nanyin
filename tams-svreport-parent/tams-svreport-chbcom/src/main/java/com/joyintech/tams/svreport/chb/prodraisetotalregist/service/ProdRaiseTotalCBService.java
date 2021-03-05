@@ -367,47 +367,43 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 						BigDecimal amt = placeMap.get(buyPlace).add(chaAmt);
 						placeMap.put(buyPlace, amt.setScale(2,BigDecimal.ROUND_HALF_UP));
 					}
-					/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
-					if("01".equals(deal.getIsagency())){
-						isagency=true;
-						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
-						isagencyAmt = isagencyAmt.add(amt);
-					}
-					/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
-
 					// modify by wm start  针对身份去除特殊五个市处理 20200812 合过来
 					if(StringUtil.equals(DictCodeListExt2.销售区域_中债_青岛市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_山东省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_山东省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_山东省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
-						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
-						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_大连市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_辽宁省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_辽宁省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_辽宁省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
-						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
-						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_宁波市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_浙江省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_浙江省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_浙江省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
-						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
-						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_厦门市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_福建省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_福建省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_福建省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
-						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
-						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					else if(StringUtil.equals(DictCodeListExt2.销售区域_中债_深圳市.getValue(), buyPlace)){
 						BigDecimal provinceAmt = placeMap.get(DictCodeListExt2.销售区域_中债_广东省.getValue())==null?BigDecimal.ZERO:placeMap.get(DictCodeListExt2.销售区域_中债_广东省.getValue());
 						placeMap.put(DictCodeListExt2.销售区域_中债_广东省.getValue(), provinceAmt.subtract(chaAmt).setScale(2,BigDecimal.ROUND_HALF_UP));
-						BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
-						isagencyAmt=isagencyAmt.subtract(amt);
 					}
 					// modify by wm  end 针对身份去除特殊五个市处理 20200812 合过来
+				/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
+				if("01".equals(deal.getIsagency())&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_青岛市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_大连市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_宁波市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_厦门市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_深圳市.getValue(), buyPlace)
+				){
+					isagency=true;
+					BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(deal.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), deal.getTradePrince(), rateMap, exchangeSource);
+					isagencyAmt = isagencyAmt.add(amt);
 				}
+				}
+				/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
+
+
 				/****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
 				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", deal.getCustomerType2());
 
