@@ -780,15 +780,15 @@
         and (prod.vdate >= #{startdate,jdbcType=DATE} or deal.prodid is not null)
 
       <if test="prodid!=null">
-    	and deal.prodid=#{prodid,jdbcType=VARCHAR} 
-    </if>
-    <if test="prodids !=null">
-		and deal.prodid in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-		</foreach>
-	</if>
+          and deal.prodid=#{prodid,jdbcType=VARCHAR}
+      </if>
+      <if test="prodids !=null">
+          and deal.prodid in
+          <foreach collection="prodids" item="item" open="(" separator=","
+                   close=")">
+              #{item}
+          </foreach>
+      </if>
     /*合并已起息，但没进行交易的产品*/
     union all
         SELECT
@@ -850,17 +850,17 @@
             and nvl(m.objfield1,'0')=nvl(pos1.ord_identified,'0')
             and nvl(prod.fprod_id,prod.prod_id)=nvl(deal.fprod_id,deal.prod_id) 
             /***加上有效交易条件**/
-            and deal.status !='D' )    
-		    <if test="prodid!=null">
-		    	and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR} 
-		    </if>
-		     <if test="prodids !=null">
-				and nvl(prod.fprod_id,prod_id) in
-				<foreach collection="prodids" item="item" open="(" separator=","
-					close=")">
-					#{item}
-				</foreach>
-			</if>     
+            and deal.status !='D' )
+              <if test="prodids !=null">
+                  and nvl(prod.fprod_id,prod_id) in
+                  <foreach collection="prodids" item="item" open="(" separator=","
+                           close=")">
+                      #{item}
+                  </foreach>
+              </if>
+              <if test="prodid!=null and prodid.length > 0">
+                  and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR}
+              </if>
     
   </insert>
   
