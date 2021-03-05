@@ -75,8 +75,8 @@
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				NULL finprodMarketId,
 				NULL finprodAbbr,
-				to_char(T4.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-				to_char(T4.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+				to_char(T41.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
+				to_char(T41.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
 				T1.TRADE_AMT tradeAmt,/*实收本息总额*/
 		        null tradeAmt2,
 				null  shareAmt,
@@ -738,8 +738,8 @@
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				NULL finprodMarketId,
 				NULL finprodAbbr,
-				to_char(T4.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
-				to_char(T4.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
+				to_char(T41.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
+				to_char(T41.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
 				T1.TRADE_AMT tradeAmt,/*实收本息总额*/
 				null tradeAmt2,
 				null shareAmt,
