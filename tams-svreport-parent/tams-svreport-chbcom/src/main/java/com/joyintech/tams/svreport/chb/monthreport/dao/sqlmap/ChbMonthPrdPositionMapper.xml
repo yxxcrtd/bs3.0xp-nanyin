@@ -873,16 +873,16 @@
     <if test="enddate!=null">
     	and enddate=#{enddate,jdbcType=DATE} 
     </if>
-    <if test="prodid!=null">
-    	and prodid=#{prodid,jdbcType=VARCHAR} 
-    </if>
      <if test="prodids !=null">
 		and prodid in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
+		<foreach collection="prodids" item="item" open="(" separator=","
 			close=")">
-			#{prodid}
+			#{item}
 		</foreach>
-	</if> 
+	</if>
+      <if test="prodid!=null and prodid.length > 0">
+          and prodid=#{prodid,jdbcType=VARCHAR}
+      </if>
     
   </delete>
   <select id="selectPrciceByProdAndDate"   resultType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" parameterType="date" >
