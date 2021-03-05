@@ -419,16 +419,16 @@ public class CommonAutoCouponService extends BaseService{
                     finProductTypeConfig.setInputValue4(interfPayhsrcsecinfo.getIssecbond());
                 }
                 //同业存单的时候五级是否他行
-//                if(StringUtil.equals(interfPayhsrcsecinfo.getSectype(),
-//                        DictCodeList.WIND一级分类_含债券一级分类等_同业存单.getValue() )){
-//                    finProductTypeConfig.setInputValue4(DictCodeList.是否_是.getValue());
-//                }
-                //判断是否是本行存单，若是则显示本行，否则显示他行
-                if (StringUtil.equals(interfPayhsrcsecinfo.getAssetClass(),"2501")){
-                    finProductTypeConfig.setInputValue4(DictCodeList.是否_否.getValue());
-                }else {
+                if(StringUtil.equals(interfPayhsrcsecinfo.getSectype(),
+                        DictCodeList.WIND一级分类_含债券一级分类等_同业存单.getValue() )){
                     finProductTypeConfig.setInputValue4(DictCodeList.是否_是.getValue());
                 }
+//                //判断是否是本行存单，若是则显示本行，否则显示他行
+//                if (StringUtil.equals(interfPayhsrcsecinfo.getAssetClass(),"2501")){
+//                    finProductTypeConfig.setInputValue4(DictCodeList.是否_否.getValue());
+//                }else {
+//                    finProductTypeConfig.setInputValue4(DictCodeList.是否_是.getValue());
+//                }
 
                 finProductTypeConfig = restTemplate.postForObject(ServiceApplication.ASSET_SERVICE_NAME + "/AssetCommon/getAssetThreeType",
                         finProductTypeConfig, FinProductTypeConfig.class);
@@ -1466,8 +1466,13 @@ public class CommonAutoCouponService extends BaseService{
         if (StringUtil.isNotEmpty(baseInfoDtos)) {
             finProduct = new AutoCouponDto();
             BeanUtil.copyPropertiesIgnoreNull(finProduct, baseInfoDtos.get(0).getFinProduct());
-            if(StringUtil.isNotEmpty(baseInfoDtos.get(0).getFinProductType())){
-                finProduct.setType4(baseInfoDtos.get(0).getFinProductType().getType4());//设置债券一级分类
+            FinProductType productType = baseInfoDtos.get(0).getFinProductType();
+            if(StringUtil.isNotEmpty(productType)){
+                finProduct.setType4(productType.getType4());//设置债券一级分类
+                finProduct.setType9(productType.getType9());
+                finProduct.setType10(productType.getType10());
+                finProduct.setType11(productType.getType11());
+                finProduct.setType12(productType.getType12());
             }
         }
         return finProduct;

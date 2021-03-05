@@ -67,4 +67,11 @@ public interface TrdQueryDuration001Mapper {
 	 * @return
 	 */
 	List<SelectOptionDto> getPortfolioIds(Map<String,Object> map);
+	
+	/**
+	 * 获取资产的Type6
+	 * @param finprodId
+	 * @return
+	 */
+	String getType6(String finprodId);
 }

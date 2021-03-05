@@ -83,4 +83,18 @@ public class TrdQueryDuration001Controller {
     public Page<SelectOptionDto> getPortfolioId(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length){
         return trdQueryDuration001Service.getPortfolioIds(page, length, map);
     }
+    
+    
+    /**
+     * 获取资产的type6
+     * 
+     * @param finprodMarketId
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getType6")
+    public String getType6(String finprodId)
+        throws Exception {
+        return trdQueryDuration001Service.getType6(finprodId);
+    }
 }

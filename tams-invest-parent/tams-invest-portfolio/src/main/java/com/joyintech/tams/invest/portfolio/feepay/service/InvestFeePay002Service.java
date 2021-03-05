@@ -873,9 +873,9 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
      * @see
      * @since 1.0
      */
-    public String queryLastPayDate(String secAcctId, String feeType, String operateType) {
+    public String queryLastPayDate(String secAcctId, String feeType,String org, String operateType) {
         return restTemplate.getForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/queryLastPayDate?secAcctId="
-                                         + secAcctId + "&feeType=" + feeType,
+                                         + secAcctId + "&feeType=" + feeType + "&org=" + org,
             String.class);
     }
 

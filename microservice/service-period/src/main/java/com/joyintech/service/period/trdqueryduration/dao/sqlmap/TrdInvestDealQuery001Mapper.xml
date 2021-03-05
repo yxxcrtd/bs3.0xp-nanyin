@@ -2222,4 +2222,8 @@
 		</where>
 		)
 	</sql>
+	
+	<select id="getType6" resultType="java.lang.String" parameterType="java.lang.String">
+		select type_6 from FIN_PRODUCT_TYPE where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+	</select>
 </mapper>

@@ -321,6 +321,9 @@
     	<if test="cdate != null and cdate != ''">
     		and #{cdate} >= to_char(TRD_PRODUCT_DEAL.MDATE, 'yyyy-MM-dd') 
     	</if>
+		<if test="org != null and org != '' and (feeType1 == 'B06' or feeType1 == 'B08')">
+			and TRD_PRODUCT_DEAL.REGIST_ORG = #{org}
+		</if>
     </select>
 
 	<select id="queryStartDate" resultType="java.lang.String">
@@ -471,15 +474,19 @@
 		<if test="secAcctId != null and secAcctId != ''">
 			AND tpd.SEC_MANAGE_ACCT_ID = #{secAcctId}
 		</if>
-		<if test="org != null and org != ''">				
-				<if test="feeType1 != null and feeType1 == 'B08'">
-				AND  asset.REGIST_ORG = #{org}
-			    </if>
+		<if test="org != null and org != '' and (feeType1 == 'B06' or feeType1 == 'B08') ">
+			AND  asset.REGIST_ORG = #{org}
 		</if>
-		AND tdf.fee_type           = #{feeType1}
-		AND tpd.TRADE_DATE >= to_date(#{startDate}, 'yyyy-MM-dd') 
-		AND to_date(#{enddate}, 'yyyy-MM-dd') > tpd.TRADE_DATE
-		AND tpda.PORTFOLIO_ID = #{ptlId}
+		AND tdf.fee_type = #{feeType1}
+		<if test="startDate != null and startDate != ''">
+			AND tpd.TRADE_DATE >= to_date(#{startDate}, 'yyyy-MM-dd')
+		</if>
+		<if test="enddate != null and enddate != ''">
+			AND to_date(#{enddate}, 'yyyy-MM-dd') > tpd.TRADE_DATE
+		</if>
+	  	<if test="ptlId != null and ptlId != ''">
+			AND tpda.PORTFOLIO_ID = #{ptlId}
+	 	</if>
 		AND tpd.FINPROD_TYPE2 != #{FINPROD_TYPE2_C11}
 		AND tpd.CHL_ID IS NULL
 		and tdf.IS_PAY_WITH_TRADE='N'

@@ -113,8 +113,8 @@ public class InvestFeePayController {
      * @return 上次计提结束日
      */
     @GetMapping("queryLastPayDate")
-    public String queryLastPayDate(String secAcctId, String feeType) {
-        return investFeePayService.queryLastPayDate(secAcctId, feeType);
+    public String queryLastPayDate(String secAcctId, String feeType,String org) {
+        return investFeePayService.queryLastPayDate(secAcctId, feeType, org);
     }
 
     /**

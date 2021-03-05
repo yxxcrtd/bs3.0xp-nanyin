@@ -168,6 +168,12 @@ $(function(){
                 label='TrdFundDuration001.reference';
                 pagePath = "invest/period/trdfundduration/TrdFundDuration002/init";
                 data.pageModel = PAGE_MODEL_REFERENCE;
+                //如果是撤销，需要去除末尾的R start
+                if(data.statusValid == CHANCLE_STATUS){
+                	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                	data.pTradeId = data.busiCode;
+                }
+                //如果是撤销，需要去除末尾的R start
                 data.totleTradeId = data.busiCode;
                 Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
                     "98%", "95%", data, function(){});
@@ -182,25 +188,42 @@ $(function(){
                 label='TrdPlanNetDuration001.reference';
                 pagePath = "invest/period/trdplannetduration/TrdPlanNetDuration002/init";
                 data.pageModel = PAGE_MODEL_REFERENCE;
+                //如果是撤销，需要去除末尾的R start
+                if(data.statusValid == CHANCLE_STATUS){
+                	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                	data.pTradeId = data.busiCode;
+                }
+                //如果是撤销，需要去除末尾的R start
                 data.totleTradeId = data.busiCode;
                 Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
                     "98%", "95%", data, function(){});//存款委托详情
             }else if(data.finprodType2 == PINAN_ASSET_TYPE_F05){
                 label='TrdDepoDuration001.reference';
                 data.adjustDate = Date.ofDate(data.adjustDate).format();
-                var pagePath = "invest/period/trddepoduration/TrdDepoDuration002/init";
-                if(data.paBussType ==61){
-                    var pagePath = "invest/period/trddepoduration/TrdDepoDuration004/init";
-                }
-                else{
-                    if(data.paBussType == 41){
-                        pagePath = "invest/period/trddepoduration/TrdDepoDuration003/init";
+                //1.通过get或取存款的type6
+                $.get(basePath+"/invest/period/trdqueryduration/TrdQueryDuration001/getType6?finprodId="+data.finprodId,function(result){
+                    var pagePath = "invest/period/trddepoduration/TrdDepoDuration002/init";
+                    //2.判断最后的url
+                    if(result ==DEPO_ASSET_TYPE_03){
+                        var pagePath = "invest/period/trddepoduration/TrdDepoDuration004/init";
                     }
-                }
-                data.pageModel = PAGE_MODEL_REFERENCE;
-                data.totleTradeId = data.busiCode;
-                Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
-                    "98%", "95%", data, function(){});//项目类委托详情
+                    else{
+                        if(data.paBussType == 41){
+                            pagePath = "invest/period/trddepoduration/TrdDepoDuration003/init";
+                        }
+                    }
+                    data.pageModel = PAGE_MODEL_REFERENCE;
+                    //如果是撤销，需要去除末尾的R start
+                    if(data.statusValid == CHANCLE_STATUS){
+                    	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                    	data.pTradeId = data.busiCode;
+                    }
+                    //如果是撤销，需要去除末尾的R start
+                    data.totleTradeId = data.busiCode;
+                    Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                        "98%", "95%", data, function(){});
+                });    
+            //项目类委托详情
             }else if(data.finprodType2 == PINAN_ASSET_TYPE_F06){
                 label='项目类资产还本付息-查看';
                 pagePath = "invest/period/trdprojduration/TrdProjectDuration002/init";
@@ -219,6 +242,12 @@ $(function(){
                 label='TrdLendDuration001.reference';
                 pagePath = "invest/period/trdlendduration/TrdLendDuration002/init";
                 data.pageModel = PAGE_MODEL_REFERENCE;
+                //如果是撤销，需要去除末尾的R start
+                if(data.statusValid == CHANCLE_STATUS){
+                	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                	data.pTradeId = data.busiCode;
+                }
+                //如果是撤销，需要去除末尾的R start
                 data.totleTradeId = data.busiCode;
                 Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
                     "98%", "95%", data, function(){});
@@ -226,6 +255,11 @@ $(function(){
                 label='买断式回购存续期交易查看';
                 pagePath = "invest/period/trdbuyoutduration/TrdRepoBuyoutDuration002/init";
                 data.pageModel = PAGE_MODEL_REFERENCE;
+                //如果是撤销，需要去除末尾的R start
+                if(data.statusValid == CHANCLE_STATUS){
+                	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                }
+                //如果是撤销，需要去除末尾的R start
                 data.totleTradeId = data.busiCode;
                 Joyin.dialog(label,basePath+pagePath,
                     "98%", "95%", data, function(){});
@@ -233,6 +267,12 @@ $(function(){
                 label='TrdPlanCurrDuration001.reference';
                 pagePath = "invest/period/trdplancurrduration/TrdPlanCurrDuration002/init";
                 data.pageModel = PAGE_MODEL_REFERENCE;
+                //如果是撤销，需要去除末尾的R start
+                if(data.statusValid == CHANCLE_STATUS){
+                	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                	data.pTradeId = data.busiCode;
+                }
+                //如果是撤销，需要去除末尾的R start
                 data.totleTradeId = data.busiCode;
                 Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
                     "98%", "95%", data, function(){});

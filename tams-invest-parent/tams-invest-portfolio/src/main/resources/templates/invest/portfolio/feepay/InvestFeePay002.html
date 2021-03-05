@@ -37,7 +37,7 @@
 													data-th-initValue="${entity?.secAcctId}">
 												</select>-->
 		                      					<select type="text" id="InvestFeePay002_secAcctId" name="secAcctId"
-						                               class="layui-input form-input input-select" placeholder="请输入内容"
+						                               class="layui-input form-input input-select" placeholder="请输入内容" required
 						                              data-th-data-url="@{/invest/portfolio/feepay/InvestFeePay001/getSecAcctIdS}"
 						                                data-th-initValue="${entity?.secAcctId}">
 						                          </select>
@@ -48,7 +48,7 @@
 											data-th-text="#{InvestFeePay002.feeType}">费用类型</label>
 										<div class="layui-input-inline input-inline">
 											<select id="InvestFeePay002_feeType" name="feeType"
-                                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                                class="layui-input form-input input-select" placeholder="请输入内容" required
                                                 th:placeholder="#{SysCommon.placeholder}" 
                                                 data-th-data-result="${INVEST_FEE_TYPE}"
                                                 formatoption="true"  type="text" childrenIds="InvestFeePay002_regTrustOrg"
@@ -58,7 +58,7 @@
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap" data-th-text="#{InvestFeePay002.regTrustOrg}">登记托管机构</label>
 										<div class="layui-input-inline input-inline">
-											<select id="InvestFeePay002_regTrustOrg" name="regTrustOrg"
+											<select id="InvestFeePay002_regTrustOrg" name="regTrustOrg" required
 												class="layui-input form-input input-select" parentIds="InvestFeePay002_feeType"
 												data-th-placeholder="#{SysCommon.placeholder}"
 												data-th-initValue='${entity?.regTrustOrg}'
