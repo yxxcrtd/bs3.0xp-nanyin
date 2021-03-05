@@ -816,10 +816,16 @@
             pos1.ORD_IDENTIFIED ord_identified,
             0 dirtysum /*募集总额*/,
             0 cleansum /*净募集金额*/,
-           case when prod.prodtype in ('N')
-            then round(pm.endamtsum*pi.prod_value,2)*nvl(rate.yeid,1)
-            else pm.endamtsum 
-            end ENDAMTSUM_OTH /*期末余额*/,
+
+            <if test="monthReport!=null and monthReport=='01'">
+               case when prod.prodtype in ('N')
+                then round(pm.endamtsum*pi.prod_value,2)*nvl(rate.yeid,1)
+                else pm.endamtsum
+                end ENDAMTSUM_OTH /*期末余额*/,
+            </if>
+            <if test="monthReport!=null and monthReport=='02'">
+              pm.endamtsum ENDAMTSUM_OTH /*期末余额*/,
+            </if>
             0 customeramt /*客户收益*/
            ,0  payamtsum   /**本期兑付金额*/
            ,case when prod.operate_mode in ('01','02')
