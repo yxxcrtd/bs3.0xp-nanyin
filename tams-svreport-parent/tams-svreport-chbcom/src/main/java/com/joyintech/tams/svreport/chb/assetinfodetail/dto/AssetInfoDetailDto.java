@@ -299,13 +299,13 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	}
 
 
-	/**
-	 * 资产二级类型
-	 * @return
-	 */
-	public String getStatusStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.中债对应上游资产二级类型, this.getOrgAssetType2());
-	}
+//	/**
+//	 * 资产二级类型
+//	 * @return
+//	 */
+//	public String getStatusStr() {
+//		return SysDataUtil.getNameFromDataDict(DictCode.中债对应上游资产二级类型, this.getOrgAssetType2());
+//	}
 
 
 	public SvrBussRepPlacementInfoDto getSvrBussRepPlacementInfoDto() {
