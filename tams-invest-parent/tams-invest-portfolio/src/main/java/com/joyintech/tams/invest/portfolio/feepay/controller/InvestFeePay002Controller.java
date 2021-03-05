@@ -301,8 +301,8 @@ public class InvestFeePay002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryLastPayDate")
-    public String queryLastPayDate(String secAcctId, String feeType, String operateType) {
-        return investFeePay002Service.queryLastPayDate(secAcctId, feeType, operateType);
+    public String queryLastPayDate(String secAcctId, String feeType,String org, String operateType) {
+        return investFeePay002Service.queryLastPayDate(secAcctId, feeType,org, operateType);
     }
 
     /**
