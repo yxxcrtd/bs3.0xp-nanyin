@@ -584,7 +584,11 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             }
             //        现金与持仓执行共同
             if(baseEtrCashPositionCommService != null && !finProductTradeDto.isNeedExecuteEtrPosition()){
-                baseTradeProductDealDto.setBussRepoSec(finProductTradeDto.getBussRepoSec());
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 start 
+                if(finProductTradeDto.getBussRepoSec() != null){
+                    baseTradeProductDealDto.setBussRepoSec(finProductTradeDto.getBussRepoSec());
+                }
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 end 
                 baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
                 baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
             }

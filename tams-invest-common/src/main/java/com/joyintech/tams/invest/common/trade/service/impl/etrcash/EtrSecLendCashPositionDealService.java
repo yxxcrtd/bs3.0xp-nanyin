@@ -87,7 +87,9 @@ public class EtrSecLendCashPositionDealService  {
                     etrSecPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                 }
-                if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 无委托提交 每只券减少委托质押券面总额/100
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 start
+                if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || DictCodeList.持仓类型_实际.equals(持仓类型)) { // 无委托提交 每只券减少委托质押券面总额/100
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 end   
                     if (StringUtils.isBlank(entrustId)) {
                         BussRepoSecDto bussRepoSecDto = finProductTradeDto.getBussRepoSec();//质押劵信息
 //                        修改质押券为空的情况
@@ -125,7 +127,9 @@ public class EtrSecLendCashPositionDealService  {
 //                    etrSecPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
 //                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
 //                }
-                if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 无委托提交 每只券减少委托质押券面总额/100
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 start
+                if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || DictCodeList.持仓类型_实际.equals(持仓类型)) { // 无委托提交 每只券减少委托质押券面总额/100
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 end
                     if (StringUtils.isBlank(entrustId)) {
                         List<RepoInfo> bussRepoSecDto = EtrCommonCashPositionDealService.findRepoInfo(deal.getFinprodId());//质押劵信息
                         if (CollectionUtils.isNotEmpty(bussRepoSecDto)) {
