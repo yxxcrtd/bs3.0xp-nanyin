@@ -122,6 +122,9 @@
 		CHB_EMPLOYEE_INFO_SUB
 		where IDENTIFY_NUMBER = #{id,jdbcType=VARCHAR}
 		and SEND_STATUS in ('02','03')
+		<if test="employeeType != null and employeeType != ''">
+			and EMPLOYEE_TYPE = #{employeeType}
+		</if>
 	</select>
 
 	<select id="isInAssetInfoSub" resultType="java.lang.Integer">
