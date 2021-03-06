@@ -5936,12 +5936,12 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
 	 )
 	and CA.CHL_FINPROD_ID is not null
 	</select>
-		<select id="selectAllTradeCounter" resultType="com.joyintech.tams.svreport.interf.chb.investtrade.dto.MstCounterPartyDto">
-        select 
-	        COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID, MANAGER_ID, HEAD_BANK, CONTACT, 
-		    CONTACT_WAY, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
-		    ,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER
-        from chb_mst_counter_party
+    <!-- 投资交易接入批本身是从上游抽数，此处不应该从CHB查数据，直接从上游表查 -->
+    <select id="selectAllTradeCounter" resultType="com.joyintech.tams.svreport.interf.chb.investtrade.dto.MstCounterPartyDto">
+        select
+            COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID, MANAGER_ID, HEAD_BANK, CONTACT,
+            CONTACT_WAY, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        from mst_counter_party
     </select>
     <select id="selectByRegistBankCode" resultType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode">
         select 

@@ -520,9 +520,15 @@
 	baseinfo.CASH_MANA_CATE ,/*是否现金管理类*/
 	baseinfo.YIELD ,/*业绩比较基准%*/
 	baseinfo.INVEST_FEE_RATE,/*投资管理费率%*/
-    baseinfo.STATUS STATUS
+    baseinfo.STATUS STATUS,
+    sub.NINE_FILE,
+    sub.FILE_NO,
+	sub.FILE_NUM
    
-	from CHB_PRD_DECLARE_INFO baseinfo 
+	from CHB_PRD_DECLARE_INFO baseinfo
+	<!-- add by zhangliang 20210306 先上传九大附件，然后修改了申报基本信息，重新执行“产品发行申报登记报送”批处理，已上传的附件在前台无法下载 备注：CHB_PRD_DECLARE_SUB表的NINE_FILE、FILE_NO、FILE_NUM字段变成空了 start -->
+	left join CHB_PRD_DECLARE_SUB sub on baseinfo.PROD_INS_ID = sub.PROD_INS_ID and sub.send_status = '01'
+	<!-- add by zhangliang 20210306 先上传九大附件，然后修改了申报基本信息，重新执行“产品发行申报登记报送”批处理，已上传的附件在前台无法下载 备注：CHB_PRD_DECLARE_SUB表的NINE_FILE、FILE_NO、FILE_NUM字段变成空了 end -->
 	/****add by leipeng 20200628 添加多法人模式查询所属机构**/
 	<if test="model_type != null">
       LEFT JOIN CHB_PRD_BASEINFO PRD on PRD.PROD_ID=baseinfo.PROD_INS_ID

@@ -507,21 +507,21 @@ public class BeforeSubErrorCheck {
     	
     	//须填报已登记的产品审批人身份证号
         String  appoverId=  dataMap.get("APPROVER_ID"); //产品审批人身份证号
-        if(!isInEmpoyeeSub(appoverId)){
+        if(!isInEmpoyeeSub(appoverId, "02")){
             errMsgSb.append("须填报已登记的产品审批人身份证号!");
             errMsgSb.append(GlobalConstant.VERTICAL_LINE);
         }
 
         //须填报已登记的产品设计人身份证号
         String  designerId=  dataMap.get("DESIGNER_ID"); //产品设计人身份证号
-        if(!isInEmpoyeeSub(designerId)){
+        if(!isInEmpoyeeSub(designerId, "03")){
             errMsgSb.append("须填报已登记的产品设计人身份证号!");
             errMsgSb.append(GlobalConstant.VERTICAL_LINE);
         }
 
         //须填报已登记的投资经理身份证号
         String  managerId=  dataMap.get("MANAGER_ID"); //投资经理身份证号
-        if(!isInEmpoyeeSub(managerId)){
+        if(!isInEmpoyeeSub(managerId, "01")){
             errMsgSb.append("须填报已登记的投资经理身份证号!");
             errMsgSb.append(GlobalConstant.VERTICAL_LINE);
         }
@@ -546,8 +546,8 @@ public class BeforeSubErrorCheck {
 
 
     /**start  判断身份证号是否有效   add by  wangzehui  20201010**/
-    public boolean isInEmpoyeeSub(String id){
-        int i = chbBeforeSubErrorCheckMapper.isInEmpoyeeSub(id);
+    public boolean isInEmpoyeeSub(String id, String employeeType){
+        int i = chbBeforeSubErrorCheckMapper.isInEmpoyeeSub(id, employeeType);
         return i>0;
     }
     /**end  判断身份证号是否有效   add by  wangzehui  20201010**/
