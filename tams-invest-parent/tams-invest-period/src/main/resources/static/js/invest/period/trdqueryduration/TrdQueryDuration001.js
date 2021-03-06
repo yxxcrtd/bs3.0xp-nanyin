@@ -208,7 +208,7 @@ $(function(){
                         var pagePath = "invest/period/trddepoduration/TrdDepoDuration004/init";
                     }
                     else{
-                        if(data.paBussType == 41){
+                        if(data.paBussType != 41){
                             pagePath = "invest/period/trddepoduration/TrdDepoDuration003/init";
                         }
                     }
