@@ -327,6 +327,9 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         if (StringUtil.isEmptyList(orgcreLineslist)){
             isKDQ = true;
             customerid = creditLinesMapper.getCustomerid(mapParm);
+        }else{
+            isKDQ = false;
+            customerid = "";
         }
         return  orgcreLineslist;
     }
