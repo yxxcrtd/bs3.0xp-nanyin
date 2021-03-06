@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +75,14 @@ public class PtlPositionAnalysis002Controller extends BaseController {
             throws Exception {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<PtlPositionAnalysis003Dto> list = ptlPositionAnalysis002Service.selectForPage(map);
+
+        if(list.getRoot().size()>0){
+            list.getRoot().forEach(item->{
+                if(item.getRate()!=null){
+                    item.setRate(item.getRate().multiply(BigDecimal.valueOf(100)));
+                }
+            });
+        }
 
         return list;
     }

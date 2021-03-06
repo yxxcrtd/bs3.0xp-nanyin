@@ -35,7 +35,7 @@
             <Cell order="31" name="资产五级分类">customAssetTypeFive</Cell>
             <Cell order="32" name="持仓券面总额">bshareFaceValue</Cell>
             <Cell order="33" name="发行券面总额">issueFaceValue</Cell>
-            <Cell order="34" name="票面利率%">rate</Cell>
+            <Cell order="34" name="票面利率%">percentRate</Cell>
             <Cell order="35" name="成本收益率%">costRate</Cell>
             <Cell order="36" name="估价收益率%">bpyield</Cell>
             <Cell order="37" name="久期">mDuration</Cell>

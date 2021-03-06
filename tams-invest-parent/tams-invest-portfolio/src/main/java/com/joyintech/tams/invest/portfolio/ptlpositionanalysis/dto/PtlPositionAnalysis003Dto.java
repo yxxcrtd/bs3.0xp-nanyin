@@ -7,7 +7,6 @@ import com.joyintech.tams.common.base.entity.AssetTargetDb;
 
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 组合持仓分析报表
@@ -275,5 +274,18 @@ public class PtlPositionAnalysis003Dto  extends AssetTargetDb implements GridRow
 
     public void setBelongInstitutionNameNew(String belongInstitutionNameNew) {
         this.belongInstitutionNameNew = belongInstitutionNameNew;
+    }
+
+    /**
+     * 获取 percentRate
+     *
+     * @return percentRate.
+     */
+    public BigDecimal getPercentRate() {
+        if(this.getRate() !=null){
+            return this.getRate().multiply(BigDecimal.valueOf(100));
+        } else {
+            return  null;
+        }
     }
 }
