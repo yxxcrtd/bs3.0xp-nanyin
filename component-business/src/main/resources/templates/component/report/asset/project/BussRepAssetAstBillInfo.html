@@ -136,6 +136,20 @@
                                    data-th-checked="${YES} ==${entity?.repBondtostockFlag}">
                         </div>
                     </div>
+                    
+                    <div class="form-inline-wrap" th:id="|${entityName}_isBzhpj_div|" >
+							<label class="layui-form-label form-label-wrap"
+								   data-th-text="#{BussRepOther.isBzhpj}">是否标准化票据</label>
+							<div class="layui-input-inline input-inline">
+								<select th:name="|${entityName}.isBzhpj|"
+										th:id="|${entityName}_isBzhpj|"
+										class="layui-input form-input input-select"
+										data-th-initValue= "${entity?.isBzhpj}"
+										data-th-placeholder="#{SysCommon.placeholder}"
+										data-th-data-result="${SVR_YES_OR_NO}" required>
+								</select>
+							</div>
+						</div>	
                 </div>
                 <div class="layui-form-item" id="bussRepAssetAstBillInfoDto_repAstBillType_div">
                     <div class="form-inline-wrap">

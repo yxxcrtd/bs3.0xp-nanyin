@@ -83,6 +83,11 @@ public class BussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
      * 是否为债转股   中债新增字段 20200407
      */
     private String repDeptEquity;
+    
+    /**
+     * 是否政府出资产业投资基金
+     */
+    private String isUnlisted;
 
     /**
      * 获取 repAssetType
@@ -229,5 +234,15 @@ public class BussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
 	 */
 	public void setRepDeptEquity(String repDeptEquity) {
 		this.repDeptEquity = repDeptEquity;
+	}
+
+
+	public String getIsUnlisted() {
+		return isUnlisted;
+	}
+
+
+	public void setIsUnlisted(String isUnlisted) {
+		this.isUnlisted = isUnlisted;
 	}
 }

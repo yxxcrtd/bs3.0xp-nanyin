@@ -20,7 +20,8 @@
         REP_FINPROD_ID REP_FINPROD_ID, REP_PRIVATEFUND_FLAG REP_PRIVATEFUND_FLAG, REP_PPPFLAG REP_PPPFLAG,
         REP_SMALLCREDIT REP_SMALLCREDIT, REP_BONDTOSTOCK_FLAG REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG REP_PRIVATEPRD_FLAG,
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
-        UPDATE_TIME UPDATE_TIME, REP_INSTIT_SIZE REP_INSTIT_SIZE, REP_ASSIGNEE REP_ASSIGNEE
+        UPDATE_TIME UPDATE_TIME, REP_INSTIT_SIZE REP_INSTIT_SIZE, REP_ASSIGNEE REP_ASSIGNEE,BANK_SEC_KZZQ BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ BANK_SEC_ZXZQ,ISUNLISTED ISUNLISTED,IS_BZHPJ IS_BZHPJ
     </sql>
     <sql id="Sql_All_Data" >
         select
@@ -45,12 +46,15 @@
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
         insert into REP_ASSET_OTHER (REP_FINPROD_ID, REP_PRIVATEFUND_FLAG,
             REP_PPPFLAG, REP_SMALLCREDIT, REP_BONDTOSTOCK_FLAG,
-            REP_PRIVATEPRD_FLAG, CREATE_USER, CREATE_DEPT,
+            REP_PRIVATEPRD_FLAG, IS_BZHPJ,ISUNLISTED,BANK_SEC_KZZQ, BANK_SEC_ZXZQ,           
+            CREATE_USER, CREATE_DEPT,
             CREATE_TIME, UPDATE_USER, UPDATE_TIME,
             REP_INSTIT_SIZE, REP_ASSIGNEE)
         values (#{repFinprodId,jdbcType=VARCHAR}, #{repPrivatefundFlag,jdbcType=VARCHAR},
             #{repPppflag,jdbcType=VARCHAR}, #{repSmallcredit,jdbcType=VARCHAR}, #{repBondtostockFlag,jdbcType=VARCHAR},
-            #{repPrivateprdFlag,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{repPrivateprdFlag,jdbcType=VARCHAR},#{isBzhpj,jdbcType=VARCHAR},#{isUnlisted,jdbcType=VARCHAR}, 
+            #{bankSecKzzq,jdbcType=VARCHAR}, #{bankSecZxzq,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
             #{repInstitSize,jdbcType=VARCHAR}, #{repAssignee,jdbcType=VARCHAR})
     </insert>

@@ -39,6 +39,20 @@
                             </select>
                         </div>
                     </div>
+                    
+                    <div class="form-inline-wrap" th:id="|${entityName}_isUnlisted_div|" >
+							<label class="layui-form-label form-label-wrap"
+								   data-th-text="#{BussRepOther.isUnlisted}">是否政府出资产业投资基金</label>
+							<div class="layui-input-inline input-inline">
+								<select th:name="|${entityName}.isUnlisted|"
+										th:id="|${entityName}_isUnlisted|"
+										class="layui-input form-input input-select"
+										data-th-initValue= "${entity?.isUnlisted}"
+										data-th-placeholder="#{SysCommon.placeholder}"
+										data-th-data-result="${SVR_YES_OR_NO}" required>
+								</select>
+							</div>
+						</div>	
                 </div>
                 <div class="layui-form-item">
                     <div class="form-inline-wrap" th:id="|${entityName}_repBankAssetTyprExplain_div|">

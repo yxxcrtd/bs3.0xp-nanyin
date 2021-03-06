@@ -88,6 +88,14 @@ public class BussFinBondRepInfoDto extends RepAssetBond{
      */
     private String repBankSecPerpetual;
     
+    /**
+     * 是否商业银行可转债
+     */
+    private String bankSecKzzq;
+    /**
+     * 是否专项债券
+     */
+    private String bankSecZxzq;
 
     public String getRepFinancialComissue() {
 		return repFinancialComissue;
@@ -215,4 +223,20 @@ public class BussFinBondRepInfoDto extends RepAssetBond{
     public void setRepAssignee(String repAssignee) {
         this.repAssignee = repAssignee;
     }
+
+	public String getBankSecKzzq() {
+		return bankSecKzzq;
+	}
+
+	public void setBankSecKzzq(String bankSecKzzq) {
+		this.bankSecKzzq = bankSecKzzq;
+	}
+
+	public String getBankSecZxzq() {
+		return bankSecZxzq;
+	}
+
+	public void setBankSecZxzq(String bankSecZxzq) {
+		this.bankSecZxzq = bankSecZxzq;
+	}
 }

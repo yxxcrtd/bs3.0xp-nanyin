@@ -102,6 +102,12 @@ public class BussRepEquityInfoDto extends RepAssetEquity{
      */
     private String repBankSecPrefer;
     
+
+    /**
+     * 是否政府出资产业投资基金
+     */
+    private String isUnlisted;
+    
     /**
      * 股权退出安排 REP_EQUITY_QUIT 中债新增字段 20200408 start
      */
@@ -374,5 +380,13 @@ public class BussRepEquityInfoDto extends RepAssetEquity{
 	 */
 	public void setRepEquityQuit(Date repEquityQuit) {
 		this.repEquityQuit = repEquityQuit;
+	}
+
+	public String getIsUnlisted() {
+		return isUnlisted;
+	}
+
+	public void setIsUnlisted(String isUnlisted) {
+		this.isUnlisted = isUnlisted;
 	}
 }

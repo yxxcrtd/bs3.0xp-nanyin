@@ -57,6 +57,7 @@ public class BussFinBondRepInfoController extends BaseController{
     public String init(Model model) {
         setSelectOptionToModel(model, bussFinBondRepInfoService.getInitDictCode());
         setSelectOptionToModel(model, DictCode.债券性质);
+        setSelectOptionToModel(model, DictCode.是否_中债);
         // 设置画面初始值
         setEntity(model);
         // 画面参数设置

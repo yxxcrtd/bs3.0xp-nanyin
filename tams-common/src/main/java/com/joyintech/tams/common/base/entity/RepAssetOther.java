@@ -32,6 +32,22 @@ public class RepAssetOther extends BaseEntity {
      * 是否投向金融资产投资公司发行的私募资产管理产品
      */
     private String repPrivateprdFlag;
+    /**
+     * 是否标准化票据
+     */
+    private String isBzhpj;
+    /**
+     * 是否政府出资产业投资基金
+     */
+    private String isUnlisted;
+    /**
+     * 是否商业银行可转债
+     */
+    private String bankSecKzzq;
+    /**
+     * 是否专项债券
+     */
+    private String bankSecZxzq;
 
     /**
      * 人行机构规模
@@ -170,4 +186,36 @@ public class RepAssetOther extends BaseEntity {
     public void setRepAssignee(String repAssignee) {
         this.repAssignee = repAssignee == null ? null : repAssignee.trim();
     }
+
+	public String getIsBzhpj() {
+		return isBzhpj;
+	}
+
+	public void setIsBzhpj(String isBzhpj) {
+		this.isBzhpj = isBzhpj;
+	}
+
+	public String getIsUnlisted() {
+		return isUnlisted;
+	}
+
+	public void setIsUnlisted(String isUnlisted) {
+		this.isUnlisted = isUnlisted;
+	}
+
+	public String getBankSecKzzq() {
+		return bankSecKzzq;
+	}
+
+	public void setBankSecKzzq(String bankSecKzzq) {
+		this.bankSecKzzq = bankSecKzzq;
+	}
+
+	public String getBankSecZxzq() {
+		return bankSecZxzq;
+	}
+
+	public void setBankSecZxzq(String bankSecZxzq) {
+		this.bankSecZxzq = bankSecZxzq;
+	}
 }

@@ -54,6 +54,14 @@ $(function() {
                 return;
             }
         }
+        if($('#type12').val() == "013" && !$('#bussFinBondRepInfoDto_bankSecKzzq').val()){
+        	Joyin.error("是否商业银行可转债数据不能为空。")
+            return;
+        }
+        if($('#repAssetType').val() == "1110" && !$('#bussFinBondRepInfoDto_bankSecZxzq').val()){
+        	Joyin.error("是否专项债券数据不能为空。")
+            return;
+        }
         var text = $('#isRight').next().find('em').text();
         if(text==='否'){
             $('#isRight').val('N');
@@ -688,7 +696,16 @@ $(function() {
                 //债券中债报送
                 $('#bussFinBondRepInfoDto_div').show();
 
-                
+                $('#bussFinBondRepInfoDto_bankSecKzzq_div').hide();
+            	$('#bussFinBondRepInfoDto_bankSecZxzq_div').hide();
+            	//资产五级分类选择“可转债”时展示是否商业银行可转债
+            	if($("#type12").val() == '013'){
+            		$('#bussFinBondRepInfoDto_bankSecKzzq_div').show();
+            	}
+            	//当资产/负债类别选择“1110 地方政府债”时展示是否专项债券
+            	  if(repAssetType=="1110"){
+            		  $('#bussFinBondRepInfoDto_bankSecZxzq_div').show(); 
+            	  }
 //                // start   modify by wj 20200408
 //            	$('#bussFinBondRepInfoDto_repFinancialComissue_div').hide();
 //            	$('#bussFinBondRepInfoDto_repBankSecCapital_div').hide();
