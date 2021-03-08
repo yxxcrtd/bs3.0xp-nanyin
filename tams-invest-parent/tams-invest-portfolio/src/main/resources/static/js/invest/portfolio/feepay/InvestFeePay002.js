@@ -73,9 +73,9 @@ $(function() {
         editCell : function(value, data, field, cell, column){
         	if (field === "actPayAmt"){
         		if (typeof value == "undefined" || value == null || value == "") {
-        			data.adjustAmt = JoyinMath.doMinus(data.actPayAmt, data.payAmt, 2, JoyinMath.ROUND_HALF_UP);
+        			data.adjustAmt = JoyinMath.doMinus(data.payAmt, data.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
         		} else {
-        			data.adjustAmt = JoyinMath.doMinus(value, data.payAmt, 2, JoyinMath.ROUND_HALF_UP);
+        			data.adjustAmt = JoyinMath.doMinus(data.payAmt,value, 2, JoyinMath.ROUND_HALF_UP);
         		}
             	feeInfoTable.renderRow(data.LAY_TABLE_INDEX, data);
             		
@@ -118,7 +118,7 @@ $(function() {
         				}
         			}
 	        		totalAmt = JoyinMath.doAdd(totalAmt, value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
-    				var adjustAmt = JoyinMath.doMinus(value.actPayAmt, value.payAmt, 2, JoyinMath.ROUND_HALF_UP);
+    				var adjustAmt = JoyinMath.doMinus(value.payAmt,value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
     				value.adjustAmt = adjustAmt;
     				feeInfoTable.renderRow(value.LAY_TABLE_INDEX, value);
         		});
@@ -370,7 +370,7 @@ $(function() {
 		var actPayAmt = $('#InvestFeePay002_actPayAmt').val();
 		var payAmt = $('#InvestFeePay002_payAmt').val();
 		if (payAmt && actPayAmt){
-			$('#InvestFeePay002_adjustAmt').val(JoyinMath.doMinus(actPayAmt, payAmt, 2, JoyinMath.ROUND_HALF_UP)).trigger('change');
+			$('#InvestFeePay002_adjustAmt').val(JoyinMath.doMinus(payAmt, actPayAmt, 2, JoyinMath.ROUND_HALF_UP)).trigger('change');
 		}else{
 			$('#InvestFeePay002_adjustAmt').val('').trigger('change');		
 		}
