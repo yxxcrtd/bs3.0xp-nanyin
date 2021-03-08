@@ -9,14 +9,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-                case 
-                    when order1.trade_id is not null then order1.portfolio_id
-                    else order2.portfolio_id
-                end as portfolioId,
-                case 
-                    when order1.trade_id is not null then order1.portfolio_name
-                    else order2.portfolio_name
-                end as portfolioName,
+                order2.portfolio_id portfolioId,
+                order2.portfolio_name portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -43,7 +37,6 @@
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
-            LEFT JOIN orderTemp order1 ON t1.TOTLE_TRADE_ID = order1.TRADE_ID
             LEFT JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
             LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
@@ -113,8 +106,14 @@
 				T1.TOTLE_TRADE_ID busiCode,
 		        T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+                case 
+                    when T1.PORTFOLIO_ID is not null then T1.PORTFOLIO_ID
+                    else order2.portfolio_id 
+                end as portfolioId,
+                case 
+                    when T1.PORTFOLIO_ID is not null then T2.PORTFOLIO_NAME
+                    else order2.portfolio_name 
+                end as portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -141,6 +140,8 @@
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 		    LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
+            LEFT JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF07}
 			AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 			and T1.TRADE_STATUS =  #{TRADE_STATUS01}
@@ -244,8 +245,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				null portfolioName,
+				dealAdd.PORTFOLIO_ID portfolioId,
+				pp.PORTFOLIO_NAME portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -273,10 +274,14 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN WFL_TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID and deal.TRADE_STATUS='01'
+            left join WFL_TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
+	        left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID
 			where T1.PS IN (#{PS_T12},#{PS_T13},#{PS_T11})
 			and T5.TYPE_6 IN (#{FUND_ASSET_TYPE_F01},#{FUND_ASSET_TYPE_F02})
 			and T1.TRADE_STATUS = #{TRADE_STATUS01}
 			and T1.IS_CANCEL = #{YESNO_N}
+            and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 			<include refid="where_sql"/>)
 		union all
 		/*计划类(净值型货币型)流程中*/
@@ -286,8 +291,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				null portfolioName,
+				dealAdd.PORTFOLIO_ID portfolioId,
+				pp.PORTFOLIO_NAME portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -315,6 +320,9 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            from WFL_TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID and  deal.TRADE_STATUS = '01'
+            left join WFL_TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
+	        left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 			where T1.PS IN (#{PS_T12},#{PS_T13},#{PS_T11})
 			and T4.PROFIT_TYPE IN (#{PROFIT_TYPE_JZ}, #{PROFIT_TYPE_HB})
 			and T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17}
@@ -329,8 +337,8 @@
 					T1.TOTLE_TRADE_ID busiCode,
 					T5.TYPE_8 finprodType2,
 					T3.PA_BUSS_TYPE paBussType,
-					T1.PORTFOLIO_ID portfolioId,
-					null portfolioName,
+			        order2.portfolio_id portfolioId,
+                    order2.portfolio_name portfolioName,
 					NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 					nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 					T4.FINPROD_MARKET_ID finprodMarketId,
@@ -358,6 +366,8 @@
 	        	LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 				LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 				LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
+                LEFT JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+                LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 				WHERE
 				T1.TRADE_STATUS = #{TRADE_STATUS01}
 				AND T1.P_TRADE_ID IS NULL/*撤销流程中的数据不展示*/
@@ -422,8 +432,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+			    order2.portfolio_id portfolioId,
+                order2.portfolio_name portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -449,6 +459,8 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE
 			T1.TRADE_STATUS = #{TRADE_STATUS01}
 			AND T1.P_TRADE_ID IS NULL/*撤销流程中的数据不展示*/
@@ -700,14 +712,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 		        T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-                case 
-                    when order1.trade_id is not null then order1.portfolio_id
-                    else order2.portfolio_id
-                end as portfolioId,
-                case 
-                    when order1.trade_id is not null then order1.portfolio_name
-                    else order2.portfolio_name
-                end as portfolioName,
+                order2.portfolio_id portfolioId,
+                order2.portfolio_name portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -734,7 +740,6 @@
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
-            LEFT JOIN orderTemp order1 ON t1.TOTLE_TRADE_ID = order1.TRADE_ID
             LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
             LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE T1.TRADE_STATUS = #{TRADE_STATUS01}
@@ -806,8 +811,14 @@
 				T1.TOTLE_TRADE_ID busiCode,
 		        T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+                case
+                    when T1.PORTFOLIO_ID is not null then T1.PORTFOLIO_ID
+                    else order2.portfolio_id 
+                end as portfolioId,
+                 case
+                    when T1.PORTFOLIO_ID is not null then T2.PORTFOLIO_NAME
+                    else order2.portfolio_name 
+                end as portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -833,6 +844,8 @@
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 		    LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE T1.TRADE_STATUS = #{TRADE_STATUS01}
 			AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 			AND T1.IS_CANCEL = #{YESNO_N}
@@ -936,8 +949,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				null portfolioName,
+				dealAdd.PORTFOLIO_ID portfolioId,
+				pp.PORTFOLIO_NAME portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -964,6 +977,9 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN  TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID and  deal.TRADE_STATUS = '01'
+	        left join TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
+	        left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 			where T1.PS IN (#{PS_T12},#{PS_T13},#{PS_T11})
 			and T5.TYPE_6 IN (#{FUND_ASSET_TYPE_F01},#{FUND_ASSET_TYPE_F02})
 			and T1.TRADE_STATUS = #{TRADE_STATUS01}
@@ -976,8 +992,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				null portfolioName,
+				dealAdd.PORTFOLIO_ID portfolioId,
+				pp.PORTFOLIO_NAME portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1004,6 +1020,9 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID and  deal.TRADE_STATUS = '01'
+	        left join TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
+	        left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 			where T1.PS IN (#{PS_T12},#{PS_T13},#{PS_T11})
 			and T4.PROFIT_TYPE IN (#{PROFIT_TYPE_JZ}, #{PROFIT_TYPE_HB})
 			and T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17}
@@ -1017,8 +1036,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				T3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				null portfolioName,
+			    order2.portfolio_id portfolioId,
+                order2.portfolio_name portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1046,6 +1065,8 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE
 			T1.TRADE_STATUS = #{TRADE_STATUS01}
 			AND T1.PORTFOLIO_ID IS NULL
@@ -1109,8 +1130,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+			    order2.portfolio_id portfolioId,
+                order2.portfolio_name portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1136,6 +1157,8 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 		WHERE
 			T1.TRADE_STATUS = #{TRADE_STATUS01}
 			AND T1.IS_CANCEL = #{YESNO_N}
@@ -1381,14 +1404,8 @@
 				T1.P_TRADE_ID busiCode,
 		        T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-                case 
-                    when order1.trade_id is not null then order1.portfolio_id
-                    else order2.portfolio_id
-                end as portfolioId,
-                case 
-                    when order1.trade_id is not null then order1.portfolio_name
-                    else order2.portfolio_name
-                end as portfolioName,
+                order2.portfolio_id portfolioId,
+                order2.portfolio_name portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1415,7 +1432,6 @@
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
-            LEFT JOIN orderTemp order1 ON t1.TOTLE_TRADE_ID = order1.TRADE_ID
             LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
             LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE T1.TRADE_STATUS = #{TRADE_STATUS03}
@@ -1486,8 +1502,14 @@
 				T1.TOTLE_TRADE_ID busiCode,
 		        T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+				case
+                    when T1.PORTFOLIO_ID is not null then T1.PORTFOLIO_ID
+                    else order2.portfolio_id 
+                end as portfolioId,
+                 case
+                    when T1.PORTFOLIO_ID is not null then T2.PORTFOLIO_NAME
+                    else order2.portfolio_name 
+                end as portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1513,6 +1535,8 @@
 		    LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 			WHERE T1.TRADE_STATUS = #{TRADE_STATUS03}
 			AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 			AND T1.IS_CANCEL = #{YESNO_N}
@@ -1615,8 +1639,8 @@
 					T1.TOTLE_TRADE_ID busiCode,
 					T5.TYPE_8 finprodType2,
 					t3.PA_BUSS_TYPE paBussType,
-					T1.PORTFOLIO_ID portfolioId,
-					null portfolioName,
+					dealAdd.PORTFOLIO_ID portfolioId,
+					pp.PORTFOLIO_NAME portfolioName,
 					NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 					nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 					T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1643,6 +1667,9 @@
 				LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 				LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 		        LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+                LEFT JOIN  TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.P_TRADE_ID and  deal.TRADE_STATUS = '01'
+	            left join TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
+	            left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 				where T1.PS IN (#{PS_T12},#{PS_T13},#{PS_T11})
 				and T5.TYPE_6 IN (#{FUND_ASSET_TYPE_F01},#{FUND_ASSET_TYPE_F02})
 				and T1.TRADE_STATUS = #{TRADE_STATUS03}
@@ -1655,8 +1682,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				null portfolioName,
+				dealAdd.PORTFOLIO_ID portfolioId,
+				pp.PORTFOLIO_NAME portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1683,6 +1710,9 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.P_TRADE_ID and  deal.TRADE_STATUS = '01'
+	        left join TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
+	        left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 			where T1.PS IN (#{PS_T12},#{PS_T13},#{PS_T11})
 			and T4.PROFIT_TYPE IN (#{PROFIT_TYPE_JZ}, #{PROFIT_TYPE_HB})
 			and T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17}
@@ -1696,8 +1726,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				T3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				null portfolioName,
+			    order2.portfolio_id portfolioId,
+                order2.portfolio_name portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1724,6 +1754,8 @@
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 		WHERE
 			T1.TRADE_STATUS = #{TRADE_STATUS03}
 			AND T1.PORTFOLIO_ID IS NULL
@@ -1784,8 +1816,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+			    order2.portfolio_id portfolioId,
+                order2.portfolio_name portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1811,6 +1843,8 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
+            LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
 		WHERE
 			T1.TRADE_STATUS = #{TRADE_STATUS03}
 			AND T1.BUSI_TYPE = #{TRD17}
@@ -2082,12 +2116,12 @@
 
     <sql id = "orderTemp">
         with orderTemp as(
-            select  LISTAGG(b.portfolio_name,',') within group(order by b.portfolio_id) portfolio_name,
-                    LISTAGG(b.portfolio_id,',')  within group(order by b.portfolio_id) portfolio_id,
+            select b.portfolio_name portfolio_name,
+                   b.portfolio_id portfolio_id,
                 a.trade_id
             from STL_PAY_ORDERS A
             inner join ptl_portfolio  b on a.portfolio_id = b.portfolio_id
-            group by  a.trade_id
+            order by a.trade_id,b.portfolio_id 
         )
     </sql>
 
