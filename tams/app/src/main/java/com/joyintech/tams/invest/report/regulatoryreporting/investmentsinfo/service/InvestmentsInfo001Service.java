@@ -137,6 +137,12 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 			if(index3!=index4){
 				sheet.addMergedRegion(new CellRangeAddress(index3, index4, 0, 0));
 			}
+			for(int j=1;j<12;j++){
+				sheet.getRow(index2).getCell(j).
+						setCellStyle(sheet.getRow(0).getCell(0).getCellStyle());
+				sheet.getRow(index4).getCell(j).
+						setCellStyle(sheet.getRow(0).getCell(0).getCellStyle());
+			}
 		wb.write(new FileOutputStream(table3AddFile));
 
 		sourceFiles.add(table3AddFile);
