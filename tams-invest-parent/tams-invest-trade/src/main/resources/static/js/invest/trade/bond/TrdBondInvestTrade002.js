@@ -933,10 +933,10 @@ var table;
 	            $("#finProd_id1").val(autoCoupon.finprodId).trigger('change');
 	            $("#windtypeone").val(autoCoupon.type4).trigger('change');
 	           // $('#finprodId').textSelect('setValue', autoCoupon.finprodId);
-
-                $("#type9").val(data.type9).trigger('change');
-                $("#type10").val(data.type10).trigger('change');
-                $("#type11").val(data.type11).trigger('change');
+	            
+                $("#type9").val(autoCoupon.type9).trigger('change');
+                $("#type10").val(autoCoupon.type10).trigger('change');
+                $("#type11").val(autoCoupon.type11).trigger('change');
 			}
         	 updateCash();
              updateSecAcctBalance();
