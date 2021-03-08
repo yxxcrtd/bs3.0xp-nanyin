@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
@@ -67,10 +68,16 @@ public class MstFeeVarietiesValidator implements BeanValidator {
 		} else {
 			if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
 				// 通过费用名称查询数据，验证费用名称的唯一性
-				List<MstFeeVarietiesDto> list = mstFeeVarietiesService.getDtoByFeeName(dto.getFeeName());
+				List<MstFeeVarietiesDto> list = null;
+				if(MultilevelDataAuthorityUtil.isEnabled()) {
+					list = mstFeeVarietiesService.getDtoByFeeNameInstituon(dto.getFeeName());
+				}
+				else {
+					list = mstFeeVarietiesService.getDtoByFeeName(dto.getFeeName());
+				}
 				if (list.size() > 0) {
 					resultList.add(new ValidMessage(
-							this.getMessage("BUSS_COM_E_0006", getMessage("MstFeeVarieties002.feeName"))));
+							this.getMessage("BUSS_COM_E_0006", getMessage("MstFeeVarieties002.feeName"),"")));
 				}
 			}
 

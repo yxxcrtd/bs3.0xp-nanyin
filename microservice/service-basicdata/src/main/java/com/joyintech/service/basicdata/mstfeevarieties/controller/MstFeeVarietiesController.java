@@ -113,4 +113,17 @@ public class MstFeeVarietiesController  {
     public List<MstFeeVarietiesDto> getDtoByFeeName(String feeName){
         return mstFeeVarietiesService.getDtoByFeeName(feeName);
     }
+    
+    /**
+     * 通过费用名称查询数据，验证费用名称的唯一性
+     * <功能详细描述>
+     * @param feeName feeName
+     * @return dto
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getDtoByFeeNameInstitution")
+    public List<MstFeeVarietiesDto> getDtoByFeeNameInstitution(@RequestBody Map<String,Object> para){
+        return mstFeeVarietiesService.getDtoByFeeNameInstitution(para);
+    }
 }
