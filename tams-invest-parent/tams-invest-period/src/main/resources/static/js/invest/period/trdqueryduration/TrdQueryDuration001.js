@@ -184,9 +184,15 @@ $(function(){
                 label='TrdPlanInterestDuration002.edit';
                 pagePath = "invest/period/trdplanintduration/TrdPlanInterestDuration002/init";
                 data.pageModel = PAGE_MODEL_REFERENCE;
+                if(data.statusValid == CHANCLE_STATUS){
+                	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                }
                 data.totleTradeId = data.busiCode;
                 Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
                     "98%", "95%", data, function(){});//计划类净值委托详情
+                if(data.statusValid == CHANCLE_STATUS){
+                	data.busiCode = data.busiCode+"R";
+                }
             }else if(data.finprodType2 == PINAN_ASSET_TYPE_F04){
                 label='TrdPlanNetDuration001.reference';
                 pagePath = "invest/period/trdplannetduration/TrdPlanNetDuration002/init";
@@ -238,9 +244,16 @@ $(function(){
                 label='项目类资产还本付息-查看';
                 pagePath = "invest/period/trdprojduration/TrdProjectDuration002/init";
                 data.pageModel = PAGE_MODEL_REFERENCE;
+                if(data.statusValid == CHANCLE_STATUS){
+                	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                }
                 data.totleTradeId = data.busiCode;
                 Joyin.dialog(label,basePath+pagePath,
-                    "98%", "95%", data, function(){});//回购委托详情
+                    "98%", "95%", data, function(){});
+                if(data.statusValid == CHANCLE_STATUS){
+                	data.busiCode = data.busiCode+"R";
+                }
+            //回购委托详情    
             }else if(data.finprodType2 == PINAN_ASSET_TYPE_F07){
                 label='回购存续期交易查看';
                 pagePath = "invest/period/trdrepoduration/TrdRepoDuration002/init";
