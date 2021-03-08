@@ -67,16 +67,7 @@ $(function() {
         },{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']
         }],
         editCell : function(value, data, field, cell, column){
-            if (field === "actPayAmt"){
-                var totalAmt = '0';
-                var allData = feeInfoTable.getAllRows();
-                if (allData && allData.length > 0){
-                    $.each(allData, function(id, value){
-                        totalAmt = JoyinMath.doAdd(totalAmt, value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
-                    });
-                }
-                $('#tradeAmt').val(totalAmt).trigger('change');
-            }else if(field === 'portfolioId'){
+            if(field === 'portfolioId'){
                 Joyin.ajaxSync(JoyinUtil.getRealPath('/invest/trade/channel/feepay/ChannelFeePay002/findPortfolioName'),{portfolioId:value}, function(result) {
                     data.portFolioName = result;
                 })
@@ -95,11 +86,20 @@ $(function() {
                             // $("#tradeAmt").val(result.tradeAmt).trigger('blur');
                             // $("#ccy").val(result.ccy).trigger('change');
                             data.payAmt = result.tradeAmt;
+                            data.actPayAmt = data.payAmt;
                         }
                     });
                 }
                 feeInfoTable.renderRow(data.LAY_TABLE_INDEX, data);
             }
+            var totalAmt = '0';
+            var allData = feeInfoTable.getAllRows();
+            if (allData && allData.length > 0){
+                $.each(allData, function(id, value){
+                    totalAmt = JoyinMath.doAdd(totalAmt, value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
+                });
+            }
+            $('#tradeAmt').val(totalAmt).trigger('change');
         },
         beforeEditCell : function(preVal, field, rowData) {
             if(field === 'portFolioName' || field === 'payAmt'){
