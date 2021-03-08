@@ -548,7 +548,7 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
             dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
             dto.setCdate(it.getCdate());
             dto.setCcy(it.getCcy());
-            dto.setAmount(it.getAmount());
+            dto.setAmount(it.getAmount().negate());
             dto.setpFinprodId(it.getpFinprodId());
             dto.setTradeId(it.getTradeId());
             dto.setCreateUser(it.getCreateUser());
