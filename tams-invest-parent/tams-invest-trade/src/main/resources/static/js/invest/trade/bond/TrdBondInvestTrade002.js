@@ -369,12 +369,12 @@ var table;
     /**
      * 交易平台联动，增加输入框事件
      */
-    $('#tradeMarket,#tradeMarketMode').on("change", function (e, isInit) {
+    $('#tradeMarket,#tradeMarketMode,#ps').on("change", function (e, isInit) {
         var tradeMarket = $('#tradeMarket').val();
         var tradeMarketMode = $('#tradeMarketMode').val();
         var $tradePlat = $('#tradePlat');
         var tradePlat = $('#tradePlat').val();
-
+        var ps = $('#ps').val();
         if (pageModel != PAGE_MODEL_REFERENCE) {
             var key = tradeMarket + tradeMarketMode;
             switch (key) {
@@ -433,6 +433,7 @@ var table;
                     //如果是交易场所+交易市场 == 上海证券交易所+一级市场;
                     $("#settleAmtDiv").hide();
                     $("#exchangeAmtDiv").hide();
+                    $("#commissionAmtDiv").show();
                     if(initFlag){
                         $("#settleAmt").trigger("change");
                         $("#exchangeAmt").trigger("change");
@@ -454,9 +455,18 @@ var table;
                     break;
                 case TRADE_PLACE_02+SHARES_TRADE_MARKET_02:
                     //如果是交易场所+交易市场 == 上海证券交易所+二级市场; 显示经手费和结算费
-                    //文本框事件
-                    $("#settleAmtDiv").show();
-                    $("#exchangeAmtDiv").show();
+                    //文本框事件              		
+                	  /*  $("#settleAmtDiv").show();
+                    $("#exchangeAmtDiv").show();*/
+                    if(ps =="T03"){                		
+                		$("#settleAmtDiv").hide();
+                		$("#exchangeAmtDiv").hide();
+                		$("#commissionAmtDiv").hide();
+                	}else if(ps !="T03"){
+                		$("#settleAmtDiv").show();
+                		$("#exchangeAmtDiv").show();
+                		$("#commissionAmtDiv").show();
+                	}
                     if(initFlag){
                         $("#settleAmt").trigger("change");
                         $("#exchangeAmt").trigger("change");
@@ -480,6 +490,7 @@ var table;
                     //如果是交易场所+交易市场 == 深圳证券交易所+一级市场;
                     $("#settleAmtDiv").hide();
                     $("#exchangeAmtDiv").hide();
+                    $("#commissionAmtDiv").show();
                     if(initFlag){
                         $("#settleAmt").trigger("change");
                         $("#exchangeAmt").trigger("change");
@@ -500,8 +511,17 @@ var table;
                     break;
                 case TRADE_PLACE_03+SHARES_TRADE_MARKET_02:
                     //如果是交易场所+交易市场 == 深圳证券交易所+二级市场;
-                    $("#settleAmtDiv").show();
-                    $("#exchangeAmtDiv").show();
+                  /*  $("#settleAmtDiv").show();
+                    $("#exchangeAmtDiv").show();*/
+                    if(ps =="T03"){                		
+                		$("#settleAmtDiv").hide();
+                		$("#exchangeAmtDiv").hide();
+                		$("#commissionAmtDiv").hide();
+                	}else if(ps !="T03"){
+                		$("#settleAmtDiv").show();
+                		$("#exchangeAmtDiv").show();
+                		$("#commissionAmtDiv").show();
+                	}
                     if(initFlag){
                         $("#settleAmt").trigger("change");
                         $("#exchangeAmt").trigger("change");
@@ -2041,8 +2061,14 @@ var table;
                 	$("#settleAmtDiv").hide();
                 	$("#exchangeAmtDiv").hide();
                 }
-            //add by yujiaping 20210304 ZGBSS-592债券交易的交易场所为上交所/深交所，交易市场为一级市场时，审批人的待办事项和完成交易详情中不应展示结算费和经手费字段end
-               if(settleSpeedStr=='01'){
+            //add by yujiaping 20210304 ZGBSS-592债券交易的交易场所为上交所/深交所，交易市场为一级市场时，审批人的待办事项和完成交易详情中不应展示结算费和经手费字段end                
+                if($('#ps').val()=="T03"){                		
+            		$("#settleAmtDiv").hide();
+            		$("#exchangeAmtDiv").hide();
+            		$("#commissionAmtDiv").hide();
+            	}
+                
+                if(settleSpeedStr=='01'){
                     $('#settleSpeed').val('0');
                 }else  if(settleSpeedStr=='02'){
                     $('#settleSpeed').val('1');
@@ -2214,6 +2240,11 @@ var table;
                     }
 
                     $("#commissionAmtDiv").show();
+                    if($('#ps').val()=="T03"){
+                    	 $("#settleAmtDiv").hide();
+                         $("#exchangeAmtDiv").hide();
+                         $("#commissionAmtDiv").hide();
+                    }
                     $("#commissionAmtRateDiv").show();
                     if($("#type6").val()&&$("#type6").val()==WINDTYPEONE_B17){
                         $("#stampDutyAmtDiv").show();
