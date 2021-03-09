@@ -313,9 +313,12 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		List<RaiseTotalRegist001Dto> subList = (List<RaiseTotalRegist001Dto>) map.get("investList");
 		if(!CollectionUtils.isEmpty(subList)){
 			for(RaiseTotalRegist001Dto dto : subList){
-				if(DictCodeListExt2.报送状态_未报送.getValue().equals(dto.getSendStatus())){
-					prodTerminationList.add(dto);
-				}
+				// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 start
+//				if(DictCodeListExt2.报送状态_未报送.getValue().equals(dto.getSendStatus())){
+//					prodTerminationList.add(dto);
+//				}
+				prodTerminationList.add(dto);
+				// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 end
 			}
 		}else{
 			//未选中数据

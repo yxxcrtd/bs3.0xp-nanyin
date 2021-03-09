@@ -999,11 +999,14 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		}
         List<AssetInfoRegist001Dto> assetInfoRegList = new ArrayList<AssetInfoRegist001Dto>();
         for(AssetInfoRegist001Dto m : assetInfoRegListOrg){
-            // 手工处理只处理未报送的
-            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())
-                    ||DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatusName())){
-                assetInfoRegList.add(m);
-            }
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 start
+//            // 手工处理只处理未报送的
+//            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())
+//                    ||DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatusName())){
+//                assetInfoRegList.add(m);
+//            }
+			assetInfoRegList.add(m);
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 end
         }
         // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
         List<String> registSeqList = new ArrayList<String>();
@@ -1061,10 +1064,13 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
         List<AssetInfoRegist001Dto> assetInfoRegList = new ArrayList<AssetInfoRegist001Dto>();
         for(AssetInfoRegist001Dto m : assetInfoRegListOrg){
             // 手工处理只处理未报送的
-            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())
-                    ||DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatusName())){
-                assetInfoRegList.add(m);
-            }
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 start
+//            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())
+//                    ||DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatusName())){
+//                assetInfoRegList.add(m);
+//            }
+			assetInfoRegList.add(m);
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 end
         }
         // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
         List<ChbAssetSubStatus> registSeqList = new ArrayList<ChbAssetSubStatus>();
