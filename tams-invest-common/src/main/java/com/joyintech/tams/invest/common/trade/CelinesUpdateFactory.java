@@ -324,9 +324,13 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 }
             }
         }
-        if (StringUtil.isEmptyList(orgcreLineslist) && iscreditflag){
+        if (StringUtil.isEmptyList(orgcreLineslist) && ((creLineslist==null || creLineslist.size()==0)||
+                (creLineslist!=null && creLineslist.size()>0 && iscreditflag))){
             isKDQ = true;
             customerid = creditLinesMapper.getCustomerid(mapParm);
+            if(StringUtil.isEmpty(customerid)){
+                customerid = model.getCounterId();
+            }
         }else{
             isKDQ = false;
             customerid = "";
