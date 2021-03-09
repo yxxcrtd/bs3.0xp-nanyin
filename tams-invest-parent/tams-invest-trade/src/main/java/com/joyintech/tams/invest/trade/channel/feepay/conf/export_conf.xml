@@ -3,7 +3,6 @@
     <Worksheet javaBean="com.joyintech.tams.invest.trade.channel.feepay.dto.ChannelFeePay001Dto">
         <Row>
             <Cell order="1" name="业务编号">tradeId</Cell>
-            <Cell order="2" name="组合代码">portfolioId</Cell>
             <Cell order="4" name="通道名称">channelName</Cell>
             <Cell order="5" name="费用名称">feeNameString</Cell>
             <Cell order="6" name="计提结束日">mdateString</Cell>
