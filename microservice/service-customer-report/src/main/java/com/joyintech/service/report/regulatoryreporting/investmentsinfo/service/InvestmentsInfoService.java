@@ -1553,6 +1553,7 @@ public class InvestmentsInfoService {
 		Date lastEndDate=calendar.getTime();
 
 		//今年年初
+		calendar.setTime(cdate);
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
@@ -1784,13 +1785,16 @@ public class InvestmentsInfoService {
 			paraMap.put("yearStartDate", yearStartDate);
 
 			assetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo1(paraMap);
-			//上季度末
 
-			calendar.add(Calendar.MONTH, -3);
-			calendar.add(Calendar.MONTH, 1);
-			calendar.set(Calendar.DAY_OF_MONTH, 0);
-			//取到上季末
-			Date lastlastEndDate=calendar.getTime();
+
+			//上上季度末
+			Calendar calendarlastEndDate= Calendar.getInstance();
+			calendarlastEndDate.setTime(lastEndDate);
+			calendarlastEndDate.add(Calendar.MONTH, -3);
+			calendarlastEndDate.add(Calendar.MONTH, 1);
+			calendarlastEndDate.set(Calendar.DAY_OF_MONTH, 0);
+			Date lastlastEndDate=calendarlastEndDate.getTime();
+
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastendDate", lastlastEndDate);
 			paraMap.put("yearStartDate", yearStartDate);
@@ -2010,6 +2014,7 @@ public class InvestmentsInfoService {
 		//取到上季末
 		Date lastEndDate=calendar.getTime();
 		//今年年初
+		calendar.setTime(cdate);
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
@@ -2042,13 +2047,13 @@ public class InvestmentsInfoService {
 			paraMap.put("yearStartDate", yearStartDate);
 
 			financeAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo1(paraMap);
-			//上季度末
-
-			calendar.add(Calendar.MONTH, -3);
-			calendar.add(Calendar.MONTH, 1);
-			calendar.set(Calendar.DAY_OF_MONTH, 0);
-			//取到上季末
-			Date lastlastEndDate=calendar.getTime();
+			//上上季度末
+			Calendar calendarlastEndDate= Calendar.getInstance();
+			calendarlastEndDate.setTime(lastEndDate);
+			calendarlastEndDate.add(Calendar.MONTH, -3);
+			calendarlastEndDate.add(Calendar.MONTH, 1);
+			calendarlastEndDate.set(Calendar.DAY_OF_MONTH, 0);
+			Date lastlastEndDate=calendarlastEndDate.getTime();
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastendDate", lastlastEndDate);
 			paraMap.put("yearStartDate", yearStartDate);

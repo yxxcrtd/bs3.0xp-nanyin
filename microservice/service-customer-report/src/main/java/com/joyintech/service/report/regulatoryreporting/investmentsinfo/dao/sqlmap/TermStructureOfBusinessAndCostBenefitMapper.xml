@@ -541,12 +541,13 @@ with cj as(
 
 	select a.days termType,nvl(a.amt,0) sessionendBalance from(
 	select days,sum(ENDAMTSUM_OTH) amt from(
+	<!--开放式产品-->
 	select case
 	  when cp.termtype='01' then '01'
       when cp.termtype in ('02','03','04') then '02'
   	  when cp.termtype ='05' then '03'
       when cp.termtype ='06' then '04'
-      when cp.termtype ='07' then '05'
+      when cp.termtype ='08' then '05'
 	end days, cp.ENDAMTSUM_OTH
 	from CHB_MONTH_PRD_POSITION cp
 	<if test="org != null  and org!=''">
@@ -554,15 +555,22 @@ with cj as(
 		on cp.prodid=di.business_id
 		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
 	</if>
+	left join chb_prd_baseinfo base
+	on cp.prodid=base.prod_id
 	where cp.ENDDATE=#{endDate,jdbcType=DATE}
-	and cp.PROFIT_TYPE='03'
-	and cp.termtype in ('01','02','03','04','05','06','07')
+	and cp.PROFIT_TYPE='03'　and base.operate_mode in ('03','04')
+	and cp.termtype in ('01','02','03','04','05','06','08')
 	<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
 	</if>
 
     union all
+	<!--封闭式产品-->
     select case
+	when base.mdate-base.vdate<![CDATA[<]]>90 then '02'
+	when base.mdate-base.vdate>=90 and base.mdate-base.vdate<![CDATA[<=]]>184 then '03'
+	when base.mdate-base.vdate>184 and base.mdate-base.vdate<![CDATA[<=]]>366 then '04'
+	when base.mdate-base.vdate>366 and base.mdate-base.vdate<![CDATA[<=]]>1096 then '05'
 	when base.mdate-base.vdate>1096 and base.mdate-base.vdate<![CDATA[<=]]>1827 then '06'
 	when base.mdate-base.vdate>1827 then '07' end days, cp.ENDAMTSUM_OTH
   	from chb_month_prd_position cp
@@ -575,15 +583,23 @@ with cj as(
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and  base.operate_mode in ('01','02')
-	and base.mdate-base.vdate>1096
 	<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
 	</if>
 
 	union all
-	select case
-		when base.opendayp>1096 and base.opendayp<![CDATA[<=]]>1827 then '06'
-		when base.opendayp>1827 then '07' end days, cp.ENDAMTSUM_OTH
+	<!--开放式产品-->
+	select
+	decode(base.OPENCYCLEUNITP,'Y',
+	case when base.OPENCYCLEP>3 and base.OPENCYCLEP<![CDATA[<=]]>5 then '06'
+	when base.OPENCYCLEP>5 then '07' end,
+	'01',case when base.OPENCYCLEP>1096 and base.OPENCYCLEP<![CDATA[<=]]>1827 then '06'
+	when base.OPENCYCLEP>1827 then '07' end,
+	'02',case when base.OPENCYCLEP*7>1096 and base.OPENCYCLEP*7<![CDATA[<=]]>1827 then '06'
+	when base.OPENCYCLEP*7>1827 then '07' end,
+	'03',case when base.OPENCYCLEP/12>3 and base.OPENCYCLEP/12<![CDATA[<=]]>5 then '06'
+	when base.OPENCYCLEP/12>5 then '07' end
+	)days, cp.ENDAMTSUM_OTH
 	from chb_month_prd_position cp
 	<if test="org != null  and org!=''">
 		left join DATA_AUTH_NOTIFY_INST di
@@ -594,7 +610,7 @@ with cj as(
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and base.operate_mode in ('03','04')
- 	and base.opendayp>1096
+ 	and base.termtype='09'
 	<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
 	</if>
@@ -607,8 +623,11 @@ with cj as(
 		on cp.prodid=di.business_id
 		and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
 	</if>
-	where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
-	and cp.termtype in ('01','02','03','04','05','06','07')
+	left join chb_prd_baseinfo base
+	on cp.prodid=base.prod_id
+	where cp.ENDDATE=#{endDate,jdbcType=DATE}   and cp.PROFIT_TYPE='03'
+	　and base.operate_mode in ('03','04')
+	and cp.termtype in ('01','02','03','04','05','06','08')
 	<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
 	</if>
@@ -625,7 +644,6 @@ with cj as(
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and  base.operate_mode in ('01','02')
-	and base.mdate-base.vdate>1096
 	<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
 	</if>
@@ -642,7 +660,7 @@ with cj as(
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and base.operate_mode in ('03','04')
-	and base.opendayp>1096
+	and base.termtype='09'
 	<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
 	</if>
@@ -658,14 +676,29 @@ with cj as(
 
 	with  rate as(
 	<if test="valconfig != null  and valconfig.equals('01')">
-	select distinct cr.prod_id as prodid,nvl(cr.prod_yield,cr.prod_benchmark_rate) as prodRate
+	select distinct cr.fprod_id as prodid,nvl(cr.prod_yield,cr.prod_benchmark_rate) as prodRate
 	from chb_prd_rate cr
-	where 1=1 and cr.change_type in ('01','03')
+	where 1=1 and cr.change_type in ('01','03') and (cr.is_lay='N'　or cr.is_lay is null)
 	and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
 	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
+		union all
+		select t.fprodid as  prodid ,
+		case when sum(t.bqty) is not  null and sum(t.bqty)!=0  then sum(t.bqty*t.prodRate)/sum(t.bqty)
+		else 0 end as prodRate
+		from(
+	select distinct cr.prod_id as prodid,cr.fprod_id as fprodid,
+		coalesce(cr.prod_yield,cr.prod_benchmark_rate) as prodRate,nvl(cpp.balance_qty,0) bqty
+	from chb_prd_rate cr
+		left join chb_prd_position cpp
+		on cr.prod_id=cpp.indentify_mark
+		and cpp.cdate=#{endDate,jdbcType=DATE}
+	where 1=1 and cr.change_type in ('01','03') and cr.is_lay='Y'
+	and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}))t
+		group by t.fprodid
 	</if>
 	<if test="valconfig != null  and valconfig.equals('02')">
-	select distinct cr.prod_id as prodid,
+	select distinct cr.fprod_id as prodid,
     decode (cr.profit_type,'02',cr.prod_yield,'03',cr.seven_day_rate,'01',
    case when 　base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　
 		and crmin.unit_value is not null and crmin.unit_value !=0 then
@@ -703,7 +736,22 @@ with cj as(
 
 	where 1=1 and cr.change_type in ('01','02')
 	and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
-	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
+	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}) and  (cr.is_lay='N'　or cr.is_lay is null)
+		union all
+		select t.fprodid as  prodid ,
+		case when sum(t.bqty) is not  null and sum(t.bqty)!=0  then sum(t.bqty*t.prodRate)/sum(t.bqty)
+		else 0 end as prodRate
+		from(
+		select distinct cr.prod_id as prodid,cr.fprod_id as fprodid,
+		coalesce(cr.prod_yield,cr.prod_benchmark_rate) as prodRate,nvl(cpp.balance_qty,0) bqty
+		from chb_prd_rate cr
+		left join chb_prd_position cpp
+		on cr.prod_id=cpp.indentify_mark
+		and cpp.cdate=#{endDate,jdbcType=DATE}
+		where 1=1 and cr.change_type in ('01') and cr.is_lay='Y'
+		and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}))t
+		group by t.fprodid
 	</if>
 
 
@@ -714,7 +762,7 @@ with cj as(
       when cp.termtype in ('02','03','04') then '02'
   	  when cp.termtype ='05' then '03'
       when cp.termtype ='06' then '04'
-      when cp.termtype ='07' then '05'
+      when cp.termtype ='08' then '05'
 	end days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
 	from CHB_MONTH_PRD_POSITION cp
 		<if test="org != null  and org!=''">
@@ -726,14 +774,20 @@ with cj as(
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
-	where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
-	and cp.termtype in ('01','02','03','04','05','06','07')
+		left join chb_prd_baseinfo base
+		on cp.prodid=base.prod_id
+	where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03' and base.operate_mode in ('03','04')
+	and cp.termtype in ('01','02','03','04','05','06','08')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 
     union all
     select case
+	when base.mdate-base.vdate<![CDATA[<]]>90 then '02'
+	when base.mdate-base.vdate>=90 and base.mdate-base.vdate<![CDATA[<=]]>184 then '03'
+	when base.mdate-base.vdate>184 and base.mdate-base.vdate<![CDATA[<=]]>366 then '04'
+	when base.mdate-base.vdate>366 and base.mdate-base.vdate<![CDATA[<=]]>1096 then '05'
 	when base.mdate-base.vdate>1096 and base.mdate-base.vdate<![CDATA[<=]]>1827 then '06'
 	when base.mdate-base.vdate>1827 then '07' end days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
   	from chb_month_prd_position cp
@@ -749,15 +803,21 @@ with cj as(
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and  base.operate_mode in ('01','02')
-	and base.mdate-base.vdate>1096
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 
 	union all
-	select case
-		when base.opendayp>1096 and base.opendayp<![CDATA[<=]]>1827 then '06'
-		when base.opendayp>1827 then '07' end days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
+	select decode(base.OPENCYCLEUNITP,'Y',
+		case when base.OPENCYCLEP>3 and base.OPENCYCLEP<![CDATA[<=]]>5 then '06'
+		when base.OPENCYCLEP>5 then '07' end,
+		'01',case when base.OPENCYCLEP>1096 and base.OPENCYCLEP<![CDATA[<=]]>1827 then '06'
+		when base.OPENCYCLEP>1827 then '07' end,
+		'02',case when base.OPENCYCLEP*7>1096 and base.OPENCYCLEP*7<![CDATA[<=]]>1827 then '06'
+		when base.OPENCYCLEP*7>1827 then '07' end,
+		'03',case when base.OPENCYCLEP/12>3 and base.OPENCYCLEP/12<![CDATA[<=]]>5 then '06'
+		when base.OPENCYCLEP/12>5 then '07' end
+		)days, nvl(cp.ENDAMTSUM_OTH,0)-nvl(scp.ENDAMTSUM_OTH,0) as amt,cp.prodid
 	from chb_month_prd_position cp
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
@@ -771,7 +831,7 @@ with cj as(
 	on cp.prodid=base.prod_id
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and base.operate_mode in ('03','04')
- 	and base.opendayp>1096
+	and base.termtype='09'
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -787,8 +847,10 @@ with cj as(
 		left join CHB_MONTH_PRD_POSITION scp
 		on cp.prodid=scp.prodid
 		and scp.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		left join chb_prd_baseinfo base
+		on cp.prodid=base.prod_id
 		where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
-		and cp.termtype in ('01','02','03','04','05','06','07')
+		and cp.termtype in ('01','02','03','04','05','06','08') and base.operate_mode in ('03','04')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -808,7 +870,6 @@ with cj as(
 		on cp.prodid=base.prod_id
 		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and  base.operate_mode in ('01','02')
-		and base.mdate-base.vdate>1096
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -828,7 +889,7 @@ with cj as(
 		on cp.prodid=base.prod_id
 		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and base.operate_mode in ('03','04')
-		and base.opendayp>1096
+		and base.termtype='09'
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -863,55 +924,85 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
-	with  rate as(
-	<if test="valconfig != null  and valconfig.equals('01')">
-	select distinct cr.prod_id as prodid,nvl(cr.prod_yield,cr.prod_benchmark_rate) as prodRate
-	from chb_prd_rate cr
-	where 1=1 and cr.change_type in ('01','03')
-	and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
-	and fc1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE})
-	</if>
-	<if test="valconfig != null  and valconfig.equals('02')">
-	select distinct cr.prod_id as prodid,
-    decode (cr.profit_type,'02',cr.prod_yield,'03',cr.seven_day_rate,'01',
+		with  rate as(
+		<if test="valconfig != null  and valconfig.equals('01')">
+			select distinct cr.fprod_id as prodid,nvl(cr.prod_yield,cr.prod_benchmark_rate) as prodRate
+			from chb_prd_rate cr
+			where 1=1 and cr.change_type in ('01','03') and (cr.is_lay='N'　or cr.is_lay is null)
+			and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
+			union all
+			select t.fprodid as  prodid ,
+			case when sum(t.bqty) is not  null and sum(t.bqty)!=0  then sum(t.bqty*t.prodRate)/sum(t.bqty)
+			else 0 end as prodRate
+			from(
+			select distinct cr.prod_id as prodid,cr.fprod_id as fprodid,
+			coalesce(cr.prod_yield,cr.prod_benchmark_rate) as prodRate,nvl(cpp.balance_qty,0) bqty
+			from chb_prd_rate cr
+			left join chb_prd_position cpp
+			on cr.prod_id=cpp.indentify_mark
+			and cpp.cdate=#{endDate,jdbcType=DATE}
+			where 1=1 and cr.change_type in ('01','03') and cr.is_lay='Y'
+			and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}))t
+			group by t.fprodid
+		</if>
+		<if test="valconfig != null  and valconfig.equals('02')">
+			select distinct cr.fprod_id as prodid,
+			decode (cr.profit_type,'02',cr.prod_yield,'03',cr.seven_day_rate,'01',
+			case when 　base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　
+			and crmin.unit_value is not null and crmin.unit_value !=0 then
+			(crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
+			when base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is  null  then 0
 
-   case when base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is not null and crmin.unit_value !=0 then
-      (crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
+			when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0
+			then (crmax.unit_value_total-crlastmax.unit_value_total)/crlastmax.unit_value_total/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
 
-    when base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is  null  then 0
 
-    when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE}　 and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0  then
-     (crmax.unit_value_total-crlastmax.unit_value_total)/crlastmax.unit_value_total/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+			when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null
+			and   crmin.unit_value is not null  and crmin.unit_value !=0 then
+			(crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
 
-    when <![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null
-      and   crmin.unit_value is not null  and crmin.unit_value !=0 then
-      (crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
+			when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
+			end ) as prodRate
+			from chb_prd_rate cr
+			left join chb_prd_baseinfo base
+			on cr.prod_id=base.prod_id
 
-     when <![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
-    end ) as prodRate
-   from chb_prd_rate cr
-	left join chb_prd_baseinfo base
-    on cr.prod_id=base.prod_id
+			left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date from chb_prd_rate cr1
+			where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}))crmax
+			on cr.prod_id=crmax.prod_id
 
-	left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date from chb_prd_rate cr1
-   where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
-	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}))crmax
-	on cr.prod_id=crmax.prod_id
+			left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date   from chb_prd_rate cr1
+			where cr1.change_date=(select min(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}))crmin
+			on cr.prod_id=crmin.prod_id
 
-    left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date   from chb_prd_rate cr1
-   where cr1.change_date=(select min(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
-	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}))crmin
-	on cr.prod_id=crmin.prod_id
+			left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total,cr1.change_date from chb_prd_rate cr1
+			where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
+			and fc1.change_date<![CDATA[<]]>#{yearStartDate,jdbcType=DATE}))crlastmax
+			on cr.prod_id=crlastmax.prod_id
 
-    left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total,cr1.change_date from chb_prd_rate cr1
-   where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
-	and fc1.change_date<![CDATA[<]]>#{yearStartDate,jdbcType=DATE}))crlastmax
-	on cr.prod_id=crlastmax.prod_id
-
-	where 1=1 and cr.change_type in ('01','02')
-	and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
-	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
-	</if>
+			where 1=1 and cr.change_type in ('01','02')
+			and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}) and  (cr.is_lay='N'　or cr.is_lay is null)
+			union all
+			select t.fprodid as  prodid ,
+			case when sum(t.bqty) is not  null and sum(t.bqty)!=0  then sum(t.bqty*t.prodRate)/sum(t.bqty)
+			else 0 end as prodRate
+			from(
+			select distinct cr.prod_id as prodid,cr.fprod_id as fprodid,
+			coalesce(cr.prod_yield,cr.prod_benchmark_rate) as prodRate,nvl(cpp.balance_qty,0) bqty
+			from chb_prd_rate cr
+			left join chb_prd_position cpp
+			on cr.prod_id=cpp.indentify_mark
+			and cpp.cdate=#{endDate,jdbcType=DATE}
+			where 1=1 and cr.change_type in ('01') and cr.is_lay='Y'
+			and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}))t
+			group by t.fprodid
+		</if>
 
 	)
 	 ,enddays as(
@@ -920,7 +1011,7 @@ with cj as(
       when cp.termtype in ('02','03','04') then '02'
   	  when cp.termtype ='05' then '03'
       when cp.termtype ='06' then '04'
-      when cp.termtype ='07' then '05'
+      when cp.termtype ='08' then '05'
 	end days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
 	from CHB_MONTH_PRD_POSITION cp
 		<if test="org != null  and org!=''">
@@ -931,13 +1022,19 @@ with cj as(
 	left join CHB_MONTH_PRD_POSITION lastcp
 	on cp.prodid=lastcp.prodid
 	and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-	where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
-	and cp.termtype in ('01','02','03','04','05','06','07')
+		left join chb_prd_baseinfo base
+		on cp.prodid=base.prod_id
+	where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03' and base.operate_mode in ('03','04')
+	and cp.termtype in ('01','02','03','04','05','06','08')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
     union all
     select case
+		when base.mdate-base.vdate<![CDATA[<]]>90 then '02'
+		when base.mdate-base.vdate>=90 and base.mdate-base.vdate<![CDATA[<=]]>184 then '03'
+		when base.mdate-base.vdate>184 and base.mdate-base.vdate<![CDATA[<=]]>366 then '04'
+		when base.mdate-base.vdate>366 and base.mdate-base.vdate<![CDATA[<=]]>1096 then '05'
 	when base.mdate-base.vdate>1096 and base.mdate-base.vdate<![CDATA[<=]]>1827 then '06'
 	when base.mdate-base.vdate>1827 then '07' end days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
   	from chb_month_prd_position cp
@@ -953,14 +1050,20 @@ with cj as(
 	and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and  base.operate_mode in ('01','02')
-	and base.mdate-base.vdate>1096
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 	union all
-	select case
-		when base.opendayp>1096 and base.opendayp<![CDATA[<=]]>1827 then '06'
-		when base.opendayp>1827 then '07' end days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
+	select decode(base.OPENCYCLEUNITP,'Y',
+		case when base.OPENCYCLEP>3 and base.OPENCYCLEP<![CDATA[<=]]>5 then '06'
+		when base.OPENCYCLEP>5 then '07' end,
+		'01',case when base.OPENCYCLEP>1096 and base.OPENCYCLEP<![CDATA[<=]]>1827 then '06'
+		when base.OPENCYCLEP>1827 then '07' end,
+		'02',case when base.OPENCYCLEP*7>1096 and base.OPENCYCLEP*7<![CDATA[<=]]>1827 then '06'
+		when base.OPENCYCLEP*7>1827 then '07' end,
+		'03',case when base.OPENCYCLEP/12>3 and base.OPENCYCLEP/12<![CDATA[<=]]>5 then '06'
+		when base.OPENCYCLEP/12>5 then '07' end
+		)days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
 	from chb_month_prd_position cp
 		<if test="org != null  and org!=''">
 			left join DATA_AUTH_NOTIFY_INST di
@@ -974,7 +1077,7 @@ with cj as(
 	and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
 	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 	and base.operate_mode in ('03','04')
- 	and base.opendayp>1096
+	and base.termtype='09'
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -989,8 +1092,10 @@ with cj as(
 		left join CHB_MONTH_PRD_POSITION lastcp
 		on cp.prodid=lastcp.prodid
 		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-		where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
-		and cp.termtype in ('01','02','03','04','05','06','07')
+		left join chb_prd_baseinfo base
+		on cp.prodid=base.prod_id
+		where cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03' and base.operate_mode in ('03','04')
+		and cp.termtype in ('01','02','03','04','05','06','08')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1010,7 +1115,6 @@ with cj as(
 		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and  base.operate_mode in ('01','02')
-		and base.mdate-base.vdate>1096
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1030,7 +1134,7 @@ with cj as(
 		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
 		and base.operate_mode in ('03','04')
-		and base.opendayp>1096
+		and base.termtype='09'
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>

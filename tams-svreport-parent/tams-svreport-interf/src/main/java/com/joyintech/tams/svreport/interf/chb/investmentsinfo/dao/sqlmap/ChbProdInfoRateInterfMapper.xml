@@ -4,6 +4,8 @@
 	<resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbProdInfoRate">
 		<id column="SEQNO" property="seqno" jdbcType="CHAR"/>
 		<result column="PROD_ID" property="prodId" jdbcType="VARCHAR"/>
+		<result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR"/>
+		<result column="IS_LAY" property="isLay" jdbcType="VARCHAR"/>
 		<result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
 		<result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR"/>
 		<result column="CHANGE_TYPE" property="changType" jdbcType="VARCHAR"/>
@@ -25,7 +27,7 @@
 		<result column="CCY" property="ccy" jdbcType="VARCHAR"/>
 	</resultMap>
 	<sql id="Base_Column_List">
-		SEQNO, PROD_ID, CHANGE_DATE, PROFIT_TYPE, CHANGE_TYPE,PROD_YIELD,PROD_BENCHMARK_RATE,
+		SEQNO, PROD_ID, FPROD_ID,IS_LAY,CHANGE_DATE, PROFIT_TYPE, CHANGE_TYPE,PROD_YIELD,PROD_BENCHMARK_RATE,
 		UNIT_VALUE_TOTAL,UNIT_VALUE,SEVEN_DAY_RATE,ORG_CODE, DEPT_CODE,
 		STATUS, REV_DATE, DATA_SOURCE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
 		REMARK,CCY
@@ -36,7 +38,10 @@
 	resultType="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbProdInfoRate" parameterType="java.util.Map">
 	  select * from(
 	  <!-- 预期收益型产品预期收益率 -->
-	  SELECT info.FINPROD_MARKET_ID AS prodId,
+	  SELECT
+	  info.finprod_id as prodId,
+	  info.FINPROD_MARKET_ID AS fprodId,
+	  case when fpa.is_lay='Y' and fpa.is_cycle='N' then 'Y' else 'N' end as isLay,
 	  rul.EFF_DATE AS changeDate,
 	  info.PROFIT_TYPE as profitType,
 	  '01' changType,
@@ -49,16 +54,12 @@
 	  FROM FIN_CASH_CALC_RULE rul
 	  left JOIN FIN_PRODUCT info
 	  on info.FINPROD_ID=rul.FINPROD_ID
+	  left JOIN FIN_PRODUCT_add fpa
+	  on fpa.FINPROD_ID=rul.FINPROD_ID
 	  LEFT JOIN FIN_CASH_INFO B
 	  ON rul.CASH_ID = B.CASH_ID
 	  WHERE 1=1
-	  <if test="finprodType2List!=null and finprodType2List.size>0">
-		  and info.FINPROD_TYPE2 in
-		  <foreach collection="finprodType2List" item="finprodType2" open="("
-				   separator="," close=")">
-			  #{finprodType2,jdbcType=VARCHAR}
-		  </foreach>
-	  </if>
+	  and info.FINPROD_TYPE2 in ('F16','F24')
 	  AND info.PROFIT_TYPE = '02'
 	  and B.CASH_TYPE_1 = '02'
 	  AND rul.BRANCH=0
@@ -67,7 +68,9 @@
 	  union all
 
 	  <!-- 净值型产品单位净值取估值核算系统 -->
-	  select info.FINPROD_MARKET_ID AS PROD_ID,
+	  select 	info.finprod_id as prodId,
+	  info.FINPROD_MARKET_ID AS fprodId,
+	  null as isLay,
 	  val.VAL_DATE as changeDate,
 	  info.PROFIT_TYPE as profitType,
 	  '02' changType,
@@ -97,7 +100,9 @@
 
 	  union all
 	  <!--净值型、货币型产品最新的业绩基准（用于计算浮动管理费）-->
-	  SELECT info.FINPROD_MARKET_ID AS prodId,
+	  SELECT   info.finprod_id as prodId,
+	  info.FINPROD_MARKET_ID AS fprodId,
+	  case when fpa.is_lay='Y' and fpa.is_cycle='N' then 'Y' else 'N' end as isLay,
 	  rul.EFF_DATE AS changeDate,
 	  info.PROFIT_TYPE as profitType,
 	  '03' changType,
@@ -110,15 +115,10 @@
 	  FROM FIN_BASE_RULE_INFO rul
 	  left JOIN FIN_PRODUCT info
 	  on info.FINPROD_ID=rul.FINPROD_ID
-
+	  left JOIN FIN_PRODUCT_add fpa
+	  on fpa.FINPROD_ID=rul.FINPROD_ID
 	  WHERE 1=1
-	  <if test="finprodType2List!=null and finprodType2List.size>0">
-		  and info.FINPROD_TYPE2 in
-		  <foreach collection="finprodType2List" item="finprodType2" open="("
-				   separator="," close=")">
-			  #{finprodType2,jdbcType=VARCHAR}
-		  </foreach>
-	  </if>
+	  and info.FINPROD_TYPE2 in ('F16','F24')
 	  AND info.PROFIT_TYPE in ('01','03')
 	  AND rul.BRANCH=0
 	  and rul.base_rule_type='02'
@@ -146,7 +146,7 @@
 	REMARK,CCY)
 	<foreach collection="list" item="dto" separator="union all">
 		select #{dto.seqno,jdbcType=CHAR},
-		#{dto.prodId,jdbcType=VARCHAR},
+		#{dto.prodId,jdbcType=VARCHAR},	#{dto.fprodId,jdbcType=VARCHAR},#{dto.isLay,jdbcType=VARCHAR},
 		#{dto.changeDate,jdbcType=TIMESTAMP}, #{dto.profitType,jdbcType=VARCHAR},#{dto.changType,jdbcType=VARCHAR},
 		#{dto.prodYield,jdbcType=DECIMAL},#{dto.prodBenchmarkRate,jdbcType=DECIMAL},#{dto.unitValueTotal,jdbcType=DECIMAL},
 		#{dto.unitValue,jdbcType=DECIMAL},#{dto.sevenDayRate,jdbcType=DECIMAL},
@@ -228,6 +228,8 @@
 		SELECT
 		#{item.seqno,jdbcType=CHAR} SEQNO,
 		#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+		#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
+		#{item.isLay,jdbcType=VARCHAR} IS_LAY,
 		#{item.changeDate,jdbcType=TIMESTAMP} CHANGE_DATE,
 		#{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
 		#{item.changType,jdbcType=VARCHAR} CHANGE_TYPE,
@@ -273,14 +275,14 @@
 	CII.UPDATE_TIME = TEMP.UPDATE_TIME,
 	CII.CCY = TEMP.CCY
 	<!-- 未匹配到这插入 -->
-	WHEN NOT MATCHED THEN INSERT (SEQNO, PROD_ID,
+	WHEN NOT MATCHED THEN INSERT (SEQNO, PROD_ID,FPROD_ID,IS_LAY,
 	CHANGE_DATE, PROFIT_TYPE,CHANGE_TYPE, PROD_YIELD,PROD_BENCHMARK_RATE,UNIT_VALUE_TOTAL,
 	UNIT_VALUE,SEVEN_DAY_RATE,
 	ORG_CODE, DEPT_CODE, STATUS,
 	REV_DATE, DATA_SOURCE, UPDATE_USER,
 	UPDATE_TIME, CREATE_USER, CREATE_TIME,
 	REMARK,CCY)
-	VALUES(TEMP.SEQNO, TEMP.PROD_ID,
+	VALUES(TEMP.SEQNO, TEMP.PROD_ID,TEMP.FPROD_ID,TEMP.IS_LAY,
 	TEMP.CHANGE_DATE, TEMP.PROFIT_TYPE,TEMP.CHANGE_TYPE,
 	TEMP.PROD_YIELD,TEMP.PROD_BENCHMARK_RATE,TEMP.UNIT_VALUE_TOTAL,TEMP.UNIT_VALUE,TEMP.SEVEN_DAY_RATE,
 	TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.STATUS,
