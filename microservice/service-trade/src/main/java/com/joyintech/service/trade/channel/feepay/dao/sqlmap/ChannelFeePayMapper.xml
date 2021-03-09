@@ -84,13 +84,13 @@ AND NOT EXISTS (SELECT 1 FROM WFL_TRD_PRODUCT_DEAL TT1
 </select>
 
 <select id="findChannelFeePaied" resultType="string">
-SELECT deal.TRADE_ID FROM TRD_PRODUCT_DEAL deal
+SELECT deal.TOTLE_TRADE_ID FROM TRD_PRODUCT_DEAL deal
 LEFT JOIN TRD_PRODUCT_DEAL_ADD t on deal.TRADE_ID = t.TRADE_ID
 WHERE deal.MDATE = #{mdate, jdbcType=DATE} AND deal.FINPROD_ID = #{finprodId}
                                         and deal.TRADE_STATUS = #{TRADE_STATUS_01} and deal.IS_CANCEL = #{N}
                                         and t.PORTFOLIO_ID = #{portfolioId}
 UNION ALL
-SELECT wfl.TRADE_ID || '流程中' FROM WFL_TRD_PRODUCT_DEAL wfl
+SELECT wfl.TOTLE_TRADE_ID || '流程中' FROM WFL_TRD_PRODUCT_DEAL wfl
 LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wfladd on wfl.TRADE_ID = wfladd.TRADE_ID
 WHERE wfl.MDATE = #{mdate, jdbcType=DATE} AND wfl.FINPROD_ID = #{finprodId}
                                             and wfl.TRADE_STATUS = #{TRADE_STATUS_01} and wfl.IS_CANCEL = #{N}
