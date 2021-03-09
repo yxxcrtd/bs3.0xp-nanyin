@@ -318,9 +318,9 @@
 		and TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{tradeStatus}
     	and TRD_TRADE_FEE_DETAIL.FEE_TYPE = #{feeType1}
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE=#{TG_BUSI_TYPE}
-    	<if test="cdate != null and cdate != ''">
+    	<!--<if test="cdate != null and cdate != ''">
     		and #{cdate} >= to_char(TRD_PRODUCT_DEAL.MDATE, 'yyyy-MM-dd') 
-    	</if>
+    	</if>-->
 		<if test="org != null and org != '' and (feeType1 == 'B06' or feeType1 == 'B08')">
 			and TRD_PRODUCT_DEAL.REGIST_ORG = #{org}
 		</if>

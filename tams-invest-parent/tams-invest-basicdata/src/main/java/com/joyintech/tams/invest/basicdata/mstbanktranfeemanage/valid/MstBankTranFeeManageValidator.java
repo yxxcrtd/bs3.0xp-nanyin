@@ -260,10 +260,8 @@ public class MstBankTranFeeManageValidator implements BeanValidator {
             }
             //Add  by  张年  20190829  end
           //Add  by  wangpeng  20191101  end
-            if(!StringUtil.equals(dto.getFeeType(), DictCodeListExt1.一次性费用类型_交易手续费.getValue())
-                && StringUtil.isEmpty(dto.getRegistOrg())){
-            	resultList.add(new ValidMessage(
-                        "registOrg","非交易手续费，登记托管机构必填！"));
+            if(StringUtil.isEmpty(dto.getRegistOrg())){
+            	resultList.add(new ValidMessage("registOrg","登记托管机构必填！"));
             }
             
           //Add  by  wangpeng  20191101  end

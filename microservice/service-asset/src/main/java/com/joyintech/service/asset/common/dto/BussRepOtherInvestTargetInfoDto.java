@@ -69,6 +69,11 @@ public class BussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
      * 人行机构规模
      */
     private String repInstitSize;
+    
+    /**
+     * 是否政府出资产业投资基金
+     */
+    private String isUnlisted;
 
     /**
      * 受让形式
@@ -204,4 +209,14 @@ public class BussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
     public void setRepAssignee(String repAssignee) {
         this.repAssignee = repAssignee;
     }
+
+
+	public String getIsUnlisted() {
+		return isUnlisted;
+	}
+
+
+	public void setIsUnlisted(String isUnlisted) {
+		this.isUnlisted = isUnlisted;
+	}
 }

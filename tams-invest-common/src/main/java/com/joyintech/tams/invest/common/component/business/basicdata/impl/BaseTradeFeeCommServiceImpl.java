@@ -55,9 +55,9 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
     			BasicTradeFeeInputDto searchDto=new BasicTradeFeeInputDto();
     			BeanUtil.copyPropertiesIgnoreNull(searchDto, inputDto);
     			//交易手续费不需要传入登记托管机构
-    			if(StringUtil.equals(BussinessDictCodeList.费用类型_交易手续费.getValue(), feeType)){
-    				searchDto.setRegistOrg(null);
-    			}
+//    			if(StringUtil.equals(BussinessDictCodeList.费用类型_交易手续费.getValue(), feeType)){
+//    				searchDto.setRegistOrg(null);
+//    			}
     			searchDto.setFeeType(feeType);
     			searchDto.setSecAcctId(null);
                 if (StringUtil.equals(searchDto.getIsGrade(), "0")) {

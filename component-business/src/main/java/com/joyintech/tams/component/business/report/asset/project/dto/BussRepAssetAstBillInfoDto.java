@@ -73,6 +73,11 @@ public class BussRepAssetAstBillInfoDto extends RepAssetAstBill{
      * 是否投向金融资产投资公司发行的私募资产管理产品
      */
     private String repPrivateprdFlag;
+    
+    /**
+     * 是否标准化票据
+     */
+    private String isBzhpj;
 
     
     /**
@@ -219,4 +224,15 @@ public class BussRepAssetAstBillInfoDto extends RepAssetAstBill{
     public void setRepPrivateprdFlag(String repPrivateprdFlag) {
         this.repPrivateprdFlag = repPrivateprdFlag;
     }
+
+
+	public String getIsBzhpj() {
+		return isBzhpj;
+	}
+
+
+	public void setIsBzhpj(String isBzhpj) {
+		this.isBzhpj = isBzhpj;
+	}
+
 }

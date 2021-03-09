@@ -19,6 +19,7 @@ $(function() {
                     var deal = {};
                     deal.ccy = $("#ccy").val();
                     deal.tradeAmt = feeInfoList[i].actPayAmt;
+                    deal.theoryInt = feeInfoList[i].payAmt;
                     deal.settleDate = $("#settleDate").val();
                     deal.ps = T10;
                     deal.tradeDate = $("#settleDate").val();
@@ -67,16 +68,7 @@ $(function() {
         },{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']
         }],
         editCell : function(value, data, field, cell, column){
-            if (field === "actPayAmt"){
-                var totalAmt = '0';
-                var allData = feeInfoTable.getAllRows();
-                if (allData && allData.length > 0){
-                    $.each(allData, function(id, value){
-                        totalAmt = JoyinMath.doAdd(totalAmt, value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
-                    });
-                }
-                $('#tradeAmt').val(totalAmt).trigger('change');
-            }else if(field === 'portfolioId'){
+            if(field === 'portfolioId'){
                 Joyin.ajaxSync(JoyinUtil.getRealPath('/invest/trade/channel/feepay/ChannelFeePay002/findPortfolioName'),{portfolioId:value}, function(result) {
                     data.portFolioName = result;
                 })
@@ -95,11 +87,23 @@ $(function() {
                             // $("#tradeAmt").val(result.tradeAmt).trigger('blur');
                             // $("#ccy").val(result.ccy).trigger('change');
                             data.payAmt = result.tradeAmt;
+                            data.actPayAmt = data.payAmt;
                         }
                     });
                 }
                 feeInfoTable.renderRow(data.LAY_TABLE_INDEX, data);
             }
+            var totalAmt = '0';
+            var totalAmt1 = '0';
+            var allData = feeInfoTable.getAllRows();
+            if (allData && allData.length > 0){
+                $.each(allData, function(id, value){
+                    totalAmt = JoyinMath.doAdd(totalAmt, value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
+                    totalAmt1 = JoyinMath.doAdd(totalAmt1, value.payAmt, 2, JoyinMath.ROUND_HALF_UP);
+                });
+            }
+            $('#tradeAmt').val(totalAmt).trigger('change');
+            $('#theoryInt').val(totalAmt1).trigger('change');
         },
         beforeEditCell : function(preVal, field, rowData) {
             if(field === 'portFolioName' || field === 'payAmt'){
@@ -112,13 +116,16 @@ $(function() {
     feeInfoTable.bind("click",".delt",function (data,index){
         feeInfoTable.removeRow(data);
         var totalAmt = '0';
+        var totalAmt1 = '0';
         var allData = feeInfoTable.getAllRows();
         if (allData && allData.length > 0){
             $.each(allData, function(id, value){
                 totalAmt = JoyinMath.doAdd(totalAmt, value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
+                totalAmt1 = JoyinMath.doAdd(totalAmt1, value.payAmt, 2, JoyinMath.ROUND_HALF_UP);
             });
         }
         $('#tradeAmt').val(totalAmt).trigger('change');
+        $('#theoryInt').val(totalAmt1).trigger('change');
     })
 
     function saveOrSubmit(operateType) {
@@ -165,7 +172,7 @@ $(function() {
         Joyin.ajax(basePath + "invest/trade/channel/feepay/ChannelFeePay002/getCollectType", {finprodMarketId : finprodMarketId},
                 function(result){
                     if (result == '01') {
-                    	$('#mdate').val('').trigger('change').attr('disabled',true);                      
+                    	$('#mdate').val('').attr('disabled',true);                     	
                     }else{
                     	$('#mdate').attr('disabled',false);   
                     }
@@ -196,6 +203,18 @@ $(function() {
      * 画面加载完成
      */
     $(function() {
+    	
+    	 var finprodMarketId = $("#finprodMarketId").val(); 
+    	 if(finprodMarketId){
+           Joyin.ajax(basePath + "invest/trade/channel/feepay/ChannelFeePay002/getCollectType", {finprodMarketId : finprodMarketId},
+                   function(result){
+                       if (result == '01') {
+                       	$('#mdate').val('').attr('disabled',true);                     	
+                       }else{
+                       	$('#mdate').attr('disabled',false);   
+                       }
+                   });
+    	 }
         /**
          * 保存
          */

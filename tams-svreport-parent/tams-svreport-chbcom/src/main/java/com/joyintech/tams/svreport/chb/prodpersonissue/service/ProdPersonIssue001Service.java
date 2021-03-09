@@ -320,9 +320,12 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
  		List<ProdPersonIssue001Dto> subList = (List<ProdPersonIssue001Dto>)map.get("prodpersonissueList");
  		if(!CollectionUtils.isEmpty(subList)){
  			for(ProdPersonIssue001Dto dto : subList){
- 				if(DictCodeListExt2.报送状态_未报送.getValue().equals(dto.getSendStatus())){
- 					registList.add(dto);
- 				}
+				// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 start
+// 				if(DictCodeListExt2.报送状态_未报送.getValue().equals(dto.getSendStatus())){
+// 					registList.add(dto);
+// 				}
+				registList.add(dto);
+				// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 end
  			}
  		}else{
  			//按条件查询全部

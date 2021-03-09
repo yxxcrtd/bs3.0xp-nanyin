@@ -144,4 +144,26 @@
 		WHERE
 			FEE_NAME = #{feeName,jdbcType=VARCHAR}
 	    </select>
+	    
+	  	<select id="getDtoByFeeNameInstitution" parameterType="java.util.Map" resultType="com.joyintech.service.basicdata.mstfeevarieties.dto.MstFeeVarietiesDto">
+	    SELECT
+	  		distinct
+			MF.FEE_ID AS feeId,
+			MF.FEE_NAME AS feeName,
+			MF.APPLY_TYPE AS applyType,
+			MF.FEE_TYPE AS feeType,
+			MF.ORG_TYPE AS orgType,
+			MF.ORG_TYPE2 AS orgType2,
+			MF.CHARGE_TYPE AS chargeType,
+			MF.BASIC_BILL AS basicBill,
+			MF.BASIS AS basis,
+			MF.ORG_TYPE2 orgType2,
+			MF.REMARK AS remark
+		FROM
+			MST_FEEINFO  MF
+		INNER JOIN SYS_DEPARTMENT SD on sd.dept_code = MF.create_dept
+		WHERE
+			MF.FEE_NAME = #{feeName,jdbcType=VARCHAR}
+			AND SD.INSTITUTION_CODE= #{institutionCode,jdbcType=VARCHAR}
+	    </select>
 </mapper>

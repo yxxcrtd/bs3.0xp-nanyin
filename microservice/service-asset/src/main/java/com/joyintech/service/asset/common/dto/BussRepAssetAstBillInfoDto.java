@@ -67,6 +67,11 @@ public class BussRepAssetAstBillInfoDto extends RepAssetAstBill{
     private String repPrivateprdFlag;
     
     /**
+     * 是否标准化票据
+     */
+    private String isBzhpj;
+    
+    /**
      * 获取 repAssetType
      * @return repAssetType.
      */
@@ -181,4 +186,16 @@ public class BussRepAssetAstBillInfoDto extends RepAssetAstBill{
     public void setRepPrivateprdFlag(String repPrivateprdFlag) {
         this.repPrivateprdFlag = repPrivateprdFlag;
     }
+
+
+	public String getIsBzhpj() {
+		return isBzhpj;
+	}
+
+
+	public void setIsBzhpj(String isBzhpj) {
+		this.isBzhpj = isBzhpj;
+	}
+
+
 }

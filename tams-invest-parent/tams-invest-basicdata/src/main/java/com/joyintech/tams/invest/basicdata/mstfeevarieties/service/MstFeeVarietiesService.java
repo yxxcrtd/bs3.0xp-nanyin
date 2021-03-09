@@ -1,9 +1,11 @@
 package com.joyintech.tams.invest.basicdata.mstfeevarieties.service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -152,6 +154,26 @@ public class MstFeeVarietiesService extends CommonExportService<MstFeeVarietiesD
         return restTemplate.getForList(
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstFeeVarieties/getDtoByFeeName?feeName="
                 +feeName,MstFeeVarietiesDto.class);
+    }
+    
+    
+    /**
+     * 通过费用名称查询数据，验证费用名称的唯一性
+     * <功能详细描述>
+     * @param feeName feeName
+     * @return dto
+     * @see
+     * @since 1.0
+     */
+    public List<MstFeeVarietiesDto> getDtoByFeeNameInstituon(String feeName) {
+    	if(MultilevelDataAuthorityUtil.isEnabled()) {
+        	Map<String,Object> para = new HashMap<>();
+        	para.put("feeName", feeName);
+        	para.put("institutionCode",MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+            return restTemplate.postForList(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstFeeVarieties/getDtoByFeeNameInstitution",para,MstFeeVarietiesDto.class);
+    	}
+    	return null;
     }
 
     

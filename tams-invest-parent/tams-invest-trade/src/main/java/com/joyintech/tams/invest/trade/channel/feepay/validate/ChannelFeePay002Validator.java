@@ -60,6 +60,9 @@ public class ChannelFeePay002Validator implements CommonValidator {
         		 resultList.add(new ValidMessage("请输入计提结束日。"));
         	 }
         }
+        if(StringUtil.isEmpty(dto.getIsClean())){
+            resultList.add(new ValidMessage("请输入是否结清。"));
+        }
         return resultList;
     }
 }

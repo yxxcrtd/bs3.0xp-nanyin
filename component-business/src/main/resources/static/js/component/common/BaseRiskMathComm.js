@@ -742,10 +742,13 @@
             portfolioName = "portfolioId";
         }
         var portfolioId = $("#" + portfolioName).val();
-        Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/isSetRiskByPortfolioId', portfolioId, function (result) {
-            resultFlag = result.data.flag;
-        }, false);
+        if(portfolioId != "" && portfolioId != null && portfolioId != undefined){
+            console.log("haha")
+            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/isSetRiskByPortfolioId', portfolioId, function (result) {
+                    resultFlag = result.data.flag;
+                }, false);
 
+        }
         return resultFlag;
     }
     

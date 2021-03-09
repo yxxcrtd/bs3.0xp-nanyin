@@ -22,6 +22,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.report.asset.project.BussRepOtherInvestTargetInfoService;
 import com.joyintech.tams.component.business.report.asset.project.dto.BussRepOtherInvestTargetInfoDto;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -47,6 +48,7 @@ public class BussRepOtherInvestTargetInfoController extends BaseController{
     @Override
     public String init(Model model) {
         setSelectOptionToModel(model, bussRepOtherInvestTargetInfoService.getInitDictCode());
+        setSelectOptionToModel(model, DictCode.是否_中债);
         model.addAttribute("YES", DictCodeList.是否_中债_是.getValue());
         //中债报送关联上级页面数据字典
         if (StringUtil.isNotEmpty(this.getParam("svr_asset_type_second_level"))){

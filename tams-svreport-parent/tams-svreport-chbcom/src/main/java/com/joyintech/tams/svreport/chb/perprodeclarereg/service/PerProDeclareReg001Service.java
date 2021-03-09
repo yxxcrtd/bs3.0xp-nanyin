@@ -444,12 +444,15 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			//界面勾选
 			@SuppressWarnings("unchecked")
 			List<PerProDeclareRegDto> dataList =  (List<PerProDeclareRegDto>) map.get("perProDeclareList");
-			subList=perProDeclareReg001Mapper.selcteDataByList(dataList);
-			for(PerProDeclareRegDto dto : subList){
-				if(DictCodeListExt2.报送状态_未报送.getValue().equals(dto.getSendStatus())){
-					proDeclareList.add(dto);
-				}
-			}
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 start
+//			subList=perProDeclareReg001Mapper.selcteDataByList(dataList);
+//			for(PerProDeclareRegDto dto : subList){
+//				if(DictCodeListExt2.报送状态_未报送.getValue().equals(dto.getSendStatus())){
+//					proDeclareList.add(dto);
+//				}
+//			}
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 end
+			proDeclareList = perProDeclareReg001Mapper.selcteDataByList(dataList);
 		}
 		if(!CollectionUtils.isEmpty(proDeclareList)){
 			// 每批处理的数据条数

@@ -931,7 +931,7 @@ public class InvestmentsInfoService {
 		//备注
 		paraMap.put("assettype2", "1299");
 		paraMap.put("endDate",endDate);
-
+		paraMap.put("svrischlbtm", CacheUtil.getSysParam("SVR_IS_CHL_BTM").toString());
 		OverallInfoDto reamrk57 = overallInfoMapper.queryBottomRemarkInfoByInfo(paraMap);
 		paraMap.put("assettype2", "1399");
 		OverallInfoDto reamrk65 = overallInfoMapper.queryBottomRemarkInfoByInfo(paraMap);
@@ -990,17 +990,19 @@ public class InvestmentsInfoService {
 		Map<String, Object> paraMap = new HashMap<String, Object>();
 		// 本季末参数
 		paraMap.put("termId", termId);
-		List<String> assetType2List = new ArrayList<>();
-		assetType2List.add("2501");
-		assetType2List.add("2502");
+		List<String> assetType2List16 = new ArrayList<>();
+		assetType2List16.add("2501");
+		assetType2List16.add("2502");
 		//备注
-		paraMap.put("assetType2List", assetType2List);
+		paraMap.put("assetType2List", assetType2List16);
 		paraMap.put("endDate",endDate);
 		if(MultilevelDataAuthorityUtil.isEnabled()) {
 			//联社模式,查询登录人的机构
 			String org =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
 			paraMap.put("org",org);
 		}
+		paraMap.put("svrischlbtm", CacheUtil.getSysParam("SVR_IS_CHL_BTM").toString());
+
 		OverallInfoDto reamrk16 = overallInfoMapper.queryRemarkInfoByInfo(paraMap);
 		//备注
 		if(null!=reamrk16 && StringUtil.isNotEmpty(reamrk16)){
@@ -1008,7 +1010,23 @@ public class InvestmentsInfoService {
 		}else{
 			resultRemarkMap.put("t6_16_remark", null);
 		}
-
+		//
+		List<String> assetType2List27 = new ArrayList<>();
+		assetType2List27.add("1401");
+		assetType2List27.add("1402");
+		assetType2List27.add("1403");
+		assetType2List27.add("1404");
+		assetType2List27.add("1405");
+		assetType2List27.add("1406");
+		assetType2List27.add("1499");
+		//备注
+		paraMap.put("assetType2List", assetType2List27);
+		OverallInfoDto reamrk27 = overallInfoMapper.queryRemarkInfoByInfo(paraMap);
+		if(null!=reamrk27 && StringUtil.isNotEmpty(reamrk27)){
+			resultRemarkMap.put("t6_27_remark", reamrk27.getRemark());
+		}else{
+			resultRemarkMap.put("t6_27_remark", null);
+		}
 		return resultRemarkMap;
 	}
 	/**  
@@ -1535,6 +1553,7 @@ public class InvestmentsInfoService {
 		Date lastEndDate=calendar.getTime();
 
 		//今年年初
+		calendar.setTime(cdate);
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
@@ -1766,13 +1785,16 @@ public class InvestmentsInfoService {
 			paraMap.put("yearStartDate", yearStartDate);
 
 			assetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo1(paraMap);
-			//上季度末
 
-			calendar.add(Calendar.MONTH, -3);
-			calendar.add(Calendar.MONTH, 1);
-			calendar.set(Calendar.DAY_OF_MONTH, 0);
-			//取到上季末
-			Date lastlastEndDate=calendar.getTime();
+
+			//上上季度末
+			Calendar calendarlastEndDate= Calendar.getInstance();
+			calendarlastEndDate.setTime(lastEndDate);
+			calendarlastEndDate.add(Calendar.MONTH, -3);
+			calendarlastEndDate.add(Calendar.MONTH, 1);
+			calendarlastEndDate.set(Calendar.DAY_OF_MONTH, 0);
+			Date lastlastEndDate=calendarlastEndDate.getTime();
+
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastendDate", lastlastEndDate);
 			paraMap.put("yearStartDate", yearStartDate);
@@ -1992,6 +2014,7 @@ public class InvestmentsInfoService {
 		//取到上季末
 		Date lastEndDate=calendar.getTime();
 		//今年年初
+		calendar.setTime(cdate);
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
@@ -2024,13 +2047,13 @@ public class InvestmentsInfoService {
 			paraMap.put("yearStartDate", yearStartDate);
 
 			financeAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo1(paraMap);
-			//上季度末
-
-			calendar.add(Calendar.MONTH, -3);
-			calendar.add(Calendar.MONTH, 1);
-			calendar.set(Calendar.DAY_OF_MONTH, 0);
-			//取到上季末
-			Date lastlastEndDate=calendar.getTime();
+			//上上季度末
+			Calendar calendarlastEndDate= Calendar.getInstance();
+			calendarlastEndDate.setTime(lastEndDate);
+			calendarlastEndDate.add(Calendar.MONTH, -3);
+			calendarlastEndDate.add(Calendar.MONTH, 1);
+			calendarlastEndDate.set(Calendar.DAY_OF_MONTH, 0);
+			Date lastlastEndDate=calendarlastEndDate.getTime();
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastendDate", lastlastEndDate);
 			paraMap.put("yearStartDate", yearStartDate);
@@ -2484,6 +2507,7 @@ public class InvestmentsInfoService {
 		Date endDate=calendar1.getTime();
 		paraMap.put("startDate",startDate);
 		paraMap.put("endDate",endDate);
+		paraMap.put("svrischlbtm", CacheUtil.getSysParam("SVR_IS_CHL_BTM").toString());
 		List<OverallInfoDto> overallInfoDtoRemarkList = overallInfoMapper.queryBottomRemarkInfoByIndustry(paraMap);
 
 		// Map<行业分类:产品形式, 余额>
@@ -2531,6 +2555,7 @@ public class InvestmentsInfoService {
 		paraMap.put("startDate", startDate);
 		paraMap.put("lastStartDate", lastDate);
 		paraMap.put("endDate",endDate);
+		paraMap.put("svrischlbtm", CacheUtil.getSysParam("SVR_IS_CHL_BTM").toString());
 		InvestmentBusinessDetailsDto investmentBusinessDetailsDto36= investmentBusinessDetailsMapper.queryBottomDiffAsset(paraMap);
 		investmentBusinessDetailsDtoList.add(investmentBusinessDetailsDto36);
 		// 本季末参数

@@ -424,10 +424,13 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
  		
  		List<ChbAstValueRegist001Dto> chbBotAstPositionRegistList  = new ArrayList<ChbAstValueRegist001Dto>();
         for(ChbAstValueRegist001Dto m : chbBotAstPositionRegistListOrg){
-            // 手工处理只处理未报送的
-            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())){
-            	chbBotAstPositionRegistList.add(m);
-            }
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 start
+//            // 手工处理只处理未报送的
+//            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())){
+//            	chbBotAstPositionRegistList.add(m);
+//            }
+			chbBotAstPositionRegistList.add(m);
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 end
         }
  		
  		if(!CollectionUtils.isEmpty(chbBotAstPositionRegistList)){
@@ -476,10 +479,13 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
  		
  		List<ChbAstValueRegist001Dto> chbBotAstPositionRegistList  = new ArrayList<ChbAstValueRegist001Dto>();
         for(ChbAstValueRegist001Dto m : chbBotAstPositionRegistListOrg){
-            // 手工处理只处理未报送的
-            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())){
-            	chbBotAstPositionRegistList.add(m);
-            }
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 start
+//            // 手工处理只处理未报送的
+//            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())){
+//            	chbBotAstPositionRegistList.add(m);
+//            }
+			chbBotAstPositionRegistList.add(m);
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 end
         }
  		
  		if(!CollectionUtils.isEmpty(chbBotAstPositionRegistList)){

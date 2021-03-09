@@ -57,5 +57,16 @@ public interface MstFeeVarietiesMapper {
      * @since 1.0
      */
     List<MstFeeVarietiesDto> getDtoByFeeName(String feeName);
+    
+    
+    /**
+     * 通过费用名称查询数据，验证费用名称的唯一性
+     * <功能详细描述>
+     * @param feeName
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<MstFeeVarietiesDto> getDtoByFeeNameInstitution(Map<String,Object> para);
 
 }

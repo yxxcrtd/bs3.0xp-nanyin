@@ -326,11 +326,14 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
         Iterator<ProdDurationReg001Dto> it=prodDurationList.iterator();
         while(it.hasNext()){
         	ProdDurationReg001Dto m =  it.next();
-			if(m.getSendStatus().equals("01")){
-				registSeqList.add(m.getRegistSeqno());
-			}else{
-				it.remove();
-			}
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 start
+//			if(m.getSendStatus().equals("01")){
+//				registSeqList.add(m.getRegistSeqno());
+//			}else{
+//				it.remove();
+//			}
+			registSeqList.add(m.getRegistSeqno());
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 end
 		}
         // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
         if (!StringUtil.isEmptyList(registSeqList)) {

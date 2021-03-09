@@ -310,10 +310,18 @@
 		</if>
 		left join chb_asset_info info
 		ON cmap.asset_code=info.asset_code
-		left join chb_assets_basis_data data
-		on cmap.asset_code=data.asset_id
-		and data.value_date=#{endDate, jdbcType = DATE}
-		and cmap.prod_id =data.prod_id
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			left join chb_assets_basis_data data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			left join chb_assets_basis_data_nobtm data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
 		where  TO_CHAR(cmap.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}
 		and cmap.ASSETVALUE_B is not null
 		<if test="assettype2 != null  and assettype2.equals('1299')">
@@ -399,10 +407,18 @@
 
 		left join chb_asset_info info
 		ON cmap.asset_code=info.asset_code
-		left join chb_assets_basis_data_nobtm data
-		on cmap.asset_code=data.asset_id
-		and data.value_date=#{endDate, jdbcType = DATE}
-		and cmap.prod_id =data.prod_id
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			left join chb_assets_basis_data data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			left join chb_assets_basis_data_nobtm data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
 		where  TO_CHAR(cmap.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}
 		and cmap.ASSETVALUE_A is not null
 		<if test="assetType2List!=null and assetType2List.size>0">
@@ -600,10 +616,18 @@
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
-		left join chb_assets_basis_data data
-		on cmap.asset_code=data.asset_id
-		and data.value_date=#{endDate, jdbcType = DATE}
-		and cmap.prod_id =data.prod_id
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			left join chb_assets_basis_data data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			left join chb_assets_basis_data_nobtm data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}

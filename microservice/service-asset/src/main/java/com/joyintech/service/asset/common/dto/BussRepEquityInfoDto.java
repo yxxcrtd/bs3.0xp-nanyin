@@ -75,6 +75,11 @@ public class BussRepEquityInfoDto extends RepAssetEquity{
      * 受让形式
      */
     private String repAssignee;
+    
+    /**
+     * 是否政府出资产业投资基金
+     */
+    private String isUnlisted;
     /**
      * 获取 repAssetType
      * @return repAssetType.
@@ -339,4 +344,14 @@ public class BussRepEquityInfoDto extends RepAssetEquity{
     public void setRepAssignee(String repAssignee) {
         this.repAssignee = repAssignee;
     }
+
+
+	public String getIsUnlisted() {
+		return isUnlisted;
+	}
+
+
+	public void setIsUnlisted(String isUnlisted) {
+		this.isUnlisted = isUnlisted;
+	}
 }

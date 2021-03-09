@@ -534,10 +534,10 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
         //质押券置换指令持仓
         List<EtrSecPositionFlowDto> etrSecPositionFlows = new ArrayList<>();
         for(PtlSecPositionFlowDto it:lstPtlSecPositionFlowDto){
-            if(StringUtil.isEmpty(input.getEntrustId())){
-                //该交易无指令，即无指令委托持仓
-                continue;
-            }
+//            if(StringUtil.isEmpty(input.getEntrustId())){
+//                //该交易无指令，即无指令委托持仓
+//                continue;
+//            }
             EtrSecPositionFlowDto dto=new EtrSecPositionFlowDto();
             dto.setSeqno(IDGenerator.generate(32));
             dto.setPortfolioId(it.getPortfolioId());
@@ -548,7 +548,7 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
             dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
             dto.setCdate(it.getCdate());
             dto.setCcy(it.getCcy());
-            dto.setAmount(it.getAmount());
+            dto.setAmount(it.getAmount().negate());
             dto.setpFinprodId(it.getpFinprodId());
             dto.setTradeId(it.getTradeId());
             dto.setCreateUser(it.getCreateUser());

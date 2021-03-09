@@ -47,7 +47,8 @@
                                                data-th-text="#{MstBankTranFeeManage001.registOrg}">登记托管机构</label>
                                         <div class="layui-input-inline input-inline">
                                             <select type="text" id="registOrg" name="registOrg" required="required"
-                                                   class="layui-input form-input input-select"
+                                                   class="layui-input form-input input-select" placeholder=""
+                                                    data-th-placeholder="#{SysCommon.placeholder}"
                                                    data-th-data-result='${REGIST_ORG_INV}'
                                                    data-th-initValue='${entity?.registOrg}'>
                                              </select>

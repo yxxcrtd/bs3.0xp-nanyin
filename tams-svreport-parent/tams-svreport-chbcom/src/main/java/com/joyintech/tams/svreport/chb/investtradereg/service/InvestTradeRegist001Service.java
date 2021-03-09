@@ -322,11 +322,14 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 		}
         List<InvestTradeRegist001Dto> investTradeList = new ArrayList<InvestTradeRegist001Dto>();
         for(InvestTradeRegist001Dto m : investTradeListOrg){
-            // 手工处理只处理未报送的
-            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())
-                    ||DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatusName())){
-                investTradeList.add(m);
-            }
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 start
+//            // 手工处理只处理未报送的
+//            if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())
+//                    ||DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatusName())){
+//                investTradeList.add(m);
+//            }
+			investTradeList.add(m);
+			// modify by zhangliang 20210309 手工处理与前台逻辑一致：只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理 end
         }
         // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
         List<String> registSeqList = new ArrayList<String>();

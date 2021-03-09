@@ -21,6 +21,14 @@ public class ChbProdInfoRate extends BaseEntity{
      * 产品代码
      */
     private String prodId;
+    /**
+     * 母产品代码
+     */
+    private String fprodId;
+    /**
+     * 是否分层
+     */
+    private String isLay;
 
     /**
      * 变动日期
@@ -289,5 +297,21 @@ public class ChbProdInfoRate extends BaseEntity{
 
     public void setChangType(String changType) {
         this.changType = changType;
+    }
+
+    public String getFprodId() {
+        return fprodId;
+    }
+
+    public void setFprodId(String fprodId) {
+        this.fprodId = fprodId;
+    }
+
+    public String getIsLay() {
+        return isLay;
+    }
+
+    public void setIsLay(String isLay) {
+        this.isLay = isLay;
     }
 }

@@ -61,6 +61,20 @@ $(function() {
         var type6 = $('#type6').val();
         var type7 = $('#type7').val();
         var repAssetType = $('#repAssetType').val();
+        
+        if(repAssetType == "1301"&& !$('#bussRepEquityInfoDto_isUnlisted').val()){
+        	Joyin.error("是否政府出资产业投资基金数据不能为空。")
+            return;
+        }
+        if(repAssetType == "1399"&& !$('#bussRepOtherInvestTargetInfoDto_isUnlisted').val()){
+        	Joyin.error("是否政府出资产业投资基金数据不能为空。")
+            return;
+        }
+        if(repAssetType == "1201" && !$('#bussRepAssetAstBillInfoDto_isBzhpj').val()){
+        	Joyin.error("是否标准化票据数据不能为空。")
+            return;
+        }
+        
         var object = $.serializeToObject('#submitForm', true);
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -203,6 +217,7 @@ $(function() {
         //add by zhangnian 20191008 end
         var repAssetType = $('#repAssetType').val();
         var type9 = $('#type9').val();
+        $('#bussRepOtherInvestTargetInfoDto_isUnlisted_div').hide();
         //权益类中债报送
         $('#bussRepEquityInfoDto_div').hide();
         //信贷及非标资产报送信息 
@@ -257,6 +272,7 @@ $(function() {
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetType_div').show();
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetTyprExplain_div').show();
             $('#bussRepOtherInvestTargetInfoDto_div').show();
+            $('#bussRepOtherInvestTargetInfoDto_isUnlisted_div').show();
             //中债新增 20200409 start
             //是否为债转股
             $('#bussRepOtherInvestTargetInfoDto_repDeptEquity_div').show();
@@ -273,7 +289,8 @@ $(function() {
             //行内资产类别、行内资产类别说明
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetType_div').show();
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetTyprExplain_div').show();
-            $('#bussRepOtherInvestTargetInfoDto_div').show();
+            $('#bussRepOtherInvestTargetInfoDto_isUnlisted_div').hide();
+            $('#bussRepOtherInvestTargetInfoDto_div').show();          
         }else if(repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"||repAssetType=="1205"||repAssetType=="2202"
             ||repAssetType=="1206"||repAssetType=="1207"||repAssetType=="1208"||repAssetType=="1209"||repAssetType=="2201"){
             $('#bussRepAssetCreditNonstdInfoDto_div').show();
