@@ -205,6 +205,7 @@
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			WHERE T1.BUSI_TYPE = #{COMMON_BUSINESS_TYPETRD11}
+            and t1.PORTFOLIO_ID <include refid="portfolioAth" />
 			and T1.TRADE_STATUS =  #{TRADE_STATUS01}
 		    <if test="portfolioId != null and !portfolioId.isEmpty()">
 			    <foreach collection="portfolioId" open=" AND T1.PORTFOLIO_ID IN (" item="item" close=")" separator=",">#{item}</foreach>
@@ -911,6 +912,7 @@
 				LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 				LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 				WHERE T1.BUSI_TYPE = #{COMMON_BUSINESS_TYPETRD11}
+                and t1.PORTFOLIO_ID <include refid="portfolioAth" />
 				and t1.TRADE_STATUS = #{TRADE_STATUS01}
 				and t1.IS_CANCEL = #{YES_OR_NO_N}
 				AND T2.INVEST_YESORNO = 'Y'
@@ -1605,6 +1607,7 @@
 				LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
 				WHERE
 				T2.INVEST_YESORNO = 'Y' AND T1.BUSI_TYPE = #{COMMON_BUSINESS_TYPETRD11}
+                and t1.PORTFOLIO_ID <include refid="portfolioAth" />
 				and t1.TRADE_STATUS = #{TRADE_STATUS03}
 				and t1.IS_CANCEL = #{YES_OR_NO_N}
     		    <if test="portfolioId != null and !portfolioId.isEmpty()">

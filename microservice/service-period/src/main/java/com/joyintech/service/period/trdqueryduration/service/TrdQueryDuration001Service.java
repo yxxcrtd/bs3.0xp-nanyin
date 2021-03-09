@@ -100,6 +100,7 @@ public class TrdQueryDuration001Service extends BaseService<TrdQueryDurationDto>
 			String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
 			param.put("institutionCode",createInst);
 		}
+		param.put("userName",LoginUserUtil.getUserName());
 		param.put("COMMON_BUSINESS_TYPETRD16", DictCodeList.共通业务类型_质押式回购存续期.getValue());
 		param.put("COMMON_BUSINESS_TYPETRD08", DictCodeList.业务类型_债券质押式回购交易.getValue());
 		param.put("FINPROD_TYPE_TGF03", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
