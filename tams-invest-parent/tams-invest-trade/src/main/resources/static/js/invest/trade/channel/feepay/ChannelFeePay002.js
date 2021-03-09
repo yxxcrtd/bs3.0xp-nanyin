@@ -19,6 +19,7 @@ $(function() {
                     var deal = {};
                     deal.ccy = $("#ccy").val();
                     deal.tradeAmt = feeInfoList[i].actPayAmt;
+                    deal.theoryInt = feeInfoList[i].payAmt;
                     deal.settleDate = $("#settleDate").val();
                     deal.ps = T10;
                     deal.tradeDate = $("#settleDate").val();
@@ -93,13 +94,16 @@ $(function() {
                 feeInfoTable.renderRow(data.LAY_TABLE_INDEX, data);
             }
             var totalAmt = '0';
+            var totalAmt1 = '0';
             var allData = feeInfoTable.getAllRows();
             if (allData && allData.length > 0){
                 $.each(allData, function(id, value){
                     totalAmt = JoyinMath.doAdd(totalAmt, value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
+                    totalAmt1 = JoyinMath.doAdd(totalAmt1, value.payAmt, 2, JoyinMath.ROUND_HALF_UP);
                 });
             }
             $('#tradeAmt').val(totalAmt).trigger('change');
+            $('#theoryInt').val(totalAmt1).trigger('change');
         },
         beforeEditCell : function(preVal, field, rowData) {
             if(field === 'portFolioName' || field === 'payAmt'){
@@ -112,13 +116,16 @@ $(function() {
     feeInfoTable.bind("click",".delt",function (data,index){
         feeInfoTable.removeRow(data);
         var totalAmt = '0';
+        var totalAmt1 = '0';
         var allData = feeInfoTable.getAllRows();
         if (allData && allData.length > 0){
             $.each(allData, function(id, value){
                 totalAmt = JoyinMath.doAdd(totalAmt, value.actPayAmt, 2, JoyinMath.ROUND_HALF_UP);
+                totalAmt1 = JoyinMath.doAdd(totalAmt1, value.payAmt, 2, JoyinMath.ROUND_HALF_UP);
             });
         }
         $('#tradeAmt').val(totalAmt).trigger('change');
+        $('#theoryInt').val(totalAmt1).trigger('change');
     })
 
     function saveOrSubmit(operateType) {
