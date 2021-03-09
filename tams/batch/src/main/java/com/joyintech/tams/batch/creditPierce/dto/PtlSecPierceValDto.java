@@ -58,6 +58,10 @@ public class PtlSecPierceValDto {
 	private String creditMstId;
 	/** 资产类型 */
 	private String assetType;
+	/**
+	 * 机构代码
+	 */
+	private String institutionCode;
 
 	public String getPortfolioId() {
 		return portfolioId;
@@ -257,5 +261,13 @@ public class PtlSecPierceValDto {
 
 	public void setAssetType(String assetType) {
 		this.assetType = assetType;
+	}
+
+	public String getInstitutionCode() {
+		return institutionCode;
+	}
+
+	public void setInstitutionCode(String institutionCode) {
+		this.institutionCode = institutionCode;
 	}
 }

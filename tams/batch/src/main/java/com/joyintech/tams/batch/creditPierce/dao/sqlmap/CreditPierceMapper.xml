@@ -4,6 +4,7 @@
 	<!-- 获取参加任务的组合数 -->
 	<select id="selectPtlSecPierceValutionList" resultType="com.joyintech.tams.batch.creditPierce.dto.PtlSecPierceValDto" parameterType="java.util.Map">
 		select
+			T4.INSTITUTION_CODE									   institutionCode,
 			PTL_SEC_PIERCE_VALUTION.CDATE                          cdate,
 			PTL_SEC_PIERCE_VALUTION.PORTFOLIO_ID                   portfolioId,
 			PTL_SEC_PIERCE_VALUTION.FINPROD_ID                     finprodId,
@@ -43,6 +44,10 @@
 		   ON T1.FINPROD_ID = PTL_SEC_PIERCE_VALUTION.FINPROD_ID
 		LEFT JOIN FIN_PRODUCT_TYPE T2
 		   ON T1.FINPROD_ID = T2.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT T3
+		   ON T3.FINPROD_MARKET_ID = PTL_SEC_PIERCE_VALUTION.PORTFOLIO_ID
+		LEFT JOIN SYS_DEPARTMENT T4
+		   ON T4.DEPT_CODE = T3.CREATE_DEPT
 		where PTL_SEC_PIERCE_VALUTION.CDATE = to_date(#{currentDate},'yyyy-MM-dd')
 	</select>
 
@@ -62,5 +67,14 @@
         where CDATE = to_date(#{currentDate},'yyyy-MM-dd')
           and CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
     </delete>
+
+	<select id="getCustomerid" resultType="java.lang.String" >
+		 select SD.INSTITUTION_CODE from MST_CUSTOMER_INFO MCI
+		 left join SYS_DEPARTMENT SD on MCI.CREATE_DEPT = SD.DEPT_CODE
+		 WHERE 1=1
+		<if test="customerId !=null and customerId !=''">
+			AND MCI.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		</if>
+	</select>
 
 </mapper>

@@ -324,7 +324,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 }
             }
         }
-        if (StringUtil.isEmptyList(orgcreLineslist)){
+        if (StringUtil.isEmptyList(orgcreLineslist) && iscreditflag){
             isKDQ = true;
             customerid = creditLinesMapper.getCustomerid(mapParm);
         }else{
@@ -650,6 +650,69 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     }
                 }
             }else if(isKDQ && isSave){
+                // 原授信占用 start
+                for (CreditLines creditLines : creLineslist) {
+                    if (isSave) {
+                        int count = creditLinesMapper.selectCreditDealCount(creditLines.getSeqno(), model.getTradeId());
+                        if (count > 0) {
+                            continue;
+                        }
+                    }
+                    hapCreditAmt = creditLines.getHapCreditAmt();
+                    // 超额释放时避免已使用金额为负值
+                    if (BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) > 0) {
+                        todocredit_amt = hapCreditAmt.negate();
+                    }
+                    //已占用额度=（已占用额度+待处理额度）>0?（已占用额度+待处理额度）:0
+                    hapCreditAmt = BigDecimal.ZERO.compareTo(hapCreditAmt.add(todocredit_amt)) < 0 ? hapCreditAmt.add(todocredit_amt) : BigDecimal.ZERO;
+                    //1.更新额度管理中 已占用额度
+                    creditLines.setHapCreditAmt(hapCreditAmt);
+                    creditLines.setUpdateTime(model.getUpdateTime());
+                    creditLines.setUpdateUser(model.getUpdateUser());
+                    if (isSave && !DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus())) {
+                        creditLinesMapper.updateLinesByPrimaryKeySelective(creditLines);
+                    }
+                    if (isNotBottomflag) {
+                        //2.0 存额度占用明细表
+                        creditLinesDeal.setSeqno(creditLines.getSeqno());
+                        creditLinesDeal.setTradeId(model.getTradeId());
+                        //占用类型（实际占用、预占用）
+                        creditLinesDeal.setCreditOccureType("01");
+                        creditLinesDeal.setTradeAmt(todocredit_amt);
+                        creditLinesDeal.setTradeDate(model.getTradeDate());
+                        creditLinesDeal.setCreateDept(model.getCreateDept());
+                        creditLinesDeal.setCreateTime(model.getCreateTime());
+                        creditLinesDeal.setCreateUser(model.getCreateUser());
+                        creditLinesDeal.setUpdateTime(model.getUpdateTime());
+                        creditLinesDeal.setUpdateUser(model.getUpdateUser());
+                        if (isSave && !DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus())) {
+                            if (null != model.getTradeStatus() && (DictCodeListExt1.交易状态_撤销.getValue().equals(model.getTradeStatus()))) {
+                                String tradeid = model.getTradeId();
+                                if (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(model.getFinprodType2())
+                                        || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(model.getFinprodType2())) {
+                                    tradeid = model.getTradeId().substring(0, model.getTradeId().length() - 1);
+                                }
+                                //删除原占用的
+                                creditLinesMapper.deleteLinesDealByTradeid(creditLines.getSeqno(), tradeid);
+                            } else {
+                                creditLinesMapper.insertLinesDeal(creditLinesDeal);
+                            }
+                        }
+                        //
+                        if (pierceAmt != null && pierceAmt.compareTo(BigDecimal.ZERO) > 0) {
+                            //                        setCreditLinesSecPosition(model,isSave,pierceAmt,creditLines);
+                        }
+                    } else {
+                        //2.1 存授信额度底层持仓关联表
+                        CreditLinesDealCommon creditLinesDealCommon = new CreditLinesDealCommon();
+                        creditLinesDeal.setTradeAmt(hapCreditAmt);
+                        creditLinesDeal.setSeqno(creditLines.getSeqno());
+                        creditLinesDeal.setCreditOccureType("01");
+                        list.add(creditLinesDealCommon);
+                    }
+                }
+                // 原授信占用 end
+
                 // 空档期授信
                 // 空档期占用机构授信
                 CreditLines creditLines = new CreditLines();

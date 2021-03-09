@@ -10,11 +10,12 @@
  
 package com.joyintech.tams.batch.creditPierce.dao;
 
-import java.util.List;
-import java.util.Map;
 import com.joyintech.tams.batch.creditPierce.dto.PtlSecPierceValDto;
 import com.joyintech.tams.common.base.entity.CreditMstInfo;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -33,5 +34,7 @@ public interface CreditPierceMapper {
     List<CreditMstInfo>  selectCreditMstInfoList();
 
     void deleteCreditPierce(Map<String,Object> paramMap);
+
+//    String getInstitutionCode(Map<String,Object> paramMap);
     
 }

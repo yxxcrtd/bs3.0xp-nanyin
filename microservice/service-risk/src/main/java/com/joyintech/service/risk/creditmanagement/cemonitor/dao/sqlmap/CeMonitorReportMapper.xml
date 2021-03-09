@@ -27,14 +27,19 @@
 			 	INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('01','04')
 			 	left join MST_CUSTOMER_INFO C on A.CUSTOMER_ID=C.CUSTOMER_ID
 		    left join SYS_DATADICT_LIST y  ON B.CREDIT_QUOTE_TYPE_VALUE = y.item_code and B.CREDIT_QUOTE_TYPE_CODE=y.dict_code  
-			 	left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on A.SEQNO=D.SEQNO
-				left join (select  CUSTOMER_ID,CREDIT_MST_ID,sum(CREDIT_AMT) as TRADE_AMT from(
-				SELECT * FROM ( SELECT CUSTOMER_ID,CREDIT_MST_ID,CREDIT_AMT,row_number() over (PARTITION BY c.CUSTOMER_ID,c.CREDIT_MST_ID ORDER BY c.CDATE DESC) as newResult
-				FROM CREDIT_LINES_PIERCE c
-				where  to_date(#{sysDate},'yyyy-MM-dd') >= c.CDATE
-				) c where c.newResult =1) GROUP BY CUSTOMER_ID,CREDIT_MST_ID) E
+			left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on A.SEQNO=D.SEQNO
+			left join
+				(
+					SELECT c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
+					FROM CREDIT_LINES_PIERCE c
+					where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
+					group by c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE
+				) E
 				on A.CUSTOMER_ID= E.CUSTOMER_ID
 				and A.CREDIT_MST_ID= E.CREDIT_MST_ID
+				and A.INSTITUTION_CODE = E.INSTITUTION_CODE
+				and A.VDATE &lt;= E.CDATE
+				and A.MDATE &gt;= E.CDATE
 			 <where>
 			    <if test="customerIdList != null and !customerIdList.isEmpty()">
 			 	A.CUSTOMER_ID IN (<foreach collection="customerIdList" item="item" separator=",">#{item}</foreach> )
@@ -174,13 +179,18 @@
 	 	INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('02')
 	 	inner join FIN_PRODUCT C on A.CUSTOMER_ID=C.FINPROD_ID
 	 	left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on A.SEQNO=D.SEQNO
-		left join (select  CUSTOMER_ID,CREDIT_MST_ID,sum(CREDIT_AMT) as TRADE_AMT from(
-		SELECT * FROM ( SELECT CUSTOMER_ID,CREDIT_MST_ID,CREDIT_AMT,row_number() over (PARTITION BY c.CUSTOMER_ID,c.CREDIT_MST_ID ORDER BY c.CDATE DESC) as newResult
-		FROM CREDIT_LINES_PIERCE c
-		where  to_date(#{sysDate},'yyyy-MM-dd') >= c.CDATE
-		) c where c.newResult =1) GROUP BY CUSTOMER_ID,CREDIT_MST_ID) E
-		 on A.CUSTOMER_ID= E.CUSTOMER_ID
+		left join
+		(
+			SELECT c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
+			FROM CREDIT_LINES_PIERCE c
+			where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
+			group by c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE
+		) E
+		on A.CUSTOMER_ID= E.CUSTOMER_ID
 		and A.CREDIT_MST_ID= E.CREDIT_MST_ID
+		and A.INSTITUTION_CODE = E.INSTITUTION_CODE
+		and A.VDATE &lt;= E.CDATE
+		and A.MDATE &gt;= E.CDATE
 		 <where>
 			<if test="customerIdList != null and !customerIdList.isEmpty()">
 				A.CUSTOMER_ID IN (<foreach collection="customerIdList" item="item" separator=",">#{item}</foreach> )
@@ -218,10 +228,20 @@
     INNER JOIN CREDIT_MST_INFO B on A.CREDIT_MST_ID=B.SEQNO and B.CREDIT_INFO_TYPE in ('03')
     inner join CREDIT_ASSETPOOL C on A.CUSTOMER_ID=C.SEQNO
     left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on A.SEQNO=D.SEQNO
-	LEFT JOIN ( SELECT CREDIT_ASSETPOOL_DETAIL.SEQNO  AS SEQNO, SUM(CREDIT_AMT) AS TRADE_AMT FROM ( SELECT * FROM ( SELECT  CUSTOMER_ID, CREDIT_MST_ID,
-		 CREDIT_AMT, row_number() over (PARTITION BY c.CUSTOMER_ID,c.CREDIT_MST_ID ORDER BY c.CDATE DESC) AS newResult FROM CREDIT_LINES_PIERCE c  WHERE
-		 to_date(#{sysDate},'yyyy-MM-dd') >= c.CDATE ) c WHERE c.newResult =1) c,CREDIT_ASSETPOOL_DETAIL where c.CUSTOMER_ID =CREDIT_ASSETPOOL_DETAIL.FINPROD_ID
-		 and CREDIT_MST_ID = '0002' GROUP BY CREDIT_ASSETPOOL_DETAIL.SEQNO) E ON A.CUSTOMER_ID=E.SEQNO
+	left join
+		 (
+		 SELECT d.seqno,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
+		 FROM CREDIT_LINES_PIERCE c
+		 inner join CREDIT_ASSETPOOL_DETAIL d
+		 on c.CUSTOMER_ID =d.FINPROD_ID
+		 and CREDIT_MST_ID = '0002'
+		 where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
+		 group by d.seqno,c.INSTITUTION_CODE ,c.CDATE
+		 ) E
+		 on A.CUSTOMER_ID= E.seqno
+		 and A.INSTITUTION_CODE = E.INSTITUTION_CODE
+		 and A.VDATE &lt;= E.CDATE
+		 and A.MDATE &gt;= E.CDATE
     union all
     
     SELECT
@@ -243,11 +263,20 @@
     inner join  CREDIT_LINES B on A.FINPROD_ID=B.CUSTOMER_ID
 	 	inner join FIN_PRODUCT C on A.FINPROD_ID=C.FINPROD_ID
     left join (select sum(TRADE_AMT) as TRADE_AMT,SEQNO from CREDIT_LINES_DEAL GROUP BY SEQNO) D on B.SEQNO=D.SEQNO
-	LEFT JOIN (SELECT CREDIT_ASSETPOOL_DETAIL.FINPROD_ID  AS FINPROD_ID, SUM(CREDIT_AMT) AS TRADE_AMT FROM ( SELECT *
-		 FROM ( SELECT CUSTOMER_ID, CREDIT_MST_ID, CREDIT_AMT, row_number() over (PARTITION BY c.CUSTOMER_ID,c.CREDIT_MST_ID
-		 ORDER BY c.CDATE DESC ) AS newResult FROM CREDIT_LINES_PIERCE c WHERE to_date(#{sysDate},'yyyy-MM-dd') >= c.CDATE ) c
-		 WHERE c.newResult =1) c,CREDIT_ASSETPOOL_DETAIL where c.CUSTOMER_ID =CREDIT_ASSETPOOL_DETAIL.FINPROD_ID and CREDIT_MST_ID = '0002'
-		 GROUP BY CREDIT_ASSETPOOL_DETAIL.FINPROD_ID) E ON A.FINPROD_ID=E.FINPROD_ID
+	left join
+		 (
+		 SELECT d.FINPROD_ID,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
+		 FROM CREDIT_LINES_PIERCE c
+		 inner join CREDIT_ASSETPOOL_DETAIL d
+		 on c.CUSTOMER_ID =d.FINPROD_ID
+		 and CREDIT_MST_ID = '0002'
+		 where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
+		 group by d.FINPROD_ID,c.INSTITUTION_CODE ,c.CDATE
+		 ) E
+		 on A.FINPROD_ID = E.FINPROD_ID
+		 and B.INSTITUTION_CODE = E.INSTITUTION_CODE
+		 and B.VDATE &lt;= E.CDATE
+		 and B.MDATE &gt;= E.CDATE
     ) MM
 		 <where>
 			 <if test="customerIdList != null and !customerIdList.isEmpty()">
