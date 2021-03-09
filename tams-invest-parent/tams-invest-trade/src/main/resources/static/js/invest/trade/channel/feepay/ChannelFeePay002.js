@@ -196,6 +196,18 @@ $(function() {
      * 画面加载完成
      */
     $(function() {
+    	
+    	 var finprodMarketId = $("#finprodMarketId").val(); 
+    	 if(finprodMarketId){
+           Joyin.ajax(basePath + "invest/trade/channel/feepay/ChannelFeePay002/getCollectType", {finprodMarketId : finprodMarketId},
+                   function(result){
+                       if (result == '01') {
+                       	$('#mdate').val('').attr('disabled',true);                     	
+                       }else{
+                       	$('#mdate').attr('disabled',false);   
+                       }
+                   });
+    	 }
         /**
          * 保存
          */
