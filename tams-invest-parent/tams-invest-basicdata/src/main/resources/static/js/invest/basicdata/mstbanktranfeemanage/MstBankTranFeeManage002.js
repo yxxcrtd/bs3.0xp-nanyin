@@ -305,7 +305,7 @@
     var feeTypeChng = function(init) {
         var feeType = $('#feeType').val();
         if (typeof init == 'undefined' || !init) {
-            $('#registOrg').val('');
+            $('#registOrg').val('').trigger('change');
         }
         // if (feeType == FEE_TYPE_B06) {
         //     $('#registOrg').attr("disabled", true);
