@@ -9,7 +9,6 @@ $(function () {
     // var unitCpriceFlag;
     // 计算交易金额
     var calcTradeAmt = function () {
-        debugger;
         if (!initFlag && !isTradeMarketFundMrMcDeal()) {
             var unitCprice = $('#unitCprice').val();
             var ps = $('#ps').val();
@@ -86,7 +85,7 @@ $(function () {
      * 仅画面控制联动，不牵涉任何其他change事件，避免死循环新copy的方法
      */
     var pageItemDisplay = function () {
-        debugger;
+        
         var ps = $('#ps').val();
         var data = $('#finprodId').select2('data')[0].object;
         // var portfolioId = $('#portfolioId').val();
@@ -450,7 +449,7 @@ $(function () {
             return true;
         },
         editCell: function(value, data, field, cell, column){
-            debugger;
+            
             var unitCprice = $('#unitCprice').val();
             var obj = {row:data.LAY_TABLE_INDEX,
                         portfolioId:data.portfolioId,
@@ -582,6 +581,52 @@ $(function () {
     }
 
     function saveOrSubmit(operateType) {
+        //添加组合分配 与 金额信息相关的校验
+    	//1. 配置参数
+    	var keyChName = ["交易金额","交易份额","待结转份额","通道费","佣金","划款金额"];
+    	var keyId = ["tradeAmt","shareAmt","carryAmt","channelAmt","commissionFee","tradeAmtAndFee"];
+    	var tableId = ["tradeAmt","shareAmt","carryAmt","channelFee","commissionAmt","tradeAmtAndFee"];
+    	var object,value,rowNum
+    	//2. 获取组合分配的table
+    	var rows = table.getAllRows();
+    	//3. 循环处理
+    	for(j=0;j<keyChName.length;j++){
+    		//3.1获取金额信息对应元素
+    		object = $("#"+keyId[j]);
+    		//3.2 获取该元素的显示状态，显示才执行校验
+    		if(!object.is(':hidden')){
+    			//3.3 获取该元素值，并保留到两位小数
+    			value = JoyinMath.doAdd(object.val(),0,2);
+    			//3.4 统计表中元素值
+    			rowNum = 0;
+           	 	for(var i = 0; i < rows.length; i++){
+           	 		rowNum = JoyinMath.doAdd(rowNum, rows[i][tableId[j]], 2);
+           	 	}
+           	 	//3.5 执行校验
+           	 	if(rowNum!=value){
+           	 		Joyin.error("金额信息中"+keyChName[j]+"不等于组合分配中对应列之和");
+           	 		return ;
+           	 	}
+    		}
+    	}
+    	//4. 单位净值特殊处理
+    	//4.1 获取金额信息中的单位净值
+    	object = $("#unitCprice");
+    	//4.2 获取该元素的显示状态，显示才执行校验
+    	if(!object.is(':hidden')){
+    		//4.3 获取该元素值
+    		value = JoyinMath.doAdd(object.val(),0,2);
+    		//4.4 对数值列进行循环判断
+       	 	for(var i = 0; i < rows.length; i++){
+       	 		rowNum = JoyinMath.doAdd(0, rows[i]["unitCprice"], 2);
+       	 		//4.5 执行校验
+           	 	if(rowNum!=value){
+           	 		Joyin.error("组合分配中第"+(i+1)+"行单位净值不等于金额元素中的单位净值");
+           	 		return ;
+           	 	}
+       	 	}
+    	}
+    	
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
 	        var s;
@@ -724,6 +769,7 @@ $(function () {
 	            object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;
 	            object.counterId=$('#trdInvestPersonInfo_counterId').select2('data')[0].id;
 	        }
+	        
 
 	        var data = $('#finprodId').select2('data')[0].object;
 	        if (data && data.finprodId) {
@@ -894,7 +940,7 @@ $(function () {
 
     //查询组合可用现金
     var getPtlCashPositionInfo = function (object) {
-        debugger;
+        
         if(!object){
             return;
         }
@@ -990,8 +1036,16 @@ $(function () {
                 // 【债券投资委托】交易对手选择内部交易对手时，清算速度为T+0不可改
                 if (交易对手 == 'N') {
                         $('#commissionFee').val('').prop("disabled", true).trigger("change");
+                        var rows = table.getAllRows();
+                        for(var i = 0; i < rows.length; i++){
+                        	table.renderRow(i,  {"commissionAmt": ''});
+                        }
+                        $("div[lay-id='dataTable']").find("div.layui-table-main").find("td[data-field='commissionAmt']").removeAttr("lay-event");
+                        $("div[lay-id='dataTable']").find("div.layui-table-main").find("td[data-field='commissionAmt']").removeAttr("title");
+
                 } else {
                     $('#commissionFee').prop("disabled", false).trigger("change");
+                    $("div[lay-id='dataTable']").find("div.layui-table-main").find("td[data-field='commissionAmt']").attr('lay-event',"editor");
                 }
             }
 //            //计算费用
@@ -1405,7 +1459,7 @@ $(function () {
          * 净值日期
          */
         $('#netDate').change(function () {
-            debugger;
+            
             var netDate = $('#netDate').val();
             var data = $('#finprodId').select2('data')[0].object;
             var tradeAmt = $('#tradeAmt').val();
@@ -1703,8 +1757,7 @@ $(function () {
      * 组合分配：联动、计算处理   start
      */
     // 组合分配：计算交易金额
-    var calcTradeAmt_DZH = function (object) {
-        debugger;
+    var calcTradeAmt_DZH = function (object) {    
         var row = object.row;
         if (!initFlag && !isTradeMarketFundMrMcDeal()) {
             var unitCprice = object.unitCprice;
