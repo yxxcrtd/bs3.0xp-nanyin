@@ -415,9 +415,9 @@ var table;
                         $("#tradeAmtAndFee").trigger("change");
                 	}
                 	else{
-                       	$("#settleAmt").val('').trigger("change");
-                        $("#exchangeAmt").val('').trigger("change");
-                        $("#commissionAmt").val('').trigger("change");
+                       //	$("#settleAmt").val('').trigger("change");
+                        //$("#exchangeAmt").val('').trigger("change");
+                        //$("#commissionAmt").val('').trigger("change");
                         $("#tradeAmtAndFee").val('').trigger("change");
                 	}
 
@@ -441,9 +441,9 @@ var table;
                         $("#tradeAmtAndFee").trigger("change");
                     }
                     else{
-                        $("#settleAmt").val('').trigger("change");
-                        $("#exchangeAmt").val('').trigger("change");
-                        $("#commissionAmt").val('').trigger("change");
+                       // $("#settleAmt").val('').trigger("change");
+                        //$("#exchangeAmt").val('').trigger("change");
+                       // $("#commissionAmt").val('').trigger("change");
                         $("#tradeAmtAndFee").val('').trigger("change");
                     }
 
@@ -473,9 +473,9 @@ var table;
                         $("#commissionAmt").trigger("change");
                         $("#tradeAmtAndFee").trigger("change");
                     }else{
-                        $("#settleAmt").val('').trigger("change");
-                        $("#exchangeAmt").val('').trigger("change");
-                        $("#commissionAmt").val('').trigger("change");
+                       // $("#settleAmt").val('').trigger("change");
+                       // $("#exchangeAmt").val('').trigger("change");
+                       // $("#commissionAmt").val('').trigger("change");
                         $("#tradeAmtAndFee").val('').trigger("change");	
                     }
                     // $("#fpriceAmt").val('').trigger("change");
@@ -498,9 +498,9 @@ var table;
                         $("#tradeAmtAndFee").trigger("change");
                     }
                     else{
-                        $("#settleAmt").val('').trigger("change");
-                        $("#exchangeAmt").val('').trigger("change");
-                        $("#commissionAmt").val('').trigger("change");
+                        //$("#settleAmt").val('').trigger("change");
+                       // $("#exchangeAmt").val('').trigger("change");
+                       // $("#commissionAmt").val('').trigger("change");
                         $("#tradeAmtAndFee").val('').trigger("change");	
                     }
                     // $("#fpriceAmt").val('').trigger("change");
@@ -529,9 +529,9 @@ var table;
                         $("#tradeAmtAndFee").trigger("change");	
                     }
                     else{
-                        $("#settleAmt").val('').trigger("change");
-                        $("#exchangeAmt").val('').trigger("change");
-                        $("#commissionAmt").val('').trigger("change");
+                        //$("#settleAmt").val('').trigger("change");
+                      //  $("#exchangeAmt").val('').trigger("change");
+                      //  $("#commissionAmt").val('').trigger("change");
                         $("#tradeAmtAndFee").val('').trigger("change");
                     }
                     // $("#fpriceAmt").val('').trigger("change");
@@ -552,9 +552,9 @@ var table;
                         $("#tradeAmtAndFee").trigger("change");
                     }
                     else{
-                        $("#settleAmt").val('').trigger("change");
-                        $("#exchangeAmt").val('').trigger("change");
-                        $("#commissionAmt").val('').trigger("change");
+                       // $("#settleAmt").val('').trigger("change");
+                       // $("#exchangeAmt").val('').trigger("change");
+                       // $("#commissionAmt").val('').trigger("change");
                         $("#tradeAmtAndFee").val('').trigger("change");	
                     }
                     // $("#fpriceAmt").val('').trigger("change");
