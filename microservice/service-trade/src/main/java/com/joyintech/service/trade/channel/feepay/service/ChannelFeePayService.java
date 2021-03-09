@@ -113,7 +113,9 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
                     TrdProductDeal deal = new TrdProductDeal();
                     BeanUtil.copyPropertiesIgnoreNull(deal, wflTrdProductDealDto);
                     baseDto.getTrdProductDeals().add(deal);
-                    baseDto.getStlPayOrders().add(channelFeePayMapper.selectAllOrders(deal.getTradeId()).get(0));
+                    StlPayOrdersDto stlPayOrdersDto = new StlPayOrdersDto();
+                    BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, channelFeePayMapper.selectAllOrders(deal.getTradeId()).get(0));
+                    baseDto.getStlPayOrders().add(stlPayOrdersDto);
                 }
             }
         }
