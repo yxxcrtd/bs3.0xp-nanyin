@@ -320,7 +320,7 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN FIN_PRODUCT_TYPE T5 on T5.FINPROD_ID = T1.FINPROD_ID
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
-            from WFL_TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID and  deal.TRADE_STATUS = '01'
+            left join  WFL_TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID and  deal.TRADE_STATUS = '01'
             left join WFL_TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
 	        left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 			where T1.PS IN (#{PS_T12},#{PS_T13},#{PS_T11})
@@ -524,8 +524,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+				dealAdd.PORTFOLIO_ID portfolioId,
+				pp.PORTFOLIO_NAME portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -561,6 +561,9 @@
 			LEFT JOIN SYS_INSTITUTION SI ON T1.INSTITUTION_CODE = SI.INSTITUTION_CODE
 			LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
 			LEFT JOIN FIN_PRODUCT FP ON T1.CHL_ID = FP.FINPROD_ID
+            left join WFL_TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID and  deal.TRADE_STATUS = '01'
+            left join WFL_TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
+	        left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 			WHERE T1.P_TRADE_ID IS NULL
 			AND T1.FINPROD_TYPE2 = #{F10}
 			and nvl(T2.PARENT_PORTFOLIO_ID,'null') = 'null'
@@ -1218,8 +1221,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+				dealAdd.PORTFOLIO_ID portfolioId,
+				pp.PORTFOLIO_NAME portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1251,6 +1254,9 @@
 		        where T6.PS = #{PS_T13,jdbcType=VARCHAR} and T6.FINPROD_TYPE2 =  #{F10} and T6.TOTLE_TRADE_ID is not null
 				group by T6.TOTLE_TRADE_ID,T6.CCY,T6.PS, T6.SETTLE_DATE,T6.VDATE,T6.MDATE ) T6
 			ON T1.TOTLE_TRADE_ID = T6.TOTLE_TRADE_ID AND T6.PS = #{PS_T13,jdbcType=VARCHAR}
+            LEFT JOIN TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID and  deal.TRADE_STATUS = '01'
+	        left join TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
+	        left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 		    WHERE T1.P_TRADE_ID IS NULL
 			AND T1.FINPROD_TYPE2 = #{F10}
 			and nvl(T2.PARENT_PORTFOLIO_ID,'null') = 'null'
@@ -1902,8 +1908,8 @@
 				T1.TOTLE_TRADE_ID busiCode,
 				T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-				T1.PORTFOLIO_ID portfolioId,
-				T2.PORTFOLIO_NAME portfolioName,
+				dealAdd.PORTFOLIO_ID portfolioId,
+				pp.PORTFOLIO_NAME portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
@@ -1937,6 +1943,9 @@
 				group by T6.TOTLE_TRADE_ID,T6.CCY,T6.PS, T6.SETTLE_DATE,T6.VDATE,T6.MDATE ) T6
 			ON T1.TOTLE_TRADE_ID = T6.TOTLE_TRADE_ID AND T6.PS = #{PS_T13,jdbcType=VARCHAR}
 		    LEFT JOIN STL_SEC_ACCT_INFO SAI ON T1.SEC_MANAGE_ACCT_ID = SAI.SEC_ACCT_ID
+            LEFT JOIN TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T1.P_TRADE_ID and  deal.TRADE_STATUS = '01'
+	        left join TRD_PRODUCT_DEAL_ADD dealAdd on deal.TRADE_ID = dealAdd.TRADE_ID
+	        left join PTL_PORTFOLIO pp on dealAdd.PORTFOLIO_ID = pp.PORTFOLIO_ID and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
 			WHERE T1.P_TRADE_ID IS NULL
 			AND T1.IS_CANCEL = #{YES_OR_NO_Y}
 			AND T1.FINPROD_TYPE2 = #{F10}
