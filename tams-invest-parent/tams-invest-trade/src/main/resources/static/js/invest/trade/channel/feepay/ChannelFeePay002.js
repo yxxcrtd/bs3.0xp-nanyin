@@ -165,7 +165,7 @@ $(function() {
         Joyin.ajax(basePath + "invest/trade/channel/feepay/ChannelFeePay002/getCollectType", {finprodMarketId : finprodMarketId},
                 function(result){
                     if (result == '01') {
-                    	$('#mdate').val('').trigger('change').attr('disabled',true);                      
+                    	$('#mdate').val('').attr('disabled',true);                     	
                     }else{
                     	$('#mdate').attr('disabled',false);   
                     }
