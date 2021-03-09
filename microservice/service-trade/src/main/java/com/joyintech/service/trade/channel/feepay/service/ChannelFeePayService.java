@@ -170,7 +170,7 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
                 ChannelFeeInfoDto channelFeeInfoDto = new ChannelFeeInfoDto();
                 channelFeeInfoDto.setPortfolioId(adds.get(i).getPortfolioId());
                 channelFeeInfoDto.setPortFolioName(channelFeePayMapper.findPortfolioName(channelFeeInfoDto.getPortfolioId()));
-                channelFeeInfoDto.setPayAmt(paDeals.get(i).getTheoryAmt());
+                channelFeeInfoDto.setPayAmt(paDeals.get(i).getTheoryInt());
                 channelFeeInfoDto.setActPayAmt(trdProductDealList.get(i).getTradeAmt());
                 result.getFeeInfoList().add(channelFeeInfoDto);
             }
