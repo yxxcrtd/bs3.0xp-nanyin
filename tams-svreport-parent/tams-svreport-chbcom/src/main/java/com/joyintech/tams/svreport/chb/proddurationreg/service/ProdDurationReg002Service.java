@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.svreport.chb.common.SvrDataStatusUtil;
 import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
@@ -474,7 +475,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
                 	if(yieldModel!=null&&yieldModel.getProdValue()!=null)
                 	reaYield = yieldModel.getProdValue();
                 }
-	            result.setReaYield(reaYield);
+	            result.setReaYield(ArithmeticUtil.multiply(reaYield, new BigDecimal(100)));
 	            
 	            // 最新收益率
 	            BigDecimal newExpYield = BigDecimal.ZERO;
@@ -485,7 +486,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
                 	if(yieldModel!=null&&yieldModel.getProdValue()!=null)
                 	  newExpYield = yieldModel.getProdValue();
 	            }
-	            result.setNewExpYield(newExpYield);
+	            result.setNewExpYield(ArithmeticUtil.multiply(newExpYield, new BigDecimal(100)));
 	        }
 	        // 净值型产品
 	        else {
