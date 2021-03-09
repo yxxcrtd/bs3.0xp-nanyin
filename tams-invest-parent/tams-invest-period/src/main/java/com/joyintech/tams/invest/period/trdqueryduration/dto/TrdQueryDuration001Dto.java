@@ -310,7 +310,10 @@ public class TrdQueryDuration001Dto extends TrdQueryDurationDto {
 		}else if(!StringUtil.isNotEmpty(getTradeAmt()) && StringUtil.isNotEmpty(getTradeAmt2())){
 			return getTradeAmt2().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 		}
-		return getTradeAmt().setScale(2, BigDecimal.ROUND_HALF_UP).toString() ;
+		else if(StringUtil.isNotEmpty(getTradeAmt())){
+			return getTradeAmt().setScale(2, BigDecimal.ROUND_HALF_UP).toString() ;
+		}
+		return "";
 	}
 
 	public void setTradeAmt2String(String tradeAmt2String) {
