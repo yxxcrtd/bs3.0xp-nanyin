@@ -505,4 +505,9 @@ public class InvestFeePayController {
     public List<InvestFeePayDto> getEffectData(@RequestBody Map<String,Object> map){
         return investFeePayService.getEffectData(map);
     }
+
+    @GetMapping("queryPayAmt")
+    public BigDecimal queryPayAmt(String totleTradeId) {
+        return investFeePayService.queryPayAmt(totleTradeId);
+    }
 }

@@ -207,9 +207,7 @@ public class InvestFeePay002Controller extends BaseController {
                     if (!StringUtil.equals(finProductFeePay001Dto.getFeeType(),
                         DictCodeList.费用品种类型_账户维护费.getValue())) {
                         // 查询费用待支付费用
-                        finProductFeePay002Dto.setPayAmt(investFeePay002Service.queryUnpayPosition(
-                            finProductFeePay001Dto.getSecAcctId(), finProductFeePay001Dto.getFeeType(),
-                            DateUtil.format(trdFinProductDealTotal.getMdate()), finProductFeePay002Dto.getRegTrustOrg()));
+                        finProductFeePay002Dto.setPayAmt(investFeePay002Service.queryPayAmt(finProductFeePay001Dto.getTradeId()));
                         // 实付 - 理论
                         finProductFeePay002Dto.setAdjustAmt(
                             ArithmeticUtil.subtract(finProductFeePay002Dto.getActPayAmt(),

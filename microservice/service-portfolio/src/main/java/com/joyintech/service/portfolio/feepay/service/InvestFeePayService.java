@@ -1657,5 +1657,8 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         List<InvestFeePayDto> list = investFeePayMapper.getEffectData(map);
         return list;
     }
-    
+
+    public BigDecimal queryPayAmt(String totleTradeId) {
+        return  investFeePayMapper.queryPayAmt(totleTradeId);
+    }
 }

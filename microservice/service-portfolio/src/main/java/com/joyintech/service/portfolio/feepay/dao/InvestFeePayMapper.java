@@ -402,4 +402,6 @@ public interface InvestFeePayMapper {
     List<InvestFeePayDto> getBusinessData(WflValidInputParameter parameter);
     
     List<InvestFeePayDto> getEffectData(Map<String, Object> map);
+
+    BigDecimal queryPayAmt(String totleTradeId);
 }

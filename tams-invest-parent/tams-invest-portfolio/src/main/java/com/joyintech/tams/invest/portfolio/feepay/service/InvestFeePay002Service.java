@@ -1423,4 +1423,9 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
                         "/InvestFeePay/getEffectData",map,
                         InvestFeePay001Dto.class);
     }
+
+    public BigDecimal queryPayAmt(String totleTradeId) {
+        return restTemplate.getForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/queryPayAmt?totleTradeId="
+                        + totleTradeId, BigDecimal.class);
+    }
 }

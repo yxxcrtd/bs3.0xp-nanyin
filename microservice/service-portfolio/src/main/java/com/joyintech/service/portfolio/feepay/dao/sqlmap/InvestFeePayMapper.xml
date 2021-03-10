@@ -1437,4 +1437,11 @@ AND NOT EXISTS (
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL=#{noFlag}
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE=#{TG_BUSI_TYPE}
 	</select>
+
+	<select id="queryPayAmt" resultType="java.math.BigDecimal">
+		select sum(p1.THEORY_INT) from PA_TRD_PRODUCT_DEAL p1
+		left join TRD_PRODUCT_DEAL t1 on p1.TRADE_ID=t1.TRADE_ID
+	  	left join  trd_fin_product_deal_total t2 on t1.TOTLE_TRADE_ID=t2.TOTLE_TRADE_ID
+		where t2.TOTLE_TRADE_ID=#{totleTradeId}
+	</select>
 </mapper>
