@@ -27,7 +27,6 @@
 		       FP.TRADE_MARKET       TRADEMARKET,
 		       FP.VDATE              VDATE,
 		       FP.MDATE              MDATE,
-		       ROUND(SEC1.DSC_CLEAN_PRICE_B, 8) UNITCPRICE,
 		       SEC.PORTFOLIO_ID
 		  FROM FIN_PRODUCT FP
 		  LEFT JOIN PTL_SEC_POSITION SEC
@@ -37,12 +36,6 @@
 		   AND SEC.HODING_TYPE = #{hodingtype, jdbcType=VARCHAR}
 		   AND SEC.SEC_ACCT_ID = #{secacctid, jdbcType=VARCHAR}
 		   AND SEC.CDATE = TO_DATE(#{cdate, jdbcType=DATE}, 'yyyy-MM-dd') - 1
-		  LEFT JOIN PTL_SEC_VALUTION SEC1
-		    ON SEC.FINPROD_ID = SEC1.FINPROD_ID
-		   AND SEC.PORTFOLIO_ID = SEC1.PORTFOLIO_ID
-		   AND SEC.INV_AIM = SEC1.INV_AIM
-		   AND SEC.CDATE = SEC1.CDATE
-		   AND SEC1.SEC_ACCT_ID = #{sec1acctid, jdbcType=VARCHAR}
 		 WHERE FP.FINPROD_MARKET_ID = #{finprodMarketId, jdbcType=VARCHAR}
     </select>
 
