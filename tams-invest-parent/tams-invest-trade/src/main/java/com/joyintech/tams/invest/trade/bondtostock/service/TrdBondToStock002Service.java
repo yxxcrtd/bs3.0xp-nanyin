@@ -659,6 +659,7 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
             // 交易对手
             trdProductDeal.setCounterId(personInfo.getCounterId());//交易对手编号
         }
+        trdProductDeal.setTradeAmt(entity.getTradeAmt());
         return trdProductDeal;
     }
     /**
