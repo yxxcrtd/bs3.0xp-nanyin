@@ -525,6 +525,15 @@
     </select>
 
     <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
+        <if test="finprodId != null and finprodId != ''">
+        with orgInfo as (
+            select 
+                REGIST_ORG org,
+                FINPROD_MARKET_ID fmi
+            from FIN_PRODUCT
+            where FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
+        )  
+        </if>
     	<if test="zhilingtype == null or zhilingtype == '01'">
 	        SELECT distinct
 	            A.ACCT_NO hidCode,
@@ -557,6 +566,9 @@
                     AND TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
                 </if>
                 <!--根据交易场所筛选 add by lishuping  20190924 end-->
+                <if test="finprodId != null and finprodId != ''">
+                    AND B.REGIST_ORG in (select org from orgInfo where fmi = #{finprodId,jdbcType=VARCHAR})
+                </if>
 	        </where>
         </if>
          <if test="zhilingtype != null and zhilingtype == '02'">
@@ -577,6 +589,9 @@
 	            <if test="initValue != null and initValue != ''">
 	                AND STL_SEC_ACCT_INFO.SEC_ACCT_ID = #{initValue, jdbcType=VARCHAR}
 	            </if>
+                <if test="finprodId != null and finprodId != ''">
+                    AND B.REGIST_ORG in (select org from orgInfo where fmi = #{finprodId,jdbcType=VARCHAR})
+                </if>
 	       </where>
         </if>
         
