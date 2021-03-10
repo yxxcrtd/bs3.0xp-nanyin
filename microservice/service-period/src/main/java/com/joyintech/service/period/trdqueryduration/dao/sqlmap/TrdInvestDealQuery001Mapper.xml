@@ -460,7 +460,7 @@
 				T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 		        null tradeAmt2,
 				null  shareAmt,
-				T1.CCY ccy,
+				T4.CCY ccy,
 				to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
 				T1.REMARK remark,
 				SI.INSTITUTION_NAME institutionName,    /*所属机构*/
@@ -1190,7 +1190,7 @@
 				T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 				null tradeAmt2,
 				null  shareAmt,
-				T1.CCY ccy,
+				T4.CCY ccy,
 				to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
 				T1.REMARK remark,
 				SI.INSTITUTION_NAME institutionName,    /*所属机构*/
@@ -1908,7 +1908,7 @@
 				T1.TRADE_AMT tradeAmt/*实收本息总额*/,
 				null tradeAmt2,
 				null  shareAmt,
-				T1.CCY ccy,
+				T4.CCY ccy,
 				to_char(T1.TRADE_DATE, 'yyyy-MM-dd') tradeDate/*资金到账日*/,
 				T1.REMARK remark,
 				SI.INSTITUTION_NAME institutionName,    /*所属机构*/
