@@ -393,6 +393,25 @@
 		<!-- AND POS.ORG_CODE = #{orgCode, jdbcType = VARCHAR} -->
 	</select>
 	
+	<!-- 通过投资端汇总，获取产品余额-->
+	<select id="getBalanceAmt" resultType="java.math.BigDecimal">
+		SELECT
+			SUM(CNY_AMT) as balanceAmt
+		FROM (
+				SELECT 
+				  CNY_AMT,
+				  ROW_NUMBER() over( partition by PRD_REGIST_CODE, HOLD_DATE, INDENTIFY_MARK order by STATUS desc ) as hodeNo
+				FROM 
+					CHB_INVESTHOLD_INFO_SUB 
+				WHERE 				
+					HOLD_DATE = #{date,jdbcType = DATE}
+					AND PRD_REGIST_CODE = #{prodId, jdbcType = VARCHAR}
+					AND STATUS IN ('01','02')
+			)
+		WHERE
+			hodeNo  = 1;					
+	</select>
+	
 	<!-- 获取产品收益-->
 	<select id="getIntAmt" 
 	 parameterType="map"

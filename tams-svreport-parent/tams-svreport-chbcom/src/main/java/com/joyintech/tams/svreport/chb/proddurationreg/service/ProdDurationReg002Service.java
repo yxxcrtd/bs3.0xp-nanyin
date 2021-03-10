@@ -339,6 +339,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 		List<ChbPrdDealSub> delList = new ArrayList<ChbPrdDealSub>();
 		List<ChbPrdDealSub> updateList = new ArrayList<ChbPrdDealSub>();
         HashMap<String,List<ChbPrdDealSub>> map = new HashMap<String,List<ChbPrdDealSub>>();
+        String amtSumType = SvrDataUtil.getSysParam(SVReportGlobalConstant.DEALSUB_BALANCEAMT_SUM_TYPE);        
 		ChbPrdDealSub result = null;
 		for(ChbPrdDurationDeal model : resultList){
 			result = new ChbPrdDealSub();
@@ -571,13 +572,34 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
             		balanceQty = balanceQty.add(pos.getBalanceQty());
             	}
             }
-        	if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
-     	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
-        		result.setBalanceAmt(balance);
-        	} else {
-        		// 净值型产品产品余额=产品份额*折算人民币净值
-        		result.setBalanceAmt(balanceQty.multiply(result.getCnyPrdValue()).setScale(2, RoundingMode.HALF_UP));
-        	}
+        	
+            /**  add 产品余额以持有者信息进行汇总的分支处理追加  by  wudebao  20210308  start  */
+            if(DictCodeListExt2.产品存续期登记产品余额_投资端持有汇总.getValue().equals(amtSumType)) {
+            	//当汇总方式（DEALSUB_BALANCEAMT_SUM_TYPE）  ==    ‘01：投资端持有汇总  的情况下进行以下处理
+            	if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
+         	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
+            		//产品为 非净值的情况下
+            		result.setBalanceAmt(balance);
+            	} else {
+            		// 当产品为 净值型产品的情况下：投资端持有信息汇总
+            		//取得本产品的持有明细汇总
+            		BigDecimal balanceAmt = chbPrdDurationRegMapper.getBalanceAmt(model.getProdId(),quotationDate);
+            		result.setBalanceAmt(balanceAmt);
+            	}
+            	
+            	
+            }else {
+            	if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
+         	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
+            		result.setBalanceAmt(balance);
+            	} else {
+            		// 净值型产品产品余额=产品份额*折算人民币净值
+            		result.setBalanceAmt(balanceQty.multiply(result.getCnyPrdValue()).setScale(2, RoundingMode.HALF_UP));
+            	}
+            }
+        	
+        	/**  add 产品余额以持有者信息进行汇总的分支处理追加  by  wudebao  20210308  start  */
+            
             result.setPrdQty(balanceQty);
 
 	        // 银行端收益

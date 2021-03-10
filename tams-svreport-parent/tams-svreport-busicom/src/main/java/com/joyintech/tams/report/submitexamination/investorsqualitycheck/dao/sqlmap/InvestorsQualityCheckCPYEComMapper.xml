@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao.InvestorsQualityCheckCPYEComMapper">	
+	<select id="objrec" >
+	WITH  objRec  AS(
+			SELECT
+				REG_CODE,
+				hodeDate,
+				MDATE,
+				BALANCE_AMT,
+				PRD_QTY
+			FROM(
+				SELECT
+					REG_CODE,
+					hodeDate,
+					MDATE,
+					BALANCE_AMT,
+					PRD_QTY,
+					ROW_NUMBER() over( partition by REG_CODE BY MDATE DESC )  AS durMDateNo
+				FROM(
+					SELECT  
+						A.REG_CODE,
+						#{searchDate,jdbcType=DATE}    AS hodeDate,
+						B.MDATE,
+						B.BALANCE_AMT,
+						B.PRD_QTY,
+						ROW_NUMBER() over( partition by A.REG_CODE , B.MDATE ORDER BY B.STATUS DESC )  AS durStatusNo
+					FROM  CHB_PRD_BASEINFO A
+						LEFT JOIN CHB_PRD_DEAL_SUB B
+						ON (A.REG_CODE = B.PROD_REGIST_CODE
+							<if test="orgCodeList != null and orgCodeList.size() > 0">
+							    <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+							        #{orgCode,jdbcType=VARCHAR}
+							    </foreach>
+							</if>
+						   )
+					WHERE
+						A.STATUS  != 'D'
+						<if test="prdTypeList != null and prdTypeList.size() > 0">
+							    <foreach collection="prdTypeList" item="operateMode" open=" AND A.OPERATE_MODE IN (" close=")" separator=",">
+							        #{operateMode,jdbcType=VARCHAR}
+							    </foreach>
+						</if>
+						AND B.STATUS  IN ('01','02')
+						AND B.MDATE  <![CDATA[<=]]> #{searchDate,jdbcType=DATE}  
+					)
+				WHERE 	durStatusNo = 1
+				)		
+			WHERE 	durMDateNo = 1
+					OR  durMDateNo = 2				
+	)
+	</select>
+	
+	
+	<!-- 余额、份额共通-核查对象数量取得 -->
+	<select id="cntCPYECom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+		<include refid="objRec"></include>
+		SELECT 
+			COUNT(DISTINCT(REG_CODE))
+		FROM
+			objRec			
+	</select>
+	
+	<!-- 余额、份额共通-错误记录取得 -->
+	<select id="searchCPYECom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+		<include refid="objRec"></include>
+			SELECT		
+				REG_CODE,
+				hodeDate,
+				MDATE,
+				BALANCE_AMT,
+				PRD_QTY,
+				TOTAL_AMT,
+				RAISE_QTY,
+				SUM(CNY_AMT) AS inverstTolAmt,
+				SUM(QTY) inverstTolQTY
+			FROM	
+				(SELECT
+						REG_CODE,
+						hodeDate,
+						MDATE,
+						BALANCE_AMT,
+						PRD_QTY,
+						TOTAL_AMT,
+						RAISE_QTY,
+						CNY_AMT,
+						QTY,
+						ROW_NUMBER() over( partition by tmp1.REG_CODE, tmp1.MDATE, C.INDENTIFY_MARK ORDER BY C.STATUS DESC )  AS hodeStsNo
+					FROM(
+							SELECT
+								REG_CODE,
+								hodeDate,
+								MDATE,
+								BALANCE_AMT,
+								PRD_QTY,
+								TOTAL_AMT,
+								RAISE_QTY
+							FROM(
+								SELECT  
+									A.REG_CODE,
+									A.hodeDate,
+									A.MDATE,
+									A.BALANCE_AMT,
+									A.PRD_QTY,
+									B.TOTAL_AMT,
+									B.RAISE_QTY,
+									ROW_NUMBER() over( partition by A.REG_CODE , A.MDATE ORDER BY B.STATUS DESC )  AS raiseStatusNo
+								FROM  objRec A
+									INNER JOIN CHB_PRD_RAISETOT_SUB B
+									ON (A.REG_CODE = B.PROD_REGIST_CODE
+										AND B.STATUS  IN ('01','02')
+									   )					
+								)
+							WHERE 	raiseStatusNo = 1
+						) tmp1
+						LEFT JOIN CHB_INVESTHOLD_INFO_SUB C
+							ON (tmp1.REG_CODE = C.PRD_REGIST_CODE
+								AND tmp1.hodeDate = C.HOLD_DATE
+								AND C.STATUS  IN ('01','02')						
+								)
+					)				
+			WHERE 	hodeStsNo = 1
+			GROUP BY 
+				REG_CODE,
+				hodeDate,
+				MDATE,
+				BALANCE_AMT,
+				PRD_QTY,
+				TOTAL_AMT,
+				RAISE_QTY						
+	</select>
+	
+</mapper>

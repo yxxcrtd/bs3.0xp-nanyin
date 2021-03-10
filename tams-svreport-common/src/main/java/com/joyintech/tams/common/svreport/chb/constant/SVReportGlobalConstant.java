@@ -566,4 +566,9 @@ public class SVReportGlobalConstant {
      */
     public static final String SVR_IS_EQUDET_CONUT = "SVR_IS_EQUDET_CONUT";
     
+    /**
+     * 存续期产品余额计算方式(01:投资端持有汇总  02:交易汇总)
+     */
+    public static final String DEALSUB_BALANCEAMT_SUM_TYPE = "DEALSUB_BALANCEAMT_SUM_TYPE";
+    
 }

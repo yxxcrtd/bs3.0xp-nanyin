@@ -114,6 +114,17 @@ public interface ChbPrdDurationRegMapper {
     List<ChbPrdPosition> getBalance(@Param("prodId") String prodId,@Param("date") Date date);
 
     /**
+     * 获取投资端汇总的产品余额
+     * 
+     * @param prodId 产品代码
+     * @param date 持有日期
+     * @return 产品余额
+     * @see
+     * @since 1.0
+     */
+    BigDecimal getBalanceAmt(@Param("prodId") String prodId,@Param("date") Date date);
+    
+    /**
      * 获取产品赎回收益(针对于净值型产品按照移动平均来计算，其他模式则根据实际金额)
      * 
      * @param prodId 产品代码
