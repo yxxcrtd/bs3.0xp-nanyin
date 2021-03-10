@@ -14,6 +14,8 @@ public class AssetsTransfer001Dto extends BaseEntity {
      * 业务编号
      */
     private String tradeId;
+
+    private String totleTradeId;
     /**
      * 投资目的
      */
@@ -793,5 +795,13 @@ public class AssetsTransfer001Dto extends BaseEntity {
      */
     public void setBackLendDirection(String backLendDirection) {
         this.backLendDirection = backLendDirection;
+    }
+
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
     }
 }

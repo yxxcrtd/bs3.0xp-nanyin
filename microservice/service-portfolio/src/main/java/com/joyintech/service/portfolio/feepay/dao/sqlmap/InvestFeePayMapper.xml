@@ -1037,9 +1037,9 @@ AND NOT EXISTS (
   	
   	<!-- 根据交易编号查询流程中数据条数 -->
   	<select id="selectInFlowDataCount" resultType="int">
-        select count(1) from WFL_TRD_PRODUCT_DEAL 
-        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
-            or P_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+        select count(1) from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
+        where TOTLE_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+            or P_TOTLE_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </select>
 
 	<select id="selectEffectDataCount" resultType="int">

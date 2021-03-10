@@ -43,6 +43,8 @@ public class SecTransfer001Dto extends BaseEntity implements ProcessEntity {
      * 拆分前交易编号
      */
     private String tradeId;
+
+	private String totleTradeId;
     /**
      * 画面元素
      */
@@ -920,5 +922,13 @@ public class SecTransfer001Dto extends BaseEntity implements ProcessEntity {
 
 	public void setIsNeedAssign(String isNeedAssign) {
 		this.isNeedAssign = isNeedAssign;
+	}
+
+	public String getTotleTradeId() {
+		return totleTradeId;
+	}
+
+	public void setTotleTradeId(String totleTradeId) {
+		this.totleTradeId = totleTradeId;
 	}
 }

@@ -249,6 +249,7 @@
         cols:[
             {field:'statusVal', width:150 , title:"转仓状态",sortField:'status'}
             ,{field:'tradeId', width:150 , title:"业务编号"}
+            ,{field:'totleTradeId', visible : false}
             ,{field:'portfolioId', width:150 , title:"组合代码",
                 render : function(data, type, row, meta) {
                     return '<a onclick="showPtlManagement(\'' + row.portfolioId
@@ -327,6 +328,7 @@
                 else if (selArr[0].assetType == PINAN_ASSET_TYPE_F01) {
                     var checkObj = {};
                     checkObj.tradeId = selArr[0].tradeId;
+                    checkObj.totleTradeId = selArr[0].totleTradeId;
                     checkObj.systemFinprodId = selArr[0].finprodId;
                     checkObj.tradeDate = selArr[0].tradeDate;
                     checkObj.operateType = "revoke";

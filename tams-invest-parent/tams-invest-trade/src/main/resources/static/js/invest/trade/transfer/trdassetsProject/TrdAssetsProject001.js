@@ -134,7 +134,7 @@
         //update by xr for 分段计息 start
         if (object.finprodId && object.settleDate && object.prinAmt) {
             //update by xr for 分段计息 end
-            Joyin.ajaxJson(basePath + "invest/invest/trade/trdplanrateinvesttrade/TrdPlanRateInvestTrade002/getIntAmt", object, function (result) {
+            Joyin.ajaxJson(basePath + "/invest/trade/trdplanrateinvesttrade/TrdPlanRateInvestTrade002/getIntAmt", object, function (result) {
                 $('#splitIntAmt').val(result.data).trigger("blur");
                 //加上精度计算，  yjm 20190725
                 // var unitIntAmt = JoyinMath.doDiv(JoyinMath.doMul(result.data*1, 100, 6), object.prinAmt*1, 4);

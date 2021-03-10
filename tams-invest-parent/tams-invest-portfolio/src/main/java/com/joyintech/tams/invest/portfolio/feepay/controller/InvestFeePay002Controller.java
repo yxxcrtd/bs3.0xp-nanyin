@@ -327,9 +327,9 @@ public class InvestFeePay002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("queryPayFeeInfoList")
     public List<InvestFeePay003Dto> queryPayFeeInfoList() {
-        if(getParam("flag").equals("false"))return new ArrayList<>();
+        if(getParam("flag").equals("true"))return new ArrayList<>();
     	// 待办事项
-        if (StringUtil.isNotEmpty(this.getParam(GlobalConstant.WORKFLOW_ID))) {
+        if (getParam("calculateFlag").equals("false") && StringUtil.isNotEmpty(this.getParam(GlobalConstant.WORKFLOW_ID))) {
             ProcessMark pro = investFeePay002Service.getBusinessInfo(
                 this.getParam(GlobalConstant.WORKFLOW_ID));
             if (pro != null) {
@@ -346,7 +346,7 @@ public class InvestFeePay002Controller extends BaseController {
             return new ArrayList<>();
         }
         // 交易成功
-        else if (StringUtil.isNotEmpty(this.getParam("tradeId"))) {
+        else if (getParam("calculateFlag").equals("false") && StringUtil.isNotEmpty(this.getParam("tradeId"))) {
             return investFeePay002Service.queryFeeDetailByTradeId(this.getParam("tradeId"), this.getParam("payDate"));
         }
         if(StringUtil.isEmpty(this.getParam("feeType")))return new ArrayList<>();

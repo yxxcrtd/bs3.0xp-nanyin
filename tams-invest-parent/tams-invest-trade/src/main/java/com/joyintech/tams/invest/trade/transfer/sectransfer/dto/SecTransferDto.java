@@ -3,6 +3,8 @@ package com.joyintech.tams.invest.trade.transfer.sectransfer.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal;
+import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -170,7 +172,16 @@ public class SecTransferDto extends TrdBondInvestTradeDto {
      *行权收益率
      */
     private BigDecimal yield;
-    
+
+	/**
+	 * 汇总扩展表
+	 */
+	private PaTrdFinProductDealTotal paTrdFinProductDealTotal;
+
+	/**
+	 * 汇总附属表
+	 */
+	private TrdDealTotalAdd trdDealTotalAdd;
     
 	public BigDecimal getExerYield() {
 		return exerYield;
@@ -362,5 +373,24 @@ public class SecTransferDto extends TrdBondInvestTradeDto {
 	public String getInvAimStr() {
 		return SysDatadictUtil.getNameFromDataDict(DictCode.投资目的, this.getInvAim());
 	}
-	
+
+	@Override
+	public PaTrdFinProductDealTotal getPaTrdFinProductDealTotal() {
+		return paTrdFinProductDealTotal;
+	}
+
+	@Override
+	public void setPaTrdFinProductDealTotal(PaTrdFinProductDealTotal paTrdFinProductDealTotal) {
+		this.paTrdFinProductDealTotal = paTrdFinProductDealTotal;
+	}
+
+	@Override
+	public TrdDealTotalAdd getTrdDealTotalAdd() {
+		return trdDealTotalAdd;
+	}
+
+	@Override
+	public void setTrdDealTotalAdd(TrdDealTotalAdd trdDealTotalAdd) {
+		this.trdDealTotalAdd = trdDealTotalAdd;
+	}
 }
