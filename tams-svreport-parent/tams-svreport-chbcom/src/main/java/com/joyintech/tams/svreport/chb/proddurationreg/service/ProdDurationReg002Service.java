@@ -574,7 +574,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
             }
         	
             /**  add 产品余额以持有者信息进行汇总的分支处理追加  by  wudebao  20210308  start  */
-            if(DictCodeListExt2.产品存续期登记产品余额_投资端持有汇总.getValue().equals(amtSumType)) {
+            if("01".equals(amtSumType)) {
             	//当汇总方式（DEALSUB_BALANCEAMT_SUM_TYPE）  ==    ‘01：投资端持有汇总  的情况下进行以下处理
             	if (DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(model.getOperateMode())
          	            || DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(model.getOperateMode())) {
