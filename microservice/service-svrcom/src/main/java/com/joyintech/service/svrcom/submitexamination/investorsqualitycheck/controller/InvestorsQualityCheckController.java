@@ -7,21 +7,24 @@
  * 修改内容：新建
  * 系统名称：中信银行资管系统
  */
- 
+
 package com.joyintech.service.svrcom.submitexamination.investorsqualitycheck.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
+import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCommonService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPZTService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.grid.Page;
-import com.joyintech.tams.report.submitexamination.delayverification.dto.DelayVerification001Dto;
-import com.joyintech.tams.report.submitexamination.delayverification.dto.DelayVerification002Dto;
-import com.joyintech.tams.report.submitexamination.delayverification.service.DelayVerification001Service;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheck001Service;
 
@@ -43,9 +46,12 @@ public class InvestorsQualityCheckController{
     @Autowired
     private InvestorsQualityCheck001Service investorsQualityCheck001Service;
 
+    @Autowired
+    private InvestorsQualityCheckCPZTService investorsQualityCheckCPZTService;
+
     /**
      * 查询列表
-     * 
+     *
      * @return Page
      */
     @PostMapping("/readConfig")
@@ -57,11 +63,49 @@ public class InvestorsQualityCheckController{
      * @return
      */
     @PostMapping("/searchInvestorsPassRate/{page}/{length}")
-    public Page<InvestorsQualityCheck001Dto> searchInvestorsPassRate(@RequestBody Map<String, Object> param){
-        return investorsQualityCheck001Service.searchInvestorsPassRate(param);
+    public List<InvestorsQualityCheck001Dto> searchInvestorsPassRate(@RequestBody Map<String, Object> param){
+        investorsQualityCheck001Service.dealParamMap(param);
+        List<InvestorsQualityCheck001Dto> resList = investorsQualityCheck001Service.searchInvestorsPassRate(param);
+
+        // add by zhangliang 20210224 多线程处理查询结果 start
+        List<InvestorsQualityCheckCommonService> serviceList = new ArrayList<>();
+        // 添加需要查询的Service对象
+        serviceList.add(investorsQualityCheckCPZTService);
+
+
+
+        // 创建线程池
+        ExecutorService taskpool = new JoyinThreadPoolExecutor(serviceList.size());
+        List<Callable<InvestorsQualityCheck001Dto>> tasks = new ArrayList<>();
+        // 创建任务
+        for (InvestorsQualityCheckCommonService service : serviceList) {
+            tasks.add(new Callable<InvestorsQualityCheck001Dto>() {
+                @Override
+                public InvestorsQualityCheck001Dto call() {
+                    return service.cntHGL(param);
+                }
+            });
+        }
+        // 为线程池添加任务
+        try {
+            List<Future<InvestorsQualityCheck001Dto>> taskResult = taskpool.invokeAll(tasks);
+            // 获取任务执行结果
+            for (Future<InvestorsQualityCheck001Dto> res : taskResult) {
+                // 需要计算
+                resList.add(res.get());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            Thread.currentThread().interrupt();
+
+            return resList;
+        }
+
+
+        return resList;
+        // add by zhangliang 20210224 多线程处理查询结果 end
     }
     /**
-     * 查询列表 
+     * 查询列表
      * --证件类型合格率
      * @return Page
      */
@@ -70,7 +114,7 @@ public class InvestorsQualityCheckController{
         return investorsQualityCheck001Service.searchTableZJLX(param);
     }
     /**
-     * 查询列表 
+     * 查询列表
      * --证件匹配合格率
      * @return Page
      */
@@ -79,12 +123,22 @@ public class InvestorsQualityCheckController{
         return investorsQualityCheck001Service.searchTableZJPP(param);
     }
     /**
-     * 查询列表 
+     * 查询列表
      * --及时性合格率
      * @return Page
      */
     @PostMapping("/searchTableJSX/{page}/{length}")
     public Page<InvestorsQualityCheck001Dto> searchTableJSX(@RequestBody Map<String, Object> param){
         return investorsQualityCheck001Service.searchTableJSX(param);
+    }
+
+    /**
+     * 查询列表
+     * --及时性合格率
+     * @return Page
+     */
+    @PostMapping("/searchTableCPZTHGL/{page}/{length}")
+    public Page<InvestorsQualityCheck001Dto> searchTableCPZTHGL(@RequestBody Map<String, Object> param){
+        return investorsQualityCheckCPZTService.queryPage(param);
     }
 }

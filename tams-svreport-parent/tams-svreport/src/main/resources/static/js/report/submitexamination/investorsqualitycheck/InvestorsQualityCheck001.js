@@ -12,11 +12,12 @@ $(function () {
     };
     readConfig();
     var curSelectedIndex = 0;
-    var xAxisData = ["证件类型", "证件匹配","及时性"];
-    var xAxisDataRate = ["证件类型合格率", "证件匹配合格率","及时性合格率"];
+    var xAxisData = ["证件类型", "证件匹配","及时性","产品状态"];
+    var xAxisDataRate = ["证件类型合格率", "证件匹配合格率","及时性合格率","产品状态合格率"];
     var xAxisDataDetail = ["用于检验境内个人投资者未使用“居民身份证”或“临时身份证”进行登记的情况", 
                      "用于校验投资者证件类型、证件号码相同，投资者姓名不同的情况",
-                     "用于检验银行是否按照T+1（下一工作日）及时性要求开展登记的情况"];
+                     "用于检验银行是否按照T+1（下一工作日）及时性要求开展登记的情况",
+                     ""];
 
     window.investorsqualitycheck = function() {
         return {
@@ -24,13 +25,13 @@ $(function () {
              * 初始化的函数
              */
             init : function(){
-        		var tableDiv0 = document.getElementById('tableDiv0');
+        		/*var tableDiv0 = document.getElementById('tableDiv0');
         		var tableDiv1 =document.getElementById("tableDiv1");
         		var tableDiv2 =document.getElementById("tableDiv2");
 
             		tableDiv0.style.display="block";
             		tableDiv1.style.display="none";
-            		tableDiv2.style.display="none";
+            		tableDiv2.style.display="none";*/
                 //防止报出时间为空的信息
                 setTimeout(function() {investorsqualitycheck.searchData();},500);
                 document.getElementById("registrationTitle").innerText=xAxisDataRate[0];
@@ -143,7 +144,7 @@ $(function () {
                 	document.getElementById("registration").innerText=xAxisDataDetail[data.pageType-1];
                 	document.getElementById("registrationTitle").innerText=xAxisDataRate[data.pageType-1];
                 	curSelectedIndex=data.pageType-1;
-            		var tableDiv0 = document.getElementById('tableDiv0');
+            		/*var tableDiv0 = document.getElementById('tableDiv0');
             		var tableDiv1 =document.getElementById("tableDiv1");
             		var tableDiv2 =document.getElementById("tableDiv2");
                 	if(data.pageType == '1'){
@@ -173,7 +174,8 @@ $(function () {
 	                    }else{
 	                        investorsqualitycheck.table2.load();
 	                    }
-                	}
+                	}*/
+                    checkOnClickRow(data);
                 },
                 page : false,
             	checkbox : false,
@@ -212,6 +214,46 @@ $(function () {
                         }
                    ]
             }),
+            // add by zhangliang 20210309 新增投资者质量核查相关 start
+            tableCPZTHGL : $('#tableCPZTHGL').joyintable({
+                ajax: {
+                    url: 'searchTableCPZTHGL',
+                    type: 'POST',
+                    data: function() {
+                        var parm={};
+                        parm=investorsqualitycheck.getPageParams();
+                        parm.index=curSelectedIndex+1;
+                        return parm;
+                    },
+                },
+                cols: [
+                    {title: "产品登记编码", field: "prdRegistCode",width:'20%'},
+                    {title: "识别标识", field: "indentifyMark",width:'20%'},
+                    {title: "持有日期", field: "holdDate",width:'20%', type:"date"},
+                    {title: "产品发行状态", field: "prdIssueSts",width:'20%'},
+                    {title: "实际终止日期", field: "prdAclMDate",width:'20%', type:"date"},
+                ]
+            }),
+            checkOnClickRow : function (data) {
+                $('#tableDiv0').toggle(false);
+                $('#tableDiv1').toggle(false);
+                $('#tableDiv2').toggle(false);
+                $('#tableDivCPZTHGL').toggle(false);
+                if(data.pageType == '1'){
+                    $('#tableDiv0').toggle(true);
+                    investorsqualitycheck.table0.table ? investorsqualitycheck.table0.reload() : investorsqualitycheck.table0.load();
+                }else if(data.pageType == '2'){
+                    $('#tableDiv1').toggle(true);
+                    investorsqualitycheck.table1.table ? investorsqualitycheck.table1.reload() : investorsqualitycheck.table1.load();
+                }else if(data.pageType == '3'){
+                    $('#tableDiv2').toggle(true);
+                    investorsqualitycheck.table2.table ? investorsqualitycheck.table2.reload() : investorsqualitycheck.table2.load();
+                }else if(data.pageType == '4'){
+                    $('#tableDivCPZTHGL').toggle(true);
+                    investorsqualitycheck.tableCPZTHGL.table ? investorsqualitycheck.tableCPZTHGL.reload() : investorsqualitycheck.tableCPZTHGL.load();
+                }
+            },
+            // add by zhangliang 20210309 新增投资者质量核查相关 end
         }
     }();
     $(function() {

@@ -95,5 +95,16 @@ public class InvestorsQualityCheck001Controller extends BaseController{
     public Page<InvestorsQualityCheck001Dto> searchTableJSX(){
         return investorsQualityCheckMService.searchTableJSX(RequestUtil.getPageParam());
     }
+
+    /**
+     * 查询列表
+     * --产品状态合格率
+     * @return Page
+     */
+    @ResponseBody
+    @RequestMapping("/searchTableCPZTHGL")
+    public Page<InvestorsQualityCheck001Dto> searchTableCPZTHGL(){
+        return investorsQualityCheckMService.searchTableCPZTHGL(RequestUtil.getPageParam());
+    }
     
 }

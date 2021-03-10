@@ -21,7 +21,7 @@ public interface InvestorsQualityCheck001Mapper {
 	 * @return
 	 */
 	List<InvestorsQualityCheck001Dto> searchInvestorsPassRate(Map<String, Object> param);
-	
+
 	/**
 	 * 查询右侧-不合格数据的详细信息
 	 * --证件类型
@@ -29,7 +29,7 @@ public interface InvestorsQualityCheck001Mapper {
 	 * @return
 	 */
 	List<InvestorsQualityCheck001Dto> searchTableZJLX(Map<String, Object> param);
-	
+
 	/**
 	 * 查询右侧-不合格数据的详细信息
 	 * --证件匹配
@@ -37,7 +37,7 @@ public interface InvestorsQualityCheck001Mapper {
 	 * @return
 	 */
 	List<InvestorsQualityCheck001Dto> searchTableZJPP(Map<String, Object> param);
-	
+
 	/**
 	 * 查询右侧-不合格数据的详细信息
 	 * --及时性
@@ -46,4 +46,11 @@ public interface InvestorsQualityCheck001Mapper {
 	 */
 	List<InvestorsQualityCheck001Dto> searchTableJSX(Map<String, Object> param);
 
+	/**
+	 * 查询右侧-不合格数据的详细信息
+	 * --产品状态合格率
+	 * @param param 参数
+	 * @return 产品状态合格率
+	 */
+	List<InvestorsQualityCheck001Dto> searchCPZTHGL(Map<String, Object> param);
 }
