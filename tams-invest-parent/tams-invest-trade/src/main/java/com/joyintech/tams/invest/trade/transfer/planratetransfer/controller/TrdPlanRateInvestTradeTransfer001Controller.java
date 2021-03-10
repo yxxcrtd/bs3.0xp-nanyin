@@ -49,7 +49,7 @@ import java.util.*;
  */
 @Controller
 @PageId("TrdPlanRateInvestTradeTransfer001")
-@RequestMapping("/invest/trade/resolute/planratetransfer/TrdPlanRateInvestTradeTransfer001")
+@RequestMapping("/invest/trade/transfer/planratetransfer/TrdPlanRateInvestTradeTransfer001")
 public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController {
 
     @Autowired
