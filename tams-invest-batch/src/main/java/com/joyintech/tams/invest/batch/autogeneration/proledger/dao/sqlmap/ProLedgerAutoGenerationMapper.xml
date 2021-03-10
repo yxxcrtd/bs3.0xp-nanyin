@@ -515,7 +515,7 @@
 							on t.finprod_id = pro.finprod_id
 						 where pro.profit_type != '02'
 						   and t.BASE_RULE_TYPE = '02'
-						   and (t.eff_date, t.finprod_id) in
+						   and (t.eff_date, t.finprod_id) in 
 							   (select max(eff_date), finprod_id
 								  from FIN_CASH_CALC_RULE
 								 where eff_date &lt;= to_date(#{batchDate,jdbcType=DATE}, 'yyyy-mm-dd')
