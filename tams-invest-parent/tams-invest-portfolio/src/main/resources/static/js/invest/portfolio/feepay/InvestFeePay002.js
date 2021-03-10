@@ -11,7 +11,8 @@ function showFeeDetail(secAcctId, ptlId, calcStartDate, calcEndDate, feeType, co
 }
 // 定义函数作用域(立即执行),防止全局变量污染
 $(function() {
-	var flag = true;
+	var calculateFlag = false;//是否是按计算按钮，刷新组合信息（默认为否）
+	var flag = false;//是否是修改列表列字段显示和隐藏，刷新组合信息（默认为否）
 	var isNew = false;//是否是新建（没有预提规则的账户维护费），默认为不是
 	var calcConditionObjBackUp;
 	var cols1 = [{field : 'portFolioName',width:230,title : 'InvestFeePay002.feeTable.portFolioName'
@@ -57,7 +58,8 @@ $(function() {
 						chargeType : $('#InvestFeePay002_hidden_chargeType').val(),
 						org : $('#InvestFeePay002_regTrustOrg').val(),
 						confirmFlag : $('#InvestFeePay002_hidden_operateType').val(),
-						flag : flag
+						flag : flag,
+						calculateFlag : calculateFlag
 						};
 			}
 		},
@@ -251,7 +253,7 @@ $(function() {
 		} else {
 			$('#InvestFeePay002_positionStartDate').val('').trigger('change');
 		}
-		flag = false;
+		flag = true;
 		if(isNew && feeType == '08'){
 			$('#InvestFeePay002_div_positionStartDate').hide();
 			$('#InvestFeePay002_div_positionEndDate').hide();
@@ -284,7 +286,7 @@ $(function() {
 				feeInfoTable.showColumns([{field:'status', visible:true}]);
 			}
 		}
-		flag = true;
+		flag = false;
 	}
 	
 	/**
@@ -410,7 +412,9 @@ $(function() {
     		Joyin.error("支付日不能为空！")
             return;
     	}
+		calculateFlag = true;
     	reloadTable();
+		calculateFlag = false;
     });
 	
 	/**
