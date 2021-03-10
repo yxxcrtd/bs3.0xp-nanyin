@@ -526,8 +526,8 @@
         $("#endTdayRule").attr("disabled",status);
         $("#payTdayRule").attr("disabled",status);
         
-        $("#rateType").attr("disabled",status);
-        $("#rate").attr("disabled",status);
+        //$("#rateType").attr("disabled",status);
+        //$("#rate").attr("disabled",status);
 //        $("#indexId").attr("disabled",status);
 //        $("#coefficient").attr("disabled",status);
 //        $("#spreadRate").attr("disabled",status);
@@ -766,24 +766,24 @@
     $('#rateType').change(function() {
         if( $('#rateType').val() === '') {
 			//update by dgf 20200116 需求变更,修改时候不允许修改这部分
-			if(pageModel==PAGE_MODEL_EDIT){
+			/*if(pageModel==PAGE_MODEL_EDIT){
 				$('#rate').trigger('change').prop('disabled', true);
 			}else{
 				$('#rate').trigger('change').prop('disabled', false);
-			}
-        	// $('#rate').val('').trigger('change').prop('disabled', false);
+			}*/
+        	$('#rate').val('').trigger('change').prop('disabled', false);
         	$('#indexId').val('').trigger('change').prop('disabled', false);
         	$('#coefficient').val('').trigger('change').prop('disabled', false);
         	$('#spreadRate').val('').trigger('change').prop('disabled', false);
         	$('#resetType').val('').trigger('change').prop('disabled', false);
         } else if( $('#rateType').val() === INT_TYPE_01) {
 			//update by dgf 20200116 需求变更,修改时候不允许修改这部分
-			if(pageModel==PAGE_MODEL_EDIT){
+			/*if(pageModel==PAGE_MODEL_EDIT){
 				$('#rate').trigger('change').prop('disabled', true);
 			}else{
 				$('#rate').trigger('change').prop('disabled', false);
-			}
-        	// $('#rate').trigger('change').prop('disabled', false);
+			}*/
+        	$('#rate').trigger('change').prop('disabled', false);
         	$('#indexId').val('').trigger('change').prop('disabled', true);
         	$('#coefficient').val('').trigger('change').prop('disabled', true);
         	$('#spreadRate').val('').trigger('change').prop('disabled', true);
@@ -859,7 +859,7 @@
     		if($('#rateType').val() == '02'){
     			$('#resetType').removeAttr("disabled");
     		}
-    		else{
+    		else if($('#rateType').val() == '01'){
     			$('#resetType').attr("disabled","disabled");
     		}
     	});
