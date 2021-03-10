@@ -153,7 +153,7 @@
                         result = '无';
                     }
                         data.revokeReason = result;
-                        WorkFlow.doDeleteList(basePath + 'invest/portfolio/feepay/InvestFeePay001/doRevoke', data, "InvestFeePay001_btn_revoke", "InvestFeePay002");
+                        WorkFlow.doRevokeList(basePath + 'invest/portfolio/feepay/InvestFeePay001/doRevoke', data, "InvestFeePay001_btn_revoke", "InvestFeePay002");
                     });
                 });
             }else{
