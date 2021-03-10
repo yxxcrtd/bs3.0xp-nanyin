@@ -53,7 +53,6 @@ import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDea
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
@@ -996,7 +995,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             reverseTradeId = reverseTrdProductDeal.getTradeId();
         }
 
-        List<String> totleIdList = Arrays.asList(entity.getTotleTradeId());
+        List<String> totleIdList1 = Arrays.asList(entity.getTotleTradeId());
+        List<String> totleIdList = new ArrayList(totleIdList1);
+
 
         // 如果能查到买入的转仓交易  则 同步撤销买入的
         if(StringUtil.isNotEmpty(reverseTradeId)){

@@ -14,10 +14,12 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.trade.transfer.assign.dto.TrdAssetAssignDto;
 import com.joyintech.tams.invest.trade.transfer.assign.service.TrdAssetAssignService;
-import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.*;
+import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecResolute001Dto;
+import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecResoluteDto;
+import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecTransfer001Dto;
+import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecTransferDto;
 import com.joyintech.tams.invest.trade.transfer.sectransfer.service.SecTransfer001Service;
 import com.joyintech.tams.invest.trade.transfer.sectransfer.service.TrdBondDuration001Service;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
@@ -108,6 +110,16 @@ public class SecTransfer001Controller extends BaseController {
             map.put("portfolioId", portfolioId);
             map.put("cdate", DateUtil.getSysDate());
             map.put("invAim", paraMap.get("invAim").toString());
+            if(StringUtil.isNotEmpty(paraMap.get("chlId"))){
+                map.put("secacctid", paraMap.get("chlId"));
+                map.put("sec1acctid", paraMap.get("chlId"));
+            }else if(StringUtil.isNotEmpty(paraMap.get("secAcctId"))){
+                map.put("secacctid", paraMap.get("secAcctId"));
+                map.put("sec1acctid", "999999");
+            }else{
+                map.put("secacctid", null);
+                map.put("sec1acctid", null);
+            }
             entity = secTransfer001Service.selectTradeInfo(map);
             //资产代码
             entity.setFinprodMarketId((String) paraMap.get("finprodMarketId"));
@@ -373,44 +385,6 @@ public class SecTransfer001Controller extends BaseController {
     @ResponseBody
     AjaxResult save(@RequestBody SecTransfer001Dto dto)
             throws Exception {
-
-        if((StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(),dto.getTradeMarket()) || StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(),dto.getTradeMarket()))
-                && StringUtil.isNotEmpty(dto.getSecManageAcctId())){
-            dto.setIsNeedAuto("YES");
-            //添加银证转账信息
-            BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter(DictCodeList.共通业务类型_资金划拨管理);
-            BussinessCodeParameter orderIdparam = new BussinessCodeParameter(DictCodeList.共通业务类型_DVP清算指令管理);
-            dto.setTradeId(IDGenerator.generate());
-            for(PtlFundAllocationDto pfa : dto.getPtlFundAllocationDtos()){
-                pfa.setPortfolioName(secTransfer001Service.selectPortfolioName(pfa.getPortfolioId()));
-                Map<String, Object> map = new HashMap<>();
-                map.put("groupId",pfa.getPortfolioId());
-                map.put("ccy",pfa.getCcy());
-                map.put("portfolioId",pfa.getPortfolioId());
-                pfa.setMyAcctNo(secTransfer001Service.getAccountInfo(map));
-                pfa.setCounterAcctNo(secTransfer001Service.getCounterAcctInfo(map));
-                List<BussTrdTransferOrderDto> list = new ArrayList<>();
-                BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
-                bussTrdTransferOrderDto.setIsNeedSend(DictCodeList.是否_是.getValue());
-                bussTrdTransferOrderDto.setPayType(DictCodeListExt1.平安划款类型_托管划款.getValue());
-                bussTrdTransferOrderDto.setSettleDate(pfa.getSettleDate());
-                bussTrdTransferOrderDto.setSettleAmt(pfa.getSettleAmt());
-                bussTrdTransferOrderDto.setCcy(pfa.getCcy());
-                bussTrdTransferOrderDto.setPayAcctNo(pfa.getMyAcctNo());
-                bussTrdTransferOrderDto.setRecAcctNo(pfa.getCounterAcctNo());
-                bussTrdTransferOrderDto.setPortfolioId(pfa.getPortfolioId());
-                bussTrdTransferOrderDto.setPs(DictCodeListExt1.收支方向_支出.getValue());
-                bussTrdTransferOrderDto.setSettleStatus(DictCodeList.结算状态_已结算.getValue());
-                bussTrdTransferOrderDto.setIsTotalTrade(DictCodeList.是否_否.getValue());
-                bussTrdTransferOrderDto.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
-                bussTrdTransferOrderDto.setOrderId(baseGetBussinessId.buildBussinessCode(orderIdparam));
-                pfa.setOrderId(bussTrdTransferOrderDto.getOrderId());
-                pfa.setTradeId(baseGetBussinessId.buildBussinessCode(bussinessCodeParameter));
-                list.add(bussTrdTransferOrderDto);
-                pfa.setBussTrdTransferOrder(list);
-            }
-        }
-
         ProcessParameter<SecTransfer001Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<SecTransfer001Dto> workFlowParameter = new WorkFlowParameter<>();
         workFlowParameter.setPageId(this.getPageId());

@@ -328,7 +328,7 @@
     <!-- 查询转仓明细列表 -->
     <select id="findTransPage" resultType="com.joyintech.service.trade.transfer.assetstransfer.dto.AssetsTransferDto">
         SELECT DISTINCT
-            T.status,T.tradeId,T.portfolioId,T.portfolioName,T.assetType,T.finprodId,T.finprodMarketId,T.finprodName,T.chlId,T.chlName,
+            T.status,T.totleTradeId,T.tradeId,T.portfolioId,T.portfolioName,T.assetType,T.finprodId,T.finprodMarketId,T.finprodName,T.chlId,T.chlName,
             T.tradeDate,T.ps,T.tradeMarket,T.ccy,T.netPrice,T.yield,T.amount,T.printAmt,T.tradeAmt,T.type6,T.backLendDirection
             <!-- add by liuwei for huaxing 20200310 start -->
             ,T.finprodType2
@@ -359,6 +359,7 @@
             SELECT CASE
                 WHEN (TRD_PRODUCT_DEAL.IS_CANCEL IS NULL OR TRD_PRODUCT_DEAL.IS_CANCEL = 'N') THEN #{TRADE_STATUS_02}
                 ELSE #{TRADE_STATUS_03} END                     AS status,
+                TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 TRD_PRODUCT_DEAL.TRADE_ID             AS tradeId,
                 TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID     AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME          AS portfolioName,
@@ -417,6 +418,7 @@
                     ON CHLFIN_PRODUCT.IS_CHL = #{YESORNO_Y} AND CHLFIN_PRODUCT.FINPROD_ID = TRD_PRODUCT_DEAL.CHL_ID
                 LEFT JOIN (<include refid="getYield"/>) YIELD ON YIELD.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
+            AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
                 AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
                 <if test="portfolioIdList != null and portfolioIdList.size()>0">
                     <foreach collection="portfolioIdList" index="index" item="item" open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -453,6 +455,7 @@
         <if test="status == null or status == '' or status == TRADE_STATUS_01">
             SELECT
                 '${TRADE_STATUS_01}'                     AS status,
+                WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 WFL_TRD_PRODUCT_DEAL.TRADE_ID             AS tradeId,
                 WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID     AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME          AS portfolioName,
@@ -545,6 +548,7 @@
             SELECT CASE
                 WHEN (TRD_PRODUCT_DEAL.IS_CANCEL IS NULL OR TRD_PRODUCT_DEAL.IS_CANCEL = 'N') THEN #{TRADE_STATUS_02}
                 ELSE #{TRADE_STATUS_03} END                       AS status,
+                TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 TRD_PRODUCT_DEAL.TRADE_ID               AS tradeId,
                 TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID       AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME            AS portfolioName,
@@ -579,6 +583,7 @@
                 ON CHLFIN_PRODUCT.IS_CHL = #{YESORNO_Y} AND CHLFIN_PRODUCT.FINPROD_ID = TRD_PRODUCT_DEAL.CHL_ID
                 LEFT JOIN PA_TRD_PRODUCT_DEAL ON TRD_PRODUCT_DEAL.TRADE_ID = PA_TRD_PRODUCT_DEAL.TRADE_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
+            AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
                 AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
                 <if test="portfolioIdList != null and portfolioIdList.size()>0">
                     <foreach collection="portfolioIdList" index="index" item="item" open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -614,6 +619,7 @@
         <if test="status == null or status == '' or status == TRADE_STATUS_01">
             SELECT
                 '${TRADE_STATUS_01}'                       AS status,
+                WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 WFL_TRD_PRODUCT_DEAL.TRADE_ID               AS tradeId,
                 WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID       AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME            AS portfolioName,
@@ -681,6 +687,7 @@
             SELECT CASE
                 WHEN (TRD_PRODUCT_DEAL.IS_CANCEL IS NULL OR TRD_PRODUCT_DEAL.IS_CANCEL = 'N') THEN #{TRADE_STATUS_02}
                 ELSE #{TRADE_STATUS_03} END                        AS status,
+                TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 TRD_PRODUCT_DEAL.TRADE_ID                AS tradeId,
                 TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID        AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME             AS portfolioName,
@@ -719,6 +726,7 @@
                 left join FIN_PRODUCT
                 on FIN_PRODUCT.FINPROD_ID = FIN_DEAL_TARGET.PLEDGE_FINPROD_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
+            AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
                 AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
                 <if test="portfolioIdList != null and portfolioIdList.size()>0">
                     <foreach collection="portfolioIdList" index="index" item="item" open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -756,6 +764,7 @@
         <if test="status == null or status == '' or status == TRADE_STATUS_01">
             SELECT
                 '${TRADE_STATUS_01}'                       AS status,
+                WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 WFL_TRD_PRODUCT_DEAL.TRADE_ID                AS tradeId,
                 WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID        AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME             AS portfolioName,
@@ -828,6 +837,7 @@
             SELECT CASE
                 WHEN (TRD_PRODUCT_DEAL.IS_CANCEL IS NULL OR TRD_PRODUCT_DEAL.IS_CANCEL = 'N') THEN #{TRADE_STATUS_02}
                 ELSE #{TRADE_STATUS_03} END                        AS status,
+                TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 TRD_PRODUCT_DEAL.TRADE_ID                AS tradeId,
                 TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID        AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME             AS portfolioName,
@@ -866,6 +876,7 @@
                 left join FIN_PRODUCT
                 on FIN_PRODUCT.FINPROD_ID = FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
+            AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
                 AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
                 <if test="portfolioIdList != null and portfolioIdList.size()>0">
                     <foreach collection="portfolioIdList" index="index" item="item" open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -901,6 +912,7 @@
         <if test="status == null or status == '' or status == TRADE_STATUS_01">
             SELECT
                 '${TRADE_STATUS_01}'                        AS status,
+                WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 WFL_TRD_PRODUCT_DEAL.TRADE_ID                AS tradeId,
                 WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID        AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME             AS portfolioName,
@@ -973,6 +985,7 @@
             SELECT CASE
                 WHEN (TRD_PRODUCT_DEAL.IS_CANCEL IS NULL OR TRD_PRODUCT_DEAL.IS_CANCEL = 'N') THEN #{TRADE_STATUS_02}
                 ELSE #{TRADE_STATUS_03} END                    AS status,
+                TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 TRD_PRODUCT_DEAL.TRADE_ID                          AS tradeId,
                 TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID                  AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME                       AS portfolioName,
@@ -1008,6 +1021,7 @@
             LEFT JOIN PA_TRD_PRODUCT_DEAL
                 ON TRD_PRODUCT_DEAL.TRADE_ID = PA_TRD_PRODUCT_DEAL.TRADE_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
+            AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
             AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item" open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -1043,6 +1057,7 @@
         /** 流程中 **/
         <if test="status == null or status == '' or status == TRADE_STATUS_01">
             SELECT '${TRADE_STATUS_01}'                               AS status,
+                WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID       AS totleTradeId,
                 WFL_TRD_PRODUCT_DEAL.TRADE_ID                      AS tradeId,
                 WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID              AS portfolioId,
                 PTL_PORTFOLIO.PORTFOLIO_NAME                       AS portfolioName,

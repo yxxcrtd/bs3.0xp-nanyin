@@ -149,6 +149,7 @@ public class SecTransferService extends BaseService<SecTransfer001Dto> {
     	map.put("FEE_TYPE_B08", DictCodeListExt1.一次性费用类型_结算手续费.getValue());
     	map.put("FEE_TYPE_B05", DictCodeListExt1.一次性费用类型_佣金.getValue());
     	map.put("Y", DictCodeListExt1.是否_是.getValue());
+        map.put("hodingtype", DictCodeList.持仓类型_实际.getValue());
     	SecTransfer001Dto dto = secTransferMapper.selectTradeInfo(map);
         return dto;
     }
