@@ -236,9 +236,9 @@
             	<div class="form-inline-wrap" th:id="|${entityName}_repFinancialComissue_div|" >
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repFinancialComissue}" style="line-height: normal!important;">是否由金融资产<br>投资公司发行</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="checkbox" th:id="|${entityName}_repFinancialComissue|" th:name="|${entityName}.repFinancialComissue|" lay-skin="switch" 
-                        data-th-value="${YES}" lay-text="是|否" 
-                        data-th-checked="${YES} ==${entity?.repFinancialComissue}"  >                         
+                        <input  th:id="|${entityName}_repFinancialComissue|" th:name="|${entityName}.repFinancialComissue|" class="layui-input form-input input-select"
+                        data-th-value="${YES}"  data-th-data-result="${SVR_YES_OR_NO}"
+                         >
                     </div>
                 </div>
                 
