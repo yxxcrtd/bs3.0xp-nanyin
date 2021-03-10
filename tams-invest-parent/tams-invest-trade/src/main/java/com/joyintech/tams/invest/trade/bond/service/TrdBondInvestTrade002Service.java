@@ -996,8 +996,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             reverseTradeId = reverseTrdProductDeal.getTradeId();
         }
 
-        List<String> totleIdList = Arrays.asList(entity.getTotleTradeId());
-
+        //List<String> totleIdList = Arrays.asList(entity.getTotleTradeId());
+        List<String> totleIdList = new ArrayList<>();
+        totleIdList.add(entity.getTotleTradeId());
         // 如果能查到买入的转仓交易  则 同步撤销买入的
         if(StringUtil.isNotEmpty(reverseTradeId)){
             totleIdList.add(reverseTradeId);
