@@ -1605,9 +1605,12 @@ with cj as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
-		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','XJ') or (cr.finprod_type2 ='F17' and cr.profit_Type='02'))
+		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15')
+		or (cr.finprod_type2 ='F17' and cr.profit_Type='02')
+		or (cr.finprod_type2 ='XJ' and cr.change_type='05')
+		)
 		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
 
 		union all
 
@@ -1623,13 +1626,15 @@ with cj as(
 		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and cr1.change_type='02'
 		)fcr
 		on cr.asset_id=fcr.asset_id
 		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id))
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id
+		)　and fc1.change_type='02'
+		)　and cr1.change_type='02'
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
@@ -1637,6 +1642,7 @@ with cj as(
 		from chb_asset_rate cr1
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		and cr1.change_type='03'
 		group by cr1.asset_id
 		)bonus
 		on cr.asset_id =bonus.asset_id
@@ -1646,13 +1652,14 @@ with cj as(
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
 		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id)
+		and cr1.change_type='03'
 		group by cr1.asset_id
 		)jybonus
 		on cr.asset_id =jybonus.asset_id
 		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
 		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
-
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.change_type='02')
+		and cr.change_type='02'
 		union all
 		<!--计划货币，货币基金-->
 
@@ -1702,9 +1709,12 @@ with cj as(
 		where 1=1
 		and (cr.profit_Type='013' or cr.finprod_type2='F10')
 		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and fc1.change_type in ('07','09')
+		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and cr.change_type in ('07','09')
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
@@ -2104,9 +2114,12 @@ with cj as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
-		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','XJ') or (cr.finprod_type2 ='F17' and cr.profit_Type='02'))
+		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15')
+		or (cr.finprod_type2 ='F17' and cr.profit_Type='02')
+		or (cr.finprod_type2 ='XJ' and cr.change_type='05')
+		)
 		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-		and fc1.change_date <![CDATA[<=]]>#{endDate,jdbcType=DATE})
+		and fc1.change_date <![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
 
 		union all
 
@@ -2121,13 +2134,15 @@ with cj as(
 		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE})
+		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and cr1.change_type='02'
 		)fcr
 		on cr.asset_id=fcr.asset_id
 		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id))
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id
+		)　and fc1.change_type='02'
+		)　and cr1.change_type='02'
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
@@ -2135,6 +2150,7 @@ with cj as(
 		from chb_asset_rate cr1
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		and cr1.change_type='03'
 		group by cr1.asset_id
 		)bonus
 		on cr.asset_id =bonus.asset_id
@@ -2144,13 +2160,14 @@ with cj as(
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
 		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id)
+		and cr1.change_type='03'
 		group by cr1.asset_id
 		)jybonus
 		on cr.asset_id =jybonus.asset_id
 		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
 		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
-
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.change_type='02')
+		and cr.change_type='02'
 		union all
 		<!--计划货币，货币基金-->
 
@@ -2200,9 +2217,12 @@ with cj as(
 		where 1=1
 		and (cr.profit_Type='013' or cr.finprod_type2='F10')
 		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE})
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and fc1.change_type in ('07','09')
+		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt!=0 )
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and cr.change_type in ('07','09')
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
