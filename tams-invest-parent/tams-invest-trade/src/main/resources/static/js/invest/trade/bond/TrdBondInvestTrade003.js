@@ -3342,7 +3342,7 @@ var table;
 			               ,{field:'investaim', width:100, title: 'TrdInvestFenPeiInfo.investaim',edit:true, sortable:false,editOption:{type:'select',formatoption:true,result: INV_AIM}}
 			               ,{field:'tradeAmt',  width:100,title: 'TrdInvestFenPeiInfo.tradeAmt',edit:true, sortable:false,type:'number', digit:2}
                           ,{field:'secManageAcctIdDuo', width:100,  title: 'EtrInvestBondInfo003.secManageAcctId',edit:true,sortable: false,
-                              editOption:{type:'select',showField:'text',id:'secManageAcctIdDuo', parentIds:'portfolioId,tradeMarket', multiple: false,searchable: true,
+                              editOption:{type:'select',showField:'text',id:'secManageAcctIdDuo', parentIds:'portfolioId,tradeMarket,finprodId', multiple: false,searchable: true,
                                   url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAccId')
                               }
                           }
