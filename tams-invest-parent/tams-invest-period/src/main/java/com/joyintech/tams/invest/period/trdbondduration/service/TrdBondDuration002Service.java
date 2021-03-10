@@ -263,6 +263,9 @@ public class TrdBondDuration002Service extends BaseService<TrdBondDuration002Pro
     @Override
     public void doUpdate(TrdBondDuration002ProcessDto entity) {
 //        baseTradeProductDealCommServiceImpl.delete(entity.getWorkflowId());
+        //对预增的金额和指令可用现金流进行先删后插，防止提交时多次进入doUpdate方法导致数据多次插入
+        String busiCode = entity.getBusiCode();
+        AllTradeCommonUtil.deletePositionReal(busiCode);
 //        2.0改造
         entity.setBaseTotalTradeInfoDto(genFinProductTradeDto2(entity));
 //        genDataForInsertDto(entity);
