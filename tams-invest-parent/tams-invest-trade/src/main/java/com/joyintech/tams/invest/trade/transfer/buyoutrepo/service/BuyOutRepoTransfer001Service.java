@@ -658,6 +658,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
                     }
                     // 数量 = 输出质押品DTO.质押数量
                     resultDto.setAmount(ArithmeticUtil.divide(prin, new BigDecimal("100"), 4));
+                    baseTradeProductDealDto.setSecAmount(ArithmeticUtil.divide(prin, new BigDecimal("100"), 4));
                     // 币种 = 金融产品交易Entity.币种
                     resultDto.setCcy(entity.getCcy());
                     // 交易编号 = 金融产品交易Entity.交易编号
@@ -704,9 +705,12 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
             // 数量 = 输出质押品DTO.质押数量
             if(StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_卖出.getValue())){
                 resultDto.setAmount(ArithmeticUtil.divide(input.getTradeAmt().negate(), 100, 4));
+                baseTradeProductDealDto.setSecAmount(ArithmeticUtil.divide(input.getTradeAmt().negate(), 100, 4));
+
             }
             else {
                 resultDto.setAmount(ArithmeticUtil.divide(input.getTradeAmt(), 100, 4));
+                baseTradeProductDealDto.setSecAmount(ArithmeticUtil.divide(input.getTradeAmt(), 100, 4));
             }
             // 币种 = 金融产品交易Entity.币种
             resultDto.setCcy(entity.getCcy());

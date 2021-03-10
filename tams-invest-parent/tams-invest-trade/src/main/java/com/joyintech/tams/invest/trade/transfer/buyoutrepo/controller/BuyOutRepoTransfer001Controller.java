@@ -163,8 +163,7 @@ public class BuyOutRepoTransfer001Controller extends BaseController {
 //                    sb.append(getMessage("资产剩余持仓不足，请确认是否继续添加？") + GlobalConstant.HTML_NEWLINE);
                     errorList.add(new ValidMessage("资产剩余持仓不足！"));
                 }*/
-                if(CacheUtil.getSysParam("TRANSFER_MARK").equals(DictCodeList.是否_是.getValue()) &&
-                        dto.getProPrinAmt().compareTo(buyOutRepoTransfer001Service.selectPosition(dto)) > 0){
+                if(dto.getProPrinAmt().compareTo(buyOutRepoTransfer001Service.selectPosition(dto)) > 0){
                     flag = true;
                     sb.append(getMessage("债券不足，请确认是否继续添加？") + GlobalConstant.HTML_NEWLINE);
                 }

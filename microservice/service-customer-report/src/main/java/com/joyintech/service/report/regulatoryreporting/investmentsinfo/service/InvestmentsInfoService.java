@@ -2282,6 +2282,10 @@ public class InvestmentsInfoService {
 			}
 		}
 
+        for(InvestmentBusinessCounterDetailsDto detail : returnAllList){
+
+            divideBillionOfCounter(detail);
+        }
 		return returnAllList;
 
 	}
@@ -2401,64 +2405,129 @@ public class InvestmentsInfoService {
 	 * @return BigDecimal 返回类型   
 	 * @throws  
 	 */  
-	private BigDecimal queryMoney(Map<String, BigDecimal> map, String key) {
+    private BigDecimal queryMoney(Map<String, BigDecimal> map, String key) {
 		return map.get(key) == null ? BigDecimal.ZERO : map.get(key);
 	}
 	
 	public InvestmentBusinessDetailsDto divideBillion(InvestmentBusinessDetailsDto detail) {
 		BigDecimal billion = new BigDecimal(10000);
 		if(detail.getSessionendNum()!=null)//期末余额
-			detail.setSessionendNum(detail.getSessionendNum().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setSessionendNum(detail.getSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		if(detail.getLastSessionendNum()!=null)//期末余额（穿透后）
-			detail.setLastSessionendNum(detail.getLastSessionendNum().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setLastSessionendNum(detail.getLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		if(detail.getNonperformingAssetNum()!=null)//本期银行收益
-			detail.setNonperformingAssetNum(detail.getNonperformingAssetNum().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setNonperformingAssetNum(detail.getNonperformingAssetNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		if(detail.getLastNonperformingAssetNum()!=null)//本期客户收益
-			detail.setLastNonperformingAssetNum(detail.getLastNonperformingAssetNum().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setLastNonperformingAssetNum(detail.getLastNonperformingAssetNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		if(detail.getTqeAmount()!=null)//本期募集金额
-			detail.setTqeAmount(detail.getTqeAmount().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setTqeAmount(detail.getTqeAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		if(detail.getTlqeAmount()!=null)//本期总募集金额
-			detail.setTlqeAmount(detail.getTlqeAmount().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setTlqeAmount(detail.getTlqeAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		if (detail.getNonsStandardAmount() != null) { // 非标准化债权类投资本季末数额
-			detail.setNonsStandardAmount(detail.getNonsStandardAmount().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setNonsStandardAmount(detail.getNonsStandardAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastNonsStandardAmount() != null) { // 非标准化债权类投资上季末数额
-			detail.setLastNonsStandardAmount(detail.getLastNonsStandardAmount().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setLastNonsStandardAmount(detail.getLastNonsStandardAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getIndInvestmentAmount() != null) { // 产业投资基金上季末数额
-			detail.setIndInvestmentAmount(detail.getIndInvestmentAmount().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setIndInvestmentAmount(detail.getIndInvestmentAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastIndInvestmentAmount() != null) { // 产业投资基金上季末数额
-			detail.setLastIndInvestmentAmount(detail.getLastIndInvestmentAmount().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setLastIndInvestmentAmount(detail.getLastIndInvestmentAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getOtherAmount() != null) { // 其他本季末数额
-			detail.setOtherAmount(detail.getOtherAmount().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setOtherAmount(detail.getOtherAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastOtherAmount() != null) { // 其他上季末数额
-			detail.setLastOtherAmount(detail.getLastOtherAmount().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setLastOtherAmount(detail.getLastOtherAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getSessionendBalance() != null) { // 表四本季末数额余额
-			detail.setSessionendBalance(detail.getSessionendBalance().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setSessionendBalance(detail.getSessionendBalance().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getSessionendYield() != null) { // 表四 本季末平均年化收益水平 收益率
-			detail.setSessionendYield(detail.getSessionendYield().multiply(new BigDecimal(100)));
+			detail.setSessionendYield(detail.getSessionendYield().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastSessionendBalance() != null) { // 表四上季末数额余额
-			detail.setLastSessionendBalance(detail.getLastSessionendBalance().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setLastSessionendBalance(detail.getLastSessionendBalance().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastSessionendYield() != null) { // 表四 上季末平均年化收益水平 收益率
-			detail.setLastSessionendYield(detail.getLastSessionendYield().multiply(new BigDecimal(100)));
+			detail.setLastSessionendYield(detail.getLastSessionendYield().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getTotleBalance() != null) { // 表三总计本季末余额
-			detail.setTotleBalance(detail.getTotleBalance().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setTotleBalance(detail.getTotleBalance().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLasttotleBalance() != null) { // 表三总计上季末余额
-			detail.setLasttotleBalance(detail.getLasttotleBalance().divide(billion, 11, BigDecimal.ROUND_HALF_UP));
+			detail.setLasttotleBalance(detail.getLasttotleBalance().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
 		}
 		return detail;
 	}
+    public InvestmentBusinessCounterDetailsDto divideBillionOfCounter(InvestmentBusinessCounterDetailsDto detail) {
+        BigDecimal billion = new BigDecimal(10000);
+        if(detail.getXtSessionendNum()!=null){
+            detail.setXtSessionendNum(detail.getXtSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getXtLastSessionendNum()!=null){
+            detail.setXtLastSessionendNum(detail.getXtLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getXtZdSessionendNum()!=null){
+            detail.setXtZdSessionendNum(detail.getXtZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getXtFbSessionendNum()!=null){
+            detail.setXtFbSessionendNum(detail.getXtFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getZqqhSessionendNum()!=null){
+            detail.setZqqhSessionendNum(detail.getZqqhSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getZqqhLastSessionendNum()!=null){
+            detail.setZqqhLastSessionendNum(detail.getZqqhLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getZqqhZdSessionendNum()!=null){
+            detail.setZqqhZdSessionendNum(detail.getZqqhZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getZqqhFbSessionendNum()!=null){
+            detail.setZqqhFbSessionendNum(detail.getZqqhFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getZqjjSessionendNum()!=null){
+            detail.setZqjjSessionendNum(detail.getZqjjSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getZqjjLastSessionendNum()!=null){
+            detail.setZqjjLastSessionendNum(detail.getZqjjLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getZqjjZdSessionendNum()!=null){
+            detail.setZqjjZdSessionendNum(detail.getZqjjZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getZqjjFbSessionendNum()!=null){
+            detail.setZqjjFbSessionendNum(detail.getZqjjFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getYhSessionendNum()!=null){
+            detail.setYhSessionendNum(detail.getYhSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getYhLastSessionendNum()!=null){
+            detail.setYhLastSessionendNum(detail.getYhLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getYhZdSessionendNum()!=null){
+            detail.setYhZdSessionendNum(detail.getYhZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getYhFbSessionendNum()!=null){
+            detail.setYhFbSessionendNum(detail.getYhFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getBxSessionendNum()!=null){
+            detail.setBxSessionendNum(detail.getBxSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getBxLastSessionendNum()!=null){
+            detail.setBxLastSessionendNum(detail.getBxLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getBxZdSessionendNum()!=null){
+            detail.setBxZdSessionendNum(detail.getBxZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        if(detail.getBxFbSessionendNum()!=null){
+            detail.setBxFbSessionendNum(detail.getBxFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+        }
+        return detail;
+    }
 
-	/**
+
+    /**
 	 * @Description 查询表三剩余数据
 	 * @param @param pageParam
 	 * @param @return 参数

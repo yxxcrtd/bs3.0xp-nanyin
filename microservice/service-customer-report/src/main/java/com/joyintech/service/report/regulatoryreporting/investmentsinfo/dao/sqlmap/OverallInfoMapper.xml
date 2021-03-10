@@ -455,7 +455,7 @@
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115')
-		AND mst.INDUSTRY IS NOT NULL
+		AND mst.INDUSTRY IS NOT NULL　and mst.INDUSTRY !='10'
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -479,7 +479,7 @@
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) = mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		AND mst.INDUSTRY is NOT NULL
+		AND mst.INDUSTRY is NOT NULL and mst.INDUSTRY !='10'
 		AND INFO.ASSET_TYPE2 IN ('1113', '1114', '1115')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
