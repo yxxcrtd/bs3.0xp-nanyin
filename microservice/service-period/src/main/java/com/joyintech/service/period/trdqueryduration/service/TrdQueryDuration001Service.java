@@ -99,6 +99,10 @@ public class TrdQueryDuration001Service extends BaseService<TrdQueryDurationDto>
 			//当前用户所属机构代码
 			String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
 			param.put("institutionCode",createInst);
+			//获取当前用户的机构树
+			List<String> instCode = LoginUserUtil.getTreeInstCode();
+			param.put("isMultilevel", true);
+			param.put("instTree", instCode);
 		}
 		param.put("userName",LoginUserUtil.getUserName());
 		param.put("COMMON_BUSINESS_TYPETRD16", DictCodeList.共通业务类型_质押式回购存续期.getValue());

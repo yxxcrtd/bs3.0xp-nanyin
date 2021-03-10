@@ -16,6 +16,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
@@ -81,9 +82,15 @@ public class TrdQueryDuration001Service extends CommonExportService<TrdQueryDura
             pageParam.put("portfolioId", new ArrayList<>());
         }
         pageParam.put("userName", LoginUserUtil.getUserName());
-        return restTemplate.postForPage(
+        Page<TrdQueryDuration001Dto> page =  restTemplate.postForPage(
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdQueryDuration001/findPage", pageParam,
                 TrdQueryDuration001Dto.class);
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+        	for(TrdQueryDuration001Dto dto:page.getRoot()) {
+        		dto.setBelongInstitutionName(dto.getInstitutionName());
+        	}
+        }
+        return page;
 	}
 
     /**
