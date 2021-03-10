@@ -227,9 +227,7 @@ $(function() {
             if(ps == ps_T05){
                 var tradeAmtHid = $('#tradeAmtHid').val();
                 // 申购确认，调整交易份额  交易份额不应显示反算理论值 yjm 20190726
-                if(!shareAmt && unitCprice != null && unitCprice != '' && unitCprice != 0){
-                    $('#shareAmt').val(tradeAmtHid/unitCprice).trigger('blur');
-                }
+                $('#shareAmt').val(tradeAmtHid/unitCprice).trigger('blur');
             }else if((ps == ps_T19 || ps == ps_T24)){
                 var tradeAmt = $('#tradeAmt').val();
                 if(unitCprice != null && unitCprice != '' && shareAmt){
@@ -469,5 +467,12 @@ $(function() {
          }else{
          	$('#type11Div').hide();
          }
+        
+        if($("#ps").val()==ps_T19){
+        	setTimeout(function(){
+                $('#tradeAmt').attr('disabled',false);
+                $('#shareAmt').attr('disabled',true);
+        	},1000)
+        }
      });
  });
