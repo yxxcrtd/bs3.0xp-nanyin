@@ -384,12 +384,17 @@ $(function() {
     $('#InvestFeePay002_btn_calculate').click(function() {
     	var feeType = $('#InvestFeePay002_feeType').val();
 		var secAcctId = $('#InvestFeePay002_secAcctId').val();
+		var regTrustOrg = $('#InvestFeePay002_regTrustOrg').val();
     	if (feeType == '14' || feeType == '08') {
     		if (!secAcctId) {
     			Joyin.error("当前费用类型下，证券账户必选！")
                 return;
     		}
-    	}
+    	}else if((feeType == '06' || feeType == '07') && !regTrustOrg){
+			Joyin.error("当前费用类型下，登记托管机构必选！")
+			return;
+		}
+
     	var startDate = $('#InvestFeePay002_positionStartDate').val();
     	var endDate = $('#InvestFeePay002_positionEndDate').val();
     	var payDate = $("#InvestFeePay002_payDate").val();
