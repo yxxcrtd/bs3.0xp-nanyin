@@ -84,6 +84,14 @@ $(function() {
         //付息信息
         if(FinPayInterestStdInfo){
             object.finPayInterestStdInfoDto.finCashPlanList = FinPayInterestStdInfo.getAllRows();
+            for(var i = 0; i < object.finPayInterestStdInfoDto.finCashPlanList.length; i++){
+                if (object.finPayInterestStdInfoDto.finCashPlanList[i].vdateTerm == null){
+                    object.finPayInterestStdInfoDto.finCashPlanList[i].vdateTerm = $('#vdate').val();       
+                }
+                if (object.finPayInterestStdInfoDto.finCashPlanList[i].mdateTerm == null){
+                    object.finPayInterestStdInfoDto.finCashPlanList[i].mdateTerm = $('#mdate').val();
+                }
+            }
         }
         //还本信息
         if(BussFinRepayment){
