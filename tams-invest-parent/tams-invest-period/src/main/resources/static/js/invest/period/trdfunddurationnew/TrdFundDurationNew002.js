@@ -102,7 +102,7 @@
         //面值
         {field : 'faceValue', visible:false},
          // 是否拆分标识
-        {field : 'isFromCopy',title: '拆分标识',visible:true},
+        {field : 'isFromCopy',title: '拆分标识',visible:false},
         {field:'operation', width:100,title: 'SysCommon.operation',sortable:false, type:'action',
             buttons: ['delt',{clas:'manual',text:'&#xe61f',title:'复制'}]}
         ],
@@ -606,19 +606,19 @@
                     }
                 }
             }
-            for ( var key in currentCalcConditionObj) {
-                for ( var key1 in currentCalcConditionObj[key].deal) {
-                    var currentDealObj = currentCalcConditionObj[key].deal;
-                    var backupDealObj = calcConditionObjBackUp[key].deal;
-                    if (typeof currentDealObj[key1] != "object"
-                        && currentDealObj[key1] != backupDealObj[key1]) {
-                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
-                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-                            [labelText, "生成划款指令"]));
-                        return true;
-                    }
-                }
-            }
+//            for ( var key in currentCalcConditionObj) {
+//                for ( var key1 in currentCalcConditionObj[key].deal) {
+//                    var currentDealObj = currentCalcConditionObj[key].deal;
+//                    var backupDealObj = calcConditionObjBackUp[key].deal;
+//                    if (typeof currentDealObj[key1] != "object"
+//                        && currentDealObj[key1] != backupDealObj[key1]) {
+//                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
+//                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+//                            [labelText, "生成划款指令"]));
+//                        return true;
+//                    }
+//                }
+//            }
         }
     };
 
