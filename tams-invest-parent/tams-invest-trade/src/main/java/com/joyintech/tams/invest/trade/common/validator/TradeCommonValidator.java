@@ -113,7 +113,7 @@ public interface TradeCommonValidator extends BeanValidator {
         boolean isCreditSync = false;
         String isOutTrade = "";
         // 债券投资交易
-        if (value instanceof TrdBondInvestTradeDto) {
+        /*if (value instanceof TrdBondInvestTradeDto) {
             TrdBondInvestTradeDto inputDto = (TrdBondInvestTradeDto)value;
             if(DictCodeList.交易方向_卖出.getValue().equals(inputDto.getPs())) {
                 map.put("payDate", inputDto.getSettleDate());
@@ -159,7 +159,7 @@ public interface TradeCommonValidator extends BeanValidator {
             ValidMessage validMessage = new ValidMessage("收息,还本,到期日当天禁止卖出!");
             validMessageList.add(validMessage);
             return validMessageList;
-        }
+        }*/
 
         //收息,还本,到期日当天禁止转仓 E
 
