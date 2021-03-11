@@ -299,13 +299,6 @@ public class SecTransfer001Controller extends BaseController {
                     ArithmeticUtil.divide(dto.getTradeAmt(),new BigDecimal(100),2).compareTo(dto.getAssetPosition()) > 0){
                 errorList.add(new ValidMessage("资产剩余持仓不足！"));
             }*/
-            if (StringUtil.isNotEmpty(dto.getTradeRepAmt()) &&
-                    /*	StringUtil.equals(dto.getPs(),DictCodeList.交易方向_买入.getValue()) && */dto.getAvalibleCash() != null &&
-                    dto.getTradeRepAmt().compareTo(dto.getAvalibleCash()) > 0) {
-//                errorList.add(new ValidMessage(组合剩余现金不足！));
-                ar.setMessage("组合剩余现金不足！", MessageType.确认消息);
-
-            }
             if (dto.getSecResoluteDtoList() != null && dto.getSecResoluteDtoList().size() > 0 && StringUtil.isNotEmpty(dto.getPortfolioId())) {
                 for (SecResoluteDto secResoluteDto : dto.getSecResoluteDtoList()) {
                     if (StringUtil.equals(dto.getPortfolioId(), secResoluteDto.getPortfolioId())) {
@@ -319,6 +312,13 @@ public class SecTransfer001Controller extends BaseController {
             }
         }
         if (StringUtil.isEmptyList(errorList)) {
+            if (StringUtil.isNotEmpty(dto.getTradeRepAmt()) &&
+                    /*	StringUtil.equals(dto.getPs(),DictCodeList.交易方向_买入.getValue()) && */dto.getAvalibleCash() != null &&
+                    dto.getTradeRepAmt().compareTo(dto.getAvalibleCash()) > 0) {
+//                errorList.add(new ValidMessage(组合剩余现金不足！));
+                ar.setMessage("组合剩余现金不足！", MessageType.确认消息);
+
+            }
             ar.setStatuCode(HttpStatus.OK.value());
         } else {
             ar.setErrorList(errorList);

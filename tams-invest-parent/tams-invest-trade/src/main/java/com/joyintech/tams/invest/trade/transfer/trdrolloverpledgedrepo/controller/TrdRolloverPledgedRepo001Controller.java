@@ -159,18 +159,6 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         if(StringUtil.isNotEmpty(rolloverPrinAmt) && rolloverPrinAmt.compareTo(BigDecimal.ZERO)<=0){
             errorList.add(new ValidMessage("rolloverPrinAmt","本金金额必须大于0！"));
         }
-        if(StringUtil.isNotEmpty(param.get("ps")) && StringUtil.equals(param.get("ps"),DictCodeList.回购拆借方向_逆回购.getValue())){
-            BussTrdAvailableCashQuery bs = new BussTrdAvailableCashQuery();
-            if(StringUtil.isNotEmpty(param.get("bussTrdAvailableCashQuery"))){
-                bs = JsonUtils.json2Object(JsonUtil.objToString(param.get("bussTrdAvailableCashQuery")),BussTrdAvailableCashQuery.class);
-            }
-            //拆分交易金额不能大于组合剩余本金
-            if(StringUtil.isNotEmpty(rolloverTradeAmt)&&StringUtil.isNotEmpty(bs)&&StringUtil.isNotEmpty(bs.getAvalibleCash())){
-                if(rolloverTradeAmt.compareTo(bs.getAvalibleCash())>0){
-                    errorList.add(new ValidMessage("bussTrdAvailableCashQuery_avalibleCash","组合剩余现金不足！"));
-                }
-            }
-        }
         else{
             List<FinDealPledgeDto> fdpdlist = new ArrayList<>();
             if(StringUtil.isNotEmpty(param.get("pledgedRepoRolloverList"))){
@@ -192,6 +180,18 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
             result.setErrorList(errorList);
         }
         else{
+            if(StringUtil.isNotEmpty(param.get("ps")) && StringUtil.equals(param.get("ps"),DictCodeList.回购拆借方向_逆回购.getValue())){
+                BussTrdAvailableCashQuery bs = new BussTrdAvailableCashQuery();
+                if(StringUtil.isNotEmpty(param.get("bussTrdAvailableCashQuery"))){
+                    bs = JsonUtils.json2Object(JsonUtil.objToString(param.get("bussTrdAvailableCashQuery")),BussTrdAvailableCashQuery.class);
+                }
+                //拆分交易金额不能大于组合剩余本金
+                if(StringUtil.isNotEmpty(rolloverTradeAmt)&&StringUtil.isNotEmpty(bs)&&StringUtil.isNotEmpty(bs.getAvalibleCash())){
+                    if(rolloverTradeAmt.compareTo(bs.getAvalibleCash())>0){
+                        result.setMessage("组合剩余现金不足！", MessageType.确认消息);
+                    }
+                }
+            }
             result.setStatuCode(200);
             listInfoDto = trdRolloverPledgedRepo001Service.setListInfoDto(param);
             listInfoDtoList.add(listInfoDto);

@@ -216,17 +216,17 @@ public class TrdAssetsProject001Controller extends BaseController {
         if(StringUtil.isNotEmpty(splitPrinAmt) && StringUtil.isNotEmpty(unSplitPrinAmt) && splitPrinAmt.compareTo(unSplitPrinAmt)>0){
             errorList.add(new ValidMessage("splitPrinAmt","转仓金额不能大于剩余可转仓本金金额！"));
         }
-	    //拆分交易金额不能大于组合剩余本金
-	    if(StringUtil.isNotEmpty(splitTradeAmt)&&StringUtil.isNotEmpty(bussTrdAvailableCashQuery)&&StringUtil.isNotEmpty(bussTrdAvailableCashQuery.getAvalibleCash())){
-	        if(splitTradeAmt.compareTo(bussTrdAvailableCashQuery.getAvalibleCash())>0){
-	            errorList.add(new ValidMessage("splitTradeAmt","组合剩余现金不足！"));
-	        }
-	    }
         if(errorList!=null && errorList.size()>0){
             result.setStatuCode(500);
             result.setErrorList(errorList);
         }
         else{
+            //拆分交易金额不能大于组合剩余本金
+            if(StringUtil.isNotEmpty(splitTradeAmt)&&StringUtil.isNotEmpty(bussTrdAvailableCashQuery)&&StringUtil.isNotEmpty(bussTrdAvailableCashQuery.getAvalibleCash())){
+                if(splitTradeAmt.compareTo(bussTrdAvailableCashQuery.getAvalibleCash())>0){
+                    result.setMessage("组合剩余现金不足！", MessageType.确认消息);
+                }
+            }
             result.setStatuCode(200);
             listInfoDto = trdAssetsProject001Service.setProjectListInfoDto(param);
             listInfoDtoList.add(listInfoDto);

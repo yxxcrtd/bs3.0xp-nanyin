@@ -68,25 +68,45 @@
             transferTradeAmt: $('#transferTradeAmt').val()
         };
         if (row.transferTradeAmt > Number($('#portoAvailableAmt').val())) {
-            Joyin.error('组合剩余现金不足!');
-            return;
+            Joyin.confirm('组合剩余现金不足!',function () {
+                //计算剩余可拆分金额
+                var restAmt = $('#restAmt').val();
+                $('#restAmt').val(Number(restAmt) - Number(row.prinAmt)).trigger("change").trigger('blur');
+                var totalPrinamt = $("#prinAmt").val();
+                var totalAssignIntamt = $("#assignIntamt").val();
+                if (Number($('#restAmt')) == 0) {
+                    var assignAmt = 0;
+                    $.each(table.getAllRows(), function(index, item) {
+                        assignAmt += Number(item['assignIntamt']);
+                    });
+                    row['assignIntamt'] = JoyinMath.doMinus(Number(totalAssignIntamt), assignAmt);
+                } else {
+                    row['assignIntamt'] = Number(totalPrinamt) == 0 ? 0 : JoyinMath.doMul(totalAssignIntamt, JoyinMath.doDiv(row['prinAmt'], totalPrinamt, 20), 2);
+                }
+                //row['assignPrinamt'] = 0;
+                table.addRow(row);
+            },function () {
+                return;
+            });
+        }else{
+            //计算剩余可拆分金额
+            var restAmt = $('#restAmt').val();
+            $('#restAmt').val(Number(restAmt) - Number(row.prinAmt)).trigger("change").trigger('blur');
+            var totalPrinamt = $("#prinAmt").val();
+            var totalAssignIntamt = $("#assignIntamt").val();
+            if (Number($('#restAmt')) == 0) {
+                var assignAmt = 0;
+                $.each(table.getAllRows(), function(index, item) {
+                    assignAmt += Number(item['assignIntamt']);
+                });
+                row['assignIntamt'] = JoyinMath.doMinus(Number(totalAssignIntamt), assignAmt);
+            } else {
+                row['assignIntamt'] = Number(totalPrinamt) == 0 ? 0 : JoyinMath.doMul(totalAssignIntamt, JoyinMath.doDiv(row['prinAmt'], totalPrinamt, 20), 2);
+            }
+            //row['assignPrinamt'] = 0;
+            table.addRow(row);
         }
-        //计算剩余可拆分金额
-        var restAmt = $('#restAmt').val();
-        $('#restAmt').val(Number(restAmt) - Number(row.prinAmt)).trigger("change").trigger('blur');
-        var totalPrinamt = $("#prinAmt").val();
-        var totalAssignIntamt = $("#assignIntamt").val();
-        if (Number($('#restAmt')) == 0) {
-        	var assignAmt = 0;
-        	$.each(table.getAllRows(), function(index, item) {
-        		assignAmt += Number(item['assignIntamt']);
-        	});
-        	row['assignIntamt'] = JoyinMath.doMinus(Number(totalAssignIntamt), assignAmt);
-        } else {
-        	row['assignIntamt'] = Number(totalPrinamt) == 0 ? 0 : JoyinMath.doMul(totalAssignIntamt, JoyinMath.doDiv(row['prinAmt'], totalPrinamt, 20), 2);
-        }
-        //row['assignPrinamt'] = 0;
-        table.addRow(row);
+
     };
 
     $('#portfolioId').change(function () {
