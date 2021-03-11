@@ -78,9 +78,20 @@ public class InvestorsQualityCheckMService extends BaseService<InvestorsQualityC
 	 * --产品状态合格率
 	 * @return Page
 	 */
-	public Page<InvestorsQualityCheck001Dto> searchTableCPZTHGL(Map<String, Object> pageParam){
+	public Page<InvestorsQualityCheck001Dto> searchTableCPZT(Map<String, Object> pageParam){
 		return restTemplate.postForPage(
-				SvrServiceApplication.COMMON_SERVICE_NAME + "/InvestorsQualityCheck/searchTableCPZTHGL",pageParam,
+				SvrServiceApplication.COMMON_SERVICE_NAME + "/InvestorsQualityCheck/searchTableCPZT",pageParam,
+				InvestorsQualityCheck001Dto.class);
+	}
+
+	/**
+	 * 查询列表
+	 * --投资者数量匹配合格率
+	 * @return Page
+	 */
+	public Page<InvestorsQualityCheck001Dto> searchTableSLPP(Map<String, Object> pageParam){
+		return restTemplate.postForPage(
+				SvrServiceApplication.COMMON_SERVICE_NAME + "/InvestorsQualityCheck/searchTableSLPP",pageParam,
 				InvestorsQualityCheck001Dto.class);
 	}
     

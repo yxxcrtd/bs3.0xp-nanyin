@@ -12,12 +12,12 @@ $(function () {
     };
     readConfig();
     var curSelectedIndex = 0;
-    var xAxisData = ["证件类型", "证件匹配","及时性","产品状态"];
-    var xAxisDataRate = ["证件类型合格率", "证件匹配合格率","及时性合格率","产品状态合格率"];
+    var xAxisData = ["证件类型", "证件匹配","及时性","产品状态","投资者数量匹配"];
+    var xAxisDataRate = ["证件类型合格率", "证件匹配合格率","及时性合格率","产品状态合格率","投资者数量匹配合格率"];
     var xAxisDataDetail = ["用于检验境内个人投资者未使用“居民身份证”或“临时身份证”进行登记的情况", 
                      "用于校验投资者证件类型、证件号码相同，投资者姓名不同的情况",
                      "用于检验银行是否按照T+1（下一工作日）及时性要求开展登记的情况",
-                     ""];
+                     "",""];
 
     window.investorsqualitycheck = function() {
         return {
@@ -215,9 +215,9 @@ $(function () {
                    ]
             }),
             // add by zhangliang 20210309 新增投资者质量核查相关 start
-            tableCPZTHGL : $('#tableCPZTHGL').joyintable({
+            tableCPZT : $('#tableCPZT').joyintable({
                 ajax: {
-                    url: 'searchTableCPZTHGL',
+                    url: 'searchTableCPZT',
                     type: 'POST',
                     data: function() {
                         var parm={};
@@ -234,11 +234,36 @@ $(function () {
                     {title: "实际终止日期", field: "prdAclMDate",width:'20%', type:"date"},
                 ]
             }),
+            tableSLPP : $('#tableSLPP').joyintable({
+                ajax: {
+                    url: 'searchTableSLPP',
+                    type: 'POST',
+                    data: function() {
+                        var parm={};
+                        parm=investorsqualitycheck.getPageParams();
+                        parm.index=curSelectedIndex+1;
+                        return parm;
+                    },
+                },
+                cols: [
+                    {title: "产品登记编码", field: "prdRegistCode",width:'20%'},
+                    {title: "产品起息日", field: "prdVDate",width:'20%', type:"date"},
+                    {title: "持有日期", field: "holdDate",width:'20%', type:"date"},
+                    {title: "产品端个人投资者数", field: "prdSingleTotal",width:'20%'},
+                    {title: "产品端法人投资者数", field: "prdLegalTotal",width:'20%'},
+                    {title: "产品端非法人投资者数", field: "prdUnLegalTotal",width:'20%'},
+                    {title: "持有端个人投资者数", field: "investSingleTotal",width:'20%'},
+                    {title: "持有端法人投资者数", field: "investLegalTotal",width:'20%'},
+                    {title: "持有端非法人投资者数", field: "investUnLegalTotal",width:'20%'},
+                    {title: "错误记录数", field: "errRecTotal",width:'20%'},
+                ]
+            }),
             checkOnClickRow : function (data) {
                 $('#tableDiv0').toggle(false);
                 $('#tableDiv1').toggle(false);
                 $('#tableDiv2').toggle(false);
-                $('#tableDivCPZTHGL').toggle(false);
+                $('#tableDivCPZT').toggle(false);
+                $('#tableDivSLPP').toggle(false);
                 if(data.pageType == '1'){
                     $('#tableDiv0').toggle(true);
                     investorsqualitycheck.table0.table ? investorsqualitycheck.table0.reload() : investorsqualitycheck.table0.load();
@@ -249,8 +274,11 @@ $(function () {
                     $('#tableDiv2').toggle(true);
                     investorsqualitycheck.table2.table ? investorsqualitycheck.table2.reload() : investorsqualitycheck.table2.load();
                 }else if(data.pageType == '4'){
-                    $('#tableDivCPZTHGL').toggle(true);
-                    investorsqualitycheck.tableCPZTHGL.table ? investorsqualitycheck.tableCPZTHGL.reload() : investorsqualitycheck.tableCPZTHGL.load();
+                    $('#tableDivCPZT').toggle(true);
+                    investorsqualitycheck.tableCPZT.table ? investorsqualitycheck.tableCPZT.reload() : investorsqualitycheck.tableCPZT.load();
+                }else if(data.pageType == '5'){
+                    $('#tableDivSLPP').toggle(true);
+                    investorsqualitycheck.tableSLPP.table ? investorsqualitycheck.tableSLPP.reload() : investorsqualitycheck.tableSLPP.load();
                 }
             },
             // add by zhangliang 20210309 新增投资者质量核查相关 end
