@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.atomic.LongAdder;
 
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -413,7 +414,10 @@ public class PbcPrdAccountEndSubService001 extends CommonExportService<PbcPrdAcc
         	fileType = name + GlobalConstant.POINT + fileType;
         }
         beforeExprot();
-        // 读取配置文件
+		Map<String, String> cacheValue = CacheUtil.getAppCache(GlobalConstant.SYS_PARA_KEY, Map.class);
+		cacheValue.put(GlobalConstant.EXPORT_EXCEL_TYPE, DictCodeList.是否_中债_否.getValue());
+		CacheUtil.putAppCache(GlobalConstant.SYS_PARA_KEY, cacheValue);
+		// 读取配置文件
         JoyinBookConfig reportConfig = pbcPrdAccountSubService001.getConfig(configFile);
         // 获取工作簿
         Workbook wb = null;
@@ -476,7 +480,11 @@ public class PbcPrdAccountEndSubService001 extends CommonExportService<PbcPrdAcc
             }
         }
         afterExprot(null, contents.size());
-        return targetFile;
+		Map<String, String> cacheValue2 = CacheUtil.getAppCache(GlobalConstant.SYS_PARA_KEY, Map.class);
+		cacheValue2.put(GlobalConstant.EXPORT_EXCEL_TYPE, DictCodeList.是否_中债_是.getValue());
+		CacheUtil.putAppCache(GlobalConstant.SYS_PARA_KEY, cacheValue2);
+
+		return targetFile;
     }
 	
 }

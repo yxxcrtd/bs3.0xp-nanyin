@@ -647,7 +647,10 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
         	fileType = name + GlobalConstant.POINT + fileType;
         }
         beforeExprot();
-        // 读取配置文件
+		Map<String, String> cacheValue = CacheUtil.getAppCache(GlobalConstant.SYS_PARA_KEY, Map.class);
+		cacheValue.put(GlobalConstant.EXPORT_EXCEL_TYPE, DictCodeList.是否_中债_否.getValue());
+		CacheUtil.putAppCache(GlobalConstant.SYS_PARA_KEY, cacheValue);
+		// 读取配置文件
         JoyinBookConfig reportConfig = getConfig(configFile);
         // 获取工作簿
         Workbook wb = null;
@@ -710,7 +713,10 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
             }
         }
         afterExprot(null, contents.size());
-        return targetFile;
+		Map<String, String> cacheValue2 = CacheUtil.getAppCache(GlobalConstant.SYS_PARA_KEY, Map.class);
+		cacheValue2.put(GlobalConstant.EXPORT_EXCEL_TYPE, DictCodeList.是否_中债_是.getValue());
+		CacheUtil.putAppCache(GlobalConstant.SYS_PARA_KEY, cacheValue2);
+		return targetFile;
     }
 
 }
