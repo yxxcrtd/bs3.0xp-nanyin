@@ -646,7 +646,6 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     标的类别_复合金融衍生品(DictCode.标的类别,"15","复合金融衍生品"),
     标的类别_其他(DictCode.标的类别,"99","其他"),
     回购标的类别_债券(DictCode.回购标的类别,"01","债券"),
-    回购标的类别_股票(DictCode.回购标的类别,"02","股票"),
     回购标的类别_基金类产品(DictCode.回购标的类别,"03","基金类产品"),
     回购标的类别_其他(DictCode.回购标的类别,"99","其他"),
     交易流通场所_中债_银行间债券市场(DictCode.交易流通场所_中债,"01","银行间债券市场"),
