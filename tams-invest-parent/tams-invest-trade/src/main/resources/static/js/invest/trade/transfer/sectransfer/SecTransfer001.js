@@ -22,7 +22,7 @@ $(function(){
      */
     var portfolioIdChange = function (object) {
     	// debugger;
-        if(object && object != null){
+        if(object && object != null && object != ""){
             var params = {};
             var avalibleCash = $("#bussTrdAvailableCashQuery_avalibleCash").val();
             var channelAvailableCash = $('#bussTrdAvailableCashQuery_channelAvailableCash').val();
@@ -43,6 +43,8 @@ $(function(){
             params.tradeDate = $("#tradeDate").val();
             params.finprodId = $("#finprodId").val();
             params.chlId = $("#chlId").val();
+            params.avalibleCash = "";
+            params.channelAvailableCash = "";
             if (window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery["bussTrdAvailableCashQuery"]) {
                 window.BussTrdAvailableCashQuery["bussTrdAvailableCashQuery"].updateCash(function () {
                     return params
@@ -50,13 +52,18 @@ $(function(){
             }
         }
         $("#tradeAmt").val('').trigger("change").trigger('blur');
-
         $("#cpriceAmt").val('').trigger("change").trigger('blur');
         $("#intAmt").val('').trigger("change").trigger('blur');
         $("#fpriceAmt").val('').trigger("change").trigger('blur');
         $("#procedureAmt").val('').trigger("change").trigger('blur');
         $("#settleAmt").val('').trigger("change").trigger('blur');
         $("#tradeRepAmt").val('').trigger("change").trigger('blur');
+        $("#unitInt").val('').trigger("change").trigger('blur');
+        $("#unitFprice").val('').trigger("change").trigger('blur');
+        $("#yield").val('').trigger("change").trigger('blur');
+        $("#turnInvAim").val('').trigger("change").trigger('blur');
+        $("#yield").val('').trigger("change").trigger('blur');
+        $("#turnInvAim").val('').trigger("change").trigger('blur');
         indexCount = 0;
     };
     
