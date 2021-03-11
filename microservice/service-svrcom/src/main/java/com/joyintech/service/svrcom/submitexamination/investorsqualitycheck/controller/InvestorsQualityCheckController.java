@@ -19,8 +19,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCommonService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckBaseService;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPZTService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckSLPPService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,9 @@ public class InvestorsQualityCheckController{
     @Autowired
     private InvestorsQualityCheckCPZTService investorsQualityCheckCPZTService;
 
+    @Autowired
+    private InvestorsQualityCheckSLPPService investorsQualityCheckSLPPService;
+
     /**
      * 查询列表
      *
@@ -68,7 +72,7 @@ public class InvestorsQualityCheckController{
         List<InvestorsQualityCheck001Dto> resList = investorsQualityCheck001Service.searchInvestorsPassRate(param);
 
         // add by zhangliang 20210224 多线程处理查询结果 start
-        List<InvestorsQualityCheckCommonService> serviceList = new ArrayList<>();
+        List<InvestorsQualityCheckBaseService> serviceList = new ArrayList<>();
         // 添加需要查询的Service对象
         serviceList.add(investorsQualityCheckCPZTService);
 
@@ -78,7 +82,7 @@ public class InvestorsQualityCheckController{
         ExecutorService taskpool = new JoyinThreadPoolExecutor(serviceList.size());
         List<Callable<InvestorsQualityCheck001Dto>> tasks = new ArrayList<>();
         // 创建任务
-        for (InvestorsQualityCheckCommonService service : serviceList) {
+        for (InvestorsQualityCheckBaseService service : serviceList) {
             tasks.add(new Callable<InvestorsQualityCheck001Dto>() {
                 @Override
                 public InvestorsQualityCheck001Dto call() {
@@ -137,8 +141,18 @@ public class InvestorsQualityCheckController{
      * --及时性合格率
      * @return Page
      */
-    @PostMapping("/searchTableCPZTHGL/{page}/{length}")
-    public Page<InvestorsQualityCheck001Dto> searchTableCPZTHGL(@RequestBody Map<String, Object> param){
+    @PostMapping("/searchTableCPZT/{page}/{length}")
+    public Page<InvestorsQualityCheck001Dto> searchTableCPZT(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPZTService.queryPage(param);
+    }
+
+    /**
+     * 查询列表
+     * --投资者数量匹配合格率
+     * @return Page
+     */
+    @PostMapping("/searchTableSLPP/{page}/{length}")
+    public Page<InvestorsQualityCheck001Dto> searchTableSLPP(@RequestBody Map<String, Object> param){
+        return investorsQualityCheckSLPPService.queryPage(param);
     }
 }

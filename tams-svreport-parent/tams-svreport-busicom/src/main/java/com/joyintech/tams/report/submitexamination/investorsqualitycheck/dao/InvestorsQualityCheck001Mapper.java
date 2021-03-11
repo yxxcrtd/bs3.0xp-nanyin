@@ -52,5 +52,13 @@ public interface InvestorsQualityCheck001Mapper {
 	 * @param param 参数
 	 * @return 产品状态合格率
 	 */
-	List<InvestorsQualityCheck001Dto> searchCPZTHGL(Map<String, Object> param);
+	List<InvestorsQualityCheck001Dto> searchCPZT(Map<String, Object> param);
+
+	/**
+	 * 查询右侧-不合格数据的详细信息
+	 * --投资者数量匹配合格率
+	 * @param param 参数
+	 * @return 产品状态合格率
+	 */
+	List<InvestorsQualityCheck001Dto> searchSLPP(Map<String, Object> param);
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public abstract class InvestorsQualityCheckCommonService extends BaseService<InvestorsQualityCheck001Dto> {
+public abstract class InvestorsQualityCheckBaseService extends BaseService<InvestorsQualityCheck001Dto> {
 
     /**
      * 查询数据
