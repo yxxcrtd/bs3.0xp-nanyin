@@ -168,6 +168,41 @@ public class FinAssetIntInfo extends BaseEntity {
     private String investYesorno;
 
     /**
+     * 分红方式（基金存续期专用）
+     */
+    private String bonusMode;
+
+    /**
+     * 拆分标识（基金存续期专用）
+     */
+    private String isFromCopy;
+
+    public String getIsFromCopy() {
+        return isFromCopy;
+    }
+
+    public void setIsFromCopy(String isFromCopy) {
+        this.isFromCopy = isFromCopy;
+    }
+
+    /**
+     * 获取 bonusMode
+     * @return bonusMode.
+     */
+    public String getBonusMode() {
+        return bonusMode;
+    }
+
+
+    /**
+     * 设置 bonusMode
+     * @param bonusMode bonusMode
+     */
+    public void setBonusMode(String bonusMode) {
+        this.bonusMode = bonusMode;
+    }
+
+    /**
      * 交易份额，债券数量等
      */
     @JsonSerialize(using= BigDecimalSerializer.class)

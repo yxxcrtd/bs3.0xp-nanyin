@@ -5,7 +5,7 @@
         var STATUS_VALID_01 = /*[[${STATUS_VALID_01}]]*/'';
         var STATUS_VALID_03 = /*[[${STATUS_VALID_03}]]*/'';
         var STATUS_VALID_05 = /*[[${STATUS_VALID_05}]]*/'';
-
+        var paraFundDealType = /*[[${paraFundDealType}]]*/;
 
         var 平安业务类型_普通拆入到期 = /*[[${PA_BUSINESS_TYPE42}]]*/'';
         var 平安业务类型_特拆拆入到期 = /*[[${PA_BUSINESS_TYPE43}]]*/'';
@@ -131,6 +131,7 @@
         var 计划类资产净值型存续交易URL = /*[[@{/invest/period/trdplannetduration/TrdPlanNetDuration002/init}]]*/'';
         var 计划类资产净值型到账URL = /*[[@{/invest/trade/plannet/TrdPlanNetInvestTrade003/init}]]*/'';
         var 基金存续交易URL = /*[[@{/invest/period/trdfundduration/TrdFundDuration002/init}]]*/'';
+        var 基金存续交易新URL = /*[[@{/invest/period/trdfunddurationnew/TrdFundDurationNew002/init}]]*/'';
         var 基金到账交易URL = /*[[@{/invest/trade/fund/TrdFundInvestTrade003/init}]]*/'';
         var 计划货币交易URL = /*[[@{/invest/period/trdplancurrduration/TrdPlanCurrDuration002/init}]]*/'';
         var 计划货币到账交易URL = /*[[@{/invest/trade/planccy/TrdPlanCcyInvestTrade003/init}]]*/'';
@@ -222,8 +223,10 @@
                 url = 计划类资产净值型存续交易URL;
             } else if (paBussType == 平安业务类型_计划类资产_利率型_赎回) {
                 url = 计划类资产利率型交易URL;
-            } else if (paBussType == 平安业务类型_货币基金现金分红 || paBussType == 平安业务类型_非货币基金现金分红) {
+            } else if (((paBussType == 平安业务类型_货币基金现金分红 || paBussType == 平安业务类型_非货币基金现金分红) && paraFundDealType == '01')) {
                 url = 基金存续交易URL;
+            }else if (((paBussType == 平安业务类型_货币基金现金分红 || paBussType == 平安业务类型_非货币基金现金分红) && paraFundDealType == '02')) {
+                url = 基金存续交易新URL;
             } else if (paBussType == 平安业务类型_货币基金赎回到账 || paBussType == 平安业务类型_非货币基金赎回到账) {
                 url = 基金到账交易URL;
             } else if (paBussType == 平安业务类型_计划类_货币型_现金分红) {

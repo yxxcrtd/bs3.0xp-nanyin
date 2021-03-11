@@ -7,9 +7,11 @@ import com.github.pagehelper.util.StringUtil;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.settle.balance.service.OutflowFundsCheckManagement001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +67,7 @@ public class InflowFundsCheckManagement001Controller extends BaseController {
         Map<String, Object> params = new HashMap<>();
         SettleCommonUtil.setParams(params);
         model.addAllAttributes(params);
+        model.addAttribute("paraFundDealType", CacheUtil.getSysParam(BussinessConstant.FUND_DEAL_TYPE));
         return super.init(model);
     }
 

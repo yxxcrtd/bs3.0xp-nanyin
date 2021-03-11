@@ -301,4 +301,9 @@ public interface BussinessConstant {
      * 银行帐账套前缀
      */
     String BOK_BANK_PREFIX = "BANK_";
+
+    /**
+     * 公墓基金存续期处理逻辑 01：旧逻辑 02：新逻辑
+     */
+    String FUND_DEAL_TYPE = "FUND_DEAL_TYPE";
 }
