@@ -82,7 +82,7 @@
 	  null as status,
 	  null scino
 	  from fin_trade_product ftp
-	  where ftp.finprod_type2 in ('F02','F03','F04','F05','F15')  and  ftp.int_rate is not null
+	  where ftp.finprod_type2 in ('F02','F03','F04','F05','F15','F08','F09')  and  ftp.int_rate is not null
 	  and nvl(ftp.UPDATE_TIME,ftp.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
 
 	  union all
