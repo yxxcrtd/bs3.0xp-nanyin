@@ -1714,7 +1714,10 @@ public class TrdRepoTrade003Service extends BaseService<TrdRepoTrade003Dto> impl
             // 备注 = 画面.备注
             repLiabilities.setRepRemark(input.getRemark());
             // 回购标的类别 = 回购标的类型_中债_债券
-            repLiabilities.setRepTargetType(DictCodeListExt1.回购标的类型_质押式正回购.getValue());
+            // update by caiqun 20210310 合并TISHKBS-1754 中债报送-资产要素登记，“回购标的的类别”不正确。导出数据为02股票，实际应为01债券  start
+            //repLiabilities.setRepTargetType(DictCodeListExt1.回购标的类型_质押式正回购.getValue());
+            repLiabilities.setRepTargetType("01");
+            // update by caiqun 20210310 合并TISHKBS-1754 中债报送-资产要素登记，“回购标的的类别”不正确。导出数据为02股票，实际应为01债券  end
             // 回购标的金额 = 本金金额
             repLiabilities.setRepBuyBackMoney(input.getPrinAmt());
 
@@ -1741,7 +1744,10 @@ public class TrdRepoTrade003Service extends BaseService<TrdRepoTrade003Dto> impl
             // 备注 = 画面.备注
             repAssetInterLend.setRepRemark(input.getRemark());
             // 回购标的类别 = 回购标的类型_中债_债券
-            repAssetInterLend.setRepTargetType(DictCodeListExt1.回购标的类型_质押式逆回购.getValue());
+            // update by caiqun 20210310 合并TISHKBS-1754 中债报送-资产要素登记，“回购标的的类别”不正确。导出数据为02股票，实际应为01债券  start
+            //repAssetInterLend.setRepTargetType(DictCodeListExt1.回购标的类型_质押式逆回购.getValue());
+            repAssetInterLend.setRepTargetType("01");
+            // update by caiqun 20210310 合并TISHKBS-1754 中债报送-资产要素登记，“回购标的的类别”不正确。导出数据为02股票，实际应为01债券  end
             // 回购标的金额 = 本金金额
             repAssetInterLend.setRepTargetAmt(input.getPrinAmt());
 
