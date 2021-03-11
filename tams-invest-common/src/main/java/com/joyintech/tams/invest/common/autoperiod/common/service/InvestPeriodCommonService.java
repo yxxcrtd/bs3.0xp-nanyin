@@ -1225,4 +1225,262 @@ public class InvestPeriodCommonService {
         }
         //modify by mashukai TISHKBS-1664 当计划类项目类资产通道投资模式开关为02时，通道代码不置位空 20201208 end
     }
+
+
+    /**
+     *
+     * 撤銷相關交易表
+     */
+    public TrdFinProductDealTotal revokeReverseTradeTable(String bizCode, String updateUser, String revokeReason, String type6,
+                                                 String actPortfolio,String tradeDealNoR) {
+        List<String> subBizCodes = periodCommonMapper.findSubTotalTradeId(bizCode);
+        if (subBizCodes != null && !subBizCodes.isEmpty()) {
+            for (String subBizCode : subBizCodes) {
+                revokeReverseTradeTable(subBizCode, updateUser, true, revokeReason,type6, actPortfolio,true,tradeDealNoR);
+            }
+        }
+        return revokeReverseTradeTable(bizCode, updateUser, true, revokeReason,type6, actPortfolio,true,tradeDealNoR);
+    }
+
+    /**
+     *
+     * @param bizCode
+     * @param updateUser
+     * @param isTotal
+     * @param revokeReason
+     * @param type6
+     * @param actPortfolio
+     * @param commonFlag
+     * @param tradeDealNoR  用于后续扩展  如果有某个交易 某字段有问题  可通过传此字段扩展
+     * @return
+     */
+    public TrdFinProductDealTotal revokeReverseTradeTable(String bizCode, String updateUser, boolean isTotal, String revokeReason, String type6,
+                                                 String actPortfolio,boolean commonFlag,String tradeDealNoR) {
+        // 用于获取关键信息的map
+        Map<String, Object> map = new HashMap<>();
+        // 是否汇总的参数区分
+        if (isTotal) {
+            map.put("totleTradeId", bizCode);
+        }
+        else {
+            map.put("tradeId", bizCode);
+        }
+        Date updateTime = new Date();
+        TrdFinProductDealTotal trdFinProductDealTotal = null;
+        if (isTotal) {
+            // 金融产品交易汇总
+            trdFinProductDealTotal = trdFinProductDealTotalMapper.selectByPrimaryKey(bizCode);
+            if (trdFinProductDealTotal != null) {
+                // 原数据 是否撤销 => 是
+                trdFinProductDealTotal.setIsCancel(DictCodeList.是否_是.getValue());
+
+                //多级法人改造 add by xr 20200711
+                if(MultilevelDataAuthorityUtil.isEnabled()){
+                    // 机构代码
+                    trdFinProductDealTotal.setInstitutionCode(MultilevelDataAuthorityUtil.getOrganizationCode(updateUser));
+                }
+                //多级法人改造 add by xr  20200711
+                trdFinProductDealTotal.setUpdateTime(updateTime);
+                trdFinProductDealTotal.setUpdateUser(updateUser);
+                trdFinProductDealTotalMapper.updateByPrimaryKeySelective(trdFinProductDealTotal);
+                // 撤销交易状态为撤销
+                trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                String newTotalTradeId = trdFinProductDealTotal.getTotleTradeId() + "R";
+//                trdFinProductDealTotal.setpTradeId(trdFinProductDealTotal.getTotleTradeId());
+                trdFinProductDealTotal.setTotleTradeId(newTotalTradeId);
+//                    trdFinProductDealTotal.setpTotleTradeId(trdFinProductDealTotal.getpTotleTradeId() + "R");
+                trdFinProductDealTotal.setpTotleTradeId(trdFinProductDealTotal.getTotleTradeId() );
+
+
+                // 是否撤销入否
+                trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+                trdFinProductDealTotal.setRemark(revokeReason);
+                trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
+
+                PaTrdFinProductDealTotal paTrdFinProductDealTotal = paTrdFinProductDealTotalMapper.selectByPrimaryKey(bizCode);
+                if (paTrdFinProductDealTotal != null) {
+                    paTrdFinProductDealTotal.setTotleTradeId(newTotalTradeId);
+                    paTrdFinProductDealTotal.setUpdateTime(updateTime);
+                    paTrdFinProductDealTotal.setUpdateUser(updateUser);
+                    paTrdFinProductDealTotalMapper.insertSelective(paTrdFinProductDealTotal);
+                }
+
+                TrdDealTotalAdd trdDealTotalAdd = trdDealTotalAddMapper.selectByPrimaryKey(bizCode);
+                /** add by yanya on 20191116 修复债券存续期撤销取不到值报空错误**/
+                if (trdDealTotalAdd != null) {
+                    trdDealTotalAdd.setTotleTradeId(newTotalTradeId);
+                    trdDealTotalAdd.setUpdateTime(updateTime);
+                    trdDealTotalAdd.setUpdateUser(updateUser);
+                    trdDealTotalAddMapper.insertSelective(trdDealTotalAdd);
+                }
+            }
+        }
+        // 划款指令
+        List<StlPayOrders> ordersTotal = periodCommonMapper.findOrdersByOrderId(bizCode);
+        revokeStlPayOrders(ordersTotal);
+        // 费用明细
+        periodCommonMapper.inertRevokeFeeDetailByTradeId(bizCode, updateUser);
+        // 费用汇总
+        periodCommonMapper.inertRevokeFeeTotalByTradeId(bizCode, updateUser);
+        // 金融产品交易Entity
+        // 增加无汇总交易的场景 无汇总交易使用交易编号关联
+        List<TrdProductDeal> trdProductDeals = periodCommonMapper.findDealByTotalId(map);
+
+        // 一体化对应etliu start
+        Map<String, String> portfolioIdMap = new HashMap<String, String>();
+        // 一体化对应etliu end
+
+        trdProductDeals.forEach(trdProductDeal1 -> {
+            TrdProductDeal trdProductDeal = new TrdProductDeal();
+            BeanUtils.copyProperties(trdProductDeal1, trdProductDeal);
+            trdProductDeal.setIsCancel(DictCodeList.是否_是.getValue());
+            // 原数据 是否撤销 => 是
+            trdProductDealMapper.updateByPrimaryKey(trdProductDeal);
+            // 交易状态为撤销
+            String oldTradeId = trdProductDeal.getTradeId();
+            String newTradeId = trdProductDeal.getTradeId() + "R";
+            trdProductDeal1.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue()); // 调用估值接口时，状态是撤销
+            trdProductDeal1.setpTradeId(oldTradeId);
+            trdProductDeal1.setTradeId(newTradeId);
+
+            trdProductDeal.setTotleTradeId(trdProductDeal.getTotleTradeId()+"R");
+
+            trdProductDeal.setpTradeId(oldTradeId);
+            trdProductDeal.setTradeId(newTradeId);
+            //更新存续期交易撤销创建时间和更新时间 add by lishuping 20190911 start
+            trdProductDeal.setCreateTime(new Date());
+            trdProductDeal.setUpdateTime(new Date());
+            //更新存续期交易撤销创建时间和更新时间 add by lishuping 20190911 end
+            trdProductDeal.setCancelRemark(revokeReason);
+            trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
+            trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+            trdProductDealMapper.insertSelective(trdProductDeal);
+
+            // 划款指令
+            //update zhangweiqi 2020-02-13 场外期权 汇总已经处理  begin
+            if(!StringUtil.equals(trdProductDeal.getBusiType(), DictCodeListExt3.业务类型_场外期权.getValue())){
+                List<StlPayOrders> orders = periodCommonMapper.findOrdersByOrderId(oldTradeId);
+                revokeStlPayOrders(orders);
+            }
+            //update zhangweiqi 2020-02-13 场外期权 汇总已经处理  end
+
+            periodCommonMapper.insertRevokePaTrdProductDeal(oldTradeId, updateUser);
+            periodCommonMapper.insertRevokeTrdProductDealAdd(oldTradeId, updateUser);
+
+            TrdProductDealAdd trdProductDealAdd = trdProductDealAddMapper.selectByPrimaryKey(oldTradeId);
+            // 组合交易
+            if (trdProductDealAdd != null && StringUtil.isNotEmpty(trdProductDealAdd.getPortfolioId())) {
+                PtlTrade deal = new PtlTrade();
+                deal.setBusiNo(oldTradeId);
+                deal.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+                deal.setPortfolioId(trdProductDealAdd.getPortfolioId());
+                periodCommonMapper.insertRevokePtlTrade(deal, updateUser);
+                if (StringUtil.isNotEmpty(actPortfolio) && !trdProductDealAdd.getPortfolioId().equals(actPortfolio)) {
+                    deal.setPortfolioId(actPortfolio);
+                    periodCommonMapper.insertRevokePtlTrade(deal, updateUser);
+                }
+
+                // 一体化对应etliu start
+                portfolioIdMap.put("portfolioId", trdProductDealAdd.getPortfolioId());
+                // 一体化对应etliu end
+            }
+
+            // 费用明细
+            periodCommonMapper.inertRevokeFeeDetailByTradeId(oldTradeId, updateUser);
+            // 删除交易报送
+            periodCommonMapper.deleteRepTradeByTradeId(oldTradeId);
+
+//            // 一体化对应etliu start
+//            // 所有交易生效后调用的共通方法
+//            AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+//            inputDto.setProdid(trdProductDealAdd.getPortfolioId());
+//            inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+//            inputDto.setTrdProductDeal(trdProductDeal);
+//            AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
+//            // 一体化对应etliu end
+        });
+
+        // 一体化对应etliu start
+        if (!StringUtil.isEmptyList(trdProductDeals)&&commonFlag) {
+            // 拆入到期 调用lendMdatDelete估值接口
+            String finprodType2 = trdProductDeals.get(0).getFinprodType2();
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_拆入.getValue(), finprodType2)
+                    || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue(), finprodType2)
+                    || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue(), finprodType2)
+                    || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), finprodType2)
+                    || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(), finprodType2)
+                    || StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue(), finprodType2)
+            ) {
+                AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+                inputDto.setTotleTradeId(bizCode);
+                AllTradeCommonUtil.lendMdatDelete(inputDto);
+                return trdFinProductDealTotal;
+            }
+
+            List<TrdProductDeal> trdProductDeals1 = periodCommonMapper.findDealByTotalIdForInterf(map);
+            List<TrdProductDealAdd> trdProductDealAdds = periodCommonMapper.findDealAddByTradeIds(trdProductDeals1);
+            List<PtlTrade> ptlTrades = periodCommonMapper.findPtlTradeByTradeIds(trdProductDeals1);
+
+            // 所有交易生效后调用的共通方法
+            for (TrdProductDeal baseDto : trdProductDeals1) {
+                AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+                inputDto.setProdid(portfolioIdMap.get("portfolioId"));
+                inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+//                子组合估值调用
+                inputDto.setActPortfolioId(actPortfolio);
+                baseDto.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                inputDto.setTrdProductDeal(baseDto);
+                inputDto.setTrdProductDealAdd(getAdd(trdProductDealAdds, baseDto.getTradeId()));
+                inputDto.setRepoType(type6);
+                if (ordersTotal != null && !ordersTotal.isEmpty()) {
+                    inputDto.setStlPayOrders(ordersTotal.get(0));
+                }
+                List<PtlTrade> ptlTradeList = new ArrayList<>();
+                for (PtlTrade ptlTrade : ptlTrades) {
+                    if (baseDto.getTradeId().equals(ptlTrade.getBusiNo())) {
+                        ptlTradeList.add(ptlTrade);
+                    }
+                }
+                inputDto.setPtlTradeList(ptlTradeList);
+                AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
+
+                // 调用投管接口 add by renping 20190205 start
+                if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue(), finprodType2)) {
+                    FinProductTypeKey key = new FinProductTypeKey();
+                    key.setFinprodId(baseDto.getFinprodId());
+                    key.setBranch(0L);
+                    FinProductType finProductType =finProductTypeMapper.selectByPrimaryKey(key);
+                    InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
+                    if (StringUtil.equals(DictCodeList.基金类资产类型_货币基金.getValue(),
+                            finProductType.getType6())) {
+                        investInterfCommDto.setPageId("TrdFundInvestTrade002.02");
+                    }
+                    else {
+                        investInterfCommDto.setPageId("TrdFundInvestTrade002.01");
+                    }
+                    investInterfCommDto.setTradeStatus(DictCodeListExt1.画面数据状态_撤销.getValue());
+                    investInterfCommDto.setPortfolioId(actPortfolio);
+                    investInterfCommDto.setTrdProductDeal(
+                            inputDto.getTrdProductDeal());
+                    investInterfCommDto.setTrdProductDealAdd(
+                            inputDto.getTrdProductDealAdd());
+                    investInterfCommDto.setTrdProductDealAdd(
+                            inputDto.getTrdProductDealAdd());
+                    investInterfCommDto.setStlPayOrders(inputDto.getStlPayOrders());
+                    // TODO 撤销这个，费用目前没有给，后续再看会不会出问题
+                    investInterfCommService.doInvestInterf(investInterfCommDto);
+                }
+                // 调用投管接口 add by renping 20190205 end
+
+                //删除授信占用
+                if (null != baseDto.getTradeId() && !"".equals(baseDto.getTradeId())){
+                    riskCreditListCommonValidatorService.deleteCredit(baseDto.getTradeId());
+                }
+            }
+        }
+        // 一体化对应etliu end
+
+        return trdFinProductDealTotal;
+    }
+
 }

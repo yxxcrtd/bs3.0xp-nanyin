@@ -149,7 +149,7 @@ public class CommonBusinessService extends BaseService {
             reverseparams.put("bizCode", reverseTradeId);
             reverseparams.put("updateUser", SecurityUtil.getLoginUser().getUserName());
             reverseparams.put("revokeReason", trdProductDeal.getCancelRemark());
-            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/doRevokeComplete?", reverseparams,
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/doRevokeReverseComplete?", reverseparams,
                     String.class);
         }
 

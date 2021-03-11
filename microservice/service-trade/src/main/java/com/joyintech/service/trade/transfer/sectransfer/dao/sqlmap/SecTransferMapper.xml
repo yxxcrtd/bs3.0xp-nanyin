@@ -184,7 +184,7 @@
     <!--查询前一日估值净价-->
     <select id="getLastNetPrice" resultType="java.math.BigDecimal">
         <if test="invAim != null and invAim == 'AC'">
-            select ROUND(b.TDY_COST_AMT/b.TDY_POSITION, 4) NETPRICE
+            select ROUND(b.TDY_COST_AMT/b.POS_AMT, 4) NETPRICE
             from BOK_STAT_DET_POSIITON b
             LEFT JOIN FIN_PRODUCT f on b.BOOKSET_ID = F.FINPROD_ID
             WHERE b.INV_AIM = #{invAim}

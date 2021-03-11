@@ -163,14 +163,6 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                     getMessage("BUSS_COM_I_0017", getMessage("FinProductBuild002.finprodName"))));
             }
 
-            
-            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsFhxgcp())) {
-                validList.add(new ValidMessage("bussRepFinProductInfoDto.isFhxgcp", getMessage("请输入是否合规新产品")));
-            }
-            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsYllccp())) {
-                validList.add(new ValidMessage("bussRepFinProductInfoDto.isYllccp", getMessage("请输入是否养老理财产品")));
-            }
-            
             // 流程中的市场代码(排期和产品新建)
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
             List<String> pageIdList = new ArrayList<String>();
@@ -207,6 +199,13 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                     getMessage("FinProductScheduling002.prodAbbr"))));
             }
         }
+               
+        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsFhxgcp())) {
+            validList.add(new ValidMessage("bussRepFinProductInfoDto.isFhxgcp", getMessage("请输入是否合规新产品")));
+        }
+        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsYllccp())) {
+            validList.add(new ValidMessage("bussRepFinProductInfoDto.isYllccp", getMessage("请输入是否养老理财产品")));
+        }        
         
         //是否现金管理类产品 必填 开放式产品必输
         if (!StringUtil.isNotEmpty(entity.getIsCashManage())  && StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_开放式.getValue())) {
