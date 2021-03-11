@@ -326,7 +326,8 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
          * 2 输入金融产品交易Entity.金融产品类型（投管分类）in (“拆入”,“拆出”) and 金融产品交易Entity.交易方向 in （“到期”）
          *
          */
-        else if (拆入_拆出.contains(deal.getFinprodType2()) && DictCodeList.交易方向_到期.getValue().equals(deal.getPs())) {
+        else if (拆入_拆出.contains(deal.getFinprodType2()) && 
+        		(DictCodeList.交易方向_到期.getValue().equals(deal.getPs()) || DictCodeList.交易方向_卖出.getValue().equals(deal.getPs()) ) ) {
               resultDto.setCdate(deal.getSettleDate());
               resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
               /**** 回购释放头寸处理*****chenlei1*add***start **/
