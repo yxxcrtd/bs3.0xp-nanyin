@@ -189,16 +189,24 @@ public class EtrSecLendCashPositionDealService  {
                         etrCashPositionFlowDto.setAmount(stlPayOrdersDto.getSettleAmt());
                         etrCashPositionFlowDto.setAcctId(stlPayOrdersDto.getMyAcctNo());
                         etrCashPositionFlowDto.setCdate(stlPayOrdersDto.getSettleDate());
-                        etrCashPositionFlowDto.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
-                        etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+                        if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()){
+                            etrCashPositionFlowDto.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto); 
+                        }
                         
-                        // 处理预增现金
-                        EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto () ;
-                        BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto1, etrCashPositionFlowDto);
-//                      etrCashPositionFlowDto1.setAmount(stlPayOrdersDto.getSettleAmt());
-                        etrCashPositionFlowDto1.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
-                        etrCashPositionFlowDto1.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
-                        etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
+                        // 处理预增现金，撤销时不处理预增现金
+                        if (DictCodeList.持仓类型_实际.equals(持仓类型) || DictCodeList.持仓类型_可用.equals(持仓类型)){
+                            EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto () ;
+                            BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto1, etrCashPositionFlowDto);
+//                          etrCashPositionFlowDto1.setAmount(stlPayOrdersDto.getSettleAmt());
+                            etrCashPositionFlowDto1.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
+                            etrCashPositionFlowDto1.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                            //流程结束时去除流程提交时增加的预增金额
+                            if (DictCodeList.持仓类型_实际.equals(持仓类型)){
+                                etrCashPositionFlowDto1.setAmount(etrCashPositionFlowDto1.getAmount().negate());    
+                            }
+                            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);  
+                        }
                     });
                 }
             }
