@@ -714,7 +714,7 @@ $(function() {
 			$('#InvestFeePay002_positionEndDate').prop("disabled", true);
 		}
 		if(feeType == '06' || feeType == '07'){
-			$('#InvestFeePay002_regTrustOrg').prop("disabled", true);
+			$('#InvestFeePay002_secAcctId').prop("disabled", true);
 		}
 		// 费用类型
 		$('#InvestFeePay002_feeType').change(feeTypeChangeAction);
