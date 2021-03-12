@@ -251,9 +251,9 @@ $(function() {
 					obj.assetSecType = $('#type7').val();
 				}
 				if (ps == ps_T06){
-					if(Number(bussTrdTransfenpeiDto[i].shareAmt) == Number(0)){
-						continue;
-					}
+					// if(Number(bussTrdTransfenpeiDto[i].shareAmt) == Number(0)){
+					// 	continue;
+					// }
 					obj.tradeAmount = bussTrdTransfenpeiDto[i].shareAmt;
 					obj.isEnabled = '01';
 				}else{
@@ -1341,9 +1341,9 @@ $(function() {
                     return;
                 }
             }
-            if($("#ps").val()==ps_T06){
-                return;
-            }
+            // if($("#ps").val()==ps_T06){
+            //     return;
+            // }
             var object = $.serializeToObject('#submitForm', true);
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/1/RSK002/F09',object,getriskdata());
             
