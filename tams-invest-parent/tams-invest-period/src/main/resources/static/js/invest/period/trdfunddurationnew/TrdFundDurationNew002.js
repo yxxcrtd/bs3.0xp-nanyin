@@ -583,47 +583,47 @@
     var stlCommandInput = tableInitData;
 
     // 检查生成指令参数是否发生变化
-    var isCalcConditionChanged = function() {
-        // 参照模式，不做check
-        if (pageModel === PAGE_MODEL_REFERENCE) {
-            return false;
-        }
-        if (!$("#bussTrdTransferOrder_div").is(":visible")) {
-            return false;
-        }
-        if (calcConditionObjBackUp == null) {
-            return false;
-        }
-
-        if(stlCommandInput != null){
-            var currentCalcConditionObj = stlCommandInput();
-            // 影响计划生成的所有项目与计划生成时记录的值比较，值变更时
-            for ( var key in currentCalcConditionObj) {
-                for ( var key1 in currentCalcConditionObj[key]) {
-                    if (typeof currentCalcConditionObj[key][key1] != "object"
-                        && currentCalcConditionObj[key][key1] != calcConditionObjBackUp[key][key1]) {
-                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
-                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-                            [labelText, "生成划款指令"]));
-                        return true;
-                    }
-                }
-            }
-            for ( var key in currentCalcConditionObj) {
-                for ( var key1 in currentCalcConditionObj[key].deal) {
-                    var currentDealObj = currentCalcConditionObj[key].deal;
-                    var backupDealObj = calcConditionObjBackUp[key].deal;
-                    if (typeof currentDealObj[key1] != "object"
-                        && currentDealObj[key1] != backupDealObj[key1]) {
-                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
-                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-                            [labelText, "生成划款指令"]));
-                        return true;
-                    }
-                }
-            }
-        }
-    };
+//    var isCalcConditionChanged = function() {
+//        // 参照模式，不做check
+//        if (pageModel === PAGE_MODEL_REFERENCE) {
+//            return false;
+//        }
+//        if (!$("#bussTrdTransferOrder_div").is(":visible")) {
+//            return false;
+//        }
+//        if (calcConditionObjBackUp == null) {
+//            return false;
+//        }
+//
+//        if(stlCommandInput != null){
+//            var currentCalcConditionObj = stlCommandInput();
+//            // 影响计划生成的所有项目与计划生成时记录的值比较，值变更时
+//            for ( var key in currentCalcConditionObj) {
+//                for ( var key1 in currentCalcConditionObj[key]) {
+//                    if (typeof currentCalcConditionObj[key][key1] != "object"
+//                        && currentCalcConditionObj[key][key1] != calcConditionObjBackUp[key][key1]) {
+//                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
+//                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+//                            [labelText, "生成划款指令"]));
+//                        return true;
+//                    }
+//                }
+//            }
+//            for ( var key in currentCalcConditionObj) {
+//                for ( var key1 in currentCalcConditionObj[key].deal) {
+//                    var currentDealObj = currentCalcConditionObj[key].deal;
+//                    var backupDealObj = calcConditionObjBackUp[key].deal;
+//                    if (typeof currentDealObj[key1] != "object"
+//                        && currentDealObj[key1] != backupDealObj[key1]) {
+//                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
+//                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+//                            [labelText, "生成划款指令"]));
+//                        return true;
+//                    }
+//                }
+//            }
+//        }
+//    };
 
     // 检查生成指令参数是否发生变化
     var isCalcConditionChangedTwo = function(bussTrdTransferOrders) {
@@ -674,13 +674,21 @@
 //            }
 //            for (var i = 0; i < calcConditionObjBackUp.deal.length; i++) {
 //                var dealDataObj = currentCalcConditionList.deal[i];
-//                    if(dealDataObj.secManageAcctId){
-//                        delete dealDataObj.secManageAcctId;
+//                    if(dealDataObj.secManageAcctId == undefined || dealDataObj.secManageAcctId == null){
+//                        dealDataObj.secManageAcctId = dealDataObj.chlId;
+//                        delete dealDataObj.chlId;
 //                    }
 //                    if(dealDataObj.chlId){
 //                        delete dealDataObj.chlId;
 //                    }
 //                var dealDataUp = calcConditionObjBackUp.deal[i];
+//                if ( typeof currentDealObj[key1] != "object"
+//                    && currentDealObj[key1] != backupDealObj[key1]) {
+//                    var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
+//                    Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+//                        [labelText, "生成划款指令"]));
+//                    return true;
+//                }
 //                for (var key in dealDataObj) {
 //                    if (key == "finprodId" || key == "finprodType2"||key=='ps') {
 //                        continue;
@@ -711,7 +719,7 @@
 //                    }
 //                }
 //            }
-//        }
+        }
     };
 
     var generateOrders = function (callback) {
@@ -1093,8 +1101,8 @@
                if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
                   $("#exRightsDate").val(sysDate).trigger("change");
                   $("#registDate").val(sysDate).trigger("change");
-//                  $("#exRightsDate").attr("disabled",true);
-//                  $("#registDate").attr("disabled",true);
+                  $("#exRightsDate").attr("disabled",true);
+                  $("#registDate").attr("disabled",true);
               }
            }else{
                $(".unitCprice").show();
