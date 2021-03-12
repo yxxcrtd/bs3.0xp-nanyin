@@ -2,7 +2,6 @@ package com.joyintech.tams.report.submitexamination.investorsqualitycheck.servic
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -12,7 +11,6 @@ import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.Inv
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +43,6 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseS
 
     @Override
     public InvestorsQualityCheck001Dto cntHGL(Map<String, Object> param) {
-        InvestorsQualityCheck001Dto dto = new InvestorsQualityCheck001Dto();
         // 查询所有记录
         dealParamMap(param);
         List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchCPZT(param);
@@ -53,12 +50,7 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseS
         param.put("queryFlag", "1");
         List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchCPZT(param);
 
-        dto.setUnQualified(String.valueOf(unQualifiedList.size()));
-        dto.setTotal(String.valueOf(allList.size()));
-        dto.setRate(ArithmeticUtil.subtract(new BigDecimal(100), ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal(unQualifiedList.size()), new BigDecimal(100)), new BigDecimal(100), 2)).toPlainString());
-        dto.setPageType("4");
-
-        return dto;
+        return cntHGLComm(allList, unQualifiedList, CPZT);
     }
 
     @Override

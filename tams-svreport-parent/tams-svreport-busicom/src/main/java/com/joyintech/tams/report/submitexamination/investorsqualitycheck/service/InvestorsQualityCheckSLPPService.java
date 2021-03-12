@@ -47,18 +47,19 @@ public class InvestorsQualityCheckSLPPService extends InvestorsQualityCheckBaseS
         int pageSize = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         // 查询不合格记录
         dealParamMap(param);
-        Page<InvestorsQualityCheck001Dto> page = super.queryForPage(pageNum, pageSize, () -> investorsQualityCheck001Mapper.searchSLPP(param));
-        // 数据字典转换
-        if (!StringUtil.isEmptyList(page.getRoot())){
-
-        }
-
-        return page;
+        return super.queryForPage(pageNum, pageSize, () -> investorsQualityCheck001Mapper.searchSLPP(param));
     }
 
     @Override
     public InvestorsQualityCheck001Dto cntHGL(Map<String, Object> param) {
-        return null;
+        // 查询所有记录
+        dealParamMap(param);
+        List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchSLPP(param);
+        // 查询不合格记录
+        param.put("queryFlag", "1");
+        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchSLPP(param);
+
+        return cntHGLComm(allList, unQualifiedList, SLPP);
     }
 
     @Override

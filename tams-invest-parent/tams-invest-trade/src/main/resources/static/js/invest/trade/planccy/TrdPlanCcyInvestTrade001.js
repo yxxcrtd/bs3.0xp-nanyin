@@ -200,7 +200,7 @@
                 obj.selectedItem[0].bTradeId = object.selectedItem[0].tradeId;
                 Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade001/check2', obj, function(result1) {
                     Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade001/check', object, function(result1) {
-                        Joyin.prompt(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.revoke")),0 ,function(result2){
+                        Joyin.prompt(JoyinUtil.getMessage("撤销原因",JoyinUtil.getLabel("SysCommon.revoke")),0 ,function(result2){
                             object.cancelRemark = result2;
                             WorkFlow.doRevokeList(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade001/revoke', object, "TrdPlanCcyInvestTrade001_btn_revoke", "TrdPlanCcyInvestTrade002");
                         });
@@ -209,7 +209,7 @@
             }else{
                 Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade001/check', object, function(result1) {
                     var resdata = result1.data;
-                    Joyin.prompt(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.revoke")),0 ,function(result2){
+                    Joyin.prompt(JoyinUtil.getMessage("撤销原因",JoyinUtil.getLabel("SysCommon.revoke")),0 ,function(result2){
                         Joyin.confirm(resdata, function() {
                         object.cancelRemark = result2;
                         WorkFlow.doRevokeList(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade001/revoke', object, "TrdPlanCcyInvestTrade001_btn_revoke", "TrdPlanCcyInvestTrade002");
