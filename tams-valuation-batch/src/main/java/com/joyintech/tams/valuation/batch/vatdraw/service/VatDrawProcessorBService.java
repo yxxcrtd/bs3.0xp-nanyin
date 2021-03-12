@@ -3548,6 +3548,7 @@ public class VatDrawProcessorBService {
 //        BigDecimal happenAmt = amtDto.getQrjcHappenAmt();
 
         BigDecimal tdyHappenAmt = BigDecimal.ZERO;
+        maAmt = amtDto.getMaqrjcAmt();
         // 读取[已实现负差是否抵扣]配置
         List<BooksetTaxConfigDto> listConfig = vatDrawCommonService.queryBooksetTaxConfig(
             acctEntity.getBooksetId(), "已实现负差是否抵扣");
