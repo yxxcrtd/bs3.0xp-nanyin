@@ -510,6 +510,43 @@
 		layui.form.render('radio');
 	}
 	
+	//add by yujiaping 20210312 ZGBS-168 控制开放周期、开放天数、确认天数只能输入整数 start
+	var openCycleChange = function (){
+		debugger;
+		if(getElementById('openCycle').val()){
+		var r =/^\d+$/;
+		var flag=r.test(getElementById('openCycle').val());
+		if(!flag){
+			Joyin.error(JoyinUtil.getMessage("开放周期只能输入整数"));
+			getElementById('openCycle').val('');
+		    return false;
+		}
+		}
+	}
+    var openDaysChange = function (){
+    	if(getElementById('openDays').val()){
+    	var r =/^\d+$/;
+		var flag=r.test(getElementById('openDays').val());
+		if(!flag){
+			Joyin.error(JoyinUtil.getMessage("开放天数只能输入整数"));
+			getElementById('openDays').val('');
+		    return false;
+		}
+    	}
+	}
+    var purSpeedChange = function (){
+    	if(getElementById('purSpeed').val()){
+    	var r =/^\d+$/;
+		var flag=r.test(getElementById('purSpeed').val());
+		if(!flag){
+			Joyin.error(JoyinUtil.getMessage("确认天数只能输入整数"));
+			getElementById('purSpeed').val('');
+		    return false;
+		}
+    	}
+    }
+	//add by yujiaping 20210312 ZGBS-168 控制开放周期、开放天数、确认天数只能输入整数 end
+	
 	var weekChange = function (){
 		var selectedValue = getElementById('dayOfWeek').val();
 		
@@ -1588,6 +1625,13 @@
 //    	getElementById('payCycle').change(payCycleChange);
 //    	getElementById('payCycleVal').change(payCycleValChange);
 //    	getElementById('payCycleUnit').change(payCycleUnitChange);
+    	
+    	//add by yujiaping 20210312 ZGBS-168 控制开放周期、开放天数、确认天数只能输入整数 start
+    	getElementById('openCycle').change(openCycleChange);
+    	getElementById('openDays').change(openDaysChange);
+    	getElementById('purSpeed').change(purSpeedChange);
+    	//add by yujiaping 20210312 ZGBS-168 控制开放周期、开放天数、确认天数只能输入整数 end
+
     	// 几号、第几工作日勾选标识
     	layui.form.on('radio(openDateFilter)', function(data){
     		if(data) {
