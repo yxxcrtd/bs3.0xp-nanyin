@@ -716,4 +716,15 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
     public void doDelete(String workflowId) {
     	wflTrdProductDealMapper.deleteByWorkflowId(workflowId);
     }
+    
+    @Override
+    public String generateTitle(EtrProjectDto entity, OperationType operationType) {
+    	return this.getMessage("EtrProject001") + "(" + entity.getPortfolioId() + ")"
+                + "-" + this.getMessage("EtrProject001.ps") + "-" + "("
+                + this.getMessage("EtrProject001.vdate") + ":" +DateUtil.format(entity.getVdate())
+                + ")-(" + this.getMessage("EtrProject001.mdate") + ":"
+                +DateUtil.format(entity.getMdate())+ ")-"
+                + this.getMessage("EtrProject001.entrustAmt") + ":"
+                + entity.getEntrustAmt();
+    }
 }
