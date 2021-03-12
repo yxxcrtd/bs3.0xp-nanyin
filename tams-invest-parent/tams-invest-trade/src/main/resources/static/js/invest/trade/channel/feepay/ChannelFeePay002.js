@@ -227,8 +227,11 @@ $(function() {
         $('#ChannelFeePay002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
+        $("#finprodMarketId").change(function (){
+            feeInfoTable.clear();
+        })
         $("#finprodMarketId").change(searchTheoryAmt);
         $("#mdate").change(searchTheoryAmt);
-        $("#portfolioId").change(searchTheoryAmt);
+        // $("#portfolioId").change(searchTheoryAmt);
     });
 }());
