@@ -71,7 +71,8 @@ $(function() {
               {title: '备注',field:'remark', width:100, sortField:'REMARK'},
               { field: 'sendStatus',visible:false},
               { field: 'submitFeedbackStatus',visible:false},
-              { field: 'registSeqno',visible:false}
+              { field: 'registSeqno',visible:false},
+              { field: 'status',visible:false}
           ]
       });
      
