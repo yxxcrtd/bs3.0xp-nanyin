@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.ajax.JoyinMessage;
+import com.joyintech.tams.common.base.dao.MstCounterPartyMapper;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -38,6 +39,8 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -119,6 +122,9 @@ public class TrdFundInvestTrade002Controller extends BaseController {
     private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
     @Autowired
     private StlSecAcctInfoMapper stlSecAcctInfoMapper;
+    
+    @Autowired
+    private MstCounterPartyMapper mstCounterPartyMapper;
     /**
      * 平台日期组件接口
      */
@@ -138,10 +144,28 @@ public class TrdFundInvestTrade002Controller extends BaseController {
 
         // 场内基金改造 add by renping 20191117 start
         model.addAttribute("ps_T52", DictCodeListExt2.交易方向_认购.getValue());
-        model.addAttribute("COUNTER_PARTY_ID_SHANGHAI",
-            BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
-        model.addAttribute("COUNTER_PARTY_ID_SHENZHEN",
-            BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+        
+        
+        String counterPartyIdShangHai = BussinessConstant.COUNTER_PARTY_ID_SHANGHAI;
+        String counterPartyIdShenZhen = BussinessConstant.COUNTER_PARTY_ID_SHENZHEN;
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+        	Map<String,Object> para = new HashMap<>();
+        	para.put("insTree", LoginUserUtil.getTreeInstCode());
+        	para.put("counterName", "上海证券交易所");
+        	List<String> result = mstCounterPartyMapper.getInsCounterIdByName(para);
+        	if(result.size()>0) {
+        		counterPartyIdShangHai = result.get(0);
+        	}
+        	para.put("counterName", "深圳证券交易所");
+        	result = mstCounterPartyMapper.getInsCounterIdByName(para);
+        	if(result.size()>0) {
+        		counterPartyIdShenZhen = result.get(0);
+        	}
+        }
+        model.addAttribute("COUNTER_PARTY_ID_SHANGHAI",counterPartyIdShangHai);
+        model.addAttribute("COUNTER_PARTY_ID_SHENZHEN",counterPartyIdShenZhen);
+        
+        
         model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_06", DictCodeListExt1.交易场所_OTC场外.getValue());
