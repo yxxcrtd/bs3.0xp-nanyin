@@ -226,24 +226,27 @@
      * 空 新建 01：点击复制按钮生成的记录 02：拆分記錄
      */
     repoInfoTable.bind('click', '.manual', function(data, index) {
-        debugger;
-        var tabList  = repoInfoTable.getAllRows();
-        if(data.isFromCopy =='02'){
-            var msg = JoyinUtil.getMessage("一条列表信息只可被拆分/复制一次");
-               Joyin.alert(msg, 2);
-        }else if(data.isFromCopy =='01'){
-             var msg = JoyinUtil.getMessage("拆分/复制记录不可再拆分/复制");
+        if(pageModel == PAGE_MODEL_NEW){
+            var tabList  = repoInfoTable.getAllRows();
+            if(data.isFromCopy =='02'){
+                var msg = JoyinUtil.getMessage("一条列表信息只可被复制/拆分一次");
                 Joyin.alert(msg, 2);
-        }else{
-            tabList[index].isFromCopy ='02';
-            if(data.bonusMode == BONUS_MODE_01){
-                data.bonusMode = BONUS_MODE_02;
+            }else if(data.isFromCopy =='01'){
+                 var msg = JoyinUtil.getMessage("复制/拆分记录不可再复制/拆分");
+                 Joyin.alert(msg, 2);
             }else{
-                data.bonusMode = BONUS_MODE_01;
+                tabList[index].isFromCopy ='02';
+                if(data.bonusMode == BONUS_MODE_01){
+                    data.bonusMode = BONUS_MODE_02;
+                }else{
+                    data.bonusMode = BONUS_MODE_01;
+                }
+                data.isFromCopy = '01';
+                tabList.splice(index+1,0,data);
+                repoInfoTable.reload({data:tabList});
             }
-            data.isFromCopy = '01';
-            tabList.splice(index+1,0,data);
-            repoInfoTable.reload({data:tabList});
+        }else{
+                return false;
         }
     });
 
@@ -606,19 +609,19 @@
                     }
                 }
             }
-//            for ( var key in currentCalcConditionObj) {
-//                for ( var key1 in currentCalcConditionObj[key].deal) {
-//                    var currentDealObj = currentCalcConditionObj[key].deal;
-//                    var backupDealObj = calcConditionObjBackUp[key].deal;
-//                    if (typeof currentDealObj[key1] != "object"
-//                        && currentDealObj[key1] != backupDealObj[key1]) {
-//                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
-//                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-//                            [labelText, "生成划款指令"]));
-//                        return true;
-//                    }
-//                }
-//            }
+            for ( var key in currentCalcConditionObj) {
+                for ( var key1 in currentCalcConditionObj[key].deal) {
+                    var currentDealObj = currentCalcConditionObj[key].deal;
+                    var backupDealObj = calcConditionObjBackUp[key].deal;
+                    if (typeof currentDealObj[key1] != "object"
+                        && currentDealObj[key1] != backupDealObj[key1]) {
+                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
+                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+                            [labelText, "生成划款指令"]));
+                        return true;
+                    }
+                }
+            }
         }
     };
 
@@ -669,7 +672,46 @@
 //                    }
 //                }
 //            }
-        }
+//            for (var i = 0; i < calcConditionObjBackUp.deal.length; i++) {
+//                var dealDataObj = currentCalcConditionList.deal[i];
+//                    if(dealDataObj.secManageAcctId){
+//                        delete dealDataObj.secManageAcctId;
+//                    }
+//                    if(dealDataObj.chlId){
+//                        delete dealDataObj.chlId;
+//                    }
+//                var dealDataUp = calcConditionObjBackUp.deal[i];
+//                for (var key in dealDataObj) {
+//                    if (key == "finprodId" || key == "finprodType2"||key=='ps') {
+//                        continue;
+//                    }
+//                    var currentDealObj = dealDataObj[key];
+//                    var backupDealObj = dealDataUp[key];
+//
+//                    if (typeof currentDealObj != "object"
+//                        && currentDealObj != backupDealObj) {
+//                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+//                            ["指令生成要素", "生成划款指令"]));
+//                        return true;
+//                    } else if (typeof currentDealObj == "object") {
+//                        for (var i in currentDealObj) {
+//                            if (dealDataObj == 'secManageAcctId') {
+//                                if(backupDealObj[j] == currentDealObj[i] &&
+//                                       ){
+//
+//                                }
+//                            }
+//                            if (typeof currentDealObj[i] != "object"
+//                                && backupDealObj[i] != currentDealObj[i]) {
+//                                Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+//                                    ["指令生成要素", "生成划款指令"]));
+//                                return true;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     };
 
     var generateOrders = function (callback) {

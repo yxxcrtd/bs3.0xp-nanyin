@@ -715,6 +715,24 @@ public class InvestPeriodCommonService {
             }
 
         }
+        //基金支持多种分红方式特殊处理
+        if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.FUND_DEAL_TYPE),"02")){
+            if (baseTotalTradeInfoDto.getBaseTradeInfoDtoList() != null
+                    && StringUtil.equals(DictCodeList.交易方向_现金分红.getValue(),baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getPs())
+                    && StringUtil.isNotEmpty(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getSecManageAcctId())
+                    && baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders()!=null) {
+                    String myAcctNo = baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders().getMyAcctNo();
+                    Map<String,Object> paraMap = new HashMap<>();
+                    paraMap.put("acctNo",myAcctNo);
+                    paraMap.put("acctType",DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+                    paraMap.put("portfolioId",baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders().getPortfolioId());
+                    paraMap.put("ccy",baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders().getCcy());
+                    if(periodCommonMapper.countAccNoNum(paraMap)>0){
+                        do生成有效数据(durationDto);
+                        return DictCodeListExt1.交易流程状态_有效.getValue();
+                    }
+            }
+        }
         insertWflData(baseTotalTradeInfoDto);
         return DictCodeListExt1.交易流程状态_流程中.getValue();
     }
