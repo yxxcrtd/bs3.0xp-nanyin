@@ -3,15 +3,26 @@ package com.joyintech.tams.report.submitexamination.investorsqualitycheck.servic
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public abstract class InvestorsQualityCheckBaseService extends BaseService<InvestorsQualityCheck001Dto> {
+
+    /**
+     * 产品状态合格率
+     */
+    protected String CPZT = "4";
+    /**
+     * 投资者数量匹配合格率
+     */
+    protected String SLPP = "5";
 
     /**
      * 查询数据
@@ -42,6 +53,23 @@ public abstract class InvestorsQualityCheckBaseService extends BaseService<Inves
         param.put("orgCodeList", orgCodeList);
 
         setParamComm(param);
+    }
+
+    /**
+     * 计算共通
+     * @param allList 全部数据
+     * @param unQualifiedList 不合格数据
+     * @param PageType 类型
+     * @return 计算对象
+     */
+    public InvestorsQualityCheck001Dto cntHGLComm(List<InvestorsQualityCheck001Dto> allList, List<InvestorsQualityCheck001Dto> unQualifiedList, String PageType) {
+        InvestorsQualityCheck001Dto dto = new InvestorsQualityCheck001Dto();
+        dto.setUnQualified(String.valueOf(unQualifiedList.size()));
+        dto.setTotal(String.valueOf(allList.size()));
+        dto.setRate(ArithmeticUtil.subtract(new BigDecimal(100), ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal(unQualifiedList.size()), new BigDecimal(100)), new BigDecimal(100), 2)).toPlainString());
+        dto.setPageType(PageType);
+
+        return dto;
     }
 
 }

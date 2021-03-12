@@ -75,7 +75,7 @@ public class InvestorsQualityCheckController{
         List<InvestorsQualityCheckBaseService> serviceList = new ArrayList<>();
         // 添加需要查询的Service对象
         serviceList.add(investorsQualityCheckCPZTService);
-
+        serviceList.add(investorsQualityCheckSLPPService);
 
 
         // 创建线程池
