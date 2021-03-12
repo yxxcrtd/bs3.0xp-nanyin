@@ -170,7 +170,9 @@ public class ChannelFeePay001Controller extends BaseController {
     	 if (WorkFlowUtil.isNotFromToDoList()) {
  	        ProcessMark processMark = new ProcessMark();
             processMark.setBusinessDataPk1(dto==null?null:dto.getChlId());
-            processMark.setBusinessDataPk2(dto==null?null:DateUtil.format(dto.getMdate()));
+            if(StringUtil.isNotEmpty(dto.getMdate())) {
+                processMark.setBusinessDataPk2(dto == null ? null : DateUtil.format(dto.getMdate()));
+            }
             processMark.setBusinessDataPk3(dto==null?null:dto.getPortfolioId());
             processMark.setBusinessDataPk4(dto==null?null:dto.getTradeId()); 
              
