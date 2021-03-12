@@ -123,9 +123,9 @@ public class BaseFinProductOpenPlanServiceImpl implements BaseFinProductOpenPlan
         //add by zhangJin 20191018 start 修复BUG:若为子产品，现金流代码返回多个
         //判断当前产品为母/子产品
         map.put("FINPROD_TYPE", DictCodeListExt1.现金流业务类型_金融产品.getValue());
-        if(StringUtil.isNotEmpty(finProduct.getpFinprodId())) {
+       /* if(StringUtil.isNotEmpty(finProduct.getpFinprodId())) {
             map.put("FINPROD_TYPE", DictCodeListExt1.金融产品类型_理财子产品.getValue());
-        }
+        }*/
         //add by zhangJin 20191018 end 修复BUG:若为子产品，现金流代码返回多个
         //查询浮动管理费的现金流代码
         String cashId = baseFinProductOpenPlanMapper.selectfinCashInfo(map);
