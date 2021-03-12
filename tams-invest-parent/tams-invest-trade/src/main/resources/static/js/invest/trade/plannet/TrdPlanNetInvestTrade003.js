@@ -232,7 +232,7 @@ $(function() {
                 var tradeAmt = $('#tradeAmt').val();
                 if(unitCprice != null && unitCprice != '' && shareAmt){
                 	if(ps == ps_T19){
-                		$('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+                		$('#tradeAmt').val(shareAmt*unitCprice).attr('disabled',false).trigger('blur');
                 	}
                 	else{
                 		$('#tradeAmt').val(shareAmt*unitCprice).attr('disabled',true).trigger('blur');
@@ -474,10 +474,7 @@ $(function() {
          }
         
         if($("#ps").val()==ps_T19){
-        	setTimeout(function(){
-                $('#tradeAmt').attr('disabled',false);
-                $('#shareAmt').attr('disabled',true);
-        	},1000)
+            $('#shareAmt').attr('disabled',true);
         }
      });
  });
