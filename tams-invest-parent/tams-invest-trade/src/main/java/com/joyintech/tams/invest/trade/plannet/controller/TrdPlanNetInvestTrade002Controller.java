@@ -154,7 +154,10 @@ public class TrdPlanNetInvestTrade002Controller extends BaseController {
             // 双击查看反显非流程中的数据
             else {
                 if (StringUtil.equals(status, DictCodeListExt1.交易流程状态_撤销.getValue())) {
-                    tradeId = this.getParam("pTradeId");
+                    String ptradeId = this.getParam("pTradeId");
+                    if(StringUtil.isNotEmpty(ptradeId)){
+                        tradeId = ptradeId;
+                    }
                 }
                 dto = trdPlanNetInvestTrade002Service.getTrdFundDto(tradeId);
                 /*if (dto.getSettleSpeed() != null){
