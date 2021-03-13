@@ -233,12 +233,14 @@
                 </div>
                   <!--  新增 是否由金融资产投资公司发行     modify by wj 20200409  -->
             <!--  <div class="layui-form-item">-->
-            	<div class="form-inline-wrap" th:id="|${entityName}_repFinancialComissue_div|" >
+            	<div class="form-inline-wrap" th:id="|${entityName}_repFinancialComissue_div|"  style="display: none">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepAssetMngProdInfo.repFinancialComissue}" style="line-height: normal!important;">是否由金融资产<br>投资公司发行</label>
                     <div class="layui-input-inline input-inline">
-                        <input  th:id="|${entityName}_repFinancialComissue|" th:name="|${entityName}.repFinancialComissue|" class="layui-input form-input input-select"
-                        data-th-value="${YES}"  data-th-data-result="${SVR_YES_OR_NO}"
-                         >
+                        <select th:id="|${entityName}_repFinancialComissue|" th:name="|${entityName}.repFinancialComissue|"
+                                th:initValue="${entity?.repFinancialComissue}" class="layui-input form-input input-select"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result="${SVR_YES_OR_NO}">
+                        </select>
                     </div>
                 </div>
                 

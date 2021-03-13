@@ -85,9 +85,12 @@ var QueryFunc=function(){
             if(repAssetType=="1705"){
             	$("#bussRepAssetMngProdInfo_repFinancialComissue").prop("required",true).trigger('change');
             	$("#bussRepAssetMngProdInfo_repFinancialComissue").attr("disabled",false).trigger('change');
+                $("#bussRepAssetMngProdInfo_repFinancialComissue_div").css('display','block');
+
             }else{
             	//默认显示否
-            	$('#bussRepAssetMngProdInfo_repFinancialComissue').prop('checked', false);
+                $("#bussRepAssetMngProdInfo_repFinancialComissue_div").css('display','none');
+                $('#bussRepAssetMngProdInfo_repFinancialComissue').prop('checked', false);
             	$("#bussRepAssetMngProdInfo_repFinancialComissue").prop("required",false).trigger('change');
             	$("#bussRepAssetMngProdInfo_repFinancialComissue").attr("disabled",true).trigger('change');
             }
