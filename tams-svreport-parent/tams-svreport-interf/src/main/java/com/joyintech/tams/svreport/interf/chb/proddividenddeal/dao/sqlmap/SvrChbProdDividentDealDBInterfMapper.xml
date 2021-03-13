@@ -68,7 +68,8 @@
        DECODE(D.PS, 'C10', D.SHARE_AMT, 0) TRADE_QTY, /*红利再投份额*/
        DECODE(D.PS, 'C10', D.TRADE_AMT, 0) TRADE_AMT, /*红利再投金额*/
        DECODE(D.PS, 'C9', D.TRADE_AMT, 0) INT_AMT, /*现金分红金额*/
-       PRD.TDY_SHARE_AMT REG_TRADE_QTY, /*权益登记日份额*/
+       <!-- PRD.TDY_SHARE_AMT REG_TRADE_QTY, /*权益登记日份额*/ -->
+       NVL(D1.SHARE_AMT, PRD.TDY_SHARE_AMT) REG_TRADE_QTY, /*权益登记日份额*/
        DECODE(REVDL.UPDATE_TIME, NULL, 'E', 'D') status, /*有效状态*/
        D.REMARK remark,
        REVDL.CREATE_TIME REV_DATE /*撤销日*/
