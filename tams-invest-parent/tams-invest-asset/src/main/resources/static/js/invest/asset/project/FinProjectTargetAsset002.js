@@ -166,6 +166,12 @@ $(function() {
         if(BusiFinProjectRatingInfo){
             object.busiFinBondRatingInfoDto.mstBondCreditRatingList = BusiFinProjectRatingInfo.getAllRows();
         }
+        
+        var label = $("#financier").siblings("span");
+        if(label.css('display')=="none"){
+        	object.financierIsHid = true;
+        }
+        
         Joyin.ajaxJson(basePath + 'invest/asset/project/FinProjectTargetAsset002/check', object, function(
                     result) {
         	if(FinPayInterestStdInfo &&FinPayInterestStdInfo.check()&& FinPayInterestStdInfo.comfirmCheck()&&BussFinRepayment.check()&&BussFinRepayment.isComfirmCheck()) {

@@ -26,6 +26,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.invest.asset.project.dto.FinProjectTargetAssetDto;
 import com.joyintech.tams.constant.DictCodeList;
@@ -209,6 +211,17 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
             resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
+        }
+        
+        //校验融资人
+        //@NotEmpty(fieldName = "FinProjectTargetAsset002.financier",groups={ValidateGroupEdit.class})
+        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+        	if((!StringUtil.isNotEmpty(dto.isFinancierIsHid())||!dto.isFinancierIsHid())&&(!StringUtil.isNotEmpty(dto.getFinancier()))) {
+        		 ValidMessage message = new ValidMessage(getMessage("FW_E_0006", getMessage("FinProjectTargetAsset002.financier")));
+        		 message.setField("financier");
+        		 message.setOrder(0);
+        		 resultList.add(message);
+        	}
         }
 
         return resultList;

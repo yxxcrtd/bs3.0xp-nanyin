@@ -413,6 +413,8 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     private String sponsorName;
 
+    private boolean financierIsHid;
+    
     /**
      * 中债报送新增
      */
@@ -692,10 +694,14 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public String getCalendarId(){
         return super.getCalendarId();
     }
-    @NotEmpty(fieldName = "FinProjectTargetAsset002.financier",groups={ValidateGroupEdit.class})
+    
+    
     public String getFinancier() {
         return super.getFinancier();
     }
+    
+    
+    
     /**
      * 获取 operateType
      * @return operateType.
@@ -1878,4 +1884,12 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public void setIsNonStandard(String isNonStandard) {
         this.isNonStandard = isNonStandard;
     }
+
+	public boolean isFinancierIsHid() {
+		return financierIsHid;
+	}
+
+	public void setFinancierIsHid(boolean financierIsHid) {
+		this.financierIsHid = financierIsHid;
+	}
 }
