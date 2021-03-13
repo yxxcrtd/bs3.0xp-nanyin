@@ -588,7 +588,7 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         trdAsynHandleStatus.setHandleStatus("01");		//01	待处理
         trdAsynHandleStatusMapper.insertSelective(trdAsynHandleStatus);
 
-        if (!(StringUtil.isNotEmpty(entity.getConfirmFlag()) && StringUtil.equals(entity.getConfirmFlag(), "confirm")) ) {
+        if (!(StringUtil.isNotEmpty(entity.getConfirmFlag()) && StringUtil.equals(entity.getConfirmFlag(), "confirm")) && StringUtil.isNotEmpty(entity.getStartDate())) {
             //流程生效更新
         	restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/updateTrdAccountmfConfigDto",
                     entity, String.class);
@@ -837,7 +837,7 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         trdAsynHandleStatus.setHandleStatus("01");		//01	待处理
         trdAsynHandleStatusMapper.insertSelective(trdAsynHandleStatus);
 
-        if (!(StringUtil.isNotEmpty(entity.getConfirmFlag()) && StringUtil.equals(entity.getConfirmFlag(), "confirm")) ) {
+        if (!(StringUtil.isNotEmpty(entity.getConfirmFlag()) && StringUtil.equals(entity.getConfirmFlag(), "confirm")) && StringUtil.isNotEmpty(entity.getStartDate())) {
             //流程生效更新
         	restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/updateTrdAccountmfConfigDto",
                     entity, String.class);
