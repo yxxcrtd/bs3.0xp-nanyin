@@ -149,8 +149,9 @@
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepEquityInfo.isPledge}">是否为质押融资</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_isPledge|" th:name="|${entityName}.isPledge|"
-                                th:initValue="${entity?.isPledge}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+                                class="layui-input form-input input-select"
+                                th:initValue='${entity?.isPledge eq null ? "02" : entity?.isPledge}'
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required disabled="disabled"
                                 data-th-data-result="${SVR_YES_OR_NO}">
                         </select>
                     </div>
