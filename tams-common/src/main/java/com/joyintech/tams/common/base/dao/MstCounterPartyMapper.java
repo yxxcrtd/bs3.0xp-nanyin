@@ -2,6 +2,9 @@ package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.MstCounterParty;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +25,6 @@ public interface MstCounterPartyMapper {
     int updateByPrimaryKey(MstCounterParty record);
     
     MstCounterParty selectPType(@Param("counterId") String counterId);
+    
+    List<String> getInsCounterIdByName(Map<String,Object> map);
 }

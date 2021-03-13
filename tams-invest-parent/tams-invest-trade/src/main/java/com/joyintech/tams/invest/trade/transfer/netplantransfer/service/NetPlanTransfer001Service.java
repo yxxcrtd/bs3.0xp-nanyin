@@ -624,9 +624,24 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
                     //插入组合持仓和各业务表
                     FinProductTradeDto finProductTradeDto = netPlanTransfer002Dto.getFinProductTradeDto();
                     finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+                    //add by yujiaping  20210312 ZGBSS-864 start
+                    if(!StringUtil.isEmptyList(finProductTradeDto.getBaseTradeProductDealDtos())){   
+                	int m=0;
+                	int n=0;
+                	for(int i=0;i<finProductTradeDto.getBaseTradeProductDealDtos().size();i++) {
+                		if(StringUtil.equals(finProductTradeDto.getBaseTradeProductDealDtos().get(i).getTrdProductDeal().getPs(), "T02")) {
+                			m=i;
+                		}
+                		if(StringUtil.equals(finProductTradeDto.getBaseTradeProductDealDtos().get(i).getTrdProductDeal().getPs(), "T01")) {
+                			n=i;
+                		}
+                	}
+                finProductTradeDto.getBaseTradeProductDealDtos().get(n).getTrdProductDeal().setrTradeId(finProductTradeDto.getBaseTradeProductDealDtos().get(m).getTrdProductDeal().getTradeId());
+                    }
+                 //add by yujiaping  20210312 ZGBSS-864 end
                     baseTradeProductDealCommService.execute(finProductTradeDto);
                     //插入组合交易表和金融产品交易扩展表
-                    if(!StringUtil.isEmptyList(finProductTradeDto.getBaseTradeProductDealDtos())){
+                    if(!StringUtil.isEmptyList(finProductTradeDto.getBaseTradeProductDealDtos())){                    	
                         finProductTradeDto.getBaseTradeProductDealDtos().forEach(baseTradeProductDealDto -> {
                             if(!StringUtil.isEmptyList(baseTradeProductDealDto.getPtlTrade())){
                                 baseTradeProductDealDto.getPtlTrade().forEach(ptlTrade -> {
@@ -637,7 +652,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
                                 paTrdProductDealMapper.insertSelective(baseTradeProductDealDto.getPaTrdProductDeal());
                             }
                             // 所有交易生效后调用的共通方法
-                            TrdProductDeal trdProductDeal = baseTradeProductDealDto.getTrdProductDeal();
+                            TrdProductDeal trdProductDeal = baseTradeProductDealDto.getTrdProductDeal();                       
                             TrdProductDealAdd trdProductDealAdd = baseTradeProductDealDto.getTrdProductDealAdd();
                             AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
                             inputDto.setProdid(trdProductDealAdd.getPortfolioId());

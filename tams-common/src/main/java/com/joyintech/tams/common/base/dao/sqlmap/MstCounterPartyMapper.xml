@@ -262,4 +262,15 @@
 	on info.customer_id=infoadd.customer_id
 	 where info.customer_id = #{counterId,jdbcType=VARCHAR}
     </select>
+    
+    <select id = "getInsCounterIdByName" parameterType = "java.util.Map" resultType = "java.lang.String">
+		select mcp.counter_Id  
+		from MST_COUNTER_PARTY mcp
+		inner join sys_user su on mcp.create_user  = su.user_name
+		inner join sys_department sd on sd.dept_code =su.dept_code
+		where counter_name = #{counterName,jdbcType=VARCHAR}
+		<foreach collection="insTree" item="item" open="and sd.institution_code in (" close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+    </select> 
 </mapper>

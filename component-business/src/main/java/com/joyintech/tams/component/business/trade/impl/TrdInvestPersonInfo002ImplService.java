@@ -9,16 +9,23 @@
  */
 package com.joyintech.tams.component.business.trade.impl;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.MstCounterPartyMapper;
 import com.joyintech.tams.component.business.trade.TrdInvestPersonInfo002Service;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -30,6 +37,10 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 public class TrdInvestPersonInfo002ImplService implements TrdInvestPersonInfo002Service {
     @Autowired
     private JoyinRestTemplate restTemplate;
+    
+    @Autowired
+    private MstCounterPartyMapper mstCounterPartyMapper;
+    
     @Override
     public Page<SelectOptionDto> selectCounterId(Map<String, Object> param) {
         // 场内基金改造 add by renping 20191117 start
@@ -38,17 +49,52 @@ public class TrdInvestPersonInfo002ImplService implements TrdInvestPersonInfo002
             && StringUtil.equals((String)param.get("finprodType2"),
                 DictCodeListExt1.金融产品类型_投管用_基金.getValue())
             && StringUtil.isEmpty((String)param.get("chlId"))) {
-            if (StringUtil.equals((String)param.get("tradeMarket"),
-                DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
-                param.put("COUNTER_PARTY_ID_SHANGHAI",
-                    BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
-            }
-            else if (StringUtil.equals((String)param.get("tradeMarket"),
-                DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
-                param.put("COUNTER_PARTY_ID_SHENZHEN",
-                    BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
-            }
+        	if(MultilevelDataAuthorityUtil.isEnabled()) {
+        		if(StringUtil.equals((String)param.get("tradeMarket"),DictCodeListExt1.交易场所_上海证券交易所.getValue())||
+        				StringUtil.equals((String)param.get("tradeMarket"),DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+                	Map<String,Object> para = new HashMap<>();
+                	para.put("insTree", LoginUserUtil.getTreeInstCode());
+                	String key,value;
+                	Set<String> counterSet = new HashSet<>();
+                	if(StringUtil.equals((String)param.get("tradeMarket"),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                		para.put("counterName", "上海证券交易所");
+                		key = "COUNTER_PARTY_ID_SHANGHAI";
+                		value = BussinessConstant.COUNTER_PARTY_ID_SHANGHAI;
+                	}
+                	else {
+                		para.put("counterName", "深圳证券交易所");
+                		key = "COUNTER_PARTY_ID_SHENZHEN";
+                		value = BussinessConstant.COUNTER_PARTY_ID_SHENZHEN;
+                	}
+                	List<String> counterList =mstCounterPartyMapper.getInsCounterIdByName(para); 
+                	counterSet.addAll(counterList);
+                	boolean initFlag = false;
+                	if(StringUtil.isNotEmpty(param.get("initValue"))) {
+                		if(counterSet.contains(param.get("initValue").toString())) {
+                			value = param.get("initValue").toString();
+                			initFlag = true;
+                		}
+                	}
+                	if(!initFlag&&counterList.size()>0) {
+                		value = counterList.get(0);
+                	}
+                	param.put(key, value);
+        		}
+        	}
+        	else {
+                if (StringUtil.equals((String)param.get("tradeMarket"),
+                        DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                        param.put("COUNTER_PARTY_ID_SHANGHAI",
+                            BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                    }
+                    else if (StringUtil.equals((String)param.get("tradeMarket"),
+                        DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+                        param.put("COUNTER_PARTY_ID_SHENZHEN",
+                            BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                    }
+        	}
         }
+        
         // 场内基金改造 add by renping 20191117 end
         if((StringUtil.equals((String)param.get("ps"), DictCodeList.交易方向_买入.getValue())
             ||StringUtil.equals((String)param.get("ps"), DictCodeList.交易方向_卖出.getValue()))

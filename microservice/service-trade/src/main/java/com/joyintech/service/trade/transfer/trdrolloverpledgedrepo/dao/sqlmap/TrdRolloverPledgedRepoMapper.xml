@@ -53,8 +53,11 @@
             AND psp.SEC_ACCT_ID = #{chlId,jdbcType=VARCHAR}
         </if>
         AND psp.HODING_TYPE IN ('01','03','05')
+        <if test="tradeDate!=null">
+            AND psp.CDATE = TO_DATE(#{tradeDate},'yyyy-MM-dd')
+        </if>
         GROUP BY psp.FINPROD_ID
-        )table1 ON table1.FINPROD_ID=fdp.FINPROD_ID
+        )table1 ON table1.FINPROD_ID=fdp.PLEDGE_FINPROD_ID
         LEFT JOIN (
         SELECT psp.FINPROD_ID,sum(psp.AMOUNT) AS AMOUNT
         FROM PTL_SEC_POSITION psp
@@ -66,8 +69,11 @@
             AND psp.SEC_ACCT_ID = #{chlId,jdbcType=VARCHAR}
         </if>
         AND psp.HODING_TYPE ='04'
+        <if test="tradeDate!=null">
+            AND psp.CDATE = TO_DATE(#{tradeDate},'yyyy-MM-dd')
+        </if>
         GROUP BY psp.FINPROD_ID
-        )table2 ON table2.FINPROD_ID=fdp.FINPROD_ID
+        )table2 ON table2.FINPROD_ID=fdp.PLEDGE_FINPROD_ID
         WHERE fdp.FINPROD_ID = #{splitTradeId,jdbcType=VARCHAR}
         and tpd.IS_CANCEL='N'
     </select>

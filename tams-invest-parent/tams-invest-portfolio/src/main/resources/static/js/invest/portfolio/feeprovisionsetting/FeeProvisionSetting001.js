@@ -38,7 +38,7 @@
                     { field : 'feeTypeStr', title : 'FeeProvisionSetting001.feeType', width : 100, sortField:'feeType'},
                     { field : 'positionStartDate', title : 'FeeProvisionSetting001.positionStartDate', width : 80, type:'date', sortField:'positionStartDate'},
                     { field : 'positionEndDate', title : 'FeeProvisionSetting001.positionEndDate', width : 80, type:'date', sortField:'positionEndDate'},
-                    { field : 'actPositionEndDate', title : 'FeeProvisionSetting001.actPositionEndDate', width : 130, type:'date', sortField:'actPositionEndDate'},
+                    // { field : 'actPositionEndDate', title : 'FeeProvisionSetting001.actPositionEndDate', width : 130, type:'date', sortField:'actPositionEndDate'},
                     { field : 'dealStatus', visible : false},
                     { field : 'feeType', visible : false },
                     { field : 'seqNo', visible : false }

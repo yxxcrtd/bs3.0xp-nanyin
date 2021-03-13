@@ -48,6 +48,7 @@ import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -384,7 +385,22 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
 //            }
 //        });
         //LOOP  质押券置换结果list
-        entity.getBussResultRepoSec().forEach(item->
+        List<PledgeBondInfoDto> resultList = new ArrayList<PledgeBondInfoDto>();
+        Map<String,List<PledgeBondInfoDto>> resultMap = entity.getBussResultRepoSec().stream().collect(JoyinCollectors.groupingBy(
+                x -> x.getFinprodId()));
+        for (String key: resultMap.keySet()){
+            if (resultMap.get(key) != null){
+                BigDecimal plgNum = BigDecimal.ZERO;
+                PledgeBondInfoDto dto = new PledgeBondInfoDto();
+                BeanUtils.copyProperties(resultMap.get(key).get(0),dto);
+                for(int i = 0;i< resultMap.get(key).size();i++ ){
+                    plgNum = plgNum.add(resultMap.get(key).get(i).getPledgePrin());
+                }
+                dto.setPledgePrin(plgNum);
+                resultList.add(dto);
+            }
+        }
+        resultList.forEach(item->
         {
             //1.质押券置换结果处理
             FinPledgeDisplaceResult finPledgeDisplaceResult=new FinPledgeDisplaceResult();

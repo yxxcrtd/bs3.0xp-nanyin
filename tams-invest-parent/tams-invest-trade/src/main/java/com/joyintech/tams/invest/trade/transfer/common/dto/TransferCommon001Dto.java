@@ -1,5 +1,7 @@
 package com.joyintech.tams.invest.trade.transfer.common.dto;
 
+import com.joyintech.framework.util.DateUtil;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -72,6 +74,14 @@ public class TransferCommon001Dto {
      */
     public Date getVdate() {
         return vdate;
+    }
+
+    public String getVdateStr() {
+        return DateUtil.format(vdate);
+    }
+
+    public String getMdateStr() {
+        return DateUtil.format(mdate);
     }
 
     /**

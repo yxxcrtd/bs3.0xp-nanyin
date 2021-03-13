@@ -112,7 +112,7 @@ public class PtlPositionAnalysis002Controller extends BaseController {
     public ResponseEntity<byte[]> export()
             throws Exception {
         return ptlPositionAnalysis002Service.export(this.getPageId(),
-                RequestUtil.getParameters(getRequest()));
+                RequestUtil.getParameters(getRequest()),"searchDate");
     }
 
 }

@@ -231,7 +231,12 @@ $(function() {
             }else if((ps == ps_T19 || ps == ps_T24)){
                 var tradeAmt = $('#tradeAmt').val();
                 if(unitCprice != null && unitCprice != '' && shareAmt){
-                    $('#tradeAmt').val(shareAmt*unitCprice).attr('disabled',true).trigger('blur');
+                	if(ps == ps_T19){
+                		$('#tradeAmt').val(shareAmt*unitCprice).attr('disabled',false).trigger('blur');
+                	}
+                	else{
+                		$('#tradeAmt').val(shareAmt*unitCprice).attr('disabled',true).trigger('blur');
+                	}
                     $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
                     $('#feeAmtRedem').change();
                 }else if(unitCprice != null && unitCprice != '' && unitCprice != 0 && tradeAmt){
@@ -469,10 +474,7 @@ $(function() {
          }
         
         if($("#ps").val()==ps_T19){
-        	setTimeout(function(){
-                $('#tradeAmt').attr('disabled',false);
-                $('#shareAmt').attr('disabled',true);
-        	},1000)
+            $('#shareAmt').attr('disabled',true);
         }
      });
  });

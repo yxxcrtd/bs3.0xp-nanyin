@@ -66,29 +66,31 @@ public class InvestFeePay002Validator implements BeanValidator {
         InvestFeePay002Dto investFeePay002Dto = (InvestFeePay002Dto)value;
         List<ValidMessage> validList = new ArrayList<ValidMessage>();
 
-        WflValidInputParameter parameter = new WflValidInputParameter();
-        parameter.setPageId("InvestFeePay002");
-        List<InvestFeePay002Dto> businessData = investFeePay002Service.getBusinessData(parameter);
-        if (businessData != null && businessData.size() > 0 && investFeePay002Dto != null){
-            for (InvestFeePay002Dto businessDatum : businessData) {
-                if (businessDatum.getAllData() != null
-                        && StringUtil.isNotEmpty(businessDatum.getAllData())
-                        && !StringUtil.equals(businessDatum.getAllData(), "")){
-                    try {
-                        Map<String, Object> dtos = JsonUtils.stringToMap(businessDatum.getAllData());
-                        if (null != dtos && !dtos.isEmpty()){
-                            //当登记托管机构，费用类型，支付日，证券账户都与流程中数据一致时，返回提示信息
-                            if (StringUtil.equals(dtos.get("feeType"),investFeePay002Dto.getFeeType())
-                            && StringUtil.equals(dtos.get("regTrustOrg"),investFeePay002Dto.getRegTrustOrg())
-                           // && StringUtil.equals(String.valueOf(dtos.get("payDate")),String.valueOf(investFeePay002Dto.getPayDate().getTime()))
-                            && StringUtil.equals(String.valueOf(dtos.get("startDate")),String.valueOf(investFeePay002Dto.getStartDate().getTime()))
-                                    && StringUtil.equals(dtos.get("secAcctId"),investFeePay002Dto.getSecAcctId())){
-                                validList.add(new ValidMessage(getMessage("FinProductFeePay002.workflowMsg")));
-                                return validList;
+        if(StringUtil.isEmpty(investFeePay002Dto.getTradeId())||!investFeePay002Dto.getOperateType().equals("submit")) {
+            WflValidInputParameter parameter = new WflValidInputParameter();
+            parameter.setPageId("InvestFeePay002");
+            List<InvestFeePay002Dto> businessData = investFeePay002Service.getBusinessData(parameter);
+            if (businessData != null && businessData.size() > 0 && investFeePay002Dto != null) {
+                for (InvestFeePay002Dto businessDatum : businessData) {
+                    if (businessDatum.getAllData() != null
+                            && StringUtil.isNotEmpty(businessDatum.getAllData())
+                            && !StringUtil.equals(businessDatum.getAllData(), "")) {
+                        try {
+                            Map<String, Object> dtos = JsonUtils.stringToMap(businessDatum.getAllData());
+                            if (null != dtos && !dtos.isEmpty()) {
+                                //当登记托管机构，费用类型，支付日，证券账户都与流程中数据一致时，返回提示信息
+                                if (StringUtil.equals(dtos.get("feeType"), investFeePay002Dto.getFeeType())
+                                        && StringUtil.equals(dtos.get("regTrustOrg"), investFeePay002Dto.getRegTrustOrg())
+                                        // && StringUtil.equals(String.valueOf(dtos.get("payDate")),String.valueOf(investFeePay002Dto.getPayDate().getTime()))
+                                        && StringUtil.equals(String.valueOf(dtos.get("startDate")), String.valueOf(investFeePay002Dto.getStartDate().getTime()))
+                                        && StringUtil.equals(dtos.get("secAcctId"), investFeePay002Dto.getSecAcctId())) {
+                                    validList.add(new ValidMessage(getMessage("FinProductFeePay002.workflowMsg")));
+                                    return validList;
+                                }
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    }catch (Exception e){
-                        e.printStackTrace();
                     }
                 }
             }

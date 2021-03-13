@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.trade.transfer.fund.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -134,17 +135,17 @@ public class FundAssetTransfer001Controller extends BaseController {
         if(StringUtil.isNotEmpty(fundDto.getTradePrin()) && StringUtil.isNotEmpty(fundDto.getRollablePrin()) && fundDto.getTradePrin().compareTo(fundDto.getRollablePrin())>0){
             errorList.add(new ValidMessage("tradePrin","交易份额不能大于剩余可转仓份额！"));
         }
-        //转仓交易份额不能大于组合剩余本金
-        if(StringUtil.isNotEmpty(fundDto.getTradeAmt())&&StringUtil.isNotEmpty(bussTrdAvailableCashQuery)&&StringUtil.isNotEmpty(bussTrdAvailableCashQuery.getAvalibleCash())){
-            if(fundDto.getTradeAmt().compareTo(bussTrdAvailableCashQuery.getAvalibleCash())>0){
-                errorList.add(new ValidMessage("bussTrdAvailableCashQuery_avalibleCash","组合剩余现金不足！"));
-            }
-        }
         if(errorList!=null && errorList.size()>0){
             result.setStatuCode(500);
             result.setErrorList(errorList);
         }
         else{
+            //转仓交易份额不能大于组合剩余本金
+            if(StringUtil.isNotEmpty(fundDto.getTradeAmt())&&StringUtil.isNotEmpty(bussTrdAvailableCashQuery)&&StringUtil.isNotEmpty(bussTrdAvailableCashQuery.getAvalibleCash())){
+                if(fundDto.getTradeAmt().compareTo(bussTrdAvailableCashQuery.getAvalibleCash())>0){
+                    result.setMessage("组合剩余现金不足！", MessageType.确认消息);
+                }
+            }
             result.setStatuCode(200);
             listInfoDto = fundAssetTransfer001Service.setProjectListInfoDto(fundDto);
             listInfoDtoList.add(listInfoDto);

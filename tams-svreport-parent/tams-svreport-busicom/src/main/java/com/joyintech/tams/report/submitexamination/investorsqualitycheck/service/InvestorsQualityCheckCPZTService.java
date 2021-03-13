@@ -2,8 +2,6 @@ package com.joyintech.tams.report.submitexamination.investorsqualitycheck.servic
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -13,10 +11,8 @@ import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.Inv
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 产品状态合格率Service
@@ -24,7 +20,7 @@ import java.util.stream.Collectors;
  *
  */
 @Service
-public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckCommonService{
+public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseService {
     
 	@Autowired
 	private InvestorsQualityCheck001Mapper investorsQualityCheck001Mapper;
@@ -36,7 +32,7 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckCommo
         int pageSize = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         // 查询不合格记录
         dealParamMap(param);
-        Page<InvestorsQualityCheck001Dto> page = super.queryForPage(pageNum, pageSize, () -> investorsQualityCheck001Mapper.searchCPZTHGL(param));
+        Page<InvestorsQualityCheck001Dto> page = super.queryForPage(pageNum, pageSize, () -> investorsQualityCheck001Mapper.searchCPZT(param));
         // 数据字典转换
         for (InvestorsQualityCheck001Dto dto : page.getRoot()) {
             dto.setPrdIssueSts(SysDataUtil.getNameFromDataDict(DictCode.发行状态, dto.getPrdIssueSts()));
@@ -47,20 +43,14 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckCommo
 
     @Override
     public InvestorsQualityCheck001Dto cntHGL(Map<String, Object> param) {
-        InvestorsQualityCheck001Dto dto = new InvestorsQualityCheck001Dto();
         // 查询所有记录
         dealParamMap(param);
-        List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchCPZTHGL(param);
+        List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchCPZT(param);
         // 查询不合格记录
         param.put("queryFlag", "1");
-        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchCPZTHGL(param);
+        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchCPZT(param);
 
-        dto.setUnQualified(String.valueOf(unQualifiedList.size()));
-        dto.setTotal(String.valueOf(allList.size()));
-        dto.setRate(ArithmeticUtil.subtract(new BigDecimal(100), ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal(unQualifiedList.size()), new BigDecimal(100)), new BigDecimal(100), 2)).toPlainString());
-        dto.setPageType("4");
-
-        return dto;
+        return cntHGLComm(allList, unQualifiedList, CPZT);
     }
 
     @Override

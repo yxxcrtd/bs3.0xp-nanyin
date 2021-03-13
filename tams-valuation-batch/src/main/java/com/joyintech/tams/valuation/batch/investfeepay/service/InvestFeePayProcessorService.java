@@ -546,13 +546,23 @@ public class InvestFeePayProcessorService {
 						}
 					}
 					// 交易手续费 交易各类费用交易手续费不为空
-					else if (DictCodeBaseSubjectNatrue.应付交易手续费.getValue().equals(fee.getBaseSubjectNature())
+					else if ((DictCodeBaseSubjectNatrue.应付中债登交易手续费.getValue().equals(fee.getBaseSubjectNature())
+							|| DictCodeBaseSubjectNatrue.应付上清所交易手续费.getValue().equals(fee.getBaseSubjectNature()))
 							&& !StringUtils.isEmpty(bokDetailId)) {
 						// 变量.交易各种费用.交易手续费
 				        accountSceneMap.put(BookConstant.BOK_DETAIL_TRADEFEE,
 				            dealTypesFeeDto.getTransactionFeeCode());
 						if (DictCodeList.是否_是.getValue().equals(item.getIsClean())) {
 							SubjectBalanceSearchDto searchDto = setSubjectBalanceSearchDto(item, fee, bokDetailId);
+							if (DictCodeList.登记托管机构_上海清算所.getValue().equals(item.getRegistOrg())) {
+								List<String> baseSubjectNatureList = new ArrayList<>();
+								baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.应付上清所交易手续费.getValue());
+								searchDto.setBaseSubjectNatureList(baseSubjectNatureList);
+							} else if (DictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue().equals(item.getRegistOrg())) {
+								List<String> baseSubjectNatureList = new ArrayList<>();
+								baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.应付中债登交易手续费.getValue());
+								searchDto.setBaseSubjectNatureList(baseSubjectNatureList);
+							}
 							// 调用共通方法：科目余额汇总查询
 							Map<String, BigDecimal> map = accountingCommonService.getSubjectBalanceCollection(searchDto,
 									DictCodeList.余额方向_贷方.getValue(),null);

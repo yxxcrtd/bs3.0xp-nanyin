@@ -295,7 +295,8 @@ $(function() {
           }else{
               for(var i=0;i<rows.length;i++){
                 if (!(rows[i].sendStatus == '01'
-                    || (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04')))) {
+                    || (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04'
+                                                       || rows[i].submitFeedbackStatus == '发送失败' || rows[i].submitFeedbackStatus == '中债退回')))) {
                     Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理，请重新选择！");
                     return;
                 }

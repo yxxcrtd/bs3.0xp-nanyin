@@ -180,7 +180,7 @@
 	</select>
 
 	<!-- 产品状态合格率 -->
-	<select id="searchCPZTHGL" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+	<select id="searchCPZT" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 		WITH
 			objRec AS
 			(
@@ -245,6 +245,124 @@
 				objRec.MDATE IS NOT NULL
 			AND objRec.MDATE &lt; objRec.HOLD_DATE))
 		</if>
+	</select>
+
+	<!-- 投资者数量匹配合格率 -->
+	<select id="searchSLPP" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+		WITH
+			OBJREC AS
+			(
+				SELECT
+					A.PROD_REGIST_CODE,
+					A.SINGLE_TOTAL,
+					A.LEGAL_TOTAL,
+					A.UNLEGAL_TOTAL,
+					B.VDATE,
+					MAX(A.STATUS)
+				FROM
+					CHB_PRD_RAISETOT_SUB A
+				LEFT JOIN
+					CHB_PRD_BASEINFO B
+				ON
+					A.PROD_REGIST_CODE = B.REG_CODE
+				WHERE
+					TO_DATE(TO_CHAR(B.VDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+				<if test="orgCodeList != null and orgCodeList.size() > 0">
+					<foreach collection="orgCodeList" item="orgCode" open=" AND B.ORG_CODE IN (" close=")" separator=",">
+						#{orgCode,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				AND A.STATUS IN (#{statusNew,jdbcType=VARCHAR}, #{statusModify,jdbcType=VARCHAR})
+				GROUP BY
+					A.PROD_REGIST_CODE,
+					A.SINGLE_TOTAL,
+					A.LEGAL_TOTAL,
+					A.UNLEGAL_TOTAL,
+					B.VDATE
+			)
+		<choose>
+			<when test="queryFlag != null and queryFlag == '1'">
+				SELECT
+					INFO.prdRegistCode,
+					INFO.prdSingleTotal,
+					INFO.prdLegalTotal,
+					INFO.prdUnLegalTotal,
+					INFO.prdVDate,
+					INFO.indentifyMark,
+					INFO.holdDate,
+					INFO.investSingleTotal,
+					INFO.investLegalTotal,
+					INFO.investUnLegalTotal,
+					<!-- 比如产品端个人投资者数≠持有端个人投资者数，则错误记录数加1 -->
+					((case when INFO.prdSingleTotal != INFO.investSingleTotal then 1 else 0 end)
+					+ (case when INFO.prdLegalTotal != INFO.investLegalTotal then 1 else 0 end)
+					+ (case when INFO.prdUnLegalTotal != INFO.investUnLegalTotal then 1 else 0 end)) errRecTotal
+					FROM (
+						SELECT
+							tmp.PROD_REGIST_CODE prdRegistCode,
+							tmp.SINGLE_TOTAL prdSingleTotal,
+							tmp.LEGAL_TOTAL prdLegalTotal,
+							tmp.UNLEGAL_TOTAL prdUnLegalTotal,
+							tmp.VDATE prdVDate,
+							tmp.INDENTIFY_MARK indentifyMark,
+							tmp.HOLD_DATE holdDate,
+							SUM(case when instr('${prdSingleTotalStr}', C.HOLDER_TYPE) > 0 then 1 else 0 end) investSingleTotal,
+							SUM(case when instr('${prdLegalTotalStr}', C.HOLDER_TYPE) > 0 then 1 else 0 end) investLegalTotal,
+							SUM(case when instr('${prdUnLegalTotalStr}', C.HOLDER_TYPE) > 0 then 1 else 0 end) investUnLegalTotal,
+							MAX(c.update_time)
+						FROM
+						(
+							SELECT
+								A.PROD_REGIST_CODE,
+								A.SINGLE_TOTAL,
+								A.LEGAL_TOTAL,
+								A.UNLEGAL_TOTAL,
+								A.VDATE,
+								B.INDENTIFY_MARK,
+								B.HOLD_DATE,
+								MAX(B.STATUS)
+							FROM
+							OBJREC A
+							INNER JOIN
+								CHB_INVESTHOLD_INFO_SUB B
+							ON
+								A.PROD_REGIST_CODE = B.PRD_REGIST_CODE
+							AND TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+							GROUP BY
+								A.PROD_REGIST_CODE,
+								A.SINGLE_TOTAL,
+								A.LEGAL_TOTAL,
+								A.UNLEGAL_TOTAL,
+								A.VDATE,
+								B.INDENTIFY_MARK,
+								B.HOLD_DATE ) tmp
+						INNER JOIN
+							CHB_EQU_SUB C
+						ON
+							tmp.INDENTIFY_MARK = c.INDENTIFY_MARK
+						GROUP BY
+							tmp.PROD_REGIST_CODE,
+							tmp.SINGLE_TOTAL,
+							tmp.LEGAL_TOTAL,
+							tmp.UNLEGAL_TOTAL,
+							tmp.VDATE,
+							tmp.INDENTIFY_MARK,
+							tmp.HOLD_DATE
+					) INFO
+					WHERE INFO.prdSingleTotal != INFO.investSingleTotal
+					or INFO.prdLegalTotal != INFO.investLegalTotal
+					or INFO.prdUnLegalTotal != INFO.investUnLegalTotal
+			</when>
+			<otherwise>
+				SELECT
+					PROD_REGIST_CODE prdRegistCode,
+					SINGLE_TOTAL prdSingleTotal,
+					LEGAL_TOTAL prdLegalTotal,
+					UNLEGAL_TOTAL prdUnLegalTotal,
+					VDATE prdVDate
+				FROM OBJREC
+			</otherwise>
+		</choose>
 	</select>
 
 </mapper>

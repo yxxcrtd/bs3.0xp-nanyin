@@ -350,18 +350,7 @@ $(function() {
 			isNew = false;
 		}
 		if(isNew && feeType == '08'){
-			$('#InvestFeePay002_div_positionStartDate').hide();
-			$('#InvestFeePay002_div_positionEndDate').hide();
-			$('#InvestFeePay002_div_payAmt').hide();
-			$('#InvestFeePay002_div_adjustAmt').hide();
-			$('#InvestFeePay002_div_calculate').hide();
 			feeInfoTable.clear();
-			feeInfoTable.showColumns([{field:'operation', visible:true}],true);
-			feeInfoTable.showColumns([{field:'ptlId', visible:true}],true);
-			feeInfoTable.showColumns([{field:'portFolioName', visible:false}],true);
-			feeInfoTable.showColumns([{field:'payAmt', visible:false}],true);
-			feeInfoTable.showColumns([{field:'adjustAmt', visible:false}],true);
-			feeInfoTable.showColumns([{field:'status', visible:false}],true) ;			
 		}		
 	}
 	//add by yujiaping 20210303 ZGBSS-654 费用类型选择【账户维护费】在没有待支付的数据时修改支付日清空组合信息 end
@@ -628,7 +617,7 @@ $(function() {
 	};
 	
 	function saveOrSubmitAction(operateType){
-		if(!isNew && $("#InvestFeePay002_feeType").val() == '08'){
+		if($('#InvestFeePay002_hidden_operateType').val() === 'confirm'){
 			var feeInfoTableList=feeInfoTable.getAllRows();
 			var sum=0;
 			for(var i=0;i<feeInfoTableList.length;i++){
@@ -712,6 +701,9 @@ $(function() {
 			$('#InvestFeePay002_feeType').prop("disabled", true);
 			$('#InvestFeePay002_regTrustOrg').prop("disabled", true);
 			$('#InvestFeePay002_positionEndDate').prop("disabled", true);
+		}
+		if(feeType == '06' || feeType == '07'){
+			$('#InvestFeePay002_secAcctId').prop("disabled", true);
 		}
 		// 费用类型
 		$('#InvestFeePay002_feeType').change(feeTypeChangeAction);

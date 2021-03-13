@@ -6,10 +6,7 @@
 package com.joyintech.service.trade.common.controller;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.service.InvestPeriodCommonService;
@@ -234,14 +231,25 @@ public class TrdCommonBaseController {
     @DTXTransaction
     @PostMapping("doRevokeComplete")
     public String doRevokeComplete(@RequestBody Map<String, Object> params) {
-        String workflowId = (String) params.get("workflowId");
-        if(StringUtil.isNotEmpty(workflowId)) {
-            investPeriodCommonService.deleteByWorkflowId(workflowId);
-        }
+        investPeriodCommonService.deleteByWorkflowId((String) params.get("workflowId"));
         TrdFinProductDealTotal trdFinProductDealTotal = investPeriodCommonService.revoke汇总和交易相关表((String) params.get("bizCode"),
                 (String) params.get("updateUser"), (String) params.get("revokeReason"), null, null);
         return Boolean.TRUE.toString();
     }
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doRevokeReverseComplete")
+    public String doRevokeReverseComplete(@RequestBody Map<String, Object> params) {
+        String workflowId = (String) params.get("workflowId");
+        if(StringUtil.isNotEmpty(workflowId)) {
+            investPeriodCommonService.deleteByWorkflowId(workflowId);
+        }
+        TrdFinProductDealTotal trdFinProductDealTotal = investPeriodCommonService.revokeReverseTradeTable((String) params.get("bizCode"),
+                (String) params.get("updateUser"), (String) params.get("revokeReason"), null, null,(String) params.get("tradeDealNoR"));
+        return Boolean.TRUE.toString();
+    }
+
 
     /**
      * 根据工作流代码查询金融产品交易附属业务流程

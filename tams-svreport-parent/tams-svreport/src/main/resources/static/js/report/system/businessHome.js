@@ -666,5 +666,11 @@ var getHoldInfoSourceInfoUrl = basePath + "system/businessHome/getHoldInfoSource
             };
             top.tab.tabAdd(newTab);
         });
+        //使主页自适应高度
+        $(window.parent.document).find("iframe").load(function() {
+            $("#carouselHome",parent.window.document).css("height","100%");
+            var frameHeight = $(window.parent.document).height()-90;
+            $("[pageid='SvreportHome002']",parent.window.document).css("height",frameHeight);
+        });
     });
 }());

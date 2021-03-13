@@ -2663,7 +2663,7 @@ var table;
                     if($("#entrustId").val() != ''){
                         $("#tradePlat").attr("disabled", true);
                     }else{
-                        $("#tradePlat").attr("disabled", false);
+                        //$("#tradePlat").attr("disabled", false);
                     }
                     // 3)无交易成交单 此项不可填
                     // $("#fTradeId").val("").trigger("change").attr("disabled", true);

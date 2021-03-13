@@ -102,9 +102,20 @@ public class InvestorsQualityCheck001Controller extends BaseController{
      * @return Page
      */
     @ResponseBody
-    @RequestMapping("/searchTableCPZTHGL")
-    public Page<InvestorsQualityCheck001Dto> searchTableCPZTHGL(){
-        return investorsQualityCheckMService.searchTableCPZTHGL(RequestUtil.getPageParam());
+    @RequestMapping("/searchTableCPZT")
+    public Page<InvestorsQualityCheck001Dto> searchTableCPZT(){
+        return investorsQualityCheckMService.searchTableCPZT(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 查询列表
+     * --投资者数量匹配合格率
+     * @return Page
+     */
+    @ResponseBody
+    @RequestMapping("/searchTableSLPP")
+    public Page<InvestorsQualityCheck001Dto> searchTableSLPP(){
+        return investorsQualityCheckMService.searchTableSLPP(RequestUtil.getPageParam());
     }
     
 }
