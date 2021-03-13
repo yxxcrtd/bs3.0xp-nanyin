@@ -166,8 +166,9 @@ public class InvestFeePay001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getSecAcctIdS")
-    public List<SelectOptionDto> getSecAcctIdS(@RequestParam(required = false) String search)
+    public Page<SelectOptionDto> getSecAcctIdS(@RequestParam(required = false) String search)
         throws Exception {
+
         //Map<String, Object> param1 = RequestUtil.getPageParam();
         List<SuggestDto> temp = investFeePay001Service.getSecAcctId(search);
         List<SelectOptionDto> select = new ArrayList<SelectOptionDto>();
@@ -177,7 +178,11 @@ public class InvestFeePay001Controller extends BaseController {
         	sdto.setText(dto.getShortName());
         	select.add(sdto);
         }
-        return select;
+        Page page = new Page();
+        page.setRoot(select);
+        page.setPage(1);
+        page.setTotal(1);
+        return page;
     }
 
     /**
