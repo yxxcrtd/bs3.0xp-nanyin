@@ -675,7 +675,10 @@ $(function() {
             	}
             }
         }
-        
+
+        if($('#InvestFeePay002_feeType').val()=='08' && !$('#InvestFeePay002_positionStartDate').val()){
+			object.endDate = '';
+		}
         Joyin.ajaxJson(basePath + 'invest/portfolio/feepay/InvestFeePay002/check',object, function(result) {
             Joyin.confirm("是否确认？", function() {
                     if(operateType === 'save') {
@@ -701,6 +704,20 @@ $(function() {
 			$('#InvestFeePay002_feeType').prop("disabled", true);
 			$('#InvestFeePay002_regTrustOrg').prop("disabled", true);
 			$('#InvestFeePay002_positionEndDate').prop("disabled", true);
+			if(!$('#InvestFeePay002_positionStartDate').val()){
+				$('#InvestFeePay002_div_positionStartDate').hide();
+				$('#InvestFeePay002_div_positionEndDate').hide();
+				$('#InvestFeePay002_div_payAmt').hide();
+				$('#InvestFeePay002_div_adjustAmt').hide();
+				$('#InvestFeePay002_div_calculate').hide();
+				feeInfoTable.showColumns([{field:'operation', visible:true}]);
+				feeInfoTable.showColumns([{field:'ptlId', visible:true}]);
+				feeInfoTable.showColumns([{field:'portFolioName', visible:false}]);
+				feeInfoTable.showColumns([{field:'payAmt', visible:false}]);
+				feeInfoTable.showColumns([{field:'adjustAmt', visible:false}]);
+				feeInfoTable.showColumns([{field:'status', visible:false}]) ;
+			}
+			feeInfoTable.showColumns([{field:'status', visible:false}]);
 		}
 		if(feeType == '06' || feeType == '07'){
 			$('#InvestFeePay002_secAcctId').prop("disabled", true);
