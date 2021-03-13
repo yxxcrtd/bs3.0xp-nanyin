@@ -42,7 +42,7 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseS
     }
 
     @Override
-    public Page<InvestorsQualityCheck001Dto> queryErrorRecList(Map<String, Object> param) {
+    public List<InvestorsQualityCheck001Dto> queryErrorRecList(Map<String, Object> param) {
         return null;
     }
 

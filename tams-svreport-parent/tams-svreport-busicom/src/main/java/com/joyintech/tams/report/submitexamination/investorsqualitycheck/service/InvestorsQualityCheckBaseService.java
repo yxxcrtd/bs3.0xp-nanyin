@@ -34,7 +34,7 @@ public abstract class InvestorsQualityCheckBaseService extends BaseService<Inves
      * 查询数据
      * @return 数据结果(不分页)
      */
-    public abstract Page<InvestorsQualityCheck001Dto> queryErrorRecList(Map<String, Object> param);
+    public abstract List<InvestorsQualityCheck001Dto> queryErrorRecList(Map<String, Object> param);
 
 
     /**
