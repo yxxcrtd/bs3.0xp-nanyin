@@ -1005,6 +1005,12 @@ var table;
                 }
             }
         });
+        
+        var select2Flag = $("#secManageAcctId").hasClass("select2-hidden-accessible");
+        if(select2Flag){
+        	$("#secManageAcctId").select2("val", " "); 
+        }
+        
     });
     /**
      * 资产名称查看
