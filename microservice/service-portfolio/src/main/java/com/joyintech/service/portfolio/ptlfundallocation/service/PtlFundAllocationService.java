@@ -162,22 +162,25 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
      * @since 1.0
      */
     public List<SelectOptionDto> getCounterAcctNo(Map<String, Object> map) {
-        if (map.get("payType") != null && StringUtil.equals(map.get("payType"), DictCodeListExt1.指令类型_银证转账_银转证.getValue())) {
+       /* if (map.get("payType") != null && StringUtil.equals(map.get("payType"), DictCodeListExt1.指令类型_银证转账_银转证.getValue())) {
             map.put("acctType", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
 //            map.put("acctType1", DictCodeListExt1.资金账户类型_结算备付金账户.getValue());
-        } else if (map.get("payType") == null || StringUtil.isEmpty((String) map.get("payType")) ||
+        } else */
+    	if (map.get("payType") == null || StringUtil.isEmpty((String) map.get("payType")) ||
                 map.get("portfolioId") == null || StringUtil.isEmpty((String) map.get("portfolioId"))) {
             return null;
-        } else {
+        } else if (map.get("payType") != null && StringUtil.equals(map.get("payType"), DictCodeListExt1.指令类型_银证转账_银转证.getValue())) {
+            return ptlFundAllocationMapper.getPtlSecTrdAcctNo(map);
+       }
+    	else {
             map.put("acctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
+            return ptlFundAllocationMapper.getCounterAcctNo(map);
         }
 
 //        // 资金的划拨管理，银证转账的收款方账户，应该关联系统中的证券托管户配置的交易结算户；证银转账，付款方账户关联系统中证券托管户配置的交易结算户
 //        if (map.get("payType") != null && StringUtil.equals(map.get("payType"), DictCodeListExt1.指令类型_银证转账_银转证.getValue())) {
 //            return ptlFundAllocationMapper.getPtlSecTrdAcctNo(map);
 //        }
-
-        return ptlFundAllocationMapper.getCounterAcctNo(map);
     }
 
     /**
@@ -191,20 +194,18 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
     public List<SelectOptionDto> getMyAcctNo(Map<String, Object> map) {
         if (map.get("payType") != null && StringUtil.equals(map.get("payType"), DictCodeListExt1.指令类型_银证转账_银转证.getValue())) {
             map.put("acctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
-//            map.put("acctType1", DictCodeListExt1.资金账户类型_结算备付金账户.getValue());
+            return ptlFundAllocationMapper.getMyAcctNo(map);
         } else if (map.get("payType") == null || StringUtil.isEmpty((String) map.get("payType")) ||
                 map.get("portfolioId") == null || StringUtil.isEmpty((String) map.get("portfolioId"))) {
             return null;
         } else {
-            map.put("acctType", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+        	return ptlFundAllocationMapper.getPtlSecTrdAcctNo(map);
         }
 
 //        // 资金的划拨管理，银证转账的收款方账户，应该关联系统中的证券托管户配置的交易结算户；证银转账，付款方账户关联系统中证券托管户配置的交易结算户
 //        if (map.get("payType") != null && StringUtil.equals(map.get("payType"), DictCodeListExt1.指令类型_银证转账_证转银.getValue())) {
 //            return ptlFundAllocationMapper.getPtlSecTrdAcctNo(map);
-//        }
-
-        return ptlFundAllocationMapper.getMyAcctNo(map);
+//        }        
     }
 
     /**
