@@ -274,6 +274,7 @@
             <if test="portfolioId != null and !portfolioId.isEmpty()">
                 AND A.PORTFOLIO_ID = #{portfolioId}
             </if>
+              AND B.TRADE_PLACE IN ('03','04')
         </where>
     </select>
 
