@@ -30,6 +30,12 @@ public abstract class InvestorsQualityCheckBaseService extends BaseService<Inves
      */
     public abstract Page<InvestorsQualityCheck001Dto> queryPage(Map<String, Object> param);
 
+    /**
+     * 查询数据
+     * @return 数据结果(不分页)
+     */
+    public abstract Page<InvestorsQualityCheck001Dto> queryErrorRecList(Map<String, Object> param);
+
 
     /**
      * 汇总计算

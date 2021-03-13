@@ -51,6 +51,11 @@ public class InvestorsQualityCheckSLPPService extends InvestorsQualityCheckBaseS
     }
 
     @Override
+    public Page<InvestorsQualityCheck001Dto> queryErrorRecList(Map<String, Object> param) {
+        return null;
+    }
+
+    @Override
     public InvestorsQualityCheck001Dto cntHGL(Map<String, Object> param) {
         // 查询所有记录
         dealParamMap(param);
