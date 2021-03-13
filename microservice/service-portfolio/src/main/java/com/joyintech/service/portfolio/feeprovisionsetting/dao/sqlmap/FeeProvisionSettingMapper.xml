@@ -184,7 +184,8 @@
         SEC_ACCT_ID = #{secAcctId} and FEE_TYPE = #{feeType}
         and (
         (#{positionStartDate} &gt;= POSITION_START_DATE and #{positionStartDate} &lt;= ACT_POSITION_END_DATE) or
-        (#{positionEndDate} &gt;= POSITION_START_DATE and #{positionEndDate} &lt;= ACT_POSITION_END_DATE)
+        (#{positionEndDate} &gt;= POSITION_START_DATE and #{positionEndDate} &lt;= ACT_POSITION_END_DATE) or
+        (#{positionStartDate} &lt;= POSITION_START_DATE and #{positionEndDate} &gt;= ACT_POSITION_END_DATE)
         )
         and DEAL_STATUS != '03'
         <if test="seqNo != null and seqNo != ''">
@@ -202,7 +203,8 @@
         SEC_ACCT_ID = #{secAcctId} and FEE_TYPE = #{feeType}
         and (
         (#{positionStartDate} &gt;= POSITION_START_DATE and #{positionStartDate} &lt;= ACT_POSITION_END_DATE) or
-        (#{positionEndDate} &gt;= POSITION_START_DATE and #{positionEndDate} &lt;= ACT_POSITION_END_DATE)
+        (#{positionEndDate} &gt;= POSITION_START_DATE and #{positionEndDate} &lt;= ACT_POSITION_END_DATE) or
+        (#{positionStartDate} &lt;= POSITION_START_DATE and #{positionEndDate} &gt;= ACT_POSITION_END_DATE)
         )
         and DEAL_STATUS != '03'
         <if test="seqNo != null and seqNo != ''">
