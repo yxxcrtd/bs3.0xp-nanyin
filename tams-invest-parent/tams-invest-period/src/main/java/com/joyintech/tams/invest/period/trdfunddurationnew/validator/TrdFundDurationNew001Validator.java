@@ -138,9 +138,13 @@ public class TrdFundDurationNew001Validator implements BeanValidator{
 
             Map<String,FinAssetIntInfo> checkListMap=new HashMap<String,FinAssetIntInfo>();
             for(FinAssetIntInfo finAssetIntInfo : dto.getFinAssetIntInfoList()){
+                if(StringUtil.isEmpty(finAssetIntInfo.getBonusMode())){
+                    messageList.add(new ValidMessage("分红类型不能为空!"));
+                    break;
+                }
                 String keytemp = finAssetIntInfo.getPortfolioId()+finAssetIntInfo.getSecAcctId()+finAssetIntInfo.getChIld()+finAssetIntInfo.getBonusMode();
                 if(checkListMap.containsKey(keytemp)){
-                    messageList.add(new ValidMessage("同一个组合、同一个证券账户/通道不能存在两种分红类型"));
+                    messageList.add(new ValidMessage("同一个组合、同一个证券账户/通道不能存在两种分红类型!"));
                     break;
                 }else{
                     checkListMap.put(keytemp, finAssetIntInfo);
