@@ -38,6 +38,15 @@ $(function() {
 	        object.entrustNum = entrustNum; // 委托金额
 	        object.entrustIntRate = entrustIntRate; // 委托所输利率
 	        object.avalibleCash = $("#bussTrdAvailableCashQuery_avalibleCash").val(); // 组合T日可用现金
+	       
+	        //TISHKBS-1855 start
+    		var isGuarantee = $('#portfolioId').select2('data')[0].object;
+            var optFeePayType = $('#optFeePayType').val();
+            if(isGuarantee == YES_OR_NO_Y || optFeePayType == OPT_FEE_PAY_TYPE_02){
+            	object.bussTrdTransferOrder = new Array();
+            }
+	        //TISHKBS-1855 end
+	        
 	        if(FileCommon) {
 	            object.fileArray = FileCommon.getUploadFileInfo();
 	        }
