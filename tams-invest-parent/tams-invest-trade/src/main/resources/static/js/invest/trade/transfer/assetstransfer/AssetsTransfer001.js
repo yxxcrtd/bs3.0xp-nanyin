@@ -315,12 +315,15 @@
                 if (selArr[0].assetType == PINAN_ASSET_TYPE_F05) {
                     var object = {selectedItem: selArr, operateType: "delete"};//请求参数
                     object.selectedItem[0].elementId = "TrdDepositInvestTrade001_btn_revoke";
+                    object.finprodId = selArr[0].finprodId;
+                    object.tradeDate = selArr[0].tradeDate;
+                    object.portfolioId= selArr[0].portfolioId;
                     Joyin.ajaxJson(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/check', object, function (result) {//数据验证
                         Joyin.prompt(JoyinUtil.getLabel('TrdDepositInvestTrade001.cancelText'), 0, function (result) {
                             for (var select in object.selectedItem) {
                                 object.selectedItem[select].cancelRemark = result;
                             }
-                            WorkFlow.doDeleteList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_revoke", "TrdDepositInvestTrade002");//删除
+                            WorkFlow.doRevokeList(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade001/delete', object, "TrdDepositInvestTrade001_btn_revoke", "TrdDepositInvestTrade002");//删除
                         });
                     });
                 }
