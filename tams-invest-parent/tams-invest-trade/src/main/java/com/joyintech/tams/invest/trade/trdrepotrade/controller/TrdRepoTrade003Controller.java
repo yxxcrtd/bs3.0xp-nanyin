@@ -803,12 +803,12 @@ public class TrdRepoTrade003Controller extends BaseController {
 //                }
 //            }
             
-            for(int j=0;j<dto.getBussTrdTransferOrder().size();j++){
-                if(!dto.getPledgeBondList().get(i).getPortfolioId().equals(dto.getBussTrdTransferOrder().get(j).getPortfolioId())){
-                    dto.getBussTrdTransferOrder().remove(j);
-                    j--;
-                }
-            }
+//            for(int j=0;j<dto.getBussTrdTransferOrder().size();j++){
+//                if(!dto.getPledgeBondList().get(i).getPortfolioId().equals(dto.getBussTrdTransferOrder().get(j).getPortfolioId())){
+//                    dto.getBussTrdTransferOrder().remove(j);
+//                    j--;
+//                }
+//            }
             
 
 //            for(int j=0;j<dto1.size();j++){
