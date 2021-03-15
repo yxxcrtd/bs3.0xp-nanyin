@@ -83,6 +83,11 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
  	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
+	 * 白名单校验正则表达式
+	 */
+	private static final String whitePattern = "^[\\u4e00-\\u9fa5\\ue815-\\ue864\\uff01-\\uff5e\\uffe0-\\uffe5\\u3000-\\u3003\\u3005-\\u3017\\u301d-\\u301e\\u2010\\u2013-\\u2016\\u2018-\\u2019\\u201c-\\u201d\\u2025-\\u2026\\u2030\\u2032-\\u2033\\u2035\\u203b\\u00b7\\u0030-\\u0039\\u0041-\\u005a\\u0061-\\u007a\\u2160-\\u216b\\u0020-\\u0026\\u0028-\\u007B\\u007D\\u007E]{0,}$";
+
+	/**
 	 *
 	 * @param pageParam
 	 * @param sendChbFlag 是否直连发送：直连发送数据字典不需要转成code value形式；手工报送则需要
@@ -633,14 +638,21 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				if (entry.getName().indexOf("/") == entry.getName().lastIndexOf("/")){
 					ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderName);
 					if (chbPrdDeclareRegFileCode != null && entry.getSize() > chbPrdDeclareRegFileCode.getFileSize() * 1024 * 1024){
-						fileCheckMsg.append("文件大小超过" + chbPrdDeclareRegFileCode.getFileSize() + "M（" + entry.getName() + "）。");
+						fileCheckMsg.append("文件（" + entry.getName() + "）大小超过" + chbPrdDeclareRegFileCode.getFileSize() + "M。");
 						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
 					}
 					String fileType = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().length());
 					if (chbPrdDeclareRegFileCode != null && chbPrdDeclareRegFileCode.getFileType().indexOf(fileType) < 0){
-						fileCheckMsg.append(entry.getName() + "文件的扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。" );
+						fileCheckMsg.append("文件（" + entry.getName() + "）扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。" );
 						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
 					}
+					// add by zhangliang 20210315 上传九大附件时，需要对每个附件的名称进行白名单检查 start
+					String fileName = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().lastIndexOf("."));
+					if (!fileName.matches(whitePattern)){
+						fileCheckMsg.append("文件（" + fileName + "）必须填写白名单中的文字。");
+						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+					}
+					// add by zhangliang 20210315 上传九大附件时，需要对每个附件的名称进行白名单检查 end
 					if (fileExistsMap.containsKey(folderName)){
 						List<String> folderNameList = new ArrayList<>(fileExistsMap.get(folderName));
 						folderNameList.add(entry.getName().substring(folderName.length() + 1));
@@ -939,6 +951,14 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
 				continue;
 			}
+			// add by zhangliang 20210315 上传九大附件时，需要对每个附件的名称进行白名单检查 start
+			String singleFileName = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().lastIndexOf("."));
+			if (!singleFileName.matches(whitePattern)){
+				fileCheckMsg.append("文件名称（" + singleFileName + "）必须填写白名单中的文字。");
+				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
+				continue;
+			}
+			// add by zhangliang 20210315 上传九大附件时，需要对每个附件的名称进行白名单检查 end
 
 			String fileName = entry.getName();
 			// 带产品代码前缀的文件，放到指定产品代码下
