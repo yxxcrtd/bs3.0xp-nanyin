@@ -2897,7 +2897,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     investdeal.F_TRADE_ID F_TRADE_CODE
     ,FRA.PAY_TYPE
         ,case 
-        when investdeal.CUR_ASSET_TYPE not in ('01','02','03','04','05','06','07','08') then null
+        when investdeal.CUR_ASSET_TYPE not in ('01','02','03','04','05','06','07','08','09') then null
         else 
             case when investdeal.INVEST_VARIETY = '01' /*债券*/ then decode(investdeal.INVEST_TYPE,'HTM','02','TRA','01','AFS','01')
                  when investdeal.INVEST_VARIETY in ('03','06','07','08','09','10','11','12','15') then '02'
