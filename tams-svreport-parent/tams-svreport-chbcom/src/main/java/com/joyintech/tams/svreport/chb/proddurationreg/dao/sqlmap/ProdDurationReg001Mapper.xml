@@ -264,12 +264,10 @@
       from CHB_PRD_DEAL_SUB
       where 1 =1
        <if test="registList !=null and registList.size()>0">
-          <foreach collection="registList" item="regist" open="and PROD_ID IN (" separator=","  close=")">
-            #{regist.prodId,jdbcType=VARCHAR}
-          </foreach>
-           <foreach collection="registList" item="regist" open="and VDATE IN (" separator=","  close=")">
-            to_date(#{regist.vdate,jdbcType=VARCHAR},'yyyyMMdd')
-          </foreach>
+		   <foreach collection="registList" item="regist" open="and ( (" separator=") or ("  close=") )">
+			   (PROD_ID || to_char(VDATE, 'yyyyMMdd')) = #{regist.prodId,jdbcType=VARCHAR} || to_char(to_date(#{regist.vdate,jdbcType=VARCHAR},'yyyy-MM-dd'), 'yyyyMMdd')
+			   and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
+		   </foreach>
        </if>
        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
 	</insert>
@@ -277,12 +275,10 @@
       delete from CHB_PRD_DEAL_SUB
       where 1 =1
        <if test="registList !=null and registList.size()>0">
-          <foreach collection="registList" item="regist" open="and PROD_ID IN (" separator=","  close=")">
-            #{regist.prodId,jdbcType=VARCHAR}
-          </foreach>
-          <foreach collection="registList" item="regist" open="and VDATE IN (" separator=","  close=")">
-            to_date(#{regist.vdate,jdbcType=VARCHAR},'yyyyMMdd')
-          </foreach>
+		   <foreach collection="registList" item="regist" open="and ( (" separator=") or ("  close=") )">
+			   (PROD_ID || to_char(VDATE, 'yyyyMMdd')) = #{regist.prodId,jdbcType=VARCHAR} || to_char(to_date(#{regist.vdate,jdbcType=VARCHAR},'yyyy-MM-dd'), 'yyyyMMdd')
+			   and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
+		   </foreach>
        </if>
        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
 	</delete>

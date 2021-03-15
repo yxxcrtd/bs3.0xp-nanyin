@@ -566,6 +566,7 @@
       <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
       ASSET_CODE = #{item.assetCode}
 	and VAL_DATE = #{item.valDate}
+  	and REGIST_SEQNO != #{item.registSeqno}
       </foreach>
    </select>
    
@@ -588,6 +589,7 @@
       <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
 	      SU.ASSET_CODE = #{item.assetCode}
 		and SU.VAL_DATE = #{item.valDate}
+		and SU.REGIST_SEQNO != #{item.registSeqno}
       </foreach>
    </select>
 </mapper>

@@ -72,7 +72,8 @@ $(function() {
               { field: 'sendStatus',visible:false},
               { field: 'submitFeedbackStatus',visible:false},
               { field: 'registSeqno',visible:false},
-              { field: 'status',visible:false}
+              { field: 'status',visible:false},
+              { field: 'sumitSeq',visible:false}
           ]
       });
      
