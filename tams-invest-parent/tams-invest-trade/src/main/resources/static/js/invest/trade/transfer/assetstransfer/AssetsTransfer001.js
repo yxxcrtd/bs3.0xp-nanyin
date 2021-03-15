@@ -435,6 +435,7 @@
                 else if (selArr[0].assetType == PINAN_ASSET_TYPE_F06) {
                     var object = selArr[0];
                     object.operateType = "revoke";
+                    object.isTransfer = true;
                     object.bizCode = selArr[0].tradeId;
                     object.statusValid = "02";//有效状态为有效
                     object.elementId = "TrdProjectInvestTrade001_btn_revoke";

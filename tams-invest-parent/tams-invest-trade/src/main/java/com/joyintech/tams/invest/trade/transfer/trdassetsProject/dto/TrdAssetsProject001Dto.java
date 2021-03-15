@@ -1167,6 +1167,14 @@ public class TrdAssetsProject001Dto extends TrdProductDeal implements ProcessEnt
 	public void setDeliveryAmount(BigDecimal deliveryAmount) {
 		this.deliveryAmount = deliveryAmount;
 	}
-    
-    
+
+    private boolean isTransfer;
+
+    public boolean isTransfer() {
+        return isTransfer;
+    }
+
+    public void setTransfer(boolean transfer) {
+        isTransfer = transfer;
+    }
 }

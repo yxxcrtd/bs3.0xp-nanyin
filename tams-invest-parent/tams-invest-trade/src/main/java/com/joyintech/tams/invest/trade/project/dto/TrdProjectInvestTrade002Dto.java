@@ -1,25 +1,16 @@
 package com.joyintech.tams.invest.trade.project.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
-import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.trade.dto.BussTrdAvailableCashQuery;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.trade.project.TrdProjectInvestTradeDto;
 import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
@@ -27,6 +18,11 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.trade.project.validator.TrdProjectInvestTradeEditDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @program: tams-invest-parent
@@ -497,5 +493,14 @@ public class TrdProjectInvestTrade002Dto extends TrdProjectInvestTradeDto implem
 
     public void setRiskCreditListCommonDto(RiskCreditListCommonDto riskCreditListCommonDto) {
         this.riskCreditListCommonDto = riskCreditListCommonDto;
+    }
+    private boolean isTransfer;
+
+    public boolean isTransfer() {
+        return isTransfer;
+    }
+
+    public void setTransfer(boolean transfer) {
+        isTransfer = transfer;
     }
 }

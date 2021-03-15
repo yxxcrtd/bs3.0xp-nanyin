@@ -1,18 +1,38 @@
 package com.joyintech.tams.invest.trade.project.controller;
 
-import java.util.*;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.intf.IDictCode;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
+import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
+import com.joyintech.tams.invest.trade.project.dto.TrdProjectInvestTrade001Dto;
+import com.joyintech.tams.invest.trade.project.dto.TrdProjectInvestTrade002Dto;
+import com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade001Service;
+import com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade002Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,28 +42,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.intf.IDictCode;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupDelete;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
-import com.joyintech.tams.invest.trade.project.dto.TrdProjectInvestTrade001Dto;
-import com.joyintech.tams.invest.trade.project.dto.TrdProjectInvestTrade002Dto;
-import com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade001Service;
-import com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade002Service;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.util.*;
 
 /**
  * @author : 强成西
@@ -145,7 +144,7 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
         WflValidInputParameter parameter = new WflValidInputParameter();
         parameter.setPageId("TrdProjectInvestTrade002");
         parameter.setBusinessDataPk1(dto.getBizCode());
-        if (!mstWorkflowCommonService.isProcessData(parameter)){
+        if (!mstWorkflowCommonService.isProcessData(parameter) && !dto.isTransfer()){
             Map<String, Object> map = new HashMap<>();
             map.put("statusValid", DictCodeListExt1.画面数据状态_新建.getValue());
             map.put("bizCode", dto.getBizCode());
