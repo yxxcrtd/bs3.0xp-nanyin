@@ -999,7 +999,12 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     decode(deal.ps,'T12',deal.int_amt,DEAL.TRADE_AMT) AMT,
     NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
     nvl(DEAL.SHARE_AMT,t3.amount) NUM,
-    DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T01','03','T02','04','T12','03','T22','09','T23',DECODE(TOTALDEAL.PS,'T08','04','T07','04'),'T38','04'),'01',DECODE(DEAL.FINPROD_TYPE2,'F08',DECODE(DEAL.PS,'T01','06','T02','08','T22','10','T23','08'),DECODE(DEAL.PS,'T01','05','T02','07','T22','09','T23','07'))) CUR_ASSET_TYPE,
+    <!-- mofify by zhangliang 20210315 特拆拆入 start -->
+    CASE WHEN DEAL.BUSI_TYPE = '01' and DEAL.FINPROD_TYPE2 = 'F25' AND DEAL.PS = 'T01' THEN '08'
+         WHEN DEAL.BUSI_TYPE = '01' and DEAL.FINPROD_TYPE2 = 'F25' AND DEAL.PS = 'T22' THEN '10'
+    <!-- mofify by zhangliang 20210315 特拆拆入 end -->
+    ELSE DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T01','03','T02','04','T12','03','T22','09','T23',DECODE(TOTALDEAL.PS,'T08','04','T07','04'),'T38','04'),'01',DECODE(DEAL.FINPROD_TYPE2,'F08',DECODE(DEAL.PS,'T01','06','T02','08','T22','10','T23','08'),DECODE(DEAL.PS,'T01','05','T02','07','T22','09','T23','07'))) END AS CUR_ASSET_TYPE,
+
     DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','收息','T09','收息','T07','收息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期')),'01',DECODE(DEAL.PS,'T22',DECODE(DEAL.FINPROD_TYPE2,'F08','付息','收息'),'T23','到期')) CUR_ASSETDET_TYPE,
     DEAL.SETTLE_DATE DEALDATE,
 
@@ -2897,7 +2902,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     investdeal.F_TRADE_ID F_TRADE_CODE
     ,FRA.PAY_TYPE
         ,case 
-        when investdeal.CUR_ASSET_TYPE not in ('01','02','03','04','05','06','07','08','09') then null
+        when investdeal.CUR_ASSET_TYPE not in ('01','02','03','04','05','06','07','08','09','10') then null
         else 
             case when investdeal.INVEST_VARIETY = '01' /*债券*/ then decode(investdeal.INVEST_TYPE,'HTM','02','TRA','01','AFS','01')
                  when investdeal.INVEST_VARIETY in ('03','06','07','08','09','10','11','12','15') then '02'
