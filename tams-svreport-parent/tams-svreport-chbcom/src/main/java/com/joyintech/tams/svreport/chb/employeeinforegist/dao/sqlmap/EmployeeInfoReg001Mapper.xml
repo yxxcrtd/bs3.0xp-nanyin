@@ -210,8 +210,8 @@
       FROM CHB_EMPLOYEE_INFO_SUB
       WHERE 1 =1
        <if test="registList !=null and registList.size()>0">
-          <foreach collection="registList" item="regist" open="AND (EMPLOYEE_TYPE||IDENTIFY_NUMBER) IN (" separator=","  close=")">
-            #{regist.employeeType,jdbcType=VARCHAR}||#{regist.identifyNumber,jdbcType=VARCHAR}
+	      <foreach collection="registList" item="regist" open="and ( (" separator=") or ("  close=") )">
+		    (EMPLOYEE_TYPE||IDENTIFY_NUMBER) = #{regist.employeeType,jdbcType=VARCHAR}||#{regist.identifyNumber,jdbcType=VARCHAR} and SUMIT_SEQ != #{regist.sumitSeq,jdbcType=VARCHAR}
           </foreach>
        </if>
        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
@@ -221,8 +221,8 @@
       DELETE FROM CHB_EMPLOYEE_INFO_SUB
       WHERE 1 =1
        <if test="registList !=null and registList.size()>0">
-          <foreach collection="registList" item="regist" open="AND (EMPLOYEE_TYPE||IDENTIFY_NUMBER) IN (" separator=","  close=")">
-             #{regist.employeeType,jdbcType=VARCHAR}||#{regist.identifyNumber,jdbcType=VARCHAR}
+          <foreach collection="registList" item="regist" open="and ( (" separator=") or ("  close=") )">
+			  (EMPLOYEE_TYPE||IDENTIFY_NUMBER) = #{regist.employeeType,jdbcType=VARCHAR}||#{regist.identifyNumber,jdbcType=VARCHAR} and SUMIT_SEQ != #{regist.sumitSeq,jdbcType=VARCHAR}
           </foreach>
        </if>
        AND SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->

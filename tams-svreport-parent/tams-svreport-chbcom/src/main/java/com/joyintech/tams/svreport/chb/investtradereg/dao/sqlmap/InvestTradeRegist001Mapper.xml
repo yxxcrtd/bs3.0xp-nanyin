@@ -1426,8 +1426,8 @@
       from CHB_INVEST_TRADE_SUB
       where 1 =1
        <if test="registList !=null and registList.size()>0">
-          <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
-            #{regist.tradeCode,jdbcType=VARCHAR}
+          <foreach collection="registList" item="regist" open="and ((" separator=") or ("  close="))">
+            TRADE_CODE = #{regist.tradeCode,jdbcType=VARCHAR} and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
           </foreach>
        </if>
        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
@@ -1436,8 +1436,8 @@
       delete from CHB_INVEST_TRADE_SUB
       where 1 =1
        <if test="registList !=null and registList.size()>0">
-          <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
-            #{regist.tradeCode,jdbcType=VARCHAR}
+          <foreach collection="registList" item="regist" open="and ((" separator=") or ("  close="))">
+            TRADE_CODE = #{regist.tradeCode,jdbcType=VARCHAR} and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
           </foreach>
        </if>
        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->

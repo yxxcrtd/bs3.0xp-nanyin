@@ -1265,7 +1265,7 @@
       SEND_STATUS = '01'
       </if>
       <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
-      prod_id = #{item.prodId,jdbcType=VARCHAR}
+      prod_id = #{item.prodId,jdbcType=VARCHAR} and REGIST_SEQNO != #{item.registSeqno,jdbcType=VARCHAR}
       </foreach>
    </select>
    <select id="selectRegPerProdList"
