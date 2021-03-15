@@ -638,14 +638,14 @@ public class ChbInvestTradeInterf  extends BaseService{
     		assetDeal.setCurAssetType(DictCodeListExt2.资金流动类型_存入银行存款.getValue());
     	}
     	// 合同编号=交易编号
-		if(!StringUtil.isNotEmpty(assetDeal.getContractCode())){
+		// if(!StringUtil.isNotEmpty(assetDeal.getContractCode())){
 			assetDeal.setContractCode(assetDeal.getTradeCode());
-		}
+		// }
     	StringBuilder sbNew = new StringBuilder(tradeCode);
 		assetIntDeal.setTradeCode(sbNew.append("02").toString());
-		if(!StringUtil.isNotEmpty(assetDeal.getContractCode())){
+		// if(!StringUtil.isNotEmpty(assetDeal.getContractCode())){
 			assetIntDeal.setContractCode(assetIntDeal.getTradeCode());
-		}
+		// }
     	// 根据资产交易资产流动类型区分资产流动类型:投资资产所得收益
     	assetIntDeal.setCurAssetType(DictCodeListExt2.资金流动类型_投资资产所得收益.getValue());
     	// 单位成交价格(净价)
