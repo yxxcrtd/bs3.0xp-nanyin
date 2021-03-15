@@ -211,4 +211,11 @@ select PORTFOLIO_NAME
     PORTFOLIO_ID=#{portfolioId}
 </where>
 </select>
+
+    <select id="getTradeId1" resultType="string">
+        select TRADE_ID from WFL_TRD_PRODUCT_DEAL
+        <where>
+            TOTLE_TRADE_ID=#{totleTradeId,jdbcType=VARCHAR}
+        </where>
+    </select>
 </mapper>

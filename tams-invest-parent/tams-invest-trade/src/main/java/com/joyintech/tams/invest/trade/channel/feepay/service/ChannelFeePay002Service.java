@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.invest.common.dto.channel.ChannelFeeInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -468,5 +469,14 @@ public class ChannelFeePay002Service extends BaseService<ChannelFeePay002Dto> im
 
     public String findPortfolioName(String portfolioId) {
         return restTemplate.getForObject(ServiceApplication.TRADE_SERVICE_NAME + "/ChannelFeePay/findPortfolioName?portfolioId="+portfolioId, String.class);
+    }
+
+    @Override
+    public void doBack(ChannelFeePay002Dto entity) {
+        List<String> tradeIdList = restTemplate.getForObject(ServiceApplication.TRADE_SERVICE_NAME + "/ChannelFeePay/getTradeId1?totleTradeId=" + entity.getTradeId(),
+                List.class);
+        for(String tradeId:tradeIdList) {
+            AllTradeCommonUtil.deletePosition(entity.getCancelRemark(), tradeId);
+        }
     }
 }

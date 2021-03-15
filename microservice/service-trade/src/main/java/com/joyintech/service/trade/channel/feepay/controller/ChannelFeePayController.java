@@ -4,6 +4,7 @@
  */
 package com.joyintech.service.trade.channel.feepay.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.trade.channel.feepay.service.ChannelFeePayService;
@@ -82,8 +83,14 @@ public class ChannelFeePayController {
     public String getTradeId(String totleTradeId,String portfolioId) {
         return channelFeePayService.getTradeId(totleTradeId,portfolioId);
     }
+
     @GetMapping("findPortfolioName")
     public String findPortfolioName(String portfolioId) {
         return channelFeePayService.findPortfolioName(portfolioId);
+    }
+
+    @GetMapping("getTradeId1")
+    public List<String> getTradeId1(String totleTradeId) {
+        return channelFeePayService.getTradeId1(totleTradeId);
     }
 }

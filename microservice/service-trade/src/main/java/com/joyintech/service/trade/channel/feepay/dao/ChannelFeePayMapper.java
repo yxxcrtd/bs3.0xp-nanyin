@@ -64,4 +64,6 @@ public interface ChannelFeePayMapper {
     String getTradeId(Map<String, Object> map);
 
     String findPortfolioName(String portfolioId);
+
+    List<String> getTradeId1(String totleTradeId);
 }
