@@ -86,24 +86,24 @@
 	</select>
 
     <!-- 同一天、同一资产、同个组合 有效或流程中交易的单位净值 -->
-    <select id="getUnitValueList" resultType="java.math.BigDecimal">
+    <select id="getUnitValueList" resultType="com.joyintech.tams.common.base.entity.TrdProductDeal">
         SELECT DISTINCT TRD_PRODUCT_DEAL.UNIT_CPRICE
         FROM TRD_PRODUCT_DEAL
-                 LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
+              <!--    LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID -->
         WHERE TRD_PRODUCT_DEAL.FINPROD_ID = #{finprodId}
           AND TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
           AND TRD_PRODUCT_DEAL.IS_CANCEL = 'N'
-          AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID = #{portfolioId}
+          AND TRD_PRODUCT_DEAL.COUNTER_ID = #{portfolioIdOut}
           AND TRD_PRODUCT_DEAL.TRADE_DATE = TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
           AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = 'N'
         UNION ALL
         SELECT DISTINCT WFL_TRD_PRODUCT_DEAL.UNIT_CPRICE
         FROM WFL_TRD_PRODUCT_DEAL
-                 LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID
+                <!--  LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID -->
         WHERE WFL_TRD_PRODUCT_DEAL.FINPROD_ID = #{finprodId}
           AND WFL_TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
           AND WFL_TRD_PRODUCT_DEAL.IS_CANCEL = 'N'
-          AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID = #{portfolioId}
+          AND WFL_TRD_PRODUCT_DEAL.COUNTER_ID = #{portfolioIdOut}
           AND WFL_TRD_PRODUCT_DEAL.TRADE_DATE = TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
           AND WFL_TRD_PRODUCT_DEAL.IS_OUT_TRADE = 'N'
     </select>
