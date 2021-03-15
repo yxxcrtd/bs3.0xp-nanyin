@@ -169,7 +169,7 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_cur15_amt", "ASSETAMT1_3_1");
 		tablePorpertyMap_2.put("t2_last15_amt", "ASSETAMT1_3_1");
 		tablePorpertyMap_2.put("t2_cur16_amt", "ASSETAMT1_3_2");
-		tablePorpertyMap_2.put("t2_last16_amt", "ASSET'AMT1_3_2");
+		tablePorpertyMap_2.put("t2_last16_amt", "ASSETAMT1_3_2");
 		tablePorpertyMap_2.put("t2_cur17_amt", "ASSETAMT1_2_1");
 		tablePorpertyMap_2.put("t2_last17_amt", "ASSETAMT1_2_1");
 		tablePorpertyMap_2.put("t2_cur18_amt", "ASSETAMT1_2_2");

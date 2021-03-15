@@ -1301,7 +1301,7 @@ with cj as(
 		</if>
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
-		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.ASSETTYPE2 not in ('1901','1902')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1316,7 +1316,7 @@ with cj as(
 			on cmap.prod_id=di.business_id
 			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
 		</if>
-		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
+		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.ASSETTYPE2 not in ('1901','1902')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1775,6 +1775,7 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
+		and cmap.ASSETTYPE2 not in ('1901','1902')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1813,6 +1814,7 @@ with cj as(
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
+		and cmap.ASSETTYPE2 not in ('1901','1902')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2303,6 +2305,7 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
+		and cmap.ASSETTYPE2 not in ('1901','1902')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2339,6 +2342,7 @@ with cj as(
 		on cmap.asset_code=lastcmap.asset_code
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
+		and cmap.ASSETTYPE2 not in ('1901','1902')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
