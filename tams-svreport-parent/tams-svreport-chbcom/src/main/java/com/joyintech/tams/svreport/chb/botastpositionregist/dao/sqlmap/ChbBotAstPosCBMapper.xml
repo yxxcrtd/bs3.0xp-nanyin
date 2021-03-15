@@ -136,8 +136,9 @@
         ON BOTASSET.ASSET_CODE = sub.ASSET_CODE
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03')
-          and (SUB.STATUS ='03' or(POS.POS_NUM is not null
-		  and SUB.POS_NUM &lt;&gt; POS.POS_NUM))
+          and (SUB.STATUS ='03' or ((POS.POS_NUM is not null and SUB.POS_NUM &lt;&gt; POS.POS_NUM)
+								or (POS.TOTAL_NUM is not null and SUB.TOTAL_NUM &lt;&gt; POS.TOTAL_NUM)
+								or (POS.ISSUE_AMT is not null and SUB.ISSUE_AMT &lt;&gt; POS.ISSUE_AMT)))
 		union all
 		SELECT
 		    sub.REGIST_SEQNO as registSeqno,
