@@ -771,27 +771,20 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
         List<ExcelValidDto> result=new ArrayList<ExcelValidDto>();
  		List<PerProDeclareRegDto> proDeclareList=new ArrayList<PerProDeclareRegDto>();
 		Map<String,Object> returnMap = new HashMap<>();
-// 	     // 选择行数据时
-//        if (param.containsKey("keyList")) {
-//            String keyList = param.get("keyList").toString();
-//            try {
-//                 proDeclareList = JsonUtils.json2List(keyList,
-//                		PerProDeclareRegDto.class);
-//            }
-//            catch (IOException e) {
-//                // e.printStackTrace();
-//                logger.error(e.getMessage(), e);
-//            }
-//        }else{
-			if(param.containsKey("checkKeys")){
-				param.put("keyList", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("checkKeys")));
-			}
-			Page<PerProDeclareRegDto> page = selectForPage(param, false);
-			if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
-				proDeclareList = page.getRoot();
-			}
-        	//查询数据
-//        }
+		if(param.containsKey("checkKeys")){
+			param.put("keyList", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("checkKeys")));
+		}
+		// modify by zhangliang 20210315 直连报送全量查询 start
+		dealSearchParam(param);
+		param.put("flag", "2");
+		//add by leipeng 20200628
+		if(CommonUtil.isBAmodel()){
+			param.put("model_type", "01");
+
+		}
+		proDeclareList = perProDeclareReg001Mapper.selectAllData(param);
+		dealDataList(proDeclareList, false);
+		// modify by zhangliang 20210315 直连报送全量查询 end
 		if (CollectionUtils.isEmpty(proDeclareList)) {
 			returnMap.put("excelValidDtoList", Arrays.asList(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据", null)));
 			return returnMap;
