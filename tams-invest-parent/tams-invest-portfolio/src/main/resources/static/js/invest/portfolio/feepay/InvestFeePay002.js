@@ -740,7 +740,7 @@ $(function() {
 		// 计提结束日
 		$('#InvestFeePay002_positionEndDate').change(endDateChangeAction);
 		// 支付日
-		$('#InvestFeePay002_payDate').change(payDateChangeAction);
+		// $('#InvestFeePay002_payDate').change(payDateChangeAction);
 		$('#InvestFeePay002_payDate').change(feeInfoListAction);
 		// 实付金额
 		$('#InvestFeePay002_actPayAmt').change(actPayAmtChangeAction);
