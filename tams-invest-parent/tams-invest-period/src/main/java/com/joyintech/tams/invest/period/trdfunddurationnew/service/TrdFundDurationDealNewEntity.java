@@ -898,20 +898,32 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
         trdProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
 //      币种
         trdProductDeal.setCcy(entity.getCcy());
-        //如果没有前置并且没有方向
+        //如果没有前置并且没有方向,说明数据来自公募基金分红新建
         if(StringUtil.isEmpty(entity.getbTradeId()) && (entity.getBaseTotalTradeInfoDto() ==null || StringUtil.isEmpty(entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getPs()))){
-            trdProductDeal.setPs(DictCodeList.交易方向_除权登记.getValue());
-            //除权日
-            trdProductDeal.setTradeDate(entity.getExRightsDate());
-            //交易本金 ->权益登记日份额
-            trdProductDeal.setPrinAmt(finAssetIntInfo.getRegistShare());
-            trdProductDeal.setShareAmt(finAssetIntInfo.getQty());
-            //单位净值 单位分红净值
-            trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
-            // 交易金额
-            trdProductDeal.setTradeAmt(finAssetIntInfo.getTradeAmt());
+            if(StringUtil.equals(entity.getAssetType(),DictCodeList.基金类资产类型_货币基金.getValue())
+                    && StringUtil.equals(finAssetIntInfo.getBonusMode(),DictCodeList.分红方式_红利再投.getValue())){
+                trdProductDeal.setPs(DictCodeList.交易方向_红利再投.getValue());
+                //         红利再投日
+                trdProductDeal.setTradeDate(entity.getReInvesDate());
+                //          交易份额    画面.分红金额
+                trdProductDeal.setShareAmt(finAssetIntInfo.getTradeAmt());
+                //        交易本金字段保存为分红金额
+                trdProductDeal.setPrinAmt(finAssetIntInfo.getTradeAmt());
+                trdProductDeal.setIntAmt(finAssetIntInfo.getTradeAmt());
+                trdProductDeal.setFpriceAmt(finAssetIntInfo.getTradeAmt());
+            }else{
+                trdProductDeal.setPs(DictCodeList.交易方向_除权登记.getValue());
+                //除权日
+                trdProductDeal.setTradeDate(entity.getExRightsDate());
+                //交易本金 ->权益登记日份额
+                trdProductDeal.setPrinAmt(finAssetIntInfo.getRegistShare());
+                trdProductDeal.setShareAmt(finAssetIntInfo.getQty());
+                //单位净值 单位分红净值
+                trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
+                // 交易金额
+                trdProductDeal.setTradeAmt(finAssetIntInfo.getTradeAmt());
+            }
         }else{
-
             if(StringUtil.equals(finAssetIntInfo.getBonusMode(),DictCodeList.分红方式_现金分红.getValue())){
                 trdProductDeal.setPs(DictCodeList.交易方向_现金分红.getValue());
                 //交易金额 分红金额
@@ -929,7 +941,8 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
 //                    trdProductDeal.setTradeDate(entity.getReInvesDate());
 //                    //交易份额    画面.分红金额
 //                    trdProductDeal.setShareAmt(finAssetIntInfo.getQty());
-//                }else if(StringUtil.equals(entity.getAssetType(),DictCodeList.基金类资产类型_非货币基金.getValue())){
+//                }else
+                if(StringUtil.equals(entity.getAssetType(),DictCodeList.基金类资产类型_非货币基金.getValue())){
                     trdProductDeal.setPs(DictCodeList.交易方向_红利再投.getValue());
                     trdProductDeal.setPrinAmt(finAssetIntInfo.getRegistShare());
                     // 单位净值 单位分红净值
@@ -938,7 +951,7 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
                     //交易份额
                     trdProductDeal.setShareAmt(finAssetIntInfo.getQty());
                     trdProductDeal.setbTradeId(entity.getbTradeId());
-//                }
+                }
             }
         }
 //      货币基金红利再投

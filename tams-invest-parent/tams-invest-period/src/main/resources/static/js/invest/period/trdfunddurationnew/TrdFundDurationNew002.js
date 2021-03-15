@@ -112,7 +112,7 @@
                    return false;
                 }
               }
-            if(field == 'bonusMode' && $("#assetType").val() == FUND_ASSET_TYPE_F01){
+            if(field == 'bonusMode' && ($("#assetType").val() == FUND_ASSET_TYPE_F01 || psType == '01')){
                return false;
             }
             return true;
@@ -226,24 +226,30 @@
      * 空 新建 01：点击复制按钮生成的记录 02：拆分記錄
      */
     repoInfoTable.bind('click', '.manual', function(data, index) {
-        if(pageModel == PAGE_MODEL_NEW){
+        if(pageModel == PAGE_MODEL_NEW && psType != '01'){
             var tabList  = repoInfoTable.getAllRows();
-            if(data.isFromCopy =='02'){
-                var msg = JoyinUtil.getMessage("一条列表信息只可被复制/拆分一次");
-                Joyin.alert(msg, 2);
-            }else if(data.isFromCopy =='01'){
-                 var msg = JoyinUtil.getMessage("复制/拆分记录不可再复制/拆分");
-                 Joyin.alert(msg, 2);
-            }else{
-                tabList[index].isFromCopy ='02';
-                if(data.bonusMode == BONUS_MODE_01){
-                    data.bonusMode = BONUS_MODE_02;
+            if($("#assetType").val()==FUND_ASSET_TYPE_F02){
+                if(data.isFromCopy =='02'){
+                    var msg = JoyinUtil.getMessage("一条列表信息只可被复制/拆分一次");
+                    Joyin.alert(msg, 2);
+                }else if(data.isFromCopy =='01'){
+                     var msg = JoyinUtil.getMessage("复制/拆分记录不可再复制/拆分");
+                     Joyin.alert(msg, 2);
                 }else{
-                    data.bonusMode = BONUS_MODE_01;
+                    tabList[index].isFromCopy ='02';
+                    if(data.bonusMode == BONUS_MODE_01){
+                        data.bonusMode = BONUS_MODE_02;
+                    }else{
+                        data.bonusMode = BONUS_MODE_01;
+                    }
+                    data.isFromCopy = '01';
+                    tabList.splice(index+1,0,data);
+                    repoInfoTable.reload({data:tabList});
                 }
-                data.isFromCopy = '01';
-                tabList.splice(index+1,0,data);
-                repoInfoTable.reload({data:tabList});
+            }else{
+                var msg = JoyinUtil.getMessage("货币基金不可复制/拆分!");
+                Joyin.alert(msg, 2);
+                return false;
             }
         }else{
                 return false;
@@ -254,15 +260,18 @@
      * 绑定删除事件
      */
     repoInfoTable.bind('click', '.delt', function(data, index) {
-        debugger;
-        if(data.isFromCopy == '01'){
-            repoInfoTable.removeRow(data);
-            var tabList = repoInfoTable.getAllRows();
-            tabList[index -1].isFromCopy ='';
-            repoInfoTable.reload({data:tabList});
+        if(pageModel == PAGE_MODEL_NEW && psType != '01'){
+            if(data.isFromCopy == '01'){
+                repoInfoTable.removeRow(data);
+                var tabList = repoInfoTable.getAllRows();
+                tabList[index -1].isFromCopy ='';
+                repoInfoTable.reload({data:tabList});
+            }else{
+                var msg = JoyinUtil.getMessage("非复制/非拆分的记录不可删除");
+                Joyin.alert(msg, 2);
+            }
         }else{
-            var msg = JoyinUtil.getMessage("非复制/非拆分的记录不可删除");
-            Joyin.alert(msg, 2);
+              return false;
         }
     });
 //    /**
@@ -543,12 +552,12 @@
 //        	}
 //        	PS = PS_T13;
 //        }
-        var tradeDate;
-        if(reInvesDateFlag){
-        	tradeDate = $("#reInvesDate").val();
-        }else{
-            tradeDate = $("#arriveDate").val();
-        }
+//        var tradeDate;
+//        if(reInvesDateFlag){
+//        	tradeDate = $("#reInvesDate").val();
+//        }else{
+//            tradeDate = $("#arriveDate").val();
+//        }
 //        else {
 ////        	非货币红利再投
 //        	tradeDate = (type == "02" || type=="05") ? $("#exRightsDate").val() :
@@ -561,19 +570,16 @@
             deal.ccy = $("#ccy").val();
             deal.tradeAmt = finAssetIntInfos[i].tradeAmt;
             deal.ps = PS;
-            deal.tradeDate = tradeDate;
+            deal.tradeDate = finAssetIntInfos[i].bonusMode == BONUS_MODE_01 ? $("#arriveDate").val():$("#reInvesDate").val();
             deal.finprodId = $("#finprodId").val();
             deal.finprodType2 = FINPRODTYPE_DEFAULT;
-//            // 道交易 新增 强成西 2019/03/26 start
-//            deal.chlId = $("#chlId").val()
-//            // 道交易 新增 强成西 2019/03/26 end
-//            deal.secManageAcctId = $("#secManageAcctId").val();
             deal.chlId = finAssetIntInfos[i].chIld;
             deal.secManageAcctId = finAssetIntInfos[i].secAcctId;
             dtos.push({
                 'isTotalTrade' : YES_OR_NO_N,
                 'bankLendingType' : null,
                 'portfolioId' : finAssetIntInfos[i].portfolioId,
+                'jiaoyiType' : finAssetIntInfos[i].bonusMode,
                 'deal' : deal
             })
         }
@@ -581,49 +587,6 @@
     }
  // 生成指令参数保存
     var stlCommandInput = tableInitData;
-
-    // 检查生成指令参数是否发生变化
-//    var isCalcConditionChanged = function() {
-//        // 参照模式，不做check
-//        if (pageModel === PAGE_MODEL_REFERENCE) {
-//            return false;
-//        }
-//        if (!$("#bussTrdTransferOrder_div").is(":visible")) {
-//            return false;
-//        }
-//        if (calcConditionObjBackUp == null) {
-//            return false;
-//        }
-//
-//        if(stlCommandInput != null){
-//            var currentCalcConditionObj = stlCommandInput();
-//            // 影响计划生成的所有项目与计划生成时记录的值比较，值变更时
-//            for ( var key in currentCalcConditionObj) {
-//                for ( var key1 in currentCalcConditionObj[key]) {
-//                    if (typeof currentCalcConditionObj[key][key1] != "object"
-//                        && currentCalcConditionObj[key][key1] != calcConditionObjBackUp[key][key1]) {
-//                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
-//                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-//                            [labelText, "生成划款指令"]));
-//                        return true;
-//                    }
-//                }
-//            }
-//            for ( var key in currentCalcConditionObj) {
-//                for ( var key1 in currentCalcConditionObj[key].deal) {
-//                    var currentDealObj = currentCalcConditionObj[key].deal;
-//                    var backupDealObj = calcConditionObjBackUp[key].deal;
-//                    if (typeof currentDealObj[key1] != "object"
-//                        && currentDealObj[key1] != backupDealObj[key1]) {
-//                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
-//                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-//                            [labelText, "生成划款指令"]));
-//                        return true;
-//                    }
-//                }
-//            }
-//        }
-//    };
 
     // 检查生成指令参数是否发生变化
     var isCalcConditionChangedTwo = function(bussTrdTransferOrders) {
@@ -650,6 +613,7 @@
             // 影响计划生成的所有项目与计划生成时记录的值比较，值变更时
             for ( var key in currentCalcConditionObj) {
                 for ( var key1 in currentCalcConditionObj[key]) {
+                    delete currentCalcConditionObj[key].jiaoyiType;
                     if (typeof currentCalcConditionObj[key][key1] != "object"
                         && currentCalcConditionObj[key][key1] != calcConditionObjBackUp[key][key1]) {
                         var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
@@ -672,53 +636,30 @@
 //                    }
 //                }
 //            }
-//            for (var i = 0; i < calcConditionObjBackUp.deal.length; i++) {
-//                var dealDataObj = currentCalcConditionList.deal[i];
-//                    if(dealDataObj.secManageAcctId == undefined || dealDataObj.secManageAcctId == null){
-//                        dealDataObj.secManageAcctId = dealDataObj.chlId;
-//                        delete dealDataObj.chlId;
-//                    }
-//                    if(dealDataObj.chlId){
-//                        delete dealDataObj.chlId;
-//                    }
-//                var dealDataUp = calcConditionObjBackUp.deal[i];
-//                if ( typeof currentDealObj[key1] != "object"
-//                    && currentDealObj[key1] != backupDealObj[key1]) {
-//                    var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
-//                    Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-//                        [labelText, "生成划款指令"]));
-//                    return true;
-//                }
-//                for (var key in dealDataObj) {
-//                    if (key == "finprodId" || key == "finprodType2"||key=='ps') {
-//                        continue;
-//                    }
-//                    var currentDealObj = dealDataObj[key];
-//                    var backupDealObj = dealDataUp[key];
-//
-//                    if (typeof currentDealObj != "object"
-//                        && currentDealObj != backupDealObj) {
-//                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-//                            ["指令生成要素", "生成划款指令"]));
-//                        return true;
-//                    } else if (typeof currentDealObj == "object") {
-//                        for (var i in currentDealObj) {
-//                            if (dealDataObj == 'secManageAcctId') {
-//                                if(backupDealObj[j] == currentDealObj[i] &&
-//                                       ){
-//
-//                                }
-//                            }
-//                            if (typeof currentDealObj[i] != "object"
-//                                && backupDealObj[i] != currentDealObj[i]) {
-//                                Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-//                                    ["指令生成要素", "生成划款指令"]));
-//                                return true;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            for(var i in calcConditionObjBackUp){
+                var backupDealObj = calcConditionObjBackUp[i].deal;
+                var currentDealObj = currentCalcConditionObj[i].deal;
+                //delete currentDealObj.bonusMode;
+                if(currentDealObj.secManageAcctId == undefined || currentDealObj.secManageAcctId == null){
+                    currentDealObj.secManageAcctId = currentDealObj.chlId;
+                    delete currentDealObj.secManageAcctId;
+                }
+                if(currentDealObj.chlId == undefined || currentDealObj.chlId == null){
+                    delete currentDealObj.chlId;
+                }else{
+                    currentDealObj.secManageAcctId = currentDealObj.chlId;
+                    delete currentDealObj.chlId;
+                }
+                for ( var key1 in currentDealObj) {
+                    if ( typeof currentDealObj[key1] != "object"
+                        && currentDealObj[key1] != backupDealObj[key1]) {
+                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
+                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+                            [labelText, "生成划款指令"]));
+                        return true;
+                    }
+                }
+            }
         }
     };
 
@@ -727,6 +668,12 @@
             var data = stlCommandInput();
             if (!data) {
                 return;
+            }
+            //如果不是现金分红，不需要生成划款指令
+            for(var i in data){
+                if(data[i].jiaoyiType != '01'){
+                    data.splice(i,1);
+                }
             }
             // 保存生成指令参数
             calcConditionObjBackUp = data;
@@ -895,6 +842,14 @@
     }
 
     function saveOrSubmit(operateType) {
+        var objectTemp = $.serializeToObject('#informationForm', true);
+        for(var i in objectTemp.finAssetIntInfoList){
+            if(objectTemp.finAssetIntInfoList[i].tradeAmt == undefined || objectTemp.finAssetIntInfoList[i].tradeAmt == null){
+                var msg = JoyinUtil.getMessage("分红明细信息中分红金额不能为空!");
+                Joyin.alert(msg, 2);
+                return;
+            }
+        }
         if (GEN_PAY_ORDERS_AUTO == '01') {
             generateOrders(function () {
                 realSaveOrSubmit(operateType);
@@ -917,14 +872,14 @@
         /**
          * 获取列表参数
          */
-        debugger;
         var object = $.serializeToObject('#informationForm', true);
         object.registShare = sumRegistShare;
         object.operateType = operateType;
         object.tradeMarket = tradeMarket;
         //分红明细不能为空
         if(object.finAssetIntInfoList.length == 0){
-            Joyin.alert("分红明细信息不能为空！");
+            var msg = JoyinUtil.getMessage("分红明细信息不能为空！");
+            Joyin.alert(msg, 2);
             return;
         }
         if(isCalcConditionChangedTwo(object.bussTrdTransferOrder)){
@@ -1038,7 +993,6 @@
 //        if(pageModel != PAGE_MODEL_REFERENCE){
 //    	    bonusModeChange();
 //    	}
-        debugger;
         var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01){
             $(".unitCprice").hide();
@@ -1048,6 +1002,8 @@
         initFlag = false;
         if(psType == '01'){
             $("#reInvesDate").val('').prop("disabled", true);
+            $("#exRightsDate").attr("disabled",true);
+            $("#registDate").attr("disabled",true);
         }else if(psType == '02'){
             $("#arriveDate").val('').prop("disabled", true);
         }
@@ -1098,12 +1054,10 @@
            var assetType = $("#assetType").val();
            if(assetType == FUND_ASSET_TYPE_F01){
                $(".unitCprice").hide();
-               if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
-                  $("#exRightsDate").val(sysDate).trigger("change");
-                  $("#registDate").val(sysDate).trigger("change");
-                  $("#exRightsDate").attr("disabled",true);
-                  $("#registDate").attr("disabled",true);
-              }
+               $("#exRightsDate").val(sysDate).trigger("change");
+               $("#registDate").val(sysDate).trigger("change");
+               $("#exRightsDate").attr("disabled",true);
+               $("#registDate").attr("disabled",true);
            }else{
                $(".unitCprice").show();
                if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
