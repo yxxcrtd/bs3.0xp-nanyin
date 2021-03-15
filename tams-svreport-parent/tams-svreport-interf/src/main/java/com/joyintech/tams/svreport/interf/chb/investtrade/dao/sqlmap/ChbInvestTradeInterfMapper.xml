@@ -815,13 +815,14 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     /*AND DEAL.TRADE_STATUS = '01'*/
     and nvL(deal.p_trade_id,'NOREV') = 'NOREV'
     /***添加非还本不带息拆分数据***/
-    
-    AND EXISTS(
-    	SELECT 1 
-      	FROM PTL_TRADE PTLTRADE
-      	WHERE 1 =1 
-      AND PTLTRADE.BUSI_NO = deal.TRADE_ID
-    )
+    <!-- modify by zhangliang 20210315 投组为啥T22收息那笔交易不登PTL_TRADE？或者中债为啥要校验PTL_TRADE存在数据  start -->
+    AND (DEAL.PS = 'T22' OR (DEAL.PS != 'T22' and EXISTS(
+        SELECT 1
+        FROM PTL_TRADE PTLTRADE
+        WHERE 1 =1
+        AND PTLTRADE.BUSI_NO = deal.TRADE_ID
+        )))
+    <!-- modify by zhangliang 20210315 投组为啥T22收息那笔交易不登PTL_TRADE？或者中债为啥要校验PTL_TRADE存在数据  end -->
     AND not EXISTS(
       SELECT 1 FROM TRD_PRODUCT_DEAL A
       LEFT JOIN TRD_PRODUCT_DEAL_ADD AD ON A.TRADE_ID = AD.TRADE_ID
