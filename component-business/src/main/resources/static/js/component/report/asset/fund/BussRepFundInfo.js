@@ -165,6 +165,10 @@
 				$('#' + BussRepFundInfoentityName + '_' + 'repInstitSize_div').hide();
 			}
 		});
+		// 投资资产种类及比例
+        getElementById('repFundInvestAsset_showRule').click(function(){
+            Joyin.alert(JoyinUtil.getLabel("BussRepFinProductInfo.repInvTypeRat.showRule"));
+        });
 		/*getElementById('repAssetType').change(function(){
 			if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F18){
 				if(getElementById('repAssetType').val()) {
