@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workbook filePath="TrdFundDuration001.xlsx" name="基金存续期交易">
-    <Worksheet javaBean="com.joyintech.tams.invest.period.trdfundduration.dto.TrdFundDurationNew001Dto">
+    <Worksheet javaBean="com.joyintech.tams.invest.period.trdfunddurationnew.dto.TrdFundDurationNew001Dto">
         <Row>
             <Cell order="1" name="有效状态">statusValidStr</Cell>
             <Cell order="2" name="业务编号">totleTradeId</Cell>

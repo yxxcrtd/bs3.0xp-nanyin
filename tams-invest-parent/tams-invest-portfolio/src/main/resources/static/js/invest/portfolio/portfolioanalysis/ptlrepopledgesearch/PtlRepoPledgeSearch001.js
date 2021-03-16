@@ -302,6 +302,11 @@ $(function() {
         $('.pledgeSummarySearchDiv #PtlRepoPledgeSearch001_btn_export').click(function() {
             exportPledgeSummaryExcel();
         });
+        
+        //重置
+   	 $('.pledgeSummarySearchDiv #PtlRepoPledgeSearch001_btn_reset').click(function(){
+   		window.location.reload();
+   	 });
 
     });
 }());
