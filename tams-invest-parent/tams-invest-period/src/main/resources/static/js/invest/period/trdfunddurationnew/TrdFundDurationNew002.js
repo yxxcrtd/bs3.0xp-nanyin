@@ -670,7 +670,8 @@
                 return;
             }
             //如果不是现金分红，不需要生成划款指令
-            for(var i in data){
+            //for(var i in data){
+            for(var i=data.length-1;i >= 0;i--){
                 if(data[i].jiaoyiType != '01'){
                     data.splice(i,1);
                 }
