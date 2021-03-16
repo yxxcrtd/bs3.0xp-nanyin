@@ -344,11 +344,11 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
     protected void buildExportParam(ExportParam exportParam) {
         if(MultilevelDataAuthorityUtil.isEnabled()) {
             exportParam.config(
-                    "/com/joyintech/tams/invest/period/trdfundduration/conf/export_conf_ls.xml").dataSource(
+                    "/com/joyintech/tams/invest/period/trdfunddurationnew/conf/export_conf_ls.xml").dataSource(
                     DataSourceType.MASERT);
         }else{
             exportParam.config(
-                    "/com/joyintech/tams/invest/period/trdfundduration/conf/export_conf.xml").dataSource(
+                    "/com/joyintech/tams/invest/period/trdfunddurationnew/conf/export_conf.xml").dataSource(
                     DataSourceType.MASERT);
         }
     }
