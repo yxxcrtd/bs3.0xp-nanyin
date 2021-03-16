@@ -482,6 +482,16 @@
     </select>
 
     <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
+        <if test="finprodId != null and finprodId != ''">
+            with orgInfo as (
+            select
+            REGIST_ORG org,
+            FINPROD_ID fi,
+            FINPROD_MARKET_ID fmi
+            from FIN_PRODUCT
+            where (FINPROD_ID = #{finprodId,jdbcType=VARCHAR} OR FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR})
+            )
+        </if>
         SELECT
             A.ACCT_NO hidCode,
             A.ACCT_NO code,
@@ -509,6 +519,9 @@
             </if>
             <if test="tradeMarket != null and tradeMarket != ''">
              	AND TRADE_PLACE =#{tradeMarket}
+            </if>
+            <if test="finprodId != null and finprodId != ''">
+                AND B.REGIST_ORG in (select org from orgInfo where (fmi = #{finprodId,jdbcType=VARCHAR} OR fi = #{finprodId,jdbcType=VARCHAR}))
             </if>
         </where>
     </select>
