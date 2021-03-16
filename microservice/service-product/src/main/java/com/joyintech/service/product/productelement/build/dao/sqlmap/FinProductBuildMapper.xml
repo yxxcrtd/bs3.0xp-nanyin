@@ -182,7 +182,7 @@
 		<!-- OPEX-812 guyunfei 20200115 end -->
 		<!-- add by liupeilin 2019-12-27 begin -->
 		LEFT JOIN (select NVL(PRO.P_FINPROD_ID, pro.finprod_id) finprod_id,
-		listagg(t.rate * 100, ',') within group(order by t.eff_date) rate
+		listagg(to_char(t.rate * 100,'FM990.00'), ',') within group(order by t.eff_date) rate
 		from FIN_BASE_RULE_INFO t
 		left join fin_product pro
 		on t.finprod_id = pro.finprod_id
