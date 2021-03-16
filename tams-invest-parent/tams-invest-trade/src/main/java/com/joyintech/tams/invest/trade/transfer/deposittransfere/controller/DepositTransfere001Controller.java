@@ -208,7 +208,7 @@ public class DepositTransfere001Controller extends BaseController {
 		StringBuilder tips = new StringBuilder();
 		for (DepositTransfere002Dto item : dto.getDepositTransfere002Dto()) {
 			if (item.getTransferTradeAmt().compareTo(item.getPrinAmt().add(item.getIntAmt())) != 0) {
-				tips.append("【" + item.getPortfolioId() + "交易金额不等于本息和！</br>");
+				tips.append(item.getPortfolioId() + "交易金额不等于本息和！</br>");
 			}
 		}
 		if (StringUtil.isNotEmpty(tips)) {

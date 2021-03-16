@@ -18,7 +18,6 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.component.business.settle.dto.BussSettleOrderParameterDto;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
@@ -41,8 +40,6 @@ import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdfunddurationnew.dto.TrdFundDurationNew001Dto;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
-import io.protostuff.StringSerializer;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -915,8 +912,7 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
                 trdProductDeal.setPs(DictCodeList.交易方向_除权登记.getValue());
                 //除权日
                 trdProductDeal.setTradeDate(entity.getExRightsDate());
-                //交易本金 ->权益登记日份额
-                trdProductDeal.setPrinAmt(finAssetIntInfo.getRegistShare());
+                trdProductDeal.setPrinAmt(finAssetIntInfo.getTradeAmt());
                 trdProductDeal.setShareAmt(finAssetIntInfo.getQty());
                 //单位净值 单位分红净值
                 trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
@@ -928,7 +924,7 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
                 trdProductDeal.setPs(DictCodeList.交易方向_现金分红.getValue());
                 //交易金额 分红金额
                 trdProductDeal.setTradeAmt(finAssetIntInfo.getTradeAmt());
-                trdProductDeal.setPrinAmt(finAssetIntInfo.getRegistShare());
+                trdProductDeal.setPrinAmt(finAssetIntInfo.getTradeAmt());
                 trdProductDeal.setTradeDate(entity.getArriveDate());
                 trdProductDeal.setShareAmt(finAssetIntInfo.getQty());
                 // 单位净值 单位分红净值
@@ -944,7 +940,7 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
 //                }else
                 if(StringUtil.equals(entity.getAssetType(),DictCodeList.基金类资产类型_非货币基金.getValue())){
                     trdProductDeal.setPs(DictCodeList.交易方向_红利再投.getValue());
-                    trdProductDeal.setPrinAmt(finAssetIntInfo.getRegistShare());
+                    trdProductDeal.setPrinAmt(finAssetIntInfo.getTradeAmt());
                     // 单位净值 单位分红净值
                     trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
                     trdProductDeal.setTradeDate(entity.getReInvesDate());

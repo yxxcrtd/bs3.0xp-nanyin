@@ -94,6 +94,7 @@
           AND TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
           AND TRD_PRODUCT_DEAL.IS_CANCEL = 'N'
           AND TRD_PRODUCT_DEAL.COUNTER_ID = #{portfolioIdOut}
+          AND TRD_PRODUCT_DEAL.PS = 'T01'
           AND TRD_PRODUCT_DEAL.TRADE_DATE = TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
           AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = 'N'
         UNION ALL
@@ -104,6 +105,7 @@
           AND WFL_TRD_PRODUCT_DEAL.TRADE_STATUS = '01'
           AND WFL_TRD_PRODUCT_DEAL.IS_CANCEL = 'N'
           AND WFL_TRD_PRODUCT_DEAL.COUNTER_ID = #{portfolioIdOut}
+          AND WFL_TRD_PRODUCT_DEAL.PS = 'T01'
           AND WFL_TRD_PRODUCT_DEAL.TRADE_DATE = TO_DATE(#{tradeDate}, 'yyyy-MM-dd')
           AND WFL_TRD_PRODUCT_DEAL.IS_OUT_TRADE = 'N'
     </select>
