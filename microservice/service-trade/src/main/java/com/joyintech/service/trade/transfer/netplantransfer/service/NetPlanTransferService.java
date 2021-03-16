@@ -5,6 +5,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.trade.transfer.netplantransfer.dao.NetPlanTransferMapper;
 import com.joyintech.service.trade.transfer.netplantransfer.dto.NetPlanTransferDto;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,7 +102,7 @@ public class NetPlanTransferService extends BaseService<NetPlanTransferDto> {
      * @see
      * @since 1.0
      */
-    public List<BigDecimal> getUnitValueList(Map<String,Object> map){
+    public List<TrdProductDeal> getUnitValueList(Map<String,Object> map){
         return netPlanTransferMapper.getUnitValueList(map);
     }
 }

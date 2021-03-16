@@ -24,12 +24,12 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.service.SvrCommonExportService;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.chb.assetinforeg.dao.AssetInfoRegist001Mapper;
@@ -783,11 +783,22 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 				logger.error(e.getMessage(), e);
 			}
 		}else{
-			Page<ChbAstValueRegist001Dto> page = searchPage(param);
-			if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
-				list = page.getRoot();
+			// modify by zhangliang 20210315 直连报送全量查询 start
+			dealSearchParam(param);
+			String issuePartyId = CommonUtil.selectBankCode();
+			if(CommonUtil.isBAmodel()){
+				list = chbAstValueRegist001Mapper.searchPageEx(param);
+				list.forEach(item -> {
+					if (StringUtil.isEmpty(item.getIssuePartyId())){
+						item.setIssuePartyId(issuePartyId);
+					}
+				});
+
+			}else{
+				list = chbAstValueRegist001Mapper.searchPage(param);
 			}
-			//查询数据
+			dealResultlist(list);
+			// modify by zhangliang 20210315 直连报送全量查询 end
 		}
 		if(CollectionUtils.isNotEmpty(list)){
 			List<CheckReport001Dto> resultlist  = check(null);

@@ -223,6 +223,8 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         // 新建交易
         if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
             this.handleBussFlowData(entity,false);
+            // 写入质押品的组合持仓流水
+            this.ptlPredgeSecPositionFlowLogic(entity, false);
         }
         // 撤销交易
         else {
@@ -235,12 +237,15 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
      */
     @Override
     public void doUpdate(TrdBondLendInvestTradeDto entity) {
+        AllTradeCommonUtil.deletePosition(entity.getCancelRemark(), entity.getTradeId());
         if (!StringUtil.equals("revoke", entity.getOperateType())
             && !StringUtil.equals("delete", entity.getOperateType())) {
             // 先删除流程中数据
            // this.doDelete(entity.getWorkflowId());
             // 重新insert
             this.handleBussFlowData(entity,true);
+            // 写入质押品的组合持仓流水,债券借贷质押品的组合持仓流水在提交时就改变
+            this.ptlPredgeSecPositionFlowLogic(entity, false);
         }
     }
 
@@ -374,8 +379,9 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
             }
             this.deleteBussFlowData(workflowId);
 
-            // 写入质押品的组合持仓流水
-            this.ptlPredgeSecPositionFlowLogic(entity, false);
+            
+//            // 写入质押品的组合持仓流水,债券借贷的质押品的组合持仓流水变更到提交时改变
+//            this.ptlPredgeSecPositionFlowLogic(entity, false);
 
             // 写入融入券组合持仓流水
             this.ptlBlendSecPositionFlowLogic(entity, false);
@@ -1922,6 +1928,7 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
      */
     @Override
     public void doBack(TrdBondLendInvestTradeDto entity) {
+        AllTradeCommonUtil.deletePosition(entity.getCancelRemark(), entity.getTradeId());
         //删除授信占用
         if (null != entity.getTradeId() && !"".equals(entity.getTradeId()) && !StringUtil.isNotEmpty(entity.getRevokeReason())){
             riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());

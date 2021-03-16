@@ -10,6 +10,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -214,6 +216,7 @@ public class NetPlanTransfer001Controller extends BaseController {
                 List<String> list = new ArrayList<>();
                 Map<String,Object> paramMap = new HashMap<>();
                 paramMap.put("finprodId",dto.getFinprodId());
+                paramMap.put("portfolioIdOut",dto.getPortfolioIdOut());
                 paramMap.put("tradeDate",DateUtil.format(dto.getTradeDate()));
                 Boolean flag = false;
                 for(NetPlanTransfer002Dto entity : dto.getNetPlanTransfer002DtoList()){
@@ -226,10 +229,19 @@ public class NetPlanTransfer001Controller extends BaseController {
                     }
                     if(StringUtil.isNotEmpty(map.get("unitValue"))){
                         paramMap.put("portfolioId",entity.getPortfolioId());
-                        List<BigDecimal> unitValueList = netPlanTransfer001Service.getUnitValueList(paramMap);
-                        if(unitValueList.size() > 0 && !unitValueList.contains(entity.getUnitValue())){
-                            flag = true;
-                            break;
+                        List<TrdProductDeal> unitValueList = netPlanTransfer001Service.getUnitValueList(paramMap);
+                        for(TrdProductDeal trdProductDeal : unitValueList){
+                        /*if(unitValueList.size() > 0 && !unitValueList.contains(entity.getUnitValue())){*/
+                        	if(StringUtil.isNotEmpty(trdProductDeal.getUnitCprice())) {
+                        		NumberFormat nf = NumberFormat.getNumberInstance();
+                        		nf.setMinimumFractionDigits(4);
+                        		String unitCprice = nf.format(trdProductDeal.getUnitCprice());
+                        		BigDecimal bd=new BigDecimal(unitCprice);
+                        		if(!bd.equals(entity.getUnitValue())) {                      			
+                        			flag = true;
+                        			break;
+                        		}
+                        	}
                         }
                     }
                 }

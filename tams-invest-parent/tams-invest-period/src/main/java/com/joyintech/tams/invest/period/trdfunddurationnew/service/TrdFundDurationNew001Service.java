@@ -215,7 +215,8 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
              }
         }
         for(FinAssetIntInfo finAssetIntInfo : entity.getFinAssetIntInfoList()){
-            if(StringUtil.equals(DictCodeList.分红方式_红利再投.getValue(),finAssetIntInfo.getBonusMode())){
+            if(StringUtil.equals(entity.getAssetType(),DictCodeList.基金类资产类型_非货币基金.getValue())
+                    && StringUtil.equals(DictCodeList.分红方式_红利再投.getValue(),finAssetIntInfo.getBonusMode())){
                 bonusTypeHlzt = true;
                 break;
             }
@@ -226,12 +227,12 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
 //           处理数据参数
             getWorkFlowPatameter(entity);
             entity.setbTradeId(entity.getTotleTradeId());
+            entity.setPstype(DictCodeList.分红方式_现金分红.getValue());
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
             List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
             listBaseTradeInfoDto = listBaseTradeInfoDto.stream().filter(baseTradeInfoDto -> StringUtil.equals(baseTradeInfoDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_现金分红.getValue())).collect(Collectors.toList());
             entity.getBaseTotalTradeInfoDto().setBaseTradeInfoDtoList(listBaseTradeInfoDto);
             entity.getBaseTotalTradeInfoDto().setIsNeedStlPayOrders(true);
-            entity.setPstype(DictCodeList.分红方式_现金分红.getValue());
             dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
         }
         if(bonusTypeHlzt){
@@ -243,13 +244,13 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
             WorkFlowParameter<TrdFundDurationNew001Dto> param = getWorkFlowPatameter(entity);
             periodCommonService.autoDealQtyForSubmit(entity.getFinAssetIntInfoList(),entity.getRegistShare(),entity.getQty());
             entity.setbTradeId(entity.getTotleTradeId());
+            entity.setPstype(DictCodeList.分红方式_红利再投.getValue());
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
             List<FinAssetIntInfo> listFinAssetIntInfo =  entity.getFinAssetIntInfoList().stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_红利再投.getValue())).collect(Collectors.toList());
             entity.setFinAssetIntInfoList(listFinAssetIntInfo);
             List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
             listBaseTradeInfoDto = listBaseTradeInfoDto.stream().filter(baseTradeInfoDto -> StringUtil.equals(baseTradeInfoDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_红利再投.getValue())).collect(Collectors.toList());
             entity.getBaseTotalTradeInfoDto().setBaseTradeInfoDtoList(listBaseTradeInfoDto);
-            entity.setPstype(DictCodeList.分红方式_红利再投.getValue());
             try {
                 //启动流程
                 WorkFlowUtil.startProcess(param,"","", entity.getCreateUser(),OperationType.NEW,false,entity);

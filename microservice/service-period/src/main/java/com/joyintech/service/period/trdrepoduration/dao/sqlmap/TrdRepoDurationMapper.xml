@@ -769,8 +769,12 @@
 </update> 	 
 
 <select id="findCeTradeIdByTotleTradeId" resultType="java.lang.String">
-    select TRADE_ID from TRD_PRODUCT_DEAL
+    select TRD_PRODUCT_DEAL.TRADE_ID tradeId from TRD_PRODUCT_DEAL
+    left join trd_product_deal_add tpda on TRD_PRODUCT_DEAL.trade_id = tpda.trade_id
+    LEFT JOIN PTL_PORTFOLIO PP
+    ON tpda.PORTFOLIO_ID = PP.PORTFOLIO_ID
 	where TOTLE_TRADE_ID = #{totleTradeId}
+    and PP.INVEST_YESORNO = 'Y'
 	and PS = 'T23'
 	and TRADE_STATUS = '01'
 	and IS_CANCEL = 'N'

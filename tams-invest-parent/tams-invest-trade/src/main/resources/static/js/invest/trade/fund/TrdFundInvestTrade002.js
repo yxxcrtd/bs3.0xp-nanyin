@@ -1229,7 +1229,7 @@ $(function () {
                 $("#trdInvestPersonInfo_counterId").on("change", counterIdOnChange);
                 pageItemDisplay();
                 initFlag = false;
-                if(pageModel != PAGE_MODEL_NEW){
+                if(pageModel == PAGE_MODEL_NEW){
                     selectManeger();
                 }
             }

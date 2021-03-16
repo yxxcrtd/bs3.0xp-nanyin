@@ -469,13 +469,15 @@
 		ON tpda.PORTFOLIO_ID = ptl.PORTFOLIO_ID
 		LEFT JOIN fin_product asset
 		ON tpd.finprod_id          = asset.finprod_id
+		left join STL_SEC_ACCT_INFO ssai
+		on ssai.SEC_ACCT_ID = tpd.SEC_MANAGE_ACCT_ID
 		WHERE tpd.TRADE_STATUS     = #{TRADE_STATUS_01}
 		AND tpd.IS_CANCEL          = #{IS_CANCEL_N}
 		<if test="secAcctId != null and secAcctId != ''">
 			AND tpd.SEC_MANAGE_ACCT_ID = #{secAcctId}
 		</if>
 		<if test="org != null and org != '' and (feeType1 == 'B06' or feeType1 == 'B08') ">
-			AND  asset.REGIST_ORG = #{org}
+			AND  ssai.REGIST_ORG = #{org}
 		</if>
 		AND tdf.fee_type = #{feeType1}
 		<if test="startDate != null and startDate != ''">

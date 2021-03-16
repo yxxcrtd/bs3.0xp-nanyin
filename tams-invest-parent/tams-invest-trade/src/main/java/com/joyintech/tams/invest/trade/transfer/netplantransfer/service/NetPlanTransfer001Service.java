@@ -170,8 +170,9 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
      * @see
      * @since 1.0
      */
-    public List<BigDecimal> getUnitValueList(Map<String,Object> map){
-        return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/NetPlanTransfer001/getUnitValueList",map, BigDecimal.class);
+    public List<TrdProductDeal> getUnitValueList(Map<String,Object> map){
+    	TrdProductDeal trdProductDeal = new TrdProductDeal();
+    	return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/NetPlanTransfer001/getUnitValueList",map, TrdProductDeal.class);
     }
 
     /**

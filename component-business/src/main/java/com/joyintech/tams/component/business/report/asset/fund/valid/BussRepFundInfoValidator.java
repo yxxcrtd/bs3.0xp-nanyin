@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.calculator.RepCheckUtil;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.util.StringUtil;
@@ -73,6 +74,18 @@ public class BussRepFundInfoValidator implements BeanValidator{
                 if(StringUtil.isEmpty(dto.getRepFundInvestAsset())){
                     resultList.add(new ValidMessage("repFundInvestAsset",
                             getMessage("COMMON_E_0057", getMessage("BussRepFundInfo.repFundInvestAsset"))));
+                }else{
+                    // 不为空的情况下 校验 规则
+                    if (RepCheckUtil.checkByteLength(dto.getRepFundInvestAsset(), 300)) {
+                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
+                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
+                    }else if(dto.getRepFundInvestAsset().contains("（") || dto.getRepFundInvestAsset().contains("）") ||
+                            dto.getRepFundInvestAsset().contains("：") || dto.getRepFundInvestAsset().contains("；")
+                            || !dto.getRepFundInvestAsset().contains(":")  || !dto.getRepFundInvestAsset().contains("%")) {
+                        resultList.add(new ValidMessage("repFundInvestAsset", this.getMessage("FW_E_0002",
+                                this.getMessage("BussRepFundInfo.repFundInvestAsset"))));
+                    }
+
                 }
 
             /*if(StringUtil.isEmpty(dto.getRepFundCompName())){

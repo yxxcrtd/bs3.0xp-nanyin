@@ -166,6 +166,26 @@ public class TrdRepoTrade004Service extends BaseService<TrdRepoTrade004Dto> impl
     public void doInsert(TrdRepoTrade004Dto entity, OperationType operationType) {
         handleBussFlowData(entity);
     }
+
+    /**
+     * 工作流doUpdate
+     *
+     * @param entity  entity
+     */
+    @Override
+    public void doUpdate(TrdRepoTrade004Dto entity) {
+        AllTradeCommonUtil.deletePosition(entity.getCancelRemark(), entity.getTradeId());
+        handleBussFlowData(entity);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doBack(TrdRepoTrade004Dto entity){
+        AllTradeCommonUtil.deletePosition(entity.getCancelRemark(), entity.getTradeId());
+    }
+    
     /**
      * 根据交易对手id获取交易对手名称
      *

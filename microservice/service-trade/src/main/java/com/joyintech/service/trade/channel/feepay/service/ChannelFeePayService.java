@@ -201,4 +201,8 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
     public String findPortfolioName(String portfolioId) {
        return channelFeePayMapper.findPortfolioName(portfolioId);
     }
+
+    public List<String> getTradeId1(String totleTradeId) {
+        return channelFeePayMapper.getTradeId1(totleTradeId);
+    }
 }

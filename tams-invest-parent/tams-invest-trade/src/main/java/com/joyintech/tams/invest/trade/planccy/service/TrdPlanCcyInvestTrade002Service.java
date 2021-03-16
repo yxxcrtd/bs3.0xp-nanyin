@@ -280,6 +280,10 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
                 dto.setStlPayOrdersList(spodList);
                 baseTradeProductDealDtos.add(dto);
             }
+            //赎回时没有划款指令，提交时需要增加指令可用持仓
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回.getValue())){
+                baseTradeProductDealDtos.add(dto);
+            }
             finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
             //        委托代码不为空处理委托代码
             if(StringUtil.isNotEmpty(entity.getEntrustId())){
@@ -311,48 +315,54 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
      */
     @Override
     public void doUpdate(TrdPlanCcyInvestTradeDto entity) {
-            if(StringUtil.equals(entity.getOperateType(), "save")){
-                restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanCcyInvestTrade/doUpdate",
-                    entity, Integer.class);
+        if(StringUtil.equals(entity.getOperateType(), "save")){
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanCcyInvestTrade/doUpdate",
+                entity, Integer.class);
+        }
+        if(StringUtil.equals(entity.getOperateType(), "submit")){
+            //流程提交过程中持仓先删后插，防止多次插入
+            AllTradeCommonUtil.deletePosition(entity.getCancelRemark(), entity.getTradeId());
+            prepareEntity(entity);
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanCcyInvestTrade/doUpdate",
+                entity, Integer.class);
+            FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
+            finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
+            BaseTradeProductDealDto dto = new BaseTradeProductDealDto();
+            dto.setTrdProductDeal(entity);
+            dto.setTrdProductDealAdd(entity.getTrdProductDealAdd());
+            List<StlPayOrdersDto> spodList = new ArrayList<>();
+            
+            for(BussTrdTransferOrderDto bttod : entity.getBussTrdTransferOrder()){
+                spodList.add(bttod);
+                dto.setStlPayOrdersList(spodList);
+                baseTradeProductDealDtos.add(dto);
             }
-            if(StringUtil.equals(entity.getOperateType(), "submit")){
-                prepareEntity(entity);
-                restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanCcyInvestTrade/doUpdate",
-                    entity, Integer.class);
-                FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
-                finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
-                List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
-                BaseTradeProductDealDto dto = new BaseTradeProductDealDto();
-                dto.setTrdProductDeal(entity);
-                dto.setTrdProductDealAdd(entity.getTrdProductDealAdd());
-                List<StlPayOrdersDto> spodList = new ArrayList<>();
-                
-                for(BussTrdTransferOrderDto bttod : entity.getBussTrdTransferOrder()){
-                    spodList.add(bttod);
-                    dto.setStlPayOrdersList(spodList);
-                    baseTradeProductDealDtos.add(dto);
-                }
-                finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
-                //        委托代码不为空处理委托代码
-                if(StringUtil.isNotEmpty(entity.getEntrustId())){
-                    dto.setEntrustId(entity.getEntrustId());
-                }
+            //赎回时没有划款指令，提交时需要增加指令可用持仓
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回.getValue())){
+                baseTradeProductDealDtos.add(dto);    
+            }
+            finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
+            //        委托代码不为空处理委托代码
+            if(StringUtil.isNotEmpty(entity.getEntrustId())){
+                dto.setEntrustId(entity.getEntrustId());
+            }
 
-                // 撤销时，子组合需要调估值共通
-                if (entity.getActPortfolioId() != null && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
-                    finProductTradeDto.getBaseTradeProductDealDtos().forEach(finProductTrade -> {
-                        finProductTrade.setActPortfolioId(entity.getActPortfolioId());
-                    });
-                }
-                baseTradeProductDealCommService.execute(finProductTradeDto);
-                if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
-                    finProductTradeDto.getBaseTradeProductDealDtos().forEach(
-                            baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getActPortfolioId()));
-                    baseTradeProductDealCommService.insertPosition(finProductTradeDto);
-                    finProductTradeDto.getBaseTradeProductDealDtos().forEach(
-                            baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getPortfolioId()));
-                }
+            // 撤销时，子组合需要调估值共通
+            if (entity.getActPortfolioId() != null && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
+                finProductTradeDto.getBaseTradeProductDealDtos().forEach(finProductTrade -> {
+                    finProductTrade.setActPortfolioId(entity.getActPortfolioId());
+                });
             }
+            baseTradeProductDealCommService.execute(finProductTradeDto);
+            if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
+                finProductTradeDto.getBaseTradeProductDealDtos().forEach(
+                        baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getActPortfolioId()));
+                baseTradeProductDealCommService.insertPosition(finProductTradeDto);
+                finProductTradeDto.getBaseTradeProductDealDtos().forEach(
+                        baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getPortfolioId()));
+            }
+        }
     }
     /**
      * 

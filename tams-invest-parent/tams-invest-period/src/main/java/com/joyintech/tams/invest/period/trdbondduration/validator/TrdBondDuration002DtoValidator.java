@@ -3,6 +3,8 @@ package com.joyintech.tams.invest.period.trdbondduration.validator;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -34,6 +36,9 @@ public class TrdBondDuration002DtoValidator implements PeriodCommonValidator {
 
     @Autowired
     private BussTrdTransferOrderService bussTrdTransferOrderService;
+
+    @Autowired
+    MstWorkflowCommonService mstWorkflowCommonService;
 
     @Override
     public List<ValidMessage> bussValid(Object value) {
@@ -87,6 +92,30 @@ public class TrdBondDuration002DtoValidator implements PeriodCommonValidator {
                 params.put("chlId", dto.isChannel()?dto.getSecManageAcctId():null);
                 if (!periodCommonService.checkIfMaxDate(params)) {
                     errorList.add(new ValidMessage(getMessage("PERIOD_E_0001")));
+                }
+            }
+
+            // 由于 行权撤销 变为 003 故需要重新校验是否存在撤销中流程
+            if (errorList.isEmpty()) {
+                if(StringUtil.equals(DictCodeListExt1.平安业务类型_债券类资产行权.getValue(), dto.getPaBussType())) {
+                    WflValidInputParameter wflValidInputParameter  = new WflValidInputParameter();
+                    wflValidInputParameter.setPageId("TrdBondDuration003");
+                    wflValidInputParameter.setBusinessDataPk1(dto.getFinprodId());
+                    if(StringUtil.isNotEmpty(dto.getWorkflowId())){
+                        wflValidInputParameter.setWorkflowId(dto.getWorkflowId());
+                    }
+                    wflValidInputParameter.setBusinessDataPk2("T39");
+                    wflValidInputParameter.setBusinessDataPk3(dto.getBusiCode());
+                    if(StringUtil.isNotEmpty(dto.isChannel())) {
+                        wflValidInputParameter.setBusinessDataPk4(dto.getSecManageAcctId());
+                    }
+                    wflValidInputParameter.setBusinessDataPk5(dto.getPayDate());
+
+                    if(mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
+                        //流程存在情况
+                        errorList.add(new ValidMessage(getMessage("COMMON_E_0021","业务编号",dto.getBusiCode())));
+                    }
+
                 }
             }
         }

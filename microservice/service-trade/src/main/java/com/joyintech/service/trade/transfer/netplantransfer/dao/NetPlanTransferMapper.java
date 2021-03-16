@@ -1,6 +1,8 @@
 package com.joyintech.service.trade.transfer.netplantransfer.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -72,5 +74,5 @@ public interface NetPlanTransferMapper {
      * @see
      * @since 1.0
      */
-    List<BigDecimal> getUnitValueList(Map<String,Object> map);
+    List<TrdProductDeal> getUnitValueList(Map<String,Object> map);
 }

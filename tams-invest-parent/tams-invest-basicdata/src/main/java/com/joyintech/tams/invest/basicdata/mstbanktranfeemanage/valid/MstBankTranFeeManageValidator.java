@@ -211,6 +211,9 @@ public class MstBankTranFeeManageValidator implements BeanValidator {
                                     mstBankTranFeeManageDto.setPs(ps);
                                     mstBankTranFeeManageDto.setWorkflowId(en.getWorkflowId());
                                     mstBankTranFeeManageDto.setIsMlti(data0List.get(0).getIsMlti());
+                                    if(StringUtil.isNotEmpty(data0List.get(0).getTradeMarketMode())){
+                                        mstBankTranFeeManageDto.setTradeMarketMode(data0List.get(0).getTradeMarketMode());
+                                    }
                                     if(StringUtil.isNotEmpty(data0List.get(0).getTermType())){
                                         //期限品种
                                         String[] arrTerm = data0List.get(0).getTermType().split(",");
@@ -246,6 +249,7 @@ public class MstBankTranFeeManageValidator implements BeanValidator {
                                 && StringUtil.equals(d.getIsMlti(), data0.getIsMlti())
                                 //增加流程中数据对期限品种和是否多券种的判断 add by gejiaao 20191230 end
                                 && DateUtil.compareDate(d.getEffDate(), data0.getEffDate()) == 0
+                                && StringUtil.equals(d.getTradeMarketMode(),data0.getTradeMarketMode())
                                 && !StringUtil.equals(data0.getWorkflowId(), dto.getWorkflowId())) {
                             flag2 = true;
                             break;

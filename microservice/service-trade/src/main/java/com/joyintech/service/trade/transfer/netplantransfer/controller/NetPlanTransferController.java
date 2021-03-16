@@ -2,6 +2,8 @@ package com.joyintech.service.trade.transfer.netplantransfer.controller;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.transfer.netplantransfer.service.NetPlanTransferService;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,8 +102,8 @@ public class NetPlanTransferController {
      * @since 1.0
      */
     @PostMapping("getUnitValueList")
-    public List<BigDecimal> getUnitValueList(@RequestBody Map<String,Object> map){
-        return netPlanTransferService.getUnitValueList(map);
+    public List<TrdProductDeal> getUnitValueList(@RequestBody Map<String,Object> map){
+    	return netPlanTransferService.getUnitValueList(map);
     }
 
 }

@@ -21,11 +21,11 @@
 			       CASE WHEN b.asset_value is not null THEN b.asset_value
 				   WHEN a.asset_value is not null THEN a.asset_value
 				   ELSE 0 END as assetValue,
-				   CASE WHEN b.net_unit_value is not null THEN to_char(b.net_unit_value,rpad('FM9.',pvp.unitvalue_dec+4,0))
-				   WHEN a.net_unit_value is not null THEN to_char(a.net_unit_value,rpad('FM9.',pvp.unitvalue_dec+4,0))
+				   CASE WHEN b.net_unit_value is not null THEN to_char(b.net_unit_value,rpad('FM99.',pvp.unitvalue_dec+5,0))
+				   WHEN a.net_unit_value is not null THEN to_char(a.net_unit_value,rpad('FM99.',pvp.unitvalue_dec+5,0))
 				   ELSE '0' END as netUnitValue,
-				   CASE WHEN b.net_unit_value is not null THEN to_char(b.net_unit_value,rpad('FM9.',pvp.unitvalue_dec+4,0))
-					WHEN a.net_unit_value is not null THEN to_char(a.net_unit_value,rpad('FM9.',pvp.unitvalue_dec+4,0))
+				   CASE WHEN b.net_unit_value is not null THEN to_char(b.net_unit_value,rpad('FM99.',pvp.unitvalue_dec+5,0))
+					WHEN a.net_unit_value is not null THEN to_char(a.net_unit_value,rpad('FM99.',pvp.unitvalue_dec+5,0))
 					ELSE '0' END as netUnitValueTemp,
 			       <!-- update by hechuan 2019-10-9 end -->
 			       /**add by leipeng UAT-230 单位净值、累计净值、七日年化收益率、应付利润，值不应该一直为0 20180903*/

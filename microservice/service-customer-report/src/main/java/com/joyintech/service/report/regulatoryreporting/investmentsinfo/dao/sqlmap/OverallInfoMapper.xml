@@ -981,7 +981,7 @@
 		/* 其他上季末数额 */
 		UNION ALL
 		SELECT
-		'OTHERCUR' AS reportType,
+		'OTHERLAST' AS reportType,
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
 		FROM CHB_MONTH_ASSET_POSITION CMAP

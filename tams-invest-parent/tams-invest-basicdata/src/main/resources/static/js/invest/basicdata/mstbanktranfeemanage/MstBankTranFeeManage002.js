@@ -96,7 +96,9 @@
         mstDto.effDate = object.effDate;
         mstDto.isMlti = object.isMlti;
         //添加交易市场
-        mstDto.tradeMarketMode = object.tradeMarketMode;
+        if($('#tradeMarketMode').val()){
+            mstDto.tradeMarketMode = object.tradeMarketMode;
+        }
         if ($("#workflowId").val() != null && $("#workflowId").val() != '') {
             mstDto.workflowId = $("#workflowId").val();
         }
@@ -156,7 +158,9 @@
         mstDto.batchSeq = object.batchSeq;
         mstDto.tradeType = object.tradeType;
         //添加交易市场
-        mstDto.tradeMarketMode = object.tradeMarketMode;
+        if($('#tradeMarketMode').val()){
+            mstDto.tradeMarketMode = object.tradeMarketMode;
+        }
         mstDto.ps = v1;
         if ($("#workflowId").val() != null && $("#workflowId").val() != '') {
             mstDto.workflowId = $("#workflowId").val();

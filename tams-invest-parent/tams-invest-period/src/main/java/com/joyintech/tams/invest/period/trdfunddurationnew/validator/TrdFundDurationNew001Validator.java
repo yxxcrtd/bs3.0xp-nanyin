@@ -144,7 +144,7 @@ public class TrdFundDurationNew001Validator implements BeanValidator{
                 }
                 String keytemp = finAssetIntInfo.getPortfolioId()+finAssetIntInfo.getSecAcctId()+finAssetIntInfo.getChIld()+finAssetIntInfo.getBonusMode();
                 if(checkListMap.containsKey(keytemp)){
-                    messageList.add(new ValidMessage("同一个组合、同一个证券账户/通道不能存在两种分红类型!"));
+                    messageList.add(new ValidMessage("同一个组合、同一个证券账户/通道不能存在相同分红类型!"));
                     break;
                 }else{
                     checkListMap.put(keytemp, finAssetIntInfo);

@@ -299,6 +299,7 @@
      	POS_DATE = #{item.posDate}
 		and PLAN_ASSET_ID = #{item.planAssetId}
 		and ASSET_CODE = #{item.assetCode}
+		and REGIST_SEQNO != #{item.registSeqno}
       </foreach>
       </where>
    </select>

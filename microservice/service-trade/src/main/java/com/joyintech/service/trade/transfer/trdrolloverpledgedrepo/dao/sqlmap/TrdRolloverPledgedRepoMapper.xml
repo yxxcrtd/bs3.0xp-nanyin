@@ -36,7 +36,7 @@
         fp.FINPROD_ABBR AS finprodAbbr,
         NVL(fdp.PLEDGE_NUMBER, 0) * 100 pledgePrin,
         NVL(fdp.PLEDGE_RATIO,0) * 100 pledgeRatio,
-        NVL(table1.AMOUNT,0) - NVL(table2.AMOUNT,0) as prdPledgePrin
+        (NVL(table1.AMOUNT,0) - NVL(table2.AMOUNT,0) + NVL(table3.AMOUNT,0))*100 as prdPledgePrin
         FROM FIN_DEAL_PLEDGE fdp
         LEFT JOIN TRD_PRODUCT_DEAL tpd
         ON fdp.FINPROD_ID = tpd.TRADE_ID
@@ -52,7 +52,7 @@
         <if test="chlId!=null and chlId!=''">
             AND psp.SEC_ACCT_ID = #{chlId,jdbcType=VARCHAR}
         </if>
-        AND psp.HODING_TYPE IN ('01','03','05')
+        AND psp.HODING_TYPE IN ('01','03','05','08')
         <if test="tradeDate!=null">
             AND psp.CDATE = TO_DATE(#{tradeDate},'yyyy-MM-dd')
         </if>
@@ -68,12 +68,46 @@
         <if test="chlId!=null and chlId!=''">
             AND psp.SEC_ACCT_ID = #{chlId,jdbcType=VARCHAR}
         </if>
-        AND psp.HODING_TYPE ='04'
+        AND psp.HODING_TYPE in('04','06','11')
         <if test="tradeDate!=null">
             AND psp.CDATE = TO_DATE(#{tradeDate},'yyyy-MM-dd')
         </if>
         GROUP BY psp.FINPROD_ID
         )table2 ON table2.FINPROD_ID=fdp.PLEDGE_FINPROD_ID
+        LEFT JOIN
+        (
+        SELECT
+        SUM(DECODE(PSP.HODING_TYPE, '12', -1*psp.AMOUNT, psp.amount)) AMOUNT,
+        psp.finprod_id
+        FROM
+        PTL_SEC_POSITION_FLOW PSP
+        INNER JOIN
+        FIN_PRODUCT T
+        ON
+        PSP.FINPROD_ID = T.FINPROD_ID
+        AND T.FINPROD_TYPE2 = 'F01'
+        AND psp.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        AND psp.CDATE &lt;= TO_DATE(#{tradeDate},'yyyy-MM-dd')
+        AND PSP.HODING_TYPE IN ('01','12')
+        AND PSP.SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+        AND NOT EXISTS
+        (
+        SELECT
+        1
+        FROM
+        PTL_SEC_POSITION_FLOW PSP1
+        WHERE
+        PSP1.portfolio_id = psp.portfolio_id
+        AND PSP1.sec_acct_id = psp.sec_acct_id
+        AND PSP1.finprod_id = psp.finprod_id
+        AND PSP1.CDATE &lt;= TO_DATE(#{tradeDate},'yyyy-MM-dd')
+        AND PSP1.CDATE > psp.CDATE
+        AND PSP1.branch = psp.branch
+        AND PSP1.inv_aim = psp.inv_aim
+        AND PSP1.hoding_type = psp.hoding_type
+        AND PSP1.ccy = psp.ccy)
+        GROUP BY
+        PSP.finprod_id )table3 ON table3.FINPROD_ID=fdp.PLEDGE_FINPROD_ID
         WHERE fdp.FINPROD_ID = #{splitTradeId,jdbcType=VARCHAR}
         and tpd.IS_CANCEL='N'
     </select>
