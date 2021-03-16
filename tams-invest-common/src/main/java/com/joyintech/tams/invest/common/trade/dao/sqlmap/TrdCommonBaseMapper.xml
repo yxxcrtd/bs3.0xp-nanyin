@@ -561,6 +561,8 @@
         left join TRD_PRODUCT_DEAL tpd2 on tpd2.TRADE_ID = tpd.R_TRADE_ID /*买入交易表*/
         LEFT JOIN FIN_PRODUCT fp ON tpd.FINPROD_ID = fp.FINPROD_ID
         where pp.PORTFOLIO_TYPE = '01'/*内部转仓*/
+        AND EXISTS ( SELECT 1 FROM  pa_trd_product_deal
+        pa WHERE    pa.trade_id = TPD.Trade_Id)
         and tpd2.IS_CANCEL = 'N' and tpd2.TRADE_STATUS = '01' /*有效状态*/
         and (tpd.trade_id = #{tradeId, jdbcType=VARCHAR} or tpd.TOTLE_TRADE_ID = #{tradeId, jdbcType=VARCHAR})
         union all
@@ -573,6 +575,8 @@
         left join TRD_PRODUCT_DEAL tpd2 on tpd2.TRADE_ID = tpd.R_TRADE_ID /*卖出交易表*/
         LEFT JOIN FIN_PRODUCT fp ON tpd.FINPROD_ID = fp.FINPROD_ID
         where pp.PORTFOLIO_TYPE = '01'/*内部转仓*/
+        AND EXISTS ( SELECT 1 FROM  pa_trd_product_deal
+        pa WHERE    pa.trade_id = TPD.Trade_Id)
         and tpd.IS_CANCEL = 'N' and tpd.TRADE_STATUS = '01' /*有效状态*/
         and (tpd.R_TRADE_ID = #{tradeId, jdbcType=VARCHAR} or tpd2.TOTLE_TRADE_ID = #{tradeId, jdbcType=VARCHAR})
     </select>
