@@ -16,7 +16,7 @@
 					MDATE,
 					BALANCE_AMT,
 					PRD_QTY,
-					ROW_NUMBER() over( partition by REG_CODE BY MDATE DESC )  AS durMDateNo
+					ROW_NUMBER() over( partition by REG_CODE ORDER BY MDATE DESC )  AS durMDateNo
 				FROM(
 					SELECT  
 						A.REG_CODE,

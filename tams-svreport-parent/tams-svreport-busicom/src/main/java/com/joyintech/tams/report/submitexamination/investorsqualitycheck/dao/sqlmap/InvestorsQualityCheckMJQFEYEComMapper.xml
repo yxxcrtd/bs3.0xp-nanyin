@@ -16,7 +16,7 @@
 					tmp2.hodeDate,
 					B.RAISE_QTY,
 					B.TOTAL_AMT,
-					ROW_NUMBER() over( partition by tmp2.REG_CODE ORDER BY B.STATUS DESC )  AS raiseStatusNo
+					ROW_NUMBER() over( partition by tmp2.REG_CODE ORDER BY B.STATUS DESC ,B.UPDATE_TIME DESC)  AS raiseStatusNo
 				FROM (
 						SELECT  
 							A.REG_CODE,
@@ -87,7 +87,7 @@
 					A.TOTAL_AMT,
 					B.QTY,
 					B.CNY_AMT,
-					ROW_NUMBER() over( partition by A.REG_CODE , B.INDENTIFY_MARK ORDER BY B.STATUS DESC )  AS investStatusNo
+					ROW_NUMBER() over( partition by A.REG_CODE , B.INDENTIFY_MARK ORDER BY B.STATUS DESC,B.UPDATE_TIME DESC )  AS investStatusNo
 				FROM  objRec A
 					INNER JOIN CHB_INVESTHOLD_INFO_SUB B
 					ON (A.REG_CODE = B.PRD_REGIST_CODE
