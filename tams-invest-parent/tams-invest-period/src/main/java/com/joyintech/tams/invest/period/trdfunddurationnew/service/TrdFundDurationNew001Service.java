@@ -251,6 +251,11 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
             List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
             listBaseTradeInfoDto = listBaseTradeInfoDto.stream().filter(baseTradeInfoDto -> StringUtil.equals(baseTradeInfoDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_红利再投.getValue())).collect(Collectors.toList());
             entity.getBaseTotalTradeInfoDto().setBaseTradeInfoDtoList(listBaseTradeInfoDto);
+            BigDecimal tradeAmt = BigDecimal.ZERO;
+            for(FinAssetIntInfo tempFinAssetIntInfo:entity.getFinAssetIntInfoList()){
+                tradeAmt = tradeAmt.add(tempFinAssetIntInfo.getTradeAmt());
+            }
+            entity.setTradeAmt(tradeAmt);
             try {
                 //启动流程
                 WorkFlowUtil.startProcess(param,"","", entity.getCreateUser(),OperationType.NEW,false,entity);
