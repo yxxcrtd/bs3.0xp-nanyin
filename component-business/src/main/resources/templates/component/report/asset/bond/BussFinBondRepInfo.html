@@ -76,6 +76,7 @@
                             <select th:id="|${entityName}_repIndustryLevel2|"
                                 th:name="|${entityName}.repIndustryLevel2|"
                                 th:initValue="${entity?.repIndustryLevel2}"
+                                data-th-parentids="|${entityName}_repIndustry|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
