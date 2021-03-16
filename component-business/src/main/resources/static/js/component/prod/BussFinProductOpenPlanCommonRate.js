@@ -1531,8 +1531,9 @@
         		$('#FinNetValueProductBuild002_investmentCycle').trigger('change').prop('disabled', false);
 //        		$('#FinNetValueProductBuild002_investmentCycle').attr('required', true).trigger('change');
 //                $('#FinNetValueProductBuild002_investmentCycle').append($('<i class="must">*</i>'));
+        		if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT ){
                 $('#FinNetValueProductBuild002_investmentCycle').parent().parent().find('.layui-form-label').append('<i class="must">*</i>');
-
+        		}
         		$('#periodDiv').hide();
         		$('#bussOpenPlandiv').show();
         		if(parentPageId !== 'FinOpenPlanMaintenance002'){
