@@ -7,6 +7,7 @@
 		<result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR"/>
 		<result column="IS_LAY" property="isLay" jdbcType="VARCHAR"/>
 		<result column="CHANGE_DATE" property="changeDate" jdbcType="TIMESTAMP"/>
+		<result column="CASHMDATE" property="cashmdate" jdbcType="TIMESTAMP"/>
 		<result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR"/>
 		<result column="CHANGE_TYPE" property="changType" jdbcType="VARCHAR"/>
 		<result column="PROD_YIELD" property="prodYield" jdbcType="DECIMAL"/>
@@ -27,7 +28,7 @@
 		<result column="CCY" property="ccy" jdbcType="VARCHAR"/>
 	</resultMap>
 	<sql id="Base_Column_List">
-		SEQNO, PROD_ID, FPROD_ID,IS_LAY,CHANGE_DATE, PROFIT_TYPE, CHANGE_TYPE,PROD_YIELD,PROD_BENCHMARK_RATE,
+		SEQNO, PROD_ID, FPROD_ID,IS_LAY,CHANGE_DATE,CASHMDATE, PROFIT_TYPE, CHANGE_TYPE,PROD_YIELD,PROD_BENCHMARK_RATE,
 		UNIT_VALUE_TOTAL,UNIT_VALUE,SEVEN_DAY_RATE,ORG_CODE, DEPT_CODE,
 		STATUS, REV_DATE, DATA_SOURCE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
 		REMARK,CCY
@@ -43,6 +44,7 @@
 	  info.FINPROD_MARKET_ID AS fprodId,
 	  case when fpa.is_lay='Y' and fpa.is_cycle='N' then 'Y' else 'N' end as isLay,
 	  rul.EFF_DATE AS changeDate,
+	  null as cashmdate,
 	  info.PROFIT_TYPE as profitType,
 	  '01' changType,
 	  rul.YIELD AS prodYield,
@@ -72,6 +74,7 @@
 	  info.FINPROD_MARKET_ID AS fprodId,
 	  null as isLay,
 	  val.VAL_DATE as changeDate,
+	  null as cashmdate,
 	  info.PROFIT_TYPE as profitType,
 	  '02' changType,
 	  null AS prodYield,
@@ -104,6 +107,7 @@
 	  info.FINPROD_MARKET_ID AS fprodId,
 	  case when fpa.is_lay='Y' and fpa.is_cycle='N' then 'Y' else 'N' end as isLay,
 	  rul.EFF_DATE AS changeDate,
+	  plan.E_ACCR_DATE as cashmdate,
 	  info.PROFIT_TYPE as profitType,
 	  '03' changType,
 	  null AS prodYield,
@@ -117,6 +121,10 @@
 	  on info.FINPROD_ID=rul.FINPROD_ID
 	  left JOIN FIN_PRODUCT_add fpa
 	  on fpa.FINPROD_ID=rul.FINPROD_ID
+	  left join FIN_FLOAT_CALC_RULE_DETAIL  detail
+	  on rul.base_rule_id=detail.base_rule_id
+	  left join FIN_FLOAT_COUNTING_RULE plan
+	  on detail.cash_id=plan.cash_id
 	  WHERE 1=1
 	  and info.FINPROD_TYPE2 in ('F16','F24')
 	  AND info.PROFIT_TYPE in ('01','03')
@@ -231,6 +239,7 @@
 		#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
 		#{item.isLay,jdbcType=VARCHAR} IS_LAY,
 		#{item.changeDate,jdbcType=TIMESTAMP} CHANGE_DATE,
+		#{item.cashmdate,jdbcType=TIMESTAMP} CASHMDATE,
 		#{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
 		#{item.changType,jdbcType=VARCHAR} CHANGE_TYPE,
 		#{item.prodYield,jdbcType=DECIMAL} PROD_YIELD,
@@ -273,17 +282,18 @@
 	CII.REMARK = TEMP.REMARK,
 	CII.UPDATE_USER = TEMP.UPDATE_USER,
 	CII.UPDATE_TIME = TEMP.UPDATE_TIME,
-	CII.CCY = TEMP.CCY
+	CII.CCY = TEMP.CCY,
+	CII.CASHMDATE = TEMP.CASHMDATE
 	<!-- 未匹配到这插入 -->
 	WHEN NOT MATCHED THEN INSERT (SEQNO, PROD_ID,FPROD_ID,IS_LAY,
-	CHANGE_DATE, PROFIT_TYPE,CHANGE_TYPE, PROD_YIELD,PROD_BENCHMARK_RATE,UNIT_VALUE_TOTAL,
+	CHANGE_DATE, CASHMDATE,PROFIT_TYPE,CHANGE_TYPE, PROD_YIELD,PROD_BENCHMARK_RATE,UNIT_VALUE_TOTAL,
 	UNIT_VALUE,SEVEN_DAY_RATE,
 	ORG_CODE, DEPT_CODE, STATUS,
 	REV_DATE, DATA_SOURCE, UPDATE_USER,
 	UPDATE_TIME, CREATE_USER, CREATE_TIME,
 	REMARK,CCY)
 	VALUES(TEMP.SEQNO, TEMP.PROD_ID,TEMP.FPROD_ID,TEMP.IS_LAY,
-	TEMP.CHANGE_DATE, TEMP.PROFIT_TYPE,TEMP.CHANGE_TYPE,
+	TEMP.CHANGE_DATE, TEMP.CASHMDATE,TEMP.PROFIT_TYPE,TEMP.CHANGE_TYPE,
 	TEMP.PROD_YIELD,TEMP.PROD_BENCHMARK_RATE,TEMP.UNIT_VALUE_TOTAL,TEMP.UNIT_VALUE,TEMP.SEVEN_DAY_RATE,
 	TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.STATUS,
 	TEMP.REV_DATE, TEMP.DATA_SOURCE, TEMP.UPDATE_USER,

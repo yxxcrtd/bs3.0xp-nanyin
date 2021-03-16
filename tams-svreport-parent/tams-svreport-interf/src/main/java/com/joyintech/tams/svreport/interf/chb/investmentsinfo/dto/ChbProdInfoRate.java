@@ -34,7 +34,10 @@ public class ChbProdInfoRate extends BaseEntity{
      * 变动日期
      */
     private Date changeDate;
-
+    /**
+     * 计提结束日
+     */
+    private Date cashmdate;
     /**
      * 产品收益类型:01净值型,02预期收益型,03	货币型
      */
@@ -313,5 +316,13 @@ public class ChbProdInfoRate extends BaseEntity{
 
     public void setIsLay(String isLay) {
         this.isLay = isLay;
+    }
+
+    public Date getCashmdate() {
+        return cashmdate;
+    }
+
+    public void setCashmdate(Date cashmdate) {
+        this.cashmdate = cashmdate;
     }
 }
