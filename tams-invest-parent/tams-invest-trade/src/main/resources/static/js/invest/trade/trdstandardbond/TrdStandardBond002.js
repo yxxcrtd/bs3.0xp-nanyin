@@ -371,6 +371,9 @@
         object.operateType = operateType;
         object.pledgeBondList = pledgeBondTbl.getAllRows();
         object.avaPledgeBondList = avaPledgeBondTBL.getAllRows();
+        //TISHKBS-1849:【投资管理-质押式回购交易】标准券管理，质押券入库，提交时报错
+        delete object.bondCode;
+        //TISHKBS-1849:【投资管理-质押式回购交易】标准券管理，质押券入库，提交时报错
         Joyin.ajaxJson(basePath + 'invest/trade/trdstandardbond/TrdStandardBond002/check', object, function (result) {
             Joyin.confirm(result.data, function () {
                 if (operateType === 'save') {
