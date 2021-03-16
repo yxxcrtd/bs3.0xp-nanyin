@@ -92,8 +92,9 @@
 		     	select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr,type8,type7,
 			        (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06) as actualPositionAmount,
 			        (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08) as tradePositionAmount,
-			        ETR_FLOW_AMOUNTE01 as instructionsAmount,ETR_FLOW_AMOUNT04 as pledgeAmount,
-			        (PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ) as preReductionAmount
+			        ETR_FLOW_AMOUNTE01 as instructionsAmount,
+					decode(mm.TYPE8,'F03',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),ETR_FLOW_AMOUNT04) as pledgeAmount,
+					decode(mm.TYPE8,'F03' ,0,(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 )) as preReductionAmount
 			       from
 			       (
 			       		select portfolioId,
