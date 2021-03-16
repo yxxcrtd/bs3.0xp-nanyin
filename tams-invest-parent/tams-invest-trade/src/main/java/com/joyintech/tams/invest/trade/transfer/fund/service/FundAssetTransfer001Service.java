@@ -84,6 +84,8 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 BeanUtil.copyPropertiesIgnoreNull(output, input);
                 // 构造Entity
                 this.prepareEntity(input, dto);
+                String rtradeid = this.prepareEntity1(output, dto);
+                input.getTrdProductDeal().setrTradeId(rtradeid);
 
                 // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
                 // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
@@ -198,7 +200,6 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
 
                 //转入产品组合登陆------------------------------------------------------------------------------------------------------------
                 // 构造Entity
-                this.prepareEntity1(output, dto);
 
                 // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
                 // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
@@ -829,7 +830,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         // 金融产品交易扩展Entity 构造结束----------------------------------------------------------
     }
 
-    private void prepareEntity1(FundAssetTransfer001Dto output, FundAssetTransfer001Dto entity) {
+    private String prepareEntity1(FundAssetTransfer001Dto output, FundAssetTransfer001Dto entity) {
         //生成交易编号
         output.setTradeId(generateTradeId(false));
         output.setActPortfolioId(output.getPortfolioId());
@@ -1021,6 +1022,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
 
         output.setWflPaTrdProductDeal(wflPaTrdProductDeal);
         // 金融产品交易扩展Entity 构造结束----------------------------------------------------------
+        return output.getTradeId();
     }
 
     /**

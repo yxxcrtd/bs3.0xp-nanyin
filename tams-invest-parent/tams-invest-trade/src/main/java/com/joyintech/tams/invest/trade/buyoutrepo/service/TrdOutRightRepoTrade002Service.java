@@ -1,15 +1,5 @@
 package com.joyintech.tams.invest.trade.buyoutrepo.service;
 
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.entity.ProcessMark;
@@ -46,6 +36,7 @@ import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.buyoutrepo.dto.TrdOutRightRepoTrade003Dto;
@@ -54,8 +45,14 @@ import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import redis.clients.jedis.BinaryClient.LIST_POSITION;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoTrade002Dto>
@@ -410,6 +407,7 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 			TrdProductDeal trdProductDeal = new TrdProductDeal();
 			trdProductDeal.setTradeId(reverseTradeId);
 			trdProductDeal.setCancelRemark(entity.getRevokeReason());
+			trdProductDeal.setFinprodId(entity.getFinprodId());
 			commonBusinessService.revokeReverseTrade(trdProductDeal,false);
 
 		}

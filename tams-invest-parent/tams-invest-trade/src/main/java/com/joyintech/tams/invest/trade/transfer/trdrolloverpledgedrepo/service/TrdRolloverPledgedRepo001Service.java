@@ -1109,11 +1109,15 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
                 TrdRolloverPledgedRepo001Dto output = new TrdRolloverPledgedRepo001Dto();
                 BeanUtil.copyPropertiesIgnoreNull(output,input);
                 // 构造Entity
+                this.prepareEntity1(output,dto);
+
                 this.prepareEntity(input,dto);
 
                 // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
                 // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
                 input.getTrdProductDeal().setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                input.getTrdProductDeal().setrTradeId(output.getTrdProductDeal().getTradeId());
+                output.getTrdProductDeal().setrTradeId(input.getTrdProductDeal().getTradeId());
 
                 // 金融产品交易扩展表Entity -> 金融产品交易扩展表
                 PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
@@ -1187,7 +1191,6 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
 
                 //转入产品组合登陆------------------------------------------------------------------------------------------------------------
                 // 构造Entity
-                this.prepareEntity1(output,dto);
 
                 // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
                 // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表

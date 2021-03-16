@@ -450,6 +450,7 @@
                 else if (selArr[0].assetType == PINAN_ASSET_TYPE_F07) {
                     var checkObj = {};
                     checkObj.tradeId = selArr[0].tradeId;
+                    checkObj.ps = selArr[0].ps;
                     checkObj.repoType = selArr[0].type6;
                     checkObj.operateType = "revoke";
                     checkObj.portfolioId = selArr[0].portfolioId;
@@ -472,6 +473,7 @@
                             checkObj.revokeReason = result;
                             checkObj.ps = selArr[0].backLendDirection;
                             checkObj.tradeDate = selArr[0].tradeDate;
+                            checkObj.finprodId = selArr[0].finprodId;
                             checkObj.portfolioId = selArr[0].portfolioId;
                             checkObj.secTotalPrin = selArr[0].amount;
                             WorkFlow.doDeleteList(basePath + 'invest/trade/buyoutrepo/TrdOutRightRepoTrade001/doRevoke', checkObj, "TrdOutRightRepoTrade001_btn_revoke", "TrdOutRightRepoTrade002");
