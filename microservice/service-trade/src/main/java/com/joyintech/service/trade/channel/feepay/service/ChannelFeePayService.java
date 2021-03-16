@@ -100,6 +100,8 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
         ProductTradeInfoDto baseDto = new ProductTradeInfoDto();
         baseDto.setTrdProductDeals(new ArrayList<TrdProductDeal>());
         baseDto.setStlPayOrders(new ArrayList<StlPayOrdersDto>());
+        baseDto.setTrdProductDealAdds(new ArrayList<TrdProductDealAdd>());
+        baseDto.setPaTrdProductDeals(new ArrayList<PaTrdProductDeal>());
         WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
         wflTrdProductDeal.setTradeId(tradeId);
         wflTrdProductDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
@@ -116,11 +118,13 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
                     StlPayOrdersDto stlPayOrdersDto = new StlPayOrdersDto();
                     BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, channelFeePayMapper.selectAllOrders(deal.getTradeId()).get(0));
                     baseDto.getStlPayOrders().add(stlPayOrdersDto);
+                    baseDto.getTrdProductDealAdds().add(channelFeePayMapper.selectAllDealAdds(Arrays.asList(deal)).get(0));
+                    baseDto.getPaTrdProductDeals().add(channelFeePayMapper.selectAllPaDeals(Arrays.asList(deal)).get(0));
                 }
             }
         }
-        baseDto.setTrdProductDealAdds(channelFeePayMapper.selectAllDealAdds(baseDto.getTrdProductDeals()));
-        baseDto.setPaTrdProductDeals(channelFeePayMapper.selectAllPaDeals(baseDto.getTrdProductDeals()));
+//        baseDto.setTrdProductDealAdds(channelFeePayMapper.selectAllDealAdds(baseDto.getTrdProductDeals()));
+//        baseDto.setPaTrdProductDeals(channelFeePayMapper.selectAllPaDeals(baseDto.getTrdProductDeals()));
 //        baseDto.setStlPayOrders(channelFeePayMapper.selectAllOrders(tradeId));
 //        baseDto.setPtlTrades(channelFeePayMapper.findPtlTrades(tradeId));
         return baseDto;
