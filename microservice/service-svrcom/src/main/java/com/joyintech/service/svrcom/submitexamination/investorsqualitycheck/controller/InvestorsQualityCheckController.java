@@ -212,7 +212,7 @@ public class InvestorsQualityCheckController{
      * --登记完整性合格率
      * @return List
      */
-    @PostMapping("/searchTableSLPP/{page}/{length}")
+    @PostMapping("/searchTableDJWZX/{page}/{length}")
     public Page<InvestorsQualityCheck001Dto> searchTableDJWZX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckDJWZXService.queryPage(param);
     }
@@ -222,7 +222,7 @@ public class InvestorsQualityCheckController{
      * --产品余额（元）合格率（封闭式产品）
      * @return List
      */
-    @PostMapping("/searchTableSLPP/{page}/{length}")
+    @PostMapping("/searchTableCPYEFBX/{page}/{length}")
     public List<InvestorsQualityCheck001Dto> searchTableCPYEFBX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPYEFBXService.queryErrorRecList(param);
     }
@@ -232,7 +232,7 @@ public class InvestorsQualityCheckController{
      * --产品余额（元）合格率（开放式式产品）
      * @return List
      */
-    @PostMapping("/searchTableSLPP/{page}/{length}")
+    @PostMapping("/searchTableCPYEKFX/{page}/{length}")
     public List<InvestorsQualityCheck001Dto> searchTableCPYEKFX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPYEKFXService.queryErrorRecList(param);
     }
@@ -242,7 +242,7 @@ public class InvestorsQualityCheckController{
      * --产品份额（元）合格率（封闭式产品）
      * @return List
      */
-    @PostMapping("/searchTableSLPP/{page}/{length}")
+    @PostMapping("/searchTableCPFEFBX/{page}/{length}")
     public List<InvestorsQualityCheck001Dto> searchTableCPFEFBX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPFEFBXService.queryErrorRecList(param);
     }
@@ -252,7 +252,7 @@ public class InvestorsQualityCheckController{
      * --产品份额（元）合格率（开放式产品）
      * @return List
      */
-    @PostMapping("/searchTableSLPP/{page}/{length}")
+    @PostMapping("/searchTableCPFEKFX/{page}/{length}")
     public List<InvestorsQualityCheck001Dto> searchTableCPFEKFX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPFEKFXService.queryErrorRecList(param);
     }
