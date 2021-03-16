@@ -35,8 +35,8 @@ public class InvestorsQualityCheckMService extends BaseService<InvestorsQualityC
      * 查询左侧-核查项合格率信息
      * @return
      */
-    public Page<InvestorsQualityCheck001Dto> searchInvestorsPassRate(Map<String, Object> pageParam){
-    	return restTemplate.postForPage(
+    public List<InvestorsQualityCheck001Dto> searchInvestorsPassRate(Map<String, Object> pageParam){
+    	return restTemplate.postForList(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/InvestorsQualityCheck/searchInvestorsPassRate",pageParam,
         		InvestorsQualityCheck001Dto.class);
     }
