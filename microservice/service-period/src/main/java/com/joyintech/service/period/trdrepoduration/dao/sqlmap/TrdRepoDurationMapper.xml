@@ -782,8 +782,6 @@
 
 	<select id="findCeTradeIdListByTotleTradeId" resultType="java.lang.String">
 	    select TRADE_ID from TRD_PRODUCT_DEAL
-        LEFT JOIN PTL_PORTFOLIO PP
-        ON add.PORTFOLIO_ID = PP.PORTFOLIO_ID
 		where TOTLE_TRADE_ID = #{totleTradeId}
 		and PS = 'T23'
 		and TRADE_STATUS = '01'
