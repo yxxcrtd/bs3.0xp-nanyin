@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.submitexamination.investorsqualitycheck.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,5 +118,82 @@ public class InvestorsQualityCheck001Controller extends BaseController{
     public Page<InvestorsQualityCheck001Dto> searchTableSLPP(){
         return investorsQualityCheckMService.searchTableSLPP(RequestUtil.getPageParam());
     }
+    
+    /**
+     * 查询列表
+     * --募集总份额合格率
+     * @return List
+     */
+    @ResponseBody
+    @RequestMapping("/searchTableMJQFE")
+    public List<InvestorsQualityCheck001Dto> searchTableMJQFE(){
+        return investorsQualityCheckMService.searchTableMJQFE(RequestUtil.getPageParam());
+    }
+    
+    /**
+     * 查询列表
+     * --实际募集金额（元）合格率
+     * @return List
+     */
+    @ResponseBody
+    @RequestMapping("/searchTableMJQYE")
+    public List<InvestorsQualityCheck001Dto> searchTableMJQYE(){
+        return investorsQualityCheckMService.searchTableMJQYE(RequestUtil.getPageParam());
+    }
+    
+    /**
+     * 查询列表
+     * --登记完整性合格率
+     * @return List
+     */
+    @ResponseBody
+    @RequestMapping("/searchTableDJWZX")
+    public Page<InvestorsQualityCheck001Dto> searchTableDJWZX(){
+        return investorsQualityCheckMService.searchTableDJWZX(RequestUtil.getPageParam());
+    }
+    
+    /**
+     * 查询列表
+     * --产品余额（元）合格率（封闭式产品）
+     * @return List
+     */
+    @ResponseBody
+    @RequestMapping("/searchTableCPYEFBX")
+    public List<InvestorsQualityCheck001Dto> searchTableCPYEFBX(){
+        return investorsQualityCheckMService.searchTableCPYEFBX(RequestUtil.getPageParam());
+    }
+    
+    /**
+    * 查询列表
+    * --产品余额（元）合格率（开放式式产品）
+    * @return List
+    */
+   @ResponseBody
+   @RequestMapping("/searchTableCPYEKFX")
+   public List<InvestorsQualityCheck001Dto> searchTableCPYEKFX(){
+       return investorsQualityCheckMService.searchTableCPYEKFX(RequestUtil.getPageParam());
+   }
+    
+    /**
+    * 查询列表
+    * --产品余额（元）合格率（封闭式产品）
+    * @return Page
+    */
+   @ResponseBody
+   @RequestMapping("/searchTableCPFEFBX")
+   public List<InvestorsQualityCheck001Dto> searchTableCPFEFBX(){
+       return investorsQualityCheckMService.searchTableCPFEFBX(RequestUtil.getPageParam());
+   }
+    
+    /**
+    * 查询列表
+    * --产品余额（元）合格率（封闭式产品）
+    * @return Page
+    */
+   @ResponseBody
+   @RequestMapping("/searchTableCPFEKFX")
+   public List<InvestorsQualityCheck001Dto> searchTableCPFEKFX(){
+       return investorsQualityCheckMService.searchTableCPFEKFX(RequestUtil.getPageParam());
+   }
     
 }

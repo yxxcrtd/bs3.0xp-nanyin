@@ -18,16 +18,26 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckBaseService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPZTService;
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckSLPPService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheck001Service;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckBaseService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPFEFBXService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPFEKFXService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPYEFBXService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPYEKFXService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckCPZTService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckDJWZXService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckMJQFEService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckMJQYEService;
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.service.InvestorsQualityCheckSLPPService;
 
 
 /**
@@ -52,6 +62,27 @@ public class InvestorsQualityCheckController{
 
     @Autowired
     private InvestorsQualityCheckSLPPService investorsQualityCheckSLPPService;
+    
+    @Autowired
+    private InvestorsQualityCheckCPYEFBXService investorsQualityCheckCPYEFBXService;
+    
+    @Autowired
+    private InvestorsQualityCheckCPYEKFXService investorsQualityCheckCPYEKFXService;
+    
+    @Autowired
+    private InvestorsQualityCheckCPFEFBXService investorsQualityCheckCPFEFBXService;
+    
+    @Autowired
+    private InvestorsQualityCheckCPFEKFXService investorsQualityCheckCPFEKFXService;
+    
+    @Autowired
+    private InvestorsQualityCheckMJQYEService investorsQualityCheckMJQYEService;
+    
+    @Autowired
+    private InvestorsQualityCheckMJQFEService investorsQualityCheckMJQFEService;
+    
+    @Autowired
+    private InvestorsQualityCheckDJWZXService investorsQualityCheckDJWZXService;
 
     /**
      * 查询列表
@@ -154,5 +185,75 @@ public class InvestorsQualityCheckController{
     @PostMapping("/searchTableSLPP/{page}/{length}")
     public Page<InvestorsQualityCheck001Dto> searchTableSLPP(@RequestBody Map<String, Object> param){
         return investorsQualityCheckSLPPService.queryPage(param);
+    }
+    
+    /**
+     * 查询列表
+     * --募集总份额合格率
+     * @return List
+     */
+    @PostMapping("/searchTableMJQFE/{page}/{length}")
+    public List<InvestorsQualityCheck001Dto> searchTableMJQFE(@RequestBody Map<String, Object> param){
+        return investorsQualityCheckMJQFEService.queryErrorRecList(param);
+    }
+    
+    /**
+     * 查询列表
+     * --实际募集金额（元）合格率
+     * @return List
+     */
+    @PostMapping("/searchTableMJQYE/{page}/{length}")
+    public List<InvestorsQualityCheck001Dto> searchTableMJQYE(@RequestBody Map<String, Object> param){
+        return investorsQualityCheckMJQYEService.queryErrorRecList(param);
+    }
+    
+    /**
+     * 查询列表
+     * --登记完整性合格率
+     * @return List
+     */
+    @PostMapping("/searchTableSLPP/{page}/{length}")
+    public Page<InvestorsQualityCheck001Dto> searchTableDJWZX(@RequestBody Map<String, Object> param){
+        return investorsQualityCheckDJWZXService.queryPage(param);
+    }
+    
+    /**
+     * 查询列表
+     * --产品余额（元）合格率（封闭式产品）
+     * @return List
+     */
+    @PostMapping("/searchTableSLPP/{page}/{length}")
+    public List<InvestorsQualityCheck001Dto> searchTableCPYEFBX(@RequestBody Map<String, Object> param){
+        return investorsQualityCheckCPYEFBXService.queryErrorRecList(param);
+    }
+    
+    /**
+     * 查询列表
+     * --产品余额（元）合格率（开放式式产品）
+     * @return List
+     */
+    @PostMapping("/searchTableSLPP/{page}/{length}")
+    public List<InvestorsQualityCheck001Dto> searchTableCPYEKFX(@RequestBody Map<String, Object> param){
+        return investorsQualityCheckCPYEKFXService.queryErrorRecList(param);
+    }
+    
+    /**
+     * 查询列表
+     * --产品份额（元）合格率（封闭式产品）
+     * @return List
+     */
+    @PostMapping("/searchTableSLPP/{page}/{length}")
+    public List<InvestorsQualityCheck001Dto> searchTableCPFEFBX(@RequestBody Map<String, Object> param){
+        return investorsQualityCheckCPFEFBXService.queryErrorRecList(param);
+    }
+    
+    /**
+     * 查询列表
+     * --产品份额（元）合格率（开放式产品）
+     * @return List
+     */
+    @PostMapping("/searchTableSLPP/{page}/{length}")
+    public List<InvestorsQualityCheck001Dto> searchTableCPFEKFX(@RequestBody Map<String, Object> param){
+        return investorsQualityCheckCPFEKFXService.queryErrorRecList(param);
     }
 }

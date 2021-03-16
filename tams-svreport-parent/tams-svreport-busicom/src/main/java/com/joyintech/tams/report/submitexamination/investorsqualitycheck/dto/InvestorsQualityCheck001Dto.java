@@ -173,6 +173,46 @@ public class InvestorsQualityCheck001Dto extends BaseEntity{
     
     private BigDecimal investRaiseTotalQty;
     
+    /**
+     * 产品端募集金额
+     */
+    private BigDecimal prdRaiseTotalAmt;
+    
+    /**
+     * 持有端募集金额
+     */
+    private BigDecimal investRaiseTotalAmt;
+    
+    /**
+     * 业务结束日
+     */
+    private Date busiMDate;
+    
+    /**
+     * 业务结束日字符串
+     */
+    private String busiMDateStr;
+    
+    /**
+     * 产品端最新产品余额
+     */
+    private BigDecimal prdBalanceAmt;
+    
+    /**
+     * 持有端产品余额
+     */
+    private BigDecimal investBalanceAmt;
+    
+    /**
+     * 产品端最新产品份额
+     */
+    private BigDecimal prdTotalQty;
+
+    /**
+     * 持有端产品份额
+     */
+    private BigDecimal investTotalQty;
+    
     public String getPrdIssueSts() {
 		return prdIssueSts;
 	}
@@ -357,45 +397,7 @@ public class InvestorsQualityCheck001Dto extends BaseEntity{
 		this.investTotalQty = investTotalQty;
 	}
 
-	/**
-     * 产品端募集金额
-     */
-    private BigDecimal prdRaiseTotalAmt;
-    
-    /**
-     * 持有端募集金额
-     */
-    private BigDecimal investRaiseTotalAmt;
-    
-    /**
-     * 业务结束日
-     */
-    private Date busiMDate;
-    
-    /**
-     * 业务结束日字符串
-     */
-    private String busiMDateStr;
-    
-    /**
-     * 产品端最新产品余额
-     */
-    private BigDecimal prdBalanceAmt;
-    
-    /**
-     * 持有端产品余额
-     */
-    private BigDecimal investBalanceAmt;
-    
-    /**
-     * 产品端最新产品份额
-     */
-    private BigDecimal prdTotalQty;
-
-    /**
-     * 持有端产品份额
-     */
-    private BigDecimal investTotalQty;
+	
     
 	public String getUnQualified() {
 		return unQualified;

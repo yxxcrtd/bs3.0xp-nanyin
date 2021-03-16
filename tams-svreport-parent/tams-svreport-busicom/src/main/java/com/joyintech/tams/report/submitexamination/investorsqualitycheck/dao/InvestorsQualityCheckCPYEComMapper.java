@@ -1,37 +1,32 @@
 package com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao;
 
-import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
-import org.springframework.stereotype.Repository;
-
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
+import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
+
 
 /**
- * 投资者质量核查Dao
- * @author hpp
+ * 余额、份额核查共通
+ * @author wdb
  *
  */
 @Repository
-public interface InvestorsQualityCheckCPYEComMapper {
+public interface InvestorsQualityCheckCPYEComMapper {	
 	/**
-	 * 查询左侧-核查项合格率信息
+	 * 错误记录数查询
+	 * --余额、份额核查共通
 	 * @param param
 	 * @return
 	 */
-	List<InvestorsQualityCheck001Dto> objrec(Map<String, Object> param);
+	BigDecimal cntCPYECom(Map<String, Object> param);
 
 	/**
-	 * 查询右侧-不合格数据的详细信息
-	 * --证件类型
-	 * @param param
-	 * @return
-	 */
-	List<InvestorsQualityCheck001Dto> cntCPYECom(Map<String, Object> param);
-
-	/**
-	 * 查询右侧-不合格数据的详细信息
-	 * --证件匹配
+	 * 错误记录信息查询
+	 * --余额、份额核查共通
 	 * @param param
 	 * @return
 	 */

@@ -53,7 +53,7 @@
 	
 	
 	<!-- 余额、份额共通-核查对象数量取得 -->
-	<select id="cntCPYECom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+	<select id="cntCPYECom" resultType="java.math.BigDecimal">
 		<include refid="objRec"></include>
 		SELECT 
 			COUNT(DISTINCT(REG_CODE))
@@ -65,15 +65,15 @@
 	<select id="searchCPYECom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 		<include refid="objRec"></include>
 			SELECT		
-				REG_CODE,
+				REG_CODE as prdRegistCode,
 				hodeDate,
-				MDATE,
-				BALANCE_AMT,
-				PRD_QTY,
-				TOTAL_AMT,
-				RAISE_QTY,
-				SUM(CNY_AMT) AS inverstTolAmt,
-				SUM(QTY) inverstTolQTY
+				MDATE as busiMDate,
+				BALANCE_AMT as prdBalanceAmt,
+				PRD_QTY as prdTotalQty,
+				TOTAL_AMT as prdRaiseTotalQty,
+				RAISE_QTY prdRaiseTotalAmt,
+				SUM(CNY_AMT) as inverstTolAmt,
+				SUM(QTY) as inverstTolQTY
 			FROM	
 				(SELECT
 						REG_CODE,
