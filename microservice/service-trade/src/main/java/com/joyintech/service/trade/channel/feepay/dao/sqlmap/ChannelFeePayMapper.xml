@@ -218,4 +218,11 @@ select PORTFOLIO_NAME
             TOTLE_TRADE_ID=#{totleTradeId,jdbcType=VARCHAR}
         </where>
     </select>
+
+    <select id="queryTrade" resultType="int">
+        select count(*) from TRD_PRODUCT_DEAL
+        <where>
+            TOTLE_TRADE_ID=#{totleTradeId,jdbcType=VARCHAR}
+        </where>
+    </select>
 </mapper>

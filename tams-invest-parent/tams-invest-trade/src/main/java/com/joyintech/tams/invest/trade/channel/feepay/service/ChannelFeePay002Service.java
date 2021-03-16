@@ -479,4 +479,9 @@ public class ChannelFeePay002Service extends BaseService<ChannelFeePay002Dto> im
             AllTradeCommonUtil.deletePosition(entity.getCancelRemark(), tradeId);
         }
     }
+
+    public int queryTrade(String totleTradeId) {
+        return restTemplate.getForObject(ServiceApplication.TRADE_SERVICE_NAME + "/ChannelFeePay/queryTrade?totleTradeId=" + totleTradeId,
+                int.class);
+    }
 }

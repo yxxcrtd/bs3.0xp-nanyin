@@ -180,6 +180,10 @@ public class ChannelFeePay001Controller extends BaseController {
              if(!StringUtil.isEmptyList(resultList)){
              	errorList.add(new ValidMessage("该数据已在撤销流程中！"));
              }
+             String totleTradeId = dto.getTradeId() + "R";
+             if(StringUtil.equals(dto.getEffectStatus(), DictCodeListExt1.有效状态_有效.getValue())&&channelFeePay002Service.queryTrade(totleTradeId)>0){
+                 errorList.add(new ValidMessage("该数据已经撤销，请刷新！"));
+             }
          }
     	 if(!StringUtil.isEmptyList(errorList)){
     	     ar.setErrorList(errorList);

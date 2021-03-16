@@ -93,4 +93,9 @@ public class ChannelFeePayController {
     public List<String> getTradeId1(String totleTradeId) {
         return channelFeePayService.getTradeId1(totleTradeId);
     }
+
+    @GetMapping("queryTrade")
+    public int queryTrade(String totleTradeId) {
+        return channelFeePayService.queryTrade(totleTradeId);
+    }
 }

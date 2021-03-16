@@ -205,4 +205,8 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
     public List<String> getTradeId1(String totleTradeId) {
         return channelFeePayMapper.getTradeId1(totleTradeId);
     }
+
+    public int queryTrade(String totleTradeId) {
+        return channelFeePayMapper.queryTrade(totleTradeId);
+    }
 }
