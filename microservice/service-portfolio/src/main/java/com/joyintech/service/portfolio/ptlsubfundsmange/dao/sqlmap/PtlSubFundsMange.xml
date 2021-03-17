@@ -585,7 +585,7 @@
 		tft.TRADE_AMT as tradeAmt,/*交易金额*/
 		tpa.PORTFOLIO_ID as portfolioId,/*子组合代码*/
 		ptp.PORTFOLIO_NAME as portfolioName,/*子组合名称*/
-		null as ccy,
+		tft.ccy as ccy,
 		tpd.TRADE_AMT as allotAmt, /*分配金额*/
 		null as seqNo,
 		null   as  workflowId,
