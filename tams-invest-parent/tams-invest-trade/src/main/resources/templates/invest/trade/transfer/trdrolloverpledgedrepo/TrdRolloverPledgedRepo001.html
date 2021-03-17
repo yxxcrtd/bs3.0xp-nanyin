@@ -289,6 +289,8 @@
 <div layout:fragment="script">
     <script data-th-inline="javascript" type="text/javascript">
         var entity = /*[[${entity}]]*/'';
+        var formTodoList = /*[[${formTodoList}]]*/false;
+        var PledgedRepoInfoListData = JSON.parse(/*[[${PledgedRepoInfoListData}]]*/'{}');
         var BACK_LEND_DIRECTION_03 = /*[[${BACK_LEND_DIRECTION_03}]]*/'';
         var BACK_LEND_DIRECTION_04 = /*[[${BACK_LEND_DIRECTION_04}]]*/'';
         var MY_SUP_TIME_TYPE_02 = /*[[${MY_SUP_TIME_TYPE_02}]]*/'';

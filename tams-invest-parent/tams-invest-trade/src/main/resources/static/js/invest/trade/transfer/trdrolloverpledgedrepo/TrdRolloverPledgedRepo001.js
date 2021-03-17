@@ -1,6 +1,10 @@
 (function () {
     var pledgedRepoRolloverList = entity.pledgedRepoRolloverList;
     var pledgedRepoInfoList = entity.pledgedRepoInfoList;
+    console.log('formTodoList',formTodoList)
+    if(formTodoList){
+        pledgedRepoInfoList = PledgedRepoInfoListData
+    }
     var buttons = [{ text: '&#xe640;',ignore:true, clas: 'delt', title: '删除' }];
     var getPageParam = function () {
         var object = $.serializeToObject('#TrdRolloverPledgedRepo001_form',true);
