@@ -6,17 +6,17 @@
 	resultType="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbAssetInfoRate" parameterType="java.util.Map">
 	  select * from(
 	  <!-- 债券，项目，存款，计划利率的收益率 -->
-	  select   row_number() over(partition by fp.finprod_market_id,f.vdate order by f.vdate desc) idx,
+	  select   row_number() over(partition by fp.finprod_market_id,f.eff_date order by f.eff_date desc) idx,
 	  fp.finprod_market_id as assetId ,fp.finprod_type2 as finprodType2,
 	  fp.profit_type as profitType,
 	  '01' changType,
-	  f.vdate as changeDate,
-	  f.range_yield as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
+	  f.eff_date as changeDate,
+	  f.yield as assetRate,null as assetBonusReinvestRate,null as closePriceFull,null as costAmt,
 	  nvl(f.UPDATE_TIME,f.CREATE_TIME) updatetime,
 	  null tradeId,
 	  null as status,
 	  null scino
-	  from fin_cash_plan f
+	  from fin_cash_calc_rule f
 	  left join fin_product fp
 	  on f.finprod_id=fp.finprod_id
 	  left join fin_cash_info cash
@@ -26,7 +26,7 @@
 	  on fp.finprod_id=fpt.finprod_id
 	  where (fp.finprod_type2 in ('F01','F18','F07') or (fp.finprod_type2='F17' and fp.profit_type='02'))
 	  and (fpt.type_11!='013' or fpt.type_11 is null)
-	  and cash.cash_type_1='02'　and f.range_yield is not null
+	  and cash.cash_type_1='02'　and f.yield is not null
 	  and nvl(f.UPDATE_TIME,f.CREATE_TIME)  > #{updatetime,jdbcType=TIMESTAMP}
 
 	  union all

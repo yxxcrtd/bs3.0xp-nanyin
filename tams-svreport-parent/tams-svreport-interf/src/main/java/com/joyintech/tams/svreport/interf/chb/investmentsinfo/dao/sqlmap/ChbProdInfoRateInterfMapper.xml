@@ -39,7 +39,8 @@
 	resultType="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbProdInfoRate" parameterType="java.util.Map">
 	  select * from(
 	  <!-- 预期收益型产品预期收益率 -->
-	  SELECT
+	  SELECT distinct
+	  decode (fpa.is_cycle,'Y',row_number() over(partition by  info.FINPROD_MARKET_ID,rul.EFF_DATE order by rul.UPDATE_TIME desc) ,1) as idx,
 	  info.finprod_id as prodId,
 	  info.FINPROD_MARKET_ID AS fprodId,
 	  case when fpa.is_lay='Y' and fpa.is_cycle='N' then 'Y' else 'N' end as isLay,
@@ -70,7 +71,9 @@
 	  union all
 
 	  <!-- 净值型产品单位净值取估值核算系统 -->
-	  select 	info.finprod_id as prodId,
+	  select distinct
+	  1 as idx,
+	  info.finprod_id as prodId,
 	  info.FINPROD_MARKET_ID AS fprodId,
 	  null as isLay,
 	  val.VAL_DATE as changeDate,
@@ -103,7 +106,9 @@
 
 	  union all
 	  <!--净值型、货币型产品最新的业绩基准（用于计算浮动管理费）-->
-	  SELECT   info.finprod_id as prodId,
+	  SELECT  distinct
+	  decode (fpa.is_cycle,'Y',row_number() over(partition by  info.FINPROD_MARKET_ID,rul.EFF_DATE order by rul.UPDATE_TIME desc) ,1) as idx,
+	  info.finprod_id as prodId,
 	  info.FINPROD_MARKET_ID AS fprodId,
 	  case when fpa.is_lay='Y' and fpa.is_cycle='N' then 'Y' else 'N' end as isLay,
 	  rul.EFF_DATE AS changeDate,
@@ -133,7 +138,7 @@
 	  and nvl(rul.UPDATE_TIME,rul.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
 
 	  ) a
-	  where 1=1
+	  where 1=1 and a.idx=1
 	  <if test="prodidList!=null and prodidList.size>0">
 		  and a.prodId in
 		  <foreach collection="prodidList" item="prodid" open="("
