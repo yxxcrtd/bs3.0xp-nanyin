@@ -89,6 +89,8 @@ public class TrdAssetsProject001Controller extends BaseController {
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
                 || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdAssetsProject001Service.getBussinessEntityByWorkflowId(workflowId);
+            model.addAttribute("entityData", JsonUtils.object2Json(dto.getProjectListInfoList()));
+            model.addAttribute("formTodoList", true);
         } 
         else{
             String finprodMarketId = RequestUtil.getParam("finprodMarketId");

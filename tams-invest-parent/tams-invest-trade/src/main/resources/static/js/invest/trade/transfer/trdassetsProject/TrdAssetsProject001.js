@@ -6,9 +6,8 @@
     /**
      * 列表信息（Total）
      */
-    var projectListInfoList = $("#projectListInfoList").joyintable({
+    var options = {
         page: false,
-        data: projectListInfoList ? projectListInfoList : [],
         height: 200,
         /**
          * 定义表头
@@ -42,13 +41,18 @@
             , {field: 'assignIntamt',width: 150,title: '待转让利息',type: 'money', digit: 2, sortable: false}
             //操作
             ,{field:'operation',title: 'SysCommon.operation',type:'action',buttons: buttons}
-        ],done:function(){
-            this.bind('click', '.delt', function(data, index) {
-                projectListInfoList.deleteRow(index);
-                calUnSplitPrinAmt();
-            });
-        }
+        ]
+    };
+    if(formTodoList) {
+        options.data = entityData;
+    }   
+    var projectListInfoList=$("#projectListInfoList").joyintable(options);
+    
+    projectListInfoList.bind('click', '.delt', function(data, index) {
+    	 projectListInfoList.deleteRow(index);
+         calUnSplitPrinAmt();
     });
+ 
     //风险测试数据
     var getriskdata = function () {
         var rows = projectListInfoList.getAllRows();
