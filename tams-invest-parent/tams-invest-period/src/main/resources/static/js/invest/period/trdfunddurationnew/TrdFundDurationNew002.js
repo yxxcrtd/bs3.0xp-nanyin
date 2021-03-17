@@ -48,14 +48,22 @@
         // 合作资产
          , {
              field : 'chIld',
-             width : "150",
-             edit : false,
-             title : 'invest.channelId',
-             sortable : false,
+             visible : false,
              editOption:{type:'select',showField:'text',id:'chIld',multiple: false,searchable: true,
                            url: JoyinUtil.getRealPath('/component/trade/BussChannelCommon/getChannelId')
              }
          }
+         // 合作资产
+          , {
+              field : 'chIldName',
+              width : "150",
+              edit : false,
+              title : 'invest.channelId',
+              sortable : false,
+              editOption:{type:'select',showField:'text',id:'chIld',multiple: false,searchable: true,
+                            url: JoyinUtil.getRealPath('/component/trade/BussChannelCommon/getChannelId')
+              }
+          }
         // 权益登记日份额
         , {
             field : 'registShare',
