@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -170,6 +172,14 @@ public class TrdPlanRateInvestTradeDtoValidator implements TradeCommonValidator 
                     }
                 }
             }
+
+            if (StringUtil.isNotEmpty(dto.getBussTrdTransfenpeiDto())){
+                Map<String, List<BussTrdTransfenpeiDto>> map = dto.getBussTrdTransfenpeiDto().stream().collect(JoyinCollectors.groupingBy(item->item.getPortfolioId()));
+                if (map!=null && map.keySet().size()<dto.getBussTrdTransfenpeiDto().size()){
+                    errorList.add(new ValidMessage("组合分配不能重复分配给同一组合。"));
+                }
+            }
+
         }
         return errorList;
     }

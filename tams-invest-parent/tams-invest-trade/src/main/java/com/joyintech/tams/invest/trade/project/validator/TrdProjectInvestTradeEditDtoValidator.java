@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.entity.EtrFinishStatus;
 import com.joyintech.tams.common.base.entity.FinProduct;
 
 import com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade002Service;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,6 +150,13 @@ public class TrdProjectInvestTradeEditDtoValidator implements TradeCommonValidat
                                 "TrdPlanRateInvestTrade002.ispayUnpaidint"))));
                     }
                 }
+            }
+        }
+
+        if (StringUtil.isNotEmpty(dto.getBussTrdTransfenpeiDto())){
+            Map<String, List<BussTrdTransfenpeiDto>> map = dto.getBussTrdTransfenpeiDto().stream().collect(JoyinCollectors.groupingBy(item->item.getPortfolioId()));
+            if (map!=null && map.keySet().size()<dto.getBussTrdTransfenpeiDto().size()){
+                errorList.add(new ValidMessage("组合分配不能重复分配给同一组合。"));
             }
         }
         

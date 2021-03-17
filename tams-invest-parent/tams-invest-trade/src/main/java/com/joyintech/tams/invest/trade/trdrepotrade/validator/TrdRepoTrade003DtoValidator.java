@@ -16,7 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -319,6 +322,14 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
             }
         }
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end
+
+        if (StringUtil.isNotEmpty(inputDto.getBussTrdTransferOrder())){
+            Map<String, List<BussTrdTransferOrderDto>> map = inputDto.getBussTrdTransferOrder().stream().collect(JoyinCollectors.groupingBy(item -> item.getPortfolioId()));
+            if (map!=null && map.keySet().size()<inputDto.getBussTrdTransferOrder().size()){
+                errorList.add(new ValidMessage("组合分配不能重复分配给同一组合。"));
+            }
+        }
+
         return errorList;
     }
 }

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -493,6 +494,15 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
              	}
         	}
         }
+
+        if (StringUtil.isNotEmpty(inputDto.getBussTrdTransfenpeiDto())){
+            Map<String, List<BussTrdTransfenpeiDto>> map = inputDto.getBussTrdTransfenpeiDto().stream().collect(JoyinCollectors.groupingBy(item->item.getPortfolioId()));
+            if (map!=null && map.keySet().size()<inputDto.getBussTrdTransfenpeiDto().size()){
+                errorList.add(new ValidMessage("组合分配不能重复分配给同一组合。"));
+            }
+        }
+
+
         return errorList;
     }
 

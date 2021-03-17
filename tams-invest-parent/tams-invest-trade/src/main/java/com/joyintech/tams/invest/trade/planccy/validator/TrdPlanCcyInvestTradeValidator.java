@@ -25,6 +25,7 @@ import com.joyintech.tams.invest.trade.common.validator.TradeCommonValidator;
 import com.joyintech.tams.invest.trade.planccy.dto.TrdPlanCcyInvestTradeDto;
 import com.joyintech.tams.invest.trade.planccy.service.TrdPlanCcyInvestTrade001Service;
 import com.joyintech.tams.invest.trade.planccy.service.TrdPlanCcyInvestTrade002Service;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -402,6 +403,16 @@ public class TrdPlanCcyInvestTradeValidator implements TradeCommonValidator {
             // errorList.add(new ValidMessage("赎回到账交易在流程中不能撤销"));
             // }
             // }
+        }
+
+        if (StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit")){
+            if (StringUtil.isNotEmpty(dto.getBussTrdTransfenpeiDto())){
+                Map<String, List<BussTrdTransfenpeiDto>> map = dto.getBussTrdTransfenpeiDto().stream().collect(JoyinCollectors.groupingBy(item->item.getPortfolioId()));
+                if (map!=null && map.keySet().size()<dto.getBussTrdTransfenpeiDto().size()){
+                    errorList.add(new ValidMessage("组合分配不能重复分配给同一组合。"));
+                }
+            }
+
         }
         return errorList;
     }
