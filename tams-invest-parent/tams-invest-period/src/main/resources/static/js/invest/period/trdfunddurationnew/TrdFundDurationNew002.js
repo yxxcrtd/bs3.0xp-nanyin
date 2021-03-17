@@ -1001,12 +1001,14 @@
             $(".unitCprice").show();
         }
         initFlag = false;
+        $("#exRightsDate").attr("disabled",true);
+        $("#registDate").attr("disabled",true);
         if(psType == '01'){
             $("#reInvesDate").val('').prop("disabled", true);
-            $("#exRightsDate").attr("disabled",true);
-            $("#registDate").attr("disabled",true);
+            $("#unitCprice").attr("disabled",true);
         }else if(psType == '02'){
             $("#arriveDate").val('').prop("disabled", true);
+            $("#exRightsDate").attr("disabled",true);
         }
         if(psType != '01'){
         	$("#bussTrdTransferOrder_div").hide();

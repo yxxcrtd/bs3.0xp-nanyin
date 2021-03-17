@@ -57,7 +57,7 @@ values ('TrdFundDurationNew002', 'TrdFundDurationNew002_btn_save', 'oneApproval'
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('TrdFundDurationNew002', 'TrdFundDurationNew002_btn_submit', 'oneApproval', 'system', '', sysdate, 'system', sysdate, 'ALL', '02');
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('TrdFundDurationNew002', 'TrdFundDuration001_btn_revoke', 'oneApproval', 'system', '', sysdate, 'system', sysdate, 'ALL', '02');
+values ('TrdFundDurationNew002', 'TrdFundDurationNew001_btn_revoke', 'oneApproval', 'system', '', sysdate, 'system', sysdate, 'ALL', '02');
 
 --草稿箱模式非对象画面表
 delete from SYS_TRASH_NOT_TARGET_PAGE where SEQ_NO = 'A6986B98361453A7E0835C5AA8C081D0'; 
