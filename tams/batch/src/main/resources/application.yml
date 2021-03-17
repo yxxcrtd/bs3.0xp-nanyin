@@ -7,7 +7,7 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   profiles:
-    active: dtx1    #一体化使用yitihua-jicheng
+    active: dtx2    #一体化使用yitihua-jicheng
   thymeleaf:
     cache: false
   #数据源配置
@@ -409,6 +409,91 @@ interf:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams1214ls
     password: zgtams1214ls
+#日志路径配置
+log:
+  path: /home/tams/logs/batch
+  level: DEBUG
+logging:
+  path: /home/tams/logs/batch
+#注册中心配置
+eureka:
+  client:
+    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:9101/eureka/
+  instance:
+    ip-address: 127.0.0.1
+    prefer-ip-address: false
+#分布式事物配置
+tx-lcn:
+  springcloud:
+    loadbalance:
+      enabled: true #开启负载均衡
+  client:
+    managerAddress: 192.168.70.228:8070 # manager服务地址(rpc端口),可填写多个负载
+  logger:
+    enabled: true # 开启日志数据库记录存储
+    onlyError: true
+    
+    
+---
+spring:
+  profiles: dtx2
+  #本地启动建议删除redis配置start
+  redis:
+    database: 5
+    host: 127.0.0.1
+    port: 6379
+    timeout: 20000
+  datasource:
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    username: zgtams1214ls_0107
+    password: zgtams1214ls_0107 
+    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+#应用配置
+application:
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldiruserName: zgtams1214ls_0107
+  sqldirpassword: zgtams1214ls_0107
+  loadbalance: false
+  micorservice:
+    contextPath:
+      single: true
+      commonService: http://127.0.0.1:8080/tams
+      basicDataService: http://127.0.0.1:8080/tams
+      documentService: http://127.0.0.1:8080/tams
+      entrustService: http://127.0.0.1:8080/tams
+      periodService: http://127.0.0.1:8080/tams
+      assetService: http://127.0.0.1:8080/tams
+      portfolioService: http://127.0.0.1:8080/tams
+      productService: http://127.0.0.1:8080/tams
+      quotaService: http://127.0.0.1:8080/tams
+      reportService: http://127.0.0.1:8080/tams
+      riskService: http://127.0.0.1:8080/tams
+      riskRdsService: http://127.0.0.1:8080/tams
+      riskInfService: http://127.0.0.1:8080/tams
+      settleService: http://127.0.0.1:8080/tams
+      tradeService: http://127.0.0.1:8080/tams
+      disclosureService: http://127.0.0.1:8080/tams
+      valuationService: http://127.0.0.1:8080/tams
+      chbService: http://127.0.0.1:8080/tams
+      chb3Service: http://127.0.0.1:8080/tams
+      svrcomService: http://127.0.0.1:8080/tams
+      pbcService: http://127.0.0.1:8080/tams
+      investInterfService: http://127.0.0.1:8080/tams
+      tamsServer: http://127.0.0.1:8080/tams
+#base数据库配置
+base:
+  datasource:
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    username: zgtams1214ls_0107
+    password: zgtams1214ls_0107
+#interf数据源配置
+interf:  
+   datasource:
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    username: zgtams1214ls_0107
+    password: zgtams1214ls_0107
 #日志路径配置
 log:
   path: /home/tams/logs/batch

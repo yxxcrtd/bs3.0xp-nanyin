@@ -71,6 +71,19 @@
         timeToIdleSeconds="0"
         timeToLiveSeconds="0"
         memoryStoreEvictionPolicy="LRU" />
+    
+    <!--  左侧导航菜单缓存 -->
+    <cache
+        name="leftMenuCache"
+        eternal="true"
+        maxElementsInMemory="2000"
+        maxElementsOnDisk="0"
+        overflowToDisk="true"
+        diskPersistent="false"
+        timeToIdleSeconds="0"
+        timeToLiveSeconds="0"
+        memoryStoreEvictionPolicy="LRU" />
+        
         
     <!-- 数据字典缓存 -->
     <cache
