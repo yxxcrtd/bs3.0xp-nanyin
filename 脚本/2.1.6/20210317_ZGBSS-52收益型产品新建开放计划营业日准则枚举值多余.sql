@@ -1,0 +1,5 @@
+delete from SYS_PAGE_DICTLIST where PAGE_ID = 'FinProductBuild002' and  SUB_PAGE_ID = 'BussFinProductOpenPlan' and DICT_ID = 'TDAY_RULE';
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values('FinProductBuild002','BussFinProductOpenPlan','TDAY_RULE','02',null,null,'system',null,sysdate,'system',sysdate,null);
+insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE)
+values('FinProductBuild002','BussFinProductOpenPlan','TDAY_RULE','04',null,null,'system',null,sysdate,'system',sysdate,null);
