@@ -85,7 +85,90 @@
 			and t8.finprod_id = t.finprodId
 	</sql>
 
-    <!-- 分页查询 -->
+	<sql id="Base_Left_join_Trade_Sql" >
+		left join (
+		select
+		portfolio_id,
+		sec_acct_id,
+		finprod_id,
+		nvl(sum(case when hoding_type = '03' then AMOUNT end),0) PTL_AMOUNT03,
+		nvl(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
+		nvl(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
+		nvl(sum(case when hoding_type = '06' then AMOUNT end),0) PTL_AMOUNT06,
+		nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08
+		from PTL_SEC_POSITION
+		where cdate = to_date(#{cdate},'yyyy-MM-dd') /**to_date('2019-10-18','yyyy-MM-dd')**/
+		/**and t6.hoding_type in ('03', '04', '05', '06','08')**/
+		<if test="hodingTypeList != null and hodingTypeList.size > 0">
+			<foreach collection="hodingTypeList"
+					 open="and hoding_type in (" item="secHodingType" separator=","
+					 close=")">
+				#{secHodingType,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		group by
+		portfolio_id,
+		sec_acct_id,
+		finprod_id
+		) t6 on t6.portfolio_id = t.portfolioId
+		/**and (t6.sec_acct_id = t.secAcctId OR t6.sec_acct_id = '999999')**/
+		and t6.sec_acct_id = t.conSecAcctId
+		and t6.finprod_id = t.finprodId
+		left join (
+		select
+		portfolio_id,
+		sec_acct_id,
+		finprod_id,
+		nvl(sum(case when hoding_type = '01' then AMOUNT end),0) PTL_FLOW_AMOUNT01
+		from PTL_SEC_POSITION_FLOW
+		where cdate <![CDATA[  <= ]]> to_date(#{cdate},'yyyy-MM-dd') /**and cdate = to_date('2019-10-18','yyyy-MM-dd')**/
+		<if
+				test="secFlowHodingTypeList != null and secFlowHodingTypeList.size > 0">
+			<foreach collection="secFlowHodingTypeList"
+					 open="and hoding_type in (" item="secFlowHodingType" separator=","
+					 close=")">
+				#{secFlowHodingType,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		group by
+		portfolio_id,
+		sec_acct_id,
+		finprod_id
+		) t7
+		on t7.portfolio_id = t.portfolioId
+		/**and (t7.sec_acct_id = t.secAcctId OR t7.sec_acct_id = '999999')**/
+		and t7.sec_acct_id = t.conSecAcctId
+		and t7.finprod_id = t.finprodId
+		left join (
+		select
+		A.portfolio_id,
+		A.sec_acct_id,
+		A.finprod_id,
+		nvl(sum(case when A.hoding_type = 'E01' then A.AMOUNT end),0) ETR_FLOW_AMOUNTE01,
+		nvl(sum(case when A.hoding_type = '04' then A.AMOUNT end),0) ETR_FLOW_AMOUNT04
+		from ETR_SEC_POSITION A INNER JOIN FIN_TRADE_PRODUCT B ON A.FINPROD_ID=B.FINPROD_ID
+		where A.cdate = to_date(#{cdate},'yyyy-MM-dd') /**and A.cdate = to_date('2019-10-18', 'yyyy-MM-dd')**/
+		/**and t8.hoding_type in ('E01', '04')**/
+		<if test="etrHodingTypeList != null and etrHodingTypeList.size > 0">
+			<foreach collection="etrHodingTypeList"
+					 open="and A.hoding_type in (" item="etrFlowHodingType" separator=","
+					 close=")">
+				#{etrFlowHodingType,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		group by
+		A.portfolio_id,
+		A.sec_acct_id,
+		A.finprod_id
+		) t8
+		on t8.portfolio_id = t.portfolioId
+		/**and (t8.sec_acct_id = t.secAcctId OR t8.sec_acct_id = '999999')**/
+		and t8.sec_acct_id = t.conSecAcctId
+		and t8.finprod_id = t.finprodId
+	</sql>
+
+
+	<!-- 分页查询 -->
     <select id="findPage" resultType="com.joyintech.service.portfolio.actualtimeasset.dto.ActualTimeAssetDto">
     	select distinct tt.* from
 		     (
@@ -298,7 +381,7 @@
 					                t5.type_7,
 					                t5.type_6
 				       ) t
-				       <include refid="Base_Left_join_Sql" />
+				       <include refid="Base_Left_join_Trade_Sql" />
 				      group by
 				      		portfolioId,
 				       		portfolioName,

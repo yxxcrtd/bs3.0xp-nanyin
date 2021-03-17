@@ -608,8 +608,10 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 					.forEach(baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd()
 							.setPortfolioId(entity.getPortfolioId()));
 		}
-
-		this.ptlSecPositionFlowLogic(entity, false);
+		
+		if (!DictCodeList.回购拆借方向_逆回购.getValue().equals(entity.getPs())){
+			this.ptlSecPositionFlowLogic(entity, false);
+		}
 	}
 
 	/**

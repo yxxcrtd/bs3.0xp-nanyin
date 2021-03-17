@@ -291,7 +291,8 @@ public class EtrBuyoutCashPositionDealService extends EtrCashPositionBaseService
         if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
             // 持仓流水dto处理   交割日增加交易券面总额/债券面值
         	 etrSecPositionFlowDto.setAmount(finProductTradeDto.getSecAmount());
-             etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId()); // 买断式回购，持仓是债券标的，从前面塞过来的，不要删
+        	 //modify by mashukai 20210317 ZGBSS-933 质押式逆回购交易生效时逆回购资产可用指令持仓增加而不是质押券的指令可用持仓增加
+//             etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId()); // 买断式回购，持仓是债券标的，从前面塞过来的，不要删
              // 添加持仓流水到目标dto
             etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             // 有委托 处理现金流水
