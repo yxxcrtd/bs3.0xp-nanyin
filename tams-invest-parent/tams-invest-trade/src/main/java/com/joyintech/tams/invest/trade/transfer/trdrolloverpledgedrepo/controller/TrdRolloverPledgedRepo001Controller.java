@@ -76,6 +76,10 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
                 || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdRolloverPledgedRepo001Service.getBussinessEntityByWorkflowId(workflowId);
+            if(dto.getPledgedRepoInfoList().size()>0){
+                model.addAttribute("PledgedRepoInfoListData", JsonUtils.object2Json(dto.getPledgedRepoInfoList()));
+                model.addAttribute("formTodoList", true);
+            }
         }
         else{
             if(StringUtil.isNotEmpty(tradeId)){
@@ -270,7 +274,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
                     for(FinDealPledgeDto deal : entity.getPledgedRepoRolloverList()){
                         sumPrinAmt= ArithmeticUtil.doAdd(deal.getDesiPledgePrin(),sumPrinAmt);
                     }
-                    
+
                     BigDecimal tradeAmt = entity.getRolloverTradeAmt() == null ? BigDecimal.ZERO : entity.getRolloverTradeAmt();
         			BigDecimal prinAmt = entity.getRolloverPrinAmt() == null ? BigDecimal.ZERO : entity.getRolloverPrinAmt();
         			BigDecimal intAmt = entity.getRolloverRepoIntAmt() == null ? BigDecimal.ZERO : entity.getRolloverRepoIntAmt();
