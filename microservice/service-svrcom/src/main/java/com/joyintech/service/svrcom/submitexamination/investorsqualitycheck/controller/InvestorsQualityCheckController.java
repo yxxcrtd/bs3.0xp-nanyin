@@ -18,6 +18,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -84,6 +86,8 @@ public class InvestorsQualityCheckController{
     @Autowired
     private InvestorsQualityCheckDJWZXService investorsQualityCheckDJWZXService;
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * 查询列表
      *
@@ -107,7 +111,13 @@ public class InvestorsQualityCheckController{
         // 添加需要查询的Service对象
         serviceList.add(investorsQualityCheckCPZTService);
         serviceList.add(investorsQualityCheckSLPPService);
-
+        serviceList.add(investorsQualityCheckCPYEFBXService);
+        serviceList.add(investorsQualityCheckCPYEKFXService);
+        serviceList.add(investorsQualityCheckCPFEFBXService);
+        serviceList.add(investorsQualityCheckCPFEKFXService);
+        serviceList.add(investorsQualityCheckMJQYEService);
+        serviceList.add(investorsQualityCheckMJQFEService);
+        serviceList.add(investorsQualityCheckDJWZXService);
 
         // 创建线程池
         ExecutorService taskpool = new JoyinThreadPoolExecutor(serviceList.size());
@@ -131,8 +141,7 @@ public class InvestorsQualityCheckController{
             }
         } catch (InterruptedException | ExecutionException e) {
             Thread.currentThread().interrupt();
-
-            return resList;
+            logger.error("InvestorsQualityCheckController.searchInvestorsPassRate统计失败：", e);
         }finally {
             // 任务结束，停止线程池的所有线程
             taskpool.shutdown();
