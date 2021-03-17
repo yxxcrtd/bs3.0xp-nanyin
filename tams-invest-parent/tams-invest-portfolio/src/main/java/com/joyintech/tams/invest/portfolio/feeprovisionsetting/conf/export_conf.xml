@@ -7,7 +7,7 @@
             <Cell order="3" name="费用类型">feeTypeStr</Cell>
             <Cell order="4" name="计提开始日">positionStartDateStr</Cell>
             <Cell order="5" name="计提结束日">positionEndDateStr</Cell>
-<!--            <Cell order="6" name="实际到期日">actPositionEndDateStr</Cell>-->
+            <Cell order="6" name="实际到期日">actPositionEndDateStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>
