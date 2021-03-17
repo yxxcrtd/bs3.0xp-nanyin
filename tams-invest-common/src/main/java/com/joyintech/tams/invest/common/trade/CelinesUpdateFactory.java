@@ -983,16 +983,16 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
     }
 
     /**
-     * 过滤多条授信最新一条，以CreditMstId&&CustomerId维度
+     * 过滤多条授信生效日最新一条，以CreditMstId&&CustomerId维度
      * @param creLineslist
      * @return
      */
     public List<CreditLines> filterNewCreditLines(List<CreditLines> creLineslist) {
         Map<String, CreditLines> creLinesMap = new HashMap<String, CreditLines>();
         for (CreditLines creditLines : creLineslist) {
-            // map中没有此项授信 || 当前一条授信创建时间新于map中授信：重新添加||更新最新授信
+            // map中没有此项授信 || 当前一条授信生效日新于map中授信：重新添加||更新最新授信
             if (creLinesMap.get(creditLines.getCreditMstId()+"|"+creditLines.getCustomerId()) == null
-                    || creditLines.getCreateTime().compareTo(creLinesMap.get(creditLines.getCreditMstId()+"|"+creditLines.getCustomerId()).getCreateTime()) >0) {
+                    || creditLines.getVdate().compareTo(creLinesMap.get(creditLines.getCreditMstId()+"|"+creditLines.getCustomerId()).getVdate()) >0) {
                 creLinesMap.put(creditLines.getCreditMstId()+"|"+creditLines.getCustomerId(), creditLines);
             }
         }

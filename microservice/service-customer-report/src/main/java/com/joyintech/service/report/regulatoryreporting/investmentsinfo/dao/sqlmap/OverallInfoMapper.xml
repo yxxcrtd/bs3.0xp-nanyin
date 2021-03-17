@@ -645,7 +645,7 @@
 
 	<select id="queryBottomTable3AddInfoList" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.OverallInfoDto" parameterType="java.util.Map">
 		/*债券本季末数额*/
-		SELECT
+		select t.* from (SELECT
 		'BONDCUR' AS reportType,
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
@@ -688,10 +688,10 @@
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 
-		GROUP BY d1.item_value
+		GROUP BY d1.item_value )t where t.balance!=0
 		/*债券上季末数额*/
 		UNION ALL
-		SELECT
+		select t.* from (SELECT
 		'BONDLAST' AS reportType,
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
@@ -734,12 +734,12 @@
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
-		GROUP BY d1.item_value
+		GROUP BY d1.item_value)t where t.balance!=0
 
 
 		/*非标准化债权类投资本季末数额*/
 		UNION ALL
-		SELECT
+		select t.* from (SELECT
 		'NOSTABONDCUR' AS reportType,
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
@@ -783,11 +783,11 @@
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 
-		GROUP BY d1.item_value
+		GROUP BY d1.item_value)t where t.balance!=0
 
 		/*非标准化债权类投资上季末数额*/
 		UNION ALL
-		SELECT
+		select t.* from (SELECT
 		'NOSTABONDLAST' AS reportType,
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
@@ -830,11 +830,11 @@
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
-		GROUP BY d1.item_value
+		GROUP BY d1.item_value)t where t.balance!=0
 
 		/*产业投资基金本季末余额*/
 		UNION ALL
-		SELECT
+		select t.* from (SELECT
 		'INDINCUR' AS reportType,
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
@@ -880,11 +880,11 @@
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
 
-		GROUP BY d1.item_value
+		GROUP BY d1.item_value)t where t.balance!=0
 
 		/*产业投资基金上季末余额*/
 		UNION ALL
-		SELECT
+		select t.* from (SELECT
 		'INDINLAST' AS reportType,
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
@@ -930,11 +930,11 @@
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
-		GROUP BY d1.item_value
+		GROUP BY d1.item_value)t where t.balance!=0
 
 		/* 其他本季末数额 */
 		UNION ALL
-		SELECT
+		select t.* from (SELECT
 		'OTHERCUR' AS reportType,
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
@@ -976,11 +976,11 @@
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
-		GROUP BY d1.item_value
+		GROUP BY d1.item_value)t where t.balance!=0
 
 		/* 其他上季末数额 */
 		UNION ALL
-		SELECT
+		select t.* from (SELECT
 		'OTHERLAST' AS reportType,
 		d1.item_value AS propertyCode,
 		NVL(SUM(NVL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
@@ -1022,7 +1022,7 @@
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
-		GROUP BY d1.item_value
+		GROUP BY d1.item_value)t where t.balance!=0
 
 	</select>
 	<select id="selectBankModeOrgName" resultType="java.lang.String">

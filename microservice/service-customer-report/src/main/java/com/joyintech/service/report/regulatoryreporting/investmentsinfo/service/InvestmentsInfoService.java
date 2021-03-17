@@ -1621,7 +1621,7 @@ public class InvestmentsInfoService {
 			Date lastYearDate=calendarlast.getTime();
 
 			paraMap.put("endDate", endDate);
-			paraMap.put("lastendDate", lastEndDate);
+			paraMap.put("lastEndDate", lastEndDate);
 			//paraMap.put("lastYearDate", lastYearDate);
 			paraMap.put("yearStartDate", yearStartDate);
             prodRateList =termStructureOfBusinessAndCostBenefitMapper.selectProductAvgRateInfo2(paraMap);
@@ -1642,7 +1642,7 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendarlastEndDate.getTime();
 
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("lastEndDate", lastlastEndDate);
 			//paraMap.put("lastYearDate", lastlastYearDate);
 			paraMap.put("yearStartDate", yearStartDate);
 
@@ -1731,7 +1731,7 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendarlastEndDate.getTime();
 
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("lastEndDate", lastlastEndDate);
 			paraMap.put("yearStartDate", yearStartDate);
 			lastassetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRateByInfo2(paraMap);
 
@@ -1796,7 +1796,7 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendarlastEndDate.getTime();
 
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("lastEndDate", lastlastEndDate);
 			paraMap.put("yearStartDate", yearStartDate);
 
 			lastassetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo1(paraMap);
@@ -2055,7 +2055,7 @@ public class InvestmentsInfoService {
 			calendarlastEndDate.set(Calendar.DAY_OF_MONTH, 0);
 			Date lastlastEndDate=calendarlastEndDate.getTime();
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("lastEndDate", lastlastEndDate);
 			paraMap.put("yearStartDate", yearStartDate);
 
 			lastFinanceAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo1(paraMap);
@@ -2078,7 +2078,7 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendarlastEndDate.getTime();
 
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("lastendDate", lastlastEndDate);
+			paraMap.put("lastEndDate", lastlastEndDate);
 			paraMap.put("yearStartDate", yearStartDate);
 
 			lastFinanceAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo2(paraMap);

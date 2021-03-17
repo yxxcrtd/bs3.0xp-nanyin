@@ -215,9 +215,9 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
     public void genFinProductDto(BuyOutRepoTransfer002Dto dto, BuyOutRepoTransfer001Dto entity){
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
-        baseTradeProductDealDtos.add(genBaseTradeProductDealDto(dto,entity, DictCodeList.交易方向_买入.getValue(),null));
+        baseTradeProductDealDtos.add(genBaseTradeProductDealDto(dto,entity, DictCodeList.交易方向_买入.getValue(),null,null));
         baseTradeProductDealDtos.add(genBaseTradeProductDealDto(dto,entity, DictCodeList.交易方向_卖出.getValue(),
-                baseTradeProductDealDtos.get(0).getTrdProductDeal().getTradeId()));
+                baseTradeProductDealDtos.get(0).getTrdProductDeal().getTradeId(),baseTradeProductDealDtos.get(0).getTrdProductDeal().getTradeId()));
         finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
         dto.setFinProductTradeDto(finProductTradeDto);
         //风险试算
@@ -239,7 +239,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
      * @see
      * @since 1.0
      */
-    public BaseTradeProductDealDto genBaseTradeProductDealDto(BuyOutRepoTransfer002Dto dto,BuyOutRepoTransfer001Dto entity,String ps,String tradeId){
+    public BaseTradeProductDealDto genBaseTradeProductDealDto(BuyOutRepoTransfer002Dto dto,BuyOutRepoTransfer001Dto entity,String ps,String tradeId,String rtradeId){
         BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
         //组合代码转为母组合代码
         dto.setActPortfolioId(dto.getPortfolioId());
@@ -250,6 +250,7 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
         TrdProductDeal trdProductDeal = genTrdProductDeal(dto,entity,ps);
         if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue()) && StringUtil.isNotEmpty(tradeId)){
             trdProductDeal.setSplitTradeId(tradeId);
+            trdProductDeal.setrTradeId(rtradeId);
         }
         baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
         //金融产品交易附属表

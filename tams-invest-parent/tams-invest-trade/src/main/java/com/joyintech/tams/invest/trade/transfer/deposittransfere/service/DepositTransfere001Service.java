@@ -385,6 +385,7 @@ public class DepositTransfere001Service extends CommonExportService<DepositTrans
         trdProductDealAddOut.setTradeId(DepositTransfere002Dto.getTradeIdOut());
         trdProductDealOut.setTradeId(DepositTransfere002Dto.getTradeIdOut());
         trdProductDealOut.setRemark("存款类转出");
+        trdProductDealOut.setrTradeId(DepositTransfere002Dto.getTradeId());
         trdProductDealOut.setPs(DictCodeList.交易方向_卖出.getValue());
         trdProductDealOut.setCounterId(DepositTransfere002Dto.getPortfolioId());
         baseDtoOut.setTrdProductDeal(trdProductDealOut);

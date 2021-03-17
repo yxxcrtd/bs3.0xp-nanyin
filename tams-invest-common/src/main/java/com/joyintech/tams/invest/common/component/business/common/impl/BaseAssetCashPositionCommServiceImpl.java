@@ -492,6 +492,16 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
         }
         //add by  liutf 20200108 end
 
+        //add by mashukai 20210316 计划类货币型资产卖出交易提交时交易可用持仓改变 start
+        if (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+                && DictCodeList.持仓类型_可用.getValue().equals(inputDto.getPositionType())
+                && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
+            resultDto.setCdate(deal.getTradeDate());
+            resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+            result.add(resultDto);
+        }
+        //add by mashukai 20210316 计划类货币型资产卖出交易提交时交易可用持仓改变 end
+
         if (DictCodeList.持仓类型_实际.getValue().equals(inputDto.getPositionType())) {
 
             /*

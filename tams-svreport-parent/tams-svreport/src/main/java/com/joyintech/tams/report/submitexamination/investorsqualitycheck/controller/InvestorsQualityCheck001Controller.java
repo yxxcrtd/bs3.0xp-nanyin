@@ -60,7 +60,7 @@ public class InvestorsQualityCheck001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/searchInvestorsPassRate")
-    public Page<InvestorsQualityCheck001Dto> searchInvestorsPassRate(){
+    public List<InvestorsQualityCheck001Dto> searchInvestorsPassRate(){
     	return investorsQualityCheckMService.searchInvestorsPassRate(RequestUtil.getPageParam());
     }
     

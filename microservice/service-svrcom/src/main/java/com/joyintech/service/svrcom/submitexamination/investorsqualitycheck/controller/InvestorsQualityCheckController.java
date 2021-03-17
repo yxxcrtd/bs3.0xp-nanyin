@@ -97,7 +97,7 @@ public class InvestorsQualityCheckController{
      * 查询左侧-核查项合格率信息
      * @return
      */
-    @PostMapping("/searchInvestorsPassRate/{page}/{length}")
+    @PostMapping("/searchInvestorsPassRate")
     public List<InvestorsQualityCheck001Dto> searchInvestorsPassRate(@RequestBody Map<String, Object> param){
         investorsQualityCheck001Service.dealParamMap(param);
         List<InvestorsQualityCheck001Dto> resList = investorsQualityCheck001Service.searchInvestorsPassRate(param);
@@ -133,6 +133,9 @@ public class InvestorsQualityCheckController{
             Thread.currentThread().interrupt();
 
             return resList;
+        }finally {
+            // 任务结束，停止线程池的所有线程
+            taskpool.shutdown();
         }
 
 

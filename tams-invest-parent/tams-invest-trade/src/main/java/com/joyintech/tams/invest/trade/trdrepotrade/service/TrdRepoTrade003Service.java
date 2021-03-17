@@ -419,7 +419,7 @@ public class TrdRepoTrade003Service extends BaseService<TrdRepoTrade003Dto> impl
             inputDto.setPtlTradeList(entity.getPtlTrade());
             if (stlPayOrders != null && !stlPayOrders.isEmpty()) {
                 StlPayOrders order = new StlPayOrders();
-                BeanUtil.copyPropertiesIgnoreNull(order, stlPayOrders);
+                BeanUtil.copyPropertiesIgnoreNull(order, stlPayOrders.get(0));
                 inputDto.setStlPayOrders(order);
             }
             AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
