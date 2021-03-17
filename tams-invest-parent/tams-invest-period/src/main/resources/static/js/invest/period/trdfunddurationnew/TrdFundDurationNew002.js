@@ -845,8 +845,8 @@
     function saveOrSubmit(operateType) {
         var objectTemp = $.serializeToObject('#informationForm', true);
         for(var i in objectTemp.finAssetIntInfoList){
-            if(objectTemp.finAssetIntInfoList[i].tradeAmt == undefined || objectTemp.finAssetIntInfoList[i].tradeAmt == null){
-                var msg = JoyinUtil.getMessage("分红明细信息中分红金额不能为空!");
+            if(!objectTemp.finAssetIntInfoList[i].tradeAmt || objectTemp.finAssetIntInfoList[i].tradeAmt <= 0){
+                var msg = JoyinUtil.getMessage("分红明细信息中分红金额不能为空/小于等于0!");
                 Joyin.alert(msg, 2);
                 return;
             }
