@@ -202,4 +202,25 @@ public class ValSubjectBalanceQuery001Service extends CommonExportService<ValSub
         return listSelectDto;
     }
 
+    public boolean reportSizeCheck(Map<String, Object> params) {
+    	int maxReportSize = 0;
+    	if(StringUtil.isNotEmpty(params.get("maxReportIOnceTime"))) {
+        	try {
+        		maxReportSize = Integer.parseInt(params.get("maxReportIOnceTime").toString());
+        	} catch (Exception e) {
+        		maxReportSize = 0;
+        	}	
+    	}
+    	if(maxReportSize>0) {
+    		params.put("maxReportSize", maxReportSize);
+    		List<ValSubjectBalanceQuery001Dto> allList = getAllList(params);
+    		if(allList!=null&&allList.size()>0) {
+    			return false;
+    		}
+    		else {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 }

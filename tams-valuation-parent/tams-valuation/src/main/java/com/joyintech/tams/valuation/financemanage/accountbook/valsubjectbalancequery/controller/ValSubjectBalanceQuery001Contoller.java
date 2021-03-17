@@ -18,12 +18,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -66,6 +69,10 @@ public class ValSubjectBalanceQuery001Contoller extends BaseController {
     
     @Autowired
     private BaseCommonService baseCommonService;
+    
+    @Value("${application.valuation.maxReportIOnceTime:100000}")
+    private Integer maxReportIOnceTime;
+    
     
     /**
      * 重写init方法，加载页面
@@ -175,4 +182,11 @@ public class ValSubjectBalanceQuery001Contoller extends BaseController {
                                      + FileNameUtil.getFileExtName(outFile),
                 outFile, true);
         }
+    
+    @RequestMapping("exportCheck")
+    @ResponseBody
+    public AjaxResult exportCheck(@RequestBody Map<String,Object> paraMap) {
+    	paraMap.put("maxReportIOnceTime",maxReportIOnceTime);
+    	return valSubjectBalanceQuery001Service.reportCheck(paraMap);
+    }
 }

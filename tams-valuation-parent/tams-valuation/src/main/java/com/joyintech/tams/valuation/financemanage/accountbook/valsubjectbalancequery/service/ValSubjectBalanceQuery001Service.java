@@ -10,15 +10,18 @@
 
 package com.joyintech.tams.valuation.financemanage.accountbook.valsubjectbalancequery.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectbalancequery.dao.ValSubjectBalanceQuery001Mapper;
 import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectbalancequery.dto.ValSubjectBalanceQuery001Dto;
@@ -59,6 +62,21 @@ public class ValSubjectBalanceQuery001Service extends CommonExportService<ValSub
     	return restTemplate.postForList(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValSubjectBalanceQuery001/getAllList",
                 params, ValSubjectBalanceQuery001Dto.class);
+    }
+    
+    public AjaxResult reportCheck(Map<String, Object> params) {
+    	AjaxResult result = new AjaxResult();
+    	List<ValidMessage> errorMessage = new ArrayList<>();
+    	boolean sizeCheck =  restTemplate.postForObject(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ValSubjectBalanceQuery001/resportSizeCheck",
+                params, Boolean.class);
+    	if(!sizeCheck) {
+    		errorMessage.add(new ValidMessage(this.getMessage("VAL_SUBJECT_E_001")));
+    	}
+    	if(errorMessage.size()>0) {
+    		result.setErrorList(errorMessage);
+    	}
+    	return result;
     }
     
     /**

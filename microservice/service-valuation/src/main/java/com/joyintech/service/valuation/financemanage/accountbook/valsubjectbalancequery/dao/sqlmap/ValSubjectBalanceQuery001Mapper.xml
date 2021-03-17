@@ -3,6 +3,10 @@
 <mapper namespace="com.joyintech.service.valuation.financemanage.accountbook.valsubjectbalancequery.dao.ValSubjectBalanceQuery001Mapper">
     
     <select id="queryPageList" resultType="com.joyintech.service.valuation.financemanage.accountbook.valsubjectbalancequery.dto.ValSubjectBalanceQuery001Dto">
+        <if test="maxReportSize!=null">
+        	select tempA.* from(
+        	select temp.*,rownum rn from(
+        </if>
         SELECT DISTINCT
             a.BALANCE_DATE AS balanceDate,    
 			a.BOOKSET_ID AS booksetId,						       
@@ -108,6 +112,11 @@
     	        </if>
         </if>
         ORDER BY booksetId,subjectNo asc
+        <if test="maxReportSize!=null">
+        		)temp
+        	)tempA 
+        	where tempA.rn = #{maxReportSize,jdbcType=INTEGER}+1
+        </if>
     </select>
     <select id="queryValBokSubject" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct
@@ -161,6 +170,10 @@
     
     
     <select id="queryPageListTotal" resultType="com.joyintech.service.valuation.financemanage.accountbook.valsubjectbalancequery.dto.ValSubjectBalanceQuery001Dto">
+        <if test="maxReportSize!=null">
+        	select tempA.*  from(
+        	select temp.*,rownum rn from(
+        </if>
         SELECT
             BALANCE_DATE as balanceDate,    
 			'' AS booksetId,						       
@@ -244,5 +257,10 @@
         ORDER BY 
             a.BALANCE_DATE desc,
             a.SUBJECT_NO 
+       	<if test="maxReportSize!=null">
+        		)temp
+         	)tempA
+        	where tempA.rn = #{maxReportSize,jdbcType=INTEGER}+1
+        </if>
     </select>
 </mapper>

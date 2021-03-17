@@ -107,4 +107,9 @@ public class ValSubjectBalanceQuery001Contoller extends BaseController {
     public List<ValSubjectBalanceQuery001Dto> getAllList(@RequestBody Map<String, Object> params) {
 		return valSubjectBalanceQuery001Service.getAllList(params);
     }
+	
+	@PostMapping("/resportSizeCheck")
+    public boolean resportSizeCheck(@RequestBody Map<String, Object> params) {
+		return valSubjectBalanceQuery001Service.reportSizeCheck(params);
+    }
 }

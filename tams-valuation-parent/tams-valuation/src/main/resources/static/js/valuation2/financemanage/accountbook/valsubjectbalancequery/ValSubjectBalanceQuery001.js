@@ -75,7 +75,9 @@ $(function () {
         }
         if (!selArr || selArr.length == 0) {
             var paramObj = getSearchParams();
-            Joyin.exportExcel('export', paramObj);
+        	Joyin.ajaxJson(basePath+'valuation/financemanage/accountbook/valsubjectbalancequery/ValSubjectBalanceQuery001/exportCheck',paramObj,function(result){
+                Joyin.exportExcel('export', paramObj);
+        	})
         } else {
             Joyin.exportExcel('export', {
                 datas : datas
