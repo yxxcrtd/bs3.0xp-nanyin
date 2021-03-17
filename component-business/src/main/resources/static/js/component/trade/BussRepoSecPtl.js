@@ -709,11 +709,11 @@
             // 组合名称
             ,{field: 'portfolioName',title: 'BussRepoSecPtl.portfolioName',type: 'text',edit: false,sortable: false}
             // 质押本方券券面总额
-            , {field: 'pledgeBfPrin',title: '质押本方券券面总额',type: 'number',edit: true,sortable: false}
+            , {field: 'pledgeBfPrin',title: '质押本方券券面总额',type: 'number',edit: false,sortable: false}
             // 质押融入券券面总额
             , {field: 'pledgeRrPrin',title: '质押融入券券面总额',type: 'number',edit: true,sortable: false, visible: false}
             //质押券汇总券面总额
-            , {field: 'pledgePrin',title: '质押券汇总券面总额',type: 'number',edit: false,sortable: false}
+            , {field: 'pledgePrin',title: '质押券汇总券面总额',type: 'number',edit: true,sortable: false}
             //折算比例%
             ,{field: 'pledgeRatio',title: 'BussRepoSecPtl.pledgeBondTotalTbl.colmodel.pledgeRatio',type: 'number',edit: false,sortable: false}
             //可质押本方券券面总额
