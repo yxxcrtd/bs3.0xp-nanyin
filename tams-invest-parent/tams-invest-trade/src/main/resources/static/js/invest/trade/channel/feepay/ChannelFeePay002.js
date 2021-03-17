@@ -2,6 +2,7 @@
  * ChannelFeePay001 通道资产查询
  */
 $(function() {
+    var feeCollectType = '02';//费用收取方式默认为与回款无关
 
     window.componentLoadCallback = function (isDone, pagePath, params) {
         if (isDone) {
@@ -150,6 +151,9 @@ $(function() {
         if(FileCommon) {
             object.uploadFileList = FileCommon.getUploadFileInfo();
         }
+        if(feeCollectType = '01'){
+            object.mdate = object.settleDate;//当合作资产费用收取类型为“回款前扣除”，默认计提结束日等于支付日，但不展示计提结束日
+        }
         Joyin.ajaxJson(basePath + 'invest/trade/channel/feepay/ChannelFeePay002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
                 if(operateType === 'save') {
@@ -172,10 +176,11 @@ $(function() {
         Joyin.ajax(basePath + "invest/trade/channel/feepay/ChannelFeePay002/getCollectType", {finprodMarketId : finprodMarketId},
                 function(result){
                     if (result == '01') {
-                    	$('#mdate').val('').attr('disabled',true);                     	
+                    	$('#mdate').val('').attr('disabled',true);
                     }else{
                     	$('#mdate').attr('disabled',false);   
                     }
+                    feeCollectType = result;
                 });
         //add by yujiaping 2020-12-22 TISHKBS-1617 【合作资产费用支付管理】所选合作资产费用收取方式设置为“回款前扣除”，计提结束日清空、置灰，不可填end
         // if ($("#finprodMarketId").val() && $("#mdate").val() && $("#portfolioId").val()) {
