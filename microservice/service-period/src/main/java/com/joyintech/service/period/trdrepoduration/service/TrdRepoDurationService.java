@@ -715,16 +715,20 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
             
             // START modify by wj 20200519 TISHKBS-383【实时资产头寸查询】撤销质押式回购到期续做，头寸统计错误
             // 最早的实际头寸 未返还。
-            params.put("holdingType", DictCodeList.持仓类型_实际.getValue());
-            flows = trdRepoDurationMapper.selectSecFlow(params);
-            if (flows != null && !flows.isEmpty()) {
-                flows.forEach(flow -> {
-                    flow.setAmount(flow.getAmount());
-                    trdRepoDurationMapper.insertSelect04Sec(flow);
-                    ptlSecPositionFlowMapper.deleteByPrimaryKey(flow.getSeqno());
-                });
+            //modify by mashukai 20210317 	ZGBSS-794 质押式回购到期，撤销生效之后资产头寸没有随之变化 start
+            if(DictCodeList.交易方向_到期续做.getValue().equals(wflTrdFinProductDealTotal.getPs())){
+                params.put("holdingType", DictCodeList.持仓类型_实际.getValue());
+                flows = trdRepoDurationMapper.selectSecFlow(params);
+                if (flows != null && !flows.isEmpty()) {
+                    flows.forEach(flow -> {
+                        flow.setAmount(flow.getAmount());
+                        trdRepoDurationMapper.insertSelect04Sec(flow);
+                        ptlSecPositionFlowMapper.deleteByPrimaryKey(flow.getSeqno());
+                    });
+                }    
             }
-            
+            //modify by mashukai 20210317 	ZGBSS-794 质押式回购到期，撤销生效之后资产头寸没有随之变化 end
+
         }
     }
 

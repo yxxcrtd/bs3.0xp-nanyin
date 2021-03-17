@@ -69,6 +69,14 @@ var table;
             object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;
             object.counterId=$('#trdInvestPersonInfo_counterId').select2('data')[0].id;
         }
+        
+        //校验质押券置换安排是否为空
+        var exchangePledge = object.bussRepoSec.exchangePledge;
+        if(exchangePledge==undefined||exchangePledge==""){
+        	Joyin.error("质押劵置换安排不能为空！");
+        	return;
+        }
+        
         Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
             Joyin.ajaxJson(basePath + 'invest/trade/bondlend/TrdBondLendInvestTrade002/check', object, function(result) {
             	//授信占用额度
@@ -607,6 +615,20 @@ var table;
         	$('#deliveryType').textSelect('setValue', SETTLEMENT_WAY_LENDING_QQDF);
         }
         
+        //质押券置换安排添加必填标志        
+        var markInterval = setInterval(function(){
+        	addMustMark();
+        },50);
+
+        var addMustMark = function () {
+        	var obj = $("#isBondLendTrade :first-child");
+       			if(obj.length>0){
+       				obj = $(obj[0]);
+       				var html = obj.html()+'<i class="must">*</i>';
+       				obj.html(html);
+       				clearInterval(markInterval);
+       			}
+        };
     };
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
