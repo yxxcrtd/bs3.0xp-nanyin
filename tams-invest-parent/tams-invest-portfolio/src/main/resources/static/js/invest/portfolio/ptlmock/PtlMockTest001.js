@@ -85,6 +85,14 @@ $(function() {
                     title : 'PtlMockTest001.mockDate',
                     width: 150,
                     type : 'datetime',
+                    sortField : 'mockDate',
+                    visible : false
+                } // 试算日期
+                ,{
+                    field : 'mockTime',
+                    title : 'PtlMockTest001.mockDate',
+                    width: 150,
+                    type : 'datetime',
                     sortField : 'mockDate'
                 } // 试算日期
                 ]

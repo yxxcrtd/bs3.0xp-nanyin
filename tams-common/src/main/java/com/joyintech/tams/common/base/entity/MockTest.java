@@ -21,6 +21,11 @@ public class MockTest extends BaseEntity {
     private Date mockDate;
 
     /**
+     * 试算日期
+     */
+    private Date mockTime;
+
+    /**
      * 组合代码
      */
     private String portfolioId;
@@ -1194,5 +1199,21 @@ public class MockTest extends BaseEntity {
      */
     public void setMockRangeRate(BigDecimal mockRangeRate) {
         this.mockRangeRate = mockRangeRate;
+    }
+
+    /**
+     * 设置 试算时间，精确到时分秒
+     * @return 试算时间，精确到时分秒
+     */
+    public Date getMockTime() {
+        return mockTime;
+    }
+
+    /**
+     * 设置 试算时间，精确到时分秒
+     * @param mockTime 试算时间，精确到时分秒
+     */
+    public void setMockTime(Date mockTime) {
+        this.mockTime = mockTime;
     }
 }

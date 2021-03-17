@@ -164,6 +164,7 @@
 			m.AGAIN_INVEST_RATE * 100 againInvestRate,
 			m.FINAN_COST * 100 finanCost,
 			m.MOCK_YIELD * 100 mockYield,
+			to_date(TO_CHAR(m.MOCK_DATE,'YYYY-MM-dd')|| ' '|| TO_CHAR(m.CREATE_TIME,'hh24:mi:ss'),'yyyy-MM-dd HH24:mi:ss') mockTime,
 			m.MOCK_DATE mockDate
 		from MOCK_TEST m 
 		  inner join PTL_PORTFOLIO p on m.PORTFOLIO_ID = p.PORTFOLIO_ID
