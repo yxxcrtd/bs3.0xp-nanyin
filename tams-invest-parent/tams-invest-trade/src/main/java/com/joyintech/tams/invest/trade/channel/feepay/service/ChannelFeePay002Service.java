@@ -96,6 +96,9 @@ public class ChannelFeePay002Service extends BaseService<ChannelFeePay002Dto> im
     private WflTrdProductDealMapper wflTrdProductDealMapper;
 
     @Autowired
+    private WflTrdFinProductDealTotalMapper wflTrdFinProductDealTotalMapper;
+
+    @Autowired
     private WflTrdProductDealAddMapper wflTrdProductDealAddMapper;
 
     @Autowired
@@ -174,6 +177,9 @@ public class ChannelFeePay002Service extends BaseService<ChannelFeePay002Dto> im
                 wflPaDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
                 wflPaDeal.setWorkflowId(wflDeal.getWorkflowId());
 
+                WflTrdFinProductDealTotal totle = new WflTrdFinProductDealTotal();
+                BeanUtil.copyPropertiesIgnoreNull(totle, wflDeal);
+                wflTrdFinProductDealTotalMapper.insertSelective(totle);
 
                 // 金融产品交易信息DTO.划款指令表Entity -> 划款指令业务流程表
 //                List<WflStlPayOrders> stlPayOrdersDtos = gen划款指令流程(entity, type);
