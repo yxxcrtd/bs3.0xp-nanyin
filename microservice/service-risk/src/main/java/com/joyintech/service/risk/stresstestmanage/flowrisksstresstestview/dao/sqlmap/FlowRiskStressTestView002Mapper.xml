@@ -51,21 +51,21 @@
       sum(decode(re1.ind_id,'1001003',round(re1.value,2),null)) as inCount,
       sum(decode(re1.ind_id,'1001004',round(re1.value,2),null)) as outCount,
       
-      sum(decode(re1.ind_id,'1003',round(-1*re1.light_value,2),null)) as ligValSceBre,
-      sum(decode(re1.ind_id,'1009',round(-1*re1.light_value,2),null)) as ligValRiskSlowBreOne,
-      sum(decode(re1.ind_id,'1004',round(-1*re1.light_value,2),null)) as ligValRiskSlowBre,
+      sum(decode(re1.ind_id,'1003',round(re1.light_value,2),null)) as ligValSceBre,
+      sum(decode(re1.ind_id,'1009',round(re1.light_value,2),null)) as ligValRiskSlowBreOne,
+      sum(decode(re1.ind_id,'1004',round(re1.light_value,2),null)) as ligValRiskSlowBre,
       sum(decode(re1.ind_id,'1005',round(abs(re1.light_value),4),null)) as ligValFlowMonBrePre,
       sum(decode(re1.ind_id,'1006',round(re1.light_value,4),null)) as ligValLeverRate,
       
-      sum(decode(re1.ind_id,'1003',round(-1*re1.medium_value,2),null)) as medValSceBre,
-      sum(decode(re1.ind_id,'1009',round(-1*re1.medium_value,2),null)) as medValRiskSlowBreOne,
-      sum(decode(re1.ind_id,'1004',round(-1*re1.medium_value,2),null)) as medValRiskSlowBre,
+      sum(decode(re1.ind_id,'1003',round(re1.medium_value,2),null)) as medValSceBre,
+      sum(decode(re1.ind_id,'1009',round(re1.medium_value,2),null)) as medValRiskSlowBreOne,
+      sum(decode(re1.ind_id,'1004',round(re1.medium_value,2),null)) as medValRiskSlowBre,
       sum(decode(re1.ind_id,'1005',round(abs(re1.medium_value),4),null)) as medValFlowMonBrePre,
       sum(decode(re1.ind_id,'1006',round(re1.medium_value,4),null)) as medValLeverRate,
       
-      sum(decode(re1.ind_id,'1003',round(-1*re1.heavy_value,2),null)) as heaValSceBre,
-      sum(decode(re1.ind_id,'1009',round(-1*re1.heavy_value,2),null)) as heaValRiskSlowBreOne,
-      sum(decode(re1.ind_id,'1004',round(-1*re1.heavy_value,2),null)) as heaValRiskSlowBre,
+      sum(decode(re1.ind_id,'1003',round(re1.heavy_value,2),null)) as heaValSceBre,
+      sum(decode(re1.ind_id,'1009',round(re1.heavy_value,2),null)) as heaValRiskSlowBreOne,
+      sum(decode(re1.ind_id,'1004',round(re1.heavy_value,2),null)) as heaValRiskSlowBre,
       sum(decode(re1.ind_id,'1005',round(abs(re1.heavy_value),4),null)) as heaValFlowMonBrePre,
       sum(decode(re1.ind_id,'1006',round(re1.heavy_value,4),null)) as heaValLeverRate
       from STT_TEST_OBJ t
