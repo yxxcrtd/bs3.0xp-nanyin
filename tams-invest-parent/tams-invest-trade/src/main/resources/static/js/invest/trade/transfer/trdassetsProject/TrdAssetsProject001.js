@@ -204,6 +204,7 @@
         $("#splitIntAmt").val('').trigger("change").trigger('blur');
         $("#splitTradeAmt").val('').trigger("change").trigger('blur');
         $("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
+        $("#bussTrdAvailableCashQuery_avalibleCashT1").val('').trigger("change").trigger('blur');
         $("#bussTrdAvailableCashQuery_channelAvailableCash").val('').trigger("change").trigger('blur');
     };
     var calUnSplitPrinAmt = function(){
