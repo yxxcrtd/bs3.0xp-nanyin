@@ -115,13 +115,23 @@ public class EtrBuyoutCashPositionDealService extends EtrCashPositionBaseService
             etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTradeId());
             // 添加现金流水到目标dto
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+
+            if (StringUtil.isEmpty(entrustId) && !etrPositionHoldDto.isNeedNegative()) { // 无委托且不是撤销时
+                // 持仓流水dto处理   交割日增加交易券面总额/债券面值
+                //如果是交易到期，没有份额，只有到账金额，所以数量=到期券结算金额/100
+                etrSecPositionFlowDto.setAmount(finProductTradeDto.getSecAmount());
+                etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId());
+
+                // 添加持仓流水到目标dto
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+            }
         }
         // 交易提交 
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 // 持仓流水dto处理   交割日增加交易券面总额/债券面值
                 //如果是交易到期，没有份额，只有到账金额，所以数量=到期券结算金额/100
-                etrSecPositionFlowDto.setAmount(finProductTradeDto.getSecAmount());
+                etrSecPositionFlowDto.setAmount(finProductTradeDto.getSecAmount().negate());
                 etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId());
                 
                 // 添加持仓流水到目标dto
