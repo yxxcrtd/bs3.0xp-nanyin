@@ -199,17 +199,17 @@
                     //row['assignPrinamt'] = 0;
                     projectListInfoList.addRow(row);
                     calUnSplitPrinAmt();
+                  //清空转仓信息的信息
+                    $("#portfolioId").val('').trigger("change").trigger('blur');
+                    $("#splitPrinAmt").val('').trigger("change").trigger('blur');
+                    $("#splitIntAmt").val('').trigger("change").trigger('blur');
+                    $("#splitTradeAmt").val('').trigger("change").trigger('blur');
+                    $("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
+                    $("#bussTrdAvailableCashQuery_avalibleCashT1").val('').trigger("change").trigger('blur');
+                    $("#bussTrdAvailableCashQuery_channelAvailableCash").val('').trigger("change").trigger('blur');
                 }
             });
-        }
-        //清空转仓信息的信息
-        $("#portfolioId").val('').trigger("change").trigger('blur');
-        $("#splitPrinAmt").val('').trigger("change").trigger('blur');
-        $("#splitIntAmt").val('').trigger("change").trigger('blur');
-        $("#splitTradeAmt").val('').trigger("change").trigger('blur');
-        $("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
-        $("#bussTrdAvailableCashQuery_avalibleCashT1").val('').trigger("change").trigger('blur');
-        $("#bussTrdAvailableCashQuery_channelAvailableCash").val('').trigger("change").trigger('blur');
+        }        
     };
     var calUnSplitPrinAmt = function(){
         var splitSumPrinAmt=0;
@@ -243,6 +243,11 @@
     	//debugger;
         var params = {};
         params.portfolioId = $("#portfolioId").val();
+        if(!params.portfolioId){
+        	$("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
+            $("#bussTrdAvailableCashQuery_avalibleCashT1").val('').trigger("change").trigger('blur');
+            $("#bussTrdAvailableCashQuery_channelAvailableCash").val('').trigger("change").trigger('blur');
+        }
         params.calendarId = $("#calendarId").val();
         params.ccy = $("#ccy").val();
         // 通道交易 新增 强成西 2019/03/26 start
