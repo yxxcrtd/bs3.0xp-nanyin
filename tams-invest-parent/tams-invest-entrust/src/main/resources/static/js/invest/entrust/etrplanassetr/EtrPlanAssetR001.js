@@ -79,7 +79,7 @@
             ,{field:'entrustAmtStr',type:'number', title: 'EtrPlanAssetR001.entrustAmt1', width:'10%',sortField:"entrustAmt"}
             ,{field:'finishAmt',type:'number', title: 'EtrPlanAssetR001.finishAmt', width:'10%',sortField:"finishAmt"}
             ,{field:'transactioncom', title: 'EtrPlanAssetR001.transactioncom',render : function(data, type, row, meta){
-                return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.entrustAmtStr*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.entrustAmtStr*100).toFixed(2)+"%</span></div></div>";
+                return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(Math.min(row.finishAmt/row.entrustAmtStr,1)*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(Math.min(row.finishAmt/row.entrustAmtStr,1)*100).toFixed(2)+"%</span></div></div>";
             }, width:'10%',sortable:false}
             ,{field:'remark', title: 'EtrPlanAssetR001.remark', width:'10%',sortable:false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
