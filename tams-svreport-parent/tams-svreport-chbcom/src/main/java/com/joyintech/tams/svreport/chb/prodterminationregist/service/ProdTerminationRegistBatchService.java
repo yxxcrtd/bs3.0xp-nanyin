@@ -168,8 +168,13 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
                     // add by zhangliang 20201109 数据流向处理 ===================================start
                     Map<String, ProdTerminationRegist001Dto> handleDataMap = handleDataStatus(result, regMap.get(prodForTerminationDto.getProdId()));
                     if (handleDataMap.containsKey(SvrDataStatusUtil.INSERT_DATA)){
-                        if(iszero&&BigDecimal.ZERO.compareTo(balanceQtysum)==0){
-                            insertlist.add(handleDataMap.get(SvrDataStatusUtil.INSERT_DATA));
+                        ProdTerminationRegist001Dto subDto = handleDataMap.get(SvrDataStatusUtil.INSERT_DATA);
+                        if(!StringUtil.equals(subDto.getStatus(), DictCodeListExt2.报送数据状态_删除.getValue())){
+                            if (iszero&&BigDecimal.ZERO.compareTo(balanceQtysum)==0){
+                                insertlist.add(subDto);
+                            }
+                        }else{
+                            insertlist.add(subDto);
                         }
                     }
                     if (handleDataMap.containsKey(SvrDataStatusUtil.DELETE_DATA)){
