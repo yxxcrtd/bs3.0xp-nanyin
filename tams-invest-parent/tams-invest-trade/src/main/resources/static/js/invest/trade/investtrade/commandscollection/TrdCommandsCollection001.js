@@ -667,7 +667,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF07', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF07', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF07', type: 'number', sortable:false}
-                        ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection001.lowestDealNum', sortable:false}
+                        //,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection001.lowestDealNum', sortable:false}
                         ,{field:'invManagerId', width:'10%', title: 'TrdCommandDispatcher001.invManagerId',sortable:false}
                         ,{field:'remark', width:'10%', title: 'TrdCommandReceive001.remark',sortable:false}
                         ,{field:'files', width:'10%', title: 'TrdFundInvestTrade002.file',sortable:false,
