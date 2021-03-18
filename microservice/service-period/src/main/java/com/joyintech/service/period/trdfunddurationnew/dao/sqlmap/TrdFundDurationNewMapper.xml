@@ -18,7 +18,7 @@
         SUM(tpd.INT_AMT) tradeAmt,
         SUM(tpd.SHARE_AMT) qty,
         nvl(tpda.REG_DATE,tpda.REG_DATE) registDate,
-        nvl(tpda.REG_DATE,tpda.REG_DATE) exRightsDate,
+        null exRightsDate,
         null arriveDate,
         <!--tpd.SEC_MANAGE_ACCT_ID secManageAcctId,-->
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
@@ -72,7 +72,7 @@
 <!--        else null end) arriveDate,-->
         tpdt.TRADE_DATE arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpd.PRIN_AMT) registShare,
+        SUM(tpda.reg_date_amt) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         tpd.P_TRADE_ID,
@@ -115,10 +115,10 @@
         SUM(tpd.INT_AMT) tradeAmt,
         null qty,
         nvl(tpda.REG_DATE,tpda.REG_DATE) registDate,
-        tpd.TRADE_DATE exRightsDate,
+        btrd.theory_pay_date exRightsDate,
         tpdt.TRADE_DATE arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpd.PRIN_AMT) registShare,
+        SUM(tpda.reg_date_amt) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         tpd.P_TRADE_ID,
@@ -139,6 +139,7 @@
         tpda.REG_DATE,
         tpd.TRADE_DATE,
         tpdt.TRADE_DATE,
+        btrd.theory_pay_date,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         tpd.P_TRADE_ID,
@@ -160,10 +161,10 @@
         SUM(tpd.INT_AMT) tradeAmt,
         SUM(tpd.SHARE_AMT) qty,
         nvl(tpda.REG_DATE,tpda.REG_DATE) registDate,
-        tpd.TRADE_DATE exRightsDate,
+        btrd.theory_pay_date exRightsDate,
         null arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpd.PRIN_AMT) registShare,
+        SUM(tpda.reg_date_amt) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         tpd.P_TRADE_ID,
@@ -183,6 +184,7 @@
         fprod_type.TYPE_6,
         tpd.TRADE_DATE,
         tpdt.TRADE_DATE,
+        btrd.theory_pay_date,
         tpdt.SETTLE_DATE,
         tpda.REG_DATE,
         tpd.UNIT_CPRICE,
@@ -210,7 +212,7 @@
         tpd.TRADE_DATE exRightsDate,
         tpdt.TRADE_DATE  arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpd.PRIN_AMT) registShare,
+        SUM(tpda.reg_date_amt) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         tpd.P_TRADE_ID,
@@ -252,10 +254,10 @@
         SUM(tpd.TRADE_AMT),
         SUM(tpd.SHARE_AMT) qty,
         nvl(tpda.REG_DATE,tpda.REG_DATE) registDate,
-        tpd.TRADE_DATE exRightsDate,
+        btrd.theory_pay_date exRightsDate,
         tpdt.TRADE_DATE arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpd.PRIN_AMT) registShare,
+        SUM(tpda.reg_date_amt) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         tpd.P_TRADE_ID,
@@ -275,6 +277,7 @@
         tpda.REG_DATE,
         tpd.TRADE_DATE,
         tpdt.TRADE_DATE ,
+        btrd.theory_pay_date,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         tpd.P_TRADE_ID,
@@ -285,8 +288,9 @@
         INNER JOIN WFL_TRD_PRODUCT_DEAL_ADD tpda ON tpd.trade_id = tpda.trade_id
         INNER JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='BONUS_MODE' and sdl.item_code = tpda.pay_type
         INNER JOIN FIN_PRODUCT_TYPE fprod_type on fprod_type.FINPROD_ID = tpd.FINPROD_ID
+        left join WFL_PA_TRD_FIN_DEAL_TOTAL btrd on btrd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         <!--通过通道投资，明细表会生成通道数据，total_tradeid分别取明细的tradeid，导致查询出多条数据-->
-        INNER JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL fpdto ON TPD.TOTLE_TRADE_ID = fpdto.TOTLE_TRADE_ID
+        <!--INNER JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL fpdto ON TPD.TOTLE_TRADE_ID = fpdto.TOTLE_TRADE_ID-->
         left join FIN_PRODUCT fp on fp.FINPROD_ID = tpd.FINPROD_ID
         left join WFL_TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.totle_trade_id =tpdt.totle_trade_id
         LEFT JOIN FIN_PRODUCT TC ON TC.FINPROD_ID = tpd.CHL_ID
@@ -295,8 +299,9 @@
         INNER JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpd.trade_id = tpda.trade_id
         INNER JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='BONUS_MODE' and sdl.item_code = tpda.pay_type
         INNER JOIN FIN_PRODUCT_TYPE fprod_type on fprod_type.FINPROD_ID = tpd.FINPROD_ID
+        left join PA_TRD_FIN_PRODUCT_DEAL_TOTAL btrd on btrd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         <!--通过通道投资，明细表会生成通道数据，total_tradeid分别取明细的tradeid，导致查询出多条数据-->
-        INNER JOIN TRD_FIN_PRODUCT_DEAL_TOTAL fpdto ON TPD.TOTLE_TRADE_ID = fpdto.TOTLE_TRADE_ID
+        <!--INNER JOIN TRD_FIN_PRODUCT_DEAL_TOTAL fpdto ON TPD.TOTLE_TRADE_ID = fpdto.TOTLE_TRADE_ID-->
         left join FIN_PRODUCT fp on fp.FINPROD_ID = tpd.FINPROD_ID
         left join TRD_FIN_PRODUCT_DEAL_TOTAL tpdt on tpd.totle_trade_id =tpdt.totle_trade_id
         LEFT JOIN FIN_PRODUCT TC ON TC.FINPROD_ID = tpd.CHL_ID

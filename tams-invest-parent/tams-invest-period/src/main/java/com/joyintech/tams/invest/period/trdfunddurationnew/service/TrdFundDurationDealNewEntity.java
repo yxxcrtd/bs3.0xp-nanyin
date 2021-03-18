@@ -1080,6 +1080,8 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
         PaTrdFinProductDealTotal paTrdTotal = new PaTrdFinProductDealTotal();
         paTrdTotal.setTotleTradeId(entity.getTotleTradeId());
         paTrdTotal.setRegDate(entity.getRegistDate());
+        //除权日
+        paTrdTotal.setTheoryPayDate(entity.getExRightsDate());
 ////        货币基金红利再投
 //        if (StringUtil.equals(entity.getType(), "01")) {
 //            paTrdTotal.setPaBussType(DictCodeListExt1.平安业务类型_货币基金红利再投.getValue());

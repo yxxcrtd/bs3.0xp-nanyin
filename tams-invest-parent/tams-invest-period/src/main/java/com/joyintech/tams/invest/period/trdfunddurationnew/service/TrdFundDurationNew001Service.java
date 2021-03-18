@@ -221,12 +221,12 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
                 break;
             }
         }
+        entity.setbTradeId(entity.getTotleTradeId());
         if(bonusTypeXjfh){
 //          非货币现金分红
 //            entity.setType(StringUtil.equals(entity.getAssetType(), DictCodeList.基金类资产类型_非货币基金.getValue())?"03":"06");
 //           处理数据参数
             getWorkFlowPatameter(entity);
-            entity.setbTradeId(entity.getTotleTradeId());
             entity.setPstype(DictCodeList.分红方式_现金分红.getValue());
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
             List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
@@ -239,11 +239,7 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
 //            非货币红利再投
             //entity.setType("04");
             entity.setElementId("TrdFundDurationNew002_btn_save");
-//            BigDecimal unit = periodCommonService.getLatestValuation(entity.getFinprodId(), DateUtil.format(entity.getExRightsDate()));
-//            entity.setQty(ArithmeticUtil.divide(entity.getTradeAmt(), unit == null ? BigDecimal.ONE:unit, 4));
             WorkFlowParameter<TrdFundDurationNew001Dto> param = getWorkFlowPatameter(entity);
-            periodCommonService.autoDealQtyForSubmit(entity.getFinAssetIntInfoList(),entity.getRegistShare(),entity.getQty());
-            entity.setbTradeId(entity.getTotleTradeId());
             entity.setPstype(DictCodeList.分红方式_红利再投.getValue());
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
             List<FinAssetIntInfo> listFinAssetIntInfo =  entity.getFinAssetIntInfoList().stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_红利再投.getValue())).collect(Collectors.toList());
@@ -256,6 +252,9 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
                 tradeAmt = tradeAmt.add(tempFinAssetIntInfo.getTradeAmt());
             }
             entity.setTradeAmt(tradeAmt);
+            BigDecimal unit = periodCommonService.getLatestValuation(entity.getFinprodId(), DateUtil.format(entity.getExRightsDate()));
+            entity.setQty(ArithmeticUtil.divide(entity.getTradeAmt(), unit == null ? BigDecimal.ONE:unit, 4));
+            periodCommonService.autoDealQtyForSubmit(entity.getFinAssetIntInfoList(),entity.getRegistShare(),entity.getQty());
             try {
                 //启动流程
                 WorkFlowUtil.startProcess(param,"","", entity.getCreateUser(),OperationType.NEW,false,entity);
@@ -281,9 +280,9 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
         //       为非货币现金分红及非货币红利再投时 设置前置交易编号
         //if(StringUtil.equals(dto.getType(),"03")||StringUtil.equals(dto.getType(),"04")||StringUtil.equals(dto.getType(),"06")){
-        if(StringUtil.equals(dto.getPstype(), "01")){
-            dto.setbTradeId(dto.getTotleTradeId());
-        }
+//        if(StringUtil.equals(dto.getPstype(), "01")){
+//            dto.setbTradeId(dto.getTotleTradeId());
+//        }
         dto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
         parameter.setBusinessCode(dto.getTotleTradeId());
         parameter.setBusinessType(DictCodeList.共通业务类型_基金类资产存续期.getValue());
@@ -426,7 +425,7 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
      * @return 统计数
      */
     public int countFollowDeal(Map<String, Object> map) {
-        return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDuration/countFollowDeal", map, Integer.class);
+        return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDurationNew/countFollowDeal", map, Integer.class);
     }
 
     /**
