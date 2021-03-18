@@ -2,6 +2,7 @@ package com.joyintech.service.trade.transfer.sectransfer.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.transfer.sectransfer.dao.SecTransferMapper;
 import com.joyintech.service.trade.transfer.sectransfer.dto.SecTransfer001Dto;
@@ -11,12 +12,17 @@ import com.joyintech.tams.common.base.entity.StlPayOrders;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +58,8 @@ public class SecTransferService extends BaseService<SecTransfer001Dto> {
     private StlPayOrdersMapper stlPayOrdersMapper;
     @Autowired
     private FinProductMapper finProductMapper;
-
+    @Autowired
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
     /**
      * 插入业务表
      * @return
@@ -184,9 +191,27 @@ public class SecTransferService extends BaseService<SecTransfer001Dto> {
      * @since 1.0
      */
     public List<SelectOptionDto> getPortfolioId(Map<String,Object> map){
+        List<SelectOptionDto> result = new ArrayList<>();
     	map.put("portfolioType", DictCodeListExt1.组合类型_投资过渡组合.getValue());
     	map.put("Y", DictCodeListExt1.是否_是.getValue());
-        return secTransferMapper.getPortfolioId(map);
+        List<SelectOptionDto> list = secTransferMapper.getPortfolioId(map);
+        for(SelectOptionDto dto:list){
+            PtlCashPositionFlowDto pcpdto = new PtlCashPositionFlowDto();
+            Date sysdate = DateUtil.parse((String)map.get("tradeDate"));
+            pcpdto.setCdate(sysdate);
+            List<String> acctTypeList = new ArrayList<>();
+            acctTypeList.add(BussinessDictCodeList.资金账户类型_托管账户.getValue());
+            acctTypeList.add(BussinessDictCodeList.资金账户类型_交易所资金账户.getValue());
+            pcpdto.setAcctType(acctTypeList);
+            pcpdto.setPortfolioId(dto.getId());
+            pcpdto.setCcy((String)map.get("ccy"));
+            if(basePtlCashPositionInfoService != null){
+                BigDecimal cashT = basePtlCashPositionInfoService.queryUsableCashPosition(pcpdto);
+                if(cashT.compareTo(new BigDecimal(0))<=0)continue;
+                result.add(dto);
+            }
+        }
+        return result;
     }
 
     // add by xuzhihao start

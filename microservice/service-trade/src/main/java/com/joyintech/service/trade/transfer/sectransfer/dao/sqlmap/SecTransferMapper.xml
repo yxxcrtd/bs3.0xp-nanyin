@@ -107,6 +107,8 @@
         FROM
         PTL_PORTFOLIO pp
         LEFT JOIN PTL_SEC_ACCT psa on pp.PORTFOLIO_ID = psa.PORTFOLIO_ID
+        left join PTL_CAPACCT_INFO pci
+        on pci.PORTFOLIO_ID=pp.PORTFOLIO_ID and pci.ACCT_TYPE = 'A01'
         <where>
             pp.INVEST_YESORNO = 'Y' AND pp.PORTFOLIO_TYPE != '04'
             and pp.PORTFOLIO_ID != #{investPortfolioId}
@@ -123,6 +125,7 @@
             <if test="secManageAcctId != null and secManageAcctId != ''">
                 AND psa.ACCT_NO = #{secManageAcctId}
             </if>
+            and pci.ACCT_NO in (select ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID=#{investPortfolioId} and ACCT_TYPE='A01')
         </where>
         <!--add by xuzhihao-->
     </select>
