@@ -148,6 +148,8 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         BigDecimal rolloverTradeAmt = BigDecimal.ZERO;
         BigDecimal rolloverPrinAmt = BigDecimal.ZERO;
         BigDecimal avaRolloverAmt = BigDecimal.ZERO;
+        BigDecimal sumRolloverPrinAmt = BigDecimal.ZERO;
+        String ps = "";
         if(StringUtil.isNotEmpty((String)param.get("rolloverTradeAmt"))){
             rolloverTradeAmt = new BigDecimal((String)param.get("rolloverTradeAmt"));//转仓交易金额
         }
@@ -156,6 +158,12 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         }
         if(StringUtil.isNotEmpty((String)param.get("avaRolloverAmt"))){
             avaRolloverAmt = new BigDecimal((String)param.get("avaRolloverAmt"));//剩余可转仓本金金额
+        }
+        if(StringUtil.isNotEmpty((String)param.get("ps"))){
+            ps = (String)param.get("ps");
+        }
+        if(StringUtil.isNotEmpty((String)param.get("sumRolloverPrinAmt"))){
+            sumRolloverPrinAmt = new BigDecimal((String)param.get("sumRolloverPrinAmt"));
         }
         if(StringUtil.isNotEmpty(rolloverPrinAmt) && StringUtil.isNotEmpty(avaRolloverAmt) && rolloverPrinAmt.compareTo(avaRolloverAmt)>0){
             errorList.add(new ValidMessage("rolloverPrinAmt","本金金额不能大于剩余未转仓本金金额！"));
@@ -167,13 +175,26 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
             List<FinDealPledgeDto> fdpdlist = new ArrayList<>();
             if(StringUtil.isNotEmpty(param.get("pledgedRepoRolloverList"))){
                 fdpdlist = JsonUtils.json2List(JsonUtil.objToString(param.get("pledgedRepoRolloverList")),FinDealPledgeDto.class);
-                for (FinDealPledgeDto dto1: fdpdlist) {
-                    if(StringUtil.isNotEmpty(dto1.getDesiPledgePrin()) && dto1.getDesiPledgePrin().compareTo(dto1.getPrdPledgePrin())>0){
-                    	JoyinMessage ms = new JoyinMessage("质押券:"+dto1.getPledgeFinprodId()+"本次拆分指定质押券面总额大于产品组合可质押券面总额,请检查质押券拆分列表", 
-                    			MessageType.确认消息);
-                        joyinMessages.add(ms);
+                if(StringUtil.isNotEmpty(ps) && ps.equals(DictCodeList.回购拆借方向_正回购.getValue())){
+                    if(sumRolloverPrinAmt.compareTo(BigDecimal.valueOf(0))==0){
+                        errorList.add(new ValidMessage("【转仓交易汇总券面总额】不能为0"));
+                    }
+                } else {
+                    for (FinDealPledgeDto dto1: fdpdlist) {
+                        if(StringUtil.isNotEmpty(dto1.getDesiPledgePrin()) && dto1.getDesiPledgePrin().compareTo(dto1.getPrdPledgePrin())>0){
+                            JoyinMessage ms = new JoyinMessage("质押券:"+dto1.getPledgeFinprodId()+"本次拆分指定质押券面总额大于产品组合可质押券面总额,请检查质押券拆分列表",
+                                    MessageType.确认消息);
+                            joyinMessages.add(ms);
+                        }
                     }
                 }
+//                for (FinDealPledgeDto dto1: fdpdlist) {
+//                    if(StringUtil.isNotEmpty(dto1.getDesiPledgePrin()) && dto1.getDesiPledgePrin().compareTo(dto1.getPrdPledgePrin())>0){
+//                    	JoyinMessage ms = new JoyinMessage("质押券:"+dto1.getPledgeFinprodId()+"本次拆分指定质押券面总额大于产品组合可质押券面总额,请检查质押券拆分列表",
+//                    			MessageType.确认消息);
+//                        joyinMessages.add(ms);
+//                    }
+//                }
             }
         }
         if(joyinMessages!=null && joyinMessages.size()>0) {
@@ -270,6 +291,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
             if(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())
                     && StringUtil.equals(dto.getRepoType(), DictCodeList.回购类型_质押式协议回购.getValue())){
                 BigDecimal sumPrinAmt = BigDecimal.ZERO;
+
                 for (TrdRolloverPledgedRepo001Dto entity:dto.getPledgedRepoInfoList()){
                     for(FinDealPledgeDto deal : entity.getPledgedRepoRolloverList()){
                         sumPrinAmt= ArithmeticUtil.doAdd(deal.getDesiPledgePrin(),sumPrinAmt);
@@ -281,10 +303,14 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         			if (tradeAmt.compareTo(prinAmt.add(intAmt)) != 0) {
         				tips.append("【" + entity.getPortfolioId() + "】交易金额不等于本息和！</br>");
         			}
+                    if(prinAmt.compareTo(sumPrinAmt)>0){
+                        tips.append("【" + entity.getPortfolioId() + "】本金金额大于转仓交易汇总券面总额</br>");
+//                        confirmMsg = "本金金额大于转仓交易汇总券面总额，是否确认提交？";
+                    }
                 }
-                if(dto.getPrinAmt().compareTo(sumPrinAmt)>0){
-                    confirmMsg = "本金金额大于转仓交易汇总券面总额，是否确认提交？";
-                }
+//                if(dto.getPrinAmt().compareTo(sumPrinAmt)>0){
+//                    confirmMsg = "本金金额大于转仓交易汇总券面总额，是否确认提交？";
+//                }
             }
         }
         if(errorList.size()>0){

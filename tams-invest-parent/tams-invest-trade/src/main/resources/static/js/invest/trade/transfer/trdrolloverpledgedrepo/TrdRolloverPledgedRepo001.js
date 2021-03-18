@@ -237,9 +237,23 @@
                     listInfoDtos = result.data.pledgedRepoInfoList;
                     pledgedRepoInfoListTable.addRow(listInfoDtos[0]);
                     calUnRolloverPrinAmt();
+
+                    $("#rolloverPrinAmt").val('');
+                    $("#rolloverTradeAmt").val('');
+                    $("#sumRolloverPrinAmt").val('');
+                    $("#rolloverRepoIntAmt").val('');
+                    $("#bussTrdAvailableCashQuery_avalibleCash").val('')
+                    $("#portfolioId").val('').trigger("change")
+//                    pledgedBondSplitTable.clear(function(){
+//                        console.log("进到这儿了")
+//                        console.log(pledgedBondSplitTable)
+//                    });
+
                 }
             });
         }
+
+
     };
     //计算金额联动
     function calUnRolloverPrinAmt(){
