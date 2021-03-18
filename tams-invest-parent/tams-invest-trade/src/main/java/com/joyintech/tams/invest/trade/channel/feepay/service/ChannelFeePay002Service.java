@@ -139,8 +139,32 @@ public class ChannelFeePay002Service extends BaseService<ChannelFeePay002Dto> im
                     entity.getTradeId());
         }
         String totleTradeId = entity.getTradeId();
-        for(int i=0;i<entity.getFeeInfoList().size();i++) {
-            if (type == OperationType.DELETE || "submit".equals(entity.getOperateType())) {
+        if (type == OperationType.DELETE || "submit".equals(entity.getOperateType())) {
+            WflTrdFinProductDealTotal totle = new WflTrdFinProductDealTotal();
+            BeanUtil.copyPropertiesIgnoreNull(totle, entity);
+            totle.setTotleTradeId(totleTradeId);
+            totle.setBusiType(DictCodeList.业务类型_产品费用交易.getValue());
+            totle.setFinprodType(DictCodeListExt1.一次性费用类型_通道费.getValue());
+            totle.setFinprodType2(DictCodeListExt1.一次性费用类型_通道费.getValue());
+            totle.setPs(DictCodeList.交易方向_付费.getValue());
+            totle.setBranch(Long.valueOf(CacheUtil.getSysParam("noBranchNoValue")));
+            totle.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            totle.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+            totle.setIsCancel(DictCodeList.是否_否.getValue());
+            totle.setTradeDate(entity.getSettleDate());
+
+            if (type == OperationType.DELETE) {
+                String rTotleTradeId = totleTradeId+"R";
+                totle.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                totle.setTotleTradeId(rTotleTradeId);
+                totle.setRemark(entity.getRevokeReason());
+                totle.setpTradeId(totleTradeId);
+            }
+
+            wflTrdFinProductDealTotalMapper.insertSelective(totle);
+
+            for(int i=0;i<entity.getFeeInfoList().size();i++) {
+
                 WflTrdProductDeal wflDeal = new WflTrdProductDeal();
                 BeanUtil.copyPropertiesIgnoreNull(wflDeal, entity);
                 if(type == OperationType.DELETE){
@@ -176,10 +200,6 @@ public class ChannelFeePay002Service extends BaseService<ChannelFeePay002Dto> im
                 wflPaDeal.setTheoryInt(entity.getFeeInfoList().get(i).getPayAmt());
                 wflPaDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
                 wflPaDeal.setWorkflowId(wflDeal.getWorkflowId());
-
-                WflTrdFinProductDealTotal totle = new WflTrdFinProductDealTotal();
-                BeanUtil.copyPropertiesIgnoreNull(totle, wflDeal);
-                wflTrdFinProductDealTotalMapper.insertSelective(totle);
 
                 // 金融产品交易信息DTO.划款指令表Entity -> 划款指令业务流程表
 //                List<WflStlPayOrders> stlPayOrdersDtos = gen划款指令流程(entity, type);
