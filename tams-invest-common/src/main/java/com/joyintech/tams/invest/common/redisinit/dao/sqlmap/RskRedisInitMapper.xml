@@ -82,7 +82,7 @@
         A41.O_CODE,A41.GRADE_RESULT,rank() over( partition by A41.O_CODE order by  A41.GRADE_DATE desc, A41.GRADE_RESULT DESC) AS rowNo
         FROM MST_BOND_CREDIT_RATING A41 WHERE  O_TYPE='01' AND GRADE_DATE &lt;=to_date('${valDate}','yyyy-MM-dd')) tempData WHERE tempData.rowNo=1
         <!-- ) ZtPingji ON ZtPingji.O_CODE=m.ISSUER_CODE -->
-        ) ZtPingji ON ZtPingji.O_CODE=m.FINPROD_MARKET_ID
+        ) ZtPingji ON ZtPingji.O_CODE=m.ISSUER
         LEFT JOIN (SELECT tempData.O_CODE,tempData.GRADE_RESULT FROM (SELECT
         A41.O_CODE,A41.GRADE_RESULT,rank() over( partition by A41.O_CODE order by  A41.GRADE_DATE desc, A41.GRADE_RESULT DESC) AS rowNo
         FROM MST_BOND_CREDIT_RATING A41 WHERE  O_TYPE='02' AND GRADE_DATE &lt;=to_date('${valDate}','yyyy-MM-dd')) tempData WHERE tempData.rowNo=1
