@@ -939,7 +939,7 @@
             window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                 var dealObj = {};
                 dealObj.finprodType2 = getFinProdType2FromPs();
-                dealObj.settleDate = $("#tradeDate").val();
+                dealObj.settleDate = $("#vdate").val();
                 dealObj.tradeDate = $("#tradeDate").val();
                 dealObj.ps = PS_T01;
                 dealObj.ccy = $("#ccy").val();
