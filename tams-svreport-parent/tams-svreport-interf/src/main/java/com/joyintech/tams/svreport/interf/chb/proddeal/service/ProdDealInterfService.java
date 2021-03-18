@@ -166,9 +166,10 @@ public class ProdDealInterfService extends BaseService{
 					// 查询父产品代码
 					if(StringUtils.isNotBlank(deal.getFinprodId())) {
 						// 从系统缓存中获取是否中债子系统(01：是 02：否)
-						String isSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM);
+						// String isSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM);
+						String isSubSystem = SvrDataUtil.getSysParam("CHB_PRD_DEAL_FILE_TYPE");
 						String newFinprodId = deal.getFinprodId();
-						if(StringUtil.equals(DictCodeListExt1.是或否_否.getValue(), isSubSystem)) {
+						if(StringUtil.equals(SVReportGlobalConstant.CHB_PRD_DEAL_FILE_TYPE_02, isSubSystem)) {
 							 newFinprodId = "F16_" + deal.getFinprodId();
 						}
 						String fProdId = chbPrdBaseinfoInterfMapper.getParentCode(newFinprodId);

@@ -66,6 +66,7 @@
         <result column="IS_NETPRICE" property="isNetprice" jdbcType="VARCHAR" />
         <result column="CREATE_ORG" property="createOrg" jdbcType="VARCHAR" />
         <result column="VAL_ORG" property="valOrg" jdbcType="VARCHAR" />
+        <result column="IS_INADVANCE" property="isInAdvance" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         FINPROD_ID FINPROD_ID, SALE_DEPARTMENT SALE_DEPARTMENT, SALE_LAYER SALE_LAYER, SALE_PERIOD SALE_PERIOD, 
@@ -86,7 +87,7 @@
         TRM_FUND_ABBR TRM_FUND_ABBR, TRM_FUND_TYPE TRM_FUND_TYPE, GRA_FUND_TYPE GRA_FUND_TYPE, 
         PUR_RED_ID PUR_RED_ID, PUR_RED_ABBR PUR_RED_ABBR, PUR_START_LOW PUR_START_LOW, RED_START_LOW RED_START_LOW, 
         ETF_TYPE ETF_TYPE, ETF_MIN_PRUNIT ETF_MIN_PRUNIT, IS_RECEIPT IS_RECEIPT, IS_NETPRICE IS_NETPRICE, 
-        CREATE_ORG CREATE_ORG, VAL_ORG VAL_ORG
+        CREATE_ORG CREATE_ORG, VAL_ORG VAL_ORG,IS_INADVANCE IS_INADVANCE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -130,7 +131,7 @@
             PUR_RED_ID, PUR_RED_ABBR, PUR_START_LOW, 
             RED_START_LOW, ETF_TYPE, ETF_MIN_PRUNIT, 
             IS_RECEIPT, IS_NETPRICE, CREATE_ORG, 
-            VAL_ORG,REP_FINPROD_INS_ID
+            VAL_ORG,REP_FINPROD_INS_ID,IS_INADVANCE
             <if test="calRateType != null" >
                 ,cal_Rate_Type
             </if>)
@@ -156,7 +157,7 @@
             #{purRedId,jdbcType=VARCHAR}, #{purRedAbbr,jdbcType=VARCHAR}, #{purStartLow,jdbcType=DECIMAL}, 
             #{redStartLow,jdbcType=DECIMAL}, #{etfType,jdbcType=VARCHAR}, #{etfMinPrunit,jdbcType=DECIMAL}, 
             #{isReceipt,jdbcType=VARCHAR}, #{isNetprice,jdbcType=VARCHAR}, #{createOrg,jdbcType=VARCHAR}, 
-            #{valOrg,jdbcType=VARCHAR},#{repFinprodInsId,jdbcType=VARCHAR}
+            #{valOrg,jdbcType=VARCHAR},#{repFinprodInsId,jdbcType=VARCHAR},#{isInAdvance,jdbcType=VARCHAR}
             <if test="calRateType != null" >
                 ,#{calRateType,jdbcType=VARCHAR}
             </if>)
@@ -356,6 +357,9 @@
             <if test="valOrg != null" >
                 VAL_ORG,
             </if>
+            <if test="isInAdvance != null">
+            	IS_INADVANCE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="finprodId != null" >
@@ -550,6 +554,9 @@
             <if test="valOrg != null" >
                 #{valOrg,jdbcType=VARCHAR},
             </if>
+            <if test="isInAdvance != null">
+            	#{isInAdvance,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
@@ -562,7 +569,7 @@
         CITY_BOND_LEV, IS_CITY_BOND, INVESTMENT_CYCLE, PROD_MANAGER, COLLECT_TYPE, REGULATORY_RATING, 
         PRD_DESIGN_ID, ADDITION, IS_PLEDGE_REP, TOFF_STRDATE, TOFF_ENDDATE, TRM_FUND_ABBR, 
         TRM_FUND_TYPE, GRA_FUND_TYPE, PUR_RED_ID, PUR_RED_ABBR, PUR_START_LOW, RED_START_LOW, 
-        ETF_TYPE, ETF_MIN_PRUNIT, IS_RECEIPT, IS_NETPRICE, CREATE_ORG, VAL_ORG)
+        ETF_TYPE, ETF_MIN_PRUNIT, IS_RECEIPT, IS_NETPRICE, CREATE_ORG, VAL_ORG,IS_INADVANCE)
         select FINPROD_ID, SALE_DEPARTMENT, SALE_LAYER, SALE_PERIOD, 
             PUR_SPEED, RED_SPEED, IS_SEC_BOND, WIND_ID, IS_AUTO_UPDATE, PORTFOLIO_ID, PROD_REGIST_CODE, 
             IS_CYCLE, IS_LAY, LAY_TYPE, INVEST_NATURE, PROFIT_FLAG, SALE_MODE, CHB_ID, TMPL_ID, 
@@ -572,7 +579,7 @@
             CITY_BOND_LEV, IS_CITY_BOND, INVESTMENT_CYCLE, PROD_MANAGER, COLLECT_TYPE, REGULATORY_RATING, 
             PRD_DESIGN_ID, ADDITION, IS_PLEDGE_REP, TOFF_STRDATE, TOFF_ENDDATE, TRM_FUND_ABBR, 
             TRM_FUND_TYPE, GRA_FUND_TYPE, PUR_RED_ID, PUR_RED_ABBR, PUR_START_LOW, RED_START_LOW, 
-            ETF_TYPE, ETF_MIN_PRUNIT, IS_RECEIPT, IS_NETPRICE, CREATE_ORG, VAL_ORG
+            ETF_TYPE, ETF_MIN_PRUNIT, IS_RECEIPT, IS_NETPRICE, CREATE_ORG, VAL_ORG,IS_INADVANCE
              from FIN_PRODUCT_ADD
              where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </insert>
@@ -756,6 +763,9 @@
             <if test="valOrg != null" >
                 VAL_ORG = #{valOrg,jdbcType=VARCHAR},
             </if>
+            <if test="isInAdvance != null" >
+                IS_INADVANCE = #{isInAdvance,jdbcType=VARCHAR},
+            </if>
         </set>
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </update>
@@ -819,7 +829,8 @@
             ETF_MIN_PRUNIT = #{etfMinPrunit,jdbcType=DECIMAL},
             IS_RECEIPT = #{isReceipt,jdbcType=VARCHAR},
             IS_NETPRICE = #{isNetprice,jdbcType=VARCHAR},
-            VAL_ORG = #{valOrg,jdbcType=VARCHAR}
+            VAL_ORG = #{valOrg,jdbcType=VARCHAR},
+            IS_INADVANCE = #{isInAdvance,jdbcType=VARCHAR}
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </update>
 </mapper>

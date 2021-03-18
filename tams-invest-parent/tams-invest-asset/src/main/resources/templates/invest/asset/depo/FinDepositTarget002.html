@@ -412,6 +412,17 @@
 												   data-th-placeholder="#{SysCommon.placeholder}">
 										</div>
 									</div>
+									
+									<div class="form-inline-wrap" id="isInAdvance_div">
+										<label class="layui-form-label form-label-wrap"
+											   data-th-text="#{FinDepositTarget002.isInAdvance}">是否可提前支取</label>
+										<div class="layui-input-inline input-inline">
+											<input type="checkbox" id="isInAdvance" name="isInAdvance"
+												   lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+												   data-th-checked="${YES_OR_NO_Y} ==${entity?.isInAdvance}">
+										</div>
+									</div>
+									
 								</div>
 								<!-- 将备注放在附件信息下 by 赵东东 2019.10.30 start -->
 									<!--<div class="layui-form-item">

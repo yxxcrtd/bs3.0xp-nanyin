@@ -234,8 +234,21 @@ public class FinDepositTargetDto extends FinProduct implements ITableRow, Proces
 	 * 买断利率
 	 */
 	private BigDecimal buyOutRate;
+	
+	/**
+	 * 是否可提前支取，风险限额用，不影响存续期
+	 */
+	private String isInAdvance;
 
-    public String getAssetSource() {
+    public String getIsInAdvance() {
+		return isInAdvance;
+	}
+
+	public void setIsInAdvance(String isInAdvance) {
+		this.isInAdvance = isInAdvance;
+	}
+
+	public String getAssetSource() {
 		return assetSource;
 	}
 

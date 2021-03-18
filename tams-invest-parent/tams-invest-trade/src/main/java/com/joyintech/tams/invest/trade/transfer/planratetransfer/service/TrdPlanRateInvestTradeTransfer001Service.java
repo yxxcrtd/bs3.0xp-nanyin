@@ -401,6 +401,7 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 		BeanUtil.copyPropertiesIgnoreNull(trdProductDealOut, trdProductDeal);
 		trdProductDealAddOut.setPortfolioId(dto.getTransferPortfolioId());
 		trdProductDealAddOut.setTradeId(planTransferDtos.getTradeIdOut());
+		trdProductDealOut.setrTradeId(trdProductDeal.getTradeId());
 		trdProductDealOut.setTradeId(planTransferDtos.getTradeIdOut());
 		trdProductDealOut.setRemark("计划类利率型转出");
 		trdProductDealOut.setPs(DictCodeList.交易方向_卖出.getValue());

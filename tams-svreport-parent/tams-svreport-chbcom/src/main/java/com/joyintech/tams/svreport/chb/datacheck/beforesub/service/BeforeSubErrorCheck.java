@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 中债一期、二期报送前检查，部分报表的强制性检查
@@ -795,8 +796,12 @@ public class BeforeSubErrorCheck {
             errMsgSb.append("底层资产行内资产负债/编码为:"+assetCode+"的底层资产不存在");
             errMsgSb.append(GlobalConstant.VERTICAL_LINE);
         }
-        int g = chbBeforeSubErrorCheckMapper.isOutsourOrAssetMana(planAssetId);
-        if(g<1){
+
+        List<String> assetTypeLit = chbBeforeSubErrorCheckMapper.isOutsourOrAssetMana(planAssetId);
+        if (!StringUtil.isEmptyList(assetTypeLit)
+                && !StringUtil.isEmptyList(assetTypeLit.stream().filter(x -> !StringUtil.equals(x, "12")
+                                                                            || !StringUtil.equals(x, "16")
+                                                                            || !StringUtil.equals(x, "19")).collect(Collectors.toList()))){
             errMsgSb.append("对应资管及委外资产行内资产/负债编码为:"+planAssetId+"的资产不属于资管及委外资产");
             errMsgSb.append(GlobalConstant.VERTICAL_LINE);
         }

@@ -97,8 +97,19 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
      * 发行机构(托管人，融资人，管理人等)
      */
     private String issuerCode;
+    
+    
+    private String isInAdvance;
 
-    /**
+    public String getIsInAdvance() {
+		return isInAdvance;
+	}
+
+	public void setIsInAdvance(String isInAdvance) {
+		this.isInAdvance = isInAdvance;
+	}
+
+	/**
      * 是否有关联方(Y或N)
      */
     private String isCorOrg;

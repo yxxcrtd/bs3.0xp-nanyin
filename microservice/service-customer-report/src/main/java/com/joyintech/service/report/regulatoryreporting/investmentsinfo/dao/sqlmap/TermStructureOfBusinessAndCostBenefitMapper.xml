@@ -1750,7 +1750,7 @@ with cj as(
 		</if>
 		union all
 		select sum(nvl(cmapr.COST_AMT,0)) amt,cmapr.ASSET_ID as assetId,sum(nvl(lastcmapr.COST_AMT,0)) lastamt,
-		'01'  days
+		'02'  days
 		from
 		chb_asset_rate cmapr
 		<if test="org != null  and org!=''">

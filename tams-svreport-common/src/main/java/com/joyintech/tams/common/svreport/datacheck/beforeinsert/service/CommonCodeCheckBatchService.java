@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 /**
@@ -44,7 +43,7 @@ import java.util.stream.Collectors;
 public class CommonCodeCheckBatchService {
 	
 	@Autowired
-	private CommonCodeCheckMapper comminCodeCheckMapper;
+	private CommonCodeCheckMapper commonCodeCheckMapper;
 
     /**
      * mybatis的sqlsession管理核心
@@ -316,7 +315,8 @@ public class CommonCodeCheckBatchService {
             ChbBotAstPositionSub chbBotAstPosSubTmp = new ChbBotAstPositionSub();
             chbBotAstPosSubTmp.setPlanAssetId(planAssetId);
             chbBotAstPosSubTmp.setPosDate(DateUtil.parse(posDate));
-            subList = comminCodeCheckMapper.queryChbBotAstPosByInfo(chbBotAstPosSubTmp);
+            chbBotAstPosSubTmp.setAssetCode(assetCode);
+            subList = commonCodeCheckMapper.queryChbBotAstPosByInfo(chbBotAstPosSubTmp);
 
         }
 
@@ -819,7 +819,7 @@ public class CommonCodeCheckBatchService {
         if (StringUtil.isNotEmpty(prodId)){
             Map<String, Object> map = new HashMap<>();
             map.put("prodId", prodId);
-            chbPrdDeclareSubList = comminCodeCheckMapper.queryChbPrdDeclareSubByRegCode(map);
+            chbPrdDeclareSubList = commonCodeCheckMapper.queryChbPrdDeclareSubByRegCode(map);
             if (!StringUtil.isEmptyList(chbPrdDeclareSubList)){
                 if ((StringUtil.isNotEmpty(chbPrdDeclareSubList.get(0).getRaisePstrdate()) &&
                         DateUtil.parse(raiseVdate).compareTo(chbPrdDeclareSubList.get(0).getRaisePstrdate()) < 0)
@@ -934,9 +934,9 @@ public class CommonCodeCheckBatchService {
         }
         }
         //不同产品之间，产品名称与产品期次不得同时重复
-        List<String>  listCheck1=comminCodeCheckMapper.genChbPrdDeclareSub1ByProdInsId(prodInsId);
+        List<String>  listCheck1= commonCodeCheckMapper.genChbPrdDeclareSub1ByProdInsId(prodInsId);
         //产品名称和产品期次不能同时重复！
-        List<String>  listCheck2=comminCodeCheckMapper.genChbPrdDeclareSub2ByProdInsId(prodInsId);
+        List<String>  listCheck2= commonCodeCheckMapper.genChbPrdDeclareSub2ByProdInsId(prodInsId);
         if(listCheck2.size()>0||listCheck1.size()>0){
             errMsg +="产品名称和产品期次不能同时重复[PROD_NAME="+dataMap.get("PROD_NAME")+",PROD_STAGE="+dataMap.get("PROD_STAGE")+"];";
         }
@@ -1210,7 +1210,7 @@ public class CommonCodeCheckBatchService {
         if (StringUtil.isNotEmpty(prodId)){
             Map<String, Object> map = new HashMap<>();
             map.put("prodId", prodId);
-            chbPrdDeclareSubList = comminCodeCheckMapper.queryChbPrdDeclareSubByRegCode(map);
+            chbPrdDeclareSubList = commonCodeCheckMapper.queryChbPrdDeclareSubByRegCode(map);
         }
         // 银行模式才判断发行机构代码，联社模式不判断
         if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
@@ -1441,7 +1441,7 @@ public class CommonCodeCheckBatchService {
         }
         }
         //理财产品实际终止日期必须大于发行登记要素中的“产品起始日期”
-        List<ChbPrdIssueSub>  listChbPrdIssueSub=comminCodeCheckMapper.getChbPrdIssueSubByProdId(prodId);
+        List<ChbPrdIssueSub>  listChbPrdIssueSub= commonCodeCheckMapper.getChbPrdIssueSubByProdId(prodId);
         if(!StringUtil.isEmptyList(listChbPrdIssueSub)){
             //产品起始日期
             Date prdVdate=listChbPrdIssueSub.get(0).getPrdVdate();

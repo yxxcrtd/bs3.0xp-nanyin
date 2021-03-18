@@ -55,7 +55,7 @@ public interface ChbBeforeSubErrorCheckMapper {
 
     int updateChbBotAstSub(String seqno);
 
-    int isOutsourOrAssetMana(String assetCode);
+    List<String> isOutsourOrAssetMana(String assetCode);
 
 	List<Map<String, String>> selectChbEmployeeSub(@Param("checkdate") Date checkdate);
 	
