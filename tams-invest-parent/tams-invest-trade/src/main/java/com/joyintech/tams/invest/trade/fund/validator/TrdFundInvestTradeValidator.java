@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.trade.common.validator.TradeCommonValidator;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade001Service;
 import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade002Service;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 
@@ -677,6 +678,18 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
         }
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 end
+
+        if (StringUtil.equals(dto.getOperateType(), "submit") || StringUtil.equals(dto.getOperateType(), "save") ){
+            if (StringUtil.isNotEmpty(dto.getBussTrdTransfenpeiDto())){
+                Map<String, List<BussTrdTransfenpeiDto>> map1 = dto.getBussTrdTransfenpeiDto().stream().collect(JoyinCollectors.groupingBy(item->item.getPortfolioId()));
+                if (map1!=null && map1.keySet().size()<dto.getBussTrdTransfenpeiDto().size()){
+                    errorList.add(new ValidMessage("组合分配不能重复分配给同一组合。"));
+                }
+            }
+
+        }
+
+
         return errorList;
     }
 
