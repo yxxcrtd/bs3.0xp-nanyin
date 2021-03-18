@@ -83,6 +83,24 @@
 			/**and (t8.sec_acct_id = t.secAcctId OR t8.sec_acct_id = '999999')**/
 			and t8.sec_acct_id = t.conSecAcctId
 			and t8.finprod_id = t.finprodId
+		/*add by mashukai 20210318 ZGBSS-976 start*/
+		left join (
+		SELECT TSF.portfolio_id,
+		TSF.sec_acct_id,
+		TSFT.finprod_id,
+		nvl(sum(decode(TSF.PS,'01',-TSFT.AMT,'02',TSFT.AMT,0)),0) AMT
+		FROM TRD_STASEC_FLOW TSF
+		INNER JOIN TRD_STASEC_FLOW_DETAIL TSFT
+		ON TSF.SEQNO=TSFT.SEQNO
+		WHERE TSF.CDATE  = to_date(#{cdate},'yyyy-MM-dd')
+		group by
+		TSF.portfolio_id,
+		TSF.sec_acct_id,
+		TSFT.finprod_id
+		)t9 on t9.portfolio_id = t.portfolioId
+		AND t9.sec_acct_id = t.conSecAcctId
+		AND t9.finprod_id  = t.finprodId
+		/*add by mashukai 20210318 ZGBSS-976 end*/
 	</sql>
 
 	<sql id="Base_Left_join_Trade_Sql" >
@@ -165,6 +183,24 @@
 		/**and (t8.sec_acct_id = t.secAcctId OR t8.sec_acct_id = '999999')**/
 		and t8.sec_acct_id = t.conSecAcctId
 		and t8.finprod_id = t.finprodId
+		/*add by mashukai 20210318 ZGBSS-976 start*/
+		left join (
+		SELECT TSF.portfolio_id,
+		TSF.sec_acct_id,
+		TSFT.finprod_id,
+		nvl(sum(decode(TSF.PS,'01',-TSFT.AMT,'02',TSFT.AMT,0)),0) AMT
+		FROM TRD_STASEC_FLOW TSF
+		INNER JOIN TRD_STASEC_FLOW_DETAIL TSFT
+		ON TSF.SEQNO=TSFT.SEQNO
+		WHERE TSF.CDATE  = to_date(#{cdate},'yyyy-MM-dd')
+		group by
+		TSF.portfolio_id,
+		TSF.sec_acct_id,
+		TSFT.finprod_id
+		)t9 on t9.portfolio_id = t.portfolioId
+		AND t9.sec_acct_id = t.conSecAcctId
+		AND t9.finprod_id  = t.finprodId
+		/*add by mashukai 20210318 ZGBSS-976 end*/
 	</sql>
 
 
@@ -195,7 +231,8 @@
 				            nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
 				            nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
 				            nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
-				            nvl(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
+				            /*标准券出入库的指令可用持仓取标准券入出库表（TRD_STASEC_FLOW）中的持仓*/
+							decode(TYPE8,'F01',NVL(SUM(ETR_FLOW_AMOUNTE01),0)+ nvl(SUM(AMT),0),NVL(SUM(ETR_FLOW_AMOUNTE01),0)) AS ETR_FLOW_AMOUNTE01,
 				            nvl(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04
 				     from  (
 					        select t.portfolio_id as portfolioId,
