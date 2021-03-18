@@ -71,11 +71,11 @@ var table;
         }
         
         //校验质押券置换安排是否为空
-        var exchangePledge = object.bussRepoSec.exchangePledge;
-        if(exchangePledge==undefined||exchangePledge==""){
-        	Joyin.error("质押劵置换安排不能为空！");
-        	return;
-        }
+//        var exchangePledge = object.bussRepoSec.exchangePledge;
+//        if(exchangePledge==undefined||exchangePledge==""){
+//        	Joyin.error("质押劵置换安排不能为空！");
+//        	return;
+//        }
         
         Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
             Joyin.ajaxJson(basePath + 'invest/trade/bondlend/TrdBondLendInvestTrade002/check', object, function(result) {

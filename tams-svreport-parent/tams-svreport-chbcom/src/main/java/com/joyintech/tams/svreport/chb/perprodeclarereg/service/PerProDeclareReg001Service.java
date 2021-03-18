@@ -647,7 +647,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
 					}
 					// add by zhangliang 20210315 上传九大附件时，需要对每个附件的名称进行白名单检查 start
-					String fileName = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().lastIndexOf("."));
+					String fileName = entry.getName().substring(entry.getName().lastIndexOf("/") + 1, entry.getName().lastIndexOf("."));
 					if (!fileName.matches(whitePattern)){
 						fileCheckMsg.append("文件（" + fileName + "）必须填写白名单中的文字。");
 						fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);
@@ -945,7 +945,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				continue;
 			}
 			// add by zhangliang 20210315 上传九大附件时，需要对每个附件的名称进行白名单检查 start
-			String singleFileName = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().lastIndexOf("."));
+			String singleFileName = entry.getName().substring(entry.getName().lastIndexOf("/") + 1, entry.getName().lastIndexOf("."));
 			if (!singleFileName.matches(whitePattern)){
 				fileCheckMsg.append("文件名称（" + singleFileName + "）必须填写白名单中的文字。");
 				fileCheckMsg.append(GlobalConstant.HTML_NEWLINE);

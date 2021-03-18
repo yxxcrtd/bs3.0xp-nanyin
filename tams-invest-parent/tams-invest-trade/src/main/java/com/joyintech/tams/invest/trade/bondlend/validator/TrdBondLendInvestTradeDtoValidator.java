@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.calculation.util.ArithmeticUtil;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.invest.trade.bondlend.dto.TrdBondLendInvestTradeDto;
@@ -34,6 +35,7 @@ import com.joyintech.tams.invest.trade.bond.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.common.validator.TradeCommonValidator;
+import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
@@ -248,6 +250,13 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
             }
         }
         // add by 裴家俊 2019-05-23--end----
+        
+        if(StringUtil.equals(inputDto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)||StringUtil.equals(inputDto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
+            if(inputDto.getBussRepoSec()!=null&&!StringUtil.isNotEmpty(inputDto.getBussRepoSec().getExchangePledge())) {
+           	 	ValidMessage validMessage = new ValidMessage("bussRepoSec.exchangePledge",getMessage("TRD_BONDLEND_E_001"));
+           	 	errorList.add(validMessage);
+           }	
+        }
 
         return errorList;
     }
