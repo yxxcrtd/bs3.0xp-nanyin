@@ -436,6 +436,54 @@
         <if test="PAGE_DATA_STATUS01 != statusValid">
         	AND deal.TOTLE_TRADE_ID = #{bizCode}
         </if>
+        <!-- 通过资产转仓交易生成的买入卖出交易，在项目类资产交易页面也应可以查看到 -->
+        UNION ALL 
+        select TPD.TRADE_ID bizCode, /*金融产品交易业务流程.交易编号*/ 
+        '${statusValid}' statusValid, 
+        TPDA.ENTRUST_ID,/*金融产品交易附属业务流程.委托代码*/
+         PP.PORTFOLIO_ID,/*金融产品交易附属业务流程.投资组合代码*/ 
+         PP.PORTFOLIO_NAME,/*组合.组合名称*/ 
+         TPD.FINPROD_TYPE2,/*金融产品交易业务流程.金融产品类型*/ 
+         TPD.FINPROD_ID,/*金融产品交易业务流程.金融产品代码*/ 
+         TPD.CHL_ID chlId,/*金融产品交易业务流程.通道代码*/ 
+         FPT.TYPE_6 projectType,/*金融产品分类.行内一级分类*/
+         FPT.TYPE_9 type9,/*金融产品分类.行内二级分类*/ 
+         FPT.TYPE_10 type10,/*金融产品分类.行内三级分类*/ 
+         FPT.TYPE_11 type11,/*金融产品分类.行内四级分类*/ 
+         FP.FINPROD_MARKET_ID,/*标的类金融产品.市场代码*/ 
+         nvl(FP.FINPROD_ABBR, FP.FINPROD_NAME) finprodName,/*标的类金融产品.金融产品简称*/ 
+         TPD.PS,/*金融产品交易业务流程.交易方向*/ 
+         TPD.PRIN_AMT,/*金融产品交易业务流程.交易本金*/ 
+         TPD.UNIT_CPRICE,/*金融产品交易业务流程.单位净价*/ 
+         TPD.UNIT_FPRICE,/*金融产品交易业务流程.单位全价*/ 
+         TPD.CCY,/*金融产品交易业务流程.交易币种*/ 
+         tpd.TRADE_AMT, 
+         TO_CHAR(tpd.SETTLE_DATE, 'yyyy-MM-dd') SETTLE_DATE, 
+         tpd.UNIT_INT unitIntAmt, tpd.CPRICE_AMT, 
+         tpd.INT_AMT, 
+         nvl(TTFD1.FEE_AMT,0) channelFee, 
+         nvl(TTFD.FEE_AMT, 0) commissionAmt, 
+         TTFD.FEE_RATE*100 commissionRate, 
+         tpd.TRADER, tpd.COUNTER_ID, 
+         tpd.COUNTER_TRADER, 
+         tpd.COUNTER_CONTACT, 
+         tpd.IS_OUT_TRADE, 
+         TO_CHAR(TPD.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,/*金融产品交易业务流程.交易日*/ 
+         TPD.REMARK,/*金融产品交易业务流程.备注*/ 
+          null PAY_UNPAIDINT_AMT,
+          null ISPAY_UNPAIDINT, 
+          CASE TPD.SETTLE_SPEED WHEN 0 THEN '01' ELSE '02' END settleSpeed, 
+          TPD.TRADE_ID as tradeId 
+          from TRD_PRODUCT_DEAL TPD
+           left join TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID=TPDA.TRADE_ID 
+           LEFT JOIN PTL_TRADE PT ON TPD.TRADE_ID = PT.BUSI_NO
+           LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID 
+           left join FIN_PRODUCT FP on FP.FINPROD_ID = TPD.FINPROD_ID 
+           left join FIN_PRODUCT_TYPE FPT on FP.FINPROD_ID=FPT.FINPROD_ID 
+           LEFT JOIN TRD_TRADE_FEE_DETAIL TTFD ON TPD.TRADE_ID = TTFD.TRADE_ID AND TTFD.FEE_TYPE = '06' 
+           LEFT JOIN TRD_TRADE_FEE_DETAIL TTFD1 ON TPD.TRADE_ID = TTFD1.TRADE_ID AND TTFD1.FEE_TYPE = #{FEE_TYPE_B09} 
+           where PP.INVEST_YESORNO = 'Y' 
+           AND TPD.TRADE_ID = #{bizCode}
     </select>
        <update id="updatePayOrders" parameterType="com.joyintech.tams.common.base.entity.WflStlPayOrders" >
             update WFL_STL_PAY_ORDERS
