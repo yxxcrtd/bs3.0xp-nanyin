@@ -232,6 +232,19 @@ public class FinDepositTargetDto extends FinProduct{
      * 投后信息
      */
     private BussPostInvestInfoDto bussPostInvestInfoDto;
+    
+	/**
+	 * 是否可提前支取，风险限额用，不影响存续期
+	 */
+	private String isInAdvance;
+
+    public String getIsInAdvance() {
+		return isInAdvance;
+	}
+
+	public void setIsInAdvance(String isInAdvance) {
+		this.isInAdvance = isInAdvance;
+	}
 
     /**
      * 取得 推荐方

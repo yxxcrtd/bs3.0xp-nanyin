@@ -1345,4 +1345,16 @@ public class FinProductAdd extends BaseEntity {
 		this.isYllccp = isYllccp == null ? null : isYllccp.trim();
 	}
 
+	/**
+	 * 是否可提前支取，风险限额用，不影响存续期
+	 */
+	private String isInAdvance;
+
+    public String getIsInAdvance() {
+		return isInAdvance;
+	}
+
+	public void setIsInAdvance(String isInAdvance) {
+		this.isInAdvance = isInAdvance;
+	}
 }

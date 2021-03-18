@@ -63,7 +63,8 @@
         ZxPingji.GRADE_RESULT  bondGradeType,
         m.ISSUER_CODE as issuerCode,
         Mingdan.LIST_LEVEL listLevel,
-        DYGLF.CORORG as isCorOrg
+        DYGLF.CORORG as isCorOrg,
+        decode(n.IS_INADVANCE,null,'N',n.IS_INADVANCE) isInAdvance
         from (select FIN_PRODUCT.* ,case  FINPROD_TYPE2 WHEN  'F01' THEN ISSUER
                 WHEN 'F06' THEN manager
                 WHEN 'F07' THEN ISSUER
@@ -122,7 +123,8 @@
         null as bondGradeType,
         null as relOrgCode,
         null as listLevel,
-        null as isCorOrg
+        null as isCorOrg,
+        'N' as isInAdvance
         from FIN_TRADE_PRODUCT m
         <![CDATA[ inner join FIN_PRODUCT_TYPE y on m.FINPROD_ID=y.FINPROD_ID and m.BRANCH='0' and y.BRANCH='0' and m.FINPROD_TYPE <> 'F21' ]]>
         left join REP_ASSET_DEPT s on m.FINPROD_ID=s.REP_FINPROD_ID
