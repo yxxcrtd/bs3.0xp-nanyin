@@ -10,14 +10,10 @@
 
 package com.joyintech.tams.invest.risk.creditmanagement.ceasset.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Length;
@@ -25,10 +21,15 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.CreditLines;
 import com.joyintech.tams.invest.risk.creditmanagement.ceasset.validator.CeAssetValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -93,7 +94,7 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
 	}
 
     @Override
-    @PrimaryKey(value=Field.PK_2)
+    @PrimaryKey(value=Field.PK_3)
     @Length(fieldName = "CeAsset002.pflsh", max =50, groups = {ValidateGroupEdit.class})
 	@NotEmpty(fieldName = "CeAsset002.pflsh",groups={ValidateGroupEdit.class})
 	public String getPflsh() {
@@ -111,6 +112,7 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
      * {@inheritDoc}
      */
     @Override
+	@PrimaryKey(value=Field.PK_2)
     public String getCustomerId(){
         return super.getCustomerId();
     }
@@ -124,6 +126,11 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
     public Date getVdate(){
         return super.getVdate();
     }
+
+	@PrimaryKey(value=Field.PK_4)
+	public String getVdateStr(){
+		return DateUtil.format(super.getVdate());
+	}
     /**
      * 到期日
      * {@inheritDoc}
@@ -215,6 +222,10 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
 		this.selectedItem = selectedItem;
 	}
 
+	@PrimaryKey(value=Field.PK_5)
+	public String getInstitutionCode() {
+		return super.getInstitutionCode();
+	}
 
 	public String getInsitituteCode() {
 		return insitituteCode;
@@ -234,6 +245,14 @@ public class CreditLinesAstDto  extends CreditLines implements ITableRow,Process
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
-	
-    
+
+	/**
+	 * 授信配置代码
+	 * {@inheritDoc}
+	 */
+	@Override
+	@PrimaryKey(value=Field.PK_6)
+	public String getCreditMstId(){
+		return super.getCreditMstId();
+	}
 }

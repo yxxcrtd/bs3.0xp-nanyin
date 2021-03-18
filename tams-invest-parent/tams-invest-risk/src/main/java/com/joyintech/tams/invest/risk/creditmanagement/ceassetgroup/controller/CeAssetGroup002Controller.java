@@ -1,7 +1,26 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.controller;
 
-import java.util.stream.Collectors;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.base.intf.IDictCode;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto;
+import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.service.CeAssetGroup002Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,27 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.dto.UploadFile;
-import com.joyintech.framework.base.intf.IDictCode;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.dto.CreditLinesAstGrpDto;
-import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.service.CeAssetGroup002Service;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.util.stream.Collectors;
 
 
 /**
@@ -117,6 +116,8 @@ public class CeAssetGroup002Controller extends BaseController {
                 dto.setSeqno(IDGenerator.generate());
             }
        }
+        String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+        dto.setInstitutionCode(createInst);
        //文件信息
        if (CollectionUtils.isNotEmpty(dto.getUploadFileList())
            && StringUtil.isNotEmpty(dto.getSeqno())) {

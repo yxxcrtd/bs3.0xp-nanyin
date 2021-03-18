@@ -263,7 +263,13 @@
 	</select>
 
     <select id="selectCreditLines" parameterType="Map"	resultType="com.joyintech.tams.common.base.entity.CreditLines" >
-        select * from CREDIT_LINES CL1
+        select CL1.SEQNO as seqno,
+        CL1.CUSTOMER_ID as customerId,
+        CL1.PFLSH as pflsh,
+        CL1.VDATE as vdate,
+        CL1.INSTITUTION_CODE as institution_Code,
+        CL1.CREDIT_MST_ID as creditMstId
+        from CREDIT_LINES CL1
         WHERE 1=1
         <if test="creditMstId !=null and creditMstId !=''">
             and CL1.CREDIT_MST_ID = #{creditMstId,jdbcType=VARCHAR}
@@ -277,6 +283,29 @@
 		<if test="seqno !=null and seqno !=''">
 			AND CL1.seqno != #{seqno,jdbcType=VARCHAR}
 		</if>
+		union all
+		select 	sdpm.BUSINESS_DATA_PK1 as seqno,
+				sdpm.BUSINESS_DATA_PK2 as customerId,
+				sdpm.BUSINESS_DATA_PK3 as pflsh,
+				to_date(sdpm.BUSINESS_DATA_PK4,'yyyy-MM-dd') as vdate,
+				sdpm.BUSINESS_DATA_PK5 as institution_Code,
+				sdpm.BUSINESS_DATA_PK6 as creditMstId
+		 from SYS_DATA_PROCESS_MARK sdpm
+		 WHERE 1=1
+		<if test="creditMstId !=null and creditMstId !=''">
+			and sdpm.BUSINESS_DATA_PK6 = #{creditMstId,jdbcType=VARCHAR}
+		</if>
+		<if test="customerId !=null and customerId !=''">
+			AND sdpm.BUSINESS_DATA_PK2 = #{customerId,jdbcType=VARCHAR}
+		</if>
+		<if test="vdate !=null and vdate !=''">
+			AND sdpm.BUSINESS_DATA_PK4  &gt;= #{vdate, jdbcType=VARCHAR}
+		</if>
+		<if test="seqno !=null and seqno !=''">
+			AND sdpm.BUSINESS_DATA_PK1 != #{seqno,jdbcType=VARCHAR}
+		</if>
+		AND sdpm.status IN('A','U','P')
+		and sdpm.his_no = (select max (sdpm1.his_no) from SYS_DATA_PROCESS_MARK sdpm1 where sdpm1.WORKFLOW_ID = sdpm.WORKFLOW_ID)
     </select>
 
 </mapper>
