@@ -407,7 +407,9 @@
 		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
 
 		from(
-		select nvl(info.asset_name,info.asset_code) as asset_name,
+		select coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then info.mdate-info.vdate||'天回购'
+		when info.asset_type2 in ('1107','1901') then info.mdate-info.vdate||'天拆借' end,
+		info.asset_code,'现金')as asset_name,
 		sum(nvl(CMAP.ASSETVALUE_B,0)) as balance,
 		sum(nvl(data.pos_amt,0)) as posAmt
 		from chb_month_asset_position  cmap
@@ -438,7 +440,9 @@
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
-		group by nvl(info.asset_name,info.asset_code)
+		group by coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then info.mdate-info.vdate||'天回购'
+		when info.asset_type2 in ('1107','1901') then info.mdate-info.vdate||'天拆借' end,
+		info.asset_code,'现金')
 		)t1
 		order by  t1.balance desc
 		) t where  t.idx<![CDATA[<=]]> 3 or t.posAmt>=1000000000
@@ -730,7 +734,9 @@
 		t1.posAmt as posAmt,row_number() over(order by t1.balance  desc) as idx
 		from
 		(select
-		nvl(info.asset_name,info.asset_code) as asset_name,
+		coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then info.mdate-info.vdate||'天回购'
+		when info.asset_type2 in ('1107','1901') then info.mdate-info.vdate||'天拆借' end,
+		info.asset_code,'现金')as asset_name,
 		sum(nvl(CMAP.ASSETVALUE_B,0)) as balance,
 		sum(nvl(data.pos_amt,0)) as posAmt
 		from chb_month_asset_position  cmap
@@ -783,7 +789,9 @@
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
-		group by nvl(info.asset_name,info.asset_code)
+		group by coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then info.mdate-info.vdate||'天回购'
+		when info.asset_type2 in ('1107','1901') then info.mdate-info.vdate||'天拆借' end,
+		info.asset_code,'现金')
 		)t1
 		order by t1.balance desc
 		) t where  t.idx<![CDATA[<=]]> 3 or t.posAmt>=1000000000
