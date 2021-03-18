@@ -127,43 +127,32 @@
         },
         editCell : function(value, row, field, cell, column) {
             if (field == 'tradeAmt') {
-                if (!value) {
-                    // 不能为空
-//                    revertFlag = true;
-                    var msg = JoyinUtil.getMessage(JoyinMessage.COMMON_E_0057,
-                            JoyinUtil.getLabel('IntDetailDuration.tradeAmt'));
-                    Joyin.alert(msg, 2);
-                } else if (parseInt(value) <= 0) {
-                    // 不能小于零
-//                    revertFlag = true;
-                    var msg = JoyinUtil.getMessage(
-                            JoyinMessage.BUSS_COM_E_0004,
-                            [ JoyinUtil.getLabel('IntDetailDuration.tradeAmt'),
-                                    0 ]);
-                    Joyin.alert(msg, 2);
-                } else {
-                    var intDetailList = repoInfoTable.getAllRows();
-                    var sumTradeAmt = 0;
-                    var sumQty = 0;
-                    var sumRegistShare = 0;
-                    // // 汇总
-                    $.each(intDetailList, function (i, v) {
-                        sumTradeAmt = JoyinMath.doAdd(v.tradeAmt, sumTradeAmt);
-                        sumQty = JoyinMath.doAdd(v.qty, sumQty);
-                        sumRegistShare = JoyinMath.doAdd(v.registShare, sumRegistShare);
-                    });
-                    $('#tradeAmt').val(sumTradeAmt);
-                }
+                var intDetailList = repoInfoTable.getAllRows();
+                var sumTradeAmt = 0;
+                var sumQty = 0;
+                var sumRegistShare = 0;
+                // // 汇总
+                $.each(intDetailList, function (i, v) {
+                    if($("#assetType").val() == FUND_ASSET_TYPE_F01 && v.bonusMode ==BONUS_MODE_02){
+                       repoInfoTable.renderRow(i,  {"qty": parseFloat(v.tradeAmt)});
+                       v.qty = v.tradeAmt;
+                    }
+                    sumTradeAmt = JoyinMath.doAdd(v.tradeAmt, sumTradeAmt);
+                    sumQty = JoyinMath.doAdd(v.qty, sumQty);
+                    sumRegistShare = JoyinMath.doAdd(v.registShare, sumRegistShare);
+                });
+                $('#tradeAmt').val(sumTradeAmt);
+                $('#qty').val(sumQty);
             }else if(field == 'qty') {
                 if (!value) {
                     // 不能为空
-                    var msg = JoyinUtil.getMessage(JoyinMessage.COMMON_E_0057,
+                    var msg = JoyinUtil.getMessage('COMMON_E_0057',
                             JoyinUtil.getLabel('IntDetailDuration.qty'));
                     Joyin.alert(msg, 2);
                 } else if (parseInt(value) <= 0) {
                     // 不能小于零
                     var msg = JoyinUtil.getMessage(
-                            JoyinMessage.BUSS_COM_E_0004,
+                            'BUSS_COM_E_0004',
                             [ JoyinUtil.getLabel('IntDetailDuration.qty'),
                                     0 ]);
                     Joyin.alert(msg, 2);

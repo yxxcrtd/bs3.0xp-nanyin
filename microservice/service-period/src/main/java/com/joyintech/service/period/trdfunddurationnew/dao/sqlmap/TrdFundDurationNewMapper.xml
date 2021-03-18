@@ -15,7 +15,7 @@
 
         regexp_replace(listagg(sdl.item_value, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') bonusModeStr,
         tpdt.SETTLE_DATE reInvesDate,
-        SUM(tpd.TRADE_AMT) tradeAmt,
+        SUM(tpd.INT_AMT) tradeAmt,
         SUM(tpd.SHARE_AMT) qty,
         nvl(tpda.REG_DATE,tpda.REG_DATE) registDate,
         nvl(tpda.REG_DATE,tpda.REG_DATE) exRightsDate,
@@ -63,7 +63,7 @@
 <!--        then nvl(tpda.BONUS_CFM_DATE,wtpda.BONUS_CFM_DATE)-->
 <!--        else null end) reInvesDate,-->
         tpdt.SETTLE_DATE reInvesDate,
-        SUM(tpd.TRADE_AMT) tradeAmt,
+        SUM(tpd.INT_AMT) tradeAmt,
         null qty,
         nvl(tpda.REG_DATE,tpda.REG_DATE) registDate,
         tpd.TRADE_DATE exRightsDate,
@@ -112,7 +112,7 @@
 
         regexp_replace(listagg(sdl.item_value, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') bonusModeStr,
         null reInvesDate,
-        SUM(tpd.TRADE_AMT) tradeAmt,
+        SUM(tpd.INT_AMT) tradeAmt,
         null qty,
         nvl(tpda.REG_DATE,tpda.REG_DATE) registDate,
         tpd.TRADE_DATE exRightsDate,
@@ -204,7 +204,7 @@
 
         regexp_replace(listagg(sdl.item_value, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') bonusModeStr,
         tpdt.SETTLE_DATE reInvesDate,
-        SUM(tpd.TRADE_AMT) tradeAmt,
+        SUM(tpd.INT_AMT) tradeAmt,
         SUM(tpd.SHARE_AMT) qty,
         nvl(tpda.REG_DATE,tpda.REG_DATE) registDate,
         tpd.TRADE_DATE exRightsDate,
