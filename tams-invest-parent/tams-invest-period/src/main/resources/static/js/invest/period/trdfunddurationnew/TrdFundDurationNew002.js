@@ -838,6 +838,12 @@
                 Joyin.alert(msg, 2);
                 return;
             }
+            if(psType == '02'
+                && (!objectTemp.finAssetIntInfoList[i].qty || objectTemp.finAssetIntInfoList[i].qty <= 0)){
+                     var msg = JoyinUtil.getMessage("分红明细信息中分红份额不能为空/小于等于0!");
+                     Joyin.alert(msg, 2);
+                     return;
+            }
         }
         if (GEN_PAY_ORDERS_AUTO == '01') {
             generateOrders(function () {
