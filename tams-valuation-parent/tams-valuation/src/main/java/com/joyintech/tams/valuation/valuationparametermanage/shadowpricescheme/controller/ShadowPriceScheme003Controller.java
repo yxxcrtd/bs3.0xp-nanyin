@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.valuationparametermanage.shadowpricescheme.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -130,13 +131,15 @@ public class ShadowPriceScheme003Controller extends BaseController {
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.证券品种, null);
         // 证券品种移除基金
         List<SelectOptionDto> options = selectDto.getOptions();
+        //ZGBS-151 证券品种只支持债券
+        List<SelectOptionDto> options1 = new ArrayList<SelectOptionDto>();
         for (SelectOptionDto item : options) {
-            if (DictCodeListExt1.证券品种_基金.getValue().equals(item.getId())) {
-                options.remove(item);
+            if (DictCodeListExt1.证券品种_债券.getValue().equals(item.getId())) {
+                options1.add(item);
                 break;
             }
         }
-        model.addAttribute("SEC_TYPE", JsonUtils.objectArray2Json(options.toArray()));
+        model.addAttribute("SEC_TYPE", JsonUtils.objectArray2Json(options1.toArray()));
         super.setSelectOptionToModel(model, DictCode.估值交易市场);
         super.setSelectOptionToModel(model, DictCode.估值市价);
         // 估值市价移除管理人报价
