@@ -52,7 +52,7 @@
 		T1.BUY_COST_AMT,
 		T1.BUY_CLEAN_PRICE,
 		<!-- T1.MARKET_VALUE, -->
-		NVL(T1.dsc_cost_amt_b,0) + NVL(T1.tdy_float_ingpl_b,0) MARKET_VALUE,
+		NVL(T1.dsc_cost_amt_b,0) + NVL(T1.tdy_float_ingpl_b,0)+NVL(T1.DELAY_PAY_AMT,0) MARKET_VALUE,
 		T1.MARKET_CLEAN_PRICE,
 		T1.TDY_INTINCEXP,
 		T1.TDY_DSCINCEXP_ADD,
