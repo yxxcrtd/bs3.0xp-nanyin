@@ -10,9 +10,9 @@
     <div class="layui-layer-content">
         <form class="layui-form" id="fundAssetTransfer_form">
             <!-- 隐藏字段 转出组合 -->
-            <input type="text" id="invTransPortf" name="invTransPortf"data-th-value='${entity?.invTransPortf}' hidden>
+            <input type="text" id="invTransPortf" name="invTransPortf" data-th-value='${entity?.invTransPortf}' hidden>
             <!-- 隐藏字段 转出组合代码 -->
-            <input type="text" id="portfolioName" name="portfolioName"data-th-value='${entity?.portfolioName}' hidden>
+            <input type="text" id="portfolioName" name="portfolioName" data-th-value='${entity?.portfolioName}' hidden>
             <!-- 隐藏字段 金融产品代码 -->
             <input type="text" id="finprodIdOrg" name="finprodIdOrg" data-th-value='${entity?.finprodIdOrg}' hidden>
             <!-- 隐藏字段 工作流代码 -->
@@ -79,6 +79,16 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap">证券托管户</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input disabled type="text" id="secManageAcctId" name="secManageAcctId"
+                                               class="layui-input form-input" placeholder="请输入内容"
+                                               th:placeholder="#{SysCommon.placeholder}"
+                                               th:value="${entity?.secManageAcctId}"
+                                        >
+                                    </div>
+                                </div>
                                 <!-- 通道 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">通道</label>
@@ -91,6 +101,8 @@
                                         </select>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 持仓份额 -->
                                 <div id="prinQtyDiv" class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">持仓份额</label>
@@ -101,8 +113,6 @@
                                                data-textrange="2" data-th-value='${entity?.tradePrinOrg}'>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 剩余可转仓份额 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">剩余可转仓份额</label>
@@ -160,7 +170,8 @@
                                                    disabled="disabled"
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-textrange='4'
-                                                   th:placeholder="#{SysCommon.placeholder}" maxlength="10" data-th-value='${entity?.tradePrin}'>
+                                                   th:placeholder="#{SysCommon.placeholder}" maxlength="10"
+                                                   data-th-value='${entity?.tradePrin}'>
                                         </div>
                                     </div>
                                 </div>
@@ -187,11 +198,15 @@
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap">
-                                        <div class="layui-col-md6 layui-col-lg6 layui-col-sm6" style="text-align: center">
-                                            <a id="fundAssetTransfer001_btn_add" class="layui-btn layui-btn-sm btn-create">添加</a>
+                                        <div class="layui-col-md6 layui-col-lg6 layui-col-sm6"
+                                             style="text-align: center">
+                                            <a id="fundAssetTransfer001_btn_add"
+                                               class="layui-btn layui-btn-sm btn-create">添加</a>
                                         </div>
-                                        <div class="layui-col-md6 layui-col-lg6 layui-col-sm6" style="text-align: center">
-                                            <a id="fundAssetTransfer001_btn_searchInfo" class="layui-btn layui-btn-sm btn-search">待转仓产品组合查询</a>
+                                        <div class="layui-col-md6 layui-col-lg6 layui-col-sm6"
+                                             style="text-align: center">
+                                            <a id="fundAssetTransfer001_btn_searchInfo"
+                                               class="layui-btn layui-btn-sm btn-search">待转仓产品组合查询</a>
                                         </div>
                                     </div>
                                 </div>
@@ -239,7 +254,7 @@
         var FINPROD_TYPE_F06 = /*[[${FINPROD_TYPE_F06}]]*/'';
         var MY_SUP_TIME_TYPE_02 = /*[[${MY_SUP_TIME_TYPE_02}]]*/'';
         var fundType = /*[[${entity.fundType}]]*/'';
-        var risk_math_switch=/*[[${risk_math_switch}]]*/'';
+        var risk_math_switch =/*[[${risk_math_switch}]]*/'';
     </script>
     <script data-th-src="@{/js/invest/trade/transfer/fund/FundAssetTransfer001.js}"></script>
 </div>
