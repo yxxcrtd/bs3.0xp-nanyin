@@ -87,8 +87,8 @@
 	<delete id="deleteBatchData" parameterType="map">
 		DELETE FROM CHB_EMPLOYEE_INFO_SUB
 		<where>
-  			<foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">     
-  				EMPLOYEE_NAME = #{item.employeeName,jdbcType=VARCHAR}
+  			<foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">
+				EMPLOYEE_TYPE = #{item.employeeType,jdbcType=VARCHAR}
   				AND IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
   				AND SEND_STATUS = '01'
     		</foreach>
