@@ -1,3 +1,4 @@
+var initFlag = false;
 $(function() {
 
     getoutDataTable();
@@ -20,7 +21,9 @@ window.componentLoadCallback = function (isDone, pagePath, params) {
         var workflowId=$('#workflowId').val();
         if(workflowId!='')
         {
+        	initFlag = true;	
             outOk();
+            initFlag = false;
         }
         else {
             var oldpledgeBondList;//定义换入质押券列表值没发生变化前的记录
@@ -247,11 +250,11 @@ var outOk = function () {
     //从选出质押券列表中 将表数据加入到最终质押券列表中
     if (outSelectedAllRows != null && outSelectedAllRows.length > 0) {
 
-        for (var i = outSelectedAllRows.length - 1; i >= 0; i--) {
-
-            resultTable.addRow(outSelectedAllRows[i]);
-
-        }
+    	if(!initFlag){
+            for (var i = outSelectedAllRows.length - 1; i >= 0; i--) {
+                resultTable.addRow(outSelectedAllRows[i]);
+            }	
+    	}
     }
         //2将选入质押券列表中 数据加入到最终质押券列表中，存在则不添加
     if (inSelectedAllRows != null && inSelectedAllRows.length > 0 ) {
@@ -327,7 +330,7 @@ var outOk = function () {
 
             var sumAmtValue = 0;
             for (var i = bussResultRepoSecMsg.length - 1; i >= 0; i--) {
-                sumAmtValue = JoyinMath.doAdd(sumAmtValue, bussResultRepoSecMsg[i].pledgePrin);
+                sumAmtValue = JoyinMath.doAdd(sumAmtValue, bussResultRepoSecMsg[i].pledgePrin*bussResultRepoSecMsg[i].pledgeRatio/100);
             }
             $("#sumAmt").val(sumAmtValue);//换出质押券换出债券汇总券面总额计算值
         }
