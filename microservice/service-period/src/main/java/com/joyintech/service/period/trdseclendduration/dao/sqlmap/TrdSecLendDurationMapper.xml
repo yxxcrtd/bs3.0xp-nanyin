@@ -82,7 +82,7 @@
             T4.MDATE,
             T1.SHARE_AMT shareAmt, /*交易份额*/
             T4.INT_RATE*100 mYield,/*借贷费率*/
-            T4.M_INT_AMT mTradeAmt, /*借贷费用*/
+            T1.TRADE_AMT mTradeAmt, /*借贷费用*/
             T1.TRADE_AMT actualSettleAmt, /*实际结算金额*/
             T4.TERM, /*借贷期限*/
             T1.SEC_MANAGE_ACCT_ID,
