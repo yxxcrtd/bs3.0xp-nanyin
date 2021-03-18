@@ -12,7 +12,7 @@
                ftp.MDATE                  as mdate,
                ftp.CALENDAR_ID            as calendarId,
                tpd.CCY                    as ccy,
-               ftp.PRIN                   as prin,
+               ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2)     as prin,
                nvl(ftp.INT_RATE * 100, 0) as intRate,
                fpt.TYPE_6                 as paBussType
         FROM TRD_PRODUCT_DEAL tpd
@@ -28,6 +28,9 @@
                                and ftp.BRANCH = 0
                  LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
                  LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                 LEFT JOIN PTL_SEC_POSITION ON PTL_SEC_POSITION.PORTFOLIO_ID = PP.PORTFOLIO_ID  
+                 AND PTL_SEC_POSITION.FINPROD_ID = tpd.TRADE_ID
+                AND PTL_SEC_POSITION.CDATE = to_date(#{sysDate},'yyyy-MM-dd')
         WHERE PP.INVEST_YESORNO = #{YESORNO_Y}
           AND tpd.TRADE_ID = #{tradeId}
           AND tpd.IS_CANCEL != #{YESORNO_Y}
