@@ -76,7 +76,7 @@
 		        remainAmt,
 			 	'02' hasChildren,
 			  	'root' parentInfo,
-			  	CONCAT(PFLSH, customerId) childInfo,
+			CONCAT(CONCAT(PFLSH, customerId),institutionCode) childInfo,
 				institutionCode
 			from CET
 			<where>
@@ -99,14 +99,14 @@
 		        usedAmtTotal,
 		        remainAmt,
 			 	'02' hasChildren,
-			  	CONCAT(PFLSH, customerId) parentInfo,
-			  	CONCAT(CONCAT(CONCAT(PFLSH, customerId), creditQuoteTypeCode), creditQuoteType) childInfo,
+			concat(CONCAT(PFLSH, customerId),institutionCode) parentInfo,
+			  	CONCAT(CONCAT(concat(CONCAT(PFLSH, customerId),institutionCode), creditQuoteTypeCode), creditQuoteType) childInfo,
 				institutionCode
 			  from CET
 			 <where>
 				parentCustomerId is not null
 	  		 	AND creditQuoteRank = '01'
-	  		 	AND CONCAT(PFLSH, customerId) = #{parentId}
+	  		 	AND concat(CONCAT(PFLSH, customerId),institutionCode) = #{parentId}
 			</where>
 			
 			 union all
@@ -135,7 +135,7 @@
 			<where>
 				parentCustomerId is not null
 			  	and (creditQuoteRank is null or creditQuoteRank != '01')
-				and rtrim(concat(concat(CONCAT(PFLSH, customerId), dll.LINKED_DICT_CODE), dll.LINKED_ITEM_CODE)) = #{parentId}
+				and rtrim(concat(concat(concat(CONCAT(PFLSH, customerId),institutionCode), dll.LINKED_DICT_CODE), dll.LINKED_ITEM_CODE)) = #{parentId}
 	  		</where>
 	 	</if>
 	 	<if test="parentId == 'export'.toString()">
