@@ -42,6 +42,7 @@ public class LendTransferService extends BaseService<LendTransferDto> {
         map.put("tradeId",tradeId);
         map.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         map.put("YESORNO_Y", DictCodeListExt1.是否_是.getValue());
+        map.put("sysDate", DateUtil.getSysDate());
         return lendTransferMapper.getTradeInfo(map);
     }
 
