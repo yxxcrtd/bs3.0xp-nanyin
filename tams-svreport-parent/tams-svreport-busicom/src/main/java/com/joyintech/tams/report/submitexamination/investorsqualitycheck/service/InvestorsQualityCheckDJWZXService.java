@@ -36,6 +36,7 @@ public class InvestorsQualityCheckDJWZXService extends InvestorsQualityCheckBase
         List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheckDJWZXMapper.searchDJWZXRec(param);
 
         //3、返回值
+        resultDto.setPageType("8");
         resultDto.setUnQualified(String.valueOf(unQualifiedList.size()));
         resultDto.setTotal(checkRecTol.toString()); 
         resultDto.setRate(checkRecTol.subtract(BigDecimal.valueOf(unQualifiedList.size())).divide(checkRecTol).toString());

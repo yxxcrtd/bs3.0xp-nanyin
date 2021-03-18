@@ -53,6 +53,7 @@ public class InvestorsQualityCheckCPFEKFXService extends InvestorsQualityCheckBa
                
         
         //3、返回值
+        resultDto.setPageType("12");
         resultDto.setUnQualified(param.get("errPrdQty").toString());
         resultDto.setTotal(checkRecTol.toString()); 
         resultDto.setRate(checkRecTol.subtract(errPrdQty).divide(checkRecTol).toString());

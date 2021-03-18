@@ -49,10 +49,13 @@ public class InvestorsQualityCheckMJQYEService extends InvestorsQualityCheckBase
                
         
         //3、返回值
+        resultDto.setPageType("7");
         resultDto.setUnQualified(errPrdQty.toString());
         resultDto.setTotal(checkRecTol.toString()); 
-        resultDto.setRate(checkRecTol.subtract(errPrdQty).divide(checkRecTol).toString());
-
+        if(checkRecTol.compareTo(BigDecimal.ZERO) == 1) {
+        	resultDto.setRate(checkRecTol.subtract(errPrdQty).divide(checkRecTol).toString());
+        }
+        
         return resultDto;
     }
 	
