@@ -568,6 +568,15 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
             inputDto.setAssetType2(finProductTradeDto.getAssetType2());
             List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);
+            //买断式回购持仓特殊处理
+            for (PtlSecPositionFlowDto dto : ptlSecPositionFlowDtoss){
+                if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
+                        && DictCodeList.交易方向_买入.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())
+                            && (DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2())
+                            || DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2()))){
+                    dto.setAmount(baseTradeProductDealDto.getSecAmount());           
+                }   
+            }
             ptlSecPositionFlows.addAll(ptlSecPositionFlowDtoss);
 
             if (baseTradeProductDealDto.getStlPayOrdersList() != null && !baseTradeProductDealDto.getStlPayOrdersList().isEmpty()) {
