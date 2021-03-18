@@ -51,7 +51,16 @@
             <foreach collection="portfolioId" open=" AND T1.PORTFOLIO_ID IN (" item="item" close=")" separator=",">#{item}</foreach>
         </if> -->
         <if test="secManageAcctId != null and !secManageAcctId.isEmpty()">
-            AND T1.SEC_MANAGE_ACCT_ID = #{secManageAcctId}
+            AND ( ( T1.PS != 'T39' AND T1.SEC_MANAGE_ACCT_ID = #{secManageAcctId} )
+                OR ( T1.PS = 'T39'  AND exists ( select 1 from
+                        trd_product_deal tpd WHERE
+                        ((TPD.TOTLE_TRADE_ID =
+                        T1.TOTLE_TRADE_ID AND t1.trade_status != '03' )
+                        OR ( TPD.TOTLE_TRADE_ID =
+                        T1.P_TRADE_ID AND t1.trade_status = '03' ))
+                        and tpd.SEC_MANAGE_ACCT_ID = #{secManageAcctId} )
+                   )
+                )
         </if>
         <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
             AND T4.FINPROD_MARKET_ID = #{finprodMarketId}
