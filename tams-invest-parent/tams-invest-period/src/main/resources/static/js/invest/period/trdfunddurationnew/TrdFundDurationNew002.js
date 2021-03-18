@@ -112,13 +112,18 @@
          // 是否拆分标识
         {field : 'isFromCopy',title: '拆分标识',visible:false},
         {field:'operation', width:100,title: 'SysCommon.operation',sortable:false, type:'action',
-            buttons: ['delt',{clas:'manual',text:'&#xe61f',title:'复制'}]}
+            buttons: ['delt',{clas:'edit',text:'&#xe61f',title:'复制'}]}
         ],
         beforeEditCell:function(value, field, data){
               if(psType != '02'){
                 if(field == 'qty'){
                    return false;
                 }
+              }
+              if(psType == '02'){
+                  if(field == 'tradeAmt' || field == 'bonusMode'){
+                     return false;
+                  }
               }
             if(field == 'bonusMode' && ($("#assetType").val() == FUND_ASSET_TYPE_F01 || psType == '01')){
                return false;
@@ -144,31 +149,17 @@
                 $('#tradeAmt').val(sumTradeAmt);
                 $('#qty').val(sumQty);
             }else if(field == 'qty') {
-                if (!value) {
-                    // 不能为空
-                    var msg = JoyinUtil.getMessage('COMMON_E_0057',
-                            JoyinUtil.getLabel('IntDetailDuration.qty'));
-                    Joyin.alert(msg, 2);
-                } else if (parseInt(value) <= 0) {
-                    // 不能小于零
-                    var msg = JoyinUtil.getMessage(
-                            'BUSS_COM_E_0004',
-                            [ JoyinUtil.getLabel('IntDetailDuration.qty'),
-                                    0 ]);
-                    Joyin.alert(msg, 2);
-                } else {
-                    var intDetailList = repoInfoTable.getAllRows();
-                    var sumTradeAmt = 0;
-                    var sumQty = 0;
-                    var sumRegistShare = 0;
-                    // // 汇总
-                    $.each(intDetailList, function (i, v) {
-                        sumTradeAmt = JoyinMath.doAdd(v.qty, sumTradeAmt);
-                        sumQty = JoyinMath.doAdd(v.qty, sumQty);
-                        sumRegistShare = JoyinMath.doAdd(v.registShare, sumRegistShare);
-                    });
-                    $('#qty').val(sumQty);
-                }
+                var intDetailList = repoInfoTable.getAllRows();
+                var sumTradeAmt = 0;
+                var sumQty = 0;
+                var sumRegistShare = 0;
+                // // 汇总
+                $.each(intDetailList, function (i, v) {
+                    sumTradeAmt = JoyinMath.doAdd(v.qty, sumTradeAmt);
+                    sumQty = JoyinMath.doAdd(v.qty, sumQty);
+                    sumRegistShare = JoyinMath.doAdd(v.registShare, sumRegistShare);
+                });
+                $('#qty').val(sumQty);
             }else if(field == 'bonusMode'){
                 //现金分红，分红份额为空不可编辑
                  if(row.bonusMode == BONUS_MODE_01){
@@ -222,8 +213,11 @@
     /**
      * 空 新建 01：点击复制按钮生成的记录 02：拆分記錄
      */
-    repoInfoTable.bind('click', '.manual', function(data, index) {
-        if(pageModel == PAGE_MODEL_NEW && psType != '01'){
+    repoInfoTable.bind('click', '.edit', function(data, index) {
+            if((pageModel == PAGE_MODEL_NEW && psType == '01')
+                || (pageModel == PAGE_MODEL_EDIT && psType == '02')){
+                return false;
+            }
             var tabList  = repoInfoTable.getAllRows();
             if($("#assetType").val()==FUND_ASSET_TYPE_F02){
                 if(data.isFromCopy =='02'){
@@ -248,16 +242,16 @@
                 Joyin.alert(msg, 2);
                 return false;
             }
-        }else{
-                return false;
-        }
     });
 
     /**
      * 绑定删除事件
      */
     repoInfoTable.bind('click', '.delt', function(data, index) {
-        if(pageModel == PAGE_MODEL_NEW && psType != '01'){
+            if((pageModel == PAGE_MODEL_NEW && psType == '01')
+                || (pageModel == PAGE_MODEL_EDIT && psType == '02')){
+                return false;
+            }
             if(data.isFromCopy == '01'){
                 repoInfoTable.removeRow(data);
                 var tabList = repoInfoTable.getAllRows();
@@ -267,9 +261,6 @@
                 var msg = JoyinUtil.getMessage("非复制/非拆分的记录不可删除");
                 Joyin.alert(msg, 2);
             }
-        }else{
-              return false;
-        }
     });
 //    /**
 //     * 绑定编辑事件
@@ -994,18 +985,22 @@
         var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01){
             $(".unitCprice").hide();
+            $("#exRightsDate").attr("disabled",true);
+            $("#registDate").attr("disabled",true);
         }else{
             $(".unitCprice").show();
         }
         initFlag = false;
-        $("#exRightsDate").attr("disabled",true);
-        $("#registDate").attr("disabled",true);
         if(psType == '01'){
             $("#reInvesDate").val('').prop("disabled", true);
             $("#unitCprice").attr("disabled",true);
+            $("#exRightsDate").attr("disabled",true);
+            $("#registDate").attr("disabled",true);
         }else if(psType == '02'){
             $("#arriveDate").val('').prop("disabled", true);
+            $("#unitCprice").attr("disabled",true);
             $("#exRightsDate").attr("disabled",true);
+            $("#registDate").attr("disabled",true);
         }
         if(psType != '01'){
         	$("#bussTrdTransferOrder_div").hide();
