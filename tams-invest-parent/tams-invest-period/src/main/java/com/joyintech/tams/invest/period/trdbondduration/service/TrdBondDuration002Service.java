@@ -265,7 +265,9 @@ public class TrdBondDuration002Service extends BaseService<TrdBondDuration002Pro
 //        baseTradeProductDealCommServiceImpl.delete(entity.getWorkflowId());
         //对预增的金额和指令可用现金流进行先删后插，防止提交时多次进入doUpdate方法导致数据多次插入
         String busiCode = entity.getBusiCode();
-        AllTradeCommonUtil.deletePositionReal(busiCode);
+//        AllTradeCommonUtil.deletePositionReal(busiCode);
+        AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), busiCode);
+
 //        2.0改造
         entity.setBaseTotalTradeInfoDto(genFinProductTradeDto2(entity));
 //        genDataForInsertDto(entity);
@@ -283,7 +285,9 @@ public class TrdBondDuration002Service extends BaseService<TrdBondDuration002Pro
         catch (Exception e) {
             e.printStackTrace();
         }
-        saveDataWhenStartWorkflow(entity, OperationType.MODIFY);
+        if (!StringUtil.isNotEmpty(entity.getRevokeReason())){
+            saveDataWhenStartWorkflow(entity, OperationType.MODIFY);
+        }
     }
 
     private void saveDataWhenStartWorkflow(TrdBondDuration002ProcessDto entity, OperationType type) {
