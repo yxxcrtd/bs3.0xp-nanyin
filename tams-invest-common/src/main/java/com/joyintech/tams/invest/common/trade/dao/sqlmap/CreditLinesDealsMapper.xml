@@ -28,7 +28,7 @@
 			   T.PFLSH,
 			   T.CREDIT_AMT creditAmt,
 			   T.HAP_CREDIT_AMT hapCreditAmt,
-			   MAX(T.VDATE),
+			   MAX(T.VDATE) as vdate,
 		       T.CREDIT_CONDITION,
 		       T.INSTITUTION_CODE institutionCode,
 		       T.CUSTOMER_ID customerId,

@@ -235,7 +235,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
     @Override
     public List<CreditLines> getOrgCeLineList(HashMap<String, Object> map) {
         TrdProductDeal model=inputmodel.getTrdProductDeal();
-        List<CreditLines> creLineslist= (List<CreditLines>) map.get("creLineslist");
+        List<CreditLines> creLineslist= filterNewCreditLines((List<CreditLines>) map.get("creLineslist"));
         //是否占用主体授信flag
         Boolean iscreditflag=false;
         for(CreditLines creditLinesAsset:creLineslist){
