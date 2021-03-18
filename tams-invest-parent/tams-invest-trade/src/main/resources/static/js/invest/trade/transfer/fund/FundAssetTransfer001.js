@@ -114,9 +114,12 @@ $(function() {
         var data = $("#fundAssetTransfer001_portfolioId").select2("data")[0].object;
         if(data){
             $("#fundAssetTransfer001_carryOverQty").val(data).trigger('blur');
+        }else{
+            $("#fundAssetTransfer001_carryOverQty").val('').trigger('blur');
         }
-        calTradeAmt();
+        // calTradeAmt();
         refreshCashAndBalance();
+        $("#fundAssetTransfer001_tradePrin").val('').trigger("change").trigger('blur');
     };
     //保存或提交按钮按下
     function saveOrSubmit(operateType) {
@@ -166,6 +169,8 @@ $(function() {
         if(unitCprice && tradePrin){
             tardeAmt = JoyinMath.doAdd(JoyinMath.doMul(tradePrin,unitCprice),carryOverQty,2);
             $("#fundAssetTransfer001_tradeAmt").val(tardeAmt);
+        }else{
+            $("#fundAssetTransfer001_tradeAmt").val('');
         }
     };
     //添加按钮
@@ -188,6 +193,8 @@ $(function() {
                     listInfoDtos= result.data.funAssetTransferDtoList;
                     funAssetTransferDtoListTable.addRow(listInfoDtos[0]);
                     calRollablePrin();
+                    $("#fundAssetTransfer001_portfolioId").val('').trigger("change").trigger('blur');
+                    portfolioIdChange();
                 }
             });
         }

@@ -90,6 +90,8 @@ public class FundAssetTransfer001Controller extends BaseController {
             paramMap.put("finprodId",entity.getFinprodIdOrg());
             model.addAttribute("initUnitCprice",fundAssetTransfer001Service.findInitCarryOverQty(paramMap));
         }
+        //证券账户
+        entity.setSecManageAcctId((String) paraMap.get("secAcctId"));
         model.addAttribute("PS_T04", DictCodeList.交易方向_申购.getValue());
         model.addAttribute("PS_T19", DictCodeList.交易方向_赎回确认.getValue());
         model.addAttribute("ps", entity.getPs());
