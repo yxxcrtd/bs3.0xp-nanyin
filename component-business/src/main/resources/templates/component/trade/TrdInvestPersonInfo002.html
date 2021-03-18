@@ -24,7 +24,7 @@
                         <div class="layui-input-inline input-inline">
                             <!-- 场内基金改造 modify by renping 20191117 start -->
                             <select required th:id="|${entityName}_counterId|" th:name="|${entityName}.counterId|" parentIds="ps,finprodType2,profitType,tradeMarket,chlId,portfolioId"
-                                    th:data-url="|@{/component/trade/TrdInvestPersonInfo002/selectCounterId}?innerTrade=${innerTrade}&counterType=${counterType}|"
+                                    th:data-url="|@{/component/trade/TrdInvestPersonInfo002/selectCounterId}?innerTrade=${innerTrade}&counterType=${counterType}&pageId=${pageId}|"
                                     formatOption="false"
                                     th:initValue="${entity?.counterId}" class="layui-input form-input input-select"
                                     th:placeholder="#{SysCommon.placeholder}">

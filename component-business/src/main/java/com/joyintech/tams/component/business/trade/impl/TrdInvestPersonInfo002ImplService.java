@@ -120,6 +120,9 @@ public class TrdInvestPersonInfo002ImplService implements TrdInvestPersonInfo002
                 && (StringUtil.equals((String)param.get("finprodType2"), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
                     ||StringUtil.equals((String)param.get("profitType"), DictCodeList.收益类型_净值型.getValue())
                     ||StringUtil.equals((String)param.get("profitType"), DictCodeList.收益类型_货币型.getValue())))
+        		//add by yujiaping 20210318 ZGBSS-366 可转债转股交易新建页面，交易对手不可以选择内部交易对手start
+        		||(StringUtil.equals("TrdBondToStock002",(String)param.get("pageId")))
+        		//add by yujiaping 20210318 ZGBSS-366 可转债转股交易新建页面，交易对手不可以选择内部交易对手end
         		//反向交易开关 add by liuwenjuan 20200323 start
         		// modify wj 20200430  去掉校验 自动生成反向交易:开的情况  买入 可以选择内部对手
 //        		||(StringUtil.equals("Y",CacheUtil.getSysParam("is_auto_generate_negate_deal")) 
