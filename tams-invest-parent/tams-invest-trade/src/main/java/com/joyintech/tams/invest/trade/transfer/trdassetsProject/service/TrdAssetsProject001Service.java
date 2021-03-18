@@ -631,6 +631,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         }
         BaseTradeInfoDto result1 = new BaseTradeInfoDto();
         TrdProductDeal trdProductDeal1 = gen产品交易(entity);
+        trdProductDeal.setrTradeId(trdProductDeal1.getTradeId());
         result1.setTrdProductDeal(trdProductDeal1);
 
         result1.setTrdProductDealAdd(gen交易附属(entity, trdProductDeal1));

@@ -55,34 +55,21 @@ public class CreditExtendsService {
     public void run(Date currentDate){
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("pdate", currentDate);
-        //获取需要继承的授信，及跑批当日生效占用额度为0的授信
+        //获取需要继承的授信，及跑批当日生效占用额度为0的授信(全量继承)
         List<CreditLines> ptlList = creditExtendsMapper.selectCreditIdForTask(paramMap);
         for(CreditLines ptl : ptlList){
             ptl.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDeal(ptl.getSeqno(), ptl.getVdate(), ptl.getCreditMstId(),ptl.getCustomerId(),ptl.getInstitutionCode()));
             ptl.setUpdateTime(new Date());
+            ptl.setUpdateUser("system");
             creditExtendsMapper.updateLinesByPrimaryKeySelective(ptl);
-
-//            paramMap.put("creditMstId", ptl.getCreditMstId());//授信配置编号
-//            paramMap.put("customerId", ptl.getCustomerId());//授信客户编号
-//            List<CreditLines> ptlPreList = creditExtendsMapper.selectPreCreditIdForTask(paramMap);
-//            if(StringUtil.isEmptyList(ptlPreList)){
-//                continue;
-//            }
-//            ptl.setHapCreditAmt(ptlPreList.get(0).getHapCreditAmt());//取最近的一次授信额度
-//            ptl.setUpdateTime(new Date());
-//            creditExtendsMapper.updateLinesByPrimaryKeySelective(ptl);
-
-//            //查找原交易关联明细信息
-//            List<CreditLinesDeal> creLineDeal=creditExtendsMapper.selectDealByPrimaryKey(ptlPreList.get(0).getSeqno());
-//            for(CreditLinesDeal entry:creLineDeal){
-//                entry.setSeqno(ptl.getSeqno());
-//                CreditLinesDealKey creKey=new CreditLinesDealKey();
-//                creKey.setSeqno(ptl.getSeqno());
-//                creKey.setTradeId(entry.getTradeId());
-//                creditLinesDealMapper.deleteByPrimaryKey(creKey);
-//                creditLinesDealMapper.insertSelective(entry);
-//            }
-
+        }
+        //获取需要增量继承的授信
+        List<CreditLines> ptlListAdd = creditExtendsMapper.selectCreditIdForTaskAdd(paramMap);
+        for(CreditLines ptl : ptlListAdd){
+            ptl.setHapCreditAmt(celinesUpdateFactory.extendCreditLinesDealAdd(ptl.getSeqno(), ptl.getVdate(), ptl.getCreditMstId(),ptl.getCustomerId(),ptl.getInstitutionCode()));
+            ptl.setUpdateTime(new Date());
+            ptl.setUpdateUser("system");
+            creditExtendsMapper.updateLinesByPrimaryKeySelective(ptl);
         }
     }
 

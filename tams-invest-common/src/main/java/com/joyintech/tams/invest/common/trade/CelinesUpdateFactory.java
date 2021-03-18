@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness {
 
@@ -1000,7 +1001,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
     }
 
     /**
-     * 授信继承
+     * 授信全量继承
      * @param name
      */
     public BigDecimal extendCreditLinesDeal(String seqno, Date vdate, String creditMstId, String customerId, String orgno) {
@@ -1019,6 +1020,54 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
             }
             BigDecimal res = creditLinesMapper.selectCreditLinesHap(param);
             return res == null? new BigDecimal("0") : res;
+        }else{
+            return new BigDecimal("0");
+        }
+    }
+
+    /**
+     * 授信增量继承
+     * @param name
+     */
+    public BigDecimal extendCreditLinesDealAdd(String seqno, Date vdate, String creditMstId, String customerId, String orgno) {
+        if(CacheUtil.getSysParam("IS_EXTEND_CREDIT").equals("true")){
+            Map<String, Object> param=new HashMap<String, Object>();
+            param.put("creditMstId", creditMstId);
+            param.put("customerId", customerId);
+            param.put("vdate", vdate);
+            param.put("orgno", orgno);
+            param.put("seqno", seqno);
+            List<CreditLinesDeal> oldCredit = creditLinesMapper.selectCreditLinesDealAdd(param);
+            List<CreditLinesDeal> newCredit = creditLinesMapper.selectCreditLinesDealAddNew(param);
+            Map<String, CreditLinesDeal> oldMap = oldCredit.stream().collect(Collectors.toMap(CreditLinesDeal::getTradeId,old -> old,(old1,old2)-> old1));
+            Map<String, CreditLinesDeal> newMap = newCredit.stream().collect(Collectors.toMap(CreditLinesDeal::getTradeId, a -> a ,(new1,new2)-> new1));
+            Iterator<Map.Entry<String, CreditLinesDeal>> entries = oldMap.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry<String, CreditLinesDeal> entry = entries.next();
+                if(newMap.remove(entry.getKey()) != null){
+                    entries.remove();
+                }
+            }
+            BigDecimal res = new BigDecimal("0");
+            if(oldMap.size()>0){
+                for(CreditLinesDeal creditLinesDeal : oldMap.values()){
+                    res = res.add(creditLinesDeal.getTradeAmt());
+                    creditLinesDeal.setSeqno(seqno);
+                    creditLinesDeal.setCreateTime(new Date());
+                    creditLinesDeal.setUpdateTime(new Date());
+                    creditLinesDealMapper.insert(creditLinesDeal);
+                }
+            }
+            if(newMap.size()>0){
+                for(CreditLinesDeal creditLinesDeal : newMap.values()){
+                    res = res.subtract(creditLinesDeal.getTradeAmt());
+                    CreditLinesDealKey creditLinesDealKey = new CreditLinesDealKey();
+                    creditLinesDealKey.setSeqno(seqno);
+                    creditLinesDealKey.setTradeId(creditLinesDeal.getTradeId());
+                    creditLinesDealMapper.deleteByPrimaryKey(creditLinesDealKey);
+                }
+            }
+            return res;
         }else{
             return new BigDecimal("0");
         }

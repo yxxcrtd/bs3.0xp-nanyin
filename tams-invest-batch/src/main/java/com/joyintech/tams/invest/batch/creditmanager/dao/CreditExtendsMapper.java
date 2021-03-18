@@ -30,6 +30,8 @@ import java.util.Map;
 public interface CreditExtendsMapper {
 
     List<CreditLines>  selectCreditIdForTask(Map<String, Object> paramMap);
+
+    List<CreditLines>  selectCreditIdForTaskAdd(Map<String, Object> paramMap);
     
     List<CreditLines>  selectPreCreditIdForTask(Map<String, Object> paramMap);
 

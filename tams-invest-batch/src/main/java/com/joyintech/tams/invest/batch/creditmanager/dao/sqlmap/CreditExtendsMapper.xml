@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.invest.batch.creditmanager.dao.CreditExtendsMapper">
-	<!-- 获取参加任务的授信 -->
+	<!-- 获取参加任务的授信(全量继承) -->
 	<select id="selectCreditIdForTask" resultType="com.joyintech.tams.common.base.entity.CreditLines">
 		select
 		<include refid="com.joyintech.tams.common.base.dao.CreditLinesMapper.Base_Column_List" />
@@ -14,6 +14,20 @@
         and (HAP_CREDIT_AMT=0 or HAP_CREDIT_AMT is null)
 		</where>
 		and not exists (select 1 from CREDIT_LINES_DEAL where CREDIT_LINES.seqno = CREDIT_LINES_DEAL.seqno)
+	</select>
+
+	<!-- 获取参加任务的授信(增量继承) -->
+	<select id="selectCreditIdForTaskAdd" resultType="com.joyintech.tams.common.base.entity.CreditLines">
+		select
+		<include refid="com.joyintech.tams.common.base.dao.CreditLinesMapper.Base_Column_List" />
+		FROM
+		CREDIT_LINES
+		<where>
+			<if test="pdate != null">
+				<![CDATA[#{pdate,jdbcType=DATE} = VDATE and #{pdate,jdbcType=DATE} <= MDATE ]]>
+			</if>
+		</where>
+		and ((HAP_CREDIT_AMT is not null and HAP_CREDIT_AMT != 0) or exists (select 1 from CREDIT_LINES_DEAL where CREDIT_LINES.seqno = CREDIT_LINES_DEAL.seqno))
 	</select>
 
 	<select id="selectPreCreditIdForTask" resultType="com.joyintech.tams.common.base.entity.CreditLines">
@@ -47,7 +61,7 @@
 		update CREDIT_LINES
 		<set >
 			<if test="hapCreditAmt != null" >
-				HAP_CREDIT_AMT = #{hapCreditAmt,jdbcType=DECIMAL},
+				HAP_CREDIT_AMT = HAP_CREDIT_AMT + #{hapCreditAmt,jdbcType=DECIMAL},
 			</if>
 			<if test="updateUser != null" >
 				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},

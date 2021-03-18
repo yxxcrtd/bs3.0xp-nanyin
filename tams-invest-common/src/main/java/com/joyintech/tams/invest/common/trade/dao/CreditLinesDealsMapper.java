@@ -95,7 +95,16 @@ public interface CreditLinesDealsMapper {
 
 	int insertLinesSecPosition(CreditLinesSecPosition creditLinesSecPosition);
 
+	/**
+	 * 查询日之前最大日期的授信明细
+	 * @param param
+	 * @return
+	 */
 	List<CreditLinesDeal> selectCreditLinesDeal(Map<String, Object> param);
+
+	List<CreditLinesDeal> selectCreditLinesDealAdd(Map<String, Object> param);
+
+	List<CreditLinesDeal> selectCreditLinesDealAddNew(Map<String, Object> param);
 
 	BigDecimal selectCreditLinesHap(Map<String, Object> param);
 
