@@ -212,12 +212,11 @@
 	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
    </update>
 
-	<select id="isOutsourOrAssetMana" resultType="java.lang.Integer" parameterType="java.lang.String">
+	<select id="isOutsourOrAssetMana" resultType="java.lang.String" parameterType="java.lang.String">
 		select
-		count(*)
+		ASSET_TYPE
 		from CHB_ASSET_INFO_SUB
 		where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
-		and ASSET_TYPE in ('12','16','19')
 	</select>
 
 	<select id="selectChbAstValSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >

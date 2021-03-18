@@ -100,6 +100,8 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 				sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
                 sub.setCreateUser(CommonUtil.getUserName());
                 sub.setUpdateUser(CommonUtil.getUserName());
+				sub.setUpdateTime(new Date());
+				sub.setCreateTime(new Date());
 				// 数据日期
 				sub.setStatusDate(batchTime);
 				sub.setChbSubmitDeadline(chbSubmitDeadline);

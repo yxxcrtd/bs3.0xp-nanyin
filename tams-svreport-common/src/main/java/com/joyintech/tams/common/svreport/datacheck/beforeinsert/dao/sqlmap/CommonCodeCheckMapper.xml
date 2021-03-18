@@ -161,9 +161,10 @@
               ISSUE_AMT issueAmt,
               UNINVEST_CASH uninvestCash
         from
-            CHB_BOT_AST_POS_SUB
+            CHB_BOT_AST_POS
         where PLAN_ASSET_ID = #{planAssetId}
           and POS_DATE = #{posDate}
+          and ASSET_CODE != #{assetCode}
     </select>
     
     <select id="queryChbAssetInfoSubByAssetCode" resultType="java.lang.Integer">
