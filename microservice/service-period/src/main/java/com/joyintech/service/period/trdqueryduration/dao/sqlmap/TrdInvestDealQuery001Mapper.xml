@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.service.period.trdqueryduration.dao.TrdQueryDuration001Mapper">
 	<sql id="STATUS_VALID_PROCESS">
+        SELECT * FROM(
 		/*债券存续期 流程中*/
 		SELECT * FROM (
 			SELECT
@@ -735,8 +736,13 @@
 		AND T1.PORTFOLIO_ID <include refid="portfolioAth"/>
 		<include refid="where_sql" />
 		ORDER BY T1.MDATE)
+        )
+        <if test="portfolioId != null and !portfolioId.isEmpty()">
+			<foreach collection="portfolioId" open=" WHERE portfolioId IN (" item="item" close=")" separator=",">#{item}</foreach>
+		</if>
 	</sql>
 	<sql id="STATUS_VALID_EFFECTIVE">
+        SELECT * FROM(
 		/*债券存续期 有效数据*/
 		SELECT * FROM (
 			SELECT
@@ -1459,9 +1465,14 @@
 		AND T1.PORTFOLIO_ID <include refid="portfolioAth"/>
 		<include refid="where_sql" />
 		ORDER BY T1.MDATE )
+        )
+        <if test="portfolioId != null and !portfolioId.isEmpty()">
+			<foreach collection="portfolioId" open=" WHERE portfolioId IN (" item="item" close=")" separator=",">#{item}</foreach>
+		</if>
 	</sql>
 	
 	<sql id="STATUS_VALID_REVOKE">
+        SELECT * FROM (
 		SELECT * FROM (
 			SELECT
 				'${PAGE_DATE_STATUS06}' statusValid,
@@ -2175,12 +2186,13 @@
 			AND T1.PORTFOLIO_ID <include refid="portfolioAth"/>
 			<include refid="where_sql" />
 			ORDER BY T1.MDATE)
+        )
+        <if test="portfolioId != null and !portfolioId.isEmpty()">
+			<foreach collection="portfolioId" open=" WHERE portfolioId IN (" item="item" close=")" separator=",">#{item}</foreach>
+		</if>
 	</sql>
 
 	<sql id="where_sql">
-		<if test="portfolioId != null and !portfolioId.isEmpty()">
-			<foreach collection="portfolioId" open=" AND T1.PORTFOLIO_ID IN (" item="item" close=")" separator=",">#{item}</foreach>
-		</if>
 		<if test="secManageAcctId != null and !secManageAcctId.isEmpty()">
 			AND T1.SEC_MANAGE_ACCT_ID = #{secManageAcctId}
 		</if>
@@ -2202,12 +2214,14 @@
 		<if test="finprodType2 != null and !finprodType2.isEmpty()">
 			AND T5.TYPE_8 = #{finprodType2}
 		</if>
+        <!--  这条件之前根本就没用到
 		<if test="portfolioId != null and !portfolioId.isEmpty()">
 			AND (T2.PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" index= "index"  separator=",">#{item}</foreach> )
 			or
 			T2.PARENT_PORTFOLIO_ID IN (<foreach collection="portfolioId" item="item" index= "index" separator=",">#{item}</foreach> )
 			)
 		</if>
+        -->
 	</sql>
 
     <sql id = "orderTemp">
