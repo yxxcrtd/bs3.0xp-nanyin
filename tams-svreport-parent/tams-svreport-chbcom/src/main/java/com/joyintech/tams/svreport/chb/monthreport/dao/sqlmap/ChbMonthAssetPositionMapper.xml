@@ -887,7 +887,10 @@
         TEMP.OCODE AS OCODE,
         rank() over (partition by TEMP.OCODE order by rownum) rk
         FROM (
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+            <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+            <!-- add by zhangliang 20210319 start-->
+            AND OTYPE = '02'
+            <!-- add by zhangliang 20210319 end-->
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
@@ -903,7 +906,10 @@
         TEMP.OCODE AS OCODE,
         rank() over (partition by TEMP.OCODE order by rownum) rk
         FROM(
-          <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+            <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+            <!-- add by zhangliang 20210319 start-->
+            AND OTYPE = '01'
+            <!-- add by zhangliang 20210319 end-->
         )
         <!--SQL注入 -->
         <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
