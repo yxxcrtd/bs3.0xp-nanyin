@@ -288,7 +288,11 @@ public class ChannelFeePay002Service extends BaseService<ChannelFeePay002Dto> im
             return wflOrder;
         }
         WflStlPayOrders dto = new WflStlPayOrders();
-        List<BussTrdTransferOrderDto> stlPayOrdersList = bussTrdTransferOrderImplService.save(new ArrayList<BussTrdTransferOrderDto>(Arrays.asList(entity.getBussTrdTransferOrder().get(i))));
+        BussTrdTransferOrderDto objDto = new BussTrdTransferOrderDto();
+        for(BussTrdTransferOrderDto dto1:entity.getBussTrdTransferOrder()){
+            if(dto1.getPortfolioId().equals(entity.getFeeInfoList().get(i).getPortfolioId()))objDto=dto1;
+        }
+        List<BussTrdTransferOrderDto> stlPayOrdersList = bussTrdTransferOrderImplService.save(new ArrayList<BussTrdTransferOrderDto>(Arrays.asList(objDto)));
         if (stlPayOrdersList != null) {
             BeanUtil.copyPropertiesIgnoreNull(dto, stlPayOrdersList.get(0));
             dto.setTradeId(tradeId);
