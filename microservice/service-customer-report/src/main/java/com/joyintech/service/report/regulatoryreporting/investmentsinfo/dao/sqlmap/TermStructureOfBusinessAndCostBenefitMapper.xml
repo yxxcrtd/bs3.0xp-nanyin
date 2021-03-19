@@ -1058,7 +1058,7 @@ with cj as(
 			where 1=1 and cr.change_type in ('01') and cr.is_lay='Y'
 			and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
 			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-			cr.change_type in ('01') and cr.is_lay='Y'
+			and cr.change_type in ('01') and cr.is_lay='Y'
 			))t
 			group by t.fprodid
 		</if>
