@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 基金存续期新建画面
@@ -163,6 +164,19 @@ public class TrdFundDurationNew002Controller extends BaseController {
             pageParam.put("registDate", DateUtil.format(dto.getRegistDate()));
 //          查询利息信息
             dto.setFinAssetIntInfoList(trdFundDurationNew001Service.findAssetIntInfo(pageParam));
+            if(StringUtil.equals("edit",param.get("mode"))){
+                List<FinAssetIntInfo> listFinAssetIntInfotemp= dto.getFinAssetIntInfoList();
+                listFinAssetIntInfotemp = listFinAssetIntInfotemp.stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_红利再投.getValue())).collect(Collectors.toList());
+                dto.setFinAssetIntInfoList(listFinAssetIntInfotemp);
+                //                // 单位净值、分红份额重新设置
+                BigDecimal unitPrice = periodCommonService.getLatestValuation(dto.getFinprodId(), DateUtil.format(dto.getExRightsDate()));
+                BigDecimal tradeAmt = BigDecimal.ZERO;
+                for(FinAssetIntInfo finAssetIntInfo : dto.getFinAssetIntInfoList()){
+                    tradeAmt = finAssetIntInfo.getTradeAmt();
+                }
+                dto.setQty(ArithmeticUtil.divide(tradeAmt, unitPrice == null ? BigDecimal.ONE:unitPrice, 4));
+                dto.setPstype(DictCodeList.分红方式_红利再投.getValue());
+            }
 //            type = StringUtil.isNotEmpty(type)?type:dto.getType();
             trader = dto.getTrader();
             if(StringUtil.equals(param.get("ps"),"T11")){
@@ -255,7 +269,8 @@ public class TrdFundDurationNew002Controller extends BaseController {
         if(StringUtil.isEmpty(dto.getbTradeId())){
             //为非货币现金分红及非货币红利再投时 设置前置交易编号
 //            if(StringUtil.equals(dto.getType(),"03")||StringUtil.equals(dto.getType(),"04") ||StringUtil.equals(dto.getType(),"06") ){
-            if(StringUtil.equals(dto.getPstype(), "01")){
+            if(StringUtil.equals(dto.getPstype(), DictCodeList.分红方式_现金分红.getValue())
+                    ||StringUtil.equals(dto.getPstype(), DictCodeList.分红方式_红利再投.getValue())){
                 dto.setbTradeId(dto.getTotleTradeId());
             }
             dto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(parameter));

@@ -241,15 +241,22 @@ public class TrdFundDurationNew001Dto extends TrdFundDurationCommonDto implement
     //add by lishuping 20191030 end
 
     public String getUpdateFlag(){
-        if(!StringUtil.equals(statusValid, DictCodeListExt1.画面数据状态_有效.getValue())||StringUtil.isNotEmpty(getHasFlow())){
-            return "02";
-        }
-        else if(StringUtil.equals(type,"04")||StringUtil.equals(type,"01")||StringUtil.equals(type,"03")||StringUtil.equals(type,"06")){
-            return "02";
-        }
-        else{
+        if(StringUtil.equals(DictCodeList.交易方向_除权登记.getValue(),getPs())
+                && StringUtil.equals(statusValid, DictCodeListExt1.画面数据状态_有效.getValue())
+                && StringUtil.isEmpty(getHasFlow())){
             return "01";
+        }else{
+            return "02";
         }
+//        if(!StringUtil.equals(statusValid, DictCodeListExt1.画面数据状态_有效.getValue())||StringUtil.isNotEmpty(getHasFlow())){
+//            return "02";
+//        }
+//        else if(StringUtil.equals(type,"04")||StringUtil.equals(type,"01")||StringUtil.equals(type,"03")||StringUtil.equals(type,"06")){
+//            return "02";
+//        }
+//        else{
+//            return "01";
+//        }
     }
 //    画面数据状态
     public String getStatusValidStr(){

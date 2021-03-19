@@ -73,7 +73,7 @@ public class TrdFundDurationNew001Validator implements BeanValidator{
             }
 //            check流程中（防止重复撤销）
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
-            wflValidInputParameter.setPageId("TrdFundDuration002");
+            wflValidInputParameter.setPageId("TrdFundDurationNew002");
 //            设置原交易编号
             wflValidInputParameter.setBusinessDataPk4(dto.getTotleTradeId());
             if(StringUtil.isNotEmpty(mstWorkflowCommonServie)&&mstWorkflowCommonServie.isInWflProcess(wflValidInputParameter)){
@@ -94,7 +94,7 @@ public class TrdFundDurationNew001Validator implements BeanValidator{
             }
             //check流程中（防止重复保存）
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
-            wflValidInputParameter.setPageId("TrdFundDuration002New");
+            wflValidInputParameter.setPageId("TrdFundDurationNew002");
 //            设置前置交易编号
             wflValidInputParameter.setBusinessDataPk3(dto.getTotleTradeId());
             if(StringUtil.isNotEmpty(mstWorkflowCommonServie)&&mstWorkflowCommonServie.isInWflProcess(wflValidInputParameter)){
@@ -122,7 +122,7 @@ public class TrdFundDurationNew001Validator implements BeanValidator{
                 }
             }
             //if (StringUtil.equals(dto.getType(),"03") || StringUtil.equals(dto.getType(),"06")) {
-            if(StringUtil.equals(dto.getPstype(),"01")){
+            if(StringUtil.equals(dto.getPstype(),DictCodeList.分红方式_现金分红.getValue())){
                 if (dto.getBussTrdTransferOrder() == null ||  dto.getBussTrdTransferOrder().isEmpty()) {
                     messageList.add(new ValidMessage("bussTrdTransferOrder","请生成划款指令"));
                 }

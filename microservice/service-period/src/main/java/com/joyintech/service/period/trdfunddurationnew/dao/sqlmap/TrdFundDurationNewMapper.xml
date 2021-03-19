@@ -286,6 +286,7 @@
     </sql>
     <sql id="linkTable">
         INNER JOIN WFL_TRD_PRODUCT_DEAL_ADD tpda ON tpd.trade_id = tpda.trade_id
+        INNER JOIN WFL_PA_TRD_PRODUCT_DEAL PTPD ON tpd.trade_id = PTPD.trade_id
         INNER JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='BONUS_MODE' and sdl.item_code = tpda.pay_type
         INNER JOIN FIN_PRODUCT_TYPE fprod_type on fprod_type.FINPROD_ID = tpd.FINPROD_ID
         left join WFL_PA_TRD_FIN_DEAL_TOTAL btrd on btrd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
@@ -297,6 +298,7 @@
     </sql>
     <sql id="linkTableyouxiao">
         INNER JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpd.trade_id = tpda.trade_id
+        INNER JOIN PA_TRD_PRODUCT_DEAL PTPD ON tpd.trade_id = PTPD.trade_id
         INNER JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='BONUS_MODE' and sdl.item_code = tpda.pay_type
         INNER JOIN FIN_PRODUCT_TYPE fprod_type on fprod_type.FINPROD_ID = tpd.FINPROD_ID
         left join PA_TRD_FIN_PRODUCT_DEAL_TOTAL btrd on btrd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
@@ -350,14 +352,16 @@
     <sql id="tmpTable">
         with tmpTable as (
         select distinct B_TRADE_ID,hasFlow from (
-        SELECT B_TRADE_ID,'01' hasFlow FROM TRD_FIN_PRODUCT_DEAL_TOTAL total where total.B_TRADE_ID is not null
+        SELECT B_TRADE_ID,'01' hasFlow FROM TRD_PRODUCT_DEAL total where total.B_TRADE_ID is not null
         and total.TRADE_STATUS = #{TRADE_STATUS01}
         and total.FINPROD_TYPE2 = #{finprodTypeTg}
+        and total.PS = #{PS_T12}
         and total.IS_CANCEL = #{YESNO_N}
         UNION all
-        SELECT B_TRADE_ID,'01' hasFlow FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL total where total.B_TRADE_ID is not null
+        SELECT B_TRADE_ID,'01' hasFlow FROM WFL_TRD_PRODUCT_DEAL total where total.B_TRADE_ID is not null
         and total.TRADE_STATUS = #{TRADE_STATUS01}
         and total.FINPROD_TYPE2 = #{finprodTypeTg}
+        and total.PS = #{PS_T12}
         and total.IS_CANCEL = #{YESNO_N})
         )
     </sql>

@@ -222,16 +222,20 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
             }
         }
         entity.setbTradeId(entity.getTotleTradeId());
+        List<FinAssetIntInfo> listFinAssetIntInfo= entity.getFinAssetIntInfoList();
         if(bonusTypeXjfh){
 //          非货币现金分红
 //            entity.setType(StringUtil.equals(entity.getAssetType(), DictCodeList.基金类资产类型_非货币基金.getValue())?"03":"06");
 //           处理数据参数
             getWorkFlowPatameter(entity);
             entity.setPstype(DictCodeList.分红方式_现金分红.getValue());
+            List<FinAssetIntInfo> listFinAssetIntInfotemp1= listFinAssetIntInfo;
+            listFinAssetIntInfotemp1 = listFinAssetIntInfotemp1.stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_现金分红.getValue())).collect(Collectors.toList());
+            entity.setFinAssetIntInfoList(listFinAssetIntInfotemp1);
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
-            List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
-            listBaseTradeInfoDto = listBaseTradeInfoDto.stream().filter(baseTradeInfoDto -> StringUtil.equals(baseTradeInfoDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_现金分红.getValue())).collect(Collectors.toList());
-            entity.getBaseTotalTradeInfoDto().setBaseTradeInfoDtoList(listBaseTradeInfoDto);
+//            List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
+//            listBaseTradeInfoDto = listBaseTradeInfoDto.stream().filter(baseTradeInfoDto -> StringUtil.equals(baseTradeInfoDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_现金分红.getValue())).collect(Collectors.toList());
+//            entity.getBaseTotalTradeInfoDto().setBaseTradeInfoDtoList(listBaseTradeInfoDto);
             entity.getBaseTotalTradeInfoDto().setIsNeedStlPayOrders(true);
             dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
         }
@@ -241,12 +245,13 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
             entity.setElementId("TrdFundDurationNew002_btn_save");
             WorkFlowParameter<TrdFundDurationNew001Dto> param = getWorkFlowPatameter(entity);
             entity.setPstype(DictCodeList.分红方式_红利再投.getValue());
+            List<FinAssetIntInfo> listFinAssetIntInfotemp2= listFinAssetIntInfo;
+            listFinAssetIntInfotemp2 = listFinAssetIntInfotemp2.stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_红利再投.getValue())).collect(Collectors.toList());
+            entity.setFinAssetIntInfoList(listFinAssetIntInfotemp2);
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
-            List<FinAssetIntInfo> listFinAssetIntInfo =  entity.getFinAssetIntInfoList().stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_红利再投.getValue())).collect(Collectors.toList());
-            entity.setFinAssetIntInfoList(listFinAssetIntInfo);
-            List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
-            listBaseTradeInfoDto = listBaseTradeInfoDto.stream().filter(baseTradeInfoDto -> StringUtil.equals(baseTradeInfoDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_红利再投.getValue())).collect(Collectors.toList());
-            entity.getBaseTotalTradeInfoDto().setBaseTradeInfoDtoList(listBaseTradeInfoDto);
+//            List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
+//            listBaseTradeInfoDto = listBaseTradeInfoDto.stream().filter(baseTradeInfoDto -> StringUtil.equals(baseTradeInfoDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_红利再投.getValue())).collect(Collectors.toList());
+//            entity.getBaseTotalTradeInfoDto().setBaseTradeInfoDtoList(listBaseTradeInfoDto);
             BigDecimal tradeAmt = BigDecimal.ZERO;
             for(FinAssetIntInfo tempFinAssetIntInfo:entity.getFinAssetIntInfoList()){
                 tradeAmt = tradeAmt.add(tempFinAssetIntInfo.getTradeAmt());

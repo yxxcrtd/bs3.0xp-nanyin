@@ -376,7 +376,9 @@ public class TrdFundDurationNewService extends BaseService<TrdFundDurationNewDto
 //        数据日期
         repTrade.setRepStatusDate(platformDateImpl.getSysDate());
 //        所有场景生成第一种报送数据||现金分红后续交易不需要生成
-        if (!StringUtil.equals(entity.getType(), "04") && !StringUtil.equals(entity.getType(), "03")) {
+        //if (!StringUtil.equals(entity.getType(), "04") && !StringUtil.equals(entity.getType(), "03")) {
+        if(!(StringUtil.equals(entity.getAssetType(), DictCodeList.基金类资产类型_非货币基金.getValue())
+                && (StringUtil.equals(deal.getPs(),DictCodeList.交易方向_现金分红.getValue()) || StringUtil.equals(deal.getPs(),DictCodeList.交易方向_红利再投.getValue())))){
 //        第一笔
 //        数量
             repTrade.setRepCount(deal.getPrinAmt());
@@ -391,7 +393,8 @@ public class TrdFundDurationNewService extends BaseService<TrdFundDurationNewDto
             repTrades.add(repTrade);
         }
 //      货币基金红利再投及非货币红利再投时，生成第二种报送数据
-        if (StringUtil.equals(entity.getType(), "01") || StringUtil.equals(entity.getType(), "04")) {
+        //if (StringUtil.equals(entity.getType(), "01") || StringUtil.equals(entity.getType(), "04")) {
+        if(StringUtil.equals(deal.getPs(),DictCodeList.交易方向_红利再投.getValue())){
             RepTrade repTrade2 = new RepTrade();
             BeanUtil.copyPropertiesIgnoreNull(repTrade2, repTrade);
 //        第二笔
