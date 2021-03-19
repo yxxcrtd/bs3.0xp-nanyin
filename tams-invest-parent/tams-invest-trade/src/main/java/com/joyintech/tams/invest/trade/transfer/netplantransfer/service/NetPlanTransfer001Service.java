@@ -796,4 +796,15 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
         }
         return false;
     }
+    
+    /**
+     * 获取处于流程中的持仓（但是未记录在在持仓流水中）
+     * @return 处于流程中的持仓（但是未记录在在持仓流水中）
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal selectWflAmtNet(Map<String,Object> map){
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/LendTransfer/selectWflAmtLend",map,
+        		BigDecimal.class);
+    }
 }
