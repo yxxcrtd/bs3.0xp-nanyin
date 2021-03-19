@@ -72,14 +72,6 @@
             type : 'money',
             sortable : false
         }
-        // 单位分红净值
-        , {
-            field : 'unitCprice',
-            width : "150",
-            title : 'IntDetailDuration.unitCprice',
-            type : 'money', digit: 4,
-            sortable : false
-        }
         // 分红类型
           , {
               field : 'bonusMode',
@@ -185,12 +177,6 @@
                 $('#tradeAmt').val(sumTradeAmt);
                 $('#qty').val(sumQty);
                 var tradeAmt = $('#tradeAmt').val();
-                if (isNotNull(tradeAmt)&&isNotNull(sumRegistShare)) {
-                    var unitCprice = JoyinMath.doDiv(tradeAmt, sumRegistShare, 12, JoyinMath.ROUND_HALF_UP);
-                    $("#unitCprice").val(unitCprice);
-                    $("#unitCprice").trigger("blur");
-                }
-
                 if (!(typeof needInit === "undefined") && needInit) {
                     resetTableData();
                     needInit = false;
@@ -219,6 +205,10 @@
                 return false;
             }
             var tabList  = repoInfoTable.getAllRows();
+            if(isNaN(data.qty)){
+                data.qty = 0;
+                tabList[index].qty = 0;
+            }
             if($("#assetType").val()==FUND_ASSET_TYPE_F02){
                 if(data.isFromCopy =='02'){
                     var msg = JoyinUtil.getMessage("一条列表信息只可被复制/拆分一次");
@@ -712,10 +702,6 @@
                                     }
                                     /*add by xr 加载表格前先计算净值*/
                                     var tradeAmt = $('#tradeAmt').val();
-                                    var unitCprice = JoyinMath.doDiv(tradeAmt, sumRegistShare, 12, JoyinMath.ROUND_HALF_UP);
-                                    $("#unitCprice").val(unitCprice);
-                                    $("#unitCprice").trigger("blur");
-
                                 }
                             });
         } else {
@@ -797,8 +783,6 @@
 //                })
 //            }
 //        }
-        // 单位分红净值
-        var unitCprice = $("#unitCprice").val();
         var tradeAmt = $("#tradeAmt").val();
         var assetType = $("#assetType").val();
         // // 分配处理每一行
@@ -807,23 +791,10 @@
                     && finAssetIntInfos[i].useFlg === 'Y') {
                 continue;
             }
-            if (unitCprice) {
-                finAssetIntInfos[i].unitCprice = unitCprice;
-                // 分红金额
-                var tradeAmt = JoyinMath.doMul(unitCprice,
-                        finAssetIntInfos[i].registShare, 2,
-                        JoyinMath.ROUND_HALF_UP);
-//                finAssetIntInfos[i].tradeAmt = tradeAmt;
-                if (FUND_ASSET_TYPE_F01 == assetType && psType == '02') {
-                    finAssetIntInfos[i].qty = tradeAmt;
-                }
-            }
         }
         if(repoInfoTable.table){
             repoInfoTable.clear(function() {
-                var unitCprice = $("#unitCprice").val();
                 $.each(finAssetIntInfos, function(i, v) {
-                    v.unitCprice = unitCprice;
                     repoInfoTable.addRow(v);
                 });
             });
@@ -990,21 +961,16 @@
 //    	}
         var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01){
-            $(".unitCprice").hide();
             $("#exRightsDate").attr("disabled",true);
             $("#registDate").attr("disabled",true);
-        }else{
-            $(".unitCprice").show();
         }
         initFlag = false;
         if(psType == '01'){
             $("#reInvesDate").val('').prop("disabled", true);
-            $("#unitCprice").attr("disabled",true);
             $("#exRightsDate").attr("disabled",true);
             $("#registDate").attr("disabled",true);
         }else if(psType == '02'){
             $("#arriveDate").val('').prop("disabled", true);
-            $("#unitCprice").attr("disabled",true);
             $("#exRightsDate").attr("disabled",true);
             $("#registDate").attr("disabled",true);
         }
@@ -1054,13 +1020,11 @@
        $('#assetType').change(function() {
            var assetType = $("#assetType").val();
            if(assetType == FUND_ASSET_TYPE_F01){
-               $(".unitCprice").hide();
                $("#exRightsDate").val(sysDate).trigger("change");
                $("#registDate").val(sysDate).trigger("change");
                $("#exRightsDate").attr("disabled",true);
                $("#registDate").attr("disabled",true);
            }else{
-               $(".unitCprice").show();
                if(pageModel==PAGE_MODEL_NEW&&!isFromCheck){
                    $("#exRightsDate").val('').trigger("change");
                    $("#registDate").val('').trigger("change");
@@ -1068,7 +1032,6 @@
                    $("#registDate").attr("disabled",false);
                }
            }
-           triValueChange("unitCprice");
        });
 
 //        // 道交易 新增 强成西 2019/03/26 start
@@ -1082,19 +1045,6 @@
         // 7.分红类型为红利再投时
         // 分红到账日不显示
 //        $('#bonusMode').change(bonusModeChange);
-        // 单位分红净值联动
-        $('#unitCprice').change(function() {
-            var unitCprice = $('#unitCprice').val();
-            if (isNotNull(unitCprice)&&isNotNull(sumRegistShare)) {
-                var tradeAmt = JoyinMath.doMul(sumRegistShare, unitCprice, 2, JoyinMath.ROUND_HALF_UP);
-                $("#tradeAmt").val(tradeAmt);
-//                var assetType = $("#assetType").val();
-//                if(assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
-//                    $("#qty").val(tradeAmt).trigger("blur");
-//                }
-                resetTableData();
-            }
-        });
         // 交易金额联动
 //        $('#tradeAmt').change(function() {
 //            var tradeAmt = $('#tradeAmt').val();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="TrdFundDuration001_ls.xlsx" name="基金存续期交易">
+<Workbook filePath="TrdFundDurationNew001_ls.xlsx" name="基金存续期交易">
     <Worksheet javaBean="com.joyintech.tams.invest.period.trdfunddurationnew.dto.TrdFundDurationNew001Dto">
         <Row>
             <Cell order="1" name="有效状态">statusValidStr</Cell>
@@ -15,10 +15,9 @@
             <Cell order="11" name="分红到账日">arriveDate</Cell>
             <Cell order="12" name="红利再投日">reInvesDate</Cell>
             <Cell order="13" name="权益登记日份额">registShare</Cell>
-            <Cell order="14" name="单位分红净值">unitCprice</Cell>
-            <Cell order="15" name="分红金额">tradeAmt</Cell>
-            <Cell order="16" name="分红份额">qty</Cell>
-            <Cell order="17" name="机构名称">institutionName</Cell>
+            <Cell order="14" name="分红金额">tradeAmt</Cell>
+            <Cell order="15" name="分红份额">qty</Cell>
+            <Cell order="16" name="机构名称">institutionName</Cell>
         </Row>
     </Worksheet>
 </Workbook>

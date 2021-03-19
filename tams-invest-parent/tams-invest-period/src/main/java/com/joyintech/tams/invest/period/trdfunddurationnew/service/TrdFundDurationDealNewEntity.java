@@ -697,8 +697,8 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
             subMap.put("finprodMarketId",entity.getFinprodMarketId());
 //            自定义不累加
             Map<String, BigDecimal> defaultMap = new HashMap<>();
-            defaultMap.put("unitCprice",finAssetIntInfo.getUnitCprice());
-            subMap.put("defaultMap", JsonUtils.object2Json(defaultMap));
+            //defaultMap.put("unitCprice",finAssetIntInfo.getUnitCprice());
+            //subMap.put("defaultMap", JsonUtils.object2Json(defaultMap));
 ////            汇总交易编号
 //            subMap.put("totleTradeId",entity.getTotleTradeId());
             Map<String, BigDecimal> preMap = new HashMap<>();
@@ -904,14 +904,14 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
             trdProductDeal.setTradeDate(entity.getArriveDate());
             trdProductDeal.setShareAmt(finAssetIntInfo.getQty());
             // 单位净值 单位分红净值
-            trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
+            //trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
             trdProductDeal.setbTradeId(entity.getbTradeId());
         }else if (StringUtil.equals(DictCodeList.分红方式_红利再投.getValue(),entity.getPstype())){
             if(StringUtil.equals(entity.getAssetType(),DictCodeList.基金类资产类型_非货币基金.getValue())){
                 trdProductDeal.setPs(DictCodeList.交易方向_红利再投.getValue());
                 trdProductDeal.setPrinAmt(finAssetIntInfo.getTradeAmt());
                 // 单位净值 单位分红净值
-                trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
+                //trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
                 trdProductDeal.setTradeDate(entity.getReInvesDate());
                 //交易份额
                 trdProductDeal.setShareAmt(finAssetIntInfo.getQty());
@@ -936,7 +936,7 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
                 trdProductDeal.setPrinAmt(finAssetIntInfo.getTradeAmt());
                 trdProductDeal.setShareAmt(finAssetIntInfo.getQty());
                 //单位净值 单位分红净值
-                trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
+                //trdProductDeal.setUnitCprice(finAssetIntInfo.getUnitCprice());
                 // 交易金额
                 trdProductDeal.setTradeAmt(finAssetIntInfo.getTradeAmt());
             }

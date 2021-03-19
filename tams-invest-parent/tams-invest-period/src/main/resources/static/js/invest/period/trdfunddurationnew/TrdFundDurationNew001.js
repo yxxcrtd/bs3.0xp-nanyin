@@ -65,7 +65,6 @@ $(function () {
             ,{field:'arriveDate',width:'10%',title:'TrdFundDurationNew001.arriveDate',type:'date'}//到账日
             ,{field:'reInvesDate',width:'10%',title:'TrdFundDurationNew001.reInvesDate',type:'date'}//再投日
             ,{field:'registShare',width:'10%',title:'TrdFundDurationNew001.registShare',type:'money'}//登记份额
-            ,{field:'unitCprice',width:'10%',title:'TrdFundDurationNew001.unitCprice',type:'money',digit: 4}//单位分红净值
             ,{field:'tradeAmt',width:'10%',title:'TrdFundDurationNew001.tradeAmt',type:'money'}//交易金额
             ,{field:'qty',width:'10%',title:'TrdFundDurationNew001.qty',type:'money'}//交易净值
             // 多级法人改造 add by caiqun 20200615
