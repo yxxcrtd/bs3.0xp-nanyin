@@ -362,7 +362,7 @@
 		WHERE  TO_CHAR(CMAP.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}
 		<if test="rating != null  and rating.equals('1')">
 			and info.asset_type2 in  ('1112','1113','1114','1115','1116','1117')
-
+			and ((info.industry　is not null and info.industry!='10') or info.industry is null)
 			and cmap.rating is not null
 			and cmap.rating in(
 			select item_value from sys_datadict_list where dict_code='SVR_MAIN_GRADE' and item_code<![CDATA[<=]]> '04'
