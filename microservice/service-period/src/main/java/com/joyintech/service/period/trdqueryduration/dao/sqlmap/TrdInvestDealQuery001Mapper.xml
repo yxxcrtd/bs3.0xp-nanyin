@@ -18,7 +18,7 @@
 				T4.FINPROD_ABBR finprodAbbr,
 				to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
 				to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
-				T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
+				order2.settle_amt tradeAmt/*实收本息总额*/,
 		        null tradeAmt2,
 				null shareAmt,
 				T1.CCY ccy,
@@ -758,7 +758,7 @@
 				T4.FINPROD_ABBR finprodAbbr,
 				to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
 				to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
-				T1.FPRICE_AMT tradeAmt/*实收本息总额*/,
+				order2.settle_amt tradeAmt/*实收本息总额*/,
 		        null tradeAmt2,
 				null  shareAmt,
 				T1.CCY ccy,
@@ -1487,7 +1487,7 @@
 				T4.FINPROD_ABBR finprodAbbr,
 				to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
 				to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
-				T1.TRADE_AMT tradeAmt/*实收本息总额*/,
+				order2.settle_amt tradeAmt/*实收本息总额*/,
 				null tradeAmt2,
 				null  shareAmt,
 				T1.CCY ccy,
@@ -2228,6 +2228,7 @@
         with orderTemp as(
             select b.portfolio_name portfolio_name,
                    b.portfolio_id portfolio_id,
+                   a.settle_amt,
                 a.trade_id
             from STL_PAY_ORDERS A
             inner join ptl_portfolio  b on a.portfolio_id = b.portfolio_id
