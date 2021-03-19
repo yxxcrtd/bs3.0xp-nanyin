@@ -278,6 +278,9 @@
                             }
                         }*/
                     });
+                if (workflowId && pageModel == '1'){
+                    window.BussTrdTransferOrder['bussTrdTransferOrder'].saveCalcCondition();
+                }
             }
         }
         
