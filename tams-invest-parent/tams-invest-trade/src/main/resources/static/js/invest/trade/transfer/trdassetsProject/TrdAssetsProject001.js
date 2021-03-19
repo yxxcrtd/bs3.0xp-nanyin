@@ -315,12 +315,22 @@
             saveOrSubmit('submit');
         });
     });
-    window.onload =function () {
+    // window.onload =function () {
+    //         $("#bussTrdAvailableCashQuery_div_T1cash").hide();
+    //         $("#bussTrdAvailableCashQuery_avalibleCash").parent().prev().html("组合可用现金");
+    //         if(chlId && chlId != null){
+    //         	$("#bussTrdAvailableCashQuery_div_channelCash").show();
+    //         }
+    //         $("#bussTrdAvailableCashQuery_div_position").hide();
+    // }
+    window.componentLoadCallback = function(isDone, pagePath, params){
+        if(isDone) {
             $("#bussTrdAvailableCashQuery_div_T1cash").hide();
             $("#bussTrdAvailableCashQuery_avalibleCash").parent().prev().html("组合可用现金");
             if(chlId && chlId != null){
-            	$("#bussTrdAvailableCashQuery_div_channelCash").show();
+                $("#bussTrdAvailableCashQuery_div_channelCash").show();
             }
             $("#bussTrdAvailableCashQuery_div_position").hide();
-    }
+        }
+    };
 }());
