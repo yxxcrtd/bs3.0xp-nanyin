@@ -1098,7 +1098,7 @@
                       }
                       ,{field:'doEntrustMoney',  width:100,title: 'TrdOutRightRepoTrade003.doEntrustMoney',edit:true, sortable:false,edit:false,type:'number', digit:2}
                       ,{field:'secManageAcctId', width:100,  title: 'TrdOutRightRepoTrade003.secManageAcctId',edit:true,sortable: false,
-                          editOption:{type:'select',showField:'text',id:'secManageAcctId', parentIds:'portfolioId,TrdOutRightRepoTrade002_tradeMarket,TrdOutRightRepoTrade002_finprodId', multiple: false,searchable: true,
+                          editOption:{type:'select',showField:'text',id:'secManageAcctId', parentIds:'portfolioId,TrdOutRightRepoTrade002_tradeMarket', multiple: false,searchable: true,
                               url: JoyinUtil.getRealPath('/invest/trade/trdrepotrade/TrdRepoTrade002/getSecManageAcctId')
                           }
                         }

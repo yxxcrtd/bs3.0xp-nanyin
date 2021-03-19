@@ -91,20 +91,7 @@
    </select>
 
    <select id="selectAvaPledgeBondDetailListSellRepo" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
-       <if test="portfolioId != null and portfolioId != '' and secAcctId != null and secAcctId != ''">
-           with reg as(
-           SELECT
-           B.REGIST_ORG  org
-           FROM
-           PTL_SEC_ACCT A
-           INNER JOIN STL_SEC_ACCT_INFO B
-           ON  A.ACCT_NO = B.SEC_ACCT_ID
-           where
-           A.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
-           and A.ACCT_NO = #{secAcctId, jdbcType=VARCHAR}
-           )
-       </if>
-       SELECT
+        SELECT
           fp.FINPROD_MARKET_ID bondCode,
           fp.FINPROD_ID finprodId,
           fp.FINPROD_ABBR bondAbbrName,
@@ -346,9 +333,6 @@
               AND mbvi.LAST_PERIOD &lt;= to_number(#{endDays1End})
            </if>
   		   <!-- 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191011 end -->
-           <if test="portfolioId != null and portfolioId != '' and secAcctId != null and secAcctId != ''">
-               AND fp.REGIST_ORG in (select org from reg)
-           </if>
         </where>
        <if test="isWithInvAim">
           ORDER BY
@@ -361,19 +345,6 @@
    </select>
 
    <select id="selectAvaPledgeBondDetailListAntiRepo" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
-        <if test="portfolioId != null and portfolioId != '' and secAcctId != null and secAcctId != ''">
-            with reg as(
-            SELECT
-            B.REGIST_ORG  org
-            FROM
-            PTL_SEC_ACCT A
-            INNER JOIN STL_SEC_ACCT_INFO B
-            ON  A.ACCT_NO = B.SEC_ACCT_ID
-            where
-            A.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
-            and A.ACCT_NO = #{secAcctId, jdbcType=VARCHAR}
-            )    
-        </if>    
         SELECT
            fp.FINPROD_MARKET_ID bondCode,
            fp.FINPROD_ABBR bondAbbrName,
@@ -428,9 +399,6 @@
            </if>
            <if test='tradeMarket!=null and tradeMarket!=""'>
                AND fp.TRADE_MARKET = #{tradeMarket}
-           </if>
-           <if test="portfolioId != null and portfolioId != '' and secAcctId != null and secAcctId != ''">
-               AND fp.REGIST_ORG in (select org from reg) 
            </if>
         </where>
    </select>

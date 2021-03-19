@@ -42,6 +42,9 @@
         if($("#AssetsTransfer001_assetType").val()){
             obj.assetType = $("#AssetsTransfer001_assetType").val().join(",");
         };
+        if($("#AssetsTransfer001_assetId").val()){
+            obj.assetId = $("#AssetsTransfer001_assetId").val().join(",");
+        };
         return obj;
     };
 
