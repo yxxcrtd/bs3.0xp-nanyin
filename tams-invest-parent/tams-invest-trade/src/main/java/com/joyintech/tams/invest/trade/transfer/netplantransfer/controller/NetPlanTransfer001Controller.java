@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
@@ -91,7 +92,17 @@ public class NetPlanTransfer001Controller extends BaseController {
             entity.setChlName(paraMap.get("chlName")==null?null : (String) paraMap.get("chlName"));
             entity.setChlId(paraMap.get("chlId")==null?null : (String) paraMap.get("chlId"));
             entity.setPosAmt(paraMap.get("posAmt")==null?null : new BigDecimal((String)paraMap.get("posAmt")));
-            entity.setUndistributedAmount(paraMap.get("undistributedAmount")==null?null : new BigDecimal((String) paraMap.get("undistributedAmount")));
+            //剩余可转仓数量为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+            paraMap.put("searchDate", DateUtil.getSysDate());
+            BigDecimal wflAmt = netPlanTransfer001Service.selectWflAmtNet(paraMap);
+            if(wflAmt != null) {
+            	BigDecimal undistributedAmount = paraMap.get("undistributedAmount")==null?null : new BigDecimal((String) paraMap.get("undistributedAmount"));
+            	BigDecimal newUndistributedAmount = ArithmeticUtil.doAdd(undistributedAmount,wflAmt);
+            	entity.setUndistributedAmount(newUndistributedAmount);
+            }else {            	
+            	entity.setUndistributedAmount(paraMap.get("undistributedAmount")==null?null : new BigDecimal((String) paraMap.get("undistributedAmount")));
+            }
+            //剩余可转仓数量为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
             paraMap.put("tradeDate",DateUtil.format(DateUtil.platDateFromCache()));
             entity.setUnitValue(netPlanTransfer001Service.getUnitValue(paraMap));
             entity.setPortfolioIdOut(paraMap.get("portfolioId")==null?null : (String) paraMap.get("portfolioId"));
