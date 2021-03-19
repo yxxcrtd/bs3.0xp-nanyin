@@ -35,6 +35,9 @@ public interface CeOrgMapper {
     List<CreditMstInfoDto> getTreeCeOrgQuote(Map<String, Object> param);
     CreditLinesOrgDto queryCeOrgBySeqno(Map<String, Object> param);
     List<CreditLines> queryCeOrgByPflshAndCustomId(@Param(value = "pflsh") String pflsh,@Param(value = "customerId") String customerId);
+
+    List<CreditLines> queryCeOrgByPflshAndCustomIdAndInst(@Param(value = "pflsh") String pflsh,@Param(value = "customerId") String customerId,@Param(value = "INSTITUTION_CODE") String INSTITUTION_CODE);
+
     /**
      * 客户代码联想下拉框
      * @return List<SuggestDto>

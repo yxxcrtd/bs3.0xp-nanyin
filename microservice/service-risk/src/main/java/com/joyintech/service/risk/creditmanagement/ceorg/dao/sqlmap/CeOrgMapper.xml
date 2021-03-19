@@ -56,7 +56,8 @@
         A.VDATE VDATE,
         A.MDATE MDATE,
         A.REMARK,
-        A.CREDIT_CONDITION
+        A.CREDIT_CONDITION,
+		A.INSTITUTION_CODE institutionCode
 
 	 FROM 
 	 	CREDIT_LINES A
@@ -74,6 +75,21 @@
         where PFLSH = #{pflsh,jdbcType=VARCHAR}
         and PARENT_CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
     </select>
+
+	<select id="queryCeOrgByPflshAndCustomIdAndInst" resultType="com.joyintech.tams.common.base.entity.CreditLines"  >
+		SELECT
+		A.SEQNO,
+		A.CREDIT_MST_ID creditMstId,
+		A.CUSTOMER_ID customerId,
+		A.CREDIT_AMT/100000000 creditAmt
+		FROM
+		CREDIT_LINES A
+		where PFLSH = #{pflsh,jdbcType=VARCHAR}
+		and PARENT_CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		<if test="INSTITUTION_CODE != null and INSTITUTION_CODE != ''">
+			and A.INSTITUTION_CODE = #{INSTITUTION_CODE,jdbcType=VARCHAR}
+		</if>
+	</select>
     
     <select id="searchRepeatByVmDate" 	resultType="Integer" >
      select nvl(sum(base99.count),0) from (

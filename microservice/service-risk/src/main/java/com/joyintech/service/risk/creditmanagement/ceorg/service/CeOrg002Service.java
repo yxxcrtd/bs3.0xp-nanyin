@@ -84,8 +84,10 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
      */
     public CreditLinesOrgDto queryCeOrgBySeqno(Map<String, Object> map ) {
     	CreditLinesOrgDto retCre = ceOrgMapper.queryCeOrgBySeqno(map);
-    	List<CreditLines> retMxList=ceOrgMapper.queryCeOrgByPflshAndCustomId(retCre.getPflsh(),retCre.getCustomerId());
-    	retCre.setCreditQuoteItem(retMxList);
+//    	List<CreditLines> retMxList=ceOrgMapper.queryCeOrgByPflshAndCustomId(retCre.getPflsh(),retCre.getCustomerId());
+		List<CreditLines> retMxList=ceOrgMapper.queryCeOrgByPflshAndCustomIdAndInst(retCre.getPflsh(),retCre.getCustomerId(),retCre.getInstitutionCode());
+
+		retCre.setCreditQuoteItem(retMxList);
     	return retCre;
     }
     
