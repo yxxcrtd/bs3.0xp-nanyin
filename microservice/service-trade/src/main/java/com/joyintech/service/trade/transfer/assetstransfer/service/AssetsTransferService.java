@@ -145,6 +145,9 @@ public class AssetsTransferService extends BaseService<AssetsTransferDto> {
         if(StringUtil.isNotEmpty(pageParam.get("assetType"))){
             pageParam.put("assetTypeList",StringUtil.splitToList(GlobalConstant.COMMA,(String) pageParam.get("assetType")));
         }
+        if(StringUtil.isNotEmpty(pageParam.get("assetId"))){
+            pageParam.put("assetIdList",StringUtil.splitToList(GlobalConstant.COMMA,(String) pageParam.get("assetId")));
+        }
         if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
             pageParam.put("portfolioIdList",StringUtil.splitToList(GlobalConstant.COMMA,(String) pageParam.get("portfolioId")));
         }
