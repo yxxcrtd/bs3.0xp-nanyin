@@ -143,7 +143,7 @@
                                         <label class="layui-form-label form-label-wrap">组合代码</label>
                                         <div class="layui-input-inline input-inline">
                                             <select type="text" id="fundAssetTransfer001_portfolioId" name="portfolioId"
-                                                    allowClear="true"
+                                                    allowClear="true" required
                                                     parentids="invTransPortf,fundAssetTransfer001_tradeDate,fundAssetTransfer001_chlId,fundAssetTransfer001_ccy,finprodIdOrg"
                                                     class="layui-input form-input input-select" maxLength="32"
                                                     data-th-data-url="@{/invest/trade/transfer/fund/FundAssetTransfer001/selectPortfolioId}"
@@ -157,7 +157,7 @@
                                         <label class="layui-form-label form-label-wrap">交易份额</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" name="tradePrin" id="fundAssetTransfer001_tradePrin"
-                                                   class="layui-input form-input text-number"
+                                                   class="layui-input form-input text-number" required
                                                    data-th-placeholder="#{SysCommon.placeholder}"
                                                    data-textrange="2" data-th-value='${entity?.tradePrin}'>
                                         </div>

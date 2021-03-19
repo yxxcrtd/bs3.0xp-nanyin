@@ -72,7 +72,7 @@ $(function() {
             // 交易份额
             , {field: 'tradePrin',width: 150,title: '交易份额',type: 'money', digit: 2, sortable: false}
             //单位净值
-            , {field: 'unitCprice',width: 150,title: '单位净值',type: 'money', digit: 2, sortable: false}
+            , {field: 'unitCprice',width: 150,title: '单位净值',type: 'money', digit: 8, sortable: false}
             //待结转份额
             , {field: 'carryOverQty',width: 150,title: '待结转份额',type: 'money', digit: 2, sortable: false}
             //交易金额
@@ -106,6 +106,9 @@ $(function() {
             window.BussTrdAvailableCashQuery["bussTrdAvailableCashQuery"].updateCash(function () {
                 return params
             });
+        }
+        if(!$('#fundAssetTransfer001_portfolioId').val()){
+            $('#bussTrdAvailableCashQuery_avalibleCash').val('').trigger('change');
         }
     };
     //组合代码change事件
@@ -175,6 +178,14 @@ $(function() {
     };
     //添加按钮
     var doAddAction = function(){
+        if(!$('#fundAssetTransfer001_portfolioId').val()){
+            Joyin.error("请输入组合");
+            return;
+        }
+        if(!$('#fundAssetTransfer001_tradePrin').val()){
+            Joyin.error("请输入交易份额");
+            return;
+        }
         var object = $.serializeToObject('#fundAssetTransfer_form', true);
         var flag = false;
         var rows = funAssetTransferDtoListTable.getAllRows();
