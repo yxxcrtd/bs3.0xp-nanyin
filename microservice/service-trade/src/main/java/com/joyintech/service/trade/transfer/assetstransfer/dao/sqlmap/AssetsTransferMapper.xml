@@ -207,7 +207,7 @@
         SELECT PTL_SEC_POSITION.PORTFOLIO_ID                                                              AS portfolioId,
             PTL_PORTFOLIO.PORTFOLIO_NAME                                                               AS portfolioName,
             FIN_PRODUCT_TYPE.TYPE_8                                                                    AS assetType,
-            null  AS finprodMarketId,
+             FIN_TRADE_PRODUCT.FINPROD_ID   AS finprodMarketId,
             case
             when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then STL_SEC_ACCT_INFO.SEC_ACCT_ID
             else null end                                                                          AS secAcctId,
@@ -267,7 +267,7 @@
         SELECT PTL_SEC_POSITION.PORTFOLIO_ID                                  AS portfolioId,
             PTL_PORTFOLIO.PORTFOLIO_NAME                                   AS portfolioName,
             FIN_PRODUCT_TYPE.TYPE_8                                        AS assetType,
-            null                                                           AS finprodMarketId,
+            FIN_TRADE_PRODUCT.FINPROD_ID                             AS finprodMarketId,
             case
             when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then PTL_SEC_POSITION.SEC_ACCT_ID
             else null end                                              AS secAcctId,
