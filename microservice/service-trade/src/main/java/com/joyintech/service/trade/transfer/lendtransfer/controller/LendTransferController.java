@@ -6,6 +6,7 @@ import com.joyintech.service.trade.transfer.lendtransfer.service.LendTransferSer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -46,5 +47,16 @@ public class LendTransferController {
     @PostMapping("getPortfolioId")
     public List<SelectOptionDto> getPortfolioId(@RequestBody Map<String,Object> map){
         return lendTransferService.getPortfolioId(map);
+    }
+    
+    /**
+     * 获取处于流程中的持仓（但是未记录在在持仓流水中）
+     * @return 处于流程中的持仓（但是未记录在在持仓流水中）
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("selectWflAmtLend")
+    public BigDecimal selectWflAmtLend(@RequestBody Map<String,Object> map){
+        return lendTransferService.selectWflAmtLend(map);
     }
 }

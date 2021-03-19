@@ -96,18 +96,14 @@ public class AssetsTransferService extends BaseService<AssetsTransferDto> {
                             StringUtil.equals(assetsTransferDto.getAssetType(), DictCodeList.平安资产类型_拆借.getValue())) {
                     	
                      	//2020-10-14 判断当前持仓与流程中持仓之和，小于等于0则不在待转仓列表显示
-                    	//modify by yujiaping 20210310 ZGBSS-782 拆借转仓交易在流程中，本金金额不应扣减 start
-                    	BigDecimal newPrintAmt = ArithmeticUtil.doAdd(assetsTransferDto.getPrintAmt(), flowAmt, wflAmt);
-                    	if(!StringUtil.equals(assetsTransferDto.getAssetType(), DictCodeList.平安资产类型_拆借.getValue())) {                    			
+                    	//转仓交易在流程中，本金金额不应扣减 start
+                    	BigDecimal newPrintAmt = ArithmeticUtil.doAdd(assetsTransferDto.getPrintAmt(), flowAmt, wflAmt);                                      			
                     	if(BigDecimal.ZERO.compareTo(newPrintAmt) < 0) {    
-                    			assetsTransferDto.setPrintAmt(ArithmeticUtil.doAdd(newPrintAmt));
-                    		}
                     		newRootList.add(assetsTransferDto);
-                    	}else {
-                    		newRootList.add(assetsTransferDto);
+                      		}                   	
                     	}
-                    	//modify by yujiaping 20210310 ZGBSS-782 拆借转仓交易在流程中，本金金额不应扣减 end
-                    } else {
+                        //转仓交易在流程中，本金金额不应扣减 end
+                       else {
                     	//2020-10-14 判断当前持仓与流程中持仓之和，小于等于0则不在待转仓列表显示
                     	BigDecimal newPosAmt = ArithmeticUtil.doAdd(assetsTransferDto.getPosAmt(), flowAmt, wflAmt);
                     	if(BigDecimal.ZERO.compareTo(newPosAmt) < 0) {

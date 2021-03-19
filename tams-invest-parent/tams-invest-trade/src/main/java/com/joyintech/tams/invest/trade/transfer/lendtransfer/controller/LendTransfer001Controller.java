@@ -86,9 +86,29 @@ public class LendTransfer001Controller extends BaseController {
                 String tradeId = (String)paraMap.get("tradeId");
                 entity = lendTransfer001Service.getTradeInfo(tradeId);
                 entity.setTradeDate(DateUtil.platDateFromCache());
-                if(StringUtil.isNotEmpty(paraMap.get("printAmt"))) {
-                    entity.setUndistributedAmount(new BigDecimal((String) paraMap.get("printAmt")));
+                //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+                paraMap.put("portfolioId",entity.getPortfolioIdOut());
+                if(StringUtil.isNotEmpty(entity.getChlId())){
+                	paraMap.put("secAcctId",null);
                 }
+                else {
+                	paraMap.put("secAcctId",entity.getSecAcctId());
+                }
+                paraMap.put("finprodId",entity.getTradeId());
+                paraMap.put("invAim",entity.getInvAim());
+                paraMap.put("ccy",entity.getCcy());
+                paraMap.put("chlId",entity.getChlId());
+                paraMap.put("searchDate", DateUtil.getSysDate());
+                BigDecimal wflAmt = lendTransfer001Service.selectWflAmtLend(paraMap);
+                if(StringUtil.isNotEmpty(paraMap.get("printAmt"))) {
+                	if(wflAmt != null) {
+                		BigDecimal newUndistributedAmount = ArithmeticUtil.doAdd(new BigDecimal((String) paraMap.get("printAmt")),wflAmt);
+                		entity.setUndistributedAmount(newUndistributedAmount);
+                	}else {               		
+                		entity.setUndistributedAmount(new BigDecimal((String) paraMap.get("printAmt")));
+                	}
+                }
+                //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
             }
             model.addAttribute("entity", entity);
         }

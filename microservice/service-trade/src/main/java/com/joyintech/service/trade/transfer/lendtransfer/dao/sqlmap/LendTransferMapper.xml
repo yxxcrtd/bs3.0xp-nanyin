@@ -10,6 +10,12 @@
                tpd.TRADE_DATE             as tradeDate,
                ftp.VDATE                  as vdate,
                ftp.MDATE                  as mdate,
+               CHL.FINPROD_ID        as chlId,
+               case when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' 
+               then PTL_SEC_POSITION.SEC_ACCT_ID
+               else null end as secAcctId,
+               ftp.FINPROD_ID  as finprodId,
+               tpd.INV_AIM  as invAim,
                ftp.CALENDAR_ID            as calendarId,
                tpd.CCY                    as ccy,
                ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2)     as prin,
@@ -31,6 +37,9 @@
                  LEFT JOIN PTL_SEC_POSITION ON PTL_SEC_POSITION.PORTFOLIO_ID = PP.PORTFOLIO_ID  
                  AND PTL_SEC_POSITION.FINPROD_ID = tpd.TRADE_ID
                 AND PTL_SEC_POSITION.CDATE = to_date(#{sysDate},'yyyy-MM-dd')
+                 LEFT JOIN FIN_PRODUCT CHL
+                ON PTL_SEC_POSITION.SEC_ACCT_ID != '999999' AND CHL.FINPROD_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
+                    CHL.IS_CHL = 'Y'
         WHERE PP.INVEST_YESORNO = #{YESORNO_Y}
           AND tpd.TRADE_ID = #{tradeId}
           AND tpd.IS_CANCEL != #{YESORNO_Y}
@@ -61,5 +70,56 @@
                 AND PTL_PORTFOLIO.MDATE &gt; to_date(#{sysDate},'yyyy-MM-dd')
             </if>
         </where>
+    </select>
+    
+    <!-- 处于流程中的持仓（但是未记录在在持仓流水中） -->
+    <select id="selectWflAmtLend" resultType="java.math.BigDecimal">
+     SELECT DISTINCT T.AMT
+     from(
+           SELECT 
+           SUM(NVL(CASE WHEN WFL_TRD_PRODUCT_DEAL.PS = 'T01' THEN 
+           (CASE WHEN FIN_PRODUCT_TYPE.TYPE_8 IN ('F04','F02') THEN WFL_TRD_PRODUCT_DEAL.SHARE_AMT 
+            WHEN FIN_PRODUCT_TYPE.TYPE_8 IN ('F07','F10','F08') THEN WFL_TRD_PRODUCT_DEAL.PRIN_AMT ELSE NULL END) 
+            ELSE -1 * (CASE WHEN FIN_PRODUCT_TYPE.TYPE_8 IN ('F04','F02') 
+          THEN WFL_TRD_PRODUCT_DEAL.SHARE_AMT WHEN FIN_PRODUCT_TYPE.TYPE_8 IN ('F07','F10','F08') 
+          THEN WFL_TRD_PRODUCT_DEAL.PRIN_AMT ELSE NULL END) END, 0)) AMT, 
+          WFL_TRD_PRODUCT_DEAL.FINPROD_ID, 
+          WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID, 
+          WFL_TRD_PRODUCT_DEAL.CHL_ID, 
+           WFL_TRD_PRODUCT_DEAL.SEC_MANAGE_ACCT_ID, 
+           WFL_TRD_PRODUCT_DEAL.CCY, 
+          WFL_TRD_PRODUCT_DEAL.INV_AIM 
+          FROM WFL_TRD_PRODUCT_DEAL 
+           LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD 
+          ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID 
+          LEFT JOIN FIN_PRODUCT_TYPE ON WFL_TRD_PRODUCT_DEAL.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID 
+          <where> 
+          WFL_TRD_PRODUCT_DEAL.TRADE_DATE &lt;= TO_DATE(#{searchDate},'yyyy-MM-dd') 
+          AND FIN_PRODUCT_TYPE.TYPE_8 in ('F04','F02','F08','F07','F10')
+          AND WFL_TRD_PRODUCT_DEAL.IS_OUT_TRADE = 'N' 
+          AND WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID IS NULL 
+          AND WFL_TRD_PRODUCT_DEAL.PS IN ('T01', 'T02')          
+            <if test="portfolioId != null and portfolioId != ''">
+                AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID = #{portfolioId}
+            </if>
+            <if test="secAcctId != null and secAcctId != ''">
+                AND WFL_TRD_PRODUCT_DEAL.SEC_MANAGE_ACCT_ID = #{secAcctId}
+            </if>
+            <if test="finprodId != null and finprodId != ''">
+                AND WFL_TRD_PRODUCT_DEAL.FINPROD_ID = #{finprodId}
+            </if>
+            <if test="invAim != null and invAim != ''">
+                AND nvl(WFL_TRD_PRODUCT_DEAL.INV_AIM,'999999') = #{invAim}
+            </if>
+            <if test="ccy != null and ccy != ''">
+                AND WFL_TRD_PRODUCT_DEAL.CCY = #{ccy}
+            </if>
+            <if test="chlId != null and chlId != ''">
+                AND WFL_TRD_PRODUCT_DEAL.CHL_ID = #{chlId}
+            </if>
+          </where>
+          GROUP BY WFL_TRD_PRODUCT_DEAL.FINPROD_ID, WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID, WFL_TRD_PRODUCT_DEAL.CHL_ID, 
+           WFL_TRD_PRODUCT_DEAL.SEC_MANAGE_ACCT_ID, WFL_TRD_PRODUCT_DEAL.CCY, WFL_TRD_PRODUCT_DEAL.INV_AIM 
+           )T
     </select>
 </mapper>

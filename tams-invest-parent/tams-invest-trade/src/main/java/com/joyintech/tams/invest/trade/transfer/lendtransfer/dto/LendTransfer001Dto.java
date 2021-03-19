@@ -119,6 +119,23 @@ public class LendTransfer001Dto extends BaseEntity implements ProcessEntity {
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
+    
+    /**
+     * 投资目的
+     */
+    private String invAim;
+    /**
+     * 通道代码
+     */
+    private String chlId;
+    /**
+     * 金融产品代码
+     */
+    private String finprodId;
+    /**
+     * 证券托管户代码
+     */
+    private String secAcctId;
 
     /**
      * 获取 实际组合代码
@@ -534,4 +551,36 @@ public class LendTransfer001Dto extends BaseEntity implements ProcessEntity {
     public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
         this.riskTrialRetDto = riskTrialRetDto;
     }
+
+	public String getInvAim() {
+		return invAim;
+	}
+
+	public void setInvAim(String invAim) {
+		this.invAim = invAim;
+	}
+
+	public String getChlId() {
+		return chlId;
+	}
+
+	public void setChlId(String chlId) {
+		this.chlId = chlId;
+	}
+
+	public String getFinprodId() {
+		return finprodId;
+	}
+
+	public void setFinprodId(String finprodId) {
+		this.finprodId = finprodId;
+	}
+
+	public String getSecAcctId() {
+		return secAcctId;
+	}
+
+	public void setSecAcctId(String secAcctId) {
+		this.secAcctId = secAcctId;
+	}
 }

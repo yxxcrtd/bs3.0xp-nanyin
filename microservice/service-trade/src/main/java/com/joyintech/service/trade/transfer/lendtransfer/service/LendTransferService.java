@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,5 +58,15 @@ public class LendTransferService extends BaseService<LendTransferDto> {
         map.put("sysDate", DateUtil.getSysDate());
         map.put("ACCT_TYPE_A01",DictCodeListExt1.资金账户类型_产品托管户.getValue());
         return lendTransferMapper.getPortfolioId(map);
+    }
+    
+    /**
+     * 获取处于流程中的持仓（但是未记录在在持仓流水中）
+     * @return 处于流程中的持仓（但是未记录在在持仓流水中）
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal selectWflAmtLend(Map<String,Object> map){
+        return lendTransferMapper.selectWflAmtLend(map);
     }
 }

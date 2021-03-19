@@ -4,6 +4,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.transfer.lendtransfer.dto.LendTransferDto;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -31,4 +32,12 @@ public interface LendTransferMapper {
      * @since 1.0
      */
     LendTransferDto getTradeInfo(Map<String,Object> map);
+    
+    /**
+     * 获取处于流程中的持仓（但是未记录在在持仓流水中）
+     * @return 处于流程中的持仓（但是未记录在在持仓流水中）
+     * @see
+     * @since 1.0
+     */
+    BigDecimal selectWflAmtLend(Map<String,Object> map);
 }
