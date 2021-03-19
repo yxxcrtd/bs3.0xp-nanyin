@@ -45,13 +45,12 @@
 			OR (T2.FINPROD_ID=#{dto.finprodId,jdbcType=VARCHAR} and T.CREDIT_MST_ID=#{creditmstidXL,jdbcType=VARCHAR})
 			OR (T2.FINPROD_ID=(select P_FINPROD_ID from fin_product where FINPROD_ID =#{dto.finprodId,jdbcType=VARCHAR}) and T.CREDIT_MST_ID=#{creditmstidXL,jdbcType=VARCHAR})
 			)
-<!--
-		   		   OR (T2.FINPROD_ID  = (select finprod_market_id from fin_product where FINPROD_ID =#{dto.finprodId,jdbcType=VARCHAR} and T.CREDIT_MST_ID=#{creditmstidXL,jdbcType=VARCHAR}))
-			AND T.VDATE = (select max(tt.vdate)
+		 <!-- OR (T2.FINPROD_ID  = (select finprod_market_id from fin_product where FINPROD_ID =#{dto.finprodId,jdbcType=VARCHAR} and T.CREDIT_MST_ID=#{creditmstidXL,jdbcType=VARCHAR}))-->
+		AND T.VDATE = (select max(tt.vdate)
                     		   from CREDIT_LINES tt
                    				where t.credit_mst_id = tt.credit_mst_id
                      				and t.customer_id = tt.customer_id
-                     				and #{dto.tradeDate,jdbcType=DATE}>=tt.vdate)-->
+                     				and #{dto.tradeDate,jdbcType=DATE}>=tt.vdate)
                      				)
 			AND #{dto.tradeDate,jdbcType=DATE} >= T.VDATE
 
@@ -156,9 +155,7 @@
 		and t.customer_id = tt.customer_id
 		and #{dto.tradeDate,jdbcType=DATE}>=tt.vdate)
 		AND #{dto.tradeDate,jdbcType=DATE} >=T.VDATE
-		<if test="dto.ps != null and (dto.ps ==ps1 or dto.ps ==ps4 or dto.ps ==ps52) ">
 			AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE}
-		</if>
 		GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CUSTOMER_ID,T.CREDIT_CONDITION,T.INSTITUTION_CODE,T.CREATE_TIME)TTT
 		LEFT JOIN temp1 ON TTT.CUSTOMER_ID=temp1.CUSTOMER_ID and TTT.CREDIT_MST_ID=temp1.CREDIT_MST_ID
 	</select>
@@ -227,9 +224,7 @@
 		and t.customer_id = tt.customer_id
 		and #{dto.tradeDate,jdbcType=DATE}>=tt.vdate)
 		AND #{dto.tradeDate,jdbcType=DATE} >=T.VDATE
-		<if test="dto.ps != null and (dto.ps ==ps1 or dto.ps ==ps4 or dto.ps ==ps52) ">
 			AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE}
-		</if>
 		GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CUSTOMER_ID,T.CREDIT_CONDITION,T.INSTITUTION_CODE,T.CREATE_TIME/*add by songyawei 20200707 bug修改 */ )TTT
 		LEFT JOIN temp1 ON TTT.CUSTOMER_ID=temp1.CUSTOMER_ID and TTT.CREDIT_MST_ID=temp1.CREDIT_MST_ID
 	</select>
@@ -437,9 +432,8 @@
                      					and t.customer_id = tt.customer_id
                      					and #{dto.tradeDate,jdbcType=DATE}>=tt.vdate)
 					AND #{dto.tradeDate,jdbcType=DATE} >=T.VDATE
-					<if test="dto.ps != null and (dto.ps ==ps1 or dto.ps ==ps4 or dto.ps ==ps52) ">
 						AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE}
-					</if>
+
 					GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CUSTOMER_ID,T.CREDIT_CONDITION,T.INSTITUTION_CODE,T.CREATE_TIME)TTT
 					LEFT JOIN temp1 ON TTT.CUSTOMER_ID=temp1.CUSTOMER_ID and TTT.CREDIT_MST_ID=temp1.CREDIT_MST_ID
 	</select>
@@ -500,9 +494,9 @@
                      					and t.customer_id = tt.customer_id
                      					and #{dto.tradeDate,jdbcType=DATE}>=tt.vdate)
 					AND #{dto.tradeDate,jdbcType=DATE} >=T.VDATE
-					<if test="dto.ps != null and (dto.ps ==ps1 or dto.ps ==ps4 or dto.ps ==ps52) ">
-						AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE}
-					</if>
+
+					AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE}
+
 					GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CUSTOMER_ID,T.CREDIT_CONDITION,T.INSTITUTION_CODE,T.CREATE_TIME)TTT
 					LEFT JOIN temp1 ON TTT.CUSTOMER_ID=temp1.CUSTOMER_ID and TTT.CREDIT_MST_ID=temp1.CREDIT_MST_ID
 	</select>
@@ -600,9 +594,7 @@
 		and t.customer_id = tt.customer_id
 		and #{dto.tradeDate,jdbcType=DATE}>=tt.vdate)
 		AND #{dto.tradeDate,jdbcType=DATE} >=T.VDATE
-		<if test="dto.ps != null and (dto.ps ==ps1 or dto.ps ==ps4 or dto.ps ==ps52) ">
 			AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE}
-		</if>
 		GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CUSTOMER_ID, T.TERM
 	</select>
 
