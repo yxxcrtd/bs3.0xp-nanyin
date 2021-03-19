@@ -81,6 +81,12 @@
 
         cols:[
             {field:'tradeId', width:150 , title:"业务编号"}
+            ,{field:'portfolioId', width:150 , title:"组合代码",
+                render : function(data, type, row, meta) {
+                    return '<a onclick="showPtlManagement(\'' + row.portfolioId
+                        + '\')" class="pro-link"  style="cursor: pointer;">'+row.portfolioId+'</a>';
+                }}
+            ,{field:'portfolioName', width:150 , title: '组合名称'}
             ,{field:'assetTypeVal', width:150 , title: '资产类型',sortField:'assetType'}
             ,{field:'finprodMarketId', title: '资产代码/标的资产代码',
                 render : function(data, type, row, meta) {
@@ -90,23 +96,17 @@
                 }
                 ,width:150}
             ,{field:'finprodName', width:150 , title: '资产名称/标的资产简称'}
-            ,{field:'printAmt', width:150 , title: '本金金额',type:'number'}
-            ,{field:'yield', width:150 , title: '利率/收益率（%）',type:'number', digit: 4}
-            ,{field:'days', width:150 , title: '剩余天数',type:'number'}
-            ,{field:'amount', width:150 , title: '券面总额',type:'number'}
-            ,{field:'posAmt', width:150 , title: '持仓数量/持仓份额',type:'number'}
-            ,{field:'portfolioId', width:150 , title:"组合代码",
-                render : function(data, type, row, meta) {
-                    return '<a onclick="showPtlManagement(\'' + row.portfolioId
-                        + '\')" class="pro-link"  style="cursor: pointer;">'+row.portfolioId+'</a>';
-                }}
-            ,{field:'portfolioName', width:150 , title: '组合名称'}
             ,{field:'chlName', width:150 , title: '通道'}
             ,{field:'secAcctName', width:150 , title: '证券账户'}
+            ,{field:'invAimVal', width:150 , title: '投资目的',sortField:'invAim'}
             ,{field:'vdate', width:150 , title: '起息日',type:'date'}
             ,{field:'mdate', width:150 , title: '到期日',type:'date'}
             ,{field:'backLendDirectionVal', width:150 , title: '交易方向',sortField:'backLendDirection'}
-            ,{field:'invAimVal', width:150 , title: '投资目的',sortField:'invAim'}
+            ,{field:'days', width:150 , title: '剩余天数',type:'number'}
+            ,{field:'yield', width:150 , title: '利率/收益率（%）',type:'number', digit: 4}
+            ,{field:'amount', width:150 , title: '券面总额',type:'number'}
+            ,{field:'printAmt', width:150 , title: '本金金额',type:'number'}
+            ,{field:'posAmt', width:150 , title: '持仓数量/持仓份额',type:'number'}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']
                 ,render: function (data, type, row, meta) {
                     return '<i class="btn iconfont edit icon-circle-correct_fill" title="确认"></i>';}
