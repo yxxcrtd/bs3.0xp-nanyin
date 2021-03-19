@@ -674,113 +674,113 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
-	with  rate as(
-	<if test="valconfig != null  and valconfig.equals('01')">
-	select distinct cr.fprod_id as prodid,nvl(cr.prod_yield,cr.prod_benchmark_rate) as prodRate
-	from chb_prd_rate cr
-	where 1=1 and cr.change_type in ('01','03') and (cr.is_lay='N'　or cr.is_lay is null)
-	and (cr.cashmdate is null or cr.cashmdate<![CDATA[>=]]>#{endDate,jdbcType=DATE})
-	and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
-	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-		and fc1.change_type in ('01','03') and (fc1.is_lay='N'　or fc1.is_lay is null)
-		and (fc1.cashmdate is null or fc1.cashmdate<![CDATA[>=]]>#{endDate,jdbcType=DATE})
-		)
-		union all
-		select t.fprodid as  prodid ,
-		case when sum(t.bqty) is not  null and sum(t.bqty)!=0  then sum(t.bqty*t.prodRate)/sum(t.bqty)
-		else 0 end as prodRate
-		from(
-	select distinct cr.prod_id as prodid,cr.fprod_id as fprodid,
-		coalesce(cr.prod_yield,cr.prod_benchmark_rate) as prodRate,nvl(cpp.balance_qty,0) bqty
-	from chb_prd_rate cr
-		left join chb_prd_position cpp
-		on cr.prod_id=cpp.indentify_mark
-		and cpp.cdate=#{endDate,jdbcType=DATE}
-	where 1=1 and cr.change_type in ('01','03') and cr.is_lay='Y'
-		and (cr.cashmdate is null or cr.cashmdate<![CDATA[>=]]>#{endDate,jdbcType=DATE})
-	and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
-	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-		and fc1.change_type in ('01','03') and fc1.is_lay='Y'
-		and (fc1.cashmdate is null or fc1.cashmdate<![CDATA[>=]]>#{endDate,jdbcType=DATE})
-		))t
-		group by t.fprodid
-	</if>
-	<if test="valconfig != null  and valconfig.equals('02')">
-	select distinct cr.fprod_id as prodid,
-    decode (cr.profit_type,'02',cr.prod_yield,'03',cr.seven_day_rate,'01',
-   case when 　base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　
-		and crmin.unit_value is not null and crmin.unit_value !=0 then
-      (crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
-    when base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is  null  then 0
+		with  rate as(
+		<if test="valconfig != null  and valconfig.equals('01')">
+			select distinct cr.fprod_id as prodid,nvl(cr.prod_yield,cr.prod_benchmark_rate) as prodRate
+			from chb_prd_rate cr
+			where 1=1 and cr.change_type in ('01','03') and (cr.is_lay='N'　or cr.is_lay is null)
+			and (cr.cashmdate is null or cr.cashmdate<![CDATA[>=]]>#{endDate,jdbcType=DATE})
+			and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+			and fc1.change_type in ('01','03') and (fc1.is_lay='N'　or fc1.is_lay is null)
+			and (fc1.cashmdate is null or fc1.cashmdate<![CDATA[>=]]>#{endDate,jdbcType=DATE})
+			)
+			union all
+			select t.fprodid as  prodid ,
+			case when sum(t.bqty) is not  null and sum(t.bqty)!=0  then sum(t.bqty*t.prodRate)/sum(t.bqty)
+			else 0 end as prodRate
+			from(
+			select distinct cr.prod_id as prodid,cr.fprod_id as fprodid,
+			coalesce(cr.prod_yield,cr.prod_benchmark_rate) as prodRate,nvl(cpp.balance_qty,0) bqty
+			from chb_prd_rate cr
+			left join chb_prd_position cpp
+			on cr.prod_id=cpp.indentify_mark
+			and cpp.cdate=#{endDate,jdbcType=DATE}
+			where 1=1 and cr.change_type in ('01','03') and cr.is_lay='Y'
+			and (cr.cashmdate is null or cr.cashmdate<![CDATA[>=]]>#{endDate,jdbcType=DATE})
+			and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+			and fc1.change_type in ('01','03') and fc1.is_lay='Y'
+			and (fc1.cashmdate is null or fc1.cashmdate<![CDATA[>=]]>#{endDate,jdbcType=DATE})
+			))t
+			group by t.fprodid
+		</if>
+		<if test="valconfig != null  and valconfig.equals('02')">
+			select distinct cr.fprod_id as prodid,
+			decode (cr.profit_type,'02',cr.prod_yield,'03',cr.seven_day_rate,'01',
+			case when 　base.vdate　<![CDATA[>=]]>#{yearStartDate,jdbcType=DATE}　
+			and crmin.unit_value is not null and crmin.unit_value !=0 then
+			(crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
+			when base.vdate　<![CDATA[>=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is  null  then 0
 
-		when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0
-		then (crmax.unit_value_total-crlastmax.unit_value_total)/crlastmax.unit_value_total/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+			when base.vdate　<![CDATA[<]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0
+			then (crmax.unit_value_total-crlastmax.unit_value_total)/crlastmax.unit_value_total/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
 
 
-		when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null
-      and   crmin.unit_value is not null  and crmin.unit_value !=0 then
-      (crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
+			when base.vdate　<![CDATA[<]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null
+			and   crmin.unit_value is not null  and crmin.unit_value !=0 then
+			(crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
 
-		when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
-    end ) as prodRate
-   from chb_prd_rate cr
-	left join chb_prd_baseinfo base
-    on cr.prod_id=base.prod_id
+			when base.vdate　<![CDATA[<]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
+			end ) as prodRate
+			from chb_prd_rate cr
+			left join chb_prd_baseinfo base
+			on cr.prod_id=base.prod_id
 
-	left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date from chb_prd_rate cr1
-   where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
-	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-		and fc1.change_type in ('01','02')
-		and  (fc1.is_lay='N'　or fc1.is_lay is null)
-		)　and cr1.change_type in ('01','02')
-		and  (cr1.is_lay='N'　or cr1.is_lay is null))crmax
-	on cr.prod_id=crmax.prod_id
+			left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date from chb_prd_rate cr1
+			where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+			and fc1.change_type in ('01','02')
+			and  (fc1.is_lay='N'　or fc1.is_lay is null)
+			)　and cr1.change_type in ('01','02')
+			and  (cr1.is_lay='N'　or cr1.is_lay is null))crmax
+			on cr.prod_id=crmax.prod_id
 
-    left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date   from chb_prd_rate cr1
-   where cr1.change_date=(select min(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
-	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-		and fc1.change_type in ('01','02')
-		and  (fc1.is_lay='N'　or fc1.is_lay is null)
+			left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date   from chb_prd_rate cr1
+			where cr1.change_date=(select min(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+			and fc1.change_type in ('01','02')
+			and  (fc1.is_lay='N'　or fc1.is_lay is null)
 
-		)and cr1.change_type in ('01','02')
-		and  (cr1.is_lay='N'　or cr1.is_lay is null)
-		)crmin
-	on cr.prod_id=crmin.prod_id
+			)and cr1.change_type in ('01','02')
+			and  (cr1.is_lay='N'　or cr1.is_lay is null)
+			)crmin
+			on cr.prod_id=crmin.prod_id
 
-    left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total,cr1.change_date from chb_prd_rate cr1
-   where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
-	and fc1.change_date<![CDATA[<]]>#{yearStartDate,jdbcType=DATE}
-		and fc1.change_type in ('01','02')
-		and  (fc1.is_lay='N'　or fc1.is_lay is null)
+			left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total,cr1.change_date from chb_prd_rate cr1
+			where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
+			and fc1.change_date<![CDATA[<]]>#{yearStartDate,jdbcType=DATE}
+			and fc1.change_type in ('01','02')
+			and  (fc1.is_lay='N'　or fc1.is_lay is null)
 
-		)and cr1.change_type in ('01','02')
-		and  (cr1.is_lay='N'　or cr1.is_lay is null))crlastmax
-	on cr.prod_id=crlastmax.prod_id
+			)and cr1.change_type in ('01','02')
+			and  (cr1.is_lay='N'　or cr1.is_lay is null))crlastmax
+			on cr.prod_id=crlastmax.prod_id
 
-	where 1=1 and cr.change_type in ('01','02')
-	and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
-	and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-		and fc1.change_type in ('01','02')
-		and  (fc1.is_lay='N'　or fc1.is_lay is null)
-		) and  (cr.is_lay='N'　or cr.is_lay is null)
-		union all
-		select t.fprodid as  prodid ,
-		case when sum(t.bqty) is not  null and sum(t.bqty)!=0  then sum(t.bqty*t.prodRate)/sum(t.bqty)
-		else 0 end as prodRate
-		from(
-		select distinct cr.prod_id as prodid,cr.fprod_id as fprodid,
-		coalesce(cr.prod_yield,cr.prod_benchmark_rate) as prodRate,nvl(cpp.balance_qty,0) bqty
-		from chb_prd_rate cr
-		left join chb_prd_position cpp
-		on cr.prod_id=cpp.indentify_mark
-		and cpp.cdate=#{endDate,jdbcType=DATE}
-		where 1=1 and cr.change_type in ('01') and cr.is_lay='Y'
-		and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-		cr.change_type in ('01') and cr.is_lay='Y'
-		))t
-		group by t.fprodid
-	</if>
+			where 1=1 and cr.change_type in ('01','02')
+			and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+			and fc1.change_type in ('01','02')
+			and  (fc1.is_lay='N'　or fc1.is_lay is null)
+			) and  (cr.is_lay='N'　or cr.is_lay is null)
+			union all
+			select t.fprodid as  prodid ,
+			case when sum(t.bqty) is not  null and sum(t.bqty)!=0  then sum(t.bqty*t.prodRate)/sum(t.bqty)
+			else 0 end as prodRate
+			from(
+			select distinct cr.prod_id as prodid,cr.fprod_id as fprodid,
+			coalesce(cr.prod_yield,cr.prod_benchmark_rate) as prodRate,nvl(cpp.balance_qty,0) bqty
+			from chb_prd_rate cr
+			left join chb_prd_position cpp
+			on cr.prod_id=cpp.indentify_mark
+			and cpp.cdate=#{endDate,jdbcType=DATE}
+			where 1=1 and cr.change_type in ('01') and cr.is_lay='Y'
+			and cr.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr.prod_id
+			and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+			and cr.change_type in ('01') and cr.is_lay='Y'
+			))t
+			group by t.fprodid
+		</if>
 
 
 	)
@@ -989,20 +989,20 @@ with cj as(
 		<if test="valconfig != null  and valconfig.equals('02')">
 			select distinct cr.fprod_id as prodid,
 			decode (cr.profit_type,'02',cr.prod_yield,'03',cr.seven_day_rate,'01',
-			case when 　base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　
+			case when 　base.vdate　<![CDATA[>=]]>#{yearStartDate,jdbcType=DATE}　
 			and crmin.unit_value is not null and crmin.unit_value !=0 then
 			(crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
-			when base.vdate　<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is  null  then 0
+			when base.vdate　<![CDATA[>=]]>#{yearStartDate,jdbcType=DATE}　 and crmin.unit_value is  null  then 0
 
-			when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0
+			when base.vdate　<![CDATA[<]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total!=null  and crmin.unit_value_total !=0
 			then (crmax.unit_value_total-crlastmax.unit_value_total)/crlastmax.unit_value_total/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
 
 
-			when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null
+			when base.vdate　<![CDATA[<]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null
 			and   crmin.unit_value is not null  and crmin.unit_value !=0 then
 			(crmax.unit_value-crmin.unit_value)/crmin.unit_value/(#{endDate,jdbcType=DATE}-crmin.change_date+1)*365
 
-			when base.vdate　<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
+			when base.vdate　<![CDATA[<]]>#{yearStartDate,jdbcType=DATE} and crlastmax.unit_value_total is null  and   crmin.unit_value is  null then 0
 			end ) as prodRate
 			from chb_prd_rate cr
 			left join chb_prd_baseinfo base

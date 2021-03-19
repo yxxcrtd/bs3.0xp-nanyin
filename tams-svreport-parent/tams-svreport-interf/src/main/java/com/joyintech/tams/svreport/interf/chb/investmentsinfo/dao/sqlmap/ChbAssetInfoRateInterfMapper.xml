@@ -161,7 +161,8 @@
 	  '08' changType,
 	  fi.cdate as changeDate,
 	  null as assetRate,null as assetBonusReinvestRate,null as closePriceFull,
-	  sum(nvl(fi.dsc_cost_amt,0)) as costAmt,
+	  case when sum(nvl(fi.share_amt,0))!=0 then sum(nvl(fi.dsc_cost_amt,0))/sum(nvl(fi.share_amt,0))
+	  else 0 end as costAmt,
 	  max(nvl(fi.UPDATE_TIME,fi.CREATE_TIME)) updatetime,
 	  null tradeId,
 	  null as status,
