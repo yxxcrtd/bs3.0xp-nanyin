@@ -141,4 +141,9 @@ public class SecTransferController {
     public String selectPortfolioName(@RequestBody String portfolioId){
         return secResoluteService.selectPortfolioName(portfolioId);
     }
+
+    @PostMapping("selectData")
+    public int selectData(@RequestBody Map<String,Object> map){
+        return secResoluteService.selectData(map);
+    }
 }

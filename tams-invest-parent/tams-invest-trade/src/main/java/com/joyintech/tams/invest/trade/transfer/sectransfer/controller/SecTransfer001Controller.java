@@ -359,7 +359,25 @@ public class SecTransfer001Controller extends BaseController {
             return wr;
         }*/
         //查询债券类资产存续期交易 状态为 01-待处理、03-流程中  2020-10-22 end
-        
+        BigDecimal unitCprice = dto.getSecResoluteDtoList().get(0).getUnitCprice();
+        for(SecResoluteDto entity:dto.getSecResoluteDtoList()){
+            //判断页面上，明细里面是否有净价不一致
+            if(entity.getUnitCprice().compareTo(unitCprice)!=0){
+                wr.setData("多笔转仓交易中净价不一致，是否确认提交");
+                return wr;
+            }
+            Map<String,Object> map = new HashMap<>();
+            map.put("portfolioId",dto.getInvestPortfolioId());
+            map.put("finprodId",entity.getFinprodId());
+            map.put("invAim",dto.getInvAim());
+            map.put("tradeDate",dto.getTradeDate());
+            map.put("unitCprice",entity.getUnitCprice());
+            //判断流程中、有效数据中是否有同一个组合、债券、投资目的、交易日的转仓交易，净值不一样的情况
+            if(secTransfer001Service.selectData(map)>0){
+                wr.setData("多笔转仓交易中净价不一致，是否确认提交");
+                return wr;
+            }
+        }
         if(HttpStatus.OK.value() == wr.getStatuCode()) {
         	String btnName = "操作";
         	if (StringUtil.equalsIgnoreCase("save", dto.getOperateType())) {

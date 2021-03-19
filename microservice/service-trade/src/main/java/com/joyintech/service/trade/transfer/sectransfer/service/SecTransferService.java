@@ -254,4 +254,9 @@ public class SecTransferService extends BaseService<SecTransfer001Dto> {
         return secTransferMapper.getLastNetPrice(param);
     }
     // add by xuzhihao end
+
+    public int selectData(Map<String, Object> map) {
+        map.put("tradeDate",new Date((Long)map.get("tradeDate")));
+        return secTransferMapper.selectData(map);
+    }
 }

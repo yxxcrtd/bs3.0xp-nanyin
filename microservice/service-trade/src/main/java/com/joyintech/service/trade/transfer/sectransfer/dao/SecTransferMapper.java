@@ -89,4 +89,6 @@ public interface SecTransferMapper {
     StlPayOrders selectStlPayOrder(@Param("tradeId") String tradeId);
 
     BigDecimal getLastNetPrice(Map<String, Object> param);
+
+    int selectData(Map<String, Object> map);
 }

@@ -815,6 +815,9 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
     	        wflTrdProductDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
                 wflTrdProductDeal.setWorkflowId(entity.getWorkflowId());
 
+                //此业务流程表中暂存卖出的投资目的
+                wflTrdProductDeal.setInvAim(entity.getInvAim());
+
     	        // 金融产品交易信息DTO.金融产品交易附属表Entity -> 金融产品交易附属业务流程表
     	        WflTrdProductDealAdd wflTrdProductDealAdd = new WflTrdProductDealAdd();
     	        BeanUtil.copyPropertiesIgnoreNull(wflTrdProductDealAdd, secResoluteDto.getTrdProductDealAdd());
@@ -2144,5 +2147,9 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             return DictCodeListExt1.平安业务类型_债券类资产行权.getValue();
         }
         return null;
+    }
+
+    public int selectData(Map<String, Object> map) {
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/SecTransfer/selectData", map, int.class);
     }
 }
