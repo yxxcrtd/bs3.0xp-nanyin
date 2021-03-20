@@ -114,11 +114,6 @@ public class DrawBaseInfoSelectComDTO {
     private String isBackValue;
 
     /**
-     * 摊销额小于剩余摊销时是否只摊销到0
-     */
-    private String amorizeRule;
-
-    /**
      * 获取 taskId
      *
      * @return taskId.
@@ -440,13 +435,5 @@ public class DrawBaseInfoSelectComDTO {
      */
     public void setIsBackValue(String isBackValue) {
         this.isBackValue = isBackValue;
-    }
-
-    public String getAmorizeRule() {
-        return amorizeRule;
-    }
-
-    public void setAmorizeRule(String amorizeRule) {
-        this.amorizeRule = amorizeRule;
     }
 }
