@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.batch.secabscalbook.service;
 
+import com.google.common.collect.Lists;
 import com.joyintech.calculation.CalculatorFactory;
 import com.joyintech.calculation.bonds.SecIntSchedule;
 import com.joyintech.calculation.bonds.constant.*;
@@ -980,7 +981,9 @@ public class SecAbsCalBookService {
             }
 //          if(参数.摊销额小于剩余摊销时是否只摊销到0 = Y && ABS(变量.利息调整) >= ABS(变量.溢折价科目余额) )
 //                  变量.利息调整 =变量.溢折价科目余额*-1
-            if(StringUtil.equals(acctEntity.getListDrawBaseInfoSelectComDTO().get(0).getAmorizeRule(),DictCodeList.是否_是.getValue())
+            Map<String, Object>  booksetExt = accountingCommonService.getValBokBooksetExtForMap(acctEntity.getBooksetId(),
+                    Lists.newArrayList(new String[] {ValDictCodeList.账套配置表参数项_摊销额小于0是否只摊到0.getValue()}));
+            if(StringUtil.equals(booksetExt.get(ValDictCodeList.账套配置表参数项_摊销额小于0是否只摊到0.getValue()),DictCodeList.是否_是.getValue())
                     && varLxtz.abs().compareTo(varSpilledPriceAccBal.abs()) >= 0){
                 varLxtz = varSpilledPriceAccBal.negate();
             }

@@ -706,6 +706,12 @@ public enum ValDictCodeList implements BaseDictCodeList {
         ValDictCode.账套配置表参数项, "REDAMOFLAG", "还本是否冲减摊销"
     ),
     /**
+     * 账套配置表参数项_还本是否冲减摊销
+     */
+    账套配置表参数项_摊销额小于0是否只摊到0(
+            ValDictCode.账套配置表参数项, "AMORTIZE_RULE", "摊销额小于剩余摊销时是否只摊销到0', '摊销额小于剩余摊销时是否只摊销到0"
+    ),
+    /**
      * 计税计提基准_发生额
      */
     计税计提基准_发生额(ValDictCode.计税计提基准, "01", "发生额"),
