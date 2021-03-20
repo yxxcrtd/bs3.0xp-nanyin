@@ -170,7 +170,6 @@
 		and sdpm.his_no = (select max (sdpm1.his_no) from SYS_DATA_PROCESS_MARK sdpm1 where sdpm1.WORKFLOW_ID = sdpm.WORKFLOW_ID)
 		and sdpm.BUSINESS_DATA_PK3 = #{pflsh,jdbcType=VARCHAR}
 		<if test="seqno !=null and seqno !=''">
-		
 			AND sdpm.BUSINESS_DATA_PK1 != #{seqno,jdbcType=VARCHAR}
 		</if>
 		<if test="creditMstId != null and creditMstId != '' and seqno != null and seqno != ''">
