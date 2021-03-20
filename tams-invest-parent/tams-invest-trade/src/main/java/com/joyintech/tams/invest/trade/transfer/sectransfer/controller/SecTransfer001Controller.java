@@ -368,7 +368,7 @@ public class SecTransfer001Controller extends BaseController {
             }
             Map<String,Object> map = new HashMap<>();
             map.put("portfolioId",dto.getInvestPortfolioId());
-            map.put("finprodId",entity.getFinprodId());
+            map.put("finprodId",dto.getFinprodId());
             map.put("invAim",dto.getInvAim());
             map.put("tradeDate",dto.getTradeDate());
             map.put("unitCprice",entity.getUnitCprice());
