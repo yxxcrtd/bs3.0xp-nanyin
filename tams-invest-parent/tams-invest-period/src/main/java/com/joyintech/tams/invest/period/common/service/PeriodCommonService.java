@@ -401,7 +401,7 @@ public class PeriodCommonService extends BaseService {
      */
     public void autoDealQtyForSubmit(List<FinAssetIntInfo> infoList, BigDecimal sumRegistShare, BigDecimal qty){
 //        剩余份额
-        BigDecimal surplus =  new BigDecimal(qty.toPlainString());
+        BigDecimal surplus =  ArithmeticUtil.round(new BigDecimal(qty.toPlainString()),2,RoundingMode.HALF_UP);
 //        计算份额
         for(int i = 0; i<infoList.size();i++){
             if(i == (infoList.size()-1)){
@@ -410,9 +410,9 @@ public class PeriodCommonService extends BaseService {
             else{
                 BigDecimal prop = ArithmeticUtil.divide(infoList.get(i).getRegistShare(),sumRegistShare,12);
 //            计算当前需要的份额
-                BigDecimal thisQty = ArithmeticUtil.multiply(prop,qty);
+                BigDecimal thisQty = ArithmeticUtil.round(ArithmeticUtil.multiply(prop,qty),2,RoundingMode.HALF_UP);
                 infoList.get(i).setQty(thisQty);
-                surplus = ArithmeticUtil.divide(surplus,thisQty,2);
+                surplus = ArithmeticUtil.subtract(surplus,thisQty);
             }
         };
     }
@@ -738,7 +738,7 @@ public class PeriodCommonService extends BaseService {
     /**
      * 根据交易编号查询该交易是否已被撤销
      *
-     * @param tradeId 交易编号
+     * @param totleTradeId 交易编号
      * @return 该交易是否已被撤销
      * @see
      * @since 1.0
