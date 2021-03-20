@@ -67,7 +67,14 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
         else {
             param.put("portfolioId", null);
         }
-        return queryForPageForSelectReturn(page, length, () -> channelFeePayMapper.findPage(param));
+        Page<ChannelFeePayDto> data = queryForPageForSelectReturn(page, length, () -> channelFeePayMapper.findPage(param));
+        List<ChannelFeePayDto> list = data.getRoot();
+        for(ChannelFeePayDto dto:data.getRoot()){
+            Map<String,Object> map = new HashMap<>();
+            map.put("finprodMarketId",dto.getFinprodMarketId());
+            if(channelFeePayMapper.getCollectType(map).equals("01")) dto.setMdate(null);
+        }
+        return data;
     }
 
     public Page<SelectOptionDto> findChannelId(int page, int length, Map<String, Object> param) {

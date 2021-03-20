@@ -3,11 +3,12 @@
 <mapper namespace="com.joyintech.service.trade.channel.feepay.dao.ChannelFeePayMapper">
     <select id="findPage" resultType="com.joyintech.tams.invest.common.dto.channel.ChannelFeePayDto">
         select tradeid,finprodid,channelname,feename,mdate,settledate,sum(theoryint)
-        theoryint,effectStatus,sum(tradeamt) tradeamt
+        theoryint,effectStatus,sum(tradeamt) tradeamt,finprodMarketId
         from
         (SELECT
         T1.TOTLE_TRADE_ID tradeId,
         T1.FINPROD_ID finprodId,
+        T4.FINPROD_MARKET_ID finprodMarketId,
         NVL(T4.FINPROD_ABBR, T4.FINPROD_NAME) channelName,
         '${SINGLE_FEE_TYPE_03}' feeName,
         T1.MDATE,
@@ -46,7 +47,7 @@
         </if>
         <!-- and t2.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}) -->
         )
-        group by tradeid,finprodid,channelname,feename,mdate,settledate,effectStatus
+        group by tradeid,finprodid,channelname,feename,mdate,settledate,effectStatus,finprodMarketId
     </select>
 
     <select id="searchTheoryAmt" resultType="com.joyintech.tams.invest.common.dto.channel.ChannelFeePayDto">
