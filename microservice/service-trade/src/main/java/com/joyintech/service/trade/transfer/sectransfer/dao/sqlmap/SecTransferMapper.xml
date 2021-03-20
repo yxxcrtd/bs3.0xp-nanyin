@@ -248,6 +248,8 @@
                    and t2.PORTFOLIO_ID = #{portfolioId}
                    and t1.FINPROD_ID = #{finprodId}
                    and t1.UNIT_CPRICE != #{unitCprice}
+                   AND tpd.TRADE_STATUS = '01'
+                   AND tpd.IS_CANCEL = 'N'
                    and t1.ps='T02'
              )
     </select>
