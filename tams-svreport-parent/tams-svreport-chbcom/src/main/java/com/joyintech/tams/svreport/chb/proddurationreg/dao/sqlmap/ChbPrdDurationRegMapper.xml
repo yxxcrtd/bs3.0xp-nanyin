@@ -8,8 +8,10 @@
 			   TEMP.ORG_CODE        as ORGCODE,
 		       NVL(INFO.FPROD_ID,INFO.PROD_ID)         as PRODID,
 		       TEMP.OPEN_START      as OPENSTART,
-		       TEMP.OPEN_END        as OPENEND1,
 		       TEMP.OPEN_VDATE      as OPENEND,
+                <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+                TEMP.PAY_DATE AS openEnd1,
+                <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		       INFO.PRD_VDATE       as VDATE,
 		       INFO.OPERATE_MODE    as OPERATEMODE,
 		       TEMP.STATUS,
@@ -19,11 +21,22 @@
 		        SELECT DEAL.ORG_CODE,
 		                DEAL.PROD_ID,
     				    DEAL.FPROD_ID,
-		                NVL(OPEN1.OPEN_START,DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)) OPEN_START,
-		                NVL(OPEN1.OPEN_END,DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)) OPEN_END,
+    				    CASE WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15') and OPEN1.PROD_ID is not null
+		                then DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
+		                else 
+		                NVL(OPEN1.OPEN_START,DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)) end as OPEN_START,
+		                CASE WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15') and OPEN1.PROD_ID is not null
+		                then DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
+		                else NVL(OPEN1.OPEN_END,DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)) end as  OPEN_END,
+                        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+                        DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) PAY_DATE,
+                        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		                CASE WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('02', '03', '17')
 		                THEN 
 		               		NVL(OPEN1.OPEN_END, NVL(OPEN1.OPEN_VDATE,DEAL.SETTDATE_DATE))
+		               	WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15') and OPEN1.PROD_ID is not null
+		                THEN 
+		               		DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
 		               	ELSE
 		               		NVL(OPEN1.OPEN_VDATE,DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE))
 		               	END OPEN_VDATE,
@@ -38,7 +51,10 @@
 		           <!-- AND DEAL.ORG_CODE = OPEN1.ORG_CODE -->
 		           AND DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) = OPEN1.OPEN_VDATE
 		           AND OPEN1.STATUS != 'D'
-		           AND OPEN1.PLAN_TYPE = '01'
+					/* modify by dubaojun 2020-05-26 青岛银行信息披露与监管报送 start */
+					/*AND OPEN1.PLAN_TYPE = '01'*/
+					AND OPEN1.PLAN_TYPE = DECODE(DEAL.TRADE_TYPE, '03', '02', '01')
+					/* modify by dubaojun 2020-05-26 青岛银行信息披露与监管报送 end */
 		         WHERE (to_char(DEAL.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 		               to_char(DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE), 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
 		           AND DEAL.TRADE_TYPE != '01'
@@ -56,7 +72,10 @@
     					YIELD.FPROD_ID,
 		                NVL(OPEN1.OPEN_START,YIELD.CHANGE_DATE) OPEN_START,
 		                NVL(OPEN1.OPEN_END,YIELD.CHANGE_DATE) OPEN_END,
-		                NVL(OPEN1.OPEN_VDATE,YIELD.CHANGE_DATE) OPEN_VDATE,
+                        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+                        YIELD.CHANGE_DATE PAY_DATE,
+                        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
+						NVL(OPEN1.OPEN_VDATE,YIELD.CHANGE_DATE) OPEN_VDATE,
 		                case when 
 		                to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') != to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') and YIELD.status='E'
 		                then 'M'
@@ -96,21 +115,28 @@
 		        SELECT FEEINFO.ORG_CODE,
 		                FEEINFO.PROD_ID,
     					FEEINFO.FPROD_ID,
-		                NVL(OPEN1.OPEN_START,FEEINFO.PAY_DATE) OPEN_START,
-		                NVL(OPEN1.OPEN_END,FEEINFO.PAY_DATE) OPEN_END,
-		                NVL(OPEN1.OPEN_VDATE,FEEINFO.PAY_DATE) OPEN_VDATE,
+    					FEEINFO.PAY_DATE OPEN_START,
+    					FEEINFO.PAY_DATE OPEN_END,
+    					<!-- 费用交易无需关联开放计划 -->
+		                <!-- NVL(OPEN1.OPEN_START,FEEINFO.PAY_DATE) OPEN_START,
+		                NVL(OPEN1.OPEN_END,FEEINFO.PAY_DATE) OPEN_END, -->
+                        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+                        FEEINFO.PAY_DATE PAY_DATE,
+                        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
+                        FEEINFO.PAY_DATE OPEN_VDATE,
+		                <!--NVL(OPEN1.OPEN_VDATE,FEEINFO.PAY_DATE) OPEN_VDATE,-->
 		                case when 
 		                to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') != to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') and FEEINFO.status='E'
 		                then 'M'
 		                else FEEINFO.status
 		                end status
 		          FROM CHB_PRD_FEE_DEAL FEEINFO
-		          LEFT JOIN CHB_PRD_OPENSCH OPEN1
+		         <!-- LEFT JOIN CHB_PRD_OPENSCH OPEN1
 		            ON NVL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) = OPEN1.PROD_ID
-		           <!-- AND FEEINFO.ORG_CODE = OPEN1.ORG_CODE -->
+		            AND FEEINFO.ORG_CODE = OPEN1.ORG_CODE 
 		           AND FEEINFO.PAY_DATE  = OPEN1.OPEN_VDATE
 		           AND OPEN1.STATUS != 'D'
-		           AND OPEN1.PLAN_TYPE = '01'
+		           AND OPEN1.PLAN_TYPE = '01'-->
 		         WHERE (to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 		               to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
 		          <!--  AND FEEINFO.STATUS  = 'E' -->
@@ -132,8 +158,10 @@
 		 GROUP BY TEMP.ORG_CODE,
 		          NVL(INFO.FPROD_ID,INFO.PROD_ID),
 		          TEMP.OPEN_START,
-		          TEMP.OPEN_END,
 		          TEMP.OPEN_VDATE,
+                    <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+                    TEMP.PAY_DATE,
+                    <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		          INFO.PRD_VDATE,
 		          INFO.OPERATE_MODE,
 		          TEMP.status,
@@ -148,6 +176,9 @@
 			NVL(INFO.FPROD_ID,INFO.PROD_ID) AS PRODID,
 			TEMP.OPEN_START AS OPENSTART,
 			TEMP.OPEN_END AS OPENEND,
+            <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+            TEMP.PAY_DATE AS openEnd1,
+            <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 			INFO.VDATE AS VDATE,
 			INFO.OPERATE_MODE AS OPERATEMODE,
 			code.REG_CODE REGCODE,
@@ -159,6 +190,9 @@
             DEAL.FPROD_ID,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) AS OPEN_START,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) AS OPEN_END,
+            <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+            DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) PAY_DATE,
+            <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		    case when 
             to_char(DEAL.UPDATE_TIME, 'yyyy-MM-dd') != to_char(DEAL.SETTDATE_DATE, 'yyyy-MM-dd') and DEAL.Status='E'
             then 'M'
@@ -182,6 +216,9 @@
             YIELD.FPROD_ID,
 			YIELD.CHANGE_DATE AS OPEN_START,
 			YIELD.CHANGE_DATE AS OPEN_END,
+            <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+            YIELD.CHANGE_DATE PAY_DATE,
+            <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		    case when 
             to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') != to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') and YIELD.status='E'
             then 'M'
@@ -212,6 +249,9 @@
             FEEINFO.FPROD_ID,
 			FEEINFO.PAY_DATE AS OPEN_START,
 			FEEINFO.PAY_DATE AS OPEN_END,
+            <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+            FEEINFO.PAY_DATE PAY_DATE,
+            <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		    case when 
              to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') != to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') and FEEINFO.status='E'
              then 'M'
@@ -242,6 +282,9 @@
 		NVL(INFO.FPROD_ID,INFO.PROD_ID),
 		TEMP.OPEN_START,
 		TEMP.OPEN_END,
+        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+        TEMP.PAY_DATE,
+        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		INFO.VDATE,
 		INFO.OPERATE_MODE,
 		TEMP.Status,
@@ -304,13 +347,27 @@
 			deal.org_code orgCode,
 			deal.trade_type tradeType,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) payDate,
+			CASE
+			WHEN '02' = '02'
+			AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15')
+			AND OPEN1.OPEN_END IS NOT NULL
+			THEN DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
+			ELSE NVL(OPEN1.OPEN_END, DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,
+			DEAL.SETTDATE_DATE))
+			END AS settdateDate,
 			deal.ccy,
 			sum(nvl(deal.int_amt,0)) intAmt,
 			max(nvl(deal.unit_bonus_amount,0)) unitBonusAmount,
 			sum(nvl(deal.trade_qty,0)) tradeQty,
 			sum(nvl(deal.trade_prince,0)) tradePrince
 		from chb_prd_deal deal
-		
+		/* add by dubaojun 2020-05-26 青岛银行信息披露与监管报送 start */
+		LEFT JOIN CHB_PRD_OPENSCH OPEN1
+		ON NVL(DEAL.FPROD_ID,DEAL.PROD_ID) = OPEN1.PROD_ID
+		AND DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) = OPEN1.OPEN_VDATE
+		AND OPEN1.STATUS != 'D'
+		AND OPEN1.PLAN_TYPE = DECODE(DEAL.TRADE_TYPE, '03', '02', '01')
+		/* add by dubaojun 2020-05-26 青岛银行信息披露与监管报送 end */
 		where deal.status != 'D'
 		AND DEAL.TRADE_TYPE !='01'
 		and (deal.BUY_PLACE not in('210200','330200','350200','370200','440300') or deal.BUY_PLACE is null)
@@ -319,7 +376,8 @@
 			<!-- and deal.org_code = #{prdDealSub.orgCode,jdbcType = VARCHAR} -->
 			and DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
 			<!-- between #{prdDealSub.openStart,jdbcType = DATE} and #{prdDealSub.openEnd,jdbcType = DATE} -->
-			= #{prdDealSub.openEnd,jdbcType = DATE}
+			<!-- = #{prdDealSub.openEnd,jdbcType = DATE}-->
+			between #{prdDealSub.openEnd,jdbcType = DATE} and #{prdDealSub.openEnd1,jdbcType = DATE}
 		</foreach>
 		
 		group by 
@@ -327,7 +385,8 @@
 			deal.org_code,
 			deal.trade_type,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE),
-			deal.ccy
+			deal.ccy,
+			OPEN1.OPEN_END
 	</select>
 	
 	<!-- 查询费用列表 -->

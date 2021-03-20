@@ -223,10 +223,25 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
         if (!StringUtil.isEmptyList(clolist)) {
             list.addAll(clolist);
         }
+        // add by dubaojun 2020-05-27 青岛银行信息披露与监管报送 start
+		// 同一产品代码+业务结束日取业务开始日最小的记录，将集合按照业务开始日从小到大排序
+		list.sort((dto1, dto2) -> {
+			int result = dto1.getProdId().compareTo(dto2.getProdId());
+			if(result == 0) {
+				result = DateUtil.compareDate(dto1.getOpenEnd(), dto2.getOpenEnd());
+			}
+			if(result == 0) {
+				result = DateUtil.compareDate(dto1.getOpenStart(), dto2.getOpenStart());
+			}
+			return result;
+		});
+		// add by dubaojun 2020-05-27 青岛银行信息披露与监管报送 end
         //基础信息变更会有数据状态不同的数据
         Map<String,ChbPrdDurationDeal> realListMap=new HashMap<String,ChbPrdDurationDeal>();
         for(ChbPrdDurationDeal single:list){
-        	String key= single.getProdId()+"-"+single.getOpenStart()+"-"+single.getOpenEnd();
+        	// modify by dubaojun 2020-05-26 青岛银行信息披露与监管报送 start
+        	String key= single.getProdId()/*+"-"+single.getOpenStart()*/+"-"+single.getOpenEnd();
+			// modify by dubaojun 2020-05-26 青岛银行信息披露与监管报送 end
         	if(realListMap.containsKey(key)){
         		ChbPrdDurationDeal valueDeal=realListMap.get(key);
         		if(single.getStatus().equals("M")){
@@ -307,7 +322,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
                 for (ChbPrdDeal chbPrdDeal : dealList) {
                     if (chbPrdDurationDeal.getProdId().equals(chbPrdDeal.getProdId())
                 		&& DateUtil.compareDate(chbPrdDurationDeal.getOpenEnd(),
-                				chbPrdDeal.getPayDate()) == 0
+                				chbPrdDeal.getSettdateDate()) == 0
                         /*&& ChbPrdDurationDeal.getOrgCode().equals(chbPrdDeal.getOrgCode())*/) {
                         dealListTemp.add(chbPrdDeal);
                     }
@@ -476,7 +491,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
                 	if(yieldModel!=null&&yieldModel.getProdValue()!=null)
                 	reaYield = yieldModel.getProdValue();
                 }
-	            result.setReaYield(ArithmeticUtil.multiply(reaYield, new BigDecimal(100)));
+	            result.setReaYield(ArithmeticUtil.multiply(reaYield, new BigDecimal(100)).setScale(5, RoundingMode.HALF_UP));
 	            
 	            // 最新收益率
 	            BigDecimal newExpYield = BigDecimal.ZERO;
@@ -487,7 +502,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
                 	if(yieldModel!=null&&yieldModel.getProdValue()!=null)
                 	  newExpYield = yieldModel.getProdValue();
 	            }
-	            result.setNewExpYield(ArithmeticUtil.multiply(newExpYield, new BigDecimal(100)));
+	            result.setNewExpYield(ArithmeticUtil.multiply(newExpYield, new BigDecimal(100)).setScale(5, RoundingMode.HALF_UP));
 	        }
 	        // 净值型产品
 	        else {
@@ -501,7 +516,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	            // 产品净值
 	            ChbPrdPeriodYield newExpYield = chbPrdDurationRegMapper.getReaYield(model.getProdId(), quotationDate, "02");
 	            if(newExpYield!=null&&newExpYield.getProdValue()!=null){
-	            	result.setPrdValue(newExpYield.getProdValue());
+	            	result.setPrdValue(newExpYield.getProdValue().setScale(5, RoundingMode.HALF_UP));
 	            }else{
 	            	result.setPrdValue(BigDecimal.ONE);
 	            }
@@ -543,16 +558,16 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	            }
                 // 累计单位分红
                 BigDecimal totalUnitBonusAmount = chbPrdDurationRegMapper.getTotalUnitBonusAmount(model.getProdId(),quotationDate);
-                result.setTotalValue(totalUnitBonusAmount);
+                result.setTotalValue(totalUnitBonusAmount.setScale(5, RoundingMode.HALF_UP));
                 
 	            //折算人民币初始净值
 	            result.setCnyOrlValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getOriginalValue(),
-		                model.getOpenEnd(), rateMap));
+		                model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
 				//折算人民币净值
 				result.setCnyPrdValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getPrdValue(),
 						model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
 				// 产品累计净值
-				result.setTotalValue((null == result.getTotalValue()?BigDecimal.ONE:result.getTotalValue()));
+				result.setTotalValue((null == result.getTotalValue()?BigDecimal.ONE:result.getTotalValue()).setScale(5, RoundingMode.HALF_UP));
 				// 累计人民币净值
 				result.setCnyTalValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getTotalValue(),
 						model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
@@ -1078,7 +1093,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 				 intamt = intamt.add(dl.getTradePrince().multiply(null == yield?BigDecimal.ZERO:yield));
 				 totalAmt = totalAmt.add(dl.getTradePrince());
 			 }
-			 avgYield = intamt.divide(totalAmt,4,RoundingMode.HALF_UP);
+			 avgYield = intamt.divide(totalAmt,7,RoundingMode.HALF_UP);
 		 }
 		return avgYield;
 	}
