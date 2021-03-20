@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,8 +61,8 @@ public class ValNetValueConfirm005Contoller extends BaseController {
 	public List<ValNetValueConfirm005Dto> getInfo(@RequestBody Map<String,Object> param){
 		List<ValNetValueConfirm005Dto> list=valNetValueConfirm005Service.getInfo(param);
 
-		list.addAll(valNetValueConfirm005Service.getInfo1(param));
-		list.addAll(valNetValueConfirm005Service.getInfo(param));
+//		list.addAll(valNetValueConfirm005Service.getInfo1(param));
+//		list.addAll(valNetValueConfirm005Service.getInfo(param));
 		return list;
 	}
 }
