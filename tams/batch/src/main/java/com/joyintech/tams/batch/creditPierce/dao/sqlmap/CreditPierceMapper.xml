@@ -10,7 +10,7 @@
 			PTL_SEC_PIERCE_VALUTION.FINPROD_ID                     finprodId,
 			PTL_SEC_PIERCE_VALUTION.CCY                            ccy,
 			PTL_SEC_PIERCE_VALUTION.SHARE_AMT                      shareAmt,
-		    nvl(PTL_SEC_PIERCE_VALUTION.MARKET_VALUE,0)+nvl(PTL_SEC_PIERCE_VALUTION.TDY_INTINCEXP,0)-nvl(T5.dscCostAmt,0)   dscCostAmt,
+		    nvl(weight.RISK_WEIGHT,0) * (nvl(PTL_SEC_PIERCE_VALUTION.MARKET_VALUE,0)+nvl(PTL_SEC_PIERCE_VALUTION.TDY_INTINCEXP,0)-nvl(T5.dscCostAmt,0))  dscCostAmt,
 			PTL_SEC_PIERCE_VALUTION.DSC_CLEAN_PRICE                dscCleanPrice,
 			PTL_SEC_PIERCE_VALUTION.BUY_COST_AMT                   buyCostAmt,
 			PTL_SEC_PIERCE_VALUTION.BUY_CLEAN_PRICE                buyCleanPrice,
@@ -48,6 +48,25 @@
 		   ON T3.FINPROD_MARKET_ID = PTL_SEC_PIERCE_VALUTION.PORTFOLIO_ID
 		LEFT JOIN SYS_DEPARTMENT T4
 		   ON T4.DEPT_CODE = T3.CREATE_DEPT
+		left join (
+		 SELECT
+			 ASSET_TYPE_ONE,
+			 ASSET_TYPE_TWO,
+			 RISK_WEIGHT
+		 FROM
+			 (  SELECT
+					 ASSET_TYPE_ONE,
+					 ASSET_TYPE_TWO,
+					 RISK_WEIGHT,
+					 RANK() OVER(PARTITION BY ASSET_TYPE_ONE,ASSET_TYPE_TWO ORDER BY EFF_DATE DESC ) AS rowno
+				 FROM
+					 RISK_WEIGHT
+				 WHERE
+					 to_date(#{currentDate},'yyyy-MM-dd') &gt;= EFF_DATE )
+		 WHERE
+			 rowno=1 )weight
+		ON weight.ASSET_TYPE_ONE=T2.TYPE_8
+  		AND weight.ASSET_TYPE_TWO=T2.TYPE_6
 		where PTL_SEC_PIERCE_VALUTION.CDATE = to_date(#{currentDate},'yyyy-MM-dd')
 	</select>
 

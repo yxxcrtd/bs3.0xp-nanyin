@@ -876,23 +876,29 @@
 	</select>
 
 	<select id="isKDQ" resultType="java.lang.Integer">
-		select count(1) from CREDIT_LINES
+		select count(1) from CREDIT_LINES CL
 		where 1=1
 		<if test="creditmstid !=null and creditmstid !=''">
-			and CREDIT_MST_ID = #{creditmstid,jdbcType=VARCHAR}
+			and CL.CREDIT_MST_ID = #{creditmstid,jdbcType=VARCHAR}
 		</if>
 		<if test="customerid !=null and customerid !=''">
-			and CUSTOMER_ID = #{customerid,jdbcType=VARCHAR}
+			and CL.CUSTOMER_ID = #{customerid,jdbcType=VARCHAR}
 		</if>
 		<if test="dealdate !=null">
-			and vdate &lt;= #{dealdate, jdbcType=DATE}
+			AND CL.VDATE = (select max(tt.vdate)
+			from CREDIT_LINES tt
+			where CL.credit_mst_id = tt.credit_mst_id
+			and CL.customer_id = tt.customer_id
+			and  #{dealdate, jdbcType=DATE} >= tt.vdate)
 		</if>
 		<if test="dealdate !=null">
-			and mdate &gt;= #{dealdate, jdbcType=DATE}
+			AND  #{dealdate, jdbcType=DATE} >=CL.VDATE
+			and CL.mdate &gt;= #{dealdate, jdbcType=DATE}
 		</if>
         <if test="orgno !=null and orgno !=''">
-            AND INSTITUTION_CODE = #{orgno,jdbcType=VARCHAR}
+            AND CL.INSTITUTION_CODE = #{orgno,jdbcType=VARCHAR}
         </if>
+
 	</select>
 
 	<select id="getCustomerid" resultType="java.lang.String" >
@@ -907,5 +913,42 @@
 			 T1.FINPROD_ID = T2.FINPROD_ID
 		 WHERE
 			 T1.FINPROD_ID = #{dto.finprodId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCeLinesInfoforassetPierce" resultType="com.joyintech.tams.common.base.entity.CreditLines">
+		SELECT T.SEQNO,
+		T.CREDIT_FLAG,
+		T.CREDIT_MST_ID,
+		T.PFLSH,
+		T.CREDIT_AMT creditAmt,
+		T.HAP_CREDIT_AMT hapCreditAmt,
+		MAX(T.VDATE) as vdate,
+		T.CREDIT_CONDITION,
+		T.INSTITUTION_CODE institutionCode,
+		T.CUSTOMER_ID customerId,
+		T.CREATE_TIME createTime
+		FROM CREDIT_LINES T
+		LEFT JOIN CREDIT_ASSETPOOL T1 ON T.CUSTOMER_ID=T1.SEQNO
+		LEFT JOIN CREDIT_ASSETPOOL_DETAIL T2 ON T2.SEQNO=T1.SEQNO
+		WHERE (
+		(
+		(#{finprodId,jdbcType=VARCHAR}=T.CUSTOMER_ID and T.CREDIT_MST_ID=#{creditmstidZC,jdbcType=VARCHAR})
+		OR (T.CUSTOMER_ID = (select P_FINPROD_ID from fin_product where FINPROD_ID =#{finprodId,jdbcType=VARCHAR}) and T.CREDIT_MST_ID=#{creditmstidZC,jdbcType=VARCHAR})
+		OR (T2.FINPROD_ID=SUBSTR(#{finprodId,jdbcType=VARCHAR}, INSTR(#{finprodId,jdbcType=VARCHAR}, '_')+1) and T.CREDIT_MST_ID=#{creditmstidXL,jdbcType=VARCHAR})
+		OR (T2.FINPROD_ID=SUBSTR((select P_FINPROD_ID from fin_product where FINPROD_ID =#{finprodId,jdbcType=VARCHAR}), INSTR((select P_FINPROD_ID from fin_product where FINPROD_ID =#{finprodId,jdbcType=VARCHAR}), '_')+1) and T.CREDIT_MST_ID=#{creditmstidXL,jdbcType=VARCHAR})
+		OR (T2.FINPROD_ID=#{finprodId,jdbcType=VARCHAR} and T.CREDIT_MST_ID=#{creditmstidXL,jdbcType=VARCHAR})
+		OR (T2.FINPROD_ID=(select P_FINPROD_ID from fin_product where FINPROD_ID =#{finprodId,jdbcType=VARCHAR}) and T.CREDIT_MST_ID=#{creditmstidXL,jdbcType=VARCHAR})
+		)
+		<!-- OR (T2.FINPROD_ID  = (select finprod_market_id from fin_product where FINPROD_ID =#{finprodId,jdbcType=VARCHAR} and T.CREDIT_MST_ID=#{creditmstidXL,jdbcType=VARCHAR}))-->
+		AND T.VDATE = (select max(tt.vdate)
+		from CREDIT_LINES tt
+		where t.credit_mst_id = tt.credit_mst_id
+		and t.customer_id = tt.customer_id
+		and #{tradeDate,jdbcType=DATE}>=tt.vdate)
+		)
+		AND #{tradeDate,jdbcType=DATE} >= T.VDATE
+
+		AND T.MDATE >=#{tradeDate,jdbcType=DATE}
+		GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CREDIT_CONDITION,T.INSTITUTION_CODE,T.CUSTOMER_ID,T.CREATE_TIME
 	</select>
 </mapper>

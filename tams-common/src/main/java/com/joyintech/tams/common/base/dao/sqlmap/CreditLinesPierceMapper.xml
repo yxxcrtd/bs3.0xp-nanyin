@@ -8,6 +8,7 @@
         <result column="PLAN_ASSET_ID" property="planAssetId" jdbcType="VARCHAR" />
         <result column="CCY" property="ccy" jdbcType="VARCHAR" />
         <result column="CREDIT_AMT" property="creditAmt" jdbcType="DECIMAL" />
+        <result column="CREDIT_FLAG" property="creditFlag" jdbcType="VARCHAR" />
         <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
         <result column="CREDIT_MST_ID" property="creditMstId" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -18,7 +19,7 @@
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, CUSTOMER_ID CUSTOMER_ID, CDATE CDATE, PLAN_ASSET_ID PLAN_ASSET_ID, CCY CCY, CREDIT_AMT CREDIT_AMT,
-        INSTITUTION_CODE INSTITUTION_CODE,CREDIT_MST_ID CREDIT_MST_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        INSTITUTION_CODE INSTITUTION_CODE,CREDIT_FLAG CREDIT_FLAG,CREDIT_MST_ID CREDIT_MST_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
         CREATE_TIME CREATE_TIME,UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
     </sql>
     <sql id="Sql_All_Data" >
@@ -45,12 +46,12 @@
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.CreditLinesPierce" >
         insert into CREDIT_LINES_PIERCE (SEQNO, CUSTOMER_ID, CDATE, PLAN_ASSET_ID, CCY, CREDIT_AMT,
-                 INSTITUTION_CODE,CREDIT_MST_ID,CREATE_USER, CREATE_DEPT,
+                 INSTITUTION_CODE,CREDIT_MST_ID,CREATE_USER, CREATE_DEPT,CREDIT_FLAG,
                  CREATE_TIME, UPDATE_USER, UPDATE_TIME)
         values (#{seqno,jdbcType=VARCHAR},  #{customerId,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE},
             #{planAssetId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{creditAmt,jdbcType=DECIMAL},
             #{institutionCode,jdbcType=VARCHAR}, #{creditMstId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
-            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR},#{creditFlag,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
             #{updateTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditLinesPierce" >
@@ -70,6 +71,9 @@
             </if>
             <if test="ccy != null" >
                 CCY,
+            </if>
+            <if test="creditFlag != null" >
+                CREDIT_FLAG,
             </if>
             <if test="creditAmt != null" >
                 CREDIT_AMT,
@@ -112,6 +116,9 @@
             <if test="ccy != null" >
                 #{ccy,jdbcType=VARCHAR},
             </if>
+            <if test="creditFlag != null" >
+                #{creditFlag,jdbcType=VARCHAR},
+            </if>
             <if test="creditAmt != null" >
                 #{creditAmt,jdbcType=DECIMAL},
             </if>
@@ -139,9 +146,9 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CreditLinesPierce" >
-        insert into CREDIT_LINES_PIERCE(SEQNO, CUSTOMER_ID, CDATE, PLAN_ASSET_ID, CCY, CREDIT_AMT,
+        insert into CREDIT_LINES_PIERCE(SEQNO, CUSTOMER_ID, CDATE, PLAN_ASSET_ID, CCY, CREDIT_AMT,CREDIT_FLAG,
             INSTITUTION_CODE, CREDIT_MST_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-        select SEQNO, CUSTOMER_ID, CDATE, PLAN_ASSET_ID, CCY, CREDIT_AMT,
+        select SEQNO, CUSTOMER_ID, CDATE, PLAN_ASSET_ID, CCY, CREDIT_AMT,CREDIT_FLAG,
              INSTITUTION_CODE,CREDIT_MST_ID,CREATE_USER, CREATE_DEPT, CREATE_TIME,
             #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
              from CREDIT_LINES_PIERCE
@@ -155,6 +162,9 @@
             </if>
             <if test="creditAmt != null" >
                 CREDIT_AMT = #{creditAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="creditFlag != null" >
+                CREDIT_FLAG = #{creditFlag,jdbcType=VARCHAR},
             </if>
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
@@ -170,6 +180,7 @@
         update CREDIT_LINES_PIERCE
         set CCY = #{CCY,jdbcType=VARCHAR},
             CREDIT_AMT = #{creditAmt,jdbcType=DECIMAL},
+            CREDIT_FLAG = #{creditFlag,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
         where SEQNO = #{seqno,jdbcType=VARCHAR}

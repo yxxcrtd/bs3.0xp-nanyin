@@ -108,6 +108,7 @@ public class CreditPierceService {
                                     &&ptl.getAssetType().equals(DictCodeList.平安资产类型_债券.getValue())){
                                 if (creditQuoteTypeCodeList.contains(ptl.getVarietyType1())){
                                     CreditLinesPierce dto = new CreditLinesPierce();
+                                    dto.setCreditFlag("Y");
                                     dto.setSeqno(IDGenerator.generate());
                                     dto.setCustomerId(finprodId);
                                     dto.setCdate(currentDate);
@@ -120,6 +121,7 @@ public class CreditPierceService {
                                 }
                             }else{
                                 CreditLinesPierce dto = new CreditLinesPierce();
+                                dto.setCreditFlag("Y");
                                 dto.setSeqno(IDGenerator.generate());
                                 dto.setCustomerId(finprodId);
                                 dto.setCdate(currentDate);
@@ -146,7 +148,7 @@ public class CreditPierceService {
                     }
                 }
             }
-            // 机构授信0001
+            // 机构授信
             Map<String,List<PtlSecPierceValDto>> ptlSecPierceValutioOrgListMap = ptlSecPierceValutioList.stream()
                     .collect(JoyinCollectors.groupingBy(PtlSecPierceValDto::getOrganId));
             if (StringUtil.isNotEmpty(ptlSecPierceValutioOrgListMap)){
@@ -166,9 +168,16 @@ public class CreditPierceService {
                                 getAssetTypeFirstLevel(entity.getAssetType()) + ":" + entity.getVarietyType1()))) {
                             Map <String, CreditLinesPierce> insAmtMap = new HashMap<String, CreditLinesPierce>();
                             for (PtlSecPierceValDto ptl : ptlSecPierceValutioVariety1ListMap.get(varietyType1)) {
+                                String flag;
+                                if(StringUtil.isNotEmpty(ptl.getFinprodId())){
+                                    flag = ceLinesUpdate.getCreditFlag(ptl.getFinprodId(),currentDate);
+                                }else{
+                                    flag = "Y";
+                                }
                                 if(insAmtMap.get(ptl.getInstitutionCode()) == null){
                                     CreditLinesPierce dtoOne = new CreditLinesPierce();
                                     dtoOne.setSeqno(IDGenerator.generate());
+                                    dtoOne.setCreditFlag(StringUtil.equals(dtoOne.getCreditFlag(), "Y") ? "Y" : flag);
                                     dtoOne.setCustomerId(organId);
                                     dtoOne.setCdate(currentDate);
                                     dtoOne.setCcy(ptlSecPierceValutioVariety1ListMap.get(varietyType1).get(0).getCcy());
@@ -179,11 +188,13 @@ public class CreditPierceService {
                                     insAmtMap.put(ptl.getInstitutionCode(),dtoOne);
                                 }else{
                                     insAmtMap.get(ptl.getInstitutionCode()).setCreditAmt(ArithmeticUtil.doAdd(insAmtMap.get(ptl.getInstitutionCode()).getCreditAmt(),ptl.getDscCostAmt()));
+                                    insAmtMap.get(ptl.getInstitutionCode()).setCreditFlag(StringUtil.equals(insAmtMap.get(ptl.getInstitutionCode()).getCreditFlag(), "Y") ? "Y" : flag);
                                 }
                             }
                             for(String institutionCode : insAmtMap.keySet()){
                                 if(insAmtMapOrg.get(institutionCode) == null){
                                     CreditLinesPierce dto = new CreditLinesPierce();
+                                    dto.setCreditFlag(StringUtil.equals(dto.getCreditFlag(), "Y") ? "Y" : insAmtMap.get(institutionCode).getCreditFlag());
                                     dto.setSeqno(IDGenerator.generate());
                                     dto.setCustomerId(organId);
                                     dto.setCdate(currentDate);
@@ -194,6 +205,8 @@ public class CreditPierceService {
                                     insAmtMapOrg.put(institutionCode, dto);
                                 }else{
                                     insAmtMapOrg.get(institutionCode).setCreditAmt(ArithmeticUtil.doAdd(insAmtMap.get(institutionCode).getCreditAmt(), insAmtMapOrg.get(institutionCode).getCreditAmt()));
+
+                                    insAmtMapOrg.get(institutionCode).setCreditFlag(StringUtil.equals(insAmtMapOrg.get(institutionCode).getCreditFlag(), "Y") ? "Y" : insAmtMap.get(institutionCode).getCreditFlag());
                                 }
                                 result.add(insAmtMap.get(institutionCode));
                             }
@@ -201,34 +214,36 @@ public class CreditPierceService {
                     }
                     for(String institutionCode : insAmtMapOrg.keySet()){
                         result.add(insAmtMapOrg.get(institutionCode));
-                        if(ceLinesUpdate.isKDQ(insAmtMapOrg.get(institutionCode).getCreditMstId(), insAmtMapOrg.get(institutionCode).getCustomerId(), insAmtMapOrg.get(institutionCode).getCdate(), institutionCode)<=0){
-                            CreditLines creditLines = new CreditLines();
-                            String seqNo = "";
-                            if (baseGetBusinessId != null) {
-                                BussinessCodeParameter codeParameter = new BussinessCodeParameter();
-                                codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_机构授信);
-                                seqNo = baseGetBusinessId.buildBussinessCode(codeParameter);
+                        if (StringUtil.equals(insAmtMapOrg.get(institutionCode).getCreditFlag(),"Y")){
+                            if(ceLinesUpdate.isKDQ(insAmtMapOrg.get(institutionCode).getCreditMstId(), insAmtMapOrg.get(institutionCode).getCustomerId(), insAmtMapOrg.get(institutionCode).getCdate(), institutionCode)<=0){
+                                CreditLines creditLines = new CreditLines();
+                                String seqNo = "";
+                                if (baseGetBusinessId != null) {
+                                    BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+                                    codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_机构授信);
+                                    seqNo = baseGetBusinessId.buildBussinessCode(codeParameter);
+                                }
+                                else {
+                                    seqNo= IDGenerator.generate();
+                                }
+                                creditLines.setSeqno(seqNo);
+                                creditLines.setCreditAmt(BigDecimal.ZERO);
+                                creditLines.setCreditMstId("0001");
+                                String customerId = insAmtMapOrg.get(institutionCode).getCustomerId();
+                                creditLines.setCustomerId(customerId);
+                                creditLines.setCreditFlag("Y");
+                                creditLines.setVdate(insAmtMapOrg.get(institutionCode).getCdate());
+                                creditLines.setMdate(DateUtil.parse("2099-12-31"));
+                                creditLines.setPflsh("空档期授信"+IDGenerator.generate().substring(0, 30));
+                                creditLines.setCreateDept(insAmtMapOrg.get(institutionCode).getCreateDept());
+                                creditLines.setCreateTime(insAmtMapOrg.get(institutionCode).getCreateTime());
+                                creditLines.setCreateUser(insAmtMapOrg.get(institutionCode).getCreateUser());
+                                creditLines.setUpdateTime(insAmtMapOrg.get(institutionCode).getUpdateTime());
+                                creditLines.setUpdateUser(insAmtMapOrg.get(institutionCode).getUpdateUser());
+                                creditLines.setInstitutionCode(insAmtMapOrg.get(institutionCode).getInstitutionCode());
+                                creditLines.setHapCreditAmt(ceLinesUpdate.extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(),insAmtMapOrg.get(institutionCode).getInstitutionCode()));
+                                creditMapper.insert(creditLines);
                             }
-                            else {
-                                seqNo= IDGenerator.generate();
-                            }
-                            creditLines.setSeqno(seqNo);
-                            creditLines.setCreditAmt(BigDecimal.ZERO);
-                            creditLines.setCreditMstId("0001");
-                            String customerId = insAmtMapOrg.get(institutionCode).getCustomerId();
-                            creditLines.setCustomerId(customerId);
-                            creditLines.setCreditFlag("Y");
-                            creditLines.setVdate(insAmtMapOrg.get(institutionCode).getCdate());
-                            creditLines.setMdate(DateUtil.parse("2099-12-31"));
-                            creditLines.setPflsh("空档期授信"+IDGenerator.generate().substring(0, 30));
-                            creditLines.setCreateDept(insAmtMapOrg.get(institutionCode).getCreateDept());
-                            creditLines.setCreateTime(insAmtMapOrg.get(institutionCode).getCreateTime());
-                            creditLines.setCreateUser(insAmtMapOrg.get(institutionCode).getCreateUser());
-                            creditLines.setUpdateTime(insAmtMapOrg.get(institutionCode).getUpdateTime());
-                            creditLines.setUpdateUser(insAmtMapOrg.get(institutionCode).getUpdateUser());
-                            creditLines.setInstitutionCode(insAmtMapOrg.get(institutionCode).getInstitutionCode());
-                            creditLines.setHapCreditAmt(ceLinesUpdate.extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(),insAmtMapOrg.get(institutionCode).getInstitutionCode()));
-                            creditMapper.insert(creditLines);
                         }
                     }
                     Map<String,List<PtlSecPierceValDto>> ptlSecPierceValutioVariety2ListMap =
@@ -243,8 +258,15 @@ public class CreditPierceService {
 
                             Map <String, CreditLinesPierce> insAmtMap = new HashMap<String, CreditLinesPierce>();
                             for (PtlSecPierceValDto ptl : ptlSecPierceValutioVariety2ListMap.get(varietyType2)) {
+                                String flag;
+                                if(StringUtil.isNotEmpty(ptl.getFinprodId())){
+                                    flag = ceLinesUpdate.getCreditFlag(ptl.getFinprodId(),currentDate);
+                                }else{
+                                    flag = "Y";
+                                }
                                 if(insAmtMap.get(ptl.getInstitutionCode()) == null){
                                     CreditLinesPierce dtoTwo = new CreditLinesPierce();
+                                    dtoTwo.setCreditFlag(StringUtil.equals(dtoTwo.getCreditFlag(), "Y") ? "Y" : flag);
                                     dtoTwo.setSeqno(IDGenerator.generate());
                                     dtoTwo.setCustomerId(organId);
                                     dtoTwo.setCdate(currentDate);
@@ -257,6 +279,7 @@ public class CreditPierceService {
                                     insAmtMap.put(ptl.getInstitutionCode(),dtoTwo);
                                 }else{
                                     insAmtMap.get(ptl.getInstitutionCode()).setCreditAmt(ArithmeticUtil.doAdd(insAmtMap.get(ptl.getInstitutionCode()).getCreditAmt(),ptl.getDscCostAmt()));
+                                    insAmtMap.get(ptl.getInstitutionCode()).setCreditFlag(StringUtil.equals(insAmtMap.get(ptl.getInstitutionCode()).getCreditFlag(), "Y") ? "Y" : flag);
                                 }
                             }
                             for(String institutionCode : insAmtMap.keySet()){
@@ -278,6 +301,7 @@ public class CreditPierceService {
                     for(PtlSecPierceValDto ptl : ptlSecPierceValutiZgjhListMap.get(zgplanId)){
                         if(insAmtMap.get(ptl.getInstitutionCode()) == null){
                             CreditLinesPierce dto = new CreditLinesPierce();
+                            dto.setCreditFlag("Y");
                             dto.setCustomerId(zgplanId);
                             dto.setCdate(currentDate);
                             dto.setCreditMstId("0002");

@@ -1075,11 +1075,33 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
 
     /**
      * 判断是否是空档期
-     * @param seqno
-     * @param tradeId
      * @return
      */
     public int isKDQ(String creditmstid, String customerid, Date dealdate, String orgno) {
         return creditLinesMapper.isKDQ(creditmstid, customerid, dealdate, orgno);
+    }
+
+    /**
+     * 查询改资产是否需要占用机构授信
+     * @return
+     */
+    public String getCreditFlag(String finprodId, Date tradedate) {
+        String flag = "N";
+        Map<String,Object> mapParm = new HashMap<>();
+        mapParm.put("creditmstidZC", BussinessDictCodeList.授信配置代码_资产授信.getValue());
+        mapParm.put("creditmstidXL", BussinessDictCodeList.授信配置代码_系列授信.getValue());
+        mapParm.put("finprodId",finprodId);
+        mapParm.put("tradedate",tradedate);
+        List<CreditLines> creditLinesList = filterNewCreditLines(creditLinesMapper.getCeLinesInfoforassetPierce(mapParm));
+        if(!StringUtil.isEmptyList(creditLinesList)){
+            for(CreditLines creditLines : creditLinesList){
+                if(StringUtil.isEmpty(creditLines.getCreditFlag()) || "Y".equals(creditLines.getCreditFlag())){
+                    flag = "Y";
+                }
+            }
+        }else{
+            flag = "Y";
+        }
+        return flag;
     }
 }

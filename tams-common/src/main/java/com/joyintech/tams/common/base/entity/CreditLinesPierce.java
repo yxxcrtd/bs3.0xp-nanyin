@@ -28,6 +28,20 @@ public class CreditLinesPierce extends CreditLinesPierceKey {
      */
     private String institutionCode;
 
+    private RiskWeight riskWeight;
+    /**
+     * 是否占用主体授信
+     */
+    private String creditFlag;
+
+    public String getCreditFlag() {
+        return creditFlag;
+    }
+
+    public void setCreditFlag(String creditFlag) {
+        this.creditFlag = creditFlag;
+    }
+
     /**
      * 授信配置代码
      */

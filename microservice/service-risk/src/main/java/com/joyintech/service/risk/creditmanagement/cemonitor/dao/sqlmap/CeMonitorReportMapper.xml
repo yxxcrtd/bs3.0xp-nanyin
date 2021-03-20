@@ -33,6 +33,7 @@
 					SELECT c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
 					FROM CREDIT_LINES_PIERCE c
 					where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
+					and c.CREDIT_FLAG != 'N'
 					group by c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE
 				) E
 				on A.CUSTOMER_ID= E.CUSTOMER_ID
@@ -184,6 +185,7 @@
 			SELECT c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE ,sum(c.CREDIT_AMT) as TRADE_AMT
 			FROM CREDIT_LINES_PIERCE c
 			where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
+			and c.CREDIT_FLAG != 'N'
 			group by c.CUSTOMER_ID,c.CREDIT_MST_ID,c.INSTITUTION_CODE ,c.CDATE
 		) E
 		on A.CUSTOMER_ID= E.CUSTOMER_ID
@@ -236,6 +238,7 @@
 		 on c.CUSTOMER_ID =d.FINPROD_ID
 		 and CREDIT_MST_ID = '0002'
 		 where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
+		 and c.CREDIT_FLAG != 'N'
 		 group by d.seqno,c.INSTITUTION_CODE ,c.CDATE
 		 ) E
 		 on A.CUSTOMER_ID= E.seqno
@@ -271,6 +274,7 @@
 		 on c.CUSTOMER_ID =d.FINPROD_ID
 		 and CREDIT_MST_ID = '0002'
 		 where c.CDATE = (SELECT MAX (CDATE) FROM CREDIT_LINES_PIERCE where CDATE &lt;= to_date(#{sysDate},'yyyy-MM-dd'))
+		 and c.CREDIT_FLAG != 'N'
 		 group by d.FINPROD_ID,c.INSTITUTION_CODE ,c.CDATE
 		 ) E
 		 on A.FINPROD_ID = E.FINPROD_ID
