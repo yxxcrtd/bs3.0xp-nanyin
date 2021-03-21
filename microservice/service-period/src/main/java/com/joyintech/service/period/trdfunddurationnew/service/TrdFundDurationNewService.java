@@ -265,22 +265,23 @@ public class TrdFundDurationNewService extends BaseService<TrdFundDurationNewDto
     public String doComplete(TrdFundDurationNewDto durationDto) {
         String updateUser = durationDto.getUpdateUser();
         Date updateTime = new Date();
-        investPeriodCommonService.doInsertAndDelete(durationDto.getBaseTotalTradeInfoDto(), updateUser, updateTime,
-                durationDto.getWorkflowId());
         if (BussinessConstant.REVOKE.equals(durationDto.getOperateType())) {
             TrdFinProductDealTotal trdFinProductDealTotal = investPeriodCommonService.revoke汇总和交易相关表(durationDto.getpTradeId(),
                     updateUser, durationDto.getRevokeReason(), null, null);
             // 删除其他表
-//            investPeriodCommonService.deleteByWorkflowId(durationDto.getWorkflowId());
-//            if ((StringUtil.equals(durationDto.getType(), "02") || StringUtil.equals(durationDto.getType(), "05"))
-//                    && StringUtil.equals(durationDto.getBonusMode(), DictCodeList.分红方式_现金分红.getValue())) {
-//                investPeriodCommonService.revoke后续交易相关表(durationDto.getpTradeId(), updateUser, durationDto.getRevokeReason(), null, null);
-//            } else if (StringUtil.equals(durationDto.getType(), "03") || StringUtil.equals(durationDto.getType(), "06")) {
-//                investPeriodCommonService.revoke汇总和交易相关表(durationDto.getbTradeId(), updateUser, durationDto.getRevokeReason(),
-//                        null, null);
-//            }
+            investPeriodCommonService.deleteByWorkflowId(durationDto.getWorkflowId());
+            if (StringUtil.isEmpty(durationDto.getPstype())
+                    && StringUtil.equals(durationDto.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList().get(0).getTrdProductDealAdd().getPayType(), DictCodeList.分红方式_现金分红.getValue())) {
+                investPeriodCommonService.revoke后续交易相关表(durationDto.getpTradeId(), updateUser, durationDto.getRevokeReason(), null, null);
+            } else if (StringUtil.equals(durationDto.getPstype(), DictCodeList.分红方式_现金分红.getValue())) {
+                investPeriodCommonService.revoke汇总和交易相关表(durationDto.getbTradeId(), updateUser, durationDto.getRevokeReason(),
+                        null, null);
+            }
             return Boolean.TRUE.toString();
         }
+
+        investPeriodCommonService.doInsertAndDelete(durationDto.getBaseTotalTradeInfoDto(), updateUser, updateTime,
+                durationDto.getWorkflowId());
 
         List<BaseTradeInfoDto> baseTradeInfoDtos = durationDto.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
         if (baseTradeInfoDtos != null && !baseTradeInfoDtos.isEmpty()) {
@@ -523,6 +524,16 @@ public class TrdFundDurationNewService extends BaseService<TrdFundDurationNewDto
 
     public Page<SelectOptionDto> getFinprodMarketId(int page, int length, Map<String, Object> param) {
         return queryForPageForSelectReturn(page, length, () -> trdFundDurationNewMapper.getFinprodMarketId(param));
+    }
+
+    /**
+     * 统计是否有流程中的分红交易
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    public int countFollowFHDeal(Map<String, Object> map) {
+        return trdFundDurationNewMapper.countFollowFHDeal(map);
     }
 
 }

@@ -197,15 +197,12 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
         }
         entity.setRepIssuePartyId(CacheUtil.getSysParam("issue_party_id"));
         // 新建交易撤销数据 或 插入Entity到对应的业务DB中, 并删除流程表中的数据
-        // TODO
         restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDurationNew/doComplete", entity,
             String.class);
-//    除权登记生成总集复核数据
-    //if(OperationType.REVOKE != type&&(StringUtil.equals(entity.getType(),"02")||StringUtil.equals(entity.getType(),"05"))){
+        //    除权登记生成总集复核数据
         if(OperationType.REVOKE != type && StringUtil.isEmpty(entity.getbTradeId())){
 //        设置工作流代码
         entity.setWorkflowId(null);
-//        if(StringUtil.equals(entity.getBonusMode(),DictCodeList.分红方式_现金分红.getValue())){
         Boolean bonusTypeXjfh = false;
         Boolean bonusTypeHlzt = false;
         for(FinAssetIntInfo finAssetIntInfo : entity.getFinAssetIntInfoList()){
@@ -224,18 +221,12 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
         entity.setbTradeId(entity.getTotleTradeId());
         List<FinAssetIntInfo> listFinAssetIntInfo= entity.getFinAssetIntInfoList();
         if(bonusTypeXjfh){
-//          非货币现金分红
-//            entity.setType(StringUtil.equals(entity.getAssetType(), DictCodeList.基金类资产类型_非货币基金.getValue())?"03":"06");
-//           处理数据参数
             getWorkFlowPatameter(entity);
             entity.setPstype(DictCodeList.分红方式_现金分红.getValue());
             List<FinAssetIntInfo> listFinAssetIntInfotemp1= listFinAssetIntInfo;
             listFinAssetIntInfotemp1 = listFinAssetIntInfotemp1.stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_现金分红.getValue())).collect(Collectors.toList());
             entity.setFinAssetIntInfoList(listFinAssetIntInfotemp1);
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
-//            List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
-//            listBaseTradeInfoDto = listBaseTradeInfoDto.stream().filter(baseTradeInfoDto -> StringUtil.equals(baseTradeInfoDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_现金分红.getValue())).collect(Collectors.toList());
-//            entity.getBaseTotalTradeInfoDto().setBaseTradeInfoDtoList(listBaseTradeInfoDto);
             entity.getBaseTotalTradeInfoDto().setIsNeedStlPayOrders(true);
             dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
         }
@@ -249,9 +240,6 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
             listFinAssetIntInfotemp2 = listFinAssetIntInfotemp2.stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_红利再投.getValue())).collect(Collectors.toList());
             entity.setFinAssetIntInfoList(listFinAssetIntInfotemp2);
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
-//            List<BaseTradeInfoDto> listBaseTradeInfoDto = entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList();
-//            listBaseTradeInfoDto = listBaseTradeInfoDto.stream().filter(baseTradeInfoDto -> StringUtil.equals(baseTradeInfoDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_红利再投.getValue())).collect(Collectors.toList());
-//            entity.getBaseTotalTradeInfoDto().setBaseTradeInfoDtoList(listBaseTradeInfoDto);
             BigDecimal tradeAmt = BigDecimal.ZERO;
             for(FinAssetIntInfo tempFinAssetIntInfo:entity.getFinAssetIntInfoList()){
                 tradeAmt = tradeAmt.add(tempFinAssetIntInfo.getTradeAmt());
@@ -499,5 +487,14 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
     @Override
     public void doRevoke(TrdFundDurationNew001Dto entity) {
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
+    }
+
+    /**
+     * 统计是否有流程中的分红交易
+     * @param map 参数
+     * @return 统计数
+     */
+    public int countFollowFHDeal(Map<String, Object> map) {
+        return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDurationNew/countFollowFHDeal", map, Integer.class);
     }
 }

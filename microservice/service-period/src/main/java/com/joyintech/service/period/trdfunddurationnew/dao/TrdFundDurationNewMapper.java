@@ -131,4 +131,12 @@ public interface TrdFundDurationNewMapper {
 	 * @return
 	 */
 	List<SelectOptionDto> getFinprodMarketId(Map<String, Object> params);
+
+	/**
+	 * 统计是否有流程中的分红交易
+	 *
+	 * @return 查询结果集
+	 * @throws Exception 异常
+	 */
+	int countFollowFHDeal(Map<String, Object> map);
 }

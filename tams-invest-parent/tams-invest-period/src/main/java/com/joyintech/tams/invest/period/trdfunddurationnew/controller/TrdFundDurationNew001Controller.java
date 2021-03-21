@@ -174,12 +174,16 @@ public class TrdFundDurationNew001Controller extends BaseController {
         paramMap.put("busiCode", dto.getTotleTradeId());
         temp.setBussTrdTransferOrder(periodCommonService.selectPayOrders(temp.getTotleTradeId()));
         paramMap.put("registDate", DateUtil.format(dto.getRegistDate()));
+        //TODO 除权登记查询不到红利再投、现金分红数据
         temp.setFinAssetIntInfoList(TrdFundDurationNew001Service.findAssetIntInfo(paramMap));
+        if(StringUtil.equals(dto.getPs(),DictCodeList.交易方向_红利再投.getValue())){
+            temp.setPstype(DictCodeList.分红方式_红利再投.getValue());
+        }
         temp.setBaseTotalTradeInfoDto(TrdFundDurationNew001Service.genFinProductTradeDto(temp));
         //        构建流程参数
         ProcessParameter<TrdFundDurationNew001Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdFundDurationNew001Dto> params = new WorkFlowParameter<>();
-        params.setPageId("TrdFundDuration002");
+        params.setPageId("TrdFundDurationNew002");
         params.setElementId(dto.getElementId());
 //        模式为撤销
         temp.setMode(OperationType.REVOKE.toString());

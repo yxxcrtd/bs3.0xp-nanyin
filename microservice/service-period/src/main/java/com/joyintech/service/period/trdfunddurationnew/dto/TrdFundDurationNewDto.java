@@ -131,6 +131,16 @@ public class TrdFundDurationNewDto extends TrdFundDurationCommonDto implements I
      */
     private String chlName;
 
+    private String pstype;
+
+    public String getPstype() {
+        return pstype;
+    }
+
+    public void setPstype(String pstype) {
+        this.pstype = pstype;
+    }
+
     /**
      * 获取 chlName
      * 

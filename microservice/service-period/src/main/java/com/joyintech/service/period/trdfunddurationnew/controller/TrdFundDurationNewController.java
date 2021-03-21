@@ -229,4 +229,15 @@ public class TrdFundDurationNewController {
             throws Exception {
         return trdFundDurationNewService.getFinprodMarketId(page, length, param);
     }
+
+    /**
+     * 统计是否有流程中的分红交易
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("countFollowFHDeal")
+    public int countFollowFHDeal(@RequestBody Map<String, Object> map) {
+        return trdFundDurationNewService.countFollowFHDeal(map);
+    }
 }
