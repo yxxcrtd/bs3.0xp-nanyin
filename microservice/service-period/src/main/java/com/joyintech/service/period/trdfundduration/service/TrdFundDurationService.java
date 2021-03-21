@@ -515,4 +515,14 @@ public class TrdFundDurationService extends BaseService<TrdFundDurationDto> {
     public Page<SelectOptionDto> getFinprodMarketId(int page, int length, Map<String, Object> param) {
         return queryForPageForSelectReturn(page, length, () -> trdFundDurationMapper.getFinprodMarketId(param));
     }
+
+    /**
+     * 统计是否存在流程中分红交易
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    public int countFollowFHDeal(Map<String, Object> map) {
+        return trdFundDurationMapper.countFollowFHDeal(map);
+    }
 }

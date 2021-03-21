@@ -497,4 +497,13 @@ implements BaseProcessService<TrdFundDuration001Dto>{
     public void doRevoke(TrdFundDuration001Dto entity) {
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
     }
+
+    /**
+     * 统计是否存在流程中分红交易
+     * @param map 参数
+     * @return 统计数
+     */
+    public int countFollowFHDeal(Map<String, Object> map) {
+        return restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDuration/countFollowFHDeal", map, Integer.class);
+    }
 }

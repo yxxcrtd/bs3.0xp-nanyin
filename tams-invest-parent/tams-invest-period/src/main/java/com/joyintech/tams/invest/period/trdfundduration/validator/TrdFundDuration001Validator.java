@@ -82,7 +82,7 @@ public class TrdFundDuration001Validator implements BeanValidator{
             periodCommonService.periodCommonRevokeCheck(dto.getStatusValid(),dto.getTotleTradeId(),messageList);
             //如果存在流程中的现金分红，则除权登记不可撤销
             map.put("ps", DictCodeList.交易方向_现金分红.getValue());
-            if(trdFundDuration001Service.countFollowDeal(map)>0){
+            if(trdFundDuration001Service.countFollowFHDeal(map)>0){
                 messageList.add(new ValidMessage(getMessage("存在流程中的现金分红交易!")));
             }
         }

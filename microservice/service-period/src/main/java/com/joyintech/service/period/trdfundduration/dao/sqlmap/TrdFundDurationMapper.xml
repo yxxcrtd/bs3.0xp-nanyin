@@ -1331,4 +1331,13 @@
             </if>
         </where>
     </select>
+
+    <select id="countFollowFHDeal" resultType="int">
+        select  count(1) from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
+        where
+        B_TRADE_ID = #{tradeId}
+        and IS_CANCEL = #{yes_no}
+        and PS = #{ps}
+        and TRADE_STATUS = #{trade_status}
+    </select>
 </mapper>
