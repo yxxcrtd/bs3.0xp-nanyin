@@ -140,7 +140,7 @@
 	  fpt.type_11 as profitType,
 	  '07' changType,
 	  fi.value_date as changeDate,
-	  null as assetRate,null as assetBonusReinvestRate,fi.close_price_full as closePriceFull,null as costAmt,
+	  null as assetRate,null as assetBonusReinvestRate,fi.close_price as closePriceFull,null as costAmt,
 	  nvl(fi.UPDATE_TIME,fi.CREATE_TIME) updatetime,
 	  null tradeId,
 	  null as status,

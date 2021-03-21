@@ -725,7 +725,7 @@ with cj as(
 			end ) as prodRate
 			from chb_prd_rate cr
 			left join chb_prd_baseinfo base
-			on cr.prod_id=base.prod_id
+			on cr.fprod_id=base.prod_id
 
 			left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date from chb_prd_rate cr1
 			where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
@@ -1006,7 +1006,7 @@ with cj as(
 			end ) as prodRate
 			from chb_prd_rate cr
 			left join chb_prd_baseinfo base
-			on cr.prod_id=base.prod_id
+			on cr.fprod_id=base.prod_id
 
 			left join (select cr1.prod_id,cr1.unit_value,cr1.unit_value_total ,cr1.change_date from chb_prd_rate cr1
 			where cr1.change_date=(select max(change_date) from chb_prd_rate fc1 where fc1.prod_id= cr1.prod_id
@@ -1299,7 +1299,7 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
-		with  rate as(
+		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
@@ -1433,6 +1433,20 @@ with cj as(
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
 		and cr.change_type in ('07','09')
+		),
+		rate as(
+		select detail.assetId as assetId,detail.assetRate as assetRate
+		from ratedetail detail
+		union all
+		select distinct cbap.plan_asset_id as assetId,
+		case when sum(nvl(cbap.pos_num,0))!=0 then
+		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
+		else 0 end as assetRate
+		from chb_bot_ast_pos cbap
+		left join ratedetail d
+		on cbap.asset_code=d.assetId
+		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbap.plan_asset_id
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
@@ -1571,7 +1585,7 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
-		with  rate as(
+		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
@@ -1704,6 +1718,20 @@ with cj as(
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
 		and cr.change_type in ('07','09')
+		),
+		rate as(
+		select detail.assetId as assetId,detail.assetRate as assetRate
+		from ratedetail detail
+		union all
+		select distinct cbap.plan_asset_id as assetId,
+		case when sum(nvl(cbap.pos_num,0))!=0 then
+		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
+		else 0 end as assetRate
+		from chb_bot_ast_pos cbap
+		left join ratedetail d
+		on cbap.asset_code=d.assetId
+		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbap.plan_asset_id
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
@@ -1907,7 +1935,7 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
-		with  rate as(
+		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
@@ -2042,6 +2070,20 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
 		and cr.change_type in ('07','09')
 		),
+		rate as(
+		select detail.assetId as assetId,detail.assetRate as assetRate
+		from ratedetail detail
+		union all
+		select distinct cbap.plan_asset_id as assetId,
+		case when sum(nvl(cbap.pos_num,0))!=0 then
+		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
+		else 0 end as assetRate
+		from chb_bot_ast_pos cbap
+		left join ratedetail d
+		on cbap.asset_code=d.assetId
+		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbap.plan_asset_id
+		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
 		case when info.perpetual_flag ='01' then '08'
@@ -2137,7 +2179,7 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
-		with  rate as(
+		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
@@ -2271,6 +2313,20 @@ with cj as(
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
 		and cr.change_type in ('07','09')
+		),
+		rate as(
+		select detail.assetId as assetId,detail.assetRate as assetRate
+		from ratedetail detail
+		union all
+		select distinct cbap.plan_asset_id as assetId,
+		case when sum(nvl(cbap.pos_num,0))!=0 then
+		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
+		else 0 end as assetRate
+		from chb_bot_ast_pos cbap
+		left join ratedetail d
+		on cbap.asset_code=d.assetId
+		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbap.plan_asset_id
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
