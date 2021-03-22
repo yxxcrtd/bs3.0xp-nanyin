@@ -106,7 +106,8 @@
 			where SUB.POS_DATE = POS.POS_DATE
 			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID 
 			  and SUB.ASSET_CODE = POS.ASSET_CODE 
-			  and SUB.SEND_STATUS in ('02','03'))
+			  and SUB.SEND_STATUS in ('02','03')
+			  and SUB.STATUS != 'D')
 		and POS.STATUS != 'D'
 	</select>
 	<!-- modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end -->
@@ -136,11 +137,11 @@
         ON BOTASSET.ASSET_CODE = sub.ASSET_CODE
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03')
-          and (SUB.STATUS ='03' or ((POS.POS_NUM is not null and SUB.POS_NUM &lt;&gt; POS.POS_NUM)
-								or (POS.TOTAL_NUM is not null and SUB.TOTAL_NUM &lt;&gt; POS.TOTAL_NUM)
-								or (POS.ISSUE_AMT is not null and SUB.ISSUE_AMT &lt;&gt; POS.ISSUE_AMT)
-								or (POS.UNINVEST_CASH is not null and SUB.UNINVEST_CASH &lt;&gt; POS.UNINVEST_CASH)
-								or (POS.POS_AMT is not null and SUB.POS_AMT &lt;&gt; POS.POS_AMT)))
+          and ((POS.POS_NUM is not null and SUB.POS_NUM &lt;&gt; POS.POS_NUM)
+				or (POS.TOTAL_NUM is not null and SUB.TOTAL_NUM &lt;&gt; POS.TOTAL_NUM)
+				or (POS.ISSUE_AMT is not null and SUB.ISSUE_AMT &lt;&gt; POS.ISSUE_AMT)
+				or (POS.UNINVEST_CASH is not null and SUB.UNINVEST_CASH &lt;&gt; POS.UNINVEST_CASH)
+				or (POS.POS_AMT is not null and SUB.POS_AMT &lt;&gt; POS.POS_AMT))
 		union all
 		SELECT
 		    sub.REGIST_SEQNO as registSeqno,
