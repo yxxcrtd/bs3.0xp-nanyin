@@ -204,7 +204,7 @@ public class InvestorsQualityCheckController{
      * --募集总份额合格率
      * @return List
      */
-    @PostMapping("/searchTableMJQFE/{page}/{length}")
+    @PostMapping("/searchTableMJQFE")
     public List<InvestorsQualityCheck001Dto> searchTableMJQFE(@RequestBody Map<String, Object> param){
         return investorsQualityCheckMJQFEService.queryErrorRecList(param);
     }
@@ -214,7 +214,7 @@ public class InvestorsQualityCheckController{
      * --实际募集金额（元）合格率
      * @return List
      */
-    @PostMapping("/searchTableMJQYE/{page}/{length}")
+    @PostMapping("/searchTableMJQYE")
     public List<InvestorsQualityCheck001Dto> searchTableMJQYE(@RequestBody Map<String, Object> param){
         return investorsQualityCheckMJQYEService.queryErrorRecList(param);
     }
@@ -234,7 +234,7 @@ public class InvestorsQualityCheckController{
      * --产品余额（元）合格率（封闭式产品）
      * @return List
      */
-    @PostMapping("/searchTableCPYEFBX/{page}/{length}")
+    @PostMapping("/searchTableCPYEFBX")
     public List<InvestorsQualityCheck001Dto> searchTableCPYEFBX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPYEFBXService.queryErrorRecList(param);
     }
@@ -244,7 +244,7 @@ public class InvestorsQualityCheckController{
      * --产品余额（元）合格率（开放式式产品）
      * @return List
      */
-    @PostMapping("/searchTableCPYEKFX/{page}/{length}")
+    @PostMapping("/searchTableCPYEKFX")
     public List<InvestorsQualityCheck001Dto> searchTableCPYEKFX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPYEKFXService.queryErrorRecList(param);
     }
@@ -254,7 +254,7 @@ public class InvestorsQualityCheckController{
      * --产品份额（元）合格率（封闭式产品）
      * @return List
      */
-    @PostMapping("/searchTableCPFEFBX/{page}/{length}")
+    @PostMapping("/searchTableCPFEFBX")
     public List<InvestorsQualityCheck001Dto> searchTableCPFEFBX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPFEFBXService.queryErrorRecList(param);
     }
@@ -264,7 +264,7 @@ public class InvestorsQualityCheckController{
      * --产品份额（元）合格率（开放式产品）
      * @return List
      */
-    @PostMapping("/searchTableCPFEKFX/{page}/{length}")
+    @PostMapping("/searchTableCPFEKFX")
     public List<InvestorsQualityCheck001Dto> searchTableCPFEKFX(@RequestBody Map<String, Object> param){
         return investorsQualityCheckCPFEKFXService.queryErrorRecList(param);
     }
