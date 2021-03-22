@@ -22,6 +22,8 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDto;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDtos;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.service.TrdPlanRateInvestTradeTransfer001Service;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -145,6 +147,14 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
         model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
         model.addAttribute("ACCT_TYPE_A01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
         model.addAttribute("ACCT_TYPE_A07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+        
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

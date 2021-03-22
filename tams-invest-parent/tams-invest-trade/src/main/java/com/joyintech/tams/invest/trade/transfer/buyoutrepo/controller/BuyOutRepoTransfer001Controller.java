@@ -17,6 +17,8 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.trade.transfer.buyoutrepo.dto.BuyOutRepoTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.buyoutrepo.dto.BuyOutRepoTransfer002Dto;
 import com.joyintech.tams.invest.trade.transfer.buyoutrepo.service.BuyOutRepoTransfer001Service;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -108,6 +110,15 @@ public class BuyOutRepoTransfer001Controller extends BaseController {
         //add by liuwei for huaxing 20200310 start
         model.addAttribute("CALC_MODEL_03", DictCodeListExt3.计算模式_计算到期净价.getValue());
         //add by liuwei for huaxing 20200310 end
+        
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
+        
         return super.init(model);
     }
 
