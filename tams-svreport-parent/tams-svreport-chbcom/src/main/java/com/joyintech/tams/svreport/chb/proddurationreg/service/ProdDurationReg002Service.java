@@ -558,7 +558,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	            }
                 // 累计单位分红
                 BigDecimal totalUnitBonusAmount = chbPrdDurationRegMapper.getTotalUnitBonusAmount(model.getProdId(),quotationDate);
-                result.setTotalValue(totalUnitBonusAmount.setScale(5, RoundingMode.HALF_UP));
+                result.setTotalValue(totalUnitBonusAmount);
                 
 	            //折算人民币初始净值
 	            result.setCnyOrlValue(ChbCcyConvertUtil.changeCnyMoney(result.getValueCcy(), result.getOriginalValue(),
