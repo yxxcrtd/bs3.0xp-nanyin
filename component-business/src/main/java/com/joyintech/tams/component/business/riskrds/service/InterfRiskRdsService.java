@@ -1113,6 +1113,14 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 retMap.add(dataReMap);
             });
         }
+        else if(StringUtil.equals(DictCodeList.平安资产类型_基金.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
+            ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
+                Map<String, Object> dataReMap=new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }
         else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_净值型.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("bussTrdTransfenpeiDto"))){
             ((List)dataMap.get("bussTrdTransfenpeiDto")).forEach(en->{
                 Map<String, Object> dataReMap=new HashMap<>();

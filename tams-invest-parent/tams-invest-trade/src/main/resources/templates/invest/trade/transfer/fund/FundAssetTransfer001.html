@@ -228,8 +228,15 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- 风险试算 -->
+            			<div th:if="${isEleShow['FundAssetTransfer001_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" 
+            				th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|">
+            			</div>
                     </div>
                     <div class="row text-center stepbar">
+                        <a th:if="${isEleShow['FundAssetTransfer001_btn_riskcal']} ne 'N' and ${isEleShow['BaseRiskMathComm_btn_riskcal']} ne 'N'"
+               				th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm"
+               				data-th-text="#{FundAssetTransfer001.risk}">风险试算</a>
                         <a id="FundAssetTransfer001_btn_save" class="layui-btn layui-btn-sm btn-save"
                            data-th-text="#{SysCommon.save}">保存</a>
                         <a id="FundAssetTransfer001_btn_submit" class="layui-btn layui-btn-sm btn-submit"
@@ -255,6 +262,8 @@
         var MY_SUP_TIME_TYPE_02 = /*[[${MY_SUP_TIME_TYPE_02}]]*/'';
         var fundType = /*[[${entity.fundType}]]*/'';
         var risk_math_switch =/*[[${risk_math_switch}]]*/'';
+        var PS_T01 = /*[[${PS_T01}]]*/'T01'; // 数据字典.交易方向_买入
+        var PS_T02 = /*[[${PS_T02}]]*/'T02'; // 数据字典.交易方向_卖出
     </script>
     <script data-th-src="@{/js/invest/trade/transfer/fund/FundAssetTransfer001.js}"></script>
 </div>

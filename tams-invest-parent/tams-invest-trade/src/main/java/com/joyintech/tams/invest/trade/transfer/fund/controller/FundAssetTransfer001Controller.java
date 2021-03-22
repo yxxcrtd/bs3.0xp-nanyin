@@ -96,6 +96,8 @@ public class FundAssetTransfer001Controller extends BaseController {
         entity.setSecManageAcctId((String) paraMap.get("secAcctId"));
         model.addAttribute("PS_T04", DictCodeList.交易方向_申购.getValue());
         model.addAttribute("PS_T19", DictCodeList.交易方向_赎回确认.getValue());
+        model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
+        model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
         model.addAttribute("ps", entity.getPs());
         model.addAttribute("sysDate", DateUtil.getSysDate());
         model.addAttribute("FUND_ASSET_TYPE_F01", DictCodeList.基金类资产类型_货币基金.getValue());
