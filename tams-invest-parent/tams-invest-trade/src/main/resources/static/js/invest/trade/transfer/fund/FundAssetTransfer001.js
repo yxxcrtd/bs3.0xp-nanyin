@@ -81,7 +81,7 @@ $(function() {
             // 交易份额
             , {field: 'tradePrin',width: 150,title: '交易份额',type: 'money', digit: 2, sortable: false}
             //单位净值
-            , {field: 'unitCprice',width: 150,title: '单位净值',type: 'money', digit: 8, sortable: false}
+            , {field: 'unitCprice',width: 150,title: '单位净值',type: 'money', digit: 4, sortable: false}
             //待结转份额
             , {field: 'carryOverQty',width: 150,title: '待结转份额',type: 'money', digit: 2, sortable: false}
             //交易金额
