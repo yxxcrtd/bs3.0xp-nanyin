@@ -23,36 +23,40 @@
     //风险测试数据
     var getriskdata = function () {
         var rows = pledgedRepoInfoListTable.getAllRows();
-        var objects = [];
-        for (var i in rows) {
-            var obj = {
-                timePoint: MY_SUP_TIME_TYPE_02,
-                valDate: $('#tradeDate').val(),
-                portfolioCode: rows[i].portfolioId,
-                tradeAmount: rows[i].rolloverPrinAmt,
-                assetType: $("#ps").val() == BACK_LEND_DIRECTION_03 ? FINPROD_TYPE_TG_F02 : FINPROD_TYPE_TG_F03,
-                tradeDirection: $('#ps').val(),
-                isEnabled: '01',
-                index: null,
-                mun: i
-            };
-            if ($('#ps').val() == BACK_LEND_DIRECTION_03) {
-                obj.assetType = FINPROD_TYPE_TG_F02;
-            } else if ($('#ps').val() == BACK_LEND_DIRECTION_04) {
-                obj.assetType = FINPROD_TYPE_TG_F03;
-            } else {
-                obj.assetType = null;
+        var object = {};
+        var list=[];
+        if(rows!=null && rows!="") {
+            for (var i in rows) {
+                var obj = {
+                    timePoint: MY_SUP_TIME_TYPE_02,
+                    valDate: $('#tradeDate').val(),
+                    portfolioCode: rows[i].portfolioId,
+                    tradeAmount: rows[i].rolloverPrinAmt,
+                    assetType: $("#ps").val() == BACK_LEND_DIRECTION_03 ? FINPROD_TYPE_TG_F02 : FINPROD_TYPE_TG_F03,
+                    tradeDirection: $('#ps').val(),
+                    isEnabled: '01',
+                    index: null,
+                    mun: i
+                };
+                if ($('#ps').val() == BACK_LEND_DIRECTION_03) {
+                    obj.assetType = FINPROD_TYPE_TG_F02;
+                } else if ($('#ps').val() == BACK_LEND_DIRECTION_04) {
+                    obj.assetType = FINPROD_TYPE_TG_F03;
+                } else {
+                    obj.assetType = null;
+                }
+                list[i] = obj;
             }
-            objects[i] = {
-                valDate: ['tradeDate', 'TrdRepoTrade002.tradeDate'],
-                portfolioCode: ['portfolioId', 'TrdRepoTrade002.portfolioId'],
-                tradeAmount: ['rolloverPrinAmt', 'TrdRepoTrade002.prinAmt'],
-                assetType: ['repoType', 'TrdRepoTrade001.repoType'],
-                tradeDirection: ['ps', 'TrdRepoTrade002.ps'],
-                data: obj
-            };
+          object = {
+        		  valDate: ['tradeDate', 'TrdRepoTrade002.tradeDate'],
+        		  portfolioCode: ['portfolioId', 'TrdRepoTrade002.portfolioId'],
+        		  tradeAmount: ['rolloverPrinAmt', 'TrdRepoTrade002.prinAmt'],
+        		  assetType: ['repoType', 'TrdRepoTrade001.repoType'],
+        		  tradeDirection: ['ps', 'TrdRepoTrade002.ps'],
+        		  data: list
+          };  
         }
-        return objects;
+        return object;
     };
     /**
      * 质押券转仓表
@@ -272,39 +276,27 @@
         $("#bussTrdAvailableCashQuery_avalibleCash").val(JoyinMath.doMinus(avalibleCash,rolloverTradeAmtSum,2)).trigger("blur");
     };
     function saveOrSubmit(operateType) {
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+	        if(BaseRiskMathComm) {
+	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+	            if(!s && s != ''){
+	                return;
+	            }
+	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+	                return;
+	            }
+	        }
+        }
         var objects = getriskdata();
         var object = getPageParam();
         object.pageModel = pageModel;
         object.operateType = operateType;
         Joyin.ajaxJson(basePath + '/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001/saveCheck', object, function (result) {
             Joyin.confirm(result.data, function () {
-                var results =[];
-                if(risk_math_switch=="01"){
-                    for(var i in objects){
-                        var object1 = objects[i];
-                        Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', object1, function() {
-                            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/riskMath', object1.data, function(result) {
-                                var cluflag=true;
-                                for(var row in result){
-                                    if(result[row].supStat=="VIOLATION"){
-                                        results.push(result[row]);;
-                                    }
-                                }
-                            },false);
-                        },false);
-                    }
-                }
-                if(risk_math_switch=="01" && results && results.length>0){
-                    var param = {};
-                    param.results = JSON.stringify(results);
-                    Joyin.dialog("风险测算",basePath+'/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001/riskMathComm','60%','50%',param);
-                }
-                else{
-                    if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + '/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001/save', object, "TrdRolloverPledgedRepo001_btn_save");
-                    } else {
-                        WorkFlow.doSubmitList(basePath + '/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001/save', object, "TrdRolloverPledgedRepo001_btn_submit");
-                    }
+                if (operateType === 'save') {
+                    WorkFlow.doSaveList(basePath + '/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001/save', object, "TrdRolloverPledgedRepo001_btn_save");
+                } else {
+                    WorkFlow.doSubmitList(basePath + '/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001/save', object, "TrdRolloverPledgedRepo001_btn_submit");
                 }
             });
         },false);
@@ -330,6 +322,13 @@
     };
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
+        	if(typeof(BaseRiskMathComm) != 'undefined') {
+                var riskparam = getriskdata();
+                if (pageModel==PAGE_MODEL_NEW){
+                    riskparam.data =null;
+                }
+                window.BaseRiskMathComm.getparam(riskparam);
+        	}
             $("#bussTrdAvailableCashQuery_div_position").hide();
             $("#bussTrdAvailableCashQuery_div_channelCash").hide();
             $("#bussTrdAvailableCashQuery_avalibleCashT1").parent().parent().hide();
@@ -366,6 +365,26 @@
         });
         $('#TrdRolloverPledgedRepo001_btn_submit').click(function () {
             saveOrSubmit('submit');
+        });
+        //风险试算
+        $('#TrdRolloverPledgedRepo001_btn_risk').click(function(){
+            var data = pledgedRepoInfoListTable.getAllRows();
+            if(data!=null && data != '') {
+                var object = $.serializeToObject('#TrdRolloverPledgedRepo001_form', true);
+                object.portfolioId = $("#invTransPortf").val();
+                //深拷贝
+                var bussTrdTransfenpeiDto = JSON.parse(JSON.stringify(data));
+                for(var i=0;i<bussTrdTransfenpeiDto.length;i++){
+                	bussTrdTransfenpeiDto[i].counterId=bussTrdTransfenpeiDto[i].portfolioId;
+                	delete bussTrdTransfenpeiDto[i].portfolioId;
+                }
+                var bussRepoSecPtl = {"pledgeBondList":bussTrdTransfenpeiDto};
+                object.bussRepoSecPtl = bussRepoSecPtl;
+                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/1/RSK002/F07',object,getriskdata());
+
+            } else {
+                Joyin.error("拆分列表信息不能为空！");
+            }
         });
     });
 }());
