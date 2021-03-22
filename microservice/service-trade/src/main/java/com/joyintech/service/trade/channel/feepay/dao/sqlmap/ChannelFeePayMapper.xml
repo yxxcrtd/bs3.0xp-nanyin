@@ -275,6 +275,7 @@
         <include refid="com.joyintech.tams.common.base.dao.TrdProductDealMapper.Base_Column_List"/>
         from TRD_PRODUCT_DEAL
         where TOTLE_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+        order by TRADE_ID
     </select>
 
     <select id="getTradeId" resultType="string">

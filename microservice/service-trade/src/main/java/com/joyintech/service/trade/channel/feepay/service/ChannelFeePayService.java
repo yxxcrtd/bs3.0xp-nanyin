@@ -144,8 +144,16 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
 //        TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(tradeId);
         if (trdProductDealList != null && trdProductDealList.size()>0) {
             BeanUtil.copyPropertiesIgnoreNull(result, trdProductDealList.get(0));
-            List<TrdProductDealAdd> adds = channelFeePayMapper.selectAllEfDealAdds(trdProductDealList);
-            List<PaTrdProductDeal> paDeals = channelFeePayMapper.selectAllEfPaDeals(trdProductDealList);
+            List<TrdProductDealAdd> adds = new ArrayList<>();
+            List<PaTrdProductDeal> paDeals = new ArrayList<>();
+            for(TrdProductDeal dto:trdProductDealList){
+                List<TrdProductDeal> list = new ArrayList<>();
+                list.add(dto);
+                adds.addAll(channelFeePayMapper.selectAllEfDealAdds(list));
+                paDeals.addAll(channelFeePayMapper.selectAllEfPaDeals(trdProductDealList));
+            }
+//            List<TrdProductDealAdd> adds = channelFeePayMapper.selectAllEfDealAdds(trdProductDealList);
+//            List<PaTrdProductDeal> paDeals = channelFeePayMapper.selectAllEfPaDeals(trdProductDealList);
             List<StlPayOrders> orders = new ArrayList<>();
             FinProduct product = finProductMapper.selectByPrimaryKey(result.getFinprodId());
             if (product != null) {
@@ -174,9 +182,9 @@ public class ChannelFeePayService extends BaseService<ChannelFeePayDto> {
             result.setTradeAmt(tradeAmt);
             result.setOrders(orders);
 
-            Map<String, Object> param = new HashMap<>();
-            List<SelectOptionDto> list = restTemplate.postForList(
-                    ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/selectPortfolioId",param, SelectOptionDto.class);
+//            Map<String, Object> param = new HashMap<>();
+//            List<SelectOptionDto> list = restTemplate.postForList(
+//                    ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/selectPortfolioId",param, SelectOptionDto.class);
             for(int i=0;i<trdProductDealList.size();i++){
                 ChannelFeeInfoDto channelFeeInfoDto = new ChannelFeeInfoDto();
                 channelFeeInfoDto.setPortfolioId(adds.get(i).getPortfolioId());
