@@ -243,6 +243,7 @@ public class TrdFundDurationNew001Dto extends TrdFundDurationCommonDto implement
     public String getUpdateFlag(){
         if(StringUtil.equals(DictCodeList.交易方向_除权登记.getValue(),getPs())
                 && StringUtil.equals(statusValid, DictCodeListExt1.画面数据状态_有效.getValue())
+                && StringUtil.equals(assetType, DictCodeList.基金类资产类型_非货币基金.getValue())
                 && StringUtil.isEmpty(getHasFlow())){
             return "01";
         }else{
