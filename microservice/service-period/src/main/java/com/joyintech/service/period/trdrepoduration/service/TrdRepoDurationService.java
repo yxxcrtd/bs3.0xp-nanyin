@@ -358,10 +358,19 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
            List<PtlSecPositionFlow> flows = trdRepoDurationMapper.selectSecFlow(params);
            if (flows != null && !flows.isEmpty()) {
                flows.forEach(flow -> {
-                   //撤销时金额取反
-                   flow.setAmount(BussinessConstant.REVOKE.equalsIgnoreCase(trdRepoDurationDto.getOperateType()) ? flow.getAmount().negate() : flow.getAmount());
-                   flow.setCdate(DateUtil.parse(trdRepoDurationDto.getSettleDate()));
-                   trdRepoDurationMapper.insertSelect04Sec(flow);
+                   if (trdRepoDurationDto.getvDate().equals(DateUtil.format(flow.getCdate()))){
+                       //撤销时金额取反
+                       flow.setAmount(BussinessConstant.REVOKE.equalsIgnoreCase(trdRepoDurationDto.getOperateType()) ? flow.getAmount().negate() : flow.getAmount());
+                       flow.setCdate(DateUtil.parse(trdRepoDurationDto.getSettleDate()));
+                       trdRepoDurationMapper.insertSelect04Sec(flow);
+                       params.put("seqNo", IDGenerator.generate());
+                       params.put("mDate", DateUtil.parse(trdRepoDurationDto.getSettleDate()));
+                       if(BussinessConstant.REVOKE.equalsIgnoreCase(trdRepoDurationDto.getOperateType())){
+                           params.put("isRevoke", "true");
+                       }
+                       //生成持仓流水数据，如果没有生成流水，重复跑当天的批处理会导致持仓数据错误
+                       trdRepoDurationMapper.insertSelect04SecFlow(params);
+                   }
                });
            }
         }
