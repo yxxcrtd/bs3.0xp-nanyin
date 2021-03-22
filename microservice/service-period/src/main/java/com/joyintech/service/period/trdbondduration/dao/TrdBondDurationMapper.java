@@ -62,5 +62,7 @@ public interface TrdBondDurationMapper {
     List<String> findCeTradeIdByTotleTradeId(String totleTradeId);
 
     List<String> findProcessDtos(Map<String, Object> param);
+    
+    Map<String,Object> getPkByBizCode(String bizCode);
 
 }

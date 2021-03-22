@@ -647,8 +647,16 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         entity.setFinprodId((String) params.get("finprodId"));
         entity.setPs("T39");
         entity.setBizCode((String) params.get("busiCode"));
-        entity.setChlId((String) params.get("secManageAcctId"));
-        entity.setPayDate(DateUtil.parse((String) params.get("payDate")));
+        //从接口中获取通道和payDate
+        Map<String,Object> map = getPkByBizCode(entity.getBizCode());
+        if(map==null) {
+            entity.setChlId((String) params.get("secManageAcctId"));
+            entity.setPayDate(DateUtil.parse((String) params.get("payDate")));	
+        }
+        else {
+        	 entity.setChlId((String)map.get("CHILD"));
+        	 entity.setPayDate(DateUtil.parse((String) map.get("PAYDATE")));	
+        }
         ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(entity);
         ProcessMark temp = WorkflowContext.getProcessMarkService().getBussinessEntityByPk(processMark);
         if (null != temp && StringUtil.isNotEmpty(temp.getBusinessData())) {
@@ -664,5 +672,9 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/findProcessDtos", param,
                 ArrayList.class);
         return dtos;
+    }
+    
+    private Map<String,Object> getPkByBizCode(String bizCode){
+    	return restTemplate.getForObject( ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/getPkByBizCode?bizCode="+bizCode, Map.class);
     }
 }
