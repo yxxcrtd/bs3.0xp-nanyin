@@ -116,9 +116,9 @@
         var vDate = $('#vDate').val();
         var yeld = $('#yield').val();
         var basis = $('#basis').val();
-        var tradeDate = $('#tradeDate').val();       
+        var tradeDate = $('#tradeDate').val();
         //应计利息总额
-        var payInt = Number(transferPrinAmt) * Number(yeld) * Math.abs((new Date(tradeDate) - new Date(vDate)) / 1000 / 60 / 60 / 24 -1 ) / Number(basis.split("/")[1]);
+        var payInt = Number(transferPrinAmt) * Number(yeld) * Math.abs((new Date(tradeDate) - new Date(vDate)) / 1000 / 60 / 60 / 24) / Number(basis.split("/")[1]);
         $('#payInt').val(payInt).trigger("change").trigger('blur');
         $('#transferTradeAmt').val(Number(transferPrinAmt) + Number(payInt)).trigger("change").trigger('blur');
     });

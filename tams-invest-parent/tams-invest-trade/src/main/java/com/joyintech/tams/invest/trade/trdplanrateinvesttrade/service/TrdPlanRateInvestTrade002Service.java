@@ -417,8 +417,7 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
             }
         	
 		}
-        Date mDate = DateUtil.addDay(settleDate,-1);
-        detailDto.setMdate(mDate);
+        detailDto.setMdate(settleDate);
         finCashPlanDetailList.add(detailDto);
         
         // END modify by wj 20200430 如果利率变更   取数据vdate mdate yield取值正确
