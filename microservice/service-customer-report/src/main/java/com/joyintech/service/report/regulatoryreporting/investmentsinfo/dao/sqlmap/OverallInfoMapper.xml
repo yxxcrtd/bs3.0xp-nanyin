@@ -375,7 +375,7 @@
 			and cmap.rating in ('AA','AA-','A+','A-')
 		</if>
 		<if test="rating != null  and rating.equals('3')">
-			and info.asset_type2 in  ('1112','1113','1114','1115','1116','1117')
+			and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
 
 			and cmap.rating is not null
 			and cmap.rating in(

@@ -3,6 +3,8 @@ package com.joyintech.service.trade.transfer.assetstransfer.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.ArithmeticUtil;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -209,5 +212,23 @@ public class AssetsTransferService extends BaseService<AssetsTransferDto> {
         map.put("ccy",assetsTransferDto.getCcy());
         map.put("chlId",assetsTransferDto.getChlId());
         return map;
+    }
+
+    public Page<SelectOptionDto> getFinprodMarketId(Map<String, Object> map, int page, int length) {
+        List<String> type8List = Arrays.asList(DictCodeList.平安资产类型_债券.getValue(),DictCodeList.平安资产类型_基金.getValue(),DictCodeList.平安资产类型_计划类资产_利率型.getValue()
+        ,DictCodeList.平安资产类型_计划类资产_净值型.getValue(),DictCodeList.平安资产类型_存款.getValue(),DictCodeList.平安资产类型_项目类资产.getValue()
+        ,DictCodeList.平安资产类型_质押式回购.getValue(),DictCodeList.平安资产类型_拆借.getValue(),DictCodeList.平安资产类型_买断式回购.getValue());
+        map.put("type8List", type8List);
+        // 多级法人改造 add by jingqiongqiong 20200615
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            //当前用户所属机构代码
+            String createInst =  MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+            //右上角选择框为空时 存放本级机构及有权限的下级机构 选择时 存放所选机构
+            List<String> resourcesTreeInstCodeList =  LoginUserUtil.getTreeInstCode();
+            map.put("institutionCode",createInst);
+            map.put("resourcesTreeInstCodeList",resourcesTreeInstCodeList);
+        }
+        // 多级法人改造 add by jingqiongqiong 20200615
+        return this.queryForPageForSelectReturn(page, length,()->assetsTransferMapper.getFinprodMarketId(map));
     }
 }

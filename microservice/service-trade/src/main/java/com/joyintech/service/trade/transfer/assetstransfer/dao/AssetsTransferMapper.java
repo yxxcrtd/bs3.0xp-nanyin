@@ -76,4 +76,6 @@ public interface AssetsTransferMapper {
      * @since 1.0
      */
     BigDecimal selectWflAmt(Map<String,Object> map);
+
+    List<SelectOptionDto> getFinprodMarketId(Map<String, Object> map);
 }

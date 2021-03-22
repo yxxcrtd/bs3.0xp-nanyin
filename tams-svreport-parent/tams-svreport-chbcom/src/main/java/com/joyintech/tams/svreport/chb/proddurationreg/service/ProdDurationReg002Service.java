@@ -557,7 +557,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	            	  }
 	            }
                 // 累计单位分红
-                BigDecimal totalUnitBonusAmount = chbPrdDurationRegMapper.getTotalUnitBonusAmount(model.getProdId(),quotationDate);
+				BigDecimal totalUnitBonusAmount = chbPrdDurationRegMapper.getTotalUnitBonusAmount(model.getProdId(),quotationDate)==null?BigDecimal.ZERO:chbPrdDurationRegMapper.getTotalUnitBonusAmount(model.getProdId(),quotationDate);
                 result.setTotalValue(totalUnitBonusAmount);
                 
 	            //折算人民币初始净值
