@@ -58,25 +58,25 @@
                                            data-th-placeholder="#{SysCommon.placeholder}">
                                 </div>
                             </div>-->
-                            <!--资产代码-->
-                            <div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">
-                                <label class="layui-form-label form-lable">资产代码</label>
-                                <div class="layui-input-inline input-inline">
-                                    <select type="text" id="AssetsTransfer001_assetId" name="assetId"
-                                            class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                            data-th-data-url="@{/invest/portfolio/ptlsingleassetpositionanalysis/PtlSingleAssetPositionAnalysis001/getFinprodMarketId}"
-                                            allowClear="true" formatoption="true" multiple>
-                                    </select>
-                                </div>
-                            </div>
                             <!-- 资产类型 -->
                             <div class="layui-inline layui-col-md3  layui-col-sm3 layui-col-lg3 layui-col-xs3 piece">
                                 <label class="layui-form-label form-lable">资产类型</label>
                                 <div class="layui-input-inline input-inline">
-                                    <select id="AssetsTransfer001_assetType" name="assetType"
+                                    <select id="AssetsTransfer001_assetType" name="assetType" childrenIds="AssetsTransfer001_assetId"
                                             class="layui-input form-input input-select"
                                             data-th-data-result ='${PINAN_ASSET_TYPE}'
                                             placeholder="请输入内容" multiple="true">
+                                    </select>
+                                </div>
+                            </div>
+                            <!--资产代码-->
+                            <div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                <label class="layui-form-label form-lable">资产代码</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select type="text" id="AssetsTransfer001_assetId" name="assetId" parentIds="AssetsTransfer001_assetType"
+                                            class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-data-url="@{/invest/trade/transfer/assetstransfer/AssetsTransfer001/getFinprodMarketId}"
+                                            allowClear="true" formatoption="true" multiple>
                                     </select>
                                 </div>
                             </div>

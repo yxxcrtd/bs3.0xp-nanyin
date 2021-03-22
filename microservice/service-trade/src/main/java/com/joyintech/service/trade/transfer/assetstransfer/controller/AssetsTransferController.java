@@ -84,4 +84,8 @@ public class AssetsTransferController {
     public List<SelectOptionDto> getFinprodId(@RequestBody Map<String,Object> map){
         return assetsTransferService.getFinprodId(map);
     }
+    @PostMapping("getFinprodMarketId/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length){
+        return assetsTransferService.getFinprodMarketId(map, page, length);
+    }
 }
