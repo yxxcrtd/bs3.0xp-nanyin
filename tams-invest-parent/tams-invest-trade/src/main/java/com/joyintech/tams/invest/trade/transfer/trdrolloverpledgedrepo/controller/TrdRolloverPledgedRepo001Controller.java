@@ -25,6 +25,8 @@ import com.joyintech.tams.invest.trade.transfer.assetstransfer.dto.AssetsTransfe
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.FinDealPledgeDto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.dto.TrdRolloverPledgedRepo001Dto;
 import com.joyintech.tams.invest.trade.transfer.trdrolloverpledgedrepo.service.TrdRolloverPledgedRepo001Service;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -113,6 +115,14 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         model.addAttribute("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         model.addAttribute("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         model.addAttribute("risk_math_switch", CacheUtil.getSysParam("risk_math_switch"));
+        
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
 

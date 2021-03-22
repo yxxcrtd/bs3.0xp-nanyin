@@ -17,6 +17,8 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.trade.transfer.fund.dto.FundAssetTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.fund.service.FundAssetTransfer001Service;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -101,6 +103,14 @@ public class FundAssetTransfer001Controller extends BaseController {
         model.addAttribute("FINPROD_TYPE_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         model.addAttribute("risk_math_switch", CacheUtil.getSysParam("risk_math_switch"));
         model.addAttribute(GlobalConstant.DETAIL_PAGE_MODEL_KEY, pageModel);
+        
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(map);
+        model.addAttribute("isEleShow", isEleShow);
         return super.init(model);
     }
     /**
