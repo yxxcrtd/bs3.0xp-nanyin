@@ -55,70 +55,62 @@
  
     //风险测试数据
     var getriskdata = function () {
-        var rows = projectListInfoList.getAllRows();
-        var object = [];
-        for (var i in rows) {
-            var obj = {
-                timePoint: MY_SUP_TIME_TYPE_02,
-                valDate: new Date(rows[i].settleDate).format("yyyy-MM-dd"),
-                portfolioCode: rows[i].portfolioId,
-                tradeAmount: rows[i].splitTradeAmt,
-                assetType: FINPROD_TYPE_F18,
-                isEnabled: '01',
-                assetCode: rows[i].finprodId,
-                tradeDirection: 'T01'
+        var data = projectListInfoList.getAllRows();
+        var object = {};
+        var list = []
+        if(data!=null && data!="") {
+            for (var i in data) {
+                var obj = {
+                        timePoint: MY_SUP_TIME_TYPE_02,
+                        valDate: new Date(data[i].settleDate).format("yyyy-MM-dd"),
+                        portfolioCode: data[i].portfolioId,
+                        tradeAmount: data[i].splitTradeAmt,
+                        assetType: FINPROD_TYPE_F18,
+                        isEnabled: '01',
+                        assetCode: data[i].finprodId,
+                        tradeDirection: T01
+                };
+                list[i] = obj;
             }
-            if ($('#projectType').val() && $('#projectType').val() != '') {
-                obj.assetSecType = $('#projectType').val();
-            }
-            object[i] = {
-                assetCode: ['finprodMarketId', 'TrdBondInvestTrade002.finprodId'],
-                valDate: ['settleDate', 'TrdPlanRateInvestTrade002.settleDate'],
-                portfolioCode: ['portfolioId', 'TrdBondInvestTrade002.portfolioId'],
-                tradeAmount: ['tradeAmt', 'TrdProjectInvestTrade002.fpriceAmt'],
-                assetType: ['projectType', 'TrdDepositInvestTrade001.finprodType'],
-                tradeDirection: ['ps', 'TrdLendInvestTrade002.ps'],
-                data: obj
-            }
+        	if ($('#projectType').val() && $('#projectType').val() != '') {
+        		obj.assetSecType = $('#projectType').val();
+        	}
+            object = {
+                    assetCode: ['finprodMarketId', 'TrdBondInvestTrade002.finprodId'],
+                    valDate: ['settleDate', 'TrdPlanRateInvestTrade002.settleDate'],
+                    portfolioCode: ['portfolioId', 'TrdBondInvestTrade002.portfolioId'],
+                    tradeAmount: ['tradeAmt', 'TrdProjectInvestTrade002.fpriceAmt'],
+                    assetType: ['projectType', 'TrdDepositInvestTrade001.finprodType'],
+                    tradeDirection: ['ps', 'TrdLendInvestTrade002.ps'],
+                    data: list
+            };
         }
         return object;
     };
 
     function saveOrSubmit(operateType) {
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+	        if(BaseRiskMathComm) {
+	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+	            if(!s && s != ''){
+	                return;
+	            }
+	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+	                return;
+	            }
+	        }
+        }
         var objects = getriskdata();
         var object = $.serializeToObject('#TrdAssetsProject001_form', true);
         object.pageModel = pageModel;
         object.operateType = operateType;
         Joyin.ajaxJson(basePath + '/invest/trade/transfer/trdassetsProject/TrdAssetsProject001/saveCheck', object, function (result) {
-            Joyin.confirm(result.data, function () {
-                var results =[];
-                if(risk_math_switch=="01"){
-                    for(var i in objects){
-                        var object1 = objects[i];
-                        Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', object1, function() {
-                            Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/riskMath', object1.data, function(result) {
-                                var cluflag=true;
-                                for(var row in result){
-                                    if(result[row].supStat=="VIOLATION"){
-                                        results.push(result[row]);;
-                                    }
-                                }
-                            },false);
-                        },false);
-                    }
-                }
-                if(risk_math_switch=="01" && results && results.length>0){
-                    var param = {};
-                    param.results = JSON.stringify(results);
-                    Joyin.dialog("风险侧算",basePath+'/invest/trade/transfer/trdassetsProject/TrdAssetsProject001/riskMathComm','60%','50%',param);
-                }
-                else{
-                    if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + '/invest/trade/transfer/trdassetsProject/TrdAssetsProject001/save', object, "TrdAssetsProject001_btn_save");
-                    } else {
-                        WorkFlow.doSubmitList(basePath + '/invest/trade/transfer/trdassetsProject/TrdAssetsProject001/save', object, "TrdAssetsProject001_btn_submit");
-                    }
-                }
+            Joyin.confirm(result.data, function () {             
+            	if (operateType === 'save') {
+            		WorkFlow.doSaveList(basePath + '/invest/trade/transfer/trdassetsProject/TrdAssetsProject001/save', object, "TrdAssetsProject001_btn_save");
+            	} else {
+                WorkFlow.doSubmitList(basePath + '/invest/trade/transfer/trdassetsProject/TrdAssetsProject001/save', object, "TrdAssetsProject001_btn_submit");
+            	}
             });
         },false);
     };
@@ -314,6 +306,27 @@
         $('#TrdAssetsProject001_btn_submit').click(function () {
             saveOrSubmit('submit');
         });
+        //风险试算
+        $('#TrdAssetsProject001_btn_risk').click(function(){
+        	debugger;
+            var data = projectListInfoList.getAllRows();
+            if(data!=null && data != '') {
+                var object = $.serializeToObject('#TrdAssetsProject001_form', true);
+                object.portfolioId = $("#invTransPortf").val();
+                //深拷贝
+                var bussTrdTransfenpeiDto = JSON.parse(JSON.stringify(data));
+                for(var i=0;i<bussTrdTransfenpeiDto.length;i++){
+                	bussTrdTransfenpeiDto[i].counterId=bussTrdTransfenpeiDto[i].portfolioId;
+                	delete bussTrdTransfenpeiDto[i].portfolioId;
+                	bussTrdTransfenpeiDto[i].ps = T02;
+                }
+                object.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
+                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/1/RSK002/F06',object,getriskdata());
+
+            } else {
+                Joyin.error("拆分列表信息不能为空！");
+            }
+        });
     });
     // window.onload =function () {
     //         $("#bussTrdAvailableCashQuery_div_T1cash").hide();
@@ -325,6 +338,13 @@
     // }
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone) {
+        	if(typeof(BaseRiskMathComm) != 'undefined') {
+                var riskparam = getriskdata();
+                if (pageModel==PAGE_MODEL_NEW){
+                    riskparam.data =null;
+                }
+                window.BaseRiskMathComm.getparam(riskparam);
+            }
             $("#bussTrdAvailableCashQuery_div_T1cash").hide();
             $("#bussTrdAvailableCashQuery_avalibleCash").parent().prev().html("组合可用现金");
             if(chlId && chlId != null){

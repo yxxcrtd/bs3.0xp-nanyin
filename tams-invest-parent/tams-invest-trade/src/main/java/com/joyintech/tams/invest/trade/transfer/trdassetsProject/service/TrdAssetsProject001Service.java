@@ -443,6 +443,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
               Date date2 = new Date(longTimeStamp2);
                 dto.setVdate(date1);
                 dto.setMdate(date2);
+              dto.setProjectType((String)data.get("finprodType"));
             }
             Map<String, Object> paraMap = new HashMap<>();
             String tradeDate = DateUtil.getSysDate();
