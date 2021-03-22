@@ -53,7 +53,7 @@ public class InvestorsQualityCheckMJQYEService extends InvestorsQualityCheckBase
         resultDto.setUnQualified(errPrdQty.toString());
         resultDto.setTotal(checkRecTol.toString()); 
         if(checkRecTol.compareTo(BigDecimal.ZERO) == 1) {
-        	resultDto.setRate(checkRecTol.subtract(errPrdQty).divide(checkRecTol).toString());
+        	resultDto.setRate(checkRecTol.subtract(errPrdQty).divide(checkRecTol,2,BigDecimal.ROUND_DOWN).toString());
         }
         
         return resultDto;

@@ -56,8 +56,12 @@ public class InvestorsQualityCheckCPYEFBXService extends InvestorsQualityCheckBa
         resultDto.setPageType("9");
         resultDto.setUnQualified(param.get("errPrdQty").toString());
         resultDto.setTotal(checkRecTol.toString()); 
-        resultDto.setRate(checkRecTol.subtract(errPrdQty).divide(checkRecTol).toString());
-
+        
+        //检查对象为0的情况下：
+        if(checkRecTol.compareTo(BigDecimal.ZERO) == 1) {
+        	resultDto.setRate(checkRecTol.subtract(errPrdQty).divide(checkRecTol,2,BigDecimal.ROUND_DOWN).toString());
+        }
+        
         return resultDto;
     }
 	
