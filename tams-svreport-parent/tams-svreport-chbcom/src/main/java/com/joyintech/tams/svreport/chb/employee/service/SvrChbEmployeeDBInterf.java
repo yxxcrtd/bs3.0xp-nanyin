@@ -126,7 +126,8 @@ public class SvrChbEmployeeDBInterf extends BaseService{
 				    	sub.setStatus(DictCodeListExt2.报送数据状态_删除.getValue());
                         deleteList.add(sub);
 				    }
-				} else if (DictCodeListExt1.维护数据状态_修改.getValue().equals(sub.getStatus())){
+				} else if (DictCodeListExt1.维护数据状态_修改.getValue().equals(sub.getStatus())
+						|| DictCodeListExt1.维护数据状态_有效.getValue().equals(sub.getStatus())){
                     // 已登记数据是删除状态，业务数据是修改或者新建状态，则生成修改未报送
 				    if (DictCodeListExt2.报送数据状态_删除.getValue().
                             equals(mapSub.get(sub.getKey()).getStatus())){
@@ -136,16 +137,6 @@ public class SvrChbEmployeeDBInterf extends BaseService{
                     	sub.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
                         deleteList.add(sub);
                     } else {
-                        deleteList.add(sub);
-                        continue;
-                    }
-                } else if (DictCodeListExt1.维护数据状态_有效.getValue().equals(sub.getStatus())){
-                    // 已登记数据是删除状态，业务数据是修改或者新建状态，则生成修改未报送
-                    if (DictCodeListExt2.报送数据状态_删除.getValue().
-                            equals(mapSub.get(sub.getKey()).getStatus())){
-                    	sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-                        deleteList.add(sub);
-                    } else{
                         deleteList.add(sub);
                         continue;
                     }
