@@ -238,11 +238,14 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
             listFinAssetIntInfotemp2 = listFinAssetIntInfotemp2.stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_红利再投.getValue())).collect(Collectors.toList());
             entity.setFinAssetIntInfoList(listFinAssetIntInfotemp2);
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
-            BigDecimal tradeAmt = BigDecimal.ZERO;
-            for(FinAssetIntInfo tempFinAssetIntInfo:entity.getFinAssetIntInfoList()){
-                tradeAmt = tradeAmt.add(tempFinAssetIntInfo.getTradeAmt());
+            BigDecimal sumtradeAmt = BigDecimal.ZERO;
+            BigDecimal sumRegistShare = BigDecimal.ZERO;
+            for(FinAssetIntInfo finAssetIntInfo : entity.getFinAssetIntInfoList()){
+                sumtradeAmt = sumtradeAmt.add(finAssetIntInfo.getTradeAmt());
+                sumRegistShare = sumRegistShare.add(finAssetIntInfo.getRegistShare());
             }
-            entity.setTradeAmt(tradeAmt);
+            entity.setRegistShare(sumRegistShare);
+            entity.setTradeAmt(sumtradeAmt);
             BigDecimal unit = periodCommonService.getLatestValuation(entity.getFinprodId(), DateUtil.format(entity.getExRightsDate()));
             entity.setQty(ArithmeticUtil.divide(entity.getTradeAmt(), unit == null ? BigDecimal.ONE:unit, 4));
             periodCommonService.autoDealQtyForSubmit(entity.getFinAssetIntInfoList(),entity.getRegistShare(),entity.getQty());
