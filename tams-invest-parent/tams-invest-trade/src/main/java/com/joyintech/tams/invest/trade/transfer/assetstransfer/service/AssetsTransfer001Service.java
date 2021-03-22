@@ -107,4 +107,9 @@ public class AssetsTransfer001Service extends BaseService<AssetsTransfer001Dto> 
                 ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/getFinprodId" ,paramMap,
                 SelectOptionDto.class);
     }
+
+    public Page<SelectOptionDto> getFinprodMarketId(Map<String, Object> paramMap) {
+        return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/getFinprodMarketId" , paramMap,
+                SelectOptionDto.class);
+    }
 }
