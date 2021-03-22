@@ -39,7 +39,10 @@ public class InvestorsQualityCheckDJWZXService extends InvestorsQualityCheckBase
         resultDto.setPageType("8");
         resultDto.setUnQualified(String.valueOf(unQualifiedList.size()));
         resultDto.setTotal(checkRecTol.toString()); 
-        resultDto.setRate(checkRecTol.subtract(BigDecimal.valueOf(unQualifiedList.size())).divide(checkRecTol).toString());
+        //检查对象为0的情况下：
+        if(checkRecTol.compareTo(BigDecimal.ZERO) == 1) {
+        	resultDto.setRate(checkRecTol.subtract(BigDecimal.valueOf(unQualifiedList.size())).divide(checkRecTol,2,BigDecimal.ROUND_DOWN).toString());
+        }       
 
         return resultDto;
     }

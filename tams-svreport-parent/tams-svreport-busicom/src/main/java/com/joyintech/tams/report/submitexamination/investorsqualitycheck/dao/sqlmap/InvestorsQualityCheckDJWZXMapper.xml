@@ -5,13 +5,11 @@
 	WITH  objRec  AS(						
 			SELECT
 				tmp1.REG_CODE,
-				tmp1.hodeDate,
 				tmp1.VDATE,
 				NVL(tmp1.actEndMDate,tmp1.MDate) MDATE			
 			FROM (
 					SELECT  
-						A.REG_CODE,
-						#{searchDate,jdbcType=DATE}    AS hodeDate,
+						A.REG_CODE,						
 						A.VDATE,
 						A.MDATE,
 						B.MDATE AS actEndMDate,		
@@ -27,18 +25,19 @@
 								)
 					WHERE
 						A.STATUS  != 'D'
-						AND B.STATUS IN ('01','02')
-						AND A.VDATE <![CDATA[<=]]> #{searchDate,jdbcType=DATE}  
+						AND B.STATUS IN ('01','02') 
+						AND TO_DATE(TO_CHAR(A.VDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 						
 				) tmp1
 			WHERE
 				endStatusNo = 1
 				AND (
-						(actEndMDate = null
+						(actEndMDate is null
 							AND MDATE <![CDATA[>]]> #{searchDate,jdbcType=DATE}  
+							AND TO_DATE(TO_CHAR(MDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[>]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 						) OR (
-							actEndMDate != null
-							AND actEndMDate <![CDATA[>]]> #{searchDate,jdbcType=DATE}
+							actEndMDate is not null
+							AND TO_DATE(TO_CHAR(actEndMDate, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[>]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 						)
 					)					   								
 	)
@@ -59,16 +58,16 @@
 		<include refid="objRec"></include>					
 			SELECT  
 				REG_CODE prdRegistCode,
-				hodeDate,
+				#{searchDate,jdbcType=VARCHAR} AS hodeDate,
 				VDATE prdVDate,
 				MDATE prdMDate	
 			FROM  objRec A
 				LEFT JOIN CHB_INVESTHOLD_INFO_SUB B
 				ON (A.REG_CODE = B.PRD_REGIST_CODE
-					AND A.hodeDate = B.HOLD_DATE
 					AND B.STATUS IN ('01','02')
 				   )
 			WHERE
-				B.PRD_REGIST_CODE = null					   														
+				TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+				AND B.PRD_REGIST_CODE is null					   														
 	</select>	
 </mapper>

@@ -6,22 +6,19 @@
 		SELECT
 			tmp3.REG_CODE,
 			tmp3.VDATE,
-			tmp3.hodeDate,
 			tmp3.RAISE_QTY,
 			tmp3.TOTAL_AMT
 		FROM (				
 				SELECT
 					tmp2.REG_CODE,
 					tmp2.VDATE,
-					tmp2.hodeDate,
 					B.RAISE_QTY,
 					B.TOTAL_AMT,
 					ROW_NUMBER() over( partition by tmp2.REG_CODE ORDER BY B.STATUS DESC ,B.UPDATE_TIME DESC)  AS raiseStatusNo
 				FROM (
 						SELECT  
 							A.REG_CODE,
-							A.VDATE,
-							#{searchDate,jdbcType=DATE}    AS hodeDate
+							A.VDATE
 						FROM CHB_PRD_BASEINFO A
 							LEFT JOIN
 								(
@@ -32,13 +29,15 @@
 									CHB_PRD_DEAL_SUB
 								WHERE
 									STATUS IN ('01','02')
-									AND MDATE <![CDATA[<=]]> #{searchDate,jdbcType=DATE} 
+									AND TO_DATE(TO_CHAR(MDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 								GROUP BY
 									PROD_REGIST_CODE
 							) tmp1
 							ON A.REG_CODE = tmp1.PROD_REGIST_CODE
+															
 						WHERE
-							tmp1.PROD_REGIST_CODE = null
+							tmp1.PROD_REGIST_CODE is null
+							AND A.STATUS  != 'D'
 							<if test="orgCodeList != null and orgCodeList.size() > 0">
 							    <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
 							        #{orgCode,jdbcType=VARCHAR}
@@ -63,8 +62,10 @@
 			objRec A
 			INNER JOIN CHB_INVESTHOLD_INFO_SUB B
 			 	ON(A.REG_CODE = B.PRD_REGIST_CODE
-			 	   AND A.hodeDate = B.HOLD_DATE
-			 	   AND B.STATUS IN ('01','02'))							
+			 	   AND B.STATUS IN ('01','02'))	
+		WHERE
+		    TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+				 	   						
 	</select>
 	
 	<!-- 余额、份额共通-错误记录取得 -->
@@ -73,7 +74,7 @@
 			SELECT
 				tmp1.REG_CODE prdRegistCode,					
 				tmp1.VDATE prdVDate,
-				tmp1.hodeDate,
+				#{searchDate} AS hodeDate,
 				tmp1.RAISE_QTY prdRaiseTotalQty,
 				tmp1.TOTAL_AMT prdRaiseTotalAmt,
 				SUM(QTY) investRaiseTotalQty,
@@ -82,7 +83,6 @@
 				SELECT  
 					A.REG_CODE,					
 					A.VDATE,
-					A.hodeDate,
 					A.RAISE_QTY,
 					A.TOTAL_AMT,
 					B.QTY,
@@ -91,15 +91,15 @@
 				FROM  objRec A
 					INNER JOIN CHB_INVESTHOLD_INFO_SUB B
 					ON (A.REG_CODE = B.PRD_REGIST_CODE
-						AND A.hodeDate = B.HOLD_DATE
 						AND B.STATUS IN ('01','02')
-					   )					
+					   )
+				WHERE
+					TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')	   					
 				) tmp1
 			WHERE 	investStatusNo = 1
 			GROUP BY
 				tmp1.REG_CODE,					
 				tmp1.VDATE,
-				tmp1.hodeDate,
 				tmp1.RAISE_QTY,
 				tmp1.TOTAL_AMT											
 	</select>	

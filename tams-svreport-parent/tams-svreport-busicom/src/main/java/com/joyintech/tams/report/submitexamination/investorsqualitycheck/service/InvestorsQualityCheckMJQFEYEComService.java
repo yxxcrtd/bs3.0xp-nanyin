@@ -76,11 +76,13 @@ public class InvestorsQualityCheckMJQFEYEComService extends BaseService<Investor
         	//当 【入参.检查类型 = 01:余额】时，进行以下处理
     		if("01".equals(checkType)) {
     		//变量.偏离度  = Math.abs(产品端募集总金额 - 投资端募集总金额)  ÷ 产品端募集总金额 * 100%		
-    			deviation = dealDto.getPrdRaiseTotalAmt().subtract(dealDto.getInvestRaiseTotalAmt()).abs().divide(dealDto.getPrdRaiseTotalAmt());
+    			deviation = dealDto.getPrdRaiseTotalAmt().subtract(dealDto.getInvestRaiseTotalAmt()).abs().divide(
+    					dealDto.getPrdRaiseTotalAmt(),2,BigDecimal.ROUND_DOWN);
     		}else {																											
     		//以外的情况下，进行以下处理																										
     		//变量.偏离度  =	Math.abs(产品端募集总份额 - 投资端募集总份额)  ÷ 产品端募集总份额 * 100%
-    			deviation = dealDto.getPrdRaiseTotalQty().subtract(dealDto.getInvestRaiseTotalQty()).abs().divide(dealDto.getPrdRaiseTotalQty());
+    			deviation = dealDto.getPrdRaiseTotalQty().subtract(dealDto.getInvestRaiseTotalQty()).abs().divide(
+    					dealDto.getPrdRaiseTotalQty(),2,BigDecimal.ROUND_DOWN);
     		}	
     		
     		

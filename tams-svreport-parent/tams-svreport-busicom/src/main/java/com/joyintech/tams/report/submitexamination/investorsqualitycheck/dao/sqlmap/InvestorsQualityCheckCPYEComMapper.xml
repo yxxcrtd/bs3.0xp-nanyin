@@ -5,14 +5,12 @@
 	WITH  objRec  AS(
 			SELECT
 				REG_CODE,
-				hodeDate,
 				MDATE,
 				BALANCE_AMT,
 				PRD_QTY
 			FROM(
 				SELECT
 					REG_CODE,
-					hodeDate,
 					MDATE,
 					BALANCE_AMT,
 					PRD_QTY,
@@ -20,11 +18,10 @@
 				FROM(
 					SELECT  
 						A.REG_CODE,
-						#{searchDate,jdbcType=DATE}    AS hodeDate,
 						B.MDATE,
 						B.BALANCE_AMT,
 						B.PRD_QTY,
-						ROW_NUMBER() over( partition by A.REG_CODE , B.MDATE ORDER BY B.STATUS DESC )  AS durStatusNo
+						ROW_NUMBER() over( partition by A.REG_CODE , B.MDATE ORDER BY B.STATUS DESC ,B.UPDATE_TIME DESC)  AS durStatusNo
 					FROM  CHB_PRD_BASEINFO A
 						LEFT JOIN CHB_PRD_DEAL_SUB B
 						ON (A.REG_CODE = B.PROD_REGIST_CODE
@@ -42,7 +39,7 @@
 							    </foreach>
 						</if>
 						AND B.STATUS  IN ('01','02')
-						AND B.MDATE  <![CDATA[<=]]> #{searchDate,jdbcType=DATE}  
+						AND TO_DATE(TO_CHAR(B.MDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 					)
 				WHERE 	durStatusNo = 1
 				)		
@@ -66,7 +63,7 @@
 		<include refid="objRec"></include>
 			SELECT		
 				REG_CODE as prdRegistCode,
-				hodeDate,
+				#{searchDate} as hodeDate,
 				MDATE as busiMDate,
 				BALANCE_AMT as prdBalanceAmt,
 				PRD_QTY as prdTotalQty,
@@ -77,7 +74,6 @@
 			FROM	
 				(SELECT
 						REG_CODE,
-						hodeDate,
 						MDATE,
 						BALANCE_AMT,
 						PRD_QTY,
@@ -89,7 +85,6 @@
 					FROM(
 							SELECT
 								REG_CODE,
-								hodeDate,
 								MDATE,
 								BALANCE_AMT,
 								PRD_QTY,
@@ -98,7 +93,6 @@
 							FROM(
 								SELECT  
 									A.REG_CODE,
-									A.hodeDate,
 									A.MDATE,
 									A.BALANCE_AMT,
 									A.PRD_QTY,
@@ -114,15 +108,14 @@
 							WHERE 	raiseStatusNo = 1
 						) tmp1
 						LEFT JOIN CHB_INVESTHOLD_INFO_SUB C
-							ON (tmp1.REG_CODE = C.PRD_REGIST_CODE
-								AND tmp1.hodeDate = C.HOLD_DATE
+							ON (tmp1.REG_CODE = C.PRD_REGIST_CODE								
 								AND C.STATUS  IN ('01','02')						
 								)
+					WHERE 	TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')	
 					)				
 			WHERE 	hodeStsNo = 1
 			GROUP BY 
 				REG_CODE,
-				hodeDate,
 				MDATE,
 				BALANCE_AMT,
 				PRD_QTY,
