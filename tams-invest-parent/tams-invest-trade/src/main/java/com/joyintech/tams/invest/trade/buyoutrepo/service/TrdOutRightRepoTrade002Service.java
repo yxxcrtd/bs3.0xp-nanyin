@@ -1332,6 +1332,9 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 						resultDto.setCcy(input.getCcy());
 						// 交易编号 = 金融产品交易Entity.交易编号
 						resultDto.setTradeId(input.getTradeId());
+						// 母金融产品代码
+						resultDto.setpFinprodId(input.getTradeId());
+
 						// 投资目的 = 按“摊余成本类-公允价值变动计入其他综合收益-公允价值变动计入当期损益”的顺序依次冻结，削减对应投资目的债券可用持仓
 						resultDto.setInvAim(StringUtil.isEmpty(avaBond.getInvAim()) ? "999999" : avaBond.getInvAim());
 
@@ -1376,6 +1379,10 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 				resultDto.setCcy(input.getCcy());
 				// 交易编号 = 金融产品交易Entity.交易编号
 				resultDto.setTradeId(input.getTradeId());
+
+				// 母金融产品代码
+				resultDto.setpFinprodId(input.getTradeId());
+
 				// 投资目的 = 按“摊余成本类-公允价值变动计入其他综合收益-公允价值变动计入当期损益”的顺序依次冻结，削减对应投资目的债券可用持仓
 				resultDto.setInvAim("999999");
 				lstPtlSecPositionFlowDto.add(resultDto);

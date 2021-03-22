@@ -105,7 +105,9 @@
         SUM(AMOUNT)
         from PTL_SEC_POSITION_DETAIL
         where CDATE = #{cdate,jdbcType=DATE}
-        <include refid="whereSqlDetail"/>
+        <if test="pFinprodId != null and pFinprodId != ''">
+            AND TRADE_ID = #{pFinprodId}
+        </if>
         <if test="acctType != null and !acctType.isEmpty() and needAcctType">
             and SEC_ACCT_ID in (
             SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
