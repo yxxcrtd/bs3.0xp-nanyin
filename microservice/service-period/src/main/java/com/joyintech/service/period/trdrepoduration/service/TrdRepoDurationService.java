@@ -358,7 +358,9 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
            List<PtlSecPositionFlow> flows = trdRepoDurationMapper.selectSecFlow(params);
            if (flows != null && !flows.isEmpty()) {
                flows.forEach(flow -> {
-                   flow.setAmount(flow.getAmount());
+                   //撤销时金额取反
+                   flow.setAmount(BussinessConstant.REVOKE.equalsIgnoreCase(trdRepoDurationDto.getOperateType()) ? flow.getAmount().negate() : flow.getAmount());
+                   flow.setCdate(DateUtil.parse(trdRepoDurationDto.getSettleDate()));
                    trdRepoDurationMapper.insertSelect04Sec(flow);
                });
            }
