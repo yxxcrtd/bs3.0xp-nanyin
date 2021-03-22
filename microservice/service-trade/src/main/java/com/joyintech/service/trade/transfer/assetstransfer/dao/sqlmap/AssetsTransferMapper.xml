@@ -210,33 +210,33 @@
         UNION ALL
 
         /** 质押式回购 **/
-        SELECT PTL_SEC_POSITION.PORTFOLIO_ID                                                              AS portfolioId,
-            PTL_PORTFOLIO.PORTFOLIO_NAME                                                               AS portfolioName,
-            FIN_PRODUCT_TYPE.TYPE_8                                                                    AS assetType,
-             FIN_TRADE_PRODUCT.FINPROD_ID   AS finprodMarketId,
-            case
-            when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then STL_SEC_ACCT_INFO.SEC_ACCT_ID
-            else null end                                                                          AS secAcctId,
-            null                                                                          AS finprodName,
-            CHL.FINPROD_ID                                                                             AS chlId,
-            CHL.FINPROD_NAME                                                                           AS chlName,
-            STL_SEC_ACCT_INFO.SEC_ACCT_NAME                                                            AS secAcctName,
-            TRD_PRODUCT_DEAL.VDATE                                                                     AS vdate,
-            TRD_PRODUCT_DEAL.MDATE                                                                     AS mdate,
-            PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION                                                                        AS ps,
-            (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd'))                             AS days,
-            ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4)                                         AS yield,
-            NULL                                                                          AS amount,
-            ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2)                                              AS printAmt,
-            null                                                                                       AS posAmt,
-            NULL                                                                                       AS finprodType2,
-            FIN_TRADE_PRODUCT.FINPROD_ID                                                                AS finprodId,
-            NULL                                                                                       AS profitType,
-            FIN_TRADE_PRODUCT.FINPROD_ID                                                               AS tradeId,
-            FIN_TRADE_PRODUCT.CALENDAR_ID AS calendarId,
-            TRD_PRODUCT_DEAL.CCY AS ccy,
-            PTL_SEC_POSITION.INV_AIM AS invAim,
-            PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION                                                                        AS backLendDirection
+        SELECT PTL_SEC_POSITION.PORTFOLIO_ID AS portfolioId,
+        PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
+        FIN_PRODUCT_TYPE.TYPE_8 AS assetType,
+        FIN_TRADE_PRODUCT.FINPROD_ID AS finprodMarketId,
+        case
+        when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then STL_SEC_ACCT_INFO.SEC_ACCT_ID
+        else null end AS secAcctId,
+        null AS finprodName,
+        CHL.FINPROD_ID AS chlId,
+        CHL.FINPROD_NAME AS chlName,
+        STL_SEC_ACCT_INFO.SEC_ACCT_NAME AS secAcctName,
+        TRD_PRODUCT_DEAL.VDATE AS vdate,
+        TRD_PRODUCT_DEAL.MDATE AS mdate,
+        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS ps,
+        (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd')) AS days,
+        ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4) AS yield,
+        NULL AS amount,
+        ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2) AS printAmt,
+        null AS posAmt,
+        NULL AS finprodType2,
+        FIN_TRADE_PRODUCT.FINPROD_ID AS finprodId,
+        NULL AS profitType,
+        FIN_TRADE_PRODUCT.FINPROD_ID AS tradeId,
+        FIN_TRADE_PRODUCT.CALENDAR_ID AS calendarId,
+        TRD_PRODUCT_DEAL.CCY AS ccy,
+        PTL_SEC_POSITION.INV_AIM AS invAim,
+        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS backLendDirection
         FROM PTL_SEC_POSITION
         INNER JOIN PTL_PORTFOLIO ON PTL_SEC_POSITION.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
         INNER JOIN FIN_TRADE_PRODUCT ON PTL_SEC_POSITION.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID
@@ -271,33 +271,33 @@
         UNION ALL
 
         /** 拆借 **/
-        SELECT PTL_SEC_POSITION.PORTFOLIO_ID                                  AS portfolioId,
-            PTL_PORTFOLIO.PORTFOLIO_NAME                                   AS portfolioName,
-            FIN_PRODUCT_TYPE.TYPE_8                                        AS assetType,
-            FIN_TRADE_PRODUCT.FINPROD_ID                             AS finprodMarketId,
-            case
-            when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then PTL_SEC_POSITION.SEC_ACCT_ID
-            else null end                                              AS secAcctId,
-            null                                                           AS finprodName,
-            CHL.FINPROD_ID                                                 AS chlId,
-            CHL.FINPROD_NAME                                               AS chlName,
-            STL_SEC_ACCT_INFO.SEC_ACCT_NAME                                AS secAcctName,
-            TRD_PRODUCT_DEAL.VDATE                                         AS vdate,
-            TRD_PRODUCT_DEAL.MDATE                                         AS mdate,
-            PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION                        AS ps,
-            (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd')) AS days,
-            ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4)             AS yield,
-            null                                                           AS amount,
-            ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2)                    AS printAmt,
-            null                                                           AS posAmt,
-            null                                                           AS finprodType2,
-            FIN_TRADE_PRODUCT.FINPROD_ID                                                           AS finprodId,
-            null                                                           AS profitType,
-            FIN_TRADE_PRODUCT.FINPROD_ID                                   AS tradeId,
-            FIN_TRADE_PRODUCT.CALENDAR_ID                                  AS calendarId,
-            TRD_PRODUCT_DEAL.CCY                                           AS ccy,
-            TRD_PRODUCT_DEAL.INV_AIM                                       AS invAim,
-            PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION                        AS backLendDirection
+        SELECT PTL_SEC_POSITION.PORTFOLIO_ID AS portfolioId,
+        PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
+        FIN_PRODUCT_TYPE.TYPE_8 AS assetType,
+        FIN_TRADE_PRODUCT.FINPROD_ID AS finprodMarketId,
+        case
+        when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then PTL_SEC_POSITION.SEC_ACCT_ID
+        else null end AS secAcctId,
+        null AS finprodName,
+        CHL.FINPROD_ID AS chlId,
+        CHL.FINPROD_NAME AS chlName,
+        STL_SEC_ACCT_INFO.SEC_ACCT_NAME AS secAcctName,
+        TRD_PRODUCT_DEAL.VDATE AS vdate,
+        TRD_PRODUCT_DEAL.MDATE AS mdate,
+        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS ps,
+        (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd')) AS days,
+        ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4) AS yield,
+        null AS amount,
+        ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2) AS printAmt,
+        null AS posAmt,
+        null AS finprodType2,
+        FIN_TRADE_PRODUCT.FINPROD_ID AS finprodId,
+        null AS profitType,
+        FIN_TRADE_PRODUCT.FINPROD_ID AS tradeId,
+        FIN_TRADE_PRODUCT.CALENDAR_ID AS calendarId,
+        TRD_PRODUCT_DEAL.CCY AS ccy,
+        TRD_PRODUCT_DEAL.INV_AIM AS invAim,
+        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS backLendDirection
         FROM PTL_SEC_POSITION PTL_SEC_POSITION
         INNER JOIN PTL_PORTFOLIO ON PTL_SEC_POSITION.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
         INNER JOIN FIN_TRADE_PRODUCT ON PTL_SEC_POSITION.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID
@@ -1338,5 +1338,53 @@
                 AND T.CHL_ID = #{chlId}
             </if>
         </where>
+    </select>
+    <select id="getFinprodMarketId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT f1.FINPROD_MARKET_ID id, nvl(f1.FINPROD_ABBR,f1.FINPROD_NAME) text
+        FROM FIN_PRODUCT f1
+        left join FIN_PRODUCT_TYPE f2
+        on f1.FINPROD_ID=f2.FINPROD_ID
+        WHERE f2.type_8 in
+        <foreach collection="type8List" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        <if test="search != null and search != ''">
+            AND (f1.FINPROD_MARKET_ID LIKE CONCAT('%',CONCAT(#{search},'%'))
+            OR f1.FINPROD_NAME LIKE CONCAT('%',CONCAT(#{search},'%'))
+            OR f1.FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search},'%')))
+        </if>
+        <if test="assetType!=null and assetType != ''">
+            and f2.type_8=#{assetType}
+        </if>
+        UNION ALL
+        SELECT f1.FINPROD_MARKET_ID id, nvl(f1.FINPROD_ABBR,f1.FINPROD_NAME) text
+        FROM FIN_PRODUCT f1
+        left join FIN_PRODUCT_TYPE f2
+        on f1.FINPROD_ID=f2.FINPROD_ID
+        <!-- 多级法人改造 add by jingqiongqiong 20200615 -->
+        <if test="institutionCode != null and institutionCode != ''">
+            INNER JOIN DATA_AUTH_NOTIFY_INST dani on dani.BUSINESS_ID = f1.FINPROD_ID AND dani.MODEL_TYPE='02'
+            <!--多级法人改造 add by jingqiongqiong 20200617-->
+            <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+                AND dani.INSTITUTION_CODE IN
+                <foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <!--多级法人改造 add by jingqiongqiong 20200617-->
+        </if>
+        WHERE f2.type_8 in
+        <foreach collection="type8List" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        <if test="assetType!=null and assetType != ''">
+            and f2.type_8=#{assetType}
+        </if>
+        <!-- 多级法人改造 add by jingqiongqiong 20200615 -->
+        <if test="search != null and search != ''">
+            AND (f1.FINPROD_MARKET_ID LIKE CONCAT('%',CONCAT(#{search},'%'))
+            OR f1.FINPROD_NAME LIKE CONCAT('%',CONCAT(#{search},'%'))
+            OR f1.FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search},'%')))
+        </if>
     </select>
 </mapper>

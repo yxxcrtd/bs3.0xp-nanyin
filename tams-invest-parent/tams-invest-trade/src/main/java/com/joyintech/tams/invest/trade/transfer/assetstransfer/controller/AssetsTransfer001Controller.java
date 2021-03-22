@@ -171,4 +171,11 @@ public class AssetsTransfer001Controller extends BaseController {
         }
         return ar;
     }
+
+    @ResponseBody
+    @RequestMapping("/getFinprodMarketId")
+    public Page<SelectOptionDto> getFinprodMarketId(){
+        Map<String,Object> paramMap = RequestUtil.getPageParam();
+        return assetsTransfer001Service.getFinprodMarketId(paramMap);
+    }
 }
