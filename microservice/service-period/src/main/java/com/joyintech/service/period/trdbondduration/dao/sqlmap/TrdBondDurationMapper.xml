@@ -1241,4 +1241,12 @@
             AND T1.SETTLE_DATE = to_date(#{tradeDate}, 'yyyy-MM-dd')
         </if>
     </select>
+    
+    <select id="getPkByBizCode" resultType="java.util.Map" parameterType="java.lang.String">
+    	select temp.* ,rownum from(
+			select distinct business_data_pk4 child, business_data_pk5 payDate
+ 			from sys_data_process_mark where page_id = 'TrdBondDuration003' and business_data_pk3 = #{bizCode,jdbcType=VARCHAR}
+ 			)temp where rownum<![CDATA[<]]>2
+    </select>
 </mapper>
+                        

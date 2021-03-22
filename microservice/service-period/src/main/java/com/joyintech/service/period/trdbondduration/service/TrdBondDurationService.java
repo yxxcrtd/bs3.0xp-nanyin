@@ -598,5 +598,8 @@ public class TrdBondDurationService extends BaseService {
         return trdBondDurationMapper.findProcessDtos(param);
     }
 
+    public Map<String,Object> getPkByBizCode(String bizCode){
+    	return trdBondDurationMapper.getPkByBizCode(bizCode);
+    }
 
 }

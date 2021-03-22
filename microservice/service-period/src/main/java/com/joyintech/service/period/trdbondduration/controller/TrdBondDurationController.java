@@ -3,6 +3,7 @@ package com.joyintech.service.period.trdbondduration.controller;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.period.trdbondduration.service.TrdBondDurationService;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonDeleteDto;
@@ -205,5 +206,13 @@ public class TrdBondDurationController {
     @PostMapping("findProcessDtos")
     public List<String> findProcessDtos(@RequestBody Map<String, Object> params) {
         return trdBondDurationService.findProcessDtos(params);
+    }
+    
+    @GetMapping("getPkByBizCode")
+    public Map<String,Object> getPkByBizCode(@RequestParam("bizCode") String bizCode) {
+    	if(StringUtil.isNotEmpty(bizCode)) {
+    		return trdBondDurationService.getPkByBizCode(bizCode);
+    	}
+        return null;
     }
 }
