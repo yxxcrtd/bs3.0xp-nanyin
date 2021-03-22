@@ -94,7 +94,7 @@ public class TrdOutRightRepoTradeService extends BaseService<TrdOutRightRepoTrad
         pageParam.put("noFlag", DictCodeList.是否_否.getValue());
         pageParam.put("yesFlag", DictCodeList.是否_是.getValue());
         pageParam.put("psPay", DictCodeList.交易方向_买入.getValue());
-
+        pageParam.put("psOut", DictCodeList.交易方向_卖出.getValue());
         return this.queryForPage(page, length,
             () -> trdOutRightRepoTradeMapper.queryForPage(pageParam));
     }
