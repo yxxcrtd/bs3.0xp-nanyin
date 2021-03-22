@@ -170,16 +170,15 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
      */
     @Override
     public void doDelete(String workflowId) {
-//        TrdFundDurationNew001Dto entity = this.getBussinessEntityByWorkflowId(workflowId);
+        TrdFundDurationNew001Dto entity = this.getBussinessEntityByWorkflowId(workflowId);
         baseTradeProductDealCommServiceImpl.delete(workflowId);
-//        if(StringUtil.equals(entity.getBonusMode(),DictCodeList.分红方式_现金分红.getValue())
-//                && StringUtil.equals(entity.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal().getTradeStatus(),DictCodeListExt1.交易状态_初始.getValue())){
-//            entity.setWorkflowId(null);
-//            entity.setType(StringUtil.equals(entity.getAssetType(), DictCodeList.基金类资产类型_非货币基金.getValue())?"03":"06");
-//            getWorkFlowPatameter(entity);
-////            entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
-//            dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
-//        }
+        if(StringUtil.equals(entity.getPstype(),DictCodeList.分红方式_现金分红.getValue())
+                && StringUtil.equals(entity.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal().getTradeStatus(),DictCodeListExt1.交易状态_初始.getValue())){
+            entity.setWorkflowId(null);
+            getWorkFlowPatameter(entity);
+            entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
+            dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
+        }
     }
     /**
      * 工作流完成
@@ -232,7 +231,6 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
         }
         if(bonusTypeHlzt){
 //            非货币红利再投
-            //entity.setType("04");
             entity.setElementId("TrdFundDurationNew002_btn_save");
             WorkFlowParameter<TrdFundDurationNew001Dto> param = getWorkFlowPatameter(entity);
             entity.setPstype(DictCodeList.分红方式_红利再投.getValue());
@@ -271,11 +269,6 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
         parameter.setElementId(dto.getElementId());
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
-        //       为非货币现金分红及非货币红利再投时 设置前置交易编号
-        //if(StringUtil.equals(dto.getType(),"03")||StringUtil.equals(dto.getType(),"04")||StringUtil.equals(dto.getType(),"06")){
-//        if(StringUtil.equals(dto.getPstype(), "01")){
-//            dto.setbTradeId(dto.getTotleTradeId());
-//        }
         dto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
         parameter.setBusinessCode(dto.getTotleTradeId());
         parameter.setBusinessType(DictCodeList.共通业务类型_基金类资产存续期.getValue());

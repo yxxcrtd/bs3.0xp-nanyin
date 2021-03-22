@@ -90,7 +90,7 @@ public class TrdFundDurationNew001Validator implements BeanValidator{
         else if(StringUtil.equals("edit",dto.getMode())){
             Map<String,Object> map = new HashMap<>();
             map.put("tradeId",dto.getTotleTradeId());
-            String ps = StringUtil.equals("03",dto.getType())?DictCodeList.交易方向_现金分红.getValue():DictCodeList.交易方向_红利再投.getValue();
+            String ps = DictCodeList.交易方向_红利再投.getValue();
             map.put("ps",ps);
             map.put("yes_no", DictCodeList.是否_否.getValue());
             map.put("trade_status", DictCodeListExt1.交易状态_初始.getValue());
@@ -126,7 +126,6 @@ public class TrdFundDurationNew001Validator implements BeanValidator{
                     }
                 }
             }
-            //if (StringUtil.equals(dto.getType(),"03") || StringUtil.equals(dto.getType(),"06")) {
             if(StringUtil.equals(dto.getPstype(),DictCodeList.分红方式_现金分红.getValue())){
                 if (dto.getBussTrdTransferOrder() == null ||  dto.getBussTrdTransferOrder().isEmpty()) {
                     messageList.add(new ValidMessage("bussTrdTransferOrder","请生成划款指令"));

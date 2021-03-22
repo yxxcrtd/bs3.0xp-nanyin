@@ -83,8 +83,6 @@ public class TrdFundDurationNew002Controller extends BaseController {
     public String init(Model model) {
 //        获取画面所有参数
         Map<String,Object> param = RequestUtil.getPageParam();
-//        获取业务类型
-        String type = (String)param.get("type");
         String workflowId = (String)param.get(GlobalConstant.WORKFLOW_ID);
         Date sysDate=DateUtil.parse(DateUtil.getSysDate()); //取时间
         Calendar calendar = new GregorianCalendar();
@@ -151,7 +149,6 @@ public class TrdFundDurationNew002Controller extends BaseController {
                 dto.setFinAssetIntInfoList(trdFundDurationNew001Service.findAssetIntInfo(pageParam));
             }
 //            处理类型及交易员
-//            type=dto==null?null:dto.getType();
             trader = dto.getTrader();
         }
 //        有效及撤销处理
@@ -177,16 +174,10 @@ public class TrdFundDurationNew002Controller extends BaseController {
                 dto.setQty(ArithmeticUtil.divide(tradeAmt, unitPrice == null ? BigDecimal.ONE:unitPrice, 4));
                 dto.setPstype(DictCodeList.分红方式_红利再投.getValue());
             }
-//            type = StringUtil.isNotEmpty(type)?type:dto.getType();
             trader = dto.getTrader();
             if(StringUtil.equals(param.get("ps"),"T11")){
                 dto.setPstype(DictCodeList.分红方式_现金分红.getValue());
             }
-//            if(type == "04"){
-//                // 单位净值、分红份额重新设置
-//                BigDecimal unitPrice = periodCommonService.getLatestValuation(dto.getFinprodId(), DateUtil.format(dto.getExRightsDate()));
-//                dto.setQty(ArithmeticUtil.divide(dto.getTradeAmt(), unitPrice, 4));
-//            }
             dto.setBussTrdTransferOrder(periodCommonService.selectPayOrders(dto.getTotleTradeId()));
         }
         else{
@@ -268,7 +259,6 @@ public class TrdFundDurationNew002Controller extends BaseController {
         parameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
         if(StringUtil.isEmpty(dto.getbTradeId())){
             //为非货币现金分红及非货币红利再投时 设置前置交易编号
-//            if(StringUtil.equals(dto.getType(),"03")||StringUtil.equals(dto.getType(),"04") ||StringUtil.equals(dto.getType(),"06") ){
             if(StringUtil.equals(dto.getPstype(), DictCodeList.分红方式_现金分红.getValue())
                     ||StringUtil.equals(dto.getPstype(), DictCodeList.分红方式_红利再投.getValue())){
                 dto.setbTradeId(dto.getTotleTradeId());
