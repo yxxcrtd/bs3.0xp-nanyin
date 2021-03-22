@@ -270,8 +270,8 @@ public class TrdFundDurationNewService extends BaseService<TrdFundDurationNewDto
                     updateUser, durationDto.getRevokeReason(), null, null);
             // 删除其他表
             investPeriodCommonService.deleteByWorkflowId(durationDto.getWorkflowId());
-            if (StringUtil.isEmpty(durationDto.getPstype())
-                    && StringUtil.equals(durationDto.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList().get(0).getTrdProductDealAdd().getPayType(), DictCodeList.分红方式_现金分红.getValue())) {
+            if (StringUtil.isEmpty(durationDto.getPstype())){
+                    //&& StringUtil.equals(durationDto.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList().get(0).getTrdProductDealAdd().getPayType(), DictCodeList.分红方式_现金分红.getValue())) {
                 investPeriodCommonService.revoke后续交易相关表(durationDto.getpTradeId(), updateUser, durationDto.getRevokeReason(), null, null);
             } else if (StringUtil.equals(durationDto.getPstype(), DictCodeList.分红方式_现金分红.getValue())) {
                 investPeriodCommonService.revoke汇总和交易相关表(durationDto.getbTradeId(), updateUser, durationDto.getRevokeReason(),
