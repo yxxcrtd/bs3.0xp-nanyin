@@ -1340,6 +1340,7 @@
         </where>
     </select>
     <select id="getFinprodMarketId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct * from (
         SELECT f1.FINPROD_MARKET_ID id, nvl(f1.FINPROD_ABBR,f1.FINPROD_NAME) text
         FROM FIN_PRODUCT f1
         left join FIN_PRODUCT_TYPE f2
@@ -1386,5 +1387,6 @@
             OR f1.FINPROD_NAME LIKE CONCAT('%',CONCAT(#{search},'%'))
             OR f1.FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search},'%')))
         </if>
+        )
     </select>
 </mapper>
