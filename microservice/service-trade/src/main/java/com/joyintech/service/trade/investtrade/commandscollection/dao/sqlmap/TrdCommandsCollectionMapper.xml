@@ -693,7 +693,7 @@
         SELECT 
             T1.ENTRUST_ID entrustId, 
             T1.VDATE vdate,
-            T1.MDATE mdate,
+            decode(#{assetType},'Con1',T1.ENTRUST_DATE,T1.MDATE) mdate,
             T1.PORTFOLIO_ID portfolioId,/* add by songyawei */
 <!--         
 		<if test="assetType != PINAN_ASSET_TYPE_F02 ">
