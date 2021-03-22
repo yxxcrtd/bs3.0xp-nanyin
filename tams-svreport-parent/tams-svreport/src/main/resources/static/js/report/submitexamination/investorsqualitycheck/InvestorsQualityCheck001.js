@@ -173,6 +173,7 @@ $(function () {
                 return parm;
             },
         },
+        loadonce : true,
         cols: [
             {title: "产品登记编码", field: "prdRegistCode",width:'20%'},
             {title: "产品起息日", field: "prdVDate",width:'20%', type:"date"},
@@ -193,6 +194,7 @@ $(function () {
                 return parm;
             },
         },
+        loadonce : true,
         cols: [
             {title: "产品登记编码", field: "prdRegistCode",width:'20%'},
             {title: "产品起息日", field: "prdVDate",width:'20%', type:"date"},
@@ -232,6 +234,7 @@ $(function () {
                 return parm;
             },
         },
+        loadonce : true,
         cols: [
             {title: "产品登记编码", field: "prdRegistCode", width:'20%'},
             {title: "持有日期", field: "holdDate",width:'20%', type:"date"},
@@ -252,6 +255,7 @@ $(function () {
                 return parm;
             },
         },
+        loadonce : true,
         cols: [
             {title: "产品登记编码", field: "prdRegistCode", width:'20%'},
             {title: "持有日期", field: "holdDate",width:'20%', type:"date"},
@@ -272,6 +276,7 @@ $(function () {
                 return parm;
             },
         },
+        loadonce : true,
         cols: [
             {title: "产品登记编码", field: "prdRegistCode", width:'20%'},
             {title: "持有日期", field: "holdDate",width:'20%', type:"date"},
@@ -292,6 +297,7 @@ $(function () {
                 return parm;
             },
         },
+        loadonce : true,
         cols: [
             {title: "产品登记编码", field: "prdRegistCode", width:'20%'},
             {title: "持有日期", field: "holdDate",width:'20%', type:"date"},
