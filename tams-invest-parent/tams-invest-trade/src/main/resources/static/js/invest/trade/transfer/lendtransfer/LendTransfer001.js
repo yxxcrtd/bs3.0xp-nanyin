@@ -3,11 +3,13 @@ $(function() {
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone) {
             //风险试算组件
-            var riskparam = getriskdata();
-            if (pageModel==PAGE_MODEL_NEW){
-                riskparam.data =null;
-            }
-            window.ResoluteRiskMathComm.getparam(riskparam);
+        	if(typeof(BaseRiskMathComm) != 'undefined') {
+                var riskparam = getriskdata();
+                if (pageModel==PAGE_MODEL_NEW){
+                    riskparam.data =null;
+                }
+                window.BaseRiskMathComm.getparam(riskparam);
+        	}
 
             //组合持仓组件
             window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showCash(true);
@@ -191,14 +193,16 @@ $(function() {
 
     //判断是提交或是保存
     function saveOrSubmit(operateType) {
-        if(ResoluteRiskMathComm) {
-            s = ResoluteRiskMathComm.saveOrSubmitCheck(operateType);
-            if(!s && s != ''){
-                return;
-            }
-            if (window.ResoluteRiskMathComm.isCalcConditionChanged(getriskdata())){
-                return;
-            }
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+	        if(BaseRiskMathComm) {
+	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+	            if(!s && s != ''){
+	                return;
+	            }
+	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+	                return;
+	            }
+	        }
         }
         var object = $.serializeToObject('#lendTransferForm', true);
         var data = table.getAllRows();
@@ -229,50 +233,12 @@ $(function() {
         var list = [];
         var object = {};
         if (data != null && data != "") {
-            if (data.length > 1) {
-                for (var i in data) {
-                    var obj = {
-                        timePoint: MY_SUP_TIME_TYPE_02,
-                        valDate: $('#LendTransfer001_tradeDate').val(),
-                        portfolioCode: data[i].portfolioId,
-                        tradeAmount: data[i].tradeAmt,
-                        assetType: $('#LendTransfer001_paBussType').val(),
-                        isEnabled: '01',
-                        tradeDirection: $('#LendTransfer001_ps').val()
-                    };
-                    var finType = '';
-                    var finMng = '';
-                    if ($('#LendTransfer001_ps').val() == BACK_LEND_DIRECTION_01) {
-                        if ($('#LendTransfer001_paBussType').val() == BANK_LENDING_TYPE_02) {
-                            obj.assetType = FINPROD_TYPE_F08;//选特拆也当作拆入
-                        } else if (!$('#LendTransfer001_paBussType').val() || $('#LendTransfer001_paBussType').val() == '') {
-                            finType = "paBussType";
-                            finMng = 'TrdLendInvestTrade002.paBussType';
-                            obj.assetType = null;
-                        } else {
-                            obj.assetType = FINPROD_TYPE_F08;
-                        }
-                    } else if ($('#LendTransfer001_ps').val() == BACK_LEND_DIRECTION_02) {
-                        obj.assetType = FINPROD_TYPE_F09;
-                    } else if (finMng == '' && (!$('#LendTransfer001_ps').val() || $('#LendTransfer001_ps').val() == '')) {
-                        finMng = 'TrdDepositInvestTrade001.finprodType';
-                    }
-                    list[i] = obj;
-                }
-                object = {
-                    valDate: ['tradeDate', '交易日期'],
-                    portfolioCode: ['portfolioId', '组合代码'],
-                    tradeAmount: ['prin', '交易金额'],
-                    assetType: [finType, finMng],
-                    tradeDirection: ['busiPs', '交易方向'],
-                    data: list
-                };
-            } else {
+            for (var i in data) {
                 var obj = {
                     timePoint: MY_SUP_TIME_TYPE_02,
                     valDate: $('#LendTransfer001_tradeDate').val(),
-                    portfolioCode: data[0].portfolioId,
-                    tradeAmount: data[0].tradeAmt,
+                    portfolioCode: data[i].portfolioId,
+                    tradeAmount: data[i].tradeAmt,
                     assetType: $('#LendTransfer001_paBussType').val(),
                     isEnabled: '01',
                     tradeDirection: $('#LendTransfer001_ps').val()
@@ -294,15 +260,16 @@ $(function() {
                 } else if (finMng == '' && (!$('#LendTransfer001_ps').val() || $('#LendTransfer001_ps').val() == '')) {
                     finMng = 'TrdDepositInvestTrade001.finprodType';
                 }
-                object = {
-                    valDate: ['tradeDate', '交易日期'],
-                    portfolioCode: ['portfolioId', '组合代码'],
-                    tradeAmount: ['prin', '交易金额'],
-                    assetType: [finType, finMng],
-                    tradeDirection: ['busiPs', '交易方向'],
-                    data: obj
-                };
+                list[i] = obj;
             }
+            object = {
+                valDate: ['tradeDate', '交易日期'],
+                portfolioCode: ['portfolioId', '组合代码'],
+                tradeAmount: ['prin', '交易金额'],
+                assetType: [finType, finMng],
+                tradeDirection: ['busiPs', '交易方向'],
+                data: list
+            };
         };
         return object;
     };
@@ -344,22 +311,16 @@ $(function() {
         $('#LendTransfer001_btn_risk').click(function(){
             var data = table.getAllRows();
             if(data != null && data != ''){
-                Joyin.ajax(basePath + 'invest/trade/transfer/lendtransfer/LendTransfer001/selectIndex', {}, function (result) {
-                    if (result) {
-                        var index = result;
-                        var object1 = getriskdata();
-                        var list2 = object1.data;
-                        if (list2 != null && list2 != '' && list2.length > 1) {
-                            for (var i in list2) {
-                                object1.data[i].mun = list2.length;
-                                object1.data[i].index = index;
-                            }
-                            window.ResoluteRiskMathComm.initBaseRiskMathCommPage2(object1);
-                        } else {
-                            window.ResoluteRiskMathComm.initBaseRiskMathCommPage(object1);
-                        }
-                    }
-                });
+                var object = $.serializeToObject('#lendTransferForm', true);
+                object.portfolioId = $("#portfolioIdOut").val();
+                //深拷贝
+                var bussTrdTransfenpeiDto = JSON.parse(JSON.stringify(data));
+                for(var i=0;i<bussTrdTransfenpeiDto.length;i++){
+                	bussTrdTransfenpeiDto[i].counterId = bussTrdTransfenpeiDto[i].portfolioId;
+                	delete bussTrdTransfenpeiDto[i].portfolioId;
+                }
+                object.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
+                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/1/RSK002/F08',object,getriskdata());
             }
             else {
                 Joyin.error("转仓列表信息不能为空！");
