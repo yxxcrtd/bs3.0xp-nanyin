@@ -1091,7 +1091,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         mapParm.put("creditmstidZC", BussinessDictCodeList.授信配置代码_资产授信.getValue());
         mapParm.put("creditmstidXL", BussinessDictCodeList.授信配置代码_系列授信.getValue());
         mapParm.put("finprodId",finprodId);
-        mapParm.put("tradedate",tradedate);
+        mapParm.put("tradeDate",tradedate);
         List<CreditLines> creditLinesList = filterNewCreditLines(creditLinesMapper.getCeLinesInfoforassetPierce(mapParm));
         if(!StringUtil.isEmptyList(creditLinesList)){
             for(CreditLines creditLines : creditLinesList){
