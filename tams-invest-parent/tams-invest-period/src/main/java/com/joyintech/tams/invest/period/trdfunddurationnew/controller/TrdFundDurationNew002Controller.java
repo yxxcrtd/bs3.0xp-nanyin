@@ -167,11 +167,15 @@ public class TrdFundDurationNew002Controller extends BaseController {
                 dto.setFinAssetIntInfoList(listFinAssetIntInfotemp);
                 //                // 单位净值、分红份额重新设置
                 BigDecimal unitPrice = periodCommonService.getLatestValuation(dto.getFinprodId(), DateUtil.format(dto.getExRightsDate()));
-                BigDecimal tradeAmt = BigDecimal.ZERO;
+                BigDecimal sumtradeAmt = BigDecimal.ZERO;
+                BigDecimal sumRegistShare = BigDecimal.ZERO;
                 for(FinAssetIntInfo finAssetIntInfo : dto.getFinAssetIntInfoList()){
-                    tradeAmt = finAssetIntInfo.getTradeAmt();
+                    sumtradeAmt = sumtradeAmt.add(finAssetIntInfo.getTradeAmt());
+                    sumRegistShare = sumRegistShare.add(finAssetIntInfo.getRegistShare());
                 }
-                dto.setQty(ArithmeticUtil.divide(tradeAmt, unitPrice == null ? BigDecimal.ONE:unitPrice, 4));
+                dto.setRegistShare(sumRegistShare);
+                dto.setQty(ArithmeticUtil.divide(sumtradeAmt, unitPrice == null ? BigDecimal.ONE:unitPrice, 4));
+                periodCommonService.autoDealQtyForSubmit(dto.getFinAssetIntInfoList(),dto.getRegistShare(),dto.getQty());
                 dto.setPstype(DictCodeList.分红方式_红利再投.getValue());
             }
             trader = dto.getTrader();
