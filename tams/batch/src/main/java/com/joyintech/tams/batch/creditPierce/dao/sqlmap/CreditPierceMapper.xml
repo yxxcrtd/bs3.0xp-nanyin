@@ -10,7 +10,7 @@
 			PTL_SEC_PIERCE_VALUTION.FINPROD_ID                     finprodId,
 			PTL_SEC_PIERCE_VALUTION.CCY                            ccy,
 			PTL_SEC_PIERCE_VALUTION.SHARE_AMT                      shareAmt,
-		    nvl(weight.RISK_WEIGHT,0) * (nvl(PTL_SEC_PIERCE_VALUTION.MARKET_VALUE,0)+nvl(PTL_SEC_PIERCE_VALUTION.TDY_INTINCEXP,0)-nvl(T5.dscCostAmt,0))  dscCostAmt,
+		    nvl(weight.RISK_WEIGHT,1) * (nvl(PTL_SEC_PIERCE_VALUTION.MARKET_VALUE,0)+nvl(PTL_SEC_PIERCE_VALUTION.TDY_INTINCEXP,0)-nvl(T5.dscCostAmt,0))  dscCostAmt,
 			PTL_SEC_PIERCE_VALUTION.DSC_CLEAN_PRICE                dscCleanPrice,
 			PTL_SEC_PIERCE_VALUTION.BUY_COST_AMT                   buyCostAmt,
 			PTL_SEC_PIERCE_VALUTION.BUY_CLEAN_PRICE                buyCleanPrice,
