@@ -1354,8 +1354,11 @@
             OR f1.FINPROD_NAME LIKE CONCAT('%',CONCAT(#{search},'%'))
             OR f1.FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search},'%')))
         </if>
-        <if test="assetType!=null and assetType != ''">
-            and f2.type_8=#{assetType}
+        <if test="assetTypeList!=null and assetTypeList.size() >0">
+            and f2.type_8 in
+            <foreach collection="assetTypeList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         UNION ALL
         SELECT f1.FINPROD_MARKET_ID id, nvl(f1.FINPROD_ABBR,f1.FINPROD_NAME) text
@@ -1378,8 +1381,11 @@
         <foreach collection="type8List" item="item" separator="," open="(" close=")">
             #{item}
         </foreach>
-        <if test="assetType!=null and assetType != ''">
-            and f2.type_8=#{assetType}
+        <if test="assetTypeList!=null and assetTypeList.size() >0 ">
+            and f2.type_8 in
+            <foreach collection="assetTypeList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         <!-- 多级法人改造 add by jingqiongqiong 20200615 -->
         <if test="search != null and search != ''">
