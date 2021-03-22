@@ -64,7 +64,7 @@
 		LEFT JOIN FIN_DEAL_PLEDGE ON TRD_PRODUCT_DEAL.TRADE_ID = FIN_DEAL_PLEDGE.finprod_id
 		where PTL_PORTFOLIO.INVEST_YESORNO='Y'
 		and TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN (#{bugOutTypeForword}, #{bugOutTypeNegative})
-		and TRD_PRODUCT_DEAL.PS = #{psPay}
+		and TRD_PRODUCT_DEAL.PS IN (#{psPay},#{psOut})
 		and TRD_PRODUCT_DEAL.TRADE_STATUS = #{tradeStatusInit}
 		and TRD_PRODUCT_DEAL.IS_CANCEL = #{noFlag}
 		<if test="portfolioId != null and portfolioId.size() > 0">
@@ -184,7 +184,7 @@
 		LEFT JOIN FIN_DEAL_PLEDGE ON TRD_PRODUCT_DEAL.TRADE_ID = FIN_DEAL_PLEDGE.finprod_id
 		where PTL_PORTFOLIO.INVEST_YESORNO='Y'
 		and TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN (#{bugOutTypeForword}, #{bugOutTypeNegative})
-		and TRD_PRODUCT_DEAL.PS = #{psPay}
+		and TRD_PRODUCT_DEAL.PS IN (#{psPay},#{psOut})
 		and TRD_PRODUCT_DEAL.TRADE_STATUS = #{tradeStatusRevoke}
 		<if test="userId != null and userId != ''">
 			and (PTL_PORTFOLIO.PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
@@ -277,7 +277,7 @@
 		LEFT JOIN FIN_DEAL_PLEDGE ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = FIN_DEAL_PLEDGE.finprod_id
 		where PTL_PORTFOLIO.INVEST_YESORNO='Y'
 		and WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 IN (#{bugOutTypeForword}, #{bugOutTypeNegative})
-		and WFL_TRD_PRODUCT_DEAL.PS = #{psPay}
+		and WFL_TRD_PRODUCT_DEAL.PS IN (#{psPay},#{psOut})
 		and WFL_TRD_PRODUCT_DEAL.TRADE_STATUS = #{tradeStatusInit}
 		and WFL_TRD_PRODUCT_DEAL.IS_CANCEL = #{noFlag}
 		<if test="portfolioId != null and portfolioId.size() > 0">

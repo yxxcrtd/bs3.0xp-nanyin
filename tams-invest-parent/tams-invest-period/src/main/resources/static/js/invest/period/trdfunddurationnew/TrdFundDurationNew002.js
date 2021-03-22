@@ -959,6 +959,11 @@
 //        if(pageModel != PAGE_MODEL_REFERENCE){
 //    	    bonusModeChange();
 //    	}
+        if(pageModel == PAGE_MODEL_NEW && !psType){
+            $("#finprodMarketId").attr("disabled",false);
+        }else{
+            $("#finprodMarketId").attr("disabled",true);
+        }
         var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01){
             $("#exRightsDate").attr("disabled",true);
