@@ -145,6 +145,7 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
         model.addAttribute("FINPROD_TYPE_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
+        model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
         model.addAttribute("ACCT_TYPE_A01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
         model.addAttribute("ACCT_TYPE_A07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
         
