@@ -290,9 +290,10 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         else{
             if(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())
                     && StringUtil.equals(dto.getRepoType(), DictCodeList.回购类型_质押式协议回购.getValue())){
-                BigDecimal sumPrinAmt = BigDecimal.ZERO;
+//                BigDecimal sumPrinAmt = BigDecimal.ZERO;
 
                 for (TrdRolloverPledgedRepo001Dto entity:dto.getPledgedRepoInfoList()){
+                    BigDecimal sumPrinAmt = BigDecimal.ZERO;
                     for(FinDealPledgeDto deal : entity.getPledgedRepoRolloverList()){
                         sumPrinAmt= ArithmeticUtil.doAdd(deal.getDesiPledgePrin(),sumPrinAmt);
                     }

@@ -27,8 +27,10 @@
                FP.TRADE_MARKET TRADEMARKET,
                FP.VDATE        VDATE,
                FP.MDATE        MDATE,
-               SEC.PORTFOLIO_ID
+               SEC.PORTFOLIO_ID,
+               FTP.TYPE_4  windTypeOne
         FROM FIN_PRODUCT FP
+        INNER JOIN FIN_PRODUCT_TYPE FTP ON FTP.FINPROD_ID=FP.FINPROD_ID
                  LEFT JOIN PTL_SEC_POSITION SEC
                            ON SEC.FINPROD_ID = FP.FINPROD_ID
                                AND SEC.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}

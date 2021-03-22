@@ -2,6 +2,13 @@ $(function(){
 
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone) {
+        	if(typeof(BaseRiskMathComm) != 'undefined') {
+                var riskparam = getriskdata();
+                if (pageModel==PAGE_MODEL_NEW){
+                    riskparam.data =null;
+                }
+                window.BaseRiskMathComm.getparam(riskparam);
+        	}
             $("#bussTrdAvailableCashQuery_div_cash").show();
             $("#bussTrdAvailableCashQuery_div_position").hide();
             $("#bussTrdAvailableCashQuery_avalibleCashT1").parent().parent().hide();
@@ -9,11 +16,6 @@ $(function(){
             if(chlId && chlId != null){
                 $("#bussTrdAvailableCashQuery_div_channelCash").show();
             }
-            var riskparam = getriskdata();
-            if (pageModel == PAGE_MODEL_NEW) {
-                riskparam.data = null;
-            }
-            window.ResoluteRiskMathComm.getparam(riskparam);
         }
     };
     
@@ -234,15 +236,17 @@ $(function(){
 
     //判断是提交或是保存
     function saveOrSubmit(operateType) {
-        if(ResoluteRiskMathComm) {
-            s = ResoluteRiskMathComm.saveOrSubmitCheck(operateType);
-            if(!s && s != ''){
-                return;
-            }
-            if (window.ResoluteRiskMathComm.isCalcConditionChanged(getriskdata())){
-                return;
-            }
-        }
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+	        if(BaseRiskMathComm) {
+	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+	            if(!s && s != ''){
+	                return;
+	            }
+	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+	                return;
+	            }
+	        }
+         }
         var object = $.serializeToObject('#secTransferForm', true);
 
         var data = table.getAllRows();
@@ -270,6 +274,7 @@ $(function(){
             Joyin.confirm(result.data, function() {
                 var tableArry = table.getAllRows();
                 // Joyin.dialog('风险试算',)
+                //object.riskCreditListCommonDto = result.data;
                 if(operateType === 'save') {
                     WorkFlow.doSaveList(basePath + 'invest/trade/transfer/sectransfer/SecTransfer001/save',
                         object, "SecTransfer001_btn_save");
@@ -288,58 +293,34 @@ $(function(){
         var list = [];
         var object = {};
         if(data!=null && data!="") {
-            if (data.length > 1) {
-                for (var i in data) {
-                    var obj = {
-                        timePoint: MY_SUP_TIME_TYPE_02,
-                        valDate: $('#tradeDate').val(),
-                        portfolioCode: data[i].portfolioId,
-                        tradeAmount: data[i].tradeRepAmt,
-                        assetType: FINPROD_TYPE_F01,
-                        isEnabled: '01',
-                        assetCode: $('#finprodId').val(),
-                        tradeDirection: PS_T01,
-                        index: null,
-                        mun: mun
-                    };
-                    list[i] = obj;
-                }
-                if ($('#windtypeone').val() && $('#windtypeone').val() != '') {
-                    for (var i in list) {
-                        list[i].assetSecType = $('#windtypeone').val();
-                    }
-                }
-                object = {
-                    valDate: ['tradeDate', '交易日期'],
-                    portfolioCode: ['portfolioId', '组合代码'],
-                    tradeAmount: ['tradeRepAmt', '交易金额'],
-                    assetType: ['assetSecType', '资产类型'],
-                    tradeDirection: ['ps', '交易方向'],
-                    data: list
-                };
-            } else {
+            for (var i in data) {
                 var obj = {
                     timePoint: MY_SUP_TIME_TYPE_02,
                     valDate: $('#tradeDate').val(),
-                    portfolioCode: data[0].portfolioId,
-                    tradeAmount: data[0].tradeRepAmt,
+                    portfolioCode: data[i].portfolioId,
+                    tradeAmount: data[i].tradeRepAmt,
                     assetType: FINPROD_TYPE_F01,
                     isEnabled: '01',
                     assetCode: $('#finprodId').val(),
-                    tradeDirection: PS_T01
+                    tradeDirection: PS_T01,
+                    index: null,
+                    mun: mun
                 };
-                if ($('#windtypeone').val() && $('#windtypeone').val() != '') {
-                    obj.assetSecType = $('#windtypeone').val();
-                }
-                object = {
-                    valDate: ['tradeDate', '交易日期'],
-                    portfolioCode: ['portfolioId', '组合代码'],
-                    tradeAmount: ['tradeRepAmt', '交易金额'],
-                    assetType: ['assetSecType', '资产类型'],
-                    tradeDirection: ['ps', '交易方向'],
-                    data: obj
-                };
+                list[i] = obj;
             }
+            if ($('#windtypeone').val() && $('#windtypeone').val() != '') {
+                for (var i in list) {
+                    list[i].assetSecType = $('#windtypeone').val();
+                }
+            }
+            object = {
+                valDate: ['tradeDate', '交易日期'],
+                portfolioCode: ['portfolioId', '组合代码'],
+                tradeAmount: ['tradeRepAmt', '交易金额'],
+                assetType: ['assetSecType', '资产类型'],
+                tradeDirection: ['ps', '交易方向'],
+                data: list
+            };
         }
         return object;
     };
@@ -512,23 +493,18 @@ $(function(){
         $('#SecTransfer001_btn_risk').click(function(){
             var data = table.getAllRows();
             if(data!=null && data != '') {
-                Joyin.ajax(basePath + 'invest/trade/transfer/sectransfer/SecTransfer001/selectIndex',{},function(result){
-                    if(result){
-                        var index=result;
-                        var object1=getriskdata();
-                        var list2=object1.data;
-                        if(list2 != null && list2 != '' && list2.length > 1) {
-                            for (var i in list2) {
-                                object1.data[i].mun = list2.length;
-                                object1.data[i].index = index;
-                            }
-                            window.ResoluteRiskMathComm.initBaseRiskMathCommPage2(object1);
-                        }
-                        else {
-                            window.ResoluteRiskMathComm.initBaseRiskMathCommPage(object1);
-                        }
-                    }
-                });
+                //-----------add by jjpei 2020-01-07 风险新版本 start----------
+                var object = $.serializeToObject('#secTransferForm', true);
+                object.portfolioId = $("#investPortfolioId").val();
+                //深拷贝
+                var bussTrdTransfenpeiDto = JSON.parse(JSON.stringify(data));
+                for(var i=0;i<bussTrdTransfenpeiDto.length;i++){
+                	delete bussTrdTransfenpeiDto[i].portfolioId;
+                	bussTrdTransfenpeiDto[i].ps = PS_T02;
+                }
+                object.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
+                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/1/RSK002/F01',object,getriskdata());
+
             } else {
                 Joyin.error("拆分列表信息不能为空！");
             }
