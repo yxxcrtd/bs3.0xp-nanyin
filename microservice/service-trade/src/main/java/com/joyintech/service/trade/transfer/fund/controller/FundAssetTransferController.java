@@ -50,7 +50,7 @@ public class FundAssetTransferController {
      * @return 单位净价list
      */
     @RequestMapping("findUnitCprice")
-    public List<FundAssetTransfer001Dto> findUnitCprice(@RequestBody Map<String,Object>param){
+    public List<BigDecimal> findUnitCprice(@RequestBody Map<String,Object>param){
         return fundAssetTransferService.findUnitCprice(param);
     }
     /**

@@ -15,7 +15,7 @@ public interface FundAssetTransferMapper {
 
     BigDecimal findInitCarryOverQty(Map<String, Object> param);
 
-    List<FundAssetTransfer001Dto> findUnitCprice(Map<String, Object> param);
+    List<BigDecimal> findUnitCprice(Map<String, Object> param);
 
     String selProdCode(Map<String, Object> param);
 

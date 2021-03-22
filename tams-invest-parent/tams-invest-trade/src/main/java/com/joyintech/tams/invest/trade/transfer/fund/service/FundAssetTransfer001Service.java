@@ -458,20 +458,14 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
     }
 
     //查询单位净价
-    public Map<String, BigDecimal> findUnitCprice(FundAssetTransfer001Dto dto) {
+    public List<String> findUnitCprice(FundAssetTransfer001Dto dto) {
         Map<String, Object> param = new HashMap<>();
-        Map<String, BigDecimal> unitCpriceMap = new HashMap<>();
+        param.put("portfolioId",dto.getInvTransPortf());
         param.put("finprodId", dto.getFinprodIdOrg());
         param.put("tardeStatus01", DictCodeListExt1.交易状态_初始.getValue());
         param.put("yesorno_no", DictCodeListExt1.是否_否.getValue());
         param.put("tradeDate", DateUtil.format(dto.getTradeDate()));
-        List<FundAssetTransfer001Dto> list = simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/findUnitCprice", param, FundAssetTransfer001Dto.class);
-        for (FundAssetTransfer001Dto fundDto : list) {
-            if (!StringUtil.isNotEmpty(unitCpriceMap.get(fundDto.getPortfolioId()))) {
-                unitCpriceMap.put(fundDto.getPortfolioId(), fundDto.getUnitCprice());
-            }
-        }
-        return unitCpriceMap;
+        return  simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/fund/FundAssetTransfer/findUnitCprice", param, List.class);
     }
 
     /**

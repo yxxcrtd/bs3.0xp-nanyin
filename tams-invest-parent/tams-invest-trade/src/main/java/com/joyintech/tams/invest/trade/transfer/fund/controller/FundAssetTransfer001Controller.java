@@ -203,14 +203,23 @@ public class FundAssetTransfer001Controller extends BaseController {
         }
         else{
             //1) 本次提交的转仓交易中是否存在单位净值不一致的转仓交易数据；
+            BigDecimal unitCprice = dto.getFunAssetTransferDtoList().get(0).getUnitCprice();
+            for(FundAssetTransfer001Dto fundDto:dto.getFunAssetTransferDtoList()){
+                if(unitCprice.compareTo(fundDto.getUnitCprice())!=0){
+                    confirmMsg = "多笔转仓交易中单位净值不一致，是否确认提交？";
+                    break;
+                }
+            }
             //2) 本次提交的转仓交易和当天同一产品同一只资产转仓给其他产品组合的交易（包括已生效和新建流程中的交易数据），是否存在单位净值不一致的数据
             //若任何一项检查发现有不一致的转仓交易数据，则系统提示
             //查询单位净价
-            Map<String,BigDecimal> map = fundAssetTransfer001Service.findUnitCprice(dto);
-            for (FundAssetTransfer001Dto fundDto: dto.getFunAssetTransferDtoList()) {
-                if(StringUtil.isNotEmpty(map.get(fundDto.getPortfolioId()))){
-                    if(fundDto.getUnitCprice().compareTo(map.get(fundDto.getPortfolioId()))!=0){
+            if(confirmMsg == ""){
+                List<String> unitCpriceList = fundAssetTransfer001Service.findUnitCprice(dto);
+                for(String unitCpriceObj:unitCpriceList){
+                    BigDecimal Obj = new BigDecimal(unitCpriceObj);
+                    if(unitCprice.compareTo(Obj)!=0){
                         confirmMsg = "多笔转仓交易中单位净值不一致，是否确认提交？";
+                        break;
                     }
                 }
             }

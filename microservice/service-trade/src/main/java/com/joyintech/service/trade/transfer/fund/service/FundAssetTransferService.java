@@ -32,7 +32,7 @@ public class FundAssetTransferService{
         return fundAssetTransferMapper.findInitCarryOverQty(param);
     }
 
-    public List<FundAssetTransfer001Dto> findUnitCprice(Map<String, Object> param) {
+    public List<BigDecimal> findUnitCprice(Map<String, Object> param) {
         return fundAssetTransferMapper.findUnitCprice(param);
     }
 
