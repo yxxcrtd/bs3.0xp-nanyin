@@ -20,11 +20,13 @@ $(function() {
             }
 
             //风险试算组件
-            var riskparam = getriskdata();
-            if (pageModel == PAGE_MODEL_NEW) {
-                riskparam.data = null;
-            }
-            window.ResoluteRiskMathComm.getparam(riskparam);
+        	if(typeof(BaseRiskMathComm) != 'undefined') {
+                var riskparam = getriskdata();
+                if (pageModel==PAGE_MODEL_NEW){
+                    riskparam.data =null;
+                }
+                window.BaseRiskMathComm.getparam(riskparam);
+        	}
         }
     };
 
@@ -171,14 +173,16 @@ $(function() {
 
     //判断是提交或是保存
     function saveOrSubmit(operateType) {
-        if(ResoluteRiskMathComm) {
-            s = ResoluteRiskMathComm.saveOrSubmitCheck(operateType);
-            if(!s && s != ''){
-                return;
-            }
-            if (window.ResoluteRiskMathComm.isCalcConditionChanged(getriskdata())){
-                return;
-            }
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+	        if(BaseRiskMathComm) {
+	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+	            if(!s && s != ''){
+	                return;
+	            }
+	            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+	                return;
+	            }
+	        }
         }
         var object = $.serializeToObject('#netPlanTransferForm', true);
         var data = table.getAllRows();
@@ -209,58 +213,33 @@ $(function() {
         var list = [];
         var object = {};
         if(data!=null&&data!="") {
-            if (data.length > 1) {
-                for (var i in data) {
-                    var obj = {
-                        timePoint: MY_SUP_TIME_TYPE_02,
-                        valDate: $('#NetPlanTransfer001_tradeDate').val(),
-                        portfolioCode: data[i].portfolioId,
-                        tradeAmount: data[i].tradeAmt,
-                        assetType: FINPROD_TYPE_F17,
-                        isEnabled: '01',
-                        assetCode: $('#finprodId').val(),
-                        tradeDirection: PS_T01,
-                        index: null,
-                        mun: mun,
-                        amtType : '1'
-                    };
-                    if($('#type7').val() && $('#type7').val() != ''){
-                        obj.assetSecType = $('#type7').val();
-                    }
-                    list[i] = obj;
-                }
-                object = {
-                    valDate: ['tradeDate', '交易日期'],
-                    portfolioCode: ['portfolioId', '组合代码'],
-                    tradeAmount: ['tradeAmt', '交易份额'],
-                    assetType: ['assetSecType', '资产类型'],
-                    tradeDirection: ['ps', '交易方向'],
-                    data: list
-                };
-            } else {
+            for (var i in data) {
                 var obj = {
                     timePoint: MY_SUP_TIME_TYPE_02,
                     valDate: $('#NetPlanTransfer001_tradeDate').val(),
-                    portfolioCode: data[0].portfolioId,
-                    tradeAmount: data[0].tradeAmt,
+                    portfolioCode: data[i].portfolioId,
+                    tradeAmount: data[i].tradeAmt,
                     assetType: FINPROD_TYPE_F17,
                     isEnabled: '01',
                     assetCode: $('#finprodId').val(),
                     tradeDirection: PS_T01,
+                    index: null,
+                    mun: mun,
                     amtType : '1'
                 };
                 if($('#type7').val() && $('#type7').val() != ''){
                     obj.assetSecType = $('#type7').val();
                 }
-                object = {
-                    valDate: ['tradeDate', '交易日期'],
-                    portfolioCode: ['portfolioId', '组合代码'],
-                    tradeAmount: ['tradeAmt', '交易份额'],
-                    assetType: ['assetSecType', '资产类型'],
-                    tradeDirection: ['ps', '交易方向'],
-                    data: obj
-                };
+                list[i] = obj;
             }
+            object = {
+                valDate: ['tradeDate', '交易日期'],
+                portfolioCode: ['portfolioId', '组合代码'],
+                tradeAmount: ['tradeAmt', '交易份额'],
+                assetType: ['assetSecType', '资产类型'],
+                tradeDirection: ['ps', '交易方向'],
+                data: list
+            };
         }
         return object;
     };
@@ -302,22 +281,19 @@ $(function() {
         $('#NetPlanTransfer001_btn_risk').click(function(){
             var data = table.getAllRows();
             if(data != null && data != ''){
-                Joyin.ajax(basePath + 'invest/trade/transfer/netplantransfer/NetPlanTransfer001/selectIndex', {}, function (result) {
-                    if (result) {
-                        var index = result;
-                        var object1 = getriskdata();
-                        var list2 = object1.data;
-                        if (list2 != null && list2 != '' && list2.length > 1) {
-                            for (var i in list2) {
-                                object1.data[i].mun = list2.length;
-                                object1.data[i].index = index;
-                            }
-                            window.ResoluteRiskMathComm.initBaseRiskMathCommPage2(object1);
-                        } else {
-                            window.ResoluteRiskMathComm.initBaseRiskMathCommPage(object1);
-                        }
-                    }
-                });
+                //-----------add by jjpei 2020-01-07 风险新版本 start----------
+                var object = $.serializeToObject('#netPlanTransferForm', true);
+                object.portfolioId = $("#portfolioIdOut").val();
+                //深拷贝
+                var bussTrdTransfenpeiDto = JSON.parse(JSON.stringify(data));
+                for(var i=0;i<bussTrdTransfenpeiDto.length;i++){
+                	bussTrdTransfenpeiDto[i].counterId=bussTrdTransfenpeiDto[i].portfolioId;
+                	delete bussTrdTransfenpeiDto[i].portfolioId;
+                	bussTrdTransfenpeiDto[i].ps = PS_T02;
+                }
+                object.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
+                window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/1/RSK002/F04',object,getriskdata());
+
             }
             else {
                 Joyin.error("拆分列表信息不能为空！");
