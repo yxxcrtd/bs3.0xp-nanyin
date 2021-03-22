@@ -3662,8 +3662,6 @@
         ON DETAIL.REP_FINPROD_ID = OTHER.REP_FINPROD_ID
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
-        left JOIN REP_ASSET_OTHER OTHER
-        on detail.REP_FINPROD_ID = OTHER.REP_FINPROD_ID
         left join fin_product info
         on info.FINPROD_ID=detail.REP_FINPROD_ID
         left join FIN_PRODUCT_TYPE infotp
