@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.apache.commons.collections4.CollectionUtils;
@@ -91,10 +93,13 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 			para.put("sendStatus", "01");
 			chbBotAstPosCBMapper.delete(para);
 			List<ChbBotAstPositionSub> updateOrDelList = chbBotAstPosCBMapper.queryUpdateOrDelList(DateUtil.format(posDate), isChbBtm);
+			List<ChbBotAstPositionSub> updateList = updateOrDelList.stream().filter(x -> StringUtil.equals(x.getStatus(), "02")).collect(Collectors.toList());
+			List<ChbBotAstPositionSub> delList = updateOrDelList.stream().filter(x -> StringUtil.equals(x.getStatus(), "03")).collect(Collectors.toList());
             // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
-            updateOrDelList = chbCommonCheckService.checkData(updateOrDelList, ChbCheckTableInfo.底层资产持仓信息登记表SUB);
+			updateList = chbCommonCheckService.checkData(updateList, ChbCheckTableInfo.底层资产持仓信息登记表SUB);
             // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
-			for (ChbBotAstPositionSub sub : updateOrDelList) {
+			updateList.addAll(delList);
+			for (ChbBotAstPositionSub sub : updateList) {
 				sub.setRegistSeqno(IDGenerator.generate(36));
 				// 报送流水号
 				sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
