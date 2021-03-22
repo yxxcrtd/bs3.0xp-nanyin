@@ -251,6 +251,10 @@ public class TrdBondInvestTrade001Controller extends BaseController {
         String operateType = inputDto.getOperateType();
         String totleTradeId = inputDto.getTotleTradeId();
         inputDto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(inputDto.getTotleTradeId());
+        String turnInvAim = trdBondInvestTrade002Service.getReverseTradeDtoInvAim(inputDto.getTotleTradeId());
+        if(StringUtil.isNotEmpty(turnInvAim)) {
+            inputDto.setTurnInvAim(turnInvAim);
+        }
         //划款指令
         if (inputDto != null && StringUtil.isEmptyList(inputDto.getBussTrdTransferOrder())){
             List<BussTrdTransferOrderBase> orderDtolist = bussSettleOrderCommService.selectOrdersByBizCode(inputDto.getTotleTradeId()) ;
