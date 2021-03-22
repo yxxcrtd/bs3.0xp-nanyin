@@ -2570,7 +2570,7 @@
             ${getProductRatingOrderSqlByZt}
         </if>
         )t where t.rk = '1'
-        )bestRatingZt on bestRatingZt.OCODE = info.ISSUER
+        )bestRatingZt on bestRatingZt.OCODE = NVL(info.ISSUER, info.FINANCIER)
         WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
