@@ -293,14 +293,16 @@
                                     <table class="layui-table pro-table-wrap" id="dataTable"></table>
                                 </div>
                                 <!-- 风险试算 -->
-                                <div id="resoluteRiskMathComm" class="page-component" th:data-path="@{/invest/trade/transfer/common/ResoluteRiskMathComm/init}"
-                                     th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',
-                                 tradeId:'${tradeId}'}|"></div>
+                                <div th:if="${isEleShow['BuyOutRepoTransfer001_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" 
+            						th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|">
+            					</div>
                             </div>
                         </div>
                     </div>
                     <div class="row text-center stepbar">
-                        <a th:id="|BuyOutRepoTransfer001_btn_risk|" class="layui-btn layui-btn-sm">风险试算</a>
+                        <a th:if="${isEleShow['BuyOutRepoTransfer001_btn_riskcal']} ne 'N' and ${isEleShow['BaseRiskMathComm_btn_riskcal']} ne 'N'"
+               				th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm"
+               				data-th-text="#{BuyOutRepoTransfer001.risk}">风险试算</a>
                         <a id="BuyOutRepoTransfer001_btn_save" class="layui-btn layui-btn-sm btn-save"
                            data-th-text="#{SysCommon.save}">保存</a>
                         <a id="BuyOutRepoTransfer001_btn_submit" class="layui-btn layui-btn-sm btn-submit"
