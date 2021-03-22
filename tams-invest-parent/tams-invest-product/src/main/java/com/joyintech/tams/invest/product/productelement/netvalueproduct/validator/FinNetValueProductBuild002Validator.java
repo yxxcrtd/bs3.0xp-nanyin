@@ -1405,7 +1405,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
 
-        validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null, ValidMessage.class);
+        // validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null, ValidMessage.class);
 
         return validList;
     }

@@ -142,9 +142,9 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 		}
 		}
 
-		if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-			errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getRepAssetType(), ValidMessage.class);
-		}
+//		if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+//			errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getRepAssetType(), ValidMessage.class);
+//		}
 
 		return errorList;
 	}

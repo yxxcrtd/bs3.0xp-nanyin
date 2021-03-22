@@ -214,9 +214,9 @@ public class FinFundTargetValidator implements BeanValidator {
                 }
             }
             //add by zhangnian 20191105 end
-            if (StringUtil.isNotEmpty(dto.getBussRepFundInfoDto())){
-                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, value, null, dto.getBussRepFundInfoDto().getRepAssetType(), ValidMessage.class);
-            }
+//            if (StringUtil.isNotEmpty(dto.getBussRepFundInfoDto())){
+//                resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, value, null, dto.getBussRepFundInfoDto().getRepAssetType(), ValidMessage.class);
+//            }
         }
         // 是否展示资产四五级分类
         if (StringUtil.equals(CacheUtil.getSysParam("IS_SHOW_TYPE"), "01") &&  (StringUtil.equals(dto.getOperateType(), "save") ||  StringUtil.equals(dto.getOperateType(), "submit"))) {

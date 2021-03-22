@@ -209,9 +209,9 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
             }
         }
 
-        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
-        }
+//        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+//            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
+//        }
         
         //校验融资人
         //@NotEmpty(fieldName = "FinProjectTargetAsset002.financier",groups={ValidateGroupEdit.class})

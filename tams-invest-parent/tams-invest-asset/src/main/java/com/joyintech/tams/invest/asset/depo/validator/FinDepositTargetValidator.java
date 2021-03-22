@@ -176,9 +176,9 @@ public class FinDepositTargetValidator implements BeanValidator{
         }
         // add by caiqun 20200727 end  BS-1118【银行模式】【投资交易-存款类标的】新建标的时，选择挂一次性划款通道，提交成功。控制只能选择逐笔划款通道
 
-        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getType6(), ValidMessage.class);
-        }
+//        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+//            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getType6(), ValidMessage.class);
+//        }
 
         return resultList;
     }

@@ -422,7 +422,7 @@ public class ProductReportRegister002Validator implements BeanValidator {
             validList.add(new ValidMessage("请输入是否现金管理类"));
         }
 
-		validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
+		// validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
 
 		return validList;
 	}

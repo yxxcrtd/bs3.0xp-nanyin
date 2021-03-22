@@ -245,9 +245,9 @@ public class FinBondTargetAssetValidator implements BeanValidator{
 
         }
 
-        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
-        }
+//        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
+//            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
+//        }
 
         return resultList;
     }
