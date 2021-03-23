@@ -190,7 +190,9 @@ public class Rsk012Service extends OccupyReleasService<Rsk004InEntity> {
 		    return 0;
         });
 		for (Map<String, Object> mapData : mapList) {
-			saveData(mapData, false, getInfId()); 
+			if(StringUtil.isNotEmpty(mapData.get("uuid"))) {
+				saveData(mapData, false, getInfId()); 	
+			}
 		}
 		// add by zhangrui1 end
         // 参数计算明细
