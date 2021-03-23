@@ -12,6 +12,10 @@
             AND (PORTFOLIO_ID LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%') OR
             PORTFOLIO_NAME LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%'))
         </if>
+        <if test="userId != null and userId != ''">
+            AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+            OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+        </if>
     </select>
 
     <!-- 获取组合树 -->
