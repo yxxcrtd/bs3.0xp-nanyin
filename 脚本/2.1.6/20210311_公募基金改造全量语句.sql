@@ -67,4 +67,4 @@ values ('A6986B98361453A7E0835C5AA8C081D0', 'TrdFundDurationNew002');
 --公墓基金存续期处理逻辑 01：旧逻辑 02：新逻辑
 delete from sys_para WHERE SYSTEM_CODE ='TRD' AND PARA_CODE ='FUND_DEAL_TYPE';
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, UPDATE_FLG, INSTITUTION_CODE)
-values ('TRD', 'FUND_DEAL_TYPE', '02', '  ', ' ', '公墓基金存续期处理逻辑 01：旧逻辑 02：新逻辑', 'system', '', sysdate, 'system', sysdate, '01', '');
+values ('TRD', 'FUND_DEAL_TYPE', '01', '  ', ' ', '公墓基金存续期处理逻辑 01：旧逻辑 02：新逻辑', 'system', '', sysdate, 'system', sysdate, '01', '');
