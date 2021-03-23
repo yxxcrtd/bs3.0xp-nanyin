@@ -89,9 +89,10 @@
     
     <select id="queryPbcAssetType" resultType="java.lang.String" parameterType="java.lang.String">
     	select 
-			case when pbc_asset_type1 = 'P06' then pbc_asset_type1
+			<!--case when pbc_asset_type1 = 'P06' then pbc_asset_type1
 			else pbc_asset_type3
-			end pbcAssetType
+			end pbcAssetType-->
+			pbc_asset_type3 pbcAssetType
 		from chb_asset_info
 		where (pbc_asset_type1 ='P06' or pbc_asset_type3='R02')
 			and ASSET_CODE = #{assetCode,jdbcType=VARCHAR}

@@ -258,19 +258,47 @@
     			assetType = result;
 				var syqDiv = document.getElementById('syqDiv');
 				var loannDiv =document.getElementById("loannDiv");
-    	    	if(assetType === 'P06'){
-    	    		$('#assetType').val("01").trigger('change');
 
-
+				var syqFlag = true;
+				if (assetType === 'Q01'){
+					$('#assetType').val("01").trigger('change');
+				}else if (assetType === 'Q02'){
+					$('#assetType').val("02").trigger('change');
+				}else if (assetType === 'Q03'){
+					$('#assetType').val("03").trigger('change');
+				}else if (assetType === 'Q04'){
+					$('#assetType').val("04").trigger('change');
+				}else if (assetType === 'Q05'){
+					$('#assetType').val("05").trigger('change');
+				}else if (assetType === 'Q06'){
+					$('#assetType').val("06").trigger('change');
+				}else if (assetType === 'Q07'){
+					$('#assetType').val("07").trigger('change');
+				}else{
+					$('#assetType').val("08").trigger('change');
+					syqFlag = false;
+				}
+				if (syqFlag){
 					syqDiv.style.display="block";
 					loannDiv.style.display="none";
-    	    	}else{
-					$('#assetType').val("02").trigger('change');
-
-
+				}else{
 					syqDiv.style.display="none";
 					loannDiv.style.display="block";
-    	    	}
+				}
+
+    	    	// if(assetType === 'P06'){
+    	    	// 	$('#assetType').val("01").trigger('change');
+				//
+				//
+				// 	syqDiv.style.display="block";
+				// 	loannDiv.style.display="none";
+    	    	// }else{
+				// 	$('#assetType').val("02").trigger('change');
+				//
+				//
+				// 	syqDiv.style.display="none";
+				// 	loannDiv.style.display="block";
+    	    	// }
     		});
     	}
     }
