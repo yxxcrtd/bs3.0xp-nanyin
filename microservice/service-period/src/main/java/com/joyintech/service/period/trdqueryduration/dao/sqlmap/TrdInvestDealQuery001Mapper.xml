@@ -750,15 +750,15 @@
 				T1.TOTLE_TRADE_ID busiCode,
 		        T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-                order2.portfolio_id portfolioId,
-                order2.portfolio_name portfolioName,
+				decode(order2.portfolio_id,null,ppTemp.portfolio_id,order2.portfolio_id) portfolioId,
+				decode(order2.portfolio_name,null,ppTemp.portfolio_name,order2.portfolio_name) portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
 				T4.FINPROD_ABBR finprodAbbr,
 				to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
 				to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
-				order2.settle_amt tradeAmt/*实收本息总额*/,
+				decode(order2.settle_amt,null,spo.settle_amt,order2.settle_amt) tradeAmt/*实收本息总额*/,
 		        null tradeAmt2,
 				null  shareAmt,
 				T1.CCY ccy,
@@ -782,6 +782,9 @@
             LEFT JOIN SYS_INSTITUTION SI ON SI.INSTITUTION_CODE = SD.INSTITUTION_CODE
             LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
             LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
+			left join trd_product_deal  tpd on order2.TRADE_ID is null and tpd.totle_trade_id = t1.totle_trade_id
+			left join STL_PAY_ORDERS spo on spo.trade_id = tpd.trade_id
+			left join ptl_portfolio ppTemp on ppTemp.portfolio_id = spo.portfolio_id
 			WHERE T1.TRADE_STATUS = #{TRADE_STATUS01}
 			AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 			AND wtdta.MP_FINPROD_ID IS NULL
@@ -1479,15 +1482,15 @@
 				T1.P_TRADE_ID busiCode,
 		        T5.TYPE_8 finprodType2,
 				t3.PA_BUSS_TYPE paBussType,
-                order2.portfolio_id portfolioId,
-                order2.portfolio_name portfolioName,
+				decode(order2.portfolio_id,null,ppTemp.portfolio_id,order2.portfolio_id) portfolioId,
+				decode(order2.portfolio_name,null,ppTemp.portfolio_name,order2.portfolio_name) portfolioName,
 				NVL(T1.SEC_MANAGE_ACCT_ID, T1.CHL_ID) secManageAcctId,
 				nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
 				T4.FINPROD_MARKET_ID finprodMarketId,
 				T4.FINPROD_ABBR finprodAbbr,
 				to_char(T1.VDATE, 'yyyy-MM-dd') vDate/*计息开始日*/,
 				to_char(T1.MDATE, 'yyyy-MM-dd') mDate/*计息结束日*/,
-				order2.settle_amt tradeAmt/*实收本息总额*/,
+				decode(order2.settle_amt,null,spo.settle_amt,order2.settle_amt) tradeAmt/*实收本息总额*/,
 				null tradeAmt2,
 				null  shareAmt,
 				T1.CCY ccy,
@@ -1511,6 +1514,9 @@
             LEFT JOIN SYS_INSTITUTION SI ON SI.INSTITUTION_CODE = SD.INSTITUTION_CODE
             LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TEMPT1 ON T1.TOTLE_TRADE_ID = TEMPT1.P_TOTLE_TRADE_ID
             LEFT JOIN orderTemp order2 on TEMPT1.TOTLE_TRADE_ID = order2.TRADE_ID
+			left join trd_product_deal tpd on order2.TRADE_ID is null and tpd.totle_trade_id = t1.P_TRADE_ID and tpd.is_cancel =  #{YESNO_N}
+			left join STL_PAY_ORDERS spo on spo.trade_id = tpd.trade_id
+			left join ptl_portfolio ppTemp on ppTemp.portfolio_id = spo.portfolio_id
 			WHERE T1.TRADE_STATUS = #{TRADE_STATUS03}
 			AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
 			AND wtdta.MP_FINPROD_ID IS NULL
