@@ -53,6 +53,9 @@ $(function(){
                 });
             }
         }
+        if(!$("#portfolioId").val()){
+        	$("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
+        }
         $("#tradeAmt").val('').trigger("change").trigger('blur');
         $("#cpriceAmt").val('').trigger("change").trigger('blur');
         $("#intAmt").val('').trigger("change").trigger('blur');
@@ -227,6 +230,7 @@ $(function(){
                     object.prinAmount = $('#tradeAmt').val();
                     object.tradeAmt = $('#tradeRepAmt').val();
                     $("#portfolioId").text('').trigger("change").trigger('blur');
+                    $("#unitCprice").val('').trigger("change").trigger('blur');
                     portfolioIdChange(object);
                 }
             })
