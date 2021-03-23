@@ -278,7 +278,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
             pledgedRepoRolloverList = JSONArray.parseArray((String)param.get("pledgedRepoRolloverList"),FinDealPledgeDto.class);
         }
         model.addAttribute("finDealPledgeList",pledgedRepoRolloverList);
-        return "/invest/trade/resolute/trdsplitpledgedrepo/PledgedSecInfo";
+        return "/invest/trade/transfer/trdrolloverpledgedrepo/PledgedSecInfo";
     }
     /**
      * 保存时校验

@@ -306,7 +306,7 @@
        LEFT JOIN FIN_PRODUCT_TYPE FPT
              ON fp.FINPROD_ID = FPT.FINPROD_ID                        
         <where>
-            AND ava.AMOUNT &gt; 0
+            AND ava.AMOUNT &gt;= 0
             /*modify by caojin 2020/6/1  债券质押式回购   可质押券面总额全部质押时 为0  故加上‘=’ TISHKBS-594  start*/
             AND  NVL(ava.AMOUNT, 0) - NVL(pledge.AMOUNT, 0) + nvl(AVA_FLOW.amount, 0)  &gt;= 0
             /*modify by caojin 2020/6/1  债券质押式回购   可质押券面总额全部质押时 为0  故加上‘=’   end*/
