@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDto;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDtos;
+import com.joyintech.tams.invest.trade.trdplanrateinvesttrade.dto.TrdPlanRateInvestTradeDto;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -82,6 +83,12 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 	private WflStlPayOrdersMapper wflStlPayOrdersMapper;
 	@Autowired
 	private BaseGetBusinessId baseGetBusinessId;
+	
+	@Autowired
+	private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
+	
+	@Autowired
+	private TrdDealTotalAddMapper trdDealTotalAddMapper;
 	/**
 	 * 划款指令生成
 	 */
@@ -268,6 +275,27 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 						item.setEntrustId(entrustId);
 					}
 				});
+				//插入totleid
+				String totleTradeId = getTradeId(entity.getFinprodId());
+				if (!StringUtil.isEmptyList(finProductTradeDto.getBaseTradeProductDealDtos())) {
+					for(BaseTradeProductDealDto baseTradeProductDealDto:finProductTradeDto.getBaseTradeProductDealDtos()) {
+						TrdProductDeal trdProductDeal = baseTradeProductDealDto.getTrdProductDeal();
+						TrdProductDealAdd trdProductDealAdd = baseTradeProductDealDto.getTrdProductDealAdd();
+						if (DictCodeList.交易方向_卖出.getValue().equals(trdProductDeal.getPs())){
+							trdProductDeal.setTotleTradeId(totleTradeId);
+							TrdFinProductDealTotal trdFinProductDealTotal = getTrdTotalDeal(trdProductDeal);
+							trdFinProductDealTotal.setPortfolioId(entity.getTransferPortfolioId());
+							trdFinProductDealTotalMapper.insert(trdFinProductDealTotal);
+							TrdDealTotalAdd trdDealTotalAdd = setTrdDealTotalAdd(trdProductDeal,baseTradeProductDealDto.getEntrustId());
+							trdDealTotalAddMapper.insert(trdDealTotalAdd);
+							//将指令的交易编号设置为totleTradeId
+							for(StlPayOrdersDto stlPayOrdersDto:baseTradeProductDealDto.getStlPayOrdersList()) {
+								stlPayOrdersDto.setTradeId(totleTradeId);
+							}
+						}
+					}
+				}
+				
 				baseTradeProductDealCommService.execute(finProductTradeDto);
 				entity.setOperateType(type.toString());
 				simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/doComplete", planTransferDtos, String.class);
@@ -879,4 +907,64 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 			});
 		}
 	}
+	
+    public TrdFinProductDealTotal getTrdTotalDeal(TrdProductDeal dto) {
+        TrdFinProductDealTotal trdProductDealTotal = new TrdFinProductDealTotal();
+        BeanUtil.copyPropertiesIgnoreNull(trdProductDealTotal, dto);
+        BigDecimal channeFee=BigDecimal.ZERO;
+        if (dto.getSettleSpeed() != null) {
+            trdProductDealTotal.setSettleSpeed(dto.getSettleSpeed());
+        }
+        trdProductDealTotal.setUnitCprice(new BigDecimal("1"));
+        if (dto.getIntAmt() != null && dto.getTradeAmt() != null) {
+            trdProductDealTotal.setUnitInt(ArithmeticUtil.divide(dto.getIntAmt(), dto.getTradeAmt(), 8));
+        }
+        trdProductDealTotal.setUnitFprice(new BigDecimal("1"));
+        trdProductDealTotal.setParValue(new BigDecimal("1"));
+        trdProductDealTotal.setBusiType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
+        trdProductDealTotal.setFinprodType("");
+        trdProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        trdProductDealTotal.setBranch(Long.valueOf(CacheUtil.getSysParam("noBranchNoValue"))/*Long.valueOf(0)*/);
+        trdProductDealTotal.setFpriceAmt(dto.getTradeAmt().subtract(channeFee));//全价总额不包含通道费
+        trdProductDealTotal.setIntAmt(dto.getIntAmt());
+        trdProductDealTotal.setCpriceAmt(dto.getPrinAmt());
+        trdProductDealTotal.setShareAmt(dto.getPrinAmt());
+        trdProductDealTotal.setTradeAmt(dto.getTradeAmt());
+        trdProductDealTotal.setIsClean(DictCodeList.是否_是.getValue());
+        trdProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+        trdProductDealTotal.setCounterId(dto.getCounterId());
+
+        dto.setIsOutTrade(DictCodeList.是否_否.getValue());
+
+        trdProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        trdProductDealTotal.setFeeAmt(BigDecimal.ZERO);
+        //2019-12-24 通道费改造 标的挂通道  通道费不参与计算
+        trdProductDealTotal.setFeeAmtUnpay(BigDecimal.ZERO);
+        trdProductDealTotal.setPayUnpaidintAmt(BigDecimal.ZERO);//支付未支付利息
+        //trdProductDealTotal.setPortfolioId(dto.getActPortfolioId());//存子组合
+        return trdProductDealTotal;
+    }
+    
+    public String getTradeId(String finprodId) {        
+    	FinProduct finProduct = bussCommonMapperDelegateService.selectBySinglePrimaryKey(
+            FinProductMapper.class, finprodId, FinProduct.class);
+    	BussinessCodeParameter bussinessCodeParameterIn = new BussinessCodeParameter();
+        bussinessCodeParameterIn.setCommonBusinessType(DictCodeList.共通业务类型_净值型资产申购);
+        if(StringUtil.equals(DictCodeList.计划类资产一级分类_券商资产管理计划, finProduct.getFinprodType2())){
+            bussinessCodeParameterIn.setType1(DictCodeList.业务编号一级分类_券商资产管理计划);
+        }else if(StringUtil.equals(DictCodeList.计划类资产一级分类_信托产品, finProduct.getFinprodType2())){
+            bussinessCodeParameterIn.setType1(DictCodeList.业务编号一级分类_信托产品);
+        }else{
+            bussinessCodeParameterIn.setType1(DictCodeList.业务编号一级分类_保险资产管理计划);
+        }
+        return baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(bussinessCodeParameterIn) : IDGenerator.generate();
+    }
+    
+    public TrdDealTotalAdd setTrdDealTotalAdd(TrdProductDeal dto,String entrustId) {
+        TrdDealTotalAdd addDto = new TrdDealTotalAdd();
+        addDto.setTotleTradeId(dto.getTotleTradeId());
+        addDto.setEntrustId(entrustId);
+        addDto.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
+        return addDto;
+    }
 }
