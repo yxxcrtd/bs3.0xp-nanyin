@@ -429,7 +429,7 @@ $(function(){
         	,{field:'settleDateVal', title: 'TrdInvestDealQuery001.settleDate',width:100,sortField:'settleDate'}
         	,{field:'remark', title: 'TrdInvestDealQuery001.remark',width:100}
 			,{field:'counterName', title: '交易对手',width:100}
-			,{field:'isOutTradeStr', title: '是否转仓',width:100}
+			,{field:'isOutTradeStr',sortField:'isOutTrade', title: '是否转仓',width:100}
         	,{field:'finprodType2', visible:false}
         	,{field:'finprodId', visible:false}
         ]
