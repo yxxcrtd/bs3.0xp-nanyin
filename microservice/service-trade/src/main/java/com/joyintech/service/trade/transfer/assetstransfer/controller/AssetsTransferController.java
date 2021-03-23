@@ -2,6 +2,7 @@ package com.joyintech.service.trade.transfer.assetstransfer.controller;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.service.trade.transfer.assetstransfer.dto.AssetsTransferDto;
 import com.joyintech.service.trade.transfer.assetstransfer.service.AssetsTransferService;
@@ -84,6 +85,18 @@ public class AssetsTransferController {
     public List<SelectOptionDto> getFinprodId(@RequestBody Map<String,Object> map){
         return assetsTransferService.getFinprodId(map);
     }
+ /**
+     * 获取业务编号联想文本框
+     * @return 联想文本框实体类集合
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getTradeId")
+    public List<SuggestDto> getTradeId(@RequestBody Map<String,Object> map){
+    	List<SuggestDto> list = assetsTransferService.getTradeId(map);
+        return list;
+    }
+	
     @PostMapping("getFinprodMarketId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length){
         return assetsTransferService.getFinprodMarketId(map, page, length);

@@ -5,6 +5,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -17,6 +18,8 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.trade.transfer.assetstransfer.dto.AssetsTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.assetstransfer.service.AssetsTransfer001Service;
+
+import org.antlr.runtime.tree.RewriteRuleNodeStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -172,6 +175,20 @@ public class AssetsTransfer001Controller extends BaseController {
         return ar;
     }
 
+ /**
+     * 获取业务编号联想文本框
+     * @return 业务编号列表
+     * @throws Exception Exception
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getTradeId")
+    public List<SuggestDto> getTradeId(){
+    	String param = super.getRequest().getParameter("param");
+        List<SuggestDto> list = assetsTransfer001Service.getTradeId(param);
+        return list;
+    }
+    
     @ResponseBody
     @RequestMapping("/getFinprodMarketId")
     public Page<SelectOptionDto> getFinprodMarketId(){

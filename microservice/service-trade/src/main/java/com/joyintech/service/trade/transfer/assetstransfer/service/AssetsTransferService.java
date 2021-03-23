@@ -6,6 +6,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -214,6 +215,17 @@ public class AssetsTransferService extends BaseService<AssetsTransferDto> {
         return map;
     }
 
+ /**
+     * 获取业务编号联想文本框
+     * @return 联想文本框实体类集合
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getTradeId(Map<String,Object> pageParam){
+    	setParam(pageParam);
+        return assetsTransferMapper.getTradeId(pageParam);
+    }
+	
     public Page<SelectOptionDto> getFinprodMarketId(Map<String, Object> map, int page, int length) {
         List<String> type8List = Arrays.asList(DictCodeList.平安资产类型_债券.getValue(),DictCodeList.平安资产类型_基金.getValue(),DictCodeList.平安资产类型_计划类资产_利率型.getValue()
         ,DictCodeList.平安资产类型_计划类资产_净值型.getValue(),DictCodeList.平安资产类型_存款.getValue(),DictCodeList.平安资产类型_项目类资产.getValue()

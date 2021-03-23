@@ -1,6 +1,7 @@
 package com.joyintech.service.trade.transfer.assetstransfer.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.service.trade.transfer.assetstransfer.dto.AssetsTransferDto;
 import org.springframework.stereotype.Repository;
@@ -77,5 +78,13 @@ public interface AssetsTransferMapper {
      */
     BigDecimal selectWflAmt(Map<String,Object> map);
 
+/**
+     * 获取业务编号联想文本框
+     * @return 联想文本框实体类集合
+     * @see
+     * @since 1.0
+     */
+    List<SuggestDto> getTradeId(Map<String,Object> map);
+	
     List<SelectOptionDto> getFinprodMarketId(Map<String, Object> map);
 }
