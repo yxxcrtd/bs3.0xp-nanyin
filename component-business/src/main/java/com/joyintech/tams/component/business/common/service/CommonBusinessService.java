@@ -4,17 +4,37 @@
  */
 package com.joyintech.tams.component.business.common.service;
 
-import java.math.BigDecimal;
-import java.util.*;
-
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
+import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
+import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
+import com.joyintech.tams.common.base.dao.PtlTradeMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.common.dao.CommonBusinessMapper;
+import com.joyintech.tams.component.business.common.dto.FinCashResetRuleDto;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
+import com.joyintech.tams.invest.common.risktrial.RiskTrialComm;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.workflow.engine.exception.WflCode;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,32 +42,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.component.business.common.dao.CommonBusinessMapper;
-import com.joyintech.tams.component.business.common.dto.FinCashResetRuleDto;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.risktrial.RiskTrialComm;
-import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
-import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
-import com.joyintech.workflow.engine.exception.WflCode;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 各种共通组件
@@ -130,6 +126,12 @@ public class CommonBusinessService extends BaseService {
         if(CollectionUtils.isEmpty(baseTradeProductDealDtoList)){
             return;
         }
+        baseTradeProductDealDtoList.forEach(baseTradeProductDealDto -> {
+            if (baseTradeProductDealDto.getSecLendFinprodId() == null){
+                baseTradeProductDealDto.setSecLendFinprodId(trdProductDeal.getFinprodId());
+            }
+            baseTradeProductDealDto.setSecAmount(baseTradeProductDealDto.getSecAmount()==null?new BigDecimal("0"):baseTradeProductDealDto.getSecAmount());
+        });
 
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtoList);

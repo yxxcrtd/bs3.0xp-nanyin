@@ -1,10 +1,10 @@
 package com.joyintech.tams.invest.trade.transfer.buyoutrepo.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -12,7 +12,8 @@ import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.trade.transfer.buyoutrepo.dto.BuyOutRepoTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.buyoutrepo.dto.BuyOutRepoTransfer002Dto;
@@ -146,6 +147,7 @@ public class BuyOutRepoTransfer001Controller extends BaseController {
     public AjaxResult addCheck(@RequestBody BuyOutRepoTransfer001Dto dto, BindingResult br) {
         AjaxResult ar = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        List<JoyinMessage> joyinMessage = new ArrayList<>();
         boolean flag = false;
         StringBuffer sb = new StringBuffer();
         if (StringUtil.isNotEmpty(dto)){
@@ -176,13 +178,13 @@ public class BuyOutRepoTransfer001Controller extends BaseController {
                 }*/
                 if(dto.getProPrinAmt().compareTo(buyOutRepoTransfer001Service.selectPosition(dto)) > 0){
                     flag = true;
-                    sb.append(getMessage("债券不足，请确认是否继续添加？") + GlobalConstant.HTML_NEWLINE);
+                    joyinMessage.add(new JoyinMessage("债券不足，请确认是否继续添加？",MessageType.确认消息));
                 }
             }
             else if(StringUtil.equals(dto.getPs(),DictCodeList.回购拆借方向_逆回购.getValue()) && dto.getAvalibleCash() != null &&
                     dto.getFirSettleAmt().compareTo(dto.getAvalibleCash()) > 0){
                 flag = true;
-                sb.append(getMessage("组合剩余现金不足，请确认是否继续添加？") + GlobalConstant.HTML_NEWLINE);
+                joyinMessage.add(new JoyinMessage("组合剩余现金不足，请确认是否继续添加？",MessageType.确认消息));
             }
             //输入的本金金额 > 剩余未拆分本金金额
             if(StringUtil.isNotEmpty(dto.getProPrinAmt()) && StringUtil.isNotEmpty(dto.getUndistributedAmount()) &&
@@ -192,7 +194,7 @@ public class BuyOutRepoTransfer001Controller extends BaseController {
         }
         if(StringUtil.isEmptyList(errorList)){
             if(flag) {
-                ar.setData(sb.substring(0, sb.length() - GlobalConstant.HTML_NEWLINE.length()));
+                ar.setJoyinMessages(joyinMessage);
                 return ar;
             }
             else {

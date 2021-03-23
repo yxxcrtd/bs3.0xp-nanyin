@@ -403,7 +403,7 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 		// 调用投管接口 add by wqd 20190218 end
 
 		if(StringUtil.isNotEmpty(reverseTradeId)){
-
+			reverseTrdProductDeal.setFinprodType2("");
 			TrdProductDeal trdProductDeal = new TrdProductDeal();
 			trdProductDeal.setTradeId(reverseTradeId);
 			trdProductDeal.setCancelRemark(entity.getRevokeReason());

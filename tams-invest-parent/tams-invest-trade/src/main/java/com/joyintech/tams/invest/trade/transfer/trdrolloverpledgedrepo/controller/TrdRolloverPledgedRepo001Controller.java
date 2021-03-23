@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 质押式回购交易拆分
+ * 质押式回购交易转仓
  */
 @RequestMapping("/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001")
 @PageId("TrdRolloverPledgedRepo001")
@@ -189,10 +189,19 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
                     if(sumRolloverPrinAmt.compareTo(BigDecimal.valueOf(0))==0){
                         errorList.add(new ValidMessage("【转仓交易汇总券面总额】不能为0"));
                     }
+                    if(!StringUtil.isEmptyList(fdpdlist)){
+                        for (FinDealPledgeDto dto1: fdpdlist) {
+                            if(StringUtil.isNotEmpty(dto1.getDesiPledgePrin()) && dto1.getDesiPledgePrin().compareTo(dto1.getPrdPledgePrin())>0){
+                                JoyinMessage ms = new JoyinMessage("质押券:"+dto1.getPledgeFinprodId()+"本次转仓指定质押券面总额大于产品组合可质押券面总额,请检查质押券转仓列表",
+                                        MessageType.确认消息);
+                                joyinMessages.add(ms);
+                            }
+                        }
+                    }
                 } else {
                     for (FinDealPledgeDto dto1: fdpdlist) {
                         if(StringUtil.isNotEmpty(dto1.getDesiPledgePrin()) && dto1.getDesiPledgePrin().compareTo(dto1.getPrdPledgePrin())>0){
-                            JoyinMessage ms = new JoyinMessage("质押券:"+dto1.getPledgeFinprodId()+"本次拆分指定质押券面总额大于产品组合可质押券面总额,请检查质押券拆分列表",
+                            JoyinMessage ms = new JoyinMessage("质押券:"+dto1.getPledgeFinprodId()+"本次转仓指定质押券面总额大于产品组合可质押券面总额,请检查质押券转仓列表",
                                     MessageType.确认消息);
                             joyinMessages.add(ms);
                         }
@@ -200,7 +209,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
                 }
 //                for (FinDealPledgeDto dto1: fdpdlist) {
 //                    if(StringUtil.isNotEmpty(dto1.getDesiPledgePrin()) && dto1.getDesiPledgePrin().compareTo(dto1.getPrdPledgePrin())>0){
-//                    	JoyinMessage ms = new JoyinMessage("质押券:"+dto1.getPledgeFinprodId()+"本次拆分指定质押券面总额大于产品组合可质押券面总额,请检查质押券拆分列表",
+//                    	JoyinMessage ms = new JoyinMessage("质押券:"+dto1.getPledgeFinprodId()+"本次转仓指定质押券面总额大于产品组合可质押券面总额,请检查质押券转仓列表",
 //                    			MessageType.确认消息);
 //                        joyinMessages.add(ms);
 //                    }
@@ -220,7 +229,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
                 if(StringUtil.isNotEmpty(param.get("bussTrdAvailableCashQuery"))){
                     bs = JsonUtils.json2Object(JsonUtil.objToString(param.get("bussTrdAvailableCashQuery")),BussTrdAvailableCashQuery.class);
                 }
-                //拆分交易金额不能大于组合剩余本金
+                //转仓交易金额不能大于组合剩余本金
                 if(StringUtil.isNotEmpty(rolloverTradeAmt)&&StringUtil.isNotEmpty(bs)&&StringUtil.isNotEmpty(bs.getAvalibleCash())){
                     if(rolloverTradeAmt.compareTo(bs.getAvalibleCash())>0){
                         result.setMessage("组合剩余现金不足！", MessageType.确认消息);
