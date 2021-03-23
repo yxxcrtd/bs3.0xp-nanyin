@@ -290,7 +290,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
             // 查询相关基础信息
             List<ChbPrdDurationDeal> listBase = chbPrdDurationRegMapper.getProdDealSubList(reallist);
             // 查询交易信息
-            List<ChbPrdDeal> dealList = chbPrdDurationRegMapper.getAllPrdDeal(reallist);
+            List<ChbPrdDeal> dealList = chbPrdDurationRegMapper.getAllPrdDeal(reallist, openProdMdateConf);
             // 投资者累计兑付金额
             List<ChbPrdDeal> dealListTemp = null;
             // 查询费用信息

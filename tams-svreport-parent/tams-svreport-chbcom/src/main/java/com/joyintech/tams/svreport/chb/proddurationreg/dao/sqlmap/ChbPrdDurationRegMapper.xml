@@ -70,26 +70,25 @@
 		        SELECT YIELD.ORG_CODE,
 		                YIELD.PROD_ID,
     					YIELD.FPROD_ID,
-		                NVL(OPEN1.OPEN_START,YIELD.CHANGE_DATE) OPEN_START,
-		                NVL(OPEN1.OPEN_END,YIELD.CHANGE_DATE) OPEN_END,
-                        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+    					NVL(OPEN1.OPEN_START, YIELD.CHANGE_DATE) OPEN_START,
+						NVL(OPEN1.OPEN_END, YIELD.CHANGE_DATE) OPEN_END,
                         YIELD.CHANGE_DATE PAY_DATE,
-                        <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-						NVL(OPEN1.OPEN_VDATE,YIELD.CHANGE_DATE) OPEN_VDATE,
-		                case when 
-		                to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') != to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') and YIELD.status='E'
-		                then 'M'
-		                else YIELD.status
-		                end status
+						YIELD.CHANGE_DATE OPEN_VDATE,
+		                case when to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') != to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') and YIELD.status='E' then 'M' else YIELD.status end status
 		          FROM CHB_PRD_PERIODYIELD YIELD
-		          LEFT JOIN CHB_PRD_OPENSCH OPEN1
-		           ON NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = OPEN1.PROD_ID
-		           <!-- add by dongxiangyang  修改 start -->
-		           AND YIELD.CHANGE_DATE  = OPEN1.OPEN_END
-		           <!-- add by dongxiangyang  修改 end -->
-		         AND OPEN1.STATUS != 'D'
-		           AND OPEN1.PLAN_TYPE = '01'
-		           left join  chb_prd_baseinfo  cinfo  on cinfo.prod_id=YIELD.prod_id
+		        	<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
+					LEFT JOIN CHB_PRD_OPENSCH OPEN1
+					ON NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = OPEN1.PROD_ID
+					AND YIELD.CHANGE_DATE = DECODE('${openProdMdateConf}', '02', OPEN1.OPEN_END, OPEN1.OPEN_VDATE)
+					AND OPEN1.STATUS != 'D'
+					AND EXISTS (SELECT 1 FROM CHB_PRD_DEAL DEAL
+								WHERE OPEN1.PROD_ID = NVL(DEAL.FPROD_ID,DEAL.PROD_ID)
+								AND DEAL.TRADE_TYPE IN ('02', '03')
+								AND OPEN1.PLAN_TYPE = DECODE(DEAL.TRADE_TYPE, '03', '02', '01')
+								AND DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) = OPEN1.OPEN_VDATE)
+					<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 end-->
+
+					<!-- left join  chb_prd_baseinfo  cinfo  on cinfo.prod_id=YIELD.prod_id -->
 		         WHERE (to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 		               to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
 		          <!--  AND YIELD.STATUS  = 'E' -->
@@ -99,14 +98,6 @@
 				          #{accountid}
 				       	</foreach>
 			       </if>
-		     and ( YIELD.CHANG_TYPE=#{changeType02,jdbcType = VARCHAR}
-             or (YIELD.CHANG_TYPE=#{changeType01,jdbcType = VARCHAR} and (
-             (to_char(OPEN1.OPEN_END,'yyyy-MM-dd')=to_char(YIELD.CHANGE_DATE,'yyyy-MM-dd') and cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
-             or  (to_char(YIELD.CHANGE_DATE,'yyyy-MM-dd')=#{thisSeasonEnd,jdbcType = VARCHAR} and cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
-             or  (not exists (select 1 from CHB_PRD_OPENSCH  where prod_id=NVL(YIELD.FPROD_ID,YIELD.PROD_ID))  and exists (select 1  from MST_HOLIDAY where cdate=YIELD.CHANGE_DATE and calendar_id = '01' and is_holiday = '0')
-             and  cinfo.OPERATE_MODE=#{opratemode03,jdbcType = VARCHAR})
-             or   cinfo.PRODTYPE=#{prodtypen,jdbcType = VARCHAR} and cinfo.VDATE=YIELD.CHANGE_DATE
-		)))
 		 /*起息日当天的不报送*/
 		/* AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and
 		NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
@@ -115,15 +106,13 @@
 		        SELECT FEEINFO.ORG_CODE,
 		                FEEINFO.PROD_ID,
     					FEEINFO.FPROD_ID,
-    					FEEINFO.PAY_DATE OPEN_START,
-    					FEEINFO.PAY_DATE OPEN_END,
     					<!-- 费用交易无需关联开放计划 -->
-		                <!-- NVL(OPEN1.OPEN_START,FEEINFO.PAY_DATE) OPEN_START,
-		                NVL(OPEN1.OPEN_END,FEEINFO.PAY_DATE) OPEN_END, -->
+		                NVL(OPEN1.OPEN_START,FEEINFO.PAY_DATE) OPEN_START,
+		                NVL(OPEN1.OPEN_END,FEEINFO.PAY_DATE) OPEN_END,
                         <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
                         FEEINFO.PAY_DATE PAY_DATE,
                         <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-                        FEEINFO.PAY_DATE OPEN_VDATE,
+						FEEINFO.PAY_DATE OPEN_VDATE,
 		                <!--NVL(OPEN1.OPEN_VDATE,FEEINFO.PAY_DATE) OPEN_VDATE,-->
 		                case when 
 		                to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') != to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') and FEEINFO.status='E'
@@ -131,12 +120,18 @@
 		                else FEEINFO.status
 		                end status
 		          FROM CHB_PRD_FEE_DEAL FEEINFO
-		         <!-- LEFT JOIN CHB_PRD_OPENSCH OPEN1
+					<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
+				 	LEFT JOIN CHB_PRD_OPENSCH OPEN1
 		            ON NVL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) = OPEN1.PROD_ID
-		            AND FEEINFO.ORG_CODE = OPEN1.ORG_CODE 
-		           AND FEEINFO.PAY_DATE  = OPEN1.OPEN_VDATE
-		           AND OPEN1.STATUS != 'D'
-		           AND OPEN1.PLAN_TYPE = '01'-->
+		            AND FEEINFO.PAY_DATE  = DECODE('${openProdMdateConf}', '02', OPEN1.OPEN_END, OPEN1.OPEN_VDATE)
+		            AND OPEN1.STATUS != 'D'
+					AND EXISTS (SELECT 1 FROM CHB_PRD_DEAL DEAL
+					WHERE OPEN1.PROD_ID = NVL(DEAL.FPROD_ID,DEAL.PROD_ID)
+					AND DEAL.TRADE_TYPE IN ('02', '03')
+					AND OPEN1.PLAN_TYPE = DECODE(DEAL.TRADE_TYPE, '03', '02', '01')
+					AND DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) = OPEN1.OPEN_VDATE)
+					<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 end-->
+
 		         WHERE (to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 		               to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
 		          <!--  AND FEEINFO.STATUS  = 'E' -->
@@ -225,7 +220,6 @@
             else YIELD.status
             end status
 			FROM CHB_PRD_PERIODYIELD YIELD
-		    left join  chb_prd_baseinfo  cinfo  on cinfo.prod_id=YIELD.prod_id
 		    WHERE (to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 			to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
 			<!-- AND YIELD.STATUS  = 'E' -->
@@ -235,11 +229,6 @@
 		          #{accountid}
 		       	</foreach>
 	        </if>
-	        and (YIELD.CHANG_TYPE=#{changeType02,jdbcType = VARCHAR}
-	        or  (YIELD.CHANG_TYPE=#{changeType01,jdbcType = VARCHAR}  and (
-            (to_char(YIELD.CHANGE_DATE-1,'D')='5'  and  cinfo.OPERATE_MODE=#{opratemode01,jdbcType = VARCHAR})/*//封闭净值型产品单位净值只报送周五的*/
-		    or   cinfo.PRODTYPE=#{prodtypen,jdbcType = VARCHAR} and cinfo.VDATE=YIELD.CHANGE_DATE             /*//净值型产品起息日当天的单位净值也需报送*/
-		     )))
 	        /*起息日当天的不报送*/
 /*		    AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and NVL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
 */			UNION ALL
@@ -347,14 +336,25 @@
 			deal.org_code orgCode,
 			deal.trade_type tradeType,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) payDate,
-			CASE
+
+
+			CASE WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15') and OPEN1.PROD_ID is not null
+			THEN DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
+			WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('02', '03', '17')
+			THEN NVL(OPEN1.OPEN_END, NVL(OPEN1.OPEN_VDATE,DEAL.SETTDATE_DATE))
+			ELSE NVL(OPEN1.OPEN_VDATE,DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE))
+			END settdateDate,
+
+
+			/*CASE
 			WHEN '02' = '02'
 			AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15')
 			AND OPEN1.OPEN_END IS NOT NULL
 			THEN DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
 			ELSE NVL(OPEN1.OPEN_END, DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,
 			DEAL.SETTDATE_DATE))
-			END AS settdateDate,
+			END AS settdateDate,*/
+
 			deal.ccy,
 			sum(nvl(deal.int_amt,0)) intAmt,
 			max(nvl(deal.unit_bonus_amount,0)) unitBonusAmount,
@@ -386,7 +386,10 @@
 			deal.trade_type,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE),
 			deal.ccy,
-			OPEN1.OPEN_END
+			OPEN1.OPEN_END,
+			OPEN1.PROD_ID,
+			OPEN1.OPEN_VDATE,
+			DEAL.SETTDATE_DATE
 	</select>
 	
 	<!-- 查询费用列表 -->

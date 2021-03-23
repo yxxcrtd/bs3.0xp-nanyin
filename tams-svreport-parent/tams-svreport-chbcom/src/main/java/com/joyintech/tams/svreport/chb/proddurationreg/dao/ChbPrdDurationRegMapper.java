@@ -69,7 +69,7 @@ public interface ChbPrdDurationRegMapper {
      * @see
      * @since 1.0
      */
-    List<ChbPrdDeal> getAllPrdDeal(@Param("list") List<ChbPrdDurationDeal> list);
+    List<ChbPrdDeal> getAllPrdDeal(@Param("list") List<ChbPrdDurationDeal> list, @Param("openProdMdateConf") String openProdMdateConf);
     /**
      * 获取费用列表
      * 
