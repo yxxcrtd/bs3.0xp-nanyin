@@ -53,6 +53,9 @@ $(function(){
                 });
             }
         }
+        if(!$("#portfolioId").val()){
+        	$("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
+        }
         $("#tradeAmt").val('').trigger("change").trigger('blur');
         $("#cpriceAmt").val('').trigger("change").trigger('blur');
         $("#intAmt").val('').trigger("change").trigger('blur');
@@ -115,10 +118,10 @@ $(function(){
     	        // ,{field:'tradeAmt', title: '交易金额',width:150,type:'number', visible:false}//交易方向
     	        ,{field:'vdate', title: '资产起息日',type:'date',width:150, sortable: false}//交易日期
     	        ,{field:'mdate', title: '资产到期日',type:'date',width:150, sortable: false}//交易日期
-    	        //,{field:'turnInvAim', title: '转仓投资目的',width:150,width:150, visible:false}//转仓投资目的
-    	        //,{field:'turnInvAimStr', title: '转仓投资目的',width:150,width:150 }//转仓投资目的
-    	        ,{field:'invAim', title: '转仓投资目的',width:150,width:150,visible:false}//投资目的
-    	        ,{field:'invAimStr', title: '转仓投资目的',width:150,width:150}//投资目的
+    	        ,{field:'turnInvAim', title: '转仓投资目的',width:150,width:150, visible:false}//转仓投资目的
+    	        ,{field:'turnInvAimStr', title: '转仓投资目的',width:150,width:150 }//转仓投资目的
+    	        // ,{field:'invAim', title: '转仓投资目的',width:150,width:150,visible:false}//投资目的
+    	        // ,{field:'invAimStr', title: '转仓投资目的',width:150,width:150}//投资目的
     	        // 待转让本金
 	            //,{field: 'assignPrinamt',width: 150,title: '待转让本金',type: 'money', digit: 2, sortable: false}
 	            // 待转让利息
@@ -126,11 +129,11 @@ $(function(){
     	        ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: [ 'delt']}//编辑和删除事件
     	    ]
     };
-    
+
     if(formTodoList) {
         options.data = entityData;
     }
-    
+
     var table=$("#dataTable").joyintable(options);
     /**
      * 绑定删除事件
@@ -140,7 +143,7 @@ $(function(){
         $('#undistributedAmount').val(Number($('#undistributedAmount').val()) + Number(data.tradeAmt)).trigger("change").trigger('blur');
         $('#distributedAmount').val(Number($('#distributedAmount').val()) - Number(data.tradeAmt)).trigger("change").trigger('blur');
     });
-    
+
     /**
      * 添加按钮按下处理
      */
@@ -166,7 +169,7 @@ $(function(){
                     //1、列表中添加数据
                     var portfolioId= options.val();
                     var portfolioId2 = options.text();
-                    var row = {                        
+                    var row = {
                         counterId : options.val(),
                         portfolioName :options.text(),
                         finprodMarketId : $('#finprodMarketId').val(),
@@ -193,8 +196,10 @@ $(function(){
                         counterType : 'N',//转仓交易默认内交易
                         finprodType2 : 'F01',//转仓交易默认债券
                         //invAim : $("#invAim").val(),//投资目的
-                        invAim : turnInvAimOptions.val(),//投资目的
-                        invAimStr : turnInvAimOptions.text(),//投资目的
+                        // invAim : turnInvAimOptions.val(),//投资目的
+                        // invAimStr : turnInvAimOptions.text(),//投资目的
+                        turnInvAim : turnInvAimOptions.val(),//投资目的
+                        turnInvAimStr : turnInvAimOptions.text(),//投资目的
                         isPayWithTrade : 'Y',
                         tradeMarketMode : '02',   //转仓交易默认二级市场
                         // tradeMarket : $('#tradeMarket').val(),
@@ -227,6 +232,7 @@ $(function(){
                     object.prinAmount = $('#tradeAmt').val();
                     object.tradeAmt = $('#tradeRepAmt').val();
                     $("#portfolioId").text('').trigger("change").trigger('blur');
+                    $("#unitCprice").val('').trigger("change").trigger('blur');
                     portfolioIdChange(object);
                 }
             })

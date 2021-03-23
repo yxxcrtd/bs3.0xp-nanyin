@@ -374,6 +374,9 @@ public class SecTransferDto extends TrdBondInvestTradeDto {
 		return SysDatadictUtil.getNameFromDataDict(DictCode.投资目的, this.getInvAim());
 	}
 
+	public String getTurnInvAimStr() {
+		return SysDatadictUtil.getNameFromDataDict(DictCode.投资目的, this.getTurnInvAim());
+	}
 	@Override
 	public PaTrdFinProductDealTotal getPaTrdFinProductDealTotal() {
 		return paTrdFinProductDealTotal;

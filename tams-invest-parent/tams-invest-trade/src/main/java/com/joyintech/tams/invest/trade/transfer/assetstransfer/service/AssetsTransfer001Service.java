@@ -4,8 +4,11 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -108,6 +111,24 @@ public class AssetsTransfer001Service extends BaseService<AssetsTransfer001Dto> 
                 SelectOptionDto.class);
     }
 
+  /**
+     * 获取业务编号联想文本框
+     * @return 业务编号列表
+     *
+     * @since 1.0
+     */
+    public List<SuggestDto> getTradeId(String param){
+    	if(param==null||"".equals(param)){
+			return new ArrayList<SuggestDto>();
+		}
+    	Map<String,Object> paramMap = RequestUtil.getPageParam();
+    	paramMap.put("tradeId", param);
+    	List<SuggestDto> list = simpleRestTemplate.postForList(
+                ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/getTradeId" ,paramMap,
+                SuggestDto.class);
+    	return list;
+    }
+    
     public Page<SelectOptionDto> getFinprodMarketId(Map<String, Object> paramMap) {
         return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/getFinprodMarketId" , paramMap,
                 SelectOptionDto.class);

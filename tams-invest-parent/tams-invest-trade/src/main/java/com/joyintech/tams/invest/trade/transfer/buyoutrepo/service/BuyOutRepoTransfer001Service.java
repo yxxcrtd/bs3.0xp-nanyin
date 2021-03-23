@@ -1031,6 +1031,9 @@ public class BuyOutRepoTransfer001Service extends CommonExportService<BuyOutRepo
                     //插入组合持仓和各业务表
                     FinProductTradeDto finProductTradeDto = buyOutRepoTransfer002Dto.getFinProductTradeDto();
                     finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+                    finProductTradeDto.getBaseTradeProductDealDtos().forEach(baseTradeProductDealDto -> {
+                        baseTradeProductDealDto.setSecAmount(baseTradeProductDealDto.getSecAmount()==null?new BigDecimal("0"):baseTradeProductDealDto.getSecAmount());
+                    });
                     baseTradeProductDealCommService.execute(finProductTradeDto);
                     //插入组合交易表和金融产品交易扩展表
                     if(!StringUtil.isEmptyList(finProductTradeDto.getBaseTradeProductDealDtos())){

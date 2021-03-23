@@ -12,6 +12,10 @@
             AND (PORTFOLIO_ID LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%') OR
             PORTFOLIO_NAME LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%'))
         </if>
+        <if test="userId != null and userId != ''">
+            AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+            OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+        </if>
     </select>
 
     <!-- 获取组合树 -->
@@ -1394,5 +1398,27 @@
             OR f1.FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search},'%')))
         </if>
         )
+    </select>
+    
+     <!-- 获取业务编号联想文本框 -->
+    <select id="getTradeId" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT DISTINCT T.tradeId   as  code,
+        null as name
+        FROM (
+        /** 债券、存款、项目类、计划类、基金、股票 **/
+        <include refid="getAssetsTransferList"></include>
+        /** 债券质押式 **/
+        UNION ALL
+        <include refid="getRepoAssetsTransferList"></include>
+        /** 债券借贷 **/
+        UNION ALL
+        <include refid="getBondAssetsTransferList"></include>
+        /** 买断式回购 **/
+        UNION ALL
+        <include refid="getBuyOutAssetsTransferList"></include>
+        /** 拆借 **/
+        UNION ALL
+        <include refid="getLendAssetsTransferList"></include>
+        )T          
     </select>
 </mapper>

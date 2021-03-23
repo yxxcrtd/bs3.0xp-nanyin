@@ -258,6 +258,7 @@ implements BaseProcessService<TrdFundDuration001Dto>{
             WorkFlowParameter<TrdFundDuration001Dto> param = getWorkFlowPatameter(entity);
             periodCommonService.autoDealQtyForSubmit(entity.getFinAssetIntInfoList(),entity.getRegistShare(),entity.getQty());
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
+            entity.setCreateUser(entity.getFinAssetIntInfoList().get(0).getCreateUser());
             try {
 //      启动流程
                 WorkFlowUtil.startProcess(param,"","", entity.getCreateUser(),OperationType.NEW,false,entity);
