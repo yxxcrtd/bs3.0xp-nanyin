@@ -1,5 +1,6 @@
 //@ sourceUrl=TrdDepositInvestTrade002.js
 (function(){
+	var initFlag = true;
     var fileArray =[];
     var entrustId = '';
     var entity = '';
@@ -261,6 +262,7 @@
             finprodIdJson = {finprodId:$("#finprodMarketId").select2("data")[0].object};
             finprodId=$("#finprodMarketId").select2("data")[0].object;
         }
+        var isInit = initFlag;
         if(finprodIdJson != null && finprodIdJson.finprodId != null && finprodIdJson.finprodId != ''){
             Joyin.ajax(basePath+ "invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002/getFinInfo",finprodIdJson,function(result){
                 if(result != null && result != ''){
@@ -278,9 +280,10 @@
                     $('#termDays').val(result.termDays);
                     $('#loadRate').val(result.loadRate);
                     $('#ccy').val(result.ccy).trigger('change'); 
-                    if (pageModel==PAGE_MODEL_NEW) {
+                    if (pageModel==PAGE_MODEL_NEW&&isInit==false) {
                     	$("#trdInvestPersonInfo002Dto_counterId").textSelect('setValue',result.issuer);
 					}
+                    isInit = false;
                     // 【bug对应】存款类资产交易新建时，先选择一个有资产提供行的资产，再改为没有资产提供行的资产，资产提供行并没有变成空
 //                    $('#assetProvider').textSelect('setValue',result.assetProvider);
                     if (result.assetProvider) {
@@ -942,5 +945,6 @@
         layui.form.on('switch(isClean)',function(){
             isCleanChange();
         });
+        initFlag = false;
     });
 }());
