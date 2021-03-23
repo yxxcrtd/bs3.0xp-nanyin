@@ -216,7 +216,7 @@ public class TrdPlanRateInvestTrade001Controller extends BaseController{
             Map<String, Object> map = new HashMap<>();
             map.put("initValue", dto.getFinprodMarketId());
             List<SelectOptionDto> list = trdPlanRateInvestTrade002Service.getFinprodMarketId(map);
-            if (StringUtil.isNotEmpty(list)){
+            if (StringUtil.isNotEmpty(list)&&list.size()>0){
                 dto.setFinprodName(list.get(0).getText());
             }
             //资产类型
