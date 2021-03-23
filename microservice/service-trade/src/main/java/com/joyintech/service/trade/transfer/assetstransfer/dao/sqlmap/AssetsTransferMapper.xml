@@ -36,6 +36,10 @@
             <if test="mdate != null and mdate != ''">
                 AND T.MDATE = TO_DATE(#{mdate},'yyyy-MM-dd')
             </if>
+            <if test="userId != null and userId != ''">
+                AND (T.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR T.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
         </where>
     </select>
 

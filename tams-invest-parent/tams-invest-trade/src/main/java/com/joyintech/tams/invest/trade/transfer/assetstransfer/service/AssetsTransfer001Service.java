@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.trade.transfer.assetstransfer.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.select.TreeNode;
@@ -55,6 +56,7 @@ public class AssetsTransfer001Service extends BaseService<AssetsTransfer001Dto> 
         Map<String,Object> paramMap = new HashMap<>();
         paramMap.put("portfolioId",portfolioId);
         paramMap.put("mdate", DateUtil.format(mdate));
+        paramMap.put("userId", LoginUserUtil.getUserName());
         treeProList = simpleRestTemplate.postForList(
                 ServiceApplication.TRADE_SERVICE_NAME + "/AssetsTransfer/getPortfolioIdTree" ,paramMap,
                 TreeNode.class);
