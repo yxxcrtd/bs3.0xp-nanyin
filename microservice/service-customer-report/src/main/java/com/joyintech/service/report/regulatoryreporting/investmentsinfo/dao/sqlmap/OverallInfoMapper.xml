@@ -327,7 +327,7 @@
 		where  TO_CHAR(cmap.ENDDATE, 'yyyyMM') = #{termId, jdbcType=VARCHAR}
 		and cmap.ASSETVALUE_B is not null
 		<if test="assettype2 != null  and assettype2.equals('1299')">
-			and  cmap.assettype2='1299'
+			and  (cmap.assettype2='1299'　or cmap.assettype2='1206')
 			<!--	and info.ISFBZB!=01-->
 
 		</if>

@@ -2467,22 +2467,22 @@ with cj as(
 		select A.industryType industryType,A.AMT sessionendBalance from(
 		select t.industryType,sum(t.amt) amt from(
 		    select nvl(cmap.ASSETVALUE_A,0) amt,
-　　　　　　　case when mst.industry3 ='03' then '01'
+　　　　　　　case
+		　　　　when　cmap.ASSETTYPE2='1701' then '07'
+			　　when cmap.ASSETTYPE2='1703' then '08'
+		　　　　when cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')  then '09'
+		　　　　when cmap.ASSETTYPE2='1706' then '10'
+		　　　　when cmap.ASSETTYPE2='1702'  then '11'
+
+		　　　　when cmap.ASSETTYPE2 in ('2601','2602','2604',
+		　　　　　　'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
+		　　　　when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
+		　　　　　when mst.industry3 ='03' then '01'
 				when mst.industry4 ='01' then '02'
 				when mst.industry4 ='02' then '03'
 				when mst.industry4 ='03' then '04'
 				when mst.industry4 ='04' then '05'
 				when mst.industry4 ='07' then '06'
-
-				when　cmap.ASSETTYPE2='1701' then '07'
-				when cmap.ASSETTYPE2='1703' then '08'
-				when cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')  then '09'
-				when cmap.ASSETTYPE2='1706' then '10'
-				when cmap.ASSETTYPE2='1702'  then '11'
-
-				when cmap.ASSETTYPE2 in ('2601','2602','2604',
-		        '2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
-				when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
 		        else  '14' end as industryType
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
@@ -2673,13 +2673,7 @@ with cj as(
 		),
 	industryTypes as(
 		    select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,
-　　　　　　　case when mst.industry3 ='03' then '01'
-				when mst.industry4 ='01' then '02'
-				when mst.industry4 ='02' then '03'
-				when mst.industry4 ='03' then '04'
-				when mst.industry4 ='04' then '05'
-				when mst.industry4 ='07' then '06'
-				when　cmap.ASSETTYPE2='1701' then '07'
+　　　　　　　case when　cmap.ASSETTYPE2='1701' then '07'
 				when cmap.ASSETTYPE2='1703' then '08'
 				when cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')  then '09'
 				when cmap.ASSETTYPE2='1706' then '10'
@@ -2687,6 +2681,12 @@ with cj as(
 				when cmap.ASSETTYPE2 in ('2601','2602','2604',
 				'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
 				when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
+		　　　　　when mst.industry3 ='03' then '01'
+				when mst.industry4 ='01' then '02'
+				when mst.industry4 ='02' then '03'
+				when mst.industry4 ='03' then '04'
+				when mst.industry4 ='04' then '05'
+				when mst.industry4 ='07' then '06'
 				else  '14' end as industryType
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
@@ -2906,13 +2906,7 @@ with cj as(
 		),
 	industryTypes as(
 	      select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
-　　　　　　　case when mst.industry3 ='03' then '01'
-				when mst.industry4 ='01' then '02'
-				when mst.industry4 ='02' then '03'
-				when mst.industry4 ='03' then '04'
-				when mst.industry4 ='04' then '05'
-				when mst.industry4 ='07' then '06'
-				when　cmap.ASSETTYPE2='1701' then '07'
+　　　　　　　case when　cmap.ASSETTYPE2='1701' then '07'
 				when cmap.ASSETTYPE2='1703' then '08'
 				when cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')  then '09'
 				when cmap.ASSETTYPE2='1706' then '10'
@@ -2920,6 +2914,12 @@ with cj as(
 				when cmap.ASSETTYPE2 in ('2601','2602','2604',
 				'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
 				when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
+		　　　　　when mst.industry3 ='03' then '01'
+				when mst.industry4 ='01' then '02'
+				when mst.industry4 ='02' then '03'
+				when mst.industry4 ='03' then '04'
+				when mst.industry4 ='04' then '05'
+				when mst.industry4 ='07' then '06'
 				else  '14' end as industryType
 		from
 		    CHB_MONTH_ASSET_POSITION cmap

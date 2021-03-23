@@ -212,8 +212,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_last45_amt", "ASSETAMT1_5_5");
 		tablePorpertyMap_2.put("t2_cur46_amt", "ASSETAMT1_5_6");
 		tablePorpertyMap_2.put("t2_last46_amt", "ASSETAMT1_5_6");
-		tablePorpertyMap_2.put("t2_cur47_amt", "ASSETAMT1_5_7");
-		tablePorpertyMap_2.put("t2_last47_amt", "ASSETAMT1_5_7");
+		//tablePorpertyMap_2.put("t2_cur47_amt", "ASSETAMT1_5_7");
+		//tablePorpertyMap_2.put("t2_last47_amt", "ASSETAMT1_5_7");
 		tablePorpertyMap_2.put("t2_cur48_amt", "ASSETAMT1_5_8");
 		tablePorpertyMap_2.put("t2_last48_amt", "ASSETAMT1_5_8");
 		tablePorpertyMap_2.put("t2_cur49_amt", "ASSETAMT1_5_9");
@@ -230,8 +230,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_last54_amt", "ASSETAMT1_5_10");
 		tablePorpertyMap_2.put("t2_cur55_amt", "ASSETAMT1_5_16_a");
 		tablePorpertyMap_2.put("t2_last55_amt", "ASSETAMT1_5_16_a");
-		tablePorpertyMap_2.put("t2_cur57_amt", "ASSETAMT1_5_16");
-		tablePorpertyMap_2.put("t2_last57_amt", "ASSETAMT1_5_16");
+		tablePorpertyMap_2.put("t2_cur57_amt", "ASSETAMT1_5_16+ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_last57_amt", "ASSETAMT1_5_16+ASSETAMT1_5_7");
 		tablePorpertyMap_2.put("t2_cur58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_last58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_cur59_amt", "ASSETAMT1_6_1");
