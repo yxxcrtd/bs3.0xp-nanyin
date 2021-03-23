@@ -249,6 +249,7 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
             BigDecimal unit = periodCommonService.getLatestValuation(entity.getFinprodId(), DateUtil.format(entity.getExRightsDate()));
             entity.setQty(ArithmeticUtil.divide(entity.getTradeAmt(), unit == null ? BigDecimal.ONE:unit, 4));
             periodCommonService.autoDealQtyForSubmit(entity.getFinAssetIntInfoList(),entity.getRegistShare(),entity.getQty());
+            entity.setCreateUser(entity.getFinAssetIntInfoList().get(0).getCreateUser());
             try {
                 //启动流程
                 WorkFlowUtil.startProcess(param,"","", entity.getCreateUser(),OperationType.NEW,false,entity);
