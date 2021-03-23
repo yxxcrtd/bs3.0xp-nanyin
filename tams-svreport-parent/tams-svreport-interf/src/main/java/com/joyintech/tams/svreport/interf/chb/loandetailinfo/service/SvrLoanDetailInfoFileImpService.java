@@ -152,7 +152,7 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
                     }
                 }
                 /****单体数据判断**/
-                if(StringUtil.equals(loanInfo.get("ASSET_TYPE"), DictCodeListExt3.中债_中债贷款分类_收益权.getValue())) {
+                if(StringUtil.isNotEmpty(loanInfo.get("ASSET_TYPE")) && !StringUtil.equals(loanInfo.get("ASSET_TYPE"), DictCodeListExt3.中债_中债贷款分类_除回购或拆借外贷款.getValue())) {
                     int each = 0;
                     try{
                         for (String code : loanInfo.get("EACH_PROPORTION").split(":")) {
