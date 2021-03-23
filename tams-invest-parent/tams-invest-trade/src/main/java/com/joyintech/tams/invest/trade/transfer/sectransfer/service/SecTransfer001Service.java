@@ -559,7 +559,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             if (StringUtil.isBlank(反向交易编号)) {
                 if (baseGetBusinessId != null) {
                     BussinessCodeParameter codeParameter = new BussinessCodeParameter();
-                    codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券卖出);
+                    codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
                     反向交易编号 = baseGetBusinessId.buildBussinessCode(codeParameter);
                 } else {
                     反向交易编号 = IDGenerator.generate().substring(0, 30);
@@ -570,7 +570,8 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             trdFinProductDealTotal1.setTotleTradeId(反向交易编号);
             trdFinProductDealTotal1.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             trdFinProductDealTotal1.setIsCancel(DictCodeList.是否_否.getValue());
-            trdFinProductDealTotal1.setCounterId(entity.getActPortfolioId());
+//            trdFinProductDealTotal1.setCounterId(entity.getActPortfolioId());
+            trdFinProductDealTotal1.setCounterId(secResolute001Dto.getInvestPortfolioId());
             /*处理反向交易方向*/
             if(DictCodeList.交易方向_买入.getValue().equals(trdFinProductDealTotal1.getPs())){
                 trdFinProductDealTotal1.setPs(DictCodeList.交易方向_卖出.getValue());
@@ -584,7 +585,8 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             // 上面copyPropertiesIgnoreNull时 错误，重新赋值
             trdFinProductDealTotal1.setInvAim(entity.getTurnInvAim());
 
-            trdFinProductDealTotal1.setPortfolioId(secResolute001Dto.getInvestPortfolioId());
+//            trdFinProductDealTotal1.setPortfolioId(secResolute001Dto.getInvestPortfolioId());
+            trdFinProductDealTotal1.setPortfolioId(entity.getCounterId());
             trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal1);
 
             PaTrdFinProductDealTotal paTrdFinDealTotal1 = entity.getPaTrdFinProductDealTotal();
@@ -665,18 +667,18 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
                 if(StringUtil.isNotEmpty(entity.getTrdProductDealAdd().getEntrustId())){
                     baseTradeProductDealDto.setEntrustId(entity.getTrdProductDealAdd().getEntrustId());
                 }
-                
+
 //                gen划款指令_BY_交易(baseTradeProductDealDto,OperationType.NEW.toString());
 
                 // 调用业务组件.【金融产品交易共通.交易产品接口】, insert
                 // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
                 baseTradeProductDealCommService.execute(finProductTradeDto);
-                
+
                 if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
                     finProductTradeDto.getBaseTradeProductDealDtos().forEach(
                             baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getActPortfolioId()));
                     baseTradeProductDealCommService.insertPosition(finProductTradeDto);
-                    
+
                     finProductTradeDto.getBaseTradeProductDealDtos().forEach(
                             baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getPortfolioId()));
                 }
@@ -721,11 +723,12 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
                 TrdProductDeal trdProductDealOut = new TrdProductDeal();
                 BeanUtil.copyPropertiesIgnoreNull(trdProductDealOut,trdProductDeal);
                 //转出交易的投资目的=原债券投资目的  转仓投资目的=转入交易的投资目的
-                trdProductDealOut.setInvAim(secResolute001Dto.getInvAim());
+//                trdProductDealOut.setInvAim(secResolute001Dto.getInvAim());
                 secResolute001Dto.setTurnInvAim(trdProductDeal.getInvAim());
+                trdProductDealOut.setInvAim(entity.getTurnInvAim());
                 trdProductDealOut.setTotleTradeId(反向交易编号);
-                
-                trdProductDealOut.setRemark("债券类资产转出交易");
+
+                trdProductDealOut.setRemark("债券类资产转入交易");
                 AllTradeCommonUtil.setDeals(inputDto, trdProductDealOut, trdProductDealAdd, paTrdProductDeal, baseTradeProductDealDto.getStlPayOrdersList(), ptlTrades,
                         entity.getActPortfolioId());
                 // 反向交易增加 end by qiangchengxi 2019年3月12日
@@ -756,10 +759,10 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
                 simpleRestTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/updateTradeId", map, Integer.class);
             }
             // 如果中标结果进来 add by gejiaao 2019年8月6日 end
-//    	});   
+//    	});
     	}
     }
-    
+
     /**
      * 提交时登录业务流程表
      *
@@ -770,7 +773,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
     private void handleBussFlowData(SecTransfer001Dto entity) {
     	if(!StringUtil.isEmptyList(entity.getSecResoluteDtoList())) {
 //    		entity.getSecResoluteDtoList().forEach(secResoluteDto ->{
-    		
+
     		for (SecTransferDto secResoluteDto :entity.getSecResoluteDtoList()) {
     			secResoluteDto.setActPortfolioId(secResoluteDto.getPortfolioId());
     			secResoluteDto.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(secResoluteDto.getPortfolioId()));
@@ -816,7 +819,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
                 wflTrdProductDeal.setWorkflowId(entity.getWorkflowId());
 
                 //此业务流程表中暂存卖出的投资目的
-                wflTrdProductDeal.setInvAim(entity.getInvAim());
+//                wflTrdProductDeal.setInvAim(entity.getInvAim());
 
     	        // 金融产品交易信息DTO.金融产品交易附属表Entity -> 金融产品交易附属业务流程表
     	        WflTrdProductDealAdd wflTrdProductDealAdd = new WflTrdProductDealAdd();
@@ -957,7 +960,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             }
         }
     }
-    
+
     public void setDzhUploadFileList(SecResoluteDto entity) {
         if (CollectionUtils.isNotEmpty(entity.getUploadFileList())) {
             for (UploadFile file:entity.getUploadFileList()) {
@@ -976,7 +979,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             }
         }
     }
-    
+
     /**
      * 由画面输入的参数dto，构筑整个需要反映到数据库的实体
      *
@@ -989,7 +992,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
         if (StringUtil.isBlank(dto.getTradeId())) {
             if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = new BussinessCodeParameter();
-                codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
+                codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券卖出);
                 dto.setTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
                 dto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
             } else {
@@ -997,7 +1000,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
                 dto.setTotleTradeId(IDGenerator.generate().substring(0, 30));
             }
         }
-        dto.setPs(DictCodeList.交易方向_买入.getValue());
+        dto.setPs(DictCodeList.交易方向_卖出.getValue());
     	dto.setTradePlat(dto.getTradeMarket());
     	   // 券面总额
         dto.setTotalFaceValue(dto.getTradeAmt());
@@ -1021,7 +1024,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
         dto.setShareAmt(
                 ArithmeticUtil.divide(dto.getTotalFaceValue(), new BigDecimal(100), 4, RoundingMode.HALF_UP));
         dto.setTradeAmt(dto.getTradeRepAmt());
-        dto.setRemark("债券类资产转入交易");
+        dto.setRemark("债券类资产转出交易");
         // modified by wangguoxian 费用设置 20190801 start
         // 交易金额 = 画面.交易金额
 //        dto.setTradeAmt(dto.getTradeAmtAndFee());
@@ -1057,10 +1060,10 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
         dto.setIsCancel(DictCodeList.是否_否.getValue());
         dto.setSecManageAcctId(secResolute001Dto.getSecManageAcctId());
         dto.setChlId(secResolute001Dto.getChlId());
-        
+
         //TrdInvestPersonInfo002Dto personInfo = dto.getTrdInvestPersonInfo();
         /**
-         * 因画面未付初始值，本身是转仓交易，特在此重新赋值 add by xr 
+         * 因画面未付初始值，本身是转仓交易，特在此重新赋值 add by xr
          */
       //  personInfo.setTrader(secResolute001Dto.getCreateUser());
 //        personInfo.setCounterId(dto.getCounterId());
@@ -1069,10 +1072,11 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
 //        personInfo.setContactInfo("");
 //        if (personInfo != null) {
             // 本方交易员
-        	
             dto.setTrader(secResolute001Dto.getCreateUser());
             // 交易对手
-            dto.setCounterId(secResolute001Dto.getInvestPortfolioId());
+//            dto.setCounterId(secResolute001Dto.getInvestPortfolioId());
+        dto.setPortfolioId(secResolute001Dto.getInvestPortfolioId());
+        dto.setInvAim(secResolute001Dto.getInvAim());
             // 是否外部交易
 //            dto.setIsOutTrade(personInfo.getIsOutTrade());
 //            if(StringUtil.equals(DictCodeList.是否_否.getValue(), personInfo.getIsOutTrade())){
@@ -1153,7 +1157,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
         paTrdProductDeal.setTradeId(dto.getTradeId()); // 交易编号
         // 平安业务类型(数据字典缓存.平安业务类型（按交易方向取对应值）)
 //        if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dto.getPs())) {
-            paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_债券类资产买入.getValue());
+            paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_债券类资产卖出.getValue());
 //        } else if (StringUtil.equals(DictCodeList.交易方向_卖出.getValue(), dto.getPs())) {
 //            paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_债券类资产卖出.getValue());
 //        }
