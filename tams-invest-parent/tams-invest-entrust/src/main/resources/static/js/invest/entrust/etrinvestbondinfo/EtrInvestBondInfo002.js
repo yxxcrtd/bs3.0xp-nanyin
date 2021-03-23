@@ -121,6 +121,14 @@
         });
     }
 
+    var getIsautobond = function(){
+        return isautobond;
+    }
+
+    window.EtrInvestBondInfo002 = {
+        getIsautobond: getIsautobond
+    };
+
     //查询组合可用现金
     var getPtlCashPositionInfo = function () {
         if (!$('#portfolioId').val() || !$('#ccy').val()) {

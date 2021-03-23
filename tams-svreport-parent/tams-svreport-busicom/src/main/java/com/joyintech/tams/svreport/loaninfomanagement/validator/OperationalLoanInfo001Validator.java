@@ -48,7 +48,7 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 			}
 
 			//当资产为资产收益权时，必填校验
-			if(StringUtil.equals(dto.getAssetType(), DictCodeListExt3.中债_中债贷款分类_收益权.getValue())){
+			if(StringUtil.isNotEmpty(dto.getAssetType()) && !StringUtil.equals(dto.getAssetType(), DictCodeListExt3.中债_中债贷款分类_除回购或拆借外贷款.getValue())){
 				//基础资产投向分类/各比例 必填
 				if(StringUtil.isEmpty(dto.getAssetsInvest())){
 					errorList.add(new ValidMessage("assetsInvest", getMessage("REPORT_COMMON_E_0001",
@@ -74,7 +74,7 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 					}
 
 				}
-			}else if(StringUtil.equals(dto.getAssetType(), DictCodeListExt3.中债_中债贷款分类_贷款.getValue())){
+			}else if(StringUtil.equals(dto.getAssetType(), DictCodeListExt3.中债_中债贷款分类_除回购或拆借外贷款.getValue())){
 				//必填验证
 				dataCheck(dto,errorList);
 
