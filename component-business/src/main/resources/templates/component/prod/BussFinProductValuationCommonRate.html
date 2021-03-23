@@ -43,7 +43,7 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-utext="#{ValuactionInfo.rateDec}">利率小数位</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_rateDec|" th:name="|${entityName}.rateDec|" th:value="${entity?.rateDec}" data-textrange="0" data-fixtype="1" maxlength=2 class="layui-input form-input text-number"/>
+                        <input type="text" th:id="|${entityName}_rateDec|" th:name="|${entityName}.rateDec|" th:value="${entity?.rateDec}" data-textrange="0" data-fixtype="1" maxlength=2 class="layui-input form-input text-number" required/>
                     </div>
                 </div>
                 <div class="form-inline-wrap">
@@ -51,7 +51,7 @@
                     <!-- 2019-9-4 10:59:15 yangxiaofeng 利率处理方式改为利率尾差处理方式 -->
                     <!-- <label class="layui-form-label form-label-wrap" data-th-utext="#{ValuactionInfo.ratevalueMode}">利率尾差处理方式</label> -->
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_ratevalueMode|" th:name="|${entityName}.ratevalueMode|" data-th-data-result="${MANTISSA_PROCESS_MODE}" th:initValue="${entity?.ratevalueMode}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" searchable="false">
+                        <select th:id="|${entityName}_ratevalueMode|" th:name="|${entityName}.ratevalueMode|" data-th-data-result="${MANTISSA_PROCESS_MODE}" th:initValue="${entity?.ratevalueMode}" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" searchable="false" required>
                         </select>
                     </div>
                 </div>
