@@ -74,7 +74,7 @@
 			SELECT
 				tmp1.REG_CODE prdRegistCode,					
 				tmp1.VDATE prdVDate,
-				#{searchDate} AS hodeDate,
+				#{searchDate} AS holdDate,
 				tmp1.RAISE_QTY prdRaiseTotalQty,
 				tmp1.TOTAL_AMT prdRaiseTotalAmt,
 				SUM(QTY) investRaiseTotalQty,
