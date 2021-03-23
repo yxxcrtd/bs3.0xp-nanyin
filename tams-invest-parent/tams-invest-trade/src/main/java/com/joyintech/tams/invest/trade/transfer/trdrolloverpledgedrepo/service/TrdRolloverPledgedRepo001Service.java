@@ -1117,7 +1117,6 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
                 // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
                 input.getTrdProductDeal().setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 input.getTrdProductDeal().setrTradeId(output.getTrdProductDeal().getTradeId());
-                output.getTrdProductDeal().setrTradeId(input.getTrdProductDeal().getTradeId());
 
                 // 金融产品交易扩展表Entity -> 金融产品交易扩展表
                 PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
