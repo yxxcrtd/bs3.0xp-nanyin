@@ -199,8 +199,8 @@ $(function () {
             {title: "产品登记编码", field: "prdRegistCode",width:'20%'},
             {title: "产品起息日", field: "prdVDate",width:'20%', type:"date"},
             {title: "持有日期", field: "holdDate",width:'20%', type:"date"},
-            {title: "产品端募集总份额", field: "prdRaiseTotalQty",width:'20%'},
-            {title: "持有端募集总份额", field: "investRaiseTotalQty",width:'20%'},
+            {title: "产品端募集金额", field: "prdRaiseTotalAmt",width:'20%'},
+            {title: "持有端募集金额", field: "investRaiseTotalAmt",width:'20%'},
         ]
     });
 
