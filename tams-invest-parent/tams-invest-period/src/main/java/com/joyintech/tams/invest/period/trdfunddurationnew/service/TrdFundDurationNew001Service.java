@@ -172,11 +172,17 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
     public void doDelete(String workflowId) {
         TrdFundDurationNew001Dto entity = this.getBussinessEntityByWorkflowId(workflowId);
         baseTradeProductDealCommServiceImpl.delete(workflowId);
-        if(StringUtil.equals(entity.getPstype(),DictCodeList.分红方式_现金分红.getValue())
-                && StringUtil.equals(entity.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal().getTradeStatus(),DictCodeListExt1.交易状态_初始.getValue())){
+        if(StringUtil.equals(entity.getPstype(),DictCodeList.分红方式_现金分红.getValue())){
+                //&& StringUtil.equals(entity.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal().getTradeStatus(),DictCodeListExt1.交易状态_初始.getValue())){
             entity.setWorkflowId(null);
+            entity.setbTradeId(entity.getTotleTradeId());
             getWorkFlowPatameter(entity);
+            List<FinAssetIntInfo> listFinAssetIntInfo= entity.getFinAssetIntInfoList();
+            listFinAssetIntInfo = listFinAssetIntInfo.stream().filter(finAssetIntInfo -> StringUtil.equals(finAssetIntInfo.getBonusMode(), DictCodeList.分红方式_现金分红.getValue())).collect(Collectors.toList());
+            entity.setFinAssetIntInfoList(listFinAssetIntInfo);
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
+            entity.getBaseTotalTradeInfoDto().setIsNeedStlPayOrders(true);
+            entity.setOperateType(BussinessConstant.SUBMIT);
             dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
         }
     }
