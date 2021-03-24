@@ -310,6 +310,8 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
                     bussinessCodeParameterIn.setType1(DictCodeList.业务编号一级分类_保险资产管理计划);
                 }
                 planTransferDtos.setTradeId(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(bussinessCodeParameterIn) : IDGenerator.generate());
+                planTransferDtos.setTotleTradeId(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(bussinessCodeParameterIn) : IDGenerator.generate());
+
                 bussinessCodeParameterOut.setCommonBusinessType(DictCodeList.共通业务类型_净值型资产赎回);
                 if(StringUtil.equals(DictCodeList.计划类资产一级分类_券商资产管理计划, finProduct.getFinprodType2())){
                     bussinessCodeParameterOut.setType1(DictCodeList.业务编号一级分类_券商资产管理计划);
@@ -319,6 +321,7 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
                     bussinessCodeParameterOut.setType1(DictCodeList.业务编号一级分类_保险资产管理计划);
                 }
                 planTransferDtos.setTradeIdOut(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(bussinessCodeParameterOut) : IDGenerator.generate());
+                planTransferDtos.setTotleTradeIdOut(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(bussinessCodeParameterIn) : IDGenerator.generate());
                 trdPlanRateInvestTradeTransfer001Service.setEntity(dto, planTransferDtos);
             });
         }

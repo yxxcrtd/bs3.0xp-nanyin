@@ -992,6 +992,8 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         trdProductDealTotal.setUnitInt(entity.getUnitIntAmt());
         trdProductDealTotal.setUnitFprice(entity.getUnitFprice());
         trdProductDealTotal.setCpriceAmt(entity.getCpriceAmt());
+        trdProductDealTotal.setPortfolioId(entity.getPortfolioId());
+
         trdProductDealTotal.setCcy(entity.getCcy());
         trdProductDealTotal.setPs(entity.getPs());
         trdProductDealTotal.setTradeDate(entity.getTradeDate());
