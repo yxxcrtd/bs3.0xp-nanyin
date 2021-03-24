@@ -13,6 +13,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao.InvestorsQualityCheckCPYEComMapper;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
 
+import io.netty.util.internal.StringUtil;
+
 /**
  * 产品余额、份额核查共同处理
  * @author wdb
@@ -104,38 +106,40 @@ public class InvestorsQualityCheckCPYEComService extends BaseService<InvestorsQu
         	//3.1 只存在一条记录
         	if(handleMap.get(key).size() == 1) {
         		handleDto1 = handleMap.get(key).get(0);
+        		
         		//3.1.1 [此记录的.业务结束日期  =  此条记录的.持有日期]
         		if(DateUtil.format(handleDto1.getHoldDate(), "yyyy-MM-dd").equals(DateUtil.format(handleDto1.getBusiMDate(), "yyyy-MM-dd"))) {
+        			
         			//当 【入参.检查类型 = 01:余额】时，进行以下处理	
         			if("01".equals(checkType)) {
     					//变量.偏离度   设置为两个偏离度的较小值																									
-    					//		Math.abs(投资端总金额 - 产品余额)  ÷ 产品余额 * 100%		
-        				deviation1 = handleDto1.getInvestBalanceAmt().subtract(handleDto1.getPrdBalanceAmt()).abs().divide(handleDto1.getPrdBalanceAmt(),2,BigDecimal.ROUND_DOWN);
-    					//		Math.abs(投资端总金额 - 实际募集金额)  ÷ 实际募集金额 * 100%				
-        				deviation2 = handleDto1.getInvestBalanceAmt().subtract(handleDto1.getPrdRaiseTotalAmt()).abs().divide(handleDto1.getPrdRaiseTotalAmt(),2,BigDecimal.ROUND_DOWN);
+    					//		Math.abs(投资端总金额 - 产品余额)  ÷ 产品余额 * 100%	
+        				deviation1 = devCalCom(handleDto1.getInvestBalanceAmt(),handleDto1.getPrdBalanceAmt());
+    					//		Math.abs(投资端总金额 - 实际募集金额)  ÷ 实际募集金额 * 100%		
+        				deviation2 = devCalCom(handleDto1.getInvestBalanceAmt(),handleDto1.getPrdRaiseTotalAmt());
     					//变量.偏离度   				=		（记录一.偏离度 <  记录二.偏离度）？ 记录一.偏离度 ： 记录二偏离度	
         				deviation = deviation1.compareTo(deviation2) == 1 ? deviation2 : deviation1;
         				
         			}else {																							
         				//以外的情况下，进行以下处理																										
-        					//变量.偏离度   设置为两个偏离度的较小值																									
-        					//Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额 * 100%			
-        					deviation1 = handleDto1.getInvestTotalQty().subtract(handleDto1.getPrdTotalQty()).abs().divide(handleDto1.getPrdTotalQty(),2,BigDecimal.ROUND_DOWN);
-        					//Math.abs(投资端总份额 - 募集总份额)  ÷ 实际募集份额 * 100%		
-        					deviation2 = handleDto1.getInvestTotalQty().subtract(handleDto1.getPrdRaiseTotalQty()).abs().divide(handleDto1.getPrdRaiseTotalQty(),2,BigDecimal.ROUND_DOWN);
-        					//变量.偏离度   				=		（记录一.偏离度 <  记录二.偏离度）？ 记录一.偏离度 ： 记录二偏离度
-        					deviation = deviation1.compareTo(deviation2) == 1 ? deviation2 : deviation1;
+    					//变量.偏离度   设置为两个偏离度的较小值																									
+    					//Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额 * 100%			
+    					deviation1 = devCalCom(handleDto1.getInvestTotalQty(),handleDto1.getPrdTotalQty());
+    					//Math.abs(投资端总份额 - 募集总份额)  ÷ 实际募集份额 * 100%		
+    					deviation2 = devCalCom(handleDto1.getInvestTotalQty(),handleDto1.getPrdRaiseTotalQty());
+    					//变量.偏离度   				=		（记录一.偏离度 <  记录二.偏离度）？ 记录一.偏离度 ： 记录二偏离度
+    					deviation = deviation1.compareTo(deviation2) == 1 ? deviation2 : deviation1;
         			}
         		}else {																												
         			//3.1.2 其它情况																											
         				//当 【入参.检查类型 = 01:余额】时，进行以下处理
         				if("01".equals(checkType)) {
-        				//变量.偏离度  				=		Math.abs(投资端总金额 - 产品金额)  ÷ 产品金额 * 100%		
-        					deviation = handleDto1.getInvestBalanceAmt().subtract(handleDto1.getPrdBalanceAmt()).abs().divide(handleDto1.getPrdBalanceAmt(),2,BigDecimal.ROUND_DOWN);
+        				//变量.偏离度  				=		Math.abs(投资端总金额 - 产品金额)  ÷ 产品金额 * 100%	
+        					deviation = devCalCom(handleDto1.getInvestBalanceAmt(),handleDto1.getPrdBalanceAmt());
         				}else {																											
         				//以外的情况下，进行以下处理																										
         				//变量.偏离度  				=		Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额 * 100%	
-        					deviation = handleDto1.getInvestTotalQty().subtract(handleDto1.getPrdTotalQty()).abs().divide(handleDto1.getPrdTotalQty(),2,BigDecimal.ROUND_DOWN);
+        					deviation = devCalCom(handleDto1.getInvestTotalQty(),handleDto1.getPrdTotalQty());
         				}
         		}
         		
@@ -165,25 +169,26 @@ public class InvestorsQualityCheckCPYEComService extends BaseService<InvestorsQu
         	}else if(handleMap.get(key).size() > 1) {
         		handleDto1 = handleMap.get(key).get(0);
         		handleDto2 = handleMap.get(key).get(1);
+        		
         		//3.2.1 存在【此记录的.业务结束日期  =  此条记录的.持有日期】的记录																											
 				if(DateUtil.format(handleDto1.getHoldDate(), "yyyy-MM-dd").equals(DateUtil.format(handleDto1.getBusiMDate(), "yyyy-MM-dd")) ||
 						DateUtil.format(handleDto2.getHoldDate(), "yyyy-MM-dd").equals(DateUtil.format(handleDto2.getBusiMDate(), "yyyy-MM-dd"))){	
         				//当 【入参.检查类型 = 01:余额】时，进行以下处理
 					if("01".equals(checkType)) {
         				//变量.偏离度   				=		（记录一.偏离度 <  记录二.偏离度）？ 记录一.偏离度 ： 记录二偏离度																			
-        				//记录一：		Math.abs(投资端总金额 - 产品余额)  ÷ 产品余额 * 100%		
-						deviation1 = handleDto1.getInvestBalanceAmt().subtract(handleDto1.getPrdBalanceAmt()).abs().divide(handleDto1.getPrdBalanceAmt(),2,BigDecimal.ROUND_DOWN);
-        				//记录二：		Math.abs(投资端总金额 - 产品余额)  ÷ 产品余额 * 100%				
-						deviation2 = handleDto2.getInvestBalanceAmt().subtract(handleDto2.getPrdBalanceAmt()).abs().divide(handleDto2.getPrdBalanceAmt(),2,BigDecimal.ROUND_DOWN);
+        				//记录一：		Math.abs(投资端总金额 - 产品余额)  ÷ 产品余额 	
+						deviation1 = devCalCom(handleDto1.getInvestBalanceAmt(),handleDto1.getPrdBalanceAmt());
+        				//记录二：		Math.abs(投资端总金额 - 产品余额)  ÷ 产品余额		
+						deviation2 = devCalCom(handleDto2.getInvestBalanceAmt(),handleDto2.getPrdBalanceAmt());
 						
 						deviation = deviation1.compareTo(deviation2) == 1 ? deviation2 : deviation1;
 					}else {																										
         				//以外的情况下，进行以下处理																										
         				//变量.偏离度   				=		（记录一.偏离度 <  记录二.偏离度）？ 记录一.偏离度 ： 记录二偏离度																			
-        				//记录一：		Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额 * 100%	
-						deviation1 = handleDto1.getInvestTotalQty().subtract(handleDto1.getPrdTotalQty()).abs().divide(handleDto1.getPrdTotalQty(),2,BigDecimal.ROUND_DOWN);
-        				//记录二：		Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额 * 100%
-						deviation2 = handleDto2.getInvestTotalQty().subtract(handleDto2.getPrdTotalQty()).abs().divide(handleDto2.getPrdTotalQty(),2,BigDecimal.ROUND_DOWN);
+        				//记录一：		Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额
+						deviation1 = devCalCom(handleDto1.getInvestTotalQty(),handleDto1.getPrdTotalQty());
+        				//记录二：		Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额 
+						deviation2 = devCalCom(handleDto2.getInvestTotalQty(),handleDto2.getPrdTotalQty());
 						
 						deviation = deviation1.compareTo(deviation2) == 1 ? deviation2 : deviation1;
 					}
@@ -236,12 +241,12 @@ public class InvestorsQualityCheckCPYEComService extends BaseService<InvestorsQu
         				//当 【入参.检查类型 = 01:余额】时，进行以下处理																										
         				//变量.偏离度   设置为业务日期较大的记录的偏离度																									
         				//Math.abs(投资端总金额 - 产品余额)  ÷ 产品余额 * 100%		
-						deviation = handleDtoMax.getInvestBalanceAmt().subtract(handleDtoMax.getPrdBalanceAmt()).abs().divide(handleDtoMax.getPrdBalanceAmt(),2,BigDecimal.ROUND_DOWN);
+						deviation = devCalCom(handleDtoMax.getInvestBalanceAmt(),handleDtoMax.getPrdBalanceAmt());
 					}else {																											
         				//以外的情况下，进行以下处理																										
         				//变量.偏离度   设置为业务日期较大的记录的偏离度																									
         				//Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额 * 100%		
-						deviation = handleDtoMax.getInvestTotalQty().subtract(handleDtoMax.getPrdTotalQty()).abs().divide(handleDtoMax.getPrdTotalQty(),2,BigDecimal.ROUND_DOWN);
+						deviation = devCalCom(handleDtoMax.getInvestTotalQty(),handleDtoMax.getPrdTotalQty());
 					}
 					
 					//错误记录追加
@@ -274,5 +279,39 @@ public class InvestorsQualityCheckCPYEComService extends BaseService<InvestorsQu
         param.put("errPrdQty", errPrdQty);
         return resultList;
     }
+    
+	   /**
+	   * 偏离度计算共通
+	   *
+	   */
+	  private BigDecimal devCalCom(BigDecimal investData ,BigDecimal prdData) {
+		  BigDecimal resultDev = new BigDecimal(0);
+		  
+		  if(prdData.compareTo(BigDecimal.ZERO) == 0) {
+			  resultDev = investData.subtract(prdData).abs();
+		  }else {
+			  resultDev = investData.subtract(prdData).abs().divide(prdData,6,BigDecimal.ROUND_UP);
+		  }
+		  		  
+		  return resultDev;
+	  	}
 
+//    /**
+//     * 异常数据初始化-没有募集、持有数据
+//     *
+//     */
+//    private void dataIniCom(InvestorsQualityCheck001Dto dealDto) {
+//    	//投资端数据处理
+//    	//金额
+//    	if(dealDto.getInvestBalanceAmt() == null) {
+//    		dealDto.setInvestBalanceAmt(new BigDecimal(0));
+//    	}
+//    	
+//    	//份额
+//    	if(dealDto.getInvestTotalQty() == null) {
+//    		dealDto.setInvestTotalQty(new BigDecimal(0));
+//    	}
+//    	
+//    }
+//    
 }

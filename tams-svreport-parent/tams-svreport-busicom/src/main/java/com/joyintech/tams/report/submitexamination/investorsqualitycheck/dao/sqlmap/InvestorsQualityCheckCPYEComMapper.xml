@@ -63,14 +63,14 @@
 		<include refid="objRec"></include>
 			SELECT		
 				REG_CODE as prdRegistCode,
-				#{searchDate} as hodeDate,
-				MDATE as busiMDate,
-				BALANCE_AMT as prdBalanceAmt,
-				PRD_QTY as prdTotalQty,
-				TOTAL_AMT as prdRaiseTotalQty,
-				RAISE_QTY prdRaiseTotalAmt,
-				SUM(CNY_AMT) as inverstTolAmt,
-				SUM(QTY) as inverstTolQTY
+				TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd') AS holdDate,
+				TO_DATE(MDATE,'yyyy-MM-dd') as busiMDate,
+				NVL(BALANCE_AMT,0) as prdBalanceAmt,
+				NVL(PRD_QTY,0) as prdTotalQty,
+				NVL(TOTAL_AMT,0) as prdRaiseTotalQty,
+				NVL(RAISE_QTY,0) prdRaiseTotalAmt,
+				NVL(SUM(CNY_AMT),0) as investBalanceAmt,
+				NVL(SUM(QTY),0) as investTotalQty
 			FROM	
 				(SELECT
 						REG_CODE,
