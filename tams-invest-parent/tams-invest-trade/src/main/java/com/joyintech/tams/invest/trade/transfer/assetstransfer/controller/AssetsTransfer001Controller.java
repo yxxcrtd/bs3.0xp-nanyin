@@ -20,7 +20,6 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.trade.transfer.assetstransfer.dto.AssetsTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.assetstransfer.service.AssetsTransfer001Service;
 
-import org.antlr.runtime.tree.RewriteRuleNodeStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
