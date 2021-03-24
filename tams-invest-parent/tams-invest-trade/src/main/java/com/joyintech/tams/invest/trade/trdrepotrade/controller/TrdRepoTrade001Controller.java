@@ -18,10 +18,14 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade001Dto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeRevokeDto;
@@ -42,10 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 回购投资交易管理
@@ -72,6 +73,9 @@ public class TrdRepoTrade001Controller extends BaseController {
      */
     @Autowired
     private TrdRepoTrade002Service trdRepoTrade002Service;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
 
     @Override
     public String init(Model model) {
@@ -148,6 +152,16 @@ public class TrdRepoTrade001Controller extends BaseController {
     @ResponseBody
     public AjaxResult check(@Valid @RequestBody TrdRepoTradeRevokeDto inputDto,
                             BindingResult result) {
+        String tradeId = inputDto.getTradeId();
+        AjaxResult ajaxResult = new AjaxResult();
+        TrdProductDeal trdProductDeal = trdCommonBaseService.selectZCDealByTid(tradeId, false);
+        // 查询到 卖出的转仓交易  说明 点击的是买入。
+        if(trdProductDeal!=null&& StringUtil.equals(DictCodeList.交易方向_卖出.getValue(),trdProductDeal.getPs())){
+            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+            errorList.add(new ValidMessage(this.getMessage("内部转仓只能撤销卖出交易,买入自动撤销！")));
+            ajaxResult.setErrorList(errorList);
+            return ajaxResult;
+        }
         return commonCheck(result, inputDto.getOperateType());
     }
 
