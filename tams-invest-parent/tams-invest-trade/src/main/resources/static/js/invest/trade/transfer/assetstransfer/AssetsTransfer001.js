@@ -439,7 +439,7 @@
                     var object = selArr[0];
                     object.operateType = "revoke";
                     object.isTransfer = true;
-                    object.bizCode = selArr[0].tradeId;
+                    object.bizCode = selArr[0].totleTradeId;
                     object.statusValid = "02";//有效状态为有效
                     object.elementId = "TrdProjectInvestTrade001_btn_revoke";
                     Joyin.ajax(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revokeCheck', object, function (result) {

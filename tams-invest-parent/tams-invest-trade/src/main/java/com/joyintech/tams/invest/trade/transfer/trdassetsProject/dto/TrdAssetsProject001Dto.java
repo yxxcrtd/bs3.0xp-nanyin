@@ -1177,4 +1177,17 @@ public class TrdAssetsProject001Dto extends TrdProductDeal implements ProcessEnt
     public void setTransfer(boolean transfer) {
         isTransfer = transfer;
     }
+
+    /**
+     * 汇总业务编号
+     */
+    private String bizCode;
+
+    public String getBizCode() {
+        return bizCode;
+    }
+
+    public void setBizCode(String bizCode) {
+        this.bizCode = bizCode;
+    }
 }

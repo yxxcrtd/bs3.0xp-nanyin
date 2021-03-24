@@ -108,6 +108,24 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
     
     @Autowired
     private TrdAssetAssignService trdAssetAssignService;
+
+    @Autowired
+    private WflTrdFinProductDealTotalMapper wflTrdFinProductDealTotalMapper;
+
+    @Autowired
+    private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
+
+    @Autowired
+    private WflPaTrdFinDealTotalMapper wflPaTrdFinDealTotalMapper;
+
+    @Autowired
+    private PaTrdFinProductDealTotalMapper paTrdFinProductDealTotalMapper;
+
+    @Autowired
+    private TrdDealTotalAddMapper trdDealTotalAddMapper;
+
+    @Autowired
+    private WflTrdDealTotalAddMapper wflTrdDealTotalAddMapper;
     
     @Override
     public void doInsert(TrdAssetsProject001Dto dto, OperationType type) {
@@ -127,6 +145,15 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
                                 }
                                 if(baseTradeInfoDto.getStlPayOrders() != null){
                                     baseTradeInfoDto.getStlPayOrders().setWorkflowId(dto.getWorkflowId());
+                                }
+                                if(baseTradeInfoDto.getTrdDealTotalAdd() != null){
+                                    baseTradeInfoDto.getTrdDealTotalAdd().setWorkflowId(dto.getWorkflowId());
+                                }
+                                if(baseTradeInfoDto.getPaTrdFinProductDealTotal() != null){
+                                    baseTradeInfoDto.getPaTrdFinProductDealTotal().setWorkflowId(dto.getWorkflowId());
+                                }
+                                if(baseTradeInfoDto.getTrdFinProductDealTotal() != null){
+                                    baseTradeInfoDto.getTrdFinProductDealTotal().setWorkflowId(dto.getWorkflowId());
                                 }
                             }
                     );
@@ -174,11 +201,30 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
             WflPaTrdProductDeal wflPaTrdProductDeal = new WflPaTrdProductDeal();
             BeanUtil.copyPropertiesIgnoreNull(wflPaTrdProductDeal, trade.getPaTrdProductDeal());
             wflPaTrdProductDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+
+            // 金融产品交易汇总信息DTO.金融产品交易汇总Entity -> 金融产品交易汇总业务流程表
+            WflTrdFinProductDealTotal wflTrdFinProductDealTotal = new WflTrdFinProductDealTotal();
+            BeanUtil.copyPropertiesIgnoreNull(wflTrdFinProductDealTotal, trade.getTrdFinProductDealTotal());
+            wflTrdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+            wflTrdFinProductDealTotal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+
+            WflPaTrdFinDealTotal wflPaTrdFinDealTotal = new WflPaTrdFinDealTotal();
+            BeanUtil.copyPropertiesIgnoreNull(wflPaTrdFinDealTotal, trade.getPaTrdFinProductDealTotal());
+            wflPaTrdFinDealTotal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            wflPaTrdFinDealTotal.setWorkflowId(entity.getWorkflowId());
+            wflPaTrdFinDealTotal.setTotleTradeId(wflTrdFinProductDealTotal.getTotleTradeId());
+
+            WflTrdDealTotalAdd wflTrdDealTotalAdd = new WflTrdDealTotalAdd();
+            BeanUtil.copyPropertiesIgnoreNull(wflTrdDealTotalAdd, trade.getTrdDealTotalAdd());
+            wflTrdDealTotalAdd.setWorkflowId(entity.getWorkflowId());
+            wflTrdDealTotalAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
             // 转换
             wflTrdProductDealMapper.insertSelective(wflTrdProductDeal);
             wflTrdProductDealAddMapper.insertSelective(wflTrdProductDealAdd);
             wflPaTrdProductDealMapper.insertSelective(wflPaTrdProductDeal);
-
+            wflTrdFinProductDealTotalMapper.insertSelective(wflTrdFinProductDealTotal);
+            wflPaTrdFinDealTotalMapper.insertSelective(wflPaTrdFinDealTotal);
+            wflTrdDealTotalAddMapper.insertSelective(wflTrdDealTotalAdd);
             if (trade.getTrdTradeFeeDetail() != null) {
                 for (TrdTradeFeeDetail detail : trade.getTrdTradeFeeDetail()) {
                     trdTradeFeeDetailMapper.deleteByPrimaryKey(detail);
@@ -208,6 +254,10 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
                     entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(trade.getTrdProductDealAdd().getPortfolioId()));
                     // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
                     // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
+                    TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
+                    BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, trade.getTrdFinProductDealTotal());
+                    trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+
                     TrdProductDeal trdProductDeal = new TrdProductDeal();
                     BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, trade.getTrdProductDeal());
                     trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
@@ -221,6 +271,15 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
                     // 金融产品交易扩展表Entity -> 金融产品交易扩展表
                     PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
                     BeanUtil.copyPropertiesIgnoreNull(paTrdProductDeal, trade.getPaTrdProductDeal());
+
+                    // 金融产品交易汇总扩展表Entity -> 金融产品交易汇总扩展表
+                    PaTrdFinProductDealTotal paTrdFinProductDealTotal = new PaTrdFinProductDealTotal();
+                    BeanUtil.copyPropertiesIgnoreNull(paTrdFinProductDealTotal, trade.getPaTrdFinProductDealTotal());
+
+                    // 金融产品交易信息DTO.金融产品交易附属表Entity -> 金融产品交易附属表
+                    TrdDealTotalAdd trdTotalAdd = new TrdDealTotalAdd();
+                    BeanUtil.copyPropertiesIgnoreNull(trdTotalAdd, trade.getTrdDealTotalAdd());
+
                     TrdCommonParam trdCommonParam = new TrdCommonParam();
                     // 组合交易表Entity -> 组合交易信息表
                     if (CollectionUtils.isNotEmpty(trade.getPtlTrade())) {
@@ -232,6 +291,11 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
                     simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/insertAutoClassifyBatch",
                             trdCommonParam, String.class);
 
+                    paTrdFinProductDealTotalMapper.insertSelective(paTrdFinProductDealTotal);
+                    trdDealTotalAddMapper.insertSelective(trdTotalAdd);
+//                    trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
+
+
                     // 金融产品交易信息DTO.划款指令表Entity -> 划款指令表
                     StlPayOrdersDto stlPayOrders = null;
                     if (com.joyintech.framework.util.StringUtil.isNotEmpty(trade.getStlPayOrders())) {
@@ -242,6 +306,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
                     FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
                     finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
                     BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+                    baseTradeProductDealDto.setTrdFinProductDealTotal(trdFinProductDealTotal);//汇总交易
                     baseTradeProductDealDto.setTrdProductDeal(trdProductDeal); // 金融产品交易
                     baseTradeProductDealDto.setTrdProductDealAdd(trdProductDealAdd); // 金融产品附属
                     // 划款指令
@@ -600,6 +665,13 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         //转出
         String portfolioId = entity.getPortfolioId();
         entity.setPs(DictCodeList.交易方向_卖出.getValue());
+        //生成卖出汇总交易编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = genBizCode(entity);
+            entity.setBizCode(baseGetBusinessId.buildBussinessCode(codeParameter));
+        } else {
+            entity.setBizCode(IDGenerator.generate());
+        }
         entity.setActPortfolioId(entity.getInvTransPortf());
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getInvTransPortf()));
         entity.setCounterId(portfolioId);
@@ -616,6 +688,12 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         result.setStlPayOrders(gen划款指令流程(entity,trdProductDeal));
 
         result.setPaTrdProductDeal(gen交易扩展(entity));
+        TrdFinProductDealTotal trdFinProductDealTotal = gen产品汇总交易(entity);
+        result.setTrdFinProductDealTotal(trdFinProductDealTotal);
+
+        result.setPaTrdFinProductDealTotal(gen汇总交易扩展(entity));
+
+        result.setTrdDealTotalAdd(gen汇总交易附属(entity));
 
         resultList.add(result);
         //转入
@@ -623,6 +701,13 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         entity.setActPortfolioId(portfolioId);
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(portfolioId));
         entity.setCounterId(entity.getInvTransPortf());
+        //生成买入汇总交易编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = genBizCode(entity);
+            entity.setBizCode(baseGetBusinessId.buildBussinessCode(codeParameter));
+        } else {
+            entity.setBizCode(IDGenerator.generate());
+        }
         //生成交易编号
         if (baseGetBusinessId != null) {
             BussinessCodeParameter codeParameter = genBizCode(entity);
@@ -644,6 +729,13 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         result1.setStlPayOrders(gen划款指令流程(entity,trdProductDeal1));
 
         result1.setPaTrdProductDeal(gen交易扩展(entity));
+
+        TrdFinProductDealTotal trdFinProductDealTotal1 = gen产品汇总交易(entity);
+        result1.setTrdFinProductDealTotal(trdFinProductDealTotal1);
+
+        result1.setPaTrdFinProductDealTotal(gen汇总交易扩展(entity));
+
+        result1.setTrdDealTotalAdd(gen汇总交易附属(entity));
 
         BussinessCodeParameter parameter = new BussinessCodeParameter();
         parameter.setCommonBusinessType(DictCodeList.共通业务类型_项目类资产交易);
@@ -790,6 +882,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
     private TrdProductDeal gen产品交易(TrdAssetsProject001Dto entity) {
         TrdProductDeal trdProductDeal = new TrdProductDeal();
         trdProductDeal.setTradeId(entity.getTradeId());
+        trdProductDeal.setTotleTradeId(entity.getBizCode());
         trdProductDeal.setBusiType(DictCodeList.共通业务类型_项目类资产交易.getValue());
         //trdProductDeal.setFinprodType();
         trdProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
@@ -885,5 +978,117 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
                 AllTradeCommonUtil.deletePosition("",deal.getTradeId());
             }
         }
+    }
+
+    private  TrdFinProductDealTotal gen产品汇总交易(TrdAssetsProject001Dto entity) {
+        TrdFinProductDealTotal trdProductDealTotal = new TrdFinProductDealTotal();
+        trdProductDealTotal.setTotleTradeId(entity.getBizCode());
+        trdProductDealTotal.setBusiType(DictCodeList.共通业务类型_项目类资产交易.getValue());
+        trdProductDealTotal.setFinprodId(entity.getFinprodId());
+        trdProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+        trdProductDealTotal.setCcy(entity.getCcy());
+        trdProductDealTotal.setBranch(Long.valueOf(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+        trdProductDealTotal.setUnitCprice(entity.getUnitCprice());
+        trdProductDealTotal.setUnitInt(entity.getUnitIntAmt());
+        trdProductDealTotal.setUnitFprice(entity.getUnitFprice());
+        trdProductDealTotal.setCpriceAmt(entity.getCpriceAmt());
+        trdProductDealTotal.setCcy(entity.getCcy());
+        trdProductDealTotal.setPs(entity.getPs());
+        trdProductDealTotal.setTradeDate(entity.getTradeDate());
+        trdProductDealTotal.setSettleDate(entity.getTradeDate());
+        trdProductDealTotal.setSettleSpeed(0L);
+        trdProductDealTotal.setVdate(entity.getVdate());//起息日
+        trdProductDealTotal.setMdate(entity.getMdate());//到期日
+        trdProductDealTotal.setPrinAmt(entity.getPrinAmt());
+        trdProductDealTotal.setShareAmt(entity.getPrinAmt());
+        trdProductDealTotal.setIntAmt(entity.getIntAmt());
+//        trdProductDealTotal.setFpriceAmt(entity.getFpriceAmt());
+        trdProductDealTotal.setTradeAmt(entity.getTradeAmt());
+        trdProductDealTotal.setWorkflowId(entity.getWorkflowId());
+        trdProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+        trdProductDealTotal.setStatus(DictCodeList.数据状态_新建.getValue());
+        trdProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        trdProductDealTotal.setTrader(LoginUserUtil.getUserName());
+        if(StringUtil.equals(entity.getPs(),DictCodeList.交易方向_卖出.getValue())){
+            trdProductDealTotal.setFpriceAmt(null);//全价总额
+            trdProductDealTotal.setCounterId(entity.getPortfolioId());//交易对手
+            trdProductDealTotal.setRemark("项目类资产转出");
+        }
+        else{
+            trdProductDealTotal.setFpriceAmt(entity.getPrinAmt());//全价总额
+            trdProductDealTotal.setCounterId(entity.getInvTransPortf());//交易对手
+            trdProductDealTotal.setRemark("项目类资产转入");
+        }//        trdProductDeal.setIsOutTrade(entity.getTrdInvestPersonInfo().getIsOutTrade());
+        trdProductDealTotal.setIsOutTrade("Y");
+
+//        trdProductDealTotal.setCounterTrader(entity.getTrdInvestPersonInfo().getCounterTrader());
+//        trdProductDealTotal.setCounterContact(entity.getTrdInvestPersonInfo().getContactInfo());
+        //总交易费用 = 手续费 + 通道费
+//        trdProductDealTotal.setFeeAmt(ArithmeticUtil.doAdd(entity.getCommissionAmt(), entity.getChannelFee()));
+        //随交易支付费用
+        //内部交易对手  通道费随交易支付  外部交易对手根据通道收取方式
+//        if(StringUtil.equals(trdProductDealTotal.getIsOutTrade(), DictCodeList.是否_否.getValue())){
+//            trdProductDealTotal.setFeeAmtPay(ArithmeticUtil.doAdd(entity.getCommissionAmt(), entity.getChannelFee()));
+//        }else{
+//            if(StringUtil.equals(entity.getCollectType(), DictCodeListExt2.收取方式_回款前扣除.getValue())){
+//                trdProductDealTotal.setFeeAmtPay(ArithmeticUtil.doAdd(entity.getCommissionAmt(), entity.getChannelFee()));
+//            }else{
+//                trdProductDealTotal.setFeeAmtPay(entity.getCommissionAmt());
+//                trdProductDealTotal.setFeeAmtUnpay(entity.getChannelFee());
+//            }
+//        }
+//		标的挂通道，通道费不随交易支付
+        trdProductDealTotal.setFeeAmtPay(entity.getCommissionAmt());
+        trdProductDealTotal.setFeeAmtUnpay(entity.getChannelFee());
+
+        trdProductDealTotal.setRemark(entity.getRemark());
+        trdProductDealTotal.setChlId(entity.getChlId());
+        if(entity.getPs().equals(DictCodeList.交易方向_卖出.getValue())) {
+            //还本不带息的资产才保存
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("finprodId", entity.getFinprodId());
+            param.put("settleDate", entity.getSettleDate());
+            Map<String, Object> result = findRepayFlag(param);
+            if (result.get("repayIntFlag") != null && result.get("repayIntFlag").equals("N")) {
+                trdProductDealTotal.setIspayUnpaidint("Y");
+            }
+        }
+        trdProductDealTotal.setPayUnpaidintAmt(entity.getSplitIntAmt());//利息总额
+        trdProductDealTotal.setPortfolioId(entity.getActPortfolioId());//存子组合
+        return trdProductDealTotal;
+    }
+
+    public Map<String, Object> findRepayFlag(Map<String, Object> params) {
+        if (StringUtil.isNotEmpty((java.lang.String)params.get("finprodId"))
+                && params.get("settleDate") != null) {
+            return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdProjectInvestTrade/findRepayFlag",
+                    params, Map.class);
+        }
+        return null;
+    }
+
+    private static PaTrdFinProductDealTotal gen汇总交易扩展(TrdAssetsProject001Dto entity) {
+        PaTrdFinProductDealTotal paTrdProductDeal = new PaTrdFinProductDealTotal();
+        paTrdProductDeal.setTotleTradeId(entity.getBizCode());
+        if(entity.getPs().equals(DictCodeList.交易方向_卖出.getValue())) {
+            paTrdProductDeal.setTheoryInt(entity.getSplitIntAmt());//
+        }
+        String paBussType = DictCodeListExt1.平安业务类型_项目类资产买入.getValue();
+        if (DictCodeList.交易方向_卖出.getValue().equals(entity.getPs())) {
+            paBussType = DictCodeListExt1.平安业务类型_项目类资产卖出.getValue();
+        }
+        paTrdProductDeal.setPaBussType(paBussType);
+        paTrdProductDeal.setDeptCode(LoginUserUtil.getDeptCode());
+        paTrdProductDeal.setWorkflowId(entity.getWorkflowId());
+        return paTrdProductDeal;
+    }
+
+    private static TrdDealTotalAdd gen汇总交易附属(TrdAssetsProject001Dto entity) {
+        TrdDealTotalAdd trdProductDealAdd = new TrdDealTotalAdd();
+        trdProductDealAdd.setTotleTradeId(entity.getBizCode());
+//        trdProductDealAdd.setEntrustId(entity.getEntrustId());
+        trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
+        trdProductDealAdd.setWorkflowId(entity.getWorkflowId());
+        return trdProductDealAdd;
     }
 }
