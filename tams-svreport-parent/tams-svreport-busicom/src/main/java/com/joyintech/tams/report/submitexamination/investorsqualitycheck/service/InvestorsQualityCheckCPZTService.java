@@ -27,12 +27,11 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseS
 
     @Override
     public Page<InvestorsQualityCheck001Dto> queryPage(Map<String, Object> param) {
-        param.put("queryFlag", "1");
         int pageNum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
         int pageSize = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
         // 查询不合格记录
         dealParamMap(param);
-        Page<InvestorsQualityCheck001Dto> page = super.queryForPage(pageNum, pageSize, () -> investorsQualityCheck001Mapper.searchCPZT(param));
+        Page<InvestorsQualityCheck001Dto> page = super.queryForPage(pageNum, pageSize, () -> investorsQualityCheck001Mapper.searchCPZTErr(param));
         // 数据字典转换
         for (InvestorsQualityCheck001Dto dto : page.getRoot()) {
             dto.setPrdIssueSts(SysDataUtil.getNameFromDataDict(DictCode.发行状态, dto.getPrdIssueSts()));
@@ -50,10 +49,9 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseS
     public InvestorsQualityCheck001Dto cntHGL(Map<String, Object> param) {
         // 查询所有记录
         dealParamMap(param);
-        List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchCPZT(param);
+        List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchCPZTAll(param);
         // 查询不合格记录
-        param.put("queryFlag", "1");
-        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchCPZT(param);
+        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchCPZTErr(param);
 
         return cntHGLComm(allList, unQualifiedList, CPZT);
     }
