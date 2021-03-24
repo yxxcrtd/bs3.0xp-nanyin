@@ -155,7 +155,7 @@
             }else if(field == 'bonusMode'){
                 //现金分红，分红份额为空不可编辑
                  if(row.bonusMode == BONUS_MODE_01){
-                    repoInfoTable.renderRow(row.LAY_TABLE_INDEX,  {"qty": parseFloat()});
+                    repoInfoTable.renderRow(row.LAY_TABLE_INDEX,  {"qty": ''});
                  }
             }
         },

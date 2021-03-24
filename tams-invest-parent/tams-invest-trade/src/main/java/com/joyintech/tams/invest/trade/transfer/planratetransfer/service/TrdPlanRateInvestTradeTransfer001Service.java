@@ -28,7 +28,6 @@ import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDto;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDtos;
-import com.joyintech.tams.invest.trade.trdplanrateinvesttrade.dto.TrdPlanRateInvestTradeDto;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -83,12 +82,24 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 	private WflStlPayOrdersMapper wflStlPayOrdersMapper;
 	@Autowired
 	private BaseGetBusinessId baseGetBusinessId;
-	
+
+	@Autowired
+	private WflTrdFinProductDealTotalMapper wflTrdFinProductDealTotalMapper;
+
 	@Autowired
 	private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
-	
+
+	@Autowired
+	private WflPaTrdFinDealTotalMapper wflPaTrdFinDealTotalMapper;
+
+	@Autowired
+	private PaTrdFinProductDealTotalMapper paTrdFinProductDealTotalMapper;
+
 	@Autowired
 	private TrdDealTotalAddMapper trdDealTotalAddMapper;
+
+	@Autowired
+	private WflTrdDealTotalAddMapper wflTrdDealTotalAddMapper;
 	/**
 	 * 划款指令生成
 	 */

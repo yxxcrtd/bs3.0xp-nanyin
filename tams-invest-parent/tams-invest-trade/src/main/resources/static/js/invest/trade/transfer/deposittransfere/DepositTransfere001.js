@@ -100,6 +100,9 @@
             };
             findCash(dataCash);
         }
+         if(!$('#portfolioId').val()){
+        	$("#portoAvailableAmt").val('').trigger("change").trigger('blur');
+        }
     });
     //查询组合持仓、组合可用现金
     var findCash = function (params) {
@@ -171,6 +174,12 @@
             }
         }
         addRow(options, options1);
+        $("#portfolioId").val('').trigger("change").trigger('blur');
+        $("#transferPrinAmt").val('').trigger("change").trigger('blur');
+        $("#transferTradeAmt").val('').trigger("change").trigger('blur');
+        $('#payInt').val('').trigger("change").trigger('blur');
+        $("#portoAvailableAmt").val('').trigger("change").trigger('blur');
+        $("#chlAvailableAmt").val('').trigger("change").trigger('blur');
     });
 
     // 行内删除按钮点击事件
