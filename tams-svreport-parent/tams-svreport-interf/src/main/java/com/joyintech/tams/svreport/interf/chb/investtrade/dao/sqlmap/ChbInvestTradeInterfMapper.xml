@@ -1080,9 +1080,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     on DEPOASSET.ISSUER = mst.customer_id
     LEFT JOIN TRD_PRODUCT_DEAL_ADD T2 ON deal.TRADE_ID = T2.TRADE_ID 
     LEFT JOIN ptl_sec_position T3 ON deal.mdate -1 = T3.CDATE AND deal.FINPROD_ID = T3.FINPROD_ID and T2.PORTFOLIO_ID = T3.PORTFOLIO_ID
-   left join MST_COUNTER_PARTY party on party.COUNTER_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
-	left join MST_COUNTER_PARTY party2 on party2.LINK_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
-    left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
+   left join MST_COUNTER_PARTY party on party.COUNTER_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,NVL(deal.counter_id, assetcounter.COUNTER_ID))),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
+	left join MST_COUNTER_PARTY party2 on party2.LINK_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,NVL(deal.counter_id, assetcounter.COUNTER_ID))),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
+    left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,NVL(deal.counter_id, assetcounter.COUNTER_ID))),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
     WHERE 1=1
     and (deal.BUSI_TYPE in( '03','01') or (DEAL.BUSI_TYPE = '37' and DEAL.FINPROD_TYPE2 = 'F07'))
     /*只接入原始交易数据*/
