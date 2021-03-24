@@ -174,6 +174,9 @@
                 });
             }
         });
+        if(!$('#portfolioId').val()){
+        	$("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
+        }
         refreshCashAndBalance();
     };
     /**

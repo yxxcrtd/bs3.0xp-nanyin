@@ -132,6 +132,9 @@
             };
             findCash(dataCash);
         }
+        if(!$('#portfolioId').val()){
+        	$("#portoAvailableAmt").val('').trigger("change").trigger('blur');
+        }
     });
 
 
@@ -229,6 +232,12 @@
             }
         }
         addRow(options, options1);
+        $("#portfolioId").val('').trigger("change").trigger('blur');
+        $("#transferPrinAmt").val('').trigger("change").trigger('blur');
+        $("#transferTradeAmt").val('').trigger("change").trigger('blur');
+        $('#payInt').val('').trigger("change").trigger('blur');
+        $("#portoAvailableAmt").val('').trigger("change").trigger('blur');
+        $("#chlAvailableAmt").val('').trigger("change").trigger('blur');
     });
 
     // 行内删除按钮点击事件
