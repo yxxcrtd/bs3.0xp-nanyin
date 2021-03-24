@@ -418,14 +418,14 @@ where 1=1 <!-- fp2.branch = 0 -->
 
 <select id="selectChlBtmByValuedateSp" parameterType="map"
 	resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
-	select t.*,T1.CHL_ID from (
+	select t.*,T1.CHL_ID, T1.mdate from (
 	select * from (
 		SELECT
 	        psv1.prod_id      AS prod_id, /*产品代码*/
 	        psv1.asset_id     AS asset_id, /*资产代码*/
 	        psv1.ccy          AS ccy, /*币种*/
 	        psv1.value_date   AS value_date, /*日期*/
-	        psv1.mdate        AS mdate, /*资产到期日*/
+			<!-- psv1.mdate        AS mdate, /*资产到期日*/-->
 	        SUM(nvl(psv1.pos_amt,0))			AS pos_amt, /*当日持仓*/
 	        SUM(nvl(psv1.tdy_cost_amt,0)) 		AS tdy_cost_amt, /*当日成本*/
 	        SUM(nvl(psv1.tdy_float_ingpl,0))	AS tdy_float_ingpl, /*当日公允价值变动*/
@@ -439,7 +439,7 @@ where 1=1 <!-- fp2.branch = 0 -->
 	                a.portfolio_id        prod_id, /*产品代码*/
 	                a.ccy                 ccy, /*币种*/
 	                a.cdate               value_date, /*日期*/
-	                c.mdate               mdate, /*资产到期日*/
+					<!-- c.mdate               mdate, /*资产到期日*/-->
 	                a.share_amt           pos_amt, /*当日持仓*/
 	                a.dsc_cost_amt        tdy_cost_amt, /*当日成本*/
 	                a.tdy_float_ingpl     tdy_float_ingpl, /*当日公允价值变动*/
@@ -462,18 +462,19 @@ where 1=1 <!-- fp2.branch = 0 -->
 	        psv1.asset_id,
 	        psv1.prod_id,
 	        psv1.ccy,
-	        psv1.value_date,
-	        psv1.mdate
+	        psv1.value_date
+			<!-- ,psv1.mdate-->
 	) a
 	where a.ASSET_ID is not null
 	union all
 	select * from (
-	  select  
+	  select
 	    psv1.PROD_ID as PROD_ID,
 	   nvl(nvl(fpf.FINPROD_MARKET_ID,fp1.FINPROD_MARKET_ID),psv1.FINPROD_ID) as ASSET_ID,
 	    psv1.ccy,
 		  psv1.VALUE_DATE as VALUE_DATE,
-	    nvl(fp1.MDATE,fp2.MDATE) as MDATE,
+		  <!-- 此处注释是因为到期日直接取通道的到期日 -->
+		  <!-- nvl(fp1.MDATE,fp2.MDATE) as MDATE,-->
 		  sum(nvl(psv1.POS_AMT,0)) as POS_AMT,
 		  sum(nvl(psv1.TDY_COST_AMT,0)) as TDY_COST_AMT,
 		  sum(nvl(psv1.TDY_FLOAT_INGPL,0)) as TDY_FLOAT_INGPL,
@@ -513,11 +514,15 @@ where 1=1 <!-- fp2.branch = 0 -->
 	
 	where 1=1 <!-- fp2.branch = 0 -->
 	  group by 
-	  psv1.PROD_ID,psv1.VALUE_DATE,nvl(fp1.MDATE,fp2.MDATE),nvl(nvl(fpf.FINPROD_MARKET_ID,fp1.FINPROD_MARKET_ID),psv1.FINPROD_ID),psv1.ccy
-	  ) a
-	  where a.ASSET_ID is not null) t
-	  inner join 
-	  (select DISTINCT fp.finprod_market_id asset_id,fp1.finprod_market_id chl_id
+	  psv1.PROD_ID,psv1.VALUE_DATE,
+		<!-- nvl(fp1.MDATE,fp2.MDATE), -->
+		nvl(nvl(fpf.FINPROD_MARKET_ID,fp1.FINPROD_MARKET_ID),psv1.FINPROD_ID),psv1.ccy
+    ) a
+    where a.ASSET_ID is not null) t
+    inner join
+    (select DISTINCT fp.finprod_market_id asset_id,fp1.finprod_market_id chl_id
+        <!-- 通过通道投资的资产到期日应该取通道的到期日 -->
+	  	, fp1.mdate
 	  from fin_cash_info ca
 	left join fin_product fp
 	on FP.FINPROD_ID=CA.FINPROD_ID
