@@ -294,4 +294,50 @@
             </if>
         </where>
     </select>
+
+	<select id="selectOrdersByBizCodeByBTradeId"
+			resultType="com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase">
+		SELECT DISTINCT case SPO.PS when '${IE_FLAG_02}' then
+		SPO.MY_ACCT_NO else
+		SPO.COUNTER_ACCT_NO end payAcctNo,
+		case SPO.PS when
+		'${IE_FLAG_02}' then SPO.COUNTER_ACCT_NO else
+		SPO.MY_ACCT_NO end
+		recAcctNo,
+		case SPO.PS when '${IE_FLAG_02}' then SCI.ACCT_NAME else
+		SCI1.ACCT_NAME
+		end payAcctName,
+		case SPO.PS when '${IE_FLAG_02}' then
+		SCI1.ACCT_NAME else SCI.ACCT_NAME
+		end recAcctName,
+		SPO.PS,
+		SPO.IS_NEED_SEND,
+		SPO.PAY_TYPE,
+		SPO.SETTLE_DATE,
+		SPO.SETTLE_AMT,
+		SPO.CCY,
+		SPO.PORTFOLIO_ID,
+		pp.PORTFOLIO_NAME,
+		SPO.SETTLE_STATUS,
+		SPO.PURPOSE,
+		SPO.TRADE_ID,
+		SPO.ORDER_ID,
+		SPO.REMARK
+		FROM STL_PAY_ORDERS
+		SPO
+		LEFT JOIN
+		STL_CAPACCT_INFO SCI ON SPO.MY_ACCT_NO = SCI.ACCT_NO
+		LEFT JOIN
+		STL_CAPACCT_INFO SCI1 ON SPO.COUNTER_ACCT_NO = SCI1.ACCT_NO
+		LEFT JOIN
+		PTL_PORTFOLIO PP ON SPO.PORTFOLIO_ID = PP.PORTFOLIO_ID
+		WHERE
+		SPO.TRADE_ID =
+		(select tfpdt.trade_id from trd_product_deal tpd
+		inner join trd_product_deal tfpdt on tpd.totle_trade_id = tfpdt.b_trade_id
+		inner join pa_trd_product_deal ptpd on tfpdt.trade_id = ptpd.trade_id
+		where tpd.trade_id = #{bizCode}
+		and tfpdt.ps ='T11'
+		)
+	</select>
 </mapper>

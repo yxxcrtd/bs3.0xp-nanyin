@@ -141,4 +141,6 @@ public interface BussSettleOrderCommMapper {
     List<StlCapacctInfo> getPtlSecTrdAcctNo(@Param("portfolioId") String portfolioId);
 
     List<StlCapacctInfo> selectProdCapacctInfoListForProd(@Param("finprodId") String finprodId, @Param("ccy") String ccy, @Param("capacctType") String value);
+
+    List<BussTrdTransferOrderBase> selectOrdersByBizCodeByBTradeId(@Param("bizCode")String bizCode, @Param("IE_FLAG_02") String value);
 }

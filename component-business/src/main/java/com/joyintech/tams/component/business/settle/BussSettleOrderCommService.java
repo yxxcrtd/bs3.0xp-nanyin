@@ -120,4 +120,7 @@ public interface BussSettleOrderCommService {
     List<StlCapacctInfo> getAcctNoByInfo(Map<String, Object> paramMap);
 
     List<StlCapacctInfo> selectCounterCapacctInfoList(Map<String, Object> paramMap);
+
+    //撤销基金除权登记时，根据前置交易编号查询不到划款指令特殊处理
+    List<BussTrdTransferOrderBase> selectOrdersByBizCodeByBTradeId(String bizCode);
 }

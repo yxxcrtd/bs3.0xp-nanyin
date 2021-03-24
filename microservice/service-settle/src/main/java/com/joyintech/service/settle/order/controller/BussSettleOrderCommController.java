@@ -129,4 +129,9 @@ public class BussSettleOrderCommController {
     public List<StlCapacctInfo> selectCounterCapacctInfoList(@RequestBody Map<String, Object> paramMap) {
         return bussSettleOrderCommService.selectCounterCapacctInfoList(paramMap);
     }
+
+    @PostMapping("selectOrdersByBizCodeByBTradeId")
+    public List<BussTrdTransferOrderBase> selectOrdersByBizCodeByBTradeId(@RequestBody String bizCode) {
+        return bussSettleOrderCommService.selectOrdersByBizCodeByBTradeId(bizCode);
+    }
 }

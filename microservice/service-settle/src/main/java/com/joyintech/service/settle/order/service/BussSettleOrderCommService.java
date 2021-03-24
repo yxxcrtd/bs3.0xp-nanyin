@@ -2021,4 +2021,9 @@ public class BussSettleOrderCommService {
         return bussSettleOrderCommMapper.selectCounterCapacctInfoList((String)paramMap.get("counterId"),
                 (String)paramMap.get("acctType"),(String)paramMap.get("ccy"));
     }
+
+    public List<BussTrdTransferOrderBase> selectOrdersByBizCodeByBTradeId(String bizCode) {
+        List<BussTrdTransferOrderBase> result = bussSettleOrderCommMapper.selectOrdersByBizCodeByBTradeId(bizCode, DictCodeListExt1.收支方向_支出.getValue());
+        return result;
+    }
 }

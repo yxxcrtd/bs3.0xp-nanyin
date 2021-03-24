@@ -1044,6 +1044,12 @@
          and fpvt.VAL_DATE &lt;= #{valDate}
         )
     </select>
+    <select id="findBTradeByBTradeId" resultType="string">
+        SELECT TOTLE_TRADE_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL WHERE B_TRADE_ID = #{bTrade}
+        AND TRADE_STATUS = '01'
+        AND (IS_CANCEL='N' OR IS_CANCEL IS NULL)
+    </select>
+
     <resultMap id="findTotals_resultMap" type="com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto">
         <id column="TRADE_ID" />
         <association property="trdProductDeal" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap"/>
@@ -1158,10 +1164,6 @@
             where
             temp.rank = 1
         </if>
-    </select>
-
-    <select id="findBTradeByBTradeId" resultType="string">
-        SELECT TOTLE_TRADE_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL WHERE B_TRADE_ID = #{bTrade} AND PS = 'T11' AND TRADE_STATUS = '01' AND (IS_CANCEL='N' OR IS_CANCEL IS NULL)
     </select>
 
     <select id="getFinprodMarketId" resultType="com.joyintech.framework.select.SelectOptionDto">
