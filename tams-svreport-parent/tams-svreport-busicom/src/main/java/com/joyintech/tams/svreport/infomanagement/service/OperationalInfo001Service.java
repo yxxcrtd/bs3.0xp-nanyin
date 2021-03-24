@@ -2062,7 +2062,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			assetType=nameMap.get(sheetName);
             		}else if (StringUtil.equals(CHB_LOAN_DETAIL_INFO, tableName)){
 						String loantype = strList.get(2) ;
-						if("01".equals(loantype)){
+						if(StringUtil.isNotEmpty(loantype) && !StringUtil.equals(loantype, "08")){
 							try {
 								int each = 0;
 								String eachProportion = strList.get(4) ;
