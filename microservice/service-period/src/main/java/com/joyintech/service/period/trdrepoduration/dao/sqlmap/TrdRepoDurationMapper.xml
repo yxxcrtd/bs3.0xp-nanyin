@@ -692,6 +692,26 @@
              where TRADE_ID = #{finprodId,jdbcType=VARCHAR} AND HODING_TYPE = #{holdingType}
     </insert>
 
+    <insert id="insertSelect04SecFlowByDate">
+        INSERT INTO PTL_SEC_POSITION_FLOW
+        (SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, HODING_TYPE, CDATE, CCY, AMOUNT,
+        P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INV_AIM)
+        select '${seqNo}', PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, HODING_TYPE, #{mDate, jdbcType=DATE}, CCY,
+        <if test="isRevoke == null or isRevoke == ''">
+            AMOUNT*-1,
+        </if>
+        <if test="isRevoke != null and isRevoke != ''">
+            AMOUNT,
+        </if>
+        P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INV_AIM
+        from PTL_SEC_POSITION_FLOW
+        where 
+            TRADE_ID = #{tradeId,jdbcType=VARCHAR} 
+            AND HODING_TYPE = #{holdingType}
+            AND CDATE = #{vDate, jdbcType=DATE}
+            AND FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </insert>
+
     <select id="findAddDealByWorkflowId" resultMap="com.joyintech.tams.common.base.dao.WflTrdProductDealAddMapper.BaseResultMap">
         <include refid="com.joyintech.tams.common.base.dao.WflTrdProductDealAddMapper.Sql_All_Data" />
         WHERE WORKFLOW_ID = #{workflowId}

@@ -336,7 +336,34 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
 
             }
       	   // 质押式到期交易撤销 额度重新占用 20.5.8 end
-      	   
+
+            // add by mashukai 20210302 ZGBSS-633 start
+            if(StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeList.交易方向_到期.getValue())) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("finprodId", trdRepoDurationDto.getFinprodId());
+                params.put("holdingType", DictCodeList.持仓类型_质押.getValue());
+                List<PtlSecPositionFlow> flows = trdRepoDurationMapper.selectSecFlow(params);
+                if (flows != null && !flows.isEmpty()) {
+                    flows.forEach(flow -> {
+                        if (trdRepoDurationDto.getvDate().equals(DateUtil.format(flow.getCdate()))){
+                            //撤销时金额取反
+                            flow.setAmount(flow.getAmount().negate());
+                            flow.setCdate(DateUtil.parse(trdRepoDurationDto.getSettleDate()));
+                            trdRepoDurationMapper.insertSelect04Sec(flow);
+                            params.put("seqNo", IDGenerator.generate());
+                            params.put("mDate", DateUtil.parse(trdRepoDurationDto.getSettleDate()));
+                            params.put("vDate", DateUtil.parse(trdRepoDurationDto.getvDate()));
+                            params.put("finprodId", flow.getFinprodId());
+                            params.put("tradeId", trdRepoDurationDto.getFinprodId());
+                            params.put("isRevoke", "true");
+                            //生成持仓流水数据，如果没有生成流水，重复跑当天的批处理会导致持仓数据错误
+                            trdRepoDurationMapper.insertSelect04SecFlowByDate(params);
+                        }
+                    });
+                }
+            }
+            // add by mashukai 20210302 ZGBSS-633 end
+            
             return Boolean.TRUE.toString();
         }
 
@@ -359,17 +386,16 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
            if (flows != null && !flows.isEmpty()) {
                flows.forEach(flow -> {
                    if (trdRepoDurationDto.getvDate().equals(DateUtil.format(flow.getCdate()))){
-                       //撤销时金额取反
-                       flow.setAmount(BussinessConstant.REVOKE.equalsIgnoreCase(trdRepoDurationDto.getOperateType()) ? flow.getAmount().negate() : flow.getAmount());
+                       flow.setAmount(flow.getAmount());
                        flow.setCdate(DateUtil.parse(trdRepoDurationDto.getSettleDate()));
                        trdRepoDurationMapper.insertSelect04Sec(flow);
                        params.put("seqNo", IDGenerator.generate());
                        params.put("mDate", DateUtil.parse(trdRepoDurationDto.getSettleDate()));
-                       if(BussinessConstant.REVOKE.equalsIgnoreCase(trdRepoDurationDto.getOperateType())){
-                           params.put("isRevoke", "true");
-                       }
+                       params.put("vDate", DateUtil.parse(trdRepoDurationDto.getvDate()));
+                       params.put("finprodId", flow.getFinprodId());
+                       params.put("tradeId", trdRepoDurationDto.getFinprodId());
                        //生成持仓流水数据，如果没有生成流水，重复跑当天的批处理会导致持仓数据错误
-                       trdRepoDurationMapper.insertSelect04SecFlow(params);
+                       trdRepoDurationMapper.insertSelect04SecFlowByDate(params);
                    }
                });
            }

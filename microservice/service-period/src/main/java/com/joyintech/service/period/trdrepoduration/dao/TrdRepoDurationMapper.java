@@ -59,6 +59,8 @@ public interface TrdRepoDurationMapper {
 
     void insertSelect04SecFlow(Map<String, Object> params);
 
+    void insertSelect04SecFlowByDate(Map<String, Object> params);
+
     void delete04Flow(Map<String, Object> params);
 
     List<PtlSecPositionFlow> selectSecFlow(Map<String, Object> params);
