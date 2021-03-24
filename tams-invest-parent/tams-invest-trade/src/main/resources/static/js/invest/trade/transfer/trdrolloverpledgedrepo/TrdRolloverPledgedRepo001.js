@@ -76,13 +76,13 @@
             // 质押券面额
             , {field: 'pledgePrin',width: 150,title: '质押券面额',type: 'money',digit: 2,sortable: false}
             // 剩余可转仓质押券面总额
-            , {field: 'avaPledgePrin',width: 200,title: '剩余可转仓质押券面总额',type: 'money', digit: 2, sortable: false}
+            , {field: 'avaPledgePrin',width: 200,title: '剩余可转仓质押券面额',type: 'money', digit: 2, sortable: false}
             // 折算比例%
             , {field: 'pledgeRatio',width: 100,title: '折算比例%',type: 'number',digit: 2, sortable: false}
             //产品组合可质押券面总额
-            , {field: 'prdPledgePrin',width: 200,title: '产品组合可质押券面总额',type: 'money',digit: 2, sortable: false}
+            , {field: 'prdPledgePrin',width: 200,title: '产品组合可质押券面额',type: 'money',digit: 2, sortable: false}
             //本次转仓指定质押券面总额
-            , {field: 'desiPledgePrin',width: 200,title: '本次转仓指定质押券面总额',type: 'money',edit:true,digit: 2, sortable: false}
+            , {field: 'desiPledgePrin',width: 200,title: '本次转仓指定质押券面额',type: 'money',edit:true,digit: 2, sortable: false}
         ],
         editCell: function (value, row, field, cell, column) {
             if(field=="desiPledgePrin"){
