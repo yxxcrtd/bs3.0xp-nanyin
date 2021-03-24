@@ -164,19 +164,32 @@
             '/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001/showPledgedInfo', '60%', '50%',object);
     });
     //组合change事件
-    var portfolioIdChange = function(){
+    var portfolioIdChange = function(){  	
         var object = getPageParam();
+        var list = new Array();
+        var index = 0;
+        if(object.pledgedRepoInfoList.length!=0){
+            for(var i = 0;i<object.pledgedRepoInfoList.length;i++){
+                index = i;
+                list[index] = object.pledgedRepoInfoList[i].pledgedRepoRolloverList[0];  
+            }
+        }
+        object.pledgedRepoList =JSON.stringify(list);
+        if(!$('#portfolioId').val()){
+        	$("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');  
+        	pledgedBondSplitTable.clear();
+        }else{
         Joyin.ajaxJson(basePath + '/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001/selectPledgedRepoRolloverList', object, function (result) {
             if (result && result.statuCode == 200) {
                 pledgedRepoRolloverList = result.data;
-                pledgedBondSplitTable.clear(function(){
+                pledgedBondSplitTable.clear();
+                pledgedBondSplitTable.addRow(pledgedRepoRolloverList);
+                /*pledgedBondSplitTable.clear(function(){
                     pledgedBondSplitTable.addRow(pledgedRepoRolloverList);
-                });
+                });*/
             }
         });
-        if(!$('#portfolioId').val()){
-        	$("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
-        }
+        }       
         refreshCashAndBalance();
     };
     /**
@@ -249,8 +262,9 @@
                     $("#rolloverTradeAmt").val('');
                     $("#sumRolloverPrinAmt").val('');
                     $("#rolloverRepoIntAmt").val('');
-                    $("#bussTrdAvailableCashQuery_avalibleCash").val('')
-                    $("#portfolioId").val('').trigger("change")
+                    $("#bussTrdAvailableCashQuery_avalibleCash").val('');
+                    $("#portfolioId").val('').trigger("change");
+                    pledgedBondSplitTable.clear();
 //                    pledgedBondSplitTable.clear(function(){
 //                        console.log("进到这儿了")
 //                        console.log(pledgedBondSplitTable)
