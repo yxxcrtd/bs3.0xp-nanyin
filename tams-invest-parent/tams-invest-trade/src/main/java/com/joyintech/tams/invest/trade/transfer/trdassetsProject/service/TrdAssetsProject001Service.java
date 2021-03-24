@@ -794,7 +794,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         if (!StringUtil.isEmptyList(entity.getBussTrdTransferOrder())) {
             BussTrdTransferOrderDto bttod = entity.getBussTrdTransferOrder().get(0);
             // 交易编号 = 业务编号 ※2生成的交易编号
-            bttod.setTradeId(entity.getTradeId());
+            bttod.setTradeId(entity.getBizCode());
             // 指令状态 = 指令状态_新建
             bttod.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
             // 工作流代码
@@ -992,6 +992,8 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         trdProductDealTotal.setUnitInt(entity.getUnitIntAmt());
         trdProductDealTotal.setUnitFprice(entity.getUnitFprice());
         trdProductDealTotal.setCpriceAmt(entity.getCpriceAmt());
+        trdProductDealTotal.setPortfolioId(entity.getPortfolioId());
+
         trdProductDealTotal.setCcy(entity.getCcy());
         trdProductDealTotal.setPs(entity.getPs());
         trdProductDealTotal.setTradeDate(entity.getTradeDate());

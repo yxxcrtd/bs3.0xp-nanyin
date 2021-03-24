@@ -269,4 +269,29 @@ public class PlanTransferDtos extends BaseEntity {
 		this.isNeedAssign = isNeedAssign;
 	}
 
+    /**
+     * 汇总交易编号
+     */
+    private String totleTradeId;
+
+    /**
+     * 汇总交易编号
+     */
+    private String totleTradeIdOut;
+
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
+    }
+
+    public String getTotleTradeIdOut() {
+        return totleTradeIdOut;
+    }
+
+    public void setTotleTradeIdOut(String totleTradeIdOut) {
+        this.totleTradeIdOut = totleTradeIdOut;
+    }
 }

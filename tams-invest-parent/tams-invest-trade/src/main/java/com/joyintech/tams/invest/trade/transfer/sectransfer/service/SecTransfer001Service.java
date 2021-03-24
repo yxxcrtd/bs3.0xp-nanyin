@@ -2062,7 +2062,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
                     ret.setIsNeedSend(DictCodeList.是否_否.getValue());
                 }
             }
-            StlPayOrdersDto stl = gen划款指令流程(bussTrdTransferOrderDtos, trdProductDealAdd, null);
+            StlPayOrdersDto stl = gen划款指令流程(bussTrdTransferOrderDtos, trdProductDealAdd, null, dto.getTotleTradeId());
             dto.setStlPayOrdersList(Arrays.asList(stl));
         }
     }
@@ -2078,13 +2078,13 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
      * @since 1.0
      */
     public StlPayOrdersDto gen划款指令流程(List<BussTrdTransferOrderDto> stlPayOrdersList, TrdProductDealAdd dealAdd,
-                                     String workflowId) {
+                                     String workflowId, String totleTradeId) {
         StlPayOrdersDto stlPayOrders = null;
         for (BussTrdTransferOrderDto dto : stlPayOrdersList) {
             if (dto.getPortfolioId().equals(dealAdd.getPortfolioId())) {
                 stlPayOrders = dto;
                 stlPayOrders.setOrderStatus(DictCodeList.清算操作类型_新建.getValue());
-                stlPayOrders.setTradeId(dealAdd.getTradeId());
+                stlPayOrders.setTradeId(totleTradeId);
                 stlPayOrders.setWorkflowId(workflowId);
             }
         }
