@@ -462,7 +462,7 @@
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -578,10 +578,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND WFL_TRD_PRODUCT_DEAL.PS = 'T02' 
+<!--		                AND WFL_TRD_PRODUCT_DEAL.PS = 'T02' -->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -748,10 +748,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND TRD_PRODUCT_DEAL.PS = 'T02'
+<!--		                AND TRD_PRODUCT_DEAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -867,10 +867,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'
+<!--		                AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -1037,10 +1037,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND TRD_PRODUCT_DEAL.PS = 'T02'
+<!--		                AND TRD_PRODUCT_DEAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -1153,10 +1153,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'
+<!--		                AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -1322,10 +1322,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND WFL_TRD_PRODUCT_DEAL.PS = 'T02'
+<!--		                AND WFL_TRD_PRODUCT_DEAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -1489,10 +1489,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND TRD_PRODUCT_DEAL.PS = 'T02'
+<!--		                AND TRD_PRODUCT_DEAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -1671,10 +1671,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND TRD_PRODUCT_DEAL.PS = 'T02'
+<!--		                AND TRD_PRODUCT_DEAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -1794,10 +1794,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'
+<!--		                AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -1903,10 +1903,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'
+<!--		                AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
@@ -2029,10 +2029,10 @@
 				<choose>
 		            <when test="YES_NO_Y.equals(isOutTrade)">
 		                AND MST_COUNTER_PARTY.COUNTER_TYPE = #{COUNTER_TYPE_05}
-		                AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'
+<!--		                AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = 'T02'-->
 		            </when>
 		            <otherwise>
-		                AND MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05}
+		                AND ( MST_COUNTER_PARTY.COUNTER_TYPE != #{COUNTER_TYPE_05} OR MST_COUNTER_PARTY.COUNTER_TYPE IS NULL )
 		            </otherwise>
 		        </choose>
 			</if>
