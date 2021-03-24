@@ -467,7 +467,7 @@
 					CHB_INVESTHOLD_INFO_SUB 
 				WHERE 				
 					HOLD_DATE = #{date,jdbcType = DATE}
-					AND PRD_REGIST_CODE = #{prodId, jdbcType = VARCHAR}
+					AND PRODID = #{prodId, jdbcType = VARCHAR}
 					AND STATUS IN ('01','02')
 			)
 		WHERE

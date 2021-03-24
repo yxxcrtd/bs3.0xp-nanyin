@@ -61,10 +61,10 @@
 	<!-- 余额、份额共通-错误记录取得 -->
 	<select id="searchCPYECom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 		<include refid="objRec"></include>
-			SELECT		
+			SELECT
 				REG_CODE as prdRegistCode,
-				TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd') AS holdDate,
-				TO_DATE(MDATE,'yyyy-MM-dd') as busiMDate,
+				TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd') as holdDate,
+				MDATE as busiMDate,
 				NVL(BALANCE_AMT,0) as prdBalanceAmt,
 				NVL(PRD_QTY,0) as prdTotalQty,
 				NVL(TOTAL_AMT,0) as prdRaiseTotalQty,
