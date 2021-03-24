@@ -381,7 +381,8 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         dto.setCalendarId((String) param.get("calendarId"));
         //资产类型
         dto.setAssetType((String) param.get("assetType"));
-
+        //证券账户
+        dto.setSecManageAcctId((String) param.get("secAcctId"));
         FinProductTypeKey key = new FinProductTypeKey();
         key.setFinprodId((String) param.get("finprodId"));
         key.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
@@ -688,6 +689,8 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         trdProductDeal.setIsClean(DictCodeList.是否_是.getValue());
         //交易场所
         trdProductDeal.setTradeMarket(entity.getTradeMarket());
+        //证券账户
+        trdProductDeal.setSecManageAcctId(entity.getSecManageAcctId());
         //交易员
         trdProductDeal.setTrader(entity.getTrader());
         //通道代码
@@ -882,7 +885,9 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         trdProductDeal.setIsClean(DictCodeList.是否_是.getValue());
         //交易场所
         trdProductDeal.setTradeMarket(entity.getTradeMarket());
-        //交易员
+        //证券账户
+        trdProductDeal.setSecManageAcctId(entity.getSecManageAcctId());
+        // 交易员
         trdProductDeal.setTrader(entity.getTrader());
         //通道代码
         trdProductDeal.setChlId(entity.getChlId());
