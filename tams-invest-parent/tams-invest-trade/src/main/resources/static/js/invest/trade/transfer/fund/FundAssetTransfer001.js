@@ -234,6 +234,7 @@ $(function() {
             chlId : $("#fundAssetTransfer001_chlId").val(),
             tradeDate : $("#fundAssetTransfer001_tradeDate").val(),
             ccy : $("#fundAssetTransfer001_ccy").val(),
+            secAcctId:$("#secManageAcctId").val(),
             listInfoList : JSON.stringify(listInfoList)
         })
     };

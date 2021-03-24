@@ -2,16 +2,24 @@ package com.joyintech.service.trade.transfer.buyoutrepo.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.trade.transfer.buyoutrepo.dao.BuyOutRepoTransferMapper;
 import com.joyintech.service.trade.transfer.buyoutrepo.dto.BuyOutRepoTransfer003Dto;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +39,9 @@ public class BuyOutRepoTransferService extends BaseService<BuyOutRepoTransfer003
      */
     @Autowired
     private BuyOutRepoTransferMapper buyOutRepoTransferMapper;
+    
+    @Autowired
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
 
     /**
      * 获取交易界面
@@ -54,7 +65,28 @@ public class BuyOutRepoTransferService extends BaseService<BuyOutRepoTransfer003
      * @since 1.0
      */
     public List<SelectOptionDto> getPortfolioId(Map<String,Object> map){
-        return buyOutRepoTransferMapper.getPortfolioId(map);
+    	map.put("ACCT_TYPE_A01",DictCodeListExt1.资金账户类型_产品托管户.getValue());
+    	List<SelectOptionDto> result = buyOutRepoTransferMapper.getPortfolioId(map);
+        if(basePtlCashPositionInfoService != null){
+            Iterator<SelectOptionDto> iterator =  result.iterator();
+            while(iterator.hasNext()) {
+            	SelectOptionDto dto = iterator.next();
+                PtlCashPositionFlowDto pcpdto = new PtlCashPositionFlowDto();
+                Date sysdate = DateUtil.parse((String)map.get("tradeDate"));
+                pcpdto.setCdate(sysdate);
+                List<String> acctTypeList = new ArrayList<>();
+                acctTypeList.add(BussinessDictCodeList.资金账户类型_托管账户.getValue());
+                acctTypeList.add(BussinessDictCodeList.资金账户类型_交易所资金账户.getValue());
+                pcpdto.setAcctType(acctTypeList);
+                pcpdto.setPortfolioId(dto.getId());
+                pcpdto.setCcy((String)map.get("ccy"));
+                BigDecimal cashT = basePtlCashPositionInfoService.queryUsableCashPosition(pcpdto);
+                if(cashT.compareTo(new BigDecimal(0))<=0) {
+                	iterator.remove();
+                }
+            }
+        }
+        return result;
     }
 
     /**

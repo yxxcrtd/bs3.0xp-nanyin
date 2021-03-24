@@ -348,6 +348,7 @@ $(function(){
             chlId : $("#chlId").val(),
             tradeDate : $("#tradeDate").val(),
             ccy : $("#ccy").val(),
+            secAcctId:$("#secManageAcctId").val(),
             listInfoList : JSON.stringify(listInfoList)
         })
     };

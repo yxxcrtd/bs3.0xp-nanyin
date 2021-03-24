@@ -68,6 +68,7 @@
         FROM
         PTL_PORTFOLIO
         LEFT JOIN PTL_SEC_ACCT ON PTL_PORTFOLIO.PORTFOLIO_ID = PTL_SEC_ACCT.PORTFOLIO_ID
+        LEFT JOIN PTL_CAPACCT_INFO ON PTL_CAPACCT_INFO.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
         <where>
             INVEST_YESORNO = 'Y' AND PORTFOLIO_TYPE = '01'
             <if test="portfolioIdOut != null and portfolioIdOut != ''">
@@ -83,6 +84,9 @@
             <if test="initValue != null and initValue != ''">
                 AND PTL_PORTFOLIO.PORTFOLIO_ID = #{initValue}
             </if>
+            AND PTL_PORTFOLIO.MDATE &gt; to_date(#{tradeDate},'yyyy-mm-dd')
+            AND PTL_CAPACCT_INFO.ACCT_NO = (SELECT DISTINCT PCI.ACCT_NO FROM PTL_CAPACCT_INFO PCI WHERE PCI.ACCT_TYPE =
+            #{ACCT_TYPE_A01} AND PCI.PORTFOLIO_ID = #{portfolioIdOut})
         </where>
     </select>
 

@@ -49,7 +49,7 @@ public class TransferCommon001Service extends BaseService {
         }
         Iterator<TransferCommon001Dto> it = resultList.iterator();
         while (it.hasNext()){
-            if(BigDecimal.ZERO.compareTo(it.next().getAvailableCash())==0){
+            if(BigDecimal.ZERO.compareTo(it.next().getAvailableCash())>=0){
                 it.remove();
             }
         }

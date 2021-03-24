@@ -128,6 +128,9 @@
             <if test="secManageAcctId != null and secManageAcctId != ''">
                 AND psa.ACCT_NO = #{secManageAcctId}
             </if>
+            <if test="tradeDate !=null and tradeDate!=''">
+            	AND pp.MDATE &gt; to_date(#{tradeDate},'yyyy-mm-dd')
+            </if>
             and pci.ACCT_NO in (select ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID=#{investPortfolioId} and
             ACCT_TYPE='A01')
         </where>

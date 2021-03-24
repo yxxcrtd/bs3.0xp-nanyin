@@ -200,7 +200,7 @@
             };
             listInfoList[i] = obj;
         }
-        Joyin.dialog("待转仓产品组合信息",basePath+"/hxbank/transfer/common/TransferCommon001/init",'60%','60%',{
+        Joyin.dialog("待转仓产品组合信息",basePath+"/invest/trade/transfer/common/TransferCommon001/init",'60%','60%',{
             portfolioId : $("#transferPortfolioId").val(),
             chlId : $("#chlId").val(),
             tradeDate : $("#tradeDate").val(),
