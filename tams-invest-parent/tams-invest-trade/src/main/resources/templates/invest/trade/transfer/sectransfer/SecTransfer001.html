@@ -260,7 +260,7 @@
 	                                <div class="layui-input-inline input-inline">
 	                                    <input  type="text" id="unitCprice" name="unitCprice"
 	                                           class="layui-input form-input text-number" placeholder="请输入内容"
-	                                           data-fixtype="2" data-textrange="16"
+	                                           data-fixtype="2" data-textrange="6"
 	                                           th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.unitCprice}">
 	                                </div>
                            </div>
@@ -286,7 +286,7 @@
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">应计利息总额</label>
                                 <div class="layui-input-inline input-inline">
-                                    <input type="text" id="intAmt" name="intAmt" data-textrange="6"
+                                    <input type="text" id="intAmt" name="intAmt" data-textrange="2"
                                            class="layui-input form-input text-number" disabled
                                            placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}">
                                 </div>
@@ -330,7 +330,7 @@
                                            data-fixtype="2" data-textrange="12" disabled
                                            th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.exerYield}"> -->
                                 <label class="layui-form-label form-label-wrap">
-                                                                                                                     到期收益率
+                                                                                                                     到期收益率%
                                 </label>
                                 <div class="layui-input-inline input-inline" style="width: 44%!important;">
                                     <input  type="text" id="yield" name="yield"
@@ -343,23 +343,16 @@
                                        data-th-text="#{TrdBondInvestTrade002.calculate}">计算</a>
                                 </div>
                             </div>
-                            <!--<div class="form-inline-wrap">
-                               <label class="layui-form-label form-label-wrap">
-                                                                                                                     行权收益率
-                                </label>-->
-                            <!-- <div class="layui-input-inline input-inline">
-                                 <input  type="text" id="yield" name="yield"
-                                        style="width: 190px; display: inline-block;"
+                            
+                            <div class="form-inline-wrap">
+                               <label class="layui-form-label form-label-wrap"> 行权收益率%</label>
+                            <div class="layui-input-inline input-inline">
+                                 <input  type="text" id="exerYield" name="exerYield"                                        
                                         class="layui-input form-input text-number" placeholder="请输入内容"
                                         data-fixtype="2" data-textrange="12" disabled
-                                        th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.yield}">  -->
-                                    <!--<div class="layui-input-inline input-inline"
-                                         style="width: 20px!important; float: right;">
-                                        <a th:id="|${pageId}_btn_calculate|" class="layui-btn layui-btn-sm"
-                                           data-th-text="#{TrdBondInvestTrade002.calculate}">计算</a>
-                                    </div>
+                                        th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.yield}">                               
                                 </div>
-                            </div>-->
+                            </div>
                             
                             <!-- 转仓投资目的 新增 dengyuzhen 20201013 start-->
 	                        <div class="form-inline-wrap" id="turnInvAim_div">
@@ -375,12 +368,12 @@
 	                        </div>
                             <!-- 转仓投资目的  新增 dengyuzhen 20201013 end-->
                             
-                            <div class="form-inline-wrap">
+                            <!-- <div class="form-inline-wrap">
                                 <a id="SecTransfer001_btn_add" class="layui-btn layui-btn-sm btn-add"
                                    data-th-text="#{SysCommon.add}">添加</a>
-                            <!-- 待转仓产品组合查询链接-->
+                            待转仓产品组合查询链接
                                 <a id="SecTransfer001_btn_searchInfo" style="margin-left: 3px;" class="layui-btn layui-btn-sm">待转仓产品组合查询</a>
-                            </div>
+                            </div> -->
                         </div>
                         <!-- <div class="layui-form-item">
                             添加按钮
@@ -393,6 +386,14 @@
                             <!-- 组合现金、持仓查询 -->
                            	<div id="avaStandardBondPositionDiv" class="page-component" th:data-path="@{/component/trade/BussTrdAvailableCashQuery/init}"
                                 th:data-params="|{entityName: 'bussTrdAvailableCashQuery'}|"></div>
+                                
+                                <div class="form-inline-wrap">
+                                <a id="SecTransfer001_btn_add" class="layui-btn layui-btn-sm btn-add"
+                                   data-th-text="#{SysCommon.add}">添加</a>
+                            <!-- 待转仓产品组合查询链接-->
+                                <a id="SecTransfer001_btn_searchInfo" style="margin-left: 3px;" class="layui-btn layui-btn-sm">待转仓产品组合查询</a>
+                            </div>
+                            
                         	</div>
                         <!-- 转仓明细 -->
             			<table id="dataTable"></table>
