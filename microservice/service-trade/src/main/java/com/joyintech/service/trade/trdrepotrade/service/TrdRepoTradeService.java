@@ -155,7 +155,12 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
         if (list != null && list.size() > 0) {
 			for (TrdRepoTradeDto trd : list) {
 				// 根据金融产品代码获取债券名称
-				List<String> bondNames = trdRepoTradeMapper.getBondNames(trd.getTradeId());
+                String tradeId = trd.getrTradeId();
+                if(StringUtil.isEmpty(tradeId)){
+                    tradeId = trd.getTradeId();
+                }
+
+				List<String> bondNames = trdRepoTradeMapper.getBondNames(tradeId);
 				String bondName = "";
 				if (bondNames != null && bondNames.size() > 0) {
 					for (int i = 0; i < bondNames.size(); i++) {
