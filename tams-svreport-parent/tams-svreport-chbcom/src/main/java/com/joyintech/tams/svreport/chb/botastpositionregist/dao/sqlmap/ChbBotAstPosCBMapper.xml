@@ -113,12 +113,13 @@
 	<!-- modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end -->
 	
 	<select id="queryUpdateOrDelList" resultType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
+		<!-- 因为存在历史已报送的记录资管计划代码和底层资产代码发生变更，重新生成修改或删除记录时需要根据ASSET_CODE_OLD关联 -->
 		SELECT
 			sub.REGIST_SEQNO as registSeqno,
 		    POS.ISSUE_PARTY_ID  as issuePartyId,
 		    to_date(#{generateDate,jdbcType=VARCHAR},'yyyy-MM-dd')  as posDate,
-		    NVL(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE) as planAssetId, 
-		    NVL(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE) as assetCode,
+			sub.PLAN_ASSET_ID as planAssetId,
+			sub.ASSET_CODE as assetCode,
 		    POS.TOTAL_NUM as totalNum,
 		    POS.ISSUE_AMT as issueAmt,
 		    POS.UNINVEST_CASH as uninvestCash,
@@ -126,15 +127,15 @@
 		    POS.POS_AMT as posAmt,
 		    '02'  status
 		FROM CHB_BOT_AST_POS_SUB sub
-		left join  CHB_BOT_AST_POS POS 
-               on SUB.POS_DATE = POS.POS_DATE
-			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID 
-			  and SUB.ASSET_CODE = POS.ASSET_CODE 
-			  and pos.status in ('M','E')
 	    LEFT JOIN CHB_ASSET_INFO PLANASSET
-	    ON PLANASSET.ASSET_CODE = sub.PLAN_ASSET_ID
+	    ON NVL(PLANASSET.ASSET_CODE_OLD , PLANASSET.ASSET_CODE) = sub.PLAN_ASSET_ID
         LEFT JOIN CHB_ASSET_INFO BOTASSET
-        ON BOTASSET.ASSET_CODE = sub.ASSET_CODE
+        ON NVL(BOTASSET.ASSET_CODE_OLD , BOTASSET.ASSET_CODE) = sub.ASSET_CODE
+		left join  CHB_BOT_AST_POS POS
+               on SUB.POS_DATE = POS.POS_DATE
+			  and SUB.PLAN_ASSET_ID = PLANASSET.ASSET_CODE
+			  and SUB.ASSET_CODE = BOTASSET.ASSET_CODE
+			  and pos.status in ('M','E')
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03')
           and ((POS.POS_NUM is not null and SUB.POS_NUM &lt;&gt; POS.POS_NUM)
@@ -147,8 +148,8 @@
 		    sub.REGIST_SEQNO as registSeqno,
 		    sub.ISSUE_PARTY_ID  as issuePartyId,
 		    to_date(#{generateDate,jdbcType=VARCHAR},'yyyy-MM-dd')  as posDate,
-            NVL(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE) as planAssetId, 
-            NVL(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE) as assetCode,
+			sub.PLAN_ASSET_ID as planAssetId,
+			sub.ASSET_CODE as assetCode,
 		    sub.TOTAL_NUM as totalNum,
 		    sub.ISSUE_AMT as issueAmt,
 		    sub.UNINVEST_CASH as uninvestCash,
@@ -157,16 +158,16 @@
 		    '03'  status	
 		FROM CHB_BOT_AST_POS_SUB sub
         LEFT JOIN CHB_ASSET_INFO PLANASSET
-        ON PLANASSET.ASSET_CODE = sub.PLAN_ASSET_ID
+        ON NVL(PLANASSET.ASSET_CODE_OLD , PLANASSET.ASSET_CODE) = sub.PLAN_ASSET_ID
         LEFT JOIN CHB_ASSET_INFO BOTASSET
-        ON BOTASSET.ASSET_CODE = sub.ASSET_CODE
+        ON NVL(BOTASSET.ASSET_CODE_OLD , BOTASSET.ASSET_CODE) = sub.ASSET_CODE
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
 		and not exists  (
 		select 1 from CHB_BOT_AST_POS POS 
 			where to_char(SUB.POS_DATE,'yyyy-MM-dd') = to_char(POS.POS_DATE,'yyyy-MM-dd')
-			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID
-			  and SUB.ASSET_CODE = POS.ASSET_CODE
+			  and PLANASSET.ASSET_CODE = POS.PLAN_ASSET_ID
+			  and BOTASSET.ASSET_CODE = POS.ASSET_CODE
 			  and POS.STATUS != 'D')
 	</select>
 
