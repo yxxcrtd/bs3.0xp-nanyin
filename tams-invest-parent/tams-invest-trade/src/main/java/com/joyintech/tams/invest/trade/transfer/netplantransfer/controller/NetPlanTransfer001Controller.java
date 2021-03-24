@@ -17,6 +17,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.trade.transfer.netplantransfer.dto.NetPlanTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.netplantransfer.dto.NetPlanTransfer002Dto;
@@ -94,17 +95,26 @@ public class NetPlanTransfer001Controller extends BaseController {
             entity.setChlName(paraMap.get("chlName")==null?null : (String) paraMap.get("chlName"));
             entity.setChlId(paraMap.get("chlId")==null?null : (String) paraMap.get("chlId"));
             entity.setPosAmt(paraMap.get("posAmt")==null?null : new BigDecimal((String)paraMap.get("posAmt")));
-            //剩余可转仓数量为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
-            paraMap.put("searchDate", DateUtil.getSysDate());
-            BigDecimal wflAmt = netPlanTransfer001Service.selectWflAmtNet(paraMap);
-            if(wflAmt != null) {
-            	BigDecimal undistributedAmount = paraMap.get("undistributedAmount")==null?null : new BigDecimal((String) paraMap.get("undistributedAmount"));
-            	BigDecimal newUndistributedAmount = ArithmeticUtil.doAdd(undistributedAmount,wflAmt);
-            	entity.setUndistributedAmount(newUndistributedAmount);
-            }else {            	
-            	entity.setUndistributedAmount(paraMap.get("undistributedAmount")==null?null : new BigDecimal((String) paraMap.get("undistributedAmount")));
-            }
-            //剩余可转仓数量为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
+//            //剩余可转仓数量为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+//            paraMap.put("searchDate", DateUtil.getSysDate());
+//            BigDecimal wflAmt = netPlanTransfer001Service.selectWflAmtNet(paraMap);
+//            if(wflAmt != null) {
+//            	BigDecimal undistributedAmount = paraMap.get("undistributedAmount")==null?null : new BigDecimal((String) paraMap.get("undistributedAmount"));
+//            	BigDecimal newUndistributedAmount = ArithmeticUtil.doAdd(undistributedAmount,wflAmt);
+//            	entity.setUndistributedAmount(newUndistributedAmount);
+//            }else {            	
+//            	entity.setUndistributedAmount(paraMap.get("undistributedAmount")==null?null : new BigDecimal((String) paraMap.get("undistributedAmount")));
+//            }
+//            //剩余可转仓数量为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
+            //add by mashukai 查询资产剩余可用持仓 参考计划类利率型交易 20210324 start 
+            PtlSecPositionFlowDto dto = new PtlSecPositionFlowDto();
+            dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+            dto.setPortfolioId((String) paraMap.get("portfolioId"));
+            dto.setFinprodId((String) paraMap.get("finprodId"));
+            dto.setCdate(DateUtil.platDateFromCache());
+            BigDecimal undistributedAmount = netPlanTransfer001Service.getPtlSecPosition(dto);
+            entity.setUndistributedAmount(undistributedAmount);
+            //add by mashukai 查询资产剩余可用持仓 参考计划类利率型交易 20210324 end
             paraMap.put("tradeDate",DateUtil.format(DateUtil.platDateFromCache()));
             entity.setUnitValue(netPlanTransfer001Service.getUnitValue(paraMap));
             entity.setPortfolioIdOut(paraMap.get("portfolioId")==null?null : (String) paraMap.get("portfolioId"));
