@@ -13,8 +13,12 @@
     function init(){
         var repoType = $("#repoType").val();
         var ps = $("#ps").val();
+        var tradeMarket = $("#tradeMarket").val();
         if(repoType && ps && repoType==H01 && ps==BACK_LEND_DIRECTION_03){//协议式正回购需要对质押券进行转仓
             $("#pledgedBondSplit_div").show();
+        }
+        else if(tradeMarket&&ps&&ps==BACK_LEND_DIRECTION_03&&tradeMarket==tradeMarket01){ //银行间正回购也需要转仓
+        	 $("#pledgedBondSplit_div").show();
         }
         else{
             $("#pledgedBondSplit_div").hide();

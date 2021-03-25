@@ -759,10 +759,13 @@
 	) temp
 	where 1=1 
 	<if test="prodidlist!=null and prodidlist.size()>0">
-	and nvl(temp.fprod_id,temp.prod_id) in
-	<foreach collection="prodidlist" item="dto" open="(" separator="," close=")">
-	#{dto,jdbcType=VARCHAR}
-	</foreach>
+      and nvl(temp.fprod_id,temp.prod_id) in
+      <foreach collection="prodidlist" item="item" index="index" open="(" separator="," close=")">
+        <if test="(index % 999) == 998">
+          null) OR nvl(temp.fprod_id,temp.prod_id) in (
+        </if>
+        #{item}
+      </foreach>
 	</if>
 	group by nvl(temp.fprod_id,temp.prod_id),temp.settdate_date
 </select>

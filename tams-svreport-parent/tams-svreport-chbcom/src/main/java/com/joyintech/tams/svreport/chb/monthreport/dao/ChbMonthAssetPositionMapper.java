@@ -72,7 +72,7 @@ public interface ChbMonthAssetPositionMapper {
      * @param endDate 月末日期
      * @return List<ChbBotAstPosition>
      */
-    List<ChbMonthAssetPosition> selectByMonthDate(@Param("startDate")String startDate,@Param("endDate")String endDate);
+    List<ChbMonthAssetPosition> selectByMonthDate(@Param("startDate")String startDate,@Param("endDate")String endDate,@Param("prodids")List<String> prodids);
     /**
      * 跑批时先删后插
      * @param cdate
@@ -111,7 +111,7 @@ public interface ChbMonthAssetPositionMapper {
      * @param cdate
      * @return
      */
-    List<ChbMonthAssetPosition> selectBotCashListEx(Date cdate);
+    List<ChbMonthAssetPosition> selectBotCashListEx(@Param("cdate")Date cdate,@Param("prodids")List<String> prodids);
 
     /**
      *

@@ -45,6 +45,20 @@ public interface ChbMonthReportDetailMapper {
 	 * int
 	 */
 	int deleteByTermId(@Param("termid")String termid,@Param("reportType")String reportType,@Param("reportuuid")String reportuuid);
+
+
+    /**
+     * 功能:多法人改造删除方法
+     * @since 1.6.0
+     * @version 1.6.0
+     * @author：weiyuqiang 2019年2月12日
+     * @param termid 期数
+     * @param reportType 报表类型 PROD-产品，BALANCE-资产负债表，DEPOSIT-结构性存款
+     * @return
+     * int
+     */
+    int deleteByTermIdEx(@Param("termid")String termid,@Param("reportType")String reportType,@Param("orgCode")String orgCode);
+
     
     /**
      * 功能:批量删除当月银行月度报表资产端数据
@@ -58,6 +72,21 @@ public interface ChbMonthReportDetailMapper {
      * int
      */
     int delete(@Param("termid")String termid,@Param("reporttype")String reporttype,@Param("reportuuid")String reportuuid);
+
+
+
+    /**
+     * 功能:批量删除当月银行月度报表资产端数据
+     * @since 1.6.0
+     * @version 1.6.0
+     * @author：weiyuqiang 2019年2月12日
+     * @param termid
+     * @param reporttype 产品端 资产端
+     * @param reportuuid 例外的外键 已报送的不删
+     * @return
+     * int
+     */
+    int deleteEx(@Param("termid")String termid,@Param("reporttype")String reporttype,@Param("regCode")String regCode);
     
     PrdSaletargetDealDetail getInvestorHoldings(PrdSaletargetDealDetail qmodel);
     

@@ -26,6 +26,18 @@
     	where 
     	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </select>
+
+
+    <select id="selectBank" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode">
+        select
+        CORB.*,SI.INSTITUTION_NAME belongInstitutionName
+        from CHB_ORG_REGIST_BANK_CODE corb
+        LEFT JOIN SYS_INSTITUTION SI ON CORB.ORG_CODE = SI.INSTITUTION_CODE
+        where 1=1
+        <if test="orgCode != null and orgCode != ''">
+            and corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+        </if>
+    </select>
 	<!-- 查询机构下的所有部门代码 -->
     <select id="selectDeptCode" resultType="java.lang.String" parameterType="java.lang.String">
     	SELECT DEPT_CODE FROM SYS_DEPARTMENT WHERE INSTITUTION_CODE = #{institutionCode} <!-- AND STATUS = 'E' -->

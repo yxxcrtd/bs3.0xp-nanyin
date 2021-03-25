@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -177,10 +178,20 @@ public abstract class PbcReportProdTotalService extends PbcExportService  {
         pbcMonthReport.setStatusDate(generateDate);  
         // 报表频率：月报
         pbcMonthReport.setReportfrequ(PbcMonthReportConstants.REPORT_FREQU_M);
-        // 发行机构代码取值
-        pbcMonthReport.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
-        pbcMonthReport.setIssuePartyName(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME));
-        pbcMonthReport.setReportOrgName(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME));
+
+
+		ChbOrgRegistBankCode bankCode = CommonUtil.getUserBank();
+
+		String code = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID);
+		String name =SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME);
+		if(null!=bankCode){
+			code = bankCode.getRegistBankCode();
+			name = bankCode.getBelongInstitutionName();
+		}
+				// 发行机构代码取值
+        pbcMonthReport.setIssuePartyId(code);
+        pbcMonthReport.setIssuePartyName(name);
+        pbcMonthReport.setReportOrgName(name);
         // 社会信用代码
         //pbcMonthReport.setSocialCreditCode(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SOCIAL_CREDIT_CODE));
         // 金融机构编码

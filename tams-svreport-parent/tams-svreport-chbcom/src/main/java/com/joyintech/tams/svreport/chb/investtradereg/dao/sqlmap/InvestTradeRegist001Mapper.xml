@@ -987,9 +987,13 @@
         </if>
         <if test="prodList !=null and prodList.size()>0">
             <!-- 产品代码不为空时 -->
-            <foreach collection="prodList" item="prodId" open="and investtrade.PROD_ID in (" close=")" separator=",">
-                #{prodId,jdbcType=VARCHAR}
-            </foreach>
+          and investtrade.PROD_ID in
+          <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+            <if test="(index % 999) == 998">
+              null) OR investtrade.PROD_ID  in (
+            </if>
+            #{item}
+          </foreach>
         </if>
 		UNION ALL
 		SELECT 

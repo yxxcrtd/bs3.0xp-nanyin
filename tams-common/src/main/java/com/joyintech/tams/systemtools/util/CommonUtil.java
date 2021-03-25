@@ -228,6 +228,21 @@ public class CommonUtil {
 		return bankCode;
 	}
 
+
+
+	public static ChbOrgRegistBankCode getUserBank() {
+		User userInfo = SecurityUtil.getLoginUser();
+		String OrgCode = null;
+		// if(userInfo.isAdmin()){
+		// return null;
+		// }
+		if (null!=userInfo&&StringUtil.isEmpty(userInfo.getOrgCode())) {
+			OrgCode = userInfo.getOrgCode();
+		}
+		List<ChbOrgRegistBankCode> orgCode = baseMapper.selectBank(OrgCode);
+		return orgCode.get(0);
+	}
+
 	/**
 	 * 判断是否浮点数字表示
 	 *

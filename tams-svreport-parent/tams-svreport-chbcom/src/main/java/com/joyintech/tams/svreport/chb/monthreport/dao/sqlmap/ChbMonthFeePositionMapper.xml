@@ -249,6 +249,17 @@
       WHERE f.p_finprod_id is null) di on di.finprod_market_id = p.PRODID
     where startdate = #{startdate,jdbcType=DATE}
     and enddate = #{enddate,jdbcType=DATE}
+    <if test="prodids !=null and prodids.size()!=0">
+      and prodid in
+      <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+        <if test="(index % 999) == 998">
+          null) OR prodid in (
+        </if>
+        #{item}
+      </foreach>
+    </if>
+
+
   </select>
     
   <insert id="genPosition" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
@@ -344,8 +355,8 @@
 		<foreach collection="prodids" item="prodid" open="(" separator=","
 			close=")">
 			#{prodid}
-		</foreach>
-	</if>
+      </foreach>
+    </if>
   </insert> 
   
   <delete id="deleteByModel" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
@@ -361,12 +372,12 @@
     	and prodid=#{prodid,jdbcType=VARCHAR} 
     </if>
     <if test="prodids !=null">
-		and prodid in
+      and prodid in
 		<foreach collection="prodids" item="prodid" open="(" separator=","
 			close=")">
 			#{prodid}
-		</foreach>
-	</if> 
+      </foreach>
+    </if>
    </delete>
    
 </mapper>

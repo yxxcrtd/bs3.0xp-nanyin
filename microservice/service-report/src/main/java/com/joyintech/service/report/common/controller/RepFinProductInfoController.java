@@ -11,8 +11,10 @@
 package com.joyintech.service.report.common.controller;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.StringUtil;
 
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -122,4 +124,10 @@ public class RepFinProductInfoController {
     public BussRepFinProductInfoDto selectRepFinprodId(String repFinprodInsId) throws Exception{
         return repFinProductInfoService.selectRepFinprodId(repFinprodInsId);
     }
+
+    @GetMapping("/getIssuePartyId")
+    public String getIssuePartyId(String investCode){
+        return repFinProductInfoService.getIssuePartyId(investCode);
+    }
+
 }

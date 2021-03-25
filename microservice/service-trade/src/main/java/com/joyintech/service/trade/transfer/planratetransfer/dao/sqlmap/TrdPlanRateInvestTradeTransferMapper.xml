@@ -20,6 +20,10 @@
             <if test="transferPortfolioId != null and transferPortfolioId != ''">
                 AND pp.PORTFOLIO_ID != #{transferPortfolioId, jdbcType=VARCHAR}
             </if>
+            <if test="userId != null and userId != ''">
+                AND (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="search != null and search != ''">
                 AND (pp.PORTFOLIO_ID LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%')
                 OR pp.PORTFOLIO_NAME LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%'))

@@ -106,9 +106,9 @@ public class ProdDurationReg001Service extends SvrCommonExportService<ProdDurati
 		
 		//add by leipeng 20200628
 		String model_type = null;
-		if(CommonUtil.isBAmodel()){
+//		if(CommonUtil.isBAmodel()){
 			pageParam.put("model_type", "01");
-		}
+//		}
 		
 		if(pageParam.get(GlobalConstant.PARAM_PAGE)!=null){
 			int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());

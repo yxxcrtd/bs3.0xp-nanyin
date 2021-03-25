@@ -19,6 +19,10 @@
                 AND (PTL_PORTFOLIO.PORTFOLIO_ID LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%')
                 OR PTL_PORTFOLIO.PORTFOLIO_NAME LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%'))
             </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="initValue != null and initValue != ''">
                 AND PTL_PORTFOLIO.PORTFOLIO_ID = #{initValue}
             </if>

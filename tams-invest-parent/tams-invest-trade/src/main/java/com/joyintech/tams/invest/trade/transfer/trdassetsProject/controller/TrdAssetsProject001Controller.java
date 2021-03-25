@@ -7,6 +7,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -182,6 +183,7 @@ public class TrdAssetsProject001Controller extends BaseController {
     @RequestMapping("selectPortfolioId")
     public List<SelectOptionDto> selectPortfolioId() {
          Map<String, Object> param = RequestUtil.getPageParam();
+        param.put("userId", LoginUserUtil.getUserName());
         return trdAssetsProject001Service.selectPortfolioId(param);
     }
     /**
