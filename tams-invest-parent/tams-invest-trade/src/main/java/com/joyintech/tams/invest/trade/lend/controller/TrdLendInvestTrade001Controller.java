@@ -145,7 +145,9 @@ public class TrdLendInvestTrade001Controller extends BaseController {
     @ResponseBody
     AjaxResult doRevoke(@RequestBody TrdLendInvestTradeDto inputDto)
         throws Exception {
-
+        if(StringUtil.isNotEmpty(inputDto.getTradeId())){
+            inputDto = trdLendInvestTrade002Service.getTrdLendInvestTradeDto(inputDto.getTradeId());
+        }
         ProcessParameter<TrdLendInvestTradeDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdLendInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);

@@ -162,8 +162,12 @@ public class LendTransfer001Service extends CommonExportService<LendTransfer001D
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
 //        entity.setIntRate(ArithmeticUtil.divide(entity.getIntRate(),new BigDecimal(100)));
-        baseTradeProductDealDtos.add(genBaseTradeProductDealDto(dto,entity, DictCodeList.交易方向_买入.getValue()));
-        baseTradeProductDealDtos.add(genBaseTradeProductDealDto(dto,entity, DictCodeList.交易方向_卖出.getValue()));
+        BaseTradeProductDealDto dto1 = genBaseTradeProductDealDto(dto,entity, DictCodeList.交易方向_买入.getValue());
+        baseTradeProductDealDtos.add(dto1);
+        BaseTradeProductDealDto dto2 = genBaseTradeProductDealDto(dto,entity, DictCodeList.交易方向_卖出.getValue());
+        dto2.getTrdProductDeal().setrTradeId(dto1.getTrdProductDeal().getTradeId());
+        dto2.getTrdProductDeal().setSplitTradeId(dto1.getTrdProductDeal().getTradeId());
+        baseTradeProductDealDtos.add(dto2);
         finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
         dto.setFinProductTradeDto(finProductTradeDto);
         //风险试算

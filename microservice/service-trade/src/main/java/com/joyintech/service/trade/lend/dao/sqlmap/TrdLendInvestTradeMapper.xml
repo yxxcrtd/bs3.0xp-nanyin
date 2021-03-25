@@ -95,7 +95,7 @@
                 LEFT JOIN PTL_TRADE PT ON wtpd.TRADE_ID = PT.BUSI_NO
                 LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
                   left join FIN_PRODUCT_TYPE fpt
-                   on fpt.FINPROD_ID = wtpd.TRADE_ID
+                   on (case when wtpd.IS_OUT_TRADE='N' and wtpd.R_TRADE_ID is not null then wtpd.R_TRADE_ID else wtpd.TRADE_ID END) = fpt.FINPROD_ID
                      and fpt.BRANCH = #{BRANCH_0}
                   left join PA_TRD_PRODUCT_DEAL wptpd
                     on wtpd.TRADE_ID = wptpd.TRADE_ID
@@ -151,7 +151,7 @@
                 LEFT JOIN PTL_TRADE PT ON wtpd.TRADE_ID = PT.BUSI_NO
                 LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
                   left join FIN_PRODUCT_TYPE fpt
-                   on fpt.FINPROD_ID = wtpd.TRADE_ID
+                   on (case when wtpd.IS_OUT_TRADE='N' and wtpd.R_TRADE_ID is not null then wtpd.R_TRADE_ID else wtpd.TRADE_ID END) = fpt.FINPROD_ID
                      and fpt.BRANCH = #{BRANCH_0}
                   <!-- left join FIN_TRADE_PRODUCT ftp
                     on ftp.FINPROD_ID = wtpd.TRADE_ID
@@ -213,12 +213,12 @@
         LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda
           ON tpda.TRADE_ID = tpd.TRADE_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt
-          ON fpt.FINPROD_ID = tpd.TRADE_ID
+          ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = fpt.FINPROD_ID
             and fpt.BRANCH = #{BRANCH_0}
         LEFT JOIN PA_TRD_PRODUCT_DEAL ptrd
           ON ptrd.TRADE_ID = tpd.TRADE_ID
         LEFT JOIN FIN_TRADE_PRODUCT ftp
-          ON ftp.FINPROD_ID = tpd.TRADE_ID
+          ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = ftp.FINPROD_ID
           and ftp.BRANCH = #{BRANCH_0}
         LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
         LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
