@@ -272,7 +272,16 @@
             ,{field:'psVal', width:150 , title: '交易方向',sortField:'ps'}
             ,{field:'tradeMarketVal', width:150 , title: '交易场所',sortField:'tradeMarket'}
             ,{field:'ccyVal', width:150 , title: '币种',sortField:'ccy'}
-            ,{field:'netPrice', width:150 , title: '净价/单位净值/交易价格',type:'number',digit: 4}
+            ,{field:'netPrice', width:150 , title: '净价/单位净值/交易价格',type:'number',
+            	render : function(data, type, row, meta) {
+                    if(row.netPrice !=undefined){
+                    	if(row.assetTypeVal == '债券'){                   		
+                    		return Number(row.netPrice).toFixed(6);
+                    	}else if(row.assetTypeVal == '基金' || row.assetTypeVal == '计划类资产(净值型)'){
+                    		return Number(row.netPrice).toFixed(4);
+                    	}
+                    }
+                }}
             ,{field:'yield', width:150 , title: '利率/收益率（%）',type:'number'}
             ,{field:'amount', width:150 , title: '券面总额',type:'number'}
             ,{field:'printAmt', width:150 , title: '本金金额',type:'number'}
