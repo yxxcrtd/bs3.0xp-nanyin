@@ -128,12 +128,12 @@ public class RepFinProductInfoService {
         if(finProduct!=null){
         	bussRepFinProductInfoDto.setRepManageMode(finProduct.getEntrustType());
         }
-        //从标的类金融产品附属表获取是否合规新产品、是否养老理财产品
+       /* //从标的类金融产品附属表获取是否合规新产品、是否养老理财产品
         FinProductAdd finProductadd = finProductAddMapper.selectByPrimaryKey(finprodId);
         if(finProductadd!=null){
         	bussRepFinProductInfoDto.setIsFhxgcp(finProductadd.getIsFhxgcp());
         	bussRepFinProductInfoDto.setIsYllccp(finProductadd.getIsYllccp());
-        }
+        }*/
         return bussRepFinProductInfoDto;
     }
     

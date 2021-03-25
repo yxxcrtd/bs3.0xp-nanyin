@@ -650,8 +650,8 @@
 		FIN_PRODUCT_ADD.PUR_SPEED purSpeed,
 		FIN_PRODUCT_ADD.RED_SPEED redSpeed,
 		FIN_PRODUCT_ADD.IS_CASH_MANAGE isCashManage,
-		FIN_PRODUCT_ADD.IS_FHXGCP isFhxgcp,
-		FIN_PRODUCT_ADD.IS_YLLCCP isYllccp,
+		Rep_Prod_Declare.IS_FHXGCP isFhxgcp,
+		Rep_Prod_Declare.IS_YLLCCP isYllccp,
 		<!-- FIN_PRODUCT.ENTRUST_TYPE issueType, --><!-- add by zhangweiqi -->
 		FIN_PRODUCT.ISSUE_TYPE issueType,
 		FIN_PRODUCT_ADD.INVEST_NATURE investNature,

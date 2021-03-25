@@ -97,6 +97,7 @@
         REP_PRICED_MODE REP_PRICED_MODE, REP_INV_ASSET_TYPE REP_INV_ASSET_TYPE, REP_CON_PRD_TRAGET REP_CON_PRD_TRAGET, 
         REP_CONT_MODE REP_CONT_MODE, REP_COOP_NAME REP_COOP_NAME, REP_INV_TYPE_RAT REP_INV_TYPE_RAT, 
         REP_IS_YIELD REP_IS_YIELD, REP_HIGH_YIELD REP_HIGH_YIELD, REP_LOW_YIELD REP_LOW_YIELD, 
+        IS_FHXGCP IS_FHXGCP,IS_YLLCCP IS_YLLCCP,
         REP_IS_YIELD_BASIS REP_IS_YIELD_BASIS, REP_RISK_TYPE REP_RISK_TYPE, REP_SALE_AREA REP_SALE_AREA, 
         REP_RAISE_CCY REP_RAISE_CCY, REP_CASH_PRIN_CCY REP_CASH_PRIN_CCY, REP_CASH_PROF_CCY REP_CASH_PROF_CCY, 
         REP_SALE_AMT_STR REP_SALE_AMT_STR, REP_RAISE_AMT_PLAN REP_RAISE_AMT_PLAN, REP_RAISE_PSTRDATE REP_RAISE_PSTRDATE, 
@@ -437,6 +438,12 @@
             <if test="repFiduciaryDuty != null" >
                 REP_FIDUCIARY_DUTY,
             </if>
+            <if test="isFhxgcp != null" >
+                IS_FHXGCP,
+            </if>
+            <if test="isYllccp != null" >
+                IS_YLLCCP,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="repFinprodId != null" >
@@ -681,6 +688,12 @@
             </if>
             <if test="repFiduciaryDuty != null" >
                 #{repFiduciaryDuty,jdbcType=VARCHAR},
+            </if>
+            <if test="isFhxgcp != null" >
+                #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="isYllccp != null" >
+                #{isYllccp,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -1193,6 +1206,12 @@
             </if>
             <if test="repFiduciaryDuty != null" >
                 REP_FIDUCIARY_DUTY = #{repFiduciaryDuty,jdbcType=VARCHAR},
+            </if>
+            <if test="isFhxgcp != null" >
+              IS_FHXGCP =  #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="isYllccp != null" >
+              IS_YLLCCP =  #{isYllccp,jdbcType=VARCHAR}
             </if>
         </set>
         where  REP_FINPROD_INS_ID = #{repFinprodInsId,jdbcType=VARCHAR}

@@ -201,10 +201,10 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
         }
                
         if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsFhxgcp())) {
-            validList.add(new ValidMessage("bussRepFinProductInfoDto.isFhxgcp", getMessage("请输入是否合规新产品")));
+            validList.add(new ValidMessage("bussRepFinProductInfoDto.isFhxgcp", getMessage("请输入新老产品标记")));
         }
         if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsYllccp())) {
-            validList.add(new ValidMessage("bussRepFinProductInfoDto.isYllccp", getMessage("请输入是否养老理财产品")));
+            validList.add(new ValidMessage("bussRepFinProductInfoDto.isYllccp", getMessage("请输入是否养老理财")));
         }        
         
         //是否现金管理类产品 必填 开放式产品必输

@@ -22,6 +22,8 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	是否_是(DictCode.是否,"Y","是"),
 	是否_否(DictCode.是否,"N","否"),
 	是否_空(DictCode.是否,"NULL","空"),
+	新老产品标记_新产品(DictCode.新老产品标记,"01","新产品"),
+	新老产品标记_老产品(DictCode.新老产品标记,"02","老产品"),
 	报表期限类型_日报(DictCode.报表期限类型,"01","日报"),
 	报表期限类型_月报(DictCode.报表期限类型,"02","月报"),
 	报表期限类型_季报(DictCode.报表期限类型,"03","季报"),

@@ -70,8 +70,7 @@
     </resultMap>
     <sql id="Base_Column_List" >
         FINPROD_ID FINPROD_ID, SALE_DEPARTMENT SALE_DEPARTMENT, SALE_LAYER SALE_LAYER, SALE_PERIOD SALE_PERIOD, 
-        PUR_SPEED PUR_SPEED, RED_SPEED RED_SPEED, IS_SEC_BOND IS_SEC_BOND, WIND_ID WIND_ID, 
-        IS_FHXGCP IS_FHXGCP,IS_YLLCCP IS_YLLCCP,
+        PUR_SPEED PUR_SPEED, RED_SPEED RED_SPEED, IS_SEC_BOND IS_SEC_BOND, WIND_ID WIND_ID,        
         IS_AUTO_UPDATE IS_AUTO_UPDATE, PORTFOLIO_ID PORTFOLIO_ID, PROD_REGIST_CODE PROD_REGIST_CODE, 
         IS_CYCLE IS_CYCLE, IS_LAY IS_LAY, LAY_TYPE LAY_TYPE, INVEST_NATURE INVEST_NATURE, 
         PROFIT_FLAG PROFIT_FLAG, SALE_MODE SALE_MODE, CHB_ID CHB_ID, TMPL_ID TMPL_ID, CLOSE_DAYS CLOSE_DAYS, 
@@ -120,7 +119,7 @@
             ISSUE_STATUS_REMARK, IS_COMPOUND_INT, TERM_TYPE, 
             FACE_VALUE, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            PAY_TYPE, IS_RECONCILIATION, IS_CASH_MANAGE, IS_FHXGCP, IS_YLLCCP,
+            PAY_TYPE, IS_RECONCILIATION, IS_CASH_MANAGE,
             RISK_LEVEL, DEAL_MODE, IS_EXCLUSIVE, 
             BID_DATE, BOARD, SH_OR_ZH, 
             IS_MARGIN_FINPROD, CITY_BOND_LEV, IS_CITY_BOND, 
@@ -145,8 +144,7 @@
             #{issueStatusRemark,jdbcType=VARCHAR}, #{isCompoundInt,jdbcType=VARCHAR}, #{termType,jdbcType=VARCHAR}, 
             #{faceValue,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{payType,jdbcType=VARCHAR}, #{isReconciliation,jdbcType=VARCHAR}, #{isCashManage,jdbcType=VARCHAR}, 
-            #{isFhxgcp,jdbcType=VARCHAR},#{isYllccp,jdbcType=VARCHAR},
+            #{payType,jdbcType=VARCHAR}, #{isReconciliation,jdbcType=VARCHAR}, #{isCashManage,jdbcType=VARCHAR},            
             #{riskLevel,jdbcType=VARCHAR}, #{dealMode,jdbcType=VARCHAR}, #{isExclusive,jdbcType=VARCHAR}, 
             #{bidDate,jdbcType=DATE}, #{board,jdbcType=VARCHAR}, #{shOrZh,jdbcType=VARCHAR}, 
             #{isMarginFinprod,jdbcType=VARCHAR}, #{cityBondLev,jdbcType=VARCHAR}, #{isCityBond,jdbcType=VARCHAR}, 

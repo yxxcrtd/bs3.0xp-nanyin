@@ -73,6 +73,7 @@ public class BussRepFinProductInfoCommonController extends BaseController {
                 DictCode.产品运作模式, DictCode.目标客户类型, DictCode.管理方式_发行登记, DictCode.开放模式_中债,
                 DictCode.层级类别,DictCode.标的类别, DictCode.境内托管机构名称, DictCode.是否_中债,
                 DictCode.是否_中债_期限});
+        setSelectOptionToModel(model,DictCode.新老产品标记);
        if (StringUtil.isNotEmpty(this.getParam("SVR_PBC_CUSTTYPE"))) {
            model.addAttribute("SVR_PBC_CUSTTYPE", this.getParam("SVR_PBC_CUSTTYPE"));
        }
