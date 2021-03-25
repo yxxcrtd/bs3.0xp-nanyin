@@ -7032,18 +7032,18 @@ public class PbcMonthAssetReportService  extends BaseService{
      * void
      */
     public void generateMonthReportDebtterm(List<PbcMonthAssetPositionDto> posAssetList,List<PbcMonthPrdPostionDto> posProdList
-            ,Date generateDate,Map<String,BigDecimal> qtfz,boolean isEdit){
-    	
-    	// 生成月度报表主表数据
-        PbcMonthReport pbcReport = genMonthReportByReporttype(PbcReportType.PBC_REPORT_3_3,generateDate,isEdit,false);
+            ,Date generateDate,Map<String,BigDecimal> qtfz,boolean isEdit) {
+
+        // 生成月度报表主表数据
+        PbcMonthReport pbcReport = genMonthReportByReporttype(PbcReportType.PBC_REPORT_3_3, generateDate, isEdit, false);
         //update by leipeng 20200319  汇总数据提取全量模板
-        Map<String,PbcReportDebtTermDetail> result = genAssetMonthReportemplate(generateDate,  PbcReportType.PBC_REPORT_3_3, 18,pbcReport.getReportuuid());
-        if(null==result){
-        	return;
+        Map<String, PbcReportDebtTermDetail> result = genAssetMonthReportemplate(generateDate, PbcReportType.PBC_REPORT_3_3, 18, pbcReport.getReportuuid());
+        if (null == result) {
+            return;
         }
-  		Map<String,Map<String,PbcReportDebtTermDetail>> deptMap = new HashMap();
-    	
-    	
+        Map<String, Map<String, PbcReportDebtTermDetail>> deptMap = new HashMap();
+
+
 //    	Map<String,PbcReportDebtTermDetail> result = new HashMap<String,PbcReportDebtTermDetail>();
 //    	// 查询产品月报需要统计的项
 //        List<PbcReportTemplateDto> listKey = pbcReportTemplateMapper.selectByReporttype(PbcReportType.PBC_REPORT_3_3,
@@ -7106,14 +7106,13 @@ public class PbcMonthAssetReportService  extends BaseService{
 //        tjListfz.add(lineg60000fz);
 //        tjListfz.add(lineg70000fz);
 //        tjListfz.add(lineg80000fz);
-        
 
-        
+
         Map<String, BigDecimal> rateMap = new HashMap<>();
         /* add by jyl 19.11.25*/
-        PbcMonthAssetPositionDto qmode=new PbcMonthAssetPositionDto();
-        List<String> prodList=new ArrayList<>();
-        for (PbcMonthPrdPostionDto dto:posProdList) {
+        PbcMonthAssetPositionDto qmode = new PbcMonthAssetPositionDto();
+        List<String> prodList = new ArrayList<>();
+        for (PbcMonthPrdPostionDto dto : posProdList) {
             prodList.add(dto.getProdid());
         }
         //产品代码去重 leipeng 20200916
@@ -7121,77 +7120,77 @@ public class PbcMonthAssetReportService  extends BaseService{
 
         qmode.setBookdate(DateUtil.parse(DateUtil.getLastDayOfLayMonth(generateDate)));
         qmode.setProdids(prodList);
-        String strj=SvrDataUtil.getSysParam(SVReportGlobalConstant.CHB_ASSETS_BASIS_DATA_CHILD);
-        if("Y".equals(strj)){
+        String strj = SvrDataUtil.getSysParam(SVReportGlobalConstant.CHB_ASSETS_BASIS_DATA_CHILD);
+        if ("Y".equals(strj)) {
             //查询子资管计划资产基础指标数据表
-            List<PbcMonthAssetPositionDto> posAssetListdtx= pbcMonthAssetPositionMapper.selectPositionFromValutionSubSystemdtx(qmode);
-            Map<String,List<PbcMonthAssetPositionDto>> cprodListMap=
+            List<PbcMonthAssetPositionDto> posAssetListdtx = pbcMonthAssetPositionMapper.selectPositionFromValutionSubSystemdtx(qmode);
+            Map<String, List<PbcMonthAssetPositionDto>> cprodListMap =
                     posAssetListdtx.stream().collect(Collectors.groupingBy(PbcMonthAssetPositionDto::getProdid));
 
-            for(ListIterator<PbcMonthAssetPositionDto> iterator=posAssetList.listIterator();iterator.hasNext();){
-                PbcMonthAssetPositionDto it=iterator.next();
+            for (ListIterator<PbcMonthAssetPositionDto> iterator = posAssetList.listIterator(); iterator.hasNext(); ) {
+                PbcMonthAssetPositionDto it = iterator.next();
                 //新疆农信：人行月报表3-3 资管产品资产负债剩余期限统计模板除实收本金栏目数据正确外，其他数据均不对 modify by hpp 2020-12-02 start
-                if(cprodListMap.containsKey(it.getProdid())){
-                //新疆农信：人行月报表3-3 资管产品资产负债剩余期限统计模板除实收本金栏目数据正确外，其他数据均不对 modify by hpp 2020-12-02 end
-                if(cprodListMap.containsKey(it.getProdid())){
-                    //BigDecimal amt=it.getAmt();
+                if (cprodListMap.containsKey(it.getProdid())) {
+                    //新疆农信：人行月报表3-3 资管产品资产负债剩余期限统计模板除实收本金栏目数据正确外，其他数据均不对 modify by hpp 2020-12-02 end
+                    if (cprodListMap.containsKey(it.getProdid())) {
+                        //BigDecimal amt=it.getAmt();
 //                    iterator.remove();
-                    for(PbcMonthAssetPositionDto single:cprodListMap.get(it.getProdid())){
-                        //single.setAmt(amt);
-                        if(single.getAssetCode().equals(it.getAssetCode())){
-                            iterator.remove();
-                            iterator.add(convertBalanceToPrdPosition1(single, generateDate,it));
-                            break;
+                        for (PbcMonthAssetPositionDto single : cprodListMap.get(it.getProdid())) {
+                            //single.setAmt(amt);
+                            if (single.getAssetCode().equals(it.getAssetCode())) {
+                                iterator.remove();
+                                iterator.add(convertBalanceToPrdPosition1(single, generateDate, it));
+                                break;
+                            }
                         }
                     }
                 }
             }
-        }
-        /*end by jyl*/
-        // 汇率取值开关
-        String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
-        for(PbcMonthAssetPositionDto pos :posAssetList){
-            // add by leipeng 20200319 获取所有部门对应信息,并列出单独的表结构
-   			 if(null!=pos.getInstitutionCode()&&null==deptMap.get(pos.getInstitutionCode())){
-   		        Map<String,PbcReportDebtTermDetail> singDeptMap = genAssetMonthReportemplate(generateDate,  PbcReportType.PBC_REPORT_3_3, 18,pbcReport.getReportuuid());
-   				 deptMap.put(pos.getInstitutionCode(), singDeptMap);
-   			 }
-        	
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G10000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "01", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G20000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "02", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G30000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "03", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G40000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "04", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G50000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "05", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G60000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "06", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G70000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01,
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "07", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G80000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "08", null);
-   			
-   			
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G10000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "01", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G20000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "02", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G30000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "03", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G40000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "04", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G50000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "05", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G60000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "06", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G70000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "07", null);
-   			setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G80000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "08", null);
-   			 
+            /*end by jyl*/
+            // 汇率取值开关
+            String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
+            for (PbcMonthAssetPositionDto pos : posAssetList) {
+                // add by leipeng 20200319 获取所有部门对应信息,并列出单独的表结构
+                if (null != pos.getInstitutionCode() && null == deptMap.get(pos.getInstitutionCode())) {
+                    Map<String, PbcReportDebtTermDetail> singDeptMap = genAssetMonthReportemplate(generateDate, PbcReportType.PBC_REPORT_3_3, 18, pbcReport.getReportuuid());
+                    deptMap.put(pos.getInstitutionCode(), singDeptMap);
+                }
+
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G10000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "01", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G20000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "02", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G30000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "03", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G40000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "04", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G50000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "05", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G60000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "06", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G70000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "07", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.ASSET_G80000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_01,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "08", null);
+
+
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G10000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "01", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G20000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "02", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G30000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "03", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G40000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "04", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G50000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "05", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G60000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "06", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G70000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "07", null);
+                setAssetReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G80000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "08", null);
+
 //        	setAssetReportDebttermValue(pos,lineg10000,rateMap,source,"01");
 //        	setAssetReportDebttermValue(pos,lineg20000,rateMap,source,"02");
 //        	setAssetReportDebttermValue(pos,lineg30000,rateMap,source,"03");
@@ -7208,57 +7207,57 @@ public class PbcMonthAssetReportService  extends BaseService{
 //        	setAssetReportDebttermValue(pos,lineg60000fz,rateMap,source,"06");
 //        	setAssetReportDebttermValue(pos,lineg70000fz,rateMap,source,"07");
 //        	setAssetReportDebttermValue(pos,lineg80000fz,rateMap,source,"08");
-        }
-        
-        //按照产品到期日还是期次到期日出3-3报表
-        String str=SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_PERIOD);
-        if("Y".equals(str)){
-	        //查询对应月末的周期型产品数据
-	        List<ChbCprodBalanceDto> cprodList=chbCprodBalanceDtoMapper.selectByValuedate(pbcReport.getEnddate());
-	        Map<String,List<ChbCprodBalanceDto>> cprodListMap=
-	        						cprodList.stream().collect(Collectors.groupingBy(ChbCprodBalanceDto::getProdId));
-	
-	        for(ListIterator<PbcMonthPrdPostionDto> iterator=posProdList.listIterator();iterator.hasNext();){
-	        	PbcMonthPrdPostionDto it=iterator.next();
-	        	if(cprodListMap.containsKey(it.getProdid())){
-	        		iterator.remove();
-	        		for(ChbCprodBalanceDto single:cprodListMap.get(it.getProdid())){
-	        			iterator.add(convertBalanceToPrdPosition(single,it));
-	        		}
-	        	}
-	        }
-        }
-        
-        for(PbcMonthPrdPostionDto pos :posProdList){
-        	// 销售区域为计划单列市的不统计（省份内已经统计）：210200大连市、330200宁波市、350200厦门市、370200青岛市、440300深圳市
-			if("210200".equals(pos.getBuyPlace()) || "330200".equals(pos.getBuyPlace()) || "350200".equals(pos.getBuyPlace()) || 
-					"370200".equals(pos.getBuyPlace()) || "440300".equals(pos.getBuyPlace())) {
-				continue;
-			}
-			
-			if(null!=pos.getInstitutionCode()&&null==deptMap.get(pos.getInstitutionCode())){
-   		        Map<String,PbcReportDebtTermDetail> singDeptMap = genAssetMonthReportemplate(generateDate,  PbcReportType.PBC_REPORT_3_3, 18,pbcReport.getReportuuid());
-   				 deptMap.put(pos.getInstitutionCode(), singDeptMap);
-   			 }
-			
-			
-			setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G10000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "01", null,null);
-			setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G20000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "02", null,null);
-			setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G30000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "03", null,null);
-			setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G40000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "04", null,null);
-			setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G50000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "05", null,null);
-			setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G60000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "06", null,null);
-			setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G70000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "07", null,null);
-			setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G80000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02, 
-   					PbcReportType.PBC_REPORT_3_3,rateMap, source, "08", null,null);
-			
+            }
+
+            //按照产品到期日还是期次到期日出3-3报表
+            String str = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_PERIOD);
+            if ("Y".equals(str)) {
+                //查询对应月末的周期型产品数据
+                List<ChbCprodBalanceDto> cprodList = chbCprodBalanceDtoMapper.selectByValuedate(pbcReport.getEnddate());
+                Map<String, List<ChbCprodBalanceDto>> cprodListMap1 =
+                        cprodList.stream().collect(Collectors.groupingBy(ChbCprodBalanceDto::getProdId));
+
+                for (ListIterator<PbcMonthPrdPostionDto> iterator = posProdList.listIterator(); iterator.hasNext(); ) {
+                    PbcMonthPrdPostionDto it = iterator.next();
+                    if (cprodListMap1.containsKey(it.getProdid())) {
+                        iterator.remove();
+                        for (ChbCprodBalanceDto single : cprodListMap1.get(it.getProdid())) {
+                            iterator.add(convertBalanceToPrdPosition(single, it));
+                        }
+                    }
+                }
+            }
+
+            for (PbcMonthPrdPostionDto pos : posProdList) {
+                // 销售区域为计划单列市的不统计（省份内已经统计）：210200大连市、330200宁波市、350200厦门市、370200青岛市、440300深圳市
+                if ("210200".equals(pos.getBuyPlace()) || "330200".equals(pos.getBuyPlace()) || "350200".equals(pos.getBuyPlace()) ||
+                        "370200".equals(pos.getBuyPlace()) || "440300".equals(pos.getBuyPlace())) {
+                    continue;
+                }
+
+                if (null != pos.getInstitutionCode() && null == deptMap.get(pos.getInstitutionCode())) {
+                    Map<String, PbcReportDebtTermDetail> singDeptMap = genAssetMonthReportemplate(generateDate, PbcReportType.PBC_REPORT_3_3, 18, pbcReport.getReportuuid());
+                    deptMap.put(pos.getInstitutionCode(), singDeptMap);
+                }
+
+
+                setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G10000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "01", null, null);
+                setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G20000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "02", null, null);
+                setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G30000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "03", null, null);
+                setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G40000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "04", null, null);
+                setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G50000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "05", null, null);
+                setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G60000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "06", null, null);
+                setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G70000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "07", null, null);
+                setPrdReportValue(pos, result, deptMap.get(pos.getInstitutionCode()), PbcReportProperycode.DEBT_G80000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02,
+                        PbcReportType.PBC_REPORT_3_3, rateMap, source, "08", null, null);
+
 //        	setReportDebttermValueProd(pos,lineg10000fz,rateMap,source,"01");
 //        	setReportDebttermValueProd(pos,lineg20000fz,rateMap,source,"02");
 //        	setReportDebttermValueProd(pos,lineg30000fz,rateMap,source,"03");
@@ -7267,28 +7266,28 @@ public class PbcMonthAssetReportService  extends BaseService{
 //        	setReportDebttermValueProd(pos,lineg60000fz,rateMap,source,"06");
 //        	setReportDebttermValueProd(pos,lineg70000fz,rateMap,source,"07");
 //        	setReportDebttermValueProd(pos,lineg80000fz,rateMap,source,"08");
-        }
-        
-        
-        // 负债及权益_债务工具+其他负债
-        result.get(PbcReportProperycode.DEBT_G80000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).
-					setDebtInstrument(result.get(PbcReportProperycode.DEBT_G80000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).getDebtInstrument().add(qtfz.get("ALL")));
+            }
 
-      //修改数据组装及入库公共方法
-    	buildSumValAndInster(result, null, pbcReport, (!CollectionUtils.isEmpty(posAssetList) ||
-                !CollectionUtils.isEmpty(posProdList)),false,null,null,null);
-    	//循环分支机构的数据组装及入库
-        for (Map.Entry<String, Map<String, PbcReportDebtTermDetail>> dtoMap : deptMap.entrySet()) {
-        	
-        	dtoMap.getValue().get(PbcReportProperycode.DEBT_G80000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).
-    					setDebtInstrument(dtoMap.getValue().get(PbcReportProperycode.DEBT_G80000+PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).getDebtInstrument().add(qtfz.get(dtoMap.getKey())));
 
-        	
-        	buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, (!CollectionUtils.isEmpty(posAssetList) ||
-	                !CollectionUtils.isEmpty(posProdList)),false,null,null,null);
-		}
-        
-        
+            // 负债及权益_债务工具+其他负债
+            result.get(PbcReportProperycode.DEBT_G80000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).
+                    setDebtInstrument(result.get(PbcReportProperycode.DEBT_G80000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).getDebtInstrument().add(qtfz.get("ALL")));
+
+            //修改数据组装及入库公共方法
+            buildSumValAndInster(result, null, pbcReport, (!CollectionUtils.isEmpty(posAssetList) ||
+                    !CollectionUtils.isEmpty(posProdList)), false, null, null, null);
+            //循环分支机构的数据组装及入库
+            for (Map.Entry<String, Map<String, PbcReportDebtTermDetail>> dtoMap : deptMap.entrySet()) {
+
+                dtoMap.getValue().get(PbcReportProperycode.DEBT_G80000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).
+                        setDebtInstrument(dtoMap.getValue().get(PbcReportProperycode.DEBT_G80000 + PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02).getDebtInstrument().add(qtfz.get(dtoMap.getKey())));
+
+
+                buildSumValAndInster(dtoMap.getValue(), dtoMap.getKey(), pbcReport, (!CollectionUtils.isEmpty(posAssetList) ||
+                        !CollectionUtils.isEmpty(posProdList)), false, null, null, null);
+            }
+
+
 //        BigDecimal hjzczwgz=BigDecimal.ZERO;//资产债务工具
 //        BigDecimal hjzcgq=BigDecimal.ZERO;//资产股权
 //        BigDecimal hjzctd=BigDecimal.ZERO;//资产特定目的载体份额
@@ -7328,8 +7327,8 @@ public class PbcMonthAssetReportService  extends BaseService{
 //	            }
 //	        }
 //        }
+        }
     }
-    	    
    /**
     * 将周期型产品余额数据转换成计算需要的产品头寸数据
     * @param balance
