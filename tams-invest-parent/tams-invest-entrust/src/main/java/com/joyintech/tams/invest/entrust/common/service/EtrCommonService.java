@@ -141,7 +141,7 @@ public class EtrCommonService extends BaseCommonService {
                     result.put("cashT21", cashT2 == null ? BigDecimal.ZERO : cashT2);// 通道T+1可用
                     cashT1 = ArithmeticUtil.doAdd(cashT1, cashT2);*/
                 }
-                result.put("cashT1", cashT1 == null ? BigDecimal.ZERO : cashT1);// 组合T+1日可用
+                result.put("cashT1", cashT1 == null ? result.get("cashT") : cashT1);// 组合T+1日可用
             }
         }
         return result;

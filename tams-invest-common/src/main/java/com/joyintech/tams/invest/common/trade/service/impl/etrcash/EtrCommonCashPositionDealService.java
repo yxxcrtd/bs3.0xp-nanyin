@@ -863,6 +863,9 @@ public class EtrCommonCashPositionDealService extends BaseService {
         if (advanceCash != null) {
             val = ArithmeticUtil.doAdd(val, advanceCash);
         }
+        if (availableCash == null && advanceCash == null){
+            return null;    
+        }
         return ArithmeticUtil.doAdd(val, 人工调整流水);
     }
 
