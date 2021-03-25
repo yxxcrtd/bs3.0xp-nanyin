@@ -538,6 +538,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
             // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
 
+
             entity.setActPortfolioId(entity.getPortfolioId());
             entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
             TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
@@ -696,6 +697,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
                     }
                 }
                 this.deleteBussFlowData(entity.getTradeId());
+                this.deleteBussFlowData1(entity.getTotleTradeId());
 
                 // 7.3写入交易信息进交易报送信息表，为中债报送用
                 this.dealInfoCbReportLogic_7_3(entity);
@@ -1264,6 +1266,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
 
         // 删除原业务流程记录
         this.deleteBussFlowData(entity.getTradeId());
+        this.deleteBussFlowData1(entity.getTotleTradeId());
 
 
         basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getTradeId());
@@ -1298,6 +1301,20 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
 
         // 金融产品交易信息DTO.划款指令表Entity -> 划款指令业务流程表
         mapperDelegateService.deleteBySpecificKey("WFL_STL_PAY_ORDERS", "TRADE_ID",tradeid);
+    }
+
+    /**
+     * 删除业务流程数据
+     *
+     * @param workflowId 工作流代码
+     * @see
+     * @since 1.0
+     */
+    private void deleteBussFlowData1(String totaltradeid) {
+        mapperDelegateService.deleteBySpecificKey("WFL_TRD_FIN_PRODUCT_DEAL_TOTAL", "TOTLE_TRADE_ID",totaltradeid);
+        mapperDelegateService.deleteBySpecificKey("WFL_PA_TRD_FIN_DEAL_TOTAL", "TOTLE_TRADE_ID",totaltradeid);
+        mapperDelegateService.deleteBySpecificKey("WFL_TRD_DEAL_TOTAL_ADD", "TOTLE_TRADE_ID",totaltradeid);
+
     }
     
     /**

@@ -285,7 +285,7 @@ $(function(){
         object.secResoluteDtoList = data;
         //保存unitCprice初始值，用于待办中编辑
         var unitCprice =  $("#unitCprice").attr("value");
-        if (null == modelType || 'undefined' == typeof(unitCprice) || '' == unitCprice) {
+        if (null == unitCprice || 'undefined' == typeof(unitCprice) || '' == unitCprice) {
         	delete object.unitCprice;
         }
         else{
