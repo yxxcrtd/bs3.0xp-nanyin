@@ -129,9 +129,9 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
 		Page<ProdTerminationRegist001Dto> page;
 		
 		//add by leipeng 20200628
-		if(CommonUtil.isBAmodel()){
+//		if(CommonUtil.isBAmodel()){
 			pageParam.put("model_type", "01");
-		}
+//		}
 		
 		if(pageParam.get(GlobalConstant.PARAM_PAGE)!=null){
 			int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());

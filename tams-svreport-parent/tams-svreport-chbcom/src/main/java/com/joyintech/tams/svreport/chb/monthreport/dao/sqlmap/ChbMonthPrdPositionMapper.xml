@@ -368,6 +368,15 @@
      left join  chb_prd_baseinfo  info on  info.prod_id=pos.PRODID
       where startdate = #{startdate,jdbcType=DATE}
       and enddate = #{enddate,jdbcType=DATE}
+      <if test="prodids !=null and prodids.size()!=0">
+          and prodid in
+          <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+              <if test="(index % 999) == 998">
+                    null) OR prodid in (
+              </if>
+              #{item}
+          </foreach>
+      </if>
   </select>
   
   <insert id="genPosition"  parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
@@ -789,6 +798,18 @@
               #{item}
           </foreach>
       </if>
+    <if test="prodid!=null">
+    	and deal.prodid=#{prodid,jdbcType=VARCHAR} 
+    </if>
+      <if test="prodids !=null">
+          and deal.prodid in
+		<foreach collection="prodids" item="prodid" open="(" separator=","
+			close=")">
+			#{prodid}
+          </foreach>
+      </if>
+
+
     /*合并已起息，但没进行交易的产品*/
     union all
         SELECT
@@ -867,6 +888,18 @@
               <if test="prodid!=null and prodid.length > 0">
                   and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR}
               </if>
+            ---加上有效交易条件
+            and deal.status !='D' )    
+		    <if test="prodid!=null">
+		    	and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR} 
+		    </if>
+              <if test="prodids !=null">
+                  and nvl(prod.fprod_id,prod_id) in
+				<foreach collection="prodids" item="item" open="(" separator=","
+					close=")">
+                      #{item}
+                  </foreach>
+              </if>
     
   </insert>
   
@@ -879,8 +912,8 @@
     <if test="enddate!=null">
     	and enddate=#{enddate,jdbcType=DATE} 
     </if>
-     <if test="prodids !=null">
-		and prodid in
+      <if test="prodids !=null">
+          and prodid in
 		<foreach collection="prodids" item="item" open="(" separator=","
 			close=")">
 			#{item}
@@ -890,6 +923,8 @@
           and prodid=#{prodid,jdbcType=VARCHAR}
       </if>
     
+          </foreach>
+      </if>
   </delete>
   <select id="selectPrciceByProdAndDate"   resultType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" parameterType="date" >
   	 select prod_id prodId,ccy,prod_value prodValue from (

@@ -151,11 +151,11 @@ public class PbcMonthProdPositionService  extends BaseService{
         }
         /* 生成人行报表头寸,chenxc updated on 2019-05-09 end */ 
         List<PbcMonthPrdPostionDto> posList =
-                    pbcMonthPrdPostionMapper.selectByDate(DateUtil.getLastDayOfLayMonth(batchDate),modelType);
+                    pbcMonthPrdPostionMapper.selectByDate(DateUtil.getLastDayOfLayMonth(batchDate),modelType,prodList);
         List<PbcMonthPrdPostionDto> posPsbcList;
 //        if(StringUtil.equals(bankCode, "001")){
 //        	//邮储个性化 方法查询不带其中的销售区域（邮储接的销售区域1级及部分2级）
-        	 posPsbcList= pbcMonthPrdPostionMapper.selectByDatePsbc(DateUtil.getLastDayOfLayMonth(batchDate),modelType); 
+        	 posPsbcList= pbcMonthPrdPostionMapper.selectByDatePsbc(DateUtil.getLastDayOfLayMonth(batchDate),modelType,prodList);
 //        }else{
 //        	posPsbcList=posList;
 //        }

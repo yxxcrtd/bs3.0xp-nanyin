@@ -12,11 +12,13 @@ package com.joyintech.service.report.common.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.service.report.common.dto.BussRepFinProductInfoDto;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.dao.ChbOrgRegistBankCodeMapper;
+import com.joyintech.tams.common.base.dao.FinProductAddMapper;import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.RepProdDeclareMapper;
 import com.joyintech.tams.common.base.dao.RepProdIssueMapper;
+import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.RepProdDeclare;
@@ -28,8 +30,10 @@ import com.joyintech.tams.component.base.report.prod.BaseRepFinProductInfoServic
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -80,6 +84,9 @@ public class RepFinProductInfoService {
      */
     @Autowired
     private BaseRepFinProductInfoMapper baseRepFinProductInfoMapper;
+
+    @Autowired
+    private ChbOrgRegistBankCodeMapper chbOrgRegistBankCodeMapper;
     /**
      * 根据金融产品代码查询中债报送信息
      * 
@@ -400,5 +407,11 @@ public class RepFinProductInfoService {
         //标的类金融产品
         // 此处的更新操作，在修改产品信息时和common服务处理冲突 delete by heyangyang 2019-09-29
         //baseRepFinProductInfoMapper.updateFinProduct(baseRepFinProductInfoDto.getFinProduct());
+    }
+
+
+    public String getIssuePartyId(String investCode){
+        ChbOrgRegistBankCode orgRegist = chbOrgRegistBankCodeMapper.selectByPrimaryKey(investCode);
+        return null!=orgRegist?orgRegist.getRegistBankCode():CacheUtil.getSysParam(BussinessConstant.ISSUE_PARTY_ID);
     }
 }

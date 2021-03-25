@@ -17,13 +17,32 @@
 	</insert>
 	
 	<delete id="deleteInfo"  parameterType="map">
-		delete from CHB_AST_VAL
+		delete  from CHB_AST_VAL c
 		<where>
 			<if test="valDate != null and valDate != ''">
-				to_char(VAL_DATE,'yyyy-MM-dd') = #{valDate,jdbcType=VARCHAR}
+				to_char(c.VAL_DATE,'yyyy-MM-dd') = #{valDate,jdbcType=VARCHAR}
 			</if>
 			<if test="status != null and status!= ''">
-				and STATUS  = #{status,jdbcType=VARCHAR}
+				and c.STATUS  = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="InstitutionCode != null and InstitutionCode != '' "  >
+				and  c.val_id  in  (select  d.val_id  from   CHB_AST_VAL d
+					left join chb_asset_info_sub csb on csb.ASSET_CODE=d.ASSET_CODE
+					LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
+					LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
+					LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+					WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
+					LEFT JOIN (
+					SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
+					WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
+					) DA
+					ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01')
+					or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
+					LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+
+				where ( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
+				or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+                  )
 			</if>
 		</where>
 	</delete>
@@ -113,10 +132,29 @@
 											and ((typex.OBJFIELD4 =  info.REGIST_ORG) or typex.OBJFIELD4 is null)
 											/***对于债券类资产，需要根据其登记托管机构配置哪些生成估值信息登记 add by leipeng 20210129***/
 											and typex.MAPPINGCODE='ASSETBASISTYPE'
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			left join chb_asset_info_sub csb on csb.ASSET_CODE=assetbasis.assetCode
+			LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
+			LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
+			LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+			WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
+			LEFT JOIN (
+			SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
+			WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
+			) DA
+			ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		</if>
 				where 1=1 
 				  and (assetbasis.posAmt &lt;&gt; 0 or assetbasis.valueDate=assetbasis.mdate)
 				  and  assetbasis.assetCode is not null
 				  and typex.MAPPINGCODE is not null
+
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			AND( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
+			or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+		</if>
+
 			) where unitValNet is not null
 	</select>
 	

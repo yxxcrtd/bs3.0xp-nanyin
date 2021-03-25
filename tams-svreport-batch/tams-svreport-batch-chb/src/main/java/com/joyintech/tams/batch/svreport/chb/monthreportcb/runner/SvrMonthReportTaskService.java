@@ -72,6 +72,9 @@ public class SvrMonthReportTaskService extends BatchBaseService {
             银行月度统计表跑批-净值型产品的信息未统计 end */
             }
         }
+
+
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date bdate=new Date();
         Long bt=bdate.getTime();

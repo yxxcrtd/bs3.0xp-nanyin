@@ -119,9 +119,9 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		dealSearchParam(pageParam);
 		
 		//add by leipeng 20200628
-		if(CommonUtil.isBAmodel()){
+//		if(CommonUtil.isBAmodel()){
 			pageParam.put("model_type", "01");
-		}
+//		}
 		
 		if (null != pageParam.get(GlobalConstant.PARAM_PAGE)
 				&& null != pageParam.get(GlobalConstant.PARAM_LENGTH)) {

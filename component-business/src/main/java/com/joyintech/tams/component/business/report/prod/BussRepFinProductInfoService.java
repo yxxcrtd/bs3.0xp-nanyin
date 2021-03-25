@@ -83,4 +83,11 @@ public interface BussRepFinProductInfoService {
      * @since 1.0
      */
     BussRepFinProductInfoDto selectRepFinprodId(String repFinprodInsId);
+
+    /**
+     * 获取当前登录用户的机构编码
+     * @return
+     */
+    String getIssuePartyId();
+
 }

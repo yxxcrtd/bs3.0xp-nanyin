@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chb.monthreport.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 描述:CHB_MONTH_FEE_POSITION表的实体类
@@ -102,6 +103,17 @@ public class ChbMonthFeePosition {
      */
     private String isYllccp;
     
+
+
+    private List<String> prodids;
+
+    public List<String> getProdids() {
+        return prodids;
+    }
+
+    public void setProdids(List<String> prodids) {
+        this.prodids = prodids;
+    }
 
     public String getInstitutionCode() {
 		return institutionCode;

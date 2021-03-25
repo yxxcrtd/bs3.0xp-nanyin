@@ -41,10 +41,10 @@ public interface PbcMonthPrdPostionMapper {
     int insertSelective(PbcMonthPrdPostionDto record);
 
     List<PbcMonthPrdPostionDto> selectByDate(@Param("bookDate") String bookDate ,
-            @Param("modelType") String modelType);
+            @Param("modelType") String modelType, @Param("prodList") List<String> prodList);
 
     List<PbcMonthPrdPostionDto> selectByDatePsbc(@Param("bookDate") String bookDate ,
-            @Param("modelType") String modelType);
+            @Param("modelType") String modelType, @Param("prodList") List<String> prodList);
 
     /**
      * 获取【分省数据客户类型接口数据】

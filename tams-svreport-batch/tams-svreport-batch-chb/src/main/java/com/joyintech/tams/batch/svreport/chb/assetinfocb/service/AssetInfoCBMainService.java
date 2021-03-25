@@ -36,8 +36,8 @@ public class AssetInfoCBMainService extends AutoSendCBBaseService{
      * void
      * @throws BatchException 
      */
-	public void autoRegistAssetInfo(Date executeDate,List<String> prodList,List<String> assetCodeList){
-	    assetInfoRegistBatchService.autoRegistAssetInfo(executeDate, prodList, assetCodeList);
+	public void autoRegistAssetInfo(Date executeDate,List<String> prodList,List<String> assetCodeList,String InstitutionCode){
+	    assetInfoRegistBatchService.autoRegistAssetInfo(executeDate, prodList, assetCodeList,InstitutionCode);
 	}
 	
 

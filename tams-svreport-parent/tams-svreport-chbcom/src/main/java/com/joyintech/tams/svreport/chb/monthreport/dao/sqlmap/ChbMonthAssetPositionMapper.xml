@@ -457,7 +457,16 @@
 		/****资产负债表中1.9.5统计错误***/
 		and (info.PBC_ASSET_TYPE3 NOT IN('J03','J04') or info.PBC_ASSET_TYPE3 is null)
 		and pos.trade_type in ('01','02','05') /*直投交易,通道交易,资管计划交易*/
-		and  pos.cDATE =#{enddate,jdbcType=DATE} 
+		and  pos.cDATE =#{enddate,jdbcType=DATE}
+          <if test="prodids !=null and prodids.size()>0">
+              and pos.prodid in
+              <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+                  <if test="(index % 999) == 998">
+                      null) OR pos.prodid in (
+                  </if>
+                  #{item}
+              </foreach>
+          </if>
     	group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE}, pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
 		decode(pos.ASSET_CODE,'REMAININGCASH','01',info.asset_type), decode(pos.ASSET_CODE,'REMAININGCASH','1001',info.ASSET_TYPE2), nvl(nvl(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,nvl(nvl(c.rating ,d.rating),nvl(a.rating,b.rating)), 
 		decode(info.PRIVATE_FLAG,'01','01',null),
@@ -640,6 +649,16 @@
     where 
      to_char(POSITION.ENDDATE, 'yyyy-MM-dd') >= #{startDate,jdbcType=VARCHAR}
     <![CDATA[and to_char(POSITION.ENDDATE, 'yyyy-MM-dd') <= #{endDate,jdbcType=VARCHAR}]]>
+      <if test="prodids !=null and prodids.size()>0">
+          and POSITION.PROD_ID in
+          <foreach collection="prodids" item="prodid"  index="index" open="(" separator=","
+                   close=")">
+              <if test="(index % 999) == 998">
+                  null) OR POSITION.PROD_ID in (
+              </if>
+              #{prodid}
+          </foreach>
+      </if>
     group by 
     POSITION.ASSETTYPE, nvl(POSITION.INDUSTRY1,'NULL'), POSITION.IN_ASSET_TYPE, 
     POSITION.PPPFLAG, POSITION.MONIT_TYPE, POSITION.MANAGE_TYPE, 
@@ -843,6 +862,15 @@
 					ON prd.PROD_ID = cp.PROD_ID
 		WHERE cp.CDATE = #{cdate,jdbcType=DATE}
 		AND prd.PROFIT_TYPE = '03'
+      <if test="prodids !=null and prodids.size()!=0">
+          and cp.prod_id in
+          <foreach collection="prodids" item="prodid" index="index" open="(" separator="," close=")">
+              <if test="(index % 999) == 998">
+                  null) OR cp.prod_id in (
+              </if>
+              #{prodid}
+          </foreach>
+      </if>
   </select>
   
     <select id="selectAssetpositionByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
@@ -923,6 +951,16 @@
 		and (info.PBC_ASSET_TYPE3 NOT IN('J03','J04') or info.PBC_ASSET_TYPE3 is null)
         and pos.trade_type in ('01','02','05') /*直投交易,通道交易,资管计划交易*/
         and pos.cDATE =#{enddate,jdbcType=DATE}
+        <if test="prodids !=null and prodids.size()>0">
+            and pos.PROD_ID in
+            <foreach collection="prodids" item="prodid"  index="index" open="(" separator=","
+                     close=")">
+                <if test="(index % 999) == 998">
+                    null) OR pos.PROD_ID in (
+                </if>
+                #{prodid}
+            </foreach>
+        </if>
         group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
         pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
         decode(pos.ASSET_CODE,'REMAININGCASH','01',info.asset_type),

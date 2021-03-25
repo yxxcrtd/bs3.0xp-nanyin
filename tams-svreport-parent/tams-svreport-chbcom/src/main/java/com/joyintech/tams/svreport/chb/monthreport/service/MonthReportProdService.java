@@ -274,11 +274,13 @@ public class MonthReportProdService {
 		ChbMonthPrdPosition prod = new ChbMonthPrdPosition();
 		prod.setStartdate(firstday);
 		prod.setEnddate(lastday);
+		prod.setProdids(report.getProdids());
 		//修改查询逻辑.一定会查出产品对应机构信息
 		List<ChbMonthPrdPosition> listPrdPosition = chbMonthPrdPositionMapper.select(prod);
 		ChbMonthFeePosition fee = new ChbMonthFeePosition();
 		fee.setStartdate(firstday);
 		fee.setEnddate(lastday);
+		fee.setProdids(report.getProdids());
 		//修改查询逻辑.一定会查出产品对应机构信息
 		List<ChbMonthFeePosition> listFeePosition = chbMonthFeePositionMapper.select(fee);
 		
@@ -1387,25 +1389,29 @@ public class MonthReportProdService {
 		
 		// 遍历result，插入全部的数据
 		//删除时上一次已报送数据不能删除
-		if(report.getWbsreportuuid()!=null&&!"".equals(report.getWbsreportuuid())){
-			//数据删除时不区分机构.全部删除
-			chbMonthReportDetailMapper.delete(sdf.format(firstday), ChbMonthReportPrdConstants.REPORT_TYPE_PROD,null);
-		}
+//		if(report.getWbsreportuuid()!=null&&!"".equals(report.getWbsreportuuid())){
+//			//数据删除时不区分机构.全部删除
+//			chbMonthReportDetailMapper.delete(sdf.format(firstday), ChbMonthReportPrdConstants.REPORT_TYPE_PROD,null);
+//		}
 		
-		//删除汇总表明细数据
-		for (ChbMonthReportDetail v : result.values()) {
-			//插入主表的uuid
-			v.setReportuuid(chbMonthReport.getReportuuid());
-			chbMonthReportDetailMapper.insert(v);
-		}
+		//删除汇总表明细数据多法人不能生成汇总数据
+//		for (ChbMonthReportDetail v : result.values()) {
+//			//插入主表的uuid
+//			v.setReportuuid(chbMonthReport.getReportuuid());
+//			chbMonthReportDetailMapper.insert(v);
+//		}
 		
 		
 		//各个分行进行数据汇总计算
 		for (Entry<String, Map<String, ChbMonthReportDetail>> map : deptMap.entrySet()) {
 			//数据汇总计算
 			sumDetail(map.getValue());
+
 			//获取当前机构对应的月报详情
 			ChbMonthReport chb = resultinits.get(map.getKey());
+			//每个机构分别删除自己的产品，避免出现错误删除的情况
+			chbMonthReportDetailMapper.deleteByTermIdEx(sdf.format(firstday), ChbMonthReportPrdConstants.REPORT_TYPE_PROD,chb.getOrgCode());
+
 			//删除汇总表数据
 			for (Entry<String,  ChbMonthReportDetail> v : map.getValue().entrySet()) {
 				v.getValue().setDetailuuid(IDGenerator.generate(36));

@@ -41,6 +41,9 @@ public interface TamsBaseMapper {
      * @since 1.0
      */
     String selectBankCode(String orgCode);
+
+
+    List<ChbOrgRegistBankCode> selectBank(String orgCode);
     
     /**
      * 查询机构下的所有部门代码
