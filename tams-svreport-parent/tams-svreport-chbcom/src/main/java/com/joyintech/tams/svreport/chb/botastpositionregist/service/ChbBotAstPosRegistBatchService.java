@@ -120,7 +120,7 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
             //生成数据状态为“新建”，报送状态为“未报送”的登记
             // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
             List<ChbBotAstPositionSub> insertDataList = chbBotAstPosCBMapper.queryInsertGenerateList(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
-                    chbSubmitDeadline, submitDeadline);
+                    chbSubmitDeadline, submitDeadline,InstitutionCode);
             insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.底层资产持仓信息登记表SUB);
 //            chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
 //                    chbSubmitDeadline, submitDeadline);
@@ -131,8 +131,8 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
             }
             // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 			
-			chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
-					chbSubmitDeadline, submitDeadline,InstitutionCode);
+			/*chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
+					chbSubmitDeadline, submitDeadline,InstitutionCode);*/
 		}
 	}
     

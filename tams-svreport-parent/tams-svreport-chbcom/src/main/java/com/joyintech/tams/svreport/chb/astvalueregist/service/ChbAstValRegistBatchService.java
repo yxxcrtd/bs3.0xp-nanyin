@@ -129,11 +129,11 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 
 			
 			//生成数据状态为“新建”，报送状态为“未报送”的登记
-			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
-					submitDeadline,InstitutionCode);
+//			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
+//					submitDeadline,InstitutionCode);
 	        // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
 			List<ChbAstValueSub> insertDataList = chbAstValCBMapper.queryInsertGenerateList(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
-                    submitDeadline);
+                    submitDeadline,InstitutionCode);
 	        insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.资产估值信息登记表SUB);
 //			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
 //					submitDeadline);
@@ -143,8 +143,8 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
                 chbAstValCBMapper.insertSub(sub);
             }
 	        // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
-			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
-					submitDeadline,InstitutionCode);
+//			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
+//					submitDeadline,InstitutionCode);
 		}
 	}
 
