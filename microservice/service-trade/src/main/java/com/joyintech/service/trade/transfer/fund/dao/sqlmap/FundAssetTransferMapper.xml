@@ -27,7 +27,7 @@
         AND A.PORTFOLIO_ID != #{invTransPortf,jdbcType=VARCHAR}
         AND A.MDATE &gt;=TO_DATE(#{tradeDate},'yyyy-MM-dd')
         AND A.VDATE &lt;=TO_DATE(#{tradeDate},'yyyy-MM-dd')
-        <if test="invTransPortf == null or invTransPortf == ''">
+        <if test="invTransPortf != null and invTransPortf != ''">
             AND PCI.ACCT_NO in (SELECT DISTINCT B.ACCT_NO FROM PTL_CAPACCT_INFO B WHERE B.PORTFOLIO_ID =
             #{invTransPortf} AND B.ACCT_TYPE = #{capacctType} AND B.CCY = #{ccy})
         </if>

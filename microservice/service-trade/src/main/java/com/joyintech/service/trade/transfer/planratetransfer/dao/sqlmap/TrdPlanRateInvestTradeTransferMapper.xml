@@ -31,6 +31,7 @@
             <if test="acctNo != null and acctNo != ''">
                 AND psa.ACCT_NO = #{acctNo}
             </if>
+            and pp.mdate &gt; to_date(#{tradeDate},'yyyy-mm-dd')
             and pci.ACCT_NO in (select ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID=#{transferPortfolioId} and ACCT_TYPE='A01')
         </where>
     </select>
