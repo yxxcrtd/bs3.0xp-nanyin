@@ -328,7 +328,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         List<ValidMessage> errorList = new ArrayList<>();
         String confirmMsg ="";
         StringBuilder tips = new StringBuilder();
-        if(StringUtil.isEmptyList(dto.getPledgedRepoInfoList())){
+        if(StringUtil.isEmptyList(dto.getPledgedRepoInfoList())||dto.getPledgedRepoInfoList().size()==0){
             errorList.add(new ValidMessage("列表信息不能空！"));
         }
         else{
@@ -360,6 +360,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         }
         if(errorList.size()>0){
             result.setErrorList(errorList);
+            return result;
         }
         if (confirmMsg.length() > 0) {
             result.setData(confirmMsg);
