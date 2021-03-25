@@ -287,15 +287,7 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
 
 
 
-    private List<String> prodids;
 
-    public List<String> getProdids() {
-        return prodids;
-    }
-
-    public void setProdids(List<String> prodids) {
-        this.prodids = prodids;
-    }
 
     public String getOldAssetCode() {
 		return oldAssetCode;
