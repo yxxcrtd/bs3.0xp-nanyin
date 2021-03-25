@@ -23,6 +23,7 @@
         else{
             $("#pledgedBondSplit_div").hide();
         }
+        portfolioIdChange();
     }
     //风险测试数据
     var getriskdata = function () {
@@ -81,6 +82,8 @@
             , {field: 'pledgePrin',width: 150,title: '质押券面额',type: 'money',digit: 2,sortable: false}
             // 剩余可转仓质押券面总额
             , {field: 'avaPledgePrin',width: 200,title: '剩余可转仓质押券面额',type: 'money', digit: 2, sortable: false}
+            // 剩余可转仓质押券面总额
+            , {field: 'avaPledgePrin1',visible:false}
             // 折算比例%
             , {field: 'pledgeRatio',width: 100,title: '折算比例%',type: 'number',digit: 2, sortable: false}
             //产品组合可质押券面总额
@@ -90,7 +93,7 @@
         ],
         editCell: function (value, row, field, cell, column) {
             if(field=="desiPledgePrin"){
-                row.avaPledgePrin = JoyinMath.doMinus(row.pledgePrin,value);
+                row.avaPledgePrin = JoyinMath.doMinus(row.avaPledgePrin1,value);
                 var allRows = pledgedBondSplitTable.getAllRows();
                 var sumDesiPledgePrin=0;
                 $.each(allRows,function(index,obj){

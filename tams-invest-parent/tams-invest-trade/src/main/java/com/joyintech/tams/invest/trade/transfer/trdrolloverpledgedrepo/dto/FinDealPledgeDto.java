@@ -18,6 +18,10 @@ public class FinDealPledgeDto extends FinDealPledge {
      */
     private BigDecimal avaPledgePrin;
     /**
+     * 剩余未拆分质押券面总额
+     */
+    private BigDecimal avaPledgePrin1;
+    /**
      * 产品组合可质押券面总额
      */
     private BigDecimal prdPledgePrin;
@@ -114,5 +118,13 @@ public class FinDealPledgeDto extends FinDealPledge {
      */
     public void setPledgePrin(BigDecimal pledgePrin) {
         this.pledgePrin = pledgePrin;
+    }
+
+    public BigDecimal getAvaPledgePrin1() {
+        return avaPledgePrin1;
+    }
+
+    public void setAvaPledgePrin1(BigDecimal avaPledgePrin1) {
+        this.avaPledgePrin1 = avaPledgePrin1;
     }
 }

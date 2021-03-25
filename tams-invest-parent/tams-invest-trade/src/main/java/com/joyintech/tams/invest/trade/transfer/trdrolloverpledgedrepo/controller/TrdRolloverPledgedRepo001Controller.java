@@ -293,8 +293,8 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         }else {
         	pledgedRepoRolloverList.get(i).setAvaPledgePrin(pledgedRepoRolloverList.get(i).getPledgePrin());
         }
-      }
-        
+            pledgedRepoRolloverList.get(i).setAvaPledgePrin1(pledgedRepoRolloverList.get(i).getAvaPledgePrin());
+        }
         result.setData(pledgedRepoRolloverList);
         return result;
     }
