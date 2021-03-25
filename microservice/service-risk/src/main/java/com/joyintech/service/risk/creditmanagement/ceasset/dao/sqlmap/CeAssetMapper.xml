@@ -91,13 +91,28 @@
    <select id="searchSameAssetGroup" 	resultType="com.joyintech.service.risk.creditmanagement.ceasset.dto.CreditLinesAstDto">
        SELECT
 	 	m.CUSTOMER_ID as customerId,
-	 	n.ASSETPOOL_NAME as customerName
+	 	n.ASSETPOOL_NAME as customerName,
+	 	m.INSTITUTION_CODE as institution_Code
 	 FROM 
 	    CREDIT_LINES m left join
 	    CREDIT_ASSETPOOL n on m.CUSTOMER_ID=n.SEQNO
 	    where m.CUSTOMER_ID in (select SEQNO from CREDIT_ASSETPOOL_DETAIL 
 	    	where FINPROD_ID=#{customerId,jdbcType=VARCHAR}
 	    )
+	   union all
+	   select
+	   sdpm.BUSINESS_DATA_PK2 as customerId,
+	   n.ASSETPOOL_NAME as customerName,
+	   sdpm.BUSINESS_DATA_PK5 as institution_Code
+	   from SYS_DATA_PROCESS_MARK sdpm
+	   left join CREDIT_ASSETPOOL n
+	   on sdpm.BUSINESS_DATA_PK2 = n.SEQNO
+	   WHERE sdpm.BUSINESS_DATA_PK2 in (select SEQNO from CREDIT_ASSETPOOL_DETAIL
+	   where FINPROD_ID=#{customerId,jdbcType=VARCHAR}
+	   )
+	   and sdpm.BUSINESS_DATA_PK6 = '0003'
+	   AND sdpm.status IN('A','U','P')
+	   and sdpm.his_no = (select max (sdpm1.his_no) from SYS_DATA_PROCESS_MARK sdpm1 where sdpm1.WORKFLOW_ID = sdpm.WORKFLOW_ID)
     </select>
 	<!-- 市场代码下拉框 -->
 	<select id="getAssetIdPub" resultType="com.joyintech.framework.select.SelectOptionDto">
