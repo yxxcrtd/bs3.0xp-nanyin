@@ -178,22 +178,18 @@
                 list[index] = object.pledgedRepoInfoList[i].pledgedRepoRolloverList[0];  
             }
         }
-        object.pledgedRepoList =JSON.stringify(list);
-        if(!$('#portfolioId').val()){
-        	$("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');  
-        	pledgedBondSplitTable.clear();
-        }else{
+        object.pledgedRepoList =JSON.stringify(list);      
         Joyin.ajaxJson(basePath + '/invest/trade/transfer/trdrolloverpledgedrepo/TrdRolloverPledgedRepo001/selectPledgedRepoRolloverList', object, function (result) {
             if (result && result.statuCode == 200) {
                 pledgedRepoRolloverList = result.data;
-                pledgedBondSplitTable.clear();
-                pledgedBondSplitTable.addRow(pledgedRepoRolloverList);
-                /*pledgedBondSplitTable.clear(function(){
+                pledgedBondSplitTable.clear(function(){
                     pledgedBondSplitTable.addRow(pledgedRepoRolloverList);
-                });*/
+                });
             }
-        });
-        }       
+        });    
+        if(!$('#portfolioId').val()){
+        	$("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');  
+        }
         refreshCashAndBalance();
     };
     /**
@@ -267,8 +263,7 @@
                     $("#sumRolloverPrinAmt").val('');
                     $("#rolloverRepoIntAmt").val('');
                     $("#bussTrdAvailableCashQuery_avalibleCash").val('');
-                    $("#portfolioId").val('').trigger("change");
-                    pledgedBondSplitTable.clear();
+                    $("#portfolioId").val('').trigger("change");                  
 //                    pledgedBondSplitTable.clear(function(){
 //                        console.log("进到这儿了")
 //                        console.log(pledgedBondSplitTable)
