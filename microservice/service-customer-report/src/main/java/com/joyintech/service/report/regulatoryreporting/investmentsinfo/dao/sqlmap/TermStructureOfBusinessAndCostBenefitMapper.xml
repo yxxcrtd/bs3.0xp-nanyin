@@ -1314,10 +1314,10 @@ with cj as(
 
 		<!-- 计划类净值型，非货币基金 -->
 		select distinct cr.asset_id as assetId,
-		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
-		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
 
 		end as assetRate
 		from chb_asset_rate cr
@@ -1370,10 +1370,10 @@ with cj as(
 
 		select
 		t.asset_id  as assetId,
-		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
-		when t.change_date>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
 		end as assetRate
 		<!--sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate-->
 		from(select cr.asset_id,cr.asset_rate,<!--cr.change_date-->fjycr．change_date
@@ -1586,7 +1586,7 @@ with cj as(
 			parameterType="map">
 
 		with  ratedetail as(
-		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
 		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
@@ -1594,16 +1594,17 @@ with cj as(
 		or (cr.finprod_type2 ='XJ' and cr.change_type='05')
 		)
 		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
-		and fc1.change_date <![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
 
 		union all
 
 		<!-- 计划类净值型，非货币基金 -->
 		select distinct cr.asset_id as assetId,
-		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
-		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+
 		end as assetRate
 		from chb_asset_rate cr
 		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
@@ -1655,10 +1656,10 @@ with cj as(
 
 		select
 		t.asset_id  as assetId,
-		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
-		when t.change_date>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
 		end as assetRate
 		<!--sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate-->
 		from(select cr.asset_id,cr.asset_rate,<!--cr.change_date-->fjycr．change_date
@@ -1694,7 +1695,7 @@ with cj as(
 		from chb_asset_rate cr
 		left join chb_asset_rate cr1
 		on cr.asset_id=cr1.asset_id
-		and cr1.cost_amt!=0
+		and cr1.cost_amt !=0
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
@@ -1936,7 +1937,7 @@ with cj as(
 			parameterType="map">
 
 		with  ratedetail as(
-		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
 		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
@@ -1950,10 +1951,10 @@ with cj as(
 
 		<!-- 计划类净值型，非货币基金 -->
 		select distinct cr.asset_id as assetId,
-		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
-		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
 
 		end as assetRate
 		from chb_asset_rate cr
@@ -2006,10 +2007,10 @@ with cj as(
 
 		select
 		t.asset_id  as assetId,
-		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
-		when t.change_date>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
 		end as assetRate
 		<!--sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate-->
 		from(select cr.asset_id,cr.asset_rate,<!--cr.change_date-->fjycr．change_date
@@ -2045,7 +2046,7 @@ with cj as(
 		from chb_asset_rate cr
 		left join chb_asset_rate cr1
 		on cr.asset_id=cr1.asset_id
-		and cr1.cost_amt!=0
+		and cr1.cost_amt !=0
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
@@ -2180,7 +2181,7 @@ with cj as(
 			parameterType="map">
 
 		with  ratedetail as(
-		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
 		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
@@ -2194,10 +2195,10 @@ with cj as(
 
 		<!-- 计划类净值型，非货币基金 -->
 		select distinct cr.asset_id as assetId,
-		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
-		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
 
 		end as assetRate
 		from chb_asset_rate cr
@@ -2250,10 +2251,10 @@ with cj as(
 
 		select
 		t.asset_id  as assetId,
-		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
-		when t.change_date>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
 		end as assetRate
 		<!--sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate-->
 		from(select cr.asset_id,cr.asset_rate,<!--cr.change_date-->fjycr．change_date
@@ -2536,8 +2537,8 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
-		with  rate as(
-		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
+		with  ratedetail as(
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
 		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
@@ -2551,10 +2552,10 @@ with cj as(
 
 		<!-- 计划类净值型，非货币基金 -->
 		select distinct cr.asset_id as assetId,
-		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
-		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
 
 		end as assetRate
 		from chb_asset_rate cr
@@ -2607,10 +2608,10 @@ with cj as(
 
 		select
 		t.asset_id  as assetId,
-		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
-		when t.change_date>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
 		end as assetRate
 		<!--sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate-->
 		from(select cr.asset_id,cr.asset_rate,<!--cr.change_date-->fjycr．change_date
@@ -2670,6 +2671,20 @@ with cj as(
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
 		and cr.change_type in ('07','09')
+		),
+		rate as(
+		select detail.assetId as assetId,detail.assetRate as assetRate
+		from ratedetail detail
+		union all
+		select distinct cbap.plan_asset_id as assetId,
+		case when sum(nvl(cbap.pos_num,0))!=0 then
+		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
+		else 0 end as assetRate
+		from chb_bot_ast_pos cbap
+		left join ratedetail d
+		on cbap.asset_code=d.assetId
+		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbap.plan_asset_id
 		),
 	industryTypes as(
 		    select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,
@@ -2769,8 +2784,8 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
-		with  rate as(
-		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率 -->
+		with  ratedetail as(
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
 		from chb_asset_rate cr
 		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
@@ -2784,10 +2799,10 @@ with cj as(
 
 		<!-- 计划类净值型，非货币基金 -->
 		select distinct cr.asset_id as assetId,
-		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
-		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} then
-		(cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
 
 		end as assetRate
 		from chb_asset_rate cr
@@ -2840,10 +2855,10 @@ with cj as(
 
 		select
 		t.asset_id  as assetId,
-		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
-		when t.change_date>#{yearStartDate,jdbcType=DATE} then
-		sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
 		end as assetRate
 		<!--sum(nvl(t.asset_rate,0))/10000*(max(t.change_date)-min(t.change_date)+1)*365 as assetRate-->
 		from(select cr.asset_id,cr.asset_rate,<!--cr.change_date-->fjycr．change_date
@@ -2903,6 +2918,20 @@ with cj as(
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
 		and cr.change_type in ('07','09')
+		),
+		rate as(
+		select detail.assetId as assetId,detail.assetRate as assetRate
+		from ratedetail detail
+		union all
+		select distinct cbap.plan_asset_id as assetId,
+		case when sum(nvl(cbap.pos_num,0))!=0 then
+		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
+		else 0 end as assetRate
+		from chb_bot_ast_pos cbap
+		left join ratedetail d
+		on cbap.asset_code=d.assetId
+		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbap.plan_asset_id
 		),
 	industryTypes as(
 	      select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
