@@ -1527,6 +1527,16 @@ with cj as(
 		on cbap.asset_code=d.assetId
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
+		union all
+		select distinct cbdc.p_asset_id as assetId,
+		case when sum(nvl(cbdc.pos_amt,0))!=0 then
+		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
+		else 0 end as assetRate
+		from chb_assets_basis_data_child cbdc
+		left join ratedetail d
+		on cbdc.asset_id=d.assetId
+		where cbdc.value_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbdc.p_asset_id
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
@@ -1893,6 +1903,16 @@ with cj as(
 		on cbap.asset_code=d.assetId
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
+		union all
+		select distinct cbdc.p_asset_id as assetId,
+		case when sum(nvl(cbdc.pos_amt,0))!=0 then
+		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
+		else 0 end as assetRate
+		from chb_assets_basis_data_child cbdc
+		left join ratedetail d
+		on cbdc.asset_id=d.assetId
+		where cbdc.value_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbdc.p_asset_id
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
@@ -2324,6 +2344,16 @@ with cj as(
 		on cbap.asset_code=d.assetId
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
+		union all
+		select distinct cbdc.p_asset_id as assetId,
+		case when sum(nvl(cbdc.pos_amt,0))!=0 then
+		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
+		else 0 end as assetRate
+		from chb_assets_basis_data_child cbdc
+		left join ratedetail d
+		on cbdc.asset_id=d.assetId
+		where cbdc.value_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbdc.p_asset_id
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
@@ -2648,6 +2678,16 @@ with cj as(
 		on cbap.asset_code=d.assetId
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
+		union all
+		select distinct cbdc.p_asset_id as assetId,
+		case when sum(nvl(cbdc.pos_amt,0))!=0 then
+		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
+		else 0 end as assetRate
+		from chb_assets_basis_data_child cbdc
+		left join ratedetail d
+		on cbdc.asset_id=d.assetId
+		where cbdc.value_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbdc.p_asset_id
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
@@ -3085,6 +3125,16 @@ with cj as(
 		on cbap.asset_code=d.assetId
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
+		union all
+		select distinct cbdc.p_asset_id as assetId,
+		case when sum(nvl(cbdc.pos_amt,0))!=0 then
+		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
+		else 0 end as assetRate
+		from chb_assets_basis_data_child cbdc
+		left join ratedetail d
+		on cbdc.asset_id=d.assetId
+		where cbdc.value_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbdc.p_asset_id
 		),
 	industryTypes as(
 		    select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,
@@ -3412,6 +3462,16 @@ with cj as(
 		on cbap.asset_code=d.assetId
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
+		union all
+		select distinct cbdc.p_asset_id as assetId,
+		case when sum(nvl(cbdc.pos_amt,0))!=0 then
+		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
+		else 0 end as assetRate
+		from chb_assets_basis_data_child cbdc
+		left join ratedetail d
+		on cbdc.asset_id=d.assetId
+		where cbdc.value_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
+		group by cbdc.p_asset_id
 		),
 	industryTypes as(
 	      select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code　as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
