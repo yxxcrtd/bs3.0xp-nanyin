@@ -385,7 +385,8 @@
             WHEN (TRD_PRODUCT_DEAL.IS_CANCEL IS NULL OR TRD_PRODUCT_DEAL.IS_CANCEL = 'N') THEN #{TRADE_STATUS_02}
             ELSE #{TRADE_STATUS_03} END AS status,
             TRD_PRODUCT_DEAL.TOTLE_TRADE_ID AS totleTradeId,
-            TRD_PRODUCT_DEAL.TRADE_ID AS tradeId,
+            decode(FIN_PRODUCT_TYPE.TYPE_8,'F03',TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,
+            TRD_PRODUCT_DEAL.TRADE_ID) AS tradeId,
             TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID AS portfolioId,
             PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
             FIN_PRODUCT_TYPE.TYPE_8 AS assetType,
@@ -488,7 +489,8 @@
             SELECT
             '${TRADE_STATUS_01}' AS status,
             WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID AS totleTradeId,
-            WFL_TRD_PRODUCT_DEAL.TRADE_ID AS tradeId,
+            decode(FIN_PRODUCT_TYPE.TYPE_8,'F03',WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,
+            WFL_TRD_PRODUCT_DEAL.TRADE_ID) AS tradeId,
             WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID AS portfolioId,
             PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
             FIN_PRODUCT_TYPE.TYPE_8 AS assetType,

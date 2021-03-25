@@ -444,6 +444,7 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 		BaseTradeProductDealDto baseDtoIn = new BaseTradeProductDealDto();
         TrdFinProductDealTotal trdFinProductDealTotal = getTrdTotalDeal(dto,planTransferDtos);
         trdFinProductDealTotal.setPs(DictCodeList.交易方向_买入.getValue());
+		trdFinProductDealTotal.setRemark("计划类利率型转入");
         baseDtoIn.setTrdFinProductDealTotal(trdFinProductDealTotal);//汇总交易表
         PaTrdFinProductDealTotal paTrdFinProductDealTotal = setPaTrdProductDealTotal(dto, planTransferDtos);
         baseDtoIn.setPaTrdFinProductDealTotal(paTrdFinProductDealTotal);
@@ -452,6 +453,8 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 		TrdProductDealAdd trdProductDealAdd = this.setTrdProductDealAdd(dto, planTransferDtos);
         baseDtoIn.setTrdProductDealAdd(trdProductDealAdd);
 		TrdProductDeal trdProductDeal = this.getEntity(dto, planTransferDtos);
+		trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
+		trdProductDeal.setRemark("计划类利率型转入");
 		baseDtoIn.setTrdProductDeal(trdProductDeal);
 		//        if (dto.getStlPayOrdersList() != null) {
 		//            for (StlPayOrders sDto : dto.getStlPayOrdersList()) {
@@ -473,6 +476,8 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 		trdProductDealAddOut.setPortfolioId(dto.getTransferPortfolioId());
 		trdProductDealAddOut.setTradeId(planTransferDtos.getTradeIdOut());
 		trdProductDealOut.setrTradeId(trdProductDeal.getTradeId());
+		trdProductDealOut.setSplitTradeId(trdProductDeal.getTradeId());
+		trdProductDealOut.setIsSwapTransaction(DictCodeList.是否_是.getValue());
 		trdProductDealOut.setTradeId(planTransferDtos.getTradeIdOut());
         trdProductDealOut.setTotleTradeId(planTransferDtos.getTotleTradeIdOut());
         trdProductDealOut.setRemark("计划类利率型转出");
@@ -988,6 +993,7 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
         if (dto.getIntAmt() != null && dto.getTransferTradeAmt() != null) {
             trdProductDealTotal.setUnitInt(ArithmeticUtil.divide(dto.getIntAmt(), dto.getTransferTradeAmt(), 8));
         }
+		trdProductDealTotal.setChlId(dto1.getChlId());
         trdProductDealTotal.setCcy(dto1.getCcy());
         trdProductDealTotal.setVdate(dto1.getVdate());//起息日
         trdProductDealTotal.setMdate(dto1.getMdate());//到期日
