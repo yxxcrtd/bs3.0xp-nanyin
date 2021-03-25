@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -722,6 +723,13 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 			if(StringUtil.isNotEmpty(item.getPartRedemFlag())) {
 				item.setPartRedemFlag(item.getPartRedemFlag()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getPartRedemFlag()));
 			}
+
+
+			//银行模式时,资产数据取当前机构的产品登记编码
+			if(!CommonUtil.isBAmodel()){
+				item.setIssuePartyId(CommonUtil.selectBankCode());
+			}
+			
 			//是否为债转股
 			if(StringUtil.isNotEmpty(item.getDeptEquity())) {
 				item.setDeptEquity(item.getDeptEquity()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是或否,item.getDeptEquity()));

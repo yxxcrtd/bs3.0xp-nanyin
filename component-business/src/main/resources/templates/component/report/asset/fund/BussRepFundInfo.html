@@ -122,10 +122,11 @@
 						<label class="layui-form-label form-lable"
 							data-th-utext="#{BussRepFundInfo.repFundInvestAsset}">基金投资资产</label>
 						<div class="layui-input-inline input-inline">
-							<input type="text" th:id="|${entityName}_repFundInvestAsset|"
+							<textarea  th:id="|${entityName}_repFundInvestAsset|"
+									   class="layui-input form-input layui-textarea" maxlength=300
 								th:name="|${entityName}.repFundInvestAsset|" required
 								th:value="${entity?.repFundInvestAsset}"
-								data-fixtype="2" class="layui-input form-input" />
+								  />
 							<a th:id="|${entityName}_repFundInvestAsset_showRule|"
 							   class="layui-btn layui-btn-sm form-input-text">规则</a>
 						</div>

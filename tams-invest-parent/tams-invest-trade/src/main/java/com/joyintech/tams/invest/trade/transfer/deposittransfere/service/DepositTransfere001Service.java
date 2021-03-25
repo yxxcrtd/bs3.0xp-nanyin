@@ -102,6 +102,7 @@ public class DepositTransfere001Service extends CommonExportService<DepositTrans
      * @return
      */
     public List<SelectOptionDto> selectPortoId(Map<String, Object> pageParam) {
+        pageParam.put("userId", LoginUserUtil.getUserName());
         return simpleRestTemplate.postForList(ServiceApplication.REPORT_SERVICE_NAME + "/DepositTransfere001/queryProdIdInfo",
                 pageParam, SelectOptionDto.class);
     }

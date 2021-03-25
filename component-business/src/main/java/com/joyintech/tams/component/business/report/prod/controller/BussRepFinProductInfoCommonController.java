@@ -82,8 +82,9 @@ public class BussRepFinProductInfoCommonController extends BaseController {
             DictCodeList.目标客户类型_机构客户专属.getValue());
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("HAS", DictCodeListExt2.有无_中债_有.getValue());
+        //多级法人改造.新建时.产品取机构登记银行代码管理 中的登记编码
         model.addAttribute("ISSUE_PARTY_ID",
-            CacheUtil.getSysParam(BussinessConstant.ISSUE_PARTY_ID));
+                bussRepFinProductInfoService.getIssuePartyId());
         model.addAttribute("defalutRepRiskLevel", DictCodeListExt1.产品风险等级_一级_低.getValue());
         model.addAttribute("saleAreaDeclareIn", DictCodeListExt2.资金投向地区_境内.getValue());
         model.addAttribute("saleAreaDeclareOut", DictCodeListExt2.资金投向地区_境外.getValue());

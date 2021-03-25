@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -143,6 +144,7 @@ public class LendTransfer001Controller extends BaseController {
     @RequestMapping("getPortfolioId")
     public List<SelectOptionDto> getPortfolioId(){
         Map<String,Object> map = RequestUtil.getPageParam();
+        map.put("userId", LoginUserUtil.getUserName());
         return lendTransfer001Service.getPortfolioId(map);
     }
 

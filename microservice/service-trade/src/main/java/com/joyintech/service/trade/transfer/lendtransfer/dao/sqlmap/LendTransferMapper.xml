@@ -66,6 +66,10 @@
             <if test="initValue != null and initValue != ''">
                 AND PTL_PORTFOLIO.PORTFOLIO_ID = #{initValue}
             </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="tradeDate != null and tradeDate != ''">
                 AND PTL_PORTFOLIO.MDATE &gt; to_date(#{tradeDate},'yyyy-MM-dd')
             </if>

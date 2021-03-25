@@ -116,6 +116,7 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 	 * @return
 	 */
 	public List<SelectOptionDto> selectPortoId(Map<String, Object> pageParam) {
+		pageParam.put("userId", LoginUserUtil.getUserName());
 		return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanRateInvestTradeTransfer/queryProdIdInfo", pageParam, SelectOptionDto.class);
 	}
 

@@ -448,11 +448,14 @@
 	      </if>
     
     where to_char(ENDDATE,'yyyy-MM-dd') = #{bookDate,jdbcType=VARCHAR}
-    <if test="prodList !=null">
-        <foreach collection="prodList" item="prodid" open="and PRODID in ("
-            separator="," close=")">
-            #{prodid,jdbcType=VARCHAR}
-        </foreach>
+    <if test="prodList !=null and prodList.size()!=0">
+      and PRODID in
+      <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+        <if test="(index % 999) == 998">
+          null) OR PRODID in (
+        </if>
+        #{item}
+      </foreach>
     </if>
   </select>
   

@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -148,6 +149,7 @@ public class NetPlanTransfer001Controller extends BaseController {
     @RequestMapping("getPortfolioId")
     public List<SelectOptionDto> getPortfolioId(){
         Map<String,Object> map = RequestUtil.getPageParam();
+        map.put("userId", LoginUserUtil.getUserName());
         return netPlanTransfer001Service.getPortfolioId(map);
     }
 

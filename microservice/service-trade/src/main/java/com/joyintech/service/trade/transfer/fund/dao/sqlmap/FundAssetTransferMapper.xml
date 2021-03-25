@@ -34,6 +34,10 @@
         <if test="secManageAcctId != null and secManageAcctId != ''">
             AND PSA.ACCT_NO=#{secManageAcctId,jdbcType=VARCHAR}
         </if>
+        <if test="userId != null and userId != ''">
+            AND (A.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+            OR A.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+        </if>
         <if test="initValue != null and initValue != ''">
             AND A.PORTFOLIO_ID = #{initValue}
         </if>

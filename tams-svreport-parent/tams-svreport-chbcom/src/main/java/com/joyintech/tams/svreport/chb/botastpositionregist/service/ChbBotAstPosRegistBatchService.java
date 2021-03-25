@@ -56,17 +56,17 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
     private ChbCommonCheckService chbCommonCheckService;
     
     
-	public void createRegist(Date batchTime){
+	public void createRegist(Date batchTime,String InstitutionCode){
         // 设置批处理bean
         setBatchBeanName(BatchBeanName.底层持仓信息登记报送);
 
         logInfoBatchStart();
 
-        createRegistAction(batchTime);
+        createRegistAction(batchTime,InstitutionCode);
 		logInfoBatchEnd();
 	}
 	
-	private void createRegistAction(Date batchTime){
+	private void createRegistAction(Date batchTime,String InstitutionCode){
 		List<Date> isUpdate = chbBotAstPosCBMapper.queryUpdateDate(DateUtil.format(batchTime));
 		if(CollectionUtils.isEmpty(isUpdate))
 			return;
@@ -91,8 +91,9 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 			Map<String,Object> para = new HashMap<String,Object>();
 			para.put("posDate", DateUtil.format(posDate));
 			para.put("sendStatus", "01");
+			para.put("InstitutionCode",InstitutionCode);
 			chbBotAstPosCBMapper.delete(para);
-			List<ChbBotAstPositionSub> updateOrDelList = chbBotAstPosCBMapper.queryUpdateOrDelList(DateUtil.format(posDate), isChbBtm);
+			List<ChbBotAstPositionSub> updateOrDelList = chbBotAstPosCBMapper.queryUpdateOrDelList(DateUtil.format(posDate), isChbBtm,InstitutionCode);
 			List<ChbBotAstPositionSub> updateList = updateOrDelList.stream().filter(x -> StringUtil.equals(x.getStatus(), "02")).collect(Collectors.toList());
 			List<ChbBotAstPositionSub> delList = updateOrDelList.stream().filter(x -> StringUtil.equals(x.getStatus(), "03")).collect(Collectors.toList());
             // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
@@ -119,7 +120,7 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
             //生成数据状态为“新建”，报送状态为“未报送”的登记
             // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
             List<ChbBotAstPositionSub> insertDataList = chbBotAstPosCBMapper.queryInsertGenerateList(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
-                    chbSubmitDeadline, submitDeadline);
+                    chbSubmitDeadline, submitDeadline,InstitutionCode);
             insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.底层资产持仓信息登记表SUB);
 //            chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
 //                    chbSubmitDeadline, submitDeadline);
@@ -130,6 +131,8 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
             }
             // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
 			
+			/*chbBotAstPosCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
+					chbSubmitDeadline, submitDeadline,InstitutionCode);*/
 		}
 	}
     
@@ -165,7 +168,7 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
     @Override
     public void execute(Date executeDate, List<String> prodList, List<String> assetList,Map<String,List<String>> param) throws BusinessException {
         try {
-        	createRegist(executeDate);
+        	createRegist(executeDate,null);
         } catch (Exception e) {
             throw new BusinessException(e);
         }

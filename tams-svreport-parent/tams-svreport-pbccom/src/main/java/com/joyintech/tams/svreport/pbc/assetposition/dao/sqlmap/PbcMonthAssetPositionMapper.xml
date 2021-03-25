@@ -507,9 +507,13 @@
           </foreach>
       </if>
       <if test='prodList!=null and prodList.size()>0'>
-          <foreach collection="prodList" item="prodCode" index="index" open="and PROD.FINPROD_MARKET_ID in (" close=")" separator=",">
-            #{prodCode,jdbcType=VARCHAR}
-          </foreach>
+        and PROD.FINPROD_MARKET_ID in
+        <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+          <if test="(index % 999) == 998">
+            null) OR PROD.FINPROD_MARKET_ID in (
+          </if>
+          #{item}
+        </foreach>
       </if>
       union all
       SELECT 
@@ -589,9 +593,13 @@
           </foreach>
       </if>
       <if test='prodList!=null and prodList.size()>0'>
-          <foreach collection="prodList" item="prodCode" index="index" open="and PROD.FINPROD_MARKET_ID in (" close=")" separator=",">
-            #{prodCode,jdbcType=VARCHAR}
-          </foreach>
+        and PROD.FINPROD_MARKET_ID in
+        <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+          <if test="(index % 999) == 998">
+            null) OR PROD.FINPROD_MARKET_ID in (
+          </if>
+          #{item}
+        </foreach>
       </if>
   </select>
   
@@ -601,11 +609,14 @@
     <if test='reportDay != null'>
     and ENDDATE &gt;= #{reportDay,jdbcType=DATE}
     </if>
-     <if test="prodList !=null">
-        <foreach collection="prodList" item="prodid" open=" and PRODID in (" separator=","
-            close=")">
-            #{prodid,jdbcType=VARCHAR}
-        </foreach>
+     <if test="prodList !=null and prodList.size > 0">
+       and PRODID in
+       <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+         <if test="(index % 999) == 998">
+           null) OR PRODID in (
+         </if>
+         #{item}
+       </foreach>
     </if>
     <if test="assetList !=null">
         <foreach collection="assetList" item="assetcode" open=" and ASSET_CODE in (" separator=","
@@ -664,10 +675,12 @@
         and fd.PROFIT_FLAG = '03'<!-- 只取非保本理财产品 -->
 		 <if test="prodids !=null and prodids.size()>0">
 		and VAL.PORTFOLIO_ID in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-		</foreach>
+           <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+             <if test="(index % 999) == 998">
+               null) OR VAL.PORTFOLIO_ID in (
+             </if>
+             #{item}
+           </foreach>
 		</if>
 		<if test="chlId !=null">
 			and VAL.FINPROD_ID=#{chlId,jdbcType=VARCHAR}
@@ -703,11 +716,13 @@
 		and fd.PROFIT_FLAG = '03'<!-- 只取非保本理财产品 -->
 		 <if test="prodids !=null and prodids.size()>0">
 		and VAL.PORTFOLIO_ID in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-		</foreach>
-		</if>
+          <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+            <if test="(index % 999) == 998">
+              null) OR VAL.PORTFOLIO_ID in (
+            </if>
+            #{item}
+          </foreach>
+         </if>
 		and VAL.FINPROD_ID !='999999'
 		 group by 'F09', rad.REP_ASSET_TYPE, null, '01', VAL.CDATE, 
   			VAL.PORTFOLIO_ID,
@@ -796,9 +811,13 @@
           </foreach>
       </if>
       <if test='prodList!=null and prodList.size()>0'>
-          <foreach collection="prodList" item="prodCode" index="index" open="and PRODINFO.prod_id in (" close=")" separator=",">
-            #{prodCode,jdbcType=VARCHAR}
-          </foreach>
+        and PRODINFO.prod_id in
+        <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+          <if test="(index % 999) == 998">
+            null) OR PRODINFO.prod_id in (
+          </if>
+          #{item}
+        </foreach>
       </if>
     </select>
     
@@ -840,10 +859,13 @@
         and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
         and val.STATUS in ('E','M')/*有效状态：有效、修改*/
         <if test="prodids !=null and prodids.size()>0">
-	        <foreach collection="prodids" item="prodid" open="and VAL.PROD_ID in (" separator=","
-	            close=")">
-                #{prodid,jdbcType=VARCHAR}
-	        </foreach>
+          and VAL.PROD_ID in
+          <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+            <if test="(index % 999) == 998">
+              null) OR VAL.PROD_ID in (
+            </if>
+            #{item}
+          </foreach>
         </if>
         <if test="chlId !=null">
             and VAL.ASSET_ID=#{chlId,jdbcType=VARCHAR}
@@ -882,10 +904,13 @@
         and val.HODING_TYPE = '03' /*只取实际*/
         and VAL.CHL_FINPROD_ID is not null ---只取通道id不为空的数据
         <if test="prodids !=null and prodids.size()>0">
-	        <foreach collection="prodids" item="prodid" open="and VAL.PORTFOLIO_ID in (" separator=","
-	            close=")">
-	            #{prodid,jdbcType=VARCHAR}
-	        </foreach>
+          and VAL.PORTFOLIO_ID in
+          <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+            <if test="(index % 999) == 998">
+              null) OR VAL.PORTFOLIO_ID in (
+            </if>
+            #{item}
+          </foreach>
         </if>
     </select>
   <select id="selectPositionFromValutionSubSystemdtx" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto"
@@ -922,9 +947,12 @@
     and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
     and val.STATUS in ('E','M')/*有效状态：有效、修改*/
     <if test="prodids !=null and prodids.size()>0">
-      <foreach collection="prodids" item="prodid" open="and VAL.PROD_ID in (" separator=","
-               close=")">
-        #{prodid,jdbcType=VARCHAR}
+      and VAL.PROD_ID in
+      <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
+        <if test="(index % 999) == 998">
+          null) OR VAL.PROD_ID in (
+        </if>
+        #{item}
       </foreach>
     </if>
     <if test="chlId !=null">

@@ -366,7 +366,7 @@ public class SvrAssetBasisNoBtmInterf extends BaseService{
 			para.put("valDate", DateUtil.format(date));
 			chbAstValInterfMapper.deleteInfo(para);
 			// 处理估值表数据
-			List<ChbAstValue> infoList = chbAstValInterfMapper.queryAssetValueInfoList(DateUtil.format(date),SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE),isChlBtm);
+			List<ChbAstValue> infoList = chbAstValInterfMapper.queryAssetValueInfoList(DateUtil.format(date),SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE),isChlBtm,null);
 			int count = 0;
 			for (ChbAstValue info : infoList) {
 				info.setValId(IDGenerator.generate(36));

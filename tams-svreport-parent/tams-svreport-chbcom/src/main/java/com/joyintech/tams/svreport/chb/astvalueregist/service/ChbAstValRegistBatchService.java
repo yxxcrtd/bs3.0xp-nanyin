@@ -53,7 +53,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
     private ChbCommonCheckService chbCommonCheckService;
 	
 
-	public void createRegist(Date batchTime){
+	public void createRegist(Date batchTime,String InstitutionCode){
 		// TODO Auto-generated method stub
 		// 设置批处理bean
 		setBatchBeanName(BatchBeanName.资产估值信息登记报送);
@@ -61,27 +61,27 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 		logInfoBatchStart();
 		List<String> assets = new ArrayList<String>();
 		// 根据接口估值表生成估值信息
-		createValueInfo(batchTime,assets);
+		createValueInfo(batchTime,assets,InstitutionCode);
 		// 根据估值信息表生成估值登记
-		createRegistAction(batchTime,assets);
+		createRegistAction(batchTime,assets,InstitutionCode);
 		// }
 
 		logInfoBatchEnd();
 	}
 
 	// 根据接口估值表生成估值信息
-	public void createValueInfo(Date batchTime,List<String> assets) {
+	public void createValueInfo(Date batchTime,List<String> assets,String InstitutionCode) {
 		String isBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
 		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDate(DateUtil.format(batchTime),isBtm);
 		if (CollectionUtils.isEmpty(isUpdate))
 			return;
 		for (Date date : isUpdate) {
-			svrAssetBasisInterf.genAssetValueInfo(date);
+			svrAssetBasisInterf.genAssetValueInfo(date,InstitutionCode);
 		}
 	}
 	
 	// 根据估值信息表生成估值登记
-	public void createRegistAction(Date batchTime,List<String> assets) {
+	public void createRegistAction(Date batchTime,List<String> assets,String InstitutionCode) {
 		String isBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
 		List<Date> isUpdate = chbAstValCBMapper.queryUpdateDate(DateUtil.format(batchTime),isBtm);
 		if (CollectionUtils.isEmpty(isUpdate))
@@ -97,6 +97,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 			Map<String, Object> para = new HashMap<String, Object>();
 			para.put("valDate", DateUtil.format(posDate));
 			para.put("sendStatus", "01");
+			para.put("InstitutionCode", InstitutionCode);
 			chbAstValCBMapper.deleteRegist(para);
 			Date chbSubmitDeadline = null;
 			Date submitDeadline = null;
@@ -106,7 +107,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 			}
 			// 数据状态为“修改、删除”，报送状态为“未报送”的登记
 			 List<ChbAstValueSub> updateOrDelList =
-			 chbAstValCBMapper.queryUpdateOrDelList(DateUtil.format(posDate));
+			 chbAstValCBMapper.queryUpdateOrDelList(DateUtil.format(posDate),InstitutionCode);
 			 // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
 			 updateOrDelList = chbCommonCheckService.checkData(updateOrDelList, ChbCheckTableInfo.资产估值信息登记表SUB);
 	         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
@@ -115,6 +116,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 				 // 报送流水号
 				 sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 				 sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+//				 sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
 				 sub.setCreateUser(CommonUtil.getUserName());
 				 sub.setUpdateUser(CommonUtil.getUserName());
 				 //数据日期
@@ -127,9 +129,11 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 
 			
 			//生成数据状态为“新建”，报送状态为“未报送”的登记
+//			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
+//					submitDeadline,InstitutionCode);
 	        // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
 			List<ChbAstValueSub> insertDataList = chbAstValCBMapper.queryInsertGenerateList(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
-                    submitDeadline);
+                    submitDeadline,InstitutionCode);
 	        insertDataList = chbCommonCheckService.checkData(insertDataList, ChbCheckTableInfo.资产估值信息登记表SUB);
 //			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
 //					submitDeadline);
@@ -139,6 +143,8 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
                 chbAstValCBMapper.insertSub(sub);
             }
 	        // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end
+//			chbAstValCBMapper.queryGenerateListAndInsert(DateUtil.format(posDate), batchTime, chbSubmitDeadline,
+//					submitDeadline,InstitutionCode);
 		}
 	}
 
@@ -158,7 +164,7 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 	@Override
 	public void execute(Date executeDate, List<String> prodList, List<String> assetList,Map<String,List<String>> param) throws BusinessException {
 		try {
-	        createRegist(executeDate);
+	        createRegist(executeDate,null);
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}

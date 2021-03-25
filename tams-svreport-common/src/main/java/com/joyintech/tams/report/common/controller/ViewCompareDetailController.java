@@ -407,6 +407,11 @@ public class ViewCompareDetailController extends BaseController {
                             }
                             else {
                                 conditionMap.put("value", "'" + detail.getCurrentValue() + "'");
+                                // add by zhangliang 20210324 从业人员登记双击查看特殊处理 start
+                                if (StringUtil.equals(pageId, "SvrEmployeeInfoReg001") && StringUtil.equals(tmpKeyField, "employeeType")){
+                                    conditionMap.put("value", "'" + StringUtil.splitToList(" ", detail.getCurrentValue()).get(0) + "'");
+                                }
+                                // add by zhangliang 20210324 从业人员登记双击查看特殊处理 end
                             }
                             where.add(conditionMap);
                         }

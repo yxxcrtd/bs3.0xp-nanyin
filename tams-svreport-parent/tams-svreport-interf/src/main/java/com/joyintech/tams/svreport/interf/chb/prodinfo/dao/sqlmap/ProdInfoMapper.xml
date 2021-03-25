@@ -190,15 +190,12 @@
       <if test="model_type != null">
       	DAI.INSTITUTION_CODE ORG_CODE  ,  --<!--  机构代码   -->
       </if>
-        <if test="model_type == null">
-            D.REP_ISSUE_PARTY_ID ORG_CODE  ,  --<!--  机构代码   -->
-        </if>
       T.FINPROD_NAME PROD_NAME  ,  --<!--  产品名称   -->
       
       /****add by leipeng 20200628 添加多法人模式查询所属机构 START**/
       
       <if test="model_type == null">
-      	TA.PROD_REGIST_CODE REG_CODE  ,  --<!--  产品登记编码   -->
+        D.REP_ISSUE_PARTY_ID REG_CODE  ,  --<!--  产品登记编码   -->
       </if>
       <if test="model_type != null">
       	COD.REGIST_BANK_CODE REG_CODE  ,  --<!--  产品登记编码   -->
@@ -209,8 +206,8 @@
       D.REP_FINPROD_INS_ID PROD_INS_ID  ,  --<!--  行内标识码   -->
       TA.PROFIT_FLAG PROFIT_TYPE  ,  --<!--  产品收益类型  01 保证收益/02 保本浮动收益/03 非保本浮动收益     -->
       '02' IS_TRANSFER  ,   --<!-- 是否母行划转产品  01 是/02 否 -->
-      TA.IS_FHXGCP IS_FHXGCP    ,   --<!-- 是否合规新产品 01 是/02 否 -->
-      TA.IS_YLLCCP IS_YLLCCP    ,   --<!-- 是否养老理财产品  01 是/02 否 -->
+      D.IS_FHXGCP IS_FHXGCP    ,   --<!-- 是否合规新产品 01 是/02 否 -->
+      D.IS_YLLCCP IS_YLLCCP    ,   --<!-- 是否养老理财产品  01 是/02 否 -->
       D.REP_INVESTOR_TYPE INVESTOR_TYPE  ,  --<!--  投资者类型   -->
       --IS_INTACT  ,  --<!--  发行要素维护完整   -->
       'E' STATUS  ,  --<!--  数据状态  A 新建/ E 有效/D删除   -->
@@ -309,7 +306,7 @@
       D.REP_CREDIT_MODE CREDIT_MODE  ,  --<!--  产品增信形式   -->
       
       <if test="model_type == null">
-      	D.REP_ISSUE_PARTY_ID ISSUE_PARTY_ID  ,  --<!--  发行机构代码   -->
+      	D.REP_ISSUE_PARTY_ID ISSUE_PARTY_ID  ,  --<!--  产品登记编码   -->
       </if>
       <if test="model_type != null">
       	COD.REGIST_BANK_CODE ISSUE_PARTY_ID  ,  --<!--  产品登记编码   -->
@@ -381,7 +378,7 @@
       ON TINFO.P_FINPROD_ID = T.FINPROD_ID
       
       LEFT JOIN  stl_fin_product_acct sfpa on sfpa.finprod_id=T.finprod_id and sfpa.acct_type = 'A01' and sfpa.CCY = T.CCY
-      LEFT JOIN stl_capacct_info sci ON sfpa.ACCT_NO = sci.ACCT_NO
+      LEFT JOIN stl_capacct_info sci ON sfpa.ACCT_NO = sci.ACCT_NO  AND sci.CCY = T.CCY
       /****add by leipeng 20200628 添加多法人模式查询所属机构**/
       <if test="model_type != null">
       LEFT JOIN DATA_AUTH_NOTIFY_INST DAI on t.finprod_id=dai.business_id and dai.model_type= '02' AND dai.DATA_TYPE = 'FINPROD04'

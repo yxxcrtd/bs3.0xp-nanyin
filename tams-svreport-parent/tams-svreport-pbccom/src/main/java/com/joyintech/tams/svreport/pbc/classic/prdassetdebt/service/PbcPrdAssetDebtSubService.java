@@ -109,19 +109,19 @@ public class PbcPrdAssetDebtSubService extends PbcClassicsSubService<PbcMonthRep
 	            posAssetList.addAll(pbcMonthAssetReportMapper.selectByDateAndProdidWithAssetPoolCode(prodIdList.subList(i, end),DateUtil.getLastDayOfLayMonth(executeDate)));
 	            //多法人模式改造  20200725 leipeng
 	            if(CommonUtil.isBAmodel()){
-	            	posProdList.addAll(pbcMonthPrdPostionMapper.selectByDateWithAssetPoolCodeEx(null,DateUtil.getLastDayOfLayMonth(executeDate)));
+	            	posProdList.addAll(pbcMonthPrdPostionMapper.selectByDateWithAssetPoolCodeEx(prodIdList,DateUtil.getLastDayOfLayMonth(executeDate)));
 	        	}else{
-	        		posProdList.addAll(pbcMonthPrdPostionMapper.selectByDateWithAssetPoolCode(null,DateUtil.getLastDayOfLayMonth(executeDate)));
+	        		posProdList.addAll(pbcMonthPrdPostionMapper.selectByDateWithAssetPoolCode(prodIdList,DateUtil.getLastDayOfLayMonth(executeDate)));
 	        	}
 	            i = end;
 	        }
         } else {
-            posAssetList.addAll(pbcMonthAssetReportMapper.selectByDateAndProdidWithAssetPoolCode(null,DateUtil.getLastDayOfLayMonth(executeDate)));
+            posAssetList.addAll(pbcMonthAssetReportMapper.selectByDateAndProdidWithAssetPoolCode(prodIdList,DateUtil.getLastDayOfLayMonth(executeDate)));
           //多法人模式改造  20200725 leipeng
         	if(CommonUtil.isBAmodel()){
-            	posProdList.addAll(pbcMonthPrdPostionMapper.selectByDateWithAssetPoolCodeEx(null,DateUtil.getLastDayOfLayMonth(executeDate)));
+            	posProdList.addAll(pbcMonthPrdPostionMapper.selectByDateWithAssetPoolCodeEx(prodIdList,DateUtil.getLastDayOfLayMonth(executeDate)));
         	}else{
-        		posProdList.addAll(pbcMonthPrdPostionMapper.selectByDateWithAssetPoolCode(null,DateUtil.getLastDayOfLayMonth(executeDate)));
+        		posProdList.addAll(pbcMonthPrdPostionMapper.selectByDateWithAssetPoolCode(prodIdList,DateUtil.getLastDayOfLayMonth(executeDate)));
         	}
         	
         }

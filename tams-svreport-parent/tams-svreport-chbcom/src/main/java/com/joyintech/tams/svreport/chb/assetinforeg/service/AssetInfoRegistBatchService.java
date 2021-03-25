@@ -98,7 +98,7 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
      * @param assetCodeList 资产代码
      * void
      */
-	public void autoRegistAssetInfo(Date executeDate,List<String> prodList,List<String> assetCodeList){
+	public void autoRegistAssetInfo(Date executeDate,List<String> prodList,List<String> assetCodeList,String InstitutionCode){
 		// 设置批处理bean
 		setBatchBeanName(BatchBeanName.资产要素登记报送);
 		// 批处理开始
@@ -112,7 +112,7 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 		paramMap.put("registDate", registDate);
 		paramMap.put("assetList", assetCodeList);
 		paramMap.put("isChlBtm", isChlBtm);
-
+        paramMap.put("InstitutionCode",InstitutionCode);
 		List<ChbAssetInfoSub001Dto> assetInfoRegList = assetInfoRegist001Mapper.selectAssetInfoForRegist(paramMap);
 		// 登记插入列表
 		List<ChbAssetInfoSub001Dto> insertDataList = new ArrayList<ChbAssetInfoSub001Dto>();
@@ -338,7 +338,7 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
      */
     @Override
     public void execute(Date executeDate, List<String> prodList, List<String> assetList,Map<String,List<String>> param) throws BusinessException {
-        autoRegistAssetInfo(executeDate, prodList, assetList);
+        autoRegistAssetInfo(executeDate, prodList, assetList,null);
     }
 
     /**
