@@ -1266,6 +1266,11 @@ public class WflTrdProductDeal extends WflTrdProductDealKey {
      */
     private String splitTradeId;
 
+    /**
+     * 是否转仓交易
+     */
+    private String isSwapTransaction;
+
     /**zhangnn for huaxing 2020/05/07**/
     private String outOfAccount;
 
@@ -1317,4 +1322,13 @@ public class WflTrdProductDeal extends WflTrdProductDealKey {
         this.outOfAccount = outOfAccount;
     }
     // 合并by华兴 end
+
+
+    public String getIsSwapTransaction() {
+        return isSwapTransaction;
+    }
+
+    public void setIsSwapTransaction(String isSwapTransaction) {
+        this.isSwapTransaction = isSwapTransaction;
+    }
 }
