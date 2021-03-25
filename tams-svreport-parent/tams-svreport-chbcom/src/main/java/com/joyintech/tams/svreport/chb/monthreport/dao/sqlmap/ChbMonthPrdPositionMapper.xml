@@ -922,9 +922,6 @@
       <if test="prodid!=null and prodid.length > 0">
           and prodid=#{prodid,jdbcType=VARCHAR}
       </if>
-    
-          </foreach>
-      </if>
   </delete>
   <select id="selectPrciceByProdAndDate"   resultType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" parameterType="date" >
   	 select prod_id prodId,ccy,prod_value prodValue from (
