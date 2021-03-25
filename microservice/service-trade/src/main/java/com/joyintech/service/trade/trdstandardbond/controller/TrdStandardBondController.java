@@ -129,9 +129,25 @@ public class TrdStandardBondController {
     }
 
     /**
+     * 质押券入库画面，提交处理
+     *
+     * @param dto 参数
+     * @return inSaveCount
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @RequestMapping("inSubmit")
+    public Long inSubmit(@RequestBody TrdStandardBondInDto dto) throws Exception {
+        return trdStandardBondService.inSubmit(dto);
+    }
+
+    /**
      * 质押券出库画面，保存处理
      *
-     * @param param 参数
+     * @param dto 参数
      * @return outSaveCount
      * @throws Exception 异常
      * @see

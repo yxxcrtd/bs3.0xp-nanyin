@@ -120,9 +120,34 @@ public class TrdStandardBondInDto extends BaseEntity {
     private Long branch;
 
     /**
+     * 是否回退
+     */
+    private Boolean isBack;
+
+    
+
+    /**
      * 质押券列表信息
      */
     List<TrdStandardBondInDto> pledgeBondList = new ArrayList<>();
+
+    /**
+     * 获取 isBack
+     *
+     * @rturn isBack
+     */
+    public Boolean getIsBack() {
+        return isBack;
+    }
+    
+    /**
+     * 设置 isBack
+     *
+     * @param isBack isBack
+     */
+    public void setIsBack(Boolean isBack) {
+        this.isBack = isBack;
+    }
 
     /**
      * 获取 pageModel
