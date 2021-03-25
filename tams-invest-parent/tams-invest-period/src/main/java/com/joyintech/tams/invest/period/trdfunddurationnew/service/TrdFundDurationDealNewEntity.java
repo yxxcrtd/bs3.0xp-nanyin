@@ -24,6 +24,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -174,7 +175,14 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
             execute交易共通子组合(entity,交易流程状态, false);
 
             if (!DictCodeList.交易方向_红利再投.getValue().equals(entity.getPs())) {// 撤销现金分红的除权登记交易时，同时撤销现金分红的持仓
-                List<BaseTradeProductDealDto> total现金分红交易 = periodCommonService.findBTradeEffectiveDeal(entity.getpTradeId());
+                List<BaseTradeProductDealDto> totalXjfh = this.findBTradeEffectiveDeal(entity.getpTradeId());
+                List<BaseTradeProductDealDto> total现金分红交易 = new ArrayList<BaseTradeProductDealDto>();
+                for(BaseTradeProductDealDto baseTradeProductDealDto : totalXjfh){
+                    if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDeal())
+                        && StringUtil.equals((baseTradeProductDealDto.getTrdProductDeal().getPs()),DictCodeList.交易方向_现金分红.getValue())){
+                        total现金分红交易.add(baseTradeProductDealDto);
+                    }
+                }
                 if (total现金分红交易 != null && !total现金分红交易.isEmpty()) {// 红利再投的除权登记交易时，这里应该检索不到数据，不处理
                     for (BaseTradeProductDealDto baseTradeProductDealDto : total现金分红交易) {
                         TrdProductDeal deal1 = baseTradeProductDealDto.getTrdProductDeal();
@@ -192,6 +200,25 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
                 }
             }
         }
+    }
+
+    public List<BaseTradeProductDealDto> findBTradeEffectiveDeal(String tradeId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("statusValid", DictCodeListExt1.交易流程状态_撤销.getValue());
+        map.put("statusValid03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        map.put("YON_Y", BussinessDictCodeList.是否_是.getValue());
+        map.put("isTqzq", "");
+        map.put("bTrade", tradeId);
+        String bizCode = restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDurationNew/findBTradeId",
+                map, String.class);
+        if (StringUtil.isNotEmpty(bizCode)) {
+            map.put("bizCode", bizCode);
+            List<BaseTradeProductDealDto> result = restTemplate.postForList(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDurationNew" +
+                            "/findEffectiveDeal",
+                    map, BaseTradeProductDealDto.class);
+            return result;
+        }
+        return null;
     }
     /**
      * 根据交易dto组装共同dto

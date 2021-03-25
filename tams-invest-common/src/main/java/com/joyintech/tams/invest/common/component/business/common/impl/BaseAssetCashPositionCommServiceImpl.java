@@ -500,7 +500,8 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
         //add by  liutf 20200108 end
 
         //add by mashukai 20210316 计划类货币型资产卖出交易提交时交易可用持仓改变 start
-        if (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+        if ((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+            && DictCodeList.收益类型_货币型.getValue().equals(profitType))
                 && DictCodeList.持仓类型_可用.getValue().equals(inputDto.getPositionType())
                 && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
             resultDto.setCdate(deal.getTradeDate());

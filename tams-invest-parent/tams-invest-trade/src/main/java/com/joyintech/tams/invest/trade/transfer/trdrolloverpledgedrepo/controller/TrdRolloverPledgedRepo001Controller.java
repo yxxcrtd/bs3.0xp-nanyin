@@ -269,8 +269,31 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectPledgedRepoRolloverList")
     public AjaxResult selectPledgedRepoRolloverList(@RequestBody Map<String,Object>param){
-        AjaxResult result = new AjaxResult();
-        List<FinDealPledgeDto> pledgedRepoRolloverList = trdRolloverPledgedRepo001Service.selectPledgedRepoRolloverList(param);
+        AjaxResult result = new AjaxResult();        
+        List<FinDealPledgeDto> pledgedRepoRolloverList = trdRolloverPledgedRepo001Service.selectPledgedRepoRolloverList(param);   
+        
+        List<FinDealPledgeDto> pledgedRepoRolloverList1 = new ArrayList<>();
+        if(StringUtil.isNotEmpty(param.get("pledgedRepoList")) && !StringUtil.equals((String)param.get("pledgedRepoList"),"{}")){
+            pledgedRepoRolloverList1 = JSONArray.parseArray((String)param.get("pledgedRepoList"),FinDealPledgeDto.class);
+        }
+        for(int i=0;i<pledgedRepoRolloverList.size();i++) {
+        	pledgedRepoRolloverList.get(i).setAvaPledgePrin(pledgedRepoRolloverList.get(i).getPledgePrin());
+    	  if(pledgedRepoRolloverList1.size() != 0) {
+    	  for(int m=0;m<pledgedRepoRolloverList1.size();m++) {
+    		  if(StringUtil.equals(pledgedRepoRolloverList1.get(m).getPledgeFinprodId(), pledgedRepoRolloverList.get(i).getPledgeFinprodId())) {
+    			  if(pledgedRepoRolloverList1.get(m).getDesiPledgePrin() != null ) {
+    				  BigDecimal avaPledgePrin = pledgedRepoRolloverList.get(i).getAvaPledgePrin().subtract(pledgedRepoRolloverList1.get(m).getDesiPledgePrin());
+    				pledgedRepoRolloverList.get(i).setAvaPledgePrin(avaPledgePrin);
+    			  }else {
+    				  pledgedRepoRolloverList.get(i).setAvaPledgePrin(pledgedRepoRolloverList.get(i).getAvaPledgePrin());
+    			  }
+    		  }
+    	  }
+        }else {
+        	pledgedRepoRolloverList.get(i).setAvaPledgePrin(pledgedRepoRolloverList.get(i).getPledgePrin());
+        }
+      }
+        
         result.setData(pledgedRepoRolloverList);
         return result;
     }
@@ -288,7 +311,8 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         }
         model.addAttribute("finDealPledgeList",pledgedRepoRolloverList);
         return "/invest/trade/transfer/trdrolloverpledgedrepo/PledgedSecInfo";
-    }
+    }   
+   
     /**
      * 保存时校验
      *

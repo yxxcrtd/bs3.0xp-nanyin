@@ -56,6 +56,7 @@
                 SELECT
                     #{VALID_STATUS_01} validStatus,
                     wtpd.F_TRADE_ID fTradeId,
+                    wtpd.R_TRADE_ID rTradeId,
                     fp1.FINPROD_NAME chlFinprodId,
                     wtpd.TRADE_ID tradeId,
 	                wtpda.ENTRUST_ID entrustId,
@@ -171,6 +172,7 @@
                 SELECT
                     #{VALID_STATUS_02} validStatus,
                     tpd.F_TRADE_ID fTradeId,
+                    tpd.R_TRADE_ID rTradeId,
                     fp1.FINPROD_NAME chlFinprodId,
                     tpd.TRADE_ID tradeId,
                     tpda.ENTRUST_ID entrustId,
@@ -192,8 +194,10 @@
                   LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
                   LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = tpd.CHL_ID
                 LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
-                LEFT JOIN FIN_PRODUCT_TYPE fpt ON  fpt.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
-                LEFT JOIN FIN_TRADE_PRODUCT ftp ON  ftp.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
+                LEFT JOIN FIN_PRODUCT_TYPE fpt ON  fpt.FINPROD_ID = tpd.FINPROD_ID AND fpt.BRANCH = #{BRANCH_0}
+                LEFT JOIN FIN_TRADE_PRODUCT ftp ON  (CASE WHEN tpd.IS_OUT_TRADE = 'N' AND tpd.SPLIT_TRADE_ID IS NOT NULL THEN
+                tpd.SPLIT_TRADE_ID  ELSE tpd.FINPROD_ID END) = ftp.FINPROD_ID
+                AND fpt.BRANCH = #{BRANCH_0}
                 LEFT JOIN PA_TRD_PRODUCT_DEAL ptpd ON ptpd.TRADE_ID = tpd.TRADE_ID
                 LEFT JOIN   sys_datadict_list dict ON tpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
                   where pp.INVEST_YESORNO='Y'
@@ -282,6 +286,7 @@
                 SELECT
                     #{VALID_STATUS_03} validStatus,
                     tpd.F_TRADE_ID fTradeId,
+                    tpd.R_TRADE_ID rTradeId,
                     fp1.FINPROD_NAME chlFinprodId,
                     tpd.TRADE_ID tradeId,
                     tpda.ENTRUST_ID entrustId,
@@ -302,14 +307,15 @@
                 LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda ON  tpda.TRADE_ID = tpd.TRADE_ID
                 LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
                 LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
-                LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
+                LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = tpd.FINPROD_ID AND fpt.BRANCH = #{BRANCH_0}
 <!--                        ON  (-->
 <!--                            (tpd.TRADE_STATUS = #{TRADE_STATUS_01} AND fpt.FINPROD_ID = tpd.TRADE_ID)-->
 <!--                            OR-->
 <!--                            (tpd.TRADE_STATUS = #{TRADE_STATUS_03} AND fpt.FINPROD_ID = SUBSTR(tpd.TRADE_ID, 0, LENGTH(tpd.TRADE_ID)-1))-->
 <!--                            )-->
 <!--                       AND fpt.BRANCH = #{BRANCH_0}-->
-                LEFT JOIN   FIN_TRADE_PRODUCT ftp ON ftp.FINPROD_ID = tpd.TRADE_ID AND fpt.BRANCH = #{BRANCH_0}
+                LEFT JOIN   FIN_TRADE_PRODUCT ftp ON (CASE WHEN tpd.IS_OUT_TRADE = 'N' AND tpd.SPLIT_TRADE_ID IS NOT NULL THEN
+                tpd.SPLIT_TRADE_ID  ELSE tpd.FINPROD_ID END) = ftp.FINPROD_ID AND fpt.BRANCH = #{BRANCH_0}
 <!--                        ON  (-->
 <!--                            (tpd.TRADE_STATUS = #{TRADE_STATUS_01} AND ftp.FINPROD_ID = tpd.TRADE_ID)-->
 <!--                            OR-->

@@ -22,8 +22,8 @@
             <if test="initValue != null and initValue != ''">
                 AND PTL_PORTFOLIO.PORTFOLIO_ID = #{initValue}
             </if>
-            <if test="sysDate != null and sysDate != ''">
-                AND PTL_PORTFOLIO.MDATE &gt; to_date(#{sysDate},'yyyy-MM-dd')
+            <if test="tradeDate != null and tradeDate != ''">
+                AND PTL_PORTFOLIO.MDATE &gt; to_date(#{tradeDate},'yyyy-MM-dd')
             </if>
         </where>
     </select>

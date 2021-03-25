@@ -124,7 +124,8 @@
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, DELIVERY_TYPE, 
             PAY_DATE, SALE_CODE, ACCR_NUM, 
-            TG_BUSI_TYPE, PS_PAYMENT)
+            TG_BUSI_TYPE, PS_PAYMENT, SPLIT_TRADE_ID,
+        IS_SWAP_TRANSACTION)
         values (#{tradeId,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
             #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
             #{tradeDate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{settleDate,jdbcType=DATE}, 
@@ -145,7 +146,8 @@
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{deliveryType,jdbcType=VARCHAR}, 
             #{payDate,jdbcType=DATE}, #{saleCode,jdbcType=VARCHAR}, #{accrNum,jdbcType=DECIMAL}, 
-            #{tgBusiType,jdbcType=VARCHAR}, #{psPayment,jdbcType=VARCHAR})
+            #{tgBusiType,jdbcType=VARCHAR}, #{psPayment,jdbcType=VARCHAR}, #{splitTradeId,jdbcType=VARCHAR},
+        #{isSwapTransaction,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal" >
         insert into TRD_PRODUCT_DEAL
@@ -339,6 +341,12 @@
             <if test="psPayment != null" >
                 PS_PAYMENT,
             </if>
+            <if test="splitTradeId != null" >
+                SPLIT_TRADE_ID,
+            </if>
+            <if test="isSwapTransaction != null" >
+                IS_SWAP_TRANSACTION,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -529,6 +537,12 @@
             </if>
             <if test="psPayment != null" >
                 #{psPayment,jdbcType=VARCHAR},
+            </if>
+            <if test="splitTradeId != null" >
+                #{splitTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="isSwapTransaction != null" >
+                #{isSwapTransaction,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

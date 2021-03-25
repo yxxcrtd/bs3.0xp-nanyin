@@ -66,6 +66,8 @@ $(function(){
         $("#unitInt").val('').trigger("change").trigger('blur');
         $("#unitFprice").val('').trigger("change").trigger('blur');
         $("#yield").val('').trigger("change").trigger('blur');
+        $("#exerYield").val('').trigger("change").trigger('blur');
+        $("#unitCprice").val('').trigger("change").trigger('blur');        
         $("#turnInvAim").val('').trigger("change").trigger('blur');
         $("#yield").val('').trigger("change").trigger('blur');
         $("#turnInvAim").val('').trigger("change").trigger('blur');
@@ -90,19 +92,19 @@ $(function(){
     	        ,{field:'tradeDate', title: '交易日期',type:'date',width:150, sortable: false}//交易日期
     	        ,{field:'settleDate', title: '交割日期',type:'date',width:150, sortable: false}//交易日期
     	        ,{field:'tradeAmt', title: '券面总额',width:150,type:'number', sortable: false}//券面总额
-    	        ,{field:'unitCprice', title: '净价',width:150,type:'number', sortable: false}//净价
+    	        ,{field:'unitCprice', title: '净价',width:150,type:'number',digit:6,sortable: false}//净价
     	        ,{field:'cpriceAmt', title: '净价总额',width:150,type:'number', sortable: false}//净价总额
-    	        ,{field:'unitInt', title: '应计利息',width:150,render : function(data, type, row, meta) {
+    	        ,{field:'unitInt', title: '应计利息',width:150,digit:6,render : function(data, type, row, meta) {
                         if(row.unitInt !=undefined){
-                            return Number(row.unitInt).toFixed(4);
+                            return Number(row.unitInt).toFixed(6);
                         }
                     }, sortable: false}//应计利息
     	        ,{field:'intAmt', title: '应计利息总额',width:150,type:'number', sortable: false}//应计利息总额
-    	        ,{field:'unitFprice', title: '全价',width:150,type:'number', sortable: false}//全价
+    	        ,{field:'unitFprice', title: '全价',width:150,type:'number', digit:6,sortable: false}//全价
     	        ,{field:'fpriceAmt', title: '全价总额',width:150,type:'number', sortable: false}//全价总额
     	        ,{field:'tradeRepAmt', title: '交易金额',width:150,type:'number', sortable: false}//交易金额
-    	        ,{field:'exerYield', title: '到期收益率',width:150,type:'number', digit: 4, sortable: false}//到期收益率
-    	        ,{field:'yeild', title: '行权收益率',width:150,type:'number', digit: 4, sortable: false}//行权收益率
+    	        ,{field:'exerYield', title: '到期收益率%',width:150,type:'number', digit: 12, sortable: false}//到期收益率
+    	        ,{field:'yeild', title: '行权收益率%',width:150,type:'number', digit: 12, sortable: false}//行权收益率
     	        ,{field:'finprodId', title: '资产代码',width:150, visible:false}//交易组合代码
     	        ,{field:'portfolioId', title: '交易对手',width:150, visible:false}//交易对手
     	        ,{field:'isOutTrade', title: '是否外部交易',width:150, visible:false}//是否外部交易
@@ -231,8 +233,7 @@ $(function(){
                     var object = {};
                     object.prinAmount = $('#tradeAmt').val();
                     object.tradeAmt = $('#tradeRepAmt').val();
-                    $("#portfolioId").text('').trigger("change").trigger('blur');
-                    $("#unitCprice").val('').trigger("change").trigger('blur');
+                    $("#portfolioId").text('').trigger("change").trigger('blur');                   
                     portfolioIdChange(object);
                 }
             })
@@ -348,6 +349,7 @@ $(function(){
             chlId : $("#chlId").val(),
             tradeDate : $("#tradeDate").val(),
             ccy : $("#ccy").val(),
+            secAcctId:$("#secManageAcctId").val(),
             listInfoList : JSON.stringify(listInfoList)
         })
     };
@@ -449,7 +451,7 @@ $(function(){
                 }
                 //交易金额
                 $("#tradeRepAmt").val($("#fpriceAmt").val()).trigger("blur");
-                $("#exerYield").val(data.exerYield).trigger("blur");
+                $("#exerYield").val(data.yield).trigger("blur");
                 $("#yield").val(data.yield).trigger("blur");
                 // 记录隐藏值
                 $("#unitCprice_calc").val(data.unitCprice);

@@ -110,10 +110,6 @@
             ,{field:'amount', width:150 , title: '券面总额',type:'number'}
             ,{field:'printAmt', width:150 , title: '本金金额',type:'number'}
             ,{field:'posAmt', width:150 , title: '持仓数量/持仓份额',type:'number'}
-            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']
-                ,render: function (data, type, row, meta) {
-                    return '<i class="btn iconfont edit icon-circle-correct_fill" title="确认"></i>';}
-            }
             ,{field:'chlId', visible : false}
             ,{field:'secAcctId', visible : false}
             ,{field:'finprodType2', visible : false}
@@ -124,6 +120,10 @@
             ,{field:'ccy', visible : false}
             ,{field:'invAim', visible : false}
             ,{field:'ps', visible : false}
+            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']
+                            ,render: function (data, type, row, meta) {
+                                return '<i class="btn iconfont edit icon-circle-correct_fill" title="确认"></i>';}
+                        }
         ],
         done: function() {
             //列表刷新 选中值可能被更新，刷新下拉框
@@ -439,7 +439,7 @@
                     var object = selArr[0];
                     object.operateType = "revoke";
                     object.isTransfer = true;
-                    object.bizCode = selArr[0].tradeId;
+                    object.bizCode = selArr[0].totleTradeId;
                     object.statusValid = "02";//有效状态为有效
                     object.elementId = "TrdProjectInvestTrade001_btn_revoke";
                     Joyin.ajax(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revokeCheck', object, function (result) {

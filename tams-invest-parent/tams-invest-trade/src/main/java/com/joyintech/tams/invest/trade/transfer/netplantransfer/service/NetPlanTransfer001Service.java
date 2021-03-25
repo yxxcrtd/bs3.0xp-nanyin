@@ -20,6 +20,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
@@ -806,5 +807,23 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
     public BigDecimal selectWflAmtNet(Map<String,Object> map){
         return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/LendTransfer/selectWflAmtLend",map,
         		BigDecimal.class);
+    }
+
+    /**
+     * 查询组合可用持仓 <功能详细描述>
+     *
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal getPtlSecPosition(PtlSecPositionFlowDto dto) {
+        dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+        if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
+            dto.setChannel(true);
+        }
+        return restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/getPtlSecPosition",
+                dto, BigDecimal.class);
     }
 }

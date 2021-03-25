@@ -800,8 +800,8 @@ public class BeforeSubErrorCheck {
         List<String> assetTypeLit = chbBeforeSubErrorCheckMapper.isOutsourOrAssetMana(planAssetId);
         if (!StringUtil.isEmptyList(assetTypeLit)
                 && !StringUtil.isEmptyList(assetTypeLit.stream().filter(x -> !StringUtil.equals(x, "12")
-                                                                            || !StringUtil.equals(x, "16")
-                                                                            || !StringUtil.equals(x, "19")).collect(Collectors.toList()))){
+                                                                            && !StringUtil.equals(x, "16")
+                                                                            && !StringUtil.equals(x, "19")).collect(Collectors.toList()))){
             errMsgSb.append("对应资管及委外资产行内资产/负债编码为:"+planAssetId+"的资产不属于资管及委外资产");
             errMsgSb.append(GlobalConstant.VERTICAL_LINE);
         }

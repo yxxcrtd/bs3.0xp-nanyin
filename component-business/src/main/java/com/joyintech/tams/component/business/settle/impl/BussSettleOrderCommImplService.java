@@ -145,4 +145,11 @@ public class BussSettleOrderCommImplService extends BaseService implements BussS
                 ServiceApplication.SETTLE_SERVICE_NAME + "/BussSettleOrderComm/selectCounterCapacctInfoList",
                 paramMap, StlCapacctInfo.class);
     }
+
+    @Override
+    public List<BussTrdTransferOrderBase> selectOrdersByBizCodeByBTradeId(String bizCode) {
+        return restTemplate.postForList(
+                ServiceApplication.SETTLE_SERVICE_NAME + "/BussSettleOrderComm/selectOrdersByBizCodeByBTradeId",
+                bizCode, BussTrdTransferOrderBase.class);
+    }
 }

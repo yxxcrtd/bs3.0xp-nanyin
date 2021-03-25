@@ -74,11 +74,11 @@
 			SELECT
 				tmp1.REG_CODE prdRegistCode,					
 				tmp1.VDATE prdVDate,
-				#{searchDate} AS holdDate,
-				tmp1.RAISE_QTY prdRaiseTotalQty,
-				tmp1.TOTAL_AMT prdRaiseTotalAmt,
-				SUM(QTY) investRaiseTotalQty,
-				SUM(CNY_AMT) investRaiseTotalAmt
+				TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd') AS holdDate,
+				NVL(tmp1.RAISE_QTY,0) as prdRaiseTotalQty,
+				NVL(tmp1.TOTAL_AMT,0) as prdRaiseTotalAmt,
+				NVL(SUM(QTY),0) as investRaiseTotalQty,
+				NVL(SUM(CNY_AMT),0) as investRaiseTotalAmt
 			FROM(
 				SELECT  
 					A.REG_CODE,					

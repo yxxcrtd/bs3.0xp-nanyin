@@ -12,6 +12,8 @@
         FROM
         PTL_PORTFOLIO pp
         LEFT JOIN PTL_SEC_ACCT psa on pp.PORTFOLIO_ID = psa.PORTFOLIO_ID
+        left join PTL_CAPACCT_INFO pci
+        on pci.PORTFOLIO_ID=pp.PORTFOLIO_ID and pci.ACCT_TYPE = 'A01'
         <where>
             pp.INVEST_YESORNO = 'Y'
             AND pp.PORTFOLIO_TYPE != '04'
@@ -25,6 +27,7 @@
             <if test="acctNo != null and acctNo != ''">
                 AND psa.ACCT_NO = #{acctNo}
             </if>
+            and pci.ACCT_NO in (select ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID=#{transferPortfolioId} and ACCT_TYPE='A01')
         </where>
     </select>
     <select id="queryAssetInt" resultType="com.joyintech.service.trade.transfer.planratetransfer.dto.PlanTransferDto">

@@ -485,9 +485,25 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 //			item.setFinancierGradeName(SvrDataUtil.getNameFromDataDict(SVReportDictCode.资产评级,item.getFinancierGrade()));
 //			item.setInGradeName(SvrDataUtil.getNameFromDataDict(SVReportDictCode.资产评级,item.getInGrade()));
 //			item.setOutGradeName(SvrDataUtil.getNameFromDataDict(SVReportDictCode.资产评级,item.getOutGrade()));
-			if (StringUtil.isNotEmpty(item.getFinArea())){
+			/*if (StringUtil.isNotEmpty(item.getFinArea())){
 				item.setFinAreaName(item.getFinArea()+" "+SvrDataUtil.getNameFromDataDict(DictCode.行政区划_市,item.getFinArea()));
 				item.setFinArea(item.getFinAreaName());
+			}*/
+			if (StringUtil.isNotEmpty(item.getFinArea())){
+				if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省市县,item.getFinArea()))){
+					item.setFinAreaName(item.getFinArea()+" "+SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省市县,item.getFinArea()));
+					item.setFinArea(item.getFinAreaName());
+				}
+				else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省,item.getFinArea()))){
+					item.setFinAreaName(item.getFinArea()+" "+SvrDataUtil.getNameFromDataDict(DictCode.行政区划_省,item.getFinArea()));
+					item.setFinArea(item.getFinAreaName());
+				}else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_市,item.getFinArea()))){
+					item.setFinAreaName(item.getFinArea()+" "+SvrDataUtil.getNameFromDataDict(DictCode.行政区划_市,item.getFinArea()));
+					item.setFinArea(item.getFinAreaName());
+				}else if(StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.行政区划_县,item.getFinArea()))){
+					item.setFinAreaName(item.getFinArea()+" "+SvrDataUtil.getNameFromDataDict(DictCode.行政区划_县,item.getFinArea()));
+					item.setFinArea(item.getFinAreaName());
+				}
 			}
 			if (StringUtil.isNotEmpty(item.getIsRight())){
 				item.setIsRightName(item.getIsRight()+" "+SvrDataUtil.getNameFromDataDict(DictCode.是否_中债,item.getIsRight()));

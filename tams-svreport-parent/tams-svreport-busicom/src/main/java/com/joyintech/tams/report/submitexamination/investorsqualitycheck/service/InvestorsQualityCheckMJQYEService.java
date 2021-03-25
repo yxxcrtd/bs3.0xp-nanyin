@@ -2,12 +2,20 @@ package com.joyintech.tams.report.submitexamination.investorsqualitycheck.servic
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
+
+import cn.hutool.core.math.MathUtil;
+
 
 /**
  * 募集期余额合格率
@@ -34,16 +42,23 @@ public class InvestorsQualityCheckMJQYEService extends InvestorsQualityCheckBase
     public InvestorsQualityCheck001Dto cntHGL(Map<String, Object> param) {
         InvestorsQualityCheck001Dto resultDto = new InvestorsQualityCheck001Dto();
         List<InvestorsQualityCheck001Dto> resultList = new ArrayList<InvestorsQualityCheck001Dto>();
+        HashMap<String, Object> proParam = new HashMap<>();
+        //画面输入参数设置-查询日期
+        proParam.put("searchDate", param.get("searchDate")); 
+        //画面输入参数设置-部门
+        String orgCode = (String)param.get("orgCode");
+        List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
+        proParam.put("orgCodeList", orgCodeList);          
+        //设置检查类型
+        proParam.put("checkType", "01");
+        
         //1、取得对象记录数：											
-      	//调用【合格率计算共通.1、核查对象数量取得】
-         
-        BigDecimal checkRecTol = investorsQualityCheckMJQFEYEComService.cntRecTolCom(param);
+      	//调用【合格率计算共通.1、核查对象数量取得】         
+        BigDecimal checkRecTol = investorsQualityCheckMJQFEYEComService.cntRecTolCom(proParam);
         
         //2、取得错误记录数：									
-        //调用【合格率计算共通.2、错误记录取得】         
-        //设置检查类型
-        param.put("checkType", "01");
-        resultList = investorsQualityCheckMJQFEYEComService.searchMJQCom(param);
+        //调用【合格率计算共通.2、错误记录取得】
+        resultList = investorsQualityCheckMJQFEYEComService.searchMJQCom(proParam);
         BigDecimal errPrdQty = new BigDecimal(resultList.size());
         
                
@@ -52,8 +67,9 @@ public class InvestorsQualityCheckMJQYEService extends InvestorsQualityCheckBase
         resultDto.setPageType("7");
         resultDto.setUnQualified(errPrdQty.toString());
         resultDto.setTotal(checkRecTol.toString()); 
-        if(checkRecTol.compareTo(BigDecimal.ZERO) == 1) {
-        	resultDto.setRate(checkRecTol.subtract(errPrdQty).divide(checkRecTol,2,BigDecimal.ROUND_DOWN).toString());
+        if(checkRecTol.compareTo(BigDecimal.ZERO) == 1) {        	
+        	resultDto.setRate(checkRecTol.subtract(errPrdQty).divide(
+        			checkRecTol,2,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN).toPlainString());
         }
         
         return resultDto;
@@ -74,14 +90,19 @@ public class InvestorsQualityCheckMJQYEService extends InvestorsQualityCheckBase
     public List<InvestorsQualityCheck001Dto> queryErrorRecList(Map<String, Object> param) {
                
         List<InvestorsQualityCheck001Dto> resultList = new ArrayList<InvestorsQualityCheck001Dto>();
-        //1、取得错误记录列表：											
-		//调用【合格率计算共通.2、错误记录取得】    
+        HashMap<String, Object> proParam = new HashMap<>();
+        //画面输入参数设置-查询日期
+        proParam.put("searchDate", param.get("searchDate")); 
+        //画面输入参数设置-部门
+        String orgCode = (String)param.get("orgCode");
+        List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
+        proParam.put("orgCodeList", orgCodeList);          
         //设置检查类型
-        param.put("checkType", "01");
+        proParam.put("checkType", "01");
 
         //2、取得错误记录数：									
     	//调用【合格率计算共通.2、错误记录取得】								
-        resultList = investorsQualityCheckMJQFEYEComService.searchMJQCom(param);
+        resultList = investorsQualityCheckMJQFEYEComService.searchMJQCom(proParam);
         //3、返回值 
         return resultList;
     }

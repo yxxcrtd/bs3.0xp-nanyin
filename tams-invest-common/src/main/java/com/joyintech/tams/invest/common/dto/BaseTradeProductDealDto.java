@@ -43,6 +43,11 @@ public class BaseTradeProductDealDto {
     private PaTrdFinProductDealTotal paTrdFinProductDealTotal;
 
     /**
+     *
+     */
+    private TrdDealTotalAdd trdDealTotalAdd;
+
+    /**
      * 实体组合代码
      */
     private String actPortfolioId;
@@ -474,4 +479,11 @@ public class BaseTradeProductDealDto {
 		this.trdTradeFeeDetail = trdTradeFeeDetail;
 	}
 
+    public TrdDealTotalAdd getTrdDealTotalAdd() {
+        return trdDealTotalAdd;
+    }
+
+    public void setTrdDealTotalAdd(TrdDealTotalAdd trdDealTotalAdd) {
+        this.trdDealTotalAdd = trdDealTotalAdd;
+    }
 }

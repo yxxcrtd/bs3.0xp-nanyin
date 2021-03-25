@@ -325,6 +325,8 @@ $(function () {
 
 
     var checkOnClickRow = function (data) {
+        $("#registrationTitle").toggle(true);
+        $("#registration").toggle(true);
         // 所有表格div对象隐藏
         $.each(objDataArr,function(i,v){
             $('#' + objDataArr[i].tableDiv).toggle(false);
@@ -343,8 +345,10 @@ $(function () {
     var init = function(){
         //防止报出时间为空的信息
         setTimeout(function() {searchData();},500);
-        document.getElementById("registrationTitle").innerText=objDataArr[0].xAxisDataRate;
-        document.getElementById("registration").innerText=objDataArr[0].xAxisDataDetail;
+        $("#registrationTitle").toggle(false);
+        $("#registration").toggle(false);
+        /*document.getElementById("registrationTitle").innerText=objDataArr[0].xAxisDataRate;
+        document.getElementById("registration").innerText=objDataArr[0].xAxisDataDetail;*/
 
     };
 
@@ -362,12 +366,18 @@ $(function () {
             Joyin.error("查询日期不可为空！");
             return;
         }
-        if(table01.table){
+        table01.table ? table01.reload() : table01.load();
+        $.each(objDataArr,function(i,v){
+            $('#' + objDataArr[i].tableDiv).toggle(false);
+        })
+        $("#registrationTitle").toggle(false);
+        $("#registration").toggle(false);
+        /*if(table01.table){
             table01.reload();
         }
         else{
             table01.load();
-        }
+        }*/
     };
 
     $(function() {

@@ -587,7 +587,8 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	/**
 	 * 融资人所属地区
 	 */
-	@DictFormat(DictCode.行政区划_市)
+	/*@DictFormat(DictCode.行政区划_市)*/
+	@DictFormat(DictCode.行政区划_省市县)
 	private String finArea;
 
 	/**

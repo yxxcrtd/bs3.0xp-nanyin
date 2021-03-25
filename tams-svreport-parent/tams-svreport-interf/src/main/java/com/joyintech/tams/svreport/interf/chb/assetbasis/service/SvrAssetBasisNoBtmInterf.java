@@ -162,6 +162,13 @@ public class SvrAssetBasisNoBtmInterf extends BaseService{
 	        		data.setUpdateUser("system");
 	        		data.setStatus("E");
 	        		data.setDataSource("16");
+
+					// add by zhangliang 20210324 通过通道购买的资产到期日设定为通道到期日 start
+					if(spAssetsBasisDataMap.containsKey(key)){
+						data.setMdate(spAssetsBasisDataMap.get(key).getMdate());
+					}
+					// add by zhangliang 20210324 通过通道购买的资产到期日设定为通道到期日 end
+
 	        		// 【资产基础指标数据接入】时，若通道不穿透报送，在接入通道时，MDATE的取值根据参数判断
 	        		if ("02".equals(isChlBtm) && "02".equals(channelAssetsMdateConf)) {
 	        			Date valueDate = data.getValueDate();

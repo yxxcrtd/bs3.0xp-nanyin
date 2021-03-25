@@ -7,11 +7,18 @@ import com.joyintech.service.trade.transfer.netplantransfer.dao.NetPlanTransferM
 import com.joyintech.service.trade.transfer.netplantransfer.dto.NetPlanTransferDto;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +38,9 @@ public class NetPlanTransferService extends BaseService<NetPlanTransferDto> {
      */
     @Autowired
     private NetPlanTransferMapper netPlanTransferMapper;
+    
+    @Autowired
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
 
     /**
      * 获取单位净值
@@ -51,9 +61,29 @@ public class NetPlanTransferService extends BaseService<NetPlanTransferDto> {
      */
     public List<SelectOptionDto> getPortfolioId(Map<String,Object> map){
         map.put("PORTFOLIO_TYPE_01", DictCodeListExt1.组合类型_投资类组合.getValue());
-        map.put("sysDate", DateUtil.getSysDate());
+        //map.put("sysDate", DateUtil.getSysDate());
         map.put("ACCT_TYPE_A01",DictCodeListExt1.资金账户类型_产品托管户.getValue());
-        return netPlanTransferMapper.getPortfolioId(map);
+        List<SelectOptionDto> result= netPlanTransferMapper.getPortfolioId(map);
+        if(basePtlCashPositionInfoService != null){
+            Iterator<SelectOptionDto> iterator =  result.iterator();
+            while(iterator.hasNext()) {
+            	SelectOptionDto dto = iterator.next();
+                PtlCashPositionFlowDto pcpdto = new PtlCashPositionFlowDto();
+                Date sysdate = DateUtil.parse((String)map.get("tradeDate"));
+                pcpdto.setCdate(sysdate);
+                List<String> acctTypeList = new ArrayList<>();
+                acctTypeList.add(BussinessDictCodeList.资金账户类型_托管账户.getValue());
+                acctTypeList.add(BussinessDictCodeList.资金账户类型_交易所资金账户.getValue());
+                pcpdto.setAcctType(acctTypeList);
+                pcpdto.setPortfolioId(dto.getId());
+                pcpdto.setCcy((String)map.get("ccy"));
+                BigDecimal cashT = basePtlCashPositionInfoService.queryUsableCashPosition(pcpdto);
+                if(cashT.compareTo(new BigDecimal(0))<=0) {
+                	iterator.remove();
+                }
+            }
+        }
+        return result;
     }
 
     /**
