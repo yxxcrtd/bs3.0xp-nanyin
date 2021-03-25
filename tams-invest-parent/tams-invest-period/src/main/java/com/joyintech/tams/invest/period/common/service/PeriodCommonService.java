@@ -4,6 +4,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
@@ -21,6 +22,7 @@ import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDea
 import com.joyintech.tams.invest.common.component.business.common.BaseAssetCashPositionCommService;
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioCashPositionsFlowInputDto;
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioPositionsFlowInputDto;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
@@ -449,12 +451,20 @@ public class PeriodCommonService extends BaseService {
         else {// 基金时，除权交易撤销时，查询分红交易
             String bizCode = restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDuration/findBTradeId",
                     map, String.class);
+            if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.FUND_DEAL_TYPE),"02")){
+                bizCode = restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDurationNew/findBTradeId",
+                        map, String.class);
+            }
             map.put("bizCode", bizCode);
         }
         if(CollectionUtils.isEmpty(tol)) {
             isTotal = false;
             tol = restTemplate.postForList(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDuration/findEffectiveDeal",
                     map, BaseTradeProductDealDto.class);
+//            if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.FUND_DEAL_TYPE),"02")){
+//                tol = restTemplate.postForList(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDurationNew/findEffectiveDeal",
+//                        map, BaseTradeProductDealDto.class);
+//            }
         }
         List<BaseTradeProductDealDto> result = new ArrayList<>();
         for(BaseTradeProductDealDto baseTradeProductDealDto:tol){

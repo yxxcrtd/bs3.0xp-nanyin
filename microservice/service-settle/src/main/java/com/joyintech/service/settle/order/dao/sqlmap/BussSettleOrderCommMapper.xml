@@ -332,12 +332,13 @@
 		LEFT JOIN
 		PTL_PORTFOLIO PP ON SPO.PORTFOLIO_ID = PP.PORTFOLIO_ID
 		WHERE
-		SPO.TRADE_ID =
+		SPO.TRADE_ID in
 		(select tfpdt.trade_id from trd_product_deal tpd
 		inner join trd_product_deal tfpdt on tpd.totle_trade_id = tfpdt.b_trade_id
 		inner join pa_trd_product_deal ptpd on tfpdt.trade_id = ptpd.trade_id
 		where tpd.trade_id = #{bizCode}
 		and tfpdt.ps ='T11'
 		)
+		ORDER BY SPO.ORDER_ID
 	</select>
 </mapper>
