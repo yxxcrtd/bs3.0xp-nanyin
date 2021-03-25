@@ -295,7 +295,7 @@
 		select REPLACE(to_char(wm_concat(t.remark)),',','、') remark from
 		(
 		select
-		t1.asset_name||'+'||to_char(t1.balance) AS remark
+		t1.asset_name||'+'||to_char(t1.balance/10000) AS remark
 		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
 		from(
 		select
@@ -395,7 +395,7 @@
 		select REPLACE(to_char(wm_concat(t.remark)),',','、') remark from
 		(
 		select
-		t1.asset_name||'+'||to_char(t1.balance) AS remark,
+		t1.asset_name||'+'||to_char(t1.balance/10000) AS remark,
 		t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
 		from(
 		select
@@ -608,7 +608,7 @@
 		from(
 		select
 		'10' INDUSTRY,
-		t1.asset_name||'+'||to_char(t1.balance) AS remark
+		t1.asset_name||'+'||to_char(t1.balance/10000) AS remark
 		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
 		from(select
 		coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then info.mdate-info.vdate||'天回购'
