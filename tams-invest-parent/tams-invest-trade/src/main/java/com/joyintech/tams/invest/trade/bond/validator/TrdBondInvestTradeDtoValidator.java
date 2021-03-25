@@ -488,7 +488,8 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
              	
         	}else{
         		if(StringUtil.equals(inputDto.getPs(), DictCodeList.交易方向_卖出.getValue()) &&
-                        StringUtil.isEmpty(inputDto.getTurnInvAim())){
+                        StringUtil.isEmpty(inputDto.getTurnInvAim()) &&
+                        DictCodeList.是否_是.getValue().equals(CacheUtil.getSysParam(BussinessConstant.IS_AUTO_GENERATE_NEGATE_DEAL))){
              		ValidMessage validMessage = new ValidMessage("turnInvAim", "转仓投资目的必填！");
                     errorList.add(validMessage);
              	}
