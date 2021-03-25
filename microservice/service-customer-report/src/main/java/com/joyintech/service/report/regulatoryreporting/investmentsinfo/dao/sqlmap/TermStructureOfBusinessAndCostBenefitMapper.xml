@@ -1331,15 +1331,41 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id　and fc2.status='E')
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		　and fc1.change_type='02')
 		and cr1.change_type='02'　
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code　and fc2.status='E')
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
@@ -1356,7 +1382,16 @@ with cj as(
 		from chb_asset_rate cr1
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
-		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id and fc2.status='E')
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= cr1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and cr1.change_type='03'
 		group by cr1.asset_id
 		)jybonus
@@ -1382,13 +1417,40 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id,cr1.change_date as crfjdate
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id and fc2.status='E'))
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code and fc2.status='E')
+		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		))
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
@@ -1413,14 +1475,32 @@ with cj as(
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)ffjycr
 		on cr.asset_id=ffjycr.asset_id
@@ -1617,15 +1697,41 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id　and fc2.status='E')
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		　and fc1.change_type='02')
 		and cr1.change_type='02'　
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code　and fc2.status='E')
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
@@ -1642,7 +1748,16 @@ with cj as(
 		from chb_asset_rate cr1
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
-		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id and fc2.status='E')
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= cr1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and cr1.change_type='03'
 		group by cr1.asset_id
 		)jybonus
@@ -1668,13 +1783,40 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id,cr1.change_date as crfjdate
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id and fc2.status='E'))
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code and fc2.status='E')
+		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		))
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
@@ -1699,14 +1841,32 @@ with cj as(
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)ffjycr
 		on cr.asset_id=ffjycr.asset_id
@@ -1968,15 +2128,41 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id　and fc2.status='E')
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		　and fc1.change_type='02')
 		and cr1.change_type='02'　
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code　and fc2.status='E')
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
@@ -1993,7 +2179,16 @@ with cj as(
 		from chb_asset_rate cr1
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
-		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id and fc2.status='E')
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= cr1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and cr1.change_type='03'
 		group by cr1.asset_id
 		)jybonus
@@ -2019,13 +2214,40 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id,cr1.change_date as crfjdate
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id and fc2.status='E'))
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code and fc2.status='E')
+		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		))
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
@@ -2050,14 +2272,32 @@ with cj as(
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)ffjycr
 		on cr.asset_id=ffjycr.asset_id
@@ -2212,15 +2452,41 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id　and fc2.status='E')
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		　and fc1.change_type='02')
 		and cr1.change_type='02'　
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code　and fc2.status='E')
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
@@ -2237,7 +2503,16 @@ with cj as(
 		from chb_asset_rate cr1
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
-		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id and fc2.status='E')
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= cr1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and cr1.change_type='03'
 		group by cr1.asset_id
 		)jybonus
@@ -2263,13 +2538,40 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id,cr1.change_date as crfjdate
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id and fc2.status='E'))
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code and fc2.status='E')
+		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		))
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
@@ -2294,14 +2596,32 @@ with cj as(
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)ffjycr
 		on cr.asset_id=ffjycr.asset_id
@@ -2569,15 +2889,41 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id　and fc2.status='E')
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		　and fc1.change_type='02')
 		and cr1.change_type='02'　
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code　and fc2.status='E')
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
@@ -2594,7 +2940,16 @@ with cj as(
 		from chb_asset_rate cr1
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
-		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id and fc2.status='E')
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= cr1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and cr1.change_type='03'
 		group by cr1.asset_id
 		)jybonus
@@ -2620,13 +2975,40 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id,cr1.change_date as crfjdate
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id and fc2.status='E'))
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code and fc2.status='E')
+		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		))
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
@@ -2651,14 +3033,32 @@ with cj as(
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)ffjycr
 		on cr.asset_id=ffjycr.asset_id
@@ -2816,15 +3216,41 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id　and fc2.status='E')
+		and fc1.change_date<![CDATA[<]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		　and fc1.change_type='02')
 		and cr1.change_type='02'　
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code　and fc2.status='E')
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code　and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
@@ -2841,7 +3267,16 @@ with cj as(
 		from chb_asset_rate cr1
 		where 1=1 and cr1.trade_id is not null and cr1.status='E'
 		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
-		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= cr1.asset_id and fc2.status='E')
+		and cr1.change_date<![CDATA[>=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= cr1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and cr1.change_type='03'
 		group by cr1.asset_id
 		)jybonus
@@ -2867,13 +3302,40 @@ with cj as(
 
 		select distinct cr1.asset_rate,ft.dealdate as change_date,cr1.asset_id,cr1.change_date as crfjdate
 		from chb_invest_trade ft
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on ft.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
 		left join  chb_asset_rate cr1
 		on ft.asset_code=cr1.asset_id
 		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('03')
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= fc1.asset_id and fc2.status='E'))
-		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2 where fc2.asset_code= ft.asset_code and fc2.status='E')
+		and fc1.change_date<![CDATA[<=]]>(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= fc1.asset_id and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		))
+		and ft.dealdate=(select min(dealdate) from chb_invest_trade fc2
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where fc2.asset_code= ft.asset_code and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>)
 		and ft.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
@@ -2898,14 +3360,32 @@ with cj as(
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)fjycr
 		on cr.asset_id=fjycr.asset_id
 		left join (
 		select min(fc2.dealdate) as change_date,fc2.asset_code as asset_id
 		from chb_invest_trade fc2
-		where 1=1 and fc2.status='E' and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on fc2.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		where 1=1 and fc2.status='E'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc2.dealdate <![CDATA[<=]]> #{endDate,jdbcType=DATE}
 		group by fc2.asset_code
 		)ffjycr
 		on cr.asset_id=ffjycr.asset_id
