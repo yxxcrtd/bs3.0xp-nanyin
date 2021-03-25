@@ -60,7 +60,7 @@ public class TrdStandardBondController {
     /**
      * 查询债券代码：下拉框
      *
-     * @param params 画面参数
+     * @param param 画面参数
      * @return 债券代码：下拉框
      */
     @RequestMapping("getBondCode")
