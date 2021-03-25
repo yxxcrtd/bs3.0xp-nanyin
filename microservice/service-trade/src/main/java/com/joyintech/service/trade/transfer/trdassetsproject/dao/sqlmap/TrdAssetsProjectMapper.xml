@@ -51,6 +51,10 @@
         AND PCI.ACCT_NO in (SELECT DISTINCT B.ACCT_NO  FROM PTL_CAPACCT_INFO B WHERE B.PORTFOLIO_ID = #{invTransPortf} AND B.ACCT_TYPE = #{capacctType} AND B.CCY = #{ccy})        <if test="initValue != null and initValue != ''">
             AND A.PORTFOLIO_ID = #{initValue}
         </if>
+        <if test="userId != null and userId != ''">
+            AND (A.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+            OR A.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+        </if>
         <if test="search != null and search != ''">
             AND ( A.PORTFOLIO_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
             or

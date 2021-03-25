@@ -174,6 +174,7 @@ public class FundAssetTransfer001Controller extends BaseController {
     @RequestMapping("selectPortfolioId")
     public List<SelectOptionDto> selectPortfolioId() {
         Map<String, Object> param = RequestUtil.getPageParam();
+        param.put("userId", LoginUserUtil.getUserName());
         return fundAssetTransfer001Service.selectPortfolioId(param);
     }
     /**
