@@ -339,7 +339,7 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
                 for (TrdRolloverPledgedRepo001Dto entity:dto.getPledgedRepoInfoList()){
                     BigDecimal sumPrinAmt = BigDecimal.ZERO;
                     for(FinDealPledgeDto deal : entity.getPledgedRepoRolloverList()){
-                        sumPrinAmt= ArithmeticUtil.doAdd(deal.getDesiPledgePrin(),sumPrinAmt);
+                        sumPrinAmt= ArithmeticUtil.doAdd(deal.getDesiPledgePrin().multiply(deal.getPledgeRatio()).divide(BigDecimal.valueOf(100),2,BigDecimal.ROUND_HALF_UP),sumPrinAmt);
                     }
 
                     BigDecimal tradeAmt = entity.getRolloverTradeAmt() == null ? BigDecimal.ZERO : entity.getRolloverTradeAmt();
