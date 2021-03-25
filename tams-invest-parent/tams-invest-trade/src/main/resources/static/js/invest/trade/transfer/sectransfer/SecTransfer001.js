@@ -66,8 +66,7 @@ $(function(){
         $("#unitInt").val('').trigger("change").trigger('blur');
         $("#unitFprice").val('').trigger("change").trigger('blur');
         $("#yield").val('').trigger("change").trigger('blur');
-        $("#exerYield").val('').trigger("change").trigger('blur');
-        $("#unitCprice").val('').trigger("change").trigger('blur');        
+        $("#exerYield").val('').trigger("change").trigger('blur');      
         $("#turnInvAim").val('').trigger("change").trigger('blur');
         $("#yield").val('').trigger("change").trigger('blur');
         $("#turnInvAim").val('').trigger("change").trigger('blur');
@@ -235,6 +234,13 @@ $(function(){
                     object.tradeAmt = $('#tradeRepAmt').val();
                     $("#portfolioId").text('').trigger("change").trigger('blur');                   
                     portfolioIdChange(object);
+                    
+                	//3. 添加按钮点击时，净价回归默认
+                    var unitCprice =  $("#unitCprice").attr("value");
+                    if(unitCprice==undefined){
+                    	unitCprice="";
+                    }
+                    $("#unitCprice").val(unitCprice).trigger("change").trigger('blur');  
                 }
             })
         }
@@ -277,6 +283,14 @@ $(function(){
         object.pageModel = pageModel;
         object.operateType = operateType;
         object.secResoluteDtoList = data;
+        //保存unitCprice初始值，用于待办中编辑
+        var unitCprice =  $("#unitCprice").attr("value");
+        if (null == modelType || 'undefined' == typeof(unitCprice) || '' == unitCprice) {
+        	delete object.unitCprice;
+        }
+        else{
+        	object.unitCprice = unitCprice;
+        }
         Joyin.ajaxJson(basePath + 'invest/trade/transfer/sectransfer/SecTransfer001/check', object, function(result) {
             Joyin.confirm(result.data, function() {
                 var tableArry = table.getAllRows();
@@ -475,6 +489,12 @@ $(function(){
         table.load();
         //组合代码联动
         $('#portfolioId').change(function () {
+        	//1. 组合代码点击时，净价回归默认
+            var unitCprice =  $("#unitCprice").attr("value");
+            if(unitCprice==undefined){
+            	unitCprice="";
+            }
+            $("#unitCprice").val(unitCprice).trigger("change").trigger('blur');  
             portfolioIdChange(null);
         });
         //计算按钮
@@ -518,5 +538,10 @@ $(function(){
             }
         });
     });
-	
+    //非编辑时不显示净价
+//    if(pageModel==PAGE_MODEL_REFERENCE){
+//    	setTimeout(function(){
+//    		 $("#unitFprice").val("");
+//    	},100);
+//    }
 }());

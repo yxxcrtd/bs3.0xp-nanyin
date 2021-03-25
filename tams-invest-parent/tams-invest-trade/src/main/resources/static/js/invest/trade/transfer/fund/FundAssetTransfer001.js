@@ -36,9 +36,9 @@ $(function() {
      */
     var init = function () {
         if (fundType && fundType == FUND_ASSET_TYPE_F01) {
-            $("#fundAssetTransfer001_unitCprice").val(1).trigger('blur').prop("disabled", true);
+            $("#fundAssetTransfer001_unitCprice").trigger('blur').prop("disabled", true);
         } else {
-            $("#fundAssetTransfer001_unitCprice").val(initUnitCprice).trigger('blur').prop("disabled", false);
+            $("#fundAssetTransfer001_unitCprice").trigger('blur').prop("disabled", false);
         }
     };
     window.componentLoadCallback = function(isDone, pagePath, params){
@@ -248,6 +248,12 @@ $(function() {
         funAssetTransferDtoListTable.load();
         //组合change事件
         $("#fundAssetTransfer001_portfolioId").change(function () {
+        	//1.组合选中时净值回归默认
+            var unitCprice =  $("#fundAssetTransfer001_unitCprice").attr("value");
+            if(unitCprice==undefined){
+            	unitCprice="";
+            }
+            $("#fundAssetTransfer001_unitCprice").val(unitCprice).trigger("change").trigger('blur');
             portfolioIdChange();
         });
         //交易份额change事件

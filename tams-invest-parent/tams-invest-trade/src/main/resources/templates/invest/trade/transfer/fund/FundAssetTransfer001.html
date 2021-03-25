@@ -171,7 +171,7 @@
                                                    class="layui-input form-input text-number" placeholder="请输入内容"
                                                    data-textrange='4'
                                                    th:placeholder="#{SysCommon.placeholder}" maxlength="10"
-                                                   data-th-value='${entity?.tradePrin}'>
+                                                   data-th-value='${entity?.unitCprice}'>
                                         </div>
                                     </div>
                                 </div>
@@ -252,7 +252,6 @@
 <div layout:fragment="script">
     <script data-th-inline="javascript" type="text/javascript">
         var sysDate = /*[[${sysDate}]]*/'';
-        var initUnitCprice = /*[[${initUnitCprice}]]*/0;
         var PS_T04 = /*[[${PS_T04}]]*/'T04'; // 数据字典.交易方向_买入
         var PS_T19 = /*[[${PS_T19}]]*/'T19'; // 数据字典.交易方向_卖出
         var formTodoList = /*[[${formTodoList}]]*/false;

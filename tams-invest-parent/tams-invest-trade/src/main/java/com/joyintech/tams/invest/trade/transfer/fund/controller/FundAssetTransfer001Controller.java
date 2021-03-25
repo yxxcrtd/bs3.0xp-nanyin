@@ -90,7 +90,14 @@ public class FundAssetTransfer001Controller extends BaseController {
             Map<String,Object> paramMap = new HashMap<>();
             paramMap.put("tradeDate",DateUtil.format(entity.getTradeDate()));
             paramMap.put("finprodId",entity.getFinprodIdOrg());
-            model.addAttribute("initUnitCprice",fundAssetTransfer001Service.findInitCarryOverQty(paramMap));
+            BigDecimal unitCprice = fundAssetTransfer001Service.findInitCarryOverQty(paramMap);
+            if(unitCprice==null) {
+            	unitCprice = BigDecimal.ZERO;
+            }
+            entity.setUnitCprice(unitCprice);
+        }
+        else {
+        	entity.setUnitCprice(BigDecimal.ONE);
         }
         model.addAttribute("PS_T04", DictCodeList.交易方向_申购.getValue());
         model.addAttribute("PS_T19", DictCodeList.交易方向_赎回确认.getValue());
