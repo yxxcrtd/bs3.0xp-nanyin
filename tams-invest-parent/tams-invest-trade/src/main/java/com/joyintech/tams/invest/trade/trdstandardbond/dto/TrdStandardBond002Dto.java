@@ -143,6 +143,29 @@ public class TrdStandardBond002Dto extends BaseEntity implements ProcessEntity {
     List<TrdStandardBond002Dto> avaPledgeBondList;
     
     private String tradeId;
+
+    /**
+     * 是否回退
+     */
+    private Boolean isBack;
+
+    /**
+     * 获取 isBack
+     *
+     * @rturn isBack
+     */
+    public Boolean getIsBack() {
+        return isBack;
+    }
+
+    /**
+     * 设置 isBack
+     *
+     * @param isBack isBack
+     */
+    public void setIsBack(Boolean isBack) {
+        this.isBack = isBack;
+    }
     
     /**
      * 取得 交易编号

@@ -22,6 +22,8 @@ import java.util.Map;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +52,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tools.collectors.JoyinCollectors;
+
 
 /**
  * 标准券微服务Service
@@ -91,7 +94,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      *
      * @param page   page
      * @param length length
-     * @param param  参数
+     * @param pageParam  参数
      * @return Page<TrdStandardBondDto>
      * @throws Exception 异常
      * @see
@@ -182,7 +185,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
     /**
      * 查询债券代码：下拉框
      *
-     * @param params 画面参数
+     * @param param 画面参数
      * @return 债券代码：下拉框
      */
     public List<SuggestDto> getBondCode(Map<String, Object> param) {
@@ -194,7 +197,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
     /**
      * 质押券入库画面，查询可质押债券列表
      *
-     * @param param 参数
+     * @param pageParam 参数
      * @return List<TrdStandardBondDto>
      * @throws Exception 异常
      * @see
@@ -391,12 +394,12 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                 PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
                 ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
                 if (ptlPositionHoldDto != null) {
-                    if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
-                            && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
-                        for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
-                            basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
-                        }
-                    }
+//                    if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
+//                            && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
+//                        for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
+//                            basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
+//                        }
+//                    }
                     if (ptlPositionHoldDto.getPtlCashPositionFlows() != null
                             && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
                         for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
@@ -406,9 +409,153 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                 }
             }
             // 标准券处理 委托那边统计持仓时，用的就是出入库的表 + 标准券的指令持仓，出入库管理已经影响了出入库的表，所以不能再影响标准券的指令持仓，否则重复计算了，这个注释掉 by qiangchengxi 20200302
-//            if (baseEtrCashPositionCommService != null && etrCashList.size() > 0) {
+            //入库交易提交时，指令可用持仓减少，入库交易生效时生成一笔反向的抵消掉
+            if (baseEtrCashPositionCommService != null && etrCashList.size() > 0) {
+                for (EtrSecPositionFlowDto ppf : etrCashList){
+                    ppf.setSeqno(IDGenerator.generate());
+                    ppf.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                }
 //                baseEtrCashPositionCommService.StandardBondExecute(etrCashList,DictCodeList.出入库方向_入库);
-//            }
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                // 持仓流水
+                etrPositionHoldDto.setPtlSecPositionFlows(etrCashList);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            }
+        }
+        return saveCount;
+    }
+
+    /**
+     * 质押券入库画面，保存处理
+     *
+     * @param dto 参数
+     * @return saveCount
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public Long inSubmit(TrdStandardBondInDto dto) throws Exception {
+        Long saveCount = 0L;
+        Date sysDate = platformDateImpl.getSysDate();
+
+        if (!StringUtil.isEmptyList(dto.getPledgeBondList())) {
+            // 可质押券信息（含投资目的）
+            Map<String, List<TrdStandardBondInDto>> avaMap = this.getAvaWithInvAim(dto)
+                    .stream().collect(JoyinCollectors.groupingBy(x -> x.getPortfolioId() + "," + x.getSecAcctId() + "," + x.getBondCode()));
+            avaMap.entrySet().stream().forEach(entry -> {
+                Collections.sort(entry.getValue(), new Comparator<TrdStandardBondInDto>() {
+                    @Override
+                    public int compare(TrdStandardBondInDto o1, TrdStandardBondInDto o2) {
+                        return o1.getInvAimSort().compareTo(o2.getInvAimSort());
+                    }
+                });
+            });
+            List<PtlSecPositionFlowDto> lstPtlSecPositionFlowDto = new ArrayList<>();
+            List<EtrSecPositionFlowDto> etrCashList = new ArrayList<EtrSecPositionFlowDto>();
+            PtlSecPositionFlowDto resultDto;
+//            TrdStasecFlowDetail tsfd;
+
+            Map<String, List<TrdStandardBondInDto>> dtoMap = dto.getPledgeBondList().stream().collect(JoyinCollectors.groupingBy(x -> x.getPortfolioId() + "," + x.getSecAcctId()));
+            for (Map.Entry<String, List<TrdStandardBondInDto>> entry : dtoMap.entrySet()) {
+                BussinessCodeParameter parameter = new BussinessCodeParameter();
+                parameter.setSeqNo("9999");
+                String seqNo = baseGetBussinessId.buildBussinessCode(parameter);
+                for (TrdStandardBondInDto tsb : entry.getValue()) {
+                    // 标准券出入库头寸处理
+                    EtrSecPositionFlowDto ret = new EtrSecPositionFlowDto();
+                    ret.setSeqno(IDGenerator.generate());
+                    String secAcctId = entry.getValue().get(0).getSecAcctId() ;
+                    if (StringUtil.isEmpty(secAcctId)) {
+                        secAcctId = "999999";
+                    }
+                    //设置 证券管理账户/通道代码，无通道无证券管理账户的存999999
+                    ret.setSecAcctId(secAcctId);
+                    // 投资目的
+                    ret.setInvAim(String.valueOf(tsb.getInvAimSort()));
+                    ret.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+//                    ret.setFinprodId(XN_STANDARD_BOND_PRODID);
+                    ret.setSeqno(IDGenerator.generate());
+                    ret.setTradeId(seqNo);
+                    ret.setFinprodId(tsb.getFinProdId());
+                    ret.setPortfolioId(tsb.getPortfolioId());
+                    ret.setBranch(0l);
+                    ret.setCdate(platformDateImpl.getSysDate());
+                    ret.setCcy(tsb.getCcy());
+                    ret.setAmount(ArithmeticUtil.divide(tsb.getPledgePrinAmt(), new BigDecimal("100"), 4).negate());
+                    //回退时金额取反
+                    if (dto.getIsBack()){
+                        ret.setAmount(ret.getAmount().negate());    
+                    }
+                    etrCashList.add(ret);
+                    // 待分配投资目的的质押券面总额
+                    BigDecimal pledgePrin = tsb.getPledgePrinAmt();
+                    if (avaMap.get(tsb.getPortfolioId() + "," + tsb.getSecAcctId() + "," + tsb.getBondCode()) == null) {
+                        continue;
+                    }
+                    for (TrdStandardBondInDto avaBond : avaMap.get(tsb.getPortfolioId() + "," + tsb.getSecAcctId() + "," + tsb.getBondCode())) {
+                        resultDto = new PtlSecPositionFlowDto();
+
+                        // 当前投资目的可分配券面总额
+                        BigDecimal avaPrin = avaBond.getAvaPledgePrinAmt();
+                        // 当前投资目的决定分配的券面总额
+                        BigDecimal prin = pledgePrin.compareTo(avaPrin) > 0 ? avaPrin : pledgePrin;
+
+                        // 组合代码 = 入库列表.组合代码
+                        resultDto.setPortfolioId(tsb.getPortfolioId());
+                        // 证券管理账户/通道代码 = nvl（nvl（入库列表.证券托管账户，入库列表.通道代码），999999）
+                        resultDto.setSecAcctId(StringUtil.isEmpty(tsb.getSecAcctId()) ? "999999" : tsb.getSecAcctId());
+                        // 金融产品代码 = 入库列表.金融产品代码
+                        resultDto.setFinprodId(tsb.getFinProdId());
+                        // 分支序号 = 系统固定参数，默认为0
+                        resultDto.setBranch(dto.getBranch());
+                        // 持仓类型
+                        resultDto.setHodingType(DictCodeList.持仓类型_质押.getValue());
+                        // 日期 = 平台日
+                        resultDto.setCdate(sysDate);
+                        // 数量 = 入库列表.质押券面总额/100
+                        resultDto.setAmount(ArithmeticUtil.divide(prin, new BigDecimal("100"), 4));
+                        // 币种 = 入库列表.币种
+                        resultDto.setCcy(tsb.getCcy());
+                        // 交易编号 = 入出库编号
+                        resultDto.setTradeId(seqNo);
+                        // 投资目的 = 按“摊余成本类-公允价值变动计入其他综合收益-公允价值变动计入当期损益”的顺序依次冻结，削减对应投资目的债券可用持仓
+                        resultDto.setInvAim(StringUtil.isEmpty(avaBond.getInvAim()) ? "999999" : avaBond.getInvAim());
+                        //回退时金额取反
+                        if (dto.getIsBack()){
+                            resultDto.setAmount(resultDto.getAmount().negate());    
+                        }
+                        if (avaPrin.compareTo(BigDecimal.ZERO) > 0) {
+                            lstPtlSecPositionFlowDto.add(resultDto);
+                        }
+                        // 分配完毕后,停止可质押券信息（含投资目的）的循环
+                        pledgePrin = pledgePrin.subtract(prin);
+                        if (pledgePrin.compareTo(BigDecimal.ZERO) <= 0) {
+                            break;
+                        }
+                    }
+
+                }
+            }
+            if (!StringUtil.isEmptyList(lstPtlSecPositionFlowDto)) {
+                PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
+                ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
+                if (ptlPositionHoldDto != null) {
+                    if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
+                            && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
+                        for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
+                            basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
+                        }
+                    }
+                }
+            }
+            //入库交易提交时，指令可用持仓减少，入库交易生效时生成一笔反向的抵消掉
+            if (baseEtrCashPositionCommService != null && etrCashList.size() > 0) {
+//                baseEtrCashPositionCommService.StandardBondExecute(etrCashList,DictCodeList.出入库方向_入库);
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                // 持仓流水
+                etrPositionHoldDto.setPtlSecPositionFlows(etrCashList);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            }
         }
         return saveCount;
     }
@@ -416,7 +563,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
     /**
      * 质押券出库画面，保存处理
      *
-     * @param param 参数
+     * @param dto 参数
      * @return saveCount
      * @throws Exception 异常
      * @see

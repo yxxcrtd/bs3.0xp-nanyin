@@ -40,7 +40,13 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
      */
     @Override
     public void doInsert(TrdStandardBond002Dto entity, OperationType operationType) {
-        // do nothing
+        //出库不考虑撤销
+        if (!StringUtil.isEmptyList(entity.getPledgeBondList())) {
+            entity.setIsBack(false);
+            entity.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSubmit",
+                    entity, Long.class);
+        }
     }
 
     /**
@@ -50,7 +56,29 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
      */
     @Override
     public void doUpdate(TrdStandardBond002Dto input) {
-        // do nothing
+        //出库不考虑撤销
+        if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
+            input.setIsBack(false);
+            input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSubmit",
+                    input, Long.class);
+        }
+    }
+
+    /**
+     * 工作流中doBack
+     *
+     * @param input
+     */
+    @Override
+    public void doBack(TrdStandardBond002Dto input) {
+        //出库不考虑撤销
+        if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
+            input.setIsBack(true);
+            input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSubmit",
+                    input, Long.class);
+        }
     }
 
     /**
