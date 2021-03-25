@@ -9,13 +9,30 @@
  */
 package com.joyintech.tams.invest.trade.lend.controller;
 
-import javax.validation.Valid;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
+import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeDto;
+import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeRevokeDto;
+import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade001Service;
+import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade002Service;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,27 +42,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeDto;
-import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeRevokeDto;
-import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade001Service;
-import com.joyintech.tams.invest.trade.lend.service.TrdLendInvestTrade002Service;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
-
+import javax.validation.Valid;
 import java.util.*;
 
 /**
@@ -118,7 +115,6 @@ public class TrdLendInvestTrade001Controller extends BaseController {
     @ResponseBody
     public AjaxResult check(@Valid @RequestBody TrdLendInvestTradeRevokeDto inputDto,
                             BindingResult result) {
-        if(result.hasErrors()){
             TrdProductDeal trdProductDeal = trdCommonBaseService.selectZCDealByTid(inputDto.getTradeId(), false);
             // 查询到 卖出的转仓交易  说明 点击的是买入。
             if(trdProductDeal!=null&& StringUtil.equals(DictCodeList.交易方向_卖出.getValue(),trdProductDeal.getPs())){
@@ -128,7 +124,7 @@ public class TrdLendInvestTrade001Controller extends BaseController {
                 ajaxResult.setErrorList(errorList);
                 return ajaxResult;
             }
-        }
+
 
         return commonCheck(result, inputDto.getOperateType());
     }
