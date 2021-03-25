@@ -206,9 +206,10 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         if(dtoList.size()>0) {
         	messages = etrinvestbondinfovalidator.bussValid(dtoList.get(0));
 			if(!StringUtil.isNotEmpty(dtoList.get(0).getVdate()))
-				messages.add(new ValidMessage("vdate", "请输入委托开始日。")); 
-			if(!StringUtil.isNotEmpty(dtoList.get(0).getTradePlat()))
-				messages.add(new ValidMessage("tradePlat", "请输入交易平台。"));
+				messages.add(new ValidMessage("vdate", "请输入委托开始日。"));
+            //2021/3/25 王亚宁  ZGBSS-392 债券多组合指令新建，未选择交易平台时，提示两行
+//			if(!StringUtil.isNotEmpty(dtoList.get(0).getTradePlat()))
+//				messages.add(new ValidMessage("tradePlat", "请输入交易平台。"));
 			if(!StringUtil.isNotEmpty(dtoList.get(0).getMdate()))
 				messages.add(new ValidMessage("mdate", "请输入委托终止日。")); 
 			if(!StringUtil.isNotEmpty(dtoList.get(0).getCcy()))

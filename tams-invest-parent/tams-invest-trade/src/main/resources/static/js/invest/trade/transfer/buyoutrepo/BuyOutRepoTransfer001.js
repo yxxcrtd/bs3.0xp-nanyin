@@ -339,6 +339,16 @@ $(function() {
         });
         //添加按钮
         $('#BuyOutRepoTransfer001_btn_add').click(function() {
+        	var prinAmt = $('#BuyOutRepoTransfer001_proPrinAmt').val();
+        	var portfolioId = $('#BuyOutRepoTransfer001_portfolioId').val();
+        	if(portfolioId == "" || portfolioId == undefined || portfolioId == null){
+        		Joyin.error("组合代码不能为空");
+        		return ;
+        	}
+        	if(prinAmt == "" || prinAmt == undefined || prinAmt == null){
+        		Joyin.error("券面总额不能为空");
+        		return ;
+        	}
         	proPrinAmtChange(function(){
         		transferChange();
         	});
