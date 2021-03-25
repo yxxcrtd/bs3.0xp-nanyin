@@ -133,6 +133,8 @@ public class BeforeSubCheck extends SvrCBBaseService{
         //产品申报登记
         resultList.addAll(beforeSubErrorCheck.checkProdDeclareSub(checkdate,null,mapInvestTradeRuleout));
         /**end  中债一二期报送前检查强制校验检查  add  by ***  20201010 */
+        resultList.addAll(beforeSubErrorCheck.checkProdRaiseTotalReg(checkdate,null,mapInvestTradeRuleout));
+
         //警告逻辑检查
         resultList.addAll(checkProdEndReg(checkdate,mapPrdEndRuleout));
         resultList.addAll(checkProdRaiseTotalReg(checkdate,mapTotalRaiseRuleout));
@@ -272,29 +274,29 @@ public class BeforeSubCheck extends SvrCBBaseService{
     	 logger.info("募集总量登记检查开始");
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
 
-        //查找募集登记检查数据
-        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectRaiseRegCheck(checkdate);
-        for ( ChbBeforeSubCheckDto m:checklist ) {
-        	//增加例外情况过滤
-        	if(mapRuleout.containsKey(m.getProdid())){
-        		continue;
-        	}
-            //不合格的数据加入到不合格列表
-            CheckReport001Dto chbReportCheck = new CheckReport001Dto();
-            chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
-            chbReportCheck.setRefseqno(m.getRegistseqno());
-            chbReportCheck.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
-            chbReportCheck.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
-            chbReportCheck.setValidKey("产品代码:"+m.getProdid());
-            chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
-                DictCode.检查结果, DictCodeListExt2.检查结果_存在预警信息项.getCodeName()));
-            chbReportCheck.setDataTime(checkdate);
-            
-            if ( m.getRegcounts()<=0 ) {//不合格
-                chbReportCheck.setWarnInfo("产品的发行登记未报送!");
-                resultList.add(chbReportCheck);
-            }            
-        }
+//        //查找募集登记检查数据
+//        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectRaiseRegCheck(checkdate);
+//        for ( ChbBeforeSubCheckDto m:checklist ) {
+//        	//增加例外情况过滤
+//        	if(mapRuleout.containsKey(m.getProdid())){
+//        		continue;
+//        	}
+//            //不合格的数据加入到不合格列表
+//            CheckReport001Dto chbReportCheck = new CheckReport001Dto();
+//            chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
+//            chbReportCheck.setRefseqno(m.getRegistseqno());
+//            chbReportCheck.setRepCode(DictCodeListExt2.报表名称_募集总量登记.getValue());
+//            chbReportCheck.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
+//            chbReportCheck.setValidKey("产品代码:"+m.getProdid());
+//            chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
+//                DictCode.检查结果, DictCodeListExt2.检查结果_存在预警信息项.getCodeName()));
+//            chbReportCheck.setDataTime(checkdate);
+//
+//            if ( m.getRegcounts()<=0 ) {//不合格
+//                chbReportCheck.setWarnInfo("产品的发行登记未报送!");
+//                resultList.add(chbReportCheck);
+//            }
+//        }
         //设置系统参数
         String svrCusNumCheck = SvrDataUtil.getSysParam("SAVE_CUS_NUM_CHECK_01");
         //当系统参数设置为【是否做客户数检查 = 01：是】的时候，进行以下处理：
