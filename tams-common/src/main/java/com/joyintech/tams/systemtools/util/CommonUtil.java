@@ -882,16 +882,5 @@ public class CommonUtil {
 		return baseCommonService.getYHGeneralBankCode();
 	}
 
-	public static ChbOrgRegistBankCode getUserBank() {
-		User userInfo = SecurityUtil.getLoginUser();
-		String OrgCode = null;
-		// if(userInfo.isAdmin()){
-		// return null;
-		// }
-		if (null!=userInfo&&StringUtil.isEmpty(userInfo.getOrgCode())) {
-			OrgCode = userInfo.getOrgCode();
-		}
-		List<ChbOrgRegistBankCode> orgCode = baseMapper.selectBank(OrgCode);
-		return orgCode.get(0);
-	}
+
 }

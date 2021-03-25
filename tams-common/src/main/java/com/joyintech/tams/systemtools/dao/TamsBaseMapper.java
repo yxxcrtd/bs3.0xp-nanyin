@@ -103,5 +103,5 @@ public interface TamsBaseMapper {
 
     String getCreateInstByID(@Param("businessId") String businessId,@Param("dataType") String dataType);
 
-    List<ChbOrgRegistBankCode> selectBank(String orgCode);
+
 }
