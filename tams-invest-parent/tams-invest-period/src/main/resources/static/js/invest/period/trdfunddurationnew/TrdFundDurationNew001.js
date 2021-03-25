@@ -166,7 +166,8 @@ $(function () {
 //        }
         pageModel = PAGE_MODEL_EDIT;
         data.mode = 'edit';
-        data.operateType = 'edit'
+        data.operateType = 'edit';
+        data.pageModel = PAGE_MODEL_EDIT;
         //发起check
         Joyin.ajaxJson(basePath + 'invest/period/trdfunddurationnew/TrdFundDurationNew001/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel(title),
