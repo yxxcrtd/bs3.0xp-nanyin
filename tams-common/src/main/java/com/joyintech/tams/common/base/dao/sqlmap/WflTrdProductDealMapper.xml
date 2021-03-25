@@ -66,6 +66,8 @@
         <result column="PAY_DATE" property="payDate" jdbcType="DATE" />
         <result column="TG_BUSI_TYPE" property="tgBusiType" jdbcType="VARCHAR" />
         <result column="ACCR_NUM" property="accrNum" jdbcType="DECIMAL" />
+        <result column="SPLIT_TRADE_ID" property="splitTradeId" jdbcType="VARCHAR" />
+        <result column="IS_SWAP_TRANSACTION" property="isSwapTransaction" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, WORKFLOW_STATUS WORKFLOW_STATUS, BUSI_TYPE BUSI_TYPE, FINPROD_ID FINPROD_ID, 
@@ -85,7 +87,7 @@
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, DELIVERY_TYPE DELIVERY_TYPE, SALE_CODE SALE_CODE, 
         PAY_DATE PAY_DATE
         , TG_BUSI_TYPE TG_BUSI_TYPE
-        , ACCR_NUM ACCR_NUM
+        , ACCR_NUM ACCR_NUM,SPLIT_TRADE_ID SPLIT_TRADE_ID,IS_SWAP_TRANSACTION IS_SWAP_TRANSACTION
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -622,6 +624,12 @@
             <if test="accrNum != null" >
                 ACCR_NUM,
             </if>
+            <if test="splitTradeId != null" >
+                SPLIT_TRADE_ID,
+            </if>
+            <if test="isSwapTransaction != null" >
+                IS_SWAP_TRANSACTION,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -815,6 +823,12 @@
             </if>
             <if test="accrNum != null" >
                 #{accrNum,jdbcType=DECIMAL},
+            </if>
+            <if test="splitTradeId != null" >
+                #{splitTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="isSwapTransaction != null" >
+                #{isSwapTransaction,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
