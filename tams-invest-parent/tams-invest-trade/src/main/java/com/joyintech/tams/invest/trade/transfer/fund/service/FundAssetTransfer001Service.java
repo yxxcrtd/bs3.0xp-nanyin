@@ -828,6 +828,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
     }
 
     private String prepareEntity1(FundAssetTransfer001Dto output, FundAssetTransfer001Dto entity) {
+        String orderId = output.getTradeId();
         //生成交易编号
         output.setTradeId(generateTradeId(false));
         output.setActPortfolioId(output.getPortfolioId());
@@ -971,7 +972,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 // 币种 = 画面.币种
                 orderParameterDeal.setCcy(entity.getCcy());
                 // 交易金额 = 画面.本金金额
-                orderParameterDeal.setTradeAmt(output.getTradePrin());
+                orderParameterDeal.setTradeAmt(output.getTradeAmt());
                 // 交易对手 = 画面.交易对手
                 orderParameterDeal.setCounterId(trdProductDeal.getCounterId());
                 orderParameterDto.setDeal(orderParameterDeal);
@@ -983,6 +984,10 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
 
                 BussTrdTransferOrderDto resultOrderDto = bussTrdTransferOrderService.generateOrder(orderParameterDto);
                 if (resultOrderDto != null) {
+                    List<BussTrdTransferOrderDto> outOrder = Arrays.asList(resultOrderDto);
+                    for (BussTrdTransferOrderDto btt : outOrder){
+                        btt.setOrderId(orderId);
+                    }
                     output.setBussTrdTransferOrder(Arrays.asList(resultOrderDto));
                 }
             }
@@ -995,6 +1000,9 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 // 工作流代码
                 bttod.setWorkflowId(output.getWorkflowId());
                 output.setBussTrdTransferOrder(bussTrdTransferOrderService.save(output.getBussTrdTransferOrder()));
+                for (BussTrdTransferOrderDto dto : output.getBussTrdTransferOrder()){
+                    dto.setOrderId(orderId);
+                }
             }
         }
         // 划款指令表Entity 构造结束----------------------------------------------------------
