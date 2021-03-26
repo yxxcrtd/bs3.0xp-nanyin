@@ -404,7 +404,9 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         	String confirmMsg = "";
         	String changeLineMark = "<br/>";
             if (StringUtil.equals(DictCodeListExt2.交易方向_认购.getValue(), dto.getPs())){
-                confirmMsg = checkTradeMarket(dto, confirmMsg, changeLineMark, dto.getBussTrdTransferOrder().get(0));
+                if (dto.getBussTrdTransferOrder() != null && dto.getBussTrdTransferOrder().size()>0){
+                    confirmMsg = checkTradeMarket(dto, confirmMsg, changeLineMark, dto.getBussTrdTransferOrder().get(0));
+                }
             }
         	if (StringUtil.isNotBlank(confirmMsg)) {
         		joyinMessages.add(new JoyinMessage(confirmMsg + ar.getData(), MessageType.警告消息));
