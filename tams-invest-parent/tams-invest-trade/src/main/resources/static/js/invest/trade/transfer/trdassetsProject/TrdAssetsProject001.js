@@ -50,6 +50,8 @@
     
     projectListInfoList.bind('click', '.delt', function(data, index) {
     	 projectListInfoList.deleteRow(index);
+    	 var unSplitPrinAmt = $("#unSplitPrinAmt").val();
+    	 $("#unSplitPrinAmt").val(Number(unSplitPrinAmt) + Number(data.prinAmt)).trigger('blur');
          calUnSplitPrinAmt();
     });
  
@@ -190,6 +192,9 @@
                     }
                     //row['assignPrinamt'] = 0;
                     projectListInfoList.addRow(row);
+                    var unSplitPrinAmt = $("#unSplitPrinAmt").val();
+                    var splitPrinAmt = $("#splitPrinAmt").val();
+               	    $("#unSplitPrinAmt").val(Number(unSplitPrinAmt) - Number(splitPrinAmt)).trigger('blur');
                     calUnSplitPrinAmt();
                   //清空转仓信息的信息
                     $("#portfolioId").val('').trigger("change").trigger('blur');
@@ -220,7 +225,7 @@
         var avalibleCash = $("#bussTrdAvailableCashQuery_avalibleCash");
         var channelAvailableCash = $("#bussTrdAvailableCashQuery_channelAvailableCash");
         var assetPosition = $("#bussTrdAvailableCashQuery_assetPosition");
-        $("#unSplitPrinAmt").val(JoyinMath.doMinus(JoyinMath.doMinus(prinAmt,allSplitSumPrinAmt,2),alSplitPrinAmt,2)).trigger("blur");
+        //$("#unSplitPrinAmt").val(JoyinMath.doMinus(JoyinMath.doMinus(prinAmt,allSplitSumPrinAmt,2),alSplitPrinAmt,2)).trigger("blur");
         $("#bussTrdAvailableCashQuery_avalibleCash").val(JoyinMath.doMinus(avalibleCash,splitSumTradeAmt,2)).trigger("blur");
         $("#bussTrdAvailableCashQuery_channelAvailableCash").val(JoyinMath.doMinus(channelAvailableCash,splitSumTradeAmt,2)).trigger("blur");
         $("#bussTrdAvailableCashQuery_assetPosition").val(JoyinMath.doMinus(assetPosition,splitSumPrinAmt,2)).trigger("blur");
@@ -237,8 +242,7 @@
         params.portfolioId = $("#portfolioId").val();
         if(!params.portfolioId){
         	$("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
-            $("#bussTrdAvailableCashQuery_avalibleCashT1").val('').trigger("change").trigger('blur');
-            $("#bussTrdAvailableCashQuery_channelAvailableCash").val('').trigger("change").trigger('blur');
+            $("#bussTrdAvailableCashQuery_avalibleCashT1").val('').trigger("change").trigger('blur');           
         }
         params.calendarId = $("#calendarId").val();
         params.ccy = $("#ccy").val();

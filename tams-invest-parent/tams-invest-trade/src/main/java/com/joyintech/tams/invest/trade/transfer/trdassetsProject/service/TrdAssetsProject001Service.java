@@ -576,6 +576,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
             projListInfoDto.setInvestRate(dto.getInvestRate());
             projListInfoDto.setUnitCprice(dto.getUnitCprice());
             projListInfoDto.setUnitFprice(dto.getUnitFprice());
+            projListInfoDto.setChlId(dto.getChlId());
             if (StringUtil.isBlank(projListInfoDto.getTradeId())) {
                 if (baseGetBusinessId != null) {
                     BussinessCodeParameter codeParameter = genBizCode(dto);
@@ -893,6 +894,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         trdProductDeal.setMdate(entity.getMdate());//到期日
         trdProductDeal.setSettleDate(entity.getSettleDate());//交割日期
         trdProductDeal.setCcy(entity.getCcy());
+        trdProductDeal.setChlId(entity.getChlId());
         trdProductDeal.setUnitCprice(entity.getUnitCprice());//单位净价
         trdProductDeal.setUnitInt(entity.getUnitIntAmt());//单位利息
         trdProductDeal.setUnitFprice(entity.getUnitFprice());//单位全价
@@ -1092,5 +1094,16 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
         trdProductDealAdd.setWorkflowId(entity.getWorkflowId());
         return trdProductDealAdd;
+    }
+	
+	 /**
+     * 获取处于流程中的持仓（但是未记录在在持仓流水中）
+     * @return 处于流程中的持仓（但是未记录在在持仓流水中）
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal selectWflAmtAsset(Map<String,Object> map){
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/trdassetsproject/TrdAssetsProject/selectWflAmtAsset",map,
+        		BigDecimal.class);
     }
 }
