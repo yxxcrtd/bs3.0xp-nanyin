@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.trade.transfer.fund.dto.FundAssetTransfer001Dto;
+import com.joyintech.tams.invest.trade.transfer.lendtransfer.service.LendTransfer001Service;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -72,6 +73,9 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
     private JasperUtil jasperUtil;
     @Autowired
     private IPlatformDate iPlatformDate;
+    
+    @Autowired
+    private LendTransfer001Service lendTransfer001Service;
 
     @Override
     public void doComplete(FundAssetTransfer001Dto dto, OperationType operationType) {
@@ -372,7 +376,16 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         }
         dto.setTradePrinOrg(tradePrinOrg);
         //剩余可转仓份额
-        dto.setRollablePrin(tradePrinOrg);
+        //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+        param.put("searchDate", DateUtil.getSysDate());
+        BigDecimal wflAmt = lendTransfer001Service.selectWflAmtLend(param);
+        if(wflAmt != null) {
+    		BigDecimal newRollablePrin = ArithmeticUtil.doAdd(tradePrinOrg,wflAmt);
+    		dto.setRollablePrin(newRollablePrin);
+    	}else {               		
+    		dto.setRollablePrin(tradePrinOrg);
+    	}
+        //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
         //金融产品代码
         dto.setFinprodIdOrg((String) param.get("finprodId"));
         //原组合代码
