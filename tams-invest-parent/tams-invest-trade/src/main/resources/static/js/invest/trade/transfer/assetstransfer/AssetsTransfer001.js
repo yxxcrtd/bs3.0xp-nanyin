@@ -350,7 +350,7 @@
                     Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade001/checkRevoke', checkObj, function (result) {
                         Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
                             checkObj.revokeReason = result;
-                            WorkFlow.doDeleteList(basePath + 'invest/trade/bond/TrdBondInvestTrade001/doRevoke', checkObj, "TrdBondInvestTrade001_btn_revoke", "TrdBondInvestTrade002");
+                            WorkFlow.doRevokeList(basePath + 'invest/trade/bond/TrdBondInvestTrade001/doRevoke', checkObj, "TrdBondInvestTrade001_btn_revoke", "TrdBondInvestTrade002");
                         });
                     });
                 }
@@ -454,7 +454,7 @@
                     Joyin.ajax(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revokeCheck', object, function (result) {
                         Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
                             object.revokeReason = result;
-                            WorkFlow.doRevoke(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revoke', object, "TrdProjectInvestTrade001_btn_revoke", "TrdProjectInvestTrade002");
+                            WorkFlow.doRevokeList(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revoke', object, "TrdProjectInvestTrade001_btn_revoke", "TrdProjectInvestTrade002");
                         });
                     });
                 }
@@ -471,7 +471,7 @@
                     Joyin.ajaxJson(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade001/checkRevoke', checkObj, function (result) {
                         Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
                             checkObj.revokeReason = result;
-                            WorkFlow.doDeleteList(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade001/doRevoke', checkObj, "TrdRepoTrade001_btn_revoke", "TrdRepoTrade002");
+                            WorkFlow.doRevokeList(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade001/doRevoke', checkObj, "TrdRepoTrade001_btn_revoke", "TrdRepoTrade002");
                         });
                     });
                 }
@@ -488,7 +488,7 @@
                             checkObj.finprodId = selArr[0].finprodId;
                             checkObj.portfolioId = selArr[0].portfolioId;
                             checkObj.secTotalPrin = selArr[0].amount;
-                            WorkFlow.doDeleteList(basePath + 'invest/trade/buyoutrepo/TrdOutRightRepoTrade001/doRevoke', checkObj, "TrdOutRightRepoTrade001_btn_revoke", "TrdOutRightRepoTrade002");
+                            WorkFlow.doRevokeList(basePath + 'invest/trade/buyoutrepo/TrdOutRightRepoTrade001/doRevoke', checkObj, "TrdOutRightRepoTrade001_btn_revoke", "TrdOutRightRepoTrade002");
                         });
                     });
                 }
@@ -503,7 +503,7 @@
                     Joyin.ajaxJson(basePath + 'invest/trade/lend/TrdLendInvestTrade001/checkRevoke', checkObj, function(result) {
                         Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
                             checkObj.revokeReason = result;
-                            WorkFlow.doDeleteList(basePath + 'invest/trade/lend/TrdLendInvestTrade001/doRevoke', checkObj, "TrdLendInvestTrade001_btn_revoke", "TrdLendInvestTrade002");
+                            WorkFlow.doRevokeList(basePath + 'invest/trade/lend/TrdLendInvestTrade001/doRevoke', checkObj, "TrdLendInvestTrade001_btn_revoke", "TrdLendInvestTrade002");
                         });
                     });
                 }
@@ -518,7 +518,7 @@
                     Joyin.ajaxJson(basePath+ 'invest/trade/stockdeal/TrdStock001/checkRevoke',checkObj,function(result) {
                         Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"),0,function(result) {
                             checkObj.revokeReason = result;
-                            WorkFlow.doDeleteList(basePath+ 'invest/trade/stockdeal/TrdStock001/doRevoke',checkObj,"TrdStock001_btn_revoke","TrdStock002");
+                            WorkFlow.doRevokeList(basePath+ 'invest/trade/stockdeal/TrdStock001/doRevoke',checkObj,"TrdStock001_btn_revoke","TrdStock002");
                         });
                     });
                 }
@@ -533,7 +533,7 @@
                     Joyin.ajaxJson(basePath + 'invest/trade/bondlend/TrdBondLendInvestTrade001/checkRevoke', checkObj, function(result) {
                         Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
                             checkObj.revokeReason = result;
-                            WorkFlow.doDeleteList(basePath + 'invest/trade/bondlend/TrdBondLendInvestTrade001/doRevoke', checkObj, "TrdBondLendInvestTrade001_btn_revoke", "TrdBondLendInvestTrade002");
+                            WorkFlow.doRevokeList(basePath + 'invest/trade/bondlend/TrdBondLendInvestTrade001/doRevoke', checkObj, "TrdBondLendInvestTrade001_btn_revoke", "TrdBondLendInvestTrade002");
                         });
                     });
                 }
