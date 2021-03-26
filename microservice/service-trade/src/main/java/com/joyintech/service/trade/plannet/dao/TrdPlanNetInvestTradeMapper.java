@@ -277,4 +277,9 @@ public interface TrdPlanNetInvestTradeMapper {
 	 * @return
 	 */
 	BigDecimal queryIssueAmt(Map<String, Object> map);
+	
+	
+	BigDecimal getPriceByTradeId(String tradeId);
+	
+	BigDecimal getPriceByWorkflowId(String workflowId);
 }

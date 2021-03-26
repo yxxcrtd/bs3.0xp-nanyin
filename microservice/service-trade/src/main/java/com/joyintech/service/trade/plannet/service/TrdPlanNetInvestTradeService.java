@@ -941,7 +941,17 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
      * @since 1.0
      */
     public BigDecimal getPrice(Map<String, Object> map) {
-        return trdPlanNetInvestTradeMapper.getPrice(map);
+    	BigDecimal price = null;
+    	if(StringUtil.isNotEmpty(map.get("tradeId"))) {
+    		price = trdPlanNetInvestTradeMapper.getPriceByTradeId(map.get("tradeId").toString());
+    	}
+    	if(price == null && StringUtil.isNotEmpty(map.get("workflowId"))) {
+    		price = trdPlanNetInvestTradeMapper.getPriceByTradeId(map.get("workflowId").toString());
+    	}
+    	if(price==null) {
+    		price = trdPlanNetInvestTradeMapper.getPrice(map);
+    	}
+        return price;
     }
 
     /**

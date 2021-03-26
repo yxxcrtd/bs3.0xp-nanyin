@@ -437,6 +437,14 @@
 			AND B.VAL_DATE = to_date(#{netDate},'yyyy-mm-dd')
 		</where>
 	</select>
+	
+	<select id="getPriceByTradeId" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+		SELECT UNIT_CPRICE FROM TRD_PRODUCT_DEAL where trade_id = #{tradeId,jdbcType=VARCHAR} AND ROWNUM = 1
+	</select>
+	
+	<select id="getPriceByWorkflowId" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+		SELECT UNIT_CPRICE FROM WFL_TRD_PRODUCT_DEAL where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR} AND ROWNUM = 1
+	</select>
 
 	<select id="getPortfolioId" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT

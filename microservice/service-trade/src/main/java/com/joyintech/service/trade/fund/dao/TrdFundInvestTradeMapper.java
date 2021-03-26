@@ -385,4 +385,8 @@ public interface TrdFundInvestTradeMapper {
      * @since 1.0
      */
     List<BussTrdTransfenpeiDto> selectTrdTransfenpeiList(Map<String, Object> param);
+    
+	BigDecimal getPriceByTradeId(String tradeId);
+	
+	BigDecimal getPriceByWorkflowId(String workflowId);
 }
