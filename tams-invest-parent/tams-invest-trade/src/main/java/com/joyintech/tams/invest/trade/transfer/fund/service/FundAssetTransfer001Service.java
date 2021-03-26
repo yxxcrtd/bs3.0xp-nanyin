@@ -695,6 +695,8 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         trdProductDeal.setTrader(entity.getTrader());
         //通道代码
         trdProductDeal.setChlId(entity.getChlId());
+
+        trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
         //备注
         input.setRemark("基金类资产交易转出");
 
@@ -892,6 +894,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         trdProductDeal.setTrader(entity.getTrader());
         //通道代码
         trdProductDeal.setChlId(entity.getChlId());
+        trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
         //备注
         output.setRemark("基金类资产交易转入");
 

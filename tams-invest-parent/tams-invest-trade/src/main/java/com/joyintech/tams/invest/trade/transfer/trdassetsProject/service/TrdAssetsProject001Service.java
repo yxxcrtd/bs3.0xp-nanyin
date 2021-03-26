@@ -926,6 +926,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
             trdProductDeal.setRemark("项目类资产转入");
         }
         trdProductDeal.setTrader(LoginUserUtil.getUserName());
+        trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
         return trdProductDeal;
     }
     @Override

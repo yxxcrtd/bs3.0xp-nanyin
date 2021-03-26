@@ -438,6 +438,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM TRD_PRODUCT_DEAL
             LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -449,6 +450,7 @@
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
             AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -541,6 +543,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM WFL_TRD_PRODUCT_DEAL
             LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -551,6 +554,7 @@
             LEFT JOIN (<include refid="getYield"/>) YIELD ON YIELD.FINPROD_ID = WFL_TRD_PRODUCT_DEAL.FINPROD_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND WFL_TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -612,6 +616,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM TRD_PRODUCT_DEAL
             LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -625,6 +630,7 @@
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
             AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -686,6 +692,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM WFL_TRD_PRODUCT_DEAL
             LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -698,6 +705,7 @@
             LEFT JOIN WFL_PA_TRD_PRODUCT_DEAL ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_PA_TRD_PRODUCT_DEAL.TRADE_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND WFL_TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -757,6 +765,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM TRD_PRODUCT_DEAL
             LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -774,6 +783,7 @@
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
             AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -837,6 +847,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM WFL_TRD_PRODUCT_DEAL
             LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -853,6 +864,7 @@
             on FIN_PRODUCT.FINPROD_ID = FIN_DEAL_TARGET.PLEDGE_FINPROD_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND WFL_TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -913,6 +925,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM TRD_PRODUCT_DEAL
             LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -931,6 +944,7 @@
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
             AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -992,6 +1006,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM WFL_TRD_PRODUCT_DEAL
             LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -1009,6 +1024,7 @@
             on FIN_PRODUCT.FINPROD_ID = FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND WFL_TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -1069,6 +1085,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM TRD_PRODUCT_DEAL
             LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -1083,6 +1100,7 @@
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
             AND TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
@@ -1144,6 +1162,7 @@
             <!-- add by liuwei for huaxing 20200310 start -->
             ,WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 as finprodType2
             <!-- add by liuwei for huaxing 20200310 end -->
+            ,WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM WFL_TRD_PRODUCT_DEAL
             LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
@@ -1157,6 +1176,7 @@
             ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_PA_TRD_PRODUCT_DEAL.TRADE_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND WFL_TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
+            AND WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION = #{YESORNO_Y}
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 <foreach collection="portfolioIdList" index="index" item="item"
                          open="AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">

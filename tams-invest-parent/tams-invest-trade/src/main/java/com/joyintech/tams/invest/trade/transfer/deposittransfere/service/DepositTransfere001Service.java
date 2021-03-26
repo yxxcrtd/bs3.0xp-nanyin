@@ -609,6 +609,7 @@ public class DepositTransfere001Service extends CommonExportService<DepositTrans
         //add by liuwei for huaxing 20200330 start
         trdProductDeal.setTrader(trdProductDeal.getCreateUser());
         //add by liuwei for huaxing 20200330 end
+        trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
         return trdProductDeal;
     }
 

@@ -613,6 +613,9 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             trdProductDeal.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());//交易状态
             trdProductDeal.setTotleTradeId(entity.getTotleTradeId());
+            trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
+
+
             // 金融产品交易信息DTO.金融产品交易附属表Entity -> 金融产品交易附属表
             TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
             BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd, entity.getTrdProductDealAdd());
@@ -730,6 +733,9 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
                 trdProductDealOut.setInvAim(entity.getTurnInvAim());
                 trdProductDealOut.setTotleTradeId(反向交易编号);
 
+                //trdProductDealOut.setSplitTradeId(trdProductDeal.getTradeId());
+                trdProductDealOut.setIsSwapTransaction(DictCodeList.是否_是.getValue());
+
                 trdProductDealOut.setRemark("债券类资产转入交易");
                 AllTradeCommonUtil.setDeals(inputDto, trdProductDealOut, trdProductDealAdd, paTrdProductDeal, baseTradeProductDealDto.getStlPayOrdersList(), ptlTrades,
                         entity.getActPortfolioId());
@@ -819,6 +825,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
     	        wflTrdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
     	        wflTrdProductDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
                 wflTrdProductDeal.setWorkflowId(entity.getWorkflowId());
+                wflTrdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
 
                 //此业务流程表中暂存卖出的投资目的
 //                wflTrdProductDeal.setInvAim(entity.getInvAim());
