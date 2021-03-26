@@ -125,7 +125,7 @@
 			  and SUB.PLAN_ASSET_ID = NVL(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE)
 			  and SUB.ASSET_CODE = NVL(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE)
 			  and SUB.SEND_STATUS in ('02','03')
-			  and SUB.STATUS != 'D')
+			  and SUB.STATUS != '03')
 		and POS.STATUS != 'D'
 	</select>
 	<!-- modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end -->
@@ -168,7 +168,7 @@
 			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
 		</if>
 		WHERE to_char(sub.POS_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
-		  and SUB.SEND_STATUS in ('02','03')
+		  and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
           and ((POS.POS_NUM is not null and SUB.POS_NUM &lt;&gt; POS.POS_NUM)
 				or (POS.TOTAL_NUM is not null and SUB.TOTAL_NUM &lt;&gt; POS.TOTAL_NUM)
 				or (POS.ISSUE_AMT is not null and SUB.ISSUE_AMT &lt;&gt; POS.ISSUE_AMT)

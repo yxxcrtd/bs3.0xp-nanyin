@@ -97,7 +97,7 @@ $(function () {
                 render: function (data, type, row, meta) {
                     var index = row.pageType-1;
                     //100%为绿色，非100%为红色
-                    if(row.rate=="100"){
+                    if(row.rate=="100" || row.rate=="100.00"){
                         selectcolor=color[0];
                     }
                     else{

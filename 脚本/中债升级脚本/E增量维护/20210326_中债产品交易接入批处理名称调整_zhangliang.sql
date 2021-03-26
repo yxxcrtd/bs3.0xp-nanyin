@@ -1,0 +1,1 @@
+UPDATE sys_batch_task SET TASK_NAME = '产品交易信息接入' WHERE TASK_NAME = '产品交易信息接入接入';
