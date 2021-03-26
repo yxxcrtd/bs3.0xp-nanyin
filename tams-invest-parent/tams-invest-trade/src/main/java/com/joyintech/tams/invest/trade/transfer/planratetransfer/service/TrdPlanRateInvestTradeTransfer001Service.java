@@ -1031,8 +1031,8 @@ public class TrdPlanRateInvestTradeTransfer001Service extends CommonExportServic
 //        }
         //2019-12-24 通道费改造 标的挂通道  通道费不参与计算
 //        trdProductDealTotal.setFeeAmtUnpay(dto.getChannelFee());
-        trdProductDealTotal.setPayUnpaidintAmt(dto.getIntAmt());//支付未支付利息
-        trdProductDealTotal.setIspayUnpaidint("Y");// 是否转让还本未支付利息
+        trdProductDealTotal.setPayUnpaidintAmt(new BigDecimal("0"));//支付未支付利息
+        trdProductDealTotal.setIspayUnpaidint("N");// 是否转让还本未支付利息
 
         trdProductDealTotal.setPortfolioId(dto.getActPortfolioId());//存子组合
         return trdProductDealTotal;

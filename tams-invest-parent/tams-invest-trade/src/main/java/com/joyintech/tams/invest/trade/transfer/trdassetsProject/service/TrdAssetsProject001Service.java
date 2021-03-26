@@ -1048,17 +1048,19 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
 
         trdProductDealTotal.setRemark(entity.getRemark());
         trdProductDealTotal.setChlId(entity.getChlId());
-        if(entity.getPs().equals(DictCodeList.交易方向_卖出.getValue())) {
-            //还本不带息的资产才保存
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("finprodId", entity.getFinprodId());
-            param.put("settleDate", entity.getSettleDate());
-            Map<String, Object> result = findRepayFlag(param);
-            if (result.get("repayIntFlag") != null && result.get("repayIntFlag").equals("N")) {
-                trdProductDealTotal.setIspayUnpaidint("Y");
-            }
-        }
-        trdProductDealTotal.setPayUnpaidintAmt(entity.getSplitIntAmt());//利息总额
+//        if(entity.getPs().equals(DictCodeList.交易方向_卖出.getValue())) {
+//            //还本不带息的资产才保存
+//            Map<String, Object> param = new HashMap<String, Object>();
+//            param.put("finprodId", entity.getFinprodId());
+//            param.put("settleDate", entity.getSettleDate());
+//            Map<String, Object> result = findRepayFlag(param);
+//            if (result.get("repayIntFlag") != null && result.get("repayIntFlag").equals("N")) {
+//                trdProductDealTotal.setIspayUnpaidint("Y");
+//            }
+//        }
+//        trdProductDealTotal.setPayUnpaidintAmt(entity.getSplitIntAmt());//利息总额
+        trdProductDealTotal.setPayUnpaidintAmt(new BigDecimal("0"));//支付未支付利息
+        trdProductDealTotal.setIspayUnpaidint("N");// 是否转让还本未支付利息
         trdProductDealTotal.setPortfolioId(entity.getActPortfolioId());//存子组合
         return trdProductDealTotal;
     }

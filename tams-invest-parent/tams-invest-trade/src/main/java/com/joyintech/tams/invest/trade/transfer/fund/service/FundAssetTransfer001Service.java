@@ -196,6 +196,13 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 inputDto.setTrdProductDeal(input.getTrdProductDeal());
                 // 通道交易 新增 强成西 2019/03/26 start
                 inputDto.setTrdProductDealAdd(input.getTrdProductDealAdd());
+                if (!StringUtil.isEmptyList(input.getBussTrdTransferOrder())) {
+                    for (BussTrdTransferOrderDto bttod : input.getBussTrdTransferOrder()) {
+                        stlPayOrder = new StlPayOrdersDto();
+                        BeanUtil.copyPropertiesIgnoreNull(stlPayOrder, bttod);
+                        inputDto.setStlPayOrders(stlPayOrder);
+                    }
+                }
                 // 通道交易 新增 强成西 2019/03/26 end
                 AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
                 // 一体化对应etliu end
@@ -311,6 +318,13 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 // 通道交易 新增 强成西 2019/03/26 start
                 outputDto.setTrdProductDealAdd(output.getTrdProductDealAdd());
                 // 通道交易 新增 强成西 2019/03/26 end
+                if (!StringUtil.isEmptyList(output.getBussTrdTransferOrder())) {
+                    for (BussTrdTransferOrderDto bttod : output.getBussTrdTransferOrder()) {
+                        stlPayOrder1 = new StlPayOrdersDto();
+                        BeanUtil.copyPropertiesIgnoreNull(stlPayOrder1, bttod);
+                        outputDto.setStlPayOrders(stlPayOrder1);
+                    }
+                }
                 AllTradeCommonUtil.handleAfterTradeComplete(outputDto);
 
                 jasperExecute(input, false);
@@ -400,6 +414,8 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         key.setFinprodId((String) param.get("finprodId"));
         key.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
         FinProductType type = bussCommonMapperDelegateService.selectByMultiPrimaryKey(FinProductTypeMapper.class,key,FinProductType.class);
+        FinProduct finProduct = bussCommonMapperDelegateService.selectByMultiPrimaryKey(FinProductMapper.class,(String) param.get("finprodId"),FinProduct.class);
+        dto.setTradeMarket(finProduct.getTradeMarket());
         if(StringUtil.isNotEmpty(type)){
             dto.setFundType(type.getType6());
         }
