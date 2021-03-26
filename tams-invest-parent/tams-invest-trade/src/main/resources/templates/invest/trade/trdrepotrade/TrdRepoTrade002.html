@@ -440,7 +440,7 @@
                      th:data-params="|{entityName: 'bussRepoSec', pageFrom: 'TrdRepoTrade002', entity:'${entity_bussRepoSecDto}',
                      portfolioId:'${entity?.portfolioId==null?'':entity?.portfolioId}', ps:'${entity?.ps==null?'':entity?.ps}',
                      bussType:'zyqJy',bussType:'zyqJy',
-                     bizCode:'${tradeId==null?'':tradeId}', entrustId:'${entity?.entrustId==null?'':entity?.entrustId}',
+                     bizCode:'${rTradeId!=null? rTradeId : tradeId==null?'':tradeId}', entrustId:'${entity?.entrustId==null?'':entity?.entrustId}',
                      securitiesCust: '${entity?.secAcctId == null? '': entity?.secAcctId}',chlId:'${entity?.chlId == null? '': entity?.chlId}', tradeMarketId: 'tradeMarket'}|"></div>
                 <!-- 划款信息 -->
                 <div class="page-component" th:data-path="@{/component/trade/BussTrdTransferOrder/init}" id="bussTrdTransferOrder_div"

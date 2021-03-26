@@ -99,7 +99,7 @@
 		m.FEE_MINI as feeMini,
 		m.CHARGE_VALUE as chargeValue,
 		m.CHARGE_RATE * 1000 as chargeRate,
-		m.IS_PAY_WITH_TRADE as isPayWithTrade,m.IS_GRADE isGrade,m.TRADE_MARKET_MODE tradeMarketMode
+		m.IS_PAY_WITH_TRADE as isPayWithTrade,nvl(m.IS_GRADE,'N') isGrade,m.TRADE_MARKET_MODE tradeMarketMode
 	 FROM (
 			select distinct BATCH_SEQ,TRADE_MARKET ,FEE_TYPE,TRADE_TYPE,CHARGE_TYPE,EFF_DATE,CHARGE_BASIS,
 		 		CASE when t.IS_GRADE='Y' then null else T1.CHARGE_VALUE end as CHARGE_VALUE,

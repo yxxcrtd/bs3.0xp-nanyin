@@ -456,6 +456,7 @@
           tpd.branch,
           tpd.regist_org
         <!-- 增加 add by nixukuan 20191119 end -->
+          ,tpd.r_trade_id
         FROM
                       TRD_PRODUCT_DEAL tpd
           LEFT JOIN   TRD_PRODUCT_DEAL_ADD tpda
