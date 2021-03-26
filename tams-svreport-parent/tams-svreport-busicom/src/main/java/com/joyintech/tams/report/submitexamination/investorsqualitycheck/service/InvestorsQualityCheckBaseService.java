@@ -73,7 +73,10 @@ public abstract class InvestorsQualityCheckBaseService extends BaseService<Inves
         dto.setUnQualified(String.valueOf(unQualifiedList.size()));
         dto.setTotal(String.valueOf(allList.size()));
         if (!StringUtil.isEmptyList(allList)){
-            dto.setRate(ArithmeticUtil.subtract(new BigDecimal(100), ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal(unQualifiedList.size()), new BigDecimal(100)), new BigDecimal(allList.size()), 2)).toPlainString());
+            dto.setRate("100");
+            if (!StringUtil.isEmptyList(unQualifiedList)){
+                dto.setRate(ArithmeticUtil.subtract(new BigDecimal(100), ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal(unQualifiedList.size()), new BigDecimal(100)), new BigDecimal(allList.size()), 2)).toPlainString());
+            }
         }
         dto.setPageType(PageType);
 
