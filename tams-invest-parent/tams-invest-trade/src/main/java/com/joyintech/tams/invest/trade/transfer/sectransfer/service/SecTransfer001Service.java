@@ -1025,7 +1025,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
         // 交易份额 = 画面.券面总额/100
         dto.setShareAmt(
                 ArithmeticUtil.divide(dto.getTotalFaceValue(), new BigDecimal(100), 4, RoundingMode.HALF_UP));
-        dto.setTradeAmt(dto.getTradeRepAmt());
+        dto.setTradeAmt(dto.getTradeAmt());
         dto.setRemark("债券类资产转出交易");
         // modified by wangguoxian 费用设置 20190801 start
         // 交易金额 = 画面.交易金额
