@@ -356,7 +356,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 // 添加持仓流水到目标dto
 //                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
 //                到期日每只券增加交易质押券面总额/100
-                etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, false));
+//                etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, false));
                 if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
                     stlPayOrdersDtos.forEach(stlPayOrdersDto -> {
                         // 现金流水dto处理 交割日减少(交易金额-交易券面总额*委托全价/债券面值）
@@ -377,6 +377,15 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 }
             }
         }
+        // 交易生效 
+        //modify by mashukai 20210326 ZGBSS-633 质押式银行间正回购到期交易生效后，质押持仓未释放 start
+        if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+            if (StringUtil.isEmpty(entrustId)) { // 无委托
+                //到期日每只券增加交易质押券面总额/100
+                etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, false));
+            }
+        }
+        //modify by mashukai 20210326 ZGBSS-633 质押式银行间正回购到期交易生效后，质押持仓未释放 end
     }
 
     /**
