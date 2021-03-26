@@ -122,8 +122,8 @@
 		</if>
 		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB 
 			where SUB.POS_DATE = POS.POS_DATE
-			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID 
-			  and SUB.ASSET_CODE = POS.ASSET_CODE 
+			  and SUB.PLAN_ASSET_ID = NVL(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE)
+			  and SUB.ASSET_CODE = NVL(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE)
 			  and SUB.SEND_STATUS in ('02','03')
 			  and SUB.STATUS != 'D')
 		and POS.STATUS != 'D'
@@ -151,9 +151,9 @@
         ON NVL(BOTASSET.ASSET_CODE_OLD , BOTASSET.ASSET_CODE) = sub.ASSET_CODE
 		left join  CHB_BOT_AST_POS POS
                on SUB.POS_DATE = POS.POS_DATE
-			  and SUB.PLAN_ASSET_ID = PLANASSET.ASSET_CODE
-			  and SUB.ASSET_CODE = BOTASSET.ASSET_CODE
-			  and pos.status in ('M','E')
+			  and POS.PLAN_ASSET_ID = PLANASSET.ASSET_CODE
+			  and POS.ASSET_CODE = BOTASSET.ASSET_CODE
+			  and POS.status in ('M','E')
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
 			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
 			LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
