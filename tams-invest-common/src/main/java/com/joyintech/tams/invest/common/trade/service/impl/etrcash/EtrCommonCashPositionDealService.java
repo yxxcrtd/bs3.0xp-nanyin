@@ -86,6 +86,11 @@ public class EtrCommonCashPositionDealService extends BaseService {
 
     private static PtlCapacctInfoMapper ptlCapacctInfoMapper;
 
+    @Autowired
+    public void setPtlCapacctInfoMapper(PtlCapacctInfoMapper ptlCapacctInfoMapper) {
+        EtrCommonCashPositionDealService.ptlCapacctInfoMapper = ptlCapacctInfoMapper;
+    }
+
     /**
      * 根据债券信息和日期获取最新市价
      * 
