@@ -233,7 +233,11 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
             entity.setFinAssetIntInfoList(listFinAssetIntInfotemp1);
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
             entity.getBaseTotalTradeInfoDto().setIsNeedStlPayOrders(true);
-            dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
+            Boolean isNotNeedPosition = true;
+            if(StringUtil.isNotEmpty(entity.getFinAssetIntInfoList().get(0).getSecAcctId())){
+                isNotNeedPosition = false;
+            }
+            dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), isNotNeedPosition);
         }
         if(bonusTypeHlzt){
 //            非货币红利再投

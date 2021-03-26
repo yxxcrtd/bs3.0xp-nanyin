@@ -1316,6 +1316,11 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             etrCashPositionFlowDto1.setSeqno(getSeqNo());
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
 
+            String QsAcctId = EtrCommonCashPositionDealService.select组合托管户(stlPayOrdersDto.getPortfolioId(), stlPayOrdersDto.getCcy(),
+                    DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+            if(StringUtil.isNotEmpty(QsAcctId)){
+                return;
+            }
             // 预增现金 资金到账日减少到账金额
             EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
             BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto1);
