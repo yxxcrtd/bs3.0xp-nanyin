@@ -166,14 +166,14 @@
 	  max(nvl(fi.UPDATE_TIME,fi.CREATE_TIME)) updatetime,
 	  null tradeId,
 	  null as status,
-	  null scino
+	  fi.sec_acct_id scino
 	  from ptl_sec_valution fi
 	  left join fin_product fp
 	  on fi.finprod_id=fp.finprod_id
 	  left join fin_product_type fpt
 	  on fp.finprod_id=fpt.finprod_id
 	  where fpt.type_11='013'
-	  group by  fp.finprod_market_id ,fp.finprod_type2,fpt.type_11,fi.cdate)tt
+	  group by  fp.finprod_market_id ,fp.finprod_type2,fpt.type_11,fi.cdate,fi.sec_acct_id)tt
 	  where  tt.updatetime  > #{updatetime,jdbcType=TIMESTAMP}
 
 
@@ -208,12 +208,12 @@
 	  max(nvl(fi.UPDATE_TIME,fi.CREATE_TIME)) updatetime,
 	  null tradeId,
 	  null as status,
-	  null scino
+	  fi.sec_acct_id scino
 	  from ptl_sec_valution fi
 	  left join fin_product fp
 	  on fi.finprod_id=fp.finprod_id
 	  where fp.finprod_type2='F10'
-	  group by  fp.finprod_market_id ,fp.finprod_type2,fi.cdate)tt
+	  group by  fp.finprod_market_id ,fp.finprod_type2,fi.cdate,fi.sec_acct_id)tt
 	  where  tt.updatetime  > #{updatetime,jdbcType=TIMESTAMP}　
 	  ) a
 	  where 1=1 and a.idx=1
@@ -260,6 +260,8 @@
 	and CII.CHANGE_TYPE = TEMP.CHANGE_TYPE
 	and ((CII.TRADE_ID is not null and TEMP.TRADE_ID is not null and CII.TRADE_ID = TEMP.TRADE_ID)
 	    or (CII.TRADE_ID  is null and TEMP.TRADE_ID is null))
+	and  ((CII.SCINO is not null and TEMP.SCINO is not null and CII.SCINO = TEMP.SCINO)
+	or (CII.SCINO  is null and TEMP.SCINO is null))
 	)
 	<!-- 匹配到则更新 -->
 	WHEN MATCHED THEN UPDATE SET

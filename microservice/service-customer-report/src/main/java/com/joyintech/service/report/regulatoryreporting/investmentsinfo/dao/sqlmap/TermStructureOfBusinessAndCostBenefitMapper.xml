@@ -1512,7 +1512,16 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and fc1.scino='999999'
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and cr1.scino='999999'
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		<!--通过通道投资的资产的收益率-->
@@ -1703,7 +1712,17 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino !='999999' and fc1.scino= cr1.scino
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
@@ -1773,6 +1792,7 @@ with cj as(
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1789,7 +1809,10 @@ with cj as(
 		</if>
 		left join (select * from chb_asset_rate scmapr
 		where scmapr.CHANGE_DATE=(select max(scmapr1.change_date) from chb_asset_rate scmapr1
-		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.COST_AMT!=0 and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'
+		and scmapr1.change_type='06'
+		and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		and scmapr.change_type='06'
 		) scmapr
 		on cmapr.ASSET_ID=scmapr.ASSET_ID
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
@@ -1812,6 +1835,7 @@ with cj as(
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1827,7 +1851,9 @@ with cj as(
 		</if>
 		left join (select * from chb_asset_rate scmapr
 		where scmapr.CHANGE_DATE=(select max(scmapr1.change_date) from chb_asset_rate scmapr1
-		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.COST_AMT!=0 and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.change_type='06'
+		and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		and scmapr.change_type='06'
 		) scmapr
 		on cmapr.ASSET_ID=scmapr.ASSET_ID
 
@@ -2083,7 +2109,16 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and fc1.scino='999999'
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and cr1.scino='999999'
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		<!--通过通道投资的资产的收益率-->
@@ -2274,7 +2309,17 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino !='999999' and fc1.scino= cr1.scino
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
@@ -2344,6 +2389,7 @@ with cj as(
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2360,7 +2406,7 @@ with cj as(
 		left join chb_asset_rate lastcmapr
 		on cmapr.ASSET_ID=lastcmapr.ASSET_ID
 		and  lastcmapr.CHANGE_DATE=#{lastEndDate,jdbcType=DATE}
-		and lastcmapr.finprod_type2='XJ' and lastcmapr.COST_AMT!=0
+		and lastcmapr.finprod_type2='XJ' and  lastcmapr.change_type='06'
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -2381,6 +2427,7 @@ with cj as(
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2397,7 +2444,7 @@ with cj as(
 		left join chb_asset_rate lastcmapr
 		on cmapr.ASSET_ID=lastcmapr.ASSET_ID
 		and  lastcmapr.CHANGE_DATE=#{lastEndDate,jdbcType=DATE}
-		and lastcmapr.finprod_type2='XJ' and lastcmapr.COST_AMT!=0
+		and lastcmapr.finprod_type2='XJ' and  lastcmapr.change_type='06'
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -2718,7 +2765,16 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and fc1.scino='999999'
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and cr1.scino='999999'
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		<!--通过通道投资的资产的收益率-->
@@ -2909,7 +2965,17 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino !='999999' and fc1.scino= cr1.scino
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
@@ -2979,6 +3045,7 @@ with cj as(
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2996,6 +3063,7 @@ with cj as(
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -3247,7 +3315,16 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and fc1.scino='999999'
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and cr1.scino='999999'
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		<!--通过通道投资的资产的收益率-->
@@ -3438,7 +3515,17 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino !='999999' and fc1.scino= cr1.scino
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
@@ -3508,6 +3595,7 @@ with cj as(
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
 	  </if>
@@ -3526,7 +3614,8 @@ with cj as(
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
-		　<if test="org != null  and org!=''">
+		and cmap.ASSETVALUE_A!=0　
+		<if test="org != null  and org!=''">
 		　and di.institution_code=#{org, jdbcType=VARCHAR}
 		　　　</if>
 		)
@@ -3889,7 +3978,16 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and fc1.scino='999999'
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and cr1.scino='999999'
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		<!--通过通道投资的资产的收益率-->
@@ -4080,7 +4178,17 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino !='999999' and fc1.scino= cr1.scino
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
@@ -4146,6 +4254,7 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -4172,6 +4281,7 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -4421,7 +4531,16 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and fc1.scino='999999'
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and cr1.scino='999999'
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		<!--通过通道投资的资产的收益率-->
@@ -4612,7 +4731,17 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino !='999999' and fc1.scino= cr1.scino
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
@@ -4678,6 +4807,7 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -4703,6 +4833,7 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>

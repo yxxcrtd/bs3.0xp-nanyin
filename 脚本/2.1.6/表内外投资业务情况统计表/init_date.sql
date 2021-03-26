@@ -157,15 +157,15 @@ values ('INSTITUTION_INDUSTRY_FOURTH_LEVEL', '09', 'INSTITUTION_INDUSTRY_THIRD_L
 --本地的认定规则
 delete from sys_para where PARA_CODE='SVR_LOCAL_AFFIRM_RULE';
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, UPDATE_FLG, INSTITUTION_CODE)
-values ('SVR', 'SVR_LOCAL_AFFIRM_RULE', '110000;120000', '01', null, '本地的认定规则-所属省', 'system', null, sysdate, 'system', sysdate, '01', null);
+values ('SVR', 'SVR_LOCAL_AFFIRM_RULE', '110000;120000', '01', null, '银监本地的认定规则-所属省', 'system', null, sysdate, 'system', sysdate, '01', null);
 --收益率取值配置
 delete from sys_para where PARA_CODE='SVR_VALCONFIG_FLAG';
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, UPDATE_FLG, INSTITUTION_CODE)
-values ('SVR', 'SVR_VALCONFIG_FLAG', '01', '01', null, '收益率取值配置', 'system', null, sysdate, 'system', sysdate, '01', null);
+values ('SVR', 'SVR_VALCONFIG_FLAG', '01', '01', null, '银监收益率取值配置', 'system', null, sysdate, 'system', sysdate, '01', null);
 --年化成本计算配置
 delete from sys_para where PARA_CODE='SVR_VALCALC_FLAG';
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, UPDATE_FLG, INSTITUTION_CODE)
-values ('SVR', 'SVR_VALCALC_FLAG', '01', '01', null, '年化成本计算配置', 'system', null, sysdate, 'system', sysdate, '01', null);
+values ('SVR', 'SVR_VALCALC_FLAG', '01', '01', null, '银监年化成本计算配置', 'system', null, sysdate, 'system', sysdate, '01', null);
 
 --数据接入
 delete from sys_batch_task where task_id='4100';

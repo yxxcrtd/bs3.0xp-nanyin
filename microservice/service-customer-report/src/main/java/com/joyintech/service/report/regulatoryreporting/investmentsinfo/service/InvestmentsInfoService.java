@@ -1557,6 +1557,14 @@ public class InvestmentsInfoService {
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
+		//上一季度年初
+		Calendar calendarlastQ = Calendar.getInstance();
+		calendarlastQ.setTime(lastEndDate);
+		calendarlastQ.set(Calendar.MONTH, 0);
+		calendarlastQ.set(Calendar.DAY_OF_MONTH, 1);
+		Date yearStartDateLastQ=calendarlastQ.getTime();
+
+
 		Map<String, Object> paraMap = new HashMap<String, Object>();
 		if(MultilevelDataAuthorityUtil.isEnabled()) {
 			//联社模式,查询登录人的机构
@@ -1604,7 +1612,7 @@ public class InvestmentsInfoService {
 			//上年今日
 			Date lastlastYearDate=calendarlastlast.getTime();
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 			lastprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectProductAvgRateInfo1(paraMap);
 
 		}else{
@@ -1644,7 +1652,7 @@ public class InvestmentsInfoService {
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
 			//paraMap.put("lastYearDate", lastlastYearDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectProductAvgRateInfo2(paraMap);
 
@@ -1713,7 +1721,7 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendar.getTime();
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 			lastassetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRateByInfo1(paraMap);
 		}else{
 			//本季度末
@@ -1732,7 +1740,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 			lastassetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRateByInfo2(paraMap);
 
 		}
@@ -1797,7 +1805,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastassetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo1(paraMap);
 		}else{
@@ -1820,7 +1828,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastassetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo2(paraMap);
 
@@ -2018,6 +2026,13 @@ public class InvestmentsInfoService {
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
+		//上一季度年初
+		Calendar calendarlastQ = Calendar.getInstance();
+		calendarlastQ.setTime(lastEndDate);
+		calendarlastQ.set(Calendar.MONTH, 0);
+		calendarlastQ.set(Calendar.DAY_OF_MONTH, 1);
+		Date yearStartDateLastQ=calendarlastQ.getTime();
+
 		Map<String, Object> paraMap = new HashMap<String, Object>();
 		if(MultilevelDataAuthorityUtil.isEnabled()) {
 			//联社模式,查询登录人的机构
@@ -2056,7 +2071,7 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendarlastEndDate.getTime();
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastFinanceAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo1(paraMap);
 		}else{
@@ -2079,7 +2094,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastFinanceAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo2(paraMap);
 
