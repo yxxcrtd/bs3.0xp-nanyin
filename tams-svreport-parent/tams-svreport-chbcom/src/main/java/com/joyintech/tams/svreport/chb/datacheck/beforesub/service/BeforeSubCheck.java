@@ -137,7 +137,7 @@ public class BeforeSubCheck extends SvrCBBaseService{
 
         //警告逻辑检查
         resultList.addAll(checkProdEndReg(checkdate,mapPrdEndRuleout));
-        resultList.addAll(checkProdRaiseTotalReg(checkdate,mapTotalRaiseRuleout));
+        // resultList.addAll(checkProdRaiseTotalReg(checkdate,mapTotalRaiseRuleout));
         resultList.addAll(checkInvestReg(checkdate,mapInvestTradeRuleout));
         resultList.addAll(checkBotAstReg(checkdate,mapBomAstRuleout));
         resultList.addAll(checkProdMonthReport(checkdate,mapMonthReportRuleout));

@@ -544,8 +544,8 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
         // List<CheckReport001Dto> resultList = beforeSubCheck.checkProdRaiseTotalReg(checkdate, mapRuleout);
 		//报送前强制的错误检查
 		List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdRaiseTotalReg(checkdate,null,mapRuleout);
-		//警告逻辑检查
-		resultList.addAll(beforeSubCheck.checkProdRaiseTotalReg(checkdate,mapRuleout));
+//		//警告逻辑检查
+//		resultList.addAll(beforeSubCheck.checkProdRaiseTotalReg(checkdate,mapRuleout));
 
         //报错检查异常数据
         int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数

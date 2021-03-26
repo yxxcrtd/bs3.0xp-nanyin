@@ -716,4 +716,12 @@
 			#{dto.refseqno,jdbcType=VARCHAR}
 		</foreach>
 	</insert>
+
+	<delete id="delReportDatasByCodeAndDate" parameterType="map">
+		delete from
+		CHB_REPORT_CHECK
+		where rep_code = #{reportCode,jdbcType=VARCHAR}
+		and to_char(DATA_TIME,'yyyy-MM-dd')=to_char(#{reportDate,jdbcType=DATE},'yyyy-MM-dd')
+		and REF_SEQNO = #{refseqno,jdbcType=VARCHAR}
+	</delete>
 </mapper>

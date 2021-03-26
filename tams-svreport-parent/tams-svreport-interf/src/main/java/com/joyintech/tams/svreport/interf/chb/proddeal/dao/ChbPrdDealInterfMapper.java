@@ -73,4 +73,13 @@ public interface ChbPrdDealInterfMapper {
 	 * @since 1.0
 	 */
 	void batchInsert(List<CheckReport001Dto> resultList);
+
+	/**
+	 * 根据检查序列号删除报送前检查已有的检查结果
+	 *
+	 * @param reportCode 报表名称
+	 * @see
+	 * @since 1.0
+	 */
+	void delReportDatasByCodeAndDate(@Param("reportCode")String reportCode,@Param("reportDate")Date reportDate, @Param("refseqno")String refseqno);
 }

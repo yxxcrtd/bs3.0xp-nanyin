@@ -76,6 +76,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 	private static final String BUSINESSKEY_CHB_PRD_DEAL_6="issuemember";
 	private static final String BUSINESSKEY_CHB_PRD_DEAL_7="inoraboard";
 
+	private static final String REFSEQNO_SPECIAL_SAMPE = "产品交易文件接入检查";
+
 	/**
 	 * logger
 	 */
@@ -970,13 +972,18 @@ public class SvrProdDealFileImpService extends FileImpService {
 			//以此条数据的产品代码为Key,进行是否认购数据判断，当此条数据为认购数据的情况下，进行以下处理：
 			if (!StringUtil.isEmpty(map.get("prinamt")) && new BigDecimal(map.get("prinamt")).compareTo(BigDecimal.ZERO) != 0) {
 				BigDecimal cust_counts = new BigDecimal(map.get("saveCusNum"));
+				// 销售区域为计划单列市的不统计（省份内已经统计）：210200大连市、330200宁波市、350200厦门市、370200青岛市、440300深圳市
+				if("210200".equals(map.get("areaCode")) || "330200".equals(map.get("areaCode")) || "350200".equals(map.get("areaCode")) ||
+						"370200".equals(map.get("areaCode")) || "440300".equals(map.get("areaCode"))) {
+					cust_counts = BigDecimal.ZERO;
+				}
 
 				//在【产品信息map】中存在prodDealInterfService
 				if (prdMap.containsKey(map.get("finprodId"))) {
-
+					ChbPrdCustNumIfo custNumIfo = prdMap.get(map.get("finprodId"));
+					custNumIfo.setCustHeldNum(custNumIfo.getCustHeldNum().add(cust_counts));
 					// 产品信息map.产品客户数信息DTO.持有客户数  + 此条信息的.保有量客户数
-					prdMap.get(map.get("finprodId")).getCustHeldNum().add(cust_counts);
-
+					prdMap.put(map.get("finprodId"), custNumIfo);
 				} else {
 					//在【产品信息map】中不存在
 					//以此条记录的信息，对【产品客户信息DTO】进行设值
@@ -985,9 +992,8 @@ public class SvrProdDealFileImpService extends FileImpService {
 					custNumIfo.setInspectionResults(null);
 					custNumIfo.setWarningInformation(null);
 					//custNumIfo.setDataOfDate(map.get());
-					BigDecimal counts = cust_counts;
-					custNumIfo.setCustHeldNum(counts);
-					custNumIfo.setThrCustNum(new BigDecimal("0"));
+					custNumIfo.setCustHeldNum(cust_counts);
+					custNumIfo.setThrCustNum(BigDecimal.ZERO);
 					//往产品信息Map中，设值<此条记录的.产品代码，循环中新建的.产品客户信息DTO>
 					prdMap.put(map.get("finprodId"), custNumIfo);
 					//对象产品list.add(此条数据的产品ID）
@@ -1014,6 +1020,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 
 			//3、检查结果数据、批量入库
             if(resultList!=null&&resultList.size()>0){
+            	// add by zhangliang 20210325 先删后插  删除的记录只能是自己生成的记录 不能把报送前检查的信息给删了 start
+				chbPrdDealInterfMapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),com.joyintech.framework.util.DateUtil.parse(checkDate), REFSEQNO_SPECIAL_SAMPE);
+				// add by zhangliang 20210325 先删后插  删除的记录只能是自己生成的记录 不能把报送前检查的信息给删了 end
 				int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
 				int batchLastIndex = batchCount;// 每批最后一个的下标
 				for (int index = 0; index < resultList.size();) {
@@ -1057,17 +1066,19 @@ public class SvrProdDealFileImpService extends FileImpService {
 					//报表名称
 					dto.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
 					//唯一标识="产品代码:" + 此条记录的.产品代码
-					dto.setValidKey("产品代码" + cinfo.getPrdCode());
+					dto.setValidKey("产品代码:" + cinfo.getPrdCode());
 					//检查结果
-					dto.setCheckResult("03");
+					dto.setCheckResult(DictCodeListExt2.检查结果_检查不通过.getCodeName());
 					//警告信息
 					if (flag) {
-						dto.setWarnInfo("客户数不一致（批前检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + 0 + "}；");
+						dto.setErrorInfo("客户数不一致（交易入库检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + 0 + "}；");
 					} else {
-						dto.setWarnInfo("客户数不一致（批前检查），三期客户数：{" + 0 + "}、一二期客户数：{" + cinfo.getCustHeldNum() + "}；");
+						dto.setErrorInfo("客户数不一致（交易入库检查），三期客户数：{" + 0 + "}、一二期客户数：{" + cinfo.getCustHeldNum() + "}；");
 					}
 					//数据日期
 					dto.setDataTime(checkdate);
+					// 检查序列号 add by zhangliang 20210325 用于区分报送前检查check还是接入check
+					dto.setRefseqno(REFSEQNO_SPECIAL_SAMPE);
 					returList.add(dto);
 				} else {
 					//c、三期存在、一二期存在，但是客户数不一致
@@ -1081,13 +1092,15 @@ public class SvrProdDealFileImpService extends FileImpService {
 						//报表名称
 						dto.setRepName(DictCodeListExt2.报表名称_募集总量登记.getCodeName());
 						//唯一标识="产品代码:" + 此条记录的.产品代码
-						dto.setValidKey("产品代码" + cinfo.getPrdCode());
+						dto.setValidKey("产品代码:" + cinfo.getPrdCode());
 						//检查结果
-						dto.setCheckResult("03");
+						dto.setCheckResult(DictCodeListExt2.检查结果_检查不通过.getCodeName());
 						//警告信息
-						dto.setWarnInfo("客户数不一致（批前检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + map.get(cinfo.getPrdCode()).getCustHeldNum() + "}；");
+						dto.setErrorInfo("客户数不一致（交易入库检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + map.get(cinfo.getPrdCode()).getCustHeldNum() + "}；");
 						//数据日期
 						dto.setDataTime(checkdate);
+						// 检查序列号 add by zhangliang 20210325 用于区分报送前检查check还是接入check
+						dto.setRefseqno(REFSEQNO_SPECIAL_SAMPE);
 						returList.add(dto);
 					}
 				}

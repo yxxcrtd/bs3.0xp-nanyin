@@ -27,6 +27,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
+import com.joyintech.tams.svreport.chb.common.SvrCustomerNumCheckService;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.dao.ChbBeforeSubErrorCheckMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,12 @@ public class BeforeSubErrorCheck {
 
     @Autowired
     private CommonCodeCheckMapper commonCodeCheckMapper;
+
+    /**
+     * 客户数检查共通方法
+     */
+    @Autowired
+    private SvrCustomerNumCheckService svrCustomerNumCheckService;
    
     
     /**
@@ -281,7 +288,7 @@ public class BeforeSubErrorCheck {
         List<Map<String, String>> listError = new ArrayList<>();
         for (Map<String,String> map : listDataStr){
             // 只有产品状态应该为“报告通过”的才可以进行发行登记。
-            checkBeforTotalRegist(map);
+            checkBeforTotalRegist(map, checkdate);
             if (StringUtil.isNotEmpty(map.get("ERRMSG"))){
                 listError.add(map);
             }
@@ -724,7 +731,7 @@ public class BeforeSubErrorCheck {
         dataMap.put("ERRMSG", errMSg);
     }
 
-    private void checkBeforTotalRegist(Map<String, String> dataMap) {
+    private void checkBeforTotalRegist(Map<String, String> dataMap, Date checkdate) {
         StringBuffer errMsgSb = new StringBuffer();
         String prodId = dataMap.get("PROD_ID");
         int i = chbBeforeSubErrorCheckMapper.isInPrdIssueSub(prodId);
@@ -770,6 +777,17 @@ public class BeforeSubErrorCheck {
                     errMsgSb.append("产品销售区域超出产品申报登记选择的区域，备注必填。");
                     errMsgSb.append(GlobalConstant.VERTICAL_LINE);
                 }
+            }
+        }
+
+        //当系统参数设置为【是否做客户数检查 = 01：是】的时候，进行以下处理：
+        if(StringUtil.isNotEmpty(prodId) && StringUtil.equals("01",SvrDataUtil.getSysParam("SAVE_CUS_NUM_CHECK_01"))){
+            List<CheckReport001Dto> resList = svrCustomerNumCheckService.checkProdRaiseTotalRegCusNumSingle(checkdate, prodId);
+            if (!StringUtil.isEmptyList(resList)){
+                resList.forEach(x -> {
+                    errMsgSb.append(x.getErrorInfo());
+                    errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+                });
             }
         }
 

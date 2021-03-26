@@ -16,7 +16,7 @@ public interface ChbCustomerNumCheckMapper {
      * @param checkDate
      * @return
      */
-    List<ChbPrdCustNumIfo>    getraiseCustNum(@Param("checkDate")Date checkDate);
+    List<ChbPrdCustNumIfo>    getraiseCustNum(@Param("checkDate")Date checkDate, @Param("prodId")String prodId);
 
 
     /**
