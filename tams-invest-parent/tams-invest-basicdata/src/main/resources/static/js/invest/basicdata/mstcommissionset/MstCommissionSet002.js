@@ -247,12 +247,12 @@
         }
         if(feeType == FEE_TYPE_B01||feeType == FEE_TYPE_B07){
             $("#tradeType").val('F01').prop('disabled',true).trigger('change');
-            $('#tradeMarketMode').val('02').prop('disabled',true).trigger('change');
+            // $('#tradeMarketMode').val('02').prop('disabled',true).trigger('change');
         }else if(feeType == FEE_TYPE_B02){
-            $('#tradeMarketMode').val('').prop('disabled',false).trigger('change');
+            // $('#tradeMarketMode').val('').prop('disabled',false).trigger('change');
             $("#tradeType").val('F11').prop('disabled',true).trigger('change');
         }else{
-            $('#tradeMarketMode').val('').prop('disabled',false).trigger('change');
+            // $('#tradeMarketMode').val('').prop('disabled',false).trigger('change');
             $("#tradeType").prop('disabled',false).trigger('change');
         }
         displayStar();
