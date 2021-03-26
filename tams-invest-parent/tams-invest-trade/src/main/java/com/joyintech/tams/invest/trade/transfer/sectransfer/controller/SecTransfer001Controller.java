@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecTransfer001Dt
 import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecTransferDto;
 import com.joyintech.tams.invest.trade.transfer.sectransfer.service.SecTransfer001Service;
 import com.joyintech.tams.invest.trade.transfer.sectransfer.service.TrdBondDuration001Service;
+import com.joyintech.tams.invest.trade.transfer.trdassetsProject.service.TrdAssetsProject001Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
@@ -62,6 +63,9 @@ public class SecTransfer001Controller extends BaseController {
      */
     @Autowired
     private SecTransfer001Service secTransfer001Service;
+    
+    @Autowired
+    TrdAssetsProject001Service trdAssetsProject001Service;
 
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
@@ -130,8 +134,19 @@ public class SecTransfer001Controller extends BaseController {
             entity.setFinprodAbbr((String) paraMap.get("finprodName"));
             //本金金额
             entity.setShareAmt(new BigDecimal((String) paraMap.get("amount")));
-            //剩余可转仓本金金额
-            entity.setUndistributedAmount(entity.getShareAmt());
+            //剩余可转仓本金金额            
+            //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+            paraMap.put("searchDate", DateUtil.getSysDate());           
+        	BigDecimal wflAmt = trdAssetsProject001Service.selectWflAmtAsset(paraMap);
+        	BigDecimal wflAmt1 = ArithmeticUtil.multiply(wflAmt,new BigDecimal(100));
+        	if(wflAmt1 != null) {
+        		BigDecimal newUndistributedAmount = ArithmeticUtil.doAdd(entity.getShareAmt(),wflAmt1);
+        		entity.setUndistributedAmount(newUndistributedAmount);
+        	}else {        		
+        		 entity.setUndistributedAmount(entity.getShareAmt());
+        	}
+        	//剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
+            
             //交易日期
             entity.setTradeDate(DateUtil.parse((String) paraMap.get("tradeDate")));
             //交割日期
