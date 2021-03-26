@@ -17,8 +17,11 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
+import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
 import com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeDetailKey;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
@@ -94,6 +97,10 @@ public class RepoNBookDetailProcessDealService {
 
     @Autowired
     private TrdProductDealMapper trdProductDealMapper;
+
+    @Autowired
+    private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
+
 
     /**
      * process 数据处理
@@ -406,9 +413,24 @@ public class RepoNBookDetailProcessDealService {
                         accountSceneMap.put(BookConstant.ONWAY_DATE,onwayDate);
                         //变量.应计利息
                         BigDecimal intAmt =BigDecimal.ZERO;
+                        TrdTradeFeeDetailKey trdTradeFeeDetailkey =new TrdTradeFeeDetailKey();
+                        trdTradeFeeDetailkey.setTradeId(dealDto.getFinprodId());
+                        trdTradeFeeDetailkey.setFeeType(DictCodeListExt3.费用类型_佣金.getValue());
+                        TrdTradeFeeDetail trdTradeFeeDetail =trdTradeFeeDetailMapper.selectByPrimaryKey(trdTradeFeeDetailkey);
+                        //原始买入交易
+                        TrdProductDeal orgtrdProductDeal = trdProductDealMapper.selectByPrimaryKey(dealDto.getFinprodId());
+
                         TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(dealDto.getTradeId());
                         PaTrdFinProductDealTotal paTrdFinProductDealTotal = paTrdFinProductDealTotalMapper.selectByPrimaryKey(trdProductDeal.getTotleTradeId());
                         intAmt = paTrdFinProductDealTotal.getTheoryInt();
+                        if(dealFeeType.equals(DictCodeList.回购费用处理方式_计入成本.getValue())){
+                            if(trdTradeFeeDetail != null){
+                                intAmt = intAmt.add(trdTradeFeeDetail.getFeeAmt());
+                            }
+                        }
+                        if(orgtrdProductDeal.getMdate().compareTo(dealDto.getTradeDate()) > 0){
+                            intAmt = glb_subjectProfit;
+                        }
                         accountAmountMap.put(BookConstant.INTAMT, intAmt);//应计利息<- 交易.理论应计利息总额
                         /** modify by yanya on 20191111 增加 提前终止、逾期返售 start**/
                         if(dealDto.getPs().equals(DictCodeList.交易方向_到期.getValue())

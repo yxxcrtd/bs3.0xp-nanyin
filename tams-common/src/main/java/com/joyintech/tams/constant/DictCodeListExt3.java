@@ -962,7 +962,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     中债_中债贷款分类_贷款(DictCode.中债贷款分类,"02","贷款"),*/
     中债_中债贷款分类_除回购或拆借外贷款(DictCode.中债贷款分类,"08","除回购或拆借外贷款"),
     中债_处理状态_待处理(DictCode.中债_处理状态,"01","待处理"),
-    中债_处理状态_已处理(DictCode.中债_处理状态,"02","已处理"),    ;
+    中债_处理状态_已处理(DictCode.中债_处理状态,"02","已处理"),
+
+    费用类型_佣金(DictCode.费用类型,"B05","佣金"),  ;
 
     /**
      * 对应于数据字典code
