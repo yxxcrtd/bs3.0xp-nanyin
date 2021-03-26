@@ -1720,8 +1720,8 @@ with cj as(
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -2317,8 +2317,8 @@ with cj as(
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -2973,8 +2973,8 @@ with cj as(
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -3523,8 +3523,8 @@ with cj as(
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -4186,8 +4186,8 @@ with cj as(
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -4739,8 +4739,8 @@ with cj as(
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28'||ffjycr.passetid))
+			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
 		</if>
 		and cr.change_type in ('07','09')
 		),
