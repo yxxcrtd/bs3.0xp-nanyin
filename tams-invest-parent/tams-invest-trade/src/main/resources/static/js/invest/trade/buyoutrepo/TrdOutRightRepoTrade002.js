@@ -594,6 +594,7 @@
     }
     
     window.componentLoadCallback = function (isDone, pagePath, params) {
+    	var initFlag = true;
         if (isDone) {
         	
         	// 刷新托管户剩余现金、组合T日可用现金、组合T+1日可用现金
@@ -615,7 +616,9 @@
             window.BussTrdTransferOrder['trdOutRightRepoTradeOrder'].setStlCommandInput(function () {
             	// 首次全价不能为空
             	if (!$("#TrdOutRightRepoTrade002_fFprice").val() || typeof $("#TrdOutRightRepoTrade002_fFprice").val() == 'undefined'){
-            		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("TrdOutRightRepoTrade002.amtInfo.firstFullPrice")]));
+            		if(!initFlag){
+                		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("TrdOutRightRepoTrade002.amtInfo.firstFullPrice")]));	
+            		}
             		return null;
             	}
             	// 券面总额不能为空
@@ -676,6 +679,7 @@
 				}
 			}
 		});*/
+        initFlag = false;
     };
     
     function saveOrSubmit(operateType) {

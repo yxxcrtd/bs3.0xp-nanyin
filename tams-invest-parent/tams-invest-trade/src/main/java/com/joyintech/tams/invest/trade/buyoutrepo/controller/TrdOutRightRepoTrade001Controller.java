@@ -45,6 +45,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+
+import java.math.BigDecimal;
 import java.util.*;
 
 @Controller
@@ -142,7 +144,13 @@ public class TrdOutRightRepoTrade001Controller extends BaseController {
     @ResponseBody
     AjaxResult doRevoke(@RequestBody TrdOutRightRepoTrade002Dto inputDto)
             throws Exception {
-
+    	
+    	//转仓交易无法从留痕表中获取对应数据
+    	inputDto = trdOutRightRepoTrade002Service
+				.queryBuyOutRepoByTradeId(inputDto.getTradeId());
+    	if(StringUtil.isNotEmpty(inputDto.getSecTotalPrin())) {
+    		inputDto.setSecTotalPrin(inputDto.getSecTotalPrin().divide(new BigDecimal(10000)));	
+    	}
         ProcessParameter<TrdOutRightRepoTrade002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdOutRightRepoTrade002Dto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);
