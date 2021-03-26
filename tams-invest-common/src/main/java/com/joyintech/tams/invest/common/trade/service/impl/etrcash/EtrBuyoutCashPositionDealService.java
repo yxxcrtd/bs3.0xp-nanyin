@@ -281,6 +281,9 @@ public class EtrBuyoutCashPositionDealService extends EtrCashPositionBaseService
         // 交易生成的持仓流水
         EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
             finProductTradeDto);
+        // 交易生成的质押券持仓流水
+        EtrSecPositionFlowDto bondEtrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                finProductTradeDto);
         // 交易生成的现金流水
         EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
             finProductTradeDto);
@@ -295,11 +298,12 @@ public class EtrBuyoutCashPositionDealService extends EtrCashPositionBaseService
         // 交易生效
         if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
             // 持仓流水dto处理   交割日增加交易券面总额/债券面值
-        	 etrSecPositionFlowDto.setAmount(finProductTradeDto.getSecAmount());
-        	 //modify by mashukai 20210317 ZGBSS-933 质押式逆回购交易生效时逆回购资产可用指令持仓增加而不是质押券的指令可用持仓增加
-//             etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId()); // 买断式回购，持仓是债券标的，从前面塞过来的，不要删
+            etrSecPositionFlowDto.setAmount(finProductTradeDto.getSecAmount());
+            bondEtrSecPositionFlowDto.setAmount(finProductTradeDto.getSecAmount());
+            bondEtrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId()); // 买断式回购，持仓是债券标的，从前面塞过来的，不要删
              // 添加持仓流水到目标dto
             etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+            etrPositionHoldDto.getPtlSecPositionFlows().add(bondEtrSecPositionFlowDto);
             // 有委托 处理现金流水
             if(StringUtil.isNotEmpty(entrustId)){
                 PtlSecValutionKey ptlSecValutionKey = new PtlSecValutionKey();
