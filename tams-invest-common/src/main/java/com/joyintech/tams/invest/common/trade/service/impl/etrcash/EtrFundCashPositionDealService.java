@@ -1288,6 +1288,11 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
             etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
             etrCashPositionFlowDto2.setSeqno(getSeqNo());
+            String QsAcctId = EtrCommonCashPositionDealService.selectZQAcctId(stlPayOrdersDto.getPortfolioId(), stlPayOrdersDto.getCcy(),
+                    etrCashPositionFlowDto2.getAcctId());
+            if(StringUtil.isNotEmpty(QsAcctId)){
+                return;
+            }
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
         });
     }
