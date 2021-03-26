@@ -156,16 +156,16 @@ $(function() {
             ,{field:'tradeAmt', title: '券面总额（万元）',width:160,
                 render : function(data, type, row, meta) {
                     if(row.tradeAmt !=undefined){
-                        return Number(row.tradeAmt).toFixed(6);
+                        return Number(row.tradeAmt).toFixed(2);
                     }
                 }}//券面总额（万元）
             ,{field:'intRate', title: '回购利率%',type:'number',width:160}//回购利率%
             ,{field:'vdate', title: '起息日',type:'date',width:160}//起息日
             ,{field:'mdate', title: '到期日',type:'date',width:160}//到期日
             ,{field:'firSettleAmt', title: '首次结算金额',type:'number',width:150}//首次结算金额
-            ,{field:'mUnitCprice', title: '到期净价',type:'number',width:150}//到期净价
-            ,{field:'mInt', title: '到期应计利息',type:'number',width:150}//到期应计利息
-            ,{field:'mUnitFprice', title: '到期全价',type:'number',width:150}//到期全价
+            ,{field:'mUnitCprice', title: '到期净价',type:'number',width:150,digit:6}//到期净价
+            ,{field:'mInt', title: '到期应计利息',type:'number',width:150,digit:6}//到期应计利息
+            ,{field:'mUnitFprice', title: '到期全价',type:'number',width:150,digit:6}//到期全价
             ,{field:'dueSettleAmt', title: '到期结算金额',type:'number',width:150}//到期结算金额
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: [ 'delt']}//编辑和删除事件
         ]

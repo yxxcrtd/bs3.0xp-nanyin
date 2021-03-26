@@ -264,17 +264,25 @@ public class BuyOutRepoTransfer002Dto extends BaseEntity {
      *
      * @return mUnitCprice 到期净价
      */
-    public BigDecimal getMUnitCprice() {
-        return this.mUnitCprice;
+//    public BigDecimal getMUnitCprice() {
+//        return this.mUnitCprice;
+//    }
+//
+//    /**
+//     * 设置 到期净价
+//     *
+//     * @param mUnitCprice 到期净价
+//     */
+//    public void setMUnitCprice(BigDecimal mUnitCprice) {
+//        this.mUnitCprice = mUnitCprice;
+//    }
+
+    public BigDecimal getmUnitFprice() {
+        return mUnitFprice;
     }
 
-    /**
-     * 设置 到期净价
-     *
-     * @param mUnitCprice 到期净价
-     */
-    public void setMUnitCprice(BigDecimal mUnitCprice) {
-        this.mUnitCprice = mUnitCprice;
+    public void setmUnitFprice(BigDecimal mUnitFprice) {
+        this.mUnitFprice = mUnitFprice;
     }
 
     /**
@@ -282,16 +290,25 @@ public class BuyOutRepoTransfer002Dto extends BaseEntity {
      *
      * @return mInt 到期应计利息
      */
-    public BigDecimal getMInt() {
-        return this.mInt;
+//    public BigDecimal getMInt() {
+//        return this.mInt;
+//    }
+//
+//    /**
+//     * 设置 到期应计利息
+//     *
+//     * @param mInt 到期应计利息
+//     */
+//    public void setMInt(BigDecimal mInt) {
+//        this.mInt = mInt;
+//    }
+
+
+    public BigDecimal getmInt() {
+        return mInt;
     }
 
-    /**
-     * 设置 到期应计利息
-     *
-     * @param mInt 到期应计利息
-     */
-    public void setMInt(BigDecimal mInt) {
+    public void setmInt(BigDecimal mInt) {
         this.mInt = mInt;
     }
 
@@ -300,17 +317,26 @@ public class BuyOutRepoTransfer002Dto extends BaseEntity {
      *
      * @return mUnitFprice 到期全价
      */
-    public BigDecimal getMUnitFprice() {
-        return this.mUnitFprice;
+//    public BigDecimal getMUnitFprice() {
+//        return this.mUnitFprice;
+//    }
+//
+//    /**
+//     * 设置 到期全价
+//     *
+//     * @param mUnitFprice 到期全价
+//     */
+//    public void setMUnitFprice(BigDecimal mUnitFprice) {
+//        this.mUnitFprice = mUnitFprice;
+//    }
+
+
+    public BigDecimal getmUnitCprice() {
+        return mUnitCprice;
     }
 
-    /**
-     * 设置 到期全价
-     *
-     * @param mUnitFprice 到期全价
-     */
-    public void setMUnitFprice(BigDecimal mUnitFprice) {
-        this.mUnitFprice = mUnitFprice;
+    public void setmUnitCprice(BigDecimal mUnitCprice) {
+        this.mUnitCprice = mUnitCprice;
     }
 
     /**

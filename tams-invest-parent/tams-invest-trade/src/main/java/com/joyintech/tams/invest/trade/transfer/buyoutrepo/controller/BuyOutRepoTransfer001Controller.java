@@ -78,6 +78,9 @@ public class BuyOutRepoTransfer001Controller extends BaseController {
         if(!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)){
             // 根据工作流与留痕处理提供的共通方法获取业务实体
             entity = buyOutRepoTransfer001Service.getBussinessEntityByWorkflowId(workflowId);
+            for(BuyOutRepoTransfer002Dto dto:entity.getBuyOutRepoTransfer002DtoList()){
+                dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000)));
+            }
             // 设置到model中
             model.addAttribute(com.joyintech.framework.constant.GlobalConstant.WORKFLOW_ID,workflowId);
             model.addAttribute("entityData", JsonUtils.object2Json(entity.getBuyOutRepoTransfer002DtoList()));
