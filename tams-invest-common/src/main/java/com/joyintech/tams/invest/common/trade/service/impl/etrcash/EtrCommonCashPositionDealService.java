@@ -84,6 +84,8 @@ public class EtrCommonCashPositionDealService extends BaseService {
 
     private static BussRepoSecService bussRepoSecService;
 
+    private static PtlCapacctInfoMapper ptlCapacctInfoMapper;
+
     /**
      * 根据债券信息和日期获取最新市价
      * 
@@ -1277,5 +1279,24 @@ public class EtrCommonCashPositionDealService extends BaseService {
 
     public List<PtlSecPositionFlow> selectSecFlow(Map<String, Object> params) {
         return etrCommonCashPositionMapper.selectSecFlow(params);
+    }
+
+    /**
+     * 检索交易关联资金账户共通
+     *
+     * @param secManageAcctId
+     * @param ccy
+     * @return
+     */
+    public static String selectZQAcctId(String portfolioId, String ccy,String secManageAcctId) {
+        PtlCapacctInfoKey key=new PtlCapacctInfoKey();
+        key.setAcctNo(secManageAcctId);
+        key.setCcy(ccy);
+        key.setPortfolioId(portfolioId);
+        PtlCapacctInfo ptlCapacctInfo = ptlCapacctInfoMapper.selectByPrimaryKey(key);
+        if(ptlCapacctInfo != null){
+            return ptlCapacctInfo.getAcctNo();
+        }
+        return null;
     }
 }
