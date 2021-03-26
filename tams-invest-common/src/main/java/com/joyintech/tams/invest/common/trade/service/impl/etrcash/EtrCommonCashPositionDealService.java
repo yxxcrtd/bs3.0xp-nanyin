@@ -1295,7 +1295,11 @@ public class EtrCommonCashPositionDealService extends BaseService {
         key.setPortfolioId(portfolioId);
         PtlCapacctInfo ptlCapacctInfo = ptlCapacctInfoMapper.selectByPrimaryKey(key);
         if(ptlCapacctInfo != null){
-            return ptlCapacctInfo.getAcctNo();
+            if(StringUtil.equals(ptlCapacctInfo.getAcctType(),DictCodeListExt1.资金账户类型_券商资金账户.getValue())){
+                return ptlCapacctInfo.getAcctNo();
+            }else{
+                return null;
+            }
         }
         return null;
     }
