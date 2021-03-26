@@ -1210,4 +1210,13 @@
                 B.B_TRADE_ID = tpd.TRADE_ID)
         order by tpd.create_time
     </select>
+    
+    <select id="getPriceByTradeId" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+		SELECT UNIT_CPRICE FROM TRD_PRODUCT_DEAL where trade_id = #{tradeId,jdbcType=VARCHAR} AND ROWNUM = 1
+	</select>
+	
+	<select id="getPriceByWorkflowId" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+		SELECT UNIT_CPRICE FROM WFL_TRD_PRODUCT_DEAL where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR} AND ROWNUM = 1
+	</select>
+    
 </mapper>

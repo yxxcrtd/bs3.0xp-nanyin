@@ -209,7 +209,7 @@ public class TrdPlanNetInvestTradeController {
      * @since 1.0
      */
     @PostMapping("getPrice")
-    public BigDecimal getPrice(@RequestBody Map<String, Object> map){
+    public BigDecimal getPrice(@RequestBody Map<String, Object> map) {
         return trdPlanNetInvestTradeService.getPrice(map);
     }
     /**

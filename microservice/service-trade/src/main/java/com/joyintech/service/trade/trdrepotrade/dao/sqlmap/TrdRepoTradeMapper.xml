@@ -465,17 +465,19 @@
           LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
           LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
           LEFT JOIN   FIN_TRADE_PRODUCT ftp
-                  ON  (
+                          ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = ftp.FINPROD_ID
+                  <!--ON  (
                           (tpd.TRADE_STATUS = #{TRADE_STATUS_01} AND ftp.FINPROD_ID = tpd.TRADE_ID)
                           OR
                           (tpd.TRADE_STATUS = #{TRADE_STATUS_03} AND ftp.FINPROD_ID = SUBSTR(tpd.TRADE_ID, 0, LENGTH(tpd.TRADE_ID)-1))
-                      )
+                      )-->
           LEFT JOIN   FIN_PRODUCT_TYPE fpt
-                  ON  (
+                        ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = fpt.FINPROD_ID
+                  <!--ON  (
                           (tpd.TRADE_STATUS = #{TRADE_STATUS_01} AND fpt.FINPROD_ID = tpd.TRADE_ID)
                           OR
                           (tpd.TRADE_STATUS = #{TRADE_STATUS_03} AND fpt.FINPROD_ID = SUBSTR(tpd.TRADE_ID, 0, LENGTH(tpd.TRADE_ID)-1))
-                      )
+                      )-->
                   AND fpt.BRANCH = #{BRANCH_0}
         WHERE
             PP.INVEST_YESORNO = 'Y'
