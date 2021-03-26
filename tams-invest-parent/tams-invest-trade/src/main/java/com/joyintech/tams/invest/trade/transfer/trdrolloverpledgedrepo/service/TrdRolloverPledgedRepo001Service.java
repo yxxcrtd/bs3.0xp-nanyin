@@ -575,6 +575,9 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
         trdProductDeal.setSecManageAcctId(entity.getSecAcctId());
         //通道代码
         trdProductDeal.setChlId(entity.getChlId());
+
+        trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
+
         //备注
         input.setRemark(remark);
 
@@ -848,6 +851,7 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
         trdProductDeal.setSecManageAcctId(entity.getSecAcctId());
         //通道代码
         trdProductDeal.setChlId(entity.getChlId());
+        trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
 
         output.setRemark(remark);
 

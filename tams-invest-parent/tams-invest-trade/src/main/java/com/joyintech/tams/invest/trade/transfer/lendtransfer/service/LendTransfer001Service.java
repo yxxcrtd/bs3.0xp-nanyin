@@ -284,6 +284,8 @@ public class LendTransfer001Service extends CommonExportService<LendTransfer001D
             }
             trdProductDeal.setIsOutTrade(DictCodeList.是否_否.getValue());
             trdProductDeal.setTrader(trdProductDeal.getCreateUser());
+            trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
+
         }
         return trdProductDeal;
     }
