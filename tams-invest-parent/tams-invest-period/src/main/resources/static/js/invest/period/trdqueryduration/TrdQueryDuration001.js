@@ -165,20 +165,32 @@ $(function(){
                 Joyin.dialog(title,basePath+pagePath,
                     "98%", "95%", data, function(){});
             }else if(data.finprodType2 == PINAN_ASSET_TYPE_F02){
-                label='TrdFundDuration001.reference';
-                pagePath = "invest/period/trdfundduration/TrdFundDuration002/init";
-                data.pageModel = PAGE_MODEL_REFERENCE;
-                //如果是撤销，需要去除末尾的R start
-                if(data.statusValid == CHANCLE_STATUS){
-                	data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
-                	data.pTradeId = data.busiCode;
-                }
-                //如果是撤销，需要去除末尾的R start
-                data.totleTradeId = data.busiCode;
-                Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
-                    "98%", "95%", data, function(){});
-                if(data.statusValid == CHANCLE_STATUS){
-                	data.busiCode = data.busiCode+"R";
+                if(FUND_DEAL_TYPE == '02'){
+                    label='TrdFundDuration001.reference';
+                    pagePath = "invest/period/trdfunddurationnew/TrdFundDurationNew002/init";
+                    data.pageModel = PAGE_MODEL_REFERENCE;
+                    if(data.statusValid == CHANCLE_STATUS){
+                        data.pTradeId = data.busiCode;
+                    }
+                    data.totleTradeId = data.busiCode;
+                    Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                        "98%", "95%", data, function(){});
+                }else{
+                    label='TrdFundDuration001.reference';
+                    pagePath = "invest/period/trdfundduration/TrdFundDuration002/init";
+                    data.pageModel = PAGE_MODEL_REFERENCE;
+                    //如果是撤销，需要去除末尾的R start
+                    if(data.statusValid == CHANCLE_STATUS){
+                        data.busiCode = data.busiCode.substring(0,data.busiCode.length - 1);
+                        data.pTradeId = data.busiCode;
+                    }
+                    //如果是撤销，需要去除末尾的R start
+                    data.totleTradeId = data.busiCode;
+                    Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                        "98%", "95%", data, function(){});
+                    if(data.statusValid == CHANCLE_STATUS){
+                        data.busiCode = data.busiCode+"R";
+                    }
                 }
             }else if(data.finprodType2 == PINAN_ASSET_TYPE_F03){
                 label='TrdPlanInterestDuration002.edit';
