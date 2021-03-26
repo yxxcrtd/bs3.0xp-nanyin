@@ -133,6 +133,11 @@ public class TrdRepoTrade002Controller extends BaseController {
             }
         } else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdRepoTrade002Service.getTrdRepoTradeDto(tradeId);
+
+            if(dto!=null && StringUtil.isNotEmpty(dto.getrTradeId())){
+                model.addAttribute("rTradeId",dto.getrTradeId());
+            }
+
         } else {
             String entrustId = this.getParam("entrustId");
             if(StringUtil.isNotBlank(entrustId)){

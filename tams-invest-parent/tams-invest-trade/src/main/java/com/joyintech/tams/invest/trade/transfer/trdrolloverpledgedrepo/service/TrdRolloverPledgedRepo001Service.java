@@ -943,6 +943,9 @@ public class TrdRolloverPledgedRepo001Service extends BaseService<TrdRolloverPle
         finTradeProductDto.setTermType(entity.getTermTypeReback());
         //交易对手							转出产品组合.组合代码
         finTradeProductDto.setCounterId(entity.getPortfolioId());
+
+        finTradeProductDto.setActCapDays(Long.valueOf(entity.getActCapDays()));
+
         output.setFinTradeProduct(finTradeProductDto);
         // 交易类金融产品Entity 构造结束----------------------------------------------------------
 
