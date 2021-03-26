@@ -103,7 +103,7 @@ $(function(){
     	        ,{field:'fpriceAmt', title: '全价总额',width:150,type:'number', sortable: false}//全价总额
     	        ,{field:'tradeRepAmt', title: '交易金额',width:150,type:'number', sortable: false}//交易金额
     	        ,{field:'exerYield', title: '到期收益率%',width:150,type:'number', digit: 12, sortable: false}//到期收益率
-    	        ,{field:'yeild', title: '行权收益率%',width:150,type:'number', digit: 12, sortable: false}//行权收益率
+    	        ,{field:'yield', title: '行权收益率%',width:150,type:'number', digit: 12, sortable: false}//行权收益率
     	        ,{field:'finprodId', title: '资产代码',width:150, visible:false}//交易组合代码
     	        ,{field:'portfolioId', title: '交易对手',width:150, visible:false}//交易对手
     	        ,{field:'isOutTrade', title: '是否外部交易',width:150, visible:false}//是否外部交易
@@ -186,7 +186,7 @@ $(function(){
                         procedureAmt : $('#procedureAmt').val(),
                         settleAmt : $('#settleAmt').val(),
                         exerYield : $('#yield').val(),
-                        yeild : $('#yield').val(),
+                        yield : $('#yield').val(),
                         tradeRepAmt : $('#tradeRepAmt').val(),
                         finprodId : $("#finprodId").val(),
                         portfolioId : $("#portfolioId").val(),
@@ -386,7 +386,7 @@ $(function(){
         paramObj.intAmt = $("#intAmt").val();
         paramObj.fpriceAmt = $("#fpriceAmt").val();
         paramObj.exerYield = $("#exerYield").val();
-        paramObj.yield = $("#yeild").val();
+        paramObj.yield = $("#yield").val();
         // 行权计算时用数据库中的理论行权日 add by renping 20191105 start
         if(paramObj.finprodId && ($("#ps").val() == 'T03' || $("#ps").val() == 'T39')) {
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getExerciseDate'), paramObj, function (result) {

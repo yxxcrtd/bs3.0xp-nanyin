@@ -107,6 +107,21 @@ public class SecTransfer001Controller extends BaseController {
             // 设置到model中
             model.addAttribute(com.joyintech.framework.constant.GlobalConstant.WORKFLOW_ID, workflowId);
             model.addAttribute("entity", JsonUtils.object2Json(entity));
+            if(entity.getSecResoluteDtoList().size()!=0) {
+            	for(int i = 0;i<entity.getSecResoluteDtoList().size();i++) {
+            		if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "01")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("银行间");
+            		}else if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "03")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("上海证券交易所");
+            		}else if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "04")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("深圳证券交易所");
+            		}else if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "05")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("机构间私募系统");
+            		}else if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "10")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("境外交易场所");
+            		}
+            	}
+            }
             model.addAttribute("entityData", JsonUtils.object2Json(entity.getSecResoluteDtoList()));
             model.addAttribute("formTodoList", true);
         }
