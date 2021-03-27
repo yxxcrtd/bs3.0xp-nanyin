@@ -1515,12 +1515,12 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and fc1.scino='999999'
+			and (fc1.scino='999999' or fc1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and cr1.scino='999999'
+			and (cr1.scino='999999' or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -1715,13 +1715,14 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino !='999999' and fc1.scino= cr1.scino
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -1774,6 +1775,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
 			　　　　           from  CHB_ASSETS_BASIS_DATA cabd
@@ -1833,6 +1835,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
 		and cmap.ASSETVALUE_A!=0
@@ -2112,12 +2115,12 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and fc1.scino='999999'
+			and (fc1.scino='999999' or fc1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and cr1.scino='999999'
+			and (cr1.scino='999999' or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -2312,13 +2315,14 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino !='999999' and fc1.scino= cr1.scino
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -2768,12 +2772,12 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and fc1.scino='999999'
+			and (fc1.scino='999999' or fc1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and cr1.scino='999999'
+			and (cr1.scino='999999' or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -2968,13 +2972,14 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino !='999999' and fc1.scino= cr1.scino
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -3027,6 +3032,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
 			　　　　           from  CHB_ASSETS_BASIS_DATA cabd
@@ -3061,6 +3067,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		and cmap.ASSETVALUE_A!=0
@@ -3318,12 +3325,12 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and fc1.scino='999999'
+			and (fc1.scino='999999' or fc1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and cr1.scino='999999'
+			and (cr1.scino='999999' or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -3518,13 +3525,14 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino !='999999' and fc1.scino= cr1.scino
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -3981,12 +3989,12 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and fc1.scino='999999'
+			and (fc1.scino='999999' or fc1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and cr1.scino='999999'
+			and (cr1.scino='999999' or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -4181,13 +4189,14 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino !='999999' and fc1.scino= cr1.scino
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -4245,6 +4254,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
 		    left join mst_customer_info_add mst
@@ -4272,6 +4282,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
@@ -4534,12 +4545,12 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and fc1.scino='999999'
+			and (fc1.scino='999999' or fc1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and cr1.scino='999999'
+			and (cr1.scino='999999' or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -4734,13 +4745,14 @@ with cj as(
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino !='999999' and fc1.scino= cr1.scino
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
-			and cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
-			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid))
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
 		</if>
 		and cr.change_type in ('07','09')
 		),

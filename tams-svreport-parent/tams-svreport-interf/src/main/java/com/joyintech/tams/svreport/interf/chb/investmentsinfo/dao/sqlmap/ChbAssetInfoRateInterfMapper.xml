@@ -208,12 +208,12 @@
 	  max(nvl(fi.UPDATE_TIME,fi.CREATE_TIME)) updatetime,
 	  null tradeId,
 	  null as status,
-	  fi.sec_acct_id scino
+	  null scino
 	  from ptl_sec_valution fi
 	  left join fin_product fp
 	  on fi.finprod_id=fp.finprod_id
 	  where fp.finprod_type2='F10'
-	  group by  fp.finprod_market_id ,fp.finprod_type2,fi.cdate,fi.sec_acct_id)tt
+	  group by  fp.finprod_market_id ,fp.finprod_type2,fi.cdate)tt
 	  where  tt.updatetime  > #{updatetime,jdbcType=TIMESTAMP}　
 	  ) a
 	  where 1=1 and a.idx=1
