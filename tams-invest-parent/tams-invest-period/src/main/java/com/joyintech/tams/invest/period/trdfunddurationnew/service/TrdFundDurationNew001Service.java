@@ -201,6 +201,13 @@ implements BaseProcessService<TrdFundDurationNew001Dto>{
         	dealEntityService.execute交易共通(entity, DictCodeListExt1.交易流程状态_有效, false);
         }
         entity.setRepIssuePartyId(CacheUtil.getSysParam("issue_party_id"));
+        if(StringUtil.isEmpty(entity.getPstype())){
+            entity.setPs(DictCodeList.交易方向_除权登记.getValue());
+        }else if(StringUtil.equals(entity.getPstype(),DictCodeList.分红方式_现金分红.getValue())){
+            entity.setPs(DictCodeList.交易方向_现金分红.getValue());
+        }else if(StringUtil.equals(entity.getPstype(),DictCodeList.分红方式_红利再投.getValue())){
+            entity.setPs(DictCodeList.交易方向_红利再投.getValue());
+        }
         // 新建交易撤销数据 或 插入Entity到对应的业务DB中, 并删除流程表中的数据
         restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDurationNew/doComplete", entity,
             String.class);
