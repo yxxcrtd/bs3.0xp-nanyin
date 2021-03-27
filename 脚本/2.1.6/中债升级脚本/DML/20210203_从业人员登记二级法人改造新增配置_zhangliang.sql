@@ -1,0 +1,40 @@
+DELETE FROM DATA_AUTH_MAPPER_CONFIG WHERE SQL_ID = 'com.joyintech.tams.svreport.chb.employeeinforegist.dao.EmployeeInfoReg001Mapper.selectAllData';
+
+INSERT
+INTO
+    DATA_AUTH_MAPPER_CONFIG
+    (
+        SQL_ID,
+        FILTER_TYPE,
+        IS_NEST,
+        JOIN_COLUMN_NAME,
+        FILTER_SQL,
+        SYSTEM_CODE,
+        PAGE_ID,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        ADD_COLUMN,
+        ADD_COLUMN_NAME,
+        DATA_TYPE
+    )
+    VALUES
+    (
+        'com.joyintech.tams.svreport.chb.employeeinforegist.dao.EmployeeInfoReg001Mapper.selectAllData',
+        '1',
+        '02',
+        'ORG_CODE',
+        NULL,
+        'REP',
+        'SvrEmployeeInfoReg001',
+        'system',
+        NULL,
+        sysdate,
+        'system',
+        sysdate,
+        NULL,
+        NULL,
+        NULL
+    );
