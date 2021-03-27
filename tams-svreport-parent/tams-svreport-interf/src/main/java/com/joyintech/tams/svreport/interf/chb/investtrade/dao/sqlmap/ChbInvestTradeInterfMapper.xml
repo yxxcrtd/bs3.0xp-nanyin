@@ -1018,11 +1018,12 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         WHEN DEAL.BUSI_TYPE = '03' THEN DECODE(DEAL.PS,'T01','03','T02','04','T12','03','T22','09','T23',DECODE(TOTALDEAL.PS,'T08','04','T07','04'),'T38','04')
         WHEN DEAL.BUSI_TYPE = '37' THEN '09' ELSE NULL END AS CUR_ASSET_TYPE,
 
-    DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','收息','T09','收息','T07','收息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期')),'01',DECODE(DEAL.PS,'T22',DECODE(DEAL.FINPROD_TYPE2,'F08','付息','收息'),'T23','到期')) CUR_ASSETDET_TYPE,
+    DECODE(DEAL.BUSI_TYPE,'01',DECODE(DEAL.PS,'T22',DECODE(DEAL.FINPROD_TYPE2,'F08','付息','收息'),'T23','到期'),DECODE(DEAL.PS,'T22',DECODE(TOTALDEAL.PS,'T08','收息','T09','收息','T07','收息'),'T23',DECODE(TOTALDEAL.PS,'T08','部分到期','T07','到期'))) CUR_ASSETDET_TYPE,
     DEAL.SETTLE_DATE DEALDATE,
 
     <!-- modify by zhangliang 20201215 修改存款类资产同业借款取值逻辑 DEAL.BUSI_TYPE = '01' and DEAL.FINPROD_TYPE2 = 'F07'-->
     case when DEAL.BUSI_TYPE = '03' then DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,'T12',mst.customer_name,DECODE(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id))
+         when DEAL.BUSI_TYPE = '37' then DECODE(DEAL.PS,'T22',mst.customer_name,'T23',mst.customer_name,'T38',mst.customer_name,'T12',mst.customer_name,DECODE(TOTALDEAL.PS,'T09',mst.customer_name,deal.counter_id))
          when DEAL.BUSI_TYPE = '01' and DEAL.FINPROD_TYPE2 = 'F07' then NVL(deal.counter_id,party2.COUNTER_ID)
          when DEAL.BUSI_TYPE = '01' and DEAL.FINPROD_TYPE2 != 'F07' then NVL(deal.counter_id,assetcounter.COUNTER_ID)
          else null end as TRADE_COUNTER,
