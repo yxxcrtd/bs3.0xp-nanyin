@@ -270,13 +270,17 @@
 		}
 		refreshCashAndBalance();
 		if($("#chlId").val()){
-			$('#procedureAmt').val('').trigger('change');
-			$('#procedureAmtDiv').hide();
-			$('#settleAmt').val('').trigger('change');
-			$('#settleAmtDiv').hide();
+			if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
+				$('#procedureAmt').val('').trigger('change');
+				$('#procedureAmtDiv').hide();
+				$('#settleAmt').val('').trigger('change');
+				$('#settleAmtDiv').hide();
+			}
 		}else{
-			$('#procedureAmtDiv').show();
-			$('#settleAmtDiv').show();
+			if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
+				$('#procedureAmtDiv').show();
+				$('#settleAmtDiv').show();
+			}
 		}
 	});
 

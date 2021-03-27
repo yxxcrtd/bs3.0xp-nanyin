@@ -317,6 +317,12 @@
         object.finprodType2 = getFinProdType2FromPs();
         object.inputValue1 = 'F07';
         object.inputValue2 = $('#repoType').val();
+        if(object.chlId){
+            if(object.procedureAmt)
+                object.procedureAmt = '';
+            if(object.settleAmt)
+                object.settleAmt = '';
+        }
         Joyin.ajaxJson(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade003/check', object, function (result) {
         	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 	            Joyin.confirm(result.data, function () {
@@ -529,8 +535,16 @@
                 $("#fTradeId").prop("disabled", false);
             }
             // add by wangguoxian 费用设置 20190719 start
-            $("#procedureAmtDiv").show();
-            $("#settleAmtDiv").show();
+
+            if($("#chlId").val()){
+                $("#procedureAmt").val('');
+                $("#procedureAmtDiv").hide();
+                $("#settleAmt").val('');
+                $("#settleAmtDiv").hide();
+            }else{
+                $("#procedureAmtDiv").show();
+                $("#settleAmtDiv").show();
+            }
             $("#commissionAmtDiv").hide();
             if(window.BussRepoSecPtl['bussRepoSecPtl'].pledgeBondTotalTbl.table){
                 window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'tranFeeAmt',visible: true}]);
@@ -2048,6 +2062,19 @@
             }
             refreshCashAndBalance();
             setBussRepoSecInput();
+            if($('#chlId').val()){
+                if($('#tradeMarket').val()==01){
+                    $('#procedureAmt').val('').trigger('change');
+                    $('#procedureAmtDiv').hide();
+                    $('#settleAmt').val('').trigger('change');
+                    $('#settleAmtDiv').hide();
+                }
+            }else{
+                if($('#tradeMarket').val()==01){
+                    $('#procedureAmtDiv').show();
+                    $('#settleAmtDiv').show();
+                }
+            }
         });
         $('#vdate').on("change", function () {
             // 起息日、到期日改变时，自动计算回购期限
