@@ -56,13 +56,7 @@ public class FlowRiskStressTestView002Service  extends CommonExportService<FlowR
     @Override
     public Page<FlowRiskStressTestView002Dto> selectPageData(Map<String, Object> selectParam) {
         // TODO Auto-generated method stub
-    	Page<FlowRiskStressTestView002Dto> page = selectAll(selectParam);
-    	for(FlowRiskStressTestView002Dto dto:page.getRoot()) {
-    		if(StringUtil.isEmpty(dto.getHeaValRiskSlowBre())) {
-    			dto.setHeaValRiskSlowBre("isEmpty");
-    		}
-    	}
-          return page;
+    	return  selectAll(selectParam);
     }  
    
     
