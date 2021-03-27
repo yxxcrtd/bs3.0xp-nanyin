@@ -185,19 +185,20 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                         errorList.add(new ValidMessage("shareAmt", "基金赎回份额不能大于基金可交易额度份额，可交易额度份额:" + entrustNum));
 
                     }
-             } else {
-                 if (DictCodeList.交易方向_赎回.getValue().equals(dto.getPs())) {
-                     List<BigDecimal> ssList= tradeCommonService.selectProAvailableCash(dto.getEntrustId());
-                     if (!StringUtil.isEmptyList(ssList) &&
-                             ssList.get(0).compareTo(BigDecimal.ZERO) != 0) {
-                         if (dto.getShareAmt().compareTo(ssList.get(0)) == 1) {
-//                             errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0003",
-//                                     this.getMessage("TrdFundInvestTrade002.tradeSha"), "委托份额:" + ssList.get(0))));
-                             errorList.add(new ValidMessage("shareAmt", "基金赎回份额不能大于基金可交易额度份额，可交易额度份额:" + ssList.get(0)));
-                         }
-                     }
-                 }
-             }
+             } 
+//             else {
+//                 if (DictCodeList.交易方向_赎回.getValue().equals(dto.getPs())) {
+//                     List<BigDecimal> ssList= tradeCommonService.selectProAvailableCash(dto.getEntrustId());
+//                     if (!StringUtil.isEmptyList(ssList) &&
+//                             ssList.get(0).compareTo(BigDecimal.ZERO) != 0) {
+//                         if (dto.getShareAmt().compareTo(ssList.get(0)) == 1) {
+////                             errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0003",
+////                                     this.getMessage("TrdFundInvestTrade002.tradeSha"), "委托份额:" + ssList.get(0))));
+//                             errorList.add(new ValidMessage("shareAmt", "基金赎回份额不能大于基金可交易额度份额，可交易额度份额:" + ssList.get(0)));
+//                         }
+//                     }
+//                 }
+//             }
             // OPEX-878 公募基金分红后赎回交易问题 如果存在存续期流程中红利再投数据，禁止赎回操作。 qcx 20200305
             if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                 List<String> 流程中 = tradeCommonService.checkWflData(dto.getFinprodId(), 金融产品代码, true);
