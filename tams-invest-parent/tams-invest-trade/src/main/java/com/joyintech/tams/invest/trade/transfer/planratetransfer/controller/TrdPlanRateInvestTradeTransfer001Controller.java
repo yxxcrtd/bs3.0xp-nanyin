@@ -338,12 +338,22 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
                 trdPlanRateInvestTradeTransfer001Service.setEntity(dto, planTransferDtos);
             });
         }
-        params.setBusinessCode(item -> item.getFinprodId());
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        params.setBusinessCode(dto.getZcId());
+
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
         // 业务说明：“交易编号：” + 上述取得的交易编号+“资产名称：”+画面.资产名称+“交易日：”+画面.交易日
         params.setComment(
                 entity -> "交易编号："
-                        + entity.getTradeId()
+                        + entity.getZcId()
                         + "资产名称："
                         + entity.getFinprodAbbr()
                         + "交易日："

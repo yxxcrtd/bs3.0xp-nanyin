@@ -415,10 +415,19 @@ public class TrdRolloverPledgedRepo001Controller extends BaseController {
         }
         workFlowParameter.setPageId(this.getPageId());
         workFlowParameter.setElementId(this.getParam("elementId"));
-        workFlowParameter.setBusinessCode((entity) -> entity.getTradeId());
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_质押式回购交易.getValue());
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        workFlowParameter.setBusinessCode((entity) -> entity.getZcId());
         workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
-                getMessage("交易编号") + GlobalConstant.OPEN_PARENTHESIS + entity.getTradeId() + GlobalConstant.CLOSE_PARENTHESIS,
+                getMessage("交易编号") + GlobalConstant.OPEN_PARENTHESIS + entity.getZcId() + GlobalConstant.CLOSE_PARENTHESIS,
                 getMessage("组合名称") + GlobalConstant.OPEN_PARENTHESIS + entity.getPortfolioName() + GlobalConstant.CLOSE_PARENTHESIS,
                 getMessage("交易日") + GlobalConstant.OPEN_PARENTHESIS + DateUtil.format(entity.getTradeDate()) + GlobalConstant.CLOSE_PARENTHESIS));
         dto.setTrader(LoginUserUtil.getUserName());
