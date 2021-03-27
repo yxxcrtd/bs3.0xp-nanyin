@@ -94,4 +94,16 @@ public class DepositTransfereController {
     public boolean insertRepTrade(@RequestBody List<RepTrade> repTradeList) {
         return baseRepTradeInfoService.insert(repTradeList);
     }
+
+    /**
+     * 获取交易编号list
+     * @param map 日期、币种
+     * @return 汇率（收盘价）
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getWorkflowTradeId")
+    public int getWorkflowTradeId(@RequestBody Map<String,Object> map){
+        return depositTransfereService.getWorkflowTradeId(map);
+    }
 }

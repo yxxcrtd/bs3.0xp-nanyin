@@ -793,7 +793,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
     public boolean multiApproveTradeCheck(String tradeId) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("tradeId", tradeId);
-        int count = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/DepositResolute001/getWorkflowTradeId",
+        int count = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/DepositTransfere001/getWorkflowTradeId",
                 map, Integer.class);
         if (count > 0) {
             return true;

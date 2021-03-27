@@ -32,4 +32,13 @@ public interface DepositTransfereMapper {
     DepositTransfereService001Dto queryAssetInt(Map<String, Object> param);
 
     String getProdRegistCode(Map<String, Object> map);
+
+    /**
+     * 获取交易编号list
+     * @param map 日期、币种
+     * @return 汇率（收盘价）
+     * @see
+     * @since 1.0
+     */
+    int getWorkflowTradeId(Map<String,Object> map);
 }

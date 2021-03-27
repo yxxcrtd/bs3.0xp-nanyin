@@ -145,228 +145,229 @@
                 AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
             </if>
 
-            UNION ALL
-        </if>
 
-        /** 买断式 **/
-        SELECT PTL_SEC_POSITION.PORTFOLIO_ID AS portfolioId,
-        PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
-        FIN_PRODUCT_TYPE.TYPE_8 AS assetType,
-        CASE WHEN FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F10} then FIN_PRODUCT.FINPROD_MARKET_ID else null end AS
-        finprodMarketId,
-        case
-        when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then STL_SEC_ACCT_INFO.SEC_ACCT_ID
-        else null end AS secAcctId,
-        case
-        when FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F10} then FIN_PRODUCT.FINPROD_ABBR
-        else null end AS finprodName,
-        CHL.FINPROD_ID AS chlId,
-        CHL.FINPROD_NAME AS chlName,
-        STL_SEC_ACCT_INFO.SEC_ACCT_NAME AS secAcctName,
-        TRD_PRODUCT_DEAL.VDATE AS vdate,
-        TRD_PRODUCT_DEAL.MDATE AS mdate,
-        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS ps,
-        (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd')) AS days,
-        ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4) AS yield,
-        CASE
-        WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F10}, #{PINAN_ASSET_TYPE_F12})
-        THEN ROUND((NVL(PTL_SEC_POSITION.AMOUNT * 100, 0)), 2)
-        ELSE NULL END AS amount,
-        CASE
-        WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F07},#{PINAN_ASSET_TYPE_F08})
-        THEN ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2)
-        ELSE NULL END AS printAmt,
-        null AS posAmt,
-        NULL AS finprodType2,
-        case
-        when FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F10} then FIN_PRODUCT.FINPROD_ID
-        else null end AS finprodId,
-        NULL AS profitType,
-        FIN_TRADE_PRODUCT.FINPROD_ID AS tradeId,
-        FIN_TRADE_PRODUCT.CALENDAR_ID AS calendarId,
-        TRD_PRODUCT_DEAL.CCY AS ccy,
-        TRD_PRODUCT_DEAL.INV_AIM AS invAim,
-        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS backLendDirection
-        FROM PTL_SEC_POSITION_DETAIL PTL_SEC_POSITION
-        INNER JOIN PTL_PORTFOLIO ON PTL_SEC_POSITION.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
-        INNER JOIN FIN_TRADE_PRODUCT ON PTL_SEC_POSITION.TRADE_ID = FIN_TRADE_PRODUCT.FINPROD_ID
-        INNER JOIN FIN_PRODUCT_TYPE
-        ON FIN_PRODUCT_TYPE.FINPROD_ID = PTL_SEC_POSITION.TRADE_ID AND FIN_PRODUCT_TYPE.TYPE_8 IS NOT NULL AND
-        FIN_PRODUCT_TYPE.BRANCH = 0
-        LEFT JOIN FIN_PRODUCT CHL
-        ON PTL_SEC_POSITION.SEC_ACCT_ID != '999999' AND CHL.FINPROD_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
-        CHL.IS_CHL = 'Y'
-        LEFT JOIN STL_SEC_ACCT_INFO on STL_SEC_ACCT_INFO.SEC_ACCT_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
-        PTL_SEC_POSITION.SEC_ACCT_ID != '999999'
-        LEFT JOIN TRD_PRODUCT_DEAL ON TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.TRADE_ID
-        LEFT JOIN PA_TRD_PRODUCT_DEAL ON PA_TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.TRADE_ID
-        LEFT JOIN FIN_DEAL_PLEDGE ON FIN_DEAL_PLEDGE.FINPROD_ID = PTL_SEC_POSITION.TRADE_ID
-        LEFT JOIN FIN_PRODUCT ON FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-        WHERE PTL_SEC_POSITION.CDATE = TO_DATE(#{searchDate},'yyyy-MM-dd')
-        AND TRD_PRODUCT_DEAL.TRADE_ID IS NOT NULL
-        AND FIN_PRODUCT_TYPE.TYPE_8 != #{PINAN_ASSET_TYPE_F07}
-        AND PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
-        <if test="assetTypeList != null and assetTypeList.size() >0">
-            <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
         </if>
-        <if test="userId != null and userId != ''">
-            AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
-            OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
-        </if>
-        <if test="portfolioCode != null and portfolioCode != ''">
-            AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
-        </if>
-        <if test="tradeId != null and tradeId != ''">
-            AND TRD_PRODUCT_DEAL.TRADE_ID = #{tradeId}
-        </if>
+    <!-- UNION ALL
+     /** 买断式 **/
+     SELECT PTL_SEC_POSITION.PORTFOLIO_ID AS portfolioId,
+     PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
+     FIN_PRODUCT_TYPE.TYPE_8 AS assetType,
+     CASE WHEN FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F10} then FIN_PRODUCT.FINPROD_MARKET_ID else null end AS
+     finprodMarketId,
+     case
+     when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then STL_SEC_ACCT_INFO.SEC_ACCT_ID
+     else null end AS secAcctId,
+     case
+     when FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F10} then FIN_PRODUCT.FINPROD_ABBR
+     else null end AS finprodName,
+     CHL.FINPROD_ID AS chlId,
+     CHL.FINPROD_NAME AS chlName,
+     STL_SEC_ACCT_INFO.SEC_ACCT_NAME AS secAcctName,
+     TRD_PRODUCT_DEAL.VDATE AS vdate,
+     TRD_PRODUCT_DEAL.MDATE AS mdate,
+     PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS ps,
+     (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd')) AS days,
+     ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4) AS yield,
+     CASE
+     WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F10}, #{PINAN_ASSET_TYPE_F12})
+     THEN ROUND((NVL(PTL_SEC_POSITION.AMOUNT * 100, 0)), 2)
+     ELSE NULL END AS amount,
+     CASE
+     WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F07},#{PINAN_ASSET_TYPE_F08})
+     THEN ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2)
+     ELSE NULL END AS printAmt,
+     null AS posAmt,
+     NULL AS finprodType2,
+     case
+     when FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F10} then FIN_PRODUCT.FINPROD_ID
+     else null end AS finprodId,
+     NULL AS profitType,
+     FIN_TRADE_PRODUCT.FINPROD_ID AS tradeId,
+     FIN_TRADE_PRODUCT.CALENDAR_ID AS calendarId,
+     TRD_PRODUCT_DEAL.CCY AS ccy,
+     TRD_PRODUCT_DEAL.INV_AIM AS invAim,
+     PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS backLendDirection
+     FROM PTL_SEC_POSITION_DETAIL PTL_SEC_POSITION
+     INNER JOIN PTL_PORTFOLIO ON PTL_SEC_POSITION.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
+     INNER JOIN FIN_TRADE_PRODUCT ON PTL_SEC_POSITION.TRADE_ID = FIN_TRADE_PRODUCT.FINPROD_ID
+     INNER JOIN FIN_PRODUCT_TYPE
+     ON FIN_PRODUCT_TYPE.FINPROD_ID = PTL_SEC_POSITION.TRADE_ID AND FIN_PRODUCT_TYPE.TYPE_8 IS NOT NULL AND
+     FIN_PRODUCT_TYPE.BRANCH = 0
+     LEFT JOIN FIN_PRODUCT CHL
+     ON PTL_SEC_POSITION.SEC_ACCT_ID != '999999' AND CHL.FINPROD_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
+     CHL.IS_CHL = 'Y'
+     LEFT JOIN STL_SEC_ACCT_INFO on STL_SEC_ACCT_INFO.SEC_ACCT_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
+     PTL_SEC_POSITION.SEC_ACCT_ID != '999999'
+     LEFT JOIN TRD_PRODUCT_DEAL ON TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.TRADE_ID
+     LEFT JOIN PA_TRD_PRODUCT_DEAL ON PA_TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.TRADE_ID
+     LEFT JOIN FIN_DEAL_PLEDGE ON FIN_DEAL_PLEDGE.FINPROD_ID = PTL_SEC_POSITION.TRADE_ID
+     LEFT JOIN FIN_PRODUCT ON FIN_DEAL_PLEDGE.PLEDGE_FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+     WHERE PTL_SEC_POSITION.CDATE = TO_DATE(#{searchDate},'yyyy-MM-dd')
+     AND TRD_PRODUCT_DEAL.TRADE_ID IS NOT NULL
+     AND FIN_PRODUCT_TYPE.TYPE_8 != #{PINAN_ASSET_TYPE_F07}
+     AND PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
+     <if test="assetTypeList != null and assetTypeList.size() >0">
+         <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
+                  separator="," close=")">
+             #{item}
+         </foreach>
+     </if>
+     <if test="userId != null and userId != ''">
+         AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+         OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+     </if>
+     <if test="portfolioCode != null and portfolioCode != ''">
+         AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
+     </if>
+     <if test="tradeId != null and tradeId != ''">
+         AND TRD_PRODUCT_DEAL.TRADE_ID = #{tradeId}
+     </if>
 
-        UNION ALL
+     UNION ALL
 
-        /** 质押式回购 **/
-        SELECT PTL_SEC_POSITION.PORTFOLIO_ID AS portfolioId,
-        PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
-        FIN_PRODUCT_TYPE.TYPE_8 AS assetType,
-        FIN_TRADE_PRODUCT.FINPROD_ID AS finprodMarketId,
-        case
-        when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then STL_SEC_ACCT_INFO.SEC_ACCT_ID
-        else null end AS secAcctId,
-        null AS finprodName,
-        CHL.FINPROD_ID AS chlId,
-        CHL.FINPROD_NAME AS chlName,
-        STL_SEC_ACCT_INFO.SEC_ACCT_NAME AS secAcctName,
-        TRD_PRODUCT_DEAL.VDATE AS vdate,
-        TRD_PRODUCT_DEAL.MDATE AS mdate,
-        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS ps,
-        (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd')) AS days,
-        ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4) AS yield,
-        NULL AS amount,
-        ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2) AS printAmt,
-        null AS posAmt,
-        NULL AS finprodType2,
-        FIN_TRADE_PRODUCT.FINPROD_ID AS finprodId,
-        NULL AS profitType,
-        FIN_TRADE_PRODUCT.FINPROD_ID AS tradeId,
-        FIN_TRADE_PRODUCT.CALENDAR_ID AS calendarId,
-        TRD_PRODUCT_DEAL.CCY AS ccy,
-        PTL_SEC_POSITION.INV_AIM AS invAim,
-        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS backLendDirection
-        FROM PTL_SEC_POSITION
-        INNER JOIN PTL_PORTFOLIO ON PTL_SEC_POSITION.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
-        INNER JOIN FIN_TRADE_PRODUCT ON PTL_SEC_POSITION.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID
-        INNER JOIN FIN_PRODUCT_TYPE
-        ON FIN_PRODUCT_TYPE.FINPROD_ID = PTL_SEC_POSITION.FINPROD_ID AND FIN_PRODUCT_TYPE.TYPE_8 IS NOT NULL AND
-        FIN_PRODUCT_TYPE.BRANCH = 0
-        LEFT JOIN FIN_PRODUCT CHL
-        ON PTL_SEC_POSITION.SEC_ACCT_ID != '999999' AND CHL.FINPROD_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
-        CHL.IS_CHL = 'Y'
-        LEFT JOIN STL_SEC_ACCT_INFO on STL_SEC_ACCT_INFO.SEC_ACCT_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
-        PTL_SEC_POSITION.SEC_ACCT_ID != '999999'
-        LEFT JOIN TRD_PRODUCT_DEAL ON TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.FINPROD_ID
-        LEFT JOIN PA_TRD_PRODUCT_DEAL ON PA_TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.FINPROD_ID
-        WHERE PTL_SEC_POSITION.HODING_TYPE = #{POSITION_TYPE_03}
-        AND PTL_SEC_POSITION.CDATE = TO_DATE(#{searchDate},'yyyy-MM-dd')
-        AND TRD_PRODUCT_DEAL.TRADE_ID IS NOT NULL
-        AND FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F07}
-        AND PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
-        <if test="assetTypeList != null and assetTypeList.size() >0">
-            <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="userId != null and userId != ''">
-            AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
-            OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
-        </if>
-        <if test="portfolioCode != null and portfolioCode != ''">
-            AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
-        </if>
-        <if test="tradeId != null and tradeId != ''">
-            AND TRD_PRODUCT_DEAL.TRADE_ID = #{tradeId}
-        </if>
+     /** 质押式回购 **/
+     SELECT PTL_SEC_POSITION.PORTFOLIO_ID AS portfolioId,
+     PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
+     FIN_PRODUCT_TYPE.TYPE_8 AS assetType,
+     FIN_TRADE_PRODUCT.FINPROD_ID AS finprodMarketId,
+     case
+     when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then STL_SEC_ACCT_INFO.SEC_ACCT_ID
+     else null end AS secAcctId,
+     null AS finprodName,
+     CHL.FINPROD_ID AS chlId,
+     CHL.FINPROD_NAME AS chlName,
+     STL_SEC_ACCT_INFO.SEC_ACCT_NAME AS secAcctName,
+     TRD_PRODUCT_DEAL.VDATE AS vdate,
+     TRD_PRODUCT_DEAL.MDATE AS mdate,
+     PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS ps,
+     (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd')) AS days,
+     ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4) AS yield,
+     NULL AS amount,
+     ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2) AS printAmt,
+     null AS posAmt,
+     NULL AS finprodType2,
+     FIN_TRADE_PRODUCT.FINPROD_ID AS finprodId,
+     NULL AS profitType,
+     FIN_TRADE_PRODUCT.FINPROD_ID AS tradeId,
+     FIN_TRADE_PRODUCT.CALENDAR_ID AS calendarId,
+     TRD_PRODUCT_DEAL.CCY AS ccy,
+     PTL_SEC_POSITION.INV_AIM AS invAim,
+     PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS backLendDirection
+     FROM PTL_SEC_POSITION
+     INNER JOIN PTL_PORTFOLIO ON PTL_SEC_POSITION.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
+     INNER JOIN FIN_TRADE_PRODUCT ON PTL_SEC_POSITION.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID
+     INNER JOIN FIN_PRODUCT_TYPE
+     ON FIN_PRODUCT_TYPE.FINPROD_ID = PTL_SEC_POSITION.FINPROD_ID AND FIN_PRODUCT_TYPE.TYPE_8 IS NOT NULL AND
+     FIN_PRODUCT_TYPE.BRANCH = 0
+     LEFT JOIN FIN_PRODUCT CHL
+     ON PTL_SEC_POSITION.SEC_ACCT_ID != '999999' AND CHL.FINPROD_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
+     CHL.IS_CHL = 'Y'
+     LEFT JOIN STL_SEC_ACCT_INFO on STL_SEC_ACCT_INFO.SEC_ACCT_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
+     PTL_SEC_POSITION.SEC_ACCT_ID != '999999'
+     LEFT JOIN TRD_PRODUCT_DEAL ON TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.FINPROD_ID
+     LEFT JOIN PA_TRD_PRODUCT_DEAL ON PA_TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.FINPROD_ID
+     WHERE PTL_SEC_POSITION.HODING_TYPE = #{POSITION_TYPE_03}
+     AND PTL_SEC_POSITION.CDATE = TO_DATE(#{searchDate},'yyyy-MM-dd')
+     AND TRD_PRODUCT_DEAL.TRADE_ID IS NOT NULL
+     AND FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F07}
+     AND PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
+     <if test="assetTypeList != null and assetTypeList.size() >0">
+         <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
+                  separator="," close=")">
+             #{item}
+         </foreach>
+     </if>
+     <if test="userId != null and userId != ''">
+         AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+         OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+     </if>
+     <if test="portfolioCode != null and portfolioCode != ''">
+         AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
+     </if>
+     <if test="tradeId != null and tradeId != ''">
+         AND TRD_PRODUCT_DEAL.TRADE_ID = #{tradeId}
+     </if>
 
-        UNION ALL
+     UNION ALL
 
-        /** 拆借 **/
-        SELECT PTL_SEC_POSITION.PORTFOLIO_ID AS portfolioId,
-        PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
-        FIN_PRODUCT_TYPE.TYPE_8 AS assetType,
-        FIN_TRADE_PRODUCT.FINPROD_ID AS finprodMarketId,
-        case
-        when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then PTL_SEC_POSITION.SEC_ACCT_ID
-        else null end AS secAcctId,
-        null AS finprodName,
-        CHL.FINPROD_ID AS chlId,
-        CHL.FINPROD_NAME AS chlName,
-        STL_SEC_ACCT_INFO.SEC_ACCT_NAME AS secAcctName,
-        TRD_PRODUCT_DEAL.VDATE AS vdate,
-        TRD_PRODUCT_DEAL.MDATE AS mdate,
-        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS ps,
-        (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd')) AS days,
-        ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4) AS yield,
-        null AS amount,
-        ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2) AS printAmt,
-        null AS posAmt,
-        null AS finprodType2,
-        FIN_TRADE_PRODUCT.FINPROD_ID AS finprodId,
-        null AS profitType,
-        FIN_TRADE_PRODUCT.FINPROD_ID AS tradeId,
-        FIN_TRADE_PRODUCT.CALENDAR_ID AS calendarId,
-        TRD_PRODUCT_DEAL.CCY AS ccy,
-        TRD_PRODUCT_DEAL.INV_AIM AS invAim,
-        PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS backLendDirection
-        FROM PTL_SEC_POSITION PTL_SEC_POSITION
-        INNER JOIN PTL_PORTFOLIO ON PTL_SEC_POSITION.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
-        INNER JOIN FIN_TRADE_PRODUCT ON PTL_SEC_POSITION.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID
-        INNER JOIN FIN_PRODUCT_TYPE
-        ON FIN_PRODUCT_TYPE.FINPROD_ID = PTL_SEC_POSITION.FINPROD_ID AND
-        FIN_PRODUCT_TYPE.TYPE_8 IS NOT null AND
-        FIN_PRODUCT_TYPE.BRANCH = 0
-        LEFT JOIN FIN_PRODUCT CHL
-        ON PTL_SEC_POSITION.SEC_ACCT_ID != '999999' AND CHL.FINPROD_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
-        CHL.IS_CHL = 'Y'
-        LEFT JOIN STL_SEC_ACCT_INFO on STL_SEC_ACCT_INFO.SEC_ACCT_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
-        PTL_SEC_POSITION.SEC_ACCT_ID != '999999'
-        LEFT JOIN TRD_PRODUCT_DEAL ON TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.FINPROD_ID
-        LEFT JOIN PA_TRD_PRODUCT_DEAL ON PA_TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.FINPROD_ID
-        WHERE PTL_SEC_POSITION.CDATE = TO_DATE(#{searchDate},'yyyy-MM-dd')
-        AND TRD_PRODUCT_DEAL.TRADE_ID IS NOT null
-        AND FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F08}
-        AND PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
-        <if test="assetTypeList != null and assetTypeList.size() >0">
-            <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
-                     separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="userId != null and userId != ''">
-            AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
-            OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
-        </if>
-        <if test="portfolioCode != null and portfolioCode != ''">
-            AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
-        </if>
-        <if test="tradeId != null and tradeId != ''">
-            AND TRD_PRODUCT_DEAL.TRADE_ID = #{tradeId}
-        </if>)T
-        WHERE (T.amount &gt; 0 OR T.printAmt &gt; 0 OR T.posAmt &gt; 0)
-        and ((T.assetType != 'F02' AND T.days &gt;=0) OR T.assetType = 'F02')
-        ORDER BY T.assetType,T.portfolioId,T.finprodId
-        )
-        <where>
-            <if test="assetIdList != null and assetIdList.size() >0">
-                <foreach collection="assetIdList" index="index" item="item" open="finprodMarketId IN ("
-                         separator="," close=")">
-                    #{item}
-                </foreach>
-            </if>
-        </where>
-    </select>
+     /** 拆借 **/
+     SELECT PTL_SEC_POSITION.PORTFOLIO_ID AS portfolioId,
+     PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
+     FIN_PRODUCT_TYPE.TYPE_8 AS assetType,
+     FIN_TRADE_PRODUCT.FINPROD_ID AS finprodMarketId,
+     case
+     when PTL_SEC_POSITION.SEC_ACCT_ID != '999999' then PTL_SEC_POSITION.SEC_ACCT_ID
+     else null end AS secAcctId,
+     null AS finprodName,
+     CHL.FINPROD_ID AS chlId,
+     CHL.FINPROD_NAME AS chlName,
+     STL_SEC_ACCT_INFO.SEC_ACCT_NAME AS secAcctName,
+     TRD_PRODUCT_DEAL.VDATE AS vdate,
+     TRD_PRODUCT_DEAL.MDATE AS mdate,
+     PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS ps,
+     (TRD_PRODUCT_DEAL.MDATE - TO_DATE(#{searchDate},'yyyy-MM-dd')) AS days,
+     ROUND(NVL(FIN_TRADE_PRODUCT.INT_RATE * 100, 0), 4) AS yield,
+     null AS amount,
+     ROUND((NVL(PTL_SEC_POSITION.AMOUNT, 0)), 2) AS printAmt,
+     null AS posAmt,
+     null AS finprodType2,
+     FIN_TRADE_PRODUCT.FINPROD_ID AS finprodId,
+     null AS profitType,
+     FIN_TRADE_PRODUCT.FINPROD_ID AS tradeId,
+     FIN_TRADE_PRODUCT.CALENDAR_ID AS calendarId,
+     TRD_PRODUCT_DEAL.CCY AS ccy,
+     TRD_PRODUCT_DEAL.INV_AIM AS invAim,
+     PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION AS backLendDirection
+     FROM PTL_SEC_POSITION PTL_SEC_POSITION
+     INNER JOIN PTL_PORTFOLIO ON PTL_SEC_POSITION.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
+     INNER JOIN FIN_TRADE_PRODUCT ON PTL_SEC_POSITION.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID
+     INNER JOIN FIN_PRODUCT_TYPE
+     ON FIN_PRODUCT_TYPE.FINPROD_ID = PTL_SEC_POSITION.FINPROD_ID AND
+     FIN_PRODUCT_TYPE.TYPE_8 IS NOT null AND
+     FIN_PRODUCT_TYPE.BRANCH = 0
+     LEFT JOIN FIN_PRODUCT CHL
+     ON PTL_SEC_POSITION.SEC_ACCT_ID != '999999' AND CHL.FINPROD_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
+     CHL.IS_CHL = 'Y'
+     LEFT JOIN STL_SEC_ACCT_INFO on STL_SEC_ACCT_INFO.SEC_ACCT_ID = PTL_SEC_POSITION.SEC_ACCT_ID AND
+     PTL_SEC_POSITION.SEC_ACCT_ID != '999999'
+     LEFT JOIN TRD_PRODUCT_DEAL ON TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.FINPROD_ID
+     LEFT JOIN PA_TRD_PRODUCT_DEAL ON PA_TRD_PRODUCT_DEAL.TRADE_ID = PTL_SEC_POSITION.FINPROD_ID
+     WHERE PTL_SEC_POSITION.CDATE = TO_DATE(#{searchDate},'yyyy-MM-dd')
+     AND TRD_PRODUCT_DEAL.TRADE_ID IS NOT null
+     AND FIN_PRODUCT_TYPE.TYPE_8 = #{PINAN_ASSET_TYPE_F08}
+     AND PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
+     <if test="assetTypeList != null and assetTypeList.size() >0">
+         <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
+                  separator="," close=")">
+             #{item}
+         </foreach>
+     </if>
+     <if test="userId != null and userId != ''">
+         AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+         OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+     </if>
+     <if test="portfolioCode != null and portfolioCode != ''">
+         AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
+     </if>
+     <if test="tradeId != null and tradeId != ''">
+         AND TRD_PRODUCT_DEAL.TRADE_ID = #{tradeId}
+     </if>
+     -->)T
+     WHERE (T.amount &gt; 0 OR T.printAmt &gt; 0 OR T.posAmt &gt; 0)
+     and ((T.assetType != 'F02' AND T.days &gt;=0) OR T.assetType = 'F02')
+     ORDER BY T.assetType,T.portfolioId,T.finprodId
+     )
+     <where>
+         <if test="assetIdList != null and assetIdList.size() >0">
+             <foreach collection="assetIdList" index="index" item="item" open="finprodMarketId IN ("
+                      separator="," close=")">
+                 #{item}
+             </foreach>
+         </if>
+     </where>
+ </select>
 
-    <!-- 查询转仓明细列表 -->
+ <!-- 查询转仓明细列表 -->
     <select id="findTransPage" resultType="com.joyintech.service.trade.transfer.assetstransfer.dto.AssetsTransferDto">
         SELECT DISTINCT
         T.status,T.totleTradeId,T.tradeId,T.portfolioId,T.portfolioName,T.assetType,T.finprodId,T.finprodMarketId,T.finprodName,T.chlId,T.chlName,
@@ -378,17 +379,17 @@
         /** 债券、存款、项目类、计划类、基金、股票 **/
         <include refid="getAssetsTransferList"></include>
         /** 债券质押式 **/
-        UNION ALL
-        <include refid="getRepoAssetsTransferList"></include>
+<!--        UNION ALL
+        <include refid="getRepoAssetsTransferList"></include>-->
         /** 债券借贷 **/
         UNION ALL
         <include refid="getBondAssetsTransferList"></include>
         /** 买断式回购 **/
-        UNION ALL
-        <include refid="getBuyOutAssetsTransferList"></include>
+<!--        UNION ALL
+        <include refid="getBuyOutAssetsTransferList"></include>-->
         /** 拆借 **/
-        UNION ALL
-        <include refid="getLendAssetsTransferList"></include>
+<!--        UNION ALL
+        <include refid="getLendAssetsTransferList"></include>-->
         )T 
         ORDER BY T.status,T.assetType,T.portfolioId,T.finprodMarketId
     </select>
@@ -401,7 +402,7 @@
             WHEN (TRD_PRODUCT_DEAL.IS_CANCEL IS NULL OR TRD_PRODUCT_DEAL.IS_CANCEL = 'N') THEN #{TRADE_STATUS_02}
             ELSE #{TRADE_STATUS_03} END AS status,
             TRD_PRODUCT_DEAL.TOTLE_TRADE_ID AS totleTradeId,
-            decode(FIN_PRODUCT_TYPE.TYPE_8,'F03',TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,
+            decode(FIN_PRODUCT_TYPE.TYPE_8,'F03',TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,'F01',TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,'F06',TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,
             TRD_PRODUCT_DEAL.TRADE_ID) AS tradeId,
             TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID AS portfolioId,
             PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
@@ -412,8 +413,14 @@
             WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F02},#{PINAN_ASSET_TYPE_F01}) THEN
             FIN_PRODUCT.FINPROD_ABBR
             ELSE FIN_PRODUCT.FINPROD_NAME END AS finprodName,
-            CHLFIN_PRODUCT.FINPROD_ID AS chlId,
-            CHLFIN_PRODUCT.FINPROD_NAME AS chlName,
+            CASE
+            WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F03},#{PINAN_ASSET_TYPE_F01},#{PINAN_ASSET_TYPE_F06}) THEN
+            CHLFIN_PRODUCT1.FINPROD_ID
+            ELSE CHLFIN_PRODUCT.FINPROD_ID END AS chlId,
+            CASE
+            WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F03},#{PINAN_ASSET_TYPE_F01},#{PINAN_ASSET_TYPE_F06}) THEN
+            CHLFIN_PRODUCT1.FINPROD_NAME
+            ELSE CHLFIN_PRODUCT.FINPROD_NAME END AS chlName,
             TRD_PRODUCT_DEAL.SETTLE_DATE AS tradeDate,
             TRD_PRODUCT_DEAL.PS AS ps,
             TRD_PRODUCT_DEAL.TRADE_MARKET AS tradeMarket,
@@ -456,12 +463,15 @@
             <!-- add by liuwei for huaxing 20200310 end -->
             ,TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM TRD_PRODUCT_DEAL
+            LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL on TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_PRODUCT_DEAL.TOTLE_TRADE_ID AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = TRD_PRODUCT_DEAL.PS
             LEFT JOIN TRD_PRODUCT_DEAL_ADD ON TRD_PRODUCT_DEAL.TRADE_ID = TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
             LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
             LEFT JOIN FIN_PRODUCT_TYPE ON FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
             LEFT JOIN FIN_PRODUCT CHLFIN_PRODUCT
             ON CHLFIN_PRODUCT.IS_CHL = #{YESORNO_Y} AND CHLFIN_PRODUCT.FINPROD_ID = TRD_PRODUCT_DEAL.CHL_ID
+            LEFT JOIN FIN_PRODUCT CHLFIN_PRODUCT1
+            ON CHLFIN_PRODUCT1.IS_CHL = #{YESORNO_Y} AND CHLFIN_PRODUCT1.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
             LEFT JOIN (<include refid="getYield"/>) YIELD ON YIELD.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND TRD_PRODUCT_DEAL.TRADE_STATUS != '03'
@@ -511,7 +521,7 @@
             SELECT
             '${TRADE_STATUS_01}' AS status,
             WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID AS totleTradeId,
-            decode(FIN_PRODUCT_TYPE.TYPE_8,'F03',WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,
+            decode(FIN_PRODUCT_TYPE.TYPE_8,'F03',WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,'F01',WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,'F06',WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID,
             WFL_TRD_PRODUCT_DEAL.TRADE_ID) AS tradeId,
             WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID AS portfolioId,
             PTL_PORTFOLIO.PORTFOLIO_NAME AS portfolioName,
@@ -522,8 +532,14 @@
             WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F02},#{PINAN_ASSET_TYPE_F01}) THEN
             FIN_PRODUCT.FINPROD_ABBR
             ELSE FIN_PRODUCT.FINPROD_NAME END AS finprodName,
-            CHLFIN_PRODUCT.FINPROD_ID AS chlId,
-            CHLFIN_PRODUCT.FINPROD_NAME AS chlName,
+            CASE
+            WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F03},#{PINAN_ASSET_TYPE_F01},#{PINAN_ASSET_TYPE_F06}) THEN
+            CHLFIN_PRODUCT1.FINPROD_ID
+            ELSE CHLFIN_PRODUCT.FINPROD_ID END AS chlId,
+            CASE
+            WHEN FIN_PRODUCT_TYPE.TYPE_8 IN (#{PINAN_ASSET_TYPE_F03},#{PINAN_ASSET_TYPE_F01},#{PINAN_ASSET_TYPE_F06}) THEN
+            CHLFIN_PRODUCT1.FINPROD_NAME
+            ELSE CHLFIN_PRODUCT.FINPROD_NAME END AS chlName,
             WFL_TRD_PRODUCT_DEAL.SETTLE_DATE AS tradeDate,
             WFL_TRD_PRODUCT_DEAL.PS AS ps,
             WFL_TRD_PRODUCT_DEAL.TRADE_MARKET AS tradeMarket,
@@ -565,12 +581,15 @@
             <!-- add by liuwei for huaxing 20200310 end -->
             ,WFL_TRD_PRODUCT_DEAL.IS_SWAP_TRANSACTION AS isSwapTransaction
             FROM WFL_TRD_PRODUCT_DEAL
+            LEFT JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL on WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PS = WFL_TRD_PRODUCT_DEAL.PS
             LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD ON WFL_TRD_PRODUCT_DEAL.TRADE_ID = WFL_TRD_PRODUCT_DEAL_ADD.TRADE_ID
             LEFT JOIN PTL_PORTFOLIO ON PTL_PORTFOLIO.PORTFOLIO_ID = WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID
             LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_ID = WFL_TRD_PRODUCT_DEAL.FINPROD_ID
             LEFT JOIN FIN_PRODUCT_TYPE ON FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
             LEFT JOIN FIN_PRODUCT CHLFIN_PRODUCT
             ON CHLFIN_PRODUCT.IS_CHL = #{YESORNO_Y} AND CHLFIN_PRODUCT.FINPROD_ID = WFL_TRD_PRODUCT_DEAL.CHL_ID
+            LEFT JOIN FIN_PRODUCT CHLFIN_PRODUCT1
+            ON CHLFIN_PRODUCT1.IS_CHL = #{YESORNO_Y} AND CHLFIN_PRODUCT1.FINPROD_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
             LEFT JOIN (<include refid="getYield"/>) YIELD ON YIELD.FINPROD_ID = WFL_TRD_PRODUCT_DEAL.FINPROD_ID
             WHERE PTL_PORTFOLIO.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
             AND WFL_TRD_PRODUCT_DEAL.IS_OUT_TRADE = #{YESORNO_N}
@@ -1488,17 +1507,17 @@
         /** 债券、存款、项目类、计划类、基金、股票 **/
         <include refid="getAssetsTransferList"></include>
         /** 债券质押式 **/
-        UNION ALL
-        <include refid="getRepoAssetsTransferList"></include>
+<!--        UNION ALL
+        <include refid="getRepoAssetsTransferList"></include>-->
         /** 债券借贷 **/
         UNION ALL
         <include refid="getBondAssetsTransferList"></include>
         /** 买断式回购 **/
-        UNION ALL
-        <include refid="getBuyOutAssetsTransferList"></include>
+<!--        UNION ALL
+        <include refid="getBuyOutAssetsTransferList"></include>-->
         /** 拆借 **/
-        UNION ALL
-        <include refid="getLendAssetsTransferList"></include>
+<!--        UNION ALL
+        <include refid="getLendAssetsTransferList"></include>-->
         )T          
     </select>
 </mapper>
