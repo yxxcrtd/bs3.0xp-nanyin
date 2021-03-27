@@ -269,6 +269,15 @@
 			$("#TrdOutRightRepoTrade002_secAcctId").prop("disabled", false);
 		}
 		refreshCashAndBalance();
+		if($("#chlId").val()){
+			$('#procedureAmt').val('').trigger('change');
+			$('#procedureAmtDiv').hide();
+			$('#settleAmt').val('').trigger('change');
+			$('#settleAmtDiv').hide();
+		}else{
+			$('#procedureAmtDiv').show();
+			$('#settleAmtDiv').show();
+		}
 	});
 
 	var changeTradeAmtAndFee = function() {
@@ -755,7 +764,13 @@
 				object.payType = data.object;
 			}
 			object.inputValue1 = PINAN_ASSET_TYPE_F10;
-			object.inputValue2 = $('#ps').val(); 
+			object.inputValue2 = $('#ps').val();
+			if(object.chlId){
+				if(object.procedureAmt)
+					object.procedureAmt = '';
+				if(object.settleAmt)
+					object.settleAmt = '';
+			}
 			if ($('#trdOutRightRepoPersonInfo_counterId').select2('data') && $('#trdOutRightRepoPersonInfo_counterId').select2('data')[0]) {
 	            object.counterId=$('#trdOutRightRepoPersonInfo_counterId').select2('data')[0].id;
 	        }
@@ -1086,8 +1101,17 @@
             }
             // 当交易场所是银行间时
             else if (tradeMarket == TRADE_PLACE_01) {
-                $("#procedureAmtDiv").show();
-                $("#settleAmtDiv").show();
+				if($('#chlId').val()){
+					$('#procedureAmt').val('').trigger('change');
+					$('#procedureAmtDiv').hide();
+					$('#settleAmt').val('').trigger('change');
+					$('#settleAmtDiv').hide();
+				}else{
+					$('#procedureAmtDiv').show();
+					$('#settleAmtDiv').show();
+				}
+                // $("#procedureAmtDiv").show();
+                // $("#settleAmtDiv").show();
                 $("#commissionAmtDiv").hide();
             }
             else {

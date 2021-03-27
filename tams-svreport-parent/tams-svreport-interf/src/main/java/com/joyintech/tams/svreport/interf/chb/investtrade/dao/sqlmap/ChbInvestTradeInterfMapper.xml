@@ -1076,9 +1076,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     on DEPOASSET.ISSUER = mst.customer_id
     LEFT JOIN TRD_PRODUCT_DEAL_ADD T2 ON deal.TRADE_ID = T2.TRADE_ID 
     LEFT JOIN ptl_sec_position T3 ON deal.mdate -1 = T3.CDATE AND deal.FINPROD_ID = T3.FINPROD_ID and T2.PORTFOLIO_ID = T3.PORTFOLIO_ID
-   left join MST_COUNTER_PARTY party on party.COUNTER_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,NVL(deal.counter_id, assetcounter.COUNTER_ID))),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
-	left join MST_COUNTER_PARTY party2 on party2.LINK_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,NVL(deal.counter_id, assetcounter.COUNTER_ID))),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
-    left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,NVL(deal.counter_id, assetcounter.COUNTER_ID))),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
+   left join MST_COUNTER_PARTY party on party.COUNTER_ID= DECODE(DEAL.BUSI_TYPE,'01',NVL(deal.counter_id,assetcounter.COUNTER_ID),DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,NVL(deal.counter_id, assetcounter.COUNTER_ID))))
+	left join MST_COUNTER_PARTY party2 on party2.LINK_ID= DECODE(DEAL.BUSI_TYPE,'01',NVL(deal.counter_id,assetcounter.COUNTER_ID),DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,NVL(deal.counter_id, assetcounter.COUNTER_ID))))
+    left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID= DECODE(DEAL.BUSI_TYPE,'01',NVL(deal.counter_id,assetcounter.COUNTER_ID),DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,NVL(deal.counter_id, assetcounter.COUNTER_ID))))
     WHERE 1=1
     and (deal.BUSI_TYPE in( '03','01') or (DEAL.BUSI_TYPE = '37' and DEAL.FINPROD_TYPE2 = 'F07'))
     /*只接入原始交易数据*/
@@ -1194,9 +1194,9 @@ LEFT JOIN
     regist_org
   ) ORG
 ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
-   left join MST_COUNTER_PARTY party on party.COUNTER_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
-	left join MST_COUNTER_PARTY party2 on party2.LINK_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
-    left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID= DECODE(DEAL.BUSI_TYPE,'03',DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,deal.counter_id)),'01',NVL(deal.counter_id,assetcounter.COUNTER_ID))
+   left join MST_COUNTER_PARTY party on party.COUNTER_ID= DECODE(DEAL.BUSI_TYPE,'01',NVL(deal.counter_id,assetcounter.COUNTER_ID),DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,deal.counter_id)))
+	left join MST_COUNTER_PARTY party2 on party2.LINK_ID= DECODE(DEAL.BUSI_TYPE,'01',NVL(deal.counter_id,assetcounter.COUNTER_ID),DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,deal.counter_id)))
+    left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID= DECODE(DEAL.BUSI_TYPE,'01',NVL(deal.counter_id,assetcounter.COUNTER_ID),DECODE(DEAL.PS,'T22',mst.customer_id,'T23',mst.customer_id,'T38',mst.customer_id,decode(TOTALDEAL.PS,'T09',mst.customer_id,deal.counter_id)))
     WHERE 1=1
     /***添加还本不带息拆分数据***/
     AND EXISTS
@@ -3031,7 +3031,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     investdeal.F_TRADE_ID F_TRADE_CODE
     ,FRA.PAY_TYPE
         ,case 
-        when investdeal.CUR_ASSET_TYPE not in ('01','02','03','04','05','06','07','08','09','10') then null
+        when investdeal.CUR_ASSET_TYPE not in ('01','02','03','04','05','06','07','08','10') then null
         else 
             case when investdeal.INVEST_VARIETY = '01' /*债券*/ then decode(investdeal.INVEST_TYPE,'HTM','02','TRA','01','AFS','01')
                  when investdeal.INVEST_VARIETY in ('03','06','07','08','09','10','11','12','15') then '02'
