@@ -79,6 +79,7 @@
 				<where>
 					(T1.IS_CANCEL is null or T1.IS_CANCEL = #{YES_NO_NO})
 					and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
+					and (T1.is_swap_transaction IS NULL OR T1.is_swap_transaction =  #{YES_NO_NO})
 				</where>
 			</if>
 			<if

@@ -303,6 +303,9 @@
 		PP.INVEST_YESORNO = 'Y'
 		AND totalDeal.PS in (#{ps_shengou},#{ps_shuhui})
 		and totalDeal.PS=deal.PS
+		<if test="status != null and status.equals(validStatus_01)">
+			and (deal.IS_CANCEL = 'Y' or deal.is_swap_transaction is null or deal.is_swap_transaction='N')
+		</if>
 		<if test="PROFIT_TYPE != null and PROFIT_TYPE != ''">
 			AND FIN.PROFIT_TYPE = #{PROFIT_TYPE}
 		</if>
@@ -412,6 +415,7 @@
 	<where>
 	totalDeal.PS in (#{ps_shengou},#{ps_shuhui})
 	and totalDeal.PS=deal.PS
+	and (deal.IS_CANCEL = 'Y' or deal.is_swap_transaction is null or deal.is_swap_transaction='N')
 	<if test="userId != null and userId != ''">
 		AND (PTL.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
 		OR PTL.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))

@@ -636,6 +636,7 @@
             AND TPD.P_TRADE_ID IS NULL/*撤销流程中的数据不展示*/
             AND TPD.PS IN (#{T01}, #{T02}, #{T40})
             AND (DEAL.IS_OVERDUE_DEAL IS NULL OR DEAL.IS_OVERDUE_DEAL != 'Y')
+			and (tpd.is_swap_transaction is null or tpd.is_swap_transaction = 'N')
             <include refid="where_sql"/>
 
             UNION ALL
@@ -886,6 +887,9 @@
             <if test="statusValid == TRADE_FLOW_STATUS01 or statusValid == TRADE_FLOW_STATUS02">
                 AND TPD.IS_CANCEL != #{YES} and TPD.TRADE_STATUS = #{TRADE_STATUS01}
             </if>
+			<if test="statusValid == TRADE_FLOW_STATUS01">
+				and (tpd.is_swap_transaction is null or tpd.is_swap_transaction = 'N')
+			</if>
             <if test="statusValid == TRADE_FLOW_STATUS03">
                 AND TPD.TRADE_STATUS = #{TRADE_STATUS03}
             </if>
