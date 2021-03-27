@@ -1,1 +1,0 @@
-UPDATE sys_para SET REMARK = '债券资产资产到期日配置参数(人行表3-3,01：资产的到期日，02：行权债取最近的行权日;无行权日或其他债券时,取资产到期日)' WHERE PARA_CODE = 'SEC_ASSETS_MDATE_CONF';

@@ -1,2 +1,0 @@
-delete  from  sys_datadict_list  where  ITEM_CODE='99' and DICT_CODE='SVR_PRO_STYLE';
-Insert into sys_datadict_list (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('SVR_PRO_STYLE','99','其他',3,'0','system',null,to_timestamp('09-3月 -20 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),'system',to_timestamp('09-3月 -20 12.00.00.000000000 上午','DD-MON-RR HH.MI.SSXFF AM'),null);
