@@ -86,15 +86,15 @@ public class FundAssetTransfer001Controller extends BaseController {
             model.addAttribute(GlobalConstant.ENTITY,entity);
         }
         //非货基查询初始单位净值
-        if(StringUtil.equals(entity.getAssetType(),DictCodeList.基金类资产类型_非货币基金.getValue())){
+        if(StringUtil.equals(entity.getFundType(),DictCodeList.基金类资产类型_非货币基金.getValue())){
             Map<String,Object> paramMap = new HashMap<>();
             paramMap.put("tradeDate",DateUtil.format(entity.getTradeDate()));
             paramMap.put("finprodId",entity.getFinprodIdOrg());
-            BigDecimal unitCprice = fundAssetTransfer001Service.findInitCarryOverQty(paramMap);
-            if(unitCprice==null) {
-            	unitCprice = BigDecimal.ZERO;
-            }
-            entity.setUnitCprice(unitCprice);
+//            BigDecimal unitCprice = fundAssetTransfer001Service.findInitCarryOverQty(paramMap);
+//            if(unitCprice==null) {
+//            	unitCprice = BigDecimal.ZERO;
+//            }
+            entity.setUnitCprice(fundAssetTransfer001Service.findInitCarryOverQty(paramMap));
         }
         else {
         	entity.setUnitCprice(BigDecimal.ONE);

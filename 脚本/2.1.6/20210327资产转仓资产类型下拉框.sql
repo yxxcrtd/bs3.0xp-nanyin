@@ -1,0 +1,1 @@
+delete from SYS_PAGE_DICTLIST where PAGE_ID='AssetsTransfer001' and DICT_ID='PINAN_ASSET_TYPE' and DICT_ITEM_VAL in('F07','F08','F10');
