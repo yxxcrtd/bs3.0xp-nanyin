@@ -663,11 +663,13 @@
 					VDATE
 					FROM FIN_PRODUCT
 					WHERE FINPROD_MARKET_ID = #{initValue}
+					AND FINPROD_TYPE2 = 'F07'/*存款类资产*/
 					) >= TO_DATE(#{platDate},'yyyy-MM-dd')
 					THEN (SELECT
 					TO_CHAR(VDATE,'yyyy-MM-dd')
 					FROM FIN_PRODUCT
 					WHERE FINPROD_MARKET_ID = #{initValue}
+					AND FINPROD_TYPE2 = 'F07'/*存款类资产*/
 					)
 					ELSE #{platDate} END
 				)
