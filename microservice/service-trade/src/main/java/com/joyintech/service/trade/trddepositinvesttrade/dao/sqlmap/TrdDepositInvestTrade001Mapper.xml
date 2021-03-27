@@ -81,6 +81,9 @@
 			    FIN.FINPROD_ID = FINTYPE.FINPROD_ID	
 		<where>
 			PP.INVEST_YESORNO = 'Y'
+			<if test="status != null and status.equals(validStatus_01)">
+				and (wfl.IS_CANCEL = 'Y' or wfl.is_swap_transaction is null or wfl.is_swap_transaction='N')
+			</if>
 			<if test="userId != null and userId != ''">
 				AND (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
 				OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
@@ -223,6 +226,7 @@
 			LEFT JOIN PTL_PORTFOLIO PP ON WFLDEAL.PORTFOLIO_ID = PP.PORTFOLIO_ID
 		<where>
 			PP.INVEST_YESORNO = 'Y'
+			and (not (wfl.is_cancel = 'N' and wfl.is_swap_transaction='Y'))
 			<if test="userId != null and userId != ''">
 				AND (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
 				OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
