@@ -1513,14 +1513,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (fc1.scino='999999' or fc1.scino is null)
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (cr1.scino='999999' or cr1.scino is null)
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -1713,12 +1721,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
 			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
 			<!--不穿透，需区分通道和非通道，此处为通道-->
 			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
 			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
@@ -2113,14 +2131,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (fc1.scino='999999' or fc1.scino is null)
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (cr1.scino='999999' or cr1.scino is null)
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -2313,12 +2339,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
 			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
 			<!--不穿透，需区分通道和非通道，此处为通道-->
 			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
 			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
@@ -2772,16 +2808,23 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (fc1.scino='999999' or fc1.scino is null)
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (cr1.scino='999999' or cr1.scino is null)
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
 		</if>
-		and cr.change_type in ('07','09')
 		),
 		<!--通过通道投资的资产的收益率-->
 		ratedetailWithTd as(
@@ -2972,12 +3015,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
 			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
 			<!--不穿透，需区分通道和非通道，此处为通道-->
 			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
 			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
@@ -3325,14 +3378,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (fc1.scino='999999' or fc1.scino is null)
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (cr1.scino='999999' or cr1.scino is null)
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -3525,12 +3586,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
 			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
 			<!--不穿透，需区分通道和非通道，此处为通道-->
 			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
 			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
@@ -3991,14 +4062,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (fc1.scino='999999' or fc1.scino is null)
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (cr1.scino='999999' or cr1.scino is null)
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -4191,12 +4270,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
 			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
 			<!--不穿透，需区分通道和非通道，此处为通道-->
 			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
 			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
@@ -4547,14 +4636,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (fc1.scino='999999' or fc1.scino is null)
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为直投-->
-			and (cr1.scino='999999' or cr1.scino is null)
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
 		</if>
 		and cr.change_type in ('07','09')
 		),
@@ -4747,12 +4844,22 @@ with cj as(
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
 		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
 			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
 			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
 		</if>
 		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
 			<!--不穿透，需区分通道和非通道，此处为通道-->
 			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
 			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))

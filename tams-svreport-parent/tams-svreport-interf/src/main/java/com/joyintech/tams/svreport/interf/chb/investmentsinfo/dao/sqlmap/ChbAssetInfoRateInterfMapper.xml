@@ -215,6 +215,30 @@
 	  where fp.finprod_type2='F10'
 	  group by  fp.finprod_market_id ,fp.finprod_type2,fi.cdate)tt
 	  where  tt.updatetime  > #{updatetime,jdbcType=TIMESTAMP}　
+
+	  union all
+	  <!--可转债成本，不区分通道和非通道 -->
+	  select tt.* from (
+	  select 1 idx,
+	  fp.finprod_market_id as assetId ,fp.finprod_type2 as finprodType2,
+	  fpt.type_11 as profitType,
+	  '11' changType,
+	  fi.cdate as changeDate,
+	  null as assetRate,null as assetBonusReinvestRate,null as closePriceFull,
+	  case when sum(nvl(fi.share_amt,0))!=0 then sum(nvl(fi.dsc_cost_amt,0))/sum(nvl(fi.share_amt,0))
+	  else 0 end as costAmt,
+	  max(nvl(fi.UPDATE_TIME,fi.CREATE_TIME)) updatetime,
+	  null tradeId,
+	  null as status,
+	  null scino
+	  from ptl_sec_valution fi
+	  left join fin_product fp
+	  on fi.finprod_id=fp.finprod_id
+	  left join fin_product_type fpt
+	  on fp.finprod_id=fpt.finprod_id
+	  where fpt.type_11='013'
+	  group by  fp.finprod_market_id ,fp.finprod_type2,fpt.type_11,fi.cdate)tt
+	  where  tt.updatetime  > #{updatetime,jdbcType=TIMESTAMP}
 	  ) a
 	  where 1=1 and a.idx=1
 </select>
