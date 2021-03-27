@@ -339,7 +339,6 @@ public class TrdAssetsProject001Controller extends BaseController {
                 }
             }
         }
-        params.setBusinessCode(dto.getFinprodMarketId());
         params.setBusinessType(DictCodeList.共通业务类型_项目类资产交易.getValue());
 
         if (BussinessConstant.SUBMIT.equals(dto.getOperateType())) {
@@ -357,8 +356,18 @@ public class TrdAssetsProject001Controller extends BaseController {
                 entity.setBaseTradeInfoDtos(trdAssetsProject001Service.genFinProductTradeDto(entity));
             }
         }
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        params.setBusinessCode(dto.getZcId());
         // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> WorkFlowUtil.concatComment("交易编号：" + dto.getTradeId(), "资产名称：" + dto.getFinprodName(),
+        params.setComment(entity -> WorkFlowUtil.concatComment("交易编号：" + dto.getZcId(), "资产名称：" + dto.getFinprodName(),
                 "起息日：" + DateUtil.format(dto.getVdate())));
         processParameter.setWorkFlowParameter(params);
         String msg = trdAssetsProject001Service.start(processParameter, dto);

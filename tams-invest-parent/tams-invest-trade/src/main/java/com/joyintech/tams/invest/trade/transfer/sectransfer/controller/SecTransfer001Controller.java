@@ -451,10 +451,20 @@ public class SecTransfer001Controller extends BaseController {
         WorkFlowParameter<SecTransfer001Dto> workFlowParameter = new WorkFlowParameter<>();
         workFlowParameter.setPageId(this.getPageId());
         workFlowParameter.setElementId(dto.getElementId());
-        workFlowParameter.setBusinessCode((entity) -> entity.getTradeId());
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_债券类资产交易.getValue());
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        workFlowParameter.setBusinessCode(dto.getZcId());
+
         // 设置流程业务说明, entity即传入的dto
-        workFlowParameter.setComment(entity -> "交易编号：" + dto.getTradeId() + ";资产名称：" +
+        workFlowParameter.setComment(entity -> "交易编号：" + dto.getZcId() + ";资产名称：" +
                 dto.getFinprodAbbr() + ";交易日：" + DateUtil.format(dto.getTradeDate()));
         processParameter.setWorkFlowParameter(workFlowParameter);
         processParameter.setPageId(this.getPageId());

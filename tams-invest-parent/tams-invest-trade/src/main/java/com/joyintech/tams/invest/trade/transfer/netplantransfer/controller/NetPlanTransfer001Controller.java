@@ -6,10 +6,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -310,7 +307,6 @@ public class NetPlanTransfer001Controller extends BaseController {
         WorkFlowParameter<NetPlanTransfer001Dto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getFinprodId());
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
         //转仓列表
         if (BussinessConstant.SUBMIT.equals(dto.getOperateType()) &&
@@ -319,8 +315,19 @@ public class NetPlanTransfer001Controller extends BaseController {
                 netPlanTransfer001Service.genFinProductDto(netPlanTransfer002Dto,dto);
             });
         }
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        params.setBusinessCode(dto.getZcId());
+
         // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> "交易编号："+""+";资产名称："+
+        params.setComment(entity -> "交易编号："+dto.getZcId()+";资产名称："+
                 dto.getFinprodAbbr()+";交易日："+ DateUtil.format(dto.getTradeDate()));
         processParameter.setWorkFlowParameter(params);
         String msg = netPlanTransfer001Service.start(processParameter, dto);
