@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.apache.commons.collections.CollectionUtils;
@@ -148,6 +149,7 @@ public class TaxScheme005Service extends CommonExportService<TaxScheme005Dto> im
      * @throws Exception
      */
     public List<SelectOptionDto> findAsset(Map<String, Object> pageParam) throws Exception {
+        pageParam.put("InstCode", LoginUserUtil.getInstCode());
         List<TaxScheme005Dto> resultList = taxScheme005Mapper.selectAsset(pageParam);
         List<SelectOptionDto> selectOptionList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(resultList)) {
