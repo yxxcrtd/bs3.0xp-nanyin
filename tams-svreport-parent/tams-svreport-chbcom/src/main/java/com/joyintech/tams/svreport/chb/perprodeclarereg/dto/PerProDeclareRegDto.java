@@ -509,6 +509,12 @@ public class PerProDeclareRegDto extends BaseEntity implements ITableRow{
      * 投资管理费率%
      */
     private BigDecimal investFeeRate;
+
+    /**
+     * 是否合规新产品
+     */
+    @DictFormat(DictCode.新老产品标记)
+    private String isFhxgcp;
     
 	/**
      * 控制操作按钮
@@ -2003,7 +2009,15 @@ public class PerProDeclareRegDto extends BaseEntity implements ITableRow{
         this.investFeeRate = investFeeRate;
     }
 
-	public String getSumitSeq() {
+    public String getIsFhxgcp() {
+        return isFhxgcp;
+    }
+
+    public void setIsFhxgcp(String isFhxgcp) {
+        this.isFhxgcp = isFhxgcp;
+    }
+
+    public String getSumitSeq() {
 		return sumitSeq;
 	}
 

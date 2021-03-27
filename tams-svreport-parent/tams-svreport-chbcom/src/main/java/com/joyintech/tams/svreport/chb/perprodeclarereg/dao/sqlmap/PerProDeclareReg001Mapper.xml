@@ -93,6 +93,7 @@
 	<result column="CASH_MANA_CATE" property="cashManaCate" />
 	<result column="YIELD" property="yield" />
 	<result column="INVEST_FEE_RATE" property="investFeeRate" />
+	<result column="IS_FHXGCP" property="isFhxgcp" />
  </resultMap>
    <select id="selectAllData" parameterType="java.util.HashMap" resultType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
       select 
@@ -194,7 +195,8 @@
 		cds.CASH_MANA_CATE cashManaCate,
 		cds.YIELD yield,
 		cds.INVEST_FEE_RATE investFeeRate,
-		cds.SUMIT_SEQ sumitSeq
+		cds.SUMIT_SEQ sumitSeq,
+		cds.IS_FHXGCP isFhxgcp
      from CHB_PRD_DECLARE_SUB cds
      left join CHB_PRDRESIST_CODE cpc on cpc.PRODID = cds.PROD_ID
      <if test="model_type != null">
@@ -417,7 +419,8 @@
 	baseinfo.CASH_MANA_CATE ,/*是否现金管理类*/
 	baseinfo.YIELD ,/*业绩比较基准%*/
 	baseinfo.INVEST_FEE_RATE,/*投资管理费率%*/
-    baseinfo.STATUS STATUS
+    baseinfo.STATUS STATUS,
+    baseinfo.IS_FHXGCP IS_FHXGCP
 	from CHB_PRD_BASEINFO baseinfo 
 	where 1 =1
 	and baseinfo.FPROD_ID IS NULL
@@ -508,8 +511,8 @@
     baseinfo.STATUS STATUS,
     sub.NINE_FILE,
     sub.FILE_NO,
-	sub.FILE_NUM
-   
+	sub.FILE_NUM,
+	baseinfo.IS_FHXGCP
 	from CHB_PRD_DECLARE_INFO baseinfo
 	<!-- add by zhangliang 20210306 先上传九大附件，然后修改了申报基本信息，重新执行“产品发行申报登记报送”批处理，已上传的附件在前台无法下载 备注：CHB_PRD_DECLARE_SUB表的NINE_FILE、FILE_NO、FILE_NUM字段变成空了 start -->
 	left join CHB_PRD_DECLARE_SUB sub on baseinfo.PROD_INS_ID = sub.PROD_INS_ID and sub.send_status = '01'
@@ -627,7 +630,8 @@
 	IS_FREE_REDEM,
 	CASH_MANA_CATE,
 	YIELD,
-	INVEST_FEE_RATE
+	INVEST_FEE_RATE,
+	IS_FHXGCP
 	)
 	<foreach collection="list" item="item" separator="union all">
 	select
@@ -719,7 +723,8 @@
 	#{item.isFreeRedem,jdbcType=VARCHAR},
 	#{item.cashManaCate,jdbcType=VARCHAR},
 	#{item.yield,jdbcType=NUMERIC},
-	#{item.investFeeRate,jdbcType=NUMERIC}
+	#{item.investFeeRate,jdbcType=NUMERIC},
+	#{item.isFhxgcp,jdbcType=VARCHAR}
 	from dual
 			
 	</foreach>
@@ -840,7 +845,8 @@
 	    IS_FREE_REDEM,
 	    CASH_MANA_CATE,
 	    YIELD,
-	    INVEST_FEE_RATE
+	    INVEST_FEE_RATE,
+	    IS_FHXGCP
 	    )
 	    values(#{sumitSeq,jdbcType=VARCHAR},
 	    #{registSeqno,jdbcType=VARCHAR},
@@ -931,7 +937,8 @@
         #{isFreeRedem,jdbcType=VARCHAR},
         #{cashManaCate,jdbcType=VARCHAR},
         #{yield,jdbcType=NUMERIC},
-        #{investFeeRate,jdbcType=NUMERIC}
+        #{investFeeRate,jdbcType=NUMERIC},
+        #{isFhxgcp,jdbcType=VARCHAR}
 	    )
     </insert>
     
@@ -1011,7 +1018,8 @@
 	sub.CASH_MANA_CATE ,
 	sub.YIELD ,
 	sub.INVEST_FEE_RATE,
-	sub.status status
+	sub.status status,
+	sub.IS_FHXGCP isFhxgcp
 	from CHB_PRD_DECLARE_SUB sub
 	where sub.send_status in ('02','03')
 	<if test="list!=null and list.size()!=0">
@@ -1043,7 +1051,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
     UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP
       )
       select 
     REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
@@ -1059,7 +1067,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, sysdate,
     UPDATE_USER, sysdate, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP
     from CHB_PRD_DECLARE_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">

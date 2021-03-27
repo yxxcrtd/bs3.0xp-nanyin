@@ -381,6 +381,12 @@ public class ChbPrdDeclareSubTmp extends BaseEntity {
     private String dataSource;
 
     /**
+     * 是否合规新产品-新老产品标记
+     */
+    @ItemAndNameDictCode
+    private String isFhxgcp;
+
+    /**
      * 取得 产品名称
      * @return 产品名称
      */
@@ -1437,5 +1443,13 @@ public class ChbPrdDeclareSubTmp extends BaseEntity {
      */
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource == null ? null : dataSource.trim();
+    }
+
+    public String getIsFhxgcp() {
+        return isFhxgcp;
+    }
+
+    public void setIsFhxgcp(String isFhxgcp) {
+        this.isFhxgcp = isFhxgcp;
     }
 }

@@ -691,6 +691,9 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
         gendto.setYield((dto.getYield()==null?BigDecimal.ZERO:dto.getYield()).setScale(5, BigDecimal.ROUND_HALF_UP));
         //投资管理费率%
         gendto.setInvestFeeRate((dto.getInvestFeeRate()==null?BigDecimal.ZERO:dto.getInvestFeeRate()).setScale(5, BigDecimal.ROUND_HALF_UP));
+        // 是否合规新产品
+        gendto.setIsFhxgcp(dto.getIsFhxgcp());
+
         return gendto;
     }
 	

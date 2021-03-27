@@ -11,6 +11,7 @@ import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportMapper;
@@ -744,7 +745,7 @@ public class MonthReportAssetService {
                                 /**G06资产端改造  add by  dongxiangyang  start*/
 
                                 //合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
-								if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+								if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
 									detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 									detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
 								}else{
@@ -776,7 +777,7 @@ public class MonthReportAssetService {
 								/**G06资产端改造  add by  dongxiangyang  start*/
 
 								//合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
-								if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+								if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
 									detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 									detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
 								}else{
@@ -812,7 +813,7 @@ public class MonthReportAssetService {
             				
             				bottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
 
-							if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+							if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
 								xgbalance=position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA();
 
 								xgbottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
@@ -860,7 +861,7 @@ public class MonthReportAssetService {
 									/**G06资产端改造  add by  dongxiangyang  start*/
 
 									//合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
-									if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+									if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
 										detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 										detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
 									}else{
@@ -882,7 +883,7 @@ public class MonthReportAssetService {
 									/**G06资产端改造  add by  dongxiangyang  start*/
 
 									//合规穿透前科目余额 = 合规穿透前科目余额 + （【是否合规产品】 = 是 【新增穿透前值】 else 【0】）
-									if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+									if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
 										detail.setXgbalance(detail.getXgbalance().add(position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA()));
 										detail.setXgbottombalance(detail.getXgbottombalance().add(position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB()));
 									}else{
@@ -911,7 +912,7 @@ public class MonthReportAssetService {
 	            				
 	            				bottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();
 
-								if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),position.getIsFhxgcp())){
+								if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),position.getIsFhxgcp())){
 									xgbalance=position.getAssetvalueA() == null?BigDecimal.ZERO:position.getAssetvalueA();
 
 									xgbottombalance = position.getAssetvalueB() == null?BigDecimal.ZERO:position.getAssetvalueB();

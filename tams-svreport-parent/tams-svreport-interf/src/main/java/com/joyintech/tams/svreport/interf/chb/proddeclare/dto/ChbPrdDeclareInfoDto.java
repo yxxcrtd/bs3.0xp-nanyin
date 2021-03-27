@@ -368,6 +368,11 @@ public class ChbPrdDeclareInfoDto extends BaseEntity{
     private String datasource;
 
     /**
+     * 是否合规新产品
+     */
+    private String isFhxgcp;
+
+    /**
      * null
      * @return DECLARE_UUID null
      */
@@ -1501,5 +1506,13 @@ public class ChbPrdDeclareInfoDto extends BaseEntity{
      */
     public void setDatasource(String datasource) {
         this.datasource = datasource == null ? null : datasource.trim();
+    }
+
+    public String getIsFhxgcp() {
+        return isFhxgcp;
+    }
+
+    public void setIsFhxgcp(String isFhxgcp) {
+        this.isFhxgcp = isFhxgcp;
     }
 }
