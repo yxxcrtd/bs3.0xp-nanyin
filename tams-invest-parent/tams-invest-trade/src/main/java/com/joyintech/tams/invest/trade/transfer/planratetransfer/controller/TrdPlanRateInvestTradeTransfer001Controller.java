@@ -22,6 +22,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDto;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDtos;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.service.TrdPlanRateInvestTradeTransfer001Service;
+import com.joyintech.tams.invest.trade.transfer.trdassetsProject.service.TrdAssetsProject001Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
@@ -56,6 +57,9 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
 
     @Autowired
     private TrdPlanRateInvestTradeTransfer001Service trdPlanRateInvestTradeTransfer001Service;
+    
+    @Autowired
+    TrdAssetsProject001Service trdAssetsProject001Service;
 
     /**
      * 通用Mapper共同代理方法
@@ -108,7 +112,16 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
             //本金金额
             entity.setPrinAmt(new BigDecimal((String) paraMap.get("printAmt")));
             //剩余可转仓本金金额
-            entity.setRestAmt(entity.getPrinAmt());
+            //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+            paraMap.put("searchDate", DateUtil.getSysDate());           
+        	BigDecimal wflAmt = trdAssetsProject001Service.selectWflAmtAsset(paraMap);
+        	if(wflAmt != null) {
+        		BigDecimal newRestAmt= ArithmeticUtil.doAdd(entity.getPrinAmt(),wflAmt);
+        		entity.setRestAmt(newRestAmt);
+        	}else {        		        		
+        		 entity.setRestAmt(entity.getPrinAmt());
+        	}
+        	//剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
             //交易日期
             entity.setTradeDate(DateUtil.parse((String) paraMap.get("tradeDate")));
             //交割日期
