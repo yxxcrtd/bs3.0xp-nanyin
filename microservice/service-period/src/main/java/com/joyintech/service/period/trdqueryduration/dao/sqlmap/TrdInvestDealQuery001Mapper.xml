@@ -277,6 +277,7 @@
 			)
 		</if>
 		ORDER BY T1.TRADE_DATE DESC)
+		<if test="isNewfundDealType == null or isNewfundDealType == '01'">
 		union all
 		SELECT * from(
 		SELECT
@@ -322,6 +323,7 @@
 		and T1.TRADE_STATUS = #{TRADE_STATUS01}
 		and T1.IS_CANCEL = #{YESNO_N}
 		<include refid="where_sql"/>)
+		</if>
 		<if test="isNewfundDealType != null and isNewfundDealType == '02'">
 			union all
 			/*多种分红类型基金有效*/
@@ -1054,6 +1056,7 @@
 			        )
 		        </if>
 				ORDER BY T1.TRADE_DATE DESC)
+			<if test="isNewfundDealType == null or isNewfundDealType == '01'">
 			union all
 			select * from (
 				SELECT
@@ -1099,6 +1102,7 @@
 				and T1.TRADE_STATUS = #{TRADE_STATUS03}
 		        and t1.IS_CANCEL = #{YES_OR_NO_N}
 				<include refid="where_sql"/>)
+				</if>
 				<if test="isNewfundDealType != null and isNewfundDealType == '02'">
 				/*多种分红类型基金撤销*/
 				union all
