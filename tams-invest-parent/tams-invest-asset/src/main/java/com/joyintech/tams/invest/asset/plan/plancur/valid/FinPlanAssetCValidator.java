@@ -62,6 +62,16 @@ public class FinPlanAssetCValidator implements BeanValidator {
     public List<ValidMessage> valid(Object value) {
         FinPlanAssetCDto dto = (FinPlanAssetCDto) value;
         List<ValidMessage> errorList = new ArrayList<>();
+
+        if (!StringUtil.equals(dto.getOperateType(), "delete")) {
+            if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo()) && StringUtil.equals(dto.getBussRepAssetMngProdInfo().getRepAssetType(),"1705")) {
+                if (StringUtil.isEmpty(dto.getBussRepAssetMngProdInfo().getRepFinancialComissue()) || dto.getBussRepAssetMngProdInfo().getRepFinancialComissue() == "") {
+                    errorList.add(new ValidMessage("BussRepAssetMngProdInfo.repFinancialComissue",
+                            "请输入是否由金融资产投资公司发行。"));
+                }
+            }    
+        }
+        
         if (WorkFlowUtil.isNotFromToDoList()) {
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
                 for(FinPlanAssetCDto e:dto.getSelectedItem()) {
@@ -97,13 +107,7 @@ public class FinPlanAssetCValidator implements BeanValidator {
                         errorList.add(new ValidMessage("finprodMarketId", getMessage("FIN_ASSET_E_0007", dto.getFinprodMarketId())));
                     }
                 }
-
-                if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo()) && StringUtil.equals(dto.getBussRepAssetMngProdInfo().getRepAssetType(),"1705")) {
-                        if (StringUtil.isEmpty(dto.getBussRepAssetMngProdInfo().getRepFinancialComissue()) || dto.getBussRepAssetMngProdInfo().getRepFinancialComissue() == "") {
-                            errorList.add(new ValidMessage("BussRepAssetMngProdInfo.repFinancialComissue",
-                                    "请选择是否由金融资产投资公司发行"));
-                        }
-                }
+                
             }
         }
         else {
