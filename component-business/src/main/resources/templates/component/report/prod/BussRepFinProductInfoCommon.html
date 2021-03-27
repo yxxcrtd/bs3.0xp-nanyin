@@ -940,7 +940,7 @@
 							<label class="layui-form-label form-label-wrap"
 								data-th-text="#{BussRepFinProductInfo.repRaisePstrdate}">募集起始日（从）</label>
 							<div class="layui-input-inline input-inline">
-								<input type="text" th:name="|repRaisePstrdate|"
+								<input type="text" th:name="|${entityName}.repRaisePstrdate|"
 									th:id="|${entityName}_repRaisePstrdate|"
 									class="layui-input form-input input-dateSelect" required
 									data-th-value='${#dates.format(entity?.repRaisePstrdate,"yyyy-MM-dd")}'>
@@ -950,7 +950,7 @@
 							<label class="layui-form-label form-label-wrap"
 								data-th-text="#{BussRepFinProductInfo.repRaisePenddate}">募集起始日（到）</label>
 							<div class="layui-input-inline input-inline">
-								<input type="text" th:name="|repRaisePenddate|"
+								<input type="text" th:name="|${entityName}.repRaisePenddate|"
 									th:id="|${entityName}_repRaisePenddate|"
 									class="layui-input form-input input-dateSelect" required
 									data-th-value='${#dates.format(entity?.repRaisePenddate,"yyyy-MM-dd")}'>
