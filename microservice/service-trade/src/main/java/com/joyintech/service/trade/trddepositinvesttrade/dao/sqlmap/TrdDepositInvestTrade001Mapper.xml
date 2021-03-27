@@ -658,7 +658,8 @@
 				) T  WHERE  T.RN <![CDATA[<=]]> 1 ) FCI
 				ON FCCR.CASH_ID = FCI.CASH_ID
 				WHERE    fci.FINPROD_ID = FIN_PRODUCT.finprod_id
-				and  TO_CHAR(FCCR.EFF_DATE,'yyyy-MM-dd')   <![CDATA[<=]]>
+				<if test="initValue != null and initValue != ''">
+					and  TO_CHAR(FCCR.EFF_DATE,'yyyy-MM-dd')   <![CDATA[<=]]>
 					CASE WHEN (SELECT
 					VDATE
 					FROM FIN_PRODUCT
@@ -672,6 +673,10 @@
 					AND FINPROD_TYPE2 = 'F07'/*存款类资产*/
 					)
 					ELSE #{platDate} END
+				</if>
+				<if test="initValue == null or initValue == ''">
+					and TO_CHAR(FCCR.EFF_DATE,'yyyy-MM-dd')   <![CDATA[<=]]> #{platDate}
+				</if>
 				)
 			</if>
 			AND FIN_PRODUCT.FINPROD_TYPE2 not in ('F01','F06','F10')
