@@ -129,6 +129,8 @@ public class BussRepFinProductInfoCommonController extends BaseController {
       //产品信息与申报信息是否合并
         model.addAttribute("repProductIsMerger", CacheUtil.getSysParam(BussinessConstant.PRODUCTT_IS_MERGER));
         model.addAttribute("yesOrNo_Y", DictCodeList.是否_是.getValue());
+        //是否子公司
+        model.addAttribute("svrIsSubsidiary", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"));
         
         if (StringUtil.equals(RequestUtil.getParam("isTodoList"), "true")) {
             BussRepFinProductInfoDto dto = mstWorkflowCommonService.getBusinessEntityByWorkFlowId(
