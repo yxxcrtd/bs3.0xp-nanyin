@@ -131,6 +131,14 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
     }
 
     @Override
+    public void doBack(FinProductAddReduce002Dto entity) {
+        // 删除工作流表
+        if(StringUtil.isNotEmpty(entity.getWorkflowId())) {
+            baseTradeProductDealCommService.deleteWflData(entity.getWorkflowId());
+        }
+    }
+
+    @Override
     public void doDelete(String workflowId) {
         // 删除工作流表
         baseTradeProductDealCommService.delete(workflowId);
@@ -318,6 +326,7 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
                     wflTrdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 }
                 wflTrdProductDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                wflTrdProductDeal.setWorkflowId(entity.getWorkflowId());
                 wflTrdProductDeals.add(wflTrdProductDeal);
             });
         }
@@ -331,6 +340,7 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
                         wflTrdProductDealAdd.getTradeId() + BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
                 }
                 wflTrdProductDealAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                wflTrdProductDealAdd.setWorkflowId(entity.getWorkflowId());
                 wflTrdProductDealAdds.add(wflTrdProductDealAdd);
             });
         }
@@ -344,6 +354,7 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
                         wflPaTrdProductDeal.getTradeId() + BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
                 }
                 wflPaTrdProductDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                wflPaTrdProductDeal.setWorkflowId(entity.getWorkflowId());
                 wflPaTrdProductDeals.add(wflPaTrdProductDeal);
             });
         }
@@ -357,6 +368,7 @@ public class FinProductAddReduceWorkflowService extends BaseService<FinProductAd
                         wflStlPayOrders1.getTradeId() + BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
                 }
                 wflStlPayOrders1.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                wflStlPayOrders1.setWorkflowId(entity.getWorkflowId());
                 wflStlPayOrders.add(wflStlPayOrders1);
             });
         }

@@ -141,10 +141,15 @@ $(function() {
                 //4、清空转仓信息的信息
                 $("#NetPlanTransfer001_portfolioId").val('').trigger("change").trigger('blur');
                 $("#NetPlanTransfer001_tradeAmt").val('').trigger("change").trigger('blur');
-                $("#NetPlanTransfer001_unitValue").val('').trigger("change").trigger('blur');
                 $("#NetPlanTransfer001_tradeMoney").val('').trigger("change").trigger('blur');
                 $("#bussTrdAvailableCashQuery_avalibleCash").val('').trigger("change").trigger('blur');
                 $("#bussTrdAvailableCashQuery_channelAvailableCash").val('').trigger("change").trigger('blur');
+                var unitValue =  $("#NetPlanTransfer001_unitValue").attr("value");
+                if(unitValue==undefined){
+                	unitValue="";
+                }
+                $("#NetPlanTransfer001_unitValue").val(unitValue).trigger("change").trigger('blur');  
+                
             }
         })
     };
@@ -188,6 +193,14 @@ $(function() {
         var data = table.getAllRows();
         object.operateType = operateType;
         object.netPlanTransfer002DtoList = data;
+        var unitValue =  $("#NetPlanTransfer001_unitValue").attr("value");
+        if (null == unitValue || 'undefined' == typeof(unitValue) || '' == unitValue) {
+        	delete object.unitValue;
+        }
+        else{
+        	object.unitValue = unitValue;
+        }
+        
         Joyin.ajaxJson(basePath + 'invest/trade/transfer/netplantransfer/NetPlanTransfer001/check', object, function(result) {
             Joyin.confirm(result.data, function() {
                 if(operateType === 'save') {
