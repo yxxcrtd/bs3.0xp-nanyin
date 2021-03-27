@@ -22,6 +22,7 @@ import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
+import com.joyintech.tams.invest.common.constantrds.BussinessConstantRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constantrds.RedisKeyEnum;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
@@ -152,7 +153,11 @@ public class PeriodRdsCommonAop extends AopBaseService<InterfRiskRdsDto> {
             else if(StringUtil.isNotEmpty(mapTrd.get("baseTotalTradeInfoDto"))) {
                     BaseTotalTradeInfoDto baseTotalTradeInfoDto = (BaseTotalTradeInfoDto) JsonUtils.map2entity((Map)mapTrd.get("baseTotalTradeInfoDto"),BaseTotalTradeInfoDto.class);
                     if (StringUtil.isNotEmpty(baseTotalTradeInfoDto) && StringUtil.isNotEmpty(baseTotalTradeInfoDto.getTrdFinProductDealTotal())) {
-                        setBasicTradeInfo(mapTrd,baseTotalTradeInfoDto.getTrdFinProductDealTotal().getPs(),baseTotalTradeInfoDto.getTrdFinProductDealTotal().getFinprodType2());
+                        String ps = baseTotalTradeInfoDto.getTrdFinProductDealTotal().getPs();
+                        if(joinPoint.getTarget().getClass().getSimpleName().contains("TrdFundDurationNew001Service")){
+                            ps = (String) mapTrd.get("ps");
+                        }
+                        setBasicTradeInfo(mapTrd,ps,baseTotalTradeInfoDto.getTrdFinProductDealTotal().getFinprodType2());
                     }
             }
         } catch (Exception e) {
