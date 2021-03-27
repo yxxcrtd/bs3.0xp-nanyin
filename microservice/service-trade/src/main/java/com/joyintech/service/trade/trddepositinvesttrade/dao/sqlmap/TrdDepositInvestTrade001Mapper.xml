@@ -417,7 +417,19 @@
 			AND FINPROD_ID = #{finprodId}
             ORDER BY UPDATE_TIME DESC) T
             WHERE ROWNUM = 1)
-		   and  FINR.EFF_DATE  <![CDATA[<=]]> #{sysDateRate}
+		   and  FINR.EFF_DATE 
+		   		<![CDATA[<=]]>
+				CASE WHEN (SELECT 
+								VDATE 
+							FROM FIN_PRODUCT 
+							WHERE FINPROD_ID = #{finprodId}
+							) >= #{sysDateRate}
+					THEN (SELECT 
+								VDATE 
+							FROM FIN_PRODUCT 
+							WHERE FINPROD_ID = #{finprodId}
+						  )
+					ELSE #{sysDateRate} END
             ORDER BY EFF_DATE DESC) RULE
             WHERE FIN.FINPROD_ID = #{finprodId} AND ROWNUM  = 1
 	</select>
@@ -646,7 +658,18 @@
 				) T  WHERE  T.RN <![CDATA[<=]]> 1 ) FCI
 				ON FCCR.CASH_ID = FCI.CASH_ID
 				WHERE    fci.FINPROD_ID = FIN_PRODUCT.finprod_id
-				and  TO_CHAR(FCCR.EFF_DATE,'yyyy-MM-dd')   <![CDATA[<=]]> #{platDate}
+				and  TO_CHAR(FCCR.EFF_DATE,'yyyy-MM-dd')   <![CDATA[<=]]>
+					CASE WHEN (SELECT
+					VDATE
+					FROM FIN_PRODUCT
+					WHERE FINPROD_MARKET_ID = #{initValue}
+					) >= TO_DATE(#{platDate},'yyyy-MM-dd')
+					THEN (SELECT
+					TO_CHAR(VDATE,'yyyy-MM-dd')
+					FROM FIN_PRODUCT
+					WHERE FINPROD_MARKET_ID = #{initValue}
+					)
+					ELSE #{platDate} END
 				)
 			</if>
 			AND FIN_PRODUCT.FINPROD_TYPE2 not in ('F01','F06','F10')
