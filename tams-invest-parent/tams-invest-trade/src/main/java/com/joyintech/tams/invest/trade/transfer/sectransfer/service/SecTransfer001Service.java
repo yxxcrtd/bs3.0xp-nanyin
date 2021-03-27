@@ -1052,7 +1052,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
         // modified by wangguoxian 费用设置 20190801 end
         // 到期收益率 = 画面.到期收益率/100
         if (dto.getYield() != null) {
-            dto.setYield(ArithmeticUtil.divide(dto.getYield(), new BigDecimal(100)));
+            dto.setYield(dto.getYield());
         }else{
         	dto.setYield(ArithmeticUtil.divide(dto.getExerYield(), new BigDecimal(100)));
         	//add by xuzhihao start
