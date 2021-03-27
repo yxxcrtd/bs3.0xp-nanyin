@@ -42,6 +42,8 @@ import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.invest.trade.bondtostock.dao.TrdBondToStockMapper;
 import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
+import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
+import com.joyintech.tams.valuation.common.interf.base.service.dealcommon.DealCommonService;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -129,6 +131,15 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
      */
     @Autowired
     private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+    
+    @Autowired
+    private DealCommonService dealCommonService;
+    
+    /**
+     * InterfCommonService
+     */
+    @Autowired
+    private InterfCommonService interfCommonService;
 
     // 调用投管接口 add by renping 20190205 start
     /**
@@ -844,7 +855,30 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
         if (StringUtil.isNotEmpty(dto.getEntrustId())) {
             dealAdd.setEntrustId(dto.getEntrustId());
         }
-        dealAdd.setPortfolioId(dto.getPortfolioId());
+        if(StringUtil.isNotEmpty(dto.getChlId())) {
+    		String channelLedgerCode = dto.getPortfolioId();
+    		//组合信息DTO
+    		PtlPortfolio ptlPortfolio = new PtlPortfolio();
+    		ptlPortfolio = interfCommonService.getPtlPortfolo(channelLedgerCode);
+    		//IF 数据字典：组合类型.子组合 eq  变量.组合信息DTO.组合类型 OR 数据字典：收益类型.预期收益 eq 变量.组合信息DTO.收益类型 
+    		if(DictCodeListExt1.组合类型_子组合.getValue().equals(ptlPortfolio.getPortfolioType()) || 
+    				DictCodeListExt2.收益类型_预期收益.getValue().equals(ptlPortfolio.getProfitType())) {
+    			//变量.核算通道账套代码  = 变量.核算通道账套代码 + "_" + 变量.通道代码
+    			channelLedgerCode = channelLedgerCode + "_" + dto.getChlId();
+    		}else {
+    			FinProduct finProduct = dealCommonService.queryFinProductByPortfolidId(ptlPortfolio.getPortfolioId());  
+    			if(finProduct.getFinprodId() != null && finProduct!=null) {
+    				//变量.核算通道账套代码 = DTO.金融产品代码
+    				channelLedgerCode = finProduct.getFinprodId();
+    			}
+    			//变量.核算通道账套代码 =变量.核算通道账套代码 + "_" + 变量.通道代码
+    			channelLedgerCode = channelLedgerCode+ "_" + dto.getChlId();
+    		}
+        	 dealAdd.setPortfolioId(channelLedgerCode);	
+        }
+        else {
+        	 dealAdd.setPortfolioId(dto.getPortfolioId());	
+        }
         dealAdd.setPreb(dto.getPreb());
         dealAdd.setSpoShareNum(dto.getSpoShareNum());
         dealAdd.setFirstUnitCprice3(dto.getFirstUnitCprice3());
