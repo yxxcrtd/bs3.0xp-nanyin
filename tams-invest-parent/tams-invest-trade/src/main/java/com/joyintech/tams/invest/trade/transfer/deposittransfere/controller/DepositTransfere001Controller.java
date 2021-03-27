@@ -289,8 +289,8 @@ public class DepositTransfere001Controller extends BaseController {
         params.setBusinessType(DictCodeList.共通业务类型_存款类资产交易.getValue());
         // 业务说明：“交易编号：” + 上述取得的交易编号+“资产名称：”+画面.资产名称+“交易日：”+画面.交易日
         params.setComment(
-                entity -> "资产代码："
-                        + entity.getFinprodId()
+                entity -> "交易编号："
+                        + entity.getTradeId()
                         + "资产名称："
                         + entity.getFinprodAbbr()
                         + "交易日："

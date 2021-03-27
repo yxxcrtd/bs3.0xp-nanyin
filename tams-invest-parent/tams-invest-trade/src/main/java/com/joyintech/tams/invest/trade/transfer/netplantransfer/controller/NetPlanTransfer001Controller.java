@@ -6,7 +6,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
@@ -313,10 +312,6 @@ public class NetPlanTransfer001Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getFinprodId());
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> "资产代码："+dto.getFinprodId()+";资产名称："+
-                dto.getFinprodAbbr()+";交易日："+ DateUtil.format(dto.getTradeDate()));
-        processParameter.setWorkFlowParameter(params);
         //转仓列表
         if (BussinessConstant.SUBMIT.equals(dto.getOperateType()) &&
                 !StringUtil.isEmptyList(dto.getNetPlanTransfer002DtoList())) {
@@ -324,6 +319,10 @@ public class NetPlanTransfer001Controller extends BaseController {
                 netPlanTransfer001Service.genFinProductDto(netPlanTransfer002Dto,dto);
             });
         }
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(entity -> "交易编号："+""+";资产名称："+
+                dto.getFinprodAbbr()+";交易日："+ DateUtil.format(dto.getTradeDate()));
+        processParameter.setWorkFlowParameter(params);
         String msg = netPlanTransfer001Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }

@@ -342,10 +342,6 @@ public class TrdAssetsProject001Controller extends BaseController {
         params.setBusinessCode(dto.getFinprodMarketId());
         params.setBusinessType(DictCodeList.共通业务类型_项目类资产交易.getValue());
 
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> WorkFlowUtil.concatComment("资产代码：" + dto.getFinprodMarketId(), "资产名称：" + dto.getFinprodName(),
-                "起息日：" + DateUtil.format(dto.getVdate())));
-        processParameter.setWorkFlowParameter(params);
         if (BussinessConstant.SUBMIT.equals(dto.getOperateType())) {
             for (TrdAssetsProject001Dto entity:dto.getProjectListInfoList()) {
                 entity.setInvTransPortf(dto.getInvTransPortf());
@@ -361,6 +357,10 @@ public class TrdAssetsProject001Controller extends BaseController {
                 entity.setBaseTradeInfoDtos(trdAssetsProject001Service.genFinProductTradeDto(entity));
             }
         }
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(entity -> WorkFlowUtil.concatComment("交易编号：" + dto.getTradeId(), "资产名称：" + dto.getFinprodName(),
+                "起息日：" + DateUtil.format(dto.getVdate())));
+        processParameter.setWorkFlowParameter(params);
         String msg = trdAssetsProject001Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }

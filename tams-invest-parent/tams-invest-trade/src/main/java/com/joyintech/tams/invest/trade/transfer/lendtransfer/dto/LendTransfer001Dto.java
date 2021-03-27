@@ -583,4 +583,17 @@ public class LendTransfer001Dto extends BaseEntity implements ProcessEntity {
 	public void setSecAcctId(String secAcctId) {
 		this.secAcctId = secAcctId;
 	}
+
+    /**
+     * 转仓编号
+     */
+    private String zcId;
+
+    public String getZcId() {
+        return zcId;
+    }
+
+    public void setZcId(String zcId) {
+        this.zcId = zcId;
+    }
 }
