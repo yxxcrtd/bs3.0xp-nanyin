@@ -137,6 +137,10 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="portfolioCode != null and portfolioCode != ''">
                 AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
             </if>
@@ -208,6 +212,10 @@
                 #{item}
             </foreach>
         </if>
+        <if test="userId != null and userId != ''">
+            AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+            OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+        </if>
         <if test="portfolioCode != null and portfolioCode != ''">
             AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
         </if>
@@ -268,6 +276,10 @@
                      separator="," close=")">
                 #{item}
             </foreach>
+        </if>
+        <if test="userId != null and userId != ''">
+            AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+            OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
         </if>
         <if test="portfolioCode != null and portfolioCode != ''">
             AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
@@ -330,6 +342,10 @@
                 #{item}
             </foreach>
         </if>
+        <if test="userId != null and userId != ''">
+            AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+            OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+        </if>
         <if test="portfolioCode != null and portfolioCode != ''">
             AND PTL_PORTFOLIO.PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
         </if>
@@ -373,7 +389,7 @@
         /** 拆借 **/
         UNION ALL
         <include refid="getLendAssetsTransferList"></include>
-        )T
+        )T 
         ORDER BY T.status,T.assetType,T.portfolioId,T.finprodMarketId
     </select>
 
@@ -456,6 +472,10 @@
                          open="AND TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
                     #{item}
                 </foreach>
+            </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
             </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
@@ -561,6 +581,10 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
                          separator="," close=")">
@@ -637,6 +661,10 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
                          separator="," close=")">
@@ -711,6 +739,10 @@
                          open="AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
                     #{item}
                 </foreach>
+            </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
             </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
@@ -790,7 +822,10 @@
                     #{item}
                 </foreach>
             </if>
-
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
                          separator="," close=")">
@@ -870,6 +905,10 @@
                          open="AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
                     #{item}
                 </foreach>
+            </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
             </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
@@ -951,6 +990,10 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
                          separator="," close=")">
@@ -1031,6 +1074,10 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
                          separator="," close=")">
@@ -1107,7 +1154,10 @@
                     #{item}
                 </foreach>
             </if>
-
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+            </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
                          separator="," close=")">
@@ -1182,6 +1232,10 @@
                          open="AND WFL_TRD_PRODUCT_DEAL_ADD.PORTFOLIO_ID IN (" separator="," close=")">
                     #{item}
                 </foreach>
+            </if>
+            <if test="userId != null and userId != ''">
+                AND (PTL_PORTFOLIO.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+                OR PTL_PORTFOLIO.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
             </if>
             <if test="assetTypeList != null and assetTypeList.size()>0">
                 <foreach collection="assetTypeList" index="index" item="item" open="AND FIN_PRODUCT_TYPE.TYPE_8 IN ("
