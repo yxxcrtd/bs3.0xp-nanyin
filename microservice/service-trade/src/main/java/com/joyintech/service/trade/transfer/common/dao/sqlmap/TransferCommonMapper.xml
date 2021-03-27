@@ -23,6 +23,12 @@
         AND pp.INVEST_YESORNO='Y'
         AND pp.MDATE &gt;=TO_DATE(#{tradeDate},'yyyy-MM-dd')
         AND pp.VDATE &lt;=TO_DATE(#{tradeDate},'yyyy-MM-dd')
+
+        <if test="userId != null and userId != ''">
+            AND (PP.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
+            OR PP.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
+        </if>
+
     </select>
 
     <!--根据工作流查询交易信息 回退用-->

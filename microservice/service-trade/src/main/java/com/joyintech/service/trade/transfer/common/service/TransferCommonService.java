@@ -1,6 +1,7 @@
 package com.joyintech.service.trade.transfer.common.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.transfer.common.dao.TransferCommonMapper;
@@ -35,6 +36,7 @@ public class TransferCommonService extends BaseService {
         List<TransferCommonDto> resultList = new ArrayList<>();
         List<TransferCommonDto> result = new ArrayList<>();
         param.put("capacctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
+        param.put("userId", LoginUserUtil.getUserName());
         resultList = transferCommonMapper.findAvaPortfolioInfo(param);
         for (TransferCommonDto dto:resultList) {
             PtlCashPositionFlowDto pcpdto = new PtlCashPositionFlowDto();
