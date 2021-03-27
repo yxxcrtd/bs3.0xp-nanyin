@@ -240,7 +240,13 @@
 	        object.assetPosition = $("#bussTrdAvailableCashQuery_assetPosition").val();
 	        object.inputValue1 = PINAN_ASSET_TYPE_F07;
 	        object.inputValue2 = $('#repoType').val();
-	        object.inputValue3 = $('#ps').val(); 
+	        object.inputValue3 = $('#ps').val();
+	        if(object.chlId){
+	            if(object.procedureAmt)
+	            object.procedureAmt = '';
+	            if(object.settleAmt)
+	            object.settleAmt = '';
+            }
 	        if ($('#trdInvestPersonInfo_counterId').select2('data') && $('#trdInvestPersonInfo_counterId').select2('data')[0]) {
 	            object.counterId=$('#trdInvestPersonInfo_counterId').select2('data')[0].id;
 	        }
@@ -1864,6 +1870,15 @@
                     }
                 }
                 setBussRepoSecInput();
+                if($("#chlId").val()){
+                    $('#procedureAmt').val('').trigger('change');
+                    $('#procedureAmtDiv').hide();
+                    $('#settleAmt').val('').trigger('change');
+                    $('#settleAmtDiv').hide();
+                }else{
+                    $('#procedureAmtDiv').show();
+                    $('#settleAmtDiv').show();
+                }
         });
         $('#vdate').on("change", function () {
             // 起息日、到期日改变时，自动计算回购期限
@@ -1895,6 +1910,15 @@
         });
         $('#tradeMarket').on("change", function () {
                 tradeMarketChangeCalendarId();
+                if($('#chlId').val()){
+                    $('#procedureAmt').val('').trigger('change');
+                    $('#procedureAmtDiv').hide();
+                    $('#settleAmt').val('').trigger('change');
+                    $('#settleAmtDiv').hide();
+                }else{
+                    $('#procedureAmtDiv').show();
+                    $('#settleAmtDiv').show();
+                }
         });
         
         
