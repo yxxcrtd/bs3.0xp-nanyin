@@ -1,1 +1,0 @@
-alter table CHB_PRD_DECLARE_SUB modify nine_file varchar2(4000);

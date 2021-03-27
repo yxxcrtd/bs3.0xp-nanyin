@@ -1,7 +1,0 @@
-
-alter table CHB_INTERF_ERRODATA modify DATAID VARCHAR2(500);
-
-
-
-
-
