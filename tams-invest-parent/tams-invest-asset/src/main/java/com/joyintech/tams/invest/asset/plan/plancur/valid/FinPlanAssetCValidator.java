@@ -97,6 +97,13 @@ public class FinPlanAssetCValidator implements BeanValidator {
                         errorList.add(new ValidMessage("finprodMarketId", getMessage("FIN_ASSET_E_0007", dto.getFinprodMarketId())));
                     }
                 }
+
+                if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo()) && StringUtil.equals(dto.getBussRepAssetMngProdInfo().getRepAssetType(),"1705")) {
+                        if (StringUtil.isEmpty(dto.getBussRepAssetMngProdInfo().getRepFinancialComissue()) || dto.getBussRepAssetMngProdInfo().getRepFinancialComissue() == "") {
+                            errorList.add(new ValidMessage("BussRepAssetMngProdInfo.repFinancialComissue",
+                                    "请选择是否由金融资产投资公司发行"));
+                        }
+                }
             }
         }
         else {
