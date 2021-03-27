@@ -2374,6 +2374,7 @@ with cj as(
 		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
@@ -2428,6 +2429,7 @@ with cj as(
 		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
@@ -3584,6 +3586,7 @@ with cj as(
 		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
@@ -3619,6 +3622,7 @@ with cj as(
 		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
@@ -4811,6 +4815,7 @@ with cj as(
   　　　　　　on cmap.asset_code=info.asset_code
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		    left join mst_customer_info_add mst
 		    on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
@@ -4837,6 +4842,7 @@ with cj as(
 		　　　　　　on cmap.asset_code=info.asset_code
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
