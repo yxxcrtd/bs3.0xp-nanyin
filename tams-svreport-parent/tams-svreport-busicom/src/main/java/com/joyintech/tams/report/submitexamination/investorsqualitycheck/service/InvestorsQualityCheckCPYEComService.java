@@ -13,8 +13,6 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao.InvestorsQualityCheckCPYEComMapper;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
 
-import io.netty.util.internal.StringUtil;
-
 /**
  * 产品余额、份额核查共同处理
  * @author wdb
@@ -130,40 +128,80 @@ public class InvestorsQualityCheckCPYEComService extends BaseService<InvestorsQu
     					//变量.偏离度   				=		（记录一.偏离度 <  记录二.偏离度）？ 记录一.偏离度 ： 记录二偏离度
     					deviation = deviation1.compareTo(deviation2) == 1 ? deviation2 : deviation1;
         			}
+        			
+        			//设置错误记录
+					if(deviation.compareTo(BigDecimal.ZERO) == 1) {
+						//错误记录增加-存续期数据设置
+						errPrdQty = errPrdQty.add(BigDecimal.ONE); 
+		        		if(deviation1.compareTo(BigDecimal.ZERO) == 1) {
+		        			//errDTO1.产品登记编码										=			此条记录的.产品登记编码
+			        		errDTO1.setPrdRegistCode(handleDto1.getPrdRegistCode());
+			            	//errDTO1.持有日期										=			此条记录的.持有日期		
+			        		errDTO1.setHoldDate(handleDto1.getHoldDate());
+			            	//errDTO1.业务结束日										=			此条记录的.业务结束日			
+			        		errDTO1.setBusiMDate(handleDto1.getBusiMDate());        		
+			            	//errDTO1.产品端最新产品余额		=	此条记录的.募集产品余额
+			        		errDTO1.setPrdBalanceAmt(handleDto1.getPrdRaiseTotalAmt());
+			            	//errDTO1.持有端产品余额										=			此条记录的.投资端总金额
+			        		errDTO1.setInvestBalanceAmt(handleDto1.getInvestBalanceAmt());
+			            	//errDTO1.产品端最新产品份额		=	此条记录的.募集产品份额
+			        		errDTO1.setPrdTotalQty(handleDto1.getPrdRaiseTotalQty());
+			            	//errDTO1.持有端产品份额										=			此条记录的.投资端总份额
+			        		errDTO1.setInvestTotalQty(handleDto1.getInvestTotalQty());
+			        		resultList.add(errDTO1);
+		        		}
+		        		
+		        		if(deviation2.compareTo(BigDecimal.ZERO) == 1) {
+		        			//errDTO1.产品登记编码										=			此条记录的.产品登记编码
+			        		errDTO2.setPrdRegistCode(handleDto1.getPrdRegistCode());
+			            	//errDTO1.持有日期										=			此条记录的.持有日期		
+			        		errDTO2.setHoldDate(handleDto1.getHoldDate());
+			            	//errDTO1.业务结束日										=			此条记录的.业务结束日			
+			        		errDTO2.setBusiMDate(handleDto1.getBusiMDate());        		
+			            	//errDTO1.产品端最新产品余额										=			此条记录的.产品余额
+			        		errDTO2.setPrdBalanceAmt(handleDto1.getPrdBalanceAmt());
+			            	//errDTO1.持有端产品余额										=			此条记录的.投资端总金额
+			        		errDTO2.setInvestBalanceAmt(handleDto1.getInvestBalanceAmt());
+			            	//errDTO1.产品端最新产品份额										=			此条记录的.产品份额
+			        		errDTO2.setPrdTotalQty(handleDto1.getPrdTotalQty());
+			            	//errDTO1.持有端产品份额										=			此条记录的.投资端总份额
+			        		errDTO2.setInvestTotalQty(handleDto1.getInvestTotalQty());
+			        		resultList.add(errDTO2);
+		        		}        															            	
+	        		}
         		}else {																												
         			//3.1.2 其它情况																											
-        				//当 【入参.检查类型 = 01:余额】时，进行以下处理
-        				if("01".equals(checkType)) {
-        				//变量.偏离度  				=		Math.abs(投资端总金额 - 产品金额)  ÷ 产品金额 * 100%	
-        					deviation = devCalCom(handleDto1.getInvestBalanceAmt(),handleDto1.getPrdBalanceAmt());
-        				}else {																											
-        				//以外的情况下，进行以下处理																										
-        				//变量.偏离度  				=		Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额 * 100%	
-        					deviation = devCalCom(handleDto1.getInvestTotalQty(),handleDto1.getPrdTotalQty());
-        				}
-        		}
-        		
-        		//错误记录追加
-        		if(deviation.compareTo(BigDecimal.ZERO) == 1) {
-        			//错误记录增加
-        			errPrdQty = errPrdQty.add(BigDecimal.ONE);        			
-	        		//errDTO1.产品登记编码										=			此条记录的.产品登记编码
-	        		errDTO1.setPrdRegistCode(handleDto1.getPrdRegistCode());
-	            	//errDTO1.持有日期										=			此条记录的.持有日期		
-	        		errDTO1.setHoldDate(handleDto1.getHoldDate());
-	            	//errDTO1.业务结束日										=			此条记录的.业务结束日			
-	        		errDTO1.setBusiMDate(handleDto1.getBusiMDate());        		
-	            	//errDTO1.产品端最新产品余额										=			此条记录的.产品余额
-	        		errDTO1.setPrdBalanceAmt(handleDto1.getPrdBalanceAmt());
-	            	//errDTO1.持有端产品余额										=			此条记录的.投资端总金额
-	        		errDTO1.setInvestBalanceAmt(handleDto1.getInvestBalanceAmt());
-	            	//errDTO1.产品端最新产品份额										=			此条记录的.产品份额
-	        		errDTO1.setPrdTotalQty(handleDto1.getPrdTotalQty());
-	            	//errDTO1.持有端产品份额										=			此条记录的.投资端总份额
-	        		errDTO1.setInvestTotalQty(handleDto1.getInvestTotalQty());
-	            	resultList.add(errDTO1);
-        		}
-        		
+    				//当 【入参.检查类型 = 01:余额】时，进行以下处理
+    				if("01".equals(checkType)) {
+    				//变量.偏离度  				=		Math.abs(投资端总金额 - 产品金额)  ÷ 产品金额 * 100%	
+    					deviation = devCalCom(handleDto1.getInvestBalanceAmt(),handleDto1.getPrdBalanceAmt());
+    				}else {																											
+    				//以外的情况下，进行以下处理																										
+    				//变量.偏离度  				=		Math.abs(投资端总份额 - 产品份额)  ÷ 产品份额 * 100%	
+    					deviation = devCalCom(handleDto1.getInvestTotalQty(),handleDto1.getPrdTotalQty());
+    				}
+    				//错误记录追加
+            		if(deviation.compareTo(BigDecimal.ZERO) == 1) {
+            			//错误记录增加
+            			errPrdQty = errPrdQty.add(BigDecimal.ONE);        			
+    	        		//errDTO1.产品登记编码										=			此条记录的.产品登记编码
+    	        		errDTO1.setPrdRegistCode(handleDto1.getPrdRegistCode());
+    	            	//errDTO1.持有日期										=			此条记录的.持有日期		
+    	        		errDTO1.setHoldDate(handleDto1.getHoldDate());
+    	            	//errDTO1.业务结束日										=			此条记录的.业务结束日			
+    	        		errDTO1.setBusiMDate(handleDto1.getBusiMDate());        		
+    	            	//errDTO1.产品端最新产品余额										=			此条记录的.产品余额
+    	        		errDTO1.setPrdBalanceAmt(handleDto1.getPrdBalanceAmt());
+    	            	//errDTO1.持有端产品余额										=			此条记录的.投资端总金额
+    	        		errDTO1.setInvestBalanceAmt(handleDto1.getInvestBalanceAmt());
+    	            	//errDTO1.产品端最新产品份额										=			此条记录的.产品份额
+    	        		errDTO1.setPrdTotalQty(handleDto1.getPrdTotalQty());
+    	            	//errDTO1.持有端产品份额										=			此条记录的.投资端总份额
+    	        		errDTO1.setInvestTotalQty(handleDto1.getInvestTotalQty());
+    	            	resultList.add(errDTO1);
+            		}
+        		}       		
+        		        		
         		
         	//3.1 存在多条记录 	
         	}else if(handleMap.get(key).size() > 1) {
@@ -290,7 +328,7 @@ public class InvestorsQualityCheckCPYEComService extends BaseService<InvestorsQu
 		  if(prdData.compareTo(BigDecimal.ZERO) == 0) {
 			  resultDev = investData.subtract(prdData).abs();
 		  }else {
-			  resultDev = investData.subtract(prdData).abs().divide(prdData,6,BigDecimal.ROUND_UP);
+			  resultDev = investData.subtract(prdData).abs().divide(prdData,5,BigDecimal.ROUND_UP);
 		  }
 		  		  
 		  return resultDev;

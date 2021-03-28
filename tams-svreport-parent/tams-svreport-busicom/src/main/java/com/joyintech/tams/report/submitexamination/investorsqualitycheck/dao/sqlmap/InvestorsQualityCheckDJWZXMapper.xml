@@ -4,42 +4,35 @@
 	<sql id="objRec" >
 	WITH  objRec  AS(						
 			SELECT
-				tmp1.REG_CODE,
+				tmp1.PROD_ID,
 				tmp1.VDATE,
-				NVL(tmp1.actEndMDate,tmp1.MDate) MDATE			
+				NVL(tmp1.actEndMDate,tmp1.MDate) MDATE,	
+				TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd') as holdDate	
 			FROM (
 					SELECT  
-						A.REG_CODE,						
+						A.PROD_ID,						
 						A.VDATE,
 						A.MDATE,
-						B.MDATE AS actEndMDate,		
-						ROW_NUMBER() over( partition by A.REG_CODE ORDER BY B.STATUS DESC ,B.UPDATE_TIME DESC )  AS endStatusNo					
+						B.MDATE AS actEndMDate,	
+						B.STATUS,
+						ROW_NUMBER() over( partition by A.PROD_ID ORDER BY B.UPDATE_TIME DESC)  AS endStatusNo					
 					FROM CHB_PRD_BASEINFO A
 						LEFT JOIN CHB_PRD_END_SUB B
-							ON (A.REG_CODE = B.PROD_REGIST_CODE
-						   		<if test="orgCodeList != null and orgCodeList.size() > 0">
-								    <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
-								        #{orgCode,jdbcType=VARCHAR}
-								    </foreach>
-								</if>	
-								)
+							ON A.PROD_ID = B.PROD_ID
 					WHERE
 						A.STATUS  != 'D'
-						AND B.STATUS IN ('01','02') 
-						AND TO_DATE(TO_CHAR(A.VDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-						
+						<if test="orgCodeList != null and orgCodeList.size() > 0">
+						    <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+						        #{orgCode,jdbcType=VARCHAR}
+						    </foreach>
+						</if>	
+						AND A.FPROD_ID is null		
+						AND TO_DATE(TO_CHAR(A.VDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')				
 				) tmp1
 			WHERE
-				endStatusNo = 1
-				AND (
-						(actEndMDate is null
-							AND MDATE <![CDATA[>]]> #{searchDate,jdbcType=DATE}  
-							AND TO_DATE(TO_CHAR(MDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[>]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-						) OR (
-							actEndMDate is not null
-							AND TO_DATE(TO_CHAR(actEndMDate, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[>]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-						)
-					)					   								
+				endStatusNo = 1	
+				AND NVL(tmp1.STATUS,'01') != '03'	
+				AND TO_DATE(TO_CHAR(NVL(actEndMDate,MDATE), 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[>]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')					
 	)
 	</sql>
 	
@@ -57,17 +50,75 @@
 	<select id="searchDJWZXRec" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 		<include refid="objRec"></include>					
 			SELECT  
-				REG_CODE prdRegistCode,
-				#{searchDate,jdbcType=VARCHAR} AS hodeDate,
-				VDATE prdVDate,
-				MDATE prdMDate	
+				A.PROD_ID as prodId,				
+				A.VDATE as prdVDate,
+				A.MDATE as prdMDate,
+				A.holdDate,
+				B.REG_CODE as prdRegistCode				
 			FROM  objRec A
-				LEFT JOIN CHB_INVESTHOLD_INFO_SUB B
-				ON (A.REG_CODE = B.PRD_REGIST_CODE
-					AND B.STATUS IN ('01','02')
-				   )
+				LEFT JOIN CHB_PRDRESIST_CODE B
+					ON A.PROD_ID = B.PRODID	
+				LEFT JOIN CHB_INVESTHOLD_INFO_SUB C
+					ON (A.PROD_ID = C.PRODID				
+						AND A.holdDate  = TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd')
+					   )
 			WHERE
-				TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-				AND B.PRD_REGIST_CODE is null					   														
+			 C.PRODID is null	
+			
+			UNION ALL	
+			
+			SELECT
+				tmp3.prodId,				
+				tmp3.prdVDate,
+				tmp3.prdMDate,
+				tmp3.holdDate,
+				tmp3.prdRegistCode
+			FROM (
+				SELECT
+					tmp2.prodId,				
+					tmp2.prdVDate,
+					tmp2.prdMDate,
+					tmp2.holdDate,
+					tmp2.prdRegistCode,
+					SUM(tmp2.lateNums) as validateTol
+				FROM (			
+					SELECT
+						tmp1.prodId,				
+						tmp1.prdVDate,
+						tmp1.prdMDate,
+						tmp1.holdDate,
+						tmp1.prdRegistCode,
+						CASE WHEN tmp1.STATUS = '03' THEN 0 
+				        ELSE 1 END lateNums 
+					FROM (
+						SELECT  
+							A.PROD_ID as prodId,				
+							A.VDATE as prdVDate,
+							A.MDATE as prdMDate,
+							A.holdDate,
+							B.REG_CODE as prdRegistCode,
+							C.STATUS,
+							ROW_NUMBER() over( partition by A.PROD_ID, C.INDENTIFY_MARK ORDER BY C.UPDATE_TIME DESC)  AS investStsNo	
+						FROM  objRec A
+							LEFT JOIN CHB_PRDRESIST_CODE B
+								ON A.PROD_ID = B.PRODID	
+							INNER JOIN CHB_INVESTHOLD_INFO_SUB C
+								ON (A.PROD_ID = C.PRODID				
+									AND A.holdDate  = TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd')
+								   )					
+						) tmp1
+					WHERE
+						investStsNo = 1
+					) tmp2	
+				GROUP BY
+					tmp2.prodId,				
+					tmp2.prdVDate,
+					tmp2.prdMDate,
+					tmp2.holdDate,
+					tmp2.prdRegistCode
+				) tmp3
+			WHERE 
+				tmp3.validateTol = 0
+							 	   														
 	</select>	
 </mapper>
