@@ -39,7 +39,7 @@ public class InvestorsQualityCheckMJQFEYEComService extends BaseService<Investor
        
     	//1、取得对象记录数：
     	//2、返回对象产品数
-    	return investorsQualityCheckMJQFEYEComMapper.cntMJQFEYETolCom(param);    										
+    	return new BigDecimal(investorsQualityCheckMJQFEYEComMapper.searchMJQFEYERecCom(param).size());    										
 
     }
     
@@ -77,12 +77,12 @@ public class InvestorsQualityCheckMJQFEYEComService extends BaseService<Investor
     		if("01".equals(checkType)) {
     		//变量.偏离度  = Math.abs(产品端募集总金额 - 投资端募集总金额)  ÷ 产品端募集总金额 * 100%		
     			deviation = dealDto.getPrdRaiseTotalAmt().subtract(dealDto.getInvestRaiseTotalAmt()).abs().divide(
-    					dealDto.getPrdRaiseTotalAmt(),2,BigDecimal.ROUND_DOWN);
+    					dealDto.getPrdRaiseTotalAmt(),5,BigDecimal.ROUND_UP);
     		}else {																											
     		//以外的情况下，进行以下处理																										
     		//变量.偏离度  =	Math.abs(产品端募集总份额 - 投资端募集总份额)  ÷ 产品端募集总份额 * 100%
     			deviation = dealDto.getPrdRaiseTotalQty().subtract(dealDto.getInvestRaiseTotalQty()).abs().divide(
-    					dealDto.getPrdRaiseTotalQty(),2,BigDecimal.ROUND_DOWN);
+    					dealDto.getPrdRaiseTotalQty(),5,BigDecimal.ROUND_UP);
     		}	
     		
     		

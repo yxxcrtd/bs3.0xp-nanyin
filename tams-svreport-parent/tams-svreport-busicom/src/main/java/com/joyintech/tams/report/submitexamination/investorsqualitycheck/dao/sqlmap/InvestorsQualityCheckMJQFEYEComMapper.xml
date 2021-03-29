@@ -4,26 +4,26 @@
 	<sql id="objRec" >
 	WITH  objRec  AS(
 		SELECT
-			tmp3.REG_CODE,
+			tmp3.PROD_ID,
 			tmp3.VDATE,
 			tmp3.RAISE_QTY,
 			tmp3.TOTAL_AMT
 		FROM (				
 				SELECT
-					tmp2.REG_CODE,
+					tmp2.PROD_ID,
 					tmp2.VDATE,
 					B.RAISE_QTY,
 					B.TOTAL_AMT,
-					ROW_NUMBER() over( partition by tmp2.REG_CODE ORDER BY B.STATUS DESC ,B.UPDATE_TIME DESC)  AS raiseStatusNo
+					ROW_NUMBER() over( partition by tmp2.PROD_ID ORDER BY B.STATUS DESC ,B.UPDATE_TIME DESC)  AS raiseStatusNo
 				FROM (
 						SELECT  
-							A.REG_CODE,
+							A.PROD_ID,
 							A.VDATE
 						FROM CHB_PRD_BASEINFO A
 							LEFT JOIN
 								(
 								SELECT
-									PROD_REGIST_CODE,
+									PROD_ID,
 									MAX(MDATE)						
 								FROM 
 									CHB_PRD_DEAL_SUB
@@ -31,12 +31,13 @@
 									STATUS IN ('01','02')
 									AND TO_DATE(TO_CHAR(MDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 								GROUP BY
-									PROD_REGIST_CODE
-							) tmp1
-							ON A.REG_CODE = tmp1.PROD_REGIST_CODE
+									PROD_ID
+								) tmp1
+							ON A.PROD_ID = tmp1.PROD_ID
 															
 						WHERE
-							tmp1.PROD_REGIST_CODE is null
+							tmp1.PROD_ID is null
+							AND A.FPROD_ID is null
 							AND A.STATUS  != 'D'
 							<if test="orgCodeList != null and orgCodeList.size() > 0">
 							    <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
@@ -45,7 +46,7 @@
 							</if>	
 					) tmp2
 					INNER JOIN CHB_PRD_RAISETOT_SUB B
-							ON (tmp2.REG_CODE = B.PROD_REGIST_CODE
+							ON (tmp2.PROD_ID = B.PROD_ID
 							   AND STATUS IN ('01','02'))	
 			) tmp3
 			WHERE raiseStatusNo = 1		   								
@@ -57,11 +58,11 @@
 	<select id="cntMJQFEYETolCom" resultType="java.math.BigDecimal">
 		<include refid="objRec"></include>
 		SELECT 
-			COUNT(DISTINCT(A.REG_CODE))
+			COUNT(DISTINCT(A.PROD_ID))
 		FROM
 			objRec A
 			INNER JOIN CHB_INVESTHOLD_INFO_SUB B
-			 	ON(A.REG_CODE = B.PRD_REGIST_CODE
+			 	ON(A.PROD_ID = B.PRODID
 			 	   AND B.STATUS IN ('01','02'))	
 		WHERE
 		    TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
@@ -71,36 +72,54 @@
 	<!-- 余额、份额共通-错误记录取得 -->
 	<select id="searchMJQFEYERecCom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 		<include refid="objRec"></include>			
+		SELECT
+			prdRegistCode,
+			prodId,					
+			prdVDate,
+			holdDate,
+			prdRaiseTotalQty,
+			prdRaiseTotalAmt,
+			investRaiseTotalQty,
+			investRaiseTotalAmt		
+		FROM(	
 			SELECT
-				tmp1.REG_CODE prdRegistCode,					
+				tmp1.REG_CODE prdRegistCode,
+				tmp1.PROD_ID as prodId,					
 				tmp1.VDATE prdVDate,
 				TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd') AS holdDate,
 				NVL(tmp1.RAISE_QTY,0) as prdRaiseTotalQty,
 				NVL(tmp1.TOTAL_AMT,0) as prdRaiseTotalAmt,
-				NVL(SUM(QTY),0) as investRaiseTotalQty,
-				NVL(SUM(CNY_AMT),0) as investRaiseTotalAmt
+				SUM(NVL(QTY,0)) as investRaiseTotalQty,
+				SUM(NVL(CNY_AMT,0)) as investRaiseTotalAmt
 			FROM(
-				SELECT  
-					A.REG_CODE,					
+				SELECT
+					A.PROD_ID,					
 					A.VDATE,
 					A.RAISE_QTY,
 					A.TOTAL_AMT,
-					B.QTY,
-					B.CNY_AMT,
-					ROW_NUMBER() over( partition by A.REG_CODE , B.INDENTIFY_MARK ORDER BY B.STATUS DESC,B.UPDATE_TIME DESC )  AS investStatusNo
+					CASE WHEN B.STATUS = '03' THEN 0 ELSE B.CNY_AMT END CNY_AMT,						
+					CASE WHEN B.STATUS = '03' THEN 0 ELSE B.QTY END QTY,
+					D.REG_CODE,
+					ROW_NUMBER() over( partition by A.PROD_ID , B.INDENTIFY_MARK ORDER BY B.UPDATE_TIME DESC )  AS investStatusNo
 				FROM  objRec A
+					LEFT JOIN CHB_PRDRESIST_CODE D
+						ON A.PROD_ID = D.PRODID					
 					INNER JOIN CHB_INVESTHOLD_INFO_SUB B
-					ON (A.REG_CODE = B.PRD_REGIST_CODE
-						AND B.STATUS IN ('01','02')
-					   )
+						ON A.PROD_ID = B.PRODID
 				WHERE
 					TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')	   					
 				) tmp1
-			WHERE 	investStatusNo = 1
+			WHERE 	
+				investStatusNo = 1
 			GROUP BY
-				tmp1.REG_CODE,					
+				tmp1.PROD_ID,
+				tmp1.REG_CODE,				
 				tmp1.VDATE,
 				tmp1.RAISE_QTY,
-				tmp1.TOTAL_AMT											
+				tmp1.TOTAL_AMT	
+			) tmp2
+		WHERE 	
+			investRaiseTotalQty > 0
+			AND investRaiseTotalAmt > 0													
 	</select>	
 </mapper>

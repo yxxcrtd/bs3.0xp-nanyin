@@ -4,47 +4,47 @@
 	<sql id="objRec" >
 	WITH  objRec  AS(
 			SELECT
-				REG_CODE,
+				PROD_ID,
 				MDATE,
 				BALANCE_AMT,
 				PRD_QTY
 			FROM(
 				SELECT
-					REG_CODE,
+					PROD_ID,
 					MDATE,
 					BALANCE_AMT,
 					PRD_QTY,
-					ROW_NUMBER() over( partition by REG_CODE ORDER BY MDATE DESC )  AS durMDateNo
+					ROW_NUMBER() over( partition by PROD_ID ORDER BY MDATE DESC )  AS durMDateNo
 				FROM(
 					SELECT  
-						A.REG_CODE,
+						A.PROD_ID,
 						B.MDATE,
 						B.BALANCE_AMT,
 						B.PRD_QTY,
-						ROW_NUMBER() over( partition by A.REG_CODE , B.MDATE ORDER BY B.STATUS DESC ,B.UPDATE_TIME DESC)  AS durStatusNo
+						ROW_NUMBER() over( partition by A.PROD_ID , B.MDATE ORDER BY B.UPDATE_TIME DESC)  AS durStatusNo
 					FROM  CHB_PRD_BASEINFO A
-						LEFT JOIN CHB_PRD_DEAL_SUB B
-						ON (A.REG_CODE = B.PROD_REGIST_CODE
-							<if test="orgCodeList != null and orgCodeList.size() > 0">
-							    <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
-							        #{orgCode,jdbcType=VARCHAR}
-							    </foreach>
-							</if>
-						   )
+						INNER JOIN CHB_PRD_DEAL_SUB B
+							ON A.PROD_ID = B.PROD_ID
 					WHERE
 						A.STATUS  != 'D'
-						<if test="prdTypeList != null and prdTypeList.size() > 0">
-							    <foreach collection="prdTypeList" item="operateMode" open=" AND A.OPERATE_MODE IN (" close=")" separator=",">
-							        #{operateMode,jdbcType=VARCHAR}
-							    </foreach>
+						<if test="orgCodeList != null and orgCodeList.size() > 0">
+						    <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+						        #{orgCode,jdbcType=VARCHAR}
+						    </foreach>
 						</if>
-						AND B.STATUS  IN ('01','02')
+						<if test="prdTypeList != null and prdTypeList.size() > 0">
+						    <foreach collection="prdTypeList" item="operateMode" open=" AND A.OPERATE_MODE IN (" close=")" separator=",">
+						        #{operateMode,jdbcType=VARCHAR}
+						    </foreach>
+						</if>
+						AND A.FPROD_ID is null
 						AND TO_DATE(TO_CHAR(B.MDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 					)
 				WHERE 	durStatusNo = 1
 				)		
-			WHERE 	durMDateNo = 1
-					OR  durMDateNo = 2				
+			WHERE 	
+				durMDateNo = 1
+				OR  durMDateNo = 2			
 	)
 	</sql>
 	
@@ -53,7 +53,7 @@
 	<select id="cntCPYECom" resultType="java.math.BigDecimal">
 		<include refid="objRec"></include>
 		SELECT 
-			COUNT(DISTINCT(REG_CODE))
+			COUNT(DISTINCT(PROD_ID))
 		FROM
 			objRec			
 	</select>
@@ -62,29 +62,32 @@
 	<select id="searchCPYECom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 		<include refid="objRec"></include>
 			SELECT
-				REG_CODE as prdRegistCode,
+				PROD_ID as prodId,			
 				TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd') as holdDate,
 				MDATE as busiMDate,
 				NVL(BALANCE_AMT,0) as prdBalanceAmt,
 				NVL(PRD_QTY,0) as prdTotalQty,
-				NVL(TOTAL_AMT,0) as prdRaiseTotalQty,
-				NVL(RAISE_QTY,0) prdRaiseTotalAmt,
+				NVL(TOTAL_AMT,0) as prdRaiseTotalAmt,
+				NVL(RAISE_QTY,0) as prdRaiseTotalQty,
 				NVL(SUM(CNY_AMT),0) as investBalanceAmt,
-				NVL(SUM(QTY),0) as investTotalQty
+				NVL(SUM(QTY),0) as investTotalQty,
+				REG_CODE as prdRegistCode
 			FROM	
-				(SELECT
-						REG_CODE,
-						MDATE,
-						BALANCE_AMT,
-						PRD_QTY,
-						TOTAL_AMT,
-						RAISE_QTY,
-						CNY_AMT,
-						QTY,
-						ROW_NUMBER() over( partition by tmp1.REG_CODE, tmp1.MDATE, C.INDENTIFY_MARK ORDER BY C.STATUS DESC )  AS hodeStsNo
+				(	
+					SELECT						
+						tmp1.PROD_ID,
+						tmp1.MDATE,
+						tmp1.BALANCE_AMT,
+						tmp1.PRD_QTY,
+						tmp1.TOTAL_AMT,
+						tmp1.RAISE_QTY,						
+						CASE WHEN C.STATUS = '03' THEN 0 ELSE C.CNY_AMT END CNY_AMT,						
+						CASE WHEN C.STATUS = '03' THEN 0 ELSE C.QTY END QTY,
+						D.REG_CODE,
+						ROW_NUMBER() over( partition by tmp1.PROD_ID, tmp1.MDATE, C.INDENTIFY_MARK ORDER BY C.UPDATE_TIME DESC )  AS hodeStsNo
 					FROM(
 							SELECT
-								REG_CODE,
+								PROD_ID,
 								MDATE,
 								BALANCE_AMT,
 								PRD_QTY,
@@ -92,29 +95,29 @@
 								RAISE_QTY
 							FROM(
 								SELECT  
-									A.REG_CODE,
+									A.PROD_ID,
 									A.MDATE,
 									A.BALANCE_AMT,
 									A.PRD_QTY,
 									B.TOTAL_AMT,
 									B.RAISE_QTY,
-									ROW_NUMBER() over( partition by A.REG_CODE , A.MDATE ORDER BY B.STATUS DESC )  AS raiseStatusNo
+									ROW_NUMBER() over( partition by A.PROD_ID , A.MDATE ORDER BY B.UPDATE_TIME DESC )  AS raiseStatusNo
 								FROM  objRec A
 									INNER JOIN CHB_PRD_RAISETOT_SUB B
-									ON (A.REG_CODE = B.PROD_REGIST_CODE
-										AND B.STATUS  IN ('01','02')
-									   )					
+										ON A.PROD_ID = B.PROD_ID					
 								)
 							WHERE 	raiseStatusNo = 1
 						) tmp1
+						LEFT JOIN CHB_PRDRESIST_CODE D
+							ON tmp1.PROD_ID = D.PRODID
 						LEFT JOIN CHB_INVESTHOLD_INFO_SUB C
-							ON (tmp1.REG_CODE = C.PRD_REGIST_CODE								
-								AND C.STATUS  IN ('01','02')						
-								)
-					WHERE 	TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')	
-					)				
+							ON tmp1.PROD_ID = C.PRODID								
+					 WHERE 	
+						TO_DATE(TO_CHAR(C.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')	
+				)				
 			WHERE 	hodeStsNo = 1
 			GROUP BY 
+				PROD_ID,
 				REG_CODE,
 				MDATE,
 				BALANCE_AMT,

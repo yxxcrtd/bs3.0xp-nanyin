@@ -35,6 +35,11 @@ public class InvestorsQualityCheck001Dto extends BaseEntity{
     private String prdRegistCode;
     
     /**
+     * 产品登记编码
+     */
+    private String prodId;
+    
+    /**
      * 登记银行代码
      */
     private String registBankCode;
@@ -437,6 +442,14 @@ public class InvestorsQualityCheck001Dto extends BaseEntity{
 
 	public void setPrdRegistCode(String prdRegistCode) {
 		this.prdRegistCode = prdRegistCode;
+	}
+	
+	public String getProdId() {
+		return prodId;
+	}
+
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
 	public String getRegistBankCode() {

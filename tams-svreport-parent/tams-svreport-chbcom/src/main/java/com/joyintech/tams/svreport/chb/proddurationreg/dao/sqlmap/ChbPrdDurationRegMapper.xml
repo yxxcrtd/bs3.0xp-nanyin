@@ -485,17 +485,16 @@
 			SUM(CNY_AMT) as balanceAmt
 		FROM (
 				SELECT 
-				  CNY_AMT,
-				  ROW_NUMBER() over( partition by PRD_REGIST_CODE, HOLD_DATE, INDENTIFY_MARK order by STATUS desc ) as hodeNo
+				  CASE WHEN STATUS = '03' THEN 0 ELSE CNY_AMT END CNY_AMT,	
+				  ROW_NUMBER() over( partition by prodId, HOLD_DATE, INDENTIFY_MARK order by UPDATE_TIME desc ) as holdNo
 				FROM 
 					CHB_INVESTHOLD_INFO_SUB 
-				WHERE 				
-					HOLD_DATE = #{date,jdbcType = DATE}
-					AND PRODID = #{prodId, jdbcType = VARCHAR}
-					AND STATUS IN ('01','02')
+				WHERE 	
+					PRODID = #{prodId, jdbcType = VARCHAR}
+					AND TO_DATE(TO_CHAR(HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{date,jdbcType=VARCHAR},'yyyy-MM-dd')
 			)
 		WHERE
-			hodeNo  = 1;					
+			holdNo  = 1;					
 	</select>
 	
 	<!-- 获取产品收益-->

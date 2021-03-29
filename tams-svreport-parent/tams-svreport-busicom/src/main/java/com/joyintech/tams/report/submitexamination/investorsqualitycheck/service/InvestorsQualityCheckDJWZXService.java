@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.submitexamination.investorsqualitycheck.service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao.InvestorsQualityCheckDJWZXMapper;
 import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto;
@@ -29,11 +31,18 @@ public class InvestorsQualityCheckDJWZXService extends InvestorsQualityCheckBase
     public InvestorsQualityCheck001Dto cntHGL(Map<String, Object> param) {
     	InvestorsQualityCheck001Dto resultDto = new InvestorsQualityCheck001Dto();
         
+    	HashMap<String, Object> proParam = new HashMap<>();
+        //画面输入参数设置-查询日期
+        proParam.put("searchDate", param.get("searchDate")); 
+        //画面输入参数设置-部门
+        String orgCode = (String)param.get("orgCode");
+        List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
+        proParam.put("orgCodeList", orgCodeList); 
     	// 1、取得对象记录数：	
-    	BigDecimal checkRecTol = investorsQualityCheckDJWZXMapper.cntDJWZXTol(param);
+    	BigDecimal checkRecTol = investorsQualityCheckDJWZXMapper.cntDJWZXTol(proParam);
         
     	// 2、取得错误记录数：
-        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheckDJWZXMapper.searchDJWZXRec(param);
+        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheckDJWZXMapper.searchDJWZXRec(proParam);
 
         //3、返回值
         resultDto.setPageType("8");
@@ -41,7 +50,8 @@ public class InvestorsQualityCheckDJWZXService extends InvestorsQualityCheckBase
         resultDto.setTotal(checkRecTol.toString()); 
         //检查对象为0的情况下：
         if(checkRecTol.compareTo(BigDecimal.ZERO) == 1) {
-        	resultDto.setRate(checkRecTol.subtract(BigDecimal.valueOf(unQualifiedList.size())).divide(checkRecTol,2,BigDecimal.ROUND_DOWN).toString());
+        	resultDto.setRate(checkRecTol.subtract(BigDecimal.valueOf(unQualifiedList.size())).divide(
+        			checkRecTol,2,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN).toPlainString());
         }       
 
         return resultDto;
