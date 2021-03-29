@@ -182,138 +182,151 @@
 	<!-- 产品状态合格率 -->
 	<select id="searchCPZTErr" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 		WITH
-			objRec AS
+			INVESTHOLD_SUB AS
 			(
 				SELECT
-					TMP.PRD_REGIST_CODE
-					,TMP.INDENTIFY_MARK
-					,TMP.HOLD_DATE
-					,MAX(ZZ.MDATE) MDATE
+					PRD_REGIST_CODE,
+					INDENTIFY_MARK,
+					HOLD_DATE
 				FROM
-					(
-						SELECT
-							PRD_REGIST_CODE,
-							INDENTIFY_MARK,
-							HOLD_DATE,
-							MAX(STATUS) STATUS
-						FROM
-							CHB_INVESTHOLD_INFO_SUB
-						WHERE
-							STATUS IN (#{statusNew,jdbcType=VARCHAR}, #{statusModify,jdbcType=VARCHAR})
-						AND TO_DATE(TO_CHAR(HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+				(
+					SELECT
+						PRD_REGIST_CODE,
+						INDENTIFY_MARK,
+						HOLD_DATE,
+						STATUS,
+						ROW_NUMBER() over( partition BY PRD_REGIST_CODE, INDENTIFY_MARK,HOLD_DATE
+						ORDER BY UPDATE_TIME DESC) AS rowno
+					FROM
+						CHB_INVESTHOLD_INFO_SUB
+					WHERE
+						TO_DATE(TO_CHAR(HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
 						<if test="orgCodeList != null and orgCodeList.size() > 0">
 							<foreach collection="orgCodeList" item="orgCode" open=" AND ORG_CODE IN (" close=")" separator=",">
 								#{orgCode,jdbcType=VARCHAR}
 							</foreach>
 						</if>
-						GROUP BY
-							PRD_REGIST_CODE,
-							HOLD_DATE,
-							INDENTIFY_MARK ) TMP
-				INNER JOIN
-					CHB_PRD_END_SUB ZZ
-				ON
-					TMP.PRD_REGIST_CODE = ZZ.PROD_REGIST_CODE
-				GROUP BY
-					TMP.PRD_REGIST_CODE
-					,TMP.INDENTIFY_MARK
-					,TMP.HOLD_DATE
+				)
+				WHERE
+					rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+			),
+			END_SUB AS
+			(
+				SELECT
+					PRD_REGIST_CODE,
+					INDENTIFY_MARK,
+					HOLD_DATE,
+					MDATE
+				FROM
+					(
+					SELECT
+						INVESTHOLD_SUB.PRD_REGIST_CODE,
+						INVESTHOLD_SUB.INDENTIFY_MARK,
+						INVESTHOLD_SUB.HOLD_DATE,
+						CHB_PRD_END_SUB.MDATE,
+						CHB_PRD_END_SUB.STATUS,
+						ROW_NUMBER() over( partition BY CHB_PRD_END_SUB.PROD_REGIST_CODE,
+						INVESTHOLD_SUB.PRD_REGIST_CODE, INVESTHOLD_SUB.INDENTIFY_MARK,
+						INVESTHOLD_SUB.HOLD_DATE ORDER BY CHB_PRD_END_SUB.UPDATE_TIME DESC) AS rowno
+					FROM
+						CHB_PRD_END_SUB
+					INNER JOIN
+						INVESTHOLD_SUB
+					ON
+					CHB_PRD_END_SUB.PROD_REGIST_CODE = INVESTHOLD_SUB.PRD_REGIST_CODE )
+				WHERE
+					rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
 			)
 		SELECT
-			objRec.PRD_REGIST_CODE prdRegistCode
-			,objRec.INDENTIFY_MARK indentifyMark
-			,objRec.HOLD_DATE holdDate
-			,CP.ISSUING_STATUS prdIssueSts
-			,objRec.MDATE prdAclMDate
+			END_SUB.PRD_REGIST_CODE,
+			END_SUB.INDENTIFY_MARK,
+			END_SUB.HOLD_DATE,
+			END_SUB.MDATE,
+			CP.ISSUING_STATUS
 		FROM
-			objRec
+			END_SUB
 		LEFT JOIN
 			CHB_PRD_BASEINFO CP
 		ON
-			objRec.PRD_REGIST_CODE = CP.REG_CODE
+			END_SUB.PRD_REGIST_CODE = CP.REG_CODE
 		WHERE
-			(
-				CP.ISSUING_STATUS = #{issuingFail,jdbcType=VARCHAR}
-			OR  (
-				objRec.MDATE IS NOT NULL
-			AND objRec.MDATE &lt; objRec.HOLD_DATE))
+			(CP.ISSUING_STATUS = #{issuingFail,jdbcType=VARCHAR} OR  (objRec.MDATE IS NOT NULL AND objRec.MDATE &lt; objRec.HOLD_DATE))
 	</select>
 
 	<!-- 产品状态合格率 -->
 	<select id="searchCPZTAll" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 		WITH
-		objRec AS
-		(
-			SELECT
-			TMP.PRD_REGIST_CODE
-			,TMP.INDENTIFY_MARK
-			,TMP.HOLD_DATE
-		FROM
+			INVESTHOLD_SUB AS
 		(
 			SELECT
 				PRD_REGIST_CODE,
 				INDENTIFY_MARK,
-				HOLD_DATE,
-				MAX(STATUS) STATUS
+				HOLD_DATE
 			FROM
-				CHB_INVESTHOLD_INFO_SUB
+			(
+				SELECT
+					PRD_REGIST_CODE,
+					INDENTIFY_MARK,
+					HOLD_DATE,
+					STATUS,
+					ROW_NUMBER() over( partition BY PRD_REGIST_CODE, INDENTIFY_MARK,HOLD_DATE
+					ORDER BY UPDATE_TIME DESC) AS rowno
+				FROM
+					CHB_INVESTHOLD_INFO_SUB
+				WHERE
+					TO_DATE(TO_CHAR(HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+					<if test="orgCodeList != null and orgCodeList.size() > 0">
+						<foreach collection="orgCodeList" item="orgCode" open=" AND ORG_CODE IN (" close=")" separator=",">
+							#{orgCode,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+			)
 			WHERE
-				STATUS IN (#{statusNew,jdbcType=VARCHAR}, #{statusModify,jdbcType=VARCHAR})
-			AND TO_DATE(TO_CHAR(HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-			<if test="orgCodeList != null and orgCodeList.size() > 0">
-				<foreach collection="orgCodeList" item="orgCode" open=" AND ORG_CODE IN (" close=")" separator=",">
-					#{orgCode,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			GROUP BY
-				PRD_REGIST_CODE,
-				HOLD_DATE,
-				INDENTIFY_MARK ) TMP
-		GROUP BY
-			TMP.PRD_REGIST_CODE
-			,TMP.INDENTIFY_MARK
-			,TMP.HOLD_DATE
+				rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
 		)
 		SELECT
-			objRec.PRD_REGIST_CODE prdRegistCode
-			,objRec.INDENTIFY_MARK indentifyMark
-			,objRec.HOLD_DATE holdDate
+			INVESTHOLD_SUB.PRD_REGIST_CODE,
+			INVESTHOLD_SUB.INDENTIFY_MARK,
+			INVESTHOLD_SUB.HOLD_DATE
 		FROM
-			objRec
+			INVESTHOLD_SUB
 	</select>
 
 	<sql id="slppComm">
 		WITH
 			OBJREC AS
-			(
+		(
+			SELECT  PROD_REGIST_CODE,
+					SINGLE_TOTAL,
+					LEGAL_TOTAL,
+					UNLEGAL_TOTAL,
+					VDATE
+			FROM (
 				SELECT
-				A.PROD_REGIST_CODE,
-				A.SINGLE_TOTAL,
-				A.LEGAL_TOTAL,
-				A.UNLEGAL_TOTAL,
-				B.VDATE,
-				MAX(A.STATUS)
-			FROM
-				CHB_PRD_RAISETOT_SUB A
-			LEFT JOIN
-				CHB_PRD_BASEINFO B
-			ON
-				A.PROD_REGIST_CODE = B.REG_CODE
+					A.PROD_REGIST_CODE,
+					A.SINGLE_TOTAL,
+					A.LEGAL_TOTAL,
+					A.UNLEGAL_TOTAL,
+					B.VDATE,
+					A.STATUS,
+					ROW_NUMBER() over( partition BY A.PROD_REGIST_CODE ORDER BY A.UPDATE_TIME DESC) AS rowno
+				FROM
+					CHB_PRD_RAISETOT_SUB A
+				LEFT JOIN
+					CHB_PRD_BASEINFO B
+				ON
+					A.PROD_REGIST_CODE = B.REG_CODE
+				WHERE
+					TO_DATE(TO_CHAR(B.VDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+					<if test="orgCodeList != null and orgCodeList.size() > 0">
+						<foreach collection="orgCodeList" item="orgCode" open=" AND B.ORG_CODE IN (" close=")" separator=",">
+							#{orgCode,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+				)
 			WHERE
-				TO_DATE(TO_CHAR(B.VDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-			<if test="orgCodeList != null and orgCodeList.size() > 0">
-				<foreach collection="orgCodeList" item="orgCode" open=" AND B.ORG_CODE IN (" close=")" separator=",">
-					#{orgCode,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			AND A.STATUS IN (#{statusNew,jdbcType=VARCHAR}, #{statusModify,jdbcType=VARCHAR})
-			GROUP BY
-				A.PROD_REGIST_CODE,
-				A.SINGLE_TOTAL,
-				A.LEGAL_TOTAL,
-				A.UNLEGAL_TOTAL,
-				B.VDATE
-			)
+				rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+		)
 	</sql>
 	<!-- 投资者数量匹配合格率 -->
 	<select id="searchSLPPAll" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
@@ -330,76 +343,93 @@
 	<!-- 投资者数量匹配合格率 -->
 	<select id="searchSLPPErr" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 		<include refid="slppComm"/>
-		SELECT
-			INFO.prdRegistCode,
-			INFO.prdSingleTotal,
-			INFO.prdLegalTotal,
-			INFO.prdUnLegalTotal,
-			INFO.prdVDate,
-			INFO.indentifyMark,
-			INFO.holdDate,
-			INFO.investSingleTotal,
-			INFO.investLegalTotal,
-			INFO.investUnLegalTotal,
-			<!-- 比如产品端个人投资者数≠持有端个人投资者数，则错误记录数加1 -->
-			((case when INFO.prdSingleTotal != INFO.investSingleTotal then 1 else 0 end)
-			+ (case when INFO.prdLegalTotal != INFO.investLegalTotal then 1 else 0 end)
-			+ (case when INFO.prdUnLegalTotal != INFO.investUnLegalTotal then 1 else 0 end)) errRecTotal
-		FROM (
+		,INVESTHOLD_SUB AS (
+			SELECT  PROD_REGIST_CODE,
+					SINGLE_TOTAL,
+					LEGAL_TOTAL,
+					UNLEGAL_TOTAL,
+					VDATE,
+					INDENTIFY_MARK,
+					HOLD_DATE
+			FROM (
 				SELECT
-					tmp.PROD_REGIST_CODE prdRegistCode,
-					tmp.SINGLE_TOTAL prdSingleTotal,
-					tmp.LEGAL_TOTAL prdLegalTotal,
-					tmp.UNLEGAL_TOTAL prdUnLegalTotal,
-					tmp.VDATE prdVDate,
-					tmp.INDENTIFY_MARK indentifyMark,
-					tmp.HOLD_DATE holdDate,
-					SUM(case when instr('${prdSingleTotalStr}', C.HOLDER_TYPE) > 0 then 1 else 0 end) investSingleTotal,
-					SUM(case when instr('${prdLegalTotalStr}', C.HOLDER_TYPE) > 0 then 1 else 0 end) investLegalTotal,
-					SUM(case when instr('${prdUnLegalTotalStr}', C.HOLDER_TYPE) > 0 then 1 else 0 end) investUnLegalTotal,
-					MAX(c.update_time)
+					A.PROD_REGIST_CODE,
+					A.SINGLE_TOTAL,
+					A.LEGAL_TOTAL,
+					A.UNLEGAL_TOTAL,
+					A.VDATE,
+					B.INDENTIFY_MARK,
+					B.HOLD_DATE,
+					B.STATUS,
+					ROW_NUMBER() over( partition BY A.PROD_REGIST_CODE, B.PRD_REGIST_CODE, B.INDENTIFY_MARK, B.HOLD_DATE ORDER BY B.UPDATE_TIME DESC) AS rowno
 				FROM
-				(
-					SELECT
-						A.PROD_REGIST_CODE,
-						A.SINGLE_TOTAL,
-						A.LEGAL_TOTAL,
-						A.UNLEGAL_TOTAL,
-						A.VDATE,
-						B.INDENTIFY_MARK,
-						B.HOLD_DATE,
-						MAX(B.STATUS)
-					FROM
-						OBJREC A
-					INNER JOIN
-						CHB_INVESTHOLD_INFO_SUB B
-					ON
-						A.PROD_REGIST_CODE = B.PRD_REGIST_CODE
-					AND TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-					GROUP BY
-						A.PROD_REGIST_CODE,
-						A.SINGLE_TOTAL,
-						A.LEGAL_TOTAL,
-						A.UNLEGAL_TOTAL,
-						A.VDATE,
-						B.INDENTIFY_MARK,
-						B.HOLD_DATE ) tmp
+					OBJREC A
 				INNER JOIN
-					CHB_EQU_SUB C
+					CHB_INVESTHOLD_INFO_SUB B
 				ON
-					tmp.INDENTIFY_MARK = c.INDENTIFY_MARK
-				GROUP BY
-					tmp.PROD_REGIST_CODE,
-					tmp.SINGLE_TOTAL,
-					tmp.LEGAL_TOTAL,
-					tmp.UNLEGAL_TOTAL,
-					tmp.VDATE,
-					tmp.INDENTIFY_MARK,
-					tmp.HOLD_DATE
-				) INFO
-		WHERE INFO.prdSingleTotal != INFO.investSingleTotal
-		or INFO.prdLegalTotal != INFO.investLegalTotal
-		or INFO.prdUnLegalTotal != INFO.investUnLegalTotal
+					A.PROD_REGIST_CODE = B.PRD_REGIST_CODE
+				AND TO_DATE(TO_CHAR(B.HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+			)
+			WHERE
+				rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+		)
+		,EQU_SUB AS(
+			SELECT
+				PROD_REGIST_CODE prdRegistCode,
+				SINGLE_TOTAL prdSingleTotal,
+				LEGAL_TOTAL prdLegalTotal,
+				UNLEGAL_TOTAL prdUnLegalTotal,
+				VDATE prdVDate,
+				HOLD_DATE holdDate,
+				SUM(case when instr('${prdSingleTotalStr}', HOLDER_TYPE) > 0 then 1 else 0 end) investSingleTotal,
+				SUM(case when instr('${prdLegalTotalStr}', HOLDER_TYPE) > 0 then 1 else 0 end) investLegalTotal,
+				SUM(case when instr('${prdUnLegalTotalStr}', HOLDER_TYPE) > 0 then 1 else 0 end) investUnLegalTotal
+			FROM (
+				SELECT
+					INVESTHOLD_SUB.PROD_REGIST_CODE,
+					INVESTHOLD_SUB.SINGLE_TOTAL,
+					INVESTHOLD_SUB.LEGAL_TOTAL,
+					INVESTHOLD_SUB.UNLEGAL_TOTAL,
+					INVESTHOLD_SUB.VDATE,
+					INVESTHOLD_SUB.INDENTIFY_MARK,
+					INVESTHOLD_SUB.HOLD_DATE,
+					CHB_EQU_SUB.STATUS,
+					CHB_EQU_SUB.HOLDER_TYPE,
+					ROW_NUMBER() over( partition BY INVESTHOLD_SUB.PROD_REGIST_CODE, CHB_EQU_SUB.INDENTIFY_MARK ORDER BY CHB_EQU_SUB.UPDATE_TIME DESC) AS rowno
+				FROM
+					INVESTHOLD_SUB
+				INNER JOIN
+					CHB_EQU_SUB
+				ON
+					INVESTHOLD_SUB.INDENTIFY_MARK = CHB_EQU_SUB.INDENTIFY_MARK
+			)
+			WHERE
+				rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+			GROUP BY PROD_REGIST_CODE,
+					SINGLE_TOTAL,
+					LEGAL_TOTAL,
+					UNLEGAL_TOTAL,
+					VDATE,
+					HOLD_DATE
+		)
+		SELECT
+			EQU_SUB.prdRegistCode,
+			EQU_SUB.prdSingleTotal,
+			EQU_SUB.prdLegalTotal,
+			EQU_SUB.prdUnLegalTotal,
+			EQU_SUB.prdVDate,
+			EQU_SUB.holdDate,
+			EQU_SUB.investSingleTotal,
+			EQU_SUB.investLegalTotal,
+			EQU_SUB.investUnLegalTotal,
+			<!-- 比如产品端个人投资者数≠持有端个人投资者数，则错误记录数加1 -->
+			((case when EQU_SUB.prdSingleTotal != EQU_SUB.investSingleTotal then 1 else 0 end)
+			+ (case when EQU_SUB.prdLegalTotal != EQU_SUB.investLegalTotal then 1 else 0 end)
+			+ (case when EQU_SUB.prdUnLegalTotal != EQU_SUB.investUnLegalTotal then 1 else 0 end)) errRecTotal
+		FROM EQU_SUB
+		WHERE EQU_SUB.prdSingleTotal != EQU_SUB.investSingleTotal
+		or EQU_SUB.prdLegalTotal != EQU_SUB.investLegalTotal
+		or EQU_SUB.prdUnLegalTotal != EQU_SUB.investUnLegalTotal
 	</select>
 
 </mapper>
