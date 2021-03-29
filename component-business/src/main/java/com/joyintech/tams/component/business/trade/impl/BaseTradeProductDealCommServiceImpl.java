@@ -1,28 +1,18 @@
 package com.joyintech.tams.component.business.trade.impl;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
-import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
-import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
+import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.CommonResult;
@@ -33,18 +23,23 @@ import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioC
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioPositionsFlowInputDto;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
-import com.joyintech.tams.invest.common.dto.BaseTradeProductDealRevokeDto;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
-import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
+import com.joyintech.tams.invest.common.dto.*;
+import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author : 强成西
@@ -279,11 +274,14 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         /*-------------------裴家俊------add------2018/11/23-------------end--------------------*/
         if (!finProductTradeDto.isNeedSum()) {
         	//update by wangpeng  20191225 通道费改造 项目类，计划类利率 不需要入库通道信息
-        	String chlid = finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getChlId();
+            String chlModelType = CacheUtil.getSysParam("CHL_MODEL_TYPE");
+            String chlid = finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getChlId();
         	if((StringUtil.equals(finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getBusiType(), DictCodeList.共通业务类型_项目类资产交易.getValue())
         			||StringUtil.equals(finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getBusiType(), DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue())
         			)&&StringUtil.isNotEmpty(finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getChlId())){
-        		finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().setChlId(null);
+                if (StringUtil.isNotEmpty(chlModelType) && chlModelType.equals("01")) {
+                    finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().setChlId(null);
+                }
         	}else if(StringUtil.equals(finProductTradeDto.getBaseTradeProductDealDtos().get(0).getTrdProductDeal().getBusiType(), DictCodeList.共通业务类型_存款类资产交易.getValue())){
         		//01 借款利率 不需要处理通道信息,  否则置空
             	if(!StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.IS_CAL_LOADRATE), "01")){
