@@ -92,4 +92,28 @@
         from STL_PAY_ORDERS
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </select>
+    
+    <!-- 处于流程中的持仓-->
+    <select id="selectWflAmtAsset" resultType="java.math.BigDecimal">
+     SELECT DISTINCT NVL(SUM(NVL(AMOUNT, 0)),0)
+        FROM PTL_SEC_POSITION_FLOW
+        WHERE HODING_TYPE = '01'
+        AND CDATE = TO_DATE(#{searchDate},'yyyy-MM-dd')
+        AND BRANCH = 0
+        <if test="portfolioId != null and portfolioId != ''">
+            AND PORTFOLIO_ID = #{portfolioId}
+        </if>
+        <if test="secAcctId != null and secAcctId != ''">
+            AND SEC_ACCT_ID = #{secAcctId}
+        </if>
+        <if test="finprodId != null and finprodId != ''">
+            AND FINPROD_ID = #{finprodId}
+        </if>
+        <if test="invAim != null and invAim != ''">
+            AND INV_AIM = #{invAim}
+        </if>
+        <if test="ccy != null and ccy != ''">
+            AND CCY = #{ccy}
+        </if>
+    </select>
 </mapper>

@@ -51,11 +51,11 @@
             , {field: 'intAmt',  width: 130, title: '应计利息总额', type: 'number'}
             , {field: 'transferTradeAmt', width: 120, title: '交易金额', type: 'number'}
             // 转让逾期利息
-            , {field: 'transOverdueIntAmt',width: 150,title: '转让逾期利息',type: 'money', digit: 2, sortable: false}
+            , {field: 'transOverdueIntAmt', visible : false,title: '转让逾期利息',type: 'money', digit: 2, sortable: false}
             // 转让逾期本金
-            , {field: 'transOverduePrinAmt',width: 150,title: '转让逾期本金',type: 'money', digit: 2, sortable: false}
+            , {field: 'transOverduePrinAmt', visible : false,title: '转让逾期本金',type: 'money', digit: 2, sortable: false}
             // 交割金额
-            , {field: 'deliveryAmount',width: 150,title: '交割金额',type: 'money', digit: 2, sortable: false}
+            , {field: 'deliveryAmount', visible : false,title: '交割金额',type: 'money', digit: 2, sortable: false}
             , {field: 'operation', title: '操作', type: 'action', buttons: ['delt']}
         ]
     };

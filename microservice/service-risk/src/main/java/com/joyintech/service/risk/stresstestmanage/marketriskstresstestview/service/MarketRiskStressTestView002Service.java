@@ -102,6 +102,19 @@ public class MarketRiskStressTestView002Service extends BaseService<MarketRiskSt
 //        Page<MarketRiskStressTestView002Dto> PAGE= super.queryForPage(page, length, () -> marketRiskStressTestView002Mapper.queryForPageTree(pageParam));
         
         List<MarketRiskStressTestView002Dto> list = marketRiskStressTestView002Mapper.queryForPageTree(pageParam);
+        //重新计算价格
+        for(MarketRiskStressTestView002Dto dto : list) {
+        	if(StringUtil.isNotEmpty(dto.getMarketCap())&&StringUtil.isNotEmpty(dto.getOpenAmount())&&StringUtil.isNotEmpty(dto.getSceneMarVal())) {
+            	//当前价格 = 持仓市值 /持仓数量 
+            	BigDecimal currentPrice =  ArithmeticUtil.divide(new BigDecimal(dto.getMarketCap()), new BigDecimal(dto.getOpenAmount()));
+            	//情景价格 = 情景市值/持仓数量
+            	BigDecimal scenePrice = ArithmeticUtil.divide(new BigDecimal(dto.getSceneMarVal()), new BigDecimal(dto.getOpenAmount()));
+            	dto.setCurrentPrice(String.format("%.2f", currentPrice));
+            	dto.setScenePrice(String.format("%.2f", scenePrice));
+            	//价格变动 = 情景价格 -  当前价格
+            	dto.setPriceChange(String.format("%.2f",  ArithmeticUtil.doSub(scenePrice,currentPrice)));
+        	}
+        }
         Page<MarketRiskStressTestView002Dto> pag = new Page<>();
         pag.setRoot(list);
         DynamicDataSourceHolder.clearDataSource();

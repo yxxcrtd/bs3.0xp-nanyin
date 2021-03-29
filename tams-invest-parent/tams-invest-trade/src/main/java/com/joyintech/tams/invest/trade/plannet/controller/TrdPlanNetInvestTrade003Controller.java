@@ -206,19 +206,6 @@ public class TrdPlanNetInvestTrade003Controller extends BaseController {
                 model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(tipiDto));
                 model.addAttribute("businessId", workflowId);
             }
-         // 双击查看反显流程中的数据
-            else  if (StringUtil.equals(status, DictCodeListExt1.交易流程状态_流程中.getValue())) {
-                dto = trdPlanNetInvestTrade003Service.getBussinessEntityByWorkflowId(workflowId);
-                BussTrdTransferOrderDto bttoDto = dto.getBussTrdTransferOrder().get(0);
-                TrdInvestPersonInfo002Dto tipiDto = dto.getTrdInvestPersonInfo();
-                model.addAttribute("entity_bussRepFinProductInfoDto",
-                        JsonUtils.object2Json(bttoDto));
-                //                model.addAttribute("riskTrialRetDto",
-                //                    JsonUtils.object2Json(dto.getRiskTrialRetDto()));
-                model.addAttribute("businessId", workflowId);
-                model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(tipiDto));
-                model.addAttribute("businessId", workflowId);
-            }
             // 双击查看反显非流程中的数据
             else {
                 dto = trdPlanNetInvestTrade003Service.getTrdFundDto(tradeId);

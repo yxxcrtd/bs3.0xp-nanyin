@@ -111,7 +111,7 @@
 		WHERE to_char(VAL.VAL_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		and not exists  (select 1 from CHB_AST_VAL_SUB SUB 
 			where SUB.VAL_DATE = VAL.VAL_DATE
-			  and SUB.ASSET_CODE = VAL.ASSET_CODE 
+			  and SUB.ASSET_CODE = NVL(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE)
 			  and SUB.SEND_STATUS in ('02','03')
 			  )
 		<!-- modify by zhangliang 20201222 中债规则变更，相同的数据也生成数据 -->
@@ -127,7 +127,7 @@
 	    SELECT
 	    	sub.REGIST_SEQNO as registSeqno,
 		    VAL.ISSUE_PARTY_ID  as issuePartyId,
-		    NVL(ASSETINFO.ASSET_CODE,ASSETINFO.ASSET_CODE_OLD) as assetCode,
+			SUB.ASSET_CODE as assetCode,
 		    VAL.VAL_DATE as valDate,
 		    VAL.UNIT_VAL_NET as unitValNet,
 		    VAL.UNIT_VAL_TOTAL as unitValTotal, 
@@ -135,10 +135,10 @@
 		    '02'  status/*修改状态*/
 		FROM CHB_AST_VAL_SUB sub
 		left join CHB_ASSET_INFO ASSETINFO
-		ON ASSETINFO.ASSET_CODE = SUB.ASSET_CODE
+		ON NVL(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE) = SUB.ASSET_CODE
 		left join CHB_AST_VAL val 
 		on val.VAL_DATE = sub.VAL_DATE 
-		and  val.ASSET_CODE = sub.ASSET_CODE
+		and  val.ASSET_CODE = ASSETINFO.ASSET_CODE
 		and val.status in ('M','E')
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
 			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
@@ -167,7 +167,7 @@
 		SELECT
 	    	sub.REGIST_SEQNO as registSeqno,
 		    VAL.ISSUE_PARTY_ID  as issuePartyId,
-		    NVL(ASSETINFO.ASSET_CODE,ASSETINFO.ASSET_CODE_OLD) as assetCode,
+			SUB.ASSET_CODE as assetCode,
 		    VAL.VAL_DATE as valDate,
 		    VAL.UNIT_VAL_NET as unitValNet,
 		    VAL.UNIT_VAL_TOTAL as unitValTotal,
@@ -175,10 +175,10 @@
 		    '01'  status/*新建状态*/
 		FROM CHB_AST_VAL_SUB sub
 		left join CHB_ASSET_INFO ASSETINFO
-		ON ASSETINFO.ASSET_CODE = SUB.ASSET_CODE
+		ON NVL(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE) = SUB.ASSET_CODE
 		left join CHB_AST_VAL val
 		on val.VAL_DATE = sub.VAL_DATE
-		and  val.ASSET_CODE = sub.ASSET_CODE
+		and  val.ASSET_CODE = ASSETINFO.ASSET_CODE
 		and val.status in ('M','E')
 		WHERE to_char(sub.VAL_DATE,'yyyy-MM-dd') = #{generateDate,jdbcType=VARCHAR}
 		  and SUB.SEND_STATUS in ('02','03')
@@ -194,7 +194,7 @@
 	    SELECT
 	        sub.REGIST_SEQNO as registSeqno,
 		    sub.ISSUE_PARTY_ID  as issuePartyId,
-            NVL(ASSETINFO.ASSET_CODE,ASSETINFO.ASSET_CODE_OLD) as assetCode,
+			SUB.ASSET_CODE as assetCode,
 		    sub.VAL_DATE as valDate,
 		    sub.UNIT_VAL_NET as unitValNet,
 		    sub.UNIT_VAL_TOTAL as unitValTotal, 
@@ -202,7 +202,7 @@
 		    '03'  status/*删除状态*/
 		FROM CHB_AST_VAL_SUB sub
         left join CHB_ASSET_INFO ASSETINFO
-        ON ASSETINFO.ASSET_CODE = SUB.ASSET_CODE
+        ON NVL(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE) = SUB.ASSET_CODE
 		<if test="InstitutionCode != null and InstitutionCode != '' "  >
 			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
 			LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
@@ -226,7 +226,7 @@
 		  	select 1 
 		  	from CHB_AST_VAL val 
 		  	where to_char(val.VAL_DATE,'yyyy-MM-dd') = to_char(sub.VAL_DATE,'yyyy-MM-dd')
-		  	and val.ASSET_CODE = sub.ASSET_CODE
+		  	and val.ASSET_CODE = ASSETINFO.ASSET_CODE
 		  	and val.STATUS != 'D'
 		  )
 	</select>

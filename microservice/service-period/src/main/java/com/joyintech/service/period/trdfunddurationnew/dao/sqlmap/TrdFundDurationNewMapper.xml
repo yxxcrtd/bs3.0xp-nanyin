@@ -72,7 +72,7 @@
 <!--        else null end) arriveDate,-->
         tpdt.TRADE_DATE arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpda.reg_date_amt) registShare,
+        SUM(distinct(tpda.reg_date_amt)) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         <!-- tpd.P_TRADE_ID,-->
@@ -118,7 +118,7 @@
         btrd.theory_pay_date exRightsDate,
         tpdt.TRADE_DATE arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpda.reg_date_amt) registShare,
+        SUM(distinct(tpda.reg_date_amt)) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         <!-- tpd.P_TRADE_ID,-->
@@ -164,7 +164,7 @@
         btrd.theory_pay_date exRightsDate,
         null arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpda.reg_date_amt) registShare,
+        SUM(distinct(tpda.reg_date_amt)) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         <!-- tpd.P_TRADE_ID,-->
@@ -212,7 +212,7 @@
         tpd.TRADE_DATE exRightsDate,
         tpdt.TRADE_DATE  arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpda.reg_date_amt) registShare,
+        SUM(distinct(tpda.reg_date_amt)) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         <!-- tpd.P_TRADE_ID,-->
@@ -257,7 +257,7 @@
         btrd.theory_pay_date exRightsDate,
         tpdt.TRADE_DATE arriveDate,
         regexp_replace(listagg(tpd.sec_manage_acct_id, ',') within group(order by tpd.totle_trade_id),'([^,]+)(,\1)*(,|$)','\1\3') secManageAcctId,
-        SUM(tpda.reg_date_amt) registShare,
+        SUM(distinct(tpda.reg_date_amt)) registShare,
         tpd.UNIT_CPRICE,
         tpd.B_TRADE_ID,
         <!-- tpd.P_TRADE_ID,-->

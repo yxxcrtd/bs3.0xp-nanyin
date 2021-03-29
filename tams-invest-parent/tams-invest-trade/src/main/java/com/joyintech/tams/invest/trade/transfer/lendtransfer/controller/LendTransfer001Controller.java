@@ -281,10 +281,21 @@ public class LendTransfer001Controller extends BaseController {
         WorkFlowParameter<LendTransfer001Dto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getTradeId());
         params.setBusinessType(DictCodeList.共通业务类型_拆借投资交易.getValue());
+
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        params.setBusinessCode(dto.getZcId());
+
         // 设置流程业务说明, entity即传入的dto
-        params.setComment((entity) -> WorkFlowUtil.concatComment("交易编号" + GlobalConstant.OPEN_PARENTHESIS + dto.getTradeId() + GlobalConstant.CLOSE_PARENTHESIS,
+        params.setComment((entity) -> WorkFlowUtil.concatComment("交易编号" + GlobalConstant.OPEN_PARENTHESIS + dto.getZcId() + GlobalConstant.CLOSE_PARENTHESIS,
                 "拆借类型" + GlobalConstant.OPEN_PARENTHESIS + SysDataUtil.getNameFromDataDict(DictCode.拆借类型, dto.getPaBussType()) + GlobalConstant.CLOSE_PARENTHESIS,
                 "交易日期"+ GlobalConstant.OPEN_PARENTHESIS + DateUtil.format(dto.getTradeDate()) + GlobalConstant.CLOSE_PARENTHESIS));
         processParameter.setWorkFlowParameter(params);

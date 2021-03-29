@@ -1,0 +1,1 @@
+UPDATE chb_datacheck_rule SET STATUS = 'D' WHERE remark = '底层资产折算人民币市值（元）必须大于等于0。';

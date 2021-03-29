@@ -105,18 +105,19 @@
         repYieldFlagChang();
         
         getElementById('repAssetType').change(function(){
-        	
+             debugger;
 //       	    $("#bussRepAssetMngProdInfo_repFinancialComissue").attr("disabled",false);
 //       	    $("#bussRepAssetMngProdInfo_repFinancialComissue").prop("required",false);
 
              //add by wj
              if(getElementById('repAssetType').val()=="1705"){
-//             	$("#bussRepAssetMngProdInfo_repFinancialComissue_div").show();
+            	$("#bussRepAssetMngProdInfo_repFinancialComissue_div").show();
              	$("#bussRepAssetMngProdInfo_repFinancialComissue").prop("required",true).trigger('change');
            	    $("#bussRepAssetMngProdInfo_repFinancialComissue").attr("disabled",false).trigger('change');
 
              }else{
             	 //默认显示否
+                 $("#bussRepAssetMngProdInfo_repFinancialComissue_div").hide();
              	 $('#bussRepAssetMngProdInfo_repFinancialComissue').prop('checked', false);
             	 $("#bussRepAssetMngProdInfo_repFinancialComissue").prop("required",false).trigger('change');
             	 $("#bussRepAssetMngProdInfo_repFinancialComissue").attr("disabled",true).trigger('change');

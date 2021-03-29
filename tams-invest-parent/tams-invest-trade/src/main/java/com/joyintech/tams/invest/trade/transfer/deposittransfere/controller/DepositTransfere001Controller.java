@@ -19,6 +19,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.trade.transfer.deposittransfere.dto.DepositTransfere001Dto;
 import com.joyintech.tams.invest.trade.transfer.deposittransfere.dto.DepositTransfere002Dto;
 import com.joyintech.tams.invest.trade.transfer.deposittransfere.service.DepositTransfere001Service;
+import com.joyintech.tams.invest.trade.transfer.trdassetsProject.service.TrdAssetsProject001Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
@@ -54,6 +55,9 @@ public class DepositTransfere001Controller extends BaseController {
 
     @Autowired
     private DepositTransfere001Service depositTransfere001Service;
+    
+    @Autowired
+    TrdAssetsProject001Service trdAssetsProject001Service;
 
     @Override
     @RequestMapping(PAGE_INIT)
@@ -91,7 +95,17 @@ public class DepositTransfere001Controller extends BaseController {
             //本金金额
             entity.setPrinAmt(new BigDecimal((String) paraMap.get("printAmt")));
             //剩余可转仓本金金额
-            entity.setRestAmt(entity.getPrinAmt());
+            //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+            paraMap.put("searchDate", DateUtil.getSysDate());           
+        	BigDecimal wflAmt = trdAssetsProject001Service.selectWflAmtAsset(paraMap);        	
+        	if(wflAmt != null) {
+        		BigDecimal newRestAmt = ArithmeticUtil.doAdd(entity.getPrinAmt(),wflAmt);
+        		entity.setRestAmt(newRestAmt);
+        	}else {        		
+        		 entity.setRestAmt(entity.getPrinAmt());
+        	}
+        	//剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
+            
             //交易日期
             entity.setTradeDate(DateUtil.parse((String) paraMap.get("tradeDate")));
             //交割日期
@@ -271,12 +285,22 @@ public class DepositTransfere001Controller extends BaseController {
                 depositTransfere001Service.setEntity(dto, depositTransfere002Dto);
             });
         }
-        params.setBusinessCode(dto.getFinprodId());
         params.setBusinessType(DictCodeList.共通业务类型_存款类资产交易.getValue());
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        params.setBusinessCode(dto.getZcId());
+
         // 业务说明：“交易编号：” + 上述取得的交易编号+“资产名称：”+画面.资产名称+“交易日：”+画面.交易日
         params.setComment(
-                entity -> "资产代码："
-                        + entity.getFinprodId()
+                entity -> "交易编号："
+                        + entity.getZcId()
                         + "资产名称："
                         + entity.getFinprodAbbr()
                         + "交易日："

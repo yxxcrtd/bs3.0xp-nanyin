@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
@@ -134,6 +135,14 @@ public class ProductReportRegister002Validator implements BeanValidator {
 						this.getMessage("FIN_PROD_E_0001", this.getMessage("BussRepFinProductInfo.isShortTerm"))));
 			}
 		}
+		
+		if (!StringUtil.isNotEmpty(entity.getIsFhxgcp())
+        		&& !StringUtil.equals("01", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"))) {
+            validList.add(new ValidMessage("isFhxgcp", getMessage("请输入新老产品标记")));
+        }
+        if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
+            validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
+        }    
 
 		// 产品期次
 		if (StringUtil.isNotEmpty(entity.getRepFinprodStage())) {

@@ -103,9 +103,8 @@ public class TrdAssetsProject001Controller extends BaseController {
         	dto.setFinprodMarketId(finprodMarketId);
         	dto.setFinprodName(RequestUtil.getParam("finprodName"));
         	dto.setInvestRate(new BigDecimal(RequestUtil.getParam("yield")));
-        	dto.setChlId(RequestUtil.getParam("chlName"));
-        	dto.setPrinAmt(prinamt);//本金金额
-        	dto.setUnSplitPrinAmt(prinamt);//剩余可转仓金额
+        	dto.setChlId(RequestUtil.getParam("chlId"));
+        	dto.setPrinAmt(prinamt);//本金金额       	              	        	
         	dto.setInvTransPortf(RequestUtil.getParam("portfolioId"));
         	dto.setSecAcctId(RequestUtil.getParam("secAcctId"));
         	dto.setCpriceAmt(dto.getPrinAmt());
@@ -116,6 +115,20 @@ public class TrdAssetsProject001Controller extends BaseController {
             paraMap.put("basis",dto.getBasis());
             paraMap.put("investRate",ArithmeticUtil.divide(dto.getInvestRate(),new BigDecimal(100),6));
             paraMap.put("prinAmt",dto.getPrinAmt());
+          //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+            paraMap.put("searchDate", DateUtil.getSysDate());
+            paraMap.put("secAcctId", dto.getSecAcctId());
+            paraMap.put("invAim", RequestUtil.getParam("invAim"));
+            paraMap.put("ccy", RequestUtil.getParam("ccy"));
+            paraMap.put("chlId", RequestUtil.getParam("chlId"));
+        	BigDecimal wflAmt = trdAssetsProject001Service.selectWflAmtAsset(paraMap);
+        	if(wflAmt != null) {
+        		BigDecimal newUnSplitPrinAmt = ArithmeticUtil.doAdd(prinamt,wflAmt);
+        		dto.setUnSplitPrinAmt(newUnSplitPrinAmt);
+        	}else {        		
+        		dto.setUnSplitPrinAmt(prinamt);//剩余可转仓金额
+        	}
+        	//剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
             String intAmt = trdPlanRateInvestTrade002Service.getIntAmtCalcu(paraMap);
             if(StringUtil.isNotEmpty(intAmt)){
                 dto.setUnitIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal(intAmt),new BigDecimal(100)),dto.getPrinAmt(),4));
@@ -326,13 +339,8 @@ public class TrdAssetsProject001Controller extends BaseController {
                 }
             }
         }
-        params.setBusinessCode(dto.getFinprodMarketId());
         params.setBusinessType(DictCodeList.共通业务类型_项目类资产交易.getValue());
 
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> WorkFlowUtil.concatComment("资产代码：" + dto.getFinprodMarketId(), "资产名称：" + dto.getFinprodName(),
-                "起息日：" + DateUtil.format(dto.getVdate())));
-        processParameter.setWorkFlowParameter(params);
         if (BussinessConstant.SUBMIT.equals(dto.getOperateType())) {
             for (TrdAssetsProject001Dto entity:dto.getProjectListInfoList()) {
                 entity.setInvTransPortf(dto.getInvTransPortf());
@@ -348,6 +356,20 @@ public class TrdAssetsProject001Controller extends BaseController {
                 entity.setBaseTradeInfoDtos(trdAssetsProject001Service.genFinProductTradeDto(entity));
             }
         }
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        params.setBusinessCode(dto.getZcId());
+        // 设置流程业务说明, entity即传入的dto
+        params.setComment(entity -> WorkFlowUtil.concatComment("交易编号：" + dto.getZcId(), "资产名称：" + dto.getFinprodName(),
+                "起息日：" + DateUtil.format(dto.getVdate())));
+        processParameter.setWorkFlowParameter(params);
         String msg = trdAssetsProject001Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }

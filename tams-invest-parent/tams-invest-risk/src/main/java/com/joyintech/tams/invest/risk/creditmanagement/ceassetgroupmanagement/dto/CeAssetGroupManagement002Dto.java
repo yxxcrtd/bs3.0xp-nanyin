@@ -10,14 +10,14 @@
  
 package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.dto;
 
-import java.util.List;
-
-import com.joyintech.tams.common.base.entity.CreditAssetpoolDetail;
 import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.tams.common.base.entity.CreditAssetpoolDetail;
 import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.validator.CeAssetGroupManagement002Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -221,7 +221,19 @@ public class CeAssetGroupManagement002Dto extends CreditAssetpoolDetail implemen
     public void setAssetpoolName(String assetpoolName) {
         this.assetpoolName = assetpoolName;
     }
-    
-    
+
+    /**
+     * 机构
+     */
+    @PrimaryKey(value = Field.PK_5)
+    private String institutionCode;
+
+    public String getInstitutionCode() {
+        return institutionCode;
+    }
+
+    public void setInstitutionCode(String institutionCode) {
+        this.institutionCode = institutionCode;
+    }
 
 }

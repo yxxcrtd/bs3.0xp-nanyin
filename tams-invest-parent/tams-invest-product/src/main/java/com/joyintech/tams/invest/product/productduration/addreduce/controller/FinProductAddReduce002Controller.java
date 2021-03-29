@@ -270,6 +270,19 @@ public class FinProductAddReduce002Controller extends BaseController {
         	return  ajaxResult;
         }
         
+        if (StringUtil.isNotEmpty(dto.getReduceInfoDtoList()) && dto.getReduceInfoDtoList().size() > 0){
+            for (ReduceInfoDto ri : dto.getReduceInfoDtoList()){
+                if (ri.getRemainPrinAmt() != null && ri.getRemainPrinAmt().compareTo(ri.getReduceAmt()) == -1){
+                    errorList.add(new ValidMessage(this.getMessage("提前赎回本金不能大于剩余本金")));    
+                }   
+                break;
+            }
+            if (errorList.size()>0){
+                ajaxResult.setErrorList(errorList);
+                return  ajaxResult;       
+            }
+        }
+        
 		//判断方案是否在流程中
         //modify by wm 当在流程中不判断此校验 start
         if(WorkFlowUtil.isNotFromToDoList()){

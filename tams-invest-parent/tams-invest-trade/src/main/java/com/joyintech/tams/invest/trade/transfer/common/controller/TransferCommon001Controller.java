@@ -27,6 +27,6 @@ public class TransferCommon001Controller extends BaseController {
     @Override
     public String init(Model model){
         model.addAttribute("entityList",transferCommon001Service.findAvaPortfolioInfo(RequestUtil.getPageParam()));
-        return "/invest/trade/transfer/common/TransferCommon001";
+        return "invest/trade/transfer/common/TransferCommon001";
     }
 }

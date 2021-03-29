@@ -134,7 +134,7 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
 						 * 			或者费用规则的资产分类一为空并且暂存的规则资产分类一不为空
 						 * 		或者暂存的规则不为空并且暂存的规则生效日不等于循环中的规则生效日
 						 */
- 						if(("Y".equals(retFeeDetailDto.getIsGrade())&&"N".equals(dto.getIsGrade()))
+ 						if(("Y".equals(retFeeDetailDto.getIsGrade())&&!"Y".equals(dto.getIsGrade()))
 								||(StringUtil.isNotEmpty(retFeeDetailDto.getWindtypetwo())&&StringUtil.isEmpty(dto.getWindtypetwo()))
 								||(StringUtil.isNotEmpty(retFeeDetailDto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypeone()))
 								||(StringUtil.isNotEmpty(retFeeDetailDto.getBatchSeq())&&!retFeeDetailDto.getEffDate().equals(dto.getEffDate())))

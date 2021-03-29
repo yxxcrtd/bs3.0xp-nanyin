@@ -989,7 +989,21 @@ $(function () {
                 return;
             }
             if ((!initFlag || $('#entrustId').val()) && netDate && data && data.finprodId && type6 == type_02) {
-                var data = {finprodId: data.finprodId, netDate: netDate}
+                var data;
+                if(pageModel==PAGE_MODEL_REFERENCE){
+                	var tempTradeId = tradeId;
+                	var tempWorkflowId = workflowId;
+                	if (null == tempTradeId || 'undefined' == typeof(tempTradeId)) {
+                		tempTradeId=""
+                	}
+                	if (null == tempWorkflowId || 'undefined' == typeof(tempWorkflowId)) {
+                		tempWorkflowId=""
+                	}
+                	data =  {finprodId:finprodId,netDate:netDate,tradeId:tempTradeId,workflowId,tempWorkflowId}; 
+                }
+                else{
+                	data =  {finprodId:finprodId,netDate:netDate};
+                }
                 Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade003/getPrice', data, function (result) {
                     $('#unitCprice').val(result).trigger('blur').change();
                 });

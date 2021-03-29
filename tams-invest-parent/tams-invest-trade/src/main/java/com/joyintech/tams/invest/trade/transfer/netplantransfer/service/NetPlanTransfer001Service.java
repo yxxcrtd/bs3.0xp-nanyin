@@ -287,6 +287,9 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
             trdProductDeal.setTrader(trdProductDeal.getCreateUser());
             trdProductDeal.setIsClean(DictCodeList.是否_是.getValue());
             trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
+
+            trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
+
         }
         return trdProductDeal;
     }
@@ -781,7 +784,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。
      * <功能详细描述>
-     * @param entity
+     * @param
      * @return
      * @throws ParseException
      * @see
@@ -790,7 +793,7 @@ public class NetPlanTransfer001Service extends CommonExportService<NetPlanTransf
     public boolean multiApproveTradeCheck(String tradeId) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("tradeId", tradeId);
-        int count = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/DepositResolute001/getWorkflowTradeId",
+        int count = simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/DepositTransfere001/getWorkflowTradeId",
                 map, Integer.class);
         if (count > 0) {
             return true;

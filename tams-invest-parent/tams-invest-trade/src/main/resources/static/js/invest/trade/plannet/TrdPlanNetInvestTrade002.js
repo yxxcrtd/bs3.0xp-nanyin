@@ -413,7 +413,21 @@ $(function() {
             var finprodId = $('#finprodId').val();
             var tradeAmt = $('#tradeAmt').val();
             if(netDate && finprodId){
-                var data = {finprodId:finprodId,netDate:netDate}
+                var data;
+                if(pageModel==PAGE_MODEL_REFERENCE){
+                	var tempTradeId = tradeId;
+                	var tempWorkflowId = workflowId;
+                	if (null == tempTradeId || 'undefined' == typeof(tempTradeId)) {
+                		tempTradeId=""
+                	}
+                	if (null == tempWorkflowId || 'undefined' == typeof(tempWorkflowId)) {
+                		tempWorkflowId=""
+                	}
+                	data =  {finprodId:finprodId,netDate:netDate,tradeId:tempTradeId,workflowId,tempWorkflowId}; 
+                }
+                else{
+                	data =  {finprodId:finprodId,netDate:netDate};
+                }
                 Joyin.ajaxJson(basePath + 'invest/trade/plannet/TrdPlanNetInvestTrade003/getPrice', data , function(result) {
                     $('#unitCprice').val(result).trigger('blur').change();
                 });

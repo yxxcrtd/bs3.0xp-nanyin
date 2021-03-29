@@ -1,34 +1,39 @@
+alter table chb_asset_info drop column chb_ISSUER_ID;
 ALTER TABLE chb_asset_info ADD chb_ISSUER_ID VARCHAR2(32);
 COMMENT ON COLUMN chb_asset_info.chb_ISSUER_ID IS '发行人Id' ;
-
+alter table chb_asset_info drop column chb_MANAGER_ID;
 ALTER TABLE chb_asset_info ADD chb_MANAGER_ID VARCHAR2(32);
 COMMENT ON COLUMN chb_asset_info.chb_MANAGER_ID IS '管理人Id' ;
-
+alter table chb_asset_info drop column chb_FINANCIER_ID;
 ALTER TABLE chb_asset_info ADD chb_FINANCIER_ID VARCHAR2(32);
 COMMENT ON COLUMN chb_asset_info.chb_FINANCIER_ID IS '融资人Id' ;
-
+alter table chb_asset_info drop column PERPETUAL_FLAG;
 ALTER TABLE chb_asset_info ADD PERPETUAL_FLAG VARCHAR2(50);
 COMMENT ON COLUMN chb_asset_info.PERPETUAL_FLAG IS '是否永续' ;
-
+alter table chb_asset_info drop column OPTION_FLAG;
 ALTER TABLE chb_asset_info ADD OPTION_FLAG VARCHAR2(50);
 COMMENT ON COLUMN chb_asset_info.OPTION_FLAG IS '是否含权' ;
 
-
+alter table chb_asset_info drop column IS_BJSZQ;
 ALTER TABLE chb_asset_info ADD IS_BJSZQ VARCHAR2(50);
 COMMENT ON COLUMN chb_asset_info.IS_BJSZQ IS '是否北金所债权' ;
-
+alter table mst_customer_info_add drop column INDUSTRY3;
 ALTER TABLE mst_customer_info_add ADD INDUSTRY3 VARCHAR2(50);
 COMMENT ON COLUMN mst_customer_info_add.INDUSTRY3 IS '行业三级分类' ;
-
+alter table mst_customer_info_add drop column INDUSTRY4;
 ALTER TABLE mst_customer_info_add ADD INDUSTRY4 VARCHAR2(50);
 COMMENT ON COLUMN mst_customer_info_add.INDUSTRY4 IS '行业四级分类' ;
 
 -- Create table
+DROP TABLE CHB_PRD_RATE;
 create table CHB_PRD_RATE
 (
   seqno            CHAR(36) not null,
   prod_id          VARCHAR2(50) not null,
+  fprod_id 　　　　　VARCHAR2(50),
+  is_lay 　　　　　　　VARCHAR2(50),
   change_date      DATE,
+  CASHMDATE 　DATE,
   profit_type       VARCHAR2(50),
   change_type       VARCHAR2(50),
   prod_yield     NUMBER(30,14),
@@ -57,8 +62,13 @@ comment on column CHB_PRD_RATE.seqno
   is '交易编号';
 comment on column CHB_PRD_RATE.prod_id
   is '产品代码';
+comment on column  chb_prd_rate.fprod_id
+is '母产品代码';
+comment on column  chb_prd_rate.is_lay
+is '是否分层';
 comment on column CHB_PRD_RATE.change_date
   is '变动日期';
+  COMMENT ON COLUMN chb_prd_rate.CASHMDATE IS '计提结束日';
 comment on column CHB_PRD_RATE.profit_type
   is '产品收益类型:01净值型,02预期收益型,03	货币型';
   comment on column CHB_PRD_RATE.change_type
@@ -100,12 +110,14 @@ alter table CHB_PRD_RATE
 
 
   -- Create table
+  DROP TABLE CHB_ASSET_RATE;
   create table CHB_ASSET_RATE
   (
     seqno               CHAR(36) not null,
     asset_id            VARCHAR2(50) not null,
     finprod_type2       VARCHAR2(50),
     profit_type         VARCHAR2(50),
+    change_type　　　　　　VARCHAR2(50),
     change_date         DATE,
     asset_rate         NUMBER(30,14),
     asset_bonusReinvest_rate NUMBER(30,14),
@@ -138,6 +150,8 @@ alter table CHB_PRD_RATE
     is '资产类型';
     comment on column CHB_ASSET_RATE.profit_type
       is '资产收益类型';
+   comment  on column CHB_ASSET_RATE.change_type
+   is '变动类型';
   comment on column CHB_ASSET_RATE.change_date
     is '变动日期';
   comment on column CHB_ASSET_RATE.asset_rate

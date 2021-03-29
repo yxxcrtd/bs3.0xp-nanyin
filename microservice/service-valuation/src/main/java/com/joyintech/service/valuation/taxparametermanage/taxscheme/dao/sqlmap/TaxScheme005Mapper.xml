@@ -219,8 +219,21 @@
 			    on ftp.finprod_id = fpt.finprod_id
 			 where fpt.type_3 is not null  and ftp.branch = '0'
 		 
-		 )
+		 )t
          <where>
+             /*标的中部分标的需要数据隔离，无法使用共通配置数据隔离，这里手动进行数据隔离*/
+             1=1
+             <if test="InstCode != null and InstCode.size() > 0">
+                 AND NOT EXISTS(
+                 SELECT * FROM DATA_AUTH_NOTIFY_INST DANI99
+                 WHERE DANI99.INSTITUTION_CODE NOT IN 
+                 <foreach collection="InstCode" item="item" open="(" close=")" separator=",">
+                     #{item}
+                 </foreach>
+                 AND T.ORIGINALFINPRODID = DANI99.BUSINESS_ID
+                 AND DANI99.MODEL_TYPE = '02'
+                 )
+             </if>
              <!-- select2的模糊查询 -->
 	         <if test="search!=null and !''.equals(search.trim())">
 	             AND (assetId like '%' || #{search} || '%'

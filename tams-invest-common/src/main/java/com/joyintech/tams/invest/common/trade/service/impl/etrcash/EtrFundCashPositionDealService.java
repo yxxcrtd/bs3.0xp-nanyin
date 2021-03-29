@@ -1288,6 +1288,11 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
             etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
             etrCashPositionFlowDto2.setSeqno(getSeqNo());
+            String QsAcctId = EtrCommonCashPositionDealService.selectZQAcctId(stlPayOrdersDto.getPortfolioId(), stlPayOrdersDto.getCcy(),
+                    etrCashPositionFlowDto2.getAcctId());
+            if(StringUtil.isNotEmpty(QsAcctId)){
+                return;
+            }
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
         });
     }
@@ -1316,6 +1321,11 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             etrCashPositionFlowDto1.setSeqno(getSeqNo());
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
 
+            String QsAcctId = EtrCommonCashPositionDealService.selectZQAcctId(stlPayOrdersDto.getPortfolioId(), stlPayOrdersDto.getCcy(),
+                    etrCashPositionFlowDto1.getAcctId());
+            if(StringUtil.isNotEmpty(QsAcctId)){
+                return;
+            }
             // 预增现金 资金到账日减少到账金额
             EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
             BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto1);

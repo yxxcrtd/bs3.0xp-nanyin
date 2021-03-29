@@ -1428,6 +1428,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	共通业务类型_项目类资产卖出(DictCode.共通业务类型,"TRD26","项目类资产卖出"),
 	共通业务类型_逆回购录入(DictCode.共通业务类型,"TRD27","逆回购录入"),
 	共通业务类型_正回购录入(DictCode.共通业务类型,"TRD28","正回购录入"),
+	共通业务类型_资产转仓(DictCode.共通业务类型,"TRD76","资产转仓"),
 	机构所属行业二级分类_有色金属矿采选业(DictCode.机构所属行业二级分类,"B09","有色金属矿采选业"),
 	机构所属行业二级分类_非金属矿采选业(DictCode.机构所属行业二级分类,"B10","非金属矿采选业"),
 	机构所属行业二级分类_开采辅助活动(DictCode.机构所属行业二级分类,"B11","开采辅助活动"),
@@ -2013,16 +2014,10 @@ public enum DictCodeList implements BaseDictCodeList {
 	共同业务类型_DVP资金调拨管理(DictCode.共通业务类型, "PTL09", "DVP资金调拨管理"),
 	产品数据来源_母行代销TA(DictCode.产品数据来源, "01", "母行代销TA"),
 	产品数据来源_三方分销TA(DictCode.产品数据来源, "02", "三方分销TA"),
-    目标投资者_PR1(DictCode.目标投资者,"PR1","PR1"),
-    目标投资者_PR2(DictCode.目标投资者,"PR2","PR2"),
-    目标投资者_PR3(DictCode.目标投资者,"PR3","PR3"),
-    目标投资者_PR4(DictCode.目标投资者,"PR4","PR4"),
     释放状态_未释放(DictCode.释放状态,"0","未释放"),
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
     共通业务类型_手动释放头寸(DictCode.共通业务类型,"MR1","手动释放头寸"),
     共通业务类型_规划策略池维护(DictCode.共通业务类型, "PRDPLAN06", "规划策略池维护"),
-	机构所属行业三级分类_中央银行服务(DictCode.机构所属行业三级分类,"01","中央银行服务"),
-
 	;
 	/*字典值已经满了 ，不要添加了*/
     private String value;

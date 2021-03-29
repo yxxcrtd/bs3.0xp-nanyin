@@ -987,4 +987,17 @@ public class TrdRolloverPledgedRepo001Dto extends TrdProductDeal implements Proc
     public void setDeptCode(String deptCode) {
         this.deptCode = deptCode;
     }
+
+    /**
+     * 转仓编号
+     */
+    private String zcId;
+
+    public String getZcId() {
+        return zcId;
+    }
+
+    public void setZcId(String zcId) {
+        this.zcId = zcId;
+    }
 }

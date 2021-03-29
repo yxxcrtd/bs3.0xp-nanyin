@@ -865,4 +865,17 @@ public class SecResolute001Dto extends BaseEntity implements ProcessEntity {
 	public void setIsNeedAuto(String isNeedAuto) {
 		this.isNeedAuto = isNeedAuto;
 	}
+
+	/**
+	 * 转仓编号
+	 */
+	private String zcId;
+
+	public String getZcId() {
+		return zcId;
+	}
+
+	public void setZcId(String zcId) {
+		this.zcId = zcId;
+	}
 }

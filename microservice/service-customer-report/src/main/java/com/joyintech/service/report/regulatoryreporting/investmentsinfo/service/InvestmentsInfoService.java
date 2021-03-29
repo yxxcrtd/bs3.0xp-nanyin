@@ -1557,6 +1557,14 @@ public class InvestmentsInfoService {
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
+		//上一季度年初
+		Calendar calendarlastQ = Calendar.getInstance();
+		calendarlastQ.setTime(lastEndDate);
+		calendarlastQ.set(Calendar.MONTH, 0);
+		calendarlastQ.set(Calendar.DAY_OF_MONTH, 1);
+		Date yearStartDateLastQ=calendarlastQ.getTime();
+
+
 		Map<String, Object> paraMap = new HashMap<String, Object>();
 		if(MultilevelDataAuthorityUtil.isEnabled()) {
 			//联社模式,查询登录人的机构
@@ -1604,7 +1612,7 @@ public class InvestmentsInfoService {
 			//上年今日
 			Date lastlastYearDate=calendarlastlast.getTime();
 			paraMap.put("endDate", lastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 			lastprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectProductAvgRateInfo1(paraMap);
 
 		}else{
@@ -1644,7 +1652,7 @@ public class InvestmentsInfoService {
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
 			//paraMap.put("lastYearDate", lastlastYearDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastprodRateList =termStructureOfBusinessAndCostBenefitMapper.selectProductAvgRateInfo2(paraMap);
 
@@ -1713,7 +1721,7 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendar.getTime();
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 			lastassetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRateByInfo1(paraMap);
 		}else{
 			//本季度末
@@ -1732,7 +1740,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 			lastassetRateList =termStructureOfBusinessAndCostBenefitMapper.selectAssetRateByInfo2(paraMap);
 
 		}
@@ -1797,7 +1805,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastassetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo1(paraMap);
 		}else{
@@ -1820,7 +1828,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastassetNSRateList =termStructureOfBusinessAndCostBenefitMapper.selectNSAssetRateByInfo2(paraMap);
 
@@ -2018,6 +2026,13 @@ public class InvestmentsInfoService {
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date yearStartDate=calendar.getTime();
+		//上一季度年初
+		Calendar calendarlastQ = Calendar.getInstance();
+		calendarlastQ.setTime(lastEndDate);
+		calendarlastQ.set(Calendar.MONTH, 0);
+		calendarlastQ.set(Calendar.DAY_OF_MONTH, 1);
+		Date yearStartDateLastQ=calendarlastQ.getTime();
+
 		Map<String, Object> paraMap = new HashMap<String, Object>();
 		if(MultilevelDataAuthorityUtil.isEnabled()) {
 			//联社模式,查询登录人的机构
@@ -2056,7 +2071,7 @@ public class InvestmentsInfoService {
 			Date lastlastEndDate=calendarlastEndDate.getTime();
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastFinanceAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo1(paraMap);
 		}else{
@@ -2079,7 +2094,7 @@ public class InvestmentsInfoService {
 
 			paraMap.put("endDate", lastEndDate);
 			paraMap.put("lastEndDate", lastlastEndDate);
-			paraMap.put("yearStartDate", yearStartDate);
+			paraMap.put("yearStartDate", yearStartDateLastQ);
 
 			lastFinanceAssetRateList =termStructureOfBusinessAndCostBenefitMapper.selectFinanceAssetRateByInfo2(paraMap);
 
@@ -2412,116 +2427,116 @@ public class InvestmentsInfoService {
 	public InvestmentBusinessDetailsDto divideBillion(InvestmentBusinessDetailsDto detail) {
 		BigDecimal billion = new BigDecimal(10000);
 		if(detail.getSessionendNum()!=null)//期末余额
-			detail.setSessionendNum(detail.getSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setSessionendNum(detail.getSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		if(detail.getLastSessionendNum()!=null)//期末余额（穿透后）
-			detail.setLastSessionendNum(detail.getLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setLastSessionendNum(detail.getLastSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		if(detail.getNonperformingAssetNum()!=null)//本期银行收益
-			detail.setNonperformingAssetNum(detail.getNonperformingAssetNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setNonperformingAssetNum(detail.getNonperformingAssetNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		if(detail.getLastNonperformingAssetNum()!=null)//本期客户收益
-			detail.setLastNonperformingAssetNum(detail.getLastNonperformingAssetNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setLastNonperformingAssetNum(detail.getLastNonperformingAssetNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		if(detail.getTqeAmount()!=null)//本期募集金额
-			detail.setTqeAmount(detail.getTqeAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setTqeAmount(detail.getTqeAmount().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		if(detail.getTlqeAmount()!=null)//本期总募集金额
-			detail.setTlqeAmount(detail.getTlqeAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setTlqeAmount(detail.getTlqeAmount().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		if (detail.getNonsStandardAmount() != null) { // 非标准化债权类投资本季末数额
-			detail.setNonsStandardAmount(detail.getNonsStandardAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setNonsStandardAmount(detail.getNonsStandardAmount().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastNonsStandardAmount() != null) { // 非标准化债权类投资上季末数额
-			detail.setLastNonsStandardAmount(detail.getLastNonsStandardAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setLastNonsStandardAmount(detail.getLastNonsStandardAmount().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getIndInvestmentAmount() != null) { // 产业投资基金上季末数额
-			detail.setIndInvestmentAmount(detail.getIndInvestmentAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setIndInvestmentAmount(detail.getIndInvestmentAmount().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastIndInvestmentAmount() != null) { // 产业投资基金上季末数额
-			detail.setLastIndInvestmentAmount(detail.getLastIndInvestmentAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setLastIndInvestmentAmount(detail.getLastIndInvestmentAmount().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getOtherAmount() != null) { // 其他本季末数额
-			detail.setOtherAmount(detail.getOtherAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setOtherAmount(detail.getOtherAmount().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastOtherAmount() != null) { // 其他上季末数额
-			detail.setLastOtherAmount(detail.getLastOtherAmount().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setLastOtherAmount(detail.getLastOtherAmount().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getSessionendBalance() != null) { // 表四本季末数额余额
-			detail.setSessionendBalance(detail.getSessionendBalance().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setSessionendBalance(detail.getSessionendBalance().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getSessionendYield() != null) { // 表四 本季末平均年化收益水平 收益率
 			detail.setSessionendYield(detail.getSessionendYield().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastSessionendBalance() != null) { // 表四上季末数额余额
-			detail.setLastSessionendBalance(detail.getLastSessionendBalance().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setLastSessionendBalance(detail.getLastSessionendBalance().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLastSessionendYield() != null) { // 表四 上季末平均年化收益水平 收益率
 			detail.setLastSessionendYield(detail.getLastSessionendYield().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getTotleBalance() != null) { // 表三总计本季末余额
-			detail.setTotleBalance(detail.getTotleBalance().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setTotleBalance(detail.getTotleBalance().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		if (detail.getLasttotleBalance() != null) { // 表三总计上季末余额
-			detail.setLasttotleBalance(detail.getLasttotleBalance().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+			detail.setLasttotleBalance(detail.getLasttotleBalance().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
 		}
 		return detail;
 	}
     public InvestmentBusinessCounterDetailsDto divideBillionOfCounter(InvestmentBusinessCounterDetailsDto detail) {
         BigDecimal billion = new BigDecimal(10000);
         if(detail.getXtSessionendNum()!=null){
-            detail.setXtSessionendNum(detail.getXtSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setXtSessionendNum(detail.getXtSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getXtLastSessionendNum()!=null){
-            detail.setXtLastSessionendNum(detail.getXtLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setXtLastSessionendNum(detail.getXtLastSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getXtZdSessionendNum()!=null){
-            detail.setXtZdSessionendNum(detail.getXtZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setXtZdSessionendNum(detail.getXtZdSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getXtFbSessionendNum()!=null){
-            detail.setXtFbSessionendNum(detail.getXtFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setXtFbSessionendNum(detail.getXtFbSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getZqqhSessionendNum()!=null){
-            detail.setZqqhSessionendNum(detail.getZqqhSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setZqqhSessionendNum(detail.getZqqhSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getZqqhLastSessionendNum()!=null){
-            detail.setZqqhLastSessionendNum(detail.getZqqhLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setZqqhLastSessionendNum(detail.getZqqhLastSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getZqqhZdSessionendNum()!=null){
-            detail.setZqqhZdSessionendNum(detail.getZqqhZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setZqqhZdSessionendNum(detail.getZqqhZdSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getZqqhFbSessionendNum()!=null){
-            detail.setZqqhFbSessionendNum(detail.getZqqhFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setZqqhFbSessionendNum(detail.getZqqhFbSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getZqjjSessionendNum()!=null){
-            detail.setZqjjSessionendNum(detail.getZqjjSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setZqjjSessionendNum(detail.getZqjjSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getZqjjLastSessionendNum()!=null){
-            detail.setZqjjLastSessionendNum(detail.getZqjjLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setZqjjLastSessionendNum(detail.getZqjjLastSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getZqjjZdSessionendNum()!=null){
-            detail.setZqjjZdSessionendNum(detail.getZqjjZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setZqjjZdSessionendNum(detail.getZqjjZdSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getZqjjFbSessionendNum()!=null){
-            detail.setZqjjFbSessionendNum(detail.getZqjjFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setZqjjFbSessionendNum(detail.getZqjjFbSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getYhSessionendNum()!=null){
-            detail.setYhSessionendNum(detail.getYhSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setYhSessionendNum(detail.getYhSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getYhLastSessionendNum()!=null){
-            detail.setYhLastSessionendNum(detail.getYhLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setYhLastSessionendNum(detail.getYhLastSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getYhZdSessionendNum()!=null){
-            detail.setYhZdSessionendNum(detail.getYhZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setYhZdSessionendNum(detail.getYhZdSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getYhFbSessionendNum()!=null){
-            detail.setYhFbSessionendNum(detail.getYhFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setYhFbSessionendNum(detail.getYhFbSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getBxSessionendNum()!=null){
-            detail.setBxSessionendNum(detail.getBxSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setBxSessionendNum(detail.getBxSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getBxLastSessionendNum()!=null){
-            detail.setBxLastSessionendNum(detail.getBxLastSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setBxLastSessionendNum(detail.getBxLastSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getBxZdSessionendNum()!=null){
-            detail.setBxZdSessionendNum(detail.getBxZdSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setBxZdSessionendNum(detail.getBxZdSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         if(detail.getBxFbSessionendNum()!=null){
-            detail.setBxFbSessionendNum(detail.getBxFbSessionendNum().divide(billion, 6, BigDecimal.ROUND_HALF_UP));
+            detail.setBxFbSessionendNum(detail.getBxFbSessionendNum().divide(billion, 2, BigDecimal.ROUND_HALF_UP));
         }
         return detail;
     }

@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1463,11 +1464,11 @@ public class MonthReportProdService {
 
 
 		//合规新产品期末存续只数//（只）
-		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),pos.getIsFhxgcp())&&
+		if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),pos.getIsFhxgcp())&&
 				(null==flag.get(calcDurationprodcounts)||flag.get(calcDurationprodcounts))){
 			result.get(code).calcxgdurationprodcounts(pos.getProdid());
 		}
-		if(StringUtil.equals(DictCodeList.是否_中债_是.getValue(),pos.getIsFhxgcp())&&(
+		if(StringUtil.equals(DictCodeListExt1.新老产品标记_新产品.getValue(),pos.getIsFhxgcp())&&(
 				null==flag.get(Balance)||flag.get(Balance))){
 			//合规新产品期末余额
 			result.get(code).setXgbalance(result.get(code).getXgbalance().add(pos.getEndamtsumOth()));

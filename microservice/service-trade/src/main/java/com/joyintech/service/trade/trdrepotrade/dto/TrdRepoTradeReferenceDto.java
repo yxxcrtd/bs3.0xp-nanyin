@@ -1304,4 +1304,18 @@ public class TrdRepoTradeReferenceDto extends TrdProductDeal {
         this.commissionAmt = commissionAmt;
     }
 
+    /**
+     * 反向交易编号
+     */
+    private String rTradeId;
+
+    @Override
+    public String getrTradeId() {
+        return rTradeId;
+    }
+
+    @Override
+    public void setrTradeId(String rTradeId) {
+        this.rTradeId = rTradeId;
+    }
 }

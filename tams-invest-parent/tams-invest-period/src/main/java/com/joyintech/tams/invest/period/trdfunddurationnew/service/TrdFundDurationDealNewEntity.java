@@ -176,27 +176,29 @@ public class TrdFundDurationDealNewEntity extends BaseService<TrdFundDurationNew
 
             if (!DictCodeList.交易方向_红利再投.getValue().equals(entity.getPs())) {// 撤销现金分红的除权登记交易时，同时撤销现金分红的持仓
                 List<BaseTradeProductDealDto> totalXjfh = this.findBTradeEffectiveDeal(entity.getpTradeId());
-                List<BaseTradeProductDealDto> total现金分红交易 = new ArrayList<BaseTradeProductDealDto>();
-                for(BaseTradeProductDealDto baseTradeProductDealDto : totalXjfh){
-                    if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDeal())
-                        && StringUtil.equals((baseTradeProductDealDto.getTrdProductDeal().getPs()),DictCodeList.交易方向_现金分红.getValue())){
-                        total现金分红交易.add(baseTradeProductDealDto);
+                if(totalXjfh != null){
+                    List<BaseTradeProductDealDto> total现金分红交易 = new ArrayList<BaseTradeProductDealDto>();
+                    for(BaseTradeProductDealDto baseTradeProductDealDto : totalXjfh){
+                        if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDeal())
+                                && StringUtil.equals((baseTradeProductDealDto.getTrdProductDeal().getPs()),DictCodeList.交易方向_现金分红.getValue())){
+                            total现金分红交易.add(baseTradeProductDealDto);
+                        }
                     }
-                }
-                if (total现金分红交易 != null && !total现金分红交易.isEmpty()) {// 红利再投的除权登记交易时，这里应该检索不到数据，不处理
-                    for (BaseTradeProductDealDto baseTradeProductDealDto : total现金分红交易) {
-                        TrdProductDeal deal1 = baseTradeProductDealDto.getTrdProductDeal();
-                        deal1.setTradeId(deal1.getTradeId() + 'R');
-                        deal1.setCreateUser(tradeDto.getCreateUser());
-                        deal1.setCreateTime(tradeDto.getCreateTime());
-                        deal1.setCreateDept(tradeDto.getCreateDept());
-                        deal1.setUpdateTime(tradeDto.getUpdateTime());
-                        deal1.setUpdateUser(tradeDto.getUpdateUser());
-                        getInterfInputDto(entity, baseTradeProductDealDto, 交易流程状态);
+                    if (total现金分红交易 != null && !total现金分红交易.isEmpty()) {// 红利再投的除权登记交易时，这里应该检索不到数据，不处理
+                        for (BaseTradeProductDealDto baseTradeProductDealDto : total现金分红交易) {
+                            TrdProductDeal deal1 = baseTradeProductDealDto.getTrdProductDeal();
+                            deal1.setTradeId(deal1.getTradeId() + 'R');
+                            deal1.setCreateUser(tradeDto.getCreateUser());
+                            deal1.setCreateTime(tradeDto.getCreateTime());
+                            deal1.setCreateDept(tradeDto.getCreateDept());
+                            deal1.setUpdateTime(tradeDto.getUpdateTime());
+                            deal1.setUpdateUser(tradeDto.getUpdateUser());
+                            getInterfInputDto(entity, baseTradeProductDealDto, 交易流程状态);
+                        }
+                        tradeDto.setBaseTradeProductDealDtos(total现金分红交易);
+                        baseTradeProductDealCommServiceImpl.execute(tradeDto);
+                        execute交易共通子组合(entity, 交易流程状态, true);
                     }
-                    tradeDto.setBaseTradeProductDealDtos(total现金分红交易);
-                    baseTradeProductDealCommServiceImpl.execute(tradeDto);
-                    execute交易共通子组合(entity, 交易流程状态, true);
                 }
             }
         }

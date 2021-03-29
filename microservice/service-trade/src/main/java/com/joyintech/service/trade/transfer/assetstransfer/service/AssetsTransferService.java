@@ -88,9 +88,11 @@ public class AssetsTransferService extends BaseService<AssetsTransferDto> {
                     BigDecimal wflAmt = assetsTransferMapper.selectWflAmt(map);
                     if (StringUtil.equals(assetsTransferDto.getAssetType(), DictCodeList.平安资产类型_债券.getValue())) {
                     	//2020-10-14 判断当前持仓与流程中持仓之和，小于等于0则不在待转仓列表显示
-                    	BigDecimal newAmount = ArithmeticUtil.doAdd(assetsTransferDto.getAmount(), flowAmt, wflAmt);
+                    	//债券在途持仓数量为交易份额，交易份额为券面总额/100,所以在这里需要查出来*100
+                    	BigDecimal flowAmt1 = ArithmeticUtil.multiply(flowAmt,new BigDecimal(100));
+                    	BigDecimal newAmount = ArithmeticUtil.doAdd(assetsTransferDto.getAmount(), flowAmt1, wflAmt);
                     	if(BigDecimal.ZERO.compareTo(newAmount) < 0) {
-                    		assetsTransferDto.setAmount(newAmount);
+                    		//assetsTransferDto.setAmount(newAmount);
                     		newRootList.add(assetsTransferDto);
                     	}
                     } else if (StringUtil.equals(assetsTransferDto.getAssetType(), DictCodeList.平安资产类型_计划类资产_利率型.getValue()) ||

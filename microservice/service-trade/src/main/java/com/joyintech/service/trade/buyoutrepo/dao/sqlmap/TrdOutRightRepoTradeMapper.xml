@@ -284,6 +284,7 @@
 		and WFL_TRD_PRODUCT_DEAL.PS IN (#{psPay},#{psOut})
 		and WFL_TRD_PRODUCT_DEAL.TRADE_STATUS = #{tradeStatusInit}
 		and WFL_TRD_PRODUCT_DEAL.IS_CANCEL = #{noFlag}
+		and (WFL_TRD_PRODUCT_DEAL.is_swap_transaction is null or WFL_TRD_PRODUCT_DEAL.is_swap_transaction = #{yesFlag})
 		<if test="portfolioId != null and portfolioId.size() > 0">
 			and (PTL_PORTFOLIO.PORTFOLIO_ID in
 			<foreach collection="portfolioId" item="item" open="(" close=")" separator=",">

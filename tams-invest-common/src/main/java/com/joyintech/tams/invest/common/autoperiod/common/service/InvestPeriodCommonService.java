@@ -717,10 +717,12 @@ public class InvestPeriodCommonService {
         }
         //基金支持多种分红方式特殊处理
         if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.FUND_DEAL_TYPE),"02")){
-            if (baseTotalTradeInfoDto.getBaseTradeInfoDtoList() != null
-                    && StringUtil.equals(DictCodeList.交易方向_现金分红.getValue(),baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getPs())
-                    && StringUtil.isNotEmpty(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getSecManageAcctId())
-                    && baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders()!=null) {
+            if(baseTotalTradeInfoDto !=null){
+                if (baseTotalTradeInfoDto.getBaseTradeInfoDtoList() != null
+                        && StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue(),baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getFinprodType2())
+                        && StringUtil.equals(DictCodeList.交易方向_现金分红.getValue(),baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getPs())
+                        && StringUtil.isNotEmpty(baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getTrdProductDeal().getSecManageAcctId())
+                        && baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders()!=null) {
                     String myAcctNo = baseTotalTradeInfoDto.getBaseTradeInfoDtoList().get(0).getStlPayOrders().getMyAcctNo();
                     Map<String,Object> paraMap = new HashMap<>();
                     paraMap.put("acctNo",myAcctNo);
@@ -731,6 +733,7 @@ public class InvestPeriodCommonService {
                         do生成有效数据(durationDto);
                         return DictCodeListExt1.交易流程状态_有效.getValue();
                     }
+                }
             }
         }
         insertWflData(baseTotalTradeInfoDto);

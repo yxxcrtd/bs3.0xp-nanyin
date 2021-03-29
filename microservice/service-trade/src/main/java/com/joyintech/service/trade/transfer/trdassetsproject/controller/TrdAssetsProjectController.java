@@ -4,10 +4,12 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.transfer.trdassetsproject.service.TrdAssetsProjectService;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -44,5 +46,15 @@ public class TrdAssetsProjectController {
     @RequestMapping("selectBussTrdTraOrderByTradeId")
     public List<BussTrdTransferOrderDto> selectBussTrdTraOrderByTradeId(@RequestBody Map<String,Object>param){
         return trdassetsProjectService.selectBussTrdTraOrderByTradeId(param);
+    }
+    /**
+     * 获取处于流程中的持仓（但是未记录在在持仓流水中）
+     * @return 处于流程中的持仓（但是未记录在在持仓流水中）
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("selectWflAmtAsset")
+    public BigDecimal selectWflAmtAsset(@RequestBody Map<String,Object> map){
+        return trdassetsProjectService.selectWflAmtAsset(map);
     }
 }

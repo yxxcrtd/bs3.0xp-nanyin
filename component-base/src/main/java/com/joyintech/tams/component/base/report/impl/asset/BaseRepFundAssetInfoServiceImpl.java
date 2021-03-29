@@ -60,7 +60,7 @@ public class BaseRepFundAssetInfoServiceImpl extends BaseService<RepFund> implem
      */
     @Override
     public boolean update(BaseRepFundAssetInfoDto dto) {
-        return baseRepFundAssetInfoServiceImpl.delete(dto) && baseRepFundAssetInfoServiceImpl.insert(dto) ;
+        return baseRepFundAssetInfoServiceImpl.delete(dto) & baseRepFundAssetInfoServiceImpl.insert(dto) ;
     }
 
     /**

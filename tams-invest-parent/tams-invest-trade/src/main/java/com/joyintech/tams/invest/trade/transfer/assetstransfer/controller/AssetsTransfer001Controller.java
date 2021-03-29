@@ -122,6 +122,7 @@ public class AssetsTransfer001Controller extends BaseController {
     @RequestMapping("/findUnTransPage")
     public Page<AssetsTransfer001Dto> findUnTransPage(){
         Map<String,Object> paramMap = RequestUtil.getPageParam();
+        paramMap.put("userId", LoginUserUtil.getUserName());
         return assetsTransfer001Service.findUnTransPage(paramMap);
     }
 
@@ -136,6 +137,7 @@ public class AssetsTransfer001Controller extends BaseController {
     @RequestMapping("/findTransPage")
     public Page<AssetsTransfer001Dto> findTransPage(){
         Map<String,Object> paramMap = RequestUtil.getPageParam();
+        paramMap.put("userId", LoginUserUtil.getUserName());
         return assetsTransfer001Service.findTransPage(paramMap);
     }
 

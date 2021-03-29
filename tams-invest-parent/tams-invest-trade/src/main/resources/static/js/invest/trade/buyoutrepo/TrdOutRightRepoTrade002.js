@@ -269,6 +269,19 @@
 			$("#TrdOutRightRepoTrade002_secAcctId").prop("disabled", false);
 		}
 		refreshCashAndBalance();
+		if($("#chlId").val()){
+			if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
+				$('#procedureAmt').val('').trigger('change');
+				$('#procedureAmtDiv').hide();
+				$('#settleAmt').val('').trigger('change');
+				$('#settleAmtDiv').hide();
+			}
+		}else{
+			if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
+				$('#procedureAmtDiv').show();
+				$('#settleAmtDiv').show();
+			}
+		}
 	});
 
 	var changeTradeAmtAndFee = function() {
@@ -594,6 +607,7 @@
     }
     
     window.componentLoadCallback = function (isDone, pagePath, params) {
+    	var initFlag = true;
         if (isDone) {
         	
         	// 刷新托管户剩余现金、组合T日可用现金、组合T+1日可用现金
@@ -615,7 +629,9 @@
             window.BussTrdTransferOrder['trdOutRightRepoTradeOrder'].setStlCommandInput(function () {
             	// 首次全价不能为空
             	if (!$("#TrdOutRightRepoTrade002_fFprice").val() || typeof $("#TrdOutRightRepoTrade002_fFprice").val() == 'undefined'){
-            		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("TrdOutRightRepoTrade002.amtInfo.firstFullPrice")]));
+            		if(!initFlag){
+                		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("TrdOutRightRepoTrade002.amtInfo.firstFullPrice")]));	
+            		}
             		return null;
             	}
             	// 券面总额不能为空
@@ -676,6 +692,7 @@
 				}
 			}
 		});*/
+        initFlag = false;
     };
     
     function saveOrSubmit(operateType) {
@@ -751,7 +768,13 @@
 				object.payType = data.object;
 			}
 			object.inputValue1 = PINAN_ASSET_TYPE_F10;
-			object.inputValue2 = $('#ps').val(); 
+			object.inputValue2 = $('#ps').val();
+			if(object.chlId){
+				if(object.procedureAmt)
+					object.procedureAmt = '';
+				if(object.settleAmt)
+					object.settleAmt = '';
+			}
 			if ($('#trdOutRightRepoPersonInfo_counterId').select2('data') && $('#trdOutRightRepoPersonInfo_counterId').select2('data')[0]) {
 	            object.counterId=$('#trdOutRightRepoPersonInfo_counterId').select2('data')[0].id;
 	        }
@@ -1082,8 +1105,17 @@
             }
             // 当交易场所是银行间时
             else if (tradeMarket == TRADE_PLACE_01) {
-                $("#procedureAmtDiv").show();
-                $("#settleAmtDiv").show();
+				if($('#chlId').val()){
+					$('#procedureAmt').val('').trigger('change');
+					$('#procedureAmtDiv').hide();
+					$('#settleAmt').val('').trigger('change');
+					$('#settleAmtDiv').hide();
+				}else{
+					$('#procedureAmtDiv').show();
+					$('#settleAmtDiv').show();
+				}
+                // $("#procedureAmtDiv").show();
+                // $("#settleAmtDiv").show();
                 $("#commissionAmtDiv").hide();
             }
             else {

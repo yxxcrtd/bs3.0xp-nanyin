@@ -10,10 +10,12 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.trade.dto.BussTrdAvailableCashQuery;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.trade.transfer.fund.dto.FundAssetTransfer001Dto;
 import com.joyintech.tams.invest.trade.transfer.fund.service.FundAssetTransfer001Service;
@@ -56,6 +58,12 @@ public class FundAssetTransfer001Controller extends BaseController {
      */
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    /**
+     * 主键生成类
+     */
+    @Autowired(required = false)
+    private BaseGetBusinessId baseGetBusinessId;
     /**
      * 重写init方法，加载页面
      * {@inheritDoc}
@@ -86,15 +94,15 @@ public class FundAssetTransfer001Controller extends BaseController {
             model.addAttribute(GlobalConstant.ENTITY,entity);
         }
         //非货基查询初始单位净值
-        if(StringUtil.equals(entity.getAssetType(),DictCodeList.基金类资产类型_非货币基金.getValue())){
+        if(StringUtil.equals(entity.getFundType(),DictCodeList.基金类资产类型_非货币基金.getValue())){
             Map<String,Object> paramMap = new HashMap<>();
             paramMap.put("tradeDate",DateUtil.format(entity.getTradeDate()));
             paramMap.put("finprodId",entity.getFinprodIdOrg());
-            BigDecimal unitCprice = fundAssetTransfer001Service.findInitCarryOverQty(paramMap);
-            if(unitCprice==null) {
-            	unitCprice = BigDecimal.ZERO;
-            }
-            entity.setUnitCprice(unitCprice);
+//            BigDecimal unitCprice = fundAssetTransfer001Service.findInitCarryOverQty(paramMap);
+//            if(unitCprice==null) {
+//            	unitCprice = BigDecimal.ZERO;
+//            }
+            entity.setUnitCprice(fundAssetTransfer001Service.findInitCarryOverQty(paramMap));
         }
         else {
         	entity.setUnitCprice(BigDecimal.ONE);
@@ -282,10 +290,20 @@ public class FundAssetTransfer001Controller extends BaseController {
         }
         workFlowParameter.setPageId(this.getPageId());
         workFlowParameter.setElementId(this.getParam("elementId"));
-        workFlowParameter.setBusinessCode((entity) -> entity.getFinprodMarketId());
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_基金类资产交易.getValue());
-        workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(getMessage("TrdFundInvestTrade002.finprodId"),
-                entity.getFinprodMarketId(), getMessage("TrdFundInvestTrade002.finprodName"), GlobalConstant.SPLIT, entity.getFinprodAbbr(),
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        workFlowParameter.setBusinessCode(dto.getZcId());
+
+        workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment("交易编号",
+                entity.getZcId(), getMessage("TrdFundInvestTrade002.finprodName"), GlobalConstant.SPLIT, entity.getFinprodAbbr(),
                 getMessage("TrdFundInvestTrade002.tradeDate"), DateUtil.format(entity.getTradeDate())));
         dto.setTrader(LoginUserUtil.getUserName());
         dto.setDeptCode(LoginUserUtil.getDeptCode());

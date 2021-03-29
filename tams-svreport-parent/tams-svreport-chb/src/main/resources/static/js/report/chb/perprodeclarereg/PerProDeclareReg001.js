@@ -220,6 +220,12 @@ $(function() {
 									sortField:'profitType'
 								},
 								{
+									title : '新老产品标记',
+									field : 'isFhxgcp',
+									width : 200,
+									sortField:'isFhxgcp'
+								},
+								{
 									title : '产品期限',
 									field : 'termtype',
 									width : 200, 

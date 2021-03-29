@@ -39,6 +39,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -135,7 +136,7 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(@Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade002Dto dto, BindingResult br)
+    public AjaxResult revoke(@RequestBody @Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade002Dto dto, BindingResult br)
         throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
@@ -164,8 +165,8 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
         //判断流程中是否存在,如果流程不存在则说明是生成的反向交易，组装撤销dto yjm end 20191015   
         ProcessParameter<TrdProjectInvestTrade002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdProjectInvestTrade002Dto> params = new WorkFlowParameter<>();
-        params.setPageId(RequestUtil.getParam("pageId"));
-        params.setElementId(dto==null?null:dto.getElementId());
+        params.setPageId("TrdProjectInvestTrade002");
+        params.setElementId("TrdProjectInvestTrade001_btn_revoke");
         params.setBusinessCode(dto==null?null:dto.getBizCode());
         params.setBusinessType(DictCodeList.共通业务类型_项目类资产交易.getValue());
 
@@ -200,15 +201,6 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
                 return ar;
             }
         }
-        int T02sum = trdBondInvestTrade002Service.selectTradeT02(dto.getBizCode());
-        if(T02sum > 0){
-            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-            errorList.add(new ValidMessage(this.getMessage("后续存在有效的卖出交易！")));
-            AjaxResult ar = new AjaxResult();
-            ar.setErrorList(errorList);
-            return ar;
-        }
-        // TISHKBS-1349 债券 进行买入交易后 隔天做卖出交易 卖出交易完成后对买入交易进行撤销,此时不提示存在后续交易 增加提示 add by caojin 20201001 end
         // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 start
         if (result.getErrorCount() == 0) {
             AjaxResult ajaxResult = new AjaxResult();
@@ -240,6 +232,17 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
             }
         }
         // 确认提醒 TISHKBS-1113【组合资金账户头寸查询】内转交易撤销提醒 add by hpp 2020-09-17 end
+
+        int T02sum = trdBondInvestTrade002Service.selectTradeT02(dto.getBizCode());
+        if(T02sum > 0){
+            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+            errorList.add(new ValidMessage(this.getMessage("后续存在有效的卖出交易！")));
+            AjaxResult ar = new AjaxResult();
+            ar.setErrorList(errorList);
+            return ar;
+        }
+        // TISHKBS-1349 债券 进行买入交易后 隔天做卖出交易 卖出交易完成后对买入交易进行撤销,此时不提示存在后续交易 增加提示 add by caojin 20201001 end
+
 
         return commonCheck(result, dto.getOperateType());
     }

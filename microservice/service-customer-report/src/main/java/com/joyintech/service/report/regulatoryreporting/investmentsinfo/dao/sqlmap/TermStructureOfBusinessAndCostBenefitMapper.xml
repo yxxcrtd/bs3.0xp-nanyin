@@ -1299,6 +1299,7 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
+		<!--直投资产收益率-->
 		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
@@ -1511,23 +1512,255 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
+		</if>
+		and cr.change_type in ('07','09')
+		),
+		<!--通过通道投资的资产的收益率-->
+		ratedetailWithTd as(
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
+		select distinct cr.asset_id as assetId,null passetid,cr.asset_rate as assetRate
+		from chb_asset_rate cr
+		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
+		or (cr.finprod_type2 ='F17' and cr.profit_Type='02')
+		or (cr.finprod_type2 ='XJ' and cr.change_type='05')
+		)
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+
+		union all
+
+		<!-- 计划类净值型，非货币基金 -->
+		select distinct cr.asset_id as assetId,fjycr.passetid,
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+
+		end as assetRate
+		from chb_asset_rate cr
+		<!--年初单位净值-->
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and cr1.change_type='02'
+		)fcr
+		on cr.asset_id=fcr.asset_id
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		    select t.* from (
+			select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+			row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		  from  chb_asset_rate cr
+		  left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		            from chb_bot_ast_pos fc1
+					<if test="org != null  and org!=''">
+						left join DATA_AUTH_NOTIFY_INST di
+						on 'F28_'||fc1.plan_asset_id=di.business_id
+						and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+					</if>
+		            where 1=1
+					<if test="org != null  and org!=''">
+						and di.institution_code=#{org, jdbcType=VARCHAR}
+					</if>
+		            group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		  on cr.asset_id=cdeal.assetid
+		  where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		        and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02'　
+		        and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		and cr1.change_type='03'
+		group by cr1.asset_id
+		)bonus
+		on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,cdeal.passetid,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr1.asset_id=cdeal.assetid
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>cdeal.dealmindate
+		and cr1.change_type='03'
+		group by cr1.asset_id,cdeal.passetid
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
+		and fjycr.passetid=jybonus.passetid
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.change_type='02')
+		and cr.change_type='02'
+		union all
+		<!--计划货币，货币基金-->
+
+		select
+		t.asset_id  as assetId,t.passetid as passetid,
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		end as assetRate
+		from(select cr.asset_id,cr.asset_rate,fjycr.change_date,fjycr.passetid
+		from  chb_asset_rate cr
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		cr.change_date as crfjdate,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.crfjdate))
+		)t
+		group by t.asset_id,t.change_date,t.passetid
+
+		union all
+		<!--可转债 -->
+		select cr.asset_id as assetId,
+		case when fjycr.change_date is not null then fjycr.passetid else ffjycr.passetid end as passetid,
+		case when fjycr.change_date is not null
+		then  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-fjycr.change_date+1)*365
+		else  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-ffjycr.change_date+1)*365
+		end as assetRate
+
+		from chb_asset_rate cr
+		left join chb_asset_rate cr1
+		on cr.asset_id=cr1.asset_id
+		and cr1.cost_amt !=0
+		<!--各通道各资产首次买入日单位净值,本年内-->
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)ffjycr
+		on cr.asset_id=ffjycr.asset_id
+		where 1=1
+		and (cr.profit_Type='013' or cr.finprod_type2='F10')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and fc1.change_type in ('07','09')
+		)
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
 		select detail.assetId as assetId,detail.assetRate as assetRate
 		from ratedetail detail
 		union all
+		<!--通道收益率-->
 		select distinct cbap.plan_asset_id as assetId,
 		case when sum(nvl(cbap.pos_num,0))!=0 then
 		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
 		else 0 end as assetRate
 		from chb_bot_ast_pos cbap
-		left join ratedetail d
+		left join ratedetailWithTd d
 		on cbap.asset_code=d.assetId
+		and (d.passetid is null or cbap.plan_asset_id=d.passetid)
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
 		union all
+		<!--母资管计划收益率-->
 		select distinct cbdc.p_asset_id as assetId,
 		case when sum(nvl(cbdc.pos_amt,0))!=0 then
 		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
@@ -1560,6 +1793,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
 			　　　　           from  CHB_ASSETS_BASIS_DATA cabd
@@ -1578,6 +1812,7 @@ with cj as(
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1594,7 +1829,10 @@ with cj as(
 		</if>
 		left join (select * from chb_asset_rate scmapr
 		where scmapr.CHANGE_DATE=(select max(scmapr1.change_date) from chb_asset_rate scmapr1
-		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.COST_AMT!=0 and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'
+		and scmapr1.change_type='06'
+		and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		and scmapr.change_type='06'
 		) scmapr
 		on cmapr.ASSET_ID=scmapr.ASSET_ID
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
@@ -1615,8 +1853,10 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}　and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1632,7 +1872,9 @@ with cj as(
 		</if>
 		left join (select * from chb_asset_rate scmapr
 		where scmapr.CHANGE_DATE=(select max(scmapr1.change_date) from chb_asset_rate scmapr1
-		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.COST_AMT!=0 and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		where   scmapr.ASSET_ID= scmapr1.ASSET_ID and scmapr1.finprod_type2='XJ'  and scmapr1.change_type='06'
+		and scmapr1.CHANGE_DATE<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1)
+		and scmapr.change_type='06'
 		) scmapr
 		on cmapr.ASSET_ID=scmapr.ASSET_ID
 
@@ -1675,6 +1917,7 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
+		<!--直投资产收益率-->
 		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
@@ -1887,23 +2130,255 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
+		</if>
+		and cr.change_type in ('07','09')
+		),
+		<!--通过通道投资的资产的收益率-->
+		ratedetailWithTd as(
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
+		select distinct cr.asset_id as assetId,null passetid,cr.asset_rate as assetRate
+		from chb_asset_rate cr
+		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
+		or (cr.finprod_type2 ='F17' and cr.profit_Type='02')
+		or (cr.finprod_type2 ='XJ' and cr.change_type='05')
+		)
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+
+		union all
+
+		<!-- 计划类净值型，非货币基金 -->
+		select distinct cr.asset_id as assetId,fjycr.passetid,
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+
+		end as assetRate
+		from chb_asset_rate cr
+		<!--年初单位净值-->
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and cr1.change_type='02'
+		)fcr
+		on cr.asset_id=fcr.asset_id
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02'　
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		and cr1.change_type='03'
+		group by cr1.asset_id
+		)bonus
+		on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,cdeal.passetid,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr1.asset_id=cdeal.assetid
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>cdeal.dealmindate
+		and cr1.change_type='03'
+		group by cr1.asset_id,cdeal.passetid
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
+		and fjycr.passetid=jybonus.passetid
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.change_type='02')
+		and cr.change_type='02'
+		union all
+		<!--计划货币，货币基金-->
+
+		select
+		t.asset_id  as assetId,t.passetid as passetid,
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		end as assetRate
+		from(select cr.asset_id,cr.asset_rate,fjycr.change_date,fjycr.passetid
+		from  chb_asset_rate cr
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		cr.change_date as crfjdate,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.crfjdate))
+		)t
+		group by t.asset_id,t.change_date,t.passetid
+
+		union all
+		<!--可转债 -->
+		select cr.asset_id as assetId,
+		case when fjycr.change_date is not null then fjycr.passetid else ffjycr.passetid end as passetid,
+		case when fjycr.change_date is not null
+		then  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-fjycr.change_date+1)*365
+		else  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-ffjycr.change_date+1)*365
+		end as assetRate
+
+		from chb_asset_rate cr
+		left join chb_asset_rate cr1
+		on cr.asset_id=cr1.asset_id
+		and cr1.cost_amt !=0
+		<!--各通道各资产首次买入日单位净值,本年内-->
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)ffjycr
+		on cr.asset_id=ffjycr.asset_id
+		where 1=1
+		and (cr.profit_Type='013' or cr.finprod_type2='F10')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and fc1.change_type in ('07','09')
+		)
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
 		select detail.assetId as assetId,detail.assetRate as assetRate
 		from ratedetail detail
 		union all
+		<!--通道收益率-->
 		select distinct cbap.plan_asset_id as assetId,
 		case when sum(nvl(cbap.pos_num,0))!=0 then
 		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
 		else 0 end as assetRate
 		from chb_bot_ast_pos cbap
-		left join ratedetail d
+		left join ratedetailWithTd d
 		on cbap.asset_code=d.assetId
+		and (d.passetid is null or cbap.plan_asset_id=d.passetid)
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
 		union all
+		<!--母资管计划收益率-->
 		select distinct cbdc.p_asset_id as assetId,
 		case when sum(nvl(cbdc.pos_amt,0))!=0 then
 		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
@@ -1935,6 +2410,7 @@ with cj as(
 		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
@@ -1954,6 +2430,7 @@ with cj as(
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1970,7 +2447,7 @@ with cj as(
 		left join chb_asset_rate lastcmapr
 		on cmapr.ASSET_ID=lastcmapr.ASSET_ID
 		and  lastcmapr.CHANGE_DATE=#{lastEndDate,jdbcType=DATE}
-		and lastcmapr.finprod_type2='XJ' and lastcmapr.COST_AMT!=0
+		and lastcmapr.finprod_type2='XJ' and  lastcmapr.change_type='06'
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -1988,9 +2465,11 @@ with cj as(
 		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE} and cmap.asset_code!='REMAININGCASH'
 		and cmap.ASSETTYPE2 not in ('1901','1902')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2007,7 +2486,7 @@ with cj as(
 		left join chb_asset_rate lastcmapr
 		on cmapr.ASSET_ID=lastcmapr.ASSET_ID
 		and  lastcmapr.CHANGE_DATE=#{lastEndDate,jdbcType=DATE}
-		and lastcmapr.finprod_type2='XJ' and lastcmapr.COST_AMT!=0
+		and lastcmapr.finprod_type2='XJ' and  lastcmapr.change_type='06'
 		where 1=1 and cmapr.CHANGE_DATE=#{endDate,jdbcType=DATE}　and cmapr.finprod_type2='XJ' and cmapr.COST_AMT!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -2115,7 +2594,7 @@ with cj as(
 	<select id="selectNSAssetRateByInfo1"
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
-
+		<!--直投资产收益率-->
 		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
@@ -2328,23 +2807,254 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
+		</if>
+		),
+		<!--通过通道投资的资产的收益率-->
+		ratedetailWithTd as(
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
+		select distinct cr.asset_id as assetId,null passetid,cr.asset_rate as assetRate
+		from chb_asset_rate cr
+		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
+		or (cr.finprod_type2 ='F17' and cr.profit_Type='02')
+		or (cr.finprod_type2 ='XJ' and cr.change_type='05')
+		)
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+
+		union all
+
+		<!-- 计划类净值型，非货币基金 -->
+		select distinct cr.asset_id as assetId,fjycr.passetid,
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+
+		end as assetRate
+		from chb_asset_rate cr
+		<!--年初单位净值-->
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and cr1.change_type='02'
+		)fcr
+		on cr.asset_id=fcr.asset_id
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02'　
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		and cr1.change_type='03'
+		group by cr1.asset_id
+		)bonus
+		on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,cdeal.passetid,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr1.asset_id=cdeal.assetid
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>cdeal.dealmindate
+		and cr1.change_type='03'
+		group by cr1.asset_id,cdeal.passetid
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
+		and fjycr.passetid=jybonus.passetid
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.change_type='02')
+		and cr.change_type='02'
+		union all
+		<!--计划货币，货币基金-->
+
+		select
+		t.asset_id  as assetId,t.passetid as passetid,
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		end as assetRate
+		from(select cr.asset_id,cr.asset_rate,fjycr.change_date,fjycr.passetid
+		from  chb_asset_rate cr
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		cr.change_date as crfjdate,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.crfjdate))
+		)t
+		group by t.asset_id,t.change_date,t.passetid
+
+		union all
+		<!--可转债 -->
+		select cr.asset_id as assetId,
+		case when fjycr.change_date is not null then fjycr.passetid else ffjycr.passetid end as passetid,
+		case when fjycr.change_date is not null
+		then  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-fjycr.change_date+1)*365
+		else  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-ffjycr.change_date+1)*365
+		end as assetRate
+
+		from chb_asset_rate cr
+		left join chb_asset_rate cr1
+		on cr.asset_id=cr1.asset_id
+		and cr1.cost_amt !=0
+		<!--各通道各资产首次买入日单位净值,本年内-->
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)ffjycr
+		on cr.asset_id=ffjycr.asset_id
+		where 1=1
+		and (cr.profit_Type='013' or cr.finprod_type2='F10')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and fc1.change_type in ('07','09')
+		)
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
 		select detail.assetId as assetId,detail.assetRate as assetRate
 		from ratedetail detail
 		union all
+		<!--通道收益率-->
 		select distinct cbap.plan_asset_id as assetId,
 		case when sum(nvl(cbap.pos_num,0))!=0 then
 		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
 		else 0 end as assetRate
 		from chb_bot_ast_pos cbap
-		left join ratedetail d
+		left join ratedetailWithTd d
 		on cbap.asset_code=d.assetId
+		and (d.passetid is null or cbap.plan_asset_id=d.passetid)
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
 		union all
+		<!--母资管计划收益率-->
 		select distinct cbdc.p_asset_id as assetId,
 		case when sum(nvl(cbdc.pos_amt,0))!=0 then
 		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
@@ -2377,6 +3087,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
 			　　　　           from  CHB_ASSETS_BASIS_DATA cabd
@@ -2395,6 +3106,7 @@ with cj as(
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2410,8 +3122,10 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2450,6 +3164,7 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
+		<!--直投资产收益率-->
 		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
@@ -2662,23 +3377,255 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
+		</if>
+		and cr.change_type in ('07','09')
+		),
+		<!--通过通道投资的资产的收益率-->
+		ratedetailWithTd as(
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
+		select distinct cr.asset_id as assetId,null passetid,cr.asset_rate as assetRate
+		from chb_asset_rate cr
+		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
+		or (cr.finprod_type2 ='F17' and cr.profit_Type='02')
+		or (cr.finprod_type2 ='XJ' and cr.change_type='05')
+		)
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+
+		union all
+
+		<!-- 计划类净值型，非货币基金 -->
+		select distinct cr.asset_id as assetId,fjycr.passetid,
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+
+		end as assetRate
+		from chb_asset_rate cr
+		<!--年初单位净值-->
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and cr1.change_type='02'
+		)fcr
+		on cr.asset_id=fcr.asset_id
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02'　
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		and cr1.change_type='03'
+		group by cr1.asset_id
+		)bonus
+		on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,cdeal.passetid,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr1.asset_id=cdeal.assetid
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>cdeal.dealmindate
+		and cr1.change_type='03'
+		group by cr1.asset_id,cdeal.passetid
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
+		and fjycr.passetid=jybonus.passetid
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.change_type='02')
+		and cr.change_type='02'
+		union all
+		<!--计划货币，货币基金-->
+
+		select
+		t.asset_id  as assetId,t.passetid as passetid,
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		end as assetRate
+		from(select cr.asset_id,cr.asset_rate,fjycr.change_date,fjycr.passetid
+		from  chb_asset_rate cr
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		cr.change_date as crfjdate,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.crfjdate))
+		)t
+		group by t.asset_id,t.change_date,t.passetid
+
+		union all
+		<!--可转债 -->
+		select cr.asset_id as assetId,
+		case when fjycr.change_date is not null then fjycr.passetid else ffjycr.passetid end as passetid,
+		case when fjycr.change_date is not null
+		then  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-fjycr.change_date+1)*365
+		else  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-ffjycr.change_date+1)*365
+		end as assetRate
+
+		from chb_asset_rate cr
+		left join chb_asset_rate cr1
+		on cr.asset_id=cr1.asset_id
+		and cr1.cost_amt !=0
+		<!--各通道各资产首次买入日单位净值,本年内-->
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)ffjycr
+		on cr.asset_id=ffjycr.asset_id
+		where 1=1
+		and (cr.profit_Type='013' or cr.finprod_type2='F10')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and fc1.change_type in ('07','09')
+		)
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
 		select detail.assetId as assetId,detail.assetRate as assetRate
 		from ratedetail detail
 		union all
+		<!--通道收益率-->
 		select distinct cbap.plan_asset_id as assetId,
 		case when sum(nvl(cbap.pos_num,0))!=0 then
 		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
 		else 0 end as assetRate
 		from chb_bot_ast_pos cbap
-		left join ratedetail d
+		left join ratedetailWithTd d
 		on cbap.asset_code=d.assetId
+		and (d.passetid is null or cbap.plan_asset_id=d.passetid)
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
 		union all
+		<!--母资管计划收益率-->
 		select distinct cbdc.p_asset_id as assetId,
 		case when sum(nvl(cbdc.pos_amt,0))!=0 then
 		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
@@ -2710,6 +3657,7 @@ with cj as(
 		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join(select distinct cabd.mdate as mdate,cabd.asset_id
@@ -2729,6 +3677,7 @@ with cj as(
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
 	  </if>
@@ -2744,10 +3693,12 @@ with cj as(
 		</if>
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
 		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
-		　<if test="org != null  and org!=''">
+		and cmap.ASSETVALUE_A!=0　
+		<if test="org != null  and org!=''">
 		　and di.institution_code=#{org, jdbcType=VARCHAR}
 		　　　</if>
 		)
@@ -2897,6 +3848,7 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
+		<!--直投资产收益率-->
 		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
@@ -3109,23 +4061,255 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
+		</if>
+		and cr.change_type in ('07','09')
+		),
+		<!--通过通道投资的资产的收益率-->
+		ratedetailWithTd as(
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
+		select distinct cr.asset_id as assetId,null passetid,cr.asset_rate as assetRate
+		from chb_asset_rate cr
+		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
+		or (cr.finprod_type2 ='F17' and cr.profit_Type='02')
+		or (cr.finprod_type2 ='XJ' and cr.change_type='05')
+		)
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+
+		union all
+
+		<!-- 计划类净值型，非货币基金 -->
+		select distinct cr.asset_id as assetId,fjycr.passetid,
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+
+		end as assetRate
+		from chb_asset_rate cr
+		<!--年初单位净值-->
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and cr1.change_type='02'
+		)fcr
+		on cr.asset_id=fcr.asset_id
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02'　
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		and cr1.change_type='03'
+		group by cr1.asset_id
+		)bonus
+		on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,cdeal.passetid,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr1.asset_id=cdeal.assetid
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>cdeal.dealmindate
+		and cr1.change_type='03'
+		group by cr1.asset_id,cdeal.passetid
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
+		and fjycr.passetid=jybonus.passetid
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.change_type='02')
+		and cr.change_type='02'
+		union all
+		<!--计划货币，货币基金-->
+
+		select
+		t.asset_id  as assetId,t.passetid as passetid,
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		end as assetRate
+		from(select cr.asset_id,cr.asset_rate,fjycr.change_date,fjycr.passetid
+		from  chb_asset_rate cr
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		cr.change_date as crfjdate,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.crfjdate))
+		)t
+		group by t.asset_id,t.change_date,t.passetid
+
+		union all
+		<!--可转债 -->
+		select cr.asset_id as assetId,
+		case when fjycr.change_date is not null then fjycr.passetid else ffjycr.passetid end as passetid,
+		case when fjycr.change_date is not null
+		then  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-fjycr.change_date+1)*365
+		else  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-ffjycr.change_date+1)*365
+		end as assetRate
+
+		from chb_asset_rate cr
+		left join chb_asset_rate cr1
+		on cr.asset_id=cr1.asset_id
+		and cr1.cost_amt !=0
+		<!--各通道各资产首次买入日单位净值,本年内-->
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)ffjycr
+		on cr.asset_id=ffjycr.asset_id
+		where 1=1
+		and (cr.profit_Type='013' or cr.finprod_type2='F10')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and fc1.change_type in ('07','09')
+		)
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
 		select detail.assetId as assetId,detail.assetRate as assetRate
 		from ratedetail detail
 		union all
+		<!--通道收益率-->
 		select distinct cbap.plan_asset_id as assetId,
 		case when sum(nvl(cbap.pos_num,0))!=0 then
 		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
 		else 0 end as assetRate
 		from chb_bot_ast_pos cbap
-		left join ratedetail d
+		left join ratedetailWithTd d
 		on cbap.asset_code=d.assetId
+		and (d.passetid is null or cbap.plan_asset_id=d.passetid)
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
 		union all
+		<!--母资管计划收益率-->
 		select distinct cbdc.p_asset_id as assetId,
 		case when sum(nvl(cbdc.pos_amt,0))!=0 then
 		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
@@ -3163,6 +4347,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
   			left join chb_asset_info info
   　　　　　　on cmap.asset_code=info.asset_code
 		    left join mst_customer_info_add mst
@@ -3172,6 +4357,7 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -3189,6 +4375,7 @@ with cj as(
 		left join CHB_MONTH_ASSET_POSITION scmap
 		on cmap.asset_code=scmap.asset_code
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
+		and cmap.prod_id=scmap.prod_id
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
@@ -3198,6 +4385,7 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -3234,6 +4422,7 @@ with cj as(
 			resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
 			parameterType="map">
 
+		<!--直投资产收益率-->
 		with  ratedetail as(
 		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
 		select distinct cr.asset_id as assetId,cr.asset_rate as assetRate
@@ -3446,23 +4635,255 @@ with cj as(
 		and fc1.change_type in ('07','09')
 		)
 		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
-		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0)
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and fc1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (fc1.scino='999999' or fc1.scino is null) and fc1.change_type in ('10','11')
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透,此处为直投-->
+			and cr1.change_type in ('10','11')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为直投-->
+			and (cr1.scino='999999' or cr1.scino is null) and cr1.change_type in ('10','11')
+		</if>
+		and cr.change_type in ('07','09')
+		),
+		<!--通过通道投资的资产的收益率-->
+		 ratedetailWithTd as(
+		<!-- 债券，项目，存款，回购，债券借贷，现金，计划利率的收益率,回购 -->
+		select distinct cr.asset_id as assetId,null passetid,cr.asset_rate as assetRate
+		from chb_asset_rate cr
+		where 1=1 and (cr.finprod_type2 in ('F01','F18','F07','F02','F03','F04','F05','F15','F08','F09')
+		or (cr.finprod_type2 ='F17' and cr.profit_Type='02')
+		or (cr.finprod_type2 ='XJ' and cr.change_type='05')
+		)
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}　and fc1.asset_rate is not null)
+
+		union all
+
+		<!-- 计划类净值型，非货币基金 -->
+		select distinct cr.asset_id as assetId,fjycr.passetid,
+		case when fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then (cr.asset_rate-fcr.asset_rate+nvl(bonus.rateSum,0))/fcr.asset_rate/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1) *365
+		when fjycr.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-fjycr.change_date+1) !=0
+		then (cr.asset_rate-fjycr.asset_rate+nvl(jybonus.rateSum,0))/fjycr.asset_rate/(#{endDate,jdbcType=DATE}-fjycr.change_date+1) *365
+
+		end as assetRate
+		from chb_asset_rate cr
+		<!--年初单位净值-->
+		left join (select cr1.asset_rate,cr1.change_date,cr1.asset_id from chb_asset_rate cr1
+		where cr1.finprod_Type2 in ('F17','F06') and cr1.profit_Type in ('01')
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE}-1　and fc1.change_type='02') and cr1.change_type='02'
+		)fcr
+		on cr.asset_id=fcr.asset_id
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01') and cr.change_type='02'　
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select cr1.asset_id,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date between #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		and cr1.change_type='03'
+		group by cr1.asset_id
+		)bonus
+		on cr.asset_id =bonus.asset_id
+		left join (
+		select cr1.asset_id,cdeal.passetid,sum(nvl(cr1.ASSET_BONUSREINVEST_RATE,0)) as rateSum
+		from chb_asset_rate cr1
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr1.asset_id=cdeal.assetid
+		where 1=1 and cr1.trade_id is not null and cr1.status='E'
+		and cr1.change_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		and cr1.change_date<![CDATA[>=]]>cdeal.dealmindate
+		and cr1.change_type='03'
+		group by cr1.asset_id,cdeal.passetid
+		)jybonus
+		on cr.asset_id =jybonus.asset_id
+		and fjycr.passetid=jybonus.passetid
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('01')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.change_type='02')
+		and cr.change_type='02'
+		union all
+		<!--计划货币，货币基金-->
+
+		select
+		t.asset_id  as assetId,t.passetid as passetid,
+		case when t.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-#{yearStartDate,jdbcType=DATE}+1)*365
+		when t.change_date>#{yearStartDate,jdbcType=DATE} and (#{endDate,jdbcType=DATE}-t.change_date+1)!=0
+		then sum(nvl(t.asset_rate,0))/10000/(#{endDate,jdbcType=DATE}-t.change_date+1)*365
+		end as assetRate
+		from(select cr.asset_id,cr.asset_rate,fjycr.change_date,fjycr.passetid
+		from  chb_asset_rate cr
+		<!--各通道各资产首次买入日单位净值-->
+		left join (
+		select t.* from (
+		select cr.asset_rate ,cdeal.passetid,cr.asset_id as asset_id,cdeal.dealmindate as change_date,
+		cr.change_date as crfjdate,
+		row_number() over(partition by cdeal.passetid,cr.asset_id order by cr.change_date desc) idx
+		from  chb_asset_rate cr
+		left join (select fc1.plan_asset_id as passetid,fc1.asset_code as assetid,min(fc1.pos_date) as dealmindate
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by fc1.plan_asset_id,fc1.asset_code)cdeal
+		on cr.asset_id=cdeal.assetid
+		where cr.change_date<![CDATA[<]]>cdeal.dealmindate
+		and  cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.status='E')t where t.idx=1
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		where 1=1 and cr.finprod_Type2 in ('F17','F06') and cr.profit_Type in ('03')
+		and cr.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and ((fjycr.change_date<![CDATA[<=]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=#{yearStartDate,jdbcType=DATE} )
+		or (fjycr.change_date<![CDATA[>]]>#{yearStartDate,jdbcType=DATE} and cr.change_date>=fjycr.crfjdate))
+		)t
+		group by t.asset_id,t.change_date,t.passetid
+
+		union all
+		<!--可转债 -->
+		select cr.asset_id as assetId,
+		case when fjycr.change_date is not null then fjycr.passetid else ffjycr.passetid end as passetid,
+		case when fjycr.change_date is not null
+		then  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-fjycr.change_date+1)*365
+		else  (cr.close_price_full-cr1.cost_amt)/cr1.cost_amt/(#{endDate,jdbcType=DATE}-ffjycr.change_date+1)*365
+		end as assetRate
+
+		from chb_asset_rate cr
+		left join chb_asset_rate cr1
+		on cr.asset_id=cr1.asset_id
+		and cr1.cost_amt !=0
+		<!--各通道各资产首次买入日单位净值,本年内-->
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date between   #{yearStartDate,jdbcType=DATE} and #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)fjycr
+		on cr.asset_id=fjycr.asset_id
+		left join (
+		select fc1.plan_asset_id as passetid,fc1.asset_code as asset_id,min(fc1.pos_date) as change_date
+		from chb_bot_ast_pos fc1
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on 'F28_'||fc1.plan_asset_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'FINASSET12'
+		</if>
+		where 1=1
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		and fc1.pos_date <![CDATA[<=]]> #{endDate,jdbcType=DATE}
+		group by fc1.plan_asset_id,fc1.asset_code
+		)ffjycr
+		on cr.asset_id=ffjycr.asset_id
+		where 1=1
+		and (cr.profit_Type='013' or cr.finprod_type2='F10')
+		and cr.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+		and fc1.change_type in ('07','09')
+		)
+		and cr1.change_date=(select max(change_date) from chb_asset_rate fc1 where fc1.asset_id= cr1.asset_id
+		and fc1.change_date<![CDATA[<=]]>#{endDate,jdbcType=DATE} and fc1.cost_amt !=0
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and fc1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and fc1.change_type in ('08','10')
+			and ((cr1.scino !='999999' and fc1.scino= cr1.scino) or cr1.scino is null)
+		</if>
+		)
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			<!--穿透，此处为通道-->
+			and cr1.change_type in ('08','10')
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			and cr1.change_type in ('08','10')
+			<!--不穿透，需区分通道和非通道，此处为通道-->
+			and ((cr1.scino!='999999' and ((cr1.scino='F28_'||fjycr.passetid and  fjycr.change_date is not null)
+			or (fjycr.change_date is not null and cr1.scino='F28_'||ffjycr.passetid)))
+			or cr1.scino is null)
+		</if>
 		and cr.change_type in ('07','09')
 		),
 		rate as(
 		select detail.assetId as assetId,detail.assetRate as assetRate
 		from ratedetail detail
 		union all
+		<!--通道收益率-->
 		select distinct cbap.plan_asset_id as assetId,
 		case when sum(nvl(cbap.pos_num,0))!=0 then
 		sum(nvl(cbap.pos_num,0) * d.assetRate )/sum(nvl(cbap.pos_num,0))
 		else 0 end as assetRate
 		from chb_bot_ast_pos cbap
-		left join ratedetail d
+		left join ratedetailWithTd d
 		on cbap.asset_code=d.assetId
+		and (d.passetid is null or cbap.plan_asset_id=d.passetid)
 		where cbap.pos_date=#{endDate,jdbcType=DATE} and  d.assetRate is not null and d.assetRate!=0
 		group by cbap.plan_asset_id
 		union all
+		<!--母资管计划收益率-->
 		select distinct cbdc.p_asset_id as assetId,
 		case when sum(nvl(cbdc.pos_amt,0))!=0 then
 		sum(nvl(cbdc.pos_amt,0) * d.assetRate )/sum(nvl(cbdc.pos_amt,0))
@@ -3501,6 +4922,7 @@ with cj as(
   　　　　　　on cmap.asset_code=info.asset_code
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		    left join mst_customer_info_add mst
 		    on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
@@ -3509,6 +4931,7 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -3526,6 +4949,7 @@ with cj as(
 		　　　　　　on cmap.asset_code=info.asset_code
 		left join CHB_MONTH_ASSET_POSITION lastcmap
 		on cmap.asset_code=lastcmap.asset_code
+		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		left join mst_customer_info_add mst
 		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
@@ -3534,6 +4958,7 @@ with cj as(
 		and  (cmap.ASSETTYPE2 in ('1102','1112','1106','2401','1303','2403','2402','2499','2601','2602','2604',
 		'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620','1701','1703',
 		'1704','1706','1702','1705') or (cmap.ASSETTYPE2='1209'  <!--and info.ISFBZB!=01-->))
+		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>

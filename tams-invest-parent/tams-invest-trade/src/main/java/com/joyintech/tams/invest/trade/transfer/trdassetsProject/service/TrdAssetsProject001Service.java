@@ -576,6 +576,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
             projListInfoDto.setInvestRate(dto.getInvestRate());
             projListInfoDto.setUnitCprice(dto.getUnitCprice());
             projListInfoDto.setUnitFprice(dto.getUnitFprice());
+            projListInfoDto.setChlId(dto.getChlId());
             if (StringUtil.isBlank(projListInfoDto.getTradeId())) {
                 if (baseGetBusinessId != null) {
                     BussinessCodeParameter codeParameter = genBizCode(dto);
@@ -893,6 +894,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         trdProductDeal.setMdate(entity.getMdate());//到期日
         trdProductDeal.setSettleDate(entity.getSettleDate());//交割日期
         trdProductDeal.setCcy(entity.getCcy());
+        trdProductDeal.setChlId(entity.getChlId());
         trdProductDeal.setUnitCprice(entity.getUnitCprice());//单位净价
         trdProductDeal.setUnitInt(entity.getUnitIntAmt());//单位利息
         trdProductDeal.setUnitFprice(entity.getUnitFprice());//单位全价
@@ -924,6 +926,7 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
             trdProductDeal.setRemark("项目类资产转入");
         }
         trdProductDeal.setTrader(LoginUserUtil.getUserName());
+        trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
         return trdProductDeal;
     }
     @Override
@@ -1045,17 +1048,19 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
 
         trdProductDealTotal.setRemark(entity.getRemark());
         trdProductDealTotal.setChlId(entity.getChlId());
-        if(entity.getPs().equals(DictCodeList.交易方向_卖出.getValue())) {
-            //还本不带息的资产才保存
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("finprodId", entity.getFinprodId());
-            param.put("settleDate", entity.getSettleDate());
-            Map<String, Object> result = findRepayFlag(param);
-            if (result.get("repayIntFlag") != null && result.get("repayIntFlag").equals("N")) {
-                trdProductDealTotal.setIspayUnpaidint("Y");
-            }
-        }
-        trdProductDealTotal.setPayUnpaidintAmt(entity.getSplitIntAmt());//利息总额
+//        if(entity.getPs().equals(DictCodeList.交易方向_卖出.getValue())) {
+//            //还本不带息的资产才保存
+//            Map<String, Object> param = new HashMap<String, Object>();
+//            param.put("finprodId", entity.getFinprodId());
+//            param.put("settleDate", entity.getSettleDate());
+//            Map<String, Object> result = findRepayFlag(param);
+//            if (result.get("repayIntFlag") != null && result.get("repayIntFlag").equals("N")) {
+//                trdProductDealTotal.setIspayUnpaidint("Y");
+//            }
+//        }
+//        trdProductDealTotal.setPayUnpaidintAmt(entity.getSplitIntAmt());//利息总额
+        trdProductDealTotal.setPayUnpaidintAmt(new BigDecimal("0"));//支付未支付利息
+        trdProductDealTotal.setIspayUnpaidint("N");// 是否转让还本未支付利息
         trdProductDealTotal.setPortfolioId(entity.getActPortfolioId());//存子组合
         return trdProductDealTotal;
     }
@@ -1092,5 +1097,16 @@ public class TrdAssetsProject001Service extends BaseService<TrdAssetsProject001D
         trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
         trdProductDealAdd.setWorkflowId(entity.getWorkflowId());
         return trdProductDealAdd;
+    }
+	
+	 /**
+     * 获取处于流程中的持仓（但是未记录在在持仓流水中）
+     * @return 处于流程中的持仓（但是未记录在在持仓流水中）
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal selectWflAmtAsset(Map<String,Object> map){
+        return simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/trade/transfer/trdassetsproject/TrdAssetsProject/selectWflAmtAsset",map,
+        		BigDecimal.class);
     }
 }

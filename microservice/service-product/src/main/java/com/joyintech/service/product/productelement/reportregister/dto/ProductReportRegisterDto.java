@@ -396,6 +396,15 @@ public class ProductReportRegisterDto extends BaseEntity {
      * 投资管理费率%
      */
     private String repInvestFeeRate;
+    
+    /**
+     * 新老产品标记
+     */
+    private String isFhxgcp;
+    /**
+     * 是否养老理财
+     */
+    private String isYllccp;
 
     /**
      * 取得 金融产品代码
@@ -1600,4 +1609,20 @@ public class ProductReportRegisterDto extends BaseEntity {
     public void setRepInvestFeeRate(String repInvestFeeRate) {
         this.repInvestFeeRate = repInvestFeeRate == null ? null : repInvestFeeRate.trim();
     }
+
+	public String getIsFhxgcp() {
+		return isFhxgcp;
+	}
+
+	public void setIsFhxgcp(String isFhxgcp) {
+		this.isFhxgcp = isFhxgcp;
+	}
+
+	public String getIsYllccp() {
+		return isYllccp;
+	}
+
+	public void setIsYllccp(String isYllccp) {
+		this.isYllccp = isYllccp;
+	}
 }

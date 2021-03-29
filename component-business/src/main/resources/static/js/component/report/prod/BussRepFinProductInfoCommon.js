@@ -363,5 +363,12 @@
                 	};
 		}
 //add by yangwenjun 20201117 草稿箱功能行内识别码带出中债报送信息相关处理 end
+        
+        //系统参数SVR_IS_SUBSIDIARY 01 是子公司时   ‘新老产品标记’置灰置空
+        if(svrIsSubsidiary == '01'){
+        	getElementById('isFhxgcp').prop('disabled', true);        
+        }else{  
+        	getElementById('isFhxgcp').prop('disabled',false);      
+        }
 	});
 }());

@@ -81,6 +81,9 @@
 			    FIN.FINPROD_ID = FINTYPE.FINPROD_ID	
 		<where>
 			PP.INVEST_YESORNO = 'Y'
+			<if test="status != null and status.equals(validStatus_01)">
+				and (wfl.IS_CANCEL = 'Y' or wfl.is_swap_transaction is null or wfl.is_swap_transaction='N')
+			</if>
 			<if test="userId != null and userId != ''">
 				AND (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
 				OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
@@ -223,6 +226,7 @@
 			LEFT JOIN PTL_PORTFOLIO PP ON WFLDEAL.PORTFOLIO_ID = PP.PORTFOLIO_ID
 		<where>
 			PP.INVEST_YESORNO = 'Y'
+			and (not (wfl.is_cancel = 'N' and wfl.is_swap_transaction='Y'))
 			<if test="userId != null and userId != ''">
 				AND (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId})
 				OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{userId}))
@@ -417,7 +421,19 @@
 			AND FINPROD_ID = #{finprodId}
             ORDER BY UPDATE_TIME DESC) T
             WHERE ROWNUM = 1)
-		   and  FINR.EFF_DATE  <![CDATA[<=]]> #{sysDateRate}
+		   and  FINR.EFF_DATE 
+		   		<![CDATA[<=]]>
+				CASE WHEN (SELECT 
+								VDATE 
+							FROM FIN_PRODUCT 
+							WHERE FINPROD_ID = #{finprodId}
+							) >= #{sysDateRate}
+					THEN (SELECT 
+								VDATE 
+							FROM FIN_PRODUCT 
+							WHERE FINPROD_ID = #{finprodId}
+						  )
+					ELSE #{sysDateRate} END
             ORDER BY EFF_DATE DESC) RULE
             WHERE FIN.FINPROD_ID = #{finprodId} AND ROWNUM  = 1
 	</select>
@@ -646,7 +662,25 @@
 				) T  WHERE  T.RN <![CDATA[<=]]> 1 ) FCI
 				ON FCCR.CASH_ID = FCI.CASH_ID
 				WHERE    fci.FINPROD_ID = FIN_PRODUCT.finprod_id
-				and  TO_CHAR(FCCR.EFF_DATE,'yyyy-MM-dd')   <![CDATA[<=]]> #{platDate}
+				<if test="initValue != null and initValue != ''">
+					and  TO_CHAR(FCCR.EFF_DATE,'yyyy-MM-dd')   <![CDATA[<=]]>
+					CASE WHEN (SELECT
+					VDATE
+					FROM FIN_PRODUCT
+					WHERE FINPROD_MARKET_ID = #{initValue}
+					AND FINPROD_TYPE2 = 'F07'/*存款类资产*/
+					) >= TO_DATE(#{platDate},'yyyy-MM-dd')
+					THEN (SELECT
+					TO_CHAR(VDATE,'yyyy-MM-dd')
+					FROM FIN_PRODUCT
+					WHERE FINPROD_MARKET_ID = #{initValue}
+					AND FINPROD_TYPE2 = 'F07'/*存款类资产*/
+					)
+					ELSE #{platDate} END
+				</if>
+				<if test="initValue == null or initValue == ''">
+					and TO_CHAR(FCCR.EFF_DATE,'yyyy-MM-dd')   <![CDATA[<=]]> #{platDate}
+				</if>
 				)
 			</if>
 			AND FIN_PRODUCT.FINPROD_TYPE2 not in ('F01','F06','F10')

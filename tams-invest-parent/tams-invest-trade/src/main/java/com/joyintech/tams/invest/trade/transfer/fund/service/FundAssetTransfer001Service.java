@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.trade.transfer.fund.dto.FundAssetTransfer001Dto;
+import com.joyintech.tams.invest.trade.transfer.lendtransfer.service.LendTransfer001Service;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -72,6 +73,9 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
     private JasperUtil jasperUtil;
     @Autowired
     private IPlatformDate iPlatformDate;
+    
+    @Autowired
+    private LendTransfer001Service lendTransfer001Service;
 
     @Override
     public void doComplete(FundAssetTransfer001Dto dto, OperationType operationType) {
@@ -192,6 +196,13 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 inputDto.setTrdProductDeal(input.getTrdProductDeal());
                 // 通道交易 新增 强成西 2019/03/26 start
                 inputDto.setTrdProductDealAdd(input.getTrdProductDealAdd());
+                if (!StringUtil.isEmptyList(input.getBussTrdTransferOrder())) {
+                    for (BussTrdTransferOrderDto bttod : input.getBussTrdTransferOrder()) {
+                        stlPayOrder = new StlPayOrdersDto();
+                        BeanUtil.copyPropertiesIgnoreNull(stlPayOrder, bttod);
+                        inputDto.setStlPayOrders(stlPayOrder);
+                    }
+                }
                 // 通道交易 新增 强成西 2019/03/26 end
                 AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
                 // 一体化对应etliu end
@@ -307,6 +318,13 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
                 // 通道交易 新增 强成西 2019/03/26 start
                 outputDto.setTrdProductDealAdd(output.getTrdProductDealAdd());
                 // 通道交易 新增 强成西 2019/03/26 end
+                if (!StringUtil.isEmptyList(output.getBussTrdTransferOrder())) {
+                    for (BussTrdTransferOrderDto bttod : output.getBussTrdTransferOrder()) {
+                        stlPayOrder1 = new StlPayOrdersDto();
+                        BeanUtil.copyPropertiesIgnoreNull(stlPayOrder1, bttod);
+                        outputDto.setStlPayOrders(stlPayOrder1);
+                    }
+                }
                 AllTradeCommonUtil.handleAfterTradeComplete(outputDto);
 
                 jasperExecute(input, false);
@@ -372,7 +390,16 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         }
         dto.setTradePrinOrg(tradePrinOrg);
         //剩余可转仓份额
-        dto.setRollablePrin(tradePrinOrg);
+        //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+        param.put("searchDate", DateUtil.getSysDate());
+        BigDecimal wflAmt = lendTransfer001Service.selectWflAmtLend(param);
+        if(wflAmt != null) {
+    		BigDecimal newRollablePrin = ArithmeticUtil.doAdd(tradePrinOrg,wflAmt);
+    		dto.setRollablePrin(newRollablePrin);
+    	}else {               		
+    		dto.setRollablePrin(tradePrinOrg);
+    	}
+        //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
         //金融产品代码
         dto.setFinprodIdOrg((String) param.get("finprodId"));
         //原组合代码
@@ -387,6 +414,8 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         key.setFinprodId((String) param.get("finprodId"));
         key.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
         FinProductType type = bussCommonMapperDelegateService.selectByMultiPrimaryKey(FinProductTypeMapper.class,key,FinProductType.class);
+        FinProduct finProduct = bussCommonMapperDelegateService.selectByMultiPrimaryKey(FinProductMapper.class,(String) param.get("finprodId"),FinProduct.class);
+        dto.setTradeMarket(finProduct.getTradeMarket());
         if(StringUtil.isNotEmpty(type)){
             dto.setFundType(type.getType6());
         }
@@ -695,6 +724,8 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         trdProductDeal.setTrader(entity.getTrader());
         //通道代码
         trdProductDeal.setChlId(entity.getChlId());
+
+        trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
         //备注
         input.setRemark("基金类资产交易转出");
 
@@ -892,6 +923,7 @@ public class FundAssetTransfer001Service extends BaseService<FundAssetTransfer00
         trdProductDeal.setTrader(entity.getTrader());
         //通道代码
         trdProductDeal.setChlId(entity.getChlId());
+        trdProductDeal.setIsSwapTransaction(DictCodeList.是否_是.getValue());
         //备注
         output.setRemark("基金类资产交易转入");
 

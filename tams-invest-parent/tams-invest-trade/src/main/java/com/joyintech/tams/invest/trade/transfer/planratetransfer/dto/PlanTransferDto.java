@@ -484,7 +484,18 @@ public class PlanTransferDto extends WflTrdProductDeal implements ProcessEntity 
     public void setVDate(Date vDate) {
         this.vDate = vDate;
     }
-    
+    /**
+     * 转仓编号
+     */
+    private String zcId;
+
+    public String getZcId() {
+        return zcId;
+    }
+
+    public void setZcId(String zcId) {
+        this.zcId = zcId;
+    }
     
 	
 }

@@ -7002,7 +7002,7 @@
         NULL FUND_INVEST_ASSET,/*基金投资资产*/
         NULL IN_ASSET_TYPE, /*行内资产类别*/
         NULL IN_ASSET_TYPE_CMM, /*行内资产类别说明*/
-        NULL REMARK, /*备注*/
+        DECODE(FTP.HOLD_PURPOSE, '99', '无', NULL) REMARK, /*备注-若持有目的为其他，备注默认为：无*/
         NULL IS_UNDER_ASSET, /*是否底层资产*/
         NULL IS_GOVERN_FUND, /*是否属于政府投资基金*/
         NULL GOVERN_INVEST_FUND, /*政府投资基金投向*/

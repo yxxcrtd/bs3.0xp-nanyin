@@ -265,6 +265,12 @@
 			$("#repMname").val('').trigger('change');
 			$("#repMname").attr("disabled",true);
 		}
+		 //系统参数SVR_IS_SUBSIDIARY 01 是子公司时   ‘新老产品标记’置灰置空
+        if(svrIsSubsidiary == '01'){
+        	$("#isFhxgcp").attr("disabled",true);     
+        }else{  
+        	$("#isFhxgcp").attr("disabled",false);    
+        }
 	}
 	$(function() {
 		star();

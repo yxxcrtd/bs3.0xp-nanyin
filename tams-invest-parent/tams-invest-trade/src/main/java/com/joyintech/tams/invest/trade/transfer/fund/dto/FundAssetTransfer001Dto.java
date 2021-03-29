@@ -994,4 +994,17 @@ public class FundAssetTransfer001Dto extends TrdProductDeal implements ProcessEn
     public void setFundType(String fundType) {
         this.fundType = fundType;
     }
+
+    /**
+     * 转仓编号
+     */
+    private String zcId;
+
+    public String getZcId() {
+        return zcId;
+    }
+
+    public void setZcId(String zcId) {
+        this.zcId = zcId;
+    }
 }

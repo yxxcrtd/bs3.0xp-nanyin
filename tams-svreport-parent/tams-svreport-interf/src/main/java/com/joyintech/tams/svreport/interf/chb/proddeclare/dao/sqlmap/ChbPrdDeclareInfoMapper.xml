@@ -73,6 +73,7 @@
     <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
     <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
     <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
+    <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     DECLARE_UUID, PROD_INS_ID, PROD_NAME, ISSUE_PARTY_ID, PROD_BRAND, PROD_STAGE, APPROVER_ID, 
@@ -86,7 +87,7 @@
     CUS_REDEEM_FLAG, INVEST_FEE_RATE, CONT_MODE, COOPERATION_NAME, INVEST_PRIN_DATE, 
     INVEST_PROF_DATE, CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, INV_TYPE_RAT, REMARK, STATUS, 
     CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, WORKFLOW_ID, 
-    DATASOURCE
+    DATASOURCE, IS_FHXGCP
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -122,7 +123,7 @@
       INV_TYPE_RAT, REMARK, STATUS, 
       CREATE_USER, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME, ORG_CODE, DEPT_CODE, 
-      WORKFLOW_ID, DATASOURCE)
+      WORKFLOW_ID, DATASOURCE, IS_FHXGCP)
     values (#{declareUuid,jdbcType=CHAR}, #{prodInsId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
       #{issuePartyId,jdbcType=VARCHAR}, #{prodBrand,jdbcType=VARCHAR}, #{prodStage,jdbcType=DECIMAL}, 
       #{approverId,jdbcType=VARCHAR}, #{approverName,jdbcType=VARCHAR}, #{designerId,jdbcType=VARCHAR}, 
@@ -146,7 +147,7 @@
       #{invTypeRat,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
       #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
-      #{workflowId,jdbcType=VARCHAR}, #{datasource,jdbcType=VARCHAR})
+      #{workflowId,jdbcType=VARCHAR}, #{datasource,jdbcType=VARCHAR}, #{isFhxgcp,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto" >
     insert into CHB_PRD_DECLARE_INFO
@@ -364,6 +365,9 @@
       <if test="datasource != null" >
         DATASOURCE,
       </if>
+      <if test="isFhxgcp != null" >
+        IS_FHXGCP,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="declareUuid != null" >
@@ -578,6 +582,9 @@
       </if>
       <if test="datasource != null" >
         #{datasource,jdbcType=VARCHAR},
+      </if>
+      <if test="isFhxgcp != null" >
+        #{isFhxgcp,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -794,6 +801,9 @@
       <if test="datasource != null" >
         DATASOURCE = #{datasource,jdbcType=VARCHAR},
       </if>
+      <if test="isFhxgcp != null" >
+        IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+      </if>
     </set>
     where DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
   </update>
@@ -868,7 +878,8 @@
       ORG_CODE = #{orgCode,jdbcType=VARCHAR},
       DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
       WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
-      DATASOURCE = #{datasource,jdbcType=VARCHAR}
+      DATASOURCE = #{datasource,jdbcType=VARCHAR},
+      IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR}
     where DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
   </update>
   <select id="selectRepDeclare" parameterType="java.util.Map"
@@ -940,7 +951,8 @@
       D.REP_CREDIT_TYPE CREDIT_TYPE  ,  --<!--  产品增信机构类型   -->
       D.REP_CREDIT_MODE CREDIT_MODE  ,  --<!--  产品增信形式   -->
       D.REP_INV_TYPE_RAT INV_TYPE_RAT  ,  --<!--  投资资产种类及比例   -->
-      D.REP_REMARK REMARK,    --<!--  备注   -->               
+      D.REP_REMARK REMARK,    --<!--  备注   -->
+      D.IS_FHXGCP IS_FHXGCP, --<!-- 是否合规新产品 -->
 	  nvl(nvl(D.UPDATE_TIME,D.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd')) AS UPDATE_TIME    
       FROM REP_PROD_DECLARE D
       left join FIN_PRODUCT_ADD AD on D.REP_FINPROD_ID = AD.FINPROD_ID
@@ -1023,7 +1035,8 @@
 		#{dto.orgCode,jdbcType=VARCHAR} ORG_CODE,
 		#{dto.deptCode,jdbcType=VARCHAR} DEPT_CODE,
 		#{dto.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
-		#{dto.datasource,jdbcType=VARCHAR} DATASOURCE
+		#{dto.datasource,jdbcType=VARCHAR} DATASOURCE,
+        #{dto.isFhxgcp,jdbcType=VARCHAR} IS_FHXGCP
 		from dual
 		</foreach>
 		) TEMP
@@ -1100,7 +1113,8 @@
       CII.ORG_CODE = TEMP.ORG_CODE,
       CII.DEPT_CODE = TEMP.DEPT_CODE,
       CII.WORKFLOW_ID = TEMP.WORKFLOW_ID,
-      CII.DATASOURCE = TEMP.DATASOURCE
+      CII.DATASOURCE = TEMP.DATASOURCE,
+      CII.IS_FHXGCP = TEMP.IS_FHXGCP
 		<!-- 未匹配到这插入 -->
 	 WHEN NOT MATCHED THEN
 	 INSERT (DECLARE_UUID, PROD_INS_ID, PROD_NAME, 
@@ -1126,7 +1140,7 @@
       INV_TYPE_RAT, REMARK, STATUS, 
       CREATE_USER, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME, ORG_CODE, DEPT_CODE, 
-      WORKFLOW_ID, DATASOURCE
+      WORKFLOW_ID, DATASOURCE, IS_FHXGCP
 		)
 	 values(
 	  TEMP.DECLARE_UUID, 
@@ -1199,7 +1213,8 @@
       TEMP.ORG_CODE, 
       TEMP.DEPT_CODE, 
       TEMP.WORKFLOW_ID, 
-      TEMP.DATASOURCE
+      TEMP.DATASOURCE,
+      TEMP.IS_FHXGCP
 		)
 	</insert>
 </mapper>

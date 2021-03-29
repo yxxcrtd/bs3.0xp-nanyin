@@ -474,7 +474,8 @@ public class FinProductDurDealService extends BaseService {
                     param.put("finprodid",resultDto.getFinprodId());
                     param.put("ps",resultDto.getPs());
                     param.put("confirmDate",resultDto.getConfirmDate());
-                    resultDto.setYield(finProductDurDealMapper.selectYield(param).toString());
+                    BigDecimal yield = finProductDurDealMapper.selectYield(param);
+                    resultDto.setYield(yield == null ? null : yield.toString());
                 }
     		}
     		else{

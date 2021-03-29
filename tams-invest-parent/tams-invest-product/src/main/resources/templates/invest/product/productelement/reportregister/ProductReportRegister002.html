@@ -685,6 +685,36 @@
 						</div>
 					</div>
 				</div>
+					<div class="layui-form-item">					
+						<div class="form-inline-wrap">
+							<label class="layui-form-label form-label-wrap"
+								   data-th-text="#{BussRepFinProductInfo.isFhxgcp}">新老产品标记</label>
+							<div class="layui-input-inline input-inline">
+								<select th:name="isFhxgcp"
+										th:id="isFhxgcp"
+										class="layui-input form-input input-select"
+										data-th-initValue= "${entity?.isFhxgcp}"
+										data-th-placeholder="#{SysCommon.placeholder}"
+										data-th-data-result="${IS_FHXGCP}" required>
+								</select>
+							</div>
+						</div>																	
+						
+						<div class="form-inline-wrap">
+							<label class="layui-form-label form-label-wrap"
+								   data-th-text="#{BussRepFinProductInfo.isYllccp}">是否养老理财</label>
+							<div class="layui-input-inline input-inline">
+								<select th:name="isYllccp"
+										th:id="isYllccp"
+										class="layui-input form-input input-select"
+										data-th-initValue= "${entity?.isYllccp}"
+										data-th-placeholder="#{SysCommon.placeholder}"
+										data-th-data-result="${SVR_YES_OR_NO}" required>
+								</select>
+							</div>
+						</div>
+						
+					</div>
 				<div class="layui-form-item">
 					<div class="form-inline-wrap">
 						<label class="layui-form-label form-label-wrap"
@@ -737,6 +767,7 @@
 			var repRaiseCcyCNY = /*[[${repRaiseCcyCNY}]]*/;
 			var YES = /*[[${YES}]]*/'Y'; // 数据字典.是否_是
 			var NO = /*[[${NO}]]*/'N'; // 数据字典.是否_否
+			var svrIsSubsidiary = /*[[${svrIsSubsidiary}]]*/; // 系统参数_是否子公司
 		</script>
 		<script
 			data-th-src="@{/js/invest/product/productelement/reportregister/ProductReportRegister002.js}"

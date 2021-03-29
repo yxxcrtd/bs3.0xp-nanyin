@@ -97,6 +97,7 @@ $(function() {
                 funAssetTransferDtoListTable.deleteRow(index);
                 refreshCashAndBalance();
                 calRollablePrin();
+                $("#fundAssetTransfer001_rollablePrin").val(Number($("#fundAssetTransfer001_rollablePrin").val()) + Number(data.tradePrin)).trigger('blur');                
             });
         }
     });
@@ -198,6 +199,7 @@ $(function() {
                     listInfoDtos= result.data.funAssetTransferDtoList;
                     funAssetTransferDtoListTable.addRow(listInfoDtos[0]);
                     calRollablePrin();
+                    $("#fundAssetTransfer001_rollablePrin").val(Number($("#fundAssetTransfer001_rollablePrin").val()) - Number($("#fundAssetTransfer001_tradePrin").val())).trigger('blur');      
                     $("#fundAssetTransfer001_portfolioId").val('').trigger("change").trigger('blur');
                     portfolioIdChange();
                 }
@@ -209,6 +211,7 @@ $(function() {
         var rollSumPrin=0;
         var rollSumTradeAmt=0;
         var tradePrinOrg = $("#fundAssetTransfer001_tradePrinOrg").val();
+        //var rollablePrin = $("#fundAssetTransfer001_rollablePrin").val();
         $.each(funAssetTransferDtoListTable.getAllRows(),function (index,data) {
             if($("#fundAssetTransfer001_portfolioId").val() && $("#fundAssetTransfer001_portfolioId").val()==data.portfolioId){
                 rollSumTradeAmt = JoyinMath.doAdd(rollSumTradeAmt,data.tradeAmt,2);
@@ -216,9 +219,10 @@ $(function() {
             rollSumPrin = JoyinMath.doAdd(rollSumPrin,data.tradePrin,2);
         });
         var avalibleCash = $("#bussTrdAvailableCashQuery_avalibleCash").val();
-        $("#fundAssetTransfer001_rollablePrin").val(JoyinMath.doMinus(tradePrinOrg,rollSumPrin,2)).trigger("blur");
+        //$("#fundAssetTransfer001_rollablePrin").val(JoyinMath.doMinus(rollablePrin,rollSumPrin,2)).trigger("blur");
         $("#bussTrdAvailableCashQuery_avalibleCash").val(JoyinMath.doMinus(avalibleCash,rollSumTradeAmt,2)).trigger("blur");
     };
+    
     var findAvaTransferPortfolioInfo = function(){
         var listInfoList = [];
         var allRows = funAssetTransferDtoListTable.getAllRows();

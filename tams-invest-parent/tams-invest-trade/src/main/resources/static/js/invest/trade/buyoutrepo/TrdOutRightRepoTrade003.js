@@ -281,6 +281,19 @@
 			$("#TrdOutRightRepoTrade002_secAcctId").prop("disabled", false);
 		}
 		refreshCashAndBalance();
+        if($("#chlId").val()){
+            if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
+                $('#procedureAmt').val('').trigger('change');
+                $('#procedureAmtDiv').hide();
+                $('#settleAmt').val('').trigger('change');
+                $('#settleAmtDiv').hide();
+            }
+        }else{
+            if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
+                $('#procedureAmtDiv').show();
+                $('#settleAmtDiv').show();
+            }
+        }
 	});
 
 	var changeTradeAmtAndFee = function() {
@@ -832,6 +845,12 @@
 			object.tradeAmt = object.secTotalPrin;
 			object.prinAmt = object.secTotalPrin;
 			object.inputValue1 = 'F10';
+            if(object.chlId){
+                if(object.procedureAmt)
+                    object.procedureAmt = '';
+                if(object.settleAmt)
+                    object.settleAmt = '';
+            }
 	        Joyin.ajaxJson(basePath + 'invest/trade/buyoutrepo/TrdOutRightRepoTrade003/check', object, function (result) {
 	        	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 		            Joyin.confirm(result.data, function () {
@@ -1703,8 +1722,15 @@
             }
             // 当交易场所是银行间时
             else if (tradeMarket == TRADE_PLACE_01) {
-                $("#procedureAmtDiv").show();
-                $("#settleAmtDiv").show();
+                if($("#chlId").val()){
+                    $("#procedureAmt").val('');
+                    $("#procedureAmtDiv").hide();
+                    $("#settleAmt").val('');
+                    $("#settleAmtDiv").hide();
+                }else{
+                    $("#procedureAmtDiv").show();
+                    $("#settleAmtDiv").show();
+                }
                 $("#commissionAmtDiv").hide();
             }
             else {

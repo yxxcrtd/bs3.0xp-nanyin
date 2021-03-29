@@ -498,7 +498,14 @@ public class ProductReportRegister002Dto extends BaseEntity implements ProcessEn
     @NotEmpty(fieldName="ProductReportRegister001.repInvestFeeRate",groups = {ValidateGroupEdit.class})
     private String repInvestFeeRate;
 
-    
+    /**
+     * 新老产品标记
+     */
+    private String isFhxgcp;
+    /**
+     * 是否养老理财
+     */
+    private String isYllccp;
     
     public String getOperateType() {
 		return operateType;
@@ -1764,6 +1771,22 @@ public class ProductReportRegister002Dto extends BaseEntity implements ProcessEn
 
 	public void setPageModel(String pageModel) {
 		this.pageModel = pageModel;
+	}
+
+	public String getIsFhxgcp() {
+		return isFhxgcp;
+	}
+
+	public void setIsFhxgcp(String isFhxgcp) {
+		this.isFhxgcp = isFhxgcp;
+	}
+
+	public String getIsYllccp() {
+		return isYllccp;
+	}
+
+	public void setIsYllccp(String isYllccp) {
+		this.isYllccp = isYllccp;
 	}
     
     

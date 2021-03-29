@@ -10,9 +10,9 @@
  
 package com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dto;
 
-import java.util.List;
-
 import com.joyintech.tams.common.base.entity.CreditAssetpoolDetail;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -198,7 +198,17 @@ public class CeAssetGroupManagement002Dto extends CreditAssetpoolDetail{
     public void setAssetpoolName(String assetpoolName) {
         this.assetpoolName = assetpoolName;
     }
-    
-    
-    
+
+    /**
+     * 机构
+     */
+    private String institutionCode;
+
+    public String getInstitutionCode() {
+        return institutionCode;
+    }
+
+    public void setInstitutionCode(String institutionCode) {
+        this.institutionCode = institutionCode;
+    }
 }

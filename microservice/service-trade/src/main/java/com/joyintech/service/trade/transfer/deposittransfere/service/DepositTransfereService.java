@@ -132,4 +132,15 @@ public class DepositTransfereService{
         return Boolean.TRUE.toString();
     }
 
+    /**
+     * 获取交易编号list
+     * @param map 日期、币种
+     * @return 汇率（收盘价）
+     * @see
+     * @since 1.0
+     */
+    public int getWorkflowTradeId(Map<String,Object> map){
+        return depositTransfereMapper.getWorkflowTradeId(map);
+    }
+
 }

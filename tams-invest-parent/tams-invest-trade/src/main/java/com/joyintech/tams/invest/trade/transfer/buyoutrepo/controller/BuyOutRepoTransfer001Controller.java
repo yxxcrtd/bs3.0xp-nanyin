@@ -264,8 +264,20 @@ public class BuyOutRepoTransfer001Controller extends BaseController {
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getTradeId());
         params.setBusinessType(DictCodeList.共通业务类型_买断式回购交易.getValue());
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> "买断式回购转仓-"+"交易编号："+dto.getTradeId()+";资产名称："+
+
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        params.setBusinessCode(dto.getZcId());
+
+
+        params.setComment(entity -> "买断式回购转仓-"+"交易编号："+dto.getZcId()+";资产名称："+
                 dto.getFinprodAbbr()+";交易日："+ DateUtil.format(dto.getTradeDate()));
         processParameter.setWorkFlowParameter(params);
         //转仓列表

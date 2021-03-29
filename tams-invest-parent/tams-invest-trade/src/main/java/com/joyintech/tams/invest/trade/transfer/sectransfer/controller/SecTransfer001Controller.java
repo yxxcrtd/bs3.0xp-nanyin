@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecTransfer001Dt
 import com.joyintech.tams.invest.trade.transfer.sectransfer.dto.SecTransferDto;
 import com.joyintech.tams.invest.trade.transfer.sectransfer.service.SecTransfer001Service;
 import com.joyintech.tams.invest.trade.transfer.sectransfer.service.TrdBondDuration001Service;
+import com.joyintech.tams.invest.trade.transfer.trdassetsProject.service.TrdAssetsProject001Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
@@ -62,6 +63,9 @@ public class SecTransfer001Controller extends BaseController {
      */
     @Autowired
     private SecTransfer001Service secTransfer001Service;
+    
+    @Autowired
+    TrdAssetsProject001Service trdAssetsProject001Service;
 
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
@@ -103,6 +107,21 @@ public class SecTransfer001Controller extends BaseController {
             // 设置到model中
             model.addAttribute(com.joyintech.framework.constant.GlobalConstant.WORKFLOW_ID, workflowId);
             model.addAttribute("entity", JsonUtils.object2Json(entity));
+            if(entity.getSecResoluteDtoList().size()!=0) {
+            	for(int i = 0;i<entity.getSecResoluteDtoList().size();i++) {
+            		if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "01")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("银行间");
+            		}else if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "03")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("上海证券交易所");
+            		}else if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "04")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("深圳证券交易所");
+            		}else if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "05")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("机构间私募系统");
+            		}else if(StringUtil.equals(entity.getSecResoluteDtoList().get(i).getTradeMarket(), "10")) {
+            			entity.getSecResoluteDtoList().get(i).setTradeMarket("境外交易场所");
+            		}
+            	}
+            }
             model.addAttribute("entityData", JsonUtils.object2Json(entity.getSecResoluteDtoList()));
             model.addAttribute("formTodoList", true);
         }
@@ -130,8 +149,19 @@ public class SecTransfer001Controller extends BaseController {
             entity.setFinprodAbbr((String) paraMap.get("finprodName"));
             //本金金额
             entity.setShareAmt(new BigDecimal((String) paraMap.get("amount")));
-            //剩余可转仓本金金额
-            entity.setUndistributedAmount(entity.getShareAmt());
+            //剩余可转仓本金金额            
+            //剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据start
+            paraMap.put("searchDate", DateUtil.getSysDate());           
+        	BigDecimal wflAmt = trdAssetsProject001Service.selectWflAmtAsset(paraMap);
+        	BigDecimal wflAmt1 = ArithmeticUtil.multiply(wflAmt,new BigDecimal(100));
+        	if(wflAmt1 != null) {
+        		BigDecimal newUndistributedAmount = ArithmeticUtil.doAdd(entity.getShareAmt(),wflAmt1);
+        		entity.setUndistributedAmount(newUndistributedAmount);
+        	}else {        		
+        		 entity.setUndistributedAmount(entity.getShareAmt());
+        	}
+        	//剩余可转仓本金金额，为可用持仓，若存在流程中数据应扣减当前流程中转仓数据end
+            
             //交易日期
             entity.setTradeDate(DateUtil.parse((String) paraMap.get("tradeDate")));
             //交割日期
@@ -421,10 +451,20 @@ public class SecTransfer001Controller extends BaseController {
         WorkFlowParameter<SecTransfer001Dto> workFlowParameter = new WorkFlowParameter<>();
         workFlowParameter.setPageId(this.getPageId());
         workFlowParameter.setElementId(dto.getElementId());
-        workFlowParameter.setBusinessCode((entity) -> entity.getTradeId());
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_债券类资产交易.getValue());
+        // 转仓编号
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_资产转仓);
+            dto.setZcId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            dto.setZcId(IDGenerator.generate());
+        }
+        workFlowParameter.setBusinessCode(dto.getZcId());
+
         // 设置流程业务说明, entity即传入的dto
-        workFlowParameter.setComment(entity -> "交易编号：" + dto.getTradeId() + ";资产名称：" +
+        workFlowParameter.setComment(entity -> "交易编号：" + dto.getZcId() + ";资产名称：" +
                 dto.getFinprodAbbr() + ";交易日：" + DateUtil.format(dto.getTradeDate()));
         processParameter.setWorkFlowParameter(workFlowParameter);
         processParameter.setPageId(this.getPageId());

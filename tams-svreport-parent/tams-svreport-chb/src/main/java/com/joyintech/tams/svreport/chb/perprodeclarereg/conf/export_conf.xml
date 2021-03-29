@@ -15,8 +15,9 @@
 		    <Cell order="11" name="业务联络人座机">liaisonTel</Cell><!--  -->	
 		    <Cell order="12" name="业务联络人手机">liaisonMobile</Cell><!--  -->	
 		    <Cell order="13" name="业务联络人邮箱">liaisonEmail</Cell><!--  -->	
-		    <Cell order="14" name="产品收益类型">profitType</Cell><!--  -->	
-		    <Cell order="15" name="产品期限">termtype</Cell><!--  -->	
+		    <Cell order="14" name="产品收益类型">profitType</Cell><!--  -->
+			<Cell order="14" name="新老产品标记">isFhxgcp</Cell><!--  -->
+			<Cell order="15" name="产品期限">termtype</Cell><!--  -->
 		    <Cell order="16" name="是否金融同业专属">excFinSector</Cell><!--  -->	
 		    <Cell order="17" name="资金投向地区">investArae</Cell><!--  -->	
 		    <Cell order="18" name="产品投资国家或地区（境外）">investCountry</Cell><!--  -->	

@@ -373,6 +373,10 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
             if(item.getInDepName()!=null){
                 item.setInDepName(item.getInDepName().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.境内托管机构名称, item.getInDepName()));
             }
+            // 新老产品标记
+			if(item.getIsFhxgcp()!=null){
+				item.setIsFhxgcp(item.getIsFhxgcp().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.新老产品标记, item.getIsFhxgcp()));
+			}
 		});
 	}
 

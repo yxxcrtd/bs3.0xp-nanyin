@@ -73,6 +73,7 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="ROW_DATE" property="rowDate" jdbcType="DATE" />
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
     </resultMap>
      <resultMap type="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto" id="PerProDeclareRegDtoRM">
     <result column="REGIST_SEQNO" property="registSeqno" />
@@ -165,6 +166,7 @@
 	<result column="CASH_MANA_CATE" property="cashManaCate" />
 	<result column="YIELD" property="yield" />
 	<result column="INVEST_FEE_RATE" property="investFeeRate" />
+    <result column="IS_FHXGCP" property="isFhxgcp" />
  </resultMap>
  
  <select id="genChbPrdDeclareSubTmpList"  resultMap="BaseResultMap">

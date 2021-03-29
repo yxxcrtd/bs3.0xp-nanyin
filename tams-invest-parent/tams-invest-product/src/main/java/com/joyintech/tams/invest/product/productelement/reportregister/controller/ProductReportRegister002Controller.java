@@ -59,7 +59,7 @@ public class ProductReportRegister002Controller extends BaseController {
 				DictCode.行政区划_省, DictCode.币种, DictCode.投资者风险偏好, DictCode.产品风险等级, DictCode.合作模式, DictCode.投资本金_收益_到账日,
 				DictCode.有无, DictCode.是否_中债, DictCode.产品增信机构类型, DictCode.产品增信形式, DictCode.开放期业务, DictCode.规律开放周期,
 				DictCode.资金投向地区, DictCode.产品运作模式, DictCode.目标客户类型, DictCode.排期发行方式, DictCode.开放模式_中债, DictCode.层级类别,
-				DictCode.标的类别, DictCode.境内托管机构名称, DictCode.是否_中债, DictCode.是否_中债_期限, DictCode.产品收益类型, DictCode.产品期限,
+				DictCode.标的类别, DictCode.境内托管机构名称, DictCode.是否_中债, DictCode.新老产品标记,DictCode.是否_中债_期限, DictCode.产品收益类型, DictCode.产品期限,
 				DictCode.产品运作模式, DictCode.管理模式, DictCode.募集方式, DictCode.投资性质, DictCode.销售区域_中债, DictCode.是否 });
 		if (StringUtil.isNotEmpty(this.getParam("SVR_PBC_CUSTTYPE"))) {
 			model.addAttribute("SVR_PBC_CUSTTYPE", this.getParam("SVR_PBC_CUSTTYPE"));
@@ -115,6 +115,8 @@ public class ProductReportRegister002Controller extends BaseController {
 //		model.addAttribute("SVR_ISSUE_PARTY_ID", CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID"));
 		//update by leipeng 【 产品申报登记要素管理】新建 发行机构代码默认值显示有误
 		model.addAttribute("SVR_ISSUE_PARTY_ID", CommonUtil.selectBankCode());
+		 //是否子公司
+        model.addAttribute("svrIsSubsidiary", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"));
 		// 流程
 		String workflowId = this.getParam("workflowId");
 		if (StringUtils.equals(this.getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY),

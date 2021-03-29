@@ -179,6 +179,9 @@ public class TrdRepoTrade001Controller extends BaseController {
     AjaxResult doRevoke(@RequestBody TrdRepoTrade002Dto inputDto)
             throws Exception {
 
+        if(StringUtil.isNotEmpty(inputDto.getTradeId())){
+            inputDto = trdRepoTrade002Service.getTrdRepoTradeDto(inputDto.getTradeId());
+        }
         ProcessParameter<TrdRepoTrade002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdRepoTrade002Dto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);
@@ -191,7 +194,7 @@ public class TrdRepoTrade001Controller extends BaseController {
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_质押式回购交易.getValue());
         workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
                 getMessage("TrdRepoTrade002.tradeId") + GlobalConstant.OPEN_PARENTHESIS + entity.getTradeId() + GlobalConstant.CLOSE_PARENTHESIS,
-                DictCodeListExt1.交易场所_银行间.getValue().equals(inputDto.getTradeMarket())?"":getMessage("TrdRepoTrade002.repoType") + GlobalConstant.OPEN_PARENTHESIS + SysDataUtil.getNameFromDataDict(DictCode.回购类型, entity.getRepoType()) + GlobalConstant.CLOSE_PARENTHESIS,
+                DictCodeListExt1.交易场所_银行间.getValue().equals(entity.getTradeMarket())?"":getMessage("TrdRepoTrade002.repoType") + GlobalConstant.OPEN_PARENTHESIS + SysDataUtil.getNameFromDataDict(DictCode.回购类型, entity.getRepoType()) + GlobalConstant.CLOSE_PARENTHESIS,
                 getMessage("TrdRepoTrade002.tradeDate") + GlobalConstant.OPEN_PARENTHESIS + DateUtil.format(entity.getTradeDate()) + GlobalConstant.CLOSE_PARENTHESIS));
 
         String msg = trdRepoTrade002Service.start(processParameter, inputDto);

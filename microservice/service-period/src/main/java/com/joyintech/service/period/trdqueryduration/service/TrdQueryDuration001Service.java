@@ -15,6 +15,7 @@ import java.util.*;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.period.trdqueryduration.dao.TrdQueryDuration001Mapper;
 import com.joyintech.service.period.trdqueryduration.dto.TrdQueryDurationDto;
@@ -56,6 +57,7 @@ public class TrdQueryDuration001Service extends BaseService<TrdQueryDurationDto>
 		List<String> statusValid = param.get("statusValid") == null ? null : (List)param.get("statusValid");
 		setParams(param);
 		this.setParamForFindAllData(param);
+		param.put("isNewfundDealType",CacheUtil.getSysParam(BussinessConstant.FUND_DEAL_TYPE));
 		Page<TrdQueryDurationDto> result = null;
 		//update by wangcheng SHBS-2192 查询条件输入 资金到账日  ，有效状态选择 待处理  报错
 		if(com.github.pagehelper.util.StringUtil.isNotEmpty((String)param.get("tradeDateStart"))&&((statusValid.size()==1) && statusValid.contains("01"))){

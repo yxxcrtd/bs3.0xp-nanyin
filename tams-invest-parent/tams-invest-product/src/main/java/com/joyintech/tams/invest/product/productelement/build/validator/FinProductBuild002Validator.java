@@ -118,7 +118,8 @@ public class FinProductBuild002Validator implements BeanValidator {
                 this.getMessage("FinProductBuild002.liquidationDate"))));
         }
         
-        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsFhxgcp())) {
+        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsFhxgcp())
+        		&& !StringUtil.equals("01", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"))) {
             validList.add(new ValidMessage("bussRepFinProductInfoDto.isFhxgcp", getMessage("请输入新老产品标记")));
         }
         if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsYllccp())) {

@@ -888,8 +888,6 @@
               <if test="prodid!=null and prodid.length > 0">
                   and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR}
               </if>
-            ---加上有效交易条件
-            and deal.status !='D' )    
 		    <if test="prodid!=null">
 		    	and nvl(prod.fprod_id,prod_id)=#{prodid,jdbcType=VARCHAR} 
 		    </if>

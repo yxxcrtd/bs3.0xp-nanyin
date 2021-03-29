@@ -110,7 +110,7 @@
         EXC_FIN_SECTOR EXC_FIN_SECTOR, IS_SHORT_TERM IS_SHORT_TERM, SHORT_TERM SHORT_TERM, 
         IS_FREE_REDEM IS_FREE_REDEM, CUSTOMER_TYPE CUSTOMER_TYPE, REP_ISSUE_TYPE REP_ISSUE_TYPE, 
         REP_YIELD REP_YIELD, REP_INVEST_NATURE REP_INVEST_NATURE, REP_IS_CASH_MANAGE REP_IS_CASH_MANAGE, 
-        REP_INVEST_FEE_RATE REP_INVEST_FEE_RATE
+        REP_INVEST_FEE_RATE REP_INVEST_FEE_RATE,IS_FHXGCP IS_FHXGCP,IS_YLLCCP IS_YLLCCP
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -431,6 +431,12 @@
             <if test="repInvestFeeRate != null" >
                 REP_INVEST_FEE_RATE,
             </if>
+            <if test="isFhxgcp != null" >
+                IS_FHXGCP,
+            </if>
+            <if test="isYllccp != null" >
+                IS_YLLCCP,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="repFinprodId != null" >
@@ -672,6 +678,12 @@
             </if>
             <if test="repInvestFeeRate != null" >
                 #{repInvestFeeRate,jdbcType=VARCHAR},
+            </if>
+            <if test="isFhxgcp != null" >
+                #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="isYllccp != null" >
+                #{isYllccp,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -941,6 +953,12 @@
             </if>
             <if test="repInvestFeeRate != null" >
                 REP_INVEST_FEE_RATE = #{repInvestFeeRate,jdbcType=VARCHAR},
+            </if>
+            <if test="isFhxgcp != null" >
+              IS_FHXGCP =  #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="isYllccp != null" >
+              IS_YLLCCP =  #{isYllccp,jdbcType=VARCHAR},
             </if>
         </set>
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}

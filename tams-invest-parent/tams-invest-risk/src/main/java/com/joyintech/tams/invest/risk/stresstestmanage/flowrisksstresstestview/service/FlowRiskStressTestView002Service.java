@@ -17,6 +17,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.csii.dc.client.util.StringUtil;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -55,7 +56,7 @@ public class FlowRiskStressTestView002Service  extends CommonExportService<FlowR
     @Override
     public Page<FlowRiskStressTestView002Dto> selectPageData(Map<String, Object> selectParam) {
         // TODO Auto-generated method stub
-          return selectAll(selectParam);
+    	return  selectAll(selectParam);
     }  
    
     

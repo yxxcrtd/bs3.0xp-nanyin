@@ -222,7 +222,8 @@
 		where SEQNO = #{seqno}
 	</select>
 	<select id="getBusinessWorkflowId" parameterType="com.joyintech.tams.component.base.core.dto.WflValidInputParameter" resultType="com.joyintech.service.risk.creditmanagement.ceassetgroupmanagement.dto.CeAssetGroupManagement002Dto">
-		select pm.WORKFLOW_ID workflowId
+		select pm.WORKFLOW_ID workflowId,
+		pm.BUSINESS_DATA_PK5 as institutionCode
     	from SYS_DATA_PROCESS_MARK pm
     	inner join (<include refid="getMaxHisNo"/>) tempHis on  pm.HIS_NO = tempHis.HIS_NO and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
     	<where>

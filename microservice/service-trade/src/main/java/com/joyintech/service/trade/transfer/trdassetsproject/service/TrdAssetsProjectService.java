@@ -68,4 +68,13 @@ public class TrdAssetsProjectService {
     public List<BussTrdTransferOrderDto> selectBussTrdTraOrderByTradeId(Map<String, Object> param) {
         return trdAssetsProjectMapper.selectBussTrdTraOrderByTradeId(param);
     }
+    /**
+     * 获取处于流程中的持仓（但是未记录在在持仓流水中）
+     * @return 处于流程中的持仓（但是未记录在在持仓流水中）
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal selectWflAmtAsset(Map<String,Object> map){
+        return trdAssetsProjectMapper.selectWflAmtAsset(map);
+    }
 }
