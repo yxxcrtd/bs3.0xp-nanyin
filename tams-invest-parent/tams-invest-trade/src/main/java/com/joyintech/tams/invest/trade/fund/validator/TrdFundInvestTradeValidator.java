@@ -179,10 +179,15 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                         && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     Map<String, Object> resultMap = trdFundInvestTrade002Service.selectEntrustAmt(param);
                     BigDecimal entrustNum = new BigDecimal((String) resultMap.get("ENTRUST_NUM"));
-                    if (StringUtil.isNotEmpty(entrustNum) && shareAmt.compareTo(entrustNum) > 0) {
+                    BigDecimal finishAmt = new BigDecimal((String) resultMap.get("FINISH_AMT"));
+
+                    // 未使用额度 为  entrustNum -  已使用额度
+                 BigDecimal availablEntrustNum = ArithmeticUtil.subtract(entrustNum, finishAmt);
+
+                 if (StringUtil.isNotEmpty(availablEntrustNum) && shareAmt.compareTo(availablEntrustNum) > 0) {
 //                        errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0003",
 //                                this.getMessage("TrdFundInvestTrade002.tradeSha"), "委托份额:" + entrustNum)));
-                        errorList.add(new ValidMessage("shareAmt", "基金赎回份额不能大于基金可交易额度份额，可交易额度份额:" + entrustNum));
+                        errorList.add(new ValidMessage("shareAmt", "基金赎回份额不能大于基金可交易额度份额，可交易额度份额:" + availablEntrustNum));
 
                     }
              } 
@@ -206,12 +211,15 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                     errorList.add(new ValidMessage("finprodId", "该资产存在流程中的存续期数据数据，交易编号：" + 流程中));
                 }
             }
-            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
-                if (StringUtil.isNotEmpty(shareAmt) && StringUtil.isNotEmpty(dto.getAssetAvailablePosition())
-                        && shareAmt.compareTo(dto.getAssetAvailablePosition()) == 1) {
-                    errorList.add(new ValidMessage("shareAmt",
-                            this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
-                                    this.getMessage("TrdBondInvestTrade002.avaliblePosition"))));
+
+            if(StringUtil.isEmptyList(errorList)) {
+                if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                    if (StringUtil.isNotEmpty(shareAmt) && StringUtil.isNotEmpty(dto.getAssetAvailablePosition())
+                            && shareAmt.compareTo(dto.getAssetAvailablePosition()) == 1) {
+                        errorList.add(new ValidMessage("shareAmt",
+                                this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
+                                        this.getMessage("TrdBondInvestTrade002.avaliblePosition"))));
+                    }
                 }
             }
         }
