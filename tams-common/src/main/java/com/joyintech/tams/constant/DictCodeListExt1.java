@@ -1817,7 +1817,8 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	//持有目的 20200409 end
 	
 	金融产品类型_预提费用(DictCode.金融产品类型,"C20","预提费用"),
-   ;
+	机构所属行业三级分类_中央银行服务(DictCode.机构所属行业三级分类,"01","中央银行服务"),
+	;
     /**
      * 对应于数据字典code
      */
