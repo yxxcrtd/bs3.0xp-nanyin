@@ -3,13 +3,13 @@
 <mapper namespace="com.joyintech.tams.svreport.chb.common.dao.ChbCustomerNumCheckMapper" >
 
     <select id="getraiseCustNum"  resultType="com.joyintech.tams.common.base.entity.ChbPrdCustNumIfo">
-        select
-        PROD_ID  prdCode,
-        SINGLE_TOTAL+LEGAL_TOTAL+UNLEGAL_TOTAL  CustHeldNum
-        from  CHB_PRD_RAISETOT_SUB
-        where
-        status_date=#{checkDate,jdbcType=DATE}
-        and status !='D'
+        SELECT
+	        PROD_ID  prdCode,
+	        SINGLE_TOTAL+LEGAL_TOTAL+UNLEGAL_TOTAL  CustHeldNum
+        FROM  CHB_PRD_RAISETOT_SUB
+        WHERE
+        	TO_DATE(TO_CHAR(STATUS_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{checkDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+        	AND  SEND_STATUS = '01'
         <if test="prodId != null and prodId != ''">
             and PROD_ID = #{prodId}
         </if>
@@ -29,6 +29,7 @@
                 from
                     CHB_EQUDET
                 <where>
+                    1 = 1
                     <if test="prodIdList != null and prodIdList.size() > 0">
                         AND ACCOUNT IN
                         <trim suffixOverrides=" OR ACCOUNT IN ()">
@@ -43,8 +44,7 @@
                                 #{item}
                             </foreach>
                         </trim>
-                    </if>
-                    AND EQUITY_CONF_DATE=#{checkDate,jdbcType=DATE}
+                    </if>                   
                     AND BUSI_TYPE='01'
                 </where>
             ) a
