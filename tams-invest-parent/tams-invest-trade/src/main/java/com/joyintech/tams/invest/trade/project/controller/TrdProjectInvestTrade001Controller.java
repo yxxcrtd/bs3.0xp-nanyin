@@ -136,7 +136,7 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(@RequestBody @Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade002Dto dto, BindingResult br)
+    public AjaxResult revoke(@Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade002Dto dto, BindingResult br)
         throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
