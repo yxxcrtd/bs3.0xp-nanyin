@@ -149,8 +149,12 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
             sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
             //update by leipeng 20200623
             //发行机构代码取值
-            if(StringUtil.isEmpty(sub.getIssuePartyId())){
+           /* if(StringUtil.isEmpty(sub.getIssuePartyId())){
             	sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+            }*/
+            if(StringUtil.isEmpty(sub.getIssuePartyId())){
+                String issuePartyId = CommonUtil.selectBankCode();
+                sub.setIssuePartyId(issuePartyId);
             }
             
             // 产品发行登记报送时点:募集起始日期
@@ -208,7 +212,7 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
     	}
         
         
-        
+
         // 删除、插入发行登记
         // add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
         issueInsertDataList = chbCommonCheckService.checkData(issueInsertDataList, ChbCheckTableInfo.个人发行登记表SUB);
@@ -328,10 +332,14 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
             single.setOrgCode(CommonUtil.getOrgCode());
             //update by leipeng 20200623
             //发行机构代码取值
-            if(StringUtil.isEmpty(single.getIssuePartyId())){
+         /*   if(StringUtil.isEmpty(single.getIssuePartyId())){
             	single.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
-            }
-            //募集起始日期（从）
+            }*/
+           if(StringUtil.isEmpty(single.getIssuePartyId())){
+               String issuePartyId = CommonUtil.selectBankCode();
+               single.setIssuePartyId(issuePartyId);
+           }
+           //募集起始日期（从）
             if(single.getRaisePstrdate()!=null){
                 if (DictCodeListExt2.募集方式_中债_公募.getValue().equals(single.getRaiseType())){
                     declare=DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品申报登记.getValue(), 

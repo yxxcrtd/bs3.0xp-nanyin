@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
@@ -88,7 +89,7 @@ public class ChbPrdOpenschInterf extends BaseService{
 					//数据来源
 					opensch.setDataSource("BS");
 					//发行机构代码
-					opensch.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+					opensch.setIssuePartyId(CommonUtil.selectBankCode());
 					
 					if(opensch.getUpdateTime().compareTo(lastUpdatetime) > 0){
 						lastUpdatetime = opensch.getUpdateTime();
@@ -107,7 +108,7 @@ public class ChbPrdOpenschInterf extends BaseService{
 					//数据来源
 					opensch.setDataSource("BS");
 					//发行机构代码
-					opensch.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+					opensch.setIssuePartyId(CommonUtil.selectBankCode());
 					//申购计划
 					opensch.setPlanType("01");
 					openSchlist.add(opensch);

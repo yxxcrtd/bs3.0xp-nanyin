@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
@@ -111,7 +112,7 @@ public class ChbBotAstPosInterf extends BaseService{
 	    		Map<String, BigDecimal> rateMap = new HashMap<>();
 	        	for(ChbBotAstPosition position : listChbBotAstPosition){
 	        		position.setPosId(IDGenerator.generate(36));
-	        		position.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+	        		position.setIssuePartyId(CommonUtil.selectBankCode());
 	        		position.setCreateUser("system");
 	        		position.setUpdateUser("system");
 	        		position.setStatus("E");
@@ -173,7 +174,7 @@ public class ChbBotAstPosInterf extends BaseService{
 				List<String> assetPlanLList = chbAssetInfoInterfMapper.selectAssetCodeByAssetType(assetTypeList, null);
 				for (ChbBotAstPosition position : listBotAstPosition) {
 					position.setPosId(IDGenerator.generate(36));
-					position.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+					position.setIssuePartyId(CommonUtil.selectBankCode());
 					position.setCreateUser("system");
 					position.setUpdateUser("system");
 					position.setStatus("E");

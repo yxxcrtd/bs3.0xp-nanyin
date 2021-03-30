@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
@@ -370,7 +371,7 @@ public class SvrAssetBasisNoBtmInterf extends BaseService{
 			int count = 0;
 			for (ChbAstValue info : infoList) {
 				info.setValId(IDGenerator.generate(36));
-				info.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+				info.setIssuePartyId(CommonUtil.selectBankCode());
 				info.setCreateUser("system");
 				info.setUpdateUser("system");
 				info.setStatus("E");

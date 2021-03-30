@@ -407,7 +407,11 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
         //部门代码
         result.setDeptCode(CommonUtil.getDeptCode());
         //发行机构代码取值
-        result.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+        //result.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+        if(StringUtil.isEmpty(result.getIssuePartyId())){
+            String issuePartyId = CommonUtil.selectBankCode();
+            result.setIssuePartyId(issuePartyId);
+        }
         //数据日期
         result.setStatusDate(executeDate);
         // 报送截止日生成
