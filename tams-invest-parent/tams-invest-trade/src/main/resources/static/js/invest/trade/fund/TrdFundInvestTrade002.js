@@ -999,10 +999,10 @@ $(function () {
                 	if (null == tempWorkflowId || 'undefined' == typeof(tempWorkflowId)) {
                 		tempWorkflowId=""
                 	}
-                	data =  {finprodId:finprodId,netDate:netDate,tradeId:tempTradeId,workflowId,tempWorkflowId}; 
+                	data =  {finprodId:data.finprodId,netDate:netDate,tradeId:tempTradeId,workflowId,tempWorkflowId};
                 }
                 else{
-                	data =  {finprodId:finprodId,netDate:netDate};
+                	data =  {finprodId:data.finprodId,netDate:netDate};
                 }
                 Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade003/getPrice', data, function (result) {
                     $('#unitCprice').val(result).trigger('blur').change();
