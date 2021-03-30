@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
@@ -394,12 +395,21 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                 PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
                 ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
                 if (ptlPositionHoldDto != null) {
-//                    if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
-//                            && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
-//                        for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
-//                            basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
-//                        }
-//                    }
+                    if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
+                            && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
+                        //入库时已经往持仓流水表中插入了持仓数据，但是seqNo与出入库详细表中的seqNo不同，所以插入一条seqNo相同的，并同时插入一条金额相反的seqNo不同的
+                        List<PtlSecPositionFlowDto> negateFlows = new ArrayList<PtlSecPositionFlowDto>();
+                        BeanUtil.copyProperties(negateFlows,ptlPositionHoldDto.getPtlSecPositionFlows());
+                        for (PtlSecPositionFlowDto negateFlow:negateFlows){
+                            //生成金额相反，seqNo不同的数据
+                            negateFlow.setAmount(negateFlow.getAmount().negate());
+                            negateFlow.setSeqno(IDGenerator.generate());
+                            ptlPositionHoldDto.getPtlSecPositionFlows().add(negateFlow);
+                        }
+                        for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
+                            basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
+                        }
+                    }
                     if (ptlPositionHoldDto.getPtlCashPositionFlows() != null
                             && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
                         for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
