@@ -7421,8 +7421,8 @@ public class PbcMonthAssetReportService  extends BaseService{
         // 报表频率：月报
         pbcMonthReport.setReportfrequ(PbcMonthReportConstants.REPORT_FREQU_M);
         // 发行机构代码取值
-        pbcMonthReport.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
-        pbcMonthReport.setIssuePartyName(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME));
+        pbcMonthReport.setIssuePartyId(CommonUtil.selectBankCode());
+        pbcMonthReport.setIssuePartyName(CommonUtil.selectBankCode());
         // 用户信息
         pbcMonthReport.setOrgCode(CommonUtil.getOrgCode());
         pbcMonthReport.setCreateDept(CommonUtil.getDeptCode());
@@ -7476,7 +7476,7 @@ public class PbcMonthAssetReportService  extends BaseService{
             }
         }
         // 填报机构名称
-        pbcMonthReport.setReportOrgName(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME));
+        pbcMonthReport.setReportOrgName(CommonUtil.selectBankCode());
         // 社会信用代码
        // pbcMonthReport.setSocialCreditCode(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SOCIAL_CREDIT_CODE));
         // 金融机构编码
@@ -8758,8 +8758,9 @@ public class PbcMonthAssetReportService  extends BaseService{
     }
     
     public String[] getRegistCode(String orgCode){
-        String issuePartyId = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID);
-        String  issuePartyName = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME);
+       // String issuePartyId = CommonUtil.selectBankCode();
+        String issuePartyId = CommonUtil.selectBankCode();
+        String  issuePartyName = CommonUtil.selectBankCode();
         // 发行机构代码取值
         if(null!=orgCode){
         	Map<String,Object> param = new HashMap<>();

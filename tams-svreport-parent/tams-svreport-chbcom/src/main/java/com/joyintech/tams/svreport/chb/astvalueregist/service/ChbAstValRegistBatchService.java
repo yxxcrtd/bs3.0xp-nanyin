@@ -115,7 +115,8 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
 				 sub.setRegistSeqno(IDGenerator.generate(36));
 				 // 报送流水号
 				 sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-				 sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+				 //sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+				 sub.setIssuePartyId(CommonUtil.selectBankCode());
 //				 sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
 				 sub.setCreateUser(CommonUtil.getUserName());
 				 sub.setUpdateUser(CommonUtil.getUserName());

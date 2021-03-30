@@ -154,7 +154,7 @@ public class InProdDealBatchService extends FileImpService {
 			// 创建机构
 			sub.setOrgCode(CommonUtil.getOrgCode());
 			// 发行机构代码取值
-			sub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+			sub.setIssuePartyId(CommonUtil.selectBankCode());
 			// 报送流水号
 			sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 			// 业务表不存在数据：

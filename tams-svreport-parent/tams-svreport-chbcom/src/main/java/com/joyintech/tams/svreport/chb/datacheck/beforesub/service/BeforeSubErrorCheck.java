@@ -29,6 +29,7 @@ import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.chb.common.SvrCustomerNumCheckService;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.dao.ChbBeforeSubErrorCheckMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -978,7 +979,7 @@ public class BeforeSubErrorCheck {
     	StringBuffer errMsgSb = new StringBuffer();
     	//发行机构代码
         String issueParthId = dataMap.get("ISSUE_PARTY_ID");
-        String bankCode = CacheUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID);
+        String bankCode = CommonUtil.selectBankCode();
         if(!bankCode.equals(issueParthId)){
         	 errMsgSb.append("发行机构代码:" + issueParthId +"必须与登记银行代码相同");
              errMsgSb.append(GlobalConstant.VERTICAL_LINE);

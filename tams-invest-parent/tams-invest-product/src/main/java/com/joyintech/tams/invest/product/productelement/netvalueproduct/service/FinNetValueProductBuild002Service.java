@@ -582,7 +582,7 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
                     //entity.getBussRepFinProductInfoDto().setRepRaisePstrdate(entity.getFirstSaleVdate());
                     //entity.getBussRepFinProductInfoDto().setRepRaisePenddate(entity.getFirstSaleVdate());
                     // 发行机构代码
-                    entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID"));
+                    entity.getBussRepFinProductInfoDto().setRepIssuePartyId(CommonUtil.selectBankCode());
                     // 报送信息存值 募集起始日期 yjm end 20190801
                     entity.getBussRepFinProductInfoDto().setRepFinprodId(entity.getFinprodId());
                     entity.getBussRepFinProductInfoDto().setRepFinprodName(entity.getFinprodName());

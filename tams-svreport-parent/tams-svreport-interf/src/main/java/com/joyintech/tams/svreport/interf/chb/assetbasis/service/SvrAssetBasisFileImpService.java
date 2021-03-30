@@ -398,7 +398,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
             	chbAssetsBasisData.setStatus("A");
             }
             chbAssetsBasisData.setValId(IDGenerator.generate(36));
-            chbAssetsBasisData.setOrgCode(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+            chbAssetsBasisData.setOrgCode(CommonUtil.selectBankCode());
             chbAssetsBasisData.setCreateUser("system");
             chbAssetsBasisData.setUpdateUser("system");
             StringBuffer keyV = new StringBuffer();
