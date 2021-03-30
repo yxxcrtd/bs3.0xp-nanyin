@@ -19,6 +19,9 @@
         searchOnInit : true,
         checkbox : false,
         page : false,
+        getRenderData:function(){
+        	return repoInfoTable.getAllRows();
+        },
         cols : [
         // 组合
         {
