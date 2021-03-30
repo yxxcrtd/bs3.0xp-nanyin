@@ -44,7 +44,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
         if (!StringUtil.equals(dto.getOperateType(), "delete")) {
             if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo()) && StringUtil.equals(dto.getBussRepAssetMngProdInfo().getRepAssetType(),"1705")) {
                 if (StringUtil.isEmpty(dto.getBussRepAssetMngProdInfo().getRepFinancialComissue()) || dto.getBussRepAssetMngProdInfo().getRepFinancialComissue() == "") {
-                    errorList.add(new ValidMessage("BussRepAssetMngProdInfo.repFinancialComissue",
+                    errorList.add(new ValidMessage("bussRepAssetMngProdInfo.repFinancialComissue",
                             "请输入是否由金融资产投资公司发行。"));
                 }
             }    
