@@ -86,17 +86,15 @@
 		left join fin_open_plan fop
 		  on fp.p_finprod_id = fop.finprod_id
 		left join fin_base_rule_info fbri
-		  on fbri.finprod_id = fp.finprod_id,(select to_date(#{platDate},'yyyy-MM-dd') + level -1 as dates from dual connect by to_date(#{platDate},'yyyy-MM-dd') + level -1 &lt;= to_date(#{platDate},'yyyy-MM-dd') + 7 ) days
+			on fbri.finprod_id = fp.finprod_id
+			AND fbri.base_rule_type = #{baseRuleType01}
+			AND fbri.branch = 0
+			left join info inf on inf.eff_date = fbri.eff_date
+			and inf.base_rule_id = fbri.base_rule_id,
+			(select to_date(#{platDate},'yyyy-MM-dd') + level -1 as dates from dual connect by to_date(#{platDate},'yyyy-MM-dd') + level -1 &lt;= to_date(#{platDate},'yyyy-MM-dd') + 7 ) days
 		where fpa.deal_mode = #{dealMode10}
-		  and fbri.eff_date = (
-		  select max(t.eff_date) from fin_base_rule_info t
-		  where t.base_rule_id = fbri.base_rule_id
-		  and t.branch = 0
-		  and t.eff_date &lt;= to_date(#{platDate},'yyyy-MM-dd')
-		  )
 		  and fp.p_finprod_id is not null
 		  and fop.finprod_id is null
-		  and fbri.base_rule_type = #{baseRuleType01}
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 start -->
 		  and fpa.term_type != #{termType03}
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 end -->
@@ -186,14 +184,12 @@
 		left join fin_open_plan fop
 		  on fp.p_finprod_id = fop.finprod_id
 		left join fin_base_rule_info fbri
-		  on fbri.finprod_id = fp.finprod_id
+		  	on fbri.finprod_id = fp.finprod_id
+		  	AND fbri.base_rule_type = #{baseRuleType01}
+		  	AND fbri.branch = 0
+		left join info inf on inf.eff_date = fbri.eff_date
+			and inf.base_rule_id = fbri.base_rule_id
 		where fpa.deal_mode = #{dealMode10}
-		  and fbri.eff_date = (
-		  select max(t.eff_date) from fin_base_rule_info t
-		  where t.base_rule_id = fbri.base_rule_id
-		  and t.branch = 0
-		  and t.eff_date &lt;= to_date(#{platDate},'yyyy-MM-dd')
-		  )
 		  and fp.p_finprod_id is not null
 		  and not exists (
 		  select t.finprod_id
@@ -204,7 +200,6 @@
 		  )
 		  and fop.open_vdate >= to_date(#{platDate},'yyyy-MM-dd')
 		  and fop.open_vdate &lt;= to_date(#{platDate},'yyyy-MM-dd') + 7
-		  and fbri.base_rule_type = #{baseRuleType01}
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 start -->
 		  and fpa.term_type != #{termType03}
 		  <!-- 待处理数据过滤 期限类型.无固定期限 add by wangcheng 20191031 end -->
@@ -327,6 +322,16 @@
 	
 	<!-- 期次管理查询 -->
 	<select id="selectForPage" resultType="com.joyintech.service.product.productelement.periodicmanagement.dto.PeriodicManagement001Dto">
+			with info as (
+			SELECT
+			MAX(t.eff_date) eff_date,
+			t.base_rule_id
+			FROM fin_base_rule_info t
+			WHERE t.branch         = 0
+			AND t.base_rule_type = '01'
+			AND t.eff_date &lt;= to_date(#{platDate},'yyyy-MM-dd')
+			group by t.base_rule_id
+			)
 			select * from (
 			<choose>
 			<when test="validStatus != null and validStatus == VALID_STATUS_01">
