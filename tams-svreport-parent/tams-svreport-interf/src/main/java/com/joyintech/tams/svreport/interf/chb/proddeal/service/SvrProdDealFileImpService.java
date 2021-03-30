@@ -1068,12 +1068,12 @@ public class SvrProdDealFileImpService extends FileImpService {
 					//唯一标识="产品代码:" + 此条记录的.产品代码
 					dto.setValidKey("产品代码:" + cinfo.getPrdCode());
 					//检查结果
-					dto.setCheckResult(DictCodeListExt2.检查结果_检查不通过.getCodeName());
+					dto.setCheckResult(DictCodeListExt2.检查结果_检查不通过.getValue());
 					//警告信息
 					if (flag) {
-						dto.setErrorInfo("客户数不一致（交易入库检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + 0 + "}；");
+						dto.setErrorInfo("客户数不一致（交易入库检查），三期客户数：" + cinfo.getCustHeldNum() + "、一二期客户数：" + 0 + "；");
 					} else {
-						dto.setErrorInfo("客户数不一致（交易入库检查），三期客户数：{" + 0 + "}、一二期客户数：{" + cinfo.getCustHeldNum() + "}；");
+						dto.setErrorInfo("客户数不一致（交易入库检查），三期客户数：" + 0 + "、一二期客户数：" + cinfo.getCustHeldNum() + "；");
 					}
 					//数据日期
 					dto.setDataTime(checkdate);
@@ -1094,9 +1094,9 @@ public class SvrProdDealFileImpService extends FileImpService {
 						//唯一标识="产品代码:" + 此条记录的.产品代码
 						dto.setValidKey("产品代码:" + cinfo.getPrdCode());
 						//检查结果
-						dto.setCheckResult(DictCodeListExt2.检查结果_检查不通过.getCodeName());
+						dto.setCheckResult(DictCodeListExt2.检查结果_检查不通过.getValue());
 						//警告信息
-						dto.setErrorInfo("客户数不一致（交易入库检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + map.get(cinfo.getPrdCode()).getCustHeldNum() + "}；");
+						dto.setErrorInfo("客户数不一致（交易入库检查），三期客户数：" + map.get(cinfo.getPrdCode()).getCustHeldNum() + "、一二期客户数：" + cinfo.getCustHeldNum() + "；");
 						//数据日期
 						dto.setDataTime(checkdate);
 						// 检查序列号 add by zhangliang 20210325 用于区分报送前检查check还是接入check

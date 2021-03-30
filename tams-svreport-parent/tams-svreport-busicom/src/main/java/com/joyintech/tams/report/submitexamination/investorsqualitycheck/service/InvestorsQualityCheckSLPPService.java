@@ -2,6 +2,7 @@ package com.joyintech.tams.report.submitexamination.investorsqualitycheck.servic
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -10,6 +11,7 @@ import com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.Inv
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -63,13 +65,26 @@ public class InvestorsQualityCheckSLPPService extends InvestorsQualityCheckBaseS
         // 查询不合格记录
         List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchSLPPErr(param);
 
-        return cntHGLComm(allList, unQualifiedList, SLPP);
+        InvestorsQualityCheck001Dto dto = new InvestorsQualityCheck001Dto();
+        dto.setUnQualified(String.valueOf(unQualifiedList.size()));
+        dto.setTotal(String.valueOf(allList.size() * 3));
+        if (!StringUtil.isEmptyList(allList)){
+            dto.setRate("100");
+            if (!StringUtil.isEmptyList(unQualifiedList)){
+                // （1取得的数量 * 3 - 检查错误数量）/1中取得的数量/3 * 100%
+                dto.setRate(ArithmeticUtil.subtract(new BigDecimal(100), ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal(unQualifiedList.size()), new BigDecimal(100)), ArithmeticUtil.multiply(new BigDecimal(allList.size()), BigDecimal.valueOf(3)), 2)).toPlainString());
+            }
+        }
+        dto.setPageType(SLPP);
+
+        return dto;
     }
 
     @Override
     public void setParamComm(Map<String, Object> param) {
         param.put("statusNew", DictCodeListExt2.报送数据状态_新建.getValue());
         param.put("statusModify", DictCodeListExt2.报送数据状态_修改.getValue());
+        param.put("statusDel", DictCodeListExt2.报送数据状态_删除.getValue());
         param.put("prdSingleTotalStr", StringUtil.joinString(prdSingleTotalList, ","));
         param.put("prdLegalTotalStr", StringUtil.joinString(prdLegalTotalList, ","));
         param.put("prdUnLegalTotalStr", StringUtil.joinString(prdUnLegalTotalList, ","));

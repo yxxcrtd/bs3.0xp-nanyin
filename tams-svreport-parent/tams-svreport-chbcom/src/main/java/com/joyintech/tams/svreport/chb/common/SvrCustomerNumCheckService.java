@@ -51,6 +51,9 @@ public class SvrCustomerNumCheckService {
 
         //新建对象： 产品列表list<Stirng>  对象产品list
         List<String> prodList = new ArrayList<>();
+        if (StringUtil.isNotEmpty(prodId)){
+            prodList.add(prodId);
+        }
 
         //1、组装一二期客户数信息
         List<ChbPrdCustNumIfo> lsitOtbch = chbCustomerNumCheckMapper.getraiseCustNum(checkdate, prodId);
@@ -58,7 +61,9 @@ public class SvrCustomerNumCheckService {
         //往产品信息Map中，设值<此条记录的.产品代码，循环中新建的.产品客户信息DTO>
         for (ChbPrdCustNumIfo info : lsitOtbch) {
             prdMap.put(info.getPrdCode(), info);
-            prodList.add(info.getPrdCode());
+            if (StringUtil.isEmpty(prodId)){
+                prodList.add(info.getPrdCode());
+            }
         }
 
         //以1中处理【对象产品List】为查询条件，查询三期数据
@@ -144,9 +149,9 @@ public class SvrCustomerNumCheckService {
                     dto.setCheckResult("03");
                     //警告信息
                     if (flag) {
-                        dto.setErrorInfo("客户数不一致（批前检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + 0 + "}；");
+                        dto.setErrorInfo("客户数不一致（批前检查），三期客户数：" + cinfo.getCustHeldNum() + "、一二期客户数：" + 0 + "；");
                     } else {
-                        dto.setErrorInfo("客户数不一致（批前检查），三期客户数：{" + 0 + "}、一二期客户数：{" + cinfo.getCustHeldNum() + "}；");
+                        dto.setErrorInfo("客户数不一致（批前检查），三期客户数：" + 0 + "、一二期客户数：" + cinfo.getCustHeldNum() + "；");
                     }
                     //数据日期
                     dto.setDataTime(checkdate);
@@ -168,7 +173,7 @@ public class SvrCustomerNumCheckService {
                         //检查结果
                         dto.setCheckResult("03");
                         //警告信息
-                        dto.setErrorInfo("客户数不一致（批前检查），三期客户数：{" + cinfo.getCustHeldNum() + "}、一二期客户数：{" + map.get(cinfo.getPrdCode()).getCustHeldNum() + "}；");
+                        dto.setErrorInfo("客户数不一致（批前检查），三期客户数：" + map.get(cinfo.getPrdCode()).getCustHeldNum() + "、一二期客户数：" + cinfo.getCustHeldNum() + "；");
                         //数据日期
                         dto.setDataTime(checkdate);
                         returList.add(dto);

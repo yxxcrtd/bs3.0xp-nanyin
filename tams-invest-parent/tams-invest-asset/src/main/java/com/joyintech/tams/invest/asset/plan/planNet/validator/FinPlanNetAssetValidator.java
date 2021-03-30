@@ -40,6 +40,15 @@ public class FinPlanNetAssetValidator implements BeanValidator {
     public List<ValidMessage> valid(Object value) {
         FinPlanNetAssetDto dto = (FinPlanNetAssetDto) value;
         List<ValidMessage> errorList = new ArrayList<>();
+        
+        if (!StringUtil.equals(dto.getOperateType(), "delete")) {
+            if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo()) && StringUtil.equals(dto.getBussRepAssetMngProdInfo().getRepAssetType(),"1705")) {
+                if (StringUtil.isEmpty(dto.getBussRepAssetMngProdInfo().getRepFinancialComissue()) || dto.getBussRepAssetMngProdInfo().getRepFinancialComissue() == "") {
+                    errorList.add(new ValidMessage("BussRepAssetMngProdInfo.repFinancialComissue",
+                            "请输入是否由金融资产投资公司发行。"));
+                }
+            }    
+        }
         if(dto.getVdate()!=null && dto.getMdate()!=null && dto.getVdate().compareTo(dto.getMdate()) >= 0){
             errorList.add(new ValidMessage("vdate",getMessage("BUSS_COM_E_0035",getMessage("FinPlanNetAsset002.vDate"), 
                 getMessage("FinPlanNetAsset002.mDate"))));

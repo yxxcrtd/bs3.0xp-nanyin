@@ -658,7 +658,7 @@
 		<if test="startDate != null  ">
 			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		</if>
-		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1106', '2401', '1303', '2403','2402','2499')
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1108','1106', '2401', '1303', '2403','2402','2499')
 		<if test="modetype != null  and modetype.equals('40')">
 			and mst.IS_GOV='Y'
 		</if>
@@ -701,7 +701,7 @@
 		 <if test="lastStartDate != null">
 		and CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 	    </if>
-		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1106', '2401', '1303', '2403','2402','2499')
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1108','1106', '2401', '1303', '2403','2402','2499')
 		<if test="modetype != null  and modetype.equals('40')">
 			and mst.IS_GOV='Y'
 		</if>
@@ -766,7 +766,7 @@
 		<if test="startDate != null">
 			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		</if>
-		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1106', '2401', '1303', '2403','2402','2499')
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1108','1106', '2401', '1303', '2403','2402','2499')
 		<if test="modetype != null  and modetype.equals('40')">
 			and mst.IS_GOV='Y'
 		</if>
