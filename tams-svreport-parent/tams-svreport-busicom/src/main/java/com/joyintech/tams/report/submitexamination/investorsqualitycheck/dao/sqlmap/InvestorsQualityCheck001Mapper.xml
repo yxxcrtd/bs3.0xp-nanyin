@@ -250,7 +250,7 @@
 		ON
 			END_SUB.PRD_REGIST_CODE = CP.REG_CODE
 		WHERE
-			(CP.ISSUING_STATUS = #{issuingFail,jdbcType=VARCHAR} OR  (objRec.MDATE IS NOT NULL AND objRec.MDATE &lt; objRec.HOLD_DATE))
+			(CP.ISSUING_STATUS = #{issuingFail,jdbcType=VARCHAR} OR  (END_SUB.MDATE IS NOT NULL AND END_SUB.MDATE &lt; END_SUB.HOLD_DATE))
 	</select>
 
 	<!-- 产品状态合格率 -->
