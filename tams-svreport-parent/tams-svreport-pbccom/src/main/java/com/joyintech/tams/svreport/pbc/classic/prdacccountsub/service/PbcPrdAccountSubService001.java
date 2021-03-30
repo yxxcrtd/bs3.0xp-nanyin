@@ -448,7 +448,7 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
         // 模板文件后缀名
         String fileType = GlobalConstant.FILE_POSTFIX_XLSX;
         String fileName = StringUtil.splitToList(GlobalConstant.POINT, reportConfig.getTempleteFile()).get(0);
-        if(StringUtil.equals(EXPORT_EXCEL_TYPE, DictCodeList.是否_否.getValue())){
+        if(StringUtil.equals(EXPORT_EXCEL_TYPE, DictCodeList.是否_中债_否.getValue())){
         	fileType = GlobalConstant.FILE_POSTFIX_XLS;
         }
         // 从配置文件中获取模板文件  以及文件类型
