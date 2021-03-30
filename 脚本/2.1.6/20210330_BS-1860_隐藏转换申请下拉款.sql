@@ -1,1 +1,1 @@
-DELETE FROM SYS_DATADICT_LIST  where SYS_DATADICT_LIST.DICT_CODE = 'PS' and SYS_DATADICT_LIST.ITEM_CODE = 'T65';
+DELETE FROM sys_page_dictlist where page_id = 'TrdFundInvestTrade001' and dict_id = 'PS' and dict_item_val = 'T65';
