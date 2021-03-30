@@ -457,7 +457,7 @@
         from CHB_INFOMGR_FILTER cif
         left join CHB_INFOMGR_FILTER_DETAIL cifd on cif.FILTERID = cifd.FILTERID
         left join CHB_INFOMGR_CONFIG cic on cifd.BASEINFORMATIONID = cic.BASEINFORMATIONID
-        where cif.FILTERNAME = #{pid,jdbcType=VARCHAR}
+        where cif.FILTERNAME = #{pid,jdbcType=VARCHAR} and cic.BASETABLEID is not null
     </select>
     
     <!-- 省市县联动 -->

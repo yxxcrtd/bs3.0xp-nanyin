@@ -386,13 +386,13 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
                 result.add(resultDto);
             }
-            if (inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue()) && 
-                    DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()) && !"N".equals(deal.getIsCancel())) {
-                resultDto.setCdate(deal.getTradeDate());
-                resultDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-                resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
-                result.add(resultDto);
-            }
+//            if (inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue()) && 
+//                    DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()) && !"N".equals(deal.getIsCancel())) {
+//                resultDto.setCdate(deal.getTradeDate());
+//                resultDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+//                resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+//                result.add(resultDto);
+//            }
             if (inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue()) && DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs())) {
                 resultDto.setCdate(deal.getTradeDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));

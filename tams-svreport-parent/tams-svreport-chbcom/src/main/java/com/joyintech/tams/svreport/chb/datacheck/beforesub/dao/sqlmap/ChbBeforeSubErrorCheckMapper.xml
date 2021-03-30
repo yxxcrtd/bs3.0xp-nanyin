@@ -171,7 +171,7 @@
 		select * from CHB_PRD_RAISETOT_SUB
 		where
 		(SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
-		and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
+		and to_date(to_char(STATUS_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd')<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
 		<if test="listProd!=null and listProd.size()!=0">
 			and PROD_ID in
 			<foreach item="prodid" collection="listProd" open="(" separator="," close=")">

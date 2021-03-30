@@ -3697,7 +3697,8 @@
         null IS_STRUCT,
         null TARGET_TYPE,
         null TARGET,
-        detail.REP_SHARES_ID ASSET_ID,
+        <!--detail.REP_SHARES_ID ASSET_ID,-->
+        CASE WHEN ASSET.REP_ASSET_TYPE = '1302' OR ASSET.REP_ASSET_TYPE = '1305' THEN info.FINPROD_MARKET_ID ELSE detail.REP_SHARES_ID END AS ASSET_ID,
         asset.REP_FINPROD_NAME ASSET_NAME,
         null CHB_SECTYPE,
         null ISSUE_MODE,

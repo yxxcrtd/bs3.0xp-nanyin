@@ -20,30 +20,36 @@
             a.ACCOUNT prdCode,
             count(INDENTIFY_MARK) CustHeldNum
             from
-            (select
-            distinct
-            ACCOUNT ,
-            INDENTIFY_MARK
-         from CHB_EQUDET
-         WHERE 1=1
-        <if test="prodIdList != null and prodIdList.size() > 0">
-            AND ACCOUNT IN
-            <trim suffixOverrides=" OR ACCOUNT IN ()">
-                <foreach collection='prodIdList' open='(' close=')' index='index'
-                         item='item'>
-                    <if test="index != 0">
-                        <choose>
-                            <when test="index % 1000 == 999">) OR ACCOUNT IN (</when>
-                            <otherwise>,</otherwise>
-                        </choose>
+            (
+                select
+                    ACCOUNT ,
+                    INDENTIFY_MARK,
+                    STATUS,
+                    ROW_NUMBER() over( partition BY ACCOUNT, INDENTIFY_MARK ORDER BY UPDATE_TIME DESC) AS rowno
+                from
+                    CHB_EQUDET
+                <where>
+                    <if test="prodIdList != null and prodIdList.size() > 0">
+                        AND ACCOUNT IN
+                        <trim suffixOverrides=" OR ACCOUNT IN ()">
+                            <foreach collection='prodIdList' open='(' close=')' index='index'
+                                     item='item'>
+                                <if test="index != 0">
+                                    <choose>
+                                        <when test="index % 1000 == 999">) OR ACCOUNT IN (</when>
+                                        <otherwise>,</otherwise>
+                                    </choose>
+                                </if>
+                                #{item}
+                            </foreach>
+                        </trim>
                     </if>
-                    #{item}
-                </foreach>
-            </trim>
-        </if>
-        AND EQUITY_CONF_DATE=#{checkDate,jdbcType=DATE}
-        AND BUSI_TYPE='01'
-        AND STATUS !='D'
-        ) a   group by a.ACCOUNT
+                    AND EQUITY_CONF_DATE=#{checkDate,jdbcType=DATE}
+                    AND BUSI_TYPE='01'
+                </where>
+            ) a
+        WHERE
+            rowno = 1 AND STATUS != 'D'
+        group by a.ACCOUNT
     </select>
 </mapper>

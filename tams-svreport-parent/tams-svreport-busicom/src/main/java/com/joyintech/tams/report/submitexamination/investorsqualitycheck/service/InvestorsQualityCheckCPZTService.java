@@ -60,6 +60,7 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseS
     public void setParamComm(Map<String, Object> param) {
         param.put("statusNew", DictCodeListExt2.报送数据状态_新建.getValue());
         param.put("statusModify", DictCodeListExt2.报送数据状态_修改.getValue());
+        param.put("statusDel", DictCodeListExt2.报送数据状态_删除.getValue());
         param.put("issuingFail", DictCodeListExt1.发行状态_发行失败.getValue());
     }
 
