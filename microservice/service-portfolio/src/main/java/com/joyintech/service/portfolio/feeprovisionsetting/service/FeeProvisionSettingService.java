@@ -1,6 +1,7 @@
 package com.joyintech.service.portfolio.feeprovisionsetting.service;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.TrdAccountmfConfigdetailDto;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -99,6 +100,7 @@ public class FeeProvisionSettingService extends BaseService<FeeProvisionSettingD
 	 * @return 账套实体类
 	 */
 	public List<SelectOptionDto> getBooksetId(Map<String,Object> map){
+		map.put("loginUserName", LoginUserUtil.getUserName());
 		map.put("FINPROD_TYPE", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
 		return feeProvisionSettingMapper.getBooksetId(map);
 	}

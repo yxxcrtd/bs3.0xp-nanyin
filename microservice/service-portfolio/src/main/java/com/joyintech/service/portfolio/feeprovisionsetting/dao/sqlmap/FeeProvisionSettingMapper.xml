@@ -101,6 +101,7 @@
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL A
         left join FIN_PRODUCT B
         on A.FINPROD_ID = B.FINPROD_ID
+        LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = A.PORTFOLIO_ID
         <where>
             (B.P_FINPROD_ID is null or B.P_FINPROD_ID = '') /*and B.IS_SUS = 'Y'*/
             <if test="search != null and search != ''">
@@ -121,6 +122,10 @@
             </if>
             <if test="positionStartDate != null and positionStartDate != ''">
                 AND ( B.MDATE - TO_DATE(#{positionStartDate,jdbcType=VARCHAR}, 'yyyy-MM-dd hh24-mi-ss')) >= 0
+            </if>
+            <if test="loginUserName != null and loginUserName != ''">
+                and (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+                OR pp.PARENT_PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
             </if>
         </where>
     </select>
