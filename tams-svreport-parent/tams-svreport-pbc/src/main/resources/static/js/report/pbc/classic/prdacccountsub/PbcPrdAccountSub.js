@@ -37,7 +37,7 @@ $(function(){
 				{ title: '报送日期',field:'submitTime',width:150,type:'datetime',sortField:'submitTime'},
 				{ title: "报送截止日", field: 'pbcSubmitDeadline',width:150, type: 'datetime',sortField:'pbcSubmitDeadline'},
 				{ title: "反馈状态", field: 'submitFeedbackStatusStr',width:150,sortField:'submitFeedbackStatus'},
-				{ title: "资产池代码", field: 'pbcAccountId',width:150,sortable:true,visible:false},
+				{ field: 'pbcAccountId',visible:false},
 //				{ title: "资产池代码(内部)", field: 'pbcAccountIdShow',width:150,sortField:''},
 //				{ title: "资产池代码(外部)", field: 'pbcCode',width:150,sortField:''},
 				{ title: "资产池代码", field: 'pbcAccountIdShow',width:150,sortField:'pbcAccountIdShow'},
