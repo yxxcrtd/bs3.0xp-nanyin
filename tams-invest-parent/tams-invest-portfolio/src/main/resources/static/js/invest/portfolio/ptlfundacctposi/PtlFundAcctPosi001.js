@@ -53,9 +53,9 @@ $(function() {
             ,{field:'portfolioName', title: 'PtlFundAcctPosi001.portfolioName', width:200}
             ,{field:'acctId', title: 'PtlFundAcctPosi001.busiAcctNo', width:150}
             ,{field:'acctName', title: 'PtlFundAcctPosi001.acctName', width:200}
-            ,{field:'amount', title: 'PtlFundAcctPosi001.amount',type:'money'}
-            ,{field:'amount1', title: 'PtlFundAcctPosi001.amount1',type:'money'}
-            ,{field:'ccyStr', title: 'PtlFundAcctPosi001.ccy',sortField: 'ccy', width:150}
+            ,{field:'amount', title: 'PtlFundAcctPosi001.amount',type:'money',width:140}
+            ,{field:'amount1', title: 'PtlFundAcctPosi001.amount1',type:'money',width:140}
+            ,{field:'ccyStr', title: 'PtlFundAcctPosi001.ccy',sortField: 'ccy'}
             ,{field:'ccy', visible:false}
             ,{field:'hodingType', visible:false}
             /*,{field:'detail', title: 'PtlFundAcctPosi001.detail',

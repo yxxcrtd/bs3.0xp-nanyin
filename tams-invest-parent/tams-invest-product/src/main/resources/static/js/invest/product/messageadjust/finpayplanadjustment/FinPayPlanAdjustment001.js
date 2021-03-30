@@ -62,10 +62,10 @@
     	},
         cols: [
               {field: 'prodType',title: 'FinProductRateQuotation001.prodType',sortable:false,sortField:'prodType',visible:false}
-            , {field: 'vdate', width:150, title: 'FinPayPlanAdjustment001.feePayStartDate',sortable:false, edit:true, type:'date'}
-            , {field: 'mdate', width:150, title: 'FinPayPlanAdjustment001.feePayEndDate', sortable:false,edit:true, type:'date'}
-            , {field: 'payDate', width:150,title: 'FinPayPlanAdjustment001.payDate',sortable:false, edit:true,  type:'date'}
-            , {field: 'payStatus',width:150, title: 'FinPayPlanAdjustment001.status',sortable:false
+            , {field: 'vdate', width:250, title: 'FinPayPlanAdjustment001.feePayStartDate',sortable:false, edit:true, type:'date'}
+            , {field: 'mdate', width:250, title: 'FinPayPlanAdjustment001.feePayEndDate', sortable:false,edit:true, type:'date'}
+            , {field: 'payDate', width:250,title: 'FinPayPlanAdjustment001.payDate',sortable:false, edit:true,  type:'date'}
+            , {field: 'payStatus', title: 'FinPayPlanAdjustment001.status',sortable:false
             	,render:function(data, type, row, meta){
             		/*
             		if(row.payStatus != null && row.payStatus != ''){
