@@ -7,8 +7,8 @@
 	        PROD_ID  prdCode,
 	        SINGLE_TOTAL+LEGAL_TOTAL+UNLEGAL_TOTAL  CustHeldNum
         FROM  CHB_PRD_RAISETOT_SUB
-        WHERE
-        	TO_DATE(TO_CHAR(STATUS_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{checkDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+        WHERE        	
+        	STATUS_DATE <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
         	AND  SEND_STATUS = '01'
         <if test="prodId != null and prodId != ''">
             and PROD_ID = #{prodId}
