@@ -45,7 +45,7 @@ import static com.joyintech.tams.invest.trade.common.service.TradeCommonService.
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
- * 
+ *
  * @author xiexinting
  * @version 1.0 2018年11月22日
  * @see TrdFundInvestTradeValidator
@@ -95,59 +95,59 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
         if (StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit")) {
             if (StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue())) {
                 if (!StringUtil.isNotEmpty(map.get("toffStrdate")) || !StringUtil.isNotEmpty(map.get("toffEnddate"))
-                    || dto.getTradeDateString().compareTo((String)map.get("toffStrdate")) < 0
-                    || dto.getTradeDateString().compareTo((String)map.get("toffEnddate")) > 0) {
+                        || dto.getTradeDateString().compareTo((String)map.get("toffStrdate")) < 0
+                        || dto.getTradeDateString().compareTo((String)map.get("toffEnddate")) > 0) {
                     errorList.add(new ValidMessage(this.getMessage("TRD_FUND_E_002")));
                 }
 
                 if (dto.getPurCfmDate() != null && StringUtil.isNotEmpty(map.get("vdate"))
-                    && DateUtil.format(dto.getPurCfmDate()).compareTo((String)map.get("vdate")) < 0) {
+                        && DateUtil.format(dto.getPurCfmDate()).compareTo((String)map.get("vdate")) < 0) {
                     errorList.add(new ValidMessage("purCfmDate", this.getMessage("TRD_FUND_E_004")));
                 }
             }
             if (!StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue())) {
                 if (StringUtil.isNotEmpty(map.get("toffStrdate")) && StringUtil.isNotEmpty(map.get("toffEnddate"))
-                    && dto.getTradeDateString().compareTo((String)map.get("toffStrdate")) >= 0
-                    && dto.getTradeDateString().compareTo((String)map.get("toffEnddate")) <= 0) {
+                        && dto.getTradeDateString().compareTo((String)map.get("toffStrdate")) >= 0
+                        && dto.getTradeDateString().compareTo((String)map.get("toffEnddate")) <= 0) {
                     errorList.add(new ValidMessage("ps", this.getMessage("TRD_FUND_E_007")));
                 }
             }
             if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
-                || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                 if ((StringUtil.isNotEmpty(map.get("etfType"))
-                     && !StringUtil.equals(map.get("etfType"), DictCodeListExt2.ETF类型_货币ETF.getValue()))
-                    || (StringUtil.isNotEmpty(map.get("trmFundType"))
+                        && !StringUtil.equals(map.get("etfType"), DictCodeListExt2.ETF类型_货币ETF.getValue()))
+                        || (StringUtil.isNotEmpty(map.get("trmFundType"))
                         && StringUtil.equals(map.get("trmFundType"), DictCodeListExt2.交易所基金类型_封闭式基金.getValue()))
-                    || (StringUtil.isNotEmpty(map.get("trmFundType"))
+                        || (StringUtil.isNotEmpty(map.get("trmFundType"))
                         && StringUtil.equals(map.get("trmFundType"), DictCodeListExt2.交易所基金类型_分级基金.getValue())
                         && StringUtil.isNotEmpty(map.get("pFinprodId")))) {
                     errorList.add(new ValidMessage(this.getMessage("TRD_FUND_E_003")));
                 }
             }
             if ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-                 || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))
-                && (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))
+                    && (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
                     || StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()))) {
                 if (dto.getUnitCprice() == null) {
                     errorList.add(new ValidMessage("unitCprice",
-                        this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradePrice"))));
+                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradePrice"))));
                 }
 
                 if (StringUtil.isNotEmpty(dto.getEntrustId()) && dto.getTrdInvestPersonInfo() != null
-                    && (StringUtil.equals(dto.getTrdInvestPersonInfo().getCounterId(),
+                        && (StringUtil.equals(dto.getTrdInvestPersonInfo().getCounterId(),
                         BussinessConstant.COUNTER_PARTY_ID_SHANGHAI)
                         || StringUtil.equals(dto.getTrdInvestPersonInfo().getCounterId(),
-                            BussinessConstant.COUNTER_PARTY_ID_SHENZHEN))) {
+                        BussinessConstant.COUNTER_PARTY_ID_SHENZHEN))) {
                     BaseEtrInvestInfoDto baseEtrInvestInfoDto = trdFundInvestTrade002Service.getEtrustDto(dto.getEntrustId());
                     if (baseEtrInvestInfoDto != null && baseEtrInvestInfoDto.getEtrEntrust() != null) {
                         BigDecimal etrPrice = baseEtrInvestInfoDto.getEtrEntrust().getPrice();
                         if (etrPrice != null && dto.getUnitCprice() != null) {
                             if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-                                && etrPrice.compareTo(dto.getUnitCprice()) < 0) {
+                                    && etrPrice.compareTo(dto.getUnitCprice()) < 0) {
                                 errorList.add(new ValidMessage("unitCprice", this.getMessage("TRD_FUND_E_006")));
                             }
                             if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
-                                && etrPrice.compareTo(dto.getUnitCprice()) > 0) {
+                                    && etrPrice.compareTo(dto.getUnitCprice()) > 0) {
                                 errorList.add(new ValidMessage("unitCprice", this.getMessage("TRD_FUND_E_005")));
                             }
                         }
@@ -175,17 +175,22 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
         BigDecimal zero = new BigDecimal(0);
         // 获取委托的份额,基金的赎回委托属于限量委托 yjm start 20191121
         if (StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit")) {
-             if (StringUtil.isNotEmpty(entrustId) && StringUtil.isNotEmpty(shareAmt)
-                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
-                    Map<String, Object> resultMap = trdFundInvestTrade002Service.selectEntrustAmt(param);
-                    BigDecimal entrustNum = new BigDecimal((String) resultMap.get("ENTRUST_NUM"));
-                    if (StringUtil.isNotEmpty(entrustNum) && shareAmt.compareTo(entrustNum) > 0) {
+            if (StringUtil.isNotEmpty(entrustId) && StringUtil.isNotEmpty(shareAmt)
+                    && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                Map<String, Object> resultMap = trdFundInvestTrade002Service.selectEntrustAmt(param);
+                BigDecimal entrustNum = new BigDecimal((String) resultMap.get("ENTRUST_NUM"));
+                BigDecimal finishAmt = new BigDecimal((String) resultMap.get("FINISH_AMT"));
+
+                // 未使用额度 为  entrustNum -  已使用额度
+                BigDecimal availablEntrustNum = ArithmeticUtil.subtract(entrustNum, finishAmt);
+
+                if (StringUtil.isNotEmpty(availablEntrustNum) && shareAmt.compareTo(availablEntrustNum) > 0) {
 //                        errorList.add(new ValidMessage("shareAmt", this.getMessage("BUSS_COM_E_0003",
 //                                this.getMessage("TrdFundInvestTrade002.tradeSha"), "委托份额:" + entrustNum)));
-                        errorList.add(new ValidMessage("shareAmt", "基金赎回份额不能大于基金可交易额度份额，可交易额度份额:" + entrustNum));
+                    errorList.add(new ValidMessage("shareAmt", "基金赎回份额不能大于基金可交易额度份额，可交易额度份额:" + availablEntrustNum));
 
-                    }
-             } 
+                }
+            }
 //             else {
 //                 if (DictCodeList.交易方向_赎回.getValue().equals(dto.getPs())) {
 //                     List<BigDecimal> ssList= tradeCommonService.selectProAvailableCash(dto.getEntrustId());
@@ -206,12 +211,15 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                     errorList.add(new ValidMessage("finprodId", "该资产存在流程中的存续期数据数据，交易编号：" + 流程中));
                 }
             }
-            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
-                if (StringUtil.isNotEmpty(shareAmt) && StringUtil.isNotEmpty(dto.getAssetAvailablePosition())
-                        && shareAmt.compareTo(dto.getAssetAvailablePosition()) == 1) {
-                    errorList.add(new ValidMessage("shareAmt",
-                            this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
-                                    this.getMessage("TrdBondInvestTrade002.avaliblePosition"))));
+
+            if(StringUtil.isEmptyList(errorList)) {
+                if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                    if (StringUtil.isNotEmpty(shareAmt) && StringUtil.isNotEmpty(dto.getAssetAvailablePosition())
+                            && shareAmt.compareTo(dto.getAssetAvailablePosition()) == 1) {
+                        errorList.add(new ValidMessage("shareAmt",
+                                this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
+                                        this.getMessage("TrdBondInvestTrade002.avaliblePosition"))));
+                    }
                 }
             }
         }
@@ -249,65 +257,65 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
             }
             if (StringUtil.isNotEmpty(dto.getPs())) {
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     if (!StringUtil.isNotEmpty(dto.getSettleSpreed())) {
                         errorList.add(new ValidMessage("settleSpreed",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.settleSpreed"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.settleSpreed"))));
                     }
                 }
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())) {
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())) {
                     if (shareAmt == null) {
                         errorList.add(new ValidMessage("shareAmt",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeSha"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeSha"))));
                     }
                     if (tradeAmt == null) {
                         errorList.add(new ValidMessage("tradeAmt",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeAmt"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeAmt"))));
                     }
                 }
                 // 场内基金改造 modify by renping 20191117 start
                 if (StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
                     // 场内基金改造 modify by renping 20191117 end
                     if (tradeAmt == null) {
                         errorList.add(new ValidMessage("tradeAmt",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeAmt"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeAmt"))));
                     }
                 }
                 else if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     if (shareAmt == null) {
                         errorList.add(new ValidMessage("shareAmt",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeSha"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeSha"))));
                     }
                     if (StringUtil.isNotEmpty(shareAmt) && StringUtil.isNotEmpty(dto.getAssetAvailablePosition())
-                        && shareAmt.compareTo(dto.getAssetAvailablePosition()) == 1) {
+                            && shareAmt.compareTo(dto.getAssetAvailablePosition()) == 1) {
                         errorList.add(new ValidMessage("shareAmt",
                                 this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
-                                this.getMessage("TrdBondInvestTrade002.avaliblePosition"))));
+                                        this.getMessage("TrdBondInvestTrade002.avaliblePosition"))));
                     }
                 }
                 if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
                     errorList.add(new ValidMessage("tradeAmt",
-                        this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"), "0")));
+                            this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"), "0")));
                 }
                 if (shareAmt != null && shareAmt.compareTo(zero) == -1) {
                     errorList.add(new ValidMessage("shareAmt",
-                        this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"), "0")));
+                            this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"), "0")));
                 }
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     BigDecimal assetAvailablePosition = dto.getAssetAvailablePosition();
                     if (assetAvailablePosition != null && shareAmt != null && shareAmt.compareTo(assetAvailablePosition) == 1) {
                         errorList.add(new ValidMessage("shareAmt",
-                            this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
-                                this.getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                                this.getMessage("BUSS_COM_E_0003", this.getMessage("TrdFundInvestTrade002.tradeSha"),
+                                        this.getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
                     }
                 }
                 // 场内基金改造 modify by renping 20191117 start
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue())) {
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
+                        || StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue())) {
                     // 场内基金改造 modify by renping 20191117 end
                     // 划款指令
                     if (bussTrdTransferOrderService != null) {
@@ -376,21 +384,21 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                 // update by 张年 2019/08/26 end
                 // 同时验证卖出方是否有足够的持仓
                 if (StringUtil.isNotEmpty(dto.getPortfolioId()) && dto.getTradeDate() != null
-                    && StringUtil.isNotEmpty(dto.getFinprodId())) {
+                        && StringUtil.isNotEmpty(dto.getFinprodId())) {
                     PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
                     ptlSecPositionFlowDto.setCdate(dto.getTradeDate());
                     ptlSecPositionFlowDto.setPortfolioId(dto.getPortfolioId());
                     // 场内基金改造 modify by renping 20191117 start
                     ptlSecPositionFlowDto.setSecAcctId(
-                        StringUtil.isEmpty(dto.getSecManageAcctId()) ? dto.getChlId() : dto.getSecManageAcctId());
+                            StringUtil.isEmpty(dto.getSecManageAcctId()) ? dto.getChlId() : dto.getSecManageAcctId());
                     // 场内基金改造 modify by renping 20191117 end
                     ptlSecPositionFlowDto.setFinprodId(dto.getFinprodId());
                     BigDecimal assetPosition = trdFundInvestTrade002Service.getPtlSecPosition(ptlSecPositionFlowDto);
                     if (assetPosition.compareTo(dto.getShareAmt()) == -1) {
                         errorList.add(new ValidMessage("",
-                            getMessage("BUSS_COM_E_0003",
-                                ptlSecPositionFlowDto.getPortfolioId() + "  " + getMessage("TrdFundInvestTrade002.tradeSha"),
-                                getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
+                                getMessage("BUSS_COM_E_0003",
+                                        ptlSecPositionFlowDto.getPortfolioId() + "  " + getMessage("TrdFundInvestTrade002.tradeSha"),
+                                        getMessage("TrdFundInvestTrade002.assetAvailablePosition"))));
                     }
                 }
             }
@@ -428,45 +436,45 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
 
             if (StringUtil.isNotEmpty(dto.getPs())) {
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     if (!StringUtil.isNotEmpty(dto.getSettleSpreed())) {
                         errorList.add(new ValidMessage("settleSpreed",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.settleSpreed"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.settleSpreed"))));
                     }
                 }
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())) {
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())) {
                     if (shareAmt == null) {
                         errorList.add(new ValidMessage("shareAmt",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeSha"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeSha"))));
                     }
                     if (tradeAmt == null) {
                         errorList.add(new ValidMessage("tradeAmt",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeAmt"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeAmt"))));
                     }
                 }
                 // 场内基金改造 modify by renping 20191117 start
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
-                        ) {
+                ) {
                     // 场内基金改造 modify by renping 20191117 end
-                	if (tradeAmt == null) {
+                    if (tradeAmt == null) {
                         errorList.add(new ValidMessage("tradeAmt",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeAmt"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeAmt"))));
                     }
                 }
                 else if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     if (shareAmt == null) {
                         errorList.add(new ValidMessage("shareAmt",
-                            this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeSha"))));
+                                this.getMessage("BUSS_COM_E_0038", this.getMessage("TrdFundInvestTrade002.tradeSha"))));
                     }
                 }
                 if (tradeAmt != null && tradeAmt.compareTo(zero) == -1) {
                     errorList.add(new ValidMessage("tradeAmt",
-                        this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"), "0")));
+                            this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeAmt"), "0")));
                 }
                 if (shareAmt != null && shareAmt.compareTo(zero) == -1) {
                     errorList.add(new ValidMessage("shareAmt",
-                        this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"), "0")));
+                            this.getMessage("BUSS_COM_E_0004", this.getMessage("TrdFundInvestTrade002.tradeSha"), "0")));
                 }
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
                     if(dto.getPortfolioId().equals("dzh")){
@@ -490,9 +498,9 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                 }
                 // 场内基金改造 modify by renping 20191117 start
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue())) {
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
+                        || StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue())) {
                     // 场内基金改造 modify by renping 20191117 end
                     // 划款指令
                     if (bussTrdTransferOrderService != null) {
@@ -562,7 +570,7 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                 // update by 张年 2019/08/26 end
                 // 同时验证卖出方是否有足够的持仓
                 if (StringUtil.isNotEmpty(dto.getPortfolioId()) && dto.getTradeDate() != null
-                    && StringUtil.isNotEmpty(dto.getFinprodId())) {
+                        && StringUtil.isNotEmpty(dto.getFinprodId())) {
                     if(dto.getPortfolioId().equals("dzh")){
                         for(BussTrdTransfenpeiDto feipeiDto : dto.getBussTrdTransfenpeiDto()){
                             PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
@@ -604,23 +612,23 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
         else if (StringUtil.equals(dto.getOperateType(), "revoke")) {
             TrdFundInvestTradeDto dtocopy = dto.getSelectedItem().get(0);
             if (StringUtil.equals(dtocopy.getValidStatus(), DictCodeListExt1.交易流程状态_撤销.getValue())
-                || StringUtil.equals(dtocopy.getValidStatus(), DictCodeListExt1.交易流程状态_流程中.getValue())) {
+                    || StringUtil.equals(dtocopy.getValidStatus(), DictCodeListExt1.交易流程状态_流程中.getValue())) {
                 errorList.add(new ValidMessage(this.getMessage("TRD_X_0005")));
             }
             if (StringUtil.equals(dtocopy.getPs(), DictCodeList.交易方向_赎回确认.getValue())
-                && trdFundInvestTrade001Service.selRedemption(dtocopy.getTradeId()) != 0) {
+                    && trdFundInvestTrade001Service.selRedemption(dtocopy.getTradeId()) != 0) {
                 errorList.add(new ValidMessage(this.getMessage("TRD_X_0006")));
             }
             String ps = dtocopy.getPs();
             if (StringUtil.isNotEmpty(ps)
-                // 场内基金改造 modify by renping 20191117 start
-                && (((StringUtil.equals(ps, DictCodeList.交易方向_申购.getValue())
-                      || StringUtil.equals(ps, DictCodeList.交易方向_赎回.getValue())
-                      || StringUtil.equals(ps, DictCodeListExt2.交易方向_转换申请.getValue())
-                      // 流程中数据check 修正 add by renping 20191020 start
-                      || StringUtil.equals(ps, DictCodeList.交易方向_赎回确认.getValue())
-                // 流程中数据check 修正 add by renping 20191020 end
-                ) && !StringUtil.equals(map.get("trmFundType"), DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue()))
+                    // 场内基金改造 modify by renping 20191117 start
+                    && (((StringUtil.equals(ps, DictCodeList.交易方向_申购.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_赎回.getValue())
+                    || StringUtil.equals(ps, DictCodeListExt2.交易方向_转换申请.getValue())
+                    // 流程中数据check 修正 add by renping 20191020 start
+                    || StringUtil.equals(ps, DictCodeList.交易方向_赎回确认.getValue())
+                    // 流程中数据check 修正 add by renping 20191020 end
+            ) && !StringUtil.equals(map.get("trmFundType"), DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue()))
                     || StringUtil.equals(ps, DictCodeListExt2.交易方向_认购.getValue()))) {
                 // 场内基金改造 modify by renping 20191117 end
                 if (!trdFundInvestTrade001Service.revokeCheck(dtocopy)) {
@@ -648,9 +656,9 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
             Integer count;
             Map<String,Object> sMap= new HashMap<String ,Object>();
             if(!StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), DictCodeList.是否_否.getValue()) &&
-                (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) ||
-                        StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()) ||
-                        StringUtil.equals(dto.getPs(), DictCodeList.交易方向_认购.getValue()))){
+                    (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) ||
+                            StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()) ||
+                            StringUtil.equals(dto.getPs(), DictCodeList.交易方向_认购.getValue()))){
                 sMap.put("chlId",dto.getChlId());
                 sMap.put("finprodId",dto.getPortfolioId());
                 count = trdFundInvestTrade002Service.selectchlTrade(sMap);
@@ -660,7 +668,7 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                 }
 
             }else if(StringUtil.equals(dto.getTrdInvestPersonInfo().getIsOutTrade(), DictCodeList.是否_否.getValue()) &&
-                        (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()) ||
+                    (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()) ||
                             StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())     )){
                 sMap.put("chlId",dto.getChlId());
                 sMap.put("counterId",dto.getCounterId());
