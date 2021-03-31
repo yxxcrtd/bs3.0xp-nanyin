@@ -2162,4 +2162,18 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
         this.assignIntamt = assignIntamt;
     }
     // 合并 by 华兴 end
+
+    /**
+     * 按钮Id
+     */
+    private String elementId;
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
+
 }
