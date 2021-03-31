@@ -215,4 +215,9 @@ public class TrdBondDurationController {
     	}
         return null;
     }
+
+    @PostMapping("findWorkflowProcessDtos")
+    public List<String> findWorkflowProcessDtos(@RequestBody Map<String, Object> params) {
+        return trdBondDurationService.findWorkflowProcessDtos(params);
+    }
 }

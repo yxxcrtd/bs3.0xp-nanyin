@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -62,17 +63,26 @@ public class InvestorsQualityCheckSLPPService extends InvestorsQualityCheckBaseS
         // 查询所有记录
         dealParamMap(param);
         List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchSLPPAll(param);
+        int allListInt = allList.size() * 3;
         // 查询不合格记录
         List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchSLPPErr(param);
+        BigDecimal unQualifiedInt = BigDecimal.ZERO;
+        for (InvestorsQualityCheck001Dto dto : unQualifiedList){
+            unQualifiedInt = ArithmeticUtil.doAdd(unQualifiedInt, dto.getErrRecTotal());
+        }
 
         InvestorsQualityCheck001Dto dto = new InvestorsQualityCheck001Dto();
-        dto.setUnQualified(String.valueOf(unQualifiedList.size()));
-        dto.setTotal(String.valueOf(allList.size() * 3));
+        dto.setUnQualified(String.valueOf(unQualifiedInt));
+        dto.setTotal(String.valueOf(allListInt));
+
         if (!StringUtil.isEmptyList(allList)){
             dto.setRate("100");
             if (!StringUtil.isEmptyList(unQualifiedList)){
-                // （1取得的数量 * 3 - 检查错误数量）/1中取得的数量/3 * 100%
-                dto.setRate(ArithmeticUtil.subtract(new BigDecimal(100), ArithmeticUtil.divide(ArithmeticUtil.multiply(new BigDecimal(unQualifiedList.size()), new BigDecimal(100)), ArithmeticUtil.multiply(new BigDecimal(allList.size()), BigDecimal.valueOf(3)), 2)).toPlainString());
+                dto.setRate("0");
+                if (allListInt != unQualifiedInt.intValue()){
+                    // （1取得的数量 * 3 - 检查错误数量）/1中取得的数量/3 * 100%
+                    dto.setRate(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.subtract(new BigDecimal(dto.getTotal()), unQualifiedInt), new BigDecimal(dto.getTotal()), 4), new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP).toPlainString());
+                }
             }
         }
         dto.setPageType(SLPP);
