@@ -17,6 +17,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -89,6 +90,12 @@ public class AssetInfoDetail002Controller extends BaseController {
         }
         return super.init(model);
     }
+
+    @Override
+    public Object after(String draftobj, Model model) {
+        return JsonUtils.json2Object(draftobj,AssetInfoDetailDto.class);
+    }
+
     /**
      * check--保存
      * @param dto
