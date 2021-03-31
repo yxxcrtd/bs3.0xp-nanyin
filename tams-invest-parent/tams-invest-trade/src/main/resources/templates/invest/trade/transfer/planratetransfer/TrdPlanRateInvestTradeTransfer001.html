@@ -41,6 +41,8 @@
                 <input id="calendarId" name="calendarId" data-th-value="${entity?.calendarId}" hidden>
                 <input name="liBranch" data-th-value='${entity?.liBranch}' hidden>
             	<input name="isNeedAssign" data-th-value='${entity?.isNeedAssign}' hidden>
+                <input type="number" id = "assignIntamt" data-textrange="2" name="assignIntamt" data-th-value='${entity?.assignIntamt}' hidden>
+
                 <div class="pro-module-wrap">
                     <div class="pro-module">
                         <h3 class="pro-module-title"><span class="title-des">交易信息</span>（<span
@@ -158,14 +160,14 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div> -->
-                                <div class="form-inline-wrap">
+<!--                                <div class="form-inline-wrap">
                                     <label class="layui-form-label form-lable">待转让利息</label>
                                     <div class="layui-input-inline input-inline">
                                         <input disabled id="assignIntamt" name="assignIntamt" class="layui-input form-input text-number"
                                                data-th-value="${entity?.assignIntamt}" data-textrange="2"/>
                                         <span class="input-right-show">元</span>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>

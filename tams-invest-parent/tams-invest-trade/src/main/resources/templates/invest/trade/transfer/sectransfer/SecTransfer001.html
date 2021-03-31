@@ -68,8 +68,9 @@
             <input type="text" id = "mdate" name="mdate" data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}' hidden>
             <input name="liBranch" data-th-value='${entity?.liBranch}' hidden>
             <input name="isNeedAssign" data-th-value='${entity?.isNeedAssign}' hidden>
-           <!--  <input type="date" id="vdate" name="vdate" data-th-value="${entity?.vdate}" hidden>
-            <input type="date" id="mdate" name="mdate" data-th-value="${entity?.mdate}" hidden> -->
+            <input type="number" id = "assignIntamt" name="assignIntamt" data-textrange="2" data-th-value='${entity?.assignIntamt}' hidden>
+            <!--  <input type="date" id="vdate" name="vdate" data-th-value="${entity?.vdate}" hidden>
+             <input type="date" id="mdate" name="mdate" data-th-value="${entity?.mdate}" hidden> -->
 <!--            <input disabled type="text" id="vdate1" name="vdate1"-->
 <!--                                               class="layui-input form-input input-dateSelect" placeholder="请输入内容"-->
 <!--                                               th:placeholder="#{SysCommon.placeholder}"-->
@@ -212,14 +213,14 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div> -->
-                                <div class="form-inline-wrap" hidden>
+<!--                                <div class="form-inline-wrap" hidden>
                                     <label class="layui-form-label form-lable">待转让利息</label>
                                     <div class="layui-input-inline input-inline">
                                         <input disabled id="assignIntamt" name="assignIntamt" class="layui-input form-input text-number"
                                                data-th-value="${entity?.assignIntamt}" data-textrange="2"/>
                                         <span class="input-right-show">元</span>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
