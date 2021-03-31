@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace = "com.joyintech.service.portfolio.ptlfundacctposi.dao.PtlFundAcctPosiMapper">
 <select id="select" resultType="com.joyintech.service.portfolio.ptlfundacctposi.dto.PtlFundAcctPosiDto">
-SELECT DISTINCT PTL.CDATE         CDATE,
+	with temp as (
+	SELECT DISTINCT PTL.CDATE         CDATE,
                 PTL.PORTFOLIO_ID,
                 PTL.ACCT_ID       ACCTID,
                 PTL.CCY           CCY,
@@ -10,7 +11,8 @@ SELECT DISTINCT PTL.CDATE         CDATE,
                 PP.PORTFOLIO_NAME PORTFOLIONAME,
                 STL.ACCT_NAME     ACCTNAME,
                 PTL.AMOUNT,
-                FLOW.AMOUNT1
+                FLOW.AMOUNT1,
+				'02' isSummary
   FROM PTL_CASH_POSITION PTL
   LEFT JOIN PTL_CAPACCT_INFO PTLACCT
     ON PTLACCT.PORTFOLIO_ID = PTL.PORTFOLIO_ID
@@ -52,6 +54,22 @@ SELECT DISTINCT PTL.CDATE         CDATE,
    ON FP.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
    <include refid="sqlwhere"></include>
 	order by PTL.PORTFOLIO_ID,PTL.CDATE asc
+	)
+	select * from temp
+	<!--汇总-->
+	union
+	select   
+		null  CDATE,
+    	''    PORTFOLIO_ID,
+        ''    ACCTID,
+        ''    CCY,
+        ''    HODINGTYPE,
+        ''    PORTFOLIONAME,
+        ''    ACCTNAME,
+        null  AMOUNT,
+        decode(SUM(AMOUNT1),null,0,SUM(AMOUNT1)) AMOUNT1,
+		'01' isSummary
+	from temp
 </select>
 <sql id="sqlwhere">
   <where>

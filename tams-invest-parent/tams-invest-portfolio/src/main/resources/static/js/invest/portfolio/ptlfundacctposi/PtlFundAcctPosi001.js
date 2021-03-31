@@ -66,7 +66,7 @@ $(function() {
             ,{field:'operation' , type:'action', title: 'PtlFundAcctPosi001.detail',
                 render:function (data, type, row, meta) {
                 var buttons = '';
-                if(purviewElements.indexOf('_manual')!=-1){
+                if(purviewElements.indexOf('_manual')!=-1&&row.isSummary =='02'){
                        buttons += '<a class="layui-btn layui-btn-sm btn-create  manual" title="明细" style="color:white">明细</a>';
                  }
                 return buttons;
