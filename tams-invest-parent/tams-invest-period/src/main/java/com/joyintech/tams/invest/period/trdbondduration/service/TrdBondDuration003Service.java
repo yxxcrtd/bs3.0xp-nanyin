@@ -677,4 +677,10 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
     private Map<String,Object> getPkByBizCode(String bizCode){
     	return restTemplate.getForObject( ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/getPkByBizCode?bizCode="+bizCode, Map.class);
     }
+
+    public List<String> findWorkflowProcessDtos(Map<String, Object> param) {
+        return restTemplate.postForObject(
+                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/findWorkflowProcessDtos", param,
+                ArrayList.class);
+    }
 }

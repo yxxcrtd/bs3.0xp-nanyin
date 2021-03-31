@@ -602,4 +602,7 @@ public class TrdBondDurationService extends BaseService {
     	return trdBondDurationMapper.getPkByBizCode(bizCode);
     }
 
+    public List<String> findWorkflowProcessDtos(Map<String, Object> params) {
+        return trdBondDurationMapper.findWorkflowProcessDtos(params);
+    }
 }
