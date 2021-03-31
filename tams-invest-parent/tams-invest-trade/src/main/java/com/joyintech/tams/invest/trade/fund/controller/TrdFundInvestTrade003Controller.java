@@ -159,9 +159,15 @@ public class TrdFundInvestTrade003Controller extends BaseController {
             if (StringUtil.equals(status, DictCodeListExt1.交易流程状态_流程中.getValue())
                 && !StringUtil.equals(ps, DictCodeList.交易方向_赎回到账.getValue())) {
                 dto = trdFundInvestTrade003Service.getBussinessEntityByWorkflowId(workflowId);
-                BussTrdTransferOrderDto bttoDto = dto.getBussTrdTransferOrder().get(0);
+                //某些流程中的交易并没有划款指令，故加此判断
+                if (dto.getBussTrdTransferOrder() != null && dto.getBussTrdTransferOrder().size() > 0) {
+                    BussTrdTransferOrderDto bttoDto = dto.getBussTrdTransferOrder().get(0);
+                    model.addAttribute("entity_bussRepFinProductInfoDto", JsonUtils.object2Json(bttoDto));
+                }
+                if (DictCodeListExt2.交易方向_转换赎回确认.getValue().equals(dto.getPs())) {
+                    dto.setPs(DictCodeListExt2.交易方向_转换确认.getValue());
+                }
                 TrdInvestPersonInfo002Dto tipiDto = dto.getTrdInvestPersonInfo();
-                model.addAttribute("entity_bussRepFinProductInfoDto", JsonUtils.object2Json(bttoDto));
                 model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(tipiDto));
                 model.addAttribute("businessId", workflowId);
                 model.addAttribute("workflowId", workflowId);

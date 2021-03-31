@@ -111,8 +111,27 @@
                     <where>
                         (T1.IS_CANCEL is null or T1.IS_CANCEL = #{YES_NO_NO})
                         and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
-                        AND (T1.PS = 'T65' OR T1.PS = 'T66')
+                        AND (T1.PS = 'T01' OR T1.PS = 'T02')
 						and  (wtpd.is_swap_transaction is null or wtpd.is_swap_transaction = #{YES_NO_NO})
+                    </where>
+
+                    UNION ALL
+
+                    SELECT
+                    T1.TOTLE_TRADE_ID TRADE_ID, #{VALID_STATUS_01} VALID_STATUS, T1.FINPROD_TYPE2, T1.FINPROD_ID,
+                    fp1.FINPROD_NAME chlFinprodId,T1.CHL_ID,
+                    T1.PS, T1.TRADE_MARKET, T1.TRADE_PLAT, T1.TRADE_MARKET_MODE,T1.TRADE_AMT, T1.PRIN_AMT,T1.SHARE_AMT, T1.CCY, T1.TRADE_DATE, T1.SETTLE_DATE,
+                    T1.REMARK, T1.WORKFLOW_ID WORKFLOW_ID, null WORKFLOW_STATUS,T1.B_TRADE_ID,T2.ENTRUST_ID,pp.PORTFOLIO_ID,pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_NAME
+                    ,T2.ASSET_RECOMMAND_ORG
+                    ,T1.TOTLE_TRADE_ID
+                    FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+                    LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = T1.CHL_ID
+                    LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD T2 on T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
+                    LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
+                    <where>
+                        (T1.IS_CANCEL is null or T1.IS_CANCEL = #{YES_NO_NO})
+                        and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
+                        AND (T1.PS = 'T65' OR T1.PS = 'T66')
                     </where>
                 </if>
                 <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_02">
