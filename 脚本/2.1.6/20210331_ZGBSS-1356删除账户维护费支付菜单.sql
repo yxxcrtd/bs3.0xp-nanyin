@@ -1,0 +1,1 @@
+delete from sys_menu where menu_id = 'PRODUCT_SIDE_001_010' and remark = '账户维护费支付';
