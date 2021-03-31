@@ -269,19 +269,6 @@
 			$("#TrdOutRightRepoTrade002_secAcctId").prop("disabled", false);
 		}
 		refreshCashAndBalance();
-		if($("#chlId").val()){
-			if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
-				$('#procedureAmt').val('').trigger('change');
-				$('#procedureAmtDiv').hide();
-				$('#settleAmt').val('').trigger('change');
-				$('#settleAmtDiv').hide();
-			}
-		}else{
-			if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
-				$('#procedureAmtDiv').show();
-				$('#settleAmtDiv').show();
-			}
-		}
 	});
 
 	var changeTradeAmtAndFee = function() {
@@ -293,7 +280,7 @@
 		}
 	}
 	// <!-- 通道交易 新增 强成西 2019/03/26 end -->
-	
+
 	/**
      * 刷新托管户剩余现金、组合T日可用现金、组合T+1日可用现金
      */
@@ -339,7 +326,7 @@
             window.BussTrdAvailableCashQuery["bussTrdOutRightRepoTrade"].showPosition();
         }
     };
-    
+
     /**
      * 券面总额改变时
      * 可修改券面总额，修改后，同步调整首次结算金额和到期结算金额
@@ -350,7 +337,7 @@
     	calc3();
     	calc4();
     };
-    
+
     /**
      * 首次全价=首次净价+首次应计利息；
      */
@@ -360,7 +347,7 @@
     	var fullPrice = JoyinMath.doAdd(cleanPrice, intAmt);// 首次全价=首次净价+首次应计利息；
     	$('#TrdOutRightRepoTrade002_fFprice').val(fullPrice);
     }
-    
+
     /**
      * 首次全价=首次净价+首次应计利息；
      */
@@ -370,7 +357,7 @@
     	var fullPrice = JoyinMath.doAdd(cleanPrice, intAmt);// 首次全价=首次净价+首次应计利息；
     	$('#TrdOutRightRepoTrade002_mFprice').val(fullPrice);
     }
-    
+
     /**
      * 首次结算金额=券面总额*首次全价/100
      */
@@ -382,9 +369,9 @@
     	}else{
     		$('#TrdOutRightRepoTrade002_fSettleAmt').val('').trigger('change');
     	}
-    	
+
     };
-    
+
     /**
      * 到期结算金额=券面总额*到期全价/100
      */
@@ -396,9 +383,9 @@
     	}else{
     		$('#TrdOutRightRepoTrade002_mSettleAmt').val('').trigger('change');
     	}
-    	
+
     };
- 
+
     /**
      * 计算买断式回购利息
      */
@@ -413,7 +400,7 @@
     	}
 		return JoyinMath.doDiv(JoyinMath.doMul(JoyinMath.doMul(settleAmt, repoTerm, 8), JoyinMath.doDiv(repoRate, 100, 8), 8), basis, 8);//回购区间利息=本金金额*（到期日-起息日）/回购交易计息基础*回购利率；
     }
-    
+
     var calcClickAction = function(){
         //首次收益率%、到期收益率%参考债券交易到期收益率的计算方法
     	var paramObj = getcheckdata();
@@ -561,7 +548,7 @@
     function getFinProdType2FromPs() {
         return ($("#TrdOutRightRepoTrade002_ps").val() == null || $("#TrdOutRightRepoTrade002_ps").val() == "") ? "" : ($("#TrdOutRightRepoTrade002_ps").val() == BACK_LEND_DIRECTION_FORWARD ? FINPROD_TYPE_TG_F04 : FINPROD_TYPE_TG_F05);
     };
-    
+
     var getcheckdata = function () {
 		var calcModel = $('#TrdOutRightRepoTrade002_calcModel').val();
         var paramObj = {vdate:$("#TrdOutRightRepoTrade002_vdate").val(),mdate:$("#TrdOutRightRepoTrade002_mdate").val(),repRate:$("#TrdOutRightRepoTrade002_repoRate").val(),settleSpeed:$("#TrdOutRightRepoTrade002_settleSpeed").val(),
@@ -605,11 +592,11 @@
 		//add by zhangnian  20200106  end
         return paramObj;
     }
-    
+
     window.componentLoadCallback = function (isDone, pagePath, params) {
     	var initFlag = true;
         if (isDone) {
-        	
+
         	// 刷新托管户剩余现金、组合T日可用现金、组合T+1日可用现金
         	psChangeAction();
 
@@ -625,12 +612,12 @@
                 //window.BaseRiskMathComm.initBaseRiskMathCommPage(riskparam);
             }
             window.CalculateFieldCheckComm.getparam(checkparam);
-            
+
             window.BussTrdTransferOrder['trdOutRightRepoTradeOrder'].setStlCommandInput(function () {
             	// 首次全价不能为空
             	if (!$("#TrdOutRightRepoTrade002_fFprice").val() || typeof $("#TrdOutRightRepoTrade002_fFprice").val() == 'undefined'){
             		if(!initFlag){
-                		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("TrdOutRightRepoTrade002.amtInfo.firstFullPrice")]));	
+                		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("TrdOutRightRepoTrade002.amtInfo.firstFullPrice")]));
             		}
             		return null;
             	}
@@ -644,7 +631,7 @@
             		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("TrdOutRightRepoTrade002.ps")]));
             		return null;
             	}
-            	
+
                 var dealObj = {};
                 dealObj.finprodType2 = getFinProdType2FromPs();
                 dealObj.settleDate = $("#TrdOutRightRepoTrade002_tradeDate").val();
@@ -694,7 +681,7 @@
 		});*/
         initFlag = false;
     };
-    
+
     function saveOrSubmit(operateType) {
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
@@ -714,7 +701,7 @@
 			if (window.CalculateFieldCheckComm.isCalcConditionChanged(getcheckdata())){
 				return;
 			}
-	
+
 	        // 检查生成划款指令参数是否发生变化
 	        if (window.BussTrdTransferOrder['trdOutRightRepoTradeOrder'].isCalcConditionChanged()) {
 	            return;
@@ -748,7 +735,7 @@
 	    			return;
 	    		}
 	    	}
-	
+
 	        var object = $.serializeToObject('#TrdOutRightRepoTrade002_submitForm', true);
 	        object.pageModel = pageModel;
 	        object.operateType = operateType;
@@ -756,7 +743,7 @@
 	        if (FileCommon) {
 	            object.uploadFileList = FileCommon.getUploadFileInfo();
 	        }
-	
+
 	        // 资产可用持仓
 	        object.assetPosition = $("#bussTrdOutRightRepoTrade_assetPosition").val();
 			object.secTotalPrin = JoyinMath.doMul(object.secTotalPrin, 10000, 2);
@@ -769,12 +756,6 @@
 			}
 			object.inputValue1 = PINAN_ASSET_TYPE_F10;
 			object.inputValue2 = $('#ps').val();
-			if(object.chlId){
-				if(object.procedureAmt)
-					object.procedureAmt = '';
-				if(object.settleAmt)
-					object.settleAmt = '';
-			}
 			if ($('#trdOutRightRepoPersonInfo_counterId').select2('data') && $('#trdOutRightRepoPersonInfo_counterId').select2('data')[0]) {
 	            object.counterId=$('#trdOutRightRepoPersonInfo_counterId').select2('data')[0].id;
 	        }
@@ -794,9 +775,9 @@
 					});
 				});
 			});
-    	});	
+    	});
 	};
-    
+
     var settleSpeedChangeAction = function(){
     	var settleSpeed = $('#TrdOutRightRepoTrade002_settleSpeed').val();
     	var tradeDate = $('#TrdOutRightRepoTrade002_tradeDate').val();
@@ -807,7 +788,7 @@
     		}else if(settleSpeed === SETTLESPEED_2){
     			num =2;
     		}
-    			
+
     		//$('#TrdOutRightRepoTrade002_vdate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
             //推算起息日  判断是否节假日 是则顺延
 			var vdate = DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd');
@@ -830,8 +811,8 @@
                 },false);
             }
     	}
-    	
-    }  
+
+    }
 
     var tradeMarketChange = function () {
 		if (TRADE_MARKET_01 == $("#TrdOutRightRepoTrade002_tradeMarket").val()) {
@@ -862,14 +843,14 @@
     		$('#TrdOutRightRepoTrade002_settleSpeed').attr('disabled',true);
     		$('#TrdOutRightRepoTrade002_dealCalId').attr('disabled',true);
     		$('#TrdOutRightRepoTrade002_ccy').attr('disabled',true);
-    		
+
 			if($('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() != "" ){
     			$('#TrdOutRightRepoTrade002_vdate').attr('disabled',true);
     		}
     		if($('#TrdOutRightRepoTrade002_entrustInfo_entrustMdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustMdate').val() != "" ){
     			$('#TrdOutRightRepoTrade002_mdate').attr('disabled',true);
     		}
-    		if ($('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() != "" 
+    		if ($('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() != ""
     				&& $('#TrdOutRightRepoTrade002_entrustInfo_entrustMdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustMdate').val() != ""  ){
     			$('#TrdOutRightRepoTrade002_termType').attr('disabled',true);
         		$('#TrdOutRightRepoTrade002_repoterm').attr('disabled',true);
@@ -897,7 +878,7 @@
     	}
     	return 0;
     }
-    
+
     /**
      * 获取期限品种  date(yyyy-MM-dd),repoterm
      */
@@ -1019,22 +1000,22 @@
 		$('#TrdOutRightRepoTrade002_finprodId').on('change',function(){
 			secIdChangeAction();
 		});
-		
+
 		/*// 期限品种
 		$('#TrdOutRightRepoTrade002_termType').change(function(){
 			termTypeChangeAction();
 		});*/
-		
+
 		// 回购期限
 		$('#TrdOutRightRepoTrade002_repoterm').on('change',function(){
 			repoTermChangeAction();
 		});
-		
+
 		// 画面到期日-画面.起息日联动实际占款天数
 		$('#TrdOutRightRepoTrade002_vdate').on('change',function(){
-			vdateChangeAction();			 
+			vdateChangeAction();
 		});
-		
+
 		// 画面到期日-画面.起息日联动实际占款天数
 		$('#TrdOutRightRepoTrade002_mdate').on('change',function(){
 			vdateMdateChangeAction();
@@ -1044,12 +1025,12 @@
         	vdateMdateChangeAction();
             settleSpeedChangeAction();
 		});
-		
+
 		// 清算速度
 		$('#TrdOutRightRepoTrade002_settleSpeed').on('change',function(){
 			settleSpeedChangeAction();
 		});
-		
+
 		// 刷新托管户剩余现金、组合T日可用现金、组合T+1日可用现金
         $('#TrdOutRightRepoTrade002_pltId, #TrdOutRightRepoTrade002_dealCalId, #TrdOutRightRepoTrade002_ccy, #TrdOutRightRepoTrade002_finprodId').on("change", function () {
             refreshCashAndBalance();
@@ -1059,32 +1040,32 @@
         $('#TrdOutRightRepoTrade002_ps').on('change',function(){
         	psChangeAction();
 		});
-        
+
         // 券面总额
         $('#TrdOutRightRepoTrade002_secTotalPrin').on('change',function(){
         	secTotalPrinChangeAction();
 		});
-        
+
         // 计算按钮
         $('#TrdOutRightRepoTrade002_btn_calculate').click(function () {
         	calcClickAction();
         });
-        
+
         // 首次全价=首次净价+首次应计利息；
         $('#TrdOutRightRepoTrade002_fCleanPrice, #TrdOutRightRepoTrade002_fIntAmt').on('change',function(){
         	calc1();
 		});
-        
+
         // 到期全价=到期净价+到期应计利息；
         $('#TrdOutRightRepoTrade002_mCleanPrice, #TrdOutRightRepoTrade002_mSettleIntAmt').on('change',function(){
         	calc2();
 		});
-        
+
         // 首次全价
         $('#TrdOutRightRepoTrade002_fFprice').on('change',function(){
         	calc3();
 		});
-        
+
         // 到期全价
         $('#TrdOutRightRepoTrade002_mFprice').on('change',function(){
         	calc4();
@@ -1105,17 +1086,8 @@
             }
             // 当交易场所是银行间时
             else if (tradeMarket == TRADE_PLACE_01) {
-				if($('#chlId').val()){
-					$('#procedureAmt').val('').trigger('change');
-					$('#procedureAmtDiv').hide();
-					$('#settleAmt').val('').trigger('change');
-					$('#settleAmtDiv').hide();
-				}else{
-					$('#procedureAmtDiv').show();
-					$('#settleAmtDiv').show();
-				}
-                // $("#procedureAmtDiv").show();
-                // $("#settleAmtDiv").show();
+                $("#procedureAmtDiv").show();
+                $("#settleAmtDiv").show();
                 $("#commissionAmtDiv").hide();
             }
             else {
