@@ -10,6 +10,7 @@
 
 package com.joyintech.service.svrcom.submitexamination.investorsqualitycheck.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.joyintech.framework.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,7 +139,19 @@ public class InvestorsQualityCheckController{
             // 获取任务执行结果
             for (Future<InvestorsQualityCheck001Dto> res : taskResult) {
                 // 需要计算
-                resList.add(res.get());
+                InvestorsQualityCheck001Dto resDto = res.get();
+                // 处理收益率前台显示
+                String rate = resDto.getRate();
+                if (StringUtil.isNotEmpty(rate)){
+                    BigDecimal rateBigD = new BigDecimal(rate);
+                    if (BigDecimal.valueOf(rateBigD.intValue()).compareTo(rateBigD) == 0){
+                        rate = String.valueOf(rateBigD.intValue());
+
+                    }
+                    resDto.setRate(rate);
+                }
+                resList.add(resDto);
+
             }
         } catch (InterruptedException | ExecutionException e) {
             Thread.currentThread().interrupt();
