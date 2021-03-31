@@ -1360,7 +1360,7 @@
                &&$('#TrdOutRightRepoTrade002_fCleanPrice').val()
                &&table.getAllRows()[i].portfolioId){
                 table.renderRow(i, {"repoRate": repoRate});
-                if(table.getAllRows().length>1){
+                if(table.getAllRows().length>0){
                     if (i != table.getAllRows().length - 1) {//非最后一列
                         var fIntAmt2 = JoyinMath.doDiv(fIntAmt4,secTotalPrin,2)-0;
                         var fSettleAmt2 = JoyinMath.doDiv(fSettleAmt4,secTotalPrin,2)-0;
