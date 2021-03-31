@@ -29,6 +29,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticInfoDto;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.dto.FinNetValueProductBuild002Dto;
@@ -331,6 +332,26 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
                             bussFinProductFeeInfoDto.setProfitType(entity.getProfitType());
                             bussFinProductFeeInfoDto.setFinCashPlanList(
                                 bussFinProductFeeInfoService.generatePayFeePlan(bussFinProductFeeInfoDto));
+                        }
+                        //ZGBSS-1320 费用品种新建 二级法人改造
+                        if(MultilevelDataAuthorityUtil.isEnabled()) {
+                            //创建机构代码
+                            String createInst =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(entity.getCreateUser());
+                            entity.setCreateInst(createInst);
+
+                            // 有查询权限的机构代码
+                            List<String> searchOrgCodeList = null;
+                            // 有编辑权限的机构代码
+                            List<String> editOrgCodeList = null;
+                            // 新建或修改时重新设置二级法人权限，删除时则清空
+                            if (!OperationType.DELETE.equals(type)) {
+                                //获取所有父级机构。  拥有查看权限
+                                searchOrgCodeList = CommonUtil.getParentInstitution(createInst);
+                                // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
+                                editOrgCodeList = Arrays.asList(entity.getCreateInst());
+                            }
+                            // 记录二级法人权限
+                            insertDataAuthTypeInst(bussFinProductFeeInfoDto.getFeeId(), searchOrgCodeList, editOrgCodeList, BussinessDictCodeList.共同业务类型_费用品种管理.getValue());
                         }
                     }
                 }
