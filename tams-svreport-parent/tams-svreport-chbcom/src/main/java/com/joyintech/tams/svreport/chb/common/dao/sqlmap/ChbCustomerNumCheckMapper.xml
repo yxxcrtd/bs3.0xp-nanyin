@@ -7,12 +7,17 @@
 	        PROD_ID  prdCode,
 	        SINGLE_TOTAL+LEGAL_TOTAL+UNLEGAL_TOTAL  CustHeldNum
         FROM  CHB_PRD_RAISETOT_SUB
-        WHERE        	
-        	STATUS_DATE <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
-        	AND  SEND_STATUS = '01'
-        <if test="prodId != null and prodId != ''">
-            and PROD_ID = #{prodId}
-        </if>
+        WHERE 1 = 1
+        <!-- prodId不为空则表示有指定产品代码，不需要再根据条件进行二次过滤，如果为空则表示数据检查批处理调用，需要过滤无效数据 -->
+        <choose>
+            <when test="prodId != null and prodId != ''">
+                and PROD_ID = #{prodId}
+            </when>
+            <otherwise>
+                AND STATUS_DATE <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+                AND SEND_STATUS = '01'
+            </otherwise>
+        </choose>
     </select>
 
     <select id="getraiseCustNumThree" resultType="com.joyintech.tams.common.base.entity.ChbPrdCustNumIfo">

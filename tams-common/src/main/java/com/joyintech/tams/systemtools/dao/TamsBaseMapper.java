@@ -42,7 +42,7 @@ public interface TamsBaseMapper {
      */
     String selectBankCode(String orgCode);
 
-
+    String selectBankCodeName(String orgCode);
     List<ChbOrgRegistBankCode> selectBank(String orgCode);
     
     /**

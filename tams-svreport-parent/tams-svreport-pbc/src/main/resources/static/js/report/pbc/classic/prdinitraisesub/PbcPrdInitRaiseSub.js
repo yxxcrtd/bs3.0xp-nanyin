@@ -65,7 +65,7 @@ $(function(){
 				{ title: '报送日期',field:'submitTime',width:150,type:'datetime',sortField:'submitTime'},
 				{ title: "报送截止日", field: 'pbcSubmitDeadline',width:150, type: 'datetime',sortField:'pbcSubmitDeadline'},
 				{ title: "反馈状态", field: 'submitFeedbackStatusStr',width:150,sortField:'submitFeedbackStatus'},
-				{ title: "产品代码", field: 'pbcProdId',width:150,sortField:'pbcProdId',visible:false},
+				{ field: 'pbcProdId',visible:false},
 //				{ title: "产品代码(内部)", field: 'pbcProdIdShow',width:150,sortField:''},
 //				{ title: "产品代码(外部)", field: 'pbcCode',width:150,sortField:''},
 				{ title: "产品代码", field: 'pbcProdIdShow',width:150,sortField:'pbcProdIdShow'},

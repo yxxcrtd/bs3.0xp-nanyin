@@ -5657,7 +5657,7 @@
       from CHB_ASSET_INFO_SUB
       where 1 =1
       <if test="registList !=null and registList.size()>0">
-         <foreach collection="registList" item="regist" open="and ((" separator="),("  close="))">
+         <foreach collection="registList" item="regist" open="and ((" separator=") OR ("  close="))">
 			 ASSET_CODE = #{regist.assetCode,jdbcType=VARCHAR} and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
          </foreach>
       </if>
@@ -5667,7 +5667,7 @@
       delete from CHB_ASSET_INFO_SUB
       where 1 =1
       <if test="registList !=null and registList.size()>0">
-		 <foreach collection="registList" item="regist" open="and ((" separator="),("  close="))">
+		 <foreach collection="registList" item="regist" open="and ((" separator=") OR ("  close="))">
             ASSET_CODE = #{regist.assetCode,jdbcType=VARCHAR} and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
          </foreach>
       </if>

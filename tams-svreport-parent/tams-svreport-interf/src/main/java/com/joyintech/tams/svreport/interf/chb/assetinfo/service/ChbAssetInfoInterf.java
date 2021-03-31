@@ -138,7 +138,8 @@ public class ChbAssetInfoInterf  extends BaseService{
         // 登记插入列表
         List<ChbAssetInfo> insertDataList = new ArrayList<ChbAssetInfo>();
         // 发行机构代码
-        String issueId = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID);
+        //String issueId = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID);
+        String issueId = CommonUtil.selectBankCode();
         // 映射源数据和中债所需数据
         List<ChbTypeMapping> assetTypeTwoMappingList = chbTypeMappingMapper.selectMappingBySrcDataType(InterfMappingConstants.MAAPING_ASSETTYPETWO_ZG);
         Map<String, ChbTypeMapping> assetTypeTwoMappingMap  = new HashMap<String, ChbTypeMapping>();

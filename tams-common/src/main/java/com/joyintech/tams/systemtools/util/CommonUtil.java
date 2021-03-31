@@ -813,6 +813,18 @@ public class CommonUtil {
 		String code = baseCommonService.selectBankCode(orgCode);
 		return null!=code?code:"";
 	}
+	public static String selectBankCodeName(){
+
+		String orgCode = "";
+		if(MultilevelDataAuthorityUtil.isEnabled()){
+			orgCode = getInstitutionCodeByLoginUser_ms();
+		}else{
+			// 银行模式下 只有一个总行  直接查总行对应的 code
+			orgCode = baseCommonService.getYHGeneralBankCode();
+		}
+		String codeName = baseCommonService.selectBankCodeName(orgCode);
+		return null!=codeName?codeName:"";
+	}
 	
 	
 	// 微服务版本获取登录用户的机构类型
