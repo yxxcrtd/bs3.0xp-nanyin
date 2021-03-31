@@ -600,7 +600,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         ProcessParameter<TrdBondInvestTradeDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdBondInvestTradeDto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);
-        processParameter.setPageId("TrdBondInvestTrade002");
+        processParameter.setPageId("TrdBondInvestTrade003");
 //        processParameter.setPageId(this.getPageId());
         if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
             processParameter.setOperationType(OperationType.NEW);
@@ -608,10 +608,10 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         else {
             processParameter.setOperationType(OperationType.MODIFY);
         }
-        workFlowParameter.setPageId("TrdBondInvestTrade002");
+        workFlowParameter.setPageId("TrdBondInvestTrade003");
 
 //        workFlowParameter.setPageId(this.getPageId());
-        workFlowParameter.setElementId(this.getParam("elementId"));
+        workFlowParameter.setElementId(dto.getElementId());
         workFlowParameter.setBusinessCode((entity) -> entity.getTotleTradeId());
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_债券类资产交易.getValue());
         workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(
