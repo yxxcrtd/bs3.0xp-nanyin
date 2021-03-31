@@ -554,7 +554,11 @@ public class TrdFundInvestTrade003Controller extends BaseController {
         }
         workFlowParameter.setPageId(this.getPageId());
         workFlowParameter.setElementId(this.getParam("elementIdForLog"));
-        workFlowParameter.setBusinessCode((entity) -> entity.getTradeId());
+        if(StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_转换确认.getValue())){
+            workFlowParameter.setBusinessCode((entity) -> entity.getTotleTradeId());
+        }else{
+            workFlowParameter.setBusinessCode((entity) -> entity.getTradeId());
+        }
         // workFlowParameter.setUserTaskListener();
         workFlowParameter.setBusinessType(DictCodeList.共通业务类型_基金类资产交易.getValue());
         workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment(getMessage("TrdFundInvestTrade002.tradeId"),
