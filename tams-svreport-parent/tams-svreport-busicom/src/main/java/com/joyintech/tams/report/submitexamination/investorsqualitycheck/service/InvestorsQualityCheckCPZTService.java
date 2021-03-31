@@ -51,7 +51,7 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseS
         dealParamMap(param);
         List<InvestorsQualityCheck001Dto> allList = investorsQualityCheck001Mapper.searchCPZTAll(param);
         // 查询不合格记录
-        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchCPZTErr(param);
+        List<InvestorsQualityCheck001Dto> unQualifiedList = investorsQualityCheck001Mapper.searchCPZTErrCalc(param);
 
         return cntHGLComm(allList, unQualifiedList, CPZT);
     }
@@ -61,7 +61,7 @@ public class InvestorsQualityCheckCPZTService extends InvestorsQualityCheckBaseS
         param.put("statusNew", DictCodeListExt2.报送数据状态_新建.getValue());
         param.put("statusModify", DictCodeListExt2.报送数据状态_修改.getValue());
         param.put("statusDel", DictCodeListExt2.报送数据状态_删除.getValue());
-        param.put("issuingFail", DictCodeListExt1.发行状态_发行失败.getValue());
+        param.put("issuingSuccess", DictCodeListExt1.发行状态_发行成功.getValue());
     }
 
 }

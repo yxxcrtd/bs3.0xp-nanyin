@@ -130,8 +130,8 @@ $(function () {
         },
         cols: [
             {title: "产品登记编码", field: "prdRegistCode",width:'20%'},
-            {title: "识别标识", field: "indentifyMark",width:'20%'},
             {title: "持有日期", field: "holdDate",width:'20%', type:"date"},
+            {title: "持有记录数", field: "holdCount",width:'20%'},
             {title: "产品发行状态", field: "prdIssueSts",width:'20%'},
             {title: "实际终止日期", field: "prdAclMDate",width:'20%', type:"date"},
         ]

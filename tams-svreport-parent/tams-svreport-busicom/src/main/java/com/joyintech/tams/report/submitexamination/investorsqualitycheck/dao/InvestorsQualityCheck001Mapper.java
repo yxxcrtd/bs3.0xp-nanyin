@@ -64,6 +64,14 @@ public interface InvestorsQualityCheck001Mapper {
 
 	/**
 	 * 查询右侧-不合格数据的详细信息
+	 * --产品状态合格率
+	 * @param param 参数
+	 * @return 产品状态合格率
+	 */
+	List<InvestorsQualityCheck001Dto> searchCPZTErrCalc(Map<String, Object> param);
+
+	/**
+	 * 查询右侧-不合格数据的详细信息
 	 * --投资者数量匹配合格率
 	 * @param param 参数
 	 * @return 产品状态合格率

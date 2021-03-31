@@ -78,10 +78,13 @@ public class InvestorsQualityCheckSLPPService extends InvestorsQualityCheckBaseS
         if (!StringUtil.isEmptyList(allList)){
             dto.setRate("100");
             if (!StringUtil.isEmptyList(unQualifiedList)){
-                dto.setRate("0");
                 if (allListInt != unQualifiedInt.intValue()){
+                    BigDecimal rate = ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.subtract(new BigDecimal(dto.getTotal()), unQualifiedInt), new BigDecimal(dto.getTotal()), 4), new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
+                    if (new BigDecimal(rate.intValue()).compareTo(rate) == 0){
+                        rate.setScale(0);
+                    }
                     // （1取得的数量 * 3 - 检查错误数量）/1中取得的数量/3 * 100%
-                    dto.setRate(ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.subtract(new BigDecimal(dto.getTotal()), unQualifiedInt), new BigDecimal(dto.getTotal()), 4), new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP).toPlainString());
+                    dto.setRate(rate.toPlainString());
                 }
             }
         }
