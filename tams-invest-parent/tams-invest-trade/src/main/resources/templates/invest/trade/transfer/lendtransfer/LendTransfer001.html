@@ -10,7 +10,9 @@
     <div class="pro-module-container">
         <form class="layui-form" id="lendTransferForm">
             <!-- 隐藏字段 组合代码 -->
+<!--
             <input type="text" id = "portfolioIdOut" name="portfolioIdOut" data-th-value='${entity?.portfolioIdOut}' hidden>
+-->
             <!-- 隐藏字段 交易日历编号 -->
             <input type="text" id = "calendarId" name="calendarId" data-th-value='${entity?.calendarId}' hidden>
             <!-- 隐藏字段 原交易编号 -->
@@ -24,6 +26,18 @@
                         </h3>
                         <div class="pro-module-item">
                             <div class="layui-form-item">
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap">转出组合代码</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select id="portfolioIdOut" name="portfolioIdOut"
+                                                disabled class="layui-input form-input input-select"
+                                                data-th-data-url="@{/invest/trade/transfer/assetstransfer/AssetsTransfer001/getPortfolioId}"
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:initValue="${entity?.portfolioIdOut}"
+                                                placeholder="请输入内容">
+                                        </select>
+                                    </div>
+                                </div>
                                 <!-- 拆借类型 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">拆借类型</label>
@@ -34,16 +48,6 @@
                                                 data-th-initValue='${entity?.paBussType}' disabled = "disabled"
                                                 data-th-data-result="${BANK_LENDING_TYPE}">
                                         </select>
-                                    </div>
-                                </div>
-                                <!-- 交易日期 -->
-                                <div class="form-inline-wrap">
-                                    <label class="layui-form-label form-label-wrap">交易日期</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <input type="text" name="tradeDate"
-                                               id="LendTransfer001_tradeDate" disabled = "disabled"
-                                               class="layui-input form-input input-dateSelect"
-                                               data-th-value='${#dates.format(entity?.tradeDate,"yyyy-MM-dd")}'>
                                     </div>
                                 </div>
                                 <!-- 交易方向 -->
@@ -60,6 +64,16 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
+                                <!-- 交易日期 -->
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap">交易日期</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" name="tradeDate"
+                                               id="LendTransfer001_tradeDate" disabled = "disabled"
+                                               class="layui-input form-input input-dateSelect"
+                                               data-th-value='${#dates.format(entity?.tradeDate,"yyyy-MM-dd")}'>
+                                    </div>
+                                </div>
                                 <!-- 起息日 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">起息日</label>
@@ -80,6 +94,8 @@
                                                data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 计息基础 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">计息基础</label>
@@ -92,8 +108,6 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 币种 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">币种</label>
@@ -116,6 +130,8 @@
                                                data-textrange="2" data-th-value='${entity?.intRate}'>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 本金金额 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">本金金额</label>
@@ -126,8 +142,6 @@
                                                data-textrange="2" data-th-value='${entity?.prin}'>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 剩余可转仓份额 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">剩余可转仓份额</label>

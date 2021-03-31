@@ -14,7 +14,9 @@
             <!-- 隐藏字段 单位净值 -->
             <input type="text" id = "unitPrice" name="unitPrice" data-th-value='${entity?.unitValue}' hidden>
             <!-- 隐藏字段 组合代码 -->
+<!--
             <input type="text" id = "portfolioIdOut" name="portfolioIdOut" data-th-value='${entity?.portfolioIdOut}' hidden>
+-->
             <!-- 隐藏字段 证券托管账户 -->
             <input type="text" id = "secAcctId" name="secAcctId" data-th-value='${entity?.secAcctId}' hidden>
             <!-- 隐藏字段 交易日历编号 -->
@@ -32,14 +34,16 @@
                         </h3>
                         <div class="pro-module-item">
                             <div class="layui-form-item">
-                                <!-- 交易日期 -->
                                 <div class="form-inline-wrap">
-                                    <label class="layui-form-label form-label-wrap">交易日期</label>
+                                    <label class="layui-form-label form-label-wrap">转出组合代码</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" name="tradeDate"
-                                               id="NetPlanTransfer001_tradeDate" disabled = "disabled"
-                                               class="layui-input form-input input-dateSelect"
-                                               data-th-value='${#dates.format(entity?.tradeDate,"yyyy-MM-dd")}'>
+                                        <select id="portfolioIdOut" name="portfolioIdOut"
+                                                disabled class="layui-input form-input input-select"
+                                                data-th-data-url="@{/invest/trade/transfer/assetstransfer/AssetsTransfer001/getPortfolioId}"
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:initValue="${entity?.portfolioIdOut}"
+                                                placeholder="请输入内容">
+                                        </select>
                                     </div>
                                 </div>
                                 <!-- 资产代码 -->
@@ -64,6 +68,16 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
+                                <!-- 交易日期 -->
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap">交易日期</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" name="tradeDate"
+                                               id="NetPlanTransfer001_tradeDate" disabled = "disabled"
+                                               class="layui-input form-input input-dateSelect"
+                                               data-th-value='${#dates.format(entity?.tradeDate,"yyyy-MM-dd")}'>
+                                    </div>
+                                </div>
                                 <!-- 币种 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">币种</label>
@@ -85,6 +99,8 @@
                                                data-th-value='${entity?.chlName}'>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 持仓份额 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">持仓份额</label>
@@ -95,8 +111,6 @@
                                                data-textrange="2" data-th-value='${entity?.posAmt}'>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 剩余可转仓份额 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">剩余可转仓份额</label>

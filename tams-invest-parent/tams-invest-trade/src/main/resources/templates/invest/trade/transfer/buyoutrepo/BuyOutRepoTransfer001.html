@@ -10,7 +10,9 @@
     <div class="pro-module-container">
         <form class="layui-form" id="buyOutRepoTransferForm">
             <!-- 隐藏字段 待转出组合 -->
+<!--
             <input type="text" id = "portfolioIdOut" name="portfolioIdOut" data-th-value='${entity?.portfolioIdOut}' hidden>
+-->
             <!-- 隐藏字段 首次净价 -->
             <input type="text" id = "unitCprice" name="unitCprice" data-th-value='${entity?.unitCprice}' hidden>
             <!-- 隐藏字段 到期净价 -->
@@ -51,6 +53,18 @@
                         </h3>
                         <div class="pro-module-item">
                             <div class="layui-form-item">
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap">转出组合代码</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select id="portfolioIdOut" name="portfolioIdOut"
+                                                disabled class="layui-input form-input input-select"
+                                                data-th-data-url="@{/invest/trade/transfer/assetstransfer/AssetsTransfer001/getPortfolioId}"
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:initValue="${entity?.portfolioIdOut}"
+                                                placeholder="请输入内容">
+                                        </select>
+                                    </div>
+                                </div>
                                 <!-- 交易日期 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">交易日期</label>
@@ -73,6 +87,8 @@
                                         </select>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 标的资产代码 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">标的资产代码</label>
@@ -83,8 +99,6 @@
                                                data-th-value='${entity?.finprodMarketId}'>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 标的资产简称 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">标的资产简称</label>
@@ -107,6 +121,8 @@
                                         </select>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 起息日 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">起息日</label>
@@ -117,8 +133,6 @@
                                                data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 到期日 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">到期日</label>
@@ -141,6 +155,8 @@
                                         </select>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 实际占款天数 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">实际占款天数</label>
@@ -151,8 +167,6 @@
                                                data-textrange="0" data-th-value='${entity?.actCapDays}'> <span class="input-right-show">天</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 币种 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">币种</label>
@@ -175,6 +189,8 @@
                                                data-textrange="4" data-th-value='${entity?.intRate}'>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 证券托管户 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">证券托管户</label>
@@ -185,8 +201,6 @@
                                                data-th-value='${entity?.secAcctName}'>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 通道 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">通道</label>
@@ -207,6 +221,8 @@
                                                data-textrange="6" data-th-value='${entity?.prinAmt}'><span class="input-right-show">万元</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 剩余未转仓券面总额 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">剩余未转仓券面总额</label>

@@ -10,7 +10,9 @@
     <div class="layui-layer-content">
         <form class="layui-form" id="fundAssetTransfer_form">
             <!-- 隐藏字段 转出组合 -->
+<!--
             <input type="text" id="invTransPortf" name="invTransPortf" data-th-value='${entity?.invTransPortf}' hidden>
+-->
             <!-- 隐藏字段 转出组合代码 -->
             <input type="text" id="portfolioName" name="portfolioName" data-th-value='${entity?.portfolioName}' hidden>
 
@@ -35,6 +37,18 @@
                         </h3>
                         <div class="pro-module-item">
                             <div class="layui-form-item">
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap">转出组合代码</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select id="invTransPortf" name="invTransPortf"
+                                                disabled class="layui-input form-input input-select"
+                                                data-th-data-url="@{/invest/trade/transfer/assetstransfer/AssetsTransfer001/getPortfolioId}"
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:initValue="${entity?.invTransPortf}"
+                                                placeholder="请输入内容">
+                                        </select>
+                                    </div>
+                                </div>
                                 <!-- 交易日期 -->
                                 <div id="tradeDateDiv" class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">交易日期</label>
@@ -45,6 +59,20 @@
                                                data-th-value='${#dates.format(entity?.tradeDate,"yyyy-MM-dd")}'>
                                     </div>
                                 </div>
+                                <!-- 币种 -->
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap">币种</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select name="ccy" id="fundAssetTransfer001_ccy"
+                                                class="layui-input form-input input-select"
+                                                data-th-placeholder="#{SysCommon.placeholder}"
+                                                data-th-initValue='${entity?.ccy}' disabled="disabled"
+                                                data-th-data-result="${CCY}">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 资产代码 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">资产代码</label>
@@ -67,20 +95,6 @@
                                                data-th-value='${entity?.finprodAbbr}'>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <!-- 币种 -->
-                                <div class="form-inline-wrap">
-                                    <label class="layui-form-label form-label-wrap">币种</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <select name="ccy" id="fundAssetTransfer001_ccy"
-                                                class="layui-input form-input input-select"
-                                                data-th-placeholder="#{SysCommon.placeholder}"
-                                                data-th-initValue='${entity?.ccy}' disabled="disabled"
-                                                data-th-data-result="${CCY}">
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">证券托管户</label>
                                     <div class="layui-input-inline input-inline">
@@ -91,6 +105,8 @@
                                         >
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <!-- 通道 -->
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">通道</label>
@@ -103,8 +119,6 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <!-- 持仓份额 -->
                                 <div id="prinQtyDiv" class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">持仓份额</label>
