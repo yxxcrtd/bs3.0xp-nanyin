@@ -42,7 +42,7 @@ $(function(){
               { title: "反馈状态", field: 'submitFeedbackStatusStr',width:150,sortField:'submitFeedbackStatus'},
               { title: "募集日期", field: 'raisingDate',width:150, type: 'date',sortField:'raisingDate'},
 //              { title: "产品代码", field: 'pbcProdId',width:150,sortField:''},
-              { title: "产品代码", field: 'pbcProdId',width:150,sortField:'pbcProdId',visible:false},
+              { field: 'pbcProdId',visible:false},
 //              { title: "产品代码(内部)", field: 'pbcProdIdShow',width:150,sortField:''},
 //              { title: "产品代码(外部)", field: 'pbcCode',width:150,sortField:''},
               { title: "产品代码", field: 'pbcProdIdShow',width:150,sortField:'pbcProdIdShow'},
