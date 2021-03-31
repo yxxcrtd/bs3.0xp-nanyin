@@ -659,4 +659,11 @@
 	       #{item,jdbcType=VARCHAR}
 	   </foreach>
 	</select>
+
+    <select id="findProductByName" resultType="java.lang.String">
+        select
+        BOOKSET_ID prodId,
+        BOOKSET_NAME prodName
+        from BOK_BOOKSET
+    </select>
 </mapper>
