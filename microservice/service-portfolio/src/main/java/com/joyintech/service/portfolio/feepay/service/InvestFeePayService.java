@@ -278,21 +278,14 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
         		}  
         		//20210303 ZGBSS-647 根据账户维护费预提设置的支付信息获得支付日 start
         		int cycle = 3;
-        		Date date1 = dto.getPositionStartDate();
-        		Date date2 = dto.getPositionEndDate();   
-        		int paycount = 1;
-        		Date date1Temp = date1;
-        	    List<Date> paylist = new ArrayList<Date>();			
-        			while(DateUtil.compareDate(date1Temp, date2) < 0) {
-        				Date calcDate = DateUtil.addMonthDate(date1, cycle*paycount);
-        				if(DateUtil.compareDate(calcDate, date2) <= 0) {        					                     
-        	                 paylist.add(calcDate);
-        	                 date1Temp=calcDate;
-        				     paycount++;			     
-        				}else {
-        					break;
-        				}
-        			}
+        		Date date1 = getNextPayDate(dto.getPositionStartDate(),Integer.parseInt(dto.getPayDate()));
+        		Date date2 = getNextPayDate(dto.getPositionEndDate(),Integer.parseInt(dto.getPayDate())); 		
+        		Date calcDate = date1;
+        	    List<Date> paylist = new ArrayList<Date>();
+        	    while(DateUtil.compareDate(calcDate, date2)<=0) {
+        	    	paylist.add(calcDate);
+        	    	calcDate = DateUtil.addMonthDate(calcDate, cycle);
+        	    }
         		//20210303 ZGBSS-647 根据账户维护费预提设置的支付信息获得支付日 end
                 // 3 查询账务明细(大于上次支付日小于等于平台日)
         		Map<String, Object> mapBok = new HashMap<>();
@@ -405,6 +398,23 @@ public class InvestFeePayService extends BaseService<InvestFeePayDto> {
 //        return list;
     }
 
+    private Date getNextPayDate(Date date,int payDay) {
+		//获取该日期后的第一个支付日：下一季度第一月的支付日
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int regionMonth = cal.get(Calendar.MONTH);
+        int payYear =  cal.get(Calendar.YEAR);
+        int payMonth = (regionMonth-1)/3*3+4;
+        if(payMonth>12) {
+        	payMonth = 1;
+        	payYear++;
+        }
+        cal.set(payYear, payMonth-1, payDay);
+        Date result = cal.getTime();
+        cal.setTime(new Date());
+        return result;
+    }
+    
     /**
      * 通过证券账户和计提开始日，计提结束日进行分组
      * 取分组后的第一条数据
