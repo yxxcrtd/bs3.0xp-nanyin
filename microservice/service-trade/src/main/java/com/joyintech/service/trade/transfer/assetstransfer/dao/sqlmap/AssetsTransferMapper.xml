@@ -8,6 +8,9 @@
         PORTFOLIO_NAME AS text
         FROM PTL_PORTFOLIO
         WHERE PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
+        <if test="initValue != null and initValue != ''">
+            AND PORTFOLIO_ID = #{initValue}
+        </if>
         <if test="search != null and search != ''">
             AND (PORTFOLIO_ID LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%') OR
             PORTFOLIO_NAME LIKE CONCAT(CONCAT('%',#{search,jdbcType=VARCHAR}),'%'))
