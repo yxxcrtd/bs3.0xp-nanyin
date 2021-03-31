@@ -270,4 +270,13 @@ public interface BaseInformationMapper {
 	 * @throws
 	 */
 	Integer selectHeaderNumByChiName(@Param("chiName") String chiName);
+
+	/**
+	 * 根据前台传入的参数查询具体表信息
+	 * @param tableId 表名
+	 * @param list 字段及参数集合
+	 * @return 具体表信息
+	 */
+	List<Object> queryChbLoanDetailInfoByParams(@Param("tableId") String tableId, @Param("list") List<BaseInformationDto> list, @Param("flag") boolean flag,@Param("assetType") String assetType);
+
 }

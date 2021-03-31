@@ -51,7 +51,10 @@
 	      </if>
 	      <if test="reporttype != null" >
 	    	and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
-	      </if> 
+	      </if>
+      <if test="deptCode == null" >
+          and pr.DEPT_CODE is null
+      </if>
 	       <if test="deptCode != null" >
 	         and pr.DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
 	       </if> 

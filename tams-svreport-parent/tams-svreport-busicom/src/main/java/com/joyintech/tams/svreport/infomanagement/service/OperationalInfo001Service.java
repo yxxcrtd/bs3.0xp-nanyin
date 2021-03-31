@@ -18,6 +18,7 @@ import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
@@ -530,7 +531,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			}
 		}
 		boolean flag = isHaveStatus(tableName);
-		list = baseInformationMapper.queryBaseInfoByParams(tableName, baseInformationList, flag,assetType);
+		if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.equals(tableName,"CHB_LOAN_DETAIL_INFO")){
+			list = baseInformationMapper.queryChbLoanDetailInfoByParams(tableName, baseInformationList, flag,assetType);
+		}else{
+			list = baseInformationMapper.queryBaseInfoByParams(tableName, baseInformationList, flag,assetType);
+		}
 		return list;
 	}
 
