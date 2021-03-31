@@ -42,7 +42,7 @@ $(function() {
                         positionStartDate: $("#FeeProvisionSetting002_positionStartDate").val()
                     }
                 }}},
-            {field:'feeAmtDetail', width: 100, title: 'FeeProvisionSetting002.feeAmtTotal', edit:true, type:'number', sortable:false,textrange:'2'},
+            {field:'feeAmtDetail', width: 200, title: 'FeeProvisionSetting002.feeAmtTotal', edit:true, type:'number', sortable:false,textrange:'2'},
             {field:'operation', width: 100, title: 'SysCommon.operation', type:'action', buttons: ['delt']}
         ]
     };

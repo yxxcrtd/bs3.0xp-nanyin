@@ -22,8 +22,8 @@ $(function() {
 					payDate: $("#InvestFeePay002_payDate").val(),
 					secAcctId: $("#InvestFeePay002_secAcctId").val()
 				}}}
-		}, {field : 'payAmt',width:120,title : 'InvestFeePay002.feeTable.payAmt',type : 'number',textrange : '2',sortable:false
-		}, {field : 'actPayAmt',width:120,title : 'InvestFeePay002.feeTable.actPayAmt',type : 'number',textrange : '2',edit:true,sortable:false
+		}, {field : 'payAmt',width:200,title : 'InvestFeePay002.feeTable.payAmt',type : 'number',textrange : '2',sortable:false
+		}, {field : 'actPayAmt',width:200,title : 'InvestFeePay002.feeTable.actPayAmt',type : 'number',textrange : '2',edit:true,sortable:false
 		}, {field : 'adjustAmt',width:120,title : 'InvestFeePay002.feeTable.adjustAmt',type : 'number',textrange : '2',sortable:false
 		}, {field : 'status',width:100,title : 'InvestFeePay002.feeTable.showDetail',sortable:false,
 			render : function(data, type, row, meta) {
