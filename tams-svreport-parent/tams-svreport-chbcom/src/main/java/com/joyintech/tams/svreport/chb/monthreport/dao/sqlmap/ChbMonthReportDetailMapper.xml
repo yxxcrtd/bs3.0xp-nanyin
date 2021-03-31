@@ -196,7 +196,7 @@
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </update>
     <delete id="deleteByTermIdEx" parameterType="java.lang.String" >
-        delete from CHB_MONTH_REPORT_DETAIL
+        delete from CHB_MONTH_REPORT_DETAIL D
         where 1 =1
         <if test="termid != null and termid != ''">
             and termid = #{termid,jdbcType=VARCHAR}
@@ -206,8 +206,8 @@
         </if>
         <if test="orgCode != null and orgCode != '' and termid != null and termid != ''">
             and exists (
-            select 1 from pbc_report t where termid = #{termid,jdbcType=VARCHAR}
-            and t.org_code = #{orgCode,jdbcType=VARCHAR}
+            select 1 from CHB_MONTH_REPORT t where termid = #{termid,jdbcType=VARCHAR}
+            and t.org_code = #{orgCode,jdbcType=VARCHAR} AND D.REPORTUUID=T.REPORTUUID
             )
         </if>
     </delete>

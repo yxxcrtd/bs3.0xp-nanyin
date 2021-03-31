@@ -557,7 +557,10 @@
        </if>
        <if test="pbcAccountId == null" >
          and PBC_ACCOUNT_ID is null
-       </if> 
+       </if>
+    <if test="deptCode == null" >
+      and DEPT_CODE is null
+    </if>
         <if test="deptCode != null" >
          and DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
        </if> 
