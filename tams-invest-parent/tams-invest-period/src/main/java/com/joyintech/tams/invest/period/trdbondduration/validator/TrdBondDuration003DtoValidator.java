@@ -50,8 +50,9 @@ public class TrdBondDuration003DtoValidator implements PeriodCommonValidator {
                     new ValidMessage("settleDate", "资金到账日不能小于支付日！"));
         }
         errorList.addAll(bussTrdTransferOrderService.check(dto.getBussTrdTransferOrder()));
+
         if (StringUtil.equals(dto.getOperateType(), "submit")) {
-            if (StringUtil.isNotEmpty(dto.getFinprodMarketId()) && StringUtil.isNotEmpty(dto.getChlId())
+            if (StringUtil.isNotEmpty(dto.getFinprodMarketId())
                 && StringUtil.isNotEmpty(dto.getSettleDate())){
                 Map<String,Object> map = new HashMap<>();
                 map.put("finprodMarketId",dto.getFinprodMarketId());
@@ -60,8 +61,15 @@ public class TrdBondDuration003DtoValidator implements PeriodCommonValidator {
                List<String> dtos = trdBondDuration003Service.findProcessDtos(map);
                if (dtos.size() > 0){
                    errorList.add(
-                           new ValidMessage("chlId", "通道已经对资产做了行权赎回！"));
+                           new ValidMessage("finprodMarketId", "此交易已存在！"));
                }
+               map.put("pageId","TrdBondDuration003");
+                map.put("finprodId",dto.getFinprodId());
+                List<String> list = trdBondDuration003Service.findWorkflowProcessDtos(map);
+                if(list.size()>0){
+                    errorList.add(
+                            new ValidMessage("finprodMarketId", "存在流程中数据！"));
+                }
             }
         }
         return errorList;
