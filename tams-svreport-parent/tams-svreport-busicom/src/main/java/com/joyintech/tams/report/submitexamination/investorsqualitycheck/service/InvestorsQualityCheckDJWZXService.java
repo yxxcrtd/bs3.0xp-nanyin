@@ -51,7 +51,7 @@ public class InvestorsQualityCheckDJWZXService extends InvestorsQualityCheckBase
         //检查对象为0的情况下：
         if(checkRecTol.compareTo(BigDecimal.ZERO) == 1) {
         	resultDto.setRate(checkRecTol.subtract(BigDecimal.valueOf(unQualifiedList.size())).divide(
-        			checkRecTol,2,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN).toPlainString());
+        			checkRecTol,2,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_UP).toPlainString());
         }       
 
         return resultDto;

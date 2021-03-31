@@ -479,7 +479,6 @@
 		<!-- AND POS.ORG_CODE = #{orgCode, jdbcType = VARCHAR} -->
 	</select>
 	
-	<!-- 通过投资端汇总，获取产品余额-->
 	<select id="getBalanceAmt" resultType="java.math.BigDecimal">
 		SELECT
 			SUM(CNY_AMT) as balanceAmt
@@ -494,7 +493,7 @@
 					AND TO_DATE(TO_CHAR(HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{date,jdbcType=VARCHAR},'yyyy-MM-dd')
 			)
 		WHERE
-			holdNo  = 1;					
+			holdNo  = 1				
 	</select>
 	
 	<!-- 获取产品收益-->
