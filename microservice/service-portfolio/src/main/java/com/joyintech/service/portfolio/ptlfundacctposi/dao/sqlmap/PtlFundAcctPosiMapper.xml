@@ -56,7 +56,7 @@
 	order by PTL.PORTFOLIO_ID,PTL.CDATE asc
 	)
 	select * from temp
-	<!--汇总-->
+	<if test='isMultiLevel == null or isMultiLevel!="01"'>
 	union
 	select   
 		null  CDATE,
@@ -70,6 +70,7 @@
         decode(SUM(AMOUNT1),null,0,SUM(AMOUNT1)) AMOUNT1,
 		'01' isSummary
 	from temp
+	</if>
 </select>
 <sql id="sqlwhere">
   <where>

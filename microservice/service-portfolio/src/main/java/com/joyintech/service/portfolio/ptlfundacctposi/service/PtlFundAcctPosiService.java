@@ -10,6 +10,8 @@
  
 package com.joyintech.service.portfolio.ptlfundacctposi.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,10 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.portfolio.ptlactivityperiod.dto.PtlActivityPeriod001Dto;
 import com.joyintech.service.portfolio.ptlfundacctposi.dao.PtlFundAcctPosiMapper;
@@ -59,8 +63,64 @@ public class PtlFundAcctPosiService extends BaseService<PtlFundAcctPosiDto>{
     	//  bug fixed:TISHKBS-75  只统计资金账户、券商账户余额，经代码核实只查询账户编码为A01/A07账户
 //    	    pageParam.put("TGZH", DictCodeListExt1.资金账户类型_产品托管户.getValue());
 //          pageParam.put("JYSZJZH", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
-
-        return super.queryForPage(page, length,() -> ptlFundAcctPosiMapper.select(pageParam));
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+        	pageParam.put("isMultiLevel", "01");
+        }
+        Page<PtlFundAcctPosiDto> pageResult = super.queryForPage(page, length,() -> ptlFundAcctPosiMapper.select(pageParam));
+        
+        //多级法人下有数据隔离，汇总需特别处理,银行模式下直接在查询中汇总
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+        	//1.查询是否需要添加汇总
+        	if(pageResult.getRoot()==null||pageResult.getRoot().size()<length){
+        		//2. 检查Root是否存在，避免因查询为空报错
+        		if(pageResult.getRoot()==null) {
+        			pageResult.setRoot(new ArrayList<PtlFundAcctPosiDto>());
+        		}
+        		//3.初始化汇总对象
+        		PtlFundAcctPosiDto summaryDto = new PtlFundAcctPosiDto();
+        		summaryDto.setIsSummary(DictCodeListExt1.是或否_是.getValue());
+        		BigDecimal summary = BigDecimal.ZERO;
+        		//4 首先汇总本页
+        		for(PtlFundAcctPosiDto dto:pageResult.getRoot()) {
+        			summary = ArithmeticUtil.doAdd(summary,dto.getAmount1());
+        		}
+        		//5.循环获取所有页进行汇总
+        		//5.1 初始化循环汇总的查询参数
+        		int summaryLength = 1000;//单次查询1000
+        		long summarySize = pageResult.getRecords();
+        		if(pageResult.getRoot()!=null) {
+        			summarySize = summarySize-pageResult.getRoot().size();
+        		}
+        		//5.2 剩余结果逐页查询汇总
+        		int i;
+        		for(i=1;i*summaryLength<summarySize;i++) {
+        			Page<PtlFundAcctPosiDto> tempPage = super.queryForPage(i, summaryLength,() -> ptlFundAcctPosiMapper.select(pageParam));
+            		for(PtlFundAcctPosiDto dto:tempPage.getRoot()) {
+            			summary = ArithmeticUtil.doAdd(summary,dto.getAmount1());
+            		}
+        		}
+        		//5.3 最后一页结果
+        		int lastLength = (int)summarySize-(i-1)*summaryLength;
+        		if(lastLength>0) {
+        			Page<PtlFundAcctPosiDto> tempPage = super.queryForPage(i, summaryLength,() -> ptlFundAcctPosiMapper.select(pageParam));
+            		for(i=0;i<lastLength;i++) {
+            			PtlFundAcctPosiDto dto = tempPage.getRoot().get(i);
+            			summary = ArithmeticUtil.doAdd(summary,dto.getAmount1());
+            		}
+        		}
+        		//6. 设置汇总数据
+        		summaryDto.setAmount1(summary);
+        		//7. 设置汇总行。
+        		pageResult.getRoot().add(summaryDto);
+        	}
+        	//8.总记录数需添加 汇总
+        	pageResult.setRecords(pageResult.getRecords()+1);
+        	//9.如果不含汇总行时为整页，则需要加页
+        	if(pageResult.getRecords()%length==1) {
+        		pageResult.setTotal(pageResult.getTotal()+1);
+        	}
+        }
+        return pageResult;
     }
 	
     /**
