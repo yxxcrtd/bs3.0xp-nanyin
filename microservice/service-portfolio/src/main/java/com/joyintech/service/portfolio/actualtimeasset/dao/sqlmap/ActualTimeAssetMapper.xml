@@ -660,11 +660,15 @@
 			INNER JOIN fin_product_type t1 on t1.finprod_id = t.finprod_id
 			<!-- 多级法人改造 add by jingqiongqiong 20200615 -->
 			<if test="institutionCode != null and institutionCode != ''">
-				INNER JOIN DATA_AUTH_NOTIFY_INST dani on dani.BUSINESS_ID = t.finprod_id AND dani.INSTITUTION_CODE=#{institutionCode}
+				LEFT JOIN DATA_AUTH_NOTIFY_INST dani on dani.BUSINESS_ID = t.finprod_id AND dani.INSTITUTION_CODE=#{institutionCode}
+				LEFT JOIN DATA_AUTH_NOTIFY_INST dani1 on dani.BUSINESS_ID is null and dani1.BUSINESS_ID = t.FINPROD_MARKET_ID AND dani1.INSTITUTION_CODE=#{institutionCode}
 			</if>
 			<!-- 多级法人改造 add by jingqiongqiong 20200615 -->
 			WHERE
 			1=1 AND t.FINPROD_TYPE2 NOT IN('F01','F02','F11')
+			<if test="institutionCode != null and institutionCode != ''">
+				and (dani.BUSINESS_ID is not null or  dani1.BUSINESS_ID is not null)
+			</if>
 			<if test="type8 != null and type8 != ''">
 				and t1.type_8 = #{type8,jdbcType = VARCHAR}
 			</if>

@@ -1788,7 +1788,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             TrdTradeFeeTotal ttfd = new TrdTradeFeeTotal();
             ttfd.setTotleTradeId(entity.getTotleTradeId());
             ttfd.setFeeType(BussinessDictCodeList.费用类型_结算费.getValue());
-            ttfd.setIsPayWithTrade(entity.getIsPayWithTrade());
+            ttfd.setIsPayWithTrade(entity.getSettleIsPayWithTrade());
             ttfd.setFeeAmt(entity.getSettleAmt());
             ttfdList.add(ttfd);
         }
@@ -1796,7 +1796,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             TrdTradeFeeTotal ttfd = new TrdTradeFeeTotal();
             ttfd.setTotleTradeId(entity.getTotleTradeId());
             ttfd.setFeeType(BussinessDictCodeList.费用类型_经手费.getValue());
-            ttfd.setIsPayWithTrade(entity.getIsPayWithTrade());
+            ttfd.setIsPayWithTrade(entity.getExchangeIsPayWithTrade());
             ttfd.setFeeAmt(entity.getExchangeAmt());
             ttfdList.add(ttfd);
         }

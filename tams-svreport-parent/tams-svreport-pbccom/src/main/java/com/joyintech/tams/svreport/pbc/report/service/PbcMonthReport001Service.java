@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -140,7 +141,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 	private CheckReport001Mapper checkReport001Mapper;
     @Autowired
 	private PbcBeforeSubCheck pbcBeforeSubCheck;
-	
+
     /**
      * 短sql最大一次最大插入条数
      */
@@ -891,12 +892,23 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
         }
         for(;reportStartDate.compareTo(reportEndDate)<=0;){
             // 重新计算只跑人行月报头寸和报表生成
-            // 生成人行月报产品端数据
-            pbcMonthProdPositionService.generateProdPositionData(reportStartDate,null,false,true);
-            // 生成人行月报资产头寸
-            pbcAssetPositionInterf.generateAssetPositionData(reportStartDate, null, null, false,true);
-            // 生成人行月报产品头寸
-            pbcMonthAssetPositionService.generateMonthAssetReport(reportStartDate, null,true);
+			if(MultilevelDataAuthorityUtil.isEnabled()) {
+				Map<String,Object> maptemp =new HashMap<String,Object>();
+				List<String> listProdtemp = pbcMonthReportMapper.findProductByName(maptemp);
+				// 生成人行月报产品端数据
+				pbcMonthProdPositionService.generateProdPositionData(reportStartDate,listProdtemp,false,true);
+				// 生成人行月报资产头寸
+				pbcAssetPositionInterf.generateAssetPositionData(reportStartDate, listProdtemp, null, false,true);
+				// 生成人行月报产品头寸
+				pbcMonthAssetPositionService.generateMonthAssetReport(reportStartDate, listProdtemp,true);
+			}else{
+				// 生成人行月报产品端数据
+				pbcMonthProdPositionService.generateProdPositionData(reportStartDate,null,false,true);
+				// 生成人行月报资产头寸
+				pbcAssetPositionInterf.generateAssetPositionData(reportStartDate, null, null, false,true);
+				// 生成人行月报产品头寸
+				pbcMonthAssetPositionService.generateMonthAssetReport(reportStartDate, null,true);
+			}
             reportStartDate = DateUtil.addMonthDate(reportStartDate, 1);
         }
         return "success";

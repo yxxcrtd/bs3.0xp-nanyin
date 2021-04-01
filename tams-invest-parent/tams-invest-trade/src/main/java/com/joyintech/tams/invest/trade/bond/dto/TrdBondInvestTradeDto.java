@@ -2175,4 +2175,5 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
+
 }

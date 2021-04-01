@@ -553,7 +553,7 @@ public class ViewCompareDetailController extends BaseController {
             dataResult.forEach((key, value) -> {
                 String field = CommonUtil.dealString(StringUtil.lowerCase(key), false);
                 detailList.forEach(detail -> {
-                    if (StringUtil.equalsIgnoreCase(detail.getData(), field) || (StringUtil.equals("registBankCode", field) && StringUtil.equals("bankCode", detail.getData()))
+                    if ((StringUtil.equalsIgnoreCase(detail.getData(), field)  &&StringUtil.isNotEmpty(value))|| (StringUtil.equals("registBankCode", field) && StringUtil.equals("bankCode", detail.getData()))
                             ||(StringUtil.equals("identifyType", detail.getData())&&(StringUtil.equals("personalIdentifyType", field)||StringUtil.equals("institutionIdentifyType", field))
                             &&StringUtil.isNotEmpty(value))
                             // modify by zhangliang 20201215 资产要素登记 委外投资属性特殊处理

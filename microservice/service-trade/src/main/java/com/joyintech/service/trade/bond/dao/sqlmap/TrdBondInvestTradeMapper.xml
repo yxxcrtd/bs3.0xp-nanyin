@@ -897,7 +897,7 @@
         WHERE
             fcp.FINPROD_ID = #{finprodId}
             <!-- AND fcp.FINPROD_TYPE = #{finprodType} -->
-            AND fcp.MDATE &lt; #{settleDate}
+            AND fcp.MDATE &lt;= #{settleDate}
             and fci.CASH_TYPE_1 = #{cashType1}
     </select>
     

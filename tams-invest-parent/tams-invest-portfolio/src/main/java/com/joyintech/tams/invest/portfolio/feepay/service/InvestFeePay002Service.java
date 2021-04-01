@@ -1113,6 +1113,9 @@ public class InvestFeePay002Service extends BaseService<InvestFeePay002Dto> impl
         trdProductDeal.setWorkflowId(entity.getWorkflowId());
 //        trdProductDeal.setMdate(entity.getPayDate());
         trdProductDeal.setIsClean(DictCodeList.是否_是.getValue());
+        if(trdProductDeal.getMdate()==null){
+            trdProductDeal.setIsClean("N");
+        }
         // 金融产品交易附属表Entity
         TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
         trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());

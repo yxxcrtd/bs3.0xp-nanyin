@@ -1,0 +1,53 @@
+delete chb_type_mapping_ex where MAPPINGCODE='ASSETBASISTYPE';
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'MONEYFOUND', '', '', '', '', '', 'F02', 'F01', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'NOMONEYFOUND', '', '', '', '', '', 'F02', 'F02', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'OTHER', '', '', '', '', '', 'F03', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'NOMONEYFOUND', '', '', '', '', '', 'F04', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'OTHER', '', '', '', '', '', 'F05', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'OTHER', '', '', '', '', '', 'F06', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'OTHER', '', '', '', '', '', 'F07', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'OTHER', '', '', '', '', '', 'F08', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'MONEYFOUND', '', '', '', '', '', 'F09', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'OTHER', '', '', '', '', '', 'F10', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'STOCK', '', '', '', '', '', 'F11', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'OPTION', '', '', '', '', '', 'F12', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'DERIVATIVE', '', '', '', '', '', 'F14', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'DERIVATIVE', '', '', '', '', '', 'F15', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'DERIVATIVE', '', '', '', '', '', 'F16', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'OPTION', '', '', '', '', '', 'F18', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');
+
+/*债券资产*/
+insert into chb_type_mapping_ex (MAPPINGID, MAPPINGCODE, MAPPINGNAME, SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD, OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, SRCFIELD)
+values (f_guid(), 'ASSETBASISTYPE', '资产基础指标类型映射', 'OTHER', '', '', '', '', '', 'F01', '', '', '', 'E', '', '', 'system', sysdate, 'system', sysdate, '', '');

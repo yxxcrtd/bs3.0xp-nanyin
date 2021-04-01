@@ -179,24 +179,22 @@
 		and to_date(to_char(ciis.SUBMIT_TIME, 'yyyy-MM-dd'), 'yyyy-MM-dd') &lt;= to_date(#{searchDate},'yyyy-MM-dd')
 	</select>
 
-	<!-- 产品状态合格率 -->
-	<select id="searchCPZTErr" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+	<sql id="cpztComm">
 		WITH
 			INVESTHOLD_SUB AS
 			(
 				SELECT
-					PRD_REGIST_CODE,
-					INDENTIFY_MARK,
-					HOLD_DATE
-				FROM
-				(
+						PRODID,
+						INDENTIFY_MARK,
+						HOLD_DATE
+					FROM
+					(
 					SELECT
-						PRD_REGIST_CODE,
+						PRODID,
 						INDENTIFY_MARK,
 						HOLD_DATE,
 						STATUS,
-						ROW_NUMBER() over( partition BY PRD_REGIST_CODE, INDENTIFY_MARK,HOLD_DATE
-						ORDER BY UPDATE_TIME DESC) AS rowno
+						ROW_NUMBER() over( partition BY PRODID, INDENTIFY_MARK,HOLD_DATE ORDER BY UPDATE_TIME DESC) AS rowno
 					FROM
 						CHB_INVESTHOLD_INFO_SUB
 					WHERE
@@ -206,86 +204,89 @@
 								#{orgCode,jdbcType=VARCHAR}
 							</foreach>
 						</if>
-				)
+					)
 				WHERE
-					rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
+				rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
 			),
 			END_SUB AS
 			(
 				SELECT
-					PRD_REGIST_CODE,
-					INDENTIFY_MARK,
-					HOLD_DATE,
+					PROD_ID,
 					MDATE
 				FROM
 					(
 					SELECT
-						INVESTHOLD_SUB.PRD_REGIST_CODE,
-						INVESTHOLD_SUB.INDENTIFY_MARK,
-						INVESTHOLD_SUB.HOLD_DATE,
+						CHB_PRD_END_SUB.PROD_ID,
 						CHB_PRD_END_SUB.MDATE,
 						CHB_PRD_END_SUB.STATUS,
-						ROW_NUMBER() over( partition BY CHB_PRD_END_SUB.PROD_REGIST_CODE,
-						INVESTHOLD_SUB.PRD_REGIST_CODE, INVESTHOLD_SUB.INDENTIFY_MARK,
-						INVESTHOLD_SUB.HOLD_DATE ORDER BY CHB_PRD_END_SUB.UPDATE_TIME DESC) AS rowno
+						ROW_NUMBER() over( partition BY CHB_PRD_END_SUB.PROD_ID ORDER BY CHB_PRD_END_SUB.UPDATE_TIME DESC) AS rowno
 					FROM
-						CHB_PRD_END_SUB
-					INNER JOIN
-						INVESTHOLD_SUB
-					ON
-					CHB_PRD_END_SUB.PROD_REGIST_CODE = INVESTHOLD_SUB.PRD_REGIST_CODE )
+						CHB_PRD_END_SUB)
 				WHERE
 					rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
-			)
+		)
+	</sql>
+
+	<!-- 产品状态合格率 -->
+	<select id="searchCPZTErr" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+		<include refid="cpztComm"/>
 		SELECT
-			END_SUB.PRD_REGIST_CODE,
-			END_SUB.INDENTIFY_MARK,
-			END_SUB.HOLD_DATE,
-			END_SUB.MDATE,
-			CP.ISSUING_STATUS
+			CPC.REG_CODE PRD_REGIST_CODE,
+			COUNT(INVESTHOLD_SUB.INDENTIFY_MARK) holdCount,
+			INVESTHOLD_SUB.HOLD_DATE,
+			END_SUB.MDATE prdAclMDate,
+			CP.ISSUING_STATUS prdIssueSts
 		FROM
+			INVESTHOLD_SUB
+		LEFT JOIN
 			END_SUB
+		ON
+			INVESTHOLD_SUB.PRODID = END_SUB.PROD_ID
 		LEFT JOIN
 			CHB_PRD_BASEINFO CP
 		ON
-			END_SUB.PRD_REGIST_CODE = CP.REG_CODE
+			INVESTHOLD_SUB.PRODID = CP.PROD_ID
+		LEFT JOIN
+			CHB_PRDRESIST_CODE CPC
+		ON
+			CP.PROD_ID = CPC.PRODID
 		WHERE
-			(CP.ISSUING_STATUS = #{issuingFail,jdbcType=VARCHAR} OR  (objRec.MDATE IS NOT NULL AND objRec.MDATE &lt; objRec.HOLD_DATE))
+			((CP.ISSUING_STATUS != #{issuingSuccess,jdbcType=VARCHAR} OR CP.ISSUING_STATUS IS NULL)
+				OR  (END_SUB.MDATE IS NOT NULL AND END_SUB.MDATE &lt; INVESTHOLD_SUB.HOLD_DATE))
+		GROUP BY
+			CPC.REG_CODE,
+			INVESTHOLD_SUB.HOLD_DATE,
+			END_SUB.MDATE,
+			CP.ISSUING_STATUS
+	</select>
+
+	<!-- 产品状态合格率 -->
+	<select id="searchCPZTErrCalc" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+		<include refid="cpztComm"/>
+		SELECT
+			INVESTHOLD_SUB.PRODID,
+			INVESTHOLD_SUB.INDENTIFY_MARK,
+			INVESTHOLD_SUB.HOLD_DATE
+		FROM
+			INVESTHOLD_SUB
+		LEFT JOIN
+			END_SUB
+		ON
+			INVESTHOLD_SUB.PRODID = END_SUB.PROD_ID
+		LEFT JOIN
+			CHB_PRD_BASEINFO CP
+		ON
+			INVESTHOLD_SUB.PRODID = CP.PROD_ID
+		WHERE
+			((CP.ISSUING_STATUS != #{issuingSuccess,jdbcType=VARCHAR} OR CP.ISSUING_STATUS IS NULL)
+			OR  (END_SUB.MDATE IS NOT NULL AND END_SUB.MDATE &lt; INVESTHOLD_SUB.HOLD_DATE))
 	</select>
 
 	<!-- 产品状态合格率 -->
 	<select id="searchCPZTAll" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
-		WITH
-			INVESTHOLD_SUB AS
-		(
-			SELECT
-				PRD_REGIST_CODE,
-				INDENTIFY_MARK,
-				HOLD_DATE
-			FROM
-			(
-				SELECT
-					PRD_REGIST_CODE,
-					INDENTIFY_MARK,
-					HOLD_DATE,
-					STATUS,
-					ROW_NUMBER() over( partition BY PRD_REGIST_CODE, INDENTIFY_MARK,HOLD_DATE
-					ORDER BY UPDATE_TIME DESC) AS rowno
-				FROM
-					CHB_INVESTHOLD_INFO_SUB
-				WHERE
-					TO_DATE(TO_CHAR(HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') = TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-					<if test="orgCodeList != null and orgCodeList.size() > 0">
-						<foreach collection="orgCodeList" item="orgCode" open=" AND ORG_CODE IN (" close=")" separator=",">
-							#{orgCode,jdbcType=VARCHAR}
-						</foreach>
-					</if>
-			)
-			WHERE
-				rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
-		)
+		<include refid="cpztComm"/>
 		SELECT
-			INVESTHOLD_SUB.PRD_REGIST_CODE,
+			INVESTHOLD_SUB.PRODID,
 			INVESTHOLD_SUB.INDENTIFY_MARK,
 			INVESTHOLD_SUB.HOLD_DATE
 		FROM

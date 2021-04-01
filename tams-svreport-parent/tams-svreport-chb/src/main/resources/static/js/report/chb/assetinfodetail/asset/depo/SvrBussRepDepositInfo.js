@@ -89,7 +89,7 @@
          var  depoType=$("#svrBussRepDepositInfoDto_repDepoType").val();
          if(depoType!='06'){
              //结构性存款挂钩标的类别/结构性存款挂钩标。该字段清空，且置灰不可修改
-             $("#svrBussRepDepositInfoDto_repTargetType").val('').attr("disabled",true);
+             $("#svrBussRepDepositInfoDto_repTargetType").val('').attr('disabled', true).trigger('change');
              $("#svrBussRepDepositInfoDto_repTarget").val('').attr("disabled",true);
          }else{
              $("#svrBussRepDepositInfoDto_repTargetType").attr("disabled",false);

@@ -473,7 +473,9 @@
        <if test="reportuuid !=null">
 	   	and REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
        </if>
-       
+      <if test="orgCode==null">
+          and ORG_CODE is null
+      </if>
        <if test="orgCode!=null">
 	   	and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
 	   </if>
@@ -657,4 +659,11 @@
 	       #{item,jdbcType=VARCHAR}
 	   </foreach>
 	</select>
+
+    <select id="findProductByName" resultType="java.lang.String">
+        select
+        BOOKSET_ID prodId,
+        BOOKSET_NAME prodName
+        from BOK_BOOKSET
+    </select>
 </mapper>

@@ -18,6 +18,7 @@ import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
+import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -136,7 +137,7 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(@RequestBody @Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade002Dto dto, BindingResult br)
+    public AjaxResult revoke(@Validated({ValidateGroupDelete.class}) TrdProjectInvestTrade002Dto dto, BindingResult br)
         throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
@@ -175,6 +176,15 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
                 "交易日：" + entity.getTradeDate()));
         processParameter.setWorkFlowParameter(params);
         TrdProjectInvestTrade002Dto entity = TrdProjectInvestTrade002Service.findEffectiveData(BeanUtil.object2Map(dto));
+        if(entity.getTrdInvestPersonInfo()==null){
+            TrdInvestPersonInfo002Dto info002Dto = new TrdInvestPersonInfo002Dto();
+            info002Dto.setTrader(entity.getTrader());
+            info002Dto.setCounterId(entity.getCounterId());
+            info002Dto.setCounterTrader(entity.getCounterTrader());
+            info002Dto.setContactInfo(entity.getCounterContact());
+            info002Dto.setIsOutTrade(entity.getIsOutTrade());
+            entity.setTrdInvestPersonInfo(info002Dto);
+        }
         entity.setRevokeReason(dto.getRevokeReason());
         String msg = TrdProjectInvestTrade002Service.start(processParameter, entity);
         return new AjaxResult(msg);

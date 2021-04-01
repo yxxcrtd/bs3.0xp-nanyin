@@ -435,7 +435,7 @@
         </if>
         <if test="PAGE_DATA_STATUS01 != statusValid">
         	AND deal.TOTLE_TRADE_ID = #{bizCode}
-        </if>
+        </if>      
     </select>
        <update id="updatePayOrders" parameterType="com.joyintech.tams.common.base.entity.WflStlPayOrders" >
             update WFL_STL_PAY_ORDERS
@@ -671,8 +671,10 @@
             AND TPD.TRADE_STATUS = #{TRADE_STATUS03}
             AND TPD.PS IN (#{T01}, #{T02}, #{T40})
             AND (DEAL.IS_OVERDUE_DEAL IS NULL OR DEAL.IS_OVERDUE_DEAL != 'Y')
-            <include refid="where_sql"/>
+            <include refid="where_sql"/>         
+        
         </if>
+        
         <if test="statusValid != null and !statusValid.isEmpty()">
             select 
             <if test="statusValid == TRADE_FLOW_STATUS01">
@@ -743,6 +745,8 @@
             AND TPD.PS IN (#{T01}, #{T02}, #{T40})
             AND (DEAL.IS_OVERDUE_DEAL IS NULL OR DEAL.IS_OVERDUE_DEAL != 'Y')
             <include refid="where_sql"/>
+                       
+            
         </if>) order by TRADE_DATE desc
     </select>
     

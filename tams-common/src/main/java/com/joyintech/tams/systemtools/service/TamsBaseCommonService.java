@@ -108,7 +108,15 @@ public class TamsBaseCommonService extends BaseService {
     public String selectBankCode(String institutionCode) {
         return tamsBaseMapper.selectBankCode(institutionCode);
     }
-    
+    /**
+     * 查询机构类型
+     * @param institutionCode 机构代码
+     * @return 机构类型
+     */
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public String selectBankCodeName(String institutionCode) {
+        return tamsBaseMapper.selectBankCodeName(institutionCode);
+    }
     
     /**
 	 * 获取登录用户的机构类型--- 微服务版本

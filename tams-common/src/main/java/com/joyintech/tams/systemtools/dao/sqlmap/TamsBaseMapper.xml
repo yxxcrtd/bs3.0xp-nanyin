@@ -26,7 +26,13 @@
     	where 
     	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </select>
-
+    <select id="selectBankCodeName" parameterType="java.lang.String" resultType="java.lang.String">
+        select
+        SI.INSTITUTION_NAME
+        from SYS_INSTITUTION si
+        where
+        si.INSTITUTION_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
 
     <select id="selectBank" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode">
         select

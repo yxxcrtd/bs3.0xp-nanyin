@@ -209,7 +209,7 @@ public class PtlAccountCurrentInterest002Controller extends BaseController{
             dto.setFinprodType(DictCodeListExt1.现金流业务类型_资金账户.getValue());
         }
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(item -> item.getCashId());
+        params.setBusinessCode(item -> item.getBusiAcctNo());
         params.setBusinessType(DictCodeList.共通业务类型_账户活期利率管理.getValue());
         // 业务说明：账户名称 + "(" + 账户名称 + ")"+ "-"  + "现金流业务类型" + "("  + "现金流业务类型"+")" + "-"  + "现金流代码" + "("  + "现金流代码"+")" + "-"  + "生效日" + "("  + "生效日"+")"
         params.setComment(
@@ -218,7 +218,7 @@ public class PtlAccountCurrentInterest002Controller extends BaseController{
                       + this.getMessage("PtlAccountCurrentInterest001.finprodType") + "("
                       + entity.getFinprodType() + ")"
                       + this.getMessage("PtlAccountCurrentInterest001.cashId") + "("
-                      + entity.getCashId() + ")"
+                      + entity.getBusiAcctNo() + ")"
                       + this.getMessage("PtlAccountCurrentInterest001.effDate") + "("
                           + DateUtil.format(entity.getEffDate()) + ")" );
         processParameter.setWorkFlowParameter(params);

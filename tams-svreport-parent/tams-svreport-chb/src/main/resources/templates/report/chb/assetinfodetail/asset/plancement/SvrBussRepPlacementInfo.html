@@ -30,7 +30,7 @@
                            data-th-utext="#{SvrBussRepPlacementInfo.rivalPartyType}">对手方类型</label>
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_rivalPartyType|" th:name="|${entityName}.rivalPartyType|"
-                                data-th-data-result="${COUNTER_TYPE}" th:initValue="${entity?.rivalPartyType}"
+                                data-th-data-result="${SVR_RIVAL_PARTY_TYPE}" th:initValue="${entity?.rivalPartyType}"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>

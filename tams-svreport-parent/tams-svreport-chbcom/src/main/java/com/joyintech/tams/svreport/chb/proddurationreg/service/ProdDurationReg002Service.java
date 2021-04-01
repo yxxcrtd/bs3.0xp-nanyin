@@ -397,7 +397,11 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 			result.setUpdateUser(CommonUtil.getUserName());
 			result.setCreateUser(CommonUtil.getUserName());
 //	        result.setIssuePartyId(model.getRegistBankCode());
-	        result.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+	       // result.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+			if(StringUtil.isEmpty(result.getIssuePartyId())){
+				String issuePartyId = CommonUtil.selectBankCode();
+				result.setIssuePartyId(issuePartyId);
+			}
 	        result.setProdRegistCode(model.getRegCode());
 	        result.setVdate(DateUtil.format(model.getOpenStart(),"yyyy-MM-dd"));
 			/**
@@ -747,7 +751,11 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 			result.setUpdateUser(CommonUtil.getUserName());
 			result.setCreateUser(CommonUtil.getUserName());
 //	        result.setIssuePartyId(model.getRegistBankCode());
-	        result.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+	   //     result.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+			if(StringUtil.isEmpty(result.getIssuePartyId())){
+				String issuePartyId = CommonUtil.selectBankCode();
+				result.setIssuePartyId(issuePartyId);
+			}
 	        result.setProdRegistCode(model.getRegCode());
 	        result.setVdate(DateUtil.format(model.getOpenStart()));
 	        result.setMdate(DateUtil.format(model.getOpenEnd()));//数据日期

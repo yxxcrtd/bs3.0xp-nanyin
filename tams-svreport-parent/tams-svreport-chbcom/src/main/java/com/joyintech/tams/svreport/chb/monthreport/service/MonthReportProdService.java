@@ -1384,25 +1384,26 @@ public class MonthReportProdService {
 //		// lineSum6Sub5.setBankprofit(line6Sub1.getBankprofit().add(line6Sub2.getBankprofit()).add(line6Sub3.getBankprofit()).add(line6Sub4.getBankprofit()));
 //
 //		
-		
-		//主表进行数据汇总计算
-		sumDetail(result);
-		
-		// 遍历result，插入全部的数据
-		//删除时上一次已报送数据不能删除
-//		if(report.getWbsreportuuid()!=null&&!"".equals(report.getWbsreportuuid())){
-//			//数据删除时不区分机构.全部删除
-//			chbMonthReportDetailMapper.delete(sdf.format(firstday), ChbMonthReportPrdConstants.REPORT_TYPE_PROD,null);
-//		}
-		
-		//删除汇总表明细数据多法人不能生成汇总数据
-//		for (ChbMonthReportDetail v : result.values()) {
-//			//插入主表的uuid
-//			v.setReportuuid(chbMonthReport.getReportuuid());
-//			chbMonthReportDetailMapper.insert(v);
-//		}
-		
-		
+		//联社模式下不进行汇总项的统计
+		if(!CommonUtil.isBAmodel()){
+			//主表进行数据汇总计算
+			sumDetail(result);
+
+			// 遍历result，插入全部的数据
+			//删除时上一次已报送数据不能删除
+			if(report.getWbsreportuuid()!=null&&!"".equals(report.getWbsreportuuid())){
+				//数据删除时不区分机构.全部删除
+				chbMonthReportDetailMapper.delete(sdf.format(firstday), ChbMonthReportPrdConstants.REPORT_TYPE_PROD,null);
+			}
+
+			// 删除汇总表明细数据多法人不能生成汇总数据
+			for (ChbMonthReportDetail v : result.values()) {
+				//插入主表的uuid
+				v.setReportuuid(chbMonthReport.getReportuuid());
+				chbMonthReportDetailMapper.insert(v);
+			}
+		}
+
 		//各个分行进行数据汇总计算
 		for (Entry<String, Map<String, ChbMonthReportDetail>> map : deptMap.entrySet()) {
 			//数据汇总计算

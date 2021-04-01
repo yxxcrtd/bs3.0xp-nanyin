@@ -21,6 +21,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -188,7 +189,7 @@ public class CommonCodeCheckBatchService {
         // 银行模式才判断发行机构代码，联社模式不判断
         if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
 	        // 发行机构代码必须与银行代码相同。
-	        if(!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), issuePartyId)){
+	        if(!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)){
 	            errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
 	        }
         }
@@ -251,7 +252,7 @@ public class CommonCodeCheckBatchService {
         if(StringUtil.isNotEmpty(issuePartyId)){
         // 发行机构代码必须与银行代码相同。
         // 银行模式才判断发行机构代码，联社模式不判断
-        if(!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), issuePartyId)
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)
                 && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
             errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
         }}
@@ -412,7 +413,7 @@ public class CommonCodeCheckBatchService {
         // 发行机构代码必须与银行代码相同。
         // 银行模式才判断发行机构代码，联社模式不判断
         if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
-        if(!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), issuePartyId)){
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)){
             errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
         }}
         // 产品登记编码报文内不可重复。
@@ -810,7 +811,7 @@ public class CommonCodeCheckBatchService {
         // 银行模式才判断发行机构代码，联社模式不判断
         if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
         // 发行机构代码必须与银行代码相同。
-        if(!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), issuePartyId)){
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)){
             errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
         }
         }
@@ -928,7 +929,7 @@ public class CommonCodeCheckBatchService {
         if(StringUtil.isNotEmpty(issuePartyId)){
         //发行机构代码必须与银行代码相同。
         // 银行模式才判断发行机构代码，联社模式不判断
-        if(!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), issuePartyId)
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)
                 && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
             errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
         }
@@ -1008,7 +1009,7 @@ public class CommonCodeCheckBatchService {
         // 1、发行机构代码必须与银行代码相同。
         // 银行模式才判断发行机构代码，联社模式不判断
         if(StringUtil.isNotEmpty(registBankCode) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
-        if (!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), registBankCode)) {
+        if (!StringUtil.equals(CommonUtil.selectBankCode(), registBankCode)) {
             errMsgBuilder.append("发行机构代码必须与银行代码相同[").append("REGIST_BANK_CODE=").append(registBankCode).append("];");
         }
         }
@@ -1097,7 +1098,7 @@ public class CommonCodeCheckBatchService {
         // 1、发行机构代码必须与银行代码相同。
         // 银行模式才判断发行机构代码，联社模式不判断
         if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
-        if (!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), issuePartyId)) {
+        if (!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)) {
             errMsgBuilder.append("发行机构代码必须与银行代码相同[").append("ISSUE_PARTY_ID=").append(issuePartyId).append("];");
         }}
         dataMap.put("ERRMSG", errMsgBuilder.toString());
@@ -1124,7 +1125,7 @@ public class CommonCodeCheckBatchService {
         // 1、发行机构代码必须与银行代码相同。
         // 银行模式才判断发行机构代码，联社模式不判断
         if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
-        if (!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), issuePartyId)) {
+        if (!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)) {
             errMsgBuilder.append("发行机构代码必须与银行代码相同[").append("ISSUE_PARTY_ID=").append(issuePartyId).append("];");
         }
         }
@@ -1215,7 +1216,7 @@ public class CommonCodeCheckBatchService {
         // 银行模式才判断发行机构代码，联社模式不判断
         if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
         //发行机构代码必须与银行代码相同。
-        if(!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), issuePartyId)){
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)){
             errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
         }}
 //      // 该产品不存在。
@@ -1436,7 +1437,7 @@ public class CommonCodeCheckBatchService {
         //发行机构代码必须与银行代码相同。
         // 银行模式才判断发行机构代码，联社模式不判断
         if(StringUtil.isNotEmpty(issuePartyId) && StringUtil.equals(SvrDataUtil.getSysParam("AUTHORITY_TYPE"), "01")){
-        if(!StringUtil.equals(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID), issuePartyId)){
+        if(!StringUtil.equals(CommonUtil.selectBankCode(), issuePartyId)){
             errMsg +="发行机构代码必须与银行代码相同[ISSUE_PARTY_ID="+issuePartyId+"];";
         }
         }

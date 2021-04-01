@@ -454,7 +454,7 @@
                     Joyin.ajax(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revokeCheck', object, function (result) {
                         Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
                             object.revokeReason = result;
-                            WorkFlow.doRevokeList(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revoke', object, "TrdProjectInvestTrade001_btn_revoke", "TrdProjectInvestTrade002");
+                            WorkFlow.doRevoke(basePath + 'invest/trade/project/TrdProjectInvestTrade001/revoke', object, "TrdProjectInvestTrade001_btn_revoke", "TrdProjectInvestTrade002");
                         });
                     });
                 }

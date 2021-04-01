@@ -281,19 +281,6 @@
 			$("#TrdOutRightRepoTrade002_secAcctId").prop("disabled", false);
 		}
 		refreshCashAndBalance();
-        if($("#chlId").val()){
-            if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
-                $('#procedureAmt').val('').trigger('change');
-                $('#procedureAmtDiv').hide();
-                $('#settleAmt').val('').trigger('change');
-                $('#settleAmtDiv').hide();
-            }
-        }else{
-            if($("#TrdOutRightRepoTrade002_tradeMarket").val()=="01"){
-                $('#procedureAmtDiv').show();
-                $('#settleAmtDiv').show();
-            }
-        }
 	});
 
 	var changeTradeAmtAndFee = function() {
@@ -305,7 +292,7 @@
 		}
 	}
 	// <!-- 通道交易 新增 强成西 2019/03/26 end -->
-	
+
 	/**
      * 刷新托管户剩余现金、组合T日可用现金、组合T+1日可用现金
      */
@@ -359,7 +346,7 @@
             table.showColumns([{field:'assetsavailablepositions',visible: true}]);
         }
     };
-    
+
     /**
      * 券面总额改变时
      * 可修改券面总额，修改后，同步调整首次结算金额和到期结算金额
@@ -370,7 +357,7 @@
     	calc3();
     	calc4();
     };
-    
+
     /**
      * 首次全价=首次净价+首次应计利息；
      */
@@ -380,7 +367,7 @@
     	var fullPrice = JoyinMath.doAdd(cleanPrice, intAmt);// 首次全价=首次净价+首次应计利息；
     	$('#TrdOutRightRepoTrade002_fFprice').val(fullPrice);
     }
-    
+
     /**
      * 首次全价=首次净价+首次应计利息；
      */
@@ -390,7 +377,7 @@
     	var fullPrice = JoyinMath.doAdd(cleanPrice, intAmt);// 首次全价=首次净价+首次应计利息；
     	$('#TrdOutRightRepoTrade002_mFprice').val(fullPrice);
     }
-    
+
     /**
      * 首次结算金额=券面总额*首次全价/100
      */
@@ -402,9 +389,9 @@
     	}else{
     		$('#TrdOutRightRepoTrade002_fSettleAmt').val('').trigger('change');
     	}
-    	
+
     };
-    
+
     /**
      * 到期结算金额=券面总额*到期全价/100
      */
@@ -416,9 +403,9 @@
     	}else{
     		$('#TrdOutRightRepoTrade002_mSettleAmt').val('').trigger('change');
     	}
-    	
+
     };
- 
+
     /**
      * 计算买断式回购利息
      */
@@ -433,7 +420,7 @@
     	}
 		return JoyinMath.doDiv(JoyinMath.doMul(JoyinMath.doMul(settleAmt, repoTerm, 8), JoyinMath.doDiv(repoRate, 100, 8), 8), basis, 8);//回购区间利息=本金金额*（到期日-起息日）/回购交易计息基础*回购利率；
     }
-    
+
     var calcClickAction = function(){
         var repoTerm = $('#TrdOutRightRepoTrade002_actAmtDays').val();//到期日-起息日
         var repoRate = $('#TrdOutRightRepoTrade002_repoRate').val();// 回购利率
@@ -445,7 +432,7 @@
         }
         return JoyinMath.doDiv(JoyinMath.doMul(JoyinMath.doMul(settleAmt, repoTerm, 8), JoyinMath.doDiv(repoRate, 100, 8), 8), basis, 8);//回购区间利息=本金金额*（到期日-起息日）/回购交易计息基础*回购利率；
     }
-    
+
     var calcClickAction2 = function(){
         //首次收益率%、到期收益率%参考债券交易到期收益率的计算方法
         var paramObj = getcheckdata();
@@ -527,7 +514,7 @@
 		calFee();
 		// add by wangguoxian 费用设置 20190722 end
     };
-    
+
     //add  by  zhangnian 20200106 start
     //通过首次净价计算其他指标
     var calOtherByFCprice = function(data,paramObj){
@@ -587,7 +574,7 @@
         });
     }
     //add  by  zhangnian 20200106 start
-    
+
     /**
      * 根据交易方向，确定资产类型：金融产品类型_投管用_债券质押式正回购、金融产品类型_投管用_债券质押式逆回购
      * @returns
@@ -595,7 +582,7 @@
     function getFinProdType2FromPs() {
         return ($("#TrdOutRightRepoTrade002_ps").val() == null || $("#TrdOutRightRepoTrade002_ps").val() == "") ? "" : ($("#TrdOutRightRepoTrade002_ps").val() == BACK_LEND_DIRECTION_FORWARD ? FINPROD_TYPE_TG_F04 : FINPROD_TYPE_TG_F05);
     };
-    
+
     var getcheckdata = function () {
         var calcModel = $('#TrdOutRightRepoTrade002_calcModel').val();
         var paramObj = {vdate:$("#TrdOutRightRepoTrade002_vdate").val(),mdate:$("#TrdOutRightRepoTrade002_mdate").val(),repRate:$("#TrdOutRightRepoTrade002_repoRate").val(),settleSpeed:$("#TrdOutRightRepoTrade002_settleSpeed").val(),
@@ -624,7 +611,7 @@
 			paramObj.unitCprice = $('#TrdOutRightRepoTrade002_mCleanPrice').val();
 			paramObj.settleDate = $('#TrdOutRightRepoTrade002_mdate').val();//到期应计利息的计算方法参考债券交易的应计利息计算方法，交割日=到期日
 		}*/
-         
+
         if(calcModel == CALC_MODEL_02){
             paramObj.unitCprice = $('#TrdOutRightRepoTrade002_mCleanPrice').val();
             paramObj.settleDate = $('#TrdOutRightRepoTrade002_mdate').val();//到期应计利息的计算方法参考债券交易的应计利息计算方法，交割日=到期日
@@ -638,14 +625,14 @@
         paramObj.secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*10000;
         paramObj.mdate = $('#TrdOutRightRepoTrade002_mdate').val();
         //add by zhangnian  20200106  end
-        
+
         return paramObj;
     }
-    
+
     window.componentLoadCallback = function (isDone, pagePath, params) {
         $('#CombinedAmount_div').hide();
         if (isDone) {
-        	
+
         	// 刷新托管户剩余现金、组合T日可用现金、组合T+1日可用现金
         	psChangeAction();
 
@@ -661,7 +648,7 @@
                 //window.BaseRiskMathComm.initBaseRiskMathCommPage(riskparam);
             }
             window.CalculateFieldCheckComm.getparam(checkparam);
-            
+
             window.BussTrdTransferOrder['trdOutRightRepoTradeOrder'].setStlCommandInput(function () {
             	// 首次全价不能为空
             	if (!$("#TrdOutRightRepoTrade002_fFprice").val() || typeof $("#TrdOutRightRepoTrade002_fFprice").val() == 'undefined'){
@@ -699,7 +686,7 @@
                         list.push(dealObj);
                     }
             	}
-                
+
                 return {
                     'isTotalTrade': YES_OR_NO_N
                     ,'bankLendingType': null
@@ -708,7 +695,7 @@
                     ,'deal': list
                 };
             });
-            
+
             if (formTodoList) {
                 window.BussTrdTransferOrder['trdOutRightRepoTradeOrder'].saveCalcCondition();
             }
@@ -737,7 +724,7 @@
             }
         });*/
     };
-    
+
     function saveOrSubmit(operateType) {
     	// 划款指令隐藏时，自动生成划款指令信息
     	generateOrders(function () {
@@ -758,7 +745,7 @@
 			if (window.CalculateFieldCheckComm.isCalcConditionChanged(getcheckdata())){
 				return;
 			}
-	
+
 	        // 检查生成划款指令参数是否发生变化
 	        if (window.BussTrdTransferOrder['trdOutRightRepoTradeOrder'].isCalcConditionChanged()) {
 	            return;
@@ -792,16 +779,16 @@
 	    			Joyin.error("请输入合理的回购期限！");
 	    			return;
 	    		}
-	    		/*var date=new Date(tradeDate); 
-	    		date.setDate(date.getDate()+repoterm); 
-	    		
-	    		var endDate2=new Date(endDate); 
+	    		/*var date=new Date(tradeDate);
+	    		date.setDate(date.getDate()+repoterm);
+
+	    		var endDate2=new Date(endDate);
 	    		if(endDate2.getTime()<date.getTime()){
 	    		    Joyin.error("请输入合理的回购期限！");
 	                return;
 	    		}*/
 	    	}
-	    	
+
 	    	//检查组合分配的和金额信息是否一致
 	    	var secTotalPrin2=JoyinMath.doMul($('#TrdOutRightRepoTrade002_secTotalPrin').val(),10000,2);
 	        if(secTotalPrin2){
@@ -819,7 +806,7 @@
 	                return;
 	            }
 	        }
-	
+
 	        var object = $.serializeToObject('#TrdOutRightRepoTrade002_submitForm', true);
 	        object.pageModel = pageModel;
 	        object.operateType = operateType;
@@ -827,7 +814,7 @@
 	        if (FileCommon) {
 	            object.uploadFileList = FileCommon.getUploadFileInfo();
 	        }
-	
+
 	        // 资产可用持仓
 	        object.assetPosition = $("#bussTrdOutRightRepoTrade_assetPosition").val();
 			object.secTotalPrin = JoyinMath.doMul(object.secTotalPrin, 10000, 2);
@@ -838,25 +825,19 @@
 			if (data && data.object) {
 				object.payType = data.object;
 			}
-			
+
 			object.maxTradeamt = maxTradeamt;
 			object.counterType = object.trdOutRightRepoPersonInfo.isOutTrade;
 			object.counterId = object.trdOutRightRepoPersonInfo.counterId;
 			object.tradeAmt = object.secTotalPrin;
 			object.prinAmt = object.secTotalPrin;
 			object.inputValue1 = 'F10';
-            if(object.chlId){
-                if(object.procedureAmt)
-                    object.procedureAmt = '';
-                if(object.settleAmt)
-                    object.settleAmt = '';
-            }
 	        Joyin.ajaxJson(basePath + 'invest/trade/buyoutrepo/TrdOutRightRepoTrade003/check', object, function (result) {
 	        	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 		            Joyin.confirm(result.data, function () {
 		                if (operateType === 'save') {
 		                    WorkFlow.doSaveList(basePath + 'invest/trade/buyoutrepo/TrdOutRightRepoTrade003/save', object, "TrdOutRightRepoTrade002_btn_save",function(result){
-	
+
 						     });
 		                } else {
 		                    WorkFlow.doSubmitList(basePath + 'invest/trade/buyoutrepo/TrdOutRightRepoTrade003/save', object, "TrdOutRightRepoTrade002_btn_submit", pageId,null, function(result){
@@ -868,7 +849,7 @@
 	        });
     	});
     };
-    
+
     var settleSpeedChangeAction = function(){
     	var settleSpeed = $('#TrdOutRightRepoTrade002_settleSpeed').val();
     	var tradeDate = $('#TrdOutRightRepoTrade002_tradeDate').val();
@@ -879,10 +860,10 @@
     		}else if(settleSpeed === SETTLESPEED_2){
     			num =2;
     		}
-    			
+
     		$('#TrdOutRightRepoTrade002_vdate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
     	}
-    	
+
     }
 
     var tradeMarketChange = function () {
@@ -911,14 +892,14 @@
     		$('#TrdOutRightRepoTrade002_settleSpeed').attr('disabled',true);
     		$('#TrdOutRightRepoTrade002_dealCalId').attr('disabled',true);
     		$('#TrdOutRightRepoTrade002_ccy').attr('disabled',true);
-    		
+
 			if($('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() != "" ){
     			$('#TrdOutRightRepoTrade002_vdate').attr('disabled',true);
     		}
     		if($('#TrdOutRightRepoTrade002_entrustInfo_entrustMdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustMdate').val() != "" ){
     			$('#TrdOutRightRepoTrade002_mdate').attr('disabled',true);
     		}
-    		if ($('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() != "" 
+    		if ($('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustVdate').val() != ""
     				&& $('#TrdOutRightRepoTrade002_entrustInfo_entrustMdate').val() && $('#TrdOutRightRepoTrade002_entrustInfo_entrustMdate').val() != ""  ){
     			$('#TrdOutRightRepoTrade002_termType').attr('disabled',true);
         		$('#TrdOutRightRepoTrade002_repoterm').attr('disabled',true);
@@ -928,7 +909,7 @@
                 //委托时 是否有回购期限品种  没有时 联动带出
                 repoTermChangeAction();
 			}
-    		
+
 		}else{
 		    $('#bussTrdTransfenpei_div').show();
 	        zhilingtypeChangeAction();
@@ -937,7 +918,7 @@
 		$("#TrdOutRightRepoTrade002_tradeMarket").change(tradeMarketChange);
 //		 tradeMarketChange();
     }
-    
+
     function distribution2(data,distriData){
         var secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*10000;
         for(var i=0;i < data.length;i++){
@@ -968,7 +949,7 @@
                                 }
                             }else{
                                 for(var k=b;k<j;k++){
-                                    
+
                                     var div=JoyinMath.doMul(data[k].doEntrustMoney,secTotalPrin,2);
                                     var tradAmt=JoyinMath.doDiv(div,tradeAmtTotle,2);
                                     if(k==j-1){
@@ -991,8 +972,8 @@
                     }
                 }
             }
-            
-            
+
+
             if(secTotalPrin<=0&&tradeAmtTotle==data[i].doEntrustMoney){
                 table.renderRow(i, {"entrustId":data[i].entrustId});
                 table.renderRow(i, {"portfolioId":data[i].portfolioId});
@@ -1025,11 +1006,11 @@
                         }
                     }
                 }
-                
+
             }
         }
     }
-    
+
     function distribution3(data){
         var secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*10000;
         var secTotalPrin2 = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*10000;
@@ -1037,11 +1018,11 @@
         for(var i=0;i < data.length;i++){
             doEntrustMoneyTotle=JoyinMath.doAdd(doEntrustMoneyTotle,data[i].doEntrustMoney,2)-0;
         }
-        
+
         for(var i=0;i < data.length;i++){
             var num=JoyinMath.doMul(data[i].doEntrustMoney,secTotalPrin2,2)-0;
             var tradeAmt=JoyinMath.doDiv(num,doEntrustMoneyTotle,2)-0;
-            
+
             if(i==data.length-1){
                 table.renderRow(i, {"entrustId":data[i].entrustId});
                 table.renderRow(i, {"portfolioId":data[i].portfolioId});
@@ -1057,7 +1038,7 @@
             }
         }
     }
-    
+
     function distribution003(val) {
         var entrustId = $('#TrdOutRightRepoTrade002_entrustId').val();
         var distribution = $('#TrdOutRightRepoTrade003_distribution').val();
@@ -1096,7 +1077,7 @@
             }
         });
     }
-    
+
     var zhilingtypeChangeAction = function(){
         $('#bussTrdAvailableCashQuery_div_cash').show();
         $('#bussTrdTransfenpei_div').show();
@@ -1147,7 +1128,7 @@
                       if(field=='portfolioId'&&entrustId){
                           return false;
                       }
-                      
+
                       if(field=='firstIntAmt'&&entrustId){
                           return false;
                       }
@@ -1217,7 +1198,7 @@
                            if(value&& value.trim()){
                                $('input[name="secManageAcctId"]').val(value.trim());
                            }
-                           
+
                            var b=0;
                            for(var i = 0; i < table.getAllRows().length; i++){
                                if(!table.getAllRows()[i].secManageAcctId){
@@ -1230,7 +1211,7 @@
                                $('#chlId').val(" ");
                                $('#chlId').attr("disabled", true);
                            }
-                           
+
                            var rowData = {};
                            //交易场所可用资金
                            if($('#TrdOutRightRepoTrade002_tradeMarket').val()&&($('#TrdOutRightRepoTrade002_tradeMarket').val()=='03'||$('#TrdOutRightRepoTrade002_tradeMarket').val()=='04')
@@ -1261,10 +1242,10 @@
                                    table.renderRow(data.LAY_TABLE_INDEX, {"assetsavailablepositions": cashdata.position});
                                });
                            }
-                           
+
                            var entrustId = $("#TrdOutRightRepoTrade002_entrustId").val();
                            if(entrustId){
-                               
+
                            }
                        }
 
@@ -1321,7 +1302,7 @@
             });
         }
     }
-    
+
     function extractedJiSuan() {
         var repoRate = $('#TrdOutRightRepoTrade002_repoRate').val();
         var secTotalPrin = $('#TrdOutRightRepoTrade002_secTotalPrin').val();
@@ -1333,9 +1314,9 @@
         var settleAmt = $('#settleAmt').val();
         var tradeAmtAndFee = $('#tradeAmtAndFee').val();
         secTotalPrin=secTotalPrin*10000;
-        
+
         var secTotalPrin2 = $('#TrdOutRightRepoTrade002_secTotalPrin').val()*10000;
-        
+
         var fIntAmtTotle = Number(0);
         var fSettleAmtTotle = Number(0);
         var mSettleIntAmtTotle = Number(0);
@@ -1343,24 +1324,24 @@
         var procedureAmtTotle = Number(0);
         var settleAmtTotle = Number(0);
         var tradeAmtAndFeeTotle = Number(0);
-        
+
         var zero='0';
-        
+
         for (var i = 0; i < table.getAllRows().length; i++) {
             var fIntAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,fIntAmt,2)-0;
             var fSettleAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,fSettleAmt,2)-0;
-            var mSettleIntAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,mSettleIntAmt,2)-0; 
-            var mSettleAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,mSettleAmt,2)-0;  
-            var procedureAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,procedureAmt,2)-0; 
-            var settleAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,settleAmt,2)-0; 
-            var tradeAmtAndFee4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,tradeAmtAndFee,2)-0; 
+            var mSettleIntAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,mSettleIntAmt,2)-0;
+            var mSettleAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,mSettleAmt,2)-0;
+            var procedureAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,procedureAmt,2)-0;
+            var settleAmt4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,settleAmt,2)-0;
+            var tradeAmtAndFee4 = JoyinMath.doMul(table.getAllRows()[i].tradeAmt==" "?zero:table.getAllRows()[i].tradeAmt,tradeAmtAndFee,2)-0;
             //先设置劵面总额
             if($('#TrdOutRightRepoTrade002_secTotalPrin').val()
                &&$('#TrdOutRightRepoTrade002_repoRate').val()
                &&$('#TrdOutRightRepoTrade002_fCleanPrice').val()
                &&table.getAllRows()[i].portfolioId){
                 table.renderRow(i, {"repoRate": repoRate});
-                if(table.getAllRows().length>1){
+                if(table.getAllRows().length>0){
                     if (i != table.getAllRows().length - 1) {//非最后一列
                         var fIntAmt2 = JoyinMath.doDiv(fIntAmt4,secTotalPrin,2)-0;
                         var fSettleAmt2 = JoyinMath.doDiv(fSettleAmt4,secTotalPrin,2)-0;
@@ -1369,7 +1350,7 @@
                         var procedureAmt2 = JoyinMath.doDiv(procedureAmt4,secTotalPrin,2)-0;
                         var settleAmt2 = JoyinMath.doDiv(settleAmt4,secTotalPrin,2)-0;
                         var tradeAmtAndFee2 = JoyinMath.doDiv(tradeAmtAndFee4,secTotalPrin,2)-0;
-                        
+
                         fIntAmtTotle = JoyinMath.doAdd(fIntAmtTotle,fIntAmt2,2)-0;
                         fSettleAmtTotle = JoyinMath.doAdd(fSettleAmtTotle,fSettleAmt2,2)-0;
                         mSettleIntAmtTotle = JoyinMath.doAdd(mSettleIntAmtTotle,mSettleIntAmt2,2)-0;
@@ -1377,7 +1358,7 @@
                         procedureAmtTotle = JoyinMath.doAdd(procedureAmtTotle,procedureAmt2,2)-0;
                         settleAmtTotle = JoyinMath.doAdd(settleAmtTotle,settleAmt2,2)-0;
                         tradeAmtAndFeeTotle = JoyinMath.doAdd(tradeAmtAndFeeTotle,tradeAmtAndFee2,2)-0;
-                        
+
                         if(fIntAmt2==0||fIntAmt2==" "){
                             fIntAmt2="0";
                         }
@@ -1396,8 +1377,8 @@
                             table.renderRow(i, {"settleAmt": ""});
                         }
                         table.renderRow(i, {"tradeRepAmt": tradeAmtAndFee2});
-                        
-                        secTotalPrin2=JoyinMath.doMinus(secTotalPrin2,table.getAllRows()[i].tradeAmt==" "?0:table.getAllRows()[i].tradeAmt,2); 
+
+                        secTotalPrin2=JoyinMath.doMinus(secTotalPrin2,table.getAllRows()[i].tradeAmt==" "?0:table.getAllRows()[i].tradeAmt,2);
                     }else{
                         if((table.getAllRows()[i].tradeAmt==null||table.getAllRows()[i].tradeAmt==""||(table.getAllRows()[i].tradeAmt-0)==0)&&secTotalPrin2>0){
                             table.renderRow(i, {"tradeAmt": secTotalPrin2});
@@ -1408,22 +1389,22 @@
                         if(table.getAllRows()[i].tradeAmt-0>0){
                             var fIntAmtTotle2 = JoyinMath.doMinus(fIntAmt,fIntAmtTotle,2);
                             var fSettleAmtTotle2 = JoyinMath.doMinus(fSettleAmt,fSettleAmtTotle,2);
-                            var mSettleIntAmtTotle2 = JoyinMath.doMinus(mSettleIntAmt,mSettleIntAmtTotle,2); 
+                            var mSettleIntAmtTotle2 = JoyinMath.doMinus(mSettleIntAmt,mSettleIntAmtTotle,2);
                             var mSettleAmtTotle2 = JoyinMath.doMinus(mSettleAmt,mSettleAmtTotle,2);
-                            var procedureAmtTotle2 = JoyinMath.doMinus(procedureAmt,procedureAmtTotle,2); 
+                            var procedureAmtTotle2 = JoyinMath.doMinus(procedureAmt,procedureAmtTotle,2);
                             var settleAmtTotle2 = JoyinMath.doMinus(settleAmt,settleAmtTotle,2);
                             var tradeAmtAndFeeTotle2 = JoyinMath.doMinus(tradeAmtAndFee,tradeAmtAndFeeTotle,2);
-                            
+
                             table.renderRow(i, {"firstIntAmt": fIntAmtTotle2});
                             table.renderRow(i, {"firstSettleAmt": fSettleAmtTotle2});
                             table.renderRow(i, {"matIntAmt": mSettleIntAmtTotle2});
                             table.renderRow(i, {"matSettleAmt": mSettleAmtTotle2});
                             if(procedureAmt){
                                 table.renderRow(i, {"procedureAmt": procedureAmtTotle2});
-                               
+
                             }else{
                                 table.renderRow(i, {"procedureAmt": ""});
-                                
+
                             }
                             if(settleAmt){
                                 table.renderRow(i, {"settleAmt": settleAmtTotle2});
@@ -1431,7 +1412,7 @@
                                 table.renderRow(i, {"settleAmt": ""});
                             }
                             table.renderRow(i, {"tradeRepAmt": tradeAmtAndFeeTotle2});
-                            
+
                             var tradeAmt3= isNaN(table.getAllRows()[i].tradeAmt-0)?0:isNaN(table.getAllRows()[i].tradeAmt-0);
                             secTotalPrin2=isNaN(secTotalPrin2)?0:secTotalPrin2;
                         }else{
@@ -1462,7 +1443,7 @@
                     }
                 }
             }
-            
+
             var params = {};
             //组合可用现金
             if(table.getAllRows()[i].portfolioId && table.getAllRows()[i].portfolioId .trim()
@@ -1500,7 +1481,7 @@
             }
         }
     }
-    
+
     /**
      * 推算当月天数（传入起息日 yyyy-MM-dd
      */
@@ -1514,7 +1495,7 @@
     	}
     	return 0;
     }
-    
+
     /**
      * 获取期限品种  date(yyyy-MM-dd),repoterm
      */
@@ -1576,7 +1557,7 @@
     	}
     	return null;
     }
-    
+
     /**
      * 计算模式change事件
      */
@@ -1631,13 +1612,13 @@
         $('#TrdOutRightRepoTrade002_calcModel').on('change',function (){
             calcModelChange();
         });
-		
+
 		// 根据债券代码联动显示债券名称
 		secIdChangeAction();
 		$('#TrdOutRightRepoTrade002_finprodId').on('change',function(){
 			secIdChangeAction();
 		});
-		
+
 		/*// 期限品种
 		$('#TrdOutRightRepoTrade002_termType').change(function(){
 			termTypeChangeAction();
@@ -1647,12 +1628,12 @@
 		$('#TrdOutRightRepoTrade002_repoterm').on('change',function(){
 			repoTermChangeAction();
 		});
-		
+
 		// 画面到期日-画面.起息日联动实际占款天数
 		$('#TrdOutRightRepoTrade002_vdate').on('change',function(){
 			vdateChangeAction();
 		});
-		
+
 		// 画面到期日-画面.起息日联动实际占款天数
 		$('#TrdOutRightRepoTrade002_mdate').on('change',function(){
 			vdateMdateChangeAction();
@@ -1661,49 +1642,49 @@
         $('#TrdOutRightRepoTrade002_dealCalId').on('change',function(){
         	vdateMdateChangeAction();
 		});
-		
+
 		// 清算速度
 		$('#TrdOutRightRepoTrade002_settleSpeed').on('change',function(){
 			settleSpeedChangeAction();
 		});
-		
+
 		// 刷新托管户剩余现金、组合T日可用现金、组合T+1日可用现金
         $('#TrdOutRightRepoTrade002_pltId, #TrdOutRightRepoTrade002_dealCalId, #TrdOutRightRepoTrade002_ccy, #TrdOutRightRepoTrade002_finprodId').on("change", function () {
             refreshCashAndBalance();
         });
-        
-        
+
+
         // 交易方向
         $('#TrdOutRightRepoTrade002_ps').on('change',function(){
         	psChangeAction();
 		});
-        
+
         // 券面总额
         $('#TrdOutRightRepoTrade002_secTotalPrin').on('change',function(){
         	secTotalPrinChangeAction();
 		});
-        
+
         // 计算按钮
         $('#TrdOutRightRepoTrade002_btn_calculate').click(function () {
         	calcClickAction2();
         	extractedJiSuan();
         });
-        
+
         // 首次全价=首次净价+首次应计利息；
         $('#TrdOutRightRepoTrade002_fCleanPrice, #TrdOutRightRepoTrade002_fIntAmt').on('change',function(){
         	calc1();
 		});
-        
+
         // 到期全价=到期净价+到期应计利息；
         $('#TrdOutRightRepoTrade002_mCleanPrice, #TrdOutRightRepoTrade002_mSettleIntAmt').on('change',function(){
         	calc2();
 		});
-        
+
         // 首次全价
         $('#TrdOutRightRepoTrade002_fFprice').on('change',function(){
         	calc3();
 		});
-        
+
         // 到期全价
         $('#TrdOutRightRepoTrade002_mFprice').on('change',function(){
         	calc4();
@@ -1722,15 +1703,8 @@
             }
             // 当交易场所是银行间时
             else if (tradeMarket == TRADE_PLACE_01) {
-                if($("#chlId").val()){
-                    $("#procedureAmt").val('');
-                    $("#procedureAmtDiv").hide();
-                    $("#settleAmt").val('');
-                    $("#settleAmtDiv").hide();
-                }else{
-                    $("#procedureAmtDiv").show();
-                    $("#settleAmtDiv").show();
-                }
+                $("#procedureAmtDiv").show();
+                $("#settleAmtDiv").show();
                 $("#commissionAmtDiv").hide();
             }
             else {

@@ -22,6 +22,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 import com.joyintech.tams.svreport.interf.chb.proddeal.dao.ChbPrdDealInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdBaseinfoInterfMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import net.sf.cglib.beans.BeanMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -400,7 +401,7 @@ public class ProdDealInterfService extends BaseService{
 		String key = "";
 		for(ChbPrdDeal dl : listChbPrdDeal){
 			dl.setSeqno(IDGenerator.generate(36));
-			dl.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+			dl.setIssuePartyId(CommonUtil.selectBankCode());
 			dl.setCreateUser(SecurityUtil.getLoginUser() == null ?"system" :SecurityUtil.getLoginUser().getUid());
 			dl.setUpdateUser(SecurityUtil.getLoginUser() == null ?"system" :SecurityUtil.getLoginUser().getUid());
 			if(DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(dl.getTradeType())

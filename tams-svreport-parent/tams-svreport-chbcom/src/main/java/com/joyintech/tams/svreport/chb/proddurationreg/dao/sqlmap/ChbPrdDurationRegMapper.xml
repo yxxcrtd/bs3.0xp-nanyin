@@ -479,22 +479,21 @@
 		<!-- AND POS.ORG_CODE = #{orgCode, jdbcType = VARCHAR} -->
 	</select>
 	
-	<!-- 通过投资端汇总，获取产品余额-->
 	<select id="getBalanceAmt" resultType="java.math.BigDecimal">
 		SELECT
-			SUM(CNY_AMT) as balanceAmt
+			SUM(NVL(CNY_AMT,0)) as balanceAmt
 		FROM (
 				SELECT 
 				  CASE WHEN STATUS = '03' THEN 0 ELSE CNY_AMT END CNY_AMT,	
 				  ROW_NUMBER() over( partition by prodId, HOLD_DATE, INDENTIFY_MARK order by UPDATE_TIME desc ) as holdNo
 				FROM 
-					CHB_INVESTHOLD_INFO_SUB 
+					CHB_INVESTHOLD_INFO_SUB
 				WHERE 	
 					PRODID = #{prodId, jdbcType = VARCHAR}
-					AND TO_DATE(TO_CHAR(HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(#{date,jdbcType=VARCHAR},'yyyy-MM-dd')
+					AND TO_DATE(TO_CHAR(HOLD_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[=]]> TO_DATE(TO_CHAR(#{date,jdbcType=DATE}, 'yyyy-MM-dd'), 'yyyy-MM-dd')
 			)
 		WHERE
-			holdNo  = 1;					
+			holdNo  = 1				
 	</select>
 	
 	<!-- 获取产品收益-->

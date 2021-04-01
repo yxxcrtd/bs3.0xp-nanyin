@@ -156,7 +156,7 @@ public class InBottomAstPositionBatchService extends FileImpService {
             //创建机构
         	sub.setOrgCode(CommonUtil.getOrgCode());
             //发行机构代码取值
-        	sub.setIssuePartyId(null == sub.getIssuePartyId()?SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID):sub.getIssuePartyId());
+        	sub.setIssuePartyId(null == sub.getIssuePartyId()?CommonUtil.selectBankCode():sub.getIssuePartyId());
             //报送流水号
 			sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 			// 业务表不存在数据：

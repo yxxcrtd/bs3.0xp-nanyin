@@ -317,12 +317,6 @@
         object.finprodType2 = getFinProdType2FromPs();
         object.inputValue1 = 'F07';
         object.inputValue2 = $('#repoType').val();
-        if(object.chlId){
-            if(object.procedureAmt)
-                object.procedureAmt = '';
-            if(object.settleAmt)
-                object.settleAmt = '';
-        }
         Joyin.ajaxJson(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade003/check', object, function (result) {
         	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 	            Joyin.confirm(result.data, function () {
@@ -375,7 +369,7 @@
         }else{
         	$("#term").prop("disabled", false);
         }
-        
+
         // var ps = $("#ps").val();
         // 1) 当回购类型为质押式协议回购时，期限品种为文本框，期限品种和回购期限均由业务人员手动输入；
         if (repoType == TARGET_BACK_TYPE_H01) {
@@ -431,7 +425,7 @@
                 if($("#ps").val()=='04'){
                     $("#Ps04Repo").hide();
                 }
-                
+
                 window.BussRepoSecPtl["bussRepoSecPtl"].showRepo();
                 if(window.BussRepoSecPtl['bussRepoSecPtl'].pledgeBondTotalTbl.table){
                     window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'addPledgeInfo',visible: true}]);
@@ -463,7 +457,7 @@
      */
     var tradeMarketOnChange = function (isInit) {
         var tradeMarket = $("#tradeMarket").val();
-        //深圳证券交易所:回购类型为质押式竞价回购  add by start 
+        //深圳证券交易所:回购类型为质押式竞价回购  add by start
         var $repoType = $('#repoType');
         if(tradeMarket == TRADE_PLACE_03){
             $repoType.updateChosenArr({
@@ -510,11 +504,11 @@
                 window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.clear();
             }
             // add by wangguoxian 费用设置 20190719 end
-            
+
             if($('#ps').val()=='04'){
-                window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'trdAcctAbleCash',visible: true}]); 
+                window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'trdAcctAbleCash',visible: true}]);
             }else{
-                window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'trdAcctAbleCash',visible: false}]); 
+                window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'trdAcctAbleCash',visible: false}]);
             }
         }
         // 当交易场所是银行间时
@@ -535,16 +529,8 @@
                 $("#fTradeId").prop("disabled", false);
             }
             // add by wangguoxian 费用设置 20190719 start
-
-            if($("#chlId").val()){
-                $("#procedureAmt").val('');
-                $("#procedureAmtDiv").hide();
-                $("#settleAmt").val('');
-                $("#settleAmtDiv").hide();
-            }else{
-                $("#procedureAmtDiv").show();
-                $("#settleAmtDiv").show();
-            }
+            $("#procedureAmtDiv").show();
+            $("#settleAmtDiv").show();
             $("#commissionAmtDiv").hide();
             if(window.BussRepoSecPtl['bussRepoSecPtl'].pledgeBondTotalTbl.table){
                 window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'tranFeeAmt',visible: true}]);
@@ -558,7 +544,7 @@
             //add by nixiukuan 当交易场所选择银行间时候隐藏回购类型 20191025 start
            /* $("#repoTypeDiv").hide();*/
             //add by nixiukuan 当交易场所选择 20191025 end
-            
+
             window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'trdAcctAbleCash',visible: false}]);
         }
        /* else
@@ -584,7 +570,7 @@
         if(!tradeMarket){
             $("#procedureAmtDiv").hide();
             $("#settleAmtDiv").hide();
-            $("#commissionAmtDiv").hide(); 
+            $("#commissionAmtDiv").hide();
         }
         // add by wangguoxian 费用设置 20190719 end
     };
@@ -1060,7 +1046,7 @@
                         var prinLast=JoyinMath.doDiv(num,ret.entrustAmtBefore,2);
                         val.othInfo.pledgeBondInfoList[i].pledgePrin=prinLast;
                     }
-                   
+
                     window.BussRepoSecPtl['bussRepoSecPtl'].addPledgeBond(val.othInfo.pledgeBondInfoList);
                 }
                 // window.BussRepoSecPtl['bussRepoSecPtl'].pledgeBondTotalTblDetailed;
@@ -1296,7 +1282,7 @@
             prinAmtRebackIntAmtOnChange();
             //处理完质押券之后处理多组合组件
             initMultiPtlInfo();
-            
+
             var object = $.serializeToObject('#submitForm', true);
             var ListDetailed=[];
             if(object.bussRepoSecPtl){
@@ -1306,7 +1292,7 @@
                     isIntVal=false;
                 }
             }
-            
+
             //分配方式
             $('#bussRepoSecPtl_btn_autoAllocation').click(function () {
                 if( !$('#bussRepoSecPtl_btn_autoAllocation').hasClass('layui-btn-disabled') ){
@@ -1345,7 +1331,7 @@
             });*/
         }
     };
-    
+
     function extractedZiDongFenPei2() {
         var entrustId = $("#entrustId").val();
         if (entrustId) {
@@ -1385,7 +1371,7 @@
                             return b.rebackPrice - a.rebackPrice;
                         });
                     }
-                    
+
                     window.BussRepoSecPtl["bussRepoSecPtl"].distribution2(rets,'rebackPrice');
                     window.BussRepoSecPtl["bussRepoSecPtl"].extractedJiSuan3();
                 }
@@ -1468,9 +1454,9 @@
     		$('#vdate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
     		vmdateOnChangeCalcDate($('#vdate').val(),$('#vpayDate'));
     	}
-    	
+
     };
-    
+
     /**
      * 起息日、到期日改变时，自动计算首次交收日、到期交收日、实际占款天数
      */
@@ -1504,7 +1490,7 @@
     		}
     	}
     };
-    
+
     var caculateDays = function(vdate,mdate){
         var fTradeId =  $('#fTradeId').val();
         if(vdate && mdate&&!fTradeId){
@@ -1546,7 +1532,7 @@
         }
         return pledgeBondList2;
     };
-    
+
     var vpayDateChange =function(){
     	if(pageModel!=PAGE_MODEL_REFERENCE){
     		if($('#tradeMarket').val() != TRADE_PLACE_01){
@@ -1577,7 +1563,7 @@
             }
     	}
     }
-    
+
     var mpayDateChange = function(){
         if($('#tradeMarket').val() != TRADE_PLACE_01){
             var mpayDate = $('#mpayDate').val();
@@ -1783,11 +1769,11 @@
 	        }else{
 	        	$('#termTypeReback').val("");
 	        }
-		} 
+		}
 //		}
 
     };
-    
+
     /**
 	 * 回购期限
 	 */
@@ -1815,10 +1801,10 @@
 	            }
 	        }else{
 	        	$('#termTypeReback').val("").trigger('change');
-	        }  
+	        }
 		}
 	}
-	 
+
 	/**
      * 获取期限品种  date(yyyy-MM-dd),repoterm
      */
@@ -2011,7 +1997,7 @@
             changeTradeAmtAndFee();
             extractedTableRendow();
             // add by wangguoxian 费用设置 20190807 end
-            
+
             if($('#ps').val()=="04"){
                 if($('#repoType').val()!="H02"){
                     $('#Ps04Repo').hide();
@@ -2027,7 +2013,7 @@
 
                 $('.laytable-cell-5-0-15').remove();
                 $('.laytable-cell-4-0-13').remove();
-                
+
                 if($('#repoType').val()=="03"||$('#repoType').val()=="04"||$('#repoType').val()=="H02"||$('#repoType').val()=="H01"){
                     window.BussRepoSecPtl["bussRepoSecPtl"].pledgeBondTotalTbl.showColumns([{field:'trdAcctAbleCash',visible: true}]);
                 }else{
@@ -2062,19 +2048,6 @@
             }
             refreshCashAndBalance();
             setBussRepoSecInput();
-            if($('#chlId').val()){
-                if($('#tradeMarket').val()==01){
-                    $('#procedureAmt').val('').trigger('change');
-                    $('#procedureAmtDiv').hide();
-                    $('#settleAmt').val('').trigger('change');
-                    $('#settleAmtDiv').hide();
-                }
-            }else{
-                if($('#tradeMarket').val()==01){
-                    $('#procedureAmtDiv').show();
-                    $('#settleAmtDiv').show();
-                }
-            }
         });
         $('#vdate').on("change", function () {
             // 起息日、到期日改变时，自动计算回购期限

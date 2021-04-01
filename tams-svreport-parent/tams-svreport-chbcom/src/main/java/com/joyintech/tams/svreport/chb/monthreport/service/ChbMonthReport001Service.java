@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -244,8 +246,14 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
 	        calendar.setTime(endDate);
 	        calendar.add(Calendar.MONTH, 1);
 	        calendar.set(Calendar.DAY_OF_MONTH, 1);
-		 monthReportRegistBatchService.genReport(calendar.getTime(), null, true);
-		return "success";
+		 if(MultilevelDataAuthorityUtil.isEnabled()) {
+			 Map<String,Object> maptemp =new HashMap<String,Object>();
+			 List<String> listProdtemp = chbMonthReportMapper.findProductByName(maptemp);
+			 monthReportRegistBatchService.genReport(calendar.getTime(), listProdtemp, true);
+		 }else{
+			 monthReportRegistBatchService.genReport(calendar.getTime(), null, true);
+		 }
+		 return "success";
 		 
 	 }
 	

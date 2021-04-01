@@ -205,6 +205,9 @@ public class BussRepoSecService {
         String pageFrom = (String) param.get("pageFrom");
         String bizCode = (String) param.get("bizCode");
         if (StringUtil.isNotEmpty(pageFrom) && StringUtil.isNotEmpty(bizCode)) {
+        	if(pageFrom.startsWith("TrdRepoTrade00")) {
+        		param.put("pageFrom","TrdRepoTrade002");
+        	}
             return bussRepoSecMapper.deletePledgeBond(param);
         } else {
             return 0;

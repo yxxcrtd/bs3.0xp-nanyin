@@ -1,0 +1,2 @@
+update data_auth_mapper_config set filter_sql='select b.*,di.BELONG_INSTITUTION_CODE belongInstitutionCode,di.model_type from ( %s ) b LEFT JOIN DATA_AUTH_NOTIFY_INST di on (di.BUSINESS_ID = b.planAssetId or (di.BUSINESS_ID = ''F28_''||b.planAssetId and di.data_type=''FINASSET12'') ) AND DI.MODEL_TYPE=''02'' where di.institution_code in %s'
+where sql_id='com.joyintech.tams.svreport.chb.botastpositionregist.dao.ChbBotAstPositionRegist001Mapper.searchPage';

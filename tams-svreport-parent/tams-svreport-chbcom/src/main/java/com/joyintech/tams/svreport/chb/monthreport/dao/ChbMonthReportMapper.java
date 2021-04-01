@@ -106,4 +106,6 @@ public interface ChbMonthReportMapper {
     * @return
      */
     List<ChbMonthReport> searchByKeys(List<String> keyList);
+
+    List<String> findProductByName(Map<String,Object> map);
 }

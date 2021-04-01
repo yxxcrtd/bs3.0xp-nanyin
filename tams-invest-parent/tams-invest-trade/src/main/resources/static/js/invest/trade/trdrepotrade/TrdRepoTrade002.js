@@ -21,6 +21,7 @@
      * 获取期限品种  date(yyyy-MM-dd),repoterm
      */
     function getTermType(date,repoterm) {
+    debugger
     	if(repoterm&&repoterm<=21){
     		//期限品种小于21天
     		if(repoterm==1){
@@ -78,7 +79,7 @@
     	}
     	return null;
     }
-    
+
     var isSectId = false;
     //是否来自与Cstp
     var isFromCstp = false;
@@ -139,7 +140,7 @@
     var getSearchParams = function () {
         return {};
     };
-    
+
     /**
      * 画星星
      */
@@ -192,7 +193,7 @@
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
 	            return;
 	        }
-	
+
 	        if($('#fTradeId').val()&&$('#prinAmt').val()&&(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)){
 	            var isTrue = false;
 	            var params = {};
@@ -207,7 +208,7 @@
 	                    Joyin.error("成交编号获得的劵面总额不得大于已存在的劵面总额！");
 	                }
 	            },false);
-	
+
 	            if(isTrue){
 	                return;
 	            }
@@ -246,12 +247,6 @@
 	        var obj = $.extend(true, {}, object);
 	        obj.finprodType2 = getFinProdType2FromPs();
 	        obj.remark=$('#repoType').select2('data')[0].id;
-            if(object.chlId){
-                if(object.procedureAmt)
-                    object.procedureAmt = '';
-                if(object.settleAmt)
-                    object.settleAmt = '';
-            }
 	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', obj, function(result1) {
 	            Joyin.ajaxJson(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade002/check', object, function (result) {
 	            	//授信占用额度
@@ -450,15 +445,8 @@
                 $("#fTradeId").prop("disabled", false);
             }
             // add by wangguoxian 费用设置 20190719 start
-            if($('#chlId').val()){
-                $("#procedureAmt").val('');
-                $("#procedureAmtDiv").hide();
-                $("#settleAmt").val('');
-                $("#settleAmtDiv").hide();
-            }else{
-                $("#procedureAmtDiv").show();
-                $("#settleAmtDiv").show();
-            }
+            $("#procedureAmtDiv").show();
+            $("#settleAmtDiv").show();
             $("#commissionAmtDiv").hide();
             // add by wangguoxian 费用设置 20190719 end
 
@@ -684,6 +672,7 @@
      * 计算费用
      */
     var calFee = function(){
+//    	debugger;
         if(!$("#tradeDate").val()){
             return;
         }
@@ -1326,6 +1315,7 @@
 	 * 期限品种联动期限
 	 */
 	var termTypeChangeAction = function(){
+	debugger
 		var termType = $('#termTypeReback').val();
 //		if($("#repoType").val()&&$("#repoType").val()==TARGET_BACK_TYPE_H02){
 			if ($('#termTypeReback').val()){
@@ -1874,19 +1864,6 @@
                     }
                 }
                 setBussRepoSecInput();
-            if($('#chlId').val()){
-                if($('#tradeMarket').val()=="01"){
-                    $('#procedureAmt').val('').trigger('change');
-                    $('#procedureAmtDiv').hide();
-                    $('#settleAmt').val('').trigger('change');
-                    $('#settleAmtDiv').hide();
-                }
-            }else{
-                if($('#tradeMarket').val()=="01"){
-                    $('#procedureAmtDiv').show();
-                    $('#settleAmtDiv').show();
-                }
-            }
         });
         $('#vdate').on("change", function () {
             // 起息日、到期日改变时，自动计算回购期限
@@ -1919,8 +1896,8 @@
         $('#tradeMarket').on("change", function () {
                 tradeMarketChangeCalendarId();
         });
-        
-        
+
+
         // add by zhanggenglin 首期交付日,到期交付日变动时 20190807 start
         $('#vpayDate').on("change", function(){
                 vpayDateChange()
@@ -1929,7 +1906,7 @@
                 mpayDateChange()
         });
        // add by zhanggenglin 首期交付日,到期交付日变动时 20190807 end
-        
+
         // 本金金额、回购利息改变时
         $('#prinAmt, #rebackIntAmt').on("change", function () {
                 prinAmtRebackIntAmtOnChange();
@@ -1968,20 +1945,20 @@
         $('#prinAmt, #rebackPrice, #basis').on("change", function () {
                 refreshRebackIntAmt();
         });
-        
+
 		// 回购期限
 		$('#term').on('change',function(){
 			if($('#tradeMarket').val() == TRADE_PLACE_01 || ($('#tradeMarket').val() == TRADE_PLACE_02  && $("#repoType").val() == TARGET_BACK_TYPE_H01)){
 				repoTermChangeAction();
 			}
 		});
-        
+
         $('#secAcctId').on("change", function () {
                 var repoType = $("#repoType").val();
                 var tradeMarket = $('#tradeMarket').val();
                 if ($("#secAcctId").val()) {
                     $("#chlId").val('').prop("disabled", true);
-                } else if ((!etrEntrust || !etrEntrust.chlId) 
+                } else if ((!etrEntrust || !etrEntrust.chlId)
                 		&& (repoType == TARGET_BACK_TYPE_H01 || (tradeMarket ==TRADE_PLACE_01 && repoType == TARGET_BACK_TYPE_H04))) {
                     $("#chlId").prop("disabled", false);
                 }
@@ -2017,7 +1994,7 @@
              window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());
 
         });
-        
+
         // 清算速度
         $('#settleSpeedStr').change(function(){
                 settleSpeedChangeAction();
@@ -2036,6 +2013,7 @@
         });
         // 期限品种改变时
         $("#termTypeReback").on("keyup blur",function(){
+        debugger;
                 calFee();
                 changeTradeAmtAndFee();
                 termTypeChangeAction();

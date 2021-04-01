@@ -136,4 +136,6 @@ public interface PbcMonthReportMapper {
     int insertOnePrd(PbcMonthReport record);
     
     List<String> selectRegistSeqnoList(@Param("list")List<PbcMonthReport> registList,@Param("flag")String flag);
+    List<String> findProductByName(Map<String,Object> map);
+
 }

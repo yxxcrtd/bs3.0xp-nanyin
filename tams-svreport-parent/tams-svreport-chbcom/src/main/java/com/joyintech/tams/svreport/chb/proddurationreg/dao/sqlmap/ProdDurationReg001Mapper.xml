@@ -35,7 +35,7 @@
 		    CPDS.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 			CPDS.STATUS_DATE statusDate,
 		    CPDS.STATUS,
-		    CPDS.ORG_CODE orgCode,
+		    NVL(CPB.ORG_CODE, CPDS.ORG_CODE) orgCode,
 		    CPDS.UPDATE_TIME updateTime,
 		    CPDS.SUBMIT_TIME submitTime,
 		    CPDS.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
@@ -46,7 +46,7 @@
 		FROM CHB_PRD_DEAL_SUB CPDS
 		LEFT JOIN CHB_PRD_BASEINFO CPB 
 		ON CPB.PROD_ID = CPDS.PROD_ID
-		AND CPB.ORG_CODE = CPDS.ORG_CODE
+		<!-- AND CPB.ORG_CODE = CPDS.ORG_CODE-->
 		AND CPB.STATUS IN ('E','M')
 	</sql>
 	<!-- 查询 产品存续期登记表数据-->

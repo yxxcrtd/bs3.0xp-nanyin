@@ -217,8 +217,13 @@ public class InvestorsQualityCheck001Dto extends BaseEntity{
      * 持有端产品份额
      */
     private BigDecimal investTotalQty;
-    
-    public String getPrdIssueSts() {
+
+	/**
+	 * 持有记录数
+	 */
+	private String holdCount;
+
+	public String getPrdIssueSts() {
 		return prdIssueSts;
 	}
 
@@ -572,5 +577,11 @@ public class InvestorsQualityCheck001Dto extends BaseEntity{
 		this.identifyTypeStr = identifyTypeStr;
 	}
 
-    
+	public String getHoldCount() {
+		return holdCount;
+	}
+
+	public void setHoldCount(String holdCount) {
+		this.holdCount = holdCount;
+	}
 }
