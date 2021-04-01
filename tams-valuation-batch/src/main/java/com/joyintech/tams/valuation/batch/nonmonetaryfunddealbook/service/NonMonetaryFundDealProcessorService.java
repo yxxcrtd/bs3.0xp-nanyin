@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListTableId;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
@@ -46,6 +47,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 非货币基金交易 process相关业务处理
@@ -168,7 +170,17 @@ public class NonMonetaryFundDealProcessorService {
             varGyjzxbdSubjectAmt = subjectBalance3.getBalance() == null ? BigDecimal.ZERO : subjectBalance3.getBalance();
         }
 
-        
+        Collections.sort(listFinProductDealInfoComDTONow, new Comparator<FinProductDealInfoComDTO>() {
+            @Override
+            public int compare(FinProductDealInfoComDTO o1, FinProductDealInfoComDTO o2) {
+                if(StringUtil.equals(o1.getPs(),DictCodeList.交易方向_除权登记.getValue())//    T13
+                        ||StringUtil.equals(o1.getPs(),DictCodeList.交易方向_红利再投.getValue())//T12
+                        ||StringUtil.equals(o1.getPs(),DictCodeList.交易方向_现金分红.getValue())){//T11
+                    return o2.getPs().compareTo(o1.getPs());
+                }
+                return 0;
+            }
+        });
         // 循环金融产品交易信息list,进行逻辑处理
         for (FinProductDealInfoComDTO dealNow : listFinProductDealInfoComDTONow) {
             
@@ -995,21 +1007,23 @@ public class NonMonetaryFundDealProcessorService {
 
                 // ********** accountAmountMap设置如下**********
                 // 利息金额 <-交易明细.交易金额
-                // 定义 变量.利息调整 = 交易明细.交易本金 - 变量.应收红利科目余额
-                varLxtzSubjectAmt = ArithmeticUtil.doSub(dealNow.getPrinAmt(), varYshlSubjectAmt);
+//                // 定义 变量.利息调整 = 交易明细.交易本金 - 变量.应收红利科目余额
+//                varLxtzSubjectAmt = ArithmeticUtil.doSub(dealNow.getPrinAmt(), varYshlSubjectAmt);
                 // 成本金额<-交易明细.交易本金
                 accountAmountMap.put(BookConstant.DEALAMT,dealNow.getPrinAmt());
                 // 利息金额<-变量.应收红利科目余额
-                accountAmountMap.put(BookConstant.BONUSAMT,varYshlSubjectAmt);
-                // 如果变量.利息调整 > 0
-                if (BigDecimal.ZERO.compareTo(varLxtzSubjectAmt) < 0) {
-                    // 利息调整（贷）<- 变量.利息调整DSCINC_C
-                    accountAmountMap.put(BookConstant.NETAMT_C,varLxtzSubjectAmt);
-                }
-                else {
-                    // 利息调整（借） <- 变量.利息调整*-1 DSCINC_D
-                    accountAmountMap.put(BookConstant.NETAMT_D,varLxtzSubjectAmt.negate());
-                }
+                accountAmountMap.put(BookConstant.BONUSAMT,dealNow.getPrinAmt());
+//                // 利息金额<-变量.应收红利科目余额
+//                accountAmountMap.put(BookConstant.BONUSAMT,varYshlSubjectAmt);
+//                // 如果变量.利息调整 > 0
+//                if (BigDecimal.ZERO.compareTo(varLxtzSubjectAmt) < 0) {
+//                    // 利息调整（贷）<- 变量.利息调整DSCINC_C
+//                    accountAmountMap.put(BookConstant.NETAMT_C,varLxtzSubjectAmt);
+//                }
+//                else {
+//                    // 利息调整（借） <- 变量.利息调整*-1 DSCINC_D
+//                    accountAmountMap.put(BookConstant.NETAMT_D,varLxtzSubjectAmt.negate());
+//                }
                 
                 /**20200102 taoran add start**/
                 // 定义 本币金额元素Map
@@ -1019,18 +1033,18 @@ public class NonMonetaryFundDealProcessorService {
                 }
                 accountAmountMap.putAll(bccyAmountMap);
                 
-            	//定义 变量.利息调整_本位币 = 成本金额_本位币 - 利息金额_本位币
-                BigDecimal varLxtzSubjectAmtBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
-                		accountAmountMap.get(BookConstant.BONUSAMT + BookConstant.BCCYAMT));
-            	if(varLxtzSubjectAmtBccy.compareTo(BigDecimal.ZERO)>0) {
-            		//利息调整（贷）_本位币<-变量.利息调整_本位币
-            		accountAmountMap.put(BookConstant.NETAMT_C + BookConstant.BCCYAMT, ArithmeticUtil.round(varLxtzSubjectAmtBccy, NumberEnum.MONEY.getCode(), null));
-            	}
-            	else {
-            		//利息调整（借）_本位币<-变量.利息调整_本位币 * -1	
-            		accountAmountMap.put(BookConstant.NETAMT_D + BookConstant.BCCYAMT, ArithmeticUtil.round(varLxtzSubjectAmtBccy.negate(), NumberEnum.MONEY.getCode(), null));
-            	}
-                /**20200102 taoran add end**/
+//            	//定义 变量.利息调整_本位币 = 成本金额_本位币 - 利息金额_本位币
+//                BigDecimal varLxtzSubjectAmtBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+//                		accountAmountMap.get(BookConstant.BONUSAMT + BookConstant.BCCYAMT));
+//            	if(varLxtzSubjectAmtBccy.compareTo(BigDecimal.ZERO)>0) {
+//            		//利息调整（贷）_本位币<-变量.利息调整_本位币
+//            		accountAmountMap.put(BookConstant.NETAMT_C + BookConstant.BCCYAMT, ArithmeticUtil.round(varLxtzSubjectAmtBccy, NumberEnum.MONEY.getCode(), null));
+//            	}
+//            	else {
+//            		//利息调整（借）_本位币<-变量.利息调整_本位币 * -1
+//            		accountAmountMap.put(BookConstant.NETAMT_D + BookConstant.BCCYAMT, ArithmeticUtil.round(varLxtzSubjectAmtBccy.negate(), NumberEnum.MONEY.getCode(), null));
+//            	}
+//                /**20200102 taoran add end**/
             	
                 // ********** 全局变量更新**********
                 // 变量.成本科目余额=变量.成本科目余额 + 交易明细.交易本金
