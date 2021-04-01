@@ -811,7 +811,7 @@ public class CommonUtil {
 		}
 
 		String code = baseCommonService.selectBankCode(orgCode);
-		if(MultilevelDataAuthorityUtil.isEnabled() && (code.equals("")||StringUtil.isEmpty(code))){
+		if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isEmpty(code)){
 			code=CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID");
 		}
 		return null!=code?code:"";
@@ -826,7 +826,7 @@ public class CommonUtil {
 			orgCode = baseCommonService.getYHGeneralBankCode();
 		}
 		String codeName = baseCommonService.selectBankCodeName(orgCode);
-		if(MultilevelDataAuthorityUtil.isEnabled() && (codeName.equals("")||StringUtil.isEmpty(codeName))){
+		if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isEmpty(codeName)){
 			codeName=CacheUtil.getSysParam("SVR_ISSUE_PARTY_NAME");
 		}
 		return null!=codeName?codeName:"";
