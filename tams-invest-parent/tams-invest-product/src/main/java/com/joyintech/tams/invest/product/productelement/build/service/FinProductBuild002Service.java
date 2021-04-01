@@ -562,6 +562,7 @@ public class FinProductBuild002Service extends BaseService<FinProductBuild002Dto
             else if (type == OperationType.MODIFY) {
             	entity.setIsFhxgcp(entity.getBussRepFinProductInfoDto().getIsFhxgcp());
                 entity.setIsYllccp(entity.getBussRepFinProductInfoDto().getIsYllccp());
+                entity.setProductEdit(true);
                 restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME
                                            + "/FinProductCommon/updateFinProductCommon",
                     entity, Integer.class);

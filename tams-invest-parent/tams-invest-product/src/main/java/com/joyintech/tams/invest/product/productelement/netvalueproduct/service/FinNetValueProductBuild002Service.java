@@ -594,6 +594,8 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
             else if (type == OperationType.MODIFY) {
             	entity.setIsFhxgcp(entity.getBussRepFinProductInfoDto().getIsFhxgcp());
                 entity.setIsYllccp(entity.getBussRepFinProductInfoDto().getIsYllccp());
+                // add by jiangpeng on 20210401 是否是产品编辑 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+                entity.setProductEdit(true);
                 restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/updateFinProductCommon",
                     entity, Integer.class);
 
