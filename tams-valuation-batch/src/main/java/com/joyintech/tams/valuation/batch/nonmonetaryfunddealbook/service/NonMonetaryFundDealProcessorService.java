@@ -1052,7 +1052,7 @@ public class NonMonetaryFundDealProcessorService {
                 // 变量.成本科目数量=变量.成本科目数量 + 交易明细.交易份额
                 varCostSubjectNum = ArithmeticUtil.doSub(varCostSubjectNum, dealNow.getShareAmt());
                 // 变量.应收红利科目余额=变量.应收红利科目余额 - (交易明细.利息总额 - 变量.利息调整)
-                varYshlSubjectAmt = ArithmeticUtil.doSub(varYshlSubjectAmt, varYshlSubjectAmt);
+                varYshlSubjectAmt = ArithmeticUtil.doSub(varYshlSubjectAmt, dealNow.getPrinAmt());
 
             }
             else if (DictCodeList.交易方向_卖出.getValue().equals(dealPsNow)) {
