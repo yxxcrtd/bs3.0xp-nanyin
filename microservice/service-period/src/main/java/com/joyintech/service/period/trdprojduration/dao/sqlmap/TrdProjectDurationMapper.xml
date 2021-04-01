@@ -495,6 +495,7 @@
         <result column="channelFee" property="channelFee"/>
         <result column="COLLECT_TYPE" property="collectType"/>
         <result column="channel" property="channel"/>
+        <result column="REMARK" property="remark"/>
         
         <association property="finAssetInfo" select="findAssetInfo"
                      column="{interestPayDay=interestPayDay,finprodId=finprodId,CASH_TYPE_1_02=CASH_TYPE_1_02,CASH_TYPE_2_C02=CASH_TYPE_2_C02,statusValid=statusValid}"/>
