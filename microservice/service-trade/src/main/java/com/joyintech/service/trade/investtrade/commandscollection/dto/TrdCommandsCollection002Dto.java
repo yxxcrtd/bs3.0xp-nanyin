@@ -152,6 +152,19 @@ public class TrdCommandsCollection002Dto extends EtrEntrust{
     private BigDecimal fpriceAmt;
 
     /**
+     * 最低成交金额
+     */
+    private BigDecimal lowestDealNum;
+
+    public BigDecimal getLowestDealNum() {
+        return lowestDealNum;
+    }
+
+    public void setLowestDealNum(BigDecimal lowestDealNum) {
+        this.lowestDealNum = lowestDealNum;
+    }
+
+    /**
      * 获取 exerYield
      * @return exerYield
      */
