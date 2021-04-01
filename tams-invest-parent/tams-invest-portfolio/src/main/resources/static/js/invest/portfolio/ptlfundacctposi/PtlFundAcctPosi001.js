@@ -53,9 +53,9 @@ $(function() {
             ,{field:'portfolioName', title: 'PtlFundAcctPosi001.portfolioName', width:200}
             ,{field:'acctId', title: 'PtlFundAcctPosi001.busiAcctNo', width:150}
             ,{field:'acctName', title: 'PtlFundAcctPosi001.acctName', width:200}
-            ,{field:'amount', title: 'PtlFundAcctPosi001.amount',type:'money'}
-            ,{field:'amount1', title: 'PtlFundAcctPosi001.amount1',type:'money'}
-            ,{field:'ccyStr', title: 'PtlFundAcctPosi001.ccy',sortField: 'ccy', width:150}
+            ,{field:'amount', title: 'PtlFundAcctPosi001.amount',type:'money',width:140}
+            ,{field:'amount1', title: 'PtlFundAcctPosi001.amount1',type:'money',width:140}
+            ,{field:'ccyStr', title: 'PtlFundAcctPosi001.ccy',sortField: 'ccy'}
             ,{field:'ccy', visible:false}
             ,{field:'hodingType', visible:false}
             /*,{field:'detail', title: 'PtlFundAcctPosi001.detail',
@@ -66,7 +66,7 @@ $(function() {
             ,{field:'operation' , type:'action', title: 'PtlFundAcctPosi001.detail',
                 render:function (data, type, row, meta) {
                 var buttons = '';
-                if(purviewElements.indexOf('_manual')!=-1){
+                if(purviewElements.indexOf('_manual')!=-1&&row.isSummary =='02'){
                        buttons += '<a class="layui-btn layui-btn-sm btn-create  manual" title="明细" style="color:white">明细</a>';
                  }
                 return buttons;
