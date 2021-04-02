@@ -553,7 +553,8 @@ public class EtrCommonCashPositionDealService extends BaseService {
         if (etrPositionHoldDto != null && etrPositionHoldDto.getPtlSecPositionFlows() != null
             && !etrPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
             List<EtrSecPositionFlowDto> 母组合流水 = new ArrayList<>();
-            etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecFlowDto -> {
+            etrPositionHoldDto.getPtlSecPositionFlows().stream().collect(Collectors.collectingAndThen(Collectors.toCollection(()->
+                    new TreeSet<>(Comparator.comparing(item->item.getSeqno()))),ArrayList::new)).forEach(etrSecFlowDto -> {
                 etrSecPositionFlowMapper.insertSelective(etrSecFlowDto);
                 // 影响母组合持仓的情况
                 if (etrPositionHoldDto.isDealEtr()) {
