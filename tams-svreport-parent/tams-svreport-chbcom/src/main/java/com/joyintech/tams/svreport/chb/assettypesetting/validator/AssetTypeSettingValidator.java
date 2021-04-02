@@ -4,6 +4,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.ChbAssetTypeMappingEx;
 import com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto;
 import com.joyintech.tams.svreport.chb.assettypesetting.service.AssetTypeSetting001Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +30,29 @@ public class AssetTypeSettingValidator implements BeanValidator {
         }else {//新建、修改
              if ((StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) ||
                     (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT))){
+                 if (StringUtil.isEmpty(dto.getAssetType1())){
+                     errorList.add(new ValidMessage("资产一级分类不可为空"));
+                 }
+                 if (StringUtil.isEmptyList(dto.getSelectedItem1())){
+                     errorList.add(new ValidMessage("资产负债类别、资产负债二级类别不可为空"));
+                 }else{
+                    for (int i = 0; i < dto.getSelectedItem1().size(); i ++){
+                        ChbAssetTypeMappingEx exDto = dto.getSelectedItem1().get(0);
+                        if (StringUtil.isEmpty(exDto.getChbAssetType())){
+                            errorList.add(new ValidMessage("第" + (i + 1) + "行资产负债类别不可为空"));
+                        }
+                        if (StringUtil.isEmpty(exDto.getChbAssetType2())){
+                            errorList.add(new ValidMessage("第" + (i + 1) + "行资产负债二级类别不可为空"));
+                        }
+                    }
+                 }
+
                 Map<String ,Object> map = new HashMap<>();
                 map.put("assetType1",dto.getAssetType1());
                 map.put("assetType2",dto.getAssetType2());
                 map.put("assetType3",dto.getAssetType3());
                 map.put("assetBusiType",dto.getAssetBusiType());
                 AssetTypeSetting001Dto assetTypeSetting001Dto = assetTypeSetting001Service.isConfilct(map);
-                if (StringUtil.isEmpty(dto.getAssetType1())){
-                    errorList.add(new ValidMessage("资产一级分类不可为空"));
-                }
-                if (dto.getSelectedItem1().size()==0){
-                    errorList.add(new ValidMessage("资产负债类别、资产负债二级类别不可为空"));
-                }
                 if (StringUtil.isNotEmpty(assetTypeSetting001Dto)){
                     errorList.add(new ValidMessage("已存在相同的资产一级分类、资产二级分类、资产三级分类、业务分类，请重新编辑后再提交！"));
                 }
