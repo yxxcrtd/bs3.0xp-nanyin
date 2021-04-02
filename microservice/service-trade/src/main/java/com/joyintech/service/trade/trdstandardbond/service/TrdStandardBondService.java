@@ -404,7 +404,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                             PtlSecPositionFlowDto negateFlow = new PtlSecPositionFlowDto();
                             BeanUtil.copyProperties(negateFlow,ptlFlow);
                             negateFlow.setAmount(negateFlow.getAmount().negate());
-                            negateFlow.setSeqno(IDGenerator.generate());
+                            negateFlow.setTradeId(IDGenerator.generate());
                             negateFlows.add(negateFlow);
                         }
                         if(negateFlows.size()>0){
