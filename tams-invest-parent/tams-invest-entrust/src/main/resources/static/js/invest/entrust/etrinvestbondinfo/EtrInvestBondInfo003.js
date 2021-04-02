@@ -90,7 +90,8 @@
                     	}
                 	});
                 }
-                if(value != null && value != '' && ($('#ps').val() == T02 ||$('#ps').val() == T03 ||$('#ps').val() == T39) && $('#ccy').val() != ''){
+                if(value != null && value != '' && ($('#ps').val() == T02 ||$('#ps').val() == T03 ||$('#ps').val() == T39) && $('#ccy').val() != ''
+                   && $('#finprodId').val() != '' && rowData.secManageAcctId != '' && $('#invAim').val() != ''){
                 	var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(), 
             				finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), invAim: data.invAim,
             				secAcctId: data.secManageAcctId, chlId: $('#chlFinprodId').val()};
@@ -138,7 +139,35 @@
                 	}
                 	break;
             	case T02:
+                    if(data.portfolioId != '' &&  data.secManageAcctId!= '' && $('#finprodId').val() != '' && rowData.secManageAcctId != '' && $('#invAim').val() != ''){
+                        var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(),
+                            finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), invAim: data.invAim,
+                            secAcctId: data.secManageAcctId, chlId: $('#chlFinprodId').val()};
+
+                        Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getAssetAvailablePosition',datas,
+                            function(result) {
+                                if(result){
+                                    rowData.assetAvailablePosition = result.position;
+                                    rowData.assetAvailablePosition1 = result.positionT1;
+                                    table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                                }
+                            });
+                    }
             	case T03:
+                    if(data.portfolioId != '' &&  data.secManageAcctId!= '' && $('#finprodId').val() != ''
+                        && rowData.secManageAcctId != '' && $('#invAim').val() != ''){
+                        var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(),
+                            finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), invAim: data.invAim,
+                            secAcctId: data.secManageAcctId, chlId: $('#chlFinprodId').val()};
+                        Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getAssetAvailablePosition',datas,
+                            function(result) {
+                                if(result){
+                                    rowData.assetAvailablePosition = result.position;
+                                    rowData.assetAvailablePosition1 = result.positionT1;
+                                    table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                                }
+                            });
+                    }
             	case T39:
                 	if (data.secManageAcctId != null && data.secManageAcctId != ''){
                 		var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(), 
