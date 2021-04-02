@@ -209,6 +209,9 @@
         for(var index in object.bussCombDistribtList){
         	var item = object.bussCombDistribtList[index];
         	var temp = JSON.parse(JSON.stringify(object));
+            if (temp.priceModel){
+                temp.priceModel = '';
+            }
         	// 指令授信 start
             temp.inputValue1 = 'F01';
             temp.finprodType2 = 'F01';
