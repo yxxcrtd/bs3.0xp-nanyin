@@ -162,30 +162,63 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
                 userName = CacheUtil.getSysParam(BussinessConstant.PORTFOLIO_HANDLE_USERID);
             }
             List<String> userIdList = new ArrayList<String>();
-            userIdList.add(userName);
+            //userIdList.add(userName);
             /*add by liupengfei for 多级法人改造 默认选中 上级管理员用户和本级管理员 start*/
+//            if(MultilevelDataAuthorityUtil.isEnabled()) {
+//                Map<String, Object> param = new HashMap<>();
+//                String createInst = MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
+//                List<String> resourcesTreeInstCodeList = CommonUtil.getParentInstitution(createInst);
+//                // 修复npe bug modify by wj ----- 20200715
+//                if (resourcesTreeInstCodeList == null) {
+//                    resourcesTreeInstCodeList = new ArrayList<>();
+//                }
+//
+//                //BS-1942 modify by wj 20200828 会将成员行机构的is_admin用户也加入权限。
+//                //【组合审批】联社模式，默认分配的用户不对
+//                //resourcesTreeInstCodeList.add(createInst);
+//                param.put("resourcesTreeInstCodeList", resourcesTreeInstCodeList);
+//                List<String> userNameList = restTemplate.postForObject(
+//                        ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getAdminUserList",
+//                        param, List.class);
+//                if (!StringUtil.isEmptyList(userNameList)) {
+//                    userIdList.addAll(userNameList);
+//                }
+//                userIdList.add(entity.getCreateUser());
+//            }
+            /*add by liupengfei for 多级法人改造 默认选中 上级管理员用户和本级管理员 end*/     
+            //设置默认用户  TISHKBS-1941
+            //联社模式下-本机构以及上级机构所有用户
+            //1. 获取所有机构
+            Map<String, Object> param = new HashMap<>();
+            List<String> resourcesTreeInstCodeList = null;
             if(MultilevelDataAuthorityUtil.isEnabled()) {
-                Map<String, Object> param = new HashMap<>();
                 String createInst = MultilevelDataAuthorityUtil.getService().queryOrganizationCode(LoginUserUtil.getUserName());
-                List<String> resourcesTreeInstCodeList = CommonUtil.getParentInstitution(createInst);
+                resourcesTreeInstCodeList = CommonUtil.getParentInstitution(createInst);
                 // 修复npe bug modify by wj ----- 20200715
                 if (resourcesTreeInstCodeList == null) {
                     resourcesTreeInstCodeList = new ArrayList<>();
                 }
-
-                //BS-1942 modify by wj 20200828 会将成员行机构的is_admin用户也加入权限。
-                //【组合审批】联社模式，默认分配的用户不对
-                //resourcesTreeInstCodeList.add(createInst);
-                param.put("resourcesTreeInstCodeList", resourcesTreeInstCodeList);
-                List<String> userNameList = restTemplate.postForObject(
-                        ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getAdminUserList",
-                        param, List.class);
-                if (!StringUtil.isEmptyList(userNameList)) {
-                    userIdList.addAll(userNameList);
-                }
-                userIdList.add(entity.getCreateUser());
+                resourcesTreeInstCodeList.add(createInst);
             }
-            /*add by liupengfei for 多级法人改造 默认选中 上级管理员用户和本级管理员 end*/
+            //银行模式下本机构所有用户
+            else {
+            	resourcesTreeInstCodeList = new ArrayList<>();
+            	String institutionCode = restTemplate.postForObject(
+            			ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getUserInstitution"
+            			,LoginUserUtil.getUserName(), String.class);
+            	if(StringUtil.isNotEmpty(institutionCode)) {
+            		resourcesTreeInstCodeList.add(institutionCode);
+            	}
+            }
+            param.put("resourcesTreeInstCodeList", resourcesTreeInstCodeList);
+            //2. 获取机构下所有用户
+            List<String> userNameList = restTemplate.postForObject(
+                    ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlmanagementinfo/getUserList",
+                    param, List.class);
+            if (!StringUtil.isEmptyList(userNameList)) {
+                userIdList.addAll(userNameList);
+            }
+            //3. 设置组合用户
             ptlPortfolioInfoDto.setUserId(userIdList);
             // 组装资金账户信息
             List<FundAccountInfoDto> fundAccountInfoList = new ArrayList<FundAccountInfoDto>();
