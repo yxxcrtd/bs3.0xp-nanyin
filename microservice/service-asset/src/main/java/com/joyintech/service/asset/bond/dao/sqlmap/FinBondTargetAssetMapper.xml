@@ -327,6 +327,7 @@
 		SELECT count(1)
 		FROM FIN_PRODUCT
 		WHERE O_FINPROD_ID = #{oFinprodId}
+		and FINPROD_ID != #{finprodId}
 	</select>
 
 </mapper>
