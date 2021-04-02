@@ -59,9 +59,11 @@ public class BussRepOtherInvestTargetInfoValidator implements BeanValidator{
                     resultList.add(new ValidMessage("repIntpayCycle",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repIntpayCycle"))));
                 }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
                 if(StringUtil.isEmpty(dto.getRepFinancier())){
                     resultList.add(new ValidMessage("repFinancier",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancier"))));
+                }
                 }
                 if(StringUtil.isEmpty(dto.getRepFinancierOrgCode())){
                     resultList.add(new ValidMessage("repFinancierOrgCode",
@@ -77,26 +79,37 @@ public class BussRepOtherInvestTargetInfoValidator implements BeanValidator{
                                 getMessage("FIN_ASSET_E_0027", getMessage("BussRepOtherInvestTargetInfo.repFinancierOrgCode"))));
                     }
                 }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
                 if(StringUtil.isEmpty(dto.getRepFcrGradeOut())){
                     resultList.add(new ValidMessage("repFcrGradeOut",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFcrGradeOut"))));
                 }
+                }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
                 if(StringUtil.isEmpty(dto.getRepFinancierType1())){
                     resultList.add(new ValidMessage("repFinancierType1",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancierType1"))));
                 }
+                }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
                 if(StringUtil.isEmpty(dto.getRepFinancierType2())){
                     resultList.add(new ValidMessage("repFinancierType2",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancierType2"))));
                 }
+                }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
                 if(StringUtil.isEmpty(dto.getRepFinancierType3())){
                     resultList.add(new ValidMessage("repFinancierType3",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinancierType3"))));
                 }
+                }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
                 if(StringUtil.isEmpty(dto.getRepFinanceProj())){
                     resultList.add(new ValidMessage("repFinanceProj",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repFinanceProj"))));
                 }
+                }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
                 if(StringUtil.isEmpty(dto.getRepIndustry1())){
                     resultList.add(new ValidMessage("repIndustry1",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repIndustry1"))));
@@ -105,6 +118,8 @@ public class BussRepOtherInvestTargetInfoValidator implements BeanValidator{
                     resultList.add(new ValidMessage("repIndustryLevel2",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repIndustryLevel2"))));
                 }
+                }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
                 if(StringUtil.isEmpty(dto.getRepProIndustry())){
                     resultList.add(new ValidMessage("repProIndustry",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repProIndustry"))));
@@ -113,9 +128,12 @@ public class BussRepOtherInvestTargetInfoValidator implements BeanValidator{
                     resultList.add(new ValidMessage("repProIndustryLevel2",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repProIndustryLevel2"))));
                 }
+                }
+                if(StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())) {
                 if(StringUtil.isEmpty(dto.getRepIndustryFlag())){
                     resultList.add(new ValidMessage("repIndustryFlag",
                             getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.repIndustryFlag"))));
+                }
                 }
                 if(StringUtil.equals(dto.getRepIndustryFlag(), DictCodeList.是否_是.getValue())){
                     if(StringUtil.isEmpty(dto.getRepMonTypeComm())){
