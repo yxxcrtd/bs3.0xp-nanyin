@@ -3400,16 +3400,18 @@
 			
 			/**产品投资交易数据筛选产品交易数据*/
 			and EXISTS (
-		          SELECT 1 FROM CHB_INVEST_TRADE T
-		          LEFT JOIN FIN_PRODUCT F ON t.PROD_ID=F.FINPROD_MARKET_ID
-		          LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='FINPROD04'
-		          WHERE ASSETINFO.ASSET_CODE=T.ASSET_CODE
-		          <if test="orgCode != null and orgCode.size() > 0">
-						<foreach collection="orgCode" item="code" 
-			         		open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
-			          		#{code,jdbcType=VARCHAR}
-			        	</foreach>
-					</if>  
+					SELECT 1 FROM TRD_PRODUCT_DEAL T
+			        left join TRD_PRODUCT_DEAL_ADD ta  on t.trade_id=ta.trade_id
+			        left join FIN_PRODUCT f1  on t.finprod_id=f1.finprod_id
+					LEFT JOIN FIN_PRODUCT F ON ta.portfolio_id=F.FINPROD_MARKET_ID
+					LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='FINPROD04'
+					WHERE ASSETINFO.ASSET_CODE=f1.FINPROD_MARKET_ID and t.trade_status='01' and t.is_cancel='N'
+					<if test="orgCode != null and orgCode.size() > 0">
+						<foreach collection="orgCode" item="code"
+								 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
+							#{code,jdbcType=VARCHAR}
+						</foreach>
+					</if>
 		    		)
 			
 			
