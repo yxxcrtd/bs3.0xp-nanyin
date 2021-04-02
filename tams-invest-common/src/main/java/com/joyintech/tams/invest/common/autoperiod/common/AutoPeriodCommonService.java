@@ -275,6 +275,7 @@ public class AutoPeriodCommonService extends BaseService {
             inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
             inputDto.setTrdProductDealList(baseTrdDurDbInertDto.getTrdProductDealList());
             inputDto.setRepoType(finProductTradeDto.getAssetType2());
+            inputDto.setStlPayOrders(baseTrdDurDbInertDto.getStlPayOrdersList().get(0));
             AllTradeCommonUtil.lendMdateAdd(inputDto);
             if (StringUtil.isNotEmpty(baseTrdDurDbInertDto.getActPortfolioId())
                 && !StringUtil.equals(

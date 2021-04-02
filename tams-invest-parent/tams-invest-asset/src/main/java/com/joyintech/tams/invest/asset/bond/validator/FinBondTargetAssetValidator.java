@@ -219,7 +219,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                 // 有些一级市场投标债券 是从快录进来的。。导致报错。校验是否被别的债券占用。
                 // BS-757
                 //【投资交易-新发行债权标的】一级市场投标债券可以加挂到两个债券标的上
-                if(finBondTargetAssetService.selectCountByOFinprodId(dto.getoFinprodId())>0){
+                if(finBondTargetAssetService.selectCountByOFinprodId(dto.getoFinprodId(),dto.getFinprodId())>0){
                     resultList.add(new ValidMessage("oFinprodId",
                             getMessage("FIN_ASSET_E_0103")));
                 }

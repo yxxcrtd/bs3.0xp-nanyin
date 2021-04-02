@@ -680,10 +680,10 @@ var table;
         if (ps == PS_T02 || ps == PS_T03 || ps == PS_T39) {
         // 一体化对应etliu end
             if (pageModel == '0') {
-                $("#yield").val("").trigger("change").attr("disabled", true);
+                // $("#yield").val("").trigger("change").attr("disabled", true);
                 $("#exerYield").val("").trigger("change").attr("disabled", true);
             }
-            $("#calculateField_yield").attr("disabled", true);
+            // $("#calculateField_yield").attr("disabled", true);
             $("#calculateField_exerYield").attr("disabled", true);
             if($("#zhilingtype").val() =="02"){
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hidePosition(true);
@@ -703,9 +703,9 @@ var table;
             }
         }
         else if (ps == PS_T01) {
-            $("#yield").attr("disabled", false);
+            // $("#yield").attr("disabled", false);
             $("#exerYield").attr("disabled", false);
-            $("#calculateField_yield").attr("disabled", false);
+            // $("#calculateField_yield").attr("disabled", false);
             $("#calculateField_exerYield").attr("disabled", false);
             if($("#zhilingtype").val() =="02"){
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hideCash(true);
