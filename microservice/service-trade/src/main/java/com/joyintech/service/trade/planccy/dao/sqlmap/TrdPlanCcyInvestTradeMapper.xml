@@ -290,6 +290,7 @@
 		tpd.FINPROD_TYPE2,
 		tpda.ENTRUST_ID,
 		tpda.RED_CFM_DATE,
+		tpda.PUR_CFM_DATE,
 		PP.PORTFOLIO_ID,
 		tpd.SETTLE_SPEED,
 		tpd.TRADE_DATE,

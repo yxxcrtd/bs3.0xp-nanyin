@@ -106,7 +106,17 @@ public class TrdPlanCcyInvestTradeDto extends TrdProductDeal implements ProcessE
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
+
+    private Date purCfmDate;
+
+    public Date getPurCfmDate() {
+        return purCfmDate;
+    }
+
+    public void setPurCfmDate(Date purCfmDate) {
+        this.purCfmDate = purCfmDate;
+    }
+
     /**
      * 取得 交易编号
      *
