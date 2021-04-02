@@ -911,54 +911,32 @@ public class ChbBaseCheckLib {
     }
 
     /**
-     * 投资资产种类及比例特殊判断方法
-     * @param data  被检查的数据
-     * @param rule  检查规则实体
-     * @return 检查结果
+     * 根据指定的规则，判断数据指定的值与目标值大小
+     * @param data 被检查的数据
+     * @param rule 检查规则实体
+     * @return
+     * @see
+     * @since 1.0
      */
-    public static boolean invAssetTypeAndPercent(Map<String, String> data, CheckElement rule){
-        //传入进来的数据值
+    public static boolean compareValueSysPara(Map<String, String> data, CheckElement rule) {
+        boolean result = false;
+
         String srcValue = data.get(rule.getSrcproperty());
-        //投资资产种类及比例要素的判断
-        boolean  flag=true;
-        String  regex="^(100|[1-9]?\\d(\\.\\d\\d?)?)%$|0$";
-        if(StringUtil.isNotEmpty(srcValue)){
-            //对于投资资产种类及比例要素按照";"切割成各个单元
-            List<String>  invTaypeRatList=Arrays.asList(srcValue.split(GlobalConstant.SEMICOLON));
-            //循环list，对于单元进行处理
-            for(String invTaype:invTaypeRatList){
-                //按照":"对于单元进行切割
-                List<String>  invTaypePatten=Arrays.asList(invTaype.split(GlobalConstant.COLON));
-                //单元切割后，不是2个部分。则格式不通过
-                if(invTaypePatten!=null&&invTaypePatten.size()!=2){
-                    flag=false;
-                    break;
-                }else{
-                    //单元切割后是2个部分，获取数值和文字
-                    //数值
-                    String  pattenOne=invTaypePatten.get(0);
-                    if(pattenOne.contains(GlobalConstant.SPLIT)){
-                        //表示为区间
-                        List<String>  pattenOneSection=Arrays.asList(pattenOne.split(GlobalConstant.SPLIT));
-                        //校验区间
-                        if(!pattenOneSection.get(0).matches(regex)||
-                                !pattenOneSection.get(1).matches(regex)){
-                            flag=false;
-                            break;
-                        }
-                    }else{
-                        //不是区间，单个数字百分号
-                        if(!pattenOne.matches(regex)){
-                            flag=false;
-                            break;
-                        }
-                    }
-                    //文字
-                    //String  pattenTwo=invTaypePatten.get(1);
+        if (StringUtil.isNotEmpty(srcValue)){
+            String sysParam = CacheUtil.getSysParam(srcValue);
+            if (StringUtil.isNotEmpty(sysParam)){
+                String objValue = rule.getObjvalue();
+                String compareTo = rule.getCompareto();
+                if (StringUtil.equals(compareTo, "!=") && !StringUtil.equals(sysParam, objValue)){
+                    result = true;
+                }
+                if (StringUtil.equals(compareTo, "==") && StringUtil.equals(sysParam, objValue)){
+                    result = true;
                 }
             }
         }
-        return flag;
+
+        return result;
     }
     
 }

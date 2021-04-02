@@ -1082,4 +1082,32 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
     }
   //addBy zhangjinyang  end 20201023
+
+    /**
+     * 根据指定的规则，判断数据指定的值与目标值大小
+     * @param data 被检查的数据
+     * @param rule 检查规则实体
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean compareValueSysPara(Map<String, String> data, CheckElement rule) {
+        boolean result = false;
+
+        if (StringUtil.isNotEmpty(rule.getSrcproperty())){
+            String sysParam = CacheUtil.getSysParam(rule.getSrcproperty());
+            if (StringUtil.isNotEmpty(sysParam)){
+                String objValue = rule.getObjvalue();
+                String compareTo = rule.getCompareto();
+                if (StringUtil.equals(compareTo, "!=") && !StringUtil.equals(sysParam, objValue)){
+                    result = true;
+                }
+                if (StringUtil.equals(compareTo, "==") && StringUtil.equals(sysParam, objValue)){
+                    result = true;
+                }
+            }
+        }
+
+        return result;
+    }
 }
