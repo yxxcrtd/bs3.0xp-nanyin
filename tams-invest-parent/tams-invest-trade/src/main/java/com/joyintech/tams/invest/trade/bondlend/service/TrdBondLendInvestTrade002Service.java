@@ -1858,7 +1858,11 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
      */
     public List<PledgeBondInfoDto> selectAvaPledgeWithInvAim(TrdBondLendInvestTradeDto input,boolean pledge) {
         Map<String, Object> param = new HashMap<>();
-        param.put("portfolioId", input.getActPortfolioId());
+        if(StringUtil.isNotEmpty(input.getActPortfolioId())) {//motify by jiangpeng on 20210402 ZGBSS-1114 新建保存债券借贷交易，报异常提醒。
+            param.put("portfolioId", input.getActPortfolioId());
+        }else{
+            param.put("portfolioId", input.getPortfolioId());
+        }
         param.put("ps", input.getPs());
         param.put("finprodId", input.getFinprodId());
         param.put("isWithInvAim", true);

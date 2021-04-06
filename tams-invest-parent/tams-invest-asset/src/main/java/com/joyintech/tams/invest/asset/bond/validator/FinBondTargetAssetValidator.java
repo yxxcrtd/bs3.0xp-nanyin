@@ -227,21 +227,22 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             }
 
             BussFinBondRepInfoDto bussFinBondRepInfoDto = dto.getBussFinBondRepInfoDto();
-            if(StringUtil.equals("99",dto.getRegistOrg())){
-                // 如果为99  则必须不能为空
-                if(bussFinBondRepInfoDto!=null){
-                    if(StringUtil.isEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())){
-                        resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0101")));
-                    }
-                }
-            }else{
-                // 如果不为99  说明则必须为空
-                if(bussFinBondRepInfoDto!=null){
-                    if(StringUtil.isNotEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())){
-                        resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0102")));
-                    }
-                }
-            }
+            //ZGBSS-1388 wyn 20210406 债券标的-权益类资产，新建、修改时不该提示“登记托管机构为99的时候,登记托管机构说明不能为空”
+//            if(StringUtil.equals("99",dto.getRegistOrg())){
+//                // 如果为99  则必须不能为空
+//                if(bussFinBondRepInfoDto!=null){
+//                    if(StringUtil.isEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())){
+//                        resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0101")));
+//                    }
+//                }
+//            }else{
+//                // 如果不为99  说明则必须为空
+//                if(bussFinBondRepInfoDto!=null){
+//                    if(StringUtil.isNotEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())){
+//                        resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0102")));
+//                    }
+//                }
+//            }
 
         }
 

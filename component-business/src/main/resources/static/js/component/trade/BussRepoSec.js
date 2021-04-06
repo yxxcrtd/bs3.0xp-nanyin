@@ -122,7 +122,6 @@
      * 添加按钮按下处理
      */
     var addProcess = function () {
-        debugger;
         Joyin.ajaxJson(basePath + 'component/trade/BussRepoSec/check',
             param, function () {
                 if (entity == null) {

@@ -216,6 +216,8 @@
             <result column="TYPE_9" property="type9" jdbcType="VARCHAR" />
             <result column="TYPE_10" property="type10" jdbcType="VARCHAR" />
             <result column="TYPE_11" property="type11" jdbcType="VARCHAR" />
+			<result column="PUR_SPEED" property="purSpreed" jdbcType="VARCHAR" />
+			<result column="RED_SPEED" property="redSpreed" jdbcType="VARCHAR" />
             <!--添加二-四级分类 lishuping 2019/7/30 end-->
 			<result column="TYPE_7" property="type7" jdbcType="VARCHAR" />
 			<result column="MANAGER" property="manager" jdbcType="VARCHAR" />
@@ -237,9 +239,12 @@
 		T2.TYPE_11,
         <!--添加二-四级分类 lishuping 2019/7/30 end-->
 		T2.TYPE_7,
+		T3.PUR_SPEED,
+		T3.RED_SPEED,
 		T1.MANAGER
 		FROM FIN_PRODUCT T1
 		LEFT JOIN FIN_PRODUCT_TYPE T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT_ADD T3 ON T1.FINPROD_ID = T3.FINPROD_ID
 		<where>
 			<if test="search != null and search != ''">
 				(T1.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
