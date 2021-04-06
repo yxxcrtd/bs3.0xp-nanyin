@@ -154,6 +154,11 @@ $(function() {
 //                $("#trdInvestPersonInfo_counterId").textSelect('setValue',data.issuer);
                     selectManeger();
                 }
+                if($('#ps').val()==ps_T04){
+                    $("#settleSpreed").val(data.purSpreed).change();
+                }else if($('#ps').val()==ps_T06){
+                    $("#settleSpreed").val(data.redSpreed).change();
+                }
                 if (ps == ps_T06) {
                     $('#settleSpreed').trigger('change');
 				}
@@ -213,6 +218,12 @@ $(function() {
                     $('#trdInvestPersonInfo_counterId option').remove()
                     $("#trdInvestPersonInfo_counterId").textSelect('setValue',$('#finprodId').select2('data')[0].object.manager);
                 }
+                if(finprodId){
+                    $('#trdInvestPersonInfo_counterId option').remove()
+                    selectManeger();
+                    var data = $('#finprodId').select2('data')[0].object;
+                    $("#settleSpreed").val(data.purSpreed);
+                }
                 if(finprodId && portfolioId && ccy){
                     getPtlCashPositionInfo();
                 }
@@ -246,6 +257,12 @@ $(function() {
                 }
                 if(finprodId && portfolioId){
                     getPtlSecPositionInfo();
+                }
+                if(finprodId){
+                    $('#trdInvestPersonInfo_counterId option').remove()
+                    selectManeger();
+                    var data = $('#finprodId').select2('data')[0].object;
+                    $("#settleSpreed").val(data.redSpreed);
                 }
                 //-----add by 裴家俊 切换到赎回时清空风险试算列表 start ----
                 if($("#baseRiskMathCommTable").data('joyintable')!=null) {
