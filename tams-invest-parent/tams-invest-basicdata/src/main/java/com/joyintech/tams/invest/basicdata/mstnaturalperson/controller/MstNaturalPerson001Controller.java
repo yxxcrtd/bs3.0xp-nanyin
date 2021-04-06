@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -152,28 +154,28 @@ public class MstNaturalPerson001Controller extends BaseController {
     public AjaxResult delete(@RequestBody @Validated({
         ValidateGroupDelete.class}) MstNaturalPerson001Dto dto, BindingResult br)
         throws Exception {
-//        if (br.hasErrors()) {
-//            return new AjaxResult(br);
-//        }
-//        ProcessParameter<MstNaturalPerson001Dto> processParameter = new ProcessParameter<MstNaturalPerson001Dto>();
-//        WorkFlowParameter<MstNaturalPerson001Dto> params = new WorkFlowParameter<MstNaturalPerson001Dto>();
-//        params.setPageId("MstNaturalPerson002");
-//        params.setElementId(dto.getElementId());
-//        params.setBusinessCode(item -> item.getCustomerId());
-//        params.setBusinessType(DictCodeList.共通业务类型_自然人管理.getValue());
-//        // 设置流程业务说明, entity即传入的dto
-//        // 客户代码 + "(" + 客户代码 + ")" + "-" + "客户名称" + "-" + "客户名称"
-//        params.setComment(entity -> "客户名称" + "-" + entity.getCustomerName());
-//        processParameter.setWorkFlowParameter(params);
-//        String msg = mstNaturalPerson001Service.start(processParameter,
-//            dto.getSelectedItem().toArray(
-//                new MstNaturalPerson001Dto[dto.getSelectedItem().size()]));
-        if(dto!=null){
-            if(mstNaturalPerson001Service.delete(dto)){
-                return new AjaxResult("删除成功");
-            }
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
         }
-        return new AjaxResult("删除失败");
+        ProcessParameter<MstNaturalPerson001Dto> processParameter = new ProcessParameter<MstNaturalPerson001Dto>();
+        WorkFlowParameter<MstNaturalPerson001Dto> params = new WorkFlowParameter<MstNaturalPerson001Dto>();
+        params.setPageId("MstNaturalPerson002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(item -> item.getCustomerId());
+        params.setBusinessType(DictCodeList.共通业务类型_自然人管理.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        // 客户代码 + "(" + 客户代码 + ")" + "-" + "客户名称" + "-" + "客户名称"
+        params.setComment(entity -> "客户名称" + "-" + entity.getCustomerName());
+        processParameter.setWorkFlowParameter(params);
+        String msg = mstNaturalPerson001Service.start(processParameter,
+            dto.getSelectedItem().toArray(
+                new MstNaturalPerson001Dto[dto.getSelectedItem().size()]));
+//        if(dto!=null){
+//            if(mstNaturalPerson001Service.delete(dto)){
+//                return new AjaxResult("删除成功");
+//            }
+//        }
+        return new AjaxResult(msg);
     }
 
     /**

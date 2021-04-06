@@ -13,6 +13,7 @@ package com.joyintech.tams.report.home.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.report.home.dto.InfoAreaDto;
@@ -56,7 +57,7 @@ public interface ReportHomeMapper {
 	 * @return List<String> 
 	 * @version 1.7 2019年5月27日
 	 */
-	List<String> selectMenulist();
+	List<String> selectMenulist(@Param("svrFlag") String svrFlag);
 	
 	/**
 	 * @Description 查询投资者身份统计数据

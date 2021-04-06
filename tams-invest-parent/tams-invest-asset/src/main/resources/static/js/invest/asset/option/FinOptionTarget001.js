@@ -38,10 +38,10 @@ $(function() {
         },
 
         cols:[
-            {field:'targetId',width:150 , title: 'FinOptionTarget001.targetId'}
-            ,{field:'targetName',width:150 ,  title: 'FinOptionTarget001.targetName'}
-            ,{field:'targetTypeStr',width:150 ,sortField:"targetType",  title: 'FinOptionTarget001.targetType'}
-            ,{field:'operation', width:100,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']
+            {field:'targetId',width:'30%' , title: 'FinOptionTarget001.targetId'}
+            ,{field:'targetName',width:'30%' ,  title: 'FinOptionTarget001.targetName'}
+            ,{field:'targetTypeStr',sortField:"targetType",  title: 'FinOptionTarget001.targetType'}
+            ,{field:'operation',title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']
         }
         ]
     });

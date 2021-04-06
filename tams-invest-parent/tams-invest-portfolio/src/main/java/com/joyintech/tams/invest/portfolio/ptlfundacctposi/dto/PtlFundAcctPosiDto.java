@@ -17,6 +17,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.framework.grid.GridRowDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -84,6 +85,8 @@ public class PtlFundAcctPosiDto extends PtlCashPosition implements GridRowDto, P
 	 * 交易方向
 	 */
 	private String ps;
+	
+	private String isSummary;
 
 	public String getPortfolioName() {
 		return portfolioName;
@@ -135,6 +138,9 @@ public class PtlFundAcctPosiDto extends PtlCashPosition implements GridRowDto, P
 	}
 	
 	public String getCdateStr(){
+		if(StringUtil.equals(isSummary, DictCodeListExt1.是或否_是.getValue())) {
+			return  SpringContextUtil.getTextValue("PtlFundAcctPosi001.isSummary");
+		}
 		return DateUtil.format(super.getCdate());
 	}
 	public String getCcyStr(){
@@ -241,5 +247,11 @@ public class PtlFundAcctPosiDto extends PtlCashPosition implements GridRowDto, P
 
 	public void setPs(String ps) {
 		this.ps = ps;
+	}
+	public String getIsSummary() {
+		return isSummary;
+	}
+	public void setIsSummary(String isSummary) {
+		this.isSummary = isSummary;
 	}
 }

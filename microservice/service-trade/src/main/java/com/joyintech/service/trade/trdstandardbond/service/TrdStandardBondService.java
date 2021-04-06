@@ -399,13 +399,17 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                             && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
                         //入库时已经往持仓流水表中插入了持仓数据，但是seqNo与出入库详细表中的seqNo不同，所以插入一条seqNo相同的，并同时插入一条金额相反的seqNo不同的
                         List<PtlSecPositionFlowDto> negateFlows = new ArrayList<PtlSecPositionFlowDto>();
-                        BeanUtil.copyProperties(negateFlows,ptlPositionHoldDto.getPtlSecPositionFlows());
-                        for (PtlSecPositionFlowDto negateFlow:negateFlows){
+                        for (PtlSecPositionFlowDto ptlFlow :ptlPositionHoldDto.getPtlSecPositionFlows()){
                             //生成金额相反，seqNo不同的数据
+                            PtlSecPositionFlowDto negateFlow = new PtlSecPositionFlowDto();
+                            BeanUtil.copyProperties(negateFlow,ptlFlow);
                             negateFlow.setAmount(negateFlow.getAmount().negate());
-                            negateFlow.setSeqno(IDGenerator.generate());
-                            ptlPositionHoldDto.getPtlSecPositionFlows().add(negateFlow);
+                            negateFlow.setTradeId(IDGenerator.generate());
+                            negateFlows.add(negateFlow);
                         }
+                        if(negateFlows.size()>0){
+                            ptlPositionHoldDto.getPtlSecPositionFlows().addAll(negateFlows);
+                        }  
                         for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
                             basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
                         }

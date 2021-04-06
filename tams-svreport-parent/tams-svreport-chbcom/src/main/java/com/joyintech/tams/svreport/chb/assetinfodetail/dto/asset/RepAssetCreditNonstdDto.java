@@ -232,20 +232,20 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
      */
      private String repExerciseType;
 
-     /**
-     * 固定行权日
-     */
-     private Date repExerciseDate;
+//     /**
+//     * 固定行权日
+//     */
+//     private Date repExerciseDate;
 
-     /**
-     * 首次行权日期
-     */
-     private Date repFirstExerciseDate;
+//     /**
+//     * 首次行权日期
+//     */
+//     private Date repFirstExerciseDate;
 
-     /**
-     * 行权周期
-     */
-     private BigDecimal repExercisePeriod;
+//     /**
+//     * 行权周期
+//     */
+//     private BigDecimal repExercisePeriod;
 
      /**
      * 行权价格
@@ -992,47 +992,47 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
 		this.repExerciseType = repExerciseType;
 	}
 
-	/**
-	 * @return the repExerciseDate
-	 */
-	public Date getRepExerciseDate() {
-		return repExerciseDate;
-	}
+//	/**
+//	 * @return the repExerciseDate
+//	 */
+//	public Date getRepExerciseDate() {
+//		return repExerciseDate;
+//	}
+//
+//	/**
+//	 * @param repExerciseDate the repExerciseDate to set
+//	 */
+//	public void setRepExerciseDate(Date repExerciseDate) {
+//		this.repExerciseDate = repExerciseDate;
+//	}
+//
+//	/**
+//	 * @return the repFirstExerciseDate
+//	 */
+//	public Date getRepFirstExerciseDate() {
+//		return repFirstExerciseDate;
+//	}
+//
+//	/**
+//	 * @param repFirstExerciseDate the repFirstExerciseDate to set
+//	 */
+//	public void setRepFirstExerciseDate(Date repFirstExerciseDate) {
+//		this.repFirstExerciseDate = repFirstExerciseDate;
+//	}
 
-	/**
-	 * @param repExerciseDate the repExerciseDate to set
-	 */
-	public void setRepExerciseDate(Date repExerciseDate) {
-		this.repExerciseDate = repExerciseDate;
-	}
-
-	/**
-	 * @return the repFirstExerciseDate
-	 */
-	public Date getRepFirstExerciseDate() {
-		return repFirstExerciseDate;
-	}
-
-	/**
-	 * @param repFirstExerciseDate the repFirstExerciseDate to set
-	 */
-	public void setRepFirstExerciseDate(Date repFirstExerciseDate) {
-		this.repFirstExerciseDate = repFirstExerciseDate;
-	}
-
-	/**
-	 * @return the repExercisePeriod
-	 */
-	public BigDecimal getRepExercisePeriod() {
-		return repExercisePeriod;
-	}
-
-	/**
-	 * @param repExercisePeriod the repExercisePeriod to set
-	 */
-	public void setRepExercisePeriod(BigDecimal repExercisePeriod) {
-		this.repExercisePeriod = repExercisePeriod;
-	}
+//	/**
+//	 * @return the repExercisePeriod
+//	 */
+//	public BigDecimal getRepExercisePeriod() {
+//		return repExercisePeriod;
+//	}
+//
+//	/**
+//	 * @param repExercisePeriod the repExercisePeriod to set
+//	 */
+//	public void setRepExercisePeriod(BigDecimal repExercisePeriod) {
+//		this.repExercisePeriod = repExercisePeriod;
+//	}
 
 	/**
 	 * @return the repExercisePrice

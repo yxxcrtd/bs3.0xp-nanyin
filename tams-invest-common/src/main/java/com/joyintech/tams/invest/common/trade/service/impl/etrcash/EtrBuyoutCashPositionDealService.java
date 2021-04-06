@@ -562,7 +562,7 @@ public class EtrBuyoutCashPositionDealService extends EtrCashPositionBaseService
             EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
             // 正回购  or 逆回购
             String ps = etrEntrust.getFinprodType2();
-            if (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(ps)) {
+            if (DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue().equals(ps)) {
                 // 委托生成的持仓流水
                 // 减少本金金额
                 EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(
@@ -570,7 +570,7 @@ public class EtrBuyoutCashPositionDealService extends EtrCashPositionBaseService
                 etrSecPositionFlowDto.setAmount(etrEntrust.getEntrustNum());
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }
-            else if (DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(ps)) {
+            else if (DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue().equals(ps)) {
                 PtlSecValutionKey ptlSecValutionKey = new PtlSecValutionKey();
                 ptlSecValutionKey.setCdate(DateUtil.addDay(etrEntrust.getMdate(), -1));// 委托结束日
                 ptlSecValutionKey.setPortfolioId(etrEntrust.getPortfolioId());

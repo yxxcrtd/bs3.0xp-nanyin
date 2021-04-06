@@ -155,7 +155,7 @@ public class FinOpenPlanMaintenanceValidator implements BeanValidator{
                     //modify by wm 2019-08-01增加净值型产品查询净值日取值规则，当净值日取值规则为 工作日-1时，不校验其净值日与开放起始日的大小 end
                     
                     //开放周期check
-                    for(int j = 0; j < selectedDto.size(); j++ ){
+                 /*   for(int j = 0; j < selectedDto.size(); j++ ){
                         if(i == j){
                             continue;
                         }
@@ -166,7 +166,7 @@ public class FinOpenPlanMaintenanceValidator implements BeanValidator{
                         if(DateUtil.compareDate(entity.getOpenDateEnd(), entity2.getOpenDateStr()) >=0 &&  DateUtil.compareDate(entity.getOpenDateEnd(), entity2.getOpenDateEnd()) <= 0){
                             resultList.add(new ValidMessage(this.getMessage("计划列表中第["+ (i+1) + "]行开放结束日被包含在第["+ (j+1) +"]行开放计划周期内!" )));
                         }
-                    } 
+                    } */
                 }
             }
         }

@@ -259,10 +259,11 @@ public class PayTheVatQuery003Controller extends BaseController {
         String pltDate = DateUtil.format(DateUtil.platDateFromCache(), DateUtil.DEFAULT_DATE_FORMAT_EN);
         List<PayTheVatQuery001Dto> list = payTheVatQuery003Service.findFinproduct(dto.getFinprodId(), seitleDate);
         List<PayTheVatQuery001Dto> list1 = payTheVatQuery003Service.findPtradeid(tradeId);
-        if (CollectionUtils.isNotEmpty(list)) {
-            msg = "缴税/退税日期要大于等于该产品的账套日期";
-            return new AjaxResult(msg, MessageType.错误消息);
-        }
+        //20210331 wyn ZGBSS-1328
+//        if (CollectionUtils.isNotEmpty(list)) {
+//            msg = "缴税/退税日期要大于等于该产品的账套日期";
+//            return new AjaxResult(msg, MessageType.错误消息);
+//        }
         if (CollectionUtils.isNotEmpty(list1)) {
             msg = "该产品已撤销。";
             return new AjaxResult(msg, MessageType.错误消息);

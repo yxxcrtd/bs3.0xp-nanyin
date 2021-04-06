@@ -53,7 +53,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_assetYield|" th:name="|${entityName}.assetYield|"
                                th:value="${entity?.assetYield}"
-                               class="layui-input form-input text-number" data-textrange="4"/>
+                               class="layui-input form-input text-number" data-textrange="5"/>
                     </div>
                 </div>
             </div>
@@ -922,8 +922,7 @@
                            data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repRemark}" style=" width: 11.9%;">备注</label>
                     <div class="layui-input-inline input-inline" style="width:81%!important;">
                         <input th:id="|${entityName}_repRemark|" th:name="|${entityName}.repRemark|"
-                               th:value="${entity?.repRemark}"
-                               data-th-text="${entity?.repRemark}" class="layui-input form-input" placeholder="请输入内容"
+                               th:value="${entity?.repRemark}" class="layui-input form-input" placeholder="请输入内容"
                                data-th-placeholder="#{SysCommon.placeholder}"></input>
                     </div>
                 </div>

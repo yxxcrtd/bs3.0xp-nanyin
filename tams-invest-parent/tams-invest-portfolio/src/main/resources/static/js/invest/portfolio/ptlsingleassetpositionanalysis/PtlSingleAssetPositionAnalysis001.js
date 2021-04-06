@@ -31,16 +31,16 @@ $(function () {
         treeUpId: 'parentInfo',
         treeShowName: 'finprodAbbr',
         lazyload:true,
-        cols: [{field:'finprodAbbr',minWidth:200, width:200, title: '资产名称'}//资产名称
-         ,{field:'finprodMarketId',minWidth:200, width:200, title: '资产代码'}//资产代码
-         ,{field:'portFolioName',minWidth:180, width:180, title: '组合名称'}//组合名称
-         ,{field:'shareAmt', title: '持仓数量',type:'money'}//持仓数量
-         ,{field:'dscCostAmt', title: '成本(元)',type:'money'}//成本(元)
-         ,{field:'marketValue', title: '市值(元)',type:'money'}//市值(元)
+        cols: [{field:'finprodAbbr',minWidth:200, width:'20%', title: '资产名称'}//资产名称
+         ,{field:'finprodMarketId',minWidth:200, width:'20%', title: '资产代码'}//资产代码
+         ,{field:'portFolioName',minWidth:200, width:'20%',title: '组合名称'}//组合名称
+         ,{field:'shareAmt', title: '持仓数量',type:'money',width:150}//持仓数量
+         ,{field:'dscCostAmt', title: '成本(元)',type:'money',width:150}//成本(元)
+         ,{field:'marketValue', title: '市值(元)',type:'money',width:150}//市值(元)
          ,{field:'marketValueRatio', title: '市值比例%',type: 'number',digit:2}//市值比例%
-         ,{field:'childInfo', width:150, visible: false}
-         ,{field:'parentInfo', width:150, visible: false}
-         ,{field:'belongInstitutionNameNew',minWidth:180, width:180, title: '机构名称',visible:AUTHORITY_TYPE=='02'}//组合名称
+         ,{field:'childInfo', visible: false}
+         ,{field:'parentInfo', visible: false}
+         ,{field:'belongInstitutionNameNew', title: '机构名称',visible:AUTHORITY_TYPE=='02'}//组合名称
          ]
     });
     /*var table=$("#dataTable").joyintable({
