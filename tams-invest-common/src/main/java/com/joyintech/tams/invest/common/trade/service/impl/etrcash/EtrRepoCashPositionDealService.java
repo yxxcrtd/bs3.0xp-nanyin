@@ -959,11 +959,17 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         // 交易提交
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
+                EtrSecPositionFlowDto temp = new EtrSecPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(temp, etrSecPositionFlowDto);
                 // 标准券
                 etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2).negate());
                 etrSecPositionFlowDto.setFinprodId(XN_STANDARD_BOND_PRODID);
                 // 添加持仓流水到目标dto
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                //modify by jiangpeng on 20210406 ZGBSS-1403 质押式竞价正回购撤销流程生效后，实时资产头寸查询中指令可用持仓未减少 start
+                temp.setAmount(交易日金额);
+                etrPositionHoldDto.getPtlSecPositionFlows().add(temp);
+                // modify by jiangpeng on 20210406 ZGBSS-1403 质押式竞价正回购撤销流程生效后，实时资产头寸查询中指令可用持仓未减少 end
             }
         }
     }

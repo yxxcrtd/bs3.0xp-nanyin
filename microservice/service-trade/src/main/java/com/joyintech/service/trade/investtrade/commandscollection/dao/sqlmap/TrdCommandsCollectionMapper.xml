@@ -779,7 +779,7 @@
                 <include refid="pledgeFinprodTable"></include>
                 ) T1
                 LEFT JOIN(SELECT ENTRUST_ID,SUM(FINISH_AMT) AS FINISHED_AMT FROM ETR_FINISH_STATUS GROUP BY ENTRUST_ID) T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
-                WHERE T1.PLEDGE_AMT - NVL(T2.FINISHED_AMT, 0) &gt; 0
+                --WHERE T1.PLEDGE_AMT - NVL(T2.FINISHED_AMT, 0) &gt; 0
                 GROUP BY T1.ENTRUST_ID
             ) T11 ON T1.ENTRUST_ID = T11.ENTRUST_ID
         </if>
@@ -894,7 +894,7 @@
                <include refid="pledgeFinprodTable"></include>
             ) T1
             LEFT JOIN(SELECT ENTRUST_ID,SUM(FINISH_AMT) AS FINISHED_AMT FROM ETR_FINISH_STATUS GROUP BY ENTRUST_ID) T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
-            WHERE T1.PLEDGE_AMT - NVL(T2.FINISHED_AMT, 0) &gt; 0
+            --WHERE T1.PLEDGE_AMT - NVL(T2.FINISHED_AMT, 0) &gt; 0
         ) T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID AND T7. PLEDGE_FINPROD = T9.PLEDGE_FINPROD
         LEFT JOIN ETR_ENTRUST_ADD T8 ON T1.ENTRUST_ID = T8.ENTRUST_ID
         <where>
