@@ -484,9 +484,11 @@
                 AND (T11.TYPE_6 = #{TYPE6_B14} OR T11.TYPE_6 = #{TYPE6_B15}) 
                 AND T1.PS = #{PS_T49}
             </if>
+            <!-- 
             <if test="assetType == PINAN_ASSET_TYPE_F07">
                 AND T15.PLEDGE_AMT - NVL(T4.FINISHED_AMT, 0) &gt; 0
             </if>
+            -->
             <if test="pledgeFinprod != null and pledgeFinprod !='' ">
                 AND DECODE(T15.PLEDGE_FINPROD, NULL, '01', T15.PLEDGE_FINPROD) = #{pledgeFinprod}
             </if>
