@@ -154,16 +154,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="layui-form-item" id="settleSpreed_div">
-                                    <div class="form-inline-wrap">
+                                <div class="layui-form-item" id="settleSpreed_div" style="display: none">
+                                    <!--<div class="form-inline-wrap">
                                         <label class="layui-form-label form-label-wrap"
                                             th:text="#{TrdPlanCcyInvestTrade002.settleSpreed}">清算速度</label>
                                         <div class="layui-input-inline input-inline">
                                             <select required type="text" id="settleSpreed" name="settleSpreed"
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:placeholder="#{SysCommon.placeholder}" disabled
                                                 th:data-result='${ACCOUNT_SPEED}' allowClear="true" formatoption="true"
                                                 th:initValue="${entity?.settleSpreed}"></select>
+                                        </div>
+                                    </div>-->
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap">确认速度</label>
+                                        <div class="layui-input-inline input-inline delaytime-inline-wrap">
+                                            <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
+                                            <input type="text" disabled id="settleSpreed" name="settleSpreed"  th:value="${entity?.settleSpreed}" class="layui-input form-input"
+                                                   style="float: left;display: inline-block; width: 75%;"/>
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap">
