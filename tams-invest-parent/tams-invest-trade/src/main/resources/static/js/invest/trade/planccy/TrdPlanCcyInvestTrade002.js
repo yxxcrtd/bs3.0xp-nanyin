@@ -345,6 +345,23 @@ $(function() {
             $('#trdInvestPersonInfo_contactInfo').val('');
         }
 
+        var calcCfmDate = function() {
+            var tradedate = $('#tradeDate').val();
+            var settleSpeed = $('#settleSpreed').val();
+            var calendarId = $('#calendarId').val();
+            if (!tradedate || !settleSpeed || !calendarId) {
+                return;
+            }
+            Joyin.ajaxSync(basePath + 'invest/trade/TrdCommonController/getNextWorkDay', {
+                'calendarId': calendarId,
+                'tradeDate': tradedate,
+                'settleSpreed':settleSpeed
+            }, function (result) {
+                $("#purCfmDate").val(result).trigger("change");
+                $('#expectedArrivalDate').val(result).trigger("change");
+            });
+        }
+
         /**
          * 单位净价
          */
@@ -462,6 +479,8 @@ $(function() {
         		var num = 0;
         		$('#expectedArrivalDate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
         	}
+            //计算确认日期
+            calcCfmDate();
         });
         
         /**
