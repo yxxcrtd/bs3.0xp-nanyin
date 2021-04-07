@@ -4,6 +4,9 @@
 
     var entrustSurAmt;
     var pledgeBondVal=null;
+    
+    var updateFlag = false;
+    
     /**
      * 设置初始参数
      * @param paramObject
@@ -368,6 +371,41 @@
                  $('.btn_add_plegin').remove();
                  $('.laytable-cell-4-0-13').remove();
              }
+             //自动计算可用标准券额度
+             if(updateFlag==false){
+            	 updateFlag = true;
+                 if($('#repoType').val()=='H02'){
+                	 var changeFlag = false;
+                     var rows = pledgeBondTotalTbl.getAllRows();
+                     for(var i=0;i<rows.length;i++){
+                    	 if(rows[i].avaStandardStockPosition==null||rows[i].avaStandardStockPosition==""){
+                        	 if(rows[i].secAcctId&&rows[i].portfolioId){
+                                 var rowData = {};
+                                 var param = {};
+                                 param.portfolioId = rows[i].portfolioId;
+                                 param.secAcctId = rows[i].secAcctId;
+                                 $.ajax({
+                                	 url:JoyinUtil.getRealPath('/invest/trade/trdstandardbond/TrdStandardBond001/selectListData'),
+                                	 data:JSON.stringify(param),
+                                	 async:false,
+                                	 type:'post',
+                                	 contentType:'application/json',
+                                	 success:function(result){
+                                         if(result[0]){
+                                        	 rows[i].avaStandardStockPosition =JoyinMath.doAdd(result[0].avaStrdPrinAmtSum,0,2);
+                                        	 changeFlag = true;
+                                         }
+                                	 }
+                                 });
+                        	 } 
+                    	 }
+                     }
+                     if(changeFlag){
+                    	 reloadPledgeBond(rows);
+                     }
+                 }
+                 updateFlag = false;
+             }
              
              this.bind('click', '.delt', function(data, index) {
                  var portfolioId=data.portfolioId;
@@ -709,7 +747,7 @@
             // 组合名称
             ,{field: 'portfolioName',title: 'BussRepoSecPtl.portfolioName',type: 'text',edit: false,sortable: false}
             // 质押本方券券面总额
-            , {field: 'pledgeBfPrin',title: '质押本方券券面总额',type: 'number',edit: false,sortable: false}
+            //, {field: 'pledgeBfPrin',title: '质押本方券券面总额',type: 'number',edit: false,sortable: false}
             // 质押融入券券面总额
             , {field: 'pledgeRrPrin',title: '质押融入券券面总额',type: 'number',edit: true,sortable: false, visible: false}
             //质押券汇总券面总额
@@ -717,7 +755,7 @@
             //折算比例%
             ,{field: 'pledgeRatio',title: 'BussRepoSecPtl.pledgeBondTotalTbl.colmodel.pledgeRatio',type: 'number',edit: false,sortable: false}
             //可质押本方券券面总额
-            ,{field: 'avaPledgeBfPrin',title: '可质押本方券券面总额',type: 'number',edit: false,sortable: false}
+            //,{field: 'avaPledgeBfPrin',title: '可质押本方券券面总额',type: 'number',edit: false,sortable: false}
             //可质押融入券券面总额
             ,{field: 'avaPledgeRrPrin',title: '可质押融入券券面总额',type: 'number',edit: false,sortable: false, visible: false}
             //可质押券面总额
