@@ -3490,10 +3490,10 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
                         Date startDate = busiDate.get(0);
                         boolean flag = true;
                         for(Date endDate: busiDate){
-                            if(startDate.compareTo(endDate)==0){
-                                startDate = endDate;
-                                continue;
-                            }
+//                            if(startDate.compareTo(endDate)==0){
+//                                startDate = endDate;
+//                                continue;
+//                            }
                             if(endDate.compareTo(finProductFloatFeeDto.getProvisionFirstDay())<0){
                                 startDate = endDate;
                                 continue;
