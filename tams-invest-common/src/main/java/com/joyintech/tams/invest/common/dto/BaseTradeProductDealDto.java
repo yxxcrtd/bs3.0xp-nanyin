@@ -486,4 +486,21 @@ public class BaseTradeProductDealDto {
     public void setTrdDealTotalAdd(TrdDealTotalAdd trdDealTotalAdd) {
         this.trdDealTotalAdd = trdDealTotalAdd;
     }
+
+    /**
+     * 是否自动批处理
+     */
+    private boolean isBatch;
+
+    public boolean isBatch() {
+        if(isBatch){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void setBatch(boolean batch) {
+        isBatch = batch;
+    }
 }
