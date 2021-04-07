@@ -10,12 +10,6 @@
 
 package com.joyintech.tams.invest.batch.autodurdealgenerate.repo.writer;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.framework.util.StringUtil;
@@ -23,6 +17,11 @@ import com.joyintech.tams.invest.batch.autodurdealgenerate.repo.dto.RepoAutoDurD
 import com.joyintech.tams.invest.batch.common.service.PinganBatchCommonService;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTrdDurDbInertDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * writer

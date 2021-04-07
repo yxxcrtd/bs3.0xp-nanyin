@@ -16,6 +16,7 @@ import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import org.springframework.stereotype.Service;
 
@@ -421,9 +422,10 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 1.无委托直投
                 // 可用现金(组合、资金账户):认购交易日减少交易金额
                 if (StringUtil.isEmpty(entrustId) && StringUtil.isEmpty(chlId)) {
-                    etrCashPositionFlowDto.setAcctId(
-                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+//                    etrCashPositionFlowDto.setAcctId(
+//                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getPayAcctNo());
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt().negate());
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
@@ -549,9 +551,10 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、资金账户):申购确认日减少交易金额
                 if (StringUtil.isEmpty(entrustId) && StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt().negate());
-                    etrCashPositionFlowDto.setAcctId(
-                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+//                    etrCashPositionFlowDto.setAcctId(
+//                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getPayAcctNo());
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.无委托通道
@@ -714,9 +717,10 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、资金账户):买入确认日减少交易金额
                 if (StringUtil.isEmpty(entrustId) && StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt().negate());
-                    etrCashPositionFlowDto.setAcctId(
-                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+//                    etrCashPositionFlowDto.setAcctId(
+//                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getPayAcctNo());
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.无委托通道
