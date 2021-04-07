@@ -705,7 +705,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         // 通道性质
         String chlType = StringUtil.isEmpty(chlId) ? null : EtrCommonCashPositionDealService.queryChlType(chlId);
         // 交易提交 增加撤销数据录入
-        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || finProductTradeDto.isBatch()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 if (StringUtil.equals(finProductTradeDto.getTrdProductDeal().getFinprodType2(),
                     DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
@@ -994,7 +994,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         // 委托代码
         String entrustId = finProductTradeDto.getEntrustId();
         // 交易提交
-        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || finProductTradeDto.isBatch()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
                     stlPayOrdersDtos.forEach(stlPayOrdersDto -> {

@@ -10,23 +10,11 @@
 
 package com.joyintech.tams.invest.batch.common.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.WflStlPayOrders;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -44,10 +32,15 @@ import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.period.common.BaseTrdDurDbInertDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 批处理共通Service
@@ -78,6 +71,11 @@ public class PinganBatchCommonService extends BaseService {
      */
     @Autowired(required = false)
     private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+    /**
+     * 持仓现金执行共通
+     */
+    @Autowired(required = false)
+    private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 
     /**
      * 清算指令生成
@@ -249,6 +247,17 @@ public class PinganBatchCommonService extends BaseService {
                 cashInputDto.setIeFlag(finProductTradeDto.getIeFlag());
                 List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);
                 ptlCashPositionFlows.addAll(resultList);
+            }
+            //        现金与持仓执行共同
+            if(baseEtrCashPositionCommService != null && !finProductTradeDto.isNeedExecuteEtrPosition()){
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 start
+                if(finProductTradeDto.getBussRepoSec() != null){
+                    baseTradeProductDealDto.setBussRepoSec(finProductTradeDto.getBussRepoSec());
+                }
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 end
+                baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
+                baseTradeProductDealDto.setBatch(true);// 自动批处理
+                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
             }
         }
         if (needNegative) {
