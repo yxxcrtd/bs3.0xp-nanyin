@@ -1365,7 +1365,7 @@ $(function() {
         /**
          * checkBox
          */
-       checkbox:$("#pageModel").val()=='0'?true : false,
+       checkbox:$("#pageModel").val()=='0'||$("#pageModel").val()=='1'?true : false,
         /**
          * check 选中事件
          */
