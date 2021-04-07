@@ -155,6 +155,7 @@ application:
   pageStep: 100
   logoAbout: /image/logos/logo-about.png
   logo: /image/logos/logo.png
+  topMenuLogo: /image/logos/logo-about.png
   sessionTimeout: 1800000
   interfMaxCorePoolSize: 20
   maxDataCountOneTimeForInvestholdInfo: 50
