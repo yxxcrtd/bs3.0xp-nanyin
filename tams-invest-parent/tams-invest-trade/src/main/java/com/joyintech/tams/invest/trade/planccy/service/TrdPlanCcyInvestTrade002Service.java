@@ -483,13 +483,14 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
         dto.setIsCancel(DictCodeList.是否_否.getValue());
         dto.setBusiType(DictCodeList.共通业务类型_计划类资产_货币型_交易.getValue());
         dto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-        if(StringUtil.equals(dto.getSettleSpreed(),DictCodeList.清算速度_T_0.getValue())){
-            dto.setSettleSpeed((long)0);
-        }else if(StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_1.getValue())){
-            dto.setSettleSpeed((long)1);
-        }else if(StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_2.getValue())){
-            dto.setSettleSpeed((long)2);
-        }
+//        if(StringUtil.equals(dto.getSettleSpreed(),DictCodeList.清算速度_T_0.getValue())){
+//            dto.setSettleSpeed((long)0);
+//        }else if(StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_1.getValue())){
+//            dto.setSettleSpeed((long)1);
+//        }else if(StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_2.getValue())){
+//            dto.setSettleSpeed((long)2);
+//        }
+        dto.setSettleSpeed(Long.parseLong(StringUtil.isEmpty(dto.getSettleSpreed()) ? "0" : dto.getSettleSpreed()));
         if(StringUtil.isNotEmpty(dto.getRedCfmDate()) &&
                 StringUtil.equals(DictCodeList.交易方向_赎回到账.getValue(), dto.getPs())){
             dto.setSettleDate(dto.getRedCfmDate());
