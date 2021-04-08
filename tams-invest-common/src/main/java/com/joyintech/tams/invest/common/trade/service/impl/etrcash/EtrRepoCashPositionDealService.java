@@ -960,8 +960,11 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 // 标准券
-                etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2).negate());
-                etrSecPositionFlowDto.setFinprodId(XN_STANDARD_BOND_PRODID);
+                EtrSecPositionFlowDto etrSecPositionFlowDtoTemp = new EtrSecPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDtoTemp, etrSecPositionFlowDto);
+                etrSecPositionFlowDtoTemp.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2).negate());
+                etrSecPositionFlowDtoTemp.setFinprodId(XN_STANDARD_BOND_PRODID);
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoTemp);
                 // 添加持仓流水到目标dto
             }
         }
