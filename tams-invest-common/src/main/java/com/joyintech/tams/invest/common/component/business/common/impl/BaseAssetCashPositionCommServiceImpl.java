@@ -510,6 +510,23 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
         }
         //add by mashukai 20210316 计划类货币型资产卖出交易提交时交易可用持仓改变 end
 
+        if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
+                && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
+            resultDto.setCdate(deal.getTradeDate());
+            resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+            result.add(resultDto);
+        }else if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
+                && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs())) {
+            PtlSecPositionFlowDto resultDtozt = new PtlSecPositionFlowDto();
+            BeanUtils.copyProperties(resultDto, resultDtozt);
+            resultDtozt.setCdate(deal.getTradeDate());
+            resultDtozt.setAmount(ArithmeticUtil.multiply(com.joyintech.framework.util.StringUtil.isNotEmpty(
+                    deal.getShareAmt()) ? deal.getShareAmt() : deal.getPrinAmt(), new BigDecimal(-1)));
+//            resultDtozt.setHodingType(DictCodeList.持仓类型_在途.getValue());
+            result.add(resultDtozt);
+            return result;
+        }
+
         if (DictCodeList.持仓类型_实际.getValue().equals(inputDto.getPositionType())) {
 
             /*
@@ -646,10 +663,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
              * 2 输入金融产品交易Entity.金融产品类型（投管分类）= 数据字典缓存.金融产品类型（投管分类).计划类 and 金融产品交易Entity.交易方向 in （“赎回”）and 收益类型(共通逻辑获取) = “净值型”
              *
              */
-            else if ((DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
+            else if (/*(DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
                       && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))
 
-                     || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+                     ||*/ (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                          && DictCodeList.收益类型_净值型.getValue().equals(profitType)
                          && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))
                      || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
@@ -770,7 +787,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             else if (((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                        && (DictCodeList.收益类型_货币型.getValue().equals(profitType)
                           /* || DictCodeList.收益类型_净值型.getValue().equals(profitType)*/))
-                      || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2()))
+                      /*|| DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())*/)
                      && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
                 resultDto.setCdate(deal.getTradeDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
