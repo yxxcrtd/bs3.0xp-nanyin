@@ -1,19 +1,10 @@
 package com.joyintech.tams.report.home.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.chb.util.ToolsUtil;
 import com.joyintech.tams.constant.DictCodeList;
@@ -23,6 +14,15 @@ import com.joyintech.tams.report.home.dao.ReportHomeMapper;
 import com.joyintech.tams.report.home.dto.InfoAreaDto;
 import com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 系统主页面用Service
@@ -248,7 +248,8 @@ public class ReportHomeService{
     @DataSource(DataSourceType.OTHER)
     public List<String> selectMenulist(){
     	List<String> menulist1 = new ArrayList<String>();
-    	List<String> menulist = reportHomeMapper.selectMenulist();
+
+    	List<String> menulist = reportHomeMapper.selectMenulist(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM));
     	if(!CollectionUtils.isEmpty(menulist)){
     		for(String menu : menulist){
     			switch(menu){

@@ -37,12 +37,12 @@ $(function () {
            ,{field:'finprodAbbr', title: '资产名称',minWidth:200, width:200}//资产名称
            ,{field:'finprodMarketId', title: '资产代码',minWidth:200, width:200}//资产代码
            ,{field:'portFolioName', title: '组合名称',minWidth:200, width:200}//组合名称
-           ,{field:'shareAmt', title: '持仓数量',type:'money'}//持仓数量
-           ,{field:'dscCostAmt', title: '成本(元)',type:'money'}//成本(元)
-           ,{field:'marketValue', title: '市值(元)',type:'money'}//市值(元)
-           ,{field:'marketValueRatio', title: '市值占比%',minWidth:100, width:100}//市值比例%
-           ,{field:'childInfo', width:150, visible: false}
-           ,{field:'parentInfo', width:150, visible: false}
+           ,{field:'shareAmt',  width:140,title: '持仓数量',type:'money'}//持仓数量
+           ,{field:'dscCostAmt', width:140,title: '成本(元)',type:'money'}//成本(元)
+           ,{field:'marketValue',width:140, title: '市值(元)',type:'money'}//市值(元)
+           ,{field:'marketValueRatio', title: '市值占比%',minWidth:100}//市值比例%
+           ,{field:'childInfo', visible: false}
+           ,{field:'parentInfo', visible: false}
            ,{field:'belongInstitutionNameNew',minWidth:180, width:180, title: '机构名称',visible:AUTHORITY_TYPE=='02'}//组合名称
        ]
    });

@@ -3325,6 +3325,15 @@
 
 <select id="selectMenulist" resultType="java.lang.String">
 	select page_id from sys_menu
-	where PARENT_MENU_ID in (select MENU_ID from sys_menu where PARENT_MENU_ID = 'SVR_003')
+	where PARENT_MENU_ID in (select MENU_ID from sys_menu where
+	<choose>
+		<when test="svrFlag != null and svrFlag eq '01'">
+			PARENT_MENU_ID = 'SVR_003'
+		</when>
+		<otherwise>
+			PARENT_MENU_ID = 'REPORT_001'
+		</otherwise>
+	</choose>
+	)
 </select>
 </mapper>

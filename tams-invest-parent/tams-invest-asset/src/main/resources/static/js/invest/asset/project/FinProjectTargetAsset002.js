@@ -289,8 +289,20 @@ $(function() {
             $('#bussRepOtherInvestTargetInfoDto_isUnlisted_div').show();
             //中债新增 20200409 start
             //是否为债转股
-            $('#bussRepOtherInvestTargetInfoDto_repDeptEquity_div').show();
+            $('#bussRepOtherInvestTargetInfoDto_repDeptEquity_div').show();            
             //中债新增 20200409 end
+            $('#bussRepOtherInvestTargetInfoDto_repFinancier').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repIndustry1').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repProIndustry').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').attr('disabled',false).trigger('change');
+            $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').attr('disabled',false).trigger('change');
         }else if(repAssetType=="1301"){
             $('#bussRepEquityInfoDto_div').show();
             //中债新增 20200409 start
@@ -304,10 +316,40 @@ $(function() {
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetType_div').show();
             $('#bussRepOtherInvestTargetInfoDto_repBankAssetTyprExplain_div').show();
             $('#bussRepOtherInvestTargetInfoDto_isUnlisted_div').hide();
-            $('#bussRepOtherInvestTargetInfoDto_div').show();          
+            $('#bussRepOtherInvestTargetInfoDto_div').show();   
+            $('#bussRepOtherInvestTargetInfoDto_repFinancier').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repFinancier').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repFcrGradeOut').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType1').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType2').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repFinancierType3').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repFinanceProj').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repIndustry1').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repIndustry1').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repIndustryLevel2').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repProIndustry').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repProIndustry').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').val('').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repProIndustryLevel2').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').val('N').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repIndustryFlag').attr('disabled',true).trigger('change');
+		    $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').val('N').trigger('change'); 
+		    $('#bussRepOtherInvestTargetInfoDto_repContainExpectedYield2').attr('disabled',true).trigger('change');
         }else if(repAssetType=="1202"||repAssetType=="1203"||repAssetType=="1204"||repAssetType=="1205"||repAssetType=="2202"
             ||repAssetType=="1206"||repAssetType=="1207"||repAssetType=="1208"||repAssetType=="1209"||repAssetType=="2201"){
-            $('#bussRepAssetCreditNonstdInfoDto_div').show();
+            $('#bussRepAssetCreditNonstdInfoDto_div').show();  
+           /* if(repAssetType=="2201"||repAssetType=="2202"){
+            	$('#bussRepAssetCreditNonstdInfoDto_repIsResale').attr('disabled',false).trigger('change');
+            }else{            	
+            	$('#bussRepAssetCreditNonstdInfoDto_repIsResale').val('N').trigger('change'); 
+            	$('#bussRepAssetCreditNonstdInfoDto_repIsResale').attr('disabled',true).trigger('change');
+            }*/
             // 中债新增 20200408 信贷资产流转项目，法定到期日置灰不可填 start
             $('#bussRepAssetCreditNonstdInfoDto_repFmdate').attr('disabled',false).trigger('change');
             //含权类型 选填
@@ -333,6 +375,14 @@ $(function() {
 		    	$('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').val('').trigger('change'); 
 			    $('#bussRepAssetCreditNonstdInfoDto_repPartRedemRate').attr('disabled',true).trigger('change');
 		    }
+		    //[资产/负债类别]为“收/受益权[1205]”以外时,收/受益权类型不可填
+		    if(repAssetType != "1205"){
+		    	$('#bussRepAssetCreditNonstdInfoDto_repProfitType').val('').trigger('change'); 
+			    $('#bussRepAssetCreditNonstdInfoDto_repProfitType').attr('disabled',true).trigger('change');
+		    }else{
+		    	$('#bussRepAssetCreditNonstdInfoDto_repProfitType').attr('disabled',false).trigger('change');
+		    }
+		    //[资产/负债类别]为“收/受益权[1205]”以外时,收/受益权类型不可填
             if(repAssetType=="2201" || repAssetType=="2202"){
 	            $('#bussRepAssetCreditNonstdInfoDto_repFmdate').val('').trigger('change'); 
 			    $('#bussRepAssetCreditNonstdInfoDto_repFmdate').attr('disabled',true).trigger('change');

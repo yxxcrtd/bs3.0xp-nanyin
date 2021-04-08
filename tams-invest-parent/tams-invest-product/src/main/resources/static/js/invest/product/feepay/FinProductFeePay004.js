@@ -294,10 +294,24 @@ $(function() {
         }
         //费用提交时校验收款账户是否为空  OPEX-545  guyunfei start
         if (object.bussTrdTransferOrder[0]) {
-            if (!object.bussTrdTransferOrder[0].recAcctNo){
-                Joyin.error("划款指令请选择收款账户！");
-                return false;
-            }
+        	// modify by yujiaping 20210331 ZGBSS-1327 是否发送指令为是收付款账户均为必填，为否则付款账户必填，收款账户非必填start
+        	if(object.bussTrdTransferOrder[0].isNeedSend == 'Y'
+        			|| object.bussTrdTransferOrder[0].isNeedSend == '是'){
+        		if (!object.bussTrdTransferOrder[0].recAcctNo){
+                    Joyin.error("划款指令请选择收款账户！");
+                    return false;
+                }
+        		if (!object.bussTrdTransferOrder[0].payAcctNo){
+                    Joyin.error("划款指令请选择付款账户！");
+                    return false;
+                }
+        	}else{
+        		if (!object.bussTrdTransferOrder[0].payAcctNo){
+                    Joyin.error("划款指令请选择付款账户！");
+                    return false;
+                }
+        	}
+        	//modify by yujiaping 20210331 ZGBSS-1327 是否发送指令为是收付款账户均为必填，为否则付款账户必填，收款账户非必填end
         }
         //费用提交时校验收款账户是否为空  OPEX-545  guyunfei end
 
