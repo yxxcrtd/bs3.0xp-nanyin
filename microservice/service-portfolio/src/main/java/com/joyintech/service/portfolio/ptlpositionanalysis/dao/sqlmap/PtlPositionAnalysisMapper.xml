@@ -576,14 +576,29 @@
                         END AS tdyIntincexp,
                        fpt.TYPE_8 as finprodType2,
                        nvl(fp.FINPROD_MARKET_ID,psv.FINPROD_ID) as finprodMarketId,
+                       NVL(fp.FINPROD_ID,psv.FINPROD_ID)   AS finprodId,
                        nvl(fp.FINPROD_ABBR, fp.FINPROD_NAME) as finprodAbbr,
                        decode(fpt.TYPE_8,'F07',fpt.TYPE_7,'F10',fpt.TYPE_7,fpt.TYPE_6) as type5
                            from PTL_SEC_PIERCE_VALUTION psv
                       left join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID
-                      LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = fp.FINPROD_ID
-                      left join PTL_PORTFOLIO pp on psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
-                      inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                           where 1=1
+                       LEFT JOIN
+                         PTL_PORTFOLIO pp
+                        ON
+                        psv.PORTFOLIO_ID=pp.PORTFOLIO_ID
+                        LEFT JOIN
+                        FIN_PRODUCT_ADD fpa
+                        ON
+                        NVL(pp.PARENT_PORTFOLIO_ID,pp.PORTFOLIO_ID) = fpa.PORTFOLIO_ID
+                        LEFT JOIN
+                        FIN_PRODUCT FP1
+                        ON
+                        FPA.FINPROD_ID = FP1.FINPROD_ID
+                        INNER JOIN
+                        FIN_PRODUCT_TYPE fpt
+                        ON
+                        fpt.FINPROD_ID=psv.FINPROD_ID
+                        AND fpt.TYPE_8 IS NOT NULL
+                           where  FP1.FINPROD_TYPE2 = 'F16'
                              <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                     AND psv.PORTFOLIO_ID IN
 		                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
@@ -601,7 +616,7 @@
 	                         </if>
 	                         <!--  add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start -->
 							 <if test=" prodManager !=null and prodManager.size()>0 " >
-							    AND FIN_PRODUCT_ADD.PROD_MANAGER IN
+							    AND fpa.PROD_MANAGER IN
 								<foreach collection="prodManager" item="item" open="(" close=")" separator=",">
 									#{item}
 								</foreach>
@@ -650,11 +665,12 @@
                 ) B on A.portfolioId=B.portfolioId and A.cdate=B.cdate  and B.typeMarketValue!=0
                   /*and A.finprodType2=B.finprodType2*/
                 left join(
-                           select AA.cdate,AA.portfolioId,AA.finprodType2,(nvl(AA.marketValue,0)+nvl(AA.tdyIntincexp,0))/BB.typeMarketValue as ystAmtRation
+                           select AA.cdate,AA.portfolioId,AA.finprodType2, AA.finprodId,(nvl(AA.marketValue,0)+nvl(AA.tdyIntincexp,0))/BB.typeMarketValue as ystAmtRation
                             , AA.marketValue as marketValue, AA.tdyIntincexp as tdyIntincexp, BB.typeMarketValue as typeMarketValue
                            from(
                                   select psv.CDATE as cdate,
                                          psv.PORTFOLIO_ID as portfolioId,
+                                         psv.FINPROD_ID   AS finprodId,
                             sum(
                             CASE
 
@@ -715,7 +731,7 @@
 			                            #{item}
 		                                </foreach>
 	                                </if>
-	                                group  by psv.CDATE,psv.PORTFOLIO_ID, fpt.TYPE_8 
+	                                group  by psv.CDATE,psv.PORTFOLIO_ID, fpt.TYPE_8,psv.FINPROD_ID
                            )AA
                       left join(
                                  select psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,
@@ -770,12 +786,13 @@
                       )BB on AA.portfolioId=BB.portfolioId and AA.cdate=BB.cdate
                       /*and AA.finprodType2=BB.finprodType2*/
                       where BB.typeMarketValue!=0
-                )C on A.portfolioId=C.portfolioId and A.finprodType2=C.finprodType2
+                )C on A.portfolioId=C.portfolioId and A.finprodType2=C.finprodType2 AND A.finprodId=C.finprodId
                 left join(
-                           select AA.cdate,AA.portfolioId,AA.finprodType2,(nvl(AA.marketValue,0)+nvl(AA.tdyIntincexp,0))/BB.typeMarketValue as monthAmtRation
+                           select AA.cdate,AA.portfolioId,AA.finprodType2,AA.finprodId,(nvl(AA.marketValue,0)+nvl(AA.tdyIntincexp,0))/BB.typeMarketValue as monthAmtRation
                            from (
                                    select psv.CDATE as cdate,
                                           psv.PORTFOLIO_ID as portfolioId,
+                                          psv.FINPROD_ID   AS finprodId,
                             sum(
                             CASE
 
@@ -836,7 +853,7 @@
 			                            #{item}
 		                                </foreach>
 	                                </if>
-	                                group  by psv.CDATE,psv.PORTFOLIO_ID, fpt.TYPE_8 
+	                                group  by psv.CDATE,psv.PORTFOLIO_ID, fpt.TYPE_8,psv.FINPROD_ID
                            )AA
                            left join(
                                        select psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,
@@ -891,12 +908,13 @@
                            )BB on AA.portfolioId=BB.portfolioId and AA.cdate=BB.cdate
                            /*and AA.finprodType2=BB.finprodType2*/
                           where BB.typeMarketValue!=0
-                ) D on A.portfolioId=D.portfolioId and A.finprodType2=D.finprodType2
+                ) D on A.portfolioId=D.portfolioId and A.finprodType2=D.finprodType2 AND A.finprodId=D.finprodId
                 left join(
-                            select AA.cdate,AA.portfolioId,AA.finprodType2,(nvl(AA.marketValue,0)+nvl(AA.tdyIntincexp,0))/BB.typeMarketValue as yearAmtRation
+                            select AA.cdate,AA.portfolioId,AA.finprodType2,AA.finprodId,(nvl(AA.marketValue,0)+nvl(AA.tdyIntincexp,0))/BB.typeMarketValue as yearAmtRation
                            from (
                                    select psv.CDATE as cdate,
                                           psv.PORTFOLIO_ID as portfolioId,
+                                          psv.FINPROD_ID   AS finprodId,
                             sum(
                             CASE
 
@@ -957,7 +975,7 @@
 			                            #{item}
 		                                </foreach>
 	                                </if>
-	                                group  by psv.CDATE,psv.PORTFOLIO_ID, fpt.TYPE_8 
+	                                group  by psv.CDATE,psv.PORTFOLIO_ID, fpt.TYPE_8, psv.FINPROD_ID
                            )AA
                            left join(
                                        select psv.CDATE as cdate,psv.PORTFOLIO_ID as portfolioId,
@@ -1012,7 +1030,7 @@
                            )BB on AA.portfolioId=BB.portfolioId and AA.cdate=BB.cdate
                             /*and AA.finprodType2=BB.finprodType2*/
                           where BB.typeMarketValue!=0
-                )F on A.portfolioId=F.portfolioId and A.finprodType2=F.finprodType2
+                )F on A.portfolioId=F.portfolioId and A.finprodType2=F.finprodType2 AND A.finprodId=F.finprodId
         union all
             SELECT
             S.cdate cdate,
@@ -1509,9 +1527,42 @@
         round((nvl(A.marketValue,0)+nvl(A.tdyIntincexp,0))*100/B.typeMarketValue,2) as amtRation
         from (
         select psv.CDATE as cdate,fpt.TYPE_8 as finprodType2,
-        sum(nvl(psv.MARKET_VALUE,0)) as marketValue,
-        sum(nvl(psv.DSC_COST_AMT,0)) as dscCostAmt,
-        sum(nvl(psv.TDY_INTINCEXP,0)) as tdyIntincexp
+        CASE
+        WHEN fpt.TYPE_8 = 'F08'
+        AND fpt.TYPE_7 = '01'
+        THEN -1*psv.DSC_COST_AMT
+        WHEN fpt.TYPE_8 = 'F07'
+        AND fpt.TYPE_7 = '03'
+        THEN -1*psv.DSC_COST_AMT
+        WHEN fpt.TYPE_8 = 'F10'
+        AND fpt.TYPE_7 = '03'
+        THEN -1*psv.DSC_COST_AMT
+        ELSE psv.DSC_COST_AMT
+        END AS dscCostAmt,
+        CASE
+        WHEN fpt.TYPE_8 = 'F08'
+        AND fpt.TYPE_7 = '01'
+        THEN -1*psv.TDY_INTINCEXP
+        WHEN fpt.TYPE_8 = 'F07'
+        AND fpt.TYPE_7 = '03'
+        THEN -1*psv.TDY_INTINCEXP
+        WHEN fpt.TYPE_8 = 'F10'
+        AND fpt.TYPE_7 = '03'
+        THEN -1*psv.TDY_INTINCEXP
+        ELSE psv.TDY_INTINCEXP
+        END AS tdyIntincexp,
+        CASE
+        WHEN fpt.TYPE_8 = 'F08'
+        AND fpt.TYPE_7 = '01'
+        THEN -1*psv.MARKET_VALUE
+        WHEN fpt.TYPE_8 = 'F07'
+        AND fpt.TYPE_7 = '03'
+        THEN -1*psv.MARKET_VALUE
+        WHEN fpt.TYPE_8 = 'F10'
+        AND fpt.TYPE_7 = '03'
+        THEN -1*psv.MARKET_VALUE
+        ELSE psv.MARKET_VALUE
+        END                                      AS marketValue
         from PTL_SEC_PIERCE_VALUTION psv
         <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
         inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
@@ -1547,7 +1598,6 @@
                 #{item}
             </foreach>
         </if>
-        group by  psv.CDATE,fpt.TYPE_8
         )A
         left join (
         select psv.CDATE as cdate,
