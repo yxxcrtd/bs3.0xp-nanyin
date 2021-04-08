@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.common.trade.service.impl.etrcash;
 
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -1033,8 +1034,30 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             BigDecimal 委托全价 = null;
             if(委托净价==null){
                 委托全价 = 债券面值;
+            }else if(StringUtil.equals(DictCodeListExt1.交易市场_一级市场.getValue(),entrustCommonDto.getEtrEntrust().getTradeMarketMode())){
+            	委托全价 = 委托净价;
             }
-            else{
+            else {
+            	 //交易所债券特殊处理start----------------------------------------------------------------
+            	 boolean isJiaoYiSuo = true;
+                 if (!StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), entrustCommonDto.getEtrEntrust().getTradeMarket())
+                     && !StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(), entrustCommonDto.getEtrEntrust().getTradeMarket())) {
+                     // 应计利息根据后台估值核算中前一个自然日的数据计算，等于后台的应计利息总额/后台的债券持仓总数量                   
+                     isJiaoYiSuo = false;
+                 }
+                // 如果交易场所为上交所、深交所的情况
+                if (isJiaoYiSuo) {
+                    // 付息债、贴现债、零息债，交割日+1
+//                    if (StringUtil.equals(DictCodeList.息票品种_附息.getValue(), secInfoModelDto.getBondsType())
+//                        || StringUtil.equals(DictCodeList.息票品种_贴现.getValue(), secInfoModelDto.getBondsType())
+//                        || StringUtil.equals(DictCodeList.息票品种_零息.getValue(), secInfoModelDto.getBondsType())) {
+                    if (!StringUtil.equals(entrustCommonDto.getEtrEntrust().getPs(), DictCodeList.交易方向_行权_回售.getValue())
+                            && !StringUtil.equals(entrustCommonDto.getEtrEntrust().getPs(), DictCodeList.交易方向_行权_赎回.getValue())) {
+                    	dealDate = DateUtil.addDay(dealDate, 1);
+                    }
+//                    }
+                }
+              //交易所债券特殊处理end----------------------------------------------------------------
                 EtrCommonCashPositionDealService etrCommonCashPositionDealService = SpringContextUtil.getBean(EtrCommonCashPositionDealService.class);
                 BigDecimal 单位应计利息 = etrCommonCashPositionDealService.gen应计利息(entrustCommonDto.getEtrEntrust().getFinprodId(),dealDate);
                 委托全价 = ArithmeticUtil.doAdd(单位应计利息,委托净价);

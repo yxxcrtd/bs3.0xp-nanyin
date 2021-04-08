@@ -987,9 +987,10 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、资金账户):赎回确认日增加交易金额
                 if (StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
-                    etrCashPositionFlowDto.setAcctId(
-                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+//                    etrCashPositionFlowDto.setAcctId(
+//                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getRecAcctNo());
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.委托通道逐笔划款、委托通道一次性划款
@@ -1266,7 +1267,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
 
         /** 场内基金_份额强减 **/
         if (!StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
-            if (DictCodeList.持仓类型_实际.equals(持仓类型)) { // 有效
+            if (DictCodeList.持仓类型_可用.equals(持仓类型)) { // 有效
                 // 1.直投
                 // 可用持仓(组合、证券账户):折算日份额变更为折算后份额
                 // 2.通道

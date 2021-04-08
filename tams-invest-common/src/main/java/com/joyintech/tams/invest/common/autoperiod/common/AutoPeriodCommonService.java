@@ -355,7 +355,7 @@ public class AutoPeriodCommonService extends BaseService {
                         flow.setUpdateTime(updateTime);
                         //                   trdRepoDurationMapper.insertSelect04Sec(flow);
                         flow.setSeqno(IDGenerator.generate());
-                        flow.setTradeId(trdFinProductDealTotal.getTotleTradeId());
+                        flow.setTradeId(trdFinProductDealTotal.getFinprodId());
                         ptlSecPositionFlowMapper.insert(flow);
                         PtlSecPositionFlowDto secPositionFlowDto =new PtlSecPositionFlowDto();//汇总头寸表
                         PtlSecPosition secPosition= new PtlSecPosition();
