@@ -490,7 +490,6 @@ public class TrdRepoTrade002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getAvaStandardStockPosition")
     public BigDecimal getAvaStandardStockPosition(@RequestParam Map<String, Object> params) {
-        params.put("manageId",params.get("secAcctId"));
         return this.trdRepoTrade002Service.getAvaStandardStockPosition(params);
     }
 

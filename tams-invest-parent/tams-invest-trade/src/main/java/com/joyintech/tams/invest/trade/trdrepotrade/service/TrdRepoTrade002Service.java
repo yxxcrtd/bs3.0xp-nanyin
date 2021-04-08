@@ -2166,6 +2166,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
      */
     public BigDecimal getAvaStandardStockPosition(Map<String, Object> params) {
         params.put("BRANCH_0", CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+        params.put("manageId",params.get("secAcctId"));
 //        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
 //                        + "/TrdRepoTrade/getAvaStandardStockPosition/",
 //                params, BigDecimal.class);
