@@ -228,7 +228,7 @@
             if (object.etrInvestPersonInfo.trader != null && object.etrInvestPersonInfo.trader != '') {
                 object.etrInvestPersonInfo.trader = object.etrInvestPersonInfo.trader.join(",");
             }
-            if (object.bussCombDistribtList != null || object.bussCombDistribtList.length == 0) {
+            if (object.bussCombDistribtList != null) {
                 if (object.bussCombDistribtList.length > 0) {
                     var entrustNum = 0.00;
                     for (var index in object.bussCombDistribtList) {
@@ -237,8 +237,6 @@
                         entrustNum += parseFloat(item.entrustNum);
                     }
                     object.entrustNum = String(entrustNum);
-                } else {
-                    return;
                 }
             }
             if (typeof FileCommon != "undefined") {
