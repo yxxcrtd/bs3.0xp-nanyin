@@ -410,7 +410,7 @@ public class TrdSecOverdueDuration003Service extends BaseService<TrdSecOverdueDu
         TrdProductDealAdd addDeal = tradeInfo.getTrdProductDealAdd();
         PtlRecePositionFlowDto ptlRecePositionFlow = new PtlRecePositionFlowDto();
         TrdProductDeal deal = tradeInfo.getTrdProductDeal();
-        BigDecimal amount = deal.getTradeAmt() != null ? deal.getTradeAmt():deal.getPrinAmt();
+        BigDecimal amount = entity.getTradeAmt() != null ? entity.getTradeAmt():entity.getPrinAmt();
         ptlRecePositionFlow.setSecAcctId(entity.getSecAcctId());
         ptlRecePositionFlow.setFinprodId(entity.getFinprodId());
         ptlRecePositionFlow.setBranch(deal.getBranch());
