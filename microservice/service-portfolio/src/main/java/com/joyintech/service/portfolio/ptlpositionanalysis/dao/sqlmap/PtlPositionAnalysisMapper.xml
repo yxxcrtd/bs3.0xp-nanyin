@@ -1928,7 +1928,12 @@
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON atd.portfolio_id = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         WHERE 1 = 1
         and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
-
+        <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+            AND atd.FINPROD_MARKET_ID IN
+            <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
         <if test="pass != null and pass != ''">
             and atd.IS_PERNE= #{pass}
         </if>
