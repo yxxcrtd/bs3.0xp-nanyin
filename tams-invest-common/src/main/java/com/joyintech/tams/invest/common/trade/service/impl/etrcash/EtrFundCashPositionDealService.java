@@ -1267,7 +1267,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
 
         /** 场内基金_份额强减 **/
         if (!StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
-            if (DictCodeList.持仓类型_实际.equals(持仓类型)) { // 有效
+            if (DictCodeList.持仓类型_可用.equals(持仓类型)) { // 有效
                 // 1.直投
                 // 可用持仓(组合、证券账户):折算日份额变更为折算后份额
                 // 2.通道
