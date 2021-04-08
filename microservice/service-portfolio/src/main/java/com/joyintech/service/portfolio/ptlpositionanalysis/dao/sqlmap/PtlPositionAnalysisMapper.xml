@@ -2064,7 +2064,12 @@
         <!-- 多级法人改造 add by hxy 20200629 end-->
         WHERE 1 = 1
         and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
-
+        <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+            AND atd.FINPROD_MARKET_ID IN
+            <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                #{item}
+            </foreach>
+        </if>
         <if test="pass != null and pass != ''">
             and atd.IS_PERNE= #{pass}
         </if>
