@@ -60,9 +60,6 @@ public class PtlPositionReportService extends BaseService<PtlPositionAnalysis003
         if(StringUtil.isNotEmpty(pageParam.get("finprodMarketId"))){
             pageParam.put("finprodMarketIdList", StringUtil.splitToList(null, pageParam.get("finprodMarketId").toString()));
         }
-        if(StringUtil.isNotEmpty(pageParam.get("finprodMarketId"))){
-            pageParam.put("finprodMarketIdList", StringUtil.splitToList(null, pageParam.get("finprodMarketId").toString()));
-        }
         // 下钻层级
         if(StringUtil.isNotEmpty(pageParam.get("deepLevel"))){
             pageParam.put("deepLevel", pageParam.get("deepLevel").toString());

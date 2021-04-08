@@ -493,6 +493,7 @@ public class DataCheckService {
 
             if ( "compareValue".equals(r.getCheckmethod()) || "compareProperty".equals(r.getCheckmethod()) 
                 ||"compareValueAsNumber".equals(r.getCheckmethod()) || "comparePropertyAsNumber".equals(r.getCheckmethod())
+                || "compareValueSysPara".equals(r.getCheckmethod())
                 ) {
                 if ( r.getCompareto()==null ||r.getCompareto().length()<1 ) {
                     logger.error("检查规则错误：检查条件中数据比较方法逻辑运算符号不能为空!["+r.getCheckconditionid()+"]");
@@ -589,6 +590,7 @@ public class DataCheckService {
             
             if ( "compareValue".equals(r.getCheckmethod()) || "compareProperty".equals(r.getCheckmethod())
                 ||"compareValueAsNumber".equals(r.getCheckmethod()) || "comparePropertyAsNumber".equals(r.getCheckmethod())
+                || "compareValueSysPara".equals(r.getCheckmethod())
                 ) {
                 if ( r.getCompareto()==null ||r.getCompareto().length()<1 ) {
                     logger.error("检查规则错误：数据比较方法逻辑运算符号不能为空!["+r.getCheckruleid()+"]");
@@ -706,6 +708,7 @@ public class DataCheckService {
 
             if ( "compareValue".equals(r.getCheckmethod()) || "compareProperty".equals(r.getCheckmethod()) 
                 ||"compareValueAsNumber".equals(r.getCheckmethod()) || "comparePropertyAsNumber".equals(r.getCheckmethod())
+                || "compareValueSysPara".equals(r.getCheckmethod())
                 ) {
                 if ( r.getCompareto()==null ||r.getCompareto().length()<1 ) {
                     logger.error("检查规则错误：检查条件中数据比较方法逻辑运算符号不能为空!["+r.getCheckconditionid()+"]");
@@ -804,6 +807,7 @@ public class DataCheckService {
             
             if ( "compareValue".equals(r.getCheckmethod()) || "compareProperty".equals(r.getCheckmethod())
                 ||"compareValueAsNumber".equals(r.getCheckmethod()) || "comparePropertyAsNumber".equals(r.getCheckmethod())
+                || "compareValueSysPara".equals(r.getCheckmethod())
                 ) {
                 if ( r.getCompareto()==null ||r.getCompareto().length()<1 ) {
                     logger.error("检查规则错误：数据比较方法逻辑运算符号不能为空!["+r.getCheckruleid()+"]");

@@ -36,9 +36,16 @@
             getElementById('repExercisePeriod').attr('disabled', false).trigger('change');
             getElementById('repExerciseDate').val('').attr('disabled', true).trigger('change');
         }else{
-            getElementById('repExerciseDate').val('').attr('disabled', true).trigger('change');
-            getElementById('repFirstExerciseDate').val('').attr('disabled', true).trigger('change');
-            getElementById('repExercisePeriod').val('').attr('disabled', true).trigger('change');
+            getElementById('repExerciseDate').attr('disabled', true).trigger('change');
+            getElementById('repFirstExerciseDate').attr('disabled', true).trigger('change');
+            getElementById('repExercisePeriod').attr('disabled', true).trigger('change');
+            if(getElementById('repExerciseType').val()=='' ||
+                getElementById('repExerciseType').val()=='01'){
+                getElementById('repExerciseDate').val('');
+                getElementById('repFirstExerciseDate').val('');
+                getElementById('repExercisePeriod').val('');
+            }
+
         }
     }
 
