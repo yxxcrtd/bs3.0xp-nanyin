@@ -111,7 +111,37 @@
                         CDATE
                 ) ava <!-- 库内债券券面总和 -->
             LEFT JOIN (
-                        SELECT
+                        SELECT  ESP.PORTFOLIO_ID
+                            ,ESP.SEC_ACCT_ID
+                            ,ESP.CCY
+                            ,SUM(NVL(ESP.AMOUNT,0)*100*-1) AMOUNT
+                        FROM ETR_SEC_POSITION ESP
+                        WHERE
+                            ESP.FINPROD_ID='XN_PRODID999'
+                            <if test="portfolioId != null and portfolioId != ''">
+                                AND ESP.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
+                            </if>
+                            <if test="secAcctId != null and secAcctId != ''">
+                                AND ESP.SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
+                            </if>
+                            <if test="searchDate != null and searchDate != ''">
+                                AND ESP.CDATE &lt;= TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
+                            </if>
+                            AND NOT EXISTS (
+                            SELECT  1
+                            FROM ETR_SEC_POSITION ESP1
+                            WHERE ESP1.PORTFOLIO_ID = ESP.PORTFOLIO_ID
+                                AND ESP1.SEC_ACCT_ID = ESP.SEC_ACCT_ID
+                                <if test="searchDate != null and searchDate != ''">
+                                    AND ESP1.CDATE &lt;= TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
+                                </if>
+                                AND ESP1.CCY = ESP.CCY
+                                AND ESP.FINPROD_ID='XN_PRODID999'
+                                AND ESP1.CDATE > ESP.CDATE )
+                            GROUP BY  ESP.PORTFOLIO_ID
+                            ,ESP.SEC_ACCT_ID
+                            ,ESP.CCY
+                        <!--SELECT
                             tpda.PORTFOLIO_ID,
                             tpd.SEC_MANAGE_ACCT_ID SEC_ACCT_ID,
                             tpd.CCY,
@@ -119,7 +149,7 @@
                                'T23',
                                NVL(TPD.PRIN_AMT, 0) * -1,
                                NVL(TPD.PRIN_AMT, 0))) AMOUNT
-<!--                             SUM(NVL(tpd.PRIN_AMT, 0)) AMOUNT -->
+&lt;!&ndash;                             SUM(NVL(tpd.PRIN_AMT, 0)) AMOUNT &ndash;&gt;
                         FROM
                                         TRD_PRODUCT_DEAL tpd
                             LEFT JOIN   FIN_PRODUCT_TYPE fpt
@@ -139,7 +169,7 @@
                             </if>
                             <if test="searchDate != null and searchDate != ''">
                                 AND TPD.Trade_Date &lt;= TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
-<!--                                 AND TO_CHAR(tpd.MDATE, 'yyyy-MM-dd') >= #{searchDate, jdbcType=VARCHAR} -->
+&lt;!&ndash;                                 AND TO_CHAR(tpd.MDATE, 'yyyy-MM-dd') >= #{searchDate, jdbcType=VARCHAR} &ndash;&gt;
                             </if>
                             <if test="FINPROD_TYPE_TG_F02 != null and FINPROD_TYPE_TG_F02 != ''">
                                 AND tpd.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F02}
@@ -147,7 +177,7 @@
                         GROUP BY
                             tpda.PORTFOLIO_ID,
                             tpd.SEC_MANAGE_ACCT_ID,
-                            tpd.CCY
+                            tpd.CCY-->
                       ) standardPledge <!-- 竞价已质押券面总额：交易所竞价正回购交易中，已质押本金金额 -->
                   ON  standardPledge.SEC_ACCT_ID = ava.SEC_ACCT_ID
                   AND standardPledge.PORTFOLIO_ID = ava.PORTFOLIO_ID
