@@ -168,11 +168,11 @@ $(function() {
                 } else {
                     $('#tradeAmt').attr('disabled',false);
                 }
-//                if ($('#shareAmt').val()){
-//                    $('#shareAmt').attr('disabled',true);
-//                } else {
-//                    $('#shareAmt').attr('disabled',false);
-//                }
+               if ($('#shareAmt').val()){
+                   $('#shareAmt').attr('disabled',true);
+               } else {
+                   $('#shareAmt').attr('disabled',false);
+               }
                 //赎回确认的时候如果交易金额或者交易份额为空的时候可编辑 yjm end 20191014
                 // $('#channelFee_div').show();
                 if(ps == ps_T24 && single==1){
@@ -284,8 +284,14 @@ $(function() {
          * 赎回费
          */
         $('#feeAmtRedem').change(function(){
+            if(!$('#unitCprice').val()){
+                $('#feeAmtRedem').val('');
+                Joyin.error("请先维护单位净值");
+                return;
+            }
             var feeAmtRedem = $('#feeAmtRedem').val();
             var tradeAmt = $('#tradeAmtHid').val();
+            var unitCprice = $('#unitCprice').val();
             //var channelFee = $('#channelFee').val();
             if(!feeAmtRedem){
                 feeAmtRedem = 0;
@@ -293,7 +299,15 @@ $(function() {
             /*if(!channelFee){
                 channelFee=0
             }*/
-            if(tradeAmt){
+            // if(tradeAmt){
+            //     $('#tradeAmt').val(Number(tradeAmt)-Number(feeAmtRedem)).trigger('blur');
+            // }
+            var isDisabled = $("#tradeAmt").prop("disabled");
+
+            if(isDisabled){
+                // 如果金额不允许编辑 则影响的是份额
+                $('#shareAmt').val(JoyinMath.doDiv(JoyinMath.doAdd(tradeAmt,feeAmtRedem,2) ,unitCprice,2)  ).trigger('change');
+            }else{
                 $('#tradeAmt').val(Number(tradeAmt)-Number(feeAmtRedem)).trigger('blur');
             }
         });
@@ -473,8 +487,8 @@ $(function() {
          	$('#type11Div').hide();
          }
         
-        if($("#ps").val()==ps_T19){
-            $('#shareAmt').attr('disabled',true);
-        }
+        // if($("#ps").val()==ps_T19){
+        //     $('#shareAmt').attr('disabled',true);
+        // }
      });
  });
