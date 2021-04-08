@@ -452,35 +452,43 @@ $(function() {
                 $('#finprodId').attr('disabled',false);
             }
         });
-        
+
+        $('#purCfmDate').change(function(){
+            var purCfmDate = $('#purCfmDate').val();
+            if(purCfmDate){
+                $('#expectedArrivalDate').val(purCfmDate).trigger('change');
+            }
+        });
         /**
          * 清算速度change事件
          */
         $('#settleSpreed').change(function(){
             var settleSpeed = $('#settleSpreed').val();
         	var tradeDate = $('#tradeDate').val();
-        	if (settleSpeed && settleSpeed != '' && tradeDate && tradeDate != ''){
-        		var num = 0;
-        		if (settleSpeed === settlet1){
-        			num = 1;
-        		}else if(settleSpeed === settlet2){
-        			num = 2;
-        		} 
-        		var finprodId = $('#finprodId').val();
-        		if (finprodId && finprodId != '') {
-        		    var param = {expectedArrivalDate:DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd'),finprodId:finprodId}
-     		        Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade002/getRedCfmDate',param,
-     		                function(result) {
-     		        	$('#expectedArrivalDate').val(DateUtil.parse(result.redCfmDate).Format('yyyy-MM-dd')).trigger('change');
-     		        }); 
-				} 
-        	}
-        	if($("#settleSpreed_div").is(":hidden")){
-        		var num = 0;
-        		$('#expectedArrivalDate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
-        	}
-            //计算确认日期
-            calcCfmDate();
+            if(pageModel==PAGE_MODEL_NEW) {
+                // if (settleSpeed && settleSpeed != '' && tradeDate && tradeDate != ''){
+                // 	var num = 0;
+                // 	if (settleSpeed === settlet1){
+                // 		num = 1;
+                // 	}else if(settleSpeed === settlet2){
+                // 		num = 2;
+                // 	}
+                // 	var finprodId = $('#finprodId').val();
+                // 	if (finprodId && finprodId != '') {
+                // 	    var param = {expectedArrivalDate:DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd'),finprodId:finprodId}
+                //         Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade002/getRedCfmDate',param,
+                //                 function(result) {
+                //         	$('#expectedArrivalDate').val(DateUtil.parse(result.redCfmDate).Format('yyyy-MM-dd')).trigger('change');
+                //         });
+                // 	}
+                // }
+                if ($("#settleSpreed_div").is(":hidden")) {
+                    var num = 0;
+                    $('#expectedArrivalDate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
+                }
+                //计算确认日期
+                calcCfmDate();
+            }
         });
         
         /**
