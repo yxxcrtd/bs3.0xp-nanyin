@@ -590,8 +590,13 @@ public class FinProductLedgerService extends BaseService<FinProductBuild001Dto> 
         				rdto.setRateRepYieldStr(start.toString());
         			}
         			else {
-        				rdto.setRateRepYieldStr(start.toString()+"(%)-"+end.toString()+"(%)");
+        				rdto.setRateRepYieldStr(start.toString()+"(%)~"+end.toString()+"(%)");
         			}
+        		}
+        	}
+        	else {
+        		if(StringUtil.isNotEmpty(rdto.getRateRepYieldStr())) {
+        			rdto.setRateRepYieldStr(rdto.getRateRepYieldStr().replace("-", "~"));
         		}
         	}
         	//处理 预期收益率/业绩比较基准（%）
