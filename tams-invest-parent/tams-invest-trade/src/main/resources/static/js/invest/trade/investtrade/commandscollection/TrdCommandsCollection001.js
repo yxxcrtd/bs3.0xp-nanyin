@@ -117,7 +117,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdBondToStock001.entrustAmt', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF01', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF01', type: 'number', sortable:false}
-                        ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
+                        // ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
                         ,{field:'secAcctName', width:'10%', title: 'TrdStock002.secAcctId',sortable:false}
                         ,{field:'invManagerId', width:'10%', title: 'TrdCommandDispatcher001.invManagerId',sortable:false}
                         ,{field:'remark', width:'10%', title: 'TrdCommandReceive001.remark',sortable:false}
@@ -233,7 +233,7 @@ $(function() {
                         ,{field:'stocketrPriceTotal', width:'10%', title: 'TrdCommandsCollection001.stocketrPriceTotal', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF01', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF01', type: 'number', sortable:false}
-                        ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
+                        // ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
                         ,{field:'secAcctName', width:'10%', title: 'TrdStock002.secAcctId',sortable:false}
                         ,{field:'invManagerId', width:'10%', title: 'TrdCommandDispatcher001.invManagerId',sortable:false}
                         ,{field:'remark', width:'10%', title: 'TrdCommandReceive001.remark',sortable:false}
@@ -344,7 +344,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF02', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF02', type: 'number', sortable:false}
-                        ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
+                        // ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
                         ,{field:'secAcctName', title: 'TrdStock002.secAcctId',sortable:false,visible:true}
                         ,{field:'invManagerId', width:'10%', title: 'TrdCommandDispatcher001.invManagerId',sortable:false}
                         ,{field:'remark', width:'10%', title: 'TrdCommandReceive001.remark',sortable:false}
@@ -452,7 +452,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF02', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF02', type: 'number', sortable:false}
-                        ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
+                        // ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
                         ,{field:'invManagerId', width:'10%', title: 'TrdCommandDispatcher001.invManagerId',sortable:false}
                         ,{field:'remark', width:'10%', title: 'TrdCommandReceive001.remark',sortable:false}
                         ,{field:'files', width:'10%', title: 'TrdFundInvestTrade002.file',sortable:false,
@@ -559,7 +559,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF02', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF02', type: 'number', sortable:false}
-                        ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
+                        // ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
                         ,{field:'invManagerId', width:'10%', title: 'TrdCommandDispatcher001.invManagerId',sortable:false}
                         ,{field:'remark', width:'10%', title: 'TrdCommandReceive001.remark',sortable:false}
                         ,{field:'files', width:'10%', title: 'TrdFundInvestTrade002.file',sortable:false,
@@ -775,7 +775,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF07', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF07', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF07', type: 'number', sortable:false}
-                        ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection001.lowestDealNum', sortable:false}
+                        // ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection001.lowestDealNum', sortable:false}
                         ,{field:'invManagerId', width:'10%', title: 'TrdCommandDispatcher001.invManagerId',sortable:false}
                         ,{field:'remark', width:'10%', title: 'TrdCommandReceive001.remark',sortable:false}
                         ,{field:'files', width:'10%', title: 'TrdFundInvestTrade002.file',sortable:false,
@@ -1075,7 +1075,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF02', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF02', type: 'number', sortable:false}
-                        ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
+                        // ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
                         ,{field:'invManagerId', width:'10%', title: 'TrdCommandDispatcher001.invManagerId',sortable:false}
                         ,{field:'remark', width:'10%', title: 'TrdCommandReceive001.remark',sortable:false}
                         ,{field:'files', width:'10%', title: 'TrdFundInvestTrade002.file',sortable:false,
@@ -1300,7 +1300,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF11', type: 'number', sortable:false}
                         ,{field:'finishedAmt', width: 200, title: 'TrdCommandsCollection002.finishedAmtF11', type: 'number', sortable:false}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF11', type: 'number', sortable:false}
-                        ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
+                        // ,{field:'lowestDealNum', width:'10%', title: 'TrdCommandsCollection002.lowestDealNum', sortable:false}
                         ,{field:'invManagerId', width:'10%', title: 'TrdCommandDispatcher001.invManagerId',sortable:false}
                         ,{field:'remark', width:'10%', title: 'TrdCommandReceive001.remark',sortable:false}
                         ,{field:'files', width:'10%', title: 'TrdFundInvestTrade002.file',sortable:false,
