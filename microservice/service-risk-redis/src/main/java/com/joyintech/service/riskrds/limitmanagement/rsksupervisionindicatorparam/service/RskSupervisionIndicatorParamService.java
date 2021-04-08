@@ -1363,7 +1363,7 @@ public class RskSupervisionIndicatorParamService extends BaseService<RskSupervis
     		}
     		if(StringUtil.equals(map.get("bodyGradeType"), BussinessDictCodeListRds.评级分类_内部评级.getValue())){
     			RskEventItemRule rule = new RskEventItemRule();
-    			rule.setItemCode("bondInsideType");
+    			rule.setItemCode("bondInsideType1");
     			rule.setMatchType(BussinessDictCodeListRds.运算符_包含.getValue());
     			rule.setItemValue(bodyGrade);
     			list.add(rule);
