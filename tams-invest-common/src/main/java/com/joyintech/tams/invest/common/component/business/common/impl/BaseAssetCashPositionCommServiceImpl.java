@@ -263,10 +263,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 String releaseStatus = statusMap == null ? null : (String)statusMap.get("RELEASE_STATUS");
                 String isManualRelease = statusMap == null ? null : (String)statusMap.get("IS_MANUAL_RELEASE");
                 if(deal.getTradeId().endsWith("R")){//是否撤销交易
-                    if (DictCodeList.是否_否.getValue().equals(isManualRelease)) {//IF 是否手工释放 = 否
-                    	 result.add(resultDto);
+                    if (DictCodeList.是否_是.getValue().equals(isManualRelease)) {//IF 是否手工释放 = 是
+                        return result;
                     }else {
-                    	return result;
+                        result.add(resultDto);
                     }
                 }else{//到期确认交易
                     if (DictCodeList.释放状态_已释放.getValue().equals(releaseStatus)) {

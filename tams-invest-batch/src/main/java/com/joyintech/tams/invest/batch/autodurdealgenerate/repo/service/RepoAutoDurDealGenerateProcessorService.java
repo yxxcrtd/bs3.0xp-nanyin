@@ -155,6 +155,7 @@ public class RepoAutoDurDealGenerateProcessorService extends BaseService {
         // 金融产品交易信息DTO.金融产品交易汇总Entity -> 金融产品交易汇总业务流程表
         WflTrdFinProductDealTotal wflTrdFinProductDealTotal = AutoPeriodRepoCommonService.gen汇总流程表(
             entity, DictCodeList.共通业务类型_质押式回购存续期.getValue());
+        wflTrdFinProductDealTotal.setFpriceAmt(entity.getTheoryAmt());
         baseTrdDurDbInertDto.setWflTrdFinProductDealTotal(wflTrdFinProductDealTotal);
         // 金融产品交易汇总表
         TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
@@ -256,6 +257,7 @@ public class RepoAutoDurDealGenerateProcessorService extends BaseService {
         BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
         baseTradeProductDealDtos.add(baseTradeProductDealDto);
         TrdProductDeal trdProductDeal = AutoPeriodRepoCommonService.getTrdProductDeal(entity);
+        trdProductDeal.setFpriceAmt(entity.getTheoryAmt());
 
         // 划款指令表Entity
         List<StlPayOrders> stlPayOrdersList = baseTrdDurDbInertDto.getStlPayOrdersList();
