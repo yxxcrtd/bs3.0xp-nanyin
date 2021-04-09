@@ -992,7 +992,14 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         // BigDecimal 交易日金额 = finProductTradeDto.getTrdProductDeal().getTradeAmt();
         // 交易生成的现金流水
         EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
-            finProductTradeDto);
+                finProductTradeDto);
+        // 交易生成的持仓流水
+        EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                finProductTradeDto);
+        // 交易金额
+        BigDecimal tradeAmt = finProductTradeDto.getTrdProductDeal().getTradeAmt();
+        //交易券面
+        BigDecimal prinAmt = finProductTradeDto.getTrdProductDeal().getPrinAmt();
         // 组合代码
         String portfolioId = finProductTradeDto.getTrdProductDealAdd().getPortfolioId();
         // 币种
@@ -1020,6 +1027,20 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                         etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
                     });
                 }
+                etrSecPositionFlowDto.setAmount(tradeAmt.negate());//到期持仓减少
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+            }
+        }
+        // 交易提交
+        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || finProductTradeDto.isBatch()) {
+            if (StringUtil.isEmpty(entrustId)) { // 无委托
+                // 标准券
+                EtrSecPositionFlowDto etrSecPositionFlowDtoTemp = new EtrSecPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDtoTemp, etrSecPositionFlowDto);
+                etrSecPositionFlowDtoTemp.setAmount(ArithmeticUtil.divide(prinAmt, 债券面值, 2));
+                etrSecPositionFlowDtoTemp.setFinprodId(XN_STANDARD_BOND_PRODID);
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoTemp);
+                // 添加持仓流水到目标dto
             }
         }
     }
