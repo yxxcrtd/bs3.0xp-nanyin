@@ -36,9 +36,9 @@ $(function () {
         checkbox: true,
         cellMinWidth : 100,
         cols: [
-            {field:'booksetId', width:160, title: '账套代码',sort: true },
-            {field:'booksetName', width:160, title: '账套名称' ,sort: true},
-            {field:'finprodId', width:200, title: '业务编号' ,sort: true},
+            {field:'booksetId', width:200, title: '账套代码',sort: true },
+            {field:'booksetName', width:200, title: '账套名称' ,sort: true},
+            {field:'finprodId', title: '业务编号' ,sort: true},
             {field:'feeType', width:120, title: '费用类型' ,sort: true,visible:false},
             {field:'feeTypeFmt', sortField: "feeType", title: '费用类型',width:120,sort: true},
             {field:'prin', width:120, type:'money', title: '金额' ,sort: true},

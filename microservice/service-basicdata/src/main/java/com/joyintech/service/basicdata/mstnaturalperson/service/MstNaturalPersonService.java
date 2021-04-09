@@ -10,6 +10,7 @@
 
 package com.joyintech.service.basicdata.mstnaturalperson.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,6 +150,12 @@ public class MstNaturalPersonService extends BaseService<MstNaturalPerson001Dto>
             BeanUtil.copyPropertiesIgnoreNull(istEntity, entity);
             mstCustomerInfoAddMapper.insert(istEntity);
             mstNaturalPerson001Mapper.insertCustomerInfo(entity);
+        }else if(StringUtil.equals(type, "DELETE")){
+            List<String> cid = new ArrayList<>();
+            if(StringUtil.isNotEmpty(entity.getCustomerId())) {
+                cid.add(entity.getCustomerId());
+            }
+            delete(cid);
         }
         else {
             MstCustomerInfoAddWithBLOBs istEntity = new MstCustomerInfoAddWithBLOBs();
