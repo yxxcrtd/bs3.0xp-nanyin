@@ -1,77 +1,70 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorator="~{layout/default}">
+<html>
+
 <head>
-<title>About</title>
-<style type="text/css">
-    .edition-container{
-        background: #2e2d2d;
-    }
-    .edition-wrap{
-        background: url("[[@{/public/images/copy-bg.png}]]");
-        background-repeat:no-repeat;
-        background-size:100% 100%;
-        -moz-background-size:100% 100%;
-        height: 458px;
-    }
-    .edition-wrapper{
-        padding-top: 80px;
-    }
-    .edition-logo{
-        text-align: center;
-        margin-bottom: 0;
-    }
-    .edition-title{
-        color: #006CD8;
-        font-size: 30px;
-        margin: 25px 0;
-        text-align: center;
-    }
-    .edition-type{
-        font-size: 14px;
-        color: #000;
-        padding-top: 10px;
-    }
-    .messageContainer{
-    	font-size:20px;
-    	padding-left:25%;
-    	padding-top:30px;
-    }
-    .message-line{
-    	padding-bottom:10px;
-    }
-    .right-text{
-      position:absolute;
-      left:60%;
-    }
-</style>
+  <meta charset="UTF-8">
+  <title>版本信息</title>
+<style>
+body {
+  background: #2e2d2d;
+  font-family:Centaur,"楷体";
+}
+#title{
+	padding-top:40px;
+	padding-left:20px;
+}
+#detail{
+	padding-top:20px;
+}
+#productName{
+	font-size:45px;
+	padding-left:35px;
+	font-family:"华文新魏";
+	color:#3e5eac;
+}
+#contain{
+  background: url("[[@{/public/images/copy-bg.png}]]");
+}
+h3{
+	font-size:18px;
+	padding-left:110px;
+	margin-block-start:10px;
+    margin-block-end:10px;
+    font-family:"宋体";
+}
+.message{
+    margin-block-start:10px;
+    margin-block-end:10px;
+	padding-left:25%;
+	font-size:22px;
+}
+    </style>
 </head>
+
 <body>
-    <div layout:fragment="content">
-        <div class="edition-container">
-            <div class="edition-wrap">
-                <div class="edition-wrapper">
-                      <p class="edition-logo"><img data-th-src="@{${logoAbout}}" /></p> 
-                      <h1 class="edition-title" data-th-text="#{aplication.title}">系统管理</h1>
-                      <div class="messageContainer">
-                      	<p class = "message-line">
-                      	<span data-th-text="#{aplication.systemversion}+':'"></span><span data-th-text="${systemVersion}" class="right-text"></span>
-                      	</p>
-                      	<p class = "message-line">
-                      	<span data-th-text="#{aplication.customerName}+':'"></span><span data-th-text="${customerName}" class="right-text"></span>
-                      	</p>
-                      	<p  class = "message-line">
-                      	<span data-th-text="|#{aplication.supportedBrowsers}:|"></span><span data-th-text="|${lastChromeVersion}|" class="right-text"></span>
-                      	</p>
-                      </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div id = "contain">
+<div id="title">
+	 <p class="edition-logo"><img data-th-src="@{${logoAbout}}"  /><span id="productName" data-th-text="#{aplication.title}"></span></p>
+</div>
+<div id = "detail">
+	<article>
+		<h3 data-th-text="#{aplication.customerName}"></h3>
+		<p class="message" data-th-text="${customerName}"></p>
+	</article>
+	<article >
+		<h3 data-th-text="#{aplication.systemversion}"></h3>
+		<p class="message" data-th-text="${systemVersion}"></p>
+	</article>
+	<article >
+		<h3  data-th-text="#{aplication.supportedBrowsers}"></h3>
+		<p class="message" data-th-text="${lastChromeVersion}"></p>
+	</article>
+</div>
+</div>
     <div layout:fragment="script">
+       <script data-th-src="@{/public/js/jquery-1.9.1.min.js}"></script>
         <script>
-        	$('.edition-container').parents('.layui-fluid').removeClass('layui-fluid');
+        $('#contain').height(document.documentElement.clientHeight-30);
         </script>
     </div>
 </body>
