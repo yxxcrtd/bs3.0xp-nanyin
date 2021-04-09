@@ -215,6 +215,19 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                       etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                   }
                   /**add by taoran 20200303 委托申购确认更新实时现金 end*/
+                  
+                  /**add by yujiaping 20210409 申购确认更新资金账户指令可用现金 end*/
+                  if(stlPayOrdersDtos!= null && stlPayOrdersDtos.size()>0
+                		  && DictCodeListExt2.申购类型_普通申购.getValue().equals(finProductTradeDto.getPurchType())){                  
+                      EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
+                              finProductTradeDto);
+                      etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTradeId());
+                      etrCashPositionFlowDto.setAcctId(gen账号(deal.getChlId(),deal.getCcy(),deal.getSecManageAcctId(), dealAdd.getPortfolioId(), dealAdd.getPurchModle(),etrCashPositionFlowDto));
+                      etrCashPositionFlowDto.setAmount(stlPayOrdersDtos.get(0).getSettleAmt().negate());
+                      etrCashPositionFlowDto.setCdate(stlPayOrdersDtos.get(0).getSettleDate());
+                      etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+                  }
+                  /**add by yujiaping 20210409 申购确认更新资金账户指令可用现金 end*/
               }
           }
 
