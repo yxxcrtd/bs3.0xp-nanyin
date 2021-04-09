@@ -634,7 +634,7 @@
 
                 var dealObj = {};
                 dealObj.finprodType2 = getFinProdType2FromPs();
-                dealObj.settleDate = $("#TrdOutRightRepoTrade002_tradeDate").val();
+				dealObj.settleDate = $("#TrdOutRightRepoTrade002_vdate").val();
                 dealObj.tradeDate = $("#TrdOutRightRepoTrade002_tradeDate").val();
                 dealObj.ps = PS_T01;
                 dealObj.ccy = $("#TrdOutRightRepoTrade002_ccy").val();
@@ -860,6 +860,10 @@
                 //委托时 是否有回购期限品种  没有时 联动带出
                 repoTermChangeAction();
 			}
+
+			repoTermChangeAction();
+			vdateMdateChangeAction();
+			settleSpeedChangeAction();
 		}
 
 		$("#TrdOutRightRepoTrade002_tradeMarket").change(tradeMarketChange);
