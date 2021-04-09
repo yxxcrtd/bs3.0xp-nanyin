@@ -863,7 +863,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
             }
         }
         // 交易提交
-        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() ) {
+        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || finProductTradeDto.isBatch()) {
             if(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())){
                 etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto,false));
             }//到期续做正回购金额收入方向会走到这个方法
