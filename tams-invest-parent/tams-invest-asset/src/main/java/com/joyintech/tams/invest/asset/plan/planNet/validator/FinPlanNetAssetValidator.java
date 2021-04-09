@@ -1,6 +1,6 @@
 package com.joyintech.tams.invest.asset.plan.planNet.validator;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -33,8 +33,8 @@ public class FinPlanNetAssetValidator implements BeanValidator {
     @Autowired
     private CommonBusinessService commonBusinessService;
 
-    @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+//    @Autowired
+//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     @Override
     public List<ValidMessage> valid(Object value) {
