@@ -49,8 +49,8 @@
 			          (case when CASH_FLOW_AMOUNT99 is not null then CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT07 + CASH_AMOUNT08 + CASH_FLOW_AMOUNT99 
 			          	else CASH_FLOW_AMOUNT01 + CASH_AMOUNT03 + CASH_AMOUNT07 + CASH_AMOUNT08 end) as tradeCash,
 			          /**(ETR_AMOUNTE01 + ETR_AMOUNTE02) as cashAvailable,指令可用**/
-			          (case when CASH_FLOW_AMOUNT99 is not null then ETR_AMOUNTE01 + ETR_AMOUNTE02+ CASH_FLOW_AMOUNT01 + CASH_FLOW_AMOUNT99 
-			          	else ETR_AMOUNTE01 + ETR_AMOUNTE02+ CASH_FLOW_AMOUNT01 end) as cashAvailable,
+			          (case when CASH_FLOW_AMOUNT99 is not null then ETR_AMOUNTE01 + ETR_AMOUNTE02 + CASH_FLOW_AMOUNT99 
+			          	else ETR_AMOUNTE01 + ETR_AMOUNTE02 end) as cashAvailable,
 			          ETR_AMOUNTE02 as advanceCash, /**预增金额  资金账户类型_券商资金账户：A07**/
 			          (CASH_FLOW_AMOUNT01 + CASH_AMOUNT07) as retrievalDesirableCash,/**可取现金余额**/
 			          CASH_FLOW_AMOUNT99 as adjustmentAmount 
