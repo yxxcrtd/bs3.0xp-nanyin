@@ -318,4 +318,6 @@ public interface EtrCommonCashPositionMapper {
     List<PtlSecPositionFlow> selectSecFlow(Map<String, Object> params);
 
     List<EtrSecPositionFlowDto> findNegateSecFlowByEntrustId(String entrustId);
+
+    String selectAcctId(String secAcctId);
 }
