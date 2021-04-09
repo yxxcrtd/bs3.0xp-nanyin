@@ -26,6 +26,7 @@
 		<result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
 		<result column="channelFee" property="channelFee" jdbcType="DECIMAL" />
 		<result column="RED_CFM_DATE"       property="redCfmDate"      jdbcType="DATE" />
+		<result column="PUR_CFM_DATE"       property="purCfmDate"      jdbcType="DATE" />
 		<result column="TYPE_6" property="type6" jdbcType="VARCHAR" />
         <!--添加二-四级分类 lishuping 2019/7/30 start-->
         <result column="TYPE_9" property="type9" jdbcType="VARCHAR" />

@@ -232,10 +232,10 @@ $(function() {
                 var tradeAmt = $('#tradeAmt').val();
                 if(unitCprice != null && unitCprice != '' && shareAmt){
                 	if(ps == ps_T19){
-                		$('#tradeAmt').val(shareAmt*unitCprice).attr('disabled',false).trigger('blur');
+                		$('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
                 	}
                 	else{
-                		$('#tradeAmt').val(shareAmt*unitCprice).attr('disabled',true).trigger('blur');
+                		$('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
                 	}
                     $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
                     $('#feeAmtRedem').change();

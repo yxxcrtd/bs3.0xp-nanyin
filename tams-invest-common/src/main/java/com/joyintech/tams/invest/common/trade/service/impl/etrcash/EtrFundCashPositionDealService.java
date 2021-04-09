@@ -319,9 +319,9 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 1.直投
                 // 可用现金(组合、托管户):减少委托金额
                 if (StringUtil.isEmpty(chlId)) {
-                    acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
-                        DictCodeListExt2.资金账户类型_托管户.getValue());
-
+//                    acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
+//                        DictCodeListExt2.资金账户类型_托管户.getValue());
+                    acctId = EtrCommonCashPositionDealService.select证券托管户(etrEntrustAdd.getSecAcctId());
                 }
                 // 2.通道一次性划款
                 // 可用现金(组合、通道):减少委托金额
@@ -341,8 +341,9 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 1.直投
                 // 可用现金(组合、资金账户):减少委托金额
                 if (StringUtil.isEmpty(chlId)) {
-                    acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
-                            DictCodeListExt2.资金账户类型_托管户.getValue());
+//                    acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
+//                            DictCodeListExt2.资金账户类型_托管户.getValue());
+                    acctId = EtrCommonCashPositionDealService.select证券托管户(etrEntrustAdd.getSecAcctId());
                 }
                 // 2.通道一次性划款
                 // 可用现金(组合、通道):减少委托金额

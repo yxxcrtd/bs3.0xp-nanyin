@@ -1741,6 +1741,8 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
         }
         TrdProductDealAdd add = new TrdProductDealAdd();
         add.setPortfolioId(trdConBond003Dto.getPortfolioId());
+        
+        add.setPurchModle(trdConBond003Dto.getPurchModle());
 
         //      申购确认不需要更新委托完成度
 //        if(StringUtil.isNotEmpty(trdConBond003Dto.getEntrustId())){

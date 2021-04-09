@@ -1309,4 +1309,8 @@ public class EtrCommonCashPositionDealService extends BaseService {
         }
         return null;
     }
+
+    public static String select证券托管户(String secAcctId) {
+        return etrCommonCashPositionMapper.selectAcctId(secAcctId);
+    }
 }
