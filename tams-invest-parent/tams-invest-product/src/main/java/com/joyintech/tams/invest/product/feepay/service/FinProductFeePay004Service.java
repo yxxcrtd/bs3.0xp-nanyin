@@ -1115,7 +1115,7 @@ public class FinProductFeePay004Service extends BaseService<FinProductFeePay005D
                                         + "&feeId="
                                         + dto.getFeeId()
                                         + "&payDate="
-                                        + DateUtil.format(dto.getPayDate())
+                                        + DateUtil.format(dto.getVdate())
                                         + "&finprodId="
                                         + sFinprodId,
                                 BigDecimal.class);
