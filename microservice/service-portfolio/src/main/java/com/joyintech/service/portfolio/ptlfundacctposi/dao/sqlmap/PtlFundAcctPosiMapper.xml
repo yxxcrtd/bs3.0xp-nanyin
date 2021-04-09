@@ -62,14 +62,15 @@
 		null  CDATE,
     	''    PORTFOLIO_ID,
         ''    ACCTID,
-        ''    CCY,
+        temp.ccy    CCY,
         ''    HODINGTYPE,
         ''    PORTFOLIONAME,
         ''    ACCTNAME,
-        null  AMOUNT,
+        decode(SUM(AMOUNT),null,0,SUM(AMOUNT))  AMOUNT,
         decode(SUM(AMOUNT1),null,0,SUM(AMOUNT1)) AMOUNT1,
 		'01' isSummary
 	from temp
+	group by ccy
 	</if>
 </select>
 <sql id="sqlwhere">
@@ -111,6 +112,9 @@
     <if test="accountType != null and accountType != ''">
       and PTLACCT.ACCT_TYPE = #{accountType}
     </if>
+    <if test="ccy !=null and ccy!=''">
+    	and PTL.CCY = #{ccy,jdbcType=VARCHAR}
+    </if>
    </where>
 </sql>
 	<select id="selectForHasChildren" resultType="java.lang.Integer">
@@ -133,7 +137,8 @@
 	
 <!-- 头寸明细查询 -->
 <select id="select1" resultType="com.joyintech.service.portfolio.ptlfundacctposi.dto.PtlFundAcctPosiDto">
-	select * from (
+    with temp as (
+	select A.*,'02' isSummary from (
 	
 	select * from (
 	SELECT DISTINCT A.CDATE             CDATE,
@@ -263,7 +268,26 @@
 	<if test="ps != null and ps != ''">
 		AND NVL(PA.BACK_LEND_DIRECTION,T.PS) = #{ps}
 	</if>
-	)
+	)A
+    )
+    select * from temp 
+    <if test='isMultiLevel == null or isMultiLevel!="01"'>
+	union
+	select   
+        null     CDATE,
+	    ''       PORTFOLIOID,
+	    ''       CCY,
+	    ''       BUSINO,
+	    decode(sum(AMOUNT),null,0,sum(AMOUNT)) AMOUNT,
+	    ''       PORTFOLIONAME,
+	    ''       FINPRODMARKETID,
+	    ''       FINPRODABBR,
+	    ''       BUSITYPE,
+        ''       ps,
+		'01' isSummary
+	from temp
+	</if>
+
 </select>
 	<select id="getPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
     	SELECT DISTINCT
@@ -360,6 +384,13 @@
 				and A.CDATE <![CDATA[<=]]> #{endCdate}
 				</if>
 			</where>
+	</select>
+	
+	<select id = "getAllCcy" parameterType="java.util.Map" resultType="java.lang.String">
+		select distinct ccy from PTL_CASH_POSITION
+		<if test='startCDate != null'>
+		  where  CDATE BETWEEN #{startCDate} AND #{endCDate}
+	  </if>
 	</select>
 	
 </mapper>
