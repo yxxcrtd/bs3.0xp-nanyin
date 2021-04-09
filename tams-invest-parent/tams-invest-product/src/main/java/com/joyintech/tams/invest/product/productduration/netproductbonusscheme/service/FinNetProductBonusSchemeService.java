@@ -70,6 +70,13 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
     @Autowired
     private FinCashInfoMapper finCashInfoMapper;
     
+    /**
+     * 现金DAO
+     */
+    @Autowired
+    private EtrCashPositionMapper etrCashPositionMapper;
+
+    
     @Autowired
     private FinCashPayRuleMapper finCashPayRuleMapper;
 
@@ -196,7 +203,7 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
         paTotal.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
         if (dto.getDealType().equals("bonusCash")) {
             paTotal.setPaBussType(DictCodeListExt1.平安业务类型_产品现金分红.getValue());
-            paTrdFinProductDealTotalMapper.insertSelective(paTotal);
+            paTrdFinProductDealTotalMapper.insertSelective(paTotal);            
         }
         else if (dto.getDealType().equals("bonusShareConfirm")) {
             paTotal.setPaBussType(DictCodeListExt1.平安业务类型_产品红利转投.getValue());
@@ -317,6 +324,22 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
                     stlPayOrdersDto.setSettleDate(orderDto.getSettleDate());
                     stlPayOrders.add(stlPayOrdersDto);
                     stlPayOrdersMapper.insertSelective(stlPayOrdersDto);
+                    
+                    /**
+                     * 指令现金流水
+                     */                    
+                    EtrCashPosition tempPosition = new EtrCashPosition();            
+                    tempPosition.setPortfolioId(stlPayOrdersDto.getPortfolioId());
+                    tempPosition.setAcctId(stlPayOrdersDto.getMyAcctNo());                   
+                    tempPosition.setAmount(stlPayOrdersDto.getSettleAmt().negate());                     
+                    tempPosition.setCcy(stlPayOrdersDto.getCcy());
+                    tempPosition.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    tempPosition.setCdate(stlPayOrdersDto.getSettleDate());
+                    EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
+                    BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
+                    EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
+                    tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));                    
+                   	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);                  
                 }
             }
 
