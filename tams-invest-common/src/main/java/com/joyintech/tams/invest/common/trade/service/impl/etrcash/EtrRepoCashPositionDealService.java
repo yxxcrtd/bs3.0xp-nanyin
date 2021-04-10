@@ -931,7 +931,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         // 通道性质
          String chlType = StringUtil.isEmpty(chlId) ? null : EtrCommonCashPositionDealService.queryChlType(chlId);
         // 交易生效
-        if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
+        if (DictCodeList.持仓类型_实际.equals(持仓类型)|| etrPositionHoldDto.isNeedNegative()) {//modify by jiangpeng on 20210406 ZGBSS-1403 质押式竞价正回购撤销流程生效后，实时资产头寸查询中指令可用持仓未减少 start
             // 有委托 or 无委托 统一处理
             // 现金流水dto处理 交割日减少(交易金额-交易券面总额*委托全价/债券面值）
             etrCashPositionFlowDto.setAmount(交易日金额);
@@ -976,16 +976,6 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 // 添加持仓流水到目标dto
             }
         }
-        //add by jiangpeng on 20210406 ZGBSS-1403 质押式竞价正回购撤销流程生效后，实时资产头寸查询中指令可用持仓未减少 start
-        if (etrPositionHoldDto.isNeedNegative()) {
-            if (StringUtil.isEmpty(entrustId)) { // 无委托
-                EtrSecPositionFlowDto temp = new EtrSecPositionFlowDto();
-                BeanUtil.copyPropertiesIgnoreNull(temp, etrSecPositionFlowDto);
-                temp.setAmount(交易日金额);
-                etrPositionHoldDto.getPtlSecPositionFlows().add(temp);
-            }
-        }
-        // add by jiangpeng on 20210406 ZGBSS-1403 质押式竞价正回购撤销流程生效后，实时资产头寸查询中指令可用持仓未减少 end
     }
 
     /**
