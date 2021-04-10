@@ -1025,7 +1025,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                         etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
                     });
                 }
-                etrSecPositionFlowDto.setAmount(tradeAmt.negate());//到期持仓减少
+                etrSecPositionFlowDto.setAmount(prinAmt.negate());//到期持仓减少
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }
         }
