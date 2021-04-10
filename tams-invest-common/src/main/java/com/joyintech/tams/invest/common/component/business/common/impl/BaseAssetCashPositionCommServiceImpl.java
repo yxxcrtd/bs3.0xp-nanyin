@@ -1562,34 +1562,35 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                  * 输入金融产品交易Entity.金融产品类型（投管分类）= 数据字典缓存.金融产品类型（投管分类).项目类 and 金融产品交易Entity.交易方向 in （“卖出”,“收息”，“还本”，“到期”）
                  */
                 if ((还本_行权_收息_到期_卖出.contains(deal.getPs())
-                     && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
-                     && DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()))
-                    || (还本_收息_到期_卖出.contains(deal.getPs())
+                        && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
+                        && DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()))
+                        || (还本_收息_到期_卖出.contains(deal.getPs())
                         && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
                         && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()))
-                    || (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(deal.getFinprodType2())
+                        || (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(deal.getFinprodType2())
                         && DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
-                        && DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)
+                        && (DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)
+                        || DictCodeList.回购类型_质押式回购.getValue().equals(assetType2))
                         && DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))
-                    || (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(deal.getFinprodType2())
+                        || (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(deal.getFinprodType2())
                         /* && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()) */
                         && DictCodeList.交易方向_买入.getValue().equals(deal.getPs())
                         && DictCodeList.回购类型_质押式竞价回购.getValue().equals(assetType2))
-                    || (DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue().equals(deal.getFinprodType2())
+                        || (DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue().equals(deal.getFinprodType2())
                         // && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()) // 现在只有银行间的交易，去掉这个判断
                         && DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))
-                    || (DictCodeListExt1.金融产品类型_投管用_存款.getValue().equals(deal.getFinprodType2())
+                        || (DictCodeListExt1.金融产品类型_投管用_存款.getValue().equals(deal.getFinprodType2())
                         && (DictCodeList.交易方向_收息.getValue().equals(deal.getPs()) || 还本_卖出_到期.contains(deal.getPs()))
                         && DictCodeList.存款类资产类型_同业借款.getValue().equals(assetType2))
 
-                    || (DictCodeListExt1.金融产品类型_投管用_存款.getValue().equals(deal.getFinprodType2())
+                        || (DictCodeListExt1.金融产品类型_投管用_存款.getValue().equals(deal.getFinprodType2())
                         && (DictCodeList.交易方向_提前支取.getValue().equals(deal.getPs()) || 还本_收息_到期_卖出.contains(deal.getPs()))
                         && DictCodeList.存款类资产类型_存放同业.getValue().equals(assetType2))
 
-                    || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+                        || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                         && DictCodeList.收益类型_收益型.getValue().equals(profitType) && 还本_到期_收息.contains(deal.getPs()))
 
-                    || (DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue().equals(deal.getFinprodType2())
+                        || (DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue().equals(deal.getFinprodType2())
                         && 还本_到期_收息.contains(deal.getPs()))) {
                     resultDto.setCdate(deal.getSettleDate());
                     resultDto.setAmount(stlPayOrder.getSettleAmt());

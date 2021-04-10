@@ -569,7 +569,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             inputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
             inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
             inputDto.setAssetType2(finProductTradeDto.getAssetType2());
-            List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);
+            List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);//持仓流水
             //买断式回购持仓特殊处理
             for (PtlSecPositionFlowDto dto : ptlSecPositionFlowDtoss){
                 if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
@@ -590,7 +590,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 cashInputDto.setAssetType2(finProductTradeDto.getAssetType2());
                 cashInputDto.setStlPayOrders(baseTradeProductDealDto.getStlPayOrdersList());
                 cashInputDto.setIeFlag(finProductTradeDto.getIeFlag());
-                List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);
+                List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);//现金流水
                 ptlCashPositionFlows.addAll(resultList);
             }
             //        现金与持仓执行共同
@@ -637,6 +637,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 }
             }
         }
+        // 更新组合现金流水
         if (ptlPositionHoldDto.getPtlCashPositionFlows() != null && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
             for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
                 basePtlCashPositionInfoService.insertCashPositionFlow(ptlCashPositionFlow);
