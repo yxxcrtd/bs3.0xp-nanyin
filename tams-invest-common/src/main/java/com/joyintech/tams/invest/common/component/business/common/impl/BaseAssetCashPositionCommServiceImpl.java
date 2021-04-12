@@ -452,16 +452,16 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             result.add(resultDto);
             return result;
         }
-        else if (StringUtils.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_基金.getValue())
-                 && (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())
-                     || StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue()))) {
-            if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
-                resultDto.setCdate(deal.getSettleDate());
-                resultDto.setAmount(ArithmeticUtil.subtract(BigDecimal.ZERO, deal.getShareAmt()));
-                result.add(resultDto);
-                return result;
-            }
-        }
+//        else if (StringUtils.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_基金.getValue())
+//                 && (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())
+//                     || StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue()))) {
+//            if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
+//                resultDto.setCdate(deal.getSettleDate());
+//                resultDto.setAmount(ArithmeticUtil.subtract(BigDecimal.ZERO, deal.getShareAmt()));
+//                result.add(resultDto);
+//                return result;
+//            }
+//        }
 
         // add by wangpeng 20190724 end
         // add by wangpeng 20190724 start
