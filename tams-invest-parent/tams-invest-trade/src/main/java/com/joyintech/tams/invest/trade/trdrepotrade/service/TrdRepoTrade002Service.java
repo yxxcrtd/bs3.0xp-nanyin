@@ -1244,6 +1244,17 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                     finProductTrade.setActPortfolioId(entity.getActPortfolioId());
                 });
             }
+            // 查询质押券信息
+            if(entity.getBussRepoSec()!=null) {
+                finProductTradeDto.setBussRepoSec(entity.getBussRepoSec());
+            }else {
+                Map<String, Object> initSearchParam = new HashMap<>();
+                initSearchParam.put("portfolioId", entity.getPortfolioId());
+                initSearchParam.put("ps", entity.getPs());
+                initSearchParam.put("bizCode", entity.getTradeId());
+                initSearchParam.put("SEC_ACCT_ID", entity.getSecAcctId() != null ? entity.getSecAcctId() : entity.getChlId());
+                finProductTradeDto.setBussRepoSec(bussRepoSecService.selectBussRepoSec(initSearchParam));
+            }
             // 调用业务组件.【金融产品交易共通.交易产品接口】, insert
             // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
             baseTradeProductDealCommService.execute(finProductTradeDto);

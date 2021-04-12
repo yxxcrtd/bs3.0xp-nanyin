@@ -247,7 +247,17 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
 //                etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2).negate());
                 // 添加持仓流水到目标dto
 //                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
-                etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, !etrPositionHoldDto.isNeedNegative()));
+                // 写入质押品的组合持仓流水-债券
+                List<EtrSecPositionFlowDto> ptlSecPositionFlowList = ptlSecPositionFlowLogic(finProductTradeDto, !etrPositionHoldDto.isNeedNegative());
+                if( etrPositionHoldDto.isNeedNegative()){
+                    for(EtrSecPositionFlowDto temp :ptlSecPositionFlowList){
+                        temp.setAmount(temp.getAmount().negate());
+                    }
+                }
+                etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowList);
+                // 写入质押品的组合持仓流水-质押式回购
+                etrSecPositionFlowDto.setAmount(交易券面总额);
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }
         }
     }
