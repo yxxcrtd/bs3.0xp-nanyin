@@ -516,6 +516,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
             result.add(resultDto);
         }else if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
+                && DictCodeList.持仓类型_可用.getValue().equals(inputDto.getPositionType())
                 && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs())) {
             PtlSecPositionFlowDto resultDtozt = new PtlSecPositionFlowDto();
             BeanUtils.copyProperties(resultDto, resultDtozt);
