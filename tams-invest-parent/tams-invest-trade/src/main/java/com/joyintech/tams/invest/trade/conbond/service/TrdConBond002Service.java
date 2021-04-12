@@ -498,8 +498,8 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 	        if(StringUtil.isNotEmpty(entity.getEntrustId())){
 	            baseTradeProductDealDto.setEntrustId(entity.getEntrustId());
 	        }
+	        baseTradeProductDealDto.setPurchModle(entity.getPurchModle());
 	        finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
-	        
 	        	
 	        entity.setActPortfolioId(entity.getPortfolioId());
 	        entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
@@ -830,6 +830,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             if (stlPayOrders != null) {
                 baseTradeProductDealDto.setStlPayOrdersList(Arrays.asList(stlPayOrders));
             }
+            baseTradeProductDealDto.setPurchModle(entity.getPurchModle());
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
             //        委托代码不为空处理委托代码
             if(StringUtil.isNotEmpty(entity.getEntrustId())){
@@ -1012,6 +1013,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             if (stlPayOrders != null) {
                 baseTradeProductDealDto.setStlPayOrdersList(Arrays.asList(stlPayOrders));
             }
+            baseTradeProductDealDto.setPurchModle(entity.getPurchModle());
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
             //        委托代码不为空处理委托代码
             if(StringUtil.isNotEmpty(entity.getEntrustId())){
