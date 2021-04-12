@@ -293,12 +293,11 @@ public class AutoPeriodCommonService extends BaseService {
     }
 
     /**
-     * 处理质押券持仓
+     * 质押回购交易释放状态
+     * @param finProductTradeDto
      * @param trdFinProductDealTotal
      */
-    public void deletePledgeSecPosition(FinProductTradeDto finProductTradeDto,TrdFinProductDealTotal trdFinProductDealTotal) {
-        String updateUser = trdFinProductDealTotal.getUpdateUser();
-        Date updateTime = new Date();
+    public void updateRelease(FinProductTradeDto finProductTradeDto,TrdFinProductDealTotal trdFinProductDealTotal){
         /***质押回购交易释放状态判断*chenlei1**add*start***/
         if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(trdFinProductDealTotal.getFinprodType2())
                 || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(trdFinProductDealTotal.getFinprodType2()))
@@ -315,6 +314,15 @@ public class AutoPeriodCommonService extends BaseService {
             }
         }
         // add by yujiaping 20210205 ZGBSS-489质押式回购交易—银行间正回购交易已做到期交易，质押式回购新建交易添加质押券，查看该债券信息有误start
+    }
+
+    /**
+     * 处理质押券持仓
+     * @param trdFinProductDealTotal
+     */
+    public void deletePledgeSecPosition(FinProductTradeDto finProductTradeDto,TrdFinProductDealTotal trdFinProductDealTotal) {
+        String updateUser = trdFinProductDealTotal.getUpdateUser();
+        Date updateTime = new Date();
         if(StringUtil.equals(trdFinProductDealTotal.getPs(),DictCodeList.交易方向_到期.getValue())) {
             Map<String, Object> params = new HashMap<>();
             params.put("finprodId", trdFinProductDealTotal.getFinprodId());

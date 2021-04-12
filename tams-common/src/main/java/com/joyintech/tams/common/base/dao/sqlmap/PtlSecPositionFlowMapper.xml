@@ -299,7 +299,7 @@
         LEFT JOIN FIN_PRODUCT_TYPE FPT ON FPT.FINPROD_ID = T2.TRADE_ID AND FPT.BRANCH = '0'
         WHERE T1.TRADE_ID = #{tradeid,jdbcType=VARCHAR}
         AND FPT.TYPE_6 = 'H01'
-
+    </select>
 
     <update id="updateReleaseStatus">
 	   update

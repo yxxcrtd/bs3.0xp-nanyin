@@ -65,6 +65,7 @@ public class RepoAutoDurDealGenerateWriter extends BaseWriter<NeedToWriteEntity>
                 }
                 autoPeriodCommonService.insertDealData(baseTrdDurDbInertDto, autoDurDealGenerateResult.getFinProductTradeDto());
                 pinganBatchCommonService.deal有效(autoDurDealGenerateResult.getFinProductTradeDto());
+                autoPeriodCommonService.updateRelease(autoDurDealGenerateResult.getFinProductTradeDto(),baseTrdDurDbInertDto.getTrdFinProductDealTotal());
             }
         }
     }
