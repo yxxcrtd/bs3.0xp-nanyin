@@ -455,7 +455,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
             }
         }
         // 交易提交
-        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()||finProductTradeDto.isBatch()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
                     stlPayOrdersDtos.forEach(stlPayOrdersDto -> {
