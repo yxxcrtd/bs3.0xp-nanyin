@@ -1470,4 +1470,9 @@ AND	fin.BRANCH = 0
 		</if>
 		GROUP by tpd.TRADE_DATE,tpd.MDATE
 	</select>
+	<select id="getIsPayInt" resultType="java.lang.String">
+		select is_pay_int  from fin_cash_plan where finprod_id = #{finprodId}
+		and cash_type in ('02','03')  and rownum=1
+	</select>
+
 </mapper>

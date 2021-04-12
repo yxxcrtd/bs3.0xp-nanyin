@@ -3,6 +3,7 @@ package com.joyintech.service.period.trdprojduration.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -176,4 +177,17 @@ public class TrdProjectDurationController {
         return trdProjectDurationService.getFinprodMarketId(page, length, param);
     }
     //add by liupengfei for多级法人 E
+
+    /**
+     * 投资委托组件.完成委托
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("isPayIntDate")
+    public boolean isPayIntDate(@RequestBody Map<String,Object> map) {
+        return trdProjectDurationService.isPayIntDate(map);
+    }
 }
