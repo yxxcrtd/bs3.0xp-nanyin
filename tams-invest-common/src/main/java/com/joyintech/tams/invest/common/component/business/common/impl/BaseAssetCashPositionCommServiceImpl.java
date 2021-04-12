@@ -263,10 +263,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 String releaseStatus = statusMap == null ? null : (String)statusMap.get("RELEASE_STATUS");
                 String isManualRelease = statusMap == null ? null : (String)statusMap.get("IS_MANUAL_RELEASE");
                 if(deal.getTradeId().endsWith("R")){//是否撤销交易
-                    if (DictCodeList.是否_是.getValue().equals(isManualRelease)) {//IF 是否手工释放 = 是
-                        return result;
-                    }else {
+                    if (DictCodeList.是否_否.getValue().equals(isManualRelease)) {//IF 是否手工释放 = 否
                         result.add(resultDto);
+                    }else {
+                        return result;
                     }
                 }else{//到期确认交易
                     if (DictCodeList.释放状态_已释放.getValue().equals(releaseStatus)) {
@@ -452,16 +452,16 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             result.add(resultDto);
             return result;
         }
-        else if (StringUtils.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_基金.getValue())
-                 && (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())
-                     || StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue()))) {
-            if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
-                resultDto.setCdate(deal.getSettleDate());
-                resultDto.setAmount(ArithmeticUtil.subtract(BigDecimal.ZERO, deal.getShareAmt()));
-                result.add(resultDto);
-                return result;
-            }
-        }
+//        else if (StringUtils.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_基金.getValue())
+//                 && (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())
+//                     || StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue()))) {
+//            if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
+//                resultDto.setCdate(deal.getSettleDate());
+//                resultDto.setAmount(ArithmeticUtil.subtract(BigDecimal.ZERO, deal.getShareAmt()));
+//                result.add(resultDto);
+//                return result;
+//            }
+//        }
 
         // add by wangpeng 20190724 end
         // add by wangpeng 20190724 start
@@ -516,6 +516,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
             result.add(resultDto);
         }else if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
+                && DictCodeList.持仓类型_可用.getValue().equals(inputDto.getPositionType())
                 && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs())) {
             PtlSecPositionFlowDto resultDtozt = new PtlSecPositionFlowDto();
             BeanUtils.copyProperties(resultDto, resultDtozt);

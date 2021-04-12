@@ -300,5 +300,11 @@
         WHERE T1.TRADE_ID = #{tradeid,jdbcType=VARCHAR}
         AND FPT.TYPE_6 = 'H01'
 
-</select>
+
+    <update id="updateReleaseStatus">
+	   update
+	      TRD_PRODUCT_DEAL_ADD  T1
+	      set T1.RELEASE_STATUS='1',T1.IS_MANUAL_RELEASE='N'
+	      where T1.TRADE_ID= #{tradeid,jdbcType=VARCHAR}
+    </update>
 </mapper>
