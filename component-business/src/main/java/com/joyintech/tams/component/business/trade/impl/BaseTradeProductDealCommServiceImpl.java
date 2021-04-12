@@ -35,6 +35,8 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -540,7 +542,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
      */
     @Override
     public Boolean insertPosition(FinProductTradeDto finProductTradeDto) {
-        DictCodeList 持仓类型 = null;
+        DictCodeList 持仓类型 = null;       
         boolean needNegative = false;
         if (DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
             持仓类型 = DictCodeList.持仓类型_实际;
@@ -601,7 +603,8 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 }
                 //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 end 
                 baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
-                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
+                String 交易流程状态 = finProductTradeDto.getWorkflowStatus();
+                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal(),交易流程状态);
             }
         }
         if (needNegative) {

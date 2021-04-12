@@ -49,7 +49,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
 
     @Override
     public CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
-                                               boolean needNegative,String ieFlag,String isOverdueDeal) {
+                                               boolean needNegative,String ieFlag,String isOverdueDeal,String 交易流程状态) {
         // 资产类型
         String finprodType = finProductTradeDto.getTrdProductDeal().getFinprodType2();
         // 处理结果
@@ -116,7 +116,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                 && (StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_申购确认.getValue())
                 ||StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))) {
-            EtrConBondCashPositionDealService.deal可转债CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
+            EtrConBondCashPositionDealService.deal可转债CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto,交易流程状态);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.一次性费用类型_通道费.getValue())) {
             if (DictCodeList.持仓类型_实际.equals(持仓类型)) { // 有效

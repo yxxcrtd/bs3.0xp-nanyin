@@ -501,7 +501,8 @@ public class BaseDealCommServiceImpl extends BaseService implements BaseDealComm
             if(baseEtrCashPositionCommService != null && !finProductTradeDto.isNeedExecuteEtrPosition()){
                 baseTradeProductDealDto.setBussRepoSec(finProductTradeDto.getBussRepoSec());
                 baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
-                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
+                String 交易流程状态 = finProductTradeDto.getWorkflowStatus();
+                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal(),交易流程状态);
             }
         }
         if (needNegative) {
