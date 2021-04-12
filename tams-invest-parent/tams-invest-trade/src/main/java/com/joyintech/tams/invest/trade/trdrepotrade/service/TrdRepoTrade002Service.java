@@ -222,6 +222,8 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
 
+    private final static String SJXY = "SJXY";//深交所协议回购期限品种
+
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。
      * {@inheritDoc}
@@ -333,6 +335,12 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
         if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
             // 构造Entity
             this.prepareEntity(entity);
+            if (StringUtils.equals(DictCodeList.回购类型_质押式协议回购.getValue(), entity.getRepoType())
+                    && StringUtils.equals(DictCodeList.交易流通场所_深圳证券交易所.getValue(), entity.getTradeMarket())
+                    && StringUtils.equals("04", entity.getPs())) {
+                entity.setTermTypeReback(SJXY);
+                entity.getTrdProductDealAdd().setTermType(SJXY);
+            }
 
             // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
             // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
