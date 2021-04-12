@@ -331,10 +331,14 @@
         if($("#tradeMarket").val()&&($("#tradeMarket").val()==TRADE_PLACE_03 ||$("#tradeMarket").val()==TRADE_PLACE_04)
                 &&$("#secAcctId").val()){
             $("#tradeMarketCash_div").show();
-            var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val()}
-            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getProAvailableCash',data,
+            var data = {portfolioId:$('#portfolioId').val(),
+                ccy:$('#ccy').val(),
+                vdate: sysDate,
+                chlId: $("#chlId").val(),
+                secAcctId: $("#secAcctId").val()}
+            Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade002/getProAvailableCash',data,
                     function(result) {
-                $('#tradeMarketCash').val(result.cashT4).trigger('blur');
+                $('#tradeMarketCash').val(result.cashS).trigger('blur');
             });
         }else{
             $("#tradeMarketCash_div").hide();
