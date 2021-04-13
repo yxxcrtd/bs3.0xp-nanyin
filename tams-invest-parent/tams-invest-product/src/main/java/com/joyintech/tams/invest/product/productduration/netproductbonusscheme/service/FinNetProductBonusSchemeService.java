@@ -17,6 +17,7 @@ import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
 import com.joyintech.tams.invest.common.component.business.common.BaseAssetCashPositionCommService;
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioCashPositionsFlowInputDto;
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioPositionsFlowInputDto;
@@ -69,6 +70,9 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
 
     @Autowired
     private FinCashInfoMapper finCashInfoMapper;
+    
+    @Autowired
+    private BasePtlCashPositionInfoMapper basePtlCashPositionInfoMapper;
     
     /**
      * 现金DAO
@@ -138,6 +142,179 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
      */
     @Autowired(required=false)
     private BaseGetBusinessId baseGetBusinessId;
+    
+    
+    @Override
+    public void doInsert(FinNetProductBonusSchemeDto dto, OperationType operationType) {
+    	 if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
+    		 this.handleBussFlowData(dto);
+    	 }
+    }
+    
+    @Override
+    public void doUpdate(FinNetProductBonusSchemeDto dto) {    	
+    	 if (!StringUtil.equals("revoke", dto.getOperateType())
+                 && !StringUtil.equals("delete", dto.getOperateType())) {
+    		 this.handleBussFlowData(dto);
+    	 }
+    }
+    
+    @Override
+    public void doBack(FinNetProductBonusSchemeDto dto) {
+    	 if (!StringUtil.equals("revoke", dto.getOperateType())
+                 && !StringUtil.equals("delete", dto.getOperateType())) {
+    	 this.delhandleBussFlowData(dto);
+    	 }
+    }
+    
+    private void handleBussFlowData(FinNetProductBonusSchemeDto dto) {
+        if (dto.getDealType().equals("bonusCash")) {
+            // 划款指令
+            List<StlPayOrders> stlPayOrders = new ArrayList<StlPayOrders>();
+            if (dto.getBussTrdTransferOrder() != null && dto.getBussTrdTransferOrder().size() > 0) {
+                for (BussTrdTransferOrderDto orderDto : dto.getBussTrdTransferOrder()) {
+                    StlPayOrders stlPayOrdersDto = new StlPayOrders();
+                    BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, orderDto);
+                    stlPayOrdersDto.setOrderId(orderDto.getOrderId());
+                    stlPayOrdersDto.setTradeId(dto.getTradeId());
+                    stlPayOrdersDto.setOrderType(orderDto.getOrderType());
+                    //净值型现金分红生成指令为汇总交易
+                    //add by wm 2019-11-06 start 
+                    stlPayOrdersDto.setIsTotalTrade(DictCodeList.是否_是.getValue());
+                    //add by wm 2019-11-06 end 
+                    if (orderDto.getPs().equals("01")) {
+                        stlPayOrdersDto.setMyAcctNo(orderDto.getRecAcctNo());
+                        //20191211净值型红利再投保持与存续期交易红利再投一致	taoran add
+                        stlPayOrdersDto.setCounterAcctNo(orderDto.getPayAcctNo());
+                    }
+                    else {
+                        stlPayOrdersDto.setMyAcctNo(orderDto.getPayAcctNo());
+                        //20191211净值型红利再投保持与存续期交易红利再投一致	taoran add
+                        stlPayOrdersDto.setCounterAcctNo(orderDto.getRecAcctNo());
+                    }
+                    stlPayOrdersDto.setSettleAmt(orderDto.getSettleAmt());
+                    stlPayOrdersDto.setCcy(orderDto.getCcy());
+                    stlPayOrdersDto.setSettleDate(orderDto.getSettleDate());
+                    stlPayOrders.add(stlPayOrdersDto);
+                    //stlPayOrdersMapper.insertSelective(stlPayOrdersDto);
+                    
+                    /**
+                     * 指令现金流水
+                     */                    
+                    EtrCashPosition tempPosition = new EtrCashPosition();            
+                    tempPosition.setPortfolioId(stlPayOrdersDto.getPortfolioId());
+                    tempPosition.setAcctId(stlPayOrdersDto.getMyAcctNo());                   
+                    tempPosition.setAmount(stlPayOrdersDto.getSettleAmt().negate());                     
+                    tempPosition.setCcy(stlPayOrdersDto.getCcy());
+                    tempPosition.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    tempPosition.setCdate(stlPayOrdersDto.getSettleDate());
+                    EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
+                    BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
+                    EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
+                    tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));                    
+                   	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);                  
+                }
+            }
+            // 组合现金流水Entity
+            List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<PtlCashPositionFlowDto>();
+            if (!StringUtil.isEmptyList(dto.getBussTrdTransferOrder())) {
+                for (BussTrdTransferOrderDto orderDto : dto.getBussTrdTransferOrder()) {
+                    PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+                    ptlCashPositionFlowDto.setPortfolioId(dto.getPortfolioId());                                    
+                        if (orderDto.getPs().equals("01")) {
+                            ptlCashPositionFlowDto.setAcctId(orderDto.getRecAcctNo());
+                            ptlCashPositionFlowDto.setAmount(orderDto.getSettleAmt());
+                        }
+                        else {
+                            ptlCashPositionFlowDto.setAcctId(orderDto.getPayAcctNo());
+                            ptlCashPositionFlowDto.setAmount(orderDto.getSettleAmt().negate());
+                        }
+
+                    ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                    ptlCashPositionFlowDto.setCdate(dto.getActBonusDate());
+                    ptlCashPositionFlowDto.setCcy(dto.getCcy());
+                    ptlCashPositionFlowDto.setOrderId(orderDto.getOrderId());
+                    ptlCashPositionFlows.add(ptlCashPositionFlowDto);
+                }
+            }
+            PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
+            ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
+            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/common/ptlposition/insertPosition",
+                ptlPositionHoldDto, Boolean.class);           
+    	}
+    }
+    
+    private void delhandleBussFlowData(FinNetProductBonusSchemeDto dto) {
+        if (dto.getDealType().equals("bonusCash")) {
+            // 划款指令
+            List<StlPayOrders> stlPayOrders = new ArrayList<StlPayOrders>();
+            if (dto.getBussTrdTransferOrder() != null && dto.getBussTrdTransferOrder().size() > 0) {
+                for (BussTrdTransferOrderDto orderDto : dto.getBussTrdTransferOrder()) {
+                    StlPayOrders stlPayOrdersDto = new StlPayOrders();
+                    BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, orderDto);
+                    stlPayOrdersDto.setOrderId(orderDto.getOrderId());
+                    stlPayOrdersDto.setTradeId(dto.getTradeId());
+                    stlPayOrdersDto.setOrderType(orderDto.getOrderType());
+                    //净值型现金分红生成指令为汇总交易
+                    //add by wm 2019-11-06 start 
+                    stlPayOrdersDto.setIsTotalTrade(DictCodeList.是否_是.getValue());
+                    //add by wm 2019-11-06 end 
+                    if (orderDto.getPs().equals("01")) {
+                        stlPayOrdersDto.setMyAcctNo(orderDto.getRecAcctNo());
+                        //20191211净值型红利再投保持与存续期交易红利再投一致	taoran add
+                        stlPayOrdersDto.setCounterAcctNo(orderDto.getPayAcctNo());
+                    }
+                    else {
+                        stlPayOrdersDto.setMyAcctNo(orderDto.getPayAcctNo());
+                        //20191211净值型红利再投保持与存续期交易红利再投一致	taoran add
+                        stlPayOrdersDto.setCounterAcctNo(orderDto.getRecAcctNo());
+                    }
+                    stlPayOrdersDto.setSettleAmt(orderDto.getSettleAmt());
+                    stlPayOrdersDto.setCcy(orderDto.getCcy());
+                    stlPayOrdersDto.setSettleDate(orderDto.getSettleDate());
+                    stlPayOrders.add(stlPayOrdersDto);
+                    //stlPayOrdersMapper.insertSelective(stlPayOrdersDto);
+                    
+                    /**
+                     * 指令现金流水
+                     */                    
+                    EtrCashPosition tempPosition = new EtrCashPosition();            
+                    tempPosition.setPortfolioId(stlPayOrdersDto.getPortfolioId());
+                    tempPosition.setAcctId(stlPayOrdersDto.getMyAcctNo());                   
+                    tempPosition.setAmount(stlPayOrdersDto.getSettleAmt());                     
+                    tempPosition.setCcy(stlPayOrdersDto.getCcy());
+                    tempPosition.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    tempPosition.setCdate(stlPayOrdersDto.getSettleDate());
+                    EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
+                    BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
+                    EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
+                    tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));                    
+                   	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);                  
+                }
+            }
+            // 组合现金流水Entity         
+            if (!StringUtil.isEmptyList(dto.getBussTrdTransferOrder())) {
+                for (BussTrdTransferOrderDto orderDto : dto.getBussTrdTransferOrder()) {
+                    PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+                    ptlCashPositionFlowDto.setPortfolioId(dto.getPortfolioId());                                    
+                        if (orderDto.getPs().equals("01")) {
+                            ptlCashPositionFlowDto.setAcctId(orderDto.getRecAcctNo());
+                            ptlCashPositionFlowDto.setAmount(orderDto.getSettleAmt());
+                        }
+                        else {
+                            ptlCashPositionFlowDto.setAcctId(orderDto.getPayAcctNo());
+                            ptlCashPositionFlowDto.setAmount(orderDto.getSettleAmt().negate());
+                        }
+
+                    ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                    ptlCashPositionFlowDto.setCdate(dto.getActBonusDate());
+                    ptlCashPositionFlowDto.setCcy(dto.getCcy());
+                    ptlCashPositionFlowDto.setOrderId(orderDto.getOrderId());                   
+                    basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);           
+                }
+            }
+    	}
+    }
 
     /**
      * {@inheritDoc}
@@ -327,7 +504,8 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
                     
                     /**
                      * 指令现金流水
-                     */                    
+                     */    
+                    if(isRevoke) {
                     EtrCashPosition tempPosition = new EtrCashPosition();            
                     tempPosition.setPortfolioId(stlPayOrdersDto.getPortfolioId());
                     tempPosition.setAcctId(stlPayOrdersDto.getMyAcctNo());                   
@@ -339,7 +517,8 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
                     BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
                     EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
                     tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));                    
-                   	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);                  
+                   	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);     
+                    }
                 }
             }
 
