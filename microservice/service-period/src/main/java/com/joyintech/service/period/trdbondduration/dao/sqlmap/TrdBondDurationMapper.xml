@@ -1176,7 +1176,7 @@
         SELECT
         PSP.PORTFOLIO_ID,
         PSP.INV_AIM,
-        NVL(NVL(FP.FINPROD_ABBR, FP.FINPROD_NAME), PSP.SEC_ACCT_ID) SEC_ACCT_ID,
+        #{chlId} SEC_ACCT_ID,
         SUM(PSP.AMOUNT)*100 qty,
         PP.PORTFOLIO_NAME
         FROM (
