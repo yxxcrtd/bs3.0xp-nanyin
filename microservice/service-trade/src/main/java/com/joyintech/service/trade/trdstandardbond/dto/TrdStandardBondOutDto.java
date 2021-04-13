@@ -39,6 +39,8 @@ public class TrdStandardBondOutDto extends BaseEntity {
      * 债券代码
      */
     private String bondCode;
+    
+    private List<String> tradeIdList;
 
     /**
      * 金融产品代码
@@ -600,4 +602,13 @@ public class TrdStandardBondOutDto extends BaseEntity {
     public void setOutBondList(List<TrdStandardBondOutDto> outBondList) {
         this.outBondList = outBondList;
     }
+
+	public List<String> getTradeIdList() {
+		return tradeIdList;
+	}
+
+	public void setTradeIdList(List<String> tradeIdList) {
+		this.tradeIdList = tradeIdList;
+	}
+
 }
