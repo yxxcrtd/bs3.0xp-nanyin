@@ -986,6 +986,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 // 标准券
                 EtrSecPositionFlowDto etrSecPositionFlowDtoTemp = new EtrSecPositionFlowDto();
                 BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDtoTemp, etrSecPositionFlowDto);
+                etrSecPositionFlowDtoTemp.setSeqno(getSeqNo());
                 etrSecPositionFlowDtoTemp.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2).negate());
                 etrSecPositionFlowDtoTemp.setFinprodId(XN_STANDARD_BOND_PRODID);
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoTemp);
@@ -1051,6 +1052,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                 // 标准券
                 EtrSecPositionFlowDto etrSecPositionFlowDtoTemp = new EtrSecPositionFlowDto();
                 BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDtoTemp, etrSecPositionFlowDto);
+                etrSecPositionFlowDtoTemp.setSeqno(getSeqNo());
                 etrSecPositionFlowDtoTemp.setAmount(ArithmeticUtil.divide(prinAmt, 债券面值, 2));
                 etrSecPositionFlowDtoTemp.setFinprodId(XN_STANDARD_BOND_PRODID);
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoTemp);
