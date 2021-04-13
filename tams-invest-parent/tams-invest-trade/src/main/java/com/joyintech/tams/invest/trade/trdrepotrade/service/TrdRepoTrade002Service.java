@@ -338,7 +338,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
             if (StringUtils.equals(DictCodeList.回购类型_质押式协议回购.getValue(), entity.getRepoType())
                     && StringUtils.equals(DictCodeList.交易流通场所_深圳证券交易所.getValue(), entity.getTradeMarket())
                     && StringUtils.equals("04", entity.getPs())) {
-                entity.setTermTypeReback(SJXY);
+                entity.getFinTradeProduct().setTermType(SJXY);
                 entity.getTrdProductDealAdd().setTermType(SJXY);
             }
 
@@ -610,7 +610,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 
         // 构造Entity
         this.prepareEntity(entity);
-        
+
         // 调用授信共同 sjj start
         TrdProductDeal TrdProductDeal = new TrdProductDeal();
         BeanUtil.copyPropertiesIgnoreNull(TrdProductDeal, entity.getTrdProductDeal());
@@ -650,7 +650,12 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 //            bussCommonMapperDelegateService.insertBatch(WflStlPayOrdersMapper.class, wflStlPayOrders);
             wflStlPayOrdersMapper.insertSelective(wflStlPayOrders);
         }
-
+        if (StringUtils.equals(DictCodeList.回购类型_质押式协议回购.getValue(), entity.getRepoType())
+                && StringUtils.equals(DictCodeList.交易流通场所_深圳证券交易所.getValue(), entity.getTradeMarket())
+                && StringUtils.equals("04", entity.getPs())
+                && entity.getFinTradeProduct() != null) {
+            entity.getFinTradeProduct().setTermType(SJXY);
+        }
         finTradeProductMapper.insertSelective(entity.getFinTradeProduct());
 
         // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水
