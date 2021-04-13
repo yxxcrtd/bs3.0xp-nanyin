@@ -82,5 +82,9 @@
         <module>microservice/tams-service-container</module>
         <module>tams/app</module>
         
+        <module>tams-system/touguan/app</module>
+        <module>tams-system/touguan/batch</module>
+        <module>tams-system/yunying/app</module>
+        <module>tams-system/yunying/batch</module>
     </modules>
 </project>
