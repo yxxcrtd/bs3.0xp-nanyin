@@ -35,8 +35,6 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
