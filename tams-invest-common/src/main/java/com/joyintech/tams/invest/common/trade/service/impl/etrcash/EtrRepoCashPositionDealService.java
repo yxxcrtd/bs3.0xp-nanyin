@@ -48,7 +48,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
 
     /**
      * 标准券_入库处理——影响债券持仓和标准券持仓
-     * 
+     *
      * @param list
      * @param 出入库方向
      * @param etrPositionHoldDto
@@ -90,7 +90,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
 
     /**
      * 质押式回购头寸处理
-     * 
+     *
      * @param finProductTradeDto
      * @param 持仓类型
      * @param etrPositionHoldDto
@@ -359,12 +359,12 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         // 通道性质
         String chlType = StringUtil.isEmpty(chlId) ? null : EtrCommonCashPositionDealService.queryChlType(chlId);
         // 交易提交
-        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || finProductTradeDto.isBatch()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 // 持仓流水dto处理 交割日增加交易券面总额/债券面值
-//                etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(交易券面总额, 债券面值, 2));
+                etrSecPositionFlowDto.setAmount(交易券面总额);
                 // 添加持仓流水到目标dto
-//                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
 //                到期日每只券增加交易质押券面总额/100
 //                etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, false));
                 if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
@@ -389,7 +389,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         }
         // 交易生效 
         //modify by mashukai 20210326 ZGBSS-633 质押式银行间正回购到期交易生效后，质押持仓未释放 start
-        if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+        if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || finProductTradeDto.isBatch()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 //到期日每只券增加交易质押券面总额/100
                 etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, false));
