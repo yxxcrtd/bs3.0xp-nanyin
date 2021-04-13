@@ -1416,7 +1416,7 @@
                   from PTL_SEC_VALUTION psv
             <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID --> 
             inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-            left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID
+            left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　and fpa.lay_type is null
             LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
                  where 1=1
                    <if test="portfolioIdList != null and portfolioIdList.size()>0">
@@ -1463,7 +1463,7 @@
                  from PTL_SEC_VALUTION psv
            <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
            inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-           left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID
+           left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　and fpa.lay_type is null
            LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
                 where 1=1
                   <if test="portfolioIdList != null and portfolioIdList.size()>0">
@@ -1570,7 +1570,7 @@
         from PTL_SEC_PIERCE_VALUTION psv
         <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
         inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-        left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID
+        left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　 and fpa.lay_type is null
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         where 1=1
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
@@ -1609,7 +1609,7 @@
         from PTL_SEC_PIERCE_VALUTION psv
         <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
         inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-        left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID
+        left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　 and fpa.lay_type is null
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         where 1=1
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
