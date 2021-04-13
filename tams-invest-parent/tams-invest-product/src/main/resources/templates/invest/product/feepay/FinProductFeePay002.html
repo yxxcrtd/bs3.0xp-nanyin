@@ -216,7 +216,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="pro-module-wrap" data-th-if="${entity?.revokeReason}">
+					<!-- <div class="pro-module-wrap" data-th-if="${entity?.revokeReason}">
 						<div class="pro-module">
 							<h3 class="pro-module-title"><span class="title-des">撤销理由</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
 							<div class="pro-module-item">
@@ -230,7 +230,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<!-- 划款指令 -->
 					<div class="page-component" th:data-path="@{/component/trade/BussTrdTransferOrder/init}"
 	                 	th:data-params="|{entityName: 'bussFinProductFeePay', pageFrom: 'submitForm', entity:'${entity_bussTrdTransferOrder}', bizCode:'${entity?.tradeId}'}|">

@@ -174,8 +174,8 @@ public class FinBondTargetAssetController {
      * @since 1.0
      */
     @GetMapping("selectCountByOFinprodId")
-    public int selectCountByOFinprodId(String oFinprodId) {
-        return finBondTargetAssetService.selectCountByOFinprodId(oFinprodId);
+    public int selectCountByOFinprodId(String oFinprodId,String finprodId) {
+        return finBondTargetAssetService.selectCountByOFinprodId(oFinprodId,finprodId);
     }
 
 }

@@ -1047,6 +1047,50 @@
                         val.othInfo.pledgeBondInfoList[i].pledgePrin=prinLast;
                     }
 
+                    //添加-可质押券面总额信息
+                    //正回购
+                    if( $("#ps").val()==BACK_LEND_DIRECTION_03){
+                    	//银行间 或 质押式协议回购
+                    	if($("#tradeMarket").val()==TRADE_PLACE_01||TARGET_BACK_TYPE_H01==$("#repoType").val()){
+                    		var secAcctId = $("#secAcctId").val();
+                    		if(!secAcctId){
+                    			secAcctId = etrEntrustAdd.secAcctId;
+                    		}
+                    		var chlId = $("#chlId").val();
+                    		if(!chlId){
+                    			chlId =  etrEntrust.chlId;
+                    		}
+                    		if(secAcctId||chlId){
+                    			for(var i=0;i<val.othInfo.pledgeBondInfoList.length;i++){
+                    				var avaPledgePrin =val.othInfo.pledgeBondInfoList[i].avaPledgePrin;
+                    				if(avaPledgePrin==null||avaPledgePrin==""){
+                                		var portfolioId = val.othInfo.pledgeBondInfoList[i].portfolioId;
+                                		var bondCode = val.othInfo.pledgeBondInfoList[i].bondCode;
+                                		if(portfolioId&&bondCode){
+                                			var param = {};
+                                			param.ps =BACK_LEND_DIRECTION_03;
+                                			param.portfolioId = portfolioId;
+                                			param.chlId = chlId;
+                                			param.secAcctId =secAcctId;
+                                			param.bondCode = bondCode;
+                                            $.ajax({
+                                           	 url:JoyinUtil.getRealPath('/component/trade/BussRepoSecDialog/selectAvaPledgeBondDetailList'),
+                                           	 data:param,
+                                           	 async:false,
+                                           	 type:'post',
+                                           	 success:function(result){
+                                           		if(result[0]){
+                                           		 val.othInfo.pledgeBondInfoList[i].avaPledgePrin = result[0].pledgePrin;
+                                           		}
+                                           	 }
+                                            });
+                                		}
+                    				}
+                    			}
+                    		}
+                    	}
+                    }
+                    
                     window.BussRepoSecPtl['bussRepoSecPtl'].addPledgeBond(val.othInfo.pledgeBondInfoList);
                 }
                 // window.BussRepoSecPtl['bussRepoSecPtl'].pledgeBondTotalTblDetailed;
@@ -1085,6 +1129,12 @@
                     if (data && data.etrEntrust) {
                         etrEntrust = data.etrEntrust;
                         entrustList = data.baseEtrInvestInfoDtoList;
+                       
+                        //多比委托进入交易放开组合自动分配
+                        if(entrustList.length>1){
+                        	$("#bussRepoSecPtl_btn_autoAllocation").removeClass("layui-btn-disabled");
+                        }
+                        
                         window.testData = data;
                         // 组合代码
                         // checkAndAssign("#portfolioId", etrEntrust.portfolioId);

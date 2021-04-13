@@ -310,11 +310,13 @@ public class EtrInvestBondInfo002Controller extends BaseController {
         }
         if(StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit")){
             List<ValidMessage> errorList = new ArrayList<>();
-            if (dto.getEntrustIntegrateNum() == null){
+            if(StringUtil.equals("01",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"))){
+            if (dto.getEntrustIntegrateNum() == null ){
                 errorList.add(new ValidMessage("融入券/卖空购回券面总额不能为空"));
             }
             if (dto.getEntrustOwnNum() == null){
                 errorList.add(new ValidMessage("本方券券面总额不能为空"));
+            }
             }
             if (errorList.size() > 0){
                 AjaxResult ajaxResult = new AjaxResult();

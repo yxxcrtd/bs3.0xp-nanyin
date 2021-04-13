@@ -776,7 +776,8 @@ public class ValInterfCommonServiceApi {
             bokBooksetPlanBatchMapper.insertBatch(listBokBooksetPlan);
         }
         // 变量.入库账套清算账户List 账套清算账户表 BOK_BOOKSET_CAPACCT_INFO 以账套代码进行删除，然后再入库
-        if (CollectionUtils.isNotEmpty(listBokBooksetCapacctInfo)) {
+        //modify by jiangpeng on 20210401 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+        if (CollectionUtils.isNotEmpty(listBokBooksetCapacctInfo) && !prodInfoDto.isProductEdit()) {
             valBooksetCapacctInfoBatchMapper.deleteBatch(listBokBooksetCapacctInfo);
             valBooksetCapacctInfoBatchMapper.insertBatch(listBokBooksetCapacctInfo);
         }

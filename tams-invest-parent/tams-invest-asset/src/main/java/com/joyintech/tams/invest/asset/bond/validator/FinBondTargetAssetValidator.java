@@ -18,6 +18,7 @@ import java.util.List;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -219,7 +220,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                 // 有些一级市场投标债券 是从快录进来的。。导致报错。校验是否被别的债券占用。
                 // BS-757
                 //【投资交易-新发行债权标的】一级市场投标债券可以加挂到两个债券标的上
-                if(finBondTargetAssetService.selectCountByOFinprodId(dto.getoFinprodId())>0){
+                if(finBondTargetAssetService.selectCountByOFinprodId(dto.getoFinprodId(),dto.getFinprodId())>0){
                     resultList.add(new ValidMessage("oFinprodId",
                             getMessage("FIN_ASSET_E_0103")));
                 }
@@ -227,18 +228,22 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             }
 
             BussFinBondRepInfoDto bussFinBondRepInfoDto = dto.getBussFinBondRepInfoDto();
-            if(StringUtil.equals("99",dto.getRegistOrg())){
-                // 如果为99  则必须不能为空
-                if(bussFinBondRepInfoDto!=null){
-                    if(StringUtil.isEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())){
-                        resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0101")));
+            //ZGBSS-1388 wyn 20210406 债券标的-权益类资产，新建、修改时不该提示“登记托管机构为99的时候,登记托管机构说明不能为空”
+            if (BussinessDictCodeList.行内资产二级分类_同业存单.getValue().equals(dto.getType9())
+                    || BussinessDictCodeList.行内资产二级分类_债券.getValue().equals(dto.getType9())) {
+                if (StringUtil.equals("99", dto.getRegistOrg())) {
+                    // 如果为99  则必须不能为空
+                    if (bussFinBondRepInfoDto != null) {
+                        if (StringUtil.isEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())) {
+                            resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0101")));
+                        }
                     }
-                }
-            }else{
-                // 如果不为99  说明则必须为空
-                if(bussFinBondRepInfoDto!=null){
-                    if(StringUtil.isNotEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())){
-                        resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0102")));
+                } else {
+                    // 如果不为99  说明则必须为空
+                    if (bussFinBondRepInfoDto != null) {
+                        if (StringUtil.isNotEmpty(bussFinBondRepInfoDto.getRepRegistorgComment())) {
+                            resultList.add(new ValidMessage(this.getMessage("FIN_ASSET_E_0102")));
+                        }
                     }
                 }
             }

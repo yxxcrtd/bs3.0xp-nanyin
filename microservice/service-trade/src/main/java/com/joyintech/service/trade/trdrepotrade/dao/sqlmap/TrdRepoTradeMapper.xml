@@ -125,7 +125,7 @@
                         )
                     </if>
                 <if test="finprodIdList != null and finprodIdList.size() > 0">
-                    and ( wtpd.trade_id in (select fdp.FINPROD_ID from PLEDGE_FINPROD_ID fdp where wtpd.trade_id = fdp.FINPROD_ID
+                    and ( wtpd.trade_id in (select fdp.FINPROD_ID from FIN_DEAL_PLEDGE fdp where wtpd.trade_id = fdp.FINPROD_ID
                     AND (fdp.PLEDGE_FINPROD_ID IN
                     <foreach collection="finprodIdList" item="item" index="index" open="("
                              close=")" separator=",">
@@ -134,7 +134,7 @@
                         </if>
                         #{item}
                     </foreach>
-                    )) or (select COUNT(1) from PLEDGE_FINPROD_ID fdp where wtpd.trade_id = fdp.FINPROD_ID
+                    )) or (select COUNT(1) from FIN_DEAL_PLEDGE fdp where wtpd.trade_id = fdp.FINPROD_ID
                     AND (fdp.PLEDGE_FINPROD_ID IN
                     <foreach collection="finprodIdList" item="item" index="index" open="("
                              close=")" separator=",">
@@ -143,7 +143,7 @@
                         </if>
                         #{item}
                     </foreach>
-                    )) == 0)
+                    )) = 0)
                 </if>
                     <if test="entrustId != null and entrustId != ''">
                         AND wtpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
@@ -239,7 +239,7 @@
                         )
                     </if>
                     <if test="finprodIdList != null and finprodIdList.size() > 0">
-                       and ( tpd.trade_id in (select fdp.FINPROD_ID from PLEDGE_FINPROD_ID fdp where tpd.trade_id = fdp.FINPROD_ID
+                       and ( tpd.trade_id in (select fdp.FINPROD_ID from FIN_DEAL_PLEDGE fdp where tpd.trade_id = fdp.FINPROD_ID
                         AND (fdp.PLEDGE_FINPROD_ID IN
                         <foreach collection="finprodIdList" item="item" index="index" open="("
                                  close=")" separator=",">
@@ -248,7 +248,7 @@
                             </if>
                             #{item}
                         </foreach>
-                     )) or (select COUNT(1) from PLEDGE_FINPROD_ID fdp where tpd.trade_id = fdp.FINPROD_ID
+                     )) or (select COUNT(1) from FIN_DEAL_PLEDGE fdp where tpd.trade_id = fdp.FINPROD_ID
                         AND (fdp.PLEDGE_FINPROD_ID IN
                         <foreach collection="finprodIdList" item="item" index="index" open="("
                                  close=")" separator=",">
@@ -257,7 +257,7 @@
                             </if>
                             #{item}
                         </foreach>
-                        )) == 0)
+                        )) = 0)
                     </if>
                     <if test="entrustId != null and entrustId != ''">
                         AND tpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
@@ -366,7 +366,7 @@
                         )
                     </if>
                 <if test="finprodIdList != null and finprodIdList.size() > 0">
-                    and ( tpd.trade_id in (select fdp.FINPROD_ID from PLEDGE_FINPROD_ID fdp where tpd.trade_id = fdp.FINPROD_ID
+                    and ( tpd.trade_id in (select fdp.FINPROD_ID from FIN_DEAL_PLEDGE fdp where tpd.trade_id = fdp.FINPROD_ID
                     AND (fdp.PLEDGE_FINPROD_ID IN
                     <foreach collection="finprodIdList" item="item" index="index" open="("
                              close=")" separator=",">
@@ -375,7 +375,7 @@
                         </if>
                         #{item}
                     </foreach>
-                    )) or (select COUNT(1) from PLEDGE_FINPROD_ID fdp where tpd.trade_id = fdp.FINPROD_ID
+                    )) or (select COUNT(1) from FIN_DEAL_PLEDGE fdp where tpd.trade_id = fdp.FINPROD_ID
                     AND (fdp.PLEDGE_FINPROD_ID IN
                     <foreach collection="finprodIdList" item="item" index="index" open="("
                              close=")" separator=",">
@@ -384,7 +384,7 @@
                         </if>
                         #{item}
                     </foreach>
-                    )) == 0)
+                    )) = 0)
                 </if>
                     <if test="entrustId != null and entrustId != ''">
                         AND tpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')

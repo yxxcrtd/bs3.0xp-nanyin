@@ -8,6 +8,7 @@ package com.joyintech.service.portfolio.ptlchlfundallocation.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.portfolio.ptlchlfundallocation.dao.PtlChlFundAllocationMapper;
@@ -29,6 +30,7 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -65,6 +67,18 @@ public class PtlChlFundAllocationService extends BaseService<PtlChlFundAllocatio
      */
     @Autowired
     private PaTrdProductDealMapper paTrdProductDealMapper;
+    
+    /**
+     * 现金流水DAO
+     */
+    @Autowired
+    private EtrCashPositionFlowMapper etrCashPositionFlowMapper;
+
+    /**
+     * 现金DAO
+     */
+    @Autowired
+    private EtrCashPositionMapper etrCashPositionMapper;
 
     /**
      * 注入组合交易mapper
@@ -315,9 +329,9 @@ public class PtlChlFundAllocationService extends BaseService<PtlChlFundAllocatio
         }
 
         // 增加委托指令流水逻辑
-        if (baseEtrCashPositionCommService != null) {
+       /* if (baseEtrCashPositionCommService != null) {
             baseEtrCashPositionCommService.portfolioEtrCashPosition(ptlHoldDto, false);
-        }
+        }*/
 
         // 调用估值接口 start
         AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
@@ -464,6 +478,87 @@ public class PtlChlFundAllocationService extends BaseService<PtlChlFundAllocatio
                 ptlCashPositionFlowMapper.insert(ptlCashPositionFlow);
             }
         });
+        
+        PtlPositionHoldDto ptlHoldDto = new PtlPositionHoldDto();
+        ptlHoldDto.setPtlCashPositionFlows(new ArrayList<>());           
+        if (entity.getPtlCashPositionFlow() != null) {
+            entity.getPtlCashPositionFlow().forEach(ptlCashPositionFlow -> {
+                PtlCashPositionFlowDto ptlCashPositionFlowDto_FuKuan = new PtlCashPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(ptlCashPositionFlowDto_FuKuan, ptlCashPositionFlow);
+                ptlCashPositionFlowDto_FuKuan.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                // 通道代码
+                if (StringUtil.equals(DictCodeList.交易方向_通道回款.getValue(), entity.getPayType())) {
+                    ptlCashPositionFlowDto_FuKuan.setChlFinprodId(entity.getChlId());
+                }
+                else {
+                    ptlCashPositionFlowDto_FuKuan.setChlFinprodId(null);
+                }
+                ptlCashPositionFlowDto_FuKuan.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());              
+                ptlHoldDto.getPtlCashPositionFlows().add(ptlCashPositionFlowDto_FuKuan);
+                /**
+                 * 收款账户处理（新建付款信息或修改付款账户金额）
+                 */
+                String accountId_ShouKuan = entity.getCounterAcctNo();
+                if (StringUtil.isNotBlank(accountId_ShouKuan)) {
+                    PtlCashPositionFlowDto ptlCashPositionFlowDto_FuKuan1 = new PtlCashPositionFlowDto();
+                    BeanUtil.copyPropertiesIgnoreNull(ptlCashPositionFlowDto_FuKuan1, ptlCashPositionFlowDto_FuKuan);
+                    ptlCashPositionFlowDto_FuKuan1.setAcctId(accountId_ShouKuan);
+                    ptlCashPositionFlowDto_FuKuan1.setAmount(ptlCashPositionFlowDto_FuKuan1.getAmount().negate());
+                    ptlCashPositionFlowDto_FuKuan1.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                    // 通道代码
+                    if (StringUtil.equals(DictCodeList.交易方向_通道划款.getValue(), entity.getPayType())) {
+                        ptlCashPositionFlowDto_FuKuan1.setChlFinprodId(entity.getChlId());
+                    }
+                    else {
+                        ptlCashPositionFlowDto_FuKuan1.setChlFinprodId(null);
+                    }
+                    ptlCashPositionFlowDto_FuKuan1.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());                
+                    ptlHoldDto.getPtlCashPositionFlows().add(ptlCashPositionFlowDto_FuKuan1);
+                }
+            });
+        }
+
+        // 增加委托指令流水逻辑
+        if (baseEtrCashPositionCommService != null) {
+            baseEtrCashPositionCommService.portfolioEtrCashPosition(ptlHoldDto, false);
+        }
         return "Success";
     }
+    
+    public String doBack(PtlChlFundAllocationDto entity) {
+    	 etrCashPositionFlowMapper.deleteFlowByOrderId(entity.getOrderId());
+    	 /**
+          * 指令现金流水
+          */
+         List<EtrCashPosition> etrCash = new ArrayList<>();
+         EtrCashPosition tempPosition = new EtrCashPosition();            
+         tempPosition.setPortfolioId(entity.getPortfolioId());
+         tempPosition.setAcctId(entity.getMyAcctNo());
+         tempPosition.setAmount(entity.getSettleAmt());   
+         tempPosition.setCcy(entity.getCcy());
+         tempPosition.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+         tempPosition.setCdate(entity.getSettleDate());
+         EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
+         BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
+         EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
+         tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));
+         etrCash.add(tempPosition); 
+         EtrCashPosition tempPosition1 = new EtrCashPosition();     
+         tempPosition1.setPortfolioId(entity.getPortfolioId());
+         tempPosition1.setAcctId(entity.getCounterAcctNo());
+         tempPosition1.setAmount(entity.getSettleAmt().negate());   
+         tempPosition1.setCcy(entity.getCcy());
+         tempPosition1.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+         tempPosition1.setCdate(entity.getSettleDate());
+         EtrCashPositionKey etrCashPositionKey1 = new EtrCashPosition(); 
+         BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey1, tempPosition1);
+         EtrCashPosition EtrCashPositionKey1 = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey1);
+         tempPosition1.setAmount(ArithmeticUtil.doAdd(tempPosition1.getAmount(), EtrCashPositionKey1.getAmount()));
+         etrCash.add(tempPosition1); 
+         for (EtrCashPosition etrCashPosition : etrCash) {
+        	 etrCashPositionMapper.updateByPrimaryKeySelective(etrCashPosition);
+         }
+         return "Success";
+    }
+    
 }

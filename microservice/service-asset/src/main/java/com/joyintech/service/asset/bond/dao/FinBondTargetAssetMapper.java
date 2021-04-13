@@ -71,6 +71,6 @@ public interface FinBondTargetAssetMapper {
 	int isHqTrade(@Param("finprodId") String finprodId);
     int selectCountByfinprodId(@Param("finprodId") String finprodId);
 
-    int selectCountByOFinprodId(@Param("oFinprodId") String oFinprodId);
+    int selectCountByOFinprodId(@Param("oFinprodId") String oFinprodId,@Param("finprodId") String finprodId);
 
 }

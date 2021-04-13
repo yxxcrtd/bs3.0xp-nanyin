@@ -323,7 +323,8 @@ public class ValuationInterfService {
             if (StringUtil.isBlank(finprodType)) {
                 finprodType = DictCodeListExt1.金融产品类型_理财产品.getValue();
             }
-
+            //modify by jiangpeng on 20210401 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+            prodInfoDto.setProductEdit(inputDto.isProductEdit());
             prodInfoDto.setFinprodId(finProduct.getFinprodId()); // 金融产品代码
             prodInfoDto.setFinprodType(finprodType); // 金融产品类型
             // 金融产品简称
@@ -388,6 +389,8 @@ public class ValuationInterfService {
             if (StringUtil.isBlank(finprodType)) {
                 finprodType = DictCodeListExt1.金融产品类型_理财产品.getValue();
             }
+            //modify by jiangpeng on 20210401 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+            prodInfoDto.setProductEdit(inputDto.isProductEdit());
             prodInfoDto.setFinprodId(finProduct.getFinprodId()); // 金融产品代码
             prodInfoDto.setFinprodType(finprodType); // 金融产品类型
             // 金融产品简称

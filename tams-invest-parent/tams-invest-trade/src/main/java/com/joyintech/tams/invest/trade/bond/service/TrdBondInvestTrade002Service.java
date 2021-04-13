@@ -56,6 +56,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
@@ -3706,5 +3707,17 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             stlPayOrders.setTradeId(dto.getTotleTradeId());
             stlPayOrdersMapper.insertSelective(stlPayOrders);
         }
+    }
+    
+    public Map<String, Object> getTradeMarketCash(Map<String, Object> param) {
+    	Map<String, Object> result = new HashMap<>();    	
+    	 BigDecimal cashS = BigDecimal.ZERO;
+    	 StlSecAcctInfo secAcct = stlSecAcctInfoMapper.selectByPrimaryKey((String)param.get("secAcctId"));
+    	 if(secAcct!=null&&StringUtil.isNotEmpty(secAcct.getTrdAcctId())){
+    		 param.put("acctId", secAcct.getTrdAcctId());
+     		cashS =  bussTrdAvailableCashQueryService.getSecManageAvailableCash(param);
+     	}
+    	 result.put("cashS", cashS);
+    	 return result;
     }
 }

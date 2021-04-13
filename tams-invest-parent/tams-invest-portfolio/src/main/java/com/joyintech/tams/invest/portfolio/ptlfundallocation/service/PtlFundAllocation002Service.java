@@ -72,6 +72,8 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
      */
     @Autowired
     private InterfComponentService interfComponentService;
+    
+   
 
 
     /**
@@ -164,11 +166,15 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     @Override
     public void doBack(PtlFundAllocationDto entity) {
         AllTradeCommonUtil.deletePositionByOrderId(entity.getOrderId());
+        restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doBack", entity,
+                String.class);
     }
 
     @Override
     public void doRevoke(PtlFundAllocationDto entity) {
         AllTradeCommonUtil.deletePositionByOrderId(entity.getOrderId());
+        restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doBack", entity,
+                String.class);
     }
 
     /**

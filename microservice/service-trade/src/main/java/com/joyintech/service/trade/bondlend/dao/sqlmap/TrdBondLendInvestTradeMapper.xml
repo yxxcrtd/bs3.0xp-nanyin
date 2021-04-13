@@ -45,6 +45,9 @@
         <result column="branch"           property="branch"     jdbcType="VARCHAR" />
         <result column="regist_org"              property="registOrg"       jdbcType="VARCHAR" />
         <!-- 增加 add by nixukuan 20191119 end -->
+        <!-- add by jiangpeng 20210406 增加对手方账号 start -->
+        <result column="ACCTRIVALID"           property="acctRivalId"     jdbcType="VARCHAR" />
+        <!-- add by jiangpeng 20210406 end -->
         <result column="HOLD_PURPOSE"       property="holdPurpose"        jdbcType="VARCHAR" />
         <association property="trdInvestPersonInfo" javaType="com.joyintech.service.trade.bond.dto.TrdInvestPersonInfoDto">
             <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
@@ -277,8 +280,11 @@
             ftpa.supply_clause,
            <!-- 增加 add by nixukuan 20191119 start -->
             tpd.branch,
-            tpd.regist_org
+            tpd.regist_org,
         <!-- 增加 add by nixukuan 20191119 end -->
+        <!-- add by jiangpeng 20210406 增加对手方账号 start -->
+            SFPA.ACCT_NO ACCTRIVALID
+        <!-- add by jiangpeng 20210406 增加对手方账号 end -->
         FROM TRD_PRODUCT_DEAL tpd
         left join FIN_TRADE_PRODUCT ftp
                      on  tpd.TRADE_ID = ftp.FINPROD_ID
@@ -294,7 +300,10 @@
         LEFT JOIN FIN_PRODUCT fp
           ON fp.FINPROD_ID = fdt.PLEDGE_FINPROD_ID
         LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
-        LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID 
+        LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+        <!-- add by jiangpeng 20210406 增加对手方账号 start -->
+        LEFT JOIN STL_FIN_PRODUCT_ACCT SFPA ON SFPA.FINPROD_ID = tpd.TRADE_ID and SFPA.CCY = ftp.CCY
+        <!-- add by jiangpeng 20210406 增加对手方账号 end -->
 		
         WHERE
             tpd.TRADE_ID = #{tradeId}

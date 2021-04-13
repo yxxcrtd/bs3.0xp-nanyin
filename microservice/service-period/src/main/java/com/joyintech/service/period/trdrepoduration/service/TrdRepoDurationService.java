@@ -596,7 +596,7 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
                     flow.setUpdateTime(updateTime);
  //                   trdRepoDurationMapper.insertSelect04Sec(flow);
                     flow.setSeqno(IDGenerator.generate());
-                    flow.setTradeId(wflTrdFinProductDealTotal.getTotleTradeId());
+                    flow.setTradeId(wflTrdFinProductDealTotal.getFinprodId());
                     ptlSecPositionFlowMapper.insert(flow);
                     PtlSecPositionFlowDto secPositionFlowDto =new PtlSecPositionFlowDto();//汇总头寸表
                     PtlSecPosition secPosition= new PtlSecPosition();

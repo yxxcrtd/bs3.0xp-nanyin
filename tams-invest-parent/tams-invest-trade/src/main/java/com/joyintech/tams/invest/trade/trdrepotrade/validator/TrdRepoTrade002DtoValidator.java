@@ -187,6 +187,8 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
         	Map<String, Object> params = new HashMap<>();
             params.put("secAcctId", inputDto.getSecAcctId());
             params.put("tradeDate", DateUtil.format(inputDto.getTradeDate()));
+            params.put("vdate", DateUtil.format(inputDto.getTradeDate()));
+            params.put("ccy", inputDto.getCcy());
             params.put("mdate", DateUtil.format(inputDto.getMdate()));
             params.put("portfolioId", inputDto.getPortfolioId());
             BigDecimal 标准券面总额 = trdRepoTrade002Service.getAvaStandardStockPosition(params);

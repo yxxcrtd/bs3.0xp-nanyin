@@ -11,6 +11,7 @@ package com.joyintech.service.settle.order.service;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.settle.order.dao.BussSettleOrderCommMapper;
@@ -1937,6 +1938,14 @@ public class BussSettleOrderCommService {
             }
         }
         // 撤销数据查看时，根据“R”结尾的total_trade_id查找R结尾的交易表数据，并查找对应的指令 add by renping 20190916 end
+        if (!StringUtil.isEmptyList(result)){
+             result.forEach(item->{
+                 if (StringUtil.isNotEmpty(item.getPayAcctNo())
+                         && StringUtil.equals(item.getPayAcctNo(), CacheUtil.getSysParam("settle_acct_no"))){
+                     item.setPayAcctName(CacheUtil.getSysParam("settle_acct_name"));
+                 }
+             });
+        }
         return result;
     }
 

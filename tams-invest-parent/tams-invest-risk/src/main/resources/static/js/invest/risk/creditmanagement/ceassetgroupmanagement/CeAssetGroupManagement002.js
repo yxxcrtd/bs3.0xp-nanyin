@@ -7,6 +7,22 @@ $(function() {
         var object = $.serializeToObject('#submitForm');
         object.pageModel = pageModel;
         object.operateType = operateType;
+        var assetpoolName = object.assetpoolName;
+        if(assetpoolName){
+            var a = assetpoolName.split("");
+            var num=0;
+            for(var i=0;i<a.length;i++){
+                if(a[i]>=0&&a[i<=9]||a[i]>='a'&&a[i]<='z'){
+                    num=num+1;
+                }else{
+                    num=num+3;
+                }
+            }
+            if(num>50){
+                Joyin.error("系列名称过长！");
+                return;
+            }
+        }
         Joyin.ajaxJson(basePath + 'invest/risk/creditmanagement/ceassetgroupmanagement/CeAssetGroupManagement002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
                 if (operateType == 'save') {
