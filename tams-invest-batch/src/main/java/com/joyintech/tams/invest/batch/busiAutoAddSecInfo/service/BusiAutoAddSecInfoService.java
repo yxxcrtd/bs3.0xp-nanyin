@@ -384,7 +384,7 @@ public class BusiAutoAddSecInfoService {
                 busiAutoAddTradeProductDealDto = this.generationDeal(ptlSecPositionflowTempList,finProduct,secId,batchDate,tradeid);
                 busiAutoAddTradeProductDealDtoList.add(busiAutoAddTradeProductDealDto);
             }
-            
+
             //2.4 更新原有标的上市代码
             this.updateFinProdAdd(finProduct);
         }
