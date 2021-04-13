@@ -1250,4 +1250,26 @@ FROM
               #{item}
             </foreach>
     </select>
+	<!-- 凭证最新账务查询 -->
+	<select id="getBookRePayListInfo" parameterType="java.util.Map" resultType="com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto">
+		SELECT
+		crt.*
+		FROM BOK_BOOKDETAIL_CURRENT crt
+		WHERE 1 =1
+		<if test="booksetId != null and booksetId != ''"> AND crt.bookset_id = #{booksetId}  </if>
+		<if test="tableId != null and tableId != ''"> AND crt.TABLE_ID = #{tableId}  </if>
+		<if test="beginHappenCycDate != null"> AND crt.book_date <![CDATA[>=]]> #{beginHappenCycDate} </if>
+		<if test="baseSubjectNature != null and baseSubjectNature != ''">
+			/**科目性质**/
+			AND crt.BASE_SUBJECT_NATURE =#{baseSubjectNature}
+		</if>
+		<if test="bokDetailId != null and bokDetailId != ''">
+			AND crt.BOK_DETAIL_ID = #{bokDetailId}	/**账务明细代码**/
+		</if>
+		<if test="bookDate != null">
+			AND  crt.book_date <![CDATA[<=]]> #{bookDate}
+		</if>
+		ORDER BY crt.HAPPEN_DATE ASC
+	</select>
+
 </mapper>

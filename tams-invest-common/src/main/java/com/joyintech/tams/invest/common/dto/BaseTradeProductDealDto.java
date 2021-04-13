@@ -157,6 +157,11 @@ public class BaseTradeProductDealDto {
 
 	/**add by taoran 20200303*/
     
+	 /**
+     * 申购方式(可转债交易字段)
+     */
+    private String purchModle;
+    
     public String getfTradeId() {
         return fTradeId;
     }
@@ -503,4 +508,12 @@ public class BaseTradeProductDealDto {
     public void setBatch(boolean batch) {
         isBatch = batch;
     }
+
+	public String getPurchModle() {
+		return purchModle;
+	}
+
+	public void setPurchModle(String purchModle) {
+		this.purchModle = purchModle;
+	}
 }

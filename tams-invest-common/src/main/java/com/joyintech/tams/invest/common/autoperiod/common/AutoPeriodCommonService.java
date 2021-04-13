@@ -293,13 +293,36 @@ public class AutoPeriodCommonService extends BaseService {
     }
 
     /**
+     * 质押回购交易释放状态
+     * @param finProductTradeDto
+     * @param trdFinProductDealTotal
+     */
+    public void updateRelease(FinProductTradeDto finProductTradeDto,TrdFinProductDealTotal trdFinProductDealTotal){
+        /***质押回购交易释放状态判断*chenlei1**add*start***/
+        if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(trdFinProductDealTotal.getFinprodType2())
+                || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(trdFinProductDealTotal.getFinprodType2()))
+                &&
+                DictCodeList.回购类型_质押式协议回购.getValue().equals(finProductTradeDto.getAssetType2())
+                &&
+                (DictCodeListExt3.交易方向_投资端_提前终止.getValue().equals(trdFinProductDealTotal.getPs())
+                        || DictCodeList.交易方向_到期 .getValue().equals(trdFinProductDealTotal.getPs()))){
+            Map<String, Object> statusMap = ptlSecPositionFlowMapper.selectTradeReleaseStatus(trdFinProductDealTotal.getFinprodId());
+            String releaseStatus = statusMap == null ? null : (String)statusMap.get("RELEASE_STATUS");
+            String isManualRelease = statusMap == null ? null : (String)statusMap.get("IS_MANUAL_RELEASE");
+            if(!DictCodeList.释放状态_已释放.getValue().equals(releaseStatus)){//IF  未释放
+                ptlSecPositionFlowMapper.updateReleaseStatus(trdFinProductDealTotal.getFinprodId());
+            }
+        }
+        // add by yujiaping 20210205 ZGBSS-489质押式回购交易—银行间正回购交易已做到期交易，质押式回购新建交易添加质押券，查看该债券信息有误start
+    }
+
+    /**
      * 处理质押券持仓
      * @param trdFinProductDealTotal
      */
     public void deletePledgeSecPosition(FinProductTradeDto finProductTradeDto,TrdFinProductDealTotal trdFinProductDealTotal) {
         String updateUser = trdFinProductDealTotal.getUpdateUser();
         Date updateTime = new Date();
-        // add by yujiaping 20210205 ZGBSS-489质押式回购交易—银行间正回购交易已做到期交易，质押式回购新建交易添加质押券，查看该债券信息有误start
         if(StringUtil.equals(trdFinProductDealTotal.getPs(),DictCodeList.交易方向_到期.getValue())) {
             Map<String, Object> params = new HashMap<>();
             params.put("finprodId", trdFinProductDealTotal.getFinprodId());

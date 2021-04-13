@@ -21,6 +21,23 @@
             if(intAmtUnpayFlag){
                 $('#repayIntAmt_div').show();
             }
+            if($("#finAssetInfo_finprodMarketId").val()){
+                   var objectPayInt = {
+                                    finprodId: $('#finAssetInfo_finprodMarketId').val(),
+                                    settleDate: $('#interestPayDay').val()
+                                 }
+                              Joyin.ajaxJson(basePath+ "invest/period/trdprojduration/TrdProjectDuration002/isPayIntDate",objectPayInt,function(result){
+                                             if(!result){
+                                                //还本日无付息，即还本日！=付息日
+                                                　　 $("#isClean").val('N').trigger('change');
+                                                 　 $("#isClean").prop("disabled", true);
+                                             }
+
+                            });
+            }
+
+
+
             $("#fpriceAmt,#channelFee,#isClean").change(function () {
                 var channelFee = $("#channelFee").val();
                 var fpriceAmt = $("#fpriceAmt").val();

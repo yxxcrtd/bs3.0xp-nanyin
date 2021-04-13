@@ -299,6 +299,12 @@
         LEFT JOIN FIN_PRODUCT_TYPE FPT ON FPT.FINPROD_ID = T2.TRADE_ID AND FPT.BRANCH = '0'
         WHERE T1.TRADE_ID = #{tradeid,jdbcType=VARCHAR}
         AND FPT.TYPE_6 = 'H01'
+    </select>
 
-</select>
+    <update id="updateReleaseStatus">
+	   update
+	      TRD_PRODUCT_DEAL_ADD  T1
+	      set T1.RELEASE_STATUS='1',T1.IS_MANUAL_RELEASE='N'
+	      where T1.TRADE_ID= #{tradeid,jdbcType=VARCHAR}
+    </update>
 </mapper>

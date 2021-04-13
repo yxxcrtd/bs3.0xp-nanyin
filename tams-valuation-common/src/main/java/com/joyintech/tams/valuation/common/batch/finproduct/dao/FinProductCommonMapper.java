@@ -518,4 +518,6 @@ public interface FinProductCommonMapper {
      * @return
      */
     Map<String, Object> selectHBFXData(Map<String, Object> map);
+
+    String getIsPayInt(@Param("finprodId") String finprodId);
 }

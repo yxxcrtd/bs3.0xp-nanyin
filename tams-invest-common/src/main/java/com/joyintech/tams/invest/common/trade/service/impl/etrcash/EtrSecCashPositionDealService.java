@@ -793,14 +793,23 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
         // 交易生成的现金流水
         EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
             finProductTradeDto);
-        etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTradeId());
+        etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTotleTradeId());
+        if(StringUtil.isNotEmpty(finProductTradeDto.getPurchModle())
+        		&& StringUtil.equals(DictCodeListExt2.申购方式_线下申购.getValue(), finProductTradeDto.getPurchModle())){
+        	String 账号 = gen账号1(finProductTradeDto.getTrdProductDeal().getTradeMarket(),
+                    finProductTradeDto.getTrdProductDeal().getChlId(), finProductTradeDto.getTrdProductDealAdd().getPortfolioId(),
+                    finProductTradeDto.getTrdProductDeal().getCcy(), finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),
+                        finProductTradeDto.getTrdProductDeal().getCounterId(),false,etrCashPositionFlowDto);
+        	etrCashPositionFlowDto.setAcctId(账号);
+        }
+        else {
         String 账号 = gen账号(finProductTradeDto.getTrdProductDeal().getTradeMarket(),
             finProductTradeDto.getTrdProductDeal().getChlId(), finProductTradeDto.getTrdProductDealAdd().getPortfolioId(),
             finProductTradeDto.getTrdProductDeal().getCcy(), finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),
-                finProductTradeDto.getTrdProductDeal().getCounterId(),
-            etrCashPositionFlowDto);
+                finProductTradeDto.getTrdProductDeal().getCounterId(),etrCashPositionFlowDto);
         // 设置账号
         etrCashPositionFlowDto.setAcctId(账号);
+        }
         // 交易生效
         if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
             etrSecPositionFlowDto.setCdate(finProductTradeDto.getTrdProductDeal().getSettleDate());
@@ -901,7 +910,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
      * @return 账号
      */
     private static String gen账号(String tradePlace, String chlId, String portfolioId, String ccy, String secManageAcctId,String counterId,
-                                EtrCashPositionFlowDto etrCashPositionFlowDto) {
+    		EtrCashPositionFlowDto etrCashPositionFlowDto) {
         return gen账号(tradePlace,chlId,portfolioId,ccy,secManageAcctId,counterId,false,etrCashPositionFlowDto);
     }
     /**
@@ -941,6 +950,31 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             }
         }
     }
+    private static String gen账号1(String tradePlace, String chlId, String portfolioId, String ccy, String secManageAcctId,String counterId,
+            boolean is卖出,
+            EtrCashPositionFlowDto etrCashPositionFlowDto){
+             String chlType = StringUtil.isEmpty(chlId) ? null : EtrCommonCashPositionDealService.queryChlType(chlId);
+            if (StringUtil.equals(chlType, DictCodeListExt2.划款方式_一次性划款.getValue())) {
+            etrCashPositionFlowDto.setChlFinprodId(chlId);
+           return EtrCommonCashPositionDealService.select通道资金账户(chlId);
+            }
+         else {
+          // 交易所无通道
+           etrCashPositionFlowDto.setChlFinprodId(null);
+           if (StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_境外交易场所.getValue())) {
+           return EtrCommonCashPositionDealService.select组合托管户(portfolioId, ccy, DictCodeListExt2.资金账户类型_托管户.getValue());
+            }
+          /* else if (!StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_银行间.getValue()) && StringUtil.isNotEmpty(secManageAcctId)
+           &&!(is卖出&&EtrCommonCashPositionDealService.isInTrade(counterId))) {
+           return EtrCommonCashPositionDealService.select资金账户(secManageAcctId, ccy);
+          }*/
+          else {
+            // 银行间深交所修改需求同一使用托管户（逐笔通道）
+          return EtrCommonCashPositionDealService.select组合托管户(portfolioId, ccy, DictCodeListExt2.资金账户类型_托管户.getValue());
+          }
+      }
+   }
+    
     public static void deal债券EntrustStart(EntrustCommonDto entrustCommonDto, EtrPositionHoldDto etrPositionHoldDto) {
         if (entrustCommonDto != null) {
             EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();

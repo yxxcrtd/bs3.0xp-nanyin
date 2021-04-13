@@ -540,7 +540,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
      */
     @Override
     public Boolean insertPosition(FinProductTradeDto finProductTradeDto) {
-        DictCodeList 持仓类型 = null;
+        DictCodeList 持仓类型 = null;       
         boolean needNegative = false;
         if (DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
             持仓类型 = DictCodeList.持仓类型_实际;
@@ -569,7 +569,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             inputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
             inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
             inputDto.setAssetType2(finProductTradeDto.getAssetType2());
-            List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);
+            List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);//组合持仓流水
             //买断式回购持仓特殊处理
             for (PtlSecPositionFlowDto dto : ptlSecPositionFlowDtoss){
                 if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
@@ -590,7 +590,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 cashInputDto.setAssetType2(finProductTradeDto.getAssetType2());
                 cashInputDto.setStlPayOrders(baseTradeProductDealDto.getStlPayOrdersList());
                 cashInputDto.setIeFlag(finProductTradeDto.getIeFlag());
-                List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);
+                List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);//组合现金流水
                 ptlCashPositionFlows.addAll(resultList);
             }
             //        现金与持仓执行共同
@@ -601,7 +601,8 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 }
                 //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 end 
                 baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
-                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
+                String 交易流程状态 = finProductTradeDto.getWorkflowStatus();
+                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal(),交易流程状态);
             }
         }
         if (needNegative) {
@@ -637,6 +638,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 }
             }
         }
+        // 更新组合现金流水
         if (ptlPositionHoldDto.getPtlCashPositionFlows() != null && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
             for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
                 basePtlCashPositionInfoService.insertCashPositionFlow(ptlCashPositionFlow);

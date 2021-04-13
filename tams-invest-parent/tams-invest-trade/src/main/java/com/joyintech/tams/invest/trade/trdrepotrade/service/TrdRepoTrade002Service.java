@@ -222,6 +222,8 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
 
+    private final static String SJXY = "SJXY";//深交所协议回购期限品种
+
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。
      * {@inheritDoc}
@@ -333,6 +335,12 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
         if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
             // 构造Entity
             this.prepareEntity(entity);
+            if (StringUtils.equals(DictCodeList.回购类型_质押式协议回购.getValue(), entity.getRepoType())
+                    && StringUtils.equals(DictCodeList.交易流通场所_深圳证券交易所.getValue(), entity.getTradeMarket())
+                    && StringUtils.equals("04", entity.getPs())) {
+                entity.getFinTradeProduct().setTermType(SJXY);
+                entity.getTrdProductDealAdd().setTermType(SJXY);
+            }
 
             // 7.1登录各业务表，包括金融产品交易、金融产品附属、划款指令及附件信息
             // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易表
@@ -602,7 +610,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 
         // 构造Entity
         this.prepareEntity(entity);
-        
+
         // 调用授信共同 sjj start
         TrdProductDeal TrdProductDeal = new TrdProductDeal();
         BeanUtil.copyPropertiesIgnoreNull(TrdProductDeal, entity.getTrdProductDeal());
@@ -642,7 +650,12 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 //            bussCommonMapperDelegateService.insertBatch(WflStlPayOrdersMapper.class, wflStlPayOrders);
             wflStlPayOrdersMapper.insertSelective(wflStlPayOrders);
         }
-
+        if (StringUtils.equals(DictCodeList.回购类型_质押式协议回购.getValue(), entity.getRepoType())
+                && StringUtils.equals(DictCodeList.交易流通场所_深圳证券交易所.getValue(), entity.getTradeMarket())
+                && StringUtils.equals("04", entity.getPs())
+                && entity.getFinTradeProduct() != null) {
+            entity.getFinTradeProduct().setTermType(SJXY);
+        }
         finTradeProductMapper.insertSelective(entity.getFinTradeProduct());
 
         // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水
@@ -1243,6 +1256,17 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                 finProductTradeDto.getBaseTradeProductDealDtos().forEach(finProductTrade -> {
                     finProductTrade.setActPortfolioId(entity.getActPortfolioId());
                 });
+            }
+            // 查询质押券信息
+            if(entity.getBussRepoSec()!=null) {
+                finProductTradeDto.setBussRepoSec(entity.getBussRepoSec());
+            }else {
+                Map<String, Object> initSearchParam = new HashMap<>();
+                initSearchParam.put("portfolioId", entity.getPortfolioId());
+                initSearchParam.put("ps", entity.getPs());
+                initSearchParam.put("bizCode", entity.getTradeId());
+                initSearchParam.put("SEC_ACCT_ID", entity.getSecAcctId() != null ? entity.getSecAcctId() : entity.getChlId());
+                finProductTradeDto.setBussRepoSec(bussRepoSecService.selectBussRepoSec(initSearchParam));
             }
             // 调用业务组件.【金融产品交易共通.交易产品接口】, insert
             // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水

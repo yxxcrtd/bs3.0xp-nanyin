@@ -257,7 +257,8 @@ public class PinganBatchCommonService extends BaseService {
                 //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 end
                 baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
                 baseTradeProductDealDto.setBatch(true);// 自动批处理
-                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
+                String 交易流程状态 = finProductTradeDto.getWorkflowStatus();
+                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal(),交易流程状态);
             }
         }
         if (needNegative) {

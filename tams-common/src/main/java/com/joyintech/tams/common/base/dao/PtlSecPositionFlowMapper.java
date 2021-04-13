@@ -29,4 +29,6 @@ public interface PtlSecPositionFlowMapper {
     void insertSelect04SecFlowByDate(Map<String, Object> params);
     
     Map<String, Object> selectTradeReleaseStatus(String tradeid);
+
+	int updateReleaseStatus(String tradeid);
 }

@@ -7492,7 +7492,11 @@ public class InterfCommonService {
             detailSubjectNoTaiL = targetFinProduct.getTermType();
             // 变量.四级科目尾号名称 =
             // InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_回购.getValue(),变量.标的信息Dto.期限品种)
-            detailSubjectNameTaiL = InterfHelper.getDictColdeList_ItemName(DictCode.回购期限品种.getValue(), targetFinProduct.getTermType());
+            if(StringUtils.equals("SJXY",targetFinProduct.getTermType())) {//深交所协议逆回购
+                detailSubjectNameTaiL = "SJXY";
+            }else{
+                detailSubjectNameTaiL = InterfHelper.getDictColdeList_ItemName(DictCode.回购期限品种.getValue(), targetFinProduct.getTermType());
+            }
         }
 
         // 变量.resultObject.四级科目尾号 = 变量.四级科目尾号

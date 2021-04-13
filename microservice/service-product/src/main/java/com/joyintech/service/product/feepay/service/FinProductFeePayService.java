@@ -394,7 +394,7 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
     public List<FinProductFeePayFeeDetailDto> queryFeeDetailByTradeId(String tradeId) {
         List<FinProductFeePayFeeDetailDto> feeDetailList=finProductFeePayMapper.queryFeeDetailByTradeId(tradeId);
         for(FinProductFeePayFeeDetailDto feeDto:feeDetailList){
-            BigDecimal feeAmt=queryUnCleanFee(feeDto.getFinprodMarketId(),feeDto.getFeeId(),DateUtil.format(feeDto.getPayDate()),
+            BigDecimal feeAmt=queryUnCleanFee(feeDto.getFinprodMarketId(),feeDto.getFeeId(),DateUtil.format(feeDto.getCalcStartDate()),
                     feeDto.getsFinprodId());
             feeDto.setUnclearAmt(feeAmt);
         }

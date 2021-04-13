@@ -31,7 +31,7 @@ public interface BaseEtrCashPositionCommService {
      * @param needNegative 是否取反
      * @return 执行结果
      */
-    CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型, boolean needNegative,String ieFlag,String isOverdueDeal);
+    CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型, boolean needNegative,String ieFlag,String isOverdueDeal,String 交易流程状态);
 
     /**
      * 委托开始执行共通

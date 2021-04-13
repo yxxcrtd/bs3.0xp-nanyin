@@ -23,5 +23,8 @@
 		    AND F.FINPROD_TYPE = #{finprodType}
 		    AND F.FEE_TYPE_ID = #{feeType}
 	</select>
+	<select id="queryTheoryInt" resultType="java.math.BigDecimal">
+		select nvl(theory_int,0) from pa_trd_product_deal where trade_id= #{tradeId}
+	</select>
 	
 </mapper>

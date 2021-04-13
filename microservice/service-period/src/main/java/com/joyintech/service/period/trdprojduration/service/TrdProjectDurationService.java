@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidat
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.service.TradeProductDealCommService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -498,4 +499,14 @@ public class TrdProjectDurationService extends BaseService {
         return queryForPageForSelectReturn(page, length, () -> trdProjectDurationMapper.getFinprodMarketId(param));
     }
     //add by liupengfei for 多级法人E
+    public boolean isPayIntDate(Map<String, Object> map) {
+        //针对还本不带息资产，若还本日！=付息日，则返回false
+        int count=trdProjectDurationMapper.isPayIntDate(map);
+        if(count>0){
+            return false;
+        }else{
+            return true;
+        }
+
+    }
 }

@@ -32,6 +32,7 @@ import com.joyintech.tams.valuation.common.constants.*;
 import com.joyintech.tams.valuation.common.utils.CalendarUtil;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import com.joyintech.tams.valuation.common.utils.ValStringUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -361,6 +362,7 @@ public class VatDrawProcessorBService {
         paramCodeList.add(ValDictCodeList.账套配置表参数项_证券类型计税方式_贷款业务收入_发生.getValue());
         paramCodeList.add(ValDictCodeList.账套配置表参数项_当日计税计提基准_金融商品转让_发生.getValue());
         paramCodeList.add(ValDictCodeList.账套配置表参数项_证券类型计税方式_金融商品转让_发生.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_摊销额小于0是否只摊到0.getValue());
 
         Map<String, Object> booksetExtMap = accountingCommonService.getValBokBooksetExtForMap(acctEntity.getBooksetId(),
             paramCodeList);
@@ -684,6 +686,53 @@ public class VatDrawProcessorBService {
         // 4.1 查询发生日当天最新的凭证:
         List<BookLatestInfoDto> listBookLatestInfo = accountingCommonService.getBookLatestInfo(
             booksetId, bookDate, null, null, null, null, happenDate, null, null, null);
+
+        //摊销已摊成0，后续出现预估转发生的情况账务明细当前表查询不到利息调整科目导致预估不能冲减问题特殊处理
+        List<BookLatestInfoDto>  listBookLatestInfotemp = new ArrayList<BookLatestInfoDto>();
+        List<BookLatestInfoDto> bookLatestInfoDtotmeplist =new ArrayList<BookLatestInfoDto>();
+        List<BookLatestInfoDto> listBookLatestInfotemp1 = listBookLatestInfo.stream().filter(bookLatestInfoDto1 ->
+                (StringUtil.equals(bookLatestInfoDto1.getTableId(), DictCodeListTableId.会计场景代码_摊余成本类债券_卖出.getValue())
+                        ||StringUtil.equals(bookLatestInfoDto1.getTableId(), DictCodeListTableId.会计场景代码_摊余成本类债券_行权赎回.getValue())
+                        ||StringUtil.equals(bookLatestInfoDto1.getTableId(), DictCodeListTableId.会计场景代码_综合收益类债券_卖出.getValue())
+                        ||StringUtil.equals(bookLatestInfoDto1.getTableId(), DictCodeListTableId.会计场景代码_综合收益类债券_行权赎回.getValue()))).collect(Collectors.toList());
+
+        Map<String, List<BookLatestInfoDto>> totalDataMap = listBookLatestInfotemp1.stream().collect(
+                JoyinCollectors.groupingBy(x ->x.getBookId()));
+        for (String key : totalDataMap.keySet()) {
+            if(!(totalDataMap.get(key).contains(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue())
+                    ||totalDataMap.get(key).contains(DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue()))){
+                listBookLatestInfotemp.addAll(totalDataMap.get(key));
+            }
+        }
+        Map<String,BookLatestInfoDto> paraMap =new HashMap<String,BookLatestInfoDto>();
+        for(BookLatestInfoDto bookLatestInfoDto : listBookLatestInfotemp){
+            //账套参数“摊销额小于0是否只摊到0”为是，同时是场景是1316、1353、1325、1355才需要组装一条是利息调整金额0的记录
+            if(StringUtil.equals(DictCodeList.是否_是.getValue(),booksetExtMap.get(ValDictCodeList.账套配置表参数项_摊销额小于0是否只摊到0.getValue()))){
+                //防止出现多条记录
+                if(paraMap.get(bookLatestInfoDto.getBokDetailId()) == null){
+                    BookLatestInfoDto bookLatestInfoDtotmep =new BookLatestInfoDto();
+                    paraMap.put(bookLatestInfoDto.getBokDetailId(),bookLatestInfoDto);
+                    BeanUtil.copyPropertiesIgnoreNull(bookLatestInfoDtotmep, bookLatestInfoDto);
+                    bookLatestInfoDtotmep.setoHappenAmt(BigDecimal.ZERO);
+                    bookLatestInfoDtotmep.setbHappenAmt(BigDecimal.ZERO);
+                    bookLatestInfoDtotmep.setoAmtHappenDate(BigDecimal.ZERO);
+                    bookLatestInfoDtotmep.setbAmtHappenDate(BigDecimal.ZERO);
+                    bookLatestInfoDtotmep.setBookOrder(new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.处理序列)));
+                    bookLatestInfoDtotmep.setSubjectNo("110");
+                    if(StringUtil.equals(bookLatestInfoDto.getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_卖出.getValue())||
+                            StringUtil.equals(bookLatestInfoDto.getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_行权赎回.getValue())){
+                        bookLatestInfoDtotmep.setBaseSubjectNature(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue());
+                    }else{
+                        bookLatestInfoDtotmep.setBaseSubjectNature(DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue());
+                    }
+                    bookLatestInfoDtotmeplist.add(bookLatestInfoDtotmep);
+                }
+             }
+        }
+        if(bookLatestInfoDtotmeplist !=null && bookLatestInfoDtotmeplist.size() > 0){
+            listBookLatestInfo.addAll(bookLatestInfoDtotmeplist);
+        }
+
         // add by xiongran 20201120 TISHKBS-1610 start
         List<BookLatestInfoDto> listBookLatestInfo2=new ArrayList<BookLatestInfoDto>();
         if(StringUtil.isNotEmpty(cfConfigs.get("SH_DEAL_ORDER"))&&StringUtil.equals(cfConfigs.get("SH_DEAL_ORDER"),"02")){
