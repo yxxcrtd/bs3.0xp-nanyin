@@ -233,7 +233,7 @@ public class PinganBatchCommonService extends BaseService {
             inputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
             inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
             inputDto.setAssetType2(finProductTradeDto.getAssetType2());
-            List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);
+            List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);//组合持仓流水
             ptlSecPositionFlows.addAll(ptlSecPositionFlowDtoss);
 
             if (baseTradeProductDealDto.getStlPayOrdersList() != null && !baseTradeProductDealDto.getStlPayOrdersList().isEmpty()) {
@@ -245,7 +245,7 @@ public class PinganBatchCommonService extends BaseService {
                 cashInputDto.setAssetType2(finProductTradeDto.getAssetType2());
                 cashInputDto.setStlPayOrders(baseTradeProductDealDto.getStlPayOrdersList());
                 cashInputDto.setIeFlag(finProductTradeDto.getIeFlag());
-                List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);
+                List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);//组合现金流水
                 ptlCashPositionFlows.addAll(resultList);
             }
             //        现金与持仓执行共同
@@ -286,14 +286,14 @@ public class PinganBatchCommonService extends BaseService {
         PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
         ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
         ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
-        // 更新持仓流水
+        // 更新组合持仓流水
         if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
             && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
             for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
                 basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
             }
         }
-        // 更新现金流水
+        // 更新组合现金流水
         if (ptlPositionHoldDto.getPtlCashPositionFlows() != null
             && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
             for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
