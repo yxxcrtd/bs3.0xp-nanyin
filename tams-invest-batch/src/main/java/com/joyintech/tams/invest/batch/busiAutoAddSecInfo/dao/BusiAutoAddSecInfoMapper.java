@@ -11,9 +11,11 @@
 package com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dao;
 
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetCashCalcRule;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -120,5 +122,5 @@ public interface BusiAutoAddSecInfoMapper {
 
     List<MstBondCreditRating> selectMstBondCreditRating(@Param("marketId") String marketId);
 
-    MstBondCreditRating selectMstinnercreditrating(@Param("marketId") String marketId);
+    Collection<? extends MstBondCreditRating> selectMstinnercreditrating(@Param("marketId") String marketId);
 }
