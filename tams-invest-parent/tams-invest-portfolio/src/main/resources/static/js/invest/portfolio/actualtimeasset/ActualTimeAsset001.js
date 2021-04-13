@@ -49,8 +49,9 @@ $(function() {
             ,{field:'actualPositionAmount', title: 'ActualTimeAsset001.actualPositionAmount',type:'number', width : 200}//实际持仓
             ,{field:'instructionsAmount', title: 'ActualTimeAsset001.instructionsAmount',type:'number', width : 200}//指令可用持仓
             ,{field:'tradePositionAmount', title: 'ActualTimeAsset001.tradePositionAmount',type:'number', width : 200}//交易可用持仓
-            ,{field:'preReductionAmount', title: 'ActualTimeAsset001.preReductionAmount',type:'number', width : 200}//预减持仓
-            ,{field:'pledgeAmount', title: 'ActualTimeAsset001.pledgeAmount',type:'number', width : 200}//质押持仓
+            ,{field:'pledgeAmount', title: 'ActualTimeAsset001.pledgeAmount',type:'number', width : 200}//预减持仓
+            ,{field:'preReductionAmount', title: 'ActualTimeAsset001.preReductionAmount',type:'number', width : 200}//质押持仓
+           
             
         ]
     });
@@ -87,7 +88,7 @@ $(function() {
             }
             else {
                 if ($('#cdate').val() > sysDate) {
-                    strError = strError + '日期必须小于等于平台日';
+                    //strError = strError + '日期必须小于等于平台日';
                 }
             }
             if(strError != '' && strError != null){
