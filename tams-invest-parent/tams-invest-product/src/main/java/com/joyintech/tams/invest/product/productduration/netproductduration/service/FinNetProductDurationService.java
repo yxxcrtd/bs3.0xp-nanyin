@@ -2769,6 +2769,9 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                 if (DictCodeList.是否_是.getValue().equals(dto.getIsCycle())) {
                 	trdFinProductDealTotal.setVdate(dto.getSubConfirmDate());
                 	trdFinProductDealTotal.setMdate(dto.getSubCycleEndDate());
+					//add by jianxx 20210331,CLONE - 【净值化产品存续期交易】周期型产品，产品存续期，期次维度，期次开始日申购，双击打开查看，期次支付日不应展示为空 start
+					trdFinProductDealTotal.setPayDate(dto.getPurCyclePayDate());
+					//add by jianxx 20210331,CLONE - 【净值化产品存续期交易】周期型产品，产品存续期，期次维度，期次开始日申购，双击打开查看，期次支付日不应展示为空 end
                 }
             }
             else if (DictCodeList.交易方向_产品申购.getValue().equals(dto.getDealType())) {

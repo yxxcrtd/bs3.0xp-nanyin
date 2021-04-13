@@ -605,6 +605,11 @@ var table;
      * 1.1交易场所
      */
     $('#tradeMarket').on("change", function () {
+    	if($('#ps').val()=="T01" && ($('#tradeMarket').val() == "03" || $('#tradeMarket').val() == "04")){
+        	$("#tradeMarketCash_div").show();
+        }else{
+        	$("#tradeMarketCash_div").hide();
+        }
         //update by zhangnian 20200213  start 交易场所和币种联合联动费用
         controlTradeFee();
         //update by zhangnian 20200213  end 交易场所和币种联合联动费用
@@ -667,6 +672,12 @@ var table;
      * 1.3交易方向
      */
     $("#ps").on("change", function () {
+    	
+    	if($('#ps').val()=="T01" && ($('#tradeMarket').val() == "03" || $('#tradeMarket').val() == "04")){
+        	$("#tradeMarketCash_div").show();
+        }else{
+        	$("#tradeMarketCash_div").hide();
+        }
         var ps = $("#ps").val();
         //交易方向发生变化，重新计算所有数据
         changeTradeAmtAndFee();
@@ -680,10 +691,10 @@ var table;
         if (ps == PS_T02 || ps == PS_T03 || ps == PS_T39) {
         // 一体化对应etliu end
             if (pageModel == '0') {
-                $("#yield").val("").trigger("change").attr("disabled", true);
+                // $("#yield").val("").trigger("change").attr("disabled", true);
                 $("#exerYield").val("").trigger("change").attr("disabled", true);
             }
-            $("#calculateField_yield").attr("disabled", true);
+            // $("#calculateField_yield").attr("disabled", true);
             $("#calculateField_exerYield").attr("disabled", true);
             if($("#zhilingtype").val() =="02"){
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hidePosition(true);
@@ -703,9 +714,9 @@ var table;
             }
         }
         else if (ps == PS_T01) {
-            $("#yield").attr("disabled", false);
+            // $("#yield").attr("disabled", false);
             $("#exerYield").attr("disabled", false);
-            $("#calculateField_yield").attr("disabled", false);
+            // $("#calculateField_yield").attr("disabled", false);
             $("#calculateField_exerYield").attr("disabled", false);
             if($("#zhilingtype").val() =="02"){
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hideCash(true);
@@ -1105,6 +1116,7 @@ var table;
             $("#chlId").prop("disabled", false);
         }
         updateCash();
+        getTradeMarketCash();
         
         // 将甲类户对应的交易手续费、结算费、佣金设置为不可编辑
 //        controllFeeItem();
@@ -1122,6 +1134,16 @@ var table;
             }
         });
     });
+    //查询交易所资金账户可用现金
+    var getTradeMarketCash = function(){
+        var data = {portfolioId:$('#portfolioId').val(),secAcctId:$('#secManageAcctId').val(),ccy:$('#ccy').val(),tradeDate:$('#tradeDate').val()}
+        if(data.portfolioId && data.secAcctId && data.ccy && data.tradeDate){
+        Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getTradeMarketCash',data,
+                function(result) {           
+            $('#tradeMarketCash').val(result.cashS).trigger('blur');
+        });
+        }
+    };  
 
     $("#chlId").on("change", function () {
         if ($("#chlId").val()) {
@@ -2106,6 +2128,12 @@ var table;
                 	$("#exchangeAmtDiv").hide();
                 }
             //add by yujiaping 20210304 ZGBSS-592债券交易的交易场所为上交所/深交所，交易市场为一级市场时，审批人的待办事项和完成交易详情中不应展示结算费和经手费字段end                
+                if($('#ps').val()=="T01" && (tradeMarket == "03" || tradeMarket == "04")){
+                	$("#tradeMarketCash_div").show();
+                }else{
+                	$("#tradeMarketCash_div").hide();
+                }
+                
                 if($('#ps').val()=="T03"){                		
             		$("#settleAmtDiv").hide();
             		$("#exchangeAmtDiv").hide();

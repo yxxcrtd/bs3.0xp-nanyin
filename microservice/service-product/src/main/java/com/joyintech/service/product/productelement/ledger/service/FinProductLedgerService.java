@@ -555,7 +555,51 @@ public class FinProductLedgerService extends BaseService<FinProductBuild001Dto> 
 //    					rdto.setRateRepYieldStr(null);
 //    			}
     		}
-    		
+        	//处理 预期收益率/业绩比较基准（%）
+        	if(StringUtil.isNotEmpty(rdto.getRateRepYieldStr())&&(rdto.getRateRepYieldStr().indexOf(":")!=-1||rdto.getRateRepYieldStr().indexOf("/")!=-1)) {
+        		//1. 初始化区间参数
+        		BigDecimal start = null;
+        		BigDecimal end  = null;
+        		//2. 根据期限作为分割
+        		String[] rateRepYields = rdto.getRateRepYieldStr().split("/");
+        		for(String rateRepYield:rateRepYields) {
+        			//3. 如果字符串中存在 期限，即“期限：rate”，去除期限
+        			if(rateRepYield.indexOf(":")!=-1) {
+        				rateRepYield = rateRepYield.split(":")[1];
+        			}
+        			//4. 将区间分段
+        			for(String rateRepYieldStr :rateRepYield.split("-")) {
+        				//5.去除首尾空格,并去除末尾的(%)
+        				rateRepYieldStr = rateRepYieldStr.trim().replace("(%)", "");
+        				//6.更新参数
+        				BigDecimal thisRate = new BigDecimal(rateRepYieldStr);
+        				if(start==null||start.compareTo(thisRate)>0) {
+        					start = thisRate;
+        				}
+        				if(end==null||end.compareTo(thisRate)<0) {
+        					end = thisRate;
+        				}
+        			}
+        		}
+        		//6. 处理结束后 更新rateRepYieldStr
+        		if(start==null) {
+        			rdto.setRateRepYieldStr(null);
+        		}
+        		else {
+        			if(start.compareTo(end)==0) {
+        				rdto.setRateRepYieldStr(start.toString());
+        			}
+        			else {
+        				rdto.setRateRepYieldStr(start.toString()+"(%)~"+end.toString()+"(%)");
+        			}
+        		}
+        	}
+        	else {
+        		if(StringUtil.isNotEmpty(rdto.getRateRepYieldStr())) {
+        			rdto.setRateRepYieldStr(rdto.getRateRepYieldStr().replace("-", "~"));
+        		}
+        	}
+        	//处理 预期收益率/业绩比较基准（%）
     		rlist.add(rdto);        		        		
         }
         dto.setRoot(rlist);

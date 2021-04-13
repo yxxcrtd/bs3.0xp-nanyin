@@ -629,7 +629,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
         ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
         ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
-        //不是逾期交易，更新持仓流水
+        //不是逾期交易，更新组合持仓流水
         if(!(StringUtil.isNotEmpty(finProductTradeDto.getIsOverdueDeal())&&StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsOverdueDeal()))){
         	if (ptlPositionHoldDto.getPtlSecPositionFlows() != null && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
                 for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {

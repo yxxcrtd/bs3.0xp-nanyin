@@ -484,9 +484,11 @@
                 AND (T11.TYPE_6 = #{TYPE6_B14} OR T11.TYPE_6 = #{TYPE6_B15}) 
                 AND T1.PS = #{PS_T49}
             </if>
+            <!-- 
             <if test="assetType == PINAN_ASSET_TYPE_F07">
                 AND T15.PLEDGE_AMT - NVL(T4.FINISHED_AMT, 0) &gt; 0
             </if>
+            -->
             <if test="pledgeFinprod != null and pledgeFinprod !='' ">
                 AND DECODE(T15.PLEDGE_FINPROD, NULL, '01', T15.PLEDGE_FINPROD) = #{pledgeFinprod}
             </if>
@@ -611,7 +613,8 @@
             T2.SEC_ACCT_ID secAcctId, 
             T1.INV_MANAGER_ID invManagerId, 
             T6.SEC_ACCT_NAME SecAcctName,
-            T1.REMARK remark
+            T1.REMARK remark,
+            T2.MIN_AMT lowestDealNum
         FROM ETR_ENTRUST　T1
         LEFT JOIN ETR_ENTRUST_ADD T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
         LEFT JOIN (SELECT ENTRUST_ID,SUM(FINISH_AMT) AS FINISHED_AMT FROM ETR_FINISH_STATUS GROUP BY ENTRUST_ID) T3 ON T1.ENTRUST_ID = T3.ENTRUST_ID
@@ -776,7 +779,7 @@
                 <include refid="pledgeFinprodTable"></include>
                 ) T1
                 LEFT JOIN(SELECT ENTRUST_ID,SUM(FINISH_AMT) AS FINISHED_AMT FROM ETR_FINISH_STATUS GROUP BY ENTRUST_ID) T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
-                WHERE T1.PLEDGE_AMT - NVL(T2.FINISHED_AMT, 0) &gt; 0
+                --WHERE T1.PLEDGE_AMT - NVL(T2.FINISHED_AMT, 0) &gt; 0
                 GROUP BY T1.ENTRUST_ID
             ) T11 ON T1.ENTRUST_ID = T11.ENTRUST_ID
         </if>
@@ -891,7 +894,7 @@
                <include refid="pledgeFinprodTable"></include>
             ) T1
             LEFT JOIN(SELECT ENTRUST_ID,SUM(FINISH_AMT) AS FINISHED_AMT FROM ETR_FINISH_STATUS GROUP BY ENTRUST_ID) T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
-            WHERE T1.PLEDGE_AMT - NVL(T2.FINISHED_AMT, 0) &gt; 0
+            --WHERE T1.PLEDGE_AMT - NVL(T2.FINISHED_AMT, 0) &gt; 0
         ) T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID AND T7. PLEDGE_FINPROD = T9.PLEDGE_FINPROD
         LEFT JOIN ETR_ENTRUST_ADD T8 ON T1.ENTRUST_ID = T8.ENTRUST_ID
         <where>

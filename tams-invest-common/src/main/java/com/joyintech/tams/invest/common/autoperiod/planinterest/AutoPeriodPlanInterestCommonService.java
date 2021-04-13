@@ -438,6 +438,7 @@ public class AutoPeriodPlanInterestCommonService extends BaseService {
         trdFinProductDealTotal.setIsClean(entity.getIsClean());//是否结清
         trdFinProductDealTotal.setPayUnpaidintAmt(entity.getPayUnpaidintAmt());//累计还本未付利息
         trdFinProductDealTotal.setChlId(entity.getChlId());
+        trdFinProductDealTotal.setRemark(entity.getRemark());
         return trdFinProductDealTotal;
     }
 

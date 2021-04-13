@@ -898,6 +898,29 @@
 		</where>
 		<!-- 多级法人改造 add by jingqiongqiong 20200618 -->
 	</select>
+	
+	<select id="getAllUserList" resultType="java.lang.String" parameterType = "java.util.Map">
+		SELECT distinct SYS_USER.USER_NAME code
+		FROM SYS_USER SYS_USER
+		INNER JOIN SYS_DEPARTMENT ON SYS_USER.DEPT_CODE = SYS_DEPARTMENT.DEPT_CODE
+		<where> 
+			<if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
+				 SYS_DEPARTMENT.INSTITUTION_CODE IN
+				<foreach collection="resourcesTreeInstCodeList" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		<!-- 多级法人改造 add by jingqiongqiong 20200618 -->
+	</select>
+	
+	<select id = "getUserInstitution" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT SYS_DEPARTMENT.INSTITUTION_CODE
+		FROM SYS_USER SYS_USER
+		INNER JOIN SYS_DEPARTMENT ON SYS_USER.DEPT_CODE = SYS_DEPARTMENT.DEPT_CODE
+		WHERE  SYS_USER.USER_NAME = #{userName,jdbcType=VARCHAR}
+		and rownum = 1
+	</select>
 
 	<select id="selectBenchmark" resultType="com.joyintech.tams.common.base.entity.FinBaseRuleInfo">
 		select

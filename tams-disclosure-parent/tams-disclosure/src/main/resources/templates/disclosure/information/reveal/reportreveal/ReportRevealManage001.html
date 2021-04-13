@@ -20,6 +20,8 @@
         <button type="button" class="layui-btn layui-btn-sm btn-default" id="ReportRevealManage001_btn_export"><i class="iconfont icon-export"></i>导出</button>
         
         <button type="button" class="layui-btn layui-btn-sm btn-delete btn-default" id="ReportRevealManage001_btn_download"><i class="iconfont icon-export"></i>导出报表文件 </button>
+        
+        <button type="button" class="btn-submit" id="ReportRevealManage001_btn_todoSubmit" style="display:none"></button>
     </div>
     <div class="joyin-form-wrap joyin-filter-form condition-area">
       <form class="layui-form" id="searchForm"> 
@@ -28,6 +30,7 @@
           <input type="hidden" name="pageFrom" id="pageFrom" data-th-value="${pageFrom}">
           <input type="hidden" name="searchDateStart" id="searchDateStart" data-th-value="${searchDateStart}">
           <input type="hidden" name="searchDateEnd" id="searchDateEnd" data-th-value="${searchDateEnd}">
+          <input type="hidden" name="selectedSeqNo" id="selectedSeqNo" data-th-value="${selectedSeqNo}">
           <div class="layui-form-item">
               
               <div class="layui-inline layui-col-md4">

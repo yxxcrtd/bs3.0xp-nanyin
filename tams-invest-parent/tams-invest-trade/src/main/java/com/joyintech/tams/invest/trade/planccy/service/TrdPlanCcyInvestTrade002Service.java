@@ -483,13 +483,14 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
         dto.setIsCancel(DictCodeList.是否_否.getValue());
         dto.setBusiType(DictCodeList.共通业务类型_计划类资产_货币型_交易.getValue());
         dto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-        if(StringUtil.equals(dto.getSettleSpreed(),DictCodeList.清算速度_T_0.getValue())){
-            dto.setSettleSpeed((long)0);
-        }else if(StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_1.getValue())){
-            dto.setSettleSpeed((long)1);
-        }else if(StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_2.getValue())){
-            dto.setSettleSpeed((long)2);
-        }
+//        if(StringUtil.equals(dto.getSettleSpreed(),DictCodeList.清算速度_T_0.getValue())){
+//            dto.setSettleSpeed((long)0);
+//        }else if(StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_1.getValue())){
+//            dto.setSettleSpeed((long)1);
+//        }else if(StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_2.getValue())){
+//            dto.setSettleSpeed((long)2);
+//        }
+        dto.setSettleSpeed(Long.parseLong(StringUtil.isEmpty(dto.getSettleSpreed()) ? "0" : dto.getSettleSpreed()));
         if(StringUtil.isNotEmpty(dto.getRedCfmDate()) &&
                 StringUtil.equals(DictCodeList.交易方向_赎回到账.getValue(), dto.getPs())){
             dto.setSettleDate(dto.getRedCfmDate());
@@ -507,21 +508,24 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
         }
         // 金融产品交易附属表
         TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
-        if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())){
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("finprodId", dto.getFinprodId());
-            Map<String, Object> result = trdPlanCcyInvestTrade003Service.getPurSpeed(param);
-//            String speed = (String)result.get("SPEED");
-            String calId = (String)result.get("CALID");
-            if (dto.getSettleSpeed() == 1 || dto.getSettleSpeed() == 2) {
-                int speedCount = dto.getSettleSpeed().intValue();
-                Date tradeDate = dto.getTradeDate();
-                List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(tradeDate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15),calId);
-                Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(tradeDate)), speedCount, holidayList, "1");
-                trdProductDealAdd.setPurCfmDate(tradeDay);
-            }
+        if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
+                ||StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())){
+//            Map<String, Object> param = new HashMap<String, Object>();
+//            param.put("finprodId", dto.getFinprodId());
+//            Map<String, Object> result = trdPlanCcyInvestTrade003Service.getPurSpeed(param);
+////            String speed = (String)result.get("SPEED");
+//            String calId = (String)result.get("CALID");
+//            if (dto.getSettleSpeed() == 1 || dto.getSettleSpeed() == 2) {
+//                int speedCount = dto.getSettleSpeed().intValue();
+//                Date tradeDate = dto.getTradeDate();
+//                List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(tradeDate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15),calId);
+//                Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(tradeDate)), speedCount, holidayList, "1");
+//                trdProductDealAdd.setPurCfmDate(tradeDay);
+//            }
+            trdProductDealAdd.setPurCfmDate(dto.getPurCfmDate());
         }else{
-            trdProductDealAdd.setRedCfmDate(dto.getRedCfmDate());
+//            trdProductDealAdd.setRedCfmDate(dto.getRedCfmDate());
+            trdProductDealAdd.setPurCfmDate(dto.getTradeDate());
         }
         trdProductDealAdd.setTradeId(dto.getTradeId());
         trdProductDealAdd.setPortfolioId(dto.getPortfolioId());

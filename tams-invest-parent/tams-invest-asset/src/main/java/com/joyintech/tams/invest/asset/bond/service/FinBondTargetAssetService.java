@@ -860,9 +860,9 @@ implements BaseProcessService<FinBondTargetAssetDto>{
      * @param oFinprodId
      * @return
      */
-    public int selectCountByOFinprodId(String oFinprodId) {
+    public int selectCountByOFinprodId(String oFinprodId,String finprodId) {
         return restTemplate.getForObject(
-                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectCountByOFinprodId?oFinprodId="+oFinprodId,
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectCountByOFinprodId?oFinprodId="+oFinprodId+"&finprodId="+finprodId,
                 Integer.class);
     }
 }

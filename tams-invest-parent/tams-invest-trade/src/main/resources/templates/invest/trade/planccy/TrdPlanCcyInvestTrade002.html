@@ -59,8 +59,8 @@
                                 </div>
                                 <div class="layui-form-item">
                                     <div id="tradeDate_div" class="form-inline-wrap">
-                                    	<label id="confirmDate" class="layui-form-label form-label-wrap"
-                                            th:text="#{TrdFundInvestTrade002.tradeDate2}" style="display:none">确认日期</label>
+<!--                                    	<label id="confirmDate" class="layui-form-label form-label-wrap"-->
+<!--                                            th:text="#{TrdFundInvestTrade002.tradeDate2}" style="display:none">确认日期</label>-->
                                         <label id="trdDate" class="layui-form-label form-label-wrap"
                                             th:text="#{TrdPlanCcyInvestTrade002.tradeDate}">交易日期</label>
                                         <div class="layui-input-inline input-inline">
@@ -106,6 +106,17 @@
                                                 formatoption="true" th:initValue="${entity?.type6}"></select>
                                         </div>
                                     </div>
+                                    <div class="form-inline-wrap" style="display: none">
+                                        <label class="layui-form-label form-label-wrap"
+                                               th:text="#{TrdPlanCcyInvestTrade002.type7}">二级类型</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <select type="text" id="type7" name="type7" required="required"
+                                                    class="layui-input form-input input-select" placeholder="请输入内容"
+                                                    th:placeholder="#{SysCommon.placeholder}" disabled="disabled"
+                                                    th:data-result='${PLAN_ASSET_SEC_TYPE}' allowClear="true"
+                                                    formatoption="true" ></select>
+                                        </div>
+                                    </div>
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-label-wrap"
                                                th:text="#{TrdPlanCcyInvestTrade001.type9}">资产二级分类</label>
@@ -130,8 +141,6 @@
                                                     formatoption="true" th:initValue="${entity?.type10}" disabled="disabled"></select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item">
                                     <div class="form-inline-wrap" id="selector5" style="display: none">
                                         <label class="layui-form-label form-label-wrap"
                                                th:text="#{TrdPlanCcyInvestTrade001.type11}">资产四级分类</label>
@@ -144,30 +153,38 @@
                                                     formatoption="true" th:initValue="${entity?.type11}" disabled="disabled"></select>
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap" style="display: none">
-                                        <label class="layui-form-label form-label-wrap"
-                                            th:text="#{TrdPlanCcyInvestTrade002.type7}">二级类型</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <select type="text" id="type7" name="type7" required="required"
-                                                class="layui-input form-input input-select" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}" disabled="disabled"
-                                                th:data-result='${PLAN_ASSET_SEC_TYPE}' allowClear="true"
-                                                formatoption="true" ></select>
-                                        </div>
-                                    </div>
-                                    <div id="settleSpreed_div" class="form-inline-wrap">
+                                </div>
+                                <div class="layui-form-item" id="settleSpreed_div" style="display: none">
+                                    <!--<div class="form-inline-wrap">
                                         <label class="layui-form-label form-label-wrap"
                                             th:text="#{TrdPlanCcyInvestTrade002.settleSpreed}">清算速度</label>
                                         <div class="layui-input-inline input-inline">
                                             <select required type="text" id="settleSpreed" name="settleSpreed"
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:placeholder="#{SysCommon.placeholder}" disabled
                                                 th:data-result='${ACCOUNT_SPEED}' allowClear="true" formatoption="true"
                                                 th:initValue="${entity?.settleSpreed}"></select>
                                         </div>
+                                    </div>-->
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap">清算速度</label>
+                                        <div class="layui-input-inline input-inline delaytime-inline-wrap">
+                                            <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
+                                            <input type="text" disabled id="settleSpreed" name="settleSpreed"  th:value="${entity?.settleSpreed}" class="layui-input form-input"
+                                                   style="float: left;display: inline-block; width: 75%;"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap" >确认日期</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <input required  type="text" id="purCfmDate" name="purCfmDate"
+                                                   class="layui-input form-input input-dateSelect" placeholder="请输入内容"
+                                                   th:placeholder="#{SysCommon.placeholder}"
+                                                   th:value="${entity?.purCfmDate==null ? platDate : #dates.format(entity?.purCfmDate,'yyyy-MM-dd')}">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="layui-form-item">
+<!--                                <div class="layui-form-item">-->
 <!--                                    <div class="form-inline-wrap">-->
 <!--                                        <label class="layui-form-label form-lable" data-th-text="#{invest.channelId}">通道</label>-->
 <!--                                        <div class="layui-input-inline input-inline">-->
@@ -178,36 +195,38 @@
 <!--                                            </select>-->
 <!--                                        </div>-->
 <!--                                    </div>-->
-                                    <div  class="form-inline-wrap">
+
+<!--                                    <div class="form-inline-wrap" th:id="div_channelCash" style="display: none;">-->
+<!--                                        <label class="layui-form-label form-label-wrap" data-th-text="|#{invest.channelId}#{EtrInvestBondInfo002.channelAvailableCash}|">通道可用现金</label>-->
+<!--                                        <div class="layui-input-inline input-inline">-->
+<!--                                            <input disabled type="text" th:id="|channelAvailableCash|" th:name="|channelAvailableCash|"-->
+<!--                                                   class="layui-input form-input text-number" />-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div id="expectedArrivalDate_div" class="layui-form-item">-->
+<!--                                    -->
+<!--                                </div>-->
+                                <div class="layui-form-item">
+                                    <div  class="form-inline-wrap" id="expectedArrivalDate_div">
                                         <label class="layui-form-label form-label-wrap"
-                                            th:text="#{TrdPlanCcyInvestTrade002.expectedArrivalDate}">预计到账日</label>
+                                               th:text="#{TrdPlanCcyInvestTrade002.expectedArrivalDate}">预计到账日</label>
                                         <div class="layui-input-inline input-inline">
                                             <input required disabled type="text" id="expectedArrivalDate" name="redCfmDate"
-                                                class="layui-input form-input input-dateSelect" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}"
-                                                th:value="${entity?.tradeDate==null ? platDate : #dates.format(entity?.tradeDate,'yyyy-MM-dd')}">
+                                                   class="layui-input form-input input-dateSelect" placeholder="请输入内容"
+                                                   th:placeholder="#{SysCommon.placeholder}"
+                                                   th:value="${entity?.tradeDate==null ? platDate : #dates.format(entity?.tradeDate,'yyyy-MM-dd')}">
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap" th:id="div_channelCash" style="display: none;">
-                                        <label class="layui-form-label form-label-wrap" data-th-text="|#{invest.channelId}#{EtrInvestBondInfo002.channelAvailableCash}|">通道可用现金</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <input disabled type="text" th:id="|channelAvailableCash|" th:name="|channelAvailableCash|"
-                                                   class="layui-input form-input text-number" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="expectedArrivalDate_div" class="layui-form-item">
                                     <div class="form-inline-wrap" id="assetAvailablePosition_div" Style="display: none">
                                         <label class="layui-form-label form-lable"
-                                            data-th-text="#{TrdPlanCcyInvestTrade002.assetAvailablePosition}">资产可用持仓</label>
+                                               data-th-text="#{TrdPlanCcyInvestTrade002.assetAvailablePosition}">资产可用持仓</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="assetAvailablePosition" name="assetAvailablePosition"
-                                                placeholder="请输入内容" data-pattern="" data-fixtype="2"
-                                                class="layui-input form-input text-number" disabled="disabled" />
+                                                   placeholder="请输入内容" data-pattern="" data-fixtype="2"
+                                                   class="layui-input form-input text-number" disabled="disabled" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item">
                                     <div class="form-inline-wrap" style="display: none" id="proAvailableCash_div">
                                         <label class="layui-form-label form-lable"
                                             data-th-text="#{TrdPlanCcyInvestTrade002.proAvailableCash}">组合T日可用现金</label>

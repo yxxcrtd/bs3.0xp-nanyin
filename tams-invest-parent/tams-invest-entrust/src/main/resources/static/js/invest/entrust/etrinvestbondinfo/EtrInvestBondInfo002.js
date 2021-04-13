@@ -237,8 +237,6 @@
                         entrustNum += parseFloat(item.entrustNum);
                     }
                     object.entrustNum = String(entrustNum);
-                } else {
-                    return;
                 }
             }
             if (typeof FileCommon != "undefined") {

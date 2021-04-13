@@ -175,7 +175,9 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
         		// 插入风险事件规则表
                 setEventCode4ItemRule(entity.getEventCode(), list);
                 for(RskEventItemRule e:list){
-                	rskEventItemRuleMapper.insert(e);
+                    if (StringUtil.isNotEmpty(e.getItemCode())){
+                        rskEventItemRuleMapper.insert(e);
+                    }
                 }
         	}
         }
