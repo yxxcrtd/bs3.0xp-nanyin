@@ -88,7 +88,7 @@ $(function() {
             }
             else {
                 if ($('#cdate').val() > sysDate) {
-                    //strError = strError + '日期必须小于等于平台日';
+                    strError = strError + '日期必须小于等于平台日';
                 }
             }
             if(strError != '' && strError != null){
