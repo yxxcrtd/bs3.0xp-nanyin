@@ -75,6 +75,16 @@ public class BusiAutoAddSecInfoService {
     private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
     @Autowired
     private AutoPeriodCommonService autoPeriodCommonService;
+    @Autowired
+    private MstBondCreditRatingMapper mstBondCreditRatingMapper;
+    @Autowired
+    private RepAssetBondMapper repAssetBondMapper;
+    @Autowired
+    private RepAssetDeptMapper repAssetDeptMapper;
+    @Autowired
+    private RepAssetOtherMapper repAssetOtherMapper;
+    @Autowired
+    private RepAssetEquityMapper repAssetEquityMapper;
 
     /**
      *  债券自动上市流通批处理
@@ -150,6 +160,11 @@ public class BusiAutoAddSecInfoService {
             TargetSearchDto searchfinExercisePlan = new TargetSearchDto();
             searchfinExercisePlan.setQueryType("FINEXERCISE_PLAN");
             queryCriteria.add(searchfinExercisePlan);
+
+            // 评级信息
+            TargetSearchDto searchMarketRating = new TargetSearchDto();
+            searchMarketRating.setQueryType("Market_Rating");
+            queryCriteria.add(searchMarketRating);
 
             Map<TargetSearchDto, Object> targetSearchMap = this.getTargetInfo(
                     finProduct.getFinprodId(), queryCriteria);
@@ -248,6 +263,14 @@ public class BusiAutoAddSecInfoService {
             }
             baseFinProductBaseInfoDto.setFinExercisePlanList(finExercisePlanList);
 
+            //评级信息表
+            List<MstBondCreditRating> mstBondCreditRatingList = new ArrayList<MstBondCreditRating>();
+            for(MstBondCreditRating mstBondCreditRating: (List<MstBondCreditRating>)targetSearchMap.get(searchMarketRating)){
+                mstBondCreditRating.setoCode(secId);
+                mstBondCreditRatingList.add(mstBondCreditRating);
+            }
+            baseFinProductBaseInfoDto.setMstBondCreditRatingList(mstBondCreditRatingList);
+
             baseFinProductBaseInfolist.add(baseFinProductBaseInfoDto);
 
             //2.2 根据组合持仓重组各组合上市流通交易
@@ -293,6 +316,42 @@ public class BusiAutoAddSecInfoService {
                 ptlSecPositionFlow.setSeqno(IDGenerator.generate());
                 ptlSecPositionFlow.setTradeId(tradeid);
                 ptlSecPositionFlowMapper.insertSelective(ptlSecPositionFlow);
+            }
+
+            //债券资产报送信息
+            RepAssetBond repAssetBondNew = new RepAssetBond();
+            RepAssetBond repAssetBond = repAssetBondMapper.selectByPrimaryKey(finProduct.getFinprodId());
+            if(repAssetBond !=null){
+                BeanUtil.copyPropertiesIgnoreNull(repAssetBondNew, repAssetBond);
+                repAssetBondNew.setRepFinprodId("F01_"+secId);
+                baseFinProductBaseInfoDto.setRepAssetBond(repAssetBondNew);
+            }
+
+            //资产负债报送信息
+            RepAssetDept repAssetDeptNew = new RepAssetDept();
+            RepAssetDept repAssetDept = repAssetDeptMapper.selectByPrimaryKey(finProduct.getFinprodId());
+            if(repAssetDept !=null){
+                BeanUtil.copyPropertiesIgnoreNull(repAssetDeptNew, repAssetDept);
+                repAssetDeptNew.setRepFinprodId("F01_"+secId);
+                baseFinProductBaseInfoDto.setRepAssetDept(repAssetDeptNew);
+            }
+
+            //中债资产其他要素
+            RepAssetOther repAssetOtherNew = new RepAssetOther();
+            RepAssetOther repAssetOther = repAssetOtherMapper.selectByPrimaryKey(finProduct.getFinprodId());
+            if(repAssetOther !=null){
+                BeanUtil.copyPropertiesIgnoreNull(repAssetOtherNew, repAssetOther);
+                repAssetOtherNew.setRepFinprodId("F01_"+secId);
+                int i = repAssetOtherMapper.insert(repAssetOtherNew);
+            }
+
+            //权益类资产报送信息
+            RepAssetEquity repAssetEquityNew = new RepAssetEquity();
+            RepAssetEquity repAssetEquity = repAssetEquityMapper.selectByPrimaryKey(finProduct.getFinprodId());
+            if(repAssetEquity !=null){
+                BeanUtil.copyPropertiesIgnoreNull(repAssetEquityNew, repAssetEquity);
+                repAssetEquityNew.setRepFinprodId("F01_"+secId);
+                int ii = repAssetEquityMapper.insert(repAssetEquityNew);
             }
 
             //2.3 更新原有标的上市代码
@@ -371,7 +430,27 @@ public class BusiAutoAddSecInfoService {
                 returnMap.put(svo, finExerciseList);
 
             }
-
+            else if("Market_Rating".equals(queryTypeNow)){
+                // 查询评级信息list
+                List<MstBondCreditRating> mstBondCreditRatingList = busiAutoAddSecInfoMapper.selectMstBondCreditRating(finprodId.replace("F01_",""));
+                mstBondCreditRatingList.addAll(busiAutoAddSecInfoMapper.selectMstinnercreditrating(finprodId.replace("F01_","")));
+                // 查询结果塞入map中
+                returnMap.put(svo, mstBondCreditRatingList);
+            }
+//            else if("REP_ASSET_BOND".equals(queryTypeNow)){
+//                // 查询评级信息list
+//                List<MstBondCreditRating> mstBondCreditRatingList = busiAutoAddSecInfoMapper.selectMstBondCreditRating(finprodId.replace("F01_",""));
+//                mstBondCreditRatingList.addAll(busiAutoAddSecInfoMapper.selectMstinnercreditrating(finprodId.replace("F01_","")));
+//                // 查询结果塞入map中
+//                returnMap.put(svo, mstBondCreditRatingList);
+//            }
+//            else if("REP_ASSET_EQUITY".equals(queryTypeNow)){
+//                // 查询评级信息list
+//                List<BussRepEquityInfoDto> mstBondCreditRatingList = bussRepEquityInfoMapper.getBussRepEquityInfoByProductId(finprodId);
+//                mstBondCreditRatingList.addAll(busiAutoAddSecInfoMapper.selectMstinnercreditrating(finprodId.replace("F01_","")));
+//                // 查询结果塞入map中
+//                returnMap.put(svo, mstBondCreditRatingList);
+//            }
 //            else if (ValDictCodeList.标的_现金流计算规则.getValue().equals(queryTypeNow)) {
 //                // 查询标的现金流计算规则list
 //                List<TargetCashCalcRule> targetCashCalcRuleList = finProductCommonMapper.getTargetCashCalcRuleList(paMap);
@@ -490,6 +569,22 @@ public class BusiAutoAddSecInfoService {
                     for (FinExercisePlan finExercisePlan : dto.getFinExercisePlanList()) {
                         finExercisePlanMapper.insert(finExercisePlan);
                     }
+                }
+
+                //插入评级表
+                if (!StringUtil.isEmptyList(dto.getMstBondCreditRatingList())) {
+                    for (MstBondCreditRating mstBondCreditRating : dto.getMstBondCreditRatingList()) {
+                       mstBondCreditRatingMapper.insert(mstBondCreditRating);
+                    }
+                }
+                // 插入标的类金融产品表
+                if (dto.getRepAssetBond() != null) {
+                    repAssetBondMapper.insert(dto.getRepAssetBond());
+                }
+
+                // 插入标的类金融产品表
+                if (dto.getRepAssetDept() != null) {
+                    repAssetDeptMapper.insert(dto.getRepAssetDept());
                 }
             }
         }
