@@ -341,8 +341,7 @@
                 $('#tradeMarketCash').val(result.cashS).trigger('blur');
             });
         }else if($("#ps").val()==T02||$("#ps").val() == T06 || $("#ps").val() == T65){
-                        $("#tradeMarketCash_div").hide();
-                  }
+            $("#tradeMarketCash_div").hide();
         }
         if(!flag){
             if($("#tradeMarket").val()&&($("#tradeMarket").val()==TRADE_PLACE_03 ||$("#tradeMarket").val()==TRADE_PLACE_04)&&!$("#entrustTongdao").val()){
