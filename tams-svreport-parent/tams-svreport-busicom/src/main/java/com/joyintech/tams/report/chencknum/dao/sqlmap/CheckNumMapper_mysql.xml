@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.chencknum.dao.CheckNumMapper_mysql">
-<select id="getSendCount" resultType="java.lang.Long">
+	<select id="getSendCount" resultType="java.lang.Long">
 		select count(1)
   		from CHB_EQU_SUB sub
   		left join CHB_SUBMIT_STATUS status
@@ -28,7 +28,37 @@
 			and status.submit_feedback_status='03'
 		</where>
 	</select>
-
+	<select id="queryTotalAmountInfo"
+			resultType="com.joyintech.tams.report.chencknum.dto.TotalAmountInfoDto">
+		select
+		id,
+		report_date as reportDate,
+		interface_type as interfaceType,
+		file_name as fileName,
+		file_amount as fileAmount,
+		file_count as fileCount,
+		file_in_data as fileInData,
+		is_equal as isEqual,
+		hald_flag as haldFlag,
+		amount,
+		amount_report as amountReport,
+		create_time as createTime,
+		update_time as updateTime
+		from
+		CHB_TOTALAMOUNT_INFO
+		<where>
+			1=1
+			<if test="reportDate!=null and reportDate != ''">
+				and report_Date = #{reportDate,jdbcType=VARCHAR}
+			</if>
+			<if test="interfaceType!=null and interfaceType != ''">
+				and interface_type = #{interfaceType,jdbcType=VARCHAR}
+			</if>
+			<if test="fileName!=null and fileName != ''">
+				and file_name = #{fileName,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 	<update id="updateTotalAmountInfo"
 		parameterType="com.joyintech.tams.report.chencknum.dto.TotalAmountInfoDto">
 		update CHB_TOTALAMOUNT_INFO
@@ -100,5 +130,21 @@
 			NOW()
 		)
 	</insert>
-
+	<!-- 批量删除 -->
+	<delete id="deltotalAmountInfoDto"
+			parameterType="com.joyintech.tams.report.chencknum.dto.TotalAmountInfoDto">
+		delete from CHB_TOTALAMOUNT_INFO
+		<where>
+			1=1
+			<if test="reportDate!=null and reportDate != ''">
+				and report_Date = #{reportDate,jdbcType=VARCHAR}
+			</if>
+			<if test="interfaceType!=null and interfaceType != ''">
+				and interface_type = #{interfaceType,jdbcType=VARCHAR}
+			</if>
+			<if test="fileName!=null and fileName != ''">
+				and file_name = #{fileName,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</delete>
 </mapper>

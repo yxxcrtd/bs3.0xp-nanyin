@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttSceneLmhMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttSceneLmh" >
+        <id column="S_S_L_SCENE_FTR_ID" property="sceneFtrId" jdbcType="VARCHAR" />
+        <result column="S_S_L_SCENE_ID" property="sceneId" jdbcType="VARCHAR" />
+        <result column="S_S_L_FTR_ID" property="ftrId" jdbcType="VARCHAR" />
+        <result column="S_S_L_LIGHT_VALUE" property="lightValue" jdbcType="DECIMAL" />
+        <result column="S_S_L_MEDIUM_VALUE" property="mediumValue" jdbcType="DECIMAL" />
+        <result column="S_S_L_HEAVY_VALUE" property="heavyValue" jdbcType="DECIMAL" />
+        <result column="S_S_L_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_S_L_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_S_L_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_S_L_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_S_L_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SCENE_FTR_ID as S_S_L_SCENE_FTR_ID, SCENE_ID as S_S_L_SCENE_ID, FTR_ID as S_S_L_FTR_ID, 
+        LIGHT_VALUE as S_S_L_LIGHT_VALUE, MEDIUM_VALUE as S_S_L_MEDIUM_VALUE, HEAVY_VALUE as S_S_L_HEAVY_VALUE, 
+        CREATE_USER as S_S_L_CREATE_USER, CREATE_DEPT as S_S_L_CREATE_DEPT, CREATE_TIME as S_S_L_CREATE_TIME, 
+        UPDATE_USER as S_S_L_UPDATE_USER, UPDATE_TIME as S_S_L_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttSceneLmhMapper.Base_Column_List" />
+        from STT_SCENE_LMH
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttSceneLmhMapper.Base_Column_List" />
+        from STT_SCENE_LMH
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttSceneLmhMapper.Base_Column_List" />
+        from STT_SCENE_LMH
+        where SCENE_FTR_ID = #{sceneFtrId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STT_SCENE_LMH
+        where SCENE_FTR_ID = #{sceneFtrId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_SCENE_LMH
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttSceneLmh" >
+        insert into STT_SCENE_LMH (SCENE_FTR_ID, SCENE_ID, FTR_ID, 
+            LIGHT_VALUE, MEDIUM_VALUE, HEAVY_VALUE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{sceneFtrId,jdbcType=VARCHAR}, #{sceneId,jdbcType=VARCHAR}, #{ftrId,jdbcType=VARCHAR}, 
+            #{lightValue,jdbcType=DECIMAL}, #{mediumValue,jdbcType=DECIMAL}, #{heavyValue,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttSceneLmh" >
+        insert into STT_SCENE_LMH
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sceneFtrId != null" >
+                SCENE_FTR_ID,
+            </if>
+            <if test="sceneId != null" >
+                SCENE_ID,
+            </if>
+            <if test="ftrId != null" >
+                FTR_ID,
+            </if>
+            <if test="lightValue != null" >
+                LIGHT_VALUE,
+            </if>
+            <if test="mediumValue != null" >
+                MEDIUM_VALUE,
+            </if>
+            <if test="heavyValue != null" >
+                HEAVY_VALUE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="sceneFtrId != null" >
+                #{sceneFtrId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneId != null" >
+                #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="ftrId != null" >
+                #{ftrId,jdbcType=VARCHAR},
+            </if>
+            <if test="lightValue != null" >
+                #{lightValue,jdbcType=DECIMAL},
+            </if>
+            <if test="mediumValue != null" >
+                #{mediumValue,jdbcType=DECIMAL},
+            </if>
+            <if test="heavyValue != null" >
+                #{heavyValue,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttSceneLmh" >
+        insert into STT_SCENE_LMH(SCENE_FTR_ID, SCENE_ID, FTR_ID, LIGHT_VALUE, MEDIUM_VALUE, 
+        HEAVY_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SCENE_FTR_ID, SCENE_ID, FTR_ID, LIGHT_VALUE, MEDIUM_VALUE, 
+            HEAVY_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from STT_SCENE_LMH
+             where STATUS = 'E' and SCENE_FTR_ID = #{sceneFtrId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttSceneLmh" >
+        update STT_SCENE_LMH
+        <set >
+            <if test="sceneId != null" >
+                SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="ftrId != null" >
+                FTR_ID = #{ftrId,jdbcType=VARCHAR},
+            </if>
+            <if test="lightValue != null" >
+                LIGHT_VALUE = #{lightValue,jdbcType=DECIMAL},
+            </if>
+            <if test="mediumValue != null" >
+                MEDIUM_VALUE = #{mediumValue,jdbcType=DECIMAL},
+            </if>
+            <if test="heavyValue != null" >
+                HEAVY_VALUE = #{heavyValue,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SCENE_FTR_ID = #{sceneFtrId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttSceneLmh" >
+        update STT_SCENE_LMH
+        <set >
+            <if test="sceneFtrId != null" >
+                SCENE_FTR_ID = #{sceneFtrId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneId != null" >
+                SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="ftrId != null" >
+                FTR_ID = #{ftrId,jdbcType=VARCHAR},
+            </if>
+            <if test="lightValue != null" >
+                LIGHT_VALUE = #{lightValue,jdbcType=DECIMAL},
+            </if>
+            <if test="mediumValue != null" >
+                MEDIUM_VALUE = #{mediumValue,jdbcType=DECIMAL},
+            </if>
+            <if test="heavyValue != null" >
+                HEAVY_VALUE = #{heavyValue,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttSceneLmh" >
+        update STT_SCENE_LMH
+        set 
+        SCENE_FTR_ID = #{sceneFtrId,jdbcType=VARCHAR},
+        SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+        FTR_ID = #{ftrId,jdbcType=VARCHAR},
+        LIGHT_VALUE = #{lightValue,jdbcType=DECIMAL},
+        MEDIUM_VALUE = #{mediumValue,jdbcType=DECIMAL},
+        HEAVY_VALUE = #{heavyValue,jdbcType=DECIMAL},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttSceneLmh" >
+        update STT_SCENE_LMH
+        set SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+            FTR_ID = #{ftrId,jdbcType=VARCHAR},
+            LIGHT_VALUE = #{lightValue,jdbcType=DECIMAL},
+            MEDIUM_VALUE = #{mediumValue,jdbcType=DECIMAL},
+            HEAVY_VALUE = #{heavyValue,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SCENE_FTR_ID = #{sceneFtrId,jdbcType=VARCHAR}
+    </update>
+</mapper>

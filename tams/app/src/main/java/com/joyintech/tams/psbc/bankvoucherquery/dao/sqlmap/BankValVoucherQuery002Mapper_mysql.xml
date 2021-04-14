@@ -31,11 +31,13 @@
             AND B.TABLE_ID = #{tableId}
         </if>
         <if test="bookDate != null and bookDate != ''">
-            AND A.BOOK_DATE = str_to_date(#{bookDate},'yyyy-mm-dd')
+            AND A.BOOK_DATE = STR_TO_DATE(#{bookDate},'%Y-%m-%d')
         </if>
         <if test="subjectNo != null and subjectNo != ''">
             AND B.SUBJECT_NO = #{subjectNo}
         </if>
     </select>
-
+    <select id="selectBusVouchNumByVouchNum" resultType="java.lang.String">
+    	select BUS_VOUCHNUM from BOK_VOUCH_MAIN where VOUCH_NUM = #{vouchNum,jdbcType=VARCHAR}
+    </select>
 </mapper>

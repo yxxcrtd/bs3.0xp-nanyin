@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfTcms001Mapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfTcms001" >
+        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <result column="SHORTNAME" property="shortname" jdbcType="VARCHAR" />
+        <result column="PRODNAME" property="prodname" jdbcType="VARCHAR" />
+        <result column="ASSETPOOL" property="assetpool" jdbcType="VARCHAR" />
+        <result column="MKTDEPTNO" property="mktdeptno" jdbcType="VARCHAR" />
+        <result column="PRODTYPE1" property="prodtype1" jdbcType="VARCHAR" />
+        <result column="MKTPLAT" property="mktplat" jdbcType="VARCHAR" />
+        <result column="PRODMODE" property="prodmode" jdbcType="VARCHAR" />
+        <result column="INDISTYPE" property="indistype" jdbcType="VARCHAR" />
+        <result column="ROLLMODE" property="rollmode" jdbcType="VARCHAR" />
+        <result column="INCOMEMODE" property="incomemode" jdbcType="VARCHAR" />
+        <result column="ROLLAMT" property="rollamt" jdbcType="DECIMAL" />
+        <result column="SYPERIOD" property="syperiod" jdbcType="DECIMAL" />
+        <result column="ISSUETYPE" property="issuetype" jdbcType="VARCHAR" />
+        <result column="CUSNAME" property="cusname" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="VARCHAR" />
+        <result column="INVESTSCOPE" property="investscope" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="VARCHAR" />
+        <result column="TERM" property="term" jdbcType="DECIMAL" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="SOLUTIONID" property="solutionid" jdbcType="VARCHAR" />
+        <result column="SUBCCY" property="subccy" jdbcType="VARCHAR" />
+        <result column="SETTCCY" property="settccy" jdbcType="VARCHAR" />
+        <result column="INTPAYCYCLE" property="intpaycycle" jdbcType="VARCHAR" />
+        <result column="SYIELD" property="syield" jdbcType="DECIMAL" />
+        <result column="HYIELD" property="hyield" jdbcType="DECIMAL" />
+        <result column="AMYIELD" property="amyield" jdbcType="DECIMAL" />
+        <result column="OYIELD" property="oyield" jdbcType="DECIMAL" />
+        <result column="PDATE" property="pdate" jdbcType="VARCHAR" />
+        <result column="SSDATE" property="ssdate" jdbcType="VARCHAR" />
+        <result column="SEDATE" property="sedate" jdbcType="VARCHAR" />
+        <result column="SUBPAYDATE" property="subpaydate" jdbcType="VARCHAR" />
+        <result column="UPPERLIMIT" property="upperlimit" jdbcType="DECIMAL" />
+        <result column="LOWERLIMIT" property="lowerlimit" jdbcType="DECIMAL" />
+        <result column="STARTAMT" property="startamt" jdbcType="DECIMAL" />
+        <result column="ADDAMT" property="addamt" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="SUBMITUSERID" property="submituserid" jdbcType="VARCHAR" />
+        <result column="SUBMITUSERNAME" property="submitusername" jdbcType="VARCHAR" />
+        <result column="REVIEWUSERID" property="reviewuserid" jdbcType="VARCHAR" />
+        <result column="REVIEWUSERNAME" property="reviewusername" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="VARCHAR" />
+        <result column="SALEMODE" property="salemode" jdbcType="VARCHAR" />
+        <result column="PRODID1" property="prodid1" jdbcType="VARCHAR" />
+        <result column="ACCTBRANCHID" property="acctbranchid" jdbcType="VARCHAR" />
+        <result column="INTERF_ID" property="interfId" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfTcms001" >
+        insert into INTERF_TCMS001 (PRODID, SHORTNAME, PRODNAME, 
+            ASSETPOOL, MKTDEPTNO, PRODTYPE1, 
+            MKTPLAT, PRODMODE, INDISTYPE, 
+            ROLLMODE, INCOMEMODE, ROLLAMT, 
+            SYPERIOD, ISSUETYPE, CUSNAME, 
+            BRANCH, INVESTSCOPE, VDATE, 
+            MDATE, TERM, BASIS, 
+            YIELD, SOLUTIONID, SUBCCY, 
+            SETTCCY, INTPAYCYCLE, SYIELD, 
+            HYIELD, AMYIELD, OYIELD, 
+            PDATE, SSDATE, SEDATE, 
+            SUBPAYDATE, UPPERLIMIT, LOWERLIMIT, 
+            STARTAMT, ADDAMT, REMARK, 
+            SUBMITUSERID, SUBMITUSERNAME, REVIEWUSERID, 
+            REVIEWUSERNAME, CDATE, SALEMODE, 
+            PRODID1, ACCTBRANCHID, INTERF_ID, 
+            CREATE_TIME)
+        values (#{prodid,jdbcType=VARCHAR}, #{shortname,jdbcType=VARCHAR}, #{prodname,jdbcType=VARCHAR}, 
+            #{assetpool,jdbcType=VARCHAR}, #{mktdeptno,jdbcType=VARCHAR}, #{prodtype1,jdbcType=VARCHAR}, 
+            #{mktplat,jdbcType=VARCHAR}, #{prodmode,jdbcType=VARCHAR}, #{indistype,jdbcType=VARCHAR}, 
+            #{rollmode,jdbcType=VARCHAR}, #{incomemode,jdbcType=VARCHAR}, #{rollamt,jdbcType=DECIMAL}, 
+            #{syperiod,jdbcType=DECIMAL}, #{issuetype,jdbcType=VARCHAR}, #{cusname,jdbcType=VARCHAR}, 
+            #{branch,jdbcType=VARCHAR}, #{investscope,jdbcType=VARCHAR}, #{vdate,jdbcType=VARCHAR}, 
+            #{mdate,jdbcType=VARCHAR}, #{term,jdbcType=DECIMAL}, #{basis,jdbcType=VARCHAR}, 
+            #{yield,jdbcType=DECIMAL}, #{solutionid,jdbcType=VARCHAR}, #{subccy,jdbcType=VARCHAR}, 
+            #{settccy,jdbcType=VARCHAR}, #{intpaycycle,jdbcType=VARCHAR}, #{syield,jdbcType=DECIMAL}, 
+            #{hyield,jdbcType=DECIMAL}, #{amyield,jdbcType=DECIMAL}, #{oyield,jdbcType=DECIMAL}, 
+            #{pdate,jdbcType=VARCHAR}, #{ssdate,jdbcType=VARCHAR}, #{sedate,jdbcType=VARCHAR}, 
+            #{subpaydate,jdbcType=VARCHAR}, #{upperlimit,jdbcType=DECIMAL}, #{lowerlimit,jdbcType=DECIMAL}, 
+            #{startamt,jdbcType=DECIMAL}, #{addamt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+            #{submituserid,jdbcType=VARCHAR}, #{submitusername,jdbcType=VARCHAR}, #{reviewuserid,jdbcType=VARCHAR}, 
+            #{reviewusername,jdbcType=VARCHAR}, #{cdate,jdbcType=VARCHAR}, #{salemode,jdbcType=VARCHAR}, 
+            #{prodid1,jdbcType=VARCHAR}, #{acctbranchid,jdbcType=VARCHAR}, #{interfId,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfTcms001" >
+        insert into INTERF_TCMS001
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                PRODID,
+            </if>
+            <if test="shortname != null" >
+                SHORTNAME,
+            </if>
+            <if test="prodname != null" >
+                PRODNAME,
+            </if>
+            <if test="assetpool != null" >
+                ASSETPOOL,
+            </if>
+            <if test="mktdeptno != null" >
+                MKTDEPTNO,
+            </if>
+            <if test="prodtype1 != null" >
+                PRODTYPE1,
+            </if>
+            <if test="mktplat != null" >
+                MKTPLAT,
+            </if>
+            <if test="prodmode != null" >
+                PRODMODE,
+            </if>
+            <if test="indistype != null" >
+                INDISTYPE,
+            </if>
+            <if test="rollmode != null" >
+                ROLLMODE,
+            </if>
+            <if test="incomemode != null" >
+                INCOMEMODE,
+            </if>
+            <if test="rollamt != null" >
+                ROLLAMT,
+            </if>
+            <if test="syperiod != null" >
+                SYPERIOD,
+            </if>
+            <if test="issuetype != null" >
+                ISSUETYPE,
+            </if>
+            <if test="cusname != null" >
+                CUSNAME,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="investscope != null" >
+                INVESTSCOPE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="term != null" >
+                TERM,
+            </if>
+            <if test="basis != null" >
+                BASIS,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="solutionid != null" >
+                SOLUTIONID,
+            </if>
+            <if test="subccy != null" >
+                SUBCCY,
+            </if>
+            <if test="settccy != null" >
+                SETTCCY,
+            </if>
+            <if test="intpaycycle != null" >
+                INTPAYCYCLE,
+            </if>
+            <if test="syield != null" >
+                SYIELD,
+            </if>
+            <if test="hyield != null" >
+                HYIELD,
+            </if>
+            <if test="amyield != null" >
+                AMYIELD,
+            </if>
+            <if test="oyield != null" >
+                OYIELD,
+            </if>
+            <if test="pdate != null" >
+                PDATE,
+            </if>
+            <if test="ssdate != null" >
+                SSDATE,
+            </if>
+            <if test="sedate != null" >
+                SEDATE,
+            </if>
+            <if test="subpaydate != null" >
+                SUBPAYDATE,
+            </if>
+            <if test="upperlimit != null" >
+                UPPERLIMIT,
+            </if>
+            <if test="lowerlimit != null" >
+                LOWERLIMIT,
+            </if>
+            <if test="startamt != null" >
+                STARTAMT,
+            </if>
+            <if test="addamt != null" >
+                ADDAMT,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="submituserid != null" >
+                SUBMITUSERID,
+            </if>
+            <if test="submitusername != null" >
+                SUBMITUSERNAME,
+            </if>
+            <if test="reviewuserid != null" >
+                REVIEWUSERID,
+            </if>
+            <if test="reviewusername != null" >
+                REVIEWUSERNAME,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="salemode != null" >
+                SALEMODE,
+            </if>
+            <if test="prodid1 != null" >
+                PRODID1,
+            </if>
+            <if test="acctbranchid != null" >
+                ACCTBRANCHID,
+            </if>
+            <if test="interfId != null" >
+                INTERF_ID,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="shortname != null" >
+                #{shortname,jdbcType=VARCHAR},
+            </if>
+            <if test="prodname != null" >
+                #{prodname,jdbcType=VARCHAR},
+            </if>
+            <if test="assetpool != null" >
+                #{assetpool,jdbcType=VARCHAR},
+            </if>
+            <if test="mktdeptno != null" >
+                #{mktdeptno,jdbcType=VARCHAR},
+            </if>
+            <if test="prodtype1 != null" >
+                #{prodtype1,jdbcType=VARCHAR},
+            </if>
+            <if test="mktplat != null" >
+                #{mktplat,jdbcType=VARCHAR},
+            </if>
+            <if test="prodmode != null" >
+                #{prodmode,jdbcType=VARCHAR},
+            </if>
+            <if test="indistype != null" >
+                #{indistype,jdbcType=VARCHAR},
+            </if>
+            <if test="rollmode != null" >
+                #{rollmode,jdbcType=VARCHAR},
+            </if>
+            <if test="incomemode != null" >
+                #{incomemode,jdbcType=VARCHAR},
+            </if>
+            <if test="rollamt != null" >
+                #{rollamt,jdbcType=DECIMAL},
+            </if>
+            <if test="syperiod != null" >
+                #{syperiod,jdbcType=DECIMAL},
+            </if>
+            <if test="issuetype != null" >
+                #{issuetype,jdbcType=VARCHAR},
+            </if>
+            <if test="cusname != null" >
+                #{cusname,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=VARCHAR},
+            </if>
+            <if test="investscope != null" >
+                #{investscope,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                #{term,jdbcType=DECIMAL},
+            </if>
+            <if test="basis != null" >
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="solutionid != null" >
+                #{solutionid,jdbcType=VARCHAR},
+            </if>
+            <if test="subccy != null" >
+                #{subccy,jdbcType=VARCHAR},
+            </if>
+            <if test="settccy != null" >
+                #{settccy,jdbcType=VARCHAR},
+            </if>
+            <if test="intpaycycle != null" >
+                #{intpaycycle,jdbcType=VARCHAR},
+            </if>
+            <if test="syield != null" >
+                #{syield,jdbcType=DECIMAL},
+            </if>
+            <if test="hyield != null" >
+                #{hyield,jdbcType=DECIMAL},
+            </if>
+            <if test="amyield != null" >
+                #{amyield,jdbcType=DECIMAL},
+            </if>
+            <if test="oyield != null" >
+                #{oyield,jdbcType=DECIMAL},
+            </if>
+            <if test="pdate != null" >
+                #{pdate,jdbcType=VARCHAR},
+            </if>
+            <if test="ssdate != null" >
+                #{ssdate,jdbcType=VARCHAR},
+            </if>
+            <if test="sedate != null" >
+                #{sedate,jdbcType=VARCHAR},
+            </if>
+            <if test="subpaydate != null" >
+                #{subpaydate,jdbcType=VARCHAR},
+            </if>
+            <if test="upperlimit != null" >
+                #{upperlimit,jdbcType=DECIMAL},
+            </if>
+            <if test="lowerlimit != null" >
+                #{lowerlimit,jdbcType=DECIMAL},
+            </if>
+            <if test="startamt != null" >
+                #{startamt,jdbcType=DECIMAL},
+            </if>
+            <if test="addamt != null" >
+                #{addamt,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="submituserid != null" >
+                #{submituserid,jdbcType=VARCHAR},
+            </if>
+            <if test="submitusername != null" >
+                #{submitusername,jdbcType=VARCHAR},
+            </if>
+            <if test="reviewuserid != null" >
+                #{reviewuserid,jdbcType=VARCHAR},
+            </if>
+            <if test="reviewusername != null" >
+                #{reviewusername,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=VARCHAR},
+            </if>
+            <if test="salemode != null" >
+                #{salemode,jdbcType=VARCHAR},
+            </if>
+            <if test="prodid1 != null" >
+                #{prodid1,jdbcType=VARCHAR},
+            </if>
+            <if test="acctbranchid != null" >
+                #{acctbranchid,jdbcType=VARCHAR},
+            </if>
+            <if test="interfId != null" >
+                #{interfId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfTcms001" >
+        insert into INTERF_TCMS001(PRODID, SHORTNAME, PRODNAME, ASSETPOOL, MKTDEPTNO, PRODTYPE1, 
+        MKTPLAT, PRODMODE, INDISTYPE, ROLLMODE, INCOMEMODE, ROLLAMT, SYPERIOD, ISSUETYPE, 
+        CUSNAME, BRANCH, INVESTSCOPE, VDATE, MDATE, TERM, BASIS, YIELD, SOLUTIONID, SUBCCY, 
+        SETTCCY, INTPAYCYCLE, SYIELD, HYIELD, AMYIELD, OYIELD, PDATE, SSDATE, SEDATE, SUBPAYDATE, 
+        UPPERLIMIT, LOWERLIMIT, STARTAMT, ADDAMT, REMARK, SUBMITUSERID, SUBMITUSERNAME, REVIEWUSERID, 
+        REVIEWUSERNAME, CDATE, SALEMODE, PRODID1, ACCTBRANCHID, INTERF_ID, CREATE_TIME)
+        select PRODID, SHORTNAME, PRODNAME, ASSETPOOL, MKTDEPTNO, PRODTYPE1, 
+            MKTPLAT, PRODMODE, INDISTYPE, ROLLMODE, INCOMEMODE, ROLLAMT, SYPERIOD, ISSUETYPE, 
+            CUSNAME, BRANCH, INVESTSCOPE, VDATE, MDATE, TERM, BASIS, YIELD, SOLUTIONID, SUBCCY, 
+            SETTCCY, INTPAYCYCLE, SYIELD, HYIELD, AMYIELD, OYIELD, PDATE, SSDATE, SEDATE, SUBPAYDATE, 
+            UPPERLIMIT, LOWERLIMIT, STARTAMT, ADDAMT, REMARK, SUBMITUSERID, SUBMITUSERNAME, REVIEWUSERID, 
+            REVIEWUSERNAME, CDATE, SALEMODE, PRODID1, ACCTBRANCHID, INTERF_ID, CREATE_TIME
+             from INTERF_TCMS001
+             where 1 = 1
+    </insert>
+</mapper>

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbTypeMappingEx">
+        <id column="MAPPINGID" jdbcType="CHAR" property="mappingid" />
+        <result column="MAPPINGNAME" jdbcType="VARCHAR" property="mappingname" />
+        <result column="SRCFIELD" jdbcType="VARCHAR" property="srcfield" />
+        <result column="SRCFIELD1" jdbcType="VARCHAR" property="srcfield1" />
+        <result column="SRCFIELD2" jdbcType="VARCHAR" property="srcfield2" />
+        <result column="SRCFIELD3" jdbcType="VARCHAR" property="srcfield3" />
+        <result column="SRCFIELD4" jdbcType="VARCHAR" property="srcfield4" />
+        <result column="SRCFIELD5" jdbcType="VARCHAR" property="srcfield5" />
+        <result column="OBJFIELD" jdbcType="VARCHAR" property="objfield" />
+        <result column="OBJFIELD1" jdbcType="VARCHAR" property="objfield1" />
+        <result column="OBJFIELD2" jdbcType="VARCHAR" property="objfield2" />
+        <result column="OBJFIELD3" jdbcType="VARCHAR" property="objfield3" />
+        <result column="OBJFIELD4" jdbcType="VARCHAR" property="objfield4" />
+        <result column="STATUS" jdbcType="VARCHAR" property="status" />
+        <result column="WORKFLOW_ID" jdbcType="VARCHAR" property="workflowId" />
+        <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+        <result column="MAPPINGCODE" jdbcType="VARCHAR" property="mappingcode" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    MAPPINGID, MAPPINGNAME, SRCFIELD,SRCFIELD1, SRCFIELD2, SRCFIELD3, SRCFIELD4, SRCFIELD5, OBJFIELD,
+    OBJFIELD1, OBJFIELD2, OBJFIELD3, OBJFIELD4, STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
+    UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE, MAPPINGCODE,SRCFIELD
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_TYPE_MAPPING_EX
+        where MAPPINGID = #{mappingid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CHB_TYPE_MAPPING_EX
+    where MAPPINGID = #{mappingid,jdbcType=CHAR}
+  </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMappingEx">
+    insert into CHB_TYPE_MAPPING_EX (MAPPINGID, MAPPINGNAME, SRCFIELD1,
+      SRCFIELD2, SRCFIELD3, SRCFIELD4,
+      SRCFIELD5, OBJFIELD, OBJFIELD1,
+      OBJFIELD2, OBJFIELD3, OBJFIELD4,
+      STATUS, WORKFLOW_ID, DEPT_CODE,
+      UPDATE_USER, UPDATE_TIME, CREATE_USER,
+      CREATE_TIME, ORG_CODE, MAPPINGCODE,SRCFIELD
+      )
+    values (#{mappingid,jdbcType=CHAR}, #{mappingname,jdbcType=VARCHAR}, #{srcfield1,jdbcType=VARCHAR},
+      #{srcfield2,jdbcType=VARCHAR}, #{srcfield3,jdbcType=VARCHAR}, #{srcfield4,jdbcType=VARCHAR},
+      #{srcfield5,jdbcType=VARCHAR}, #{objfield,jdbcType=VARCHAR}, #{objfield1,jdbcType=VARCHAR},
+      #{objfield2,jdbcType=VARCHAR}, #{objfield3,jdbcType=VARCHAR}, #{objfield4,jdbcType=VARCHAR},
+      #{status,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{mappingcode,jdbcType=VARCHAR}, #{srcfield,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMappingEx">
+        insert into CHB_TYPE_MAPPING_EX
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mappingid != null">
+                MAPPINGID,
+            </if>
+            <if test="mappingname != null">
+                MAPPINGNAME,
+            </if>
+            <if test="srcfield != null">
+                SRCFIELD,
+            </if>
+            <if test="srcfield1 != null">
+                SRCFIELD1,
+            </if>
+            <if test="srcfield2 != null">
+                SRCFIELD2,
+            </if>
+            <if test="srcfield3 != null">
+                SRCFIELD3,
+            </if>
+            <if test="srcfield4 != null">
+                SRCFIELD4,
+            </if>
+            <if test="srcfield5 != null">
+                SRCFIELD5,
+            </if>
+            <if test="objfield != null">
+                OBJFIELD,
+            </if>
+            <if test="objfield1 != null">
+                OBJFIELD1,
+            </if>
+            <if test="objfield2 != null">
+                OBJFIELD2,
+            </if>
+            <if test="objfield3 != null">
+                OBJFIELD3,
+            </if>
+            <if test="objfield4 != null">
+                OBJFIELD4,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="workflowId != null">
+                WORKFLOW_ID,
+            </if>
+            <if test="deptCode != null">
+                DEPT_CODE,
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null">
+                CREATE_USER,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="orgCode != null">
+                ORG_CODE,
+            </if>
+            <if test="mappingcode != null">
+                MAPPINGCODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mappingid != null">
+                #{mappingid,jdbcType=CHAR},
+            </if>
+            <if test="mappingname != null">
+                #{mappingname,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield != null">
+                #{srcfield,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield1 != null">
+                #{srcfield1,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield2 != null">
+                #{srcfield2,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield3 != null">
+                #{srcfield3,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield4 != null">
+                #{srcfield4,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield5 != null">
+                #{srcfield5,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield != null">
+                #{objfield,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield1 != null">
+                #{objfield1,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield2 != null">
+                #{objfield2,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield3 != null">
+                #{objfield3,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield4 != null">
+                #{objfield4,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null">
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null">
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null">
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="mappingcode != null">
+                #{mappingcode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMappingEx">
+        update CHB_TYPE_MAPPING_EX
+        <set>
+            <if test="mappingname != null">
+                MAPPINGNAME = #{mappingname,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield != null">
+                SRCFIELD = #{srcfield,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield1 != null">
+                SRCFIELD1 = #{srcfield1,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield2 != null">
+                SRCFIELD2 = #{srcfield2,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield3 != null">
+                SRCFIELD3 = #{srcfield3,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield4 != null">
+                SRCFIELD4 = #{srcfield4,jdbcType=VARCHAR},
+            </if>
+            <if test="srcfield5 != null">
+                SRCFIELD5 = #{srcfield5,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield != null">
+                OBJFIELD = #{objfield,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield1 != null">
+                OBJFIELD1 = #{objfield1,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield2 != null">
+                OBJFIELD2 = #{objfield2,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield3 != null">
+                OBJFIELD3 = #{objfield3,jdbcType=VARCHAR},
+            </if>
+            <if test="objfield4 != null">
+                OBJFIELD4 = #{objfield4,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null">
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null">
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null">
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="mappingcode != null">
+                MAPPINGCODE = #{mappingcode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where MAPPINGID = #{mappingid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMappingEx">
+    update CHB_TYPE_MAPPING_EX
+    set MAPPINGNAME = #{mappingname,jdbcType=VARCHAR},
+        SRCFIELD = #{srcfield,jdbcType=VARCHAR},
+      SRCFIELD1 = #{srcfield1,jdbcType=VARCHAR},
+      SRCFIELD2 = #{srcfield2,jdbcType=VARCHAR},
+      SRCFIELD3 = #{srcfield3,jdbcType=VARCHAR},
+      SRCFIELD4 = #{srcfield4,jdbcType=VARCHAR},
+      SRCFIELD5 = #{srcfield5,jdbcType=VARCHAR},
+      OBJFIELD = #{objfield,jdbcType=VARCHAR},
+      OBJFIELD1 = #{objfield1,jdbcType=VARCHAR},
+      OBJFIELD2 = #{objfield2,jdbcType=VARCHAR},
+      OBJFIELD3 = #{objfield3,jdbcType=VARCHAR},
+      OBJFIELD4 = #{objfield4,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      MAPPINGCODE = #{mappingcode,jdbcType=VARCHAR}
+    where MAPPINGID = #{mappingid,jdbcType=CHAR}
+  </update>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_TYPE_MAPPING_EX
+        where 1=1
+        and status='E'
+    </select>
+
+    <select id="selectByMappingcode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_TYPE_MAPPING_EX
+        where 1=1
+        and status='E'
+        and mappingcode=#{mappingcode,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

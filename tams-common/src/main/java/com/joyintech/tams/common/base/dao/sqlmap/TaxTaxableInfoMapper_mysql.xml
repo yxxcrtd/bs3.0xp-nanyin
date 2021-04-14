@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TaxTaxableInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TaxTaxableInfo" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="SCH_ID" property="schId" jdbcType="VARCHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="ASSET_CLASSIFY" property="assetClassify" jdbcType="VARCHAR" />
+        <result column="CAPI_INCOME_FEATURE" property="capiIncomeFeature" jdbcType="VARCHAR" />
+        <result column="INCOME_TYPE" property="incomeType" jdbcType="VARCHAR" />
+        <result column="TAXABLE_SIGN" property="taxableSign" jdbcType="VARCHAR" />
+        <result column="TAX_RATE" property="taxRate" jdbcType="DECIMAL" />
+        <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="MAINTENANCE_MODE" property="maintenanceMode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, SCH_ID SCH_ID, ASSET_ID ASSET_ID, ASSET_CLASSIFY ASSET_CLASSIFY, CAPI_INCOME_FEATURE CAPI_INCOME_FEATURE, 
+        INCOME_TYPE INCOME_TYPE, TAXABLE_SIGN TAXABLE_SIGN, TAX_RATE TAX_RATE, FEE_TYPE FEE_TYPE, 
+        EFF_DATE EFF_DATE, MAINTENANCE_MODE MAINTENANCE_MODE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TaxTaxableInfoMapper.Base_Column_List" />
+        from TAX_TAXABLE_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TaxTaxableInfoMapper.Base_Column_List" />
+        from TAX_TAXABLE_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TaxTaxableInfoMapper.Base_Column_List" />
+        from TAX_TAXABLE_INFO
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TAX_TAXABLE_INFO
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TaxTaxableInfo" >
+        insert into TAX_TAXABLE_INFO (SEQ_NO, SCH_ID, ASSET_ID, 
+            ASSET_CLASSIFY, CAPI_INCOME_FEATURE, INCOME_TYPE, 
+            TAXABLE_SIGN, TAX_RATE, FEE_TYPE, 
+            EFF_DATE, MAINTENANCE_MODE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{schId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, 
+            #{assetClassify,jdbcType=VARCHAR}, #{capiIncomeFeature,jdbcType=VARCHAR}, #{incomeType,jdbcType=VARCHAR}, 
+            #{taxableSign,jdbcType=VARCHAR}, #{taxRate,jdbcType=DECIMAL}, #{feeType,jdbcType=VARCHAR}, 
+            #{effDate,jdbcType=DATE}, #{maintenanceMode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TaxTaxableInfo" >
+        insert into TAX_TAXABLE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="schId != null" >
+                SCH_ID,
+            </if>
+            <if test="assetId != null" >
+                ASSET_ID,
+            </if>
+            <if test="assetClassify != null" >
+                ASSET_CLASSIFY,
+            </if>
+            <if test="capiIncomeFeature != null" >
+                CAPI_INCOME_FEATURE,
+            </if>
+            <if test="incomeType != null" >
+                INCOME_TYPE,
+            </if>
+            <if test="taxableSign != null" >
+                TAXABLE_SIGN,
+            </if>
+            <if test="taxRate != null" >
+                TAX_RATE,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="maintenanceMode != null" >
+                MAINTENANCE_MODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="schId != null" >
+                #{schId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetId != null" >
+                #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetClassify != null" >
+                #{assetClassify,jdbcType=VARCHAR},
+            </if>
+            <if test="capiIncomeFeature != null" >
+                #{capiIncomeFeature,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeType != null" >
+                #{incomeType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxableSign != null" >
+                #{taxableSign,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRate != null" >
+                #{taxRate,jdbcType=DECIMAL},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="maintenanceMode != null" >
+                #{maintenanceMode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TaxTaxableInfo" >
+        insert into TAX_TAXABLE_INFO(SEQ_NO, SCH_ID, ASSET_ID, ASSET_CLASSIFY, CAPI_INCOME_FEATURE, 
+        INCOME_TYPE, TAXABLE_SIGN, TAX_RATE, FEE_TYPE, EFF_DATE, MAINTENANCE_MODE, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, SCH_ID, ASSET_ID, ASSET_CLASSIFY, CAPI_INCOME_FEATURE, 
+            INCOME_TYPE, TAXABLE_SIGN, TAX_RATE, FEE_TYPE, EFF_DATE, MAINTENANCE_MODE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from TAX_TAXABLE_INFO
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TaxTaxableInfo" >
+        update TAX_TAXABLE_INFO
+        <set >
+            <if test="schId != null" >
+                SCH_ID = #{schId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetId != null" >
+                ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetClassify != null" >
+                ASSET_CLASSIFY = #{assetClassify,jdbcType=VARCHAR},
+            </if>
+            <if test="capiIncomeFeature != null" >
+                CAPI_INCOME_FEATURE = #{capiIncomeFeature,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeType != null" >
+                INCOME_TYPE = #{incomeType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxableSign != null" >
+                TAXABLE_SIGN = #{taxableSign,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRate != null" >
+                TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE = #{effDate,jdbcType=DATE},
+            </if>
+            <if test="maintenanceMode != null" >
+                MAINTENANCE_MODE = #{maintenanceMode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TaxTaxableInfo" >
+        update TAX_TAXABLE_INFO
+        set SCH_ID = #{schId,jdbcType=VARCHAR},
+            ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            ASSET_CLASSIFY = #{assetClassify,jdbcType=VARCHAR},
+            CAPI_INCOME_FEATURE = #{capiIncomeFeature,jdbcType=VARCHAR},
+            INCOME_TYPE = #{incomeType,jdbcType=VARCHAR},
+            TAXABLE_SIGN = #{taxableSign,jdbcType=VARCHAR},
+            TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+            FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            EFF_DATE = #{effDate,jdbcType=DATE},
+            MAINTENANCE_MODE = #{maintenanceMode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

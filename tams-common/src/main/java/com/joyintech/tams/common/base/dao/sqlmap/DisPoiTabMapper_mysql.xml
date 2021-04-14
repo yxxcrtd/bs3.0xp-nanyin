@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.DisPoiTabMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.DisPoiTab" >
+        <id column="TAB_NUM" property="tabNum" jdbcType="VARCHAR" />
+        <result column="TAB_NAME" property="tabName" jdbcType="VARCHAR" />
+        <result column="TEMP_PATH" property="tempPath" jdbcType="VARCHAR" />
+        <result column="TEMP_NAME" property="tempName" jdbcType="VARCHAR" />
+        <result column="TEMP_PRAMS" property="tempPrams" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TAB_NUM TAB_NUM, TAB_NAME TAB_NAME, TEMP_PATH TEMP_PATH, TEMP_NAME TEMP_NAME, TEMP_PRAMS TEMP_PRAMS,
+        STATUS STATUS, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.DisPoiTabMapper.Base_Column_List" />
+        from DIS_POI_TAB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.DisPoiTabMapper.Base_Column_List" />
+        from DIS_POI_TAB
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.DisPoiTabMapper.Base_Column_List" />
+        from DIS_POI_TAB
+        where TAB_NUM = #{tabNum,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from DIS_POI_TAB
+        where TAB_NUM = #{tabNum,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.DisPoiTab" >
+        insert into DIS_POI_TAB (TAB_NUM, TAB_NAME, TEMP_PATH,
+            TEMP_NAME, TEMP_PRAMS, STATUS,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{tabNum,jdbcType=VARCHAR}, #{tabName,jdbcType=VARCHAR}, #{tempPath,jdbcType=VARCHAR},
+            #{tempName,jdbcType=VARCHAR}, #{tempPrams,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.DisPoiTab" >
+        insert into DIS_POI_TAB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tabNum != null" >
+                TAB_NUM,
+            </if>
+            <if test="tabName != null" >
+                TAB_NAME,
+            </if>
+            <if test="tempPath != null" >
+                TEMP_PATH,
+            </if>
+            <if test="tempName != null" >
+                TEMP_NAME,
+            </if>
+            <if test="tempPrams != null" >
+                TEMP_PRAMS,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tabNum != null" >
+                #{tabNum,jdbcType=VARCHAR},
+            </if>
+            <if test="tabName != null" >
+                #{tabName,jdbcType=VARCHAR},
+            </if>
+            <if test="tempPath != null" >
+                #{tempPath,jdbcType=VARCHAR},
+            </if>
+            <if test="tempName != null" >
+                #{tempName,jdbcType=VARCHAR},
+            </if>
+            <if test="tempPrams != null" >
+                #{tempPrams,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.DisPoiTab" >
+        insert into DIS_POI_TAB(TAB_NUM, TAB_NAME, TEMP_PATH, TEMP_NAME, TEMP_PRAMS, STATUS,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TAB_NUM, TAB_NAME, TEMP_PATH, TEMP_NAME, TEMP_PRAMS, #{status,jdbcType=VARCHAR} STATUS,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from DIS_POI_TAB
+             where STATUS = 'E' and TAB_NUM = #{tabNum,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.DisPoiTab" >
+        update DIS_POI_TAB
+        <set >
+            <if test="tabName != null" >
+                TAB_NAME = #{tabName,jdbcType=VARCHAR},
+            </if>
+            <if test="tempPath != null" >
+                TEMP_PATH = #{tempPath,jdbcType=VARCHAR},
+            </if>
+            <if test="tempName != null" >
+                TEMP_NAME = #{tempName,jdbcType=VARCHAR},
+            </if>
+            <if test="tempPrams != null" >
+                TEMP_PRAMS = #{tempPrams,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TAB_NUM = #{tabNum,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.DisPoiTab" >
+        update DIS_POI_TAB
+        set TAB_NAME = #{tabName,jdbcType=VARCHAR},
+            TEMP_PATH = #{tempPath,jdbcType=VARCHAR},
+            TEMP_NAME = #{tempName,jdbcType=VARCHAR},
+            TEMP_PRAMS = #{tempPrams,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TAB_NUM = #{tabNum,jdbcType=VARCHAR}
+    </update>
+</mapper>

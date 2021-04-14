@@ -1,0 +1,849 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.AssetTargetDbMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.AssetTargetDb" >
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <id column="IS_PERNE" property="isPerne" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+        <result column="PINAN_ASSET_TYPE" property="pinanAssetType" jdbcType="VARCHAR" />
+        <result column="CUSTOM_ASSET_TYPE_TWO" property="customAssetTypeTwo" jdbcType="VARCHAR" />
+        <result column="CUSTOM_ASSET_TYPE_THREE" property="customAssetTypeThree" jdbcType="VARCHAR" />
+        <result column="CUSTOM_ASSET_TYPE_FOUR" property="customAssetTypeFour" jdbcType="VARCHAR" />
+        <result column="CUSTOM_ASSET_TYPE_FIVE" property="customAssetTypeFive" jdbcType="VARCHAR" />
+        <result column="FAIRE_PRICE" property="fairePrice" jdbcType="DECIMAL" />
+        <result column="POS_AMOUNT" property="posAmount" jdbcType="DECIMAL" />
+        <result column="PRIN" property="prin" jdbcType="DECIMAL" />
+        <result column="POS_COST" property="posCost" jdbcType="DECIMAL" />
+        <result column="POS_VALUE" property="posValue" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP" property="tdyIntincexp" jdbcType="DECIMAL" />
+        <result column="ISSUE_PARTY" property="issueParty" jdbcType="VARCHAR" />
+        <result column="IS_SOE" property="isSoe" jdbcType="VARCHAR" />
+        <result column="IS_LISTED_COMPANY" property="isListedCompany" jdbcType="VARCHAR" />
+        <result column="COMPANY_NATURE" property="companyNature" jdbcType="VARCHAR" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY2" property="industry2" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="TERM_DAYS" property="termDays" jdbcType="DECIMAL" />
+        <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+        <result column="LAST_PERIOD" property="lastPeriod" jdbcType="DECIMAL" />
+        <result column="LATEST_DEAL_DATE" property="latestDealDate" jdbcType="DATE" />
+        <result column="BSHARE_FACE_VALUE" property="bshareFaceValue" jdbcType="DECIMAL" />
+        <result column="ISSUE_FACE_VALUE" property="issueFaceValue" jdbcType="DECIMAL" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="COST_RATE" property="costRate" jdbcType="DECIMAL" />
+        <result column="BPYIELD" property="bpyield" jdbcType="DECIMAL" />
+        <result column="M_DURATION" property="mDuration" jdbcType="DECIMAL" />
+        <result column="MDURATION" property="mduration" jdbcType="DECIMAL" />
+        <result column="M_CONVEXITY" property="mConvexity" jdbcType="DECIMAL" />
+        <result column="EX_INFO" property="exInfo" jdbcType="VARCHAR" />
+        <result column="EX_NEXT_DATE" property="exNextDate" jdbcType="DATE" />
+        <result column="LAST_EX_PERIOD" property="lastExPeriod" jdbcType="DECIMAL" />
+        <result column="M_GRADE_RESULT" property="mGradeResult" jdbcType="VARCHAR" />
+        <result column="M_GRADE_ORG" property="mGradeOrg" jdbcType="VARCHAR" />
+        <result column="B_GRADE_RESULT" property="bGradeResult" jdbcType="VARCHAR" />
+        <result column="B_GRADE_ORG" property="bGradeOrg" jdbcType="VARCHAR" />
+        <result column="M_GRADE_RESULT_IN" property="mGradeResultIn" jdbcType="VARCHAR" />
+        <result column="B_GRADE_RESULT_IN" property="bGradeResultIn" jdbcType="VARCHAR" />
+        <result column="IS_CITY_BOND" property="isCityBond" jdbcType="VARCHAR" />
+        <result column="CITY_BOND_LEV" property="cityBondLev" jdbcType="VARCHAR" />
+        <result column="C_SHARES" property="cShares" jdbcType="DECIMAL" />
+        <result column="S_SHARES" property="sShares" jdbcType="DECIMAL" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="IS_SUS" property="isSus" jdbcType="VARCHAR" />
+        <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+        <result column="EX_DATE" property="exDate" jdbcType="VARCHAR" />
+        <result column="M_GRADE_ORG_IN" property="mGradeOrgIn" jdbcType="VARCHAR" />
+        <result column="B_GRADE_ORG_IN" property="bGradeOrgIn" jdbcType="VARCHAR" />
+        <result column="BSHARE_SCALE" property="bshareScale" jdbcType="DECIMAL" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="CRN" property="crn" jdbcType="DECIMAL" />
+        <result column="ASSET_RISK_TYPE" property="assetRiskType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PORTFOLIO_ID PORTFOLIO_ID, FINPROD_ID FINPROD_ID, BRANCH BRANCH, IS_PERNE IS_PERNE,
+        CDATE CDATE, FINPROD_MARKET_ID FINPROD_MARKET_ID, FINPROD_NAME FINPROD_NAME, PINAN_ASSET_TYPE PINAN_ASSET_TYPE,
+        CUSTOM_ASSET_TYPE_TWO CUSTOM_ASSET_TYPE_TWO, CUSTOM_ASSET_TYPE_THREE CUSTOM_ASSET_TYPE_THREE,
+        CUSTOM_ASSET_TYPE_FOUR CUSTOM_ASSET_TYPE_FOUR, CUSTOM_ASSET_TYPE_FIVE CUSTOM_ASSET_TYPE_FIVE,
+        FAIRE_PRICE FAIRE_PRICE, POS_AMOUNT POS_AMOUNT, PRIN PRIN, POS_COST POS_COST, POS_VALUE POS_VALUE,
+        TDY_INTINCEXP TDY_INTINCEXP, ISSUE_PARTY ISSUE_PARTY, IS_SOE IS_SOE, IS_LISTED_COMPANY IS_LISTED_COMPANY,
+        COMPANY_NATURE COMPANY_NATURE, INDUSTRY INDUSTRY, INDUSTRY2 INDUSTRY2, VDATE VDATE,
+        MDATE MDATE, TERM_DAYS TERM_DAYS, COUNTER_ID COUNTER_ID, LAST_PERIOD LAST_PERIOD,
+        LATEST_DEAL_DATE LATEST_DEAL_DATE, BSHARE_FACE_VALUE BSHARE_FACE_VALUE, ISSUE_FACE_VALUE ISSUE_FACE_VALUE,
+        RATE RATE, COST_RATE COST_RATE, BPYIELD BPYIELD, M_DURATION M_DURATION, MDURATION MDURATION,
+        M_CONVEXITY M_CONVEXITY, EX_INFO EX_INFO, EX_NEXT_DATE EX_NEXT_DATE, LAST_EX_PERIOD LAST_EX_PERIOD,
+        M_GRADE_RESULT M_GRADE_RESULT, M_GRADE_ORG M_GRADE_ORG, B_GRADE_RESULT B_GRADE_RESULT,
+        B_GRADE_ORG B_GRADE_ORG, M_GRADE_RESULT_IN M_GRADE_RESULT_IN, B_GRADE_RESULT_IN B_GRADE_RESULT_IN,
+        IS_CITY_BOND IS_CITY_BOND, CITY_BOND_LEV CITY_BOND_LEV, C_SHARES C_SHARES, S_SHARES S_SHARES,
+        TRADE_MARKET TRADE_MARKET, IS_SUS IS_SUS, IS_RIGHT IS_RIGHT, EX_DATE EX_DATE, M_GRADE_ORG_IN M_GRADE_ORG_IN,
+        B_GRADE_ORG_IN B_GRADE_ORG_IN, BSHARE_SCALE BSHARE_SCALE, PROFIT_TYPE PROFIT_TYPE,
+        CRN CRN, ASSET_RISK_TYPE ASSET_RISK_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.AssetTargetDbMapper.Base_Column_List" />
+        from ASSET_TARGET_DB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.AssetTargetDbMapper.Base_Column_List" />
+        from ASSET_TARGET_DB
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.AssetTargetDbKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.AssetTargetDbMapper.Base_Column_List" />
+        from ASSET_TARGET_DB
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and BRANCH = #{branch,jdbcType=DECIMAL}
+        and IS_PERNE = #{isPerne,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.AssetTargetDbKey" >
+        delete from ASSET_TARGET_DB
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and IS_PERNE = #{isPerne,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.AssetTargetDb" >
+        insert into ASSET_TARGET_DB (PORTFOLIO_ID, FINPROD_ID, BRANCH,
+            IS_PERNE, CDATE, FINPROD_MARKET_ID,
+            FINPROD_NAME, PINAN_ASSET_TYPE, CUSTOM_ASSET_TYPE_TWO,
+            CUSTOM_ASSET_TYPE_THREE, CUSTOM_ASSET_TYPE_FOUR,
+            CUSTOM_ASSET_TYPE_FIVE, FAIRE_PRICE, POS_AMOUNT,
+            PRIN, POS_COST, POS_VALUE,
+            TDY_INTINCEXP, ISSUE_PARTY, IS_SOE,
+            IS_LISTED_COMPANY, COMPANY_NATURE, INDUSTRY,
+            INDUSTRY2, VDATE, MDATE,
+            TERM_DAYS, COUNTER_ID, LAST_PERIOD,
+            LATEST_DEAL_DATE, BSHARE_FACE_VALUE, ISSUE_FACE_VALUE,
+            RATE, COST_RATE, BPYIELD,
+            M_DURATION, MDURATION, M_CONVEXITY,
+            EX_INFO, EX_NEXT_DATE, LAST_EX_PERIOD,
+            M_GRADE_RESULT, M_GRADE_ORG, B_GRADE_RESULT,
+            B_GRADE_ORG, M_GRADE_RESULT_IN, B_GRADE_RESULT_IN,
+            IS_CITY_BOND, CITY_BOND_LEV, C_SHARES,
+            S_SHARES, TRADE_MARKET, IS_SUS,
+            IS_RIGHT, EX_DATE, M_GRADE_ORG_IN,
+            B_GRADE_ORG_IN, BSHARE_SCALE, PROFIT_TYPE,
+            CRN, ASSET_RISK_TYPE, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME
+            ,DV01,FLOAT_INGPL_ADD_PRICE,FLOAT_INGPL_ADD)
+        values (#{portfolioId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL},
+            #{isPerne,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{finprodMarketId,jdbcType=VARCHAR},
+            #{finprodName,jdbcType=VARCHAR}, #{pinanAssetType,jdbcType=VARCHAR}, #{customAssetTypeTwo,jdbcType=VARCHAR},
+            #{customAssetTypeThree,jdbcType=VARCHAR}, #{customAssetTypeFour,jdbcType=VARCHAR},
+            #{customAssetTypeFive,jdbcType=VARCHAR}, #{fairePrice,jdbcType=DECIMAL}, #{posAmount,jdbcType=DECIMAL},
+            #{prin,jdbcType=DECIMAL}, #{posCost,jdbcType=DECIMAL}, #{posValue,jdbcType=DECIMAL},
+            #{tdyIntincexp,jdbcType=DECIMAL}, #{issueParty,jdbcType=VARCHAR}, #{isSoe,jdbcType=VARCHAR},
+            #{isListedCompany,jdbcType=VARCHAR}, #{companyNature,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR},
+            #{industry2,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE},
+            #{termDays,jdbcType=DECIMAL}, #{counterId,jdbcType=VARCHAR}, #{lastPeriod,jdbcType=DECIMAL},
+            #{latestDealDate,jdbcType=DATE}, #{bshareFaceValue,jdbcType=DECIMAL}, #{issueFaceValue,jdbcType=DECIMAL},
+            #{rate,jdbcType=DECIMAL}, #{costRate,jdbcType=DECIMAL}, #{bpyield,jdbcType=DECIMAL},
+            #{mDuration,jdbcType=DECIMAL}, #{mduration,jdbcType=DECIMAL}, #{mConvexity,jdbcType=DECIMAL},
+            #{exInfo,jdbcType=VARCHAR}, #{exNextDate,jdbcType=DATE}, #{lastExPeriod,jdbcType=DECIMAL},
+            #{mGradeResult,jdbcType=VARCHAR}, #{mGradeOrg,jdbcType=VARCHAR}, #{bGradeResult,jdbcType=VARCHAR},
+            #{bGradeOrg,jdbcType=VARCHAR}, #{mGradeResultIn,jdbcType=VARCHAR}, #{bGradeResultIn,jdbcType=VARCHAR},
+            #{isCityBond,jdbcType=VARCHAR}, #{cityBondLev,jdbcType=VARCHAR}, #{cShares,jdbcType=DECIMAL},
+            #{sShares,jdbcType=DECIMAL}, #{tradeMarket,jdbcType=VARCHAR}, #{isSus,jdbcType=VARCHAR},
+            #{isRight,jdbcType=VARCHAR}, #{exDate,jdbcType=VARCHAR}, #{mGradeOrgIn,jdbcType=VARCHAR},
+            #{bGradeOrgIn,jdbcType=VARCHAR}, #{bshareScale,jdbcType=DECIMAL}, #{profitType,jdbcType=VARCHAR},
+            #{crn,jdbcType=DECIMAL}, #{assetRiskType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}
+            ,#{dv01,jdbcType=DECIMAL},#{floatIngplAddPrice,jdbcType=DECIMAL},#{floatIngplAdd,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.AssetTargetDb" >
+        insert into ASSET_TARGET_DB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="isPerne != null" >
+                IS_PERNE,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID,
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="pinanAssetType != null" >
+                PINAN_ASSET_TYPE,
+            </if>
+            <if test="customAssetTypeTwo != null" >
+                CUSTOM_ASSET_TYPE_TWO,
+            </if>
+            <if test="customAssetTypeThree != null" >
+                CUSTOM_ASSET_TYPE_THREE,
+            </if>
+            <if test="customAssetTypeFour != null" >
+                CUSTOM_ASSET_TYPE_FOUR,
+            </if>
+            <if test="customAssetTypeFive != null" >
+                CUSTOM_ASSET_TYPE_FIVE,
+            </if>
+            <if test="fairePrice != null" >
+                FAIRE_PRICE,
+            </if>
+            <if test="posAmount != null" >
+                POS_AMOUNT,
+            </if>
+            <if test="prin != null" >
+                PRIN,
+            </if>
+            <if test="posCost != null" >
+                POS_COST,
+            </if>
+            <if test="posValue != null" >
+                POS_VALUE,
+            </if>
+            <if test="tdyIntincexp != null" >
+                TDY_INTINCEXP,
+            </if>
+            <if test="issueParty != null" >
+                ISSUE_PARTY,
+            </if>
+            <if test="isSoe != null" >
+                IS_SOE,
+            </if>
+            <if test="isListedCompany != null" >
+                IS_LISTED_COMPANY,
+            </if>
+            <if test="companyNature != null" >
+                COMPANY_NATURE,
+            </if>
+            <if test="industry != null" >
+                INDUSTRY,
+            </if>
+            <if test="industry2 != null" >
+                INDUSTRY2,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="termDays != null" >
+                TERM_DAYS,
+            </if>
+            <if test="counterId != null" >
+                COUNTER_ID,
+            </if>
+            <if test="lastPeriod != null" >
+                LAST_PERIOD,
+            </if>
+            <if test="latestDealDate != null" >
+                LATEST_DEAL_DATE,
+            </if>
+            <if test="bshareFaceValue != null" >
+                BSHARE_FACE_VALUE,
+            </if>
+            <if test="issueFaceValue != null" >
+                ISSUE_FACE_VALUE,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="costRate != null" >
+                COST_RATE,
+            </if>
+            <if test="bpyield != null" >
+                BPYIELD,
+            </if>
+            <if test="mDuration != null" >
+                M_DURATION,
+            </if>
+            <if test="mduration != null" >
+                MDURATION,
+            </if>
+            <if test="mConvexity != null" >
+                M_CONVEXITY,
+            </if>
+            <if test="exInfo != null" >
+                EX_INFO,
+            </if>
+            <if test="exNextDate != null" >
+                EX_NEXT_DATE,
+            </if>
+            <if test="lastExPeriod != null" >
+                LAST_EX_PERIOD,
+            </if>
+            <if test="mGradeResult != null" >
+                M_GRADE_RESULT,
+            </if>
+            <if test="mGradeOrg != null" >
+                M_GRADE_ORG,
+            </if>
+            <if test="bGradeResult != null" >
+                B_GRADE_RESULT,
+            </if>
+            <if test="bGradeOrg != null" >
+                B_GRADE_ORG,
+            </if>
+            <if test="mGradeResultIn != null" >
+                M_GRADE_RESULT_IN,
+            </if>
+            <if test="bGradeResultIn != null" >
+                B_GRADE_RESULT_IN,
+            </if>
+            <if test="isCityBond != null" >
+                IS_CITY_BOND,
+            </if>
+            <if test="cityBondLev != null" >
+                CITY_BOND_LEV,
+            </if>
+            <if test="cShares != null" >
+                C_SHARES,
+            </if>
+            <if test="sShares != null" >
+                S_SHARES,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="isSus != null" >
+                IS_SUS,
+            </if>
+            <if test="isRight != null" >
+                IS_RIGHT,
+            </if>
+            <if test="exDate != null" >
+                EX_DATE,
+            </if>
+            <if test="mGradeOrgIn != null" >
+                M_GRADE_ORG_IN,
+            </if>
+            <if test="bGradeOrgIn != null" >
+                B_GRADE_ORG_IN,
+            </if>
+            <if test="bshareScale != null" >
+                BSHARE_SCALE,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="crn != null" >
+                CRN,
+            </if>
+            <if test="assetRiskType != null" >
+                ASSET_RISK_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="isPerne != null" >
+                #{isPerne,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="finprodMarketId != null" >
+                #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="pinanAssetType != null" >
+                #{pinanAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="customAssetTypeTwo != null" >
+                #{customAssetTypeTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="customAssetTypeThree != null" >
+                #{customAssetTypeThree,jdbcType=VARCHAR},
+            </if>
+            <if test="customAssetTypeFour != null" >
+                #{customAssetTypeFour,jdbcType=VARCHAR},
+            </if>
+            <if test="customAssetTypeFive != null" >
+                #{customAssetTypeFive,jdbcType=VARCHAR},
+            </if>
+            <if test="fairePrice != null" >
+                #{fairePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="posAmount != null" >
+                #{posAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="prin != null" >
+                #{prin,jdbcType=DECIMAL},
+            </if>
+            <if test="posCost != null" >
+                #{posCost,jdbcType=DECIMAL},
+            </if>
+            <if test="posValue != null" >
+                #{posValue,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexp != null" >
+                #{tdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="issueParty != null" >
+                #{issueParty,jdbcType=VARCHAR},
+            </if>
+            <if test="isSoe != null" >
+                #{isSoe,jdbcType=VARCHAR},
+            </if>
+            <if test="isListedCompany != null" >
+                #{isListedCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="companyNature != null" >
+                #{companyNature,jdbcType=VARCHAR},
+            </if>
+            <if test="industry != null" >
+                #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="industry2 != null" >
+                #{industry2,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="termDays != null" >
+                #{termDays,jdbcType=DECIMAL},
+            </if>
+            <if test="counterId != null" >
+                #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="lastPeriod != null" >
+                #{lastPeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="latestDealDate != null" >
+                #{latestDealDate,jdbcType=DATE},
+            </if>
+            <if test="bshareFaceValue != null" >
+                #{bshareFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="issueFaceValue != null" >
+                #{issueFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="costRate != null" >
+                #{costRate,jdbcType=DECIMAL},
+            </if>
+            <if test="bpyield != null" >
+                #{bpyield,jdbcType=DECIMAL},
+            </if>
+            <if test="mDuration != null" >
+                #{mDuration,jdbcType=DECIMAL},
+            </if>
+            <if test="mduration != null" >
+                #{mduration,jdbcType=DECIMAL},
+            </if>
+            <if test="mConvexity != null" >
+                #{mConvexity,jdbcType=DECIMAL},
+            </if>
+            <if test="exInfo != null" >
+                #{exInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="exNextDate != null" >
+                #{exNextDate,jdbcType=DATE},
+            </if>
+            <if test="lastExPeriod != null" >
+                #{lastExPeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="mGradeResult != null" >
+                #{mGradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="mGradeOrg != null" >
+                #{mGradeOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="bGradeResult != null" >
+                #{bGradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="bGradeOrg != null" >
+                #{bGradeOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="mGradeResultIn != null" >
+                #{mGradeResultIn,jdbcType=VARCHAR},
+            </if>
+            <if test="bGradeResultIn != null" >
+                #{bGradeResultIn,jdbcType=VARCHAR},
+            </if>
+            <if test="isCityBond != null" >
+                #{isCityBond,jdbcType=VARCHAR},
+            </if>
+            <if test="cityBondLev != null" >
+                #{cityBondLev,jdbcType=VARCHAR},
+            </if>
+            <if test="cShares != null" >
+                #{cShares,jdbcType=DECIMAL},
+            </if>
+            <if test="sShares != null" >
+                #{sShares,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="isSus != null" >
+                #{isSus,jdbcType=VARCHAR},
+            </if>
+            <if test="isRight != null" >
+                #{isRight,jdbcType=VARCHAR},
+            </if>
+            <if test="exDate != null" >
+                #{exDate,jdbcType=VARCHAR},
+            </if>
+            <if test="mGradeOrgIn != null" >
+                #{mGradeOrgIn,jdbcType=VARCHAR},
+            </if>
+            <if test="bGradeOrgIn != null" >
+                #{bGradeOrgIn,jdbcType=VARCHAR},
+            </if>
+            <if test="bshareScale != null" >
+                #{bshareScale,jdbcType=DECIMAL},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="crn != null" >
+                #{crn,jdbcType=DECIMAL},
+            </if>
+            <if test="assetRiskType != null" >
+                #{assetRiskType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.AssetTargetDb" >
+        insert into ASSET_TARGET_DB(PORTFOLIO_ID, FINPROD_ID, BRANCH, IS_PERNE, CDATE, FINPROD_MARKET_ID,
+        FINPROD_NAME, PINAN_ASSET_TYPE, CUSTOM_ASSET_TYPE_TWO, CUSTOM_ASSET_TYPE_THREE, CUSTOM_ASSET_TYPE_FOUR,
+        CUSTOM_ASSET_TYPE_FIVE, FAIRE_PRICE, POS_AMOUNT, PRIN, POS_COST, POS_VALUE, TDY_INTINCEXP,
+        ISSUE_PARTY, IS_SOE, IS_LISTED_COMPANY, COMPANY_NATURE, INDUSTRY, INDUSTRY2, VDATE,
+        MDATE, TERM_DAYS, COUNTER_ID, LAST_PERIOD, LATEST_DEAL_DATE, BSHARE_FACE_VALUE, ISSUE_FACE_VALUE,
+        RATE, COST_RATE, BPYIELD, M_DURATION, MDURATION, M_CONVEXITY, EX_INFO, EX_NEXT_DATE,
+        LAST_EX_PERIOD, M_GRADE_RESULT, M_GRADE_ORG, B_GRADE_RESULT, B_GRADE_ORG, M_GRADE_RESULT_IN,
+        B_GRADE_RESULT_IN, IS_CITY_BOND, CITY_BOND_LEV, C_SHARES, S_SHARES, TRADE_MARKET,
+        IS_SUS, IS_RIGHT, EX_DATE, M_GRADE_ORG_IN, B_GRADE_ORG_IN, BSHARE_SCALE, PROFIT_TYPE,
+        CRN, ASSET_RISK_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select PORTFOLIO_ID, FINPROD_ID, BRANCH, IS_PERNE, CDATE, FINPROD_MARKET_ID,
+            FINPROD_NAME, PINAN_ASSET_TYPE, CUSTOM_ASSET_TYPE_TWO, CUSTOM_ASSET_TYPE_THREE, CUSTOM_ASSET_TYPE_FOUR,
+            CUSTOM_ASSET_TYPE_FIVE, FAIRE_PRICE, POS_AMOUNT, PRIN, POS_COST, POS_VALUE, TDY_INTINCEXP,
+            ISSUE_PARTY, IS_SOE, IS_LISTED_COMPANY, COMPANY_NATURE, INDUSTRY, INDUSTRY2, VDATE,
+            MDATE, TERM_DAYS, COUNTER_ID, LAST_PERIOD, LATEST_DEAL_DATE, BSHARE_FACE_VALUE, ISSUE_FACE_VALUE,
+            RATE, COST_RATE, BPYIELD, M_DURATION, MDURATION, M_CONVEXITY, EX_INFO, EX_NEXT_DATE,
+            LAST_EX_PERIOD, M_GRADE_RESULT, M_GRADE_ORG, B_GRADE_RESULT, B_GRADE_ORG, M_GRADE_RESULT_IN,
+            B_GRADE_RESULT_IN, IS_CITY_BOND, CITY_BOND_LEV, C_SHARES, S_SHARES, TRADE_MARKET,
+            IS_SUS, IS_RIGHT, EX_DATE, M_GRADE_ORG_IN, B_GRADE_ORG_IN, BSHARE_SCALE, PROFIT_TYPE,
+            CRN, ASSET_RISK_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+
+             from ASSET_TARGET_DB
+             where 1 = 1 and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and IS_PERNE = #{isPerne,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.AssetTargetDb" >
+        update ASSET_TARGET_DB
+        <set >
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="pinanAssetType != null" >
+                PINAN_ASSET_TYPE = #{pinanAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="customAssetTypeTwo != null" >
+                CUSTOM_ASSET_TYPE_TWO = #{customAssetTypeTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="customAssetTypeThree != null" >
+                CUSTOM_ASSET_TYPE_THREE = #{customAssetTypeThree,jdbcType=VARCHAR},
+            </if>
+            <if test="customAssetTypeFour != null" >
+                CUSTOM_ASSET_TYPE_FOUR = #{customAssetTypeFour,jdbcType=VARCHAR},
+            </if>
+            <if test="customAssetTypeFive != null" >
+                CUSTOM_ASSET_TYPE_FIVE = #{customAssetTypeFive,jdbcType=VARCHAR},
+            </if>
+            <if test="fairePrice != null" >
+                FAIRE_PRICE = #{fairePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="posAmount != null" >
+                POS_AMOUNT = #{posAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="prin != null" >
+                PRIN = #{prin,jdbcType=DECIMAL},
+            </if>
+            <if test="posCost != null" >
+                POS_COST = #{posCost,jdbcType=DECIMAL},
+            </if>
+            <if test="posValue != null" >
+                POS_VALUE = #{posValue,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexp != null" >
+                TDY_INTINCEXP = #{tdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="issueParty != null" >
+                ISSUE_PARTY = #{issueParty,jdbcType=VARCHAR},
+            </if>
+            <if test="isSoe != null" >
+                IS_SOE = #{isSoe,jdbcType=VARCHAR},
+            </if>
+            <if test="isListedCompany != null" >
+                IS_LISTED_COMPANY = #{isListedCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="companyNature != null" >
+                COMPANY_NATURE = #{companyNature,jdbcType=VARCHAR},
+            </if>
+            <if test="industry != null" >
+                INDUSTRY = #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="industry2 != null" >
+                INDUSTRY2 = #{industry2,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="termDays != null" >
+                TERM_DAYS = #{termDays,jdbcType=DECIMAL},
+            </if>
+            <if test="counterId != null" >
+                COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="lastPeriod != null" >
+                LAST_PERIOD = #{lastPeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="latestDealDate != null" >
+                LATEST_DEAL_DATE = #{latestDealDate,jdbcType=DATE},
+            </if>
+            <if test="bshareFaceValue != null" >
+                BSHARE_FACE_VALUE = #{bshareFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="issueFaceValue != null" >
+                ISSUE_FACE_VALUE = #{issueFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="costRate != null" >
+                COST_RATE = #{costRate,jdbcType=DECIMAL},
+            </if>
+            <if test="bpyield != null" >
+                BPYIELD = #{bpyield,jdbcType=DECIMAL},
+            </if>
+            <if test="mDuration != null" >
+                M_DURATION = #{mDuration,jdbcType=DECIMAL},
+            </if>
+            <if test="mduration != null" >
+                MDURATION = #{mduration,jdbcType=DECIMAL},
+            </if>
+            <if test="mConvexity != null" >
+                M_CONVEXITY = #{mConvexity,jdbcType=DECIMAL},
+            </if>
+            <if test="exInfo != null" >
+                EX_INFO = #{exInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="exNextDate != null" >
+                EX_NEXT_DATE = #{exNextDate,jdbcType=DATE},
+            </if>
+            <if test="lastExPeriod != null" >
+                LAST_EX_PERIOD = #{lastExPeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="mGradeResult != null" >
+                M_GRADE_RESULT = #{mGradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="mGradeOrg != null" >
+                M_GRADE_ORG = #{mGradeOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="bGradeResult != null" >
+                B_GRADE_RESULT = #{bGradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="bGradeOrg != null" >
+                B_GRADE_ORG = #{bGradeOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="mGradeResultIn != null" >
+                M_GRADE_RESULT_IN = #{mGradeResultIn,jdbcType=VARCHAR},
+            </if>
+            <if test="bGradeResultIn != null" >
+                B_GRADE_RESULT_IN = #{bGradeResultIn,jdbcType=VARCHAR},
+            </if>
+            <if test="isCityBond != null" >
+                IS_CITY_BOND = #{isCityBond,jdbcType=VARCHAR},
+            </if>
+            <if test="cityBondLev != null" >
+                CITY_BOND_LEV = #{cityBondLev,jdbcType=VARCHAR},
+            </if>
+            <if test="cShares != null" >
+                C_SHARES = #{cShares,jdbcType=DECIMAL},
+            </if>
+            <if test="sShares != null" >
+                S_SHARES = #{sShares,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="isSus != null" >
+                IS_SUS = #{isSus,jdbcType=VARCHAR},
+            </if>
+            <if test="isRight != null" >
+                IS_RIGHT = #{isRight,jdbcType=VARCHAR},
+            </if>
+            <if test="exDate != null" >
+                EX_DATE = #{exDate,jdbcType=VARCHAR},
+            </if>
+            <if test="mGradeOrgIn != null" >
+                M_GRADE_ORG_IN = #{mGradeOrgIn,jdbcType=VARCHAR},
+            </if>
+            <if test="bGradeOrgIn != null" >
+                B_GRADE_ORG_IN = #{bGradeOrgIn,jdbcType=VARCHAR},
+            </if>
+            <if test="bshareScale != null" >
+                BSHARE_SCALE = #{bshareScale,jdbcType=DECIMAL},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="crn != null" >
+                CRN = #{crn,jdbcType=DECIMAL},
+            </if>
+            <if test="assetRiskType != null" >
+                ASSET_RISK_TYPE = #{assetRiskType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and BRANCH = #{branch,jdbcType=DECIMAL}
+        and IS_PERNE = #{isPerne,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.AssetTargetDb" >
+        update ASSET_TARGET_DB
+        set FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            PINAN_ASSET_TYPE = #{pinanAssetType,jdbcType=VARCHAR},
+            CUSTOM_ASSET_TYPE_TWO = #{customAssetTypeTwo,jdbcType=VARCHAR},
+            CUSTOM_ASSET_TYPE_THREE = #{customAssetTypeThree,jdbcType=VARCHAR},
+            CUSTOM_ASSET_TYPE_FOUR = #{customAssetTypeFour,jdbcType=VARCHAR},
+            CUSTOM_ASSET_TYPE_FIVE = #{customAssetTypeFive,jdbcType=VARCHAR},
+            FAIRE_PRICE = #{fairePrice,jdbcType=DECIMAL},
+            POS_AMOUNT = #{posAmount,jdbcType=DECIMAL},
+            PRIN = #{prin,jdbcType=DECIMAL},
+            POS_COST = #{posCost,jdbcType=DECIMAL},
+            POS_VALUE = #{posValue,jdbcType=DECIMAL},
+            TDY_INTINCEXP = #{tdyIntincexp,jdbcType=DECIMAL},
+            ISSUE_PARTY = #{issueParty,jdbcType=VARCHAR},
+            IS_SOE = #{isSoe,jdbcType=VARCHAR},
+            IS_LISTED_COMPANY = #{isListedCompany,jdbcType=VARCHAR},
+            COMPANY_NATURE = #{companyNature,jdbcType=VARCHAR},
+            INDUSTRY = #{industry,jdbcType=VARCHAR},
+            INDUSTRY2 = #{industry2,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            TERM_DAYS = #{termDays,jdbcType=DECIMAL},
+            COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            LAST_PERIOD = #{lastPeriod,jdbcType=DECIMAL},
+            LATEST_DEAL_DATE = #{latestDealDate,jdbcType=DATE},
+            BSHARE_FACE_VALUE = #{bshareFaceValue,jdbcType=DECIMAL},
+            ISSUE_FACE_VALUE = #{issueFaceValue,jdbcType=DECIMAL},
+            RATE = #{rate,jdbcType=DECIMAL},
+            COST_RATE = #{costRate,jdbcType=DECIMAL},
+            BPYIELD = #{bpyield,jdbcType=DECIMAL},
+            M_DURATION = #{mDuration,jdbcType=DECIMAL},
+            MDURATION = #{mduration,jdbcType=DECIMAL},
+            M_CONVEXITY = #{mConvexity,jdbcType=DECIMAL},
+            EX_INFO = #{exInfo,jdbcType=VARCHAR},
+            EX_NEXT_DATE = #{exNextDate,jdbcType=DATE},
+            LAST_EX_PERIOD = #{lastExPeriod,jdbcType=DECIMAL},
+            M_GRADE_RESULT = #{mGradeResult,jdbcType=VARCHAR},
+            M_GRADE_ORG = #{mGradeOrg,jdbcType=VARCHAR},
+            B_GRADE_RESULT = #{bGradeResult,jdbcType=VARCHAR},
+            B_GRADE_ORG = #{bGradeOrg,jdbcType=VARCHAR},
+            M_GRADE_RESULT_IN = #{mGradeResultIn,jdbcType=VARCHAR},
+            B_GRADE_RESULT_IN = #{bGradeResultIn,jdbcType=VARCHAR},
+            IS_CITY_BOND = #{isCityBond,jdbcType=VARCHAR},
+            CITY_BOND_LEV = #{cityBondLev,jdbcType=VARCHAR},
+            C_SHARES = #{cShares,jdbcType=DECIMAL},
+            S_SHARES = #{sShares,jdbcType=DECIMAL},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            IS_SUS = #{isSus,jdbcType=VARCHAR},
+            IS_RIGHT = #{isRight,jdbcType=VARCHAR},
+            EX_DATE = #{exDate,jdbcType=VARCHAR},
+            M_GRADE_ORG_IN = #{mGradeOrgIn,jdbcType=VARCHAR},
+            B_GRADE_ORG_IN = #{bGradeOrgIn,jdbcType=VARCHAR},
+            BSHARE_SCALE = #{bshareScale,jdbcType=DECIMAL},
+            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            CRN = #{crn,jdbcType=DECIMAL},
+            ASSET_RISK_TYPE = #{assetRiskType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and IS_PERNE = #{isPerne,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+</mapper>

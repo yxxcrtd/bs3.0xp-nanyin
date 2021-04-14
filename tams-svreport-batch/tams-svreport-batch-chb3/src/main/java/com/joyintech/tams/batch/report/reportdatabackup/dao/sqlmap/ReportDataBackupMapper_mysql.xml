@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.batch.report.reportdatabackup.dao.ReportDataBackupMapper_mysql">
-    <!-- 插入 ChbInfoReport数据-->
+	<!-- 查询传入的表名是否存在-->
+	<select id="queryTableIsExist" parameterType="java.lang.String" resultType="java.lang.String">
+		select TABLE_NAME tableName from user_tables
+		where table_name = #{tableName}
+	</select>
+	<!-- 报送总表备份 -->
+	<update id="createChbInfoReport">
+        create table ${newTableName} as select * from CHB_INFO_REPORT  where 1=0
+    </update>
+	<!-- 插入 ChbInfoReport数据-->
     <insert id="insertChbInfoReportData">
     	insert into ${newTableName}
 		select * from CHB_INFO_REPORT rep where rep.REPORT_NO in (
@@ -88,5 +97,24 @@
         insert into ${newTableName}
         select sub.* from  CHB_INVESTHOLD_INFO_SUB sub
     		where sub.HOLD_DATE >= str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%M-%d')
+    </update>
+	<update id="createChbSubmitStatus">
+        create table ${newTableName} as select CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS  where 1=0
+    </update>
+	<update id="createChbInvestHoldInfo">
+        create table ${newTableName} as select * from CHB_INVESTHOLD_INFO   where 1=0
+    </update>
+	<update id="createChbInvestHoldInfoSub">
+        create table ${newTableName} as select * from  CHB_INVESTHOLD_INFO_SUB sub where 1=0
+    </update>
+	<update id="truncateTable">
+        truncate table ${tableName}
+    </update>
+	<insert id="insertDataToOriTable">
+    	insert into ${newTableName}
+		select * from  ${tempTableName}
+    </insert>
+	<update id="dropTempTable">
+    	drop table ${newTableName};
     </update>
 </mapper>
