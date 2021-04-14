@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.batch.busiAutoAddSecInfo.service;
 
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -31,6 +32,8 @@ import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -102,6 +105,7 @@ public class BusiAutoAddSecInfoService {
      * @see
      * @since 1.0
      */
+    @Transactional(rollbackFor=Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void autoGeneration(Date batchDate) {
         //1、获取未上市债券信息
         Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -447,6 +451,7 @@ public class BusiAutoAddSecInfoService {
                 trdProductDeal.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
                 trdProductDeal.setFinprodId("F01_"+secId);
                 trdProductDeal.setTradeDate(batchDate);
+                trdProductDeal.setPs(DictCodeList.交易方向_上市流通.getValue());
                 trdProductDeal.setBranch(0L);
                 deals.add(trdProductDeal);
                 //金融产品交易扩展表
