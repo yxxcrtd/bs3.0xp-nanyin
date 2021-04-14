@@ -330,7 +330,7 @@ public class AutoPeriodCommonService extends BaseService {
             List<PtlSecPositionFlow> flows = ptlSecPositionFlowMapper.selectSecFlow(params);
             if (flows != null && !flows.isEmpty()) {
                 flows.forEach(flow -> {
-                    if (trdFinProductDealTotal.getVdate().equals(DateUtil.format(flow.getCdate()))){
+                    if (trdFinProductDealTotal.getVdate().equals(flow.getCdate())){
                         flow.setAmount(flow.getAmount());
                         flow.setCdate(trdFinProductDealTotal.getSettleDate());
                         ptlSecPositionFlowMapper.insertSelect04Sec(flow);

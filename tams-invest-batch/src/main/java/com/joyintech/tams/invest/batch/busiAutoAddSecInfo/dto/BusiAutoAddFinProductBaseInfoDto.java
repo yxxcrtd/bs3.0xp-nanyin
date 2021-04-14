@@ -19,10 +19,10 @@ import java.util.List;
  * 〈功能详细描述〉
  * @author shijingjing
  * @version 1.0 2021年04月07日
- * @see BaseFinProductBaseInfoDto
+ * @see BusiAutoAddFinProductBaseInfoDto
  * @since 1.0
  */
-public class BaseFinProductBaseInfoDto {
+public class BusiAutoAddFinProductBaseInfoDto {
     
     /**
      * 标的类金融产品entity
@@ -72,6 +72,18 @@ public class BaseFinProductBaseInfoDto {
      * 开放规则dtolist
      */
     private List<FinOpenRule> finOpenRuleList;
+    /**
+     * 持仓list
+     */
+    private List<PtlSecPositionFlow> ptlSecPositionFlowlist;
+    /**
+     * 指令持仓list
+     */
+    private List<EtrSecPositionFlow> etrSecPositionFlowlist;
+    //债券资产报送信息
+    private RepAssetOther repAssetOther;
+    //权益类资产报送信息
+    private RepAssetEquity repAssetEquity;
     
     /**
      * 基金报送信息 add by shenchen
@@ -333,5 +345,36 @@ public class BaseFinProductBaseInfoDto {
 	public void setMstBondCreditRatingList(List<MstBondCreditRating> mstBondCreditRatingList) {
 		this.mstBondCreditRatingList = mstBondCreditRatingList;
 	}
-   
+
+    public List<PtlSecPositionFlow> getPtlSecPositionFlowlist() {
+        return ptlSecPositionFlowlist;
+    }
+
+    public void setPtlSecPositionFlowlist(List<PtlSecPositionFlow> ptlSecPositionFlowlist) {
+        this.ptlSecPositionFlowlist = ptlSecPositionFlowlist;
+    }
+
+    public List<EtrSecPositionFlow> getEtrSecPositionFlowlist() {
+        return etrSecPositionFlowlist;
+    }
+
+    public void setEtrSecPositionFlowlist(List<EtrSecPositionFlow> etrSecPositionFlowlist) {
+        this.etrSecPositionFlowlist = etrSecPositionFlowlist;
+    }
+
+    public RepAssetOther getRepAssetOther() {
+        return repAssetOther;
+    }
+
+    public void setRepAssetOther(RepAssetOther repAssetOther) {
+        this.repAssetOther = repAssetOther;
+    }
+
+    public RepAssetEquity getRepAssetEquity() {
+        return repAssetEquity;
+    }
+
+    public void setRepAssetEquity(RepAssetEquity repAssetEquity) {
+        this.repAssetEquity = repAssetEquity;
+    }
 }

@@ -25,7 +25,7 @@
         LEFT JOIN FIN_PRODUCT fp ON inp.SECID = fp.FINPROD_MARKET_ID
         WHERE fp.FINPROD_ID IS NULL
         AND inp.SECNAME = #{finprodAbbr,jdbcType=VARCHAR}
-        AND inp.MARKET  = #{tradeMarket,jdbcType=VARCHAR}
+        AND inp.MARKET2  = #{tradeMarket,jdbcType=VARCHAR}
     </select>
 
     <select id="selectFinCashInfo" resultType="com.joyintech.tams.common.base.entity.FinCashInfo">
@@ -133,6 +133,7 @@
         ETR_SEC_POSITION esp
         WHERE esp.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} /**金融产品代码**/
         AND esp.CDATE = to_date(#{DealDate},'yyyy-MM-dd')
+        AND esp.HODING_TYPE = #{HODING_TYPE_E01}
     </select>
 
     <select id="getPtlSecPositionList"
@@ -146,6 +147,7 @@
         PTL_SEC_POSITION esp
         WHERE esp.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} /**金融产品代码**/
         AND esp.CDATE = to_date(#{DealDate},'yyyy-MM-dd')
+        AND esp.HODING_TYPE = #{HODING_TYPE_03}
     </select>
 
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >

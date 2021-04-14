@@ -604,12 +604,18 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
             PtlSecPositionFlowDto resultDto;
             TrdStasecFlowDetail tsfd;
 
+            int tradeIdIndex = 0;
+            
             Map<String, List<TrdStandardBondOutDto>> dtoMap = dto.getOutBondList().stream().collect(JoyinCollectors.groupingBy(x -> x.getPortfolioId() + "," + x.getSecAcctId()));
             for (Map.Entry<String, List<TrdStandardBondOutDto>> entry : dtoMap.entrySet()) {
+            	/*
                 BussinessCodeParameter parameter = new BussinessCodeParameter();
                 parameter.setSeqNo("9999");
                 String seqNo = baseGetBussinessId.buildBussinessCode(parameter);
-
+                */
+            	String seqNo = dto.getTradeIdList().get(tradeIdIndex);
+            	tradeIdIndex++;
+            	
                 TrdStasecFlow tsf = new TrdStasecFlow();
                 tsf.setSeqno(seqNo);
                 tsf.setPortfolioId(entry.getValue().get(0).getPortfolioId());
