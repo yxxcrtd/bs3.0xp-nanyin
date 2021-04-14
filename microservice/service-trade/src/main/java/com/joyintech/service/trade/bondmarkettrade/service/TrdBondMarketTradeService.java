@@ -150,8 +150,7 @@ public class TrdBondMarketTradeService extends BaseService {
      * @see
      * @since 1.0
      */
-    public Page<TrdBondMarketTradeDto> findPage(int page, int length,
-                                                     Map<String, Object> pageParam)
+    public Page<TrdBondMarketTradeDto> findPage(int page, int length,Map<String, Object> pageParam)
             throws Exception {
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.有效状态_待处理.getValue());
