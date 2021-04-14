@@ -356,6 +356,7 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
                             params.put("finprodId", flow.getFinprodId());
                             params.put("tradeId", trdRepoDurationDto.getFinprodId());
                             params.put("isRevoke", "true");
+                            params.put("invAim", flow.getInvAim());
                             //生成持仓流水数据，如果没有生成流水，重复跑当天的批处理会导致持仓数据错误
                             trdRepoDurationMapper.insertSelect04SecFlowByDate(params);
                         }
@@ -393,6 +394,7 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
                        params.put("mDate", DateUtil.parse(trdRepoDurationDto.getSettleDate()));
                        params.put("vDate", DateUtil.parse(trdRepoDurationDto.getvDate()));
                        params.put("finprodId", flow.getFinprodId());
+                       params.put("invAim", flow.getInvAim());
                        params.put("tradeId", trdRepoDurationDto.getFinprodId());
                        //生成持仓流水数据，如果没有生成流水，重复跑当天的批处理会导致持仓数据错误
                        trdRepoDurationMapper.insertSelect04SecFlowByDate(params);

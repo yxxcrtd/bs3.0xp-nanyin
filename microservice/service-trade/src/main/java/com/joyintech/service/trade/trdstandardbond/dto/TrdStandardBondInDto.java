@@ -65,6 +65,8 @@ public class TrdStandardBondInDto extends BaseEntity {
     
     
     private List<String> tradeIdList;
+    
+    private String isComplete;
 
     /**
      * 币种
@@ -500,5 +502,13 @@ public class TrdStandardBondInDto extends BaseEntity {
 
 	public void setTradeIdList(List<String> tradeIdList) {
 		this.tradeIdList = tradeIdList;
+	}
+
+	public String getIsComplete() {
+		return isComplete;
+	}
+
+	public void setIsComplete(String isComplete) {
+		this.isComplete = isComplete;
 	}
 }

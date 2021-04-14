@@ -1660,6 +1660,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	持仓类型_卖空(DictCode.持仓类型,"11","卖空"),
 	持仓类型_卖空可用(DictCode.持仓类型,"12","卖空可用"),
 	持仓类型_人工调整(DictCode.持仓类型,"99","人工调整"),
+	持仓类型_临时(DictCode.持仓类型,"13","人工调整"),
 	资产科目类型_存款类(DictCode.资产科目类型,"CKL","存款类"),
 	资产科目类型_项目类(DictCode.资产科目类型,"LLXFB","项目类"),
 	活期类存放同业收息方式_计入活期存款(DictCode.活期类存放同业收息方式,"01","计入活期存款"),

@@ -711,6 +711,7 @@
             AND HODING_TYPE = #{holdingType}
             AND CDATE = #{vDate, jdbcType=DATE}
             AND FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND INV_AIM = #{invAim,jdbcType=VARCHAR}
     </insert>
 
     <select id="findAddDealByWorkflowId" resultMap="com.joyintech.tams.common.base.dao.WflTrdProductDealAddMapper.BaseResultMap">

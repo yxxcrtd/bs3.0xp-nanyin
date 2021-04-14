@@ -37,6 +37,8 @@ public class TrdStandardBond003Dto extends BaseEntity implements ProcessEntity {
     private List<String> tradeIdList;
     
     private String operateType;
+    
+    private String isComplete;
 
     /**
      * 组合代码
@@ -651,5 +653,13 @@ public class TrdStandardBond003Dto extends BaseEntity implements ProcessEntity {
 
 	public void setOperateType(String operateType) {
 		this.operateType = operateType;
+	}
+
+	public String getIsComplete() {
+		return isComplete;
+	}
+
+	public void setIsComplete(String isComplete) {
+		this.isComplete = isComplete;
 	}
 }
