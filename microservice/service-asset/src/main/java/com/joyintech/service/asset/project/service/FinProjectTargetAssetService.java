@@ -288,6 +288,10 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
             		racnDto.setRepPartRedemFlag(null);
             	}
             	//BS-36 新增可投资资产中，部分赎回标识默认的是否，资产要素登记中该字段也是否，期望应为空 end
+            	/*else{
+            		RepAssetCreditNonstd racnDto= entity.getBaseRepAssetCreditNonstdInfoDto().getRepAssetCreditNonstdList().get(0);
+            		racnDto.setRepIsResale(null);
+            	}*/
                 baseRepAssetCreditNonstdInfoService.insert(entity.getBaseRepAssetCreditNonstdInfoDto().getRepAssetCreditNonstdList());
             }
         }
@@ -312,6 +316,12 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
         //其他资产报送信息
         if(null!=baseRepOtherInvestTargetInfoService){
             if(null!=entity.getBaseRepOtherInvestTargetInfoDto()){
+            	if(StringUtil.equals(entity.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他非标准化债权类投资.getValue())
+            			|| StringUtil.equals(entity.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他新增可投资资产.getValue())){
+            		RepOtherInvestTarget racnDto= entity.getBaseRepOtherInvestTargetInfoDto().getRepOtherInvestTargetList().get(0);
+            		racnDto.setRepIndustryFlag(null);
+            		racnDto.setRepContainExpectedYield2(null);
+            	}
                 baseRepOtherInvestTargetInfoService.insert(entity.getBaseRepOtherInvestTargetInfoDto().getRepOtherInvestTargetList());
             }
         }
@@ -486,6 +496,10 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
             		racnDto.setRepPartRedemFlag(null);
             	}
             	//BS-36 新增可投资资产中，部分赎回标识默认的是否，资产要素登记中该字段也是否，期望应为空 end
+            	/*else{
+            		RepAssetCreditNonstd racnDto= entity.getBaseRepAssetCreditNonstdInfoDto().getRepAssetCreditNonstdList().get(0);
+            		racnDto.setRepIsResale(null);
+            	}*/
                 baseRepAssetCreditNonstdInfoService.update(entity.getBaseRepAssetCreditNonstdInfoDto());
             }
         }
@@ -513,6 +527,12 @@ public class FinProjectTargetAssetService extends BaseService<FinProjectTargetAs
         //其他资产报送信息
         if(null!=baseRepOtherInvestTargetInfoService){
             if(null!=entity.getBaseRepOtherInvestTargetInfoDto()){
+            	if(StringUtil.equals(entity.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他非标准化债权类投资.getValue())
+            			|| StringUtil.equals(entity.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_其他新增可投资资产.getValue())){
+            		RepOtherInvestTarget racnDto= entity.getBaseRepOtherInvestTargetInfoDto().getRepOtherInvestTargetList().get(0);
+            		racnDto.setRepIndustryFlag(null);
+            		racnDto.setRepContainExpectedYield2(null);
+            	}
                 baseRepOtherInvestTargetInfoService.update(entity.getBaseRepOtherInvestTargetInfoDto());
             }
         }

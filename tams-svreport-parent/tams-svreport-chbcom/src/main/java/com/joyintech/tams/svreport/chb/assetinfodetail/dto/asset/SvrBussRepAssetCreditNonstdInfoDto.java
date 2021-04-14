@@ -144,7 +144,7 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
     /**
     * 行权周期
     */
-    private BigDecimal repExercisePeriod;
+    private Integer repExercisePeriod;
 
     /**
     * 行权价格
@@ -743,7 +743,7 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
 	/**
 	 * @return the repExercisePeriod
 	 */
-	public BigDecimal getRepExercisePeriod() {
+	public Integer getRepExercisePeriod() {
 		return repExercisePeriod;
 	}
 
@@ -751,7 +751,7 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
 	/**
 	 * @param repExercisePeriod the repExercisePeriod to set
 	 */
-	public void setRepExercisePeriod(BigDecimal repExercisePeriod) {
+	public void setRepExercisePeriod(Integer repExercisePeriod) {
 		this.repExercisePeriod = repExercisePeriod;
 	}
 

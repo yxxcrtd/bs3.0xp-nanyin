@@ -3141,7 +3141,7 @@
           END 
         END AS FLOAT_FACTOR,
         CASE WHEN T21.INT_TYPE = '01' THEN NULL 
-        ELSE detail.REP_SPREAD_RATE/100
+        ELSE detail.REP_SPREAD_RATE
         END SPREAD_RATE,
         <!-- MODIFY BY ZHANGLIANGz 20201212 START -->
         <!-- detail.REP_FINANCIER FINANCIE, -->

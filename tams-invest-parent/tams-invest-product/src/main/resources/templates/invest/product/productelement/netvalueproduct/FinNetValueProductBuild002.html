@@ -208,7 +208,7 @@
 											data-th-text="#{FinProductBuild002.investmentCycle}">投资周期（天）</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" name="investmentCycle" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-												id="FinNetValueProductBuild002_investmentCycle"
+												required
 												class="layui-input form-input text-number" data-textrange="0" maxlength=4
 												data-th-placeholder="#{SysCommon.placeholder}"
 												data-th-value='${entity?.investmentCycle}'>

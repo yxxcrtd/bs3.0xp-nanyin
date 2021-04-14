@@ -76,6 +76,8 @@ public class PtlFundAcctPosiDto extends PtlCashPosition {
 	 * 交易方向
 	 */
 	private String ps;
+	
+	private String isSummary;
 
 	public String getFinprodId() {
 		return finprodId;
@@ -228,5 +230,13 @@ public class PtlFundAcctPosiDto extends PtlCashPosition {
 
 	public void setPs(String ps) {
 		this.ps = ps;
+	}
+
+	public String getIsSummary() {
+		return isSummary;
+	}
+
+	public void setIsSummary(String isSummary) {
+		this.isSummary = isSummary;
 	}
 }
