@@ -390,7 +390,7 @@ public class BusiAutoAddSecInfoService {
             }
 
             //2.4 更新原有标的上市代码
-            this.updateFinProdAdd(finProduct);
+            this.updateFinProdAdd(finProduct,secId);
         }
         //入库加券信息
         if(baseFinProductBaseInfolist != null && baseFinProductBaseInfolist.size() > 0){
@@ -403,10 +403,10 @@ public class BusiAutoAddSecInfoService {
     }
 
     //更新原有标的上市代码
-    private void updateFinProdAdd(FinProduct finProduct) {
+    private void updateFinProdAdd(FinProduct finProduct,String secId) {
         FinProductAdd finProductAdd = new FinProductAdd();
         finProductAdd.setFinprodId(finProduct.getFinprodId());
-        //finProductAdd.setap(secId);
+        finProductAdd.setAppearMarketId(secId);
         busiAutoAddSecInfoMapper.updateByPrimaryKey(finProductAdd);
     }
 
@@ -428,6 +428,7 @@ public class BusiAutoAddSecInfoService {
         trdFinProductDealTotal.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
         trdFinProductDealTotal.setFinprodId("F01_"+secId);
         trdFinProductDealTotal.setTradeDate(batchDate);
+        trdFinProductDealTotal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         trdFinProductDealTotal.setBranch(0L);
         busiAutoAddTradeProductDealDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
 
@@ -453,6 +454,7 @@ public class BusiAutoAddSecInfoService {
                 trdProductDeal.setTradeDate(batchDate);
                 trdProductDeal.setPs(DictCodeList.交易方向_上市流通.getValue());
                 trdProductDeal.setBranch(0L);
+                trdProductDeal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
                 deals.add(trdProductDeal);
                 //金融产品交易扩展表
                 TrdProductDealAdd trdProductDealAdd =new TrdProductDealAdd();

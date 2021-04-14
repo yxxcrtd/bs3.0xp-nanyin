@@ -1475,4 +1475,18 @@ AND	fin.BRANCH = 0
 		and cash_type in ('02','03')  and rownum=1
 	</select>
 
+	<select id="selectTrdFinProductBarter"
+			resultType="com.joyintech.tams.valuation.common.dto.TrdFinProductBarterDto">
+		SELECT A.*,B.*,C.*
+		FROM TRD_FIN_PRODUCT_BARTER A
+		LEFT JOIN
+		FIN_PRODUCT_TYPE C
+		ON C.FINPROD_ID = A.FINPROD_ID AND C.TYPE_8 = A.FINPROD_TYPE
+		LEFT JOIN
+		BOK_DETAIL_ID B
+		ON B.BUSI_ID = A.FINPROD_ID AND B.BUSI_DETAIL_TYPE = A.FINPROD_TYPE AND A.INV_AIM = B.INV_AIM
+		WHERE
+		A.TRADE_ID =  #{tradeId}
+	</select>
+
 </mapper>

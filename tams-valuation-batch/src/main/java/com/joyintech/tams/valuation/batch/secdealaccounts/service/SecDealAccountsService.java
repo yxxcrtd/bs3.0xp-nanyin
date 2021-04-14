@@ -48,6 +48,7 @@ import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.dto.TrdFinProductBarterDto;
 import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -323,6 +324,9 @@ public class SecDealAccountsService {
             //交易方向_应收款项转出 add by yanya on 20191226
             else if (DictCodeList.交易方向_应收款项转出.getValue().equals(dealNow.getPs())) {
                 this.getReceivablesOut(rstBaseinfo, returnResult, dealNow, acctEntity, param);
+            }
+            else if(DictCodeList.交易方向_上市流通.getValue().equals(dealNow.getPs())){
+                this.getListingCirculation(rstBaseinfo, returnResult, dealNow, acctEntity, param);
             }
         }
     }
@@ -6498,4 +6502,352 @@ public class SecDealAccountsService {
         returnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
     }
 
+    /**
+     * 上市流通
+     * @param rstBaseinfo
+     * @param returnResult
+     * @param dealNow
+     * @param acctEntity
+     * @param param
+     */
+    private void getListingCirculation(TargetFinProduct rstBaseinfo, BookGenerateResult returnResult, FinProductDealInfoComDTO dealNow,
+                                       FinProductDealInfoResult acctEntity, DealParamterDto param) {
+
+        //交易编号为空则返回
+        if (StringUtil.isBlank(dealNow.getTradeId())) {
+            return;
+        }
+        //调用 共通【实物交易查询】  参考详细设计-标的类共通方法设计.xlsx【实物交易查询】
+        TrdFinProductBarterDto trdFinProductBarterDto = finProductCommonService.selectTrdFinProductBarter(dealNow.getTradeId());
+
+        //查询不到返回
+        if(trdFinProductBarterDto ==null){
+            return;
+        }
+
+        //原资产成本科目余额
+        BigDecimal origCbkmye = BigDecimal.ZERO;
+        //原资产成本科目数量
+        BigDecimal origCbkmsl = BigDecimal.ZERO;
+        //原资产应计利息科目余额
+        BigDecimal origyjlxkmye = BigDecimal.ZERO;
+        //原资产公允价值变动科目余额
+        BigDecimal origgyjzbdkmye = BigDecimal.ZERO;
+        //原资产溢折价科目余额
+        BigDecimal origyzjkmye = BigDecimal.ZERO;
+        // 调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
+        SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
+//        searchDto.setHappenDate(DateUtil.addDay(acctEntity.getHappenDate(),-1));
+//        searchDto.setBookDate(DateUtil.addDay(acctEntity.getBookDate(),-1));
+        searchDto.setHappenDate(acctEntity.getHappenDate());
+        searchDto.setBookDate(acctEntity.getBookDate());
+        searchDto.setBooksetId(acctEntity.getBooksetId());
+        searchDto.setBokDetailId(trdFinProductBarterDto.getBokDetailId());
+        searchDto.setTaskPri(acctEntity.getListFinProductDealInfoComDTO().get(0).getTaskPri());
+
+        // 2.1.成本类科目余额
+        List<SubjectBalance> listSubjectBalance = new ArrayList<SubjectBalance>();
+        if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.摊余成本类成本.getValue())));
+            listSubjectBalance = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(
+                acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.公允价值损益类_成本.getValue())));
+            listSubjectBalance = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
+                acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.综合收益类成本.getValue())));
+            listSubjectBalance = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+        if (listSubjectBalance != null && listSubjectBalance.size() > 0) {
+            origCbkmye = listSubjectBalance.get(0).getBalance();
+            origCbkmsl =listSubjectBalance.get(0).getNum();
+        }
+        // 2.2.应计利息类科目余额
+        List<SubjectBalance> listSubjectBalanceInt = new ArrayList<SubjectBalance>();
+        if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.摊余成本类债券应计利息.getValue())));
+            listSubjectBalanceInt = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(
+                acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.公允价值损益类应计利息.getValue())));
+            listSubjectBalanceInt = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
+                acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.综合收益类应计利息.getValue())));
+            listSubjectBalanceInt = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+
+        if (listSubjectBalanceInt != null && listSubjectBalanceInt.size() > 0) {
+            origyjlxkmye = listSubjectBalanceInt.get(0).getBalance();
+        }
+
+        // 2.3.公允价值变动类科目余额
+        List<SubjectBalance> listSubjectBalanceFV = new ArrayList<SubjectBalance>();
+        if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.公允价值损益类_公允价值变动.getValue())));
+            listSubjectBalanceFV = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
+                acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.综合收益类_公允价值变动.getValue())));
+            listSubjectBalanceFV = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+
+        if (listSubjectBalanceFV != null && listSubjectBalanceFV.size() > 0) {
+            origgyjzbdkmye = listSubjectBalanceFV.get(0).getBalance();
+        }
+
+        // 2.4.溢折价类科目余额
+        List<SubjectBalance> listSubjectBalanceEX = new ArrayList<SubjectBalance>();
+        if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue())));
+            listSubjectBalanceEX = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
+                acctEntity.getInvAim())) {
+            searchDto.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue())));
+            listSubjectBalanceEX = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDto, DictCodeList.余额方向_借方.getValue());
+        }
+        if (listSubjectBalanceEX != null && listSubjectBalanceEX.size() > 0) {
+            // 变量.溢折价科目余额 = 科目余额
+            origyzjkmye = listSubjectBalanceEX.get(0).getBalance();
+        }
+
+        //初始化定义 - 记账场景要素管理
+        AccountDriver ad = new AccountDriver();
+        // 初始化定义 - 存放该笔记账的场景要素 map定义
+        Map<String, Object> accountSceneMap = new HashMap<>();
+        // 初始化定义 - 存放该笔记账的相关金额要素 map定义
+        Map<String, BigDecimal> accountAmountMap = new HashMap<>();
+        // 初始化定义 - 存放该笔记账的相关金额对应的币种 map定义
+        Map<String, Object> accountCurrencyMap = new HashMap<>();
+
+        accountSceneMap = bookCommonLogic.transactionElementAssign(acctEntity, dealNow);
+        // 会计场景
+        ad.setTreeNode(acctEntity.getBookSetTreeNode());
+
+        // accountSceneMap设置
+        // 备注
+        if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(acctEntity.getInvAim())) {
+            //ad.会计场景代码="会计场景代码_公允价值损益类债券_上市流通"
+            ad.setTableId(DictCodeListTableId.会计场景代码_公允价值损益类债券_上市流通.getValue());
+            // 备注
+            accountSceneMap.put(BookConstant.BOOK_REMARK,
+                    "公允价值损益类债券资产" + SysDataUtil.getNameFromDataDict(DictCode.交易方向, dealNow.getPs()) + "交易登账");
+        } else if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(acctEntity.getInvAim())) {
+            //ad.会计场景代码="会计场景代码_摊余成本类债券_上市流通"
+            ad.setTableId(DictCodeListTableId.会计场景代码_摊余成本类债券_上市流通.getValue());
+            // 备注
+            accountSceneMap.put(BookConstant.BOOK_REMARK,
+                    "摊余成本类债券资产" + SysDataUtil.getNameFromDataDict(DictCode.交易方向, dealNow.getPs()) + "交易登账");
+        } else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
+                acctEntity.getInvAim())) {
+            //ad.会计场景代码="会计场景代码_综合收益类债券_上市流通"
+            ad.setTableId(DictCodeListTableId.会计场景代码_综合收益类债券_上市流通.getValue());
+            // 备注
+            accountSceneMap.put(BookConstant.BOOK_REMARK,
+                    "综合收益类债券资产" + SysDataUtil.getNameFromDataDict(DictCode.交易方向, dealNow.getPs()) + "交易登账");
+        }
+
+        // 公共场景赋值
+        getAccountSceneMap(accountSceneMap, dealNow, rstBaseinfo);
+        //1减少 2增加
+        accountSceneMap.put(BookConstant.BOK_DETAIL_ID1,
+                getValBokDetailId(trdFinProductBarterDto.getFinprodId(), trdFinProductBarterDto.getBokDetailId(), null,dealNow.getCcy()));
+
+        accountSceneMap.put(BookConstant.BOK_DETAIL_ID2,
+                getValBokDetailId(dealNow.getFinprodId(), dealNow.getBokDetailId(), null,dealNow.getCcy()));
+
+        // accountAmountMap设置
+        // 成本金额
+        accountAmountMap.put(BookConstant.FACEVALUE,
+                ArithmeticUtil.round(origCbkmye, NumberEnum.MONEY));
+        // 应收利息
+        accountAmountMap.put(BookConstant.INTAMT,
+                ArithmeticUtil.round(origyjlxkmye, NumberEnum.MONEY));
+
+        // 发生数量->交易明细.交易份额
+        accountSceneMap.put(BookConstant.HAPPEN_NUMBER, origCbkmsl);
+
+        if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(acctEntity.getInvAim())) {
+            // 公允价值变动科目
+            if(origgyjzbdkmye.compareTo(BigDecimal.ZERO) >= 0){
+                accountAmountMap.put(BookConstant.FLOAT_C_O,origgyjzbdkmye);
+                accountAmountMap.put(BookConstant.FLOAT_D,origgyjzbdkmye);
+            }else{
+                origgyjzbdkmye = ArithmeticUtil.multiply(origgyjzbdkmye,new BigDecimal(-1));
+                accountAmountMap.put(BookConstant.FLOAT_D_O,ArithmeticUtil.round(origgyjzbdkmye, NumberEnum.MONEY));
+                accountAmountMap.put(BookConstant.FLOAT_C,origgyjzbdkmye);
+            }
+        }else if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(acctEntity.getInvAim())) {
+            // 溢折价科目
+            if(origyzjkmye.compareTo(BigDecimal.ZERO) >= 0){
+                accountAmountMap.put(BookConstant.FLOAT_C_O,origyzjkmye);
+                accountAmountMap.put(BookConstant.FLOAT_D,origyzjkmye);
+            }else{
+                origyzjkmye = ArithmeticUtil.multiply(origyzjkmye,new BigDecimal(-1));
+                accountAmountMap.put(BookConstant.FLOAT_D_O,ArithmeticUtil.round(origyzjkmye, NumberEnum.MONEY));
+                accountAmountMap.put(BookConstant.FLOAT_C,origyzjkmye);
+            }
+        } else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
+                acctEntity.getInvAim())) {
+            // 公允价值变动科目
+            if(origgyjzbdkmye.compareTo(BigDecimal.ZERO) >= 0){
+                accountAmountMap.put(BookConstant.FLOAT_C_O,origgyjzbdkmye);
+                accountAmountMap.put(BookConstant.FLOAT_D,origgyjzbdkmye);
+            }else{
+                origgyjzbdkmye = ArithmeticUtil.multiply(origgyjzbdkmye,new BigDecimal(-1));
+                accountAmountMap.put(BookConstant.FLOAT_D_O,ArithmeticUtil.round(origgyjzbdkmye, NumberEnum.MONEY));
+                accountAmountMap.put(BookConstant.FLOAT_C,origgyjzbdkmye);
+            }
+            // 溢折价科目
+            if(origyzjkmye.compareTo(BigDecimal.ZERO) >= 0){
+                accountAmountMap.put(BookConstant.FLOAT_C_O,origyzjkmye);
+                accountAmountMap.put(BookConstant.FLOAT_D,origyzjkmye);
+            }else{
+                origyzjkmye = ArithmeticUtil.multiply(origyzjkmye,new BigDecimal(-1));
+                accountAmountMap.put(BookConstant.FLOAT_D_O,ArithmeticUtil.round(origyzjkmye, NumberEnum.MONEY));
+                accountAmountMap.put(BookConstant.FLOAT_C,origyzjkmye);
+            }
+        }
+
+        // accountAmountMap再设置如下
+        // 因为与记账金额元素map的key及数量一致，故采用循环
+        for (String keyNow : accountAmountMap.keySet()) {
+            accountCurrencyMap.put(keyNow, dealNow.getCcy());// value值塞入当前交易币种
+        }
+
+        /** modify by yanya on 20191231 增加本位币处理 start**/
+        // 初始化定义 - 存放该笔本位币记账的相关金额要素 map定义
+        Map<String, BigDecimal> accountAmountBCCYAMTMap = new HashMap<>();
+        BigDecimal 汇率 = BigDecimal.ONE;
+        String standardCcyNow = acctEntity.getStandardCcy();//本位币
+        Date happenDateNow = acctEntity.getHappenDate();//发生日
+        if (!dealNow.getCcy().equals(acctEntity.getStandardCcy())) {
+            //调用计算类	方法共通【汇率查询】
+            //基础币种 = 交易明细.币种 and 报价币种 = 交易类账务处理结果.本位币 and 日期 = 交易类账务处理结果.发生日
+            List<CurrencyMarketDto> currencyMarketList = finProductCommonService.getCurrencyMarket(acctEntity.getBookDate(), acctEntity.getBooksetId(),
+                    standardCcyNow, dealNow.getCcy());
+            if (!StringUtil.isEmptyList(currencyMarketList) && currencyMarketList.get(0) != null) {
+                汇率 = currencyMarketList.get(0).getClosePrice();
+            }
+        }
+        //本位币金额元素赋值 循环金额元素
+        for (String key : accountAmountMap.keySet()) {
+            accountAmountBCCYAMTMap.put(key + BookConstant.BCCYAMT,
+                    ArithmeticUtil.round(calculationCommonService.doMultiply(accountAmountMap.get(key), 汇率), NumberEnum.MONEY));
+        }
+        //循环本币金额元素，赋值本币
+        for (String key : accountAmountBCCYAMTMap.keySet()) {
+            accountCurrencyMap.put(key, standardCcyNow);// value值塞入当前交易币种
+        }
+        /** 本位币 币种**/
+        accountCurrencyMap.put(BookConstant.B_CCY, standardCcyNow);
+
+        //记账金额元素 putALl 随记账本位币金额map
+        accountAmountMap.putAll(accountAmountBCCYAMTMap);
+//        //accountAmountMap再次设置如下：
+//        /** 交易金额_本位币	<-	(印花税支出_本位币 + 经手费支出_本位币 + 证管费支出_本位币 + 结算费支出_本位币 + 佣金支出_本位币 + 交易手续费支出
+//         + 结算手续费支出 + 成本金额_本位币 + 利息金额_本位币)
+//         -（印花税_本位币 + 经手费_本位币 + 证管费_本位币 + 结算费_本位币 + 佣金_本位币 + 交易手续费_本位币
+//         + 结算手续费_本位币)
+//         **/
+//        BigDecimal 交易金额本位币1 = ArithmeticUtil.doAdd(accountAmountBCCYAMTMap.get(BookConstant.STAMPTAX_OUT + BookConstant.BCCYAMT),//印花税支出_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.HANDFEE_OUT + BookConstant.BCCYAMT),//经手费支出_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.CERTIFEE_OUT + BookConstant.BCCYAMT),//证管费支出_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.SETTLEFEE_OUT + BookConstant.BCCYAMT),//结算费支出_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.COMMISSION_OUT + BookConstant.BCCYAMT),//佣金支出_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.TRADEFEE_OUT + BookConstant.BCCYAMT),//交易手续费支出_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.SETTLEMENTFEE_OUT + BookConstant.BCCYAMT),//结算手续费支出_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT),//成本金额_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));//利息金额_本位币
+//
+//        BigDecimal 交易金额本位币2 = ArithmeticUtil.doAdd(
+//                accountAmountBCCYAMTMap.get(BookConstant.STAMPTAX + BookConstant.BCCYAMT),//印花税_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.HANDFEE + BookConstant.BCCYAMT),//经手费_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.CERTIFEE + BookConstant.BCCYAMT),//证管费_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.SETTLEFEE + BookConstant.BCCYAMT),//结算费_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.COMMISSION + BookConstant.BCCYAMT),//佣金_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.TRADEFEE + BookConstant.BCCYAMT),//交易手续费_本位币
+//                accountAmountBCCYAMTMap.get(BookConstant.SETTLEMENTFEE + BookConstant.BCCYAMT));//结算手续费_本位币
+//        BigDecimal 交易金额本位币 = ArithmeticUtil.doSub(交易金额本位币1, 交易金额本位币2);
+//        accountAmountMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT, ArithmeticUtil.round(交易金额本位币, NumberEnum.MONEY));
+//        accountCurrencyMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT, standardCcyNow);// value值塞入当前交易币种
+
+        // map塞入场景要素管理中
+        // 记账场景要素
+        ad.setAccountSceneMap(accountSceneMap);
+        // 记账金额要素
+        ad.setAccountAmountMap(accountAmountMap);
+        // 记账金额币种要素
+        ad.setAccountCurrencyMap(accountCurrencyMap);
+
+        // 记账凭证生成
+        BookGenerateResult resultNowNow = bookLogic.genAccount(ad, new SysBatchExecInfo());
+        // 因为当前属于同一个维度，故将生成的账务名中的账务明细（当前表）数据，累加到返回数据中
+        returnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
+
+        // 全局变量的更新
+//        // 变量.成本科目余额 =变量.成本科目余额 + 交易明细.交易本金
+//        param.setVarCostSubjectAmt(
+//                ArithmeticUtil.doAdd(param.getVarCostSubjectAmt(), dealNow.getPrinAmt()));
+//        // 变量.成本科目数量=变量.成本科目数量 + 交易明细.交易份额
+//        param.setVarCostSubjectNum(
+//                ArithmeticUtil.doAdd(param.getVarCostSubjectNum(), dealNow.getShareAmt()));
+//        // 变量.应计利息科目余额=变量.应计利息科目余额 + 交易明细.利息总额
+//        param.setVarLxSubjectAmt(
+//                ArithmeticUtil.doAdd(param.getVarLxSubjectAmt(), dealNow.getIntAmt()));
+//        // 变量.公允价值变动科目余额     =	变量.公允价值变动科目余额 - 变量.冲减公允价值变动
+//        param.setVarGySubjectAmt(
+//                ArithmeticUtil.doSub(param.getVarGySubjectAmt(),varCjgyjzbdSubjectAmt));
+    }
+
+    /**
+     * 组装账务明细(资金帐户/现金类)
+     *
+     * @param busiId
+     * @param bokDetailId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public BokDetailId getValBokDetailId(String busiId, String bokDetailId,
+                                         String busiDetailType,String ccy) {
+        BokDetailId valBokDetailId = new BokDetailId();
+        valBokDetailId.setBusiId(busiId);
+        valBokDetailId.setBusiDetailType(busiDetailType);
+        valBokDetailId.setCcy(ccy);
+        if (bokDetailId == null) {
+            valBokDetailId.setBokDetailId(bookAccountCommonService.genMd5BokDetailId(valBokDetailId));
+        }
+        else {
+            valBokDetailId.setBokDetailId(bokDetailId);
+        }
+        return valBokDetailId;
+    }
 }

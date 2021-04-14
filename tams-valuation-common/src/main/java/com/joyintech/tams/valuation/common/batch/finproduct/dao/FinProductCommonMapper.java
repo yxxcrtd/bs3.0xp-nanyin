@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.*;
+import com.joyintech.tams.valuation.common.dto.TrdFinProductBarterDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -520,4 +521,7 @@ public interface FinProductCommonMapper {
     Map<String, Object> selectHBFXData(Map<String, Object> map);
 
     String getIsPayInt(@Param("finprodId") String finprodId);
+	
+	TrdFinProductBarterDto selectTrdFinProductBarter(@Param("tradeId") String tradeId);
+
 }
