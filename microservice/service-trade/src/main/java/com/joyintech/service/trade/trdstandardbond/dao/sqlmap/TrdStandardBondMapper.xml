@@ -11,7 +11,8 @@
         pspf.INV_AIM,
         </if>
        <!--SUM(DECODE(tsf.PS, #{LIBRARY_DIRECTION_01}, 1, #{LIBRARY_DIRECTION_02}, -1)*NVL(PSPF.AMOUNT, 0)) AMOUNT-->
-        SUM(NVL(PSPF.AMOUNT, 0)) AMOUNT
+        SUM(NVL(PSPF.AMOUNT, 0)) AMOUNT1,
+        SUM(decode(PSPF.hoding_type,'13',0,NVL(PSPF.AMOUNT, 0))) AMOUNT
      FROM
                    TRD_STASEC_FLOW tsf
        LEFT JOIN   TRD_STASEC_FLOW_DETAIL tsfd
@@ -80,7 +81,7 @@
             <!-- 标准券查询画面：已质押标准券额度（竞价回购已质押券面总额*折算率） -->
             '' pledgeStdrdPrinAmt,
             <!-- 标准券查询画面：可使用标准券总额度（标准券额度-已质押标准券额度）-->
-            '' avaStrdPrinAmt
+            (NVL(inTotalPrinAmt.AMOUNT1, 0)-NVL(inTotalPrinAmt.AMOUNT, 0))*100*NVL(fscr.SCALE, 0) avaStrdPrinAmt
         FROM
                 (
                     SELECT

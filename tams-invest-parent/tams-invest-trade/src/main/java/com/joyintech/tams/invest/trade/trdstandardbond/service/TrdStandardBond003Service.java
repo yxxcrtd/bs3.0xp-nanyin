@@ -72,6 +72,7 @@ public class TrdStandardBond003Service extends BaseService<TrdStandardBond003Dto
     public void doInsert(TrdStandardBond003Dto entity, OperationType operationType) {
     	//1. 只有提交时会处理
     	if ("submit".equals(entity.getOperateType())&&!StringUtil.isEmptyList(entity.getOutBondList())) {
+    		entity.setIsComplete(DictCodeListExt1.是否_否.getValue());
     		//2. 设置新的tradeId
     		//setTradeIdList(entity);
     		//3. 调用微服务入流水表
@@ -95,6 +96,7 @@ public class TrdStandardBond003Service extends BaseService<TrdStandardBond003Dto
     	setTradeIdList(input);
     	//3. 如果非空，需要入流水表
     	if(!StringUtil.isEmptyList(input.getOutBondList())) {
+    		input.setIsComplete(DictCodeListExt1.是否_否.getValue());
             Long insertCount = 0L;
             input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
             insertCount += restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/outSave",
@@ -152,6 +154,7 @@ public class TrdStandardBond003Service extends BaseService<TrdStandardBond003Dto
     	//3. 调用微服务进行处理
         Long insertCount = 0L;
         if (!StringUtil.isEmptyList(input.getOutBondList())) {
+        	input.setIsComplete(DictCodeListExt1.是否_是.getValue());
             input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
             insertCount += restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/outSave",
                     input, Long.class);
@@ -224,7 +227,7 @@ public class TrdStandardBond003Service extends BaseService<TrdStandardBond003Dto
     		//1. 获取之前所有的流程中流水
     		List<PtlSecPositionFlow> secFlows = new ArrayList<>();
     		Map<String,Object> param = new HashMap<>();
-    		param.put("holdingType", DictCodeList.持仓类型_质押.getValue());
+    		param.put("holdingType", DictCodeListExt1.持仓类型_临时.getValue());
     		for(String tradeId:entity.getTradeIdList()) {
     			param.put("finprodId", tradeId);
     			secFlows.addAll(ptlSecPositionFlowMapper.selectSecFlow(param));

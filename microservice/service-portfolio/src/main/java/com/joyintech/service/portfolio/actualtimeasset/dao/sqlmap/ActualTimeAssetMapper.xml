@@ -93,6 +93,7 @@
 		INNER JOIN TRD_STASEC_FLOW_DETAIL TSFT
 		ON TSF.SEQNO=TSFT.SEQNO
 		WHERE TSF.CDATE  = to_date(#{cdate},'yyyy-MM-dd')
+        and (TSF.ps = '01' or not exists (select 1 from PTL_SEC_POSITION_FLOW pspf where TSF.SEQNO = PSPF.TRADE_ID and pspf.hoding_type='13'))
 		group by
 		TSF.portfolio_id,
 		TSF.sec_acct_id,
@@ -193,6 +194,7 @@
 		INNER JOIN TRD_STASEC_FLOW_DETAIL TSFT
 		ON TSF.SEQNO=TSFT.SEQNO
 		WHERE TSF.CDATE  = to_date(#{cdate},'yyyy-MM-dd')
+        and (TSF.ps = '01' or not exists (select 1 from PTL_SEC_POSITION_FLOW pspf where TSF.SEQNO = PSPF.TRADE_ID and pspf.hoding_type='13'))
 		group by
 		TSF.portfolio_id,
 		TSF.sec_acct_id,

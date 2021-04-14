@@ -20,6 +20,7 @@ import com.joyintech.tams.common.base.dao.TrdStasecFlowDetailMapper;
 import com.joyintech.tams.common.base.dao.TrdStasecFlowMapper;
 import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -71,7 +72,8 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     public void doInsert(TrdStandardBond002Dto entity, OperationType operationType) {
         //出库不考虑撤销
         if (StringUtil.equals(entity.getOperateType(), "submit")&&!StringUtil.isEmptyList(entity.getPledgeBondList())) {
-            entity.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+            entity.setIsComplete(DictCodeListExt1.是否_否.getValue());
+        	entity.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSave",
                     entity, Long.class);
         }
@@ -90,6 +92,7 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     	setTradeIdList(input);
         //3.如果存在质押券信息，则需要重新入库
         if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
+        	input.setIsComplete(DictCodeListExt1.是否_否.getValue());
             input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSave",
                     input, Long.class);
@@ -151,6 +154,7 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     	//3. 重新入表
         Long insertCount = 0L;
         if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
+        	input.setIsComplete(DictCodeListExt1.是否_是.getValue());
             input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
             insertCount += restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSave",
                     input, Long.class);
@@ -190,7 +194,7 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     		//1. 获取之前所有的流程中流水
     		List<PtlSecPositionFlow> secFlows = new ArrayList<>();
     		Map<String,Object> param = new HashMap<>();
-    		param.put("holdingType", DictCodeList.持仓类型_质押.getValue());
+    		param.put("holdingType", DictCodeListExt1.持仓类型_临时.getValue());
     		for(String tradeId:entity.getTradeIdList()) {
     			param.put("finprodId", tradeId);
     			secFlows.addAll(ptlSecPositionFlowMapper.selectSecFlow(param));
