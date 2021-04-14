@@ -137,6 +137,45 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
     public static void deal可转债CashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
                                            EtrPositionHoldDto etrPositionHoldDto,String 交易流程状态) {
             if(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue())){
+            	//流程中减少债券指令可用持仓
+            	if(StringUtil.isEmpty(finProductTradeDto.getTrdProductDealAdd().getEntrustId())&&DictCodeListExt1.交易流程状态_流程中.getValue().equals(交易流程状态)){
+            		TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
+            		 // 交易生成的持仓流水 (债券)
+            		EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                            finProductTradeDto);
+            		etrSecPositionFlowDto.setAmount(deal.getShareAmt().negate());
+            		etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);           		
+            	}
+            	//交易生效（无委托）	增加股票指令可用持仓
+            	if(StringUtil.isEmpty(finProductTradeDto.getTrdProductDealAdd().getEntrustId())&&DictCodeListExt1.交易流程状态_有效.getValue().equals(交易流程状态)){
+            		TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
+                    TrdFinProductBarter barterDeal = finProductTradeDto.getTrdFinProductBarterList().get(0);
+                    // 交易生成的持仓流水 (股票)
+                    EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                            finProductTradeDto);
+                    etrSecPositionFlowDto.setAmount(barterDeal.getShareAmt());
+                    etrSecPositionFlowDto.setFinprodId(barterDeal.getFinprodId());
+                    etrSecPositionFlowDto.setCdate(deal.getTradeDate());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);     		
+            	}
+            	//交易撤销（无委托）	更新债券、股票指令可用持仓
+            	if(StringUtil.isEmpty(finProductTradeDto.getTrdProductDealAdd().getEntrustId())&&DictCodeListExt1.交易流程状态_撤销.getValue().equals(交易流程状态)){
+            		TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
+                    TrdFinProductBarter barterDeal = finProductTradeDto.getTrdFinProductBarterList().get(0);
+                    // 交易生成的持仓流水 (债券)
+            		EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                            finProductTradeDto);
+            		etrSecPositionFlowDto.setAmount(deal.getShareAmt().negate());
+            		etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);    
+                    // 交易生成的持仓流水 (股票)
+                    EtrSecPositionFlowDto etrSecPositionFlowDto1 = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                            finProductTradeDto);
+                    etrSecPositionFlowDto1.setAmount(barterDeal.getShareAmt());
+                    etrSecPositionFlowDto1.setFinprodId(barterDeal.getFinprodId());
+                    etrSecPositionFlowDto1.setCdate(deal.getTradeDate());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto1);     		
+            	}
+            	
 //                交易生效（有委托）	增加股票指令可用持仓		增加股票指令可用持仓
                 if(StringUtil.isNotEmpty(finProductTradeDto.getTrdProductDealAdd().getEntrustId())&&持仓类型.equals(DictCodeList.持仓类型_实际)){
                     TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
