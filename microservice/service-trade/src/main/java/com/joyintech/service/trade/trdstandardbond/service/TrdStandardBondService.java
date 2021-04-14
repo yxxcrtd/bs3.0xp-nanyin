@@ -422,19 +422,6 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                     }
                 }
             }
-            // 标准券处理 委托那边统计持仓时，用的就是出入库的表 + 标准券的指令持仓，出入库管理已经影响了出入库的表，所以不能再影响标准券的指令持仓，否则重复计算了，这个注释掉 by qiangchengxi 20200302
-            //入库交易提交时，指令可用持仓减少，入库交易生效时生成一笔反向的抵消掉
-            if (baseEtrCashPositionCommService != null && etrCashList.size() > 0) {
-                for (EtrSecPositionFlowDto ppf : etrCashList){
-                    ppf.setSeqno(IDGenerator.generate());
-                    ppf.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-                }
-//                baseEtrCashPositionCommService.StandardBondExecute(etrCashList,DictCodeList.出入库方向_入库);
-                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
-                // 持仓流水
-                etrPositionHoldDto.setPtlSecPositionFlows(etrCashList);
-                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
-            }
         }
         return saveCount;
     }

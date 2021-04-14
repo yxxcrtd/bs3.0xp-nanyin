@@ -124,13 +124,6 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
         catch (Exception e) {
             e.printStackTrace();
         }
-        //4. 按照原流程，撤回时还会处理指令流水
-        if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
-        	input.setIsBack(true);
-            input.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
-            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdStandardBond/inSubmit",
-                    input, Long.class);
-        }
     }
 
     /**
