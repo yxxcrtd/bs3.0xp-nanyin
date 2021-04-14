@@ -335,7 +335,7 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         // 交易日期
         Date tradeDate = finProductTradeDto.getTrdProductDeal().getTradeDate();
 //        BigDecimal 债券面值 = EtrCommonCashPositionDealService.gen债券面值(assetCode, tradeDate);
-        BigDecimal 交易券面总额 = finProductTradeDto.getTrdProductDeal().getPrinAmt();
+//        BigDecimal 交易券面总额 = finProductTradeDto.getTrdProductDeal().getPrinAmt();
         // BigDecimal 交易日金额 = finProductTradeDto.getTrdProductDeal().getTradeAmt();
         // BigDecimal 委托全价 = finProductTradeDto.getTrdProductDeal().getFpriceAmt();
         // 交割日减少(交易金额-交易券面总额*委托全价/债券面值）
@@ -362,9 +362,9 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative() || finProductTradeDto.isBatch()) {
             if (StringUtil.isEmpty(entrustId)) { // 无委托
                 // 持仓流水dto处理 交割日增加交易券面总额/债券面值
-                etrSecPositionFlowDto.setAmount(交易券面总额);
+//                etrSecPositionFlowDto.setAmount(交易券面总额);
                 // 添加持仓流水到目标dto
-                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+//                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
 //                到期日每只券增加交易质押券面总额/100
 //                etrPositionHoldDto.getPtlSecPositionFlows().addAll(ptlSecPositionFlowLogic(finProductTradeDto, false));
                 if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
