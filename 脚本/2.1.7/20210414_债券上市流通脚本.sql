@@ -1,5 +1,5 @@
 delete from sys_menu where menu_id = 'INVEST_MANAGEMENT_001_003_032';
-Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('INVEST_MANAGEMENT_001_003_032','TRD',null,'INVEST_MANAGEMENT_001_003','TrdBondMarketTrade001',9,'02','债券上市流通','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('INVEST_MANAGEMENT_001_003_032','TRD',null,'INVEST_MANAGEMENT_001_003','TrdBondMarketTrade001',32,'02','债券上市流通','system',null,sysdate,'system',sysdate);
 	
 delete from sys_page where page_id in ('TrdBondMarketTrade001','TrdBondMarketTrade002');
 Insert into sys_page (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('TrdBondMarketTrade001','TRD','/invest/trade/bondmarkettrade/TrdBondMarketTrade001','invest/trade/bondmarkettrade/TrdBondMarketTrade001',null,null,null,'02','01','债券上市流通','system',null,sysdate,'system',sysdate);
