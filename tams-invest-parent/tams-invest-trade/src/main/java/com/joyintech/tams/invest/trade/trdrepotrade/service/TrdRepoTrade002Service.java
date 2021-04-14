@@ -650,12 +650,15 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
 //            bussCommonMapperDelegateService.insertBatch(WflStlPayOrdersMapper.class, wflStlPayOrders);
             wflStlPayOrdersMapper.insertSelective(wflStlPayOrders);
         }
+        // add by jiangpeng on 20210413 ZGBSS-1393 start
+        //【质押式回购自动到期-估值表】【质押式回购自动到期-估值表】0301zy03，2021-03-01，估值表中资产的成本、数量都不对。
         if (StringUtils.equals(DictCodeList.回购类型_质押式协议回购.getValue(), entity.getRepoType())
                 && StringUtils.equals(DictCodeList.交易流通场所_深圳证券交易所.getValue(), entity.getTradeMarket())
                 && StringUtils.equals("04", entity.getPs())
                 && entity.getFinTradeProduct() != null) {
             entity.getFinTradeProduct().setTermType(SJXY);
         }
+        // add by jiangpeng on 20210413 ZGBSS-1393 end
         finTradeProductMapper.insertSelective(entity.getFinTradeProduct());
 
         // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水

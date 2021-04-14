@@ -25,7 +25,7 @@
         LEFT JOIN FIN_PRODUCT fp ON inp.SECID = fp.FINPROD_MARKET_ID
         WHERE fp.FINPROD_ID IS NULL
         AND inp.SECNAME = #{finprodAbbr,jdbcType=VARCHAR}
-        AND inp.MARKET  = #{tradeMarket,jdbcType=VARCHAR}
+        AND inp.MARKET2  = #{tradeMarket,jdbcType=VARCHAR}
     </select>
 
     <select id="selectFinCashInfo" resultType="com.joyintech.tams.common.base.entity.FinCashInfo">
@@ -133,6 +133,7 @@
         ETR_SEC_POSITION esp
         WHERE esp.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} /**金融产品代码**/
         AND esp.CDATE = to_date(#{DealDate},'yyyy-MM-dd')
+        AND esp.HODING_TYPE = #{HODING_TYPE_E01}
     </select>
 
     <select id="getPtlSecPositionList"
@@ -146,6 +147,7 @@
         PTL_SEC_POSITION esp
         WHERE esp.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} /**金融产品代码**/
         AND esp.CDATE = to_date(#{DealDate},'yyyy-MM-dd')
+        AND esp.HODING_TYPE = #{HODING_TYPE_03}
     </select>
 
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
@@ -153,4 +155,30 @@
         set APPEAR_MARKET_ID = '1111'
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectMstBondCreditRating"
+            resultType="com.joyintech.tams.common.base.entity.MstBondCreditRating">
+        SELECT
+        O_CODE O_CODE, GRADE_ORG_ID GRADE_ORG_ID, GRADE_DATE GRADE_DATE, O_TYPE O_TYPE, SHORT_LONG_TERM SHORT_LONG_TERM,
+        GRADE_RESULT GRADE_RESULT, INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_RECOMMAND IS_RECOMMAND,
+        ISSUER_RATE_TYPE ISSUER_RATE_TYPE, NOTICE_DATE NOTICE_DATE, GRADE_EXPECTATION GRADE_EXPECTATION,
+        DIRECTION_CHANGE DIRECTION_CHANGE
+        FROM
+        MST_BOND_CREDIT_RATING
+        WHERE o_code = #{marketId,jdbcType=VARCHAR} /**市场代码**/
+    </select>
+
+    <select id="selectMstinnercreditrating"
+            resultType="com.joyintech.tams.common.base.entity.MstInnerCreditRating">
+        SELECT
+        O_CODE O_CODE, O_TYPE O_TYPE, GRADE_ORG_ID GRADE_ORG_ID, GRADE_DATE GRADE_DATE, GRADE_RESULT GRADE_RESULT,
+        INPUT_TYPE INPUT_TYPE, GRADE_EXPECTATION GRADE_EXPECTATION, DIRECTION_CHANGE DIRECTION_CHANGE,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME
+        FROM
+        MST_INNER_CREDIT_RATING
+        WHERE o_code = #{marketId,jdbcType=VARCHAR} /**市场代码**/
+    </select>
+
 </mapper>

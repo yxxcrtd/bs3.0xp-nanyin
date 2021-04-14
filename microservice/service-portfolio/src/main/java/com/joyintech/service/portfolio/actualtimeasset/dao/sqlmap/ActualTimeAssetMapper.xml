@@ -214,10 +214,12 @@
 			        ETR_FLOW_AMOUNTE01 as instructionsAmount,
 					decode(mm.TYPE8,'F03',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									'F09',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
+									'F07',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									ETR_FLOW_AMOUNT04
 									) as pledgeAmount, 
 					decode(mm.TYPE8,'F03' ,0,
 									'F09' ,0,
+									'F07',ETR_FLOW_AMOUNT04,
 									(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 )
 									) as preReductionAmount
 			       from

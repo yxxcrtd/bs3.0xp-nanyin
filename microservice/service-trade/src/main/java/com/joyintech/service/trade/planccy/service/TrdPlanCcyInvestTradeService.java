@@ -64,6 +64,7 @@ import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlSecPositionInfoMapper;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
@@ -181,6 +182,9 @@ public class TrdPlanCcyInvestTradeService extends BaseService<TrdPlanCcyInvestTr
     @Autowired
     private InvestInterfCommService investInterfCommService;
     // 调用投管接口 add by renping 20190205 end
+    
+    @Autowired
+    private BasePtlSecPositionInfoMapper basePtlSecPositionInfoMapper;
 
     /**
      * 分页查询 <功能详细描述>
@@ -588,6 +592,16 @@ public class TrdPlanCcyInvestTradeService extends BaseService<TrdPlanCcyInvestTr
                 DictCodeList.交易方向_申购确认.getValue()) || entity.getPs().equals(
                     DictCodeList.交易方向_买入.getValue()) ? DictCodeListExt2.资金流动类型_资产买入.getValue() : DictCodeListExt2.资金流动类型_资产卖出或到期.getValue());
             repTradeMapper.deleteByPrimaryKey(repTradeKey);
+            
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+            	PtlSecPositionFlowDto positionFlowDto = new PtlSecPositionFlowDto();
+            	positionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+            	positionFlowDto.setCdate(entity.getTradeDate());
+            	positionFlowDto.setTradeId(entity.getTradeId());
+            	positionFlowDto.setPortfolioId(entity.getPortfolioId());
+            	positionFlowDto.setFinprodId(entity.getFinprodId());
+            	basePtlSecPositionInfoMapper.deletePtlSecPositionFlow(positionFlowDto);
+            }
         }
     }
 

@@ -16,14 +16,17 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dao.BusiAutoAddSecInfoMapper;
-import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BaseFinProductBaseInfoDto;
+import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddFinProductBaseInfoDto;
+import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddTradeProductDealDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
+import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.valuation.common.batch.finproduct.dao.FinProductCommonMapper;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.*;
-import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,15 +69,31 @@ public class BusiAutoAddSecInfoService {
     @Autowired
     private FinExercisePlanMapper finExercisePlanMapper;
     @Autowired
-    private EtrSecPositionMapper etrSecPositionMapper;
-    @Autowired
     private EtrSecPositionFlowMapper etrSecPositionFlowMapper;
-    @Autowired
-    private PtlSecPositionMapper ptlSecPositionMapper;
     @Autowired
     private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
     @Autowired
     private AutoPeriodCommonService autoPeriodCommonService;
+    @Autowired
+    private MstBondCreditRatingMapper mstBondCreditRatingMapper;
+    @Autowired
+    private RepAssetBondMapper repAssetBondMapper;
+    @Autowired
+    private RepAssetDeptMapper repAssetDeptMapper;
+    @Autowired
+    private RepAssetOtherMapper repAssetOtherMapper;
+    @Autowired
+    private RepAssetEquityMapper repAssetEquityMapper;
+    @Autowired
+    private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
+    @Autowired
+    private TrdFinProductBarterTotalMapper trdFinProductBarterTotalMapper;
+    @Autowired
+    private TrdProductDealMapper trdProductDealMapper;
+    @Autowired
+    private TrdProductDealAddMapper trdProductDealAddMapper;
+    @Autowired
+    private TrdFinProductBarterMapper trdFinProductBarterMapper;
 
     /**
      *  债券自动上市流通批处理
@@ -91,14 +110,17 @@ public class BusiAutoAddSecInfoService {
         List<FinProduct> listFinProduct = busiAutoAddSecInfoMapper.selectUnlistedSecList(paramMap);
 
         //2、获取接口表债券信息，按照简称完全匹配
-        List<BaseFinProductBaseInfoDto> baseFinProductBaseInfolist = new ArrayList<BaseFinProductBaseInfoDto>();
+        List<BusiAutoAddFinProductBaseInfoDto> baseFinProductBaseInfolist = new ArrayList<BusiAutoAddFinProductBaseInfoDto>();
+
+        List<BusiAutoAddTradeProductDealDto> busiAutoAddTradeProductDealDtoList = new ArrayList<BusiAutoAddTradeProductDealDto>();
+
         for(FinProduct finProduct : listFinProduct){
             String secId = busiAutoAddSecInfoMapper.getSecId(finProduct);
             if(StringUtil.isBlank(secId)){
                 continue;
             }
 
-            BaseFinProductBaseInfoDto baseFinProductBaseInfoDto = new BaseFinProductBaseInfoDto();
+            BusiAutoAddFinProductBaseInfoDto baseFinProductBaseInfoDto = new BusiAutoAddFinProductBaseInfoDto();
             //2.1、复制未上市债券信息，并修改金融产品代码为上市金融产品代码
             //标的类金融产品表
             FinProduct finProductNew = new FinProduct();
@@ -150,6 +172,11 @@ public class BusiAutoAddSecInfoService {
             TargetSearchDto searchfinExercisePlan = new TargetSearchDto();
             searchfinExercisePlan.setQueryType("FINEXERCISE_PLAN");
             queryCriteria.add(searchfinExercisePlan);
+
+            // 评级信息
+            TargetSearchDto searchMarketRating = new TargetSearchDto();
+            searchMarketRating.setQueryType("Market_Rating");
+            queryCriteria.add(searchMarketRating);
 
             Map<TargetSearchDto, Object> targetSearchMap = this.getTargetInfo(
                     finProduct.getFinprodId(), queryCriteria);
@@ -248,63 +275,233 @@ public class BusiAutoAddSecInfoService {
             }
             baseFinProductBaseInfoDto.setFinExercisePlanList(finExercisePlanList);
 
-            baseFinProductBaseInfolist.add(baseFinProductBaseInfoDto);
+            //评级信息表
+            List<MstBondCreditRating> mstBondCreditRatingList = new ArrayList<MstBondCreditRating>();
+            for(MstBondCreditRating mstBondCreditRating: (List<MstBondCreditRating>)targetSearchMap.get(searchMarketRating)){
+                mstBondCreditRating.setoCode(secId);
+                mstBondCreditRatingList.add(mstBondCreditRating);
+            }
+            baseFinProductBaseInfoDto.setMstBondCreditRatingList(mstBondCreditRatingList);
+
+            //债券资产报送信息
+            RepAssetBond repAssetBondNew = new RepAssetBond();
+            RepAssetBond repAssetBond = repAssetBondMapper.selectByPrimaryKey(finProduct.getFinprodId());
+            if(repAssetBond !=null){
+                BeanUtil.copyPropertiesIgnoreNull(repAssetBondNew, repAssetBond);
+                repAssetBondNew.setRepFinprodId("F01_"+secId);
+                baseFinProductBaseInfoDto.setRepAssetBond(repAssetBondNew);
+            }
+
+            //资产负债报送信息
+            RepAssetDept repAssetDeptNew = new RepAssetDept();
+            RepAssetDept repAssetDept = repAssetDeptMapper.selectByPrimaryKey(finProduct.getFinprodId());
+            if(repAssetDept !=null){
+                BeanUtil.copyPropertiesIgnoreNull(repAssetDeptNew, repAssetDept);
+                repAssetDeptNew.setRepFinprodId("F01_"+secId);
+                baseFinProductBaseInfoDto.setRepAssetDept(repAssetDeptNew);
+            }
+
+            //中债资产其他要素
+            RepAssetOther repAssetOtherNew = new RepAssetOther();
+            RepAssetOther repAssetOther = repAssetOtherMapper.selectByPrimaryKey(finProduct.getFinprodId());
+            if(repAssetOther !=null){
+                BeanUtil.copyPropertiesIgnoreNull(repAssetOtherNew, repAssetOther);
+                repAssetOtherNew.setRepFinprodId("F01_"+secId);
+                baseFinProductBaseInfoDto.setRepAssetOther(repAssetOtherNew);
+            }
+
+            //权益类资产报送信息
+            RepAssetEquity repAssetEquityNew = new RepAssetEquity();
+            RepAssetEquity repAssetEquity = repAssetEquityMapper.selectByPrimaryKey(finProduct.getFinprodId());
+            if(repAssetEquity !=null){
+                BeanUtil.copyPropertiesIgnoreNull(repAssetEquityNew, repAssetEquity);
+                repAssetEquityNew.setRepFinprodId("F01_"+secId);
+                baseFinProductBaseInfoDto.setRepAssetEquity(repAssetEquityNew);
+            }
 
             //2.2 根据组合持仓重组各组合上市流通交易
             //2.2.1 处理各组合指令持仓数据
             Map<String,String> tempMap =new HashMap<String,String>();
             tempMap.put("finprodId",finProduct.getFinprodId());
             tempMap.put("DealDate", DateUtil.addDay(DateUtil.format(batchDate),-1));
+            tempMap.put("HODING_TYPE_E01",DictCodeListExt1.持仓类型_委托指令可用.getValue());
             List<EtrSecPosition> etrSecPositionList = busiAutoAddSecInfoMapper.getEtrSecPositionList(tempMap);
+            List<EtrSecPositionFlow> etrSecPositionflowlist =new ArrayList<EtrSecPositionFlow>();
             BussinessCodeParameter parameter = new BussinessCodeParameter();
             parameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
             String tradeid =  autoPeriodCommonService.buildBussinessCode(parameter);
             for(EtrSecPosition etrSecPosition : etrSecPositionList){
-                EtrSecPositionFlow etrSecPositionFlow =new EtrSecPositionFlow();
+                EtrSecPositionFlow orgetrSecPositionFlow =new EtrSecPositionFlow();
+                EtrSecPositionFlow targetrSecPositionFlow =new EtrSecPositionFlow();
                 //发行代码对应流水
-                BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlow, etrSecPosition);
-                etrSecPositionFlow.setSeqno(IDGenerator.generate());
-                etrSecPositionFlow.setAmount(ArithmeticUtil.multiply(etrSecPosition.getAmount(),new BigDecimal("-1")));
-                etrSecPositionFlow.setTradeId(tradeid);
-                etrSecPositionFlowMapper.insertSelective(etrSecPositionFlow);
+                BeanUtil.copyPropertiesIgnoreNull(orgetrSecPositionFlow, etrSecPosition);
+                orgetrSecPositionFlow.setSeqno(IDGenerator.generate());
+                orgetrSecPositionFlow.setAmount(ArithmeticUtil.multiply(etrSecPosition.getAmount(),new BigDecimal("-1")));
+                orgetrSecPositionFlow.setTradeId(tradeid);
+                etrSecPositionflowlist.add(orgetrSecPositionFlow);
 
                 //上市流通代码对应持仓
-                etrSecPositionFlow.setAmount(ArithmeticUtil.multiply(etrSecPositionFlow.getAmount(),new BigDecimal("-1")));
-                etrSecPositionFlow.setFinprodId("F01_"+secId);
-                etrSecPositionFlow.setSeqno(IDGenerator.generate());
-                etrSecPositionFlow.setTradeId(tradeid);
-                etrSecPositionFlowMapper.insertSelective(etrSecPositionFlow);
+                BeanUtil.copyPropertiesIgnoreNull(targetrSecPositionFlow, orgetrSecPositionFlow);
+                targetrSecPositionFlow.setSeqno(IDGenerator.generate());
+                targetrSecPositionFlow.setAmount(ArithmeticUtil.multiply(targetrSecPositionFlow.getAmount(),new BigDecimal("-1")));
+                targetrSecPositionFlow.setFinprodId("F01_"+secId);
+                targetrSecPositionFlow.setTradeId(tradeid);
+                etrSecPositionflowlist.add(targetrSecPositionFlow);
             }
-
+            baseFinProductBaseInfoDto.setEtrSecPositionFlowlist(etrSecPositionflowlist);
             //2.2.2 处理各组合持仓数据
+            tempMap.put("HODING_TYPE_03",DictCodeList.持仓类型_实际.getValue());
             List<PtlSecPosition> ptlSecPositionList = busiAutoAddSecInfoMapper.getPtlSecPositionList(tempMap);
+            List<PtlSecPositionFlow> ptlSecPositionflowList = new ArrayList<PtlSecPositionFlow>();
+            List<PtlSecPositionFlow> ptlSecPositionflowTempList = new ArrayList<PtlSecPositionFlow>();
             for(PtlSecPosition ptlSecPosition : ptlSecPositionList){
-                PtlSecPositionFlow ptlSecPositionFlow =new PtlSecPositionFlow();
-                BeanUtil.copyPropertiesIgnoreNull(ptlSecPositionFlow, ptlSecPosition);
+                String ptlsectradeid =  autoPeriodCommonService.buildBussinessCode(parameter);
+                PtlSecPositionFlow orgptlSecPositionFlow =new PtlSecPositionFlow();
+                PtlSecPositionFlow targptlSecPositionFlow =new PtlSecPositionFlow();
+                BeanUtil.copyPropertiesIgnoreNull(orgptlSecPositionFlow, ptlSecPosition);
                 //发行代码对应流水
-                ptlSecPositionFlow.setSeqno(IDGenerator.generate());
-                ptlSecPositionFlow.setAmount(ArithmeticUtil.multiply(ptlSecPosition.getAmount(),new BigDecimal("-1")));
-                ptlSecPositionFlow.setTradeId(tradeid);
-                ptlSecPositionFlowMapper.insertSelective(ptlSecPositionFlow);
+                orgptlSecPositionFlow.setSeqno(IDGenerator.generate());
+                orgptlSecPositionFlow.setAmount(ArithmeticUtil.multiply(ptlSecPosition.getAmount(),new BigDecimal("-1")));
+                orgptlSecPositionFlow.setTradeId(ptlsectradeid);
+                ptlSecPositionflowList.add(orgptlSecPositionFlow);
 
                 //上市流通代码对应持仓
-                ptlSecPositionFlow.setAmount(ArithmeticUtil.multiply(ptlSecPositionFlow.getAmount(),new BigDecimal("-1")));
-                ptlSecPositionFlow.setFinprodId("F01_"+secId);
-                ptlSecPositionFlow.setSeqno(IDGenerator.generate());
-                ptlSecPositionFlow.setTradeId(tradeid);
-                ptlSecPositionFlowMapper.insertSelective(ptlSecPositionFlow);
+                BeanUtil.copyPropertiesIgnoreNull(targptlSecPositionFlow, orgptlSecPositionFlow);
+                targptlSecPositionFlow.setSeqno(IDGenerator.generate());
+                targptlSecPositionFlow.setAmount(ArithmeticUtil.multiply(targptlSecPositionFlow.getAmount(),new BigDecimal("-1")));
+                targptlSecPositionFlow.setFinprodId("F01_"+secId);
+                targptlSecPositionFlow.setTradeId(ptlsectradeid);
+                ptlSecPositionflowList.add(targptlSecPositionFlow);
+                ptlSecPositionflowTempList.add(targptlSecPositionFlow);
+            }
+            baseFinProductBaseInfoDto.setPtlSecPositionFlowlist(ptlSecPositionflowList);
+
+            baseFinProductBaseInfolist.add(baseFinProductBaseInfoDto);
+
+            //2.3 生成上市流通交易
+            BusiAutoAddTradeProductDealDto busiAutoAddTradeProductDealDto =new BusiAutoAddTradeProductDealDto();
+            if(baseFinProductBaseInfolist != null && baseFinProductBaseInfolist.size() > 0){
+                busiAutoAddTradeProductDealDto = this.generationDeal(ptlSecPositionflowTempList,finProduct,secId,batchDate,tradeid);
+                busiAutoAddTradeProductDealDtoList.add(busiAutoAddTradeProductDealDto);
             }
 
-            //2.3 更新原有标的上市代码
-            FinProductAdd finProductAdd = new FinProductAdd();
-            finProductAdd.setFinprodId(finProduct.getFinprodId());
-            //finProductAdd.setap(secId);
-            busiAutoAddSecInfoMapper.updateByPrimaryKey(finProductAdd);
+            //2.4 更新原有标的上市代码
+            this.updateFinProdAdd(finProduct);
         }
-        //入库
+        //入库加券信息
         if(baseFinProductBaseInfolist != null && baseFinProductBaseInfolist.size() > 0){
             this.insert(baseFinProductBaseInfolist);
         }
+        //入库交易信息
+        if(busiAutoAddTradeProductDealDtoList !=null && busiAutoAddTradeProductDealDtoList.size() > 0){
+            this.insertDeal(busiAutoAddTradeProductDealDtoList);
+        }
+    }
+
+    //更新原有标的上市代码
+    private void updateFinProdAdd(FinProduct finProduct) {
+        FinProductAdd finProductAdd = new FinProductAdd();
+        finProductAdd.setFinprodId(finProduct.getFinprodId());
+        //finProductAdd.setap(secId);
+        busiAutoAddSecInfoMapper.updateByPrimaryKey(finProductAdd);
+    }
+
+    //生成上市流通交易
+    private BusiAutoAddTradeProductDealDto generationDeal(List<PtlSecPositionFlow> ptlSecPositionflowTempList,FinProduct finProduct,String secId,Date batchDate,String totalTradeId) {
+        BusiAutoAddTradeProductDealDto busiAutoAddTradeProductDealDto =new BusiAutoAddTradeProductDealDto();
+        List<TrdProductDeal> deals = new ArrayList<>();
+        List<TrdProductDealAdd> dealAdds = new ArrayList<>();
+        List<TrdFinProductBarter> dealBarters = new ArrayList<>();
+        busiAutoAddTradeProductDealDto.setTrdProductDeals(deals);
+        busiAutoAddTradeProductDealDto.setTrdProductDealAdds(dealAdds);
+        busiAutoAddTradeProductDealDto.setTrdFinProductBarterList(dealBarters);
+
+        //金融产品交易汇总表
+        TrdFinProductDealTotal trdFinProductDealTotal =new TrdFinProductDealTotal();
+        trdFinProductDealTotal.setTotleTradeId(totalTradeId);
+        trdFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        trdFinProductDealTotal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
+        trdFinProductDealTotal.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
+        trdFinProductDealTotal.setFinprodId("F01_"+secId);
+        trdFinProductDealTotal.setTradeDate(batchDate);
+        trdFinProductDealTotal.setBranch(0L);
+        busiAutoAddTradeProductDealDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
+
+        //金融产品实物汇总交易
+        TrdFinProductBarterTotal trdFinProductBarterTotal =new TrdFinProductBarterTotal();
+        trdFinProductBarterTotal.setTradeId(totalTradeId);
+        trdFinProductBarterTotal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
+        trdFinProductBarterTotal.setFinprodId(finProduct.getFinprodId());
+        trdFinProductBarterTotal.setBranch(0L);
+        busiAutoAddTradeProductDealDto.setTrdFinProductBarterTotal(trdFinProductBarterTotal);
+
+        for(PtlSecPositionFlow ptlSecPositionFlow:ptlSecPositionflowTempList){
+                //金融产品交易表
+                TrdProductDeal trdProductDeal =new TrdProductDeal();
+                trdProductDeal.setTradeId(ptlSecPositionFlow.getTradeId());
+                trdProductDeal.setInvAim(ptlSecPositionFlow.getInvAim());
+                trdProductDeal.setTotleTradeId(totalTradeId);
+                trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                trdProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                trdProductDeal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
+                trdProductDeal.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
+                trdProductDeal.setFinprodId("F01_"+secId);
+                trdProductDeal.setTradeDate(batchDate);
+                trdProductDeal.setBranch(0L);
+                deals.add(trdProductDeal);
+                //金融产品交易扩展表
+                TrdProductDealAdd trdProductDealAdd =new TrdProductDealAdd();
+                trdProductDealAdd.setTradeId(ptlSecPositionFlow.getTradeId());
+                trdProductDealAdd.setPortfolioId(ptlSecPositionFlow.getPortfolioId());
+                trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
+                dealAdds.add(trdProductDealAdd);
+                //金融产品交易明细表
+                TrdFinProductBarter trdFinProductBarter =new TrdFinProductBarter();
+                trdFinProductBarter.setTradeId(ptlSecPositionFlow.getTradeId());
+                trdFinProductBarter.setFinprodId(finProduct.getFinprodId());
+                trdFinProductBarter.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
+                trdFinProductBarter.setInvAim(ptlSecPositionFlow.getInvAim());
+                trdFinProductBarter.setBranch(0L);
+                dealBarters.add(trdFinProductBarter);
+
+            AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+//            inputDto.setPageId("TrdBondInvestTrade002");
+            inputDto.setProdid(trdProductDealAdd.getPortfolioId());
+            inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+            inputDto.setTrdProductDeal(trdProductDeal);
+            inputDto.setTrdProductDealAdd(trdProductDealAdd);
+            AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
+        }
+        return busiAutoAddTradeProductDealDto;
+    }
+
+    //插入上市流通交易表
+    private void insertDeal(List<BusiAutoAddTradeProductDealDto> busiAutoAddTradeProductDealDtoList) {
+        BusiAutoAddTradeProductDealDto busiAutoAddTradeProductDealDto = busiAutoAddTradeProductDealDtoList.get(0);
+        if(busiAutoAddTradeProductDealDto !=null){
+            if(busiAutoAddTradeProductDealDto.getTrdFinProductDealTotal()!= null){
+                trdFinProductDealTotalMapper.insert(busiAutoAddTradeProductDealDto.getTrdFinProductDealTotal());
+            }
+            if(busiAutoAddTradeProductDealDto.getTrdFinProductBarterTotal()!= null){
+                trdFinProductBarterTotalMapper.insert(busiAutoAddTradeProductDealDto.getTrdFinProductBarterTotal());
+            }
+            if (!StringUtil.isEmptyList(busiAutoAddTradeProductDealDto.getTrdProductDeals())) {
+                for (TrdProductDeal trdProductDeal : busiAutoAddTradeProductDealDto.getTrdProductDeals()) {
+                    trdProductDealMapper.insert(trdProductDeal);
+                }
+            }
+            if (!StringUtil.isEmptyList(busiAutoAddTradeProductDealDto.getTrdProductDealAdds())) {
+                for (TrdProductDealAdd trdProductDealAdd : busiAutoAddTradeProductDealDto.getTrdProductDealAdds()) {
+                    trdProductDealAddMapper.insert(trdProductDealAdd);
+                }
+            }
+            if (!StringUtil.isEmptyList(busiAutoAddTradeProductDealDto.getTrdFinProductBarterList())) {
+                for (TrdFinProductBarter trdFinProductBarter : busiAutoAddTradeProductDealDto.getTrdFinProductBarterList()) {
+                    trdFinProductBarterMapper.insert(trdFinProductBarter);
+                }
+            }
+        }
+
     }
 
     /**
@@ -371,7 +568,27 @@ public class BusiAutoAddSecInfoService {
                 returnMap.put(svo, finExerciseList);
 
             }
-
+            else if("Market_Rating".equals(queryTypeNow)){
+                // 查询评级信息list
+                List<MstBondCreditRating> mstBondCreditRatingList = busiAutoAddSecInfoMapper.selectMstBondCreditRating(finprodId.replace("F01_",""));
+                mstBondCreditRatingList.addAll(busiAutoAddSecInfoMapper.selectMstinnercreditrating(finprodId.replace("F01_","")));
+                // 查询结果塞入map中
+                returnMap.put(svo, mstBondCreditRatingList);
+            }
+//            else if("REP_ASSET_BOND".equals(queryTypeNow)){
+//                // 查询评级信息list
+//                List<MstBondCreditRating> mstBondCreditRatingList = busiAutoAddSecInfoMapper.selectMstBondCreditRating(finprodId.replace("F01_",""));
+//                mstBondCreditRatingList.addAll(busiAutoAddSecInfoMapper.selectMstinnercreditrating(finprodId.replace("F01_","")));
+//                // 查询结果塞入map中
+//                returnMap.put(svo, mstBondCreditRatingList);
+//            }
+//            else if("REP_ASSET_EQUITY".equals(queryTypeNow)){
+//                // 查询评级信息list
+//                List<BussRepEquityInfoDto> mstBondCreditRatingList = bussRepEquityInfoMapper.getBussRepEquityInfoByProductId(finprodId);
+//                mstBondCreditRatingList.addAll(busiAutoAddSecInfoMapper.selectMstinnercreditrating(finprodId.replace("F01_","")));
+//                // 查询结果塞入map中
+//                returnMap.put(svo, mstBondCreditRatingList);
+//            }
 //            else if (ValDictCodeList.标的_现金流计算规则.getValue().equals(queryTypeNow)) {
 //                // 查询标的现金流计算规则list
 //                List<TargetCashCalcRule> targetCashCalcRuleList = finProductCommonMapper.getTargetCashCalcRuleList(paMap);
@@ -434,10 +651,10 @@ public class BusiAutoAddSecInfoService {
     /**
      * 标的类金融产品基本信息
      */
-    private void insert(List<BaseFinProductBaseInfoDto> list) {
+    private void insert(List<BusiAutoAddFinProductBaseInfoDto> list) {
         if (list != null && list.size() > 0) {
             // 循环遍历list里的dto
-            for (BaseFinProductBaseInfoDto dto : list) {
+            for (BusiAutoAddFinProductBaseInfoDto dto : list) {
                 // 插入标的类金融产品表
                 if (dto.getFinProduct() != null) {
                     // 一体化对应etliu start
@@ -490,6 +707,40 @@ public class BusiAutoAddSecInfoService {
                     for (FinExercisePlan finExercisePlan : dto.getFinExercisePlanList()) {
                         finExercisePlanMapper.insert(finExercisePlan);
                     }
+                }
+                //插入持仓表
+                if (!StringUtil.isEmptyList(dto.getPtlSecPositionFlowlist())) {
+                    for (PtlSecPositionFlow ptlSecPositionFlow : dto.getPtlSecPositionFlowlist()) {
+                        ptlSecPositionFlowMapper.insert(ptlSecPositionFlow);
+                    }
+                }
+                //插入指令持仓表
+                if (!StringUtil.isEmptyList(dto.getEtrSecPositionFlowlist())) {
+                    for (EtrSecPositionFlow etrSecPositionFlow : dto.getEtrSecPositionFlowlist()) {
+                        etrSecPositionFlowMapper.insert(etrSecPositionFlow);
+                    }
+                }
+                //插入评级表
+                if (!StringUtil.isEmptyList(dto.getMstBondCreditRatingList())) {
+                    for (MstBondCreditRating mstBondCreditRating : dto.getMstBondCreditRatingList()) {
+                       mstBondCreditRatingMapper.insert(mstBondCreditRating);
+                    }
+                }
+                // 插入标的类金融产品表
+                if (dto.getRepAssetBond() != null) {
+                    repAssetBondMapper.insert(dto.getRepAssetBond());
+                }
+                // 插入标的类金融产品表
+                if (dto.getRepAssetDept() != null) {
+                    repAssetDeptMapper.insert(dto.getRepAssetDept());
+                }
+                // 插入债券资产报送信息表
+                if (dto.getRepAssetOther() != null) {
+                    repAssetOtherMapper.insert(dto.getRepAssetOther());
+                }
+                // 插入权益类资产报送信息表
+                if (dto.getRepAssetEquity() != null) {
+                    repAssetEquityMapper.insert(dto.getRepAssetEquity());
                 }
             }
         }

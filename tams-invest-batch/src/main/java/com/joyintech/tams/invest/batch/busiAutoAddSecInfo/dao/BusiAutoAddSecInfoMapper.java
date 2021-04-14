@@ -15,6 +15,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetCashCal
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -118,4 +119,8 @@ public interface BusiAutoAddSecInfoMapper {
     List<PtlSecPosition> getPtlSecPositionList(Map<String, String> tempMap);
 
     void updateByPrimaryKey(FinProductAdd finProductAdd);
+
+    List<MstBondCreditRating> selectMstBondCreditRating(@Param("marketId") String marketId);
+
+    Collection<? extends MstBondCreditRating> selectMstinnercreditrating(@Param("marketId") String marketId);
 }
