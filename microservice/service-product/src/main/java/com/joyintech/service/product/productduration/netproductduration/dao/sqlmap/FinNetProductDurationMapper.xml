@@ -686,7 +686,7 @@
 	        	left join FIN_PRODUCT ON FIN_PRODUCT.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID 
 	        WHERE FIN_PRODUCT.p_finprod_id = #{finprodId,jdbcType=VARCHAR} AND ptl.cdate = #{cDate,jdbcType=DATE}
 	          AND ptl.amount > 0
-		      <if test="confirmDate != null and confirmDate != ''">
+		      <if test="confirmDate != null ">
 				  AND #{confirmDate,jdbcType=DATE} > fin_trade_product.vdate
 			  </if>
 		)ORDER BY  M_DATE ASC 
