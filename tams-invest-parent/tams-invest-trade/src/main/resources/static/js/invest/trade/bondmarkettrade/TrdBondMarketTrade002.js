@@ -1,0 +1,87 @@
+(function(){
+    /**
+     * 获取查询参数
+     */
+    var getPageParams = function() {
+        var pageParam = {
+            finprodId:$('#finprodId').val()
+            ,finprodAbbr: $('#finprodAbbr').val()
+            ,tradeMarket: $('#tradeMarket').val()
+            ,appearMarketId: $('#appearMarketId').val()
+            ,appearMarketAbbr: $('#appearMarketAbbr').val()
+            ,isAdded: $('#isAdded').val()
+            ,tradeDate: $('#tradeDate').val()
+        };
+        return pageParam;
+    };
+
+    function saveOrSubmit(operateType) {
+        debugger;
+        var object = getPageParams();
+        object.pageModel = pageModel;
+        object.operateType = operateType;
+        Joyin.ajaxJson(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/check', object, function(result) {
+            Joyin.confirm(result.data, function() {
+                if(operateType === 'save') {
+                    WorkFlow.doSaveList(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/save', object, "TrdBondMarketTrade002_btn_save");
+                }
+                else {
+                    WorkFlow.doSubmitList(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/save', object, "TrdBondMarketTrade002_btn_submit");
+                }
+            });
+        },false);
+    };
+
+    /**
+     * 画面联动处理
+     * 1.1发行代码
+     */
+    $('#finprodId').on("change", function () {
+        if ($('#finprodId').val() == null || $('#finprodId').val() == ''){
+            $('#tradeMarket').val('').trigger('change');
+            $('#finprodAbbr').val('').trigger('change');
+        }else{
+            var data = $('#finprodId').select2('data')[0].object;
+            if (data != undefined && data.tradeMarket){
+                $('#tradeMarket').val(data.tradeMarket).trigger('change');
+            }
+            if (data != undefined && data.finprodAbbr){
+                $('#finprodAbbr').val(data.finprodAbbr).trigger('change');
+            }    
+        }
+    });
+
+    /**
+     * 画面联动处理
+     * 1.2发行代码
+     */
+    $('#appearMarketId').on("change", function () {
+        if ($('#appearMarketId').val() == null || $('#appearMarketId').val() == '') {
+            $('#appearMarketAbbr').val('').trigger('change');
+            $('#isAdded').val('').trigger('change');
+        }else {
+            var data = $('#appearMarketId').select2('data')[0].object;
+            if (data != undefined && data.appearMarketAbbr){
+                $('#appearMarketAbbr').val(data.appearMarketAbbr).trigger('change');
+            }
+            if (data != undefined && data.isAdded){
+                $('#isAdded').val(data.isAdded).trigger('change');
+            }    
+        }
+    });
+    
+    $(function () {
+        if (pageModel != null && pageModel != ''){
+            $('#pageModel').val(pageModel).trigger('change');    
+        }
+        
+        // 绑定按钮事件
+        $('#TrdBondMarketTrade002_btn_save').click(function() {
+            saveOrSubmit('save');
+        });
+        $('#TrdBondMarketTrade002_btn_submit').click(function() {
+            saveOrSubmit('submit');
+        });
+        
+    });
+}());
