@@ -682,9 +682,19 @@
     ,POSITION.ASSETTYPE2
     ,POSITION.IS_FHXGCP
   </select>
-  <delete id="deleteByDate" parameterType="date" >
+  <delete id="deleteByDate" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
     delete from CHB_MONTH_ASSET_POSITION
-    where STARTDATE<![CDATA[>=]]> #{cdate,jdbcType=DATE}
+    where enddate<![CDATA[>=]]> #{enddate,jdbcType=DATE}
+      <if test="prodids !=null and prodids.size()>0">
+          and prod_id in
+          <foreach collection="prodids" item="prodid"  index="index" open="(" separator=","
+                   close=")">
+              <if test="(index % 999) == 998">
+                  null) OR prod_id in (
+              </if>
+              #{prodid}
+          </foreach>
+      </if>
   </delete>
   <select id="selectPrdCashByDate" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
   		parameterType="date">

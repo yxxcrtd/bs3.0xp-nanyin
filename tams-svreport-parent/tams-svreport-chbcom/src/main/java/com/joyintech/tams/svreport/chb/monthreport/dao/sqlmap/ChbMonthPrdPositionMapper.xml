@@ -433,14 +433,9 @@
 	    ,info.OPENTYPEP
         ,info.CASH_MANA_CATE
         /***封闭期在半年以上的定期开放式产品：改成按照期限品种统计； leipeng 20201226***/
-      ,          case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
-                      then '02' else
-                      (case when info.SHORT_TERM is null
-                          then null
-                          when info.SHORT_TERM>184
-                          then '02'
-                          else
-                          '01' end)
+      ,          case when info.CASH_MANA_CATE='01' then '01'
+                      when info.operate_mode in ('03') and info.termtype in ('06','08','09')
+                      then '02' else '03'
                       end openduration
 	    ,info.PROFIT_TYPE
 	    ,decode(info.EXC_FIN_SECTOR,'01','04',info.SALETARGET) saletarget
@@ -820,7 +815,7 @@
             prod.profit_type,
             decode(prod.EXC_FIN_SECTOR,'01','04',prod.SALETARGET) saletarget,
             prod.vdate,
-            '03' openduration,
+            pi.OPENDURATION openduration,
             prod.CASH_MANA_CATE,
             pi.durationflag,
             NULL con_prd_traget,
@@ -848,7 +843,7 @@
             CHB_MONTH_PRD_POSITION pos1          
             left join  chb_prd_baseinfo prod
             on pos1.PRODID = prod.PROD_ID
-            left join pi on pi.prodid=prod.prod_id
+            inner join pi on pi.prodid=prod.prod_id
 			/*left join pm on pm.prodid=prod.prod_id*/
 			LEFT JOIN PM ON PM.PRODID=POS1.PRODID
       		and  (PM.ord_identified=pos1.ord_identified 
