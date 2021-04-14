@@ -49,6 +49,10 @@ public class TrdStandardBond002Dto extends BaseEntity implements ProcessEntity {
      * 债券代码
      */
     private String bondCode;
+    
+    private String operateType;
+    
+    private List<String> tradeIdList;
 
     /**
      * 金融产品代码
@@ -560,4 +564,20 @@ public class TrdStandardBond002Dto extends BaseEntity implements ProcessEntity {
     public void setAvaPledgeBondList(List<TrdStandardBond002Dto> avaPledgeBondList) {
         this.avaPledgeBondList = avaPledgeBondList;
     }
+
+	public String getOperateType() {
+		return operateType;
+	}
+
+	public void setOperateType(String operateType) {
+		this.operateType = operateType;
+	}
+
+	public List<String> getTradeIdList() {
+		return tradeIdList;
+	}
+
+	public void setTradeIdList(List<String> tradeIdList) {
+		this.tradeIdList = tradeIdList;
+	}
 }

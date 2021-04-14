@@ -302,11 +302,15 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
             PtlSecPositionFlowDto resultDto;
             TrdStasecFlowDetail tsfd;
 
+            int tradeIdIndex = 0;
             Map<String, List<TrdStandardBondInDto>> dtoMap = dto.getPledgeBondList().stream().collect(JoyinCollectors.groupingBy(x -> x.getPortfolioId() + "," + x.getSecAcctId()));
             for (Map.Entry<String, List<TrdStandardBondInDto>> entry : dtoMap.entrySet()) {
+            	/*
                 BussinessCodeParameter parameter = new BussinessCodeParameter();
                 parameter.setSeqNo("9999");
                 String seqNo = baseGetBussinessId.buildBussinessCode(parameter);
+                */
+            	String seqNo = dto.getTradeIdList().get(tradeIdIndex);
 
                 TrdStasecFlow tsf = new TrdStasecFlow();
                 tsf.setSeqno(seqNo);
@@ -317,7 +321,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                 tsf.setRemark("质押券入库");
 
                 saveCount += trdStasecFlowMapper.insert(tsf);
-
+                
                 for (TrdStandardBondInDto tsb : entry.getValue()) {
                     tsfd = new TrdStasecFlowDetail();
                     tsfd.setSeqno(seqNo);
@@ -398,6 +402,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                     if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
                             && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
                         //入库时已经往持仓流水表中插入了持仓数据，但是seqNo与出入库详细表中的seqNo不同，所以插入一条seqNo相同的，并同时插入一条金额相反的seqNo不同的
+                    	/* 逻辑调整，在流程中每一步生成上一步的反向流水，因此，末尾不需要生成反向流水
                         List<PtlSecPositionFlowDto> negateFlows = new ArrayList<PtlSecPositionFlowDto>();
                         for (PtlSecPositionFlowDto ptlFlow :ptlPositionHoldDto.getPtlSecPositionFlows()){
                             //生成金额相反，seqNo不同的数据
@@ -409,15 +414,10 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                         }
                         if(negateFlows.size()>0){
                             ptlPositionHoldDto.getPtlSecPositionFlows().addAll(negateFlows);
-                        }  
+                        }
+                        */  
                         for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
                             basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
-                        }
-                    }
-                    if (ptlPositionHoldDto.getPtlCashPositionFlows() != null
-                            && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
-                        for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
-                            basePtlCashPositionInfoServiceImpl.insertCashPositionFlow(ptlCashPositionFlow);
                         }
                     }
                 }
@@ -550,18 +550,18 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
 
                 }
             }
-            if (!StringUtil.isEmptyList(lstPtlSecPositionFlowDto)) {
-                PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
-                ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
-                if (ptlPositionHoldDto != null) {
-                    if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
-                            && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
-                        for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
-                            basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
-                        }
-                    }
-                }
-            }
+//            if (!StringUtil.isEmptyList(lstPtlSecPositionFlowDto)) {
+//                PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
+//                ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
+//                if (ptlPositionHoldDto != null) {
+//                    if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
+//                            && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
+//                        for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
+//                            basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
+//                        }
+//                    }
+//                }
+//            }
             //入库交易提交时，指令可用持仓减少，入库交易生效时生成一笔反向的抵消掉
             if (baseEtrCashPositionCommService != null && etrCashList.size() > 0) {
 //                baseEtrCashPositionCommService.StandardBondExecute(etrCashList,DictCodeList.出入库方向_入库);
