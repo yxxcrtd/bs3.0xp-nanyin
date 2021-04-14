@@ -6707,12 +6707,12 @@ public class SecDealAccountsService {
         }else if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(acctEntity.getInvAim())) {
             // 溢折价科目
             if(origyzjkmye.compareTo(BigDecimal.ZERO) >= 0){
-                accountAmountMap.put(BookConstant.FLOAT_C_O,origyzjkmye);
-                accountAmountMap.put(BookConstant.FLOAT_D,origyzjkmye);
+                accountAmountMap.put(BookConstant.DSCINC_C_O,origyzjkmye);
+                accountAmountMap.put(BookConstant.DSCINC_D,origyzjkmye);
             }else{
                 origyzjkmye = ArithmeticUtil.multiply(origyzjkmye,new BigDecimal(-1));
-                accountAmountMap.put(BookConstant.FLOAT_D_O,ArithmeticUtil.round(origyzjkmye, NumberEnum.MONEY));
-                accountAmountMap.put(BookConstant.FLOAT_C,origyzjkmye);
+                accountAmountMap.put(BookConstant.DSCINC_D_O,ArithmeticUtil.round(origyzjkmye, NumberEnum.MONEY));
+                accountAmountMap.put(BookConstant.DSCINC_C,origyzjkmye);
             }
         } else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
                 acctEntity.getInvAim())) {
@@ -6727,12 +6727,12 @@ public class SecDealAccountsService {
             }
             // 溢折价科目
             if(origyzjkmye.compareTo(BigDecimal.ZERO) >= 0){
-                accountAmountMap.put(BookConstant.FLOAT_C_O,origyzjkmye);
-                accountAmountMap.put(BookConstant.FLOAT_D,origyzjkmye);
+                accountAmountMap.put(BookConstant.DSCINC_C_O,origyzjkmye);
+                accountAmountMap.put(BookConstant.DSCINC_D,origyzjkmye);
             }else{
                 origyzjkmye = ArithmeticUtil.multiply(origyzjkmye,new BigDecimal(-1));
-                accountAmountMap.put(BookConstant.FLOAT_D_O,ArithmeticUtil.round(origyzjkmye, NumberEnum.MONEY));
-                accountAmountMap.put(BookConstant.FLOAT_C,origyzjkmye);
+                accountAmountMap.put(BookConstant.DSCINC_D_O,ArithmeticUtil.round(origyzjkmye, NumberEnum.MONEY));
+                accountAmountMap.put(BookConstant.DSCINC_C,origyzjkmye);
             }
         }
 
