@@ -1693,7 +1693,8 @@
         NULL monthAmtRationExTemp,
         NULL yearAmtRationTemp,
         NULL ystMarketValue,
-        NULL ystTdyIntincexp
+        NULL ystTdyIntincexp,
+        pcp.acct_id
         FROM PTL_SEC_PIERCE_VALUTION psv
         LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
         LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
@@ -1724,14 +1725,15 @@
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
         GROUP BY
-        psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount
+        psv.cdate,psv.portfolio_Id,pp.portfolio_Name,pcp.amount,pcp.acct_id
         ) S
         LEFT JOIN (
         SELECT
         psv.cdate cdate,
         psv.portfolio_Id portfolioId,
         pcp.amount marketValue,
-        pcp.amount dscCostAmt
+        pcp.amount dscCostAmt,
+        pcp.acct_id
         FROM PTL_SEC_PIERCE_VALUTION psv
         LEFT JOIN FIN_PRODUCT ON FIN_PRODUCT.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
         LEFT JOIN FIN_PRODUCT_ADD ON FIN_PRODUCT_ADD.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
@@ -1777,8 +1779,8 @@
         </if>
         <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
         GROUP BY
-        psv.cdate,psv.portfolio_Id,pcp.amount
-        ) SS ON S.portfolioId = SS.portfolioId
+        psv.cdate,psv.portfolio_Id,pcp.amount,pcp.acct_id
+        ) SS ON S.portfolioId = SS.portfolioId and  S.acct_id = SS.acct_id
         )assetHold
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON assetHold.portfolioId = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         WHERE 1=1
