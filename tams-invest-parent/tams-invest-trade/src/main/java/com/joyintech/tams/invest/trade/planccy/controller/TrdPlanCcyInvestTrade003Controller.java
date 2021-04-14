@@ -211,20 +211,22 @@ public class TrdPlanCcyInvestTrade003Controller extends BaseController {
             else {
                 dto = trdPlanCcyInvestTrade003Service.getTrdFundDto(tradeId,feeType);
                 if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()) || StringUtil.equals(dto.getPs(),DictCodeList.交易方向_赎回.getValue())){
-                    Map<String, Object> param = new HashMap<String, Object>();
-                    param.put("finprodId", dto.getFinprodId());
-                    Map<String, Object> result = trdPlanCcyInvestTrade003Service.getPurSpeed(param);
-                    Long speed = dto.getSettleSpeed();
-                    String calId = (String)result.get("CALID");
-                    if (speed == 1) {
-                        Date tradeDate = dto.getTradeDate();
-                        List<String> holidayList = dateCalService.getDealCalendarHoliday(
-                            DateUtil.parse(DateUtil.format(tradeDate)),
-                            DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15), calId);
-                        Date tradeDay = dateCalService.calculationTradingDay(
-                            DateUtil.parse(DateUtil.format(tradeDate)), 1, holidayList, "1");
-                        dto.setTradeDate(tradeDay);
-                    }
+//                    Map<String, Object> param = new HashMap<String, Object>();
+//                    param.put("finprodId", dto.getFinprodId());
+//                    Map<String, Object> result = trdPlanCcyInvestTrade003Service.getPurSpeed(param);
+//                    Long speed = dto.getSettleSpeed();
+//                    String calId = (String)result.get("CALID");
+//                    if (speed == 1) {
+//                        Date tradeDate = dto.getTradeDate();
+//                        List<String> holidayList = dateCalService.getDealCalendarHoliday(
+//                            DateUtil.parse(DateUtil.format(tradeDate)),
+//                            DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15), calId);
+//                        Date tradeDay = dateCalService.calculationTradingDay(
+//                            DateUtil.parse(DateUtil.format(tradeDate)), 1, holidayList, "1");
+//                        dto.setTradeDate(tradeDay);
+//                    }
+                    //显示实际的确认日期
+                    dto.setTradeDate(dto.getPurCfmDate());
                 }
                 if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
                     Map<String, Object> accountTradId = new HashMap<>();

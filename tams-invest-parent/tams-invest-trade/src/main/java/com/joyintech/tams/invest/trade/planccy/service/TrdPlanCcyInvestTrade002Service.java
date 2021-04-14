@@ -151,6 +151,7 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
             	if(StringUtil.equals(entity.getPs(),DictCodeList.交易方向_申购.getValue()) || StringUtil.equals(entity.getPs(),DictCodeList.交易方向_赎回.getValue())){
             		TrdPlanCcyInvestTradeConfirmDto confirmDto = new TrdPlanCcyInvestTradeConfirmDto();
             		BeanUtil.copyPropertiesIgnoreNull(confirmDto,entity);
+                    confirmDto.setTradeDate(entity.getPurCfmDate());
             		ProcessParameter<TrdPlanCcyInvestTradeConfirmDto> workFlowPatameter = getWorkFlowPatameter(confirmDto);
                     confirmDto.setCreateUser(entity.getCreateUser());
             		try {
@@ -209,14 +210,14 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
         dto.setbTradeId(dto.getTradeId());
         dto.setWorkflowId(null);
         dto.setOperateType("save");
-        if (dto.getSettleSpeed() == 1 || dto.getSettleSpeed() == 2) {
-            int speedCount = dto.getSettleSpeed().intValue();
-//            dto.setTradeDate(DateUtil.addDay(dto.getTradeDate(), 1));
-        	Date tradeDate = dto.getTradeDate();
-            List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(tradeDate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15),dto.getCalendarId());
-            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(tradeDate)), speedCount, holidayList, "1");
-            dto.setTradeDate(tradeDay);
-        }
+//        if (dto.getSettleSpeed() == 1 || dto.getSettleSpeed() == 2) {
+//            int speedCount = dto.getSettleSpeed().intValue();
+////            dto.setTradeDate(DateUtil.addDay(dto.getTradeDate(), 1));
+//        	Date tradeDate = dto.getTradeDate();
+//            List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(tradeDate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15),dto.getCalendarId());
+//            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(tradeDate)), speedCount, holidayList, "1");
+//            dto.setTradeDate(tradeDay);
+//        }
         if (baseGetBusinessId != null) {
             BussinessCodeParameter codeParameter = new BussinessCodeParameter();
             codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_计划类资产_货币型_交易);
@@ -527,6 +528,7 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
 //            trdProductDealAdd.setRedCfmDate(dto.getRedCfmDate());
             trdProductDealAdd.setPurCfmDate(dto.getTradeDate());
         }
+        trdProductDealAdd.setRedCfmDate(dto.getRedCfmDate());
         trdProductDealAdd.setTradeId(dto.getTradeId());
         trdProductDealAdd.setPortfolioId(dto.getPortfolioId());
         trdProductDealAdd.setEntrustId(dto.getEntrustId());
