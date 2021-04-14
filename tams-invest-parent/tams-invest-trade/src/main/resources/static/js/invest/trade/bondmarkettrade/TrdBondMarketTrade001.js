@@ -43,7 +43,7 @@
         },
         cols:[
             {field:'totleTradeId', sortField:'totleTradeId',width:220, title: 'TrdBondMarketTrade001.totleTradeId',visible:false}
-            ,{field:'rowNum',width:220, title: 'TrdBondMarketTrade001.rowNum',sortable: false}
+            ,{field:'rowNum',width:60, title: 'TrdBondMarketTrade001.rowNum',sortable: false}
             ,{field:'finprodId',sortField:'finprodId', width:180, title: 'TrdBondMarketTrade001.finprodId'}
             ,{field:'finprodAbbr',sortField:'finprodAbbr', width:180, title: 'TrdBondMarketTrade001.finprodAbbr'}
             ,{field:'tradeMarket', sortField:'tradeMarket',width:130, title: 'TrdBondMarketTrade001.tradeMarket',visible:false}

@@ -247,168 +247,172 @@ public class TrdBondMarketTradeService extends BaseService {
         BaseFinProductBaseInfoDto baseFinProductBaseInfoDto = new BaseFinProductBaseInfoDto();
 
         String newFinprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + dto.getAppearMarketId();
-        
-        //1. 查询数据
-        //标的类金融产品Entity
-        FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
-        
-        //标的类金融产品附属表Entity
-        FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(dto.getFinprodId());
 
-        //金融产品分类表Entity
-        FinProductTypeKey finProductTypeKey = new FinProductTypeKey();
-        finProductTypeKey.setFinprodId(dto.getFinprodId());
-        finProductTypeKey.setBranch(0L);
-        FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(finProductTypeKey);
-        
-        
-        //List<现金流信息Entity>    
-        FinCashInfo finCashInfo = new FinCashInfo();
-        finCashInfo.setFinprodId(dto.getFinprodId());
-        List<FinCashInfo> finCashInfos = baseFinProductCashInfoService.select(finCashInfo);
-        Map<String,String> cashIdMap = new HashMap<>();
-        for (FinCashInfo cashInfo : finCashInfos) {
-            //将原现金流代码作为key，新生成的现金流代码作为value
-            String cashId = IDGenerator.generate();
-            cashIdMap.put(cashInfo.getCashId(),cashId);
-            cashInfo.setFinprodId(newFinprodId);
-            cashInfo.setCashId(cashId);
-        }
-        
-        //List<现金流计算规则表Entity> 
-        BaseFinProductCashCalcRuleDto baseFinProductCashCalcRuleDto = new BaseFinProductCashCalcRuleDto();
-        baseFinProductCashCalcRuleDto.setFinprodId(dto.getFinprodId());
-        List<FinCashCalcRule> finCashCalcRules = baseFinProductCashCalcRuleService.selectByBaseFinProductCashCalcRuleDto(baseFinProductCashCalcRuleDto);
+        FinProduct finProduct1 = finProductMapper.selectByPrimaryKey(newFinprodId);
+        //根据资产代码查询不到数据则进行加券操作
+        if (finProduct1 == null){
+            //1. 查询数据
+            //标的类金融产品Entity
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
 
-        //List<现金流利率信息表Entity>  
-        BaseFinProductCashRateRuleDto baseFinProductCashRateRuleDto = new BaseFinProductCashRateRuleDto();
-        baseFinProductCashRateRuleDto.setFinprodId(dto.getFinprodId());
-        List<FinRateInfo> finRateInfos = baseFinProductCashRateRuleService.selectByBaseFinProductCashRateRuleDto(baseFinProductCashRateRuleDto);
-        
-        //List<现金流支付规则表Entity>  
-        FinCashPayRule finCashPayRule = new FinCashPayRule();
-        finCashPayRule.setFinprodId(dto.getFinprodId());
-        List<FinCashPayRule> finCashPayRules = baseFinProductPayRuleService.select(finCashPayRule);
+            //标的类金融产品附属表Entity
+            FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(dto.getFinprodId());
 
-        //List<现金流计划表Entity>  
-        FinCashPlan finCashPlan = new FinCashPlan();
-        finCashPlan.setFinprodId(dto.getFinprodId());
-        List<FinCashPlan> finCashPlans = baseFinProductCashPayPlanService.select(finCashPlan);
-        
-        //List<行权规则表Entity>  
-        BaseFinProductExerciseRuleDto baseFinProductExerciseRuleDto = new BaseFinProductExerciseRuleDto();
-        baseFinProductExerciseRuleDto.setFinprodId(dto.getFinprodId());
-        List<FinExerciseRule> finExerciseRules = baseFinProductExerciseRuleService.select(baseFinProductExerciseRuleDto);
-        
-        //List<行权计划表Entity>  
-        FinExercisePlan finExercisePlan = new FinExercisePlan();
-        finExercisePlan.setFinprodId(dto.getFinprodId());
-        List<FinExercisePlan> finExercisePlans = baseFinProductExercisePlanService.select(finExercisePlan);
+            //金融产品分类表Entity
+            FinProductTypeKey finProductTypeKey = new FinProductTypeKey();
+            finProductTypeKey.setFinprodId(dto.getFinprodId());
+            finProductTypeKey.setBranch(0L);
+            FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(finProductTypeKey);
 
-        //债券资产报送信息Entity
-        RepAssetBond repAssetBond = repAssetBondMapper.selectByPrimaryKey(dto.getFinprodId());
-        //资产负债报送信息Entity
-        RepAssetDept repAssetDept = repAssetDeptMapper.selectByPrimaryKey(dto.getFinprodId());
-        //中债资产其他要素Entity
-        RepAssetOther repAssetOther = repAssetOtherMapper.selectByPrimaryKey(dto.getFinprodId());
-        //权益类资产报送信息Entity
-        RepAssetEquity repAssetEquity = repAssetEquityMapper.selectByPrimaryKey(dto.getFinprodId());
-        
-        //债券信用评级Entity
-        List<MstBondCreditRating> mstBondCreditRatingList = trdBondMarkettTradeMapper.selectByPrimaryKey(finProduct.getFinprodMarketId());
 
-        //处理债券资产报送信息Entity
-        repAssetBond.setRepFinprodId(newFinprodId);
-        //处理资产负债报送信息Entity
-        repAssetDept.setRepFinprodId(newFinprodId);
-        //处理中债资产其他要素Entity
-        repAssetOther.setRepFinprodId(newFinprodId);
-        repAssetOtherMapper.insertSelective(repAssetOther);
-        //处理权益类资产报送信息Entity
-        repAssetEquity.setRepFinprodId(newFinprodId);
-        repAssetEquityMapper.insertSelective(repAssetEquity);
-        //处理债券信用评级Entity
-        for (MstBondCreditRating mstBondCreditRating : mstBondCreditRatingList) {
-            mstBondCreditRating.setoCode(dto.getAppearMarketId());
-        }
-        
-        //处理查询到的数据
-        finProduct.setFinprodId(newFinprodId);
-        finProduct.setFinprodMarketId(dto.getAppearMarketId());
-
-        finProductAdd.setFinprodId(newFinprodId);
-
-        finProductType.setFinprodId(newFinprodId);
-
-        //处理现金流信息
-        for (String key : cashIdMap.keySet()) {
-            //现金流计算规则表Entity
-            for (FinCashCalcRule finCashCalcRule : finCashCalcRules) {
-                if (StringUtil.equals(key,finCashCalcRule.getCashId())){
-                    finCashCalcRule.setCashId(cashIdMap.get(key));
-                    finCashCalcRule.setFinprodId(newFinprodId);
-                }   
+            //List<现金流信息Entity>    
+            FinCashInfo finCashInfo = new FinCashInfo();
+            finCashInfo.setFinprodId(dto.getFinprodId());
+            List<FinCashInfo> finCashInfos = baseFinProductCashInfoService.select(finCashInfo);
+            Map<String,String> cashIdMap = new HashMap<>();
+            for (FinCashInfo cashInfo : finCashInfos) {
+                //将原现金流代码作为key，新生成的现金流代码作为value
+                String cashId = IDGenerator.generate();
+                cashIdMap.put(cashInfo.getCashId(),cashId);
+                cashInfo.setFinprodId(newFinprodId);
+                cashInfo.setCashId(cashId);
             }
 
-            //现金流支付规则表Entity
-            for (FinRateInfo finRateInfo : finRateInfos) {
-                if (StringUtil.equals(key,finRateInfo.getCashId())){
-                    finRateInfo.setCashId(cashIdMap.get(key));
-                    finRateInfo.setFinprodId(newFinprodId);
+            //List<现金流计算规则表Entity> 
+            BaseFinProductCashCalcRuleDto baseFinProductCashCalcRuleDto = new BaseFinProductCashCalcRuleDto();
+            baseFinProductCashCalcRuleDto.setFinprodId(dto.getFinprodId());
+            List<FinCashCalcRule> finCashCalcRules = baseFinProductCashCalcRuleService.selectByBaseFinProductCashCalcRuleDto(baseFinProductCashCalcRuleDto);
+
+            //List<现金流利率信息表Entity>  
+            BaseFinProductCashRateRuleDto baseFinProductCashRateRuleDto = new BaseFinProductCashRateRuleDto();
+            baseFinProductCashRateRuleDto.setFinprodId(dto.getFinprodId());
+            List<FinRateInfo> finRateInfos = baseFinProductCashRateRuleService.selectByBaseFinProductCashRateRuleDto(baseFinProductCashRateRuleDto);
+
+            //List<现金流支付规则表Entity>  
+            FinCashPayRule finCashPayRule = new FinCashPayRule();
+            finCashPayRule.setFinprodId(dto.getFinprodId());
+            List<FinCashPayRule> finCashPayRules = baseFinProductPayRuleService.select(finCashPayRule);
+
+            //List<现金流计划表Entity>  
+            FinCashPlan finCashPlan = new FinCashPlan();
+            finCashPlan.setFinprodId(dto.getFinprodId());
+            List<FinCashPlan> finCashPlans = baseFinProductCashPayPlanService.select(finCashPlan);
+
+            //List<行权规则表Entity>  
+            BaseFinProductExerciseRuleDto baseFinProductExerciseRuleDto = new BaseFinProductExerciseRuleDto();
+            baseFinProductExerciseRuleDto.setFinprodId(dto.getFinprodId());
+            List<FinExerciseRule> finExerciseRules = baseFinProductExerciseRuleService.select(baseFinProductExerciseRuleDto);
+
+            //List<行权计划表Entity>  
+            FinExercisePlan finExercisePlan = new FinExercisePlan();
+            finExercisePlan.setFinprodId(dto.getFinprodId());
+            List<FinExercisePlan> finExercisePlans = baseFinProductExercisePlanService.select(finExercisePlan);
+
+            //债券资产报送信息Entity
+            RepAssetBond repAssetBond = repAssetBondMapper.selectByPrimaryKey(dto.getFinprodId());
+            //资产负债报送信息Entity
+            RepAssetDept repAssetDept = repAssetDeptMapper.selectByPrimaryKey(dto.getFinprodId());
+            //中债资产其他要素Entity
+            RepAssetOther repAssetOther = repAssetOtherMapper.selectByPrimaryKey(dto.getFinprodId());
+            //权益类资产报送信息Entity
+            RepAssetEquity repAssetEquity = repAssetEquityMapper.selectByPrimaryKey(dto.getFinprodId());
+
+            //债券信用评级Entity
+            List<MstBondCreditRating> mstBondCreditRatingList = trdBondMarkettTradeMapper.selectByPrimaryKey(finProduct.getFinprodMarketId());
+
+            //处理债券资产报送信息Entity
+            repAssetBond.setRepFinprodId(newFinprodId);
+            //处理资产负债报送信息Entity
+            repAssetDept.setRepFinprodId(newFinprodId);
+            //处理中债资产其他要素Entity
+            repAssetOther.setRepFinprodId(newFinprodId);
+            repAssetOtherMapper.insertSelective(repAssetOther);
+            //处理权益类资产报送信息Entity
+            repAssetEquity.setRepFinprodId(newFinprodId);
+            repAssetEquityMapper.insertSelective(repAssetEquity);
+            //处理债券信用评级Entity
+            for (MstBondCreditRating mstBondCreditRating : mstBondCreditRatingList) {
+                mstBondCreditRating.setoCode(dto.getAppearMarketId());
+            }
+
+            //处理查询到的数据
+            finProduct.setFinprodId(newFinprodId);
+            finProduct.setFinprodMarketId(dto.getAppearMarketId());
+
+            finProductAdd.setFinprodId(newFinprodId);
+
+            finProductType.setFinprodId(newFinprodId);
+
+            //处理现金流信息
+            for (String key : cashIdMap.keySet()) {
+                //现金流计算规则表Entity
+                for (FinCashCalcRule finCashCalcRule : finCashCalcRules) {
+                    if (StringUtil.equals(key,finCashCalcRule.getCashId())){
+                        finCashCalcRule.setCashId(cashIdMap.get(key));
+                        finCashCalcRule.setFinprodId(newFinprodId);
+                    }
+                }
+
+                //现金流支付规则表Entity
+                for (FinRateInfo finRateInfo : finRateInfos) {
+                    if (StringUtil.equals(key,finRateInfo.getCashId())){
+                        finRateInfo.setCashId(cashIdMap.get(key));
+                        finRateInfo.setFinprodId(newFinprodId);
+                    }
+                }
+
+                //现金流支付规则表Entity
+                for (FinCashPayRule cashPayRule : finCashPayRules) {
+                    if (StringUtil.equals(key,cashPayRule.getCashId())){
+                        cashPayRule.setCashId(cashIdMap.get(key));
+                        cashPayRule.setFinprodId(newFinprodId);
+                    }
+                }
+
+                //现金流计划表Entity
+                for (FinCashPlan cashPlan : finCashPlans) {
+                    if (StringUtil.equals(key,cashPlan.getCashId())){
+                        cashPlan.setCashId(cashIdMap.get(key));
+                        cashPlan.setFinprodId(newFinprodId);
+                    }
+                }
+
+                //行权规则表Entity
+                for (FinExerciseRule finExerciseRule : finExerciseRules) {
+                    if (StringUtil.equals(key,finExerciseRule.getCashId())){
+                        finExerciseRule.setCashId(cashIdMap.get(key));
+                        finExerciseRule.setFinprodId(newFinprodId);
+                    }
+                }
+
+                //行权计划表Entity
+                for (FinExercisePlan exercisePlan : finExercisePlans) {
+                    if (StringUtil.equals(key,exercisePlan.getCashId())){
+                        exercisePlan.setCashId(cashIdMap.get(key));
+                        exercisePlan.setFinprodId(newFinprodId);
+                    }
                 }
             }
 
-            //现金流支付规则表Entity
-            for (FinCashPayRule cashPayRule : finCashPayRules) {
-                if (StringUtil.equals(key,cashPayRule.getCashId())){
-                    cashPayRule.setCashId(cashIdMap.get(key));
-                    cashPayRule.setFinprodId(newFinprodId);
-                }    
-            }
-                    
-            //现金流计划表Entity
-            for (FinCashPlan cashPlan : finCashPlans) {
-                if (StringUtil.equals(key,cashPlan.getCashId())){
-                    cashPlan.setCashId(cashIdMap.get(key));
-                    cashPlan.setFinprodId(newFinprodId);
-                }
-            }
-
-            //行权规则表Entity
-            for (FinExerciseRule finExerciseRule : finExerciseRules) {
-                if (StringUtil.equals(key,finExerciseRule.getCashId())){
-                    finExerciseRule.setCashId(cashIdMap.get(key));
-                    finExerciseRule.setFinprodId(newFinprodId);
-                }    
-            }
-
-            //行权计划表Entity
-            for (FinExercisePlan exercisePlan : finExercisePlans) {
-                if (StringUtil.equals(key,exercisePlan.getCashId())){
-                    exercisePlan.setCashId(cashIdMap.get(key));
-                    exercisePlan.setFinprodId(newFinprodId);
-                }
-            }        
+            //组装标的类金融产品基本信息DTO
+            baseFinProductBaseInfoDto.setFinProduct(finProduct);
+            baseFinProductBaseInfoDto.setFinProductAdd(finProductAdd);
+            baseFinProductBaseInfoDto.setFinProductType(finProductType);
+            baseFinProductBaseInfoDto.setFinCashInfoList(finCashInfos);
+            baseFinProductBaseInfoDto.setFinCashCalcRuleList(finCashCalcRules);
+            baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfos);
+            baseFinProductBaseInfoDto.setFinCashPayRuleList(finCashPayRules);
+            baseFinProductBaseInfoDto.setFinCashPlanList(finCashPlans);
+            baseFinProductBaseInfoDto.setFinExercisePlanList(finExercisePlans);
+            baseFinProductBaseInfoDto.setFinExerciseRuleList(finExerciseRules);
+            baseFinProductBaseInfoDto.setRepAssetBond(repAssetBond);
+            baseFinProductBaseInfoDto.setRepAssetDept(repAssetDept);
+            baseFinProductBaseInfoDto.setMstBondCreditRatingList(mstBondCreditRatingList);
+            List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoDtos = new ArrayList<>();
+            baseFinProductBaseInfoDtos.add(baseFinProductBaseInfoDto);
+            //调用接口入库
+            baseFinProductBaseInfoService.insert(baseFinProductBaseInfoDtos);    
         }
-
-        //组装标的类金融产品基本信息DTO
-        baseFinProductBaseInfoDto.setFinProduct(finProduct);
-        baseFinProductBaseInfoDto.setFinProductAdd(finProductAdd);
-        baseFinProductBaseInfoDto.setFinProductType(finProductType);
-        baseFinProductBaseInfoDto.setFinCashInfoList(finCashInfos);
-        baseFinProductBaseInfoDto.setFinCashCalcRuleList(finCashCalcRules);
-        baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfos);
-        baseFinProductBaseInfoDto.setFinCashPayRuleList(finCashPayRules);
-        baseFinProductBaseInfoDto.setFinCashPlanList(finCashPlans);
-        baseFinProductBaseInfoDto.setFinExercisePlanList(finExercisePlans);
-        baseFinProductBaseInfoDto.setFinExerciseRuleList(finExerciseRules);
-        baseFinProductBaseInfoDto.setRepAssetBond(repAssetBond);
-        baseFinProductBaseInfoDto.setRepAssetDept(repAssetDept);
-        baseFinProductBaseInfoDto.setMstBondCreditRatingList(mstBondCreditRatingList);
-        List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoDtos = new ArrayList<>();
-        baseFinProductBaseInfoDtos.add(baseFinProductBaseInfoDto);
-        //调用接口入库
-        baseFinProductBaseInfoService.insert(baseFinProductBaseInfoDtos);
     }
 
     public int selectIsInWorkflow(TrdBondMarketTradeDto dto) {

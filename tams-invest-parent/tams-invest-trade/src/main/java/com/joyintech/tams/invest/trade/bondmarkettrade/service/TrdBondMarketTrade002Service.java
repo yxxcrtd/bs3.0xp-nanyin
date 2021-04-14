@@ -192,6 +192,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
 
             //7.3.2根据上述返回结果组装交易数据
             List<BaseTradeInfoDto> tradeInfoDtoList = new ArrayList<>();
+            List<AllTradeCommonInputDto> allTradeCommonInputDtos = new ArrayList<>();
             for (PtlSecPositionFlowDto ptlSecPositionFlowDto: oldPtlSecList){
                 BaseTradeInfoDto baseTradeInfoDto = new BaseTradeInfoDto();
 
@@ -207,6 +208,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 trdProductDeal.setTradeDate(entity.getTradeDate());
                 trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
+                trdProductDeal.setInvAim(ptlSecPositionFlowDto.getInvAim());
                 baseTradeInfoDto.setTrdProductDeal(trdProductDeal);
 
                 TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
@@ -225,6 +227,14 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 trdFinProductBarter.setInvAim(ptlSecPositionFlowDto.getInvAim());
                 baseTradeInfoDto.setTrdFinProductBarter(trdFinProductBarter);
                 tradeInfoDtoList.add(baseTradeInfoDto);
+                
+                AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+                inputDto.setProdid(trdProductDealAdd.getPortfolioId());
+                inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+                inputDto.setTrdProductDeal(trdProductDeal);
+                inputDto.setTrdProductDealAdd(trdProductDealAdd);
+                inputDto.setTrdFinProductBarter(trdFinProductBarter);
+                allTradeCommonInputDtos.add(inputDto);
             }
 
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/doInsert", tradeInfoDtoList,
@@ -240,10 +250,11 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/autoAddBond", entity,
                         String.class);
             }
-            //交易生成后调用共通生成入账信息，参考之前债券二级交易处理，实物表生成新的账务明细代码可参考可转债；
-            //TODO
-            
-            
+            //交易生成后调用共通生成入账信息
+            for (AllTradeCommonInputDto allTradeCommonInputDto : allTradeCommonInputDtos) {
+                AllTradeCommonUtil.handleAfterTradeComplete(allTradeCommonInputDto);
+            }
+
         }else{
             this.doCompleteRevoke(entity);    
         }
