@@ -689,6 +689,9 @@
 		      <if test="confirmDate != null ">
 				  AND #{confirmDate,jdbcType=DATE} > fin_trade_product.vdate
 			  </if>
+			  <if test="confirmDate != null ">
+				 AND #{confirmDate,jdbcType=DATE} > fin_trade_product.mate
+			  </if>
 		)ORDER BY  M_DATE ASC 
 		
 	</select>
