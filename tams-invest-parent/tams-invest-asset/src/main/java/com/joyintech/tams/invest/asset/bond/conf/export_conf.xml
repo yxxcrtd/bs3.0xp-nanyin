@@ -37,6 +37,8 @@
             <Cell order="32" name="是否永续">isSusStr</Cell>
             <Cell order="33" name="是否含权债">isRightStr</Cell>
             <Cell order="34" name="是否城投债">isCityBondStr</Cell>
+            <Cell order="35" name="是否私募债">isPPBStr</Cell>
+            <Cell order="36" name="是否净价交易">isNetpriceStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>
