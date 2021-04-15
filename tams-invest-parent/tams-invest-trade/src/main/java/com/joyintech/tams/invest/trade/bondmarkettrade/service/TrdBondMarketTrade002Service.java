@@ -1,6 +1,9 @@
 package com.joyintech.tams.invest.trade.bondmarkettrade.service;
 
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -16,22 +19,20 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
-import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
-import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.bondmarkettrade.dto.TrdBondMarketTradeDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -92,7 +93,10 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
      */
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
-    
+
+    @DataSource(DataSourceType.MASERT)
+    @DTXTransaction
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void doComplete(TrdBondMarketTradeDto entity, OperationType operationType) {
         
@@ -209,6 +213,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
                 trdProductDeal.setInvAim(ptlSecPositionFlowDto.getInvAim());
+                trdProductDeal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
                 baseTradeInfoDto.setTrdProductDeal(trdProductDeal);
 
                 TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
@@ -227,13 +232,12 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 trdFinProductBarter.setInvAim(ptlSecPositionFlowDto.getInvAim());
                 baseTradeInfoDto.setTrdFinProductBarter(trdFinProductBarter);
                 tradeInfoDtoList.add(baseTradeInfoDto);
-                
                 AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
                 inputDto.setProdid(trdProductDealAdd.getPortfolioId());
                 inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
                 inputDto.setTrdProductDeal(trdProductDeal);
                 inputDto.setTrdProductDealAdd(trdProductDealAdd);
-                inputDto.setTrdFinProductBarter(trdFinProductBarter);
+//                inputDto.setTrdFinProductBarter(trdFinProductBarter);
                 allTradeCommonInputDtos.add(inputDto);
             }
 
@@ -242,24 +246,25 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
 
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/doInsertTotal", entity,
                     TrdBondMarketTradeDto.class);
-            
-//            baseTradeProductDealCommService.execute(finProductTradeDto);
+
+            //交易生成后调用共通生成入账信息
+            for (AllTradeCommonInputDto allTradeCommonInputDto : allTradeCommonInputDtos) {
+                AllTradeCommonUtil.handleAfterTradeComplete(allTradeCommonInputDto);
+            }
             
             //债券如果没有加券，则自动加券
             if(StringUtil.equals("false",entity.getIsAdded())){
                 restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/autoAddBond", entity,
                         String.class);
             }
-            //交易生成后调用共通生成入账信息
-            for (AllTradeCommonInputDto allTradeCommonInputDto : allTradeCommonInputDtos) {
-                AllTradeCommonUtil.handleAfterTradeComplete(allTradeCommonInputDto);
-            }
-
         }else{
             this.doCompleteRevoke(entity);    
         }
     }
 
+    @DataSource(DataSourceType.MASERT)
+    @DTXTransaction
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void doInsert(TrdBondMarketTradeDto entity, OperationType operationType){
         if ("save".equals(entity.getOperateType())) {
@@ -308,6 +313,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
         trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
         trdFinProductDealTotal.setPs(DictCodeList.交易方向_上市流通.getValue());
+        trdFinProductDealTotal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         //构造金融产品交易信息DTO
         BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
         baseTradeProductDealDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
@@ -442,6 +448,9 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
     /**
      * {@inheritDoc}
      */
+    @DataSource(DataSourceType.MASERT)
+    @DTXTransaction
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void doUpdate(TrdBondMarketTradeDto entity) {
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
