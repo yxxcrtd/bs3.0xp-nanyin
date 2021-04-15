@@ -104,7 +104,7 @@
         <!--add by xuzhihao-->
         SELECT DISTINCT
         pp.PORTFOLIO_ID id,
-        pp.PORTFOLIO_NAME text
+        pp.PORTFOLIO_ID || ':' || pp.PORTFOLIO_NAME text
         <!--PORTFOLIO_ID || ':' || PORTFOLIO_NAME shortName,
             PORTFOLIO_ID hidCode -->
         FROM

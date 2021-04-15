@@ -190,14 +190,17 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
      * @param entity
      */
     private void processOldFlow(TrdStandardBond002Dto entity) {
-    	if(entity.getTradeIdList()!=null&&entity.getTradeIdList().size()>0) {
+    	String [] holdingTypes = { DictCodeListExt1.持仓类型_临时.getValue(), DictCodeList.持仓类型_质押.getValue()};
+     	if(entity.getTradeIdList()!=null&&entity.getTradeIdList().size()>0) {
     		//1. 获取之前所有的流程中流水
     		List<PtlSecPositionFlow> secFlows = new ArrayList<>();
     		Map<String,Object> param = new HashMap<>();
-    		param.put("holdingType", DictCodeListExt1.持仓类型_临时.getValue());
     		for(String tradeId:entity.getTradeIdList()) {
     			param.put("finprodId", tradeId);
-    			secFlows.addAll(ptlSecPositionFlowMapper.selectSecFlow(param));
+    			for(String holdingType:holdingTypes) {
+    				param.put("holdingType", holdingType);
+    				secFlows.addAll(ptlSecPositionFlowMapper.selectSecFlow(param));
+    			}
     			//删除质押信息
     			trdStasecFlowMapper.deleteByPrimaryKey(tradeId);
     			trdStasecFlowDetailMapper.deleteBySeq(tradeId);

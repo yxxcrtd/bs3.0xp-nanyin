@@ -149,11 +149,11 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                     deal(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                 }
                 // 交易提交
-               /* if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+                if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
                     if (StringUtil.isEmpty(entrustId)) { // 无委托
                         预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                     }
-                }*/
+                }
             }
             // 中间还本（直投）
             else if (StringUtil.equals(ps, BussinessDictCodeList.交易方向_还本.getValue())) {
@@ -166,7 +166,7 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                 if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
                     if (StringUtil.isEmpty(entrustId)) { // 无委托
                         // 资金到账日增加到账金额
-                        //预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
+                        预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                         // 提交日减少还本金额
                         if (deal.getPrinAmt() != null && deal.getPrinAmt().compareTo(BigDecimal.ZERO) > 0) {
                             etrSecPositionFlowDto.setAmount(deal.getPrinAmt().negate());
@@ -189,7 +189,7 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                             etrSecPositionFlowDto.setAmount(deal.getPrinAmt().negate());
                             etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                         }
-                        //预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
+                        预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                     }
                 }
             }
@@ -268,11 +268,11 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                         deal(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                     }
                     // 交易提交
-                    /*if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+                    if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
                         if (StringUtil.isEmpty(entrustId)) { // 无委托
                             预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                         }
-                    }*/
+                    }
                 }
                 // 中间还本(逐笔划款通道)
                 else if (StringUtil.equals(ps, BussinessDictCodeList.交易方向_还本.getValue())) {
@@ -288,7 +288,7 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                                 etrSecPositionFlowDto.setAmount(deal.getPrinAmt().negate());
                                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                             }
-                            //预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
+                            预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                         }
                     }
                 }
@@ -306,7 +306,7 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                                 etrSecPositionFlowDto.setAmount(deal.getPrinAmt().negate());
                                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                             }
-                            //预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
+                            预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                         }
                     }
                 }
@@ -385,7 +385,7 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                             EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto();
                             BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto1, etrCashPositionFlowDto);
                             etrCashPositionFlowDto1.setSeqno(getSeqNo());
-                           // 预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto1, acctId);
+                            预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto1, acctId);
                         }
                     }
                 }
@@ -403,7 +403,7 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                                 etrSecPositionFlowDto.setAmount(deal.getPrinAmt().negate());
                                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                             }
-                            //预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
+                            预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                         }
                     }
                 }
@@ -422,7 +422,7 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                             }
     
-                            //预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
+                            预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                         }
                     }
                 }
@@ -445,14 +445,14 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                 etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
 
                 // 预增现金 资金到账日减少到账金额
-               /* EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
+                EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
                 BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto1);
                 etrCashPositionFlowDto2.setAmount(stlPayOrdersDto.getSettleAmt().negate());
                 etrCashPositionFlowDto2.setAcctId(stlPayOrdersDto.getMyAcctNo());
                 etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
                 etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
                 etrCashPositionFlowDto2.setSeqno(getSeqNo());
-                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);*/
+                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
             });
         }
     }

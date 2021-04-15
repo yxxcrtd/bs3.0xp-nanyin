@@ -155,6 +155,8 @@
 		A.FINPROD_MARKET_ID,
 		A.IS_RIGHT
 		FROM FIN_PRODUCT A
+		LEFT JOIN FIN_PRODUCT_ADD FPA 
+			ON FPA.FINPROD_ID = A.FINPROD_ID 
 		LEFT JOIN FIN_PRODUCT_TYPE B
 		ON B.FINPROD_ID = A.FINPROD_ID
 		LEFT JOIN
@@ -196,6 +198,7 @@
                 AND A.TRADE_MARKET = #{FINPROD_MARKET}
             </if>
             <!-- 可选择的债券标的只能是银行间 add by renping 20190920 end -->
+			AND (FPA.IS_ISSUE_ASSET = 'N' OR FPA.IS_ISSUE_ASSET IS NULL)
 		</where>
 		union
 		select interf.SECID id,

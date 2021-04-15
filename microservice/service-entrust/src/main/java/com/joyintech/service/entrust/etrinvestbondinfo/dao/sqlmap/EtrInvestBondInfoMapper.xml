@@ -273,10 +273,71 @@
 		T1.CCY
 		FROM
 		FIN_PRODUCT T1
+		LEFT JOIN
+		FIN_PRODUCT_ADD FPA
+		ON T1.FINPROD_ID = FPA.FINPROD_ID
 		LEFT JOIN 
         FIN_PRODUCT_TYPE T2
         ON T1.FINPROD_ID = T2.FINPROD_ID
-		<include refid="getfinprodIdForAddWhere"></include>
+		<where>
+			T1.FINPROD_TYPE2 = #{assestType}
+			<if test="initValue != null and !initValue.equals('')">
+				and T1.FINPROD_MARKET_ID = #{initValue}
+			</if>
+			<if test="tradeMarket != null and !tradeMarket.equals('')">
+				and T1.TRADE_MARKET = #{tradeMarket}
+			</if>
+			<if test="search != null and !search.equals('')">
+				and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+				or T1.FINPROD_NAME like concat('%',concat(#{search},'%')))
+			</if>
+			AND FPA.IS_ISSUE_ASSET = 'Y'
+			AND FPA.APPEAR_MARKET_ID IS NULL
+		</where>
+		
+		union ALL
+
+		SELECT
+		T1.FINPROD_MARKET_ID id,
+		<!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
+		T1.FINPROD_ABBR text,
+		<!--下拉框值为代码+简称 modified by lishuping 20191017 end-->
+		T1.FINPROD_NAME,
+		T1.FINPROD_ID,
+		T1.CALENDAR_ID,
+		T1.TRADE_MARKET,
+		T1.IS_RIGHT,
+		<!-- type4改为type9~11	王贵奇2019/7/27 开始 -->
+		<!-- T2.TYPE_4, -->
+		T2.TYPE_9,
+		T2.TYPE_10,
+		T2.TYPE_11,
+		<!-- type4改为type9~11	王贵奇2019/7/27 结束 -->
+		T1.VDATE,
+		T1.MDATE,
+		T1.CCY
+		FROM
+		FIN_PRODUCT T1
+		LEFT JOIN
+		FIN_PRODUCT_ADD FPA
+		ON T1.FINPROD_ID = FPA.FINPROD_ID
+		LEFT JOIN
+		FIN_PRODUCT_TYPE T2
+		ON T1.FINPROD_ID = T2.FINPROD_ID
+		<where>
+			T1.FINPROD_TYPE2 = #{assestType}
+			<if test="initValue != null and !initValue.equals('')">
+				and T1.FINPROD_MARKET_ID = #{initValue}
+			</if>
+			<if test="tradeMarket != null and !tradeMarket.equals('')">
+				and T1.TRADE_MARKET = #{tradeMarket}
+			</if>
+			<if test="search != null and !search.equals('')">
+				and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+				or T1.FINPROD_NAME like concat('%',concat(#{search},'%')))
+			</if>
+			AND (FPA.IS_ISSUE_ASSET = 'N' OR FPA.IS_ISSUE_ASSET IS NULL)
+		</where>
 		<if test="isautobond != null and isautobond == 'true'">
 		union
 SELECT interf.SECID id,

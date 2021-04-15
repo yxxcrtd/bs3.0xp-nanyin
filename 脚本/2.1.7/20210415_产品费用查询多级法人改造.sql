@@ -1,0 +1,1 @@
+update data_auth_mapper_config set  join_column_name='finprodMarketId',data_type='PTL01' where sql_id ='com.joyintech.service.product.feepay.dao.FinProductFeePayMapper.selectForPage';

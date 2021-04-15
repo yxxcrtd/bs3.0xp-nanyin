@@ -12,7 +12,12 @@
         </if>
        <!--SUM(DECODE(tsf.PS, #{LIBRARY_DIRECTION_01}, 1, #{LIBRARY_DIRECTION_02}, -1)*NVL(PSPF.AMOUNT, 0)) AMOUNT-->
         SUM(NVL(PSPF.AMOUNT, 0)) AMOUNT1,
-        SUM(decode(PSPF.hoding_type,'13',0,NVL(PSPF.AMOUNT, 0))) AMOUNT
+        SUM(case 
+                when tsf.ps = '01' then NVL(PSPF.AMOUNT, 0)
+                when PSPF.hoding_type='13' then 0
+                else NVL(PSPF.AMOUNT, 0) end 
+        )AMOUNT
+
      FROM
                    TRD_STASEC_FLOW tsf
        LEFT JOIN   TRD_STASEC_FLOW_DETAIL tsfd
@@ -32,6 +37,10 @@
          </if>
          <if test="secAcctId != null and secAcctId != ''">
              AND tsf.SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
+         </if>
+         <!-- 非标准全页面查询， 需过滤 入库 临时 流水 -->
+         <if test='isStandardPage !="Y"'>
+         	and (tsf.ps = '02' or PSPF.hoding_type !='13')
          </if>
         <!--  AND NOT EXISTS(
                        SELECT
