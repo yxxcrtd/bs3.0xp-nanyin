@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao.InvestorsQualityCheckMJQFEYEComMapper_mysql">
+    <sql id="objRec" >
+        WITH  objRec  AS(
+        SELECT
+        tmp3.PROD_ID,
+        tmp3.VDATE,
+        tmp3.RAISE_QTY,
+        tmp3.TOTAL_AMT
+        FROM (
+        SELECT
+        tmp2.PROD_ID,
+        tmp2.VDATE,
+        B.RAISE_QTY,
+        B.TOTAL_AMT,
+        ROW_NUMBER() over( partition by tmp2.PROD_ID ORDER BY B.STATUS DESC ,B.UPDATE_TIME DESC)  AS raiseStatusNo
+        FROM (
+        SELECT
+        A.PROD_ID,
+        A.VDATE
+        FROM CHB_PRD_BASEINFO A
+        LEFT JOIN
+        (
+        SELECT
+        PROD_ID,
+        MAX(MDATE)
+        FROM
+        CHB_PRD_DEAL_SUB
+        WHERE
+        STATUS IN ('01','02')
+        AND STR_TO_DATE(DATE_FORMAT(MDATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[<=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+        GROUP BY
+        PROD_ID
+        ) tmp1
+        ON A.PROD_ID = tmp1.PROD_ID
+
+        WHERE
+        tmp1.PROD_ID is null
+        AND A.FPROD_ID is null
+        AND A.STATUS  != 'D'
+        <if test="orgCodeList != null and orgCodeList.size() > 0">
+            <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+                #{orgCode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        ) tmp2
+        INNER JOIN CHB_PRD_RAISETOT_SUB B
+        ON (tmp2.PROD_ID = B.PROD_ID
+        AND STATUS IN ('01','02'))
+        ) tmp3
+        WHERE raiseStatusNo = 1
+        )
+    </sql>
+
+
+    <!-- 余额、份额共通-核查对象数量取得 -->
+    <select id="cntMJQFEYETolCom" resultType="java.math.BigDecimal">
+        <include refid="objRec"></include>
+        SELECT
+        COUNT(DISTINCT(A.PROD_ID))
+        FROM
+        objRec A
+        INNER JOIN CHB_INVESTHOLD_INFO_SUB B
+        ON(A.PROD_ID = B.PRODID
+        AND B.STATUS IN ('01','02'))
+        WHERE
+        STR_TO_DATE(DATE_FORMAT(B.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+
+    </select>
+
+    <!-- 余额、份额共通-错误记录取得 -->
+    <select id="searchMJQFEYERecCom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+        <include refid="objRec"></include>
+        SELECT
+        prdRegistCode,
+        prodId,
+        prdVDate,
+        holdDate,
+        prdRaiseTotalQty,
+        prdRaiseTotalAmt,
+        investRaiseTotalQty,
+        investRaiseTotalAmt
+        FROM(
+        SELECT
+        tmp1.REG_CODE prdRegistCode,
+        tmp1.PROD_ID as prodId,
+        tmp1.VDATE prdVDate,
+        STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d') AS holdDate,
+        IFNULL(tmp1.RAISE_QTY,0) as prdRaiseTotalQty,
+        IFNULL(tmp1.TOTAL_AMT,0) as prdRaiseTotalAmt,
+        SUM(IFNULL(QTY,0)) as investRaiseTotalQty,
+        SUM(IFNULL(CNY_AMT,0)) as investRaiseTotalAmt
+        FROM(
+        SELECT
+        A.PROD_ID,
+        A.VDATE,
+        A.RAISE_QTY,
+        A.TOTAL_AMT,
+        CASE WHEN B.STATUS = '03' THEN 0 ELSE B.CNY_AMT END CNY_AMT,
+        CASE WHEN B.STATUS = '03' THEN 0 ELSE B.QTY END QTY,
+        D.REG_CODE,
+        ROW_NUMBER() over( partition by A.PROD_ID , B.INDENTIFY_MARK ORDER BY B.UPDATE_TIME DESC )  AS investStatusNo
+        FROM  objRec A
+        LEFT JOIN CHB_PRDRESIST_CODE D
+        ON A.PROD_ID = D.PRODID
+        INNER JOIN CHB_INVESTHOLD_INFO_SUB B
+        ON A.PROD_ID = B.PRODID
+        WHERE
+        STR_TO_DATE(DATE_FORMAT(B.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+        ) tmp1
+        WHERE
+        investStatusNo = 1
+        GROUP BY
+        tmp1.PROD_ID,
+        tmp1.REG_CODE,
+        tmp1.VDATE,
+        tmp1.RAISE_QTY,
+        tmp1.TOTAL_AMT
+        ) tmp2
+        WHERE
+        investRaiseTotalQty > 0
+        AND investRaiseTotalAmt > 0
+    </select>
+</mapper>

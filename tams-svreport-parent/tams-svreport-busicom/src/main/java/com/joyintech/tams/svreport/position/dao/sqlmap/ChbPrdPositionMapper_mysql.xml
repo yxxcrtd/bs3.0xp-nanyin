@@ -29,33 +29,35 @@
   </resultMap>
   
   <insert id="insertBatch" parameterType="java.util.List" >
-       insert into CHB_PRD_POSITION 
+       insert into CHB_PRD_POSITION
 	       (CDATE, PROD_ID, INDENTIFY_MARK,CCY,
-	        ISSUE_PARTY_ID, TDADD_QTY, TDADD_AMT, 
-	        TDADD_COST, TDADD_INTAMT,BALANCE_QTY, BALANCE_AMT, 
+	        ISSUE_PARTY_ID, TDADD_QTY, TDADD_AMT,
+	        TDADD_COST, TDADD_INTAMT,BALANCE_QTY, BALANCE_AMT,
 	        TOTAL_INTAMT,ORG_CODE,DEPT_CODE,
 	        CREATE_USER,CREATE_TIME, REMARK)
+	    values (
         <foreach collection="insertDataList" item="dto" index="index"  separator="union all"  open="("  close=")">
-	       select    
-		        #{dto.cdate,jdbcType=DATE}, 
-		        #{dto.prodId,jdbcType=VARCHAR}, 
-		        #{dto.indentifyMark,jdbcType=VARCHAR}, 
-		        #{dto.ccy,jdbcType=VARCHAR}, 
-	            #{dto.issuePartyId,jdbcType=VARCHAR}, 
+	       select
+		        #{dto.cdate,jdbcType=DATE},
+		        #{dto.prodId,jdbcType=VARCHAR},
+		        #{dto.indentifyMark,jdbcType=VARCHAR},
+		        #{dto.ccy,jdbcType=VARCHAR},
+	            #{dto.issuePartyId,jdbcType=VARCHAR},
 	            #{dto.tdaddQty,jdbcType=DECIMAL},
-	            #{dto.tdaddAmt,jdbcType=DECIMAL}, 
-	            #{dto.tdaddCost,jdbcType=DECIMAL}, 
-	            #{dto.tdaddIntamt,jdbcType=DECIMAL}, 
-	            #{dto.balanceQty,jdbcType=DECIMAL}, 
-	            #{dto.balanceAmt,jdbcType=DECIMAL}, 
-	            #{dto.totalIntamt,jdbcType=DECIMAL}, 
-	            #{dto.orgCode,jdbcType=VARCHAR}, 
-	            #{dto.deptCode,jdbcType=VARCHAR}, 
-	            #{dto.createUser,jdbcType=VARCHAR}, 
+	            #{dto.tdaddAmt,jdbcType=DECIMAL},
+	            #{dto.tdaddCost,jdbcType=DECIMAL},
+	            #{dto.tdaddIntamt,jdbcType=DECIMAL},
+	            #{dto.balanceQty,jdbcType=DECIMAL},
+	            #{dto.balanceAmt,jdbcType=DECIMAL},
+	            #{dto.totalIntamt,jdbcType=DECIMAL},
+	            #{dto.orgCode,jdbcType=VARCHAR},
+	            #{dto.deptCode,jdbcType=VARCHAR},
+	            #{dto.createUser,jdbcType=VARCHAR},
 	            NOW(),
 	            #{dto.remark,jdbcType=VARCHAR}
             from dual
        </foreach>
+       )
   </insert>
   
   <insert id="insertPos" parameterType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition" >

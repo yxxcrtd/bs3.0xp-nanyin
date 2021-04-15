@@ -32,7 +32,6 @@
     <result column="REDCOST" property="redCost" jdbcType="DECIMAL" />
     <result column="ENDCOST" property="endCost" jdbcType="DECIMAL" />
   </resultMap>
-
   <select id="selectProdDealList"  parameterType="map" 
           resultSetType="FORWARD_ONLY" fetchSize="1000"
           resultType="com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto">
@@ -98,10 +97,17 @@
 	      WHEN INFO.PRODTYPE = 'N' THEN 
 	        DEAL.QM_PRINCE  * ifnull((SELECT 
 	                            PROD_VALUE 
-	                          FROM (SELECT RANK() OVER(PARTITION BY PROD_ID ORDER BY CHANGE_DATE DESC) MY_RANK,FPROD_ID,PROD_ID,PROD_VALUE 
-	                                FROM CHB_PRD_PERIODYIELD
+	                          FROM (SELECT FPROD_ID,PROD_ID,PROD_VALUE
+	  								if
+	  								(@PROD_ID = PROD_ID, @rank := @rank + 1,@rank :=1) as MY_RANK,
+	  								(@PROD_ID := PROD_ID) PROD_ID
+	  								FROM CHB_PRD_PERIODYIELD,
+	  									(SELECT @rank := 0, @PROD_ID := null) b
 	                                WHERE CHANGE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE} 
 	                                AND CHANG_TYPE='01'
+	  								order by
+	  								PROD_ID,
+	  								CHANGE_DATE desc
 	                                ) 
 	                          WHERE 1=1
 	                          AND ifnull(FPROD_ID,PROD_ID) = INFO.PROD_ID limit 1
@@ -202,20 +208,17 @@
 	                      AND D.SETTDATE_DATE <![CDATA[<]]> #{reportStartDate,jdbcType=DATE})    
   
   </select>
-  
   <select id="selectByDate" resultMap="BaseResultMap" parameterType="java.lang.String">
 	  select * from PBC_MONTH_PRD_POSITION b inner join chb_prd_baseinfo info on b.prodid = info.prod_id
 	  	where DATE_FORMAT(b.ENDDATE,'%Y-%m-%d') = #{bookDate,jdbcType=VARCHAR}
 	  	and info.profit_type = '03' /*过滤非保本产品*/
   </select>
-  
   <select id="selectByDatePsbc" resultMap="BaseResultMap" parameterType="java.lang.String">
 	  select * from PBC_MONTH_PRD_POSITION b inner join chb_prd_baseinfo info on b.prodid = info.prod_id
 	  	where DATE_FORMAT(b.ENDDATE,'%Y-%m-%d') = #{bookDate,jdbcType=VARCHAR}
 	  	and info.profit_type = '03'  /*过滤非保本产品*/
 	  	and (b.BUY_PLACE not in('210200','330200','350200','370200','440300') or b.BUY_PLACE is null)
   </select>
-  
   <select id="selectByDateWithoutCustomer" resultMap="BaseResultMap" parameterType="java.lang.String">
 	  select  pmpp.PRODID, 
       pmpp.IS_CONSTRACTE,pmpp.TRANSFER_TYPE, 
@@ -232,7 +235,6 @@
 	  	group by pmpp.PRODID,pmpp.IS_CONSTRACTE,pmpp.TRANSFER_TYPE,pmpp.BUY_PLACE,pmpp.VDATE,pmpp.OPERATE_MODE,pmpp.RAISEMODE,
 	  	pmpp.IVSTORIENTATION,pmpp.MANAGE_TYPE,pmpp.FIDUCIARY_DUTY,pmpp.DURATIONFLAG,pmpp.IS_MARKET_FUND,pmpp.PAYSTATUS,pmpp.TERM,pmpp.CCY,pmpp.END_DAYS
   </select>
-  
   <insert id="genPosition" parameterType="map" >
 	  insert into pbc_month_prd_position(
 	    POSUUID
@@ -601,22 +603,24 @@
       FROM
       (
       SELECT
-      RANK() OVER(
-      PARTITION BY prod_id,ifnull(ccy,'CNY')
-      ORDER BY
-      change_date DESC
-      ) my_rank,
       fprod_id,
       prod_id,
       ifnull(ccy,'CNY') ccy,
-      prod_value
+      prod_value,
+	  if
+	  (@prod_id = prod_id, @rank := @rank + 1,@rank :=1) as my_rank,
+	  (@prod_id := prod_id) prod_id
       FROM
-      chb_prd_periodyield
+      chb_prd_periodyield,
+	  (select @rank := 0, @prod_id := null) b
       WHERE
       1 = 1
       and CHANGE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
       AND chang_type = '01'
       AND status in ('E' ,'M')/*收益率添加修改状态*/
+	  order by
+	  prod_id,
+	  change_date desc
       )
       WHERE
       1 = 1 limit 1
@@ -658,8 +662,6 @@
       ) rate on deal.yieldccy = rate.ccyOriginal
 	where baseinfo.status in ('E','M')
   </insert>
-  
-  
   <insert id="genPsbcPosition" parameterType="map" >
 	    insert into pbc_month_prd_position(
 	    POSUUID
@@ -1001,22 +1003,25 @@
       FROM
       (
       SELECT
-      RANK() OVER(
-      PARTITION BY prod_id,ifnull(ccy,'CNY')
-      ORDER BY
-      change_date DESC
-      ) my_rank,
+	  if
+	  (@prod_id = prod_id and @ccy = ifnull(ccy,'CNY'), @rank := @rank + 1,@rank :=1) as my_rank,
+	  (@prod_id := prod_id) prod_id,
+	  (@ccy := ifnull(ccy,'CNY')) ccy,
       fprod_id,
       prod_id,
       ifnull(ccy,'CNY') ccy,
       prod_value
       FROM
-      chb_prd_periodyield
+      chb_prd_periodyield,
+	  (select @rank := 0, @prod_id := null, @prod_id := ccy) b
       WHERE
       1 = 1
       and CHANGE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
       AND chang_type = '01'
       AND status in ('E' ,'M')/*收益率添加修改状态*/
+	  order by
+	  prod_id,ifnull(ccy,'CNY'),
+	  change_date desc
       )
       WHERE
       1 = 1 limit 1
@@ -1055,7 +1060,205 @@
       and t.TRADE_DATE <![CDATA[<=]]>#{reportEndDate,jdbcType=DATE})
       ) rate on deal.yieldccy = rate.ccyOriginal
   </insert>
-  
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto" >
+    insert into PBC_MONTH_PRD_POSITION (POSUUID, PRODID, ORG_CODE,
+      STARTDATE, ENDDATE, BOOKDATE,
+      IS_CONSTRACTE, TRANSFER_TYPE, BUY_PLACE,
+      OPERATE_MODE, RAISEMODE, IVSTORIENTATION,
+      MANAGE_TYPE, FIDUCIARY_DUTY, DURATIONFLAG,
+      IS_MARKET_FUND, VDATE, PAYSTATUS,
+      TERM, CCY, CUSTOMER_TYPE2,
+      ENDAMTSUM_OTH, DIRTYAMTSUM, REDAMT,
+      ENDQTYSUM, END_DAYS)
+    values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+      #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP},
+      #{isConstracte,jdbcType=VARCHAR}, #{transferType,jdbcType=VARCHAR}, #{buyPlace,jdbcType=VARCHAR},
+      #{operateMode,jdbcType=VARCHAR}, #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR},
+      #{manageType,jdbcType=VARCHAR}, #{fiduciaryDuty,jdbcType=VARCHAR}, #{durationflag,jdbcType=VARCHAR},
+      #{isMarketFund,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP}, #{paystatus,jdbcType=VARCHAR},
+      #{term,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, #{customerType2,jdbcType=VARCHAR},
+      #{endamtsumOth,jdbcType=DECIMAL}, #{dirtyamtsum,jdbcType=DECIMAL}, #{redamt,jdbcType=DECIMAL},
+      #{endqtysum,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL})
+    </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto" >
+		insert into PBC_MONTH_PRD_POSITION
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="posuuid != null" >
+				POSUUID,
+			</if>
+			<if test="prodid != null" >
+				PRODID,
+			</if>
+			<if test="orgCode != null" >
+				ORG_CODE,
+			</if>
+			<if test="startdate != null" >
+				STARTDATE,
+			</if>
+			<if test="enddate != null" >
+				ENDDATE,
+			</if>
+			<if test="bookdate != null" >
+				BOOKDATE,
+			</if>
+			<if test="isConstracte != null" >
+				IS_CONSTRACTE,
+			</if>
+			<if test="transferType != null" >
+				TRANSFER_TYPE,
+			</if>
+			<if test="buyPlace != null" >
+				BUY_PLACE,
+			</if>
+			<if test="operateMode != null" >
+				OPERATE_MODE,
+			</if>
+			<if test="raisemode != null" >
+				RAISEMODE,
+			</if>
+			<if test="ivstorientation != null" >
+				IVSTORIENTATION,
+			</if>
+			<if test="manageType != null" >
+				MANAGE_TYPE,
+			</if>
+			<if test="fiduciaryDuty != null" >
+				FIDUCIARY_DUTY,
+			</if>
+			<if test="durationflag != null" >
+				DURATIONFLAG,
+			</if>
+			<if test="isMarketFund != null" >
+				IS_MARKET_FUND,
+			</if>
+			<if test="vdate != null" >
+				VDATE,
+			</if>
+			<if test="paystatus != null" >
+				PAYSTATUS,
+			</if>
+			<if test="term != null" >
+				TERM,
+			</if>
+			<if test="ccy != null" >
+				CCY,
+			</if>
+			<if test="customerType2 != null" >
+				CUSTOMER_TYPE2,
+			</if>
+			<if test="endamtsumOth != null" >
+				ENDAMTSUM_OTH,
+			</if>
+			<if test="dirtyamtsum != null" >
+				DIRTYAMTSUM,
+			</if>
+			<if test="redamt != null" >
+				REDAMT,
+			</if>
+			<if test="endqtysum != null" >
+				ENDQTYSUM,
+			</if>
+			<if test="endDays != null" >
+				END_DAYS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="posuuid != null" >
+				#{posuuid,jdbcType=CHAR},
+			</if>
+			<if test="prodid != null" >
+				#{prodid,jdbcType=VARCHAR},
+			</if>
+			<if test="orgCode != null" >
+				#{orgCode,jdbcType=VARCHAR},
+			</if>
+			<if test="startdate != null" >
+				#{startdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="enddate != null" >
+				#{enddate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="bookdate != null" >
+				#{bookdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isConstracte != null" >
+				#{isConstracte,jdbcType=VARCHAR},
+			</if>
+			<if test="transferType != null" >
+				#{transferType,jdbcType=VARCHAR},
+			</if>
+			<if test="buyPlace != null" >
+				#{buyPlace,jdbcType=VARCHAR},
+			</if>
+			<if test="operateMode != null" >
+				#{operateMode,jdbcType=VARCHAR},
+			</if>
+			<if test="raisemode != null" >
+				#{raisemode,jdbcType=VARCHAR},
+			</if>
+			<if test="ivstorientation != null" >
+				#{ivstorientation,jdbcType=VARCHAR},
+			</if>
+			<if test="manageType != null" >
+				#{manageType,jdbcType=VARCHAR},
+			</if>
+			<if test="fiduciaryDuty != null" >
+				#{fiduciaryDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="durationflag != null" >
+				#{durationflag,jdbcType=VARCHAR},
+			</if>
+			<if test="isMarketFund != null" >
+				#{isMarketFund,jdbcType=VARCHAR},
+			</if>
+			<if test="vdate != null" >
+				#{vdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="paystatus != null" >
+				#{paystatus,jdbcType=VARCHAR},
+			</if>
+			<if test="term != null" >
+				#{term,jdbcType=DECIMAL},
+			</if>
+			<if test="ccy != null" >
+				#{ccy,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType2 != null" >
+				#{customerType2,jdbcType=VARCHAR},
+			</if>
+			<if test="endamtsumOth != null" >
+				#{endamtsumOth,jdbcType=DECIMAL},
+			</if>
+			<if test="dirtyamtsum != null" >
+				#{dirtyamtsum,jdbcType=DECIMAL},
+			</if>
+			<if test="redamt != null" >
+				#{redamt,jdbcType=DECIMAL},
+			</if>
+			<if test="endqtysum != null" >
+				#{endqtysum,jdbcType=DECIMAL},
+			</if>
+			<if test="endDays != null" >
+				#{endDays,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+  <delete id="deleteByReportDay" parameterType="java.lang.String" >
+		delete from PBC_MONTH_PRD_POSITION
+		where 1 = 1
+		<if test='reportEndDate != null'>
+			and ENDDATE >= #{reportEndDate,jdbcType=DATE}
+		</if>
+		<if test="prodList !=null and prodList.size()>0">
+			and PRODID in
+			<foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR PRODID in (
+				</if>
+				#{item}
+			</foreach>
+		</if>
+	</delete>
   <select id="selectByDateWithAssetPoolCode" resultMap="BaseResultMap" parameterType="java.lang.String">
       select 
       prdposition.POSUUID, 
@@ -1101,4 +1304,93 @@
         </foreach>
     </if>
   </select>
+  <select id="getPInterfProCustomDealList" resultType="com.joyintech.tams.svreport.pbc.prod.dto.PInterfProCustomDealDto">
+	      select
+               pdeal.FINPROD_ID finprodId,
+                pdeal.BUY_PLACE buyPlace ,
+                pdeal.BUY_PLACE_NAME buyPlaceName,
+                pdeal.CUSTOMER_TYPE1 customerType1,
+                pdeal.CUSTOMER_TYPE2 customerType2,
+                case pdeal.CCY when '036' then 'AUD'
+                when '124' then 'CAD'
+                when '156' then 'CNY'
+                when '344' then 'HKD'
+                when '392' then 'JPY'
+                when '826' then 'GBP'
+                when '840' then 'USD'
+                when '978' then 'EUR' end ccy,
+                pdeal.DEALTYPE dealtype,
+                pdeal.DEALDATE dealdate,
+                pdeal.DEALAMT dealamt,
+                pdeal.PRINQTY prinqty,
+                pdeal.ORGAMT orgamt,
+                pdeal.ORGQTY orgqty,
+                pdeal.PERAMY peramy,
+                pdeal.PERQTY perqty,
+                pdeal.REMARK remark,
+                pdeal.CREATE_TIME createTime,
+                pdeal.UPDATE_TIME updateTime,
+                fadd.ISSUE_STATUS issueStatus,
+                cpb.TERMINATEDATE terminatedate,
+                cpb.MDATE mDate
+         from P_INTERF_PRO_CUSTOM_DEAL pdeal
+        LEFT JOIN FIN_PRODUCT_ADD fadd
+        ON pdeal.FINPROD_ID =fadd.FINPROD_ID
+        LEFT JOIN CHB_PRD_BASEINFO cpb
+        ON pdeal.FINPROD_ID =cpb.PROD_ID
+  </select>
+  <select id="selectByDateWithAssetPoolCodeEx" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		prdposition.POSUUID,
+		prdposition.PRODID,
+		prdposition.ORG_CODE,
+		prdposition.STARTDATE,
+		prdposition.ENDDATE,
+		prdposition.BOOKDATE,
+		prdposition.IS_CONSTRACTE,
+		prdposition.TRANSFER_TYPE,
+		prdposition.BUY_PLACE,
+		prdposition.OPERATE_MODE,
+		prdposition.RAISEMODE,
+		prdposition.IVSTORIENTATION,
+		prdposition.MANAGE_TYPE,
+		prdposition.FIDUCIARY_DUTY,
+		prdposition.DURATIONFLAG,
+		prdposition.IS_MARKET_FUND,
+		prdposition.VDATE,
+		prdposition.PAYSTATUS,
+		prdposition.TERM,
+		prdposition.CCY,
+		prdposition.CUSTOMER_TYPE2,
+		prdposition.ENDAMTSUM_OTH,
+		prdposition.DIRTYAMTSUM,
+		prdposition.REDAMT,
+		prdposition.ENDQTYSUM,
+		prdposition.END_DAYS,
+		prdposition.ENDCOST,
+		PRDBASEINFO.PBC_ACCOUNT_ID ASSET_POOL_CODE,
+		di.institution_code
+		from PBC_MONTH_PRD_POSITION prdposition
+		inner JOIN PBC_PRD_ACCOUNT_SUB PRDBASEINFO
+		ON PRDBASEINFO.ACCOUNT_ID = prdposition.PRODID
+
+		left join (      select f.finprod_market_id,di.institution_code
+		from fin_product f
+		left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE = 'FINPROD04' and f.p_finprod_id is null) di on di.finprod_market_id = prdposition.PRODID
+		where DATE_FORMAT(ENDDATE,'%Y-%m-%d') = #{bookDate,jdbcType=VARCHAR}
+		/**筛选到期的产品   start */
+		and di.institution_code is not null
+		and   ( prdposition.PAYSTATUS  ='04'
+		or   prdposition.PAYSTATUS is  null )
+		/**筛选到期的产品   end */
+		<if test="prodList !=null and prodList.size()>0">
+			and prdposition.PRODID in
+			<foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR prdposition.PRODID in (
+				</if>
+				#{item}
+			</foreach>
+		</if>
+	</select>
 </mapper>

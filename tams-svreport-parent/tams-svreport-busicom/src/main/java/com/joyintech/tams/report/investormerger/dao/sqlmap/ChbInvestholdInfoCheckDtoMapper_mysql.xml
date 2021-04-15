@@ -608,7 +608,7 @@
 	 and  s2.REGIST_BANK_CODE=s1.REGIST_BANK_CODE
 </select>
 	<select id="selectLastMergerIndentifyMarkAndBankcode" resultType="string">
-	SELECT DISTINCT CK.REGIST_BANK_CODE||','||CK.MERGER_INDENTIFY_MARK||','||DATE_FORMAT(HOLD_DATE,'%Y-%m-%d')
+	SELECT DISTINCT concat_ws(',',CK.REGIST_BANK_CODE,CK.MERGER_INDENTIFY_MARK,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'))
 	FROM CHB_INVESTHOLD_INFO_CHECK ck
 	where (ck.OPERATE_STATUS is null or ck.OPERATE_STATUS='01')
 	and CK.MERGER_INDENTIFY_MARK is not null
@@ -768,9 +768,6 @@
 		from
 		chb_investhold_info_check cii
 		where
-		<!-- 	<foreach collection="newKeyList" item="item" open="(cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in(" separator="," close=")">
-                (#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
-            </foreach>	 -->
 		<foreach collection="newKeyList" item="item" open="(" separator="or" close=")">
 			(cii.REGIST_BANK_CODE =#{item.registBankCode}
 			and cii.INDENTIFY_MARK=#{item.indentifyMark}
@@ -797,11 +794,7 @@
 		and s1.PRODID=s2.PRODID
 		where s1.status='E'
 		<if test="keys !=null and keys.size()>0">
-			AND s1.REGIST_BANK_CODE
-			||'_'||s1.INDENTIFY_MARK
-			||'_'||s1.CCY
-			||'_'||s1.HOLD_DATE
-			||'_'||s1.PRODID
+			AND concat_ws('_',s1.REGIST_BANK_CODE,s1.INDENTIFY_MARK,s1.CCY,s1.HOLD_DATE,s1.PRODID)
 			IN
 			<foreach collection="keys" item="key" open="(" separator=","  close=")">
 				#{key,jdbcType=VARCHAR}
@@ -831,11 +824,7 @@
 		UNION all select ORG_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK where ORG_INDENTIFY_MARK is not null)
 		and s1.INDENTIFY_MARK not in (select INDENTIFY_MARK from CHB_EQU_HOLD )
 		<if test="keys !=null and keys.size()>0">
-			AND s1.REGIST_BANK_CODE
-			||'_'||s1.INDENTIFY_MARK
-			||'_'||s1.CCY
-			||'_'||s1.HOLD_DATE
-			||'_'||s1.PRODID
+			AND concat_ws('_',s1.REGIST_BANK_CODE,s1.INDENTIFY_MARK,s1.CCY,s1.HOLD_DATE,s1.PRODID)
 			IN
 			<foreach collection="keys" item="key" open="(" separator=","  close=")">
 				#{key,jdbcType=VARCHAR}
@@ -848,11 +837,7 @@
 		CHB_INVESTHOLD_INFO_sub
 		where SEND_STATUS='01'
 		<if test="keys !=null and keys.size()>0">
-			AND REGIST_BANK_CODE
-			||'_'||INDENTIFY_MARK
-			||'_'||CCY
-			||'_'||DATE_FORMAT(HOLD_DATE,'%Y-%m-%d')
-			||'_'||PRODID
+			AND concat_ws('_',REGIST_BANK_CODE,INDENTIFY_MARK,CCY,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),PRODID)
 			IN
 			<foreach collection="keys" item="key" open="(" separator=","  close=")">
 				#{key,jdbcType=VARCHAR}
@@ -863,11 +848,7 @@
 		delete from CHB_INVESTHOLD_INFO
 		where 1=1
 		and status='E'
-		AND REGIST_BANK_CODE
-		||'_'||INDENTIFY_MARK
-		||'_'||CCY
-		||'_'||DATE_FORMAT(HOLD_DATE,'%Y-%m-%d')
-		||'_'||PRODID
+		AND concat_ws('_',REGIST_BANK_CODE,INDENTIFY_MARK,CCY,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),PRODID)
 		IN
 		<foreach collection="keys" item="key" open="(" separator=","  close=")">
 			#{key,jdbcType=VARCHAR}
@@ -877,11 +858,7 @@
 		delete from CHB_INVESTHOLD_INFO_sub
 		where SEND_STATUS='01'
 		and status='01'
-		AND REGIST_BANK_CODE
-		||'_'||INDENTIFY_MARK
-		||'_'||CCY
-		||'_'||DATE_FORMAT(HOLD_DATE,'%Y-%m-%d')
-		||'_'||PRODID
+		AND  concat_ws('_',REGIST_BANK_CODE,INDENTIFY_MARK,CCY,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),PRODID)
 		IN
 		<foreach collection="keys" item="key" open="(" separator=","  close=")">
 			#{key,jdbcType=VARCHAR}
@@ -890,11 +867,7 @@
 	<update id="updateUnMergeInvestorsHoldInfo">
 		update CHB_INVESTHOLD_INFO info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
 		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
-		where info.REGIST_BANK_CODE
-		||'_'||info.INDENTIFY_MARK
-		||'_'||info.CCY
-		||'_'||DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d')
-		||'_'||info.PRODID
+		where concat_ws('_',info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d'),info.PRODID)
 		IN
 		<foreach collection="keys" item="key" open="(" separator=","  close=")">
 			#{key,jdbcType=VARCHAR}
@@ -903,11 +876,7 @@
 	<update id="updateUnMergeInvestorsHoldInfoSub">
 		update CHB_INVESTHOLD_INFO_SUB info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
 		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
-		where info.REGIST_BANK_CODE
-		||'_'||info.INDENTIFY_MARK
-		||'_'||info.CCY
-		||'_'||DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d')
-		||'_'||info.PRODID
+		where concat_ws('_',info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d'),info.PRODID)
 		IN
 		<foreach collection="keys" item="key" open="(" separator=","  close=")">
 			#{key,jdbcType=VARCHAR}
@@ -916,11 +885,7 @@
 	<update id="updateUnMergeInvestorsHoldInfoCheck">
 		update CHB_INVESTHOLD_INFO_CHECK info set info.MERGER_INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
 		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
-		where info.REGIST_BANK_CODE
-		||'_'||info.MERGER_INDENTIFY_MARK
-		||'_'||info.CCY
-		||'_'||DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d')
-		||'_'||info.PRODID
+		where concat_ws('_',info.REGIST_BANK_CODE,info.MERGER_INDENTIFY_MARK,info.CCY,DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d'),info.PRODID)
 		IN
 		<foreach collection="keys" item="key" open="(" separator=","  close=")">
 			#{key,jdbcType=VARCHAR}

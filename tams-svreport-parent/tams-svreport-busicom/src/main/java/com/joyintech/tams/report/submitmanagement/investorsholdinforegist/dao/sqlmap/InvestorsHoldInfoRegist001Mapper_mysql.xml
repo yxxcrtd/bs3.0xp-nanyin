@@ -575,11 +575,15 @@
 	
 	<!-- 批量更新 投资者持有信息检查序列号-->
 	<update id="updateInvestRegistCheckSeqno" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
-		MERGE INTO CHB_INVESTHOLD_INFO_SUB CII
-		USING (
-		<foreach collection="list" item="item" open="select * from("
-			close=")" separator="union all">
-			SELECT 
+
+		UPDATE  CHB_INVESTHOLD_INFO_SUB as A,
+		(
+		select CHECK_SEQNO from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="list" item="item"  separator="union all">
+			SELECT
 			#{item.registBankCode} REGIST_BANK_CODE,
 			#{item.indentifyMark} INDENTIFY_MARK,
 			#{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
@@ -590,16 +594,14 @@
 			dual
 		</foreach>
 		) TEMP
-		<!-- 业务主键匹配 -->
-		ON(CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE 
+		) de
+		) AS B
+		set  A.* = B.* where exisits (select 1 from CHB_INVESTHOLD_INFO_SUB CII where CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
 		AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
 		AND CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE
 		AND CII.HOLD_DATE = TEMP.HOLD_DATE
 		AND CII.CCY = TEMP.CCY
-		AND CII.SEND_STATUS = '01'
-		)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN UPDATE SET CII.CHECK_SEQNO = TEMP.CHECK_SEQNO
+		AND CII.SEND_STATUS = '01');
 	</update>
 	<!-- 批量更新投资者身份信息发送状态 -->
 	<update id="updateInvestorsHoldInfoRegistSendStatus" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">

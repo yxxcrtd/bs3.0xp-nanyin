@@ -378,7 +378,6 @@
     
   </select>
   
-  
   <delete id="deleteByDate" parameterType="java.util.Map" >
     delete from CHB_ASSET_POSITION
     where CDATE<![CDATA[>=]]> #{cdate,jdbcType=DATE}

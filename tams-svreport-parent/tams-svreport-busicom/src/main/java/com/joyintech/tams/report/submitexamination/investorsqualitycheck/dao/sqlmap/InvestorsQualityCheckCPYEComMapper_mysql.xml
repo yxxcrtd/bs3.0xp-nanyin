@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao.InvestorsQualityCheckCPYEComMapper_mysql">
+    <sql id="objRec" >
+        WITH  objRec  AS(
+        SELECT
+        PROD_ID,
+        MDATE,
+        BALANCE_AMT,
+        PRD_QTY
+        FROM(
+        SELECT
+        PROD_ID,
+        MDATE,
+        BALANCE_AMT,
+        PRD_QTY,
+        ROW_NUMBER() over( partition by PROD_ID ORDER BY MDATE DESC )  AS durMDateNo
+        FROM(
+        SELECT
+        A.PROD_ID,
+        B.MDATE,
+        B.BALANCE_AMT,
+        B.PRD_QTY,
+        ROW_NUMBER() over( partition by A.PROD_ID , B.MDATE ORDER BY B.UPDATE_TIME DESC)  AS durStatusNo
+        FROM  CHB_PRD_BASEINFO A
+        INNER JOIN CHB_PRD_DEAL_SUB B
+        ON A.PROD_ID = B.PROD_ID
+        WHERE
+        A.STATUS  != 'D'
+        <if test="orgCodeList != null and orgCodeList.size() > 0">
+            <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+                #{orgCode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="prdTypeList != null and prdTypeList.size() > 0">
+            <foreach collection="prdTypeList" item="operateMode" open=" AND A.OPERATE_MODE IN (" close=")" separator=",">
+                #{operateMode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        AND A.FPROD_ID is null
+        AND STR_TO_DATE(DATE_FORMAT(B.MDATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[<=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+        )
+        WHERE 	durStatusNo = 1
+        )
+        WHERE
+        durMDateNo = 1
+        OR  durMDateNo = 2
+        )
+    </sql>
+
+
+    <!-- 余额、份额共通-核查对象数量取得 -->
+    <select id="cntCPYECom" resultType="java.math.BigDecimal">
+        <include refid="objRec"></include>
+        SELECT
+        COUNT(DISTINCT(PROD_ID))
+        FROM
+        objRec
+    </select>
+
+    <!-- 余额、份额共通-错误记录取得 -->
+    <select id="searchCPYECom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+        <include refid="objRec"></include>
+        SELECT
+        PROD_ID as prodId,
+        STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d') as holdDate,
+        MDATE as busiMDate,
+        IFNULL(BALANCE_AMT,0) as prdBalanceAmt,
+        IFNULL(PRD_QTY,0) as prdTotalQty,
+        IFNULL(TOTAL_AMT,0) as prdRaiseTotalAmt,
+        IFNULL(RAISE_QTY,0) as prdRaiseTotalQty,
+        IFNULL(SUM(CNY_AMT),0) as investBalanceAmt,
+        IFNULL(SUM(QTY),0) as investTotalQty,
+        REG_CODE as prdRegistCode
+        FROM
+        (
+        SELECT
+        tmp1.PROD_ID,
+        tmp1.MDATE,
+        tmp1.BALANCE_AMT,
+        tmp1.PRD_QTY,
+        tmp1.TOTAL_AMT,
+        tmp1.RAISE_QTY,
+        CASE WHEN C.STATUS = '03' THEN 0 ELSE C.CNY_AMT END CNY_AMT,
+        CASE WHEN C.STATUS = '03' THEN 0 ELSE C.QTY END QTY,
+        D.REG_CODE,
+        ROW_NUMBER() over( partition by tmp1.PROD_ID, tmp1.MDATE, C.INDENTIFY_MARK ORDER BY C.UPDATE_TIME DESC )  AS hodeStsNo
+        FROM(
+        SELECT
+        PROD_ID,
+        MDATE,
+        BALANCE_AMT,
+        PRD_QTY,
+        TOTAL_AMT,
+        RAISE_QTY
+        FROM(
+        SELECT
+        A.PROD_ID,
+        A.MDATE,
+        A.BALANCE_AMT,
+        A.PRD_QTY,
+        B.TOTAL_AMT,
+        B.RAISE_QTY,
+        ROW_NUMBER() over( partition by A.PROD_ID , A.MDATE ORDER BY B.UPDATE_TIME DESC )  AS raiseStatusNo
+        FROM  objRec A
+        INNER JOIN CHB_PRD_RAISETOT_SUB B
+        ON A.PROD_ID = B.PROD_ID
+        )
+        WHERE 	raiseStatusNo = 1
+        ) tmp1
+        LEFT JOIN CHB_PRDRESIST_CODE D
+        ON tmp1.PROD_ID = D.PRODID
+        LEFT JOIN CHB_INVESTHOLD_INFO_SUB C
+        ON tmp1.PROD_ID = C.PRODID
+        WHERE
+        STR_TO_DATE(DATE_FORMAT(C.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+        )
+        WHERE 	hodeStsNo = 1
+        GROUP BY
+        PROD_ID,
+        REG_CODE,
+        MDATE,
+        BALANCE_AMT,
+        PRD_QTY,
+        TOTAL_AMT,
+        RAISE_QTY
+    </select>
+
+</mapper>

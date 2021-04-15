@@ -244,18 +244,30 @@
 	
 	<insert id="mergeInto"
 		parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
-		merge into CHB_MST_COUNTER_PARTY a
-		using (
-		<foreach index="index" collection="list" item="item" open="("
-			close=")" separator="union all">
+		insert into CHB_MST_COUNTER_PARTY(UUID,COUNTER_ID, COUNTER_TYPE,
+		COUNTER_NAME,
+		LINK_ID, MANAGER_ID, HEAD_BANK,
+		CONTACT, CONTACT_WAY, REMARK,
+		CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS)
+		select UUID,COUNTER_ID, COUNTER_TYPE,
+		COUNTER_NAME,
+		LINK_ID, MANAGER_ID, HEAD_BANK,
+		CONTACT, CONTACT_WAY, REMARK,
+		CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="list" item="item"  separator="union all">
 			select #{item.uuid,jdbcType=VARCHAR} uuid,
 			#{item.counterId,jdbcType=VARCHAR} counterId,
 			#{item.counterType,jdbcType=VARCHAR} counterType,
 			#{item.counterName,jdbcType=VARCHAR} counterName,
-			#{item.linkId,jdbcType=VARCHAR} linkId, 
+			#{item.linkId,jdbcType=VARCHAR} linkId,
 			#{item.managerId,jdbcType=VARCHAR} managerId,
 			#{item.headBank,jdbcType=VARCHAR} headBank,
-			#{item.contact,jdbcType=VARCHAR} contact, 
+			#{item.contact,jdbcType=VARCHAR} contact,
 			#{item.contactWay,jdbcType=VARCHAR} contactWay,
 			#{item.remark,jdbcType=VARCHAR} remark,
 			#{item.createUser,jdbcType=VARCHAR} createUser,
@@ -268,31 +280,44 @@
 			#{item.isCentralCounter,jdbcType=VARCHAR} isCentralCounter
 			from dual
 		</foreach>
-		) b
-		on (
-		a.COUNTER_ID = b.counterId and a.STATUS != 'D'
-		)
-		when matched then update set
-		a.COUNTER_TYPE=b.counterType,a.COUNTER_NAME=b.counterName,a.LINK_ID=b.linkId,
-		a.MANAGER_ID=b.managerId,a.HEAD_BANK=b.headBank,a.CONTACT=b.contact,a.CONTACT_WAY=b.contactWay,
-		a.REMARK=b.remark,
-		a.UPDATE_TIME=NOW(),a.COUNTER_TYPE1=b.counterType1,
-		a.UPDATE_USER=b.updateUser,
-		a.COUNTER_TYPE2=b.counterType2,a.IS_CENTRAL_COUNTER=b.isCentralCounter,
-		a.STATUS = 'M'
-		
-		when not matched then insert (UUID,COUNTER_ID, COUNTER_TYPE,
-		COUNTER_NAME,
-		LINK_ID, MANAGER_ID, HEAD_BANK,
-		CONTACT, CONTACT_WAY, REMARK,
-		CREATE_USER, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS)
-		values(
-		b.uuid,
-		b.counterId,b.counterType,b.counterName,b.linkId,b.managerId,b.headBank,b.contact,
-		b.contactWay,b.remark,b.createUser,b.createDept,NOW(),b.updateUser,NOW(),b.counterType1,
-		b.counterType2,b.isCentralCounter,'E'
-		)
+		) TEMP where not exisits (select 1 from CHB_MST_COUNTER_PARTY CII 过滤条件)
+		) de ;
+
+		UPDATE  CHB_MST_COUNTER_PARTY as A,
+		(
+		select COUNTER_TYPE,COUNTER_NAME,LINK_ID,
+		MANAGER_ID,HEAD_BANK,CONTACT,CONTACT_WAY,
+		REMARK,	UPDATE_TIME,a.COUNTER_TYPE1,
+		UPDATE_USER,COUNTER_TYPE2,IS_CENTRAL_COUNTER,
+		STATUS from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="list" item="item"  separator="union all">
+			select #{item.uuid,jdbcType=VARCHAR} uuid,
+			#{item.counterId,jdbcType=VARCHAR} counterId,
+			#{item.counterType,jdbcType=VARCHAR} counterType,
+			#{item.counterName,jdbcType=VARCHAR} counterName,
+			#{item.linkId,jdbcType=VARCHAR} linkId,
+			#{item.managerId,jdbcType=VARCHAR} managerId,
+			#{item.headBank,jdbcType=VARCHAR} headBank,
+			#{item.contact,jdbcType=VARCHAR} contact,
+			#{item.contactWay,jdbcType=VARCHAR} contactWay,
+			#{item.remark,jdbcType=VARCHAR} remark,
+			#{item.createUser,jdbcType=VARCHAR} createUser,
+			#{item.createDept,jdbcType=VARCHAR} createDept,
+			#{item.createTime,jdbcType=TIMESTAMP} createTime,
+			#{item.updateUser,jdbcType=VARCHAR} updateUser,
+			#{item.updateTime,jdbcType=TIMESTAMP} updateTime,
+			#{item.counterType1,jdbcType=VARCHAR} counterType1,
+			#{item.counterType2,jdbcType=VARCHAR} counterType2,
+			#{item.isCentralCounter,jdbcType=VARCHAR} isCentralCounter
+			from dual
+		</foreach>
+		) TEMP
+		) de
+		) AS B
+		set  A.* = B.* where exisits (select 1 from CHB_MST_COUNTER_PARTY CII where CII.COUNTER_ID = TEMP.counterId and CII.STATUS != 'D');
 	</insert>
 	<!-- 根据数据状态皮量更新，传入的dto数据状态为D则更新为D否则更新为M -->
 	<update id="updateBachByStatus"

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.interf.cnbond.dao.CnBondInterfMapper" >
+    <select id="selectReportNoByRepMesNo" resultType ="com.joyintech.tams.common.base.entity.ChbInfoReport">
+        select
+	       REPORT_NO AS reportNo,
+	       REP_MES_NO AS repMesNo,
+		   UPLOAD_RESULT AS uploadResult,
+		   UPLOAD_RESULT_MSG AS uploadResultMsg,
+		   UPLOAD_FILE_ID AS uploadFileId,
+		   CHECK_FILE_ID AS checkFileId,
+		   CHECK_RESULT AS checkResult,
+		   CHECK_RESULT_MSG AS checkResultMsg,
+		   CHECK_FILE_NAME AS checkFileName,
+		   CHECK_TOTAL_COUNT AS checkTotalCount,
+		   CHECK_SUCCESS_COUNT AS  checkSuccessCount,
+		   CHECK_FAILED_COUNT AS checkFailedCount,
+		   INSIDE_FILE_ID AS insideFileId,
+		   SEND_TIME AS sendTime,
+		   REPLY_TIME AS replyTime
+        from
+            CHB_INFO_REPORT
+        where REP_MES_NO =  #{repMesNo,jdbcType=VARCHAR}
+    </select>
+    <!-- 更新中债报送结果 -->
+    <update id="updateChbSubmitStatus" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
+        update CHB_SUBMIT_STATUS
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null" >
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where
+        REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+        <if test="submitNum != null" >
+            AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+    <update id="updateChbEquDetSubmitStatus" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
+        update CHB_EQUDET_SUBMIT_STATUS
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null" >
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where
+        REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+        <if test="submitNum != null" >
+            AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+        </if>
+    </update>
+    <insert id="insertChbInfoReportList">
+        insert into CHB_INFO_REPORT (REPORT_NO, REP_MES_NO, UPLOAD_RESULT,
+        UPLOAD_RESULT_MSG, UPLOAD_FILE_ID, CHECK_FILE_ID,
+        CHECK_RESULT, CHECK_RESULT_MSG, CHECK_FILE_NAME,
+        CHECK_TOTAL_COUNT, CHECK_SUCCESS_COUNT, CHECK_FAILED_COUNT,
+        INSIDE_FILE_ID, SEND_TIME, REPLY_TIME,
+        WORKFLOW_ID, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TYPE
+        )
+        <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
+            #{item.reportNo,jdbcType=VARCHAR}, #{item.repMesNo,jdbcType=VARCHAR}, #{item.uploadResult,jdbcType=VARCHAR},
+            #{item.uploadResultMsg,jdbcType=VARCHAR}, #{item.uploadFileId,jdbcType=VARCHAR}, #{item.checkFileId,jdbcType=VARCHAR},
+            #{item.checkResult,jdbcType=VARCHAR}, #{item.checkResultMsg,jdbcType=VARCHAR}, #{item.checkFileName,jdbcType=VARCHAR},
+            #{item.checkTotalCount,jdbcType=DECIMAL}, #{item.checkSuccessCount,jdbcType=DECIMAL}, #{item.checkFailedCount,jdbcType=DECIMAL},
+            #{item.insideFileId,jdbcType=VARCHAR}, #{item.sendTime,jdbcType=DATE}, #{item.replyTime,jdbcType=TIMESTAMP},
+            #{item.workflowId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.submitType,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+
+    <insert id="insertChbSubmitStatusList">
+        insert into CHB_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
+        SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,
+        CREATE_USER, CREATE_TIME, REPORT_NO,
+        SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
+        <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
+            #{item.seqno,jdbcType=VARCHAR}, #{item.submitNum,jdbcType=VARCHAR}, #{item.submitType,jdbcType=VARCHAR},
+            #{item.submitFeedbackStatus,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.reportNo,jdbcType=VARCHAR},
+            #{item.submitFeedbackMsg,jdbcType=VARCHAR},#{item.uniqueIdenti,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+    <insert id="insertChbEquDetSubmitStatusList">
+        insert into CHB_EQUDET_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
+        SUBMIT_FEEDBACK_STATUS,EQUITY_CONF_DATE, UPDATE_USER, UPDATE_TIME,
+        CREATE_USER, CREATE_TIME, REPORT_NO,
+        SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
+        <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
+            #{item.seqno,jdbcType=VARCHAR}, #{item.submitNum,jdbcType=VARCHAR}, #{item.submitType,jdbcType=VARCHAR},
+            #{item.submitFeedbackStatus,jdbcType=VARCHAR},#{item.equityConfDate,jdbcType=DATE}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.reportNo,jdbcType=VARCHAR},
+            #{item.submitFeedbackMsg,jdbcType=VARCHAR},#{item.uniqueIdenti,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+    <select id="selectOrgCodeByRegistBankCode" resultType="java.lang.String">
+        select max(ORG_CODE) as orgCode from CHB_ORG_REGIST_BANK_CODE where REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+    </select>
+</mapper>

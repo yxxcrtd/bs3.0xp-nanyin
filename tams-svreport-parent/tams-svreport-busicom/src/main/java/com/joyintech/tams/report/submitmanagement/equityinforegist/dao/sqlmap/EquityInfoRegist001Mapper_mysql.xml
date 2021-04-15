@@ -479,7 +479,7 @@
             CREATE_USER, CREATE_TIME, SUMIT_SEQ,
             ORG_CODE
             )
-            select A.* from (
+            values
             <foreach collection="list" item="item" index="index" separator="UNION ALL">
             	select  HOLD.INDENTIFY_MARK,
        				    HOLD.REGIST_BANK_CODE,
@@ -522,7 +522,7 @@
   					where HOLD.INDENTIFY_MARK=#{item.indentifyMark,jdbcType=CHAR}
   						  and HOLD.REGIST_BANK_CODE=#{item.bankCode,jdbcType=CHAR}
             </foreach>
-            )A
+
 	</insert>
 	<select id="getEirListByindentifyMarkList" resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
 		select INDENTIFY_MARK        as indentifyMark,
