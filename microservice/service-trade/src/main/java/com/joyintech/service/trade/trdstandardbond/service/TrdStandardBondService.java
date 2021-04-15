@@ -105,6 +105,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                                                                Map<String, Object> pageParam)
             throws Exception {
         this.setParam(pageParam);
+        pageParam.put("isStandardPage", DictCodeListExt1.是否_是.getValue());
         Page<TrdStandardBondSearchDto> pageResult = this.queryForPage(page, length,
                 () -> this.trdStandardBondMapper.selectSearchDataList(pageParam));
         pageParam.put("FINPROD_TYPE_TG_F02",DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
@@ -372,12 +373,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                         // 分支序号 = 系统固定参数，默认为0
                         resultDto.setBranch(dto.getBranch());
                         // 持仓类型
-                        if(StringUtil.equals(dto.getIsComplete(), DictCodeListExt1.是否_是.getValue())) {
-                        	resultDto.setHodingType(DictCodeList.持仓类型_质押.getValue());
-                        }
-                        else {
-                        	resultDto.setHodingType(DictCodeListExt1.持仓类型_临时.getValue());
-                        }
+                        resultDto.setHodingType(DictCodeList.持仓类型_质押.getValue());
                         // 日期 = 平台日
                         resultDto.setCdate(sysDate);
                         // 数量 = 入库列表.质押券面总额/100
@@ -392,6 +388,15 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                         if (avaPrin.compareTo(BigDecimal.ZERO) > 0) {
                             lstPtlSecPositionFlowDto.add(resultDto);
                         }
+                        //流程中需额外生成一条 临时的反向流水，用于在标准券页面抵消
+                        if(StringUtil.equals(dto.getIsComplete(), DictCodeListExt1.是否_否.getValue())) {
+                        	PtlSecPositionFlowDto tempDto =  new PtlSecPositionFlowDto();
+                        	BeanUtil.copyPropertiesIgnoreNull(tempDto, resultDto);
+                        	tempDto.setHodingType(DictCodeListExt1.持仓类型_临时.getValue());
+                        	tempDto.setAmount(tempDto.getAmount().negate());
+                        	lstPtlSecPositionFlowDto.add(tempDto);
+                        }
+                        
                         // 分配完毕后,停止可质押券信息（含投资目的）的循环
                         pledgePrin = pledgePrin.subtract(prin);
                         if (pledgePrin.compareTo(BigDecimal.ZERO) <= 0) {
