@@ -596,8 +596,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     期权费支付类型_后付期权费(DictCode.期权费支付类型,"02","后付期权费"),
     
     共通业务类型_基金账户管理(DictCode.共通业务类型,"MST25","基金账户管理"),
-    账户类型_证券账户(DictCode.账户类型,"SEC","证券账户"),
-    账户类型_基金账户(DictCode.账户类型,"FUND","基金账户"),
+    证券账户类型_证券账户(DictCode.证券账户类型,"SEC","证券账户"),
+    证券账户类型_基金账户(DictCode.证券账户类型,"FUND","基金账户"),
 
     //穿透维度 add by chendijun 20200113 start
     穿透维度_不穿透(DictCode.穿透维度,"01","不穿透"),

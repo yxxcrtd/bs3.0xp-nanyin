@@ -17,7 +17,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.workflow.engine.entity.FlowEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -48,6 +52,17 @@ import com.joyintech.workflow.engine.constant.OperationType;
 @Service
 public class MstSecuritiesAccountService extends CommonExportService<MstSecuritiesAccountDto> implements BaseProcessService<MstSecuritiesAccountDto>{
 
+    @Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
+
+    /**
+     * 获取工作流当前节点信息
+     * @param workflowId
+     * @return
+     */
+    public SysWflBusinessList getWorkFlowData(String workflowId){
+        return sysWflBusinessListMapper.selectByPrimaryKey(workflowId);
+    }
     
     /**
      * 查询
@@ -130,6 +145,17 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
             ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getBusiAcctNo?busiAcctNo="+busiAcctNo,
             SelectOptionDto.class);
     }
+    
+    /**
+     * 券商名称联想下拉框
+     * @param brokerName
+     * @return
+     */
+    public List<SelectOptionDto> getBrokerName(String brokerName){
+    	return restTemplate.getForList(
+				ServiceApplication.BASICDATA_SERVICE_NAME+"/MstMarketInstitutions/getBrokerName?brokerName="+brokerName,
+				SelectOptionDto.class);
+    }
     /**
      * 文件读取
      *
@@ -151,6 +177,7 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
     @Override
     public void doComplete(MstSecuritiesAccountDto entity, OperationType type) {
         String action=StringUtil.EMPTY;
+        handleEntity(entity);
         if(OperationType.DELETE.equals(type)){
             action="delete";
         }
@@ -181,6 +208,12 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
             // 记录二级法人权限
             insertDataAuthTypeInst(entity.getSecAcctId(), searchOrgCodeList, editOrgCodeList, DictCodeList.共通业务类型_证券账户管理.getValue());
         } 
+    }
+	
+	    private  void handleEntity(MstSecuritiesAccountDto entity){
+        if(!StringUtil.equals(entity.getRegistOrg(),"03")){
+            entity.setTradePlace(entity.getTradePlace2());
+        }
     }
     /**
      * 检查证券账户账号是否用过
@@ -279,5 +312,23 @@ public class MstSecuritiesAccountService extends CommonExportService<MstSecuriti
 //                                         +businessId,
 //                                         Integer.class);
 //    }
-   
+    
+    /**
+     * 期货公司检索
+     * @param search
+     * @return
+     */
+    public List<SelectOptionDto> getFuturesCompany(String search) {
+        return restTemplate.getForList(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFuturesCompany?companyNo="+search,
+                SelectOptionDto.class);
+    }
+
+    @Override
+    public String checkForSubmit(FlowEntity entity, boolean isMutiApproval) {
+        if(isMutiApproval){
+            return "证券账户管理,不可批量!";
+        }
+        return null;
+    }
 }

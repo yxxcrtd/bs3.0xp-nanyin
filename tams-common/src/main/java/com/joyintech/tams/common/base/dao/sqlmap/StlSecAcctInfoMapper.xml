@@ -19,13 +19,17 @@
         <result column="TRADE_PLACE" property="tradePlace" jdbcType="VARCHAR" />
         <result column="SEC_ACCT_TYPE" property="secAcctType" jdbcType="VARCHAR" />
         <result column="MANAGER" property="manager" jdbcType="VARCHAR" />
+        <result column="BOND_ID" property="bondId" jdbcType="VARCHAR" />
+        <result column="BROKER_NAME" property="brokerName" jdbcType="VARCHAR" />
+        <result column="TRADE_NO" property="tradeNo" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEC_ACCT_ID SEC_ACCT_ID, SEC_ACCT_NAME SEC_ACCT_NAME, SEC_ACCT_SOURCE SEC_ACCT_SOURCE, 
         REGIST_ORG REGIST_ORG, TRD_ACCT_ID TRD_ACCT_ID, TRD_ACCT_CCY TRD_ACCT_CCY, REC_ACCT_ID REC_ACCT_ID, 
         REC_ACCT_CCY REC_ACCT_CCY, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, TRADE_PLACE TRADE_PLACE, 
-        SEC_ACCT_TYPE SEC_ACCT_TYPE, MANAGER MANAGER
+        SEC_ACCT_TYPE SEC_ACCT_TYPE, MANAGER MANAGER, BOND_ID BOND_ID, BROKER_NAME BROKER_NAME, 
+        TRADE_NO TRADE_NO
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -53,13 +57,15 @@
             REC_ACCT_ID, REC_ACCT_CCY, REMARK, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, TRADE_PLACE, 
-            SEC_ACCT_TYPE, MANAGER)
+            SEC_ACCT_TYPE, MANAGER, BOND_ID, 
+            BROKER_NAME, TRADE_NO)
         values (#{secAcctId,jdbcType=VARCHAR}, #{secAcctName,jdbcType=VARCHAR}, #{secAcctSource,jdbcType=VARCHAR}, 
             #{registOrg,jdbcType=VARCHAR}, #{trdAcctId,jdbcType=VARCHAR}, #{trdAcctCcy,jdbcType=VARCHAR}, 
             #{recAcctId,jdbcType=VARCHAR}, #{recAcctCcy,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{tradePlace,jdbcType=VARCHAR}, 
-            #{secAcctType,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR})
+            #{secAcctType,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{bondId,jdbcType=VARCHAR}, 
+            #{brokerName,jdbcType=VARCHAR}, #{tradeNo,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlSecAcctInfo" >
         insert into STL_SEC_ACCT_INFO
@@ -115,6 +121,15 @@
             <if test="manager != null" >
                 MANAGER,
             </if>
+            <if test="bondId != null" >
+                BOND_ID,
+            </if>
+            <if test="brokerName != null" >
+                BROKER_NAME,
+            </if>
+            <if test="tradeNo != null" >
+                TRADE_NO,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="secAcctId != null" >
@@ -168,15 +183,26 @@
             <if test="manager != null" >
                 #{manager,jdbcType=VARCHAR},
             </if>
+            <if test="bondId != null" >
+                #{bondId,jdbcType=VARCHAR},
+            </if>
+            <if test="brokerName != null" >
+                #{brokerName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeNo != null" >
+                #{tradeNo,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlSecAcctInfo" >
         insert into STL_SEC_ACCT_INFO(SEC_ACCT_ID, SEC_ACCT_NAME, SEC_ACCT_SOURCE, REGIST_ORG, 
         TRD_ACCT_ID, TRD_ACCT_CCY, REC_ACCT_ID, REC_ACCT_CCY, REMARK, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME, TRADE_PLACE, SEC_ACCT_TYPE, MANAGER)
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, TRADE_PLACE, SEC_ACCT_TYPE, MANAGER, BOND_ID, 
+        BROKER_NAME, TRADE_NO)
         select SEC_ACCT_ID, SEC_ACCT_NAME, SEC_ACCT_SOURCE, REGIST_ORG, 
             TRD_ACCT_ID, TRD_ACCT_CCY, REC_ACCT_ID, REC_ACCT_CCY, REMARK, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, TRADE_PLACE, SEC_ACCT_TYPE, MANAGER
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, TRADE_PLACE, SEC_ACCT_TYPE, MANAGER, BOND_ID, 
+            BROKER_NAME, TRADE_NO
              from STL_SEC_ACCT_INFO
              where 1 = 1 and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
     </insert>
@@ -222,6 +248,15 @@
             <if test="manager != null" >
                 MANAGER = #{manager,jdbcType=VARCHAR},
             </if>
+            <if test="bondId != null" >
+                BOND_ID = #{bondId,jdbcType=VARCHAR},
+            </if>
+            <if test="brokerName != null" >
+                BROKER_NAME = #{brokerName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeNo != null" >
+                TRADE_NO = #{tradeNo,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
     </update>
@@ -239,7 +274,10 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             TRADE_PLACE = #{tradePlace,jdbcType=VARCHAR},
             SEC_ACCT_TYPE = #{secAcctType,jdbcType=VARCHAR},
-            MANAGER = #{manager,jdbcType=VARCHAR}
+            MANAGER = #{manager,jdbcType=VARCHAR},
+            BOND_ID = #{bondId,jdbcType=VARCHAR},
+            BROKER_NAME = #{brokerName,jdbcType=VARCHAR},
+            TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
         where SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
     </update>
 </mapper>

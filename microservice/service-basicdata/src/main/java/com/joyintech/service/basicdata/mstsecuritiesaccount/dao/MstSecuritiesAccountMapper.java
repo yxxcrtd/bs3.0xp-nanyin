@@ -10,6 +10,7 @@
  
 package com.joyintech.service.basicdata.mstsecuritiesaccount.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public interface MstSecuritiesAccountMapper {
      * 
      * 模糊查询
      * <功能详细描述>
-     * @param param pageParam
+     * @param  pageParam
      * @return List
      * @see
      * @since 1.0
@@ -167,4 +168,40 @@ public interface MstSecuritiesAccountMapper {
 //     * @since 1.0
 //     */
 //    int deleteFileByBusinessId(@Param("businessId")String businessId);
+    
+    /**
+     * 证券代码查询
+     * @param map
+     * @return
+     */
+    List<SelectOptionDto> getFinprodMarketInfo(Map<String,Object> map);
+    
+    /**
+     * 标的查询
+     * @param map
+     * @return
+     */
+    List<SelectOptionDto> getFinprodId(Map<String,Object> map);
+    
+    /**
+     * 证券账户查询
+     * @param map
+     * @return
+     */
+    List<SelectOptionDto> getSecAcctInfo(Map<String,Object> map);
+    
+    /**
+     * 组合资金账户查询
+     * @param map
+     * @return
+     */
+    List<SelectOptionDto> getPtlSecAcctInfo(Map<String,Object> map);
+
+    List<SelectOptionDto> getFinprodMarketInfoPosition(Map<String, Object> params);
+
+    List<SelectOptionDto> getFinprodIdByMarketId(Map<String, Object> map);
+
+    List<Map<String, Object>> getFaceValueList(Map<String, Object> map);
+    
+    List<SelectOptionDto> getFuturesCompany(@Param("companyNo")String companyNo);
 }

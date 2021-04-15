@@ -10,9 +10,10 @@
  
 package com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.controller;
 
-
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -29,21 +30,28 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto;
-import com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.service.MstSecuritiesAccountService;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto;
+import com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.service.MstSecuritiesAccountService;
+import com.joyintech.workflow.engine.constant.WflConstants;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.service.ProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import com.joyintech.tams.invest.basicdata.mstsaledepartment.service.MstSaleDepartmentService;
+import com.joyintech.framework.util.JsonUtils;
 
 
 /**
@@ -69,6 +77,15 @@ public class MstSecuritiesAccount002Controller extends BaseController{
      */
     @Autowired(required = false)
     private FileAttachmentProcess fileAttachmentProcess;
+	
+   /**
+	 * 营业部Service获取券商
+	 */
+	@Autowired
+	private MstSaleDepartmentService mstSaleDepartmentService;
+
+    @Autowired
+    private ProcessService processService;
 
     /**
      * 新建页面初始化
@@ -78,8 +95,16 @@ public class MstSecuritiesAccount002Controller extends BaseController{
     public String init(Model model) {
         //单选框枚举值设置
         this.setSelectOptionToModel(model, DictCode.登记托管机构,DictCode.交易场所,DictCode.账户来源);
+		List<SelectOptionDto> brokerIds = getMstCustomerInfo();
+		model.addAttribute("brokerIds", JsonUtils.objectArray2Json(brokerIds.toArray()));
         String secAcctId = getParam("secAcctId");
         String workflowId = getParam("workflowId");
+        //是否双录（01：是，02：否）
+        String isDoubleRecord = CacheUtil.getSysParam("DOUBLE_RECORD");
+        //是否为第一个审批节点
+        String isFirstApprovalNode = DictCodeList.是否_否.getValue();
+
+        model.addAttribute("isDoubleRecord",isDoubleRecord);
       //不来自于代办
         if(WorkFlowUtil.isNotFromToDoList()&& StringUtil.isNotEmpty(secAcctId)){
             //根据主键获取业务实体
@@ -90,9 +115,29 @@ public class MstSecuritiesAccount002Controller extends BaseController{
         else if(StringUtil.isNotEmpty(workflowId)){
             //根据工作流与留痕处理提供的共通方法获取业务实体
             MstSecuritiesAccountDto entity = mstSecuritiesAccountService.getBussinessEntityByWorkflowId(workflowId);
+            SysWflBusinessList workFlowData = mstSecuritiesAccountService.getWorkFlowData(workflowId);
             model.addAttribute("entity", entity);
             model.addAttribute("workflowId", workflowId);
+            if(!StringUtil.equals(workFlowData.getActionType(),"delete")) {//删除不开启双录
+	            //双录
+	            try {
+	                //获取当前节点信息
+	                //工作流ID
+	                String taskId = this.getParam(WflConstants.PROCESS_TASK_ID);
+	
+	                String proDefKey = processService.getProDefKeyByProcessInstanceId(workFlowData.getWorkflowId());
+	
+	                ProcessMark processMark = mstSecuritiesAccountService.getBusinessInfo(workflowId);
+	                String secondTaskDefinitionId = processService.getSecondTaskDefinitionId(proDefKey,
+	                        mstSecuritiesAccountService.getRuntimeVariables(processMark, taskId));
+	                isFirstApprovalNode = StringUtil.equals(workFlowData.getCurNodeId(), secondTaskDefinitionId)
+	                        ?DictCodeList.是否_是.getValue():DictCodeList.是否_否.getValue();
+	            } catch (WorkFlowException e) {
+	                e.printStackTrace();
+	            }
+            }
         }
+        model.addAttribute("isFirstApprovalNode",isFirstApprovalNode);
         return super.init(model);
     }
     /**
@@ -110,6 +155,20 @@ public class MstSecuritiesAccount002Controller extends BaseController{
         List<SelectOptionDto> temp = mstSecuritiesAccountService.getBusiAcctNo(search);
         return temp;
     }
+    
+    /**
+     * 券商名称联想下拉框
+     * @param search
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/getBrokerName")
+    public List<SelectOptionDto> getBrokerName(String search)throws Exception{
+    	List<SelectOptionDto> temp=mstSecuritiesAccountService.getBrokerName(search);
+    	return temp;
+    }
+    
     /**
      * 保存按钮点击时的check
      *
@@ -150,6 +209,7 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //            dto.setSeqNo(code);
 //        }
         dto.setBussinessId(dto.getSeqNo());
+        dto.setSecAcctType(DictCodeListExt3.证券账户类型_证券账户.getValue());
         ProcessParameter<MstSecuritiesAccountDto> processParameter = new ProcessParameter<MstSecuritiesAccountDto>();
         WorkFlowParameter<MstSecuritiesAccountDto> params = new WorkFlowParameter<MstSecuritiesAccountDto>();
         params.setPageId(this.getPageId());
@@ -241,4 +301,36 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //    public int deleteFileByBusinessId(String businessId) throws Exception {
 //        return mstSecuritiesAccountService.deleteFileByBusinessId(businessId);
 //    }
+	/**
+	 * 券商
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<SelectOptionDto> getMstCustomerInfo(){
+		List<SelectOptionDto> brokerLst = new ArrayList<SelectOptionDto>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			brokerLst = mstSaleDepartmentService.getMstCustomerInfo(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return brokerLst;
+	}
+	
+    /**
+    *
+    * @Description //期货公司下拉框
+    * @Param [search]
+    * @return java.util.List<com.joyintech.framework.select.SelectOptionDto>
+    * @version 1.0
+    * @see
+   **/
+   @ResponseBody
+   @RequestMapping("/getFuturesCompany")
+   public List<SelectOptionDto> getFuturesCompany(String search)
+           throws Exception {
+       List<SelectOptionDto> temp = mstSecuritiesAccountService.getFuturesCompany(search);
+       return temp;
+   }
 }

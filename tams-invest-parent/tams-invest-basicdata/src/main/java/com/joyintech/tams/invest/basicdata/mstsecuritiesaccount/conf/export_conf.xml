@@ -9,6 +9,7 @@
             <Cell order="5" name="资金账户名称">acctName</Cell>
             <Cell order="6" name="交易场所">tradePlaceStr</Cell>
             <Cell order="7" name="账户来源">secAcctSourceStr</Cell>
+            <Cell order="8" name="交易编号">tradeNo</Cell>
         </Row>
     </Worksheet>
 </Workbook>

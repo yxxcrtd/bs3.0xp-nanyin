@@ -89,6 +89,98 @@ public class MstSecuritiesAccountDto extends StlSecAcctInfo implements ITableRow
      * 文件列表
      */
     private transient List<UploadFile> fileArray;
+
+    /**
+     * 托管机构-双录
+     */
+    private String registOrgContrast;
+    /**
+     * 回款账户-双录
+     */
+    private String recAcctIdContrast;
+    /**
+     * 资金结算账户-双录
+     */
+    private String trdAcctIdContrast;
+    /**
+     * 交易场所-双录
+     */
+    private String tradePlaceContrast;
+    /**
+     * 是否双录且是第一审批节点
+     */
+    private String isDoubleInput;
+
+
+    /**
+     * null
+     */
+    private String tradePlace2;
+    
+//  /**
+//  * 期货公司
+//  */
+// private String futuresCompany;
+//
+// public String getFuturesCompany() {
+//     return futuresCompany;
+// }
+//
+// public void setFuturesCompany(String futuresCompany) {
+//     this.futuresCompany = futuresCompany;
+// }
+ /**
+  * 交易编号
+  */
+ private String tradeNo;
+
+ public String getTradeNo() {
+		return tradeNo;
+	}
+
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
+
+    public String getIsDoubleInput() {
+        return isDoubleInput;
+    }
+
+    public void setIsDoubleInput(String isDoubleInput) {
+        this.isDoubleInput = isDoubleInput;
+    }
+
+    public String getRegistOrgContrast() {
+        return registOrgContrast;
+    }
+
+    public void setRegistOrgContrast(String registOrgContrast) {
+        this.registOrgContrast = registOrgContrast;
+    }
+
+    public String getRecAcctIdContrast() {
+        return recAcctIdContrast;
+    }
+
+    public void setRecAcctIdContrast(String recAcctIdContrast) {
+        this.recAcctIdContrast = recAcctIdContrast;
+    }
+
+    public String getTrdAcctIdContrast() {
+        return trdAcctIdContrast;
+    }
+
+    public void setTrdAcctIdContrast(String trdAcctIdContrast) {
+        this.trdAcctIdContrast = trdAcctIdContrast;
+    }
+
+    public String getTradePlaceContrast() {
+        return tradePlaceContrast;
+    }
+
+    public void setTradePlaceContrast(String tradePlaceContrast) {
+        this.tradePlaceContrast = tradePlaceContrast;
+    }
     
     /**
      * 获取 fileArray
@@ -329,6 +421,16 @@ public class MstSecuritiesAccountDto extends StlSecAcctInfo implements ITableRow
     public String getTradePlace() {
         return super.getTradePlace();
     }
+    
+    /**
+     * 
+     * 股东代码
+     */
+    @Override
+    @Length(fieldName = "MstSecuritiesAccount002.bondId", max = 50, groups = {ValidateGroupEdit.class})
+    public String getBondId() {
+        return super.getBondId();
+    }
     /**
      * 资金账户名称
      */
@@ -401,4 +503,11 @@ public class MstSecuritiesAccountDto extends StlSecAcctInfo implements ITableRow
         return super.getSecAcctSource();
     }
 
+    public String getTradePlace2() {
+        return tradePlace2;
+    }
+
+    public void setTradePlace2(String tradePlace2) {
+        this.tradePlace2 = tradePlace2;
+    }
 }

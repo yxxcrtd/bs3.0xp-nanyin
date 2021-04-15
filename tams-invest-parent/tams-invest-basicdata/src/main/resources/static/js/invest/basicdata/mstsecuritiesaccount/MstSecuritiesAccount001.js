@@ -56,6 +56,7 @@ $(function() {
             ,{field:'acctName',width:'15%',sortField:'acctName', title: 'MstSecuritiesAccount001.trdAcctName'}
            ,{field:'tradePlaceStr',width:'15%',sortField:'tradePlace', title: 'MstSecuritiesAccount001.tradePlace'}
             ,{field:'secAcctSourceStr',width:'15%',sortField:'secAcctSource', title: 'MstSecuritiesAccount001.secAcctSource'}
+            ,{field:'tradeNo',width:'15%',sortField:'tradeNo', title: 'MstSecuritiesAccount001.tradeNo'}
             ,{field:'operation',width:'25%', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });
