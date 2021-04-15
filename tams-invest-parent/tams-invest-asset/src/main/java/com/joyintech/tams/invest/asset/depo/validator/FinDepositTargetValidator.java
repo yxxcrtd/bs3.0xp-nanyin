@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.asset.depo.validator;
 
 //import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
@@ -110,7 +110,7 @@ public class FinDepositTargetValidator implements BeanValidator{
                 resultList.add(new ValidMessage("",
                     getMessage("BUSS_COM_E_0004",getMessage("FinInterestFactor.loadRate"), getMessage("FinDepositTarget002.referRate"))));
             }
-            
+
         }
         if(null!=dto.getVdate()&&null!=dto.getMdate()){
             if(DateUtil.compareDate(dto.getVdate(), dto.getMdate())!=-1){

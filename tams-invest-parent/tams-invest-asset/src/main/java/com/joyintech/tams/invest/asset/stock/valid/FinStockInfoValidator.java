@@ -7,7 +7,6 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
 package com.joyintech.tams.invest.asset.stock.valid;
 
 //import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
@@ -55,7 +54,6 @@ public class FinStockInfoValidator implements BeanValidator {
      */
     @Autowired
     private FinStockInfoService finStockInfoService;
-    
     @Autowired
     MstWorkflowCommonService mstWorkflowCommonService;
 
