@@ -1354,6 +1354,7 @@
 			(<include refid="VALID_COLUMNS"></include>
 		<where>
 			PTL_PORTFOLIO.INVEST_YESORNO = 'Y' /* AND TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null */
+			and TRD_PRODUCT_DEAL.FINPROD_TYPE2 != 'F01'
 			<if test="etridList != null and !etridList.isEmpty() ">
 				and TRD_PRODUCT_DEAL.TRADE_ID in 
 				<foreach collection="etridList" index="index"  item="item" open="(" close=")" separator=",">
