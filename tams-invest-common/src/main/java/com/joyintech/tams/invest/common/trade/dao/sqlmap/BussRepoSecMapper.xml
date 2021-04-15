@@ -48,6 +48,8 @@
             A.IS_RIGHT,
             A.REGIST_ORG
         FROM FIN_PRODUCT A
+        LEFT JOIN FIN_PRODUCT_ADD FPA
+            ON FPA.FINPROD_ID = A.FINPROD_ID
         LEFT JOIN FIN_PRODUCT_TYPE B
             ON B.FINPROD_ID = A.FINPROD_ID
         LEFT JOIN
@@ -87,6 +89,7 @@
                     #{item}
                 </foreach>
             </if>
+            AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
         </where>
    </select>
 
@@ -123,36 +126,10 @@
           ava.INV_AIM invAim
           </if>
         FROM
-<!--             ( -->
-<!--                 SELECT -->
-<!--                   FINPROD_ID, -->
-<!--                   <if test="isWithInvAim"> -->
-<!--                   INV_AIM, -->
-<!--                   </if> -->
-<!--                   SUM(NVL(AMOUNT, 0)) AMOUNT -->
-<!--                 FROM -->
-<!--                   PTL_SEC_POSITION -->
-<!--                 WHERE -->
-<!--                       PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR} -->
-<!--                   AND CDATE &lt;= TO_DATE(#{plateDate, jdbcType=VARCHAR}, 'yyyy-MM-dd') -->
-<!--                   AND HODING_TYPE IN (#{POSITION_TYPE_01}, #{POSITION_TYPE_03}) -->
-<!--                   <if test="secAcctId != null and secAcctId != '' and secAcctId !='undefined'"> -->
-<!--                       AND SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR} -->
-<!--                   </if> -->
-<!--                   <if test="chlId != null and chlId != '' and chlId !='undefined'"> -->
-<!--                       AND SEC_ACCT_ID = #{chlId, jdbcType=VARCHAR} -->
-<!--                    </if> -->
-<!--                 GROUP BY -->
-<!--                   FINPROD_ID -->
-<!--                   <if test="isWithInvAim"> -->
-<!--                     ,INV_AIM -->
-<!--                   </if> -->
-<!--             ) ava -->
             (select PSP.FINPROD_ID,
                   <if test="isWithInvAim">
                   INV_AIM,
                   </if>
-<!--                 PSV.END_DAYS_1, -->
                 SUM(DECODE(PSP.HODING_TYPE,#{POSITION_TYPE_06},-PSP.AMOUNT,'11',-PSP.AMOUNT,PSP.AMOUNT)) AMOUNT
             	from PTL_SEC_POSITION PSP
   				LEFT JOIN FIN_PRODUCT T ON PSP.FINPROD_ID = T.FINPROD_ID
@@ -227,16 +204,6 @@
                    MST_BOND_CREDIT_RATING
                    WHERE GRADE_DATE &lt;= TO_DATE(#{plateDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
                ) MBCR ON MBCR.O_CODE = T.FINPROD_MARKET_ID AND MBCR.NUM = 1
-               <!--             	LEFT JOIN ( -->
-               <!-- 	            	SELECT -->
-               <!-- 					    RANK() OVER(PARTITION BY FINPROD_ID ORDER BY CDATE DESC, PORTFOLIO_ID, SEC_ACCT_ID, INV_AIM) NUM, -->
-               <!-- 					    FINPROD_ID, -->
-               <!-- 					    END_DAYS_1 -->
-               <!-- 					FROM -->
-               <!-- 					    PTL_SEC_VALUTION -->
-               <!-- 					WHERE CDATE &lt;= TO_DATE(#{plateDate, jdbcType=VARCHAR}, 'yyyy-MM-dd') -->
-               <!--             	) PSV ON PSV.FINPROD_ID = PSP.FINPROD_ID AND PSV.NUM = 1 -->
-               <!-- 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191011 end -->
             LEFT JOIN (
                     SELECT
                         PSP.FINPROD_ID,
@@ -283,7 +250,9 @@
                    <if test="tradeMarket != null and tradeMarket != ''">
                        AND fp.TRADE_MARKET = #{tradeMarket}
                    </if>
-            LEFT JOIN   MST_BOND_VALUATION_INFO mbvi
+            LEFT JOIN FIN_PRODUCT_ADD FPA ON FPA.FINPROD_ID = T.FINPROD_ID
+
+       LEFT JOIN   MST_BOND_VALUATION_INFO mbvi
                     ON  mbvi.SEC_ID = fp.FINPROD_MARKET_ID
                     AND mbvi.VALUE_DATE &lt;= TO_DATE(#{plateDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
                     AND NOT EXISTS (
@@ -310,6 +279,9 @@
             /*modify by caojin 2020/6/1  债券质押式回购   可质押券面总额全部质押时 为0  故加上‘=’ TISHKBS-594  start*/
             AND  NVL(ava.AMOUNT, 0) - NVL(pledge.AMOUNT, 0) + nvl(AVA_FLOW.amount, 0)  &gt;= 0
             /*modify by caojin 2020/6/1  债券质押式回购   可质押券面总额全部质押时 为0  故加上‘=’   end*/
+            /*modify by mashukai 2021/4/15  过滤发行标的 start*/
+            AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
+            /*modify by mashukai 2021/4/15  过滤发行标的 end*/
             <if test="repRegistOrg != null and repRegistOrg.size() > 0">
                 AND fp.REGIST_ORG in
                 <foreach collection="repRegistOrg" item="item" open="(" close=")" separator=",">
@@ -356,7 +328,11 @@
            fpt.type_6 secType
            <!-- 债券质押回购多组合，张庚林，20190723 end-->
         FROM
-                        FIN_PRODUCT fp
+            FIN_PRODUCT fp
+            <!-- 过滤发行标的，马数凯，20210415 start-->
+            LEFT JOIN FIN_PRODUCT_ADD FPA
+                ON FPA.FINPROD_ID = A.FINPROD_ID
+            <!-- 过滤发行标的，马数凯，20210415 end-->
             <!-- 债券质押回购多组合，张庚林，20190723 start-->
             left join fin_product_type fpt2
             on fp.finprod_id=fpt2.finprod_id
@@ -378,7 +354,8 @@
            LEFT JOIN FIN_PRODUCT_TYPE FPT
              ON fp.FINPROD_ID = FPT.FINPROD_ID                                 
         <where>
-                fp.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+            fp.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+            AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
             <if test="tradeMarket != null and tradeMarket != ''">
                 AND fp.TRADE_MARKET = #{tradeMarket, jdbcType=VARCHAR}
             </if>
