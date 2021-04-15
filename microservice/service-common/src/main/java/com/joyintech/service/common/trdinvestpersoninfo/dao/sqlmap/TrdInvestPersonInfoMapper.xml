@@ -175,7 +175,7 @@
             'S' "object"
     	FROM 
     		MST_COUNTER_PARTY T1 
-    	INNER JOIN
+    	LEFT JOIN
     		MST_CUSTOMER_INFO T2
     	ON
     		T1.LINK_ID = T2.CUSTOMER_ID
