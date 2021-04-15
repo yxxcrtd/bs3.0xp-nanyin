@@ -1,0 +1,1 @@
+delete from SYS_PAGE_DICTLIST where PAGE_ID='EtrBondBiddingResult001' and DICT_ID='PAYMENT_STATUS';
