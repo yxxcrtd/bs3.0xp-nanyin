@@ -19,7 +19,7 @@
 		T.START_DATE,
 		T.Sequence
 		from
-(
+		(
 		SELECT
 		a.JOB_ID,
 		a.START_DATE,
@@ -30,12 +30,12 @@
 		FROM
 		( SELECT * FROM REP_INSTALL_LOG WHERE START_DATE IS NOT NULL ) a,
 		( SELECT @rownum := 0, @JOB_ID := NULL, @rank := 0 ) b
-)T where T.Sequence<![CDATA[<=]]>1
+		)T where T.Sequence<![CDATA[<=]]>1
 		) P ON P.JOB_ID=rj.JOB_ID
 		WHERE
 		  1=1
 		<if test="jobName != null and jobName != ''">
-			AND rj.JOB_NAME LIKE concat(concat('%',#{jobName,jdbcType=VARCHAR}),'%')
+			AND rj.JOB_NAME LIKE concat_ws(concat_ws('%',#{jobName,jdbcType=VARCHAR}),'%')
 
 		</if>
 		<if test="jobIdArr != null and jobIdArr.length > 0">
@@ -46,7 +46,16 @@
 			</foreach>
 		</if>
 		ORDER BY rj.UPDATE_TIME desc
-		) where 1=1
+		) TEMP where 1=1
+    </select>
+	<select id="selectReportIdList" resultType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto">
+		SELECT
+		  info.rep_id repId,
+		  info.report_name reportName
+		FROM
+		  rep_info info
+		WHERE
+		  1=1
     </select>
 	<update id="updateConfirmStatusById" parameterType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto" >
 	      update REP_REVEAL
@@ -57,4 +66,24 @@
 	      where 1=1
 	      and id = #{id,jdbcType=VARCHAR}
     </update>
+	<select id="selectJobInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		  info.JOB_ID id,
+		  info.JOB_ID text
+		FROM rep_job info
+
+    </select>
+	<!-- 查询是否已经执行 -->
+	<select id="isExecByJobIdAndDate" resultType="com.joyintech.tams.common.base.entity.RepInstallLog">
+    	SELECT
+    		log.JOB_ID jobId,
+    		log.JOB_SEQ jobSeq,
+    		log.EXEC_DATE execDate,
+    		log.EXEC_STATUS execStatus
+		FROM REP_INSTALL_LOG log
+		WHERE log.JOB_ID=#{jobId, jdbcType=VARCHAR}
+			AND ( log.EXEC_DATE =#{execDate, jdbcType=DATE}
+    			OR  log.LASTEXEC_DATE=#{execDate, jdbcType=DATE})
+			AND log.STATUS = 'E'
+    </select>
 </mapper>

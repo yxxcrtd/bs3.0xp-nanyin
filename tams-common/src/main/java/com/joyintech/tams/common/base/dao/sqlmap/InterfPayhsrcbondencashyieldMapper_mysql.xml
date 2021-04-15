@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfPayhsrcbondencashyieldMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfPayhsrcbondencashyield" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="STATE_DATE" property="stateDate" jdbcType="VARCHAR" />
+        <result column="CURVE_CODE" property="curveCode" jdbcType="VARCHAR" />
+        <result column="CURVE_NAME" property="curveName" jdbcType="VARCHAR" />
+        <result column="MTRTY" property="mtrty" jdbcType="DECIMAL" />
+        <result column="YLD" property="yld" jdbcType="DECIMAL" />
+        <result column="CREATEDATE" property="createdate" jdbcType="DATE" />
+        <result column="CREATEUSER" property="createuser" jdbcType="VARCHAR" />
+        <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
+        <result column="LSTMNTUSER" property="lstmntuser" jdbcType="VARCHAR" />
+        <result column="CURVE_TYPE" property="curveType" jdbcType="VARCHAR" />
+        <result column="N" property="n" jdbcType="DECIMAL" />
+        <result column="K" property="k" jdbcType="DECIMAL" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, STATE_DATE STATE_DATE, CURVE_CODE CURVE_CODE, CURVE_NAME CURVE_NAME, 
+        MTRTY MTRTY, YLD YLD, CREATEDATE CREATEDATE, CREATEUSER CREATEUSER, LSTMNTDATE LSTMNTDATE, 
+        LSTMNTUSER LSTMNTUSER, CURVE_TYPE CURVE_TYPE, N N, K K, OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcbondencashyieldMapper.Base_Column_List" />
+        from INTERF_PAYHSRCBONDENCASHYIELD
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcbondencashyieldMapper.Base_Column_List" />
+        from INTERF_PAYHSRCBONDENCASHYIELD
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrcbondencashyieldMapper.Base_Column_List" />
+        from INTERF_PAYHSRCBONDENCASHYIELD
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_PAYHSRCBONDENCASHYIELD
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcbondencashyield" >
+        insert into INTERF_PAYHSRCBONDENCASHYIELD (OBJECT_ID, STATE_DATE, CURVE_CODE, 
+            CURVE_NAME, MTRTY, YLD, 
+            CREATEDATE, CREATEUSER, LSTMNTDATE, 
+            LSTMNTUSER, CURVE_TYPE, N, 
+            K, OPDATE, OPMODE)
+        values (#{objectId,jdbcType=VARCHAR}, #{stateDate,jdbcType=VARCHAR}, #{curveCode,jdbcType=VARCHAR}, 
+            #{curveName,jdbcType=VARCHAR}, #{mtrty,jdbcType=DECIMAL}, #{yld,jdbcType=DECIMAL}, 
+            #{createdate,jdbcType=DATE}, #{createuser,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}, 
+            #{lstmntuser,jdbcType=VARCHAR}, #{curveType,jdbcType=VARCHAR}, #{n,jdbcType=DECIMAL}, 
+            #{k,jdbcType=DECIMAL}, #{opdate,jdbcType=DATE}, #{opmode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcbondencashyield" >
+        insert into INTERF_PAYHSRCBONDENCASHYIELD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="stateDate != null" >
+                STATE_DATE,
+            </if>
+            <if test="curveCode != null" >
+                CURVE_CODE,
+            </if>
+            <if test="curveName != null" >
+                CURVE_NAME,
+            </if>
+            <if test="mtrty != null" >
+                MTRTY,
+            </if>
+            <if test="yld != null" >
+                YLD,
+            </if>
+            <if test="createdate != null" >
+                CREATEDATE,
+            </if>
+            <if test="createuser != null" >
+                CREATEUSER,
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE,
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER,
+            </if>
+            <if test="curveType != null" >
+                CURVE_TYPE,
+            </if>
+            <if test="n != null" >
+                N,
+            </if>
+            <if test="k != null" >
+                K,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="stateDate != null" >
+                #{stateDate,jdbcType=VARCHAR},
+            </if>
+            <if test="curveCode != null" >
+                #{curveCode,jdbcType=VARCHAR},
+            </if>
+            <if test="curveName != null" >
+                #{curveName,jdbcType=VARCHAR},
+            </if>
+            <if test="mtrty != null" >
+                #{mtrty,jdbcType=DECIMAL},
+            </if>
+            <if test="yld != null" >
+                #{yld,jdbcType=DECIMAL},
+            </if>
+            <if test="createdate != null" >
+                #{createdate,jdbcType=DATE},
+            </if>
+            <if test="createuser != null" >
+                #{createuser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="curveType != null" >
+                #{curveType,jdbcType=VARCHAR},
+            </if>
+            <if test="n != null" >
+                #{n,jdbcType=DECIMAL},
+            </if>
+            <if test="k != null" >
+                #{k,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcbondencashyield" >
+        insert into INTERF_PAYHSRCBONDENCASHYIELD(OBJECT_ID, STATE_DATE, CURVE_CODE, CURVE_NAME, 
+        MTRTY, YLD, CREATEDATE, CREATEUSER, LSTMNTDATE, LSTMNTUSER, CURVE_TYPE, N, K, OPDATE, 
+        OPMODE)
+        select OBJECT_ID, STATE_DATE, CURVE_CODE, CURVE_NAME, 
+            MTRTY, YLD, CREATEDATE, CREATEUSER, LSTMNTDATE, LSTMNTUSER, CURVE_TYPE, N, K, OPDATE, 
+            OPMODE
+             from INTERF_PAYHSRCBONDENCASHYIELD
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcbondencashyield" >
+        update INTERF_PAYHSRCBONDENCASHYIELD
+        <set >
+            <if test="stateDate != null" >
+                STATE_DATE = #{stateDate,jdbcType=VARCHAR},
+            </if>
+            <if test="curveCode != null" >
+                CURVE_CODE = #{curveCode,jdbcType=VARCHAR},
+            </if>
+            <if test="curveName != null" >
+                CURVE_NAME = #{curveName,jdbcType=VARCHAR},
+            </if>
+            <if test="mtrty != null" >
+                MTRTY = #{mtrty,jdbcType=DECIMAL},
+            </if>
+            <if test="yld != null" >
+                YLD = #{yld,jdbcType=DECIMAL},
+            </if>
+            <if test="createdate != null" >
+                CREATEDATE = #{createdate,jdbcType=DATE},
+            </if>
+            <if test="createuser != null" >
+                CREATEUSER = #{createuser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="curveType != null" >
+                CURVE_TYPE = #{curveType,jdbcType=VARCHAR},
+            </if>
+            <if test="n != null" >
+                N = #{n,jdbcType=DECIMAL},
+            </if>
+            <if test="k != null" >
+                K = #{k,jdbcType=DECIMAL},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrcbondencashyield" >
+        update INTERF_PAYHSRCBONDENCASHYIELD
+        set STATE_DATE = #{stateDate,jdbcType=VARCHAR},
+            CURVE_CODE = #{curveCode,jdbcType=VARCHAR},
+            CURVE_NAME = #{curveName,jdbcType=VARCHAR},
+            MTRTY = #{mtrty,jdbcType=DECIMAL},
+            YLD = #{yld,jdbcType=DECIMAL},
+            CREATEDATE = #{createdate,jdbcType=DATE},
+            CREATEUSER = #{createuser,jdbcType=VARCHAR},
+            LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            CURVE_TYPE = #{curveType,jdbcType=VARCHAR},
+            N = #{n,jdbcType=DECIMAL},
+            K = #{k,jdbcType=DECIMAL},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

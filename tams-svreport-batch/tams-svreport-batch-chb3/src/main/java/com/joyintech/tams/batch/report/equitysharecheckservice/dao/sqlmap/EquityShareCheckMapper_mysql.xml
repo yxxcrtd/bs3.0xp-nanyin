@@ -7,7 +7,7 @@
                                             PRODID,PRODNAME,PRD_REGIST_CODE,INDENTIFY_MARK,
                                             CCY,TDYQTY,YSTQTY,CHANGEQTY,UPDATE_USER,
                                             UPDATE_TIME,CREATE_USER,CREATE_TIME,CREATE_DEPT)
-               select f_guid SEQNO, r.*
+        select f_guid SEQNO, r.*
 		from (
 		select
         todayData.HOLD_DATE EQUITY_CONF_DATE, /*查询日期*/
@@ -75,7 +75,7 @@
 				when t.busi_type = '15' then - 1 * t.shares
                 when t.busi_type = '16' then - 1 * t.shares
         else t.shares end
-        ) shares /*当日变动份额*/
+        ) shares
 		from chb_equdet t
 		where t.STATUS != 'D'
 		group by t.REGIST_BANK_CODE,
@@ -99,5 +99,4 @@
     <delete id="deleteChbEqudetCheckResult">
     	delete from CHB_EQUDET_CHECK_RESULT where date_format(EQUITY_CONF_DATE,'%Y-%m-%d') =#{date,jdbcType=VARCHAR}
     </delete>
-
 </mapper>

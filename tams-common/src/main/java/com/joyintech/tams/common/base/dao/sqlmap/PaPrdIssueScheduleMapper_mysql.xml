@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PaPrdIssueScheduleMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PaPrdIssueSchedule" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
+        <result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="RAISE_STRDATE" property="raiseStrdate" jdbcType="DATE" />
+        <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="DATE" />
+        <result column="TOFF_START_LOW" property="toffStartLow" jdbcType="DECIMAL" />
+        <result column="YIELD_LOW" property="yieldLow" jdbcType="DECIMAL" />
+        <result column="TOFF_START_MID" property="toffStartMid" jdbcType="DECIMAL" />
+        <result column="YIELD_MID" property="yieldMid" jdbcType="DECIMAL" />
+        <result column="TOFF_START_HIG" property="toffStartHig" jdbcType="DECIMAL" />
+        <result column="YIELD_HIG" property="yieldHig" jdbcType="DECIMAL" />
+        <result column="LOWEST_AMT" property="lowestAmt" jdbcType="DECIMAL" />
+        <result column="RAISE_MAX" property="raiseMax" jdbcType="DECIMAL" />
+        <result column="SALE_FEE_RATE" property="saleFeeRate" jdbcType="DECIMAL" />
+        <result column="TRUST_FEE_RATE" property="trustFeeRate" jdbcType="DECIMAL" />
+        <result column="ISSUE_MODE" property="issueMode" jdbcType="VARCHAR" />
+        <result column="INTPAY_CYC" property="intpayCyc" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+        <result column="BRANCH_BANK" property="branchBank" jdbcType="VARCHAR" />
+        <result column="OPEN_CYCLE" property="openCycle" jdbcType="VARCHAR" />
+        <result column="OPEN_CYCLE_OTH" property="openCycleOth" jdbcType="DECIMAL" />
+        <result column="OPEN_REMARK" property="openRemark" jdbcType="VARCHAR" />
+        <result column="FIRST_OPEN_DAY" property="firstOpenDay" jdbcType="DATE" />
+        <result column="HDAY_OPEN_FLAG" property="hdayOpenFlag" jdbcType="VARCHAR" />
+        <result column="AVE_OPEN_TIME" property="aveOpenTime" jdbcType="DECIMAL" />
+        <result column="OPEN_BUSS" property="openBuss" jdbcType="VARCHAR" />
+        <result column="OPEN_BUSS_REMARK" property="openBussRemark" jdbcType="VARCHAR" />
+        <result column="SCHEME_ID" property="schemeId" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="TMPL_ID" property="tmplId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, FINPROD_MARKET_ID FINPROD_MARKET_ID, FINPROD_ABBR FINPROD_ABBR, 
+        FINPROD_NAME FINPROD_NAME, VDATE VDATE, MDATE MDATE, RAISE_STRDATE RAISE_STRDATE, 
+        RAISE_ENDDATE RAISE_ENDDATE, TOFF_START_LOW TOFF_START_LOW, YIELD_LOW YIELD_LOW, 
+        TOFF_START_MID TOFF_START_MID, YIELD_MID YIELD_MID, TOFF_START_HIG TOFF_START_HIG, 
+        YIELD_HIG YIELD_HIG, LOWEST_AMT LOWEST_AMT, RAISE_MAX RAISE_MAX, SALE_FEE_RATE SALE_FEE_RATE, 
+        TRUST_FEE_RATE TRUST_FEE_RATE, ISSUE_MODE ISSUE_MODE, INTPAY_CYC INTPAY_CYC, CCY CCY, 
+        TERM_TYPE TERM_TYPE, PROD_REGIST_CODE PROD_REGIST_CODE, BRANCH_BANK BRANCH_BANK, 
+        OPEN_CYCLE OPEN_CYCLE, OPEN_CYCLE_OTH OPEN_CYCLE_OTH, OPEN_REMARK OPEN_REMARK, FIRST_OPEN_DAY FIRST_OPEN_DAY, 
+        HDAY_OPEN_FLAG HDAY_OPEN_FLAG, AVE_OPEN_TIME AVE_OPEN_TIME, OPEN_BUSS OPEN_BUSS, 
+        OPEN_BUSS_REMARK OPEN_BUSS_REMARK, SCHEME_ID SCHEME_ID, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        TMPL_ID TMPL_ID
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PaPrdIssueScheduleMapper.Base_Column_List" />
+        from PA_PRD_ISSUE_SCHEDULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PaPrdIssueScheduleMapper.Base_Column_List" />
+        from PA_PRD_ISSUE_SCHEDULE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PaPrdIssueScheduleMapper.Base_Column_List" />
+        from PA_PRD_ISSUE_SCHEDULE
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PA_PRD_ISSUE_SCHEDULE
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PaPrdIssueSchedule" >
+        insert into PA_PRD_ISSUE_SCHEDULE (FINPROD_ID, FINPROD_MARKET_ID, FINPROD_ABBR, 
+            FINPROD_NAME, VDATE, MDATE, 
+            RAISE_STRDATE, RAISE_ENDDATE, TOFF_START_LOW, 
+            YIELD_LOW, TOFF_START_MID, YIELD_MID, 
+            TOFF_START_HIG, YIELD_HIG, LOWEST_AMT, 
+            RAISE_MAX, SALE_FEE_RATE, TRUST_FEE_RATE, 
+            ISSUE_MODE, INTPAY_CYC, CCY, 
+            TERM_TYPE, PROD_REGIST_CODE, BRANCH_BANK, 
+            OPEN_CYCLE, OPEN_CYCLE_OTH, OPEN_REMARK, 
+            FIRST_OPEN_DAY, HDAY_OPEN_FLAG, AVE_OPEN_TIME, 
+            OPEN_BUSS, OPEN_BUSS_REMARK, SCHEME_ID, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            TMPL_ID)
+        values (#{finprodId,jdbcType=VARCHAR}, #{finprodMarketId,jdbcType=VARCHAR}, #{finprodAbbr,jdbcType=VARCHAR}, 
+            #{finprodName,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, 
+            #{raiseStrdate,jdbcType=DATE}, #{raiseEnddate,jdbcType=DATE}, #{toffStartLow,jdbcType=DECIMAL}, 
+            #{yieldLow,jdbcType=DECIMAL}, #{toffStartMid,jdbcType=DECIMAL}, #{yieldMid,jdbcType=DECIMAL}, 
+            #{toffStartHig,jdbcType=DECIMAL}, #{yieldHig,jdbcType=DECIMAL}, #{lowestAmt,jdbcType=DECIMAL}, 
+            #{raiseMax,jdbcType=DECIMAL}, #{saleFeeRate,jdbcType=DECIMAL}, #{trustFeeRate,jdbcType=DECIMAL}, 
+            #{issueMode,jdbcType=VARCHAR}, #{intpayCyc,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
+            #{termType,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, #{branchBank,jdbcType=VARCHAR}, 
+            #{openCycle,jdbcType=VARCHAR}, #{openCycleOth,jdbcType=DECIMAL}, #{openRemark,jdbcType=VARCHAR}, 
+            #{firstOpenDay,jdbcType=DATE}, #{hdayOpenFlag,jdbcType=VARCHAR}, #{aveOpenTime,jdbcType=DECIMAL}, 
+            #{openBuss,jdbcType=VARCHAR}, #{openBussRemark,jdbcType=VARCHAR}, #{schemeId,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{tmplId,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PaPrdIssueSchedule" >
+        insert into PA_PRD_ISSUE_SCHEDULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID,
+            </if>
+            <if test="finprodAbbr != null" >
+                FINPROD_ABBR,
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="raiseStrdate != null" >
+                RAISE_STRDATE,
+            </if>
+            <if test="raiseEnddate != null" >
+                RAISE_ENDDATE,
+            </if>
+            <if test="toffStartLow != null" >
+                TOFF_START_LOW,
+            </if>
+            <if test="yieldLow != null" >
+                YIELD_LOW,
+            </if>
+            <if test="toffStartMid != null" >
+                TOFF_START_MID,
+            </if>
+            <if test="yieldMid != null" >
+                YIELD_MID,
+            </if>
+            <if test="toffStartHig != null" >
+                TOFF_START_HIG,
+            </if>
+            <if test="yieldHig != null" >
+                YIELD_HIG,
+            </if>
+            <if test="lowestAmt != null" >
+                LOWEST_AMT,
+            </if>
+            <if test="raiseMax != null" >
+                RAISE_MAX,
+            </if>
+            <if test="saleFeeRate != null" >
+                SALE_FEE_RATE,
+            </if>
+            <if test="trustFeeRate != null" >
+                TRUST_FEE_RATE,
+            </if>
+            <if test="issueMode != null" >
+                ISSUE_MODE,
+            </if>
+            <if test="intpayCyc != null" >
+                INTPAY_CYC,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE,
+            </if>
+            <if test="prodRegistCode != null" >
+                PROD_REGIST_CODE,
+            </if>
+            <if test="branchBank != null" >
+                BRANCH_BANK,
+            </if>
+            <if test="openCycle != null" >
+                OPEN_CYCLE,
+            </if>
+            <if test="openCycleOth != null" >
+                OPEN_CYCLE_OTH,
+            </if>
+            <if test="openRemark != null" >
+                OPEN_REMARK,
+            </if>
+            <if test="firstOpenDay != null" >
+                FIRST_OPEN_DAY,
+            </if>
+            <if test="hdayOpenFlag != null" >
+                HDAY_OPEN_FLAG,
+            </if>
+            <if test="aveOpenTime != null" >
+                AVE_OPEN_TIME,
+            </if>
+            <if test="openBuss != null" >
+                OPEN_BUSS,
+            </if>
+            <if test="openBussRemark != null" >
+                OPEN_BUSS_REMARK,
+            </if>
+            <if test="schemeId != null" >
+                SCHEME_ID,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="tmplId != null" >
+                TMPL_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodMarketId != null" >
+                #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodAbbr != null" >
+                #{finprodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="raiseStrdate != null" >
+                #{raiseStrdate,jdbcType=DATE},
+            </if>
+            <if test="raiseEnddate != null" >
+                #{raiseEnddate,jdbcType=DATE},
+            </if>
+            <if test="toffStartLow != null" >
+                #{toffStartLow,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldLow != null" >
+                #{yieldLow,jdbcType=DECIMAL},
+            </if>
+            <if test="toffStartMid != null" >
+                #{toffStartMid,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldMid != null" >
+                #{yieldMid,jdbcType=DECIMAL},
+            </if>
+            <if test="toffStartHig != null" >
+                #{toffStartHig,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldHig != null" >
+                #{yieldHig,jdbcType=DECIMAL},
+            </if>
+            <if test="lowestAmt != null" >
+                #{lowestAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseMax != null" >
+                #{raiseMax,jdbcType=DECIMAL},
+            </if>
+            <if test="saleFeeRate != null" >
+                #{saleFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="trustFeeRate != null" >
+                #{trustFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="issueMode != null" >
+                #{issueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="intpayCyc != null" >
+                #{intpayCyc,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistCode != null" >
+                #{prodRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="branchBank != null" >
+                #{branchBank,jdbcType=VARCHAR},
+            </if>
+            <if test="openCycle != null" >
+                #{openCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="openCycleOth != null" >
+                #{openCycleOth,jdbcType=DECIMAL},
+            </if>
+            <if test="openRemark != null" >
+                #{openRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="firstOpenDay != null" >
+                #{firstOpenDay,jdbcType=DATE},
+            </if>
+            <if test="hdayOpenFlag != null" >
+                #{hdayOpenFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="aveOpenTime != null" >
+                #{aveOpenTime,jdbcType=DECIMAL},
+            </if>
+            <if test="openBuss != null" >
+                #{openBuss,jdbcType=VARCHAR},
+            </if>
+            <if test="openBussRemark != null" >
+                #{openBussRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeId != null" >
+                #{schemeId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tmplId != null" >
+                #{tmplId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PaPrdIssueSchedule" >
+        insert into PA_PRD_ISSUE_SCHEDULE(FINPROD_ID, FINPROD_MARKET_ID, FINPROD_ABBR, FINPROD_NAME, 
+        VDATE, MDATE, RAISE_STRDATE, RAISE_ENDDATE, TOFF_START_LOW, YIELD_LOW, TOFF_START_MID, 
+        YIELD_MID, TOFF_START_HIG, YIELD_HIG, LOWEST_AMT, RAISE_MAX, SALE_FEE_RATE, TRUST_FEE_RATE, 
+        ISSUE_MODE, INTPAY_CYC, CCY, TERM_TYPE, PROD_REGIST_CODE, BRANCH_BANK, OPEN_CYCLE, 
+        OPEN_CYCLE_OTH, OPEN_REMARK, FIRST_OPEN_DAY, HDAY_OPEN_FLAG, AVE_OPEN_TIME, OPEN_BUSS, 
+        OPEN_BUSS_REMARK, SCHEME_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, TMPL_ID)
+        select FINPROD_ID, FINPROD_MARKET_ID, FINPROD_ABBR, FINPROD_NAME, 
+            VDATE, MDATE, RAISE_STRDATE, RAISE_ENDDATE, TOFF_START_LOW, YIELD_LOW, TOFF_START_MID, 
+            YIELD_MID, TOFF_START_HIG, YIELD_HIG, LOWEST_AMT, RAISE_MAX, SALE_FEE_RATE, TRUST_FEE_RATE, 
+            ISSUE_MODE, INTPAY_CYC, CCY, TERM_TYPE, PROD_REGIST_CODE, BRANCH_BANK, OPEN_CYCLE, 
+            OPEN_CYCLE_OTH, OPEN_REMARK, FIRST_OPEN_DAY, HDAY_OPEN_FLAG, AVE_OPEN_TIME, OPEN_BUSS, 
+            OPEN_BUSS_REMARK, SCHEME_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, TMPL_ID
+             from PA_PRD_ISSUE_SCHEDULE
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PaPrdIssueSchedule" >
+        update PA_PRD_ISSUE_SCHEDULE
+        <set >
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodAbbr != null" >
+                FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="raiseStrdate != null" >
+                RAISE_STRDATE = #{raiseStrdate,jdbcType=DATE},
+            </if>
+            <if test="raiseEnddate != null" >
+                RAISE_ENDDATE = #{raiseEnddate,jdbcType=DATE},
+            </if>
+            <if test="toffStartLow != null" >
+                TOFF_START_LOW = #{toffStartLow,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldLow != null" >
+                YIELD_LOW = #{yieldLow,jdbcType=DECIMAL},
+            </if>
+            <if test="toffStartMid != null" >
+                TOFF_START_MID = #{toffStartMid,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldMid != null" >
+                YIELD_MID = #{yieldMid,jdbcType=DECIMAL},
+            </if>
+            <if test="toffStartHig != null" >
+                TOFF_START_HIG = #{toffStartHig,jdbcType=DECIMAL},
+            </if>
+            <if test="yieldHig != null" >
+                YIELD_HIG = #{yieldHig,jdbcType=DECIMAL},
+            </if>
+            <if test="lowestAmt != null" >
+                LOWEST_AMT = #{lowestAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseMax != null" >
+                RAISE_MAX = #{raiseMax,jdbcType=DECIMAL},
+            </if>
+            <if test="saleFeeRate != null" >
+                SALE_FEE_RATE = #{saleFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="trustFeeRate != null" >
+                TRUST_FEE_RATE = #{trustFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="issueMode != null" >
+                ISSUE_MODE = #{issueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="intpayCyc != null" >
+                INTPAY_CYC = #{intpayCyc,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistCode != null" >
+                PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="branchBank != null" >
+                BRANCH_BANK = #{branchBank,jdbcType=VARCHAR},
+            </if>
+            <if test="openCycle != null" >
+                OPEN_CYCLE = #{openCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="openCycleOth != null" >
+                OPEN_CYCLE_OTH = #{openCycleOth,jdbcType=DECIMAL},
+            </if>
+            <if test="openRemark != null" >
+                OPEN_REMARK = #{openRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="firstOpenDay != null" >
+                FIRST_OPEN_DAY = #{firstOpenDay,jdbcType=DATE},
+            </if>
+            <if test="hdayOpenFlag != null" >
+                HDAY_OPEN_FLAG = #{hdayOpenFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="aveOpenTime != null" >
+                AVE_OPEN_TIME = #{aveOpenTime,jdbcType=DECIMAL},
+            </if>
+            <if test="openBuss != null" >
+                OPEN_BUSS = #{openBuss,jdbcType=VARCHAR},
+            </if>
+            <if test="openBussRemark != null" >
+                OPEN_BUSS_REMARK = #{openBussRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeId != null" >
+                SCHEME_ID = #{schemeId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tmplId != null" >
+                TMPL_ID = #{tmplId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PaPrdIssueSchedule" >
+        update PA_PRD_ISSUE_SCHEDULE
+        set FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+            FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            RAISE_STRDATE = #{raiseStrdate,jdbcType=DATE},
+            RAISE_ENDDATE = #{raiseEnddate,jdbcType=DATE},
+            TOFF_START_LOW = #{toffStartLow,jdbcType=DECIMAL},
+            YIELD_LOW = #{yieldLow,jdbcType=DECIMAL},
+            TOFF_START_MID = #{toffStartMid,jdbcType=DECIMAL},
+            YIELD_MID = #{yieldMid,jdbcType=DECIMAL},
+            TOFF_START_HIG = #{toffStartHig,jdbcType=DECIMAL},
+            YIELD_HIG = #{yieldHig,jdbcType=DECIMAL},
+            LOWEST_AMT = #{lowestAmt,jdbcType=DECIMAL},
+            RAISE_MAX = #{raiseMax,jdbcType=DECIMAL},
+            SALE_FEE_RATE = #{saleFeeRate,jdbcType=DECIMAL},
+            TRUST_FEE_RATE = #{trustFeeRate,jdbcType=DECIMAL},
+            ISSUE_MODE = #{issueMode,jdbcType=VARCHAR},
+            INTPAY_CYC = #{intpayCyc,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+            BRANCH_BANK = #{branchBank,jdbcType=VARCHAR},
+            OPEN_CYCLE = #{openCycle,jdbcType=VARCHAR},
+            OPEN_CYCLE_OTH = #{openCycleOth,jdbcType=DECIMAL},
+            OPEN_REMARK = #{openRemark,jdbcType=VARCHAR},
+            FIRST_OPEN_DAY = #{firstOpenDay,jdbcType=DATE},
+            HDAY_OPEN_FLAG = #{hdayOpenFlag,jdbcType=VARCHAR},
+            AVE_OPEN_TIME = #{aveOpenTime,jdbcType=DECIMAL},
+            OPEN_BUSS = #{openBuss,jdbcType=VARCHAR},
+            OPEN_BUSS_REMARK = #{openBussRemark,jdbcType=VARCHAR},
+            SCHEME_ID = #{schemeId,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            TMPL_ID = #{tmplId,jdbcType=VARCHAR}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

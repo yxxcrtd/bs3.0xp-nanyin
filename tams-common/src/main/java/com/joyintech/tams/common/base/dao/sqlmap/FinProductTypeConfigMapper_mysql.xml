@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinProductTypeConfigMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinProductTypeConfig" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="CONFIG_TYPE" property="configType" jdbcType="VARCHAR" />
+        <result column="INPUT_VALUE_1" property="inputValue1" jdbcType="VARCHAR" />
+        <result column="INPUT_VALUE_2" property="inputValue2" jdbcType="VARCHAR" />
+        <result column="INPUT_VALUE_3" property="inputValue3" jdbcType="VARCHAR" />
+        <result column="INPUT_VALUE_4" property="inputValue4" jdbcType="VARCHAR" />
+        <result column="INPUT_VALUE_5" property="inputValue5" jdbcType="VARCHAR" />
+        <result column="OUTPUT_VALUE_1" property="outputValue1" jdbcType="VARCHAR" />
+        <result column="OUTPUT_VALUE_2" property="outputValue2" jdbcType="VARCHAR" />
+        <result column="OUTPUT_VALUE_3" property="outputValue3" jdbcType="VARCHAR" />
+        <result column="OUTPUT_VALUE_4" property="outputValue4" jdbcType="VARCHAR" />
+        <result column="OUTPUT_VALUE_5" property="outputValue5" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, CONFIG_TYPE CONFIG_TYPE, INPUT_VALUE_1 INPUT_VALUE_1, INPUT_VALUE_2 INPUT_VALUE_2,
+        INPUT_VALUE_3 INPUT_VALUE_3, INPUT_VALUE_4 INPUT_VALUE_4, INPUT_VALUE_5 INPUT_VALUE_5,
+        OUTPUT_VALUE_1 OUTPUT_VALUE_1, OUTPUT_VALUE_2 OUTPUT_VALUE_2, OUTPUT_VALUE_3 OUTPUT_VALUE_3,
+        OUTPUT_VALUE_4 OUTPUT_VALUE_4, OUTPUT_VALUE_5 OUTPUT_VALUE_5, REMARK REMARK, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinProductTypeConfigMapper.Base_Column_List" />
+        from FIN_PRODUCT_TYPE_CONFIG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinProductTypeConfigMapper.Base_Column_List" />
+        from FIN_PRODUCT_TYPE_CONFIG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinProductTypeConfigMapper.Base_Column_List" />
+        from FIN_PRODUCT_TYPE_CONFIG
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from FIN_PRODUCT_TYPE_CONFIG
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinProductTypeConfig" >
+        insert into FIN_PRODUCT_TYPE_CONFIG (SEQNO, CONFIG_TYPE, INPUT_VALUE_1,
+            INPUT_VALUE_2, INPUT_VALUE_3, INPUT_VALUE_4,
+            INPUT_VALUE_5, OUTPUT_VALUE_1, OUTPUT_VALUE_2,
+            OUTPUT_VALUE_3, OUTPUT_VALUE_4, OUTPUT_VALUE_5,
+            REMARK, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{configType,jdbcType=VARCHAR}, #{inputValue1,jdbcType=VARCHAR},
+            #{inputValue2,jdbcType=VARCHAR}, #{inputValue3,jdbcType=VARCHAR}, #{inputValue4,jdbcType=VARCHAR},
+            #{inputValue5,jdbcType=VARCHAR}, #{outputValue1,jdbcType=VARCHAR}, #{outputValue2,jdbcType=VARCHAR},
+            #{outputValue3,jdbcType=VARCHAR}, #{outputValue4,jdbcType=VARCHAR}, #{outputValue5,jdbcType=VARCHAR},
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductTypeConfig" >
+        insert into FIN_PRODUCT_TYPE_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="configType != null" >
+                CONFIG_TYPE,
+            </if>
+            <if test="inputValue1 != null" >
+                INPUT_VALUE_1,
+            </if>
+            <if test="inputValue2 != null" >
+                INPUT_VALUE_2,
+            </if>
+            <if test="inputValue3 != null" >
+                INPUT_VALUE_3,
+            </if>
+            <if test="inputValue4 != null" >
+                INPUT_VALUE_4,
+            </if>
+            <if test="inputValue5 != null" >
+                INPUT_VALUE_5,
+            </if>
+            <if test="outputValue1 != null" >
+                OUTPUT_VALUE_1,
+            </if>
+            <if test="outputValue2 != null" >
+                OUTPUT_VALUE_2,
+            </if>
+            <if test="outputValue3 != null" >
+                OUTPUT_VALUE_3,
+            </if>
+            <if test="outputValue4 != null" >
+                OUTPUT_VALUE_4,
+            </if>
+            <if test="outputValue5 != null" >
+                OUTPUT_VALUE_5,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="configType != null" >
+                #{configType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue1 != null" >
+                #{inputValue1,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue2 != null" >
+                #{inputValue2,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue3 != null" >
+                #{inputValue3,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue4 != null" >
+                #{inputValue4,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue5 != null" >
+                #{inputValue5,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue1 != null" >
+                #{outputValue1,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue2 != null" >
+                #{outputValue2,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue3 != null" >
+                #{outputValue3,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue4 != null" >
+                #{outputValue4,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue5 != null" >
+                #{outputValue5,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProductTypeConfig" >
+        insert into FIN_PRODUCT_TYPE_CONFIG(SEQNO, CONFIG_TYPE, INPUT_VALUE_1, INPUT_VALUE_2,
+        INPUT_VALUE_3, INPUT_VALUE_4, INPUT_VALUE_5, OUTPUT_VALUE_1, OUTPUT_VALUE_2, OUTPUT_VALUE_3,
+        OUTPUT_VALUE_4, OUTPUT_VALUE_5, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        select SEQNO, CONFIG_TYPE, INPUT_VALUE_1, INPUT_VALUE_2,
+            INPUT_VALUE_3, INPUT_VALUE_4, INPUT_VALUE_5, OUTPUT_VALUE_1, OUTPUT_VALUE_2, OUTPUT_VALUE_3,
+            OUTPUT_VALUE_4, OUTPUT_VALUE_5, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from FIN_PRODUCT_TYPE_CONFIG
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinProductTypeConfig" >
+        update FIN_PRODUCT_TYPE_CONFIG
+        <set >
+            <if test="configType != null" >
+                CONFIG_TYPE = #{configType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue1 != null" >
+                INPUT_VALUE_1 = #{inputValue1,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue2 != null" >
+                INPUT_VALUE_2 = #{inputValue2,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue3 != null" >
+                INPUT_VALUE_3 = #{inputValue3,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue4 != null" >
+                INPUT_VALUE_4 = #{inputValue4,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue5 != null" >
+                INPUT_VALUE_5 = #{inputValue5,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue1 != null" >
+                OUTPUT_VALUE_1 = #{outputValue1,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue2 != null" >
+                OUTPUT_VALUE_2 = #{outputValue2,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue3 != null" >
+                OUTPUT_VALUE_3 = #{outputValue3,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue4 != null" >
+                OUTPUT_VALUE_4 = #{outputValue4,jdbcType=VARCHAR},
+            </if>
+            <if test="outputValue5 != null" >
+                OUTPUT_VALUE_5 = #{outputValue5,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProductTypeConfig" >
+        update FIN_PRODUCT_TYPE_CONFIG
+        set CONFIG_TYPE = #{configType,jdbcType=VARCHAR},
+            INPUT_VALUE_1 = #{inputValue1,jdbcType=VARCHAR},
+            INPUT_VALUE_2 = #{inputValue2,jdbcType=VARCHAR},
+            INPUT_VALUE_3 = #{inputValue3,jdbcType=VARCHAR},
+            INPUT_VALUE_4 = #{inputValue4,jdbcType=VARCHAR},
+            INPUT_VALUE_5 = #{inputValue5,jdbcType=VARCHAR},
+            OUTPUT_VALUE_1 = #{outputValue1,jdbcType=VARCHAR},
+            OUTPUT_VALUE_2 = #{outputValue2,jdbcType=VARCHAR},
+            OUTPUT_VALUE_3 = #{outputValue3,jdbcType=VARCHAR},
+            OUTPUT_VALUE_4 = #{outputValue4,jdbcType=VARCHAR},
+            OUTPUT_VALUE_5 = #{outputValue5,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>
