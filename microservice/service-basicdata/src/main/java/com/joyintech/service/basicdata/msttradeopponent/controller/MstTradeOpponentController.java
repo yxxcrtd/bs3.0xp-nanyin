@@ -316,4 +316,16 @@ public class MstTradeOpponentController {
     public int isExistHistoryDeal(@RequestBody Map<String,Object> map){
         return basicMstTradeOpponentService.isExistHistoryDeal(map);
     }
+
+
+    /**
+     *
+     * @param map
+     * @return
+     */
+    @PostMapping("selectCounterIdByCustomer")
+    public List<MstTradeOpponentDto> selectCounterIdByCustomer(@RequestBody Map<String,Object> map){
+        return mstTradeOpponent001Service.selectCounterIdByCustomer(map);
+    }
+
 }

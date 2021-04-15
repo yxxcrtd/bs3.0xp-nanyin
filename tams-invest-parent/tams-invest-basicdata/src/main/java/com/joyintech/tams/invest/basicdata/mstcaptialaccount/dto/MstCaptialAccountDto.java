@@ -10,15 +10,19 @@
  
 package com.joyintech.tams.invest.basicdata.mstcaptialaccount.dto;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.joyintech.tams.common.base.entity.StlCapacctInfo;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.grid.GridRowDto;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -82,12 +86,94 @@ public class MstCaptialAccountDto extends StlCapacctInfo implements ITableRow, P
      */
     private String path;
     
+    
+    /**
+     * 生效日
+     */
+    private Date effectDate;
+    
+    /**
+     * 计息基础
+     */
+    private String basis;
+    
+    /**
+     * 利率类型
+     */
+    private String rateType;
+    
+    /**
+     * 利率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal rate;
+    /**
+     * 活期利率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal currentRate;
+    
+    /**
+     * 基准ID
+     */
+    private String indexId;
+    
+    /**
+     * 基准来源
+     */
+    private String indexSource;
+    /**
+     * 系数
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal coefficient;
+    /**
+     * 利差
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal spreadRate;
+    
+    /**
+     * 账户类型
+     */
+    private String accountType;
+    
+    /**
+     * 是否计提活期利息
+     */
+    private String isCalint;
+
     /**
      * 
      */
     private List<UploadFile> fileArray;
     
+    /*双录要素 start */
+    /**
+     * 是否第一个审批节点
+     */
+    private String isFirstApprovalNode;
     
+    /**
+     * 工作流操作类型
+     */
+    private String wflOperType;
+    /**
+     * 币种-对比
+     */
+    private String ccyContrast;
+    
+    /**
+     * 开户行-对比
+     */
+    private String bankDepContrast;
+    
+    /**
+     * 大额支付系统号/网点号 -对比
+     */
+    private String largePaynoContrast;
+    
+    /*双录要素 end */
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -300,4 +386,319 @@ public class MstCaptialAccountDto extends StlCapacctInfo implements ITableRow, P
         
     }
 
+
+    
+    /**
+     * 获取 isFirstApprovalNode
+     * @return isFirstApprovalNode.
+     */
+    public String getIsFirstApprovalNode() {
+        return isFirstApprovalNode;
+    }
+
+
+    
+    /**
+     * 设置 isFirstApprovalNode
+     * @param isFirstApprovalNode isFirstApprovalNode
+     */
+    public void setIsFirstApprovalNode(String isFirstApprovalNode) {
+        this.isFirstApprovalNode = isFirstApprovalNode;
+    }
+
+
+    
+    /**
+     * 获取 ccyContrast
+     * @return ccyContrast.
+     */
+    public String getCcyContrast() {
+        return ccyContrast;
+    }
+
+
+    
+    /**
+     * 设置 ccyContrast
+     * @param ccyContrast ccyContrast
+     */
+    public void setCcyContrast(String ccyContrast) {
+        this.ccyContrast = ccyContrast;
+    }
+
+
+    
+    /**
+     * 获取 bankDepContrast
+     * @return bankDepContrast.
+     */
+    public String getBankDepContrast() {
+        return bankDepContrast;
+    }
+
+
+    
+    /**
+     * 设置 bankDepContrast
+     * @param bankDepContrast bankDepContrast
+     */
+    public void setBankDepContrast(String bankDepContrast) {
+        this.bankDepContrast = bankDepContrast;
+    }
+
+
+    
+    /**
+     * 获取 largePaynoContrast
+     * @return largePaynoContrast.
+     */
+    public String getLargePaynoContrast() {
+        return largePaynoContrast;
+    }
+
+
+    
+    /**
+     * 设置 largePaynoContrast
+     * @param largePaynoContrast largePaynoContrast
+     */
+    public void setLargePaynoContrast(String largePaynoContrast) {
+        this.largePaynoContrast = largePaynoContrast;
+    }
+
+
+    /**
+     * 获取 wflOperType
+     * @return wflOperType.
+     */
+    public String getWflOperType() {
+        return wflOperType;
+    }
+
+
+    /**
+     * 设置 wflOperType
+     * @param wflOperType wflOperType
+     */
+    public void setWflOperType(String wflOperType) {
+        this.wflOperType = wflOperType;
+    }
+
+    /**
+     * 获取 effectDate
+     * @return effectDate.
+     */
+    public Date getEffectDate() {
+        return effectDate;
+    }
+
+
+    
+    /**
+     * 设置 effectDate
+     * @param effectDate effectDate
+     */
+    public void setEffectDate(Date effectDate) {
+        this.effectDate = effectDate;
+    }
+
+
+    
+    /**
+     * 获取 basis
+     * @return basis.
+     */
+    public String getBasis() {
+        return basis;
+    }
+
+
+    
+    /**
+     * 设置 basis
+     * @param basis basis
+     */
+    public void setBasis(String basis) {
+        this.basis = basis;
+    }
+
+
+    
+    /**
+     * 获取 rateType
+     * @return rateType.
+     */
+    public String getRateType() {
+        return rateType;
+    }
+
+
+    
+    /**
+     * 设置 rateType
+     * @param rateType rateType
+     */
+    public void setRateType(String rateType) {
+        this.rateType = rateType;
+    }
+
+
+    
+    /**
+     * 获取 rate
+     * @return rate.
+     */
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+
+    
+    /**
+     * 设置 rate
+     * @param rate rate
+     */
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+
+    
+    /**
+     * 获取 currentRate
+     * @return currentRate.
+     */
+    public BigDecimal getCurrentRate() {
+        return currentRate;
+    }
+
+
+    
+    /**
+     * 设置 currentRate
+     * @param currentRate currentRate
+     */
+    public void setCurrentRate(BigDecimal currentRate) {
+        this.currentRate = currentRate;
+    }
+
+
+    
+    /**
+     * 获取 coefficient
+     * @return coefficient.
+     */
+    public BigDecimal getCoefficient() {
+        return coefficient;
+    }
+
+
+    
+    /**
+     * 设置 coefficient
+     * @param coefficient coefficient
+     */
+    public void setCoefficient(BigDecimal coefficient) {
+        this.coefficient = coefficient;
+    }
+
+
+    
+    /**
+     * 获取 spreadRate
+     * @return spreadRate.
+     */
+    public BigDecimal getSpreadRate() {
+        return spreadRate;
+    }
+
+
+    
+    /**
+     * 设置 spreadRate
+     * @param spreadRate spreadRate
+     */
+    public void setSpreadRate(BigDecimal spreadRate) {
+        this.spreadRate = spreadRate;
+    }
+    
+    /**
+     * 取得 账户性质
+     * @return 账户性质
+     */
+    @NotEmpty(fieldName = "MstCaptialAccount002.accountNature",groups = {ValidateGroupEdit.class})
+    public String getAccountNature() {
+        return super.getAccountNature();
+    }
+
+
+    /**
+     * 获取 indexId
+     * @return indexId.
+     */
+    public String getIndexId() {
+        return indexId;
+    }
+
+
+    /**
+     * 设置 indexId
+     * @param indexId indexId
+     */
+    public void setIndexId(String indexId) {
+        this.indexId = indexId;
+    }
+
+
+    /**
+     * 获取 indexSource
+     * @return indexSource.
+     */
+    public String getIndexSource() {
+        return indexSource;
+    }
+
+
+    /**
+     * 设置 indexSource
+     * @param indexSource indexSource
+     */
+    public void setIndexSource(String indexSource) {
+        this.indexSource = indexSource;
+    }
+
+    /**
+     * 获取 accountType
+     * @return accountType.
+     */
+    public String getAccountType() {
+        return accountType;
+    }
+    
+    /**
+     * 设置 accountType
+     * @param accountType accountType
+     */
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+    
+    
+    /**
+     * 获取 isCalint
+     * @return isCalint.
+     */
+    public String getIsCalint() {
+        return isCalint;
+    }
+
+
+    
+    /**
+     * 设置 isCalint
+     * @param isCalint isCalint
+     */
+    public void setIsCalint(String isCalint) {
+        this.isCalint = isCalint;
+    }
 }

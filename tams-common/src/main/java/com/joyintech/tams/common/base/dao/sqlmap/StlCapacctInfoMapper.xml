@@ -19,13 +19,20 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NATURE" property="accountNature" jdbcType="VARCHAR" />
+        <result column="IS_CALINT" property="isCalint" jdbcType="VARCHAR" />
+        <result column="OWN_DEPT" property="ownDept" jdbcType="VARCHAR" />
+        <result column="ACC_PASS" property="accPass" jdbcType="VARCHAR" />
+        <result column="TRADE_PASS" property="tradePass" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ACCT_NO ACCT_NO, CCY CCY, BUSI_ACCT_NO BUSI_ACCT_NO, ACCT_NAME ACCT_NAME, BANK_DEP BANK_DEP, 
         IN_OUT_BANK IN_OUT_BANK, CORR_NO CORR_NO, LARGE_PAYNO LARGE_PAYNO, SWIFT_CODE SWIFT_CODE, 
         BLN_AREA BLN_AREA, IS_OVERDRAW IS_OVERDRAW, REMARK REMARK, CREATE_USER CREATE_USER, 
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
-	    ,SEQ_NO /* add by songyawei 2020-06-18 */
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        SEQ_NO SEQ_NO, ACCOUNT_NATURE ACCOUNT_NATURE, IS_CALINT IS_CALINT, OWN_DEPT OWN_DEPT, 
+        ACC_PASS ACC_PASS, TRADE_PASS TRADE_PASS
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -55,21 +62,17 @@
             CORR_NO, LARGE_PAYNO, SWIFT_CODE, 
             BLN_AREA, IS_OVERDRAW, REMARK, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME
-            /*多级法人改造  增加seqno字段  add by caojin 2020/6/15   start*/
-            ,SEQ_NO
-            /*多级法人改造  增加seqno字段  add by caojin 2020/6/15   end*/
-            )
+            UPDATE_USER, UPDATE_TIME, SEQ_NO, 
+            ACCOUNT_NATURE, IS_CALINT, OWN_DEPT, 
+            ACC_PASS, TRADE_PASS)
         values (#{acctNo,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{busiAcctNo,jdbcType=VARCHAR}, 
             #{acctName,jdbcType=VARCHAR}, #{bankDep,jdbcType=VARCHAR}, #{inOutBank,jdbcType=VARCHAR}, 
             #{corrNo,jdbcType=VARCHAR}, #{largePayno,jdbcType=VARCHAR}, #{swiftCode,jdbcType=VARCHAR}, 
             #{blnArea,jdbcType=VARCHAR}, #{isOverdraw,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
-            /*多级法人改造  增加seqno字段  add by caojin 2020/6/15   start*/
-            ,#{seqNo,jdbcType=VARCHAR}
-            /*多级法人改造  增加seqno字段  add by caojin 2020/6/15   end*/
-            )
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{seqNo,jdbcType=VARCHAR}, 
+            #{accountNature,jdbcType=VARCHAR}, #{isCalint,jdbcType=VARCHAR}, #{ownDept,jdbcType=VARCHAR}, 
+            #{accPass,jdbcType=VARCHAR}, #{tradePass,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlCapacctInfo" >
         insert into STL_CAPACCT_INFO
@@ -125,6 +128,24 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="accountNature != null" >
+                ACCOUNT_NATURE,
+            </if>
+            <if test="isCalint != null" >
+                IS_CALINT,
+            </if>
+            <if test="ownDept != null" >
+                OWN_DEPT,
+            </if>
+            <if test="accPass != null" >
+                ACC_PASS,
+            </if>
+            <if test="tradePass != null" >
+                TRADE_PASS,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="acctNo != null" >
@@ -178,15 +199,35 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="accountNature != null" >
+                #{accountNature,jdbcType=VARCHAR},
+            </if>
+            <if test="isCalint != null" >
+                #{isCalint,jdbcType=VARCHAR},
+            </if>
+            <if test="ownDept != null" >
+                #{ownDept,jdbcType=VARCHAR},
+            </if>
+            <if test="accPass != null" >
+                #{accPass,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePass != null" >
+                #{tradePass,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlCapacctInfo" >
         insert into STL_CAPACCT_INFO(ACCT_NO, CCY, BUSI_ACCT_NO, ACCT_NAME, BANK_DEP, IN_OUT_BANK, 
         CORR_NO, LARGE_PAYNO, SWIFT_CODE, BLN_AREA, IS_OVERDRAW, REMARK, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, SEQ_NO, ACCOUNT_NATURE, IS_CALINT, OWN_DEPT, 
+        ACC_PASS, TRADE_PASS)
         select ACCT_NO, CCY, BUSI_ACCT_NO, ACCT_NAME, BANK_DEP, IN_OUT_BANK, 
             CORR_NO, LARGE_PAYNO, SWIFT_CODE, BLN_AREA, IS_OVERDRAW, REMARK, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SEQ_NO, ACCOUNT_NATURE, IS_CALINT, OWN_DEPT, 
+            ACC_PASS, TRADE_PASS
              from STL_CAPACCT_INFO
              where 1 = 1 and ACCT_NO = #{acctNo,jdbcType=VARCHAR} and CCY = #{ccy,jdbcType=VARCHAR}
     </insert>
@@ -229,6 +270,24 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="seqNo != null" >
+                SEQ_NO = #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="accountNature != null" >
+                ACCOUNT_NATURE = #{accountNature,jdbcType=VARCHAR},
+            </if>
+            <if test="isCalint != null" >
+                IS_CALINT = #{isCalint,jdbcType=VARCHAR},
+            </if>
+            <if test="ownDept != null" >
+                OWN_DEPT = #{ownDept,jdbcType=VARCHAR},
+            </if>
+            <if test="accPass != null" >
+                ACC_PASS = #{accPass,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePass != null" >
+                TRADE_PASS = #{tradePass,jdbcType=VARCHAR},
+            </if>
         </set>
         where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
           and CCY = #{ccy,jdbcType=VARCHAR}
@@ -246,7 +305,13 @@
             IS_OVERDRAW = #{isOverdraw,jdbcType=VARCHAR},
             REMARK = #{remark,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SEQ_NO = #{seqNo,jdbcType=VARCHAR},
+            ACCOUNT_NATURE = #{accountNature,jdbcType=VARCHAR},
+            IS_CALINT = #{isCalint,jdbcType=VARCHAR},
+            OWN_DEPT = #{ownDept,jdbcType=VARCHAR},
+            ACC_PASS = #{accPass,jdbcType=VARCHAR},
+            TRADE_PASS = #{tradePass,jdbcType=VARCHAR}
         where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
           and CCY = #{ccy,jdbcType=VARCHAR}
     </update>

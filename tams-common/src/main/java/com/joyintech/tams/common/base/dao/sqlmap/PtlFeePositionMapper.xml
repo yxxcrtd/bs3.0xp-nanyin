@@ -10,22 +10,25 @@
         <result column="TDY_FEE_RATE" property="tdyFeeRate" jdbcType="DECIMAL" />
         <result column="TDY_INTERVAL_PAY_FEE" property="tdyIntervalPayFee" jdbcType="DECIMAL" />
         <result column="TDY_ACCUMUL_PAY_FEE" property="tdyAccumulPayFee" jdbcType="DECIMAL" />
-        <result column="O_CCY" property="oCcy" jdbcType="VARCHAR" />
-        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
-        <result column="TDY_INTERVAL_PAY_FEE_B" property="tdyIntervalPayFeeB" jdbcType="DECIMAL" />
-        <result column="TDY_ACCUMUL_PAY_FEE_B" property="tdyAccumulPayFeeB" jdbcType="DECIMAL" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="O_CCY" property="oCcy" jdbcType="VARCHAR" />
+        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+        <result column="TDY_INTERVAL_PAY_FEE_B" property="tdyIntervalPayFeeB" jdbcType="DECIMAL" />
+        <result column="TDY_ACCUMUL_PAY_FEE_B" property="tdyAccumulPayFeeB" jdbcType="DECIMAL" />
+        <result column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="SEAT_ID" property="seatId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         PORTFOLIO_ID PORTFOLIO_ID, CDATE CDATE, PTL_FEE_TYPE PTL_FEE_TYPE, PTL_FEE_PLACE PTL_FEE_PLACE, 
         TDY_FEE_CAPITAL TDY_FEE_CAPITAL, TDY_FEE_RATE TDY_FEE_RATE, TDY_INTERVAL_PAY_FEE TDY_INTERVAL_PAY_FEE, 
-        TDY_ACCUMUL_PAY_FEE TDY_ACCUMUL_PAY_FEE, O_CCY O_CCY, B_CCY B_CCY, TDY_INTERVAL_PAY_FEE_B TDY_INTERVAL_PAY_FEE_B, 
-        TDY_ACCUMUL_PAY_FEE_B TDY_ACCUMUL_PAY_FEE_B, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        TDY_ACCUMUL_PAY_FEE TDY_ACCUMUL_PAY_FEE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, O_CCY O_CCY, 
+        B_CCY B_CCY, TDY_INTERVAL_PAY_FEE_B TDY_INTERVAL_PAY_FEE_B, TDY_ACCUMUL_PAY_FEE_B TDY_ACCUMUL_PAY_FEE_B, 
+        CUSTOMER_ID CUSTOMER_ID, SEAT_ID SEAT_ID
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -57,17 +60,17 @@
         insert into PTL_FEE_POSITION (PORTFOLIO_ID, CDATE, PTL_FEE_TYPE, 
             PTL_FEE_PLACE, TDY_FEE_CAPITAL, TDY_FEE_RATE, 
             TDY_INTERVAL_PAY_FEE, TDY_ACCUMUL_PAY_FEE, 
-            O_CCY, B_CCY, TDY_INTERVAL_PAY_FEE_B, 
-            TDY_ACCUMUL_PAY_FEE_B, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME
-            )
-        values (#{portfolioId,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{ptlFeeType,jdbcType=VARCHAR},
-            #{ptlFeePlace,jdbcType=VARCHAR}, #{tdyFeeCapital,jdbcType=DECIMAL}, #{tdyFeeRate,jdbcType=DECIMAL},
-            #{tdyIntervalPayFee,jdbcType=DECIMAL}, #{tdyAccumulPayFee,jdbcType=DECIMAL},
-            #{oCcy,jdbcType=VARCHAR}, #{bCcy,jdbcType=VARCHAR}, #{tdyIntervalPayFeeB,jdbcType=DECIMAL},
-            #{tdyAccumulPayFeeB,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
-            )
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, O_CCY, 
+            B_CCY, TDY_INTERVAL_PAY_FEE_B, TDY_ACCUMUL_PAY_FEE_B, 
+            CUSTOMER_ID, SEAT_ID)
+        values (#{portfolioId,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{ptlFeeType,jdbcType=VARCHAR}, 
+            #{ptlFeePlace,jdbcType=VARCHAR}, #{tdyFeeCapital,jdbcType=DECIMAL}, #{tdyFeeRate,jdbcType=DECIMAL}, 
+            #{tdyIntervalPayFee,jdbcType=DECIMAL}, #{tdyAccumulPayFee,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{oCcy,jdbcType=VARCHAR}, 
+            #{bCcy,jdbcType=VARCHAR}, #{tdyIntervalPayFeeB,jdbcType=DECIMAL}, #{tdyAccumulPayFeeB,jdbcType=DECIMAL}, 
+            #{customerId,jdbcType=VARCHAR}, #{seatId,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlFeePosition" >
         insert into PTL_FEE_POSITION
@@ -96,18 +99,6 @@
             <if test="tdyAccumulPayFee != null" >
                 TDY_ACCUMUL_PAY_FEE,
             </if>
-            <if test="oCcy != null" >
-                O_CCY,
-            </if>
-            <if test="bCcy != null" >
-                B_CCY,
-            </if>
-            <if test="tdyIntervalPayFeeB != null" >
-                TDY_INTERVAL_PAY_FEE_B,
-            </if>
-            <if test="tdyAccumulPayFeeB != null" >
-                TDY_ACCUMUL_PAY_FEE_B,
-            </if>
             <if test="createUser != null" >
                 CREATE_USER,
             </if>
@@ -122,6 +113,24 @@
             </if>
             <if test="updateTime != null" >
                 UPDATE_TIME,
+            </if>
+            <if test="oCcy != null" >
+                O_CCY,
+            </if>
+            <if test="bCcy != null" >
+                B_CCY,
+            </if>
+            <if test="tdyIntervalPayFeeB != null" >
+                TDY_INTERVAL_PAY_FEE_B,
+            </if>
+            <if test="tdyAccumulPayFeeB != null" >
+                TDY_ACCUMUL_PAY_FEE_B,
+            </if>
+            <if test="customerId != null" >
+                CUSTOMER_ID,
+            </if>
+            <if test="seatId != null" >
+                SEAT_ID,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -149,18 +158,6 @@
             <if test="tdyAccumulPayFee != null" >
                 #{tdyAccumulPayFee,jdbcType=DECIMAL},
             </if>
-            <if test="oCcy != null" >
-                #{oCcy,jdbcType=VARCHAR},
-            </if>
-            <if test="bCcy != null" >
-                #{bCcy,jdbcType=VARCHAR},
-            </if>
-            <if test="tdyIntervalPayFeeB != null" >
-                #{tdyIntervalPayFeeB,jdbcType=DECIMAL},
-            </if>
-            <if test="tdyAccumulPayFeeB != null" >
-                #{tdyAccumulPayFeeB,jdbcType=DECIMAL},
-            </if>
             <if test="createUser != null" >
                 #{createUser,jdbcType=VARCHAR},
             </if>
@@ -176,17 +173,35 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="oCcy != null" >
+                #{oCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="bCcy != null" >
+                #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyIntervalPayFeeB != null" >
+                #{tdyIntervalPayFeeB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyAccumulPayFeeB != null" >
+                #{tdyAccumulPayFeeB,jdbcType=DECIMAL},
+            </if>
+            <if test="customerId != null" >
+                #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="seatId != null" >
+                #{seatId,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PtlFeePosition" >
         insert into PTL_FEE_POSITION(PORTFOLIO_ID, CDATE, PTL_FEE_TYPE, PTL_FEE_PLACE, TDY_FEE_CAPITAL, 
-        TDY_FEE_RATE, TDY_INTERVAL_PAY_FEE, TDY_ACCUMUL_PAY_FEE, O_CCY, B_CCY, TDY_INTERVAL_PAY_FEE_B, 
-        TDY_ACCUMUL_PAY_FEE_B, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
-        )
+        TDY_FEE_RATE, TDY_INTERVAL_PAY_FEE, TDY_ACCUMUL_PAY_FEE, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, O_CCY, B_CCY, TDY_INTERVAL_PAY_FEE_B, TDY_ACCUMUL_PAY_FEE_B, 
+        CUSTOMER_ID, SEAT_ID)
         select PORTFOLIO_ID, CDATE, PTL_FEE_TYPE, PTL_FEE_PLACE, TDY_FEE_CAPITAL, 
-            TDY_FEE_RATE, TDY_INTERVAL_PAY_FEE, TDY_ACCUMUL_PAY_FEE, O_CCY, B_CCY, TDY_INTERVAL_PAY_FEE_B, 
-            TDY_ACCUMUL_PAY_FEE_B, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
-            
+            TDY_FEE_RATE, TDY_INTERVAL_PAY_FEE, TDY_ACCUMUL_PAY_FEE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, O_CCY, B_CCY, TDY_INTERVAL_PAY_FEE_B, TDY_ACCUMUL_PAY_FEE_B, 
+            CUSTOMER_ID, SEAT_ID
              from PTL_FEE_POSITION
              where 1 = 1 and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE} and PTL_FEE_TYPE = #{ptlFeeType,jdbcType=VARCHAR} and PTL_FEE_PLACE = #{ptlFeePlace,jdbcType=VARCHAR}
     </insert>
@@ -205,6 +220,12 @@
             <if test="tdyAccumulPayFee != null" >
                 TDY_ACCUMUL_PAY_FEE = #{tdyAccumulPayFee,jdbcType=DECIMAL},
             </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
             <if test="oCcy != null" >
                 O_CCY = #{oCcy,jdbcType=VARCHAR},
             </if>
@@ -217,11 +238,11 @@
             <if test="tdyAccumulPayFeeB != null" >
                 TDY_ACCUMUL_PAY_FEE_B = #{tdyAccumulPayFeeB,jdbcType=DECIMAL},
             </if>
-            <if test="updateUser != null" >
-                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            <if test="customerId != null" >
+                CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
-                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            <if test="seatId != null" >
+                SEAT_ID = #{seatId,jdbcType=VARCHAR},
             </if>
         </set>
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
@@ -235,12 +256,14 @@
             TDY_FEE_RATE = #{tdyFeeRate,jdbcType=DECIMAL},
             TDY_INTERVAL_PAY_FEE = #{tdyIntervalPayFee,jdbcType=DECIMAL},
             TDY_ACCUMUL_PAY_FEE = #{tdyAccumulPayFee,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             O_CCY = #{oCcy,jdbcType=VARCHAR},
             B_CCY = #{bCcy,jdbcType=VARCHAR},
             TDY_INTERVAL_PAY_FEE_B = #{tdyIntervalPayFeeB,jdbcType=DECIMAL},
             TDY_ACCUMUL_PAY_FEE_B = #{tdyAccumulPayFeeB,jdbcType=DECIMAL},
-            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+            SEAT_ID = #{seatId,jdbcType=VARCHAR}
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
           and CDATE = #{cdate,jdbcType=DATE}
           and PTL_FEE_TYPE = #{ptlFeeType,jdbcType=VARCHAR}

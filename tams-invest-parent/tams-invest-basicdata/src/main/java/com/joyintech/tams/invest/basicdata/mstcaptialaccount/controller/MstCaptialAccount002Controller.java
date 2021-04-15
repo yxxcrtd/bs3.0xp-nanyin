@@ -10,10 +10,13 @@
  
 package com.joyintech.tams.invest.basicdata.mstcaptialaccount.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,20 +31,25 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.listener.FileAttachmentProcess;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.invest.basicdata.mstcaptialaccount.dto.MstCaptialAccountDto;
-import com.joyintech.tams.invest.basicdata.mstcaptialaccount.service.MstCaptialAccountService;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.basicdata.mstcaptialaccount.dto.MstCaptialAccountDto;
+import com.joyintech.tams.invest.basicdata.mstcaptialaccount.service.MstCaptialAccountService;
+import com.joyintech.workflow.engine.constant.WflConstants;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.service.ProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 
@@ -69,30 +77,74 @@ public class MstCaptialAccount002Controller extends BaseController{
     @Autowired(required = false)
     private FileAttachmentProcess fileAttachmentProcess;
     
+    @Autowired(required=false)
+    private ProcessService processService;
+    
     /**
      * 新建页面初始化
      */
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model,DictCode.币种,DictCode.资产来源);
+        this.setSelectOptionToModel(model,DictCode.币种,DictCode.资产来源,DictCode.账户性质,
+            DictCode.资金账户类型,DictCode.是否,DictCode.计息基础,DictCode.利率类型);
+        
+        
+        List<SelectOptionDto> curRateSelect = new ArrayList<SelectOptionDto>();
+        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.利率行情, null);
+        for(SelectOptionDto dto : selectDto.getOptions()){
+            SelectOptionDto dto1 = new SelectOptionDto();
+            dto1.setId(dto.getId());
+            dto1.setText(dto.getText());
+            dto1.setObject(DictCodeListExt1.基准类型_2_利率.getValue());
+            curRateSelect.add(dto1);
+        }
+        
+        model.addAttribute("RATE_SOURCE", JsonUtils.object2Json(curRateSelect.toArray()));
+        
         //网点号/大额支付系统号
         String acctNo = getParam("acctNo");
         //币种
         String ccy = getParam("ccy");
         String workflowId = getParam("workflowId");
 //        model.addAttribute("FileArray", "");
+        //是否双录 add by chendijun 2020-02-17
+        String dooubleRecord =  CacheUtil.getSysParam("DOUBLE_RECORD");
+        //是否第一个审批节点
+        String isFirstApprovalNode = DictCodeList.是否_否.getValue();
         if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(acctNo) && StringUtil.isNotEmpty(ccy)) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("acctNo", acctNo);
             map.put("ccy", ccy);
             MstCaptialAccountDto mstCaptialAccountDto = mstCaptialAccountService.selectDetail(map);
 //            List<SysUploadFileInfo> fileArray = mstCaptialAccountService.selectFileByBusinessId(acctNo);
+            mstCaptialAccountDto.setIsFirstApprovalNode(isFirstApprovalNode);
             model.addAttribute("entity", mstCaptialAccountDto);
 //            model.addAttribute("FileArray", fileArray);
         }
         else if(!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)){
             MstCaptialAccountDto mstCaptialAccountDto = mstCaptialAccountService.getBussinessEntityByWorkflowId(workflowId);
 //            List<UploadFile> fileArray = mstCaptialAccountDto.getFileArray();
+            
+            
+            //获取当前节点 信息
+            SysWflBusinessList sysWflBusinessList = mstCaptialAccountService.getSysWflBusinessList(workflowId);
+            // 工作流ID
+            String taskId = this.getParam(WflConstants.PROCESS_TASK_ID);
+            try {
+//                Task curActiveTask = processService.getActiveTaskId(processInstanceId, SecurityUtil.getLoginUser().getUserName());
+                String proDefKey = processService.getProDefKeyByProcessInstanceId(sysWflBusinessList.getWorkflowId());
+                ProcessMark processMark = mstCaptialAccountService.getBusinessInfo(workflowId);
+                String secondTaskDefinitionId =  processService.getSecondTaskDefinitionId(proDefKey,mstCaptialAccountService.getRuntimeVariables(processMark, taskId));
+                isFirstApprovalNode = StringUtil.equals(sysWflBusinessList.getCurNodeId(), secondTaskDefinitionId)
+                    ?DictCodeList.是否_是.getValue():DictCodeList.是否_否.getValue();
+                
+            }
+            catch (WorkFlowException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            mstCaptialAccountDto.setIsFirstApprovalNode(isFirstApprovalNode);
+            
             model.addAttribute("entity", mstCaptialAccountDto);
 //            model.addAttribute("FileArray", fileArray);
             //model.addAttribute("pageModel",mstCaptialAccountDto.getPageModel());
@@ -100,6 +152,7 @@ public class MstCaptialAccount002Controller extends BaseController{
         if (!StringUtil.isNotEmpty(acctNo) && !StringUtil.isNotEmpty(ccy) && !StringUtil.isNotEmpty(workflowId)) {
             MstCaptialAccountDto entity = new MstCaptialAccountDto();
             //新建设置币种为人名币为初始值
+            entity.setIsFirstApprovalNode(isFirstApprovalNode);
             entity.setCcy("CNY");
             model.addAttribute("entity",entity);
         } 
@@ -107,7 +160,30 @@ public class MstCaptialAccount002Controller extends BaseController{
            /* model.addAttribute("notEditOrgCode", true);*/
         }
         model.addAttribute("CNY", DictCodeList.币种_人民币_CNY.getValue());
+        model.addAttribute("ACCOUNT_NATURE_02", DictCodeListExt3.账户性质_非银行账户.getValue());
+        model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
+        model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        
+        model.addAttribute("INT_TYPE_01", DictCodeList.利率类型_固定利率.getValue());
+        model.addAttribute("INT_TYPE_02", DictCodeList.利率类型_浮动利率.getValue());
+        
+        model.addAttribute("RATE_DEF_DEFAULT","0.3");
+        model.addAttribute("BASIS_A_360",DictCodeList.计息基础_A_360.getValue());
+        
+        model.addAttribute("ACCT_TYPE_A07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+        model.addAttribute("ACCT_TYPE_A01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
+//        model.addAttribute("ACCT_TYPE_B24", DictCodeListExt1.资金账户类型_期货资金账户.getValue());
+        model.addAttribute("dooubleRecord",dooubleRecord);
         return super.init(model);
+    }
+    
+    
+    
+    @ResponseBody
+    @RequestMapping("getOwnDept")
+    public Page<SelectOptionDto> getOwnDept(){
+        Map<String,Object> map = RequestUtil.getPageParam();
+        return mstCaptialAccountService.getOwnDept(map);
     }
     
     /**

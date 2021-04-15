@@ -20,6 +20,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.invest.basicdata.mstcustomernature.dto.MstCustomerNatureDto;
+import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -148,7 +149,7 @@ public class MstCustomerNatureService extends CommonExportService<MstCustomerNat
 
     /**
      * check是否持有金融牌照
-     * @param param customerId
+     * @param customerId
      * @return 
      * @see
      * @since 1.0
@@ -169,5 +170,16 @@ public class MstCustomerNatureService extends CommonExportService<MstCustomerNat
 		return restTemplate.postForObject(
 	            ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCustomerNature/checkwflstatus",
 	            param, Integer.class);
+	}
+	
+	
+	/**
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public List<MstTradeOpponentDto> selectCounterIdByCustomer(Map<String, Object> param) {
+		return restTemplate.postForList(
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstTradeOpponent/selectCounterIdByCustomer", param, MstTradeOpponentDto.class);
 	}
 }

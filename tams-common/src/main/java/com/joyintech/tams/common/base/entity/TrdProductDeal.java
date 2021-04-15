@@ -331,6 +331,11 @@ public class TrdProductDeal extends BaseEntity {
      */
     private String tgBusiType;
 
+    /**
+     * 席位号
+     */
+    private String seatId;
+
     //add by zhangnian 20200304 start
     private String inputValue1;
     private String inputValue2;
@@ -1420,4 +1425,13 @@ public class TrdProductDeal extends BaseEntity {
         this.liBranch = liBranch;
     }
     // 合并by华兴 end
+
+
+    public String getSeatId() {
+        return seatId;
+    }
+
+    public void setSeatId(String seatId) {
+        this.seatId = seatId;
+    }
 }

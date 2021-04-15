@@ -302,4 +302,19 @@ FROM
 		</if>
 	</where>
 </select>
+
+	<select id="selectCounterIdByCustomer" resultType = "com.joyintech.service.basicdata.msttradeopponent.dto.MstTradeOpponentDto">
+		SELECT
+		COUNTER_ID,
+		COUNTER_TYPE,
+		COUNTER_NAME
+		FROM
+		MST_COUNTER_PARTY
+		<where>
+			COUNTER_TYPE = '01'
+			<if test="customerId != null and customerId != ''">
+				AND LINK_ID = #{customerId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 </mapper>

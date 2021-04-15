@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.basicdata.mstcaptialaccount.dto.MstCaptialAccountDto;
+import com.joyintech.service.basicdata.mstcaptialaccount.dto.MstCaptialAccountDto2;
 import com.joyintech.service.basicdata.mstcaptialaccount.service.MstCaptialAccountService;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 
 /**
@@ -55,7 +58,7 @@ public class MstCaptialAccountController {
     /**
      * 联想文本框service层实现
      *
-     * @param param 检索参数
+     * @param acctName 检索参数
      * @return SuggestDto
      */
     @GetMapping("/getAcctName")
@@ -116,7 +119,7 @@ public class MstCaptialAccountController {
      * 
      * 工作流完成操作
      * <功能详细描述>
-     * @param map 业务实体
+     * @param dto 业务实体
      * @see
      * @since 1.0
      */
@@ -151,11 +154,38 @@ public class MstCaptialAccountController {
     @PostMapping("/updateTitle")
     public int updateTitle(@RequestBody Map<String, Object> map){
         return mstCaptialAccountService.updateTitle(map);
+
     }
 
     @PostMapping("/getUniqueAcctNoPayNo")
     public int getUniqueAcctNoPayNo(@RequestBody Map<String, Object> map){
         return mstCaptialAccountService.getUniqueAcctNoPayNo(map);
     }
-
+    /**
+     * 
+     * 查询流程当前节点信息
+     * <功能详细描述>
+     * @param workflowId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getSysWflBusinessList")
+    public SysWflBusinessList getSysWflBusinessList(@RequestBody String workflowId){
+        return mstCaptialAccountService.getSysWflBusinessList(workflowId); 
+    }
+	
+	    
+    @PostMapping("/selectForInterf")
+    public List<MstCaptialAccountDto2> selectForInterf(@RequestBody Map<String, Object> map) {
+        return mstCaptialAccountService.selectForInterf(map);
+    }
+    
+    /**
+     * 
+     */
+    @PostMapping("/getOwnDept/{page}/{length}")
+    public Page<SelectOptionDto> getOwnDept(@RequestBody Map<String,Object> map, @PathVariable int page, @PathVariable int length) {
+        return mstCaptialAccountService.getOwnDept(map, page, length);
+    }
 }

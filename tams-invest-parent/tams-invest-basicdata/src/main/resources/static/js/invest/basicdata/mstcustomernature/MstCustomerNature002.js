@@ -53,15 +53,10 @@ $(function() {
          }
          ]
     });
-    var customerCharaterTable=$("#customerCharaterTable").joyintable({
-    /*
-     * 给表格赋虚拟数据
-     */
-    data:[
-          {
-        	  "customerCharaterStr":typeName_01,
-        	  "customerCharater":typeValue_01
-           },
+    var customerCharaterData = [{
+     	  "customerCharaterStr":typeName_01,
+     	  "customerCharater":typeValue_01
+        },
            {
         	   "customerCharaterStr":typeName_02,
         	   "customerCharater":typeValue_02
@@ -93,13 +88,27 @@ $(function() {
            {
                "customerCharaterStr":typeName_09,
                "customerCharater":typeValue_09
-           }
-          ],
+        },
+        {
+            "customerCharaterStr":typeName_10,
+            "customerCharater":typeValue_10
+        },
+        {
+            "customerCharaterStr":typeName_12,
+            "customerCharater":typeValue_12
+        }
+       ];
+    var customerCharaterTable=$("#customerCharaterTable").joyintable({
+    /*
+	 * 给表格赋虚拟数据
+	 */
+          data:customerCharaterData,
           /**
-           * 给表格赋予双击查看功能
-           */
+			 * 给表格赋予双击查看功能
+			 */
           searchOnInit:true,
-    page:false,
+          page:false,
+          loadonce:true,
     
         /*
          * 定义表头
@@ -172,6 +181,7 @@ $(function() {
         if(datas != null && datas.length > 0 ){    //判断是否选择左侧表中的元素
             if(customerCharaters != null && customerCharaters.length > 0){//判断是否选择右侧表中的元素
                 matchTable.clear();
+		var isbonder = '0';//是否是券商，0为否 1为是
                 var z=0;
                 var tempList = [];
                 for(var i=0; i< customerCharaters.length; i++){  //对右侧表中选择的元素进行循环
@@ -180,11 +190,21 @@ $(function() {
                         for(var key in datas[j]){   //将左侧表中元素复制到中间的json对象中
                             temp[key]=datas[j][key];
                         }
+                    	if(customerCharaters[i]["customerCharater"]  ==  typeValue_10){//是否选择了券商
+                    		isbonder = '1';
+                    	}
                         temp["customerCharater"]=customerCharaters[i]["customerCharater"]; //将右侧表中元素复制到中间的json对象中
                         temp["customerCharaterStr"]=customerCharaters[i]["customerCharaterStr"]; //将右侧表中元素复制到中间的json对象中
 //                        if(map.has('customerId:'+temp.customerId+',customerCharater:'+temp.customerCharater)){
 //                            continue;
 //                        }
+//                       //如果是券商，则判断是否列表中已经存在该客户期货公司的匹配数据
+//                         if(isbonder == '1'){
+//                         	if(map.has('customerId:'+temp.customerId+',customerCharater:'+typeValue_11)){
+//                         		Joyin.error(JoyinUtil.getMessage('客户:'+temp.customerName+' 已经选择了期货公司性质，不能同时为券商性质'));
+//                         		continue;
+//                         	}
+//                         }
                         tempList.push(temp);
                     }
                 }
@@ -241,7 +261,22 @@ $(function() {
     // 绑定按钮事件
 	matchTable.load();
     $('#MstCustomerNature002_btn_search').click(function() {
-        table.load();
+    	var customerType = $('#customerType').val();
+    	if(customerType){
+            table.load();
+            var data = customerCharaterData.map(a => Object.assign({}, a));
+            if(customerType == CUSTOMER_TYPE_02){
+            	var idx = data.indexOf(data.find(function(element){ return element.customerCharater === typeValue_12;}));
+            	if(idx != -1){
+            	 data.splice(idx, 1);
+               }
+            }
+            customerCharaterTable.options.data = data;
+            customerCharaterTable.reload();
+    	}else{
+    		Joyin.error(JoyinUtil.getMessage("COMMON_E_0057",JoyinUtil.getLabel("MstCustomerNature002.customerType")));
+            return;
+    	}
     });
    $('#MstCustomerNature002_btn_match').click(function(){
 	   match();

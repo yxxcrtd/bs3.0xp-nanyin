@@ -2,8 +2,8 @@
  * 客户性质修改 
  */
 $(function() { 
-            $('#customerId').attr("disabled",true);
-            $('#customerName').attr("disabled",true);
+    $('#customerId').attr("disabled",true);
+    $('#customerName').attr("disabled",true);
     function saveOrSubmit(operateType) {
         var selectedItem = table.getAllRows();
         var selectedItemArray=[];
@@ -50,6 +50,13 @@ $(function() {
             if(v.customerCharater==CUSTOMER_NATURE_06){
                 object.isPledgor="Y";
             }
+            if(v.customerCharater==CUSTOMER_NATURE_10){
+                object.isBroker="Y";
+            }
+            if(v.customerCharater==CUSTOMER_NATURE_12){
+                object.isCounter="Y";
+            }
+            selectedItem[idx].customerId = $("#customerId").val();
         });
         object.pageModel = pageModel;
         object.operateType = operateType;
@@ -65,10 +72,24 @@ $(function() {
             });
         });
     };
-    
+    //初始化
+	var init = function() {
+		if (entityData.customerType == CUSTOMER_TYPE_02) {// 自然人
+			if(typeof CUSTOMER_NATURE == "string"){
+				CUSTOMER_NATURE = JSON.parse(CUSTOMER_NATURE); 
+			var idx = CUSTOMER_NATURE.indexOf(CUSTOMER_NATURE.find(function(element){ return element.id === CUSTOMER_NATURE_12;}));
+        	if(idx != -1){
+        		CUSTOMER_NATURE.splice(idx, 1);
+			}
+        	CUSTOMER_NATURE = JSON.stringify(CUSTOMER_NATURE);
+		}
+	  }
+	};
     /**
      * 页面加载初始化
      */
+	init();
+	
     var options = {
         page: true,
         checkbox: false,
@@ -109,6 +130,12 @@ $(function() {
     }
     if(entityData.isPledgor=='Y'){
         options.data.push({"customerCharater": CUSTOMER_NATURE_06});
+    }
+    if(entityData.isBroker=='Y'){
+        options.data.push({"customerCharater": CUSTOMER_NATURE_10});
+    }
+    if(entityData.isCounter=='Y'){
+        options.data.push({"customerCharater": CUSTOMER_NATURE_12});
     }
     /*
      * 初始化表格

@@ -10,12 +10,16 @@
  
 package com.joyintech.service.basicdata.mstcaptialaccount.dto;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.json.BigDecimalSerializer;
 /**
  * 
  * 〈一句话功能简述〉
@@ -69,6 +73,62 @@ public class MstCaptialAccountDto extends StlCapacctInfo implements ITableRow{
      * 文件服务器路径
      */
     private String path;
+    
+    /**
+     * 生效日
+     */
+    private Date effectDate;
+    
+    /**
+     * 计息基础
+     */
+    private String basis;
+    
+    /**
+     * 利率类型
+     */
+    private String rateType;
+    
+    /**
+     * 利率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal rate;
+    /**
+     * 活期利率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal currentRate;
+    
+    /**
+     * 基准ID
+     */
+    private String indexId;
+    
+    /**
+     * 基准来源
+     */
+    private String indexSource;
+    /**
+     * 系数
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal coefficient;
+    /**
+     * 利差
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal spreadRate;
+    
+    /**
+     * 账户类型
+     */
+    private String accountType;
+    
+    /**
+     * 是否计提活期利息
+     */
+    private String isCalint;
     
     /**
      * 
@@ -200,6 +260,253 @@ public class MstCaptialAccountDto extends StlCapacctInfo implements ITableRow{
     
     public void setPageModel(String pageModel) {
         this.pageModel = pageModel;
+    }
+
+
+
+
+    
+    /**
+     * 获取 effectDate
+     * @return effectDate.
+     */
+    public Date getEffectDate() {
+        return effectDate;
+    }
+
+
+
+
+    
+    /**
+     * 设置 effectDate
+     * @param effectDate effectDate
+     */
+    public void setEffectDate(Date effectDate) {
+        this.effectDate = effectDate;
+    }
+
+
+
+
+    
+    /**
+     * 获取 basis
+     * @return basis.
+     */
+    public String getBasis() {
+        return basis;
+    }
+
+
+
+
+    
+    /**
+     * 设置 basis
+     * @param basis basis
+     */
+    public void setBasis(String basis) {
+        this.basis = basis;
+    }
+
+
+
+
+    
+    /**
+     * 获取 rateType
+     * @return rateType.
+     */
+    public String getRateType() {
+        return rateType;
+    }
+
+
+
+
+    
+    /**
+     * 设置 rateType
+     * @param rateType rateType
+     */
+    public void setRateType(String rateType) {
+        this.rateType = rateType;
+    }
+
+
+
+
+    
+    /**
+     * 获取 rate
+     * @return rate.
+     */
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+
+
+
+    
+    /**
+     * 设置 rate
+     * @param rate rate
+     */
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+
+
+
+    
+    /**
+     * 获取 currentRate
+     * @return currentRate.
+     */
+    public BigDecimal getCurrentRate() {
+        return currentRate;
+    }
+
+
+
+
+    
+    /**
+     * 设置 currentRate
+     * @param currentRate currentRate
+     */
+    public void setCurrentRate(BigDecimal currentRate) {
+        this.currentRate = currentRate;
+    }
+
+
+
+
+    
+    /**
+     * 获取 coefficient
+     * @return coefficient.
+     */
+    public BigDecimal getCoefficient() {
+        return coefficient;
+    }
+
+
+
+
+    
+    /**
+     * 设置 coefficient
+     * @param coefficient coefficient
+     */
+    public void setCoefficient(BigDecimal coefficient) {
+        this.coefficient = coefficient;
+    }
+
+
+
+
+    
+    /**
+     * 获取 spreadRate
+     * @return spreadRate.
+     */
+    public BigDecimal getSpreadRate() {
+        return spreadRate;
+    }
+
+
+
+
+    
+    /**
+     * 设置 spreadRate
+     * @param spreadRate spreadRate
+     */
+    public void setSpreadRate(BigDecimal spreadRate) {
+        this.spreadRate = spreadRate;
+    }
+
+
+
+
+    /**
+     * 获取 indexId
+     * @return indexId.
+     */
+    public String getIndexId() {
+        return indexId;
+    }
+
+
+
+
+    /**
+     * 设置 indexId
+     * @param indexId indexId
+     */
+    public void setIndexId(String indexId) {
+        this.indexId = indexId;
+    }
+
+
+
+
+    /**
+     * 获取 indexSource
+     * @return indexSource.
+     */
+    public String getIndexSource() {
+        return indexSource;
+    }
+
+
+
+
+    /**
+     * 设置 indexSource
+     * @param indexSource indexSource
+     */
+    public void setIndexSource(String indexSource) {
+        this.indexSource = indexSource;
+    }
+
+    /**
+     * 获取 accountType
+     * @return accountType.
+     */
+    public String getAccountType() {
+        return accountType;
+    }
+
+
+
+
+    
+    /**
+     * 设置 accountType
+     * @param accountType accountType
+     */
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+    /**
+     * 获取 isCalint
+     * @return isCalint.
+     */
+    public String getIsCalint() {
+        return isCalint;
+    }
+
+    /**
+     * 设置 isCalint
+     * @param isCalint isCalint
+     */
+    public void setIsCalint(String isCalint) {
+        this.isCalint = isCalint;
     }
 
 }

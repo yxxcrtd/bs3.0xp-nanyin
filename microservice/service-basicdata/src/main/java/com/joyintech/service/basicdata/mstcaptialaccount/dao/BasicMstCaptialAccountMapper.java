@@ -10,13 +10,18 @@
  
 package com.joyintech.service.basicdata.mstcaptialaccount.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.basicdata.mstcaptialaccount.dto.MstCaptialAccountDto;
+import com.joyintech.service.basicdata.mstcaptialaccount.dto.MstCaptialAccountDto2;
+import com.joyintech.system.base.entity.SysWflBusinessList;
+import com.joyintech.tams.common.base.entity.StlCapacctReInfo;
 
 /**
  * 
@@ -40,6 +45,8 @@ public interface BasicMstCaptialAccountMapper {
      */
     List<MstCaptialAccountDto> select(Map<String, Object> pageParam);
     List<MstCaptialAccountDto> selectCheck(Map<String, Object> pageParam);
+	
+    List<MstCaptialAccountDto2> selectForInterf(Map<String, Object> pageParam); 
     
     /**
      * 联想下拉框
@@ -121,4 +128,70 @@ public interface BasicMstCaptialAccountMapper {
 
     int getUniqueAcctNoPayNo(Map<String, Object> map);
     
-}
+       /**
+     * 
+     * 查询当前节点信息
+     * <功能详细描述>
+     * @param workflowId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    SysWflBusinessList getSysWflBusinessList(String workflowId);
+    
+    /**
+     * 获取利率
+     * @param map 集合
+     * @return 利率
+     * @see
+     * @since 1.0
+     */
+    BigDecimal getIndexIntRate(Map<String,Object> map);
+    
+    
+    /**
+     * 获取活期利率信息
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<MstCaptialAccountDto> getAccCurrentInterestList(Map<String,Object> map);
+    
+    
+    /**
+     * 
+     * 获取所属营业部
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getOwnDept(Map<String,Object> map);
+    
+    /**
+     * 
+     * 资金账户关联删除
+     * <功能详细描述>
+     * @param map
+     * @return 
+     * @see
+     * @since 1.0
+     */
+    void deleteStlCapacctReInfo(MstCaptialAccountDto mstCaptialAccountDto);
+    
+    /**
+     * 查询账户管理表数据
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<StlCapacctReInfo> getStlCapacctReInfo(Map<String,Object> map);
+	
+	}

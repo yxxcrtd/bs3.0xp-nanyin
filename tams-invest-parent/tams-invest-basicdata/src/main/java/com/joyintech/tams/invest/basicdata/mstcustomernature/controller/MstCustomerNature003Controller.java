@@ -13,6 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import org.h2.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,10 +42,6 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.invest.basicdata.mstcustomernature.dto.MstCustomerNatureDto;
 import com.joyintech.tams.invest.basicdata.mstcustomernature.service.MstCustomerNatureService;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.LeaveMarkProcessService;
@@ -71,15 +72,21 @@ public class MstCustomerNature003Controller extends BaseController {
     @Autowired(required = false)
     private LeaveMarkProcessService leaveMarkProcessService;
     /**
+     * 注入业务主键生产类
+     */
+    @Autowired(required = false)
+    private BaseGetBusinessId baseGetBusinessId;
+    /**
      * 画面初始化
      */
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
+    	setSelectOptionToModel(model, DictCode.客户性质);
         String customerId = getParam("customerId");
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("customerId", customerId);
-        this.setSelectOptionToModel(model, DictCode.客户性质);
+        
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
 //      添加工作流代码的判断
         if (!WorkFlowUtil.isNotFromToDoList()&&StringUtil.isNotEmpty(workflowId)) {
@@ -104,6 +111,10 @@ public class MstCustomerNature003Controller extends BaseController {
         model.addAttribute("CUSTOMER_NATURE_07", DictCodeList.客户性质_承销商.getValue());
         model.addAttribute("CUSTOMER_NATURE_08", DictCodeList.客户性质_存放行.getValue());
         model.addAttribute("CUSTOMER_NATURE_09", DictCodeList.客户性质_投资顾问.getValue());
+        model.addAttribute("CUSTOMER_NATURE_10", DictCodeListExt3.客户性质_券商.getValue());
+        model.addAttribute("CUSTOMER_NATURE_12", DictCodeListExt3.客户性质_交易对手.getValue());
+        model.addAttribute("CUSTOMER_TYPE_01", DictCodeList.客户类型_法人.getValue());
+        model.addAttribute("CUSTOMER_TYPE_02", DictCodeList.客户类型_自然人.getValue());
         return super.init(model);
     }
 
@@ -139,10 +150,95 @@ public class MstCustomerNature003Controller extends BaseController {
         List<String> listCustomerCharater = new ArrayList<String>();
         List<String> listCustomerType = new ArrayList<String>();
         Map<String, Object> map = new HashMap<String, Object>();
+        //将数据字典里的值放入map中
+        map.put("flag_01", DictCodeList.客户性质_发行人.getCodeName());
+        map.put("flag_02", DictCodeList.客户性质_融资人.getCodeName());
+        map.put("flag_03", DictCodeList.客户性质_管理人.getCodeName());
+        map.put("flag_04", DictCodeList.客户性质_托管人.getCodeName());
+        map.put("flag_05", DictCodeList.客户性质_担保人.getCodeName());
+        map.put("flag_07", DictCodeList.客户性质_承销商.getCodeName());
+        map.put("flag_08", DictCodeList.客户性质_存放行.getCodeName());
+        map.put("flag_09", DictCodeList.客户性质_投资顾问.getCodeName());
+        map.put("flag_06", DictCodeList.客户性质_出质人.getCodeName());
+        map.put("flag_10", DictCodeListExt3.客户性质_券商.getCodeName());
+        map.put("flag_12", DictCodeListExt3.客户性质_交易对手.getCodeName());
         map.put("index", DictCodeList.客户类型_法人.getCodeName());
         map.put("count", DictCodeList.客户类型_自然人.getCodeName());
+        //查找原客户性质配置情况；
+        Map<String, Object> query = new HashMap<String, Object>();
+        query.put("customerId", dto.getCustomerId());
+    	MstCustomerNatureDto mstCustomerNatureOld = mstCustomerNatureService.selectByPrimaryKey(query);
+    	
+        
         for (MstCustomerNatureDto mstCustomerNatureDto : selectedItem) {
-            listCustomerCharater.add(mstCustomerNatureDto.getCustomerCharater());
+        	 //将客户性质的code改成name值放入map中
+            if (DictCodeList.客户性质_发行人.getValue().equals(
+                mstCustomerNatureDto.getCustomerCharater())) {
+                listCustomerCharater.add((String)map.get("flag_01"));
+            }
+            if (DictCodeList.客户性质_融资人.getValue().equals(
+                mstCustomerNatureDto.getCustomerCharater())) {
+                listCustomerCharater.add((String)map.get("flag_02"));
+            }
+            if (DictCodeList.客户性质_管理人.getValue().equals(
+                mstCustomerNatureDto.getCustomerCharater())) {
+                listCustomerCharater.add((String)map.get("flag_03"));
+            }
+            if (DictCodeList.客户性质_托管人.getValue().equals(
+                mstCustomerNatureDto.getCustomerCharater())) {
+                listCustomerCharater.add((String)map.get("flag_04"));
+            }
+            if (DictCodeList.客户性质_担保人.getValue().equals(
+                mstCustomerNatureDto.getCustomerCharater())) {
+                listCustomerCharater.add((String)map.get("flag_05"));
+            }
+            if (DictCodeList.客户性质_出质人.getValue().equals(
+                mstCustomerNatureDto.getCustomerCharater())) {
+                listCustomerCharater.add((String)map.get("flag_06"));
+            }
+            if (DictCodeList.客户性质_承销商.getValue().equals(
+                mstCustomerNatureDto.getCustomerCharater())) {
+                listCustomerCharater.add((String)map.get("flag_07"));
+            }
+            if (DictCodeList.客户性质_存放行.getValue().equals(
+                mstCustomerNatureDto.getCustomerCharater())) {
+                listCustomerCharater.add((String)map.get("flag_08"));
+            }
+            if (DictCodeList.客户性质_投资顾问.getValue().equals(
+                mstCustomerNatureDto.getCustomerCharater())) {
+                listCustomerCharater.add((String)map.get("flag_09"));
+            }
+            if (DictCodeListExt3.客户性质_券商.getValue().equals(
+                    mstCustomerNatureDto.getCustomerCharater())) {
+                    listCustomerCharater.add((String)map.get("flag_10"));
+            }
+            if (DictCodeListExt3.客户性质_交易对手.getValue().equals(
+                    mstCustomerNatureDto.getCustomerCharater())) {
+                    listCustomerCharater.add((String)map.get("flag_12"));
+            }
+            //listCustomerCharater.add(mstCustomerNatureDto.getCustomerCharater());
+            //原来不是交易对手，现在是交易对手，新建
+            if(StringUtils.isNullOrEmpty(mstCustomerNatureOld.getIsCounter()) && DictCodeListExt3.客户性质_交易对手.getValue().equals(mstCustomerNatureDto.getCustomerCharater())){
+            	  //add by lijie2 start
+                //生成交易对手代码以及交易对手类型，默认市场机构
+                  BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+                  bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_交易对手管理);
+                  String counterId = null;
+                  if (dto.getCounterId() == null || dto.getCounterId().isEmpty()) {
+                   counterId = baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(bussinessCodeParameter) : IDGenerator.generate();
+                  	dto.setCounterId(counterId);
+                  }
+                  dto.setCounterType(DictCodeListExt1.交易对手类型_市场机构.getValue());
+                  dto.setCounterId(counterId);
+                //add by lijie2 end 
+            }
+        }
+        ////原来是交易对手，现在不再是交易对手
+        if(StringUtil.isNotEmpty(mstCustomerNatureOld.getIsCounter()) && !listCustomerCharater.contains(DictCodeListExt3.客户性质_交易对手.getValue())){
+        	List<MstTradeOpponentDto> lst = mstCustomerNatureService.selectCounterIdByCustomer(query);
+        	if(lst != null && lst.size() > 0){
+        		dto.setCounterId(lst.get(0).getCounterId());
+        	}
         }
         // 将客户性质的code改为name
         if (DictCodeList.客户类型_法人.getValue().equals(dto.getCustomerType())) {
@@ -172,7 +268,6 @@ public class MstCustomerNature003Controller extends BaseController {
      * 对前台传入数据进行验证
      * @param dto 实体类
      * @param result 结果集
-     * @param model
      * @return AjaxResult
      */
     @ResponseBody

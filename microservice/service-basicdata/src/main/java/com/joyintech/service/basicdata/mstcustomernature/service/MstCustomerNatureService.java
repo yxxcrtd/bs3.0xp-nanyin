@@ -11,11 +11,23 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.basicdata.mstcustomernature.dao.MstCustomerNatureMapper;
 import com.joyintech.service.basicdata.mstcustomernature.dto.MstCustomerNatureDto;
+import com.joyintech.tams.common.base.dao.MstCustomerInfoAddMapper;
+import com.joyintech.tams.common.base.dao.MstCustomerInfoMapper;
+import com.joyintech.tams.common.base.entity.MstCustomerInfo;
+import com.joyintech.tams.common.base.entity.MstCustomerInfoAddWithBLOBs;
+import com.joyintech.service.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
+import com.joyintech.tams.common.base.dao.MstCounterPartyMapper;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
+import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import com.joyintech.workflow.engine.constant.OperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +55,26 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
     @Autowired
     private MstCustomerNatureMapper mstCustomerNatureMapper;
 
+    // 调用投管接口 add by renping 20200409 start
+	@Autowired
+	private MstCounterPartyMapper mstCounterPartyMapper;
+    /**
+     * 投管接口共通组件
+     */
+    @Autowired
+    private InvestInterfCommService investInterfCommService;
+    /**
+     * 客户信息表
+     */
+    @Autowired
+    private MstCustomerInfoMapper mstCustomerInfoMapper;
+    
+    /**
+     * 客户信息附加表
+     */
+    @Autowired
+    private MstCustomerInfoAddMapper mstCustomerInfoAddMapper;
+    // 调用投管接口 add by renping 20200409 end
     /**
      * 实现docomplement方法
      */
@@ -77,7 +109,13 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
             // }
             // mstCustomerNatureMapper.updateCustomerCharaterByPrimaryKey(mdto);
             // }
+        	//先更新交易对手，再更新客户性质
+        	updateCounter(entity);
             mstCustomerNatureMapper.updateByPrimaryKey(entity);
+            // 调用投管接口 add by renping 20200409 start
+            setInterf(entity.getCustomerId());
+            // 调用投管接口 add by renping 20200409 end
+
         }
         else {
             // List<MstCustomerNatureDto> list = entity.getSelectedItem();
@@ -114,15 +152,91 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
                     else if (StringUtil.equals(temp.getCustomerCharater(), DictCodeList.客户性质_出质人.getValue())) {
                         dto.setIsPledgor("Y");
                     }
+                    else if (StringUtil.equals(temp.getCustomerCharater(), DictCodeListExt3.客户性质_券商.getValue())) {
+                        dto.setIsBroker("Y");
+                    }
+                    else if (StringUtil.equals(temp.getCustomerCharater(), DictCodeListExt3.客户性质_交易对手.getValue())) {
+						dto.setIsCounter("Y");
+						/****** 生成交易对手 ****/
+						createCounter(temp);
+						/*******************/
+					}
                 }
                 dto.setCustomerId(key);
                 mstCustomerNatureMapper.updateByPrimaryKey(dto);
+                // 调用投管接口 add by renping 20200409 start
+                setInterf(key);
+                // 调用投管接口 add by renping 20200409 end
             }
             // }
         }
 
     }
+    /**
+	 * 创建机构交易对手记录
+	 */
+	public void createCounter(MstCustomerNatureDto dto) {
+		MstTradeOpponentDto mstTradeOpponentDto = new MstTradeOpponentDto();
+		mstTradeOpponentDto.setCounterId(dto.getCounterId());
+		mstTradeOpponentDto.setCounterName(dto.getCustomerName());
+		mstTradeOpponentDto.setLinkId(dto.getCustomerId());
+		mstTradeOpponentDto.setCounterType(dto.getCounterType());
+        mstTradeOpponentDto.setOperateType(dto.getOperateType());
+		mstCounterPartyMapper.insertSelective(mstTradeOpponentDto);
+        // 调用投管接口 add by chaowei
+        mstCounterInterf(mstTradeOpponentDto);
+        // 调用投管接口 add by chaowei
 
+	}
+    // 调用投管接口 add by renping 20200409 start
+	/**
+	 * 更新机构交易对手记录 
+	 */
+	public void updateCounter(MstCustomerNatureDto dto) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("customerId", dto.getCustomerId());
+		MstCustomerNatureDto entity = mstCustomerNatureMapper.selectByPrimaryKey(map);
+		 //原来是交易对手,现在不是交易对手,删除交易对手记录；
+		if ("Y".equals(entity.getIsCounter()) && dto.getIsCounter() == null) {
+			mstCounterPartyMapper.deleteByPrimaryKey(dto.getCounterId());
+            // 调用投管接口 add by daizhiwei
+            MstTradeOpponentDto mstTradeOpponentDto = new MstTradeOpponentDto();
+            mstTradeOpponentDto.setCounterId(dto.getCounterId());
+            mstTradeOpponentDto.setCounterName(dto.getCustomerName());
+            mstTradeOpponentDto.setLinkId(dto.getCustomerId());
+            mstTradeOpponentDto.setCounterType(dto.getCounterType());
+            mstTradeOpponentDto.setOperateType(OperationType.DELETE.toString());
+            mstCounterInterf(mstTradeOpponentDto);
+            // 调用投管接口 add by daizhiwei
+		}//原来不是交易对手,现在是交易对手,新增交易对手记录；
+		else if (entity.getIsCounter() == null && "Y".equals(dto.getIsCounter())) {
+            dto.setOperateType(OperationType.NEW.toString());
+			createCounter(dto);
+		}
+	}
+    /**
+     * 投管接口（客户性质通过市场机构接口发送）
+     * @param customerId
+     * @see
+     * @since 1.0
+     */
+    private void setInterf(String customerId) {
+        InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
+        investInterfCommDto.setPageId("MstCustomerNature002");
+        MstCustomerInfo mstCustomerInfo = this.mstCustomerInfoMapper.selectByPrimaryKey(customerId);
+        investInterfCommDto.setMstCustomerInfo(mstCustomerInfo);
+        investInterfCommService.doInvestInterf(investInterfCommDto);
+    }
+    /**
+     * 调用投管接口--交易对手
+     * @param entity 界面上信息
+     */
+    private void mstCounterInterf(MstTradeOpponentDto entity){
+        InvestInterfCommDto investInterfCommDto = new InvestInterfCommDto();
+        investInterfCommDto.setPageId("MstTradeOpponent002");
+        investInterfCommDto.setMstCounterParty(entity);
+        investInterfCommService.doInvestInterf(investInterfCommDto);
+    }
     /**
      * 客户名称的联想文本框的查询方法
      *
@@ -199,6 +313,8 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
         param.put("CUSTOMER_CHARATER_07", DictCodeList.客户性质_承销商.getValue());
         param.put("CUSTOMER_CHARATER_08", DictCodeList.客户性质_存放行.getValue());
         param.put("CUSTOMER_CHARATER_09", DictCodeList.客户性质_投资顾问.getValue());
+        param.put("CUSTOMER_CHARATER_10", DictCodeListExt3.客户性质_券商.getValue());
+        param.put("CUSTOMER_CHARATER_12", DictCodeListExt3.客户性质_交易对手.getValue());
     }
 
     /**
@@ -213,28 +329,27 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
     public Page<MstCustomerNatureDto> selectCustomerInfo(int page, int length, Map<String, Object> pageParam)
         throws Exception {
         buileQueryMap(pageParam);
+        pageParam.put("flag_01", DictCodeList.客户性质_发行人.getCodeName());
+        pageParam.put("flag_02", DictCodeList.客户性质_融资人.getCodeName());
+        pageParam.put("flag_03", DictCodeList.客户性质_管理人.getCodeName());
+        pageParam.put("flag_04", DictCodeList.客户性质_托管人.getCodeName());
+        pageParam.put("flag_05", DictCodeList.客户性质_担保人.getCodeName());
+        pageParam.put("flag_06", DictCodeList.客户性质_出质人.getCodeName());
+        pageParam.put("flag_07", DictCodeList.客户性质_承销商.getCodeName());
+        pageParam.put("flag_08", DictCodeList.客户性质_存放行.getCodeName());
+        pageParam.put("flag_09", DictCodeList.客户性质_投资顾问.getCodeName());
+        pageParam.put("flag_10", DictCodeListExt3.客户性质_券商.getCodeName());
+        pageParam.put("flag_12", DictCodeListExt3.客户性质_交易对手.getCodeName());
         Page<MstCustomerNatureDto> dto = super.queryForPage(page, length,
             () -> mstCustomerNatureMapper.selectCustomerInfo(pageParam));
         List<MstCustomerNatureDto> ldto = dto.getRoot();
-        // 将数据字典里的值存入map中
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("flag_01", DictCodeList.客户性质_发行人.getCodeName());
-        map.put("flag_02", DictCodeList.客户性质_融资人.getCodeName());
-        map.put("flag_03", DictCodeList.客户性质_管理人.getCodeName());
-        map.put("flag_04", DictCodeList.客户性质_托管人.getCodeName());
-        map.put("flag_05", DictCodeList.客户性质_担保人.getCodeName());
-        map.put("flag_06", DictCodeList.客户性质_出质人.getCodeName());
-        map.put("flag_07", DictCodeList.客户性质_承销商.getCodeName());
-        map.put("flag_08", DictCodeList.客户性质_存放行.getCodeName());
-        map.put("flag_09", DictCodeList.客户性质_投资顾问.getCodeName());
         // 将后台传来的值转换成数据字典值
         for (MstCustomerNatureDto mdto : ldto) {
             List<String> slist = new ArrayList<String>();
             List<String> list = StringUtil.splitToList(GlobalConstant.COMMA, mdto.getCustomerCharater());
             for (int i = 0; i < list.size(); i++ ) {
                 if (StringUtil.isNotEmpty(list.get(i))) {
-                    String str = (String)map.get("flag_0" + (i + 1));
-                    slist.add(str);
+                    slist.add(list.get(i));
                 }
             }
             String customerCharater = StringUtil.joinString(slist, GlobalConstant.COMMA);
@@ -285,7 +400,7 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
     /**
      * check是否持有金融牌照
      *
-     * @param param customerId
+     * @param  customerId
      * @return
      * @see
      * @since 1.0

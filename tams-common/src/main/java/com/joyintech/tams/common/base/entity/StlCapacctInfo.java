@@ -50,11 +50,36 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
      * 备注
      */
     private String remark;
-    
+
     /**
-     * 增加seqNo
+     * 流水号
      */
     private String seqNo;
+
+    /**
+     * 账户性质
+     */
+    private String accountNature;
+
+    /**
+     * 是否计提活期利息
+     */
+    private String isCalint;
+
+    /**
+     * 所属营业部
+     */
+    private String ownDept;
+
+    /**
+     * 账户密码
+     */
+    private String accPass;
+
+    /**
+     * 交易密码
+     */
+    private String tradePass;
 
     /**
      * 取得 账号
@@ -215,12 +240,100 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
     }
-    
-    public String getSeqNo() {
-		return seqNo;
-	}
 
-	public void setSeqNo(String seqNo) {
-		this.seqNo = seqNo;
-	}
+    /**
+     * 取得 流水号
+     * @return 流水号
+     */
+    public String getSeqNo() {
+        return seqNo;
+    }
+
+    /**
+     * 设置 流水号
+     * @param seqNo 流水号
+     */
+    public void setSeqNo(String seqNo) {
+        this.seqNo = seqNo == null ? null : seqNo.trim();
+    }
+
+    /**
+     * 取得 账户性质
+     * @return 账户性质
+     */
+    public String getAccountNature() {
+        return accountNature;
+    }
+
+    /**
+     * 设置 账户性质
+     * @param accountNature 账户性质
+     */
+    public void setAccountNature(String accountNature) {
+        this.accountNature = accountNature == null ? null : accountNature.trim();
+    }
+
+    /**
+     * 取得 是否计提活期利息
+     * @return 是否计提活期利息
+     */
+    public String getIsCalint() {
+        return isCalint;
+    }
+
+    /**
+     * 设置 是否计提活期利息
+     * @param isCalint 是否计提活期利息
+     */
+    public void setIsCalint(String isCalint) {
+        this.isCalint = isCalint == null ? null : isCalint.trim();
+    }
+
+    /**
+     * 取得 所属营业部
+     * @return 所属营业部
+     */
+    public String getOwnDept() {
+        return ownDept;
+    }
+
+    /**
+     * 设置 所属营业部
+     * @param ownDept 所属营业部
+     */
+    public void setOwnDept(String ownDept) {
+        this.ownDept = ownDept == null ? null : ownDept.trim();
+    }
+
+    /**
+     * 取得 账户密码
+     * @return 账户密码
+     */
+    public String getAccPass() {
+        return accPass;
+    }
+
+    /**
+     * 设置 账户密码
+     * @param accPass 账户密码
+     */
+    public void setAccPass(String accPass) {
+        this.accPass = accPass == null ? null : accPass.trim();
+    }
+
+    /**
+     * 取得 交易密码
+     * @return 交易密码
+     */
+    public String getTradePass() {
+        return tradePass;
+    }
+
+    /**
+     * 设置 交易密码
+     * @param tradePass 交易密码
+     */
+    public void setTradePass(String tradePass) {
+        this.tradePass = tradePass == null ? null : tradePass.trim();
+    }
 }

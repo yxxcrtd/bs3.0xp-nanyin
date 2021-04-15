@@ -31,6 +31,8 @@
 			and IS_SALER is null
 			and IS_DEPOSIT_BANK is null
 			and IS_INVEST_ADVISER is null
+			and IS_BROKER is null
+			and IS_COUNTER is null
 			<if test="customerId != null and customerId != ''">
 				and CUSTOMER_ID like concat(concat('%',
 				#{customerId,jdbcType=VARCHAR}),'%')
@@ -57,6 +59,8 @@
 			and IS_SALER is null
 			and IS_DEPOSIT_BANK is null
 			and IS_INVEST_ADVISER is null
+			and IS_BROKER is null
+			and IS_COUNTER is null
 			<if test="customerName != null and customerName != ''">
 				and CUSTOMER_NAME like concat(concat('%',
 				#{customerName,jdbcType=VARCHAR}),'%')
@@ -74,9 +78,17 @@
 		CUSTOMER_ID customerId,
 		CUSTOMER_NAME customerName,
 		CUSTOMER_TYPE customerType,
-		IS_ISSUER || ',' || IS_FINANCIER || ',' || IS_ASSTE_MANAGER || ',' ||
-		IS_TRUSTER || ',' || IS_GUARANTEE || ',' || IS_PLEDGOR || ',' || 
-		IS_SALER || ',' || IS_DEPOSIT_BANK || ',' || IS_INVEST_ADVISER customerCharater
+		decode(IS_ISSUER,'Y',#{flag_01},'') || ',' ||
+		decode(IS_FINANCIER,'Y',#{flag_02},'')  || ',' ||
+		decode(IS_ASSTE_MANAGER,'Y',#{flag_03},'') || ',' ||
+		decode(IS_TRUSTER,'Y',#{flag_04},'') || ',' ||
+		decode(IS_GUARANTEE,'Y',#{flag_05},'')|| ',' ||
+		decode(IS_PLEDGOR,'Y',#{flag_06},'') || ',' ||
+		decode(IS_SALER,'Y',#{flag_07},'') || ',' ||
+		decode(IS_DEPOSIT_BANK,'Y',#{flag_08},'') || ',' ||
+		decode(IS_INVEST_ADVISER,'Y',#{flag_09},'') ||',' ||
+		decode(IS_BROKER,'Y',#{flag_10},'') || ',' ||
+		decode(IS_COUNTER,'Y',#{flag_12},'') customerCharater
 		FROM
 		MST_CUSTOMER_INFO
 		<trim prefix="where" prefixOverrides="AND |OR">
@@ -123,6 +135,12 @@
 					<if test="customerCharater.contains(CUSTOMER_CHARATER_06)">
 						OR IS_PLEDGOR = 'Y'
 					</if>
+					<if test="customerCharater.contains(CUSTOMER_CHARATER_10)">
+						OR IS_BROKER = 'Y'
+					</if>
+					<if test="customerCharater.contains(CUSTOMER_CHARATER_12)">
+						OR IS_COUNTER = 'Y'
+					</if>
 				</trim>
 			</if>
 		</trim>
@@ -146,6 +164,8 @@
 			and IS_SALER is null
 			and IS_DEPOSIT_BANK is null
 			and IS_INVEST_ADVISER is null
+			and IS_BROKER is null
+			and IS_COUNTER is null
 			<if test="customerType != null and customerType != ''">
 				and CUSTOMER_TYPE =#{customerType,jdbcType=VARCHAR}
 			</if>
@@ -218,6 +238,18 @@
 			<if test="isPledgor == null"><!-- 20200622 add by lilan 219行缺少逗號 -->
 				IS_PLEDGOR = null,
 			</if>
+			<if test="isBroker != null">
+				IS_BROKER = 'Y',
+			</if>
+			<if test="isBroker == null">
+				IS_BROKER = null,
+			</if>
+			<if test="isCounter != null">
+				IS_COUNTER = 'Y',
+			</if>
+			<if test="isCounter == null">
+				IS_COUNTER = null
+			</if>
 			<if test="updateUser != null" >
 				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
 			</if>
@@ -259,6 +291,12 @@
 			<if test="IS_PLEDGOR != null and IS_PLEDGOR =='Y'.toString() ">
 				IS_PLEDGOR = 'Y',
 			</if>
+			<if test="isBroker != null and isBroker =='Y'.toString() ">
+				IS_BROKER = 'Y',
+			</if>
+			<if test="IS_COUNTER != null and IS_COUNTER =='Y'.toString() ">
+				IS_COUNTER = 'Y',
+			</if>
 		</set>
 		where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
 	</update>
@@ -274,7 +312,9 @@
 		IS_SALER = NULL,
 		IS_DEPOSIT_BANK = NULL,
 		IS_INVEST_ADVISER = NULL, 
-		IS_PLEDGOR = NULL
+		IS_PLEDGOR = NULL,
+		IS_BROKER = NULL,
+		IS_COUNTER = NULL
 		where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
 	</update>
 	
@@ -293,7 +333,9 @@
 		IS_SALER  isSaler,
 		IS_DEPOSIT_BANK isDepositBank,
 		IS_INVEST_ADVISER isInvestAdviser,
-		IS_PLEDGOR isPledgor
+		IS_PLEDGOR isPledgor,
+		IS_BROKER isBroker,
+		IS_COUNTER isCounter
 		FROM MST_CUSTOMER_INFO
 		WHERE
 		CUSTOMER_ID =#{customerId,jdbcType=VARCHAR}

@@ -28,7 +28,7 @@ import com.joyintech.service.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
  * @since 1.0
  */
 @Repository
-public interface BasicMstTradeOpponent001Mapper {
+public interface    BasicMstTradeOpponent001Mapper {
     /**
      * 查询交易对手类型
      * @param map 查询参数
@@ -191,6 +191,8 @@ public interface BasicMstTradeOpponent001Mapper {
     List<SelectOptionDto> getOfficeId(@Param("param") String param);
     List<SelectOptionDto> getMarketId(Map<String, Object> map);
     int deletePaFinProduct(MstTradeOpponentDto dto);
+
+    List<MstTradeOpponentDto> selectCounterIdByCustomer(Map<String, Object> map);
     
     int deleteFinProductAcct(MstTradeOpponentDto dto);
 }
