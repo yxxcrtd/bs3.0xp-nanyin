@@ -10,7 +10,7 @@ cd %~dp0
 copy %currentpath%\运营-service.xml %basepath%\microservice\tams-service-container\pom.xml
 
 @echo  "==============Mavne Install==============="
-call mvn clean install -f %currentpath%\运营一体化.xml --settings D:\install\development\apache-maven-3.5.4\conf\settings-joyin-new.xml -Dmaven.test.skip=true
+call mvn clean install -f %currentpath%\运营一体化.xml -Dmaven.test.skip=true --settings %1
 
 @echo  "==============Copy Jar==============="
 copy %basepath%\tams-system\yunying\app\target\tams-yunying.jar %currentpath%\jar\tams-yunying.jar
