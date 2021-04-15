@@ -32,6 +32,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.tams.invest.asset.bond.service.FinBondTargetAssetService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -48,7 +49,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -84,7 +88,7 @@ public class FinBondTargetAsset002Controller extends BaseController{
 		// 新增邮储五级分类 -wangguiqi on 2019/7/19 -end
 		DictCode.WIND二级分类_含债券二级分类等,DictCode.本金收益特征,DictCode.发行方式,DictCode.是否,DictCode.币种,DictCode.登记托管机构_中债,
         //新增城投债级别 add by gejiaao 2019/8/22
-        DictCode.城投债级别
+        DictCode.城投债级别,DictCode.交易平台
     };
     @Override
     public String init(Model model){
@@ -311,5 +315,57 @@ public class FinBondTargetAsset002Controller extends BaseController{
     public Page<SelectOptionDto> getfinprodIdForAdd() 
         throws Exception {
         return finBondTargetAssetService.getfinprodIdForAdd(RequestUtil.getPageParam());
+    }
+    
+    @ResponseBody
+    @RequestMapping("/getIsNetSett")
+    private AjaxResult getIsNetSett(@RequestParam("finprodMarketId") String finprodMarketId,
+                                             @RequestParam("tradeMarket") String tradeMarket,
+                                             @RequestParam("type9") String type9,
+                                             @RequestParam("isPpb") String isPpb) {
+        Map<String,String> map=new HashMap<String,String> ();
+        AjaxResult ar = new AjaxResult();
+        String isNetSett=StringUtil.EMPTY;
+        String tradePlat=StringUtil.EMPTY;
+        if(StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), tradeMarket)){
+            // 全额结算 标识
+            boolean settleFlag = false;
+            // 判断债券代码 是否在 139000-139999代码段债券、123000-123499代码段债券 范围内
+            String secid = finprodMarketId;
+            if(finprodMarketId.contains (".")){
+                secid=finprodMarketId.substring(0,finprodMarketId.indexOf("."));
+            }
+            Pattern pattern=Pattern.compile("^-?\\d+(\\.\\d+)?$");
+            //是否属于139000-139999代码段债券
+            if(pattern.matcher(secid).matches()) {
+                Long l = Long.parseLong(secid);
+                if ((l > 139000 && l < 139999) || (l > 123000 && l < 123499)) {
+                    settleFlag = true;
+                }
+            }
+            //全额结算 : 私募债 || 139000-139999代码段债券、123000-123499代码段债券 || 资产支持证券
+            if(StringUtil.equals(isPpb, "Y") || settleFlag || StringUtil.equals(BussinessDictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue(), type9)){
+                isNetSett="N";
+                tradePlat=DictCodeList.交易平台_固定收益平台.getValue();
+            }else{
+                //以上情况都不符合则为纳入净额结算标准范围的债券
+                isNetSett="Y";
+                tradePlat=DictCodeList.交易平台_固定收益平台.getValue()+","+DictCodeList.交易平台_竞价撮合平台.getValue()+","+DictCodeList.交易平台_大宗交易平台.getValue();
+            }
+        }else if(StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(), tradeMarket)){
+            //全额结算: 私募债 || 资产支持证券
+            if(StringUtil.equals(isPpb, "Y") || StringUtil.equals(BussinessDictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue(), type9)){
+                isNetSett="N";
+                tradePlat=DictCodeList.交易平台_综合协议交易平台.getValue();
+            }else{
+                isNetSett="Y";
+                tradePlat=DictCodeList.交易平台_竞价撮合平台.getValue()+","+DictCodeList.交易平台_综合协议交易平台.getValue();
+            }
+        }
+        map.put("isNetSett", isNetSett);
+        map.put("tradePlat", tradePlat);
+
+        ar.setData (map);
+        return ar;
     }
 }

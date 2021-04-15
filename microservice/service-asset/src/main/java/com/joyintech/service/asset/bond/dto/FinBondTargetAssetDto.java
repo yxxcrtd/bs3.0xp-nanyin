@@ -227,8 +227,55 @@ public class FinBondTargetAssetDto extends FinProduct{
      * 资产/负债类别
      */
     private String repAssetType;
-
+    
+    private String isNetSett;
+    
+    private String tradePlat;
+    
     /**
+     * 是否私募债
+     */
+    private String isPPB;
+    
+    /**
+     * 是否净价交易
+     */
+    private String isNetprice;
+
+    
+    public String getIsNetSett() {
+		return isNetSett;
+	}
+
+	public void setIsNetSett(String isNetSett) {
+		this.isNetSett = isNetSett;
+	}
+
+	public String getTradePlat() {
+		return tradePlat;
+	}
+
+	public void setTradePlat(String tradePlat) {
+		this.tradePlat = tradePlat;
+	}
+
+	public String getIsPPB() {
+		return isPPB;
+	}
+
+	public void setIsPPB(String isPPB) {
+		this.isPPB = isPPB;
+	}
+
+	public String getIsNetprice() {
+		return isNetprice;
+	}
+
+	public void setIsNetprice(String isNetprice) {
+		this.isNetprice = isNetprice;
+	}
+
+	/**
      * 获取 creditFlag
      * @return creditFlag.
      */

@@ -504,6 +504,42 @@
 										</div>
 									</div>
 								</div>
+
+								<div class="layui-form-item">
+									<div class="form-inline-wrap" id="isPpb_div">
+										<label class="layui-form-label form-label-wrap"
+											   data-th-text="#{FinBondTargetAsset002.isPpb}">是否私募债</label>
+										<div class="layui-input-inline input-inline">
+											<input type="checkbox" id="isPPB" name="isPPB" lay-filter="isPPB"
+												   lay-skin="switch" data-th-value="${YES}" lay-text="是|否" required
+												   data-th-checked="${YES_OR_NO_Y} ==${entity?.isPPB}">
+										</div>
+									</div>
+									<div class="form-inline-wrap" id="isNetPrice_div">
+										<label class="layui-form-label form-label-wrap">是否净价交易</label>
+										<div class="layui-input-inline input-inline">
+											<input type="checkbox" id="isNetprice" name="isNetprice" lay-filter="isNetprice"
+												   lay-skin="switch" data-th-value="${YES}" lay-text="是|否" required
+												   data-th-checked="${YES_OR_NO_Y} ==${entity?.isNetprice}">
+										</div>
+									</div>
+									<input type="hidden" id="isNetSett" name="isNetSett"
+										   data-th-value='${entity?.isNetSett}'>
+									<div class="form-inline-wrap" id="isApproveMarket_div">
+										<label class="layui-form-label form-label-wrap">允许交易的平台</label>
+										<div class="layui-input-inline input-inline">
+											<select name="tradePlat" id="tradePlat"
+													class="layui-input form-input input-select" allowClear="true" formatoption="true"
+													data-th-placeholder="#{SysCommon.placeholder}" required
+													data-th-data-result="${SHARES_TRADE_PLATFORM}"
+													multiple="multiple"
+													th:initValue="${entity?.tradePlat}">
+											</select>
+										</div>
+									</div>
+								</div>
+
+
         	                    <!-- 新增担保人 add by renping 20190930 start -->
 								<div class="layui-form-item">
 								    <div class="form-inline-wrap">

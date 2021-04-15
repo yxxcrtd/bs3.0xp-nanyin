@@ -92,6 +92,15 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             		resultList.add(new ValidMessage(getMessage("含权债的行权计划不能为空!")));
             	}
             }
+            
+            if(dto.getTradeMarket ().equals ("03") || dto.getTradeMarket ().equals ("04")){
+                if(dto.getIsNetprice () == null || dto.getIsNetprice () == ""){
+                    resultList.add(new ValidMessage(getMessage("是否净价交易不能为空")));
+                }
+                if(dto.getTradePlat () == null || dto.getTradePlat () == ""){
+                    resultList.add(new ValidMessage(getMessage("允许交易的平台不能为空")));
+                }
+            }
         }
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){

@@ -36,6 +36,9 @@
 		,T2.IS_CITY_BOND isCityBond
 		,T7.INDUSTRY industry
 		,T7.INDUSTRY2 industry2
+		,T2.IS_PPB isPPb,
+		T2.IS_NETPRICE isNetprice,
+		T2.IS_NET_SETT isNetSett
 		FROM
 			FIN_PRODUCT T1
 			LEFT JOIN MST_CUSTOMER_INFO ON MST_CUSTOMER_INFO.CUSTOMER_ID = T1.ISSUER
@@ -186,6 +189,10 @@
 			T2.IS_CITY_BOND isCityBond,
 			T2.CITY_BOND_LEV cityBondLev,
 			<!-- 城投债级别 gejiaao  2019/8/22 -结束-->
+			T2.IS_PPB isPPB,
+			T2.IS_NET_SETT isNetSett,
+			T2.TRADE_PLAT tradePlat,
+			T2.IS_NETPRICE isNetPrice,
 			T11.FINPROD_MARKET_ID conFinprodMarketId,
 		    T12.REP_ASSET_TYPE repAssetType
 			from FIN_PRODUCT T1
