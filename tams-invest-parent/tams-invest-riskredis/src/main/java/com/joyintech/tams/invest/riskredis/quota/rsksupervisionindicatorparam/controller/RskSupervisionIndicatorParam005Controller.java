@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.controller;
 
+//import com.joyintech.component.svrreport.chb.contant.DictCodeListExt;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;

@@ -46,14 +46,14 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
     public List<ValidMessage> valid(Object value) {
         FinPlanProfitAssetDto dto = (FinPlanProfitAssetDto) value;
         List<ValidMessage> errorList = new ArrayList<>();
-        
+
         if (!StringUtil.equals(dto.getOperateType(), "delete")) {
             if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo()) && StringUtil.equals(dto.getBussRepAssetMngProdInfo().getRepAssetType(),"1705")) {
                 if (StringUtil.isEmpty(dto.getBussRepAssetMngProdInfo().getRepFinancialComissue()) || dto.getBussRepAssetMngProdInfo().getRepFinancialComissue() == "") {
                     errorList.add(new ValidMessage("bussRepAssetMngProdInfo.repFinancialComissue",
                             "请输入是否由金融资产投资公司发行。"));
                 }
-            }    
+            }
         }
         if (StringUtil.isNotEmpty(dto.getPageModel())) {
 	        if(dto.getVdate()!=null && dto.getMdate()!=null && dto.getVdate().compareTo(dto.getMdate()) >= 0){
@@ -82,7 +82,7 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 	                //        }
 	                //    }
 	                //}
-            } 
+            }
             else{
                 if(StringUtil.equals(dto.getCreditFlag(), DictCodeList.是否_是.getValue())
                     && (dto.getActualCreditProvid() == null || StringUtil.equals(dto.getActualCreditProvid(), ""))
@@ -100,7 +100,7 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 //                    }
                 }
             }
-            
+
 	        } else {
 	            if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
 	                if (finPlanProfitAssetService.selectFinprodMarketId(dto.getFinprodMarketId()) > 0) {
@@ -142,7 +142,7 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 		}
 		// 根据二级分类的值判断是否投向金融资产投资公司发行的私募资产管理产品是必填还是选填 by 赵东东 2019.10.16
 		if(StringUtil.equals(dto.getType(),DictCodeList.计划类资产二级分类_公募计划.getValue())) {
-			// 编辑时BussRepAssetMngProdInfo为空，不check by 赵东东 2019.10.16 
+			// 编辑时BussRepAssetMngProdInfo为空，不check by 赵东东 2019.10.16
 			if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo())) {
 			if(StringUtil.isEmpty(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag())) {
 				errorList.add(new ValidMessage("BussRepAssetMngProdInfo.repPrivateprdFlag",

@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.asset.project.validator;
 
 import java.util.*;
@@ -89,7 +89,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
            }
             if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)
                 || StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
-                if(dto != null && dto.getType6() != null 
+                if(dto != null && dto.getType6() != null
                     && (StringUtil.equals(dto.getType6(), DictCodeList.项目类一级分类_非标债权.getValue())
                         || StringUtil.equals(dto.getType6(), DictCodeList.项目类一级分类_结构化证券.getValue())
                         || StringUtil.equals(dto.getType6(), DictCodeList.项目类一级分类_股票定向增发投资.getValue())
@@ -104,7 +104,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
                     }
                 }
             }
-            
+
             //编辑前检查
             if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
                 for(FinProjectTargetAssetDto entity : dto.getSelectedItem()){
@@ -116,7 +116,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
                     }
                 }
             }
-            
+
             //修改保存前检查
             if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
             	//到期日不能小于平台日的标的不可编辑
@@ -212,7 +212,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
 //        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
 //            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
 //        }
-        
+
         //校验融资人
         //@NotEmpty(fieldName = "FinProjectTargetAsset002.financier",groups={ValidateGroupEdit.class})
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {

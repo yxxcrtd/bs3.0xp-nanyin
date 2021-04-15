@@ -119,7 +119,7 @@ public class FinFundTargetValidator implements BeanValidator {
                                         +"("+dto.getFinprodMarketId()+")")));
                     }
                 }
-                
+
                 /*if(list.size()>0){
                     resultList.add(
                         new ValidMessage(this.getMessage("BUSS_COM_E_0006", getMessage("MstFeeVarieties002.feeName"))));
