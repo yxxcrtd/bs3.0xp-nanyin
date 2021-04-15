@@ -1828,6 +1828,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	//add by yzg 20210422 start
 	交易对手类型_非法人机构(DictCode.交易对手类型 ,"06","非法人机构"),
 	//add by yzg 20210422 end
+	平安业务类型_债券类资产配债(DictCode.平安业务类型,"163","债券类资产配债"),
 	;
     /**
      * 对应于数据字典code

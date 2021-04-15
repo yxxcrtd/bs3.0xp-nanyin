@@ -146,6 +146,10 @@ public class BaseTradeProductDealDto {
      * 申购类型(可转债交易字段)
      */
     private String purchType;
+	/**
+     * 来自场内交易下单标识
+     */
+    private String isFromExchange;
     
     /**
      * 债券一级市场缴款页面标识

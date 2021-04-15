@@ -121,6 +121,42 @@ public class FinProductCommonBatchService {
 
 
     /**
+     * 百元券面共通查询方法
+     *
+     * @param finprodId 标的代码
+     * @param happenDate 发生日
+     * @return faceValue 处理后的百元券面
+     * @see
+     * @since 1.0
+     */
+    @SuppressWarnings("unchecked")
+    public BigDecimal getFaceValue(String finprodId, Date happenDate) {
+        BigDecimal faceValue = new BigDecimal("100");
+        BigDecimal payedFaceValue = new BigDecimal("0");
+        // 增加查询类型Dto
+        TargetSearchDto searchDto = new TargetSearchDto();
+        searchDto.setQueryType(ValDictCodeList.标的_现金流计划.getValue());
+        searchDto.setCashType1(DictCodeListExt1.现金流一级类型_本金.getValue());
+        List<TargetSearchDto> listSearchDto = new ArrayList<>();
+        // 放入list中传参
+        listSearchDto.add(searchDto);
+        // 获取现金流计划结果集
+        List<TargetCashPlan> listDto = (List<TargetCashPlan>)this.getTargetInfo(finprodId,
+                listSearchDto).get(searchDto);
+        if(null!=listDto){
+            for (TargetCashPlan plan : listDto) {
+                // 计息结束日 <= 发生日
+                if (DateUtil.compareDate(plan.getMdate(), happenDate) <= 0) {
+                    payedFaceValue = ArithmeticUtil.doAdd(payedFaceValue, plan.getPrinAmt());
+                }
+            }
+        }
+        faceValue = ArithmeticUtil.subtract(faceValue, payedFaceValue);
+        return faceValue;
+    }
+
+
+    /**
      * 公用方法：标的类共通方法 - 标的信息查询
      * 
      * @param finprodId 标的代码【必输项】
