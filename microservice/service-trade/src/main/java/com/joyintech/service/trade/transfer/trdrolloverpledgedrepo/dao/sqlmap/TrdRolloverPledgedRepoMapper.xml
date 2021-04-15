@@ -5,7 +5,7 @@
     <select id="selectPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
         A.PORTFOLIO_ID id,
-        A.PORTFOLIO_NAME text
+        A.PORTFOLIO_ID || ':' || A.PORTFOLIO_NAME text
         FROM PTL_PORTFOLIO A
         LEFT JOIN PTL_SEC_ACCT PSA
         ON A.PORTFOLIO_ID = PSA.PORTFOLIO_ID

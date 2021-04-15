@@ -5,7 +5,7 @@
     <select id="getPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         PORTFOLIO_ID AS id,
-        PORTFOLIO_NAME AS text
+        PORTFOLIO_ID || ':' || PORTFOLIO_NAME AS text
         FROM PTL_PORTFOLIO
         WHERE PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_01}
         <if test="initValue != null and initValue != ''">
