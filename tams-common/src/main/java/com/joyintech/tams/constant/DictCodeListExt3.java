@@ -964,8 +964,20 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     中债_处理状态_待处理(DictCode.中债_处理状态,"01","待处理"),
     中债_处理状态_已处理(DictCode.中债_处理状态,"02","已处理"),
 
-    费用类型_佣金(DictCode.费用类型,"B05","佣金"),  ;
-
+    费用类型_佣金(DictCode.费用类型,"B05","佣金"), 
+    
+    /**
+     * add by yzg 20210411
+     */
+    申报单位_手(DictCode.申报单位,"1","手"),
+    申报单位_张(DictCode.申报单位,"2","张"),
+    特殊处理业务_质押出入库(DictCode.特殊处理业务,"1","质押出入库"),
+    柜台接口类型_金证kcbp(DictCode.柜台接口类型,"1","金证kcbp"),
+    柜台接口类型_恒生ufx(DictCode.柜台接口类型,"2","恒生ufx"),
+    柜台接口类型_ctp(DictCode.柜台接口类型,"5","ctp"),
+    共通业务类型_席位信息管理(DictCode.共通业务类型,"MST26","席位信息管理"),
+    共通业务类型_标准券再折算率(DictCode.共通业务类型,"SCRCR01","标准券再折算率"),
+;
     /**
      * 对应于数据字典code
      */

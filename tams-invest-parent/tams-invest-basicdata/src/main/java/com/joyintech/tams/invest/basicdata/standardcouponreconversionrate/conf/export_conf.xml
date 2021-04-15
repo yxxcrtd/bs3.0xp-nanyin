@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="StandardCouponReConversionRate001.xlsx" name="标准券再折算率维护">
+	<Worksheet javaBean="com.joyintech.tams.invest.basicdata.standardcouponreconversionrate.dto.StandardCouponReConversionRateDto">
+		<Row>
+			<Cell order="1" name="券商">brokerName</Cell><!-- 券商-->
+			<Cell order="2" name="资金账户">accountTypeStr</Cell><!-- 资金账户-->
+			<Cell order="3" name="标准券再折算率">tandardRate</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>
