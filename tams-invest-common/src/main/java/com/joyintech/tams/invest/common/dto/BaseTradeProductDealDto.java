@@ -146,6 +146,10 @@ public class BaseTradeProductDealDto {
      * 申购类型(可转债交易字段)
      */
     private String purchType;
+	/**
+     * 来自场内交易下单标识
+     */
+    private String isFromExchange;
     
     public String getPurchType() {
 		return purchType;
@@ -503,4 +507,20 @@ public class BaseTradeProductDealDto {
     public void setBatch(boolean batch) {
         isBatch = batch;
     }
+	/**
+     * 获取 isFromExchange
+     * @return isFromExchange.
+     */
+    public String getIsFromExchange() {
+        return isFromExchange;
+    }
+
+    /**
+     * 设置 isFromExchange
+     * @param isFromExchange isFromExchange
+     */
+    public void setIsFromExchange(String isFromExchange) {
+        this.isFromExchange = isFromExchange;
+    }
+
 }

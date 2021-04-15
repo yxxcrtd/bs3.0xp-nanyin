@@ -68,6 +68,29 @@ public class FinProductTradeDto extends BaseEntity {
     private String isOverdueDeal;
 
     /**
+     * 是否手工交收不执行头寸处理
+     */
+    private String isDealSettlePosition;
+
+    /**
+     * 是否处理委托完成度
+     */
+    private boolean needHandleFinishEntrust;
+    
+//    /**
+//     * 是否有报价信息（01：是，02：否,03:撤销）
+//     */
+//    private String isOfferFlag;
+    
+    public String getIsDealSettlePosition() {
+        return isDealSettlePosition;
+    }
+
+    public void setIsDealSettlePosition(String isDealSettlePosition) {
+        this.isDealSettlePosition = isDealSettlePosition;
+    }
+
+    /**
      * 获取 ieFlag
      *
      * @return ieFlag
@@ -239,4 +262,20 @@ public class FinProductTradeDto extends BaseEntity {
 	public void setIsOverdueDeal(String isOverdueDeal) {
 		this.isOverdueDeal = isOverdueDeal;
 	}
+
+    public boolean isNeedHandleFinishEntrust() {
+        return needHandleFinishEntrust;
+    }
+
+    public void setNeedHandleFinishEntrust(boolean needHandleFinishEntrust) {
+        this.needHandleFinishEntrust = needHandleFinishEntrust;
+    }
+
+//	public String getIsOfferFlag() {
+//		return isOfferFlag;
+//	}
+//
+//	public void setIsOfferFlag(String isOfferFlag) {
+//		this.isOfferFlag = isOfferFlag;
+//	}
 }

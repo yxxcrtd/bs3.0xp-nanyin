@@ -71,6 +71,21 @@ public class EtrSecPositionFlow extends BaseEntity {
     private String tradeId;
 
     /**
+     * 关闭时冲销标识，关闭：01，重新打开：02
+     */
+    private String closeFlag;
+
+    /**
+     * 冲销业务编号
+     */
+    private String offsetId;
+
+    /**
+     * 冲正标识
+     */
+    private String offsetFlag;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -261,5 +276,53 @@ public class EtrSecPositionFlow extends BaseEntity {
      */
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId == null ? null : tradeId.trim();
+    }
+
+    /**
+     * 取得 关闭时冲销标识，关闭：01，重新打开：02
+     * @return 关闭时冲销标识，关闭：01，重新打开：02
+     */
+    public String getCloseFlag() {
+        return closeFlag;
+    }
+
+    /**
+     * 设置 关闭时冲销标识，关闭：01，重新打开：02
+     * @param closeFlag 关闭时冲销标识，关闭：01，重新打开：02
+     */
+    public void setCloseFlag(String closeFlag) {
+        this.closeFlag = closeFlag == null ? null : closeFlag.trim();
+    }
+
+    /**
+     * 取得 冲销业务编号
+     * @return 冲销业务编号
+     */
+    public String getOffsetId() {
+        return offsetId;
+    }
+
+    /**
+     * 设置 冲销业务编号
+     * @param offsetId 冲销业务编号
+     */
+    public void setOffsetId(String offsetId) {
+        this.offsetId = offsetId == null ? null : offsetId.trim();
+    }
+
+    /**
+     * 取得 冲正标识
+     * @return 冲正标识
+     */
+    public String getOffsetFlag() {
+        return offsetFlag;
+    }
+
+    /**
+     * 设置 冲正标识
+     * @param offsetFlag 冲正标识
+     */
+    public void setOffsetFlag(String offsetFlag) {
+        this.offsetFlag = offsetFlag == null ? null : offsetFlag.trim();
     }
 }

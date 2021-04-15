@@ -1823,6 +1823,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
     目标投资者_PR4(DictCode.目标投资者,"PR4","PR4"),
     机构所属行业三级分类_中央银行服务(DictCode.机构所属行业三级分类,"01","中央银行服务"),
     交易场所_中国金融期货交易所(DictCode.交易场所,"12","中国金融期货交易所"),
+	平安业务类型_债券类资产配债(DictCode.平安业务类型,"163","债券类资产配债"),
 	;
     /**
      * 对应于数据字典code

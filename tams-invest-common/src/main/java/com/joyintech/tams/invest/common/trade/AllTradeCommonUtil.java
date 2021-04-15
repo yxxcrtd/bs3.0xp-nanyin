@@ -5,22 +5,9 @@
 
 package com.joyintech.tams.invest.common.trade;
 
-import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
-
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.*;
-
+import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -44,7 +31,6 @@ import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
-import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
@@ -57,6 +43,19 @@ import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
 import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfo;
 import com.joyintech.tams.valuation.common.interf.base.dto.ChannelProdDeal;
 import com.joyintech.tams.valuation.common.interf.howmany.dto.TrdProductDealDto;
+import org.apache.commons.collections4.CollectionUtils;
+import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.*;
+
+import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
 
 /**
  * 所有交易都要调用的共通Util
@@ -2032,4 +2031,23 @@ public class AllTradeCommonUtil {
         return trdCommonBaseMapper.isPortfolioId(portfolioId);
     }
     // add by zhangrui1 20200511 判断转仓交易 end
+	// add by lijie2 20200910 投资目的取值逻辑 start
+	/**
+	 * 投资目的取值逻辑
+	 * 
+	 * @param portfolioId
+	 * @return
+	 */
+	public static String getInvAim(String portfolioId) {
+		if (StringUtils.isNotEmpty(portfolioId)) {
+			PtlPortfolio ptlPortfolio = ptlPortfolioMapper.selectByPrimaryKey(portfolioId);
+			if (null != ptlPortfolio && StringUtils.isNotEmpty(ptlPortfolio.getProfitType())) {
+				if (DictCodeList.收益类型_货币型.getValue().equals(ptlPortfolio.getProfitType())) {
+					return DictCodeListExt1.投资目的_摊余成本类.getValue();
+				}
+			}
+		}
+		return DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue();
+	}
+	// add by lijie2 20200910 投资目的取值逻辑 end
 }

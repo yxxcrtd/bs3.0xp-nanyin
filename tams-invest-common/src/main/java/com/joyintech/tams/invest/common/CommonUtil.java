@@ -20,10 +20,7 @@ import java.util.Map.Entry;
 import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.EncryptUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.redis.lock.Locker;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.indic.entity.IIndicator;
@@ -144,6 +141,27 @@ public final class CommonUtil {
         return null;
     }
 
+public static final BigDecimal getBigDecimal(Map<String, Object> map, String key,
+                                                 BigDecimal defVal) {
+        Object obj = map.get(key);
+        if (obj == null) {
+            return defVal;
+        }
+        if (obj instanceof BigDecimal) {
+            return (BigDecimal)obj;
+        }
+        return new BigDecimal(obj.toString());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static final Map<String, Object> toMap(Object obj) {
+        if (obj instanceof Map) {
+            return (Map<String, Object>)obj;
+        }
+        else {
+            return BeanUtil.object2Map(obj);
+        }
+    }
     /**
      * 比较大小
      *

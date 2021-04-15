@@ -35,6 +35,28 @@ spring:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+  rabbitmq:
+    # 105测试环境使用mq配置如下
+    #addresses: 192.168.70.59:5672
+    #username: rbmq
+    #password: rbmq
+    # 开发环境使用mq配置如下
+    addresses: 192.168.90.118:5672
+    username: joyin
+    password: joyin123
+    publisher-confirms: true
+    publisher-returns: true
+    listener:
+      simple:
+        max-concurrency: 20
+        concurrency: 1
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+    template:
+      retry:
+        enabled: false
+      mandatory: true
   activemq:
     active: false
     systemId: tams
@@ -292,14 +314,14 @@ spring:
 #  redislock:
 #    redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: tams30
+    password: tams30
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0810
-  sqldirpassword: zgtams0810_123
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldiruserName: tams30
+  sqldirpassword: tams30
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -311,24 +333,24 @@ shiro:
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: tams30
+    password: tams30
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: tams30
+    password: tams30
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: tams30
+    password: tams30
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: tams30
+    password: tams30
 log:
   path: /home/tams/logs/tams
   level: debug

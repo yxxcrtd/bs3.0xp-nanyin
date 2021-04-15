@@ -1,11 +1,8 @@
 package com.joyintech.tams.invest.common.dto.common;
 
 import com.joyintech.framework.base.BaseDictCodeList;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,7 +22,7 @@ public class BussinessCodeParameter {
     /**
      * 共通业务类型
      */
-    private DictCodeList commonBusinessType;
+    private BaseDictCodeList commonBusinessType;
     //-----------add by jjpei 20190627---------
     /**
      * 共通业务类型EXT
@@ -35,37 +32,41 @@ public class BussinessCodeParameter {
     /**
      * 一级分类
      */
-    private DictCodeList type1;
+    private BaseDictCodeList type1;
 
     /**
      * 二级分类
      */
-    private DictCodeList type2;
+    private BaseDictCodeList type2;
 
     /**
      * 三级分类
      */
-    private DictCodeList type3;
+    private BaseDictCodeList type3;
 
     /**
      * 四级分类
      */
-    private DictCodeList type4;
+    private BaseDictCodeList type4;
 
     /**
      * 五级分类
      */
-    private DictCodeList type5;
+    private BaseDictCodeList type5;
 
     /**
      * 六级分类
      */
-    private DictCodeList type6;
+    private BaseDictCodeList type6;
+    /**
+     * mapInfo
+     */
+    private Map<String,Object> mapInfo;
 
     public BussinessCodeParameter() {
     }
 
-    public BussinessCodeParameter(DictCodeList commonBusinessType) {
+    public BussinessCodeParameter(BaseDictCodeList commonBusinessType) {
         this.commonBusinessType = commonBusinessType;
     }
 
@@ -74,7 +75,7 @@ public class BussinessCodeParameter {
      * 
      * @return commonBusinessType.
      */
-    public DictCodeList getCommonBusinessType() {
+    public BaseDictCodeList getCommonBusinessType() {
         return commonBusinessType;
     }
 
@@ -83,7 +84,7 @@ public class BussinessCodeParameter {
      * 
      * @param commonBusinessType commonBusinessType
      */
-    public void setCommonBusinessType(DictCodeList commonBusinessType) {
+    public void setCommonBusinessType(BaseDictCodeList commonBusinessType) {
         this.commonBusinessType = commonBusinessType;
     }
 
@@ -92,7 +93,7 @@ public class BussinessCodeParameter {
      * 
      * @return type1.
      */
-    public DictCodeList getType1() {
+    public BaseDictCodeList getType1() {
         return type1;
     }
 
@@ -101,7 +102,7 @@ public class BussinessCodeParameter {
      * 
      * @param type1 type1
      */
-    public void setType1(DictCodeList type1) {
+    public void setType1(BaseDictCodeList type1) {
         this.type1 = type1;
     }
 
@@ -110,7 +111,7 @@ public class BussinessCodeParameter {
      * 
      * @return type2.
      */
-    public DictCodeList getType2() {
+    public BaseDictCodeList getType2() {
         return type2;
     }
 
@@ -119,7 +120,7 @@ public class BussinessCodeParameter {
      * 
      * @param type2 type2
      */
-    public void setType2(DictCodeList type2) {
+    public void setType2(BaseDictCodeList type2) {
         this.type2 = type2;
     }
 
@@ -128,7 +129,7 @@ public class BussinessCodeParameter {
      * 
      * @return type3.
      */
-    public DictCodeList getType3() {
+    public BaseDictCodeList getType3() {
         return type3;
     }
 
@@ -137,7 +138,7 @@ public class BussinessCodeParameter {
      * 
      * @param type3 type3
      */
-    public void setType3(DictCodeList type3) {
+    public void setType3(BaseDictCodeList type3) {
         this.type3 = type3;
     }
 
@@ -146,7 +147,7 @@ public class BussinessCodeParameter {
      * 
      * @return type4.
      */
-    public DictCodeList getType4() {
+    public BaseDictCodeList getType4() {
         return type4;
     }
 
@@ -155,7 +156,7 @@ public class BussinessCodeParameter {
      * 
      * @param type4 type4
      */
-    public void setType4(DictCodeList type4) {
+    public void setType4(BaseDictCodeList type4) {
         this.type4 = type4;
     }
 
@@ -164,7 +165,7 @@ public class BussinessCodeParameter {
      * 
      * @return type5.
      */
-    public DictCodeList getType5() {
+    public BaseDictCodeList getType5() {
         return type5;
     }
 
@@ -173,7 +174,7 @@ public class BussinessCodeParameter {
      * 
      * @param type5 type5
      */
-    public void setType5(DictCodeList type5) {
+    public void setType5(BaseDictCodeList type5) {
         this.type5 = type5;
     }
 
@@ -182,7 +183,7 @@ public class BussinessCodeParameter {
      * 
      * @return type6.
      */
-    public DictCodeList getType6() {
+    public BaseDictCodeList getType6() {
         return type6;
     }
 
@@ -191,7 +192,7 @@ public class BussinessCodeParameter {
      * 
      * @param type6 type6
      */
-    public void setType6(DictCodeList type6) {
+    public void setType6(BaseDictCodeList type6) {
         this.type6 = type6;
     }
 
@@ -219,5 +220,72 @@ public class BussinessCodeParameter {
 
     public void setCommonBusinessExtType(Map<String, Object> commonBusinessExtType) {
         this.commonBusinessExtType = commonBusinessExtType;
+    }
+    /**
+     * 转换成DICTCODELIST
+     * @param baseDictCode
+     * @return
+     */
+    public static Map<String,Object> fromDictCodeList(BaseDictCodeList baseDictCode){
+        Map<String,Object> retMap=new HashMap<String,Object>();
+        retMap.put("codeName",baseDictCode.getCodeName());
+        retMap.put("value",baseDictCode.getValue());
+        retMap.put("dictCode",baseDictCode.getDictCode());
+        return retMap;
+    }
+    /**
+     * 转换成DICTCODELIST
+     * @return
+     */
+    public Map<String,Object> initMapInfo(){
+        if(mapInfo==null){
+            mapInfo = new HashMap<>();
+        }
+        if(seqNo!=null){
+            mapInfo.put("seqNo",seqNo);
+        }
+        if(commonBusinessType!=null){
+            mapInfo.put("commonBusinessType",fromDictCodeList(commonBusinessType));
+        }
+        if(type1!=null){
+            mapInfo.put("type1",fromDictCodeList(type1));
+        }
+        if(type2!=null){
+            mapInfo.put("type2",fromDictCodeList(type2));
+        }
+        if(type3!=null){
+            mapInfo.put("type3",fromDictCodeList(type3));
+        }
+        if(type4!=null){
+            mapInfo.put("type4",fromDictCodeList(type4));
+        }
+        if(type5!=null){
+            mapInfo.put("type5",fromDictCodeList(type5));
+        }
+        if(type6!=null){
+            mapInfo.put("type6",fromDictCodeList(type6));
+        }
+        if(commonBusinessExtType !=null ){
+            mapInfo.put(commonBusinessType==null?"commonBusinessType":"commonBusinessExtType",commonBusinessExtType);
+        }
+        return mapInfo;
+    }
+
+    /**
+     * 获取 mapInfo
+     *
+     * @return mapInfo mapInfo
+     */
+    public Map<String, Object> getMapInfo() {
+        return this.mapInfo;
+    }
+
+    /**
+     * 设置 mapInfo
+     *
+     * @param mapInfo mapInfo
+     */
+    public void setMapInfo(Map<String, Object> mapInfo) {
+        this.mapInfo = mapInfo;
     }
 }

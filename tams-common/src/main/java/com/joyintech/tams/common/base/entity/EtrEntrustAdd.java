@@ -378,6 +378,131 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     private String biddingRange;
 
+
+    /**
+     * 管理人
+     */
+    private String manager;
+
+    /**
+     * 审批编号
+     */
+    private String reviewid;
+
+    /**
+     * 资产四级类型
+     */
+    private String type11;
+
+    /**
+     * 资产五级类型
+     */
+    private String type12;
+
+    /**
+     * 放款先决条件审查:Y-通过，N-不通过
+     */
+    private String isCredit;
+
+    /**
+     * 审查意见
+     */
+    private String creditRemark;
+
+    /**
+     * 计算方式，净价，全价，到期收益率
+     */
+    private String calMode;
+
+    /**
+     * 席位号
+     */
+    private String counterSeat;
+
+    /**
+     * 约定号
+     */
+    private String counterConNo;
+
+    /**
+     * 全价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal fullPrice;
+
+    /**
+     * 目标类型
+     */
+    private String targetType;
+
+    /**
+     * 对手方交易商
+     */
+    private String counterOrg;
+
+    /**
+     * 本方交易员
+     */
+    private String trader;
+
+    /**
+     * 衍生品买卖方向
+     */
+    private String derivativeBsDir;
+
+    /**
+     * 衍生品开平仓标志
+     */
+    private String derivativeOcFlag;
+
+    /**
+     * 首次交收日
+     */
+    private Date vpayDate;
+
+    /**
+     * 到期交收日
+     */
+    private Date mpayDate;
+
+    /**
+     * 到期应计利息
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal mIntAmt;
+
+    /**
+     * 到期结算金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal mTradeAmt;
+
+    /**
+     * 占款天数
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal capDays;
+
+    /**
+     * 成交编号/初始交易编号
+     */
+    private String tradeId;
+
+    /**
+     * 请求号
+     */
+    private String requestId;
+
+    /**
+     * 报价方式
+     */
+    private String quoteType;
+
+    /**
+     * 续做类型
+     */
+    private String redoType;
+
     /**
      * 取得 委托代码
      * @return 委托代码
@@ -1489,5 +1614,392 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     public void setBiddingRange(String biddingRange) {
         this.biddingRange = biddingRange == null ? null : biddingRange.trim();
+    }
+
+
+    /**
+     * 取得 管理人
+     * @return 管理人
+     */
+    public String getManager() {
+        return manager;
+    }
+
+    /**
+     * 设置 管理人
+     * @param manager 管理人
+     */
+    public void setManager(String manager) {
+        this.manager = manager == null ? null : manager.trim();
+    }
+
+    /**
+     * 取得 审批编号
+     * @return 审批编号
+     */
+    public String getReviewid() {
+        return reviewid;
+    }
+
+    /**
+     * 设置 审批编号
+     * @param reviewid 审批编号
+     */
+    public void setReviewid(String reviewid) {
+        this.reviewid = reviewid == null ? null : reviewid.trim();
+    }
+
+    /**
+     * 取得 资产四级类型
+     * @return 资产四级类型
+     */
+    public String getType11() {
+        return type11;
+    }
+
+    /**
+     * 设置 资产四级类型
+     * @param type11 资产四级类型
+     */
+    public void setType11(String type11) {
+        this.type11 = type11 == null ? null : type11.trim();
+    }
+
+    /**
+     * 取得 资产五级类型
+     * @return 资产五级类型
+     */
+    public String getType12() {
+        return type12;
+    }
+
+    /**
+     * 设置 资产五级类型
+     * @param type12 资产五级类型
+     */
+    public void setType12(String type12) {
+        this.type12 = type12 == null ? null : type12.trim();
+    }
+
+    /**
+     * 取得 放款先决条件审查:Y-通过，N-不通过
+     * @return 放款先决条件审查:Y-通过，N-不通过
+     */
+    public String getIsCredit() {
+        return isCredit;
+    }
+
+    /**
+     * 设置 放款先决条件审查:Y-通过，N-不通过
+     * @param isCredit 放款先决条件审查:Y-通过，N-不通过
+     */
+    public void setIsCredit(String isCredit) {
+        this.isCredit = isCredit == null ? null : isCredit.trim();
+    }
+
+    /**
+     * 取得 审查意见
+     * @return 审查意见
+     */
+    public String getCreditRemark() {
+        return creditRemark;
+    }
+
+    /**
+     * 设置 审查意见
+     * @param creditRemark 审查意见
+     */
+    public void setCreditRemark(String creditRemark) {
+        this.creditRemark = creditRemark == null ? null : creditRemark.trim();
+    }
+
+    /**
+     * 取得 计算方式，净价，全价，到期收益率
+     * @return 计算方式，净价，全价，到期收益率
+     */
+    public String getCalMode() {
+        return calMode;
+    }
+
+    /**
+     * 设置 计算方式，净价，全价，到期收益率
+     * @param calMode 计算方式，净价，全价，到期收益率
+     */
+    public void setCalMode(String calMode) {
+        this.calMode = calMode == null ? null : calMode.trim();
+    }
+
+    /**
+     * 取得 席位号
+     * @return 席位号
+     */
+    public String getCounterSeat() {
+        return counterSeat;
+    }
+
+    /**
+     * 设置 席位号
+     * @param counterSeat 席位号
+     */
+    public void setCounterSeat(String counterSeat) {
+        this.counterSeat = counterSeat == null ? null : counterSeat.trim();
+    }
+
+    /**
+     * 取得 约定号
+     * @return 约定号
+     */
+    public String getCounterConNo() {
+        return counterConNo;
+    }
+
+    /**
+     * 设置 约定号
+     * @param counterConNo 约定号
+     */
+    public void setCounterConNo(String counterConNo) {
+        this.counterConNo = counterConNo == null ? null : counterConNo.trim();
+    }
+
+    /**
+     * 取得 全价
+     * @return 全价
+     */
+    public BigDecimal getFullPrice() {
+        return fullPrice;
+    }
+
+    /**
+     * 设置 全价
+     * @param fullPrice 全价
+     */
+    public void setFullPrice(BigDecimal fullPrice) {
+        this.fullPrice = fullPrice;
+    }
+
+    /**
+     * 取得 目标类型
+     * @return 目标类型
+     */
+    public String getTargetType() {
+        return targetType;
+    }
+
+    /**
+     * 设置 目标类型
+     * @param targetType 目标类型
+     */
+    public void setTargetType(String targetType) {
+        this.targetType = targetType == null ? null : targetType.trim();
+    }
+
+    /**
+     * 取得 对手方交易商
+     * @return 对手方交易商
+     */
+    public String getCounterOrg() {
+        return counterOrg;
+    }
+
+    /**
+     * 设置 对手方交易商
+     * @param counterOrg 对手方交易商
+     */
+    public void setCounterOrg(String counterOrg) {
+        this.counterOrg = counterOrg == null ? null : counterOrg.trim();
+    }
+
+    /**
+     * 取得 本方交易员
+     * @return 本方交易员
+     */
+    public String getTrader() {
+        return trader;
+    }
+
+    /**
+     * 设置 本方交易员
+     * @param trader 本方交易员
+     */
+    public void setTrader(String trader) {
+        this.trader = trader == null ? null : trader.trim();
+    }
+
+    /**
+     * 取得 衍生品买卖方向
+     * @return 衍生品买卖方向
+     */
+    public String getDerivativeBsDir() {
+        return derivativeBsDir;
+    }
+
+    /**
+     * 设置 衍生品买卖方向
+     * @param derivativeBsDir 衍生品买卖方向
+     */
+    public void setDerivativeBsDir(String derivativeBsDir) {
+        this.derivativeBsDir = derivativeBsDir == null ? null : derivativeBsDir.trim();
+    }
+
+    /**
+     * 取得 衍生品开平仓标志
+     * @return 衍生品开平仓标志
+     */
+    public String getDerivativeOcFlag() {
+        return derivativeOcFlag;
+    }
+
+    /**
+     * 设置 衍生品开平仓标志
+     * @param derivativeOcFlag 衍生品开平仓标志
+     */
+    public void setDerivativeOcFlag(String derivativeOcFlag) {
+        this.derivativeOcFlag = derivativeOcFlag == null ? null : derivativeOcFlag.trim();
+    }
+
+    /**
+     * 取得 首次交收日
+     * @return 首次交收日
+     */
+    public Date getVpayDate() {
+        return vpayDate;
+    }
+
+    /**
+     * 设置 首次交收日
+     * @param vpayDate 首次交收日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setVpayDate(Date vpayDate) {
+        this.vpayDate = vpayDate;
+    }
+
+    /**
+     * 取得 到期交收日
+     * @return 到期交收日
+     */
+    public Date getMpayDate() {
+        return mpayDate;
+    }
+
+    /**
+     * 设置 到期交收日
+     * @param mpayDate 到期交收日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setMpayDate(Date mpayDate) {
+        this.mpayDate = mpayDate;
+    }
+
+    /**
+     * 取得 到期应计利息
+     * @return 到期应计利息
+     */
+    public BigDecimal getmIntAmt() {
+        return mIntAmt;
+    }
+
+    /**
+     * 设置 到期应计利息
+     * @param mIntAmt 到期应计利息
+     */
+    public void setmIntAmt(BigDecimal mIntAmt) {
+        this.mIntAmt = mIntAmt;
+    }
+
+    /**
+     * 取得 到期结算金额
+     * @return 到期结算金额
+     */
+    public BigDecimal getmTradeAmt() {
+        return mTradeAmt;
+    }
+
+    /**
+     * 设置 到期结算金额
+     * @param mTradeAmt 到期结算金额
+     */
+    public void setmTradeAmt(BigDecimal mTradeAmt) {
+        this.mTradeAmt = mTradeAmt;
+    }
+
+    /**
+     * 取得 占款天数
+     * @return 占款天数
+     */
+    public BigDecimal getCapDays() {
+        return capDays;
+    }
+
+    /**
+     * 设置 占款天数
+     * @param capDays 占款天数
+     */
+    public void setCapDays(BigDecimal capDays) {
+        this.capDays = capDays;
+    }
+
+    /**
+     * 取得 成交编号/初始交易编号
+     * @return 成交编号/初始交易编号
+     */
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    /**
+     * 设置 成交编号/初始交易编号
+     * @param tradeId 成交编号/初始交易编号
+     */
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId == null ? null : tradeId.trim();
+    }
+
+    /**
+     * 取得 请求号
+     * @return 请求号
+     */
+    public String getRequestId() {
+        return requestId;
+    }
+
+    /**
+     * 设置 请求号
+     * @param requestId 请求号
+     */
+    public void setRequestId(String requestId) {
+        this.requestId = requestId == null ? null : requestId.trim();
+    }
+
+    /**
+     * 取得 报价方式
+     * @return 报价方式
+     */
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    /**
+     * 设置 报价方式
+     * @param quoteType 报价方式
+     */
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType == null ? null : quoteType.trim();
+    }
+
+    /**
+     * 取得 续做类型
+     * @return 续做类型
+     */
+    public String getRedoType() {
+        return redoType;
+    }
+
+    /**
+     * 设置 续做类型
+     * @param redoType 续做类型
+     */
+    public void setRedoType(String redoType) {
+        this.redoType = redoType == null ? null : redoType.trim();
     }
 }

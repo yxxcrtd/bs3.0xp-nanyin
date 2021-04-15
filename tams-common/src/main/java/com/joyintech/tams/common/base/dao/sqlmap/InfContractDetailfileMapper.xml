@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InfContractDetailfileMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InfContractDetailfile" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+        <result column="DEAL_NO" property="dealNo" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="ACCT_NO" property="acctNo" jdbcType="VARCHAR" />
+        <result column="BOND_ID" property="bondId" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="TRADE_PLAT" property="tradePlat" jdbcType="VARCHAR" />
+        <result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
+        <result column="SHARE_AMT" property="shareAmt" jdbcType="DECIMAL" />
+        <result column="UNIT_CPRICE" property="unitCprice" jdbcType="DECIMAL" />
+        <result column="UNIT_FPRICE" property="unitFprice" jdbcType="DECIMAL" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="V_TRADE_ID" property="vTradeId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="DEAL_MARGIN" property="dealMargin" jdbcType="DECIMAL" />
+        <result column="SETTLE_DAY" property="settleDay" jdbcType="DATE" />
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+        <result column="SCALE" property="scale" jdbcType="DECIMAL" />
+        <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, ENTRUST_ID ENTRUST_ID, ORDER_ID ORDER_ID, ORDER_NO ORDER_NO, DEAL_NO DEAL_NO, 
+        PORTFOLIO_ID PORTFOLIO_ID, ACCT_NO ACCT_NO, BOND_ID BOND_ID, FINPROD_ID FINPROD_ID, 
+        PS PS, TRADE_MARKET TRADE_MARKET, TRADE_PLAT TRADE_PLAT, FINPROD_MARKET_ID FINPROD_MARKET_ID, 
+        SHARE_AMT SHARE_AMT, UNIT_CPRICE UNIT_CPRICE, UNIT_FPRICE UNIT_FPRICE, TRADE_AMT TRADE_AMT, 
+        TRADE_DATE TRADE_DATE, VDATE VDATE, MDATE MDATE, V_TRADE_ID V_TRADE_ID, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        CCY CCY, DEAL_MARGIN DEAL_MARGIN, SETTLE_DAY SETTLE_DAY, BUSI_TYPE BUSI_TYPE, SCALE SCALE, 
+        COUNTER_ID COUNTER_ID
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfContractDetailfileMapper.Base_Column_List" />
+        from INF_CONTRACT_DETAILFILE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfContractDetailfileMapper.Base_Column_List" />
+        from INF_CONTRACT_DETAILFILE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfContractDetailfileMapper.Base_Column_List" />
+        from INF_CONTRACT_DETAILFILE
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INF_CONTRACT_DETAILFILE
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InfContractDetailfile" >
+        insert into INF_CONTRACT_DETAILFILE (SEQNO, ENTRUST_ID, ORDER_ID, 
+            ORDER_NO, DEAL_NO, PORTFOLIO_ID, 
+            ACCT_NO, BOND_ID, FINPROD_ID, 
+            PS, TRADE_MARKET, TRADE_PLAT, 
+            FINPROD_MARKET_ID, SHARE_AMT, UNIT_CPRICE, 
+            UNIT_FPRICE, TRADE_AMT, TRADE_DATE, 
+            VDATE, MDATE, V_TRADE_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CCY, 
+            DEAL_MARGIN, SETTLE_DAY, BUSI_TYPE, 
+            SCALE, COUNTER_ID)
+        values (#{seqno,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
+            #{orderNo,jdbcType=VARCHAR}, #{dealNo,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, 
+            #{acctNo,jdbcType=VARCHAR}, #{bondId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{ps,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, #{tradePlat,jdbcType=VARCHAR}, 
+            #{finprodMarketId,jdbcType=VARCHAR}, #{shareAmt,jdbcType=DECIMAL}, #{unitCprice,jdbcType=DECIMAL}, 
+            #{unitFprice,jdbcType=DECIMAL}, #{tradeAmt,jdbcType=DECIMAL}, #{tradeDate,jdbcType=DATE}, 
+            #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{vTradeId,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR}, 
+            #{dealMargin,jdbcType=DECIMAL}, #{settleDay,jdbcType=DATE}, #{busiType,jdbcType=VARCHAR}, 
+            #{scale,jdbcType=DECIMAL}, #{counterId,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InfContractDetailfile" >
+        insert into INF_CONTRACT_DETAILFILE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="orderId != null" >
+                ORDER_ID,
+            </if>
+            <if test="orderNo != null" >
+                ORDER_NO,
+            </if>
+            <if test="dealNo != null" >
+                DEAL_NO,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="acctNo != null" >
+                ACCT_NO,
+            </if>
+            <if test="bondId != null" >
+                BOND_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="tradePlat != null" >
+                TRADE_PLAT,
+            </if>
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID,
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT,
+            </if>
+            <if test="unitCprice != null" >
+                UNIT_CPRICE,
+            </if>
+            <if test="unitFprice != null" >
+                UNIT_FPRICE,
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="vTradeId != null" >
+                V_TRADE_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="dealMargin != null" >
+                DEAL_MARGIN,
+            </if>
+            <if test="settleDay != null" >
+                SETTLE_DAY,
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE,
+            </if>
+            <if test="scale != null" >
+                SCALE,
+            </if>
+            <if test="counterId != null" >
+                COUNTER_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderId != null" >
+                #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null" >
+                #{orderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="dealNo != null" >
+                #{dealNo,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="acctNo != null" >
+                #{acctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="bondId != null" >
+                #{bondId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePlat != null" >
+                #{tradePlat,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodMarketId != null" >
+                #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="shareAmt != null" >
+                #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="unitCprice != null" >
+                #{unitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="unitFprice != null" >
+                #{unitFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmt != null" >
+                #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="vTradeId != null" >
+                #{vTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMargin != null" >
+                #{dealMargin,jdbcType=DECIMAL},
+            </if>
+            <if test="settleDay != null" >
+                #{settleDay,jdbcType=DATE},
+            </if>
+            <if test="busiType != null" >
+                #{busiType,jdbcType=VARCHAR},
+            </if>
+            <if test="scale != null" >
+                #{scale,jdbcType=DECIMAL},
+            </if>
+            <if test="counterId != null" >
+                #{counterId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InfContractDetailfile" >
+        insert into INF_CONTRACT_DETAILFILE(SEQNO, ENTRUST_ID, ORDER_ID, ORDER_NO, DEAL_NO, 
+        PORTFOLIO_ID, ACCT_NO, BOND_ID, FINPROD_ID, PS, TRADE_MARKET, TRADE_PLAT, FINPROD_MARKET_ID, 
+        SHARE_AMT, UNIT_CPRICE, UNIT_FPRICE, TRADE_AMT, TRADE_DATE, VDATE, MDATE, V_TRADE_ID, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CCY, DEAL_MARGIN, 
+        SETTLE_DAY, BUSI_TYPE, SCALE, COUNTER_ID)
+        select SEQNO, ENTRUST_ID, ORDER_ID, ORDER_NO, DEAL_NO, 
+            PORTFOLIO_ID, ACCT_NO, BOND_ID, FINPROD_ID, PS, TRADE_MARKET, TRADE_PLAT, FINPROD_MARKET_ID, 
+            SHARE_AMT, UNIT_CPRICE, UNIT_FPRICE, TRADE_AMT, TRADE_DATE, VDATE, MDATE, V_TRADE_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CCY, DEAL_MARGIN, 
+            SETTLE_DAY, BUSI_TYPE, SCALE, COUNTER_ID
+             from INF_CONTRACT_DETAILFILE
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InfContractDetailfile" >
+        update INF_CONTRACT_DETAILFILE
+        <set >
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderId != null" >
+                ORDER_ID = #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null" >
+                ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="dealNo != null" >
+                DEAL_NO = #{dealNo,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="acctNo != null" >
+                ACCT_NO = #{acctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="bondId != null" >
+                BOND_ID = #{bondId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePlat != null" >
+                TRADE_PLAT = #{tradePlat,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="unitCprice != null" >
+                UNIT_CPRICE = #{unitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="unitFprice != null" >
+                UNIT_FPRICE = #{unitFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="vTradeId != null" >
+                V_TRADE_ID = #{vTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMargin != null" >
+                DEAL_MARGIN = #{dealMargin,jdbcType=DECIMAL},
+            </if>
+            <if test="settleDay != null" >
+                SETTLE_DAY = #{settleDay,jdbcType=DATE},
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+            </if>
+            <if test="scale != null" >
+                SCALE = #{scale,jdbcType=DECIMAL},
+            </if>
+            <if test="counterId != null" >
+                COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InfContractDetailfile" >
+        update INF_CONTRACT_DETAILFILE
+        set ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            ORDER_ID = #{orderId,jdbcType=VARCHAR},
+            ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+            DEAL_NO = #{dealNo,jdbcType=VARCHAR},
+            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            ACCT_NO = #{acctNo,jdbcType=VARCHAR},
+            BOND_ID = #{bondId,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            TRADE_PLAT = #{tradePlat,jdbcType=VARCHAR},
+            FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+            UNIT_CPRICE = #{unitCprice,jdbcType=DECIMAL},
+            UNIT_FPRICE = #{unitFprice,jdbcType=DECIMAL},
+            TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            V_TRADE_ID = #{vTradeId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            DEAL_MARGIN = #{dealMargin,jdbcType=DECIMAL},
+            SETTLE_DAY = #{settleDay,jdbcType=DATE},
+            BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+            SCALE = #{scale,jdbcType=DECIMAL},
+            COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>
