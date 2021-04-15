@@ -1365,7 +1365,7 @@ $(function() {
         /**
          * checkBox
          */
-       checkbox:$("#pageModel").val()=='0'||$("#pageModel").val()=='1'?true : false,
+       checkbox:$("#pageModel").val()=='0'?true : false,
         /**
          * check 选中事件
          */
@@ -1570,6 +1570,10 @@ $(function() {
     	    					-redCycleDataTableList[data.LAY_TABLE_INDEX].redFeeLc});
     			}
     		}
+    		debugger;
+			if($("#pageModel").val()=='1'){
+				redCycleDataTableCheckByIndex(redCycleDataTableList);
+			}
         }
     });
 
@@ -1632,7 +1636,7 @@ $(function() {
      * 赎回期次子产品列表check选中事件
      */
     var redCycleDataTableCheck = function() {
-	   
+	   debugger;
     	var redCycleDataTableList = redCycleDataTable.getAllCheckedRows();
     	var redDealNumTotal = 0;
     	var redDealAmtTotal = 0;
@@ -1687,6 +1691,66 @@ $(function() {
 		$("#redFeeLc").val(redFeeLcTotal);
 		$("#redFee").val(redFeeTotal);
 		$("#redTotalNetValue").val(redTotalNetValueTotal);
+		$("#redPurFeeHd").val(redPurFeeHdTotal);
+		$("#redCost").val(redCostTotal);
+		$("#redProfit").val(redProfitTotal);
+		$("#redManaFreeVal").val(redManaFreeValTotal);
+	};
+
+	var redCycleDataTableCheckByIndex = function(redCycleDataTableList) {
+		var redDealNumTotal = 0;
+		var redDealAmtTotal = 0;
+		var redFeeLcTotal = 0;		//赎回费(产品留存)总和
+		var redFeeTotal = 0;		//赎回费总和
+		var redTotalNetValueTotal = 0;		//净金额总和
+		var redPurFeeHdTotal = 0;		//申购费(后端)总和
+		var redCostTotal = 0;		//赎回成本总和
+		var redProfitTotal = 0;		//赎回收益总和
+		var redManaFreeValTotal = 0;		//浮动管理费总和
+		for(var i in redCycleDataTableList){
+
+			if(redCycleDataTableList[i].redDealNum){
+				redDealNumTotal = redDealNumTotal + parseFloat(redCycleDataTableList[i].redDealNum);
+			}
+			if(redCycleDataTableList[i].redDealAmt){
+				redDealAmtTotal = redDealAmtTotal + parseFloat(redCycleDataTableList[i].redDealAmt);
+			}
+			if(redCycleDataTableList[i].redFeeLc){
+				redFeeLcTotal = redFeeLcTotal + parseFloat(redCycleDataTableList[i].redFeeLc);
+			}
+			if(redCycleDataTableList[i].redTotalNetValue){
+				redTotalNetValueTotal = redTotalNetValueTotal + parseFloat(redCycleDataTableList[i].redTotalNetValue);
+			}
+			if(redCycleDataTableList[i].redFee){
+				redFeeTotal = redFeeTotal + parseFloat(redCycleDataTableList[i].redFee);
+			}
+			if(redCycleDataTableList[i].totalNetValue){
+				redTotalNetValueTotal = redTotalNetValueTotal + parseFloat(redCycleDataTableList[i].redTotalNetValue);
+			}
+			if(redCycleDataTableList[i].redPurFeeHd){
+				redPurFeeHdTotal = redPurFeeHdTotal + parseFloat(redCycleDataTableList[i].redPurFeeHd);
+			}
+			if(redCycleDataTableList[i].redCost){
+				redCostTotal = redCostTotal + parseFloat(redCycleDataTableList[i].redCost);
+			}
+			if(redCycleDataTableList[i].redProfit){
+				redProfitTotal = redProfitTotal + parseFloat(redCycleDataTableList[i].redProfit);
+			}
+			if(redCycleDataTableList[i].redManaFreeVal){
+				redManaFreeValTotal = redManaFreeValTotal + parseFloat(redCycleDataTableList[i].redManaFreeVal);
+			}
+
+		}
+		//  add by jiangpeng on 20200731  start
+		//  赎回，交易份额含小数位，会导致净金额 交易金额 小数位展示6位，应于非周期一致保留两位
+		redTotalNetValueTotal = JoyinUtil.formatNumber(redTotalNetValueTotal,2,null,2);
+		redDealAmtTotal = JoyinUtil.formatNumber(redDealAmtTotal,2,null,2);
+		//  add by jiangpeng on 20200731 end
+		$("#redDealNum").val(redDealNumTotal);
+		$("#redDealAmt").val(redDealAmtTotal);
+		$("#redFeeLc").val(redFeeLcTotal);
+		$("#redFee").val(redFeeTotal);
+		$("#redTotalNetValue").val(redDealAmtTotal);
 		$("#redPurFeeHd").val(redPurFeeHdTotal);
 		$("#redCost").val(redCostTotal);
 		$("#redProfit").val(redProfitTotal);
@@ -1871,7 +1935,8 @@ $(function() {
 		$("#expireProfit").val(expireProfitTotal);
 		$("#expireManaFreeVal").val(expireManaFreeValTotal);
 	};
-    /**
+
+	/*
      * 定义强增强减子组合列表
      */
     var addReduceCycleDataTable=$("#addReduceCycleDataTable").joyintable({
@@ -3105,5 +3170,8 @@ $(function() {
         if(workflowId != null && workflowId != ''){
         	$("#FinNetProductDuration_btn_revoke").hide();
         }
+		if($("#pageModel").val()=='1'){
+			expireCycleDataTableCheck();
+		}
     });
 }());
