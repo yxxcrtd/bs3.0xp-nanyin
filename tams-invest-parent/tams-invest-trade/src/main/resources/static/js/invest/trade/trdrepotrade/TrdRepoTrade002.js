@@ -1013,6 +1013,9 @@
                 }
             });*/
         }
+        if(repoType){
+            $('#repoType').val(repoType).trigger('change');
+        }
     };
 
     /**
@@ -1294,7 +1297,7 @@
     			$("#calendarId").textSelect('setValue', '05');
     			//默认回购类型质押式竞价回购
             	if(pageModel!=PAGE_MODEL_REFERENCE){
-            	$("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
+            	    $("#repoType").textSelect('setValue',TARGET_BACK_TYPE_H02);
                     $('#repoType').attr('disabled',false);
                     var $repoType = $('#repoType');
                     //BS-1144深圳证券交易所:回购类型放开质押式协议回购  add by yujiaping 2020-11-25 start
