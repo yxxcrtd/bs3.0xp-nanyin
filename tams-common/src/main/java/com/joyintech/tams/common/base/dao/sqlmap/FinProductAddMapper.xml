@@ -133,6 +133,9 @@
             VAL_ORG,REP_FINPROD_INS_ID,IS_INADVANCE
             <if test="calRateType != null" >
                 ,cal_Rate_Type
+            </if>
+            <if test="isIssueAsset != null" >
+                ,IS_ISSUE_ASSET
             </if>)
         values (#{finprodId,jdbcType=VARCHAR}, #{saleDepartment,jdbcType=VARCHAR}, #{saleLayer,jdbcType=VARCHAR}, 
             #{salePeriod,jdbcType=DECIMAL}, #{purSpeed,jdbcType=DECIMAL}, #{redSpeed,jdbcType=DECIMAL}, 
@@ -158,6 +161,9 @@
             #{valOrg,jdbcType=VARCHAR},#{repFinprodInsId,jdbcType=VARCHAR},#{isInAdvance,jdbcType=VARCHAR}
             <if test="calRateType != null" >
                 ,#{calRateType,jdbcType=VARCHAR}
+            </if>
+            <if test="isIssueAsset != null" >
+                ,#{isIssueAsset,jdbcType=VARCHAR}
             </if>)
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >

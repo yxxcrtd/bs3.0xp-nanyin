@@ -229,6 +229,27 @@ public class FinBondTargetAssetDto extends FinProduct{
     private String repAssetType;
 
     /**
+     * 是否发行标的
+     */
+    public String isIssueAsset;
+
+    /**
+     * 获取 isIssueAsset
+     * @return isIssueAsset.
+     */
+    public String getIsIssueAsset() {
+        return isIssueAsset;
+    }
+
+    /**
+     * 设置 isIssueAsset
+     * @param isIssueAsset isIssueAsset
+     */
+    public void setIsIssueAsset(String isIssueAsset) {
+        this.isIssueAsset = isIssueAsset;
+    }
+
+    /**
      * 获取 creditFlag
      * @return creditFlag.
      */
