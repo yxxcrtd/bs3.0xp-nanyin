@@ -201,15 +201,7 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
 		 if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
     		 this.handleBussFlowData(dto);
     	 }		
-	 }
-	 
-	 @Override
-	    public void doUpdate(FinNetProductDurationDto dto) {    	
-	    	 if (!StringUtil.equals("revoke", dto.getOperateType())
-	                 && !StringUtil.equals("delete", dto.getOperateType())) {
-	    		 this.handleBussFlowData(dto);
-	    	 }
-	    }	
+	 }	 	
 	 
 	 @Override
 	    public void doBack(FinNetProductDurationDto dto) {
@@ -448,7 +440,8 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
     			 dto.setBussTrdTransferOrder(requestDto.getBussTrdTransferOrder());
     		}catch (Exception e) {
     			e.printStackTrace();
-    		}
+    		}    		
+    		 this.handleBussFlowData(dto);
     	}
     }
 
