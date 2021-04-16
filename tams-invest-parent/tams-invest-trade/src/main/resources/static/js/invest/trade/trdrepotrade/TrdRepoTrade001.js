@@ -204,7 +204,7 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0058"));
                 return;
             }
-            if(selArr[0]["validStatusText"]!='有效' || selArr[0]["repoTypeText"]!='质押式协议回购'){
+            if(selArr[0]["validStatusText"]!='有效' || (selArr[0]["repoTypeText"]!='质押式协议回购' && selArr[0]["tradeMarket"]!='银行间')){
                 Joyin.error(JoyinUtil.getMessage("请选择交易状态为有效、回购类型为质押式协议回购、直投的数据进行操作!"));
                 return;
             }
