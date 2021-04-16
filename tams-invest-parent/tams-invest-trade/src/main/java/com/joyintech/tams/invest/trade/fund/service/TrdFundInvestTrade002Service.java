@@ -348,7 +348,7 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
 					confirmDto.setFeeAmtPay(null);
 					ProcessParameter<TrdFundInvestTradeConfirmDto> workFlowPatameter = getWorkFlowPatameter(confirmDto);
 					try {
-                        WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(), "", "", confirmDto.getCreateUser(),
+                        WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(), "", "", confirmDto.getTrader(),
                                 OperationType.NEW, false, confirmDto);
                     }
 					catch (Exception e) {
