@@ -107,27 +107,6 @@
           and POS_DATE = #{posDate}
           and ASSET_CODE != #{assetCode}
     </select>
-
-    <!--add by zhangliang 20201010 start-->
-    <select id="queryChbPrdDeclareSubByRegCode" resultType="com.joyintech.tams.common.base.entity.ChbPrdDeclareSub">
-        select
-        REGIST_SEQNO registSeqno,
-        RAISE_PSTRDATE raisePstrdate,
-        RAISE_PENDDATE raisePenddate,
-        OPERATE_MODE operateMode,
-        SALE_AREA saleArea
-        from
-        CHB_PRD_DECLARE_SUB
-        <where>
-            <if test="prodId != null and prodId != ''">
-                and PROD_INS_ID = #{prodId}
-            </if>
-            <if test="regCode != null and regCode != ''">
-                and REG_CODE = #{regCode}
-            </if>
-        </where>
-    </select>
-
     <select id="genChbPrdDeclareSub1ByProdInsId" resultType="java.lang.String">
 		SELECT
 		     st.PROD_INS_ID
