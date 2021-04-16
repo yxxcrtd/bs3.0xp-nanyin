@@ -15,6 +15,7 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -98,6 +99,10 @@ public class FinProductExpire002Service extends BaseService<FinProductExpire002D
 
     @Autowired
     private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
+    
+    @Autowired
+    private EtrCashPositionMapper etrCashPositionMapper;
+
 
     /**
      * {@inheritDoc} ---丁俊峰放开注释
@@ -139,7 +144,7 @@ public class FinProductExpire002Service extends BaseService<FinProductExpire002D
             catch (Exception e) {
                 e.printStackTrace();
             }
-            entity.setOperateType(OperationType.MODIFY.toString());
+           // entity.setOperateType(OperationType.MODIFY.toString());
             // 重新insert
             this.insertBussFlowData(entity);
         }
@@ -1629,6 +1634,43 @@ public class FinProductExpire002Service extends BaseService<FinProductExpire002D
                 baseAssetCashPositionCommMapper.deleteCashPositionByOrderIds(orderIds);
             }
         }
-
+        // 划款指令
+        if (entity.getBussTrdTransferOrder() != null && entity.getBussTrdTransferOrder().size() > 0) {
+            for (BussTrdTransferOrderDto orderDto : entity.getBussTrdTransferOrder()) {
+                StlPayOrders stlPayOrdersDto = new StlPayOrders();
+                BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, orderDto);
+                stlPayOrdersDto.setOrderId(orderDto.getOrderId());
+                stlPayOrdersDto.setTradeId(entity.getTradeId());
+                stlPayOrdersDto.setOrderType(orderDto.getOrderType());
+                stlPayOrdersDto.setIsTotalTrade(DictCodeList.是否_是.getValue());
+                if (orderDto.getPs().equals("01")) {
+                    stlPayOrdersDto.setMyAcctNo(orderDto.getRecAcctNo());                 
+                    stlPayOrdersDto.setCounterAcctNo(orderDto.getPayAcctNo());
+                }
+                else {
+                    stlPayOrdersDto.setMyAcctNo(orderDto.getPayAcctNo());                 
+                    stlPayOrdersDto.setCounterAcctNo(orderDto.getRecAcctNo());
+                }
+                stlPayOrdersDto.setSettleAmt(orderDto.getSettleAmt());
+                stlPayOrdersDto.setCcy(orderDto.getCcy());
+                stlPayOrdersDto.setSettleDate(orderDto.getSettleDate());        
+                
+                /**
+                 * 指令现金流水
+                 */                    
+                EtrCashPosition tempPosition = new EtrCashPosition();            
+                tempPosition.setPortfolioId(stlPayOrdersDto.getPortfolioId());
+                tempPosition.setAcctId(stlPayOrdersDto.getMyAcctNo());                   
+                tempPosition.setAmount(stlPayOrdersDto.getSettleAmt());                     
+                tempPosition.setCcy(stlPayOrdersDto.getCcy());
+                tempPosition.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                tempPosition.setCdate(stlPayOrdersDto.getSettleDate());
+                EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
+                BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
+                EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
+                tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));                    
+               	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);                  
+            }
+        }
     }
 }

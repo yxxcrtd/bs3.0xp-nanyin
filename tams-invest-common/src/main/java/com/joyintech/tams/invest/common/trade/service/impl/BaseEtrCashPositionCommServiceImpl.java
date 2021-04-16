@@ -425,7 +425,8 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             }
             else if (StringUtil.equals(ps, DictCodeList.交易方向_产品赎回.getValue())
         			|| StringUtil.equals(ps, DictCodeList.交易方向_产品到期.getValue())
-                     || StringUtil.equals(ps, DictCodeList.交易方向_产品现金分红.getValue())) {
+                     || StringUtil.equals(ps, DictCodeList.交易方向_产品现金分红.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_产品提前赎回.getValue()) ) {
                 ret.setAmount(stlPayOrdersDto.getSettleAmt().negate());
             }
             if(cashInputDto.getNeedNegative()){//确定是撤销交易，交易金额取反
