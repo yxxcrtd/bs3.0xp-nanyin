@@ -24,7 +24,12 @@
 		    AND F.FEE_TYPE_ID = #{feeType}
 	</select>
 	<select id="queryTheoryInt" resultType="java.math.BigDecimal">
-		select nvl(theory_int,0) from pa_trd_product_deal where trade_id= #{tradeId}
+		select sum(nvl(decode(d.is_clean,'N',d.trade_amt,pd.theory_int),0))
+		from trd_product_deal d
+		left join pa_trd_product_deal pd
+		on d.trade_id=pd.trade_id
+		where d.trade_status='01' and d.Is_Cancel='N' and d.finprod_id= #{finprodId} and d.finprod_type=#{finprodType}
+		and d.settle_date　>= #{mdate,jdbcType=DATE} and d.mdate<![CDATA[<]]> #{mdate,jdbcType=DATE}
 	</select>
 	
 </mapper>

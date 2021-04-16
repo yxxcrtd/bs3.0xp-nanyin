@@ -34,6 +34,7 @@
         ,MST_CUSTOMER_INFO.CUSTOMER_ID issuer
 		,B.EXERCISE_DATE exerciseDate
 		,T2.IS_CITY_BOND isCityBond
+        ,T2.IS_ISSUE_ASSET isIssueAsset
 		,T7.INDUSTRY industry
 		,T7.INDUSTRY2 industry2
 		FROM
@@ -128,6 +129,14 @@
 				<if test="issuer != null and issuer != ''">
 					AND T.ISSUER = #{issuer,jdbcType=VARCHAR}
 				</if>
+                <if test="isIssueAsset != null and isIssueAsset != ''">
+					<if test="isIssueAsset == 'Y'.toString()">
+						AND T.ISISSUEASSET = #{isIssueAsset,jdbcType=VARCHAR}
+					</if>
+					<if test="isIssueAsset != 'Y'.toString()">
+						AND (T.ISISSUEASSET = #{isIssueAsset,jdbcType=VARCHAR} OR T.ISISSUEASSET IS NULL)
+					</if>
+                </if>
 				<!-- 添加是否新增债券条件 add by liupeilin 2020-01-15 begin -->
 				<if test="isFileter != null and isFileter != '' and isFileter eq 'Y'.toString()">
 				and T.FINPROD_ID in (
@@ -185,7 +194,10 @@
 			<!-- 城投债级别 gejiaao  2019/8/22 -开始-->
 			T2.IS_CITY_BOND isCityBond,
 			T2.CITY_BOND_LEV cityBondLev,
-			<!-- 城投债级别 gejiaao  2019/8/22 -结束-->
+			<!-- 城投债级别 gejiaao  2021/4/16 -结束-->
+			<!-- 是否发行标的 马数凯  2021/4/16 start-->
+			T2.IS_ISSUE_ASSET isIssueAsset,
+			<!-- 是否发行标的 马数凯  2019/8/22 end-->
 			T11.FINPROD_MARKET_ID conFinprodMarketId,
 		    T12.REP_ASSET_TYPE repAssetType
 			from FIN_PRODUCT T1

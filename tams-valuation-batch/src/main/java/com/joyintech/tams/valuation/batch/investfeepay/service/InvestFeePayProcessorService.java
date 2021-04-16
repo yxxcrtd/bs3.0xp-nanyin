@@ -873,12 +873,10 @@ public class InvestFeePayProcessorService {
 					DictCodeList.余额方向_贷方.getValue(),null);
 			// 科目余额
 			BigDecimal subjectBalance = map.get(item.getCcy());
-			//若出现晚支付场景，则理论费用取交易表中存的应付利息
-			if(StringUtil.isNotEmpty(item.getMdate()) && StringUtil.isNotEmpty(item.getSettleDate()) && item.getSettleDate().compareTo(item.getMdate())>0){
-				if(StringUtil.isNotEmpty(item.getTradeId())){
-					subjectBalance=investFeePayMapper.queryTheoryInt(item.getTradeId())==null?BigDecimal.ZERO:investFeePayMapper.queryTheoryInt(item.getTradeId());
-				}
-			}
+            //应允许出现晚支付场景，所以理论费用应再减去sum（支付日大于等于本次付费截止日 且 付费截止日小于当前截止日的付费交易理论或实付）
+			BigDecimal subjectBalancePay=investFeePayMapper.queryTheoryInt(item);
+			subjectBalance = ArithmeticUtil.subtract(subjectBalance, subjectBalancePay);
+
 
 			// 金额元素.应计费用 = 返回值.科目余额
 			accountAmountMap.put(BookConstant.ACCOUNTS_FEE, subjectBalance);
