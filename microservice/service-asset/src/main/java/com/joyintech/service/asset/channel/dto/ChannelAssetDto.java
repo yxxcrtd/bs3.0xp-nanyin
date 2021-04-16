@@ -13,6 +13,7 @@ package com.joyintech.service.asset.channel.dto;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.RepAssetDept;
 import com.joyintech.tams.common.base.entity.RepAssetMngPlan;
+import com.joyintech.tams.common.base.entity.RepAssetOther;
 import com.joyintech.tams.common.base.entity.StlFinProductAcct;
 import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
 
@@ -118,6 +119,10 @@ public class ChannelAssetDto extends FinProduct{
      * 资产管理计划报送信息entity
      */
     private RepAssetMngPlan repAssetMngPlan;
+    /**
+     * 中债资产其他要素entity
+     */
+    private RepAssetOther repAssetOther;
     
     /**
      * 管理人名称
@@ -559,4 +564,12 @@ public class ChannelAssetDto extends FinProduct{
     public void setCollectType(String collectType) {
         this.collectType = collectType;
     }
+
+	public RepAssetOther getRepAssetOther() {
+		return repAssetOther;
+	}
+
+	public void setRepAssetOther(RepAssetOther repAssetOther) {
+		this.repAssetOther = repAssetOther;
+	}
 }
