@@ -1253,10 +1253,10 @@
         ,STL_PAY_ORDERS.CCY as CCY
         ,TRD_FIN_PRODUCT_DEAL_TOTAL.VDATE positionStartDate
         ,TRD_FIN_PRODUCT_DEAL_TOTAL.MDATE positionEndDate
-        ,TRD_TRADE_FEE_DETAIL.is_prepaid isPerpaid
         <!-- 分层产品明细需要 add by yzg start 20191227 -->
         ,FIN_CASH_INFO.CASH_ID cashId
         <!-- 分层产品明细需要 add by yzg end 20191227 -->
+        ,TRD_TRADE_FEE_DETAIL.is_prepaid isPerpaid
         FROM
         TRD_FIN_PRODUCT_DEAL_TOTAL
         INNER JOIN PTL_TRADE
@@ -1369,10 +1369,10 @@
         ,STL_PAY_ORDERS.CCY as CCY
         ,TRD_PRODUCT_DEAL.VDATE positionStartDate
         ,TRD_PRODUCT_DEAL.MDATE positionEndDate
-        ,TRD_TRADE_FEE_DETAIL.is_prepaid isPerpaid
         <!-- 分层产品明细需要 add by yzg start 20191227 -->
         ,FIN_CASH_INFO.CASH_ID cashId
         <!-- 分层产品明细需要 add by yzg end 20191227 -->
+        ,TRD_TRADE_FEE_DETAIL.is_prepaid isPerpaid
         FROM
         TRD_FIN_PRODUCT_DEAL_TOTAL
         INNER JOIN PTL_TRADE
