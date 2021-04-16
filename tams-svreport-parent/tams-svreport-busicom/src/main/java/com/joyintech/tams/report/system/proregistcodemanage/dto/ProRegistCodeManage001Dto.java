@@ -7,10 +7,11 @@
  * 修改内容：新建
  * 系统名称：中信银行资管系统
  */
- 
+
 package com.joyintech.tams.report.system.proregistcodemanage.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -19,6 +20,7 @@ import com.joyintech.tams.report.common.base.TableRow;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -43,12 +45,12 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
      * 机构代码
      */
     private String orgCode;
-    
+
     /**
      * 机构代码名称
      */
     private String orgName;
-    
+
     /**
      * 产品名称
      */
@@ -103,12 +105,12 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
      * 到期日结束
      */
     private Date mdateEnd;
-    
+
     /**
      * 登记编码为空
      */
     private boolean isNotNull;
-    
+
     /**
      * 募集开始日
      */
@@ -132,16 +134,55 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
      * 募集起始日期（到）
      */
     private String raisePendDate;
-    
+
     /**
      * 登记编码生成日
      */
     private String generateDate;
+
+
+    /**
+     * 上传附件的文件路径
+     */
+    private String path;
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     /**
      * 产品运作模式
      */
     @DictFormat(DictCode.产品运作模式)
     private String operateMode;
+
+    /**
+     * 附件信息DTO
+     */
+    private List<UploadFile> fileArray;
+
+    /**
+     * 获取 fileArray
+     *
+     * @return fileArray.
+     */
+    public List<UploadFile> getFileArray() {
+        return fileArray;
+    }
+
+    /**
+     * 设置 fileArray
+     *
+     * @param fileArray
+     *            fileArray
+     */
+    public void setFileArray(List<UploadFile> fileArray) {
+        this.fileArray = fileArray;
+    }
 
     /**
      * 获取 prodid
@@ -367,7 +408,7 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
         this.isNotNull = isNotNull;
     }
 
-    
+
     /**
      * 获取 excelNum
      * @return excelNum.
@@ -376,7 +417,7 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
         return excelNum;
     }
 
-    
+
     /**
      * 设置 excelNum
      * @param excelNum excelNum
@@ -385,13 +426,13 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
         this.excelNum = excelNum;
     }
 
-	public String getRaiseVdate() {
-		return raiseVdate;
-	}
+    public String getRaiseVdate() {
+        return raiseVdate;
+    }
 
-	public void setRaiseVdate(String raiseVdate) {
-		this.raiseVdate = raiseVdate;
-	}
+    public void setRaiseVdate(String raiseVdate) {
+        this.raiseVdate = raiseVdate;
+    }
 
     public String getSendStatus() {
         return sendStatus;
@@ -432,11 +473,11 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
      * 获取 operateMode
      * @return operateMode.
      */
-	public String getOperateMode() {
-		return operateMode;
-	}
+    public String getOperateMode() {
+        return operateMode;
+    }
 
-	
+
     public String getOperateModeStr() {
         return operateMode==null?null:SysDataUtil.getNameFromDataDict(DictCode.产品运作模式, this.operateMode);
     }
@@ -449,21 +490,21 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
         this.operateMode = operateMode == null ? null : operateMode.trim();
     }
 
-	public String getOrgName() {
-		return orgName;
-	}
+    public String getOrgName() {
+        return orgName;
+    }
 
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
 
-	public String getGenerateDate() {
-		return generateDate;
-	}
+    public String getGenerateDate() {
+        return generateDate;
+    }
 
-	public void setGenerateDate(String generateDate) {
-		this.generateDate = generateDate;
-	}
-    
-    
+    public void setGenerateDate(String generateDate) {
+        this.generateDate = generateDate;
+    }
+
+
 }

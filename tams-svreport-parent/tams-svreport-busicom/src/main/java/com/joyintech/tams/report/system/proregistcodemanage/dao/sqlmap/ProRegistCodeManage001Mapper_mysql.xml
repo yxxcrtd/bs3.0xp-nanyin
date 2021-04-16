@@ -92,14 +92,14 @@
 		b.OPERATE_MODE operateMode,
 		DATE_FORMA(b.VDATE,'%Y-%m-%d') vdate,
 		DATE_FORMA(b.MDATE,'%Y-%m-%d') mdate,
-		psp.INVESTOR_TYPE investor,
 		DATE_FORMA(A.CREATE_TIME,'%Y-%m-%d') generateDate,
-		A.REMARK remark
+		A.REMARK remark,
+		c.PATH
 		FROM CHB_PRDRESIST_CODE A
 		left join chb_prd_baseinfo b
 		on b.prod_id = a.PRODID
-		left join PRD_SALE_PARAM  psp
-		on psp.FINPROD_ID = 'F16_'||a.PRODID
+		left join sys_upload_file_info c
+		on c.SEQ_NO=a.REG_CODE
 		<where>
 			<if test="prodList != null and prodList.size() > 0">
 				<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">
@@ -346,4 +346,23 @@
 			cpc.PRODID = #{prodId}
 		</where>
 	</select>
+	<select id="selectProCodeList" resultType="java.lang.String">
+		SELECT
+		A.REG_CODE regCode
+		FROM CHB_PRDRESIST_CODE A
+		left join chb_prd_baseinfo b
+		on b.prod_id = a.PRODID
+	</select>
+	<delete id="deleteBySeqNo" parameterType="java.lang.String" >
+		delete from SYS_UPLOAD_FILE_INFO
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertSysUploadFileInfo" parameterType="com.joyintech.tams.common.base.entity.SysUploadFileInfo" >
+		insert into SYS_UPLOAD_FILE_INFO (SEQ_NO, FILE_NAME, PATH,
+            BUSINESS_ID, CREATE_USER, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR},
+            #{businessId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+	</insert>
 </mapper>
