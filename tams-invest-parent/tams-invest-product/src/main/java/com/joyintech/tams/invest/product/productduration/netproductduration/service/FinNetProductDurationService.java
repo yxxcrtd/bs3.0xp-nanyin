@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
@@ -96,6 +97,7 @@ import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -202,6 +204,28 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
         }
         // 删除工作流表
         baseTradeProductDealCommServiceImpl.delete(dto.getWorkflowId());
+    }
+    
+    /**
+     * ZGBSS-382:待办中进行删除后提交，删除不掉
+     */
+    @Override
+    public void doUpdate(FinNetProductDurationDto dto) {
+    	if (!StringUtil.equals("revoke", dto.getOperateType()) && !StringUtil.equals("delete", dto.getOperateType())) {
+    		try {
+    			 //1. 获取前端页面数据
+    			 ProcessMark newEntity = WorkFlowUtil.getBusinessObjectFromRequest(FinNetProductDurationDto.class,true);
+    			 FinNetProductDurationDto requestDto = getBussinessEntity(newEntity);
+    			 //2. 利用前端数据 覆盖 dto中指定字段
+    			 dto.setAddReduceDealAmt03(requestDto.getAddReduceDealAmt03());
+    			 dto.setAddReduceDealNum03(requestDto.getAddReduceDealNum03());
+    			 dto.setAddReduceDealAmt(requestDto.getAddReduceDealAmt());
+    			 dto.setAddReduceDealNum(requestDto.getAddReduceDealNum());
+    			 dto.setBussTrdTransferOrder(requestDto.getBussTrdTransferOrder());
+    		}catch (Exception e) {
+    			e.printStackTrace();
+    		}
+    	}
     }
 
     private void saveRepDuration(FinNetProductDurationDto dto, boolean isRevoke) {
