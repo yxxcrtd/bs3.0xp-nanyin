@@ -541,6 +541,15 @@
                                     </div>
                                 </div>
                                 <!--　add by zhangpuyu 2019/10/24 end -->
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{FinBondTargetAsset002.isIssueAsset}">是否发行标的</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="checkbox" id="isIssueAsset" name="isIssueAsset"
+                                               lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+                                               data-th-checked="${YES_OR_NO_Y} ==${entity?.isIssueAsset}">
+                                    </div>
+                                </div>
                             </div>
                             <!-- 新增担保人 add by renping 20190930 end -->
                         </div>

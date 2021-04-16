@@ -105,6 +105,7 @@
             ,{field:'isSusStr',sortField:"IS_SUS",title:'FinBondTargetAsset002.isSus',width:150}//是否永续
             ,{field:'isRightStr',sortField:"IS_RIGHT",title:'FinBondTargetAsset002.isRight',width:150}//是否含权债
             ,{field:'isCityBondStr',sortField:"isCityBond",title:'FinBondTargetAsset002.isCityBond',width:150}//是否城投债
+            ,{field:'isIssueAsset',sortField:"isIssueAsset",title:'FinBondTargetAsset002.isIssueAsset',width:150}//是否发行标的
            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}//编辑和删除事件
         ]
     });

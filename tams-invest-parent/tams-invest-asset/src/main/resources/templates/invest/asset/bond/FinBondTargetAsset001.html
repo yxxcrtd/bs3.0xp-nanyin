@@ -140,7 +140,15 @@
                                         </div>
                                     </div>
                     <!--  添加是否新增债券条件 add by liupeilin 2020-01-15 end -->
-					
+                
+                    <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                        <label class="layui-form-label form-lable" data-th-text="#{FinBondTargetAsset002.isIssueAsset}">是否发行标的 </label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="isIssueAsset" name="isIssueAsset" 
+                                    class="layui-input form-input input-select" allowClear="true"
+                                    data-th-data-result="${YES_OR_NO}"></select>
+                        </div>
+                    </div>
 				</div>
             </form>   
         </div> 
