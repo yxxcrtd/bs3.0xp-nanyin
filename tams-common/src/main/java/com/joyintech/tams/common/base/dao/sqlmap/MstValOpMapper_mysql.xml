@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstValOpMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstValOp" >
+        <id column="FINPROD_ID2" property="finprodId2" jdbcType="VARCHAR" />
+        <id column="VAL_DATE" property="valDate" jdbcType="DATE" />
+        <result column="VALUATION" property="valuation" jdbcType="DECIMAL" />
+        <result column="VALMODEL_ID" property="valmodelId" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PUBLISH_DATE" property="publishDate" jdbcType="DATE" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID2 FINPROD_ID2, VAL_DATE VAL_DATE, VALUATION VALUATION, VALMODEL_ID VALMODEL_ID, 
+        CCY CCY, INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, PUBLISH_DATE PUBLISH_DATE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstValOpMapper.Base_Column_List" />
+        from MST_VAL_OP
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstValOpMapper.Base_Column_List" />
+        from MST_VAL_OP
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MstValOpKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstValOpMapper.Base_Column_List" />
+        from MST_VAL_OP
+        where FINPROD_ID2 = #{finprodId2,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstValOpKey" >
+        delete from MST_VAL_OP
+        where FINPROD_ID2 = #{finprodId2,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstValOp" >
+        insert into MST_VAL_OP (FINPROD_ID2, VAL_DATE, VALUATION, 
+            VALMODEL_ID, CCY, INPUT_TYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, PUBLISH_DATE
+            )
+        values (#{finprodId2,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{valuation,jdbcType=DECIMAL}, 
+            #{valmodelId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{inputType,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{publishDate,jdbcType=DATE}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstValOp" >
+        insert into MST_VAL_OP
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId2 != null" >
+                FINPROD_ID2,
+            </if>
+            <if test="valDate != null" >
+                VAL_DATE,
+            </if>
+            <if test="valuation != null" >
+                VALUATION,
+            </if>
+            <if test="valmodelId != null" >
+                VALMODEL_ID,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="publishDate != null" >
+                PUBLISH_DATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId2 != null" >
+                #{finprodId2,jdbcType=VARCHAR},
+            </if>
+            <if test="valDate != null" >
+                #{valDate,jdbcType=DATE},
+            </if>
+            <if test="valuation != null" >
+                #{valuation,jdbcType=DECIMAL},
+            </if>
+            <if test="valmodelId != null" >
+                #{valmodelId,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="publishDate != null" >
+                #{publishDate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstValOp" >
+        insert into MST_VAL_OP(FINPROD_ID2, VAL_DATE, VALUATION, VALMODEL_ID, CCY, INPUT_TYPE, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, PUBLISH_DATE)
+        select FINPROD_ID2, VAL_DATE, VALUATION, VALMODEL_ID, CCY, INPUT_TYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, PUBLISH_DATE
+             from MST_VAL_OP
+             where 1 = 1 and FINPROD_ID2 = #{finprodId2,jdbcType=VARCHAR} and VAL_DATE = #{valDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstValOp" >
+        update MST_VAL_OP
+        <set >
+            <if test="valuation != null" >
+                VALUATION = #{valuation,jdbcType=DECIMAL},
+            </if>
+            <if test="valmodelId != null" >
+                VALMODEL_ID = #{valmodelId,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="publishDate != null" >
+                PUBLISH_DATE = #{publishDate,jdbcType=DATE},
+            </if>
+        </set>
+        where FINPROD_ID2 = #{finprodId2,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstValOp" >
+        update MST_VAL_OP
+        set VALUATION = #{valuation,jdbcType=DECIMAL},
+            VALMODEL_ID = #{valmodelId,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            PUBLISH_DATE = #{publishDate,jdbcType=DATE}
+        where FINPROD_ID2 = #{finprodId2,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+    </update>
+</mapper>

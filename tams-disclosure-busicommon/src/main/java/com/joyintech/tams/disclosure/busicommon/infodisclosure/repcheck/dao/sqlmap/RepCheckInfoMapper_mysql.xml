@@ -30,4 +30,17 @@
 		and rpi.PROD_ID = #{prodId,jdbcType=VARCHAR}
 		and rpi.p_prod_id is null 
 	</select>
+    <select id="getCheckInfo"
+            resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.entity.RepCheckInfoDto">
+		select rcr.CHECK_ID as checkId,rcr.REP_ID as repId,rcr.CHECK_FOR as checkFor,rcr.ID as id,
+		       rc.QUERY_SCOPE as queryScope,rc.QUERY_TYPE as queryType,rc.BASE_DATA_TYPE as baseDataType,
+		       rc.QUERY_CONTEN_DESCR as queryContenDescr,rc.QUERY_CONTEN as queryConten,
+		       rc.QUERY_PARAM as queryParam,rc.DATA_TYPE as dataType,rc.PARAM_TYPE as paramType,
+		       rc.PARAM_VALUE1 as paramValue1,rc.PARAM_VALUE2 as paramValue2
+		from REP_CHECK_RELATION rcr
+		inner join REP_CHECK rc on rcr.CHECK_ID=rc.CHECK_ID and rc.STATUS='E'
+		where rcr.STATUS='E'
+		and rcr.REP_ID=#{repId,jdbcType=VARCHAR}
+		and rcr.CHECK_FOR=#{checkFor,jdbcType=VARCHAR}
+	</select>
 </mapper>

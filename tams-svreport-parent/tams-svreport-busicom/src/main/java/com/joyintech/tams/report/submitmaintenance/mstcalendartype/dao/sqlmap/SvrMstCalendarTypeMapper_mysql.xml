@@ -33,7 +33,7 @@
 		SELECT 
 		       T6.TRADE_CALENDAR_ID tradeCalendarId,
 		       T6.CALENDARNAME calendarName,
-    listagg(T6.CALENDARTYPE, ',')  within group ( order by T6.CALENDARTYPE ) calendarType
+                group_concat(T6.CALENDARTYPE, ',')  calendarType
         FROM(
                SELECT 
                       T5.TRADE_CALENDAR_ID,
@@ -276,7 +276,7 @@
 		SELECT 
 		       T6.TRADE_CALENDAR_ID tradeCalendarId,
 		       T6.CALENDARNAME calendarName,
-    listagg(T6.CALENDARTYPE, ',')  within group ( order by T6.CALENDARTYPE ) calendarType
+                group_concat(T6.CALENDARTYPE, ',') calendarType
         FROM(
                SELECT 
                       T5.TRADE_CALENDAR_ID,

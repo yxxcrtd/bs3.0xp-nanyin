@@ -14,10 +14,61 @@
         on P.REPORT_ID=I.REP_ID 
         where 1=1 
         <if test="reportName != null and reportName != ''">
-			and REPORT_NAME like concat(concat('%',#{reportName,jdbcType=VARCHAR}),'%')
+			and REPORT_NAME like concat_ws(concat_ws('%',#{reportName,jdbcType=VARCHAR}),'%')
 		</if>
 		AND I.REPORT_TYPE='Y'
         group by 
         I.REP_ID , I.REPORT_NAME,I.UPDATE_TIME)temp order by temp.UPDATE_TIME desc
 	</select>
+	<select id="select" resultType="com.joyintech.system.base.entity.SysRole">
+		select
+			ROLE_ID as roleId,
+			ROLE_NAME as roleName
+		from SYS_ROLE
+	</select>
+	<select id="findUserRole" resultType="com.joyintech.system.base.entity.SysRole">
+		select
+		ID roleId,ROLE_NAME  roleName
+		from
+		rep_power
+		where 1=1
+		<if test="repId != null and repId != ''">
+			and REPORT_ID=#{repId}
+		</if>
+	</select>
+	<insert id="save" parameterType="com.joyintech.tams.common.base.entity.RepPower" >
+		insert into REP_POWER
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				ID,
+			</if>
+			<if test="type != null" >
+				TYPE,
+			</if>
+			<if test="reportId != null" >
+				REPORT_ID,
+			</if>
+			<if test="roleName != null" >
+				ROLE_NAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null" >
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="reportId != null" >
+				#{reportId,jdbcType=VARCHAR},
+			</if>
+			<if test="roleName != null" >
+				#{roleName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<delete id="deleteByKey" parameterType="java.lang.String" >
+        delete from REP_POWER
+        where REPORT_ID = #{repId,jdbcType=VARCHAR}
+    </delete>
 </mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.AssetConfigMonDetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.AssetConfigMonDetail" >
+        <id column="ASSET_CONFIG_CODE" property="assetConfigCode" jdbcType="VARCHAR" />
+        <id column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <id column="ASSET_MONTH" property="assetMonth" jdbcType="VARCHAR" />
+        <result column="CUR_END_AMT" property="curEndAmt" jdbcType="DECIMAL" />
+        <result column="CUR_INV_AMT" property="curInvAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ASSET_CONFIG_CODE ASSET_CONFIG_CODE, ASSET_TYPE ASSET_TYPE, ASSET_MONTH ASSET_MONTH,
+        CUR_END_AMT CUR_END_AMT, CUR_INV_AMT CUR_INV_AMT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.AssetConfigMonDetailMapper.Base_Column_List" />
+        from ASSET_CONFIG_MON_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.AssetConfigMonDetailMapper.Base_Column_List" />
+        from ASSET_CONFIG_MON_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.AssetConfigMonDetailKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.AssetConfigMonDetailMapper.Base_Column_List" />
+        from ASSET_CONFIG_MON_DETAIL
+        where ASSET_CONFIG_CODE = #{assetConfigCode,jdbcType=VARCHAR}
+        and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+        and ASSET_MONTH = #{assetMonth,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.AssetConfigMonDetailKey" >
+        delete from ASSET_CONFIG_MON_DETAIL
+        where ASSET_CONFIG_CODE = #{assetConfigCode,jdbcType=VARCHAR}
+          and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+          and ASSET_MONTH = #{assetMonth,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.AssetConfigMonDetail" >
+        insert into ASSET_CONFIG_MON_DETAIL (ASSET_CONFIG_CODE, ASSET_TYPE, ASSET_MONTH,
+            CUR_END_AMT, CUR_INV_AMT, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME)
+        values (#{assetConfigCode,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, #{assetMonth,jdbcType=VARCHAR},
+            #{curEndAmt,jdbcType=DECIMAL}, #{curInvAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.AssetConfigMonDetail" >
+        insert into ASSET_CONFIG_MON_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="assetConfigCode != null" >
+                ASSET_CONFIG_CODE,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
+            <if test="assetMonth != null" >
+                ASSET_MONTH,
+            </if>
+            <if test="curEndAmt != null" >
+                CUR_END_AMT,
+            </if>
+            <if test="curInvAmt != null" >
+                CUR_INV_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="assetConfigCode != null" >
+                #{assetConfigCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetMonth != null" >
+                #{assetMonth,jdbcType=VARCHAR},
+            </if>
+            <if test="curEndAmt != null" >
+                #{curEndAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="curInvAmt != null" >
+                #{curInvAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.AssetConfigMonDetail" >
+        insert into ASSET_CONFIG_MON_DETAIL(ASSET_CONFIG_CODE, ASSET_TYPE, ASSET_MONTH, CUR_END_AMT,
+        CUR_INV_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ASSET_CONFIG_CODE, ASSET_TYPE, ASSET_MONTH, CUR_END_AMT,
+            CUR_INV_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from ASSET_CONFIG_MON_DETAIL
+             where 1 = 1 and ASSET_CONFIG_CODE = #{assetConfigCode,jdbcType=VARCHAR} and ASSET_TYPE = #{assetType,jdbcType=VARCHAR} and ASSET_MONTH = #{assetMonth,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.AssetConfigMonDetail" >
+        update ASSET_CONFIG_MON_DETAIL
+        <set >
+            <if test="curEndAmt != null" >
+                CUR_END_AMT = #{curEndAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="curInvAmt != null" >
+                CUR_INV_AMT = #{curInvAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ASSET_CONFIG_CODE = #{assetConfigCode,jdbcType=VARCHAR}
+        and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+        and ASSET_MONTH = #{assetMonth,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.AssetConfigMonDetail" >
+        update ASSET_CONFIG_MON_DETAIL
+        set CUR_END_AMT = #{curEndAmt,jdbcType=DECIMAL},
+            CUR_INV_AMT = #{curInvAmt,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ASSET_CONFIG_CODE = #{assetConfigCode,jdbcType=VARCHAR}
+          and ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+          and ASSET_MONTH = #{assetMonth,jdbcType=VARCHAR}
+    </update>
+</mapper>

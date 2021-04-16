@@ -26,10 +26,10 @@
 				and T1.is_holiday = #{ishDay}
 			</if>
 			<if test="startDate != null and ! startDate.equals('')">
-				and T1.cdate &gt;= to_date(#{startDate},'yyyy-MM-dd')
+				and T1.cdate &gt;= STR_TO_DATE(#{startDate},'%Y-%m-%d')
 			</if>
 			<if test="endDate != null and ! endDate.equals('')">
-				and T1.cdate &lt;= to_date(#{endDate},'yyyy-MM-dd')
+				and T1.cdate &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
 			</if>
 		</where>
 		ORDER BY calendarId ASC,cdate DESC

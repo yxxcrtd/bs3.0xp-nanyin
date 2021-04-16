@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskValtblStructMapDtlMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskValtblStructMapDtl" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <id column="SRC_COL_INDEX" property="srcColIndex" jdbcType="VARCHAR" />
+        <result column="SRC_COL_DATA_TYPE" property="srcColDataType" jdbcType="VARCHAR" />
+        <result column="TGT_INDEX" property="tgtIndex" jdbcType="VARCHAR" />
+        <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, SRC_COL_INDEX SRC_COL_INDEX, SRC_COL_DATA_TYPE SRC_COL_DATA_TYPE, TGT_INDEX TGT_INDEX, 
+        MEMO MEMO, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblStructMapDtlMapper.Base_Column_List" />
+        from RSK_VALTBL_STRUCT_MAP_DTL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblStructMapDtlMapper.Base_Column_List" />
+        from RSK_VALTBL_STRUCT_MAP_DTL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskValtblStructMapDtlKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskValtblStructMapDtlMapper.Base_Column_List" />
+        from RSK_VALTBL_STRUCT_MAP_DTL
+        where ID = #{id,jdbcType=VARCHAR}
+          and SRC_COL_INDEX = #{srcColIndex,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskValtblStructMapDtlKey" >
+        delete from RSK_VALTBL_STRUCT_MAP_DTL
+        where ID = #{id,jdbcType=VARCHAR}
+          and SRC_COL_INDEX = #{srcColIndex,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskValtblStructMapDtl" >
+        insert into RSK_VALTBL_STRUCT_MAP_DTL (ID, SRC_COL_INDEX, SRC_COL_DATA_TYPE, 
+            TGT_INDEX, MEMO, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{id,jdbcType=VARCHAR}, #{srcColIndex,jdbcType=VARCHAR}, #{srcColDataType,jdbcType=VARCHAR}, 
+            #{tgtIndex,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskValtblStructMapDtl" >
+        insert into RSK_VALTBL_STRUCT_MAP_DTL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="srcColIndex != null" >
+                SRC_COL_INDEX,
+            </if>
+            <if test="srcColDataType != null" >
+                SRC_COL_DATA_TYPE,
+            </if>
+            <if test="tgtIndex != null" >
+                TGT_INDEX,
+            </if>
+            <if test="memo != null" >
+                MEMO,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="srcColIndex != null" >
+                #{srcColIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="srcColDataType != null" >
+                #{srcColDataType,jdbcType=VARCHAR},
+            </if>
+            <if test="tgtIndex != null" >
+                #{tgtIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null" >
+                #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskValtblStructMapDtl" >
+        insert into RSK_VALTBL_STRUCT_MAP_DTL(ID, SRC_COL_INDEX, SRC_COL_DATA_TYPE, TGT_INDEX, 
+        MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ID, SRC_COL_INDEX, SRC_COL_DATA_TYPE, TGT_INDEX, 
+            MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_VALTBL_STRUCT_MAP_DTL
+             where 1 = 1 and ID = #{id,jdbcType=VARCHAR} and SRC_COL_INDEX = #{srcColIndex,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskValtblStructMapDtl" >
+        update RSK_VALTBL_STRUCT_MAP_DTL
+        <set >
+            <if test="srcColDataType != null" >
+                SRC_COL_DATA_TYPE = #{srcColDataType,jdbcType=VARCHAR},
+            </if>
+            <if test="tgtIndex != null" >
+                TGT_INDEX = #{tgtIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null" >
+                MEMO = #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+          and SRC_COL_INDEX = #{srcColIndex,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskValtblStructMapDtl" >
+        update RSK_VALTBL_STRUCT_MAP_DTL
+        set SRC_COL_DATA_TYPE = #{srcColDataType,jdbcType=VARCHAR},
+            TGT_INDEX = #{tgtIndex,jdbcType=VARCHAR},
+            MEMO = #{memo,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ID = #{id,jdbcType=VARCHAR}
+          and SRC_COL_INDEX = #{srcColIndex,jdbcType=VARCHAR}
+    </update>
+</mapper>

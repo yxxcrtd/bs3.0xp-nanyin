@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbBotAstPositionMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
+        <id column="POS_ID" property="posId" jdbcType="CHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="POS_DATE" property="posDate" jdbcType="TIMESTAMP" />
+        <result column="PLAN_ASSET_ID" property="planAssetId" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="TOTAL_NUM" property="totalNum" jdbcType="DECIMAL" />
+        <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+        <result column="UNINVEST_CASH" property="uninvestCash" jdbcType="DECIMAL" />
+        <result column="POS_NUM" property="posNum" jdbcType="DECIMAL" />
+        <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
+        <result column="ISFINAPLAN" property="isfinaplan" jdbcType="CHAR" />
+        <result column="ISCHL" property="ischl" jdbcType="CHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    POS_ID, ISSUE_PARTY_ID, POS_DATE, PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, ISSUE_AMT,
+    UNINVEST_CASH, POS_NUM, POS_AMT, ISFINAPLAN, ISCHL, WORKFLOW_ID, STATUS, ORG_CODE,
+    DEPT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DATASOURCE
+  </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbBotAstPositionSubMapper.Base_Column_List" />
+        from CHB_BOT_AST_POS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbBotAstPositionSubMapper.Base_Column_List" />
+        from CHB_BOT_AST_POS
+        where STATUS = 'E'
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from CHB_BOT_AST_POS
+        where POS_ID = #{posId,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_BOT_AST_POS
+    where POS_ID = #{posId,jdbcType=CHAR}
+  </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
+    insert into CHB_BOT_AST_POS (POS_ID, ISSUE_PARTY_ID, POS_DATE,
+      PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
+      ISSUE_AMT, UNINVEST_CASH, POS_NUM,
+      POS_AMT, ISFINAPLAN, ISCHL,
+      WORKFLOW_ID, STATUS, ORG_CODE,
+      DEPT_CODE, CREATE_USER, CREATE_DEPT,
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+      DATASOURCE)
+    values (#{posId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{posDate,jdbcType=TIMESTAMP},
+      #{planAssetId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{totalNum,jdbcType=DECIMAL},
+      #{issueAmt,jdbcType=DECIMAL}, #{uninvestCash,jdbcType=DECIMAL}, #{posNum,jdbcType=DECIMAL},
+      #{posAmt,jdbcType=DECIMAL}, #{isfinaplan,jdbcType=CHAR}, #{ischl,jdbcType=CHAR},
+      #{workflowId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+      #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+      #{datasource,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
+        insert into CHB_BOT_AST_POS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="posId != null" >
+                POS_ID,
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID,
+            </if>
+            <if test="posDate != null" >
+                POS_DATE,
+            </if>
+            <if test="planAssetId != null" >
+                PLAN_ASSET_ID,
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE,
+            </if>
+            <if test="totalNum != null" >
+                TOTAL_NUM,
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT,
+            </if>
+            <if test="uninvestCash != null" >
+                UNINVEST_CASH,
+            </if>
+            <if test="posNum != null" >
+                POS_NUM,
+            </if>
+            <if test="posAmt != null" >
+                POS_AMT,
+            </if>
+            <if test="isfinaplan != null" >
+                ISFINAPLAN,
+            </if>
+            <if test="ischl != null" >
+                ISCHL,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="datasource != null" >
+                DATASOURCE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="posId != null" >
+                #{posId,jdbcType=CHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="posDate != null" >
+                #{posDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="planAssetId != null" >
+                #{planAssetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="totalNum != null" >
+                #{totalNum,jdbcType=DECIMAL},
+            </if>
+            <if test="issueAmt != null" >
+                #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="uninvestCash != null" >
+                #{uninvestCash,jdbcType=DECIMAL},
+            </if>
+            <if test="posNum != null" >
+                #{posNum,jdbcType=DECIMAL},
+            </if>
+            <if test="posAmt != null" >
+                #{posAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="isfinaplan != null" >
+                #{isfinaplan,jdbcType=CHAR},
+            </if>
+            <if test="ischl != null" >
+                #{ischl,jdbcType=CHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="datasource != null" >
+                #{datasource,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
+        update CHB_BOT_AST_POS
+        <set >
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="posDate != null" >
+                POS_DATE = #{posDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="planAssetId != null" >
+                PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="totalNum != null" >
+                TOTAL_NUM = #{totalNum,jdbcType=DECIMAL},
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="uninvestCash != null" >
+                UNINVEST_CASH = #{uninvestCash,jdbcType=DECIMAL},
+            </if>
+            <if test="posNum != null" >
+                POS_NUM = #{posNum,jdbcType=DECIMAL},
+            </if>
+            <if test="posAmt != null" >
+                POS_AMT = #{posAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="isfinaplan != null" >
+                ISFINAPLAN = #{isfinaplan,jdbcType=CHAR},
+            </if>
+            <if test="ischl != null" >
+                ISCHL = #{ischl,jdbcType=CHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="datasource != null" >
+                DATASOURCE = #{datasource,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where POS_ID = #{posId,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
+    update CHB_BOT_AST_POS
+    set ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+      POS_DATE = #{posDate,jdbcType=TIMESTAMP},
+      PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR},
+      ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+      TOTAL_NUM = #{totalNum,jdbcType=DECIMAL},
+      ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+      UNINVEST_CASH = #{uninvestCash,jdbcType=DECIMAL},
+      POS_NUM = #{posNum,jdbcType=DECIMAL},
+      POS_AMT = #{posAmt,jdbcType=DECIMAL},
+      ISFINAPLAN = #{isfinaplan,jdbcType=CHAR},
+      ISCHL = #{ischl,jdbcType=CHAR},
+      WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      DATASOURCE = #{datasource,jdbcType=VARCHAR}
+    where POS_ID = #{posId,jdbcType=CHAR}
+  </update>
+</mapper>

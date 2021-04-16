@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.employee.dao.SvrChbEmployeeDBInterfMapper_mysql" >
+
+    <select id="selectBatchData" resultType="com.joyintech.tams.common.base.entity.ChbEmployeeInfo">
+		SELECT
+		    EMPLOYEE_TYPE,
+			EMPLOYEE_NAME,
+			EMPLOYEE_SEX,
+			ISSUE_PARTY_ID,
+			IDENTIFY_NUMBER,
+			BELONGS_BANK,
+			BELONGS_PLACE,
+			COMPANY_NAME,
+			BELONGS_DEPT,
+			POSITION,
+			EDUCATION,
+			ACADEMIC_DEGREE,
+			FIRSTTIME2WORK,
+			FIRSTTIME2FINWORK,
+			PROFESSIONAL_TITLE,
+			FIN_PROFESSIONAL_CRTF,
+			FIN_TRAINING_NO,
+			AWARDS,
+			OFFICE_TEL,
+			MOBILE_TEL,
+			MAIL,
+			REG_BUSI_TYPE,
+			REG_EMPLOYEE_TYPE,
+			STATUS,
+			DEPT_CODE,
+			ORG_CODE,
+			UPDATE_USER,
+			UPDATE_TIME,
+			CREATE_USER,
+			CREATE_TIME,
+			REMARK
+	    FROM CHB_EMPLOYEE_INFO
+		WHERE DATE_FORMAT(NVL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
+	</select>
+
+    <select id="selectRegEmployeeData" resultType="com.joyintech.tams.common.base.entity.ChbEmployeeInfoSub">
+		SELECT
+		    EMPLOYEE_TYPE,
+			EMPLOYEE_NAME,
+			EMPLOYEE_SEX,
+			ISSUE_PARTY_ID,
+			IDENTIFY_NUMBER,
+			BELONGS_BANK,
+			BELONGS_PLACE,
+			COMPANY_NAME,
+			BELONGS_DEPT,
+			POSITION,
+			EDUCATION,
+			ACADEMIC_DEGREE,
+			FIRSTTIME2WORK,
+			FIRSTTIME2FINWORK,
+			PROFESSIONAL_TITLE,
+			FIN_PROFESSIONAL_CRTF,
+			FIN_TRAINING_NO,
+			AWARDS,
+			OFFICE_TEL,
+			MOBILE_TEL,
+			MAIL,
+			REG_BUSI_TYPE,
+			REG_EMPLOYEE_TYPE,
+			STATUS,
+			DEPT_CODE,
+			ORG_CODE,
+			UPDATE_USER,
+			UPDATE_TIME,
+			CREATE_USER,
+			CREATE_TIME,
+			SUMIT_SEQ,
+			CHB_SUBMIT_DEADLINE,
+			SUBMIT_DEADLINE,
+			SUBMIT_FEEDBACK_STATUS,
+			SEND_STATUS,
+			STATUS_DATE,
+			SUBMIT_TIME,
+			REMARK
+		FROM CHB_EMPLOYEE_INFO_SUB
+		WHERE  1=1
+        AND  SEND_STATUS  in ('02','03')
+	</select>
+
+    <delete id="deleteBatchData" parameterType="map">
+        DELETE FROM CHB_EMPLOYEE_INFO_SUB
+        <where>
+            <foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">
+                EMPLOYEE_TYPE = #{item.employeeType,jdbcType=VARCHAR}
+                AND IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
+                AND SEND_STATUS = '01'
+            </foreach>
+        </where>
+    </delete>
+
+    <insert id="insertChbEmployeeSubData">
+        MERGE INTO CHB_EMPLOYEE_INFO_SUB CII
+        USING (
+        <foreach collection="subList" item="item" open="select * from("
+                 close=")" separator="union all">
+            SELECT
+            #{item.employeeType,jdbcType=VARCHAR} EMPLOYEE_TYPE,
+            #{item.employeeName,jdbcType=VARCHAR} EMPLOYEE_NAME,
+            #{item.employeeSex,jdbcType=VARCHAR} EMPLOYEE_SEX,
+            #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+            #{item.identifyNumber,jdbcType=VARCHAR} IDENTIFY_NUMBER,
+            #{item.belongsBank,jdbcType=VARCHAR} BELONGS_BANK,
+            #{item.belongsPlace,jdbcType=VARCHAR} BELONGS_PLACE,
+            #{item.companyName,jdbcType=VARCHAR} COMPANY_NAME,
+            #{item.belongsDept,jdbcType=VARCHAR} BELONGS_DEPT,
+            #{item.position,jdbcType=VARCHAR} POSITION,
+            #{item.education,jdbcType=VARCHAR} EDUCATION,
+            #{item.academicDegree,jdbcType=VARCHAR} ACADEMIC_DEGREE,
+            #{item.firsttime2work,jdbcType=VARCHAR} FIRSTTIME2WORK,
+            #{item.firsttime2finwork,jdbcType=VARCHAR} FIRSTTIME2FINWORK,
+            #{item.professionalTitle,jdbcType=VARCHAR} PROFESSIONAL_TITLE,
+            #{item.finProfessionalCrtf,jdbcType=VARCHAR} FIN_PROFESSIONAL_CRTF,
+            #{item.finTrainingNo,jdbcType=VARCHAR} FIN_TRAINING_NO,
+            #{item.awards,jdbcType=VARCHAR} AWARDS,
+            #{item.officeTel,jdbcType=VARCHAR} OFFICE_TEL,
+            #{item.mobileTel,jdbcType=VARCHAR} MOBILE_TEL,
+            #{item.mail,jdbcType=VARCHAR} MAIL,
+            #{item.regBusiType,jdbcType=VARCHAR} REG_BUSI_TYPE,
+            #{item.regEmployeeType,jdbcType=VARCHAR} REG_EMPLOYEE_TYPE,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=VARCHAR} UPDATE_TIME,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createTime,jdbcType=VARCHAR} CREATE_TIME,
+            #{item.sumitSeq,jdbcType=VARCHAR} SUMIT_SEQ,
+            #{item.chbSubmitDeadline,jdbcType=VARCHAR} CHB_SUBMIT_DEADLINE,
+            #{item.submitDeadline,jdbcType=VARCHAR} SUBMIT_DEADLINE,
+            #{item.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
+            #{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
+            #{item.statusDate,jdbcType=VARCHAR} STATUS_DATE,
+            #{item.submitTime,jdbcType=VARCHAR} SUBMIT_TIME,
+            #{item.remark,jdbcType=VARCHAR} REMARK
+            FROM DUAL
+        </foreach>
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON(CII.EMPLOYEE_NAME = TEMP.EMPLOYEE_NAME
+        AND CII.IDENTIFY_NUMBER = TEMP.IDENTIFY_NUMBER
+        AND CII.STATUS = TEMP.STATUS
+        AND 1 = 2 <!-- 更新废弃，直接先删后插 -->
+        )
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN UPDATE
+        SET  CII.EMPLOYEE_TYPE = TEMP.EMPLOYEE_TYPE,
+        CII.EMPLOYEE_SEX = TEMP.EMPLOYEE_SEX,
+        CII.BELONGS_BANK = TEMP.BELONGS_BANK,
+        CII.BELONGS_PLACE = TEMP.BELONGS_PLACE,
+        CII.COMPANY_NAME = TEMP.COMPANY_NAME,
+        CII.BELONGS_DEPT = TEMP.BELONGS_DEPT,
+        CII.POSITION = TEMP.POSITION,
+        CII.EDUCATION = TEMP.EDUCATION,
+        CII.FIRSTTIME2WORK = TEMP.FIRSTTIME2WORK,
+        CII.FIRSTTIME2FINWORK = TEMP.FIRSTTIME2FINWORK,
+        CII.PROFESSIONAL_TITLE = TEMP.PROFESSIONAL_TITLE,
+        CII.FIN_PROFESSIONAL_CRTF = TEMP.FIN_PROFESSIONAL_CRTF,
+        CII.FIN_TRAINING_NO = TEMP.FIN_TRAINING_NO,
+        CII.AWARDS = TEMP.AWARDS,
+        CII.OFFICE_TEL = TEMP.OFFICE_TEL,
+        CII.MOBILE_TEL = TEMP.MOBILE_TEL,
+        CII.MAIL = TEMP.MAIL,
+        CII.REG_BUSI_TYPE = TEMP.REG_BUSI_TYPE,
+        CII.REG_EMPLOYEE_TYPE = TEMP.REG_EMPLOYEE_TYPE,
+        CII.DEPT_CODE = TEMP.DEPT_CODE,
+        CII.ORG_CODE = TEMP.ORG_CODE,
+        CII.UPDATE_TIME = TEMP.UPDATE_TIME,
+        CII.UPDATE_USER = TEMP.UPDATE_USER,
+        CII.REMARK = TEMP.REMARK
+        <!-- 未匹配到这插入 -->
+        WHEN NOT MATCHED THEN INSERT (
+        EMPLOYEE_TYPE,
+        EMPLOYEE_NAME,
+        EMPLOYEE_SEX,
+        ISSUE_PARTY_ID,
+        IDENTIFY_NUMBER,
+        BELONGS_BANK,
+        BELONGS_PLACE,
+        COMPANY_NAME,
+        BELONGS_DEPT,
+        POSITION,
+        EDUCATION,
+        ACADEMIC_DEGREE,
+        FIRSTTIME2WORK,
+        FIRSTTIME2FINWORK,
+        PROFESSIONAL_TITLE,
+        FIN_PROFESSIONAL_CRTF,
+        FIN_TRAINING_NO,
+        AWARDS,
+        OFFICE_TEL,
+        MOBILE_TEL,
+        MAIL,
+        REG_BUSI_TYPE,
+        REG_EMPLOYEE_TYPE,
+        STATUS,
+        DEPT_CODE,
+        ORG_CODE,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        SUMIT_SEQ,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS,
+        SEND_STATUS,
+        STATUS_DATE,
+        SUBMIT_TIME,
+        REMARK
+        )
+        VALUES( TEMP.EMPLOYEE_TYPE,
+        TEMP.EMPLOYEE_NAME,
+        TEMP.EMPLOYEE_SEX,
+        TEMP.ISSUE_PARTY_ID,
+        TEMP.IDENTIFY_NUMBER,
+        TEMP.BELONGS_BANK,
+        TEMP.BELONGS_PLACE,
+        TEMP.COMPANY_NAME,
+        TEMP.BELONGS_DEPT,
+        TEMP.POSITION,
+        TEMP.EDUCATION,
+        TEMP.ACADEMIC_DEGREE,
+        TEMP.FIRSTTIME2WORK,
+        TEMP.FIRSTTIME2FINWORK,
+        TEMP.PROFESSIONAL_TITLE,
+        TEMP.FIN_PROFESSIONAL_CRTF,
+        TEMP.FIN_TRAINING_NO,
+        TEMP.AWARDS,
+        TEMP.OFFICE_TEL,
+        TEMP.MOBILE_TEL,
+        TEMP.MAIL,
+        TEMP.REG_BUSI_TYPE,
+        TEMP.REG_EMPLOYEE_TYPE,
+        TEMP.STATUS,
+        TEMP.DEPT_CODE,
+        TEMP.ORG_CODE,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.SUMIT_SEQ,
+        TEMP.CHB_SUBMIT_DEADLINE,
+        TEMP.SUBMIT_DEADLINE,
+        TEMP.SUBMIT_FEEDBACK_STATUS,
+        TEMP.SEND_STATUS,
+        TEMP.STATUS_DATE,
+        TEMP.SUBMIT_TIME,
+        TEMP.REMARK)
+    </insert>
+
+</mapper>

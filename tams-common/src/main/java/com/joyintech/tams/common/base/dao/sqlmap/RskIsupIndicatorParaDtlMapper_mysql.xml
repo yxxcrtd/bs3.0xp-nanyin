@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIsupIndicatorParaDtlMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIsupIndicatorParaDtl" >
+        <id column="PARA_CODE" property="paraCode" jdbcType="VARCHAR" />
+        <id column="PARA_GRANULARITY" property="paraGranularity" jdbcType="VARCHAR" />
+        <result column="PARA_DISPLAY_TYPE" property="paraDisplayType" jdbcType="VARCHAR" />
+        <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+        <result column="REDIS_FIELD" property="redisField" jdbcType="VARCHAR" />
+        <result column="IS_FRESH_CAN_TRD" property="isFreshCanTrd" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PARA_CODE PARA_CODE, PARA_GRANULARITY PARA_GRANULARITY, PARA_DISPLAY_TYPE PARA_DISPLAY_TYPE, 
+        CONTENT CONTENT, REDIS_FIELD REDIS_FIELD, IS_FRESH_CAN_TRD IS_FRESH_CAN_TRD, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupIndicatorParaDtlMapper.Base_Column_List" />
+        from RSK_ISUP_INDICATOR_PARA_DTL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupIndicatorParaDtlMapper.Base_Column_List" />
+        from RSK_ISUP_INDICATOR_PARA_DTL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorParaDtlKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupIndicatorParaDtlMapper.Base_Column_List" />
+        from RSK_ISUP_INDICATOR_PARA_DTL
+        where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
+          and PARA_GRANULARITY = #{paraGranularity,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorParaDtlKey" >
+        delete from RSK_ISUP_INDICATOR_PARA_DTL
+        where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
+          and PARA_GRANULARITY = #{paraGranularity,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorParaDtl" >
+        insert into RSK_ISUP_INDICATOR_PARA_DTL (PARA_CODE, PARA_GRANULARITY, PARA_DISPLAY_TYPE, 
+            CONTENT, REDIS_FIELD, IS_FRESH_CAN_TRD, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{paraCode,jdbcType=VARCHAR}, #{paraGranularity,jdbcType=VARCHAR}, #{paraDisplayType,jdbcType=VARCHAR}, 
+            #{content,jdbcType=VARCHAR}, #{redisField,jdbcType=VARCHAR}, #{isFreshCanTrd,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorParaDtl" >
+        insert into RSK_ISUP_INDICATOR_PARA_DTL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="paraCode != null" >
+                PARA_CODE,
+            </if>
+            <if test="paraGranularity != null" >
+                PARA_GRANULARITY,
+            </if>
+            <if test="paraDisplayType != null" >
+                PARA_DISPLAY_TYPE,
+            </if>
+            <if test="content != null" >
+                CONTENT,
+            </if>
+            <if test="redisField != null" >
+                REDIS_FIELD,
+            </if>
+            <if test="isFreshCanTrd != null" >
+                IS_FRESH_CAN_TRD,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="paraCode != null" >
+                #{paraCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paraGranularity != null" >
+                #{paraGranularity,jdbcType=VARCHAR},
+            </if>
+            <if test="paraDisplayType != null" >
+                #{paraDisplayType,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null" >
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="redisField != null" >
+                #{redisField,jdbcType=VARCHAR},
+            </if>
+            <if test="isFreshCanTrd != null" >
+                #{isFreshCanTrd,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorParaDtl" >
+        insert into RSK_ISUP_INDICATOR_PARA_DTL(PARA_CODE, PARA_GRANULARITY, PARA_DISPLAY_TYPE, 
+        CONTENT, REDIS_FIELD, IS_FRESH_CAN_TRD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select PARA_CODE, PARA_GRANULARITY, PARA_DISPLAY_TYPE, 
+            CONTENT, REDIS_FIELD, IS_FRESH_CAN_TRD, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_ISUP_INDICATOR_PARA_DTL
+             where 1 = 1 and PARA_CODE = #{paraCode,jdbcType=VARCHAR} and PARA_GRANULARITY = #{paraGranularity,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorParaDtl" >
+        update RSK_ISUP_INDICATOR_PARA_DTL
+        <set >
+            <if test="paraDisplayType != null" >
+                PARA_DISPLAY_TYPE = #{paraDisplayType,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null" >
+                CONTENT = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="redisField != null" >
+                REDIS_FIELD = #{redisField,jdbcType=VARCHAR},
+            </if>
+            <if test="isFreshCanTrd != null" >
+                IS_FRESH_CAN_TRD = #{isFreshCanTrd,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
+          and PARA_GRANULARITY = #{paraGranularity,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicatorParaDtl" >
+        update RSK_ISUP_INDICATOR_PARA_DTL
+        set PARA_DISPLAY_TYPE = #{paraDisplayType,jdbcType=VARCHAR},
+            CONTENT = #{content,jdbcType=VARCHAR},
+            REDIS_FIELD = #{redisField,jdbcType=VARCHAR},
+            IS_FRESH_CAN_TRD = #{isFreshCanTrd,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PARA_CODE = #{paraCode,jdbcType=VARCHAR}
+          and PARA_GRANULARITY = #{paraGranularity,jdbcType=VARCHAR}
+    </update>
+</mapper>

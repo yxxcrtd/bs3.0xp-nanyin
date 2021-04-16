@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.config.poireportmodelmanage.dao.PoiReportModelManage003Mapper_mysql">
+	<select id="getReportSearchConditions"
+			resultType="com.joyintech.tams.disclosure.information.config.poireportmodelmanage.dto.PoiReportModelManage003Dto">
+		SELECT
+		    t1.dis_id       AS disid,
+		    t1.dis_name     AS disname,
+		    t1.dis_table    AS distable,
+		    t1.dis_key      AS diskey,
+		    t1.dis_val      AS disval,
+		    t1.dis_type     AS distype,
+		    t1.dis_params as disParams
+		FROM dis_prams t1
+		    LEFT JOIN dis_praams_sub t2 ON t1.dis_id=t2.dis_id
+		WHERE 1=1
+		    AND t2.tab_num= #{tabNum,jdbcType=VARCHAR}
+		ORDER BY
+		    t2.dis_order
+	</select>
+	<select id="selectDisPramsByKey"
+			resultType="com.joyintech.tams.disclosure.information.config.poireportmodelmanage.dto.PoiReportModelManage003Dto">
+		SELECT
+		    t1.dis_id       AS disid,
+		    t1.dis_name     AS disname,
+		    t1.dis_table    AS distable,
+		    t1.dis_key      AS diskey,
+		    t1.dis_val      AS disval,
+		    t1.dis_type     AS distype,
+		    t1.dis_params as disParams
+		FROM dis_prams t1
+		WHERE 1=1
+		    AND t1.dis_id= #{disId,jdbcType=VARCHAR}
+	</select>
 	<select id="selectConfirmStatus" resultType="java.lang.Integer">
     	SELECT COUNT(1)
     	FROM REP_REVEAL
@@ -30,11 +61,8 @@
 			REP_REVEAL
 		WHERE
 			REP_ID = #{tabNum,jdbcType=VARCHAR}
-		/*AND nvl2(PRODID,PRODID,'0') = #{PROD_ID,jdbcType=VARCHAR} */
 		AND IF(!ISNULL(PRODID) , PRODID , '0' ) = #{PROD_ID,jdbcType=VARCHAR}
-		/*AND nvl2(DATE_FORMAT(START_DATE,'%Y-%m-%d'),DATE_FORMAT(START_DATE,'%Y-%m-%d'),'0') = #{START_DATE,jdbcType=VARCHAR}*/
 		AND IF(! ISNULL(DATE_FORMAT(START_DATE,'%Y-%m-%d')) , DATE_FORMAT(START_DATE,'%Y-%m-%d') ,'0') = #{START_DATE,jdbcType=VARCHAR}
-		/*AND nvl2(DATE_FORMAT(END_DATE,'%Y-%m-%d'),DATE_FORMAT(END_DATE,'%Y-%m-%d'),'0') = #{END_DATE,jdbcType=VARCHAR}*/
 		AND IF(! ISNULL(DATE_FORMAT(END_DATE,'%Y-%m-%d')) , DATE_FORMAT(END_DATE,'%Y-%m-%d') ,'0' ) = #{END_DATE,jdbcType=VARCHAR}
 		AND STATUS='E'
     </select>

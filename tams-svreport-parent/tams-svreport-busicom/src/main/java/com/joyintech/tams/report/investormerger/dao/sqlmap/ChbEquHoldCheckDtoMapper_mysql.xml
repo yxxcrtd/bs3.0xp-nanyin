@@ -88,7 +88,92 @@
       #{createDept,jdbcType=VARCHAR}, #{interfCheckResult,jdbcType=VARCHAR}, #{operatestatus,jdbcType=VARCHAR}
       , #{mergerindentifymark,jdbcType=VARCHAR})
   </insert>
-  
+	<select id="selectBymodel" resultType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto" parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
+		select <include refid="Base_Column_List"/>
+		from CHB_EQU_HOLD_CHECK
+		where 1=1
+		<if test="indentifyMark != null" >
+			and INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
+		</if>
+		<if test="orgIndentifyMark != null" >
+			and ORG_INDENTIFY_MARK=#{orgIndentifyMark,jdbcType=VARCHAR}
+		</if>
+		<if test="registBankCode != null" >
+			and REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
+		</if>
+		<if test="isBelongBank != null" >
+			and IS_BELONG_BANK=#{isBelongBank,jdbcType=CHAR}
+		</if>
+		<if test="theBankName != null" >
+			and THE_BANK_NAME=#{theBankName,jdbcType=VARCHAR}
+		</if>
+		<if test="theBankCode != null" >
+			and THE_BANK_CODE=#{theBankCode,jdbcType=VARCHAR}
+		</if>
+		<if test="holderMark != null" >
+			and HOLDER_MARK=#{holderMark,jdbcType=CHAR}
+		</if>
+		<if test="holderRegion != null" >
+			and HOLDER_REGION=#{holderRegion,jdbcType=VARCHAR}
+		</if>
+		<if test="holderType != null" >
+			and HOLDER_TYPE=#{holderType,jdbcType=CHAR}
+		</if>
+		<if test="personalIdentifyType != null and personalIdentifyType!=''" >
+			and PERSONAL_IDENTIFY_TYPE=#{personalIdentifyType,jdbcType=CHAR}
+		</if>
+		<if test="institutionIdentifyType != null and institutionIdentifyType != ''" >
+			and INSTITUTION_IDENTIFY_TYPE=#{institutionIdentifyType,jdbcType=VARCHAR}
+		</if>
+		<if test="otherIdentifyName != null and otherIdentifyName != ''" >
+			and OTHER_IDENTIFY_NAME=#{otherIdentifyName,jdbcType=VARCHAR}
+		</if>
+		<if test="identifyNumber != null" >
+			and IDENTIFY_NUMBER=#{identifyNumber,jdbcType=VARCHAR}
+		</if>
+		<if test="spvCapAccBank != null" >
+			and SPV_CAP_ACC_BANK=#{spvCapAccBank,jdbcType=VARCHAR}
+		</if>
+		<if test="otherCapAccBank != null" >
+			and OTHER_CAP_ACC_BANK=#{otherCapAccBank,jdbcType=VARCHAR}
+		</if>
+		<if test="spvRegistCode != null" >
+			and SPV_REGIST_CODE=#{spvRegistCode,jdbcType=VARCHAR}
+		</if>
+		<if test="holderDate != null" >
+			and HOLDER_DATE=#{holderDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="holderName != null" >
+			and HOLDER_NAME=#{holderName,jdbcType=VARCHAR}
+		</if>
+		<if test="holderSex != null" >
+			and HOLDER_SEX=#{holderSex,jdbcType=CHAR}
+		</if>
+		<if test="holderRiskPrefer != null" >
+			and HOLDER_RISK_PREFER=#{holderRiskPrefer,jdbcType=VARCHAR}
+		</if>
+		<if test="holderCellphone != null" >
+			and HOLDER_CELLPHONE=#{holderCellphone,jdbcType=VARCHAR}
+		</if>
+		<if test="holderTelephone != null" >
+			and HOLDER_TELEPHONE=#{holderTelephone,jdbcType=VARCHAR}
+		</if>
+		<if test="isSubmit != null" >
+			and IS_SUBMIT=#{isSubmit,jdbcType=CHAR}
+		</if>
+		<if test="holderEmail != null" >
+			and HOLDER_EMAIL=#{holderEmail,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null" >
+			and STATUS=#{status,jdbcType=VARCHAR}
+		</if>
+		<if test="agent != null" >
+			and AGENT=#{agent,jdbcType=VARCHAR}
+		</if>
+		<if test="interfCheckResult != null" >
+			and INTERF_CHECK_RESULT=#{interfCheckResult,jdbcType=VARCHAR}
+		</if>
+	</select>
   <select id="selectAllData" resultMap="BaseResultMap" parameterType="java.util.Map">
   	select a.INDENTIFY_MARK, a.ORG_INDENTIFY_MARK,
 	a.REGIST_BANK_CODE, a.IS_BELONG_BANK, a.THE_BANK_NAME,
@@ -155,7 +240,22 @@
 	          then 'A'
 	  	  else 'B' end) desc,IMARK desc,a.INDENTIFY_MARK desc
   </select>
-  
+	<select id="selectBythreeInfo" resultType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto" parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
+		select <include refid="Base_Column_List"/>
+		from CHB_EQU_HOLD_CHECK
+		where
+		HOLDER_NAME=#{holderName,jdbcType=VARCHAR}
+		<if test="personalIdentifyType != null and personalIdentifyType!=''" >
+			and PERSONAL_IDENTIFY_TYPE=#{personalIdentifyType,jdbcType=CHAR}
+		</if>
+		<if test="institutionIdentifyType != null and institutionIdentifyType != ''" >
+			and INSTITUTION_IDENTIFY_TYPE=#{institutionIdentifyType,jdbcType=VARCHAR}
+		</if>
+		<if test="otherIdentifyName != null and otherIdentifyName != ''" >
+			and OTHER_IDENTIFY_NAME=#{otherIdentifyName,jdbcType=VARCHAR}
+		</if>
+		and IDENTIFY_NUMBER=#{identifyNumber,jdbcType=VARCHAR}
+	</select>
   <select id="queryAllCheckData" resultMap="BaseResultMap" parameterType="java.util.List">
   	select <include refid="Base_Column_List"/>
   	from CHB_EQU_HOLD_CHECK
@@ -168,7 +268,14 @@
         </foreach>
 	 </if>
   </select>
-
+	<select id="selectByPrimarykey" parameterType="java.lang.String"
+			resultType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
+		select
+		<include refid="Base_Column_List" />
+		from CHB_EQU_HOLD_CHECK
+		where INDENTIFY_MARK =
+		#{indentifyMark,jdbcType=VARCHAR}
+	</select>
   <select id="selectAllDataByList" resultMap="BaseResultMap">
   	select a.INDENTIFY_MARK, a.ORG_INDENTIFY_MARK,
 	a.REGIST_BANK_CODE, a.IS_BELONG_BANK, a.THE_BANK_NAME,
@@ -426,8 +533,7 @@
    <delete id="delCheckDataBatch" parameterType="java.util.List">
      DELETE FROM CHB_EQU_HOLD_CHECK
 			WHERE concat_ws('',REGIST_BANK_CODE, '_', IDENTIFY_NUMBER, '_',HOLDER_NAME, '_', PERSONAL_IDENTIFY_TYPE, '_', INSTITUTION_IDENTIFY_TYPE, '_', OTHER_IDENTIFY_NAME)= #{key,jdbcType=VARCHAR}
-	       <!--  AND OPERATE_STATUS = '01' -->
-  </delete>
+	</delete>
   
    <update id="updateMergerIndentifyMark" parameterType="java.util.Map">
      UPDATE CHB_EQU_HOLD_CHECK HOLD 
@@ -500,18 +606,18 @@
    </select>
    
    <delete id="deleteEquityInfoBatch" parameterType="java.util.List">
-	            DELETE FROM CHB_EQU_HOLD HOLD
-	            WHERE 1=1
-	            <if test="keys !=null and keys.size()>0">
-				AND concat_ws('',HOLD.REGIST_BANK_CODE, '_', HOLD.IDENTIFY_NUMBER, '_',HOLD.HOLDER_NAME, '_', HOLD.PERSONAL_IDENTIFY_TYPE, '_', HOLD.INSTITUTION_IDENTIFY_TYPE, '_', HOLD.OTHER_IDENTIFY_NAME) IN
-	              	<foreach collection="keys" item="key" open="(" separator=","  close=")">
-            		 #{key,jdbcType=VARCHAR}
-        			</foreach>
-        			 </if>
-			    AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
-				    			WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK
-				    		    AND T.SUBMIT_STATUS = '03'
-			                  )
+	  DELETE FROM CHB_EQU_HOLD HOLD
+	  WHERE 1=1
+	  <if test="keys !=null and keys.size()>0">
+	  AND concat_ws('',HOLD.REGIST_BANK_CODE, '_', HOLD.IDENTIFY_NUMBER, '_',HOLD.HOLDER_NAME, '_', HOLD.PERSONAL_IDENTIFY_TYPE, '_', HOLD.INSTITUTION_IDENTIFY_TYPE, '_', HOLD.OTHER_IDENTIFY_NAME) IN
+		  <foreach collection="keys" item="key" open="(" separator=","  close=")">
+            	#{key,jdbcType=VARCHAR}
+		  </foreach>
+	  </if>
+	AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
+				    		WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK
+				    		AND T.SUBMIT_STATUS = '03'
+			    )
   </delete>
   
   <delete id="deleteEquitySubInfoBatch" parameterType="java.util.List">
@@ -552,18 +658,17 @@
 	</if>
 	and IDENTIFY_NUMBER=#{identifyNumber,jdbcType=VARCHAR}
   </update>
-  
+	<update id="updateChbPrdPosition" parameterType="java.lang.String">
+	update CHB_PRD_POSITION
+	set INDENTIFY_MARK = #{mergerindentifymark,jdbcType=VARCHAR}
+	where INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
+	</update>
   
    <update id="refreshChangeIndentifyMark" parameterType="java.util.List">
     <choose>
        <when  test="list !=null and list.size()>0">
          begin
 	       <foreach collection="list" item="item" index="index" separator=";">
-	           <!-- UPDATE CHB_PRD_DEAL DEAL
-		        SET DEAL.INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR},
-		        DEAL.UPDATE_TIME = sysdate
-			   WHERE DEAL.INDENTIFY_MARK = #{item.orgIndentifyMark,jdbcType=VARCHAR}; -->
-			   
 			   UPDATE CHB_EQU_HOLD_CHECK HOLDCHECK
 			    SET HOLDCHECK.ORG_INDENTIFY_MARK  =  #{item.orgIndentifyMark,jdbcType=VARCHAR},
 			    HOLDCHECK.INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR},
@@ -692,4 +797,43 @@
             #{createDept,jdbcType=VARCHAR})
     </insert>
 
+	<delete id="deleteChbEquHold"
+			parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
+		delete from CHB_EQU_HOLD hold
+		where
+		hold.IDENTIFY_NUMBER = #{identifyNumber,jdbcType=VARCHAR}
+		AND hold.HOLDER_NAME = #{holderName,jdbcType=VARCHAR}
+		<if test="personalIdentifyType!=null and personalIdentifyType!=''">
+			AND hold.PERSONAL_IDENTIFY_TYPE = #{personalIdentifyType,jdbcType=VARCHAR}
+		</if>
+		<if test="institutionIdentifyType!=null and institutionIdentifyType!=''">
+			AND hold.INSTITUTION_IDENTIFY_TYPE=#{institutionIdentifyType,jdbcType=VARCHAR}
+		</if>
+		<if test="otherIdentifyName!=null and otherIdentifyName!=''">
+			AND hold.OTHER_IDENTIFY_NAME=#{otherIdentifyName,jdbcType=VARCHAR}
+		</if>
+	</delete>
+	<delete id="deleteChbEquSub"
+			parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
+		delete from CHB_EQU_SUB hold
+		where
+		hold.IDENTIFY_NUMBER = #{identifyNumber,jdbcType=VARCHAR}
+		AND hold.HOLDER_NAME = #{holderName,jdbcType=VARCHAR}
+		<if test="personalIdentifyType!=null and personalIdentifyType!=''">
+			AND hold.PERSONAL_IDENTIFY_TYPE = #{personalIdentifyType,jdbcType=VARCHAR}
+		</if>
+		<if test="institutionIdentifyType!=null and institutionIdentifyType!=''">
+			AND hold.INSTITUTION_IDENTIFY_TYPE=#{institutionIdentifyType,jdbcType=VARCHAR}
+		</if>
+		<if test="otherIdentifyName!=null and otherIdentifyName!=''">
+			AND hold.OTHER_IDENTIFY_NAME=#{otherIdentifyName,jdbcType=VARCHAR}
+		</if>
+	</delete>
+	<delete id="deleteCheckDataByPrimarykey"
+			parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
+	delete from CHB_EQU_HOLD_CHECK hold
+	where
+	hold.INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+	AND hold.REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+  	</delete>
 </mapper>

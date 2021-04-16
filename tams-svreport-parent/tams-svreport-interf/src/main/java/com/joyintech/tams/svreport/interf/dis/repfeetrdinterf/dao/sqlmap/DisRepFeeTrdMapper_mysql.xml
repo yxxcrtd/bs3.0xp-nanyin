@@ -145,81 +145,103 @@
     delete from  REP_FEE_TRD
     </delete>
    <update id="mergeRepFeeTrdInfo">
-     MERGE INTO REP_FEE_TRD T  
-        USING (
-       <foreach collection="list" item="item" open="select * from("
-				close=")" separator="union all">
-				SELECT 
-       #{item.busiId,jdbcType=VARCHAR} as BUSI_ID,
-       #{item.feeId,jdbcType=VARCHAR} as  FEE_ID,
-       #{item.prodId,jdbcType=VARCHAR} as  PROD_ID,
-       #{item.paidFee,jdbcType=DECIMAL}as PAID_FEE,
-       #{item.payDate,jdbcType=DATE} as PAY_DATE ,
-       #{item.inputType,jdbcType=VARCHAR} as INPUT_TYPE,
-       #{item.inputUser,jdbcType=VARCHAR} as INPUT_USER,
-       #{item.status,jdbcType=VARCHAR} as STATUS,
-       #{item.adapterId,jdbcType=VARCHAR} as ADAPTER_ID,
-       #{item.createUser,jdbcType=VARCHAR} as CREATE_USER,
-       #{item.createDept,jdbcType=VARCHAR} as CREATE_DEPT ,
-       #{item.createTime,jdbcType=TIMESTAMP} as CREATE_TIME,
-       #{item.updateUser,jdbcType=VARCHAR} as UPDATE_USER,
-       #{item.updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME,
-       #{item.cashType2,jdbcType=VARCHAR} as CASH_TYPE2
-       from dual
+       insert into REP_FEE_TRD(BUSI_ID,
+       FEE_ID,
+       PROD_ID,
+       PAID_FEE,
+       PAY_DATE,
+       INPUT_TYPE,
+       INPUT_USER,
+       STATUS,
+       ADAPTER_ID,
+       CREATE_USER,
+       CREATE_DEPT,
+       CREATE_TIME,
+       UPDATE_USER,
+       UPDATE_TIME,
+       CASH_TYPE2)
+       select T.BUSI_ID,
+       T.FEE_ID,
+       T.PROD_ID,
+       T.PAID_FEE,
+       T.PAY_DATE,
+       T.INPUT_TYPE,
+       T.INPUT_USER,
+       T.STATUS,
+       T.ADAPTER_ID,
+       T.CREATE_USER,
+       T.CREATE_DEPT,
+       T.CREATE_TIME,
+       T.UPDATE_USER,
+       T.UPDATE_TIME,
+       T.CASH_TYPE2 from
+       (
+       select TEMP.* from
+       (
+       <foreach collection="list" item="item"  separator="union all">
+           SELECT
+           #{item.busiId,jdbcType=VARCHAR} as BUSI_ID,
+           #{item.feeId,jdbcType=VARCHAR} as  FEE_ID,
+           #{item.prodId,jdbcType=VARCHAR} as  PROD_ID,
+           #{item.paidFee,jdbcType=DECIMAL}as PAID_FEE,
+           #{item.payDate,jdbcType=DATE} as PAY_DATE ,
+           #{item.inputType,jdbcType=VARCHAR} as INPUT_TYPE,
+           #{item.inputUser,jdbcType=VARCHAR} as INPUT_USER,
+           #{item.status,jdbcType=VARCHAR} as STATUS,
+           #{item.adapterId,jdbcType=VARCHAR} as ADAPTER_ID,
+           #{item.createUser,jdbcType=VARCHAR} as CREATE_USER,
+           #{item.createDept,jdbcType=VARCHAR} as CREATE_DEPT ,
+           #{item.createTime,jdbcType=TIMESTAMP} as CREATE_TIME,
+           #{item.updateUser,jdbcType=VARCHAR} as UPDATE_USER,
+           #{item.updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME,
+           #{item.cashType2,jdbcType=VARCHAR} as CASH_TYPE2
+           from dual
        </foreach>
-	) T1
-	ON (T.BUSI_ID=T1.BUSI_ID)
-	WHEN MATCHED THEN
-	UPDATE SET
-	T.FEE_ID=T1.FEE_ID,
-	T.PROD_ID=T1.PROD_ID,
-	T.PAID_FEE=T1.PAID_FEE,
-	T.PAY_DATE=T1.PAY_DATE,
-	T.INPUT_TYPE=T1.INPUT_TYPE,
-	T.INPUT_USER=T1.INPUT_USER,
-	T.STATUS=T1.STATUS,
-	T.ADAPTER_ID=T1.ADAPTER_ID,
-	T.CREATE_USER=T1.CREATE_USER,
-	T.CREATE_DEPT=T1.CREATE_DEPT,
-	T.CREATE_TIME=T1.CREATE_TIME,
-	T.UPDATE_USER=T1.UPDATE_USER,
-	T.UPDATE_TIME=T1.UPDATE_TIME,
-	T.CASH_TYPE2=T1.CASH_TYPE2
-	
-	WHEN NOT MATCHED THEN
-	INSERT(
-	T.BUSI_ID,
-	T.FEE_ID,
-	T.PROD_ID,
-	T.PAID_FEE,
-	T.PAY_DATE,
-	T.INPUT_TYPE,
-	T.INPUT_USER,
-	T.STATUS,
-	T.ADAPTER_ID,
-	T.CREATE_USER,
-	T.CREATE_DEPT,
-	T.CREATE_TIME,
-	T.UPDATE_USER,
-	T.UPDATE_TIME,
-	T.CASH_TYPE2
-	) VALUES (
-	T1.BUSI_ID,
-	T1.FEE_ID,
-	T1.PROD_ID,
-	T1.PAID_FEE,
-	T1.PAY_DATE,
-	T1.INPUT_TYPE,
-	T1.INPUT_USER,
-	T1.STATUS,
-	T1.ADAPTER_ID,
-	T1.CREATE_USER,
-	T1.CREATE_DEPT,
-	T1.CREATE_TIME,
-	T1.UPDATE_USER,
-	T1.UPDATE_TIME,
-	T1.CASH_TYPE2
-	)	
+       ) TEMP where not exisits (select 1 from REP_FEE_TRD CII where CII.BUSI_ID=TEMP.BUSI_ID)
+       ) T ;
+
+       UPDATE  REP_FEE_TRD as A,
+       (
+       select T.FEE_ID,
+       T.PROD_ID,
+       T.PAID_FEE,
+       T.PAY_DATE,
+       T.INPUT_TYPE,
+       T.INPUT_USER,
+       T.STATUS,
+       T.ADAPTER_ID,
+       T.CREATE_USER,
+       T.CREATE_DEPT,
+       T.CREATE_TIME,
+       T.UPDATE_USER,
+       T.UPDATE_TIME,
+       T.CASH_TYPE2 from
+       (
+       select TEMP.* from
+       (
+       <foreach collection="list" item="item"  separator="union all">
+           SELECT
+           #{item.busiId,jdbcType=VARCHAR} as BUSI_ID,
+           #{item.feeId,jdbcType=VARCHAR} as  FEE_ID,
+           #{item.prodId,jdbcType=VARCHAR} as  PROD_ID,
+           #{item.paidFee,jdbcType=DECIMAL}as PAID_FEE,
+           #{item.payDate,jdbcType=DATE} as PAY_DATE ,
+           #{item.inputType,jdbcType=VARCHAR} as INPUT_TYPE,
+           #{item.inputUser,jdbcType=VARCHAR} as INPUT_USER,
+           #{item.status,jdbcType=VARCHAR} as STATUS,
+           #{item.adapterId,jdbcType=VARCHAR} as ADAPTER_ID,
+           #{item.createUser,jdbcType=VARCHAR} as CREATE_USER,
+           #{item.createDept,jdbcType=VARCHAR} as CREATE_DEPT ,
+           #{item.createTime,jdbcType=TIMESTAMP} as CREATE_TIME,
+           #{item.updateUser,jdbcType=VARCHAR} as UPDATE_USER,
+           #{item.updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME,
+           #{item.cashType2,jdbcType=VARCHAR} as CASH_TYPE2
+           from dual
+       </foreach>
+       ) TEMP
+       ) T
+       ) AS B
+       set  A.* = B.* where  exisits (select 1 from REP_FEE_TRD CII where CII.BUSI_ID=TEMP.BUSI_ID);
     </update>
     <select id="selectCashIdByProdidAndCashType2" parameterType="com.joyintech.tams.svreport.interf.dis.repfeetrdinterf.dto.DisRepFeeTrd"
     	resultType="com.joyintech.tams.svreport.interf.dis.repfeetrdinterf.dto.DisRepFeeTrd">

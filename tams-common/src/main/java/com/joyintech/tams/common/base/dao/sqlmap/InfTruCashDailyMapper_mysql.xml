@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InfTruCashDailyMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InfTruCashDaily" >
+        <id column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+        <id column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ACCT_ATTR" property="acctAttr" jdbcType="VARCHAR" />
+        <result column="ACCT_BALANCE" property="acctBalance" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ACCOUNT ACCOUNT, CCY CCY, CDATE CDATE, STATUS STATUS, ACCT_ATTR ACCT_ATTR, ACCT_BALANCE ACCT_BALANCE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfTruCashDailyMapper.Base_Column_List" />
+        from INF_TRU_CASH_DAILY
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfTruCashDailyMapper.Base_Column_List" />
+        from INF_TRU_CASH_DAILY
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.InfTruCashDailyKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfTruCashDailyMapper.Base_Column_List" />
+        from INF_TRU_CASH_DAILY
+        where ACCOUNT = #{account,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InfTruCashDailyKey" >
+        delete from INF_TRU_CASH_DAILY
+        where ACCOUNT = #{account,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InfTruCashDaily" >
+        insert into INF_TRU_CASH_DAILY (ACCOUNT, CCY, CDATE, 
+            STATUS, ACCT_ATTR, ACCT_BALANCE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{account,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, 
+            #{status,jdbcType=VARCHAR}, #{acctAttr,jdbcType=VARCHAR}, #{acctBalance,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InfTruCashDaily" >
+        insert into INF_TRU_CASH_DAILY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="account != null" >
+                ACCOUNT,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="acctAttr != null" >
+                ACCT_ATTR,
+            </if>
+            <if test="acctBalance != null" >
+                ACCT_BALANCE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="account != null" >
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="acctAttr != null" >
+                #{acctAttr,jdbcType=VARCHAR},
+            </if>
+            <if test="acctBalance != null" >
+                #{acctBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InfTruCashDaily" >
+        insert into INF_TRU_CASH_DAILY(ACCOUNT, CCY, CDATE, STATUS, ACCT_ATTR, ACCT_BALANCE, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ACCOUNT, CCY, CDATE, #{status,jdbcType=VARCHAR} STATUS, ACCT_ATTR, ACCT_BALANCE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from INF_TRU_CASH_DAILY
+             where STATUS = 'E' and ACCOUNT = #{account,jdbcType=VARCHAR} and CCY = #{ccy,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InfTruCashDaily" >
+        update INF_TRU_CASH_DAILY
+        <set >
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="acctAttr != null" >
+                ACCT_ATTR = #{acctAttr,jdbcType=VARCHAR},
+            </if>
+            <if test="acctBalance != null" >
+                ACCT_BALANCE = #{acctBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ACCOUNT = #{account,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InfTruCashDaily" >
+        update INF_TRU_CASH_DAILY
+        set STATUS = #{status,jdbcType=VARCHAR},
+            ACCT_ATTR = #{acctAttr,jdbcType=VARCHAR},
+            ACCT_BALANCE = #{acctBalance,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ACCOUNT = #{account,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+</mapper>

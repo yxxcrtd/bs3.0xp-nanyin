@@ -14,6 +14,9 @@
 	   	</foreach>
 	</if>
   </select>
-
+	<update id="updatePrdBaseInfoSub" parameterType="java.lang.String" >
+	   update PBC_PRD_BASEINFO_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
        
 </mapper>

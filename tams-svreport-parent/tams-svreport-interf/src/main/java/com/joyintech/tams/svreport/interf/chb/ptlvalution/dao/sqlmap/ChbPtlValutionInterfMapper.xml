@@ -41,7 +41,7 @@
      psv.DSC_COST_AMT, psv.DSC_CLEAN_PRICE, psv.BUY_COST_AMT,  psv.BUY_CLEAN_PRICE,psv.MARKET_VALUE,
      psv.MARKET_CLEAN_PRICE, psv.TDY_INTINCEXP,psv.TDY_DSCINCEXP_ADD, psv.TDY_INTINCEXP_ADD,psv.TDY_DSCLOSS_ADD,
      psv.TDY_FLOAT_INGPL_ADD,psv.TDY_FEE_ADD,psv.CREATE_USER,psv.CREATE_DEPT,psv.CREATE_TIME,psv.UPDATE_USER,
-     nvl(psv.UPDATE_TIME,psv.CREATE_TIME) UPDATE_TIME,
+     IFNULL(psv.UPDATE_TIME,psv.CREATE_TIME) UPDATE_TIME,
      fpv.VALUATION  ACCU_NET_VALUE/*场外金融产品估值*/
     from PTL_SEC_VALUTION psv
     left join REP_ASSET_DEPT info on info.REP_FINPROD_ID = psv.FINPROD_ID
@@ -58,12 +58,12 @@
      sum(psv.DSC_COST_AMT), sum(psv.DSC_CLEAN_PRICE), sum(psv.BUY_COST_AMT),  sum(psv.BUY_CLEAN_PRICE),sum(psv.MARKET_VALUE),
      sum(psv.MARKET_CLEAN_PRICE),sum(psv.TDY_INTINCEXP),sum(psv.TDY_DSCINCEXP_ADD), sum(psv.TDY_INTINCEXP_ADD),sum(psv.TDY_DSCLOSS_ADD),
      sum(psv.TDY_FLOAT_INGPL_ADD),sum(psv.TDY_FEE_ADD),max(psv.CREATE_USER),max(psv.CREATE_DEPT),max(psv.CREATE_TIME),max(psv.UPDATE_USER),
-     max(nvl(psv.UPDATE_TIME,psv.CREATE_TIME)) UPDATE_TIME,
+     max(IFNULL(psv.UPDATE_TIME,psv.CREATE_TIME)) UPDATE_TIME,
      sum(fpv.VALUATION)  ACCU_NET_VALUE/*场外金融产品估值*/
     from PTL_SEC_VALUTION psv
     left join FIN_PRODUCT product on product.FINPROD_ID = psv.FINPROD_ID
     and FINPROD_TYPE2 = 'F17'
-    left join REP_ASSET_DEPT info on info.REP_FINPROD_ID = nvl(product.P_FINPROD_ID,product.FINPROD_ID)
+    left join REP_ASSET_DEPT info on info.REP_FINPROD_ID = IFNULL(product.P_FINPROD_ID,product.FINPROD_ID)
     left join FIN_PRODUCT_VALUATION fpv on fpv.FINPROD_ID = info.FINPROD_MARKET_ID and fpv.VAL_DATE = psv.CDATE
     where psv.CDATE = #{batchTime,jdbcType=TIMESTAMP} and info.FINPROD_MARKET_ID is not null
     and exists(
@@ -78,12 +78,12 @@
     select 
      CDATE cdate
     from PTL_SEC_VALUTION
-    where nvl(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+    where IFNULL(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
     union all
     select 
      VAL_DATE cdate
     from FIN_PRODUCT_VALUATION
-    where nvl(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+    where IFNULL(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
     ) order by cdate
   </select>
 

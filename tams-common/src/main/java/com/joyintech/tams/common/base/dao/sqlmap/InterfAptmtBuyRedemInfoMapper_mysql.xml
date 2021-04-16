@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfAptmtBuyRedemInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfAptmtBuyRedemInfo" >
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="VARCHAR" />
+        <result column="BUY_AMT" property="buyAmt" jdbcType="DECIMAL" />
+        <result column="BUY_LOT" property="buyLot" jdbcType="DECIMAL" />
+        <result column="REDEM_LOT" property="redemLot" jdbcType="DECIMAL" />
+        <result column="REDEM_AMT" property="redemAmt" jdbcType="DECIMAL" />
+        <result column="NET_BUY_REDEM_AMT" property="netBuyRedemAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfAptmtBuyRedemInfo" >
+        insert into INTERF_APTMT_BUY_REDEM_INFO (PROD_ID, CDATE, BUY_AMT, 
+            BUY_LOT, REDEM_LOT, REDEM_AMT, 
+            NET_BUY_REDEM_AMT, CREATE_TIME)
+        values (#{prodId,jdbcType=VARCHAR}, #{cdate,jdbcType=VARCHAR}, #{buyAmt,jdbcType=DECIMAL}, 
+            #{buyLot,jdbcType=DECIMAL}, #{redemLot,jdbcType=DECIMAL}, #{redemAmt,jdbcType=DECIMAL}, 
+            #{netBuyRedemAmt,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfAptmtBuyRedemInfo" >
+        insert into INTERF_APTMT_BUY_REDEM_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="buyAmt != null" >
+                BUY_AMT,
+            </if>
+            <if test="buyLot != null" >
+                BUY_LOT,
+            </if>
+            <if test="redemLot != null" >
+                REDEM_LOT,
+            </if>
+            <if test="redemAmt != null" >
+                REDEM_AMT,
+            </if>
+            <if test="netBuyRedemAmt != null" >
+                NET_BUY_REDEM_AMT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=VARCHAR},
+            </if>
+            <if test="buyAmt != null" >
+                #{buyAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="buyLot != null" >
+                #{buyLot,jdbcType=DECIMAL},
+            </if>
+            <if test="redemLot != null" >
+                #{redemLot,jdbcType=DECIMAL},
+            </if>
+            <if test="redemAmt != null" >
+                #{redemAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="netBuyRedemAmt != null" >
+                #{netBuyRedemAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfAptmtBuyRedemInfo" >
+        insert into INTERF_APTMT_BUY_REDEM_INFO(PROD_ID, CDATE, BUY_AMT, BUY_LOT, REDEM_LOT, 
+        REDEM_AMT, NET_BUY_REDEM_AMT, CREATE_TIME)
+        select PROD_ID, CDATE, BUY_AMT, BUY_LOT, REDEM_LOT, 
+            REDEM_AMT, NET_BUY_REDEM_AMT, CREATE_TIME
+             from INTERF_APTMT_BUY_REDEM_INFO
+             where 1 = 1
+    </insert>
+</mapper>

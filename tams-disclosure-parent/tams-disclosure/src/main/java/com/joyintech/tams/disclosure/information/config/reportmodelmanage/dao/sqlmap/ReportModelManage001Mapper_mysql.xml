@@ -16,10 +16,10 @@
 			FOLDER  as temLoad		
 			FROM rep_reportinfo		WHERE 1=1 
         <if test="temName!=null and temName!=''">
-			and URI like concat(concat('%',#{temName,jdbcType=VARCHAR}),'%')
+			and URI like concat_ws(concat_ws('%',#{temName,jdbcType=VARCHAR}),'%')
 		</if>
         <if test="temDescription!=null and temDescription!=''">
-			and REPORTDESC like concat(concat('%',#{temDescription,jdbcType=VARCHAR}),'%')
+			and REPORTDESC like concat_ws(concat_ws('%',#{temDescription,jdbcType=VARCHAR}),'%')
 		</if>
 		order by IFNULL(UPDATE_TIME,CREATE_TIME)  desc
 	</select>

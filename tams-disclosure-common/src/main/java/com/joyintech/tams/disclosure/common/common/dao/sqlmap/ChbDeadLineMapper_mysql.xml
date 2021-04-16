@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.common.common.dao.ChbDeadLineMapper_mysql">
+	<select id="findByReportCode" parameterType="java.lang.String"
+			resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLineDto">
+		select
+		rtp.SEQNO seqno,
+		rtp.ORG_CODE orgCode,
+		rtp.REPORT_CODE reportCode,
+		rtp.TYPE_DETAIL typeDetail,
+		rtp.SUBMIT_TIMETYPE submitTimetype,
+		rtp.SUBMIT_REQUIRE3 submitRequire3,
+		rtp.SUBMIT_REQUIRE2 submitRequire2,
+		rtp.SUBMIT_REQUIRE submitRequire,
+		rtp.SUBMIT_POINT_BOND submitPointBond,
+		rtp.SUBMIT_POINT_BANK submitPointBank,
+		rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
+		rtp.DELETE_SUBMING_POINT deleteSubmingPoint,
+		rtp.STATUS status,
+		rtp.WORKFLOW_ID workflowId,
+		rtp.UPDATE_USER updateUser,
+		rtp.UPDATE_TIME updateTime,
+		rtp.CREATE_USER createUser,
+		rtp.CREATE_TIME createTime
+		from CHB_REG_TIME_POINTS rtp
+		where
+		rtp.STATUS = 'E'
+		and rtp.REPORT_CODE = #{reportCode,jdbcType=VARCHAR}
+		<if test="typeDetail != null and typeDetail != ''" >
+			and rtp.TYPE_DETAIL #{typeDetail,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectChbMktHolidayByKey" resultType="com.joyintech.tams.common.base.entity.ChbMktHoliday">
+    	select
+        BUSI_DATE busiDate,
+    	MARKET_CODE marketCode,
+    	IS_HOLIDAY isHoliday,
+    	WORKFLOW_ID workflowId,
+    	STATUS status
+        from CHB_MKT_HOLIDAY
+        where BUSI_DATE = #{busiDate,jdbcType=DATE}
+          and MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+    </select>
 	<select id="getChbDeadline" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
      	select deadline1.*
      	from(select LIMIT num, deadline.* from(
@@ -64,14 +104,12 @@
 		 where deadline1.num = 1
     </select>
 	<select id="getJESHLARGESHDATE" resultType="java.util.Date">
-
 	        SELECT DISTINCT LARGE_SH_DATE
 			FROM REP_PROD_INFO_TA
 			WHERE IS_LARGE_SH='1'
 			AND LARGE_SH_DATE= #{NOW(), jdbcType=DATE}
 			AND PROD_ID = #{prodId, jdbcType=VARCHAR}
-
-  </select>
+  	</select>
 	<select id="getMJTZLARGESHDATE" resultType="java.util.Date">
 
 	        SELECT DISTINCT T.LARGE_SH_DATE
@@ -88,7 +126,7 @@
 			AND LARGE_SH_DATE = #{NOW(), jdbcType=DATE}
 			AND PROD_ID= #{prodId, jdbcType=VARCHAR}
 
-  </select>
+  	</select>
 	<select id="getOpenRevealDate" parameterType="string" resultType="java.util.Date">
   		 select 
   		 <if test="basisDateType !=null and basisDateType == '04'">
@@ -112,7 +150,7 @@
 	     <if test="basisDateType !=null and basisDateType == '09'">
 	        AND OPEN_VDATE = #{NOW(), jdbcType=DATE}    
 	     </if>
-  </select>
+  	</select>
 	<select id="getAdjustDate" resultType="int">
 
 	        SELECT 
@@ -131,7 +169,7 @@
 				HAVING COUNT(1) > 1
 			)
 
-  </select>
+  	</select>
 	<select id="getInfoDeadline" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
      	select deadline1.*
      	from(select LIMIT num, deadline.* from(

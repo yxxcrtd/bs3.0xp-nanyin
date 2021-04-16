@@ -115,6 +115,7 @@
             TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT, TDY_RED_B_D_ULAMT, 
             TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT
             )
+        values (
                 <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close=" from dual)">
           #{item.booksetId,jdbcType=VARCHAR}, #{item.balanceDate,jdbcType=DATE}, #{item.subjectNo,jdbcType=VARCHAR}, 
@@ -135,6 +136,7 @@
             #{item.tdyRedOCUlamt,jdbcType=DECIMAL}, #{item.tdyPurBDUlamt,jdbcType=DECIMAL}, #{item.tdyRedBDUlamt,jdbcType=DECIMAL}, 
             #{item.tdyPurBCUlamt,jdbcType=DECIMAL}, #{item.tdyRedBCUlamt,jdbcType=DECIMAL}
                </foreach>
+        )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.dis.bokbalanceinterf.dto.BokBalance" >
         insert into BOK_BALANCE

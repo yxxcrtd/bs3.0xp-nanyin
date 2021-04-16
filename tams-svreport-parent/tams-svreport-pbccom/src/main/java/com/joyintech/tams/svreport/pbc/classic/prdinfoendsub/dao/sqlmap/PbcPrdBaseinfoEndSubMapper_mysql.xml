@@ -531,13 +531,19 @@
     NOW(), UPDATE_USER, NOW()
       from (
       	select <include refid="Base_Column_List2"></include>,
-      	rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-      	from PBC_PRD_BASEINFO_END_SUB_HIS
+        if
+        (@PBC_PROD_ID = PBC_PROD_ID, @rank := @rank + 1,@rank :=1) as ranknum,
+        (@PBC_PROD_ID := PBC_PROD_ID) PBC_PROD_ID
+      	from PBC_PRD_BASEINFO_END_SUB_HIS,
+        (select @rank := 0, @PBC_PROD_ID := null) b
       	where 
       	PBC_PROD_ID in
        <foreach collection="list" open="(" close=")" separator="," item="item">
       		#{item.pbcProdId,jdbcType=CHAR}
       </foreach>
+      order by
+      PBC_PROD_ID,
+      ifnull(update_time,create_time) desc
       )
       where 1 = 1 limit 1
 </insert>
@@ -547,13 +553,19 @@
 	    select  PBC_PROD_ID
 	      from (
 	      	select PBC_PROD_ID ,
-	      	rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-	      	from PBC_PRD_BASEINFO_END_SUB_HIS
+            if
+            (@PBC_PROD_ID = PBC_PROD_ID, @rank := @rank + 1,@rank :=1) as ranknum,
+            (@PBC_PROD_ID := PBC_PROD_ID) PBC_PROD_ID
+	      	from PBC_PRD_BASEINFO_END_SUB_HIS,
+            (select @rank := 0, @PBC_PROD_ID := null) b
 	      	where 
 	      	PBC_PROD_ID in
 	       <foreach collection="list" open="(" close=")" separator="," item="item">
 	      		#{item.pbcProdId,jdbcType=CHAR}
 	      </foreach>
+            order by
+            PBC_PROD_ID,
+            ifnull(update_time,create_time) desc
 	      )
 	      where 1 = 1 limit 1
     )

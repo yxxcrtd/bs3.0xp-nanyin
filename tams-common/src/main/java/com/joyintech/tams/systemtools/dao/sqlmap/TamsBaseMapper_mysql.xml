@@ -1,8 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.systemtools.dao.TamsBaseMapper_mysql">
+    <select id="getSequenceIndexData" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
+        <if test="databaseType == 'mysql'">
+            SELECT _nextIndex('WFL_SEQUENCE')
+        </if>
+    </select>
 
-	<!-- 查询机构类型 -->
+    <select id="selectBankCode" parameterType="java.lang.String" resultType="java.lang.String">
+    	select
+    	corb.REGIST_BANK_CODE
+    	from CHB_ORG_REGIST_BANK_CODE corb
+    	where
+    	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+    <select id="selectBankCodeName" parameterType="java.lang.String" resultType="java.lang.String">
+        select
+        SI.INSTITUTION_NAME
+        from SYS_INSTITUTION si
+        where
+        si.INSTITUTION_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectBank" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode">
+        select
+        CORB.*,SI.INSTITUTION_NAME belongInstitutionName
+        from CHB_ORG_REGIST_BANK_CODE corb
+        LEFT JOIN SYS_INSTITUTION SI ON CORB.ORG_CODE = SI.INSTITUTION_CODE
+        where 1=1
+        <if test="orgCode != null and orgCode != ''">
+            and corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <!-- 查询机构下的所有部门代码 -->
+    <select id="selectDeptCode" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT DEPT_CODE FROM SYS_DEPARTMENT WHERE INSTITUTION_CODE = #{institutionCode} <!-- AND STATUS = 'E' -->
+    </select>
+
+    <select id="selectDataModuleByUserName" resultType="com.joyintech.tams.systemtools.dto.SystemActorRoleDto">
+		SELECT
+			INSTITUTION_CODE as institutionCode,
+			DEPT_CODE as deptCode,
+			SUM(ROLE_DATA_TYPE) as roleDataType
+		FROM SYS_DATA_ROLE_MODULE
+		WHERE ROLE_ID IN (SELECT ROLE_ID FROM SYS_USER_ROLE WHERE USER_ID = #{userName}) AND ROLE_DATA_TYPE IN ('02', '04')
+		GROUP BY INSTITUTION_CODE, DEPT_CODE
+	</select>
+
+    <select id="selectSysDatadictValue" resultType="string">
+		SELECT ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE = #{dictCode} and ITEM_CODE = #{itemCode}
+	</select>
+
+    <select id="selectSysDatadictValueList" resultType="com.joyintech.tams.systemtools.dto.SysDataDict">
+		SELECT DICT_CODE,
+				ITEM_CODE,
+				ITEM_VALUE,
+				ORDER_NO,
+				DEFAULT_VALUE
+		FROM SYS_DATADICT_LIST WHERE DICT_CODE = #{dictCode}
+	</select>
+
+    <select id="selectSysDatadictItemCode" resultType="string">
+		SELECT ITEM_CODE FROM SYS_DATADICT_LIST WHERE DICT_CODE = #{dictCode} and ITEM_VALUE = #{itemValue}
+	</select>
+
+    <select id="selectSysParamValue" resultType="string">
+        select PARAM_VALUE from SYS_PARA where  PARA_CODE =#{paramCode}
+        <if test="systemCode != null">
+            and SYSTEM_CODE = #{systemCode}
+        </if>
+    </select>
+
+    <select id="queryFirstIndustryBySecondIndustry" resultType="com.joyintech.tams.systemtools.dto.SysDataDict">
+		SELECT TRIM(ITEM_CODE) AS itemCode,
+		TRIM(LINKED_ITEM_CODE) AS linkedItemCode
+		FROM SYS_DATADICT_LIST_LINK
+		WHERE DICT_CODE = 'INSTITUTION_INDUSTRY_SECOND_LEVEL'
+		AND LINKED_DICT_CODE = 'INSTITUTION_INDUSTRY_FIRST_LEVEL'
+	</select>
+
+    <!-- 查询机构类型 -->
 	<select id="getInstitutionType" resultType="java.lang.String" parameterType="java.lang.String">
     	SELECT INSTITUTION_TYPE FROM SYS_INSTITUTION WHERE INSTITUTION_CODE = #{institutionCode}
     </select>
@@ -50,5 +127,19 @@
             b.UPPER_INSTITUTION_CODE = si2.INSTITUTION_CODE
 	)TEMP_INSTITUTION
     </select>
-    
+
+    <select id="getYHGeneralBankCode" resultType="java.lang.String">
+        SELECT INSTITUTION_CODE
+        FROM SYS_INSTITUTION SI
+        WHERE INSTITUTION_TYPE = '01'
+    </select>
+
+    <select id="getCreateInstByID" resultType="java.lang.String">
+        SELECT INSTITUTION_CODE
+        FROM Data_Auth_Notify_Inst SI
+        WHERE BUSINESS_ID = #{businessId}
+        and model_type = '02'
+        and data_type = #{dataType}
+    </select>
+
 </mapper>

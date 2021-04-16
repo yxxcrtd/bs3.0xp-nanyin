@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper_mysql">
+	<select id="getRepScreenList" resultType="com.joyintech.tams.common.base.entity.RepScreen">
+        SELECT
+        	SCREEN_KEY,
+        	SCREEN_NAME,
+            SCREEN_TYPE,
+            SCREEN_VALUE,
+            SCREEN_STATUS
+        FROM REP_SCREEN
+       	where REP_ID = #{repId}
+       	AND SCREEN_STATUS = 'Y'
+       	ORDER BY SCREEN_INDEX
+    </select>
+	<select id="getRepInfoListByPid" resultType="com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto" parameterType="java.lang.String" >
+        select
+			I.REP_ID,
+			I.TEMPLATE_ID,
+			I.TEMPLATE_PATH,
+			I.REPORT_NAME,
+			I.REPORT_TYPE
+        from REP_INFO I
+        LEFT JOIN REP_TREE T ON I.REP_ID=T.TREE_ID
+		WHERE T.P_ID=#{repId,jdbcType=VARCHAR} AND T.FLAG='Y'
+        and I.REPORT_TYPE = 'Y'
+    </select>
+	<select id="getInfoByRepId" resultType="com.joyintech.tams.disclosure.information.reveal.detailshow.dto.RepDetailsShow001Dto" parameterType="java.lang.String" >
+        select
+			REP_ID,
+			TEMPLATE_ID,
+			TEMPLATE_PATH,
+			REPORT_NAME,
+			REPORT_TYPE
+        from REP_INFO
+        where REP_ID = #{repId,jdbcType=VARCHAR}
+        and REPORT_TYPE = 'Y'
+    </select>
+	<!-- add by chendong in 2018-11-27 start -->
+	<select id="getProdInfo" resultType="com.joyintech.tams.disclosure.information.reveal.detailshow.dto.ProdInfoDto" parameterType="java.lang.String" >
+   		select
+   			PROD_ID prodId,
+   			PROD_ABBR prodName
+   		from
+   			REP_PROD_INFO
+        where STATUS='E'
+        and p_prod_id is null
+    </select>
 	<select id="querySameCount" resultType="java.lang.Integer">
         SELECT 
 			count(*) 
@@ -9,15 +54,12 @@
 		WHERE
 			REP_ID = #{repId,jdbcType=VARCHAR}
 		<if test="portnum != null and portnum.size() > 0">
-				/**AND nvl2(PRODID,PRODID,'0') in  */
 				AND IF(!ISNULL(PRODID) , PRODID , '0' ) in
 				<foreach collection="portnum" item="item" open="(" close=")" separator=",">
 					#{item}
 				</foreach>
 		</if>			
-		/*AND nvl2(DATE_FORMAT(START_DATE,'%Y-%m-%d'),DATE_FORMAT(START_DATE,'%Y-%m-%d'),'0') = #{startDate,jdbcType=VARCHAR} */
 		AND IF(! ISNULL(DATE_FORMAT(START_DATE,'%Y-%m-%d')) , DATE_FORMAT(START_DATE,'%Y-%m-%d') , '0' ) = #{startDate,jdbcType=VARCHAR}
-		/*	AND nvl2(DATE_FORMAT(END_DATE,'%Y-%m-%d'),DATE_FORMAT(END_DATE,'%Y-%m-%d'),'0') = #{endDate,jdbcType=VARCHAR} */
 		AND IF(! ISNULL(DATE_FORMAT(END_DATE,'%Y-%m-%d')) ,DATE_FORMAT(END_DATE,'%Y-%m-%d') , '0' ) = #{endDate,jdbcType=VARCHAR}
 		AND STATUS='E'
     </select>
@@ -30,10 +72,101 @@
 		WHERE
 			REP_ID = #{repId,jdbcType=VARCHAR}
 		AND PRODID = #{portnum,jdbcType=VARCHAR}
-		/* AND nvl2(DATE_FORMAT(START_DATE,'%Y-%m-%d'),DATE_FORMAT(START_DATE,'%Y-%m-%d'),'0') = #{startDate,jdbcType=VARCHAR} */
 		AND IF(!ISNULL(DATE_FORMAT(START_DATE,'%Y-%m-%d')) ,DATE_FORMAT(START_DATE,'%Y-%m-%d') , '0' ) = #{startDate,jdbcType=VARCHAR}
-		/* AND nvl2(DATE_FORMAT(END_DATE,'%Y-%m-%d'),DATE_FORMAT(END_DATE,'%Y-%m-%d'),'0') = #{endDate,jdbcType=VARCHAR} */
 		AND IF(!ISNULL(DATE_FORMAT(END_DATE,'%Y-%m-%d')) , DATE_FORMAT(END_DATE,'%Y-%m-%d') , '0' ) = #{endDate,jdbcType=VARCHAR}
 		AND STATUS='E'
     </update>
+	<select id="getProdList" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.ProdInfoListEntity">
+		SELECT
+    		PROD_ID prodId,
+    		PROD_RE prodRe,
+    		PROD_NAME prodName,
+    		PROD_ABBR prodAbbr,
+    		RAISE_MIN raiseMin,
+    		RAISE_MAX raiseMax,
+    		RAISE_STRDATE raiseStrdate,
+    		RAISE_ENDDATE raiseEnddate,
+    		RAISE_CCY raiseCcy,
+    		SET_DATE setDate,
+    		VDATE vdate,
+    		FIRST_OPEN_DAY firstOpenDay,
+    		MDATE mdate,
+    		ACT_MDATE actMdate,
+    		TERM term,
+    		WINDUP_DATE windupDate,
+    		ISSUE_MODE issueMode,
+    		PROFIT_TYPE profitType,
+    		PROD_TYPE prodType,
+    		ISSUE_STATUS issueStatus,
+    		RAISE_TYPE raiseType,
+    		RISK_LEVEL riskLevel,
+    		REVEAL_CHANNEL revealChannel
+			FROM REP_PROD_INFO
+    	WHERE
+    		1=1
+    	AND	PROD_ID = #{prodId,jdbcType=VARCHAR}
+	</select>
+	<select id="getRuleInfo" resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodisclosurereadandgen.entity.RepRuleEntity">
+		SELECT
+    		rr.ID id,
+    		rr.RULE_NAME ruleName,
+    		rr.REP_NAME repName,
+    		rr.REP_ID repId,
+    		rr.RCF_TYPE rcfType,
+    		rr.RCF_VALUE rcfValue,
+    		rr.BASIS_DATE_TYPE basisDateType,
+    		rr.MAKE_TYPE makeType,
+    		rr.MAKE_VALUE makeValue,
+    		rr.MAKE_DATE_TYPE makeDateType,
+    		rr.MAKE_TIME makeTime,
+    		rr.REVEAL_TYPE revealType,
+    		rr.REVEAL_VALUE revealValue,
+    		rr.REVEAL_DATE_TYPE revealDateType,
+   		 	rr.REVEAL_TIME revealTime,
+    		rr.DATA_TYPE dataType,
+    		rr.DATA_RANGE dataRange,
+    		rr.DATA_BEGIN dataBegin,
+    		rr.DATA_END dataEnd,
+    		rr.DATA_VALUE dataValue,
+    		rr.FILE_OUT_TYPE fileOutType,
+    		rr.REVEAL_CHANNEL revealChannel,
+    		rr.FTP_ID ftpId,
+    		rr.IS_REVEAL isReveal,
+    		rr.IS_CONFIRM isConfirm,
+    		rr.DETAIL detail
+		FROM
+    		REP_RULE rr
+		WHERE
+    		1=1
+		AND REP_ID = #{repId,jdbcType=VARCHAR}
+	</select>
+	<!-- chendong add in 2019-01-10 -->
+	<select id="getErrorMsg" resultType="java.lang.String">
+		SELECT
+		  ERRORMSG
+	    FROM REP_CHECK_ERRMSG
+	    WHERE REP_ID = #{rep_id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteErrorMsg">
+		delete from REP_CHECK_ERRMSG
+        where REP_ID = #{rep_id,jdbcType=VARCHAR}  or REP_ID='null'
+	</delete>
+	<select id="getProdName" resultType="java.lang.String">
+		SELECT
+		  PROD_NAME
+	    FROM REP_PROD_INFO
+	    WHERE PROD_ID = #{prod_id,jdbcType=VARCHAR}
+	    and p_prod_id is null /*不取子产品*/
+	</select>
+	<select id="getRepJobRangeInfo" resultType="com.joyintech.tams.common.base.entity.RepJobRange">
+		select rjr.ID as id,
+               rjr.JOB_ID as jobId,
+               rjr.FLAG as flag,
+               rjr.RULE_TYPE1 as ruleType1,
+               rjr.RULE_TYPE2 as ruleType2,
+               rjr.RULE_TYPE3 as ruleType3,
+               rjr.RULE_TYPE4 as ruleType4
+          from REP_JOB_RANGE rjr
+         where rjr.JOB_ID=#{repId,jdbcType=VARCHAR}
+	</select>
 </mapper>

@@ -293,75 +293,101 @@
 <delete id="deleteTodayData">
   delete from MST_CUSTOMER_INFO where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')
   </delete>
-  
+
 	<insert id="mergeMstCustomerInfoData"
 		parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
-		MERGE INTO MST_CUSTOMER_INFO CII
-		USING (
-		<foreach collection="list" item="item" open="select * from("
-			close=")" separator="union all">
-			SELECT
-			#{item.customerName,jdbcType=VARCHAR} CUSTOMER_NAME,
-			#{item.customerAbbr,jdbcType=VARCHAR} CUSTOMER_ABBR,
-			#{item.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE,
-			#{item.isIssuer,jdbcType=VARCHAR} IS_ISSUER,
-			#{item.isAssteManager,jdbcType=VARCHAR} IS_ASSTE_MANAGER,
-			#{item.isTruster,jdbcType=VARCHAR} IS_TRUSTER,
-			#{item.isSaler,jdbcType=VARCHAR} IS_SALER,
-			#{item.isFinancier,jdbcType=VARCHAR} IS_FINANCIER,
-			#{item.isGuarantee,jdbcType=VARCHAR} IS_GUARANTEE,
-			#{item.isRatingAgencies,jdbcType=VARCHAR} IS_RATING_AGENCIES,
-			#{item.isPledgor,jdbcType=VARCHAR} IS_PLEDGOR,
-			#{item.isDepositBank,jdbcType=VARCHAR} IS_DEPOSIT_BANK,
-			#{item.isInvestAdviser,jdbcType=VARCHAR} IS_INVEST_ADVISER,
-			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-			NOW() CREATE_TIME,
-			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			NOW() UPDATE_TIME,
-			#{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
-			FROM
-			DUAL
-		</foreach>
-		) TEMP
-		<!-- 业务主键匹配 -->
-		ON(CII.CUSTOMER_ID = TEMP.CUSTOMER_ID
-		)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN UPDATE SET
-		CUSTOMER_NAME = TEMP.CUSTOMER_NAME,
-		CUSTOMER_ABBR = TEMP.CUSTOMER_ABBR,
-		CUSTOMER_TYPE = TEMP.CUSTOMER_TYPE,
-		IS_ISSUER = TEMP.IS_ISSUER,
-		IS_ASSTE_MANAGER = TEMP.IS_ASSTE_MANAGER,
-		IS_TRUSTER = TEMP.IS_TRUSTER,
-		IS_SALER = TEMP.IS_SALER,
-		IS_FINANCIER = TEMP.IS_FINANCIER,
-		IS_GUARANTEE = TEMP.IS_GUARANTEE,
-		IS_RATING_AGENCIES = TEMP.IS_RATING_AGENCIES,
-		IS_PLEDGOR = TEMP.IS_PLEDGOR,
-		IS_DEPOSIT_BANK = TEMP.IS_DEPOSIT_BANK,
-		IS_INVEST_ADVISER = TEMP.IS_INVEST_ADVISER,
-		CREATE_USER = TEMP.CREATE_USER,
-		CREATE_DEPT = TEMP.CREATE_DEPT,
-		CREATE_TIME = TEMP.CREATE_TIME,
-		UPDATE_USER = TEMP.UPDATE_USER,
-		UPDATE_TIME = TEMP.UPDATE_TIME
-		<!-- 未匹配到这插入 -->
-		WHEN NOT MATCHED THEN INSERT
-		(CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
-		CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
-		IS_TRUSTER, IS_SALER, IS_FINANCIER,
-		IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
-		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-		UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
-		IS_INVEST_ADVISER)
-		values (TEMP.CUSTOMER_ID, TEMP.CUSTOMER_NAME, TEMP.CUSTOMER_ABBR,
-		TEMP.CUSTOMER_TYPE, TEMP.IS_ISSUER, TEMP.IS_ASSTE_MANAGER,
-		TEMP.IS_TRUSTER, TEMP.IS_SALER, TEMP.IS_FINANCIER,
-		TEMP.IS_GUARANTEE, TEMP.IS_RATING_AGENCIES, TEMP.CREATE_USER,
-		TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
-		TEMP.UPDATE_TIME, TEMP.IS_PLEDGOR, TEMP.IS_DEPOSIT_BANK,
-		TEMP.IS_INVEST_ADVISER)
+        insert into MST_CUSTOMER_INFO(CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
+        CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
+        IS_TRUSTER, IS_SALER, IS_FINANCIER,
+        IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
+        IS_INVEST_ADVISER)
+        select CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
+        CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
+        IS_TRUSTER, IS_SALER, IS_FINANCIER,
+        IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
+        IS_INVEST_ADVISER from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.customerName,jdbcType=VARCHAR} CUSTOMER_NAME,
+            #{item.customerAbbr,jdbcType=VARCHAR} CUSTOMER_ABBR,
+            #{item.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE,
+            #{item.isIssuer,jdbcType=VARCHAR} IS_ISSUER,
+            #{item.isAssteManager,jdbcType=VARCHAR} IS_ASSTE_MANAGER,
+            #{item.isTruster,jdbcType=VARCHAR} IS_TRUSTER,
+            #{item.isSaler,jdbcType=VARCHAR} IS_SALER,
+            #{item.isFinancier,jdbcType=VARCHAR} IS_FINANCIER,
+            #{item.isGuarantee,jdbcType=VARCHAR} IS_GUARANTEE,
+            #{item.isRatingAgencies,jdbcType=VARCHAR} IS_RATING_AGENCIES,
+            #{item.isPledgor,jdbcType=VARCHAR} IS_PLEDGOR,
+            #{item.isDepositBank,jdbcType=VARCHAR} IS_DEPOSIT_BANK,
+            #{item.isInvestAdviser,jdbcType=VARCHAR} IS_INVEST_ADVISER,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            NOW() CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            NOW() UPDATE_TIME,
+            #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
+            FROM    DUAL
+        </foreach>
+        ) TEMP where not exisits (select 1 from MST_CUSTOMER_INFO CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID)
+        ) de ;
+
+        UPDATE  MST_CUSTOMER_INFO as A,
+        (
+        select CUSTOMER_NAME,
+        CUSTOMER_ABBR,
+        CUSTOMER_TYPE,
+        IS_ISSUER,
+        IS_ASSTE_MANAGER,
+        IS_TRUSTER,
+        IS_SALER,
+        IS_FINANCIER,
+        IS_GUARANTEE,
+        IS_RATING_AGENCIES,
+        IS_PLEDGOR,
+        IS_DEPOSIT_BANK,
+        IS_INVEST_ADVISER,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.customerName,jdbcType=VARCHAR} CUSTOMER_NAME,
+            #{item.customerAbbr,jdbcType=VARCHAR} CUSTOMER_ABBR,
+            #{item.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE,
+            #{item.isIssuer,jdbcType=VARCHAR} IS_ISSUER,
+            #{item.isAssteManager,jdbcType=VARCHAR} IS_ASSTE_MANAGER,
+            #{item.isTruster,jdbcType=VARCHAR} IS_TRUSTER,
+            #{item.isSaler,jdbcType=VARCHAR} IS_SALER,
+            #{item.isFinancier,jdbcType=VARCHAR} IS_FINANCIER,
+            #{item.isGuarantee,jdbcType=VARCHAR} IS_GUARANTEE,
+            #{item.isRatingAgencies,jdbcType=VARCHAR} IS_RATING_AGENCIES,
+            #{item.isPledgor,jdbcType=VARCHAR} IS_PLEDGOR,
+            #{item.isDepositBank,jdbcType=VARCHAR} IS_DEPOSIT_BANK,
+            #{item.isInvestAdviser,jdbcType=VARCHAR} IS_INVEST_ADVISER,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            NOW() CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            NOW() UPDATE_TIME,
+            #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
+            FROM    DUAL
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        set  A.* = B.* where exisits (select 1 from MST_CUSTOMER_INFO CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID);
 	</insert>
 </mapper>

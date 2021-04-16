@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfBranchMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfBranch" >
+        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="VARCHAR" />
+        <result column="BRANCHID" property="branchid" jdbcType="VARCHAR" />
+        <result column="BANKNAME" property="bankname" jdbcType="VARCHAR" />
+        <result column="BRANCHBUYNUM" property="branchbuynum" jdbcType="DECIMAL" />
+        <result column="BRANCHACCOUNTAMOUNT" property="branchaccountamount" jdbcType="DECIMAL" />
+        <result column="BRANCHBUYAMOUNT" property="branchbuyamount" jdbcType="DECIMAL" />
+        <result column="BRANCHDRAWAMOUNT" property="branchdrawamount" jdbcType="DECIMAL" />
+        <result column="INTERF_ID" property="interfId" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfBranch" >
+        insert into INTERF_BRANCH (PRODID, CDATE, BRANCHID, 
+            BANKNAME, BRANCHBUYNUM, BRANCHACCOUNTAMOUNT, 
+            BRANCHBUYAMOUNT, BRANCHDRAWAMOUNT, INTERF_ID, 
+            CREATE_TIME)
+        values (#{prodid,jdbcType=VARCHAR}, #{cdate,jdbcType=VARCHAR}, #{branchid,jdbcType=VARCHAR}, 
+            #{bankname,jdbcType=VARCHAR}, #{branchbuynum,jdbcType=DECIMAL}, #{branchaccountamount,jdbcType=DECIMAL}, 
+            #{branchbuyamount,jdbcType=DECIMAL}, #{branchdrawamount,jdbcType=DECIMAL}, #{interfId,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfBranch" >
+        insert into INTERF_BRANCH
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                PRODID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="branchid != null" >
+                BRANCHID,
+            </if>
+            <if test="bankname != null" >
+                BANKNAME,
+            </if>
+            <if test="branchbuynum != null" >
+                BRANCHBUYNUM,
+            </if>
+            <if test="branchaccountamount != null" >
+                BRANCHACCOUNTAMOUNT,
+            </if>
+            <if test="branchbuyamount != null" >
+                BRANCHBUYAMOUNT,
+            </if>
+            <if test="branchdrawamount != null" >
+                BRANCHDRAWAMOUNT,
+            </if>
+            <if test="interfId != null" >
+                INTERF_ID,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=VARCHAR},
+            </if>
+            <if test="branchid != null" >
+                #{branchid,jdbcType=VARCHAR},
+            </if>
+            <if test="bankname != null" >
+                #{bankname,jdbcType=VARCHAR},
+            </if>
+            <if test="branchbuynum != null" >
+                #{branchbuynum,jdbcType=DECIMAL},
+            </if>
+            <if test="branchaccountamount != null" >
+                #{branchaccountamount,jdbcType=DECIMAL},
+            </if>
+            <if test="branchbuyamount != null" >
+                #{branchbuyamount,jdbcType=DECIMAL},
+            </if>
+            <if test="branchdrawamount != null" >
+                #{branchdrawamount,jdbcType=DECIMAL},
+            </if>
+            <if test="interfId != null" >
+                #{interfId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfBranch" >
+        insert into INTERF_BRANCH(PRODID, CDATE, BRANCHID, BANKNAME, BRANCHBUYNUM, BRANCHACCOUNTAMOUNT, 
+        BRANCHBUYAMOUNT, BRANCHDRAWAMOUNT, INTERF_ID, CREATE_TIME)
+        select PRODID, CDATE, BRANCHID, BANKNAME, BRANCHBUYNUM, BRANCHACCOUNTAMOUNT, 
+            BRANCHBUYAMOUNT, BRANCHDRAWAMOUNT, INTERF_ID, CREATE_TIME
+             from INTERF_BRANCH
+             where 1 = 1
+    </insert>
+</mapper>

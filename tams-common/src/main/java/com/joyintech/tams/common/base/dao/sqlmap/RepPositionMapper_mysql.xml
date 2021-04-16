@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepPositionMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepPosition" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <id column="REP_BANK_ASSET_CODE" property="repBankAssetCode" jdbcType="VARCHAR" />
+        <id column="REP_DATE" property="repDate" jdbcType="DATE" />
+        <result column="REP_ISSUE_PARTY_ID" property="repIssuePartyId" jdbcType="VARCHAR" />
+        <result column="REP_FINPROD_REG_ID" property="repFinprodRegId" jdbcType="VARCHAR" />
+        <result column="REP_POSITION_TYPE" property="repPositionType" jdbcType="VARCHAR" />
+        <result column="REP_CCY" property="repCcy" jdbcType="VARCHAR" />
+        <result column="REP_BALANCE" property="repBalance" jdbcType="DECIMAL" />
+        <result column="REP_BALANCE_CNY" property="repBalanceCny" jdbcType="DECIMAL" />
+        <result column="REP_COUNT" property="repCount" jdbcType="DECIMAL" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        <result column="REP_POS_REG_DATE" property="repPosRegDate" jdbcType="DATE" />
+        <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" />
+        <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_BANK_ASSET_CODE REP_BANK_ASSET_CODE, REP_DATE REP_DATE, 
+        REP_ISSUE_PARTY_ID REP_ISSUE_PARTY_ID, REP_FINPROD_REG_ID REP_FINPROD_REG_ID, REP_POSITION_TYPE REP_POSITION_TYPE, 
+        REP_CCY REP_CCY, REP_BALANCE REP_BALANCE, REP_BALANCE_CNY REP_BALANCE_CNY, REP_COUNT REP_COUNT, 
+        REP_REMARK REP_REMARK, REP_POS_REG_DATE REP_POS_REG_DATE, REP_SEND_STATUS REP_SEND_STATUS, 
+        REP_STATUS_DATE REP_STATUS_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepPositionMapper.Base_Column_List" />
+        from REP_POSITION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepPositionMapper.Base_Column_List" />
+        from REP_POSITION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RepPositionKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepPositionMapper.Base_Column_List" />
+        from REP_POSITION
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_BANK_ASSET_CODE = #{repBankAssetCode,jdbcType=VARCHAR}
+          and REP_DATE = #{repDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepPositionKey" >
+        delete from REP_POSITION
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_BANK_ASSET_CODE = #{repBankAssetCode,jdbcType=VARCHAR}
+          and REP_DATE = #{repDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepPosition" >
+        insert into REP_POSITION (REP_FINPROD_ID, REP_BANK_ASSET_CODE, REP_DATE, 
+            REP_ISSUE_PARTY_ID, REP_FINPROD_REG_ID, REP_POSITION_TYPE, 
+            REP_CCY, REP_BALANCE, REP_BALANCE_CNY, 
+            REP_COUNT, REP_REMARK, REP_POS_REG_DATE, 
+            REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repBankAssetCode,jdbcType=VARCHAR}, #{repDate,jdbcType=DATE}, 
+            #{repIssuePartyId,jdbcType=VARCHAR}, #{repFinprodRegId,jdbcType=VARCHAR}, #{repPositionType,jdbcType=VARCHAR}, 
+            #{repCcy,jdbcType=VARCHAR}, #{repBalance,jdbcType=DECIMAL}, #{repBalanceCny,jdbcType=DECIMAL}, 
+            #{repCount,jdbcType=DECIMAL}, #{repRemark,jdbcType=VARCHAR}, #{repPosRegDate,jdbcType=DATE}, 
+            #{repSendStatus,jdbcType=VARCHAR}, #{repStatusDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepPosition" >
+        insert into REP_POSITION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repBankAssetCode != null" >
+                REP_BANK_ASSET_CODE,
+            </if>
+            <if test="repDate != null" >
+                REP_DATE,
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID,
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID,
+            </if>
+            <if test="repPositionType != null" >
+                REP_POSITION_TYPE,
+            </if>
+            <if test="repCcy != null" >
+                REP_CCY,
+            </if>
+            <if test="repBalance != null" >
+                REP_BALANCE,
+            </if>
+            <if test="repBalanceCny != null" >
+                REP_BALANCE_CNY,
+            </if>
+            <if test="repCount != null" >
+                REP_COUNT,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            <if test="repPosRegDate != null" >
+                REP_POS_REG_DATE,
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS,
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repBankAssetCode != null" >
+                #{repBankAssetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repDate != null" >
+                #{repDate,jdbcType=DATE},
+            </if>
+            <if test="repIssuePartyId != null" >
+                #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repPositionType != null" >
+                #{repPositionType,jdbcType=VARCHAR},
+            </if>
+            <if test="repCcy != null" >
+                #{repCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repBalance != null" >
+                #{repBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="repBalanceCny != null" >
+                #{repBalanceCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repCount != null" >
+                #{repCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repPosRegDate != null" >
+                #{repPosRegDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepPosition" >
+        insert into REP_POSITION(REP_FINPROD_ID, REP_BANK_ASSET_CODE, REP_DATE, REP_ISSUE_PARTY_ID, 
+        REP_FINPROD_REG_ID, REP_POSITION_TYPE, REP_CCY, REP_BALANCE, REP_BALANCE_CNY, REP_COUNT, 
+        REP_REMARK, REP_POS_REG_DATE, REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REP_FINPROD_ID, REP_BANK_ASSET_CODE, REP_DATE, REP_ISSUE_PARTY_ID, 
+            REP_FINPROD_REG_ID, REP_POSITION_TYPE, REP_CCY, REP_BALANCE, REP_BALANCE_CNY, REP_COUNT, 
+            REP_REMARK, REP_POS_REG_DATE, REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_POSITION
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR} and REP_BANK_ASSET_CODE = #{repBankAssetCode,jdbcType=VARCHAR} and REP_DATE = #{repDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepPosition" >
+        update REP_POSITION
+        <set >
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repPositionType != null" >
+                REP_POSITION_TYPE = #{repPositionType,jdbcType=VARCHAR},
+            </if>
+            <if test="repCcy != null" >
+                REP_CCY = #{repCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repBalance != null" >
+                REP_BALANCE = #{repBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="repBalanceCny != null" >
+                REP_BALANCE_CNY = #{repBalanceCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repCount != null" >
+                REP_COUNT = #{repCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repPosRegDate != null" >
+                REP_POS_REG_DATE = #{repPosRegDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_BANK_ASSET_CODE = #{repBankAssetCode,jdbcType=VARCHAR}
+          and REP_DATE = #{repDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepPosition" >
+        update REP_POSITION
+        set REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            REP_POSITION_TYPE = #{repPositionType,jdbcType=VARCHAR},
+            REP_CCY = #{repCcy,jdbcType=VARCHAR},
+            REP_BALANCE = #{repBalance,jdbcType=DECIMAL},
+            REP_BALANCE_CNY = #{repBalanceCny,jdbcType=DECIMAL},
+            REP_COUNT = #{repCount,jdbcType=DECIMAL},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            REP_POS_REG_DATE = #{repPosRegDate,jdbcType=DATE},
+            REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+          and REP_BANK_ASSET_CODE = #{repBankAssetCode,jdbcType=VARCHAR}
+          and REP_DATE = #{repDate,jdbcType=DATE}
+    </update>
+</mapper>
