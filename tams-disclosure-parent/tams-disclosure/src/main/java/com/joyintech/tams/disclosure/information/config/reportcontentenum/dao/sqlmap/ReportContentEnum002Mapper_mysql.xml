@@ -55,13 +55,6 @@
             #{createDept,jdbcType=VARCHAR},
             '已审核')
    </insert>
-    <select id="selectById" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto" parameterType="java.lang.String">
-       select ris.ID as id,ris.PRI_ID as priId,ris.INDEX_NAME as indexName,ris.INDEX_VALUE as indexValue,ris.INDEX_DATE as indexDate,
-              ris.INDEX_TYPE as indexType,DATE_FORMAT(ris.INDEX_DATE,'%Y-%m-%d') as indexDateStr,ris.INDEX_FILE as indexFile,ris.INDEX_DETAIL as indexDetail,
-              ris.AUDIT_STATUS as auditStatus
-       from REP_INDEX_SUB ris
-       where ris.ID =#{id}
-   </select>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
      update REP_INDEX_SUB 
        <set >
