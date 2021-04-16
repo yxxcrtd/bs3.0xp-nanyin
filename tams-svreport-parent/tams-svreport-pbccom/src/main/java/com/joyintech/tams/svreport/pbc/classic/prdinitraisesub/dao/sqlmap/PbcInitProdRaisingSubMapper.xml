@@ -1350,14 +1350,6 @@
       PBC_PROD_ID = #{item.pbcProdId,jdbcType=VARCHAR}
       </foreach>
    </select>
-  <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
-    delete from PBC_INIT_PROD_RAISING_SUB
-    where
-    PBC_PROD_ID in <foreach collection="list" item="item" open="(" close=")" separator=",">
-    #{item.pbcProdId,jdbcType=CHAR}
-  </foreach>
-    and SEND_STATUS in ('02','03')
-  </delete>
 
 
 <!--
