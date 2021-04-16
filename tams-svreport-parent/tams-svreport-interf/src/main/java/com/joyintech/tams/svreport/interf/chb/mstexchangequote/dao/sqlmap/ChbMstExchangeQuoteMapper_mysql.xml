@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.svreport.interf.chb.mstexchangequote.dao.ChbMstExchangeQuoteMapper">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.mstexchangequote.dao.ChbMstExchangeQuoteMapper_mysql">
     <!--    入库操作 mergeInfoList   -->
     <insert id="mergeInfoList" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote">
         insert into MST_EXCHARGE_QUOTE(EXCHARGE_CODE,
