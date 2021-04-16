@@ -1283,7 +1283,7 @@ public class FinProductFeePay002Service extends BaseService<FinProductFeePay002D
                         BigDecimal unclearAmt = restTemplate.getForObject(
                             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductFeePay/queryUnCleanFee?ptlId="
                                                                           + map.get("ptlId") + "&feeId=" + map.get("feeId")
-                                                                          + "&payDate=" + map.get("payDate") + "&finprodId="
+                                                                          + "&payDate=" + DateUtil.format(dto.getCalcStartDate()) + "&finprodId="
                                                                           + sFinprodId,
 
                             BigDecimal.class);

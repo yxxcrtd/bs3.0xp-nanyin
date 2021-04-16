@@ -2113,7 +2113,7 @@
         AND TPD.IS_CLEAN = 'N'
         group by TPD.FINPROD_ID ,TTFD.FEE_ID,fcp.mdate
 
-        union all
+     <!--   union all
         select TPD.FINPROD_ID,
         TTFD.FEE_ID,
         to_date(#{calcEndDate}, 'yyyy-MM-dd'),
@@ -2137,7 +2137,7 @@
             AND TPD.MDATE =to_date(#{calcStartDate}, 'yyyy-MM-dd')
         </if>
         AND TPD.IS_CLEAN = 'N'
-        group by TPD.FINPROD_ID, TTFD.FEE_ID, to_date(#{calcEndDate}, 'yyyy-MM-dd')
+        group by TPD.FINPROD_ID, TTFD.FEE_ID, to_date(#{calcEndDate}, 'yyyy-MM-dd')-->
 
         )uct
         on uct.finprod_id=FIN_CASH_INFO.finprod_id
@@ -2286,7 +2286,7 @@
         AND TPD.IS_CLEAN = 'N'
         group by TPD.FINPROD_ID ,TTFD.FEE_ID,fcp.mdate
 
-        union all
+    <!--    union all
         select TPD.FINPROD_ID,
         TTFD.FEE_ID,
         to_date(#{calcEndDate}, 'yyyy-MM-dd'),
@@ -2310,7 +2310,7 @@
             AND TPD.MDATE =to_date(#{calcStartDate}, 'yyyy-MM-dd')
         </if>
         AND TPD.IS_CLEAN = 'N'
-        group by TPD.FINPROD_ID, TTFD.FEE_ID, to_date(#{calcEndDate}, 'yyyy-MM-dd')
+        group by TPD.FINPROD_ID, TTFD.FEE_ID, to_date(#{calcEndDate}, 'yyyy-MM-dd')-->
 
         )uct
         on uct.finprod_id=FIN_CASH_INFO.finprod_id
