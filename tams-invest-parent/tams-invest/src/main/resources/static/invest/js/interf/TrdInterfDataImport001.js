@@ -173,47 +173,48 @@ $(function () {
 			layer.alert('请选择时间!');
 			return ;
 		}
-		$.ajax({
-			url : "checkExecute",
-			type : "POST",
-			data : '',
-			success: function(msg){
-				if(msg>0){
-					layer.alert('当前正在进行登帐，请稍后再试!!');
-					return;
-				}else{
-					Joyin.ajax('runAs',
-						{
-							datas : datas,
-							startDate:startDate,
-							endDate:endDate,
-							prodList :prods
-						},
-						function(data) {
-							var result = JSON.parse(data);
-							if(result.isCheck==1){
-								//再次执行启动前停止上一次轮询
-								stopInterval();
-								//成功调用轮询
-								queryDate = result.createDate;
-								execTaskId = result.execTaskId;
-								//调用后一秒再查询接口,快速展示界面数据
-								startInterval();
-								progress(0);
-								$("#TrdInterfDataImport001_btn_doInterBtn").addClass("layui-btn-disabled");
-								clickFlag=false;
-							}else if(result.isCheck==0){
-								layui.layer.alert("任务执行中，请稍后再试!");
-							}else{
-								layui.layer.alert("发送启动请求失败");
-
-							}
-						});
-				}
+		Joyin.ajax('runAs',
+			{
+				datas : datas,
+				startDate:startDate,
+				endDate:endDate,
+				prodList :prods
 			},
-			failure : function() {
-			}
-		});
+			function(data) {
+				var result = JSON.parse(data);
+				if(result.isCheck==1){
+					//再次执行启动前停止上一次轮询
+					stopInterval();
+					//成功调用轮询
+					queryDate = result.createDate;
+					execTaskId = result.execTaskId;
+					//调用后一秒再查询接口,快速展示界面数据
+					startInterval();
+					progress(0);
+					$("#TrdInterfDataImport001_btn_doInterBtn").addClass("layui-btn-disabled");
+					clickFlag=false;
+				}else if(result.isCheck==0){
+					layui.layer.alert("任务执行中，请稍后再试!");
+				}else{
+					layui.layer.alert("发送启动请求失败");
+
+				}
+			});
+		// $.ajax({
+		// 	url : "checkExecute",
+		// 	type : "POST",
+		// 	data : '',
+		// 	success: function(msg){
+		// 		if(msg>0){
+		// 			layer.alert('当前正在进行登帐，请稍后再试!!');
+		// 			return;
+		// 		}else{
+		//
+		// 		}
+		// 	},
+		// 	failure : function() {
+		// 	}
+		// });
 	};
 
 	//发送停止命令
