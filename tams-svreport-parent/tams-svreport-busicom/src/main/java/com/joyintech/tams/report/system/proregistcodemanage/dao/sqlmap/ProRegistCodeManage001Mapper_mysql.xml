@@ -8,16 +8,16 @@
 		A.ORG_CODE orgCode,
 		b.PROD_NAME prodName,
 		A.REG_CODE regCode,
-		DATE_FORMA(A.VDATE,'%Y-%m-%d') vdate,
-		DATE_FORMA(A.MDATE,'%Y-%m-%d') mdate,
+		DATE_FORMAT(A.VDATE,'%Y-%m-%d') vdate,
+		DATE_FORMAT(A.MDATE,'%Y-%m-%d') mdate,
 		A.INVESTOR investor,
 		A.REMARK remark,
 		A.OPERATE_MODE operateMode,
-		DATE_FORMA(d.RAISE_VDATE,'%Y-%m-%d') raiseVdate,
+		DATE_FORMAT(d.RAISE_VDATE,'%Y-%m-%d') raiseVdate,
 		IFNULL(c.send_status, #{sendStatus03,jdbcType=VARCHAR}) sendStatus,
 		c.send_remark sendRemark,
-		DATE_FORMA(b.RAISE_PSTRDATE,'%Y-%m-%d') raisePstrDate,
-		DATE_FORMA(b.RAISE_PENDDATE,'%Y-%m-%d') raisePendDate
+		DATE_FORMAT(b.RAISE_PSTRDATE,'%Y-%m-%d') raisePstrDate,
+		DATE_FORMAT(b.RAISE_PENDDATE,'%Y-%m-%d') raisePendDate
 		FROM chb_prd_declare_info b
 		left join CHB_PRDRESIST_CODE A
 		on A.PRODID=b.PROD_INS_ID
@@ -38,22 +38,22 @@
 				</foreach>
 			</if>
 			<if test="vdateStart != null and vdateStart != ''" >
-				AND DATE_FORMA(A.VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{vdateStart}
+				AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{vdateStart}
 			</if>
 			<if test="vdateEnd != null and vdateEnd != ''" >
-				AND DATE_FORMA(A.VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{vdateEnd}
+				AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{vdateEnd}
 			</if>
 			<if test="mdateStart != null and mdateStart != ''" >
-				AND DATE_FORMA(A.MDATE,'%Y-%m-%d') <![CDATA[>=]]> #{mdateStart}
+				AND DATE_FORMAT(A.MDATE,'%Y-%m-%d') <![CDATA[>=]]> #{mdateStart}
 			</if>
 			<if test="mdateEnd != null and mdateEnd != ''" >
-				AND DATE_FORMA(A.MDATE,'%Y-%m-%d') <![CDATA[<=]]> #{mdateEnd}
+				AND DATE_FORMAT(A.MDATE,'%Y-%m-%d') <![CDATA[<=]]> #{mdateEnd}
 			</if>
 			<if test="raisevdateStart != null and raisevdateStart != ''" >
-				AND DATE_FORMA(d.RAISE_VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{raisevdateStart}
+				AND DATE_FORMAT(d.RAISE_VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{raisevdateStart}
 			</if>
 			<if test="raisevdateEnd != null and raisevdateEnd != ''" >
-				AND DATE_FORMA(d.RAISE_VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{raisevdateEnd}
+				AND DATE_FORMAT(d.RAISE_VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{raisevdateEnd}
 			</if>
 			<if test="regCodeList != null and regCodeList.size() > 0">
 				<foreach collection="regCodeList" item="regCode" open=" AND A.REG_CODE IN (" close=")" separator=",">
@@ -90,9 +90,9 @@
 		b.PROD_NAME prodName,
 		A.REG_CODE regCode,
 		b.OPERATE_MODE operateMode,
-		DATE_FORMA(b.VDATE,'%Y-%m-%d') vdate,
-		DATE_FORMA(b.MDATE,'%Y-%m-%d') mdate,
-		DATE_FORMA(A.CREATE_TIME,'%Y-%m-%d') generateDate,
+		DATE_FORMAT(b.VDATE,'%Y-%m-%d') vdate,
+		DATE_FORMAT(b.MDATE,'%Y-%m-%d') mdate,
+		DATE_FORMAT(A.CREATE_TIME,'%Y-%m-%d') generateDate,
 		A.REMARK remark,
 		c.PATH
 		FROM CHB_PRDRESIST_CODE A
@@ -112,16 +112,16 @@
 				</foreach>
 			</if>
 			<if test="vdateStart != null and vdateStart != ''" >
-				AND DATE_FORMA(b.VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{vdateStart}
+				AND DATE_FORMAT(b.VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{vdateStart}
 			</if>
 			<if test="vdateEnd != null and vdateEnd != ''" >
-				AND DATE_FORMA(b.VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{vdateEnd}
+				AND DATE_FORMAT(b.VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{vdateEnd}
 			</if>
 			<if test="mdateStart != null and mdateStart != ''" >
-				AND DATE_FORMA(b.MDATE,'%Y-%m-%d') <![CDATA[>=]]> #{mdateStart}
+				AND DATE_FORMAT(b.MDATE,'%Y-%m-%d') <![CDATA[>=]]> #{mdateStart}
 			</if>
 			<if test="mdateEnd != null and mdateEnd != ''" >
-				AND DATE_FORMA(b.MDATE,'%Y-%m-%d') <![CDATA[<=]]> #{mdateEnd}
+				AND DATE_FORMAT(b.MDATE,'%Y-%m-%d') <![CDATA[<=]]> #{mdateEnd}
 			</if>
 			<if test="regCodeList != null and regCodeList.size() > 0">
 				<foreach collection="regCodeList" item="regCode" open=" AND A.REG_CODE IN (" close=")" separator=",">
