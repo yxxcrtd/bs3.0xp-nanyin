@@ -45,25 +45,26 @@ import java.util.*;
 @PageId("TrdInterfDataImport001")
 @RequestMapping("/invest/interf/TrdInterfDataImport001")
 public class TrdInterfDataImport001Contoller extends BaseController {
-	
+
 	//代表公共数据
 	private static String InterfFlag = "InterfData";
 	@Autowired
 	private TrdInterfDataImport001Service trdInterfDataImport001Service;
     @Autowired
     private BaseCommonService baseCommonService;
-    
+
     @Autowired
     private InterfCommonService interfCommonService;
-	
+
 	/**
      * 页面初始化，显示画面<br>
-     * 
+     *
      * @param model Model
      * @return 初始化路径
      * @see
      * @since 1.0
      */
+    @Override
     public String init(Model model) {
         String sysDate=baseCommonService.getSysDateString();
         if(sysDate==null||"".equals(sysDate)){
@@ -72,8 +73,8 @@ public class TrdInterfDataImport001Contoller extends BaseController {
         model.addAttribute("sysDate", sysDate);
         return super.init(model);
     }
-    
-    
+
+
     @RequestMapping("/getInterGroup")
     @ResponseBody
     @SuppressWarnings("rawtypes")
@@ -92,7 +93,7 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     public Page<SelectOptionDto> getFinprodId() {
         return trdInterfDataImport001Service.getFinprodId(RequestUtil.getPageParam());
     }
-    
+
     @RequestMapping("/getInterGroupCode")
     @ResponseBody
     public List<SelectOptionDto> getInterGroupCode(){
@@ -101,8 +102,8 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     	List<SelectOptionDto>  list = trdInterfDataImport001Service.getInterGroupCode(map);
     	return list;
     }
-    
-    
+
+
     @RequestMapping("/findLogPage")
     @ResponseBody
     public List<TrdInterfDataImport001LogDto> findLogPage(){
@@ -117,19 +118,19 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     	}
     	return list;
     }
-    
-    
+
+
     @RequestMapping("/stopInterf")
     @ResponseBody
     public int stopInterf(){
     	Map<String, Object> map = new HashMap<>();
     	return trdInterfDataImport001Service.stopInterLog(map);
     }
-    
-    
+
+
     /**
      * 接口启动
-     * 
+     *
      * @throws IOException
      * @see
      * @since 1.0
@@ -173,5 +174,5 @@ public class TrdInterfDataImport001Contoller extends BaseController {
 //        return json.toString();
         return null;
     }
-  
+
 }
