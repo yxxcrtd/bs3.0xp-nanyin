@@ -12,10 +12,8 @@ import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.interf.dao.TrdInterfDataImport001Mapper;
 import com.joyintech.tams.invest.interf.dto.TrdInterfDataImport001Dto;
 import com.joyintech.tams.invest.interf.dto.TrdInterfDataImport001LogDto;
-import com.joyintech.tams.invest.interf.dto.ValInterflogExt;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.valuation.common.interf.base.constant.DictCodeInterfList;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
@@ -34,82 +32,59 @@ public class TrdInterfDataImport001Service extends CommonExportService<TrdInterf
 
 	private static final String INTERF_PLACE_URL = "url_interf_place";
 
-	@Autowired
-	private TrdInterfDataImport001Mapper valPublicDataImport001Mapper;
-	
 
-	
-	public List<ValInterflogExt> getValInterflogDetail(Map<String,Object> params){
-		
-//		return valPublicDataImport001Mapper.getValInterflogDetail(params);
-		return restTemplate.postForList(
-                ServiceApplication.INTERF_PLACE_SERVICE_NAME + "/ValPublicDataImport003/searchList",
-                params, ValInterflogExt.class);
-	}
-	
+
 	public List<TrdInterfDataImport001LogDto> getInterActionLogDetail(Map<String,Object> params){
-		
-//		return valPublicDataImport001Mapper.getInterActionLogDetail(params);
-		return restTemplate.postForList(
-                ServiceApplication.INTERF_PLACE_SERVICE_NAME + "/ValPublicDataImport002/searchList",
-                params, TrdInterfDataImport001LogDto.class);
+		//TODO
+		return null;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 获取任务组
 	 * @param params
 	 * @return
 	 */
 	public List<SelectOptionDto> getInterGroupCode(Map<String,Object> params){
-		
-//		return valPublicDataImport001Mapper.getInterGroupCode(params);
-		return restTemplate.postForList(
-                ServiceApplication.INTERF_PLACE_SERVICE_NAME + "/ValPublicDataImport001/getInterGroupCode",
-                params, SelectOptionDto.class);
+		//TODO
+		return null;
 	}
-	
+
 	/**
 	 * 获取界面日志信息
 	 * @param params
 	 * @return
 	 */
 	public List<TrdInterfDataImport001LogDto> getInterActionLog(Map<String, Object> params){
-//		return valPublicDataImport001Mapper.getInterActionLog(params);
-		return restTemplate.postForList(
-                ServiceApplication.INTERF_PLACE_SERVICE_NAME + "/ValPublicDataImport001/findLogPage",
-                params, TrdInterfDataImport001LogDto.class);
+		//TODO
+		return null;
 	}
-	
+
 	/**
 	 * 手工停止
 	 * @param params
 	 * @return
 	 */
 	public int stopInterLog(Map<String, Object> params){
-//		return valPublicDataImport001Mapper.stopInterLog(params);
-		return restTemplate.postForObject(
-                ServiceApplication.INTERF_PLACE_SERVICE_NAME + "/ValPublicDataImport001/stopInterf",
-                params, int.class);
+		//TODO
+		return 0;
 	}
-	
-	
+
+
 	/**
 	 * 检查当前是否有正在运行中的批处理
 	 * @param params
 	 * @return
 	 */
 	public int checkInterLog(Map<String, Object> params){
-//		return valPublicDataImport001Mapper.checkInterLog(params);
-		return restTemplate.postForObject(
-                ServiceApplication.INTERF_PLACE_SERVICE_NAME + "/ValPublicDataImport001/runAs",
-                params, int.class);
+		//TODO
+		return 0;
 	}
-	
+
 	/**
      * 封装参数
-     * 
+     *
      * @param
      * @param startDate 开始日
      * @param endDate 结束日
@@ -125,7 +100,7 @@ public class TrdInterfDataImport001Service extends CommonExportService<TrdInterf
         if(datas.length()>0){
         	date=datas.substring(0, datas.length()-1);
         }
-        
+
         urlParams.put(InterfCommonConstant.接口_运行接口名称, date);
         urlParams.put(InterfCommonConstant.接口_对接系统ID, DictCodeInterfList.接口对接系统ID_资管.getValue());
         urlParams.put(InterfCommonConstant.接口_发送接收, DictCodeInterfList.接口发送接收状态_接收.getValue());
