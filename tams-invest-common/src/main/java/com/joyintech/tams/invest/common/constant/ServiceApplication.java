@@ -128,6 +128,11 @@ public class ServiceApplication {
     public static String SERVLET_CONTEXT_PATH = "/tams";
     // 批处理调用画面端服务增加 add by renping 2019-07-31 end
 
+    /**
+     * 接口平台接口 add by czj 20210416
+     */
+    public static String INTERF_PLACE_SERVICE_NAME = "http://interfPlaceService";
+
     @Configuration
     @ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "commonService")
     @EnableConfigurationProperties(ContextPathConfiguration.class)
