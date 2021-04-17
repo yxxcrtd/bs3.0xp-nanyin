@@ -1,23 +1,32 @@
 package com.joyintech.tams.invest.interf.service;
 
+
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.interf.dao.TrdInterfDataImport001Mapper;
 import com.joyintech.tams.invest.interf.dto.TrdInterfDataImport001Dto;
 import com.joyintech.tams.invest.interf.dto.TrdInterfDataImport001LogDto;
+import com.joyintech.tams.invest.interf.dto.TreeNode1;
 import com.joyintech.tams.invest.interf.dto.ValInterflogExt;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.period.trdsecoverdueduration.dto.TrdSecOverdueDuration003Dto;
 import com.joyintech.tams.valuation.common.interf.base.constant.DictCodeInterfList;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +40,7 @@ public class TrdInterfDataImport001Service extends CommonExportService<TrdInterf
 	@Autowired
 	private TrdInterfDataImport001Mapper valPublicDataImport001Mapper;
 	
-	
-	public List<TrdInterfDataImport001Dto> getInterGroup(Map<String,Object> params){
-		
-		return valPublicDataImport001Mapper.getInterGroup(params);
-	}
+
 	
 	public List<ValInterflogExt> getValInterflogDetail(Map<String,Object> params){
 		
@@ -155,13 +160,40 @@ public class TrdInterfDataImport001Service extends CommonExportService<TrdInterf
 		return urlParams;
 	}
 
+	public Page<SelectOptionDto> getFinprodId (Map<String, Object> map) {
+		map.put("userId", SecurityUtil.getLoginUser().getUserName());
+		return restTemplate.postForPage(
+				ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductBuild/queryProdIdInfo", map,
+				SelectOptionDto.class);
+	}
+
+
 	@SuppressWarnings("rawtypes")
 	public List<TreeNode> getTreeNodeList(Map<String,Object> params){
-		return restTemplate.postForList(getUrl(), params, TreeNode.class);
+		AjaxResult result = restTemplate.postForObject(getUrl(), params, AjaxResult.class);
+		List<Map> list = (List<Map>)result.getData();
+		List<TreeNode> res = new ArrayList<>();
+		list.forEach((en) ->{
+			TreeNode node = new TreeNode();
+			node.setId((String)en.get("id"));
+			node.setpId((String)en.get("pid"));
+			node.setName((String)en.get("name"));
+			if(StringUtil.equals((String)en.get("type"),"1")) {
+				node.setParent(true);
+			}
+			res.add(node);
+		});
+
+		return res;
+	}
+
+	public void runAs(Map<String, Object> map) {
+		AjaxResult result = restTemplate.postForObject("http://192.168.90.208:1666/bridge/datarouter/http/json/callTrigger", map, AjaxResult.class);
 	}
 
 	private String getUrl() {
 		return CacheUtil.getSysParam(INTERF_PLACE_URL);
 	}
+
 
 }

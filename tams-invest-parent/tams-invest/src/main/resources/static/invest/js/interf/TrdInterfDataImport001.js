@@ -282,6 +282,23 @@ $(function () {
 
 	mainTable();
 
+	/**
+	 * 取消全选或者全选按钮
+	 */
+	var checkOrNoAll = function() {
+		var treeObj_ = $.fn.zTree.getZTreeObj("typeDatatree_tree");
+		if(treeObj_) {
+			var noCheckNodes_ = treeObj_.getCheckedNodes(false);
+			if(noCheckNodes_.length > 0) {
+				treeObj_.checkAllNodes(true);//全选
+			}
+			else {
+				treeObj_.checkAllNodes(false);//取消全选
+			}
+		}
+	}
+
+
 	var clickFlag = true;
 
 	/**
@@ -324,6 +341,10 @@ $(function () {
 			mainTable(this);
 		});
 
+        // 绑定全选或者取消全选宫那个
+		$('#ValPublicDataImport001_btn_checkall').click(function() {
+			checkOrNoAll();
+		});
 
 		var tree=$("#typeDatatree");
 		var docH= $(document).height();
