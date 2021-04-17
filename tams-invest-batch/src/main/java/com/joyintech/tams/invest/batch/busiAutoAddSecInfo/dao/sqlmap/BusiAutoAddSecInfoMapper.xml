@@ -149,7 +149,7 @@
 
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
         update FIN_PRODUCT_ADD
-        set APPEAR_MARKET_ID = '1111'
+        set APPEAR_MARKET_ID = #{appearMarketId,jdbcType=VARCHAR}
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </update>
 
