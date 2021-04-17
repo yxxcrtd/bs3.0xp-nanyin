@@ -16,9 +16,11 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.interf.dto.TrdInterfDataImport001LogDto;
+import com.joyintech.tams.invest.interf.dto.TreeNode1;
 import com.joyintech.tams.invest.interf.service.TrdInterfDataImport001Service;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.service.BaseCommonService;
@@ -77,20 +79,20 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     @ResponseBody
     @SuppressWarnings("rawtypes")
     public List<TreeNode> getInterGroup(){
+
     	Map<String,Object> map = RequestUtil.getPageParam();
     	map.put("batchName", getParam("TmpCName"));
     	map.put("taskGrpType", InterfFlag);
-    	map.put("gpcode","TAMS3.0");
-        map.put("tgcode","trigger_http_tams3.0");
-    	List<TreeNode> treeList = trdInterfDataImport001Service.getTreeNodeList(map);
-    	return treeList;
+    	map.put("gpcode","TAMS30");
+        map.put("tgcode","trigger_http_tams30");
+    	return trdInterfDataImport001Service.getTreeNodeList(map);
     }
 
-//    @RequestMapping("/getFinprodId")
-//    @ResponseBody
-//    public Page<SelectOptionDto> getFinprodId() {
-//        return trdInterfDataImport001Service.getFinprodId();
-//    }
+    @RequestMapping("/getFinprodId")
+    @ResponseBody
+    public Page<SelectOptionDto> getFinprodId() {
+        return trdInterfDataImport001Service.getFinprodId(RequestUtil.getPageParam());
+    }
     
     @RequestMapping("/getInterGroupCode")
     @ResponseBody
@@ -137,6 +139,16 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     @ResponseBody
     public String runAs()
         throws IOException {
+        Map<String,Object> map = RequestUtil.getPageParam();
+        map.put("async",true);
+        map.put("predate",new Date());
+        map.put("preseqno", IDGenerator.generate());
+        map.put("routers",new String[]{"VAL_0001"});
+        map.put("batchName", getParam("TmpCName"));
+        map.put("taskGrpType", InterfFlag);
+        map.put("gpcode","TAMS30");
+        map.put("trigger","trigger_http_tams30");
+        trdInterfDataImport001Service.runAs(map);
 //        JsonObject json = new JsonObject();
 //        int check = 0;
 //		Date date = new Date();
