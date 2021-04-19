@@ -480,14 +480,22 @@
       OPENSCH.FINPROD_ID FINPROD_ID
       from (
       /*下一开放起始日取值逻辑：OPEN_START>报表结束日期，按照OPEN_START升序排序并且去重，取第一个日期，若取不到，则取产品到期日*/
-      SELECT RANK() OVER(PARTITION BY OPLAN.FINPROD_ID ORDER BY OPLAN.FINPROD_ID,OPLAN.OPEN_DATE_STR ASC) RANKNUM,
-      OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
-      oplan.FINPROD_ID FINPROD_ID
-      FROM FIN_OPEN_PLAN OPLAN
-      WHERE OPLAN.BRANCH = 0
-      AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
+        SELECT
+          OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
+          oplan.FINPROD_ID FINPROD_ID,
+        IF
+          ( @PROD_ID = oplan.PROD_ID, @rank := @rank + 1, @rank := 1 ) AS RANKNUM,
+          @FINPROD_ID := oplan.FINPROD_ID
+        FROM
+            FIN_OPEN_PLAN OPLAN,
+         ( SELECT @FINPROD_ID := NULL, @rank := 0 ) a
+        WHERE OPLAN.BRANCH = 0
+            AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
+        ORDER BY
+          oplan.FINPROD_ID,
+          OPLAN.OPEN_DATE_STR
       ) OPENSCH
-      where 1 = 1 limit 1
+      where 1 = 1 and RANKNUM = 1
       ) OPENPLAN/*开放计划*/
       ON OPENPLAN.FINPROD_ID = PROD.FINPROD_ID
       WHERE 1 =1
@@ -565,14 +573,22 @@
       OPENSCH.FINPROD_ID FINPROD_ID
       from (
       /*下一开放起始日取值逻辑：OPEN_START>报表结束日期，按照OPEN_START升序排序并且去重，取第一个日期，若取不到，则取产品到期日*/
-      SELECT RANK() OVER(PARTITION BY OPLAN.FINPROD_ID ORDER BY OPLAN.FINPROD_ID,OPLAN.OPEN_DATE_STR ASC) RANKNUM,
-      OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
-      oplan.FINPROD_ID FINPROD_ID
-      FROM FIN_OPEN_PLAN OPLAN
+      SELECT
+        OPLAN.OPEN_DATE_STR OPEN_DATE_STR,
+        oplan.FINPROD_ID FINPROD_ID,
+      IF
+        ( @PROD_ID = oplan.PROD_ID, @rank := @rank + 1, @rank := 1 ) AS RANKNUM,
+        @FINPROD_ID := oplan.FINPROD_ID
+      FROM
+        FIN_OPEN_PLAN OPLAN,
+        ( SELECT @FINPROD_ID := NULL, @rank := 0 ) a
       WHERE OPLAN.BRANCH = 0
-      AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
+            AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
+      ORDER BY
+        oplan.FINPROD_ID,
+        OPLAN.OPEN_DATE_STR
       ) OPENSCH
-      where 1 = 1 limit 1
+      where 1 = 1 and RANKNUM = 1
       ) OPENPLAN/*开放计划*/
       ON OPENPLAN.FINPROD_ID = PROD.FINPROD_ID
       WHERE 1 =1
