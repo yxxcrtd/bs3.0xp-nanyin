@@ -14,6 +14,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.common.listener.UploadListener;
 import com.joyintech.tams.common.base.dao.BaseMapper;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -86,6 +87,25 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 	 * 白名单校验正则表达式
 	 */
 	private static final String whitePattern = "^[\\u4e00-\\u9fa5\\ue815-\\ue864\\uff01-\\uff5e\\uffe0-\\uffe5\\u3000-\\u3003\\u3005-\\u3017\\u301d-\\u301e\\u2010\\u2013-\\u2016\\u2018-\\u2019\\u201c-\\u201d\\u2025-\\u2026\\u2030\\u2032-\\u2033\\u2035\\u203b\\u00b7\\u0030-\\u0039\\u0041-\\u005a\\u0061-\\u007a\\u2160-\\u216b\\u0020-\\u0026\\u0028-\\u007B\\u007D\\u007E]{0,}$";
+
+
+
+	public List<PerProDeclareRegDto> queryPrdDeclareList(List<String> columnList){
+		return perProDeclareReg001Mapper.queryPrdDeclareList(columnList);
+	}
+	//插入上传文件
+	public int insertSysUploadFileInfo(SysUploadFileInfo sysUploadFileInfo){
+		return perProDeclareReg001Mapper.insertSysUploadFileInfo(sysUploadFileInfo);
+	}
+	//删除数据库记录的上传文件信息
+	public int deleteBySeqNo(String seqNo){
+		return perProDeclareReg001Mapper.deleteBySeqNo(seqNo);
+	}
+
+	public void updateChbPrdDeclare(String seqNo, String filename) {
+		perProDeclareReg001Mapper.updateChbPrdDeclare(seqNo, filename);
+		return;
+	}
 
 	/**
 	 *

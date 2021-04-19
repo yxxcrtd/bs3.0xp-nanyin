@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -84,4 +85,12 @@ public interface PerProDeclareReg001Mapper {
 	 * @return 行内标识码列表
 	 */
 	List<SelectOptionDto> queryProdInsIdList(Map<String,Object> map);
+
+	List<PerProDeclareRegDto> queryPrdDeclareList( @Param("columnList")List<String> columnList);
+
+	int insertSysUploadFileInfo(SysUploadFileInfo sysUploadFileInfo);
+
+	int deleteBySeqNo(String seqNo);
+
+	void updateChbPrdDeclare(@Param("seqNo")String seqNo, @Param("filename")String filename);
 }
