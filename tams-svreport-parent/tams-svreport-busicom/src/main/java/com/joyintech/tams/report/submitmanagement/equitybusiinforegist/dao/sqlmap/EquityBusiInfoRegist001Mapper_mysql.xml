@@ -1122,7 +1122,7 @@
 	</sql>
 	<select id="getLastWeekDay" resultType="java.util.Date" >
 		SELECT
-			max (A.BUSI_DATE) busiDate
+			max(A.BUSI_DATE) busiDate
 		FROM CHB_MKT_HOLIDAY A
 		where 
 		A.BUSI_DATE &lt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
