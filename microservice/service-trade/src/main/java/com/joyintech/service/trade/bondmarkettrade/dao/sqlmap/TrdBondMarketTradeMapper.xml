@@ -80,7 +80,7 @@
         <where>
             <if test="search != null and search != ''">
                 (
-                A.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                A.FINPROD_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
                 or
                 A.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
                 )
