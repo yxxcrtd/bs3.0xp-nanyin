@@ -546,7 +546,7 @@
         <if test="search != null and search !='' ">
         AND PBC_ACCOUNT_ID LIKE concat_ws('','%', #{search},'%')
         </if>
-    )
+    ) tmp
     where 1 = 1 limit 1
  </select>
 <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
