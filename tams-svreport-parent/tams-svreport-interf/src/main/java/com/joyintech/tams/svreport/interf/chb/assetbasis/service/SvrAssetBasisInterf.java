@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -143,7 +144,13 @@ public class SvrAssetBasisInterf extends BaseService{
 	        				data.setMdate(exerciseDate);
 	        			}
 	        		}
-	        		
+
+	        		//上市流通交易，上市标的修改成发行标的资产代码
+	        		String pulicAssetId = chbAssetBasisInterfMapper.getPulicAssetId(data.getAssetId());
+	        		if(StringUtil.isNotEmpty(pulicAssetId)){
+						data.setAssetId(pulicAssetId);
+					}
+//
 	        		StringBuffer keyVFinal = new StringBuffer();
 	            	keyVFinal.append(data.getProdId()).append(data.getAssetId()).append(data.getValueDate());
 	            	String md5Key = DigestUtils.md5Hex(keyVFinal.toString());

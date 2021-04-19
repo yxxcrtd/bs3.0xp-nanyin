@@ -1952,7 +1952,13 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                           && (DictCodeList.交易方向_行权_回售.getValue().equals(deal.getPs())
                               || DictCodeList.交易方向_行权_赎回.getValue().equals(deal.getPs())))) {
                     // 一体化对应etliu end
+                	//modify by yujiaping 20210419 TISHKBS-1871【债券存续期管理】交易所债券行权赎回ptl_cash_position_flow生成的现金流日期错误start
+                	if(DictCodeList.交易方向_行权_赎回.getValue().equals(deal.getPs())) {
+                    resultDto.setCdate(deal.getSettleDate());
+                	}else {
                     resultDto.setCdate(deal.getTradeDate());
+                	}
+                	//modify bu yujiaping 20210419 TISHKBS-1871【债券存续期管理】交易所债券行权赎回ptl_cash_position_flow生成的现金流日期错误end
                     resultDto.setAmount(stlPayOrder.getSettleAmt());
                     resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
                     result.add(resultDto);

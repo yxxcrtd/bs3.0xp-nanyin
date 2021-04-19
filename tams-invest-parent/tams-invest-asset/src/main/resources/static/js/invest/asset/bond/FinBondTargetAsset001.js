@@ -66,6 +66,8 @@
         cols:[
              {field:'finprodId',  title: 'FinBondTargetAsset002.finprodId',visible:false} //金融产品代码
             ,{field:'finprodMarketId',  title: 'FinBondTargetAsset002.finprodId',sortField:'FINPROD_MARKET_ID',width:200}//资产代码
+            ,{field:'isIssueAsset',sortField:"isIssueAsset",title:'FinBondTargetAsset002.isIssueAsset',width:150,visible:false}//是否发行标的
+            ,{field:'isIssueAssetStr',sortField:"isIssueAsset",title:'FinBondTargetAsset002.isIssueAsset',width:150}//是否城投债
             ,{field:'finprodAbbr',  title: 'FinBondTargetAsset002.finprodAbbr',sortField:'FINPROD_ABBR',width:200}//资产简称
             ,{field:'vdate',title:'FinBondTargetAsset002.vdate',type:'date',width:150}//起息日
             ,{field:'mdate',title:'FinBondTargetAsset002.mdate',type:'date',width:150}//到期日
@@ -105,7 +107,6 @@
             ,{field:'isSusStr',sortField:"IS_SUS",title:'FinBondTargetAsset002.isSus',width:150}//是否永续
             ,{field:'isRightStr',sortField:"IS_RIGHT",title:'FinBondTargetAsset002.isRight',width:150}//是否含权债
             ,{field:'isCityBondStr',sortField:"isCityBond",title:'FinBondTargetAsset002.isCityBond',width:150}//是否城投债
-            ,{field:'isIssueAsset',sortField:"isIssueAsset",title:'FinBondTargetAsset002.isIssueAsset',width:150}//是否发行标的
            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}//编辑和删除事件
         ]
     });

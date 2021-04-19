@@ -349,8 +349,8 @@
         select '${pendingStatus}' effectStatus,
         <!-- 一体化对应etliu -->
         FIN_PRODUCT_ADD.PORTFOLIO_ID ptlId,
-        FIN_PRODUCT1.FINPROD_MARKET_ID finprodMarketId,
-        FIN_PRODUCT1.Finprod_Id finprodId,
+        FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
+        FIN_PRODUCT.Finprod_Id finprodId,
         FIN_PRODUCT_ADD.SALE_DEPARTMENT saleDepartment,
         MST_FEEINFO.FEE_ID feeId,
         MST_FEEINFO.Fee_Name feeName,
@@ -521,8 +521,8 @@
             and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
         </if>
         GROUP BY FIN_PRODUCT_ADD.PORTFOLIO_ID,
-        FIN_PRODUCT1.FINPROD_MARKET_ID,
-        FIN_PRODUCT1.Finprod_Id,
+        FIN_PRODUCT.FINPROD_MARKET_ID,
+        FIN_PRODUCT.Finprod_Id,
         FIN_PRODUCT_ADD.SALE_DEPARTMENT,
         FIN_PRODUCT1.FINPROD_ABBR,
         BOK_POSITION_PRDFEE.FEE_TYPE,
@@ -2320,7 +2320,7 @@
         FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
         AND FIN_PRODUCT.P_FINPROD_ID is not null
         AND FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
-        AND FIN_PRODUCT.P_FINPROD_ID = #{finprodId}
+        AND FIN_PRODUCT.FINPROD_ID = #{finprodId}
         AND MST_FEEINFO.FEE_ID = #{feeId}
        <!-- AND BOK_POSITION_PRDFEE.CDATE =
         (SELECT max(B.CDATE)

@@ -293,6 +293,7 @@ public class BusiAutoAddSecInfoService {
             if(repAssetBond !=null){
                 BeanUtil.copyPropertiesIgnoreNull(repAssetBondNew, repAssetBond);
                 repAssetBondNew.setRepFinprodId("F01_"+secId);
+                repAssetBondNew.setSecId(secId);
                 repAssetBondNew.setCreateTime(new Date());
                 repAssetBondNew.setUpdateTime(new Date());
                 baseFinProductBaseInfoDto.setRepAssetBond(repAssetBondNew);
@@ -304,6 +305,7 @@ public class BusiAutoAddSecInfoService {
             if(repAssetDept !=null){
                 BeanUtil.copyPropertiesIgnoreNull(repAssetDeptNew, repAssetDept);
                 repAssetDeptNew.setRepFinprodId("F01_"+secId);
+                repAssetDeptNew.setFinprodMarketId(secId);
                 repAssetDeptNew.setUpdateTime(new Date());
                 repAssetDeptNew.setCreateTime(new Date());
                 baseFinProductBaseInfoDto.setRepAssetDept(repAssetDeptNew);
@@ -326,6 +328,7 @@ public class BusiAutoAddSecInfoService {
             if(repAssetEquity !=null){
                 BeanUtil.copyPropertiesIgnoreNull(repAssetEquityNew, repAssetEquity);
                 repAssetEquityNew.setRepFinprodId("F01_"+secId);
+                repAssetEquityNew.setRepSharesId(secId);
                 repAssetEquityNew.setUpdateTime(new Date());
                 repAssetEquityNew.setCreateTime(new Date());
                 baseFinProductBaseInfoDto.setRepAssetEquity(repAssetEquityNew);
@@ -435,6 +438,9 @@ public class BusiAutoAddSecInfoService {
         trdFinProductDealTotal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
         trdFinProductDealTotal.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
         trdFinProductDealTotal.setFinprodId("F01_"+secId);
+        trdFinProductDealTotal.setPs(DictCodeList.交易方向_上市流通.getValue());
+        trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         trdFinProductDealTotal.setTradeDate(batchDate);
         trdFinProductDealTotal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         trdFinProductDealTotal.setBranch(0L);
@@ -463,6 +469,7 @@ public class BusiAutoAddSecInfoService {
                 trdProductDeal.setPs(DictCodeList.交易方向_上市流通.getValue());
                 trdProductDeal.setBranch(0L);
                 trdProductDeal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+                trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
                 deals.add(trdProductDeal);
                 //金融产品交易扩展表
                 TrdProductDealAdd trdProductDealAdd =new TrdProductDealAdd();

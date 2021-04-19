@@ -2555,6 +2555,8 @@
         on nvl(info.ISSUER,info.financier)=customerinfo.CUSTOMER_ID
         left join rep_asset_other assetother
         on assetother.rep_finprod_id=detail.REP_FINPROD_ID
+        left join FIN_PRODUCT_ADD fpd
+        on detail.SEC_ID = fpd.appear_market_id
         <!--获取主体评级 -->
         left join(
         select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
@@ -2572,6 +2574,7 @@
         )t where t.rk = '1'
         )bestRatingZt on bestRatingZt.OCODE = NVL(info.ISSUER, info.FINANCIER)
         WHERE 1 =1
+        and fpd.finprod_id is null
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
         /*根据创建时间、更新时间和接口接入时间接入数据*/
@@ -3915,9 +3918,12 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
+        left join FIN_PRODUCT_ADD fpd
+        on detail.rep_shares_id = fpd.appear_market_id
         WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
+        and fpd.finprod_id is null
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -7797,6 +7803,8 @@
         on info.ISSUER=customerinfo.CUSTOMER_ID
         left join REP_ASSET_OTHER ASSETOTHER
         on ASSETOTHER.REP_FINPROD_ID=info.FINPROD_ID
+        left join FIN_PRODUCT_ADD fpd
+        on detail.SEC_ID = fpd.appear_market_id
         <!--获取主体评级 -->
         left join(
         select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
@@ -7816,6 +7824,7 @@
         WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
+        and fpd.finprod_id is null
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -8812,9 +8821,12 @@
         on info.FINANCIER=customerinfo.CUSTOMER_ID
         left join REP_ASSET_OTHER ASSETOTHER
         on ASSETOTHER.REP_FINPROD_ID=info.FINPROD_ID
+        left join FIN_PRODUCT_ADD fpd
+        on detail.rep_shares_id = fpd.appear_market_id
         WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
+        and fpd.finprod_id is null
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
