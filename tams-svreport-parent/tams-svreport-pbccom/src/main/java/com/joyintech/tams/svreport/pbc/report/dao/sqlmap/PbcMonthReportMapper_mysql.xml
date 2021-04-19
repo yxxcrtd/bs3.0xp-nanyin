@@ -208,7 +208,7 @@
         	</if>
             and REPORTTYPE != 'ONEPRD_ASSET_DEBT'<!-- 过滤单产品资产负债表 -->
 		</where>
-   	) ORDER BY STATUSDATE
+   	) tmp ORDER BY STATUSDATE
   </select>
   <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
       update PBC_REPORT sub
