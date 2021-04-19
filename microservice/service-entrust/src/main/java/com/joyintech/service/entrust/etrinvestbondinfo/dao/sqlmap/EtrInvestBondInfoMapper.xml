@@ -748,4 +748,33 @@ SELECT interf.SECID id,
 	       </where>
         </if>
     </select>
+    
+    
+    <select id="getStdPosition" parameterType = "java.util.Map" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(NVL(PSPF.AMOUNT, 0)) AMOUNT
+        FROM
+            TRD_STASEC_FLOW tsf
+        LEFT JOIN
+            TRD_STASEC_FLOW_DETAIL tsfd
+        ON
+            tsfd.SEQNO = tsf.SEQNO
+        AND tsfd.BRANCH = '0'
+        LEFT JOIN
+            PTL_SEC_POSITION_FLOW PSPF
+        ON
+            TSF.SEQNO = PSPF.TRADE_ID
+        AND PSPF.FINPROD_ID = tsfd.FINPROD_ID
+        AND TSF.PORTFOLIO_ID = PSPF.PORTFOLIO_ID
+        AND TSF.SEC_ACCT_ID = PSPF.SEC_ACCT_ID
+        AND TSF.CDATE = PSPF.CDATE
+        WHERE
+            tsf.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+		AND PSPF.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		AND PSPF.SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+		AND PSPF.INV_AIM = #{invAim,jdbcType=VARCHAR}			
+        AND tsf.CDATE &lt;= TO_DATE(#{sysDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+		and (TSF.ps = '01' or not exists (select 1 from PTL_SEC_POSITION_FLOW pspf where TSF.SEQNO = PSPF.TRADE_ID and pspf.hoding_type='13'))
+    	
+    </select>
 </mapper>

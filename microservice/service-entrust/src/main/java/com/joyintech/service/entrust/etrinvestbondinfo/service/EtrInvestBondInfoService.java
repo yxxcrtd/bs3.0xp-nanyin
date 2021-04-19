@@ -647,4 +647,8 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
         return this.queryForSuggest(() -> etrInvestBondInfoMapper.getSecManageAcctId(param),
             null);
     }
+    
+    public BigDecimal getStdPosition(Map<String,Object> param) {
+    	return etrInvestBondInfoMapper.getStdPosition(param);
+    }
 }

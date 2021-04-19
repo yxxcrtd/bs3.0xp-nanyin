@@ -125,4 +125,12 @@ public interface EtrInvestBondInfoMapper {
      * @since 1.0
      */
     List<SuggestDto> getSecManageAcctId(Map<String, Object> param);
+    
+    
+    /**
+     * 获取标准券持仓
+     * @param param
+     * @return
+     */
+    BigDecimal getStdPosition(Map<String,Object> param);
 }
