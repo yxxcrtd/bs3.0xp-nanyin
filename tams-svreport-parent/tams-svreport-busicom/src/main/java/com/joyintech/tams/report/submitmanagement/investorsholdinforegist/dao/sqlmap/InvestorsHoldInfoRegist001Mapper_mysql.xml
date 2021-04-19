@@ -11,13 +11,13 @@
 				ciis.CCY                    ccy,              
 				ciis.HOLD_DATE              holdDate,         
 				ciis.AMOUNT                 amount,
-				(case when substring(ciis.AMOUNT,1,1) = '.') then concat_ws('',0, ciis.AMOUNT)
+				(case when substring(ciis.AMOUNT,1,1) = '.' then concat_ws('',0, ciis.AMOUNT)
 		   				else ciis.AMOUNT end) amountExportExcel,
 				ciis.QTY                    qty,
-				(case when substring(ciis.QTY,1,1) = '.') then concat_ws('',0, ciis.QTY)
+				(case when substring(ciis.QTY,1,1) = '.' then concat_ws('',0, ciis.QTY)
 						else ciis.QTY end) qtyExportExcel,
 				ciis.CNY_AMT                cnyAmt,
-				(case when substring(ciis.CNY_AMT,1,1) = '.') then concat_ws('',0, ciis.CNY_AMT)
+				(case when substring(ciis.CNY_AMT,1,1) = '.' then concat_ws('',0, ciis.CNY_AMT)
 						else ciis.CNY_AMT end) cnyAmtExportExcel,
 				ciis.REMARK                 remark,           
 				ciis.SUBMIT_DEADLINE        submitDeadline,   

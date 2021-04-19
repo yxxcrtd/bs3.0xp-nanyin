@@ -992,7 +992,7 @@
 			STATUS AS STATUS,
 			t1.UPDATE_TIME AS updateTime,
 			t2.SUBMIT_FEEDBACK_STATUS AS submitFeedbackStatus,
-			IF( @INDENTIFY_MARK = t1.INDENTIFY_MARK, @rank := @rank + 1, @rank := 1 ) AS rank,
+			IF( @INDENTIFY_MARK = t1.INDENTIFY_MARK, @rank := @rank + 1, @rank := 1 ) AS rank1,
 			@INDENTIFY_MARK := t1.INDENTIFY_MARK
 			FROM
 			( SELECT @rownum := 0, @CASH_ID := NULL, @rank := 0 )b,
@@ -1012,7 +1012,7 @@
 		    </if>
 		</where>
 		) 
-		where rank = 1
+		where rank1 = 1
 	</select>
 	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)-->                             
 	<select id="queryBatchForEquityInfoSingle"  resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">

@@ -84,7 +84,7 @@
 				and upper(CAVS.ASSET_CODE) like concat_ws(concat_ws('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
 		</where>
-		) order by valDate,assetCode
+		) temp order by valDate,assetCode
 	</select>
 
 
@@ -301,7 +301,7 @@
 				and upper(CAVS.ASSET_CODE) like concat_ws(concat_ws('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
 		</where>
-		) order by valDate,assetCode
+		) temp order by valDate,assetCode
 	</select>
 
 	<select id="queryExportListByKeys" resultType="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
