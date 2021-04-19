@@ -293,6 +293,7 @@ public class BusiAutoAddSecInfoService {
             if(repAssetBond !=null){
                 BeanUtil.copyPropertiesIgnoreNull(repAssetBondNew, repAssetBond);
                 repAssetBondNew.setRepFinprodId("F01_"+secId);
+                repAssetBondNew.setSecId(secId);
                 repAssetBondNew.setCreateTime(new Date());
                 repAssetBondNew.setUpdateTime(new Date());
                 baseFinProductBaseInfoDto.setRepAssetBond(repAssetBondNew);
@@ -304,6 +305,7 @@ public class BusiAutoAddSecInfoService {
             if(repAssetDept !=null){
                 BeanUtil.copyPropertiesIgnoreNull(repAssetDeptNew, repAssetDept);
                 repAssetDeptNew.setRepFinprodId("F01_"+secId);
+                repAssetDeptNew.setFinprodMarketId(secId);
                 repAssetDeptNew.setUpdateTime(new Date());
                 repAssetDeptNew.setCreateTime(new Date());
                 baseFinProductBaseInfoDto.setRepAssetDept(repAssetDeptNew);
@@ -326,6 +328,7 @@ public class BusiAutoAddSecInfoService {
             if(repAssetEquity !=null){
                 BeanUtil.copyPropertiesIgnoreNull(repAssetEquityNew, repAssetEquity);
                 repAssetEquityNew.setRepFinprodId("F01_"+secId);
+                repAssetEquityNew.setRepSharesId(secId);
                 repAssetEquityNew.setUpdateTime(new Date());
                 repAssetEquityNew.setCreateTime(new Date());
                 baseFinProductBaseInfoDto.setRepAssetEquity(repAssetEquityNew);
