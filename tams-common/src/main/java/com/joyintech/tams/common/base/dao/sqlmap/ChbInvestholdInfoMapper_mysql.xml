@@ -49,7 +49,7 @@
         where REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
         and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
         and PRODID = #{prodid,jdbcType=VARCHAR}
-        and HOLD_DATE = #{holdDate,jdbcType=DATE}
+        and HOLD_DATE = STR_TO_DATE (#{holdDate,jdbcType=DATE},'%Y-%m-%d %H:%i:%s')
         and CCY = #{ccy,jdbcType=VARCHAR}
         and STATUS = #{status,jdbcType=VARCHAR}
     </select>
@@ -58,7 +58,7 @@
         where REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
           and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
           and PRODID = #{prodid,jdbcType=VARCHAR}
-          and HOLD_DATE = #{holdDate,jdbcType=DATE}
+          and HOLD_DATE = STR_TO_DATE (#{holdDate,jdbcType=DATE},'%Y-%m-%d %H:%i:%s')
           and CCY = #{ccy,jdbcType=VARCHAR}
           and STATUS = #{status,jdbcType=VARCHAR}
     </delete>
@@ -227,7 +227,7 @@
             ORG_CODE, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, AGENT, CREATE_DEPT
 
              from CHB_INVESTHOLD_INFO
-             where STATUS = 'E' and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and PRODID = #{prodid,jdbcType=VARCHAR} and HOLD_DATE = #{holdDate,jdbcType=DATE} and CCY = #{ccy,jdbcType=VARCHAR}
+             where STATUS = 'E' and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and PRODID = #{prodid,jdbcType=VARCHAR} and HOLD_DATE = STR_TO_DATE (#{holdDate,jdbcType=DATE},'%Y-%m-%d %H:%i:%s') and CCY = #{ccy,jdbcType=VARCHAR}
     </insert>
     <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
         insert into CHB_INVESTHOLD_INFO(REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE,
@@ -284,7 +284,7 @@
         where REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
         and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
         and PRODID = #{prodid,jdbcType=VARCHAR}
-        and HOLD_DATE = #{holdDate,jdbcType=DATE}
+        and HOLD_DATE = STR_TO_DATE (#{holdDate,jdbcType=DATE},'%Y-%m-%d %H:%i:%s')
         and CCY = #{ccy,jdbcType=VARCHAR}
         and STATUS = #{status,jdbcType=VARCHAR}
     </update>
@@ -301,7 +301,7 @@
                 PRODID = #{prodid,jdbcType=VARCHAR},
             </if>
             <if test="holdDate != null" >
-                HOLD_DATE = #{holdDate,jdbcType=DATE},
+                HOLD_DATE = STR_TO_DATE (#{holdDate,jdbcType=DATE},'%Y-%m-%d %H:%i:%s'),
             </if>
             <if test="ccy != null" >
                 CCY = #{ccy,jdbcType=VARCHAR},
@@ -351,7 +351,7 @@
         REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
         INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR},
         PRODID = #{prodid,jdbcType=VARCHAR},
-        HOLD_DATE = #{holdDate,jdbcType=DATE},
+        HOLD_DATE = STR_TO_DATE (#{holdDate,jdbcType=DATE},'%Y-%m-%d %H:%i:%s'),
         CCY = #{ccy,jdbcType=VARCHAR},
         STATUS = #{status,jdbcType=VARCHAR},
         PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR},
@@ -384,7 +384,7 @@
         where REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
           and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
           and PRODID = #{prodid,jdbcType=VARCHAR}
-          and HOLD_DATE = #{holdDate,jdbcType=DATE}
+          and HOLD_DATE = STR_TO_DATE (#{holdDate,jdbcType=DATE},'%Y-%m-%d %H:%i:%s')
           and CCY = #{ccy,jdbcType=VARCHAR}
           and STATUS = #{status,jdbcType=VARCHAR}
     </update>
