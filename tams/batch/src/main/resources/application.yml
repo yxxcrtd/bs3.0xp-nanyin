@@ -12,7 +12,7 @@ spring:
     cache: false
   #数据源配置
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
     initialSize: 10
     maxTotal: 50
@@ -26,18 +26,10 @@ spring:
   activemq:
     systemId: valuation_batch
     active: false
-    brokerUrl: tcp://localhost:61616
-    user: system
-    password: manager
-    maximumRedeliveries: 10
-    initialRedeliveryDelay: 1
-    backOffMultiplier: 2
-    useExponentialBackOff: true
-    maximumRedeliveryDelay: -1
 #base数据源配置  
 base:
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
     maxTotal: 50
     maxIdle: 50
@@ -51,7 +43,7 @@ base:
 #interf数据源配置
 interf:
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
     maxTotal: 50
     maxIdle: 50
@@ -129,9 +121,9 @@ spring:
     cluster:
       nodes: 192.168.90.180:6379,192.168.90.180:6380,192.168.90.181:6381,192.168.90.181:6382,192.168.90.182:6383,192.168.90.182:6384
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zjtams2121_test
-    password: zjtams2121_test
+    password: zjtams2121_test 
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -168,13 +160,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zjtams2121_test
     password: zjtams2121_test
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zjtams2121_test
     password: zjtams2121_test
 #日志路径配置
@@ -197,7 +189,7 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams214_v1203
     password: zgtams214_v1203 
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
@@ -236,13 +228,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams214_v1203
     password: zgtams214_v1203
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams214_v1203
     password: zgtams214_v1203
 #日志路径配置
@@ -283,7 +275,7 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
     password: zgtams0702ls 
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
@@ -322,13 +314,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
     password: zgtams0702ls
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
     password: zgtams0702ls
 #日志路径配置
@@ -364,21 +356,20 @@ spring:
   profiles: dtx1
   #本地启动建议删除redis配置start
   redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.90.198
+    database: 5
+    host: 127.0.0.1
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
-    username: root
-    password: joyin123
-    #reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    username: zgtams1214ls
+    password: zgtams1214ls 
+    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
-  sqldiruserName: root
-  sqldirpassword: joyin123
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  sqldiruserName: zgtams1214ls
+  sqldirpassword: zgtams1214ls
   loadbalance: false
   micorservice:
     contextPath:
@@ -409,21 +400,21 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
-    username: root
-    password: joyin123
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    username: zgtams1214ls
+    password: zgtams1214ls
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
-    username: root
-    password: joyin123
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
+    username: zgtams1214ls
+    password: zgtams1214ls
 #日志路径配置
 log:
-  path: /logs/hxbatch
+  path: /home/tams/logs/batch
   level: DEBUG
 logging:
-  path: /logs/hxbatch
+  path: /home/tams/logs/batch
 #注册中心配置
 eureka:
   client:
@@ -439,7 +430,7 @@ tx-lcn:
     loadbalance:
       enabled: true #开启负载均衡
   client:
-    managerAddress: 192.168.90.197:8070 # manager服务地址(rpc端口),可填写多个负载
+    managerAddress: 192.168.70.228:8070 # manager服务地址(rpc端口),可填写多个负载
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
@@ -455,7 +446,7 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: productLs_20210301_WY
     password: productLs_20210301_WY 
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
@@ -494,13 +485,13 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: productLs_20210301_WY
     password: productLs_20210301_WY
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?serverTimezone=UTC&amp;characterEncoding=utf-8&amp;allowMultiQueries=true
+    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: productLs_20210301_WY
     password: productLs_20210301_WY
 #日志路径配置
