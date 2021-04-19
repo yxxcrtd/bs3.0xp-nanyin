@@ -29,7 +29,7 @@ import java.util.*;
  * @description:
  */
 
-@Service("backMstNetAssetQuotationInfoImportDataService")
+@Service("serviceComNetAssetQuotationInfoImportDataService")
 public class ComNetAssetQuotationInfoImportDataService extends CommonExportService<ComNetAssetQuotationInfo001Dto>  {
 
 

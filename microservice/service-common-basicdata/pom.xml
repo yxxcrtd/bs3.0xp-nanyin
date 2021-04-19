@@ -13,12 +13,6 @@
     <name>service-common-basicdata</name>
     <description>公共基础数据服务</description>
 
-    <properties>
-        <start-class>com.joyintech.service.basicdata.CommonBasicDataApplication</start-class>
-        <hibernate.version>5.3.6.Final</hibernate.version>
-    </properties>
-
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

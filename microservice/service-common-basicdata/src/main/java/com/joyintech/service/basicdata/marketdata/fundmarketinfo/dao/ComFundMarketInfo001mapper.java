@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * @see ComFundMarketInfo001mapper
  * @since 1.0
  */
-@Repository(value="serviceValFundMarketInfo001mapper")
+@Repository(value="serviceComFundMarketInfo001mapper")
 public interface ComFundMarketInfo001mapper {
 
 

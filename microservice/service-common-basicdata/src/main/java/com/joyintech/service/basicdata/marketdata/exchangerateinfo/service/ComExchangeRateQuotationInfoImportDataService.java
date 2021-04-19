@@ -33,7 +33,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  * @description:
  */
 
-@Service
+@Service("serviceComExchangeRateQuotationInfoImportDataService")
 public class ComExchangeRateQuotationInfoImportDataService extends CommonExportService<ComExchangeQuotationInfoDto>  {
 
 

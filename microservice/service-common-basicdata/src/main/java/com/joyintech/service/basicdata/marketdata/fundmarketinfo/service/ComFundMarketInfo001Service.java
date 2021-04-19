@@ -20,7 +20,7 @@ import com.joyintech.service.basicdata.marketdata.fundmarketinfo.dao.ComFundMark
  * @see ComFundMarketInfo001Service
  * @since 1.0
  */
-@Service(value="serviceComFundMarketInfo001Service")
+@Service("serviceComFundMarketInfo001Service")
 public class ComFundMarketInfo001Service extends CommonExportService<ComFundMarketInfo001dto>{
 
     /**

@@ -89,6 +89,18 @@
 					<artifactId>service-trade</artifactId>
 					<groupId>com.joyintech</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>component-base</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>tams-invest-common</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-common</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
