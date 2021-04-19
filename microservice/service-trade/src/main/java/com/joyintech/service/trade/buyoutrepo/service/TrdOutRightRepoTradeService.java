@@ -131,6 +131,30 @@ public class TrdOutRightRepoTradeService extends BaseService<TrdOutRightRepoTrad
     }
 
     /**
+     * 写入融入券的组合持仓流水(持仓类型为借贷融入/借贷融出)
+     *  ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+     * @author jiangpeng
+     *
+     * @param bizCode 交易编号
+     * @return List<PtlSecPositionFlowDto>
+     * @see
+     * @since 1.0
+     */
+    public List<PtlSecPositionFlow> selectPtlSecPositionFlowForSL(String bizCode, String holdingType) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("bizCode", bizCode);
+        if (StringUtil.isNotEmpty(holdingType) && !"null".equals(holdingType)) {
+            param.put("POSITION_TYPE_ROLLIN", holdingType);
+            param.put("POSITION_TYPE_ROLLOUT", holdingType);
+        }
+        else {
+            param.put("POSITION_TYPE_ROLLIN", DictCodeListExt1.持仓类型_借贷融入.getValue());
+            param.put("POSITION_TYPE_ROLLOUT", DictCodeListExt1.持仓类型_借贷融出.getValue());
+        }
+        return this.trdOutRightRepoTradeMapper.selectPtlSecPositionFlow(param);
+    }
+
+    /**
      * 根据交易编号删除组合持仓流水（持仓类型为融入融出）
      *
      * @param bizCode 交易编号
@@ -152,8 +176,8 @@ public class TrdOutRightRepoTradeService extends BaseService<TrdOutRightRepoTrad
             param.put("POSITION_TYPE_ROLLOUT", holdingType);
         }
         else {
-            param.put("POSITION_TYPE_ROLLIN", DictCodeList.持仓类型_融入.getValue());
             param.put("POSITION_TYPE_ROLLOUT", DictCodeList.持仓类型_融出.getValue());
+            param.put("POSITION_TYPE_ROLLIN", DictCodeList.持仓类型_融入.getValue());
         }
         return param;
     }

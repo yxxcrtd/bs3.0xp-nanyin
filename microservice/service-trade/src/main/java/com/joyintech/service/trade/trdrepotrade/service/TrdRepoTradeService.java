@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,19 +46,6 @@ import com.joyintech.tams.common.base.dao.MstCounterPartyMapper;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
 import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
 import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
-import com.joyintech.tams.common.base.entity.EtrFinishStatus;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.FinTradeProductKey;
-import com.joyintech.tams.common.base.entity.InterfOpicsTradRepo;
-import com.joyintech.tams.common.base.entity.InterfTradRepoasst;
-import com.joyintech.tams.common.base.entity.MstCounterParty;
-import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
-import com.joyintech.tams.common.base.entity.TrdMatchInfo;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetailKey;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
@@ -193,6 +181,20 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
         param.put("bizCode", bizCode);
         param.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
         return this.trdRepoTradeMapper.selectPtlSecPositionFlow(param);
+    }
+
+    /**
+     * 根据交易编号检索指令持仓流水（持仓类型为E01）
+     * ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+     * @author jiangpeng
+     *
+     * @param param -bizCode 交易编号
+     * @return List<EtrSecPositionFlow>
+     * @since 1.0
+     */
+    public List<EtrSecPositionFlow> selectEtrSecPositionFlow(Map<String, Object> param) {
+        param.put("POSITION_TYPE_E01", DictCodeListExt1.持仓类型_委托指令可用.getValue());
+        return this.trdRepoTradeMapper.selectEtrSecPositionFlow(param);
     }
 
     /**

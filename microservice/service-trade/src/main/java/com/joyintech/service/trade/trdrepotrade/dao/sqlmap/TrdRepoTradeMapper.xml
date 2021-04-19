@@ -497,6 +497,19 @@
           AND HODING_TYPE = #{POSITION_TYPE_04}
     </select>
 
+    <!--add by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误-->
+    <select id="selectEtrSecPositionFlow" resultMap="com.joyintech.tams.common.base.dao.EtrSecPositionFlowMapper.BaseResultMap">
+        SELECT
+        <include refid="com.joyintech.tams.common.base.dao.EtrSecPositionFlowMapper.Base_Column_List"></include>
+        FROM
+        ETR_SEC_POSITION_FLOW
+        WHERE
+        TRADE_ID = #{bizCode}
+        AND TRADE_ID != FINPROD_ID
+        AND FINPROD_ID = #{finprodId}
+        AND HODING_TYPE = #{POSITION_TYPE_E01}
+    </select>
+
     <select id="selectTradeIdByWorkflowId" resultType="string">
         select max(TRADE_ID) from WFL_TRD_PRODUCT_DEAL where WORKFLOW_ID = #{workflowId}
     </select>

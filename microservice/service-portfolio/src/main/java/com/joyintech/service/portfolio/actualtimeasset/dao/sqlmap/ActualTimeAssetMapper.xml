@@ -13,7 +13,10 @@
 				nvl(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
 				nvl(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
 				nvl(sum(case when hoding_type = '06' then AMOUNT end),0) PTL_AMOUNT06,
-				nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08
+				nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08,
+				/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+				nvl(sum(case when hoding_type = '09' then AMOUNT end),0) PTL_AMOUNT09,
+				nvl(sum(case when hoding_type = '10' then AMOUNT end),0) PTL_AMOUNT10
 			from PTL_SEC_POSITION
 			where cdate = to_date(#{cdate},'yyyy-MM-dd') /**to_date('2019-10-18','yyyy-MM-dd')**/
 				/**and t6.hoding_type in ('03', '04', '05', '06','08')**/
@@ -114,7 +117,10 @@
 		nvl(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
 		nvl(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
 		nvl(sum(case when hoding_type = '06' then AMOUNT end),0) PTL_AMOUNT06,
-		nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08
+		nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08,
+		/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+		nvl(sum(case when hoding_type = '09' then AMOUNT end),0) PTL_AMOUNT09,
+		nvl(sum(case when hoding_type = '10' then AMOUNT end),0) PTL_AMOUNT10
 		from PTL_SEC_POSITION
 		where cdate = to_date(#{cdate},'yyyy-MM-dd') /**to_date('2019-10-18','yyyy-MM-dd')**/
 		/**and t6.hoding_type in ('03', '04', '05', '06','08')**/
@@ -212,11 +218,13 @@
 		     (
 		     	select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr,type8,type7,
 			        (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06) as actualPositionAmount,
-			        (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08) as tradePositionAmount,
+					/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+			        (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08+ PTL_AMOUNT09 - PTL_AMOUNT10) as tradePositionAmount,
 			        ETR_FLOW_AMOUNTE01 as instructionsAmount,
 					decode(mm.TYPE8,'F03',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									'F09',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									'F07',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
+									'F01',(ETR_FLOW_AMOUNT04 - PTL_AMOUNT09 + PTL_AMOUNT10),
 									ETR_FLOW_AMOUNT04
 									) as pledgeAmount, 
 					decode(mm.TYPE8,'F03' ,0,
@@ -240,6 +248,9 @@
 				            nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
 				            nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
 				            nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+							/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+							nvl(sum(PTL_AMOUNT09),0) as PTL_AMOUNT09,
+							nvl(sum(PTL_AMOUNT10),0) as PTL_AMOUNT10,
 				            nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
 				            /*标准券出入库的指令可用持仓取标准券入出库表（TRD_STASEC_FLOW）中的持仓*/
 							decode(TYPE8,'F01',NVL(SUM(ETR_FLOW_AMOUNTE01),0)+ nvl(SUM(AMT),0),NVL(SUM(ETR_FLOW_AMOUNTE01),0)) AS ETR_FLOW_AMOUNTE01,
@@ -348,6 +359,9 @@
 				             	nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
 				             	nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
 				             	nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+								/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+								nvl(sum(PTL_AMOUNT09),0) as PTL_AMOUNT09,
+								nvl(sum(PTL_AMOUNT10),0) as PTL_AMOUNT10,
 				             	nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
 				             	nvl(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
 				             	nvl(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04
@@ -451,6 +465,9 @@
 				             	nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
 				             	nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
 				             	nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+								/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+								nvl(sum(PTL_AMOUNT09),0) as PTL_AMOUNT09,
+								nvl(sum(PTL_AMOUNT10),0) as PTL_AMOUNT10,
 				             	nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
 				             	nvl(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
 				             	nvl(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04

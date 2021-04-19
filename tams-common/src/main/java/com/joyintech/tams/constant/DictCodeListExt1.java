@@ -1657,6 +1657,13 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	持仓类型_委托指令可用(DictCode.持仓类型,"E01","委托指令可用"),
 	持仓类型_委托指令预增(DictCode.持仓类型,"E02","委托指令预增"),
 	持仓类型_预占用(DictCode.持仓类型,"08","预占用"),
+	// add by jiangpeng on 20210416 start
+	// ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+	持仓类型_融入(DictCode.持仓类型,"05","融入"),
+	持仓类型_融出(DictCode.持仓类型,"06","融出"),
+	持仓类型_借贷融入(DictCode.持仓类型,"09","借贷融入"),
+	持仓类型_借贷融出(DictCode.持仓类型,"10","借贷融出"),
+	// add by jiangpeng on 20210416 end
 	持仓类型_卖空(DictCode.持仓类型,"11","卖空"),
 	持仓类型_卖空可用(DictCode.持仓类型,"12","卖空可用"),
 	持仓类型_人工调整(DictCode.持仓类型,"99","人工调整"),

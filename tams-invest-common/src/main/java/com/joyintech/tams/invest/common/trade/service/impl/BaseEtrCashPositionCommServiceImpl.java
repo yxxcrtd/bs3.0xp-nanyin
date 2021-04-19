@@ -72,8 +72,12 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
         }
 
         if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-                && !(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_申购确认.getValue())
-                ||StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))
+                && !(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())
+                || StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))
+                // add by jiangpeng on 20210416 start
+                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                && !StringUtil.equals("Y", finProductTradeDto.getIsSLDeal())
+            // add by jiangpeng on 20210416 end
         ) {
             EtrSecCashPositionDealService.deal债券CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
@@ -92,7 +96,11 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             EtrProjectCashPositionDealService.deal项目类资产CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())
-                 || StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())) {
+                || StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())
+                // add by jiangpeng on 20210416 start
+                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                || StringUtil.equals("Y", finProductTradeDto.getIsSLDeal())) {
+            // add by jiangpeng on 20210416 end
             EtrSecLendCashPositionDealService.deal债券借贷CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {

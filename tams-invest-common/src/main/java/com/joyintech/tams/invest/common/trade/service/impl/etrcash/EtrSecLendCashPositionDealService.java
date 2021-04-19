@@ -133,11 +133,15 @@ public class EtrSecLendCashPositionDealService  {
                                 // 减少委托本金金额
                                 EtrSecPositionFlowDto etrSecPositionFlowDto1 = new EtrSecPositionFlowDto();
                                 BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDto1, etrSecPositionFlowDto);
-                                etrSecPositionFlowDto1.setAmount(pledgeBondInfoDto.getPledgeNumber().negate());
+                                //modify by jiangpeng on 20210416 start
+                                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                                // 债券借贷融入到期 释放质押持仓
+                                etrSecPositionFlowDto1.setAmount(pledgeBondInfoDto.getPledgeNumber());
                                 //流程审批结束且不为撤销时，指令可用持仓增加
-                                if (DictCodeList.持仓类型_实际.equals(持仓类型) && !etrPositionHoldDto.isNeedNegative()){
-                                    etrSecPositionFlowDto1.setAmount(etrSecPositionFlowDto1.getAmount().negate());
-                                }
+//                                if (DictCodeList.持仓类型_实际.equals(持仓类型) && !etrPositionHoldDto.isNeedNegative()){
+//                                    etrSecPositionFlowDto1.setAmount(etrSecPositionFlowDto1.getAmount().negate());
+//                                }
+                                //add by jiangpeng on 20210416 end
                                 etrSecPositionFlowDto1.setFinprodId(pledgeBondInfoDto.getPledgeFinprodId());
                                 etrSecPositionFlowDto1.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
                                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto1);
@@ -145,36 +149,41 @@ public class EtrSecLendCashPositionDealService  {
                         }
                     }
                 }
-                
-                //撤销时不改变预增金额
-                if (!etrPositionHoldDto.isNeedNegative()){
-                    List<StlPayOrdersDto> stlPayOrdersDtos = finProductTradeDto.getStlPayOrdersList();
-                    if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
-                        stlPayOrdersDtos.forEach(stlPayOrdersDto -> {
-                            etrCashPositionFlowDto.setOrderId(stlPayOrdersDto.getOrderId());
-                            // 可用现金 减少借贷费用的可用现金
-                            etrCashPositionFlowDto.setAmount(stlPayOrdersDto.getSettleAmt().negate());
-                            etrCashPositionFlowDto.setAcctId(stlPayOrdersDto.getMyAcctNo());
-                            etrCashPositionFlowDto.setCdate(stlPayOrdersDto.getSettleDate());
-                            etrCashPositionFlowDto.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
-                            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
 
+                // modify by jiangpeng on 20210416 start
+                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                //撤销时不改变预增金额
+                List<StlPayOrdersDto> stlPayOrdersDtos = finProductTradeDto.getStlPayOrdersList();
+                if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
+                    stlPayOrdersDtos.forEach(stlPayOrdersDto -> {
+                        etrCashPositionFlowDto.setOrderId(stlPayOrdersDto.getOrderId());
+                        // 可用现金 减少借贷费用的可用现金
+                        etrCashPositionFlowDto.setAmount(stlPayOrdersDto.getSettleAmt().negate());
+                        etrCashPositionFlowDto.setAcctId(stlPayOrdersDto.getMyAcctNo());
+                        etrCashPositionFlowDto.setCdate(stlPayOrdersDto.getSettleDate());
+                        etrCashPositionFlowDto.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+                            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+                        }
+                        if ((DictCodeList.持仓类型_实际.equals(持仓类型) || DictCodeList.持仓类型_可用.equals(持仓类型))
+                                && !etrPositionHoldDto.isNeedNegative()) {
                             // 处理预增现金
-                            EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto () ;
+                            EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto();
                             BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto1, etrCashPositionFlowDto);
                             //流程审批结束且不为撤销时，预增现金增加提交时减少的值
-                            if (DictCodeList.持仓类型_实际.equals(持仓类型)){
+                            if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
                                 etrCashPositionFlowDto1.setAmount(etrCashPositionFlowDto1.getAmount().negate());
                             }
                             etrCashPositionFlowDto1.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
                             etrCashPositionFlowDto1.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
                             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
-                        });
-                    }    
+                        }
+                    });
                 }
-            } 
+                // modify by jiangpeng on 20210416 end
+            }
          // 融出到期，只在生效时，体现持仓和现金.只需处理债券交割，现金交割（暂不实现）
-            else {
+            else if (StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())){
                 if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
                     etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId());
                     etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(deal.getPrinAmt(), 100, 2));
@@ -210,6 +219,16 @@ public class EtrSecLendCashPositionDealService  {
                     });
                 }
             }
+            // add by jiangpeng on 20210416 start
+            // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+            else if (StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+                    && StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsCashPay())) {
+                if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+                    etrSecPositionFlowDto.setAmount(deal.getShareAmt());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                }
+            }
+            // add by jiangpeng on 20210416 end
         }
     }
 
