@@ -90,8 +90,8 @@
 			</foreach>
 		</if>
 		and STR_TO_DATE(to_char(ciis.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+		) temp3
 		) temp
-		)
 	</select>
 
 	<!-- 证件类型-不合格数据信息 -->
@@ -176,7 +176,7 @@
 				#{orgCode,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		and STR_TO_DATE(to_char(ciis.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+		and STR_TO_DATE(DATE_FORMAT(ciis.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
 	</select>
 
 	<sql id="cpztComm">
@@ -204,7 +204,7 @@
 				#{orgCode,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		)
+		) temp1
 		WHERE
 		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
 		),
@@ -221,10 +221,10 @@
 		CHB_PRD_END_SUB.STATUS,
 		ROW_NUMBER() over( partition BY CHB_PRD_END_SUB.PROD_ID ORDER BY CHB_PRD_END_SUB.UPDATE_TIME DESC) AS rowno
 		FROM
-		CHB_PRD_END_SUB)
+		CHB_PRD_END_SUB) temp2
 		WHERE
 		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
-		)
+		) temp3
 	</sql>
 
 	<!-- 产品状态合格率 -->
@@ -324,7 +324,7 @@
 				#{orgCode,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		)
+		) temp1
 		WHERE
 		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
 		)
@@ -370,7 +370,7 @@
 		ON
 		A.PROD_REGIST_CODE = B.PRD_REGIST_CODE
 		AND STR_TO_DATE(TO_CHAR(B.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
-		)
+		)  temp1
 		WHERE
 		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
 		)
@@ -403,7 +403,7 @@
 		CHB_EQU_SUB
 		ON
 		INVESTHOLD_SUB.INDENTIFY_MARK = CHB_EQU_SUB.INDENTIFY_MARK
-		)
+		) temp2
 		WHERE
 		rowno = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
 		GROUP BY PROD_REGIST_CODE,
@@ -412,7 +412,7 @@
 		UNLEGAL_TOTAL,
 		VDATE,
 		HOLD_DATE
-		)
+		)  temp3
 		SELECT
 		EQU_SUB.prdRegistCode,
 		EQU_SUB.prdSingleTotal,

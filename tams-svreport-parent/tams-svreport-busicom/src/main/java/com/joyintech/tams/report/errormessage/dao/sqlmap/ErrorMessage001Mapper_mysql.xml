@@ -69,7 +69,7 @@
     </select>
     <select id="queryPage" resultType="com.joyintech.tams.report.errormessage.dto.ErrorMessage001" parameterType="map">
     select *
-    from (<include refid="base_view"></include>)
+    from (<include refid="base_view"></include>) temp
     <where>
         <if test="createTimeStart != null and createTimeStart != ''">
             DATE_FORMAT(createTime,'%Y-%m-%d') &gt;= #{createTimeStart}
