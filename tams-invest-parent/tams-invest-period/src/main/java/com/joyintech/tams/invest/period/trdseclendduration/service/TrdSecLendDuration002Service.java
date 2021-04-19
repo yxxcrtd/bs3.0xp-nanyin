@@ -148,16 +148,29 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
         this.ptlPredgeSecPositionFlowLogic(entity, OperationType.REVOKE == operationType?true:false);
 
         // add by jiangpeng on 20210416 start
-        // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+        // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融出到期交易产生的错误
         if(OperationType.REVOKE == operationType) {
+            // modify by jiangpeng on 20210419 start
+            //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融出到期交易产生的错误
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())) {
+                // 写入融入券指令持仓流水
+                this.etrBlendSecPositionFlowLogic(entity, true);
+            }
+            // modify by jiangpeng on 20210419 end
             // 写入融入券组合持仓流水
             this.ptlBlendSecPositionFlowLogic(entity, true);
-            // 写入融入券指令持仓流水
-            this.etrBlendSecPositionFlowLogic(entity, true);
             // add by jiangpeng on 20210416 end
         }else{
-            // 写入融入券组合持仓流水(借贷融入/借贷融出->融入/融出)
-            this.ptlBlendSecPositionFlowLogicEffect(entity);
+            // modify by jiangpeng on 20210419 start
+            //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融出到期交易产生的错误
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())) {
+                // 写入融入券组合持仓流水(借贷融入/借贷融出->融入/融出)
+                this.ptlBlendSecPositionFlowLogicEffect(entity);
+            }else{
+                // 写入融入券组合持仓流水
+                this.ptlBlendSecPositionFlowLogic(entity, false);
+            }
+            // modify by jiangpeng on 20210419 end
         }
 
         // 新建交易撤销数据 或 插入Entity到对应的业务DB中, 并删除流程表中的数据
@@ -267,10 +280,15 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                 }
                 // add by jiangpeng on 20210416 start
                 // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
-                // 写入融入券组合持仓流水
-                this.ptlBlendSecPositionFlowLogic(entity, false);
-                // 写入融入券指令持仓流水
-                this.etrBlendSecPositionFlowLogic(entity, false);
+                // modify by jiangpeng on 20210419 start
+                //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融入到期交易产生的错误
+                if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())) {
+                    // modify by jiangpeng on 20210419 end
+                    // 写入融入券组合持仓流水
+                    this.ptlBlendSecPositionFlowLogic(entity, false);
+                    // 写入融入券指令持仓流水
+                    this.etrBlendSecPositionFlowLogic(entity, false);
+                }
                 // add by jiangpeng on 20210416 end
             }
         }
@@ -379,7 +397,9 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                 } else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), input.getFinprodType2())) {
                     resultDto.setHodingType(DictCodeListExt1.持仓类型_借贷融入.getValue());
                 } else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), input.getFinprodType2())) {
-                    resultDto.setHodingType(DictCodeListExt1.持仓类型_借贷融出.getValue());
+                    // modify by jiangpeng on 20210419 ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融出到期交易产生的错误
+//                    resultDto.setHodingType(DictCodeListExt1.持仓类型_借贷融出.getValue());
+                    resultDto.setHodingType(ptlSecPositionFlow.getHodingType());
                 }
                 // add by jiangpeng on 20210416 end
                 // 日期

@@ -204,7 +204,9 @@ public class EtrSecLendCashPositionDealService  {
                         }
                         
                         // 处理预增现金，撤销时不处理预增现金
-                        if (DictCodeList.持仓类型_实际.equals(持仓类型) || DictCodeList.持仓类型_可用.equals(持仓类型)){
+                        // modify by jiangpeng on 20210419
+                        //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融入到期交易产生的错误
+                        if ((DictCodeList.持仓类型_实际.equals(持仓类型) || DictCodeList.持仓类型_可用.equals(持仓类型)) && !etrPositionHoldDto.isNeedNegative()) {
                             EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto () ;
                             BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto1, etrCashPositionFlowDto);
 //                          etrCashPositionFlowDto1.setAmount(stlPayOrdersDto.getSettleAmt());
