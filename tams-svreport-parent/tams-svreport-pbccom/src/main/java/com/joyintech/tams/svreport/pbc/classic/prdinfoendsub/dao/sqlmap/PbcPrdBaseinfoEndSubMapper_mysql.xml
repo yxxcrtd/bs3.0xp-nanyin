@@ -822,7 +822,7 @@
         </if>
         <!-- 手工处理传入查询日期 实际到期日add by gaojian 2019-06-18 end -->
   	</where>
-  	) group by 
+  	) tmp group by
   	PBC_PROD_ID,MDATE
   	
  </select>

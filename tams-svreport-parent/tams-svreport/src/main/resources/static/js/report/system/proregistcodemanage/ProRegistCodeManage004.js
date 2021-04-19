@@ -24,13 +24,9 @@
                                 Joyin.error(errorMessage);
                             }else{
                                 Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage004/checkAndSave', object, function(result) {
-                                    /*if("0"==result.message()){
-                                        /!*Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage004/save', object, function(result) {
-                                            if("0"==result.message()){
-                                                FileCommon.emptyUploadFileInfo();
-                                            }
-                                        })*!/
-                                    }*/
+                                    if(result.message=='保存成功'){
+                                        parent.layer.closeAll();
+                                    }
                                 })
                             }
                         }

@@ -1099,4 +1099,13 @@
 			WHERE PROD_INS_ID LIKE concat(concat('%', #{search}),'%')
 		</if>
 	</select>
+	<select id="queryPrdDeclareList" parameterType="java.util.Map" resultType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
+	</select>
+
+	<delete id="deleteBySeqNo" parameterType="java.lang.String" >
+	</delete>
+	<insert id="insertSysUploadFileInfo" parameterType="com.joyintech.tams.common.base.entity.SysUploadFileInfo" >
+	</insert>
+	<update id="updateChbPrdDeclare" parameterType="java.util.Map">
+	</update>
 </mapper>
