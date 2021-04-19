@@ -315,7 +315,7 @@
 	    /*若币种取值与产品基本信息表，取前三位*/
 	    ifnull(deal.ccy, (case baseinfo.RAISE_CCY when NULL then NULL else substring(baseinfo.RAISE_CCY, 1, 3) end)) ccy,/*币种*/
     	deal.customer_type2 customertype2,/*客户二级类型*/
-        deal.endqtysum*(case #{jsbankStr,jdbcType=VARCHAR} when '01' then TRUNC(deal.prod_value,5) when '02' then ROUND(deal.prod_value,5) else  end)*ifnull(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
+        deal.endqtysum*(case #{jsbankStr,jdbcType=VARCHAR} when '01' then TRUNCATE(deal.prod_value,5) when '02' then ROUND(deal.prod_value,5)  end)*ifnull(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
 	    deal.dirtyamtsum       dirtyamtsum,/*募集金额*/
 	    deal.redamt            redamt,/*兑付金额*/
 	    deal.raiseqty       raiseqty,/*当期募集份额*/
@@ -458,12 +458,12 @@
           AND VH.TRADE_CALENDAR_ID = info.CALENDAR_ID ) dee  ORDER BY REALCDATE
           ) T,
           ( SELECT @rownum := 0, @PRODUUID := NULL, @rank := 0 )b
-      )
+      ) tmp
       WHERE NUM = #{days,jdbcType=INTEGER}
       and fprod_id IS NULL
       and status in ('E','M')
       AND VDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
-      ) TEMPPROD tem on info.PRODUUID = tem.PRODUUID
+      ) tem on info.PRODUUID = tem.PRODUUID
       WHERE
       info.fprod_id IS NULL
       and info.status in ('E','M')
@@ -522,7 +522,8 @@
       endqtysum
       FROM
       pbc_month_prd_position
-      WHERE ENDDATE between ADD_MONTHS(#{reportStartDate,jdbcType=DATE},-1) and #{reportStartDate,jdbcType=DATE}
+      WHERE ENDDATE
+      	between ADDDATE(str_to_date(#{reportStartDate,jdbcType=DATE},'%y-%m-%d'),INTERVAL -1 MONTH) and #{reportStartDate,jdbcType=DATE}
       UNION ALL
       /*本周期头寸*/
       SELECT
@@ -581,14 +582,13 @@
       WHERE
       1 = 1
       AND dl.settdate_date BETWEEN #{reportStartDate,jdbcType=DATE} AND #{reportEndDate,jdbcType=DATE}
-      ---AND dl.trade_type != '04'
       AND dl.status in ('E','M')
       GROUP BY
       ifnull(dl.fprod_id, dl.prod_id),
       ccy,
       typemap.objfield1,
       buy_place
-      )
+      ) tmp
       GROUP BY
       prodid,
       ccy,
@@ -609,7 +609,7 @@
       prod_value,
 	  if
 	  (@prod_id = prod_id, @rank := @rank + 1,@rank :=1) as my_rank,
-	  (@prod_id := prod_id) prod_id
+	  (@prod_id := prod_id)
       FROM
       chb_prd_periodyield,
 	  (select @rank := 0, @prod_id := null) b
@@ -621,13 +621,13 @@
 	  order by
 	  prod_id,
 	  change_date desc
-      )
+      ) tmp
       WHERE
       1 = 1 limit 1
       ) pv
       ON ds.prodid = pv.prod_id
       /*and ds.ccy=pv.ccy*/
-      ) pos  deal ON deal.prodid = info.prod_id
+      ) deal ON deal.prodid = info.prod_id
 	    left join CHB_PRD_BASEINFO baseinfo on baseinfo.PROD_ID=info.prod_id
         left join (
       SELECT
@@ -741,7 +741,7 @@
 	    /*若币种取值与产品基本信息表，取前三位*/
         ifnull(deal.ccy, (case baseinfo.RAISE_CCY when NULL then NULL else substring(baseinfo.RAISE_CCY, 1, 3) end)) ccy,/*币种*/
         deal.customer_type2 customertype2,/*客户二级类型*/
-        deal.endqtysum*(case #{jsbankStr,jdbcType=VARCHAR} when '01' then TRUNC(deal.prod_value,5) when '02' then ROUND(deal.prod_value,5) else  end)*ifnull(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
+        deal.endqtysum*(case #{jsbankStr,jdbcType=VARCHAR} when '01' then TRUNCATE(deal.prod_value,5) when '02' then ROUND(deal.prod_value,5) else  end)*ifnull(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
 	    deal.dirtyamtsum       dirtyamtsum,/*募集金额*/
 	    deal.redamt            redamt,/*兑付金额*/
 	    deal.raiseqty       raiseqty,/*当期募集份额*/

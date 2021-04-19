@@ -59,7 +59,7 @@
         <if test="orgCode != null and orgCode != '' ">
             and corbc.ORG_CODE=#{orgCode,jdbcType=VARCHAR}
         </if>
-        and rownum=1
+        limit 1
     </select>
 
 </mapper>
