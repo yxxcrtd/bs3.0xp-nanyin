@@ -331,7 +331,7 @@
             FIN_PRODUCT fp
             <!-- 过滤发行标的，马数凯，20210415 start-->
             LEFT JOIN FIN_PRODUCT_ADD FPA
-                ON FPA.FINPROD_ID = A.FINPROD_ID
+                ON FPA.FINPROD_ID = fp.FINPROD_ID
             <!-- 过滤发行标的，马数凯，20210415 end-->
             <!-- 债券质押回购多组合，张庚林，20190723 start-->
             left join fin_product_type fpt2
