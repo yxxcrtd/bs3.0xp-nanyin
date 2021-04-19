@@ -502,7 +502,8 @@
     decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS','SELL','AFS') INVEST_TYPE,/*投资目的 枚举值对应待处理TODO*/
     null PROD_ID,/*取自从属表*/
     deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
-    DEAL.FINPROD_ID ASSET_CODE,
+    <!--    DEAL.FINPROD_ID ASSET_CODE,-->
+    NVL(fp.FINPROD_ID,fpd.FINPROD_ID) ASSET_CODE,
     DEAL.CCY CCY,
     deal.trade_amt AMT,
     NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
@@ -570,6 +571,8 @@
     left join MST_COUNTER_PARTY party on party.COUNTER_ID= DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',customer.customer_id,'T23',customer.customer_id)
 	left join MST_COUNTER_PARTY party2 on party2.LINK_ID=DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',NVL(DEAL.COUNTER_ID,secASSET.Issuer),'T22',customer.customer_id,'T23',customer.customer_id, 'T29', secASSET.Issuer, 'T32', secASSET.Issuer)
     left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID=DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',customer.customer_id,'T23',customer.customer_id)
+    left join FIN_PRODUCT_ADD fpd on secASSET.finprod_market_id = fpd.appear_market_id
+    LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = fpd.FINPROD_ID
     WHERE 1=1
     /*债券借贷现金交易融出券生成的交易暂时先放这里统计*/
     AND (DEAL.BUSI_TYPE IN ( '02', '29') or (DEAL.BUSI_TYPE = '14' and DEAL.PS = 'T02') or (DEAL.BUSI_TYPE = '37' and DEAL.FINPROD_TYPE2 = 'F01'))
@@ -590,7 +593,7 @@
       LEFT JOIN TRD_PRODUCT_DEAL_ADD AD ON A.TRADE_ID = AD.TRADE_ID
       WHERE A.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       AND AD.PORTFOLIO_ID=DEALADD.PORTFOLIO_ID
-      AND A.PS IN ('T25','T26')
+      AND A.PS IN ('T25','T26','T41')
     )
     /*根据交割日和接口接入时间接入数据*/
     <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -605,7 +608,8 @@
     decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS','SELL','AFS') INVEST_TYPE,/*投资目的 枚举值对应待处理TODO*/
     null PROD_ID,/*取自从属表*/
     ORG.regist_org REGIST_BANK_CODE,/*登记银行编码*/
-    DEAL.FINPROD_ID ASSET_CODE,
+    <!--    DEAL.FINPROD_ID ASSET_CODE,-->
+    NVL(fp.FINPROD_ID,fpd.FINPROD_ID) ASSET_CODE,
     DEAL.CCY CCY,
     deal.trade_amt AMT,
     NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
@@ -684,6 +688,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
     left join MST_COUNTER_PARTY party on party.COUNTER_ID= DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',customer.customer_id,'T23',customer.customer_id)
 	left join MST_COUNTER_PARTY party2 on party2.LINK_ID= DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',customer.customer_id,'T23',customer.customer_id)
     left join MST_COUNTER_PARTY party3 on party3.MANAGER_ID= DECODE(DEAL.PS,'T01',DEAL.COUNTER_ID,'T02',DEAL.COUNTER_ID,'T03',DEAL.COUNTER_ID,'T39',DEAL.COUNTER_ID,'T22',customer.customer_id,'T23',customer.customer_id)
+    left join FIN_PRODUCT_ADD fpd on secASSET.finprod_market_id = fpd.appear_market_id
+    LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = fpd.FINPROD_ID
     WHERE 1=1
     AND EXISTS(
      SELECT 1 FROM TRD_PRODUCT_DEAL A
@@ -3380,7 +3386,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS','SELL','AFS') INVEST_TYPE,/*投资目的 枚举值对应待处理TODO*/
       null PROD_ID,/*取自从属表*/
       deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
-      DEAL.FINPROD_ID ASSET_CODE,
+      <!--DEAL.FINPROD_ID ASSET_CODE,-->
+      NVL(fp.FINPROD_ID,fpd.FINPROD_ID) ASSET_CODE,
       DEAL.CCY CCY,
       deal.trade_amt AMT,
       NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
@@ -3474,6 +3481,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       LEFT JOIN DATA_AUTH_NOTIFY_INST T23 ON nvl(party.counter_id,party2.counter_id) = T23.BUSINESS_ID AND
       T23.DATA_TYPE = 'MST15'
       AND T23.MODEL_TYPE='02' AND T22.INSTITUTION_CODE=T23.INSTITUTION_CODE
+      left join FIN_PRODUCT_ADD fpd on secASSET.finprod_market_id = fpd.appear_market_id
+      LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = fpd.FINPROD_ID
       WHERE 1=1
       and T23.INSTITUTION_CODE IS NOT NULL
       /*债券借贷现金交易融出券生成的交易暂时先放这里统计*/
@@ -3496,7 +3505,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       LEFT JOIN TRD_PRODUCT_DEAL_ADD AD ON A.TRADE_ID = AD.TRADE_ID
       WHERE A.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       AND AD.PORTFOLIO_ID=DEALADD.PORTFOLIO_ID
-      AND A.PS IN ('T25','T26')
+      AND A.PS IN ('T25','T26','T41')
       )
       /*根据交割日和接口接入时间接入数据*/
       <![CDATA[AND( NVL(deal.UPDATE_TIME,deal.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -3511,7 +3520,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       decode(DEAL.INV_AIM,'FVTPL','TRA','AC','HTM','FVOCI','AFS','SELL','AFS') INVEST_TYPE,/*投资目的 枚举值对应待处理TODO*/
       null PROD_ID,/*取自从属表*/
       ORG.regist_org REGIST_BANK_CODE,/*登记银行编码*/
-      DEAL.FINPROD_ID ASSET_CODE,
+      <!--DEAL.FINPROD_ID ASSET_CODE,-->
+      NVL(fp.FINPROD_ID,fpd.FINPROD_ID) ASSET_CODE,
       DEAL.CCY CCY,
       deal.trade_amt AMT,
       NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
@@ -3606,6 +3616,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       LEFT JOIN DATA_AUTH_NOTIFY_INST T23 ON nvl(party.counter_id,party2.counter_id) = T23.BUSINESS_ID AND
       T23.DATA_TYPE = 'MST15'
       AND T23.MODEL_TYPE='02' AND T22.INSTITUTION_CODE=T23.INSTITUTION_CODE
+      left join FIN_PRODUCT_ADD fpd on secASSET.finprod_market_id = fpd.appear_market_id
+      LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = fpd.FINPROD_ID
       WHERE 1=1
       and T23.INSTITUTION_CODE IS NOT NULL
       AND EXISTS(
