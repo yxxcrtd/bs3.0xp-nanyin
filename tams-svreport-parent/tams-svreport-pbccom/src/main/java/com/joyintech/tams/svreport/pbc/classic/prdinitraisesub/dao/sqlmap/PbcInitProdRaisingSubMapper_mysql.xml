@@ -394,7 +394,7 @@
       <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
     </where>
 
-    ) group by
+    ) tmp group by
     PBC_PROD_ID
     ,CUSTOMER_TYPE1
     union all
@@ -518,7 +518,7 @@
       <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
     </where>
 
-    ) group by
+    ) tmp group by
     PBC_PROD_ID
     ,CUSTOMER_TYPE1
     ,CCY
@@ -643,7 +643,7 @@
       <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
     </where>
 
-    ) group by
+    ) tmp group by
     PBC_PROD_ID
     ,CUSTOMER_TYPE1
     ,BUY_PLACE
@@ -862,7 +862,7 @@
         order by
          PBC_PROD_ID,
         ifnull(update_time,create_time) desc
-      )
+      ) tmp
       where 1 = 1 limit 1
   </insert>
   <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
@@ -1026,7 +1026,7 @@
         <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
   	</where>
   	
-  	) group by 
+  	) tmp group by
   	 PBC_PROD_ID
   	 ,CUSTOMER_TYPE1
   	<if test="buyPlace == null">

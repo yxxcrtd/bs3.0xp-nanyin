@@ -1815,7 +1815,7 @@
            and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
         </if>
     </where>
-  ) group by 
+  ) tmp group by
   		RAISING_DATE
   		,PBC_PROD_ID
   		<if test="yield == null">
@@ -2020,7 +2020,7 @@
            and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
         </if>
     </where>
-  ) group by 
+  ) tmp group by
   		RAISING_DATE
   		,PBC_PROD_ID
   		<if test="yield == null">

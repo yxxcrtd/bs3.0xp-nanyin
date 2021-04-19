@@ -599,7 +599,7 @@
        		 </if>
             and rep.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
         </where>
-    ) 
+    ) tmp
     <!-- ORDER BY STATUS_DATE -->
     <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
   	 ORDER BY CHBSUBMITDEADLINE ASC, UPDATETIME DESC
