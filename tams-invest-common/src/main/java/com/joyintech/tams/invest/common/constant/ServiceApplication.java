@@ -162,6 +162,7 @@ public class ServiceApplication {
                 CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
                 PINGAN_SERVICE_NAME = PINGAN_SERVICE_NAME + config.getTamsServer();
                 INVEST_INTERF_SERVICE_NAME = INVEST_INTERF_SERVICE_NAME + config.getInvestInterfService();
+                INTERF_PLACE_SERVICE_NAME = INTERF_PLACE_SERVICE_NAME +config.getInterfPlaceService();
             }
             else {
                 COMMON_SERVICE_NAME = config.getCommonService();
@@ -182,6 +183,8 @@ public class ServiceApplication {
                 CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
                 PINGAN_SERVICE_NAME = config.getTamsServer();
                 INVEST_INTERF_SERVICE_NAME = config.getInvestInterfService();
+                INTERF_PLACE_SERVICE_NAME = config.getInterfPlaceService();
+
             }
         }
     }
@@ -231,6 +234,16 @@ public class ServiceApplication {
          * 投管接口
          */
         private String investInterfService;
+
+        private String interfPlaceService;
+
+        public String getInterfPlaceService() {
+            return interfPlaceService;
+        }
+
+        public void setInterfPlaceService(String interfPlaceService) {
+            this.interfPlaceService = interfPlaceService;
+        }
 
         /**
          * 获取 investInterfService

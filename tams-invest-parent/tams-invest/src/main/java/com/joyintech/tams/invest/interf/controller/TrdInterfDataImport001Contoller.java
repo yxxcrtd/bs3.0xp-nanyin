@@ -10,15 +10,14 @@
 package com.joyintech.tams.invest.interf.controller;
 
 import com.google.gson.JsonObject;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.TreeNode;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.invest.interf.dto.TrdInterfDataImport001LogDto;
 import com.joyintech.tams.invest.interf.service.TrdInterfDataImport001Service;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
@@ -46,15 +45,26 @@ import java.util.*;
 @RequestMapping("/invest/interf/TrdInterfDataImport001")
 public class TrdInterfDataImport001Contoller extends BaseController {
 
-	//代表公共数据
-	private static String InterfFlag = "InterfData";
+    /**
+     * 接口平台组号
+     */
+	private static String INTERF_PLACE_GPCODE = "gpcode";
+    /**
+     * 接口平台触发器编号
+     */
+    private static String INTERF_PLACE_TGCODE = "tgcode";
+
+    private static String sysDate ;
+
+    private static String gpcode ;
+
+    private static String tgcode ;
+
 	@Autowired
 	private TrdInterfDataImport001Service trdInterfDataImport001Service;
     @Autowired
     private BaseCommonService baseCommonService;
 
-    @Autowired
-    private InterfCommonService interfCommonService;
 
 	/**
      * 页面初始化，显示画面<br>
@@ -66,7 +76,9 @@ public class TrdInterfDataImport001Contoller extends BaseController {
      */
     @Override
     public String init(Model model) {
-        String sysDate=baseCommonService.getSysDateString();
+        gpcode = CacheUtil.getSysParam(INTERF_PLACE_GPCODE);
+        tgcode = CacheUtil.getSysParam(INTERF_PLACE_TGCODE);
+        sysDate=baseCommonService.getSysDateString();
         if(sysDate==null||"".equals(sysDate)){
             sysDate=DateUtil.format(new Date());
         }
@@ -81,10 +93,8 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     public List<TreeNode> getInterGroup(){
 
     	Map<String,Object> map = RequestUtil.getPageParam();
-    	map.put("batchName", getParam("TmpCName"));
-    	map.put("taskGrpType", InterfFlag);
-    	map.put("gpcode","TAMS30");
-        map.put("tgcode","trigger_http_tams30");
+    	map.put("gpcode",gpcode);
+        map.put("tgcode",tgcode);
     	return trdInterfDataImport001Service.getTreeNodeList(map);
     }
 
@@ -94,14 +104,6 @@ public class TrdInterfDataImport001Contoller extends BaseController {
         return trdInterfDataImport001Service.getFinprodId(RequestUtil.getPageParam());
     }
 
-    @RequestMapping("/getInterGroupCode")
-    @ResponseBody
-    public List<SelectOptionDto> getInterGroupCode(){
-    	Map<String,Object> map = new HashMap<String,Object>();
-    	map.put("TmpCName", getParam("TmpCName"));
-    	List<SelectOptionDto>  list = trdInterfDataImport001Service.getInterGroupCode(map);
-    	return list;
-    }
 
 
     @RequestMapping("/findLogPage")
@@ -109,14 +111,10 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     public List<TrdInterfDataImport001LogDto> findLogPage(){
     	List<TrdInterfDataImport001LogDto>  list = new ArrayList<>();
     	Map<String,Object> map = RequestUtil.getPageParam();
-    	//map.put("createDate", DateUtil.parse("20180815"));
-    	map.put("status", this.getParam("status"));
-    	map.put("execTaskId", this.getParam("execTaskId"));
-    	if(StringUtil.isNotEmpty(map.get("exDate"))){
-        	map.put("createDate", new Date(Long.valueOf(map.get("exDate").toString())));
-    		list = trdInterfDataImport001Service.getInterActionLog(map);
-    	}
-    	return list;
+        map.put("gpcode",gpcode);
+        map.put("tgcode",tgcode);
+        map.put("predate",sysDate);
+    	return trdInterfDataImport001Service.getInterActionLog(map);
     }
 
 
@@ -137,42 +135,31 @@ public class TrdInterfDataImport001Contoller extends BaseController {
      */
     @RequestMapping("runAs")
     @ResponseBody
-    public String runAs()
-        throws IOException {
+    public AjaxResult runAs() throws IOException {
+
         Map<String,Object> map = RequestUtil.getPageParam();
-        map.put("async",true);
-        map.put("predate",new Date());
-        map.put("preseqno", IDGenerator.generate());
-        map.put("routers",new String[]{"VAL_0001"});
-        map.put("batchName", getParam("TmpCName"));
-        map.put("taskGrpType", InterfFlag);
-        map.put("gpcode","TAMS30");
-        map.put("trigger","trigger_http_tams30");
-        trdInterfDataImport001Service.runAs(map);
-//        JsonObject json = new JsonObject();
-//        int check = 0;
-//		Date date = new Date();
-//		Map<String,Object> map = new HashMap<String,Object>();
-//		String execTaskId = interfCommonService.getUUid();
-//		//检查当前是否有正在运行中的批处理
-//    	if(trdInterfDataImport001Service.checkInterLog(map)==0){
-//            String datas = this.getParam("datas");
-//            String startDate = this.getParam("startDate");
-//            String endDate = this.getParam("endDate");
-//            String url = valInertfStartUp001Service.getUrl(null);
-//            Map<String, String> urlParams = valPublicDataImport001Service.getParm(datas, DateUtil.formatDate(startDate),
-//                  DateUtil.formatDate(endDate),null,InterfCommonConstant.接口模式_全账套);//modify by dongjun on 20180104
-//            urlParams.put(InterfCommonConstant.接口_任务执行ID, execTaskId);
-//            valInertfStartUp001Service.runInterf(url, urlParams);
-//            check=1;
-//    	}
-//
-//        json.addProperty("isCheck", check);
-//        json.addProperty("createDate", date.getTime());
-//        json.addProperty("execTaskId", execTaskId);
-//
-//        return json.toString();
-        return null;
+        Map<String,Object> params = new HashMap<>();
+        Map<String,Object> parameter = new HashMap<>();
+        Object prodIdObj = map.get("prodList");
+        if(StringUtil.isNotEmpty(prodIdObj)) {
+            parameter.put("prodList",((String)prodIdObj).split(GlobalConstant.COMMA));
+        }else{
+            parameter.put("prodList",new String []{});
+        }
+        Object dataObj = map.get("datas");
+        if(StringUtil.isNotEmpty(dataObj)) {
+            params.put("routers",((String)dataObj).split(GlobalConstant.COMMA));
+        }else{
+            params.put("routers",new String []{});
+        }
+        parameter.put("queryDate",map.get("queryDate"));
+        params.put("parameter",parameter);
+        params.put("async",true);
+        params.put("predate",sysDate);
+        params.put("preseqno", map.get("preseqno"));
+        params.put("gpcode",gpcode);
+        params.put("trigger",tgcode);
+        return trdInterfDataImport001Service.runAs(params);
     }
 
 }
