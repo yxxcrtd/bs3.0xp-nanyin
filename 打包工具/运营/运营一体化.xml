@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>com.joyintech</groupId>
+		<artifactId>tams-parent</artifactId>
+		<version>0.0.3</version>
+	</parent>
+	
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>tams-base</artifactId>
+    <version>2.1.2</version>
+    <packaging>pom</packaging>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <modules>
+		<!--  公共 -->
+		<module>../../JixuCenter</module>
+        <module>../../tams-common</module>
+        <module>../../tams-common-customer</module>
+        <module>../../tams-invest-common</module>
+        <module>../../tams-disclosure-busicommon</module>
+        <module>../../tams-disclosure-common</module>
+        <module>../../tams-disclosure-interf</module>
+        <module>../../tams-svreport-common</module>
+        <module>../../tams-valuation-api</module>
+        <module>../../tams-valuation-common</module>
+				
+		<!-- 后台服务 -->
+        <module>../../microservice/service-chb</module>
+		<module>../../microservice/service-chb3</module>
+		<module>../../microservice/service-customer-report</module>
+        <module>../../microservice/service-disclosure</module>
+        <module>../../microservice/service-pbc</module>
+        <module>../../microservice/service-svrcom</module>
+        <module>../../microservice/service-valuation</module>
+		<module>../../microservice/service-common-basicdata</module>
+        <module>../../microservice/tams-service-container</module>
+
+        <!-- 批处理 -->
+		<module>../../tams-disclosure-batch</module>
+        <module>../../tams-valuation-batch</module>
+        <module>../../tams-svreport-batch</module>
+        <module>../../tams-system/yunying/batch</module>
+
+        <!-- 前台应用 -->
+		<module>../../tams-disclosure-parent</module>
+        <module>../../tams-svreport-parent</module>
+        <module>../../tams-valuation-parent</module>
+        <module>../../tams-valuation-report</module>
+        <module>../../tams-common-basicdata</module>
+        <module>../../tams-system/yunying/app</module>		
+    </modules>
+</project>
