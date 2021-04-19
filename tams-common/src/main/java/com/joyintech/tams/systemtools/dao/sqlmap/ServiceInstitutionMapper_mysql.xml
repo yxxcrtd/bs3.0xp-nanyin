@@ -5,7 +5,9 @@
 		SELECT INSTITUTION_CODE code,
 		INSTITUTION_NAME name,
 		INSTITUTION_NAME shortName,
-		NSTITUTION_CODE hidCode
+		/** modify by yanya on 20210419 字段写错
+		NSTITUTION_CODE hidCode**/
+		INSTITUTION_CODE hidCode
 		FROM SYS_INSTITUTION
 	</select>
 

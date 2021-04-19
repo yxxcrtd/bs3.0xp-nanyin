@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.systemtools.dao.TamsBaseMapper_mysql">
     <select id="getSequenceIndexData" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
-        <if test="databaseType == 'mysql'">
-            SELECT _nextIndex('WFL_SEQUENCE')
-        </if>
+        <!--<if test="databaseType == 'mysql'"> -->
+            SELECT _nextIndex(#{sequenceName, jdbcType=VARCHAR})
+        <!--</if>-->
     </select>
 
     <select id="selectBankCode" parameterType="java.lang.String" resultType="java.lang.String">
