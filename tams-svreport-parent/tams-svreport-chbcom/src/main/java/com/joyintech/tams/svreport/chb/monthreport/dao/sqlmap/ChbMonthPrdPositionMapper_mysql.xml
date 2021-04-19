@@ -410,13 +410,10 @@
         /*产品存续状态*/
         pd as(
         select DISTINCT info.prod_id,
-        decode(info.ISSUING_STATUS,
-        '01',
-        case when info.vdate<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-        then IFNULL(deal.prod_id,'02','01')
-        else '03'
-        end,
-        '03') DURATIONFLAG
+        case info.ISSUING_STATUS when '01' then (
+             case when info.vdate<![CDATA[<=]]>#{enddate,jdbcType=DATE}  then IF(ISNULL(prod_id),'02','01')
+                     else '03'  end)
+             else '03'  end DURATIONFLAG
         from CHB_PRD_BASEINFO info
         left join chb_prd_deal deal
         on IFNULL(deal.fprod_id,deal.prod_id)=info.prod_id and deal.TRADE_TYPE='16' and  deal.SETTDATE_DATE <![CDATA[<=]]>#{enddate,jdbcType=DATE}
@@ -433,7 +430,7 @@
         ,info.OPENTYPEP
         ,info.CASH_MANA_CATE
         /***封闭期在半年以上的定期开放式产品：改成按照期限品种统计； leipeng 20201226***/
-        ,          case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
+        , case when info.operate_mode in ('03') and info.termtype in ('06','08','09')
         then '02' else
         (case when info.SHORT_TERM is null
         then null

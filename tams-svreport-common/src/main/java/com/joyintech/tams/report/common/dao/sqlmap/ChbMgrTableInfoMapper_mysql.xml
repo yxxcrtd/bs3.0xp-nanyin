@@ -38,7 +38,7 @@
 	</select>
 	<select id="checkTableExist" parameterType="java.util.Map"
 			resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME =
+		SELECT COUNT(*) FROM information_schema.`TABLES` WHERE TABLE_NAME =
 		#{mgrTableName,jdbcType=VARCHAR}
 	</select>
 	<select id="checkDoubleInfo" parameterType="java.util.Map"

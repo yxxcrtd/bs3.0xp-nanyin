@@ -42,12 +42,12 @@
     </select>
     <select id="queryColumn" resultMap="BaseResultMap" parameterType="java.lang.String" >
 		SELECT DISTINCT COLUMN_NAME, DATA_TYPE
- 		 FROM ALL_TAB_COLS
+ 		 FROM information_schema.`COLUMNS`
  	    WHERE TABLE_NAME = #{tableId,jdbcType=CHAR}
 	</select>
     <select id="queryUUID" resultType="java.lang.Integer" parameterType="java.util.Map" >
 		SELECT COUNT(*)
- 		 FROM ALL_TAB_COLS
+ 		 FROM information_schema.`COLUMNS`
  	    WHERE TABLE_NAME = #{tableId,jdbcType=CHAR}
       AND COLUMN_NAME = #{column,jdbcType=CHAR}
       AND DATA_TYPE = 'CHAR'

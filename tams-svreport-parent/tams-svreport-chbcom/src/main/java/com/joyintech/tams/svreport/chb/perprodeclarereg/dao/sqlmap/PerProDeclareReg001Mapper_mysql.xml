@@ -245,7 +245,7 @@
             
             <if test="prodName != null and prodName != ''">
 				/* and cds.PROD_NAME like '%${prodName}%' */
-				and cds.PROD_NAME like concat('%', concat(#{prodName},'%'))
+				and cds.PROD_NAME like concat_ws('%', concat_ws(#{prodName},'%'))
 			</if>
 			
 			  <if test="theProdId != null and theProdId != ''">
