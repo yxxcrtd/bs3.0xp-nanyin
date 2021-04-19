@@ -157,6 +157,11 @@ public interface BussinessConstant {
      * 是否需要上级审批（是否已超授权）
      */
     String 是否需要上级审批 = "needNextCheck";
+    
+    /**
+     * 指令交易录单是否需要上级审批
+     */
+    String 指令交易录单是否需要上级审批 = "approverFlage";
     /**
      * 投资交易撤销，撤销交易编号后缀
      */

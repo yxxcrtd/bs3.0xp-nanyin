@@ -11,11 +11,12 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_APPROVAL" property="isApproval" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ENTRUST_ID ENTRUST_ID, TRADER TRADER, REC_STATUS REC_STATUS, TRADING_HEADER TRADING_HEADER, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME
+        UPDATE_TIME UPDATE_TIME, IS_APPROVAL IS_APPROVAL
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -42,12 +43,12 @@
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.EtrDistribute" >
         insert into ETR_DISTRIBUTE (ENTRUST_ID, TRADER, REC_STATUS, 
             TRADING_HEADER, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME
-            )
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            IS_APPROVAL)
         values (#{entrustId,jdbcType=VARCHAR}, #{trader,jdbcType=VARCHAR}, #{recStatus,jdbcType=VARCHAR}, 
             #{tradingHeader,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
-            )
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{isApproval,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrDistribute" >
         insert into ETR_DISTRIBUTE
@@ -79,6 +80,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="isApproval != null" >
+                IS_APPROVAL,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="entrustId != null" >
@@ -108,13 +112,16 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isApproval != null" >
+                #{isApproval,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrDistribute" >
         insert into ETR_DISTRIBUTE(ENTRUST_ID, TRADER, REC_STATUS, TRADING_HEADER, CREATE_USER, 
-        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_APPROVAL)
         select ENTRUST_ID, TRADER, REC_STATUS, TRADING_HEADER, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, IS_APPROVAL
              from ETR_DISTRIBUTE
              where 1 = 1 and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR} and TRADER = #{trader,jdbcType=VARCHAR}
     </insert>
@@ -133,6 +140,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isApproval != null" >
+                IS_APPROVAL = #{isApproval,jdbcType=VARCHAR},
+            </if>
         </set>
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
           and TRADER = #{trader,jdbcType=VARCHAR}
@@ -142,7 +152,8 @@
         set REC_STATUS = #{recStatus,jdbcType=VARCHAR},
             TRADING_HEADER = #{tradingHeader,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_APPROVAL = #{isApproval,jdbcType=VARCHAR}
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
           and TRADER = #{trader,jdbcType=VARCHAR}
     </update>

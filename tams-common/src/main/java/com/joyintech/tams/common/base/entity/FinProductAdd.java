@@ -342,6 +342,33 @@ public class FinProductAdd extends BaseEntity {
      * 交易平台
      */
     private String tradePlat;
+	
+
+    /**
+     * 期货合约标的
+     */
+    private String futuresContractId;
+
+    /**
+     * 最后交易日
+     */
+    private Date lastTradeDate;
+
+    /**
+     * 最后交割日
+     */
+    private Date lastSettleDate;
+
+    /**
+     * 交割方式
+     */
+    private String deliveryMethod;
+
+    /**
+     * 合约乘数
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal contractMultiplier;
 
     /**
      * 取得 金融产品代码
@@ -1400,5 +1427,45 @@ public class FinProductAdd extends BaseEntity {
      */
     public void setTradePlat(String tradePlat) {
         this.tradePlat = tradePlat == null ? null : tradePlat.trim();
+    }
+
+    public String getFuturesContractId() {
+        return futuresContractId;
+    }
+
+    public void setFuturesContractId(String futuresContractId) {
+        this.futuresContractId = futuresContractId;
+    }
+
+    public Date getLastTradeDate() {
+        return lastTradeDate;
+    }
+
+    public void setLastTradeDate(Date lastTradeDate) {
+        this.lastTradeDate = lastTradeDate;
+    }
+
+    public Date getLastSettleDate() {
+        return lastSettleDate;
+    }
+
+    public void setLastSettleDate(Date lastSettleDate) {
+        this.lastSettleDate = lastSettleDate;
+    }
+
+    public String getDeliveryMethod() {
+        return deliveryMethod;
+    }
+
+    public void setDeliveryMethod(String deliveryMethod) {
+        this.deliveryMethod = deliveryMethod;
+    }
+
+    public BigDecimal getContractMultiplier() {
+        return contractMultiplier;
+    }
+
+    public void setContractMultiplier(BigDecimal contractMultiplier) {
+        this.contractMultiplier = contractMultiplier;
     }
 }
