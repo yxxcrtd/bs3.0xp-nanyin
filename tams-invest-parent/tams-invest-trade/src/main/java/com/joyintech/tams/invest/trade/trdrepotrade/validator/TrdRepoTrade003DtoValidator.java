@@ -180,30 +180,58 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
         // 3) 正回购本金金额不能大于质押券信息中汇总券面总额，若大于，则提示：“正回购委托金额不能大于质押券汇总券面总额”（除11的其他正回购）
         List<PledgeBondInfoDto> PledgeBondList=inputDto.getBussRepoSecPtl().getPledgeBondList();
         List<PledgeBondInfoDto> PledgeBondListDetailed=inputDto.getBussRepoSecPtl().getPledgeBondListDetailed();
-        for(int i=0;i<PledgeBondList.size();i++){
-            int k=0;
-            for(int j=0;j<PledgeBondListDetailed.size();j++){
-                if(PledgeBondList.get(i).getPortfolioId().equals(PledgeBondListDetailed.get(j).getPortfolioId())){
-                    k=k+1;
-                    if (DictCodeList.回购拆借方向_正回购.getValue().equals(inputDto.getPs())
-                        && DictCodeList.回购类型_质押式协议回购.getValue().equals(inputDto.getRepoType())
-                        && inputDto.getPrinAmt() != null
-                        && (inputDto.getBussRepoSecPtl() == null
-                        || inputDto.getBussRepoSecPtl().getPledgeBondListDetailed().get(j) == null)) {
-                    ValidMessage validMessage = new ValidMessage("prinAmt",
-                            getMessage("TRD_E_00121"));
-                        errorList.add(validMessage);
-                        break;
-                    }
-                }
-            }
+        //从组合分配信息中获取，详细信息中存在不添加质押券跳过改校验的问题
+        if(DictCodeList.回购拆借方向_正回购.getValue().equals(inputDto.getPs())&&
+        	(DictCodeList.回购类型_质押式协议回购.getValue().equals(inputDto.getRepoType())||DictCodeListExt1.交易场所_银行间.getValue().equals(inputDto.getTradeMarket()))
+        ) {
+        	for(PledgeBondInfoDto pledgeBondInfoDto:PledgeBondList) {
+        		if(pledgeBondInfoDto.getPrinAmt()==null||pledgeBondInfoDto.getTotalPrinAmt()==null||pledgeBondInfoDto.getPrinAmt().compareTo(pledgeBondInfoDto.getTotalPrinAmt())>0) {
+        			errorList.add(new ValidMessage(getMessage("TRD_E_00121")));
+        			break;
+        		}
+        	}
+        	//v2.1.7 添加委托校验
+        	for(PledgeBondInfoDto pledgeBondInfoDto:PledgeBondList) {
+        		if(StringUtil.isNotEmpty(pledgeBondInfoDto.getEntrustId())) {
+        			boolean flag = StringUtil.isNotEmpty(pledgeBondInfoDto.getEntrustSurAmt());
+        			if(flag) {
+        				BigDecimal entrustSurAmt = new BigDecimal(pledgeBondInfoDto.getEntrustSurAmt());
+        				if(pledgeBondInfoDto.getTotalPrinAmt()==null||entrustSurAmt.compareTo(pledgeBondInfoDto.getTotalPrinAmt())>0) {
+        					flag = false;
+        				}
+        			}
+        			if(!flag) {
+        				errorList.add(new ValidMessage(getMessage("TRD_E_00123")));
+        				break;
+        			}
+        		}
+        	}
+        }
+        
+//        for(int i=0;i<PledgeBondList.size();i++){
+//            int k=0;
+//            for(int j=0;j<PledgeBondListDetailed.size();j++){
+//                if(PledgeBondList.get(i).getPortfolioId().equals(PledgeBondListDetailed.get(j).getPortfolioId())){
+//                    k=k+1;
+//                    if (DictCodeList.回购拆借方向_正回购.getValue().equals(inputDto.getPs())
+//                        && DictCodeList.回购类型_质押式协议回购.getValue().equals(inputDto.getRepoType())
+//                        && inputDto.getPrinAmt() != null
+//                        && (inputDto.getBussRepoSecPtl() == null
+//                        || inputDto.getBussRepoSecPtl().getPledgeBondListDetailed().get(j) == null)) {
+//                    ValidMessage validMessage = new ValidMessage("prinAmt",
+//                            getMessage("TRD_E_00121"));
+//                        errorList.add(validMessage);
+//                        break;
+//                    }
+//                }
+//            }
 //            if(k==0){//标准券的时候判断
 //                ValidMessage validMessage = new ValidMessage("prinAmt",
 //                    getMessage("TRD_E_00121"));
 //                errorList.add(validMessage);
 //                break;
 //            }
-        }
+//        }
 
         // 4)5) 本金金额高于副总裁/总裁助理相应资产的授权额度，则交易无法提交。
 //        Map<String, Object> params = new HashMap<>();
