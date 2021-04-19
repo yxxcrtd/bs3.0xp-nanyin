@@ -1,32 +1,61 @@
 $(function () {
 
-	var queryDate;
-	var status;
-	var execTaskId;
-	var prodList;
+	// var queryDate;
+	// var status;
+	// var execTaskId;
+	// var prodId;
 
 	//轮询间隔事件
 	var time = 5000;
 	//轮询启动接口ID
 	var interId;
+	//前置流水号
+	var preseqno;
 
 	/**
 	 * 获取查询参数
 	 */
 	var getSearchParams = function() {
-		return {exDate : $.trim(queryDate),
-			status : status,
-			execTaskId : $.trim(execTaskId),
-			prodList : $.trim(prodList)
+		var pageParam = {
+			queryDate : $('#queryDate').val(),
+			prodId : $('#prodId').val(),
+			datas :null,
+			preseqno:preseqno
 		}
+		var treeObj=$.fn.zTree.getZTreeObj("typeDatatree_tree"),
+			nodes=treeObj.getCheckedNodes(true),
+			datas = "";
+		for(var i=0;i<nodes.length;i++){
+			if(nodes[i].check_Child_State==-1){
+				datas+=nodes[i].id + ",";
+			}
+		}
+		pageParam.datas = datas;
+		if ($("#prodId").val()) {
+			pageParam.prodId = $("#prodId").val().join(",");
+		} else {
+			pageParam.prodId = null;
+		}
+		return pageParam;
 	};
 
 	var getTreeParams = function(){
 		return {
-			TmpCName: $('#TmpCName').val()
+			name: $('#name').val()
 		}
 	}
 
+	var getUUID = function() {
+		/*生成32位随机流水号*/
+		/*默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1*/
+		var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+		var maxPos = chars.length;
+		var pwd = '';
+		for (i = 0; i < 32; i++) {
+			pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+		}
+		return pwd;
+	};
 
 
 
@@ -103,10 +132,10 @@ $(function () {
 			height:docH-160,
 			dblclick:function(table, data) {
 				//跳转详情界面
-				if(data.status=='02'||data.status=='09'){
-					Joyin.dialog(JoyinUtil.getLabel("查看导入数据："+data.taskCname),
+				if(data.status!='1'){
+					Joyin.dialog(JoyinUtil.getLabel("查看导入数据："+data.taskName),
 						JoyinUtil.getRealPath("/invest/interf/TrdInterfDataImport002/init"),
-						"95%", "95%", {pageModel:PAGE_MODEL_REFERENCE,seqno:data.seqno},
+						"95%", "95%", {pageModel:PAGE_MODEL_REFERENCE,id:data.id},
 						null);
 				}
 
@@ -114,30 +143,28 @@ $(function () {
 			checkbox: false,
 			cellMinWidth : 100,
 			rowno:true,
-			cols:[ {field:'seqno', title: 'seqno', visible:false},
-				{field:'busiDate', title: '业务日期', width:120, sort: true},
-				{field:'taskCname', title: '任务名称',width:160, sort: true},
+			cols:[ {field:'id', title: 'id', visible:false},
+				{field:'busidate', title: '业务日期', width:120, sort: true},
+				{field:'rtname', title: '任务名称',width:160, sort: true},
 				{field:'status', title: '执行状态',width:105,
 					render: function (data, type, row, meta) {
-						if(data=='02'){
+						if(data=='2'){
 							return '<span class="layui-badge-rim" style="width:55px;height:20px;background-color:#17c347;color:#fff">'+'成功'+'</span>';
-						}else if(data=='03'){
+						}else if(data=='3'){
 							return '<span class="layui-badge-rim" style="width:55px;height:20px;background-color:#ff2236;color:#fff">'+'失败'+'</span>';
-						}else if(data=='01'){
+						}else if(data=='1'){
 							return '<span class="layui-badge-rim" style="width:55px;height:20px;background-color:#13a7edd1;color:#fff">'+'执行中'+'</span>';
-						}else if(data=='00'){
-							return '<span class="layui-badge-rim" style="width:55px;height:20px;">'+'未执行'+'</span>';
-						}else if(data=='04'){
-							return '<span class="layui-badge-rim" style="width:65px;height:20px;">'+'终止执行'+'</span>';
-						}else if(data=='09'){
-							return '<span class="layui-badge-rim layui-bg-orange" style="width:55px;height:20px;">'+'警告'+'</span>';
 						}
 					}},
-				{field:'detailAction', title: '执行结果',width:300, sort: true},
-				{field:'startDateFmt',sorfiled:"startTime", title: '操作日期',width:120, sort: true},
-				{field:'lastTime', title: '耗时(s)',width:100, sort: true},
-				{field:'startTimeFmt',sorfiled:"startTime", title: '开始时间',width:120, sort: true},
-				{field:'endTimeFmt',sorfiled:"endTime",title: '结束时间',width:120, sort: true}]
+				{field:'runmsg', title: '执行结果',width:300,sort: true},
+				{field:'optdate',sorfiled:"optdate", title: '操作日期',width:120, sort: true},
+				{field:'runtime', title: '耗时(s)',width:100,
+					render: function (data, type, row, meta) {
+						return (data/1000).toFixed(2);
+					}
+				},
+				{field:'sttime',sorfiled:"sttime", title: '开始时间',width:150, sort: true},
+				{field:'edtime',sorfiled:"edtime",title: '结束时间',width:150, sort: true}]
 			,loadonce:true,
 			page:false
 		});
@@ -151,54 +178,45 @@ $(function () {
 
 	//发送启动命令
 	var doInter = function (){
-
-
-		var startDate = $('#queryDate').startDate();
-		var endDate = $('#queryDate').endDate();
-		var prods = $('#prodList').val();
-
-		var treeObj=$.fn.zTree.getZTreeObj("typeDatatree_tree"),
-			nodes=treeObj.getCheckedNodes(true),
-			datas = "";
-		for(var i=0;i<nodes.length;i++){
-			if(nodes[i].check_Child_State==-1){
-				datas+=nodes[i].id + ",";
-			}
-		}
-		if(datas==''){
+		var param = getSearchParams();
+		preseqno = getUUID();
+		if(param.datas==''){
 			layer.alert('请选择导入的接口文件！');
 			return ;
 		}
-		if(startDate==''||endDate==''){
+		if(param.queryDate==''){
 			layer.alert('请选择时间!');
 			return ;
 		}
 		Joyin.ajax('runAs',
 			{
-				datas : datas,
-				startDate:startDate,
-				endDate:endDate,
-				prodList :prods
+				datas : param.datas,
+				queryDate : param.queryDate,
+				// startDate:startDate,
+				// endDate:endDate,
+				prodList : param.prodId,
+				preseqno : preseqno
 			},
 			function(data) {
-				var result = JSON.parse(data);
-				if(result.isCheck==1){
+				var result = data.statuCode;
+				if(result==200) {
 					//再次执行启动前停止上一次轮询
 					stopInterval();
 					//成功调用轮询
-					queryDate = result.createDate;
-					execTaskId = result.execTaskId;
+					// queryDate = result.createDate;
+					// execTaskId = result.execTaskId;
 					//调用后一秒再查询接口,快速展示界面数据
 					startInterval();
 					progress(0);
 					$("#TrdInterfDataImport001_btn_doInterBtn").addClass("layui-btn-disabled");
-					clickFlag=false;
-				}else if(result.isCheck==0){
-					layui.layer.alert("任务执行中，请稍后再试!");
-				}else{
-					layui.layer.alert("发送启动请求失败");
-
+					clickFlag = false;
 				}
+				// }else if(result.isCheck==0){
+				// 	layui.layer.alert("任务执行中，请稍后再试!");
+				// }else{
+				// 	layui.layer.alert("发送启动请求失败");
+				//
+				// }
 			});
 		// $.ajax({
 		// 	url : "checkExecute",
@@ -359,6 +377,6 @@ $(function () {
 
 function serachKey(){
 	$('#typeDatatree').reloadTree({
-		TmpCName: $('#TmpCName').val()
+		name: $('#name').val()
 	});
 }
