@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.joyintech.service.trade.common.service.TrdAvailableCashQueryService;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlSecPositionInfoMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -243,6 +244,9 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
 
     @Autowired(required = false)
     private TrdAvailableCashQueryService trdAvailableCashQueryService;
+
+    @Autowired
+    private BasePtlSecPositionInfoMapper basePtlSecPositionInfoMapper;
     /**
      * 分页查询
      * 
@@ -844,6 +848,15 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
             repTradeKey.setRepMoneyFlowType(entity.getPs().equals(DictCodeList.交易方向_申购确认.getValue()) || entity.getPs().equals(
                 DictCodeList.交易方向_买入.getValue()) ? DictCodeListExt2.资金流动类型_资产买入.getValue() : DictCodeListExt2.资金流动类型_资产卖出或到期.getValue());
             repTradeMapper.deleteByPrimaryKey(repTradeKey);
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                PtlSecPositionFlowDto positionFlowDto = new PtlSecPositionFlowDto();
+                positionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                positionFlowDto.setCdate(entity.getTradeDate());
+                positionFlowDto.setTradeId(entity.getTradeId());
+                positionFlowDto.setPortfolioId(entity.getPortfolioId());
+                positionFlowDto.setFinprodId(entity.getFinprodId());
+                basePtlSecPositionInfoMapper.deletePtlSecPositionFlow(positionFlowDto);
+            }
         }
     }
 
