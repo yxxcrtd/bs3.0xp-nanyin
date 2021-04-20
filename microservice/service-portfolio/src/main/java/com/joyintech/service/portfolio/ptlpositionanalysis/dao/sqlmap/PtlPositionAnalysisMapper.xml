@@ -2672,6 +2672,7 @@
             b.cShares,
             b.sShares,
             b.floatIngplAdd,
+			b.bshareScale,
             b.issueFaceValue
             from (select * from (
                 select 
