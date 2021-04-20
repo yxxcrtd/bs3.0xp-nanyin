@@ -40,6 +40,8 @@
         if ($('#finprodId').val() == null || $('#finprodId').val() == ''){
             $('#tradeMarket').val('').trigger('change');
             $('#finprodAbbr').val('').trigger('change');
+            $('#appearMarketId').val('').trigger('change');
+            $('#appearMarketId').attr("disabled",true);
         }else{
             var data = $('#finprodId').select2('data')[0].object;
             if (data != undefined && data.tradeMarket){
@@ -47,7 +49,8 @@
             }
             if (data != undefined && data.finprodAbbr){
                 $('#finprodAbbr').val(data.finprodAbbr).trigger('change');
-            }    
+            }
+            $('#appearMarketId').attr("disabled",false);
         }
     });
 
@@ -74,7 +77,8 @@
         if (pageModel != null && pageModel != ''){
             $('#pageModel').val(pageModel).trigger('change');    
         }
-        
+        //
+        $('#appearMarketId').attr("disabled",true);
         // 绑定按钮事件
         $('#TrdBondMarketTrade002_btn_save').click(function() {
             saveOrSubmit('save');
