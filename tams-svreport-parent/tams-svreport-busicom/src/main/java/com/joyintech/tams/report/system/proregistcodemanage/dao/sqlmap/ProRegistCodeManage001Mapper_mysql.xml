@@ -247,7 +247,7 @@
 		STATUS = #{status}
 		<foreach collection="prdRegistCodeList" item="prdRegistCode" open=" and PRD_REGIST_CODE in (" close=")" separator=",">
 			#{prdRegistCode,jdbcType=VARCHAR}
-		</foreach>)
+		</foreach>) temp
 	</select>
 
 	<select id="selectProdInfo" resultType="map">
