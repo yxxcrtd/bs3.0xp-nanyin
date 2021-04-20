@@ -3,7 +3,52 @@
 <mapper
 	namespace="com.joyintech.service.portfolio.ptlpositionanalysis.dao.PtlPositionAnalysisMapper">
 	<sql id="PTL_DETAIL">
-         with assetHold as (
+         with tempA as (
+            select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
+            from PTL_SEC_VALUTION
+            where 1=1
+            <if test="searchDate != null and searchDate != ''">
+                and CDATE &lt; to_date(#{searchDate},'yyyy-mm-dd')
+            </if>
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+		        AND PORTFOLIO_ID IN
+		        <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+			        #{item}
+		        </foreach>
+	        </if>
+            group by PORTFOLIO_ID
+         ),
+         tempB as(
+            select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
+            from PTL_SEC_VALUTION
+            where 1=1
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+		        AND PORTFOLIO_ID IN
+		        <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+			         #{item}
+		        </foreach>
+	        </if>
+            <if test="searchDate != null and searchDate != ''">
+                and to_char(CDATE,'MM')&gt;=TO_CHAR(to_date(#{searchDate},'yyyy-mm-dd'),'MM')
+            </if>
+            group by PORTFOLIO_ID
+         ),
+         tempC as(
+            select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
+            from PTL_SEC_VALUTION
+            where 1=1
+            <if test="searchDate != null and searchDate != ''">
+                and  CDATE &gt;= to_date(to_char(to_date(#{searchDate},'yyyy-mm-dd'),'yyyy')||'-01-01','yyyy-mm-dd')
+            </if>
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+		        AND PORTFOLIO_ID IN
+		        <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+			        #{item}
+		        </foreach>
+	        </if>
+            group by PORTFOLIO_ID
+         ),
+         assetHold as (
                     select A.cdate,A.portfolioId,A.portfolioName,A.finprodType2,A.type5,A.finprodMarketId,A.finprodAbbr,A.marketValue,
                   <!--BS-1790 拆借，计划类货币型，利率互换也显示成本字段-->
                    <!--CASE WHEN A.finprodType2 IN ('F08', 'F09', 'F16') THEN NULL ELSE A.dscCostAmt END dscCostAmt,-->
@@ -50,15 +95,15 @@
                       inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
                            where FP1.FINPROD_TYPE2 = 'F16'
                            <!-- fp.FINPROD_TYPE2 IN ('F01','F02','F03','F06','F07','F08','F09','F17','F18','F25','F20') -->
+                            <if test="searchDate != null and searchDate != ''">
+                             and psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+                             </if>
                              <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                     AND psv.PORTFOLIO_ID IN
 		                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
 			                     #{item}
 		                         </foreach>
 	                         </if>
-                             <if test="searchDate != null and searchDate != ''">
-                             and to_char(psv.CDATE,'yyyy-mm-dd') = #{searchDate}
-                             </if>
                              <if test="assetTypeList != null and assetTypeList.size()>0">
 		                     AND fpt.TYPE_8 IN
 		                         <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
@@ -87,15 +132,15 @@
                            <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                            inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
                            where 1=1
+                            <if test="searchDate != null and searchDate != ''">
+                                and psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+                            </if>
                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                     AND psv.PORTFOLIO_ID IN
 		                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
 			                     #{item}
 		                         </foreach>
 	                         </if>
-                             <if test="searchDate != null and searchDate != ''">
-                             and to_char(psv.CDATE,'yyyy-mm-dd')= #{searchDate}
-                             </if>
                            group by psv.CDATE,psv.PORTFOLIO_ID
                 ) B on A.portfolioId=B.portfolioId and A.cdate=B.cdate and B.typeMarketValue!=0
                 left join(
@@ -121,21 +166,7 @@
                                    from PTL_SEC_VALUTION psv
                              <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                               inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                              inner join (
-                                           select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
-                                           from PTL_SEC_VALUTION
-                                           where 1=1
-                                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                     AND PORTFOLIO_ID IN
-		                                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                     #{item}
-		                                         </foreach>
-	                                         </if>
-                                             <if test="searchDate != null and searchDate != ''">
-                                             and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
-                                             </if>
-                                          group by PORTFOLIO_ID
-                                          )E on E.portfolioId=psv.PORTFOLIO_ID
+                              inner join tempA E on E.portfolioId=psv.PORTFOLIO_ID
                                   where psv.CDATE=E.maxCdate
                                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                            AND psv.PORTFOLIO_ID IN
@@ -163,21 +194,7 @@
                             from PTL_SEC_VALUTION psv
                             <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                             inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                            inner join (
-                                           select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
-                                           from PTL_SEC_VALUTION
-                                           where 1=1
-                                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                     AND PORTFOLIO_ID IN
-		                                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                     #{item}
-		                                         </foreach>
-	                                         </if>
-                                             <if test="searchDate != null and searchDate != ''">
-                                             and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
-                                             </if>
-                                          group by PORTFOLIO_ID
-                                          )E on E.portfolioId=psv.PORTFOLIO_ID
+                            inner join tempA E on E.portfolioId=psv.PORTFOLIO_ID
                                   where psv.CDATE=E.maxCdate
                                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                            AND psv.PORTFOLIO_ID IN
@@ -217,21 +234,7 @@
                                     from PTL_SEC_VALUTION psv
                              <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                              inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                             inner join (
-                                           select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
-                                           from PTL_SEC_VALUTION
-                                           where 1=1
-                                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                     AND PORTFOLIO_ID IN
-		                                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                     #{item}
-		                                         </foreach>
-	                                         </if>
-                                             <if test="searchDate != null and searchDate != ''">
-                                             and to_char(CDATE,'MM')&gt;=TO_CHAR(to_date(#{searchDate},'yyyy-mm-dd'),'MM')
-                                             </if>
-                                          group by PORTFOLIO_ID
-                                          )E on E.portfolioId=psv.PORTFOLIO_ID
+                             inner join tempB E on E.portfolioId=psv.PORTFOLIO_ID
                                   where psv.CDATE=E.maxCdate
                                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                            AND psv.PORTFOLIO_ID IN
@@ -259,21 +262,7 @@
                                   from PTL_SEC_VALUTION psv
                                   <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                                   inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                                  inner join (
-                                                select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
-                                                  from PTL_SEC_VALUTION
-                                                 where 1=1
-                                                   <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                           AND PORTFOLIO_ID IN
-		                                               <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                           #{item}
-		                                               </foreach>
-	                                               </if>
-                                                   <if test="searchDate != null and searchDate != ''">
-                                                   and to_char(CDATE,'MM')&gt;=to_char(to_date(#{searchDate},'yyyy-mm-dd'),'MM')
-                                                   </if>
-                                              group by PORTFOLIO_ID
-                                               )E on E.portfolioId=psv.PORTFOLIO_ID
+                                  inner join tempB E on E.portfolioId=psv.PORTFOLIO_ID
                                         where psv.CDATE=E.maxCdate
                                           <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                                  AND psv.PORTFOLIO_ID IN
@@ -314,21 +303,7 @@
                                     from PTL_SEC_VALUTION psv
                              <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                              inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                             inner join (
-                                           select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
-                                           from PTL_SEC_VALUTION
-                                           where 1=1
-                                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                     AND PORTFOLIO_ID IN
-		                                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                     #{item}
-		                                         </foreach>
-	                                         </if>
-                                             <if test="searchDate != null and searchDate != ''">
-                                             and to_char(CDATE,'yyyy')&gt;=to_char(to_date(#{searchDate},'yyyy-mm-dd'),'yyyy')
-                                             </if>
-                                          group by PORTFOLIO_ID
-                                          )E on E.portfolioId=psv.PORTFOLIO_ID
+                             inner join tempC E on E.portfolioId=psv.PORTFOLIO_ID
                                   where psv.CDATE=E.maxCdate
                                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                            AND psv.PORTFOLIO_ID IN
@@ -356,21 +331,7 @@
                                   from PTL_SEC_VALUTION psv
                                   <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                                   inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                                  inner join (
-                                                select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
-                                                  from PTL_SEC_VALUTION
-                                                 where 1=1
-                                                   <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                           AND PORTFOLIO_ID IN
-		                                               <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                           #{item}
-		                                               </foreach>
-	                                               </if>
-                                                   <if test="searchDate != null and searchDate != ''">
-                                                   and to_char(CDATE,'yyyy')&gt;=to_char(to_date(#{searchDate},'yyyy-mm-dd'),'yyyy')
-                                                   </if>
-                                              group by PORTFOLIO_ID
-                                               )E on E.portfolioId=psv.PORTFOLIO_ID
+                                  inner join tempC E on E.portfolioId=psv.PORTFOLIO_ID
                                         where psv.CDATE=E.maxCdate
                                           <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                                  AND psv.PORTFOLIO_ID IN
@@ -436,7 +397,7 @@
                         LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
                         left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
                         WHERE
-                        TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+                        psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
                         and pcp.portfolio_Id is not NULL
                         <if test="portfolioIdList != null and portfolioIdList.size()>0">
                             AND pcp.PORTFOLIO_ID IN
@@ -474,21 +435,7 @@
                     LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
                     LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
                     left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
-                    inner join (
-                    select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
-                    from PTL_SEC_VALUTION
-                    where 1=1
-                    <if test="portfolioIdList != null and portfolioIdList.size()>0">
-                        AND PORTFOLIO_ID IN
-                        <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-                            #{item}
-                        </foreach>
-                    </if>
-                    <if test="searchDate != null and searchDate != ''">
-                        and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
-                    </if>
-                    group by PORTFOLIO_ID
-                    )E on E.portfolioId=psv.PORTFOLIO_ID
+                    inner join tempA E on E.portfolioId=psv.PORTFOLIO_ID
                     WHERE
                         psv.CDATE=E.maxCdate
                     and pcp.portfolio_Id is not NULL
@@ -519,7 +466,52 @@
 	</sql>
 	
 	<sql id="PTL_DETAIL_PIERCE">
-         with assetHold as (
+         with tempA as(
+            select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
+            from PTL_SEC_PIERCE_VALUTION
+            where 1=1
+            <if test="searchDate != null and searchDate != ''">
+                and CDATE &lt; to_date(#{searchDate},'yyyy-mm-dd')
+            </if>
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+		        AND PORTFOLIO_ID IN
+		        <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+			        #{item}
+		        </foreach>
+	        </if>
+            group by PORTFOLIO_ID
+         ),
+         tempB as(
+            select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
+            from PTL_SEC_PIERCE_VALUTION
+            where 1=1
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+		        AND PORTFOLIO_ID IN
+		        <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+			         #{item}
+		        </foreach>
+	        </if>
+            <if test="searchDate != null and searchDate != ''">
+                and to_char(CDATE,'MM')&gt;=TO_CHAR(to_date(#{searchDate},'yyyy-mm-dd'),'MM')
+            </if>
+            group by PORTFOLIO_ID
+         ),
+         tempC as(
+            select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
+            from PTL_SEC_PIERCE_VALUTION
+            where 1=1
+            <if test="searchDate != null and searchDate != ''">
+                and  CDATE &gt;= to_date(to_char(to_date(#{searchDate},'yyyy-mm-dd'),'yyyy')||'-01-01','yyyy-mm-dd')
+            </if>
+            <if test="portfolioIdList != null and portfolioIdList.size()>0">
+		        AND PORTFOLIO_ID IN
+		        <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
+			        #{item}
+		        </foreach>
+	        </if>
+            group by PORTFOLIO_ID
+         ),
+         assetHold as (
                     select A.cdate,A.portfolioId,A.portfolioName,A.finprodType2,A.type5,A.finprodMarketId,A.finprodAbbr,A.marketValue,
                     <!--CASE WHEN A.finprodType2 IN ('F08', 'F09', 'F16') THEN NULL ELSE A.dscCostAmt END dscCostAmt, --> <!--BS-1790 拆借，计划类货币型，利率互换也显示成本字段-->
                     A.dscCostAmt,
@@ -601,15 +593,15 @@
                         fpt.FINPROD_ID=psv.FINPROD_ID
                         AND fpt.TYPE_8 IS NOT NULL
                            where  FP1.FINPROD_TYPE2 = 'F16'
+                            <if test="searchDate != null and searchDate != ''">
+                                and psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
+                             </if>
                              <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                     AND psv.PORTFOLIO_ID IN
 		                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
 			                     #{item}
 		                         </foreach>
 	                         </if>
-                             <if test="searchDate != null and searchDate != ''">
-                             and to_char(psv.CDATE,'yyyy-mm-dd') = #{searchDate}
-                             </if>
                              <if test="assetTypeList != null and assetTypeList.size()>0">
 		                     AND fpt.TYPE_8 IN
 		                         <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
@@ -647,15 +639,15 @@
                            <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                            inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
                            where 1=1
+                            <if test="searchDate != null and searchDate != ''">
+                                 and  psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+                             </if>
                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                     AND psv.PORTFOLIO_ID IN
 		                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
 			                     #{item}
 		                         </foreach>
 	                         </if>
-                             <if test="searchDate != null and searchDate != ''">
-                             and to_char(psv.CDATE,'yyyy-mm-dd')= #{searchDate}
-                             </if>
                              <!--<if test="assetTypeList != null and assetTypeList.size()>0">
 		                     AND fpt.TYPE_8 IN
 		                         <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
@@ -705,21 +697,7 @@
                                    from PTL_SEC_PIERCE_VALUTION psv
                              <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                              inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                             inner join (
-                                           select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
-                                           from PTL_SEC_PIERCE_VALUTION
-                                           where 1=1
-                                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                     AND PORTFOLIO_ID IN
-		                                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                     #{item}
-		                                         </foreach>
-	                                         </if>
-                                             <if test="searchDate != null and searchDate != ''">
-                                             and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
-                                             </if>
-                                          group by PORTFOLIO_ID
-                                          )E on E.portfolioId=psv.PORTFOLIO_ID
+                             inner join tempA E on E.portfolioId=psv.PORTFOLIO_ID
                                   where psv.CDATE=E.maxCdate
                                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                            AND psv.PORTFOLIO_ID IN
@@ -755,21 +733,7 @@
         from PTL_SEC_PIERCE_VALUTION psv
                             <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                             inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                            inner join (
-                                           select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
-                                           from PTL_SEC_PIERCE_VALUTION
-                                           where 1=1
-                                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                     AND PORTFOLIO_ID IN
-		                                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                     #{item}
-		                                         </foreach>
-	                                         </if>
-                                             <if test="searchDate != null and searchDate != ''">
-                                             and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
-                                             </if>
-                                          group by PORTFOLIO_ID
-                                          )E on E.portfolioId=psv.PORTFOLIO_ID
+                            inner join tempA E on E.portfolioId=psv.PORTFOLIO_ID
                                   where psv.CDATE=E.maxCdate
                                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                            AND psv.PORTFOLIO_ID IN
@@ -827,21 +791,7 @@
                                     from PTL_SEC_PIERCE_VALUTION psv
                              <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                              inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                             inner join (
-                                           select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
-                                           from PTL_SEC_PIERCE_VALUTION
-                                           where 1=1
-                                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                     AND PORTFOLIO_ID IN
-		                                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                     #{item}
-		                                         </foreach>
-	                                         </if>
-                                             <if test="searchDate != null and searchDate != ''">
-                                             and to_char(CDATE,'MM')&gt;=TO_CHAR(to_date(#{searchDate},'yyyy-mm-dd'),'MM')
-                                             </if>
-                                          group by PORTFOLIO_ID
-                                          )E on E.portfolioId=psv.PORTFOLIO_ID
+                             inner join tempB E on E.portfolioId=psv.PORTFOLIO_ID
                                   where psv.CDATE=E.maxCdate
                                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                            AND psv.PORTFOLIO_ID IN
@@ -877,21 +827,7 @@
         from PTL_SEC_PIERCE_VALUTION psv
                                   <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                                   inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                                  inner join (
-                                                select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
-                                                  from PTL_SEC_PIERCE_VALUTION
-                                                 where 1=1
-                                                   <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                           AND PORTFOLIO_ID IN
-		                                               <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                           #{item}
-		                                               </foreach>
-	                                               </if>
-                                                   <if test="searchDate != null and searchDate != ''">
-                                                   and to_char(CDATE,'MM')&gt;=to_char(to_date(#{searchDate},'yyyy-mm-dd'),'MM')
-                                                   </if>
-                                              group by PORTFOLIO_ID
-                                               )E on E.portfolioId=psv.PORTFOLIO_ID
+                                  inner join tempB E on E.portfolioId=psv.PORTFOLIO_ID
                                         where psv.CDATE=E.maxCdate
                                           <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                                  AND psv.PORTFOLIO_ID IN
@@ -949,21 +885,7 @@
                                     from PTL_SEC_PIERCE_VALUTION psv
                              <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                              inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                             inner join (
-                                           select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
-                                           from PTL_SEC_PIERCE_VALUTION
-                                           where 1=1
-                                             <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                     AND PORTFOLIO_ID IN
-		                                         <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                     #{item}
-		                                         </foreach>
-	                                         </if>
-                                             <if test="searchDate != null and searchDate != ''">
-                                             and to_char(CDATE,'MM')&gt;=to_char(to_date(#{searchDate},'yyyy-mm-dd'),'yyyy')
-                                             </if>
-                                          group by PORTFOLIO_ID
-                                          )E on E.portfolioId=psv.PORTFOLIO_ID
+                             inner join tempC E on E.portfolioId=psv.PORTFOLIO_ID
                                   where psv.CDATE=E.maxCdate
                                     <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                            AND psv.PORTFOLIO_ID IN
@@ -999,21 +921,7 @@
         from PTL_SEC_PIERCE_VALUTION psv
                                   <!-- inner join FIN_PRODUCT fp on psv.FINPROD_ID=fp.FINPROD_ID -->
                                   inner join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID=psv.FINPROD_ID and fpt.TYPE_8 is not null
-                                  inner join (
-                                                select PORTFOLIO_ID portfolioId,min(CDATE) as maxCdate
-                                                  from PTL_SEC_PIERCE_VALUTION
-                                                 where 1=1
-                                                   <if test="portfolioIdList != null and portfolioIdList.size()>0">
-		                                           AND PORTFOLIO_ID IN
-		                                               <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-			                                           #{item}
-		                                               </foreach>
-	                                               </if>
-                                                   <if test="searchDate != null and searchDate != ''">
-                                                   and to_char(CDATE,'yyyy')&gt;=to_char(to_date(#{searchDate},'yyyy-mm-dd'),'yyyy')
-                                                   </if>
-                                              group by PORTFOLIO_ID
-                                               )E on E.portfolioId=psv.PORTFOLIO_ID
+                                  inner join tempC E on E.portfolioId=psv.PORTFOLIO_ID
                                         where psv.CDATE=E.maxCdate
                                           <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		                                  AND psv.PORTFOLIO_ID IN
@@ -1079,7 +987,7 @@
             LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
             left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
             WHERE
-            TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+            psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
             and pcp.portfolio_Id is not NULL
             <if test="portfolioIdList != null and portfolioIdList.size()>0">
                 AND pcp.PORTFOLIO_ID IN
@@ -1117,21 +1025,7 @@
             LEFT JOIN PTL_PORTFOLIO pp ON psv.PORTFOLIO_ID = pp.PORTFOLIO_ID
             LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
             left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
-            inner join (
-            select PORTFOLIO_ID portfolioId,max(CDATE) as maxCdate
-            from PTL_SEC_PIERCE_VALUTION
-            where 1=1
-            <if test="portfolioIdList != null and portfolioIdList.size()>0">
-                AND PORTFOLIO_ID IN
-                <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="searchDate != null and searchDate != ''">
-                and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
-            </if>
-            group by PORTFOLIO_ID
-            )E on E.portfolioId=psv.PORTFOLIO_ID
+            inner join tempA E on E.portfolioId=psv.PORTFOLIO_ID
             WHERE
             psv.CDATE=E.maxCdate
             and pcp.portfolio_Id is not NULL
@@ -1419,6 +1313,9 @@
             left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　and fpa.lay_type is null
             LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
                  where 1=1
+                  <if test="searchDate != null and searchDate != ''">
+                    and psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
+                  </if>
                    <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		              AND psv.PORTFOLIO_ID IN
 		              <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
@@ -1433,9 +1330,6 @@
 					 </foreach>
 				  </if>
 				  <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-                  <if test="searchDate != null and searchDate != ''">
-                  and to_char(psv.CDATE,'yyyy-mm-dd') = #{searchDate}
-                  </if>
                   <if test="assetTypeList != null and assetTypeList.size()>0">
 		              AND fpt.TYPE_8 IN
 		              <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
@@ -1466,6 +1360,9 @@
            left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　and fpa.lay_type is null
            LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
                 where 1=1
+                    <if test="searchDate != null and searchDate != ''">
+                    and psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+                  </if>
                   <if test="portfolioIdList != null and portfolioIdList.size()>0">
 		              AND psv.PORTFOLIO_ID IN
 		              <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
@@ -1480,9 +1377,6 @@
 					 </foreach>
 				  </if>
 				  <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-                  <if test="searchDate != null and searchDate != ''">
-                  and to_char(psv.CDATE,'yyyy-mm-dd')= #{searchDate}
-                  </if>
                   <if test="assetTypeList != null and assetTypeList.size()>0">
 		              AND fpt.TYPE_8 IN
 		              <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
@@ -1573,6 +1467,9 @@
         left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　 and fpa.lay_type is null
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         where 1=1
+        <if test="searchDate != null and searchDate != ''">
+            and psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
+        </if>
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
             AND psv.PORTFOLIO_ID IN
             <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
@@ -1587,9 +1484,6 @@
 			 </foreach>
 	    </if>
 	    <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-        <if test="searchDate != null and searchDate != ''">
-            and to_char(psv.CDATE,'yyyy-mm-dd') = #{searchDate}
-        </if>
         <if test="assetTypeList != null and assetTypeList.size()>0">
             AND fpt.TYPE_8 IN
             <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
@@ -1612,6 +1506,9 @@
         left join FIN_PRODUCT_ADD fpa ON psv.PORTFOLIO_ID = fpa.PORTFOLIO_ID　 and fpa.lay_type is null
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON psv.PORTFOLIO_ID = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         where 1=1
+        <if test="searchDate != null and searchDate != ''">
+            and psv.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
+        </if>
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
             AND psv.PORTFOLIO_ID IN
             <foreach collection="portfolioIdList" item="item" separator="," open="(" close =")">
@@ -1626,9 +1523,6 @@
 			 </foreach>
 	    </if>
 	    <!--  add by wangyang1 【吉林银行】 增加 产品经理end -->
-        <if test="searchDate != null and searchDate != ''">
-            and to_char(psv.CDATE,'yyyy-mm-dd')= #{searchDate}
-        </if>
         <if test="assetTypeList != null and assetTypeList.size()>0">
             AND fpt.TYPE_8 IN
             <foreach collection="assetTypeList" item="item" separator="," open="(" close =")">
@@ -1702,7 +1596,7 @@
         LEFT JOIN PTL_CASH_POSITION pcp ON psv.PORTFOLIO_ID = pcp.PORTFOLIO_ID and psv.cdate = pcp.cdate
         left JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = psv.FINPROD_ID and fpt.TYPE_8 is not null
         WHERE
-        TO_CHAR (psv.CDATE, 'yyyy-mm-dd') = #{searchDate}
+        psv.CDATE  = to_date(#{searchDate},'yyyy-mm-dd')
         and pcp.portfolio_Id is not NULL
         <if test="portfolioIdList != null and portfolioIdList.size()>0">
             AND pcp.PORTFOLIO_ID IN
@@ -1751,7 +1645,7 @@
             </foreach>
         </if>
         <if test="searchDate != null and searchDate != ''">
-            and to_char(CDATE,'yyyy-mm-dd') &lt; #{searchDate}
+            and CDATE &lt; to_date(#{searchDate},'yyyy-mm-dd')
         </if>
         group by PORTFOLIO_ID
         )E on E.portfolioId=psv.PORTFOLIO_ID
@@ -1983,7 +1877,7 @@
         from ASSET_TARGET_DB atd
         LEFT JOIN DATA_AUTH_NOTIFY_INST DATAINST ON atd.portfolio_id = DATAINST.BUSINESS_ID AND DATAINST.DATA_TYPE='PTL01' AND DATAINST.MODEL_TYPE = '02'
         WHERE 1 = 1
-        and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+        and atd.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
         <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
             AND atd.FINPROD_MARKET_ID IN
             <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
@@ -2119,7 +2013,7 @@
         </if>
         <!-- 多级法人改造 add by hxy 20200629 end-->
         WHERE 1 = 1
-        and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+        and atd.CDATE= to_date(#{searchDate},'yyyy-mm-dd') 
         <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
             AND atd.FINPROD_MARKET_ID IN
             <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
@@ -2298,7 +2192,7 @@
                 </foreach>
             </if>
             <if test="searchDate != null and searchDate != ''">
-                and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+                and atd.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
             </if>
             <if test="profitTypeList != null and profitTypeList.size()>0">
                 AND atd.PROFIT_TYPE IN
@@ -2375,7 +2269,7 @@
                 </foreach>
             </if>
             <if test="searchDate != null and searchDate != ''">
-                and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+                and atd.CDATE= to_date(#{searchDate},'yyyy-mm-dd') 
             </if>
             <if test="profitTypeList != null and profitTypeList.size()>0">
                 AND atd.PROFIT_TYPE IN
@@ -2492,7 +2386,7 @@
                 </foreach>
             </if>
             <if test="searchDate != null and searchDate != ''">
-                and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+                and atd.CDATE = to_date(#{searchDate},'yyyy-mm-dd') 
             </if>
             <if test="profitTypeList != null and profitTypeList.size()>0">
                 AND atd.PROFIT_TYPE IN
@@ -2658,7 +2552,7 @@
                 </foreach>
             </if>
             <if test="searchDate != null and searchDate != ''">
-                and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+                and atd.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
             </if>
             <if test="profitTypeList != null and profitTypeList.size()>0">
                 AND atd.PROFIT_TYPE IN
@@ -2731,7 +2625,7 @@
                 </foreach>
             </if>
             <if test="searchDate != null and searchDate != ''">
-                and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+                and atd.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
             </if>
             <if test="profitTypeList != null and profitTypeList.size()>0">
                 AND atd.PROFIT_TYPE IN
@@ -2867,7 +2761,7 @@
                 </foreach>
             </if>
             <if test="searchDate != null and searchDate != ''">
-                and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+                and atd.CDATE = to_date(#{searchDate},'yyyy-mm-dd')
             </if>
             <if test="profitTypeList != null and profitTypeList.size()>0">
                 AND atd.PROFIT_TYPE IN
@@ -3009,7 +2903,7 @@
                 </foreach>
             </if>
             <if test="searchDate != null and searchDate != ''">
-                and to_char(atd.CDATE,'yyyy-mm-dd') = #{searchDate}
+                and atd.CDATE= to_date(#{searchDate},'yyyy-mm-dd') 
             </if>
             <if test="profitTypeList != null and profitTypeList.size()>0">
                 AND atd.PROFIT_TYPE IN
