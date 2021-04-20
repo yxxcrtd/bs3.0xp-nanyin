@@ -349,7 +349,10 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                     ret.setBranch(0l);
                     ret.setCdate(platformDateImpl.getSysDate());
                     ret.setCcy(tsb.getCcy());
-                    ret.setAmount(ArithmeticUtil.divide(tsb.getPledgePrinAmt(), new BigDecimal("100"), 4));
+                    // add by jiangpeng on 20210420 start ZGBSS-1229 债券的可用指令持仓需要减去入库的标准券 故标准券的指令持仓需入库 资产id为债券 标准券的虚拟指令持仓不入库
+                    ret.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    // add by jiangpeng on 20210420 end
+                    ret.setAmount(ArithmeticUtil.divide(tsb.getPledgePrinAmt().negate(), new BigDecimal("100"), 4));
                     etrCashList.add(ret);
                     // 待分配投资目的的质押券面总额
                     BigDecimal pledgePrin = tsb.getPledgePrinAmt();
@@ -433,6 +436,13 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                     }
                 }
             }
+            // add by jiangpeng on 20210420 start ZGBSS-1229 债券的可用指令持仓需要减去入库的标准券 故标准券的指令持仓需入库 资产id为债券 标准券的虚拟指令持仓不入库
+            if (!StringUtil.isEmptyList(etrCashList) && StringUtil.equals(dto.getIsComplete(), DictCodeListExt1.是否_否.getValue())) {
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                etrPositionHoldDto.setPtlSecPositionFlows(etrCashList);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            }
+            // add by jiangpeng on 20210420 end
         }
         return saveCount;
     }
@@ -513,8 +523,11 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                     ret.setFinprodId(tsb.getFinProdId());
                     ret.setPortfolioId(entry.getValue().get(0).getPortfolioId());
                     ret.setBranch(0l);
+                    // add by jiangpeng on 20210420 start ZGBSS-1229 债券的可用指令持仓需要减去入库的标准券 故标准券的指令持仓需入库 资产id为债券 标准券的虚拟指令持仓不入库
+                    ret.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                     ret.setCdate(platformDateImpl.getSysDate());
-                    ret.setAmount(ArithmeticUtil.divide(tsb.getPledgePrinAmt(), new BigDecimal("100"), 4));
+                    ret.setAmount(ArithmeticUtil.divide(tsb.getOutPrinAmt(), new BigDecimal("100"), 4));
+                    // add by jiangpeng on 20210420 end
                     etrCashList.add(ret);
                     // 待分配投资目的的出库券面总额
                     BigDecimal outPrinAmt = tsb.getOutPrinAmt();
@@ -574,6 +587,13 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
 //            if (baseEtrCashPositionCommService != null && etrCashList.size() > 0) {
 //                baseEtrCashPositionCommService.StandardBondExecute(etrCashList,DictCodeList.出入库方向_出库);
 //            }
+            // modify by jiangpeng on 20210420 start ZGBSS-1229 债券的可用指令持仓需要减去入库的标准券 故标准券的指令持仓需入库 资产id为债券 标准券的虚拟指令持仓不入库
+            if (!StringUtil.isEmptyList(etrCashList) && StringUtil.equals(dto.getIsComplete(), DictCodeListExt1.是否_是.getValue())) {
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                etrPositionHoldDto.setPtlSecPositionFlows(etrCashList);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            }
+            // modify by jiangpeng on 20210420 end
         }
         return saveCount;
     }
