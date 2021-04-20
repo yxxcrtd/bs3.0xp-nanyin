@@ -133,6 +133,8 @@ public class TrdInterfDataImport001Service extends CommonExportService<TrdInterf
 
 	private String getUrl(String infType) {
 		String url = CacheUtil.getSysParam(INTERF_PLACE_URL);
+
+//		String url="http://192.168.10.200:1666/bridge/datarouter/http/json";
 		if(StringUtil.equals(infType,"01")) {
 			//查询文件接口
 			url = url+"/listRouterByGroupAndTrigger";
