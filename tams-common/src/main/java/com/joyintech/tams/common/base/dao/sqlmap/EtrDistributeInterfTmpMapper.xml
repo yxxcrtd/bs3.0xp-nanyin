@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.EtrDistributeInterfTmpMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp" >
+        <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <id column="TRADER" property="trader" jdbcType="VARCHAR" />
+        <result column="TRADING_HEADER" property="tradingHeader" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ENTRUST_ID ENTRUST_ID, TRADER TRADER, TRADING_HEADER TRADING_HEADER, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrDistributeInterfTmpMapper.Base_Column_List" />
+        from ETR_DISTRIBUTE_INTERF_TMP
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrDistributeInterfTmpMapper.Base_Column_List" />
+        from ETR_DISTRIBUTE_INTERF_TMP
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmpKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrDistributeInterfTmpMapper.Base_Column_List" />
+        from ETR_DISTRIBUTE_INTERF_TMP
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and TRADER = #{trader,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmpKey" >
+        delete from ETR_DISTRIBUTE_INTERF_TMP
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and TRADER = #{trader,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp" >
+        insert into ETR_DISTRIBUTE_INTERF_TMP (ENTRUST_ID, TRADER, TRADING_HEADER, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{entrustId,jdbcType=VARCHAR}, #{trader,jdbcType=VARCHAR}, #{tradingHeader,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp" >
+        insert into ETR_DISTRIBUTE_INTERF_TMP
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="trader != null" >
+                TRADER,
+            </if>
+            <if test="tradingHeader != null" >
+                TRADING_HEADER,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="trader != null" >
+                #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="tradingHeader != null" >
+                #{tradingHeader,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp" >
+        insert into ETR_DISTRIBUTE_INTERF_TMP(ENTRUST_ID, TRADER, TRADING_HEADER, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ENTRUST_ID, TRADER, TRADING_HEADER, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from ETR_DISTRIBUTE_INTERF_TMP
+             where 1 = 1 and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR} and TRADER = #{trader,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp" >
+        update ETR_DISTRIBUTE_INTERF_TMP
+        <set >
+            <if test="tradingHeader != null" >
+                TRADING_HEADER = #{tradingHeader,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and TRADER = #{trader,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp" >
+        update ETR_DISTRIBUTE_INTERF_TMP
+        set TRADING_HEADER = #{tradingHeader,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and TRADER = #{trader,jdbcType=VARCHAR}
+    </update>
+</mapper>

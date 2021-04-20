@@ -35,6 +35,28 @@ spring:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+  rabbitmq:
+    # 105测试环境使用mq配置如下
+    #addresses: 192.168.70.59:5672
+    #username: rbmq
+    #password: rbmq
+    # 开发环境使用mq配置如下
+    addresses: 192.168.90.118:5672
+    username: joyin
+    password: joyin123
+    publisher-confirms: true
+    publisher-returns: true
+    listener:
+      simple:
+        max-concurrency: 20
+        concurrency: 1
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+    template:
+      retry:
+        enabled: false
+      mandatory: true
   activemq:
     active: false
     systemId: tams
@@ -235,6 +257,7 @@ application:
       tamsServer: http://127.0.0.1:${server.port}/tams
       investInterfService: http://127.0.0.1:${server.port}/tams
       adapterService: http://127.0.0.1:${server.port}/tams
+      bankuplinkService: http://127.0.0.1:${server.port}/tams
 
 # 使用服务注册中心的方式
 #  loadbalance: true

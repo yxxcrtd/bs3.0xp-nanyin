@@ -51,4 +51,6 @@ public interface BaseGetBussinessIdMapper {
      */
     String getNextValBySequenceName(@Param("sequenceName")String sequenceName);
 
+    List<MstBusinessIdRule> selectRuleByMapInfo(BussinessCodeParameter parameter);
+
 }

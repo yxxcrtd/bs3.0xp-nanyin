@@ -20,6 +20,12 @@ package com.joyintech.tams.invest.common.constantrds;
  */
 public enum RedisKeyEnum {
     /**
+     * MQ指令信息推送-Redis主键
+     */
+	MQ指令信息推送(
+        "RSK{MQ}COMMAND"
+    ),
+    /**
      * 风险事件配置-Redis主键
      */
     风险事件配置(
@@ -91,6 +97,14 @@ public enum RedisKeyEnum {
     资产实时规模信息(
         "RSK{INFO}ASSETAMOUNT"
     ),
+	// add by zhangrui1 指标趋势信息 start
+    /**
+     * 指标趋势信息-Redis主键
+     */
+    指标趋势信息(
+        "RSK{INDICATOR}TREND"
+    ),
+    // add by zhangrui1 指标趋势信息 end
     /**
      * 资产久期附属信息-Redis主键
      */

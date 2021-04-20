@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCfetsPartyRelaTmpMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCfetsPartyRelaTmp" >
+        <id column="RELA_ID" property="relaId" jdbcType="VARCHAR" />
+        <result column="MPARTY_CUSTOMER_ID" property="mpartyCustomerId" jdbcType="VARCHAR" />
+        <result column="SPARTY_CUSTOMER_ID" property="spartyCustomerId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        RELA_ID RELA_ID, MPARTY_CUSTOMER_ID MPARTY_CUSTOMER_ID, SPARTY_CUSTOMER_ID SPARTY_CUSTOMER_ID, 
+        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCfetsPartyRelaTmpMapper.Base_Column_List" />
+        from INTERF_CFETS_PARTY_RELA_TMP
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCfetsPartyRelaTmpMapper.Base_Column_List" />
+        from INTERF_CFETS_PARTY_RELA_TMP
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCfetsPartyRelaTmpMapper.Base_Column_List" />
+        from INTERF_CFETS_PARTY_RELA_TMP
+        where RELA_ID = #{relaId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_CFETS_PARTY_RELA_TMP
+        where RELA_ID = #{relaId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsPartyRelaTmp" >
+        insert into INTERF_CFETS_PARTY_RELA_TMP (RELA_ID, MPARTY_CUSTOMER_ID, SPARTY_CUSTOMER_ID, 
+            CREATE_USER, CREATE_TIME, CREATE_DEPT, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{relaId,jdbcType=VARCHAR}, #{mpartyCustomerId,jdbcType=VARCHAR}, #{spartyCustomerId,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsPartyRelaTmp" >
+        insert into INTERF_CFETS_PARTY_RELA_TMP
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="relaId != null" >
+                RELA_ID,
+            </if>
+            <if test="mpartyCustomerId != null" >
+                MPARTY_CUSTOMER_ID,
+            </if>
+            <if test="spartyCustomerId != null" >
+                SPARTY_CUSTOMER_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="relaId != null" >
+                #{relaId,jdbcType=VARCHAR},
+            </if>
+            <if test="mpartyCustomerId != null" >
+                #{mpartyCustomerId,jdbcType=VARCHAR},
+            </if>
+            <if test="spartyCustomerId != null" >
+                #{spartyCustomerId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsPartyRelaTmp" >
+        insert into INTERF_CFETS_PARTY_RELA_TMP(RELA_ID, MPARTY_CUSTOMER_ID, SPARTY_CUSTOMER_ID, 
+        CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, UPDATE_TIME)
+        select RELA_ID, MPARTY_CUSTOMER_ID, SPARTY_CUSTOMER_ID, 
+            CREATE_USER, CREATE_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from INTERF_CFETS_PARTY_RELA_TMP
+             where 1 = 1 and RELA_ID = #{relaId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsPartyRelaTmp" >
+        update INTERF_CFETS_PARTY_RELA_TMP
+        <set >
+            <if test="mpartyCustomerId != null" >
+                MPARTY_CUSTOMER_ID = #{mpartyCustomerId,jdbcType=VARCHAR},
+            </if>
+            <if test="spartyCustomerId != null" >
+                SPARTY_CUSTOMER_ID = #{spartyCustomerId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where RELA_ID = #{relaId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsPartyRelaTmp" >
+        update INTERF_CFETS_PARTY_RELA_TMP
+        set MPARTY_CUSTOMER_ID = #{mpartyCustomerId,jdbcType=VARCHAR},
+            SPARTY_CUSTOMER_ID = #{spartyCustomerId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where RELA_ID = #{relaId,jdbcType=VARCHAR}
+    </update>
+</mapper>

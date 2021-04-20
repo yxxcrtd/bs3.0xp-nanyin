@@ -2108,6 +2108,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      */
     清算速度_T加1(BussinessDictCode.清算速度,"02","T+1"),
     /**
+     * T+2
+     */
+    清算速度_T加2(BussinessDictCode.清算速度,"03","T+2"),
+    /**
      * 尾数处理方式_四舍五入
      */
     尾数处理方式_四舍五入(BussinessDictCode.尾数处理方式,"01","四舍五入"),
@@ -5135,6 +5139,281 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 央行票据
      */
     央行票据(BussinessDictCode.WIND一级分类_含债券一级分类等, "B03", "央行票据"),
+	/**
+     * 结算方式
+     */
+    结算方式_见券付款(BussinessDictCode.结算方式, "01", "见券付款"),
+    结算方式_见款付券(BussinessDictCode.结算方式, "02", "见款付券"),
+    结算方式_券款对付(BussinessDictCode.结算方式, "03", "券款对付"),
+    /**
+     * 共同业务类型_CFETS账户关联
+     */
+    共同业务类型_CFETS账户关联(BussinessDictCode.共同业务类型, "MST22", "CFETS账户关联"),
+
+    /**
+     * 报价方式_对话报价
+     */
+    报价方式_对话报价(BussinessDictCode.报价方式, "01", "对话报价"),
+    /**
+     * 报价方式_请求报价
+     */
+    报价方式_请求报价(BussinessDictCode.报价方式, "02", "请求报价"),
+    /**
+     * 清算类型_净额清算
+     */
+    清算类型_净额清算(BussinessDictCode.清算类型, "02", "净额清算"),
+    /**
+     * 清算类型_全额清算
+     */
+    清算类型_全额清算(BussinessDictCode.清算类型, "01", "全额清算"),
+    /**
+     * 银行间上行本方角色_询价方
+     */
+    银行间上行本方角色_询价方(BussinessDictCode.银行间上行本方角色, "01", "询价方"),
+    /**
+     * 银行间上行本方角色_回复方
+     */
+    银行间上行本方角色_回复方(BussinessDictCode.银行间上行本方角色, "02", "回复方"),
+    /**
+     * 银行间上行本方角色_非做市方
+     */
+    银行间上行本方角色_非做市方(BussinessDictCode.银行间上行本方角色, "03", "非做市方"),
+    /**
+     * 银行间上行本方角色_做市方
+     */
+    银行间上行本方角色_做市方(BussinessDictCode.银行间上行本方角色, "04", "做市方"),
+    /**
+     * 银行间上行回复查询方式_指定交易员可见
+     */
+    银行间上行回复查询方式_指定交易员可见(BussinessDictCode.银行间上行回复查询方式, "02", "指定交易员可见"),
+    /**
+     * 银行间上行回复查询方式_全部交易员可见
+     */
+    银行间上行回复查询方式_全部交易员可见(BussinessDictCode.银行间上行回复查询方式, "01", "全部交易员可见"),
+    /**
+     * 银行间上行发送状态_待发送
+     */
+    银行间上行发送状态_待发送(BussinessDictCode.银行间上行发送状态, "00", "待发送"),
+    /**
+     * 银行间上行发送状态_已发送
+     */
+    银行间上行发送状态_已发送(BussinessDictCode.银行间上行发送状态, "01", "已发送"),
+    /**
+     * 银行间上行发送状态_成功
+     */
+    银行间上行发送状态_成功(BussinessDictCode.银行间上行发送状态, "02", "成功"),
+    /**
+     * 银行间上行发送状态_失败
+     */
+    银行间上行发送状态_失败(BussinessDictCode.银行间上行发送状态, "03", "失败"),
+    /**
+     * 银行间上行报价状态_新增中
+     */
+    银行间上行报价状态_新增中(BussinessDictCode.银行间上行报价状态, "01", "新增中"),
+    /**
+     * 银行间上行报价状态_已新增
+     */
+    银行间上行报价状态_已新增(BussinessDictCode.银行间上行报价状态, "02", "已新增"),
+    /**
+     * 银行间上行报价状态_修改中
+     */
+    银行间上行报价状态_修改中(BussinessDictCode.银行间上行报价状态, "03", "修改中"),
+    /**
+     * 银行间上行报价状态_已修改
+     */
+    银行间上行报价状态_已修改(BussinessDictCode.银行间上行报价状态, "04", "已修改"),
+    /**
+     * 银行间上行报价状态_撤回中
+     */
+    银行间上行报价状态_撤回中(BussinessDictCode.银行间上行报价状态, "05", "撤回中"),
+    /**
+     * 银行间上行报价状态_已撤回
+     */
+    银行间上行报价状态_已撤回(BussinessDictCode.银行间上行报价状态, "06", "已撤回"),
+    /**
+     * 银行间上行报价状态_已成交
+     */
+    银行间上行报价状态_已成交(BussinessDictCode.银行间上行报价状态, "07", "已成交"),
+    /**
+     * 银行间上行报价状态_已终止
+     */
+    银行间上行报价状态_已终止(BussinessDictCode.银行间上行报价状态, "08", "已终止"),
+    /**
+     * 银行间上行报价状态_待回复
+     */
+    银行间上行报价状态_待回复(BussinessDictCode.银行间上行报价状态, "09", "待回复"),
+    /**
+     * 银行间上行报价状态_成交中
+     */
+    银行间上行报价状态_成交中(BussinessDictCode.银行间上行报价状态, "10", "成交中"),
+    /**
+     * 银行间上行报价状态_终止中
+     */
+    银行间上行报价状态_终止中(BussinessDictCode.银行间上行报价状态, "11", "终止中"),
+    /**
+     * 银行间上行报价状态_已回复
+     */
+    银行间上行报价状态_已回复(BussinessDictCode.银行间上行报价状态, "12", "已回复"),
+    /**
+     * 银行间上行报价状态_已过期
+     */
+    银行间上行报价状态_已过期(BussinessDictCode.银行间上行报价状态, "13", "已过期"),
+    /**
+     * 银行间上行报价状态_已拒绝
+     */
+    银行间上行报价状态_已拒绝(BussinessDictCode.银行间上行报价状态, "14", "已拒绝"),
+    /**
+     * 银行间上行报价状态_已撤销
+     */
+    银行间上行报价状态_已撤销(BussinessDictCode.银行间上行报价状态, "15", "已撤销"),
+    /**
+     * 银行间上行报价状态_拒绝中
+     */
+    银行间上行报价状态_拒绝中(BussinessDictCode.银行间上行报价状态, "16", "拒绝中"),
+    /**
+     * 银行间上行报价状态_回复中
+     */
+    银行间上行报价状态_回复中(BussinessDictCode.银行间上行报价状态, "17", "回复中"),
+    /**
+     * 银行间上行报价状态_交谈中
+     */
+    银行间上行报价状态_交谈中(BussinessDictCode.银行间上行报价状态, "18", "交谈中"),
+    /**
+     * 银行间上行报价状态_已交谈
+     */
+    银行间上行报价状态_已交谈(BussinessDictCode.银行间上行报价状态, "19", "已交谈"),
+    /**
+     * 计算选择方式_净价
+     */
+    计算选择方式_净价(BussinessDictCode.计算选择方式, "01", "净价"),
+    /**
+     * 计算选择方式_到期收益率
+     */
+    计算选择方式_到期收益率(BussinessDictCode.计算选择方式, "02", "到期收益率"),
+    /**
+     * 计算选择方式_行权收益率
+     */
+    计算选择方式_行权收益率(BussinessDictCode.计算选择方式, "03", "行权收益率"),
+    /**
+     * 计算选择方式_全价总额
+     */
+    计算选择方式_全价总额(BussinessDictCode.计算选择方式, "04", "全价总额"),
+    //zhangliang hefei 银行间上行 20200512 add end
+
+    //2020-05-29 银行间上行 add start
+    /**
+     * 成交状态_未成交
+     */
+    银行间成交状态_未成交(BussinessDictCode.银行间成交状态, "01", "未成交"),
+    /**
+     * 成交状态_已成交
+     */
+    银行间成交状态_已成交(BussinessDictCode.银行间成交状态, "02", "已成交"),
+    /**
+     * 报价系统区分类型_现券对话报价
+     */
+    报价系统区分类型_现券对话报价(BussinessDictCode.报价系统区分类型, "01", "现券对话报价"),
+    /**
+     * 报价系统区分类型_现券请求报价
+     */
+    报价系统区分类型_现券请求报价(BussinessDictCode.报价系统区分类型, "02", "现券请求报价"),
+    /**
+     * 报价系统区分类型_质押式回购对话报价
+     */
+    报价系统区分类型_质押式回购对话报价(BussinessDictCode.报价系统区分类型, "03", "质押式回购对话报价"),
+    /**
+     * 共同业务类型_银行间上行
+     */
+    共同业务类型_银行间上行(BussinessDictCode.共同业务类型, "TRD77", "银行间上行"),
+    //2020-05-29 银行间上行 add end
+    //add by xindi 2020.06.11 start
+    请求类型_RFT(BussinessDictCode.请求类型, "RFT", "RFT"),
+    请求类型_RFQ(BussinessDictCode.请求类型, "RFQ", "RFQ"),
+    请求类型_IOI_RFT(BussinessDictCode.请求类型, "IOI_RFT", "IOI_RFT"),
+    请求类型_IOI_RFQ(BussinessDictCode.请求类型, "IOI_RFQ", "IOI_RFQ"),
+
+    IN_OR_OUT_IN(BussinessDictCode.IN_OR_OUT, "IN", "IN"),
+    N_OR_OUT_OUT(BussinessDictCode.IN_OR_OUT, "ON", "OUT"),
+
+    类型_请求(BussinessDictCode.类型, "1", "请求"),
+    类型_订阅(BussinessDictCode.类型, "2", "订阅"),
+
+    状态_状态(BussinessDictCode.状态, "0", "状态"),
+    状态_成功(BussinessDictCode.状态, "1", "成功"),
+    状态_失败(BussinessDictCode.状态, "2", "失败"),
+    状态_未知(BussinessDictCode.状态, "9", "未知"),
+    //add by xindi 2020.06.11 end
+    //add by chendong in 2020-07-07 start
+    完成状态_未完成(BussinessDictCode.完成状态, "01", "未完成"),
+    完成状态_已完成(BussinessDictCode.完成状态, "02", "已完成"),
+    //add by chendong in 2020-07-07 end
+
+    // add by yeyang 20200714 start 托管户活期利率增加分段计息规则
+    TD_LAT_ALL(BussinessDictCode.TD_LAT, "01", "全额套档"),
+    TD_LAT_LEVEL(BussinessDictCode.TD_LAT, "02", "分层套档"),
+    INT_CALC_TYPE_FIXED(BussinessDictCode.INT_CALC_TYPE, "01", "固定"),
+    INT_CALC_TYPE_FLOAT(BussinessDictCode.INT_CALC_TYPE, "02", "浮动"),
+    // add by yeyang 20200714 end
+    //数据来源_画面录入(BussinessDictCode.数据来源, "01", "画面录入"),
+    //数据来源_文件导入(BussinessDictCode.数据来源, "02", "文件导入"),
+    //add by chendong in 2020-07-20 start
+    /**
+     * 交易日历_银行间
+     */
+    交易日历_银行间(BussinessDictCode.交易日历, "IB", "银行间"),
+    /**
+     * 交易日历_上交所
+     */
+    交易日历_上交所(BussinessDictCode.交易日历, "SH", "上交所"),
+    /**
+     * 交易日历_深交所
+     */
+    交易日历_深交所(BussinessDictCode.交易日历, "SZ", "深交所"),
+    //add by chendong in 2020-07-20 end
+    /**
+     * 是否特殊委托_全部 add by wangguangyu317
+     */
+    是否特殊委托_全部(BussinessDictCode.是否特殊委托,"01","全部"),
+    /**
+     * 是否特殊委托_是 add by wangguangyu317
+     */
+    是否特殊委托_是(BussinessDictCode.是否特殊委托,"02","是"),
+    /**
+     * 是否特殊委托_否 add by wangguangyu317
+     */
+    是否特殊委托_否(BussinessDictCode.是否特殊委托,"03","否"),
+    平安资产一级分类_资产支持证券(BussinessDictCode.平安资产一级分类, "B13", "资产支持证券"),
+    期限品种_利率互换_1Y(BussinessDictCode.期限品种_利率互换, "1Y", "1Y"),
+    期限品种_利率互换_2Y(BussinessDictCode.期限品种_利率互换, "2Y", "2Y"),
+    期限品种_利率互换_6M(BussinessDictCode.期限品种_利率互换, "6M", "6M"),
+    期限品种_利率互换_3M(BussinessDictCode.期限品种_利率互换, "3M", "3M"),
+    期限品种_利率互换_1M(BussinessDictCode.期限品种_利率互换, "1M", "1M"),
+    期限品种_利率互换_9M(BussinessDictCode.期限品种_利率互换, "9M", "9M"),
+    /**
+     * 投资目的_卖空
+     */
+    投资目的_卖空(BussinessDictCode.投资目的, "SELL", "SELL"),
+    /**
+     * 成本法
+     */
+    组合估值方法_成本法(BussinessDictCode.组合估值方法, "01", "成本法"),
+    /**
+     * 市价法
+     */
+    组合估值方法_市价法(BussinessDictCode.组合估值方法, "02", "市价法"),
+    /**
+     * 其他
+     */
+    组合估值方法_其他(BussinessDictCode.组合估值方法, "03", "其他"),
+    
+    /**
+     * 匹配状态_未匹配
+     */
+    匹配状态_部分匹配(BussinessDictCode.匹配状态,"03","部分匹配"),
+	 /**
+     * 持仓类型_卖空
+     */
+    持仓类型_卖空(BussinessDictCode.持仓类型, "07", "卖空"),
   ;
 	//add by gaopeng 20191024 start
 	//add by gaopeng 20191024 end

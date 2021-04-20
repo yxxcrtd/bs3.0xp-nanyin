@@ -17,12 +17,17 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="SPLIT_TYPE" property="splitType" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="OFFSET_ID" property="offsetId" jdbcType="VARCHAR" />
+        <result column="OFFSET_FLAG" property="offsetFlag" jdbcType="VARCHAR" />
+        <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, PORTFOLIO_ID PORTFOLIO_ID, ACCT_ID ACCT_ID, HODING_TYPE HODING_TYPE, 
         CDATE CDATE, CCY CCY, AMOUNT AMOUNT, ORDER_ID ORDER_ID, CHL_FINPROD_ID CHL_FINPROD_ID, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME, SPLIT_TYPE SPLIT_TYPE
+        UPDATE_TIME UPDATE_TIME, SPLIT_TYPE SPLIT_TYPE, REMARK REMARK, OFFSET_ID OFFSET_ID, 
+        OFFSET_FLAG OFFSET_FLAG, ENTRUST_ID ENTRUST_ID
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -49,14 +54,16 @@
             HODING_TYPE, CDATE, CCY, 
             AMOUNT, ORDER_ID, CHL_FINPROD_ID, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME, SPLIT_TYPE
-            )
+            UPDATE_USER, UPDATE_TIME, SPLIT_TYPE, 
+            REMARK, OFFSET_ID, OFFSET_FLAG, 
+            ENTRUST_ID)
         values (#{seqno,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{acctId,jdbcType=VARCHAR}, 
             #{hodingType,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, 
             #{amount,jdbcType=DECIMAL}, #{orderId,jdbcType=VARCHAR}, #{chlFinprodId,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{splitType,jdbcType=VARCHAR}
-            )
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{splitType,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{offsetId,jdbcType=VARCHAR}, #{offsetFlag,jdbcType=VARCHAR}, 
+            #{entrustId,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlCashPositionFlow" >
         insert into PTL_CASH_POSITION_FLOW
@@ -106,6 +113,18 @@
             <if test="splitType != null" >
                 SPLIT_TYPE,
             </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="offsetId != null" >
+                OFFSET_ID,
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG,
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -153,15 +172,27 @@
             <if test="splitType != null" >
                 #{splitType,jdbcType=VARCHAR},
             </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetId != null" >
+                #{offsetId,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetFlag != null" >
+                #{offsetFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PtlCashPositionFlow" >
         insert into PTL_CASH_POSITION_FLOW(SEQNO, PORTFOLIO_ID, ACCT_ID, HODING_TYPE, CDATE, 
         CCY, AMOUNT, ORDER_ID, CHL_FINPROD_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME, SPLIT_TYPE)
+        UPDATE_TIME, SPLIT_TYPE, REMARK, OFFSET_ID, OFFSET_FLAG, ENTRUST_ID)
         select SEQNO, PORTFOLIO_ID, ACCT_ID, HODING_TYPE, CDATE, 
             CCY, AMOUNT, ORDER_ID, CHL_FINPROD_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SPLIT_TYPE
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SPLIT_TYPE, REMARK, OFFSET_ID, OFFSET_FLAG, ENTRUST_ID
              from PTL_CASH_POSITION_FLOW
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -201,6 +232,18 @@
             <if test="splitType != null" >
                 SPLIT_TYPE = #{splitType,jdbcType=VARCHAR},
             </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetId != null" >
+                OFFSET_ID = #{offsetId,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -216,7 +259,11 @@
             CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            SPLIT_TYPE = #{splitType,jdbcType=VARCHAR}
+            SPLIT_TYPE = #{splitType,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            OFFSET_ID = #{offsetId,jdbcType=VARCHAR},
+            OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>

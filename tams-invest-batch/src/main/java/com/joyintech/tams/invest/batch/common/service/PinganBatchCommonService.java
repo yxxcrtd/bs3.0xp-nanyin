@@ -176,9 +176,11 @@ public class PinganBatchCommonService extends BaseService {
      * @throws Exception
      */
     public String buildBussinessCode(BussinessCodeParameter parameter) {
+        BussinessCodeParameter req = new BussinessCodeParameter();
+        req.setMapInfo(parameter.initMapInfo());
         // 生成的业务编号
         return restTemplate.postForObject(
-            ServiceApplication.COMMON_SERVICE_NAME + "/core/selectRule", parameter,
+            ServiceApplication.COMMON_SERVICE_NAME + "/core/selectRule", req,
             String.class);
     }
 

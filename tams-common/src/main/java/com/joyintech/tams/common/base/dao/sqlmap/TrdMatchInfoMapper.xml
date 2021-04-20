@@ -15,12 +15,14 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="F_SYS_ID" property="fSysId" jdbcType="VARCHAR" />
+        <result column="MATCH_NUM_CB" property="matchNumCb" jdbcType="DECIMAL" />
+        <result column="MATCH_NUM_SC" property="matchNumSc" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, CSTP_TRADE_ID CSTP_TRADE_ID, PRE_TRADE_ID PRE_TRADE_ID, ENTRUST_ID ENTRUST_ID, 
         MATCH_NUM MATCH_NUM, MATCH_TYPE MATCH_TYPE, TRADE_DATE TRADE_DATE, CREATE_USER CREATE_USER, 
         CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        F_SYS_ID F_SYS_ID
+        F_SYS_ID F_SYS_ID, MATCH_NUM_CB MATCH_NUM_CB, MATCH_NUM_SC MATCH_NUM_SC
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -47,12 +49,14 @@
             ENTRUST_ID, MATCH_NUM, MATCH_TYPE, 
             TRADE_DATE, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            F_SYS_ID)
+            F_SYS_ID, MATCH_NUM_CB, MATCH_NUM_SC
+            )
         values (#{seqno,jdbcType=VARCHAR}, #{cstpTradeId,jdbcType=VARCHAR}, #{preTradeId,jdbcType=VARCHAR}, 
             #{entrustId,jdbcType=VARCHAR}, #{matchNum,jdbcType=DECIMAL}, #{matchType,jdbcType=VARCHAR}, 
             #{tradeDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{fSysId,jdbcType=VARCHAR})
+            #{fSysId,jdbcType=VARCHAR}, #{matchNumCb,jdbcType=DECIMAL}, #{matchNumSc,jdbcType=DECIMAL}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdMatchInfo" >
         insert into TRD_MATCH_INFO
@@ -96,6 +100,12 @@
             <if test="fSysId != null" >
                 F_SYS_ID,
             </if>
+            <if test="matchNumCb != null" >
+                MATCH_NUM_CB,
+            </if>
+            <if test="matchNumSc != null" >
+                MATCH_NUM_SC,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -137,15 +147,21 @@
             <if test="fSysId != null" >
                 #{fSysId,jdbcType=VARCHAR},
             </if>
+            <if test="matchNumCb != null" >
+                #{matchNumCb,jdbcType=DECIMAL},
+            </if>
+            <if test="matchNumSc != null" >
+                #{matchNumSc,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdMatchInfo" >
         insert into TRD_MATCH_INFO(SEQNO, CSTP_TRADE_ID, PRE_TRADE_ID, ENTRUST_ID, MATCH_NUM, 
         MATCH_TYPE, TRADE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-        F_SYS_ID)
+        F_SYS_ID, MATCH_NUM_CB, MATCH_NUM_SC)
         select SEQNO, CSTP_TRADE_ID, PRE_TRADE_ID, ENTRUST_ID, MATCH_NUM, 
             MATCH_TYPE, TRADE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            F_SYS_ID
+            F_SYS_ID, MATCH_NUM_CB, MATCH_NUM_SC
              from TRD_MATCH_INFO
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -179,6 +195,12 @@
             <if test="fSysId != null" >
                 F_SYS_ID = #{fSysId,jdbcType=VARCHAR},
             </if>
+            <if test="matchNumCb != null" >
+                MATCH_NUM_CB = #{matchNumCb,jdbcType=DECIMAL},
+            </if>
+            <if test="matchNumSc != null" >
+                MATCH_NUM_SC = #{matchNumSc,jdbcType=DECIMAL},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -192,7 +214,9 @@
             TRADE_DATE = #{tradeDate,jdbcType=DATE},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            F_SYS_ID = #{fSysId,jdbcType=VARCHAR}
+            F_SYS_ID = #{fSysId,jdbcType=VARCHAR},
+            MATCH_NUM_CB = #{matchNumCb,jdbcType=DECIMAL},
+            MATCH_NUM_SC = #{matchNumSc,jdbcType=DECIMAL}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>

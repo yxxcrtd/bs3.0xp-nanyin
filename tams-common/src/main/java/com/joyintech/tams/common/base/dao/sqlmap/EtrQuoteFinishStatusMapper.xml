@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.EtrQuoteFinishStatusMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus" >
+        <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <id column="QUOTE_ID" property="quoteId" jdbcType="VARCHAR" />
+        <result column="FINISH_DATE" property="finishDate" jdbcType="DATE" />
+        <result column="FINISH_AMT" property="finishAmt" jdbcType="DECIMAL" />
+        <result column="TRADER" property="trader" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ENTRUST_ID ENTRUST_ID, QUOTE_ID QUOTE_ID, FINISH_DATE FINISH_DATE, FINISH_AMT FINISH_AMT, 
+        TRADER TRADER, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrQuoteFinishStatusMapper.Base_Column_List" />
+        from ETR_QUOTE_FINISH_STATUS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrQuoteFinishStatusMapper.Base_Column_List" />
+        from ETR_QUOTE_FINISH_STATUS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.EtrQuoteFinishStatusKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrQuoteFinishStatusMapper.Base_Column_List" />
+        from ETR_QUOTE_FINISH_STATUS
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.EtrQuoteFinishStatusKey" >
+        delete from ETR_QUOTE_FINISH_STATUS
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus" >
+        insert into ETR_QUOTE_FINISH_STATUS (ENTRUST_ID, QUOTE_ID, FINISH_DATE, 
+            FINISH_AMT, TRADER, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{entrustId,jdbcType=VARCHAR}, #{quoteId,jdbcType=VARCHAR}, #{finishDate,jdbcType=DATE}, 
+            #{finishAmt,jdbcType=DECIMAL}, #{trader,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus" >
+        insert into ETR_QUOTE_FINISH_STATUS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="quoteId != null" >
+                QUOTE_ID,
+            </if>
+            <if test="finishDate != null" >
+                FINISH_DATE,
+            </if>
+            <if test="finishAmt != null" >
+                FINISH_AMT,
+            </if>
+            <if test="trader != null" >
+                TRADER,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteId != null" >
+                #{quoteId,jdbcType=VARCHAR},
+            </if>
+            <if test="finishDate != null" >
+                #{finishDate,jdbcType=DATE},
+            </if>
+            <if test="finishAmt != null" >
+                #{finishAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="trader != null" >
+                #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus" >
+        insert into ETR_QUOTE_FINISH_STATUS(ENTRUST_ID, QUOTE_ID, FINISH_DATE, FINISH_AMT, 
+        TRADER, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ENTRUST_ID, QUOTE_ID, FINISH_DATE, FINISH_AMT, 
+            TRADER, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from ETR_QUOTE_FINISH_STATUS
+             where 1 = 1 and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR} and QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus" >
+        update ETR_QUOTE_FINISH_STATUS
+        <set >
+            <if test="finishDate != null" >
+                FINISH_DATE = #{finishDate,jdbcType=DATE},
+            </if>
+            <if test="finishAmt != null" >
+                FINISH_AMT = #{finishAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="trader != null" >
+                TRADER = #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus" >
+        update ETR_QUOTE_FINISH_STATUS
+        set FINISH_DATE = #{finishDate,jdbcType=DATE},
+            FINISH_AMT = #{finishAmt,jdbcType=DECIMAL},
+            TRADER = #{trader,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
+    </update>
+</mapper>

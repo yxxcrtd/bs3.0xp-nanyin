@@ -333,14 +333,15 @@ I 内部客户 O 外部客户
     private String oritradeid;
 
     /**
+     * 对方交易员电话
+     */
+    private String countertelephone;
+
+    /**
      * 托管账号
      */
     private String ourdepositaccountnumber;
 
-    /**
-     * 对方交易员电话
-     */
-    private String countertelephone;
 
     /**
      * null
@@ -352,16 +353,29 @@ I 内部客户 O 外部客户
      */
     private String settleSpeed;
 
+    /**
+     * 交易手续费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal dealFeeamt;
 
-    private BigDecimal repoamtcstp;
+    /**
+     * 结算服务费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal settFeeamt;
 
-    public BigDecimal getRepoamtcstp() {
-        return repoamtcstp;
-    }
+    /**
+     * 交易本金(中债登)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal cbFpriceAmt;
 
-    public void setRepoamtcstp(BigDecimal repoamtcstp) {
-        this.repoamtcstp = repoamtcstp;
-    }
+    /**
+     * 交易本金(上清所)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal scFpriceAmt;
 
     /**
      * 取得 网下交易编号生成规则：DEPO
@@ -1355,22 +1369,6 @@ I 内部客户 O 外部客户
     }
 
     /**
-     * 取得 托管账号
-     * @return 托管账号
-     */
-    public String getOurdepositaccountnumber() {
-        return ourdepositaccountnumber;
-    }
-
-    /**
-     * 设置 托管账号
-     * @param ourdepositaccountnumber 托管账号
-     */
-    public void setOurdepositaccountnumber(String ourdepositaccountnumber) {
-        this.ourdepositaccountnumber = ourdepositaccountnumber == null ? null : ourdepositaccountnumber.trim();
-    }
-
-    /**
      * 取得 对方交易员电话
      * @return 对方交易员电话
      */
@@ -1384,6 +1382,22 @@ I 内部客户 O 外部客户
      */
     public void setCountertelephone(String countertelephone) {
         this.countertelephone = countertelephone == null ? null : countertelephone.trim();
+    }
+
+    /**
+     * 取得 托管账号
+     * @return 托管账号
+     */
+    public String getOurdepositaccountnumber() {
+        return ourdepositaccountnumber;
+    }
+
+    /**
+     * 设置 托管账号
+     * @param ourdepositaccountnumber 托管账号
+     */
+    public void setOurdepositaccountnumber(String ourdepositaccountnumber) {
+        this.ourdepositaccountnumber = ourdepositaccountnumber == null ? null : ourdepositaccountnumber.trim();
     }
 
     /**
@@ -1416,5 +1430,69 @@ I 内部客户 O 外部客户
      */
     public void setSettleSpeed(String settleSpeed) {
         this.settleSpeed = settleSpeed == null ? null : settleSpeed.trim();
+    }
+
+    /**
+     * 取得 交易手续费
+     * @return 交易手续费
+     */
+    public BigDecimal getDealFeeamt() {
+        return dealFeeamt;
+    }
+
+    /**
+     * 设置 交易手续费
+     * @param dealFeeamt 交易手续费
+     */
+    public void setDealFeeamt(BigDecimal dealFeeamt) {
+        this.dealFeeamt = dealFeeamt;
+    }
+
+    /**
+     * 取得 结算服务费
+     * @return 结算服务费
+     */
+    public BigDecimal getSettFeeamt() {
+        return settFeeamt;
+    }
+
+    /**
+     * 设置 结算服务费
+     * @param settFeeamt 结算服务费
+     */
+    public void setSettFeeamt(BigDecimal settFeeamt) {
+        this.settFeeamt = settFeeamt;
+    }
+
+    /**
+     * 取得 交易本金(中债登)
+     * @return 交易本金(中债登)
+     */
+    public BigDecimal getCbFpriceAmt() {
+        return cbFpriceAmt;
+    }
+
+    /**
+     * 设置 交易本金(中债登)
+     * @param cbFpriceAmt 交易本金(中债登)
+     */
+    public void setCbFpriceAmt(BigDecimal cbFpriceAmt) {
+        this.cbFpriceAmt = cbFpriceAmt;
+    }
+
+    /**
+     * 取得 交易本金(上清所)
+     * @return 交易本金(上清所)
+     */
+    public BigDecimal getScFpriceAmt() {
+        return scFpriceAmt;
+    }
+
+    /**
+     * 设置 交易本金(上清所)
+     * @param scFpriceAmt 交易本金(上清所)
+     */
+    public void setScFpriceAmt(BigDecimal scFpriceAmt) {
+        this.scFpriceAmt = scFpriceAmt;
     }
 }

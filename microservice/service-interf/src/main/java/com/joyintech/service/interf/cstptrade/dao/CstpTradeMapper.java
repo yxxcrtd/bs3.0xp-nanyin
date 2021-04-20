@@ -27,7 +27,7 @@ import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
  * @see CstpTradeMapper
  * @since 1.0
  */
-@Repository
+@Repository("cstpTradeMapperInterf")
 public interface CstpTradeMapper {
 
     /**

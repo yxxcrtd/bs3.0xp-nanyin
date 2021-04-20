@@ -706,9 +706,11 @@ public class AllTradeCommonUtil {
                         String 原交易子组合代码 = btpdd.getActPortfolioId();
                         deal.setCounterId(原交易子组合代码);
                         trdProductDealAdd.setPortfolioId(交易对手的母组合);
-
+                        BussinessCodeParameter BussinessCodeParameter = getBussinessCodeParameter(busiType, trdProductDeal);
+                        BussinessCodeParameter req = new BussinessCodeParameter();
+                        req.setMapInfo(BussinessCodeParameter.initMapInfo());
                         deal.setTradeId(restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectRule",
-                            getBussinessCodeParameter(busiType, trdProductDeal), String.class));
+                                req, String.class));
                         trdProductDealAdd.setTradeId(deal.getTradeId());
                         
                       //交易费用不为空 入库交易费用信息
@@ -997,9 +999,11 @@ public class AllTradeCommonUtil {
                         String 原交易子组合代码 = btpdd.getActPortfolioId();
                         deal.setCounterId(原交易子组合代码);
                         trdProductDealAdd.setPortfolioId(交易对手的母组合);
-
+                        BussinessCodeParameter BussinessCodeParameter = getBussinessCodeParameter(busiType, trdProductDeal);
+                        BussinessCodeParameter req = new BussinessCodeParameter();
+                        req.setMapInfo(BussinessCodeParameter.initMapInfo());
                         deal.setTradeId(restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectRule",
-                                getBussinessCodeParameter(busiType, trdProductDeal), String.class));
+                                req, String.class));
                         trdProductDealAdd.setTradeId(deal.getTradeId());
                         // 反向交易子组合
                         List<PtlTrade> ptlTradeListTemp = new ArrayList<>();

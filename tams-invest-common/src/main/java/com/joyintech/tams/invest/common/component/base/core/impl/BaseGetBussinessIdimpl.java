@@ -46,8 +46,14 @@ public class BaseGetBussinessIdimpl implements BaseGetBussinessId{
     public String buildBussinessCode(BussinessCodeParameter parameter) {
         // 生成的业务编号
         String bussinessCode = null;
-        // 多条规则时直接取第一条 modify by renping 20190924 start 
-        List<MstBusinessIdRule> ruleList = baseGetBussinessIdMapper.selectRuleByParameter(parameter);
+        // 多条规则时直接取第一条 modify by renping 20190924 start
+        List<MstBusinessIdRule> ruleList = null;
+        if(parameter.getMapInfo()!=null && parameter.getMapInfo().size()>0){
+            ruleList=baseGetBussinessIdMapper.selectRuleByMapInfo(parameter);
+        }
+        else{
+            ruleList=baseGetBussinessIdMapper.selectRuleByParameter(parameter);
+        }
         MstBusinessIdRule rule = null;
         if (!StringUtil.isEmptyList(ruleList)) {
             rule = ruleList.get(0);

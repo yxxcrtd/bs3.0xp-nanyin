@@ -61,6 +61,26 @@ public class PtlCashPositionFlow extends BaseEntity {
     private String splitType;
 
     /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 冲销业务编号
+     */
+    private String offsetId;
+
+    /**
+     * 冲正标识
+     */
+    private String offsetFlag;
+
+    /**
+     * 委托编号
+     */
+    private String entrustId;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -219,5 +239,69 @@ public class PtlCashPositionFlow extends BaseEntity {
      */
     public void setSplitType(String splitType) {
         this.splitType = splitType == null ? null : splitType.trim();
+    }
+
+    /**
+     * 取得 备注
+     * @return 备注
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * 设置 备注
+     * @param remark 备注
+     */
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    /**
+     * 取得 冲销业务编号
+     * @return 冲销业务编号
+     */
+    public String getOffsetId() {
+        return offsetId;
+    }
+
+    /**
+     * 设置 冲销业务编号
+     * @param offsetId 冲销业务编号
+     */
+    public void setOffsetId(String offsetId) {
+        this.offsetId = offsetId == null ? null : offsetId.trim();
+    }
+
+    /**
+     * 取得 冲正标识
+     * @return 冲正标识
+     */
+    public String getOffsetFlag() {
+        return offsetFlag;
+    }
+
+    /**
+     * 设置 冲正标识
+     * @param offsetFlag 冲正标识
+     */
+    public void setOffsetFlag(String offsetFlag) {
+        this.offsetFlag = offsetFlag == null ? null : offsetFlag.trim();
+    }
+
+    /**
+     * 取得 委托编号
+     * @return 委托编号
+     */
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    /**
+     * 设置 委托编号
+     * @param entrustId 委托编号
+     */
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId == null ? null : entrustId.trim();
     }
 }

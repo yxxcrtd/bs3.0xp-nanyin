@@ -24,6 +24,7 @@
 		<module>tams-invest-riskredis</module>
 		<module>tams-invest-settle</module>
 		<module>tams-invest-trade</module>
+		<module>tams-invest-bankuplink</module>
 	</modules>
 
 	<dependencies>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.CfetsStatusDatadictConvertMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.CfetsStatusDatadictConvert" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="QUOTE_TYPE_IBU" property="quoteTypeIbu" jdbcType="VARCHAR" />
+        <result column="MSG_TYPE" property="msgType" jdbcType="VARCHAR" />
+        <result column="QUOTE_TRANS_TYPE" property="quoteTransType" jdbcType="VARCHAR" />
+        <result column="QUOTE_STATUS" property="quoteStatus" jdbcType="VARCHAR" />
+        <result column="EXEC_TYPE" property="execType" jdbcType="VARCHAR" />
+        <result column="MY_SIDE" property="mySide" jdbcType="VARCHAR" />
+        <result column="EXE_TYPE" property="exeType" jdbcType="VARCHAR" />
+        <result column="TRADE_STATUS" property="tradeStatus" jdbcType="VARCHAR" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, QUOTE_TYPE_IBU QUOTE_TYPE_IBU, MSG_TYPE MSG_TYPE, QUOTE_TRANS_TYPE QUOTE_TRANS_TYPE, 
+        QUOTE_STATUS QUOTE_STATUS, EXEC_TYPE EXEC_TYPE, MY_SIDE MY_SIDE, EXE_TYPE EXE_TYPE, 
+        TRADE_STATUS TRADE_STATUS, SEND_STATUS SEND_STATUS, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CfetsStatusDatadictConvertMapper.Base_Column_List" />
+        from CFETS_STATUS_DATADICT_CONVERT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CfetsStatusDatadictConvertMapper.Base_Column_List" />
+        from CFETS_STATUS_DATADICT_CONVERT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CfetsStatusDatadictConvertMapper.Base_Column_List" />
+        from CFETS_STATUS_DATADICT_CONVERT
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CFETS_STATUS_DATADICT_CONVERT
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.CfetsStatusDatadictConvert" >
+        insert into CFETS_STATUS_DATADICT_CONVERT (SEQNO, QUOTE_TYPE_IBU, MSG_TYPE, 
+            QUOTE_TRANS_TYPE, QUOTE_STATUS, EXEC_TYPE, 
+            MY_SIDE, EXE_TYPE, TRADE_STATUS, 
+            SEND_STATUS, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{quoteTypeIbu,jdbcType=VARCHAR}, #{msgType,jdbcType=VARCHAR}, 
+            #{quoteTransType,jdbcType=VARCHAR}, #{quoteStatus,jdbcType=VARCHAR}, #{execType,jdbcType=VARCHAR}, 
+            #{mySide,jdbcType=VARCHAR}, #{exeType,jdbcType=VARCHAR}, #{tradeStatus,jdbcType=VARCHAR}, 
+            #{sendStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CfetsStatusDatadictConvert" >
+        insert into CFETS_STATUS_DATADICT_CONVERT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="quoteTypeIbu != null" >
+                QUOTE_TYPE_IBU,
+            </if>
+            <if test="msgType != null" >
+                MSG_TYPE,
+            </if>
+            <if test="quoteTransType != null" >
+                QUOTE_TRANS_TYPE,
+            </if>
+            <if test="quoteStatus != null" >
+                QUOTE_STATUS,
+            </if>
+            <if test="execType != null" >
+                EXEC_TYPE,
+            </if>
+            <if test="mySide != null" >
+                MY_SIDE,
+            </if>
+            <if test="exeType != null" >
+                EXE_TYPE,
+            </if>
+            <if test="tradeStatus != null" >
+                TRADE_STATUS,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteTypeIbu != null" >
+                #{quoteTypeIbu,jdbcType=VARCHAR},
+            </if>
+            <if test="msgType != null" >
+                #{msgType,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteTransType != null" >
+                #{quoteTransType,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteStatus != null" >
+                #{quoteStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="execType != null" >
+                #{execType,jdbcType=VARCHAR},
+            </if>
+            <if test="mySide != null" >
+                #{mySide,jdbcType=VARCHAR},
+            </if>
+            <if test="exeType != null" >
+                #{exeType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeStatus != null" >
+                #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CfetsStatusDatadictConvert" >
+        insert into CFETS_STATUS_DATADICT_CONVERT(SEQNO, QUOTE_TYPE_IBU, MSG_TYPE, QUOTE_TRANS_TYPE, 
+        QUOTE_STATUS, EXEC_TYPE, MY_SIDE, EXE_TYPE, TRADE_STATUS, SEND_STATUS, REMARK, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQNO, QUOTE_TYPE_IBU, MSG_TYPE, QUOTE_TRANS_TYPE, 
+            QUOTE_STATUS, EXEC_TYPE, MY_SIDE, EXE_TYPE, TRADE_STATUS, SEND_STATUS, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from CFETS_STATUS_DATADICT_CONVERT
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.CfetsStatusDatadictConvert" >
+        update CFETS_STATUS_DATADICT_CONVERT
+        <set >
+            <if test="quoteTypeIbu != null" >
+                QUOTE_TYPE_IBU = #{quoteTypeIbu,jdbcType=VARCHAR},
+            </if>
+            <if test="msgType != null" >
+                MSG_TYPE = #{msgType,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteTransType != null" >
+                QUOTE_TRANS_TYPE = #{quoteTransType,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteStatus != null" >
+                QUOTE_STATUS = #{quoteStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="execType != null" >
+                EXEC_TYPE = #{execType,jdbcType=VARCHAR},
+            </if>
+            <if test="mySide != null" >
+                MY_SIDE = #{mySide,jdbcType=VARCHAR},
+            </if>
+            <if test="exeType != null" >
+                EXE_TYPE = #{exeType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeStatus != null" >
+                TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CfetsStatusDatadictConvert" >
+        update CFETS_STATUS_DATADICT_CONVERT
+        set QUOTE_TYPE_IBU = #{quoteTypeIbu,jdbcType=VARCHAR},
+            MSG_TYPE = #{msgType,jdbcType=VARCHAR},
+            QUOTE_TRANS_TYPE = #{quoteTransType,jdbcType=VARCHAR},
+            QUOTE_STATUS = #{quoteStatus,jdbcType=VARCHAR},
+            EXEC_TYPE = #{execType,jdbcType=VARCHAR},
+            MY_SIDE = #{mySide,jdbcType=VARCHAR},
+            EXE_TYPE = #{exeType,jdbcType=VARCHAR},
+            TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1325,6 +1325,92 @@ public enum BussinessDictCode implements com.joyintech.framework.base.BaseDictCo
     行内资产二级分类("CUSTOM_ASSET_TYPE_TWO"),
     行内资产三级分类("CUSTOM_ASSET_TYPE_THREE"),
     因子启停("FTR_BUSINESS_TYPE"),
+    /**
+     * 授信对象 Added by yufei on 2020-06-29
+     */
+    授信对象("CREDIT_OBJ"),
+    结算方式("SETT_MODE"),
+    平安资产一级分类("ASSET_REPORT_TYPE_1"),
+  //zhangliang hefei 银行间上行 20200512 add start
+    /**
+     * 报价方式
+     */
+    报价方式("QUOTE_TYPE"),
+    /**
+     * 清算类型
+     */
+    清算类型("CLEAR_TYPE"),
+    /**
+     * 银行间上行本方角色
+     */
+    银行间上行本方角色("QUOTE_ROLE_TYPE"),
+    /**
+     * 银行间上行回复查询方式
+     */
+    银行间上行回复查询方式("REPLY_QUERY_TYPE_IBU"),
+    /**
+     * 银行间上行报价状态
+     */
+    银行间上行报价状态("QUOTE_STUTAS_IBU"),
+    /**
+     * 银行间上行发送状态
+     */
+    银行间上行发送状态("SEND_TYPE_IBU"),
+    /**
+     * 计算选择方式
+     */
+    计算选择方式("CALC_INTPUT_TYPE"),
+    /**
+     * 报价系统区分类型
+     */
+    报价系统区分类型("QUOTE_SYSMARK_IBU"),
+    /**
+     * 成交状态
+     */
+    银行间成交状态("DEAL_TYPE_IBU"),
+    //zhangliang hefei 银行间上行 20200512 add end
+    
+  //add by xindi 2020.06.11 start
+    请求类型("REQTYPE"),
+    IN_OR_OUT("IOTYPE"),
+    报文状态_RFT_IN("MSGTYPE_RFT_IN"),
+    报文状态_RFQ_IN("MSGTYPE_RFQ_IN"),
+    报文状态_RFT_OUT("MSGTYPE_RFT_OUT"),
+    报文状态_RFQ_OUT("MSGTYPE_RFQ_OUT"),
+    类型("INTERFREQTYPE"),
+    状态("INTERFREQSTATUS"),
+    报价状态("QUOTESTATUS"),
+    //add by xindi 2020.06.11 end
+  //add by chendong in 2020-07-07 start
+    /**
+     * 完成状态
+     */
+    完成状态("FINISH_STATUS"),
+    //add by chendong in 2020-07-07 end
+
+    // add by yeyang 20200714 start 托管户活期利率增加分段计息规则
+    TD_LAT("TD_LAT"),
+    INT_CALC_TYPE("INT_CALC_TYPE"),
+    // add by yeyang 20200714 end
+    //add by chendong in 2020-07-20 start
+    交易日历("TRANSACTION_CALENDAR"),
+    //add by chendong in 2020-07-20 end
+    /**
+     * 是否特殊委托
+     */
+    是否特殊委托("ISSPECIALENTRUST"),
+    /**
+     * 期限品种(利率互换)
+     */
+    期限品种_利率互换("TERM_TYPE_IRS"),
+    /**
+     * 互换方式
+     */
+    互换方式("IRS_TYPE"),
+    /**
+     * 组合估值方法
+     */
+    组合估值方法("PTL_VALUATION_METHOD")
     ;
     /**
      * 对应于数据字典code
