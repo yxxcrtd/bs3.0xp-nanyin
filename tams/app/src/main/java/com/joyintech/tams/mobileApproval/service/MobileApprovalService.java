@@ -1006,7 +1006,6 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 
     private void doUpdate(FlowEntity flowEntity, boolean flag) throws Exception {
         boolean skip = false;
-        ProcessMark proMark=null;
         WorkflowMethodInterceptor interceptor = WorkflowContext.getInterceptor();
         if (null != interceptor) {
             skip = !interceptor.beforeDoUpdate(flowEntity);
@@ -1062,7 +1061,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
             }
             finally {
                 if(null != interceptor) {
-                    interceptor.afterDoUpdate(flowEntity,proMark);
+                    interceptor.afterDoUpdate(flowEntity);
                 }
             }
         }
