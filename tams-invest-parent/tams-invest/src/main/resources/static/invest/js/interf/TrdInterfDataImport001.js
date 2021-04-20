@@ -18,7 +18,8 @@ $(function () {
 	var getSearchParams = function() {
 		var pageParam = {
 			queryDate : $('#queryDate').val(),
-			prodId : $('#prodId').val(),
+			// prodId : $('#prodId').val(),
+			prodId : $('#prodId').select2('data'),
 			datas :null,
 			preseqno:preseqno
 		}
@@ -31,11 +32,21 @@ $(function () {
 			}
 		}
 		pageParam.datas = datas;
-		if ($("#prodId").val()) {
-			pageParam.prodId = $("#prodId").val().join(",");
-		} else {
-			pageParam.prodId = null;
+		// if ($("#prodId").val()) {
+		// 	pageParam.prodId = $("#prodId").val().join(",");
+		// } else {
+		// 	pageParam.prodId = null;
+		// }
+		if (pageParam.prodId) {
+			var prodList = pageParam.prodId,
+				prodIds="";
+			for(var i=0;i<prodList.length;i++){
+				if(prodList[i].selected){
+					prodIds+=prodList[i].object + ",";
+				}
+			}
 		}
+		pageParam.prodId = prodIds;
 		return pageParam;
 	};
 
@@ -130,16 +141,6 @@ $(function () {
 				}
 			},
 			height:docH-160,
-			dblclick:function(table, data) {
-				//跳转详情界面
-				if(data.status!='1'){
-					Joyin.dialog(JoyinUtil.getLabel("查看导入数据："+data.taskName),
-						JoyinUtil.getRealPath("/invest/interf/TrdInterfDataImport002/init"),
-						"95%", "95%", {pageModel:PAGE_MODEL_REFERENCE,id:data.id},
-						null);
-				}
-
-			},
 			checkbox: false,
 			cellMinWidth : 100,
 			rowno:true,
@@ -192,8 +193,6 @@ $(function () {
 			{
 				datas : param.datas,
 				queryDate : param.queryDate,
-				// startDate:startDate,
-				// endDate:endDate,
 				prodList : param.prodId,
 				preseqno : preseqno
 			},
@@ -203,20 +202,12 @@ $(function () {
 					//再次执行启动前停止上一次轮询
 					stopInterval();
 					//成功调用轮询
-					// queryDate = result.createDate;
-					// execTaskId = result.execTaskId;
 					//调用后一秒再查询接口,快速展示界面数据
 					startInterval();
 					progress(0);
 					$("#TrdInterfDataImport001_btn_doInterBtn").addClass("layui-btn-disabled");
 					clickFlag = false;
 				}
-				// }else if(result.isCheck==0){
-				// 	layui.layer.alert("任务执行中，请稍后再试!");
-				// }else{
-				// 	layui.layer.alert("发送启动请求失败");
-				//
-				// }
 			});
 		// $.ajax({
 		// 	url : "checkExecute",
@@ -361,7 +352,7 @@ $(function () {
 		});
 
         // 绑定全选或者取消全选宫那个
-		$('#ValPublicDataImport001_btn_checkall').click(function() {
+		$('#TrdInterfDataImport001_btn_checkall').click(function() {
 			checkOrNoAll();
 		});
 
