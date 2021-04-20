@@ -1329,6 +1329,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     期货合约代码前缀_IF(DictCode.期货合约代码前缀,"IF","IF"),
     期货合约代码前缀_IC(DictCode.期货合约代码前缀,"IC","IC"),
     期货合约代码前缀_IH(DictCode.期货合约代码前缀,"IH","IH"),
+	交易方向_正回购(DictCode.交易方向, "03", "正回购"),
+    交易方向_逆回购(DictCode.交易方向, "04", "逆回购"),
+	债券计算模式_单位净价(DictCode.债券计算模式, "01", "单位净价"),
+    债券计算模式_单位全价(DictCode.债券计算模式, "02", "单位全价"),
+    债券计算模式_到期收益率(DictCode.债券计算模式, "03", "到期收益率"),
 ;
     /**
      * 对应于数据字典code
