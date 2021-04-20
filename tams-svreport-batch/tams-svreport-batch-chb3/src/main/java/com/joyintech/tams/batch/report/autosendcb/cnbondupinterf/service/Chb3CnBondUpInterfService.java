@@ -34,6 +34,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
 import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
@@ -331,8 +332,11 @@ public class Chb3CnBondUpInterfService extends InterfService {
 
             // 解析处理开始前，登录监控信息表，状态处理中
             ChbFileReadMonitorInfo monitorInfoDto = new ChbFileReadMonitorInfo();
-            monitorInfoDto.setHandleSeqno(
-                CommonUtil.getSequenceIndexData(DataIndexSequenceType.上游文件读取处理监控序列号));
+            // 合并mysql改造代码  add by zoujiamin  2021/04/20  start
+//            monitorInfoDto.setHandleSeqno(
+//                CommonUtil.getSequenceIndexData(DataIndexSequenceType.上游文件读取处理监控序列号));
+            monitorInfoDto.setHandleSeqno(IDGenerator.generate());
+            // 合并mysql改造代码  add by zoujiamin  2021/04/20  start
             monitorInfoDto.setHandleFileName(realName);
             monitorInfoDto.setHandleFilePath(remotePath);
             monitorInfoDto.setFileReadStartTime(new Date());
