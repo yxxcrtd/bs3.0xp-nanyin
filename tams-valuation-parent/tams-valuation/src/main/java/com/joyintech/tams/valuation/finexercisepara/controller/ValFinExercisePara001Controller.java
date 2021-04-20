@@ -99,7 +99,7 @@ public class ValFinExercisePara001Controller extends BaseController {
     @RequestMapping("findFinprod")
     public Page<SelectOptionDto> findFinprod()
         throws Exception {
-        return valFinExercisePara002Service.findFinprod(RequestUtil.getPageParam());
+        return valFinExercisePara001Service.findFinprod(RequestUtil.getPageParam());
     }
     
     /**

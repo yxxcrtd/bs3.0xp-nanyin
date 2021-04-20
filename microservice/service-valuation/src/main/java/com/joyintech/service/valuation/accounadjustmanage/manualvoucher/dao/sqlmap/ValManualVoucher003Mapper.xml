@@ -347,12 +347,14 @@
      <!-- 标的类金融产品 多级法人改造 hxy 20200618-->
     <select id='getFinProductPub' resultType="com.joyintech.framework.select.SuggestDto">
     	SELECT
-		    FINPROD_ID AS code,
-		    FINPROD_NAME AS name,
-		    FINPROD_ABBR AS shortName,
-		    FINPROD_TYPE AS hidCode
+			FP.FINPROD_ID AS code,
+			FP.FINPROD_NAME AS name,
+			FP.FINPROD_ABBR AS shortName,
+			FP.FINPROD_TYPE AS hidCode
 		FROM FIN_PRODUCT FP
+		left join fin_product_add fpd on fp.finprod_id = fpd.finprod_id
 		WHERE 1=1 and FP.FINPROD_TYPE2  in ('F01','F06','F10')
+		and fpd.appear_market_id is null
 		<if test="finprodType != null" >
 		AND FP.FINPROD_TYPE = #{finprodType}
 		</if>
@@ -368,7 +370,9 @@
 		    FP.FINPROD_ID AS shortName,
 		    FP.FINPROD_TYPE AS hidCode
 		FROM FIN_TRADE_PRODUCT FP
+		left join fin_product_add fpd on fp.finprod_id = fpd.finprod_id
 		WHERE 1=1 and FP.FINPROD_TYPE  in ('F01','F06','F10')
+		and fpd.appear_market_id is null
 		<if test="finprodType != null" >
 	       AND FP.FINPROD_TYPE = #{finprodType}
 		</if>

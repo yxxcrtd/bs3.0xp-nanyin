@@ -502,4 +502,53 @@
               </if>
           </where>
     </select>
+
+    <select id="selectAsset" resultType="com.joyintech.service.valuation.taxparametermanage.taxscheme.dto.TaxScheme005Dto" >
+        select * from (
+
+        select
+        nvl(fp.finprod_market_id, fp.finprod_id) as assetId, /*资产代码*/
+        nvl(fp.finprod_abbr, fp.finprod_name) as assetName, /*资产名称*/
+        fp.finprod_type as finprodType, /*金融产品分类*/
+        fp.finprod_id as originalFinprodId /*资产代码*/
+        from fin_product_type fpt
+        inner join fin_product fp
+        on fp.finprod_id = fpt.finprod_id
+        where fpt.type_3 is not null
+
+        union all
+
+        select
+        ftp.finprod_id as assetId, /*资产代码*/
+        ftp.finprod_id  as assetName, /*资产名称*/
+        ftp.finprod_type as finprodType, /*金融产品分类*/
+        ftp.finprod_id as originalFinprodId /*资产代码*/
+        from fin_product_type fpt
+        inner join fin_trade_product ftp
+        on ftp.finprod_id = fpt.finprod_id
+        where fpt.type_3 is not null  and ftp.branch = '0'
+
+        )t
+        <where>
+            /*标的中部分标的需要数据隔离，无法使用共通配置数据隔离，这里手动进行数据隔离*/
+            1=1
+            <if test="InstCode != null and InstCode.size() > 0">
+                AND NOT EXISTS(
+                SELECT * FROM DATA_AUTH_NOTIFY_INST DANI99
+                WHERE DANI99.INSTITUTION_CODE NOT IN
+                <foreach collection="InstCode" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+                AND T.ORIGINALFINPRODID = DANI99.BUSINESS_ID
+                AND DANI99.MODEL_TYPE = '02'
+                )
+            </if>
+            <!-- select2的模糊查询 -->
+            <if test="search!=null and !''.equals(search.trim())">
+                AND (assetId like '%' || #{search} || '%'
+                OR assetName like '%' || #{search} || '%' )
+            </if>
+        </where>
+
+    </select>
 </mapper>

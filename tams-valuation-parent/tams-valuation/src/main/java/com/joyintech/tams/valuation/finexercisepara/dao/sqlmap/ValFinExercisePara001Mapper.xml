@@ -38,4 +38,22 @@
             and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} 
             and BRANCH = #{branch,jdbcType=DECIMAL}
 	</delete>
+
+	<select id="findFinprod"  resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		fp.finprod_id   as id, /*金融产品代码*/
+		fp.finprod_name  as text /*金融产品全称*/
+		from FIN_PRODUCT fp
+		where fp.finprod_type = 'F01'
+		and fp.is_right = 'Y'
+		<if test="search !=null and search !='' ">
+			AND (
+			fp.finprod_id LIKE CONCAT('%', CONCAT(#{search}, '%'))
+			OR fp.finprod_name LIKE CONCAT('%', CONCAT(#{search}, '%'))
+			)
+		</if>
+		<if test="initValue !=null and initValue != ''">
+			AND fp.finprod_id = #{initValue}
+		</if>
+	</select>
 </mapper>

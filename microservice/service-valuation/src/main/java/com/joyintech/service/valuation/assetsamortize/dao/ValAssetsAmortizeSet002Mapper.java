@@ -59,4 +59,14 @@ public interface ValAssetsAmortizeSet002Mapper {
      */
     boolean checkBokAmoConfig(ValAssetsAmortizeSet001Dto dto);
 
+    /**
+     * 资产代码下拉框获取
+     *
+     * @return 返回的数据
+     * @exception Exception
+     *                异常
+     * @since 1.0
+     */
+    List<SelectOptionDto> getFinprodId2(Map<String, Object> map);
+
 }

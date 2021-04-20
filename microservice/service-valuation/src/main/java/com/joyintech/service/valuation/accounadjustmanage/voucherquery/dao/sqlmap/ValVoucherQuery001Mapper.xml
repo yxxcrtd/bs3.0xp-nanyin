@@ -57,9 +57,15 @@
                         <!-- 资产/负债代码 -->
                         <!-- 只要满足 -->
                         <if test="busiId !=null and busiId !='' ">
-                            AND (
-                                B.BUSI_ID LIKE '%' || #{busiId} || '%'
-                            )
+                          AND (B.BUSI_ID LIKE '%' || #{busiId}  || '%' OR
+                            (B.BUSI_ID LIKE
+                                '%' || (select (nvl((select t.finprod_id
+                                        from fin_product_add t
+                                        where (t.appear_market_id LIKE
+                                        '%' || #{busiId}  || '%' or
+                                        concat('F01_',
+                                        t.appear_market_id) LIKE '%' || #{busiId} || '%')),' '))
+                                        from dual) || '%'))
                         </if>
                         <if test="subjectNo !=null and subjectNo !='' ">
                             AND NVL(B.DETAIL_SUBJECT_NO,B.SUBJECT_NO) = #{subjectNo}
@@ -204,9 +210,15 @@
                 <!-- 资产/负债代码 -->
                 <!-- 只要满足 -->
                 <if test="busiId !=null and busiId !='' ">
-                    AND (
-                        B.BUSI_ID LIKE '%' || #{busiId} || '%'
-                    )
+                    AND (B.BUSI_ID LIKE '%' || #{busiId}  || '%' OR
+                        (B.BUSI_ID LIKE
+                        '%' || (select (nvl((select t.finprod_id
+                                from fin_product_add t
+                                where (t.appear_market_id LIKE
+                                '%' || #{busiId}  || '%' or
+                                concat('F01_',
+                                t.appear_market_id) LIKE '%' || #{busiId} || '%')),' '))
+                                from dual) || '%'))
                 </if>
                 <!-- 记账日期 -->
                 <if test="bookDateBegin !=null">
