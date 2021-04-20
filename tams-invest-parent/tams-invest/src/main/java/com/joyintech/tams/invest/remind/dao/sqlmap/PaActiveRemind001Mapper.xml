@@ -3127,5 +3127,17 @@ select #{R7S1} as remType,
 		<include refid="com.joyintech.tams.invest.remind.dao.PaActiveRemind002Mapper.selramindR9S1_data"/>
 		)
 	</select>
+
+	<select id="searchCountR10S1" resultType="java.util.HashMap">
+		select count(1) R10S1 from (
+		<include refid="com.joyintech.tams.invest.remind.dao.PaActiveRemind002Mapper.selramindR10S1_data"/>
+		)
+	</select>
+
+	<select id="searchCountR10S2" resultType="java.util.HashMap">
+		select count(1) R10S2 from (
+		<include refid="com.joyintech.tams.invest.remind.dao.PaActiveRemind002Mapper.selramindR10S2_data"/>
+		)
+	</select>
 	
 </mapper>

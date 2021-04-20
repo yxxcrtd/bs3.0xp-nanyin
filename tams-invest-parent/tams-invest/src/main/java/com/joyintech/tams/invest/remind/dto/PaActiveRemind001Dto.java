@@ -156,6 +156,25 @@ public class PaActiveRemind001Dto extends RskSupervisionRiskAnalyzeDto  {
     }
 
     /**
+     * 上市代码
+     */
+    private String appearMarketId;
+
+    /**
+     * 获取上市代码
+     */
+    public String getAppearMarketId() {
+        return appearMarketId;
+    }
+
+    /**
+     * 设置上市代码
+     */
+    public void setAppearMarketId(String appearMarketId) {
+        this.appearMarketId = appearMarketId;
+    }
+
+    /**
      * 计息截止日
      * @return 计息截止日
      */

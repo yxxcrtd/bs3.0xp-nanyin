@@ -5,6 +5,8 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 
@@ -14,6 +16,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.trade.bondmarkettrade.dto.TrdBondMarketTradeDto;
+import com.joyintech.tams.invest.trade.bondmarkettrade.service.TrdBondMarketTrade001Service;
 import com.joyintech.tams.invest.trade.bondmarkettrade.service.TrdBondMarketTrade002Service;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -29,7 +32,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 债券上市流通
@@ -47,6 +52,9 @@ public class TrdBondMarketTrade002Controller extends BaseController {
     TrdBondMarketTrade002Service trdBondMarketTrade002Service;
 
     @Autowired
+    TrdBondMarketTrade001Service trdBondMarketTrade001Service;
+    
+    @Autowired
     private IPlatformDate iPlatformDate;
     
     @Override
@@ -56,6 +64,8 @@ public class TrdBondMarketTrade002Controller extends BaseController {
 //        param.put("tradeDate",DateUtil.format(iPlatformDate.getSysDate()));
         String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);
         String totalTradeId = this.getParam("totleTradeId");
+        String finprodId = this.getParam("finprodId");
+        String appearMarketId = this.getParam("appearMarketId");
         if (StringUtil.isNotEmpty(workflowId)){
             //流程中
             dto = trdBondMarketTrade002Service.getBussinessEntityByWorkflowId(
@@ -63,7 +73,20 @@ public class TrdBondMarketTrade002Controller extends BaseController {
             model.addAttribute("workflowId",workflowId);
             model.addAttribute("entity",dto);
         }else if (StringUtil.isNotEmpty(totalTradeId) && !StringUtil.isNotEmpty(workflowId)){
+            //双击进入查看页面
             dto = trdBondMarketTrade002Service.selectByTotalTradeId(totalTradeId);
+            model.addAttribute("entity",dto);
+        }else if (!StringUtil.isNotEmpty(totalTradeId) && !StringUtil.isNotEmpty(workflowId)){
+            //从主动提醒处进入新建页面
+            dto.setFinprodId(finprodId);
+            dto.setAppearMarketId(appearMarketId);
+//            dto.setTradeMarket("01");
+            Map<String, Object> params = new HashMap<>();
+            params.put("initValue",finprodId);
+            Page<SelectOptionDto> page = trdBondMarketTrade001Service.getFinprodId(params);
+            Map<String,Object> map = (Map<String, Object>) page.getRoot().get(0).getObject();
+            String tradeMarket = (String) map.get("tradeMarket");
+            dto.setTradeMarket(tradeMarket);
             model.addAttribute("entity",dto);
         }
         model.addAttribute("platDate",iPlatformDate.getSysDateStr());
