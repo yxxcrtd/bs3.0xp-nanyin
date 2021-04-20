@@ -37,7 +37,7 @@
         WHERE
             basetableid = #{tableName}
             limit 1
-    )
+    ) temp
     </select>
 
     <select id="getBaseInfoIds" resultType="string">

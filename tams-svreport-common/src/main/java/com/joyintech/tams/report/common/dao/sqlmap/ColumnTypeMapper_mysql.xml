@@ -51,6 +51,6 @@
  	    WHERE TABLE_NAME = #{tableId,jdbcType=CHAR}
       AND COLUMN_NAME = #{column,jdbcType=CHAR}
       AND DATA_TYPE = 'CHAR'
-      AND DATA_LENGTH = 36
+      #AND DATA_LENGTH = 36
 	</select>
 </mapper>
