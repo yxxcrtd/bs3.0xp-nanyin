@@ -2666,26 +2666,65 @@
             b.posAmount,
             b.posCost,
             b.posValue,
-            b.tdyIntincexp from (select * from (select atd.finprod_id as finprodId,atd.branch,atd.is_perne as
-            isPerne,atd.cdate ,atd.finprod_market_id as finprodMarketId,atd.finprod_name as
-            finprodName,atd.pinan_asset_type as pinanAssetType,atd.custom_asset_type_two as
-            customAssetTypeTwo,atd.custom_asset_type_three as customAssetTypeThree,atd.custom_asset_type_four as
-            customAssetTypeFour,atd.custom_asset_type_five as customAssetTypeFive,atd.faire_price as
-            fairePrice,atd.issue_party as issueParty,atd.is_soe as
-            isSoe,atd.is_listed_company as isListedCompany,atd.company_nature as companyNature,atd.industry
-            ,atd.industry2 ,
-            atd.vdate ,atd.mdate,atd.term_days as termDays,atd.counter_id as counterId,atd.last_period as
-            lastPeriod,atd.latest_deal_date as latestDealDate,atd.bshare_face_value as
-            bshareFaceValue,atd.issue_face_value as issueFaceValue,atd.rate,atd.cost_rate as costRate,atd.bpyield
-            ,atd.m_convexity mConvexity,atd.ex_info as exInfo,atd.ex_next_date as exNextDate,atd.last_ex_period as
-            lastExPeriod,atd.m_grade_result mGradeResult,atd.m_grade_org mGradeOrg,atd.b_grade_result
-            bGradeResult,atd.b_grade_org bGradeOrg,atd.m_grade_result_in mGradeResultIn,atd.b_grade_result_in
-            bGradeResultIn,atd.is_city_bond isCityBond,atd.city_bond_lev cityBondLev,atd.c_shares cShares,atd.s_shares
-            sShares,
-            atd.trade_market tradeMarket,atd.is_sus isSus,atd.is_right isRight,atd.ex_date exDate,atd.m_grade_org_in
-            mGradeOrgIn,atd.b_grade_org_in bGradeOrgIn,atd.bshare_scale bshareScale,atd.profit_type
-            profitType,atd.M_DURATION mDuration,atd.MDURATION mdurationAmend
-            , '02' hasChildren,atd.dv01 dv01,atd.float_ingpl_add_price floatIngplAddPrice,atd.float_ingpl_add floatIngplAdd,
+            b.tdyIntincexp,
+            b.fairePrice,
+            b.bshareFaceValue,
+            b.cShares,
+            b.sShares,
+            b.floatIngplAdd,
+            b.issueFaceValue
+            from (select * from (
+                select 
+                    atd.finprod_id as finprodId,
+                    atd.branch,
+                    atd.is_perne as isPerne,
+                    atd.cdate,
+                    atd.finprod_market_id as finprodMarketId,
+                    atd.finprod_name as finprodName,
+                    atd.pinan_asset_type as pinanAssetType,
+                    atd.custom_asset_type_two as customAssetTypeTwo,
+                    atd.custom_asset_type_three as customAssetTypeThree,
+                    atd.custom_asset_type_four as customAssetTypeFour,
+                    atd.custom_asset_type_five as customAssetTypeFive,
+                    atd.issue_party as issueParty,
+                    atd.is_soe as isSoe,
+                    atd.is_listed_company as isListedCompany,
+                    atd.company_nature as companyNature,
+                    atd.industry,
+                    atd.industry2 ,
+                    atd.vdate,
+                    atd.mdate,
+                    atd.term_days as termDays,
+                    atd.counter_id as counterId,
+                    atd.last_period as lastPeriod,
+                    atd.latest_deal_date as latestDealDate,
+                    atd.rate,
+                    atd.cost_rate as costRate,
+                    atd.bpyield,
+                    atd.m_convexity mConvexity,
+                    atd.ex_info as exInfo,
+                    atd.ex_next_date as exNextDate,
+                    atd.last_ex_period as lastExPeriod,
+                    atd.m_grade_result mGradeResult,
+                    atd.m_grade_org mGradeOrg,
+                    atd.b_grade_result bGradeResult,
+                    atd.b_grade_org bGradeOrg,
+                    atd.m_grade_result_in mGradeResultIn,
+                    atd.b_grade_result_in bGradeResultIn,
+                    atd.is_city_bond isCityBond,
+                    atd.city_bond_lev cityBondLev,
+                    atd.trade_market tradeMarket,
+                    atd.is_sus isSus,
+                    atd.is_right isRight,
+                    atd.ex_date exDate,
+                    atd.m_grade_org_in mGradeOrgIn,
+                    atd.b_grade_org_in bGradeOrgIn,
+                    atd.profit_type profitType,
+                    atd.M_DURATION mDuration,
+                    atd.MDURATION mdurationAmend, 
+                    '02' hasChildren,
+                    atd.dv01 dv01,
+                    atd.float_ingpl_add_price floatIngplAddPrice,
             <choose>
                 <!-- 下钻层级 1级-->
                 <when test="deepLevel!= null and deepLevel != '' and deepLevel=='01'">
@@ -2821,12 +2860,6 @@
             atd.custom_asset_type_three ,
             atd.custom_asset_type_four ,
             atd.custom_asset_type_five ,
-            atd.faire_price  ,
-            atd.pos_amount,
-            atd.prin,
-            atd.pos_cost ,
-            atd.pos_value ,
-            atd.tdy_intincexp ,
             atd.issue_party ,
             atd.is_soe ,
             atd.is_listed_company ,
@@ -2839,8 +2872,6 @@
             atd.counter_id ,
             atd.last_period ,
             atd.latest_deal_date ,
-            atd.bshare_face_value,
-            atd.issue_face_value,
             atd.rate,
             atd.cost_rate ,
             atd.bpyield,
@@ -2856,29 +2887,34 @@
             atd.b_grade_result_in ,
             atd.is_city_bond ,
             atd.city_bond_lev ,
-            atd.c_shares ,
-            atd.s_shares ,
             atd.trade_market ,
             atd.is_sus,
             atd.is_right,
             atd.ex_date,
             atd.m_grade_org_in ,
             atd.b_grade_org_in ,
-            atd.bshare_scale ,
             atd.profit_type ,
             atd.M_DURATION ,
-            atd.MDURATION,atd.dv01,atd.float_ingpl_add_price ,atd.float_ingpl_add ) t where t.row_number=1)a
+            atd.MDURATION,atd.dv01,atd.float_ingpl_add_price
+            ) t where t.row_number=1)a
             left join (
             select
-            atd.finprod_id as finprodId,
-            sum(atd.pos_amount) as posAmount,
-            sum(atd.pos_cost) as posCost,
-            CASE WHEN (FTP.FINPROD_TYPE2 ='F02' OR FTP.FINPROD_TYPE2 ='F25' OR FTP.FINPROD_TYPE2 ='F04')
-            THEN SUM(atd.pos_value)*-1
-            ELSE SUM(atd.pos_value) end posValue,
-            CASE WHEN (FTP.FINPROD_TYPE2 ='F02' OR FTP.FINPROD_TYPE2 ='F25' OR FTP.FINPROD_TYPE2 ='F04')
-            THEN SUM(atd.tdy_intincexp)*-1
-            ELSE SUM(atd.tdy_intincexp) end tdyIntincexp
+                atd.finprod_id as finprodId,
+                sum(atd.pos_amount) as posAmount,
+                sum(atd.pos_cost) as posCost,
+                sum(atd.faire_price) as fairePrice,
+                sum(atd.bshare_face_value) as bshareFaceValue,
+                sum(atd.c_shares) as cShares,
+                sum(atd.s_shares) as sShares,
+                sum(atd.bshare_scale) as bshareScale,
+                sum(atd.float_ingpl_add) as floatIngplAdd,
+                sum(atd.issue_face_value) as issueFaceValue,
+                CASE WHEN (FTP.FINPROD_TYPE2 ='F02' OR FTP.FINPROD_TYPE2 ='F25' OR FTP.FINPROD_TYPE2 ='F04')
+                    THEN SUM(atd.pos_value)*-1
+                    ELSE SUM(atd.pos_value) end posValue,
+                CASE WHEN (FTP.FINPROD_TYPE2 ='F02' OR FTP.FINPROD_TYPE2 ='F25' OR FTP.FINPROD_TYPE2 ='F04')
+                    THEN SUM(atd.tdy_intincexp)*-1
+                    ELSE SUM(atd.tdy_intincexp) end tdyIntincexp
             from ASSET_TARGET_DB atd
             LEFT JOIN FIN_TRADE_PRODUCT FTP ON atd.FINPROD_ID = FTP.FINPROD_ID AND FTP.BRANCH='0'
              <!-- 多级法人改造 add by hxy 20200629 start-->
@@ -2892,7 +2928,6 @@
                       open="in ("  close=")">
                    #{item}
                    </foreach>
-             
             </if>
            <!-- 多级法人改造 add by hxy 20200629 end--> 
             WHERE 1 = 1
