@@ -80,11 +80,17 @@
         <module>JixuCenter</module>
 
         <module>microservice/tams-service-container</module>
+        <module>microservice/service-bankuplink</module>
         <module>tams/app</module>
         
         <module>tams-system/touguan/app</module>
         <module>tams-system/touguan/batch</module>
         <module>tams-system/yunying/app</module>
         <module>tams-system/yunying/batch</module>
+
+        <!-- 组件  -->
+        <module>background-component/component-common</module>
+        <module>background-component/inter-bank-uplink</module>
+        <module>background-component/exchange-order</module>
     </modules>
 </project>
