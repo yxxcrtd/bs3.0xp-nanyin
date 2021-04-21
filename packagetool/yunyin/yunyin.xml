@@ -42,7 +42,7 @@
         <module>../../microservice/service-svrcom</module>
         <module>../../microservice/service-valuation</module>
 		<module>../../microservice/service-common-basicdata</module>
-		<module>packagetool/yunyin/tams-service-container</module>
+		<module>../../packagetool/yunyin/tams-service-container</module>
 
         <!-- 批处理 -->
 		<module>../../tams-disclosure-batch</module>

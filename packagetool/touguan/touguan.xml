@@ -50,7 +50,7 @@
 		<module>../../microservice/service-invest-interf</module>
         <module>../../microservice/service-interf</module>
 		<module>../../microservice/service-common-basicdata</module>
-		<module>packagetool/touguan/tams-service-container</module>
+		<module>../../packagetool/touguan/tams-service-container</module>
 		
         <!-- 批处理 -->
         <module>../../tams-invest-batch</module>
