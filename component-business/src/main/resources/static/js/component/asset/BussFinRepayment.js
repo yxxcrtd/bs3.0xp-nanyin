@@ -728,10 +728,6 @@
                     msg = JoyinUtil.getMessage('BUSS_COM_E_0037', [JoyinUtil.getLabel("FinPayInterestStdInfo.ispayInt"),JoyinUtil.getLabel("FinPayInterestStdInfo.title")]);
                 }
             }
-            //还本计划条数增加或减少，应点击确定按钮
-             if(list && list.length > 0 && list.length !=previewParams.invRepayList.length ) {
-                msg = JoyinUtil.getMessage("还本计划已变更,请点击确认,重新计算应计利息!");
-             }
             if(msg) {
                 Joyin.error(msg);
                 return false;
@@ -758,6 +754,10 @@
                 }
             })
         }
+         //还本计划条数增加或减少，应点击确定按钮
+         if(list && list.length > 0 && list.length !=previewParams.invRepayList.length ) {
+                msg = JoyinUtil.getMessage("还本计划已变更,请点击确认,重新计算应计利息!");
+         }
         if(msg) {
             Joyin.error(msg);
             return false;

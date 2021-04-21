@@ -174,7 +174,9 @@ $(function() {
         
         Joyin.ajaxJson(basePath + 'invest/asset/project/FinProjectTargetAsset002/check', object, function(
                     result) {
-        	if(FinPayInterestStdInfo &&FinPayInterestStdInfo.check()&& FinPayInterestStdInfo.comfirmCheck()&&BussFinRepayment.check()&&BussFinRepayment.isComfirmCheck()) {
+        	if(FinPayInterestStdInfo &&FinPayInterestStdInfo.check()&& FinPayInterestStdInfo.comfirmCheck()&&BussFinRepayment.check()&&BussFinRepayment.isComfirmCheck()
+        	  && FinPayInterestStdInfo.saveCheck()
+        	  ) {
                 Joyin.ajaxJson(basePath + 'invest/asset/common/isHoliday', {
                     mdate: object.mdate,
                     calendarId: object.calendarId

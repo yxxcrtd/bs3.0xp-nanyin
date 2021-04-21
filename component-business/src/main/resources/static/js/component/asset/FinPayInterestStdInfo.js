@@ -1154,10 +1154,6 @@
                     msg = JoyinUtil.getMessage('BUSS_COM_E_0037', [JoyinUtil.getLabel("FinPayInterestStdInfo.ispayInt"),JoyinUtil.getLabel("FinPayInterestStdInfo.title")]);
                 }
             }
-            //付息计划条数增加或减少，应点击确定按钮
-            if(list && list.length > 0 && list.length !=previewParams.invScheduleList.length ) {
-                  msg = JoyinUtil.getMessage("付息计划已变更,请点击确认!");
-            }
             if(msg) {
                 Joyin.error(msg);
                 return false;
@@ -1165,6 +1161,30 @@
         }
         return true;
     }
+     /*
+         * 保存验证
+         */
+        function saveCheck() {
+            var msg;
+            // 付息计划列表为空时
+            var list = getAllRows();
+            if(!list || list.length == 0) {
+                msg = JoyinUtil.getMessage('COMMON_E_0057',"付息计划");
+            }
+            else {
+                //付息计划条数增加或减少，应点击确定按钮
+                if(list && list.length > 0 && list.length !=previewParams.invScheduleList.length ) {
+                      msg = JoyinUtil.getMessage("付息计划已变更,请点击确认!");
+                }
+
+            }
+             if(msg) {
+                  Joyin.error(msg);
+                  return false;
+             }
+            return true;
+        }
+
 
     /**
      * 确认按钮check(js)
@@ -1325,7 +1345,8 @@
         generationPlan:generationPlan,
         disableFinPayInterest:disableFinPayInterest,
         checkPlanChanged : checkPlanChanged,
-        clearAll: clearAll
+        clearAll: clearAll,
+        saveCheck:saveCheck
     };
 
 
