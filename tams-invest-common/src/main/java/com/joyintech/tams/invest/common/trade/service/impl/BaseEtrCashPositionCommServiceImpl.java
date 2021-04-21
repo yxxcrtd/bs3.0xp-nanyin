@@ -75,8 +75,8 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 && !(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())
                 || StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))
                 // add by jiangpeng on 20210416 start
-                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
-                && !StringUtil.equals("Y", finProductTradeDto.getIsSLDeal())
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                && !StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsSLDeal())
             // add by jiangpeng on 20210416 end
         ) {
             EtrSecCashPositionDealService.deal债券CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
@@ -97,10 +97,10 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())
                 || StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())
-                // add by jiangpeng on 20210416 start
-                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
-                || StringUtil.equals("Y", finProductTradeDto.getIsSLDeal())) {
-            // add by jiangpeng on 20210416 end
+                // add by jiangpeng on 20210421 start
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                || StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsSLDeal())) {
+            // add by jiangpeng on 20210421 end
             EtrSecLendCashPositionDealService.deal债券借贷CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {

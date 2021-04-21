@@ -113,15 +113,13 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
             else {
                 getInterfInputDto(item, DictCodeListExt1.交易流程状态_有效);
             }
-            // add by jiangpeng on 20210416 start
-            // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
-            if (StringUtil.isNotEmpty(entity.getIsCashPay())
-                    && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(item.getTrdProductDeal().getFinprodType2())
-                    && DictCodeList.交易方向_到期.getValue().equals(item.getTrdProductDeal().getPs())) {
+            // add by jiangpeng on 20210421 start
+            // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+            if (StringUtil.isNotEmpty(entity.getIsCashPay())){
                 item.setIsCashPay(entity.getIsCashPay());
             }
             item.setIsSLDeal(DictCodeList.是否_是.getValue());
-            //add by jiangpeng on 20210416 end
+            //add by jiangpeng on 20210421 end
         });
 
         baseTradeProductDealCommServiceImpl.execute(tradeDto);
@@ -145,7 +143,7 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
         }
 
         // 写入质押品的组合持仓流水
-        this.ptlPredgeSecPositionFlowLogic(entity, OperationType.REVOKE == operationType?true:false);
+        this.ptlPredgeSecPositionFlowLogic(entity, OperationType.REVOKE == operationType);
 
         // add by jiangpeng on 20210416 start
         // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融出到期交易产生的错误
@@ -163,14 +161,23 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
         }else{
             // modify by jiangpeng on 20210419 start
             //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融出到期交易产生的错误
-            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())) {
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())
+                    && StringUtil.equals(DictCodeList.是否_否.getValue(), entity.getIsCashPay())) {
                 // 写入融入券组合持仓流水(借贷融入/借贷融出->融入/融出)
                 this.ptlBlendSecPositionFlowLogicEffect(entity);
-            }else{
+            }else {
                 // 写入融入券组合持仓流水
                 this.ptlBlendSecPositionFlowLogic(entity, false);
             }
             // modify by jiangpeng on 20210419 end
+            // add by jiangpeng on 20210421 start
+            // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+            if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())
+                    && StringUtil.equals(DictCodeList.是否_是.getValue(), entity.getIsCashPay())){
+                // 写入融入券指令持仓流水
+                this.etrBlendSecPositionFlowLogic(entity, false);
+            }
+            // add by jiangpeng on 20210421 end
         }
 
         // 新建交易撤销数据 或 插入Entity到对应的业务DB中, 并删除流程表中的数据
@@ -282,7 +289,8 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                 // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
                 // modify by jiangpeng on 20210419 start
                 //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融入到期交易产生的错误
-                if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())) {
+                if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())
+                        && StringUtil.equals(DictCodeList.是否_否, entity.getIsCashPay())) {
                     // modify by jiangpeng on 20210419 end
                     // 写入融入券组合持仓流水
                     this.ptlBlendSecPositionFlowLogic(entity, false);
@@ -392,7 +400,7 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                 // add by jiangpeng on 20210416 start
                 // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
                 // 持仓类型
-                if (isNegate) {
+                if (isNegate || StringUtil.equals(DictCodeList.是否_是.getValue(), input.getIsCashPay())) {
                     resultDto.setHodingType(ptlSecPositionFlow.getHodingType());
                 } else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), input.getFinprodType2())) {
                     resultDto.setHodingType(DictCodeListExt1.持仓类型_借贷融入.getValue());

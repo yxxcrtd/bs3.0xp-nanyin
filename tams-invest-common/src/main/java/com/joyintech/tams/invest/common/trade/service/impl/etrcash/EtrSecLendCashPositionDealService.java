@@ -187,6 +187,13 @@ public class EtrSecLendCashPositionDealService  {
                 if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
                     etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId());
                     etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(deal.getPrinAmt(), 100, 2));
+                    // add by jiangpeng on 20210421 start
+                    // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                    if (StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsCashPay())
+                            && StringUtil.equals(finProductTradeDto.getSecLendFinprodId(), deal.getFinprodId())) {
+                        etrSecPositionFlowDto.setAmount(etrSecPositionFlowDto.getAmount().negate());
+                    }
+                    // add by jiangpeng on 20210421 end
                     etrSecPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                 }
@@ -221,16 +228,16 @@ public class EtrSecLendCashPositionDealService  {
                     });
                 }
             }
-            // add by jiangpeng on 20210416 start
-            // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+            // add by jiangpeng on 20210421 start
+            // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
             else if (StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                     && StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsCashPay())) {
-                if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+                if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
                     etrSecPositionFlowDto.setAmount(deal.getShareAmt());
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                 }
             }
-            // add by jiangpeng on 20210416 end
+            // add by jiangpeng on 20210421 end
         }
     }
 

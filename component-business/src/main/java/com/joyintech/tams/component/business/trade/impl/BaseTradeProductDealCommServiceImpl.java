@@ -664,16 +664,16 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                         || DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2()))){
                     dto.setAmount(baseTradeProductDealDto.getSecAmount());
                 }
-                // add by jiangpeng on 20210416 start
-                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                // add by jiangpeng on 20210421 start
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
                 // 融入的资产，还需要根据选择的投资目的，从融入增加的持仓变成该投资目的减少的持仓。
-                // 融出的资产，还需要根据选择的投资目的，从融出减少的持仓变成该投资目的减少持仓。
+                // 融出的资产，还需要根据选择的投资目的，从融出减少的持仓变成该投资目的减少的持仓。
                 if (StringUtil.equals(DictCodeList.是否_是.getValue(), baseTradeProductDealDto.getIsCashPay())
                         && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2())
                         && DictCodeList.交易方向_到期.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())) {
                     dto.setAmount(dto.getAmount().negate());
                 }
-                // add by jiangpeng on 20210416 end
+                // add by jiangpeng on 20210421 end
             }
             ptlSecPositionFlows.addAll(ptlSecPositionFlowDtoss);
 
