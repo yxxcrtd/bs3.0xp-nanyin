@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -21,12 +23,6 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.trade.trdrepotrade.dto.InterfOpicsTradRepoDto;
 import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeDto;
 import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeReferenceDto;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.InterfTradRepoasst;
-import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
-import com.joyintech.tams.common.base.entity.TrdMatchInfo;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 
 /**
@@ -138,11 +134,7 @@ public interface TrdRepoTradeMapper {
      * @see
      * @since 1.0
      */
-    InterfOpicsTradRepoDto queryRepoCstpInfoByNo(@Param("fedealno") String fedealno,
-                                                 @Param("entrustId") String entrustId,
-                                                 @Param("preTradeId") String preTradeId,
-                                                 @Param("prodType") String prodType,
-                                                 @Param("isCstpSure") String isCstpSure);
+    InterfOpicsTradRepoDto queryRepoCstpInfoByNo(@Param("fedealno") String fedealno);
 
     /**
      * 根据成交单号查询回购抵押品关联
@@ -214,4 +206,10 @@ public interface TrdRepoTradeMapper {
      * @return
      */
     String getChlId(String tradeId);
+	
+	 List<FinProduct> selectFinProduct(Map<String, Object> params);
+
+    InterfOpicsTradRepo selectInterfOpicsTradRepo(@Param("fTradeId") String fTradeId);
+
+    List<InterfTradRepoasstDto> getMatchpledgeBondInfo(Map<String,Object> map);
 }

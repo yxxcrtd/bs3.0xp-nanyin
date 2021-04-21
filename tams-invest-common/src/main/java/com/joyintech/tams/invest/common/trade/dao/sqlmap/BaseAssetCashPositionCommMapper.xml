@@ -171,4 +171,10 @@
         WHERE deal.TOTLE_TRADE_ID = #{tradeId}
         and totle.ps=deal.ps
     </select>
+
+    <delete id="deleteCashPositionByOrderId" >
+        DELETE
+        from PTL_CASH_POSITION_FLOW
+        where ORDER_ID = #{orderId,jdbcType=VARCHAR} AND HODING_TYPE IN ('01', '02')
+    </delete>
 </mapper>

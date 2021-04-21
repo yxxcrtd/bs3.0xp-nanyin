@@ -10,20 +10,24 @@
 package com.joyintech.tams.invest.trade.trdrepotrade.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.joyintech.tams.common.base.entity.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.Pattern;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.trade.dto.BussTrdAvailableCashQuery;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
-import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
+import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.interf.dto.CreditAmtSelDto;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.validator.TrdRepoTrade002DtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -87,6 +91,72 @@ public class TrdRepoTrade002Dto extends TrdProductDeal implements ProcessEntity 
      * 交易金额
      */
     private BigDecimal tradeAmtAndFee;
+
+    /**
+     * 是否是交易所导入数据
+     */
+    private boolean importFlag;
+
+    /**
+     * 是否是自动录单数据
+     */
+    private  boolean autoTradeFlag;
+    /**
+     * 交易金额(原交易金额被券面总额所用)
+     */
+    private BigDecimal tradeRepAmt;
+
+    /**
+     * 是否是多个质押券
+     */
+    private String isGrade;
+
+
+    /**
+     * 账户来源
+     */
+    private String secAcctSource;
+    /**
+     * 登记托管机构
+     */
+    private String secRegistOrg;
+    // add by zhangliang 20190923 性能优化 end
+
+    /**
+     *功能描述:报价编号
+     * @author zhangnian
+     * @date 2021/1/18 0018
+     * @param  * @param null
+     * @return
+     */
+    private String quoteId;
+
+    /**
+     * 回购成交回报信息
+     */
+    private InterfOpicsTradRepo interfOpicsTradRepo;
+
+    /**
+     * 质押品信息
+     */
+    private List<InterfTradRepoasstDto> interfTradRepoassts;
+
+    /**
+     * 中债全价总额
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal cbFpriceAmt;
+
+    /**
+     * 上清全价总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal scFpriceAmt;
+
+    /**
+     * 额度验证结果
+     */
+    private CreditAmtSelDto creditList;
 
     /**
      * 获取 channelFee
@@ -449,6 +519,27 @@ public class TrdRepoTrade002Dto extends TrdProductDeal implements ProcessEntity 
     private String preTradeId;
     
     private RiskCreditListCommonDto riskCreditListCommonDto;
+	/**
+     * 中债登本金金额
+     */
+    @NotEmpty(fieldName = "TrdRepoTrade002.zzdPrinAmt", groups = ValidateGroupEdit.class)
+    private BigDecimal zzdPrinAmt;
+
+    /**
+     * 上清所本金金额
+     */
+    @NotEmpty(fieldName = "TrdRepoTrade002.sqsPrinAmt", groups = ValidateGroupEdit.class)
+    private BigDecimal sqsPrinAmt;
+
+    /**
+     * 中债登结算费
+     */
+    private BigDecimal zzdSettleAmt;
+
+    /**
+     * 上清所结算费
+     */
+    private BigDecimal sqsSettleAmt;
 
 
     public String getPreTradeId() {
@@ -1591,5 +1682,137 @@ public class TrdRepoTrade002Dto extends TrdProductDeal implements ProcessEntity 
 
     public void setRiskCreditListCommonDto(RiskCreditListCommonDto riskCreditListCommonDto) {
         this.riskCreditListCommonDto = riskCreditListCommonDto;
+    }
+	public BigDecimal getZzdPrinAmt() {
+        return zzdPrinAmt==null?BigDecimal.ZERO:zzdPrinAmt;
+    }
+
+    public void setZzdPrinAmt(BigDecimal zzdPrinAmt) {
+        this.zzdPrinAmt = zzdPrinAmt;
+    }
+
+    public BigDecimal getSqsPrinAmt() {
+        return sqsPrinAmt==null?BigDecimal.ZERO:sqsPrinAmt;
+    }
+
+    public void setSqsPrinAmt(BigDecimal sqsPrinAmt) {
+        this.sqsPrinAmt = sqsPrinAmt;
+    }
+
+    public BigDecimal getZzdSettleAmt() {
+        return zzdSettleAmt;
+    }
+
+    public void setZzdSettleAmt(BigDecimal zzdSettleAmt) {
+        this.zzdSettleAmt = zzdSettleAmt;
+    }
+
+    public BigDecimal getSqsSettleAmt() {
+        return sqsSettleAmt;
+    }
+
+    public void setSqsSettleAmt(BigDecimal sqsSettleAmt) {
+        this.sqsSettleAmt = sqsSettleAmt;
+    }
+
+    public boolean isAutoTradeFlag() {
+        return autoTradeFlag;
+    }
+
+    public void setAutoTradeFlag(boolean autoTradeFlag) {
+        this.autoTradeFlag = autoTradeFlag;
+    }
+
+    public String getIsGrade() {
+        return isGrade;
+    }
+
+    public void setIsGrade(String isGrade) {
+        this.isGrade = isGrade;
+    }
+
+    public BigDecimal getTradeRepAmt() {
+        return tradeRepAmt;
+    }
+
+    public void setTradeRepAmt(BigDecimal tradeRepAmt) {
+        this.tradeRepAmt = tradeRepAmt;
+    }
+
+    public boolean isImportFlag() {
+        return importFlag;
+    }
+
+    public void setImportFlag(boolean importFlag) {
+        this.importFlag = importFlag;
+    }
+
+    public String getSecAcctSource() {
+        return secAcctSource;
+    }
+
+    public void setSecAcctSource(String secAcctSource) {
+        this.secAcctSource = secAcctSource;
+    }
+
+    public String getSecRegistOrg() {
+        return secRegistOrg;
+    }
+
+    public void setSecRegistOrg(String secRegistOrg) {
+        this.secRegistOrg = secRegistOrg;
+    }
+
+    public String getQuoteId() {
+        return quoteId;
+    }
+
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
+    }
+
+    public InterfOpicsTradRepo getInterfOpicsTradRepo() {
+        return interfOpicsTradRepo;
+    }
+
+    public void setInterfOpicsTradRepo(InterfOpicsTradRepo interfOpicsTradRepo) {
+        this.interfOpicsTradRepo = interfOpicsTradRepo;
+    }
+
+    public List<InterfTradRepoasstDto> getInterfTradRepoassts() {
+        return interfTradRepoassts;
+    }
+
+    public void setInterfTradRepoassts(List<InterfTradRepoasstDto> interfTradRepoassts) {
+        this.interfTradRepoassts = interfTradRepoassts;
+    }
+
+    public BigDecimal getCbFpriceAmt() {
+        return cbFpriceAmt;
+    }
+
+    public void setCbFpriceAmt(BigDecimal cbFpriceAmt) {
+        this.cbFpriceAmt = cbFpriceAmt;
+    }
+
+    public BigDecimal getScFpriceAmt() {
+        return scFpriceAmt;
+    }
+
+    public void setScFpriceAmt(BigDecimal scFpriceAmt) {
+        this.scFpriceAmt = scFpriceAmt;
+    }
+
+    @PrimaryKey(PrimaryKey.Field.PK_4)
+    public String getfTradeId2() {
+        return this.getfTradeId();
+    }
+
+    public CreditAmtSelDto getCreditList() {
+        return creditList;
+    }
+
+    public void setCreditList(CreditAmtSelDto creditList) {
+        this.creditList = creditList;
     }
 }

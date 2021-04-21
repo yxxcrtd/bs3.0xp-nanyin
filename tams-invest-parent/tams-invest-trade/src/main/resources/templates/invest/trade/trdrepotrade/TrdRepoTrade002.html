@@ -34,6 +34,8 @@
                             <input type="hidden" id="registOrg" name="registOrg" th:value="${entity?.registOrg}" />
                             <input type="hidden" id="formatDate" name="formatDate" th:value="${formatDate}"/>
                             <!-- add by wangpeng 登记托管机构 20190817 end-->
+                            <!-- 有编号交易是否有报价 -->
+                        	<input type="hidden" id="isOfferFlag" name="isOfferFlag" />
                         </h3>
                         <div class="pro-module-item pro-item-wrap">
                             <div class="layui-form-item">
@@ -66,7 +68,7 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{TrdRepoTrade002.fTradeId}">成交编号</label>
-                                    <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline" th:if="${pageModel} eq ${pageModelNew}">
                                         <!-- <input type="text" id="fTradeId" name="fTradeId"
                                                class="layui-input form-input" maxlength="32"
                                                placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
@@ -81,11 +83,17 @@
 <!--                                               data-th-data-url="@{/invest/trade/trdrepotrade/TrdRepoTrade002/queryRepoCstpInfoList}" data-idfield="code"-->
 <!--                                               data-keyfield="name" data-th-value="${entity?.fTradeId}"-->
 <!--                                               data-th-data-effectivefieldsalias='|{"code":"#{TrdRepoTrade002.fTradeId}","shortName":"#{TrdRepoTrade002.fTradeId}"}|'>-->
-                                        <select type="text" id="fTradeId" name="fTradeId"
-                                                class="layui-input form-input input-select" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/trade/trdrepotrade/TrdRepoTrade002/queryRepoCstpInfoList}"
-                                                allowClear="true" th:initValue="${entity?.fTradeId}"></select>
-
+                                        <select id="fTradeId" name="fTradeId" formatoption="false"
+                                                class="layui-input form-input input-select"
+                                                th:data-url="@{/invest/trade/trdrepotrade/TrdRepoTrade002/queryRepoCstpInfoList}"
+                                                allowClear="true" placeholder="请输入内容" th:initValue="${entity?.fTradeId}">
+                                        </select>
+                                    </div>
+                                    <div class="layui-input-inline input-inline" th:if="${pageModel} ne ${pageModelNew}">
+                                        <input id="fTradeIdShow" name="fTradeId" formatoption="false" type="text"
+                                               class="layui-input form-input" disabled
+                                               allowClear="true" placeholder="请输入内容" th:value="${entity?.fTradeId}">
+                                        </input>
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +116,9 @@
                                                     class="layui-input form-input input-select" childrenIds="repoType,secAcctId"
                                                     placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                     th:data-result='${TRADE_PLACE}' allowClear="true" formatoption="true"
-                                                    th:initValue="${entity?.tradeMarket}"></select>
+                                                    th:initValue="${entity?.tradeMarket}"
+                                                    disabled
+                                            ></select>
                                         </div>
                                 </div>
                                 <div class="form-inline-wrap" id="repoTypeDiv">
@@ -159,6 +169,17 @@
                                     </div>
                                 </div>
                             <div class="layui-form-item">
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-label-wrap"
+                                           th:text="#{TrdRepoTrade002.term}">期限(天)</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input required type="text" id="term" name="term" maxlength="10"
+                                               class="layui-input form-input text-number" placeholder="请输入内容"
+                                               th:placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="0"
+                                               th:value="${entity?.term}">
+                                        <span class="input-right-show">天</span>
+                                    </div>
+                                </div>
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{TrdRepoTrade002.termTypeReback}">期限品种</label>
@@ -397,6 +418,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <input disabled type="text" id="tradeAmtAndFee" name="tradeAmtAndFee"  th:value="${entity?.tradeAmtAndFee}"
                                                class="layui-input form-input text-number">
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap" id="procedureAmtDiv">
@@ -406,24 +428,27 @@
                                         <input  type="text" id="procedureAmt" name="procedureAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.procedureAmt}">
+                                        <span class="input-right-show">元</span>
                             </div>
                                 </div>
-                                <div class="form-inline-wrap" id="settleAmtDiv">
+                                <div class="form-inline-wrap" id="settleAmtDiv" style="display:none">
                                     <label class="layui-form-label form-label-wrap"
-                                           th:text="#{TrdRepoTrade002.settleAmt}">结算服务费</label>
+                                           th:text="#{TrdRepoTrade002.settleAmt}">结算费</label>
                                     <div class="layui-input-inline input-inline">
                                         <input  type="text" id="settleAmt" name="settleAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.settleAmt}">
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-                                <div class="form-inline-wrap" id="commissionAmtDiv">
+                                <div class="form-inline-wrap" id="commissionAmtDiv" style="display:none">
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{TrdBondInvestTrade002.commissionAmt}">佣金</label>
                                     <div class="layui-input-inline input-inline">
                                         <input  type="text" id="commissionAmt" name="commissionAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.commissionAmt}">
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>                                
                             </div>
@@ -434,13 +459,13 @@
                 </div>
                 <!-- 人员信息 -->
                 <div class="page-component" th:data-path="@{/component/trade/TrdInvestPersonInfo002/init}"
-                     th:data-params="|{entityName: 'trdInvestPersonInfo', pageFrom: 'submitForm', entity:'${entity_trdInvestPersonInfo}', innerTrade: false}|"></div>
+                     th:data-params="|{entityName: 'trdInvestPersonInfo', pageFrom: 'submitForm', entity:'${entity_trdInvestPersonInfo}', innerTrade: false,callPageId:'TrdBondInvestTrade002',entrustId:'${entity?.entrustId}'}|"></div>
                 <!-- 质押券信息 -->
                 <div class="page-component" th:data-path="@{/component/trade/BussRepoSec/init}"
                      th:data-params="|{entityName: 'bussRepoSec', pageFrom: 'TrdRepoTrade002', entity:'${entity_bussRepoSecDto}',
                      portfolioId:'${entity?.portfolioId==null?'':entity?.portfolioId}', ps:'${entity?.ps==null?'':entity?.ps}',
-                     bussType:'zyqJy',bussType:'zyqJy',
-                     bizCode:'${rTradeId!=null? rTradeId : tradeId==null?'':tradeId}', entrustId:'${entity?.entrustId==null?'':entity?.entrustId}',
+                     bussType:'zyqJy',bussType:'zyqJy',tradeType:'trdRepo',
+                     bizCode:'${tradeId==null?'':tradeId}', entrustId:'${entity?.entrustId==null?'':entity?.entrustId}',
                      securitiesCust: '${entity?.secAcctId == null? '': entity?.secAcctId}',chlId:'${entity?.chlId == null? '': entity?.chlId}', tradeMarketId: 'tradeMarket'}|"></div>
                 <!-- 划款信息 -->
                 <div class="page-component" th:data-path="@{/component/trade/BussTrdTransferOrder/init}" id="bussTrdTransferOrder_div"
@@ -496,8 +521,7 @@
                 <div th:if="${isEleShow['TrdRepoTrade002_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'"  id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',workflowId:'${workflowId?: ''}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
                 <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin:50px;">
                     <div class="row text-center" style="margin: 20px 0;">
-                        <a th:if="${isEleShow['TrdRepoTrade002_btn_riskcal']} ne 'N' and ${isEleShow['BaseRiskMathComm_btn_riskcal']} ne 'N'"
-                                th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm"
+                        <a th:id="|${pageId}_btn_risk|" class="layui-btn layui-btn-sm"
                            th:text="#{TrdRepoTrade002.risk}">风险试算</a>
                         <a th:id="|${pageId}_btn_save|" class="layui-btn layui-btn-sm btn-save"
                            th:text="#{SysCommon.save}">保存</a>

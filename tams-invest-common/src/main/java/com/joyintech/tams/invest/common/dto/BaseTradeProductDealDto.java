@@ -146,11 +146,45 @@ public class BaseTradeProductDealDto {
      * 申购类型(可转债交易字段)
      */
     private String purchType;
-	/**
+    
+    /**
+     * 债券一级市场缴款页面标识
+     */
+    private String bondFirstSign;
+    
+    /**
      * 来自场内交易下单标识
      */
     private String isFromExchange;
     
+    /**
+     * 是否走工作流（结算下行过来的数据没有流程中的记录）
+     */
+    private boolean isNotWorkflow;
+    
+    // add by etliu 20210128 start
+    /**
+     * 银行间上行报价编号
+     */
+    private String quoteId;
+    
+    /**
+     * 获取 quoteId
+     * @return quoteId.
+     */
+    public String getQuoteId() {
+        return quoteId;
+    }
+
+    /**
+     * 设置 quoteId
+     * @param quoteId quoteId
+     */
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
+    }
+    // add by etliu 20210128 end
+
     public String getPurchType() {
 		return purchType;
 	}
@@ -522,5 +556,14 @@ public class BaseTradeProductDealDto {
     public void setIsFromExchange(String isFromExchange) {
         this.isFromExchange = isFromExchange;
     }
+
+    public String getBondFirstSign() {
+		return bondFirstSign;
+	}
+
+	public void setBondFirstSign(String bondFirstSign) {
+		this.bondFirstSign = bondFirstSign;
+	}
+
 
 }

@@ -30,13 +30,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
@@ -897,5 +895,15 @@ public class TrdBondInvestTrade002Controller extends BaseController {
     @ResponseBody
     public Map<String, Object> getTradeMarketCash(@RequestBody Map<String, Object> params) {
         return trdBondInvestTrade002Service.getTradeMarketCash(params);
+    }
+	
+	/**
+     * 银行间债券交易自动录单
+     */
+    @Transactional(rollbackFor = { Exception.class })
+    @PostMapping("secAutoTrade")
+    @ResponseBody
+    public Map<String,Object> secAutoTrade(@RequestBody TrdBondInvestTradeDto entity) {
+        return trdBondInvestTrade002Service.secAutoTrade(entity);
     }
 }

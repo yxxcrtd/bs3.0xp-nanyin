@@ -342,12 +342,9 @@ public class FinProductAdd extends BaseEntity {
      * 交易平台
      */
     private String tradePlat;
-	
 
-    /**
-     * 期货合约标的
-     */
-    private String futuresContractId;
+
+
 
     /**
      * 最后交易日
@@ -1429,13 +1426,6 @@ public class FinProductAdd extends BaseEntity {
         this.tradePlat = tradePlat == null ? null : tradePlat.trim();
     }
 
-    public String getFuturesContractId() {
-        return futuresContractId;
-    }
-
-    public void setFuturesContractId(String futuresContractId) {
-        this.futuresContractId = futuresContractId;
-    }
 
     public Date getLastTradeDate() {
         return lastTradeDate;

@@ -64,6 +64,7 @@
                         <!-- add by wangpeng 费用设置 20190817 end-->
                         <input type="hidden" id="settleIsPayWithTrade" name="settleIsPayWithTrade" th:value="${entity?.settleIsPayWithTrade}" />
                         <input type="hidden" id="exchangeIsPayWithTrade" name="exchangeIsPayWithTrade" th:value="${entity?.exchangeIsPayWithTrade}" />
+						<input type="hidden" id="isOfferFlag" name="isOfferFlag" />
                         <!-- 起息日 -->
                         <input type="hidden" id="vdate" name="vdate"
                                class="layui-input form-input" placeholder="请输入内容"
@@ -124,21 +125,28 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{TrdBondInvestTrade002.fTradeId}">成交编号</label>
-                                    <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline"  th:if="${pageModel} eq ${pageModelNew}">
                                         <!-- <input type="text" id="fTradeId" name="fTradeId"
                                                class="layui-input form-input"
                                                placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                th:value="${entity?.fTradeId}"> -->
-                                        <select type="text" id="fTradeId" name="fTradeId"
-                                                class="layui-input form-input input-select" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/trade/bond/TrdBondInvestTrade002/querySecCstpInfoList}"
-                                                allowClear="true" th:initValue="${entity?.fTradeId}"></select>
+                                        <select id="fTradeId" name="fTradeId" formatoption="false"
+                                                class="layui-input form-input input-select" parentIds="entrustId"
+                                                th:data-url="@{/invest/trade/bond/TrdBondInvestTrade002/querySecCstpInfoList?pageModel='0'}"
+                                                allowClear="true" placeholder="请输入内容" th:initValue="${entity?.fTradeId}">
+                                        </select>
                                         <!--                                        <input type="text" id="fTradeId" name="fTradeId"-->
                                         <!--                                               class="layui-input form-input input-lenovoselect" placeholder="请输入内容"-->
                                         <!--                                               data-th-placeholder="#{SysCommon.placeholder}"-->
                                         <!--                                               data-th-data-url="@{/invest/trade/bond/TrdBondInvestTrade002/querySecCstpInfoList}" data-idfield="code"-->
                                         <!--                                               data-keyfield="name" data-th-value="${entity?.fTradeId}"-->
                                         <!--                                               data-th-data-effectivefieldsalias='|{"code":"#{TrdBondInvestTrade002.fTradeId}","shortName":"#{TrdBondInvestTrade002.fTradeId}"}|'>-->
+                                    </div>
+                                    <div class="layui-input-inline input-inline" th:if="${pageModel} ne ${pageModelNew}">
+                                        <input id="fTradeIdShow" name="fTradeId" formatoption="false" type="text"
+                                                class="layui-input form-input" disabled
+                                                allowClear="true" placeholder="请输入内容" th:value="${entity?.fTradeId}">
+                                        </input>
                                     </div>
                                 </div>
                             </div>
@@ -345,7 +353,7 @@
                                 </div>
                                 <!-- 一级债券 新增 葛佳傲 2019/07/30 end -->
                                 <!-- 资产推荐方 新增 zhuyongkang 20191023 start-->
-                                <div class="form-inline-wrap">
+                                <div class="form-inline-wrap" Style="display: none">
                                     <label class="layui-form-label form-label-wrap"
                                            data-th-text="#{TrdBondInvestTrade002.assetRecommandOrg}">资产推荐方</label>
                                     <div class="layui-input-inline input-inline">
@@ -441,7 +449,7 @@
                                         <input required type="text" id="tradeAmt" name="tradeAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.tradeAmt}" />
-                                        <span class="input-right-show">元</span>
+                                        <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap shortSellingSupported">
@@ -476,15 +484,16 @@
                                 </div>
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">
-                                        <input type="radio" id="calculateField_unitCprice" name="calculateField" value="unitCprice" title="净价">
+                                        <input type="radio" id="calculateField_unitCprice" name="calculateField" value="unitCprice" title="净价" lay-filter="calculateField">
                                     </label>
                                     <div class="layui-input-inline input-inline">
                                         <input required type="text" id="unitCprice" name="unitCprice"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                data-fixtype="2" data-textrange="8"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.unitCprice}" />
+                                        <span class="input-right-show" style="margin-right: 0px;">元</span>
                                         <label class="label-deviation-degree" id="deviationDegreeLabel"></label>
-                                        <a id="TrdBondInvestTrade002_btn_viewCprice" th:if="${isEleShow['TrdBondInvestTrade002_btn_viewCprice']} ne 'N'" class="layui-btn layui-btn-sm form-input-text" data-ignore=true>查看</a>
+                                        <!-- <a id="TrdBondInvestTrade002_btn_viewCprice" th:if="${isEleShow['TrdBondInvestTrade002_btn_viewCprice']} ne 'N'" class="layui-btn layui-btn-sm form-input-text" data-ignore=true>查看</a> -->
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
@@ -495,6 +504,7 @@
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.cpriceAmt}" />
                                         <input type="hidden" id="integrateCpriceAmt" name="integrateCpriceAmt" />
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                             </div>
@@ -507,6 +517,7 @@
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                data-fixtype="2" data-th-data-textrange="12"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.unitInt}" />
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
@@ -517,6 +528,7 @@
                                                class="layui-input form-input text-number"
                                                placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                th:value="${entity?.intAmt}" />
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
@@ -527,6 +539,7 @@
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                data-fixtype="2" data-textrange="8"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.unitFprice}" />
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                             </div>
@@ -552,12 +565,13 @@
                                 </div>
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">
-                                        <input type="radio" id="calculateField_fpriceAmt" name="calculateField" value="fpriceAmt" title="全价总额">
+                                        <input type="radio" id="calculateField_fpriceAmt" name="calculateField" value="fpriceAmt" title="全价总额" lay-filter="calculateField">
                                     </label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="fpriceAmt" name="fpriceAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.fpriceAmt}" />
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                             </div>
@@ -609,20 +623,21 @@
                                         <input required type="text" id="tradeAmt" name="tradeAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.tradeAmt}">
-                                        <span class="input-right-show">元</span>
+                                        <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">
-                                        <input type="radio" id="calculateField_unitCprice" name="calculateField" value="unitCprice" th:text="#{TrdBondInvestTrade002.unitCprice}">
+                                        <input type="radio" id="calculateField_unitCprice" name="calculateField" value="unitCprice" th:text="#{TrdBondInvestTrade002.unitCprice}" lay-filter="calculateField">
                                     </label>
                                     <div class="layui-input-inline input-inline">
                                         <input required type="text" id="unitCprice" name="unitCprice"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                data-fixtype="2" data-textrange="8"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.unitCprice}">
+                                        <span class="input-right-show" style="margin-right: 0px;">元</span>
                                         <label class="label-deviation-degree" id="deviationDegreeLabel"></label>
-                                        <a id="TrdBondInvestTrade002_btn_viewCprice" class="layui-btn layui-btn-sm form-input-text" data-ignore=true>查看</a>
+                                        <!-- <a id="TrdBondInvestTrade002_btn_viewCprice" class="layui-btn layui-btn-sm form-input-text" data-ignore=true>查看</a> -->
                                     </div>
                                 </div>
                             </div>
@@ -635,6 +650,7 @@
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                data-fixtype="2" data-th-data-textrange="12"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.unitInt}">
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
@@ -645,6 +661,7 @@
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                data-fixtype="2" data-textrange="8"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.unitFprice}">
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
@@ -654,6 +671,7 @@
                                         <input type="text" id="cpriceAmt" name="cpriceAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.cpriceAmt}">
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                             </div>
@@ -666,16 +684,18 @@
                                                class="layui-input form-input text-number"
                                                placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                th:value="${entity?.intAmt}">
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">
-                                        <input type="radio" id="calculateField_fpriceAmt" name="calculateField" value="fpriceAmt" th:text="#{TrdBondInvestTrade002.fpriceAmt}">
+                                        <input type="radio" id="calculateField_fpriceAmt" lay-filter="calculateField" name="calculateField" value="fpriceAmt" th:text="#{TrdBondInvestTrade002.fpriceAmt}">
                                     </label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="fpriceAmt" name="fpriceAmt"
                                                class="layui-input form-input text-number" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.fpriceAmt}">
+                                        <span class="input-right-show">元</span>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap" id="channelFee_div" style="display: none">

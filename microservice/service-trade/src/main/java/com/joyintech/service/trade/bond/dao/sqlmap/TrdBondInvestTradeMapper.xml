@@ -1346,4 +1346,39 @@
     <select id="getType7" parameterType="com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto" resultType="java.lang.String">
         select type_7 from FIN_PRODUCT_TYPE where FINPROD_ID=#{finprodId}
     </select>
+    
+    <select id="selectInterfTradSecdeal" resultType="com.joyintech.tams.common.base.entity.InterfTradSecdeal">
+    SELECT
+        <include refid="com.joyintech.tams.common.base.dao.InterfTradSecdealMapper.Base_Column_List" />
+    FROM
+        INTERF_TRAD_SECDEAL
+    WHERE
+        FEDEALNO = #{fTradeId,jdbcType = VARCHAR}
+    </select>
+    <select id="selectMatchNum" resultType="java.math.BigDecimal">
+        SELECT
+            MATCH_NUM *100
+        FROM
+            TRD_MATCH_INFO tmi
+        WHERE
+            ENTRUST_ID = #{entrustId,jdbcType = VARCHAR}
+            AND CSTP_TRADE_ID = #{fedealno,jdbcType = VARCHAR}
+    </select>
+    <select id="queryPortfolioIdByFedealno" resultType="com.joyintech.tams.common.base.entity.PtlPortfolio" parameterType="java.lang.String">
+        SELECT
+        T1.PORTFOLIO_ID,
+        T3.PROFIT_TYPE
+        FROM
+        IBU_QUOTE_BOND T1
+        INNER JOIN IBU_QUOTE_BOND_DET T2 ON
+        T2.QUOTE_ID = T1.QUOTE_ID
+        INNER JOIN PTL_PORTFOLIO T3 ON
+        T3.PORTFOLIO_ID = T1.PORTFOLIO_ID
+        INNER JOIN PTL_PORTFOLIO_AUTHORITY T4 ON
+        T3.PORTFOLIO_ID = T4.PORTFOLIO_ID
+        <if test="loginUserName!=null">
+            AND T4.USER_ID = #{loginUserName}
+        </if>
+        WHERE T2.EXECID = #{fedealno}
+    </select>
 </mapper>

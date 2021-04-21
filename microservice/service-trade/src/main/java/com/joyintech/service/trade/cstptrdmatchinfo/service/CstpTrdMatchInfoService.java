@@ -13,6 +13,7 @@ import com.joyintech.service.trade.cstptrdmatchinfo.dao.CstpTrdMatchInfoMapper;
 import com.joyintech.service.trade.cstptrdmatchinfo.dto.CstpTrdMatchInfoDto;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.TrdMatchInfo;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -116,5 +117,13 @@ public class CstpTrdMatchInfoService extends BaseService<CstpTrdMatchInfoDto> {
             	}
             }    
         }
+	}
+	
+	public boolean deleteTrdPledgeMatchInfo( TrdMatchInfo trdMatchInfo){
+		int delete = cstpTrdMatchInfoMapper.deleteTrdPledgeMatchInfo(trdMatchInfo);
+		if(delete >=0){
+			return true;
+		}
+		return false;
 	}
 }

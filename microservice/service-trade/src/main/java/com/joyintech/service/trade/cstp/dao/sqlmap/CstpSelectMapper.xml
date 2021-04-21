@@ -7,89 +7,89 @@
 		select distinct aa.* from(
 		SELECT
 		I.OURTRADERNAME ourTradeName,
-		decode(I.BUSINESSTYPE,'T01',
-		(select TRADE_MARKET from fin_product where FINPROD_market_ID = I.SECURITYID),
-		'T02',decode(tr.market, 'IB', '01', 'SH', '03', 'SZ', '04')) market,
-		decode(I.BUSINESSTYPE,'T01',ts.SETTLE_SPEED,'T02',tr.SETTLE_SPEED) settleSpeed,
+		decode(I.BUSINESSTYPE,'BOND',
+		(select TRADE_MARKET from fin_product where FINPROD_market_ID = ts.SECID),
+		'REPO',decode(tr.market, 'IB', '01', 'SH', '03', 'SZ', '04')) market,
+		decode(decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED),'1','01','2','02','3','03') settleSpeed,
 		I.ourdepositaccountname,
-
-		I.OURDEPOSITACCOUNTNUMBER
-		,I.EXECID execid
+		I.EXECID execid
 		,I.BUSINESSTYPE businesstype
-		,decode(I.BUSINESSTYPE,'T01',I.SECURITYID,'T02','') securityid
-		,decode(I.BUSINESSTYPE, 'T01', I.SYMBOL, 'T02', '') symbol
-		,I.SIDE side
+		,decode(I.BUSINESSTYPE,'BOND',ts.SECID,'REPO','') securityid
+		,decode(I.BUSINESSTYPE, 'BOND', I.SYMBOL, 'REPO', '') symbol
+		,nvl(ts.ps,tr.ps) side
 		,ts.Prinamt prinamt
 		,tr.Repoamt repoamt
 		,I.LASTQTY lastqty
-		,(select sum(MATCH_NUM) from trd_match_info where CSTP_TRADE_ID = I.EXECID) lastqtyready
-		<!--decode(I.BUSINESSTYPE,'T01',I.LASTQTY-ts.Prinamt,'T02',I.LASTQTY-tr.Repoamt) lastqtyready-->
-		,decode(I.BUSINESSTYPE,'T01',I.PRICE,'T02',I.PRICE*100) price
-		,decode(I.BUSINESSTYPE, 'T01', I.DIRTYPRICE, 'T02', '') dirtyprice
-		,decode(I.BUSINESSTYPE, 'T01', I.UNDERLYINGYIELD2*100, 'T02', '') underlyingyield2
+		,tmi.SUMMATCHNUM lastqtyready 
+		<!--decode(I.BUSINESSTYPE,'BOND',I.LASTQTY-ts.Prinamt,'REPO',I.LASTQTY-tr.Repoamt) lastqtyready-->
+		,decode(I.BUSINESSTYPE,'BOND',I.PRICE,'REPO',I.PRICE*100) price
+		,decode(I.BUSINESSTYPE, 'BOND', I.DIRTYPRICE, 'REPO', '') dirtyprice
+		,decode(I.BUSINESSTYPE, 'BOND', I.UNDERLYINGYIELD2*100, 'REPO', '') underlyingyield2
 		,I.TRADEDATE tradedate
-		,decode(I.BUSINESSTYPE, 'T01', I.ACCRUEDINTERESTAMT, 'T02', '') accruedinterestamt
+		,decode(I.BUSINESSTYPE, 'BOND', I.ACCRUEDINTERESTAMT, 'REPO', '') accruedinterestamt
 		,I.ACCRUEDINTERESTTOTALAMT accruedinteresttotalamt
 		,I.TRADECASHAMT tradecashamt
-		,decode(I.BUSINESSTYPE, 'T01', '', 'T02', I.SETTLCURRAMT2) settlcurramt2
-		,decode(I.BUSINESSTYPE, 'T01', '', 'T02', I.TRADELIMITDAYS) tradelimitdays
-		,decode(I.BUSINESSTYPE, 'T01', '', 'T02', I.CASHHOLDINGDAYS) cashholdingdays
-		,round(decode(I.BUSINESSTYPE, 'T01',
-		(NVL(I.LASTQTY,0)-NVL(ts.Prinamt,0))/NVL(I.LASTQTY,0),
-		'T02',(NVL(I.LASTQTY,0)-NVL(tr.Repoamt,0))/NVL(I.LASTQTY,0)),4) percent,
-		decode(I.BUSINESSTYPE, 'T01', I.STRIKEYIELD*100, 'T02', '') strikeyield,
+		,decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.SETTLCURRAMT2) settlcurramt2
+		,decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.TRADELIMITDAYS) tradelimitdays
+		,decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.CASHHOLDINGDAYS) cashholdingdays
+		,ROUND(NVL(tmi.SUMMATCHNUM*100, 0)/ NVL(I.LASTQTY, 1) , 4) percent,
+		decode(I.BUSINESSTYPE, 'BOND', I.STRIKEYIELD*100, 'REPO', '') strikeyield,
 		CASE
-		WHEN TRD.F_TRADE_ID IS NULL and WFL.F_TRADE_ID is null THEN
+		WHEN tmi.SUMMATCHNUM IS  NULL  or tmi.SUMMATCHNUM=0 THEN
 		<!--未匹配-->'02'
-		WHEN ((TRD.F_TRADE_ID IS NOT NULL OR WFL.F_TRADE_ID is NOT null) AND
-		decode(I.BUSINESSTYPE,'T01',ts.Prinamt,'T02',tr.Repoamt)=0)
-		then
-		<!--
-		已匹配-->'01'
+		WHEN  tmi.SUMMATCHNUM*100 =I.LASTQTY then
+		<!-- 已匹配-->'01'
 		ELSE
-		<!--
-		部分匹配-->'03'
+		<!-- 部分匹配-->'03'
 		END
-		matchStatus
-		,P.PORTFOLIO_ID  portfolioId /* add by songyawei */
+		matchStatus,
+		QUOTE.QUOTEID  reference,
+		QUOTE.ENTRUST_ID entrustId,
+		I.CB_FPRICE_AMT,
+		I.SC_FPRICE_AMT,
+		case when ipar.portfolio_id is not null
+				then i.OURDEPOSITACCOUNTNUMBER
+			else COUNTERDEPOSITACCOUNTNUMBER
+			end as  OURDEPOSITACCOUNTNUMBER,
+		su.USER_NAME userName
 		FROM
 		INTERF_CSTP_TRADE I
-		LEFT JOIN
-		TRD_PRODUCT_DEAL TRD
-		ON
-		TRD.F_TRADE_ID = I.EXECID AND TRD.IS_CANCEL = #{IS_CANCEL} AND TRD.TRADE_STATUS=01
-		LEFT JOIN
-		TRD_PRODUCT_DEAL_ADD TADD
-		ON
-		TRD.TRADE_ID = TADD.TRADE_ID
-		LEFT JOIN
-		PTL_PORTFOLIO P
-		ON
-		TADD.PORTFOLIO_ID = P.PORTFOLIO_ID
-		LEFT JOIN
-		WFL_TRD_PRODUCT_DEAL WFL
-		ON
-		WFL.F_TRADE_ID = I.EXECID AND WFL.IS_CANCEL = #{IS_CANCEL} AND WFL.TRADE_STATUS=01
-		LEFT JOIN
-		WFL_TRD_PRODUCT_DEAL_ADD WADD
-		ON
-		WFL.TRADE_ID = WADD.TRADE_ID
-		LEFT JOIN
-		PTL_PORTFOLIO WP
-		ON
-		WADD.PORTFOLIO_ID = WP.PORTFOLIO_ID
+		INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
 		left join INTERF_OPICS_TRAD_REPO tr on tr.oritradeid = I.EXECID
-		left join INTERF_TRAD_SECDEAL ts on ts.FEDEALNO = EXECID
+		left join INTERF_TRAD_SECDEAL ts on ts.FEDEALNO = I.EXECID
+		<!-- left join fin_product fp on ts.SECID= fp.finprod_market_id -->
+		LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON I.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID 
+		LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID 
+		LEFT JOIN SYS_USER_ADD sua ON nvl(ts.TRAD,tr.BUYTRADER) =sua.IBU_TRADER 
+		LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID 
+		LEFT JOIN  (
+		      SELECT
+		        SUM(MATCH_NUM) SUMMATCHNUM,CSTP_TRADE_ID
+		      FROM
+		        trd_match_info
+		      group by
+		        CSTP_TRADE_ID  ) tmi on tmi.CSTP_TRADE_ID = I.EXECID
+		LEFT JOIN (
+				SELECT i.EXECID ,listagg(nvl(iqb.ENTRUST_ID , nvl(iqc.ENTRUST_ID ,nvl(iqerb.ENTRUST_ID,iqerr.ENTRUST_ID) )), ',')
+					WITHIN GROUP ( ORDER BY i.UPDATETIME  DESC) AS ENTRUST_ID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID) QUOTEID 
+				FROM  INTERF_CSTP_TRADE i
+				LEFT JOIN IBU_QUOTE_BOND_DET iqbd ON i.EXECID = iqbd.EXECID
+				LEFT JOIN IBU_QUOTE_BOND iqb ON iqbd.QUOTE_ID = iqb.QUOTE_ID
+				LEFT JOIN IBU_QUOTE_ETR_RE iqerb ON iqb.QUOTE_ID = iqerb.QUOTE_ID
+				LEFT JOIN IBU_QUOTE_CREP iqc ON i.EXECID = iqc.EXECID
+				LEFT JOIN IBU_QUOTE_ETR_RE iqerr ON iqc.QUOTE_ID = iqerr.QUOTE_ID
+				GROUP BY i.EXECID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID)
+			) QUOTE ON QUOTE.EXECID=I.EXECID
 		<where>
-			AND I.BUSINESSTYPE in ('T01','T02')
+			AND I.BUSINESSTYPE in ('BOND','REPO')
 			<if test="finprodType != null and !''.equals(finprodType)">
 				AND I.BUSINESSTYPE = #{finprodType}
 			</if>
 			<if test="ps != null and !''.equals(ps)">
-				AND I.SIDE = #{ps}
+				AND nvl(ts.ps,tr.ps) = #{ps}
 			</if>
 			<if test="finprodId != null and !''.equals(finprodId)">
-				AND I.SECURITYID = #{finprodId}
+				AND (ts.SECID = #{finprodId} or ts.SECID = CONCAT(#{finprodId},'.IB'))
 			</if>
 			<if test="execid != null">
 				AND I.EXECID IN
@@ -122,6 +122,30 @@
 			<if test="priceAmt2!=null and priceAmt2!='' ">
 				and I.TRADECASHAMT &lt;= ${priceAmt2}
 			</if>
+			<if test="entrustBusiCode !=null and entrustBusiCode !='' ">
+				and (nvl(iqb.ENTRUST_ID ,nvl(iqerb.ENTRUST_ID ,nvl(iqc.ENTRUST_ID,iqerr.ENTRUST_ID ))) = #{entrustBusiCode}
+					or  nvl(iqb.ENTRUST_ID ,nvl(iqerb.ENTRUST_ID ,nvl(iqc.ENTRUST_ID,iqerr.ENTRUST_ID ))) is null
+					)
+			</if>
+			<!-- <if test="entrustBusiCode ==null or entrustBusiCode =='' ">
+				and nvl(iqb.ENTRUST_ID ,nvl(iqerb.ENTRUST_ID ,nvl(iqc.ENTRUST_ID,iqerr.ENTRUST_ID ))) is null
+			</if> -->
+			<if test="quoteId !=null and quoteId !='' ">
+				and QUOTE.quoteId = #{quoteId} 
+			</if>
+			<if test="entrustFinprodId !=null and entrustFinprodId !='' ">
+				and ts.SECID = #{entrustFinprodId} 
+			</if>
+			<if test="entrustSettleSpeed !=null and entrustSettleSpeed !='' ">
+				and decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED) = #{entrustSettleSpeed} 
+			</if>
+			<if test="entrustPs !=null and entrustPs !='' ">
+				and nvl(ts.ps,tr.ps) = #{entrustPs} 
+			</if>
+			<if test="entrustTradelimitdays !=null and entrustTradelimitdays !='' ">
+				and I.TRADELIMITDAYS = #{entrustTradelimitdays} 
+			</if>
+			
 		</where>
 		) aa
 		<where>
@@ -172,25 +196,77 @@
 			</if>
 		</where>
 	</select>
+	
+	<!-- 成交编号下拉框查询 -->
+	<select id="getBusiCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+	select distinct id, text from (
+		<trim prefixOverrides="UNION ALL">
+					select QUOTE_ID id,
+						   QUOTE_ID text
+					from  IBU_QUOTE_BOND
+				UNION ALL
+					select QUOTE_ID id,
+						   QUOTE_ID text
+					from  IBU_QUOTE_CREP
+			<if test=" quote == null or quote =='' ">
+				UNION ALL
+					select ENTRUST_ID id,
+						   ENTRUST_ID text
+					from  ETR_ENTRUST
+					where ((FINPROD_TYPE2 ='F01' and ps in('T01','T02'))
+							 or (FINPROD_TYPE2 in ('F02','F03') ))
+			</if>
+			<if test=" quote == null or quote =='' ">
+				UNION ALL
+					select trade_id id,
+						   trade_id text
+					from TRD_PRODUCT_DEAL_PRE
+			</if>
+		
+		</trim>
+		)
+		<where>
+			<if test="search != null and !''.equals(search)">
+				AND id LIKE CONCAT('%',CONCAT(#{search},'%'))
+			</if>
+		</where>
+	</select>
 	<!-- 资产代码查询 -->
 	<select id="getFinprodId" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT
-		distinct
-			SECURITYID code,
-			SYMBOL name,
-			SYMBOL shortName
-		FROM 
-			INTERF_CSTP_TRADE
+		DISTINCT T1.SECURITYID code,
+		T1.SYMBOL name,
+		T1.SYMBOL shortName
+		FROM
+		INTERF_CSTP_TRADE T1
+		INNER JOIN (
+		SELECT
+		MAX(UPDATETIME) UPDATETIME,
+		SECURITYID
+		FROM
+		INTERF_CSTP_TRADE
+		GROUP BY
+		SECURITYID) T2 ON
+		T1.UPDATETIME = T2.UPDATETIME
+		AND T1.SECURITYID = T1.SECURITYID
 		<where>
 			<if test="param != null and !''.equals(param)">
-				AND (SECURITYID LIKE CONCAT('%',CONCAT(#{param},'%'))
-				OR SYMBOL LIKE CONCAT('%',CONCAT(#{param},'%')))
+				AND (T1.SECURITYID LIKE CONCAT('%',CONCAT(#{param},'%'))
+				OR T1.SYMBOL LIKE CONCAT('%',CONCAT(#{param},'%')))
 			</if>
 		</where>
 	</select>
 	<select id="getAmountByFtradeId" resultType="java.math.BigDecimal">
 		select lastqty from INTERF_CSTP_TRADE
 		<where>
+			updatetime = (select max(t.updatetime)
+			from interf_cstp_trade t
+			<where>
+				<if test="fTradeId!=null and fTradeId!='' ">
+					t.execid = #{fTradeId,jdbcType=VARCHAR}
+				</if>
+			</where>
+			)
 			<if test="fTradeId!=null and fTradeId!='' ">
 				and execid = #{fTradeId}
 			</if>

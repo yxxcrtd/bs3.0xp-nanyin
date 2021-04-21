@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,19 +41,6 @@ import com.joyintech.tams.common.base.dao.InterfTradSecdealMapper;
 import com.joyintech.tams.common.base.dao.PtlSecValutionMapper;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
 import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
-import com.joyintech.tams.common.base.entity.AssetTargetDb;
-import com.joyintech.tams.common.base.entity.EtrFinishStatus;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
-import com.joyintech.tams.common.base.entity.PtlSecValution;
-import com.joyintech.tams.common.base.entity.PtlSecValutionKey;
-import com.joyintech.tams.common.base.entity.StlSecAcctInfo;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeTotal;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeTotalKey;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
@@ -522,18 +511,18 @@ public class TrdBondInvestTradeService extends BaseService {
         params.put("Y", DictCodeList.是否_是.getValue());
         TrdBondInvestTradeDto resultDto = trdBondInvestTradeMapper.getTrdBondInvestTradeDto(params);
         if (resultDto != null) {
-            // 清算速度
-           if (resultDto.getSettleSpeed() == null || resultDto.getSettleSpeed() == 0L) {
-               //del by xr 展示位0、1、2
+            // etliu 20200716 modify 画面上的清算速度已经是输入框，显示数值，不是下拉框显示数据字典了 start
+//            // 清算速度
+//           if (resultDto.getSettleSpeed() == null || resultDto.getSettleSpeed() == 0L) {
 //                resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_0.getValue());
-               resultDto.setSettleSpeedStr("0");
-            }
-            else if(resultDto.getSettleSpeed() == 1L){
+//            }
+//            else {
 //                resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_1.getValue());
-               resultDto.setSettleSpeedStr("1");
-            }else{
-               resultDto.setSettleSpeedStr("2");
-           }
+//            }
+            if (resultDto.getSettleSpeed() != null) {
+                resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
+            }
+            // etliu 20200716 modify 画面上的清算速度已经是输入框，显示数值，不是下拉框显示数据字典了 end
             // 到期收益率
             if (resultDto.getYield() != null) {
                 resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));
@@ -777,6 +766,9 @@ public class TrdBondInvestTradeService extends BaseService {
         InterfTradSecdeal interfTradSecdeal = trdBondInvestTradeMapper.querySecCstpInfoByNo(fedealno,entrustId,preTradeId,isCstpSure);
         if (interfTradSecdeal != null){
             BeanUtil.copyPropertiesIgnoreNull(trdBondInvestTradeCSTPDto, interfTradSecdeal);
+            if(StringUtil.equals(isCstpSure,"true")&&StringUtil.isNotEmpty(fedealno)&&StringUtil.isNotEmpty(entrustId)){
+                trdBondInvestTradeCSTPDto.setPrinamt(trdBondInvestTradeMapper.selectMatchNum(fedealno,entrustId));
+            }
             if(interfTradSecdeal.getDealdate()!=null){
                 trdBondInvestTradeCSTPDto.setDealDateStr();
             }
@@ -790,24 +782,41 @@ public class TrdBondInvestTradeService extends BaseService {
             }
             if (finProduct != null){
                 trdBondInvestTradeCSTPDto.setSecid(finProduct.getFinprodId());
+                trdBondInvestTradeCSTPDto.setFinprodMarketId(finProduct.getFinprodMarketId());
             }
             // 交易方向转换
-            if (StringUtil.equals(trdBondInvestTradeCSTPDto.getPs(), "P")){
-                trdBondInvestTradeCSTPDto.setPs(BussinessDictCodeList.交易方向_买入.getValue());
-            }
-            else{
-                trdBondInvestTradeCSTPDto.setPs(BussinessDictCodeList.交易方向_卖出.getValue());
-            }
-            // 交易对手代码转换
-//            if (StringUtil.isNotEmpty(trdBondInvestTradeCSTPDto.getCno())) {
-//                    MstCounterParty mstCounterParty = trdBondInvestTradeMapper.queryMstCounterPartyByCounterName(trdBondInvestTradeCSTPDto.getCno());
-//                if (mstCounterParty != null) {
-//                    trdBondInvestTradeCSTPDto.setCno(mstCounterParty.getCounterId());
-//                }
+//            if (StringUtil.equals(trdBondInvestTradeCSTPDto.getPs(), "P")){
+//                trdBondInvestTradeCSTPDto.setPs(BussinessDictCodeList.交易方向_买入.getValue());
 //            }
 //            else{
-//                trdBondInvestTradeCSTPDto.setCno(null);
+//                trdBondInvestTradeCSTPDto.setPs(BussinessDictCodeList.交易方向_卖出.getValue());
 //            }
+            // 查询报价信息
+            EtrEntrustExt etrEntrustExt = trdBondInvestTradeMapper.queryBondEntrustInfo(interfTradSecdeal.getFedealno());
+            if(null!=etrEntrustExt){
+            	//有报价
+            	trdBondInvestTradeCSTPDto.setIsOfferFlag("01");
+                if(StringUtil.isNotEmpty(etrEntrustExt.getCpPartyId())){
+                    trdBondInvestTradeCSTPDto.setCno(trdBondInvestTradeMapper.selectCounterId(etrEntrustExt.getCpPartyId()));
+                }
+                trdBondInvestTradeCSTPDto.setClienttrader(etrEntrustExt.getCpTrader());
+//                trdBondInvestTradeCSTPDto.setEntrustId(etrEntrustExt.getEntrustId());
+            }else{
+                /*if (StringUtil.isNotEmpty(trdBondInvestTradeCSTPDto.getCno())) {
+                        MstCounterParty mstCounterParty = trdBondInvestTradeMapper.queryMstCounterPartyByCounterName(trdBondInvestTradeCSTPDto.getCno());
+                    if (mstCounterParty != null) {
+                        trdBondInvestTradeCSTPDto.setCno(mstCounterParty.getCounterId());
+                    }
+                }
+                else{
+                    trdBondInvestTradeCSTPDto.setCno(null);
+                }*/
+            	//无报价
+            	trdBondInvestTradeCSTPDto.setIsOfferFlag("02");
+            	//无报价交易对手置空
+            	trdBondInvestTradeCSTPDto.setClienttrader(StringUtil.EMPTY);
+            	trdBondInvestTradeCSTPDto.setCno(StringUtil.EMPTY);
+            }
             // 根据证券账户查询对应组合
             // 查询证券账户是否系统存在
             StlSecAcctInfo stlSecAcctInfo = stlSecAcctInfoMapper.selectByPrimaryKey(trdBondInvestTradeCSTPDto.getOurdepositaccountnumber());
@@ -816,13 +825,17 @@ public class TrdBondInvestTradeService extends BaseService {
                 trdBondInvestTradeCSTPDto.setOurdepositaccountnumber("A000000001");
             }
             // 根据证券账户查询关联关联组合
-            List<String> portfolioList = trdBondInvestTradeMapper.queryPortfolioIdBySecAcctId(loginUserName, trdBondInvestTradeCSTPDto.getOurdepositaccountnumber());
+            List<PtlPortfolio> portfolioList = trdBondInvestTradeMapper.queryPortfolioIdByFedealno(loginUserName, fedealno);
             if (!StringUtil.isEmptyList(portfolioList) && portfolioList.size() == 1){
-                trdBondInvestTradeCSTPDto.setPortfolioId(portfolioList.get(0));
+                trdBondInvestTradeCSTPDto.setPortfolioId(portfolioList.get(0).getPortfolioId());
+                String invAim = BussinessDictCodeList.投资目的_公允价值变动计入当期损益.getValue();
+                String profitType =  portfolioList.get(0).getProfitType();
+                if(StringUtil.equals(profitType,DictCodeList.收益类型_货币型.getValue())
+                        ||StringUtil.equals(profitType,DictCodeList.收益类型_收益型.getValue())){
+                    invAim = BussinessDictCodeList.投资目的_摊余成本类.getValue();
+                }
+                trdBondInvestTradeCSTPDto.setInvAim(invAim);
             }
-//            else{
-//                trdBondInvestTradeCSTPDto.setOurdepositaccountnumber(null);
-//            }
         }
         return trdBondInvestTradeCSTPDto;
     }
@@ -846,7 +859,8 @@ public class TrdBondInvestTradeService extends BaseService {
             BigDecimal prinamt = BigDecimal.ZERO;
             Map<String,Object> ftrademap = new HashMap<>();
             ftrademap.put("fTradeId",fTradeId);
-            InterfTradSecdeal interfTradSecdeal = interfTradSecdealMapper.selectByPrimaryKey(fTradeId);
+            //InterfTradSecdeal interfTradSecdeal = interfTradSecdealMapper.selectByPrimaryKey(fTradeId);
+            InterfTradSecdeal interfTradSecdeal = trdBondInvestTradeMapper.selectInterfTradSecdeal(fTradeId);
             BigDecimal amountByFtradeId = cstpSelectMapper.getAmountByFtradeId(ftrademap);
             if(amountByFtradeId!=null){
                 prinamt = amountByFtradeId;
@@ -988,4 +1002,14 @@ public class TrdBondInvestTradeService extends BaseService {
     public String getType7(TrdBondInvestTradeDto dto) {
         return trdBondInvestTradeMapper.getType7(dto);
     }
+	
+		public List<TrdTradeFeeDetail>  getAllFeeByFTradeId(Map<String, Object> map) {
+		List<TrdTradeFeeDetail>  allFee = trdBondInvestTradeMapper.getAllFeeByFTradeId(map);
+		return allFee;
+	}
+
+	public InterfTradSecdeal getInterfTradSecdeal(Map<String, Object> map) {
+		String fTradeId = (String) map.get("fTradeId");
+		return trdBondInvestTradeMapper.selectInterfTradSecdeal(fTradeId);
+	}
 }

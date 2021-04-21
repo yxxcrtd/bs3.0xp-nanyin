@@ -89,4 +89,6 @@ public interface BaseAssetCashPositionCommMapper {
     
     Map<String, Object> selectTradeReleaseStatus(Map<String, Object> map);
 
+    int deleteCashPositionByOrderId(@Param("orderId") String orderId);
+
 }

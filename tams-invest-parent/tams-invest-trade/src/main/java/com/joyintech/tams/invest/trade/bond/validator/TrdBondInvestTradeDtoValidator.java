@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -503,7 +506,45 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
             }
         }
 
-
+		if(StringUtil.isNotEmpty(inputDto.getfTradeId())){//成交编号不为空 校验
+        	Map<String,Object> map = new HashMap<>();
+        	map.put("fTradeId", inputDto.getfTradeId());
+        	//入库时的费用
+        	InterfTradSecdeal interfTradSecdeal = trdBondInvestTrade002Service.getInterfTradSecdeal(map);
+        	BigDecimal dealFeeAmt  = StringUtil.isNotEmpty(interfTradSecdeal.getDealFeeamt())?interfTradSecdeal.getDealFeeamt(): BigDecimal.ZERO;
+        	BigDecimal settFeeAmt  = StringUtil.isNotEmpty(interfTradSecdeal.getSettFeeamt())?interfTradSecdeal.getSettFeeamt(): BigDecimal.ZERO;
+        	
+        	//所有已经使用的费用
+        	List<TrdTradeFeeDetail> allfee = trdBondInvestTrade002Service.getAllFeeByFTradeId(map);
+        	BigDecimal dealFeeAmtSum  = BigDecimal.ZERO;
+        	BigDecimal settFeeAmtSum  = BigDecimal.ZERO;
+        	for(TrdTradeFeeDetail trdTradeFeeDetail:allfee){
+        		if(StringUtil.equals(trdTradeFeeDetail.getFeeType(), BussinessDictCodeList.费用类型_交易手续费.getValue())){
+        			dealFeeAmtSum =ArithmeticUtil.doAdd(trdTradeFeeDetail.getFeeAmt(),dealFeeAmtSum);
+            	}
+        		if(StringUtil.equals(trdTradeFeeDetail.getFeeType(), BussinessDictCodeList.费用类型_结算手续费.getValue())){
+        			settFeeAmtSum = ArithmeticUtil.doAdd(trdTradeFeeDetail.getFeeAmt(),settFeeAmtSum);
+            	}
+        	}
+        	if(ArithmeticUtil.doAdd(dealFeeAmtSum,inputDto.getProcedureAmt()).compareTo(dealFeeAmt)>0){
+    			ValidMessage validMessage = new ValidMessage("procedureAmt", "当前交易交易手续费与已完成交易已超过当前下行成交数据交易手续费！");
+                errorList.add(validMessage);
+    		}
+        	if(ArithmeticUtil.doAdd(settFeeAmtSum,inputDto.getSettleAmt()).compareTo(settFeeAmt)>0){
+				ValidMessage validMessage = new ValidMessage("settleAmt", "当前交易结算手续费与已完成交易已超过当前下行成交数据结算手续费！");
+                errorList.add(validMessage);
+    		}
+        }
+        if(StringUtil.isNotEmpty(inputDto.getfTradeId())&&null!=inputDto.getTradeAmt()){
+            Map<String,Object> map = new HashMap<>();
+            map.put("fTradeId",inputDto.getfTradeId());
+            map.put("tradeAmt",inputDto.getTradeAmt());
+            map.put("workflowId",inputDto.getWorkflowId());
+            if(!trdBondInvestTrade002Service.isAllTradeAmtByFTradeId(map)){
+                ValidMessage validMessage = new ValidMessage("tradeAmt", "券面总额不可大于该成交数据中未录入交易的券面总额！");
+                errorList.add(validMessage);
+            }
+        }
         return errorList;
     }
 
