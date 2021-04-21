@@ -192,7 +192,11 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
                 //项目类资产理论开始日、理论结束日不参与计算逻辑
                 entity2.setVdateTerm(entity2.getVdate());
                 entity2.setMdateTerm(entity2.getMdate());
-                entity2.setIsPayInt(DictCodeList.是否_是.getValue());
+                if(StringUtil.isNotEmpty(entity2.getIsPayInt()) && entity2.getIsPayInt().equals(DictCodeList.是否_否.getValue())){
+                    entity2.setIsPayInt(entity2.getIsPayInt());
+                }else{
+                    entity2.setIsPayInt(DictCodeList.是否_是.getValue());
+                }
                 entity2.setCashBaseamt(scai.getIssueAmt());
                 entity2.setCashUnitType(DictCodeList.现金流单位_总额.getValue());
                 if(DateUtil.compareDate(entity2.getMdate(), scai.getMdate())==0){
