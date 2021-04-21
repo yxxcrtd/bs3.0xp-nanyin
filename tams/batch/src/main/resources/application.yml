@@ -25,7 +25,7 @@ spring:
     logAbandoned: true
   activemq:
     active: false
-    systemId: tams
+    systemId: valuation_batch
     brokerUrl: tcp://localhost:61616
     user: system
     password: manager
