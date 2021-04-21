@@ -15,6 +15,8 @@
     <result column="CUSTOMERPROFIT" property="customerprofit" jdbcType="DECIMAL" />
     <result column="BANKPROFIT" property="bankprofit" jdbcType="DECIMAL" />
     <result column="PRODYIELD" property="prodyield" jdbcType="DECIMAL" />
+      <result column="XGBALANCE" property="xgbalance" jdbcType="DECIMAL" />
+      <result column="XGBOTTOMBALANCE" property="xgbottombalance" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, PRODCOUNTS, PRODAMOUNT, PRODNETAMOUNT, 
