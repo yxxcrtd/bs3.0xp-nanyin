@@ -235,433 +235,453 @@
 	  	group by pmpp.PRODID,pmpp.IS_CONSTRACTE,pmpp.TRANSFER_TYPE,pmpp.BUY_PLACE,pmpp.VDATE,pmpp.OPERATE_MODE,pmpp.RAISEMODE,
 	  	pmpp.IVSTORIENTATION,pmpp.MANAGE_TYPE,pmpp.FIDUCIARY_DUTY,pmpp.DURATIONFLAG,pmpp.IS_MARKET_FUND,pmpp.PAYSTATUS,pmpp.TERM,pmpp.CCY,pmpp.END_DAYS
   </select>
+  <sql id="pos">
+		/*头寸计算：几个金额的计算，以产品id，币种，客户二级类型，销售区域分组*/
+		select ds.*
+			,ifnull(pv.prod_value,1) prod_value ,/*产品最新净值*/
+			pv.ccy yieldccy/*报价币种*/
+		from (
+			SELECT
+				prodid,
+				ccy,
+				customer_type2,
+				buy_place,
+				SUM(dirtyamtsum) dirtyamtsum, /*当期募集金额*/
+				SUM(redamt) redamt, /*当期兑付金额*/
+				SUM(raiseqty) raiseqty, /*当期募集份额*/
+				SUM(payqty) payqty, /*当期兑付份额*/
+				SUM(redcost) redcost, /*当期到期本金*/
+				SUM(endcost) endcost, /*剩余成本*/
+				SUM(endqtysum) endqtysum /*期末份额*/
+			FROM
+				(
+				/*上周期头寸*/
+				SELECT
+					prodid,
+					ccy,
+					customer_type2,
+					buy_place,
+					0 dirtyamtsum,
+					0 redamt,
+					0 raiseqty,
+					0 payqty,
+					0 redcost,
+					endcost,
+					endqtysum
+				FROM
+					pbc_month_prd_position
+				WHERE ENDDATE between ADD_MONTHS(#{reportStartDate,jdbcType=DATE},-1) and #{reportStartDate,jdbcType=DATE}
+				UNION ALL
+				/*本周期头寸*/
+				SELECT
+					ifnull(dl.fprod_id, dl.prod_id) prodid,
+					ccy,
+					typemap.objfield1 customer_type2,
+					buy_place,
+				SUM(
+					CASE
+						WHEN dl.trade_type IN('01', '02', '14'
+								<if test="hasbouns != null and hasbouns =='01'">
+									/***根据参数判断是否添加红利再投**/
+									,'05'
+								</if>
+							) THEN
+							dl.trade_prince
+						ELSE 0
+					END
+				) dirtyamtsum,
+				SUM(
+					CASE
+						WHEN dl.trade_type IN('03', '04', '15', '16', '17'
+								<if test="hasbouns != null and hasbouns =='01'">
+									/***根据参数判断是否添加红利再投**/
+									,'05'
+								</if>
+							) THEN /*加上 04收益分配，05红利再投的交易金额与人行确认不需统计*/
+								dl.trade_prince
+						ELSE 0
+					END
+				) redamt,
+				SUM(
+					CASE
+						WHEN dl.trade_type IN('01', '02', '05','14'
+								<if test="hasbouns != null and hasbouns =='01'">
+									/***根据参数判断是否添加红利再投**/
+									,'05'
+								</if>
+							) THEN
+								dl.trade_qty
+						ELSE 0
+					END
+				) raiseqty,
+				SUM(
+					CASE
+						WHEN dl.trade_type IN('03', '15','16', '17') THEN
+							dl.trade_qty
+						ELSE 0
+					END
+				) payqty,
+				SUM(
+					CASE
+						WHEN dl.trade_type = '16' THEN
+							dl.trade_cost
+						ELSE 0
+					END
+				) redcost,
+				SUM(DECODE(dl.trade_type, '01', dl.trade_cost, '02', dl.trade_cost, '05', dl.trade_cost, '14', dl.trade_cost, - 1 * dl.trade_cost)) endcost,
+				SUM(DECODE(dl.trade_type, '01', dl.trade_qty, '02', dl.trade_qty, '05', dl.trade_qty, '14', dl.trade_qty, - 1 * dl.trade_qty)) endqtysum
+				FROM
+					chb_prd_deal dl
+					left join chb_type_mapping_ex typemap
+					on dl.CUSTOMER_TYPE2=typemap.srcfield1
+					and typemap.mappingcode='PBC_MONTH_REPORT_CUSTOMER_TYPE2'
+				WHERE
+					1 = 1
+					AND dl.settdate_date BETWEEN #{reportStartDate,jdbcType=DATE} AND #{reportEndDate,jdbcType=DATE}
+					---AND dl.trade_type != '04'
+					AND dl.status in ('E','M')
+				GROUP BY
+					ifnull(dl.fprod_id, dl.prod_id),
+					ccy,
+					typemap.objfield1,
+					buy_place
+				) bb
+			GROUP BY
+				prodid,
+				ccy,
+				customer_type2,
+				buy_place
+			) ds
+		/*产品净值*/
+		LEFT JOIN (
+			SELECT
+				prod_value,
+				ifnull(fprod_id, prod_id) prod_id,ccy
+			FROM
+				(
+				SELECT
+					fprod_id,
+					IF
+					((@prod_id = prod_id AND @ccy = ifnull(ccy,'CNY')), @rank := @rank + 1, @rank :=1) as my_rank,
+					(@prod_id := prod_id) prod_id,
+					(@ccy := ifnull(ccy,'CNY')) ccy,
+					prod_value
+				FROM
+					chb_prd_periodyield,
+					(SELECT @rank := 0, @prod_id := NULL, @ccy := NULL) a
+				WHERE
+					1 = 1
+					and CHANGE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+					AND chang_type = '01'
+					AND status in ('E' ,'M')/*收益率添加修改状态*/
+				GROUP BY
+					prod_id,
+					ccy,
+					change_date DESC
+				) cc
+			WHERE
+			my_rank = 1
+		) pv
+		ON ds.prodid = pv.prod_id
+  </sql>
+  <sql id="rate">
+		/*汇率信息*/
+		  SELECT
+			  BASIS_CYY ccyOriginal,
+			  QUOT_CYY ccyConvert,
+			  TRADE_DATE publishDate,
+			  case when #{exchangeSource,jdbcType=VARCHAR} = '02'
+			  then
+				  CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+			  when #{exchangeSource,jdbcType=VARCHAR} = '01'
+			  then
+				  OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+			  when #{exchangeSource,jdbcType=VARCHAR} = '03'
+			  then
+				  HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+			  when #{exchangeSource,jdbcType=VARCHAR} = '04'
+			  then
+				  LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+			  when #{exchangeSource,jdbcType=VARCHAR} = '05'
+				  then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+			  end yeid
+		  FROM MST_EXCHARGE_QUOTE info
+		  where
+			  info.QUOT_CYY = 'CNY'
+			  AND INFO.DATASOURCE_TYPE = 'SAFE'
+			  and info.TRADE_DATE = (select max(t.TRADE_DATE)
+				  from MST_EXCHARGE_QUOTE t
+				  where t.BASIS_CYY = info.BASIS_CYY
+					  and t.QUOT_CYY = info.QUOT_CYY
+					  AND t.DATASOURCE_TYPE = 'SAFE'
+					  and t.TRADE_DATE <![CDATA[<=]]>#{reportEndDate,jdbcType=DATE})
+  </sql>
+  <sql id="TEMPPROD">
+		/* 产品信息：兑付状态实际需要的到期日*/
+		  SELECT * FROM (
+			  SELECT
+			      @rownum :=@rownum +1 rownum,
+			      T.PRODUUID,
+				  T.REALCDATE,
+				  T.fprod_id,
+				  T.status,t.vdate,
+				  IF
+				  (@PRODUUID = T.PRODUUID, @rank :=@rank + 1, @rank :=1 ) AS NUM,
+				  @PRODUUID := A.T.PRODUUID
+			  FROM
+				  (SELECT info.PRODUUID, VH.CDATE REALCDATE, info.fprod_id, info.status, info.vdate
+					  FROM CHB_PRD_BASEINFO INFO,  VAL_VW_MST_HOLIDAY VH
+					  WHERE IS_HOLIDAY = '0'
+						  AND VH.CDATE > INFO.MDATE
+						  AND VH.TRADE_CALENDAR_ID = info.CALENDAR_ID
+					  ORDER BY PRODUUID, REALCDATE
+				  ) T,
+				  (SELECT @rownum :=0, @PRODUUID := NULL, @rank := 0) tmp
+			  ) T1
+		  WHERE NUM = #{days,jdbcType=INTEGER}
+			  and fprod_id IS NULL
+			  and status in ('E','M')
+			  AND VDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+  </sql>
+  <sql id="prod">
+		/*产品信息：产品基本信息，产品最新净值，产品开放计划信息，产品的交易信息*/
+		SELECT
+			info.prod_id,
+			info.org_code,
+			info.is_constracte,/*是否分级产品*/
+			info.prodtype,/*产品标识*/
+			info.is_market_fund,/*货币市场基金*/
+			info.transfer_type,/*转让类型*/
+			info.operate_mode,/*运行方式*/
+			info.raise_type,/*募集方式*/
+			info.ivstorientation,/*投资性质*/
+			info.manage_type,/*管理方式*/
+			info.fiduciary_duty,/*受托职责*/
+			info.vdate,/*起息日*/
+			info.mdate,/*合同期限*/
+			info.terminatedate /*终止日期*/
+			ifnull(sch.plancounts,0) plancounts, /*开放计划条数*/
+			sch.minopenstart minopenstart, /*最小开放日*/
+			ifnull(dealstat.dealcounts,0) dealcounts, /*交易条数*/
+			ifnull(dealstat.terminatecounts,0) terminatecounts, /*终止交易条数*/
+			dealstat.settdate_date, /*终止交易确认日*/
+			info.issuing_status, /*存续状态*/
+			ifnull(tem.REALCDATE, INFO.MDATE) REALMDATE /*修正到期日*/
+		FROM
+			/*产品基本信息*/
+			chb_prd_baseinfo info
+			/*开放计划*/
+		left join (
+			SELECT
+				a.prod_id,
+				ifnull(a.plancounts,0) plancounts,
+				b.minopenstart
+			FROM
+				(
+				SELECT
+					COUNT(1) plancounts,
+					prod_id
+				FROM
+					chb_prd_opensch
+				WHERE
+					status in ('E','M')
+				GROUP BY
+					prod_id
+				) a
+				LEFT JOIN (
+					SELECT
+						MIN(open_start) minopenstart,
+						prod_id
+					FROM
+						chb_prd_opensch
+					WHERE
+						status in ('E','M')
+					AND open_start > #{reportEndDate,jdbcType=DATE}
+					GROUP BY
+						prod_id
+				) b
+				ON a.prod_id = b.prod_id
+			) sch
+		on sch.prod_id = info.prod_id
+		/*交易统计：产品的交易条数，16交易的条数，16交易的确认日*/
+		left join(
+			SELECT
+				a.prod_id,
+				ifnull(a.dealcounts,0) dealcounts,
+				ifnull(b.terminatecounts,0) terminatecounts,
+				b.settdate_date
+			FROM
+				(
+				SELECT
+					ifnull(fprod_id, prod_id) prod_id,
+					COUNT(1) dealcounts
+				FROM
+					chb_prd_deal
+				WHERE
+					status in ('E','M')
+				and settdate_date<![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+				GROUP BY
+					ifnull(fprod_id, prod_id)
+				) a
+				LEFT JOIN (
+					SELECT
+						ifnull(fprod_id, prod_id) prod_id,
+						MAX(settdate_date) settdate_date,
+						COUNT(1) terminatecounts
+					FROM
+						chb_prd_deal
+					WHERE
+						status in ('E','M')
+						AND trade_type = '16'
+						and settdate_date<![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+					GROUP BY
+						ifnull(fprod_id, prod_id)
+					) b
+				ON a.prod_id = b.prod_id
+			) dealstat
+		on dealstat.prod_id=info.prod_id
+		left join (<include refid="TEMPPROD" />)  tem
+			on info.PRODUUID = tem.PRODUUID
+		WHERE
+			info.fprod_id IS NULL
+			and info.status in ('E','M')
+			<!--   /*非保本*/ 月报数据初始化时包含不再过滤非保本，在生成产品端1.1~1.6以及3.1~3.3的报表数据时再进行过滤
+			AND info.profit_type = '03' -->
+			<if test="prodList !=null and prodList.size()>0">
+				AND INFO.PROD_ID IN
+				<foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
+					<if test="(index % 999) == 998">
+						null) OR INFO.PROD_ID in (
+					</if>
+					#{item}
+				</foreach>
+			</if>
+			AND INFO.VDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+			/*历史到期产品不统计*/
+			AND NOT EXISTS (
+				SELECT
+					1
+				FROM
+					chb_prd_deal d
+				WHERE
+					d.trade_type = '16'
+					AND ifnull(d.fprod_id, d.prod_id) = info.prod_id
+					and status in ('E','M')
+					AND D.SETTDATE_DATE <![CDATA[<]]> #{reportStartDate,jdbcType=DATE}
+			)
+  </sql>
   <insert id="genPosition" parameterType="map" >
 	  insert into pbc_month_prd_position(
-	    POSUUID
-	    ,PRODID 
-	    ,ORG_CODE
-	    ,STARTDATE
-	    ,ENDDATE
-	    ,BOOKDATE
-	    ,IS_CONSTRACTE
-	    ,TRANSFER_TYPE
-	    ,BUY_PLACE
-	    ,OPERATE_MODE
-	    ,RAISEMODE
-	    ,IVSTORIENTATION
-	    ,MANAGE_TYPE
-	    ,FIDUCIARY_DUTY
-	    ,DURATIONFLAG
-	    ,IS_MARKET_FUND
-	    ,VDATE
-	    ,PAYSTATUS
-	    ,TERM
-	    ,CCY
-	    ,CUSTOMER_TYPE2
-	    ,ENDAMTSUM_OTH
-	    ,DIRTYAMTSUM
-	    ,REDAMT
-	    ,DIRTYQTY
-	    ,REDQTY
-	    ,ENDQTYSUM
-	    ,END_DAYS
-	    , REDCOST
-	    , ENDCOST)
-	    
-	/*WITH pos AS 头寸计算：几个金额的计算，以产品id，币种，客户二级类型，销售区域分组*/
-	/* rate as 汇率信息*/
-    /* TEMPPROD AS 产品信息：兑付状态实际需要的到期日*/
-	/* , prod AS产品信息：产品基本信息，产品最新净值，产品开放计划信息，产品的交易信息*/
-
-	SELECT
-        F_GUID() posuuid /*主键*/,
-	    info.prod_id           prodid,/*产品代码*/
-	    info.org_code          orgcode,/*产品所属机构代码*/
-	    #{reportStartDate,jdbcType=DATE} startdate,/*报表开始日期*/
-	    #{reportEndDate,jdbcType=DATE}enddate,/*报表结束日期*/
-	    #{batchDate,jdbcType=DATE} bookdate,/*统计日期*/
-	    (case info.is_constracte when 'Y' then '01' else '02' end) isconstracte,/*是否分级产品*/
-	    /*--info.prodtype          prodtype,产品标识*/
-	    info.transfer_type     transfertype,/*转让类型*/
-	    deal.buy_place         buyplace,/*销售区域*/
-	    info.operate_mode      operatemode,/*运行方式*/
-	    info.raise_type        raisemode,/*募集方式*/
-	    info.ivstorientation   ivstorientation,/*投资性质*/
-	    info.manage_type       managetype,/*管理方式*/
-	    info.fiduciary_duty    fiduciaryduty,/*受托职责*/
-	    CASE
-	        when info.dealcounts>0 and info.terminatecounts=0 then '01'
-	        when info.dealcounts>0 and info.terminatecounts>0 then '02'
-	        when info.dealcounts=0 and info.Issuing_Status='01' then '01'
-            else '03'
-	    END durationflag,/*存续状态*/
-	    info.is_market_fund    ismarketfund,/*货币市场基金*/
-	    info.vdate,/*起息日*/
-	    case 
-	        when info.terminatecounts>0 then
-	            CASE 
-	                WHEN  info.REALMDATE=info.settdate_date then '01'
-	                WHEN info.REALMDATE>info.settdate_date then '02'
-	                else '03'                
-	            end
-	        else
-	            case when
-	                INFO.REALMDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE} then '04'
-	            else null
-	            end
-	    END paystatus,/*兑付状态*/
-	    (case info.operate_mode when '03' then '0' when '04' then '0' else info.mdate - info.vdate end) term,/*合同期限*/
-	    /*TRIM(ifnull(deal.ccy,baseinfo.RAISE_CCY)) ccy,*/
-	    /*若币种取值与产品基本信息表，取前三位*/
-	    ifnull(deal.ccy, (case baseinfo.RAISE_CCY when NULL then NULL else substring(baseinfo.RAISE_CCY, 1, 3) end)) ccy,/*币种*/
-    	deal.customer_type2 customertype2,/*客户二级类型*/
-        deal.endqtysum*(case #{jsbankStr,jdbcType=VARCHAR} when '01' then TRUNCATE(deal.prod_value,5) when '02' then ROUND(deal.prod_value,5)  end)*ifnull(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
-	    deal.dirtyamtsum       dirtyamtsum,/*募集金额*/
-	    deal.redamt            redamt,/*兑付金额*/
-	    deal.raiseqty       raiseqty,/*当期募集份额*/
-	    deal.payqty           payqty,/*当期兑付份额*/	    
-	    deal.endqtysum         endqtysum,/*剩余份额*/
-	    CASE
-	        WHEN info.operate_mode IN ('01','02') THEN
-	            greatest(info.mdate - #{reportEndDate,jdbcType=DATE}, 0)
-	        ELSE
-	            (
-	                CASE
-	                    WHEN info.plancounts = 0 THEN 1 /*开放计划条数为0，表示高频开放*/
-	                    ELSE greatest(ifnull(info.minopenstart,info.mdate)- #{reportEndDate,jdbcType=DATE}, 0)
-	                END
-	            )
-	    END end_days,/*剩余期限*/
-	    deal.redcost, /*当期到期本金*/
-		(case deal.endqtysum when 0 then 0 else deal.endcost end) endcost/*剩余成本*/
-	FROM
-      (
-      SELECT
-      info.prod_id,
-      info.org_code,
-      info.is_constracte,/*是否分级产品*/
-      info.prodtype,/*产品标识*/
-      info.is_market_fund,/*货币市场基金*/
-      info.transfer_type,/*转让类型*/
-      info.operate_mode,/*运行方式*/
-      info.raise_type,/*募集方式*/
-      info.ivstorientation,/*投资性质*/
-      info.manage_type,/*管理方式*/
-      info.fiduciary_duty,/*受托职责*/
-      info.vdate,/*起息日*/
-      info.mdate,/*合同期限*/
-      info.terminatedate /*终止日期*/
-      ,ifnull(sch.plancounts,0) plancounts /*开放计划条数*/
-      ,sch.minopenstart minopenstart /*最小开放日*/
-      ,ifnull(dealstat.dealcounts,0) dealcounts /*交易条数*/
-      ,ifnull(dealstat.terminatecounts,0) terminatecounts /*终止交易条数*/
-      ,dealstat.settdate_date /*终止交易确认日*/
-      ,info.issuing_status /*存续状态*/
-      ,ifnull(tem.REALCDATE, INFO.MDATE) REALMDATE /*修正到期日*/
-      FROM
-      /*产品基本信息*/
-      chb_prd_baseinfo info
-      /*开放计划*/
-      left join (
-      SELECT
-      a.prod_id,
-      ifnull(a.plancounts,0) plancounts,
-      b.minopenstart
-      FROM
-      (
-      SELECT
-      COUNT(1) plancounts,
-      prod_id
-      FROM
-      chb_prd_opensch
-      WHERE
-      status in ('E','M')
-      GROUP BY
-      prod_id
-      ) a
-      LEFT JOIN (
-      SELECT
-      MIN(open_start) minopenstart,
-      prod_id
-      FROM
-      chb_prd_opensch
-      WHERE
-      status in ('E','M')
-      AND open_start > #{reportEndDate,jdbcType=DATE}
-      GROUP BY
-      prod_id
-      ) b ON a.prod_id = b.prod_id
-      ) sch
-      on sch.prod_id = info.prod_id
-      /*交易统计：产品的交易条数，16交易的条数，16交易的确认日*/
-      left join(
-      SELECT
-      a.prod_id,
-      ifnull(a.dealcounts,0) dealcounts,
-      ifnull(b.terminatecounts,0) terminatecounts,
-      b.settdate_date
-      FROM
-      (
-      SELECT
-      ifnull(fprod_id, prod_id) prod_id,
-      COUNT(1) dealcounts
-      FROM
-      chb_prd_deal
-      WHERE
-      status in ('E','M')
-      and settdate_date<![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
-      GROUP BY
-      ifnull(fprod_id, prod_id)
-      ) a
-      LEFT JOIN (
-      SELECT
-      ifnull(fprod_id, prod_id) prod_id,
-      MAX(settdate_date) settdate_date,
-      COUNT(1) terminatecounts
-      FROM
-      chb_prd_deal
-      WHERE
-      status in ('E','M')
-      AND trade_type = '16'
-      and settdate_date<![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
-      GROUP BY
-      ifnull(fprod_id, prod_id)
-      ) b ON a.prod_id = b.prod_id
-      ) dealstat
-      on dealstat.prod_id=info.prod_id
-      left join (
-      SELECT * FROM
-      (
-          SELECT
-          @rownum:=@rownum+1 rownum,
-          T.PRODUUID,
-          T.REALCDATE,
-          t.fprod_id,
-          t.STATUS,
-          t.vdate,
-          IF( @PRODUUID = t.PRODUUID, @rank := @rank + 1, @rank := 1 ) AS NUM,
-          @PRODUUID := t.PRODUUID
-
-          FROM
-          ( SELECT * FROM (SELECT
-          info.PRODUUID,
-          VH.CDATE REALCDATE,
-          info.fprod_id,
-          info.STATUS,
-          info.vdate
-          FROM
-          CHB_PRD_BASEINFO INFO,
-          VAL_VW_MST_HOLIDAY VH
-          WHERE
-          IS_HOLIDAY = '0'
-          AND VH.CDATE > INFO.MDATE
-          AND VH.TRADE_CALENDAR_ID = info.CALENDAR_ID ) dee  ORDER BY REALCDATE
-          ) T,
-          ( SELECT @rownum := 0, @PRODUUID := NULL, @rank := 0 )b
-      ) tmp
-      WHERE NUM = #{days,jdbcType=INTEGER}
-      and fprod_id IS NULL
-      and status in ('E','M')
-      AND VDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
-      ) tem on info.PRODUUID = tem.PRODUUID
-      WHERE
-      info.fprod_id IS NULL
-      and info.status in ('E','M')
-      <!--   /*非保本*/ 月报数据初始化时包含不再过滤非保本，在生成产品端1.1~1.6以及3.1~3.3的报表数据时再进行过滤
-      AND info.profit_type = '03' -->
-      <if test="prodList !=null and prodList.size()>0">
-          AND INFO.PROD_ID IN
-          <foreach collection="prodList" item="prodid" open="(" separator=","  close=")">
-              #{prodid,jdbcType=VARCHAR}
-          </foreach>
-      </if>
-      AND INFO.VDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
-      /*历史到期产品不统计*/
-      AND NOT EXISTS (
-      SELECT
-      1
-      FROM
-      chb_prd_deal d
-      WHERE
-      d.trade_type = '16'
-      AND ifnull(d.fprod_id, d.prod_id) = info.prod_id
-      AND D.SETTDATE_DATE <![CDATA[<]]> #{reportStartDate,jdbcType=DATE}
-      )
-      )   info
-	    LEFT JOIN (
-      select ds.*
-      ,ifnull(pv.prod_value,1) prod_value ,/*产品最新净值*/
-      pv.ccy yieldccy/*报价币种*/
-      from (
-      SELECT
-      prodid,
-      ccy,
-      customer_type2,
-      buy_place,
-      SUM(dirtyamtsum) dirtyamtsum, /*当期募集金额*/
-      SUM(redamt) redamt, /*当期兑付金额*/
-      SUM(raiseqty) raiseqty, /*当期募集份额*/
-      SUM(payqty) payqty, /*当期兑付份额*/
-      SUM(redcost) redcost, /*当期到期本金*/
-      SUM(endcost) endcost, /*剩余成本*/
-      SUM(endqtysum) endqtysum /*期末份额*/
-      FROM
-      (
-      /*上周期头寸*/
-      SELECT
-      prodid,
-      ccy,
-      customer_type2,
-      buy_place,
-      0 dirtyamtsum,
-      0 redamt,
-      0 raiseqty,
-      0 payqty,
-      0 redcost,
-      endcost,
-      endqtysum
-      FROM
-      pbc_month_prd_position
-      WHERE ENDDATE
-      	between ADDDATE(str_to_date(#{reportStartDate,jdbcType=DATE},'%y-%m-%d'),INTERVAL -1 MONTH) and #{reportStartDate,jdbcType=DATE}
-      UNION ALL
-      /*本周期头寸*/
-      SELECT
-      ifnull(dl.fprod_id, dl.prod_id) prodid,
-      ccy,
-      typemap.objfield1 customer_type2,
-      buy_place,
-      SUM(
-      CASE
-      WHEN dl.trade_type IN('01', '02', '14') THEN /*05红利再投的交易金额与人行确认不需统计*/
-      dl.trade_prince
-      ELSE 0
-      END
-      ) dirtyamtsum,
-      SUM(
-      CASE
-      WHEN dl.trade_type IN('03', '04', '15', '16', '17') THEN /*加上 04收益分配，05红利再投的交易金额与人行确认不需统计*/
-      dl.trade_prince
-      ELSE 0
-      END
-      ) redamt,
-      SUM(
-      CASE
-      WHEN dl.trade_type IN('01', '02', '05','14') THEN
-      dl.trade_qty
-      ELSE 0
-      END
-      ) raiseqty,
-      SUM(
-      CASE
-      WHEN dl.trade_type IN('03', '15','16', '17') THEN
-      dl.trade_qty
-      ELSE 0
-      END
-      ) payqty,
-      SUM(
-      CASE
-      WHEN dl.trade_type = '16' THEN
-      dl.trade_cost
-      ELSE 0
-      END
-      ) redcost,
-      SUM(case
-      when dl.trade_type in ('01','02','05','14') then dl.trade_cost
-      else - 1 * dl.trade_cost
-      end) endcost,
-      SUM(case
-      when dl.trade_type in ('01','02','05','14') then dl.trade_qty
-      else - 1 * dl.trade_qty
-      end) endqtysum
-      FROM
-      chb_prd_deal dl
-      left join chb_type_mapping_ex typemap
-      on dl.CUSTOMER_TYPE2=typemap.srcfield1
-      and typemap.mappingcode='PBC_MONTH_REPORT_CUSTOMER_TYPE2'
-      WHERE
-      1 = 1
-      AND dl.settdate_date BETWEEN #{reportStartDate,jdbcType=DATE} AND #{reportEndDate,jdbcType=DATE}
-      AND dl.status in ('E','M')
-      GROUP BY
-      ifnull(dl.fprod_id, dl.prod_id),
-      ccy,
-      typemap.objfield1,
-      buy_place
-      ) tmp
-      GROUP BY
-      prodid,
-      ccy,
-      customer_type2,
-      buy_place
-      ) ds
-      /*产品净值*/
-      LEFT JOIN (
-      SELECT
-      prod_value,
-      ifnull(fprod_id, prod_id) prod_id,ccy
-      FROM
-      (
-      SELECT
-      fprod_id,
-      prod_id,
-      ifnull(ccy,'CNY') ccy,
-      prod_value,
-	  if
-	  (@prod_id = prod_id, @rank := @rank + 1,@rank :=1) as my_rank,
-	  (@prod_id := prod_id)
-      FROM
-      chb_prd_periodyield,
-	  (select @rank := 0, @prod_id := null) b
-      WHERE
-      1 = 1
-      and CHANGE_DATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
-      AND chang_type = '01'
-      AND status in ('E' ,'M')/*收益率添加修改状态*/
-	  order by
-	  prod_id,
-	  change_date desc
-      ) tmp
-      WHERE
-      1 = 1 limit 1
-      ) pv
-      ON ds.prodid = pv.prod_id
-      /*and ds.ccy=pv.ccy*/
-      ) deal ON deal.prodid = info.prod_id
-	    left join CHB_PRD_BASEINFO baseinfo on baseinfo.PROD_ID=info.prod_id
-        left join (
-      SELECT
-      BASIS_CYY ccyOriginal,
-      QUOT_CYY ccyConvert,
-      TRADE_DATE publishDate,
-      case when #{exchangeSource,jdbcType=VARCHAR} = '02'
-      then
-      CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-      when #{exchangeSource,jdbcType=VARCHAR} = '01'
-      then
-      OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-      when #{exchangeSource,jdbcType=VARCHAR} = '03'
-      then
-      HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-      when #{exchangeSource,jdbcType=VARCHAR} = '04'
-      then
-      LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-      when #{exchangeSource,jdbcType=VARCHAR} = '05'
-      then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-      end yeid
-      FROM MST_EXCHARGE_QUOTE info
-      where
-      info.QUOT_CYY = 'CNY'
-      AND INFO.DATASOURCE_TYPE = 'SAFE'
-      and info.TRADE_DATE = (select max(t.TRADE_DATE)
-      from MST_EXCHARGE_QUOTE t
-      where t.BASIS_CYY = info.BASIS_CYY
-      and t.QUOT_CYY = info.QUOT_CYY
-      AND t.DATASOURCE_TYPE = 'SAFE'
-      and t.TRADE_DATE <![CDATA[<=]]>#{reportEndDate,jdbcType=DATE})
-      ) rate on deal.yieldccy = rate.ccyOriginal
-	where baseinfo.status in ('E','M')
-  </insert>
+			POSUUID,
+			PRODID,
+			ORG_CODE,
+			STARTDATE,
+			ENDDATE,
+			BOOKDATE,
+			IS_CONSTRACTE,
+			TRANSFER_TYPE,
+			BUY_PLACE,
+			OPERATE_MODE,
+			RAISEMODE,
+			IVSTORIENTATION,
+			MANAGE_TYPE,
+			FIDUCIARY_DUTY,
+			DURATIONFLAG,
+			IS_MARKET_FUND,
+			VDATE,
+			PAYSTATUS,
+			TERM,
+			CCY,
+			CUSTOMER_TYPE2,
+			ENDAMTSUM_OTH,
+			DIRTYAMTSUM,
+			REDAMT,
+			DIRTYQTY,
+			REDQTY,
+			ENDQTYSUM,
+			END_DAYS,
+			REDCOST,
+			ENDCOST)
+	  SELECT
+		  f_guid() posuuid /*主键*/,
+		  info.prod_id           prodid,/*产品代码*/
+		  info.org_code          orgcode,/*产品所属机构代码*/
+		  #{reportStartDate,jdbcType=DATE} startdate,/*报表开始日期*/
+		  #{reportEndDate,jdbcType=DATE}enddate,/*报表结束日期*/
+		  #{batchDate,jdbcType=DATE} bookdate,/*统计日期*/
+		  DECODE(info.is_constracte, 'Y', '01', '02') isconstracte,/*是否分级产品*/
+		  /*--info.prodtype          prodtype,产品标识*/
+		  info.transfer_type     transfertype,/*转让类型*/
+		  deal.buy_place         buyplace,/*销售区域*/
+		  info.operate_mode      operatemode,/*运行方式*/
+		  info.raise_type        raisemode,/*募集方式*/
+		  info.ivstorientation   ivstorientation,/*投资性质*/
+		  info.manage_type       managetype,/*管理方式*/
+		  info.fiduciary_duty    fiduciaryduty,/*受托职责*/
+		  CASE
+			  when info.dealcounts>0 and info.terminatecounts=0 then '01'
+			  when info.dealcounts>0 and info.terminatecounts>0 then '02'
+			  when info.dealcounts=0 and info.Issuing_Status='01' then '01'
+		  	  else '03'
+		  END durationflag,/*存续状态*/
+		  info.is_market_fund    ismarketfund,/*货币市场基金*/
+		  info.vdate,/*起息日*/
+		  case
+			  when info.terminatecounts>0 then
+	  			  case
+					  when  info.REALMDATE=info.settdate_date then '01'
+					  when info.REALMDATE>info.settdate_date then '02'
+					  else '03'
+				  end
+			  else
+				  case when
+					  INFO.REALMDATE <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE} then '04'
+				  else null
+			  end
+	  	  end paystatus,/*兑付状态*/
+		  case
+		  	  when info.operate_mode in ('03','04') then '0'
+		  	  else  info.mdate - info.vdate
+		  end  term,/*合同期限*/
+		  /*TRIM(ifnull(deal.ccy,baseinfo.RAISE_CCY)) ccy,*/
+		  /*若币种取值与产品基本信息表，取前三位*/
+		  ifnull(deal.ccy, DECODE(baseinfo.RAISE_CCY, NULL, NULL, SUBSTR(baseinfo.RAISE_CCY, 1, 3))) ccy,/*币种*/
+		  deal.customer_type2 customertype2,/*客户二级类型*/
+		  deal.endqtysum*(case
+								when #{isPre,jdbcType=VARCHAR} = '02' then deal.prod_value
+								else (case
+										  when #{jsbankStr,jdbcType=VARCHAR} = '01' then TRUNC(deal.prod_value,5)
+										  when #{jsbankStr,jdbcType=VARCHAR} = '02' then ROUND(deal.prod_value,5)
+									  end)
+						  end)*ifnull(rate.yeid,1) ENDAMTSUM_OTH,/*期末余额*/
+		  deal.dirtyamtsum       dirtyamtsum,/*募集金额*/
+		  deal.redamt            redamt,/*兑付金额*/
+		  deal.raiseqty       raiseqty,/*当期募集份额*/
+		  deal.payqty           payqty,/*当期兑付份额*/
+		  deal.endqtysum         endqtysum,/*剩余份额*/
+		  CASE
+			  WHEN info.operate_mode IN ('01','02') THEN
+				  greatest( (case when (info.mdate - #{reportEndDate,jdbcType=DATE}) <![CDATA[<]]> 0 then 1 else info.mdate - #{reportEndDate,jdbcType=DATE} end), 0)
+			  ELSE
+			  (
+				  CASE
+					  WHEN info.plancounts = 0 THEN 1 /*开放计划条数为0，表示高频开放*/
+					  ELSE greatest( (case when ifnull(info.minopenstart,info.mdate)- #{reportEndDate,jdbcType=DATE} <![CDATA[<]]> 0 then 1 else ifnull(info.minopenstart,info.mdate)- #{reportEndDate,jdbcType=DATE}  end), 0)
+				  END
+			  )
+		  END end_days,/*剩余期限*/
+		  deal.redcost, /*当期到期本金*/
+		  case
+			  when deal.endqtysum = 0 then 0
+			  else deal.endcost
+		  end endcost/*剩余成本*/
+	  FROM
+	      (<include refid="prod" />)   info
+		  LEFT JOIN (<include refid="pos" />)  deal ON deal.prodid = info.prod_id
+		  left join CHB_PRD_BASEINFO baseinfo on baseinfo.PROD_ID=info.prod_id
+		  left join (<include refid="rate" />) on deal.yieldccy = rate.ccyOriginal
+	  where baseinfo.status in ('E','M')
+	</insert>
   <insert id="genPsbcPosition" parameterType="map" >
 	    insert into pbc_month_prd_position(
 	    POSUUID

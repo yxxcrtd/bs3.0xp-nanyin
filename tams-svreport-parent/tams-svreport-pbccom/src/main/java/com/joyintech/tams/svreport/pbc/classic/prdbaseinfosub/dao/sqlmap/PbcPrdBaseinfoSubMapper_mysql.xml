@@ -162,7 +162,10 @@
 		#{creditFlag,jdbcType=CHAR}, #{creditType,jdbcType=VARCHAR}, #{creditMode,jdbcType=VARCHAR},
 		#{inDepName,jdbcType=VARCHAR}, #{inDepCode,jdbcType=VARCHAR},
 		#{outDepCtry,jdbcType=VARCHAR},
-		#{outDepName,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP},
+		#{outDepName,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP},
+		case  when
+		 (select code_type from pbc_prod_assetpool_code
+		 where inside_prod_id = #{prodId,jdbcType=VARCHAR}) in ('03','04') then null else #{mdate,jdbcType=TIMESTAMP} end,
 		#{accountId,jdbcType=VARCHAR}, #{isConstracte,jdbcType=CHAR},
 		#{transferType,jdbcType=CHAR},
 		#{identiFlag,jdbcType=CHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP},

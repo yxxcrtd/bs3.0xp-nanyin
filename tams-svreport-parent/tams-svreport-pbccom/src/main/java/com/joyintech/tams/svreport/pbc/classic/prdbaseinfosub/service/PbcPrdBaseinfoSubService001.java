@@ -190,7 +190,7 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
             if (StringUtil.isNotEmpty(result.getIdentiFlag())){
                 result.setIdentiFlag( SysDataUtil.getNameFromDataDict(DictCode.人行理财产品发起机构标识,result.getIdentiFlag()));
             }
-            if(result.getOutDepCtry()!=null){
+            if(StringUtil.isNotEmpty(result.getOutDepCtry())){
 				List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, result.getOutDepCtry());
 				result.setOutDepCtry("");
 				for(String outDepCtry : outDepCtrys){
@@ -278,7 +278,7 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
             if (StringUtil.isNotEmpty(result.getIdentiFlag())){
                 result.setIdentiFlag( SysDataUtil.getNameFromDataDict(DictCode.人行理财产品发起机构标识,result.getIdentiFlag()));
             }
-            if(result.getOutDepCtry()!=null){
+            if(StringUtil.isNotEmpty(result.getOutDepCtry())){
 				List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, result.getOutDepCtry());
 				result.setOutDepCtry("");
 				for(String outDepCtry : outDepCtrys){
