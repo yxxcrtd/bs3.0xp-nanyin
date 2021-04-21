@@ -785,7 +785,7 @@ var table;
      * 融入券券面总额
      */
     $('#integrateTradeAmt').change(function () {
-        var tradeAmt = $("#tradeAmt").val();
+        var tradeAmt = $("#tradeAmt").val()*10000;
         if (!tradeAmt) {
             tradeAmt = 0;
         }
@@ -804,7 +804,7 @@ var table;
      * 本方券券面总额
      */
     $('#ownTradeAmt').change(function () {
-        var tradeAmt = $("#tradeAmt").val();
+        var tradeAmt = $("#tradeAmt").val()*10000;
         if (!tradeAmt) {
             tradeAmt = 0;
         }
@@ -812,7 +812,7 @@ var table;
 
         var integrateTradeAmt = JoyinMath.doMinus(tradeAmt, ownTradeAmt, 2, JoyinMath.ROUND_HALF_UP)
         if (integrateTradeAmt < 0) {
-            $("#tradeAmt").val(ownTradeAmt).trigger("blur");
+            $("#tradeAmt").val(ownTradeAmt / 10000).trigger("blur");
             $("#integrateTradeAmt").val(0).trigger("blur");
         } else {
             $("#integrateTradeAmt").val(integrateTradeAmt).trigger("blur");
