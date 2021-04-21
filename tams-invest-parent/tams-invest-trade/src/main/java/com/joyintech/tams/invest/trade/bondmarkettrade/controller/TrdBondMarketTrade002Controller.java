@@ -76,17 +76,18 @@ public class TrdBondMarketTrade002Controller extends BaseController {
             //双击进入查看页面
             dto = trdBondMarketTrade002Service.selectByTotalTradeId(totalTradeId);
             model.addAttribute("entity",dto);
-        }else if (!StringUtil.isNotEmpty(totalTradeId) && !StringUtil.isNotEmpty(workflowId)){
+        }else if (!StringUtil.isNotEmpty(totalTradeId) && !StringUtil.isNotEmpty(workflowId) && StringUtil.isNotEmpty(finprodId)){
             //从主动提醒处进入新建页面
             dto.setFinprodId(finprodId);
             dto.setAppearMarketId(appearMarketId);
-//            dto.setTradeMarket("01");
             Map<String, Object> params = new HashMap<>();
             params.put("initValue",finprodId);
             Page<SelectOptionDto> page = trdBondMarketTrade001Service.getFinprodId(params);
-            Map<String,Object> map = (Map<String, Object>) page.getRoot().get(0).getObject();
-            String tradeMarket = (String) map.get("tradeMarket");
-            dto.setTradeMarket(tradeMarket);
+            if (page != null && page.getRoot() != null && page.getRoot().size() > 0){
+                Map<String,Object> map = (Map<String, Object>) page.getRoot().get(0).getObject();
+                String tradeMarket = (String) map.get("tradeMarket");
+                dto.setTradeMarket(tradeMarket);
+            }
             model.addAttribute("entity",dto);
         }
         model.addAttribute("platDate",iPlatformDate.getSysDateStr());
