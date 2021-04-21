@@ -151,6 +151,14 @@ public class FinProductAdd extends BaseEntity {
     private String isCashManage;
 
     /**
+     * 是否合规新产品
+     */
+    private String isFhxgcp;
+    /**
+     * 是否养老理财产品
+     */
+    private String isYllccp;
+    /**
      * 产品风险等级
      */
     private String riskLevel;
@@ -309,63 +317,28 @@ public class FinProductAdd extends BaseEntity {
     private String valOrg;
 
     /**
-     * 计息利率方式 01买断利率计提 02净投资收益率计提
+     * 计息利率方式
+     * add by jiangPeng on 20200721
      */
     private String calRateType;
 
     /**
-     * 行内识别码
+     * 是否非标
      */
-    private String repFinprodInsId;
-
-    /**
-     * 存款类标的否可提前支取，用于风险限额，不影响存续期操作
-     */
-    private String isInadvance;
+    private String isNonStandard;
 
     /**
      * 无固定期限
      */
     private String noFixedTerm;
 
-    /**
-     * 是否纳入净额结算 Y:是 N:否
-     */
-    private String isNetSett;
+    public String getIsNonStandard() {
+        return isNonStandard;
+    }
 
-    /**
-     * 是否私募债 Y:是 N:否
-     */
-    private String isPpb;
-
-    /**
-     * 交易平台
-     */
-    private String tradePlat;
-
-
-
-
-    /**
-     * 最后交易日
-     */
-    private Date lastTradeDate;
-
-    /**
-     * 最后交割日
-     */
-    private Date lastSettleDate;
-
-    /**
-     * 交割方式
-     */
-    private String deliveryMethod;
-
-    /**
-     * 合约乘数
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal contractMultiplier;
+    public void setIsNonStandard(String isNonStandard) {
+        this.isNonStandard = isNonStandard;
+    }
 
     /**
      * 取得 金融产品代码
@@ -1315,51 +1288,29 @@ public class FinProductAdd extends BaseEntity {
     }
 
     /**
-     * 取得 计息利率方式 01买断利率计提 02净投资收益率计提
-     * @return 计息利率方式 01买断利率计提 02净投资收益率计提
+     * 计息利率方式
      */
     public String getCalRateType() {
         return calRateType;
     }
 
-    /**
-     * 设置 计息利率方式 01买断利率计提 02净投资收益率计提
-     * @param calRateType 计息利率方式 01买断利率计提 02净投资收益率计提
-     */
-    public void setCalRateType(String calRateType) {
-        this.calRateType = calRateType == null ? null : calRateType.trim();
-    }
 
     /**
-     * 取得 行内识别码
-     * @return 行内识别码
+     * 计息利率方式
      */
+    public void setCalRateType(String calRateType) {
+        this.calRateType = calRateType;
+    }
+
+
+    private String repFinprodInsId;
+
     public String getRepFinprodInsId() {
         return repFinprodInsId;
     }
 
-    /**
-     * 设置 行内识别码
-     * @param repFinprodInsId 行内识别码
-     */
     public void setRepFinprodInsId(String repFinprodInsId) {
-        this.repFinprodInsId = repFinprodInsId == null ? null : repFinprodInsId.trim();
-    }
-
-    /**
-     * 取得 存款类标的否可提前支取，用于风险限额，不影响存续期操作
-     * @return 存款类标的否可提前支取，用于风险限额，不影响存续期操作
-     */
-    public String getIsInadvance() {
-        return isInadvance;
-    }
-
-    /**
-     * 设置 存款类标的否可提前支取，用于风险限额，不影响存续期操作
-     * @param isInadvance 存款类标的否可提前支取，用于风险限额，不影响存续期操作
-     */
-    public void setIsInadvance(String isInadvance) {
-        this.isInadvance = isInadvance == null ? null : isInadvance.trim();
+        this.repFinprodInsId = repFinprodInsId;
     }
 
     /**
@@ -1378,84 +1329,32 @@ public class FinProductAdd extends BaseEntity {
         this.noFixedTerm = noFixedTerm == null ? null : noFixedTerm.trim();
     }
 
-    /**
-     * 取得 是否纳入净额结算 Y:是 N:否
-     * @return 是否纳入净额结算 Y:是 N:否
-     */
-    public String getIsNetSett() {
-        return isNetSett;
+    public String getIsFhxgcp() {
+        return isFhxgcp;
+    }
+
+    public void setIsFhxgcp(String isFhxgcp) {
+        this.isFhxgcp = isFhxgcp == null ? null : isFhxgcp.trim();
+    }
+
+    public String getIsYllccp() {
+        return isYllccp;
+    }
+
+    public void setIsYllccp(String isYllccp) {
+        this.isYllccp = isYllccp == null ? null : isYllccp.trim();
     }
 
     /**
-     * 设置 是否纳入净额结算 Y:是 N:否
-     * @param isNetSett 是否纳入净额结算 Y:是 N:否
+     * 是否可提前支取，风险限额用，不影响存续期
      */
-    public void setIsNetSett(String isNetSett) {
-        this.isNetSett = isNetSett == null ? null : isNetSett.trim();
+    private String isInAdvance;
+
+    public String getIsInAdvance() {
+        return isInAdvance;
     }
 
-    /**
-     * 取得 是否私募债 Y:是 N:否
-     * @return 是否私募债 Y:是 N:否
-     */
-    public String getIsPpb() {
-        return isPpb;
-    }
-
-    /**
-     * 设置 是否私募债 Y:是 N:否
-     * @param isPpb 是否私募债 Y:是 N:否
-     */
-    public void setIsPpb(String isPpb) {
-        this.isPpb = isPpb == null ? null : isPpb.trim();
-    }
-
-    /**
-     * 取得 交易平台
-     * @return 交易平台
-     */
-    public String getTradePlat() {
-        return tradePlat;
-    }
-
-    /**
-     * 设置 交易平台
-     * @param tradePlat 交易平台
-     */
-    public void setTradePlat(String tradePlat) {
-        this.tradePlat = tradePlat == null ? null : tradePlat.trim();
-    }
-
-
-    public Date getLastTradeDate() {
-        return lastTradeDate;
-    }
-
-    public void setLastTradeDate(Date lastTradeDate) {
-        this.lastTradeDate = lastTradeDate;
-    }
-
-    public Date getLastSettleDate() {
-        return lastSettleDate;
-    }
-
-    public void setLastSettleDate(Date lastSettleDate) {
-        this.lastSettleDate = lastSettleDate;
-    }
-
-    public String getDeliveryMethod() {
-        return deliveryMethod;
-    }
-
-    public void setDeliveryMethod(String deliveryMethod) {
-        this.deliveryMethod = deliveryMethod;
-    }
-
-    public BigDecimal getContractMultiplier() {
-        return contractMultiplier;
-    }
-
-    public void setContractMultiplier(BigDecimal contractMultiplier) {
-        this.contractMultiplier = contractMultiplier;
+    public void setIsInAdvance(String isInAdvance) {
+        this.isInAdvance = isInAdvance;
     }
 }
