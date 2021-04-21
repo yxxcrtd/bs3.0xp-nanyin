@@ -35,11 +35,27 @@ public class TrdBondMarketTrade001Service extends BaseService<TrdBondMarketTrade
 
     }
 
+    /**
+     * 发行代码下拉框
+     *
+     * @param params 查询参数
+     * @return
+     * @see
+     * @since 1.0
+     */
     public Page<SelectOptionDto> getFinprodId(Map<String, Object> params) {
         return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/getFinprodId", params,
                 SelectOptionDto.class);
     }
 
+    /**
+     * 上市代码下拉框
+     *
+     * @param params 查询参数
+     * @return
+     * @see
+     * @since 1.0
+     */
     public Page<SelectOptionDto> getAppearMarketId(Map<String, Object> params) {
         return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/getAppearMarketId", params,
                 SelectOptionDto.class);

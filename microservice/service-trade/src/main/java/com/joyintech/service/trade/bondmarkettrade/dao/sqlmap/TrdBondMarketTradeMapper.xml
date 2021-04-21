@@ -202,6 +202,9 @@
         FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL WTFPDT
         <where>
             WTFPDT.FINPROD_ID = 'F01_'||#{appearMarketId,jdbcType=VARCHAR}
+            <if test="workflowId != null and workflowId != ''">
+                AND WTFPDT.WORKFLOW_ID NOT IN #{workflowId,jdbcType=VARCHAR}
+            </if>
         </where>
     </select>
 

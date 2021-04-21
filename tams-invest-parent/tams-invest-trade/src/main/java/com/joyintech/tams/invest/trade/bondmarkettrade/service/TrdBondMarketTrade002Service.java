@@ -360,6 +360,13 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
         return baseGetBusinessId.buildBussinessCode(codeParameter);
     }
 
+    /**
+     * 查询上市代码是否有其他流程中数据
+     *
+     * @param dto 画面参数dto
+     * @see
+     * @since 1.0
+     */
     public int selectIsInWorkflow(TrdBondMarketTradeDto dto) {
            return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/selectIsInWorkflow", dto,
                     Integer.class);
@@ -462,12 +469,26 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
         }
     }
 
+    /**
+     * 根据汇总交易编号查询交易数据
+     *
+     * @param totalTradeId 汇总交易编号
+     * @see
+     * @since 1.0
+     */
     public TrdBondMarketTradeDto selectByTotalTradeId(String totalTradeId) {
         // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/selectByTotalTradeId", totalTradeId,
                 TrdBondMarketTradeDto.class);    
     }
 
+    /**
+     * 查询是否存在当天交易数据
+     *
+     * @param dto 
+     * @see
+     * @since 1.0
+     */
     public int selectDealNums(TrdBondMarketTradeDto dto) {
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/selectDealNums", dto,
                 Integer.class);

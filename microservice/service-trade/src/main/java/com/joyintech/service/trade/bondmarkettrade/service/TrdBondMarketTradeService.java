@@ -201,6 +201,14 @@ public class TrdBondMarketTradeService extends BaseService {
                 () -> trdBondMarkettTradeMapper.getAppearMarketId(param));
     }
 
+    /**
+     * 获取持仓数据
+     *
+     * @param map
+     * @return 持仓数据
+     * @see
+     * @since 1.0
+     */
     public Map<String, Object> getPosition(Map<String, Object> map) {
         Map<String, Object> resultMap = new HashMap<>();
         List<PtlSecPosition> ptlSecPositions = trdBondMarkettTradeMapper.getPtlPosition(map);
@@ -211,6 +219,13 @@ public class TrdBondMarketTradeService extends BaseService {
         return resultMap;
     }
 
+    /**
+     * 流程结束登录业务表
+     *
+     * @param entity
+     * @see
+     * @since 1.0
+     */
     public void doInsertTotal(TrdBondMarketTradeDto entity) {
         if (entity!= null){
             //7.1登录各业务表，包括金融产品汇总交易、金融产品实物汇总交易表
@@ -226,6 +241,13 @@ public class TrdBondMarketTradeService extends BaseService {
         }
     }
 
+    /**
+     * 流程结束登录业务表
+     *
+     * @param tradeInfoDtoList
+     * @see
+     * @since 1.0
+     */
     public void doInsert(List<BaseTradeInfoDto> tradeInfoDtoList) {
         if (tradeInfoDtoList != null && tradeInfoDtoList.size() > 0){
             //登录金融产品交易，金融产品附属交易，实物交易表
@@ -414,22 +436,47 @@ public class TrdBondMarketTradeService extends BaseService {
         }
     }
 
+    /**
+     * 查询是否有工作流中数据
+     * @param dto
+     * @return
+     */
     public int selectIsInWorkflow(TrdBondMarketTradeDto dto) {
         return trdBondMarkettTradeMapper.selectIsInWorkflow(dto);
     }
 
+    /**
+     * 查询是否有当日交易数据
+     * @param dto
+     * @return
+     */
     public int selectDealNum(TrdBondMarketTradeDto dto) {
         return  trdBondMarkettTradeMapper.selectDealNum(dto);
     }
 
+    /**
+     * 查询是否有当日以及后续交易数据
+     * @param dto
+     * @return
+     */
     public int selectDealNums(TrdBondMarketTradeDto dto) {
         return  trdBondMarkettTradeMapper.selectDealNums(dto);
     }
 
+    /**
+     * 根据汇总交易编号查询交易数据
+     * @param totalTradeId
+     * @return
+     */
     public TrdBondMarketTradeDto selectByTotalTradeId(String totalTradeId) {
         return  trdBondMarkettTradeMapper.selectByTotalTradeId(totalTradeId);   
     }
 
+    /**
+     * 撤销数据处理
+     * @param entity
+     * @return
+     */
     public void doCompleteRevoke(TrdBondMarketTradeDto entity) {
         String bizCode = entity.getTotleTradeId();
         if (bizCode.lastIndexOf('R') == bizCode.length() - 1) {

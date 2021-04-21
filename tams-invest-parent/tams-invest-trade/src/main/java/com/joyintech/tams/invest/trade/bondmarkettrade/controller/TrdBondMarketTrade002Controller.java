@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -171,5 +172,25 @@ public class TrdBondMarketTrade002Controller extends BaseController {
         }
         return commonCheck(result, dto.getOperateType());
     }
-    
+
+
+    /**
+     * 流程中保存时无法存储数据，所以根据要素重新生成数据
+     *
+     * @param dto 
+     * @return
+     * @throws ParseException
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/getSaveData")
+    public AjaxResult getSaveData(@RequestBody TrdBondMarketTradeDto dto){
+        AjaxResult ar = new AjaxResult();
+        trdBondMarketTrade002Service.setEntity(dto);
+        if (StringUtil.isNotEmpty(dto)) {
+            ar.setData(dto);
+        }
+        return ar;
+    }
 }

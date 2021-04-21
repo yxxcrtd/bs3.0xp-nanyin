@@ -31,8 +31,24 @@ public interface TrdBondMarketTradeMapper {
      */
     List<TrdBondMarketTradeDto> selectDeal(Map<String, Object> paraMap);
 
+    /**
+     * 查询发行代码下拉框
+     *
+     * @param param 参数
+     * @return 发行代码下拉框
+     * @see
+     * @since 1.0
+     */
     List<SelectOptionDto> getFinprodId(Map<String, Object> param);
 
+    /**
+     * 查询上市代码下拉框
+     *
+     * @param param 参数
+     * @return 上市代码下拉框
+     * @see
+     * @since 1.0
+     */
     List<SelectOptionDto> getAppearMarketId(Map<String, Object> param);
 
     /**
@@ -47,8 +63,18 @@ public interface TrdBondMarketTradeMapper {
      * */
     List<EtrSecPosition> getEtrPosition(Map<String, Object> map);
 
+    /**
+     * 查询是否有当日交易数据
+     * @param dto
+     * @return
+     */
     int selectDealNum(TrdBondMarketTradeDto dto);
 
+    /**
+     * 查询是否有当日交易数据
+     * @param dto
+     * @return
+     */
     int selectIsInWorkflow(TrdBondMarketTradeDto dto);
 
     /**
@@ -61,6 +87,13 @@ public interface TrdBondMarketTradeMapper {
      */
     TrdBondMarketTradeDto selectByTotalTradeId(@Param("totalTradeId")String totalTradeId);
 
+    /**
+     * 根据主键更新金融产品附属表表中数据
+     *
+     * @param entity 参数
+     * @see
+     * @since 1.0
+     */
     void updateByPrimaryKey(TrdBondMarketTradeDto entity);
 
     
@@ -72,5 +105,10 @@ public interface TrdBondMarketTradeMapper {
 
     List<EtrSecPositionFlowDto> selectRevokeEtrPositinFlows(@Param("bizCode")String bizCode);
 
+    /**
+     * 查询是否有当日以及后续交易数据
+     * @param dto
+     * @return
+     */
     int selectDealNums(TrdBondMarketTradeDto dto);
 }

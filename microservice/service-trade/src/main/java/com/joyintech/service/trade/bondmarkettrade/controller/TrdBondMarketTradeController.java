@@ -48,7 +48,7 @@ public class TrdBondMarketTradeController {
 
     
     /**
-     * 通道可用现金查询
+     * 根据汇总交易编号查询交易数据
      * @param totalTradeId
      * @return
      */
@@ -141,9 +141,11 @@ public class TrdBondMarketTradeController {
     }
 
     /**
-     * 查询是否有流程中数据
-     * @param dto
-     * @return
+     * 查询上市代码是否有其他流程中数据
+     *
+     * @param dto 画面参数dto
+     * @see
+     * @since 1.0
      */
     @PostMapping("selectIsInWorkflow")
     public int selectIsInWorkflow(@RequestBody TrdBondMarketTradeDto dto){

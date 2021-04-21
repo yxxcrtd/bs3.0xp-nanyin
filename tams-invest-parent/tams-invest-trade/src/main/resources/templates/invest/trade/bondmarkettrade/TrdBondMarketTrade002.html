@@ -9,7 +9,7 @@
 <body>
 <div layout:fragment="content">
     <form class="layui-form " id="submitForm">
-        <input type="hidden" id="tradeId" name="tradeId" th:value="${tradeId}" />
+        <input type="hidden" id="totleTradeId" name="totleTradeId" th:value="${entity?.totleTradeId}" />
         <input type="hidden" id="workflowId" name="workflowId" th:value="${workflowId}" />
         <input type="hidden" id="finprodType2" name="finprodType2" th:value="${entity?.finprodType2}" />
         <input type="hidden" id="isAdded" name="isAdded" th:value="${entity?.isAdded}" />
