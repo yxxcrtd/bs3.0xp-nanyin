@@ -304,6 +304,12 @@ public class TrdPlanCcyInvestTrade003Controller extends BaseController {
             TrdInvestPersonInfo002Dto tipiDto = dto.getTrdInvestPersonInfo();
             model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(tipiDto));
             model.addAttribute("businessId", workflowId);
+            // add by jiangpeng on 20210421 start
+            // TISHKBS-2005【风险试算】：申购申请复核,赎回确认复核时风险试算无数据
+            if(StringUtil.isNotEmpty(dto.getTradeId())){
+                model.addAttribute("tradeId", dto.getTradeId());
+            }
+            // add by jiangpeng on 20210421 end
         } 
         dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         dto.setProfitType(DictCodeList.收益类型_货币型.getValue());
