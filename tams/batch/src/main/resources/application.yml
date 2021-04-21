@@ -7,12 +7,12 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   profiles:
-    active: dtx1    #一体化使用yitihua-jicheng
+    active: dtx1
   thymeleaf:
     cache: false
   #数据源配置
   datasource:
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
     initialSize: 10
     maxTotal: 50
@@ -22,14 +22,22 @@ spring:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true   
+    logAbandoned: true
   activemq:
-    systemId: valuation_batch
     active: false
-#base数据源配置  
+    systemId: tams
+    brokerUrl: tcp://localhost:61616
+    user: system
+    password: manager
+    maximumRedeliveries: 10
+    initialRedeliveryDelay: 1
+    backOffMultiplier: 2
+    useExponentialBackOff: true
+    maximumRedeliveryDelay: -1
+#base数据源配置
 base:
   datasource:
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
     maxTotal: 50
     maxIdle: 50
@@ -39,11 +47,11 @@ base:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-  casEnable: false        
+  casEnable: false
 #interf数据源配置
 interf:
   datasource:
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    driverClassName: com.mysql.jdbc.Driver
     validationQuery: SELECT 1 FROM DUAL
     maxTotal: 50
     maxIdle: 50
@@ -64,16 +72,6 @@ jixu:
     type: 3
 #应用配置
 application:
-  chb:
-    #由于一二期直连调用组件包，组件包不能访问缓存，故在此配置同三期一致的路径
-    filepath: /home/tams/svr_nb_prod/sharedata/chb/send/CB/
-    #由于一二期直连调用组件包，组件包不能访问缓存，故在此配置同三期一致的路径
-    download-file-path: /home/tams/svr_nb_prod/sharedata/chb/recive/CB/
-    maxSqlNum: 1000
-    msg-start-time: 0600
-    msg-end-time: 2200
-    reportCbFeedBackHandleCountOneTime: 10000
-    isExceptionWhenSendTimeout: 01
   cache:
     file: classpath:ehcache_batch.xml
   sysCode: TAMS
@@ -100,7 +98,7 @@ batch:
     maxJobPoolSize: 5 #job线程池
     maxExeUser: 2 #最大并发用户数
     maxThreadPerUser: 5 #任务并发数
-    sleeptime: 1000 #轮询时间 
+    sleeptime: 10000 #轮询时间
     maxSqlNum: 50 #批量提交数
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -117,19 +115,36 @@ threadpool:
 ---
 spring:
   profiles: yitihua-jicheng
+  rabbitmq:
+    addresses: 192.168.45.20:5672
+    username: rbmq
+    password: rbmq
+    publisher-confirms: true
+    publisher-returns: true
+    listener:
+      simple:
+        max-concurrency: 20
+        concurrency: 1
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+    template:
+      retry:
+        enabled: false
+      mandatory: true
   redis:
     cluster:
-      nodes: 192.168.90.180:6379,192.168.90.180:6380,192.168.90.181:6381,192.168.90.181:6382,192.168.90.182:6383,192.168.90.182:6384
+      nodes: 192.168.45.20:6379,192.168.45.20:6380,192.168.45.20:6381,192.168.45.20:6382,192.168.45.20:6383,192.168.45.20:6384
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2121_test
-    password: zjtams2121_test 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: GDPB
+    password: GDPB
+    reportSqlldrDatabaseName: 192.168.60.43:3306/hx2jgbs_test #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zjtams2121_test
-  sqldirpassword: zjtams2121_test
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+  sqldiruserName: GDPB
+  sqldirpassword: GDPB
   #以下根据实际ip和端口进行修改
   micorservice:
     contextPath:
@@ -160,15 +175,15 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2121_test
-    password: zjtams2121_test
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: GDPB
+    password: GDPB
 #interf数据源配置
-interf:  
-   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2121_test
-    password: zjtams2121_test
+interf:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: GDPB
+    password: GDPB
 #日志路径配置
 log:
   path: /home/tams/logs/batch
@@ -181,23 +196,43 @@ eureka:
     enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
 ---
 spring:
-  profiles: dtx
+  profiles: dtx1
+  #rabbitmq:
+  #  addresses: 192.168.45.20:5672
+  #  username: rbmq
+  #  password: rbmq
+  #  publisher-confirms: true
+  #  publisher-returns: true
+  #  listener:
+  #    simple:
+  #      max-concurrency: 20
+  #      concurrency: 1
+  #      acknowledge-mode: manual
+  #      retry:
+  #        enabled: true
+  #  template:
+  #    retry:
+  #      enabled: false
+  #    mandatory: true
   #本地启动建议删除redis配置start
   redis:
-    database: 0
-    host: 127.0.0.1
+    database: 2
+    host: 192.168.70.240
     port: 6379
     timeout: 20000
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.45.20:6379,192.168.45.20:6380,192.168.45.20:6381,192.168.45.20:6382,192.168.45.20:6383,192.168.45.20:6384
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams214_v1203
-    password: zgtams214_v1203 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: joyin123
+    reportSqlldrDatabaseName: 192.168.60.43:3306/hx2jgbs_test #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams214_v1203
-  sqldirpassword: zgtams214_v1203
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+  sqldiruserName: root
+  sqldirpassword: joyin123
   loadbalance: false
   micorservice:
     contextPath:
@@ -228,18 +263,69 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams214_v1203
-    password: zgtams214_v1203
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: joyin123
 #interf数据源配置
-interf:  
-   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams214_v1203
-    password: zgtams214_v1203
+interf:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/hx2jgbs_test?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+    username: root
+    password: joyin123
 #日志路径配置
 log:
   path: /home/tams/logs/batch
+  level: DEBUG
+logging:
+  path: /home/tams/logs/batch
+#注册中心配置
+eureka:
+  client:
+    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:9101/eureka/
+  instance:
+    ip-address: 127.0.0.1
+    prefer-ip-address: false
+#分布式事物配置
+tx-lcn:
+  springcloud:
+    loadbalance:
+      enabled: true #开启负载均衡
+  client:
+    managerAddress: 192.168.70.228:8070 # manager服务地址(rpc端口),可填写多个负载
+  logger:
+    enabled: true # 开启日志数据库记录存储
+    onlyError: true
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+      threadSize: 8
+---
+spring:
+  profiles: yitihua
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams
+    password: zgtams
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams
+    password: zgtams
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams
+    password: zgtams
+log:
+  path: /home/tams/logs/batch-jicheng
   level: INFO
 logging:
   path: /home/tams/logs/batch
@@ -248,7 +334,7 @@ eureka:
   client:
     enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
     serviceUrl:
-      defaultZone: http://127.0.0.1:9101/eureka/
+      defaultZone: http://127.0.0.1:9100/eureka/
   instance:
     ip-address: 127.0.0.1
     prefer-ip-address: false
@@ -262,260 +348,9 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-    
-    
----
-spring:
-  profiles: dtxls
-  #本地启动建议删除redis配置start
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.70.228
-    port: 6379
-    timeout: 20000
-  datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
-#应用配置
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams0702ls
-  sqldirpassword: zgtams0702ls
-  loadbalance: false
-  micorservice:
-    contextPath:
-      single: true
-      commonService: http://127.0.0.1:8080/tams
-      basicDataService: http://127.0.0.1:8080/tams
-      documentService: http://127.0.0.1:8080/tams
-      entrustService: http://127.0.0.1:8080/tams
-      periodService: http://127.0.0.1:8080/tams
-      assetService: http://127.0.0.1:8080/tams
-      portfolioService: http://127.0.0.1:8080/tams
-      productService: http://127.0.0.1:8080/tams
-      quotaService: http://127.0.0.1:8080/tams
-      reportService: http://127.0.0.1:8080/tams
-      riskService: http://127.0.0.1:8080/tams
-      riskRdsService: http://127.0.0.1:8080/tams
-      riskInfService: http://127.0.0.1:8080/tams
-      settleService: http://127.0.0.1:8080/tams
-      tradeService: http://127.0.0.1:8080/tams
-      disclosureService: http://127.0.0.1:8080/tams
-      valuationService: http://127.0.0.1:8080/tams
-      chbService: http://127.0.0.1:8080/tams
-      chb3Service: http://127.0.0.1:8080/tams
-      svrcomService: http://127.0.0.1:8080/tams
-      pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080/tams
-#base数据库配置
-base:
-  datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
-#interf数据源配置
-interf:  
-   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams0702ls
-    password: zgtams0702ls
-#日志路径配置
-log:
-  path: /home/tams/logs/batch
-  level: DEBUG
-logging:
-  path: /home/tams/logs/batch
-#注册中心配置
-eureka:
-  client:
-    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
-    serviceUrl:
-      defaultZone: http://127.0.0.1:9101/eureka/
-  instance:
-    ip-address: 127.0.0.1
-    prefer-ip-address: false
-#分布式事物配置
-tx-lcn:
-  springcloud:
-    loadbalance:
-      enabled: true #开启负载均衡
-  client:
-    managerAddress: 192.168.70.228:8070 # manager服务地址(rpc端口),可填写多个负载
-  logger:
-    enabled: true # 开启日志数据库记录存储
-    onlyError: true
-    
-    
-    
----
-spring:
-  profiles: dtx1
-  #本地启动建议删除redis配置start
-  redis:
-    database: 5
-    host: 127.0.0.1
-    port: 6379
-    timeout: 20000
-  datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams1214ls
-    password: zgtams1214ls 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
-#应用配置
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams1214ls
-  sqldirpassword: zgtams1214ls
-  loadbalance: false
-  micorservice:
-    contextPath:
-      single: true
-      commonService: http://127.0.0.1:8080/tams
-      basicDataService: http://127.0.0.1:8080/tams
-      documentService: http://127.0.0.1:8080/tams
-      entrustService: http://127.0.0.1:8080/tams
-      periodService: http://127.0.0.1:8080/tams
-      assetService: http://127.0.0.1:8080/tams
-      portfolioService: http://127.0.0.1:8080/tams
-      productService: http://127.0.0.1:8080/tams
-      quotaService: http://127.0.0.1:8080/tams
-      reportService: http://127.0.0.1:8080/tams
-      riskService: http://127.0.0.1:8080/tams
-      riskRdsService: http://127.0.0.1:8080/tams
-      riskInfService: http://127.0.0.1:8080/tams
-      settleService: http://127.0.0.1:8080/tams
-      tradeService: http://127.0.0.1:8080/tams
-      disclosureService: http://127.0.0.1:8080/tams
-      valuationService: http://127.0.0.1:8080/tams
-      chbService: http://127.0.0.1:8080/tams
-      chb3Service: http://127.0.0.1:8080/tams
-      svrcomService: http://127.0.0.1:8080/tams
-      pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080/tams
-#base数据库配置
-base:
-  datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams1214ls
-    password: zgtams1214ls
-#interf数据源配置
-interf:  
-   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams1214ls
-    password: zgtams1214ls
-#日志路径配置
-log:
-  path: /home/tams/logs/batch
-  level: DEBUG
-logging:
-  path: /home/tams/logs/batch
-#注册中心配置
-eureka:
-  client:
-    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
-    serviceUrl:
-      defaultZone: http://127.0.0.1:9101/eureka/
-  instance:
-    ip-address: 127.0.0.1
-    prefer-ip-address: false
-#分布式事物配置
-tx-lcn:
-  springcloud:
-    loadbalance:
-      enabled: true #开启负载均衡
-  client:
-    managerAddress: 192.168.70.228:8070 # manager服务地址(rpc端口),可填写多个负载
-  logger:
-    enabled: true # 开启日志数据库记录存储
-    onlyError: true
-    
-    
----
-spring:
-  profiles: dtx2
-  #本地启动建议删除redis配置start
-  redis:
-    database: 0
-    host: 127.0.0.1
-    port: 6379
-    timeout: 20000
-  datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: productLs_20210301_WY
-    password: productLs_20210301_WY 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
-#应用配置
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: productLs_20210301_WY
-  sqldirpassword: productLs_20210301_WY
-  loadbalance: false
-  micorservice:
-    contextPath:
-      single: true
-      commonService: http://127.0.0.1:8080/tams
-      basicDataService: http://127.0.0.1:8080/tams
-      documentService: http://127.0.0.1:8080/tams
-      entrustService: http://127.0.0.1:8080/tams
-      periodService: http://127.0.0.1:8080/tams
-      assetService: http://127.0.0.1:8080/tams
-      portfolioService: http://127.0.0.1:8080/tams
-      productService: http://127.0.0.1:8080/tams
-      quotaService: http://127.0.0.1:8080/tams
-      reportService: http://127.0.0.1:8080/tams
-      riskService: http://127.0.0.1:8080/tams
-      riskRdsService: http://127.0.0.1:8080/tams
-      riskInfService: http://127.0.0.1:8080/tams
-      settleService: http://127.0.0.1:8080/tams
-      tradeService: http://127.0.0.1:8080/tams
-      disclosureService: http://127.0.0.1:8080/tams
-      valuationService: http://127.0.0.1:8080/tams
-      chbService: http://127.0.0.1:8080/tams
-      chb3Service: http://127.0.0.1:8080/tams
-      svrcomService: http://127.0.0.1:8080/tams
-      pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080/tams
-#base数据库配置
-base:
-  datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: productLs_20210301_WY
-    password: productLs_20210301_WY
-#interf数据源配置
-interf:  
-   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: productLs_20210301_WY
-    password: productLs_20210301_WY
-#日志路径配置
-log:
-  path: /home/tams/logs/batch
-  level: DEBUG
-logging:
-  path: /home/tams/logs/batch
-#注册中心配置
-eureka:
-  client:
-    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
-    serviceUrl:
-      defaultZone: http://127.0.0.1:9101/eureka/
-  instance:
-    ip-address: 127.0.0.1
-    prefer-ip-address: false
-#分布式事物配置
-tx-lcn:
-  springcloud:
-    loadbalance:
-      enabled: true #开启负载均衡
-  client:
-    managerAddress: 192.168.70.228:8070 # manager服务地址(rpc端口),可填写多个负载
-  logger:
-    enabled: true # 开启日志数据库记录存储
-    onlyError: true
+b45:
+  properties:
+    urlIP: 10.1.20.87
+    urlPort: 8088
+    urlMid: /dev.0/am4-banktransfer-manage/1.0
+    localFilePath: //home//uap//testNfs//
