@@ -265,10 +265,16 @@ public class NPrdBaseinfoTemplateRecService {
                 if(!StringUtil.isEmpty(dto.getValDecDigits())){
                     //单位净值小数位
                     sysParas.put(ValDictCodeList.账套配置表参数项_估值小数位位数.getValue(), dto.getValDecDigits());
+                    /**ADD BY WUJIE ON 20210421 START REMARK:累计单位净值小数位数_估值表展示 临时处理，待后续优化**/
+                    sysParas.put(ValDictCodeList.账套配置表参数项_累计单位净值小数位数_估值表展示.getValue(), dto.getValDecDigits());
+                    /**ADD BY WUJIE ON 20210421 END REMARK:累计单位净值小数位数_估值表展示 临时处理，待后续优化**/
                 }
                 if(!StringUtil.isEmpty(dto.getValDecType())){
                     //单位净值尾数处理
                     sysParas.put(ValDictCodeList.账套配置表参数项_估值小数位处理方式.getValue(), dto.getValDecType());
+                    /**ADD BY WUJIE ON 20210421 START REMARK:累计单位净值小数尾数_估值表展示 临时处理，待后续优化**/
+                    sysParas.put(ValDictCodeList.账套配置表参数项_累计单位净值小数尾数_估值表展示.getValue(), dto.getValDecType());
+                    /**ADD BY WUJIE ON 20210421 END REMARK:累计单位净值小数尾数_估值表展示 临时处理，待后续优化**/
                 }
 
                 if(!StringUtil.isEmpty(dto.getFloatCyclyearYieldDigits())){
@@ -307,7 +313,7 @@ public class NPrdBaseinfoTemplateRecService {
                     /**modify by wujie on 20190704 start
                      sysParas.put(DictCodeList.账套配置表参数项_产品费后估值小数尾数处理方式_估值表展示.getValue(), dto.getShowAfterDecDigits());
                      **/
-                    sysParas.put(ValDictCodeList.账套配置表参数项_产品费前估值小数位数_估值表展示.getValue(), dto.getShowAfterDecDigits());
+                    sysParas.put(ValDictCodeList.账套配置表参数项_产品费后估值小数位数_估值表展示.getValue(), dto.getShowAfterDecDigits());
                     /**modify by wujie on 20190704 end**/
                 }
 
