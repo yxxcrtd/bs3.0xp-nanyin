@@ -427,22 +427,27 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
      */
     @Override
     public void doUpdate(FinNetProductDurationDto dto) {
-    	if (!StringUtil.equals("revoke", dto.getOperateType()) && !StringUtil.equals("delete", dto.getOperateType())) {
-    		try {
-    			 //1. 获取前端页面数据
-    			 ProcessMark newEntity = WorkFlowUtil.getBusinessObjectFromRequest(FinNetProductDurationDto.class,true);
-    			 FinNetProductDurationDto requestDto = getBussinessEntity(newEntity);
-    			 //2. 利用前端数据 覆盖 dto中指定字段
-    			 dto.setAddReduceDealAmt03(requestDto.getAddReduceDealAmt03());
-    			 dto.setAddReduceDealNum03(requestDto.getAddReduceDealNum03());
-    			 dto.setAddReduceDealAmt(requestDto.getAddReduceDealAmt());
-    			 dto.setAddReduceDealNum(requestDto.getAddReduceDealNum());
-    			 dto.setBussTrdTransferOrder(requestDto.getBussTrdTransferOrder());
-    		}catch (Exception e) {
-    			e.printStackTrace();
-    		}    		
-    		 this.handleBussFlowData(dto);
-    	}
+//    	if (!StringUtil.equals("revoke", dto.getOperateType()) && !StringUtil.equals("delete", dto.getOperateType())) {
+//    		try {
+//    			 //1. 获取前端页面数据
+//    			 ProcessMark newEntity = WorkFlowUtil.getBusinessObjectFromRequest(FinNetProductDurationDto.class,true);
+//    			 FinNetProductDurationDto requestDto = getBussinessEntity(newEntity);
+//    			 //2. 利用前端数据 覆盖 dto中指定字段
+//    			 dto.setAddReduceDealAmt03(requestDto.getAddReduceDealAmt03());
+//    			 dto.setAddReduceDealNum03(requestDto.getAddReduceDealNum03());
+//    			 dto.setAddReduceDealAmt(requestDto.getAddReduceDealAmt());
+//    			 dto.setAddReduceDealNum(requestDto.getAddReduceDealNum());
+//    			 dto.setBussTrdTransferOrder(requestDto.getBussTrdTransferOrder());
+//    		}catch (Exception e) {
+//    			e.printStackTrace();
+//    		}
+//    		 this.handleBussFlowData(dto);
+//    	}
+		if (!StringUtil.equals("revoke", dto.getOperateType())
+				&& !StringUtil.equals("delete", dto.getOperateType())) {
+			this.handleBussFlowData(dto);
+		}
+
     }
 
     private void saveRepDuration(FinNetProductDurationDto dto, boolean isRevoke) {
