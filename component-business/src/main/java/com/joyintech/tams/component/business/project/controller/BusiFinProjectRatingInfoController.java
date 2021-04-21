@@ -20,6 +20,7 @@ import com.joyintech.tams.component.business.bond.BusiFinBondRatingInfoService;
 import com.joyintech.tams.component.business.bond.dto.BusiFinBondRatingInfoDto;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.project.BusiFinProjectRatingInfoService;
+import com.joyintech.tams.component.business.project.dto.BusiFinProjectRatingInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -97,7 +98,7 @@ public class BusiFinProjectRatingInfoController extends BaseController{
 	            String entityName = StringUtil.defaultString(this.getParam("entityName"),
 	                BusiFinBondRatingInfoService.DEFAULT_ENTITY_NAME);
 	            //根据工作流与留痕处理提供的共通方法获取业务实体
-	            BusiFinBondRatingInfoDto busiFinBondRatingInfoDto = mstWorkflowCommonService.getBusinessEntityByWorkFlowId(workFlowId, entityName, BusiFinBondRatingInfoDto.class);
+                BusiFinProjectRatingInfoDto busiFinBondRatingInfoDto = mstWorkflowCommonService.getBusinessEntityByWorkFlowId(workFlowId, entityName, BusiFinProjectRatingInfoDto.class);
 	            if(null!=busiFinBondRatingInfoDto){
 	                mstBondCreditRatingList = busiFinBondRatingInfoDto.getMstBondCreditRatingList();
 	            }
