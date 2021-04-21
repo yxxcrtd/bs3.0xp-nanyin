@@ -13,10 +13,9 @@
 <body>
   <div layout:fragment="content">
     <div class="form-button-area" filter="false">
-      <a id="ProRateInfo001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
-      <a id="ProRateInfo001_btn_delete" class="layui-btn layui-btn-sm btn-delete btn-default" data-th-text="#{SysCommon.delete}">删除</a>
-      <a id="ProRateInfo001_btn_export" class="layui-btn layui-btn-sm btn-import btn-default">导出</a>
-      <a id="ProRateInfo001_btn_search" class="layui-btn layui-btn-sm btn-import btn-default">查询</a>
+      <a id="ProRateInfo001_btn_add" class="layui-btn layui-btn-sm btn-create" >新建</a>
+      <a id="ProRateInfo001_btn_delete" class="layui-btn layui-btn-sm btn-delete btn-default" >批量删除</a>
+      <a id="ProRateInfo001_btn_export" class="layui-btn layui-btn-sm btn-import btn-default">导入</a>
     </div>
     <div class="joyin-form-wrap condition-area">
         <form class="layui-form" id="searchForm">
@@ -24,19 +23,20 @@
             <div class="layui-inline layui-col-md3">
               <label class="layui-form-label form-lable">产品</label>
               <div class="layui-input-inline input-inline">
-                <input id="ProRegistCodeManage001_prod" name="prod" class="layui-input form-input input-lenovoselect" 
-                data-th-data-parentids="orgCode" data-th-data-code="prdCode" placeholder="请输入"
-                data-th-data-url="@{/svreport/system/prorate/ProRateInfo001/getProd}"
-                data-idfield="code" data-keyfield="code"
-                data-showindex = 'false'
-                data-effectivefieldsalias='{"code":"产品代码","shortName":"产品名称"}'
-                >
+                <select id="prod_id" name="prod_id"
+                        data-th-data-url='@{/svreport/system/prorate/ProRateInfo001/getProdID}'
+                        data-th-data-formatoption=true data-th-data-parentids="orgCode"
+                        class="input-select" placeholder="请选择"
+                        data-th-placeholder="#{SysCommon.selectplaceholder}"
+                        allowClear="true" multiple="multiple"
+                        data-th-initValue="${entity?.prodId}">
+                </select>
               </div>
             </div>
             <div class="layui-inline layui-col-md3">
               <label class="layui-form-label form-lable">信披费用类型</label>
               <div class="layui-input-inline input-inline">
-                <select id="ProRegistCodeManage001_regCode" name="regCode" data-th-data-url='@{/svreport/system/prorate/ProRateInfo001/getRegCode}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+                <select id="ProRegistCodeManage001_prdFeeType" name="getPrdFeeType" data-th-data-url='@{/svreport/system/prorate/ProRateInfo001/getPrdFeeType}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
                 </select>
 
               </div>
@@ -44,7 +44,7 @@
             <div class="layui-inline layui-col-md3">
               <label class="layui-form-label form-lable">数据状态</label>
               <div class="layui-input-inline input-inline">
-                <select id="ProRegistCodeManage002_regCode" name="regCode" data-th-data-url='@{/svreport/system/prorate/ProRateInfo001/getRegCode}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+                <select id="ProRegistCodeManage002_dataStatus" name="getDataStatus" data-th-data-url='@{/svreport/system/prorate/ProRateInfo001/getDataStatus}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
                 </select>
 
               </div>

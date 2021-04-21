@@ -11,6 +11,19 @@ import java.util.Date;
 public class ProRateInfo001Dto extends BaseEntity implements ITableRow {
 
     /**
+     * uuid主键
+     */
+    private String datauuid;
+
+    public String getDatauuid() {
+        return datauuid;
+    }
+
+    public void setDatauuid(String datauuid) {
+        this.datauuid = datauuid;
+    }
+
+    /**
      * 数据状态
      */
     private String status;
