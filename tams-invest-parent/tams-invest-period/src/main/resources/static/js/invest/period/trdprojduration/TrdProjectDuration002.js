@@ -21,7 +21,7 @@
             if(intAmtUnpayFlag){
                 $('#repayIntAmt_div').show();
             }
-            if($("#finAssetInfo_finprodMarketId").val()){
+            if($("#finAssetInfo_finprodMarketId").val() && $("#cashType").val()&&($("#cashType").val()=='02'||$("#cashType").val()=='03') ){
                    var objectPayInt = {
                                     finprodId: $('#finAssetInfo_finprodMarketId').val(),
                                     settleDate: $('#interestPayDay').val()
@@ -29,8 +29,8 @@
                               Joyin.ajaxJson(basePath+ "invest/period/trdprojduration/TrdProjectDuration002/isPayIntDate",objectPayInt,function(result){
                                              if(!result){
                                                 //还本日无付息，即还本日！=付息日
+                                                    $("#isClean").attr("disabled",true);
                                                 　　 $("#isClean").val('N').trigger('change');
-                                                 　 $("#isClean").prop("disabled", true);
                                              }
 
                             });
