@@ -221,9 +221,9 @@
         <result column="PBC_ASSET_TYPE3" property="pbcAssetType3"
             jdbcType="VARCHAR" />
         <result column="TRM_FUND_TYPE" property="trmFundType" jdbcType="VARCHAR" />
-            
+
       <result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
-	
+
 	<result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
 	<result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
 	<result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
@@ -487,9 +487,9 @@
         <result column="ORG_ASSET_TYPE4" property="orgAssetType4"
             jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE5" property="orgAssetType5"
-            jdbcType="VARCHAR" />  
+            jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE_EX" property="orgAssetTypeEx"
-            jdbcType="VARCHAR"/>      
+            jdbcType="VARCHAR"/>
         <result column="BUY_PLACE" property="buyPlace"
             jdbcType="VARCHAR" />
         <result column="ASSET_TYPE3" property="assetType3"
@@ -504,7 +504,7 @@
             jdbcType="VARCHAR" />
         <result column="TRM_FUND_TYPE" property="trmFundType" jdbcType="VARCHAR" />
     </resultMap>
-    
+
     <sql id="Base_Column_List">
         ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE,
         DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT,
@@ -551,7 +551,7 @@
         BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,
         ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,BUY_PLACE,ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3
     </sql>
-    
+
     <sql id="Psbc_Base_Column_List">
         ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE,
         DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT,
@@ -598,7 +598,7 @@
         BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,
         ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3
     </sql>
-    
+
     <insert id="insertBatch"
         parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         insert into CHB_ASSET_INFO (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -1499,7 +1499,7 @@
         </foreach>
         ;end;
     </update>
-    
+
     <update id="updateBatchPsbc"
         parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         begin
@@ -1989,34 +1989,34 @@
         </foreach>
         ;end;
     </update>
-    
+
     <select id="selectIsExistAssetByAssetCode" parameterType="java.lang.String" resultType="java.lang.Integer">
     select count(*)
     from chb_asset_info
     where  ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
-    
+
     </select>
-    
+
     <delete id="deleteByAssetCodeList" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
       delete from chb_asset_info
       <where>
         <foreach collection="insertList" item="item" index="index" open="ASSET_CODE in (" close=")" separator=",">
-        #{item.assetCode,jdbcType=VARCHAR} 
+        #{item.assetCode,jdbcType=VARCHAR}
         </foreach>
       </where>
     </delete>
-    
+
     <delete id="deleteByAssetCode" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
       delete from chb_asset_info
       <where>
-        ASSET_CODE = #{assetCode,jdbcType=VARCHAR} 
+        ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
       </where>
     </delete>
-    
+
     <select id="selectAssetCodeByAssetType" parameterType="java.util.Map" resultType="java.lang.String">
         select ASSET_CODE
         from chb_asset_info
-        where  1 =1 
+        where  1 =1
         <if test='assetTypeList != null'>
         <foreach collection="assetTypeList" item="assetType" index="index" open="and ASSET_TYPE in (" close=")" separator=",">
             #{assetType,jdbcType=VARCHAR}
@@ -2026,12 +2026,12 @@
             and to_char(status_date,'yyyy-MM-dd') = #{cdate,jdbcType=VARCHAR}
         </if>
     </select>
-    
-  
+
+
     <select id="selectAssetCodeBySysdate" parameterType="java.util.Map" resultType="java.lang.String">
         select ASSET_CODE
         from chb_asset_info
-        where  1 =1 
+        where  1 =1
         <if test='isToday != null '>
             <choose >
                 <when test=' isToday == true'>
@@ -2042,28 +2042,28 @@
                 </otherwise>
             </choose>
         </if>
-    </select> 
-  <select id="selectAssetByInterfdateBatch" parameterType="map" 
+    </select>
+  <select id="selectAssetByInterfdateBatch" parameterType="map"
     resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
     /*add by lingxq 针对投管端【存放标的】新建的标的【资产三级分类】为【活期存放】时,金额元素隐藏，抽数从首次交易里获取金额*/
      WITH TMP_HQCF as (
-	   SELECT 
+	   SELECT
 	      SUM(NVL(DECODE(DEAL.PS,'T01',DEAL.PRIN_AMT,-1*DEAL.PRIN_AMT),0)) AS AMT,MIN(DEAL.TRADE_DATE),DEAL.FINPROD_ID
 	   FROM TRD_PRODUCT_DEAL DEAL
-	   
+
 	   LEFT JOIN REP_ASSET_DEPT ASSET
 	   ON DEAL.FINPROD_ID = ASSET.REP_FINPROD_ID
-	    
+
 	   LEFT JOIN FIN_PRODUCT INFO
 	   ON INFO.FINPROD_ID=DEAL.FINPROD_ID
-	   
-	   LEFT JOIN FIN_PRODUCT_TYPE INFOTP 
+
+	   LEFT JOIN FIN_PRODUCT_TYPE INFOTP
 	   ON NVL(INFO.P_FINPROD_ID,ASSET.REP_FINPROD_ID)=INFOTP.FINPROD_ID
 	   WHERE  DEAL.BUSI_TYPE IN( '03','01','37')
 	   AND INFOTP.TYPE_6='D03'
 	   AND DEAL.TRADE_STATUS = '01'
 	   AND DEAL.IS_CANCEL = 'N'
-	   
+
 	   GROUP BY DEAL.FINPROD_ID
 	 )
         /*银行存款类资产报送信息*/
@@ -2300,10 +2300,10 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
-        LEFT JOIN TMP_HQCF 
+        LEFT JOIN TMP_HQCF
         on TMP_HQCF.FINPROD_ID = detail.REP_FINPROD_ID
-        WHERE 1 =1 
-        and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->                                               
+        WHERE 1 =1
+        and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -2523,9 +2523,9 @@
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
         DETAIL.REP_BANK_SEC_CAPITAL as BANK_SEC_CAPITAL,
-		
+
 		DETAIL.REP_BANK_SEC_PERPETUAL as BANK_SEC_PERPETUAL,
-		
+
 		NULL BANK_SEC_PREFER,
         OTHER.BANK_SEC_KZZQ,
         OTHER.BANK_SEC_ZXZQ,
@@ -2824,7 +2824,7 @@
         left join MST_COUNTER_PARTY mcp
          on ((tradeproduct.COUNTER_ID=mcp.COUNTER_ID and infotp.TYPE_6!='D01')
          or  (info.issuer = mcp.link_id and infotp.TYPE_6='D01') )
-        LEFT JOIN DATA_AUTH_NOTIFY_INST T22 ON ((info.finprod_id = T22.BUSINESS_ID AND T22.Data_Type = 'FINASSET02') 
+        LEFT JOIN DATA_AUTH_NOTIFY_INST T22 ON ((info.finprod_id = T22.BUSINESS_ID AND T22.Data_Type = 'FINASSET02')
         		or(detailadd.PORTFOLIO_ID = T22.BUSINESS_ID and T22.DATA_TYPE='PTL01')) AND T22.MODEL_TYPE='02'
          LEFT JOIN DATA_AUTH_NOTIFY_INST T23 ON mcp.counter_id = T23.BUSINESS_ID AND T23.Data_Type = 'MST15' and T23.MODEL_TYPE='02'
          and T22.INSTITUTION_CODE=T23.INSTITUTION_CODE
@@ -2839,7 +2839,7 @@
         <![CDATA[or NVL(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(infotp.UPDATE_TIME,infotp.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(customerinfo.UPDATE_TIME,customerinfo.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
-        <![CDATA[or NVL(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>        
+        <![CDATA[or NVL(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(mcp.UPDATE_TIME,mcp.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
          /*拆放同业及买入返售报送信息、负债(同业拆入/卖出回购)报送信息*/
         UNION ALL
@@ -3048,7 +3048,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -3064,7 +3064,7 @@
         CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
-		
+
         FROM REP_LIABILITIES DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -3081,7 +3081,7 @@
         on info.FINANCIER=customerinfo.CUSTOMER_ID
         left join MST_COUNTER_PARTY mcp
         on NVL(tradeproduct.COUNTER_ID, info.ISSUER)=decode(info.ISSUER,null,mcp.COUNTER_ID,mcp.link_id)
-        WHERE 1 =1 
+        WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
         /*根据创建时间、更新时间和接口接入时间接入数据*/
@@ -3138,9 +3138,9 @@
           ELSE CASE WHEN T22.COEFFICIENT=1 THEN NULL
                  ELSE (T22.COEFFICIENT-1)*100
                   END
-          END 
+          END
         END AS FLOAT_FACTOR,
-        CASE WHEN T21.INT_TYPE = '01' THEN NULL 
+        CASE WHEN T21.INT_TYPE = '01' THEN NULL
         ELSE detail.REP_SPREAD_RATE
         END SPREAD_RATE,
         <!-- MODIFY BY ZHANGLIANGz 20201212 START -->
@@ -3298,14 +3298,14 @@
                   else null
              end
         end  as COUPON_SPECIES,
-        case when ASSET.REP_ASSET_TYPE ='2201' then null 
-             when ASSET.REP_ASSET_TYPE ='2202' then null 
+        case when ASSET.REP_ASSET_TYPE ='2201' then null
+             when ASSET.REP_ASSET_TYPE ='2202' then null
         else case when T31.PAY_CYCLE='08' then '02'
                   else '01'
                   END
         end as INTEREST_RULE_FLAG,
-        case when ASSET.REP_ASSET_TYPE ='2201' then null 
-             when ASSET.REP_ASSET_TYPE ='2202' then null 
+        case when ASSET.REP_ASSET_TYPE ='2201' then null
+             when ASSET.REP_ASSET_TYPE ='2202' then null
         else DETAIL.REP_INTPAY_RULE
         end as INTPAY_RULE,
         case when ASSET.REP_ASSET_TYPE ='2201' then null
@@ -3362,7 +3362,7 @@
         end as CREDIT_ORG_CODE,
         case when ASSET.REP_ASSET_TYPE ='2201' then null
              when ASSET.REP_ASSET_TYPE ='2202' then null
-        else b.CUSTOMER_NAME 
+        else b.CUSTOMER_NAME
         end as CREDIT_ORG_NAME,
         null EQUITY_QUIT,
         null DEPT_EQUITY,
@@ -3397,7 +3397,7 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
-        
+
         left join  FIN_CASH_INFO T11
         on T11.FINPROD_ID =detail.REP_FINPROD_ID  AND T11.CASH_TYPE_2 = 'C02'
         LEFT JOIN FIN_RATE_INFO T21
@@ -3405,7 +3405,7 @@
         LEFT JOIN FIN_CASH_PAY_RULE T31
         ON (T31.CASH_ID = T11.CASH_ID
             AND T31.EFF_DATE = info.VDATE)
-        
+
         left join FIN_CASH_INFO T12
         on T12.FINPROD_ID = detail.REP_FINPROD_ID  and T12.CASH_TYPE_2 = 'C02'
         left join FIN_RATE_INFO T22
@@ -3421,11 +3421,11 @@
         left join fin_product_credit tt
         on tt.FINPROD_ID = detail.REP_FINPROD_ID
         left join mst_customer_info_add a
-        on tt.credit_flag = a.customer_id	
-        left join mst_customer_info b	
+        on tt.credit_flag = a.customer_id
+        left join mst_customer_info b
         on b.customer_id = a.customer_id
 
-        
+
         WHERE 1 =1
         and nvl(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
@@ -3640,7 +3640,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -4129,7 +4129,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -4371,7 +4371,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -4387,7 +4387,7 @@
         CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
-		
+
         FROM REP_ASSET_AST_QDII_SEC DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -4613,7 +4613,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -4629,7 +4629,7 @@
         CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
-		
+
         FROM REP_ASSET_AST_QDII_REV DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -4855,7 +4855,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -4871,7 +4871,7 @@
         CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
-		
+
         FROM REP_AST_QDII_SHARE DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -5097,7 +5097,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -5113,7 +5113,7 @@
         CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
-		
+
         FROM REP_AST_QDII_STRUCT DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -5593,7 +5593,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -5846,7 +5846,7 @@
 
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -6091,7 +6091,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -6586,7 +6586,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -6830,7 +6830,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -6846,7 +6846,7 @@
         CASE WHEN infotp.TYPE_11 = '130' THEN '01' ELSE '02' END IS_BJSZQ,
         NULL IS_PERPETUAL,
         NULL IS_FBZB
-		
+
         FROM REP_LIABILITIES_OTHER DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -7076,7 +7076,7 @@
         null DEPT_EQUITY,
         FTP.hold_purpose HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -7104,7 +7104,7 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join TRD_PRODUCT_DEAL ftt
                     on  ftt.trade_id = FTP.FINPROD_ID
-	and ftt.trade_status = '01'	
+	and ftt.trade_status = '01'
         WHERE FTP.FINPROD_TYPE2 IN ('F11', 'F12', 'F13', 'F14', 'F29', 'F30','F35')
         AND NVL(INFO.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         /*根据创建时间、更新时间和接口接入时间接入数据*/
@@ -7355,7 +7355,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER,
@@ -11801,7 +11801,7 @@
             #{pbcAssetTyp3,jdbcType=VARCHAR},
         )
     </insert>
-    
+
      <insert id="insertPsbc"
         parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         insert into CHB_ASSET_INFO (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -12008,29 +12008,29 @@
             #{pbcAssetTyp3,jdbcType=VARCHAR},
         )
     </insert>
-    
+
     <delete id="deleteAllData">
       truncate table chb_asset_info
     </delete>
-    
+
     <delete id="deleteBySysTime" parameterType="java.util.Map">
         delete from chb_asset_info
         <where>
             <if test="isToday != null ">
                 <choose>
                     <when test="isToday == true">
-                        to_char(nvl(update_time,create_time),'yyyy-MM-dd') 
+                        to_char(nvl(update_time,create_time),'yyyy-MM-dd')
                         = to_char(sysdate,'yyyy-MM-dd')
                     </when>
                     <otherwise>
-                        to_char(nvl(update_time,create_time),'yyyy-MM-dd') 
+                        to_char(nvl(update_time,create_time),'yyyy-MM-dd')
                         &lt;= to_char(sysdate,'yyyy-MM-dd')
                     </otherwise>
                 </choose>
             </if>
         </where>
-    </delete>   
-    
+    </delete>
+
     <insert id="mergeInfoList"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         MERGE INTO CHB_ASSET_INFO CII
         USING (
@@ -12259,8 +12259,8 @@
         <!-- 业务主键匹配 -->
         ON (CII.ASSET_CODE = TEMP.ASSET_CODE)
         <!-- 匹配到则更新 -->
-        WHEN MATCHED THEN 
-        UPDATE 
+        WHEN MATCHED THEN
+        UPDATE
         SET <!-- CII.ASSET_UUID = TEMP.ASSET_UUID,
             CII.ASSET_CODE = TEMP.ASSET_CODE, -->
             CII.ASSET_TYPE = TEMP.ASSET_TYPE,
@@ -12478,7 +12478,7 @@
             <!-- add by zhangliang G06升级字段新增  end -->
             ,CII.PRIVATE_FLAG	=	TEMP.PRIVATE_FLAG
         <!-- 未匹配到这插入 -->
-        WHEN NOT MATCHED THEN 
+        WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE, DISCOUNT_YIELD,
@@ -12805,7 +12805,7 @@
             ,TEMP.PRIVATE_FLAG
         )
     </insert>
-    
+
      <insert id="mergeInfoListPsbc"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         MERGE INTO CHB_ASSET_INFO CII
         USING (
@@ -12980,8 +12980,8 @@
         <!-- 业务主键匹配 -->
         ON (CII.ASSET_CODE = TEMP.ASSET_CODE)
         <!-- 匹配到则更新 -->
-        WHEN MATCHED THEN 
-        UPDATE 
+        WHEN MATCHED THEN
+        UPDATE
         SET <!-- CII.ASSET_UUID = TEMP.ASSET_UUID,
             CII.ASSET_CODE = TEMP.ASSET_CODE, -->
             CII.ASSET_TYPE = TEMP.ASSET_TYPE,
@@ -13145,7 +13145,7 @@
             CII.PBC_ASSET_TYPE2 = TEMP.PBC_ASSET_TYPE2,
             CII.PBC_ASSET_TYPE3 = TEMP.PBC_ASSET_TYPE3
         <!-- 未匹配到这插入 -->
-        WHEN NOT MATCHED THEN 
+        WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE, DISCOUNT_YIELD,
@@ -13197,7 +13197,7 @@
         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
         SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,
         ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,
-        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD) 
+        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD)
         values(
             TEMP.ASSET_UUID,
             TEMP.ASSET_CODE,
@@ -13586,7 +13586,7 @@
 				#{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
 				#{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
             <!-- G06升级 add by qufangxu at 2021-02-03 -->
-            
+
             from dual
         </foreach>
         ) TEMP
@@ -14704,8 +14704,8 @@
         TEMP.TRM_FUND_TYPE
         )
     </insert>
-    
-    <select id="selectChlAssetByInterfdateBatch" parameterType="map" 
+
+    <select id="selectChlAssetByInterfdateBatch" parameterType="map"
         resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT null ASSET_UUID,
         asset.FINPROD_MARKET_ID asset_code,
@@ -14898,7 +14898,7 @@
         on DETAIL.REP_MANAGER_ID=mci.CUSTOMER_ID
         left join mst_customer_info mci1
         on DETAIL.REP_TRUSTEE_ID=mci1.CUSTOMER_ID
-        WHERE 1 =1 
+        WHERE 1 =1
         and info.IS_CHL = 'Y'<!-- 通道资产的信息单独查询 -->
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -14907,8 +14907,8 @@
         <![CDATA[OR NVL(CUSTOMERINFO.UPDATE_TIME,CUSTOMERINFO.CREATE_TIME) > #{INTERFDATE,jdbcType=TIMESTAMP}]]>
         <![CDATA[or NVL(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     </select>
-    
-     <select id="selectChlAssetByInterfdateBatchPsbc" parameterType="map" 
+
+     <select id="selectChlAssetByInterfdateBatchPsbc" parameterType="map"
         resultMap="PsbcBaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT null ASSET_UUID,
         asset.FINPROD_MARKET_ID asset_code,
@@ -15116,7 +15116,7 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
-        WHERE 1 =1 
+        WHERE 1 =1
         and info.IS_CHL = 'Y'<!-- 通道资产的信息单独查询 -->
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( NVL(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
