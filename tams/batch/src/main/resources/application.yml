@@ -7,7 +7,7 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   profiles:
-    active: dtx1    #一体化使用yitihua-jicheng
+    active: dtxls    #一体化使用yitihua-jicheng
   thymeleaf:
     cache: false
   #数据源配置
@@ -22,10 +22,18 @@ spring:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true   
+    logAbandoned: true
   activemq:
-    systemId: valuation_batch
     active: false
+    systemId: valuation_batch
+    brokerUrl: tcp://localhost:61616
+    user: system
+    password: manager
+    maximumRedeliveries: 10
+    initialRedeliveryDelay: 1
+    backOffMultiplier: 2
+    useExponentialBackOff: true
+    maximumRedeliveryDelay: -1
 #base数据源配置  
 base:
   datasource:
@@ -100,7 +108,7 @@ batch:
     maxJobPoolSize: 5 #job线程池
     maxExeUser: 2 #最大并发用户数
     maxThreadPerUser: 5 #任务并发数
-    sleeptime: 1000 #轮询时间 
+    sleeptime: 1000 #轮询时间
     maxSqlNum: 50 #批量提交数
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -271,19 +279,19 @@ spring:
   redis:
     database: 1
     password: joyin!234
-    host: 192.168.70.228
+    host: 192.168.90.198
     port: 6379
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
-    password: zgtams0702ls 
+    password: zgtams0702ls_123
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
   sqldiruserName: zgtams0702ls
-  sqldirpassword: zgtams0702ls
+  sqldirpassword: zgtams0702ls_123
   loadbalance: false
   micorservice:
     contextPath:
@@ -316,13 +324,13 @@ base:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
-    password: zgtams0702ls
+    password: zgtams0702ls_123
 #interf数据源配置
 interf:  
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
-    password: zgtams0702ls
+    password: zgtams0702ls_123
 #日志路径配置
 log:
   path: /home/tams/logs/batch
@@ -344,7 +352,7 @@ tx-lcn:
     loadbalance:
       enabled: true #开启负载均衡
   client:
-    managerAddress: 192.168.70.228:8070 # manager服务地址(rpc端口),可填写多个负载
+    managerAddress: 192.168.90.197:8070 # manager服务地址(rpc端口),可填写多个负载
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
