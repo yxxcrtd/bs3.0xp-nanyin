@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListTableId;
 
 import org.apache.commons.lang.StringUtils;
@@ -58,6 +59,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetCashPay
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetCashPlan;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProduct;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchDto;
+import com.joyintech.tams.valuation.common.batch.losscommon.service.LossCommonService;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tams.constant.DictCode;
@@ -95,6 +97,11 @@ public class SecT1HandleService {
      */
     @Autowired
     private CalculationCommonService calculationCommonService;
+    
+    /**ADD BY CAOGUO ON 20201113 减值相关修改 START **/
+    @Autowired
+    private LossCommonService lossCommonService;
+    /**ADD BY CAOGUO ON 20201113 减值相关修改 END **/
 
     /**
      * 债券T+1方法 <功能详细描述>
@@ -386,6 +393,24 @@ public class SecT1HandleService {
                             newCash = targetCashCalcRule.getYield();
                         }
                     }
+                    /**ADD BY CAOGUO ON 20201113 减值相关增加 START */
+                    List<String> paramCodeList = new ArrayList<String>();
+                    paramCodeList.add(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue()); 
+                    Map<String, Object> getValBokBooksetExtMap = accountingCommonService
+                            .getValBokBooksetExtForMap(secT1HandleParamterDto.getBooksetId(), paramCodeList);
+                    String recalcType = "";
+                    if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue()) != null){
+                        recalcType = (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue());
+                    }
+                    // if (减值资产第三阶段是否重新计算实际利率 = 02：重算 ）
+                    if (DictCodeListExt3.减值资产第三阶段是否重新计算实际利率_重算.getValue().equals(
+                        recalcType)) {
+                        if (lossCommonService.isP3InOrOut(varDate,
+                            rstBaseinfo.getFinprodId(), null, null)) {
+                            重算状态 = true;
+                        }
+                    }
+                    /**ADD BY CAOGUO ON 20201113 减值相关增加  end */
                     /**ADD BY WUJIE ON 20191216 START**/
                     // 变量.摊销重算配置DTO = 调用计算类共通【摊销重算配置查询
 					List<BokAmoConfig> bokAmoConfigList = calculationCommonService.getBokAmoConfig(
@@ -635,7 +660,6 @@ public class SecT1HandleService {
     /**
      * 利息计提-计算百元面值的债券的利息
      * 
-     * @param acctEntityEx 计提基础信息DTO
      * @param rstBaseinfo 标的信息
      * @param listIntinfo 付息计划列表
      * @param listCashinfo 报价信息列表
@@ -817,14 +841,10 @@ public class SecT1HandleService {
     /**
      * 计算债券的日摊销收益率
      * 
-     * @param acctEntityEx 计提基础信息DTO
      * @param rstBaseinfo 标的信息
      * @param listIntinfo 付息列表
      * @param listCashinfo 报价列表
      * @param listPayinfo 支付规则
-     * @param varSpilledPriceAccBal 溢折价科目余额
-     * @param varOAmtHappenDate 成本科目余额
-     * @param varInterestAccBal 应计利息余额
      * @param varFaceValue 百元面值
      * @param newCash 最新报价
      * @return SecDscYieldOutParameter

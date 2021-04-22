@@ -10,10 +10,17 @@
 
 package com.joyintech.tams.valuation.batch.secabscalbook.service;
 
-import com.google.common.collect.Lists;
 import com.joyintech.calculation.CalculatorFactory;
 import com.joyintech.calculation.bonds.SecIntSchedule;
+import com.joyintech.calculation.bonds.base.param.SecCalYearDayCountOutputParameter;
+import com.joyintech.calculation.bonds.base.param.SecCalYearInputParameter;
 import com.joyintech.calculation.bonds.constant.*;
+import com.joyintech.calculation.bonds.interest.AccurIntForDisCalculator;
+import com.joyintech.calculation.bonds.interest.BasisIntCalculator;
+import com.joyintech.calculation.bonds.interest.param.AccurIntForDisInputParameter;
+import com.joyintech.calculation.bonds.interest.param.AccurInterestOutputParameter;
+import com.joyintech.calculation.bonds.interest.param.BasisIntInputParameter;
+import com.joyintech.calculation.bonds.interest.param.BasisIntOutputParameter;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.shell.SecDscYieldCalculator;
 import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
@@ -36,6 +43,7 @@ import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInf
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
+import com.joyintech.tams.valuation.batch.common.accounting.service.LossCommonBatchService;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookAccountGenLogic;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookCommonLogic;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.AccountDriver;
@@ -47,7 +55,9 @@ import com.joyintech.tams.valuation.batch.common.drawbaseinfoselectcom.dto.DrawB
 import com.joyintech.tams.valuation.batch.common.drawbaseinfoselectcom.dto.DrawBaseInfoSelectComResult;
 import com.joyintech.tams.valuation.batch.common.finproduct.service.FinProductCommonService;
 import com.joyintech.tams.valuation.batch.secabscalbook.dto.SecSubjectBalanceDto;
+import com.joyintech.tams.valuation.batch.secabscalbook.processor.SecAbsCalBookProcessor;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.*;
+import com.joyintech.tams.valuation.common.batch.losscommon.service.LossCommonService;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.*;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
@@ -62,6 +72,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -112,7 +123,11 @@ public class SecAbsCalBookService {
     @Autowired
     private BokFinProductValuationParaMapper bokFinProductValuationParaKeyMapper;
     
-
+    @Autowired
+    private LossCommonService lossCommonService;
+    
+    @Autowired
+    private LossCommonBatchService lossCommonBatchService;
     /**
      * 日志
      */
@@ -150,7 +165,13 @@ public class SecAbsCalBookService {
         if (returnResult.getValBokBookdetailBatch() == null) {
             returnResult.setValBokBookdetailBatch(new ArrayList<ValBokBookdetailBatch>());
         }
-
+        
+        /**ADD BY CAOGUO ON 20201016 减值相关修改 START **/        
+        if (returnResult.getBokStatLossPosiitonList() == null) {
+            returnResult.setBokStatLossPosiitonList(new ArrayList<BokStatLossPosiiton>());
+        }
+        /**ADD BY CAOGUO ON 20201016 END**/
+        
         for (DrawBaseInfoSelectComDTO acctEntityEx : acctEntityList) {
             // 1.数据准备
             // 1.1 变量定义
@@ -225,7 +246,7 @@ public class SecAbsCalBookService {
             searchDao.setHappenDate(acctEntity.getHappenDate());
             searchDao.setBookDate(acctEntity.getBookDate());
             searchDao.setTaskPri(acctEntityEx.getTaskPri());
-
+            searchDao.setoCcy(acctEntityEx.getoCcy());
             // 2.3.溢折价类科目余额
             List<SubjectBalance> listSubjectBalanceEX = new ArrayList<SubjectBalance>();
             if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(acctEntityEx.getInvAim())) {
@@ -245,7 +266,29 @@ public class SecAbsCalBookService {
                 // 变量.溢折价科目余额 = 科目余额
                 varSpilledPriceAccBal = listSubjectBalanceEX.get(0).getBalance();
             }
-
+            /**ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+            // 变量.减值准备科目余额
+            BigDecimal varJzzbYe = BigDecimal.ZERO;
+            // 2.3.1.减值准备科目余额查询
+            List<SubjectBalance> listSubjectBalanceJZ = new ArrayList<SubjectBalance>();
+            if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(acctEntityEx.getInvAim())) {
+                searchDao.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.摊余成本类资产减值.getValue())));
+                listSubjectBalanceJZ = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDao, DictCodeList.余额方向_借方.getValue());
+            }
+            else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
+                acctEntityEx.getInvAim())) {
+                searchDao.setBaseSubjectNatureList(new ArrayList<String>(
+                    Arrays.asList(DictCodeBaseSubjectNatrue.其它综合收益_减值.getValue())));
+                listSubjectBalanceJZ = accountingCommonService.getSubjectBalanceExpectDirection(
+                    searchDao, DictCodeList.余额方向_借方.getValue());
+            }
+            if (listSubjectBalanceJZ != null && listSubjectBalanceJZ.size() > 0) {
+                // 变量.溢折价科目余额 = 科目余额
+                varJzzbYe = listSubjectBalanceJZ.get(0).getBalance();
+            }
+            /**ADD BY CAOGUO ON 20201019 END**/
             // 2.4.标的类金融产品信息
             // 查询条件
             List<TargetSearchDto> queryCriteria = new ArrayList<TargetSearchDto>();
@@ -353,6 +396,9 @@ public class SecAbsCalBookService {
                 baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.摊余成本类成本.getValue());
                 baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue());
                 baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.摊余成本类债券应计利息.getValue());
+                /**ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+                baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.摊余成本类资产减值.getValue());
+                /**ADD BY CAOGUO ON 20201019 END**/
             }
             else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
                 acctEntity.getInvAim())) {
@@ -360,6 +406,9 @@ public class SecAbsCalBookService {
                 baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.综合收益类成本.getValue());
                 baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue());
                 baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.综合收益类应计利息.getValue());
+                /**ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+                baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.其它综合收益_减值.getValue());
+                /**ADD BY CAOGUO ON 20201019 END**/
             }
             // 调用账务共通设计->【凭证最新账务查询】
             List<BookLatestInfoDto> listBookLatestInfoDto = accountingCommonService.getBookLatestInfo(
@@ -375,7 +424,10 @@ public class SecAbsCalBookService {
             BigDecimal varDrjstxzyjKmye = varSpilledPriceAccBal;
             // 变量.当日计算应计利息余额 = 变量.应计利息余额
             BigDecimal varDrjsyjlxKmye = varInterestAccBal;
-
+            /**ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+            // 变量.当日计算减值准备科目余额 = 变量.减值准备科目余额
+            BigDecimal varDrjJzzbYe = varJzzbYe;
+            /**ADD BY CAOGUO ON 20201019 END**/
             // LOOP 变量.买入账务明细列表 -> 变量.账务明细
             if (listBookLatestInfoDto != null && listBookLatestInfoDto.size() > 0) {
                 for (BookLatestInfoDto var : listBookLatestInfoDto) {
@@ -429,6 +481,24 @@ public class SecAbsCalBookService {
                                 var.getoHappenAmt());
                         }
                     }
+                    /**ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+                    // if(变量.账务明细.基础科目性质 = XX减值准备的账务明细 )
+                    if (DictCodeBaseSubjectNatrue.摊余成本类资产减值.getValue().equals(
+                        var.getBaseSubjectNature())
+                        || DictCodeBaseSubjectNatrue.其它综合收益_减值.getValue().equals(
+                            var.getBaseSubjectNature())) {
+                        // 变量.账务明细.借贷方向为借时
+                        if (DictCodeList.借贷方向_借.getValue().equals(var.getCdFlag())) {
+                            // 变量.当日计算应计利息余额 -= 变量.账务明细.原币发生额
+                            varDrjJzzbYe = ArithmeticUtil.subtract(varDrjJzzbYe,
+                                var.getoHappenAmt());
+                        }
+                        else {
+                            // 变量.当日计算应计利息余额 += 变量.账务明细.原币发生额
+                            varDrjJzzbYe = ArithmeticUtil.doAdd(varDrjJzzbYe, var.getoHappenAmt());
+                        }
+                    }
+                    /**ADD BY CAOGUO ON 20201019 END**/
                 }
             }
             // 卖出场景
@@ -499,6 +569,24 @@ public class SecAbsCalBookService {
                                 var.getoHappenAmt());
                         }
                     }
+                    /**ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+                    // if(变量.账务明细.基础科目性质 = XX减值准备的账务明细 )
+                    if (DictCodeBaseSubjectNatrue.摊余成本类资产减值.getValue().equals(
+                        var.getBaseSubjectNature())
+                        || DictCodeBaseSubjectNatrue.其它综合收益_减值.getValue().equals(
+                            var.getBaseSubjectNature())) {
+                        // 变量.账务明细.借贷方向为借时
+                        if (DictCodeList.借贷方向_借.getValue().equals(var.getCdFlag())) {
+                            // 变量.当日计算应计利息余额 -= 变量.账务明细.原币发生额
+                            varDrjJzzbYe = ArithmeticUtil.subtract(varDrjJzzbYe,
+                                var.getoHappenAmt());
+                        }
+                        else {
+                            // 变量.当日计算应计利息余额 += 变量.账务明细.原币发生额
+                            varDrjJzzbYe = ArithmeticUtil.doAdd(varDrjJzzbYe, var.getoHappenAmt());
+                        }
+                    }
+                    /**ADD BY CAOGUO ON 20201019 END**/
                 }
             }
             // // 次日T+1买入场景
@@ -664,6 +752,26 @@ public class SecAbsCalBookService {
             accountSceneMap.put(BookConstant.OFFSET_FLAG, DictCodeList.冲正标识_正常交易.getValue());
             // 备注
             accountSceneMap.put(BookConstant.BOOK_REMARK, "债券类资产每日计提");
+            List<String> paramCodeList = new ArrayList<String>();
+            // 账套配置表参数项_本位币差额处理方式
+            paramCodeList.add(ValDictCodeList.账套配置表参数项_本位币差额处理方式.getValue()); 
+            paramCodeList.add(ValDictCodeList.账套配置表参数项_减值资产第三阶段利息计提摊销差额计入科目.getValue()); 
+            paramCodeList.add(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue()); 
+            Map<String, Object> getValBokBooksetExtMap = accountingCommonService
+                    .getValBokBooksetExtForMap(acctEntity.getBooksetId(), paramCodeList);
+            
+            String bccyadjType = "";
+            if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_本位币差额处理方式.getValue()) != null){
+                bccyadjType = (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_本位币差额处理方式.getValue());
+            }
+            String subjectNoType = "";
+            if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段利息计提摊销差额计入科目.getValue()) != null){
+                subjectNoType = (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段利息计提摊销差额计入科目.getValue());
+            }
+            String recalcType = "";
+            if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue()) != null){
+                recalcType = (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_减值资产第三阶段是否重新计算实际利率.getValue());
+            }
             // accountAmountMap设置
             // 3.1 上次付息日到发生日+1日的应计利息
             // 变量.本日应计利息余额
@@ -801,6 +909,8 @@ public class SecAbsCalBookService {
             BigDecimal varTzsy = BigDecimal.ZERO;
             // 定义 变量.摊销日利率
             BigDecimal varDayRate = BigDecimal.ZERO;
+            //定义变量 摊销日利率的计算是否是由于折溢价为0时，计算值用于减值计提的时候用的（统计分析明细表（账务明细）不存该值） modify by yanya on 20210105
+            boolean 折溢价为零计算标识 = false;
 
             // 持有目的! = 以公允价值变动计量
             if (!acctEntityEx.getInvAim().equals(
@@ -877,13 +987,22 @@ public class SecAbsCalBookService {
 								if (count > 0 || isLlbg) {
 									amoFlg = true;
 								}
+								/**ADD BY CAOGUO ON 20201113 减值相关增加 START */
+	                            // if (减值资产第三阶段是否重新计算实际利率 = 02：重算 ）
+	                            if (DictCodeListExt3.减值资产第三阶段是否重新计算实际利率_重算.getValue().equals(
+	                                recalcType)) {
+	                                if (lossCommonService.isP3InOrOut(happenDate,
+	                                    acctEntityEx.getBusiId(), acctEntityEx.getNumP3(), null)) {
+	                                    amoFlg = true;
+	                                }
+	                            }
+	                            /**ADD BY CAOGUO ON 20201113 减值相关增加 end */
 //	                        } else if (DictCodeList.是否_是.getValue().equals(bokAmoConfig.getIsRecal())) {
                             // 变量.摊销重算配置DTO.是否重算 = "是" 重算方式 = “重算” or “指定实际利率” //设计变更-计提摊销重算逻辑修改 zhangyf 20181205
                             } else if (DictCodeList.重算方式_重算.getValue().equals(bokAmoConfig.getRecalType())
                                 || DictCodeList.重算方式_指定实际利率.getValue().equals(bokAmoConfig.getRecalType())) {
                                 amoFlg = true;
                             }
-
                             //设计变更-计提摊销重算逻辑修改 zhangyf 20181205 start
                             //if (变量.重算Flag = true and 变量.摊销重算配置DTO.实际日利率 ！=null)
                             if (amoFlg && null!= bokAmoConfig && null != bokAmoConfig.getDailydscYield()) {
@@ -973,22 +1092,60 @@ public class SecAbsCalBookService {
                                varLxtz = BigDecimal.ZERO;
                            }
                         }
+                        //modify by yanya on 20201229 折溢价为空的时候，根据票面利率计算
+                        else {
+                            varDayRate = this.calSecInterest(rstBaseinfo, listIntinfo, listPayinfo, listCashinfo, happenDate);
+                            //modify by yanya on 20210105 由于折溢价为0时，计算摊销日利率值用于减值计提，统计分析明细表（账务明细）不存该值
+                            折溢价为零计算标识 = true;
+                        }
                     }
                 }
             }
             else {
                 varLxtz = varSpilledPriceAccBal.negate();
             }
-//          if(参数.摊销额小于剩余摊销时是否只摊销到0 = Y && ABS(变量.利息调整) >= ABS(变量.溢折价科目余额) )
-//                  变量.利息调整 =变量.溢折价科目余额*-1
-            Map<String, Object>  booksetExt = accountingCommonService.getValBokBooksetExtForMap(acctEntity.getBooksetId(),
-                    Lists.newArrayList(new String[] {ValDictCodeList.账套配置表参数项_摊销额小于0是否只摊到0.getValue()}));
-            if(StringUtil.equals(booksetExt.get(ValDictCodeList.账套配置表参数项_摊销额小于0是否只摊到0.getValue()),DictCodeList.是否_是.getValue())
-                    && varLxtz.abs().compareTo(varSpilledPriceAccBal.abs()) >= 0){
-                varLxtz = varSpilledPriceAccBal.negate();
-            }
             // 变量.投资收益 = 变量.利息调整 + 3.1 处理的应计利息
             varTzsy = ArithmeticUtil.doAdd(varLxtz, intAmt);
+            /**ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+            //公允价值变动无需处理减值计提
+            // 定义      变量.减值计提 = 0
+            BigDecimal jzzb = BigDecimal.ZERO;
+            if (!acctEntityEx.getInvAim().equals(
+                    DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue())) {
+                // if（计提类账务处理结果.减值阶段3数量 >0 && 变量.投资收益！=0）
+                if (acctEntityEx.getNumP3() > 0
+                    && varTzsy.compareTo(BigDecimal.ZERO) != 0) {
+                    // 变量.投资收益 = 变量.摊销日利率 *（变量.当日计算减值准备科目余额 + 变量.当日计算摊销溢折价科目余额 + 变量.当日计算摊销成本科目余额）
+                    varTzsy = ArithmeticUtil.round(ArithmeticUtil.multiply(
+                        ArithmeticUtil.doAdd(varDrjstxzyjKmye, varDrjscbKmye, varDrjJzzbYe),
+                        varDayRate), NumberEnum.MONEY);
+                    // if ( 减值资产第三阶段利息计提摊销差额计入= 01：减值准备)）
+                    if (DictCodeListExt3.减值资产第三阶段利息计提摊销差额计入科目_减值准备.getValue().equals(
+                        subjectNoType)) {
+                        // 变量.减值计提 = 变量.利息调整 + 3.1 处理的应计利息 - 变量.投资收益
+                        jzzb = ArithmeticUtil.doSub(ArithmeticUtil.doAdd(varLxtz, intAmt),
+                            varTzsy);
+                    }
+                    else {
+                        //变量.利息调整 = 变量.投资收益 - 3.1 处理的应计利息
+                        varLxtz = ArithmeticUtil.doSub(varTzsy, intAmt);
+                    }                    
+                }
+                // if（变量.减值计提 >= 0）
+                if (jzzb.compareTo(BigDecimal.ZERO) >= 0) {
+                    // 减值计提（贷） = 变量.减值计提
+                    accountAmountMap.put(BookConstant.IMPAMT_C,
+                        ArithmeticUtil.round(jzzb, NumberEnum.MONEY));
+                    accountCurrencyMap.put(BookConstant.IMPAMT_C, varCcy);
+                }
+                else {
+                    // 减值计提（借） = 变量.减值计提 * -1
+                    accountAmountMap.put(BookConstant.IMPAMT_D,
+                        ArithmeticUtil.round(jzzb.negate(), NumberEnum.MONEY));
+                    accountCurrencyMap.put(BookConstant.IMPAMT_D, varCcy);
+                }
+            }
+            /**ADD BY CAOGUO ON 20201019 END**/
             // 变量.利息调整 > 0
             if (varLxtz.compareTo(BigDecimal.ZERO) >= 0) {
                 // 利息调整（借） = 变量.利息调整
@@ -1051,14 +1208,47 @@ public class SecAbsCalBookService {
             //记账金额元素 putALl 随记账本位币金额map
             accountAmountMap.putAll(accountAmountBCCYAMTMap);
             //accountAmountMap再次设置如下：
-            //变量.投资收益_本位币	=	round(变量.利息调整,共通金额位数) * 变量.汇率 + 应计利息_本位币
-            BigDecimal 投资收益本位币 = ArithmeticUtil.doAdd(
-                    ArithmeticUtil.multiply(ArithmeticUtil.round(varLxtz, NumberEnum.MONEY), 汇率),
-                    accountAmountBCCYAMTMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT)
-                    );
-
-            accountAmountMap.put(BookConstant.INCOME_C + BookConstant.BCCYAMT,
+            
+            /** MODIFY BY CAOGUO ON 20201019 修改了精度保留地方 START **/
+            /** ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+            // if (本位币差额处理方式=02 减值准备 && 减值资产第三阶段利息计提摊销差额计入= 01：减值准备)
+            if (DictCodeListExt3.本位币差额处理方式_减值准备.getValue().equals(bccyadjType)
+                && DictCodeListExt3.减值资产第三阶段利息计提摊销差额计入科目_减值准备.getValue().equals(subjectNoType)) {
+                // 定义 变量.本币减值计提 = 变量.利息调整 * 变量.汇率 + 应计利息_本位币 - 投资收益_本位币
+                BigDecimal jzzbB = ArithmeticUtil.round(
+                    calculationCommonService.doMultiply(jzzb, 汇率), NumberEnum.MONEY);
+                jzzbB = ArithmeticUtil.doSub(
+                    ArithmeticUtil.doAdd(
+                        ArithmeticUtil.round(calculationCommonService.doMultiply(varLxtz, 汇率),
+                            NumberEnum.MONEY),
+                        accountAmountBCCYAMTMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT)),
+                    jzzbB);
+                // if（变量.减值计提 >= 0）
+                if (jzzbB.compareTo(BigDecimal.ZERO) >= 0) {
+                    // 减值计提本币（贷） = 变量.本币减值计提
+                    accountAmountMap.put(BookConstant.IMPAMT_C + BookConstant.BCCYAMT,
+                        ArithmeticUtil.round(jzzbB, NumberEnum.MONEY));
+                    accountCurrencyMap.put(BookConstant.IMPAMT_C, varCcy);
+                }
+                else {
+                    // 减值计提本币（借） = 变量.本币减值计提 * -1
+                    accountAmountMap.put(BookConstant.IMPAMT_D + BookConstant.BCCYAMT,
+                        ArithmeticUtil.round(jzzbB.negate(), NumberEnum.MONEY));
+                    accountCurrencyMap.put(BookConstant.IMPAMT_D, varCcy);
+                }
+            }
+            else {
+                // 变量.投资收益_本位币 = round(变量.利息调整,共通金额位数) * 变量.汇率 + 应计利息_本位币
+                BigDecimal 投资收益本位币 = ArithmeticUtil.doAdd(
+                    ArithmeticUtil.round(calculationCommonService.doMultiply(varLxtz, 汇率), NumberEnum.MONEY),
+                    accountAmountBCCYAMTMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));
+                投资收益本位币 = ArithmeticUtil.doSub(投资收益本位币, ArithmeticUtil.round(
+                    calculationCommonService.doMultiply(jzzb, 汇率), NumberEnum.MONEY));
+                accountAmountMap.put(BookConstant.INCOME_C + BookConstant.BCCYAMT,
                     ArithmeticUtil.round(投资收益本位币, NumberEnum.MONEY));
+            }
+            /** ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+                
             //if（变量.投资收益 > 0）
 //            if(投资收益本位币.compareTo(BigDecimal.ZERO) > 0) {
 //                //投资收益（贷）_本位币  	<-		变量.投资收益_本位币
@@ -1109,6 +1299,11 @@ public class SecAbsCalBookService {
                 }
             }
 
+            //modify by yanya on 20210105 由于折溢价为0时，计算摊销日利率值用于减值计提，统计分析明细表（账务明细）不存该值，这里清除
+            if(折溢价为零计算标识) {
+                varDayRate = BigDecimal.ZERO;
+            }
+
             // 定义当日统计分析账务明细汇总信息
             BokStatDetPosiiton bokSummaryTableNew = new BokStatDetPosiiton();
             bokSummaryTableNew.setBooksetId(acctEntity.getBooksetId()); // 账套代码
@@ -1146,16 +1341,16 @@ public class SecAbsCalBookService {
 //            bokSummaryTableNew.setTdyCostAmt(varOAmtHappenDate);
             //modify jinmaodong 20190517 修改当日成本 = 变量.当日成本科目余额 + 变量.溢折价科目余额+变量.利息调整
             bokSummaryTableNew.setTdyCostAmt(ArithmeticUtil.doAdd(varOAmtHappenDate, varSpilledPriceAccBal, varLxtz));
-            /**add by taoran 20200110 start**/
+            /**add by taoran 20200110 start**/									
             // if（标的信息.交易场所 = "银行间"）
 //            if (DictCodeListExt1.估值交易市场_银行间.getValue().equals(rstBaseinfo.getTradeMarket())) {
-//                //变量.当日统计分析账务明细汇总信息.当日份额_实际 = 变量.当日计算成本科目数量
+//                //变量.当日统计分析账务明细汇总信息.当日份额_实际 = 变量.当日计算成本科目数量	
 //            	bokSummaryTableNew.setTdyPosition(varDrjscbKmsl);
 //            	//变量.当日统计分析账务明细汇总信息.当日成本_实际 = 变量.当日计算摊销溢折价科目余额 + 变量.当日计算摊销成本科目余额
 //            	bokSummaryTableNew.setTdyCostAmt(ArithmeticUtil.doAdd(varDrjstxzyjKmye, varDrjscbKmye));
 //            }
 //            // else if（标的信息.交易场所 = "上交所" or "深交所"）
-//            else if (DictCodeListExt1.估值交易市场_上交所.getValue().equals(rstBaseinfo.getTradeMarket()) ||
+//            else if (DictCodeListExt1.估值交易市场_上交所.getValue().equals(rstBaseinfo.getTradeMarket()) || 
 //            			DictCodeListExt1.估值交易市场_深交所.getValue().equals(rstBaseinfo.getTradeMarket())) {
 //                //变量.当日统计分析账务明细汇总信息.当日份额_实际 = 变量.当日成本科目数量
 //            	bokSummaryTableNew.setTdyPosition(varNumAmtHappenDate);
@@ -1163,7 +1358,7 @@ public class SecAbsCalBookService {
 //            	bokSummaryTableNew.setTdyPosition(ArithmeticUtil.doAdd(varOAmtHappenDate, varSpilledPriceAccBal));
 //            }
 //            else {
-//            	//变量.当日统计分析账务明细汇总信息.当日份额_实际 = 变量.当日计算成本科目数量
+//            	//变量.当日统计分析账务明细汇总信息.当日份额_实际 = 变量.当日计算成本科目数量	
 //            	bokSummaryTableNew.setTdyPosition(varDrjscbKmsl);
 //            	//变量.当日统计分析账务明细汇总信息.当日成本_实际 = 变量.当日计算摊销溢折价科目余额 + 变量.当日计算摊销成本科目余额
 //            	bokSummaryTableNew.setTdyCostAmt(ArithmeticUtil.doAdd(varDrjstxzyjKmye, varDrjscbKmye));
@@ -1221,9 +1416,39 @@ public class SecAbsCalBookService {
             BigDecimal tdyIntincexpB = ArithmeticUtil.doAdd(varInterestAccBalBCCY,
                     accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));
             bokSummaryTableNew.setTdyIntincexpB(ArithmeticUtil.round(tdyIntincexpB, NumberEnum.MONEY.getCode(), null));
-            /** add by yanya on 20200109 本位币处理 end**/
+            /** add by yanya     20200109 本位币处理 end**/
 
-
+            /**ADD BY CAOGUO ON 20201015 减值相关修改 START **/
+            bokSummaryTableNew.setTdyIntadjexpAdd(varLxtz);
+            bokSummaryTableNew.setTdyIntadjexpAddB(varLxtz);
+            bokSummaryTableNew.setTdyLossAmt(ArithmeticUtil.doAdd(varJzzbYe, jzzb.negate()));
+            bokSummaryTableNew.setTdyLossAmtB(bokSummaryTableNew.getTdyLossAmt());
+            // if（金额元素.减值准备 ！= 0）
+            if (jzzb.compareTo(BigDecimal.ZERO) != 0) {
+                BokStatLossPosiiton statLoss = null;
+                for (ValBokBookdetailBatch detail : resultNowNow.getValBokBookdetailBatch()) {
+                    // 变量.账务明细 = 调用账务明细生成共通返回结果中 基础科目性质 ="摊余成本类资产减值"的第一条数据
+                    if (DictCodeBaseSubjectNatrue.摊余成本类资产减值.getValue().equals(
+                        detail.getBaseSubjectNature()) || DictCodeBaseSubjectNatrue.其它综合收益_减值.getValue().equals(
+                            detail.getBaseSubjectNature())) {
+                        // 调用【减值相关共通-减值计提明细数据生成】
+                        statLoss = lossCommonService.setLossInfoAccr(detail, jzzb.negate(),
+                            ArithmeticUtil.round(calculationCommonService.doMultiply(jzzb.negate(), 汇率),
+                                NumberEnum.MONEY),
+                            ArithmeticUtil.doAdd(varJzzbYe, jzzb.negate()),
+                            ArithmeticUtil.round(
+                                ArithmeticUtil.multiply(ArithmeticUtil.doAdd(varJzzbYe, jzzb.negate()), 汇率),
+                                NumberEnum.MONEY),
+                            null, null, DictCodeListExt3.减值生成方式_计提批处理.getValue());
+                        break;
+                    }
+                }
+                if (statLoss != null) {
+                    // 变量.统计分析明细表（资产减值）减值使用列表.add(上述返回值)
+                    returnResult.getBokStatLossPosiitonList().add(statLoss);
+                }
+            }
+            /**ADD BY CAOGUO ON 20201015 END**/
             // 添加到返回值中
             returnResult.getBokSummaryList().add(bokSummaryTableNew);
         }
@@ -1268,9 +1493,18 @@ public class SecAbsCalBookService {
         // 计算日
 		parameter.setCalDate(rstBaseinfo.getVdate().compareTo(calcDate) > 0
 				? BasicUtil.dateToLocal(rstBaseinfo.getVdate()) : BasicUtil.dateToLocal(calcDate));
-        if (calcDate.compareTo(acctEntity.getHappenDate()) == 0) {
+		//减值比例
+		BigDecimal eclVaule = lossCommonBatchService.getStage3Vaule(acctEntity.getHappenDate(), rstBaseinfo.getFinprodMarketId());
+        //折算比例
+		BigDecimal zhesuanbili = BigDecimal.ONE;
+		if(acctEntityEx.getNumP3() >0 && eclVaule!=null){
+		    zhesuanbili = zhesuanbili.subtract(eclVaule);
+        }
+		if (calcDate.compareTo(acctEntity.getHappenDate()) == 0) {
             // 券面总额
             parameter.setTotalMoney(ArithmeticUtil.multiply(new BigDecimal(100), varDrjscbKmsl));
+            // 摊销目标额
+            parameter.setTargetAmt(ArithmeticUtil.multiply(new BigDecimal(100), varDrjscbKmsl,zhesuanbili));
             // 摊余成本净价总额
             // 变量.溢折价科目余额 + 变量.成本科目余额
             parameter.setTotalNetPrice(
@@ -1282,6 +1516,8 @@ public class SecAbsCalBookService {
             SecSubjectBalanceDto dto = getSubjectBalanceByDate(acctEntity, acctEntityEx, calcDate);
             // 券面总额
             parameter.setTotalMoney(ArithmeticUtil.multiply(new BigDecimal(100), dto.getNumT1()));
+            // 券面总额
+            parameter.setTargetAmt(ArithmeticUtil.multiply(new BigDecimal(100), dto.getNumT1(),zhesuanbili));
             // 摊余成本净价总额
             // 变量.溢折价科目余额 + 变量.成本科目余额
             parameter.setTotalNetPrice(
@@ -1842,5 +2078,269 @@ public class SecAbsCalBookService {
         Date day = calendar.getTime();
 
         return day;
+    }
+
+    /**
+     * 计算债券的利率
+     * @param targetFinProduct 标的信息
+     * @param interestPayList 付息计划
+     * @param payRuleList 支付规则列表
+     * @param quotationList 现金流计算规则
+     * @param happenDate    计算日
+     * @return
+     */
+    private BigDecimal calSecInterest(TargetFinProduct targetFinProduct, List<TargetCashPlan> interestPayList, List<TargetCashPayRule> payRuleList, List<TargetCashCalcRule> quotationList, Date happenDate) {
+        //获取小于等于计算日得报价
+        TargetCashCalcRule targetCashCalcRuleDto = null;
+        //默认取最新的一条
+        int num = quotationList.size() - 1;
+        for(int i = 0; i < quotationList.size(); i++){
+            TargetCashCalcRule targetCashCalcRule = quotationList.get(i);
+            if(targetCashCalcRule.getEffDate().compareTo(happenDate) > 0){
+                num = i - 1;
+                break;
+            }
+        }
+        targetCashCalcRuleDto = quotationList.get(num);
+
+        BigDecimal interest = BigDecimal.ZERO;
+        //取计算日所在得付息计划
+        TargetCashPlan cashPlan = null;
+        if (null != interestPayList) {
+            for (TargetCashPlan sec : interestPayList) {
+                if (BasicUtil.dateBefore(BasicUtil.dateToLocal(happenDate),BasicUtil.dateToLocal(sec.getMdate()))
+                        && BasicUtil.dateAfter(BasicUtil.dateToLocal(happenDate), BasicUtil.dateToLocal(sec.getVdate()))) {
+                    cashPlan = sec;
+                }
+            }
+        }
+
+        //取最新得支付规则
+        TargetCashPayRule targetCashPayRule = null;
+        if(!payRuleList.isEmpty()){
+            targetCashPayRule = payRuleList.get(0);
+        }
+
+        //处理计息基础
+        String basisString = targetCashCalcRuleDto.getBasis();
+        // 计息基础
+        Basis basis = null;
+        //将计息基础转为算法可识别得计息基础
+        basis = getBasis(basisString);
+
+        // 根据计息基础确定利息分配方式
+        AllocationType allocationType = null;
+        if (DictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)) {
+            allocationType = AllocationType.平均分配;
+        }
+        else if (DictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
+            allocationType = AllocationType.按实际天数分配;
+        }
+        else {
+            allocationType = AllocationType.按实际天数分配;
+        }
+        
+        if (DictCodeList.息票品种_贴现.getValue().equals(targetFinProduct.getCouponSpecies())
+        		|| DictCodeList.息票品种_零息.getValue().equals(targetFinProduct.getCouponSpecies())) {
+        	AccurIntForDisInputParameter parameter= new AccurIntForDisInputParameter();
+        	parameter.setIssuePrice(targetFinProduct.getIssuePrice());
+        	parameter.setStartDate(BasicUtil.dateToLocal(targetFinProduct.getVdate()));
+        	parameter.setEndDate(BasicUtil.dateToLocal(targetFinProduct.getMdate()));
+        	parameter.setCalDate(BasicUtil.dateToLocal(happenDate).plusDays(1));
+        	
+        	AccurIntForDisCalculator calculator = new AccurIntForDisCalculator();
+        	AccurInterestOutputParameter accurOutput = calculator.calculate(parameter);
+        	interest = ArithmeticUtil.divide(accurOutput.getInterest(), 
+        			new BigDecimal(BasicUtil.days(parameter.getCalDate(),parameter.getStartDate())));
+        }
+        else{
+        	// 对于非A/A的计息基础
+            if(!Basis.A_A.equals(basis)) {
+                // 计息基础计算单位利率单位应计利息
+                BasisIntCalculator basisCal = CalculatorFactory.createBasisIntCalculator();
+                BasisIntInputParameter basisInput = new BasisIntInputParameter();
+                basisInput.setCalDate(BasicUtil.dateToLocal(happenDate).plusDays(1));
+                basisInput.setCalStartDate(BasicUtil.dateToLocal(happenDate));
+                // 计算日所在付息计划
+                if (Basis._30_360.equals(basis)) {
+                    basisInput.setSecIntStartDate(BasicUtil.dateToLocal(cashPlan.getVdate()));
+                }
+                basisInput.setBasis(basis);
+                // 利息分配方式
+                basisInput.setAllocationType(allocationType);
+                // 首次付息日
+                Date firstPayDate = targetCashPayRule.getFirstPayDate();
+                //推算方式
+                SecIntSchCalMethod secIntSchCalMethod = null;
+
+                String secIntSchCalMethodString = targetCashPayRule.getCalcRule();
+
+                if (DictCodeList.推算方式_起息日向后.getValue().equals(secIntSchCalMethodString)) {
+                    secIntSchCalMethod = SecIntSchCalMethod.起息日向后;
+                }
+                else if (DictCodeList.推算方式_到期日向前.getValue().equals(secIntSchCalMethodString)) {
+                    secIntSchCalMethod = SecIntSchCalMethod.到期日向前;
+                }
+                else if (DictCodeList.推算方式_首次支付日.getValue().equals(secIntSchCalMethodString)) {
+                    secIntSchCalMethod = SecIntSchCalMethod.首次付息日;
+                }
+                // 计息年度计算
+                SecCalYearInputParameter secInput = new SecCalYearInputParameter();
+                secInput.setCalDate(BasicUtil.dateToLocal(happenDate));
+                secInput.setVariety(Variety.附息);
+                secInput.setCalMethod(secIntSchCalMethod);
+                // 标的基本资料.起息日 -> 债券起息日
+                secInput.setStartDate(BasicUtil.dateToLocal(targetFinProduct.getVdate()));
+                // 标的基本资料.到期日 -> 债券到期日
+                secInput.setEndDate(BasicUtil.dateToLocal(targetFinProduct.getMdate()));
+                // 标的基本资料.首次付息日-> 债券首次付息日
+                secInput.setFirstPayDate(BasicUtil.dateToLocal(firstPayDate));
+                // 计息年度天数计算
+                SecCalYearDayCountOutputParameter yearDayCount = CalculatorFactory.createSecCalYearDayCountCalculator().calculate(secInput);
+                // 计息年度天数
+                basisInput.setYearTotalDays((int)yearDayCount.getDay());
+                BasisIntOutputParameter basisOutput = basisCal.calculate(basisInput);
+                interest = basisOutput.getInterest();
+            }
+            // A/A的计息基础
+            else {
+                // 首次付息日
+                Date firstPayDate = targetCashPayRule.getFirstPayDate();
+                //推算方式
+                SecIntSchCalMethod secIntSchCalMethod = null;
+
+                String secIntSchCalMethodString = targetCashPayRule.getCalcRule();
+
+                if (DictCodeList.推算方式_起息日向后.getValue().equals(secIntSchCalMethodString)) {
+                    secIntSchCalMethod = SecIntSchCalMethod.起息日向后;
+                }
+                else if (DictCodeList.推算方式_到期日向前.getValue().equals(secIntSchCalMethodString)) {
+                    secIntSchCalMethod = SecIntSchCalMethod.到期日向前;
+                }
+                else if (DictCodeList.推算方式_首次支付日.getValue().equals(secIntSchCalMethodString)) {
+                    secIntSchCalMethod = SecIntSchCalMethod.首次付息日;
+                }
+
+                //付息频率
+                String yearIntRateString = targetCashPayRule.getPayCycle();
+                //将付息频率转为算法可识别频率
+                IntFrequency yearIntRate = null;
+                if (DictCodeList.频率_月.getValue().equals(yearIntRateString)) {
+                    yearIntRate = IntFrequency.月付;
+                }
+                else if (DictCodeList.频率_季.getValue().equals(yearIntRateString)) {
+                    yearIntRate = IntFrequency.季付;
+                }
+                else if (DictCodeList.频率_年.getValue().equals(yearIntRateString)) {
+                    yearIntRate = IntFrequency.年付;
+                }
+                else if (DictCodeList.频率_半年.getValue().equals(yearIntRateString)) {
+                    yearIntRate = IntFrequency.半年付;
+                }
+                else {
+                    yearIntRate = IntFrequency.年付;
+                }
+
+                //区间理论起始日
+                LocalDate theoryStartDate =
+                        cashPlan.getVdateTerm() == null ? BasicUtil.dateToLocal(
+                                cashPlan.getVdate()) : BasicUtil.dateToLocal(
+                                cashPlan.getVdateTerm());
+                //区间理论结束日
+                LocalDate theoryCutoffDate =
+                        cashPlan.getMdateTerm() == null ? BasicUtil.dateToLocal(
+                                cashPlan.getMdate()) : BasicUtil.dateToLocal(
+                                cashPlan.getMdateTerm());
+
+                // 计息年度计算
+                SecCalYearInputParameter secInput = new SecCalYearInputParameter();
+                secInput.setCalDate(BasicUtil.dateToLocal(happenDate));
+                secInput.setVariety(Variety.附息);
+                secInput.setCalMethod(secIntSchCalMethod);
+                // 标的基本资料.起息日 -> 债券起息日
+                secInput.setStartDate(BasicUtil.dateToLocal(targetFinProduct.getVdate()));
+                // 标的基本资料.到期日 -> 债券到期日
+                secInput.setEndDate(BasicUtil.dateToLocal(targetFinProduct.getMdate()));
+                // 标的基本资料.首次付息日-> 债券首次付息日
+                secInput.setFirstPayDate(BasicUtil.dateToLocal(firstPayDate));
+                // 计息年度天数计算
+                SecCalYearDayCountOutputParameter yearDayCount = CalculatorFactory.createSecCalYearDayCountCalculator().calculate(secInput);
+                // 计息基础
+                BasisIntCalculator basisCal = CalculatorFactory.createBasisIntCalculator();
+                BasisIntInputParameter basisInput = new BasisIntInputParameter();
+                // 计算日
+                basisInput.setCalDate(BasicUtil.dateToLocal(happenDate).plusDays(1));
+                // 计算起始日
+                basisInput.setCalStartDate(BasicUtil.dateToLocal(happenDate));
+                // 计息基础
+                basisInput.setBasis(basis);
+                // 付息频率
+                basisInput.setYearIntRate(yearIntRate);
+                // 利息分配方式
+                basisInput.setAllocationType(allocationType);
+                // 计息年度天数
+                basisInput.setYearTotalDays((int)yearDayCount.getDay());
+                // 理论计息周期天数
+                basisInput.setCycleDays(BasicUtil.days(theoryCutoffDate, theoryStartDate));
+                BasisIntOutputParameter basisOutput = basisCal.calculate(basisInput);
+                interest = basisOutput.getInterest();
+            }
+        }
+        String SEC_INT_SCALE_BANK = CacheUtil.getSysParam("SEC_INT_SCALE_BANK");
+        //交易所债券在计算应计利息时的舍位位数
+        String SEC_INT_SCALE_EXCHANGE = CacheUtil.getSysParam("SEC_INT_SCALE_EXCHANGE");
+        //控制是先计算利息还是先对应计利息进行舍位：Y-先舍位；N-先计算
+        String SEC_INT_SCALE = CacheUtil.getSysParam("SEC_INT_SCALE");
+        if(SEC_INT_SCALE==null||SEC_INT_SCALE.equals(DictCodeList.是否_是.getValue())){
+            // if（标的信息.交易场所 = "银行间"）
+            if (DictCodeListExt1.估值交易市场_银行间.getValue().equals(targetFinProduct.getTradeMarket())) {
+                // 调用金额共通方法设置有效小数位,小数位数取值共通参数 SEC_INT_SCALE_BANK
+                interest = ArithmeticUtil.round(interest,
+                        Integer.parseInt(StringUtils.isEmpty(SEC_INT_SCALE_BANK) ? "12" : SEC_INT_SCALE_BANK),null);
+            }
+            /**add by taoran 20200110 start **/
+            // else if（标的信息.交易场所 = "上交所" or "深交所"）
+            else if (DictCodeListExt1.估值交易市场_上交所.getValue().equals(targetFinProduct.getTradeMarket()) ||
+                    DictCodeListExt1.估值交易市场_深交所.getValue().equals(targetFinProduct.getTradeMarket())) {
+                // 调用金额共通方法设置有效小数位,小数位数取值共通参数 SEC_INT_SCALE_EXCHANGE
+                interest = ArithmeticUtil.round(interest,
+                        Integer.parseInt(StringUtils.isEmpty(SEC_INT_SCALE_EXCHANGE) ? "8" : SEC_INT_SCALE_EXCHANGE),null);
+            }
+            else {
+                // 调用金额共通方法设置有效小数位,小数位数取值共通参数 SEC_INT_SCALE_BANK
+                interest = ArithmeticUtil.round(interest,
+                        Integer.parseInt(StringUtils.isEmpty(SEC_INT_SCALE_BANK) ? "12" : SEC_INT_SCALE_BANK),null);
+            }
+        }
+        return ArithmeticUtil.multiply(interest, targetCashCalcRuleDto.getYield());
+    }
+
+    /**
+     * 将计息基础 转为 算法能识别得计息基础
+     * @param basisString
+     * @return
+     */
+    private Basis getBasis(String basisString) {
+        Basis basis = null;
+        if (DictCodeList.计息基础_A_360.getValue().equals(basisString)) {
+            basis = Basis.A_360;
+        } else if (DictCodeList.计息基础_A_365.getValue().equals(basisString)) {
+            basis = Basis.A_365;
+        } else if (DictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)
+                || DictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
+            basis = Basis.A_A;
+        } else if (DictCodeList.计息基础_A_365F.getValue().equals(basisString)) {
+            basis = Basis.A_365F;
+        } else if (DictCodeList.计息基础_30_360.getValue().equals(basisString)) {
+            basis = Basis._30_360;
+        } else if (DictCodeListExt1.计息基础_A_A_D.getValue().equals(basisString)) {
+            basis = Basis.A_A_D;
+        }
+        /**ADD BY WUJIE ON 20200208 START**/
+        else if (DictCodeListExt3.计息基础_30U_360.getValue().equals(basisString)) {
+            basis = Basis._30U_360;
+        }
+        /**ADD BY WUJIE ON 20200208 END**/
+        return basis;
     }
 }

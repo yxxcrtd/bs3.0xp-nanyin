@@ -333,12 +333,9 @@ public class LossCommonService {
      * @param costBalance 交易份额
      * @param faceValue 面值
      * @param happenDate 计算日
-     * @param batchExedetailSeqNo
-     * @param bookSetId
      * @return
      */
-    public BigDecimal calSecIntAmt(TargetFinProduct finProduct,BigDecimal costNum,BigDecimal faceValue,Date happenDate
-    		, String batchExedetailSeqNo, String bookSetId){
+    public BigDecimal calSecIntAmt(TargetFinProduct finProduct,BigDecimal costNum,BigDecimal faceValue,Date happenDate){
     	BigDecimal result = BigDecimal.ZERO;
     	
     	if(faceValue==null || faceValue.compareTo(BigDecimal.ZERO)==0){

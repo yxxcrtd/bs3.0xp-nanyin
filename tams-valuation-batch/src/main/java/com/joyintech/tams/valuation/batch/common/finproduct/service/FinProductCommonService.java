@@ -33,6 +33,7 @@ import com.joyintech.tams.valuation.batch.common.drawbaseinfoselectcom.dto.DrawB
 import com.joyintech.tams.valuation.common.batch.finproduct.dao.FinProductCommonMapper;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.*;
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
+import com.joyintech.tams.valuation.common.batch.tradecommon.dto.ValExecApplyInfoDto;
 import com.joyintech.tams.valuation.common.batch.tradecommon.dto.ValTrdProductDealInfoDto;
 import com.joyintech.tams.valuation.common.batch.tradecommon.service.ValTradeCommonService;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
@@ -1668,6 +1669,74 @@ public class FinProductCommonService {
      */
     public Map<String, Object> selectHBFXData(Map<String, Object> map) {
         return finProductCommonMapper.selectHBFXData(map);
+    }
+
+    /**
+     * 共通计算债券行权后的公允价值
+     * @param booksetId 账套代码
+     * @param finprodId 金融产品代码
+     * @param invAim 投资母
+     * @param marketPrice 市价
+     * @param calculationNum 数量
+     * @param happenDate 发生日
+     * @return
+     */
+    public BigDecimal calculationSecFairValue(String booksetId, String finprodId, String invAim, BigDecimal marketPrice,
+                                              BigDecimal calculationNum, Date happenDate) {
+
+        //1.定义变量
+        //定义 变量.公允价值变动是否启用行权价
+        String 公允价值变动是否启用行权价 = "";
+        //定义 变量.行权回售申请交易处理
+        String 行权回售申请交易处理 = "";
+        //定义 变量.公允价值变动
+        BigDecimal 公允价值变动 = BigDecimal.ZERO;
+        //定义 变量.行权申请信息DTO
+        //2.处理详情
+        //2.1 查询账套参数配置信息
+        // 账套核算参数查询
+        List<String> paramCodeList = new ArrayList<String>();
+        // DL_ACCR_TYPE 账套配置表参数项_拆借计提方式
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_公允价值变动是否启用行权价.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_行权回售申请交易处理.getValue());
+        Map<String, Object> getValBokBooksetExtMap = accountingCommonService.getValBokBooksetExtForMap(booksetId, paramCodeList);
+        //调用账务类共通（DTO.账套代码, 参数项：如下）
+        //EXEC_PRICE_CAL_TYPE	公允价值变动是否启用行权价
+        if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_公允价值变动是否启用行权价.getValue()) != null){
+            公允价值变动是否启用行权价 = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_公允价值变动是否启用行权价.getValue());
+        }
+        //变量.公允价值变动是否启用行权价 = 返回值
+        if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_行权回售申请交易处理.getValue()) != null){
+            行权回售申请交易处理 = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_行权回售申请交易处理.getValue());
+        }
+        //IF 变量.公允价值变动是否启用行权价 IS  NULL AND 数据字典：是否.否 eq 变量.公允价值变动是否启用行权价
+        if(StringUtil.isEmpty(公允价值变动是否启用行权价) || StringUtil.equals(DictCodeList.是否_否.getValue(), 公允价值变动是否启用行权价)) {
+            //变量.公允价值变动 =	输入.市价 * 输入.计算成本数量
+            公允价值变动 = ArithmeticUtil.multiply(marketPrice, calculationNum);
+            return 公允价值变动;
+        }
+        //调用共通设计->【详细设计-交易信息查询共通方法设计.xlsx】->债券行权回售申请查询SHEET
+        ValExecApplyInfoDto valExecApplyInfoDto = valTradeCommonService.secExecApplyQuery(booksetId, finprodId, invAim,
+                happenDate, 行权回售申请交易处理);
+        if(valExecApplyInfoDto == null) {
+            //变量.公允价值变动 =	输入.市价 * 输入.计算成本数量
+            公允价值变动 = ArithmeticUtil.multiply(marketPrice, calculationNum);
+            return 公允价值变动;
+        }
+        //IF 输入.计算成本数量 <= 变量.行权申请信息DTO.行权份额
+        if(calculationNum.compareTo(valExecApplyInfoDto.getExecNum()) <= 0) {
+            //变量.公允价值变动 =		变量.行权申请信息DTO.行权份额 * 变量.行权申请信息DTO.行权价格
+            公允价值变动 = ArithmeticUtil.multiply(valExecApplyInfoDto.getExecPrice(), valExecApplyInfoDto.getExecNum());
+        }
+        else {
+            //变量.公允价值变动 =变量.行权申请信息DTO.行权份额 * 变量.行权申请信息DTO.行权价格 + 输入.市价*(输入.计算成本数量-变量.行权申请信息DTO.行权份额)
+            公允价值变动 = ArithmeticUtil.doAdd(
+                    ArithmeticUtil.multiply(valExecApplyInfoDto.getExecPrice(), valExecApplyInfoDto.getExecNum()),
+                    ArithmeticUtil.multiply(marketPrice,
+                            ArithmeticUtil.doSub(calculationNum, valExecApplyInfoDto.getExecNum()))
+            );
+        }
+        return 公允价值变动;
     }
 
     /**
