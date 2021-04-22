@@ -241,4 +241,25 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectEtrSecFlow" resultType="com.joyintech.tams.common.base.entity.EtrSecPositionFlow">
+        select SEQNO,
+                PORTFOLIO_ID,
+                SEC_ACCT_ID,
+                FINPROD_ID,
+                BRANCH,
+                INV_AIM,
+                HODING_TYPE,
+                CDATE,
+                CCY,
+                NVL(AMOUNT*-1, 0) AMOUNT,
+                P_FINPROD_ID,
+                TRADE_ID,
+                CREATE_USER,
+                CREATE_DEPT,
+                CREATE_TIME
+             from ETR_SEC_POSITION_FLOW
+             where TRADE_ID = #{finprodId,jdbcType=VARCHAR} AND HODING_TYPE = #{holdingType}
+    </select>
+
 </mapper>

@@ -1274,6 +1274,17 @@
         )payplan
         on plan.finprod_id=payplan.finprod_id
         where fp.finprod_market_id =#{finprodId}
-        and plan.cash_type in ('01','04') and plan.pay_date!=to_date(#{settleDate},'yyyy-MM-dd')
+        and plan.cash_type in ('01','04') and plan.pay_date=to_date(#{settleDate},'yyyy-MM-dd')
+    </select>
+    <select id="isNoPayInt" resultType="java.lang.Integer">
+        select count(1)  from fin_cash_plan plan
+        left join fin_product fp
+        on plan.finprod_id=fp.finprod_id
+        inner join (
+        select distinct p.finprod_id from fin_cash_plan p
+        where p.is_pay_int='N'
+        )payplan
+        on plan.finprod_id=payplan.finprod_id
+        where fp.finprod_market_id =#{finprodId}
     </select>
 </mapper>

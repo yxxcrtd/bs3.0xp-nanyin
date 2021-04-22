@@ -28,7 +28,7 @@
                                  }
                               Joyin.ajaxJson(basePath+ "invest/period/trdprojduration/TrdProjectDuration002/isPayIntDate",objectPayInt,function(result){
                                              if(!result){
-                                                //还本日无付息，即还本日！=付息日
+                                                //若针对，还本带息，返回 true，针对还本不带息，若有付息日=还本日，返回true
                                                     $("#isClean").attr("disabled",true);
                                                 　　 $("#isClean").val('N').trigger('change');
                                              }

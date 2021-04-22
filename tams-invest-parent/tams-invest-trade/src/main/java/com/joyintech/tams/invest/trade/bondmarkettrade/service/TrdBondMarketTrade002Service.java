@@ -94,9 +94,9 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
 
-    @DataSource(DataSourceType.MASERT)
-    @DTXTransaction
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+//    @DataSource(DataSourceType.MASERT)
+//    @DTXTransaction
+//    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void doComplete(TrdBondMarketTradeDto entity, OperationType operationType) {
         
@@ -262,9 +262,9 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
         }
     }
 
-    @DataSource(DataSourceType.MASERT)
-    @DTXTransaction
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+//    @DataSource(DataSourceType.MASERT)
+//    @DTXTransaction
+//    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void doInsert(TrdBondMarketTradeDto entity, OperationType operationType){
         if ("save".equals(entity.getOperateType())) {
@@ -455,9 +455,9 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
     /**
      * {@inheritDoc}
      */
-    @DataSource(DataSourceType.MASERT)
-    @DTXTransaction
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+//    @DataSource(DataSourceType.MASERT)
+//    @DTXTransaction
+//    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void doUpdate(TrdBondMarketTradeDto entity) {
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
