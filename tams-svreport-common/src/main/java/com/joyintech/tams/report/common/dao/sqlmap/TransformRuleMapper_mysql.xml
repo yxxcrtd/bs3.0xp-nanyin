@@ -68,7 +68,7 @@
 		insert into  CHB_TRANSFORM_RULE(SEQNO,TRANS_TYPE,ORG_FIELD,PINGYING,FIELD_UNICODE,
 			TARGET_FIELD,STATUS,IS_MODIFY,REMARK,UPDATE_USER,UPDATE_TIME,
 			CREATE_USER,CREATE_TIME,CREATE_DEPT) 
-		values (f_guid,
+		values (f_guid(),
         	#{transType,jdbcType=CHAR} ,
         	#{orgField,jdbcType=VARCHAR} ,
         	#{pinyin,jdbcType=VARCHAR} ,
