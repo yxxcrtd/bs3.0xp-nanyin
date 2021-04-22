@@ -1169,7 +1169,7 @@
 	 	PBC_PROD_ID,
 	 	ifnull(update_time,create_time) desc
 	) tmp
-	where 1 = 1 limit 1
+	where ranknum = 1
  </select>
 	<select id="selectAllRegisteAccountData" resultType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
 		select DISTINCT trim(ACCOUNT_ID) accountId,trim(PBC_ACCOUNT_ID) pbcAccountId  
