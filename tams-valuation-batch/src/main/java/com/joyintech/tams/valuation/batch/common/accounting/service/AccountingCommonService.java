@@ -1924,6 +1924,38 @@ public class AccountingCommonService {
                                                      Date beginHappenCycDate,
                                                      Date endHappenCycDate) {
 
+
+        return getBookLatestInfo(booksetId, bookDate,
+                bokDetailId,baseSubjectNatureList, tableId,  tradeId,happenDate,  onwayDate, beginHappenCycDate,endHappenCycDate,null);
+    }
+
+    /**
+     * 凭证最新账务查询
+     *
+     * @param booksetId 账套代码
+     * @param bookDate 入账日
+     * @param bokDetailId 账务明细代码
+     * @param baseSubjectNature 基础科目性质
+     * @param tableId 场景代码
+     * @param tradeId 交易编号
+     * @param happenDate 发生日
+     * @param onwayDate 在途日期
+     * @param beginHappenCycDate 发生周期开始日
+     * @param endHappenCycDate 发生周期结束日
+     * @param isadd 数量增加
+     * @return List<BookLatestInfoDto>
+     * @see
+     * @since 1.0
+     */
+    public List<BookLatestInfoDto> getBookLatestInfo(String booksetId, Date bookDate,
+                                                     String bokDetailId,
+                                                     List<String> baseSubjectNatureList,
+                                                     String tableId, String tradeId,
+                                                     Date happenDate, Date onwayDate,
+                                                     Date beginHappenCycDate,
+                                                     Date endHappenCycDate,
+                                                     String isadd) {
+
         // 设置sql查询参数map
         Map<String, Object> paMap = new HashMap<String, Object>();
         paMap.put("booksetId", booksetId);
@@ -1940,6 +1972,7 @@ public class AccountingCommonService {
 
         return accountingCommonMapper.getBookLatestInfo(paMap);
     }
+
 
     /**
      * 账务类共通方法设计 - 统计分析账务明细汇总查询
@@ -1958,6 +1991,26 @@ public class AccountingCommonService {
     public BokStatDetPosiiton getCountAnalysis(Date beginDate, Date endDate, Date bookDate,
                                                String booksetId, String bokDetailId, String busiId,
                                                List<Date> searchDateList) {
+        return getCountAnalysis(beginDate,endDate,bookDate,booksetId, bokDetailId, busiId, searchDateList,null);
+    }
+
+    /**
+     * 账务类共通方法设计 - 统计分析账务明细汇总查询
+     *
+     * @param beginDate 查询开始日 ---【非必填】
+     * @param endDate 查询结束日 ---【非必填】
+     * @param bookDate 入账日 ---【必填】
+     * @param booksetId 账套代码 ---【必填】
+     * @param bokDetailId 账务明细代码 ---【非必填】
+     * @param busiId 业务明细代码---【非必填】
+     * @param searchDateList 查询日列表 ---【非必填】
+     * @return 账务明细汇总
+     * @see
+     * @since 1.0
+     */
+    public BokStatDetPosiiton getCountAnalysis(Date beginDate, Date endDate, Date bookDate,
+                                               String booksetId, String bokDetailId, String busiId,
+                                               List<Date> searchDateList,String isPosZero) {
         // 设置sql查询参数map
         Map<String, Object> paMap = new HashMap<String, Object>();
         paMap.put("beginDate", beginDate);
@@ -1966,7 +2019,9 @@ public class AccountingCommonService {
         paMap.put("booksetId", booksetId);
         paMap.put("bokDetailId", bokDetailId);
         paMap.put("busiId", busiId);
+        paMap.put("isPosZero", isPosZero);
         paMap.put("searchDateList", searchDateList);
+
 
         // 数据查询
         List<BokStatDetPosiiton> list = accountingCommonMapper.getCountAnalysis(paMap);

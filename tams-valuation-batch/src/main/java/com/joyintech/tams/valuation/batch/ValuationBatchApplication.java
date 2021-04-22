@@ -25,7 +25,7 @@ import com.joyintech.framework.JoyinApplication;
  * @author 何阳阳
  * @version 1.0 2018年5月21日
  * @see ValuationBatchApplication
- * @since 1.0
+ * @since 1.0InvestRateChangeProcessorService
  */
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class}, excludeName = {
 		"org.activiti.spring.boot.SecurityAutoConfiguration",

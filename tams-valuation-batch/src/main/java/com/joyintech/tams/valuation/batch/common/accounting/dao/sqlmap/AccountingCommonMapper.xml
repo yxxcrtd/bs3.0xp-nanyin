@@ -608,6 +608,7 @@ FROM
 						 <if test="happenDate != null"> AND cur.HAPPEN_DATE = #{happenDate}	/**发生日**/ </if>		
 						 <if test="beginHappenCycDate != null"> AND cur.HAPPEN_DATE <![CDATA[>=]]> #{beginHappenCycDate} </if>
 						 <if test="endHappenCycDate != null"> AND cur.HAPPEN_DATE <![CDATA[<=]]> #{endHappenCycDate} </if>
+						 <if test="isadd != null and isadd.equals('Y')"> AND decode(cur.cd_flag,'D',1,'C',-1,0)*cur.HAPPEN_NUMBER > 0 </if>
 				      ) TEMP
 				 WHERE TEMP.rn = 1
 				 AND TEMP.offsetFlag = #{offsetFlag} /**冲正标识**/
@@ -666,6 +667,10 @@ FROM
                   AND A.BUSI_ID = #{busiId} 
               </if>
 		      AND A.BOOK_DATE <![CDATA[<=]]> #{bookDate} 
+		      <if test="isPosZero != null and isPosZero != ''"> 
+                  AND A.POS_AMT = 0
+              </if>
+		       
 		) TMP WHERE TMP.rn = 1
 	</select>
     <!-- 待计提现金流查询(分层) -->
