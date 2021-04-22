@@ -15,9 +15,11 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.EtrSecPositionFlowMapper;
 import com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper;
 import com.joyintech.tams.common.base.dao.TrdStasecFlowDetailMapper;
 import com.joyintech.tams.common.base.dao.TrdStasecFlowMapper;
+import com.joyintech.tams.common.base.entity.EtrSecPositionFlow;
 import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -28,6 +30,9 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.trade.trdstandardbond.dto.TrdStandardBond002Dto;
 import com.joyintech.tams.invest.trade.trdstandardbond.dto.TrdStandardBond003Dto;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -52,6 +57,9 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     
     @Autowired
     private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
+
+    @Autowired
+    private EtrSecPositionFlowMapper etrSecPositionFlowMapper;
     
     @Autowired
     private TrdStasecFlowDetailMapper trdStasecFlowDetailMapper;
@@ -87,7 +95,7 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     @Override
     public void doUpdate(TrdStandardBond002Dto input) {
     	//1. 生成反向流水，并删除之前的质押信息
-    	processOldFlow(input);
+    	processOldFlow(input,false);// modify by jiangpeng on 20210420 ZGBSS-1229
     	//2. 生成信息交易编号信息
     	setTradeIdList(input);
         //3.如果存在质押券信息，则需要重新入库
@@ -107,7 +115,7 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     @Override
     public void doBack(TrdStandardBond002Dto input) {
     	//1. 生成反向流水
-    	processOldFlow(input);
+    	processOldFlow(input,true);// modify by jiangpeng on 20210420 ZGBSS-1229
     	//2. 交易编号信息置空
     	input.setTradeIdList(null);
     	//3. 更新留痕表
@@ -148,7 +156,7 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     @Override
     public void doComplete(TrdStandardBond002Dto input, OperationType operationType) {
     	//1. 生成反向流水
-    	processOldFlow(input);
+    	processOldFlow(input,false);// modify by jiangpeng on 20210420 ZGBSS-1229
     	//2. 重新生成交易编号信息
     	setTradeIdList(input);
     	//3. 重新入表
@@ -189,11 +197,14 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
      * 根据保存的交易编号生成反向的交易流水
      * @param entity
      */
-    private void processOldFlow(TrdStandardBond002Dto entity) {
+    private void processOldFlow(TrdStandardBond002Dto entity,boolean isDoBack) {// modify by jiangpeng on 20210420 ZGBSS-1229
     	String [] holdingTypes = { DictCodeListExt1.持仓类型_临时.getValue(), DictCodeList.持仓类型_质押.getValue()};
      	if(entity.getTradeIdList()!=null&&entity.getTradeIdList().size()>0) {
     		//1. 获取之前所有的流程中流水
     		List<PtlSecPositionFlow> secFlows = new ArrayList<>();
+            // add by jiangpeng on 20210420 start ZGBSS-1229
+            List<EtrSecPositionFlow> etrSecFlows = new ArrayList<>();
+            // add by jiangpeng on 20210420 end
     		Map<String,Object> param = new HashMap<>();
     		for(String tradeId:entity.getTradeIdList()) {
     			param.put("finprodId", tradeId);
@@ -201,6 +212,12 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     				param.put("holdingType", holdingType);
     				secFlows.addAll(ptlSecPositionFlowMapper.selectSecFlow(param));
     			}
+                // add by jiangpeng on 20210420 start ZGBSS-1229
+                if(isDoBack) {
+                    param.put("holdingType", DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    etrSecFlows.addAll(etrSecPositionFlowMapper.selectEtrSecFlow(param));
+                }
+                // add by jiangpeng on 20210420 end
     			//删除质押信息
     			trdStasecFlowMapper.deleteByPrimaryKey(tradeId);
     			trdStasecFlowDetailMapper.deleteBySeq(tradeId);
@@ -212,6 +229,15 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
     			BeanUtils.copyProperties(flow, dto);
     		    ptlSecPositionFlowDtos.add(dto);
     		}
+            // add by jiangpeng on 20210420 start ZGBSS-1229
+            List<EtrSecPositionFlowDto> etrSecPositionFlowDtos = new ArrayList<>();
+            for (EtrSecPositionFlow flow : etrSecFlows) {
+                EtrSecPositionFlowDto dto = new EtrSecPositionFlowDto();
+                BeanUtils.copyProperties(flow, dto);
+                dto.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                etrSecPositionFlowDtos.add(dto);
+            }
+            // add by jiangpeng on 20210420 end
     		//3. 提交处理
     		if(ptlSecPositionFlowDtos.size()>0) {
                 PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
@@ -219,6 +245,13 @@ public class TrdStandardBond002Service extends BaseService<TrdStandardBond002Dto
                 restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/common/ptlposition/insertPosition",
                         ptlPositionHoldDto, Boolean.class);
     		}
+            // add by jiangpeng on 20210420 start ZGBSS-1229
+            if (isDoBack && !StringUtil.isEmptyList(etrSecPositionFlowDtos)) {
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlowDtos);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+            }
+            // add by jiangpeng on 20210420 end
     	}
     }
     
