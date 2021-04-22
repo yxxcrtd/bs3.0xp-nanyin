@@ -635,18 +635,18 @@ public class LendBookDetailProcessDealService {
             	
                 // 变量.利息金额元素 
                 String lxJeYs = "";
-                // 变量.利息差额（贷）金额元素
-                String lxCeJeYs_C = "";
-                // 利息差额（借）金额元素
+                // 变量.利息差额金额元素 正方
+                String lxCeJeYs_A = "";
+                // 利息差额 金额元素 负方
                 String lxCeJeYs_D = "";
                 // 交易明细.金融产品类型 = “拆入”
                 if(DictCodeListExt1.金融产品类型_拆入.getValue().equals(dealDto.getFinprodType())){
                 	// 变量.利息金额元素 = 数据字典.金额元素.应计利息
                 	lxJeYs = "INTAMT";
                     // 变量.利息差额（贷）金额元素 = 数据字典.金额元素.利息支出差额
-                    lxCeJeYs_C = "OUTCOMEAMT_C";
+                    lxCeJeYs_A = "OUTCOMEAMT_D";
                     // 利息差额（借）金额元素 = 数据字典.金额元素.利息支出差额
-                    lxCeJeYs_D = "OUTCOMEAMT_D";
+                    lxCeJeYs_D = "OUTCOMEAMT_C";
                 	// ad.会计场景代码="拆放同业（拆入）-到期"
                 	ad.setTableId(DictCodeListTableId.会计场景代码_拆入_到期.getValue());
                 	// 备注
@@ -656,7 +656,7 @@ public class LendBookDetailProcessDealService {
                 	// 变量.利息金额元素 = 数据字典.金额元素.应收利息
                 	lxJeYs = "INTAMT";
                     // 变量.利息差额（贷）金额元素 =  数据字典.金额元素.利息差额
-                    lxCeJeYs_C = "INCOMEAMT_C";
+                	lxCeJeYs_A = "INCOMEAMT_C";
                     // 利息差额（借）金额元素 =  数据字典.金额元素.利息差额
                     lxCeJeYs_D = "INCOMEAMT_D";
 
@@ -698,30 +698,93 @@ public class LendBookDetailProcessDealService {
 
                 // 获取差值 = 交易明细.利息总额 - 变量.冲减应计利息
                 BigDecimal subResult = ArithmeticUtil.doSub(dealDto.getIntAmt(), cjProfit);
+                // 利息支出差额设置（借正，贷负）
+                if (subResult.compareTo(BigDecimal.ZERO) > 0) {
+                	//变量.利息差额金额元素 <- 交易明细.利息总额 - 变量.冲减应计利息
+                    accountAmountMap.put(lxCeJeYs_A, subResult.abs());
+                }
+                else {
+                	//变量.利息差额金额元素 <- (交易明细.利息总额 - 变量.冲减应计利息)*-1
+                    accountAmountMap.put(lxCeJeYs_D, subResult.abs());
+                }
+                
+                
+                /**add by wujie on 20201021 start remark:资产减值：多币种改造**/
+                
+                // 定义 本币金额元素Map
+                Map<String, BigDecimal> bccyAmountMap = new HashMap<>();
+                for(String key : accountAmountMap.keySet()){
+                	bccyAmountMap.put(key + BookConstant.BCCYAMT, calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null, accountAmountMap.get(key), changeRate));
+                }
+                accountAmountMap.putAll(bccyAmountMap);
 
-                //update by xr for TISHKBS-687 start
+                //定义 变量.利息差额_本位币 
+                BigDecimal incomeamtBccy = null;
                 if(DictCodeListExt1.金融产品类型_拆入.getValue().equals(dealDto.getFinprodType())){
-                    // 利息支出差额设置（借负，贷正）
-                    if (subResult.compareTo(BigDecimal.ZERO) > 0) {
-                        //变量.利息差额金额元素 <- 交易明细.利息总额 - 变量.冲减应计利息
-                        accountAmountMap.put(lxCeJeYs_D, subResult.abs());
+                	if (subResult.compareTo(BigDecimal.ZERO) > 0) {
+                    	
+                		// 变量.利息差额_本位币  = 	本息和_本位币- (本金金额_本位币 + 应收利息_本位币) 
+                    	incomeamtBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                    			ArithmeticUtil.doAdd(accountAmountMap.get(BookConstant.COST + BookConstant.BCCYAMT)
+    	            				, accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT)));
+                		
+                    	//利息差额(贷)_本位币<-变量.本息和_本位币		
+                        accountAmountMap.put(lxCeJeYs_A + BookConstant.BCCYAMT, 
+                        		ArithmeticUtil.round(incomeamtBccy, NumberEnum.MONEY.getCode(), null));
                     }
-                    else {
-                        //变量.利息差额金额元素 <- (交易明细.利息总额 - 变量.冲减应计利息)*-1
-                        accountAmountMap.put(lxCeJeYs_C, subResult.abs());
-                    }
-                }else{
-                    // 利息支出差额设置（借正，贷负）
-                    if (subResult.compareTo(BigDecimal.ZERO) > 0) {
-                        //变量.利息差额金额元素 <- 交易明细.利息总额 - 变量.冲减应计利息
-                        accountAmountMap.put(lxCeJeYs_C, subResult.abs());
-                    }
-                    else {
-                        //变量.利息差额金额元素 <- (交易明细.利息总额 - 变量.冲减应计利息)*-1
-                        accountAmountMap.put(lxCeJeYs_D, subResult.abs());
+                    else{
+                    	// 变量.利息差额_本位币  = 	本金金额_本位币 + 应收利息_本位币 - 本息和_本位币
+                    	incomeamtBccy = ArithmeticUtil.doSub(
+                    			ArithmeticUtil.doAdd(accountAmountMap.get(BookConstant.COST + BookConstant.BCCYAMT)
+    	            				, accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT))
+                				, accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT));
+                    	//利息差额(借)_本位币<-变量.利息差额_本位币	
+                        accountAmountMap.put(lxCeJeYs_D + BookConstant.BCCYAMT, 
+                        		ArithmeticUtil.round(incomeamtBccy, NumberEnum.MONEY.getCode(), null));
                     }
                 }
-                //update by xr for TISHKBS-687 end
+                else{
+                	if (subResult.compareTo(BigDecimal.ZERO) > 0) {
+                    	// 变量.利息差额_本位币  = 	本息和_本位币 -(本金金额_本位币 + 应收利息_本位币)
+                    	incomeamtBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+                    			ArithmeticUtil.doAdd(accountAmountMap.get(BookConstant.COST + BookConstant.BCCYAMT)
+    	            				, accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT)));
+                    	//利息差额(贷)_本位币<-变量.本息和_本位币		
+                        accountAmountMap.put(lxCeJeYs_A + BookConstant.BCCYAMT, 
+                        		ArithmeticUtil.round(incomeamtBccy, NumberEnum.MONEY.getCode(), null));
+                    }
+                    else{
+                    	// 变量.利息差额_本位币  = 	本金金额_本位币 + 应收利息_本位币 - 本息和_本位币
+                    	incomeamtBccy = ArithmeticUtil.doSub(
+                    			ArithmeticUtil.doAdd(accountAmountMap.get(BookConstant.COST + BookConstant.BCCYAMT)
+    	            				, accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT)),
+                    			accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT));
+                    	
+                    	//利息差额(借)_本位币<-变量.利息差额_本位币	
+                        accountAmountMap.put(lxCeJeYs_D + BookConstant.BCCYAMT, 
+                        		ArithmeticUtil.round(incomeamtBccy, NumberEnum.MONEY.getCode(), null));
+                    }
+
+                }
+                accountCurrencyMap.put(BookConstant.B_CCY, acctEntity.getStandardCcy());
+                
+                /**add by wujie on 20201021 end**/
+                
+                // 记账金额元素币种信息塞值
+                // 因为与记账金额元素map的key及数量一致，故采用循环
+                for (String keyNow : accountAmountMap.keySet()) {
+                    accountCurrencyMap.put(keyNow, dealDto.getCcy());// 币种 - 交易明细.交易币种
+                }
+                
+                // map塞入场景要素管理中
+                ad.setAccountSceneMap(accountSceneMap);// 记账场景要素
+                ad.setAccountAmountMap(accountAmountMap);// 记账金额要素
+                ad.setAccountCurrencyMap(accountCurrencyMap);// 记账金额币种要素
+
+                // 记账凭证生成
+                BookGenerateResult resultNowNow = bookLogic.genAccount(ad, batchExecuteInfo);
+                // 因为当前属于同一个维度，故将生成的账务名中的账务明细（当前表）数据，累加到返回数据中
+                rtnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
                                 
                 // 全局变量的更新
                 // 变量.成本科目余额 = 变量.成本科目余额 - 变量.冲减成本
