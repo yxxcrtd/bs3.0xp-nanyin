@@ -528,6 +528,24 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             return result;
         }
 
+        if (StringUtils.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_基金.getValue())
+                && (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())
+                || StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue()))) {
+            resultDto.setTradeId(deal.getTotleTradeId());
+            if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
+                resultDto.setCdate(deal.getSettleDate());
+                resultDto.setAmount(ArithmeticUtil.subtract(BigDecimal.ZERO, deal.getShareAmt()));
+                result.add(resultDto);
+                return result;
+            }
+            else if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue())) {
+                resultDto.setCdate(deal.getSettleDate());
+                resultDto.setAmount(deal.getShareAmt());
+                result.add(resultDto);
+                return result;
+            }
+        }
+
         if (DictCodeList.持仓类型_实际.getValue().equals(inputDto.getPositionType())) {
 
             /*
@@ -932,22 +950,22 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 result.add(resultDto);
                 return result;
             }
-            else if (StringUtils.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_基金.getValue())
-                     && (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())
-                         || StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue()))) {
-                if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
-                    resultDto.setCdate(deal.getSettleDate());
-                    resultDto.setAmount(ArithmeticUtil.subtract(BigDecimal.ZERO, deal.getShareAmt()));
-                    result.add(resultDto);
-                    return result;
-                }
-                else if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue())) {
-                    resultDto.setCdate(deal.getSettleDate());
-                    resultDto.setAmount(deal.getShareAmt());
-                    result.add(resultDto);
-                    return result;
-                }
-            }
+//            else if (StringUtils.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_基金.getValue())
+//                     && (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())
+//                         || StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue()))) {
+//                if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强减.getValue())) {
+//                    resultDto.setCdate(deal.getSettleDate());
+//                    resultDto.setAmount(ArithmeticUtil.subtract(BigDecimal.ZERO, deal.getShareAmt()));
+//                    result.add(resultDto);
+//                    return result;
+//                }
+//                else if (StringUtils.equals(deal.getPs(), DictCodeList.交易方向_份额强增.getValue())) {
+//                    resultDto.setCdate(deal.getSettleDate());
+//                    resultDto.setAmount(deal.getShareAmt());
+//                    result.add(resultDto);
+//                    return result;
+//                }
+//            }
             // 利率互换买入移动到实际持仓时 renping 2019-08-29 end
             // 债转股交易 dingzhipeng 2019-11-22 start
             else if (StringUtils.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
