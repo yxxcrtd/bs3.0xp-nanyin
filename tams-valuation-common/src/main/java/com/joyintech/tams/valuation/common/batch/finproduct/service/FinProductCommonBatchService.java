@@ -26,7 +26,10 @@ import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BokFinProductValuationParaMapper;
 import com.joyintech.tams.common.base.entity.BokDetailId;
+import com.joyintech.tams.common.base.entity.BokFinProductValuationPara;
+import com.joyintech.tams.common.base.entity.BokFinProductValuationParaKey;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.MstIntRateInfo;
@@ -59,6 +62,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchD
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TradeInfoDto;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 
 /**
  * 标的类共通方法
@@ -76,6 +80,9 @@ public class FinProductCommonBatchService {
      */
     @Autowired
     private FinProductCommonMapper finProductCommonMapper;
+
+    @Autowired
+    private BokFinProductValuationParaMapper bokFinProductValuationParaKeyMapper;
 
     /**
      * 百元券面共通查询方法
@@ -1210,5 +1217,32 @@ public class FinProductCommonBatchService {
         }
         MstValIrs result = mstValIrsList.get(0);
         return result;
+    }
+
+    /**
+     * 摊销设置日获取
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param rstBaseinfo 资产信息
+     * @param booksetId  账套信息
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public TargetFinProduct getExeDate(TargetFinProduct rstBaseinfo,String booksetId){
+
+        /* 判断债券日终计算摊销时，优先级为账套加资产维度>资产维度>账套维度(暂时不存在 )   add wangwei1  2019/03/02 */
+        BokFinProductValuationParaKey bokFinProductValuationParaKey=new BokFinProductValuationParaKey();
+        bokFinProductValuationParaKey.setBoksetId(booksetId);
+        bokFinProductValuationParaKey.setFinprodId(rstBaseinfo.getFinprodId());
+        bokFinProductValuationParaKey.setBranch(InterfCommonConstant.分支序号_默认);
+        BokFinProductValuationPara bokFinProductValuationPara= bokFinProductValuationParaKeyMapper.selectByPrimaryKey(bokFinProductValuationParaKey);
+       //2.查询结果不为空，重新赋值含权债摊销日
+        if(bokFinProductValuationPara !=null){
+            rstBaseinfo.setExeDate(bokFinProductValuationPara.getExeDateType());
+        }
+        /* 判断债券日终计算摊销时，优先级为账套加资产维度>资产维度>账套维度(暂时不存在 )   end wangwei1  2019/03/02 */
+        return rstBaseinfo;
+
     }
 }

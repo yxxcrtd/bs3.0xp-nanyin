@@ -246,6 +246,11 @@ public class TargetFinProduct {
      * 登记托管机构
      */
     private String registOrg;
+
+    /**
+     * 是否其他债权，其他资产都为空，只有项目类资产为：Y；
+     */
+    private String isQtzq;
     
     /**
      * 取得 登记托管机构
@@ -1026,6 +1031,22 @@ public class TargetFinProduct {
      */
     public void setFaceValue(BigDecimal faceValue) {
         this.faceValue = faceValue;
+    }
+
+    /**
+     * 获取 isQtzq 是否其他债券
+     * @return isQtzq.
+     */
+    public String getIsQtzq() {
+        return isQtzq;
+    }
+
+    /**
+     * 设置 isQtzq 是否其他债券
+     * @param isQtzq
+     */
+    public void setIsQtzq(String isQtzq) {
+        this.isQtzq = isQtzq;
     }
     
 }
