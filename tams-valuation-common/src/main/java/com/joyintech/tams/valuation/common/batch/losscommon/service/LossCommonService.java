@@ -632,8 +632,7 @@ public class LossCommonService {
      * @param happenDate 计算日
      * @return
      */
-    public BigDecimal calCommonIntAmt(TargetFinProduct finProduct,BigDecimal costBalance,String accrType,Date happenDate
-    		, String batchExedetailSeqNo, String bookSetId){
+    public BigDecimal calCommonIntAmt(TargetFinProduct finProduct,BigDecimal costBalance,String accrType,Date happenDate){
     	BigDecimal result = BigDecimal.ZERO;
     	
     	// 查询条件
