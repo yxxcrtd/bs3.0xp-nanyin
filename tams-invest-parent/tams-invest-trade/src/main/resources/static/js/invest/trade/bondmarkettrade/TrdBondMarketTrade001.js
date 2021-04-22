@@ -55,6 +55,9 @@
     });
 
     $(function () {
+        //导出按钮隐藏
+        $('#TrdBondMarketTrade001_btn_export').hide();
+        
         // 绑定按钮事件
         $('#TrdBondMarketTrade001_btn_search').click(function() {
             table.load();
