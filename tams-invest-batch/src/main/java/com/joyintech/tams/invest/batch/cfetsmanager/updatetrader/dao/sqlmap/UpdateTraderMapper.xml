@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.batch.cfetsmanager.updatetrader.dao.UpdateTraderMapper">
+
+	<select id="selectCustomerNew" resultType="com.joyintech.tams.common.base.entity.MstCfetsCustomerInfo">
+        SELECT T1.PARTY_NAME partyName
+        FROM MST_CFETS_CUSTOMER_INFO T1
+        LEFT JOIN MST_COUNTER_PARTY T2 on T2.COUNTER_NAME = T1.PARTY_NAME
+        WHERE to_char(T1.UPDATE_TIME,'yyyymmdd') = #{batchDate}
+        and T2.COUNTER_NAME IS NULL
+    </select>
+    
+</mapper>
