@@ -1,98 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao.InvestorsQualityCheck001Mapper_mysql">
+    <select id="searchInvestorsPassRate" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
+		select
+			unQualified,
+			total,
+			(case total when 0 THEN 0 /*总数为0时，合格率为0*/
+			else ROUND((1-(unQualified/total))*100,2) end)as rate,
+			pageType
+		from(
+			/*1 证件类型合格率*/
+			select
+				count(temp.SUBMIT_STATUS) as total,
+				count(temp.SUBMIT_STATUS) - ifnull(sum(temp.lateNums),0) as unQualified,
+				'1' as pageType /*1 证件类型*/
+			from(
+				select
+					case when ces.PERSONAL_IDENTIFY_TYPE in ('00','01') then 1
+					else 0 end lateNums, /*统计不符合条件数*/
+					ces.SUBMIT_STATUS
+				from CHB_EQU_SUB ces
+				where ces.STATUS in ('01','02')
+					and ces.SUBMIT_STATUS in ('02','03')
+					and ces.HOLDER_MARK = '01'
+					and ces.HOLDER_TYPE in ('01','02','03')
+					<if test="orgCodeList != null and orgCodeList.size() > 0">
+						<foreach collection="orgCodeList" item="orgCode" open=" AND ces.ORG_CODE IN (" close=")" separator=",">
+							#{orgCode,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+					and  STR_TO_DATE(DATE_FORMAT(ces.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d')  &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+			) temp
 
-	<select id="searchInvestorsPassRate" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
-		select
-		unQualified,
-		total,
-		(case total when 0 THEN 0 /*总数为0时，合格率为0*/
-		else ROUND((1-(unQualified/total))*100,2) end)as rate,
-		pageType
-		from(
-		/*1 证件类型合格率*/
-		select
-		count(temp.SUBMIT_STATUS) as total,
-		count(temp.SUBMIT_STATUS) - ifnull(sum(temp.lateNums),0) as unQualified,
-		'1' as pageType /*1 证件类型*/
-		from(
-		select
-		case when ces.PERSONAL_IDENTIFY_TYPE in ('00','01') then 1
-		else 0 end lateNums, /*统计不符合条件数*/
-		ces.SUBMIT_STATUS
-		from CHB_EQU_SUB ces
-		where ces.STATUS in ('01','02')
-		and ces.SUBMIT_STATUS in ('02','03')
-		and ces.HOLDER_MARK = '01'
-		and ces.HOLDER_TYPE in ('01','02','03')
-		<if test="orgCodeList != null and orgCodeList.size() > 0">
-			<foreach collection="orgCodeList" item="orgCode" open=" AND ces.ORG_CODE IN (" close=")" separator=",">
-				#{orgCode,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		and  STR_TO_DATE(to_char(ces.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d')  &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
-		) temp
+			union all
+			/*2 证件匹配合格率*/
+			select
+				temp2.total as total,
+				temp1.unQualified,
+				'2' as pageType /*2 证件匹配*/
+			from(
+				select ifnull(sum(counts),0) as unQualified from (
+					select
+						ces1.PERSONAL_IDENTIFY_TYPE,
+						ces1.INSTITUTION_IDENTIFY_TYPE,
+						ces1.IDENTIFY_NUMBER,
+						count(1) counts
+					from CHB_EQU_SUB ces1
+					where ces1.STATUS in ('01','02')
+						and ces1.SUBMIT_STATUS in ('02','03')
+						<if test="orgCodeList != null and orgCodeList.size() > 0">
+							<foreach collection="orgCodeList" item="orgCode" open=" AND ces1.ORG_CODE IN (" close=")" separator=",">
+								#{orgCode,jdbcType=VARCHAR}
+							</foreach>
+						</if>
+						and STR_TO_DATE(DATE_FORMAT(ces1.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+					group by ces1.PERSONAL_IDENTIFY_TYPE, ces1.INSTITUTION_IDENTIFY_TYPE, ces1.IDENTIFY_NUMBER
+					having count(1) > 1
+					) cc
+			) temp1,(
+				select count(1) total
+				from CHB_EQU_SUB ces2
+				where ces2.STATUS in ('01','02')
+					and ces2.SUBMIT_STATUS in ('02','03')
+					<if test="orgCodeList != null and orgCodeList.size() > 0">
+						<foreach collection="orgCodeList" item="orgCode" open=" AND ces2.ORG_CODE IN (" close=")" separator=",">
+							#{orgCode,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+					and STR_TO_DATE(DATE_FORMAT(ces2.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+			) temp2
 
-		union all
-		/*2 证件匹配合格率*/
-		select
-		temp2.total as total,
-		temp1.unQualified,
-		'2' as pageType /*2 证件匹配*/
-		from(
-		select ifnull(sum(counts),0) as unQualified from (
-		select
-		ces1.PERSONAL_IDENTIFY_TYPE,
-		ces1.INSTITUTION_IDENTIFY_TYPE,
-		ces1.IDENTIFY_NUMBER,
-		count(1) counts
-		from CHB_EQU_SUB ces1
-		where ces1.STATUS in ('01','02')
-		and ces1.SUBMIT_STATUS in ('02','03')
-		<if test="orgCodeList != null and orgCodeList.size() > 0">
-			<foreach collection="orgCodeList" item="orgCode" open=" AND ces1.ORG_CODE IN (" close=")" separator=",">
-				#{orgCode,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		and STR_TO_DATE(to_char(ces1.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
-		group by ces1.PERSONAL_IDENTIFY_TYPE, ces1.INSTITUTION_IDENTIFY_TYPE, ces1.IDENTIFY_NUMBER
-		having count(1) > 1)
-		) temp1,(
-		select count(1) total
-		from CHB_EQU_SUB ces2
-		where ces2.STATUS in ('01','02')
-		and ces2.SUBMIT_STATUS in ('02','03')
-		<if test="orgCodeList != null and orgCodeList.size() > 0">
-			<foreach collection="orgCodeList" item="orgCode" open=" AND ces2.ORG_CODE IN (" close=")" separator=",">
-				#{orgCode,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		and STR_TO_DATE(to_char(ces2.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
-		) temp2
+			union all
+			/*3 及时性合格率*/
+			select
+				count(temp.SEND_STATUS) as total,
+				ifnull(sum(temp.lateNums),0) as unQualified,
+				'3' as pageType /*3 及时性*/
+			from(
+				select
+					case when ciis.SUBMIT_TIME > ciis.SUBMIT_DEADLINE then 1
+					else 0 end lateNums, /*统计不符合条件数*/
+					ciis.SEND_STATUS
+				from CHB_INVESTHOLD_INFO_SUB ciis
+				where ciis.STATUS in ('01','02')
+					and ciis.SEND_STATUS in ('02','03')
+					<if test="orgCodeList != null and orgCodeList.size() > 0">
+						<foreach collection="orgCodeList" item="orgCode" open=" AND ciis.ORG_CODE IN (" close=")" separator=",">
+							#{orgCode,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+					and STR_TO_DATE(DATE_FORMAT(ciis.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+			) temp
+		) aa
 
-		union all
-		/*3 及时性合格率*/
-		select
-		count(temp.SEND_STATUS) as total,
-		ifnull(sum(temp.lateNums),0) as unQualified,
-		'3' as pageType /*3 及时性*/
-		from(
-		select
-		case when ciis.SUBMIT_TIME > ciis.SUBMIT_DEADLINE then 1
-		else 0 end lateNums, /*统计不符合条件数*/
-		ciis.SEND_STATUS
-		from CHB_INVESTHOLD_INFO_SUB ciis
-		where ciis.STATUS in ('01','02')
-		and ciis.SEND_STATUS in ('02','03')
-		<if test="orgCodeList != null and orgCodeList.size() > 0">
-			<foreach collection="orgCodeList" item="orgCode" open=" AND ciis.ORG_CODE IN (" close=")" separator=",">
-				#{orgCode,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		and STR_TO_DATE(to_char(ciis.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
-		) temp3
-		) temp
-	</select>
+
+    </select>
 
 	<!-- 证件类型-不合格数据信息 -->
 	<select id="searchTableZJLX" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
@@ -111,7 +113,7 @@
 				#{orgCode,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		and STR_TO_DATE(to_char(ces.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+		and STR_TO_DATE(DATE_FORMAT(ces.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
 		and ces.PERSONAL_IDENTIFY_TYPE not in ('00','01')
 	</select>
 
@@ -136,7 +138,7 @@
 				#{orgCode,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		and STR_TO_DATE(to_char(ces1.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+		and STR_TO_DATE(DATE_FORMAT(ces1.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
 		group by ces1.PERSONAL_IDENTIFY_TYPE, ces1.INSTITUTION_IDENTIFY_TYPE, ces1.IDENTIFY_NUMBER
 		having count(1) > 1
 		) temp
@@ -155,7 +157,7 @@
 		and ces.identify_number=temp.identify_number
 		where ces.STATUS in ('01','02')
 		and ces.SUBMIT_STATUS in ('02','03')
-		and STR_TO_DATE(to_char(ces.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
+		and STR_TO_DATE(DATE_FORMAT(ces.SUBMIT_TIME, '%Y-%m-%d'), '%Y-%m-%d') &lt;= STR_TO_DATE(#{searchDate},'%Y-%m-%d')
 		<if test="orgCodeList != null and orgCodeList.size() > 0">
 			<foreach collection="orgCodeList" item="orgCode" open=" AND ces.ORG_CODE IN (" close=")" separator=",">
 				#{orgCode,jdbcType=VARCHAR}
@@ -203,7 +205,7 @@
 		FROM
 		CHB_INVESTHOLD_INFO_SUB
 		WHERE
-		STR_TO_DATE(TO_CHAR(HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		STR_TO_DATE(DATE_FORMAT(HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
 		<if test="orgCodeList != null and orgCodeList.size() > 0">
 			<foreach collection="orgCodeList" item="orgCode" open=" AND ORG_CODE IN (" close=")" separator=",">
 				#{orgCode,jdbcType=VARCHAR}
@@ -330,7 +332,7 @@
 		ON
 		A.PROD_REGIST_CODE = B.REG_CODE
 		WHERE
-		STR_TO_DATE(TO_CHAR(B.VDATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		STR_TO_DATE(DATE_FORMAT(B.VDATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
 		<if test="orgCodeList != null and orgCodeList.size() > 0">
 			<foreach collection="orgCodeList" item="orgCode" open=" AND B.ORG_CODE IN (" close=")" separator=",">
 				#{orgCode,jdbcType=VARCHAR}
@@ -430,7 +432,7 @@
 		CHB_INVESTHOLD_INFO_SUB B
 		ON
 		A.PROD_REGIST_CODE = B.PRD_REGIST_CODE
-		AND STR_TO_DATE(TO_CHAR(B.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		AND STR_TO_DATE(DATE_FORMAT(B.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') = STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
 		)  temp2
 		WHERE
 		rowno1 = 1 AND STATUS != #{statusDel,jdbcType=VARCHAR}
