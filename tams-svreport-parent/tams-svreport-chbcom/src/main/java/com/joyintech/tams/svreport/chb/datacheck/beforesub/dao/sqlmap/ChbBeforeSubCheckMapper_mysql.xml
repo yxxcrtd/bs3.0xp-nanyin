@@ -104,7 +104,7 @@
 	    on pe.prod_id=pi.prod_id
 	    left join pp
 	    on pe.prod_id=pp.prod_id
-	)
+	)AS T1
 
   </select>
 
