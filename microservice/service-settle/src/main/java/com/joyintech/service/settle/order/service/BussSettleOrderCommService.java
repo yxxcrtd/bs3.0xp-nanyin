@@ -574,6 +574,12 @@ public class BussSettleOrderCommService {
                             && (StringUtil.equals(dto.getPs(), DictCodeListExt1.交易方向_提前行权.getValue())
                             || StringUtil.equals(dto.getPs(), DictCodeListExt1.交易方向_到期行权.getValue())
                     ))
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                    && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购确认.getValue())
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())))
+                    // add by etliu 20210421 权益类资产相关代码合并 end
                 ) {
                     return "B17";
                 }
@@ -666,6 +672,18 @@ public class BussSettleOrderCommService {
                     || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())
                         && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
                         && StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()))
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回到账.getValue()))
+                        || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue()))
+                        || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))
+                        ||  (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_现金分红.getValue()) )
+                        ||  (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_除权登记.getValue()))
+                    // add by etliu 20210421 权益类资产相关代码合并 end
                 ){
                     return "B20";
                 }else if(StringUtil.equals(dto.getFinprodType2(), DictCodeList.共通业务类型_资金划拨管理.getValue())){

@@ -76,11 +76,11 @@
             /*,{field:'type6', visible:false}
             ,{field:'type6Str', width:'12%', title: 'TrdPlanCcyInvestTrade001.type6',sortField:"TYPE_6"}*/
             ,{field:'type9', visible:false}
-            ,{field:'type9Str', width:'12%', title: 'TrdProjectNetInvestTrade001.type10',sortField:"TYPE_9"}
+            ,{field:'type9Str', width:'12%', title: 'TrdProjectNetInvestTrade001.type9',sortField:"TYPE_9"}
             ,{field:'type10', visible:false}
-            ,{field:'type10Str', width:'12%', title: 'TrdProjectNetInvestTrade001.type10',sortField:"TYPE_10", visible:false}
-            // ,{field:'type11', visible:false}
-            // ,{field:'type11Str', width:'12%', title: 'TrdProjectNetInvestTrade001.type11',sortField:"TYPE_11",visible:IS_SHOW_TYPE == '01'?true:false}
+            ,{field:'type10Str', width:'12%', title: 'TrdProjectNetInvestTrade001.type10',sortField:"TYPE_10"}
+            ,{field:'type11', visible:false}
+            ,{field:'type11Str', width:'12%', title: 'TrdProjectNetInvestTrade001.type11',sortField:"TYPE_11",visible:IS_SHOW_TYPE == '01'?true:false}
             /*添加二-四级分类的表单头,隐藏资产类型 zhangpuyu 2019/7/29 end*/
             ,{field:'ps',visible:false}
             ,{field:'psStr', width:100, title: 'TrdProjectNetInvestTrade001.ps',sortField:"PS"}

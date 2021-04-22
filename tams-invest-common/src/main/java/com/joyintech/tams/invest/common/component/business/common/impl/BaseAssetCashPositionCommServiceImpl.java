@@ -177,7 +177,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
         }
         //add by yujiaping 2021-1-6 解决ZGBS-139 计划类净值型卖出交易提交后（流程中），没有占用资产可用持仓 start
         else if ((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
-                && (DictCodeList.收益类型_净值型.getValue().equals(profitType)))             
+                && (DictCodeList.收益类型_净值型.getValue().equals(profitType))             
+			   // add by etliu 20210421 权益类资产相关代码合并 start
+			   || DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2()))
+			   // add by etliu 20210421 权益类资产相关代码合并 end
               && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
          resultDto.setCdate(deal.getTradeDate());
          resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
@@ -371,7 +374,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                   || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                       && DictCodeList.收益类型_净值型.getValue().equals(profitType))
                   || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
-                      && DictCodeList.收益类型_货币型.getValue().equals(profitType)))
+                      && DictCodeList.收益类型_货币型.getValue().equals(profitType))
+                // add by etliu 20210421 权益类资产相关代码合并 start
+                || (DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2())))
+                // add by etliu 20210421 权益类资产相关代码合并 end
                  && (DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs()) || DictCodeListExt2.交易方向_转换赎回确认.getValue().equals(deal.getPs()))
                 || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                         && DictCodeList.收益类型_货币型.getValue().equals(profitType) && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))
@@ -614,7 +620,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                          && DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))
 
                      || ((DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
-                          || DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2()))
+                          || DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    || DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2()))
+                    // add by etliu 20210421 权益类资产相关代码合并 end
                          // 场内基金改造 modify by renping 20191117 start
                          && (DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
                              || DictCodeList.交易方向_认购确认.getValue().equals(deal.getPs())
@@ -669,6 +678,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                      ||*/ (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                          && DictCodeList.收益类型_净值型.getValue().equals(profitType)
                          && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    || (DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2())
+                    && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))
+                    // add by etliu 20210421 权益类资产相关代码合并 end
                      || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                          && DictCodeList.收益类型_货币型.getValue().equals(profitType)
                          && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))) {
@@ -776,6 +789,9 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             else if (((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                        && (DictCodeList.收益类型_货币型.getValue().equals(profitType)
                            || DictCodeList.收益类型_净值型.getValue().equals(profitType)))
+					// add by etliu 20210421 权益类资产相关代码合并 start
+					||DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2())
+					// add by etliu 20210421 权益类资产相关代码合并 end
                       || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2()))
                      && DictCodeList.交易方向_买入.getValue().equals(deal.getPs())) {
                 if (inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue())) {
@@ -1276,6 +1292,11 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                       || (DictCodeList.交易方向_申购.getValue().equals(deal.getPs())
                           && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                           && DictCodeList.收益类型_净值型.getValue().equals(profitType))
+					  // add by etliu 20210421 权益类资产相关代码合并 start
+                      || (DictCodeList.交易方向_申购.getValue().equals(deal.getPs())
+                        && DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2())
+                        )
+					  // add by etliu 20210421 权益类资产相关代码合并 end
                       || (DictCodeList.交易方向_申购.getValue().equals(deal.getPs())
                           && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                           && DictCodeList.收益类型_货币型.getValue().equals(profitType)))
@@ -1467,7 +1488,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             else if (((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                        && (DictCodeList.收益类型_货币型.getValue().equals(profitType)
                            || DictCodeList.收益类型_净值型.getValue().equals(profitType)))
-                      || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2()))
+                      || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
+					  // add by etliu 20210421 权益类资产相关代码合并 start
+					  || DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2()))
+					  // add by etliu 20210421 权益类资产相关代码合并 end
                      && DictCodeList.交易方向_买入.getValue().equals(deal.getPs())) {
                 resultDto.setCdate(stlPayOrder.getSettleDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
@@ -1721,6 +1745,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                          || (DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
                              && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                              && DictCodeList.收益类型_净值型.getValue().equals(profitType))
+					     // add by etliu 20210421 权益类资产相关代码合并 start
+                         || (DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
+                             && DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2()))
+					     // add by etliu 20210421 权益类资产相关代码合并 end
                          || (DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
                              && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                              && DictCodeList.收益类型_货币型.getValue().equals(profitType))) {
@@ -1826,6 +1854,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                           && DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2()))
                          || (DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs())
                              && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2()))
+						 // add by etliu 20210421 权益类资产相关代码合并 start
+                         || (DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs())
+                             && DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2()))
+						 // add by etliu 20210421 权益类资产相关代码合并 end
                          || (DictCodeList.交易方向_除权登记.getValue().equals(deal.getPs())
                              && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                              && DictCodeList.收益类型_净值型.getValue().equals(profitType))
@@ -1834,7 +1866,12 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                              && DictCodeList.交易方向_除权登记.getValue().equals(deal.getPs()))
                          || (DictCodeList.交易方向_除权登记.getValue().equals(deal.getPs())
                              && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
-                             && DictCodeList.收益类型_货币型.getValue().equals(profitType))) {
+                             && DictCodeList.收益类型_货币型.getValue().equals(profitType))
+						 // add by etliu 20210421 权益类资产相关代码合并 start
+                         || (DictCodeList.交易方向_除权登记.getValue().equals(deal.getPs())
+                             && DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2())
+						 // add by etliu 20210421 权益类资产相关代码合并 end
+							 )) {
 
                     PtlCashPositionFlowDto ztFlowDto = new PtlCashPositionFlowDto();
                     // 输入参数.组合代码
@@ -1909,6 +1946,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                          || (赎回到账_现金分红.contains(deal.getPs())
                              && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                              && DictCodeList.收益类型_净值型.getValue().equals(profitType))
+						 // add by etliu 20210421 权益类资产相关代码合并 start
+                         || (赎回到账_现金分红.contains(deal.getPs())
+                             && DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2()))
+						 // add by etliu 20210421 权益类资产相关代码合并 end
                          || (赎回到账_现金分红.contains(deal.getPs())
                              && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                              && DictCodeList.收益类型_货币型.getValue().equals(profitType))) {
@@ -2058,7 +2099,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 else if (((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                            && (DictCodeList.收益类型_货币型.getValue().equals(profitType)
                                || DictCodeList.收益类型_净值型.getValue().equals(profitType)))
-                          || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2()))
+                          || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(deal.getFinprodType2())
+						  // add by etliu 20210421 权益类资产相关代码合并 start
+                          || DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2()))
+						  // add by etliu 20210421 权益类资产相关代码合并 end
                          && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
                     resultDto.setCdate(stlPayOrder.getSettleDate());
                     resultDto.setAmount(stlPayOrder.getSettleAmt());

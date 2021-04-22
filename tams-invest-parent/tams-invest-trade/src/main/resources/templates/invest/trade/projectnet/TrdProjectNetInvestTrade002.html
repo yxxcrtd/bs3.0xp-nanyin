@@ -116,39 +116,27 @@
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
-                                    <label class="layui-form-label form-label-wrap"
-                                           th:text="一级分类">一级分类</label>
+                                    <label class="layui-form-label form-lable" data-th-text="#{TrdProjectInvestTrade002.type9}">资产二级分类</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="type9" name="type9" required="required"
-                                                class="layui-input form-input input-select" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}"　disabled="disabled"
-                                                th:data-result='${CUSTOM_ASSET_TYPE_TWO}' allowClear="true"
-                                                data-th-childrenIds="type10"
-                                                formatoption="true" th:initValue="${entity?.type9}"></select>
+                                        <select id="type9" name="type9" class="layui-input form-input input-select" allowClear="true" disabled
+                                                data-th-data-result='${CUSTOM_ASSET_TYPE_TWO}' data-th-initValue="${entity?.type9}">
+                                        </select>
                                     </div>
                                 </div>
-                                <!--<div class="form-inline-wrap">
-                                    <label class="layui-form-label form-label-wrap"
-                                           th:text="#{TrdProjectNetInvestTrade001.type10}">一级分类</label>
+                                <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-lable" data-th-text="#{TrdProjectInvestTrade002.type10}">资产三级分类</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="type10" name="type10"
-                                                class="layui-input form-input input-select" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}"　disabled="disabled"
-                                                th:data-result='${CUSTOM_ASSET_TYPE_THREE}' allowClear="true"
-                                                data-parentIds="type9"
-                                                formatoption="true" th:initValue="${entity?.type10}"></select>
+                                        <select id="type10" name="type10" class="layui-input form-input input-select" allowClear="true" disabled
+                                                data-th-data-result='${CUSTOM_ASSET_TYPE_THREE}' data-th-initValue="${entity?.type10}">
+                                        </select>
                                     </div>
-                                </div>-->
+                                </div>
                                 <div class="form-inline-wrap" id="selector5" style="display: none">
-                                    <label class="layui-form-label form-label-wrap"
-                                           th:text="#{TrdProjectNetInvestTrade001.type11}">资产四级分类</label>
+                                    <label class="layui-form-label form-lable" data-th-text="#{TrdProjectInvestTrade002.type11}">资产四级分类</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="type11" name="type11"
-                                                class="layui-input form-input input-select" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}"　disabled="disabled"
-                                                th:data-result='${CUSTOM_ASSET_TYPE_FOUR}' allowClear="true"
-                                                data-parentIds="type10"
-                                                formatoption="true" th:initValue="${entity?.type11}"></select>
+                                        <select id="type11" name="type11" class="layui-input form-input input-select" allowClear="true" disabled
+                                                data-th-data-result='${CUSTOM_ASSET_TYPE_FOUR}' data-th-initValue="${entity?.type11}">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
