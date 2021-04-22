@@ -5,8 +5,9 @@
      */
     var searchform =function(){
         var param =  $.serializeToObject('#searchForm');
-        param.startDate: $('#checkDate').startDate(),
-        param.endDate: $('#checkDate').endDate(),
+
+        param.startDate= $('#checkDate').startDate();
+        param.endDate= $('#checkDate').endDate();
         if(param.checkPoint){
             param.checkPoint = param.checkPoint.join(",");
         }
@@ -14,6 +15,9 @@
             param.prebatchStatus = param.prebatchStatus.join(",");
         }
         return param;
+
+
+
     };
 
 
@@ -30,7 +34,7 @@
         },
         cols:[
             {field:'checkDateStr', title: 'SysPrebatchResult001.checkDate', width:'10%',sortField:'checkDate'}
-            ,{field:'taskId', title: 'SysPrebatchResult001.taskId', width:'10%',sortField:'taskId'}
+            ,{field:'taskIdStr', title: 'SysPrebatchResult001.taskId', width:'10%',sortField:'taskId'}
             ,{field:'taskStatusStr', title: 'SysPrebatchResult001.taskStatus', width:'10%',sortField:'taskStatus'}
             ,{field:'detailCount', title: 'SysPrebatchResult001.detailCount', width:'10%',sortField:'detailCount'}
             ,{field:'executeDateStr', title: 'SysPrebatchResult001.executeDate', width:'10%',sortField:'executeDate'}

@@ -7,7 +7,7 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <div class="form-button-area">
+        <div class="form-button-area" export="false">
             <a id="SysPrebatchResult001_btn_add" class="layui-btn layui-btn-sm btn-create">启动</a>
 <!--            <a id="SysPrebatchResult001_btn_delete" class="layui-btn layui-btn-sm btn-delete" style="display: none">删除</a>-->
         </div>
@@ -18,7 +18,7 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{SysPrebatchResult001.checkDate}">检查日</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="SysPrebatchResult001_checkDate" name='checkDate'
+                            <input type="text" id="checkDate" name='checkDate'
                                    data-th-placeholder="#{SysCommon.dateInterval}" class="layui-input form-input input-dateRangeSelect" />
                         </div>
                     </div>
