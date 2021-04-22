@@ -754,16 +754,32 @@
                 }
             })
         }
-         //还本计划条数增加或减少，应点击确定按钮
-         if(list && list.length > 0 && list.length !=previewParams.invRepayList.length ) {
-                msg = JoyinUtil.getMessage("还本计划已变更,请点击确认,重新计算应计利息!");
-         }
         if(msg) {
             Joyin.error(msg);
             return false;
         }
         return true;
     }
+        /**
+         * 维护还本计划后，是否点击确认
+         * 可以通过支付日是否为空判断是否重新计算利息
+         */
+        var saveCheck = function(){
+            var list = getAllRows();var msg;
+
+            if(!list || list.length == 0) {
+                msg = JoyinUtil.getMessage('COMMON_E_0057',"还本计划");
+             }
+             //还本计划条数增加或减少，应点击确定按钮
+             if(list && list.length > 0 && list.length !=previewParams.invRepayList.length ) {
+                    msg = JoyinUtil.getMessage("还本计划已变更,请点击确认,重新计算应计利息!");
+             }
+            if(msg) {
+                Joyin.error(msg);
+                return false;
+            }
+            return true;
+        }
     /**
      * 计算剩余金额
      */
@@ -818,7 +834,8 @@
             generationPlan:generationPlan,
             repayPlanCheck:repayPlanCheck,
             disableBussFinRepay:disableBussFinRepay,
-            isComfirmCheck:isComfirmCheck
+            isComfirmCheck:isComfirmCheck,
+            saveCheck:saveCheck
     };
     
     $(function(){

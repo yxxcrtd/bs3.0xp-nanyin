@@ -44,17 +44,20 @@
         cols:[
             {field:'totleTradeId', sortField:'totleTradeId',width:220, title: 'TrdBondMarketTrade001.totleTradeId',visible:false}
             ,{field:'rowNum',width:60, title: 'TrdBondMarketTrade001.rowNum',sortable: false}
-            ,{field:'finprodId',sortField:'finprodId', width:180, title: 'TrdBondMarketTrade001.finprodId'}
-            ,{field:'finprodAbbr',sortField:'finprodAbbr', width:180, title: 'TrdBondMarketTrade001.finprodAbbr'}
-            ,{field:'tradeMarket', sortField:'tradeMarket',width:130, title: 'TrdBondMarketTrade001.tradeMarket',visible:false}
-            ,{field:'tradeMarketText', sortField:'tradeMarket',width:130, title: 'TrdBondMarketTrade001.tradeMarket'}
-            ,{field:'appearMarketId',sortField:'appearMarketId', width:180, title: 'TrdBondMarketTrade001.appearMarketId'}
-            ,{field:'appearMarketAbbr',sortField:'appearMarketAbbr', width:180, title: 'TrdBondMarketTrade001.appearMarketAbbr'}
-            ,{field:'tradeDate', sortField:'tradeDate',width:100, title: 'TrdBondMarketTrade001.tradeDate', type: 'date'}
+            ,{field:'finprodId',sortField:'finprodId', width:220, title: 'TrdBondMarketTrade001.finprodId'}
+            ,{field:'finprodAbbr',sortField:'finprodAbbr', width:220, title: 'TrdBondMarketTrade001.finprodAbbr'}
+            ,{field:'tradeMarket', sortField:'tradeMarket',width:220, title: 'TrdBondMarketTrade001.tradeMarket',visible:false}
+            ,{field:'tradeMarketText', sortField:'tradeMarket',width:220, title: 'TrdBondMarketTrade001.tradeMarket'}
+            ,{field:'appearMarketId',sortField:'appearMarketId', width:220, title: 'TrdBondMarketTrade001.appearMarketId'}
+            ,{field:'appearMarketAbbr',sortField:'appearMarketAbbr', title: 'TrdBondMarketTrade001.appearMarketAbbr'}
+            ,{field:'tradeDate', sortField:'tradeDate', title: 'TrdBondMarketTrade001.tradeDate', type: 'date'}
         ],
     });
 
     $(function () {
+        //导出按钮隐藏
+        $('#TrdBondMarketTrade001_btn_export').hide();
+        
         // 绑定按钮事件
         $('#TrdBondMarketTrade001_btn_search').click(function() {
             table.load();
