@@ -173,4 +173,46 @@
 	<select id="findInvAimByPortIdAndFinId" resultType="string">
 		SELECT INV_AIM FROM INV_BOK_VAL_SCHEME_SPECIAL WHERE PORTFOLIO_ID = #{portfolioId} and FINPROD_ID = #{finprodId}
 	</select>
+	<select id="selectAddByPrimaryKeyPtl" resultMap="com.joyintech.tams.common.base.dao.EtrEntrustAddMapper.BaseResultMap">
+		select
+		<include refid="com.joyintech.tams.common.base.dao.EtrEntrustAddMapper.Base_Column_List" />
+		from ETR_ENTRUST_ADD
+		<where>
+			ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+	<select id="selectEtrClosedCashFlow" resultType="com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto">
+		SELECT <include refid="com.joyintech.tams.common.base.dao.EtrCashPositionFlowMapper.Base_Column_List" />
+		FROM ETR_CASH_POSITION_FLOW WHERE CLOSE_FLAG='01' AND OFFSET_ID=#{entrustId}
+	</select>
+
+	<select id="selectEtrClosedSecFlow" resultType="com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto">
+		SELECT <include refid="com.joyintech.tams.common.base.dao.EtrSecPositionFlowMapper.Base_Column_List" />
+		FROM ETR_SEC_POSITION_FLOW WHERE CLOSE_FLAG='01' AND TRADE_ID=#{entrustId}
+	</select>
+
+	<update id="updateEtrClosedCashFlow">
+		UPDATE ETR_CASH_POSITION_FLOW SET CLOSE_FLAG='02' WHERE SEQNO=#{seqNo}
+	</update>
+
+	<update id="updateEtrClosedSecFlow">
+		UPDATE ETR_SEC_POSITION_FLOW SET CLOSE_FLAG='02' WHERE SEQNO=#{seqNo}
+	</update>
+	
+   	<update id="deleteDistributeInterfTmp"
+		parameterType="java.util.HashMap">
+		DELETE FROM ETR_DISTRIBUTE_INTERF_TMP
+		WHERE ENTRUST_ID = #{entrustId}
+	</update>
+
+	<update id="updatEetrDistribute" parameterType="com.joyintech.tams.common.base.entity.EtrEntrust" >
+		update ETR_DISTRIBUTE
+		<set >
+			<if test="entrustStatus != null" >
+				REC_STATUS = #{entrustStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+	</update>
 </mapper>

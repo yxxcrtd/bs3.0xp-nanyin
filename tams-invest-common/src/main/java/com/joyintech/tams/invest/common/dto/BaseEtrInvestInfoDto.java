@@ -101,6 +101,32 @@ public class BaseEtrInvestInfoDto {
      */
     private Map<String,Object> othInfo;
 
+    /**
+     * 流程id
+     */
+    private String workFlowId;
+
+    /**
+     * 附件
+     */
+    private MstFileInputParameter mstFileInputParameter;
+
+    public MstFileInputParameter getMstFileInputParameter() {
+        return mstFileInputParameter;
+    }
+
+    public void setMstFileInputParameter(MstFileInputParameter mstFileInputParameter) {
+        this.mstFileInputParameter = mstFileInputParameter;
+    }
+
+    public String getWorkFlowId() {
+        return workFlowId;
+    }
+
+    public void setWorkFlowId(String workFlowId) {
+        this.workFlowId = workFlowId;
+    }
+
     public Map<String, Object> getOthInfo() {
         return othInfo;
     }

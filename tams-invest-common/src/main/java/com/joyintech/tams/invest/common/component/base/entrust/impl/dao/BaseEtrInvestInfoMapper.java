@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.component.base.entrust.dto.BaseEtrFinishAmtDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -129,4 +131,17 @@ public interface BaseEtrInvestInfoMapper {
     String findInvAimByPortIdAndFinId(@Param("portfolioId") String portfolioId, @Param("finprodId") String finprodId);
 
     String findInvAimByPortIdAndFinType(@Param("portfolioId") String portfolioId, @Param("finprodId") String finprodId);
+    EtrEntrustAdd selectAddByPrimaryKeyPtl(Map<String, Object> pageParam);
+
+    List<EtrCashPositionFlowDto> selectEtrClosedCashFlow(String entrustId);
+
+    void updateEtrClosedCashFlow(String seqNo);
+
+    void updateEtrClosedSecFlow(String seqno);
+
+    List<EtrSecPositionFlowDto> selectEtrClosedSecFlow(String entrustId);
+
+	void deleteDistributeInterfTmp(String entrustId);
+
+    void updatEetrDistribute(EtrEntrust etrEntrust);
 }
