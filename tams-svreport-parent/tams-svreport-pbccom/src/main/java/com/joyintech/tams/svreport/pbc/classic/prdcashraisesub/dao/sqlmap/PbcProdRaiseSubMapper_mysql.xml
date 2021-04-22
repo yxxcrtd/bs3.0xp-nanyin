@@ -2068,12 +2068,16 @@
    <!-- 产品资金募集信息页面导出人行Excel报表中的第一个sheet起始募集信息的明细数据  -->
   <select id="searchListDetailSheet1" parameterType="map" resultMap="SearchResultMap">
   	<!--  	WITH  tab AS子查询出不同客户类型、不同币种的当期申购金额、当期申购金额折人民币、当期申购份额的金额 -->
-	SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from (select
-    concat_ws('','buyplace',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
-    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.RAISING_AMTSUM je,a.RAISING_AMTSUM_CNY zrmb,a.RAISING_QTY fe
-    from PBC_PROD_RAISING_SUB a
-    LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-    where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}) tab
+    WITH tab AS (
+      select
+        concat_ws('','buyplace',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.RAISING_AMTSUM je,a.RAISING_AMTSUM_CNY zrmb,a.RAISING_QTY fe
+      from PBC_PROD_RAISING_SUB a
+      LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+      where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+        and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}
+    )
+    SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
 	union all
 	select 'buyplace4000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
 	union all
@@ -2086,18 +2090,23 @@
 	select 'buyplace8000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='8' group by tab.ITEM_VALUE
 	union all
 	select 'buyplace9000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='9' group by tab.ITEM_VALUE
-  	
+
   </select>
   
   <!-- 产品资金募集信息页面导出人行Excel报表中的第二个sheet页当期兑付的明细数据 -->
   <select id="searchListDetailSheet2" parameterType="map" resultMap="SearchResultMap">
     <!-- WITH tab AS子查询出不同客户类型、不同币种的当期兑付金额、当期兑付金额折人民币、当期兑付份额的金额 -->
-	SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from (select
-    concat_ws('','buyplaceSheet2',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
-    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.REDAMT je,a.REDAMT_CNY zrmb,a.REDQTY fe
-    from PBC_PROD_RAISING_SUB a
-    LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-    where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}) tab
+    WITH tab AS (
+      select
+        concat_ws('','buyplaceSheet2',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.REDAMT je,a.REDAMT_CNY zrmb,a.REDQTY fe
+      from PBC_PROD_RAISING_SUB a
+      LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+      where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+        and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}
+        and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}
+    )
+    SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
 	union all
 	select 'buyplaceSheet24000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
 	union all
@@ -2116,13 +2125,17 @@
  <!--  产品资金募集信息页面导出人行Excel报表中的第三个sheet页期末产品的明细数据 -->
   <select id="searchListDetailSheet3" parameterType="map" resultMap="SearchResultMap">
     <!-- tab AS 子查询出不同客户类型、不同币种的期末产品金额、期末产品金额折人民币、期末产品份额的金额 -->
-	SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from  (select
-    concat_ws('','buyplaceSheet3',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
-    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.ENDAMTSUM je,a.ENDAMTSUM_CNY zrmb,a.ENDQTY fe
-    from PBC_PROD_RAISING_SUB a
-    LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-    where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP})
-    tab
+    WITH tab AS (
+      select
+        concat_ws('','buyplaceSheet3',a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.ENDAMTSUM je,a.ENDAMTSUM_CNY zrmb,a.ENDQTY fe
+      from PBC_PROD_RAISING_SUB a
+      LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+      where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+      and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}
+    )
+
+    SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
 	union all
 	select 'buyplaceSheet34000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
 	union all
