@@ -226,4 +226,21 @@ public class TradeCommonService extends BaseService {
     public int selectTrdOnPayDate(Map<String, Object> params) {
         return trdCommonBaseMapper.selectTrdOnPayDate(params);
     }
+
+    // add by etliu 20210421 权益类资产相关代码合并 start
+    /**
+     * chaowei
+     * 指令接收交易录单根据委托代码查询流程中已录入金额
+     * @param finprod_id
+     * @return BigDecimal
+     */
+    public BigDecimal queryWflPrinAmtByAssetId(String finprod_id) {
+        BigDecimal wflPrinAmt = BigDecimal.ZERO;
+        Map<String,Object> map = new HashMap<>();
+        map.put("finprod_id", finprod_id);
+        wflPrinAmt = restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/queryWflPrinAmtByAssetId", map,
+                BigDecimal.class);
+        return wflPrinAmt;
+    }
+    // add by etliu 20210421 权益类资产相关代码合并 end
 }

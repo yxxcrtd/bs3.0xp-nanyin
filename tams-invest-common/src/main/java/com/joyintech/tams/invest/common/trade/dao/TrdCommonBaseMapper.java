@@ -271,4 +271,15 @@ public interface TrdCommonBaseMapper {
     Map<String, Object> getYSKLXBalance(Map<String, Object> map);
 
     int selectTrdOnPayDate(Map<String, Object> params);
+
+    // add by etliu 20210421 权益类资产相关代码合并 start
+    /**
+     * 根据资产代码查询流程中已录入金额
+     * @param map map
+     * @return BigDecimal
+     * @author chaowei
+     * @since 1.0
+     */
+    BigDecimal queryWflPrinAmtByAssetId(Map<String, Object> map);
+    // add by etliu 20210421 权益类资产相关代码合并 end
 }

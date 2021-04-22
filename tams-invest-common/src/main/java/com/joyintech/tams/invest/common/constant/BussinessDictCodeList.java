@@ -929,6 +929,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 已撤回
      */
     委托接收状态_已撤回(BussinessDictCode.委托状态,"07","已撤回"),
+    /**
+     * 待审批
+     */
+    委托状态_流程中(BussinessDictCode.委托状态,"08","流程中"),
 
     /**
      * 已退回

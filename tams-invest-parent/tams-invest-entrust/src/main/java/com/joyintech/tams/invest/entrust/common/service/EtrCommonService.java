@@ -350,4 +350,41 @@ public class EtrCommonService extends BaseCommonService {
             return addMessage;
         }
     }
+
+    // add by etliu 20210421 权益类资产相关代码合并 start
+    /**
+     * 检查投资指令开始日与投资指令结束日都必须为平台日，且投资指令开始日与结束日要相等
+     * @param startDate 开始日
+     * @param endDate 结束日
+     * @param indexId 文件行号
+     * @return 提示信息
+     */
+    public static String checkIsPlateDate(String startDate, String endDate, String indexId){
+
+        // 估值日必须等于平台日
+        String platedate = DateUtil.getSysDate();
+
+        // modify by dubaojun 2020-07-06 缺陷SNSTZJY-124对应：输入的日期格式不合法时直接跳过  start
+        try {
+            if (DateUtil.compareDate(platedate,startDate) != 0
+                    || DateUtil.compareDate(platedate,endDate) != 0){
+
+                return "指令开始日与指令终止日应为【"+platedate+"】(行号为"+indexId+")";
+
+            }else {
+
+                if (DateUtil.compareDate(startDate,startDate) != 0){
+                    return "指令开始日与指令终止日应为【"+platedate+"】(行号为"+indexId+")";
+                }else {
+                    return "";
+                }
+
+            }
+        } catch (RuntimeException e) {
+            return "";
+        }
+        // modify by dubaojun 2020-07-06 缺陷SNSTZJY-124对应：输入的日期格式不合法时直接跳过  end
+
+    }
+    // add by etliu 20210421 权益类资产相关代码合并 end
 }

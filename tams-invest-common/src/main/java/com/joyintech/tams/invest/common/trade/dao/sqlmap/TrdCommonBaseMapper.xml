@@ -1058,4 +1058,18 @@
 		           AND T.FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
 		           AND T.TRADE_DATE = #{payDate, jdbcType=DATE})
 	</select>
+
+    <!--add by etliu 20210421 权益类资产相关代码合并 start-->
+    <select id="queryWflPrinAmtByAssetId" resultType="java.math.BigDecimal">
+        SELECT
+            NVL(SUM(PRIN_AMT),0)
+        FROM WFL_TRD_PRODUCT_DEAL
+        WHERE 1=1
+          and TRADE_STATUS = #{TRADE_STATUS}
+          and is_cancel =#{YES_OR_NO_N}
+          and p_trade_id is null
+          and FINPROD_ID=#{finprod_id}
+          and ps in ('T01','T04')
+    </select>
+    <!--add by etliu 20210421 权益类资产相关代码合并 end-->
 </mapper>

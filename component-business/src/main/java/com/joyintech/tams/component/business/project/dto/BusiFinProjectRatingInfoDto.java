@@ -23,7 +23,7 @@ import java.util.List;
  * 〈功能详细描述〉
  * @author sunhui
  * @version 1.0 2020年11月23日
- * @see BusiFinBondRatingInfoDto
+ * @see BusiFinProjectRatingInfoDto
  * @since 1.0
  */
 @ValidLogic(targetClass = BusiFinProjectRatingInfoValidator.class,groups = {ValidateGroupEdit.class})

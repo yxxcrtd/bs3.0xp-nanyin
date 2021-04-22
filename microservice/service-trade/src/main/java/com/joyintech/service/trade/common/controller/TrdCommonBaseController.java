@@ -681,4 +681,16 @@ public class TrdCommonBaseController {
     public List<MockTrdProductDealDto> selectFyTradedeal(@RequestBody Map<String, Object> param) throws Exception {
         return trdCommonBaseService.selectFyTradedeal(param);
     }
+
+    // add by etliu 20210421 权益类资产相关代码合并 start
+    /**
+     * 根据资产代码查询流程中已录入金额
+     * @author chaowei
+     * @return BigDecimal
+     */
+    @PostMapping("queryWflPrinAmtByAssetId")
+    public BigDecimal queryWflPrinAmtByAssetId(@RequestBody Map<String,Object> map) {
+        return trdCommonBaseService.queryWflPrinAmtByAssetId(map);
+    }
+    // add by etliu 20210421 权益类资产相关代码合并 end
 }

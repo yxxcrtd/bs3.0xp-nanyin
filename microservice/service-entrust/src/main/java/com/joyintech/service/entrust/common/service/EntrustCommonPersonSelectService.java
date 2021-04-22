@@ -16,6 +16,7 @@ import java.util.Map;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.service.entrust.etrplanassetn.dto.EtrPlanAssetNDto;
 import com.joyintech.service.entrust.etrplanassetr.dto.EtrPlanAssetRDto;
+import com.joyintech.service.entrust.etrprojectnet.dto.EtrProjectNetDto;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeList;
@@ -202,4 +203,16 @@ public class EntrustCommonPersonSelectService extends BaseService<ITableRow> {
     public List<String> findSameNameCounterId(Map<String, Object> map) {
         return entrustCommonPersonSelectMapper.findSameNameCounterId(map);
     }
+
+    // add by etliu 20210421 权益类资产相关代码合并 start
+    @DataSource(DataSourceType.OTHER)
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    public List<EtrProjectNetDto> getRealName5(List<EtrProjectNetDto> dtoList){
+        for(EtrProjectNetDto dto:dtoList){
+            String realName = entrustCommonPersonSelectMapper.getRealName(dto.getInvManagerId());
+            dto.setInvManagerId(realName);
+        }
+        return dtoList;
+    }
+    // add by etliu 20210421 权益类资产相关代码合并 end
 }
