@@ -58,7 +58,7 @@ public class TrdInterfDataImport001Contoller extends BaseController {
 
     private static String gpcode ;
 
-    private static String tgcode ;
+    private static String trigger ;
 
 	@Autowired
 	private TrdInterfDataImport001Service trdInterfDataImport001Service;
@@ -77,7 +77,7 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     @Override
     public String init(Model model) {
         gpcode = CacheUtil.getSysParam(INTERF_PLACE_GPCODE);
-        tgcode = CacheUtil.getSysParam(INTERF_PLACE_TGCODE);
+        trigger = CacheUtil.getSysParam(INTERF_PLACE_TGCODE);
         sysDate=baseCommonService.getSysDateString();
         if(sysDate==null||"".equals(sysDate)){
             sysDate=DateUtil.format(new Date());
@@ -94,7 +94,7 @@ public class TrdInterfDataImport001Contoller extends BaseController {
 
     	Map<String,Object> map = RequestUtil.getPageParam();
     	map.put("gpcode",gpcode);
-        map.put("tgcode",tgcode);
+        map.put("trigger",trigger);
     	return trdInterfDataImport001Service.getTreeNodeList(map);
     }
 
@@ -112,7 +112,7 @@ public class TrdInterfDataImport001Contoller extends BaseController {
     	List<TrdInterfDataImport001LogDto>  list = new ArrayList<>();
     	Map<String,Object> map = RequestUtil.getPageParam();
         map.put("gpcode",gpcode);
-        map.put("tgcode",tgcode);
+        map.put("trigger",trigger);
         map.put("predate",sysDate);
     	return trdInterfDataImport001Service.getInterActionLog(map);
     }
@@ -158,7 +158,7 @@ public class TrdInterfDataImport001Contoller extends BaseController {
         params.put("predate",sysDate);
         params.put("preseqno", map.get("preseqno"));
         params.put("gpcode",gpcode);
-        params.put("trigger",tgcode);
+        params.put("trigger",trigger);
         return trdInterfDataImport001Service.runAs(params);
     }
 
