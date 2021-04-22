@@ -1191,6 +1191,14 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     分支类型_行权(DictCode.分支类型,"D03","行权"),
     /** add by yanya on 20210309 添加分支序号类型：行权 end**/
 
+    /** add by yanya on 20210309 行权状态增加放弃行权 start**/
+    行权状态_放弃行权(DictCode.行权状态,"04","放弃行权"),
+    /** add by yanya on 20210309 行权状态增加放弃行权 end**/
+
+    /** add by yanya on 20210309 新增数据字典：行权回售申请交易处理 start**/
+    行权回售申请交易处理_保留原数据(DictCode.行权回售申请交易处理,"01","保留原数据"),
+    行权回售申请交易处理_重新估值(DictCode.行权回售申请交易处理,"02","重新估值"),
+    /** add by yanya on 20210309 新增数据字典：行权回售申请交易处理 end**/
 
     // add by etliu 2021-04-20 权益类资产功能合并 start
     金融产品类型_投管用_权益类资产(DictCode.金融产品类型_投管用,"F37","权益类资产"),
