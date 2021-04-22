@@ -253,10 +253,10 @@
   			AND T1.ASSET_TYPE_TWO=T2.TYPE_6
  			WHERE T2.FINPROD_ID = #{finprodId}
     </select>
-    
-    <select id="getFaceValue" resultType="java.math.BigDecimal" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal">
+
+	<select id="getFaceValue" resultType="java.math.BigDecimal">
 		SELECT nvl(100-sum(nvl(PRIN_AMT,0)),100)
-   			FROM FIN_CASH_PLAN 
+   			FROM FIN_CASH_PLAN
    			WHERE FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
    			AND  #{tradeDate,jdbcType=DATE} >= MDATE
    			GROUP BY FINPROD_ID
@@ -950,5 +950,20 @@
 
 		AND T.MDATE >=#{tradeDate,jdbcType=DATE}
 		GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CREDIT_CONDITION,T.INSTITUTION_CODE,T.CUSTOMER_ID,T.CREATE_TIME
+	</select>
+
+	<!--获取最新净值-->
+	<select id="getLastPrice" resultType="java.math.BigDecimal">
+		SELECT
+		A.VALUATION
+		FROM
+		FIN_PRODUCT_VALUATION A, FIN_PRODUCT C
+		<where>
+			C.FINPROD_ID = #{finprodId} AND C.FINPROD_MARKET_ID = A.FINPROD_ID AND C.FINPROD_TYPE2 = A.FINPROD_TYPE2
+			AND A.VAL_DATE = (SELECT MAX(VAL_DATE)
+			FROM FIN_PRODUCT_VALUATION A2
+			WHERE A2.FINPROD_ID = A.FINPROD_ID
+			AND A2.VAL_DATE &lt;= #{sysDate})
+		</where>
 	</select>
 </mapper>

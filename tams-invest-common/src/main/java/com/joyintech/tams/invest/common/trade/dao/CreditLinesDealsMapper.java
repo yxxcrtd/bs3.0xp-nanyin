@@ -36,7 +36,7 @@ public interface CreditLinesDealsMapper {
 	
 	RiskWeight getRsk(@Param("finprodId")String finprodId, @Param("tradedate")Date tradedate);
 
-	BigDecimal getFaceValue(TrdProductDeal model);
+	BigDecimal getFaceValue(Object model);
 
 	int updateLinesByPrimaryKeySelective(CreditLines creditLines);
 	
@@ -124,4 +124,6 @@ public interface CreditLinesDealsMapper {
 	String getCustomerid(Map<String,Object> model);
 
 	List<CreditLines> getCeLinesInfoforassetPierce(Map<String,Object> model);
+
+	BigDecimal getLastPrice(@Param("finprodId")String finprodId,@Param("sysDate")Date sysDate);
 }

@@ -282,4 +282,7 @@ public interface TrdCommonBaseMapper {
      */
     BigDecimal queryWflPrinAmtByAssetId(Map<String, Object> map);
     // add by etliu 20210421 权益类资产相关代码合并 end
+	
+	List<PtlPortfolio> selectPortfolioIds(Map<String, Object> map);
+
 }

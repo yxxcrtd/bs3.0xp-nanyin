@@ -54,6 +54,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
 
@@ -2054,4 +2055,35 @@ public class AllTradeCommonUtil {
 		return DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue();
 	}
 	// add by lijie2 20200910 投资目的取值逻辑 end
+
+    /**
+     * 批量抽取内部交易对手
+     *
+     * @param counterIds 交易对手
+     * @return 内部交易对手
+     */
+    public static Map<String, PtlPortfolio> selectPortfolioIds(List<String> counterIds) {
+        //防止counterIds中存在null的对象
+        List<String> tmpList = new ArrayList<String>();
+        if (!StringUtil.isEmptyList(counterIds)) {
+            for(String counterId:counterIds) {
+                if(StringUtil.isNotEmpty(counterId)) {
+                    tmpList.add(counterId);
+                }
+            }
+        }
+
+        if (StringUtil.isEmptyList(tmpList)) {
+            return new HashMap<>();
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", tmpList);
+        List<PtlPortfolio> list = trdCommonBaseMapper.selectPortfolioIds(map);
+        if (!StringUtil.isEmptyList(list)) {
+            return list.stream().collect(
+                    Collectors.toMap(PtlPortfolio::getPortfolioId, info -> info));
+        }
+        return new HashMap<>();
+    }
+    // add by zahngrui1 20200703 批量抽取反向交易编号内部就交易对手 end
 }

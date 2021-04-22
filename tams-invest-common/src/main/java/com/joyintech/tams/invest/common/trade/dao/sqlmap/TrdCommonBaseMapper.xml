@@ -1072,4 +1072,16 @@
           and ps in ('T01','T04')
     </select>
     <!--add by etliu 20210421 权益类资产相关代码合并 end-->
+    
+    <select id="selectPortfolioIds" resultMap="com.joyintech.tams.common.base.dao.PtlPortfolioMapper.BaseResultMap">
+        SELECT
+        <include refid="com.joyintech.tams.common.base.dao.PtlPortfolioMapper.Base_Column_List" />
+        FROM PTL_PORTFOLIO
+        <if test="list != null and list.size() > 0">
+            WHERE PORTFOLIO_ID in
+            <foreach  collection="list" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
 </mapper>
