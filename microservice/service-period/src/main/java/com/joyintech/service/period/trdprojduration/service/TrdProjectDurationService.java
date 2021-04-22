@@ -500,10 +500,15 @@ public class TrdProjectDurationService extends BaseService {
     }
     //add by liupengfei for 多级法人E
     public boolean isPayIntDate(Map<String, Object> map) {
-        //针对还本不带息资产，若还本日！=付息日，则返回false
-        int count=trdProjectDurationMapper.isPayIntDate(map);
+        //若针对，还本带息，返回 true，针对还本不带息，若有付息日=还本日，返回true
+        int count=trdProjectDurationMapper.isNoPayInt(map);
         if(count>0){
-            return false;
+            int countt=trdProjectDurationMapper.isPayIntDate(map);
+            if(countt>0){
+                return true;
+            }else{
+                return false;
+            }
         }else{
             return true;
         }

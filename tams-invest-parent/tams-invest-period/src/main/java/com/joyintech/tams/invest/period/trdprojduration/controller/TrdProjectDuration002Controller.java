@@ -215,7 +215,7 @@ public class TrdProjectDuration002Controller extends BaseController {
         return new AjaxResult(msg);
     }
     /**
-     * 根据主键查询清算账户表
+     * 是否付息日　
      *
      * @param ccy 币种
      * @param acctNo 网点账号
