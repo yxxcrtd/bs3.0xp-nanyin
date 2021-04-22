@@ -442,7 +442,7 @@ public class ViewCompareDetailController extends BaseController {
 
             // 如果是履历表
             if(StringUtil.endsWith(tableName, "_HIS")) {
-                searchParam.put("order", " ORDER BY nvl(UPDATE_TIME,CREATE_TIME) DESC");
+                searchParam.put("order", " ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC");
             }
             else {
                 searchParam.put("order", oder);
