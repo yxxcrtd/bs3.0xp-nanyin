@@ -298,7 +298,7 @@
     <select id="selectByTotalTradeId" resultType="com.joyintech.service.trade.bondmarkettrade.dto.TrdBondMarketTradeDto">
         select
         TFPDT.TOTLE_TRADE_ID  totleTradeId,
-        TFPDT.FINPROD_ID finprodId,
+        TFPBP.FINPROD_ID finprodId,
         FP.FINPROD_MARKET_ID appearMarketId,
         FP.TRADE_MARKET tradeMarket,
         FP.FINPROD_ABBR appearMarketAbbr,
