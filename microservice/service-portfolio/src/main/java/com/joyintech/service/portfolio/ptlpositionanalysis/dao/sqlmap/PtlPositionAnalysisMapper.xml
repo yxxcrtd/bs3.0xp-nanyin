@@ -2672,8 +2672,7 @@
             b.cShares,
             b.sShares,
             b.floatIngplAdd,
-			b.bshareScale,
-            b.issueFaceValue
+			b.bshareScale
             from (select * from (
                 select 
                     atd.finprod_id as finprodId,
@@ -2702,6 +2701,7 @@
                     atd.rate,
                     atd.cost_rate as costRate,
                     atd.bpyield,
+                    atd.issue_face_value as issueFaceValue,
                     atd.m_convexity mConvexity,
                     atd.ex_info as exInfo,
                     atd.ex_next_date as exNextDate,
@@ -2864,6 +2864,7 @@
             atd.issue_party ,
             atd.is_soe ,
             atd.is_listed_company ,
+            atd.issue_face_value,
             atd.company_nature ,
             atd.industry,
             atd.industry2,
@@ -2909,7 +2910,6 @@
                 sum(atd.s_shares) as sShares,
                 sum(atd.bshare_scale) as bshareScale,
                 sum(atd.float_ingpl_add) as floatIngplAdd,
-                sum(atd.issue_face_value) as issueFaceValue,
                 CASE WHEN (FTP.FINPROD_TYPE2 ='F02' OR FTP.FINPROD_TYPE2 ='F25' OR FTP.FINPROD_TYPE2 ='F04')
                     THEN SUM(atd.pos_value)*-1
                     ELSE SUM(atd.pos_value) end posValue,
