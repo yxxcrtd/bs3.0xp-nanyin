@@ -30,6 +30,13 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.BokBooksetExt;
+import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
+import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListTableId;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
@@ -53,16 +60,13 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetCashPla
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProduct;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchDto;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TradeInfoDto;
+import com.joyintech.tams.valuation.common.batch.losscommon.service.LossCommonService;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.DataIndexSequenceType;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
-import com.joyintech.tams.common.base.entity.BokBooksetExt;
-import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
 
 /**
  * 存款类资产计提账务处理 process相关业务处理
@@ -105,13 +109,17 @@ public class DepositeAssetCalBookService {
      */
     @Autowired
     private CalculationCommonService calculationCommonService;
-
+    
+    /**
+     * 减值共通
+     */
+    @Autowired
+    private LossCommonService lossCommonService;
     /**
      * DBUtil
      */
     @Autowired
     private DBUtil dBUtil;
-
     /**
      * process 数据处理
      * 
@@ -165,23 +173,41 @@ public class DepositeAssetCalBookService {
         costBalance = subjectBalance.getBalance();
         // 变量.当日成本科目数量
         BigDecimal costNum = subjectBalance.getNum();
-
+        /**ADD BY CAOGUO ON 20201020 减值相关修改 START **/
+        // 减值准备类科目余额
+        subjectBalance = this.getSubjectBalanceEx(booksetIdNow, bokDetailIdNow,
+            happenDateNow, bookDateNow, DictCodeList.余额方向_借方.getValue(),
+            DictCodeBaseSubjectNatrue.存放同业减值准备.getValue(), taskPri);
+        // 变量.当日成本科目数量
+        BigDecimal jzzbYe = subjectBalance.getBalance();
+        /**ADD BY CAOGUO ON 20201020 END**/
         // 账套核算参数查询
         List<String> paramCodeList = new ArrayList<String>();
         // DEPO_ACCR_TYPE 账套配置表参数项_存款计提方式
         paramCodeList.add(ValDictCodeList.账套配置表参数项_存款计提方式.getValue());
+        /**modify by caoguo on 20201020 start 修改调用获取账套参数方法*/
         // 调用账务类共通（DTO.账套代码, 参数项：如下）
-        List<BokBooksetExt> listBooksetExt = accountingCommonService.getValBokBooksetExt(
-            booksetIdNow, paramCodeList);
+        /*List<BokBooksetExt> listBooksetExt = accountingCommonService.getValBokBooksetExt(
+            booksetIdNow, paramCodeList,batchExecuteInfo.getBatchExedetailSeqNo());*/
+        Map<String, Object> getValBokBooksetExtMap = accountingCommonService
+            .getValBokBooksetExtForMap(acctEntity.getBooksetId(), paramCodeList);
         // 变量.计提方式 = 账套配置表参数项_拆借计提方式 对应的计提方式
         String calType = "";
         String calTypetab = "";
-        if (!CollectionUtils.isEmpty(listBooksetExt)) {
+        /*if (!CollectionUtils.isEmpty(listBooksetExt)) {
             // 获取第一条即可
             calType = listBooksetExt.get(0).getParamValue();
             calTypetab =listBooksetExt.get(0).getParamValue();
+        }*/
+        if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_拆借计提方式.getValue()) != null){
+            calType = (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_拆借计提方式.getValue());
+            calTypetab =calType;
         }
-
+        String bccyadjType = "";
+        if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_本位币差额处理方式.getValue()) != null){
+            bccyadjType = (String)getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_本位币差额处理方式.getValue());
+        }
+        /**modify by caoguo on 20201020 end**/
         // 3. 处理交易
         // 3.1、循环处理计提明细
         // 循环 计提基础信息列表 进行逻辑处理
@@ -197,13 +223,7 @@ public class DepositeAssetCalBookService {
             }else{
                 calType =calTypetab; 
             }
-            
-            
-            
-
-            // 获取标的交易信息到期日的前一天
             Date mdateYsdWithTarget = this.getYesterday(targetFinProduct.getMdate());
-
             // 调用共通设计-> 标的类共通：标的信息查询（现金流计算规则）
             TargetSearchDto targetSearchDto = new TargetSearchDto();
             targetSearchDto.setQueryType(ValDictCodeList.标的_现金流计算规则.getValue());
@@ -275,10 +295,8 @@ public class DepositeAssetCalBookService {
             }
             /** 如果是活期存放，不考虑到期日，只要成本余额有值则会计提。modify by chendijun 20200424 end **/
             // 结果集发生日 大于 标的到期日前一天
-            // 结果集发生日 大于 标的到期日前一天
-            else  if (DateUtil.compareDate(happenDateNow, mdateYsdWithTarget) <= 0) {
-                //到期日前一天恒定使用区间倒减的算法
-                if (DictCodeList.计提方式_区间倒减.getValue().equals(calType)||DateUtil.compareDate(happenDateNow, mdateYsdWithTarget) == 0) {
+            else if (DateUtil.compareDate(happenDateNow, mdateYsdWithTarget) <= 0) {
+                if (DictCodeList.计提方式_区间倒减.getValue().equals(calType)) {
                     // 1、计算上次付息日到发生日的应收利息
                     // 调用共通设计->【标的类共通方法】->当前付息区间查询
                     List<TargetCashPlan> listCashPlan = finProductCommonService.getCurrentIntRange(
@@ -287,7 +305,6 @@ public class DepositeAssetCalBookService {
                     // 变量.计息开始日 = 返回值.计息开始日
                     Date vdate = targetCashPlan.getVdate();
                     // 变量.计息结束日 = 返回值.计息结束日
-                    @SuppressWarnings("unused")
 //                    Date mDate = targetCashPlan.getMdate();
 
                     // 定义 变量.本金列表
@@ -348,9 +365,6 @@ public class DepositeAssetCalBookService {
                         }
                     });
                     quoteList.add(latestQuoteInfo);
-
-
-
                     CalCommonResult calCommonResult = calculationCommonService.calCommon(
                         happenDateNow, DateUtil.addDay(happenDateNow, 1), prinList, quoteList);
                     // 变量.应收利息 = 返回值.总利息金额
@@ -403,11 +417,95 @@ public class DepositeAssetCalBookService {
                     汇率 = currencyMarketList.get(0).getClosePrice();
                 }
             }
+            
+            /**ADD BY CAOGUO ON 20201019 减值相关修改 START **/
+            BigDecimal interestB = ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), null, interest, 汇率);
+                
+            // 变量.利息收入 = 变量.应计利息
+            BigDecimal lxsr = interest;
+            // 定义 变量.减值计提 = 0
+            BigDecimal jzzb = BigDecimal.ZERO;
+            // if（计提类账务处理结果.减值阶段 = "P3买入后出现减值" && 变量.投资收益！=0）
+            if (dto.getNumP3() > 0 && interest.compareTo(BigDecimal.ZERO) != 0) {
+                // 定义 变量.本金列表
+                List<PrincipalInfo> prinList = new ArrayList<>();
+                // 本金列表赋值 【参数.发生日，变量.成本科目余额】
+                PrincipalInfo principalInfo = new PrincipalInfo();
+                principalInfo.setChangeDate(happenDateNow);
+                principalInfo.setPrinAmount(ArithmeticUtil.doAdd(costBalance,jzzbYe));
+                prinList.add(principalInfo);
+                // 定义 小于等于参数.发生日的最新报价信息
+                QuoteInfo latestQuoteInfo = new QuoteInfo();
+                // 定义 变量.报价列表
+                List<QuoteInfo> quoteList = new ArrayList<>();
+                // 报价列表赋值
+                // 小于等于参数.发生日的最新变量.报价列表组成【参数.发生日，变量.报价.利率】
+                targetCashCalcRuleList.forEach(item -> {
+                    if (DateUtil.compareDate(happenDateNow, item.getEffDate()) >= 0) {
+                        if (latestQuoteInfo.getIssueDate() == null) {
+                            latestQuoteInfo.setInterest(item.getYield());
+                            latestQuoteInfo.setIssueDate(item.getEffDate());
+                            latestQuoteInfo.setAccountBasis(item.getBasis());
+                        }
+                        else if (DateUtil.compareDate(latestQuoteInfo.getIssueDate(),
+                            item.getEffDate()) <= 0) {
+                            latestQuoteInfo.setInterest(item.getYield());
+                            latestQuoteInfo.setIssueDate(item.getEffDate());
+                            latestQuoteInfo.setAccountBasis(item.getBasis());
+                        }
+                    }
+                });
+                quoteList.add(latestQuoteInfo);
+                CalCommonResult calCommonResult = calculationCommonService.calCommon(
+                    happenDateNow, DateUtil.addDay(happenDateNow, 1), prinList, quoteList);
+                // 变量.利息收入 = 变量.利率 *（变量.成本科目余额 + 变量.减值准备科目余额）
+                lxsr = calCommonResult.getTotalInterestAmt();
+                // 变量.减值计提 = 变量.应计利息 - 变量.利息收入
+                jzzb = ArithmeticUtil.doSub(interest, lxsr);
+            }
+            // if（变量.减值计提 >= 0）
+            if (jzzb.compareTo(BigDecimal.ZERO) >= 0) {
+                // 减值计提（贷） = 变量.减值计提
+                accountAmountMap.put(BookConstant.IMPAMT_C,
+                    ArithmeticUtil.round(jzzb, NumberEnum.MONEY));
+                accountCurrencyMap.put(BookConstant.IMPAMT_C, dto.getoCcy());
+            }
+            else {
+                // 减值计提（借） = 变量.减值计提 * -1
+                accountAmountMap.put(BookConstant.IMPAMT_D,
+                    ArithmeticUtil.round(jzzb.negate(), NumberEnum.MONEY));
+                accountCurrencyMap.put(BookConstant.IMPAMT_D, dto.getoCcy());
+            }
+            
+            // 利息收入 <- 变量.利息收入
+            accountAmountMap.put(BookConstant.INCOMEAMT, lxsr);
+            accountCurrencyMap.put(BookConstant.INCOMEAMT, dto.getoCcy());
+            if (DictCodeListExt3.本位币差额处理方式_减值准备.getValue().equals(bccyadjType)) {
+                BigDecimal jzzbB = ArithmeticUtil.doSub(interestB, ArithmeticUtil.round(
+                    calculationCommonService.doMultiply(lxsr, 汇率), NumberEnum.MONEY));      
+                if (jzzbB.compareTo(BigDecimal.ZERO) >= 0) {
+                    // 减值计提（贷） = 变量.减值计提
+                    accountAmountMap.put(BookConstant.IMPAMT_C + BookConstant.BCCYAMT,
+                        ArithmeticUtil.round(jzzbB, NumberEnum.MONEY));
+                }
+                else {
+                    // 减值计提（借） = 变量.减值计提 * -1
+                    accountAmountMap.put(BookConstant.IMPAMT_D + BookConstant.BCCYAMT,
+                        ArithmeticUtil.round(jzzbB.negate(), NumberEnum.MONEY));
+                }
+            }else {
+                // 利息收入本位币 <- 变量.利息收入*汇率 - 减值准备*汇率
+                BigDecimal lxsrB = ArithmeticUtil.doSub(interestB, ArithmeticUtil.round(
+                    calculationCommonService.doMultiply(jzzb, 汇率), NumberEnum.MONEY));
+                accountAmountMap.put(BookConstant.INCOMEAMT + BookConstant.BCCYAMT,
+                    ArithmeticUtil.round(lxsrB, NumberEnum.MONEY));            
+            }
+            
+            /** ADD BY CAOGUO ON 20201019 END **/
             // 应收利息 = 变量.应收利息
             accountAmountMap.put(BookConstant.INTAMT, interest);
             // 应收利息_本位币 = 变量.应收利息
-            accountAmountMap.put(BookConstant.INTAMT+BookConstant.BCCYAMT, ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), null, interest, 汇率));
-
+            accountAmountMap.put(BookConstant.INTAMT+BookConstant.BCCYAMT, interestB);  // modify BY CAOGUO ON 20201019 变量修改 
             // 记账金额元素币种信息塞值
             // 应计利息 值塞入当前交易币种（当前为获取计提里面的原币）
             accountCurrencyMap.put(BookConstant.INTAMT, dto.getoCcy());
@@ -522,7 +620,36 @@ public class DepositeAssetCalBookService {
             // 当日应计利息_本位币
             bokSummaryTableNew.setTdyIntincexpB(bokSummaryTableNew.getTdyIntincexp());
             // 与金茂东确认：当前【统计分析明细表（账务明细）】 相关本位币字段值 = 对应原币字段值 yangjian 2019/08/13 ======== end
-
+            /**ADD BY CAOGUO ON 20201015 减值相关修改 START **/
+            bokSummaryTableNew.setTdyLossAmt(ArithmeticUtil.doAdd(jzzbYe, jzzb.negate()));
+            bokSummaryTableNew.setTdyLossAmtB(bokSummaryTableNew.getTdyLossAmt());
+            // if（金额元素.减值准备 ！= 0）
+            if (jzzb.compareTo(BigDecimal.ZERO) != 0) {
+                BokStatLossPosiiton statLoss = null;
+                for (ValBokBookdetailBatch detail : resultNowNow.getValBokBookdetailBatch()) {
+                    // 变量.账务明细 = 调用账务明细生成共通返回结果中 基础科目性质 ="存放同业减值准备"的第一条数据
+                    if (DictCodeBaseSubjectNatrue.存放同业减值准备.getValue().equals(
+                        detail.getBaseSubjectNature())) {
+                        // 调用【减值相关共通-减值计提明细数据生成】
+                        statLoss = lossCommonService.setLossInfoAccr(detail, jzzb.negate(),
+                            ArithmeticUtil.round(
+                                calculationCommonService.doMultiply(jzzb.negate(), 汇率),
+                                NumberEnum.MONEY),
+                            ArithmeticUtil.doAdd(jzzbYe, jzzb.negate()),
+                            ArithmeticUtil.round(
+                                ArithmeticUtil.multiply(
+                                    ArithmeticUtil.doAdd(jzzbYe, jzzb.negate()), 汇率),
+                                NumberEnum.MONEY),
+                            null, null, DictCodeListExt3.减值生成方式_计提批处理.getValue());
+                        break;
+                    }
+                }
+                if (statLoss != null) {
+                    // 变量.统计分析明细表（资产减值）减值使用列表.add(上述返回值)
+                    returnResult.getBokStatLossPosiitonList().add(statLoss);
+                }
+            }
+            /**ADD BY CAOGUO ON 20201015 END**/
 
             // 添加到返回值中
             returnResult.getBokSummaryList().add(bokSummaryTableNew);
