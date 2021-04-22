@@ -150,12 +150,12 @@
             , visible: false}
         , {field: 'finprodMarketId', title: 'EtrPlanAssetN002.finprodId', sortable : false, width: 150}
         /*,{field:'assetType1',visible:false}*/
-        ,{field:'busAssetType1', title: 'EtrProjectNet001.assetType2', sortable : false, width:'10%',edit: false}
-        ,{field:'busAssetType10', title: 'EtrProjectNet001.assetType2', sortable : false, width:'10%',edit: false,visible:false}
-        // ,{field:'assetType10',visible:false}
-        // ,{field:'busAssetType10', title: 'EtrPlanAssetC001.type10', sortable : false, width:'10%',edit: false}
-        // ,{field:'assetType11',visible:false}
-        // ,{field:'busAssetType11', title: 'EtrPlanAssetC001.type11', sortable : false, width:'10%',edit: false,visible:IS_SHOW_TYPE == '01'?true:false},{field:'ccy',visible:false}
+        ,{field:'busAssetType1', title: 'EtrProject001.type9', sortable : false, width:'10%',edit: false}
+        //,{field:'busAssetType10', title: 'EtrProjectNet001.assetType2', sortable : false, width:'10%',edit: false,visible:false}
+        ,{field:'assetType10',visible:false}
+        ,{field:'busAssetType10', title: 'EtrProject001.type10', sortable : false, width:'10%',edit: false}
+        ,{field:'assetType11',visible:false}
+        ,{field:'busAssetType11', title: 'EtrProject001.type11', sortable : false, width:'10%',edit: false,visible:IS_SHOW_TYPE == '01'?true:false},{field:'ccy',visible:false}
        /* ,{field:'purSpeed', title: 'FinPlanNetAsset002.purSpeed', sortable : false, width:'10%',edit: false}
         ,{field:'redSpeed', title: 'FinPlanNetAsset002.redSpeed', sortable : false, width:'10%',edit: false}*/
         ,{field:'busCcy', title: 'EtrPlanAssetN001.ccy', sortable : false, width:'10%',sortField:"ccy"}
@@ -304,25 +304,25 @@
          */
         $('#EtrProjectNet003_btn_riskcal').click(function(){
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-            //add by zhangnian  start
-            var list = $.serializeToObject('#searchForm', true).selectedItem;
-            var objectList = [];
-            for(var i in list){
-                var temp = {};
-                temp.portfolioId = list[i].portfolioId;
-                temp.ps = list[i].ps;
-                temp.ccy = list[i].ccy;
-                temp.finprodId = list[i].finprodId;
-                temp.entrustAmt = list[i].entrustAmt;
-                temp.entrustNum = list[i].entrustNum;
-                temp.groupCode = 'F19_0_'+i;//格式类型+委托/交易+序号
-                temp.counterId = list[i].counterId;
-                objectList.push(temp);
-            }
-            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F19',
-                objectList, getriskdata());
+            // //add by zhangnian  start
+            // var list = $.serializeToObject('#searchForm', true).selectedItem;
+            // var objectList = [];
+            // for(var i in list){
+            //     var temp = {};
+            //     temp.portfolioId = list[i].portfolioId;
+            //     temp.ps = list[i].ps;
+            //     temp.ccy = list[i].ccy;
+            //     temp.finprodId = list[i].finprodId;
+            //     temp.entrustAmt = list[i].entrustAmt;
+            //     temp.entrustNum = list[i].entrustNum;
+            //     temp.groupCode = 'F19_0_'+i;//格式类型+委托/交易+序号
+            //     temp.counterId = list[i].counterId;
+            //     objectList.push(temp);
+            // }
+            // window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F19',
+            //     objectList, getriskdata());
             //add by zhangnian end
-            //$("#riskMathFlag").val("02")
+            $("#riskMathFlag").val("02")
         });
 
     });

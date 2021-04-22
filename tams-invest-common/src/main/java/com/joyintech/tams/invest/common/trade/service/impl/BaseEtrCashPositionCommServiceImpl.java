@@ -118,6 +118,11 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 ||StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))) {
             EtrConBondCashPositionDealService.deal可转债CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        else if(StringUtil.equals(finprodType, DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())){
+            EtrNetCashPositionDealService.deal计划类CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
+        }
+        // add by etliu 20210421 权益类资产相关代码合并 end
         else if (StringUtil.equals(finprodType, DictCodeListExt1.一次性费用类型_通道费.getValue())) {
             if (DictCodeList.持仓类型_实际.equals(持仓类型)) { // 有效
                 TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
@@ -254,6 +259,12 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 EtrConBondCashPositionDealService.deal可转债EntrustStart(entrustCommonDto, etrPositionHoldDto);
             }
           //add by gaopeng 增加债转股委托资金头寸 end
+            // add by etliu 20210421 权益类资产相关代码合并 start
+            //权益类资产
+            else if(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(finprodType)){
+                EtrNetCashPositionDealService.deal计划类EntrustStart(entrustCommonDto, etrPositionHoldDto);
+            }
+            // add by etliu 20210421 权益类资产相关代码合并 end
             EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
         }
         return new CommonResult(CommonResult.SUCCED, "处理完成");
@@ -337,6 +348,12 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                         		StringUtil.equals(etrEntrust.getPs(),DictCodeListExt1.交易方向_债转股.getValue()))) {
                     EtrConBondCashPositionDealService.deal可转债EntrustClose(entrustCommonDto, etrPositionHoldDto);
                 }
+                // add by etliu 20210421 权益类资产相关代码合并 start
+                //权益类资产
+                else if(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(finprodType)){
+                    EtrNetCashPositionDealService.deal计划类EntrustClose(entrustCommonDto, etrPositionHoldDto);
+                }
+                // add by etliu 20210421 权益类资产相关代码合并 end
                 // 委托撤回或拒绝时，当前平台日处理实时持仓
                 etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(DateUtil.platDateFromCache()));
                 etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(DateUtil.platDateFromCache()));

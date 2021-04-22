@@ -585,8 +585,8 @@ public class EtrProjectNetService extends CommonExportService<EtrProjectNetDto> 
             /*dto.setPurSpeed(m.get("purSpeed").toString());
             dto.setRedSpeed(m.get("redSpeed").toString());*/
 
-            /*dto.setAssetType10(m.get("assetType10").toString());*/
-//            dto.setAssetType11(m.get("assetType11").toString());
+            dto.setAssetType10(m.get("assetType10").toString());
+            dto.setAssetType11(m.get("assetType11").toString());
             dto.setFinprodName(m.get("finprodName").toString());
             dto.setCcy(m.get("ccy").toString());
             dto.setFinprodId(m.get("finprodId").toString());
