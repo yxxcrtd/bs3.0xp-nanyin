@@ -187,6 +187,10 @@ public interface BussinessConstant {
      */
     String ISCREDIT = "ISCREDIT";
     /**
+     *授信使用条件开关
+     */
+    String CREDIT_CONDITION_SHOW = "CREDIT_CONDITION_SHOW";
+    /**
      *是否需要监控授信开关
      */
     String ISNEEDCONTROLCREDIT = "ISNEEDCONTROLCREDIT";
@@ -301,6 +305,14 @@ public interface BussinessConstant {
      *  add by wj 20200506 工作流优化 存款类交易  不入业务表的开关  02：不入业务表
      */
     String WFL_AUTO = "wfl_auto";
+    /**
+     * 提示信息换行
+     */
+    String MSG_SPLIT = "<br />";
+    /**
+     * 委托指令交易时间端配置的开关 Y：开 N：关
+     */
+    String ETR_TRADE_TIME_SWITCH = "etr_trade_time_switch";
     
     /**
      * 银行帐账套前缀
@@ -311,4 +323,32 @@ public interface BussinessConstant {
      * 公墓基金存续期处理逻辑 01：旧逻辑 02：新逻辑
      */
     String FUND_DEAL_TYPE = "FUND_DEAL_TYPE";
+
+    /**
+     * 系统参数code，场内交易指令画面行情区域自动刷新时间（毫秒）
+     */
+    String ETREXCHANGE_HQAREA_REFRESH_PERIOD = "etrExchange_HqArea_refresh_period";
+
+    /**
+     * 系统参数code，场内交易指令画面持仓列表自动刷新时间（毫秒）
+     */
+    String ETREXCHANGE_POSTABLE_REFRESH_PERIOD = "etrExchange_posTable_refresh_period";
+
+    /**
+     * 系统参数code，场内交易指令画面指令列表自动刷新时间（毫秒）
+     */
+    String ETREXCHANGE_ENTRUSTTABLE_REFRESH_PERIOD = "etrExchange_entrustTable_refresh_period";
+
+    /**
+     * 交易所协议回购指令画面非公开行情区域自动刷新时间（毫秒）
+     */
+    String UNOPENQUOTA_REFRESH_PERIOD = "etrAgreRepTrade_UnOpenQuota_refresh_period";
+    /**
+     * 交易所协议回购指令画面持仓列表自动刷新时间（毫秒）
+     */
+    String POSTABLE_REFRESH_PERIOD = "etrAgreRepTrade_posTable_refresh_period";
+    /**
+     * 交易所协议回购指令画面在途回购自动刷新时间（毫秒）
+     */
+    String ONWAYREP_REFRESH_PERIOD = "etrAgreRepTrade_onWayRep_refresh_period";
 }
