@@ -155,10 +155,34 @@ public class BokStatDetPosiiton extends BokStatDetPosiitonKey {
     private BigDecimal tdyFloatIngplExpB;
 
     /**
-     * 当日应计利息_本位币
+     * 当日累计应计利息余额_本位币
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal tdyIntincexpB;
+
+    /**
+     * 当日发生利息调整
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyIntadjexpAdd;
+
+    /**
+     * 当日发生利息调整_本位币
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyIntadjexpAddB;
+
+    /**
+     * 减值余额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyLossAmt;
+
+    /**
+     * 减值余额_本位币
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyLossAmtB;
 
     /**
      * 取得 账套日期
@@ -175,22 +199,6 @@ public class BokStatDetPosiiton extends BokStatDetPosiitonKey {
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setBooksetDate(Date booksetDate) {
         this.booksetDate = booksetDate;
-    }
-
-    /**
-     * 取得 当前持仓
-     * @return 当前持仓
-     */
-    public BigDecimal getPosAmt() {
-        return posAmt;
-    }
-
-    /**
-     * 设置 当前持仓
-     * @param posAmt 当前持仓
-     */
-    public void setPosAmt(BigDecimal posAmt) {
-        this.posAmt = posAmt;
     }
 
     /**
@@ -581,18 +589,98 @@ public class BokStatDetPosiiton extends BokStatDetPosiitonKey {
     }
 
     /**
-     * 取得 当日应计利息_本位币
-     * @return 当日应计利息_本位币
+     * 取得 当日累计应计利息余额_本位币
+     * @return 当日累计应计利息余额_本位币
      */
     public BigDecimal getTdyIntincexpB() {
         return tdyIntincexpB;
     }
 
     /**
-     * 设置 当日应计利息_本位币
-     * @param tdyIntincexpB 当日应计利息_本位币
+     * 设置 当日累计应计利息余额_本位币
+     * @param tdyIntincexpB 当日累计应计利息余额_本位币
      */
     public void setTdyIntincexpB(BigDecimal tdyIntincexpB) {
         this.tdyIntincexpB = tdyIntincexpB;
+    }
+
+    /**
+     * 取得 当前持仓
+     * @return 当前持仓
+     */
+    public BigDecimal getPosAmt() {
+        return posAmt;
+    }
+
+    /**
+     * 设置 当前持仓
+     * @param posAmt 当前持仓
+     */
+    public void setPosAmt(BigDecimal posAmt) {
+        this.posAmt = posAmt;
+    }
+
+    /**
+     * 取得 当日发生利息调整
+     * @return 当日发生利息调整
+     */
+    public BigDecimal getTdyIntadjexpAdd() {
+        return tdyIntadjexpAdd;
+    }
+
+    /**
+     * 设置 当日发生利息调整
+     * @param tdyIntadjexpAdd 当日发生利息调整
+     */
+    public void setTdyIntadjexpAdd(BigDecimal tdyIntadjexpAdd) {
+        this.tdyIntadjexpAdd = tdyIntadjexpAdd;
+    }
+
+    /**
+     * 取得 当日发生利息调整_本位币
+     * @return 当日发生利息调整_本位币
+     */
+    public BigDecimal getTdyIntadjexpAddB() {
+        return tdyIntadjexpAddB;
+    }
+
+    /**
+     * 设置 当日发生利息调整_本位币
+     * @param tdyIntadjexpAddB 当日发生利息调整_本位币
+     */
+    public void setTdyIntadjexpAddB(BigDecimal tdyIntadjexpAddB) {
+        this.tdyIntadjexpAddB = tdyIntadjexpAddB;
+    }
+
+    /**
+     * 取得 减值余额
+     * @return 减值余额
+     */
+    public BigDecimal getTdyLossAmt() {
+        return tdyLossAmt;
+    }
+
+    /**
+     * 设置 减值余额
+     * @param tdyLossAmt 减值余额
+     */
+    public void setTdyLossAmt(BigDecimal tdyLossAmt) {
+        this.tdyLossAmt = tdyLossAmt;
+    }
+
+    /**
+     * 取得 减值余额_本位币
+     * @return 减值余额_本位币
+     */
+    public BigDecimal getTdyLossAmtB() {
+        return tdyLossAmtB;
+    }
+
+    /**
+     * 设置 减值余额_本位币
+     * @param tdyLossAmtB 减值余额_本位币
+     */
+    public void setTdyLossAmtB(BigDecimal tdyLossAmtB) {
+        this.tdyLossAmtB = tdyLossAmtB;
     }
 }
