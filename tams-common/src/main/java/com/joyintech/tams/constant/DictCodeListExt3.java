@@ -1334,6 +1334,14 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 	债券计算模式_单位净价(DictCode.债券计算模式, "01", "单位净价"),
     债券计算模式_单位全价(DictCode.债券计算模式, "02", "单位全价"),
     债券计算模式_到期收益率(DictCode.债券计算模式, "03", "到期收益率"),
+    /** add by yanya on 20210309 添加行权的交易方向：行权-回售申请、行权-赎回结转 start**/
+    交易方向_行权回售申请(DictCode.交易方向,"T67","行权-回售申请"),
+    交易方向_行权赎回结转(DictCode.交易方向,"T68","行权-赎回结转"),
+    /** add by yanya on 20210309 添加行权的交易方向：行权-回售申请、行权-赎回结转 end**/
+    /** add by yanya on 20210309 添加分支序号类型：行权 start**/
+    分支类型_行权(DictCode.分支类型,"D03","行权"),
+    /** add by yanya on 20210309 添加分支序号类型：行权 end**/
+
 
     // add by etliu 2021-04-20 权益类资产功能合并 start
     金融产品类型_投管用_权益类资产(DictCode.金融产品类型_投管用,"F37","权益类资产"),
