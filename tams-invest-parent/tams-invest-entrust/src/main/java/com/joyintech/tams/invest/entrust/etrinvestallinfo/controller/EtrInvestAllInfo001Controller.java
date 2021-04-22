@@ -96,6 +96,19 @@ public class EtrInvestAllInfo001Controller extends BaseController {
         model.addAttribute("IRS_TYPE", DictCode.互换方式.getValue());
         model.addAttribute("PS_T04", DictCodeList.交易方向_申购.getValue());
         model.addAttribute("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
+        
+        model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        model.addAttribute("TRADE_PLACE_12", DictCodeListExt1.交易场所_中国金融期货交易所.getValue());
+        model.addAttribute("F19", DictCodeListExt3.平安资产类型_权益类资产.getValue());
+
+
+        model.addAttribute("ENTRUST_BUSS_TYPE_17", DictCodeListExt3.上农商_指令业务类型_协议回购首期指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_18", DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_19", DictCodeListExt3.上农商_指令业务类型_协议回购到期购回指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_20", DictCodeListExt3.上农商_指令业务类型_协议回购到期续做指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_21", DictCodeListExt3.上农商_指令业务类型_协议回购中途换券指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_22", DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue());
         return super.init(model);
     }
     /**

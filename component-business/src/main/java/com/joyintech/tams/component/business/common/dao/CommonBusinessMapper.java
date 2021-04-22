@@ -49,4 +49,6 @@ public interface CommonBusinessMapper {
      */
     MstExchargeQuote getExchangeRate(Map<String, Object> map);
     // 资产类型改为授权类型 add by renping 2019-08-19  end
+
+    BigDecimal selectFaceValue(Map<String, Object> params);
 }

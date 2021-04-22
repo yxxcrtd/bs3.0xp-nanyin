@@ -1517,4 +1517,20 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
     public List<MstIntRateInfo> selectAlllv(Map<String,Object> map){
         return ptlManagementInfo001Mapper.selectAlllv(map);
     }
+
+    /**
+     *
+     * @Description //组合权限接口
+     * @Param [param]
+     * @return java.util.List<com.joyintech.service.portfolio.ptlmanagementinfo.dto.PtlAuthInfoDto>
+     * @version 1.0
+     * @see
+     **/
+    public Map<String,Object> getPtlAuthInfo(Map<String, Object> param) {
+        Map<String,Object> returnMap  = new HashMap<String,Object>();
+        returnMap.put("errorCode",0);
+        returnMap.put("errorMsg","成功");
+        returnMap.put("data",ptlManagementInfo001Mapper.getPtlAuthInfo(param));
+        return returnMap;
+    }
 }

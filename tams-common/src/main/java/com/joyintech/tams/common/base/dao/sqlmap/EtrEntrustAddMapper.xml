@@ -68,7 +68,6 @@
         <result column="OPT_FEE_PAY_TYPE2" property="optFeePayType2" jdbcType="VARCHAR" />
         <result column="OPT_FEE_PAY_TYPE" property="optFeePayType" jdbcType="VARCHAR" />
         <result column="R_FINPROD_ID" property="rFinprodId" jdbcType="VARCHAR" />
-        <result column="MIN_AMT" property="minAmt" jdbcType="DECIMAL" />
         <result column="CONTRACT_RESULT" property="contractResult" jdbcType="VARCHAR" />
         <result column="CONTRACT_NO" property="contractNo" jdbcType="VARCHAR" />
         <result column="PAYMENT_DATE" property="paymentDate" jdbcType="DATE" />
@@ -76,6 +75,25 @@
         <result column="MAIN_CONSIGNEE" property="mainConsignee" jdbcType="VARCHAR" />
         <result column="WARRANTOR" property="warrantor" jdbcType="VARCHAR" />
         <result column="BIDDING_RANGE" property="biddingRange" jdbcType="VARCHAR" />
+        <result column="MIN_AMT" property="minAmt" jdbcType="DECIMAL" />
+        <result column="CAL_MODE" property="calMode" jdbcType="VARCHAR" />
+        <result column="COUNTER_SEAT" property="counterSeat" jdbcType="VARCHAR" />
+        <result column="COUNTER_CON_NO" property="counterConNo" jdbcType="VARCHAR" />
+        <result column="FULL_PRICE" property="fullPrice" jdbcType="DECIMAL" />
+        <result column="TARGET_TYPE" property="targetType" jdbcType="VARCHAR" />
+        <result column="COUNTER_ORG" property="counterOrg" jdbcType="VARCHAR" />
+        <result column="TRADER" property="trader" jdbcType="VARCHAR" />
+        <result column="VPAY_DATE" property="vpayDate" jdbcType="DATE" />
+        <result column="MPAY_DATE" property="mpayDate" jdbcType="DATE" />
+        <result column="M_INT_AMT" property="mIntAmt" jdbcType="DECIMAL" />
+        <result column="M_TRADE_AMT" property="mTradeAmt" jdbcType="DECIMAL" />
+        <result column="CAP_DAYS" property="capDays" jdbcType="DECIMAL" />
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="REQUEST_ID" property="requestId" jdbcType="VARCHAR" />
+        <result column="REDO_TYPE" property="redoType" jdbcType="VARCHAR" />
+        <result column="QUOTE_TYPE" property="quoteType" jdbcType="VARCHAR" />
+        <result column="DERIVATIVE_BS_DIR" property="derivativeBsDir" jdbcType="VARCHAR" />
+        <result column="DERIVATIVE_OC_FLAG" property="derivativeOcFlag" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ENTRUST_ID ENTRUST_ID, SETTLE_SPREED SETTLE_SPREED, EXER_YIELD EXER_YIELD, MATURE_YIELD MATURE_YIELD, 
@@ -95,9 +113,14 @@
         HIGH_HIND_PRICE HIGH_HIND_PRICE, LOW_HIND_PRICE LOW_HIND_PRICE, HIGH_EXERC_PRICE HIGH_EXERC_PRICE, 
         LOW_EXERC_PRICE LOW_EXERC_PRICE, EXE_PRICE EXE_PRICE, KNOCK_PRICE KNOCK_PRICE, EXERCISE_TYPE EXERCISE_TYPE, 
         EXEC_BASE_DATE EXEC_BASE_DATE, OPT_FEE_PAY_TYPE2 OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE OPT_FEE_PAY_TYPE, 
-        R_FINPROD_ID R_FINPROD_ID, MIN_AMT MIN_AMT, CONTRACT_RESULT CONTRACT_RESULT, CONTRACT_NO CONTRACT_NO, 
+        R_FINPROD_ID R_FINPROD_ID, CONTRACT_RESULT CONTRACT_RESULT, CONTRACT_NO CONTRACT_NO, 
         PAYMENT_DATE PAYMENT_DATE, LISTING_DATE LISTING_DATE, MAIN_CONSIGNEE MAIN_CONSIGNEE, 
-        WARRANTOR WARRANTOR, BIDDING_RANGE BIDDING_RANGE
+        WARRANTOR WARRANTOR, BIDDING_RANGE BIDDING_RANGE, MIN_AMT MIN_AMT, CAL_MODE CAL_MODE, 
+        COUNTER_SEAT COUNTER_SEAT, COUNTER_CON_NO COUNTER_CON_NO, FULL_PRICE FULL_PRICE, 
+        TARGET_TYPE TARGET_TYPE, COUNTER_ORG COUNTER_ORG, TRADER TRADER, VPAY_DATE VPAY_DATE, 
+        MPAY_DATE MPAY_DATE, M_INT_AMT M_INT_AMT, M_TRADE_AMT M_TRADE_AMT, CAP_DAYS CAP_DAYS, 
+        TRADE_ID TRADE_ID, REQUEST_ID REQUEST_ID, REDO_TYPE REDO_TYPE, QUOTE_TYPE QUOTE_TYPE, 
+        DERIVATIVE_BS_DIR DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG DERIVATIVE_OC_FLAG
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -142,9 +165,15 @@
             HIGH_EXERC_PRICE, LOW_EXERC_PRICE, EXE_PRICE, 
             KNOCK_PRICE, EXERCISE_TYPE, EXEC_BASE_DATE, 
             OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, 
-            MIN_AMT, CONTRACT_RESULT, CONTRACT_NO, 
-            PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, 
-            WARRANTOR, BIDDING_RANGE)
+            CONTRACT_RESULT, CONTRACT_NO, PAYMENT_DATE, 
+            LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, 
+            BIDDING_RANGE, MIN_AMT, CAL_MODE, 
+            COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, 
+            TARGET_TYPE, COUNTER_ORG, TRADER, 
+            VPAY_DATE, MPAY_DATE, M_INT_AMT, 
+            M_TRADE_AMT, CAP_DAYS, TRADE_ID, 
+            REQUEST_ID, REDO_TYPE, QUOTE_TYPE, 
+            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG)
         values (#{entrustId,jdbcType=VARCHAR}, #{settleSpreed,jdbcType=DECIMAL}, #{exerYield,jdbcType=DECIMAL}, 
             #{matureYield,jdbcType=DECIMAL}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, 
             #{termDays,jdbcType=DECIMAL}, #{termDays2,jdbcType=DECIMAL}, #{termType,jdbcType=VARCHAR}, 
@@ -167,9 +196,15 @@
             #{highExercPrice,jdbcType=DECIMAL}, #{lowExercPrice,jdbcType=DECIMAL}, #{exePrice,jdbcType=DECIMAL}, 
             #{knockPrice,jdbcType=DECIMAL}, #{exerciseType,jdbcType=VARCHAR}, #{execBaseDate,jdbcType=DATE}, 
             #{optFeePayType2,jdbcType=VARCHAR}, #{optFeePayType,jdbcType=VARCHAR}, #{rFinprodId,jdbcType=VARCHAR}, 
-            #{minAmt,jdbcType=DECIMAL}, #{contractResult,jdbcType=VARCHAR}, #{contractNo,jdbcType=VARCHAR}, 
-            #{paymentDate,jdbcType=DATE}, #{listingDate,jdbcType=DATE}, #{mainConsignee,jdbcType=VARCHAR}, 
-            #{warrantor,jdbcType=VARCHAR}, #{biddingRange,jdbcType=VARCHAR})
+            #{contractResult,jdbcType=VARCHAR}, #{contractNo,jdbcType=VARCHAR}, #{paymentDate,jdbcType=DATE}, 
+            #{listingDate,jdbcType=DATE}, #{mainConsignee,jdbcType=VARCHAR}, #{warrantor,jdbcType=VARCHAR}, 
+            #{biddingRange,jdbcType=VARCHAR}, #{minAmt,jdbcType=DECIMAL}, #{calMode,jdbcType=VARCHAR}, 
+            #{counterSeat,jdbcType=VARCHAR}, #{counterConNo,jdbcType=VARCHAR}, #{fullPrice,jdbcType=DECIMAL}, 
+            #{targetType,jdbcType=VARCHAR}, #{counterOrg,jdbcType=VARCHAR}, #{trader,jdbcType=VARCHAR}, 
+            #{vpayDate,jdbcType=DATE}, #{mpayDate,jdbcType=DATE}, #{mIntAmt,jdbcType=DECIMAL}, 
+            #{mTradeAmt,jdbcType=DECIMAL}, #{capDays,jdbcType=DECIMAL}, #{tradeId,jdbcType=VARCHAR}, 
+            #{requestId,jdbcType=VARCHAR}, #{redoType,jdbcType=VARCHAR}, #{quoteType,jdbcType=VARCHAR}, 
+            #{derivativeBsDir,jdbcType=VARCHAR}, #{derivativeOcFlag,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustAdd" >
         insert into ETR_ENTRUST_ADD
@@ -372,9 +407,6 @@
             <if test="rFinprodId != null" >
                 R_FINPROD_ID,
             </if>
-            <if test="minAmt != null" >
-                MIN_AMT,
-            </if>
             <if test="contractResult != null" >
                 CONTRACT_RESULT,
             </if>
@@ -395,6 +427,63 @@
             </if>
             <if test="biddingRange != null" >
                 BIDDING_RANGE,
+            </if>
+            <if test="minAmt != null" >
+                MIN_AMT,
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE,
+            </if>
+            <if test="counterSeat != null" >
+                COUNTER_SEAT,
+            </if>
+            <if test="counterConNo != null" >
+                COUNTER_CON_NO,
+            </if>
+            <if test="fullPrice != null" >
+                FULL_PRICE,
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE,
+            </if>
+            <if test="counterOrg != null" >
+                COUNTER_ORG,
+            </if>
+            <if test="trader != null" >
+                TRADER,
+            </if>
+            <if test="vpayDate != null" >
+                VPAY_DATE,
+            </if>
+            <if test="mpayDate != null" >
+                MPAY_DATE,
+            </if>
+            <if test="mIntAmt != null" >
+                M_INT_AMT,
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT,
+            </if>
+            <if test="capDays != null" >
+                CAP_DAYS,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="requestId != null" >
+                REQUEST_ID,
+            </if>
+            <if test="redoType != null" >
+                REDO_TYPE,
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE,
+            </if>
+            <if test="derivativeBsDir != null" >
+                DERIVATIVE_BS_DIR,
+            </if>
+            <if test="derivativeOcFlag != null" >
+                DERIVATIVE_OC_FLAG,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -596,9 +685,6 @@
             <if test="rFinprodId != null" >
                 #{rFinprodId,jdbcType=VARCHAR},
             </if>
-            <if test="minAmt != null" >
-                #{minAmt,jdbcType=DECIMAL},
-            </if>
             <if test="contractResult != null" >
                 #{contractResult,jdbcType=VARCHAR},
             </if>
@@ -620,6 +706,63 @@
             <if test="biddingRange != null" >
                 #{biddingRange,jdbcType=VARCHAR},
             </if>
+            <if test="minAmt != null" >
+                #{minAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="calMode != null" >
+                #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="counterSeat != null" >
+                #{counterSeat,jdbcType=VARCHAR},
+            </if>
+            <if test="counterConNo != null" >
+                #{counterConNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fullPrice != null" >
+                #{fullPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType != null" >
+                #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterOrg != null" >
+                #{counterOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="trader != null" >
+                #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="vpayDate != null" >
+                #{vpayDate,jdbcType=DATE},
+            </if>
+            <if test="mpayDate != null" >
+                #{mpayDate,jdbcType=DATE},
+            </if>
+            <if test="mIntAmt != null" >
+                #{mIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="capDays != null" >
+                #{capDays,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="requestId != null" >
+                #{requestId,jdbcType=VARCHAR},
+            </if>
+            <if test="redoType != null" >
+                #{redoType,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteType != null" >
+                #{quoteType,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeBsDir != null" >
+                #{derivativeBsDir,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeOcFlag != null" >
+                #{derivativeOcFlag,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustAdd" >
@@ -633,8 +776,11 @@
         PURCH_MODLE, PURCH_TYPE, IS_AGREEMENT_END, OUR_ENT_NUM, LENDIN_ENT_NUM, OUR_ABLE_NUM, 
         LENDIN_ABLE_NUM, SELL_ABLE_NUM, PB_EXPORTSTATUS, HIGH_HIND_PRICE, LOW_HIND_PRICE, 
         HIGH_EXERC_PRICE, LOW_EXERC_PRICE, EXE_PRICE, KNOCK_PRICE, EXERCISE_TYPE, EXEC_BASE_DATE, 
-        OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, MIN_AMT, CONTRACT_RESULT, CONTRACT_NO, 
-        PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE)
+        OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
+        PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
+        COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, VPAY_DATE, 
+        MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, QUOTE_TYPE, 
+        DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG)
         select ENTRUST_ID, SETTLE_SPREED, EXER_YIELD, MATURE_YIELD, 
             VDATE, MDATE, TERM_DAYS, TERM_DAYS2, TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, ASSET_TYPE, 
             ASSET_TYPE1, BUSI_PS, CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
@@ -645,8 +791,11 @@
             PURCH_MODLE, PURCH_TYPE, IS_AGREEMENT_END, OUR_ENT_NUM, LENDIN_ENT_NUM, OUR_ABLE_NUM, 
             LENDIN_ABLE_NUM, SELL_ABLE_NUM, PB_EXPORTSTATUS, HIGH_HIND_PRICE, LOW_HIND_PRICE, 
             HIGH_EXERC_PRICE, LOW_EXERC_PRICE, EXE_PRICE, KNOCK_PRICE, EXERCISE_TYPE, EXEC_BASE_DATE, 
-            OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, MIN_AMT, CONTRACT_RESULT, CONTRACT_NO, 
-            PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE
+            OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
+            PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
+            COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, VPAY_DATE, 
+            MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, QUOTE_TYPE, 
+            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG
              from ETR_ENTRUST_ADD
              where 1 = 1 and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </insert>
@@ -839,9 +988,6 @@
             <if test="rFinprodId != null" >
                 R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
             </if>
-            <if test="minAmt != null" >
-                MIN_AMT = #{minAmt,jdbcType=DECIMAL},
-            </if>
             <if test="contractResult != null" >
                 CONTRACT_RESULT = #{contractResult,jdbcType=VARCHAR},
             </if>
@@ -862,6 +1008,63 @@
             </if>
             <if test="biddingRange != null" >
                 BIDDING_RANGE = #{biddingRange,jdbcType=VARCHAR},
+            </if>
+            <if test="minAmt != null" >
+                MIN_AMT = #{minAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="counterSeat != null" >
+                COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
+            </if>
+            <if test="counterConNo != null" >
+                COUNTER_CON_NO = #{counterConNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fullPrice != null" >
+                FULL_PRICE = #{fullPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterOrg != null" >
+                COUNTER_ORG = #{counterOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="trader != null" >
+                TRADER = #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="vpayDate != null" >
+                VPAY_DATE = #{vpayDate,jdbcType=DATE},
+            </if>
+            <if test="mpayDate != null" >
+                MPAY_DATE = #{mpayDate,jdbcType=DATE},
+            </if>
+            <if test="mIntAmt != null" >
+                M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="capDays != null" >
+                CAP_DAYS = #{capDays,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="requestId != null" >
+                REQUEST_ID = #{requestId,jdbcType=VARCHAR},
+            </if>
+            <if test="redoType != null" >
+                REDO_TYPE = #{redoType,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeBsDir != null" >
+                DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeOcFlag != null" >
+                DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
             </if>
         </set>
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
@@ -930,14 +1133,32 @@
             OPT_FEE_PAY_TYPE2 = #{optFeePayType2,jdbcType=VARCHAR},
             OPT_FEE_PAY_TYPE = #{optFeePayType,jdbcType=VARCHAR},
             R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
-            MIN_AMT = #{minAmt,jdbcType=DECIMAL},
             CONTRACT_RESULT = #{contractResult,jdbcType=VARCHAR},
             CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
             PAYMENT_DATE = #{paymentDate,jdbcType=DATE},
             LISTING_DATE = #{listingDate,jdbcType=DATE},
             MAIN_CONSIGNEE = #{mainConsignee,jdbcType=VARCHAR},
             WARRANTOR = #{warrantor,jdbcType=VARCHAR},
-            BIDDING_RANGE = #{biddingRange,jdbcType=VARCHAR}
+            BIDDING_RANGE = #{biddingRange,jdbcType=VARCHAR},
+            MIN_AMT = #{minAmt,jdbcType=DECIMAL},
+            CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
+            COUNTER_CON_NO = #{counterConNo,jdbcType=VARCHAR},
+            FULL_PRICE = #{fullPrice,jdbcType=DECIMAL},
+            TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            COUNTER_ORG = #{counterOrg,jdbcType=VARCHAR},
+            TRADER = #{trader,jdbcType=VARCHAR},
+            VPAY_DATE = #{vpayDate,jdbcType=DATE},
+            MPAY_DATE = #{mpayDate,jdbcType=DATE},
+            M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+            M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            CAP_DAYS = #{capDays,jdbcType=DECIMAL},
+            TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            REQUEST_ID = #{requestId,jdbcType=VARCHAR},
+            REDO_TYPE = #{redoType,jdbcType=VARCHAR},
+            QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+            DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR}
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </update>
 </mapper>

@@ -618,4 +618,9 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
             throws Exception {
         return ptlManagementInfo001Service.selectAlllv(param);
     }
+
+    @PostMapping("getPtlAuthInfo")
+    public Map<String, Object>  getPtlAuthInfo(@RequestBody Map<String, Object> param){
+        return ptlManagementInfo001Service.getPtlAuthInfo(param);
+    }
 }

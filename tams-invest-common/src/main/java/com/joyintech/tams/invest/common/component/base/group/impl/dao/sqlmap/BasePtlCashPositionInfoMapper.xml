@@ -102,4 +102,13 @@
             )
         </if>
     </select>
+    
+    <select id="selectNextWorkDay" parameterType="map" resultType="java.util.Date">
+      	SELECT
+      		min(cdate)
+      	FROM VAL_VW_MST_HOLIDAY 
+      	WHERE CDATE > #{cdate,jdbcType=DATE}
+      	AND IS_HOLIDAY = '0'
+      	AND TRADE_CALENDAR_ID = #{tradeMarketId}
+    </select>
 </mapper>

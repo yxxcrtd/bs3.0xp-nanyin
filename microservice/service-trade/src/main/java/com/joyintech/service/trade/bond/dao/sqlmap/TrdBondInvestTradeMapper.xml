@@ -1381,4 +1381,15 @@
         </if>
         WHERE T2.EXECID = #{fedealno}
     </select>
+    
+        <select id="getAllFeeByFTradeId" resultType="com.joyintech.tams.common.base.entity.TrdTradeFeeDetail">
+		SELECT fee_type feeType, sum(fee_amt) feeAmt
+			FROM TRD_TRADE_FEE_DETAIL ttfd
+			WHERE TRADE_ID IN (
+				SELECT TRADE_ID FROM TRD_PRODUCT_DEAL tpd
+				WHERE F_TRADE_ID =#{fTradeId}
+					AND TRADE_STATUS ='01'
+					AND IS_CANCEL ='N')
+			GROUP BY fee_type
+	</select>
 </mapper>

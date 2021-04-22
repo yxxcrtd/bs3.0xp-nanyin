@@ -117,7 +117,7 @@ public class ClientUtil extends BaseService {
         return rsp;
     }
 
-    private static final Map<String, Object> head() {
+    public static final Map<String, Object> head() {
         Map<String, Object> head = new HashMap<>();
         // 设置 报文类型
         head.put(BussinessConstantRds.STDMSGTYPE, "0100");

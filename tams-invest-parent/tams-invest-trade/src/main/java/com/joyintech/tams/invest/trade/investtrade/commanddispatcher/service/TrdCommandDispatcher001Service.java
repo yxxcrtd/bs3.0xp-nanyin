@@ -73,6 +73,10 @@ public class TrdCommandDispatcher001Service extends CommonExportService<TrdComma
 		pageParam.put("entrustReturn", DictCodeList.委托状态_已退回.getValue());
 		String finprodType2Old = (String)pageParam.get("finprodType2");
 		String entrustStatus = (String)pageParam.get("entrustStatus");
+		if(StringUtil.isNotEmpty(pageParam.get("entrustStatus"))){
+			List<String> entrustStatusList = StringUtil.splitToList(",",(String)pageParam.get("entrustStatus"));
+			pageParam.put("entrustStatusList", entrustStatusList);
+		}
 		String assetType1 = (String)pageParam.get("assetType1");
 		pageParam.put("assetType1", StringUtil.splitToList(GlobalConstant.COMMA, assetType1));
 //		List<String> list1=new ArrayList<>();
@@ -192,10 +196,16 @@ public class TrdCommandDispatcher001Service extends CommonExportService<TrdComma
 		    }
 		}
 		//根据组合权限表添加检索权限
-		pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
-		return restTemplate.postForPage(
-	            ServiceApplication.TRADE_SERVICE_NAME + "/TrdCommandDispatcher001/findPage", pageParam,
-	            TrdCommandDispatcher001Dto.class);
+		if(StringUtil.isNotEmpty(SecurityUtil.getLoginUser())) {
+		    pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+		    return restTemplate.postForPage(
+		           ServiceApplication.TRADE_SERVICE_NAME + "/TrdCommandDispatcher001/findPage", pageParam,
+		           TrdCommandDispatcher001Dto.class);
+		} 
+		else {
+		    return new Page<TrdCommandDispatcher001Dto>();
+		}
+
 	}
 	
 	/**

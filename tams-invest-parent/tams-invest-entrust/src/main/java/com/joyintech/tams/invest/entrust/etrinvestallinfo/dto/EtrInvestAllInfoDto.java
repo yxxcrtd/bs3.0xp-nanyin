@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.entrust.etrinvestallinfo.dto;
 
 import java.math.BigDecimal;
 
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -71,11 +73,29 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 	 */
 	private String psStr;
 
+    /**
+     * 证券账户名称
+     */
+    private String secAcctName;
 	/**
 	 * PB是否已导出
 	 */
 	private String pbExportstatus;
 
+	/**
+	 * <功能详细描述>
+	 * @return
+	 */
+	public String getVdateStr(){
+		return DateUtil.format(super.getVdate());
+	}
+	/**
+	 * <功能详细描述>
+	 * @return
+	 */
+	public String getMdateStr(){
+		return DateUtil.format(super.getMdate());
+	}
 	/**
 	 * 获取 settleSpreed
 	 * 
@@ -247,6 +267,24 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 	public void setPsStr(String psStr) {
 		this.psStr = psStr;
 	}
+
+    /**
+     * 获取 secAcctName
+     * 
+     * @return secAcctName
+     */
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    /**
+     * 设置 secAcctName
+     * 
+     * @param secAcctName String
+     */
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
+    }
 
 	/**
 	 * 获取 PB是否已导出

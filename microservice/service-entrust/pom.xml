@@ -50,6 +50,28 @@
           <artifactId>component-base</artifactId>
           <version>0.0.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>framework-rabbitmq</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>framework-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.joyintech.component</groupId>
+            <artifactId>exchange-order</artifactId>
+            <version>2.0.0</version>
+        </dependency>
 	</dependencies>
 	<properties>
         <start-class>com.joyintech.service.entrust.EntrustApplication</start-class>

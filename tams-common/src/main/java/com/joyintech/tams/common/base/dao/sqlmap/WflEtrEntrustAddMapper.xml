@@ -93,6 +93,9 @@
         <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
         <result column="REQUEST_ID" property="requestId" jdbcType="VARCHAR" />
         <result column="REDO_TYPE" property="redoType" jdbcType="VARCHAR" />
+        <result column="DERIVATIVE_BS_DIR" property="derivativeBsDir" jdbcType="VARCHAR" />
+        <result column="DERIVATIVE_OC_FLAG" property="derivativeOcFlag" jdbcType="VARCHAR" />
+        <result column="QUOTE_TYPE" property="quoteType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ENTRUST_ID ENTRUST_ID, WORKFLOW_STATUS WORKFLOW_STATUS, SETTLE_SPREED SETTLE_SPREED, 
@@ -119,7 +122,8 @@
         COUNTER_SEAT COUNTER_SEAT, COUNTER_CON_NO COUNTER_CON_NO, FULL_PRICE FULL_PRICE, 
         TARGET_TYPE TARGET_TYPE, COUNTER_ORG COUNTER_ORG, TRADER TRADER, WORKFLOW_ID WORKFLOW_ID, 
         VPAY_DATE VPAY_DATE, MPAY_DATE MPAY_DATE, M_INT_AMT M_INT_AMT, M_TRADE_AMT M_TRADE_AMT, 
-        CAP_DAYS CAP_DAYS, TRADE_ID TRADE_ID, REQUEST_ID REQUEST_ID, REDO_TYPE REDO_TYPE
+        CAP_DAYS CAP_DAYS, TRADE_ID TRADE_ID, REQUEST_ID REQUEST_ID, REDO_TYPE REDO_TYPE, 
+        DERIVATIVE_BS_DIR DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG DERIVATIVE_OC_FLAG, QUOTE_TYPE QUOTE_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -161,8 +165,8 @@
         OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
         PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
         COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, WORKFLOW_ID, 
-        VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE
-        )
+        VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
+        DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE)
         select ENTRUST_ID, WORKFLOW_STATUS, SETTLE_SPREED, EXER_YIELD, 
             MATURE_YIELD, VDATE, MDATE, TERM_DAYS, TERM_DAYS2, TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, 
             ASSET_TYPE, ASSET_TYPE1, BUSI_PS, CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, CREATE_DEPT, 
@@ -176,8 +180,8 @@
             OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
             PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
             COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
-            VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE
-            
+            VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
+            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE
              from WFL_ETR_ENTRUST_ADD
              where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
@@ -445,6 +449,15 @@
             <if test="redoType != null" >
                 REDO_TYPE = #{redoType,jdbcType=VARCHAR},
             </if>
+            <if test="derivativeBsDir != null" >
+                DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeOcFlag != null" >
+                DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            </if>
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
@@ -537,7 +550,10 @@
         CAP_DAYS = #{capDays,jdbcType=DECIMAL},
         TRADE_ID = #{tradeId,jdbcType=VARCHAR},
         REQUEST_ID = #{requestId,jdbcType=VARCHAR},
-        REDO_TYPE = #{redoType,jdbcType=VARCHAR}
+        REDO_TYPE = #{redoType,jdbcType=VARCHAR},
+        DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+        DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
+        QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR}
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
@@ -571,7 +587,8 @@
             TRADER, WORKFLOW_ID, VPAY_DATE, 
             MPAY_DATE, M_INT_AMT, M_TRADE_AMT, 
             CAP_DAYS, TRADE_ID, REQUEST_ID, 
-            REDO_TYPE)
+            REDO_TYPE, DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, 
+            QUOTE_TYPE)
         values (#{entrustId,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, #{settleSpreed,jdbcType=DECIMAL}, 
             #{exerYield,jdbcType=DECIMAL}, #{matureYield,jdbcType=DECIMAL}, #{vdate,jdbcType=DATE}, 
             #{mdate,jdbcType=DATE}, #{termDays,jdbcType=DECIMAL}, #{termDays2,jdbcType=DECIMAL}, 
@@ -602,7 +619,8 @@
             #{trader,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{vpayDate,jdbcType=DATE}, 
             #{mpayDate,jdbcType=DATE}, #{mIntAmt,jdbcType=DECIMAL}, #{mTradeAmt,jdbcType=DECIMAL}, 
             #{capDays,jdbcType=DECIMAL}, #{tradeId,jdbcType=VARCHAR}, #{requestId,jdbcType=VARCHAR}, 
-            #{redoType,jdbcType=VARCHAR})
+            #{redoType,jdbcType=VARCHAR}, #{derivativeBsDir,jdbcType=VARCHAR}, #{derivativeOcFlag,jdbcType=VARCHAR}, 
+            #{quoteType,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
         insert into WFL_ETR_ENTRUST_ADD
@@ -880,6 +898,15 @@
             <if test="redoType != null" >
                 REDO_TYPE,
             </if>
+            <if test="derivativeBsDir != null" >
+                DERIVATIVE_BS_DIR,
+            </if>
+            <if test="derivativeOcFlag != null" >
+                DERIVATIVE_OC_FLAG,
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="entrustId != null" >
@@ -1155,6 +1182,15 @@
             <if test="redoType != null" >
                 #{redoType,jdbcType=VARCHAR},
             </if>
+            <if test="derivativeBsDir != null" >
+                #{derivativeBsDir,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeOcFlag != null" >
+                #{derivativeOcFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteType != null" >
+                #{quoteType,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
@@ -1171,8 +1207,8 @@
         OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
         PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
         COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, WORKFLOW_ID, 
-        VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE
-        )
+        VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
+        DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE)
         select ENTRUST_ID, WORKFLOW_STATUS, SETTLE_SPREED, EXER_YIELD, 
             MATURE_YIELD, VDATE, MDATE, TERM_DAYS, TERM_DAYS2, TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, 
             ASSET_TYPE, ASSET_TYPE1, BUSI_PS, CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, CREATE_DEPT, 
@@ -1186,8 +1222,8 @@
             OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
             PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
             COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
-            VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE
-            
+            VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
+            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE
              from WFL_ETR_ENTRUST_ADD
              where 1 = 1 and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR} and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </insert>
@@ -1452,6 +1488,15 @@
             <if test="redoType != null" >
                 REDO_TYPE = #{redoType,jdbcType=VARCHAR},
             </if>
+            <if test="derivativeBsDir != null" >
+                DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeOcFlag != null" >
+                DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            </if>
         </set>
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
@@ -1543,7 +1588,10 @@
             CAP_DAYS = #{capDays,jdbcType=DECIMAL},
             TRADE_ID = #{tradeId,jdbcType=VARCHAR},
             REQUEST_ID = #{requestId,jdbcType=VARCHAR},
-            REDO_TYPE = #{redoType,jdbcType=VARCHAR}
+            REDO_TYPE = #{redoType,jdbcType=VARCHAR},
+            DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+            DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
+            QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR}
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
           and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
     </update>

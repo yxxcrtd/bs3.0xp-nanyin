@@ -11,6 +11,15 @@
         </if>
     </delete>
     
+    <delete id="deleteTodayStaSecPosData">
+        delete from ETR_SEC_POSITION where CDATE = #{batchDate,jdbcType=DATE} and FINPROD_ID = 'XN_PRODID999'
+        <if test="productIdList != null and !productIdList.isEmpty()">
+        and (
+            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+            )
+        </if>
+    </delete>
+    
     <insert id="insertTodaySecPosData">
         insert into ETR_SEC_POSITION (PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, 
             BRANCH, HODING_TYPE, CDATE, 
@@ -55,4 +64,97 @@
           targetTable.PORTFOLIO_ID, targetTable.SEC_ACCT_ID, targetTable.FINPROD_ID, targetTable.BRANCH, 
           targetTable.HODING_TYPE, targetTable.CCY, targetTable.INV_AIM
     </insert>
+
+<insert id="insertTodayStaSecPosData">
+  insert into etr_sec_position
+  (portfolio_id,
+   sec_acct_id,
+   finprod_id,
+   branch,
+   inv_aim,
+   hoding_type,
+   cdate,
+   amount,
+   ccy,
+   p_finprod_id,
+   face_value,
+   create_user,
+   create_dept,
+   create_time,
+   update_user,
+   update_time)
+  select temp.portfolio_id,
+         temp.sec_acct_id,
+         'XN_PRODID999' as finprod_id,
+         temp.branch,
+         '999999' as inv_aim,
+         'E01' as hoding_type,
+         trunc(sysdate) cdate,
+         sum(temp.amount) amount,
+         'CNY' ccy,
+         null p_finprod_id,
+         null face_value,
+         'system' create_user,
+         null create_dept,
+         cast (sysdate as timestamp) create_time,
+         'system' update_user,
+         cast (sysdate as timestamp) update_time
+    from (select temp.portfolio_id,
+                 temp.sec_acct_id,
+                 detail.branch,
+                 sum((case when temp.ps = 'T68' then detail.amt else -1 * detail.amt end) * nvl(fscr.scale, 1)) as amount
+            from trd_temp_stasec_flow temp
+           inner join trd_temp_stasec_flow_detail detail
+              on temp.seqno = detail.seqno
+            left join fin_stdsec_converse_radio fscr
+              on detail.finprod_id = fscr.finprod_id
+             and fscr.vdate = #{batchDate,jdbcType=DATE}
+           <![CDATA[where temp.cdate <= #{batchDate,jdbcType=DATE}]]>
+          <if test="productIdList != null and !productIdList.isEmpty()">
+	                and (
+	            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+	            )
+	        </if>
+           group by temp.portfolio_id, temp.sec_acct_id, detail.branch
+          union all
+          select temp.portfolio_id,
+                 temp.sec_acct_id,
+                 detail.branch,
+                 sum((case when temp.ps = 'T68' then detail.amt else -1 * detail.amt end) * nvl(fscr.scale, 1)) as amount
+            from trd_stasec_flow temp
+           inner join trd_stasec_flow_detail detail
+              on temp.seqno = detail.seqno
+            left join fin_stdsec_converse_radio fscr
+              on detail.finprod_id = fscr.finprod_id
+             and fscr.vdate = #{batchDate,jdbcType=DATE}
+           <![CDATA[where temp.cdate <= #{batchDate,jdbcType=DATE}]]>
+          <if test="productIdList != null and !productIdList.isEmpty()">
+	                and (
+	            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+	            )
+	        </if>
+           group by temp.portfolio_id, temp.sec_acct_id, detail.branch
+          union all
+          select etr_cpf.portfolio_id,
+                 etr_cpf.sec_acct_id,
+                 etr_cpf.branch,
+                 sum(etr_cpf.amount) as amount
+            from etr_sec_position_flow etr_cpf
+           where etr_cpf.finprod_id = 'XN_PRODID999'
+                <if test="productIdList != null and !productIdList.isEmpty()">
+	                and (
+	            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+	            )
+	        </if>
+	         and etr_cpf.hoding_type = 'E01'
+             and etr_cpf.trade_id not in
+                 (select ee.entrust_id from etr_entrust ee where ee.ps in ('T68', 'T69')
+                  union
+                  select tsf.seqno from trd_stasec_flow tsf)
+           group by etr_cpf.portfolio_id,
+                    etr_cpf.sec_acct_id,
+                    etr_cpf.branch) temp
+   group by temp.portfolio_id, temp.sec_acct_id, temp.branch
+    </insert>
+
 </mapper>

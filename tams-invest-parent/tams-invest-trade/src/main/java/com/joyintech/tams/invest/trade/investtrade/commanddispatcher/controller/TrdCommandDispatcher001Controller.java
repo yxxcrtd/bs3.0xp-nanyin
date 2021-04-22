@@ -35,6 +35,11 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.trade.investtrade.commanddispatcher.dto.TrdCommandDispatcher001Dto;
 import com.joyintech.tams.invest.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
 
@@ -61,8 +66,10 @@ public class TrdCommandDispatcher001Controller extends BaseController{
 	@RequestMapping(PAGE_INIT)
 	public String init(Model model) {
 		// TODO Auto-generated method stub
-	    
-		setSelectOptionToModel(model,DictCode.币种,DictCode.委托状态,DictCode.平安资产类型,DictCode.交易场所,DictCode.交易方向);
+	    // modify by dubaojun 2020-06-29 上海农商行增加是否进入审批流程查询条件 start
+		setSelectOptionToModel(model,DictCode.币种,DictCode.委托状态,DictCode.平安资产类型,DictCode.交易场所,DictCode.交易方向,
+		        DictCode.是否);
+        // modify by dubaojun 2020-06-29 上海农商行增加是否进入审批流程查询条件 end
 		
 		List<SelectOptionDto> options = new ArrayList<>();
         SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.WIND一级分类_含债券一级分类等, null);
@@ -99,6 +106,25 @@ public class TrdCommandDispatcher001Controller extends BaseController{
         model.addAttribute("PINAN_ASSET_TYPE_F12", DictCodeListExt2.平安资产类型_债券借贷.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F16", DictCodeListExt2.平安资产类型_利率互换.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F36", DictCodeListExt1.金融产品类型_投管用_立项指令.getValue());
+        model.addAttribute("PINAN_ASSET_TYPE_F19", DictCodeListExt3.平安资产类型_权益类资产.getValue());
+        model.addAttribute("PINAN_ASSET_TYPE_F20", DictCodeListExt3.平安资产类型_期货.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_01", DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_02", DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_03", DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_04", DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_05", DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_06", DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_17", DictCodeListExt3.上农商_指令业务类型_协议回购首期指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_18", DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_19", DictCodeListExt3.上农商_指令业务类型_协议回购到期购回指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_20", DictCodeListExt3.上农商_指令业务类型_协议回购到期续做指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_21", DictCodeListExt3.上农商_指令业务类型_协议回购中途换券指令.getValue());
+        model.addAttribute("ENTRUST_BUSS_TYPE_22", DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue());
+
+        model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        model.addAttribute("TRADE_PLACE_12", DictCodeListExt1.交易场所_中国金融期货交易所.getValue());
+        
         //add by gejiaao start
         model.addAttribute("PINAN_ASSET_TYPE_F17", DictCodeListExt2.平安资产类型_一级市场债.getValue());
         model.addAttribute("PS_T04", DictCodeList.交易方向_申购.getValue());
@@ -214,7 +240,6 @@ public class TrdCommandDispatcher001Controller extends BaseController{
      * 校验
      * <功能详细描述>
      * @param dto
-     * @param result
      * @return
      * @see
      * @since 1.0

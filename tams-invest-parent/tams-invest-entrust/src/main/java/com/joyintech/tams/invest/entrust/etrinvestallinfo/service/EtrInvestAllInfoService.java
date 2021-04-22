@@ -88,6 +88,11 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
             List<String> dateList =StringUtil.splitToList(",", (String)param.get("finprodType2"));
             param.put("finprodType2List",dateList);
         }
+
+        if(StringUtil.isNotEmpty(param.get("entrustStatus"))){
+            List<String> entrustStatusList = StringUtil.splitToList(",",(String)param.get("entrustStatus"));
+            param.put("entrustStatusList", entrustStatusList);
+        }
         //交易方向为利率互换 转换
         if(StringUtil.isNotEmpty((String)param.get("ps"))){
         	if( StringUtil.equals((String)param.get("ps") , DictCode.互换方式.getValue()+DictCodeListExt2.互换方式_收取固定.getValue()) ){

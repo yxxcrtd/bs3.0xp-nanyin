@@ -72,12 +72,12 @@ public class EtrEntrustAdd extends BaseEntity {
     private String assetType;
 
     /**
-     * 资产二级分类，委托页面的债券一级分类
+     * 资产一级分类，委托页面的债券一级分类
      */
     private String assetType1;
 
     /**
-     * 回购/拆借/互换方向，正回购、逆回购、拆入、拆出、收取固定、收取浮动
+     * 回购/拆借方向，正回购、逆回购、拆入、拆出
      */
     private String busiPs;
 
@@ -92,13 +92,13 @@ public class EtrEntrustAdd extends BaseEntity {
     private String secAcctId;
 
     /**
-     * 首次单位净价
+     * null
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal firstUnitCprice;
 
     /**
-     * 首次单位净价2，输入净价范围时使用
+     * null
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal firstUnitCprice2;
@@ -109,7 +109,7 @@ public class EtrEntrustAdd extends BaseEntity {
     private String exchangePledge;
 
     /**
-     * 外汇交易类型，人民币外汇、外币对
+     * 外汇交易类型
      */
     private String excDealType;
 
@@ -151,17 +151,17 @@ public class EtrEntrustAdd extends BaseEntity {
     private String corCurAcct;
 
     /**
-     * 人民币货币账户
+     * 人民币账户
      */
     private String cnyAcct;
 
     /**
-     * 起息日2，输入到期日范围时使用
+     * 起息日2
      */
     private Date vdate2;
 
     /**
-     * 到期日2，输入到期日范围时使用
+     * 到期日2
      */
     private Date mdate2;
 
@@ -171,22 +171,22 @@ public class EtrEntrustAdd extends BaseEntity {
     private String excFxsTermType;
 
     /**
-     * 缴款方式，一级分销、一级缴款、二级交易
+     * 缴款方式
      */
     private String payType;
 
     /**
-     * 资产三级分类，委托页面的债券一级分类
+     * 个性分类三
      */
     private String assetType10;
 
     /**
-     * 资产四级分类，委托页面的债券一级分类
+     * 个性分类四
      */
     private String assetType11;
 
     /**
-     * 交易方式，竞价交易/大宗交易/盘后定价交易/大宗交易专场/转仓交易
+     * 交易方式
      */
     private String dealMode;
 
@@ -227,12 +227,12 @@ public class EtrEntrustAdd extends BaseEntity {
     private BigDecimal expConNum;
 
     /**
-     * 申购方式，网上申购、网下申购
+     * 申购方式
      */
     private String purchModle;
 
     /**
-     * 申购类型，优先配售、普通申购
+     * 申购类型
      */
     private String purchType;
 
@@ -272,7 +272,7 @@ public class EtrEntrustAdd extends BaseEntity {
     private BigDecimal sellAbleNum;
 
     /**
-     * PB导出状态
+     * PB是否已导出
      */
     private String pbExportstatus;
 
@@ -338,12 +338,6 @@ public class EtrEntrustAdd extends BaseEntity {
     private String rFinprodId;
 
     /**
-     * 最低成交金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal minAmt;
-
-    /**
      * 合同签署结果
      */
     private String contractResult;
@@ -378,36 +372,11 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     private String biddingRange;
 
-
     /**
-     * 管理人
+     * 最低成交金额
      */
-    private String manager;
-
-    /**
-     * 审批编号
-     */
-    private String reviewid;
-
-    /**
-     * 资产四级类型
-     */
-    private String type11;
-
-    /**
-     * 资产五级类型
-     */
-    private String type12;
-
-    /**
-     * 放款先决条件审查:Y-通过，N-不通过
-     */
-    private String isCredit;
-
-    /**
-     * 审查意见
-     */
-    private String creditRemark;
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal minAmt;
 
     /**
      * 计算方式，净价，全价，到期收益率
@@ -444,16 +413,6 @@ public class EtrEntrustAdd extends BaseEntity {
      * 本方交易员
      */
     private String trader;
-
-    /**
-     * 衍生品买卖方向
-     */
-    private String derivativeBsDir;
-
-    /**
-     * 衍生品开平仓标志
-     */
-    private String derivativeOcFlag;
 
     /**
      * 首次交收日
@@ -494,14 +453,24 @@ public class EtrEntrustAdd extends BaseEntity {
     private String requestId;
 
     /**
+     * 续做类型
+     */
+    private String redoType;
+
+    /**
      * 报价方式
      */
     private String quoteType;
 
     /**
-     * 续做类型
+     * 衍生品买卖方向
      */
-    private String redoType;
+    private String derivativeBsDir;
+
+    /**
+     * 衍生品开平仓标志
+     */
+    private String derivativeOcFlag;
 
     /**
      * 取得 委托代码
@@ -699,32 +668,32 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 资产二级分类，委托页面的债券一级分类
-     * @return 资产二级分类，委托页面的债券一级分类
+     * 取得 资产一级分类，委托页面的债券一级分类
+     * @return 资产一级分类，委托页面的债券一级分类
      */
     public String getAssetType1() {
         return assetType1;
     }
 
     /**
-     * 设置 资产二级分类，委托页面的债券一级分类
-     * @param assetType1 资产二级分类，委托页面的债券一级分类
+     * 设置 资产一级分类，委托页面的债券一级分类
+     * @param assetType1 资产一级分类，委托页面的债券一级分类
      */
     public void setAssetType1(String assetType1) {
         this.assetType1 = assetType1 == null ? null : assetType1.trim();
     }
 
     /**
-     * 取得 回购/拆借/互换方向，正回购、逆回购、拆入、拆出、收取固定、收取浮动
-     * @return 回购/拆借/互换方向，正回购、逆回购、拆入、拆出、收取固定、收取浮动
+     * 取得 回购/拆借方向，正回购、逆回购、拆入、拆出
+     * @return 回购/拆借方向，正回购、逆回购、拆入、拆出
      */
     public String getBusiPs() {
         return busiPs;
     }
 
     /**
-     * 设置 回购/拆借/互换方向，正回购、逆回购、拆入、拆出、收取固定、收取浮动
-     * @param busiPs 回购/拆借/互换方向，正回购、逆回购、拆入、拆出、收取固定、收取浮动
+     * 设置 回购/拆借方向，正回购、逆回购、拆入、拆出
+     * @param busiPs 回购/拆借方向，正回购、逆回购、拆入、拆出
      */
     public void setBusiPs(String busiPs) {
         this.busiPs = busiPs == null ? null : busiPs.trim();
@@ -764,32 +733,32 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 首次单位净价
-     * @return 首次单位净价
+     * 取得 null
+     * @return null
      */
     public BigDecimal getFirstUnitCprice() {
         return firstUnitCprice;
     }
 
     /**
-     * 设置 首次单位净价
-     * @param firstUnitCprice 首次单位净价
+     * 设置 null
+     * @param firstUnitCprice null
      */
     public void setFirstUnitCprice(BigDecimal firstUnitCprice) {
         this.firstUnitCprice = firstUnitCprice;
     }
 
     /**
-     * 取得 首次单位净价2，输入净价范围时使用
-     * @return 首次单位净价2，输入净价范围时使用
+     * 取得 null
+     * @return null
      */
     public BigDecimal getFirstUnitCprice2() {
         return firstUnitCprice2;
     }
 
     /**
-     * 设置 首次单位净价2，输入净价范围时使用
-     * @param firstUnitCprice2 首次单位净价2，输入净价范围时使用
+     * 设置 null
+     * @param firstUnitCprice2 null
      */
     public void setFirstUnitCprice2(BigDecimal firstUnitCprice2) {
         this.firstUnitCprice2 = firstUnitCprice2;
@@ -812,16 +781,16 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 外汇交易类型，人民币外汇、外币对
-     * @return 外汇交易类型，人民币外汇、外币对
+     * 取得 外汇交易类型
+     * @return 外汇交易类型
      */
     public String getExcDealType() {
         return excDealType;
     }
 
     /**
-     * 设置 外汇交易类型，人民币外汇、外币对
-     * @param excDealType 外汇交易类型，人民币外汇、外币对
+     * 设置 外汇交易类型
+     * @param excDealType 外汇交易类型
      */
     public void setExcDealType(String excDealType) {
         this.excDealType = excDealType == null ? null : excDealType.trim();
@@ -940,32 +909,32 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 人民币货币账户
-     * @return 人民币货币账户
+     * 取得 人民币账户
+     * @return 人民币账户
      */
     public String getCnyAcct() {
         return cnyAcct;
     }
 
     /**
-     * 设置 人民币货币账户
-     * @param cnyAcct 人民币货币账户
+     * 设置 人民币账户
+     * @param cnyAcct 人民币账户
      */
     public void setCnyAcct(String cnyAcct) {
         this.cnyAcct = cnyAcct == null ? null : cnyAcct.trim();
     }
 
     /**
-     * 取得 起息日2，输入到期日范围时使用
-     * @return 起息日2，输入到期日范围时使用
+     * 取得 起息日2
+     * @return 起息日2
      */
     public Date getVdate2() {
         return vdate2;
     }
 
     /**
-     * 设置 起息日2，输入到期日范围时使用
-     * @param vdate2 起息日2，输入到期日范围时使用
+     * 设置 起息日2
+     * @param vdate2 起息日2
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setVdate2(Date vdate2) {
@@ -973,16 +942,16 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 到期日2，输入到期日范围时使用
-     * @return 到期日2，输入到期日范围时使用
+     * 取得 到期日2
+     * @return 到期日2
      */
     public Date getMdate2() {
         return mdate2;
     }
 
     /**
-     * 设置 到期日2，输入到期日范围时使用
-     * @param mdate2 到期日2，输入到期日范围时使用
+     * 设置 到期日2
+     * @param mdate2 到期日2
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setMdate2(Date mdate2) {
@@ -1006,64 +975,64 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 缴款方式，一级分销、一级缴款、二级交易
-     * @return 缴款方式，一级分销、一级缴款、二级交易
+     * 取得 缴款方式
+     * @return 缴款方式
      */
     public String getPayType() {
         return payType;
     }
 
     /**
-     * 设置 缴款方式，一级分销、一级缴款、二级交易
-     * @param payType 缴款方式，一级分销、一级缴款、二级交易
+     * 设置 缴款方式
+     * @param payType 缴款方式
      */
     public void setPayType(String payType) {
         this.payType = payType == null ? null : payType.trim();
     }
 
     /**
-     * 取得 资产三级分类，委托页面的债券一级分类
-     * @return 资产三级分类，委托页面的债券一级分类
+     * 取得 个性分类三
+     * @return 个性分类三
      */
     public String getAssetType10() {
         return assetType10;
     }
 
     /**
-     * 设置 资产三级分类，委托页面的债券一级分类
-     * @param assetType10 资产三级分类，委托页面的债券一级分类
+     * 设置 个性分类三
+     * @param assetType10 个性分类三
      */
     public void setAssetType10(String assetType10) {
         this.assetType10 = assetType10 == null ? null : assetType10.trim();
     }
 
     /**
-     * 取得 资产四级分类，委托页面的债券一级分类
-     * @return 资产四级分类，委托页面的债券一级分类
+     * 取得 个性分类四
+     * @return 个性分类四
      */
     public String getAssetType11() {
         return assetType11;
     }
 
     /**
-     * 设置 资产四级分类，委托页面的债券一级分类
-     * @param assetType11 资产四级分类，委托页面的债券一级分类
+     * 设置 个性分类四
+     * @param assetType11 个性分类四
      */
     public void setAssetType11(String assetType11) {
         this.assetType11 = assetType11 == null ? null : assetType11.trim();
     }
 
     /**
-     * 取得 交易方式，竞价交易/大宗交易/盘后定价交易/大宗交易专场/转仓交易
-     * @return 交易方式，竞价交易/大宗交易/盘后定价交易/大宗交易专场/转仓交易
+     * 取得 交易方式
+     * @return 交易方式
      */
     public String getDealMode() {
         return dealMode;
     }
 
     /**
-     * 设置 交易方式，竞价交易/大宗交易/盘后定价交易/大宗交易专场/转仓交易
-     * @param dealMode 交易方式，竞价交易/大宗交易/盘后定价交易/大宗交易专场/转仓交易
+     * 设置 交易方式
+     * @param dealMode 交易方式
      */
     public void setDealMode(String dealMode) {
         this.dealMode = dealMode == null ? null : dealMode.trim();
@@ -1166,32 +1135,32 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 申购方式，网上申购、网下申购
-     * @return 申购方式，网上申购、网下申购
+     * 取得 申购方式
+     * @return 申购方式
      */
     public String getPurchModle() {
         return purchModle;
     }
 
     /**
-     * 设置 申购方式，网上申购、网下申购
-     * @param purchModle 申购方式，网上申购、网下申购
+     * 设置 申购方式
+     * @param purchModle 申购方式
      */
     public void setPurchModle(String purchModle) {
         this.purchModle = purchModle == null ? null : purchModle.trim();
     }
 
     /**
-     * 取得 申购类型，优先配售、普通申购
-     * @return 申购类型，优先配售、普通申购
+     * 取得 申购类型
+     * @return 申购类型
      */
     public String getPurchType() {
         return purchType;
     }
 
     /**
-     * 设置 申购类型，优先配售、普通申购
-     * @param purchType 申购类型，优先配售、普通申购
+     * 设置 申购类型
+     * @param purchType 申购类型
      */
     public void setPurchType(String purchType) {
         this.purchType = purchType == null ? null : purchType.trim();
@@ -1294,16 +1263,16 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 PB导出状态
-     * @return PB导出状态
+     * 取得 PB是否已导出
+     * @return PB是否已导出
      */
     public String getPbExportstatus() {
         return pbExportstatus;
     }
 
     /**
-     * 设置 PB导出状态
-     * @param pbExportstatus PB导出状态
+     * 设置 PB是否已导出
+     * @param pbExportstatus PB是否已导出
      */
     public void setPbExportstatus(String pbExportstatus) {
         this.pbExportstatus = pbExportstatus == null ? null : pbExportstatus.trim();
@@ -1487,22 +1456,6 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 最低成交金额
-     * @return 最低成交金额
-     */
-    public BigDecimal getMinAmt() {
-        return minAmt;
-    }
-
-    /**
-     * 设置 最低成交金额
-     * @param minAmt 最低成交金额
-     */
-    public void setMinAmt(BigDecimal minAmt) {
-        this.minAmt = minAmt;
-    }
-
-    /**
      * 取得 合同签署结果
      * @return 合同签署结果
      */
@@ -1616,101 +1569,20 @@ public class EtrEntrustAdd extends BaseEntity {
         this.biddingRange = biddingRange == null ? null : biddingRange.trim();
     }
 
-
     /**
-     * 取得 管理人
-     * @return 管理人
+     * 取得 最低成交金额
+     * @return 最低成交金额
      */
-    public String getManager() {
-        return manager;
+    public BigDecimal getMinAmt() {
+        return minAmt;
     }
 
     /**
-     * 设置 管理人
-     * @param manager 管理人
+     * 设置 最低成交金额
+     * @param minAmt 最低成交金额
      */
-    public void setManager(String manager) {
-        this.manager = manager == null ? null : manager.trim();
-    }
-
-    /**
-     * 取得 审批编号
-     * @return 审批编号
-     */
-    public String getReviewid() {
-        return reviewid;
-    }
-
-    /**
-     * 设置 审批编号
-     * @param reviewid 审批编号
-     */
-    public void setReviewid(String reviewid) {
-        this.reviewid = reviewid == null ? null : reviewid.trim();
-    }
-
-    /**
-     * 取得 资产四级类型
-     * @return 资产四级类型
-     */
-    public String getType11() {
-        return type11;
-    }
-
-    /**
-     * 设置 资产四级类型
-     * @param type11 资产四级类型
-     */
-    public void setType11(String type11) {
-        this.type11 = type11 == null ? null : type11.trim();
-    }
-
-    /**
-     * 取得 资产五级类型
-     * @return 资产五级类型
-     */
-    public String getType12() {
-        return type12;
-    }
-
-    /**
-     * 设置 资产五级类型
-     * @param type12 资产五级类型
-     */
-    public void setType12(String type12) {
-        this.type12 = type12 == null ? null : type12.trim();
-    }
-
-    /**
-     * 取得 放款先决条件审查:Y-通过，N-不通过
-     * @return 放款先决条件审查:Y-通过，N-不通过
-     */
-    public String getIsCredit() {
-        return isCredit;
-    }
-
-    /**
-     * 设置 放款先决条件审查:Y-通过，N-不通过
-     * @param isCredit 放款先决条件审查:Y-通过，N-不通过
-     */
-    public void setIsCredit(String isCredit) {
-        this.isCredit = isCredit == null ? null : isCredit.trim();
-    }
-
-    /**
-     * 取得 审查意见
-     * @return 审查意见
-     */
-    public String getCreditRemark() {
-        return creditRemark;
-    }
-
-    /**
-     * 设置 审查意见
-     * @param creditRemark 审查意见
-     */
-    public void setCreditRemark(String creditRemark) {
-        this.creditRemark = creditRemark == null ? null : creditRemark.trim();
+    public void setMinAmt(BigDecimal minAmt) {
+        this.minAmt = minAmt;
     }
 
     /**
@@ -1823,38 +1695,6 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     public void setTrader(String trader) {
         this.trader = trader == null ? null : trader.trim();
-    }
-
-    /**
-     * 取得 衍生品买卖方向
-     * @return 衍生品买卖方向
-     */
-    public String getDerivativeBsDir() {
-        return derivativeBsDir;
-    }
-
-    /**
-     * 设置 衍生品买卖方向
-     * @param derivativeBsDir 衍生品买卖方向
-     */
-    public void setDerivativeBsDir(String derivativeBsDir) {
-        this.derivativeBsDir = derivativeBsDir == null ? null : derivativeBsDir.trim();
-    }
-
-    /**
-     * 取得 衍生品开平仓标志
-     * @return 衍生品开平仓标志
-     */
-    public String getDerivativeOcFlag() {
-        return derivativeOcFlag;
-    }
-
-    /**
-     * 设置 衍生品开平仓标志
-     * @param derivativeOcFlag 衍生品开平仓标志
-     */
-    public void setDerivativeOcFlag(String derivativeOcFlag) {
-        this.derivativeOcFlag = derivativeOcFlag == null ? null : derivativeOcFlag.trim();
     }
 
     /**
@@ -1972,6 +1812,22 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
+     * 取得 续做类型
+     * @return 续做类型
+     */
+    public String getRedoType() {
+        return redoType;
+    }
+
+    /**
+     * 设置 续做类型
+     * @param redoType 续做类型
+     */
+    public void setRedoType(String redoType) {
+        this.redoType = redoType == null ? null : redoType.trim();
+    }
+
+    /**
      * 取得 报价方式
      * @return 报价方式
      */
@@ -1988,18 +1844,34 @@ public class EtrEntrustAdd extends BaseEntity {
     }
 
     /**
-     * 取得 续做类型
-     * @return 续做类型
+     * 取得 衍生品买卖方向
+     * @return 衍生品买卖方向
      */
-    public String getRedoType() {
-        return redoType;
+    public String getDerivativeBsDir() {
+        return derivativeBsDir;
     }
 
     /**
-     * 设置 续做类型
-     * @param redoType 续做类型
+     * 设置 衍生品买卖方向
+     * @param derivativeBsDir 衍生品买卖方向
      */
-    public void setRedoType(String redoType) {
-        this.redoType = redoType == null ? null : redoType.trim();
+    public void setDerivativeBsDir(String derivativeBsDir) {
+        this.derivativeBsDir = derivativeBsDir == null ? null : derivativeBsDir.trim();
+    }
+
+    /**
+     * 取得 衍生品开平仓标志
+     * @return 衍生品开平仓标志
+     */
+    public String getDerivativeOcFlag() {
+        return derivativeOcFlag;
+    }
+
+    /**
+     * 设置 衍生品开平仓标志
+     * @param derivativeOcFlag 衍生品开平仓标志
+     */
+    public void setDerivativeOcFlag(String derivativeOcFlag) {
+        this.derivativeOcFlag = derivativeOcFlag == null ? null : derivativeOcFlag.trim();
     }
 }

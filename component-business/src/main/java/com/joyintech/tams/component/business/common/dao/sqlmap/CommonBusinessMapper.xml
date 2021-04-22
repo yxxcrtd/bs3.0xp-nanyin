@@ -136,4 +136,10 @@
 		) WHERE ROWNUM = 1
 	</select>
     <!-- 资产类型改为授权类型 add by renping 2019-08-19  end -->
+    <select id="selectFaceValue" resultType="java.math.BigDecimal">
+        SELECT 100 - sum(nvl(PRIN_AMT,0 ))
+        FROM FIN_CASH_PLAN
+        WHERE FINPROD_ID=#{finprodId}
+        AND TO_DATE(#{sysDate}, 'yyyy-MM-dd') >= MDATE
+    </select>
 </mapper>

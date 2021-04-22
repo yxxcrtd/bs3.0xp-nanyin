@@ -103,6 +103,14 @@ public class TrdCommandDispatcher001Dto extends EtrEntrust{
 	private String distributeRule;//分发规则
 	private String distributeParameter;//分发参数
 
+    /**
+	 * 交易端接收到分发的指令后，是否要自动接收 1.不传该字段，不自动接收 2.Y-自动接收 3.N-不自动接收
+	 */
+    private String isAutoReceive;
+	/**
+	 * 申购方式
+	 */
+	private String purchModle;
 	public String getDistributeRule() {
 		return distributeRule;
 	}
@@ -202,8 +210,8 @@ public class TrdCommandDispatcher001Dto extends EtrEntrust{
         return userName;
     }
     /**
-     * 设置 trader
-     * @param trader trader
+     * 设置 userName
+     * @param userName userName
      */
     public void setUserName(String userName) {
         this.userName = userName;
@@ -344,5 +352,20 @@ public class TrdCommandDispatcher001Dto extends EtrEntrust{
 	}
 	public void setOtherPs(String otherPs) {
 		this.otherPs = otherPs;
+	}
+	public String getIsAutoReceive() {
+		return isAutoReceive;
+	}
+
+	public void setIsAutoReceive(String isAutoReceive) {
+		this.isAutoReceive = isAutoReceive;
+	}
+
+	public String getPurchModle() {
+		return purchModle;
+	}
+
+	public void setPurchModle(String purchModle) {
+		this.purchModle = purchModle;
 	}
 }

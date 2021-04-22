@@ -248,7 +248,7 @@
 				IS_COUNTER = 'Y',
 			</if>
 			<if test="isCounter == null">
-				IS_COUNTER = null
+				IS_COUNTER = null,
 			</if>
 			<if test="updateUser != null" >
 				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},

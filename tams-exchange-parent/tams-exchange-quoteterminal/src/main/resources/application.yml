@@ -1,0 +1,95 @@
+server:
+  port: 8999
+  address: 0.0.0.0
+spring:
+  profiles:
+    active: joyin-210
+  application:
+    name: quote-server
+  datasource:
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    validationQuery: SELECT 1 FROM DUAL
+eureka:
+  client:
+    enabled: false
+scheduled:
+  quote:
+    task: 10000
+    stock:
+      start: 30 4 9 ? *  MON-FRI
+      end: 0 0 16 ? *  MON-FRI
+      time: 0905-1600
+      flush: 50000
+wd:
+  login:
+    ip: 10.100.3.163
+    port: 6221
+    username: dev_test
+    password: dev_test
+ctp:
+  pszNsAddress: tcp://180.168.146.187:10110
+  brokerId: 9999
+  userId: 159887
+  password: 891026Ljp
+  syncReqTimeout: 30
+  traderFrontUrl: tcp://180.168.146.187:10101
+  authCode:
+  appId:
+  exchanges: SHFE,DCE,CZCE,CFFEX,INE
+
+
+
+---
+spring:
+  profiles: gaoyu
+  cache:
+    type: redis
+  redis:
+    database: 0
+    timeout: 20000
+    host: joyin.gaoyusoft.com
+    port: 6379
+  datasource:
+    url: jdbc:oracle:thin:@//211.152.51.188:1521/wind
+    username: yitihua1_0710
+    password: yitihua1_0710
+    maxTotal: 50
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//211.152.51.188:1521/wind
+    username: yitihua1_0710
+    password: yitihua1_0710
+    maxTotal: 50
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+log:
+  path: /home/tams/logs/quoteterminal
+  level: INFO
+---
+spring:
+  profiles: joyin-210
+  cache:
+    type: redis
+  redis:
+    database: 10
+    timeout: 20000
+    host: 192.168.70.210 #192.168.70.160
+    port: 6379
+    password: joyin!234
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
+    username: hgcs01
+    password: hgcs01
+    maxTotal: 50
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
+    username: hgcs01
+    password: hgcs01
+    maxTotal: 50
+    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
+
+log:
+  path: /home/tams/logs/quoteterminal
+  level: DEBUG

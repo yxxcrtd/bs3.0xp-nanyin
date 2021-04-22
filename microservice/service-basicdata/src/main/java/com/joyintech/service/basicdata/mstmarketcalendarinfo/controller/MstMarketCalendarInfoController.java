@@ -9,9 +9,11 @@
  */
 package com.joyintech.service.basicdata.mstmarketcalendarinfo.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -137,5 +139,35 @@ public class MstMarketCalendarInfoController{
     @GetMapping("/getMstCalendarInfo")
     public List<MstCalendarInfo>  getMstCalendarInfo(){
         return mstMarketCalendarInfo001Service.getMstCalendarInfo();
+    }
+
+
+    /***
+     * 第N个交易日查询
+     * @param para
+     * @return
+     */
+    @PostMapping("/queryTradeDate")
+    public Map<String,Object> queryTradeDate(@RequestBody Map<String,Object> para){
+        //日历类型
+        String tradeCalendarType = (String)para.get("tradeCalendarType");
+        //日期
+        String cdate = (String)para.get("CDATE");
+        //第N个交易日
+        Integer nDay = (Integer)para.get("NDay");
+
+        MstMarketCalendarInfo001Dto dto = new MstMarketCalendarInfo001Dto();
+        if("3".equals(tradeCalendarType)) {
+            dto.setCalendarId("04");
+        } else if("4".equals(tradeCalendarType)) {
+            dto.setCalendarId("05");
+        }
+        dto.setCdate(DateUtil.parse(cdate));
+        String tradeDate =  mstMarketCalendarInfo001Service.queryTradeDate(dto,nDay);
+
+        Map<String,Object> map = new HashMap<String,Object>();
+
+        map.put("tradeDate",tradeDate);
+        return map;
     }
 }

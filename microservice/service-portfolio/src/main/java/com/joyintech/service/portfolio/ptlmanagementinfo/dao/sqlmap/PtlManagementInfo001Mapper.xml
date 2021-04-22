@@ -1255,4 +1255,19 @@
 		)
 	</select>
 
+	<select id="getPtlAuthInfo" resultType="com.joyintech.service.portfolio.ptlmanagementinfo.dto.PtlAuthInfoDto">
+		select
+		PORTFOLIO_ID portfolioCode,
+		USER_ID
+		from PTL_PORTFOLIO_AUTHORITY
+		<where>
+			<if test="portfolioCode != null and portfolioCode !=''">
+				and PORTFOLIO_ID = #{portfolioCode,jdbcType=VARCHAR}
+			</if>
+			<if test="userId != null and userId !=''">
+				and USER_ID = #{userId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
 </mapper>

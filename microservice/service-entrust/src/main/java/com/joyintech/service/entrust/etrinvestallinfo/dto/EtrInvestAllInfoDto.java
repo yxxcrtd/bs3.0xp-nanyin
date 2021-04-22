@@ -68,6 +68,10 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 	 * PB是否已导出
 	 */
 	private String pbExportstatus;
+    /**
+     * 证券账户名称
+     */
+    private String secAcctName;
 
 	/**
 	 * 获取 settleSpreed
@@ -229,5 +233,23 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 	public void setPbExportstatus(String pbExportstatus) {
 		this.pbExportstatus = pbExportstatus;
 	}
+
+    /**
+     * 获取 secAcctName
+     * 
+     * @return secAcctName
+     */
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    /**
+     * 设置 secAcctName
+     * 
+     * @param secAcctName String
+     */
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
+    }
 	
 }

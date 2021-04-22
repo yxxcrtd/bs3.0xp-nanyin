@@ -97,6 +97,16 @@ public class EtrStockDto extends EtrEntrust implements ProcessEntity {
      * 证券托管户
      */
     private String secAcctId;
+
+    /**
+     * 上市板块
+     */
+    private String board;
+
+    /**
+     * 交易模式
+     */
+    private String dealMode;
     /**
      * 获取证券托管户
      * @return
@@ -479,7 +489,23 @@ public class EtrStockDto extends EtrEntrust implements ProcessEntity {
     public List<RiskTrialRetDto> getRiskTrialRetDto() {
         return riskTrialRetDto;
     }
-    
+
+    public String getBoard() {
+        return board;
+    }
+
+    public void setBoard(String board) {
+        this.board = board;
+    }
+
+    public String getDealMode() {
+        return dealMode;
+    }
+
+    public void setDealMode(String dealMode) {
+        this.dealMode = dealMode;
+    }
+
     /**
      * 设置 riskTrialRetDto
      * @param riskTrialRetDto riskTrialRetDto
@@ -564,14 +590,14 @@ public class EtrStockDto extends EtrEntrust implements ProcessEntity {
     }
 
     public String getBusBoard(){
-        return SysDataUtil.getNameFromDataDict(DictCode.上市板, super.getBoard());
+        return SysDataUtil.getNameFromDataDict(DictCode.上市板, this.getBoard());
     }
 
     public String getBusTradeMarket(){
         return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
     }
 
-    public String getBusDealMode(){ return SysDataUtil.getNameFromDataDict(DictCode.外汇交易模式, super.getDealMode()); }
+    public String getBusDealMode(){ return SysDataUtil.getNameFromDataDict(DictCode.外汇交易模式, this.getDealMode()); }
     
     public String getBusEntrustStatus(){
         return SysDataUtil.getNameFromDataDict(DictCode.委托状态, super.getEntrustStatus());

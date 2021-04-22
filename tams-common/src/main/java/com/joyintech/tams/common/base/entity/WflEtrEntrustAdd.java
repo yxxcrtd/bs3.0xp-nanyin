@@ -457,6 +457,21 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
     private String redoType;
 
     /**
+     * 衍生品买卖方向
+     */
+    private String derivativeBsDir;
+
+    /**
+     * 衍生品开平仓标志
+     */
+    private String derivativeOcFlag;
+
+    /**
+     * 报价方式
+     */
+    private String quoteType;
+
+    /**
      * 取得 清算速度
      * @return 清算速度
      */
@@ -1809,5 +1824,53 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
      */
     public void setRedoType(String redoType) {
         this.redoType = redoType == null ? null : redoType.trim();
+    }
+
+    /**
+     * 取得 衍生品买卖方向
+     * @return 衍生品买卖方向
+     */
+    public String getDerivativeBsDir() {
+        return derivativeBsDir;
+    }
+
+    /**
+     * 设置 衍生品买卖方向
+     * @param derivativeBsDir 衍生品买卖方向
+     */
+    public void setDerivativeBsDir(String derivativeBsDir) {
+        this.derivativeBsDir = derivativeBsDir == null ? null : derivativeBsDir.trim();
+    }
+
+    /**
+     * 取得 衍生品开平仓标志
+     * @return 衍生品开平仓标志
+     */
+    public String getDerivativeOcFlag() {
+        return derivativeOcFlag;
+    }
+
+    /**
+     * 设置 衍生品开平仓标志
+     * @param derivativeOcFlag 衍生品开平仓标志
+     */
+    public void setDerivativeOcFlag(String derivativeOcFlag) {
+        this.derivativeOcFlag = derivativeOcFlag == null ? null : derivativeOcFlag.trim();
+    }
+
+    /**
+     * 取得 报价方式
+     * @return 报价方式
+     */
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    /**
+     * 设置 报价方式
+     * @param quoteType 报价方式
+     */
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType == null ? null : quoteType.trim();
     }
 }
