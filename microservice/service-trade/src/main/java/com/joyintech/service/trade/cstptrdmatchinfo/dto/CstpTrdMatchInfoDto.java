@@ -15,4 +15,13 @@ import java.util.Date;
  **/
 public class CstpTrdMatchInfoDto extends CstpTrdMatchInfo {
 
+    private String finprodMarketId;
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
 }

@@ -3,6 +3,8 @@ package com.joyintech.service.trade.cstptrdmatchinfo.controller;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.service.trade.cstptrdmatchinfo.dto.CstpTrdMatchInfoDto;
 import com.joyintech.service.trade.cstptrdmatchinfo.service.CstpTrdMatchInfoService;
+import com.joyintech.tams.common.base.entity.TrdMatchInfo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ import java.util.Map;
  * @Version V1.0
  **/
 @RestController("backCstpTrdMatchInfoController")
-@RequestMapping("/CSTPTrdMatchInfo")
+@RequestMapping("${service}/CSTPTrdMatchInfo")
 public class CstpTrdMatchInfoController {
     @Autowired
     private CstpTrdMatchInfoService cstpTrdMatchInfoService;
@@ -26,5 +28,12 @@ public class CstpTrdMatchInfoController {
     public Page<CstpTrdMatchInfoDto> findPage(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
 
         return cstpTrdMatchInfoService.findPage(page, length, map);
+    }
+    
+    @ResponseBody
+    @PostMapping("deleteTrdPledgeMatchInfo")
+    public boolean deleteTrdPledgeMatchInfo(@RequestBody TrdMatchInfo trdMatchInfo) throws Exception{
+
+        return cstpTrdMatchInfoService.deleteTrdPledgeMatchInfo(trdMatchInfo);
     }
 }

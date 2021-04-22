@@ -109,9 +109,9 @@ public class CstpSelect001Service extends CommonExportService<CstpSelectDto> {
             if(map.containsKey("entrustMatchType")){
                 map.put("matchType",map.get("entrustMatchType").toString());
             }
-            if(map.containsKey("entrustSettleSpeed")){
+            /*if(map.containsKey("entrustSettleSpeed")){
                 map.put("settleSpeed",map.get("entrustSettleSpeed").toString());
-            }
+            }*/
             if(map.containsKey("entrustFinprodType")){
                 map.put("finprodType",map.get("entrustFinprodType").toString());
             }
@@ -157,6 +157,21 @@ public class CstpSelect001Service extends CommonExportService<CstpSelectDto> {
         return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
             + "/CSTPSelect/getExecid",map,SelectOptionDto.class);
     }
+    
+    /**
+     * 报价信息 委托  预交易
+     * @param map 查询参数
+     * @return 下拉框集合
+     * @return
+     * @see
+     * @since 1.0
+     */
+
+    public Page<SelectOptionDto> getBusiCode(Map<String,Object> map){
+        return restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
+            + "/CSTPSelect/getBusiCode",map,SelectOptionDto.class);
+    }
+    
     /**
      * 获取资产代码下拉框
      * @return 下拉框集合

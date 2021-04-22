@@ -34,7 +34,7 @@ import com.joyintech.tams.common.base.entity.TrdMatchInfo;
  * @since 1.0
  */
 @RestController
-@RequestMapping("/CstpAutoSelect")
+@RequestMapping("${service}/CstpAutoSelect")
 public class CstpAutoSelectController {
     /**
      * 注入Service

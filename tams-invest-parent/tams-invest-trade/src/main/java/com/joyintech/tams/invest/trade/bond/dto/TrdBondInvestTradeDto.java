@@ -24,6 +24,7 @@ import com.joyintech.tams.component.business.trade.dto.BussTrdAvailableCashQuery
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.dto.cstp.InterfTradSecdealDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
@@ -54,6 +55,11 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
     private static final long serialVersionUID = -7438510730454849159L;
 
     /**
+     * 交易编号
+     */
+    private String tradeId;
+
+    /**
      * 指令类型
      */
     private String zhilingtype;
@@ -66,6 +72,35 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      * 组合分配
      */
     private List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto;
+	
+	/**
+     *功能描述:报价编号
+     * @author zhangnian
+     * @date 2021/1/18 0018
+     * @param  * @param null
+     * @return
+    */
+    private String quoteId;
+	
+	/**
+     * 是否是银行间下行自动录单数据
+     * @return
+     */
+    private boolean autoTradeFlag;
+	
+/**
+     * 交易金额(原交易金额被券面总额所用)
+     */
+    private BigDecimal tradeRepAmt;
+	 /**
+     * 导入标识
+     */
+    private boolean importFlag;
+	
+	/**
+     * 账户来源
+     */
+    private String secAcctSource;
     
     /**
      * 取得 金融产品类型（投管分类），债券、理财产品、基金、理财产品模板、理财产品分层
@@ -117,6 +152,8 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      * 合作资产
      */
     private String chlFinprodId;
+
+    private String isOfferFlag;//是否存在报价信息
 
     public String getChlFinprodId() {
         return chlFinprodId;
@@ -475,6 +512,11 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
 
     //交易预录入
     private String preTradeId;
+
+    /**
+     * 债券成交回报信息
+     */
+    private InterfTradSecdealDto interfTradSecdeal;
 
     public String getPreTradeId() {
         return preTradeId;
@@ -2188,5 +2230,70 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
 	public void setTradeMarketCash(BigDecimal tradeMarketCash) {
 		this.tradeMarketCash = tradeMarketCash;
 	}
+	public InterfTradSecdealDto getInterfTradSecdeal() {
+        return interfTradSecdeal;
+    }
 
+    public void setInterfTradSecdeal(InterfTradSecdealDto interfTradSecdeal) {
+        this.interfTradSecdeal = interfTradSecdeal;
+    }
+	public String getQuoteId() {
+        return quoteId;
+    }
+
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
+    }
+
+	@PrimaryKey(PrimaryKey.Field.PK_4)
+    public String getfTradeId2() {
+        return this.getfTradeId();
+    }
+	public boolean isAutoTradeFlag() {
+        return autoTradeFlag;
+    }
+
+    public void setAutoTradeFlag(boolean autoTradeFlag) {
+        this.autoTradeFlag = autoTradeFlag;
+    }
+
+    public BigDecimal getTradeRepAmt() {
+        return tradeRepAmt;
+    }
+
+    public void setTradeRepAmt(BigDecimal tradeRepAmt) {
+        this.tradeRepAmt = tradeRepAmt;
+    }
+
+    public boolean isImportFlag() {
+        return importFlag;
+    }
+
+    public void setImportFlag(boolean importFlag) {
+        this.importFlag = importFlag;
+    }
+
+    public String getSecAcctSource() {
+        return secAcctSource;
+    }
+
+    public void setSecAcctSource(String secAcctSource) {
+        this.secAcctSource = secAcctSource;
+    }
+
+    public String getIsOfferFlag() {
+        return isOfferFlag;
+    }
+
+    public void setIsOfferFlag(String isOfferFlag) {
+        this.isOfferFlag = isOfferFlag;
+    }
+
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
+    }
 }

@@ -11,12 +11,7 @@
 package com.joyintech.tams.invest.interf.constant;
 
 import com.joyintech.tams.common.base.entity.InterfSendMurex;
-import com.joyintech.tams.invest.interf.dto.BatchResultDto;
-import com.joyintech.tams.invest.interf.dto.CusdepOrderDto;
-import com.joyintech.tams.invest.interf.dto.EsbReqRspDto;
-import com.joyintech.tams.invest.interf.dto.FinProdDto;
-import com.joyintech.tams.invest.interf.dto.SendEmailDto;
-import com.joyintech.tams.invest.interf.dto.TradeClearDto;
+import com.joyintech.tams.invest.interf.dto.*;
 
 /**
  * 调用模块枚举类
@@ -104,7 +99,13 @@ public enum InterfServiceCaller {
      */
     SEND_MUREX(
         "sendMurex", InterfSendMurex.class
-    );
+    ),
+    /**
+     * 可用额度查询
+     */
+    SEND_CREDIT_SEL(
+            "SEND_CREDIT_SEL",CreditAmtSelDto .class
+    );;
 
     /**
      * 调用模块代码

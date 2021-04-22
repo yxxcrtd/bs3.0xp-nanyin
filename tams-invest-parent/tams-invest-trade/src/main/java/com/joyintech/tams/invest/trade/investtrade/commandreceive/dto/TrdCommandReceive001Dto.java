@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.trade.investtrade.commandreceive.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -27,6 +28,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 
 /**
  * 指令接收dto
@@ -140,6 +142,15 @@ public class TrdCommandReceive001Dto extends EtrEntrust{
 	private String tradeType;
 	private String tradeTypeName;
 	private BigDecimal prinAmt;
+	/**
+	 * 报价编号
+	 */
+	private String quoteId;
+	
+	/**
+	 * 可质押券信息
+	 */
+	private List<PledgeBondInfoDto> pledgeBondInfoDtoList;
 
 	public BigDecimal getPrinAmt() {
 		return prinAmt;
@@ -561,5 +572,21 @@ public class TrdCommandReceive001Dto extends EtrEntrust{
 
 	public void setContractNo(String contractNo) {
 		this.contractNo = contractNo;
+	}
+
+	public String getQuoteId() {
+		return quoteId;
+	}
+
+	public void setQuoteId(String quoteId) {
+		this.quoteId = quoteId;
+	}
+
+	public List<PledgeBondInfoDto> getPledgeBondInfoDtoList() {
+		return pledgeBondInfoDtoList;
+	}
+
+	public void setPledgeBondInfoDtoList(List<PledgeBondInfoDto> pledgeBondInfoDtoList) {
+		this.pledgeBondInfoDtoList = pledgeBondInfoDtoList;
 	}
 }

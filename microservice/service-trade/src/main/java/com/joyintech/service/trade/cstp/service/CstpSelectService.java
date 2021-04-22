@@ -72,6 +72,12 @@ public class CstpSelectService extends BaseService<CstpSelectDto>{
         Page<SelectOptionDto> pages = this.queryForPageForSelectReturn(page, length, () -> cstpSelectMapper.getExecid(map));
         return pages;
     }
+    
+    
+    public Page<SelectOptionDto> getBusiCode(int page,int length,Map<String,Object> map){
+        Page<SelectOptionDto> pages = this.queryForPageForSelectReturn(page, length, () -> cstpSelectMapper.getBusiCode(map));
+        return pages;
+    }
     /**
      * 获取资产代码下拉框
      * @return 下拉框集合

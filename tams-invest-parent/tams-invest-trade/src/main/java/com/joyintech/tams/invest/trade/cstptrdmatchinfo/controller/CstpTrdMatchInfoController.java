@@ -68,4 +68,17 @@ public class CstpTrdMatchInfoController  extends BaseController {
     public ResponseEntity<byte[]> export() throws Exception {
         return cstpTrdMatchInfoService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
+    
+    /**
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("checkPosition")
+    public Map<String,Object> checkPosition(){
+        Map<String,Object> map = RequestUtil.getPageParam();
+        return cstpTrdMatchInfoService.checkPosition(map);
+    }
+    
+    
 }

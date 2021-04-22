@@ -20,8 +20,8 @@ import javax.validation.constraints.NotNull;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.StlDvpOrders;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.interf.dto.*;
-import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -533,6 +533,12 @@ public class InterfComponentService {
                 }*/
             }
         }
+    }
+
+    public CreditAmtSelDto creditAmtSel(CreditAmtSelDto dto) {
+        String url = ServiceApplication.INVEST_INTERF_SERVICE_NAME
+                + InterfUtil.getUrl(InterfServiceCaller.SEND_CREDIT_SEL.code());
+        return restTemplate.postForObject(url, dto, CreditAmtSelDto.class);
     }
 
 }

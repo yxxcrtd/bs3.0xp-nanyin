@@ -13,8 +13,8 @@
             <Cell order="9"  name="交易方向">otherPs</Cell>
             <Cell order="10" name="交易场所">otherTradeMarket</Cell>
             <Cell order="11" name="清算速度">settleSpeedStr</Cell>
-            <Cell order="12" name="回购期限">epoTerm</Cell>
-            <Cell order="13" name="委托额度">entrustAmt</Cell>
+            <Cell order="12" name="回购期限">repoTerm</Cell>
+            <Cell order="13" name="指令额度">entrustAmt</Cell>
             <Cell order="14" name="预录入额度">prinAmt</Cell>
             <Cell order="15" name="劵面总额">tradeAmt</Cell>
             <Cell order="16" name="交易金额">prinAmt</Cell>

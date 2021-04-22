@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -211,8 +212,8 @@ public class TrdRepoTradeController {
      * @return cstp交易信息
      */
     @GetMapping("queryRepoCstpInfoByNo")
-    public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(String fedealno,String entrustId,String preTradeId, String loginUserName,String prodType,String isCstpSure){
-        return trdRepoTradeService.queryRepoCstpInfoByNo(fedealno,entrustId,preTradeId,loginUserName,prodType,isCstpSure);
+    public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(String fedealno, String loginUserName){
+        return trdRepoTradeService.queryRepoCstpInfoByNo(fedealno,loginUserName);
     }
 
     /**
@@ -332,5 +333,15 @@ public class TrdRepoTradeController {
     @RequestMapping("getChlId")
     public String getChlId(@RequestBody String tradeId) {
         return trdRepoTradeService.getChlId(tradeId);
+    }
+	
+	@PostMapping("selectFinProduct")
+    public List<FinProduct> selectFinProduct(@RequestBody Map<String, Object> param){
+        return trdRepoTradeService.selectFinProduct(param);
+    }
+
+    @RequestMapping("getMatchpledgeBondInfo")
+    public List<InterfTradRepoasstDto> getMatchpledgeBondInfo(@RequestBody Map<String,Object> map){
+        return trdRepoTradeService.getMatchpledgeBondInfo(map);
     }
 }

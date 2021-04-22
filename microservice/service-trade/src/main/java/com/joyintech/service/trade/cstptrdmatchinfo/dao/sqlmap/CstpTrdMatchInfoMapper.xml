@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.service.trade.cstptrdmatchinfo.dao.CstpTrdMatchInfoMapper">
     <select id="findPage" resultType="com.joyintech.service.trade.cstptrdmatchinfo.dto.CstpTrdMatchInfoDto">
-      SELECT aa.* FROM (
+      SELECT DISTINCT aa.* FROM (
             SELECT TRD_MATCH_INFO.MATCH_TYPE matchType,
             '01' tradeType,
             TRD_MATCH_INFO.Seqno seqno,
@@ -55,7 +55,8 @@
             T1.REPO_TERM actCapDays,
             TRD_PRODUCT_DEAL_PRE.TOTLE_TRADE_ID totleTradeId,
             DECODE(TRD_PRODUCT_DEAL_PRE.finprod_type2,'F01', null, nvl(T1.PRIN_AMT,0) + nvl(T1.INT_AMT, 0)) mdateSettleAmt
-            from TRD_MATCH_INFO
+            ,fin_product.FINPROD_MARKET_ID
+        from TRD_MATCH_INFO
             left join TRD_PRODUCT_DEAL_PRE on TRD_PRODUCT_DEAL_PRE.TRADE_ID =
             TRD_MATCH_INFO.Pre_Trade_Id
             left join TRD_PRODUCT_DEAL_ADD_PRE on TRD_PRODUCT_DEAL_ADD_PRE.TRADE_ID =
@@ -115,7 +116,8 @@
 					ELSE (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'PS' AND ITEM_CODE = ETR_ENTRUST.PS)
 					END AS otherPs,
                    ETR_ENTRUST.Inv_Aim invAim,
-                   TRD_MATCH_INFO.match_num prinAmt,
+                    CASE WHEN ETR_ENTRUST.FINPROD_TYPE2 ='F01' THEN TRD_MATCH_INFO.match_num*100
+                    ELSE TRD_MATCH_INFO.match_num END prinAmt,
                    DECODE(ETR_ENTRUST_ADD.ASSET_TYPE, 'F01', ETR_ENTRUST.Price, NVL(ETR_ENTRUST.Price,0) * 100) unitCprice,
                    null fpriceAmt,
                    ETR_ENTRUST_ADD.Mature_Yield matureYield,
@@ -130,7 +132,8 @@
                     '03') settleSpreed,
                    null unitInt,
                    null intAmt,
-                   TRD_MATCH_INFO.match_num tradeAmt,
+                    CASE WHEN ETR_ENTRUST.FINPROD_TYPE2 ='F01' THEN TRD_MATCH_INFO.match_num*100
+                    ELSE TRD_MATCH_INFO.match_num END  tradeAmt,
                    ETR_ENTRUST_add.Sec_Acct_Id secAcctId,
                   (select sec_acct_name from STL_SEC_ACCT_INFO where sec_acct_id=ETR_ENTRUST_add.Sec_Acct_Id) secAcctName,
                     ETR_ENTRUST.Trade_Plat tradePlat,
@@ -142,7 +145,8 @@
                     INTERF_CSTP_TRADE.cashHoldingDays actCapDays,
                     null totleTradeId,
                     null mdateSettleAmt
-              from TRD_MATCH_INFO
+                    ,fin_product.FINPROD_MARKET_ID
+        from TRD_MATCH_INFO
               left join INTERF_CSTP_TRADE on INTERF_CSTP_TRADE.EXECID = TRD_MATCH_INFO.Cstp_Trade_Id
               left join INTERF_OPICS_TRAD_REPO on INTERF_OPICS_TRAD_REPO.oritradeid = TRD_MATCH_INFO.Cstp_Trade_Id
               left join INTERF_TRAD_SECDEAL on INTERF_TRAD_SECDEAL.FEDEALNO =  TRD_MATCH_INFO.Cstp_Trade_Id
@@ -217,10 +221,7 @@
                       and aa.tradeMarket = #{tradeMarket}
                   </if>
                   <if test="finprodMarketId!=null and finprodMarketId!='' ">
-                      and aa.finprodMarketId = #{tradeMarket}
-                  </if>
-                  <if test="finprodMarketId!=null and finprodMarketId!='' ">
-                      and aa.finprodMarketId = #{tradeMarket}
+                      and (aa.finprodMarketId = #{finprodMarketId} or aa.finprodMarketId = concat(#{finprodMarketId},'.IB'))
                   </if>
                   <if test="trdMatchInfoDateBegin != null and trdMatchInfoDateBegin != ''">
                       <![CDATA[ AND aa.tradeDate  >= to_date(#{trdMatchInfoDateBegin},'yyyy-mm-dd') ]]>
@@ -242,4 +243,15 @@
 				</if>
               </where>
     </select>
+    
+    <delete id="deleteTrdPledgeMatchInfo" parameterType="com.joyintech.tams.common.base.entity.TrdMatchInfo">
+    	DELETE FROM  TRD_PLEDGE_MATCH_INFO 
+    	where CSTP_TRADE_ID =#{cstpTradeId}
+    	<if test="entrustId !=null and entrustId !='' ">
+			and ENTRUST_ID = #{entrustId}
+		</if>
+    	<if test="preTradeId !=null and preTradeId !='' ">
+			and PRE_TRADE_ID = #{preTradeId}
+		</if>
+    </delete>
 </mapper>

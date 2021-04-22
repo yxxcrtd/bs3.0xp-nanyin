@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -21,16 +23,6 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.trade.bond.dto.SecCpriceInfoDto;
 import com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto;
-import com.joyintech.tams.common.base.entity.AssetTargetDb;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
-import com.joyintech.tams.common.base.entity.MstCounterParty;
-import com.joyintech.tams.common.base.entity.PtlSecValution;
-import com.joyintech.tams.common.base.entity.PtlSecValutionKey;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 
@@ -305,4 +297,17 @@ public interface TrdBondInvestTradeMapper {
     /* add by msk 新增查询通道划款交易 20201111 TISHKBS-1038 end */
 
     String getType7(TrdBondInvestTradeDto dto);
+	
+	InterfTradSecdeal selectInterfTradSecdeal(@Param("fTradeId") String fTradeId);
+	
+	String selectCounterId(@Param("cpPartyId") String cpPartyId);
+	List<TrdTradeFeeDetail> getAllFeeByFTradeId(Map<String, Object> map);
+
+	EtrEntrustExt queryRepoEntrustInfo(@Param("oritradeId") String oritradeId);
+
+    EtrEntrustExt queryBondEntrustInfo(@Param("oritradeId") String oritradeId);
+	
+	BigDecimal selectMatchNum(@Param("fedealno") String fedealno,@Param("entrustId") String entrustId);
+	 List<PtlPortfolio> queryPortfolioIdByFedealno(@Param("loginUserName") String loginUserName, @Param("fedealno") String fedealno);
+
 }

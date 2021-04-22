@@ -36,6 +36,13 @@ public class TrdRepoTradeCSTPDto extends InterfOpicsTradRepo {
      */
     private String portfolioId;
 
+    private String entrustId;
+    
+    /**
+     * 是否有报价信息（01：是，02：否）
+     */
+    private String isOfferFlag;
+
     /**
      * {@linkplain}
      */
@@ -85,5 +92,22 @@ public class TrdRepoTradeCSTPDto extends InterfOpicsTradRepo {
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
     }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+	public String getIsOfferFlag() {
+		return isOfferFlag;
+	}
+
+	public void setIsOfferFlag(String isOfferFlag) {
+		this.isOfferFlag = isOfferFlag;
+	}
+    
     
 }

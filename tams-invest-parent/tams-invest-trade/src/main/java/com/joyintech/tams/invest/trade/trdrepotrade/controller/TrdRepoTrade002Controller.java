@@ -25,13 +25,11 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -755,5 +753,16 @@ public class TrdRepoTrade002Controller extends BaseController {
         Boolean allTradeAmtByPreTradeId = trdRepoTrade002Service.isAllTradeAmtByPreTradeId(params);
         ajaxResult.setData(allTradeAmtByPreTradeId);
         return ajaxResult;
+    }
+
+
+    /**
+     * 质押式回购银行间交易下行自动录单
+     */
+    @ResponseBody
+    @PostMapping("repoAutoTrade")
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String,Object> repoAutoTrade(@RequestBody TrdRepoTrade002Dto repoTradeDto) {
+        return trdRepoTrade002Service.repoAutoTrade(repoTradeDto);
     }
 }

@@ -11,11 +11,14 @@
 package com.joyintech.tams.invest.trade.cstp.dto;
 
 import com.joyintech.tams.common.base.entity.InterfCstpTrade;
+import com.joyintech.tams.common.base.entity.InterfTradRepoasst;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * cstp下行交易Dto
@@ -57,8 +60,13 @@ public class CstpSelectDto extends InterfCstpTrade{
     private BigDecimal percent;
 
     private String ourTradeName;
+    private String  userName;
 
     private BigDecimal lastqtyready;
+    
+    private String entrustId;
+    
+    private List<InterfTradRepoasstDto> interfTradRepoasstDtoList;
     
     
     /**
@@ -248,4 +256,28 @@ public class CstpSelectDto extends InterfCstpTrade{
     public void setOurTradeName(String ourTradeName) {
         this.ourTradeName = ourTradeName;
     }
+
+	public List<InterfTradRepoasstDto> getInterfTradRepoasstDtoList() {
+		return interfTradRepoasstDtoList;
+	}
+
+	public void setInterfTradRepoasstDtoList(List<InterfTradRepoasstDto> interfTradRepoasstDtoList) {
+		this.interfTradRepoasstDtoList = interfTradRepoasstDtoList;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getEntrustId() {
+		return entrustId;
+	}
+
+	public void setEntrustId(String entrustId) {
+		this.entrustId = entrustId;
+	}
 }
