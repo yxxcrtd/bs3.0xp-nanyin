@@ -112,6 +112,12 @@ public class DrawBaseInfoSelectComDTO {
      * 是否倒起息
      */
     private String isBackValue;
+    
+    /**
+     * 减值阶段3数量
+     * add by caoguo on 20201031
+     */
+    private Long numP3;
 
     /**
      * 获取 taskId
@@ -436,4 +442,24 @@ public class DrawBaseInfoSelectComDTO {
     public void setIsBackValue(String isBackValue) {
         this.isBackValue = isBackValue;
     }
+
+    
+    /**
+     * 获取 numP3
+     * @return numP3.
+     */
+    public Long getNumP3() {
+        return numP3;
+    }
+
+    
+    /**
+     * 设置 numP3
+     * @param numP3 numP3
+     */
+    public void setNumP3(Long numP3) {
+        this.numP3 = numP3;
+    }
+
+
 }

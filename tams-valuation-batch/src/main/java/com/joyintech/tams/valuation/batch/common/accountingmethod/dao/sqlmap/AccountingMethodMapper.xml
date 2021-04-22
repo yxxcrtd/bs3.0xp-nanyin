@@ -278,32 +278,32 @@
     <delete id="deleteBokStatDetPosiitonBatch" parameterType="com.joyintech.tams.common.base.entity.BokStatDetPosiitonKey" >
         delete from BOK_STAT_DET_POSIITON
         where (BOOKSET_ID,HAPPEN_DATE,BOOK_DATE,BOK_DETAIL_ID) in
-        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
-            (#{item.booksetId,jdbcType=VARCHAR}, #{item.happenDate,jdbcType=DATE}, #{item.bookDate,jdbcType=DATE},#{item.bokDetailId,jdbcType=VARCHAR})
+       <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+          (#{item.booksetId,jdbcType=VARCHAR}, #{item.happenDate,jdbcType=DATE}, #{item.bookDate,jdbcType=DATE},#{item.bokDetailId,jdbcType=VARCHAR})
         </foreach>
     </delete>
 
     <insert id="insertBokStatDetPosiitonBatch" parameterType="com.joyintech.tams.common.base.entity.BokStatDetPosiiton" >
         insert into BOK_STAT_DET_POSIITON (BOOKSET_ID, HAPPEN_DATE, BOOK_DATE,
-        BOK_DETAIL_ID, BOOK_SUMMARY_ORDER, BOOKSET_DATE,
-        POS_AMT, INT_RATE, DAILYDSC_YIELD,
-        TDY_INTINCEXP_ADD, TDY_INTINCEXP, FINPROD_TYPE,
-        VDATE, MDATE, CHL_ID, INV_AIM,
-        TDY_POSITION, TDY_COST_AMT, TDY_FLOAT_INGPL,
-        END_DAYS_1, END_DAYS_2, END_DAYS_COST_AMT,
-        BUSI_ID, VAL_DATE, CREATE_USER,
-        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME, TDY_FLOAT_INGPL_EXP, CCY,
-        B_CCY, TDY_INTINCEXP_ADD_B, TDY_COST_AMT_B,
-        TDY_FLOAT_INGPL_B, TDY_FLOAT_INGPL_EXP_B, TDY_INTINCEXP_B
-        <!-- add by wujie on 20201017 start remark:资产减值 -->
-        ,TDY_LOSS_AMT
-        ,TDY_LOSS_AMT_B
-        ,TDY_INTADJEXP_ADD
-        ,TDY_INTADJEXP_ADD_B
-        <!-- add by wujie on 20201017 end -->
-        )
-        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close=" from dual)">
+            BOK_DETAIL_ID, BOOK_SUMMARY_ORDER, BOOKSET_DATE,
+            POS_AMT, INT_RATE, DAILYDSC_YIELD,
+            TDY_INTINCEXP_ADD, TDY_INTINCEXP, FINPROD_TYPE,
+            VDATE, MDATE, CHL_ID, INV_AIM,
+            TDY_POSITION, TDY_COST_AMT, TDY_FLOAT_INGPL,
+            END_DAYS_1, END_DAYS_2, END_DAYS_COST_AMT,
+            BUSI_ID, VAL_DATE, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, TDY_FLOAT_INGPL_EXP, CCY,
+            B_CCY, TDY_INTINCEXP_ADD_B, TDY_COST_AMT_B,
+            TDY_FLOAT_INGPL_B, TDY_FLOAT_INGPL_EXP_B, TDY_INTINCEXP_B
+            <!-- add by wujie on 20201017 start remark:资产减值 -->
+            ,TDY_LOSS_AMT
+            ,TDY_LOSS_AMT_B
+            ,TDY_INTADJEXP_ADD
+            ,TDY_INTADJEXP_ADD_B
+            <!-- add by wujie on 20201017 end -->
+            )
+          <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close=" from dual)">
             #{item.booksetId,jdbcType=VARCHAR}, #{item.happenDate,jdbcType=DATE}, #{item.bookDate,jdbcType=DATE},
             #{item.bokDetailId,jdbcType=VARCHAR}, #{item.bookSummaryOrder,jdbcType=DECIMAL}, #{item.booksetDate,jdbcType=DATE},
             #{item.posAmt,jdbcType=DECIMAL}, #{item.intRate,jdbcType=DECIMAL}, #{item.dailydscYield,jdbcType=DECIMAL},
@@ -322,7 +322,7 @@
             , #{item.tdyIntadjexpAdd,jdbcType=DECIMAL}
             , #{item.tdyIntadjexpAddB,jdbcType=DECIMAL}
             <!-- add by wujie on 20201017 end -->
-        </foreach>
+          </foreach>
     </insert>
 
 </mapper>

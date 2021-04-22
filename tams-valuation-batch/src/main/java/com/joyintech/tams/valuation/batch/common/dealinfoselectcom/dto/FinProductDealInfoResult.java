@@ -81,6 +81,12 @@ public class FinProductDealInfoResult extends NeedOperateEntity {
      * 交易基本信息列表
      */
     private List<FinProductDealInfoComDTO> listFinProductDealInfoComDTO = new ArrayList<FinProductDealInfoComDTO>();
+    
+    /**
+     * 减值阶段
+     * add by wujie on 20201017 remark:资产减值
+     */
+    private String stage;
 
     /**
      * 取得 账套代码
@@ -279,4 +285,15 @@ public class FinProductDealInfoResult extends NeedOperateEntity {
     public void setListFinProductDealInfoComDTO(List<FinProductDealInfoComDTO> listFinProductDealInfoComDTO) {
         this.listFinProductDealInfoComDTO = listFinProductDealInfoComDTO;
     }
+
+	public String getStage() {
+		return stage;
+	}
+
+	public void setStage(String stage) {
+		this.stage = stage;
+	}
+    
+    
+
 }

@@ -633,11 +633,27 @@ public class AccountingCommonService {
      * @see
      * @since 1.0
      */
+
     public Map<String, BigDecimal> getSubjectBalanceCollection(SubjectBalanceSearchDto searchDto,
                                                                String expectedBalFalg,String bccySum) {
+        return getSubjectBalanceCollection(searchDto,expectedBalFalg, bccySum,null);
+    }
+
+    /**
+     * 科目余额汇总查询 （相当于根据科目类别对所有的科目余额进行余额和数量的总处理）
+     *
+     * @return resultMap 余额Map(币种，科目余额)
+     * @param searchDto 科目余额查询参数Dto
+     * @param expectedBalFalg --期待余额方向
+     * @param bccySum 是否原币汇总 Y:是  N:否
+     * @see
+     * @since 1.0
+     */
+    public Map<String, BigDecimal> getSubjectBalanceCollection(SubjectBalanceSearchDto searchDto,
+                                                               String expectedBalFalg,String bccySum,Long taskPri) {
         // 查询账务明细当前表
         searchDto.setBranchHandleFlag("01");
-        searchDto.setTaskPri(null);// 批处理优先级设置为null
+        searchDto.setTaskPri(taskPri);// 批处理优先级设置为null
         List<SubjectBalance> list = this.getSubjectLatestBalance(searchDto);
 
         // 定义 出参.余额Map

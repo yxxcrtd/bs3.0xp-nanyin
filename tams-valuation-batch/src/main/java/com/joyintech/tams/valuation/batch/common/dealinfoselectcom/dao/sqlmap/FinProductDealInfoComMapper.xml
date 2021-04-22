@@ -74,7 +74,11 @@
 		    N.IS_PREPAID, /** 是否作为待摊 **/
 			A.ACCR_NUM, /** 计提份额 **/
 			A.PS_PAYMENT psPayment /**收付方向**/
-		FROM
+			<!-- ADD BY CAOGUO ON 20201016 减值相关修改 START  -->
+			,NULL lossStage 
+			,A.TOTLE_TRADE_ID totleTradeId
+			<!--ADD BY CAOGUO ON 20201016 减值相关修改 end  -->
+		FROM 
 			BOK_BATCH_TASK_TODO D
 			INNER JOIN BOK_BOOKSET M
 				ON D.BOOKSET_ID = M.BOOKSET_ID
@@ -130,6 +134,11 @@
 			    A.TRADE_ID = Q.TRADE_ID AND
 			    A.FINPROD_ID = Q.FINPROD_ID AND
 			    A.FINPROD_TYPE = Q.FINPROD_TYPE
+			<!-- add by 曹国 增加减值阶段查询
+			LEFT JOIN FIN_PRODUCT_LOSS_STAGE R ON
+				A.FINPROD_ID = R.FINPROD_ID AND
+				D.HAPPEN_DATE >= R.EFF_DATE AND
+				D.HAPPEN_DATE &lt; R.INVALID_DATE -->    
 		WHERE 		
 			(K.IS_TRADE = #{isTradeY,jdbcType=VARCHAR}	
 			OR K.IS_TRADE IS NULL)
