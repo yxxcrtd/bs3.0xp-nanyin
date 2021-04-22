@@ -421,9 +421,10 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 1.无委托直投
                 // 可用现金(组合、资金账户):认购交易日减少交易金额
                 if (StringUtil.isEmpty(entrustId) && StringUtil.isEmpty(chlId)) {
-                    etrCashPositionFlowDto.setAcctId(
-                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+//                    etrCashPositionFlowDto.setAcctId(
+//                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    etrCashPositionFlowDto.setAcctId(finProductTradeDto.getStlPayOrdersList().get(0).getMyAcctNo());
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt().negate());
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
