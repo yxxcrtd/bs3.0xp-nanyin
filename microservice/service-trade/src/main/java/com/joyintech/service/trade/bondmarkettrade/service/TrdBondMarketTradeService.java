@@ -1,11 +1,9 @@
 package com.joyintech.service.trade.bondmarkettrade.service;
 
-import cn.hutool.db.DaoTemplate;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.bondmarkettrade.dao.TrdBondMarketTradeMapper;
@@ -342,27 +340,45 @@ public class TrdBondMarketTradeService extends BaseService {
             List<MstBondCreditRating> mstBondCreditRatingList = trdBondMarkettTradeMapper.selectByPrimaryKey(finProduct.getFinprodMarketId());
 
             //处理债券资产报送信息Entity
-            repAssetBond.setRepFinprodId(newFinprodId);
+            if(repAssetBond != null){
+                repAssetBond.setRepFinprodId(newFinprodId);
+            }
+            
             //处理资产负债报送信息Entity
-            repAssetDept.setRepFinprodId(newFinprodId);
+            if (repAssetDept != null){
+                repAssetDept.setRepFinprodId(newFinprodId);
+            }
+            
             //处理中债资产其他要素Entity
-            repAssetOther.setRepFinprodId(newFinprodId);
-            repAssetOtherMapper.insertSelective(repAssetOther);
+            if (repAssetOther != null){
+                repAssetOther.setRepFinprodId(newFinprodId);
+                repAssetOtherMapper.insertSelective(repAssetOther);
+            }
+            
             //处理权益类资产报送信息Entity
-            repAssetEquity.setRepFinprodId(newFinprodId);
-            repAssetEquityMapper.insertSelective(repAssetEquity);
+            if (repAssetEquity != null){
+                repAssetEquity.setRepFinprodId(newFinprodId);
+                repAssetEquityMapper.insertSelective(repAssetEquity);
+            }
+            
             //处理债券信用评级Entity
             for (MstBondCreditRating mstBondCreditRating : mstBondCreditRatingList) {
                 mstBondCreditRating.setoCode(dto.getAppearMarketId());
             }
 
             //处理查询到的数据
-            finProduct.setFinprodId(newFinprodId);
-            finProduct.setFinprodMarketId(dto.getAppearMarketId());
+            if (finProduct != null){
+                finProduct.setFinprodId(newFinprodId);
+                finProduct.setFinprodMarketId(dto.getAppearMarketId());
+            }
+            
+            if (finProductAdd != null){
+                finProductAdd.setFinprodId(newFinprodId);
+            }
 
-            finProductAdd.setFinprodId(newFinprodId);
-
-            finProductType.setFinprodId(newFinprodId);
+            if (finProductType != null){
+                finProductType.setFinprodId(newFinprodId);
+            }
 
             //处理现金流信息
             for (String key : cashIdMap.keySet()) {
