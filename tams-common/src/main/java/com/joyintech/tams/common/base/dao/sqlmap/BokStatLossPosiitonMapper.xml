@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokStatLossPosiitonMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokStatLossPosiiton" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="BOK_SEQNO" property="bokSeqno" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="HAPPEN_DATE" property="happenDate" jdbcType="DATE" />
+        <result column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <result column="BOOKSET_DATE" property="booksetDate" jdbcType="DATE" />
+        <result column="BOK_DETAIL_ID" property="bokDetailId" jdbcType="VARCHAR" />
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="SCHEME_DETAIL_ID" property="schemeDetailId" jdbcType="VARCHAR" />
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="LOSS_EXE_TYPE" property="lossExeType" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+        <result column="TDY_COST_AMT" property="tdyCostAmt" jdbcType="DECIMAL" />
+        <result column="TDY_INT_AMT" property="tdyIntAmt" jdbcType="DECIMAL" />
+        <result column="TDY_LOSSAMT_ADD" property="tdyLossamtAdd" jdbcType="DECIMAL" />
+        <result column="TDY_LOSSAMT" property="tdyLossamt" jdbcType="DECIMAL" />
+        <result column="TDY_LOSSAMT_ADD_B" property="tdyLossamtAddB" jdbcType="DECIMAL" />
+        <result column="TDY_LOSSAMT_B" property="tdyLossamtB" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="LOSS_GEN_TYPE" property="lossGenType" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, BOK_SEQNO BOK_SEQNO, BOOKSET_ID BOOKSET_ID, HAPPEN_DATE HAPPEN_DATE, 
+        BOOK_DATE BOOK_DATE, BOOKSET_DATE BOOKSET_DATE, BOK_DETAIL_ID BOK_DETAIL_ID, BUSI_ID BUSI_ID, 
+        SCHEME_DETAIL_ID SCHEME_DETAIL_ID, TRADE_ID TRADE_ID, LOSS_EXE_TYPE LOSS_EXE_TYPE, 
+        CCY CCY, B_CCY B_CCY, TDY_COST_AMT TDY_COST_AMT, TDY_INT_AMT TDY_INT_AMT, TDY_LOSSAMT_ADD TDY_LOSSAMT_ADD, 
+        TDY_LOSSAMT TDY_LOSSAMT, TDY_LOSSAMT_ADD_B TDY_LOSSAMT_ADD_B, TDY_LOSSAMT_B TDY_LOSSAMT_B, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, LOSS_GEN_TYPE LOSS_GEN_TYPE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokStatLossPosiitonMapper.Base_Column_List" />
+        from BOK_STAT_LOSS_POSIITON
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokStatLossPosiitonMapper.Base_Column_List" />
+        from BOK_STAT_LOSS_POSIITON
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.BokStatLossPosiitonMapper.Base_Column_List" />
+        from BOK_STAT_LOSS_POSIITON
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from BOK_STAT_LOSS_POSIITON
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokStatLossPosiiton" >
+        insert into BOK_STAT_LOSS_POSIITON (SEQNO, BOK_SEQNO, BOOKSET_ID, 
+            HAPPEN_DATE, BOOK_DATE, BOOKSET_DATE, 
+            BOK_DETAIL_ID, BUSI_ID, SCHEME_DETAIL_ID, 
+            TRADE_ID, LOSS_EXE_TYPE, CCY, 
+            B_CCY, TDY_COST_AMT, TDY_INT_AMT, 
+            TDY_LOSSAMT_ADD, TDY_LOSSAMT, TDY_LOSSAMT_ADD_B, 
+            TDY_LOSSAMT_B, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            LOSS_GEN_TYPE)
+        values (#{seqno,jdbcType=VARCHAR}, #{bokSeqno,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, 
+            #{happenDate,jdbcType=DATE}, #{bookDate,jdbcType=DATE}, #{booksetDate,jdbcType=DATE}, 
+            #{bokDetailId,jdbcType=VARCHAR}, #{busiId,jdbcType=VARCHAR}, #{schemeDetailId,jdbcType=VARCHAR}, 
+            #{tradeId,jdbcType=VARCHAR}, #{lossExeType,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
+            #{bCcy,jdbcType=VARCHAR}, #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyIntAmt,jdbcType=DECIMAL}, 
+            #{tdyLossamtAdd,jdbcType=DECIMAL}, #{tdyLossamt,jdbcType=DECIMAL}, #{tdyLossamtAddB,jdbcType=DECIMAL}, 
+            #{tdyLossamtB,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{lossGenType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokStatLossPosiiton" >
+        insert into BOK_STAT_LOSS_POSIITON
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="bokSeqno != null" >
+                BOK_SEQNO,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE,
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID,
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="schemeDetailId != null" >
+                SCHEME_DETAIL_ID,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="lossExeType != null" >
+                LOSS_EXE_TYPE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="bCcy != null" >
+                B_CCY,
+            </if>
+            <if test="tdyCostAmt != null" >
+                TDY_COST_AMT,
+            </if>
+            <if test="tdyIntAmt != null" >
+                TDY_INT_AMT,
+            </if>
+            <if test="tdyLossamtAdd != null" >
+                TDY_LOSSAMT_ADD,
+            </if>
+            <if test="tdyLossamt != null" >
+                TDY_LOSSAMT,
+            </if>
+            <if test="tdyLossamtAddB != null" >
+                TDY_LOSSAMT_ADD_B,
+            </if>
+            <if test="tdyLossamtB != null" >
+                TDY_LOSSAMT_B,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="lossGenType != null" >
+                LOSS_GEN_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="bokSeqno != null" >
+                #{bokSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="booksetDate != null" >
+                #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bokDetailId != null" >
+                #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeDetailId != null" >
+                #{schemeDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="lossExeType != null" >
+                #{lossExeType,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="bCcy != null" >
+                #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyCostAmt != null" >
+                #{tdyCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntAmt != null" >
+                #{tdyIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyLossamtAdd != null" >
+                #{tdyLossamtAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyLossamt != null" >
+                #{tdyLossamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyLossamtAddB != null" >
+                #{tdyLossamtAddB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyLossamtB != null" >
+                #{tdyLossamtB,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lossGenType != null" >
+                #{lossGenType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokStatLossPosiiton" >
+        insert into BOK_STAT_LOSS_POSIITON(SEQNO, BOK_SEQNO, BOOKSET_ID, HAPPEN_DATE, BOOK_DATE, 
+        BOOKSET_DATE, BOK_DETAIL_ID, BUSI_ID, SCHEME_DETAIL_ID, TRADE_ID, LOSS_EXE_TYPE, 
+        CCY, B_CCY, TDY_COST_AMT, TDY_INT_AMT, TDY_LOSSAMT_ADD, TDY_LOSSAMT, TDY_LOSSAMT_ADD_B, 
+        TDY_LOSSAMT_B, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, LOSS_GEN_TYPE
+        )
+        select SEQNO, BOK_SEQNO, BOOKSET_ID, HAPPEN_DATE, BOOK_DATE, 
+            BOOKSET_DATE, BOK_DETAIL_ID, BUSI_ID, SCHEME_DETAIL_ID, TRADE_ID, LOSS_EXE_TYPE, 
+            CCY, B_CCY, TDY_COST_AMT, TDY_INT_AMT, TDY_LOSSAMT_ADD, TDY_LOSSAMT, TDY_LOSSAMT_ADD_B, 
+            TDY_LOSSAMT_B, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, LOSS_GEN_TYPE
+            
+             from BOK_STAT_LOSS_POSIITON
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokStatLossPosiiton" >
+        update BOK_STAT_LOSS_POSIITON
+        <set >
+            <if test="bokSeqno != null" >
+                BOK_SEQNO = #{bokSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE = #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE = #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeDetailId != null" >
+                SCHEME_DETAIL_ID = #{schemeDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="lossExeType != null" >
+                LOSS_EXE_TYPE = #{lossExeType,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="bCcy != null" >
+                B_CCY = #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyCostAmt != null" >
+                TDY_COST_AMT = #{tdyCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntAmt != null" >
+                TDY_INT_AMT = #{tdyIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyLossamtAdd != null" >
+                TDY_LOSSAMT_ADD = #{tdyLossamtAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyLossamt != null" >
+                TDY_LOSSAMT = #{tdyLossamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyLossamtAddB != null" >
+                TDY_LOSSAMT_ADD_B = #{tdyLossamtAddB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyLossamtB != null" >
+                TDY_LOSSAMT_B = #{tdyLossamtB,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lossGenType != null" >
+                LOSS_GEN_TYPE = #{lossGenType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokStatLossPosiiton" >
+        update BOK_STAT_LOSS_POSIITON
+        set BOK_SEQNO = #{bokSeqno,jdbcType=VARCHAR},
+            BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            HAPPEN_DATE = #{happenDate,jdbcType=DATE},
+            BOOK_DATE = #{bookDate,jdbcType=DATE},
+            BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR},
+            BUSI_ID = #{busiId,jdbcType=VARCHAR},
+            SCHEME_DETAIL_ID = #{schemeDetailId,jdbcType=VARCHAR},
+            TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            LOSS_EXE_TYPE = #{lossExeType,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            B_CCY = #{bCcy,jdbcType=VARCHAR},
+            TDY_COST_AMT = #{tdyCostAmt,jdbcType=DECIMAL},
+            TDY_INT_AMT = #{tdyIntAmt,jdbcType=DECIMAL},
+            TDY_LOSSAMT_ADD = #{tdyLossamtAdd,jdbcType=DECIMAL},
+            TDY_LOSSAMT = #{tdyLossamt,jdbcType=DECIMAL},
+            TDY_LOSSAMT_ADD_B = #{tdyLossamtAddB,jdbcType=DECIMAL},
+            TDY_LOSSAMT_B = #{tdyLossamtB,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            LOSS_GEN_TYPE = #{lossGenType,jdbcType=VARCHAR}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>
