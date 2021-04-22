@@ -146,6 +146,7 @@ public enum DictCodeListRsk implements BaseDictCodeList {
     授信占用类别_实占(DictCode.授信占用类别,"02","实占"),
     授信占用来源_画面(DictCode.授信占用类别,"03","画面"),
     授信占用来源_接口(DictCode.授信占用类别,"04","接口"),
+    
 	;
     /**
      * 对应于数据字典code
