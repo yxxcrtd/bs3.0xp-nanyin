@@ -141,6 +141,11 @@ public enum DictCodeListRsk implements BaseDictCodeList {
     名单级别_一级库(DictCode.名单级别,"01","一级库"),
     名单级别_二级库(DictCode.名单级别,"02","二级库"),
     估值来源_行内(DictCode.估值来源,"BAK","行内-BAK"),
+
+    授信占用类别_预占(DictCode.授信占用类别,"01","预占"),
+    授信占用类别_实占(DictCode.授信占用类别,"02","实占"),
+    授信占用来源_画面(DictCode.授信占用类别,"03","画面"),
+    授信占用来源_接口(DictCode.授信占用类别,"04","接口"),
 	;
     /**
      * 对应于数据字典code
