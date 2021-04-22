@@ -80,6 +80,19 @@
 		    </exclusions>
         </dependency>
 
+		<!-- 交易画面端 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>tams-exchange</artifactId>
+			<version>2.1.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
         <!-- 移动APP -->
 		<dependency>
 			<groupId>com.joyintech</groupId>
