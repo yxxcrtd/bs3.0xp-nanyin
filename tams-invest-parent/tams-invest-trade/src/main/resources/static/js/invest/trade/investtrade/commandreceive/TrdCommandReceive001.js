@@ -128,6 +128,17 @@ var showDetailByFinprodId = function (finprodId, finprodType2) {
                 finprodId: finprodId
             });
     }
+    // add by etliu 20210421 权益类资产相关代码合并 start
+    else if (finprodType2 == PINAN_ASSET_TYPE_F19) {
+        label = 'FinProjectNetTargetAsset002.title';
+        pagePath = "invest/asset/projectnet/FinProjectNetTargetAsset002/init";
+        Joyin.dialog(JoyinUtil.getLabel(label), basePath + pagePath, "95%",
+            "90%", {
+                pageModel: PAGE_MODEL_REFERENCE,
+                finprodId: finprodId
+            });//权益类资产标的信息查看
+    }
+    // add by etliu 20210421 权益类资产相关代码合并 end
 };
 
 /**
@@ -366,6 +377,17 @@ var TrdCommandReceive001 = function () {
                             },
                             function(){table.reload();});
                     }
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    else if (data.finprodType2 == PINAN_ASSET_TYPE_F19) {
+                        label = 'EtrProjectNet002.detail';
+                        pagePath = "invest/entrust/etrprojectnet/EtrProjectNet002/init";
+                        Joyin.dialog(JoyinUtil.getLabel(label),
+                            basePath + pagePath, "95%", "90%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                entrustId: entrustId,
+                            });//权益类指令详情
+                    }
+                    // add by etliu 20210421 权益类资产相关代码合并 end
 
                 },
 //        height:'300px',
@@ -780,6 +802,17 @@ var TrdCommandReceive001 = function () {
                             },
                             function(){table.reload();});
                     }
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    else if (data.finprodType2 == PINAN_ASSET_TYPE_F19){
+                        label = 'EtrProjectNet002.detail';
+                        pagePath = "invest/entrust/etrprojectnet/EtrProjectNet002/init";
+                        Joyin.dialog(JoyinUtil.getLabel(label),
+                            basePath + pagePath, "95%", "90%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                entrustId: entrustId
+                            });//权益类指令详情
+                    }
+                    // add by etliu 20210421 权益类资产相关代码合并 end
 
                 },
                 searchOnInit: true,
@@ -1109,6 +1142,17 @@ var TrdCommandReceive001 = function () {
                                 entrustId: entrustId
                             });
                     }
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    else if (data.finprodType2 == PINAN_ASSET_TYPE_F19) {//项目类资产
+                        label = 'TrdProjectNetInvestTrade002';
+                        pagePath = "invest/trade/projectnet/TrdProjectNetInvestTrade002/init";
+                        Joyin.dialog(JoyinUtil.getLabel(label),
+                            basePath + pagePath, "95%", "90%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                bizCode: data.tradeId
+                            });
+                    }
+                    // add by etliu 20210421 权益类资产相关代码合并 end
                 },
                 cols: [{
                     field: 'tradeId',
@@ -1646,6 +1690,12 @@ var TrdCommandReceive001 = function () {
                         Joyin.error("立项指令暂不支持交易录单");
                         return;
                     }
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    else if (finprodType2 == PINAN_ASSET_TYPE_F19) { //权益类资产交易
+                        label = 'TrdProjectNetInvestTrade002';
+                        pagePath = "invest/trade/projectnet/TrdProjectNetInvestTrade002/init";
+                    }
+                    // add by etliu 20210421 权益类资产相关代码合并 end
 
                     pagePath = basePath + pagePath;
                     // Joyin.ajax(pagePath,

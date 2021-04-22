@@ -102,6 +102,11 @@ public class TrdCommandReceive001Controller extends BaseController{
         model.addAttribute("PINAN_ASSET_TYPE_F12", DictCodeListExt2.平安资产类型_债券借贷.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F16", DictCodeListExt2.平安资产类型_利率互换.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F36", DictCodeListExt1.金融产品类型_投管用_立项指令.getValue());
+
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        model.addAttribute("PINAN_ASSET_TYPE_F19", DictCodeListExt3.平安资产类型_权益类资产.getValue());
+        // add by etliu 20210421 权益类资产相关代码合并 end
+
         //add by gejiaao start
         model.addAttribute("PINAN_ASSET_TYPE_F17", DictCodeListExt2.平安资产类型_一级市场债.getValue());
         //add by gejiaao end
