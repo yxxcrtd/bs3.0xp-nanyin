@@ -163,4 +163,9 @@ public interface AccountingMethodMapper {
      * @since 1.0
      */
     PaTrdProductDeal getPaTrdProductDeal(Map<String, Object> params);
+
+    int deleteBokStatDetPosiitonBatch(List<BokStatDetPosiiton> list);
+
+    int insertBokStatDetPosiitonBatch(List<BokStatDetPosiiton> list);
+
 }

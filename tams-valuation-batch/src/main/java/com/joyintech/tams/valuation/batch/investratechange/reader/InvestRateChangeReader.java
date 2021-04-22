@@ -24,7 +24,6 @@ import com.joyintech.tams.valuation.batch.investratechange.dto.InvestRateChangeR
 import com.joyintech.tams.valuation.batch.investratechange.service.InvestRateChangeReaderService;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 
-import org.apache.poi.hpsf.Decimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;

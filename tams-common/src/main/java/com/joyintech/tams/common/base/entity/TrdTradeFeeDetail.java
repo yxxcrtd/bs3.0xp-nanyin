@@ -43,6 +43,11 @@ public class TrdTradeFeeDetail extends TrdTradeFeeDetailKey {
     private String isPrepaid;
 
     /**
+     * 更新时间
+     */
+    private String registOrg;
+
+    /**
      * 取得 是否随交易支付
      * @return 是否随交易支付
      */
@@ -152,5 +157,21 @@ public class TrdTradeFeeDetail extends TrdTradeFeeDetailKey {
      */
     public void setIsPrepaid(String isPrepaid) {
         this.isPrepaid = isPrepaid == null ? null : isPrepaid.trim();
+    }
+
+    /**
+     * 取得 更新时间
+     * @return 更新时间
+     */
+    public String getRegistOrg() {
+        return registOrg;
+    }
+
+    /**
+     * 设置 更新时间
+     * @param registOrg 更新时间
+     */
+    public void setRegistOrg(String registOrg) {
+        this.registOrg = registOrg == null ? null : registOrg.trim();
     }
 }

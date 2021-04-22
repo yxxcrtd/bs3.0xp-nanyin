@@ -1,9 +1,10 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.TrdFeeConfig;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TrdFeeConfigMapper {
@@ -20,6 +21,6 @@ public interface TrdFeeConfigMapper {
     int updateByPrimaryKeySelective(TrdFeeConfig record);
 
     int updateByPrimaryKey(TrdFeeConfig record);
-
-    List<String> findWindtypetwo(String windtypeone);
+    
+	List<String> findWindtypetwo(String windtypeone);
 }

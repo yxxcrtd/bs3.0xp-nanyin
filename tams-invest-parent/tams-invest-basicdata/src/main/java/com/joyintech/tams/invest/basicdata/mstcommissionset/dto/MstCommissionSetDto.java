@@ -16,6 +16,7 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.basicdata.mstcommissionset.validator.MstCommissionSetValidator;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -99,22 +100,6 @@ public class MstCommissionSetDto extends TrdFeeConfig implements ProcessEntity {
      * 流程中做pk1存json串
      */
     private String allData;
-
-    private List<TrdFeeConfigDetail> trdFeeConfigDetailList;
-
-    public List<TrdFeeConfigDetail> getTrdFeeConfigDetailList() {
-        return trdFeeConfigDetailList;
-    }
-
-    public void setTrdFeeConfigDetailList(List<TrdFeeConfigDetail> trdFeeConfigDetailList) {
-        this.trdFeeConfigDetailList = trdFeeConfigDetailList;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-
 
     public String getPageId() {
         return pageId;
@@ -379,25 +364,46 @@ public class MstCommissionSetDto extends TrdFeeConfig implements ProcessEntity {
         this.feeRate = feeRate;
     }
 
-    public String getIsGradeStr() {
+    //add by hudongyang 2020-08-05 start
+    private List<TrdFeeConfigDetail>  trdFeeConfigDetailList;
+    /**
+     * 选择的数据
+     * @return List
+     */
+    public List<TrdFeeConfigDetail> getTrdFeeConfigDetailList() {
+        return trdFeeConfigDetailList;
+    }
+
+    /**
+     * 选择的数据
+     *
+     * @param trdFeeConfigDetailList trdFeeConfigDetailList
+     */
+    public void setTrdFeeConfigDetailList(List<TrdFeeConfigDetail> trdFeeConfigDetailList) {
+        this.trdFeeConfigDetailList = trdFeeConfigDetailList;
+    }
+
+    public String getAssetClassify1Str() {
+        return SysDataUtil.getNameFromDataDict(DictCode.授信资产二级分类, this.getAssetClassify1());
+    }
+    public String getAssetClassify2Str() {
+        return SysDataUtil.getNameFromDataDict(DictCode.授信资产三级分类, this.getAssetClassify2());
+    }
+    public String getCommCalMethodStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.佣金计算方式, this.getCommCalMethod());
+    }
+    public String getIsGradeStr(){
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.是否, this.getIsGrade());
     }
-    public String getWindtypeoneStr() {
-        if(this.getWindtypeone()==null||this.getWindtypeone()=="")return null;
-        String[] windtypeoneArray = this.getWindtypeone().split(",");
-        String obj="";
-        for(String windtypeone:windtypeoneArray){
-            obj = obj+SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND一级分类_含债券一级分类等, windtypeone)+",";
+    public String getBrokerBaerFeeStr() {
+        if(StringUtil.isNotEmpty(super.getBrokerBaerFee()) ){
+            List<String> brokerBaerFeeList=new ArrayList<String>();
+            for(String brokerBaerFeeStr:super.getBrokerBaerFee().split(",")){
+                brokerBaerFeeList.add(SysDataUtil.getNameFromDataDict(BussinessDictCode.费用类型, brokerBaerFeeStr));
+            }
+            return String.join(",", brokerBaerFeeList);
         }
-        return obj.substring(0,obj.length()-1);
+        return super.getBrokerBaerFee();
     }
-    public String getWindtypetwoStr() {
-        if(this.getWindtypetwo()==null||this.getWindtypetwo()=="")return null;
-        String[] windtypetwoArray = this.getWindtypetwo().split(",");
-        String obj="";
-        for(String windtypetwo:windtypetwoArray){
-            obj = obj+SysDataUtil.getNameFromDataDict(BussinessDictCode.WIND二级分类_含债券二级分类等, windtypetwo)+",";
-        }
-        return obj.substring(0,obj.length()-1);
-    }
+    //add by hudongyang 2020-08-05 end
 }

@@ -40,6 +40,31 @@
     								</select>	
     						</div>
     					</div>
+                        <div class="form-inline-wrap">
+                            <label class="layui-form-label form-lable"
+                                   data-th-text="#{MstCommissionSet002.tradeType}">交易品种</label>
+                            <div class="layui-input-inline input-inline">
+                                <select th:id="tradeType" name="tradeType" formatoption="false"
+                                        class="layui-input form-input input-select"
+                                        multiple="true"
+                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                        data-th-initValue='${entity?.tradeType}'
+                                        data-th-data-result="${RISK_ASSET_TYPE}">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                            <label class="layui-form-label form-lable"
+                                   data-th-text="#{MstCommissionSet002.effDate}">生效日</label>
+                            <div class="layui-input-inline input-inline">
+                                <input type="text" id="effDate" name="effDate"
+                                       class="layui-input form-input input-dateSelect"
+                                       data-th-value='${#dates.format(entity?.effDate,"yyyy-MM-dd")}'
+                                       placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" >
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

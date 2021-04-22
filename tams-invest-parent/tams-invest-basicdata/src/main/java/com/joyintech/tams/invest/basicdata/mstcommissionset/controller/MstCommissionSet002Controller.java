@@ -16,11 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,9 +41,6 @@ import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.invest.basicdata.mstcommissionset.dto.MstCommissionSetDto;
 import com.joyintech.tams.invest.basicdata.mstcommissionset.service.MstCommissionSetService;
@@ -80,7 +80,16 @@ public class MstCommissionSet002Controller extends BaseController {
      */
     private static final IDictCode[] DICT_CODES = new BussinessDictCode[] {BussinessDictCode.交易场所,
         BussinessDictCode.计费类型, BussinessDictCode.计费基数, BussinessDictCode.期限品种,
-        BussinessDictCode.平安资产类型, BussinessDictCode.费用类型, BussinessDictCode.是否};
+        BussinessDictCode.费用类型, BussinessDictCode.是否
+        ,BussinessDictCode.交易平台
+    };
+
+    /**
+     * add by hudongyang 初始化查询条件
+     */
+    private static final IDictCode[] DICT_CODES1 = new DictCode[] {
+            DictCode.交易所费用资产分类一, DictCode.交易所费用资产分类二, DictCode.佣金计算方式, DictCode.分档条件, DictCode.授信资产类型
+    };
 
     /**
      * {@inheritDoc}
@@ -93,9 +102,6 @@ public class MstCommissionSet002Controller extends BaseController {
                 workflowId);
             model.addAttribute("pageModel", dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
-            if(StringUtil.isNotEmpty(dto.getWindtypetwo())){
-                model.addAttribute("windtypetwo", dto.getWindtypetwo().split(","));
-            }
         }
         else if (WorkFlowUtil.isNotFromToDoList()
                  && StringUtil.isNotEmpty(this.getParam("batchSeq"))) {
@@ -103,28 +109,25 @@ public class MstCommissionSet002Controller extends BaseController {
             MstCommissionSetDto dto = mstCommissionSetService.getBussinessEntityBySeqNo(
                 this.getParam("batchSeq"));
             model.addAttribute(GlobalConstant.ENTITY, dto);
-            if(StringUtil.isNotEmpty(dto.getWindtypetwo())){
-                model.addAttribute("windtypetwo", dto.getWindtypetwo().split(","));
-            }
         }
-        this.setSelectOptionToModel(model,new IDictCode[]{BussinessDictCode.交易市场,BussinessDictCode.WIND一级分类_含债券一级分类等,BussinessDictCode.WIND二级分类_含债券二级分类等});
         this.setSelectOptionToModel(model, DICT_CODES);
+        this.setSelectOptionToModel(model, DICT_CODES1);//add by hudongyang 增加初始化
         List<SelectOptionDto> listFloatRate = new ArrayList<SelectOptionDto>();
         SelectDto selectDto1 = this.getSelectDataFromDataDic(BussinessDictCode.交易方向, null);
         for (SelectOptionDto dto : selectDto1.getOptions()) {
             dto.setId(dto.getId());
             listFloatRate.add(dto);
         }
-        SelectDto selectDto2 = this.getSelectDataFromDataDic(BussinessDictCode.回购拆借方向, null);
+        //add by longpeng start SNSTZJY-2438产品化-交易所费用设置--新建数据，交易品种为“质押式回购”时，“交易方向”下拉框枚举值显示重复
+        /*SelectDto selectDto2 = this.getSelectDataFromDataDic(BussinessDictCode.回购拆借方向, null);
         for (SelectOptionDto dto : selectDto2.getOptions()) {
             dto.setId(dto.getId());
             listFloatRate.add(dto);
-        }
+        }*/
+      //add by longpeng end SNSTZJY-2438产品化-交易所费用设置--新建数据，交易品种为“质押式回购”时，“交易方向”下拉框枚举值显示重复
         model.addAttribute("PS", JsonUtils.objectArray2Json(listFloatRate.toArray()));
         model.addAttribute("FEE_TYPE_B02", BussinessDictCodeList.费用类型_印花税.getValue());
         model.addAttribute("FEE_TYPE_B05", BussinessDictCodeList.费用类型_佣金.getValue());
-        model.addAttribute("FEE_TYPE_B01", BussinessDictCodeList.费用类型_经手费.getValue());
-        model.addAttribute("FEE_TYPE_B07", BussinessDictCodeList.费用类型_结算费.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F01", BussinessDictCodeList.平安资产类型_债券.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F11", BussinessDictCodeList.平安资产类型_股票.getValue());
         // 场内基金改造 add by renping 20191117 start
@@ -132,6 +135,15 @@ public class MstCommissionSet002Controller extends BaseController {
         // 场内基金改造 add by renping 20191117 end
         model.addAttribute("CHARGE_KIND_1", BussinessDictCodeList.计费类型_固定费率.getValue());
         model.addAttribute("CHARGE_BASIS_02", BussinessDictCodeList.计费基数_成交金额.getValue());
+        
+        SelectDto temp = this.getSelectDataFromDataDic(DictCode.一次性费用类型, null);
+        List<SelectOptionDto> listFeeTypeQs = new ArrayList<SelectOptionDto>();
+        for (SelectOptionDto dto : temp.getOptions()) {
+        	if (!StringUtil.equals(dto.getId(), DictCodeListExt1.一次性费用类型_佣金.getValue())) {
+        		listFeeTypeQs.add(dto);
+        	}
+        }
+        model.addAttribute("FEE_TYPE_QS", JsonUtils.objectArray2Json(listFeeTypeQs.toArray()));
         return super.init(model);
     }
 
@@ -207,32 +219,42 @@ public class MstCommissionSet002Controller extends BaseController {
         params.setComment(entity -> {
             return WorkFlowUtil.concatComment(getMessage("MstCommissionSet002.batchSeq"),
                 GlobalConstant.OPEN_PARENTHESIS, businessCode, GlobalConstant.CLOSE_PARENTHESIS,
-                getMessage("MstCommissionSet002.secAcct"), GlobalConstant.OPEN_PARENTHESIS,
-                entity.getSecAcctId(), GlobalConstant.CLOSE_PARENTHESIS);
+                getMessage("MstCommissionSet002.tradeType"), GlobalConstant.OPEN_PARENTHESIS,
+                    SysDataUtil.getNameFromDataDict(DictCode.授信资产类型, entity.getTradeType()), GlobalConstant.CLOSE_PARENTHESIS);
         });
         processParameter.setWorkFlowParameter(params);
         String msg = mstCommissionSetService.start(processParameter, dto);
         return new AjaxResult(msg);
     }
 
-
+    /**
+     * add by hudongyang
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
-    @RequestMapping("findTable")
-    public Page<TrdFeeConfigDetail> findTable() throws Exception {
-        List<TrdFeeConfigDetail> list=new ArrayList<>();
-//        Page<TrdFeeConfigDetail> page = mstCommissionSetService.findTable(RequestUtil.getParameters(getRequest()));
-        Map<String,Object> map=RequestUtil.getParameters(getRequest());
-
-        String workflowId=(String)map.get("workflowId");
-        if(workflowId!=null && workflowId!=""){
-            MstCommissionSetDto dto = mstCommissionSetService.getBussinessEntityByWorkflowId(workflowId);
-            list = dto.getTrdFeeConfigDetailList();
-        }else if(map.get("batchSeq")!=null && map.get("batchSeq")!=""){
-            list = mstCommissionSetService.findTable(map);
-        }
-        if("N".equals(map.get("isGrade"))) list = new ArrayList<>();
-        Page<TrdFeeConfigDetail> page = new Page<>();
-        page.setRoot(list);
+    @RequestMapping("findPage")
+    public Page<TrdFeeConfigDetail> selectAll()
+            throws Exception {
+        Page<TrdFeeConfigDetail> page = mstCommissionSetService.select(
+                RequestUtil.getPageParam());
         return page;
+    }
+
+    /**
+     * add by hudongyang
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/getMstCustomerInfo")
+    public List<SelectOptionDto> getMstCustomerInfo()
+            throws Exception {
+        Map<String, Object> param = new HashMap<String, Object>();
+        String customerId = super.getRequest().getParameter("search");
+        param.put("customerId", customerId);
+        List<SelectOptionDto> temp = mstCommissionSetService.getMstCustomerInfo(param);
+
+        return temp;
     }
 }

@@ -21,7 +21,7 @@ public interface TrdFinProductDealTotalMapper {
     int updateByPrimaryKeySelective(TrdFinProductDealTotal record);
 
     int updateByPrimaryKey(TrdFinProductDealTotal record);
-
+    
     DebtBaseInfo selectIsRight(@Param("finprodId") String finprodId);
 
 	int insertDebtBaseInfo(DebtBaseInfo debtbaseinfo);

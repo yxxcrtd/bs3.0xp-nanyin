@@ -27,7 +27,7 @@ public interface MstCommissionSetMapper {
 	 */
 	List<MstCommissionSetDto> selectForPage(Map<String, Object> pageParam);
 	
-	MstCommissionSetDto getBussinessEntityBySeqNo(Map<String, Object> pageParam);
+	List<MstCommissionSetDto> getBussinessEntityBySeqNo(Map<String, Object> pageParam);
 
 	/**
      * 证券账户联想下拉框
@@ -36,8 +36,6 @@ public interface MstCommissionSetMapper {
     List<SelectOptionDto> getSecAcctName(Map<String, Object> map);
     
     int searchRepeatBySecPs(Map<String, Object> map);
-    
-    List<MstCommissionSetDto> searchRepeatBySecPs1(Map<String, Object> map);
     
     String getSecRegistOrg(String secAcctId);
     /**
@@ -51,5 +49,7 @@ public interface MstCommissionSetMapper {
      */ 
     int deleteDtlByBatchSeq(String batchSeq);
 
-    List<TrdFeeConfigDetail> findTable(Map<String, Object> param);
+    //add by hudongyang
+	List<TrdFeeConfigDetail> getTrdFeeConfigDetailList(Map<String, Object> pageParam);
+	List<SelectOptionDto> getMstCustomerInfo(Map<String, Object> map);
 }

@@ -1,9 +1,10 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TrdProductDealMapper {
@@ -20,6 +21,6 @@ public interface TrdProductDealMapper {
     int updateByPrimaryKeySelective(TrdProductDeal record);
 
     int updateByPrimaryKey(TrdProductDeal record);
-
+    
     List<TrdProductDeal> selectByTrade(TrdProductDeal deal);
 }

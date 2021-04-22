@@ -7,6 +7,7 @@ package com.joyintech.tams.valuation.batch.common.accountingmethod.entity;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
+import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
 import com.joyintech.tams.valuation.batch.common.base.entity.extcommon.ValBokBookdetailBatch;
 
 import java.util.ArrayList;
@@ -42,7 +43,18 @@ public class BookGenerateResult extends NeedToWriteEntity {
      * 记账凭证主错误表信息
      */
     // private BokKeepaccountErr bokKeepaccountErr;
+    /**
+     * 统计分析明细表（资产减值）
+     */
+    private List<BokStatLossPosiiton> bokStatLossPosiitonList = new ArrayList<BokStatLossPosiiton>();
 
+    public List<BokStatLossPosiiton> getBokStatLossPosiitonList() {
+        return bokStatLossPosiitonList;
+    }
+
+    public void setBokStatLossPosiitonList(List<BokStatLossPosiiton> bokStatLossPosiitonList) {
+        this.bokStatLossPosiitonList = bokStatLossPosiitonList;
+    }
     /**
      * 默认构造函数
      */
