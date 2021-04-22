@@ -238,10 +238,12 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		    if(item.getInvestCountry()!=null){
 		    	List<String> investCountrys=StringUtil.splitToList(GlobalConstant.COMMA, item.getInvestCountry());
 				item.setInvestCountry("");
-				for(String investCountry : investCountrys){
-					item.setInvestCountry(item.getInvestCountry()+","+investCountry+" "+SvrDataUtil.getNameFromDataDict(DictCode.所属国家或地区, investCountry));
+				if (!StringUtil.isEmptyList(investCountrys)){
+					for(String investCountry : investCountrys){
+						item.setInvestCountry(item.getInvestCountry()+","+investCountry+" "+SvrDataUtil.getNameFromDataDict(DictCode.所属国家或地区, investCountry));
+					}
+					item.setInvestCountry(item.getInvestCountry().substring(1));
 				}
-				item.setInvestCountry(item.getInvestCountry().substring(1));
 		    }
 			
 			if(item.getFinanSerModel()!=null){
