@@ -108,10 +108,15 @@ public class TradeRdsCommonAop {
             return;
         }
         Object[] args = joinPoint.getArgs();
+
         Map<String,Object> mapTrd=JsonUtils.object2Map(args[0]);
         if (StringUtil.isNotEmpty(mapTrd.get("operateType"))&&mapTrd.get("operateType").equals("submit")) {
             //如果是撤销的退回再提交直接退去，不需要调实占
             if(!checkRevokeAction(mapTrd.get("workflowId"))){
+                return;
+            }
+            //债券上市流通交易不走实占接口代码
+            if (mapTrd.get("ps") != null && StringUtil.equals(mapTrd.get("ps"),DictCodeList.交易方向_上市流通.getValue())){
                 return;
             }
         	revokeBackRiskCommon(mapTrd,BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),joinPoint);

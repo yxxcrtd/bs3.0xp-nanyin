@@ -1,9 +1,6 @@
 package com.joyintech.tams.invest.trade.bondmarkettrade.service;
 
-import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -31,8 +28,6 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -289,6 +284,8 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
      * @since 1.0
      */
     public void setEntity(TrdBondMarketTradeDto dto) {
+        dto.setPs(DictCodeList.交易方向_上市流通.getValue());
+        dto.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
         //分支0
         String branch = CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE);
         Long branchLong = Long.parseLong(branch);
