@@ -190,6 +190,9 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
             params.put("mdate", DateUtil.format(inputDto.getMdate()));
             params.put("portfolioId", inputDto.getPortfolioId());
             BigDecimal 标准券面总额 = trdRepoTrade002Service.getAvaStandardStockPosition(params);
+            if(!StringUtil.isNotEmpty(标准券面总额)){
+            	标准券面总额 = BigDecimal.ZERO;
+            }
             if (inputDto.getPrinAmt() != null && inputDto.getPrinAmt().compareTo(标准券面总额) > 0) {
                 ValidMessage validMessage = new ValidMessage("prinAmt",
                         getMessage("TRD_E_0005"));
