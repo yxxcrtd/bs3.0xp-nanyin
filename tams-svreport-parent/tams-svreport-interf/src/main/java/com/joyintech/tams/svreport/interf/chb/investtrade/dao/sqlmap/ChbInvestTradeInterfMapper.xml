@@ -3387,7 +3387,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       null PROD_ID,/*取自从属表*/
       deal.regist_org REGIST_BANK_CODE,/*登记银行编码*/
       <!--DEAL.FINPROD_ID ASSET_CODE,-->
-      NVL(fp.FINPROD_ID,fpd.FINPROD_ID) ASSET_CODE,
+      NVL(fpd.FINPROD_ID,DEAL.FINPROD_ID) ASSET_CODE,
       DEAL.CCY CCY,
       deal.trade_amt AMT,
       NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
@@ -3521,7 +3521,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
       null PROD_ID,/*取自从属表*/
       ORG.regist_org REGIST_BANK_CODE,/*登记银行编码*/
       <!--DEAL.FINPROD_ID ASSET_CODE,-->
-      NVL(fp.FINPROD_ID,fpd.FINPROD_ID) ASSET_CODE,
+      NVL(fpd.FINPROD_ID,DEAL.FINPROD_ID) ASSET_CODE,
       DEAL.CCY CCY,
       deal.trade_amt AMT,
       NULL CNY_AMT,/*折算后人民币在街口中单独处理*/
