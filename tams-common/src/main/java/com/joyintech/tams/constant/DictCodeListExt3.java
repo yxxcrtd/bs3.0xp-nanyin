@@ -561,6 +561,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     //add by likai 2020-1-14
     共通业务类型_期权投资委托(DictCode.共通业务类型,"ETR21","期权投资委托"),
 
+    减值测算方式_外部评估(DictCode.减值测算方式,"01","外部评估"),
+    减值测算方式_预期信用损失模型(DictCode.减值测算方式,"02","预期信用损失模型"),
+    减值生成方式_计提批处理(DictCode.减值生成方式,"01","计提批处理"),
+    减值生成方式_交易批处理(DictCode.减值生成方式,"02","交易批处理"),
+    减值生成方式_减值计提批处理(DictCode.减值生成方式,"03","减值计提批处理"),
 
 
 
@@ -997,7 +1002,13 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_席位信息管理(DictCode.共通业务类型,"MST26","席位信息管理"),
     共通业务类型_标准券再折算率(DictCode.共通业务类型,"SCRCR01","标准券再折算率"),
 
-
+    减值处理方式_减值(DictCode.减值处理方式,"01","减值"),
+    减值处理方式_转回(DictCode.减值处理方式,"02","转回"),
+    减值处理方式_减值使用(DictCode.减值处理方式,"03","减值使用"),
+    减值处理方式_清理核销(DictCode.减值处理方式,"04","清理核销"),
+    阶段_初始买入时_P1(DictCode.减值阶段,"P1","一阶段"),
+    阶段_买入后风险显著提升_P2(DictCode.减值阶段,"P2","二阶段"),
+    阶段_买入后出现减值_P3(DictCode.减值阶段,"P3","三阶段"),
 
 
 
