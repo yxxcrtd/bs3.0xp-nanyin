@@ -222,7 +222,9 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             }
             //撤销基金除权登记时，根据前置交易编号查询不到划款指令特殊处理
             if(bttob == null || bttob.isEmpty()){
-                bttob = bussSettleOrderCommService.selectOrdersByBizCodeByBTradeId(baseTradeDto.getTrdProductDeal().getbTradeId());
+            	if(StringUtil.isNotEmpty(baseTradeDto.getTrdProductDeal().getbTradeId())){
+            		bttob = bussSettleOrderCommService.selectOrdersByBizCodeByBTradeId(baseTradeDto.getTrdProductDeal().getbTradeId());
+            	}
             }
             /*----------------------TISHKBS-1583 计划类净值型存续期交易撤销报错,前置交易编号为空时取交易编号去掉R modify by msk end--------------------*/
             List<BussTrdTransferOrderDto> reslist = new ArrayList<BussTrdTransferOrderDto>();
