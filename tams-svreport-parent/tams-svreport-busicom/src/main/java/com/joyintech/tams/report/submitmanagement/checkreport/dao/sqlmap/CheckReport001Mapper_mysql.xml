@@ -11,7 +11,7 @@
 		shortName
 		FROM chb_prd_declare_info A
 		<where>
-			A.PROD_INS_ID like concat_ws('','%',#{prodId, jdbcType=VARCHAR},'%')
+			A.PROD_INS_ID like concat('%',#{prodId, jdbcType=VARCHAR},'%')
 		</where>
 		order by A.PROD_INS_ID
 	</select>
@@ -34,7 +34,7 @@
         A.PRODNAME as shortName
         FROM CHB_PRDRESIST_CODE A
         <where>
-			A.PRODID like concat_ws('','%',#{prodId, jdbcType=VARCHAR},'%')
+			A.PRODID like concat('%',#{prodId, jdbcType=VARCHAR},'%')
         </where>
         order by A.PRODID
 	</select>

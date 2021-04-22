@@ -1,34 +1,11 @@
 package com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.ZipFileUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -42,13 +19,29 @@ import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
-import com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportAssetDebtDetailDto;
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsDataFileHelper;
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dao.PbcProdRaiseSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSubVo;
 import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubCheck;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 /**
  * 产品资金募集信息service
  * @author liuyu
@@ -617,6 +610,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
     		Map<String,Object> data  = new HashMap<String,Object>();
 			File depositfile = TisUtil.createFile(data, "pbc/PbcReport_PbcRaisProd_CNY", fileName);
 			sourceFiles.add(depositfile);
+			sourceFiles0.add(depositfile);
 		}
         // 如果生成excel文件个数大于1，生成压缩文件
         File outFile = null;

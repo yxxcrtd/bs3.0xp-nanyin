@@ -6,7 +6,7 @@
 		SELECT
 		b.PROD_INS_ID prodId,
 		A.ORG_CODE orgCode,
-		b.PROD_NAME prodName,
+		A.PRODNAME prodName,
 		A.REG_CODE regCode,
 		DATE_FORMAT(A.VDATE,'%Y-%m-%d') vdate,
 		DATE_FORMAT(A.MDATE,'%Y-%m-%d') mdate,
@@ -87,7 +87,7 @@
 		A.PRODID prodId,
 		A.ORG_CODE orgCode,
 		IFNULL(b.prod_name,a.reg_code) orgName,
-		b.PROD_NAME prodName,
+		A.PRODNAME prodName,
 		A.REG_CODE regCode,
 		b.OPERATE_MODE operateMode,
 		DATE_FORMAT(b.VDATE,'%Y-%m-%d') vdate,
@@ -208,7 +208,7 @@
 		<where>
 			A.REG_CODE is not null
 			<if test="search != null and search != ''">
-				and A.REG_CODE like concat_ws(concat_ws('%', #{search}),'%') or b.PROD_NAME like concat_ws(concat_ws('%', #{search}),'%')
+				and A.REG_CODE like concat('%', #{search},'%') or b.PROD_NAME like concat('%', #{search},'%')
 			</if>
 			<if test="orgCodeList !=null and orgCodeList.size()>0">
 				<!-- 机构代码不为空时 -->

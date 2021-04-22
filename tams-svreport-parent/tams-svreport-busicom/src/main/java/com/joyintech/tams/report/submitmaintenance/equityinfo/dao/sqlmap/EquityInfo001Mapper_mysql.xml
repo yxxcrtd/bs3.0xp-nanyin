@@ -37,7 +37,7 @@
 		from CHB_EQU_HOLD A
 		<where>
 			<if test="bankCode != null and bankCode != ''">
-				A.REGIST_BANK_CODE LIKE concat_ws(concat_ws('%',#{bankCode}),'%')
+				A.REGIST_BANK_CODE LIKE concat('%',#{bankCode},'%')
 			</if>
 			<if test="orgCodeList != null and orgCodeList.size() > 0">
 				<foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
@@ -50,7 +50,7 @@
 				</foreach>
 			</if>
 			<if test="indentifyMark != null and indentifyMark != ''">
-				AND A.INDENTIFY_MARK LIKE concat_ws(concat_ws('%',#{indentifyMark}),'%')
+				AND A.INDENTIFY_MARK LIKE concat('%',#{indentifyMark},'%')
 			</if>
 			<if test="holderTypeList != null and holderTypeList.size() > 0">
 				<foreach collection="holderTypeList" item="holderType" open=" AND A.HOLDER_TYPE IN (" close=")" separator=",">
@@ -58,10 +58,10 @@
 				</foreach>
 			</if>
 			<if test="holderName != null and holderName != ''">
-				AND A.HOLDER_NAME LIKE concat_ws(concat_ws('%',#{holderName}),'%')
+				AND A.HOLDER_NAME LIKE concat('%',#{holderName},'%')
 			</if>
 			<if test="identifyNumber != null and identifyNumber != ''">
-				AND A.IDENTIFY_NUMBER LIKE concat_ws(concat_ws('%',#{identifyNumber}),'%')
+				AND A.IDENTIFY_NUMBER LIKE concat('%',#{identifyNumber},'%')
 			</if>
 		</where>
 		ORDER BY UPDATE_TIME DESC, INDENTIFY_MARK ASC
