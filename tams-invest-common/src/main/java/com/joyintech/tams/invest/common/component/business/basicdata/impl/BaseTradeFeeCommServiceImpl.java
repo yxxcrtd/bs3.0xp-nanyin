@@ -122,11 +122,11 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
 					 * 			或者债券信息中资产分类一等于费用规则的资产分类一并且费用规则的资产分类二为空
 					 * 			或者费用规则的资产分类一为空并且费用规则的资产分类二为空
 					 */
-					if((CommonUtils.isNotEmpty(inputDto.getType6()) && inputDto.getType6().equals(dto.getWindtypeone())) &&
-							(CommonUtils.isNotEmpty(inputDto.getType7()) && inputDto.getType7().equals(dto.getWindtypetwo()))
-							||(CommonUtils.isNotEmpty(inputDto.getType6()) && inputDto.getType6().equals(dto.getWindtypeone()) &&
-							StringUtil.isEmpty(dto.getWindtypetwo()))
-							||StringUtil.isEmpty(dto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypetwo())){
+					if((CommonUtils.isNotEmpty(inputDto.getType6()) && inputDto.getType6().equals(dto.getAssetClassify1())) &&
+							(CommonUtils.isNotEmpty(inputDto.getType7()) && inputDto.getType7().equals(dto.getAssetClassify2()))
+							||(CommonUtils.isNotEmpty(inputDto.getType6()) && inputDto.getType6().equals(dto.getAssetClassify1()) &&
+							StringUtil.isEmpty(dto.getAssetClassify2()))
+							||StringUtil.isEmpty(dto.getAssetClassify1())&&StringUtil.isEmpty(dto.getAssetClassify2())){
 						/**满足条件，一定存在一条该种类下的费用规则满足要求
 						 * 判断循环是否进入了下一个种类并且是否已经找到了满足条件的费用规则，若满足，跳出循环
 						 * 实现条件：费用规则的费用规则中是否分档为“否”并且暂存的规则是否分档为“是”
@@ -135,8 +135,8 @@ public class BaseTradeFeeCommServiceImpl implements BaseTradeFeeCommService {
 						 * 		或者暂存的规则不为空并且暂存的规则生效日不等于循环中的规则生效日
 						 */
  						if(("Y".equals(retFeeDetailDto.getIsGrade())&&!"Y".equals(dto.getIsGrade()))
-								||(StringUtil.isNotEmpty(retFeeDetailDto.getWindtypetwo())&&StringUtil.isEmpty(dto.getWindtypetwo()))
-								||(StringUtil.isNotEmpty(retFeeDetailDto.getWindtypeone())&&StringUtil.isEmpty(dto.getWindtypeone()))
+								||(StringUtil.isNotEmpty(retFeeDetailDto.getAssetClassify2())&&StringUtil.isEmpty(dto.getAssetClassify2()))
+								||(StringUtil.isNotEmpty(retFeeDetailDto.getAssetClassify1())&&StringUtil.isEmpty(dto.getAssetClassify1()))
 								||(StringUtil.isNotEmpty(retFeeDetailDto.getBatchSeq())&&!retFeeDetailDto.getEffDate().equals(dto.getEffDate())))
 							break;
 						//判断该种类下的该费用规则是否分档

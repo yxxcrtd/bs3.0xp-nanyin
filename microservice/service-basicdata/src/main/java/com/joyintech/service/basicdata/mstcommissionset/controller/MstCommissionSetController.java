@@ -8,7 +8,6 @@ package com.joyintech.service.basicdata.mstcommissionset.controller;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -86,11 +85,6 @@ public class MstCommissionSetController {
     public int searchRepeatBySecPs(@RequestBody Map<String, Object> map) {
         return mstCommissionSetService.searchRepeatBySecPs(map);
     }
-    
-    @RequestMapping("/searchRepeatBySecPs1")
-    public int searchRepeatBySecPs1(@RequestBody Map<String, Object> map) {
-        return mstCommissionSetService.searchRepeatBySecPs1(map);
-    }
 
     /**
      * 插入
@@ -136,8 +130,14 @@ public class MstCommissionSetController {
         throws Exception {
         return mstCommissionSetService.delete(dto);
     }
-    @PostMapping("findTable")
-    public List<TrdFeeConfigDetail> findTable(@RequestBody Map<String, Object> param) throws Exception {
-        return mstCommissionSetService.findTable(param);
+
+    /**
+     * add by hudongyang
+     * @param param
+     * @return
+     */
+    @PostMapping("/getMstCustomerInfo")
+    public List<SelectOptionDto> getMstCustomerInfo(@RequestBody Map<String, Object> param) {
+        return mstCommissionSetService.getMstCustomerInfo(param);
     }
 }

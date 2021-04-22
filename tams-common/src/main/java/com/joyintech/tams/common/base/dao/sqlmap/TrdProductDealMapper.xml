@@ -68,6 +68,7 @@
         <result column="SPLIT_TRADE_ID" property="splitTradeId" jdbcType="VARCHAR" />
         <result column="IS_SWAP_TRANSACTION" property="isSwapTransaction" jdbcType="VARCHAR" />
         <result column="SEAT_ID" property="seatId" jdbcType="VARCHAR" />
+        <result column="SETTLEMEN_TYPE" property="settlemenType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, BUSI_TYPE BUSI_TYPE, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, 
@@ -85,7 +86,7 @@
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME, DELIVERY_TYPE DELIVERY_TYPE, PAY_DATE PAY_DATE, SALE_CODE SALE_CODE, 
         ACCR_NUM ACCR_NUM, TG_BUSI_TYPE TG_BUSI_TYPE, PS_PAYMENT PS_PAYMENT, SPLIT_TRADE_ID SPLIT_TRADE_ID, 
-        IS_SWAP_TRANSACTION IS_SWAP_TRANSACTION, SEAT_ID SEAT_ID
+        IS_SWAP_TRANSACTION IS_SWAP_TRANSACTION, SEAT_ID SEAT_ID, SETTLEMEN_TYPE SETTLEMEN_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -129,7 +130,8 @@
             UPDATE_USER, UPDATE_TIME, DELIVERY_TYPE, 
             PAY_DATE, SALE_CODE, ACCR_NUM, 
             TG_BUSI_TYPE, PS_PAYMENT, SPLIT_TRADE_ID, 
-            IS_SWAP_TRANSACTION, SEAT_ID)
+            IS_SWAP_TRANSACTION, SEAT_ID, SETTLEMEN_TYPE
+            )
         values (#{tradeId,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
             #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
             #{tradeDate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{settleDate,jdbcType=DATE}, 
@@ -151,7 +153,8 @@
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{deliveryType,jdbcType=VARCHAR}, 
             #{payDate,jdbcType=DATE}, #{saleCode,jdbcType=VARCHAR}, #{accrNum,jdbcType=DECIMAL}, 
             #{tgBusiType,jdbcType=VARCHAR}, #{psPayment,jdbcType=VARCHAR}, #{splitTradeId,jdbcType=VARCHAR}, 
-            #{isSwapTransaction,jdbcType=VARCHAR}, #{seatId,jdbcType=VARCHAR})
+            #{isSwapTransaction,jdbcType=VARCHAR}, #{seatId,jdbcType=VARCHAR}, #{settlemenType,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal" >
         insert into TRD_PRODUCT_DEAL
@@ -354,6 +357,9 @@
             <if test="seatId != null" >
                 SEAT_ID,
             </if>
+            <if test="settlemenType != null" >
+                SETTLEMEN_TYPE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -554,6 +560,9 @@
             <if test="seatId != null" >
                 #{seatId,jdbcType=VARCHAR},
             </if>
+            <if test="settlemenType != null" >
+                #{settlemenType,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal" >
@@ -566,7 +575,7 @@
         COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID, CASH_ID, REGIST_ORG, REMARK, CANCEL_REMARK, 
         CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DELIVERY_TYPE, PAY_DATE, 
         SALE_CODE, ACCR_NUM, TG_BUSI_TYPE, PS_PAYMENT, SPLIT_TRADE_ID, IS_SWAP_TRANSACTION, 
-        SEAT_ID)
+        SEAT_ID, SETTLEMEN_TYPE)
         select TRADE_ID, BUSI_TYPE, FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, 
             BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, SETTLE_SPEED, CCY, CPRICE_DATE, UNIT_CPRICE, 
             UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, 
@@ -576,7 +585,7 @@
             COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID, CASH_ID, REGIST_ORG, REMARK, CANCEL_REMARK, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DELIVERY_TYPE, PAY_DATE, 
             SALE_CODE, ACCR_NUM, TG_BUSI_TYPE, PS_PAYMENT, SPLIT_TRADE_ID, IS_SWAP_TRANSACTION, 
-            SEAT_ID
+            SEAT_ID, SETTLEMEN_TYPE
              from TRD_PRODUCT_DEAL
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </insert>
@@ -769,6 +778,9 @@
             <if test="seatId != null" >
                 SEAT_ID = #{seatId,jdbcType=VARCHAR},
             </if>
+            <if test="settlemenType != null" >
+                SETTLEMEN_TYPE = #{settlemenType,jdbcType=VARCHAR},
+            </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
@@ -835,10 +847,11 @@
             PS_PAYMENT = #{psPayment,jdbcType=VARCHAR},
             SPLIT_TRADE_ID = #{splitTradeId,jdbcType=VARCHAR},
             IS_SWAP_TRANSACTION = #{isSwapTransaction,jdbcType=VARCHAR},
-            SEAT_ID = #{seatId,jdbcType=VARCHAR}
+            SEAT_ID = #{seatId,jdbcType=VARCHAR},
+            SETTLEMEN_TYPE = #{settlemenType,jdbcType=VARCHAR}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
-
+    
     <select id="selectByTrade" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal" >
         select
         DEAL.TRADE_ID

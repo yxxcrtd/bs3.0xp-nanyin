@@ -45,25 +45,27 @@ public class TrdFeeConfigDetail extends BaseEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal chargeRate;
 
+    /**
+     * 是否包含起点金额
+     */
     private String isCludeStartamt;
 
+    /**
+     * 分档金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal gradeAmount;
 
-    public String getIsCludeStartamt() {
-        return isCludeStartamt;
-    }
+    /**
+     * 分档条件
+     */
+    private String gradeCondition;
 
-    public void setIsCludeStartamt(String isCludeStartamt) {
-        this.isCludeStartamt = isCludeStartamt;
-    }
-
-    public BigDecimal getGradeAmount() {
-        return gradeAmount;
-    }
-
-    public void setGradeAmount(BigDecimal gradeAmount) {
-        this.gradeAmount = gradeAmount;
-    }
+    /**
+     * 分档金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal gradeAmt;
 
     /**
      * 取得 流水号
@@ -175,5 +177,69 @@ public class TrdFeeConfigDetail extends BaseEntity {
      */
     public void setChargeRate(BigDecimal chargeRate) {
         this.chargeRate = chargeRate;
+    }
+
+    /**
+     * 取得 是否包含起点金额
+     * @return 是否包含起点金额
+     */
+    public String getIsCludeStartamt() {
+        return isCludeStartamt;
+    }
+
+    /**
+     * 设置 是否包含起点金额
+     * @param isCludeStartamt 是否包含起点金额
+     */
+    public void setIsCludeStartamt(String isCludeStartamt) {
+        this.isCludeStartamt = isCludeStartamt == null ? null : isCludeStartamt.trim();
+    }
+
+    /**
+     * 取得 分档金额
+     * @return 分档金额
+     */
+    public BigDecimal getGradeAmount() {
+        return gradeAmount;
+    }
+
+    /**
+     * 设置 分档金额
+     * @param gradeAmount 分档金额
+     */
+    public void setGradeAmount(BigDecimal gradeAmount) {
+        this.gradeAmount = gradeAmount;
+    }
+
+    /**
+     * 取得 分档条件
+     * @return 分档条件
+     */
+    public String getGradeCondition() {
+        return gradeCondition;
+    }
+
+    /**
+     * 设置 分档条件
+     * @param gradeCondition 分档条件
+     */
+    public void setGradeCondition(String gradeCondition) {
+        this.gradeCondition = gradeCondition == null ? null : gradeCondition.trim();
+    }
+
+    /**
+     * 取得 分档金额
+     * @return 分档金额
+     */
+    public BigDecimal getGradeAmt() {
+        return gradeAmt;
+    }
+
+    /**
+     * 设置 分档金额
+     * @param gradeAmt 分档金额
+     */
+    public void setGradeAmt(BigDecimal gradeAmt) {
+        this.gradeAmt = gradeAmt;
     }
 }

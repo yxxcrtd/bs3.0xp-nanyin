@@ -24,8 +24,6 @@ public class MstCommissionSetDto extends TrdFeeConfig {
 
     private String secAcctName;
 
-    private List<TrdFeeConfigDetail> trdFeeConfigDetailList;
-
     /**
      * 计费值
      */
@@ -49,8 +47,8 @@ public class MstCommissionSetDto extends TrdFeeConfig {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal chargeRate;
-
-    public String getSecAcctName() {
+    
+	public String getSecAcctName() {
 		return secAcctName;
 	}
 
@@ -114,19 +112,29 @@ public class MstCommissionSetDto extends TrdFeeConfig {
         return chargeRate;
     }
 
-    public List<TrdFeeConfigDetail> getTrdFeeConfigDetailList() {
-        return trdFeeConfigDetailList;
-    }
-
-    public void setTrdFeeConfigDetailList(List<TrdFeeConfigDetail> trdFeeConfigDetailList) {
-        this.trdFeeConfigDetailList = trdFeeConfigDetailList;
-    }
-
     /**
      * 设置 计费比率
      * @param chargeRate 计费比率
      */
     public void setChargeRate(BigDecimal chargeRate) {
         this.chargeRate = chargeRate;
+    }
+
+    private List<TrdFeeConfigDetail> trdFeeConfigDetailList;
+    /**
+     * 选择的数据
+     * @return List
+     */
+    public List<TrdFeeConfigDetail> getTrdFeeConfigDetailList() {
+        return trdFeeConfigDetailList;
+    }
+
+    /**
+     * 选择的数据
+     *
+     * @param trdFeeConfigDetailList trdFeeConfigDetailList
+     */
+    public void setTrdFeeConfigDetailList(List<TrdFeeConfigDetail> trdFeeConfigDetailList) {
+        this.trdFeeConfigDetailList = trdFeeConfigDetailList;
     }
 }

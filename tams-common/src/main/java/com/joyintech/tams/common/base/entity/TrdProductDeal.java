@@ -348,6 +348,11 @@ public class TrdProductDeal extends BaseEntity {
     private String holdPurpose;
     
     /**
+     * 交收方式
+     */
+    private String settlemenType;
+    
+    /**
      * 多组合交易使用 最大组合交易金额
      */
     private BigDecimal maxTradeamt;
@@ -1434,4 +1439,14 @@ public class TrdProductDeal extends BaseEntity {
     public void setSeatId(String seatId) {
         this.seatId = seatId;
     }
+
+	public String getSettlemenType() {
+		return settlemenType;
+	}
+
+	public void setSettlemenType(String settlemenType) {
+		this.settlemenType = settlemenType;
+	}
+    
+    
 }

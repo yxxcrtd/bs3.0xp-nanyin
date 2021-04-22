@@ -404,6 +404,50 @@ public class TrdFinProductDealTotal extends BaseEntity {
      */
     private String institutionCode;
     //多级法人改造 add by caiqun 20200615
+    
+    /**
+     * 权益登记日
+     */
+    private Date regDate;
+
+    /**
+     * 除权除息日
+     */
+    private Date exDevidentDate;
+
+    /**
+     * 红股上市日
+     */
+    private Date redShareListingDate;
+
+    /**
+     * 派息日
+     */
+    private Date devidentDate;
+
+    /**
+     * 每股送转
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal perDevidentAmt;
+
+    /**
+     * 每股派息
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal perDevidentCash;
+
+    /**
+     * 分红金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal devidentCash;
+
+    /**
+     * 分红股本
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal devidentAmt;
     /**
      * 取得 汇总交易编号
      * @return 汇总交易编号
@@ -1575,4 +1619,70 @@ public class TrdFinProductDealTotal extends BaseEntity {
     public void setPsStr(String psStr) {
         this.psStr = psStr;
     }
+
+	public Date getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+
+	public Date getExDevidentDate() {
+		return exDevidentDate;
+	}
+
+	public void setExDevidentDate(Date exDevidentDate) {
+		this.exDevidentDate = exDevidentDate;
+	}
+
+	public Date getRedShareListingDate() {
+		return redShareListingDate;
+	}
+
+	public void setRedShareListingDate(Date redShareListingDate) {
+		this.redShareListingDate = redShareListingDate;
+	}
+
+	public Date getDevidentDate() {
+		return devidentDate;
+	}
+
+	public void setDevidentDate(Date devidentDate) {
+		this.devidentDate = devidentDate;
+	}
+
+	public BigDecimal getPerDevidentAmt() {
+		return perDevidentAmt;
+	}
+
+	public void setPerDevidentAmt(BigDecimal perDevidentAmt) {
+		this.perDevidentAmt = perDevidentAmt;
+	}
+
+	public BigDecimal getPerDevidentCash() {
+		return perDevidentCash;
+	}
+
+	public void setPerDevidentCash(BigDecimal perDevidentCash) {
+		this.perDevidentCash = perDevidentCash;
+	}
+
+	public BigDecimal getDevidentCash() {
+		return devidentCash;
+	}
+
+	public void setDevidentCash(BigDecimal devidentCash) {
+		this.devidentCash = devidentCash;
+	}
+
+	public BigDecimal getDevidentAmt() {
+		return devidentAmt;
+	}
+
+	public void setDevidentAmt(BigDecimal devidentAmt) {
+		this.devidentAmt = devidentAmt;
+	}
+    
+    
 }
