@@ -236,8 +236,6 @@ insert into sys_batch_task (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME
 values ('88600', 'INV', '流程中产品定义', null, 'processProductTask', 1, 'system', null, sysdate, 'system', sysdate);
 
 
-
-
  insert into sys_prebatch_task_add (GROUP_ID, TASK_ID, STOP_FLAG, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
  select  a.seq_no,'88600'
  , '01', null, 'system', null, sysdate, 'system', sysdate
@@ -245,4 +243,12 @@ values ('88600', 'INV', '流程中产品定义', null, 'processProductTask', 1, 
 
 
 insert into sys_batch_job (BATCH_SEQ_NO, TASK_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('c063ade42f4b49b4e0538c5aa8c0f799', '88600', 'system', null, sysdate, 'system', sysdate);
+select  a.seq_no,'88600', 'system', null, sysdate, 'system', sysdate
+  from sys_batch_grp a where BATCH_NAME = '批前检查';
+
+
+
+------- 增加多及法人 过滤
+insert into data_auth_mapper_config (SQL_ID, FILTER_TYPE, IS_NEST, JOIN_COLUMN_NAME, FILTER_SQL, SYSTEM_CODE, PAGE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADD_COLUMN, ADD_COLUMN_NAME, DATA_TYPE)
+values ('com.joyintech.tams.invest.batch.prebatchcheck.processproduct.dao.ProcessProductMapper.selectProcessProductList', '5', '02', 'instCode', null, 'prebatch', 'processProductTask', 'admin', null,
+sysdate, 'admin', sysdate, null, null, null);
