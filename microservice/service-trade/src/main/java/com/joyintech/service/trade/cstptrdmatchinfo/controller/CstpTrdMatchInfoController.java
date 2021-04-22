@@ -18,7 +18,7 @@ import java.util.Map;
  * @Version V1.0
  **/
 @RestController("backCstpTrdMatchInfoController")
-@RequestMapping("${service}/CSTPTrdMatchInfo")
+@RequestMapping("CSTPTrdMatchInfo")
 public class CstpTrdMatchInfoController {
     @Autowired
     private CstpTrdMatchInfoService cstpTrdMatchInfoService;

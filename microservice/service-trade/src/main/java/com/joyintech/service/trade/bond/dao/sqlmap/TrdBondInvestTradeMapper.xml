@@ -1065,14 +1065,92 @@
     </select>
 
     <select id="querySecCstpInfoList" resultType="com.joyintech.framework.select.SelectOptionDto">
-        select FEDEALNO id, FEDEALNO text
-        from INTERF_TRAD_SECDEAL where 1=1
-        <if test="initValue != null and initValue != ''">
-            and FEDEALNO IN (#{initValue})
-        </if>
-        <if test="param != null and param != ''">
-            and FEDEALNO like concat(concat('%',#{param}),'%')
-        </if>
+    	<choose>
+			<when test="entrustId != null and entrustId != '' ">
+				<!-- 无报价 -->
+				select   FEDEALNO id, FEDEALNO text from (
+				select FEDEALNO ,C.ENTRUST_ID,D.ENTRUST_ID
+			        from INTERF_TRAD_SECDEAL a
+			        inner join FIN_PRODUCT b  on A.SECID=b.finprod_market_id
+			        left join ETR_ENTRUST c on b.finprod_id=c.FINPROD_ID and a.ps=c.ps
+			          and case when a.profolio_id is not null
+			            then  c.PORTFOLIO_ID
+			            else null
+			            end   = a.profolio_id
+			        inner join ETR_ENTRUST_ADD d on decode(A.SETTLE_SPEED,'1','0','2','1','3','2') = D.SETTLE_SPREED
+			        left join (
+			          select  sum(share_amt) share_amt,f_trade_id  from (
+			            select sum(share_amt) share_amt,f_trade_id
+			            from TRD_PRODUCT_DEAL t1 group by T1.F_TRADE_ID
+			            union all
+			            select sum(share_amt) share_amt,f_trade_id
+			            from WFL_TRD_PRODUCT_DEAL t1 group by T1.F_TRADE_ID
+			          ) group by f_trade_id
+			        ) s  on  s.f_trade_id= a.FEDEALNO
+			        left join IBU_QUOTE_BOND_DET e on A.FEDEALNO=e.EXECID
+			        left join IBU_QUOTE_BOND f on e.QUOTE_ID=f.QUOTE_ID
+			        left join IBU_QUOTE_ETR_RE g on e.QUOTE_ID =g.QUOTE_ID
+			       where  ( S.SHARE_AMT &lt; A.SETTAMT  or S.SHARE_AMT is null)
+			       and ( (f.ENTRUST_ID is null and  g.ENTRUST_ID is null) or e.EXECID is null )
+			       and (c.ENTRUST_ID =#{entrustId} or  D.ENTRUST_ID =#{entrustId})
+
+			     union all
+			     <!-- 有委托 -->
+			       select FEDEALNO ,C.ENTRUST_ID,D.ENTRUST_ID
+			        from INTERF_TRAD_SECDEAL a
+			        left join IBU_QUOTE_BOND_DET b on A.FEDEALNO=B.EXECID
+			        left join IBU_QUOTE_BOND c on B.QUOTE_ID=C.QUOTE_ID
+			        left join IBU_QUOTE_ETR_RE d on b.QUOTE_ID =D.QUOTE_ID
+			        left join (
+			          select  sum(share_amt) share_amt,f_trade_id  from (
+			            select sum(share_amt) share_amt,f_trade_id
+			            from TRD_PRODUCT_DEAL t1 group by T1.F_TRADE_ID
+			            union all
+			            select sum(share_amt) share_amt,f_trade_id
+			            from WFL_TRD_PRODUCT_DEAL t1 group by T1.F_TRADE_ID
+			          ) group by f_trade_id
+			        ) s  on  s.f_trade_id= a.FEDEALNO
+			       where ( S.SHARE_AMT &lt; A.SETTAMT  or S.SHARE_AMT is null)
+			       	and (c.ENTRUST_ID =#{entrustId} or  D.ENTRUST_ID =#{entrustId})
+			       )
+			       where 1=1
+			       <if test="initValue != null and initValue != ''">
+			            and FEDEALNO IN (#{initValue})
+			        </if>
+			        <if test="param != null and param != ''">
+			            and FEDEALNO like concat(concat('%',#{param}),'%')
+			        </if>
+			       group by  FEDEALNO
+			</when>
+			<otherwise>
+			<!-- 无委托 -->
+				 select FEDEALNO id, FEDEALNO text
+			        from INTERF_TRAD_SECDEAL a
+			        left join IBU_QUOTE_BOND_DET b on A.FEDEALNO=B.EXECID
+			        left join IBU_QUOTE_BOND c on B.QUOTE_ID=C.QUOTE_ID
+			        left join IBU_QUOTE_ETR_RE d on b.QUOTE_ID =D.QUOTE_ID
+			        left join (
+			          select  sum(share_amt) share_amt,f_trade_id  from (
+			            select sum(share_amt) share_amt,f_trade_id
+			            from TRD_PRODUCT_DEAL t1 group by T1.F_TRADE_ID
+			            union all
+			            select sum(share_amt) share_amt,f_trade_id
+			            from WFL_TRD_PRODUCT_DEAL t1 group by T1.F_TRADE_ID
+			          ) group by f_trade_id
+			        ) s  on  s.f_trade_id= a.FEDEALNO
+			       where ( S.SHARE_AMT &lt; A.SETTAMT  or S.SHARE_AMT is null)
+			       	and ( (c.ENTRUST_ID is null and  d.ENTRUST_ID is null) or b.EXECID is null )
+			       	<if test="initValue != null and initValue != ''">
+			            and FEDEALNO IN (#{initValue})
+			        </if>
+			        <if test="param != null and param != ''">
+			            and FEDEALNO like concat(concat('%',#{param}),'%')
+			        </if>
+			       	 group by  FEDEALNO
+			</otherwise>
+		</choose>
+
+
     </select>
     <select id="queryMstCounterPartyByCounterName" resultMap="com.joyintech.tams.common.base.dao.MstCounterPartyMapper.BaseResultMap">
         select
@@ -1381,8 +1459,27 @@
         </if>
         WHERE T2.EXECID = #{fedealno}
     </select>
-    
-        <select id="getAllFeeByFTradeId" resultType="com.joyintech.tams.common.base.entity.TrdTradeFeeDetail">
+
+    <!--根据成交单编号查询上行报价债券委托信息  -->
+    <select id="queryBondEntrustInfo" resultType="com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt">
+    	SELECT DISTINCT IBU_QUOTE_BOND.ENTRUST_ID, IBU_QUOTE_BOND.PORTFOLIO_ID, IBU_QUOTE_BOND.OU_PARTY_ID,IBU_QUOTE_BOND.QUOTE_ID,IBU_QUOTE_BOND.OU_TRADER_ID ouTrader,IBU_QUOTE_BOND_DET.CP_PARTY_ID,IBU_QUOTE_BOND_DET.CP_TRADER,IBU_QUOTE_BOND.PS
+		  FROM IBU_QUOTE_BOND, IBU_QUOTE_BOND_DET
+		 WHERE IBU_QUOTE_BOND.QUOTE_ID = IBU_QUOTE_BOND_DET.QUOTE_ID
+		   AND IBU_QUOTE_BOND_DET.EXECID = #{oritradeId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectCounterId" resultType="String">
+      select
+         mcp.COUNTER_ID
+     from
+         MST_COUNTER_PARTY mcp
+         INNER JOIN MST_CFETS_CUSTOMER_INFO mcci
+         ON mcp.COUNTER_NAME = mcci.PARTY_NAME
+     WHERE
+         mcci.PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getAllFeeByFTradeId" resultType="com.joyintech.tams.common.base.entity.TrdTradeFeeDetail">
 		SELECT fee_type feeType, sum(fee_amt) feeAmt
 			FROM TRD_TRADE_FEE_DETAIL ttfd
 			WHERE TRADE_ID IN (
@@ -1392,4 +1489,5 @@
 					AND IS_CANCEL ='N')
 			GROUP BY fee_type
 	</select>
+
 </mapper>

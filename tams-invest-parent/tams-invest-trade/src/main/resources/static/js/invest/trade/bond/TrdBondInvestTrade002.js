@@ -98,6 +98,8 @@ var table;
 	            object.finprodName = $('#select2-finprodId-container').attr('title');
 	        }
 			object.tradeAmt = $("#tradeAmt").val()*10000;
+            object.ownTradeAmt = $("#ownTradeAmt").val()*10000;
+            object.integrateTradeAmt = $("#integrateTradeAmt").val()*10000;
             object.finprodId = $("#finprodId").val();
 	        object.pageModel = pageModel;
 	        object.operateType = operateType;
@@ -150,7 +152,7 @@ var table;
                                             (object.bussTrdTransferOrder[bussTrdTransferOrder].settleAmt== object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt)){
 
                                             object.portfolioId = object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId;
-                                            object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt;
+                                            object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt*10000;
                                             object.cpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].cpriceAmt;
                                             object.fpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt;
                                             ajaxJsonSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
@@ -783,7 +785,7 @@ var table;
      * 融入券券面总额
      */
     $('#integrateTradeAmt').change(function () {
-        var tradeAmt = $("#tradeAmt").val()*10000;
+        var tradeAmt = $("#tradeAmt").val();
         if (!tradeAmt) {
             tradeAmt = 0;
         }
@@ -802,7 +804,7 @@ var table;
      * 本方券券面总额
      */
     $('#ownTradeAmt').change(function () {
-        var tradeAmt = $("#tradeAmt").val()*10000;
+        var tradeAmt = $("#tradeAmt").val();
         if (!tradeAmt) {
             tradeAmt = 0;
         }
@@ -810,7 +812,7 @@ var table;
 
         var integrateTradeAmt = JoyinMath.doMinus(tradeAmt, ownTradeAmt, 2, JoyinMath.ROUND_HALF_UP)
         if (integrateTradeAmt < 0) {
-            $("#tradeAmt").val(ownTradeAmt / 10000).trigger("blur");
+            $("#tradeAmt").val(ownTradeAmt).trigger("blur");
             $("#integrateTradeAmt").val(0).trigger("blur");
         } else {
             $("#integrateTradeAmt").val(integrateTradeAmt).trigger("blur");
@@ -1481,7 +1483,7 @@ var table;
 //        paramObj.exchangeAmt=$("#exchangeAmt").val();
 //        paramObj.commissionAmt=$("#commissionAmt").val();
 
-        paramObj.tradeAmt = $("#tradeAmt").val();
+        paramObj.tradeAmt = $("#tradeAmt").val()*10000;
         paramObj.unitCprice = $("#unitCprice").val();
         paramObj.unitInt = $("#unitInt").val();
         paramObj.unitFprice = $("#unitFprice").val();
@@ -1489,8 +1491,8 @@ var table;
         paramObj.intAmt = $("#intAmt").val();
         paramObj.fpriceAmt = $("#fpriceAmt").val();
         paramObj.exerYield = $("#exerYield").val();
-        paramObj.ownTradeAmt = $("#ownTradeAmt").val();
-        paramObj.integrateTradeAmt = $("#integrateTradeAmt").val();
+        paramObj.ownTradeAmt = $("#ownTradeAmt").val()*10000;
+        paramObj.integrateTradeAmt = $("#integrateTradeAmt").val()*10000;
         paramObj.yield = $("#yield").val();
 
         // 隐藏域如果有值，使用隐藏域

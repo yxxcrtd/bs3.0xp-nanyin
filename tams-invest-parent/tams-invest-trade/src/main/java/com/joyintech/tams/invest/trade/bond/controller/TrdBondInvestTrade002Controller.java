@@ -13,8 +13,10 @@ package com.joyintech.tams.invest.trade.bond.controller;
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
@@ -219,7 +221,11 @@ public class TrdBondInvestTrade002Controller extends BaseController {
 //                dto.setTurnInvAim(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue());
 //            }
 //        }
-
+        if (dto.getTradeAmt() != null){
+            dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            dto.setOwnTradeAmt(dto.getOwnTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            dto.setIntegrateTradeAmt(dto.getIntegrateTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+        }
         Date sysDate = DateUtil.platDateFromCache();
         String formatDate = DateUtil.format(sysDate);
         model.addAttribute("formatDate",formatDate);
@@ -288,6 +294,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
+        model.addAttribute("userId", LoginUserUtil.getUserName());
         return super.init(model);
     }
 

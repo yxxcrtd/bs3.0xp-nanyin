@@ -1980,12 +1980,8 @@ $(function(){
         	object.trdCommandReceive001DtoList =tableData;
             Joyin.confirm('请确认是否进行交易匹配？',function () {
                 Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/cstp/CSTPTrdMatchInfo/saveTrdMatchInfoByCstp'),object,function (result) {
-                    if(result.message){//失败
-                        Joyin.error('交易匹配确认失败');
-                    }else{
-                        table.table?table.reload():table.load();
-                        EntrustTable.table?EntrustTable.reload():EntrustTable.load();
-                    }
+                    table.table?table.reload():table.load();
+                    EntrustTable.table?EntrustTable.reload():EntrustTable.load();
                 },false);
             })
         }

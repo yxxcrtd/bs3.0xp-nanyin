@@ -1117,6 +1117,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
             }
             else {// 多组合
                 for (IbuQuoteEtrReDto ibuQuoteEtrReDto : ibuQuoteEtrReDtoList) {
+                    dto.setEntrustId(ibuQuoteEtrReDto.getEntrustId());
                     getAllPtlSecPositionFlowDto(dto, platDate, ptlSecPositionFlows,
                         bondDialogueQuoteDto, factor, ibuQuoteEtrReDto);
                 }
@@ -1141,6 +1142,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 			}else{//多组合
 			    for (IbuQuoteEtrReDto ibuQuoteEtrReDto : ibuQuoteEtrReDtoList) {
 					/********************** 持仓流水DTO构造 *************************************/
+					dto.setEntrustId(ibuQuoteEtrReDto.getEntrustId());
 					getAllPtlCashpositionFlowDto(dto, settleDate, ptlCashPositionFlows, bondDialogueQuoteDto, factor,
 					    ibuQuoteEtrReDto);
 				}
@@ -1221,6 +1223,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 				ptlSecPositionFlowDtoUnit.setSecAcctId(secAcctId); // 证券账户
 			}
 		}
+        ptlSecPositionFlowDtoUnit.setEntrustId(dto.getEntrustId());
 		ptlSecPositionFlows.add(ptlSecPositionFlowDtoUnit);
 	}
 
@@ -1290,6 +1293,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 		
 		ptlCashPositionFlowDtoUnit.setOrderId(dto.getQuoteId());// 报价编号
 		ptlCashPositionFlowDtoUnit.setChlFinprodId(null);// 通道金融产品代码
+        ptlCashPositionFlowDtoUnit.setEntrustId(dto.getEntrustId());
 		/*************************************************************************/
 		ptlCashPositionFlows.add(ptlCashPositionFlowDtoUnit);
 	}

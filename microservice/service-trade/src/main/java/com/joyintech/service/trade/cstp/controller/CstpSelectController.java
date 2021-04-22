@@ -33,7 +33,7 @@ import com.joyintech.service.trade.cstp.service.CstpSelectService;
  * @since 1.0
  */
 @RestController
-@RequestMapping("${service}/CSTPSelect")
+@RequestMapping("CSTPSelect")
 public class CstpSelectController {
     /**
      * 注入Service

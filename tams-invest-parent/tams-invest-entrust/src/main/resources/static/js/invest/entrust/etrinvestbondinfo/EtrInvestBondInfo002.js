@@ -332,6 +332,7 @@
             if (initFlag) {
                 init();
             }
+            $('#isRight').trigger('change');
         }
     }
     /**
@@ -951,6 +952,7 @@
                     $('#price').attr('disabled', false);
                     $('#matureYield').attr('disabled', false);
                     $('#exerYield').attr('disabled', false);
+                    $('#isRight').trigger('change');
                 }
                 if ($('#price').val()) {
                     calData('price');

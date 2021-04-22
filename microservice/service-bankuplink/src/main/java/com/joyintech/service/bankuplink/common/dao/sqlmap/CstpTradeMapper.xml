@@ -187,11 +187,11 @@
     <!--本方机构代码是否绑定了组合  来决定本方和对手方-->
     <select id="getPtlByOurinstitutioncode" resultType="java.lang.Integer">
         SELECT
-            COUNT(*)
+        COUNT(*)
         FROM
-            MST_CFETS_CUSTOMER_INFO T1
+        MST_CFETS_CUSTOMER_INFO T1
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA T2 ON
-            T2.PARTY_ID = T1.PARTY_ID
+        T2.PARTY_ID = T1.PARTY_ID
         WHERE
             T2.PORTFOLIO_ID IS NOT NULL
             <if test="ourinstitutioncode != null and ourinstitutioncode != ''">

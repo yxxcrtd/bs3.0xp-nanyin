@@ -522,13 +522,11 @@ public class TrdRepoTrade002Dto extends TrdProductDeal implements ProcessEntity 
 	/**
      * 中债登本金金额
      */
-    @NotEmpty(fieldName = "TrdRepoTrade002.zzdPrinAmt", groups = ValidateGroupEdit.class)
     private BigDecimal zzdPrinAmt;
 
     /**
      * 上清所本金金额
      */
-    @NotEmpty(fieldName = "TrdRepoTrade002.sqsPrinAmt", groups = ValidateGroupEdit.class)
     private BigDecimal sqsPrinAmt;
 
     /**
