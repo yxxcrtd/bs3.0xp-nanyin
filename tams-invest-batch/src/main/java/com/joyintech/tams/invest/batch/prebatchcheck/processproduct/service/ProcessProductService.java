@@ -7,6 +7,7 @@ import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.prebatchcheck.common.dto.SysPrebatchResultDto;
 import com.joyintech.tams.invest.batch.prebatchcheck.common.service.PrebatchCheckCommonService;
 import com.joyintech.tams.invest.batch.prebatchcheck.processproduct.dao.ProcessProductMapper;
@@ -50,10 +51,10 @@ public class ProcessProductService {
         if(!StringUtil.isEmptyList(details)){
             if(StringUtil.equals("00",dto.getStopFlag())){
                 // 是否卡批  是的话 则为错误  00不卡批则为预警
-                dto.setTaskStatus(DictCodeList.批前检查_执行状态_预警.getValue());
+                dto.setTaskStatus(DictCodeListExt3.批前检查_执行状态_预警.getValue());
             }else{
 
-                dto.setTaskStatus(DictCodeList.批前检查_执行状态_错误.getValue());
+                dto.setTaskStatus(DictCodeListExt3.批前检查_执行状态_错误.getValue());
             }
 
             dto.setDetailCount(details.size());
@@ -61,7 +62,7 @@ public class ProcessProductService {
             prebatchCheckCommonService.insertBatchResultDetail(details);
 
         }else{
-            dto.setTaskStatus(DictCodeList.批前检查_执行状态_成功.getValue());
+            dto.setTaskStatus(DictCodeListExt3.批前检查_执行状态_成功.getValue());
         }
 
 

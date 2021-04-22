@@ -1,10 +1,15 @@
 package com.joyintech.tams.invest.prebatch.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.constant.BatchDictCode;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 
 import java.util.Date;
 
 public class SysPrebatchResult001Dto  extends BaseEntity {
+
+    private static final long serialVersionUID = 1L;
 
     private String seqNo;
     private String batchSeqNo;
@@ -13,11 +18,27 @@ public class SysPrebatchResult001Dto  extends BaseEntity {
     private Date checkDate;
     private Date executeDate;
     private String taskStatus;
+    private int detailCount;
     private String stopFlag;
     private String startMode;
     private Date startTime;
     private Date endTime;
     private String institutionCode;
+
+    private Long processTime;
+    private String startTimeStr;
+
+    private String endTimeStr;
+
+    private String taskStatusStr;
+
+    private String taskIdStr;
+
+    private String checkDateStr;
+
+    private String executeDateStr;
+
+
 
     public String getSeqNo() {
         return seqNo;
@@ -113,5 +134,69 @@ public class SysPrebatchResult001Dto  extends BaseEntity {
 
     public void setCheckDate(Date checkDate) {
         this.checkDate = checkDate;
+    }
+
+    public Long getProcessTime() {
+        return processTime;
+    }
+
+    public void setProcessTime(Long processTime) {
+        this.processTime = processTime;
+    }
+
+    public String getStartTimeStr() {
+        return startTimeStr;
+    }
+
+    public void setStartTimeStr(String startTimeStr) {
+        this.startTimeStr = startTimeStr;
+    }
+
+    public String getEndTimeStr() {
+        return endTimeStr;
+    }
+
+    public void setEndTimeStr(String endTimeStr) {
+        this.endTimeStr = endTimeStr;
+    }
+
+    public String getTaskStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.批前检查_执行状态, this.taskStatus);
+    }
+
+    public void setTaskStatusStr(String taskStatusStr) {
+        this.taskStatusStr = taskStatusStr;
+    }
+
+    public String getTaskIdStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.检查项, this.taskId);
+    }
+
+    public void setTaskIdStr(String taskIdStr) {
+        this.taskIdStr = taskIdStr;
+    }
+
+    public String getCheckDateStr() {
+        return checkDateStr;
+    }
+
+    public void setCheckDateStr(String checkDateStr) {
+        this.checkDateStr = checkDateStr;
+    }
+
+    public String getExecuteDateStr() {
+        return executeDateStr;
+    }
+
+    public void setExecuteDateStr(String executeDateStr) {
+        this.executeDateStr = executeDateStr;
+    }
+
+    public int getDetailCount() {
+        return detailCount;
+    }
+
+    public void setDetailCount(int detailCount) {
+        this.detailCount = detailCount;
     }
 }

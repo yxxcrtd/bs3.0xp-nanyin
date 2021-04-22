@@ -38,6 +38,19 @@ public class SysPrebatchResult001Service extends CommonExportService<SysPrebatch
     public Page<SysPrebatchResult001Dto> findPage(Map<String, Object> pageParam) {
         int page = Integer.valueOf(pageParam.get("page").toString());
         int length =Integer.valueOf(pageParam.get("length").toString());
+
+        if (StringUtil.isNotEmpty(pageParam.get("checkPoint"))) {
+            pageParam.put("checkPoint", StringUtil.splitToList(null, pageParam.get("checkPoint").toString()));
+        }else{
+            pageParam.remove("checkPoint");
+        }
+
+        if (StringUtil.isNotEmpty(pageParam.get("prebatchStatus"))) {
+            pageParam.put("prebatchStatus", StringUtil.splitToList(null, pageParam.get("prebatchStatus").toString()));
+        }else{
+            pageParam.remove("prebatchStatus");
+        }
+
         return super.queryForPage(page,length,()->sysPrebatchResult001Mapper.findPage(pageParam));
     }
 

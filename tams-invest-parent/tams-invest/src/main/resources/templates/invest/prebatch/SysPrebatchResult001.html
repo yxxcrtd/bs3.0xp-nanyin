@@ -18,16 +18,13 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{SysPrebatchResult001.checkDate}">检查日</label>
                         <div class="layui-input-inline input-inline">
-                            <input id="SysPrebatchResult001_checkDate" name='checkDate'
-                                   class="layui-input form-input input-dateRangeSelect"
-                                   placeholder="请选择时间区间"
-                                   data-th-value="|${checkDateStr} - ${checkDateEnd}|"
-                                   data-th-placeholder="#{SysCommon.placeholder}">
+                            <input type="text" id="SysPrebatchResult001_checkDate" name='checkDate'
+                                   data-th-placeholder="#{SysCommon.dateInterval}" class="layui-input form-input input-dateRangeSelect" />
                         </div>
                     </div>
                     <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
                         <label class="layui-form-label form-lable"
-                               data-th-text="#{SysPrebatchResult001.checkPoint}">检查项</label>
+                               data-th-text="#{SysPrebatchResult001.taskId}">检查项</label>
                         <div class="layui-input-inline input-inline">
                             <select name="checkPoint"
                                     class="layui-input form-input input-select" formatoption=true multiple="true"
@@ -38,12 +35,12 @@
                     </div>
                     <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
                         <label class="layui-form-label form-lable"
-                               data-th-text="#{SysPrebatchResult001.precheckStatus}">执行状态</label>
+                               data-th-text="#{SysPrebatchResult001.taskStatus}">执行状态</label>
                         <div class="layui-input-inline input-inline">
-                            <select name="precheckStatus"
+                            <select name="prebatchStatus"
                                     class="layui-input form-input input-select" formatoption=true multiple="true"
                                     data-th-placeholder="#{SysCommon.placeholder}"
-                                    data-th-data-result="${PRECHECK_STATUS}">
+                                    data-th-data-result="${PREBATCH_STATUS}">
                             </select>
                         </div>
                     </div>

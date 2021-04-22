@@ -7,6 +7,7 @@ import com.joyintech.framework.base.entity.SysBatchgrpExecInfo;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.prebatchcheck.common.dto.SysPrebatchResultDto;
 import com.joyintech.tams.invest.batch.prebatchcheck.common.service.PrebatchCheckCommonService;
 import com.joyintech.tams.invest.batch.prebatchcheck.processproduct.service.ProcessProductService;
@@ -70,7 +71,7 @@ public class ProcessProductTask extends BatchBaseService {
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
-            dto.setTaskStatus(DictCodeList.批前检查_执行状态_异常.getValue());
+            dto.setTaskStatus(DictCodeListExt3.批前检查_执行状态_异常.getValue());
             logger.error(e.getMessage());
         }
 

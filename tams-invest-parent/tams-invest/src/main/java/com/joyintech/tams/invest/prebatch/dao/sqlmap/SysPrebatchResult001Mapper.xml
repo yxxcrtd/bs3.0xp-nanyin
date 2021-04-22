@@ -3,7 +3,42 @@
 <mapper namespace="com.joyintech.tams.invest.prebatch.dao.SysPrebatchResult001Mapper">
 
     <select id="findPage" resultType="com.joyintech.tams.invest.prebatch.dto.SysPrebatchResult001Dto">
-        SELECT * FROM SYS_PREBATCH_RESULT
+        SELECT
+        SEQ_NO, BATCH_SEQ_NO, TASK_ID, BEAN_NAME, CHECK_DATE,
+        EXECUTE_DATE, TASK_STATUS, DETAIL_COUNT, START_MODE,
+        START_TIME, END_TIME, STOP_FLAG, INSTITUTION_CODE,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+        (extract(day from A.END_TIME-A.START_TIME) * 86400+ extract(hour from A.END_TIME-A.START_TIME) * 3600
+        + extract(minute from A.END_TIME-A.START_TIME) * 60+ extract(second from A.END_TIME-A.START_TIME)) * 1000
+        as processTime,
+        TO_CHAR(A.START_TIME, 'YYYY-MM-DD HH24:MI:SS.ff3') as startTimeStr,
+        TO_CHAR(A.END_TIME, 'YYYY-MM-DD HH24:MI:SS.ff3') as endTimeStr,
+        TO_CHAR(A.EXECUTE_DATE, 'YYYY-MM-DD') as executeDateStr,
+        TO_CHAR(A.CHECK_DATE, 'YYYY-MM-DD') as checkDateStr
+        FROM SYS_PREBATCH_RESULT A
+        <where>
+            <if test="startDate!=null and !startDate.equals('') ">
+                AND TO_CHAR(A.CHECK_DATE, 'YYYY-MM-DD') &gt;= #{startDate}
+            </if>
+            <if test="endDate!=null and !endDate.equals('') ">
+                AND TO_CHAR(A.CHECK_DATE, 'YYYY-MM-DD') &lt;= #{endDate}
+            </if>
+
+            <if test="checkPoint != null and checkPoint.size() > 0">
+                AND A.TASK_ID in
+                <foreach collection="checkPoint" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="prebatchStatus != null and prebatchStatus.size() > 0">
+                AND A.TASK_STATUS in
+                <foreach collection="prebatchStatus" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+
+
     </select>
 
     <delete id="deleteByDateAndInstCodeLs">

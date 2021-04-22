@@ -4,7 +4,16 @@
      * 获取查询参数
      */
     var searchform =function(){
-        return $.serializeToObject('#searchForm');
+        var param =  $.serializeToObject('#searchForm');
+        param.startDate: $('#checkDate').startDate(),
+        param.endDate: $('#checkDate').endDate(),
+        if(param.checkPoint){
+            param.checkPoint = param.checkPoint.join(",");
+        }
+        if(param.prebatchStatus){
+            param.prebatchStatus = param.prebatchStatus.join(",");
+        }
+        return param;
     };
 
 
@@ -19,23 +28,19 @@
                 return searchform();
             }
         },
-//        dblclick:function(table, data) {
-//            data.operateType = "dblclick";
-//            data.pageModel=PAGE_MODEL_REFERENCE;
-//            Joyin.dialog(JoyinUtil.getLabel("MstNaturalPerson002"),
-//                    JoyinUtil.getRealPath("invest/basicdata/mstnaturalperson/MstNaturalPerson002/init"),
-//                    "98%", "95%", data,
-//                    function(){table.reload();});
-//        },
         cols:[
-            {field:'checkDate', title: 'SysPrebatchResult001.checkDate', width:'10%',sortField:'checkDate'}
+            {field:'checkDateStr', title: 'SysPrebatchResult001.checkDate', width:'10%',sortField:'checkDate'}
             ,{field:'taskId', title: 'SysPrebatchResult001.taskId', width:'10%',sortField:'taskId'}
-            ,{field:'taskStatus', title: 'SysPrebatchResult001.taskStatus', width:'10%',sortField:'taskStatus'}
+            ,{field:'taskStatusStr', title: 'SysPrebatchResult001.taskStatus', width:'10%',sortField:'taskStatus'}
             ,{field:'detailCount', title: 'SysPrebatchResult001.detailCount', width:'10%',sortField:'detailCount'}
-            ,{field:'executeDate', title: 'SysPrebatchResult001.executeDate', width:'10%',sortField:'executeDate'}
-            ,{field:'duration', title: 'SysPrebatchResult001.duration', width:'10%',sortable:false}
-            ,{field:'startTime', title: 'SysPrebatchResult001.startTime', width:'10%',sortField:'startTime'}
-            ,{field:'endTime', title: 'SysPrebatchResult001.endTime', width:'10%',sortField:'endTime'}
+            ,{field:'executeDateStr', title: 'SysPrebatchResult001.executeDate', width:'10%',sortField:'executeDate'}
+            ,{
+                field: 'processTime', width: 200, title: '耗时(S)',sortable:false, render: function (data, type, row, meta) {
+                    return data*1/1000;
+                }
+            }
+            ,{field:'startTimeStr', title: 'SysPrebatchResult001.startTime', width:'10%',sortField:'startTime'}
+            ,{field:'endTimeStr', title: 'SysPrebatchResult001.endTime', width:'10%',sortField:'endTime'}
             ,{field:'seqNo', visible: false}
             ,{field:'batchSeqNo', visible: false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}

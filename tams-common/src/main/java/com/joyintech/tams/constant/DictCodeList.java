@@ -2018,12 +2018,6 @@ public enum DictCodeList implements BaseDictCodeList {
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
     共通业务类型_手动释放头寸(DictCode.共通业务类型,"MR1","手动释放头寸"),
     共通业务类型_规划策略池维护(DictCode.共通业务类型, "PRDPLAN06", "规划策略池维护"),
-	批前检查_执行状态_未执行(DictCode.批前检查_执行状态,"UNR","未执行"),
-	批前检查_执行状态_执行中(DictCode.批前检查_执行状态,"RUN","执行中"),
-	批前检查_执行状态_成功(DictCode.批前检查_执行状态,"END","成功"),
-	批前检查_执行状态_异常(DictCode.批前检查_执行状态,"EXP","异常"),
-	批前检查_执行状态_错误(DictCode.批前检查_执行状态,"ERROR","错误"),
-	批前检查_执行状态_预警(DictCode.批前检查_执行状态,"WARN","预警"),
 	;
 	/*字典值已经满了 ，不要添加了*/
     private String value;

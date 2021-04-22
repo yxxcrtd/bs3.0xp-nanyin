@@ -4,6 +4,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.prebatchcheck.common.dao.PrebatchCheckCommonMapper;
 import com.joyintech.tams.invest.batch.prebatchcheck.common.dto.SysPrebatchResultDto;
 import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail;
@@ -45,7 +46,7 @@ public class PrebatchCheckCommonService extends BaseService {
             return null;
         }
 
-        dto.setTaskStatus(DictCodeList.批前检查_执行状态_执行中.getValue());
+        dto.setTaskStatus(DictCodeListExt3.批前检查_执行状态_执行中.getValue());
         dto.setStartTime(new Date());
 
         // 先将 启动时间 及 启动状态更新为 启动中 并记录开始时间
