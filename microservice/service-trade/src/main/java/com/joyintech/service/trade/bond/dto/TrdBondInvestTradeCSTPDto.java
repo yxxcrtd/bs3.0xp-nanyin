@@ -17,6 +17,23 @@ public class TrdBondInvestTradeCSTPDto extends InterfTradSecdeal {
 
     private String settDateStr;
 
+    private String entrustId;
+
+    /**
+     * 市场代码
+     */
+    private String finprodMarketId;
+
+    /**
+     * 投资目的
+     */
+    private String invAim;
+    
+    /**
+     * 是否有报价信息（01：是，02：否）
+     */
+    private String isOfferFlag;
+
 
     /**
      * 
@@ -47,4 +64,39 @@ public class TrdBondInvestTradeCSTPDto extends InterfTradSecdeal {
       this.settDateStr =   DateUtil.format(super.getSettdate());
     }
 
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+
+	public String getIsOfferFlag() {
+		return isOfferFlag;
+	}
+
+
+	public void setIsOfferFlag(String isOfferFlag) {
+		this.isOfferFlag = isOfferFlag;
+	}
+    
+    
 }

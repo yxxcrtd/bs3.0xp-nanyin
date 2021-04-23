@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import com.joyintech.tams.common.base.entity.BokSubject;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.subjectbalancecollect.dto.BooksetTodoDto;
+import com.joyintech.tams.valuation.batch.subjectbalancecollect.dto.SubjectBalanceBatch;
 
 /**
  * 科目余额汇总Mapper
@@ -42,6 +43,15 @@ public interface SubjectBalanceCollectMapper {
      * @since 1.0
      */
     int deleteBalanceByKey(Map<String, Object> param);
+    
+    
+    /**
+     * 根据任务代码和入账日期删除对应的日初科目余额信息
+     * ADD BY WUJIE ON 20210121
+     */
+    int deleteBalanceBefByKey(Map<String, Object> param);
+    
+    
 
     /**
      * 查询所有待处理的账套代码
@@ -63,6 +73,19 @@ public interface SubjectBalanceCollectMapper {
      * @since 1.0
      */
     List<SubjectBalance> queryYesterdayBalance(@Param("queryDate") Date queryDate,
+                                               @Param("booksetId") String booksetId);
+    
+    /**
+     * 日初科目余额查询
+     * 
+     * @param queryDate 查询日期
+     * @param booksetId 账套代码
+     * @return 科目余额结果集
+     * @see
+     * @since 1.0
+     * ADD BY WUJIE ON 20210114
+     */
+    List<SubjectBalance> queryTdayBalanceBef(@Param("queryDate") Date queryDate,
                                                @Param("booksetId") String booksetId);
 
     /**
@@ -87,5 +110,12 @@ public interface SubjectBalanceCollectMapper {
      * @since 1.0
      */
     List<BokSubject> querySubject(@Param("booksetId") String booksetId);
+    /**
+     * 批量插入
+     * @param list 数据
+     * @return 插入条数
+     * 
+     */
+    int insertBatch(List<SubjectBalanceBatch> list);
 
 }

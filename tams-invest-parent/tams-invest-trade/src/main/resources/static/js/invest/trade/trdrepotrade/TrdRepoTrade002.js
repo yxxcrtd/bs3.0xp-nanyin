@@ -123,6 +123,9 @@
         }else{
             obj.assetType = null;
         }
+        // add by zhangrui1 交易对手影响风险试算 start
+        obj.counterId = $('#trdInvestPersonInfo_counterId').val();
+        // add by zhangrui1 交易对手影响风险试算 end
         var object = {
             valDate: ['tradeDate', 'TrdRepoTrade002.tradeDate'],
             portfolioCode: ['portfolioId', 'TrdRepoTrade002.portfolioId'],
@@ -131,6 +134,9 @@
             tradeDirection:['ps', 'TrdRepoTrade002.ps'],
             data: obj
         };
+        // add by zhangrui1 交易对手影响风险试算 start
+        object.counterId = ['counterId', 'TrdInvestPersonInfo002Dto.counterId'];
+        // add by zhangrui1 交易对手影响风险试算 end
         return object;
     };
 
@@ -235,7 +241,12 @@
 	        // 委托的期限品种
 	        object.entrustTermType = entrustTermType;
 	        object.preTradeId = preTradeId;
-	        object.fTradeId = fTradeId;
+	        if(object.trdInvestPersonInfo && $("#fTradeId").val()){
+	        	object.trdInvestPersonInfo.counterTrader = $('select#trdInvestPersonInfo_counterTrader').val();
+	        }else{
+	        	object.trdInvestPersonInfo.counterTrader = $('input#trdInvestPersonInfo_counterTrader').val();
+	        }
+//	        object.fTradeId = fTradeId;
 	        // 资产可用持仓
 	        object.assetPosition = $("#bussTrdAvailableCashQuery_assetPosition").val();
 	        object.inputValue1 = PINAN_ASSET_TYPE_F07;
@@ -372,9 +383,10 @@
             $("#avaStandardStockPositionDiv").hide();
         }
         if (pageModel != PAGE_MODEL_REFERENCE) {//查看页面
+            var termTypeReback = pageModel== PAGE_MODEL_NEW? $('#termTypeReback').val():termTypeRebackValue;
             $('#termTypeReback').tradeRepTypeChange({
                 termType: 'termTypeReback',
-                termTypeValue: $('#termTypeReback').val(),
+                termTypeValue: termTypeReback,
                 tradeMarket: $(tradeMarket).val(),
                 tradeP02: TRADE_PLACE_02,
                 tradeP03: TRADE_PLACE_03,
@@ -802,8 +814,9 @@
             repoType: $('#repoType').val(),
             chlId: $('#chlId').val(),
             //add by 张年  2019/08/05 start
-            tradeMarket:$('#tradeMarket').val()
+            tradeMarket:$('#tradeMarket').val(),
             //add by 张年  2019/08/05 end
+            isFromCstp:isFromCstp
         };
         var object = {
             portfolioId: ['portfolioId', 'TrdRepoTrade002.portfolioId'],
@@ -841,6 +854,8 @@
                         $("#portfolioId").textSelect('setValue', etrEntrust.portfolioId);
                         // 交易场所
                         checkAndAssign("#tradeMarket", etrEntrust.tradeMarket);
+                        // 交易平台
+                        checkAndAssign("#tradePlat", etrEntrust.tradePlat);
                         // 交易日历
                         checkAndAssign("#calendarId", etrEntrust.calendarId);
                         $("#calendarId").textSelect('setValue', etrEntrust.calendarId);
@@ -987,7 +1002,9 @@
                 fTradeIdChangeAction(fTradeId);
             }
             // 委托进入场合，根据委托代码设置画面信息
-            initPageInfoFromEntrust();
+            if (pageModel==PAGE_MODEL_NEW) {
+                initPageInfoFromEntrust();
+            }
             if (formTodoList) {
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].saveCalcCondition();
             }
@@ -1367,6 +1384,71 @@
 //		}
 
 	};
+    /**
+     * 根据 回购期限 获得 期限品种
+     * @param date
+     * @param term
+     * @returns {string|null}
+     */
+    function getTermTypeReback(date,term) {
+        if(term && term<=21){
+            //期限品种小于21天
+            if(term==1){
+                return R001;
+            }
+            if(term>1&&term<=7){
+                return R007;
+            }
+            if(term>7&&term<=14){
+                return R014;
+            }
+            if(term>14&&term<=21){
+                return R021;
+            }
+        }
+        var day=0;
+        //date为空时  返回0
+        if(date&&term){
+            //获取日期
+            date =DateUtil.parse(date);
+            //获取之后月00天 即本月最后一天
+            day= new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+1,0).getDate();
+            if(term<=day){
+                return R1M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+2,0).getDate();
+            if(term<=day){
+                return R2M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+3,0).getDate();
+            if(term<=day){
+                return R3M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+4,0).getDate();
+            if(term<=day){
+                return R4M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+5,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+6,0).getDate();
+            if(term<=day){
+                return R6M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+7,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+8,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+9,0).getDate();
+            if(term<=day){
+                return R9M;
+            }
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+10,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+11,0).getDate();
+            day= day+new Date(date.getFullYear(),new Date(DateUtil.parse(date)).getMonth()+12,0).getDate();
+            if(term<=day){
+                return R1Y;
+            }
+        }
+        return null;
+    }
+    /** modified by qufnagxu at 2020-0806 start **/
 
 	/**
 	 * 起息日联动首付日
@@ -1416,9 +1498,15 @@
         $('#trdInvestPersonInfo_counterId').attr('disabled', false);
 
         if (fTradeId && fTradeId != ''){
-            Joyin.ajaxSync(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade002/queryRepoCstpInfoByNo', {fedealno : fTradeId,entrustId:entrustId,preTradeId:preTradeId,isCstpSure:isCstpSure}, function(result){
+            Joyin.ajaxJson(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade002/queryRepoCstpInfoByNo', {fedealno : fTradeId,entrustId:entrustId,preTradeId:preTradeId,isCstpSure:isCstpSure}, function(result){
                 if (result){
                     isFromCstp = true;
+                    //是否有报价
+                	if(result.isOfferFlag && result.isOfferFlag != ''){
+                		$('#isOfferFlag').val(result.isOfferFlag);
+                	}else{
+                		$('#isOfferFlag').val('');
+                	}
                     if (result.dealdateStr && result.dealdateStr != ''){
                         $('#tradeDate').val(result.dealdateStr).trigger('change');// 交易日期
                         if($('#tradeDate').val()){
@@ -1428,17 +1516,28 @@
                         $('#tradeDate').val('');
                         $('#tradeDate').attr('disabled', false);
                     }
-                    // if (result.portfolioId && result.portfolioId != ''){
-                    //     $('#portfolioId').textSelect('setValue', result.portfolioId);//组合代码
-                    //     if($('#portfolioId').val()){
-                    //         $('#portfolioId').attr('disabled', true);
-                    //     }
-                    // }else{
-                    //     $('#bussTrdAvailableCashQuery_avalibleCash').val('');
-                    //     $('#bussTrdAvailableCashQuery_avalibleCashT1').val('');
-                    //     deleteSelect('portfolioId');
-                    //     $('#portfolioId').attr('disabled', false);
-                    // }
+                    //非cstp下行交易画面
+                    if(isCstpSure!="true"){
+                        if (result.entrustId && result.entrustId != ''){
+                            $('#entrustId').val(result.entrustId);// 价格
+                            if($('#entrustId').val()){
+                                $('#entrustId').attr('disabled', true);
+                            }
+                        }else{
+                            $('#entrustId').val('');
+                        }
+                        if (result.portfolioId && result.portfolioId != ''){
+                            $('#portfolioId').textSelect('setValue', result.portfolioId);//组合代码
+                            if($('#portfolioId').val()){
+                                $('#portfolioId').attr('disabled', true);
+                            }
+                        }else{
+                            $('#bussTrdAvailableCashQuery_avalibleCash').val('');
+                            $('#bussTrdAvailableCashQuery_avalibleCashT1').val('');
+                            deleteSelect('portfolioId');
+                            $('#portfolioId').attr('disabled', false);
+                        }
+                    }
                     if (result.prodtype && result.prodtype != ''){
                         $('#repoType').val(result.prodtype).trigger('change');// 回购类型
                         if($('#repoType').val()){
@@ -1536,8 +1635,8 @@
                         deleteSelect('ccy');
                         $('#ccy').attr('disabled', false);
                     }
-                    if (result.repoamtcstp && result.repoamtcstp != ''){
-                        $('#prinAmt').val(result.repoamtcstp).trigger('change');//本金金额
+                    if (result.facetotalamt && result.facetotalamt != ''){
+                        $('#prinAmt').val(result.facetotalamt).trigger('change');//本金金额
                         if( $('#prinAmt').val()){
                             $('#prinAmt').attr('disabled', true);
                         }
@@ -1564,6 +1663,15 @@
                         $('#rebackIntAmt').val('');
                         $('#rebackIntAmt').attr('disabled', false);
                     }
+                    if (result.repoamt && result.repoamt != ''){
+                        $('#tradeAmtAndFee').val(result.repoamt).trigger('change');//回购金额
+                        if($('#tradeAmtAndFee').val()){
+                            $('#tradeAmtAndFee').attr('disabled', true);
+                        }
+                    }else{
+                        $('#tradeAmtAndFee').val('');
+                        $('#tradeAmtAndFee').attr('disabled', false);
+                    }
                     if (result.mdealamt && result.mdealamt != ''){
                         $('#mdateSettleAmt').val(result.mdealamt).trigger('change');//到期结算金额
                         if($('#mdateSettleAmt').val()){
@@ -1575,33 +1683,41 @@
                         $('#mdateSettleAmt').attr('disabled', false);
                         $('#tradeAmtAndFee').attr('disabled', false);
                     }
-                    if (result.seller && result.seller != ''){
-                        $('#trdInvestPersonInfo_counterId').textSelect('setValue', result.seller);// 交易对手
-                        if( $('#trdInvestPersonInfo_counterId').val()){
-                            $('#trdInvestPersonInfo_counterId').attr('disabled', true);
+                    setTimeout(function () {
+                        //本方交易员
+                        if (result.buycost && result.buycost != ''){
+                            $('#trdInvestPersonInfo_trader').textSelect('setValue',result.buycost);
+                        }else{
+                            $('#trdInvestPersonInfo_trader').textSelect('setValue',userId);
                         }
-                    }else{
-                        deleteSelect('trdInvestPersonInfo_counterId');
-                        $('#trdInvestPersonInfo_counterId').attr('disabled', false);
-                    }
-                    if (result.selltrader && result.selltrader != ''){
-                        $('#trdInvestPersonInfo_counterTrader').val(result.selltrader);// 对手方交易员
-                        if($('#trdInvestPersonInfo_counterTrader').val()){
-                            $('#trdInvestPersonInfo_counterTrader').attr('disabled', true);
+                        if (result.seller && result.seller != ''){
+                            $('#trdInvestPersonInfo_counterId').textSelect('setValue', result.seller);// 交易对手
+                            if( $('#trdInvestPersonInfo_counterId').val()){
+                                $('#trdInvestPersonInfo_counterId').attr('disabled', true);
+                            }
+                        }else{
+                            deleteSelect('trdInvestPersonInfo_counterId');
+                            $('#trdInvestPersonInfo_counterId').attr('disabled', false);
                         }
-                    }else{
-                        $('#trdInvestPersonInfo_counterTrader').val('');
-                        $('#trdInvestPersonInfo_counterTrader').attr('disabled', false);
-                    }
-                    if (result.countertelephone && result.countertelephone != ''){
-                        $('#trdInvestPersonInfo_contactInfo').val(result.countertelephone);// 联系方式
-                        if($('#trdInvestPersonInfo_contactInfo').val()){
-                            $('#trdInvestPersonInfo_contactInfo').attr('disabled', true);
+                        if (result.selltrader && result.selltrader != ''){
+                            $('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').textSelect('setValue',result.selltrader);// 对手方交易员
+                            if($('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').val()){
+                                $('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').attr('disabled', true);
+                            }
+                        }else{
+                            $('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').val('');
+                            $('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').attr('disabled', false);
                         }
-                    }else{
-                        $('#trdInvestPersonInfo_contactInfo').val('');
-                        $('#trdInvestPersonInfo_contactInfo').attr('disabled', false);
-                    }
+                        if (result.countertelephone && result.countertelephone != ''){
+                            $('#trdInvestPersonInfo_contactInfo').val(result.countertelephone);// 联系方式
+                            if($('#trdInvestPersonInfo_contactInfo').val()){
+                                $('#trdInvestPersonInfo_contactInfo').attr('disabled', true);
+                            }
+                        }else{
+                            $('#trdInvestPersonInfo_contactInfo').val('');
+                            $('#trdInvestPersonInfo_contactInfo').attr('disabled', false);
+                        }
+                    },1000);
                     if (result.facetotalamt && result.facetotalamt != ''){
                         $('#bussRepoSec_totalPrinAmt').val(result.facetotalamt).trigger('blur');//汇总券面总额
                         if($('#bussRepoSec_totalPrinAmt').val()){
@@ -1643,6 +1759,36 @@
                         $('#actCapDays').val('');
                         $('#actCapDays').attr('disabled', false);
                     }
+                    if(result.zzdPrinAmt && result.zzdPrinAmt != ''){
+                        $('#zzdPrinAmt').val(result.zzdPrinAmt).trigger('change');// 中债登券面总额  zzdPrinAmt bussRepoSec_zzdTotalPrinAmt
+                        $('#bussRepoSec_zzdTotalPrinAmt').val(result.zzdPrinAmt).trigger('change');
+                        if($('#zzdPrinAmt').val()){
+                            $('#zzdPrinAmt').attr('disabled', true);
+                        }
+                        if($('#bussRepoSec_zzdTotalPrinAmt').val()){
+                            $('#bussRepoSec_zzdTotalPrinAmt').attr('disabled', true);
+                        }
+                    }else{
+                        $('#zzdPrinAmt').val('');
+                        $('#zzdPrinAmt').attr('disabled', false);
+                        $('#bussRepoSec_zzdTotalPrinAmt').val('');
+                        $('#bussRepoSec_zzdTotalPrinAmt').attr('disabled', false);
+                    }
+                    if(result.sqsPrinAmt && result.sqsPrinAmt != ''){
+                        $('#sqsPrinAmt').val(result.sqsPrinAmt).trigger('change');// 上清所券面总额
+                        $('#bussRepoSec_sqsTotalPrinAmt').val(result.sqsPrinAmt).trigger('change');
+                        if($('#sqsPrinAmt').val()){
+                            $('#sqsPrinAmt').attr('disabled', true);
+                        }
+                        if($('#bussRepoSec_sqsTotalPrinAmt').val()){
+                            $('#bussRepoSec_sqsTotalPrinAmt').attr('disabled', true);
+                        }
+                    }else{
+                        $('#sqsPrinAmt').val('');
+                        $('#sqsPrinAmt').attr('disabled', false);
+                        $('#bussRepoSec_sqsTotalPrinAmt').val('');
+                        $('#bussRepoSec_sqsTotalPrinAmt').attr('disabled', false);
+                    }
                     if (_.isArray(result.pledgeBondInfoDtoList)){
                         if (result.prodtype != TARGET_BACK_TYPE_H02) {
                             if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
@@ -1655,13 +1801,19 @@
                             window.BussRepoSec["bussRepoSec"].reloadPledgeBond('');
                         }
                     }
-                    setTimeout(function () {
+                    //成交编号   通道置灰
+                    $('#chlId').attr('disabled',true);
+                    $('#bussRepoSec_btn_add').addClass('layui-btn-disabled').off();
+                    $('#bussRepoSec_btn_delete').addClass('layui-btn-disabled').off();
+                   /* setTimeout(function () {
                         isFromCstp = false;
-                    },1000);
+                    },1000);*/
                 }
             })
         }else{
-            if ( $('#tradeDate').val()){
+            isFromCstp = false;
+            $('#entrustId').val('');
+            /*if ( $('#tradeDate').val()){
                 $('#tradeDate').val($('#formatDate').val());
                 $('#tradeDate').attr('disabled', true);
             }
@@ -1713,8 +1865,8 @@
                 $('#term').attr('disabled', false);
             }
             if ( $('#basis').val()){
-                /*deleteSelect('basis');
-                $('#basis').attr('disabled', false);*/
+                /!*deleteSelect('basis');
+                $('#basis').attr('disabled', false);*!/
                 $('#basis').val(BASIS_A_365).trigger('change');
             }
             if ( $('#ccy').val()){
@@ -1776,7 +1928,7 @@
             setTimeout(function () {
                 $('#bussTrdAvailableCashQuery_avalibleCash').val('');
                 $('#bussTrdAvailableCashQuery_avalibleCashT1').val('');
-            },1500)
+            },1500)*/
 
         }
     };
@@ -1857,9 +2009,12 @@
                 refreshCashAndBalance();
                 if(pageModel==PAGE_MODEL_NEW&&!$('#entrustId').val()){
                     //清空质押劵
-                    if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
-                        if(window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.table){
-                            window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.clear();
+                    //非成交编号  刷新
+                    if(!isFromCstp){
+                        if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
+                            if(window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.table){
+                                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.clear();
+                            }
                         }
                     }
                 }
@@ -1926,9 +2081,12 @@
                 // 组合代码、证券托管户、交易日、到期日改变时，刷新可使用标准券额度
                 refreshAvaStandardStockPosition();
             if(pageModel==PAGE_MODEL_NEW&&!$('#entrustId').val()){
-                //清空质押劵
-                if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
-                    window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.clear();
+                //非成交编号  刷新
+                if(!isFromCstp){
+                    //清空质押劵
+                    if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
+                        window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.clear();
+                    }
                 }
             }
                 // 设置添加质押券共通参数
@@ -1971,9 +2129,12 @@
                 // 组合代码、证券托管户、交易日、到期日改变时，刷新可使用标准券额度
                 refreshAvaStandardStockPosition();
                 if(pageModel==PAGE_MODEL_NEW&&!$('#entrustId').val()&&!preTradeId){
-                    //清空质押劵
-                    if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
-                        window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.clear();
+                    //非成交编号  刷新
+                    if(!isFromCstp){
+                        //清空质押劵
+                        if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
+                            window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.clear();
+                        }
                     }
                 }
                 setBussRepoSecInput();
@@ -1989,9 +2150,26 @@
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 start----------
             var object = $.serializeToObject('#submitForm', true);
+            
+         // add by etliu 20210129 start
+            // 选择的成交编号存在对应的报价，则不影响风险
+            if (object.fTradeId) {
+                Joyin.ajaxSync(basePath + 'invest/trade/TrdCommonController/checkExecIdHasQuote', {'execId': object.fTradeId}, function (result) {
+                    if (result == 'Y') {
+                        object.isSkipRisk = 'Y';
+                        object.isSkipRiskMsg = '选择的成交编号存在对应的报价，本次交易不影响风险';
+                    }
+                });
+            }
+         // add by etliu 20210129 end
+            
              window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/1/RSK002/F07', object,getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 end----------
-             window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());
+          // add by etliu 20210129 start
+             if (object.isSkipRisk != 'Y') {
+                 window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());
+             }
+          // add by etliu 20210129 end
 
         });
 
@@ -2026,10 +2204,16 @@
 
         // add by wangguoxian 费用设置 20190807 end
 
+
         // 银行间成交编号(当交易场所选择银行间时，银行间成交编号可编辑)
         $('#fTradeId').change(function(){
             if (pageModel==PAGE_MODEL_NEW&&!fTradeId){
                 fTradeIdChangeAction(fTradeId);
+                if($("#fTradeId").val()==''){
+                    Joyin.ajax(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade002/init', {entrustId:$('#entrustId').val(),portfolioId:$('#portfolioId').val()}, function (data) {
+                        $("body").html(data);
+                    });
+                }
             }
         });
         var getDateByNow =  function (){

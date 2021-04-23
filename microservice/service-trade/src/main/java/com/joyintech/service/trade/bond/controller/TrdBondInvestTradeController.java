@@ -15,7 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.service.trade.bond.service.TrdBondCalcService;
 import com.joyintech.tams.invest.common.dto.period.trdfundduration.TrdFundDurationCommonDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +39,9 @@ import com.joyintech.service.trade.bond.service.TrdBondInvestTradeService;
 import com.joyintech.tams.common.base.entity.AssetTargetDb;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
+import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
@@ -58,6 +63,9 @@ public class TrdBondInvestTradeController {
      */
     @Autowired
     private TrdBondInvestTradeService trdBondInvestTradeService;
+
+    @Autowired
+    private TrdBondCalcService trdBondCalcService;
 
     /**
      * 分页查询
@@ -408,6 +416,27 @@ public class TrdBondInvestTradeController {
         Boolean allTradeAmtByFTradeId = trdBondInvestTradeService.isAllTradeAmtByFTradeId(map);
         return allTradeAmtByFTradeId;
     }
+    
+    
+    /**
+     * 根据成交编号查询费用的值是否和接口的值一致
+     * @param fTradeId
+     * @return
+     */
+    @PostMapping("getAllFeeByFTradeId")
+    public List<TrdTradeFeeDetail>  getAllFeeByFTradeId(@RequestBody Map<String, Object> map){
+    	List<TrdTradeFeeDetail>  allFee = trdBondInvestTradeService.getAllFeeByFTradeId(map);
+        return allFee;
+    }
+    
+    @PostMapping("getInterfTradSecdeal")
+    public InterfTradSecdeal  getInterfTradSecdeal(@RequestBody Map<String, Object> map){
+    	InterfTradSecdeal  interfTradSecdeal = trdBondInvestTradeService.getInterfTradSecdeal(map);
+        return interfTradSecdeal;
+    }
+    
+    
+    
     /**
      * 根据资产代码获取相关交易信息列表
      * @param map
@@ -553,5 +582,34 @@ public class TrdBondInvestTradeController {
     @PostMapping("getType7")
     public String getType7(@RequestBody TrdBondInvestTradeDto dto) {
         return trdBondInvestTradeService.getType7(dto);
+    }
+
+
+
+    // 按照净价计算
+    @PostMapping("calculate01Data")
+    public AjaxResult calculate01Data(@RequestBody Map<String, Object> map) {
+        TrdBondInvestTradeDto inputDto = JSON.parseObject(
+                JSON.toJSONString(map), TrdBondInvestTradeDto.class);
+        inputDto.setCalculateField("unitCprice");
+        return trdBondCalcService.calculateData(inputDto);
+    }
+
+    // 按照全价总额计算
+    @PostMapping("calculate02Data")
+    public AjaxResult calculate02Data(@RequestBody Map<String, Object> map) {
+        TrdBondInvestTradeDto inputDto = JSON.parseObject(
+                JSON.toJSONString(map), TrdBondInvestTradeDto.class);
+        inputDto.setCalculateField("fpriceAmt");
+        return trdBondCalcService.calculateData(inputDto);
+    }
+
+    // 按照到期收益率计算
+    @PostMapping("calculate03Data")
+    public AjaxResult calculate03Data(@RequestBody Map<String, Object> map) {
+        TrdBondInvestTradeDto inputDto = JSON.parseObject(
+                JSON.toJSONString(map), TrdBondInvestTradeDto.class);
+        inputDto.setCalculateField("yield");
+        return trdBondCalcService.calculateData(inputDto);
     }
 }

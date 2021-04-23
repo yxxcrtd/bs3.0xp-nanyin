@@ -33,6 +33,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
+
 		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
@@ -115,6 +116,31 @@
 		    </exclusions>
         </dependency>
 
+		<!-- 交易画面端 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>tams-exchange</artifactId>
+			<version>2.1.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- 接口画面端 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>tams-customer-interf</artifactId>
+			<version>1.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
         <!-- 移动APP -->
 		<dependency>

@@ -19,6 +19,7 @@ import com.joyintech.batch.core.dto.SysBatchExecInfoDto;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.valuation.batch.assetimpairmentprovision.dto.AssetImpairmentProvisionReaderResult;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dao.AssetIntdateCarryoverMapper;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.PrdCashEntity;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.dao.AccountingMethodMapper;
@@ -1039,6 +1040,67 @@ public class BookCommonLogic {
 
         return accountSceneMap;
     }
+    
+	/**
+	 * 资产减值计提 - [参看设计【详细设计-共用场景元素赋值】计提场景元素]
+	 *
+	 * @param params 
+	 * @param acctEntity 资产减值计提Dto
+	 * @return Map<String, Object>
+	 * @see
+	 * @since 1.0
+	 */
+	public Map<String, Object> accrualElementAssignForTaFeeLoss(AssetImpairmentProvisionReaderResult acctEntity,
+			Map<String, Object> params) {
+
+		// 初始化定义 - 存放该笔记账的场景要素 map定义
+		Map<String, Object> accountSceneMap = new HashMap<>();
+
+		// 若reader传递的参数为空，不进行后续处理
+		if (acctEntity == null) {
+			return accountSceneMap;
+		}
+
+		// 记账场景要素map塞值
+		// 账套代码 -> 交易类账务处理结果.账套代码
+		accountSceneMap.put(BookConstant.BOOKSET_ID, acctEntity.getBooksetId());
+		// 发生日 -> 交易类账务处理结果.发生日
+		accountSceneMap.put(BookConstant.HAPPEN_DATE, acctEntity.getHappenDate());
+		// 入账日 -> 交易类账务处理结果.入账日
+		accountSceneMap.put(BookConstant.BOOK_DATE, acctEntity.getBookDate());
+		// 账套日期 -> 交易明细.账套代码
+		accountSceneMap.put(BookConstant.BOOKSET_DATE, acctEntity.getBooksetDate());
+		// 任务代码 -> 交易明细.任务代码
+		accountSceneMap.put(BookConstant.TASK_ID, params.get("taskId"));
+		// 任务优先级 -> 交易明细.任务优先级
+		accountSceneMap.put(BookConstant.TASK_PRI, params.get("taskPri"));
+		// 凭证类型 -> 【日终:01】
+		accountSceneMap.put(BookConstant.BOOK_TYPE, DictCodeList.凭证类型_日终.getValue());
+		// ADD JINMAODONG 20190803 场景分支增加币种
+		// 币种
+		accountSceneMap.put(BookConstant.CCY, params.get("oCcy"));
+		// 本位币 -> 交易明细.本位币
+		accountSceneMap.put(BookConstant.B_CCY, acctEntity.getStandardCcy());
+		// 投资目的 -> 交易明细.投资目的
+		accountSceneMap.put(BookConstant.INV_AIM, acctEntity.getInvAim());
+		// 账务明细代码1->交易类账务处理结果.账务明细代码
+		accountSceneMap.put(BookConstant.BOK_DETAIL_ID1, getValBokDetailId(acctEntity.getBusiId(),
+				acctEntity.getBokDetailId(), null, (String) params.get("oCcy")));
+		// 交易类型 -> null
+		accountSceneMap.put(BookConstant.DEALTYPE, null);
+		// 发生数量 - 交易明细.数量余额
+		accountSceneMap.put(BookConstant.HAPPEN_NUMBER, null);
+		// 是否累计余额
+		accountSceneMap.put(BookConstant.IS_ACC_BALANCE, DictCodeList.是否_是.getValue());
+		// 交易编号 - > (计提类生成的账户明细，不需要塞交易编号)
+		accountSceneMap.put(BookConstant.TRADE_ID, null);
+		// 冲正标识 - （往账务明细（当前表））默认塞入正常
+		accountSceneMap.put(BookConstant.OFFSET_FLAG, DictCodeList.冲正标识_正常交易.getValue());
+		// 是否0入账
+		accountSceneMap.put(BookConstant.IS_ZERO_ACCOUNT, null);
+
+		return accountSceneMap;
+	}
     /**
      * 查询账务明细代码
      */

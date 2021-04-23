@@ -13,8 +13,10 @@ package com.joyintech.tams.invest.trade.bond.controller;
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
@@ -30,13 +32,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
@@ -151,7 +151,14 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(tradeId);
-
+            Map<String, Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("portfolioId", dto.getPortfolioId());
+            paramMap.put("secAcctId", dto.getSecManageAcctId());
+            paramMap.put("tradeDate", DateUtil.format(dto.getTradeDate()));
+            paramMap.put("ccy", dto.getCcy());    
+            Map<String, Object> result = new HashMap<>();
+            result = trdBondInvestTrade002Service.getTradeMarketCash(paramMap);
+            dto.setTradeMarketCash((BigDecimal)result.get("cashS"));
             //转仓交易目的 显示为转仓交易的 交易目的
             if(dto!=null){
                 String turnInvAim = trdBondInvestTrade002Service.getReverseTradeDtoInvAim(tradeId);
@@ -214,7 +221,11 @@ public class TrdBondInvestTrade002Controller extends BaseController {
 //                dto.setTurnInvAim(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue());
 //            }
 //        }
-
+        if (dto.getTradeAmt() != null){
+            dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            dto.setOwnTradeAmt(dto.getOwnTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            dto.setIntegrateTradeAmt(dto.getIntegrateTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+        }
         Date sysDate = DateUtil.platDateFromCache();
         String formatDate = DateUtil.format(sysDate);
         model.addAttribute("formatDate",formatDate);
@@ -283,6 +294,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
+        model.addAttribute("userId", LoginUserUtil.getUserName());
         return super.init(model);
     }
 
@@ -876,5 +888,29 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         Boolean allTradeAmtByPreTradeId = trdBondInvestTrade002Service.isAllTradeAmtByPreTradeId(params);
         ajaxResult.setData(allTradeAmtByPreTradeId);
         return ajaxResult;
+    }
+    
+    /**
+     * 获取交易所资金账户可用现金
+     *
+     * @param 
+     * @return 计算结果
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getTradeMarketCash")
+    @ResponseBody
+    public Map<String, Object> getTradeMarketCash(@RequestBody Map<String, Object> params) {
+        return trdBondInvestTrade002Service.getTradeMarketCash(params);
+    }
+	
+	/**
+     * 银行间债券交易自动录单
+     */
+    @Transactional(rollbackFor = { Exception.class })
+    @PostMapping("secAutoTrade")
+    @ResponseBody
+    public Map<String,Object> secAutoTrade(@RequestBody TrdBondInvestTradeDto entity) {
+        return trdBondInvestTrade002Service.secAutoTrade(entity);
     }
 }

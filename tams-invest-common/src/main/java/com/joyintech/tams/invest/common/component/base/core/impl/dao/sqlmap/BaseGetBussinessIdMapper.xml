@@ -69,4 +69,70 @@
 	<select id="getNextValBySequenceName" resultType="java.lang.String" useCache="false" flushCache="true">
 		select ${sequenceName}.nextval from dual
 	</select>
+
+	<select id="selectRuleByMapInfo" parameterType="com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter"
+			resultMap="com.joyintech.tams.common.base.dao.MstBusinessIdRuleMapper.BaseResultMap">
+		SELECT
+		SEQ_NO,
+		COMMON_BUSINESS_TYPE,
+		TYPE_1,
+		TYPE_2,
+		TYPE_3,
+		TYPE_4,
+		TYPE_5,
+		TYPE_6,
+		BUSINESS_ID_RULE_TYPE,
+		PREFIX_NAME,
+		PREFIX_SEQUENCE_NAME,
+		PREFIX_SEQUENCE_LEN,
+		POSTFIX_NAME,
+		POSTFIX_SEQUENCE_NAME,
+		POSTFIX_SEQUENCE_LEN,
+		DATE_RULE_TYPE,
+		BUSINESS_ID_SERVICE_NAME,
+		BUSINESS_ID_METHOD_NAME,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME
+		FROM
+		MST_BUSINESS_ID_RULE
+		<where>
+			<choose>
+				<!-- 增加seqNo的匹配模式 -->
+				<when test="mapInfo.seqNo != null and mapInfo.seqNo != ''">
+					SEQ_NO = #{mapInfo.seqNo}
+				</when>
+				<otherwise>
+					<!-- 支持数据字典的ext1和ext2对应 修改 by renping 2019-07-19 start-->
+					<if test="mapInfo.commonBusinessType != null">
+						COMMON_BUSINESS_TYPE = #{mapInfo.commonBusinessType.value}
+					</if>
+					<if test="mapInfo.commonBusinessExtType != null">
+						and COMMON_BUSINESS_TYPE = #{mapInfo.commonBusinessExtType.value}
+					</if>
+					<!-- 支持数据字典的ext1和ext2对应 修改 by renping 2019-07-19 end-->
+					<if test="mapInfo.type1 != null">
+						and TYPE_1 = #{mapInfo.type1.value}
+					</if>
+					<if test="mapInfo.type2 != null">
+						and TYPE_2 = #{mapInfo.type2.value}
+					</if>
+					<if test="mapInfo.type3 != null">
+						and TYPE_3 = #{mapInfo.type3.value}
+					</if>
+					<if test="mapInfo.type4 != null">
+						and TYPE_4 = #{mapInfo.type4.value}
+					</if>
+					<if test="mapInfo.type5 != null">
+						and TYPE_5 = #{mapInfo.type5.value}
+					</if>
+					<if test="mapInfo.type6 != null">
+						and TYPE_6 = #{mapInfo.type6.value}
+					</if>
+				</otherwise>
+			</choose>
+		</where>
+	</select>
 </mapper>

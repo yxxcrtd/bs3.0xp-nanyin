@@ -121,7 +121,7 @@ public class FundSecuritiesAccount002Controller extends BaseController{
             return new AjaxResult(br);
         }
         dto.setBussinessId(dto.getSeqNo());
-        dto.setSecAcctType(DictCodeListExt3.账户类型_基金账户.getValue());
+        dto.setSecAcctType(DictCodeListExt3.证券账户类型_基金账户.getValue());
         ProcessParameter<FundSecuritiesAccountDto> processParameter = new ProcessParameter<FundSecuritiesAccountDto>();
         WorkFlowParameter<FundSecuritiesAccountDto> params = new WorkFlowParameter<FundSecuritiesAccountDto>();
         params.setPageId(this.getPageId());

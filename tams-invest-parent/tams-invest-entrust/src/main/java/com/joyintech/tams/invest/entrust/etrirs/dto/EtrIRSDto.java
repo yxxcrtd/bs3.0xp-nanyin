@@ -146,6 +146,8 @@ public class EtrIRSDto extends EtrEntrust implements ProcessEntity {
      */
     
     private String matureYield;
+
+    private String dealMode;
     
     /**
      * 获取 riskTrialRetDto
@@ -471,7 +473,7 @@ public class EtrIRSDto extends EtrEntrust implements ProcessEntity {
      * @since 1.0
      */
     public String getDealModeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.利率行情, super.getDealMode());
+        return SysDataUtil.getNameFromDataDict(DictCode.利率行情, this.getDealMode());
     }
     
     /**
@@ -532,14 +534,17 @@ public class EtrIRSDto extends EtrEntrust implements ProcessEntity {
         return super.getMdate();
     }
 
-    
-	@Override
+
 	@NotEmpty(fieldName = "EtrIRS.dealMode", groups = {ValidateGroupEdit.class})
     public String getDealMode() {
-		return super.getDealMode();
+		return dealMode;
 	}
 
-	@Override
+    public void setDealMode(String dealMode) {
+        this.dealMode = dealMode;
+    }
+
+    @Override
 	@NotEmpty(fieldName = "EtrIRS.ccy", groups = {ValidateGroupEdit.class})
     public String getCcy() {
 		return super.getCcy();

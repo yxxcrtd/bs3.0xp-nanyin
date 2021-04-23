@@ -1822,6 +1822,12 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
     目标投资者_PR3(DictCode.目标投资者,"PR3","PR3"),
     目标投资者_PR4(DictCode.目标投资者,"PR4","PR4"),
     机构所属行业三级分类_中央银行服务(DictCode.机构所属行业三级分类,"01","中央银行服务"),
+	平安业务类型_债券类资产配债(DictCode.平安业务类型,"163","债券类资产配债"),
+
+	资金账户类型_期货资金账户(DictCode.资金账户类型,"B24","期货资金账户"),
+	//add by yzg 20210422 start
+	交易对手类型_非法人机构(DictCode.交易对手类型 ,"06","非法人机构"),
+	//add by yzg 20210422 end
 	;
     /**
      * 对应于数据字典code

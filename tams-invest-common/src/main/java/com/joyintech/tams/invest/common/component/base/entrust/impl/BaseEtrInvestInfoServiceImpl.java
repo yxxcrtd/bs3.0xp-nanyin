@@ -17,6 +17,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.entrust.dto.BaseEtrFinishAmtDto;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
@@ -102,6 +103,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
      */
     @Autowired
     private EtrEntrustBidPriceMapper etrEntrustBidPriceMapper;
+    @Autowired
+    private WflEtrEntrustBidPriceMapper wflEtrEntrustBidPriceMapper;
 
     @Autowired(required = false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
@@ -113,6 +116,30 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
 
     @Autowired
     private BaseEtrInvestInfoMapper baseEtrInvestInfoMapper;
+
+    /**
+     * 附件信息共通Service
+     */
+    @Autowired(required = false)
+    private MstFileCommonService mstFileCommonService;
+
+    /**
+     * 委托指令流程中Mapper
+     */
+    @Autowired
+    private WflEtrEntrustMapper wflEtrEntrustMapper;
+
+    /**
+     * 委托指令附属表流程中Mapper
+     */
+    @Autowired
+    private WflEtrEntrustAddMapper wflEtrEntrustAddMapper;
+
+    /**
+     * 委托指令回购质押品流程中Mapper
+     */
+    @Autowired
+    private WflEtrPledgeMapper wflEtrPledgeMapper;
 
     /**
      * 委托操作相关校验 <一句话功能简述> <功能详细描述>
@@ -556,7 +583,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         // 修改委托指令表中值
         int flag = etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
         // 修改委托指令分发表中值 add by yangwenjun 20201209
-        etrEntrustMapper.updateByPrimaryKeySelective1(etrEntrust);
+        baseEtrInvestInfoMapper.updatEetrDistribute(etrEntrust);
         // 判断更新委托状态执行成功
         if (flag == 1) {
             return true;
@@ -854,5 +881,66 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             invAim = baseEtrInvestInfoMapper.findInvAimByPortIdAndFinType(portfolioId, finprodId);
         }
         return invAim;
+    }
+
+    @Override
+    public boolean newDelegateFlow(BaseEtrInvestInfoDto dto) {
+        if (dto != null) {
+            WflEtrEntrust entrust = new WflEtrEntrust();
+            BeanUtil.copyPropertiesIgnoreNull(entrust,dto.getEtrEntrust());
+            entrust.setWorkflowId(dto.getWorkFlowId());
+            entrust.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            wflEtrEntrustMapper.insertSelective(entrust);
+            // 保存委托指令附属表
+            WflEtrEntrustAdd entrustAdd = new WflEtrEntrustAdd();
+            BeanUtil.copyPropertiesIgnoreNull(entrustAdd,dto.getEtrEntrustAdd());
+            entrustAdd.setWorkflowId(dto.getWorkFlowId());
+            entrustAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            wflEtrEntrustAddMapper.insertSelective(entrustAdd);
+            // 保存List<委托指令回购质押品>
+            if (dto.getEtrPledgeList() != null && dto.getEtrPledgeList().size() > 0) {
+                for (EtrPledge etrPledge : dto.getEtrPledgeList()) {
+                    WflEtrPledge wflEtrPledge = new WflEtrPledge();
+                    BeanUtil.copyPropertiesIgnoreNull(wflEtrPledge,etrPledge);
+                    wflEtrPledge.setWorkflowId(dto.getWorkFlowId());
+                    wflEtrPledge.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrPledgeMapper.insertSelective(wflEtrPledge);
+                }
+            }
+            // 保存List<委托投标标位表>
+            if (dto.getBidPriceList() != null && !dto.getBidPriceList().isEmpty()) {
+                for (EtrEntrustBidPrice etrEntrustBidPrice : dto.getBidPriceList()) {
+                    etrEntrustBidPrice.setBidPrice(etrEntrustBidPrice.getBidPrice().divide(BigDecimal.valueOf(100)));
+                    WflEtrEntrustBidPrice wflEtrEntrustBidPrice = new WflEtrEntrustBidPrice();
+                    BeanUtil.copyPropertiesIgnoreNull(wflEtrEntrustBidPrice,etrEntrustBidPrice);
+                    wflEtrEntrustBidPrice.setWorkflowId(dto.getWorkFlowId());
+                    wflEtrEntrustBidPrice.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrEntrustBidPriceMapper.insertSelective(wflEtrEntrustBidPrice);
+                }
+            }
+            if (mstFileCommonService != null && dto.getMstFileInputParameter() != null) {
+                dto.getMstFileInputParameter().setBussinessId(dto.getWorkFlowId());
+                mstFileCommonService.updateBusinessId(dto.getMstFileInputParameter());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteDelegateFlow(Map<String, Object> param) {
+        String workflowId = (String)param.get("workflowId");
+        if (workflowId != null) {
+            // 删除委托指令
+            wflEtrEntrustMapper.deleteByWorkflowId(workflowId);
+            // 删除委托指令附属
+            wflEtrEntrustAddMapper.deleteByWorkflowId(workflowId);
+            // 删除委托指令回购质押品
+            wflEtrPledgeMapper.deleteByWorkflowId(workflowId);
+            // 全删委托投标标位表
+            wflEtrEntrustBidPriceMapper.deleteByWorkflowId(workflowId);
+            return true;
+        }
+        return false;
     }
 }

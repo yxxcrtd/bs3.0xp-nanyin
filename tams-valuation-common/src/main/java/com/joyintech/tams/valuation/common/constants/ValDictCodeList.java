@@ -354,12 +354,21 @@ public enum ValDictCodeList implements BaseDictCodeList {
      * 账套配置表参数项_交易所结算模式
      */
     账套配置表参数项_交易所结算模式(ValDictCode.账套配置表参数项, "SETTLEMENT_MODEL", "交易所结算模式"),
-    
+
     /**
      * 账套配置表参数项_待摊费用计提方式
      */
     账套配置表参数项_待摊费用计提方式(ValDictCode.账套配置表参数项, "UNAMO_ACCR_TYPE", "待摊费用计提方式"),
-    
+
+
+    /**
+     * 账套配置表参数项_债券公允价值变动计算过程小数位
+     */
+    账套配置表参数项_债券公允价值变动计算过程小数位(
+        ValDictCode.账套配置表参数项, "SEC_FAIRVALUE_DIGITS", "债券公允价值变动计算过程小数位"
+    ),
+
+
     /**
      * 费前费后区分_费前
      */
@@ -410,7 +419,7 @@ public enum ValDictCodeList implements BaseDictCodeList {
     计息基础_债券类资产_30_360(
         ValDictCode.计息基础_债券类资产, "30/360", "30/360"
     ),
-    
+
     /**
      * 债券类资产_30U_360
      */
@@ -551,9 +560,9 @@ public enum ValDictCodeList implements BaseDictCodeList {
     账套配置表参数项_周期年化收益率小数尾数处理方式_估值表展示(
             ValDictCode.账套配置表参数项, "SHOW_CYCLYEAR_YIELD_TYPE", "周期年化收益率小数尾数处理方式_估值表展示"
     ),
-    
-    
-    
+
+
+
     /**
      * 账套配置表参数项_累计单位净值小数位数_估值表展示
      */
@@ -578,7 +587,7 @@ public enum ValDictCodeList implements BaseDictCodeList {
     账套配置表参数项_累积万份收益小数尾数_估值表展示(
     		ValDictCode.账套配置表参数项, "SHOW_AFTER_DEC_SUM_TYPE", "累积万份收益小数尾数_估值表展示"
     ),
-    
+
     /**
      * 账套配置表参数项_本日年化收益率小数位数_估值表展示
      */
@@ -591,8 +600,8 @@ public enum ValDictCodeList implements BaseDictCodeList {
     账套配置表参数项_本日年化收益率小数尾数_估值表展示(
     		ValDictCode.账套配置表参数项, "TDY_YEILD_DEC_TYPE", "本日年化收益率小数尾数_估值表展示"
     ),
-    
-    
+
+
     /**
      * 账套配置表参数项_7日年化收益率小数位数_估值表展示
      */
@@ -617,7 +626,7 @@ public enum ValDictCodeList implements BaseDictCodeList {
     账套配置表参数项_汇兑损益结转频率(
             ValDictCode.账套配置表参数项, "EXCHANGE_CYCLE", "汇兑损益结转频率"
     ),
-    
+
     /**
      * 账套配置表参数项_昨日单位净值_估值日期类型
      */
@@ -700,6 +709,30 @@ public enum ValDictCodeList implements BaseDictCodeList {
         ValDictCode.账套配置表参数项, "TAX_ASSET_TYPE_DKYWSR_FS", "证券类型计税方式_贷款业务收入_发生"
     ),
     /**
+     * 账套配置表参数项_减值测算频率
+     */
+    账套配置表参数项_减值测算频率(
+        ValDictCode.账套配置表参数项, "LOSS_TEST_RATE", "减值测算频率"
+    ),
+    /**
+     * 账套配置表参数项_减值测算日
+     */
+    账套配置表参数项_减值测算日(
+        ValDictCode.账套配置表参数项, "LOSS_TEST_DATE", "减值测算日"
+    ),
+    /**
+     * 账套配置表参数项_触发减值交易类型
+     */
+    账套配置表参数项_触发减值交易类型(
+        ValDictCode.账套配置表参数项, "LOSS_TEST_TREAD", "触发减值交易类型"
+    ),
+    /**
+     * 账套配置表参数项_资产到期之后是否计提减值
+     */
+    账套配置表参数项_资产到期之后是否计提减值(
+        ValDictCode.账套配置表参数项, "AFT_EXP_IS_CAL", "资产到期之后是否计提减值"
+    ),
+    /**
      * 账套配置表参数项_还本是否冲减摊销
      */
     账套配置表参数项_还本是否冲减摊销(
@@ -777,11 +810,11 @@ public enum ValDictCodeList implements BaseDictCodeList {
     估值日期类型_上一工作日(
         ValDictCode.账套配置表参数项, "02", "估值日期类型-上一工作日"
         ),
-    
+
     /**
      * 估值日期类型-上一自然日
      * @author zhangJin
-     * 
+     *
      */
     周期型产品浮动管理费是否进行理财账务处理(
         ValDictCode.账套配置表参数项, "IS_CYCLY_PRD_DEAL_ACCOUNT", "周期型产品浮动管理费是否进行理财账务处理"
@@ -794,13 +827,75 @@ public enum ValDictCodeList implements BaseDictCodeList {
     账套配置表参数项_债券借贷费用损益计入方式(
             ValDictCode.账套配置表参数项, "BOND_LENDING_DEAL_FEE_SUBJECT", "债券借贷费用损益计入方式"
     ),
-    
+
+    /**
+     * 账套配置表参数项_债权类资产公允价值变动计算过程小数位
+     * add by wujie on 20201015 remark:计划类收益型资产改造
+     */
+    账套配置表参数项_债权类资产公允价值变动计算过程小数位(
+        ValDictCode.账套配置表参数项, "DELTRIGHT_FAIRVALUE_DIGITS", "债权类资产公允价值变动计算过程小数位"
+    ),
+
+    /**
+     * 账套配置表参数项_本位币差额处理方式
+     */
+    账套配置表参数项_本位币差额处理方式(
+        ValDictCode.账套配置表参数项, "BCCYADJ_TYPE", "本位币差额处理方式"
+    ),
+
+    /**
+     * 账套配置表参数项_还本收息冲抵减值准备处理日
+     */
+    账套配置表参数项_还本收息冲抵减值准备处理日(
+        ValDictCode.账套配置表参数项, "OFFSETIMPT_DATETYPE", "还本收息冲抵减值准备处理日"
+    ),
+    /**
+     * 账套配置表参数项_卖出冲抵减值准备处理方式
+     */
+    账套配置表参数项_卖出冲抵减值准备处理方式(
+        ValDictCode.账套配置表参数项, "OFFSETIMPT_SHELL_TYPE", "卖出冲抵减值准备处理方式"
+    ),
+
+    /**
+     * 账套配置表参数项_收息冲抵减值准备处理方式
+     */
+    账套配置表参数项_收息冲抵减值准备处理方式(
+        ValDictCode.账套配置表参数项, "OFFSETIMPT_SX_TYPE", "收息冲抵减值准备处理方式"
+    ),
+
+    /**
+     * 账套配置表参数项_收息是否冲抵减值准备
+     */
+    账套配置表参数项_收息是否冲抵减值准备(
+        ValDictCode.账套配置表参数项, "IS_OFFSETIMPT_SX", "收息是否冲抵减值准备"
+    ),
+    /**
+     * 账套配置表参数项_减值资产第三阶段利息计提摊销差额计入科目
+     */
+    账套配置表参数项_减值资产第三阶段利息计提摊销差额计入科目(
+        ValDictCode.账套配置表参数项, "LOSS_P3_SECACCR_SUBJECT_NO", "减值资产第三阶段利息计提摊销差额计入科目"
+    ),
+    /**
+     * 账套配置表参数项_减值资产第三阶段是否重新计算实际利率
+     */
+    账套配置表参数项_减值资产第三阶段是否重新计算实际利率(
+        ValDictCode.账套配置表参数项, "LOSS_P3_SECACCR_YEILD_RECALC", "减值资产第三阶段是否重新计算实际利率"
+    ),
+    /** add by yanya on 20210309 增加行权相关的账套参数**/
+    /**
+     * 公允价值变动是否启用行权价
+     */
+    账套配置表参数项_公允价值变动是否启用行权价(
+            ValDictCode.账套配置表参数项, "EXEC_PRICE_CAL_TYPE", "公允价值变动是否启用行权价"
+    ),
+    账套配置表参数项_行权回售申请交易处理(
+            ValDictCode.账套配置表参数项, "EXEC_RESALEAPPLY_DEAL", "行权回售申请交易处理"
+    ),
     账套配置表参数项_预提费用计提方式(
-        ValDictCode.账套配置表参数项, "TOCAL_ACCR_TYPE", "预提费用计提方式"
+            ValDictCode.账套配置表参数项, "TOCAL_ACCR_TYPE", "预提费用计提方式"
     ),
 
     ;
-
     /**
      * 对应于数据字典code
      */

@@ -215,7 +215,7 @@ public class SecVestAssetDealTemplateRecService {
 	           	valBokDetailId_dsf.setCcy(valFinProductDeal.getCcy());
 	           	valBokDetailId_dsf.setBokDetailId(interfCommonService.genMd5BokDetailId(valBokDetailId_dsf));
 	           	 
-	            BokDetailId dsf = interfCommonService.settingDetailSubjectNoTaiL(trdFinProductBarter.getFinprodId(), trdFinProductBarter.getFinprodType(), null, valFinProductDeal.getBusiType());
+	            BokDetailId dsf = interfCommonService.settingDetailSubjectNoTaiL(trdFinProductBarter.getFinprodId(), trdFinProductBarter.getFinprodType(), null, valFinProductDeal.getBusiType(),valBokDetailId_dsf.getBooksetId());
 	       	    valBokDetailId_dsf.setDetailSubnameTail(dsf.getDetailSubnameTail());
 	       		valBokDetailId_dsf.setDetailSubjectNoTail(dsf.getDetailSubjectNoTail()==null?dsf.getDetailSubnameTail():dsf.getDetailSubjectNoTail());
 	       		listValBokDetailId.add(valBokDetailId_dsf);
@@ -314,7 +314,9 @@ public class SecVestAssetDealTemplateRecService {
      */
     private StlOrders getStlOrders(ValSecVestAssetDeal dto, TrdProductDeal valFinProductDeal){
     	StlOrders result = new StlOrders();
-    	if(dto.getMyAcctNo() == null && dto.getCounterAcctNo() == null){
+        //modify by yanya on 20210204 判定为空包含空字符
+        //if(dto.getMyAcctNo() == null && dto.getCounterAcctNo() == null){
+        if(StringUtil.isEmpty(dto.getMyAcctNo()) && StringUtil.isEmpty(dto.getCounterAcctNo()) ){
     		return null;
     	}
     	result.setMyAcctNo(dto.getMyAcctNo());

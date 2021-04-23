@@ -12,9 +12,7 @@ package com.joyintech.service.trade.cstp.dao;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.stereotype.Repository;
-
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.trade.cstp.dto.CstpSelectDto;
@@ -62,4 +60,6 @@ public interface CstpSelectMapper {
     List<SuggestDto> getFinprodId(Map<String,Object> map);
 
     BigDecimal getAmountByFtradeId(Map<String,Object> map);
+    
+	List<SelectOptionDto> getBusiCode(Map<String, Object> map);
 }

@@ -40,11 +40,6 @@ public class EtrEntrust extends BaseEntity {
     private String tradePlat;
 
     /**
-     * 交易方式，竞价交易/大宗交易/盘后定价交易/大宗交易专场
-     */
-    private String dealMode;
-
-    /**
      * 交易市场，一级市场、二级市场
      */
     private String tradeMarketMode;
@@ -106,20 +101,6 @@ public class EtrEntrust extends BaseEntity {
     private BigDecimal entrustAmt;
 
     /**
-     * 委托额度，用于APP质押式回购指令显示
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal APPentrustAmtOne;
-
-
-
-    /**
-     * 券面总额，用于APP买断式式回购指令显示
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal APPentrustAmtTWO;
-
-    /**
      * 委托数量，数量或者券面总额/100
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -136,13 +117,6 @@ public class EtrEntrust extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal proAvailableCash;
-
-    /**
-     * 组合T+1可用现金,用于APP质押式回购指令,买断式回购指令
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal appProAvailableCash1;
-
 
     /**
      * 托管户可用现金
@@ -190,11 +164,26 @@ public class EtrEntrust extends BaseEntity {
      * 销售代码
      */
     private String saleCode;
-    
+
     /**
      * 价格模式
      */
     private String priceModel;
+
+    /**
+     * 委托类型
+     */
+    private String entrustType;
+
+    /**
+     * 证券代码
+     */
+    private String stockId;
+
+    /**
+     * 指令类别
+     */
+    private String entrustClass;
 
     /**
      * 取得 委托代码
@@ -418,21 +407,6 @@ public class EtrEntrust extends BaseEntity {
      */
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo == null ? null : contactInfo.trim();
-    }
-
-    /**
-     * 取得交易方式,竞价交易/大宗交易/盘后定价交易/大宗交易专场
-     * @return
-     */
-    public String getDealMode() {
-        return dealMode;
-    }
-    /**
-     * 设置交易方式,竞价交易/大宗交易/盘后定价交易/大宗交易专场
-     * @return
-     */
-    public void setDealMode(String dealMode) {
-        this.dealMode = dealMode;
     }
 
     /**
@@ -677,82 +651,84 @@ public class EtrEntrust extends BaseEntity {
     public void setChlId(String chlId) {
         this.chlId = chlId == null ? null : chlId.trim();
     }
-    
-    /**
-     * 上市板
-     * @return
-     */
-    private String board;
 
     /**
-     * 获取上市板
-     * @return
-     */
-	public String getBoard() {
-		return board;
-	}
-	/**
-	 * 设置上市板
-	 * @param board
-	 */
-
-	public void setBoard(String board) {
-		this.board = board;
-	}
-
-    /**
-     * 获取销售代码
-     * @return
+     * 取得 销售代码
+     * @return 销售代码
      */
     public String getSaleCode() {
         return saleCode;
     }
 
     /**
-     * 设置销售代码
-     * @param saleCode
+     * 设置 销售代码
+     * @param saleCode 销售代码
      */
     public void setSaleCode(String saleCode) {
-        this.saleCode = saleCode;
+        this.saleCode = saleCode == null ? null : saleCode.trim();
     }
-    
+
     /**
-     * 获取价格模式
-     * @return
+     * 取得 价格模式
+     * @return 价格模式
      */
     public String getPriceModel() {
         return priceModel;
     }
 
     /**
-     * 设置价格模式
-     * @param priceModel
+     * 设置 价格模式
+     * @param priceModel 价格模式
      */
     public void setPriceModel(String priceModel) {
-        this.priceModel = priceModel;
+        this.priceModel = priceModel == null ? null : priceModel.trim();
     }
 
-    public BigDecimal getAPPentrustAmtOne() {
-        return APPentrustAmtOne;
+    /**
+     * 取得 委托类型
+     * @return 委托类型
+     */
+    public String getEntrustType() {
+        return entrustType;
     }
 
-    public void setAPPentrustAmtOne(BigDecimal APPentrustAmtOne) {
-        this.APPentrustAmtOne = APPentrustAmtOne;
+    /**
+     * 设置 委托类型
+     * @param entrustType 委托类型
+     */
+    public void setEntrustType(String entrustType) {
+        this.entrustType = entrustType == null ? null : entrustType.trim();
     }
 
-    public BigDecimal getAPPentrustAmtTWO() {
-        return APPentrustAmtTWO;
+    /**
+     * 取得 证券代码
+     * @return 证券代码
+     */
+    public String getStockId() {
+        return stockId;
     }
 
-    public void setAPPentrustAmtTWO(BigDecimal APPentrustAmtTWO) {
-        this.APPentrustAmtTWO = APPentrustAmtTWO;
+    /**
+     * 设置 证券代码
+     * @param stockId 证券代码
+     */
+    public void setStockId(String stockId) {
+        this.stockId = stockId == null ? null : stockId.trim();
     }
 
-    public BigDecimal getAppProAvailableCash1() {
-        return appProAvailableCash1;
+    /**
+     * 取得 指令类别
+     * @return 指令类别
+     */
+    public String getEntrustClass() {
+        return entrustClass;
     }
 
-    public void setAppProAvailableCash1(BigDecimal appProAvailableCash1) {
-        this.appProAvailableCash1 = appProAvailableCash1;
+    /**
+     * 设置 指令类别
+     * @param entrustClass 指令类别
+     */
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass == null ? null : entrustClass.trim();
     }
 }

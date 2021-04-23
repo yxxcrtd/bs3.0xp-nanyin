@@ -43,6 +43,18 @@
           <groupId>com.joyintech</groupId>
           <artifactId>framework-data</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>framework-rabbitmq</artifactId>
+        </dependency>
+        
 	</dependencies>
 	<properties>
         <start-class>com.joyintech.service.trade.TradeApplication</start-class>

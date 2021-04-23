@@ -30,10 +30,10 @@ var table;
         object.pageModel = pageModel;
         object.operateType = operateType;
         //股票交易不能做内部交易 yjm start 20191119
-        if (object.trdInvestPersonInfo && object.trdInvestPersonInfo.isOutTrade == 'N'){
-            Joyin.error("股票交易不可做内部交易！");
-            return false;
-        }
+        // if (object.trdInvestPersonInfo && object.trdInvestPersonInfo.isOutTrade == 'N'){
+        //     Joyin.error("股票交易不可做内部交易！");
+        //     return false;
+        // }
         //股票交易不能做内部交易 yjm end 20191119
         if(FileCommon) {
             object.uploadFileList = FileCommon.getUploadFileInfo();

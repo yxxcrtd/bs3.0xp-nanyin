@@ -123,8 +123,15 @@
 				bc.BASE_SUBJECT_NATURE as baseSubjectNature,    <!-- 账务明细（当前表）.基础科目性质  -->
 				<!-- 四级科目号 -->
 				bc.DETAIL_SUBJECT_NO AS detailSubjectNo,    <!-- 账务明细（当前表）.四级科目号  --> 
-                bs.BAL_FLAG
-				,bc.MDATE mdate
+                bs.BAL_FLAG,
+                bc.MDATE mdate,
+                bc.BRANCH,
+                bc.task_pri taskPri,
+                bc.OFFSET_DATE offsetDate,
+                bc.BOOK_DATE bookDate,
+                bc.BOOK_ORDER bookOrder,
+                bt.task_pri btTaskPri,
+                bs.SUBJECT_TYPE subjectType
 		    FROM BOK_BOOKDETAIL_CURRENT bc 
 		    LEFT JOIN BOK_DETAIL_ID bdi
 		        ON bdi.BOOKSET_ID = bc.BOOKSET_ID
@@ -322,6 +329,9 @@
 			       a.PROFIT_AMT          AS profitAmt, /**应付利润**/
                    a.TOT_PROFIT_AMT      AS totProfitAmt, /**累计应付利润**/
                    a.INT_RATE            AS intRate, /**计提利率（当日发生）**/
+                   <!-- add by wujie on 20200403 start -->
+                   a.layering_id,/**分层代码**/
+                   <!-- add by wujie on 20200403 end -->
 			       ROW_NUMBER() OVER(PARTITION BY BOOKSET_ID, HAPPEN_DATE ORDER BY BOOKSET_DATE DESC) AS rn
             FROM BOK_STAT_BOK_POSITION a
             WHERE 
@@ -527,7 +537,7 @@
     		ROW_NUMBER() OVER(PARTITION BY b.BASE_SUBJECT_NATURE
 	                ORDER BY b.SUBJECT_NO ASC) AS rowno
     	FROM BOK_SCENESUBJECT a,TMP,BOK_SUBJECT b
-    	WHERE a.SCENE_NODE_ID = TMP.SCENE_NODE_ID
+    	WHERE  TMP.SCENE_NODE_ID like a.SCENE_NODE_ID  || '%'
     	AND a.BOOKSET_ID = #{booksetId}
     	AND a.BOOKSET_ID = b.BOOKSET_ID
     	AND a.SUBJECT_NO = b.SUBJECT_NO
@@ -608,6 +618,7 @@ FROM
 						 <if test="happenDate != null"> AND cur.HAPPEN_DATE = #{happenDate}	/**发生日**/ </if>		
 						 <if test="beginHappenCycDate != null"> AND cur.HAPPEN_DATE <![CDATA[>=]]> #{beginHappenCycDate} </if>
 						 <if test="endHappenCycDate != null"> AND cur.HAPPEN_DATE <![CDATA[<=]]> #{endHappenCycDate} </if>
+						 <if test="isadd != null and isadd.equals('Y')"> AND decode(cur.cd_flag,'D',1,'C',-1,0)*cur.HAPPEN_NUMBER > 0 </if>
 				      ) TEMP
 				 WHERE TEMP.rn = 1
 				 AND TEMP.offsetFlag = #{offsetFlag} /**冲正标识**/
@@ -666,6 +677,10 @@ FROM
                   AND A.BUSI_ID = #{busiId} 
               </if>
 		      AND A.BOOK_DATE <![CDATA[<=]]> #{bookDate} 
+		      <if test="isPosZero != null and isPosZero != ''"> 
+                  AND A.POS_AMT = 0
+              </if>
+		       
 		) TMP WHERE TMP.rn = 1
 	</select>
     <!-- 待计提现金流查询(分层) -->

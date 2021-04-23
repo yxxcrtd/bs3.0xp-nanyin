@@ -5398,6 +5398,14 @@ public enum BussinessDictCodeListRds implements BaseDictCodeList {
             BussinessDictCodeRds.接口系统ID, "RSK012", "实占释放批量接口"
     ), 接口系统ID_实占批量接口(
             BussinessDictCodeRds.接口系统ID, "RSK200", "实占批量接口"
+    ), 接口系统ID_预占批量接口(
+            BussinessDictCodeRds.接口系统ID, "RSK101", "预占批量接口"
+    ), 接口系统ID_预占释放批量接口(
+            BussinessDictCodeRds.接口系统ID, "RSK105", "预占释放批量接口"
+    ), 接口系统ID_风险审批接口(
+            BussinessDictCodeRds.接口系统ID, "RSK007", "风险审批接口"
+    ), 接口系统ID_批量风险审批接口(
+            BussinessDictCodeRds.接口系统ID, "RSK0017", "批量风险审批接口"
     ),
 
     评级变动_调高(

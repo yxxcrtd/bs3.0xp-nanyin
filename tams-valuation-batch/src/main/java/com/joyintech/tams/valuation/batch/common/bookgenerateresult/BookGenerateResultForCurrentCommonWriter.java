@@ -17,6 +17,7 @@ import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookAccountGenLogic;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.dao.AccountingMethodMapper;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.BookGenerateResult;
+import com.joyintech.tams.valuation.common.batch.losscommon.service.LossCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,12 @@ public class BookGenerateResultForCurrentCommonWriter extends BaseWriter<NeedToW
      */
     @Autowired
     private BokStatDetPosiitonMapper bokSummaryTableMapper;
-
+    
+    /**
+     * 减值相关共通
+     */
+    @Autowired
+    private LossCommonService lossCommonService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     
@@ -89,6 +95,12 @@ public class BookGenerateResultForCurrentCommonWriter extends BaseWriter<NeedToW
             // 插入【账务汇总表（账套）】表
            this.insertBokSummary(bookGenerateResult.getValBokStatDetPosiitonBatch());
         }
+        /**ADD BY CAOGUO ON 20201016 减值相关修改 START **/
+        // 第五步：循环数据，插入【统计分析明细表（资产减值）】数据
+        for(BookGenerateResult bookGenerateResult : resultList){
+            lossCommonService.insertBokStatLossPosiitonList(bookGenerateResult.getBokStatLossPosiitonList());
+        }
+        /**ADD BY CAOGUO ON 20201016 END**/
 
     }
 

@@ -70,41 +70,52 @@ var table;
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
 	            return;
 	        }
+
+			var tradeAmt_=$('#tradeAmt').val();
 	
-	        if($('#fTradeId').val()&&$('#tradeAmt').val()&&(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)){//新建
-	            var isTrue = false;
-	            var params = {};
-	            params.fTradeId = $('#fTradeId').val();
-	            params.tradeAmt = $('#tradeAmt').val();
-	            params.workflowId = $('#workflowId').val();
-	            Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/isAllTradeAmtByFTradeId'), params, function (result) {
-	                if(result&&!result.data){
-	                    isTrue = true;
-	                    Joyin.error("成交编号获得的劵面总额不得大于已存在的劵面总额！");
-	                }
-	            },false);
-	            if(isTrue){
-	                return;
-	            }
-	        }
+//	        if($('#fTradeId').val()&&$('#tradeAmt').val()&&(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)){//新建
+//	            var isTrue = false;
+//	            var params = {};
+//	            params.fTradeId = $('#fTradeId').val();
+//
+//	            if (tradeAmt_) {
+//		             params.tradeAmt=tradeAmt_*10000;//万元转成元
+//	            }
+//
+//	            params.workflowId = $('#workflowId').val();
+//	            Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/isAllTradeAmtByFTradeId'), params, function (result) {
+//	                if(result&&!result.data){
+//	                    isTrue = true;
+//	                    Joyin.error("成交编号获得的劵面总额不得大于已存在的劵面总额！");
+//	                }
+//	            },false);
+//	            if(isTrue){
+//	                return;
+//	            }
+//	        }
 	        var object = $.serializeToObject('#submitForm', true);
 	        if ($('#select2-finprodId-container').attr('title')){
 	            object.finprodName = $('#select2-finprodId-container').attr('title');
-	        } 
+	        }
+			object.tradeAmt = $("#tradeAmt").val()*10000;
+            object.ownTradeAmt = $("#ownTradeAmt").val()*10000;
+            object.integrateTradeAmt = $("#integrateTradeAmt").val()*10000;
+            object.finprodId = $("#finprodId").val();
 	        object.pageModel = pageModel;
 	        object.operateType = operateType;
 	        if(FileCommon) {
 	            object.uploadFileList = FileCommon.getUploadFileInfo();
 	        }
+          object.tradeAmt = tradeAmt_*10000;
 	        object.settleAmt=$("#settleAmt").val();
 	        object.exchangeAmt=$("#exchangeAmt").val();
 	        object.commissionAmt=$("#commissionAmt").val();
 	        object.preTradeId = preTradeId;
-	        object.fTradeId = fTradeId;
-	        object.entrustNum = entrustNum; // 委托时的券面总额
-	        object.entrustPrice = entrustPrice; // 委托时的净价
-	        object.entrustYield = entrustYield; // 委托时的到期收益率
-	        object.entrustExerYield = entrustExerYield; // 委托时的行权收益率
+//	        object.fTradeId = fTradeId;
+	        object.entrustNum = entrustNum; // 指令时的券面总额
+	        object.entrustPrice = entrustPrice; // 指令时的净价
+	        object.entrustYield = entrustYield; // 指令时的到期收益率
+	        object.entrustExerYield = entrustExerYield; // 指令时的行权收益率
 	        object.assetPosition = $("#bussTrdAvailableCashQuery_assetPosition").val(); // 资产可用持仓
 	        object.bondFirstSign = $("#bondFirstSign").val(); //中标结果页面进入的标识 add by gejiaao 2019/8/9
 	        object.deviation=  parseFloat($("#deviationDegreeLabel").text())/100;//偏离度获取界面值并将其转换为数值型by赵东东 2019.9.24
@@ -114,9 +125,18 @@ var table;
 	            object.collectType = data.object.collectType;
 	        }
 	        if ($('#trdInvestPersonInfo_counterId').select2('data') && $('#trdInvestPersonInfo_counterId').select2('data')[0]) {
-	            object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;
-	            object.counterId = $('#trdInvestPersonInfo_counterId').select2('data')[0].id;
+	            object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;;
 	        }
+	        if(object.trdInvestPersonInfo && $("#fTradeId").val()){
+	        	object.trdInvestPersonInfo.counterTrader = $('select#trdInvestPersonInfo_counterTrader').val();
+	        }else{
+	        	object.trdInvestPersonInfo.counterTrader = $('input#trdInvestPersonInfo_counterTrader').val();
+	        }
+            if (typeof shortSellingSupported != 'undefined' && shortSellingSupported == '02') {
+                object.ownTradeAmt = tradeAmt_*10000;
+                object.ownFpriceAmt = object.fpriceAmt;
+                object.ownIntAmt = object.intAmt;
+            }
 	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
                 if(isautobond == true){
                     Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
@@ -132,7 +152,7 @@ var table;
                                             (object.bussTrdTransferOrder[bussTrdTransferOrder].settleAmt== object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt)){
 
                                             object.portfolioId = object.bussTrdTransferOrder[bussTrdTransferOrder].portfolioId;
-                                            object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt;
+                                            object.tradeAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].tradeAmt*10000;
                                             object.cpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].cpriceAmt;
                                             object.fpriceAmt = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].fpriceAmt;
                                             ajaxJsonSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/check', object, function(result) {
@@ -605,6 +625,11 @@ var table;
      * 1.1交易场所
      */
     $('#tradeMarket').on("change", function () {
+    	if($('#ps').val()=="T01" && ($('#tradeMarket').val() == "03" || $('#tradeMarket').val() == "04")){
+        	$("#tradeMarketCash_div").show();
+        }else{
+        	$("#tradeMarketCash_div").hide();
+        }
         //update by zhangnian 20200213  start 交易场所和币种联合联动费用
         controlTradeFee();
         //update by zhangnian 20200213  end 交易场所和币种联合联动费用
@@ -667,6 +692,12 @@ var table;
      * 1.3交易方向
      */
     $("#ps").on("change", function () {
+    	
+    	if($('#ps').val()=="T01" && ($('#tradeMarket').val() == "03" || $('#tradeMarket').val() == "04")){
+        	$("#tradeMarketCash_div").show();
+        }else{
+        	$("#tradeMarketCash_div").hide();
+        }
         var ps = $("#ps").val();
         //交易方向发生变化，重新计算所有数据
         changeTradeAmtAndFee();
@@ -680,10 +711,10 @@ var table;
         if (ps == PS_T02 || ps == PS_T03 || ps == PS_T39) {
         // 一体化对应etliu end
             if (pageModel == '0') {
-                $("#yield").val("").trigger("change").attr("disabled", true);
+                // $("#yield").val("").trigger("change").attr("disabled", true);
                 $("#exerYield").val("").trigger("change").attr("disabled", true);
             }
-            $("#calculateField_yield").attr("disabled", true);
+            // $("#calculateField_yield").attr("disabled", true);
             $("#calculateField_exerYield").attr("disabled", true);
             if($("#zhilingtype").val() =="02"){
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hidePosition(true);
@@ -703,9 +734,9 @@ var table;
             }
         }
         else if (ps == PS_T01) {
-            $("#yield").attr("disabled", false);
+            // $("#yield").attr("disabled", false);
             $("#exerYield").attr("disabled", false);
-            $("#calculateField_yield").attr("disabled", false);
+            // $("#calculateField_yield").attr("disabled", false);
             $("#calculateField_exerYield").attr("disabled", false);
             if($("#zhilingtype").val() =="02"){
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].hideCash(true);
@@ -926,9 +957,12 @@ var table;
             $("#basis").val(data.basis).trigger('change');
 
             // 新增资产二、三、四级分类  王贵奇  2019/7/30 开始
-            $("#type9").val(data.type9).trigger('change');
-            $("#type10").val(data.type10).trigger('change');
-            $("#type11").val(data.type11).trigger('change');
+            //延时加载
+            setTimeout(function () {
+                $("#type9").val(data.type9).trigger('change');
+                $("#type10").val(data.type10).trigger('change');
+                $("#type11").val(data.type11).trigger('change');
+            },1000);
             // 新增资产二、三、四级分类  王贵奇  2019/7/30 结束
 //            if(data.windtypeone && !$("#windtypeone").val()) {
 //                $("#windtypeone").val(data.windtypeone).trigger('change');
@@ -1066,7 +1100,9 @@ var table;
     $("#portfolioId").on("change", function (e, isInit) {
         // 债券投资 改变组合 需联动 证券账户 ,证券托管户应清空选择项
         if (!isInit && pageModel !=PAGE_MODEL_REFERENCE&&pageModel !=PAGE_MODEL_EDIT) {
-            $("#secManageAcctId").val('').trigger("change");
+        	if(!$("#fTradeId").val()){
+        		$("#secManageAcctId").val('').trigger("change");
+        	}
         }
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 start //
         if (IS_SHOW_CPRICE == 'Y') {
@@ -1076,8 +1112,15 @@ var table;
         updateCash();
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 end //
         //货币型产品投资目的默认显示摊余成本 add by liupeilin 2020-01-15 begin
-        if(BANKCODE == '004'){
+        //if(BANKCODE == '004'){
+        if($("#fTradeId").val()){
         	calcInvAim();
+        	if($("#portfolioId").val()){
+        		$("#invAim").attr('disabled',true);
+    		}else{
+    			$("#invAim").val('').trigger('change');
+    			$("#invAim").attr('disabled',false);
+    		}
         }
        //货币型产品投资目的默认显示摊余成本 add by liupeilin 2020-01-15 end
         TradeCommon.getSecPositionForSaleAll(setParam(), function (result) {
@@ -1105,6 +1148,7 @@ var table;
             $("#chlId").prop("disabled", false);
         }
         updateCash();
+        getTradeMarketCash();
         
         // 将甲类户对应的交易手续费、结算费、佣金设置为不可编辑
 //        controllFeeItem();
@@ -1122,6 +1166,16 @@ var table;
             }
         });
     });
+    //查询交易所资金账户可用现金
+    var getTradeMarketCash = function(){
+        var data = {portfolioId:$('#portfolioId').val(),secAcctId:$('#secManageAcctId').val(),ccy:$('#ccy').val(),tradeDate:$('#tradeDate').val()}
+        if(data.portfolioId && data.secAcctId && data.ccy && data.tradeDate){
+        Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getTradeMarketCash',data,
+                function(result) {           
+            $('#tradeMarketCash').val(result.cashS).trigger('blur');
+        });
+        }
+    };  
 
     $("#chlId").on("change", function () {
         if ($("#chlId").val()) {
@@ -1429,7 +1483,7 @@ var table;
 //        paramObj.exchangeAmt=$("#exchangeAmt").val();
 //        paramObj.commissionAmt=$("#commissionAmt").val();
 
-        paramObj.tradeAmt = $("#tradeAmt").val();
+        paramObj.tradeAmt = $("#tradeAmt").val()*10000;
         paramObj.unitCprice = $("#unitCprice").val();
         paramObj.unitInt = $("#unitInt").val();
         paramObj.unitFprice = $("#unitFprice").val();
@@ -1437,8 +1491,8 @@ var table;
         paramObj.intAmt = $("#intAmt").val();
         paramObj.fpriceAmt = $("#fpriceAmt").val();
         paramObj.exerYield = $("#exerYield").val();
-        paramObj.ownTradeAmt = $("#ownTradeAmt").val();
-        paramObj.integrateTradeAmt = $("#integrateTradeAmt").val();
+        paramObj.ownTradeAmt = $("#ownTradeAmt").val()*10000;
+        paramObj.integrateTradeAmt = $("#integrateTradeAmt").val()*10000;
         paramObj.yield = $("#yield").val();
 
         // 隐藏域如果有值，使用隐藏域
@@ -1504,10 +1558,10 @@ var table;
         Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/calculateData'), paramObj, function (result) {
             if (result && result.data) {
                 var data = result.data;
-                $("#tradeAmt").val(data.tradeAmt).change().trigger("blur");
-                //modified by liuwei for 深农商：反算的净价偏离度不显示 20200817 start
-                $("#unitCprice").val(data.unitCprice).trigger("change");
-                //modified by liuwei for 深农商：反算的净价偏离度不显示 20200817 end
+                if(!$('#fTradeId').val()){
+                    $("#tradeAmt").val(data.tradeAmt / 10000).change().trigger("blur");
+                }
+                $("#unitCprice").val(data.unitCprice).trigger("blur");
                 $("#unitInt").val(data.unitInt).trigger("blur");
                 $("#unitFprice").val(data.unitFprice).trigger("blur");
                 $("#cpriceAmt").val(data.cpriceAmt).trigger("blur");
@@ -1931,6 +1985,62 @@ var table;
         // }
 
     };
+
+    $("#payType").change(function () {
+        radioAndPayTypeChange();
+    });
+
+
+    layui.form.on('radio(calculateField)', function(data) {
+        layui.form.render(); //更新
+        radioAndPayTypeChange();
+    });
+
+    var radioAndPayTypeChange = function(){
+        if ($("#bondFirstSign").val()) {
+            if ($("#payType").val()=='01' || $("#payType").val()=='02'){
+                $("#yield").attr('checked',true);
+                $('#calculateField_unitCprice').attr("disabled", true);
+                $('#calculateField_fpriceAmt').attr("disabled", true);
+                $("#unitCprice").val('');
+                $("#unitCprice").attr("disabled", true);
+                $("#fpriceAmt").val('');
+                checkAndAssign("#yield", yield, false); // 到期收益率
+                $("#fpriceAmt").attr("disabled", true);
+            }
+            if ($("#payType").val()=='03'){
+                var calculateField = $("[name=calculateField]:radio").next(".layui-form-radioed").prev("input").val();
+                $('#calculateField_unitCprice').attr("disabled", false);
+                $('#calculateField_fpriceAmt').attr("disabled", false);
+                $("[name=calculateField]:radio").next().removeClass('layui-radio-disbaled layui-disabled');
+                if (calculateField=='yield'){
+                    $("#unitCprice").val('');
+                    $("#unitCprice").attr("disabled", true);
+                    $("#fpriceAmt").val('');
+                    $("#fpriceAmt").attr("disabled", true);
+                    checkAndAssign("#yield", yield, false); // 到期收益率
+                }
+
+                if (calculateField=='unitCprice'){
+                    $("#yield").val('');
+                    $("#yield").attr("disabled", true);
+                    $("#fpriceAmt").val('');
+                    $("#fpriceAmt").attr("disabled", true);
+                    $("#unitCprice").val('');
+                    $("#unitCprice").attr("disabled", false);
+                }
+
+                if (calculateField=='fpriceAmt'){
+                    $("#yield").val('');
+                    $("#yield").attr("disabled", true);
+                    $("#fpriceAmt").val('');
+                    $("#fpriceAmt").attr("disabled", false);
+                    $("#unitCprice").val('');
+                    $("#unitCprice").attr("disabled", true);
+                }
+            }
+        }
+    }
     
     window.componentLoadCallback = function(isDone, pagePath, params){
         if(isDone){
@@ -2106,6 +2216,12 @@ var table;
                 	$("#exchangeAmtDiv").hide();
                 }
             //add by yujiaping 20210304 ZGBSS-592债券交易的交易场所为上交所/深交所，交易市场为一级市场时，审批人的待办事项和完成交易详情中不应展示结算费和经手费字段end                
+                if($('#ps').val()=="T01" && (tradeMarket == "03" || tradeMarket == "04")){
+                	$("#tradeMarketCash_div").show();
+                }else{
+                	$("#tradeMarketCash_div").hide();
+                }
+                
                 if($('#ps').val()=="T03"){                		
             		$("#settleAmtDiv").hide();
             		$("#exchangeAmtDiv").hide();
@@ -2126,6 +2242,13 @@ var table;
                 if(settleDateText){
                     $('#settleDate').val(settleDateText);
                 }
+            }
+            //通过成交编号录入的交易  交易方向  资产代码置灰  不可编译
+            var fTradeIdShow = $('#fTradeIdShow').val();
+            var workflowId = $('#workflowId').val();
+            if(fTradeIdShow&&workflowId){
+                $('#ps').attr('disabled',true);
+                $('#finprodMarketId').attr('disabled',true);
             }
         }
 
@@ -2381,6 +2504,19 @@ var table;
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 start----------
             var object = $.serializeToObject('#submitForm', true);
+            object.tradeAmt = $("#tradeAmt").val()*10000;
+         // add by etliu 20210129 start
+            // 选择的成交编号存在对应的报价，则不影响风险
+            if (object.fTradeId) {
+                Joyin.ajaxSync(basePath + 'invest/trade/TrdCommonController/checkExecIdHasQuote', {'execId': object.fTradeId}, function (result) {
+                    if (result == 'Y') {
+                        object.isSkipRisk = 'Y';
+                        object.isSkipRiskMsg = '选择的成交编号存在对应的报价，本次交易不影响风险';
+                    }
+                });
+            }
+         // add by etliu 20210129 end
+            
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/1/RSK002/F01',object,getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 end----------
             window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());
@@ -2558,6 +2694,12 @@ var table;
     $('#fTradeId').on("change",function(){
         if (pageModel==PAGE_MODEL_NEW&&!fTradeId) {
             fTradeIdChangeAction();
+            // 中标结果维护画面跳转过来，不重新load画面
+            if($("#fTradeId").val()=='' && $("#bondFirstSign").val() == ''){
+                Joyin.ajax(basePath + 'invest/trade/bond/TrdBondInvestTrade002/init', {entrustId:$('#entrustId').val(),portfolioId:$('#portfolioId').val()}, function (data) {
+                    $("body").html(data);
+                });
+            }
         }
     });
     /**
@@ -2588,6 +2730,20 @@ var table;
         if (fTradeId && fTradeId != ''){
             Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/querySecCstpInfoByNo', {fedealno : fTradeId,entrustId:entrustId,preTradeId:preTradeId,isCstpSure:isCstpSure}, function(result){
                 if (result){
+                	//投资目的不可用
+                	$("#invAim").attr('disabled', true);
+                	//净价全价总额不可选
+                	$("#calculateField_unitCprice").attr('disabled', true);
+                	$("#calculateField_fpriceAmt").attr('disabled', true);
+                	$("#calculateField_exerYield").attr('disabled', true);
+                	$("#calculateField_yield").attr('disabled', true);
+                	//是否有报价
+                	
+                	if(result.isOfferFlag && result.isOfferFlag != ''){
+                		$('#isOfferFlag').val(result.isOfferFlag);
+                	}else{
+                		$('#isOfferFlag').val('');
+                	}
                     if (result.secid && result.secid != ''){
                         deleteSelect('finprodId');
                         $('#finprodId').textSelect('setValue', result.secid);//债券代码;
@@ -2668,40 +2824,47 @@ var table;
                     // 交易对手号代码
                     // 票值
                     if (result.prinamt && result.prinamt != ''){
-                        $('#tradeAmt').val(result.prinamt).trigger('change');// 本金金额(券面总额)
+                        $('#tradeAmt').val(result.prinamt / 10000).trigger('blur').trigger('change');// 本金金额(券面总额)
                         if($('#tradeAmt').val()){
-                            $('#tradeAmt').attr('disabled', true);
+                            $('#tradeAmt').attr('disabled', false); //成交编号以后，页面的券面总额被置灰，期望可以修改
                         }
                     }else{
                         $('#tradeAmt').val('').change();
                         $('#tradeAmt').attr('disabled', false);
                     }
-                    if (result.settamt && result.settamt != ''){
-                        $('#fpriceAmt').val(result.settamt).trigger('change');// 结算金额(全价总额)
-                        if($('#fpriceAmt').val()){
-                            $('#fpriceAmt').attr('disabled', true);
-                        }
-                    }else{
-                        $('#fpriceAmt').val('');
-                        $('#fpriceAmt').attr('disabled', false);
+                    if($('#tradeAmt').val()){
+                    	$("#TrdBondInvestTrade002_btn_calculate").click();
                     }
-                    // 产品
-                    // 业务类型
-                    // 交易员
-                    if (result.convintamt && result.convintamt != ''){
-                        $('#intAmt').val(result.convintamt).trigger('change');// 转换利息金额
-                        if($('#intAmt').val()){
-                            $('#intAmt').attr('disabled', true);
-                        }
-                    }else{
-                        $('#intAmt').val('');
-                        $('#intAmt').attr('disabled', false);
-                    }
-                    if (result.invtype && result.invtype != ''){
-                        $('#invAim').val(result.invtype).trigger('change');// 转换利息金额
+//                     if (result.settamt && result.settamt != ''){
+//                         $('#fpriceAmt').val(result.settamt).trigger('blur').trigger('change');// 结算金额(全价总额)
+//                         if($('#fpriceAmt').val()){
+//                             $('#fpriceAmt').attr('disabled', true);
+//                         }
+//                     }else{
+//                         $('#fpriceAmt').val('');
+//                         $('#fpriceAmt').attr('disabled', false);
+//                     }
+//                     // 产品
+//                     // 业务类型
+//                     // 交易员
+//                     if (result.convintamt && result.convintamt != ''){
+//                         $('#intAmt').val(result.convintamt).trigger('blur').trigger('change');// 转换利息金额
+//                         if($('#intAmt').val()){
+//                             $('#intAmt').attr('disabled', true);
+//                         }
+//                     }else{
+//                         $('#intAmt').val('');
+//                         $('#intAmt').attr('disabled', false);
+//                     }
+                    if (result.invAim && result.invAim != ''){
+                        $('#invAim').val(result.invAim).trigger('change');// 投资目的
                         if($('#invAim').val()){
                             $('#invAim').attr('disabled', true);
                         }
+                    }
+                    else{
+                        $('#invAim').val('').trigger('change');
+                        $('#invAim').attr('disabled', false);
                     }
                     // 有效状态
                     // 经纪人
@@ -2735,52 +2898,53 @@ var table;
                         $('textarea[name="remark"]').val('');
                     }
                     // 更新时间
-                    if (result.cno && result.cno != ''){
-                        $('#trdInvestPersonInfo_counterId').textSelect('setValue', result.cno);// 交易对手
-                    }else{
-                        deleteSelect('trdInvestPersonInfo_counterId');
-                    }
-                    if (result.clienttrader && result.clienttrader != ''){
-                        $('#trdInvestPersonInfo_counterTrader').val(result.clienttrader);// 对手方交易员
-                        if($('#trdInvestPersonInfo_counterTrader').val()){
-                            $('#trdInvestPersonInfo_counterTrader').attr('disabled', true);
+                    setTimeout(function () {
+                        if (result.cno && result.cno != ''){
+                            $('#trdInvestPersonInfo_counterId').textSelect('setValue', result.cno);// 交易对手
+                            if($('#trdInvestPersonInfo_counterId').val()){
+                                $('#trdInvestPersonInfo_counterId').attr('disabled', true);
+                            }
+                        }else{
+                            deleteSelect('trdInvestPersonInfo_counterId');
                         }
-                    }else{
-                        $('#trdInvestPersonInfo_counterTrader').val('');
-                        $('#trdInvestPersonInfo_counterTrader').attr('disabled', false);
-                    }
-                    if (result.countertelephone && result.countertelephone != ''){
-                        $('#trdInvestPersonInfo_contactInfo').val(result.countertelephone);// 联系方式
-                        if($('#trdInvestPersonInfo_contactInfo').val()){
-                            $('#trdInvestPersonInfo_contactInfo').attr('disabled', true);
+                        if (result.clienttrader && result.clienttrader != ''){
+                            $('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').textSelect('setValue',result.clienttrader);// 对手方交易员
+                            if($('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').val()){
+                                $('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').attr('disabled', true);
+                            }
+                        }else{
+                            $('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').val('');
+                            $('#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader').attr('disabled', false);
                         }
-                    }else{
-                        $('#trdInvestPersonInfo_contactInfo').val('');
-                        $('#trdInvestPersonInfo_contactInfo').attr('disabled', false);
-                    }
+                        if (result.countertelephone && result.countertelephone != ''){
+                            $('#trdInvestPersonInfo_contactInfo').val(result.countertelephone);// 联系方式
+                            if($('#trdInvestPersonInfo_contactInfo').val()){
+                                $('#trdInvestPersonInfo_contactInfo').attr('disabled', true);
+                            }
+                        }else{
+                            $('#trdInvestPersonInfo_contactInfo').val('');
+                            $('#trdInvestPersonInfo_contactInfo').attr('disabled', false);
+                        }
+                        //本方交易员
+                        if (result.trad && result.trad != '' && $('#isOfferFlag').val()=='01'){
+                            $('#trdInvestPersonInfo_trader').textSelect('setValue',result.trad);
+                        }else{
+                            $('#trdInvestPersonInfo_trader').textSelect('setValue',userId);
+                        }
+                    },1000);
                     // 根据CSTP金额信息计算其他要素
                     // 清算速度
                     if (result.settleSpeed){
                         var cstpSettleSpeed='';
-                        if(result.settleSpeed=='0'||result.settleSpeed=='01'){
+                        if(result.settleSpeed=='1'||result.settleSpeed=='01'){
                             cstpSettleSpeed='0';
-                        }else if(result.settleSpeed=='1'||result.settleSpeed=='02'){
+                        }else if(result.settleSpeed=='2'||result.settleSpeed=='02'){
                             cstpSettleSpeed='1';
-                        }else if(result.settleSpeed=='1'||result.settleSpeed=='03'){
+                        }else if(result.settleSpeed=='3'||result.settleSpeed=='03'){
                             cstpSettleSpeed='2';
                         }
-                        $('#settleSpeed').attr('disabled', true);
                         $("#settleSpeed").val(cstpSettleSpeed).trigger('change');
-                        // var days = (new Date(result.settdateStr) - new Date(result.dealdateStr))/(24*60*60*1000);
-                        // if (days == 0){
-                        //     if($('#settleSpeed').val()){
-                        //     }
-                        // }else{
-                        //     if($('#settleSpeed').val()){
-                        //         $('#settleSpeed').attr('disabled', true);
-                        //         $("#settleSpeed").val(ACCOUNT_SPEED_T1).trigger('change');
-                        //     }
-                        // }
+                        $('#settleSpeed').attr('disabled', true);
                     }else{
                         deleteSelect('settleSpeed');
                         $('#settleSpeed').trigger('change');
@@ -2790,10 +2954,10 @@ var table;
                     // 单位应计利息
                     if (result.accruedinterestamt||result.unitInt){
                         if(result.accruedinterestamt){
-                            $('#unitInt').val(result.accruedinterestamt).trigger('change');
+                            $('#unitInt').val(result.accruedinterestamt).trigger('blur').trigger('change');
                         }
                         if(result.unitInt){
-                            $('#unitInt').val(result.unitInt).trigger('change');
+                            $('#unitInt').val(result.unitInt).trigger('blur').trigger('change');
                         }
                         if($('#unitInt').val()){
                             $('#unitInt').attr('disabled', true);
@@ -2804,7 +2968,7 @@ var table;
                     }
                     // 全价
                     if (result.dirtyprice && result.dirtyprice != ''){
-                        $('#unitFprice').val(result.dirtyprice).trigger('change');
+                        $('#unitFprice').val(result.dirtyprice).trigger('blur').trigger('change');
                         if($('#unitFprice').val()){
                             $('#unitFprice').attr('disabled', true);
                         }
@@ -2824,7 +2988,7 @@ var table;
                     }
                     // 行权收益率
                     if (result.strikeyield && result.strikeyield != ''){
-                        $('#exerYield').val(result.strikeyield).trigger('change');
+                        $('#exerYield').val(Number(result.strikeyield)*Number(100)).trigger('blur');
                         if($('#exerYield').val()){
                             $('#exerYield').attr('disabled', true);
                         }
@@ -2832,13 +2996,30 @@ var table;
                         $('#exerYield').val('');
                         $('#exerYield').attr('disabled', false);
                     }
-
+                    //成交编号带出的abs债券 行权收益率和到期收益率计算
+                    if($('#yield').val()==''&&$('#exerYield').val()==''){
+                        var paramObj = getCalcParam(false);
+                        if (!paramObj) {
+                            return;
+                        }
+                        Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/calculateData'), paramObj, function (result) {
+                            if (result && result.data) {
+                                var data = result.data;
+                                $("#exerYield").val(data.exerYield).trigger("blur");
+                                $("#yield").val(data.yield).trigger("blur");
+                                $('#exerYield').attr('disabled', true);
+                                $('#yield').attr('disabled', true);
+                            }
+                        },false);
+                    }
+                    //计算按钮隐藏
+                    //$('#TrdBondInvestTrade002_btn_calculate').addClass('layui-btn-disabled').off();
                     // 银行间成交编号联动费用设置
                     calcFeeDataByFTradeId();
                 }
             })
         }else{
-            if ($('#finprodId').val()){
+            /*if ($('#finprodId').val()){
                 $('#finprodName').val('');
                 deleteSelect('finprodId');
                 $('#finprodId').attr('disabled', false);
@@ -2975,14 +3156,14 @@ var table;
                 $('#bussTrdAvailableCashQuery_assetPosition').attr('disabled', false);
             }
             // 银行间成交编号联动费用设置
-            calcFeeDataByFTradeId();
+            calcFeeDataByFTradeId();*/
         }
     }
 
     var calcFeeDataByFTradeId = function () {
         var paramObj = $.serializeToObject('#submitForm', true);
         paramObj.calculateField = $("[name=calculateField]:checked").val();
-        paramObj.tradeAmt = $("#tradeAmt").val();
+        paramObj.tradeAmt = $("#tradeAmt").val()*10000;
         paramObj.unitCprice = $("#unitCprice").val();
         paramObj.unitInt = $("#unitInt").val();
         paramObj.unitFprice = $("#unitFprice").val();

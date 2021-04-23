@@ -55,8 +55,12 @@ public class CstpSelectDto extends InterfCstpTrade{
     private BigDecimal percent;
 
     private String ourTradeName;
+    
+    private String  userName;
 
     private BigDecimal lastqtyready;
+    
+    private String entrustId;
 
     public BigDecimal getLastqtyready() {
         return lastqtyready;
@@ -177,4 +181,20 @@ public class CstpSelectDto extends InterfCstpTrade{
     public void setOurTradeName(String ourTradeName) {
         this.ourTradeName = ourTradeName;
     }
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getEntrustId() {
+		return entrustId;
+	}
+
+	public void setEntrustId(String entrustId) {
+		this.entrustId = entrustId;
+	}
 }

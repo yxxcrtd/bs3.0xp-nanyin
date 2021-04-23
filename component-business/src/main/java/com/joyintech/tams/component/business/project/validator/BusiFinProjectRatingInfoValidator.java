@@ -16,7 +16,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
-import com.joyintech.tams.component.business.bond.dto.BusiFinBondRatingInfoDto;
+import com.joyintech.tams.component.business.project.dto.BusiFinProjectRatingInfoDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class BusiFinProjectRatingInfoValidator implements BeanValidator{
     @Override
     public List<ValidMessage> valid(Object value) {
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-        BusiFinBondRatingInfoDto dto = (BusiFinBondRatingInfoDto)value;
+        BusiFinProjectRatingInfoDto dto = (BusiFinProjectRatingInfoDto)value;
         List<MstBondCreditRating> mstBondCreditRatingList = dto.getMstBondCreditRatingList();
 //        校验重复的评级信息
 //        Set<MstBondCreditRating> set = new  HashSet<MstBondCreditRating>();
@@ -54,12 +54,12 @@ public class BusiFinProjectRatingInfoValidator implements BeanValidator{
                         getMessage("COMMON_E_0057", getMessage("BusiFinBondRatingInfo.gradeType"))));
                     break;
                 }
-                //长期短期不可为空
+                /*//长期短期不可为空
                 if(StringUtil.isEmpty(entity.getShortLongTerm())){
                     resultList.add(new ValidMessage("",
                         getMessage("COMMON_E_0057", getMessage("BusiFinBondRatingInfo.shortLongTerm"))));
                     break;
-                }
+                }*/
                 //评级结果不可为空
                 if(StringUtil.isEmpty(entity.getGradeResult())){
                     resultList.add(new ValidMessage("",

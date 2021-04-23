@@ -118,6 +118,21 @@ public class ServiceApplication {
     public static String INVEST_INTERF_SERVICE_NAME = "http://investInterfService";
 
     /**
+     * 交易系统接口
+     */
+    public static String EXCHANGE_SERVICE_NAME = "http://exchangeService";
+    
+    /**
+     * 行情系统接口
+     */
+    public static String QUOTE_SERVICE_NAME = "http://quoteService";
+    
+    /**
+     * 银行间上行
+     */
+    public static String BANKUPLINK_SERVICE_NAME = "http://bankuplinkService";
+
+    /**
      * 页面端
      */
     public static String PINGAN_SERVICE_NAME = "http://tams-server";
@@ -157,6 +172,9 @@ public class ServiceApplication {
                 CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
                 PINGAN_SERVICE_NAME = PINGAN_SERVICE_NAME + config.getTamsServer();
                 INVEST_INTERF_SERVICE_NAME = INVEST_INTERF_SERVICE_NAME + config.getInvestInterfService();
+                EXCHANGE_SERVICE_NAME = EXCHANGE_SERVICE_NAME + config.getExchangeService();
+                QUOTE_SERVICE_NAME = EXCHANGE_SERVICE_NAME + config.getQuoteService();
+                BANKUPLINK_SERVICE_NAME = BANKUPLINK_SERVICE_NAME + config.getBankuplinkService();
             }
             else {
                 COMMON_SERVICE_NAME = config.getCommonService();
@@ -177,6 +195,9 @@ public class ServiceApplication {
                 CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
                 PINGAN_SERVICE_NAME = config.getTamsServer();
                 INVEST_INTERF_SERVICE_NAME = config.getInvestInterfService();
+                EXCHANGE_SERVICE_NAME = config.getExchangeService();
+                QUOTE_SERVICE_NAME = config.getQuoteService();
+                BANKUPLINK_SERVICE_NAME = config.getBankuplinkService();
             }
         }
     }
@@ -226,6 +247,12 @@ public class ServiceApplication {
          * 投管接口
          */
         private String investInterfService;
+
+        private String exchangeService;
+        
+        private String quoteService;
+        
+        private String bankuplinkService;
 
         /**
          * 获取 investInterfService
@@ -434,6 +461,30 @@ public class ServiceApplication {
         public void setRiskInfService(String riskInfService) {
             this.riskInfService = riskInfService;
         }
+
+        public String getExchangeService() {
+            return exchangeService;
+        }
+
+        public void setExchangeService(String exchangeService) {
+            this.exchangeService = exchangeService;
+        }
+        
+        public String getQuoteService() {
+            return quoteService;
+        }
+
+        public void setQuoteService(String quoteService) {
+            this.quoteService = quoteService;
+        }
+
+		public String getBankuplinkService() {
+			return bankuplinkService;
+		}
+
+		public void setBankuplinkService(String bankuplinkService) {
+			this.bankuplinkService = bankuplinkService;
+		}
     }
 
 }

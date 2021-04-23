@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.trade.cstptrdmatchinfo.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -43,9 +44,9 @@ public class CstpTrdMatchInfoController  extends BaseController {
         try {
             cstpTrdMatchInfoService.saveTrdMatchInfoByCstp(dto);
         } catch (Exception e) {
-           return new AjaxResult("false");
+           return new AjaxResult("交易匹配确认失败",MessageType.错误消息);
         }
-        return new AjaxResult();
+        return new AjaxResult("交易匹配确认成功",MessageType.提示消息);
     }
 
     @ResponseBody
@@ -68,4 +69,17 @@ public class CstpTrdMatchInfoController  extends BaseController {
     public ResponseEntity<byte[]> export() throws Exception {
         return cstpTrdMatchInfoService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
+    
+    /**
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("checkPosition")
+    public Map<String,Object> checkPosition(){
+        Map<String,Object> map = RequestUtil.getPageParam();
+        return cstpTrdMatchInfoService.checkPosition(map);
+    }
+    
+    
 }

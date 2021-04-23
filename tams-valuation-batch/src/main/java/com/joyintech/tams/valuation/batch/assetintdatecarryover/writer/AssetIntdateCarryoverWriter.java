@@ -114,6 +114,9 @@ public class AssetIntdateCarryoverWriter extends BaseWriter<NeedToWriteEntity> {
             bookCommonLogic.insertValFinProductDealExt(listValFinProductDealExt);
             // assetIntdateCarryoverMapper.insertValFinProductDealExt(listValFinProductDealExt);
 
+            // 估值核算账务明细表 数据插入 add by yanya on 20201217
+            bookCommonLogic.insertBokDetailId(listBokDetailId);
+
             // 交易类金融产品表 数据插入
             /**MODIFY BY WUJIE ON 20190521 START
              bookCommonLogic.insertValTradeFinProduct(listValTradeFinProduct);

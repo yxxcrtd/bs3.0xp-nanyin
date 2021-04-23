@@ -134,6 +134,16 @@ public class TrdCommandsCollection001Dto extends EtrEntrust{
     private BigDecimal expConValue;
 
     /**
+     * 上市板块
+     */
+    private String board;
+
+    /**
+     * 交易模板
+     */
+    private String dealMode;
+
+    /**
      * 委托详情列表
      */
     public List<TrdCommandsCollection002Dto> entrustList;
@@ -344,7 +354,7 @@ public class TrdCommandsCollection001Dto extends EtrEntrust{
 
     /**
      * 设置 SecAcctName
-     * @param SecAcctName SecAcctName
+     * @param  secAcctName
      */
     public void setSecAcctName(String secAcctName) {
         SecAcctName = secAcctName;
@@ -547,7 +557,7 @@ public class TrdCommandsCollection001Dto extends EtrEntrust{
      * @return boardStr 
      */
     public String getBoardStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.上市板, super.getBoard());
+        return SysDataUtil.getNameFromDataDict(DictCode.上市板, this.getBoard());
     }
 
     /**
@@ -613,5 +623,20 @@ public class TrdCommandsCollection001Dto extends EtrEntrust{
     public String getLendTypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.拆借类型, getType6());
     }
-    
+
+    public String getBoard() {
+        return board;
+    }
+
+    public void setBoard(String board) {
+        this.board = board;
+    }
+
+    public String getDealMode() {
+        return dealMode;
+    }
+
+    public void setDealMode(String dealMode) {
+        this.dealMode = dealMode;
+    }
 }

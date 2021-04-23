@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCfetsTraderTmpMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCfetsTraderTmp" >
+        <id column="TRADER_ID" property="traderId" jdbcType="VARCHAR" />
+        <result column="PARTY_CUSTOMER_ID" property="partyCustomerId" jdbcType="VARCHAR" />
+        <result column="TRADER_NAME" property="traderName" jdbcType="VARCHAR" />
+        <result column="TELPHONE_NO" property="telphoneNo" jdbcType="VARCHAR" />
+        <result column="TEL_NO" property="telNo" jdbcType="VARCHAR" />
+        <result column="FAX_NO" property="faxNo" jdbcType="VARCHAR" />
+        <result column="MSN" property="msn" jdbcType="VARCHAR" />
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+        <result column="POST_CODE" property="postCode" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADER_ID TRADER_ID, PARTY_CUSTOMER_ID PARTY_CUSTOMER_ID, TRADER_NAME TRADER_NAME, 
+        TELPHONE_NO TELPHONE_NO, TEL_NO TEL_NO, FAX_NO FAX_NO, MSN MSN, EMAIL EMAIL, ADDRESS ADDRESS, 
+        POST_CODE POST_CODE, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, 
+        CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCfetsTraderTmpMapper.Base_Column_List" />
+        from INTERF_CFETS_TRADER_TMP
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCfetsTraderTmpMapper.Base_Column_List" />
+        from INTERF_CFETS_TRADER_TMP
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCfetsTraderTmpMapper.Base_Column_List" />
+        from INTERF_CFETS_TRADER_TMP
+        where TRADER_ID = #{traderId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_CFETS_TRADER_TMP
+        where TRADER_ID = #{traderId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsTraderTmp" >
+        insert into INTERF_CFETS_TRADER_TMP (TRADER_ID, PARTY_CUSTOMER_ID, TRADER_NAME, 
+            TELPHONE_NO, TEL_NO, FAX_NO, 
+            MSN, EMAIL, ADDRESS, 
+            POST_CODE, REMARK, CREATE_USER, 
+            CREATE_TIME, CREATE_DEPT, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{traderId,jdbcType=VARCHAR}, #{partyCustomerId,jdbcType=VARCHAR}, #{traderName,jdbcType=VARCHAR}, 
+            #{telphoneNo,jdbcType=VARCHAR}, #{telNo,jdbcType=VARCHAR}, #{faxNo,jdbcType=VARCHAR}, 
+            #{msn,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+            #{postCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsTraderTmp" >
+        insert into INTERF_CFETS_TRADER_TMP
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="traderId != null" >
+                TRADER_ID,
+            </if>
+            <if test="partyCustomerId != null" >
+                PARTY_CUSTOMER_ID,
+            </if>
+            <if test="traderName != null" >
+                TRADER_NAME,
+            </if>
+            <if test="telphoneNo != null" >
+                TELPHONE_NO,
+            </if>
+            <if test="telNo != null" >
+                TEL_NO,
+            </if>
+            <if test="faxNo != null" >
+                FAX_NO,
+            </if>
+            <if test="msn != null" >
+                MSN,
+            </if>
+            <if test="email != null" >
+                EMAIL,
+            </if>
+            <if test="address != null" >
+                ADDRESS,
+            </if>
+            <if test="postCode != null" >
+                POST_CODE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="traderId != null" >
+                #{traderId,jdbcType=VARCHAR},
+            </if>
+            <if test="partyCustomerId != null" >
+                #{partyCustomerId,jdbcType=VARCHAR},
+            </if>
+            <if test="traderName != null" >
+                #{traderName,jdbcType=VARCHAR},
+            </if>
+            <if test="telphoneNo != null" >
+                #{telphoneNo,jdbcType=VARCHAR},
+            </if>
+            <if test="telNo != null" >
+                #{telNo,jdbcType=VARCHAR},
+            </if>
+            <if test="faxNo != null" >
+                #{faxNo,jdbcType=VARCHAR},
+            </if>
+            <if test="msn != null" >
+                #{msn,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null" >
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="postCode != null" >
+                #{postCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsTraderTmp" >
+        insert into INTERF_CFETS_TRADER_TMP(TRADER_ID, PARTY_CUSTOMER_ID, TRADER_NAME, TELPHONE_NO, 
+        TEL_NO, FAX_NO, MSN, EMAIL, ADDRESS, POST_CODE, REMARK, CREATE_USER, CREATE_TIME, 
+        CREATE_DEPT, UPDATE_USER, UPDATE_TIME)
+        select TRADER_ID, PARTY_CUSTOMER_ID, TRADER_NAME, TELPHONE_NO, 
+            TEL_NO, FAX_NO, MSN, EMAIL, ADDRESS, POST_CODE, REMARK, CREATE_USER, CREATE_TIME, 
+            CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from INTERF_CFETS_TRADER_TMP
+             where 1 = 1 and TRADER_ID = #{traderId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsTraderTmp" >
+        update INTERF_CFETS_TRADER_TMP
+        <set >
+            <if test="partyCustomerId != null" >
+                PARTY_CUSTOMER_ID = #{partyCustomerId,jdbcType=VARCHAR},
+            </if>
+            <if test="traderName != null" >
+                TRADER_NAME = #{traderName,jdbcType=VARCHAR},
+            </if>
+            <if test="telphoneNo != null" >
+                TELPHONE_NO = #{telphoneNo,jdbcType=VARCHAR},
+            </if>
+            <if test="telNo != null" >
+                TEL_NO = #{telNo,jdbcType=VARCHAR},
+            </if>
+            <if test="faxNo != null" >
+                FAX_NO = #{faxNo,jdbcType=VARCHAR},
+            </if>
+            <if test="msn != null" >
+                MSN = #{msn,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                EMAIL = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null" >
+                ADDRESS = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="postCode != null" >
+                POST_CODE = #{postCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADER_ID = #{traderId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsTraderTmp" >
+        update INTERF_CFETS_TRADER_TMP
+        set PARTY_CUSTOMER_ID = #{partyCustomerId,jdbcType=VARCHAR},
+            TRADER_NAME = #{traderName,jdbcType=VARCHAR},
+            TELPHONE_NO = #{telphoneNo,jdbcType=VARCHAR},
+            TEL_NO = #{telNo,jdbcType=VARCHAR},
+            FAX_NO = #{faxNo,jdbcType=VARCHAR},
+            MSN = #{msn,jdbcType=VARCHAR},
+            EMAIL = #{email,jdbcType=VARCHAR},
+            ADDRESS = #{address,jdbcType=VARCHAR},
+            POST_CODE = #{postCode,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADER_ID = #{traderId,jdbcType=VARCHAR}
+    </update>
+</mapper>

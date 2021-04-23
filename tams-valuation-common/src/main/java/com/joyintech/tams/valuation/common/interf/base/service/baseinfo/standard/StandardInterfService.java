@@ -228,7 +228,14 @@ public class StandardInterfService {
 		
 		//2. 账务明细代码 = MD5(A.账号+A.账户类型)
 		bokDetailId.setBokDetailId(interfCommonService.genMd5BokDetailId(bokDetailId));
-		
+		//add lby on 2020 start
+		//调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+		BokDetailId bokDetailIdTail = interfCommonService.settingDetailSubjectNoTaiL(dto.getActNo(),dto.getSubjectType(),0L,null,booksetId);
+		//T5  账务明细代码表.四级科目尾号 = DTO.四级科目尾号
+		bokDetailId.setDetailSubjectNoTail(bokDetailIdTail.getDetailSubjectNoTail());
+		//T5 账务明细代码表.四级科目尾号名称 = DTO.四级科目尾号名称
+		bokDetailId.setDetailSubnameTail(bokDetailIdTail.getDetailSubnameTail());
+		//add lby on 2020 end
 		return bokDetailId;
 	}
 }

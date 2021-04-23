@@ -150,6 +150,9 @@ public class CleanOrderTemplateRecSerive {
             // T3: 账务明细代码表
             BokDetailId valBokDetailId = this.getValBokDetailId(dto);
             listValBokDetailId.add(valBokDetailId);
+            // T6: 账务明细代码表
+            BokDetailId valBokDetailIdT6 = this.getValBokDetailIdT6(dto);
+            listValBokDetailId.add(valBokDetailIdT6);
             // T4: 入账信息表
             BokDealAccounting valBokDealAccounting = this.getValDealAccounting(dto,
                 valBokDetailId,ValOrders);
@@ -287,10 +290,64 @@ public class CleanOrderTemplateRecSerive {
         bokDetailId.setTradeId(dto.getTradeId());
         //创建时间 = 固定值:系统时间
         bokDetailId.setCreateTime(dto.getCreateTime());
+        /** add by lby on 20201228 start **/
+        //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+        BokDetailId bokDetailIdTail = interfCommonService.settingDetailSubjectNoTaiL(dto.getMyAcctNo(),bokDetailId.getBusiDetailType(),0L,null,bokDetailId.getBooksetId());
+        //T3.账务明细代码.四级科目尾号 = dto.四级科目尾号
+        bokDetailId.setDetailSubjectNoTail(bokDetailIdTail.getDetailSubjectNoTail());
+        //T3.账务明细代码.四级科目尾号名称 = dto.四级科目尾号名称
+        bokDetailId.setDetailSubnameTail(bokDetailIdTail.getDetailSubnameTail());
+        /** add by lby on 20201228 end **/
+        return bokDetailId;
+    }
+    /**
+     * T6: 账务明细代码表
+     *
+     * @param dto ValCleanOrder
+     * @return BokDetailId
+     * @see
+     * @author lby
+     * @date 2020-12-28
+     * @since 1.0
+     */
+    private BokDetailId getValBokDetailIdT6(ValCleanOrder dto) {
+        BokDetailId bokDetailId = new BokDetailId();
+        //账套代码 = 调用共通设计->【详细设计-接口共通方法设计.xlsx】->账套信息(根据产品代码)SHEET
+        ValBooksetInfoDto booksetInfoDto = interfCommonService.getBooksetInfoByProdId(dto.getProdId());
+        if(bokDetailId != null) {
+            bokDetailId.setBooksetId(booksetInfoDto.getBooksetId());
+        }
+
+        //业务明细代码 = A.对方资金账户
+        bokDetailId.setBusiId(dto.getCounterAcctNo());
+
+        BokBooksetCapacctInfo bokBooksetCapacctInfo =
+                interfCommonService.queryBokBooksetCapacctInfo(bokDetailId.getBooksetId(), dto.getMyAcctNo(),dto.getCcy(),null);
+        if(bokBooksetCapacctInfo != null){
+            bokDetailId.setBusiDetailType(bokBooksetCapacctInfo.getAcctType());
+        }
+
+        // 币种 = A.币种
+        bokDetailId.setCcy(dto.getCcy());
+
+        //账务明细代码 = MD5加密(A.对方资金账户+T6.本方资金账户类型,A.币种)
+        bokDetailId.setBokDetailId(interfCommonService.genMd5BokDetailId(bokDetailId));
+        //投资目的 = 默认为空
+        //证券管理户代码 = 默认为空
+        //交易编号 = A.交易编号
+        bokDetailId.setTradeId(dto.getTradeId());
+        //创建时间 = 固定值:系统时间
+        bokDetailId.setCreateTime(dto.getCreateTime());
+
+        //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+        BokDetailId bokDetailIdTail = interfCommonService.settingDetailSubjectNoTaiL(dto.getCounterAcctNo(),bokDetailId.getBusiDetailType(),0L,null,bokDetailId.getBooksetId());
+        //T6.账务明细代码.四级科目尾号 = dto.四级科目尾号
+        bokDetailId.setDetailSubjectNoTail(bokDetailIdTail.getDetailSubjectNoTail());
+        //T6.账务明细代码.四级科目尾号名称 = dto.四级科目尾号名称
+        bokDetailId.setDetailSubnameTail(bokDetailIdTail.getDetailSubnameTail());
 
         return bokDetailId;
     }
-
     /**
      * T4: 入账信息表
      *

@@ -196,7 +196,25 @@
 			<artifactId>service-valuation</artifactId>
 			<version>2.1.1</version>
 		</dependency>
-
+		<!--银行间上下行-->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>service-bankuplink</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		
+<!--		&lt;!&ndash; 场内交易&ndash;&gt;-->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>service-exchange</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<!-- 行情 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>service-quote</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		<!-- 引入Actuator监控依赖 <dependency> <groupId>org.springframework.boot</groupId> 
 			<artifactId>spring-boot-starter-actuator</artifactId> </dependency> -->
 	</dependencies>

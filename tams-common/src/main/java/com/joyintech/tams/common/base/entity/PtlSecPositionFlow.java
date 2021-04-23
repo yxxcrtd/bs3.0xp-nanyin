@@ -35,6 +35,11 @@ public class PtlSecPositionFlow extends BaseEntity {
     private Long branch;
 
     /**
+     * 投资目的
+     */
+    private String invAim;
+
+    /**
      * 持仓类型，可用、实际、在途、质押、融入、融出
      */
     private String hodingType;
@@ -66,9 +71,19 @@ public class PtlSecPositionFlow extends BaseEntity {
     private String tradeId;
 
     /**
-     * null
+     * 冲销业务编号
      */
-    private String invAim;
+    private String offsetId;
+
+    /**
+     * 冲正标识
+     */
+    private String offsetFlag;
+
+    /**
+     * 委托编号
+     */
+    private String entrustId;
 
     /**
      * 取得 流水号
@@ -148,6 +163,22 @@ public class PtlSecPositionFlow extends BaseEntity {
      */
     public void setBranch(Long branch) {
         this.branch = branch;
+    }
+
+    /**
+     * 取得 投资目的
+     * @return 投资目的
+     */
+    public String getInvAim() {
+        return invAim;
+    }
+
+    /**
+     * 设置 投资目的
+     * @param invAim 投资目的
+     */
+    public void setInvAim(String invAim) {
+        this.invAim = invAim == null ? null : invAim.trim();
     }
 
     /**
@@ -248,18 +279,47 @@ public class PtlSecPositionFlow extends BaseEntity {
     }
 
     /**
-     * 取得 null
-     * @return null
+     * 取得 冲销业务编号
+     * @return 冲销业务编号
      */
-    public String getInvAim() {
-        return invAim;
+    public String getOffsetId() {
+        return offsetId;
     }
 
     /**
-     * 设置 null
-     * @param invAim null
+     * 设置 冲销业务编号
+     * @param offsetId 冲销业务编号
      */
-    public void setInvAim(String invAim) {
-        this.invAim = invAim == null ? null : invAim.trim();
+    public void setOffsetId(String offsetId) {
+        this.offsetId = offsetId == null ? null : offsetId.trim();
     }
+
+    /**
+     * 取得 冲正标识
+     * @return 冲正标识
+     */
+    public String getOffsetFlag() {
+        return offsetFlag;
+    }
+
+    /**
+     * 设置 冲正标识
+     * @param offsetFlag 冲正标识
+     */
+    public void setOffsetFlag(String offsetFlag) {
+        this.offsetFlag = offsetFlag == null ? null : offsetFlag.trim();
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+    /**
+     * 取得 委托编号
+     * @return 委托编号
+     */
+    public String getEntrustId() {
+        return entrustId;
+    }
+
 }

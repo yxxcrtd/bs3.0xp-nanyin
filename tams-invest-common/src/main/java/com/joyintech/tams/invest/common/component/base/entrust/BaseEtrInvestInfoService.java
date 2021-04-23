@@ -16,6 +16,8 @@ import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 
 import java.util.List;
+import java.util.Map;
+
 /**
  * 投资委托 基础组件
  * 〈一句话功能简述〉 
@@ -191,4 +193,18 @@ public interface BaseEtrInvestInfoService {
     BaseEtrFinishAmtDto  selectEtrFinishAmtDtoByPrimaryKey(String entrustId);
 	
 	String findInvAim(String portfolioId, String finprodId);
+
+    /**
+     * 录入指令流程中的数据
+     * @param entity
+     * @return
+     */
+    boolean newDelegateFlow(BaseEtrInvestInfoDto entity);
+
+    /**
+     * 删除指令流程中的数据
+     * @param param
+     * @return
+     */
+    boolean deleteDelegateFlow(Map<String, Object> param);
 }

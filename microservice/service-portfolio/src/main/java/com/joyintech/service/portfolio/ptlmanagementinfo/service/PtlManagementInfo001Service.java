@@ -755,6 +755,23 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
         return userList;
     }
     /*add by liupengfei for 多级法人改造 默认选中 上级管理员用户和本级管理员 end*/
+    
+    
+    @DataSource(DataSourceType.OTHER)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public List<String> getUserList(Map<String,Object> param){
+    	if(param.get("resourcesTreeInstCodeList")==null||((List)param.get("resourcesTreeInstCodeList")).size()==0) {
+    		return new ArrayList<String>();
+    	}
+        List<String> userList = ptlManagementInfo001Mapper.getAllUserList(param);
+        return userList;
+    }
+    
+    @DataSource(DataSourceType.OTHER)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public String getUserInstitution(String userName){
+        return ptlManagementInfo001Mapper.getUserInstitution(userName);
+    }
 
     @DataSource(DataSourceType.OTHER)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -1499,5 +1516,21 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
      */
     public List<MstIntRateInfo> selectAlllv(Map<String,Object> map){
         return ptlManagementInfo001Mapper.selectAlllv(map);
+    }
+
+    /**
+     *
+     * @Description //组合权限接口
+     * @Param [param]
+     * @return java.util.List<com.joyintech.service.portfolio.ptlmanagementinfo.dto.PtlAuthInfoDto>
+     * @version 1.0
+     * @see
+     **/
+    public Map<String,Object> getPtlAuthInfo(Map<String, Object> param) {
+        Map<String,Object> returnMap  = new HashMap<String,Object>();
+        returnMap.put("errorCode",0);
+        returnMap.put("errorMsg","成功");
+        returnMap.put("data",ptlManagementInfo001Mapper.getPtlAuthInfo(param));
+        return returnMap;
     }
 }

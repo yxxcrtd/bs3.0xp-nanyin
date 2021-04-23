@@ -14,11 +14,17 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_CLUDE_STARTAMT" property="isCludeStartamt" jdbcType="VARCHAR" />
+        <result column="GRADE_AMOUNT" property="gradeAmount" jdbcType="DECIMAL" />
+        <result column="GRADE_CONDITION" property="gradeCondition" jdbcType="VARCHAR" />
+        <result column="GRADE_AMT" property="gradeAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQ_NO SEQ_NO, CONFIG_SEQ_NO CONFIG_SEQ_NO, IS_MLTI IS_MLTI, CHARGE_VALUE CHARGE_VALUE, 
         FEE_MAXI FEE_MAXI, FEE_MINI FEE_MINI, CHARGE_RATE CHARGE_RATE, CREATE_USER CREATE_USER, 
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        IS_CLUDE_STARTAMT IS_CLUDE_STARTAMT, GRADE_AMOUNT GRADE_AMOUNT, GRADE_CONDITION GRADE_CONDITION, 
+        GRADE_AMT GRADE_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -44,13 +50,15 @@
         insert into TRD_FEE_CONFIG_DETAIL (SEQ_NO, CONFIG_SEQ_NO, IS_MLTI, 
             CHARGE_VALUE, FEE_MAXI, FEE_MINI, 
             CHARGE_RATE, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME,GRADE_AMOUNT,IS_CLUDE_STARTAMT
-            )
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            IS_CLUDE_STARTAMT, GRADE_AMOUNT, GRADE_CONDITION, 
+            GRADE_AMT)
         values (#{seqNo,jdbcType=VARCHAR}, #{configSeqNo,jdbcType=VARCHAR}, #{isMlti,jdbcType=VARCHAR}, 
             #{chargeValue,jdbcType=DECIMAL}, #{feeMaxi,jdbcType=DECIMAL}, #{feeMini,jdbcType=DECIMAL}, 
             #{chargeRate,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{gradeAmount,jdbcType=DECIMAL},#{isCludeStartamt,jdbcType=VARCHAR}
-            )
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{isCludeStartamt,jdbcType=VARCHAR}, #{gradeAmount,jdbcType=DECIMAL}, #{gradeCondition,jdbcType=VARCHAR}, 
+            #{gradeAmt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfigDetail" >
         insert into TRD_FEE_CONFIG_DETAIL
@@ -91,6 +99,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="isCludeStartamt != null" >
+                IS_CLUDE_STARTAMT,
+            </if>
+            <if test="gradeAmount != null" >
+                GRADE_AMOUNT,
+            </if>
+            <if test="gradeCondition != null" >
+                GRADE_CONDITION,
+            </if>
+            <if test="gradeAmt != null" >
+                GRADE_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqNo != null" >
@@ -129,15 +149,27 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isCludeStartamt != null" >
+                #{isCludeStartamt,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeAmount != null" >
+                #{gradeAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="gradeCondition != null" >
+                #{gradeCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeAmt != null" >
+                #{gradeAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdFeeConfigDetail" >
         insert into TRD_FEE_CONFIG_DETAIL(SEQ_NO, CONFIG_SEQ_NO, IS_MLTI, CHARGE_VALUE, FEE_MAXI, 
-        FEE_MINI, CHARGE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
-        )
+        FEE_MINI, CHARGE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        IS_CLUDE_STARTAMT, GRADE_AMOUNT, GRADE_CONDITION, GRADE_AMT)
         select SEQ_NO, CONFIG_SEQ_NO, IS_MLTI, CHARGE_VALUE, FEE_MAXI, 
-            FEE_MINI, CHARGE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
-            
+            FEE_MINI, CHARGE_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            IS_CLUDE_STARTAMT, GRADE_AMOUNT, GRADE_CONDITION, GRADE_AMT
              from TRD_FEE_CONFIG_DETAIL
              where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </insert>
@@ -168,6 +200,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isCludeStartamt != null" >
+                IS_CLUDE_STARTAMT = #{isCludeStartamt,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeAmount != null" >
+                GRADE_AMOUNT = #{gradeAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="gradeCondition != null" >
+                GRADE_CONDITION = #{gradeCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeAmt != null" >
+                GRADE_AMT = #{gradeAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </update>
@@ -180,7 +224,11 @@
             FEE_MINI = #{feeMini,jdbcType=DECIMAL},
             CHARGE_RATE = #{chargeRate,jdbcType=DECIMAL},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_CLUDE_STARTAMT = #{isCludeStartamt,jdbcType=VARCHAR},
+            GRADE_AMOUNT = #{gradeAmount,jdbcType=DECIMAL},
+            GRADE_CONDITION = #{gradeCondition,jdbcType=VARCHAR},
+            GRADE_AMT = #{gradeAmt,jdbcType=DECIMAL}
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </update>
 </mapper>

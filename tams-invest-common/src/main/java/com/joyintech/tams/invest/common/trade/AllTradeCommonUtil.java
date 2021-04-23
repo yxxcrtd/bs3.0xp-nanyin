@@ -5,22 +5,9 @@
 
 package com.joyintech.tams.invest.common.trade;
 
-import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
-
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.*;
-
+import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -44,7 +31,6 @@ import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
-import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dao.TrdCommonBaseMapper;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
@@ -57,6 +43,20 @@ import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
 import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfo;
 import com.joyintech.tams.valuation.common.interf.base.dto.ChannelProdDeal;
 import com.joyintech.tams.valuation.common.interf.howmany.dto.TrdProductDealDto;
+import org.apache.commons.collections4.CollectionUtils;
+import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
 
 /**
  * 所有交易都要调用的共通Util
@@ -522,7 +522,14 @@ public class AllTradeCommonUtil {
             /** ADD BY WUJIE ON 20191119 END **/
             bokTradeBuildInputDto.setStlPayOrders(inputDto.getStlPayOrders());
 
+            /**ADD BY WUJIE ON 20210129 START REMARK:回购交易方向：到期续作、逾期贩售**/
+            bokTradeBuildInputDto.setPsType(inputDto.getPsType());
+            /**ADD BY WUJIE ON 20210129 END**/
+
             valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
+
+            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
+
             // 调用授信共通
             for (TrdProductDeal trdProductDeal : inputDto.getTrdProductDealList()) {
                 AllTradeCommonInputDto input = new AllTradeCommonInputDto();
@@ -556,6 +563,12 @@ public class AllTradeCommonUtil {
             /** ADD BY WUJIE ON 20191119 START **/
             bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
             /** ADD BY WUJIE ON 20191119 END **/
+
+            /**ADD BY WUJIE ON 20210129 START REMARK:回购交易方向：到期续作、逾期贩售**/
+            bokTradeBuildInputDto.setPsType(inputDto.getPsType());
+            /**ADD BY WUJIE ON 20210129 END**/
+
+            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
 
             valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
             // 调用授信共通
@@ -707,9 +720,11 @@ public class AllTradeCommonUtil {
                         String 原交易子组合代码 = btpdd.getActPortfolioId();
                         deal.setCounterId(原交易子组合代码);
                         trdProductDealAdd.setPortfolioId(交易对手的母组合);
-
+                        BussinessCodeParameter BussinessCodeParameter = getBussinessCodeParameter(busiType, trdProductDeal);
+                        BussinessCodeParameter req = new BussinessCodeParameter();
+                        req.setMapInfo(BussinessCodeParameter.initMapInfo());
                         deal.setTradeId(restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectRule",
-                            getBussinessCodeParameter(busiType, trdProductDeal), String.class));
+                                req, String.class));
                         trdProductDealAdd.setTradeId(deal.getTradeId());
                         
                       //交易费用不为空 入库交易费用信息
@@ -998,9 +1013,11 @@ public class AllTradeCommonUtil {
                         String 原交易子组合代码 = btpdd.getActPortfolioId();
                         deal.setCounterId(原交易子组合代码);
                         trdProductDealAdd.setPortfolioId(交易对手的母组合);
-
+                        BussinessCodeParameter BussinessCodeParameter = getBussinessCodeParameter(busiType, trdProductDeal);
+                        BussinessCodeParameter req = new BussinessCodeParameter();
+                        req.setMapInfo(BussinessCodeParameter.initMapInfo());
                         deal.setTradeId(restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/selectRule",
-                                getBussinessCodeParameter(busiType, trdProductDeal), String.class));
+                                req, String.class));
                         trdProductDealAdd.setTradeId(deal.getTradeId());
                         // 反向交易子组合
                         List<PtlTrade> ptlTradeListTemp = new ArrayList<>();
@@ -2032,4 +2049,54 @@ public class AllTradeCommonUtil {
         return trdCommonBaseMapper.isPortfolioId(portfolioId);
     }
     // add by zhangrui1 20200511 判断转仓交易 end
+	// add by lijie2 20200910 投资目的取值逻辑 start
+	/**
+	 * 投资目的取值逻辑
+	 * 
+	 * @param portfolioId
+	 * @return
+	 */
+	public static String getInvAim(String portfolioId) {
+		if (StringUtils.isNotEmpty(portfolioId)) {
+			PtlPortfolio ptlPortfolio = ptlPortfolioMapper.selectByPrimaryKey(portfolioId);
+			if (null != ptlPortfolio && StringUtils.isNotEmpty(ptlPortfolio.getProfitType())) {
+				if (DictCodeList.收益类型_货币型.getValue().equals(ptlPortfolio.getProfitType())) {
+					return DictCodeListExt1.投资目的_摊余成本类.getValue();
+				}
+			}
+		}
+		return DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue();
+	}
+	// add by lijie2 20200910 投资目的取值逻辑 end
+
+    /**
+     * 批量抽取内部交易对手
+     *
+     * @param counterIds 交易对手
+     * @return 内部交易对手
+     */
+    public static Map<String, PtlPortfolio> selectPortfolioIds(List<String> counterIds) {
+        //防止counterIds中存在null的对象
+        List<String> tmpList = new ArrayList<String>();
+        if (!StringUtil.isEmptyList(counterIds)) {
+            for(String counterId:counterIds) {
+                if(StringUtil.isNotEmpty(counterId)) {
+                    tmpList.add(counterId);
+                }
+            }
+        }
+
+        if (StringUtil.isEmptyList(tmpList)) {
+            return new HashMap<>();
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", tmpList);
+        List<PtlPortfolio> list = trdCommonBaseMapper.selectPortfolioIds(map);
+        if (!StringUtil.isEmptyList(list)) {
+            return list.stream().collect(
+                    Collectors.toMap(PtlPortfolio::getPortfolioId, info -> info));
+        }
+        return new HashMap<>();
+    }
+    // add by zahngrui1 20200703 批量抽取反向交易编号内部就交易对手 end
 }

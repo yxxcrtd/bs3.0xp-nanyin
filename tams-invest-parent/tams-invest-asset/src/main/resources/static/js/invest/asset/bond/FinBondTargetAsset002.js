@@ -71,7 +71,10 @@ $(function() {
         var repAssetType = $('#repAssetType').val();
         //update by zhangnian 20190920 end
         var  couponSpecies = getInterestFactorElementById('couponSpecies').val();
-        var object = $.serializeToObject('#submitForm', true); 
+        var object = $.serializeToObject('#submitForm', true);
+        if(object.tradePlat){
+            object.tradePlat = object.tradePlat.toString();
+        }
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.finCashCalcRuleList = finCashCalcRuleList;
@@ -645,6 +648,7 @@ $(function() {
     		$("#actualCreditProvid").attr("required", false).trigger('change');
     	}
         isCityBondChange();
+        isApproveShow();
     	star();
     	//    add by zoujiamin 20210120 TISHKBS-1799  start
     	type11Change();
@@ -657,6 +661,97 @@ $(function() {
             $("#cityBondLevDiv").hide();
         }else {
             $("#cityBondLevDiv").show();
+        }
+    };
+
+    var isApproveShow = function () {
+        if($('#tradeMarket').val() == '03' || $('#tradeMarket').val() == '04'){
+            $('#isNetPrice_div').show();
+            $('#isApproveMarket_div').show();
+        }else {
+            $('#isNetPrice_div').hide();
+            $('#isApproveMarket_div').hide();
+        }
+    }
+
+    var isApproveMarketChange = function () {
+        var isPpb = $('#isPPB').val();
+        var isPpbChange = $('#isPPB')[0].checked;
+        if (!isPpbChange) {
+            isPpb = "N";
+        }else {
+            isPpb = "Y";
+        }
+
+        // var $isApproveMarket = $("#tradePlat");
+        // var isApproveMarket = $isApproveMarket.val();
+        // $isApproveMarket.updateChosenArr({
+        //     item: [''],
+        //     chosen: isApproveMarket
+        // })
+        var tradeMarket = $('#tradeMarket').val();
+        var type9 = $('#type9').val();
+        var finprodMarketId = $('#finprodMarketId').val();
+        if (finprodMarketId && isPpb && type9 && tradeMarket) {
+            Joyin.ajax(basePath + 'invest/asset/bond/FinBondTargetAsset002/getIsNetSett?finprodMarketId='
+                + finprodMarketId + '&tradeMarket=' + tradeMarket + '&isPpb=' + isPpb
+                + '&type9=' + type9, '', function (result) {
+                $('#isNetSett').val(result.data.isNetSett);
+                var tradePlat = result.data.tradePlat;
+                if($('#tradeMarket').val() == '03' && result.data.isNetSett == "N" ){
+//                    $("#tradePlat").select2();
+                    //$("#tradePlat").val(['03']).trigger("change");
+                    // var $isApproveMarket = $("#tradePlat");
+                    // var isApproveMarket = $isApproveMarket.val();
+                    // $isApproveMarket.updateChosenArr({
+                    //     item: ['03'],
+                    //     chosen: isApproveMarket
+                    // });
+                }else if($('#tradeMarket').val() == '03' && result.data.isNetSett == "Y" ) {
+//                    $("#tradePlat").select2();
+                    //$("#tradePlat").val(['02','03','04']).trigger("change");
+                    //$("#tradePlat").val(['02','03','04']).trigger("change");
+                    // var $isApproveMarket = $("#tradePlat");
+                    // var isApproveMarket = $isApproveMarket.val();
+                    // $isApproveMarket.updateChosenArr({
+                    //     item: ['02','03','04'],
+                    //     chosen: isApproveMarket
+                    // });
+                }
+                else if($('#tradeMarket').val() == '04' && result.data.isNetSett == "N" ){
+//                    $("#tradePlat").select2();
+                    //$("#tradePlat").val(['05']).trigger("change");
+                    // var $isApproveMarket = $("#tradePlat");
+                    // var isApproveMarket = $isApproveMarket.val();
+                    // $isApproveMarket.updateChosenArr({
+                    //     item: ['05'],
+                    //     chosen: isApproveMarket
+                    // });
+                }else if($('#tradeMarket').val() == '04' && result.data.isNetSett == "Y" ) {
+                    $("#tradePlat").select2();
+                    //$("#tradePlat").val(['02', '05']).trigger("change");
+                    // var $isApproveMarket = $("#tradePlat");
+                    // var isApproveMarket = $isApproveMarket.val();
+                    // $isApproveMarket.updateChosenArr({
+                    //     item: ['02', '05'],
+                    //     chosen: isApproveMarket
+                    // })
+                }else {
+                    $("#tradePlat").select2();
+                    $("#tradePlat").val([]).trigger("change");
+                    // var $isApproveMarket = $("#tradePlat");
+                    // var isApproveMarket = $isApproveMarket.val();
+                    // $isApproveMarket.updateChosenArr({
+                    //     item: [],
+                    //     chosen: isApproveMarket
+                    // })
+                }
+                if(tradePlat){
+                    tradePlat =  tradePlat.split(",");
+                    $("#tradePlat").val(tradePlat).trigger("change");
+                }
+                $('#tradePlat').trigger('change');
+            });
         }
     };
     /**
@@ -773,9 +868,49 @@ $(function() {
         $('#issuer').change(issuerChange);
 
         $('#type11').change(type11Change);
+	$('#tradeMarket,#type9,#isPPB,#finprodMarketId').change(function() {
+            isApproveMarketChange()
+        });
 
         $('#tradeMarket').change(function(){
 			AssetCommon.setTradeMarketId($('#tradeMarket').val());
+			if($('#tradeMarket').val() == '03' || $('#tradeMarket').val() == '04'){
+                $('#isNetPrice_div').show();
+                $('#isApproveMarket_div').show();
+            }else {
+                $('#isNetPrice_div').hide();
+                $('#isApproveMarket_div').hide();
+            };
+
+            if($('#tradeMarket').val() == '01'){
+                $('#calendarId').textSelect('setValue', '03');
+            }else if($('#tradeMarket').val() == '03'){
+                $('#calendarId').textSelect('setValue', '04');
+            }else if($('#tradeMarket').val() == '04'){
+                $('#calendarId').textSelect('setValue', '05');
+            }else {
+                $('#calendarId').empty()
+            }
+
+            // Joyin.ajaxJson(basePath + 'business/common/CommonSelect/selectCalendarId', null ,function(dataList){
+            //     if(dataList){
+            //         $("#calendarId").vzzal(JSON.stringify(dataList.root))
+            //
+            //         // if($('#tradeMarket').val() == '01'){
+            //         //     $("#calendarId").select2();
+            //         //     $("#calendarId").val(['03']).trigger("change");
+            //         // }else if($('#tradeMarket').val() == '03'){
+            //         //     $("#calendarId").select2();
+            //         //     $("#calendarId").val(['04']).trigger("change");
+            //         // }else if($('#tradeMarket').val() == '04'){
+            //         //     $("#calendarId").select2();
+            //         //     $("#calendarId").val(['05']).trigger("change");
+            //         // }
+            //     }
+            // });
+
+
+
 		});
         $('#magnifier').click(getInterfBondInfo);
         $('#mdate,#vdate').change(function(obj){
@@ -824,7 +959,11 @@ $(function() {
 
         layui.form.on('switch(isCityBond)',function(){
             isCityBondChange();
-        });        
+        });
+
+        layui.form.on('switch(isPPB)',function(){
+            isApproveMarketChange();
+        });
         //是否展示资产四五级分类
         /*if(IS_SHOW_TYPE == '01'){
         	$('#selector5').show();

@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.valuation.common.interf.base.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -324,4 +325,31 @@ public interface InterfCommonMapper {
      * @since 1.0
      */
     List<String> getAddTaxType(Map<String, Object> params);
+
+    /**
+     * 行权申请交易更新
+     * @param list
+     * @param exerciseStatus
+     * @param tradeDate
+     * @param updateTime
+     * @param updateUser
+     * @return
+     */
+    int updateExecApplyDealBatch(@Param("list") List<String> list, @Param("exerciseStatus") String exerciseStatus,
+                                 @Param("cancelExerciseDate") Date cancelExerciseDate, @Param("updateTime") Date updateTime,
+                                 @Param("updateUser") String updateUser);
+
+    /**
+     * 根据交易编号删除入账信息
+     * @param list
+     * @return
+     */
+    int deleteBokDealAccountingBatch(@Param("list") List<String> list);
+
+    /**
+     * 根据入账信息删除入账信息明细表
+     * @param list
+     * @return
+     */
+    int deleteBokDealAccountingDetailBatch(@Param("list") List<String> list);
 }

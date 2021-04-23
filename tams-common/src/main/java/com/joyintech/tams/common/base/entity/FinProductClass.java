@@ -64,6 +64,26 @@ public class FinProductClass extends BaseEntity {
     private String taxClassName;
 
     /**
+     * 收益类型
+     */
+    private String profitType;
+
+    /**
+     * 收益类型名称
+     */
+    private String profitTypeName;
+
+    /**
+     * 场内基金类型
+     */
+    private String trmFundType;
+
+    /**
+     * 场内基金类型名称
+     */
+    private String trmFundTypeName;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -253,5 +273,69 @@ public class FinProductClass extends BaseEntity {
      */
     public void setTaxClassName(String taxClassName) {
         this.taxClassName = taxClassName == null ? null : taxClassName.trim();
+    }
+
+    /**
+     * 取得 收益类型
+     * @return 收益类型
+     */
+    public String getProfitType() {
+        return profitType;
+    }
+
+    /**
+     * 设置 收益类型
+     * @param profitType 收益类型
+     */
+    public void setProfitType(String profitType) {
+        this.profitType = profitType == null ? null : profitType.trim();
+    }
+
+    /**
+     * 取得 收益类型名称
+     * @return 收益类型名称
+     */
+    public String getProfitTypeName() {
+        return profitTypeName;
+    }
+
+    /**
+     * 设置 收益类型名称
+     * @param profitTypeName 收益类型名称
+     */
+    public void setProfitTypeName(String profitTypeName) {
+        this.profitTypeName = profitTypeName == null ? null : profitTypeName.trim();
+    }
+
+    /**
+     * 取得 场内基金类型
+     * @return 场内基金类型
+     */
+    public String getTrmFundType() {
+        return trmFundType;
+    }
+
+    /**
+     * 设置 场内基金类型
+     * @param trmFundType 场内基金类型
+     */
+    public void setTrmFundType(String trmFundType) {
+        this.trmFundType = trmFundType == null ? null : trmFundType.trim();
+    }
+
+    /**
+     * 取得 场内基金类型名称
+     * @return 场内基金类型名称
+     */
+    public String getTrmFundTypeName() {
+        return trmFundTypeName;
+    }
+
+    /**
+     * 设置 场内基金类型名称
+     * @param trmFundTypeName 场内基金类型名称
+     */
+    public void setTrmFundTypeName(String trmFundTypeName) {
+        this.trmFundTypeName = trmFundTypeName == null ? null : trmFundTypeName.trim();
     }
 }

@@ -117,6 +117,14 @@ var showDetailByFinprodId=function(finprodId,finprodType2){
                 pageModel:PAGE_MODEL_REFERENCE,
                 finprodId:finprodId
             });
+    }else if(finprodType2 == PINAN_ASSET_TYPE_F19){
+        label='FinProjectNetTargetAsset002.title';
+        pagePath = "invest/asset/projectnet/FinProjectNetTargetAsset002/init";
+        Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+            "95%", "90%",{
+                pageModel:PAGE_MODEL_REFERENCE,
+                finprodId:finprodId
+            });//权益类资产查看
     }
 }
 
@@ -138,6 +146,9 @@ $(function(){
     		var assetType1=$("#TrdCommandDispatcher001_assetType1").val().split(",").join(",");
     		obj.assetType1 = (assetType1.charAt(0) == ',') ? assetType1.substring(1, assetType1.length) : assetType1;
     	}
+        if($('#TrdCommandDispatcher001_entrustStatus').val()){
+            obj.entrustStatus = $('#TrdCommandDispatcher001_entrustStatus').val().join(',');
+        }
     	//利率互换交易方向特殊处理  后台转换
         if ($("#TrdCommandDispatcher001_ps").val() && $('#TrdCommandDispatcher001_ps').select2('data')[0].col ==IRS_TYPE) {
         	obj.ps = IRS_TYPE+obj.ps;
@@ -159,6 +170,42 @@ $(function(){
         dblclick:function(table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
             entrustId = data.entrustId;
+            tradeMarket = data.tradeMarket;
+            purchModle  = data.purchModle;
+            //交易所（上交和深交）的指令(可转债网下申购亦是场内交易)
+            if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04) {
+                label = 'EtrExchangeTrade001.detail';
+                var entrustType = data.entrustType;
+                if(entrustType == ENTRUST_BUSS_TYPE_22 || entrustType == ENTRUST_BUSS_TYPE_21
+                    || entrustType == ENTRUST_BUSS_TYPE_20 || entrustType == ENTRUST_BUSS_TYPE_19
+                    || entrustType == ENTRUST_BUSS_TYPE_18 || entrustType == ENTRUST_BUSS_TYPE_17) {
+                    pagePath = "invest/entrust/etragrereptrade/EtrAgreRepTrade001/init";
+                    Joyin.dialog(JoyinUtil.getLabel(label), basePath + pagePath,
+                        "95%", "90%", {
+                            pageModel: PAGE_MODEL_REFERENCE,
+                            entrustId: entrustId,
+                        });//交易所指令详情
+                }else  //场内可转债网下申购
+                if(purchModle == '02'){
+                    label='EtrConBond002.dblclick';
+                    pagePath = "invest/entrust/etrconbond/EtrConBond002/init";
+                    Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                        "95%", "90%",{
+                            pageModel:PAGE_MODEL_REFERENCE,
+                            entrustId:entrustId
+                        });
+                }
+                else {
+                    pagePath = "invest/entrust/etrexchangetrade/EtrExchangeTrade001/init";
+                    Joyin.dialog(JoyinUtil.getLabel(label), basePath + pagePath,
+                        "95%", "90%", {
+                            pageModel: PAGE_MODEL_REFERENCE,
+                            entrustId: entrustId,
+                        });//交易所指令详情
+                }
+            }
+            //银行间等指令
+            else {
             //债券委托详情
             if(data.finprodType2 == PINAN_ASSET_TYPE_F01 && data.ps != PS_T04 && data.ps != PS_T49){
         		label='EtrInvestBondInfo001.detail';
@@ -329,7 +376,16 @@ $(function(){
 						entrustId:data.entrustId
 					},
 					function(){table.reload();});
-			}
+                }else if(data.finprodType2 == PINAN_ASSET_TYPE_F19){
+                    label='EtrProjectNet002.detail';
+                    pagePath = "invest/entrust/etrprojectnet/EtrProjectNet002/init";
+                    Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                        "95%", "90%",{
+                            pageModel:PAGE_MODEL_REFERENCE,
+                            entrustId:entrustId,
+                        });//回购委托详情
+                }
+            }
         },
         cols:[
         	{field:'otherEntrustStatus', title: 'TrdCommandDispatcher001.entrustStatus',width:100, sortField:'entrustStatus'}
@@ -358,9 +414,11 @@ $(function(){
         		field:'finprodMarketId', 
         		title: 'TrdCommandDispatcher001.finprodId',
         		render : function(data, type, row, meta) {
+        		if(row.finprodType2 != "F07"){
         			if(row.finprodMarketId !=undefined){
         				return "<a onclick=\"showDetailByFinprodId('"+row.finprodId+"','"+row.finprodType2+"')\" + style='cursor: pointer;'>"+row.finprodMarketId+"</a>";
         			}
+        		  }
                 },
                 width:180
         	}
@@ -369,19 +427,21 @@ $(function(){
         	,{field:'otherTradeMarket',  title: 'TrdCommandDispatcher001.tradeMarket',width:130, sortField:'tradeMarket'}
         	,{field:'entrustAmt', title: 'TrdCommandDispatcher001.entrustAmt',type:'number', width:140}
             //add by  gejiaao satrt 列表项中委托额度后增加字段投标标位
-            ,{field:'bidPrice', title: 'TrdCommandDispatcher001.bidPrice', width:140}
+            ,{field:'bidPrice', title: 'TrdCommandDispatcher001.bidPrice', width:140,sortable:false}
             //add by  gejiaao end
         	,{field:'finishAmt', title: 'TrdCommandDispatcher001.finshAmt',type:'number', width:140}
         	,{field:'otherCcy',  title: 'TrdCommandDispatcher001.ccy',width:120, sortField:'ccy'}
-        	,{field:'entrustDate', title: 'TrdCommandDispatcher001.entrustDate',type:'date'}
-        	,{field:'vdate', title: 'TrdCommandDispatcher001.vdate',type:'date'}
-        	,{field:'mdate', title: 'TrdCommandDispatcher001.mdate',type:'date'}
+        	,{field:'entrustDateStr', title: 'TrdCommandDispatcher001.entrustDate',type:'date',sortField:'entrustDate'}
+        	,{field:'vdateStr', title: 'TrdCommandDispatcher001.vdate',type:'date',sortField:'vdate'}
+        	,{field:'mdateStr', title: 'TrdCommandDispatcher001.mdate',type:'date',sortField:'mdate'}
         	,{field:'remark', title: 'TrdCommandDispatcher001.remark',width:150}
         	,{field:'entrustStatus', visible:false}
         	,{field:'tradeId', visible:false}
         	,{field:'finprodId', visible:false}
         	,{field:'userName', visible:false}
 			,{field:'bussBidDate', visible:false}
+			,{field:'entrustType', visible:false}
+            ,{field:'purchModle', visible:false}
         ]
     });
     /**

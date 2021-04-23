@@ -189,6 +189,9 @@ public class BookDetailCompareIntoProcessorService {
             key.setBaseSubjectNature(val.getBaseSubjectNature());// 基础科目性质
             key.setCdFlag(val.getCdFlag());// 借贷方向
             key.setBookId(val.getBookId());
+            /**add by wujie on 20210113 start remark:key 少了原币金额**/
+            key.setoCcy(val.getoCcy());//原币币种
+            /**add by wujie on 20210113 start remark:end 少了原币金额**/
             if (MAP_C.get(key) == null) {
                 BokBookdetailCurrent comparisonOfAccountRecords = accountingCommonService.comparisonOfAccountRecords(
                     val, null, val.getBookDate(), val.getCdFlag());

@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.BookGenerateResult;
 import com.joyintech.tams.valuation.batch.common.base.entity.extcommon.ValBokBookdetailBatch;
 import com.joyintech.tams.valuation.batch.manualvoucher.dao.ManualVoucherMapper;
@@ -147,6 +149,14 @@ public class ManualVoucherProcessor extends BaseProcessor<NeedOperateEntity, Boo
                 new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.处理序列)));
             // 0金额是否处理
             bookDetail.setIsexeZeroAmt(DictCodeList.是否_是.getValue());
+            SubjectBalance subjectBalance = new SubjectBalance();
+            subjectBalance.setBusiId(detail.getBusiId());
+            subjectBalance.setBusiDetailType(detail.getBusiDetailType());
+            subjectBalance.setInvAim(detail.getInvAim());
+            subjectBalance.setBalFlag(detail.getBalFlag());
+            subjectBalance.setSubjectType(detail.getSubjectType());
+            bookDetail.setSubjectBalance(subjectBalance);
+            createSubjectBalance(bookDetail);
             // 添加到list中
             bookDetailList.add(bookDetail);
         }
@@ -154,6 +164,38 @@ public class ManualVoucherProcessor extends BaseProcessor<NeedOperateEntity, Boo
         result.setValBokBookdetailBatch(bookDetailList);
         
         return result;
+    }
+    /**
+     * 构造缓存对象
+     */
+    private void createSubjectBalance(ValBokBookdetailBatch batch){
+    	SubjectBalance subjectBalance = new SubjectBalance();
+    	if(batch.getSubjectBalance()!=null){
+    		subjectBalance = batch.getSubjectBalance();
+    	}
+        subjectBalance.setBooksetId(batch.getBooksetId());
+        subjectBalance.setBokDetailId(batch.getBokDetailId());
+        subjectBalance.setBusiId(batch.getBusiId());
+        subjectBalance.setTableId(batch.getTableId());
+        subjectBalance.setSubjectNo(batch.getSubjectNo());
+        subjectBalance.setOCcy(batch.getoCcy());
+        subjectBalance.setbCcy(batch.getbCcy());
+        subjectBalance.setBalFlagHappenDate(batch.getBalFlagHappenDate());
+        subjectBalance.setBalance(batch.getoAmtHappenDate());
+        subjectBalance.setbAmt(batch.getbAmtHappenDate());
+        subjectBalance.setNum(batch.getNumAmtHappenDate());
+        subjectBalance.setShareAmtClean(batch.getShareAmtClean());
+        subjectBalance.setHappenDate(DateUtil.format(batch.getHappenDate()));
+        subjectBalance.setBaseSubjectNature(batch.getBaseSubjectNature());
+        subjectBalance.setDetailSubjectNo(batch.getDetailSubjectNo());
+        subjectBalance.setMdate(batch.getMdate());
+        subjectBalance.setBranch(batch.getBranch());
+        subjectBalance.setTaskPri(batch.getTaskPri());
+        subjectBalance.setBtTaskPri(batch.getTaskPri());
+        subjectBalance.setOffsetDate(batch.getOffsetDate());
+        subjectBalance.setBookDate(batch.getBookDate());
+        subjectBalance.setBookOrder(batch.getBookOrder());
+        batch.setSubjectBalance(subjectBalance);
     }
 
 }

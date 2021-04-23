@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,13 @@ public class AssetIntdateCarryoverDelWriter extends BaseWriter<NeedToWriteEntity
 //        listPs.add(DictCodeList.交易方向_债券派息.getValue());
 //        listPs.add(DictCodeList.交易方向_债券派本.getValue());
         listPs.add(DictCodeList.交易方向_到期.getValue());
+        /**modify by wujie on 20210107 start**/
+        listPs.add(DictCodeList.交易方向_卖空债券结息.getValue());
+        listPs.add(DictCodeList.交易方向_卖空债券还本.getValue());
+        /**modify by wujie on 20210107 end**/
+        /** modify by yanya on 20210311 增加行权-赎回结转 start**/
+        listPs.add(DictCodeListExt3.交易方向_行权赎回结转.getValue());
+        /** modify by yanya on 20210311 增加行权-赎回结转 end**/
      /*   listPs.add(DictCodeList.交易方向_卖空债券结息.getValue());
         listPs.add(DictCodeList.交易方向_卖空债券还本.getValue());*/
         params.put("listPs", listPs);

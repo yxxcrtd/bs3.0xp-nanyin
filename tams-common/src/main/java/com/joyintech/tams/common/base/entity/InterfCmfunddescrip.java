@@ -692,11 +692,45 @@ public class InterfCmfunddescrip extends InterfCmfunddescripKey {
         this.isCompoundInt = isCompoundInt == null ? null : isCompoundInt.trim();
     }
 
-    // add by jiangpeng on 20200721 公募基金标的 接口 start
-    /**
-     * 认购起始日
-     * @return 认购起始日
-     */
+  //交易所基金类型
+    private String exFundType;
+    
+    //交易所基金简称
+    private String exFundAbbrName;
+    
+    //申购赎回代码  
+    private String purRedCode;
+    
+    //申购赎回简称
+    private String purRedAbbrName;
+    
+    //单笔申购金额下限
+    private BigDecimal singlePurLowerAmount;
+    
+    //单笔赎回份额下限
+    private BigDecimal singleRedLowerShare;
+    
+    //ETF最小申购赎回单位
+    private String purAndRedMinUnitETF;
+    
+    //ETF类型
+    private String etfType;
+    
+    //分级基金
+    private String graFundType;
+    
+    //母基金代码
+    private String pFinprodId;
+    
+    //母基金名称
+    private String pFinprodName;
+    
+    //计息营业日准则
+    private String endTdayRule;
+    
+    //付息营业日准则
+    private String payTdayRule;
+    
     public String getfIssueOefStartdateinst() {
         return fIssueOefStartdateinst;
     }
@@ -773,10 +807,6 @@ public class InterfCmfunddescrip extends InterfCmfunddescripKey {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal redStartLow;
 
-    /**
-     * ETF类型
-     */
-    private String etfType;
 
     /**
      * ETF最小申购赎回单位
@@ -792,6 +822,110 @@ public class InterfCmfunddescrip extends InterfCmfunddescripKey {
 
     public String getIssuerScaleType() {
         return issuerScaleType;
+    }
+
+	public void setExFundType(String exFundType) {
+		this.exFundType = exFundType;
+	}
+
+	public String getExFundAbbrName() {
+		return exFundAbbrName;
+	}
+
+	public void setExFundAbbrName(String exFundAbbrName) {
+		this.exFundAbbrName = exFundAbbrName;
+	}
+
+	public String getPurRedCode() {
+		return purRedCode;
+	}
+
+	public void setPurRedCode(String purRedCode) {
+		this.purRedCode = purRedCode;
+	}
+
+	public String getPurRedAbbrName() {
+		return purRedAbbrName;
+	}
+
+	public void setPurRedAbbrName(String purRedAbbrName) {
+		this.purRedAbbrName = purRedAbbrName;
+	}
+
+	public BigDecimal getSinglePurLowerAmount() {
+		return singlePurLowerAmount;
+	}
+
+	public void setSinglePurLowerAmount(BigDecimal singlePurLowerAmount) {
+		this.singlePurLowerAmount = singlePurLowerAmount;
+	}
+
+	public BigDecimal getSingleRedLowerShare() {
+		return singleRedLowerShare;
+	}
+
+	public void setSingleRedLowerShare(BigDecimal singleRedLowerShare) {
+		this.singleRedLowerShare = singleRedLowerShare;
+	}
+
+	public String getPurAndRedMinUnitETF() {
+		return purAndRedMinUnitETF;
+	}
+
+	public void setPurAndRedMinUnitETF(String purAndRedMinUnitETF) {
+		this.purAndRedMinUnitETF = purAndRedMinUnitETF;
+	}
+
+	public String getEtfType() {
+		return etfType;
+	}
+
+	public void setEtfType(String etfType) {
+		this.etfType = etfType;
+	}
+
+	public String getGraFundType() {
+		return graFundType;
+	}
+
+	public void setGraFundType(String graFundType) {
+		this.graFundType = graFundType;
+	}
+
+	public String getpFinprodId() {
+		return pFinprodId;
+	}
+
+	public void setpFinprodId(String pFinprodId) {
+		this.pFinprodId = pFinprodId;
+	}
+
+	public String getpFinprodName() {
+		return pFinprodName;
+	}
+
+	public void setpFinprodName(String pFinprodName) {
+		this.pFinprodName = pFinprodName;
+	}
+
+	public String getEndTdayRule() {
+		return endTdayRule;
+	}
+
+	public void setEndTdayRule(String endTdayRule) {
+		this.endTdayRule = endTdayRule;
+	}
+
+	public String getPayTdayRule() {
+		return payTdayRule;
+	}
+
+	public void setPayTdayRule(String payTdayRule) {
+		this.payTdayRule = payTdayRule;
+	}
+
+    public String getExFundType() {
+        return exFundType;
     }
 
     public void setIssuerScaleType(String issuerScaleType) {
@@ -860,14 +994,6 @@ public class InterfCmfunddescrip extends InterfCmfunddescripKey {
 
     public void setRedStartLow(BigDecimal redStartLow) {
         this.redStartLow = redStartLow;
-    }
-
-    public String getEtfType() {
-        return etfType;
-    }
-
-    public void setEtfType(String etfType) {
-        this.etfType = etfType;
     }
 
     public BigDecimal getEtfMinPrunit() {

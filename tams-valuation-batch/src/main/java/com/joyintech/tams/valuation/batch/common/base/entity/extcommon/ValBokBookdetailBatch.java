@@ -8,6 +8,7 @@ package com.joyintech.tams.valuation.batch.common.base.entity.extcommon;
 import com.joyintech.tams.common.base.entity.BokBookdetailCurrent;
 import com.joyintech.tams.common.base.entity.BokBussDetsub;
 import com.joyintech.tams.common.base.entity.BokSubjectDetail;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.base.entity.BatchOperationInterface;
 import com.joyintech.tams.valuation.batch.common.base.spring.annotation.BaseEntityClassName;
 
@@ -36,7 +37,10 @@ public class ValBokBookdetailBatch extends BokBookdetailCurrent implements Batch
      * 业务明细科目
      */
     private BokBussDetsub valBokBussDetsub;
-
+    /**
+     * 科目余额缓存用
+     */
+    private SubjectBalance subjectBalance;
     /**
      * 科目类别
      */
@@ -96,5 +100,19 @@ public class ValBokBookdetailBatch extends BokBookdetailCurrent implements Batch
     public void setValBokSubjectDetail(BokSubjectDetail valBokSubjectDetail) {
         this.valBokSubjectDetail = valBokSubjectDetail;
     }
+
+
+
+	public SubjectBalance getSubjectBalance() {
+		return subjectBalance;
+	}
+
+
+
+	public void setSubjectBalance(SubjectBalance subjectBalance) {
+		this.subjectBalance = subjectBalance;
+	}
+
+
 
 }

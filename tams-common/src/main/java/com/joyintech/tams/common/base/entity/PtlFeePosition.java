@@ -52,6 +52,16 @@ public class PtlFeePosition extends PtlFeePositionKey {
     private BigDecimal tdyAccumulPayFeeB;
 
     /**
+     * 券商代码
+     */
+    private String customerId;
+
+    /**
+     * 席位号
+     */
+    private String seatId;
+
+    /**
      * 取得 当日计费本金
      * @return 当日计费本金
      */
@@ -177,5 +187,37 @@ public class PtlFeePosition extends PtlFeePositionKey {
      */
     public void setTdyAccumulPayFeeB(BigDecimal tdyAccumulPayFeeB) {
         this.tdyAccumulPayFeeB = tdyAccumulPayFeeB;
+    }
+
+    /**
+     * 取得 券商代码
+     * @return 券商代码
+     */
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    /**
+     * 设置 券商代码
+     * @param customerId 券商代码
+     */
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId == null ? null : customerId.trim();
+    }
+
+    /**
+     * 取得 席位号
+     * @return 席位号
+     */
+    public String getSeatId() {
+        return seatId;
+    }
+
+    /**
+     * 设置 席位号
+     * @param seatId 席位号
+     */
+    public void setSeatId(String seatId) {
+        this.seatId = seatId == null ? null : seatId.trim();
     }
 }

@@ -10,9 +10,13 @@
 
 package com.joyintech.service.basicdata.mstmarketcalendarinfo.service;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jixu.common.util.DateUtil;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -135,5 +139,50 @@ public class MstMarketCalendarInfoService
      */
     public List<MstCalendarInfo> getMstCalendarInfo(){
         return mstMarketCalendarInfo001Mapper.getMstCalendarInfo();
+    }
+
+    /**
+     * 查询交易日
+     * @param dto
+     * @param nDay
+     * @return
+     */
+    public String queryTradeDate(MstMarketCalendarInfo001Dto dto,int nDay) {
+        int count =0;
+        Date cdate= dto.getCdate();
+        if(nDay==0) {
+            while(count==0) {
+                dto.setCdate(cdate);
+                MstMarketCalendarInfo001Dto result = this.getMstMarketCalendarInfo001DtoByKey(dto);
+                Map<String, Object> map = new HashMap<String, Object>();
+                if (result != null && result.getIsHoliday() == 0) {//0-是交易日
+                    count += 1;
+                } else {
+                    cdate = DateUtils.addDays(cdate,1);
+                }
+            }
+        } else if(nDay > 0) {
+            while(count < nDay) {
+                cdate = DateUtils.addDays(cdate,1);
+                dto.setCdate(cdate);
+                MstMarketCalendarInfo001Dto result = this.getMstMarketCalendarInfo001DtoByKey(dto);
+                Map<String, Object> map = new HashMap<String, Object>();
+                if (result != null && result.getIsHoliday() == 0) {//0-是交易日
+                    count += 1;
+                }
+            }
+        }else if(nDay < 0) {
+            while(count > nDay) {
+                cdate = DateUtils.addDays(cdate,-1);
+                dto.setCdate(cdate);
+                MstMarketCalendarInfo001Dto result = this.getMstMarketCalendarInfo001DtoByKey(dto);
+                Map<String, Object> map = new HashMap<String, Object>();
+                if (result != null && result.getIsHoliday() == 0) {//0-是交易日
+                    count -= 1;
+                }
+            }
+        }
+
+        return DateUtil.convertD2YYYYMMDD(cdate);
     }
 }

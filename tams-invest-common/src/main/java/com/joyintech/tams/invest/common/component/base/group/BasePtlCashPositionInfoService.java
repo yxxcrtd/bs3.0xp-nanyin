@@ -11,7 +11,9 @@
 package com.joyintech.tams.invest.common.component.base.group;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 
 /**
@@ -63,4 +65,30 @@ public interface BasePtlCashPositionInfoService {
      * @since 1.0
      */
     boolean deleteCashPosition(PtlCashPositionFlowDto positionQueryDto);
+    
+    /**
+     * 查询下个工作日
+     * @param tradeMarketId
+     * @param cdate
+     * @param finprodId
+     * @return
+     */
+    Date selectNextWorkDay(String tradeMarketId, Date cdate, String finprodId);
+    
+    /**
+     * 查询可取现金
+     *
+     * @param positionQueryDto PtlPositionFlowQueryDto
+     * @return BigDecimal
+     * @see
+     * @since 1.0
+     */
+    BigDecimal queryUsableCashPositionOther(PtlCashPositionFlowDto positionQueryDto);
+    
+    /**
+     * 查询资产附加信息，查询产品是否纳入净额结算
+     * @param finprodId
+     * @return
+     */
+    FinProductAdd getFinProductAdd(String finprodId);
 }

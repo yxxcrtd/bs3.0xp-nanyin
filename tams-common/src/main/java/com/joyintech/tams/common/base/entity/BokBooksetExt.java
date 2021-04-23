@@ -17,6 +17,11 @@ public class BokBooksetExt extends BokBooksetExtKey {
     private String remark;
 
     /**
+     * 参数类型
+     */
+    private String paramType;
+
+    /**
      * 取得 参数值
      * @return 参数值
      */
@@ -62,5 +67,21 @@ public class BokBooksetExt extends BokBooksetExtKey {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    /**
+     * 取得 参数类型
+     * @return 参数类型
+     */
+    public String getParamType() {
+        return paramType;
+    }
+
+    /**
+     * 设置 参数类型
+     * @param paramType 参数类型
+     */
+    public void setParamType(String paramType) {
+        this.paramType = paramType == null ? null : paramType.trim();
     }
 }

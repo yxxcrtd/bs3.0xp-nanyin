@@ -59,6 +59,16 @@
 		     AND C.FINPROD_TYPE != 'F21'
 		     AND C.FINPROD_ID = #{finprodId}
 		     AND C.FINPROD_TYPE = #{finprodType}
+			UNION ALL
+			SELECT
+			T.ACCT_NO FINPROD_ID,
+			'F20' FINPROD_TYPE,
+			T.ACCT_NAME FINPROD_ID,
+			NULL PROFIT_TYPE,
+			NULL TERM_TYPE
+			FROM STL_CAPACCT_INFO T
+			WHERE T.ACCT_NO = #{finprodId}
+			AND 'F20' = #{finprodType}
 	</select>
 	
 	<select id="findOrderTypeByTrade" parameterType="com.joyintech.tams.common.base.entity.TrdProductDeal" resultType="com.joyintech.tams.common.base.entity.StlOrdersMapping">

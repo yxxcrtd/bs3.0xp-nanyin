@@ -81,6 +81,20 @@
 		AND (plan.PRIN_AMT != 0 OR plan.INT_AMT != 0 OR plan.CASH_AMT != 0)
 
 		AND (plan.FINPROD_TYPE IN (#{finprodType2},#{finprodType3},#{finprodType4}) or (plan.FINPROD_TYPE = #{finprodType1} and t.TYPE_1 = '01'))
+		/** add by yanya on 20210311 增加债券行权的判定 start**/
+		AND NOT EXISTS (
+			SELECT
+				1
+			FROM
+				TRD_PRODUCT_DEAL deal
+			LEFT JOIN BOK_DEAL_ACCOUNTING account ON deal.TRADE_ID = account.BUSI_NO
+			WHERE
+				plan.FINPROD_ID = deal.FINPROD_ID
+				AND deal.PS = #{execPs,jdbcType=VARCHAR}
+				AND plan.MDATE = deal.MDATE
+				AND bookset.BOOKSET_ID = account.BOOKSET_ID
+		)
+		/** add by yanya on 20210311 增加债券行权的判定 end**/
 	</select>
 	
 <!-- 是否存在已交易生成 -->
@@ -369,12 +383,12 @@ AND		deal.PS IN ('T07', 'T08', 'T09')
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, CCY)
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close=" from dual)">
-           	#{booksetId,jdbcType=VARCHAR}, #{bokDetailId,jdbcType=VARCHAR}, #{busiId,jdbcType=VARCHAR}, 
-            #{busiDetailType,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, 
-            #{tradeId,jdbcType=VARCHAR}, #{detailSubjectNoTail,jdbcType=VARCHAR}, #{detailSubnameTail,jdbcType=VARCHAR}, 
-            #{branch,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
-			#{ccy,jdbcType=VARCHAR}
+           	#{item.booksetId,jdbcType=VARCHAR}, #{item.bokDetailId,jdbcType=VARCHAR}, #{item.busiId,jdbcType=VARCHAR},
+            #{item.busiDetailType,jdbcType=VARCHAR}, #{item.invAim,jdbcType=VARCHAR}, #{item.secManageAcctId,jdbcType=VARCHAR},
+            #{item.tradeId,jdbcType=VARCHAR}, #{item.detailSubjectNoTail,jdbcType=VARCHAR}, #{item.detailSubnameTail,jdbcType=VARCHAR},
+            #{item.branch,jdbcType=DECIMAL}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+			#{item.ccy,jdbcType=VARCHAR}
         </foreach>
     </insert>
      
@@ -465,7 +479,7 @@ WHERE
 	
 	<!-- 资产理论结息日结转数据读取 (交易类) -->
 	<select id="queryAssetIntdateCarryoverReaderTransaction"  parameterType="java.util.Map" 
-	resultType="com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderDetail" >
+	resultType="com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverExecReaderDetail" >
 SELECT		
 	plan.CASH_ID,
 	plan.CASH_NUM,
@@ -535,5 +549,64 @@ INNER JOIN BOK_BOOKSET_DATE booksetdt
 WHERE		
 	plan.FINPROD_TYPE = 'F09'  
 AND (plan.PRIN_AMT != 0 OR plan.INT_AMT != 0 OR plan.CASH_AMT != 0) 
-	</select>	
+	</select>
+
+	<!--add by yanya on 20210311 债券行权计划查询-->
+	<select id="selectSecExerciseList" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverExecReaderDetail" >
+		SELECT
+			plan.CASH_ID,
+			plan.EXERCISE_TYPE,
+			plan.VDATE,
+			plan.MDATE,
+			plan.EXERCISE_DATE,
+			plan.EXERCISE_STATUS,
+			plan.EXERCISE_PRICE,
+			plan.EXERCISE_REMARK,
+			plan.FINPROD_ID,
+			plan.FINPROD_TYPE,
+			plan.FINPROD_TYPE2,
+			plan.BRANCH,
+			plan.ACT_EXERCISE_DATE,
+		    #{execCashType1,jdbcType=VARCHAR} execCashType1,
+			fin.CCY ccy,
+			fin.TRADE_MARKET,
+			fin.ACTMDATE,
+			bookset.BOOKSET_ID,
+			tktodo.BOOKSET_DATE
+		FROM
+			FIN_EXERCISE_PLAN plan
+		INNER JOIN	FIN_CASH_INFO info
+			ON	info.CASH_ID = plan.CASH_ID
+			AND	plan.BRANCH = info.BRANCH
+			AND info.CASH_TYPE_1 = #{cashType1,jdbcType=VARCHAR}
+		INNER JOIN 	FIN_PRODUCT fin
+			ON	plan.FINPROD_ID = fin.FINPROD_ID
+			AND	plan.FINPROD_TYPE = fin.FINPROD_TYPE
+		INNER JOIN 	BOK_BATCH_TASK_TODO tktodo
+			ON (tktodo.TASK_ID = #{taskId,jdbcType=VARCHAR} OR tktodo.TASK_ID is null)
+				AND tktodo.BOOKSET_DATE = plan.EXERCISE_DATE
+		INNER JOIN BOK_BOOKSET bookset
+			ON bookset.BOOKSET_ID = tktodo. BOOKSET_ID
+		WHERE
+			plan.BRANCH = #{branch,jdbcType=DECIMAL}
+			AND plan.EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR}
+			AND plan.ACT_EXERCISE_DATE is not null
+			AND fin.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+			AND tktodo.SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+	</select>
+
+	<!--add by yanya on 20210311 查询债券行权计划交易数量-->
+	<select id="selectExecTradeCount" parameterType="java.util.Map" resultType="java.lang.Integer" >
+		SELECT
+			count(*)
+		FROM TRD_PRODUCT_DEAL A,BOK_DEAL_ACCOUNTING B
+		WHERE B.busi_no = A.trade_id
+          AND B.BUSI_TABLE = #{busiTable,jdbcType=VARCHAR}
+          AND B.BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          AND A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          AND A.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+          AND A.MDATE = #{exerciseDate,jdbcType=DATE}
+          AND A.PS = #{ps,jdbcType=VARCHAR}
+	</select>
 </mapper>

@@ -21,13 +21,22 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListTableId;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
+import com.joyintech.tams.valuation.batch.common.calculation.entity.DealTypesFeeDto;
 import com.joyintech.tams.valuation.batch.common.calculation.service.CalculationCommonService;
+import com.joyintech.tams.valuation.batch.common.dealinfoselectcom.dto.FinProductDealInfoComDTO;
 import com.joyintech.tams.valuation.batch.common.drawbaseinfoselectcom.dto.DrawBaseInfoSelectComDTO;
 import com.joyintech.tams.valuation.batch.common.drawbaseinfoselectcom.dto.DrawBaseInfoSelectComResult;
 import com.joyintech.tams.valuation.common.batch.finproduct.dao.FinProductCommonMapper;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.*;
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
+import com.joyintech.tams.valuation.common.batch.tradecommon.dto.ValExecApplyInfoDto;
+import com.joyintech.tams.valuation.common.batch.tradecommon.dto.ValTrdProductDealInfoDto;
+import com.joyintech.tams.valuation.common.batch.tradecommon.service.ValTradeCommonService;
+import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCode;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
@@ -39,6 +48,7 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 标的类共通方法
@@ -81,6 +91,8 @@ public class FinProductCommonService {
     @Autowired
     private FinProductCommonBatchService finProductCommonBatchService;
 
+    @Autowired
+    ValTradeCommonService valTradeCommonService;
     /**
      * 公用方法：标的类共通方法 - 标的信息查询
      * @param finprodId 标的代码【必输项】
@@ -1657,5 +1669,637 @@ public class FinProductCommonService {
      */
     public Map<String, Object> selectHBFXData(Map<String, Object> map) {
         return finProductCommonMapper.selectHBFXData(map);
+    }
+
+    /**
+     * 市价查询-计划类利率型
+     *
+     * add by wujie on 20201015  remark:计划类收益型资产改造
+     * @param happenDate 发生日
+     * @param booksetId 账套代码
+     * @param finProdId 产品代码
+     * @param invAim 投资目的
+     * @return 市价净值、估值日期
+     */
+    public MarketPriceDto gettDeltRightMarketPrice(Date happenDate, String booksetId, String finProdId,
+                                                   String invAim) {
+        // 1.定义变量
+        // 定义 变量.市价Dto
+        MarketPriceDto marketPriceDto = new MarketPriceDto();
+
+        marketPriceDto.setPrice(BigDecimal.ZERO);
+
+        //行情查询日期
+        Date queryDate=null;
+
+        List<TargetSearchDto> queryCriteria = new ArrayList<>();
+        TargetSearchDto targetSearchDto = new TargetSearchDto();
+        targetSearchDto.setQueryType(ValDictCodeList.标的_信息.getValue());
+        queryCriteria.add(targetSearchDto);
+        Map<TargetSearchDto, Object> targetSearchMap = this.getTargetInfo(finProdId,
+                queryCriteria);
+        TargetFinProduct targetFinProduct = (TargetFinProduct)targetSearchMap.get(targetSearchDto);
+        // 判断是否为空
+        if (targetFinProduct == null) {
+            return marketPriceDto;
+        }
+        // 赋值市场代码
+        String finprodMarketId = targetFinProduct.getFinprodMarketId();
+
+        // 查看数据库配置表 - 特殊资产配置开关是否。只有开关打开才执行特殊资产逻辑
+        String specialAssetConfigSwitch = CacheUtil.getSysParam("SPECIAL_ASSET_CONFIG_SWITCH");
+        if ("ON".equals(specialAssetConfigSwitch)) {
+            // 调共通方法-【详细设计-标的类共通方法设计】-估值方案特殊资产配置查询SHEET
+            List<SchemeDetailDto> specialList = this.getSpecialSchemeDetail(happenDate, booksetId,
+                    DictCodeListExt1.配置方案类型_估值方案.getValue(), finProdId);
+            SchemeDetailDto specialDto = null;
+            if (specialList != null && !specialList.isEmpty()) {
+                for (SchemeDetailDto item : specialList) {
+                    if (item.getInvAim() == null || item.getInvAim().equals(invAim)) {
+                        specialDto = item;
+                        break;
+                    }
+                }
+            }
+
+            // 特殊资产方案有值的情况
+            if (specialDto != null) {
+                if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(specialDto.getInvAim())) {
+                    // 变量.市价净价 = 0;
+                    marketPriceDto.setPrice(BigDecimal.ZERO);
+                }
+                else if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(invAim)
+                        || DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(invAim)) {
+                    // 估值方法为成本法
+                    if (DictCodeListExt1.估值方法_成本法.getValue().equals(specialDto.getValuationMethod())
+                            || DictCodeListExt1.估值方法_摊余成本法.getValue().equals(specialDto.getValuationMethod())) {
+                        marketPriceDto.setPrice(BigDecimal.ZERO);
+                    }
+                    // 市值法、市值成本孰低法
+                    else {
+                        // 获取行情查询日期
+                        queryDate = getQuotationQueryDate(specialDto.getValuationDate(), happenDate);
+                        // 查询行情价格
+                        marketPriceDto = getQuotation(queryDate, specialDto.getValuationPrice(),
+                                specialDto.getValuationPrice2(), finprodMarketId,
+                                DictCodeListExt1.金融产品类型_计划类资产.getValue(), specialDto.getPriceClass());
+                        // 小数位处理
+                        setQuotaDigit(specialDto.getQuotaDigit(), marketPriceDto, specialDto.getPriceTailMode());
+                    }
+                }
+                if(queryDate!=null){
+                    //理论估值日期
+                    String isHoliday = calculationCommonService.getIsHoliday(queryDate,targetFinProduct.getCalendarId());
+                    if("0".equals(isHoliday)){
+                        marketPriceDto.setSchemeValDate(queryDate);
+                    }else{
+                        marketPriceDto.setSchemeValDate(calculationCommonService.getCDate(queryDate,targetFinProduct.getCalendarId()));
+                    }
+                }
+                return marketPriceDto;
+            }
+        }
+
+        // 2.调用共通查询估值方案
+        Map<String, Object> params = new HashMap<>();
+        params.put("happenDate", happenDate);
+        params.put("booksetId", booksetId);
+        List<SchemeDetailDto> listSchemeDetailDto = this.getSchemeDetail(happenDate, booksetId,
+                DictCodeListExt1.证券品种_计划类资产_收益型.getValue(), DictCodeListExt1.配置方案类型_估值方案.getValue(),
+                targetFinProduct.getTradeMarket(), targetFinProduct.getType1(), invAim);
+        if (CollectionUtils.isEmpty(listSchemeDetailDto) || listSchemeDetailDto.get(0) == null) {
+            return marketPriceDto;
+        }
+        SchemeDetailDto schemeDetailDto = listSchemeDetailDto.get(0);
+
+        if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(invAim)) {
+            marketPriceDto.setPrice(BigDecimal.ZERO);
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(invAim)
+                || DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(invAim)) {
+            // 估值方法为成本法
+            if (DictCodeListExt1.估值方法_成本法.getValue().equals(schemeDetailDto.getValuationMethod())
+                    || DictCodeListExt1.估值方法_摊余成本法.getValue().equals(schemeDetailDto.getValuationMethod())) {
+                marketPriceDto.setPrice(BigDecimal.ZERO);
+            }
+            // 市值法、市值成本孰低法
+            else {
+                // 获取行情查询日期
+                queryDate = getQuotationQueryDate(schemeDetailDto.getValuationDate(), happenDate);
+                // 查询行情价格
+                marketPriceDto = getQuotation(queryDate, schemeDetailDto.getValuationPrice(),
+                        schemeDetailDto.getValuationPrice2(), finprodMarketId,
+                        DictCodeListExt1.金融产品类型_计划类资产.getValue(), schemeDetailDto.getPriceClass());
+                setQuotaDigit(schemeDetailDto.getQuotaDigit(), marketPriceDto,schemeDetailDto.getPriceTailMode());
+            }
+        }
+
+        if(queryDate!=null){
+            //理论估值日期
+            String isHoliday = calculationCommonService.getIsHoliday(queryDate,targetFinProduct.getCalendarId());
+
+            if("0".equals(isHoliday)){
+                marketPriceDto.setSchemeValDate(queryDate);
+            }else{
+                marketPriceDto.setSchemeValDate(calculationCommonService.getCDate(queryDate,targetFinProduct.getCalendarId()));
+            }
+        }
+
+        return marketPriceDto;
+    }
+
+    /**
+     * 共通计算债券行权后的公允价值
+     * @param booksetId 账套代码
+     * @param finprodId 金融产品代码
+     * @param invAim 投资母
+     * @param marketPrice 市价
+     * @param calculationNum 数量
+     * @param happenDate 发生日
+     * @return
+     */
+    public BigDecimal calculationSecFairValue(String booksetId, String finprodId, String invAim, BigDecimal marketPrice,
+                                              BigDecimal calculationNum, Date happenDate) {
+
+        //1.定义变量
+        //定义 变量.公允价值变动是否启用行权价
+        String 公允价值变动是否启用行权价 = "";
+        //定义 变量.行权回售申请交易处理
+        String 行权回售申请交易处理 = "";
+        //定义 变量.公允价值变动
+        BigDecimal 公允价值变动 = BigDecimal.ZERO;
+        //定义 变量.行权申请信息DTO
+        //2.处理详情
+        //2.1 查询账套参数配置信息
+        // 账套核算参数查询
+        List<String> paramCodeList = new ArrayList<String>();
+        // DL_ACCR_TYPE 账套配置表参数项_拆借计提方式
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_公允价值变动是否启用行权价.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_行权回售申请交易处理.getValue());
+        Map<String, Object> getValBokBooksetExtMap = accountingCommonService.getValBokBooksetExtForMap(booksetId, paramCodeList);
+        //调用账务类共通（DTO.账套代码, 参数项：如下）
+        //EXEC_PRICE_CAL_TYPE	公允价值变动是否启用行权价
+        if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_公允价值变动是否启用行权价.getValue()) != null){
+            公允价值变动是否启用行权价 = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_公允价值变动是否启用行权价.getValue());
+        }
+        //变量.公允价值变动是否启用行权价 = 返回值
+        if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_行权回售申请交易处理.getValue()) != null){
+            行权回售申请交易处理 = (String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_行权回售申请交易处理.getValue());
+        }
+        //IF 变量.公允价值变动是否启用行权价 IS  NULL AND 数据字典：是否.否 eq 变量.公允价值变动是否启用行权价
+        if(StringUtil.isEmpty(公允价值变动是否启用行权价) || StringUtil.equals(DictCodeList.是否_否.getValue(), 公允价值变动是否启用行权价)) {
+            //变量.公允价值变动 =	输入.市价 * 输入.计算成本数量
+            公允价值变动 = ArithmeticUtil.multiply(marketPrice, calculationNum);
+            return 公允价值变动;
+        }
+        //调用共通设计->【详细设计-交易信息查询共通方法设计.xlsx】->债券行权回售申请查询SHEET
+        ValExecApplyInfoDto valExecApplyInfoDto = valTradeCommonService.secExecApplyQuery(booksetId, finprodId, invAim,
+                happenDate, 行权回售申请交易处理);
+        if(valExecApplyInfoDto == null) {
+            //变量.公允价值变动 =	输入.市价 * 输入.计算成本数量
+            公允价值变动 = ArithmeticUtil.multiply(marketPrice, calculationNum);
+            return 公允价值变动;
+        }
+        //IF 输入.计算成本数量 <= 变量.行权申请信息DTO.行权份额
+        if(calculationNum.compareTo(valExecApplyInfoDto.getExecNum()) <= 0) {
+            //变量.公允价值变动 =		变量.行权申请信息DTO.行权份额 * 变量.行权申请信息DTO.行权价格
+            公允价值变动 = ArithmeticUtil.multiply(valExecApplyInfoDto.getExecPrice(), valExecApplyInfoDto.getExecNum());
+        }
+        else {
+            //变量.公允价值变动 =变量.行权申请信息DTO.行权份额 * 变量.行权申请信息DTO.行权价格 + 输入.市价*(输入.计算成本数量-变量.行权申请信息DTO.行权份额)
+            公允价值变动 = ArithmeticUtil.doAdd(
+                    ArithmeticUtil.multiply(valExecApplyInfoDto.getExecPrice(), valExecApplyInfoDto.getExecNum()),
+                    ArithmeticUtil.multiply(marketPrice,
+                            ArithmeticUtil.doSub(calculationNum, valExecApplyInfoDto.getExecNum()))
+            );
+        }
+        return 公允价值变动;
+    }
+
+    /**
+     * 行权交易差额
+     * add by yanya on 20210310
+     * @param booksetId 账套代码
+     * @param bookDate 入账日
+     * @param bokDetailId 账务明细代码
+     * @param rstBaseinfo 标的信息
+     * @param dealNow 行权确认交易
+     * @param batchExedetailSeqNo 批处理编号
+     * @return
+     */
+    public ValExecFeeDiffDto calculationFeeDetailDiff(String booksetId, Date bookDate, String bokDetailId, TargetFinProduct rstBaseinfo,
+                                                      FinProductDealInfoComDTO dealNow) {
+        //1.定义变量
+        //定义 变量.行权交易差额信息
+        ValExecFeeDiffDto result = new ValExecFeeDiffDto();
+        //定义 变量.交易各种费用_差额
+        //印花税差额
+        BigDecimal 印花税差额 = BigDecimal.ZERO;
+        //经手费差额
+        BigDecimal 经手费差额 = BigDecimal.ZERO;
+        //证管费差额
+        BigDecimal 证管费差额 = BigDecimal.ZERO;
+        //结算费差额
+        BigDecimal 结算费差额 = BigDecimal.ZERO;
+        //佣金差额
+        BigDecimal 佣金差额 = BigDecimal.ZERO;
+        //交易手续费差额
+        BigDecimal 交易手续费差额 = BigDecimal.ZERO;
+        //结算手续费差额
+        BigDecimal 结算手续费差额 = BigDecimal.ZERO;
+        //通道费差额
+        BigDecimal 通道费差额 = BigDecimal.ZERO;
+        //交易费用差额
+        BigDecimal 交易费用差额 = BigDecimal.ZERO;
+
+        //印花税随交易支付差额
+        BigDecimal 印花税随交易支付差额 = BigDecimal.ZERO;
+        //经手费随交易支付差额
+        BigDecimal 经手费随交易支付差额 = BigDecimal.ZERO;
+        //证管费随交易支付差额
+        BigDecimal 证管费随交易支付差额 = BigDecimal.ZERO;
+        //结算费随交易支付差额
+        BigDecimal 结算费随交易支付差额 = BigDecimal.ZERO;
+        //佣金随交易支付差额
+        BigDecimal 佣金随交易支付差额 = BigDecimal.ZERO;
+        //交易手续费随交易支付差额
+        BigDecimal 交易手续费随交易支付差额 = BigDecimal.ZERO;
+        //结算手续费随交易支付差额
+        BigDecimal 结算手续费随交易支付差额 = BigDecimal.ZERO;
+        //交易费用随交易支付差额
+        BigDecimal 交易费用不随交易支付差额 = BigDecimal.ZERO;
+        //定义 变量.利息差额
+        //利息金额差额
+        BigDecimal 利息金额差额 = BigDecimal.ZERO;
+        //定义 变量.清算款差额
+        //清算款差额
+        BigDecimal 清算款差额 = BigDecimal.ZERO;
+        //定义 变量.应计利息 = 0
+        BigDecimal 应计利息 = BigDecimal.ZERO;
+        //定义 变量.交易金额_清算款 =0
+        BigDecimal 交易金额清算款 = BigDecimal.ZERO;
+        //定义 变量.交易份额 = 0
+        BigDecimal 交易份额 = BigDecimal.ZERO;
+        //定义 变量.交易本金 = 0
+        BigDecimal 交易本金 = BigDecimal.ZERO;
+        //2.处理详情
+        //2.1 数据初始化
+        Map<String, String> map = this.getPsAndTableIdByExecDeal(dealNow.getPs(), dealNow.getInvAim());
+        //定义 变量.交易方向
+        String 交易方向 = map.get("ps");
+        //定义 变量.会计事件代码
+        String 会计事件代码 = map.get("tableId");
+        //调用账务共通设计->【凭证最新账务查询】
+        List<BookLatestInfoDto> listSubjectBalanceInt = this.quaryExecSubjectBalance(booksetId, bookDate, bokDetailId,
+                会计事件代码, dealNow.getInvAim());
+        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(listSubjectBalanceInt)) {
+            String 成本基础科目性质 = this.getExecCbBaseSubjectNatrue(dealNow.getInvAim());
+            String 应计利息基础科目性质 = this.getExecYjlxBaseSubjectNatrue(dealNow.getInvAim());
+            String 清算款基础科目性质 = DictCodeBaseSubjectNatrue.清算款.getValue();
+            for(BookLatestInfoDto item : listSubjectBalanceInt) {
+                //if(变量.账务明细.基础科目性质 = XX应计利息的账务明细 )
+                if(StringUtil.equals(应计利息基础科目性质, item.getBaseSubjectNature())) {
+                    ///变量.账务明细.借贷方向为借时
+                    if(StringUtil.equals(item.getCdFlag(), DictCodeList.借贷方向_借.getValue())) {
+                        //变量.应计利息 -= 变量.账务明细.原币发生额
+                        应计利息 = ArithmeticUtil.doSub(应计利息, item.getoHappenAmt());
+                    }
+                    //变量.账务明细.借贷方向为贷时
+                    else if(StringUtil.equals(item.getCdFlag(), DictCodeList.借贷方向_贷.getValue())) {
+                        //变量.应计利息 +=	变量.账务明细.原币发生额
+                        应计利息 = ArithmeticUtil.doAdd(应计利息, item.getoHappenAmt());
+                    }
+                }
+                // if(变量.账务明细.基础科目性质 = XX成本的账务明细 )
+                else if(StringUtil.equals(成本基础科目性质, item.getBaseSubjectNature())) {
+                    //变量.交易份额 += 变量.账务明细.发生数量
+                    交易份额 = ArithmeticUtil.doAdd(交易份额, item.getHappenNumber());
+                    //变量.交易本金 += 变量.账务明细.原币发生额
+                    交易本金 = ArithmeticUtil.doAdd(交易本金, item.getoHappenAmt());
+                }
+                //if(变量.账务明细.基础科目性质 = 清算款的账务明细 )
+                else if(StringUtil.equals(清算款基础科目性质, item.getBaseSubjectNature())) {
+                    //变量.交易金额_清算款 += 变量.账务明细.原币发生额
+                    交易金额清算款 = ArithmeticUtil.doAdd(交易金额清算款, item.getoHappenAmt());
+                }
+
+            };
+        }
+        //2.2 费用差额
+        //定义 变量.确认交易各种费用
+        //调用 共通【费用处理共通】  参考本设计书sheet【费用处理共通】
+        DealTypesFeeDto dealTypesFeeDto = calculationCommonService.quaryDealTypesFeeamt(
+                dealNow.getValTradeFeeDetailList(), dealNow.getProdId(), dealNow.getPortfolioId());
+        //IF 数据字典:交易方向.行权-回售 eq 入参.行权确认交易DTO.交易方向
+        if(StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dealNow.getPs())) {
+            List<TrdTradeFeeDetail> allList = new ArrayList<>();
+            //定义查询参数
+            Map<String, Object> 入账查询参数 = new HashMap<>();
+            //账套代码					交易类账务处理结果.账套代码
+            入账查询参数.put("booksetId", booksetId);
+            //金融产品代码					交易明细.金融产品代码
+            入账查询参数.put("finprodId", dealNow.getFinprodId());
+            //金融产品类型					交易明细.金融产品类型
+            入账查询参数.put("finprodType", dealNow.getFinprodType());
+            //投资目的					交易明细.投资目的
+            入账查询参数.put("invAim", dealNow.getInvAim());
+            //业务类型					数据字典：业务类型.债券交易
+            入账查询参数.put("busiType", DictCodeList.业务类型_债券交易预处理.getValue());
+            //交易方向					数据字典：交易方向.收息到账
+            入账查询参数.put("ps", 交易方向);
+            //分支序号					交易明细.分支序号
+            入账查询参数.put("branch", dealNow.getBranch());
+            //入账日_结束日					交易类账务处理结果.入账日 - 1
+            入账查询参数.put("bookDate", dealNow.getMdate());
+            //调用【交易信息查询共通方法设计-入账交易信息查询】
+            List<ValTrdProductDealInfoDto>  dealList = valTradeCommonService.findEntryTradeInfo(入账查询参数);
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(dealList)) {
+                //LOOP 变量.交易信息List  交易信息ENTITY
+                for(ValTrdProductDealInfoDto item : dealList) {
+                    //调用【交易信息查询共通方法设计-交易费用明细查询】
+                    List<TrdTradeFeeDetail> fee = valTradeCommonService.findTrdTradeFeeDetailInfo(item.getTradeId());
+                    if (org.apache.commons.collections.CollectionUtils.isNotEmpty(fee)) {
+                        allList.addAll(fee);
+                    }
+                }
+            }
+            //调用 共通【费用处理共通】  参考本设计书sheet【费用处理共通】
+            DealTypesFeeDto applyFeeDto = calculationCommonService.quaryDealTypesFeeamt(allList, dealNow.getProdId(), dealNow.getPortfolioId());
+            //变量.交易各种费用_差额.印花税	=		变量.确认交易各种费用.印花税	-		变量.交易各种费用.印花税
+            印花税差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getStampDuty(), applyFeeDto.getStampDuty());
+            //变量.交易各种费用_差额.经手费	=		变量.确认交易各种费用.经手费	-		变量.交易各种费用.经手费
+            经手费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getBrokerage(), applyFeeDto.getBrokerage());
+            //变量.交易各种费用_差额.证管费	=		变量.确认交易各种费用.证管费	-		变量.交易各种费用.证管费
+            证管费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getCertificateFee(), applyFeeDto.getCertificateFee());
+            //变量.交易各种费用_差额.结算费	=		变量.确认交易各种费用.结算费	-		变量.交易各种费用.结算费
+            结算费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getClearingFee(), applyFeeDto.getClearingFee());
+            //变量.交易各种费用_差额.佣金	=		变量.确认交易各种费用.佣金		-		变量.交易各种费用.佣金
+            佣金差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getCommission(), applyFeeDto.getCommission());
+            //变量.交易各种费用_差额.交易手续费	=		变量.确认交易各种费用.交易手续费	-		变量.交易各种费用.交易手续费
+            交易手续费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getTransactionFee(), applyFeeDto.getTransactionFee());
+            //变量.交易各种费用_差额.结算手续费	=		变量.确认交易各种费用.结算手续费	-		变量.交易各种费用.结算手续费
+            结算手续费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getSettlementFee(), applyFeeDto.getSettlementFee());
+            //变量.交易各种费用_差额.交易费用	=		变量.确认交易各种费用.交易费用		-		变量.交易各种费用.交易费用
+            交易费用差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getFeeAmt(), applyFeeDto.getFeeAmt());
+            //变量.交易各种费用_差额.通道费		=		变量.确认交易各种费用.通道费		-		变量.交易各种费用.通道费
+            通道费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getChlFee(), applyFeeDto.getChlFee());
+            //变量.交易各种费用_差额.随交易支付_印花税	=	变量.确认交易各种费用.随交易支付_印花税	-	变量.交易各种费用.随交易支付_印花税
+            印花税随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getStampDutyForDealPay(), applyFeeDto.getStampDutyForDealPay());
+            //变量.交易各种费用_差额.随交易支付_经手费	=	变量.确认交易各种费用.随交易支付_经手费	-	变量.交易各种费用.随交易支付_经手费
+            经手费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getBrokerageForDealPay(), applyFeeDto.getBrokerageForDealPay());
+            //变量.交易各种费用_差额.随交易支付_证管费	=	变量.确认交易各种费用.随交易支付_证管费	-	变量.交易各种费用.随交易支付_证管费
+            证管费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getCertificateFeeForDealPay(), applyFeeDto.getCertificateFeeForDealPay());
+            //变量.交易各种费用_差额.随交易支付_结算费	=	变量.确认交易各种费用.随交易支付_结算费	-	变量.交易各种费用.随交易支付_结算费
+            结算费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getClearingFeeForDealPay(), applyFeeDto.getClearingFeeForDealPay());
+            //变量.交易各种费用_差额.随交易支付_佣金		=	变量.确认交易各种费用.随交易支付_佣金  -	变量.交易各种费用.随交易支付_佣金
+            佣金随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getCommissionForDealPay(), applyFeeDto.getCommissionForDealPay());
+            //变量.交易各种费用_差额.随交易支付_交易手续费	=	变量.确认交易各种费用.随交易支付_交易手续费	-	变量.交易各种费用.随交易支付_交易手续费
+            交易手续费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getTransactionFeeForDealPay(), applyFeeDto.getTransactionFeeForDealPay());
+            //变量.交易各种费用_差额.随交易支付_结算手续费	=	变量.确认交易各种费用.随交易支付_结算手续费	-	变量.交易各种费用.随交易支付_结算手续费
+            结算手续费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getSettlementFeeForDealPay(), applyFeeDto.getSettlementFeeForDealPay());
+            //变量.交易各种费用_差额.不随交易费用	=		变量.确认交易各种费用.不随交易费用	-		变量.交易各种费用.不随交易费用
+            交易费用不随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getNoFeeAmt(), applyFeeDto.getNoFeeAmt());
+
+        }
+        //ELSE IF 数据字典:交易方向.行权-赎回 eq 入参.行权确认交易DTO.交易方向
+        else if(StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dealNow.getPs())) {
+            //变量.交易各种费用_差额 = 变量.确认交易各种费用
+            //变量.交易各种费用_差额.印花税	=		变量.确认交易各种费用.印花税	-		变量.交易各种费用.印花税
+            印花税差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getStampDuty());
+            //变量.交易各种费用_差额.经手费	=		变量.确认交易各种费用.经手费	-		变量.交易各种费用.经手费
+            经手费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getBrokerage());
+            //变量.交易各种费用_差额.证管费	=		变量.确认交易各种费用.证管费	-		变量.交易各种费用.证管费
+            证管费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getCertificateFee());
+            //变量.交易各种费用_差额.结算费	=		变量.确认交易各种费用.结算费	-		变量.交易各种费用.结算费
+            结算费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getClearingFee());
+            //变量.交易各种费用_差额.佣金	=		变量.确认交易各种费用.佣金		-		变量.交易各种费用.佣金
+            佣金差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getCommission());
+            //变量.交易各种费用_差额.交易手续费	=		变量.确认交易各种费用.交易手续费	-		变量.交易各种费用.交易手续费
+            交易手续费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getTransactionFee());
+            //变量.交易各种费用_差额.结算手续费	=		变量.确认交易各种费用.结算手续费	-		变量.交易各种费用.结算手续费
+            结算手续费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getSettlementFee());
+            //变量.交易各种费用_差额.交易费用	=		变量.确认交易各种费用.交易费用		-		变量.交易各种费用.交易费用
+            交易费用差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getFeeAmt());
+            //变量.交易各种费用_差额.通道费		=		变量.确认交易各种费用.通道费		-		变量.交易各种费用.通道费
+            通道费差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getChlFee());
+            //变量.交易各种费用_差额.随交易支付_印花税	=	变量.确认交易各种费用.随交易支付_印花税	-	变量.交易各种费用.随交易支付_印花税
+            印花税随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getStampDutyForDealPay());
+            //变量.交易各种费用_差额.随交易支付_经手费	=	变量.确认交易各种费用.随交易支付_经手费	-	变量.交易各种费用.随交易支付_经手费
+            经手费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getBrokerageForDealPay());
+            //变量.交易各种费用_差额.随交易支付_证管费	=	变量.确认交易各种费用.随交易支付_证管费	-	变量.交易各种费用.随交易支付_证管费
+            证管费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getCertificateFeeForDealPay());
+            //变量.交易各种费用_差额.随交易支付_结算费	=	变量.确认交易各种费用.随交易支付_结算费	-	变量.交易各种费用.随交易支付_结算费
+            结算费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getClearingFeeForDealPay());
+            //变量.交易各种费用_差额.随交易支付_佣金		=	变量.确认交易各种费用.随交易支付_佣金  -	变量.交易各种费用.随交易支付_佣金
+            佣金随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getCommissionForDealPay());
+            //变量.交易各种费用_差额.随交易支付_交易手续费	=	变量.确认交易各种费用.随交易支付_交易手续费	-	变量.交易各种费用.随交易支付_交易手续费
+            交易手续费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getTransactionFeeForDealPay());
+            //变量.交易各种费用_差额.随交易支付_结算手续费	=	变量.确认交易各种费用.随交易支付_结算手续费	-	变量.交易各种费用.随交易支付_结算手续费
+            结算手续费随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getSettlementFeeForDealPay());
+            //变量.交易各种费用_差额.不随交易费用	=		变量.确认交易各种费用.不随交易费用	-		变量.交易各种费用.不随交易费用
+            交易费用不随交易支付差额 = ArithmeticUtil.doSub(dealTypesFeeDto.getNoFeeAmt());
+        }
+        //2.3 利息差额处理
+        //IF 数据字典：投资目的.公允价值变动类 eq 入参.行权确认交易DTO.投资目的
+        if (StringUtil.equals(DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue(), dealNow.getInvAim())) {
+            //变量.利息差额 =					入参.行权确认交易DTO.利息金额 - 变量.应计利息
+            利息金额差额 = ArithmeticUtil.doSub(dealNow.getIntAmt(), 应计利息);
+        }
+        else {
+            //IF 数据字典：息票品种.零息 eq 入参.标的信息.息票品种 OR 数据字典：息票品种.贴现 eq 入参.标的信息.息票品种
+            if (StringUtil.equals(DictCodeList.息票品种_零息.getValue(), rstBaseinfo.getCouponSpecies())
+                    || StringUtil.equals(DictCodeList.息票品种_贴现.getValue(), rstBaseinfo.getCouponSpecies())) {
+                //变量.利息差额 = 0
+                利息金额差额 = BigDecimal.ZERO;
+            }
+            //息票品种非零息、贴现
+            else {
+                //变量.利息差额 =	入参.行权确认交易DTO.利息金额 - 变量.应计利息
+                利息金额差额 = ArithmeticUtil.doSub(dealNow.getIntAmt(), 应计利息);
+            }
+        }
+        //2.4 清算款差额处理
+        //变量.清算款差额 = 入参.行权确认交易DTO.交易金额 - 变量.交易金额_清算款
+        清算款差额 = ArithmeticUtil.doSub(dealNow.getTradeAmt(), 交易金额清算款);
+        //交易金额差额
+        result.setTradeAmtDiff(清算款差额);
+        //利息金额差额
+        result.setIntAmtDiff(利息金额差额);
+        //印花税差额
+        result.setStampDutyDiff(印花税差额);
+        //经手费差额
+        result.setBrokerageDiff(经手费差额);
+        //证管费差额
+        result.setCertificateFeeDiff(证管费差额);
+        //结算费差额
+        result.setClearingFeeDiff(结算费差额);
+        //佣金差额
+        result.setCommissionDiff(佣金差额);
+        //交易手续费差额
+        result.setTransactionFeeDiff(交易手续费差额);
+        //结算手续费差额
+        result.setSettlementFeeDiff(结算手续费差额);
+        //随交易支付_印花税差额
+        result.setStampDutyForDealPayDiff(印花税随交易支付差额);
+        //随交易支付_经手费差额
+        result.setBrokerageForDealPayDiff(经手费随交易支付差额);
+        //随交易支付_证管费差额
+        result.setCertificateFeeForDealPayDiff(证管费随交易支付差额);
+        //随交易支付_结算费差额
+        result.setClearingFeeForDealPayDiff(结算费随交易支付差额);
+        //随交易支付_佣金差额
+        result.setCommissionForDealPayDiff(佣金随交易支付差额);
+        //随交易支付_交易手续费差额
+        result.setTransactionFeeForDealPayDiff(交易手续费随交易支付差额);
+        //随交易支付_结算手续费差额
+        result.setSettlementFeeForDealPayDiff(结算手续费随交易支付差额);
+        //通道费差额
+        result.setChlFeeDiff(通道费差额);
+        //交易费用差额
+        result.setFeeAmtDiff(交易费用差额);
+        //不随交易支付费用差额
+        result.setNoFeeAmtDiff(交易费用不随交易支付差额);
+        //账务明细代码
+
+        //印花税账务明细代码
+        result.setStampDutyCode(dealTypesFeeDto.getStampDutyCode());
+        //经手费账务明细代码
+        result.setBrokerageCode(dealTypesFeeDto.getBrokerageCode());
+        //证管费账务明细代码
+        result.setCertificateFeeCode(dealTypesFeeDto.getCertificateFeeCode());
+        //结算费账务明细代码
+        result.setClearingFeeCode(dealTypesFeeDto.getClearingFeeCode());
+        //佣金账务明细代码
+        result.setCommissionCode(dealTypesFeeDto.getCommissionCode());
+        //交易手续费账务明细代码
+        result.setTransactionFeeCode(dealTypesFeeDto.getTransactionFeeCode());
+        //结算手续费账务明细代码
+        result.setSettlementFeeCode(dealTypesFeeDto.getSettlementFeeCode());
+        //通道费账务明细代码
+        result.setChlFeeCode(dealTypesFeeDto.getChlFeeCode());
+
+        return result;
+    }
+
+    /**
+     * 根据行权交易方向投资目的获取行权申请的交易方向及场景代码
+     * @param ps 行权确认交易方向
+     * @param invAim 投资目的
+     * @return
+     */
+    private Map<String, String> getPsAndTableIdByExecDeal(String ps, String invAim) {
+        String returnPs = ps;//返回的交易方向
+        String tableId = "";//返回的场景代码
+        //数据字典：交易方向.行权-回售+数据字典：投资目的.摊余成本类=数据字典：交易方向.行权-回售申请+数据字典：会计事件代码.摊余成本债券-回售申请
+        if(StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), ps)
+                && StringUtil.equals(DictCodeListExt1.投资目的_摊余成本类.getValue(), invAim)) {
+            returnPs = DictCodeListExt3.交易方向_行权回售申请.getValue();
+            tableId = DictCodeListTableId.会计场景代码_摊余成本债券_回售申请.getValue();
+        }
+        //数据字典：交易方向.行权-回售+数据字典：投资目的.公允价值变动类=数据字典：交易方向.行权-回售申请+数据字典：会计事件代码.公允价值损益类债券-回售申请
+        else if (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), ps)
+                && StringUtil.equals(DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue(), invAim)) {
+            returnPs = DictCodeListExt3.交易方向_行权回售申请.getValue();
+            tableId = DictCodeListTableId.会计场景代码_公允价值损益类债券_回售申请.getValue();
+        }
+        //数据字典：交易方向.行权-回售+数据字典：投资目的.综合收益类=数据字典：交易方向.行权-回售申请+数据字典：会计事件代码.综合收益债券-回售申请
+        else if (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), ps)
+                && StringUtil.equals(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue(), invAim)) {
+            returnPs = DictCodeListExt3.交易方向_行权回售申请.getValue();
+            tableId = DictCodeListTableId.会计场景代码_综合收益债券_回售申请.getValue();
+        }
+        //数据字典：交易方向.行权-赎回+数据字典：投资目的.摊余成本类=数据字典：交易方向.行权-赎回结转+数据字典：会计事件代码.摊余成本债券-赎回结转
+        else if (StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), ps)
+                && StringUtil.equals(DictCodeListExt1.投资目的_摊余成本类.getValue(), invAim)) {
+            returnPs = DictCodeListExt3.交易方向_行权赎回结转.getValue();
+            tableId = DictCodeListTableId.会计场景代码_摊余成本债券_赎回结转.getValue();
+        }
+        //数据字典：交易方向.行权-赎回+数据字典：投资目的.公允价值变动类=数据字典：交易方向.行权-赎回结转+数据字典：会计事件代码.公允价值损益类债券-赎回结转
+        else if (StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), ps)
+                && StringUtil.equals(DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue(), invAim)) {
+            returnPs = DictCodeListExt3.交易方向_行权赎回结转.getValue();
+            tableId = DictCodeListTableId.会计场景代码_公允价值损益类债券_赎回结转.getValue();
+        }
+        //数据字典：交易方向.行权-赎回+数据字典：投资目的.综合收益类=数据字典：交易方向.行权-赎回结转+数据字典：会计事件代码.综合收益债券-赎回结转
+        else if (StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), ps)
+                && StringUtil.equals(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue(), invAim)) {
+            returnPs = DictCodeListExt3.交易方向_行权赎回结转.getValue();
+            tableId = DictCodeListTableId.会计场景代码_综合收益债券_赎回结转.getValue();
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("ps", returnPs);
+        map.put("tableId", tableId);
+        return map;
+    }
+
+    /**
+     * 根据投资目的获取债券的应计利息基础科目性质
+     * @param invAim 投资目的
+     * @return
+     */
+    private String getExecYjlxBaseSubjectNatrue(String invAim) {
+        String yjlxBaseSubjectNatrue = null;
+        if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(invAim)) {
+            yjlxBaseSubjectNatrue = DictCodeBaseSubjectNatrue.摊余成本类债券应计利息.getValue();
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(invAim)) {
+            yjlxBaseSubjectNatrue = DictCodeBaseSubjectNatrue.公允价值损益类应计利息.getValue();
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(invAim)) {
+            yjlxBaseSubjectNatrue = DictCodeBaseSubjectNatrue.综合收益类应计利息.getValue();
+        }
+        return yjlxBaseSubjectNatrue;
+    }
+
+    /**
+     * 根据投资目的获取债券的成本基础科目性质
+     * @param invAim 投资目的
+     * @return
+     */
+    private String getExecCbBaseSubjectNatrue(String invAim) {
+        String cbBaseSubjectNatrue = null;
+        if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(invAim)) {
+            cbBaseSubjectNatrue = DictCodeBaseSubjectNatrue.摊余成本类成本.getValue();
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(invAim)) {
+            cbBaseSubjectNatrue = DictCodeBaseSubjectNatrue.公允价值损益类_成本.getValue();
+        }
+        else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(invAim)) {
+            cbBaseSubjectNatrue = DictCodeBaseSubjectNatrue.综合收益类成本.getValue();
+        }
+        return cbBaseSubjectNatrue;
+    }
+
+    /**
+     * 调用共通最新账务查询一日余额(行权申请查询)
+     * @param booksetId 账套代码
+     * @param bookDate 入账日
+     * @param bokDetailId 账务明细代码
+     * @param tableId 场景代码
+     * @param invAim 投资目的
+     * @param batchExedetailSeqNo 批处理编号
+     * @return
+     */
+    private List<BookLatestInfoDto> quaryExecSubjectBalance(String booksetId, Date bookDate, String bokDetailId,
+                                                            String tableId, String invAim) {
+        // 科目余额查询参数
+        SubjectBalanceSearchDto searchDao = new SubjectBalanceSearchDto();
+        searchDao.setBooksetId(booksetId);
+        searchDao.setBokDetailId(bokDetailId);
+        searchDao.setBookDate(bookDate);
+        searchDao.setTableId(tableId);
+        // 2.2.应计利息类科目余额
+        List<BookLatestInfoDto> list = new ArrayList<BookLatestInfoDto>();
+        List<String> baseSubjectNatureList = new ArrayList<>();//查询的基础科目性质
+        //添加成本
+        baseSubjectNatureList.add(this.getExecCbBaseSubjectNatrue(invAim));
+        //添加应计利息
+        baseSubjectNatureList.add(this.getExecYjlxBaseSubjectNatrue(invAim));
+        //添加清算款
+        baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.清算款.getValue());
+        searchDao.setBaseSubjectNatureList(baseSubjectNatureList);
+        list = accountingCommonService.getBookLatestInfo(booksetId, bookDate, bokDetailId, baseSubjectNatureList, tableId,
+                null, null, null, null, null);
+        return list;
     }
 }

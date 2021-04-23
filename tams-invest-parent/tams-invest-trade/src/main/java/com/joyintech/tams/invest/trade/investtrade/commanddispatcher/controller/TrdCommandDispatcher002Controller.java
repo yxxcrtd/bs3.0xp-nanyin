@@ -29,11 +29,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.trade.investtrade.commanddispatcher.dto.TrdCommandDispatcher001Dto;
 import com.joyintech.tams.invest.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
 
@@ -72,8 +76,10 @@ public class TrdCommandDispatcher002Controller extends BaseController{
 		model.addAttribute("PINAN_ASSET_TYPE_F17", DictCodeListExt2.平安资产类型_一级市场债.getValue());
 		model.addAttribute("entrustIds", entrustIds);
 		model.addAttribute("userNames", userNames);
-		String entrustStatus=getParam("entrustStatus");
-		model.addAttribute("entrustStatus", entrustStatus);
+        // add by dubaojun 2020-06-29 上海农商行项目新增是否进入审批流程 start
+        String isApproval = getParam("isApproval");
+        model.addAttribute("isApproval", isApproval);
+        // add by dubaojun 2020-06-29 上海农商行项目新增是否进入审批流程 end
 		return super.init(model);
 	}
 

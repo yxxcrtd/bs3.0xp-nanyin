@@ -3,7 +3,7 @@
     <Worksheet javaBean="com.joyintech.tams.invest.trade.cstptrdmatchinfo.dto.CstpTrdMatchInfoDto">
         <Row>
             <Cell order="1" name="匹配方式">matchTypeStr</Cell>
-            <Cell order="2" name="委托编号">entrustId</Cell>
+            <Cell order="2" name="指令编号">entrustId</Cell>
             <Cell order="3" name="投资经理">invManagerId</Cell>
             <Cell order="4" name="预录入交易编号">preTradeId</Cell>
             <Cell order="5" name="组合代码">portfolioId</Cell>

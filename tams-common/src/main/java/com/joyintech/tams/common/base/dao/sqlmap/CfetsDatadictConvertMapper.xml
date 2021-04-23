@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.CfetsDatadictConvertMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.CfetsDatadictConvert" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="FIELD_CODE" property="fieldCode" jdbcType="VARCHAR" />
+        <result column="FIELD_NAME" property="fieldName" jdbcType="VARCHAR" />
+        <result column="SYSTEM_DICT_CODE" property="systemDictCode" jdbcType="VARCHAR" />
+        <result column="SYSTEM_ITEM_CODE" property="systemItemCode" jdbcType="VARCHAR" />
+        <result column="CFETS_ITEM_CODE" property="cfetsItemCode" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, FIELD_CODE FIELD_CODE, FIELD_NAME FIELD_NAME, SYSTEM_DICT_CODE SYSTEM_DICT_CODE, 
+        SYSTEM_ITEM_CODE SYSTEM_ITEM_CODE, CFETS_ITEM_CODE CFETS_ITEM_CODE, REMARK REMARK, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CfetsDatadictConvertMapper.Base_Column_List" />
+        from CFETS_DATADICT_CONVERT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CfetsDatadictConvertMapper.Base_Column_List" />
+        from CFETS_DATADICT_CONVERT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CfetsDatadictConvertMapper.Base_Column_List" />
+        from CFETS_DATADICT_CONVERT
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CFETS_DATADICT_CONVERT
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.CfetsDatadictConvert" >
+        insert into CFETS_DATADICT_CONVERT (SEQNO, FIELD_CODE, FIELD_NAME, 
+            SYSTEM_DICT_CODE, SYSTEM_ITEM_CODE, CFETS_ITEM_CODE, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{fieldCode,jdbcType=VARCHAR}, #{fieldName,jdbcType=VARCHAR}, 
+            #{systemDictCode,jdbcType=VARCHAR}, #{systemItemCode,jdbcType=VARCHAR}, #{cfetsItemCode,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CfetsDatadictConvert" >
+        insert into CFETS_DATADICT_CONVERT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="fieldCode != null" >
+                FIELD_CODE,
+            </if>
+            <if test="fieldName != null" >
+                FIELD_NAME,
+            </if>
+            <if test="systemDictCode != null" >
+                SYSTEM_DICT_CODE,
+            </if>
+            <if test="systemItemCode != null" >
+                SYSTEM_ITEM_CODE,
+            </if>
+            <if test="cfetsItemCode != null" >
+                CFETS_ITEM_CODE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="fieldCode != null" >
+                #{fieldCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fieldName != null" >
+                #{fieldName,jdbcType=VARCHAR},
+            </if>
+            <if test="systemDictCode != null" >
+                #{systemDictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="systemItemCode != null" >
+                #{systemItemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="cfetsItemCode != null" >
+                #{cfetsItemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CfetsDatadictConvert" >
+        insert into CFETS_DATADICT_CONVERT(SEQNO, FIELD_CODE, FIELD_NAME, SYSTEM_DICT_CODE, 
+        SYSTEM_ITEM_CODE, CFETS_ITEM_CODE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SEQNO, FIELD_CODE, FIELD_NAME, SYSTEM_DICT_CODE, 
+            SYSTEM_ITEM_CODE, CFETS_ITEM_CODE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from CFETS_DATADICT_CONVERT
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.CfetsDatadictConvert" >
+        update CFETS_DATADICT_CONVERT
+        <set >
+            <if test="fieldCode != null" >
+                FIELD_CODE = #{fieldCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fieldName != null" >
+                FIELD_NAME = #{fieldName,jdbcType=VARCHAR},
+            </if>
+            <if test="systemDictCode != null" >
+                SYSTEM_DICT_CODE = #{systemDictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="systemItemCode != null" >
+                SYSTEM_ITEM_CODE = #{systemItemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="cfetsItemCode != null" >
+                CFETS_ITEM_CODE = #{cfetsItemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CfetsDatadictConvert" >
+        update CFETS_DATADICT_CONVERT
+        set FIELD_CODE = #{fieldCode,jdbcType=VARCHAR},
+            FIELD_NAME = #{fieldName,jdbcType=VARCHAR},
+            SYSTEM_DICT_CODE = #{systemDictCode,jdbcType=VARCHAR},
+            SYSTEM_ITEM_CODE = #{systemItemCode,jdbcType=VARCHAR},
+            CFETS_ITEM_CODE = #{cfetsItemCode,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

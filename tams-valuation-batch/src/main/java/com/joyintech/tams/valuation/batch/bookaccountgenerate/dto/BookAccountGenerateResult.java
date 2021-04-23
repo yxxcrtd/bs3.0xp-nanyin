@@ -16,17 +16,19 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.common.base.entity.BokVouchDetail;
 import com.joyintech.tams.common.base.entity.BokVouchMain;
 import com.joyintech.tams.common.base.entity.BokVouchRel;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 
 
 public class BookAccountGenerateResult extends NeedToWriteEntity {
     private List<BokVouchMain> valVouchMain;
     private List<BokVouchDetail> valVouchDetail;
     private List<BokVouchRel> valVouchRel;
+    
     private boolean updateHistory;
     
     public BookAccountGenerateResult(List<BokVouchMain> valVouchMain,
                                      List<BokVouchDetail> valVouchDetail,
-                                     List<BokVouchRel> valVouchRel, boolean updateHistory) {
+                                     List<BokVouchRel> valVouchRel,boolean updateHistory) {
         this.valVouchMain = valVouchMain;
         this.valVouchDetail = valVouchDetail;
         this.valVouchRel = valVouchRel;
@@ -66,5 +68,6 @@ public class BookAccountGenerateResult extends NeedToWriteEntity {
     public void setValVouchRel(List<BokVouchRel> valVouchRel) {
         this.valVouchRel = valVouchRel;
     }
-    
+
+
 }

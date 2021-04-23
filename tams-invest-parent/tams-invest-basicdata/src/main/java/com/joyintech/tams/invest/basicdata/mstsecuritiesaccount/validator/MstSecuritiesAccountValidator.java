@@ -20,6 +20,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto;
 import com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.service.MstSecuritiesAccountService;
 
@@ -49,7 +50,16 @@ public class MstSecuritiesAccountValidator implements BeanValidator{
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             // 删除check
             List<MstSecuritiesAccountDto> list = dto.getSelectedItem();
-            List<MstSecuritiesAccountDto> tempList = mstSecuritiesAccountService.checkAllCodeIsUse(list);
+            List<MstSecuritiesAccountDto> tempList =new ArrayList<MstSecuritiesAccountDto>();
+            if(null!=list) {
+            	tempList = mstSecuritiesAccountService.checkAllCodeIsUse(list);
+            }else {
+            	MstSecuritiesAccountDto tempData=new MstSecuritiesAccountDto();
+            	tempData.setSecAcctId(dto.getSecAcctId());
+            	List<MstSecuritiesAccountDto> oldList=new ArrayList<MstSecuritiesAccountDto>();
+            	oldList.add(tempData);
+            	tempList = mstSecuritiesAccountService.checkAllCodeIsUse(oldList);
+            }
             //判断组合表中是否连着这个证券账户
             if (tempList.size() > 0) {
                 for (MstSecuritiesAccountDto tempDto : tempList) {
@@ -59,6 +69,7 @@ public class MstSecuritiesAccountValidator implements BeanValidator{
                        
                 }
             }
+            return resultList;
         }
         else  if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
         }
@@ -92,6 +103,22 @@ public class MstSecuritiesAccountValidator implements BeanValidator{
                 }
             }
             
+        }
+		
+		//双录校验
+        if(StringUtil.equals(dto.getIsDoubleInput(),DictCodeList.是否_是.getValue())){
+            if(!StringUtil.equals(dto.getRegistOrgContrast(),dto.getRegistOrg())){
+                resultList.add( new ValidMessage("registOrg", "托管机构二次录入信息核对不一致"));
+            }
+            if(!StringUtil.equals(dto.getRecAcctIdContrast(),dto.getRecAcctId())){
+                resultList.add( new ValidMessage("recAcctId", "回款账户二次录入信息核对不一致"));
+            }
+            if(!StringUtil.equals(dto.getTrdAcctIdContrast(),dto.getTrdAcctId())){
+                resultList.add( new ValidMessage("trdAcctId", "资金结算账户二次录入信息核对不一致"));
+            }
+            if(!StringUtil.equals(dto.getTradePlaceContrast(),dto.getTradePlace())){
+                resultList.add( new ValidMessage("tradePlace", "交易场所二次录入信息核对不一致"));
+            }
         }
 
         return resultList;

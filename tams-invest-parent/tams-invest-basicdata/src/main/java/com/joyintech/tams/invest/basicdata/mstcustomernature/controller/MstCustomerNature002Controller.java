@@ -33,13 +33,17 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
-import com.joyintech.tams.invest.basicdata.mstcustomernature.dto.MstCustomerNatureDto;
-import com.joyintech.tams.invest.basicdata.mstcustomernature.service.MstCustomerNatureService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.basicdata.mstcustomernature.dto.MstCustomerNatureDto;
+import com.joyintech.tams.invest.basicdata.mstcustomernature.service.MstCustomerNatureService;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -74,6 +78,13 @@ public class MstCustomerNature002Controller extends BaseController {
      */
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonService;
+    
+    
+    /**
+     * 注入业务主键生产类
+     */
+    @Autowired(required = false)
+    private BaseGetBusinessId baseGetBusinessId;
 
     /**
      * 画面初始化
@@ -91,6 +102,8 @@ public class MstCustomerNature002Controller extends BaseController {
         model.addAttribute("typeValue_07", DictCodeList.客户性质_承销商.getValue());
         model.addAttribute("typeValue_08", DictCodeList.客户性质_存放行.getValue());
         model.addAttribute("typeValue_09", DictCodeList.客户性质_投资顾问.getValue());
+        model.addAttribute("typeValue_10", DictCodeListExt3.客户性质_券商.getValue());
+        model.addAttribute("typeValue_12", DictCodeListExt3.客户性质_交易对手.getValue());
         model.addAttribute("typeName_01", DictCodeList.客户性质_发行人.getCodeName());
         model.addAttribute("typeName_02", DictCodeList.客户性质_融资人.getCodeName());
         model.addAttribute("typeName_03", DictCodeList.客户性质_管理人.getCodeName());
@@ -100,6 +113,11 @@ public class MstCustomerNature002Controller extends BaseController {
         model.addAttribute("typeName_07", DictCodeList.客户性质_承销商.getCodeName());
         model.addAttribute("typeName_08", DictCodeList.客户性质_存放行.getCodeName());
         model.addAttribute("typeName_09", DictCodeList.客户性质_投资顾问.getCodeName());
+        model.addAttribute("typeName_10", DictCodeListExt3.客户性质_券商.getCodeName());
+        model.addAttribute("typeName_12", DictCodeListExt3.客户性质_交易对手.getCodeName());
+        
+        model.addAttribute("CUSTOMER_TYPE_01", DictCodeList.客户类型_法人.getValue());
+        model.addAttribute("CUSTOMER_TYPE_02", DictCodeList.客户类型_自然人.getValue());
         // 判断是否来自工作流
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
@@ -212,6 +230,9 @@ public class MstCustomerNature002Controller extends BaseController {
             map.put("flag_08", DictCodeList.客户性质_存放行.getCodeName());
             map.put("flag_09", DictCodeList.客户性质_投资顾问.getCodeName());
             map.put("flag_06", DictCodeList.客户性质_出质人.getCodeName());
+            map.put("flag_10", DictCodeListExt3.客户性质_券商.getCodeName());
+            map.put("flag_12", DictCodeListExt3.客户性质_交易对手.getCodeName());
+            
             map.put("index", DictCodeList.客户类型_法人.getCodeName());
             map.put("count", DictCodeList.客户类型_自然人.getCodeName());
             //将客户性质的code改成name值放入map中
@@ -250,6 +271,24 @@ public class MstCustomerNature002Controller extends BaseController {
             if (DictCodeList.客户性质_投资顾问.getValue().equals(
                 mstCustomerNatureDto.getCustomerCharater())) {
                 listCustomerCharater.add((String)map.get("flag_09"));
+            }
+            if (DictCodeListExt3.客户性质_券商.getValue().equals(
+                    mstCustomerNatureDto.getCustomerCharater())) {
+                    listCustomerCharater.add((String)map.get("flag_10"));
+            }
+            if (DictCodeListExt3.客户性质_交易对手.getValue().equals(
+                    mstCustomerNatureDto.getCustomerCharater())) {
+                    listCustomerCharater.add((String)map.get("flag_12"));
+                  //add by lijie2 start
+                  //生成交易对手代码以及交易对手类型，默认市场机构
+                    BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+                    bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_交易对手管理);
+                    if (mstCustomerNatureDto.getCounterId() == null || mstCustomerNatureDto.getCounterId().isEmpty()) {
+                    	mstCustomerNatureDto.setCounterId(baseGetBusinessId != null ? baseGetBusinessId.buildBussinessCode(
+                            bussinessCodeParameter) : IDGenerator.generate());
+                    }
+                    mstCustomerNatureDto.setCounterType(DictCodeListExt1.交易对手类型_市场机构.getValue());
+                  //add by lijie2 end 
             }
             //将客户代码加入list中，不能重复
             if (!listCustomerId.contains(mstCustomerNatureDto.getCustomerId())) {

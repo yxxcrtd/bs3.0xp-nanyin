@@ -11,6 +11,7 @@ package com.joyintech.service.settle.order.service;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.settle.order.dao.BussSettleOrderCommMapper;
@@ -573,6 +574,12 @@ public class BussSettleOrderCommService {
                             && (StringUtil.equals(dto.getPs(), DictCodeListExt1.交易方向_提前行权.getValue())
                             || StringUtil.equals(dto.getPs(), DictCodeListExt1.交易方向_到期行权.getValue())
                     ))
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                    && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购确认.getValue())
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())))
+                    // add by etliu 20210421 权益类资产相关代码合并 end
                 ) {
                     return "B17";
                 }
@@ -665,6 +672,18 @@ public class BussSettleOrderCommService {
                     || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())
                         && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
                         && StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()))
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回到账.getValue()))
+                        || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue()))
+                        || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))
+                        ||  (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_现金分红.getValue()) )
+                        ||  (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                        && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_除权登记.getValue()))
+                    // add by etliu 20210421 权益类资产相关代码合并 end
                 ){
                     return "B20";
                 }else if(StringUtil.equals(dto.getFinprodType2(), DictCodeList.共通业务类型_资金划拨管理.getValue())){
@@ -1937,6 +1956,14 @@ public class BussSettleOrderCommService {
             }
         }
         // 撤销数据查看时，根据“R”结尾的total_trade_id查找R结尾的交易表数据，并查找对应的指令 add by renping 20190916 end
+        if (!StringUtil.isEmptyList(result)){
+             result.forEach(item->{
+                 if (StringUtil.isNotEmpty(item.getPayAcctNo())
+                         && StringUtil.equals(item.getPayAcctNo(), CacheUtil.getSysParam("settle_acct_no"))){
+                     item.setPayAcctName(CacheUtil.getSysParam("settle_acct_name"));
+                 }
+             });
+        }
         return result;
     }
 

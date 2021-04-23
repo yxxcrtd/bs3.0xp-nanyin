@@ -3,9 +3,6 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.constant.DictCode;
-
 import java.util.Date;
 
 public class TrdFeeConfig extends BaseEntity {
@@ -14,45 +11,10 @@ public class TrdFeeConfig extends BaseEntity {
      */
     private String seqNo;
 
-    private String tradeMarketMode;
-
-
-    public String getTradeMarketMode() {
-        return tradeMarketMode;
-    }
-
-    public void setTradeMarketMode(String tradeMarketMode) {
-        this.tradeMarketMode = tradeMarketMode;
-    }
-
     /**
      * 交易场所
      */
     private String tradeMarket;
-    /**
-     * 资产分类一
-     */
-    private String windtypeone;
-    /**
-     * 资产分类二
-     */
-    private String windtypetwo;
-
-    public String getWindtypeone() {
-        return windtypeone;
-    }
-
-    public void setWindtypeone(String windtypeone) {
-        this.windtypeone = windtypeone;
-    }
-
-    public String getWindtypetwo() {
-        return windtypetwo;
-    }
-
-    public void setWindtypetwo(String windtypetwo) {
-        this.windtypetwo = windtypetwo;
-    }
 
     /**
      * 费用类型
@@ -113,6 +75,71 @@ public class TrdFeeConfig extends BaseEntity {
      * 是否随交易支付
      */
     private String isPayWithTrade;
+
+    /**
+     * 交易市场
+     */
+    private String tradeMarketMode;
+
+    /**
+     * 计算过程中保留位数
+     */
+    private Long retentionBit;
+
+    /**
+     * 费用由券商承担费用
+     */
+    private String brokerBaerFee;
+
+    /**
+     * 佣金计算方式
+     */
+    private String commCalMethod;
+
+    /**
+     * 分档模式
+     */
+    private String gradeMode;
+
+    /**
+     * 券商代码
+     */
+    private String customerId;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 资产分类一
+     */
+    private String assetClassify1;
+
+    /**
+     * 资产分类二
+     */
+    private String assetClassify2;
+
+    /**
+     * 交易平台，银行间、上交所固定收益平台、上交所大宗交易平台、深交所大宗平台、深交所综合协议交易平台、其他等
+     */
+    private String tradePlat;
+
+    /**
+     * 计算过程中其他费用保留位数
+     */
+    private String othrerRetentionBit;
+
+    /**
+     * 组合代码
+     */
+    private String portfolioId;
+
+    /**
+     * 是否多券种
+     */
+    private String isMlti;
 
     /**
      * 取得 流水号
@@ -337,5 +364,213 @@ public class TrdFeeConfig extends BaseEntity {
      */
     public void setIsPayWithTrade(String isPayWithTrade) {
         this.isPayWithTrade = isPayWithTrade == null ? null : isPayWithTrade.trim();
+    }
+
+    /**
+     * 取得 交易市场
+     * @return 交易市场
+     */
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    /**
+     * 设置 交易市场
+     * @param tradeMarketMode 交易市场
+     */
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode == null ? null : tradeMarketMode.trim();
+    }
+
+    /**
+     * 取得 计算过程中保留位数
+     * @return 计算过程中保留位数
+     */
+    public Long getRetentionBit() {
+        return retentionBit;
+    }
+
+    /**
+     * 设置 计算过程中保留位数
+     * @param retentionBit 计算过程中保留位数
+     */
+    public void setRetentionBit(Long retentionBit) {
+        this.retentionBit = retentionBit;
+    }
+
+    /**
+     * 取得 费用由券商承担费用
+     * @return 费用由券商承担费用
+     */
+    public String getBrokerBaerFee() {
+        return brokerBaerFee;
+    }
+
+    /**
+     * 设置 费用由券商承担费用
+     * @param brokerBaerFee 费用由券商承担费用
+     */
+    public void setBrokerBaerFee(String brokerBaerFee) {
+        this.brokerBaerFee = brokerBaerFee == null ? null : brokerBaerFee.trim();
+    }
+
+    /**
+     * 取得 佣金计算方式
+     * @return 佣金计算方式
+     */
+    public String getCommCalMethod() {
+        return commCalMethod;
+    }
+
+    /**
+     * 设置 佣金计算方式
+     * @param commCalMethod 佣金计算方式
+     */
+    public void setCommCalMethod(String commCalMethod) {
+        this.commCalMethod = commCalMethod == null ? null : commCalMethod.trim();
+    }
+
+    /**
+     * 取得 分档模式
+     * @return 分档模式
+     */
+    public String getGradeMode() {
+        return gradeMode;
+    }
+
+    /**
+     * 设置 分档模式
+     * @param gradeMode 分档模式
+     */
+    public void setGradeMode(String gradeMode) {
+        this.gradeMode = gradeMode == null ? null : gradeMode.trim();
+    }
+
+    /**
+     * 取得 券商代码
+     * @return 券商代码
+     */
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    /**
+     * 设置 券商代码
+     * @param customerId 券商代码
+     */
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId == null ? null : customerId.trim();
+    }
+
+    /**
+     * 取得 备注
+     * @return 备注
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * 设置 备注
+     * @param remark 备注
+     */
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    /**
+     * 取得 资产分类一
+     * @return 资产分类一
+     */
+    public String getAssetClassify1() {
+        return assetClassify1;
+    }
+
+    /**
+     * 设置 资产分类一
+     * @param assetClassify1 资产分类一
+     */
+    public void setAssetClassify1(String assetClassify1) {
+        this.assetClassify1 = assetClassify1 == null ? null : assetClassify1.trim();
+    }
+
+    /**
+     * 取得 资产分类二
+     * @return 资产分类二
+     */
+    public String getAssetClassify2() {
+        return assetClassify2;
+    }
+
+    /**
+     * 设置 资产分类二
+     * @param assetClassify2 资产分类二
+     */
+    public void setAssetClassify2(String assetClassify2) {
+        this.assetClassify2 = assetClassify2 == null ? null : assetClassify2.trim();
+    }
+
+    /**
+     * 取得 交易平台，银行间、上交所固定收益平台、上交所大宗交易平台、深交所大宗平台、深交所综合协议交易平台、其他等
+     * @return 交易平台，银行间、上交所固定收益平台、上交所大宗交易平台、深交所大宗平台、深交所综合协议交易平台、其他等
+     */
+    public String getTradePlat() {
+        return tradePlat;
+    }
+
+    /**
+     * 设置 交易平台，银行间、上交所固定收益平台、上交所大宗交易平台、深交所大宗平台、深交所综合协议交易平台、其他等
+     * @param tradePlat 交易平台，银行间、上交所固定收益平台、上交所大宗交易平台、深交所大宗平台、深交所综合协议交易平台、其他等
+     */
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat == null ? null : tradePlat.trim();
+    }
+
+    /**
+     * 取得 计算过程中其他费用保留位数
+     * @return 计算过程中其他费用保留位数
+     */
+    public String getOthrerRetentionBit() {
+        return othrerRetentionBit;
+    }
+
+    /**
+     * 设置 计算过程中其他费用保留位数
+     * @param othrerRetentionBit 计算过程中其他费用保留位数
+     */
+    public void setOthrerRetentionBit(String othrerRetentionBit) {
+        this.othrerRetentionBit = othrerRetentionBit == null ? null : othrerRetentionBit.trim();
+    }
+
+    /**
+     * 取得 组合代码
+     * @return 组合代码
+     */
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    /**
+     * 设置 组合代码
+     * @param portfolioId 组合代码
+     */
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId == null ? null : portfolioId.trim();
+    }
+
+    /**
+     * 取得 是否多券种
+     * @return 是否多券种
+     */
+    public String getIsMlti() {
+        return isMlti;
+    }
+
+    /**
+     * 设置 是否多券种
+     * @param isMlti 是否多券种
+     */
+    public void setIsMlti(String isMlti) {
+        this.isMlti = isMlti == null ? null : isMlti.trim();
     }
 }

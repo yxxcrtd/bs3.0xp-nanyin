@@ -28,6 +28,7 @@ import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeListNatureGroup;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dao.AssetIntdateCarryoverMapper;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverDeal;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderDetail;
@@ -603,9 +604,16 @@ public class AssetIntdateCarryoverProcessorService {
 
         // 【账务明细代码】 判断是否已存在，已存在跳过处理
         // 数据生成===============================================================================
+        /** modify by yanya on 20210104 质押券的账务明细代码判定用质押券判定 start**/
         BokDetailIdKey key = new BokDetailIdKey();
-        key.setBokDetailId(bokDetailId);
+        BokDetailId valbokDetailIdSell = new BokDetailId();
+        valbokDetailIdSell.setBusiId(detail.getFinprodId());
+        valbokDetailIdSell.setBusiDetailType(detail.getFinprodType());
+        valbokDetailIdSell.setInvAim(DictCodeListExt1.投资目的_卖空.getValue());
+        //key.setBokDetailId(bokDetailId);
+        key.setBokDetailId(bookAccountCommonService.genMd5BokDetailId(valbokDetailIdSell));
         key.setBooksetId(detail.getBooksetId());
+        /** modify by yanya on 20210104 质押券的账务明细代码判定用质押券判定 end**/
         boolean bokDetailIdflag = checkCreateBokDetailId(assetIntdateCarryoverResult, key);
         // 判断是否已存在，已存在跳过处理
         if (bokDetailIdflag) {
@@ -631,6 +639,8 @@ public class AssetIntdateCarryoverProcessorService {
             bokDetailIdNew.setDetailSubjectNoTail(detail.getFinprodId());
             // 四级科目尾号名称 = DTO.金融产品名称
             bokDetailIdNew.setDetailSubnameTail(detail.getFinprodName());
+            //modify by yanya on 20201217 增加分支序号
+            bokDetailIdNew.setBranch(BookConstant.DEFALUT_BRANCH);
             // 入库
             dao.setBokDetailId(bokDetailIdNew);
         }
@@ -843,7 +853,8 @@ public class AssetIntdateCarryoverProcessorService {
             // 判断 交易中是否有生成过与当前相同的标的信息
             for (AssetIntdateCarryoverDeal item : listDeal) {
                 // 金融产品代码、金融产品类型、分支序号一致，则已生成过，则不需重复生成
-                if (bokDetailIdKey.getBokDetailId() != null
+                //modify by yanya on 20201217 增加账务明细为空的判定
+                if (bokDetailIdKey.getBokDetailId() != null && item.getBokDetailId() != null
                     && StringUtil.equals(bokDetailIdKey.getBokDetailId(),
                         item.getBokDetailId().getBokDetailId())
                     && StringUtil.equals(bokDetailIdKey.getBooksetId(),
@@ -904,7 +915,8 @@ public class AssetIntdateCarryoverProcessorService {
 
         // 1.是否存在已交易生成
         int dealCount = assetIntdateCarryoverMapper.queryDealCount(detail.getFinprodId(),
-            detail.getFinprodType(), detail.getMdate(), detail.getBooksetId(), glob_ps);
+                    detail.getFinprodType(), detail.getMdate(), detail.getBooksetId(), glob_ps);
+        
         if (dealCount > 0) {
             return;
         }
@@ -912,7 +924,7 @@ public class AssetIntdateCarryoverProcessorService {
         // 2.成本查询
         // 2.1基础科目性质查询
         List<String> subjectNatureList = accountingCommonService.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_成本类对应科目查询.getValue());
+    		DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue());
 
         // 2.2 最新余额查询
         SubjectBalanceSearchDto searchDao = new SubjectBalanceSearchDto();
@@ -1054,6 +1066,8 @@ public class AssetIntdateCarryoverProcessorService {
                  */
                 // if（变量.利息 != 0）
                 if (!ArithmeticUtil.equals(intAmt, BigDecimal.ZERO)) {
+                	
+                	/**moidfy modify wujie on 20210107
                     // 设计变更 add by zhangyf 20181026 start
                     // if DTO.金融产品类型 = "债券资产" && 变量.账务明细代码信息.投资目的 = 卖空
                     if (detail.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券.getValue())
@@ -1061,10 +1075,10 @@ public class AssetIntdateCarryoverProcessorService {
                         // 变量.交易方向 = "卖空债券结息"
                         dealPs = DictCodeList.交易方向_卖空债券结息.getValue();
                     }
-                    else {
+                    else {**/
                         // 变量.交易方向 = "收息"
                         dealPs = DictCodeList.交易方向_收息.getValue();
-                    }
+//                    }
                     // 设计变更 add by zhangyf 20181026 end
 
                     // 设计变更 hide by zhangyf 20181026 start
@@ -1114,6 +1128,7 @@ public class AssetIntdateCarryoverProcessorService {
                 }
                 // if（变量.本金 != 0）
                 if (!ArithmeticUtil.equals(printAmt, BigDecimal.ZERO)) {
+                	/**modify by wujie on 20210107
                     // 设计变更 add by zhangyf 20181026 start
                     // if DTO.金融产品类型 = "债券资产" && 变量.账务明细代码信息.投资目的 = 卖空
                     if (detail.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券.getValue())
@@ -1121,10 +1136,10 @@ public class AssetIntdateCarryoverProcessorService {
                         // 变量.交易方向 = "卖空债券还本"
                         dealPs = DictCodeList.交易方向_卖空债券还本.getValue();
                     }
-                    else {
+                    else {**/
                         // 变量.交易方向 = "还本"
                         dealPs = DictCodeList.交易方向_还本.getValue();
-                    }
+//                    }
                     // 设计变更 add by zhangyf 20181026 start
 
                     // 设计变更 hide by zhangyf 20181026 start

@@ -46,7 +46,7 @@ import com.joyintech.tams.invest.common.util.XmlParseUtil;
  * @see CstpTradeService
  * @since 1.0
  */
-@Service
+@Service("cstpTradeServiceInterf")
 public class CstpTradeService extends InterfBaseService {
 
     /**

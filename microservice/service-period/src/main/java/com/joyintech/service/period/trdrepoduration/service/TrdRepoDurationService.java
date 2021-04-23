@@ -596,7 +596,7 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
                     flow.setUpdateTime(updateTime);
  //                   trdRepoDurationMapper.insertSelect04Sec(flow);
                     flow.setSeqno(IDGenerator.generate());
-                    flow.setTradeId(wflTrdFinProductDealTotal.getTotleTradeId());
+                    flow.setTradeId(wflTrdFinProductDealTotal.getFinprodId());
                     ptlSecPositionFlowMapper.insert(flow);
                     PtlSecPositionFlowDto secPositionFlowDto =new PtlSecPositionFlowDto();//汇总头寸表
                     PtlSecPosition secPosition= new PtlSecPosition();
@@ -687,6 +687,11 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
                 BeanUtil.copyPropertiesIgnoreNull(stlPayOrders, stlPayOrdersDtos.get(0));
                 inputDto.setStlPayOrders(stlPayOrders);
             }
+
+            /**ADD BY WUJIE ON 20210129 START REMARK:回购交易方向：到期续作、逾期贩售**/
+            inputDto.setPsType(trdRepoDurationDto.getPs());
+            /**ADD BY WUJIE ON 20210129 END**/
+
             AllTradeCommonUtil.lendMdateAdd(inputDto);
             if (StringUtil.isNotEmpty(trdRepoDurationDto.getActPortfolioId())
                     && !StringUtil.equals(trdRepoDurationDto.getPortfolioId(), trdRepoDurationDto.getActPortfolioId())) {
@@ -1184,6 +1189,7 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
         trdProductDealOrg.setFeeAmtUnpay(null);//初始清空
         trdProductDealOrg.setFeeAmtPay(null);//初始清空
         //交易金额 正回购时，交易金额 = 本金金额 - 佣金；逆回购时，交易金额 = 本金金额 + 佣金；
+        /**moidfy by wujie on 20201229 start
         if(trdRepoDurationDto.getCommissionAmt()!=null) {
             if (trdProductDealOrg.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
                 trdProductDealOrg.setTradeAmt(界面deal.getPrinAmt().subtract(trdRepoDurationDto.getCommissionAmt()));
@@ -1191,6 +1197,17 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
                 trdProductDealOrg.setTradeAmt(界面deal.getPrinAmt().add(trdRepoDurationDto.getCommissionAmt()));
             }
         }
+        **/
+        if (trdProductDealOrg.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+        	trdProductDealOrg.setTradeAmt(ArithmeticUtil.subtract(界面deal.getPrinAmt(), trdRepoDurationDto.getCommissionAmt()));
+        }
+        else{
+        	trdProductDealOrg.setTradeAmt(ArithmeticUtil.doAdd(界面deal.getPrinAmt(), trdRepoDurationDto.getCommissionAmt()));
+        }
+        /**moidfy by wujie on 20201229 end**/
+        
+        
+        
         //trdProductDealOrg.setFpriceAmt(trdRepoDurationDto.getTradeAmtex());//续做到期结算金额
         trdProductDealOrg.setCounterId(界面deal.getCounterId());
         trdProductDealOrg.setCounterTrader(界面deal.getCounterTrader());

@@ -613,8 +613,8 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
      * @see
      * @since 1.0
      */
-    public int selectCountByOFinprodId(String oFinprodId) {
-        return finBondTargetAssetMapper.selectCountByOFinprodId(oFinprodId);
+    public int selectCountByOFinprodId(String oFinprodId,String finprodId) {
+        return finBondTargetAssetMapper.selectCountByOFinprodId(oFinprodId,finprodId);
     }
 
 }

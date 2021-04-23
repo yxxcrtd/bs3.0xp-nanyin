@@ -47,7 +47,7 @@ public class FeeProvisionSettingService extends BaseService<FeeProvisionSettingD
 	 * @return SuggestDto
 	 */
 	public Page<SelectOptionDto> getSecAcctId(int page, int length, Map<String, Object> map) {
-		map.put("secAcctType_fund", DictCodeListExt3.账户类型_基金账户.getValue());
+		map.put("secAcctType_fund", DictCodeListExt3.证券账户类型_基金账户.getValue());
 		return this.queryForPageForSelectReturn(page, length, () -> feeProvisionSettingMapper.getSecAcctId(map));
 	}
 

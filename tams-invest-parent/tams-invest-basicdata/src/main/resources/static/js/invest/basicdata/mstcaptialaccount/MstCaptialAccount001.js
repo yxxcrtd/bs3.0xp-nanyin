@@ -36,7 +36,7 @@
             ,{field:'ccyStr',width:'20%', sortField:'CCY', title: 'MstCaptialAccount002.currency'}
             ,{field:'acctNo',width:'20%', visible: false}
             ,{field:'ccy',width:'20%', visible: false}
-            ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt']}
+            ,{field:'operation', title: '操作' , type:'action',buttons: ['edit', 'delt']}
         ],
         //loadonce:true
     });
@@ -51,13 +51,13 @@
     table.bind('click', '.edit', function(data, index) {
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
-        Joyin.ajaxJson(basePath + 'invest/basicdata/mstcaptialaccount/MstCaptialAccount002/check', data, function(result) {
+//        Joyin.ajaxJson(basePath + 'invest/basicdata/mstcaptialaccount/MstCaptialAccount002/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("MstCaptialAccount002.edit"),
                     basePath + "invest/basicdata/mstcaptialaccount/MstCaptialAccount002/init",
                     "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
             						acctNo:data.acctNo,
             						ccy:data.ccy},function(){table.reload();});
-        });
+//        });
     });
     /**
      * 绑定删除事件

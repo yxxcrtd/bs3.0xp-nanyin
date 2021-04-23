@@ -29,6 +29,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.trade.investtrade.commanddispatcher.dao.TrdCommandDispatcher001Mapper;
+import com.joyintech.service.trade.investtrade.commanddispatcher.dto.EntrCommandDispatcherTotalDto;
 import com.joyintech.service.trade.investtrade.commanddispatcher.dto.PaEtrAutoDispenseTimeDto;
 import com.joyintech.service.trade.investtrade.commanddispatcher.dto.TrdCommandDispatcher001Dto;
 import com.joyintech.tams.common.base.dao.EtrAutoDispenseRuleDetailMapper;
@@ -47,6 +48,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 
 /**
  * 微服务端交易查询service 〈功能详细描述〉
@@ -57,6 +59,7 @@ import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInves
  * @since 1.0
  */
 @Service("backTrdCommandDispatcher001Service")
+@Transactional(rollbackFor = Exception.class)
 public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispatcher001Dto> {
 
     /**
@@ -77,6 +80,11 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
     @Autowired
     private EtrDistributeMapper etrDistributeMapper;
 
+    /**
+     * 指令推送信息查询service
+     */
+    @Autowired
+    private EntrCommandDispatcherService entrCommandDispatcherService;
     /**
      * 投资委托委托组件
      */
@@ -198,7 +206,7 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
     /**
      * 委托代码的联想文本框的查询方法
      * 
-     * @param param param
+     * @param pageParam
      * @return List
      * @see
      * @since 1.0
@@ -222,7 +230,7 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
     /**
      * 资产代码的联想文本框的查询方法
      * 
-     * @param param param
+     * @param finprodId
      * @return List
      * @see
      * @since 1.0
@@ -242,7 +250,7 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
     /**
      * 获取radio交易员组的查询方法
      * 
-     * @param param param
+     * @param pageParam param
      * @return List
      * @see
      * @since 1.0
@@ -256,7 +264,7 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
     /**
      * 获取联想文本框交易员的查询方法
      * 
-     * @param param param
+     * @param pageParam param
      * @return List
      * @see
      * @since 1.0
@@ -360,12 +368,23 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
 //                etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
             }
         }
+        Map<String, Object> param = new HashMap<>();
+		param.put("entrustId", dto.getEntrustId());
+		param.put("isAutoReceive", dto.getIsAutoReceive());
+		EntrCommandDispatcherTotalDto msgdto =  entrCommandDispatcherService.pushCommandMsg(param);
+		
+		// modify by etliu 20210203 可转债网下申购不发送交易端 start
+		if (msgdto != null && !StringUtil.isEmptyList(msgdto.getEtr_entrust_list())) {
+		    restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME
+		        + "/EtrCommandDispatcher/pushCommandMsg",msgdto,Integer.class);	
+		}
+        // modify by etliu 20210203 可转债网下申购不发送交易端 end
     }
 
     /**
      * 判断交易员是否有全部权限
      * 
-     * @param userNames
+     * @param userName
      * @param dealers
      * @return
      */
@@ -439,7 +458,7 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
     /**
      * 添加委托指令分发
      * 
-     * @param record
+     * @param dto
      * @return
      */
     public void addEtrDistribute(TrdCommandDispatcher001Dto dto) {

@@ -368,6 +368,7 @@ implements BaseProcessService<FinBondTargetAssetDto>{
         //金融产品附属表entity
         FinProductAdd finProductAdd = new FinProductAdd();
         BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
+        finProductAdd.setIsPpb(dto.getIsPPB());
         //----add by jjpei 20190727 添加投资性质----start----
         if(StringUtil.isNotBlank(dto.getType4())&&DictCodeList.WIND一级分类_含债券一级分类等_优先股.getValue().equals(dto.getType4())){
             finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
@@ -860,9 +861,9 @@ implements BaseProcessService<FinBondTargetAssetDto>{
      * @param oFinprodId
      * @return
      */
-    public int selectCountByOFinprodId(String oFinprodId) {
+    public int selectCountByOFinprodId(String oFinprodId,String finprodId) {
         return restTemplate.getForObject(
-                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectCountByOFinprodId?oFinprodId="+oFinprodId,
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectCountByOFinprodId?oFinprodId="+oFinprodId+"&finprodId="+finprodId,
                 Integer.class);
     }
 }

@@ -72,6 +72,17 @@ public class MstCustomerNatureDto extends MstCustomerInfo implements ITableRow, 
      * 
      */
     private List<String> selectedCustomerCharater;
+    
+    
+    /**
+     * 交易对手代码
+     */
+    private String counterId;
+    
+    /**
+     * 交易对手类型
+     */
+    private String counterType;
 
     /**
      * 取得 客户代码
@@ -235,4 +246,24 @@ public class MstCustomerNatureDto extends MstCustomerInfo implements ITableRow, 
     public String getCustomerTypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.客户类型, super.getCustomerType());
     }
+
+
+	public String getCounterId() {
+		return counterId;
+	}
+
+
+	public void setCounterId(String counterId) {
+		this.counterId = counterId;
+	}
+
+
+	public String getCounterType() {
+		return counterType;
+	}
+
+
+	public void setCounterType(String counterType) {
+		this.counterType = counterType;
+	}
 }

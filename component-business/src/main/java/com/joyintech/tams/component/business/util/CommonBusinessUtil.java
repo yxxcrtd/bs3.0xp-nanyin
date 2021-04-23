@@ -1,6 +1,8 @@
 package com.joyintech.tams.component.business.util;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @program: tams-invest-parent
@@ -46,6 +48,63 @@ public class CommonBusinessUtil {
      */
 
     private static final String CN_ZEOR_FULL = "零元" + CN_FULL;
+
+
+    /**
+     * 场内质押式回购期限品种映射Map
+     */
+    public static final Map<String, Integer> TERM_MAP;
+    static
+    {
+        TERM_MAP = new HashMap<String, Integer>();
+        //上交所--半角
+        TERM_MAP.put("GC001", 1);
+        TERM_MAP.put("GC002", 2);
+        TERM_MAP.put("GC003", 3);
+        TERM_MAP.put("GC004", 4);
+        TERM_MAP.put("GC007", 7);
+        TERM_MAP.put("GC014", 14);
+        TERM_MAP.put("GC021", 21);
+        TERM_MAP.put("GC028", 28);
+        TERM_MAP.put("GC091", 91);
+        TERM_MAP.put("GC182", 182);
+
+        //上交所--全角
+        TERM_MAP.put("ＧＣ001", 1);
+        TERM_MAP.put("ＧＣ002", 2);
+        TERM_MAP.put("ＧＣ003", 3);
+        TERM_MAP.put("ＧＣ004", 4);
+        TERM_MAP.put("ＧＣ007", 7);
+        TERM_MAP.put("ＧＣ014", 14);
+        TERM_MAP.put("ＧＣ021", 21);
+        TERM_MAP.put("ＧＣ028", 28);
+        TERM_MAP.put("ＧＣ091", 91);
+        TERM_MAP.put("ＧＣ182", 182);
+
+        //深交所--半角
+        TERM_MAP.put("R-001", 1);
+        TERM_MAP.put("R-002", 2);
+        TERM_MAP.put("R-003", 3);
+        TERM_MAP.put("R-004", 4);
+        TERM_MAP.put("R-007", 7);
+        TERM_MAP.put("R-014", 14);
+        TERM_MAP.put("R-021", 21);
+        TERM_MAP.put("R-028", 28);
+        TERM_MAP.put("R-091", 91);
+        TERM_MAP.put("R-182", 182);
+
+        //深交所--全角
+        TERM_MAP.put("Ｒ-001", 1);
+        TERM_MAP.put("Ｒ-002", 2);
+        TERM_MAP.put("Ｒ-003", 3);
+        TERM_MAP.put("Ｒ-004", 4);
+        TERM_MAP.put("Ｒ-007", 7);
+        TERM_MAP.put("Ｒ-014", 14);
+        TERM_MAP.put("Ｒ-021", 21);
+        TERM_MAP.put("Ｒ-028", 28);
+        TERM_MAP.put("Ｒ-091", 91);
+        TERM_MAP.put("Ｒ-182", 182);
+    }
 
     public static String getUpperMoneyResult(BigDecimal numberOfMoney) {
         if (numberOfMoney == null) {

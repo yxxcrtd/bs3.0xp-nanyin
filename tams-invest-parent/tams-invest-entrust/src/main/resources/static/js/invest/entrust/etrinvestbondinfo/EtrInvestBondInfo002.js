@@ -237,8 +237,6 @@
                         entrustNum += parseFloat(item.entrustNum);
                     }
                     object.entrustNum = String(entrustNum);
-                } else {
-                    return;
                 }
             }
             if (typeof FileCommon != "undefined") {
@@ -334,6 +332,7 @@
             if (initFlag) {
                 init();
             }
+            $('#isRight').trigger('change');
         }
     }
     /**
@@ -953,6 +952,7 @@
                     $('#price').attr('disabled', false);
                     $('#matureYield').attr('disabled', false);
                     $('#exerYield').attr('disabled', false);
+                    $('#isRight').trigger('change');
                 }
                 if ($('#price').val()) {
                     calData('price');

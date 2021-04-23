@@ -255,6 +255,21 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
         return ptlManagementInfo001Service.getAdminUserList(param);
     }
     /*add by liupengfei for 多级法人改造 默认选中 上级管理员用户和本级管理员 end*/
+    
+    //TISHKBS-1941 设置默认用户为机构下所有用户，不止管理员
+    //获取机构下所有用户
+    @PostMapping("getUserList")
+    public List<String> getUserList(@RequestBody Map<String,Object> param){
+        return ptlManagementInfo001Service.getUserList(param);
+    }
+   
+    //获取用户所在机构-银行模式下无法调用多级法人接口
+    @PostMapping("getUserInstitution")
+    public String getUserInstitution(@RequestBody String userName){
+        return ptlManagementInfo001Service.getUserInstitution(userName);
+    }
+    
+    
     /**
      * 资金账户信息删除
      * @param portfolioId 组合代码
@@ -602,5 +617,10 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     public List<MstIntRateInfo> selectAlllv(@RequestBody Map<String, Object> param)
             throws Exception {
         return ptlManagementInfo001Service.selectAlllv(param);
+    }
+
+    @PostMapping("getPtlAuthInfo")
+    public Map<String, Object>  getPtlAuthInfo(@RequestBody Map<String, Object> param){
+        return ptlManagementInfo001Service.getPtlAuthInfo(param);
     }
 }

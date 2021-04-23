@@ -28,7 +28,10 @@ $(function() {
         cols:[
              {field:'customerId', width:'20%', title: 'MstCustomerNature001.customerId'}
             ,{field:'customerName', width:'20%', title: 'MstCustomerNature001.customerName'}
-            ,{field:'customerType', width:'20%', title: 'MstCustomerNature001.customerType',
+            //产品化_SNSTZJY-2163 客户性质管理 导出显示列与设定显示列不符 modify by libaisong 2020-11-16
+           /* ,{field:'customerTypeStr', width:'20%', title: 'MstCustomerNature001.customerType',*/
+            //产品化——SNSTZJY-2436客户性质管理：客户类型列点击排序，异常 add by longpeng 20201219 
+            ,{field:'customerTypeStr', sortField:'customerType', width:'20%', title: 'MstCustomerNature001.customerType',
                 render : function(data, type, row, meta) {
                     if (data =='01') {
                         return JoyinUtil.getLabel("MstCustomerNature001.business");

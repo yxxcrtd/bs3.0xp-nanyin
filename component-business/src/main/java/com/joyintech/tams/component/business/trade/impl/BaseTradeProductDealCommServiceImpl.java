@@ -15,6 +15,7 @@ import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommServi
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonResult;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
@@ -267,7 +268,12 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         		认购确认_申购确认_赎回确认_除权登记_红利再投.contains(baseTradeDto.getTrdProductDeal().getPs())&&
         		DictCodeList.收益类型_净值型.getValue().equals(profitType)&& DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(baseTradeDto.getTrdProductDeal().getFinprodType2())||
         		认购确认_申购确认_赎回确认_除权登记_红利再投.contains(baseTradeDto.getTrdProductDeal().getPs())&&
-                DictCodeList.收益类型_货币型.getValue().equals(profitType)&& DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(baseTradeDto.getTrdProductDeal().getFinprodType2())){
+                DictCodeList.收益类型_货币型.getValue().equals(profitType)&& DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(baseTradeDto.getTrdProductDeal().getFinprodType2())
+                // add by etliu 20210421 权益类资产相关代码合并 start
+                || 认购确认_申购确认_赎回确认_除权登记_红利再投.contains(baseTradeDto.getTrdProductDeal().getPs())&&
+                        DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(baseTradeDto.getTrdProductDeal().getFinprodType2())
+                // add by etliu 20210421 权益类资产相关代码合并 end
+        ){
         			globalStlOrderList=baseTradeDto.getStlPayOrdersList();
         			baseTradeDto.setStlPayOrdersList(new ArrayList<StlPayOrdersDto>());
         }
@@ -300,7 +306,12 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         		认购确认_申购确认_赎回确认_除权登记_红利再投.contains(baseTradeDto.getTrdProductDeal().getPs())&&
         		DictCodeList.收益类型_净值型.getValue().equals(profitType)&& DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(baseTradeDto.getTrdProductDeal().getFinprodType2())||
         		认购确认_申购确认_赎回确认_除权登记_红利再投.contains(baseTradeDto.getTrdProductDeal().getPs())&&
-                DictCodeList.收益类型_货币型.getValue().equals(profitType)&& DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(baseTradeDto.getTrdProductDeal().getFinprodType2())){
+                DictCodeList.收益类型_货币型.getValue().equals(profitType)&& DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(baseTradeDto.getTrdProductDeal().getFinprodType2())
+                // add by etliu 20210421 权益类资产相关代码合并 start
+                || 认购确认_申购确认_赎回确认_除权登记_红利再投.contains(baseTradeDto.getTrdProductDeal().getPs())&&
+                DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(baseTradeDto.getTrdProductDeal().getFinprodType2())
+                // add by etliu 20210421 权益类资产相关代码合并 end
+        ){
         		baseTradeDto.setStlPayOrdersList(globalStlOrderList);
         }
         /*----------------------裴家俊----add------2018/11/23-------------end--------------------*/
@@ -391,7 +402,11 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 status.setFinishAmt(baseTradeProductDealDto.getTrdProductDeal().getShareAmt());
             }else if(StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())||
                      StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())||
-                    StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())){
+                    StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    || StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())
+                    // add by etliu 20210421 权益类资产相关代码合并 end
+            ){
                     EtrEntrust etr =etrEntrustMapper.selectByPrimaryKey(baseTradeProductDealDto.getTrdProductDealAdd().getEntrustId());
             	//委托是金额 更新金额
             	if(StringUtil.isNotEmpty(etr)&&StringUtil.isNotEmpty(etr.getEntrustAmt())){
@@ -629,7 +644,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
         PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
         ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
         ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
-        //不是逾期交易，更新持仓流水
+        //不是逾期交易，更新组合持仓流水
         if(!(StringUtil.isNotEmpty(finProductTradeDto.getIsOverdueDeal())&&StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsOverdueDeal()))){
         	if (ptlPositionHoldDto.getPtlSecPositionFlows() != null && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
                 for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {

@@ -43,8 +43,12 @@
 			   B.HAPPEN_DATE AS happenDate,/**发生日**/
 			   /**add by yanya 20190926 增加剩余期限、剩余存续期限 start**/
 			   B.end_days_1 AS endDays1,/**剩余期限**/
-			   B.end_days_2 AS endDays2 /**剩余存续期限**/
+			   B.end_days_2 AS endDays2, /**剩余存续期限**/
 			   /**add by yanya 20190926 增加剩余期限、剩余存续期限 end**/
+			   /**add by jinmaodong 20201016 增加减值余额、减值余额_本币 start**/
+			   B.tdy_loss_amt as tdy_loss_amt, /**减值余额**/
+			   B.tdy_loss_amt_b as tdy_loss_amt_b /**减值余额_本币**/
+			   /**add by jinmaodong 20201016 增加减值余额、减值余额_本币 end**/
 
 		FROM BOK_STAT_DET_POSIITON B
 		INNER JOIN BOK_BOOKSET C ON B.BOOKSET_ID = C.BOOKSET_ID
@@ -102,39 +106,42 @@
 	
 	<!-- 获取【组合资产估值】数据 - 账套通道投资资产信息  -->
 	<select id="getPtlSecValutionWithTd" resultType="com.joyintech.tams.valuation.batch.positionmake.dto.PtlSecValutionWithOtherFieldDto"  parameterType="java.util.Map" >
-			SELECT
-			      C.BOOKSET_ID as booksetId,/**账套代码**/
-			      (CASE  WHEN C.ACCT_SUBJECT_TYPE = #{finprodType,jdbcType=VARCHAR} THEN C.ACCT_SUBJECT_ID ELSE D.PORTFOLIO_ID END) AS portfolioId,/**投资组合代码 **/
-			      NVL(B.CHANNEL_ID,'999999') AS secAcctId,/**通道代码,pdm中说明，若无通道代码，塞入999999**/ 
-			      B.BOOK_DATE AS cdate,/**日期**/ 
-			      B.BUSI_ID AS finprodId,/**金融产品代码**/          
-			      nvl(B.INV_AIM,'999999') AS invAim,/**投资目的,pdm中说明，若无投资目的，塞入999999**/
-			      B.CCY AS ccy,/**币种**/           
-			      B.POS_AMT AS shareAmt,/**数量**/           
-			      B.TDY_FLOAT_INGPL_EXP as tdyFloatIngpl,/**当日累计公允价值变动**/           
-			      B.TDY_COST_AMT AS dscCostAmt,/**摊销总成本**/           
-			      B.shareAmt, /**摊销成本净价**/
-			      B.TDY_INTINCEXP AS tdyIntincexp, /**当日应计利息**/
-			      B.DAILYDSC_YIELD AS actDYield, /**实际日利率**/
-			                 
-			      B.Bok_Detail_Id as bokDetailId,/**账务明细代码**/
-			      B.Busi_Id as busiId,/**业务明细代码**/
+		SELECT
+		      C.BOOKSET_ID as booksetId,/**账套代码**/
+		      (CASE  WHEN C.ACCT_SUBJECT_TYPE = #{finprodType,jdbcType=VARCHAR} THEN C.ACCT_SUBJECT_ID ELSE D.PORTFOLIO_ID END) AS portfolioId,/**投资组合代码 **/
+		      NVL(B.CHANNEL_ID,'999999') AS secAcctId,/**通道代码,pdm中说明，若无通道代码，塞入999999**/ 
+		      B.BOOK_DATE AS cdate,/**日期**/ 
+		      B.BUSI_ID AS finprodId,/**金融产品代码**/          
+		      nvl(B.INV_AIM,'999999') AS invAim,/**投资目的,pdm中说明，若无投资目的，塞入999999**/
+		      B.CCY AS ccy,/**币种**/           
+		      B.POS_AMT AS shareAmt,/**数量**/           
+		      B.TDY_FLOAT_INGPL_EXP as tdyFloatIngpl,/**当日累计公允价值变动**/           
+		      B.TDY_COST_AMT AS dscCostAmt,/**摊销总成本**/           
+		      B.shareAmt, /**摊销成本净价**/
+		      B.TDY_INTINCEXP AS tdyIntincexp, /**当日应计利息**/
+		      B.DAILYDSC_YIELD AS actDYield, /**实际日利率**/
+		                 
+		      B.Bok_Detail_Id as bokDetailId,/**账务明细代码**/
+		      B.Busi_Id as busiId,/**业务明细代码**/
 
-				  decode(B.B_CCY,null,B.CCY,B.B_CCY) AS bCcy,/**本位币**/
-				  decode(B.TDY_FLOAT_INGPL_EXP_B,null,B.TDY_FLOAT_INGPL_EXP,B.TDY_FLOAT_INGPL_EXP_B) AS tdyFloatIngplB,/**当日累计公允价值变动_本位币**/
-				  decode(B.TDY_COST_AMT_B,null,B.TDY_COST_AMT,B.TDY_COST_AMT_B) AS dscCostAmtB,/**摊销总成本_本位币**/
-				  (CASE WHEN NVL(B.POS_AMT,0) = 0 THEN 0
-					ELSE (decode(B.TDY_COST_AMT_B,null,B.TDY_COST_AMT,B.TDY_COST_AMT_B) / B.POS_AMT) END) AS dscCleanPriceB,/**摊销成本净价_本位币**/
-				  decode(B.TDY_INTINCEXP_ADD_B,null,B.TDY_INTINCEXP,B.TDY_INTINCEXP_ADD_B) AS tdyIntincexpB, /**当日累计应计利息_本位币**/
+			  decode(B.B_CCY,null,B.CCY,B.B_CCY) AS bCcy,/**本位币**/
+			  decode(B.TDY_FLOAT_INGPL_EXP_B,null,B.TDY_FLOAT_INGPL_EXP,B.TDY_FLOAT_INGPL_EXP_B) AS tdyFloatIngplB,/**当日累计公允价值变动_本位币**/
+			  decode(B.TDY_COST_AMT_B,null,B.TDY_COST_AMT,B.TDY_COST_AMT_B) AS dscCostAmtB,/**摊销总成本_本位币**/
+			  (CASE WHEN NVL(B.POS_AMT,0) = 0 THEN 0
+				ELSE (decode(B.TDY_COST_AMT_B,null,B.TDY_COST_AMT,B.TDY_COST_AMT_B) / B.POS_AMT) END) AS dscCleanPriceB,/**摊销成本净价_本位币**/
+			  decode(B.TDY_INTINCEXP_ADD_B,null,B.TDY_INTINCEXP,B.TDY_INTINCEXP_ADD_B) AS tdyIntincexpB, /**当日累计应计利息_本位币**/
 
-				  B.INT_RATE AS intRate,/**计提利率**/
-				  B.BOOK_DATE AS bookDate,/**入账日**/
-				  B.HAPPEN_DATE AS happenDate,/**发生日**/
-				  /**add by yanya 20190926 增加剩余期限、剩余存续期限 start**/
-				  B.end_days_1 AS endDays1,/**剩余期限**/
-				  B.end_days_2 AS endDays2 /**剩余存续期限**/
-				  /**add by yanya 20190926 增加剩余期限、剩余存续期限 end**/
-
+			  B.INT_RATE AS intRate,/**计提利率**/
+			  B.BOOK_DATE AS bookDate,/**入账日**/
+			  B.HAPPEN_DATE AS happenDate,/**发生日**/
+			  /**add by yanya 20190926 增加剩余期限、剩余存续期限 start**/
+			  B.end_days_1 AS endDays1,/**剩余期限**/
+			  B.end_days_2 AS endDays2, /**剩余存续期限**/
+			  /**add by yanya 20190926 增加剩余期限、剩余存续期限 end**/
+			  /**add by jinmaodong 20201016 增加减值余额、减值余额_本币 start**/
+			  B.tdy_loss_amt, /**减值余额**/
+			  B.tdy_loss_amt_b /**减值余额_本币**/
+			  /**add by jinmaodong 20201016 增加减值余额、减值余额_本币 end**/
 		FROM (
 			SELECT
 				RE.CHANNEL_ID,
@@ -162,12 +169,15 @@
 				po.int_rate,/**计提利率**/
 				/**add by yanya 20190926 增加剩余期限、剩余存续期限 start**/
 				PO.end_days_1,/**剩余期限**/
-				PO.end_days_2 /**剩余存续期限**/
+				PO.end_days_2, /**剩余存续期限**/
 				/**add by yanya 20190926 增加剩余期限、剩余存续期限 end**/
+			    /**add by jinmaodong 20201016 增加减值余额、减值余额_本币 start**/
+			    PO.tdy_loss_amt as tdy_loss_amt, /**减值余额**/
+			    PO.tdy_loss_amt_b as tdy_loss_amt_b /**减值余额_本币**/
+			    /**add by jinmaodong 20201016 增加减值余额、减值余额_本币 end**/
 
 			FROM BOK_BOOKSET_RE RE
 			INNER JOIN BOK_STAT_DET_POSIITON PO ON RE.BOOKSET_ID_SON = PO.BOOKSET_ID
-		    WHERE PO.BUSI_ID IS NOT NULL
 		) B
 		INNER JOIN BOK_BOOKSET C ON B.BOOKSET_ID = C.BOOKSET_ID
 		<!-- modify by wujie on 20190830 
@@ -299,6 +309,9 @@
 			C.LEV AS lev, /**层级**/
 			B.BOOKSET_ID AS booksetId, /**账套代码**/
 			B.YIELD_7 AS yield7 /**当日7日年化收益率**/
+			<!-- add by wujie no 20200403 start -->
+			,B.TDY_BOUNS_AMT as tdyProfitCarry/**当日分红金额**/
+			<!-- add by wujie on 20200403 end -->
 		FROM BOK_STAT_BOK_POSITION B
 		INNER JOIN BOK_ACCT_LAYERING_INFO C ON B.BOOKSET_ID = C.BOOKSET_ID
 		AND B.LAYERING_ID = C.LAYERING_ID
@@ -395,6 +408,7 @@
 			case 
 		        when BASE_SUBJECT_NATURE = 'YFZZDJSSXF' or BASE_SUBJECT_NATURE = 'YFZZDJYSXF' then '01'
 		        when BASE_SUBJECT_NATURE = 'YFSQSJSSXF' or BASE_SUBJECT_NATURE = 'YFSQSJYSXF' then '02'
+		        when BASE_SUBJECT_NATURE = 'YFZDJSSXF' then '03'
 		    ELSE '999999' END AS feePlace
 		FROM BOK_FEE_TABLE_SET
 		WHERE BASE_SUBJECT_NATURE IN 
@@ -432,7 +446,7 @@
 		DSC_COST_AMT_B, DSC_CLEAN_PRICE_B, DELAY_PAY_AMT_B,
 		TDY_INTINCEXP_B, IN_TDY_INTINCEXP, OUT_TDY_INTINCEXP,
 		END_DAYS_1, END_DAYS_2, INT_RATE,
-		TDY_DSCLOSS_ADD_B,gen_type)
+		TDY_DSCLOSS_ADD_B,gen_type,TDY_LOSS_AMT,TDY_LOSS_AMT_B)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close=" from dual)">
 			#{item.cdate,jdbcType=DATE}, #{item.portfolioId,jdbcType=VARCHAR}, #{item.secAcctId,jdbcType=VARCHAR},
 			#{item.finprodId,jdbcType=VARCHAR}, #{item.invAim,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR},
@@ -447,7 +461,7 @@
 			#{item.dscCostAmtB,jdbcType=DECIMAL}, #{item.dscCleanPriceB,jdbcType=DECIMAL}, #{item.delayPayAmtB,jdbcType=DECIMAL},
 			#{item.tdyIntincexpB,jdbcType=DECIMAL}, #{item.inTdyIntincexp,jdbcType=DECIMAL}, #{item.outTdyIntincexp,jdbcType=DECIMAL},
 			#{item.endDays1,jdbcType=DECIMAL}, #{item.endDays2,jdbcType=DECIMAL}, #{item.intRate,jdbcType=DECIMAL},
-			#{item.tdyDsclossAddB,jdbcType=DECIMAL},#{item.genType,jdbcType=VARCHAR}
+			#{item.tdyDsclossAddB,jdbcType=DECIMAL},#{item.genType,jdbcType=VARCHAR},#{item.tdyLossAmt,jdbcType=DECIMAL},#{item.tdyLossAmtB,jdbcType=DECIMAL}
 		</foreach>
 	</insert>
     
@@ -496,6 +510,9 @@
             TDY_UNIT_VALUE_SUM,TDY_YIELD, TDY_UNPAID_INTINCEXP, 
             TDY_ASSET_AMT, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME,YIELD_7
+            <!-- add by wujie on 20200403 start -->
+            ,TDY_PROFIT_CARRY
+            <!-- add by wujie on 20200403 end -->
             )
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close=" from dual)">
 			#{item.finprodId,jdbcType=VARCHAR}, #{item.branch,jdbcType=DECIMAL}, #{item.cdate,jdbcType=DATE}, 
@@ -503,6 +520,9 @@
 			#{item.tdyUnitValueSum,jdbcType=DECIMAL},#{item.tdyYield,jdbcType=DECIMAL}, #{item.tdyUnpaidIntincexp,jdbcType=DECIMAL}, 
 			#{item.tdyAssetAmt,jdbcType=DECIMAL}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, 
 			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},#{item.yield7,jdbcType=DECIMAL}
+			<!-- add by wujie on 20200403 start -->
+			,#{item.tdyProfitCarry,jdbcType=DECIMAL}
+			<!-- add by wujie on 20200403 end -->
         </foreach>
     </insert>
         
@@ -713,7 +733,9 @@
 	<select id="getCostInfo" resultType="com.joyintech.tams.valuation.batch.positionmake.dto.PtlSecValutionWithOtherFieldDto"  parameterType="java.util.Map" >
 		SELECT
 			C.BOOKSET_ID as booksetId,/**账套代码**/
-			(CASE  WHEN C.ACCT_SUBJECT_TYPE = #{finprodType,jdbcType=VARCHAR} THEN C.ACCT_SUBJECT_ID ELSE D.PORTFOLIO_ID END) AS portfolioId,/**投资组合代码**/
+			(CASE  WHEN C.ACCT_SUBJECT_TYPE = #{finprodType,jdbcType=VARCHAR} THEN C.ACCT_SUBJECT_ID
+				<!-- modify by yanya on 20210208 增加产品附属表组合代码为空的判定逻辑-->
+			   ELSE NVL(D.PORTFOLIO_ID,C.ACCT_SUBJECT_ID) END) AS portfolioId,/**投资组合代码**/
 			'999999' AS secAcctId,/**通道代码,pdm中说明，若无通道代码，塞入999999**/
 			#{booksetDate,jdbcType=DATE} AS cdate,/**日期**/
 			'999999' AS invAim /**投资目的,pdm中说明，若无投资目的，塞入999999**/

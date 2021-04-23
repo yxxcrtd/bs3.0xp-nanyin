@@ -2,17 +2,13 @@ package com.joyintech.tams.invest.basicdata.mstcommissionset.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.common.base.entity.CreditLines;
@@ -20,14 +16,11 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.basicdata.mstcommissionset.dto.MstCommissionSetDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 
@@ -40,29 +33,13 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class MstCommissionSetService extends CommonExportService<MstCommissionSetDto> implements BaseProcessService<MstCommissionSetDto>{
+
+    //add by hudongyang 2020-08-03
+    @Autowired
+    private MstCommissionSetService mstCommissionSetService;
 	
 	@Override
 	public void doComplete(MstCommissionSetDto entity, OperationType type) {
-		// 二级法人权限处理
-        if(MultilevelDataAuthorityUtil.isEnabled()) {
-            //创建机构代码
-            String createInst =   MultilevelDataAuthorityUtil.getService().queryOrganizationCode(entity.getCreateUser());
-            entity.setCreateInst(createInst);
-
-            // 有查询权限的机构代码
-            List<String> searchOrgCodeList = null;
-            // 有编辑权限的机构代码
-            List<String> editOrgCodeList = null;
-            // 新建或修改时重新设置二级法人权限，删除时则清空
-            if (!OperationType.DELETE.equals(type)) {
-                //获取所有父级机构。  拥有查看权限
-                searchOrgCodeList = CommonUtil.getParentInstitution(createInst);
-                // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
-                editOrgCodeList = Arrays.asList(entity.getCreateInst());
-            }
-            // 记录二级法人权限
-            insertDataAuthTypeInst(entity.getBatchSeq(), searchOrgCodeList, editOrgCodeList, DictCodeList.共通业务类型_佣金设置.getValue());
-        }
 		 String action = StringUtil.EMPTY;
 		 if (OperationType.DELETE.equals(type)) {
 	            action = "delete";
@@ -86,17 +63,23 @@ public class MstCommissionSetService extends CommonExportService<MstCommissionSe
      * @since 1.0
      */
     public Page<MstCommissionSetDto> selectForPage(Map<String, Object> map){
+        //add by hudongyang 2020-08-04 start
+        if (StringUtil.isNotEmpty(map.get("tradeType"))) {
+            map.put("tradeType", StringUtil.splitToList(null, map.get("tradeType").toString()));
+        }else{
+            map.remove("tradeType");
+        }
+        //add by hudongyang 2020-08-04 end
+
         Page<MstCommissionSetDto> page = restTemplate.postForPage(
                 ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCommissionSet/findPage",
                 map, MstCommissionSetDto.class);
         List<MstCommissionSetDto> dtoList = page.getRoot();
         for (MstCommissionSetDto dto : dtoList){
-            if(!"Y".equals(dto.getIsGrade())){
-                if (StringUtil.equals(dto.getChargeType(), BussinessDictCodeList.计费类型_固定费率.getValue())){
-                    dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),8, RoundingMode.HALF_UP).toString());
-                }else {
-                    dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),2,RoundingMode.HALF_UP).toString());
-                }
+            if (StringUtil.equals(dto.getChargeType(), BussinessDictCodeList.计费类型_固定费率.getValue())){
+                dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),8, RoundingMode.HALF_UP).toString()+"‰");
+            }else {
+                dto.setFeeRate(ArithmeticUtil.round(dto.getChargeValue(),2,RoundingMode.HALF_UP).toString()+"元");
             }
         }
         return page;
@@ -132,7 +115,7 @@ public class MstCommissionSetService extends CommonExportService<MstCommissionSe
      */
     public int searchRepeatBySecPs(Map<String, Object> map){
     	 return restTemplate.postForObject(
-    	            ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCommissionSet/searchRepeatBySecPs1",map,
+    	            ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCommissionSet/searchRepeatBySecPs",map,
     	             Integer.class);
     }
     
@@ -165,7 +148,15 @@ public class MstCommissionSetService extends CommonExportService<MstCommissionSe
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
         if(("effDate".equals(propName)) && value != null){
-            cell.setCellValue(DateUtil.format((Date)value));
+            //add by hudongyang 2020-08-04 导出日期报错 start
+//            cell.setCellValue(DateUtil.format((Date)value));
+
+            if(value instanceof Date){
+                cell.setCellValue(DateUtil.format((Date)value));
+            }else if (value instanceof Long){
+                cell.setCellValue(DateUtil.format(new Date((Long) value)));
+            }
+            //add by hudongyang 2020-08-04 导出日期报错 end
         }
     }
 
@@ -219,18 +210,48 @@ public class MstCommissionSetService extends CommonExportService<MstCommissionSe
                 Integer.class);
     }
 
-    public List<TrdFeeConfigDetail> findTable(Map<String, Object> parameters) {
-//        List<TrdFeeConfigDetail> page = restTemplate.postForList(ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCommissionSet/findTable", parameters, TrdFeeConfigDetail.class);
-        List<TrdFeeConfigDetail> list = restTemplate.postForList(ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCommissionSet/findTable", parameters, TrdFeeConfigDetail.class);
-        for(TrdFeeConfigDetail trdFeeConfigDetailDto:list){
-            if(StringUtil.isNotEmpty(trdFeeConfigDetailDto.getChargeRate())){
-                trdFeeConfigDetailDto.setChargeRate(trdFeeConfigDetailDto.getChargeRate().multiply(new BigDecimal("1000")));
+    /**
+     * add by hudongyang
+     * @param pageParam
+     * @return
+     */
+    public Page<TrdFeeConfigDetail> select(Map<String, Object> pageParam) {
+        String workflowId=(String)pageParam.get("workflowId");
+        Page<TrdFeeConfigDetail> page = new Page<>();
+        if(StringUtil.isNotEmpty(workflowId)){
+            MstCommissionSetDto dto = this.getBussinessEntityByWorkflowId(
+                    workflowId);
+            List<TrdFeeConfigDetail> list = new ArrayList<TrdFeeConfigDetail>();
+            if(dto.getTrdFeeConfigDetailList() !=  null){
+                list=dto.getTrdFeeConfigDetailList();
             }
-            if(StringUtil.isNotEmpty(trdFeeConfigDetailDto.getGradeAmount())){
-                trdFeeConfigDetailDto.setGradeAmount(trdFeeConfigDetailDto.getGradeAmount().divide(new BigDecimal("10000")));
-            }
-
+            page.setRoot(list);
+            page.setRecords(list.size());
         }
-        return list;
+        else{
+            if(pageParam.get("batchSeq") != null && !"".equals((String)pageParam.get("batchSeq"))){
+                MstCommissionSetDto entity = mstCommissionSetService.getBussinessEntityBySeqNo((String)pageParam.get("batchSeq"));
+                List<TrdFeeConfigDetail> list = new ArrayList<TrdFeeConfigDetail>();
+                if(entity != null){
+                    if(entity.getTrdFeeConfigDetailList() != null){
+                        list=entity.getTrdFeeConfigDetailList();
+                    }
+                    page.setRoot(list);
+                    page.setRecords(list.size());
+                }
+            }
+        }
+        return page;
+    }
+
+    /**
+     * add by hudongyang
+     * @param param
+     * @return
+     */
+    public List<SelectOptionDto> getMstCustomerInfo(Map<String, Object> param) {
+        return restTemplate.postForList(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCommissionSet/getMstCustomerInfo",
+                param, SelectOptionDto.class);
     }
 }

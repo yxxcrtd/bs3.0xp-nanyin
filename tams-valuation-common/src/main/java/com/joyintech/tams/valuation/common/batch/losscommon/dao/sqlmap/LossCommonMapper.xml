@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.valuation.common.batch.losscommon.dao.LossCommonMapper" >
+ 	
+ 	<select id="getTrdAssetLoss" resultMap="com.joyintech.tams.common.base.dao.TrdAssetLossMapper.BaseResultMap" parameterType="java.util.Map">
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdAssetLossMapper.Base_Column_List" />
+        from TRD_ASSET_LOSS
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+         AND LOSS_DATE &lt;= #{queryDate,jdbcType=DATE}
+         AND INVALID_DATE &gt; #{queryDate,jdbcType=DATE} 
+    </select>
+    
+    <!-- 插入统计分析明细表（资产减值）  -->
+    <insert id="insertBokStatLossPosiiton">
+        insert into BOK_STAT_LOSS_POSIITON (SEQNO, BOK_SEQNO, BOOKSET_ID, 
+            HAPPEN_DATE, BOOK_DATE, BOOKSET_DATE, 
+            BOK_DETAIL_ID, BUSI_ID, SCHEME_DETAIL_ID, 
+            TRADE_ID, LOSS_EXE_TYPE, CCY, 
+            B_CCY, TDY_COST_AMT, TDY_INT_AMT, 
+            TDY_LOSSAMT_ADD, TDY_LOSSAMT, TDY_LOSSAMT_ADD_B, 
+            TDY_LOSSAMT_B, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,LOSS_GEN_TYPE
+            )
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.seqno,jdbcType=VARCHAR}, #{item.bokSeqno,jdbcType=VARCHAR}, #{item.booksetId,jdbcType=VARCHAR}, 
+            #{item.happenDate,jdbcType=DATE}, #{item.bookDate,jdbcType=DATE}, #{item.booksetDate,jdbcType=DATE}, 
+            #{item.bokDetailId,jdbcType=VARCHAR}, #{item.busiId,jdbcType=VARCHAR}, #{item.schemeDetailId,jdbcType=VARCHAR}, 
+            #{item.tradeId,jdbcType=VARCHAR}, #{item.lossExeType,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR}, 
+            #{item.bCcy,jdbcType=VARCHAR}, #{item.tdyCostAmt,jdbcType=DECIMAL}, #{item.tdyIntAmt,jdbcType=DECIMAL}, 
+            #{item.tdyLossamtAdd,jdbcType=DECIMAL}, #{item.tdyLossamt,jdbcType=DECIMAL}, #{item.tdyLossamtAddB,jdbcType=DECIMAL}, 
+            #{item.tdyLossamtB,jdbcType=DECIMAL}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, 
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+            ,#{item.lossGenType,jdbcType=VARCHAR}
+
+        </foreach>    
+    </insert>      
+
+	<!-- 删除 统计分析明细表（资产减值） -->
+	<delete id="deleteBokStatLossPosiiton" parameterType="java.util.Map">
+		DELETE
+		FROM BOK_STAT_LOSS_POSIITON a
+		WHERE EXISTS(
+			SELECT 1
+            FROM BOK_BATCH_TASK_TODO B
+            WHERE
+              	B.BOOKSET_ID =  A.BOOKSET_ID
+              	AND B.SEQ_NO = #{seqNo}
+				AND B.BOOKSET_DATE = #{BOOKSET_DATE}
+                AND B.TASK_ID = #{taskId}
+        	)
+        	AND a.BOOKSET_DATE <![CDATA[>=]]> #{BOOKSET_DATE}
+	</delete>
+	
+	<select id="getP3num" resultType="long" parameterType="java.util.Map">
+        select 
+        (SELECT COUNT(1)
+		  FROM TRD_ASSET_LOSS TT
+		  WHERE TT.SEC_ID = MR.SEC_ID
+		  AND TT.VAL_DATE = MR.VAL_DATE
+		  AND TT.STAGE    = #{stage}
+		  AND TT.STATUS   = #{status}
+		  ) AS numP3
+        from FIN_PRODUCT finProduct
+		LEFT JOIN (
+				SELECT 
+					MAX(VAL_DATE) VAL_DATE,
+					SEC_ID 
+				FROM 
+					TRD_ASSET_LOSS
+				WHERE
+					VAL_DATE <![CDATA[ <= ]]> #{serDate} 
+				AND	STATUS = #{status} 
+				GROUP BY 
+					SEC_ID	
+				) MR
+			 ON finProduct.FINPROD_MARKET_ID = MR.SEC_ID
+		WHERE
+			finProduct.FINPROD_ID = #{finprodId}	 
+    </select>
+
+</mapper>

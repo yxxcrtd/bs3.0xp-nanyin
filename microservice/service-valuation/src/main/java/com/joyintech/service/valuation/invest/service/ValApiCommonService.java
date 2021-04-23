@@ -948,7 +948,7 @@ public class ValApiCommonService {
                 }
 
                 BokDetailId bokDetailId = interfCommonService.settingDetailSubjectNoTaiL(finprodId, finprodType, branch,
-                        trdProductDeal.getBusiType());
+                        trdProductDeal.getBusiType(),dto.getBokDetailIdList().get(0).getBooksetId());
 
                 // 定义 变量.四级科目尾号 = DTO.四级科目尾号
                 String detailSubjectNoTaiL = bokDetailId.getDetailSubjectNoTail();

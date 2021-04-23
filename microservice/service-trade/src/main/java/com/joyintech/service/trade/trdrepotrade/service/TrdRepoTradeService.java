@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
+import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -456,20 +459,21 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
      * @param loginUserName 登录用户
      * @return cstp交易信息
      */
-    public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(String fedealno, String entrustId,String preTradeId,String loginUserName,String prodType,String isCstpSure){
+    public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(String fedealno,String loginUserName){
         TrdRepoTradeCSTPDto trdRepoTradeCSTPDto = new TrdRepoTradeCSTPDto();
 
-        InterfOpicsTradRepoDto interfOpicsTradRepo = trdRepoTradeMapper.queryRepoCstpInfoByNo(fedealno,entrustId,preTradeId,prodType,isCstpSure);
+        InterfOpicsTradRepoDto interfOpicsTradRepo = trdRepoTradeMapper.queryRepoCstpInfoByNo(fedealno);
         if (interfOpicsTradRepo != null){
             BeanUtil.copyPropertiesIgnoreNull(trdRepoTradeCSTPDto, interfOpicsTradRepo);
 
             if (StringUtil.equals(trdRepoTradeCSTPDto.getPs(), "RS")){
                 trdRepoTradeCSTPDto.setPs(BussinessDictCodeList.回购拆借方向_正回购.getValue());
-            } else if (StringUtil.equals(trdRepoTradeCSTPDto.getPs(), "RB")){
+            }
+            else if (StringUtil.equals(trdRepoTradeCSTPDto.getPs(), "RB")){
                 trdRepoTradeCSTPDto.setPs(BussinessDictCodeList.回购拆借方向_逆回购.getValue());
             }
 
-            if (StringUtil.equals(trdRepoTradeCSTPDto.getBasis(), "A365")){
+            if (StringUtil.equals(trdRepoTradeCSTPDto.getBasis(), "A/365")){
                 trdRepoTradeCSTPDto.setBasis(BussinessDictCodeList.计息基础_A_365.getValue());
             }
 
@@ -485,42 +489,49 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
             else {
                 trdRepoTradeCSTPDto.setMarket(null);
             }
-            FinProduct finProduct = new FinProduct();
-            if(StringUtils.isNotBlank(trdRepoTradeCSTPDto.getSecid())){
-                // 根据债券代码查询资产代码
-                if(StringUtils.equals(prodType,BussinessDictCodeList.回购交易_质押式.getValue())){//质押式回购
-                    finProduct = trdBondInvestTradeMapper.queryFinProductInfoByMark(trdRepoTradeCSTPDto.getSecid(), BussinessDictCodeList.平安资产类型_债券.getValue());
-                }else if(StringUtils.equals(prodType,BussinessDictCodeList.回购交易_买断式.getValue())){
-                    finProduct = trdBondInvestTradeMapper.queryFinProductInfoByMark(trdRepoTradeCSTPDto.getSecid(), BussinessDictCodeList.平安资产类型_债券.getValue());
-                }
-            }
-            if (finProduct != null){
-                trdRepoTradeCSTPDto.setSecid(finProduct.getFinprodId());
-            }
             // 交易对手代码转换
-//            if (StringUtil.isNotEmpty(trdRepoTradeCSTPDto.getSeller())) {
-//                MstCounterParty mstCounterParty = trdBondInvestTradeMapper.queryMstCounterPartyByCounterName(trdRepoTradeCSTPDto.getSeller());
-//                if (mstCounterParty != null) {
-//                    trdRepoTradeCSTPDto.setSeller(mstCounterParty.getCounterId());
-//                }
-//                else{
-//                    trdRepoTradeCSTPDto.setSeller(null);
-//                }
-//            }
+            // 查询报价信息
+            EtrEntrustExt etrEntrustExt = trdBondInvestTradeMapper.queryRepoEntrustInfo(fedealno);
+            if(null!=etrEntrustExt){
+            	//有报价
+            	trdRepoTradeCSTPDto.setIsOfferFlag("01");
+                if(StringUtil.isNotEmpty(etrEntrustExt.getCpPartyId())){
+                    trdRepoTradeCSTPDto.setSeller(trdBondInvestTradeMapper.selectCounterId(etrEntrustExt.getCpPartyId()));
+                }
+                trdRepoTradeCSTPDto.setSelltrader(etrEntrustExt.getCpTrader());
+                trdRepoTradeCSTPDto.setPortfolioId(etrEntrustExt.getPortfolioId());
+                trdRepoTradeCSTPDto.setEntrustId(etrEntrustExt.getEntrustId());
+                trdRepoTradeCSTPDto.setBuycost(etrEntrustExt.getOuTrader());
+            }else{
+            	//无报价
+            	trdRepoTradeCSTPDto.setIsOfferFlag("02");
+            	trdRepoTradeCSTPDto.setBuycost(null);
+            	trdRepoTradeCSTPDto.setSelltrader(null);
+                /*if (StringUtil.isNotEmpty(trdRepoTradeCSTPDto.getSeller())) {
+                    MstCounterParty mstCounterParty = trdBondInvestTradeMapper.queryMstCounterPartyByCounterName(trdRepoTradeCSTPDto.getSeller());
+                    if (mstCounterParty != null) {
+                        trdRepoTradeCSTPDto.setSeller(mstCounterParty.getCounterId());
+                    }
+                    else{
+                        trdRepoTradeCSTPDto.setSeller(null);
+                    }
+                }*/
+            }
             // 根据证券账户查询对应组合
             // 查询证券账户是否系统存在
-            if (StringUtil.isEmpty(trdRepoTradeCSTPDto.getOurdepositaccountnumber()) || stlSecAcctInfoMapper.selectByPrimaryKey(trdRepoTradeCSTPDto.getOurdepositaccountnumber()) == null){
-                // 不存在默认设置甲类户
+            // 甲类户都是以"A"开头，乙类户可能证券账户信息那边暂时没有维护
+            /*if (StringUtil.indexOf(trdRepoTradeCSTPDto.getOurdepositaccountnumber(), "A") == 0){
                 trdRepoTradeCSTPDto.setOurdepositaccountnumber("A000000001");
-            }
-            // 根据证券账户查询关联关联组合
-            List<String> portfolioList = trdBondInvestTradeMapper.queryPortfolioIdBySecAcctId(loginUserName, trdRepoTradeCSTPDto.getOurdepositaccountnumber());
-            if (!StringUtil.isEmptyList(portfolioList) && portfolioList.size() == 1){
-                trdRepoTradeCSTPDto.setPortfolioId(portfolioList.get(0));
-            } else{
-                //trdRepoTradeCSTPDto.setOurdepositaccountnumber(null);
-            }
-
+            }// 乙类户
+            else{
+                // 根据证券账户查询关联组合
+                if(StringUtil.isNotEmpty(trdRepoTradeCSTPDto.getOurdepositaccountnumber())){
+                    List<PtlPortfolio> portfolioList = trdBondInvestTradeMapper.queryPortfolioIdBySecAcctId(null,trdRepoTradeCSTPDto.getOurdepositaccountnumber());
+                    if (!StringUtil.isEmptyList(portfolioList)){
+                        trdRepoTradeCSTPDto.setPortfolioId(portfolioList.get(0).getPortfolioId());
+                    }
+                }
+            }*/
         }
 
         return trdRepoTradeCSTPDto;
@@ -560,16 +571,21 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
         BigDecimal prinamt = new BigDecimal(0);
         if(StringUtils.isNotBlank(fTradeId)){
             Map<String,Object> ftrademap = new HashMap<>();
-            InterfOpicsTradRepo interfOpicsTradRepo = interfOpicsTradRepoMapper.selectByPrimaryKey(fTradeId);
+            //InterfOpicsTradRepo interfOpicsTradRepo = interfOpicsTradRepoMapper.selectByPrimaryKey(fTradeId);
+            InterfOpicsTradRepo interfOpicsTradRepo = trdRepoTradeMapper.selectInterfOpicsTradRepo(fTradeId);
             ftrademap.put("fTradeId",fTradeId);
             BigDecimal amountByFtradeId = cstpSelectMapper.getAmountByFtradeId(ftrademap);
             if(StringUtils.equals(tradeType,BussinessDictCodeList.回购交易_质押式.getValue())){
-                 prinamt = interfOpicsTradRepo.getRepoamt().setScale(2, BigDecimal.ROUND_HALF_UP);
+                if (interfOpicsTradRepo != null && interfOpicsTradRepo.getRepoamt() != null) {
+                    prinamt = interfOpicsTradRepo.getRepoamt().setScale(2, BigDecimal.ROUND_HALF_UP);
+                }
                  if(amountByFtradeId!=null){
                      prinamt = amountByFtradeId;
                  }
             }else{
-                prinamt = interfOpicsTradRepo.getFacetotalamt().setScale(2, BigDecimal.ROUND_HALF_UP);
+                if (interfOpicsTradRepo != null && interfOpicsTradRepo.getFacetotalamt() != null) {
+                    prinamt = interfOpicsTradRepo.getFacetotalamt().setScale(2, BigDecimal.ROUND_HALF_UP);
+                }
             }
 
             //有效
@@ -686,5 +702,13 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
      */
     public String getChlId(String tradeId) {
         return trdRepoTradeMapper.getChlId(tradeId);
+    }
+	
+	 public List<FinProduct> selectFinProduct(Map<String, Object> params) {
+        return trdRepoTradeMapper.selectFinProduct(params);
+    }
+
+    public List<InterfTradRepoasstDto> getMatchpledgeBondInfo(Map<String,Object> map){
+        return trdRepoTradeMapper.getMatchpledgeBondInfo(map);
     }
 }

@@ -13,15 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.service.portfolio.ptlmanagementinfo.dto.*;
 import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.service.portfolio.ptlmanagementinfo.dto.FundAccountInfoDto;
-import com.joyintech.service.portfolio.ptlmanagementinfo.dto.NodeDto;
-import com.joyintech.service.portfolio.ptlmanagementinfo.dto.PtlManagementInfoDto;
-import com.joyintech.service.portfolio.ptlmanagementinfo.dto.SecuritiesAccountInfoDto;
 
 
 /**
@@ -405,6 +402,15 @@ public interface PtlManagementInfo001Mapper {
      * @since 1.0
      */
     List<NodeDto> getUserList(Map<String, Object> param);
+    
+    /**
+     * 获取输入机构列表中所有的用户
+     * @param param
+     * @return
+     */
+    List<String> getAllUserList(Map<String, Object> param);
+    
+    String getUserInstitution(String userName);
 
     /**
      * 模拟试算
@@ -520,5 +526,8 @@ public interface PtlManagementInfo001Mapper {
      * @since 1.0
      */
     List<MstIntRateInfo> selectAlllv(Map<String,Object> map);
+
+
+    List<PtlAuthInfoDto> getPtlAuthInfo(Map<String, Object> param);
 
 }

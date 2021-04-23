@@ -69,6 +69,8 @@
         <result column="TG_BUSI_TYPE" property="tgBusiType" jdbcType="VARCHAR" />
         <result column="IS_OVERDUE_DEAL" property="isOverdueDeal" jdbcType="VARCHAR" />
         <result column="SETTLE_SPEED" property="settleSpeed" jdbcType="DECIMAL" />
+        <result column="PAY_UNPAIDINT_AMT" property="payUnpaidintAmt" jdbcType="DECIMAL" />
+        <result column="ISPAY_UNPAIDINT" property="ispayUnpaidint" jdbcType="VARCHAR" />
         <result column="CLEAR_TYPE" property="clearType" jdbcType="VARCHAR" />
         <result column="EFF_TIME" property="effTime" jdbcType="TIMESTAMP" />
         <result column="DELIVERY_TYPE" property="deliveryType" jdbcType="VARCHAR" />
@@ -76,8 +78,15 @@
         <result column="RATE" property="rate" jdbcType="DECIMAL" />
         <result column="REPO_TERM" property="repoTerm" jdbcType="DECIMAL" />
         <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
-        <result column="PAY_UNPAIDINT_AMT" property="payUnpaidintAmt" jdbcType="DECIMAL" />
-        <result column="ISPAY_UNPAIDINT" property="ispayUnpaidint" jdbcType="VARCHAR" />
+        <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+        <result column="REG_DATE" property="regDate" jdbcType="DATE" />
+        <result column="EX_DEVIDENT_DATE" property="exDevidentDate" jdbcType="DATE" />
+        <result column="RED_SHARE_LISTING_DATE" property="redShareListingDate" jdbcType="DATE" />
+        <result column="DEVIDENT_DATE" property="devidentDate" jdbcType="DATE" />
+        <result column="PER_DEVIDENT_AMT" property="perDevidentAmt" jdbcType="DECIMAL" />
+        <result column="PER_DEVIDENT_CASH" property="perDevidentCash" jdbcType="DECIMAL" />
+        <result column="DEVIDENT_CASH" property="devidentCash" jdbcType="DECIMAL" />
+        <result column="DEVIDENT_AMT" property="devidentAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, BUSI_TYPE BUSI_TYPE, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, 
@@ -96,9 +105,12 @@
         CURRENT_SUB CURRENT_SUB, LAST_AMT LAST_AMT, LAST_RED LAST_RED, LAST_AMT_SUB LAST_AMT_SUB, 
         ACCOUNTING_AMT ACCOUNTING_AMT, RED_PROFIT RED_PROFIT, RED_COST RED_COST, DQPRIN_AMT DQPRIN_AMT, 
         PAY_DATE PAY_DATE, REMAIN_PRIN REMAIN_PRIN, TG_BUSI_TYPE TG_BUSI_TYPE, IS_OVERDUE_DEAL IS_OVERDUE_DEAL, 
-        SETTLE_SPEED SETTLE_SPEED, CLEAR_TYPE CLEAR_TYPE, EFF_TIME EFF_TIME, DELIVERY_TYPE DELIVERY_TYPE, 
-        M_DELIVERY_TYPE M_DELIVERY_TYPE, RATE RATE, REPO_TERM REPO_TERM, TERM_TYPE TERM_TYPE, 
-        PAY_UNPAIDINT_AMT PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT ISPAY_UNPAIDINT
+        SETTLE_SPEED SETTLE_SPEED, PAY_UNPAIDINT_AMT PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT ISPAY_UNPAIDINT, 
+        CLEAR_TYPE CLEAR_TYPE, EFF_TIME EFF_TIME, DELIVERY_TYPE DELIVERY_TYPE, M_DELIVERY_TYPE M_DELIVERY_TYPE, 
+        RATE RATE, REPO_TERM REPO_TERM, TERM_TYPE TERM_TYPE, INSTITUTION_CODE INSTITUTION_CODE, 
+        REG_DATE REG_DATE, EX_DEVIDENT_DATE EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE RED_SHARE_LISTING_DATE, 
+        DEVIDENT_DATE DEVIDENT_DATE, PER_DEVIDENT_AMT PER_DEVIDENT_AMT, PER_DEVIDENT_CASH PER_DEVIDENT_CASH, 
+        DEVIDENT_CASH DEVIDENT_CASH, DEVIDENT_AMT DEVIDENT_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -143,12 +155,12 @@
             ACCOUNTING_AMT, RED_PROFIT, RED_COST, 
             DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
             TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, 
-            CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, 
-            M_DELIVERY_TYPE, RATE, REPO_TERM, 
-            TERM_TYPE, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT
-            <!-- 多级法人改造 add by caiqun 20200615 -->
-            ,INSTITUTION_CODE
-            <!-- 多级法人改造 add by caiqun 20200615 -->
+            PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, CLEAR_TYPE, 
+            EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, 
+            RATE, REPO_TERM, TERM_TYPE, 
+            INSTITUTION_CODE, REG_DATE, EX_DEVIDENT_DATE, 
+            RED_SHARE_LISTING_DATE, DEVIDENT_DATE, PER_DEVIDENT_AMT, 
+            PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT
             )
         values (#{totleTradeId,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
             #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
@@ -172,12 +184,12 @@
             #{accountingAmt,jdbcType=DECIMAL}, #{redProfit,jdbcType=DECIMAL}, #{redCost,jdbcType=DECIMAL}, 
             #{dqprinAmt,jdbcType=DECIMAL}, #{payDate,jdbcType=DATE}, #{remainPrin,jdbcType=DECIMAL}, 
             #{tgBusiType,jdbcType=VARCHAR}, #{isOverdueDeal,jdbcType=VARCHAR}, #{settleSpeed,jdbcType=DECIMAL}, 
-            #{clearType,jdbcType=VARCHAR}, #{effTime,jdbcType=TIMESTAMP}, #{deliveryType,jdbcType=VARCHAR}, 
-            #{mDeliveryType,jdbcType=VARCHAR}, #{rate,jdbcType=DECIMAL}, #{repoTerm,jdbcType=DECIMAL}, 
-            #{termType,jdbcType=VARCHAR}, #{payUnpaidintAmt,jdbcType=DECIMAL}, #{ispayUnpaidint,jdbcType=VARCHAR}
-            <!-- 多级法人改造 add by caiqun 20200615 -->
-            ,#{institutionCode,jdbcType=VARCHAR}
-            <!-- 多级法人改造 add by caiqun 20200615 -->
+            #{payUnpaidintAmt,jdbcType=DECIMAL}, #{ispayUnpaidint,jdbcType=VARCHAR}, #{clearType,jdbcType=VARCHAR}, 
+            #{effTime,jdbcType=TIMESTAMP}, #{deliveryType,jdbcType=VARCHAR}, #{mDeliveryType,jdbcType=VARCHAR}, 
+            #{rate,jdbcType=DECIMAL}, #{repoTerm,jdbcType=DECIMAL}, #{termType,jdbcType=VARCHAR}, 
+            #{institutionCode,jdbcType=VARCHAR}, #{regDate,jdbcType=DATE}, #{exDevidentDate,jdbcType=DATE}, 
+            #{redShareListingDate,jdbcType=DATE}, #{devidentDate,jdbcType=DATE}, #{perDevidentAmt,jdbcType=DECIMAL}, 
+            #{perDevidentCash,jdbcType=DECIMAL}, #{devidentCash,jdbcType=DECIMAL}, #{devidentAmt,jdbcType=DECIMAL}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
@@ -384,6 +396,12 @@
             <if test="settleSpeed != null" >
                 SETTLE_SPEED,
             </if>
+            <if test="payUnpaidintAmt != null" >
+                PAY_UNPAIDINT_AMT,
+            </if>
+            <if test="ispayUnpaidint != null" >
+                ISPAY_UNPAIDINT,
+            </if>
             <if test="clearType != null" >
                 CLEAR_TYPE,
             </if>
@@ -405,17 +423,33 @@
             <if test="termType != null" >
                 TERM_TYPE,
             </if>
-            <if test="payUnpaidintAmt != null" >
-                PAY_UNPAIDINT_AMT,
-            </if>
-            <if test="ispayUnpaidint != null" >
-                ISPAY_UNPAIDINT,
-            </if>
-            <!-- 多级法人改造 add by caiqun 20200615 -->
             <if test="institutionCode != null" >
                 INSTITUTION_CODE,
             </if>
-            <!-- 多级法人改造 add by caiqun 20200615 -->
+            <if test="regDate != null" >
+                REG_DATE,
+            </if>
+            <if test="exDevidentDate != null" >
+                EX_DEVIDENT_DATE,
+            </if>
+            <if test="redShareListingDate != null" >
+                RED_SHARE_LISTING_DATE,
+            </if>
+            <if test="devidentDate != null" >
+                DEVIDENT_DATE,
+            </if>
+            <if test="perDevidentAmt != null" >
+                PER_DEVIDENT_AMT,
+            </if>
+            <if test="perDevidentCash != null" >
+                PER_DEVIDENT_CASH,
+            </if>
+            <if test="devidentCash != null" >
+                DEVIDENT_CASH,
+            </if>
+            <if test="devidentAmt != null" >
+                DEVIDENT_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="totleTradeId != null" >
@@ -619,6 +653,12 @@
             <if test="settleSpeed != null" >
                 #{settleSpeed,jdbcType=DECIMAL},
             </if>
+            <if test="payUnpaidintAmt != null" >
+                #{payUnpaidintAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ispayUnpaidint != null" >
+                #{ispayUnpaidint,jdbcType=VARCHAR},
+            </if>
             <if test="clearType != null" >
                 #{clearType,jdbcType=VARCHAR},
             </if>
@@ -640,17 +680,33 @@
             <if test="termType != null" >
                 #{termType,jdbcType=VARCHAR},
             </if>
-            <if test="payUnpaidintAmt != null" >
-                #{payUnpaidintAmt,jdbcType=DECIMAL},
-            </if>
-            <if test="ispayUnpaidint != null" >
-                #{ispayUnpaidint,jdbcType=VARCHAR},
-            </if>
-            <!-- 多级法人改造 add by caiqun 20200615 -->
             <if test="institutionCode != null" >
                 #{institutionCode,jdbcType=VARCHAR},
             </if>
-            <!-- 多级法人改造 add by caiqun 20200615 -->
+            <if test="regDate != null" >
+                #{regDate,jdbcType=DATE},
+            </if>
+            <if test="exDevidentDate != null" >
+                #{exDevidentDate,jdbcType=DATE},
+            </if>
+            <if test="redShareListingDate != null" >
+                #{redShareListingDate,jdbcType=DATE},
+            </if>
+            <if test="devidentDate != null" >
+                #{devidentDate,jdbcType=DATE},
+            </if>
+            <if test="perDevidentAmt != null" >
+                #{perDevidentAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="perDevidentCash != null" >
+                #{perDevidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="devidentCash != null" >
+                #{devidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="devidentAmt != null" >
+                #{devidentAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
@@ -663,8 +719,10 @@
         COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID, PROD_ID, P_TOTLE_TRADE_ID, REMARK, CREATE_USER, 
         CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CURRENT_SUB, LAST_AMT, LAST_RED, 
         LAST_AMT_SUB, ACCOUNTING_AMT, RED_PROFIT, RED_COST, DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
-        TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, 
-        M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT)
+        TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, 
+        CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, 
+        INSTITUTION_CODE, REG_DATE, EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE, DEVIDENT_DATE, 
+        PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT)
         select TOTLE_TRADE_ID, BUSI_TYPE, FINPROD_ID, FINPROD_TYPE, 
             FINPROD_TYPE2, BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, CCY, UNIT_CPRICE, UNIT_INT, 
             UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, FEE_AMT_PAY, 
@@ -674,8 +732,10 @@
             COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID, PROD_ID, P_TOTLE_TRADE_ID, REMARK, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CURRENT_SUB, LAST_AMT, LAST_RED, 
             LAST_AMT_SUB, ACCOUNTING_AMT, RED_PROFIT, RED_COST, DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
-            TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, 
-            M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT
+            TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, 
+            CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, 
+            INSTITUTION_CODE, REG_DATE, EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE, DEVIDENT_DATE, 
+            PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT
              from TRD_FIN_PRODUCT_DEAL_TOTAL
              where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </insert>
@@ -871,6 +931,12 @@
             <if test="settleSpeed != null" >
                 SETTLE_SPEED = #{settleSpeed,jdbcType=DECIMAL},
             </if>
+            <if test="payUnpaidintAmt != null" >
+                PAY_UNPAIDINT_AMT = #{payUnpaidintAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ispayUnpaidint != null" >
+                ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
+            </if>
             <if test="clearType != null" >
                 CLEAR_TYPE = #{clearType,jdbcType=VARCHAR},
             </if>
@@ -892,11 +958,32 @@
             <if test="termType != null" >
                 TERM_TYPE = #{termType,jdbcType=VARCHAR},
             </if>
-            <if test="payUnpaidintAmt != null" >
-                PAY_UNPAIDINT_AMT = #{payUnpaidintAmt,jdbcType=DECIMAL},
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
             </if>
-            <if test="ispayUnpaidint != null" >
-                ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
+            <if test="regDate != null" >
+                REG_DATE = #{regDate,jdbcType=DATE},
+            </if>
+            <if test="exDevidentDate != null" >
+                EX_DEVIDENT_DATE = #{exDevidentDate,jdbcType=DATE},
+            </if>
+            <if test="redShareListingDate != null" >
+                RED_SHARE_LISTING_DATE = #{redShareListingDate,jdbcType=DATE},
+            </if>
+            <if test="devidentDate != null" >
+                DEVIDENT_DATE = #{devidentDate,jdbcType=DATE},
+            </if>
+            <if test="perDevidentAmt != null" >
+                PER_DEVIDENT_AMT = #{perDevidentAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="perDevidentCash != null" >
+                PER_DEVIDENT_CASH = #{perDevidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="devidentCash != null" >
+                DEVIDENT_CASH = #{devidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="devidentAmt != null" >
+                DEVIDENT_AMT = #{devidentAmt,jdbcType=DECIMAL},
             </if>
         </set>
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
@@ -966,6 +1053,8 @@
             TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR},
             IS_OVERDUE_DEAL = #{isOverdueDeal,jdbcType=VARCHAR},
             SETTLE_SPEED = #{settleSpeed,jdbcType=DECIMAL},
+            PAY_UNPAIDINT_AMT = #{payUnpaidintAmt,jdbcType=DECIMAL},
+            ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
             CLEAR_TYPE = #{clearType,jdbcType=VARCHAR},
             EFF_TIME = #{effTime,jdbcType=TIMESTAMP},
             DELIVERY_TYPE = #{deliveryType,jdbcType=VARCHAR},
@@ -973,10 +1062,18 @@
             RATE = #{rate,jdbcType=DECIMAL},
             REPO_TERM = #{repoTerm,jdbcType=DECIMAL},
             TERM_TYPE = #{termType,jdbcType=VARCHAR},
-            PAY_UNPAIDINT_AMT = #{payUnpaidintAmt,jdbcType=DECIMAL},
-            ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR}
+            INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            REG_DATE = #{regDate,jdbcType=DATE},
+            EX_DEVIDENT_DATE = #{exDevidentDate,jdbcType=DATE},
+            RED_SHARE_LISTING_DATE = #{redShareListingDate,jdbcType=DATE},
+            DEVIDENT_DATE = #{devidentDate,jdbcType=DATE},
+            PER_DEVIDENT_AMT = #{perDevidentAmt,jdbcType=DECIMAL},
+            PER_DEVIDENT_CASH = #{perDevidentCash,jdbcType=DECIMAL},
+            DEVIDENT_CASH = #{devidentCash,jdbcType=DECIMAL},
+            DEVIDENT_AMT = #{devidentAmt,jdbcType=DECIMAL}
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
+    
     <!--查询债券相应的基本信息-->
     <select id="selectIsRight" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.DebtBaseInfo">
 		    SELECT T1.FINPROD_ID AS finProdId,

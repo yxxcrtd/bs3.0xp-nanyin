@@ -88,7 +88,32 @@ $(function () {
                           return '<a href="'+JoyinUtil.getRealPath('/framework/download/' + row.annexPath)+ '">'+ data +'</a>'
                    }
                 },
-		]
+		],
+		done:function(){
+			//流程中退回时需选中
+	        var workflowId = $("#workflowId").val();
+	        var selectedSeqNo = $("#selectedSeqNo").val();
+	        if (workflowId !== null || workflowId !== undefined || workflowId !== '') { 
+	        	 var rows =  table.getAllRows();
+	        	 //非待办不可编辑：将未选中结果移除
+	        	 if(pageModel==PAGE_MODEL_REFERENCE){
+	        		 for(var i=rows.length-1;i>=0;i--){
+	        			 if(rows[i].id!=selectedSeqNo){
+	        				 table.deleteRow(i);
+	        			 }
+	        		 }
+	        	 }
+	        	 //待办中可编辑：选中对应行
+	        	 else{
+		        	 for(var i=0;i<rows.length;i++){
+		        		 if(selectedSeqNo&&rows[i].id==selectedSeqNo){
+		        			 table.checkRow(i);
+		        			 break;
+		        		 }
+		        	 } 
+	        	 }
+	        }
+		}
 	});
 
 	var exportExcel = function() {
@@ -534,6 +559,15 @@ $(function () {
  		   download();
 	    });
         // add by guozhongbao 报表披露管理 20181204 end
+        
+        //流程中设置所有行选中
+        var workflowId = $("#workflowId").val();
+        if (workflowId !== null || workflowId !== undefined || workflowId !== '') { 
+        	 //流程中添加.btn-submit 按钮，退回后提交会用到，目前只考虑 设置披露
+        	 $('#ReportRevealManage001_btn_todoSubmit').click(function(){
+        		 $('#ReportRevealManage001_btn_submit').trigger("click");
+        	 });
+        }
     });
 	
 });

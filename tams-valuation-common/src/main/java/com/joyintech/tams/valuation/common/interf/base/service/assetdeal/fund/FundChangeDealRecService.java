@@ -189,7 +189,7 @@ public class FundChangeDealRecService {
             valBokDetailId_Change.setTradeId(valFinProductDeal.getTradeId());
             valBokDetailId_Change.setCcy(valFinProductDeal.getCcy());
             valBokDetailId_Change.setBokDetailId(interfCommonService.genMd5BokDetailId(valBokDetailId_Change));
-            BokDetailId change = interfCommonService.settingDetailSubjectNoTaiL(item.getcAssetId(),DictCodeListExt1.金融产品类型_基金.getValue() , null, valFinProductDeal.getBusiType());
+            BokDetailId change = interfCommonService.settingDetailSubjectNoTaiL(item.getcAssetId(),DictCodeListExt1.金融产品类型_基金.getValue() , null, valFinProductDeal.getBusiType(),valBokDetailId_Change.getBooksetId());
             valBokDetailId_Change.setDetailSubnameTail(change.getDetailSubnameTail());
             valBokDetailId_Change.setDetailSubjectNoTail(change.getDetailSubjectNoTail()==null?change.getDetailSubnameTail():change.getDetailSubjectNoTail());
        		listValBokDetailId.add(valBokDetailId_Change);
@@ -322,10 +322,15 @@ public class FundChangeDealRecService {
         result.setPrinAmt(dto.getPrinAmt());
         // 随交易支付费用 = IF  I.通道费是否随交易支付 =“是” I.交易费 + I.通道费  ELSE I.交易费
         BigDecimal chlFeeAmt = (dto.getChlFeeAmt() == null) ? BigDecimal.ZERO : dto.getChlFeeAmt();
+        /** modify by yanya on 20210207 交易费为空时用0处理 start**/
+        BigDecimal feeAmt = (dto.getFeeAmt() == null) ? BigDecimal.ZERO : dto.getFeeAmt();
+        /** modify by yanya on 20210207 交易费为空时用0处理 end**/
         if(DictCodeList.是否_是.getValue().equals(dto.getIsChlFeeAmt())){
-        	result.setFeeAmtPay(dto.getFeeAmt().add(chlFeeAmt));
+        	//result.setFeeAmtPay(dto.getFeeAmt().add(chlFeeAmt));
+            result.setFeeAmtPay(feeAmt.add(chlFeeAmt));
         }else{
-        	result.setFeeAmtPay(dto.getFeeAmt());
+        	//result.setFeeAmtPay(dto.getFeeAmt());
+            result.setFeeAmtPay(feeAmt);
         }
         // 交易金额 = I.交易金额
         result.setTradeAmt(dto.getTradeAmt());
@@ -333,8 +338,11 @@ public class FundChangeDealRecService {
         if(DictCodeList.是否_否.getValue().equals(dto.getIsChlFeeAmt())){
         	result.setFeeAmtPay(dto.getChlFeeAmt());
         }
+        /** modify by yanya on 20210207 交易费为空时用0处理 start**/
         // 总交易费用 =  I.交易费 + I.通道费
-        result.setFeeAmt(dto.getFeeAmt().add(chlFeeAmt));
+        //result.setFeeAmt(dto.getFeeAmt().add(chlFeeAmt));
+        result.setFeeAmt(feeAmt.add(chlFeeAmt));
+        /** modify by yanya on 20210207 交易费为空时用0处理 end**/
         // 交易方向 = I.交易方向
         result.setPs(dto.getPs());
         // 交易状态 = I.数据动作标志

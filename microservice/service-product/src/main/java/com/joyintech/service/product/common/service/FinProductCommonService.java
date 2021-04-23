@@ -527,7 +527,7 @@ public class FinProductCommonService extends BaseService {
                     StringUtil.defaultString(finProductCommonInfoDto.getRepFinprodInsId())));
         }
         //当更新时，更新组合资金账户信息 add by wm start 2019-10-24
-        this.updatePtlCapacctAcct(finProductCommonInfoDto);
+//        this.updatePtlCapacctAcct(finProductCommonInfoDto); //modify by jiangpeng on 20210401 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
         //当更新时，更新组合资金账户信息 add by wm end 2019-10-24
         this.insertFinProductCommon(finProductCommonInfoDto);
         //当更新时，更新组合的募集方式 add by wangwei5 start 2020-03-20
@@ -1427,6 +1427,8 @@ public class FinProductCommonService extends BaseService {
             inputDto.setFinProductAdd(finProductAdd);
             inputDto.setPrdValParam(finProductCommonInfoDto.getBussFinProductValuationDto());
             inputDto.setFinProdAcctDataList(finProductCommonInfoDto.getBussFinProductFundAccountInfoDto());
+            //add by jiangpeng on 20210401 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+            inputDto.setProductEdit(finProductCommonInfoDto.isProductEdit());
             valuationInterfService.prodOtherInfoInit(inputDto);
         }
         // 一体化对应etliu end
@@ -3488,10 +3490,10 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
                         Date startDate = busiDate.get(0);
                         boolean flag = true;
                         for(Date endDate: busiDate){
-                            if(startDate.compareTo(endDate)==0){
-                                startDate = endDate;
-                                continue;
-                            }
+//                            if(startDate.compareTo(endDate)==0){
+//                                startDate = endDate;
+//                                continue;
+//                            }
                             if(endDate.compareTo(finProductFloatFeeDto.getProvisionFirstDay())<0){
                                 startDate = endDate;
                                 continue;

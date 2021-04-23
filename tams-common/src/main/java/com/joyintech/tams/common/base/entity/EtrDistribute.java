@@ -12,6 +12,11 @@ public class EtrDistribute extends EtrDistributeKey {
     private String tradingHeader;
 
     /**
+     * 是否进入流程审批
+     */
+    private String isApproval;
+
+    /**
      * 取得 接收状态
      * @return 接收状态
      */
@@ -41,5 +46,21 @@ public class EtrDistribute extends EtrDistributeKey {
      */
     public void setTradingHeader(String tradingHeader) {
         this.tradingHeader = tradingHeader == null ? null : tradingHeader.trim();
+    }
+
+    /**
+     * 取得 是否进入流程审批
+     * @return 是否进入流程审批
+     */
+    public String getIsApproval() {
+        return isApproval;
+    }
+
+    /**
+     * 设置 是否进入流程审批
+     * @param isApproval 是否进入流程审批
+     */
+    public void setIsApproval(String isApproval) {
+        this.isApproval = isApproval == null ? null : isApproval.trim();
     }
 }

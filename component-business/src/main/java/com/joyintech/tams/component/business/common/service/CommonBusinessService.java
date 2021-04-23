@@ -1348,4 +1348,9 @@ public class CommonBusinessService extends BaseService {
                 String.class);
     }
     /*组合模拟试算功能合并 panbin 2020-8-18 end*/
+
+    public BigDecimal selectFaceValue(Map<String, Object> params) {
+        BigDecimal result = commonBusinessMapper.selectFaceValue(params);
+        return result == null ? new BigDecimal(100) : result;
+    }
 }

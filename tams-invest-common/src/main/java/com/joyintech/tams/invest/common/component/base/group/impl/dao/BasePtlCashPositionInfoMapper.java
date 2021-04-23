@@ -91,4 +91,15 @@ public interface BasePtlCashPositionInfoMapper {
      * @date 2018/9/30
      */
     BigDecimal selectCashPositionNew(PtlCashPositionFlowDto positionQueryDto);
+	
+	    /**
+     * 根据查询日期、交易场所代码查询下一工作日
+     * 
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    Date selectNextWorkDay(Map<String,Object> map);
 }

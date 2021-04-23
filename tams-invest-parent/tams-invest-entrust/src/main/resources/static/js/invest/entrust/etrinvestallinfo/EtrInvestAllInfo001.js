@@ -13,6 +13,9 @@
         if($('#portfolioId').val()){
             data.portfolioId = $('#portfolioId').val().join(',');
          }
+        if($('#entrustStatus').val()){
+            data.entrustStatus = $('#entrustStatus').val().join(',');
+        }
         //利率互换交易方向  后台转换
         if($('#ps').val() && $('#ps').select2('data')[0].col ==IRS_TYPE ){
         	data.ps= IRS_TYPE+data.ps
@@ -34,6 +37,34 @@
         dblclick:function(table, data) {
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
+            tradeMarket = data.tradeMarket;
+            //交易所（上交和深交）的指令
+            if((tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04) && data.assetType != F17) {
+                var entrustType = data.entrustType;
+                if(entrustType == ENTRUST_BUSS_TYPE_22 || entrustType == ENTRUST_BUSS_TYPE_21
+                    || entrustType == ENTRUST_BUSS_TYPE_20 || entrustType == ENTRUST_BUSS_TYPE_19
+                    || entrustType == ENTRUST_BUSS_TYPE_18 || entrustType == ENTRUST_BUSS_TYPE_17) {
+                    pagePath = "invest/entrust/etragrereptrade/EtrAgreRepTrade001/init";
+                    Joyin.dialog(JoyinUtil.getLabel('EtrExchangeTrade001.detail'), basePath + pagePath,
+                        "95%", "90%", {
+                            pageModel: PAGE_MODEL_REFERENCE,
+                            entrustId: data.entrustId,
+                        });//交易所指令详情
+                }
+            	//债券申购进可转债页面
+            	else if(data.assetType == F01 && data.ps == PS_T04 ){
+            		label='EtrConBond002.refrence';
+            		pagePath = '/invest/entrust/etrconbond/EtrConBond002/init'
+            	}else{
+                	label='EtrExchangeTrade001.detail';
+                	pagePath = "/invest/entrust/etrexchangetrade/EtrExchangeTrade001/init";
+            	}
+                Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                    "95%", "90%",data,
+                    function(){table.reload();});//交易所指令详情
+                
+            }
+            else {
             if(data.assetType == F01 && data.ps != PS_T04 && data.ps != PS_T49){
                 Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrBond"),
                          basePath
@@ -164,6 +195,7 @@
                     "95%", "80%", {
                         pageModel:PAGE_MODEL_REFERENCE,
                         entrustId:data.entrustId,
+                            entrustStatus:data.entrustStatus,
                         targetFinprodId:data.finprodId,
                         portfolioId:data.portfolioId
                     },
@@ -202,10 +234,19 @@
                     },
                     function(){table.reload();});
             }
+                else if(data.assetType == F19){
+                    Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrProjectnet"),
+                        basePath
+                        + "invest/entrust/etrprojectnet/EtrProjectNet002/init",
+                        "95%", "80%", data,
+                        function(){table.reload();});
+                }
+            }
         },
         cols:[ 
              {field:'entrustId',visible:false}
             ,{field:'entrustStatus', visible:false}
+            ,{field:'entrustType',visible:false}
             ,{field:'entrustStatusStr', title: 'EtrInvestAllInfo001.entrustStatus', width:'200',sortField:"entrustStatus"}
             ,{field:'portfolioId', title: 'EtrInvestAllInfo001.portfolioId', width:'200',
                 render : function(data, type, row, meta) {
@@ -217,12 +258,17 @@
                 } ,sortField:"portfolioId"
             }
             ,{field:'portfolioName', title: 'EtrInvestAllInfo001.portfolioName', width:'200',sortField:"portfolioName"}
+            // add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start
+            ,{field:'secAcctName', title: 'EtrInvestAllInfo001.secAcctName', width:'200',sortField:"secAcctName"}
+            // add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end
             ,{field:'assetType',visible:false}
             ,{field:'assetTypeStr', title: 'EtrInvestAllInfo001.finprodType2', width:'200',sortField:"assetType"}
             ,{field:'finprodId',visible:false}
             ,{field:'finprodMarketId', title: 'EtrInvestAllInfo001.finprodId', width:'200',
                 render : function(data, type, row, meta) {
-                    return "<a  class='pro-link finprodIdLink' style='cursor: pointer;'>"+data+"</ a>";
+                	if(row.assetType != F07){
+                		 return "<a  class='pro-link finprodIdLink' style='cursor: pointer;'>"+data+"</ a>";
+                	}
                 },sortField:"finprodMarketId"
             }
             ,{field:'finprodName', title: 'EtrInvestAllInfo001.finprodName', width:'200',sortField:"finprodName"}
@@ -235,8 +281,8 @@
             ,{field:'entrustAmt',type:'number', title: 'EtrInvestAllInfo001.entrustAmt', width:'200', type:'money',sortField:"entrustAmt"}
             ,{field:'ccy',visible:false}
             ,{field:'ccyStr', title: 'EtrInvestAllInfo001.ccy', width:'200',sortField:"ccy"}
-            ,{field:'vdate', title: 'EtrInvestAllInfo001.vdate', width:'200' ,type:'date',sortField:"vdate"}
-            ,{field:'mdate', title: 'EtrInvestAllInfo001.mdate', width:'200' ,type:'date',sortField:"mdate"}
+            ,{field:'vdateStr', title: 'EtrInvestAllInfo001.vdate', width:'200' ,type:'date',sortField:"vdate"}
+            ,{field:'mdateStr', title: 'EtrInvestAllInfo001.mdate', width:'200' ,type:'date',sortField:"mdate"}
             ,{field:'invManagerId', title: 'EtrInvestAllInfo001.invManagerId', width:'200',sortField:"invManagerId"}
             ,{field:'remark', title: 'EtrInvestAllInfo001.remark', width:'200',sortable:false}
             ,{field:'pbExportstatus', visible:false}
@@ -320,6 +366,13 @@
                 + "invest/asset/tenderbond/FinTenderBondTargetAsset002/init",
                 "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
                     finprodId:row.finprodId,  //债券一级债券委托查看
+                });
+        }else if(row.assetType == F19){
+            Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.astProjectnet"),
+                basePath
+                + "invest/asset/projectnet/FinProjectNetTargetAsset002/init",
+                "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                    finprodId:row.finprodId,  //金融产品代码
                 });
         }
     });

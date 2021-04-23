@@ -116,7 +116,7 @@ public class CstpSelect001Controller extends BaseController{
         param.put("cstpType","cstp");
         param.put("entrustStatus", DictCodeList.委托状态_已接收.getValue());
         String isCstp = (String) param.get("isCstp");
-        Page<TrdCommandReceive001Dto> trdCommandReceive001DtoPage = trdCommandReceive001Service.selectForPageFromCstp(param);
+            Page<TrdCommandReceive001Dto> trdCommandReceive001DtoPage = trdCommandReceive001Service.selectForPageFromCstp(param);
 //        if(Boolean.parseBoolean(isCstp)){
 //            cstpSelect001Service.findEntrustPageByCstp(param,trdCommandReceive001DtoPage);
 //        }
@@ -178,6 +178,20 @@ public class CstpSelect001Controller extends BaseController{
         Page<SelectOptionDto> execid = cstpSelect001Service.getExecid(map);
         return execid;
     }
+    
+    /**
+     * 报价信息 委托  预交易
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getBusiCode")
+    public Page<SelectOptionDto> getBusiCode(){
+        Map<String,Object> map = RequestUtil.getPageParam();
+        Page<SelectOptionDto> execid = cstpSelect001Service.getBusiCode(map);
+        return execid;
+    }
+    
     /**
      * 获取资产代码下拉框
      * @return 下拉框集合

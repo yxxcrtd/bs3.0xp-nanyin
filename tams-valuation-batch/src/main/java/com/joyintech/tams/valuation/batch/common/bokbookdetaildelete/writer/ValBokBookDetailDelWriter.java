@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.valuation.batch.common.accounting.dao.AccountingCommonMapper;
-import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
 import com.joyintech.tams.valuation.batch.common.bokbookdetaildelete.dto.ValBokBookDetailDelResult;
 import com.joyintech.tams.valuation.batch.vatdraw.dao.VatDrawCommonMapper;
+import com.joyintech.tams.valuation.common.batch.losscommon.service.LossCommonService;
 
 /**
  * 账务明细删除批处理 - 写入
@@ -26,10 +26,10 @@ import com.joyintech.tams.valuation.batch.vatdraw.dao.VatDrawCommonMapper;
 public class ValBokBookDetailDelWriter extends BaseWriter<NeedToWriteEntity> {
 
     /**
-     * 共通方法
+     * 减值准备共通方法
      */
     @Autowired
-    private AccountingCommonService accountingCommonService;
+    private LossCommonService lossCommonService;
 
     @Autowired
     private VatDrawCommonMapper vatDrawCommonMapper;
@@ -70,6 +70,8 @@ public class ValBokBookDetailDelWriter extends BaseWriter<NeedToWriteEntity> {
         accountingCommonMapper.deleteBokClawbackInfo(this.getParams());
         // 回补信息明细删除
         accountingCommonMapper.deleteBokClawbackInfoDetail(this.getParams());
+        //删除统计分析明细表（资产减值）
+        lossCommonService.deleteBokStatLossPosiiton(this.getParams());
     }
 
 }

@@ -342,6 +342,19 @@ public class FinProductDealInfoComDTO {
      * 收付方向
      */
     private String psPayment;
+    
+    // ADD BY CAOGUO ON 20201015 减值相关修改 START
+    /**
+     * 减值阶段
+     */
+    private String lossStage;
+    /**
+     * 汇总交易编号
+     */
+    private String totleTradeId;
+    // ADD BY CAOGUO ON 20201015 END
+
+   
 
     /**
      * 取得 交易市场，一级市场、二级市场
@@ -1501,5 +1514,41 @@ public class FinProductDealInfoComDTO {
      */
     public void setPsPayment(String psPayment) {
         this.psPayment = psPayment;
+    }
+
+    /**
+     * 获取 lossStage
+     * 
+     * @return lossStage.
+     */
+    public String getLossStage() {
+        return lossStage;
+    }
+
+    /**
+     * 设置 lossStage
+     * 
+     * @param lossStage lossStage
+     */
+    public void setLossStage(String lossStage) {
+        this.lossStage = lossStage;
+    }
+
+    /**
+     * 获取 totleTradeId
+     * 
+     * @return totleTradeId.
+     */
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    /**
+     * 设置 totleTradeId
+     * 
+     * @param totleTradeId totleTradeId
+     */
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
     }
 }

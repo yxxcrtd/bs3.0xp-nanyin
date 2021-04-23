@@ -29,6 +29,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.systemtools.service.SystemToolService;
 import com.joyintech.tams.valuation.common.interf.base.constant.*;
 import com.joyintech.tams.valuation.common.interf.base.service.dealcommon.DealCommonService;
 import org.apache.commons.collections.CollectionUtils;
@@ -44,6 +45,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.InvAimDto;
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
+import com.joyintech.tams.valuation.common.batch.tradecommon.dto.ValTrdProductDealInfoDto;
+import com.joyintech.tams.valuation.common.batch.tradecommon.service.ValTradeCommonService;
 import com.joyintech.tams.valuation.common.constants.ValDictCode;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tams.constant.DictCode;
@@ -67,12 +70,15 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnRe
 import com.joyintech.tams.valuation.common.interf.base.dto.ValBooksetInfoDto;
 import com.joyintech.tams.valuation.common.interf.base.dto.ValChannelProdDealDto;
 import com.joyintech.tams.valuation.common.interf.base.dto.ValFinProductExt;
+import com.joyintech.tams.valuation.common.interf.base.dto.SecExecApplyDto;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValDlTarget;
 import com.joyintech.tams.valuation.common.interf.val.dao.BokTradeBuildMapper;
 import com.joyintech.tams.valuation.common.interf.val.service.ValSysParaService;
 import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 接口共通
@@ -159,6 +165,16 @@ public class InterfCommonService {
     @Autowired
     private FinProductAddMapper finProductAddMapper;
     /**
+     * 系统工具类
+     */
+    @Autowired
+    private SystemToolService systemToolService;
+    /**
+     * 交易信息查询
+     */
+    @Autowired
+    ValTradeCommonService valTradeCommonService;
+    /**
      * 账套信息初始化
      * 
      * @param dto 标的类金融产品信息 modify by wujie on 20181013 remark:增加参数tmp_booksetId
@@ -221,6 +237,8 @@ public class InterfCommonService {
         
         // 变量.模板账套信息.特殊核算模型 = 账套信息Dto.特殊核算模型
         resValBokBookset.setBokSpecMode(valBokBookset.getBokSpecMode());// add by dongjun on
+        // 变量.模板账套信息 = prodinfo.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
+        resValBokBookset.setBelongInstitutionCode(dto.getBelongInstitutionCode());
         result.setValBokBookset(resValBokBookset);
 
         // 2.2.2 账套日期表(BOK_BOOKSET_DATE)
@@ -360,6 +378,9 @@ public class InterfCommonService {
                     bokBooksetExt.setParamValue(dtoAdd.getIsCalc());
                     bokBooksetExt.setParamName(ValDictCodeList.账套配置表参数项_活期存款是否计提.getCodeName());
                     bokBooksetExt.setRemark("数据字典：是否");
+                    /**add by wujie on 20210303 start**/
+                    bokBooksetExt.setParamType(DictCodeListExt3.账套参数类型_资产类.getValue());
+                    /**add by wujie on 20210303 end**/
                     resValBokBooksetExt.add(bokBooksetExt);
                 }
             }
@@ -369,6 +390,9 @@ public class InterfCommonService {
                 bokBooksetExt.setParamCode(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue());
                 bokBooksetExt.setParamName(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getCodeName());
                 bokBooksetExt.setRemark("数据字典：损益结转频率");
+                /**add by wujie on 20210303 start**/
+                bokBooksetExt.setParamType(DictCodeListExt3.账套参数类型_产品类.getValue());
+                /**add by wujie on 20210303 end**/
                 // 1. 货币型产品
                 if (DictCodeList.收益类型_货币型.getValue().equals(profitType)) {
                     bokBooksetExt.setParamValue(UP_CARRYOVER_CYCLE_HBX);
@@ -391,6 +415,9 @@ public class InterfCommonService {
                 bokBooksetExt.setParamCode(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue());
                 bokBooksetExt.setParamName(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getCodeName());
                 bokBooksetExt.setRemark("数据字典：损益结转频率");
+                /**add by wujie on 20210303 start**/
+                bokBooksetExt.setParamType(DictCodeListExt3.账套参数类型_产品类.getValue());
+                /**add by wujie on 20210303 end**/
                 // 1. 货币型产品
                 if (DictCodeList.收益类型_货币型.getValue().equals(profitType)) {
                     bokBooksetExt.setParamValue(PAL_CARRYOVER_CYCLE_HBX);
@@ -413,6 +440,9 @@ public class InterfCommonService {
                 bokBooksetExt.setParamCode(ValDictCodeList.账套配置表参数项_损益结转频率.getValue());
                 bokBooksetExt.setParamName(ValDictCodeList.账套配置表参数项_损益结转频率.getCodeName());
                 bokBooksetExt.setRemark("数据字典：损益结转频率");
+                /**add by wujie on 20210303 start**/
+                bokBooksetExt.setParamType(DictCodeListExt3.账套参数类型_产品类.getValue());
+                /**add by wujie on 20210303 end**/
                 // 2. 净值型产品
                 if (DictCodeList.收益类型_净值型.getValue().equals(profitType)) {
                     bokBooksetExt.setParamValue(CARRYOVER_CYCLE_JZX);
@@ -436,6 +466,9 @@ public class InterfCommonService {
                 bokBooksetExt.setParamValue(profitType);
                 bokBooksetExt.setParamName("收益类型");
                 bokBooksetExt.setRemark("数据字典：收益类型");
+                /**add by wujie on 20210303 start**/
+                bokBooksetExt.setParamType(DictCodeListExt3.账套参数类型_其他类.getValue());
+                /**add by wujie on 20210303 end**/
                 resValBokBooksetExt.add(bokBooksetExt);
             }
             if (ValDictCodeList.账套配置表参数项_估值表模板.getValue().equals(key)) {
@@ -450,6 +483,11 @@ public class InterfCommonService {
                 bokBooksetExt.setParamValue(paramValue);
                 bokBooksetExt.setParamName(ValDictCodeList.账套配置表参数项_估值表模板.getCodeName());
                 bokBooksetExt.setRemark("数据字典：估值表模板");
+                
+                /**add by wujie on 20210303 start**/
+                bokBooksetExt.setParamType(DictCodeListExt3.账套参数类型_估值表.getValue());
+                /**add by wujie on 20210303 end**/
+                
                 resValBokBooksetExt.add(bokBooksetExt);
             }
         }
@@ -471,6 +509,9 @@ public class InterfCommonService {
         		bok.setParamValue(sysParams.get(key));
         		bok.setParamName(ValDictCodeList.from(ValDictCode.账套配置表参数项, key) == null ? StringUtil.EMPTY : 
         			ValDictCodeList.from(ValDictCode.账套配置表参数项, key).getCodeName());
+        		 /**add by wujie on 20210303 start**/
+        		bok.setParamType(DictCodeListExt3.账套参数类型_其他类.getValue());
+                /**add by wujie on 20210303 end**/
         		resValBokBooksetExt.add(bok);
         	}
         }
@@ -680,6 +721,12 @@ public class InterfCommonService {
         else {
             invAim = deal.getInvAim();
         }
+        /**add by wujie on 20201116 start remark:投资目的为999999时，设置为空**/
+        if("999999".equals(invAim)){
+        	invAim = null;
+        }
+        /**add by wujie on 20201116 end remark:投资目的为999999时，设置为空**/
+        
         /** modify by dongjun on 20190313 remark:通道变更 start**/
         // 定义变量：业务明细代码
         String bokDetailId = deal.getFinprodId();
@@ -724,6 +771,7 @@ public class InterfCommonService {
         // 入账凭证编号 BOOK_ID NULL
         // 创建时间 = 系统时间
         valDealAccounting.setCreateTime(deal.getCreateTime());
+        
         // added by wangzhiang 增加入账信息投资目的 20181208 start
         // 投资目的
         valDealAccounting.setInvAim(invAim);
@@ -2163,24 +2211,15 @@ public class InterfCommonService {
      */
     public String getCalendarId(String tradeMarket) {
         String calendarId = null;
-//        if (tradeMarket == null) {
-//            return calendarId;
-//        }
-        if (DictCodeList.交易流通场所_银行间债券市场.getValue().equals(tradeMarket)) {
+        if (DictCodeListExt1.估值交易市场_银行间.getValue().equals(tradeMarket)) {
             calendarId = "03";
         }
-        else if (DictCodeList.交易流通场所_上海证券交易所.getValue().equals(tradeMarket)) {
+        else if (DictCodeListExt1.估值交易市场_上交所.getValue().equals(tradeMarket)) {
             calendarId = "04";
         }
-        else if (DictCodeList.交易流通场所_深圳证券交易所.getValue().equals(tradeMarket)) {
+        else if (DictCodeListExt1.估值交易市场_深交所.getValue().equals(tradeMarket)) {
             calendarId = "05";
         }
-        /*
-         * else if(DictCodeList.交易流通场所_上海期货交易所.getValue().equals(tradeMarket)){ calendarId = "SH";
-         * } else if(DictCodeList.交易流通场所_上海黄金交易所.getValue().equals(tradeMarket)){ calendarId =
-         * "SH"; } else if(DictCodeList.交易流通场所_上海票据交易所.getValue().equals(tradeMarket)){ calendarId
-         * = "SH"; }
-         */
         else {
             calendarId = "03";
         }
@@ -2218,6 +2257,10 @@ public class InterfCommonService {
         }
         else if (DictCodeList.分支类型_应收利息.getValue().equals(branchType)) {
             breanchStr += "02";
+        }
+        /** add by yanya on 20210309 增加行权的分支序号生成**/
+        else if (DictCodeListExt3.分支类型_行权.getValue().equals(branchType)) {
+            breanchStr += "03";
         }
         breanch = Long.valueOf(breanchStr);
         return breanch;
@@ -4317,6 +4360,24 @@ public class InterfCommonService {
             paramMap.put("PS_PAYMENT", tradeDeal.getPsPayment());
         }
         /**ADD BY WUJIE ON 20200205 END**/
+
+        /** add by yanya on 20201222 其他债券跟计划类指令一样，这里增加是否其他债券参数区分 start**/
+        //判定为计划类资产 且 业务类型为资产类交易
+        if(StringUtil.equals(DictCodeListExt1.金融产品类型_计划类资产.getValue(), tradeDeal.getFinprodType())
+            && StringUtil.equals(DictCodeList.业务类型_计划类资产交易_类债券资产交易.getValue(), tradeDeal.getBusiType())) {
+            //定义 是否其他债券 默认为否
+            String 是否其他债券 = DictCodeList.是否_否.getValue();
+            //定义 变量.标的类金融产品附属DTO = 查询标的类金融产品附属表
+            FinProductAdd finProductAddDto = finProductAddMapper.selectByPrimaryKey(tradeDeal.getFinprodId());
+            //IF 变量.标的类金融产品附属DTO IS NOT NULL AND 变量.标的类金融产品附属DTO.是否其他债权 IS NOT NULL
+            if(finProductAddDto != null && StringUtil.isNotEmpty(finProductAddDto.getIsQtzq())) {
+                //变量.是否其他债权 = 变量.标的类金融产品附属DTO.是否其他债权
+                是否其他债券 = finProductAddDto.getIsQtzq();
+            }
+            //变量.交易标的DTO.参数条件Map.put("IS_QTZQ",变量.是否其他债权)
+            paramMap.put("IS_QTZQ", 是否其他债券);
+        }
+        /** add by yanya on 20201222 其他债券跟计划类指令一样，这里增加是否其他债券参数区分 end**/
         
         dto.setParamMap(paramMap);
         
@@ -4436,7 +4497,10 @@ public class InterfCommonService {
             if(DictCodeList.是否_是.getValue().equals(stl.getIsBook())){
             	continue;
             }
-            
+            /** add by lby on 20201225 四级科目尾号集合 start**/
+            //定义 变量.四级科目尾号集合
+            Map<String,BokDetailId> detailSubjectNoTailMap= new HashMap<>();
+            /** add by lby on 20201225 四级科目尾号集合 end**/
             for (ValBooksetInfoDto bokset : boksetList) {
             	/**
                  * 入账信息初始化
@@ -4497,6 +4561,22 @@ public class InterfCommonService {
                 valDealAccountingDetail.setBokDetailId(detailId);
                 // 币种 变量.交易标的DTO.币种
                 valBokDetailId.setCcy(dto.getCcy());
+                /** add by lby on 20201225 四级科目尾号集合 start**/
+                //定义 变量.bokDetailId = 变量.四级科目尾号集合.get(BOK.账套代码+变量.账务明细代码)
+                BokDetailId bokDetailId = detailSubjectNoTailMap.get(bokset.getBooksetId() + valBokDetailId.getBokDetailId());
+                //IF 变量.bokDetailId IS NULL
+                if (!StringUtil.isNotEmpty(bokDetailId)){
+                    //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+                    //变量.bokDetailId = 返回值
+                    bokDetailId = this.settingDetailSubjectNoTaiL(myAcctNo, myAcctType, null, null, bokset.getBooksetId());
+                }
+                //变量.四级科目尾号集合.put(BOK.账套代码+变量.账务明细代码,变量.bokDetailId)
+                detailSubjectNoTailMap.put(bokset.getBooksetId() + valBokDetailId.getBokDetailId(),bokDetailId);
+                //变量.账务明细代码表Dto.四级科目尾号 = 变量.bokDetailId.四级科目尾号
+                valBokDetailId.setDetailSubjectNoTail(bokDetailId.getDetailSubjectNoTail());
+                //变量.账务明细代码表Dto.四级科目尾号名称 = 变量.bokDetailId.四级科目尾号名称
+                valBokDetailId.setDetailSubnameTail(bokDetailId.getDetailSubnameTail());
+                /** add by lby on 20201225 四级科目尾号集合 end**/
                 listBokDetailId.add(valBokDetailId);
                 
                 /**ADD BY WUJIE ON 20190929 START**/
@@ -4509,13 +4589,25 @@ public class InterfCommonService {
                 	 valBokDetailId_dsf.setTradeId(tradeDeal.getTradeId());
                 	 valBokDetailId_dsf.setCcy(tradeDeal.getCcy());
                 	 valBokDetailId_dsf.setBokDetailId(genMd5BokDetailId(valBokDetailId_dsf));
-                	 
-                	 /**四级科目尾号处理 START**/
-                	 BokDetailId dsf = this.settingDetailSubjectNoTaiL(dto.getFinprodId(), dto.getFinprodType(), branch, dto.getBusiType());
+
+                	 /**四级科目尾号处理 START modify by lby 20201228
+                	 BokDetailId dsf = this.settingDetailSubjectNoTaiL(dto.getFinprodId(), dto.getFinprodType(), branch, dto.getBusiType(),bokset.getBooksetId());
             		 valBokDetailId_dsf.setDetailSubnameTail(dsf.getDetailSubnameTail());
             		 valBokDetailId_dsf.setDetailSubjectNoTail(dsf.getDetailSubjectNoTail());
-                	 /**四级科目尾号处理 END**/
-            		 
+                	 四级科目尾号处理 END modify by lby 20201228**/
+                    //定义 变量.bokDetailIdTail = 变量.四级科目尾号集合.get(BOK.账套代码+变量.对手方_账务明细代码)
+                    BokDetailId bokDetailIdTail = detailSubjectNoTailMap.get(bokset.getBooksetId() + valBokDetailId_dsf.getBokDetailId());
+                    if (!StringUtil.isNotEmpty(bokDetailIdTail)){
+                        //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+                        //变量.bokDetailId = 返回值
+                        bokDetailIdTail = this.settingDetailSubjectNoTaiL(dto.getFinprodId(), dto.getFinprodType(), 0L, tradeDeal.getBusiType(), bokset.getBooksetId());
+                    }
+                    //变量.四级科目尾号集合.put(BOK.账套代码+变量.对手方_账务明细代码,变量.bokDetailId)
+                    detailSubjectNoTailMap.put(bokset.getBooksetId() + valBokDetailId_dsf.getBokDetailId(),bokDetailIdTail);
+                    //变量.对手方_账务明细代码表DTO.四级科目尾号 = 变量.bokDetailId.四级科目尾号
+                    valBokDetailId_dsf.setDetailSubnameTail(bokDetailIdTail.getDetailSubnameTail());
+                    //变量.对手方_账务明细代码表DTO.四级科目尾号名称 = 变量.bokDetailId.四级科目尾号名称
+                    valBokDetailId_dsf.setDetailSubjectNoTail(bokDetailIdTail.getDetailSubjectNoTail());
                      listBokDetailId.add(valBokDetailId_dsf);
                 }
                 /**ADD BY WUJIE ON 20190929 END IF**/
@@ -4716,6 +4808,24 @@ public class InterfCommonService {
             paramMap.put("PS_PAYMENT", tradeDeal.getPsPayment());
         }
         /**ADD BY WUJIE ON 20200205 END**/
+
+        /** add by yanya on 20201222 其他债券跟计划类指令一样，这里增加是否其他债券参数区分 start**/
+        //判定为计划类资产 且 业务类型为资产类交易
+        if(StringUtil.equals(DictCodeListExt1.金融产品类型_计划类资产.getValue(), tradeDeal.getFinprodType())
+                && StringUtil.equals(DictCodeList.业务类型_计划类资产交易_类债券资产交易.getValue(), tradeDeal.getBusiType())) {
+            //定义 是否其他债券 默认为否
+            String 是否其他债券 = DictCodeList.是否_否.getValue();
+            //定义 变量.标的类金融产品附属DTO = 查询标的类金融产品附属表
+            FinProductAdd finProductAddDto = finProductAddMapper.selectByPrimaryKey(tradeDeal.getFinprodId());
+            //IF 变量.标的类金融产品附属DTO IS NOT NULL AND 变量.标的类金融产品附属DTO.是否其他债权 IS NOT NULL
+            if(finProductAddDto != null && StringUtil.isNotEmpty(finProductAddDto.getIsQtzq())) {
+                //变量.是否其他债权 = 变量.标的类金融产品附属DTO.是否其他债权
+                是否其他债券 = finProductAddDto.getIsQtzq();
+            }
+            //变量.交易标的DTO.参数条件Map.put("IS_QTZQ",变量.是否其他债权)
+            paramMap.put("IS_QTZQ", 是否其他债券);
+        }
+        /** add by yanya on 20201222 其他债券跟计划类指令一样，这里增加是否其他债券参数区分 end**/
         
         //变量.交易标的DTO.参数条件Map  = 变量.参数条件Map
         dto.setParamMap(paramMap);
@@ -4882,6 +4992,10 @@ public class InterfCommonService {
             if(DictCodeList.是否_是.getValue().equals(stl.getIsBook())){
                 continue;
             }
+            /** add by lby on 20201225 四级科目尾号集合 start**/
+            //定义 变量.四级科目尾号集合
+            Map<String,BokDetailId> detailSubjectNoTailMap= new HashMap<>();
+            /** add by lby on 20201225 四级科目尾号集合 end**/
             //LOOP 变量.核算主体查询账套信息 BOK
             for (ValBooksetInfoDto bokset : boksetList) {
                 //定义 变量.入账信息Dto
@@ -4919,6 +5033,22 @@ public class InterfCommonService {
                 //定义 变量.账务明细代码 = 调用共通设计->【详细设计-接口共通方法设计.xlsx】->生成MD5账务明细代码SHEET
                 String bokDetailId = this.genMd5BokDetailId(valBokDetailId);
                 valBokDetailId.setBokDetailId(bokDetailId);
+                /** add by lby on 20201225 四级科目尾号集合 start**/
+                //定义 变量.bokDetailId = 变量.四级科目尾号集合.get(BOK.账套代码 +变量.账务明细代码)
+                BokDetailId bokDetailIdTaiL = detailSubjectNoTailMap.get(bokset.getBooksetId() + valBokDetailId.getBokDetailId());
+                //IF 变量.bokDetailId IS NULL
+                if (!StringUtil.isNotEmpty(bokDetailIdTaiL)){
+                    //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+                    //变量.bokDetailId = 返回值
+                    bokDetailIdTaiL = this.settingDetailSubjectNoTaiL(myAcctNo, myAcctType, null, null, bokset.getBooksetId());
+                }
+                //变量.四级科目尾号集合.put(BOK.账套代码 +变量.账务明细代码,变量.bokDetailId)
+                detailSubjectNoTailMap.put(bokset.getBooksetId() + valBokDetailId.getBokDetailId(),bokDetailIdTaiL);
+                //变量.账务明细代码表Dto.四级科目尾号 = 变量.bokDetailId.四级科目尾号
+                valBokDetailId.setDetailSubjectNoTail(bokDetailIdTaiL.getDetailSubjectNoTail());
+                //变量.账务明细代码表Dto.四级科目尾号名称 = 变量.bokDetailId.四级科目尾号名称
+                valBokDetailId.setDetailSubnameTail(bokDetailIdTaiL.getDetailSubnameTail());
+                /** add by lby on 20201225 四级科目尾号集合 end**/
                 listBokDetailId.add(valBokDetailId);
                 
                 // 定义 变量.入账账务明细Dto
@@ -4970,9 +5100,23 @@ public class InterfCommonService {
                 	 valBokDetailId_dsf.setTradeId(tradeDeal.getTradeId());
                 	 valBokDetailId_dsf.setCcy(tradeDeal.getCcy());
                 	 valBokDetailId_dsf.setBokDetailId(genMd5BokDetailId(valBokDetailId_dsf));
-                	 BokDetailId dsf = this.settingDetailSubjectNoTaiL(dto.getFinprodId(), dto.getFinprodType(), branch, dto.getBusiType());
+                	 /*BokDetailId dsf = this.settingDetailSubjectNoTaiL(dto.getFinprodId(), dto.getFinprodType(), branch, dto.getBusiType(),bokset.getBooksetId());
             		 valBokDetailId_dsf.setDetailSubnameTail(dsf.getDetailSubnameTail());
-            		 valBokDetailId_dsf.setDetailSubjectNoTail(dsf.getDetailSubjectNoTail());
+            		 valBokDetailId_dsf.setDetailSubjectNoTail(dsf.getDetailSubjectNoTail());*/
+                	 //定义 变量.bokDetailId = 变量.四级科目尾号集合.get(BOK.账套代码 + 变量.对手方_账务明细代码)
+                     BokDetailId bokDetailIdTmp = detailSubjectNoTailMap.get(bokset.getBooksetId() + valBokDetailId_dsf.getBokDetailId());
+                    if (!StringUtil.isNotEmpty(bokDetailIdTmp)){
+                        //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+                        BokDetailId bokDetailId3 = this.settingDetailSubjectNoTaiL(dto.getFinprodId(), dto.getFinprodType(), 0L, tradeDeal.getBusiType(), bokset.getBooksetId());
+                        //变量.bokDetailId = 返回值
+                        bokDetailIdTmp = bokDetailId3;
+                    }
+                    //变量.四级科目尾号集合.put(BOK.账套代码+变量.账务明细代码,变量.bokDetailId)
+                    detailSubjectNoTailMap.put(bokset.getBooksetId() + valBokDetailId_dsf.getBokDetailId(),bokDetailIdTmp);
+                    //变量.对手方_账务明细代码表DTO.四级科目尾号 = 变量.bokDetailId.四级科目尾号
+                    valBokDetailId_dsf.setDetailSubjectNoTail(bokDetailIdTmp.getDetailSubjectNoTail());
+                    //变量.对手方_账务明细代码表DTO.四级科目尾号名称 = 变量.bokDetailId.四级科目尾号名称
+                    valBokDetailId_dsf.setDetailSubnameTail(bokDetailIdTmp.getDetailSubnameTail());
                      listBokDetailId.add(valBokDetailId_dsf);
                 }
                 /**ADD BY WUJIE ON 20191026 END IF**/
@@ -4986,6 +5130,22 @@ public class InterfCommonService {
                 	 valBokDetailId_dsf.setTradeId(tradeDeal.getTradeId());
                 	 valBokDetailId_dsf.setCcy(tradeDeal.getCcy());
                 	 valBokDetailId_dsf.setBokDetailId(genMd5BokDetailId(valBokDetailId_dsf));
+                    /** add by lby on 20201225 四级科目尾号集合 start**/
+                    //定义 变量.bokDetailId = 变量.四级科目尾号集合.get(BOK.账套代码 + 变量.对手方_账务明细代码)
+                    BokDetailId bokDetailIdTaiL2 = detailSubjectNoTailMap.get(bokset.getBooksetId() + valBokDetailId_dsf.getBokDetailId());
+                    //IF 变量.bokDetailId IS NULL
+                    if (!StringUtil.isNotEmpty(bokDetailIdTaiL2)){
+                        //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+                        //变量.bokDetailId = 返回值
+                        bokDetailIdTaiL2 = this.settingDetailSubjectNoTaiL(counterAcctNo, counterAcctType, null, null, bokset.getBooksetId());
+                    }
+                    //变量.四级科目尾号集合.put(BOK.账套代码 + 变量.对手方_账务明细代码,变量.bokDetailId)
+                    detailSubjectNoTailMap.put(bokset.getBooksetId() + valBokDetailId_dsf.getBokDetailId(),bokDetailIdTaiL2);
+                    //变量.交易保证金账户_账务明细代码表DTO.四级科目尾号 =	变量.bokDetailId.四级科目尾号
+                    valBokDetailId_dsf.setDetailSubjectNoTail(bokDetailIdTaiL2.getDetailSubjectNoTail());
+                    //变量.交易保证金账户_账务明细代码表DTO.四级科目尾号名称 =	变量.bokDetailId.四级科目尾号名称
+                    valBokDetailId_dsf.setDetailSubnameTail(bokDetailIdTaiL2.getDetailSubnameTail());
+                    /** add by lby on 20201225 四级科目尾号集合 end**/
                      listBokDetailId.add(valBokDetailId_dsf);
                 }
                 /**ADD BY WUJIE ON 20200110 END IF**/
@@ -6110,6 +6270,9 @@ public class InterfCommonService {
     	List<StlFinProductAcct> newstlFinProductAcctList=this.queryStlFinProductAcctInfo(map);
     	//初始化通道资金账户信息
     	if(!CollectionUtils.isEmpty(newstlFinProductAcctList)){
+    	    //定义 变量.四级科目尾号集合 Map<String,BokDetailId> 20201225 start
+            Map<String,BokDetailId> bokDetailIdMap = new HashMap<>();
+            // 20201225 end
             newstlFinProductAcctList.forEach(x ->{
                 String acctType = x.getAcctType();
                 if(DictCodeListExt1.资金账户类型_产品托管户.getValue().equals(x.getAcctType())){
@@ -6168,7 +6331,20 @@ public class InterfCommonService {
     		    	bokDetail.setBranch(0L);
                     // 币种 L.币种
     		    	bokDetail.setCcy(x.getCcy());
-    		    	bokDetailIdList.add(bokDetail);
+                    //定义 变量.bokDetailId = 变量.四级科目尾号集合.get(变量.子账套代码+变量.账务明细代码)
+                    BokDetailId bokDetailIdTmp = bokDetailIdMap.get(booksetIdSon + bokDetail.getBokDetailId());
+                    if (!StringUtil.isNotEmpty(bokDetailIdTmp)){
+                        //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+                        //变量.bokDetailId = 返回值
+                        bokDetailIdTmp = this.settingDetailSubjectNoTaiL(x.getAcctNo(), acctType, null, null, booksetIdSon);
+                    }
+                    //变量.四级科目尾号集合.put(变量.子账套代码+变量.账务明细代码,变量.bokDetailId)
+                    bokDetailIdMap.put(booksetIdSon + bokDetail.getBokDetailId(),bokDetailIdTmp);
+                    //变量.账务明细代码Dto.四级科目尾号 = 变量.bokDetailId.四级科目尾号
+                    bokDetail.setDetailSubjectNoTail(bokDetailIdTmp.getDetailSubjectNoTail());
+                    //变量.账务明细代码Dto.四级科目尾号名称 =	变量.bokDetailId.四级科目尾号名称
+                    bokDetail.setDetailSubnameTail(bokDetailIdTmp.getDetailSubnameTail());
+                    bokDetailIdList.add(bokDetail);
     			}
     			
     		});
@@ -6512,6 +6688,8 @@ public class InterfCommonService {
 		   if(CollectionUtils.isEmpty(initStlFinProductAcctList)){
 			   continue;
 		   }
+		   //定义 变量.四级科目尾号集合 Map<String,BokDetailId>
+           Map<String,BokDetailId> bokDetailIdMap = new HashMap<>();
            for(BokBooksetSonDto b:bokBooksetSonDtoList){
                for(StlFinProductAcct s:initStlFinProductAcctList){
                    String acctType = s.getAcctType();
@@ -6568,8 +6746,23 @@ public class InterfCommonService {
                     bokDetail.setBranch(0L);
                     // 币种 S.币种
                     bokDetail.setCcy(s.getCcy());
-                    bokDetailIdList.add(bokDetail);
-	    		    	
+                   /** add by lby on 20201225 start**/
+                   //定义 变量.bokDetailId =	变量.四级科目尾号集合.get(B.子账套代码+变量.账务明细代码)
+                   BokDetailId bokDetailIdTmp = bokDetailIdMap.get(b.getSubBokBooksetId() + bokDetail.getBokDetailId());
+                   if (!StringUtil.isNotEmpty(bokDetailIdTmp)){
+                       //调用共通设计->【详细设计-接口共通方法设计.xlsx】->四级科目号设置SHEET
+                       //变量.bokDetailId = 返回值
+                       bokDetailIdTmp = this.settingDetailSubjectNoTaiL(s.getAcctNo(), acctType, null, null, b.getSubBokBooksetId());
+                   }
+                   //变量.四级科目尾号集合.put(B.子账套代码+变量.账务明细代码,变量.bokDetailId)
+                   bokDetailIdMap.put(b.getSubBokBooksetId() + bokDetail.getBokDetailId(),bokDetailIdTmp);
+                   //变量.账务明细代码Dto.四级科目尾号 = 变量.bokDetailId.四级科目尾号
+                   bokDetail.setDetailSubjectNoTail(bokDetailIdTmp.getDetailSubjectNoTail());
+                   //变量.账务明细代码Dto.四级科目尾号名称 = 变量.bokDetailId.四级科目尾号名称
+                   bokDetail.setDetailSubnameTail(bokDetailIdTmp.getDetailSubnameTail());
+                   /** add by lby on 20201225 end**/
+                   bokDetailIdList.add(bokDetail);
+
 			   }
 			   
 		   };
@@ -6927,6 +7120,12 @@ public class InterfCommonService {
                 invAim = trdProductDeal.getInvAim();
             }
             
+            /**add by wujie on 20201116 start remark:投资目的为999999时，设置为空**/
+            if("999999".equals(invAim)){
+            	invAim = null;
+            }
+            /**add by wujie on 20201116 end remark:投资目的为999999时，设置为空**/
+            
             String busiId = trdProductDeal.getFinprodId();
             String busiDetailType = trdProductDeal.getFinprodType();
             // 定义 变量.币种 = NULL
@@ -7226,7 +7425,7 @@ public class InterfCommonService {
      * @param busiType 业务类型
      * @return
      */
-    public BokDetailId settingDetailSubjectNoTaiL(String finprodId, String finprodType, Long branch, String busiType) {
+    public BokDetailId settingDetailSubjectNoTaiL(String finprodId, String finprodType, Long branch, String busiType,String booksetId) {
 
         // 定义 变量.标的信息Dto
         TargetFinProduct targetFinProduct = null;
@@ -7244,7 +7443,15 @@ public class InterfCommonService {
             lastFinprodType = DictCodeListExt1.金融产品类型_理财产品.getValue();
             branch1 = branch;
         }
-
+        /** add by lby on 20201225 start **/
+        else {
+            //ELSE 输入.金融产品类型 IN (数据字典：资金账户类型)
+            if (systemToolService.getDataDictItem(DictCode.资金账户类型.getValue(), finprodType) != null){
+                //变量.处理后金融产品类型 = 数据字典：金融产品类型.资金账户 F20
+                lastFinprodType = DictCodeListExt1.金融产品类型_资金账户.getValue();
+            }
+        }
+        /** add by lby on 20201225 end **/
         // 查询结果保存至 变量.标的信息Dto
         targetFinProduct = bokTradeBuildMapper.getTargetFinProductByCondition(finprodId, lastFinprodType);
 
@@ -7272,14 +7479,23 @@ public class InterfCommonService {
             // 变量.四级科目尾号 += FinalString.LAYERING_SPLIT + 输入.金融产品类型
             detailSubjectNoTaiL += FinalString.LAYERING_SPLIT + finprodType;
         }
-
+        
         // IF 数据字典：业务类型.拆借交易 eq 输入.业务类型
         if (targetFinProduct!=null && (DictCodeList.业务类型_拆借交易.getValue().equals(busiType))) {
-            // 变量.四级科目尾号 = 变量.标的信息Dto.期限品种
-            detailSubjectNoTaiL = targetFinProduct.getTermType();
-            // 变量.四级科目尾号名称 =
-            // InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_内部拆借.getValue(),变量.标的信息Dto.期限品种)
-            detailSubjectNameTaiL = InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_内部拆借.getValue(), targetFinProduct.getTermType());
+        	boolean IS_FORSUBJECT = true;//期限品种作为四级科目号
+        	if(DictCodeListExt1.金融产品类型_同业借款.getValue().equals(targetFinProduct.getFinprodType()) && booksetId != null){
+        		BokBooksetExt bokBooksetExt = this.queryBokBooksetExtbyId(ValDictCodeList.账套配置表参数项_同业借款四级科目类型.getValue(),booksetId);
+        		if(bokBooksetExt==null || "01".equals(bokBooksetExt.getParamValue())){
+        			IS_FORSUBJECT = false;
+        		}
+        	}
+        	if(IS_FORSUBJECT){
+        		// 变量.四级科目尾号 = 变量.标的信息Dto.期限品种
+                detailSubjectNoTaiL = targetFinProduct.getTermType();
+                // 变量.四级科目尾号名称 =
+                // InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_内部拆借.getValue(),变量.标的信息Dto.期限品种)
+                detailSubjectNameTaiL = InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_内部拆借.getValue(), targetFinProduct.getTermType());
+        	}
         }
 
         // IF 数据字典：业务类型.债券买断式回购交易 eq 输入.业务类型
@@ -7295,7 +7511,13 @@ public class InterfCommonService {
         // 变量.resultObject.四级科目尾号 = 变量.四级科目尾号
         bokDetailId.setDetailSubjectNoTail(detailSubjectNoTaiL);
         // 变量.resultObject.四级科目尾号名称 = 变量.四级科目尾号名称
-        bokDetailId.setDetailSubnameTail(detailSubjectNameTaiL);
+        //变量.resultObject.四级科目尾号名称 = NVL(变量.四级科目尾号名称,变量.四级科目尾号) start add lby on 20201225
+        if (StringUtil.isNotEmpty(detailSubjectNameTaiL)){
+            bokDetailId.setDetailSubnameTail(detailSubjectNameTaiL);
+        }else {
+            bokDetailId.setDetailSubnameTail(detailSubjectNoTaiL);
+        }
+        //变量.resultObject.四级科目尾号名称 = NVL(变量.四级科目尾号名称,变量.四级科目尾号) end add lby on 20201225
         return bokDetailId;
     }
 
@@ -7403,103 +7625,64 @@ public class InterfCommonService {
     }
 
     /**
-     * 四级科目号设置
-     *add by xr  for TISHKBS-638 20200618
-     * @param finprodId 金融产品代码
-     * @param finprodType 金融产品类型
-     * @param branch
-     * @param busiType 业务类型
-     * @return
+     * 行权回售申请交易更新
+     * add by yanya on 20210309
+     * @param list 行权申请交易
      */
-    public BokDetailId settingDetailSubjectNoTaiL(String booksetId,String finprodId, String finprodType, Long branch, String busiType) {
-
-        // 定义 变量.标的信息Dto
-        TargetFinProduct targetFinProduct = null;
-        // 定义 变量.resultObject BokDetailId
-        BokDetailId bokDetailId = new BokDetailId();
-        // 定义 变量.处理后金融产品类型 = 输入.金融产品类型
-        String lastFinprodType = finprodType;
-        // 定义 变量.分支序号 = NULL
-        Long branch1 = null;
-
-        // 2.1 查询标的类信息
-        // IF 数据字典:金融产品类型.理财子产品 eq 输入.金融产品类型
-        if (DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(finprodType)) {
-            // 变量.处理后金融产品类型 = 数据字典：金融产品类型.理财产品
-            lastFinprodType = DictCodeListExt1.金融产品类型_理财产品.getValue();
-            branch1 = branch;
-        }
-
-        // 查询结果保存至 变量.标的信息Dto
-        targetFinProduct = bokTradeBuildMapper.getTargetFinProductByCondition(finprodId, lastFinprodType);
-
-        // 2.2 设置四级科目尾号
-        // 定义 变量.四级科目尾号 = 输入.金融产品代码
-        String detailSubjectNoTaiL = finprodId;
-        // 定义 变量.四级科目尾号名称 = 变量.标的信息Dto.金融产品名称
-        String detailSubjectNameTaiL = null;
-        if(targetFinProduct != null){
-            detailSubjectNameTaiL = targetFinProduct.getFinprodName();
-        }
-        // IF 数据字典:金融产品类型.理财子产品 eq 输入.金融产品类型
-        if (DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(finprodType)) {
-            // 变量.四级科目尾号 += 变量.分支序号
-            detailSubjectNoTaiL += branch1;
-            // 变量.四级科目尾号名称 += 变量.分支序号
-            detailSubjectNameTaiL += branch1;
-        }
-
-        // IF 数据字典：金融产品类型.理财产品 eq 输入.金融产品类型
-        // or 数据字典：金融产品类型.理财子产品 eq 输入.金融产品类型
-        // or 数据字典：金融产品类型.理财投资组合 eq 输入.金融产品类型
-        if (DictCodeListExt1.金融产品类型_理财产品.getValue().equals(finprodType) || DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(finprodType)
-                || DictCodeListExt1.金融产品类型_投资组合.getValue().equals(finprodType)) {
-            // 变量.四级科目尾号 += FinalString.LAYERING_SPLIT + 输入.金融产品类型
-            detailSubjectNoTaiL += FinalString.LAYERING_SPLIT + finprodType;
-        }
-
-        // IF 数据字典：业务类型.拆借交易 eq 输入.业务类型
-        if (targetFinProduct!=null && (DictCodeList.业务类型_拆借交易.getValue().equals(busiType))) {
-
-            if(DictCodeListExt1.金融产品类型_同业借款.getValue().equals(finprodType)){
-                BokBooksetExt bokBooksetExt =queryBokBooksetExtbyId(ValDictCodeList.账套配置表参数项_同业借款四级科目类型.getValue(),
-                        booksetId);
-                if(bokBooksetExt==null || "01".equals(bokBooksetExt.getParamValue())){
-                    detailSubjectNoTaiL = finprodId;
-                    detailSubjectNameTaiL = targetFinProduct.getFinprodName();
+    public void execApplyDealUpdate(List<SecExecApplyDto> list) {
+        if (CollectionUtils.isNotEmpty(list)) {
+            Date updateTime = list.get(0).getUpdateTime();//更新时间;
+            String updateUser = list.get(0).getUpdateUser();//更新人
+            Map<Date, List<SecExecApplyDto>> groupBy = list.stream().collect(Collectors.groupingBy(SecExecApplyDto::getTradeDate));
+            for (Map.Entry<Date, List<SecExecApplyDto>> entry : groupBy.entrySet()) {
+                //待更新交易List
+                List<String> tradeIdList = new ArrayList<>();
+                for(SecExecApplyDto dto : entry.getValue()) {
+                    //定义查询参数
+                    Map<String, Object> 入账查询参数 = new HashMap<>();
+                    //账套代码					行权回售申请ENITY.账套代码
+                    入账查询参数.put("booksetId", dto.getBooksetId());
+                    //金融产品代码					行权回售申请ENITY.金融产品代码
+                    入账查询参数.put("finprodId", dto.getFinprodId());
+                    //金融产品类型					行权回售申请ENITY.金融产品类型
+                    入账查询参数.put("finprodType", dto.getFinprodType());
+                    //投资目的					行权回售申请ENITY.投资目的
+                    入账查询参数.put("invAim", dto.getInvAim());
+                    //业务类型					行权回售申请ENITY.业务类型
+                    入账查询参数.put("busiType", dto.getBusiType());
+                    //交易方向					行权回售申请ENITY.交易方向
+                    入账查询参数.put("ps", dto.getPs());
+                    //分支序号					行权回售申请ENITY.分支序号
+                    入账查询参数.put("branch", dto.getBranch());
+                    //入账日				行权回售申请ENITY.入账日
+                    入账查询参数.put("bookDate", dto.getBookDate());
+                    //调用【交易信息查询共通方法设计-入账交易信息查询】
+                    List<ValTrdProductDealInfoDto> tradeList = valTradeCommonService.findEntryTradeInfo(入账查询参数);
+                    if (CollectionUtils.isNotEmpty(tradeList)) {
+                        //loop 变量.交易信息List 交易信息Entity
+                        tradeList.stream().forEach(item -> {
+                            //IF 交易信息Entity.行权状态 IS NULL OR 数据字典：行权状态.不行权 ！= 交易信息Entity.行权状态
+                            if(StringUtil.isEmpty(item.getExerciseStatus())
+                                    || StringUtil.equals(item.getExerciseStatus(), DictCodeListExt3.行权状态_放弃行权.getValue())) {
+                                //变量.待更新交易List.add（交易信息Entity.交易编号)
+                                tradeIdList.add(item.getTradeId());
+                            }
+                        });
+                    }
                 }
-                else{
-                    detailSubjectNoTaiL = targetFinProduct.getTermType();
-                    // 变量.四级科目尾号名称 =
-                    // InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_内部拆借.getValue(),变量.标的信息Dto.期限品种)
-                    detailSubjectNameTaiL = InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_内部拆借.getValue(), targetFinProduct.getTermType());
-                }
-            }else{
-                // 变量.四级科目尾号 = 变量.标的信息Dto.期限品种
-                detailSubjectNoTaiL = targetFinProduct.getTermType();
-                detailSubjectNameTaiL = InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_内部拆借.getValue(), targetFinProduct.getTermType());
-                // 变量.四级科目尾号名称 =
-                // InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_内部拆借.getValue(),变量.标的信息Dto.期限品种)
+                if (CollectionUtils.isNotEmpty(tradeIdList)) {
+                    Date cancelExerciseDate = entry.getKey();
+                    //更新数据 行权状态
+                    mapper.updateExecApplyDealBatch(tradeIdList, DictCodeListExt3.行权状态_放弃行权.getValue(),
+                            cancelExerciseDate, updateTime, updateUser);
+                    //删除入账信息表
+                    mapper.deleteBokDealAccountingBatch(tradeIdList);
+                    //删除入账信息明细表
+                    mapper.deleteBokDealAccountingDetailBatch(tradeIdList);
 
+                }
             }
-
-         }
-
-        // IF 数据字典：业务类型.债券买断式回购交易 eq 输入.业务类型
-        // OR 数据字典：业务类型.债券质押式回购交易 eq 输入.业务类型
-        if (targetFinProduct!=null && (DictCodeList.业务类型_债券买断式回购交易.getValue().equals(busiType) || DictCodeList.业务类型_债券质押式回购交易.getValue().equals(busiType))) {
-            // 变量.四级科目尾号 = 变量.标的信息Dto.期限品种
-            detailSubjectNoTaiL = targetFinProduct.getTermType();
-            // 变量.四级科目尾号名称 =
-            // InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_回购.getValue(),变量.标的信息Dto.期限品种)
-            detailSubjectNameTaiL = InterfHelper.getDictColdeList_ItemName(DictCode.回购期限品种.getValue(), targetFinProduct.getTermType());
         }
-
-        // 变量.resultObject.四级科目尾号 = 变量.四级科目尾号
-        bokDetailId.setDetailSubjectNoTail(detailSubjectNoTaiL);
-        // 变量.resultObject.四级科目尾号名称 = 变量.四级科目尾号名称
-        bokDetailId.setDetailSubnameTail(detailSubjectNameTaiL);
-        return bokDetailId;
     }
 
 }

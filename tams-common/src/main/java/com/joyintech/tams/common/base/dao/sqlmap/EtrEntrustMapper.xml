@@ -38,6 +38,9 @@
         <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
         <result column="SALE_CODE" property="saleCode" jdbcType="VARCHAR" />
         <result column="PRICE_MODEL" property="priceModel" jdbcType="VARCHAR" />
+        <result column="ENTRUST_TYPE" property="entrustType" jdbcType="VARCHAR" />
+        <result column="STOCK_ID" property="stockId" jdbcType="VARCHAR" />
+        <result column="ENTRUST_CLASS" property="entrustClass" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, FINPROD_ID FINPROD_ID, FINPROD_TYPE2 FINPROD_TYPE2, 
@@ -49,7 +52,7 @@
         PRICE PRICE, IS_ACCURATE IS_ACCURATE, INV_MANAGER_ID INV_MANAGER_ID, CALENDAR_ID CALENDAR_ID, 
         REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CHL_ID CHL_ID, SALE_CODE SALE_CODE, 
-        PRICE_MODEL PRICE_MODEL
+        PRICE_MODEL PRICE_MODEL, ENTRUST_TYPE ENTRUST_TYPE, STOCK_ID STOCK_ID, ENTRUST_CLASS ENTRUST_CLASS
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -83,7 +86,8 @@
             IS_ACCURATE, INV_MANAGER_ID, CALENDAR_ID, 
             REMARK, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            CHL_ID, SALE_CODE, PRICE_MODEL
+            CHL_ID, SALE_CODE, PRICE_MODEL, 
+            ENTRUST_TYPE, STOCK_ID, ENTRUST_CLASS
             )
         values (#{entrustId,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
             #{finprodType2,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, #{tradePlat,jdbcType=VARCHAR}, 
@@ -96,7 +100,8 @@
             #{isAccurate,jdbcType=VARCHAR}, #{invManagerId,jdbcType=VARCHAR}, #{calendarId,jdbcType=VARCHAR}, 
             #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{chlId,jdbcType=VARCHAR}, #{saleCode,jdbcType=VARCHAR}, #{priceModel,jdbcType=VARCHAR}
+            #{chlId,jdbcType=VARCHAR}, #{saleCode,jdbcType=VARCHAR}, #{priceModel,jdbcType=VARCHAR}, 
+            #{entrustType,jdbcType=VARCHAR}, #{stockId,jdbcType=VARCHAR}, #{entrustClass,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrEntrust" >
@@ -210,6 +215,15 @@
             <if test="priceModel != null" >
                 PRICE_MODEL,
             </if>
+            <if test="entrustType != null" >
+                ENTRUST_TYPE,
+            </if>
+            <if test="stockId != null" >
+                STOCK_ID,
+            </if>
+            <if test="entrustClass != null" >
+                ENTRUST_CLASS,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="entrustId != null" >
@@ -320,6 +334,15 @@
             <if test="priceModel != null" >
                 #{priceModel,jdbcType=VARCHAR},
             </if>
+            <if test="entrustType != null" >
+                #{entrustType,jdbcType=VARCHAR},
+            </if>
+            <if test="stockId != null" >
+                #{stockId,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustClass != null" >
+                #{entrustClass,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrEntrust" >
@@ -328,13 +351,13 @@
         CONTACT_INFO, ENTRUST_DATE, VDATE, MDATE, ENTRUST_AMT, ENTRUST_NUM, AVAILABLE_NUM, 
         PRO_AVAILABLE_CASH, ACC_AVAILABLE_CASH, ENTRUST_STATUS, PRICE, IS_ACCURATE, INV_MANAGER_ID, 
         CALENDAR_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-        CHL_ID, SALE_CODE, PRICE_MODEL)
+        CHL_ID, SALE_CODE, PRICE_MODEL, ENTRUST_TYPE, STOCK_ID, ENTRUST_CLASS)
         select ENTRUST_ID, PORTFOLIO_ID, FINPROD_ID, FINPROD_TYPE2, TRADE_MARKET, 
             TRADE_PLAT, TRADE_MARKET_MODE, PS, CCY, INV_AIM, COUNTER_ID, IS_OUT_TRADE, COUNTER_TRADER, 
             CONTACT_INFO, ENTRUST_DATE, VDATE, MDATE, ENTRUST_AMT, ENTRUST_NUM, AVAILABLE_NUM, 
             PRO_AVAILABLE_CASH, ACC_AVAILABLE_CASH, ENTRUST_STATUS, PRICE, IS_ACCURATE, INV_MANAGER_ID, 
             CALENDAR_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            CHL_ID, SALE_CODE, PRICE_MODEL
+            CHL_ID, SALE_CODE, PRICE_MODEL, ENTRUST_TYPE, STOCK_ID, ENTRUST_CLASS
              from ETR_ENTRUST
              where 1 = 1 and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </insert>
@@ -437,14 +460,14 @@
             <if test="priceModel != null" >
                 PRICE_MODEL = #{priceModel,jdbcType=VARCHAR},
             </if>
-        </set>
-        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
-    </update>
-    <update id="updateByPrimaryKeySelective1" parameterType="com.joyintech.tams.common.base.entity.EtrEntrust" >
-        update ETR_DISTRIBUTE
-        <set >
-            <if test="entrustStatus != null" >
-                REC_STATUS = #{entrustStatus,jdbcType=VARCHAR},
+            <if test="entrustType != null" >
+                ENTRUST_TYPE = #{entrustType,jdbcType=VARCHAR},
+            </if>
+            <if test="stockId != null" >
+                STOCK_ID = #{stockId,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustClass != null" >
+                ENTRUST_CLASS = #{entrustClass,jdbcType=VARCHAR},
             </if>
         </set>
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
@@ -482,7 +505,10 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             CHL_ID = #{chlId,jdbcType=VARCHAR},
             SALE_CODE = #{saleCode,jdbcType=VARCHAR},
-            PRICE_MODEL = #{priceModel,jdbcType=VARCHAR}
+            PRICE_MODEL = #{priceModel,jdbcType=VARCHAR},
+            ENTRUST_TYPE = #{entrustType,jdbcType=VARCHAR},
+            STOCK_ID = #{stockId,jdbcType=VARCHAR},
+            ENTRUST_CLASS = #{entrustClass,jdbcType=VARCHAR}
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </update>
 </mapper>

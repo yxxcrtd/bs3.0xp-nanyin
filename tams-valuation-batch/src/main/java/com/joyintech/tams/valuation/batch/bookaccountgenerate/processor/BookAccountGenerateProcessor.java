@@ -25,8 +25,13 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
+import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.BokDetailIdMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListTableId;
 import com.joyintech.tams.valuation.batch.bookaccountgenerate.dto.BookAccountDetail;
 import com.joyintech.tams.valuation.batch.bookaccountgenerate.dto.BookAccountGenerateReadResult;
 import com.joyintech.tams.valuation.batch.bookaccountgenerate.dto.BookAccountGenerateResult;
@@ -49,6 +54,10 @@ public class BookAccountGenerateProcessor extends BaseProcessor<NeedOperateEntit
 
     @Autowired
     private AccountingCommonService accountingCommonService;
+
+    /** modify by yanya on 20200106 账务明细代码mapper**/
+    @Autowired
+    private BokDetailIdMapper bokDetailIdMapper;
 
     @Autowired
     private DBUtil dBUtil;
@@ -103,6 +112,113 @@ public class BookAccountGenerateProcessor extends BaseProcessor<NeedOperateEntit
             交易凭证集合 = entity.getBookAccountDetailList().stream().filter(d->StringUtil.isNotEmpty(d.getTradeId())).collect(
                     Collectors.groupingBy(d -> d.getBooksetId() +d.getBookId()+d.getTradeId()));
         }
+        /**add by wujie on 20201113 start remark:清理减值-科目合并**/
+        
+        List<String> tableList = new ArrayList<String>();
+        tableList.add(DictCodeListTableId.会计场景代码_摊余成本类债券_减值清理.getValue());
+        tableList.add(DictCodeListTableId.会计场景代码_综合收益类债券_减值清理.getValue());
+        
+        tableList.add(DictCodeListTableId.会计场景代码_摊余成本类收益型计划类资产_减值清理.getValue());
+        tableList.add(DictCodeListTableId.会计场景代码_综合收益类收益型资产_减值清理.getValue());
+
+        /** modify by yanya on 20210106 其他债权减值清理相同科目作合并展示 start**/
+        tableList.add(DictCodeListTableId.会计场景代码_摊余成本类其他债权投资_减值清理.getValue());
+        tableList.add(DictCodeListTableId.会计场景代码_综合收益类其他债权投资_减值清理.getValue());
+        /** modify by yanya on 20210106 其他债权减值清理相同科目作合并展示 end**/
+
+        tableList.add(DictCodeListTableId.会计场景代码_拆放同业_减值清理.getValue());
+        tableList.add(DictCodeListTableId.会计场景代码_存放同业_减值清理.getValue());
+
+        /** modify by yanya on 20210106 买断式回购还本派息 处理资产代码，凭证中目前按照债券代码生成，现在处理根据账务明细代码查找回购代码进行展示 start**/
+        List<String> 买断式回购还本派息 = new ArrayList<String>();
+        买断式回购还本派息.add(DictCodeListTableId.会计场景代码_买断式逆回购_期间债券还本派息.getValue());
+        买断式回购还本派息.add(DictCodeListTableId.会计场景代码_买断式正回购_期间债券还本派息.getValue());
+        Map<String, BokDetailId> 账务明细代码集合 = new HashMap<>();
+        /** modify by yanya on 20210106 买断式回购还本派息 处理资产代码，凭证中目前按照债券代码生成，现在处理根据账务明细代码查找回购代码进行展示 end**/
+
+        for (Iterator<Entry<String, List<BookAccountDetail>>> iterator = 交易凭证集合.entrySet().iterator(); iterator.hasNext();) {
+        	Entry<String, List<BookAccountDetail>> entry = iterator.next();
+        	if(entry.getValue()==null || entry.getValue().size()==0){
+        		continue;
+        	}
+            /** modify by yanya on 20210106 买断式回购还本派息 处理资产代码，凭证中目前按照债券代码生成，现在处理根据账务明细代码查找回购代码进行展示 start**/
+            if(买断式回购还本派息.contains(entry.getValue().get(0).getTableId())) {
+                for (BookAccountDetail detail : entry.getValue()) {
+                    //账套代码 及 账务明细代码都不为空
+                    if(StringUtil.isNotEmpty(detail.getBokDetailId()) && StringUtil.isNotEmpty(detail.getBooksetId())) {
+                        if(账务明细代码集合.containsKey(detail.getBooksetId() + detail.getBokDetailId())) {
+                            detail.setBusiId(账务明细代码集合.get(detail.getBooksetId() + detail.getBokDetailId()).getBusiId());
+                        }
+                        else {
+                            BokDetailIdKey bokDetailIdKey = new BokDetailIdKey();
+                            bokDetailIdKey.setBooksetId(detail.getBooksetId());
+                            bokDetailIdKey.setBokDetailId(detail.getBokDetailId());
+                            BokDetailId 账务明细代码 = bokDetailIdMapper.selectByPrimaryKey(bokDetailIdKey);
+                            if(账务明细代码 != null && StringUtil.isNotEmpty(账务明细代码.getBusiId())) {
+                                detail.setBusiId(账务明细代码.getBusiId());
+                                账务明细代码集合.put(detail.getBooksetId() + detail.getBokDetailId(), 账务明细代码);
+                            }
+                        }
+                    }
+                }
+            }
+            /** modify by yanya on 20210106 买断式回购还本派息 处理资产代码，凭证中目前按照债券代码生成，现在处理根据账务明细代码查找回购代码进行展示 end**/
+        	if(!tableList.contains(entry.getValue().get(0).getTableId())){
+        		continue;
+        	}
+        	Map<String,BookAccountDetail> 交易凭证科目合并集合= new HashMap<>();//key：科目号 + 原币
+        	for (BookAccountDetail detail : entry.getValue()) {
+        		String key = detail.getSubjectNo() + detail.getoCcy();
+        		BookAccountDetail dto = 交易凭证科目合并集合.get(key);
+        		if(dto == null){
+        			dto = detail;
+        		}
+        		else{
+        			Map<String, Object> balance = null;
+        			if(!dto.getCdFlag().equals(detail.getCdFlag()) 
+        					&& BigDecimal.ZERO.compareTo(ArithmeticUtil.doSub(dto.getoHappenAmt(),detail.getoHappenAmt()))<0){
+        				balance = accountingCommonService.balanceDirectDealAccrualAddBalance(
+                                dto.getCdFlag(), //科目余额方向
+                                dto.getCdFlag(), //实际余额方向
+                                dto.getoHappenAmt(),//实际余额
+                                dto.getHappenNumber(), //实际数量
+                                detail.getCdFlag(),//发生额方向
+                                detail.getoHappenAmt(), //原币发生额
+                                detail.getHappenNumber(),//发生数量
+                                dto.getbHappenAmt(),//本币实际余额
+                                detail.getbHappenAmt());//本币发生额
+        			}
+        			else{
+        				balance = accountingCommonService.balanceDirectDealAccrualAddBalance(
+        						detail.getCdFlag(), //科目余额方向
+        						detail.getCdFlag(), //实际余额方向
+        						detail.getoHappenAmt(),//实际余额
+        						detail.getHappenNumber(), //实际数量
+                                dto.getCdFlag(),//发生额方向
+                                dto.getoHappenAmt(), //原币发生额
+                                dto.getHappenNumber(),//发生数量
+                                detail.getbHappenAmt(),//本币实际余额
+                                dto.getbHappenAmt());//本币发生额
+        			}
+                    dto.setbHappenAmt((BigDecimal)balance.get("benbalance"));
+                    dto.setCdFlag((String)balance.get("balDirect"));
+                    dto.setoHappenAmt((BigDecimal)balance.get("balance"));
+                    dto.setHappenNumber((BigDecimal)balance.get("num"));
+                    dto.setHappenDate(dto.getHappenDate());
+                    
+                    
+                    
+        		}
+        		if(!DictCodeList.是否_是.getValue().equals(dto.getAccQuaFlag())){
+        			dto.setHappenNumber(null);
+        		}
+        		交易凭证科目合并集合.put(key, dto);
+        	}
+        	entry.setValue(交易凭证科目合并集合.values().stream().collect(Collectors.toList()));
+        }
+        /**add by wujie on 20201113 end remark:清理减值-科目合并**/
+        
+        
         // IF 【补账凭证是否合并】= 是
         if (StringUtil.equals(isCombSupVoucValue,
             DictCodeList.是否_是.getValue())) {
@@ -128,6 +244,8 @@ public class BookAccountGenerateProcessor extends BaseProcessor<NeedOperateEntit
                             凭证账务明细关联.put(key, list2);
                         }
                         else {
+                        	String batchSeqno=null;
+                        	Map<String, Object> params=this.getParams();
                             if(map.containsKey(dto.getSubjectNo())) {
                                 BookAccountDetail detail = map.get(dto.getSubjectNo());
                                 String balFlag = accountingCommonService.getBalFlag(dto.getSubjectNo(),
@@ -138,6 +256,8 @@ public class BookAccountGenerateProcessor extends BaseProcessor<NeedOperateEntit
                                         detail.getHappenNumber(), dto.getCdFlag(),
                                         dto.getoHappenAmt(), dto.getHappenNumber(),
                                         detail.getbHappenAmt(),dto.getbHappenAmt());
+                                
+                                
                                 detail.setbHappenAmt((BigDecimal)balance.get("benbalance"));
                                 detail.setCdFlag((String)balance.get("balDirect"));
                                 detail.setoHappenAmt((BigDecimal)balance.get("balance"));
@@ -237,6 +357,11 @@ public class BookAccountGenerateProcessor extends BaseProcessor<NeedOperateEntit
                 detailDto.setbCcy(detail.getbCcy());
                 detailDto.setbHappenAmt(detail.getbHappenAmt());
                 //设计变更   modified by chufengjie 20190520 end
+
+                // add by zwq on 2020-12-25 start
+                detailDto.setSubjectName(detail.getSubjectName());
+                detailDto.setDetailSubjectName(detail.getDetailSubjectName());
+                // add by zwq on 2020-12-25 end
                 
                 // IF 数据字典：是否.否 eq 凭证待处理DTO.0金额是否处理 OR 凭证待处理DTO.0金额是否处理 IS NULL
                 if(DictCodeList.是否_否.getValue().equals(detail.getIsexeZeroAmt())
@@ -249,6 +374,7 @@ public class BookAccountGenerateProcessor extends BaseProcessor<NeedOperateEntit
                 }
                 
                 凭证子表列表.add(detailDto);
+          
                 if(!tableIdList.contains(detail.getTableId())){
                     tableIdList.add(detail.getTableId());
                 }
@@ -268,7 +394,70 @@ public class BookAccountGenerateProcessor extends BaseProcessor<NeedOperateEntit
             }
             凭证主表列表.add(mainDto);
         }
+        /** modify by yanya on 20210104 罚息计提场景增加合并处理(本息和计提，生成多笔凭证，这里合并处理) start**/
+        Map<String, List<BookAccountDetail>> 非交易凭证集合合并 = new HashMap<>();
+        List<String> 非交易合并场景集合 = new ArrayList<String>();
+        非交易合并场景集合.add(DictCodeListTableId.会计场景代码_逾期款罚息计提.getValue());
         for (Iterator<Entry<String, List<BookAccountDetail>>> iterator = 非交易凭证集合.entrySet().iterator(); iterator.hasNext();) {
+            Entry<String, List<BookAccountDetail>> entry = iterator.next();
+            if(entry.getValue() == null || entry.getValue().size() == 0 ) {
+                continue;
+            }
+            if(!非交易合并场景集合.contains(entry.getValue().get(0).getTableId())) {
+                非交易凭证集合合并.put(entry.getKey(), entry.getValue());
+            }
+            else {
+                Map<String,BookAccountDetail> 非交易凭证科目合并集合= new HashMap<>();//key：科目号 + 原币
+                for (BookAccountDetail detail : entry.getValue()) {
+                    String key = detail.getSubjectNo() + detail.getoCcy();
+                    BookAccountDetail dto = 非交易凭证科目合并集合.get(key);
+                    if(dto == null){
+                        dto = detail;
+                    }
+                    else{
+                        Map<String, Object> balance = null;
+                        if(!dto.getCdFlag().equals(detail.getCdFlag())
+                                && BigDecimal.ZERO.compareTo(ArithmeticUtil.doSub(dto.getoHappenAmt(),detail.getoHappenAmt()))<0){
+                            balance = accountingCommonService.balanceDirectDealAccrualAddBalance(
+                                    dto.getCdFlag(), //科目余额方向
+                                    dto.getCdFlag(), //实际余额方向
+                                    dto.getoHappenAmt(),//实际余额
+                                    dto.getHappenNumber(), //实际数量
+                                    detail.getCdFlag(),//发生额方向
+                                    detail.getoHappenAmt(), //原币发生额
+                                    detail.getHappenNumber(),//发生数量
+                                    dto.getbHappenAmt(),//本币实际余额
+                                    detail.getbHappenAmt());//本币发生额
+                        }
+                        else{
+                            balance = accountingCommonService.balanceDirectDealAccrualAddBalance(
+                                    detail.getCdFlag(), //科目余额方向
+                                    detail.getCdFlag(), //实际余额方向
+                                    detail.getoHappenAmt(),//实际余额
+                                    detail.getHappenNumber(), //实际数量
+                                    dto.getCdFlag(),//发生额方向
+                                    dto.getoHappenAmt(), //原币发生额
+                                    dto.getHappenNumber(),//发生数量
+                                    detail.getbHappenAmt(),//本币实际余额
+                                    dto.getbHappenAmt());//本币发生额
+                        }
+                        dto.setbHappenAmt((BigDecimal)balance.get("benbalance"));
+                        dto.setCdFlag((String)balance.get("balDirect"));
+                        dto.setoHappenAmt((BigDecimal)balance.get("balance"));
+                        dto.setHappenNumber((BigDecimal)balance.get("num"));
+                        dto.setHappenDate(dto.getHappenDate());
+                    }
+                    if(!DictCodeList.是否_是.getValue().equals(dto.getAccQuaFlag())){
+                        dto.setHappenNumber(null);
+                    }
+                    非交易凭证科目合并集合.put(key, dto);
+                }
+                非交易凭证集合合并.put(entry.getKey(), 非交易凭证科目合并集合.values().stream().collect(Collectors.toList()));
+            }
+        }
+        //for (Iterator<Entry<String, List<BookAccountDetail>>> iterator = 非交易凭证集合.entrySet().iterator(); iterator.hasNext();) {
+        for (Iterator<Entry<String, List<BookAccountDetail>>> iterator = 非交易凭证集合合并.entrySet().iterator(); iterator.hasNext();) {
+        /** modify by yanya on 20210104 罚息计提场景增加合并处理(本息和计提，生成多笔凭证，这里合并处理) end**/
             Entry<String, List<BookAccountDetail>> entry = iterator.next();
             maxBookAccountNum = maxBookAccountNum + 1;
             String padBookAccountNum = accountingCommonService.padBookAccountNum(
@@ -309,6 +498,11 @@ public class BookAccountGenerateProcessor extends BaseProcessor<NeedOperateEntit
                 detailDto.setbCcy(detail.getbCcy());
                 detailDto.setbHappenAmt(detail.getbHappenAmt());
                 //设计变更   modified by chufengjie 20190520 end
+
+                // add by zwq 2020-12-25 start
+                detailDto.setSubjectName(detail.getSubjectName());
+                detailDto.setDetailSubjectName(detail.getDetailSubjectName());
+                // add by zwq 2020-12-25 end
 
                 // IF 数据字典：是否.否 eq 凭证待处理DTO.0金额是否处理 OR 凭证待处理DTO.0金额是否处理 IS NULL
                 if(DictCodeList.是否_否.getValue().equals(detail.getIsexeZeroAmt())
@@ -359,5 +553,4 @@ public class BookAccountGenerateProcessor extends BaseProcessor<NeedOperateEntit
         result.setProdId(entity.getBooksetId());
         return result;
     }
-
 }

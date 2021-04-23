@@ -99,6 +99,36 @@
         <result column="PRINCIPAL" property="principal" jdbcType="DECIMAL" />
         <result column="TOTALPRINCIPAL" property="totalprincipal" jdbcType="DECIMAL" />
         <result column="CASHBONDINDICATOR" property="cashbondindicator" jdbcType="VARCHAR" />
+        <result column="MISCFEEAMT" property="miscfeeamt" jdbcType="DECIMAL" />
+        <result column="DISPUTESETTLEMENTMETHOD" property="disputesettlementmethod" jdbcType="CHAR" />
+        <result column="COUPONPAYMENTINDICATOR" property="couponpaymentindicator" jdbcType="CHAR" />
+        <result column="MARGINREPLACEMENT" property="marginreplacement" jdbcType="CHAR" />
+        <result column="MARGINTOTALAMT" property="margintotalamt" jdbcType="DECIMAL" />
+        <result column="MARGINTYPE" property="margintype" jdbcType="CHAR" />
+        <result column="STARTDATE" property="startdate" jdbcType="VARCHAR" />
+        <result column="ENDDATE" property="enddate" jdbcType="VARCHAR" />
+        <result column="FIRSTPERIODSTARTDATE" property="firstperiodstartdate" jdbcType="VARCHAR" />
+        <result column="LEGINTERESTACCRUALDATE" property="leginterestaccrualdate" jdbcType="VARCHAR" />
+        <result column="TRDTYPE" property="trdtype" jdbcType="VARCHAR" />
+        <result column="LEGDAYCOUNT" property="legdaycount" jdbcType="CHAR" />
+        <result column="LEGBENCHMARKCURVENAME" property="legbenchmarkcurvename" jdbcType="VARCHAR" />
+        <result column="LEGPRICE" property="legprice" jdbcType="DECIMAL" />
+        <result column="LEGBENCHMARKSPREAD" property="legbenchmarkspread" jdbcType="DECIMAL" />
+        <result column="LEGINTERESTACCRUALFREQUENCY" property="leginterestaccrualfrequency" jdbcType="CHAR" />
+        <result column="LEGINTERESTACCRUALMETHOD" property="leginterestaccrualmethod" jdbcType="CHAR" />
+        <result column="COUPONPAYMENTDATERESET" property="couponpaymentdatereset" jdbcType="CHAR" />
+        <result column="INTERESTACCURALDAYSADJUSTMENT" property="interestaccuraldaysadjustment" jdbcType="CHAR" />
+        <result column="CALCULATEAGENCY" property="calculateagency" jdbcType="CHAR" />
+        <result column="LEGSIDE1" property="legside1" jdbcType="VARCHAR" />
+        <result column="LEGSIDE2" property="legside2" jdbcType="VARCHAR" />
+        <result column="FIXLEGDAYCOUNT" property="fixlegdaycount" jdbcType="CHAR" />
+        <result column="FLTLEGDAYCOUNT" property="fltlegdaycount" jdbcType="CHAR" />
+        <result column="FIXLEGCOUPONPAYMENTFREQUENCY" property="fixlegcouponpaymentfrequency" jdbcType="CHAR" />
+        <result column="FLTLEGCOUPONPAYMENTFREQUENCY" property="fltlegcouponpaymentfrequency" jdbcType="CHAR" />
+        <result column="FIXLEGCOUPONPAYMENTDATE" property="fixlegcouponpaymentdate" jdbcType="VARCHAR" />
+        <result column="FLTLEGCOUPONPAYMENTDATE" property="fltlegcouponpaymentdate" jdbcType="VARCHAR" />
+        <result column="CB_FPRICE_AMT" property="cbFpriceAmt" jdbcType="DECIMAL" />
+        <result column="SC_FPRICE_AMT" property="scFpriceAmt" jdbcType="DECIMAL" />
     </resultMap>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCstpTrade" >
         insert into INTERF_CSTP_TRADE (MSGTYPE, MSGSEQNUM, SENDINGTIME, 
@@ -139,8 +169,19 @@
             STRIKEYIELD, YIELD2, TRADEMETHOD, 
             SETTLTYPE, DEALTRANSTYPE, CLORDID, 
             CONTINGENCYINDICATOR, REFERENCE, CLEARINGMETHOD, 
-            PRINCIPAL, TOTALPRINCIPAL, CASHBONDINDICATOR
-            )
+            PRINCIPAL, TOTALPRINCIPAL, CASHBONDINDICATOR, 
+            MISCFEEAMT, DISPUTESETTLEMENTMETHOD, COUPONPAYMENTINDICATOR, 
+            MARGINREPLACEMENT, MARGINTOTALAMT, MARGINTYPE, 
+            STARTDATE, ENDDATE, FIRSTPERIODSTARTDATE, 
+            LEGINTERESTACCRUALDATE, TRDTYPE, LEGDAYCOUNT, 
+            LEGBENCHMARKCURVENAME, LEGPRICE, LEGBENCHMARKSPREAD, 
+            LEGINTERESTACCRUALFREQUENCY, LEGINTERESTACCRUALMETHOD, 
+            COUPONPAYMENTDATERESET, INTERESTACCURALDAYSADJUSTMENT, 
+            CALCULATEAGENCY, LEGSIDE1, LEGSIDE2, 
+            FIXLEGDAYCOUNT, FLTLEGDAYCOUNT, FIXLEGCOUPONPAYMENTFREQUENCY, 
+            FLTLEGCOUPONPAYMENTFREQUENCY, FIXLEGCOUPONPAYMENTDATE, 
+            FLTLEGCOUPONPAYMENTDATE, CB_FPRICE_AMT, 
+            SC_FPRICE_AMT)
         values (#{msgtype,jdbcType=VARCHAR}, #{msgseqnum,jdbcType=VARCHAR}, #{sendingtime,jdbcType=VARCHAR}, 
             #{onbehalfofcompid,jdbcType=VARCHAR}, #{datasource,jdbcType=VARCHAR}, #{businesstype,jdbcType=VARCHAR}, 
             #{execid,jdbcType=VARCHAR}, #{lastqty,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
@@ -179,8 +220,19 @@
             #{strikeyield,jdbcType=DECIMAL}, #{yield2,jdbcType=DECIMAL}, #{trademethod,jdbcType=VARCHAR}, 
             #{settltype,jdbcType=VARCHAR}, #{dealtranstype,jdbcType=VARCHAR}, #{clordid,jdbcType=VARCHAR}, 
             #{contingencyindicator,jdbcType=VARCHAR}, #{reference,jdbcType=VARCHAR}, #{clearingmethod,jdbcType=VARCHAR}, 
-            #{principal,jdbcType=DECIMAL}, #{totalprincipal,jdbcType=DECIMAL}, #{cashbondindicator,jdbcType=VARCHAR}
-            )
+            #{principal,jdbcType=DECIMAL}, #{totalprincipal,jdbcType=DECIMAL}, #{cashbondindicator,jdbcType=VARCHAR}, 
+            #{miscfeeamt,jdbcType=DECIMAL}, #{disputesettlementmethod,jdbcType=CHAR}, #{couponpaymentindicator,jdbcType=CHAR}, 
+            #{marginreplacement,jdbcType=CHAR}, #{margintotalamt,jdbcType=DECIMAL}, #{margintype,jdbcType=CHAR}, 
+            #{startdate,jdbcType=VARCHAR}, #{enddate,jdbcType=VARCHAR}, #{firstperiodstartdate,jdbcType=VARCHAR}, 
+            #{leginterestaccrualdate,jdbcType=VARCHAR}, #{trdtype,jdbcType=VARCHAR}, #{legdaycount,jdbcType=CHAR}, 
+            #{legbenchmarkcurvename,jdbcType=VARCHAR}, #{legprice,jdbcType=DECIMAL}, #{legbenchmarkspread,jdbcType=DECIMAL}, 
+            #{leginterestaccrualfrequency,jdbcType=CHAR}, #{leginterestaccrualmethod,jdbcType=CHAR}, 
+            #{couponpaymentdatereset,jdbcType=CHAR}, #{interestaccuraldaysadjustment,jdbcType=CHAR}, 
+            #{calculateagency,jdbcType=CHAR}, #{legside1,jdbcType=VARCHAR}, #{legside2,jdbcType=VARCHAR}, 
+            #{fixlegdaycount,jdbcType=CHAR}, #{fltlegdaycount,jdbcType=CHAR}, #{fixlegcouponpaymentfrequency,jdbcType=CHAR}, 
+            #{fltlegcouponpaymentfrequency,jdbcType=CHAR}, #{fixlegcouponpaymentdate,jdbcType=VARCHAR}, 
+            #{fltlegcouponpaymentdate,jdbcType=VARCHAR}, #{cbFpriceAmt,jdbcType=DECIMAL}, 
+            #{scFpriceAmt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCstpTrade" >
         insert into INTERF_CSTP_TRADE
@@ -476,6 +528,96 @@
             <if test="cashbondindicator != null" >
                 CASHBONDINDICATOR,
             </if>
+            <if test="miscfeeamt != null" >
+                MISCFEEAMT,
+            </if>
+            <if test="disputesettlementmethod != null" >
+                DISPUTESETTLEMENTMETHOD,
+            </if>
+            <if test="couponpaymentindicator != null" >
+                COUPONPAYMENTINDICATOR,
+            </if>
+            <if test="marginreplacement != null" >
+                MARGINREPLACEMENT,
+            </if>
+            <if test="margintotalamt != null" >
+                MARGINTOTALAMT,
+            </if>
+            <if test="margintype != null" >
+                MARGINTYPE,
+            </if>
+            <if test="startdate != null" >
+                STARTDATE,
+            </if>
+            <if test="enddate != null" >
+                ENDDATE,
+            </if>
+            <if test="firstperiodstartdate != null" >
+                FIRSTPERIODSTARTDATE,
+            </if>
+            <if test="leginterestaccrualdate != null" >
+                LEGINTERESTACCRUALDATE,
+            </if>
+            <if test="trdtype != null" >
+                TRDTYPE,
+            </if>
+            <if test="legdaycount != null" >
+                LEGDAYCOUNT,
+            </if>
+            <if test="legbenchmarkcurvename != null" >
+                LEGBENCHMARKCURVENAME,
+            </if>
+            <if test="legprice != null" >
+                LEGPRICE,
+            </if>
+            <if test="legbenchmarkspread != null" >
+                LEGBENCHMARKSPREAD,
+            </if>
+            <if test="leginterestaccrualfrequency != null" >
+                LEGINTERESTACCRUALFREQUENCY,
+            </if>
+            <if test="leginterestaccrualmethod != null" >
+                LEGINTERESTACCRUALMETHOD,
+            </if>
+            <if test="couponpaymentdatereset != null" >
+                COUPONPAYMENTDATERESET,
+            </if>
+            <if test="interestaccuraldaysadjustment != null" >
+                INTERESTACCURALDAYSADJUSTMENT,
+            </if>
+            <if test="calculateagency != null" >
+                CALCULATEAGENCY,
+            </if>
+            <if test="legside1 != null" >
+                LEGSIDE1,
+            </if>
+            <if test="legside2 != null" >
+                LEGSIDE2,
+            </if>
+            <if test="fixlegdaycount != null" >
+                FIXLEGDAYCOUNT,
+            </if>
+            <if test="fltlegdaycount != null" >
+                FLTLEGDAYCOUNT,
+            </if>
+            <if test="fixlegcouponpaymentfrequency != null" >
+                FIXLEGCOUPONPAYMENTFREQUENCY,
+            </if>
+            <if test="fltlegcouponpaymentfrequency != null" >
+                FLTLEGCOUPONPAYMENTFREQUENCY,
+            </if>
+            <if test="fixlegcouponpaymentdate != null" >
+                FIXLEGCOUPONPAYMENTDATE,
+            </if>
+            <if test="fltlegcouponpaymentdate != null" >
+                FLTLEGCOUPONPAYMENTDATE,
+            </if>
+            <if test="cbFpriceAmt != null" >
+                CB_FPRICE_AMT,
+            </if>
+            <if test="scFpriceAmt != null" >
+                SC_FPRICE_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="msgtype != null" >
@@ -769,6 +911,96 @@
             <if test="cashbondindicator != null" >
                 #{cashbondindicator,jdbcType=VARCHAR},
             </if>
+            <if test="miscfeeamt != null" >
+                #{miscfeeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="disputesettlementmethod != null" >
+                #{disputesettlementmethod,jdbcType=CHAR},
+            </if>
+            <if test="couponpaymentindicator != null" >
+                #{couponpaymentindicator,jdbcType=CHAR},
+            </if>
+            <if test="marginreplacement != null" >
+                #{marginreplacement,jdbcType=CHAR},
+            </if>
+            <if test="margintotalamt != null" >
+                #{margintotalamt,jdbcType=DECIMAL},
+            </if>
+            <if test="margintype != null" >
+                #{margintype,jdbcType=CHAR},
+            </if>
+            <if test="startdate != null" >
+                #{startdate,jdbcType=VARCHAR},
+            </if>
+            <if test="enddate != null" >
+                #{enddate,jdbcType=VARCHAR},
+            </if>
+            <if test="firstperiodstartdate != null" >
+                #{firstperiodstartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="leginterestaccrualdate != null" >
+                #{leginterestaccrualdate,jdbcType=VARCHAR},
+            </if>
+            <if test="trdtype != null" >
+                #{trdtype,jdbcType=VARCHAR},
+            </if>
+            <if test="legdaycount != null" >
+                #{legdaycount,jdbcType=CHAR},
+            </if>
+            <if test="legbenchmarkcurvename != null" >
+                #{legbenchmarkcurvename,jdbcType=VARCHAR},
+            </if>
+            <if test="legprice != null" >
+                #{legprice,jdbcType=DECIMAL},
+            </if>
+            <if test="legbenchmarkspread != null" >
+                #{legbenchmarkspread,jdbcType=DECIMAL},
+            </if>
+            <if test="leginterestaccrualfrequency != null" >
+                #{leginterestaccrualfrequency,jdbcType=CHAR},
+            </if>
+            <if test="leginterestaccrualmethod != null" >
+                #{leginterestaccrualmethod,jdbcType=CHAR},
+            </if>
+            <if test="couponpaymentdatereset != null" >
+                #{couponpaymentdatereset,jdbcType=CHAR},
+            </if>
+            <if test="interestaccuraldaysadjustment != null" >
+                #{interestaccuraldaysadjustment,jdbcType=CHAR},
+            </if>
+            <if test="calculateagency != null" >
+                #{calculateagency,jdbcType=CHAR},
+            </if>
+            <if test="legside1 != null" >
+                #{legside1,jdbcType=VARCHAR},
+            </if>
+            <if test="legside2 != null" >
+                #{legside2,jdbcType=VARCHAR},
+            </if>
+            <if test="fixlegdaycount != null" >
+                #{fixlegdaycount,jdbcType=CHAR},
+            </if>
+            <if test="fltlegdaycount != null" >
+                #{fltlegdaycount,jdbcType=CHAR},
+            </if>
+            <if test="fixlegcouponpaymentfrequency != null" >
+                #{fixlegcouponpaymentfrequency,jdbcType=CHAR},
+            </if>
+            <if test="fltlegcouponpaymentfrequency != null" >
+                #{fltlegcouponpaymentfrequency,jdbcType=CHAR},
+            </if>
+            <if test="fixlegcouponpaymentdate != null" >
+                #{fixlegcouponpaymentdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fltlegcouponpaymentdate != null" >
+                #{fltlegcouponpaymentdate,jdbcType=VARCHAR},
+            </if>
+            <if test="cbFpriceAmt != null" >
+                #{cbFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="scFpriceAmt != null" >
+                #{scFpriceAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCstpTrade" >
@@ -791,7 +1023,13 @@
         UNDERLYINGACCRUEDINTERESTAMT2, UNDERLYINGDIRTYPRICE, UNDERLYINGDIRTYPRICE2, UNDERLYINGYIELD, 
         UNDERLYINGYIELD2, UPDATETIME, STRIKEYIELD, YIELD2, TRADEMETHOD, SETTLTYPE, DEALTRANSTYPE, 
         CLORDID, CONTINGENCYINDICATOR, REFERENCE, CLEARINGMETHOD, PRINCIPAL, TOTALPRINCIPAL, 
-        CASHBONDINDICATOR)
+        CASHBONDINDICATOR, MISCFEEAMT, DISPUTESETTLEMENTMETHOD, COUPONPAYMENTINDICATOR, MARGINREPLACEMENT, 
+        MARGINTOTALAMT, MARGINTYPE, STARTDATE, ENDDATE, FIRSTPERIODSTARTDATE, LEGINTERESTACCRUALDATE, 
+        TRDTYPE, LEGDAYCOUNT, LEGBENCHMARKCURVENAME, LEGPRICE, LEGBENCHMARKSPREAD, LEGINTERESTACCRUALFREQUENCY, 
+        LEGINTERESTACCRUALMETHOD, COUPONPAYMENTDATERESET, INTERESTACCURALDAYSADJUSTMENT, 
+        CALCULATEAGENCY, LEGSIDE1, LEGSIDE2, FIXLEGDAYCOUNT, FLTLEGDAYCOUNT, FIXLEGCOUPONPAYMENTFREQUENCY, 
+        FLTLEGCOUPONPAYMENTFREQUENCY, FIXLEGCOUPONPAYMENTDATE, FLTLEGCOUPONPAYMENTDATE, CB_FPRICE_AMT, 
+        SC_FPRICE_AMT)
         select MSGTYPE, MSGSEQNUM, SENDINGTIME, ONBEHALFOFCOMPID, 
             DATASOURCE, BUSINESSTYPE, EXECID, LASTQTY, PRICE, SECURITYID, SIDE, SYMBOL, TEXT, 
             TRANSACTTIME, SETTLDATE, TRADEDATE, QUOTEID, EXECTYPE, SETTLDATE2, DELIVERYTYPE, 
@@ -811,7 +1049,13 @@
             UNDERLYINGACCRUEDINTERESTAMT2, UNDERLYINGDIRTYPRICE, UNDERLYINGDIRTYPRICE2, UNDERLYINGYIELD, 
             UNDERLYINGYIELD2, UPDATETIME, STRIKEYIELD, YIELD2, TRADEMETHOD, SETTLTYPE, DEALTRANSTYPE, 
             CLORDID, CONTINGENCYINDICATOR, REFERENCE, CLEARINGMETHOD, PRINCIPAL, TOTALPRINCIPAL, 
-            CASHBONDINDICATOR
+            CASHBONDINDICATOR, MISCFEEAMT, DISPUTESETTLEMENTMETHOD, COUPONPAYMENTINDICATOR, MARGINREPLACEMENT, 
+            MARGINTOTALAMT, MARGINTYPE, STARTDATE, ENDDATE, FIRSTPERIODSTARTDATE, LEGINTERESTACCRUALDATE, 
+            TRDTYPE, LEGDAYCOUNT, LEGBENCHMARKCURVENAME, LEGPRICE, LEGBENCHMARKSPREAD, LEGINTERESTACCRUALFREQUENCY, 
+            LEGINTERESTACCRUALMETHOD, COUPONPAYMENTDATERESET, INTERESTACCURALDAYSADJUSTMENT, 
+            CALCULATEAGENCY, LEGSIDE1, LEGSIDE2, FIXLEGDAYCOUNT, FLTLEGDAYCOUNT, FIXLEGCOUPONPAYMENTFREQUENCY, 
+            FLTLEGCOUPONPAYMENTFREQUENCY, FIXLEGCOUPONPAYMENTDATE, FLTLEGCOUPONPAYMENTDATE, CB_FPRICE_AMT, 
+            SC_FPRICE_AMT
              from INTERF_CSTP_TRADE
              where 1 = 1
     </insert>

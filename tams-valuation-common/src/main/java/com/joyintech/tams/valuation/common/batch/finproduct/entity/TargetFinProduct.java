@@ -247,7 +247,40 @@ public class TargetFinProduct {
      */
     private String registOrg;
     
+
     /**
+     * 分支序号
+     */
+    private Long branch;
+    
+    /**
+     * 分支序号类型
+     */
+    private String branchType;
+
+    /**
+     * 是否其他债权，其他资产都为空，只有项目类资产为：Y；
+     */
+    private String isQtzq;
+    
+    
+    public String getBranchType() {
+		return branchType;
+	}
+
+	public void setBranchType(String branchType) {
+		this.branchType = branchType;
+	}
+
+	public Long getBranch() {
+		return branch;
+	}
+
+	public void setBranch(Long branch) {
+		this.branch = branch;
+	}
+
+	/**
      * 取得 登记托管机构
      * @return 登记托管机构
      */
@@ -1026,6 +1059,22 @@ public class TargetFinProduct {
      */
     public void setFaceValue(BigDecimal faceValue) {
         this.faceValue = faceValue;
+    }
+
+    /**
+     * 获取 isQtzq 是否其他债券
+     * @return isQtzq.
+     */
+    public String getIsQtzq() {
+        return isQtzq;
+    }
+
+    /**
+     * 设置 isQtzq 是否其他债券
+     * @param isQtzq
+     */
+    public void setIsQtzq(String isQtzq) {
+        this.isQtzq = isQtzq;
     }
     
 }

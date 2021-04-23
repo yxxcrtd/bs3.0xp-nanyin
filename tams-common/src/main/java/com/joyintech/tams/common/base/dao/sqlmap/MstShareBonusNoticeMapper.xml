@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstShareBonusNoticeMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstShareBonusNotice" >
+        <id column="SHARES_ID" property="sharesId" jdbcType="VARCHAR" />
+        <id column="REG_DATE" property="regDate" jdbcType="DATE" />
+        <result column="DEL_DATE" property="delDate" jdbcType="DATE" />
+        <result column="DEVIDENT_DATE" property="devidentDate" jdbcType="DATE" />
+        <result column="REDSHARE_LISTING_DATE" property="redshareListingDate" jdbcType="DATE" />
+        <result column="PER_DEVIDENT_AMT" property="perDevidentAmt" jdbcType="DECIMAL" />
+        <result column="PER_DEVIDENT_CASH" property="perDevidentCash" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SHARES_ID SHARES_ID, REG_DATE REG_DATE, DEL_DATE DEL_DATE, DEVIDENT_DATE DEVIDENT_DATE, 
+        REDSHARE_LISTING_DATE REDSHARE_LISTING_DATE, PER_DEVIDENT_AMT PER_DEVIDENT_AMT, PER_DEVIDENT_CASH PER_DEVIDENT_CASH, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstShareBonusNoticeMapper.Base_Column_List" />
+        from MST_SHARE_BONUS_NOTICE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstShareBonusNoticeMapper.Base_Column_List" />
+        from MST_SHARE_BONUS_NOTICE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MstShareBonusNoticeKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstShareBonusNoticeMapper.Base_Column_List" />
+        from MST_SHARE_BONUS_NOTICE
+        where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
+          and REG_DATE = #{regDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstShareBonusNoticeKey" >
+        delete from MST_SHARE_BONUS_NOTICE
+        where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
+          and REG_DATE = #{regDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstShareBonusNotice" >
+        insert into MST_SHARE_BONUS_NOTICE (SHARES_ID, REG_DATE, DEL_DATE, 
+            DEVIDENT_DATE, REDSHARE_LISTING_DATE, PER_DEVIDENT_AMT, 
+            PER_DEVIDENT_CASH, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{sharesId,jdbcType=VARCHAR}, #{regDate,jdbcType=DATE}, #{delDate,jdbcType=DATE}, 
+            #{devidentDate,jdbcType=DATE}, #{redshareListingDate,jdbcType=DATE}, #{perDevidentAmt,jdbcType=DECIMAL}, 
+            #{perDevidentCash,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstShareBonusNotice" >
+        insert into MST_SHARE_BONUS_NOTICE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sharesId != null" >
+                SHARES_ID,
+            </if>
+            <if test="regDate != null" >
+                REG_DATE,
+            </if>
+            <if test="delDate != null" >
+                DEL_DATE,
+            </if>
+            <if test="devidentDate != null" >
+                DEVIDENT_DATE,
+            </if>
+            <if test="redshareListingDate != null" >
+                REDSHARE_LISTING_DATE,
+            </if>
+            <if test="perDevidentAmt != null" >
+                PER_DEVIDENT_AMT,
+            </if>
+            <if test="perDevidentCash != null" >
+                PER_DEVIDENT_CASH,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="sharesId != null" >
+                #{sharesId,jdbcType=VARCHAR},
+            </if>
+            <if test="regDate != null" >
+                #{regDate,jdbcType=DATE},
+            </if>
+            <if test="delDate != null" >
+                #{delDate,jdbcType=DATE},
+            </if>
+            <if test="devidentDate != null" >
+                #{devidentDate,jdbcType=DATE},
+            </if>
+            <if test="redshareListingDate != null" >
+                #{redshareListingDate,jdbcType=DATE},
+            </if>
+            <if test="perDevidentAmt != null" >
+                #{perDevidentAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="perDevidentCash != null" >
+                #{perDevidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstShareBonusNotice" >
+        insert into MST_SHARE_BONUS_NOTICE(SHARES_ID, REG_DATE, DEL_DATE, DEVIDENT_DATE, 
+        REDSHARE_LISTING_DATE, PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SHARES_ID, REG_DATE, DEL_DATE, DEVIDENT_DATE, 
+            REDSHARE_LISTING_DATE, PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_SHARE_BONUS_NOTICE
+             where 1 = 1 and SHARES_ID = #{sharesId,jdbcType=VARCHAR} and REG_DATE = #{regDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstShareBonusNotice" >
+        update MST_SHARE_BONUS_NOTICE
+        <set >
+            <if test="delDate != null" >
+                DEL_DATE = #{delDate,jdbcType=DATE},
+            </if>
+            <if test="devidentDate != null" >
+                DEVIDENT_DATE = #{devidentDate,jdbcType=DATE},
+            </if>
+            <if test="redshareListingDate != null" >
+                REDSHARE_LISTING_DATE = #{redshareListingDate,jdbcType=DATE},
+            </if>
+            <if test="perDevidentAmt != null" >
+                PER_DEVIDENT_AMT = #{perDevidentAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="perDevidentCash != null" >
+                PER_DEVIDENT_CASH = #{perDevidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
+          and REG_DATE = #{regDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstShareBonusNotice" >
+        update MST_SHARE_BONUS_NOTICE
+        set DEL_DATE = #{delDate,jdbcType=DATE},
+            DEVIDENT_DATE = #{devidentDate,jdbcType=DATE},
+            REDSHARE_LISTING_DATE = #{redshareListingDate,jdbcType=DATE},
+            PER_DEVIDENT_AMT = #{perDevidentAmt,jdbcType=DECIMAL},
+            PER_DEVIDENT_CASH = #{perDevidentCash,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
+          and REG_DATE = #{regDate,jdbcType=DATE}
+    </update>
+</mapper>

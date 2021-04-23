@@ -61,10 +61,14 @@
         <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
         <result column="REVDATE" property="revdate" jdbcType="DATE" />
         <result column="ORITRADEID" property="oritradeid" jdbcType="VARCHAR" />
-        <result column="OURDEPOSITACCOUNTNUMBER" property="ourdepositaccountnumber" jdbcType="VARCHAR" />
         <result column="COUNTERTELEPHONE" property="countertelephone" jdbcType="VARCHAR" />
+        <result column="OURDEPOSITACCOUNTNUMBER" property="ourdepositaccountnumber" jdbcType="VARCHAR" />
         <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
         <result column="SETTLE_SPEED" property="settleSpeed" jdbcType="VARCHAR" />
+        <result column="DEAL_FEEAMT" property="dealFeeamt" jdbcType="DECIMAL" />
+        <result column="SETT_FEEAMT" property="settFeeamt" jdbcType="DECIMAL" />
+        <result column="CB_FPRICE_AMT" property="cbFpriceAmt" jdbcType="DECIMAL" />
+        <result column="SC_FPRICE_AMT" property="scFpriceAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADEID TRADEID, PRODTYPE PRODTYPE, PS PS, CRTREVDEALSTATUS CRTREVDEALSTATUS, RETRADEID RETRADEID, 
@@ -79,8 +83,9 @@
         EFFECTFLAG EFFECTFLAG, INTDATERULE INTDATERULE, ISHEDGING ISHEDGING, ATTCH1DIR ATTCH1DIR, 
         ATTCH2DIR ATTCH2DIR, ATTCH3DIR ATTCH3DIR, DEALTEXT DEALTEXT, CREATEUSER CREATEUSER, 
         CREATEDATE CREATEDATE, LSTMNTUSER LSTMNTUSER, LSTMNTDATE LSTMNTDATE, REVDATE REVDATE, 
-        ORITRADEID ORITRADEID, OURDEPOSITACCOUNTNUMBER OURDEPOSITACCOUNTNUMBER, COUNTERTELEPHONE COUNTERTELEPHONE, 
-        TERM_TYPE TERM_TYPE, SETTLE_SPEED SETTLE_SPEED
+        ORITRADEID ORITRADEID, COUNTERTELEPHONE COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER OURDEPOSITACCOUNTNUMBER, 
+        TERM_TYPE TERM_TYPE, SETTLE_SPEED SETTLE_SPEED, DEAL_FEEAMT DEAL_FEEAMT, SETT_FEEAMT SETT_FEEAMT, 
+        CB_FPRICE_AMT CB_FPRICE_AMT, SC_FPRICE_AMT SC_FPRICE_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -122,8 +127,9 @@
             ATTCH1DIR, ATTCH2DIR, ATTCH3DIR, 
             DEALTEXT, CREATEUSER, CREATEDATE, 
             LSTMNTUSER, LSTMNTDATE, REVDATE, 
-            ORITRADEID, OURDEPOSITACCOUNTNUMBER, 
-            COUNTERTELEPHONE, TERM_TYPE, SETTLE_SPEED
+            ORITRADEID, COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER, 
+            TERM_TYPE, SETTLE_SPEED, DEAL_FEEAMT, 
+            SETT_FEEAMT, CB_FPRICE_AMT, SC_FPRICE_AMT
             )
         values (#{tradeid,jdbcType=VARCHAR}, #{prodtype,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
             #{crtrevdealstatus,jdbcType=VARCHAR}, #{retradeid,jdbcType=VARCHAR}, #{market,jdbcType=VARCHAR}, 
@@ -144,8 +150,9 @@
             #{attch1dir,jdbcType=VARCHAR}, #{attch2dir,jdbcType=VARCHAR}, #{attch3dir,jdbcType=VARCHAR}, 
             #{dealtext,jdbcType=VARCHAR}, #{createuser,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE}, 
             #{lstmntuser,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}, #{revdate,jdbcType=DATE}, 
-            #{oritradeid,jdbcType=VARCHAR}, #{ourdepositaccountnumber,jdbcType=VARCHAR}, 
-            #{countertelephone,jdbcType=VARCHAR}, #{termType,jdbcType=VARCHAR}, #{settleSpeed,jdbcType=VARCHAR}
+            #{oritradeid,jdbcType=VARCHAR}, #{countertelephone,jdbcType=VARCHAR}, #{ourdepositaccountnumber,jdbcType=VARCHAR}, 
+            #{termType,jdbcType=VARCHAR}, #{settleSpeed,jdbcType=VARCHAR}, #{dealFeeamt,jdbcType=DECIMAL}, 
+            #{settFeeamt,jdbcType=DECIMAL}, #{cbFpriceAmt,jdbcType=DECIMAL}, #{scFpriceAmt,jdbcType=DECIMAL}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfOpicsTradRepo" >
@@ -328,17 +335,29 @@
             <if test="oritradeid != null" >
                 ORITRADEID,
             </if>
-            <if test="ourdepositaccountnumber != null" >
-                OURDEPOSITACCOUNTNUMBER,
-            </if>
             <if test="countertelephone != null" >
                 COUNTERTELEPHONE,
+            </if>
+            <if test="ourdepositaccountnumber != null" >
+                OURDEPOSITACCOUNTNUMBER,
             </if>
             <if test="termType != null" >
                 TERM_TYPE,
             </if>
             <if test="settleSpeed != null" >
                 SETTLE_SPEED,
+            </if>
+            <if test="dealFeeamt != null" >
+                DEAL_FEEAMT,
+            </if>
+            <if test="settFeeamt != null" >
+                SETT_FEEAMT,
+            </if>
+            <if test="cbFpriceAmt != null" >
+                CB_FPRICE_AMT,
+            </if>
+            <if test="scFpriceAmt != null" >
+                SC_FPRICE_AMT,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -519,17 +538,29 @@
             <if test="oritradeid != null" >
                 #{oritradeid,jdbcType=VARCHAR},
             </if>
-            <if test="ourdepositaccountnumber != null" >
-                #{ourdepositaccountnumber,jdbcType=VARCHAR},
-            </if>
             <if test="countertelephone != null" >
                 #{countertelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="ourdepositaccountnumber != null" >
+                #{ourdepositaccountnumber,jdbcType=VARCHAR},
             </if>
             <if test="termType != null" >
                 #{termType,jdbcType=VARCHAR},
             </if>
             <if test="settleSpeed != null" >
                 #{settleSpeed,jdbcType=VARCHAR},
+            </if>
+            <if test="dealFeeamt != null" >
+                #{dealFeeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeamt != null" >
+                #{settFeeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="cbFpriceAmt != null" >
+                #{cbFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="scFpriceAmt != null" >
+                #{scFpriceAmt,jdbcType=DECIMAL},
             </if>
         </trim>
     </insert>
@@ -541,7 +572,8 @@
         BUYCOST, BUYTRADER, SELLER, SELLCOST, SELLTRADER, ASSETREFRATE, ASSETAMT, HOSTRATE, 
         HOSTAMT, DEALNO, MFLAG, FMFLAG, CDATE, EFFECTFLAG, INTDATERULE, ISHEDGING, ATTCH1DIR, 
         ATTCH2DIR, ATTCH3DIR, DEALTEXT, CREATEUSER, CREATEDATE, LSTMNTUSER, LSTMNTDATE, REVDATE, 
-        ORITRADEID, OURDEPOSITACCOUNTNUMBER, COUNTERTELEPHONE, TERM_TYPE, SETTLE_SPEED)
+        ORITRADEID, COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER, TERM_TYPE, SETTLE_SPEED, DEAL_FEEAMT, 
+        SETT_FEEAMT, CB_FPRICE_AMT, SC_FPRICE_AMT)
         select TRADEID, PRODTYPE, PS, CRTREVDEALSTATUS, RETRADEID, 
             MARKET, ISMANAUL, ASSETPOOL, DEALDATE, VDATE, MDATE, TERM, CCY, REPORATE, BASIS, 
             REPOINTAMT, REPOAMT, SECID, SECNAME, FACETOTALAMT, VCPRICE, MCPRICE, VDPRICE, MDPRICE, 
@@ -549,7 +581,8 @@
             BUYCOST, BUYTRADER, SELLER, SELLCOST, SELLTRADER, ASSETREFRATE, ASSETAMT, HOSTRATE, 
             HOSTAMT, DEALNO, MFLAG, FMFLAG, CDATE, EFFECTFLAG, INTDATERULE, ISHEDGING, ATTCH1DIR, 
             ATTCH2DIR, ATTCH3DIR, DEALTEXT, CREATEUSER, CREATEDATE, LSTMNTUSER, LSTMNTDATE, REVDATE, 
-            ORITRADEID, OURDEPOSITACCOUNTNUMBER, COUNTERTELEPHONE, TERM_TYPE, SETTLE_SPEED
+            ORITRADEID, COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER, TERM_TYPE, SETTLE_SPEED, DEAL_FEEAMT, 
+            SETT_FEEAMT, CB_FPRICE_AMT, SC_FPRICE_AMT
              from INTERF_OPICS_TRAD_REPO
              where 1 = 1 and TRADEID = #{tradeid,jdbcType=VARCHAR}
     </insert>
@@ -730,17 +763,29 @@
             <if test="oritradeid != null" >
                 ORITRADEID = #{oritradeid,jdbcType=VARCHAR},
             </if>
-            <if test="ourdepositaccountnumber != null" >
-                OURDEPOSITACCOUNTNUMBER = #{ourdepositaccountnumber,jdbcType=VARCHAR},
-            </if>
             <if test="countertelephone != null" >
                 COUNTERTELEPHONE = #{countertelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="ourdepositaccountnumber != null" >
+                OURDEPOSITACCOUNTNUMBER = #{ourdepositaccountnumber,jdbcType=VARCHAR},
             </if>
             <if test="termType != null" >
                 TERM_TYPE = #{termType,jdbcType=VARCHAR},
             </if>
             <if test="settleSpeed != null" >
                 SETTLE_SPEED = #{settleSpeed,jdbcType=VARCHAR},
+            </if>
+            <if test="dealFeeamt != null" >
+                DEAL_FEEAMT = #{dealFeeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeamt != null" >
+                SETT_FEEAMT = #{settFeeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="cbFpriceAmt != null" >
+                CB_FPRICE_AMT = #{cbFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="scFpriceAmt != null" >
+                SC_FPRICE_AMT = #{scFpriceAmt,jdbcType=DECIMAL},
             </if>
         </set>
         where TRADEID = #{tradeid,jdbcType=VARCHAR}
@@ -805,10 +850,14 @@
             LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
             REVDATE = #{revdate,jdbcType=DATE},
             ORITRADEID = #{oritradeid,jdbcType=VARCHAR},
-            OURDEPOSITACCOUNTNUMBER = #{ourdepositaccountnumber,jdbcType=VARCHAR},
             COUNTERTELEPHONE = #{countertelephone,jdbcType=VARCHAR},
+            OURDEPOSITACCOUNTNUMBER = #{ourdepositaccountnumber,jdbcType=VARCHAR},
             TERM_TYPE = #{termType,jdbcType=VARCHAR},
-            SETTLE_SPEED = #{settleSpeed,jdbcType=VARCHAR}
+            SETTLE_SPEED = #{settleSpeed,jdbcType=VARCHAR},
+            DEAL_FEEAMT = #{dealFeeamt,jdbcType=DECIMAL},
+            SETT_FEEAMT = #{settFeeamt,jdbcType=DECIMAL},
+            CB_FPRICE_AMT = #{cbFpriceAmt,jdbcType=DECIMAL},
+            SC_FPRICE_AMT = #{scFpriceAmt,jdbcType=DECIMAL}
         where TRADEID = #{tradeid,jdbcType=VARCHAR}
     </update>
 </mapper>

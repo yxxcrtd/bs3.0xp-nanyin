@@ -10,6 +10,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListNatureGroup;
 import com.joyintech.tams.constant.DictCodeListTableId;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.StayDrawSubprdEntity;
@@ -178,12 +179,17 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
         List<PtlSecValutionWithOtherFieldDto> listCostInfo = positionMakeWithoutDispatchMapper.getCostInfo(sqlMap);
         // 定义 变量.组合资产信息C
         List<PtlSecValutionWithOtherFieldDto> listCostInfoC = new ArrayList<>();
+        /**add by wujie on 20201109 start remark:处理成本为0时，减值余额不为0**/
+        //定义 变量.减值准备D
+        List<PtlSecValutionWithOtherFieldDto> listJzzbD = new ArrayList<>();
+        /**add by wujie on 20201109 e**/
+        
         // LOOP 上面查询结果 ENTITY
         if (CollectionUtils.isNotEmpty(listCostInfo)) {
             for (PtlSecValutionWithOtherFieldDto item : listCostInfo) {
                 // 调用共通【账务类共通方法】，基础科目性质查询
                 List<String> subjectNatureList = accountingCommonService.getValSubjectNatureListWithAcctStandardId(
-                        DictCodeListExt1.分组代码_成本类对应科目查询.getValue(), DictCodeListExt2.会计准则_企业准则.getValue());
+                		DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue(), DictCodeListExt2.会计准则_企业准则.getValue());
                 // 调用共通【账务类共通方法】，科目余额查询-期待方向
                 List<SubjectBalance> listSubjectBalance = this.getSubjectBalance(item.getBooksetId(),
                         happenDate, bookDate, DictCodeList.余额方向_借方.getValue(), subjectNatureList);
@@ -211,6 +217,38 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
                     } 
                     listCostInfoC.add(dto);
                 }
+                /**add by wujie on 20201109 start remark:处理成本为0时，减值余额不为0**/
+                // 调用共通【账务类共通方法】，基础科目性质查询
+                subjectNatureList = accountingCommonService.getValSubjectNatureListWithAcctStandardId(
+                		DictCodeListNatureGroup.分组代码_减值计提减值准备类对应科目查询.getValue(), DictCodeListExt2.会计准则_企业准则.getValue());
+                // 调用共通【账务类共通方法】，科目余额查询-期待方向
+                listSubjectBalance = this.getSubjectBalance(item.getBooksetId(),
+                        happenDate, bookDate, DictCodeList.余额方向_借方.getValue(), subjectNatureList);
+                for(SubjectBalance balance : listSubjectBalance){
+                	if(balance.getBalance()==null || BigDecimal.ZERO.compareTo(balance.getBalance())==0){
+                		continue;
+                	}
+                    PtlSecValutionWithOtherFieldDto dto = new PtlSecValutionWithOtherFieldDto();
+                    BeanUtils.copyProperties(item, dto);
+                    // ENTITY.业务明细代码 = 科目余额.业务明细代码
+                    dto.setBusiId(balance.getBusiId());
+                    dto.setFinprodId(balance.getBusiId());
+                    // ENTITY.币种 = 科目余额.币种
+                    dto.setCcy(balance.getOCcy());
+                    dto.setbCcy(balance.getbCcy());
+                    // ENTITY.账务明细代码 = 科目余额.账务明细代码
+                    dto.setBokDetailId(balance.getBokDetailId());
+                    // ENTITY.投资目的不为空，则 ENTITY.投资目的= 科目余额.投资目的
+                    if(StringUtil.isNotEmpty(balance.getInvAim())){
+                        dto.setInvAim(balance.getInvAim());
+                    } 
+                    // ENTITY.减值余额 = 科目余额.科目余额
+                    dto.setTdyLossAmt(balance.getBalance());
+                    // ENTITY.减值余额_本位币 = 科目余额.本币余额
+                    dto.setTdyLossAmtB(balance.getbAmt());
+                    listJzzbD.add(dto);
+                }
+                /**add by wujie on 20201109 end**/
             }
 
             // 循环组合资产信息结果B，如果该组合代码+资产代码在组合资产信息A中不存在，则A.add(B);
@@ -339,6 +377,37 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
                 ptlSecValutionListWithNoTd.addAll(listCostInfoC);
             }
         }
+        
+        /**add by wujie on 20201109 start remark:处理成本为0时，减值余额不为0**/
+        if (CollectionUtils.isEmpty(ptlSecValutionListWithNoTd)
+        		&& CollectionUtils.isNotEmpty(listJzzbD)){
+        	ptlSecValutionListWithNoTd = new ArrayList<>();
+        	ptlSecValutionListWithNoTd.addAll(listJzzbD);
+        }
+        else  if (CollectionUtils.isNotEmpty(ptlSecValutionListWithNoTd)
+        		&& CollectionUtils.isNotEmpty(listJzzbD)) {
+            Map<String, PtlSecValutionWithOtherFieldDto> dtoMap = new HashMap<>();
+            ptlSecValutionListWithNoTd.forEach(item -> {
+                dtoMap.put(item.getPortfolioId() + item.getBokDetailId(), item);
+            });
+            for (PtlSecValutionWithOtherFieldDto item : listJzzbD) {
+            	// 如果该组合代码+账务明细代码在组合资产信息A中不存在，则A.add(C);
+                String key =item.getPortfolioId()+item.getBokDetailId();
+                if(!dtoMap.containsKey(key)){
+                    ptlSecValutionListWithNoTd.add(item);
+                }
+                else{
+                	PtlSecValutionWithOtherFieldDto dto = dtoMap.get(key);
+                	// ENTITY.减值余额 = D表ENTITY.减值余额
+                    dto.setTdyLossAmt(item.getTdyLossAmt());
+                    // ENTITY.减值余额_本位币 = D表ENTITY.减值余额_本位币
+                    dto.setTdyLossAmtB(item.getTdyLossAmtB());
+                	// 更新A表
+                    ptlSecValutionListWithNoTd.set(ptlSecValutionListWithNoTd.indexOf(dto), dto);
+                }
+            }
+        }
+        /**add by wujie on 20201109 end remark:处理成本为0时，减值余额不为0**/
 
 
         // 设计变更【价差收入、计提利率增加，邮储报表增加】。即直投资产，增加价差信息================begin。
@@ -346,11 +415,14 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
         // 查询[LIST-价差信息C]
         // 调用共通【账务类共通方法】，基础科目性质查询
         List<String> subjectNatureListForJc = accountingCommonService.getValSubjectNatureListWithAcctStandardId(
-                DictCodeListExt1.分组代码_成本类对应科目查询.getValue(), DictCodeListExt2.会计准则_企业准则.getValue());
+        		DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue(), DictCodeListExt2.会计准则_企业准则.getValue());
 
         // 查询[LIST-价差信息C]
         Map<String,Object> sqlmapForJc = new HashMap<String,Object>();
         sqlmapForJc.put("list",subjectNatureListForJc);//科目性质
+        sqlmapForJc.put("booksetIds", sqlMap.get("booksetIds"));
+        sqlmapForJc.put("bookDate", bookDate);
+        sqlmapForJc.put("happenDate", happenDate);
         List<JcInfoDto> JcInfoDtoList =positionMakeWithoutDispatchMapper.getJcInfoDtoList(sqlmapForJc);
 
         // 循环【资产估值（直投资产）list】进行塞值。
@@ -515,7 +587,7 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
 
                     // 累加多余数据中，当前账套和业务明细代码下的待清算资金 作为【待清算资金】
                     for (BlanceDto out : outOfDate) {
-                        if (vo.getBooksetId().equals(out.getBooksetId()) && StringUtil.equals(busId,out.getBusiId())) {
+                        if (StringUtil.equals(vo.getBooksetId(),out.getBooksetId()) && StringUtil.equals(busId,out.getBusiId())) {
                             ptlSecValution.setCcy(out.getCcy());// 币种
                             ptlSecValution.setDelayPayAmt(
                                 ArithmeticUtil.doAdd(ptlSecValution.getDelayPayAmt(), out.getDqskBlance()));// 待清算资金
@@ -563,7 +635,7 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
         List<BookSetInfoDto> booksetInfoList = positionMakeWithoutDispatchMapper.getBookSetInfo(sqlMap);
         // 4.2 查询基础科目性质
         List<String> subjectNatureList = accountingCommonService.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_投资端费用科目查询.getValue());
+        		DictCodeListNatureGroup.分组代码_投资端费用科目查询.getValue());
         // 4.3 查询基础科目性质对应费用类型
         // 组装MAP<基础科目性质，费用信息>
         Map<String, SubjectNatureFeeTypeInfo> subjectNatureFeeTypeMap = new HashMap<String, SubjectNatureFeeTypeInfo>();

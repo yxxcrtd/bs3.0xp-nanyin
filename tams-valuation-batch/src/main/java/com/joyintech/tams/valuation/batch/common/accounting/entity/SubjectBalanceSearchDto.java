@@ -106,7 +106,10 @@ public class SubjectBalanceSearchDto {
      * 特殊核算模型
      */
     private String specialAccount; 
-
+    /**
+     * 原位币
+     */
+    private String oCcy; 
     
     
     /**
@@ -418,5 +421,16 @@ public class SubjectBalanceSearchDto {
     public void setSpecialAccount(String specialAccount) {
         this.specialAccount = specialAccount;
     }
+
+
+	public String getoCcy() {
+		return oCcy;
+	}
+
+
+	public void setoCcy(String oCcy) {
+		this.oCcy = oCcy;
+	}
+    
 
 }

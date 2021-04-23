@@ -191,6 +191,20 @@ public class EtrRepoDto extends EtrEntrust implements ProcessEntity {
      */
     private  String assetAvailablePosition1;
 
+    /**
+     * 委托额度，用于APP质押式回购指令显示
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal APPentrustAmtOne;
+
+
+
+    /**
+     * 券面总额，用于APP买断式式回购指令显示
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal APPentrustAmtTWO;
+
 
     public String getAssetAvailablePosition1() {
         return assetAvailablePosition1;
@@ -788,5 +802,21 @@ public class EtrRepoDto extends EtrEntrust implements ProcessEntity {
     @NotEmpty(fieldName = "EtrRepo002.priceModel", groups = {ValidateGroupEdit.class})
     public String getPriceModel() {
         return super.getPriceModel();
+    }
+
+    public BigDecimal getAPPentrustAmtOne() {
+        return APPentrustAmtOne;
+    }
+
+    public void setAPPentrustAmtOne(BigDecimal APPentrustAmtOne) {
+        this.APPentrustAmtOne = APPentrustAmtOne;
+    }
+
+    public BigDecimal getAPPentrustAmtTWO() {
+        return APPentrustAmtTWO;
+    }
+
+    public void setAPPentrustAmtTWO(BigDecimal APPentrustAmtTWO) {
+        this.APPentrustAmtTWO = APPentrustAmtTWO;
     }
 }

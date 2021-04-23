@@ -491,7 +491,7 @@
 								   INNER JOIN FIN_TRADE_PRODUCT fin ON fin.finprod_id = t2.finprod_id
 								   INNER JOIN FIN_DEAL_PLEDGE FDP ON t2.FINPROD_ID = FDP.FINPROD_ID
 								   INNER JOIN fin_product_type t5 ON FDP.PLEDGE_FINPROD_ID = t5.finprod_id
-								   INNER JOIN FIN_PRODUCT fin1 on fin1.finprod_id = FDP.PLEDGE_FINPROD_ID <!-- 标的类资产 -->
+								   INNER JOIN FIN_PRODUCT fin1 on fin1.finprod_id = t2.finprod_id <!-- 标的类资产 -->
 								   LEFT JOIN PTL_SEC_ACCT t1 ON t1.portfolio_id = t.portfolio_id AND t1.acct_no = t2.sec_manage_acct_id
 								   LEFT JOIN STL_SEC_ACCT_INFO t4 ON t4.sec_acct_id = t1.acct_no
 								   <!-- modify by wj 20200515  TISHKBS-447 项目类通道TRD_PRODUCT_DEAL的chlId为空。关联TRD_FIN_PRODUCT_DEAL_TOTAL表的ChlId  -->

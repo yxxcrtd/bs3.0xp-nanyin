@@ -35,7 +35,7 @@ var showDealPre = function (totleTradeId, finprodTypeStr) {
 }
 
 /**
- * 委托查看页面
+ * 指令查看页面
  */
 var showEntrust = function (entrustId, finprodTypeStr) {
     if (finprodTypeStr == "债券") {
@@ -150,7 +150,7 @@ var showDetailByFinprodId = function (finprodId, finprodType2) {
             "95%", "90%", {
                 pageModel: PAGE_MODEL_REFERENCE,
                 finprodId: finprodId
-            });//债券借贷委托查看
+            });//债券借贷指令查看
     } else if (finprodType2 == PINAN_ASSET_TYPE_F16) {
         label = 'SysCommon.refrence';
         pagePath = "invest/entrust/etrirs/EtrIRS002/init";
@@ -195,6 +195,7 @@ $(function(){
             obj.execid='';
         }
         obj.isEntrust = false;
+        obj.quoteId=$("#quoteId").val()
         if(table[0]&&type=='entrust'){
             obj.isEntrust = true;
             obj.entrustSecAcctId = table[0].secAcctId;
@@ -204,21 +205,21 @@ $(function(){
             obj.entrustTradeDateBegin = table[0].vdateStr;
             obj.entrustTradeDateEnd = table[0].mdateStr;
             if(table[0].settleSpeed=='0'||table[0].settleSpeed=='01'){
-                obj.entrustSettleSpeed='01'
+                obj.entrustSettleSpeed='1'
             }else if(table[0].settleSpeed=='1'||table[0].settleSpeed=='02'){
-                obj.entrustSettleSpeed='02'
+                obj.entrustSettleSpeed='2'
             }else if(table[0].settleSpeed=='1'||table[0].settleSpeed=='03'){
-                obj.entrustSettleSpeed='03'
+                obj.entrustSettleSpeed='3'
             }else{//空值
-                obj.entrustSettleSpeed='05'
+                obj.entrustSettleSpeed='5'
             }
             if(table[0].finprodType2&&table[0].finprodType2=='F01'){
-                obj.entrustFinprodType = 'T01'
+                obj.entrustFinprodType = 'BOND'
                 obj.entrustPrice = table[0].price;//净价
                 obj.entrustUnderlyingyield2 = table[0].matureYield;//到期收益率
                 obj.entrustStrikeyield = table[0].exerYield;//行权收益率
             }else if(table[0].finprodType2&&table[0].finprodType2=='F07'){
-                obj.entrustFinprodType = 'T02'
+                obj.entrustFinprodType = 'REPO'
                 obj.entrustPrice = table[0].price;//回购利率
                 obj.entrustTradelimitdays =table[0].repoTerm;//回购期限
             }
@@ -249,6 +250,7 @@ $(function(){
     var getEntrustPageParams = function (type) {
         var data = table.getAllCheckedRows();
         var obj ={};
+        obj.busiCode=$("#TrdCommandReceive001_busiCode").val();
         obj.beginDate = $('#TrdCommandReceive001_createTime').startDate();
         obj.endDate = $('#TrdCommandReceive001_createTime').endDate();
         //obj.portfolioId =  $('#TrdCommandReceive001_portfolioId').val();
@@ -285,7 +287,7 @@ $(function(){
         if(data[0]&&type){
             obj.isCstp = true;
             obj.cstpTradeDate  = data[0].tradeDateStr;
-            if(data[0].businesstype=='T01'){
+            if(data[0].businesstype=='BOND'){
                 obj.cstpFinprodType2 ='F01';
                 obj.cstpFfinprodMarketId =data[0].securityid;//资产代码
                 if(data[0].price){
@@ -304,7 +306,7 @@ $(function(){
                 }else{
                     obj.cstpExerYield = null;
                 }
-            }else if(data[0].businesstype=='T02'){
+            }else if(data[0].businesstype=='REPO'){
                 obj.cstpFinprodType2 ='F07';
                 if(data[0].price){
                     obj.cstpPrice = data[0].price;//净价
@@ -316,11 +318,11 @@ $(function(){
             obj.cstpTradeMarket = data[0].market;//交易场所
             obj.cstpPs = data[0].side;
             obj.cstpSecAcctId = data[0].ourdepositaccountnumber;
-            if(data[0].settleSpeed=='0'||data[0].settleSpeed=='01'){
+            if(data[0].settleSpeed=='1'||data[0].settleSpeed=='01'){
                 obj.cstpSettleSpeed='0'
-            }else if(data[0].settleSpeed=='1'||data[0].settleSpeed=='02'){
+            }else if(data[0].settleSpeed=='2'||data[0].settleSpeed=='02'){
                 obj.cstpSettleSpeed='1'
-            }else if(data[0].settleSpeed=='1'||data[0].settleSpeed=='03'){
+            }else if(data[0].settleSpeed=='3'||data[0].settleSpeed=='03'){
                 obj.cstpSettleSpeed='2'
             }else{//空值
                 obj.cstpSettleSpeed='5'
@@ -365,81 +367,334 @@ $(function(){
         obj.priceAmt2 = $('#trdMatchInfo_priceAmt2').val();
         return obj;
     }
-    var TrdMatchInfoSave = function (tableData,tableCstp) {
-        var object = {};
-        object.trdMatchInfos = [];
-        $.each(tableData,function (index,val) {
-            $.each(tableCstp,function (index1,val1) {
-                var trdMatchInfo = {};
-                trdMatchInfo.cstpTradeId=val1.execid;
-                if(val.tradeType=='02'){//投资指令
-                    trdMatchInfo.preTradeId=''
-                    trdMatchInfo.entrustId=val.entrustId;
-                }else{
-                    trdMatchInfo.preTradeId=val.entrustId;
-                    trdMatchInfo.entrustId='';
-                }
-                if(tableCstp.length==1&&tableData.length==1){
-                	var amt = 0;
-                	if(val1.businesstype=='T01'){
-                		amt = Number(val1.prinamt);
-                	} else if(val1.businesstype=='T02'){
-                		amt = Number(val1.repoamt);
-                    }
-                	if(val.tradeType=='02'){
-                		if (Number(val.entrustAmt) > amt) {
-                			trdMatchInfo.matchNum=amt;
-                		} else {
-                			trdMatchInfo.matchNum=val.entrustAmt;
-                		}
-                	} else {
-                        if(val1.businesstype=='T01'){
-                            trdMatchInfo.matchNum=val1.prinamt;
-                        }else if(val1.businesstype=='T02'){
-                            trdMatchInfo.matchNum=val1.repoamt;
-                        }
-                	}
-                }else{
-                    if(tableCstp.lengt>1){
-                        if(val1.businesstype=='T01'){
-                            trdMatchInfo.matchNum=val1.prinamt;
-                        }else if(val1.businesstype=='T02'){
-                            trdMatchInfo.matchNum=val1.repoamt;
-                        }
-                    }else if(tableData.length>1){
-                    	var amt = 0;
-                    	if(val1.businesstype=='T01'){
-                    		amt = Number(val1.prinamt);
-                    	} else if(val1.businesstype=='T02'){
-                    		amt = Number(val1.repoamt);
-                        }
-                    	if(val.tradeType=='02'){
-                    		if (Number(val.entrustAmt) > amt) {
-                    			trdMatchInfo.matchNum=amt;
-                    		} else {
-                    			trdMatchInfo.matchNum=val.entrustAmt;
-                    		}
-                    	} else {
-                            if(val1.businesstype=='T01'){
-                                trdMatchInfo.matchNum=val1.prinamt;
-                            }else if(val1.businesstype=='T02'){
-                                trdMatchInfo.matchNum=val1.repoamt;
-                            }
-                    	}
+//    var TrdMatchInfoSave = function (tableData,tableCstp) {
+//        var object = {};
+//        object.trdMatchInfos = [];
+//        $.each(tableData,function (index,val) {
+//            $.each(tableCstp,function (index1,val1) {
+//                var trdMatchInfo = {};
+//                trdMatchInfo.cstpTradeId=val1.execid;
+//                if(val.tradeType=='02'){//投资指令
+//                    trdMatchInfo.preTradeId=''
+//                    trdMatchInfo.entrustId=val.entrustId;
+//                }else{
+//                    trdMatchInfo.preTradeId=val.entrustId;
+//                    trdMatchInfo.entrustId='';
+//                }
+//                if(tableCstp.length==1&&tableData.length==1){
+//                	var amt = 0;
+//                	if(val1.businesstype=='BOND'){
+//                		amt = Number(val1.prinamt);
+//                	} else if(val1.businesstype=='REPO'){
+//                		amt = Number(val1.repoamt);
+//                    }
+//                	if(val.tradeType=='02'){
+//                		if (Number(val.entrustAmt) > amt) {
+//                			trdMatchInfo.matchNum=amt;
+//                		} else {
+//                			trdMatchInfo.matchNum=val.entrustAmt;
+//                		}
+//                	} else {
+//                        if(val1.businesstype=='BOND'){
+//                            trdMatchInfo.matchNum=val1.prinamt;
+//                        }else if(val1.businesstype=='REPO'){
+//                            trdMatchInfo.matchNum=val1.repoamt;
+//                        }
+//                	}
+//                }else{
+//                    if(tableCstp.lengt>1){
+//                        if(val1.businesstype=='BOND'){
+//                            trdMatchInfo.matchNum=val1.prinamt;
+//                        }else if(val1.businesstype=='REPO'){
+//                            trdMatchInfo.matchNum=val1.repoamt;
+//                        }
+//                    }else if(tableData.length>1){
+//                    	var amt = 0;
+//                    	if(val1.businesstype=='BOND'){
+//                    		amt = Number(val1.prinamt);
+//                    	} else if(val1.businesstype=='REPO'){
+//                    		amt = Number(val1.repoamt);
+//                        }
 //                    	if(val.tradeType=='02'){
-//                    		trdMatchInfo.matchNum=val.entrustAmt;
+//                    		if (Number(val.entrustAmt) > amt) {
+//                    			trdMatchInfo.matchNum=amt;
+//                    		} else {
+//                    			trdMatchInfo.matchNum=val.entrustAmt;
+//                    		}
 //                    	} else {
-//                    		trdMatchInfo.matchNum=val.prinAmt;
+//                            if(val1.businesstype=='BOND'){
+//                                trdMatchInfo.matchNum=val1.prinamt;
+//                            }else if(val1.businesstype=='REPO'){
+//                                trdMatchInfo.matchNum=val1.repoamt;
+//                            }
 //                    	}
-                    }
-                }
-                trdMatchInfo.matchType='1';//手工匹配
-                trdMatchInfo.tradeDate=new Date(val.createTimeValStr);
-                object.trdMatchInfos.push(trdMatchInfo);
-            })
-        })
-        return object;
-    }
+////                    	if(val.tradeType=='02'){
+////                    		trdMatchInfo.matchNum=val.entrustAmt;
+////                    	} else {
+////                    		trdMatchInfo.matchNum=val.prinAmt;
+////                    	}
+//                    }
+//                }
+//                trdMatchInfo.matchType='1';//手工匹配
+//                trdMatchInfo.tradeDate=new Date(val.createTimeValStr);
+//                object.trdMatchInfos.push(trdMatchInfo);
+//            })
+//        })
+//        return object;
+//    }
+    
+    
+    
+//    var TrdMatchInfoSaveNew = function (tableData,tableCstp) {
+//    	var object = {};
+//        object.trdMatchInfos = [];
+//    	if(tableData.length>1){//一条成交匹配多条委托
+//    		if(val.tradeType=='01'){//预录入走原先逻辑
+//    			return TrdMatchInfoSave(tableData,tableCstp)
+//    		}else if(tableCstp[0].businesstype=='BOND'){//债券走原先逻辑
+//    			return TrdMatchInfoSave(tableData,tableCstp)
+//    		}else{//回购
+//    			
+//    		}
+//    		
+//    	}else{//多条成交匹配一条委托
+//    		if(val.tradeType=='01'){//预录入走原先逻辑
+//    			return TrdMatchInfoSave(tableData,tableCstp)
+//    		}else if(tableCstp[0].businesstype=='BOND'){//债券走原先逻辑
+//    			return TrdMatchInfoSave(tableData,tableCstp)
+//    		}else{//回购
+//    			
+//    		}
+//    	}
+//        return object;
+//    }
+    
+//    var MatchRepo = function (tableCstp,tableEntrust){
+//    	
+//    	var object = {};
+//        object.trdMatchInfos = [];
+//    	//获取当前cstp剩余质押券
+//    	Joyin.ajaxSync('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId',tableCstp,function (data) {
+//            if(data){
+//            	$.each(data,function (index,val) {
+//            		$.each(tableCstp,function (CstpIndex,cstp) {
+//                		if(val.execid==cstp.execid){//成交编号
+//                			cstp.interfTradRepoasstList = val
+//                		}
+//                	}
+//            	}
+//            }
+//        })
+//        //获取当前委托可用质押券
+//        Joyin.ajaxSync('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId',tableEntrust,function (data) {
+//            if(data){
+//            	$.each(data,function (index,val) {
+//            		$.each(tableEntrust,function (entrustIndex,entrust) {
+//                		if(val.entrust==cstp.entrust){//委托编号
+//                			entrust.trdPledgeList = val
+//                		}
+//                	}
+//            	}
+//            }
+//        })
+//        
+//        //委托匹配多成交
+//        if(tableCstp.length>1){
+//        	var entrust = tableEntrust[0];
+//        	entrust.ava =entrust.proAvailableCash;//初始化 委托可交易金额
+//        	for(var i=0;i>=tableCstp.length;i++) {
+//        		if(entrust.ava<=0){//无可用时，跳出
+//        			break;
+//        		}
+//        		var cstpVal =tableCstp[i];//cstp下行数据
+//        		var trdMatchInfo = {};//需要匹配数据
+//        		var trdPledgeMatchInfoList =[]; //需要匹配的质押券信息
+//                trdMatchInfo.cstpTradeId=cstpVal.execid;
+//                trdMatchInfo.preTradeId=''
+//                trdMatchInfo.entrustId=entrust.entrustId;
+//                trdMatchInfo.matchType='1';//手工匹配
+//                trdMatchInfo.tradeDate=new Date(entrust.createTimeValStr);
+//                //成交对应的折算比例
+//                var totaldeal = 0;
+//                $.each(cstpVal.interfTradRepoasstList,function(index,val){
+//                	totaldeal = JoyinMath.doAdd( totaldeal,val.dealamt)
+//                })
+//                //上请本金
+//                cstpVal.scFpriceAmt
+//                //中债本金
+//                cstpVal.cbFpriceAmt
+//                //trdMatchInfo
+//                trdMatchInfo.matchNum =0;//匹配额度
+//                //未匹配金额
+//                var noMatchNum =JoyinMath.doMinus(cstp.tradecashamt,cstp.lastqtyready);
+//                
+//                //cstp质押券信息
+//                for(var j=0;j>=cstpVal.interfTradRepoasstList.length;j++){
+//                	for(var s=0;s>=entrust.trdPledgeList.length;s++){
+//                		var repoasst = cstpVal.interfTradRepoasstList[j]//当前质押券
+//                		var etrpledge = entrust.trdPledgeList[s] //当前委托可用质押券
+//                		var repoasstSecId =repoasst.secid+".IB"
+//                		if( repoasstSecId== etrpledge.bondCode){//资产代码匹配成功
+//                			etrpledge.repRegistOrg//登记机构
+//                			repoasst.facetotalamt//成交券面
+//                			repoasst.convrate//折算比例
+//                			repoasst.dealamt//成交金额
+//                			etrpledge.avaPledgePrin//可质押券面
+//                			if(etrpledge.avaPledgePrin<=0){//无可用质押   继续循环
+//                				continue;
+//                			}
+//                			var trdPledgeMatchInfo = {};
+//            				trdPledgeMatchInfo.cstpTradeId=cstpVal.execid;
+//            				trdPledgeMatchInfo.preTradeId=''
+//          					trdPledgeMatchInfo.entrustId=entrust.entrustId;
+//            				trdPledgeMatchInfo.matchType='1';//手工匹配
+//            				trdPledgeMatchInfo.tradeDate=new Date(entrust.createTimeValStr);
+//            				
+//                			if(repoasst.facetotalamt<etrpledge.avaPledgePrin){//成交券面小于剩余可用质押券
+//                				if(repoasst.dealamt<entrust.ava){//成交质押券额度小于剩余可交易
+//                					trdPledgeMatchInfo.matchNum = repoasst.facetotalamt
+//                					var entrustminus = JoyinMath.doMul(noMatchNum,JoyinMath.doDiv( repoasst.dealamt,  totaldeal, 12),2)
+//                					entrust.ava =JoyinMath.doMinus(entrust.ava,entrustminus )//减少剩余额度
+//                					etrpledge.avaPledgePrin =JoyinMath.doMinus(etrpledge.avaPledgePrin,repoasst.facetotalamt )//减少可用券面
+//                					trdMatchInfo.matchNum =JoyinMath.doAdd(trdMatchInfo.matchNum,entrustminus )//增加匹配额度
+//                				}else{
+//                					//成交质押券额度大于剩余可交易
+//                					trdPledgeMatchInfo.matchNum = etrpledge.avaPledgePrin
+//                					var entrustminus = JoyinMath.doMul(JoyinMath.doMul(etrpledge.avaPledgePrin, repoasst.convrate, 12), JoyinMath.doDiv( repoasst.dealamt,  totaldeal, 12), 2)
+//                					entrust.ava =JoyinMath.doMinus(entrust.ava,entrustminus )//减少剩余额度
+//                					etrpledge.avaPledgePrin =JoyinMath.doMinus(etrpledge.avaPledgePrin,etrpledge.avaPledgePrin )//减少可用券面
+//                					trdMatchInfo.matchNum =JoyinMath.doAdd(trdMatchInfo.matchNum,entrustminus )//增加匹配额度
+//                				}
+//                			}else{//成交券面大于剩余可用质押券
+//                				//折算本金
+//                				var entrustminus = JoyinMath.doMul(JoyinMath.doMul(etrpledge.avaPledgePrin, repoasst.convrate, 12), JoyinMath.doDiv( repoasst.dealamt,  totaldeal, 12), 2)
+//                				if(entrustminus <entrust.ava){//换算的成交信息小于剩余可委托
+//                					trdPledgeMatchInfo.matchNum = etrpledge.avaPledgePrin
+////                					var entrustminus = JoyinMath.doMul(JoyinMath.doMul(etrpledge.avaPledgePrin, repoasst.convrate, 12), JoyinMath.doDiv( repoasst.dealamt,  totaldeal, 12), 2)
+//                					entrust.ava =JoyinMath.doMinus(entrust.ava,entrustminus )//减少剩余额度
+//                					etrpledge.avaPledgePrin =JoyinMath.doMinus(etrpledge.avaPledgePrin,etrpledge.avaPledgePrin )//减少可用券面
+//                					trdMatchInfo.matchNum =JoyinMath.doAdd(trdMatchInfo.matchNum,entrustminus )//增加匹配额度
+//                				}else{
+//                					//换算的成交信息大于剩余委托
+//                					//通过委托换算可质押券
+//                					var matchNum =JoyinMath.doMul(entrust.ava ,JoyinMath.doDiv( totaldeal,repoasst.dealamt,   12), 2);//匹配数量
+//                					entrust.ava =JoyinMath.doMinus(entrust.ava,entrust.ava )//减少剩余额度
+//                					etrpledge.avaPledgePrin =JoyinMath.doMinus(etrpledge.avaPledgePrin,matchNum )//减少可用券面
+//                					trdMatchInfo.matchNum =JoyinMath.doAdd(trdMatchInfo.matchNum,matchNum )//增加匹配额度
+//                				}
+//                			}
+//                			trdPledgeMatchInfoList.push(trdPledgeMatchInfo);
+//                		}
+//                	}
+//                }
+//                
+//                trdMatchInfos.push(trdMatchInfo);
+//                
+//                return object;
+//        		
+//            });
+//        }
+//        
+//        //成交匹配多委托
+//        if(tableEntrust.length>1){
+//        	var cstp = tableCstp[0]; //成交信息
+//        	entrust.ava =entrust.proAvailableCash;//初始化 委托可交易金额
+//        	for(var i=0;i>=tableCstp.length;i++) {
+//        		if(entrust.ava<=0){//无可用时，跳出
+//        			break;
+//        		}
+//        		var cstpVal =tableCstp[i];//cstp下行数据
+//        		var trdMatchInfo = {};//需要匹配数据
+//        		var trdPledgeMatchInfoList =[]; //需要匹配的质押券信息
+//                trdMatchInfo.cstpTradeId=cstpVal.execid;
+//                trdMatchInfo.preTradeId=''
+//                trdMatchInfo.entrustId=entrust.entrustId;
+//                trdMatchInfo.matchType='1';//手工匹配
+//                trdMatchInfo.tradeDate=new Date(entrust.createTimeValStr);
+//                //成交对应的折算比例
+//                var totaldeal = 0;
+//                $.each(cstpVal.interfTradRepoasstList,function(index,val){
+//                	totaldeal = JoyinMath.doAdd( totaldeal,val.dealamt)
+//                })
+//                //上请本金
+//                cstpVal.scFpriceAmt
+//                //中债本金
+//                cstpVal.cbFpriceAmt
+//                //trdMatchInfo
+//                trdMatchInfo.matchNum =0;//匹配额度
+//                
+//                //cstp质押券信息
+//                for(var j=0;j>=cstpVal.interfTradRepoasstList.length;j++){
+//                	for(var s=0;s>=entrust.trdPledgeList.length;s++){
+//                		var repoasst = cstpVal.interfTradRepoasstList[j]//当前质押券
+//                		var etrpledge = entrust.trdPledgeList[s] //当前委托可用质押券
+//                		var repoasstSecId =repoasst.secid+".IB"
+//                		if( repoasstSecId== etrpledge.bondCode){//资产代码匹配成功
+//                			etrpledge.repRegistOrg//登记机构
+//                			repoasst.facetotalamt//成交券面
+//                			repoasst.convrate//折算比例
+//                			repoasst.dealamt//成交金额
+//                			etrpledge.avaPledgePrin//可质押券面
+//                			if(etrpledge.avaPledgePrin<=0){//无可用质押   继续循环
+//                				continue;
+//                			}
+//                			var trdPledgeMatchInfo = {};
+//            				trdPledgeMatchInfo.cstpTradeId=cstpVal.execid;
+//            				trdPledgeMatchInfo.preTradeId=''
+//          					trdPledgeMatchInfo.entrustId=entrust.entrustId;
+//            				trdPledgeMatchInfo.matchType='1';//手工匹配
+//            				trdPledgeMatchInfo.tradeDate=new Date(entrust.createTimeValStr);
+//            				
+//                			if(repoasst.facetotalamt<etrpledge.avaPledgePrin){//成交券面小于剩余可用质押券
+//                				if(repoasst.dealamt<entrust.ava){//成交质押券额度小于剩余可交易
+//                					trdPledgeMatchInfo.matchNum = repoasst.facetotalamt
+//                					entrust.ava =JoyinMath.doMinus(entrust.ava,repoasst.dealamt )//减少剩余额度
+//                					etrpledge.avaPledgePrin =JoyinMath.doMinus(etrpledge.avaPledgePrin,repoasst.facetotalamt )//减少可用券面
+//                					trdMatchInfo.matchNum =JoyinMath.doAdd(trdMatchInfo.matchNum,repoasst.dealamt )//增加匹配额度
+//                				}else{
+//                					//成交质押券额度大于剩余可交易
+//                					trdPledgeMatchInfo.matchNum = etrpledge.avaPledgePrin
+//                					var entrustminus = JoyinMath.doMul(JoyinMath.doMul(etrpledge.avaPledgePrin, repoasst.convrate, 12), JoyinMath.doDiv( repoasst.dealamt,  totaldeal, 12), 2)
+//                					entrust.ava =JoyinMath.doMinus(entrust.ava,entrustminus )//减少剩余额度
+//                					etrpledge.avaPledgePrin =JoyinMath.doMinus(etrpledge.avaPledgePrin,etrpledge.avaPledgePrin )//减少可用券面
+//                					trdMatchInfo.matchNum =JoyinMath.doAdd(trdMatchInfo.matchNum,entrustminus )//增加匹配额度
+//                				}
+//                			}else{//成交券面大于剩余可用质押券
+//                				//折算本金
+//                				var entrustminus = JoyinMath.doMul(JoyinMath.doMul(etrpledge.avaPledgePrin, repoasst.convrate, 12), JoyinMath.doDiv( repoasst.dealamt,  totaldeal, 12), 2)
+//                				if(entrustminus <entrust.ava){//换算的成交信息小于剩余可委托
+//                					trdPledgeMatchInfo.matchNum = etrpledge.avaPledgePrin
+////                            					var entrustminus = JoyinMath.doMul(JoyinMath.doMul(etrpledge.avaPledgePrin, repoasst.convrate, 12), JoyinMath.doDiv( repoasst.dealamt,  totaldeal, 12), 2)
+//                					entrust.ava =JoyinMath.doMinus(entrust.ava,entrustminus )//减少剩余额度
+//                					etrpledge.avaPledgePrin =JoyinMath.doMinus(etrpledge.avaPledgePrin,etrpledge.avaPledgePrin )//减少可用券面
+//                					trdMatchInfo.matchNum =JoyinMath.doAdd(trdMatchInfo.matchNum,entrustminus )//增加匹配额度
+//                				}else{
+//                					//换算的成交信息大于剩余委托
+//                					//通过委托换算可质押券
+//                					var matchNum =JoyinMath.doMul(entrust.ava ,JoyinMath.doDiv( totaldeal,repoasst.dealamt,   12), 2);//匹配数量
+//                					entrust.ava =JoyinMath.doMinus(entrust.ava,entrust.ava )//减少剩余额度
+//                					etrpledge.avaPledgePrin =JoyinMath.doMinus(etrpledge.avaPledgePrin,matchNum )//减少可用券面
+//                					trdMatchInfo.matchNum =JoyinMath.doAdd(trdMatchInfo.matchNum,matchNum )//增加匹配额度
+//                				}
+//                			}
+//                			trdPledgeMatchInfoList.push(trdPledgeMatchInfo);
+//                		}
+//                	}
+//                }
+//                
+//                trdMatchInfos.push(trdMatchInfo);
+//                
+//                return object;
+//        		
+//            });
+//        }
+//            		
+//        
+//        
+//    }
+    
+    
+    
 
     var TrdMatchInfoDelete = function (tableDate) {
         var object = {};
@@ -467,7 +722,34 @@ $(function(){
         cols:[
             // {field:'portfolioId', title: 'CSTPSelect001.portfolioId',width:'100'}
             // ,{field:'portfolioName', title: 'CSTPSelect001.portfolioName',width:'100'}
-            {field:'matchStatusStr', title: 'CSTPSelect001.matchStatus',sortField:'matchStatus',width:'100'}
+            {field:'matchStatusStr', title: 'CSTPSelect001.matchStatus',sortField:'matchStatus',width:'100',fixed:'left',
+                render:function (data,type,row,meta) {
+                    if(row.matchStatus == '01'){
+                        return "<div class='layui-table-cell laytable-cell-4-0-1' style='color:blue'>"+row.matchStatusStr+"</div>";
+                    }
+                    else if(row.matchStatus == '02'){
+                        return "<div class='layui-table-cell laytable-cell-4-0-1' style='color:red'>"+row.matchStatusStr+"</div>";
+                    }
+                    else if(row.matchStatus == '03'){
+                        return "<div class='layui-table-cell laytable-cell-4-0-1' style='color:yellowgreen'>"+row.matchStatusStr+"</div>";
+                    }
+                }
+            }
+            ,{
+                field: 'dealPercent',
+                title: '匹配度',
+                width: 100,
+                fixed:'left',
+                render: function (data, type, row, meta) {
+                    return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"
+                        + (row.dealPercent)
+                        + "%'><span class='layui-progress-text'>"
+                        + (row.dealPercent)
+                        + "%</span></div></div>";
+                },
+                width: 100,
+                sortField: 'percent'
+            }
             ,{field:'execid', title: 'CSTPSelect001.execid',width:'100'}
             ,{field:'businesstypeStr', title: 'CSTPSelect001.finprodType',sortField:'businesstype',width:'100'}
             ,{field:'securityid', title: 'CSTPSelect001.finprodId',width:'100'}
@@ -480,30 +762,19 @@ $(function(){
             ,{field:'underlyingyield2', title: 'CSTPSelect001.underlyingyield2',width:'150',type:'number', digit:12}
             ,{field:'strikeyield', title: '行权收益率%',width:'150',type:'number', digit:12}
             ,{field:'tradeDateStr', title: 'CSTPSelect001.tradedate1',sortField:'tradedate',width:'120'}
-            ,{field:'settleSpeedStr', title: '清算速度',sortField:'ttleSpeed',width:'100'}
+            ,{field:'settleSpeedStr', title: '清算速度',sortField:'settleSpeed',width:'100'}
             ,{field:'accruedinterestamt',  title: 'CSTPSelect001.accruedinterestamt',width:'110',type:'number', digit:12}
             ,{field:'accruedinteresttotalamt',  title: 'CSTPSelect001.accruedinteresttotalamt',width:'150',type:'number', digit:2}
             ,{field:'tradecashamt', title: 'CSTPSelect001.tradecashamt',width:'110',type:'number', digit:2}
+            ,{field:'cbFpriceAmt', title: '中债本金金额（元）',width:'150',type:'number', digit:2}
+            ,{field:'scFpriceAmt', title: '上清本金金额（元）',width:'150',type:'number', digit:2}
             ,{field:'settlcurramt2', title: 'CSTPSelect001.settlcurramt2',width:'150',type:'number', digit:2}
             ,{field:'tradelimitdays', title: 'CSTPSelect001.tradelimitdays',width:'110'}
             ,{field:'cashholdingdays', title: 'CSTPSelect001.cashholdingdays',width:'150'}
             ,{field:'lastqtyready', title: '已匹配额度',width:'150',type:'number', digit:2}
+            ,{field:'reference', title: '报价编号',width:'150'}
             ,{field:'ourdepositaccountname', title: '证券账户',sortField:'ourdepositaccountnumber',width:'100'}
             ,{field:'ourTradeName', title: 'CSTPSelect001.ourTradeName',width:'100'}
-            ,{
-                field: 'dealPercent',
-                title: '匹配度',
-                width: 100,
-                render: function (data, type, row, meta) {
-                    return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"
-                        + (row.dealPercent)
-                        + "%'><span class='layui-progress-text'>"
-                        + (row.dealPercent)
-                        + "%</span></div></div>";
-                },
-                width: 100,
-                sortField: 'percent'
-            }
             ,{field:'market', visible: false}
             ,{field:'prinamt', visible: false}
             ,{field:'repoamt', visible: false}
@@ -522,7 +793,7 @@ $(function(){
     table.bind('click', '.portfolioId-link', function (row) {
         var param = {};
         if(row.execid){
-            if(row.businesstype=='T01'){
+            if(row.businesstype=='BOND'){
                 param.fTradeId = row.execid;
                 Joyin.dialog("CSTP下行交易债券匹配明细",
                     JoyinUtil.getRealPath("invest/trade/bond/TrdBondInvestTrade001/init"),
@@ -547,9 +818,9 @@ $(function(){
             },
             dblclick: function (table, data) {
                 var entrustId = data.entrustId;
-                //委托的
+                //指令的
                 if(data.tradeType=='02'){
-                    //债券委托详情
+                    //债券指令详情
                     if (data.finprodType2 == PINAN_ASSET_TYPE_F01) {
                         label = 'EtrInvestBondInfo001.detail';
                         pagePath = "invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init";
@@ -557,7 +828,7 @@ $(function(){
                             basePath + pagePath, "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId,
-                            });//基金委托详情
+                            });//基金指令详情
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F02) {
                         label = 'EtrFund002.detail';
                         pagePath = "invest/entrust/etrfund/EtrFund002/init";
@@ -565,7 +836,7 @@ $(function(){
                             basePath + pagePath, "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId,
-                            });//计划类利率委托详情
+                            });//计划类利率指令详情
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F03) {
                         label = 'EtrPlanAssetR002.detail';
                         pagePath = "invest/entrust/etrplanassetr/EtrPlanAssetR002/init";
@@ -573,7 +844,7 @@ $(function(){
                             basePath + pagePath, "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId,
-                            });//计划类净值委托详情
+                            });//计划类净值指令详情
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F04) {
                         label = 'EtrPlanAssetN002.detail';
                         pagePath = "invest/entrust/etrplanassetn/EtrPlanAssetN002/init";
@@ -581,7 +852,7 @@ $(function(){
                             basePath + pagePath, "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId,
-                            });//存款委托详情
+                            });//存款指令详情
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F05) {
                         label = 'EtrBrowDepoInfo002.detail';
                         pagePath = "invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/init";
@@ -589,7 +860,7 @@ $(function(){
                             basePath + pagePath, "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId,
-                            });//项目类委托详情
+                            });//项目类指令详情
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F06) {
                         label = 'EtrProject002.detail';
                         pagePath = "invest/entrust/etrproject/EtrProject002/init";
@@ -597,7 +868,7 @@ $(function(){
                             basePath + pagePath, "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId,
-                            });//回购委托详情
+                            });//回购指令详情
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F07) {
                         label = 'EtrRepo002.detail';
                         pagePath = "invest/entrust/etrrepo/EtrRepo002/init";
@@ -621,7 +892,7 @@ $(function(){
                             basePath + pagePath, "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId
-                            });//计划类货币委托
+                            });//计划类货币指令
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F10) {
                         label = 'EtrBoutRepo002.refrence';
                         pagePath = "invest/entrust/etrboutrepo/EtrBoutRepo002/init";
@@ -629,7 +900,7 @@ $(function(){
                             basePath + pagePath, "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId
-                            });// 买断式回购委托
+                            });// 买断式回购指令
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F11) {
                         label = 'EtrStock002.refence';
                         pagePath = "invest/entrust/etrstock/EtrStock002/init";
@@ -637,7 +908,7 @@ $(function(){
                             basePath + pagePath, "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId
-                            });// 股票交易委托
+                            });// 股票交易指令
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F13) {
                         label = 'EtrWtSpotex.dblclick';
                         pagePath = "invest/entrust/etrwtspotex/EtrWtSpotex002/init";
@@ -645,7 +916,7 @@ $(function(){
                             "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId
-                            });//外汇即期委托
+                            });//外汇即期指令
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F14) {
                         label = 'EtrForwex002.refrence';
                         pagePath = "invest/entrust/etrforwex/EtrForwex002/init";
@@ -653,7 +924,7 @@ $(function(){
                             "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId
-                            });//外汇远期委托
+                            });//外汇远期指令
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F15) {
                         label = 'EtrWtFxswap002.refrence';
                         pagePath = "invest/entrust/etrwtfxswap/EtrWtFxswap002/init";
@@ -661,7 +932,7 @@ $(function(){
                             "95%", "90%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
                                 entrustId: entrustId
-                            });//外汇掉期委托
+                            });//外汇掉期指令
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F12) {
                         label = 'EtrSecLend.refrence';
                         pagePath = "invest/entrust/etrseclend/EtrSecLend002/init";
@@ -671,7 +942,7 @@ $(function(){
                                 entrustId: entrustId,
                                 targetFinprodId: data.finprodId,
                                 portfolioId: data.portfolioId
-                            });//债券借贷委托查看
+                            });//债券借贷指令查看
                     } else if (data.finprodType2 == PINAN_ASSET_TYPE_F16) {
                         label = 'EtrIRS.dblclick';
                         pagePath = "invest/entrust/etrirs/EtrIRS002/init";
@@ -698,16 +969,36 @@ $(function(){
 //        height:'300px',
             cols: [
                 {
+                    field: 'otherEntrustStatus',
+                    title: 'TrdCommandReceive001.entrustStatus',
+                    width: 100,
+                    sortField: 'entrustStatus',
+                    fixed:'left'
+                },
+                {
+                    field: 'dealPercent',
+                    title: 'TrdCommandReceive001.dealPercent',
+                    width: 100,
+                    fixed:'left',
+                    render: function (data, type, row, meta) {
+                        if(row.tradeType=='02'){
+                            return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"
+                                + (row.dealPercent)
+                                + "%'><span class='layui-progress-text'>"
+                                + (row.dealPercent)
+                                + "%</span></div></div>";
+                        }else{
+                            return '';
+                        }
+                    },
+                    width: 100,
+                    sortField: 'percent'
+                },
+                {
                     field: 'tradeTypeName',
                     title: '交易类型',
                     width: 100,
                     sortField: 'tradeType'
-                },
-                {
-                    field: 'otherEntrustStatus',
-                    title: 'TrdCommandReceive001.entrustStatus',
-                    width: 100,
-                    sortField: 'entrustStatus'
                 },
                 {
                     field: 'createTimeValStr',
@@ -828,23 +1119,6 @@ $(function(){
                     width: 140
                 },
                 {
-                    field: 'dealPercent',
-                    title: 'TrdCommandReceive001.dealPercent',
-                    width: 100,
-                    render: function (data, type, row, meta) {
-                        if(row.tradeType=='02'){
-                            return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"
-                                + (row.dealPercent)
-                                + "%'><span class='layui-progress-text'>"
-                                + (row.dealPercent)
-                                + "%</span></div></div>";
-                        }else{
-                            return '';
-                        }
-                    },
-                    width: 100,
-                    sortField: 'percent'
-                }, {
                     field: 'otherCcy',
                     title: 'TrdCommandReceive001.ccy',
                     width: 120,
@@ -852,6 +1126,10 @@ $(function(){
                 }, {
                     field: 'trader',
                     title: 'TrdCommandReceive001.trader',
+                    width: 100
+                }, {
+                    field: 'busiCode',
+                    title: '业务编号',
                     width: 100
                 }, {
                     field: 'remark',
@@ -928,13 +1206,13 @@ $(function(){
         if(row.finprodType2){
             if(row.finprodType2=='F01'){
                 param.entrustId = row.entrustId;
-                Joyin.dialog("债券委托匹配交易明细",
+                Joyin.dialog("债券指令匹配交易明细",
                     JoyinUtil.getRealPath("invest/trade/bond/TrdBondInvestTrade001/init"),
                     "99%", "99%", param/*,
                     function(){table.reload();}*/);
             }else{
                 param.entrustId = row.entrustId;
-                Joyin.dialog("质押式回购委托匹配交易明细",
+                Joyin.dialog("质押式回购指令匹配交易明细",
                     JoyinUtil.getRealPath("invest/trade/trdrepotrade/TrdRepoTrade001/init"),
                     "99%", "99%", param
                     /*, function(){table.reload();}*/
@@ -963,7 +1241,7 @@ $(function(){
                 },
                 {
                     field: 'entrustId',
-                    title: '委托编号',
+                    title: '指令编号',
                     width: 150,
                     render: function (data, type, row, meta) {
                     	if (row.entrustId) {
@@ -1029,10 +1307,10 @@ $(function(){
                     sortField: 'finprodType'
                 },
                 {
-                    field: 'finprodId',
+                    field: 'finprodMarketId',
                     title: '资产代码',
                     width: 150,
-                    sortField: 'finprodId'
+                    sortField: 'finprodMarketId'
                 },
                 {
                     field: 'finprodAbbr',
@@ -1179,17 +1457,17 @@ $(function(){
             click: function (table, data) {
                 entrustId = data.entrustId;
                 $('#detailTable_Div').attr("hidden", false);
-                detailTable ? detailTable.reload() : detailTable
-                    .load();
+//                detailTable ? detailTable.reload() : detailTable
+//                    .load();
                 // detailTable.table ? detailTable.reload() :
                 // detailTable.load();
 //        	showEtrInvest(data.entrustId);
                 // table.$element.next().find(".layui-table-content
                 // ").css({height:'200px'})
-                detailTable.$element.next().find(
-                    ".layui-tab-content").css({
-                    height: '200px'
-                });
+//                detailTable.$element.next().find(
+//                    ".layui-tab-content").css({
+//                    height: '200px'
+//                });
             }
         });
     /**
@@ -1262,7 +1540,7 @@ $(function(){
         $('#Entrust_btn_canPiPei').click(function(){
             if(EntrustTable.getAllCheckedRows().length==0||EntrustTable.getAllCheckedRows().length>1){
                 Joyin.error(JoyinUtil
-                    .getMessage("请选择一条委托数据"));
+                    .getMessage("请选择一条指令数据"));
                 return;
             }
             table.options.ajax.data=function(){
@@ -1521,7 +1799,7 @@ $(function(){
                 tableCstp = tableCst;
             }
             if(tableData.finprodType2==PINAN_ASSET_TYPE_F01){//债券
-                if(tableCstp[0].businesstype!='T01'){//资产类型不一致
+                if(tableCstp[0].businesstype!='BOND'){//资产类型不一致
                     return "BUSS_CSTP_004";
                 }
                 if(tableData.finprodMarketId!=tableCstp[0].securityid){//资产代码不一致
@@ -1534,10 +1812,10 @@ $(function(){
                 if(error){
                     return error;
                 }
-                if(tableCstp[0].settleSpeed&&tableData.settleSpeed!=tableCstp[0].settleSpeed){//清算速度不一致
+                if(tableCstp[0].settleSpeed&&Number(tableData.settleSpeed)!=tableCstp[0].settleSpeed){//清算速度不一致
                     return "BUSS_CSTP_009";
                 }
-                if(tableCstp[0].ourTradeName&&tableData.trader!=tableCstp[0].ourTradeName){//交易员不一致
+                if(tableCstp[0].userName&&tableData.trader!=tableCstp[0].userName){//交易员不一致
                     return "CSTP_SELECT_001";
                 }
                 var price =  priceAndmatureYield(tableData.priceMode,tableCstp,tableData.ps,'price',tableData.price);
@@ -1553,7 +1831,7 @@ $(function(){
                     return exerYield;
                 }
             }else if(tableData.finprodType2==PINAN_ASSET_TYPE_F07){//回购式交易
-                if(tableCstp[0].businesstype!='T02'){//资产类型不一致
+                if(tableCstp[0].businesstype!='REPO'){//资产类型不一致
                     return "BUSS_CSTP_004";
                 }
                 // if(tableData.finprodMarketId!=tableCstp[0].securityid){//资产代码不一致
@@ -1562,17 +1840,36 @@ $(function(){
                 if(tableData.ps!=tableCstp[0].side){//交易方向不一致
                     return "BUSS_CSTP_005";
                 }
+                if(tableCstp[0].side=='03'){//正回购  校验持仓
+                	if(tableCstp[0].quoteId&&tableData.quoteId&&tableData.quoteId.indexOf(tableCstp[0].quoteId)!=-1){
+                		//有报价 且对应委托是此报价的
+                		//跳过
+                	}else{
+                		var positionParam ={}
+                		positionParam.execid=tableCstp[0].execid
+                		positionParam.portfolioId=tableData.portfolioId
+                		var iserror = true;
+                		Joyin.ajaxSync('/invest/trade/cstp/CSTPTrdMatchInfo/checkPosition',positionParam,function (data) {
+                            if(data&&data.isContainPosition=='Y'){
+                            	iserror=false;
+                            }
+                        })
+                        if(iserror){
+                        	return "所选业务编号为："+tableData.busiCode+"没有对应下行成交编号为："+tableCstp[0].execid+"所需质押券可用持仓";
+                        }
+                	}
+                }
                 var error = getSecAcctId(tableData.secAcctId,tableData.portfolioId,tableData.tradeMarket,tableCstp[0]);
                 if(error){
                     return error;
                 }
                 if(tableData.tradeMarket!=tableCstp[0].market){//交易场所不一致不一致
-                    return "下行数据的交易场所和委托的交易场所不一致";
+                    return "下行数据的交易场所和指令的交易场所不一致";
                 }
                 if(tableCstp[0].settleSpeed&&tableData.settleSpeed!=tableCstp[0].settleSpeed){//清算速度不一致
                     return "BUSS_CSTP_009";
                 }
-                if(tableCstp[0].ourTradeName&&tableData.trader!=tableCstp[0].ourTradeName){//交易员不一致
+                if(tableCstp[0].userName&&tableData.trader!=tableCstp[0].userName){//交易员不一致
                     return "CSTP_SELECT_001";
                 }
                 if(tableCstp[0].tradelimitdays&&tableData.repoTerm!=tableCstp[0].tradelimitdays){//回购期限不一致
@@ -1583,61 +1880,61 @@ $(function(){
                     return price;
                 }
             }
-            if(tableData.trader&&tableCstp[0].ourTradeName){
-                if(tableData.trader!=tableCstp[0].ourTradeName){
+            if(tableData.trader&&tableCstp[0].userName){
+                if(tableData.trader!=tableCstp[0].userName){
                     return "BUSS_CSTP_050";
                 }
-            }else if(!tableData.trader&&tableCstp[0].ourTradeName){//交易员不一致
+            }else if(!tableData.trader&&tableCstp[0].userName){//交易员不一致
                 return "BUSS_CSTP_050";
-            }else if(tableData.trader&&!tableCstp[0].ourTradeName){
+            }else if(tableData.trader&&!tableCstp[0].userName){
                 return "BUSS_CSTP_050";
             }
         }
-        function tradeAmtCanJIaoyi(tableCst,entrustAmt,type){
-            var tableCstp = [];
-            //判断是否为对象
-            if($.isPlainObject(tableCst)){
-                tableCstp.push(tableCst);
-            }
-            //判断是否为数组
-            if($.isArray(tableCst)){
-                tableCstp = tableCst;
-            }
-            var path = '';
-            if(tableCstp[0].execid&&entrustAmt){
-                var isTrue = false;
-                var params = {};
-                params.fTradeId = tableCstp[0].execid;
-                if(type==PINAN_ASSET_TYPE_F01){
-                    path = '/invest/trade/bond/TrdBondInvestTrade002/isAllTradeAmtByFTradeId';
-                    if(Number(entrustAmt)>Number(tableCstp[0].prinamt)){
-                        params.tradeAmt = tableCstp[0].prinamt;
-                    }else{
-                        params.tradeAmt =entrustAmt;
-                    }
-                }else if(type==PINAN_ASSET_TYPE_F07){
-                    path = '/invest/trade/trdrepotrade/TrdRepoTrade002/isAllTradeAmtByFTradeId';
-                    if(Number(entrustAmt)>Number(tableCstp[0].repoamt)){
-                        params.tradeAmt = tableCstp[0].repoamt;
-                    }else{
-                        params.tradeAmt =entrustAmt;
-                    }
-                    params.tradeType = 'PLEDGE';
-                    params.ps =tableCstp[0].ps;
-                }
-
-                params.workflowId = null;
-                Joyin.ajaxJson(JoyinUtil.getRealPath(path), params, function (result) {
-                    if(result&&!result.data){
-                        isTrue = true;
-                        // Joyin.error("成交编号获得的劵面总额不得大于已存在的劵面总额！");
-                    }
-                },false);
-                if(isTrue){
-                    return "成交编号获得的劵面总额不得大于已存在的劵面总额！";
-                }
-            }
-        }
+//        function tradeAmtCanJIaoyi(tableCst,entrustAmt,type){
+//            var tableCstp = [];
+//            //判断是否为对象
+//            if($.isPlainObject(tableCst)){
+//                tableCstp.push(tableCst);
+//            }
+//            //判断是否为数组
+//            if($.isArray(tableCst)){
+//                tableCstp = tableCst;
+//            }
+//            var path = '';
+//            if(tableCstp[0].execid&&entrustAmt){
+//                var isTrue = false;
+//                var params = {};
+//                params.fTradeId = tableCstp[0].execid;
+//                if(type==PINAN_ASSET_TYPE_F01){
+//                    path = '/invest/trade/bond/TrdBondInvestTrade002/isAllTradeAmtByFTradeId';
+//                    if(Number(entrustAmt)>Number(tableCstp[0].prinamt)){
+//                        params.tradeAmt = tableCstp[0].prinamt;
+//                    }else{
+//                        params.tradeAmt =entrustAmt;
+//                    }
+//                }else if(type==PINAN_ASSET_TYPE_F07){
+//                    path = '/invest/trade/trdrepotrade/TrdRepoTrade002/isAllTradeAmtByFTradeId';
+//                    if(Number(entrustAmt)>Number(tableCstp[0].repoamt)){
+//                        params.tradeAmt = tableCstp[0].repoamt;
+//                    }else{
+//                        params.tradeAmt =entrustAmt;
+//                    }
+//                    params.tradeType = 'PLEDGE';
+//                    params.ps =tableCstp[0].ps;
+//                }
+//
+//                params.workflowId = null;
+//                Joyin.ajaxJson(JoyinUtil.getRealPath(path), params, function (result) {
+//                    if(result&&!result.data){
+//                        isTrue = true;
+//                        // Joyin.error("成交编号获得的劵面总额不得大于已存在的劵面总额！");
+//                    }
+//                },false);
+//                if(isTrue){
+//                    return "成交编号获得的劵面总额不得大于已存在的劵面总额！";
+//                }
+//            }
+//        }
 
         function preTradeAmtJiaoYi(tableCst,tableData,type){
             var tableCstp = [];
@@ -1677,15 +1974,14 @@ $(function(){
         }
 
         function saveTrdMatchInfo(tableData,tableCstp){
-              var object = TrdMatchInfoSave(tableData, tableCstp);
+//              var object = TrdMatchInfoSave(tableData, tableCstp);
+        	var object ={}
+        	object.cstpSelectDtoList=tableCstp;
+        	object.trdCommandReceive001DtoList =tableData;
             Joyin.confirm('请确认是否进行交易匹配？',function () {
                 Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/cstp/CSTPTrdMatchInfo/saveTrdMatchInfoByCstp'),object,function (result) {
-                    if(result.message){//失败
-                        Joyin.error('交易匹配确认失败');
-                    }else{
-                        table.table?table.reload():table.load();
-                        EntrustTable.table?EntrustTable.reload():EntrustTable.load();
-                    }
+                    table.table?table.reload():table.load();
+                    EntrustTable.table?EntrustTable.reload():EntrustTable.load();
                 },false);
             })
         }
@@ -1877,7 +2173,7 @@ $(function(){
                     return JoyinUtil.getMessage("TRD_PEP_003");
                 }
                 var keyMap;
-                if(tableCstp[0].businesstype =='T01'){
+                if(tableCstp[0].businesstype =='BOND'){
                     //对于债券，在资产标的、交易方向、交易场所、交易平台、通道相同时，交易员可勾选多笔合并交易录单，某个字段为空时可认为是与其他相同；
                     keyMap ={
                         //金融产品类型
@@ -1891,7 +2187,7 @@ $(function(){
                         "tradeType":""
                     };
                 }
-                else if(tableCstp[0].businesstype =='T02'){
+                else if(tableCstp[0].businesstype =='REPO'){
                     // 5.	对于正/逆回购，期限品种、回购类型、交易场所、交易方向相同时，也可以分别勾选多笔合并交易录单；
                     keyMap ={
                         "businesstype":"",
@@ -1947,27 +2243,27 @@ $(function(){
 
                 if(font && font!="businesstype"){
                     //债券
-                    if(tableCstp[0].businesstype =='T01'){
+                    if(tableCstp[0].businesstype =='BOND'){
                         return JoyinUtil.getMessage("TRD_PEP_001");
-                    }else if(tableCstp[0].businesstype =='T02'){
+                    }else if(tableCstp[0].businesstype =='REPO'){
                         return JoyinUtil.getMessage("TRD_PEP_002");
                     }
                 }
                 var returnVal = "";
                 var cstpAmtAll = 0;
                 $.each(tableCstp,function (index,val) {
-                    if(val.businesstype=='T01'){
+                    if(val.businesstype=='BOND'){
                         cstpAmtAll = JoyinMath.doAdd(cstpAmtAll,val.prinamt,2);
-                    }else if(val.businesstype=='T02'){
+                    }else if(val.businesstype=='REPO'){
                         cstpAmtAll = JoyinMath.doAdd(cstpAmtAll,val.repoamt,2);
                     }
                 });
-                if(cstpAmtAll>Number(tableData[0].entrustAmt)){
-                    // return "下行数据的劵面总额或者本金金额不能大于委托的可交易额度！";
+                if(cstpAmtAll>Number(tableData[0].proAvailableCash)){
+                    // return "下行数据的劵面总额或者本金金额不能大于指令的可交易额度！";
                 }
                 $.each(tableCstp,function (index,val) {
                     if(tableData[0].tradeType=='02'){
-                        returnVal = tradeAmtCanJIaoyi(val,tableData[0].entrustAmt,tableData[0].finprodType2);
+//                        returnVal = tradeAmtCanJIaoyi(val,tableData[0].entrustAmt,tableData[0].finprodType2);
                     }else if(tableData[0].tradeType=='01'){
                         returnVal = preTradeAmtJiaoYi(val,tableData,tableData[0].finprodType2);
                     }
@@ -1999,9 +2295,9 @@ $(function(){
                     returnValue!='BUSS_CSTP_012'&&returnValue!='BUSS_CSTP_013'&&returnValue!='BUSS_CSTP_014'){
                     return JoyinUtil.getMessage(returnValue);
                 }
-                if(tableCstp[0]&&tableCstp[0].businesstype=='T01'){
+                if(tableCstp[0]&&tableCstp[0].businesstype=='BOND'){
                     if(tableData[0].tradeType=='02'){
-                        var returnVal = tradeAmtCanJIaoyi(tableCstp,tableData[0].entrustAmt,PINAN_ASSET_TYPE_F01);
+//                        var returnVal = tradeAmtCanJIaoyi(tableCstp,tableData[0].entrustAmt,PINAN_ASSET_TYPE_F01);
                         if(returnVal){
                             return returnVal;
                         }
@@ -2011,9 +2307,9 @@ $(function(){
                             return returnVal;
                         }
                     }
-                }else if(tableCstp[0]&&tableCstp[0].businesstype=='T02'){
+                }else if(tableCstp[0]&&tableCstp[0].businesstype=='REPO'){
                     if(tableData[0].tradeType=='02') {
-                        var returnVal = tradeAmtCanJIaoyi(tableCstp, tableData[0].entrustAmt, PINAN_ASSET_TYPE_F07);
+//                        var returnVal = tradeAmtCanJIaoyi(tableCstp, tableData[0].entrustAmt, PINAN_ASSET_TYPE_F07);
                         if (returnVal) {
                             return returnVal;
                         }
@@ -2028,11 +2324,28 @@ $(function(){
         }
 
         function oneCstpMoreEntrust(tableData,tableCstp,isSome){
+        	if(tableCstp[0].entrustId){//委托信息存在
+        		var quoteIdFlag = true;
+        		var entrustIdList = tableCstp[0].entrustId.split(',');
+        		for(var i =0;i<tableData.length;i++){
+        			if(tableData[i].entrustId){
+        				if(entrustIdList.includes(tableData[i].entrustId)){
+        					continue;
+        				}
+        			}
+        			quoteIdFlag =false;
+        			break;
+        		}
+        		if(!quoteIdFlag){
+        			return "当前下行成交数据有对应上行报价委托信息，请选择对应委托！";
+        		}
+        	}
+        	
             var portifios = [];
             if (tableData.length > 1&&tableCstp==1) {
-                if(!ISTRADERECOMMANDrECEIVE){
-                    return JoyinUtil.getMessage("BUSS_COM_E_0046")
-                }
+//                if(!ISTRADERECOMMANDrECEIVE){//是否允许多组合录单
+//                    return JoyinUtil.getMessage("BUSS_COM_E_0046")
+//                }
                 //交易类型不一致的话
                 var isSomeType = tableData.some(function (value, index) {
                     return value.finprodType2 !== tableData[0].finprodType2;
@@ -2126,9 +2439,9 @@ $(function(){
                         entrustAmtAll = JoyinMath.doAdd(entrustAmtAll,value.entrustAmt,2);
                     }
                 })
-                if(isAllEqual(portifios)){
-                    return '请选择不同的组合进行交易录单';
-                }
+//                if(isAllEqual(portifios)){
+//                    return '请选择不同的组合进行交易录单';
+//                }
                 if(errorType&&errorType!='BUSS_CSTP_050'&&errorType!='BUSS_CSTP_011'&&
                     errorType!='BUSS_CSTP_012'&&errorType!='BUSS_CSTP_013'&&errorType!='BUSS_CSTP_014'){
                     return JoyinUtil.getMessage(errorType);
@@ -2142,9 +2455,9 @@ $(function(){
                         return JoyinUtil.getMessage("TRD_PEP_002")
                     }
                 }
-                if(tableCstp[0]&&tableCstp[0].businesstype=='T01'){
+                if(tableCstp[0]&&tableCstp[0].businesstype=='BOND'){
                     if(tableData[0].tradeType=='02') {
-                        var returnVal = tradeAmtCanJIaoyi(tableCstp, entrustAmtAll, PINAN_ASSET_TYPE_F01);
+//                        var returnVal = tradeAmtCanJIaoyi(tableCstp, entrustAmtAll, PINAN_ASSET_TYPE_F01);
                         if (returnVal) {
                             return returnVal;
                         }
@@ -2154,9 +2467,9 @@ $(function(){
                             return returnVal;
                         }
                     }
-                }else if(tableCstp[0]&&tableCstp[0].businesstype=='T02'){
+                }else if(tableCstp[0]&&tableCstp[0].businesstype=='REPO'){
                     if(tableData[0].tradeType=='02') {
-                        var returnVal = tradeAmtCanJIaoyi(tableCstp, entrustAmtAll, PINAN_ASSET_TYPE_F07);
+//                        var returnVal = tradeAmtCanJIaoyi(tableCstp, entrustAmtAll, PINAN_ASSET_TYPE_F07);
                         if (returnVal) {
                             return returnVal;
                         }
@@ -2188,9 +2501,9 @@ $(function(){
                     returnValue!='BUSS_CSTP_012'&&returnValue!='BUSS_CSTP_013'&&returnValue!='BUSS_CSTP_014'){
                     return JoyinUtil.getMessage(returnValue);
                 }
-                if(tableCstp[0]&&tableCstp[0].businesstype=='T01'){
+                if(tableCstp[0]&&tableCstp[0].businesstype=='BOND'){
                     if(tableData[0].tradeType=='02') {
-                        var returnVal = tradeAmtCanJIaoyi(tableCstp, tableData[0].entrustAmt, PINAN_ASSET_TYPE_F01);
+//                        var returnVal = tradeAmtCanJIaoyi(tableCstp, tableData[0].entrustAmt, PINAN_ASSET_TYPE_F01);
                         if (returnVal) {
                             return returnVal;
                         }
@@ -2200,9 +2513,9 @@ $(function(){
                             return returnVal;
                         }
                     }
-                }else if(tableCstp[0]&&tableCstp[0].businesstype=='T02'){
+                }else if(tableCstp[0]&&tableCstp[0].businesstype=='REPO'){
                     if(tableData[0].tradeType=='02') {
-                        var returnVal = tradeAmtCanJIaoyi(tableCstp, tableData[0].entrustAmt, PINAN_ASSET_TYPE_F07);
+//                        var returnVal = tradeAmtCanJIaoyi(tableCstp, tableData[0].entrustAmt, PINAN_ASSET_TYPE_F07);
                         if (returnVal) {
                             return returnVal;
                         }
@@ -2254,7 +2567,7 @@ $(function(){
             var rows = TrdMatchInfo.getAllCheckedRows();
             var entrustIds = [];
             var preTradeIds=[];
-            if(rows.length==0){
+            if(rows.length!=1){
                 Joyin.error("请选择一条数据进行提交操作");
                 return;
             }
@@ -2299,33 +2612,31 @@ $(function(){
                     var confirmContent4 = '';
                     var confirmContent5 = '';
                     var isReturn = false;
-                    var isSome = {};
-                    isSome.isSomeJiaoYiYuan = true;
+                    var isSome = {};//是否相同？
+                    isSome.isSomeJiaoYiYuan = true;//交易员
                     isSome.isprice = true;//净价
                     isSome.isunderlyingyield2 = true;//到期收益率
                     isSome.isstrikeyield = true;//行权收益率
                     isSome.ispriceHg = true;//回购利率
-                    if(table){
+                    if(table){//cstp下行table
                         var tableCstp = table.getAllCheckedRows();
                     }
-                    if (EntrustTable != null && EntrustTable != '') {
+                    if (EntrustTable != null && EntrustTable != '') {//委托列表table
                         var tableData = EntrustTable.getAllCheckedRows();
                     }
-                    if(!tableCstp || tableCstp.length == 0){
-                        Joyin.error(JoyinUtil
-                            .getMessage("BUSS_CSTP_001"));
+                    if(!tableCstp || tableCstp.length == 0){//未选cstptable
+                        Joyin.error(JoyinUtil.getMessage("BUSS_CSTP_001"));
                         return;
                     }
-                    if (!tableData || tableData.length == 0) {
-                        Joyin.error(JoyinUtil
-                            .getMessage("BUSS_COM_E_0026"));
+                    if (!tableData || tableData.length == 0) {//未选委托table
+                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0026"));
                         return;
                     }
                     if(tableCstp.length>1 && tableData.length>1){
                         Joyin.error('下行交易数据和指令预交易数据不能同时大于2条数据');
                         return;
                     }
-                    var isSomeType = tableData.some(function (value, index) {
+                    var isSomeType = tableData.some(function (value, index) {//委托列表交易类型是否相同
                         return value.tradeType !== tableData[0].tradeType;
                     });
                     if(isSomeType){
@@ -2336,7 +2647,7 @@ $(function(){
                         Joyin.error('只能选择一条预录入数据');
                         return;
                     }
-                    var matchStatus = true;
+                    var matchStatus = true;//全部匹配标识
                     $.each(tableCstp,function (index,val) {
                         if(!(val.matchStatus=='02'||val.matchStatus=='03')){
                             matchStatus = false;
@@ -2344,8 +2655,7 @@ $(function(){
                         }
                     });
                     if(!matchStatus){
-                        Joyin.error(JoyinUtil
-                            .getMessage("BUSS_CSTP_003"));
+                        Joyin.error(JoyinUtil.getMessage("BUSS_CSTP_003"));
                         return;
                     }
                     if(tableCstp.length>0 && tableData.length>0){
@@ -2358,15 +2668,15 @@ $(function(){
                                     return false;
                                 }
                             })
-                     })
+                        })
                         if(isReturn){
-                            Joyin.error('交易日期不在委托的有效区间内');
+                            Joyin.error('交易日期不在指令的有效区间内');
                             return;
                         }
                     }
                     var errorDate = false;
                     $.each(tableData,function (index,val) {
-                        // 平台日期小于委托开始日报错
+                        // 平台日期小于指令开始日报错
                         if (platDate < val.vdateStr) {
                             errorDate=true;
                             return false;
@@ -2377,13 +2687,13 @@ $(function(){
                         return;
                     }
 
-                    //一条cstp数据匹配多条委托预交易
+                    //一条cstp数据匹配多条指令预交易
                     var error1 = oneCstpMoreEntrust(tableData,tableCstp,isSome);
                     if(error1){
                         Joyin.error(error1);
                         return;
                     }
-                    //一条委托匹配多条cstp数据
+                    //一条指令匹配多条cstp数据
                     var error2 = oneEntrustMoreCstp(tableData,tableCstp,isSome);
                     if(error2){
                         Joyin.error(error2);
@@ -2393,7 +2703,7 @@ $(function(){
                     //交易录单的check
                     $.each(tableData,function (index,data) {
                         if(data.tradeType){
-                            if(data.tradeType=='02'){//委托的
+                            if(data.tradeType=='02'){//指令的
                                 Joyin.ajaxJson(
                                     JoyinUtil
                                         .getRealPath('invest/trade/investtrade/commandreceive/TrdCommandReceive001/check'),
@@ -2413,23 +2723,23 @@ $(function(){
                         }
                     });
                     if(!isSome.isprice){
-                        confirmContent1 = '债券委托的净价与债券成交单的净价不一致，';
+                        confirmContent1 = '债券指令的净价与债券成交单的净价不一致，';
                         confirmContent = confirmContent+confirmContent1;
                     }
                     if(!isSome.isunderlyingyield2){
-                        confirmContent2 = '债券委托的到期收益率与债券成交单的到期收益率不一致，';
+                        confirmContent2 = '债券指令的到期收益率与债券成交单的到期收益率不一致，';
                         confirmContent = confirmContent+confirmContent2;
                     }
                     if(!isSome.isstrikeyield){
-                        confirmContent3 = '债券委托的行权收益率与债券成交单的行权收益率不一致，';
+                        confirmContent3 = '债券指令的行权收益率与债券成交单的行权收益率不一致，';
                         confirmContent = confirmContent+confirmContent3;
                     }
                     if(!isSome.ispriceHg){
-                        confirmContent4 = '质押式回购委托的回购利率与质押式成交单的回购利率不一致，';
+                        confirmContent4 = '质押式回购指令的回购利率与质押式成交单的回购利率不一致，';
                         confirmContent = confirmContent+confirmContent4;
                     }
                     if(!isSome.isSomeJiaoYiYuan){
-                        confirmContent5 = '质押式回购委托的回购利率与质押式成交单的回购利率不一致，';
+                        confirmContent5 = '质押式回购指令的回购利率与质押式成交单的回购利率不一致，';
                         confirmContent = confirmContent+confirmContent5;
                     }
 
@@ -2445,5 +2755,28 @@ $(function(){
                        }
                     }
                 });
+        //更多
+        $('#CSTPSelect001_much').click(function () {
+            if($('#CSTPSelect001_much').find('span').html()=="更多"){
+                $('#CSTPSelect001_much_div1').show();
+                $('#CSTPSelect001_much_div2').show();
+                $('#CSTPSelect001_much').find('span').html("取消更多");
+            }else{
+                $('#CSTPSelect001_much_div1').hide();
+                $('#CSTPSelect001_much_div2').hide();
+                $('#CSTPSelect001_much').find('span').html("更多");
+            }
+        });
+        $('#Entrust_much').click(function () {
+            if($('#Entrust_much').find('span').html()=="更多"){
+                $('#Entrust_much_div1').show();
+                $('#Entrust_much_div2').show();
+                $('#Entrust_much').find('span').html("取消更多");
+            }else{
+                $('#Entrust_much_div1').hide();
+                $('#Entrust_much_div2').hide();
+                $('#Entrust_much').find('span').html("更多");
+            }
+        });
     });
 }());

@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListTableId;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
@@ -46,6 +47,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 非货币基金交易 process相关业务处理
@@ -168,7 +170,17 @@ public class NonMonetaryFundDealProcessorService {
             varGyjzxbdSubjectAmt = subjectBalance3.getBalance() == null ? BigDecimal.ZERO : subjectBalance3.getBalance();
         }
 
-        
+        Collections.sort(listFinProductDealInfoComDTONow, new Comparator<FinProductDealInfoComDTO>() {
+            @Override
+            public int compare(FinProductDealInfoComDTO o1, FinProductDealInfoComDTO o2) {
+                if(StringUtil.equals(o1.getPs(),DictCodeList.交易方向_除权登记.getValue())//    T13
+                        ||StringUtil.equals(o1.getPs(),DictCodeList.交易方向_红利再投.getValue())//T12
+                        ||StringUtil.equals(o1.getPs(),DictCodeList.交易方向_现金分红.getValue())){//T11
+                    return o2.getPs().compareTo(o1.getPs());
+                }
+                return 0;
+            }
+        });
         // 循环金融产品交易信息list,进行逻辑处理
         for (FinProductDealInfoComDTO dealNow : listFinProductDealInfoComDTONow) {
             
@@ -443,7 +455,11 @@ public class NonMonetaryFundDealProcessorService {
                 ad.setTableId(DictCodeListTableId.会计场景代码_非货币基金及净值型资产_份额调增.getValue());//
 
                 // ********** accountSceneMap设置如下，共通**********
+                /**MODIFY BY WUJIE ON 20210129 START REMARK:金额为0也出凭证
                 accountSceneMap.put(BookConstant.IS_ZERO_ACCOUNT,DictCodeList.是否_否.getValue() );
+                **/
+                accountSceneMap.put(BookConstant.IS_ZERO_ACCOUNT,DictCodeList.是否_是.getValue());
+                /**MODIFY BY WUJIE ON 20210129 END **/
                 
                 accountSceneMap.put(BookConstant.ACCT_TYPE,dealNow.getAcctType());
 
@@ -487,6 +503,10 @@ public class NonMonetaryFundDealProcessorService {
                     "非货币基金" + DictCodeList.交易方向_份额强减.getCodeName() + "交易登账");
                 
                 accountSceneMap.put(BookConstant.ACCT_TYPE,dealNow.getAcctType());
+                
+                /**ADD BY WUJIE ON 20210129 START REMARK:金额为0也出凭证**/
+                accountSceneMap.put(BookConstant.IS_ZERO_ACCOUNT,DictCodeList.是否_是.getValue());
+                /**ADD BY WUJIE ON 20210129 END **/
 
                 // ********** accountAmountMap设置如下**********
                 // 发生数量	<-	交易明细.交易份额
@@ -617,8 +637,7 @@ public class NonMonetaryFundDealProcessorService {
                 accountAmountMap.putAll(bccyAmountMap);
                 //定义 本币_变量.买卖价差
             	BigDecimal varMmjcBccy = BigDecimal.ZERO;
-            	
-				//变量.买卖价差_本位币 = (实收金额_本位币 + 随交易支付_佣金_本位币 + 交易费用_本位币) -(成本金额_本位币 + 应付佣金_本位币)                                                                                                    
+            	//变量.买卖价差_本位币 = (实收金额_本位币 + 随交易支付_佣金_本位币 + 交易费用_本位币) -(成本金额_本位币 + 应付佣金_本位币)                                                                                                    
                 BigDecimal dealAmtBccy = accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT);
                 BigDecimal commissionOutBccy = accountAmountMap.get(BookConstant.COMMISSION_OUT + BookConstant.BCCYAMT);
                 BigDecimal feeAmtBccy = accountAmountMap.get(BookConstant.FEEAMT + BookConstant.BCCYAMT);
@@ -626,8 +645,7 @@ public class NonMonetaryFundDealProcessorService {
                 BigDecimal commissionBccy = accountAmountMap.get(BookConstant.COMMISSION + BookConstant.BCCYAMT);
                 varMmjcBccy = ArithmeticUtil.doSub(ArithmeticUtil.doAdd(dealAmtBccy, commissionOutBccy, feeAmtBccy)
                         , ArithmeticUtil.doAdd(dcostAmtBccy, commissionBccy));
-				
-				if(varMmjcBccy.compareTo(BigDecimal.ZERO)>0) {
+            	if(varMmjcBccy.compareTo(BigDecimal.ZERO)>0) {
             		accountAmountMap.put(BookConstant.DSCLOSS_C + BookConstant.BCCYAMT, ArithmeticUtil.round(varMmjcBccy, NumberEnum.MONEY.getCode(), null));
             	}
             	else {
@@ -645,7 +663,6 @@ public class NonMonetaryFundDealProcessorService {
                     varCjgyjzbdSubjectAmt);
 
             }
-
 
             /** modify by yanya on 20200111 非货币基金增加转换交易处理，转入方向变更为转换申购确认 start**/
             //else if (DictCodeList.交易方向_转入.getValue().equals(dealPsNow)) {
@@ -995,21 +1012,23 @@ public class NonMonetaryFundDealProcessorService {
 
                 // ********** accountAmountMap设置如下**********
                 // 利息金额 <-交易明细.交易金额
-                // 定义 变量.利息调整 = 交易明细.交易本金 - 变量.应收红利科目余额
-                varLxtzSubjectAmt = ArithmeticUtil.doSub(dealNow.getPrinAmt(), varYshlSubjectAmt);
+//                // 定义 变量.利息调整 = 交易明细.交易本金 - 变量.应收红利科目余额
+//                varLxtzSubjectAmt = ArithmeticUtil.doSub(dealNow.getPrinAmt(), varYshlSubjectAmt);
                 // 成本金额<-交易明细.交易本金
                 accountAmountMap.put(BookConstant.DEALAMT,dealNow.getPrinAmt());
                 // 利息金额<-变量.应收红利科目余额
-                accountAmountMap.put(BookConstant.BONUSAMT,varYshlSubjectAmt);
-                // 如果变量.利息调整 > 0
-                if (BigDecimal.ZERO.compareTo(varLxtzSubjectAmt) < 0) {
-                    // 利息调整（贷）<- 变量.利息调整DSCINC_C
-                    accountAmountMap.put(BookConstant.NETAMT_C,varLxtzSubjectAmt);
-                }
-                else {
-                    // 利息调整（借） <- 变量.利息调整*-1 DSCINC_D
-                    accountAmountMap.put(BookConstant.NETAMT_D,varLxtzSubjectAmt.negate());
-                }
+                accountAmountMap.put(BookConstant.BONUSAMT,dealNow.getPrinAmt());
+//                // 利息金额<-变量.应收红利科目余额
+//                accountAmountMap.put(BookConstant.BONUSAMT,varYshlSubjectAmt);
+//                // 如果变量.利息调整 > 0
+//                if (BigDecimal.ZERO.compareTo(varLxtzSubjectAmt) < 0) {
+//                    // 利息调整（贷）<- 变量.利息调整DSCINC_C
+//                    accountAmountMap.put(BookConstant.NETAMT_C,varLxtzSubjectAmt);
+//                }
+//                else {
+//                    // 利息调整（借） <- 变量.利息调整*-1 DSCINC_D
+//                    accountAmountMap.put(BookConstant.NETAMT_D,varLxtzSubjectAmt.negate());
+//                }
                 
                 /**20200102 taoran add start**/
                 // 定义 本币金额元素Map
@@ -1019,18 +1038,18 @@ public class NonMonetaryFundDealProcessorService {
                 }
                 accountAmountMap.putAll(bccyAmountMap);
                 
-            	//定义 变量.利息调整_本位币 = 成本金额_本位币 - 利息金额_本位币
-                BigDecimal varLxtzSubjectAmtBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
-                		accountAmountMap.get(BookConstant.BONUSAMT + BookConstant.BCCYAMT));
-            	if(varLxtzSubjectAmtBccy.compareTo(BigDecimal.ZERO)>0) {
-            		//利息调整（贷）_本位币<-变量.利息调整_本位币
-            		accountAmountMap.put(BookConstant.NETAMT_C + BookConstant.BCCYAMT, ArithmeticUtil.round(varLxtzSubjectAmtBccy, NumberEnum.MONEY.getCode(), null));
-            	}
-            	else {
-            		//利息调整（借）_本位币<-变量.利息调整_本位币 * -1	
-            		accountAmountMap.put(BookConstant.NETAMT_D + BookConstant.BCCYAMT, ArithmeticUtil.round(varLxtzSubjectAmtBccy.negate(), NumberEnum.MONEY.getCode(), null));
-            	}
-                /**20200102 taoran add end**/
+//            	//定义 变量.利息调整_本位币 = 成本金额_本位币 - 利息金额_本位币
+//                BigDecimal varLxtzSubjectAmtBccy = ArithmeticUtil.doSub(accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT),
+//                		accountAmountMap.get(BookConstant.BONUSAMT + BookConstant.BCCYAMT));
+//            	if(varLxtzSubjectAmtBccy.compareTo(BigDecimal.ZERO)>0) {
+//            		//利息调整（贷）_本位币<-变量.利息调整_本位币
+//            		accountAmountMap.put(BookConstant.NETAMT_C + BookConstant.BCCYAMT, ArithmeticUtil.round(varLxtzSubjectAmtBccy, NumberEnum.MONEY.getCode(), null));
+//            	}
+//            	else {
+//            		//利息调整（借）_本位币<-变量.利息调整_本位币 * -1
+//            		accountAmountMap.put(BookConstant.NETAMT_D + BookConstant.BCCYAMT, ArithmeticUtil.round(varLxtzSubjectAmtBccy.negate(), NumberEnum.MONEY.getCode(), null));
+//            	}
+//                /**20200102 taoran add end**/
             	
                 // ********** 全局变量更新**********
                 // 变量.成本科目余额=变量.成本科目余额 + 交易明细.交易本金
@@ -1038,7 +1057,7 @@ public class NonMonetaryFundDealProcessorService {
                 // 变量.成本科目数量=变量.成本科目数量 + 交易明细.交易份额
                 varCostSubjectNum = ArithmeticUtil.doSub(varCostSubjectNum, dealNow.getShareAmt());
                 // 变量.应收红利科目余额=变量.应收红利科目余额 - (交易明细.利息总额 - 变量.利息调整)
-                varYshlSubjectAmt = ArithmeticUtil.doSub(varYshlSubjectAmt, varYshlSubjectAmt);
+                varYshlSubjectAmt = ArithmeticUtil.doSub(varYshlSubjectAmt, dealNow.getPrinAmt());
 
             }
             else if (DictCodeList.交易方向_卖出.getValue().equals(dealPsNow)) {

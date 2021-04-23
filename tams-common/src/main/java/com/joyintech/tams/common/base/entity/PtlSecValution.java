@@ -188,13 +188,24 @@ public class PtlSecValution extends PtlSecValutionKey {
      */
     private String genType;
 
-
     /**
      * 到期收益率
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal yield;
 
+
+    /**
+     * 减值余额_本币
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyLossAmtB;
+
+    /**
+     * 减值余额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tdyLossAmt;
 
     /**
      * 取得 币种
@@ -709,4 +720,35 @@ public class PtlSecValution extends PtlSecValutionKey {
     }
 
 
+    /**
+     * 取得 减值余额_本币
+     * @return 减值余额_本币
+     */
+    public BigDecimal getTdyLossAmtB() {
+        return tdyLossAmtB;
+    }
+
+    /**
+     * 设置 减值余额_本币
+     * @param tdyLossAmtB 减值余额_本币
+     */
+    public void setTdyLossAmtB(BigDecimal tdyLossAmtB) {
+        this.tdyLossAmtB = tdyLossAmtB;
+    }
+
+    /**
+     * 取得 减值余额
+     * @return 减值余额
+     */
+    public BigDecimal getTdyLossAmt() {
+        return tdyLossAmt;
+    }
+
+    /**
+     * 设置 减值余额
+     * @param tdyLossAmt 减值余额
+     */
+    public void setTdyLossAmt(BigDecimal tdyLossAmt) {
+        this.tdyLossAmt = tdyLossAmt;
+    }
 }

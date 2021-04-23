@@ -247,4 +247,8 @@ public class MstTradeOpponent001Service extends BaseService<MstTradeOpponentDto>
         return basicMstTradeOpponent001Mapper.getCctInfo(map);
         
     }
+
+    public List<MstTradeOpponentDto> selectCounterIdByCustomer(Map<String,Object> map){
+        return basicMstTradeOpponent001Mapper.selectCounterIdByCustomer(map);
+    }
 }

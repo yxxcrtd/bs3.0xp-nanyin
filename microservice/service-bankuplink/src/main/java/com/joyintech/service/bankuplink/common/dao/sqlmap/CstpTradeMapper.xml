@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.bankuplink.common.dao.CstpTradeMapper">
+    <select id="selectSecByExecid" parameterType="String"  resultType="String">
+    select t.dealno from 
+    INTERF_TRAD_SECDEAL t 
+    where t.FEDEALNO = #{execid,jdbcType=VARCHAR}
+    </select>
+     <select id="selectRepoByExecid" parameterType="String"  resultType="String">
+    select t.TRADEID from 
+    INTERF_OPICS_TRAD_REPO t 
+    where t.ORITRADEID = #{execid,jdbcType=VARCHAR}
+    </select>
+    
+     <select id="selectTradeSec" parameterType="String"  
+     resultType="com.joyintech.tams.invest.common.dto.cstp.InterfTradSecdealDto">
+  select  TRIM(t.SECURITYID)|| '.IB'  secid,
+       t.SETTLCURRENCY ccy,                    
+       DECODE(t.SIDE, '1', 'P', 'S') ps,
+       t.PRICE price8,
+       t.YIELD2 yield8,
+       t.STRIKEYIELD  strikeyield,
+       t.DIRTYPRICE dirtyprice,
+       t.ACCRUEDINTERESTAMT  accruedinterestamt,
+       t.SETTLTYPE settleSpeed,
+       t.LASTQTY      prinamt,
+       t.SETTLCURRAMT settamt,
+       t.OURTRADERNAME trad,
+       t.COUNTERTRADERNAME clienttrader,
+       t.COUNTERTELEPHONE countertelephone,
+       t.OURDEPOSITACCOUNTNUMBER ourdepositaccountnumber,
+       t.ACCRUEDINTERESTAMT  unitInt,
+       t.ACCRUEDINTERESTTOTALAMT convintamt, 
+       'E' effectflag, 
+       to_date(#{sysDate,jdbcType=VARCHAR},'YYYY-MM-DD') inputdate,
+       TO_DATE(t.TRADEDATE, 'YYYYMMDD') dealdate,
+       TO_DATE(t.SETTLDATE, 'YYYYMMDD') settdate,
+       DECODE(t.EXECTYPE, '4',  to_date(#{sysDate,jdbcType=VARCHAR},'YYYY-MM-DD'), '') revdate,
+       1 updatecounter,                      
+       t.EXECID fedealno,
+       t.TEXT dealtext,
+       t.UPDATETIME lstmntdate,
+       t.CLEARINGMETHOD clearingmethod,
+       t.DELIVERYTYPE deliverytype,
+       t.COUNTERINSTITUTIONCODE cno
+
+  from interf_cstp_trade t
+ where t.execid =  #{execid,jdbcType=VARCHAR}
+ and  t.businesstype =  #{businesstype,jdbcType=VARCHAR}
+   and t.updatetime = (select max(t.updatetime)
+                         from interf_cstp_trade t
+                        where  t.execid = #{execid,jdbcType=VARCHAR}
+                         and  t.businesstype =  #{businesstype,jdbcType=VARCHAR})
+    </select>
+    <select id="selectBuytrader" parameterType="String" resultType="String">
+    select t.user_name
+    from SYS_USER t
+    where t.real_name = #{ourtraderchinesename,jdbcType=VARCHAR}
+    </select>
+     <select id="selectSeller" parameterType="String" resultType="String">
+ 	select t.institution_code
+  	from SYSINSTITUTION t
+ 	where t.institution_name =  #{institutionchinesefullname,jdbcType=VARCHAR}
+    </select>
+       <select id="selectPortfolioId" parameterType="java.util.Map" resultType="String">
+ 	select t.PORTFOLIO_ID
+  from PTL_CAPACCT_INFO t
+ where (t.Acct_Type = #{A08,jdbcType=VARCHAR} 
+ 	or t.Acct_Type = #{A09,jdbcType=VARCHAR} 
+    or t.Acct_Type =#{A10,jdbcType=VARCHAR} )
+    and t.Acct_No= =  #{ourcapitalaccountnumber,jdbcType=VARCHAR}
+    </select>
+    <select id="selectDealNo" parameterType="String" resultType="String">
+ 	<!--SELECT 'CSTP' || TO_CHAR(#{sysDate,jdbcType=VARCHAR}, 'yyyyMMdd') ||
+       DECODE(LENGTH(CSTP_SEQNO.NEXTVAL), 1, '000', 2, '00', 3, '0', '') ||
+       CSTP_SEQNO.NEXTVAL-->
+     SELECT '${prefix}' || #{sysDate,jdbcType=VARCHAR} || lpad(CSTP_SEQNO.NEXTVAL, 4, '0')
+     FROM DUAL
+    </select>
+       <select id="selectTradRepo" parameterType="String"  
+       resultType="com.joyintech.tams.common.base.entity.InterfOpicsTradRepo">
+    select DECODE(t.MARKETINDICATOR, 9, 'H01', 10, 'H03', '') prodtype,
+       TRIM(t.SECURITYID) secid,
+       DECODE(t.SIDE, '4', 'RS', 'RB') ps,
+       'N' crtrevdealstatus,
+       'IB' market,
+       0 ismanaul,
+       'O' clienttype,
+       TO_DATE(t.TRADEDATE, 'YYYYMMDD') dealdate,
+       TO_DATE(t.SETTLDATE, 'YYYYMMDD') vdate,
+       TO_DATE(t.SETTLDATE2, 'YYYYMMDD') mdate,
+       t.settldate2 - t.SETTLDATE term,
+       t.SETTLCURRENCY ccy,
+       t.PRICE reporate,
+       'A/365' basis,
+       DECODE(t.MARKETINDICATOR,
+              9,
+              t.ACCRUEDINTERESTTOTALAMT,
+              10,
+              t.SETTLCURRAMT2 - t.SETTLCURRAMT) repointamt,
+       DECODE(t.MARKETINDICATOR, 9, t.TRADECASHAMT, 10, t.SETTLCURRAMT) repoamt,
+       t.SETTLCURRAMT vdealamt, 
+       t.SETTLCURRAMT2 mdealamt, 
+       DECODE(t.DELIVERYTYPE, 0, 'DVP', 4, 'PUD', 5, 'DUP') vclrform,
+       DECODE(t.DELIVERYTYPE2, 0, 'DVP', 4, 'PUD', 5, 'DUP') mclrform,
+       t.COUNTERTRADERNAME selltrader,  
+       t.TEXT dealtext,
+       DECODE(t.EXECTYPE, '4',  to_date(#{sysDate,jdbcType=VARCHAR}), '') revdate,
+       t.UPDATETIME lstmntdate,
+       'E' effectflag,
+       t.LASTQTY facetotalamt,
+       t.COUNTERINSTITUTIONCODE seller,
+       t.SECURITYID termType,
+       t.CB_FPRICE_AMT,
+       t.SC_FPRICE_AMT,
+       t.OURDEPOSITACCOUNTNUMBER ourdepositaccountnumber,
+       CASE WHEN  t.SETTLDATE = t.TRADEDATE THEN '1'
+       ELSE '2' END  settleSpeed
+  from interf_cstp_trade t
+ where t.execid =  #{execid,jdbcType=VARCHAR}
+  and  t.businesstype =  #{businesstype,jdbcType=VARCHAR}
+   and t.updatetime = (select max(t.updatetime)
+                         from interf_cstp_trade t
+                        where t.execid =  #{execid,jdbcType=VARCHAR}
+                         and  t.businesstype =  #{businesstype,jdbcType=VARCHAR})
+    </select>
+     <select id="selectrepoAsset" parameterType="String" resultType="String">
+ 	 select t.tradeid
+  from INTERF_TRAD_REPOASST t
+ where t.tradeid =  #{execid,jdbcType=VARCHAR}
+   and t.secid =  #{secid,jdbcType=VARCHAR}
+    </select>
+    <update id="updateRepoAsst" parameterType="com.joyintech.tams.common.base.entity.InterfTradRepoasst">
+    update INTERF_TRAD_REPOASST
+    <trim prefix="set" suffixOverrides=",">
+    	<if test="secname != null">secname= #{secname,jdbcType=VARCHAR},</if>
+    	<if test="facetotalamt != null">facetotalamt= #{facetotalamt,jdbcType=VARCHAR},</if>
+    	<if test="convrate != null">convrate= #{convrate,jdbcType=VARCHAR},</if>
+    	<if test="dealamt != null">dealamt= #{dealamt,jdbcType=VARCHAR},</if>
+    	<if test="seqNo != null">seq_no= #{seqNo,jdbcType=VARCHAR},</if>
+    </trim>
+     where tradeid =  #{tradeid,jdbcType=VARCHAR}
+   	 and secid =  #{secid,jdbcType=VARCHAR}
+    
+    </update>
+
+    <select id="selectPortfolioIdByQuoteId" resultType="string">
+        select  PORTFOLIO_ID from
+        <if test="businessType != null and businessType.equals('BOND')">
+            IBU_QUOTE_BOND
+        </if>
+        <if test="businessType != null and businessType.equals('REPO')">
+            IBU_QUOTE_CREP
+        </if>
+        where CFETS_QUOTE_ID  =  #{quoteid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectSeqNo" resultType="String">
+        SELECT CSTP_SEQNO.NEXTVAL FROM DUAL
+    </select>
+    
+    <!--查询交易对手-->
+    <select id="selectCounterId" resultType="String">
+      select
+         mcp.COUNTER_ID
+     from
+         MST_COUNTER_PARTY mcp
+         INNER JOIN MST_CFETS_CUSTOMER_INFO mcci
+         ON mcp.COUNTER_NAME = mcci.PARTY_NAME
+     WHERE
+         mcci.PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}
+    </select>
+
+    <!--是否是多组合-->
+    <select id="getIsDzh" resultType="java.lang.String">
+        SELECT
+        DECODE(COUNT(1),'0','N','Y')
+        FROM
+        IBU_QUOTE_ETR_RE
+        <where>
+            <if test="quoteId != null and quoteId != ''">
+                  QUOTE_ID = #{quoteId}
+            </if>
+        </where>
+    </select>
+
+    <!--本方机构代码是否绑定了组合  来决定本方和对手方-->
+    <select id="getPtlByOurinstitutioncode" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        MST_CFETS_CUSTOMER_INFO T1
+        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA T2 ON
+        T2.PARTY_ID = T1.PARTY_ID
+        WHERE
+            T2.PORTFOLIO_ID IS NOT NULL
+            <if test="ourinstitutioncode != null and ourinstitutioncode != ''">
+                AND T1.PARTY_CUSTOMER_ID = #{ourinstitutioncode}
+            </if>
+    </select>
+</mapper>

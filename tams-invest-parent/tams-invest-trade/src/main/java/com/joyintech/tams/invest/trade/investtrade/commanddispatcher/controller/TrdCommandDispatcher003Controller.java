@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,7 +128,12 @@ public class TrdCommandDispatcher003Controller extends BaseController{
 	    
 	    }
 	    else{
-	        trdCommandDispatcher001Service.insertEtrAutoTime(map);
+            // modify by dubaojun 2020-06-29 上海农商行项目设置异常时需要报出错误消息 start
+	        int count = trdCommandDispatcher001Service.insertEtrAutoTime(map);
+	        if(count == 0) {
+	            result.appendMessage(new ValidMessage("自动分发设置失败，请联系管理员！"));
+	        }
+            // modify by dubaojun 2020-06-29 上海农商行项目设置异常时需要报出错误消息 end
 	    }
 	    return result;
 	}

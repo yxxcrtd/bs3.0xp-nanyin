@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dao.AssetIntdateCarryoverMapper;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderDetail;
 import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderResult;
@@ -64,8 +64,10 @@ public class AssetIntdateCarryoverReaderService {
         param.put("finprodType1", DictCodeListExt1.金融产品类型_存款.getValue());
         param.put("finprodType2", DictCodeListExt1.金融产品类型_债券.getValue());
         param.put("finprodType3", DictCodeListExt1.金融产品类型_计划类资产.getValue());
-        param.put("finprodType4", DictCodeListExt1	.金融产品类型_同业借款.getValue());
-
+        param.put("finprodType4", DictCodeListExt1.金融产品类型_同业借款.getValue());
+        /** add by yanya on 20210311 增加债券行权的判定 start**/
+        param.put("execPs", DictCodeListExt3.交易方向_行权赎回结转.getValue());
+        /** add by yanya on 20210311 增加债券行权的判定 end**/
         // 生成整体任务调度信息
         List<AssetIntdateCarryoverReaderDetail> detailList = assetIntdateCarryoverMapper.queryAssetIntdateCarryoverReaderDetail(param);
         /** modify by dongjun on 20190328 通道子账套对应修改  end**/

@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstSaleDepartmentMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstSaleDepartment" >
+        <id column="SALE_DEPID" property="saleDepid" jdbcType="VARCHAR" />
+        <result column="SALE_DEPNAME" property="saleDepname" jdbcType="VARCHAR" />
+        <result column="BROKER_ID" property="brokerId" jdbcType="VARCHAR" />
+        <result column="IP_ADDR" property="ipAddr" jdbcType="VARCHAR" />
+        <result column="PORT_NUM" property="portNum" jdbcType="VARCHAR" />
+        <result column="CONTACT_ADDR" property="contactAddr" jdbcType="VARCHAR" />
+        <result column="CONTACT_TEL" property="contactTel" jdbcType="VARCHAR" />
+        <result column="FAX_NO" property="faxNo" jdbcType="VARCHAR" />
+        <result column="IP_ADDR2" property="ipAddr2" jdbcType="VARCHAR" />
+        <result column="PORT_NUM2" property="portNum2" jdbcType="VARCHAR" />
+        <result column="DECLARE_UNIT" property="declareUnit" jdbcType="VARCHAR" />
+        <result column="IS_NETRETURN" property="isNetreturn" jdbcType="VARCHAR" />
+        <result column="HANDLE_TYPE" property="handleType" jdbcType="VARCHAR" />
+        <result column="INTER_TYPE" property="interType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SH_SEATNO" property="shSeatno" jdbcType="VARCHAR" />
+        <result column="SZ_SEATNO" property="szSeatno" jdbcType="VARCHAR" />
+        <result column="SERVERINFO" property="serverinfo" jdbcType="VARCHAR" />
+        <result column="ZJ_SEATNO" property="zjSeatno" jdbcType="VARCHAR" />
+        <result column="SQ_SEATNO" property="sqSeatno" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SALE_DEPID SALE_DEPID, SALE_DEPNAME SALE_DEPNAME, BROKER_ID BROKER_ID, IP_ADDR IP_ADDR, 
+        PORT_NUM PORT_NUM, CONTACT_ADDR CONTACT_ADDR, CONTACT_TEL CONTACT_TEL, FAX_NO FAX_NO, 
+        IP_ADDR2 IP_ADDR2, PORT_NUM2 PORT_NUM2, DECLARE_UNIT DECLARE_UNIT, IS_NETRETURN IS_NETRETURN, 
+        HANDLE_TYPE HANDLE_TYPE, INTER_TYPE INTER_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, SH_SEATNO SH_SEATNO, 
+        SZ_SEATNO SZ_SEATNO, SERVERINFO SERVERINFO, ZJ_SEATNO ZJ_SEATNO, SQ_SEATNO SQ_SEATNO
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstSaleDepartmentMapper.Base_Column_List" />
+        from MST_SALE_DEPARTMENT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstSaleDepartmentMapper.Base_Column_List" />
+        from MST_SALE_DEPARTMENT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstSaleDepartmentMapper.Base_Column_List" />
+        from MST_SALE_DEPARTMENT
+        where SALE_DEPID = #{saleDepid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from MST_SALE_DEPARTMENT
+        where SALE_DEPID = #{saleDepid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstSaleDepartment" >
+        insert into MST_SALE_DEPARTMENT (SALE_DEPID, SALE_DEPNAME, BROKER_ID, 
+            IP_ADDR, PORT_NUM, CONTACT_ADDR, 
+            CONTACT_TEL, FAX_NO, IP_ADDR2, 
+            PORT_NUM2, DECLARE_UNIT, IS_NETRETURN, 
+            HANDLE_TYPE, INTER_TYPE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, SH_SEATNO, SZ_SEATNO, 
+            SERVERINFO, ZJ_SEATNO, SQ_SEATNO
+            )
+        values (#{saleDepid,jdbcType=VARCHAR}, #{saleDepname,jdbcType=VARCHAR}, #{brokerId,jdbcType=VARCHAR}, 
+            #{ipAddr,jdbcType=VARCHAR}, #{portNum,jdbcType=VARCHAR}, #{contactAddr,jdbcType=VARCHAR}, 
+            #{contactTel,jdbcType=VARCHAR}, #{faxNo,jdbcType=VARCHAR}, #{ipAddr2,jdbcType=VARCHAR}, 
+            #{portNum2,jdbcType=VARCHAR}, #{declareUnit,jdbcType=VARCHAR}, #{isNetreturn,jdbcType=VARCHAR}, 
+            #{handleType,jdbcType=VARCHAR}, #{interType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{shSeatno,jdbcType=VARCHAR}, #{szSeatno,jdbcType=VARCHAR}, 
+            #{serverinfo,jdbcType=VARCHAR}, #{zjSeatno,jdbcType=VARCHAR}, #{sqSeatno,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstSaleDepartment" >
+        insert into MST_SALE_DEPARTMENT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="saleDepid != null" >
+                SALE_DEPID,
+            </if>
+            <if test="saleDepname != null" >
+                SALE_DEPNAME,
+            </if>
+            <if test="brokerId != null" >
+                BROKER_ID,
+            </if>
+            <if test="ipAddr != null" >
+                IP_ADDR,
+            </if>
+            <if test="portNum != null" >
+                PORT_NUM,
+            </if>
+            <if test="contactAddr != null" >
+                CONTACT_ADDR,
+            </if>
+            <if test="contactTel != null" >
+                CONTACT_TEL,
+            </if>
+            <if test="faxNo != null" >
+                FAX_NO,
+            </if>
+            <if test="ipAddr2 != null" >
+                IP_ADDR2,
+            </if>
+            <if test="portNum2 != null" >
+                PORT_NUM2,
+            </if>
+            <if test="declareUnit != null" >
+                DECLARE_UNIT,
+            </if>
+            <if test="isNetreturn != null" >
+                IS_NETRETURN,
+            </if>
+            <if test="handleType != null" >
+                HANDLE_TYPE,
+            </if>
+            <if test="interType != null" >
+                INTER_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="shSeatno != null" >
+                SH_SEATNO,
+            </if>
+            <if test="szSeatno != null" >
+                SZ_SEATNO,
+            </if>
+            <if test="serverinfo != null" >
+                SERVERINFO,
+            </if>
+            <if test="zjSeatno != null" >
+                ZJ_SEATNO,
+            </if>
+            <if test="sqSeatno != null" >
+                SQ_SEATNO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="saleDepid != null" >
+                #{saleDepid,jdbcType=VARCHAR},
+            </if>
+            <if test="saleDepname != null" >
+                #{saleDepname,jdbcType=VARCHAR},
+            </if>
+            <if test="brokerId != null" >
+                #{brokerId,jdbcType=VARCHAR},
+            </if>
+            <if test="ipAddr != null" >
+                #{ipAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="portNum != null" >
+                #{portNum,jdbcType=VARCHAR},
+            </if>
+            <if test="contactAddr != null" >
+                #{contactAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="contactTel != null" >
+                #{contactTel,jdbcType=VARCHAR},
+            </if>
+            <if test="faxNo != null" >
+                #{faxNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ipAddr2 != null" >
+                #{ipAddr2,jdbcType=VARCHAR},
+            </if>
+            <if test="portNum2 != null" >
+                #{portNum2,jdbcType=VARCHAR},
+            </if>
+            <if test="declareUnit != null" >
+                #{declareUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="isNetreturn != null" >
+                #{isNetreturn,jdbcType=VARCHAR},
+            </if>
+            <if test="handleType != null" >
+                #{handleType,jdbcType=VARCHAR},
+            </if>
+            <if test="interType != null" >
+                #{interType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="shSeatno != null" >
+                #{shSeatno,jdbcType=VARCHAR},
+            </if>
+            <if test="szSeatno != null" >
+                #{szSeatno,jdbcType=VARCHAR},
+            </if>
+            <if test="serverinfo != null" >
+                #{serverinfo,jdbcType=VARCHAR},
+            </if>
+            <if test="zjSeatno != null" >
+                #{zjSeatno,jdbcType=VARCHAR},
+            </if>
+            <if test="sqSeatno != null" >
+                #{sqSeatno,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstSaleDepartment" >
+        insert into MST_SALE_DEPARTMENT(SALE_DEPID, SALE_DEPNAME, BROKER_ID, IP_ADDR, PORT_NUM, 
+        CONTACT_ADDR, CONTACT_TEL, FAX_NO, IP_ADDR2, PORT_NUM2, DECLARE_UNIT, IS_NETRETURN, 
+        HANDLE_TYPE, INTER_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        SH_SEATNO, SZ_SEATNO, SERVERINFO, ZJ_SEATNO, SQ_SEATNO)
+        select SALE_DEPID, SALE_DEPNAME, BROKER_ID, IP_ADDR, PORT_NUM, 
+            CONTACT_ADDR, CONTACT_TEL, FAX_NO, IP_ADDR2, PORT_NUM2, DECLARE_UNIT, IS_NETRETURN, 
+            HANDLE_TYPE, INTER_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            SH_SEATNO, SZ_SEATNO, SERVERINFO, ZJ_SEATNO, SQ_SEATNO
+             from MST_SALE_DEPARTMENT
+             where 1 = 1 and SALE_DEPID = #{saleDepid,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstSaleDepartment" >
+        update MST_SALE_DEPARTMENT
+        <set >
+            <if test="saleDepname != null" >
+                SALE_DEPNAME = #{saleDepname,jdbcType=VARCHAR},
+            </if>
+            <if test="brokerId != null" >
+                BROKER_ID = #{brokerId,jdbcType=VARCHAR},
+            </if>
+            <if test="ipAddr != null" >
+                IP_ADDR = #{ipAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="portNum != null" >
+                PORT_NUM = #{portNum,jdbcType=VARCHAR},
+            </if>
+            <if test="contactAddr != null" >
+                CONTACT_ADDR = #{contactAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="contactTel != null" >
+                CONTACT_TEL = #{contactTel,jdbcType=VARCHAR},
+            </if>
+            <if test="faxNo != null" >
+                FAX_NO = #{faxNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ipAddr2 != null" >
+                IP_ADDR2 = #{ipAddr2,jdbcType=VARCHAR},
+            </if>
+            <if test="portNum2 != null" >
+                PORT_NUM2 = #{portNum2,jdbcType=VARCHAR},
+            </if>
+            <if test="declareUnit != null" >
+                DECLARE_UNIT = #{declareUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="isNetreturn != null" >
+                IS_NETRETURN = #{isNetreturn,jdbcType=VARCHAR},
+            </if>
+            <if test="handleType != null" >
+                HANDLE_TYPE = #{handleType,jdbcType=VARCHAR},
+            </if>
+            <if test="interType != null" >
+                INTER_TYPE = #{interType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="shSeatno != null" >
+                SH_SEATNO = #{shSeatno,jdbcType=VARCHAR},
+            </if>
+            <if test="szSeatno != null" >
+                SZ_SEATNO = #{szSeatno,jdbcType=VARCHAR},
+            </if>
+            <if test="serverinfo != null" >
+                SERVERINFO = #{serverinfo,jdbcType=VARCHAR},
+            </if>
+            <if test="zjSeatno != null" >
+                ZJ_SEATNO = #{zjSeatno,jdbcType=VARCHAR},
+            </if>
+            <if test="sqSeatno != null" >
+                SQ_SEATNO = #{sqSeatno,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SALE_DEPID = #{saleDepid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstSaleDepartment" >
+        update MST_SALE_DEPARTMENT
+        set SALE_DEPNAME = #{saleDepname,jdbcType=VARCHAR},
+            BROKER_ID = #{brokerId,jdbcType=VARCHAR},
+            IP_ADDR = #{ipAddr,jdbcType=VARCHAR},
+            PORT_NUM = #{portNum,jdbcType=VARCHAR},
+            CONTACT_ADDR = #{contactAddr,jdbcType=VARCHAR},
+            CONTACT_TEL = #{contactTel,jdbcType=VARCHAR},
+            FAX_NO = #{faxNo,jdbcType=VARCHAR},
+            IP_ADDR2 = #{ipAddr2,jdbcType=VARCHAR},
+            PORT_NUM2 = #{portNum2,jdbcType=VARCHAR},
+            DECLARE_UNIT = #{declareUnit,jdbcType=VARCHAR},
+            IS_NETRETURN = #{isNetreturn,jdbcType=VARCHAR},
+            HANDLE_TYPE = #{handleType,jdbcType=VARCHAR},
+            INTER_TYPE = #{interType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SH_SEATNO = #{shSeatno,jdbcType=VARCHAR},
+            SZ_SEATNO = #{szSeatno,jdbcType=VARCHAR},
+            SERVERINFO = #{serverinfo,jdbcType=VARCHAR},
+            ZJ_SEATNO = #{zjSeatno,jdbcType=VARCHAR},
+            SQ_SEATNO = #{sqSeatno,jdbcType=VARCHAR}
+        where SALE_DEPID = #{saleDepid,jdbcType=VARCHAR}
+    </update>
+</mapper>

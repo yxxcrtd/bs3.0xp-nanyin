@@ -64,6 +64,21 @@ public class StlSecAcctInfo extends BaseEntity {
     private String manager;
 
     /**
+     * 股东代码
+     */
+    private String bondId;
+
+    /**
+     * 券商名称
+     */
+    private String brokerName;
+
+    /**
+     * 交易编码
+     */
+    private String tradeNo;
+
+    /**
      * 取得 证券账户代码
      * @return 证券账户代码
      */
@@ -253,5 +268,53 @@ public class StlSecAcctInfo extends BaseEntity {
      */
     public void setManager(String manager) {
         this.manager = manager == null ? null : manager.trim();
+    }
+
+    /**
+     * 取得 股东代码
+     * @return 股东代码
+     */
+    public String getBondId() {
+        return bondId;
+    }
+
+    /**
+     * 设置 股东代码
+     * @param bondId 股东代码
+     */
+    public void setBondId(String bondId) {
+        this.bondId = bondId == null ? null : bondId.trim();
+    }
+
+    /**
+     * 取得 券商名称
+     * @return 券商名称
+     */
+    public String getBrokerName() {
+        return brokerName;
+    }
+
+    /**
+     * 设置 券商名称
+     * @param brokerName 券商名称
+     */
+    public void setBrokerName(String brokerName) {
+        this.brokerName = brokerName == null ? null : brokerName.trim();
+    }
+
+    /**
+     * 取得 交易编码
+     * @return 交易编码
+     */
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    /**
+     * 设置 交易编码
+     * @param tradeNo 交易编码
+     */
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo == null ? null : tradeNo.trim();
     }
 }

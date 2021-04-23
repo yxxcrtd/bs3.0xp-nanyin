@@ -14,10 +14,15 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.PtlCashPositionFlowMapper;
 import com.joyintech.tams.common.base.dao.PtlCashPositionMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.PtlCashPosition;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
@@ -30,6 +35,7 @@ import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -68,6 +74,18 @@ public class BasePtlCashPositionInfoServiceImpl implements BasePtlCashPositionIn
     private BaseGetBussinessId baseGetBussinessIdimpl;
 
     /**
+     * 资产信息Mapper
+     */
+    @Autowired
+    private FinProductMapper finProductMapper;
+    
+    /**
+     * 资产信息Mapper
+     */
+    @Autowired
+    private FinProductAddMapper finProductAddMapper;
+    
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -86,6 +104,29 @@ public class BasePtlCashPositionInfoServiceImpl implements BasePtlCashPositionIn
         return ArithmeticUtil.doAdd(可用现金, 实际现金);
     }
 
+    /**
+     * 查询账户可取余额
+     */
+    @Override
+    public BigDecimal queryUsableCashPositionOther(PtlCashPositionFlowDto positionQueryDto) {
+        Assert.isTrue(positionQueryDto != null, "查询dto不能为null");
+        Assert.isTrue(StringUtil.isNotEmpty(positionQueryDto.getPortfolioId()), "组合代码不能为空");
+        Assert.notNull(positionQueryDto.getCdate(), "日期不能为null");
+        Assert.isTrue(StringUtil.isNotEmpty(positionQueryDto.getCcy()), "币种不能为空");
+        String holdingType = positionQueryDto.getHodingType();
+        positionQueryDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+        positionQueryDto.setNeedAcctType(true);
+        BigDecimal 可用现金 = basePtlCashPositionInfoMapper.selectCashPositionFlow(positionQueryDto);
+        positionQueryDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+        BigDecimal 实际现金 = queryOtherCashPosition(positionQueryDto);
+        positionQueryDto.setHodingType(DictCodeListExt1.持仓类型_不可支取.getValue());
+        BigDecimal 不可支取现金 = queryOtherCashPosition(positionQueryDto);
+        不可支取现金 = 不可支取现金 == null ? BigDecimal.ZERO : 不可支取现金;
+        不可支取现金 = 不可支取现金.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : 不可支取现金;
+        positionQueryDto.setHodingType(holdingType);
+        return ArithmeticUtil.subtract(ArithmeticUtil.doAdd(可用现金, 实际现金), 不可支取现金);
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -203,5 +244,34 @@ public class BasePtlCashPositionInfoServiceImpl implements BasePtlCashPositionIn
         position.setCreateUser(positionFlowDto.getCreateUser());
         position.setCreateDept(positionFlowDto.getCreateDept());
         return position;
+    }
+    
+    /**
+     * 获取下一个工作日
+     * @param tradeMarketId
+     * @param cdate
+     * @param finprodId
+     * @return
+     */
+    public Date selectNextWorkDay(String tradeMarketId, Date cdate, String finprodId) {
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	//资产交易不传的话，通过资产信息获取
+    	if (StringUtil.isEmpty(tradeMarketId)) {
+    		FinProduct fin = finProductMapper.selectByPrimaryKey(finprodId);
+    		tradeMarketId = fin.getCalendarId();
+    	}
+    	map.put("tradeMarketId", tradeMarketId);
+    	map.put("cdate", cdate);
+    	Date rstDate = basePtlCashPositionInfoMapper.selectNextWorkDay(map);
+    	return rstDate == null ? cdate : rstDate;
+    }
+    
+    /**
+     * 查询资产附加信息，查询产品是否纳入净额结算
+     * @param finprodId
+     * @return
+     */
+    public FinProductAdd getFinProductAdd(String finprodId) {
+    	return finProductAddMapper.selectByPrimaryKey(finprodId);
     }
 }

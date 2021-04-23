@@ -28,6 +28,8 @@ import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
@@ -92,7 +94,6 @@ public class BookAccountGenLogic {
 
     @Autowired
     private FinProductCommonBatchService finProductCommonBatchService;
-
 
     /**
      * 记账凭证生成
@@ -193,7 +194,7 @@ public class BookAccountGenLogic {
             bookDetail.setBooksetDate((Date)accountSceneMap.get(BookConstant.BOOKSET_DATE));
             // 基础科目性质 <- 会计分录配置信息.基础科目性质
             bookDetail.setBaseSubjectNature(accountEntry.getBaseSubjectNature());
-
+            SubjectBalance subjectBalance = new SubjectBalance();
             BokDetailId valBokDetailId = (BokDetailId)accountSceneMap.get(
                 accountEntry.getBokDetailId());
             if (valBokDetailId != null) {
@@ -203,6 +204,9 @@ public class BookAccountGenLogic {
                 bookDetail.setBokDetailId(valBokDetailId.getBokDetailId());
                 // 账套代码
                 valBokDetailId.setBooksetId(bookDetail.getBooksetId());
+                subjectBalance.setBusiId(valBokDetailId.getBusiId());
+                subjectBalance.setBusiDetailType(valBokDetailId.getBusiDetailType());
+                subjectBalance.setInvAim(valBokDetailId.getInvAim());
             }
             // 分支序号,当前默认为0
             Map<String, Object> accountNatrueSceneMap = accountNatrueMap == null ? null : accountNatrueMap.get(
@@ -212,10 +216,16 @@ public class BookAccountGenLogic {
             bookDetail.setBranch(branch != null ? branch : BookConstant.DEFALUT_BRANCH);
             // 科目号 <- 会计分录配置信息.科目号
             bookDetail.setSubjectNo(accountEntry.getSubjectId());
+            // 查找账务明细代码表
+            BokDetailId bokDetailId = valBokDetailIdMapper.selectByPrimaryKey(valBokDetailId);
+            if(bokDetailId != null){
+            	subjectBalance.setBusiId(bokDetailId.getBusiId());
+                subjectBalance.setBusiDetailType(bokDetailId.getBusiDetailType());
+                subjectBalance.setInvAim(bokDetailId.getInvAim());
+            }
             // 是否生成四级科目
             if (DictCodeList.是否_是.getValue().equals(accountEntry.getGenDetsubFlag())) {
-                // 查找账务明细代码表
-                BokDetailId bokDetailId = valBokDetailIdMapper.selectByPrimaryKey(valBokDetailId);
+
                 // 设置明细科目
                 BokSubjectDetail bokSubjectDetail = genDetailSubjectCode(accountSceneMap,
                     accountEntry, bokDetailId);
@@ -301,19 +311,101 @@ public class BookAccountGenLogic {
             // 处理序列 <- 自动生成的序列号20位
             bookDetail.setBookOrder(
                     new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.处理序列)));
-
+            
+            
+            /**modify by wujie on 20201130 start reamrk:增加部分科目余额更新处理
             if (DictCodeList.是否_是.getValue().equals(
-                accountSceneMap.get(BookConstant.IS_ACC_BALANCE))) {
-                String key = bookDetail.getBooksetId() + GlobalConstant.COMMA + bookDetail.getBokDetailId() + GlobalConstant.COMMA
-                    + bookDetail.getBaseSubjectNature() + GlobalConstant.COMMA + bookDetail.getHappenDate() + GlobalConstant.COMMA
-                    + bookDetail.getBookDate();
-                // 计算原币余额、数量、余额方向
-                calBalance(accountEntry, bookDetail, tempDetailMap.get(key));
-                tempDetailMap.put(key, bookDetail);
-                // 原币余额
-                bookDetail.setoAmtHappenDate(bookDetail.getoAmtHappenDate());
-                // 本币余额
-                bookDetail.setbAmtHappenDate(bookDetail.getbAmtHappenDate());
+                accountSceneMap.get(BookConstant.IS_ACC_BALANCE))) {**/
+            	
+        	/**add by wujie on 20201130 start reamrk:增加部分科目余额更新处理**/
+            boolean isAccBalance = false;
+            if (DictCodeList.是否_是.getValue().equals(
+                    accountSceneMap.get(BookConstant.IS_ACC_BALANCE))) {
+            	isAccBalance = true;
+            }
+            else if (DictCodeListExt3.累计余额_部分.getValue().equals(accountSceneMap.get(BookConstant.IS_ACC_BALANCE))) {
+            	Map<String,String> accountNatrueBalanceMap = accountDriver.getAccountNatrueBalanceMap();
+            	if(accountNatrueBalanceMap!=null
+            			&& DictCodeList.是否_是.getValue().equals(accountNatrueBalanceMap.get(accountEntry.getBaseSubjectNature()))){
+            			 isAccBalance = true;
+            	}
+            }
+            if(isAccBalance){
+            /**add by wujie on 20201130 end**/
+            	
+            	
+            	/**add by wujie on 20201111 start remark:指定基础科目性质科目进行余额更新**/
+            	//科目余额_本次发生前
+            	BigDecimal balance = accountAmountMap.get(accountEntry.getFormElement()+BookConstant.BALANCE);
+            	//科目余额本位币_本次发生前
+            	BigDecimal balance_bccy = accountAmountMap.get(accountEntry.getFormElement()+BookConstant.BALANCE+BookConstant.BCCYAMT);
+            	//科目数量_本次发生前
+    			BigDecimal balanceNum = accountAmountMap.get(accountEntry.getFormElement()+BookConstant.BALANCE_NUMBER);
+            	if(balance!=null){
+            		if(null == balance_bccy){
+	                    if(bookDetail.getoCcy().equals(bookDetail.getbCcy())){
+	                    	balance_bccy = balance;
+	                    }else{
+	                        List<CurrencyMarketDto> currMarkets = finProductCommonBatchService.getCurrencyMarket(bookDetail.getBookDate(),
+	                        		bookDetail.getBooksetId(), bookDetail.getbCcy(),
+	                                bookDetail.getoCcy());
+	                        if(CollectionUtils.isNotEmpty(currMarkets)){
+	                            CurrencyMarketDto currMarket = currMarkets.get(0);
+	                            balance_bccy = ArithmeticUtil.round(currMarket.getClosePrice().multiply(balance), NumberEnum.MONEY);
+	                        }else{
+	                        	balance_bccy = balance;
+	                        }
+	                    }
+	                }
+            		Map<String, Object> mapHappenDate = accountingCommonService.balanceDirectDealAccrualAddBalance(
+        					//科目余额方向
+        					accountEntry.getBalFlag(),
+        					//实际余额方向
+        					(String)accountSceneMap.get(accountEntry.getFormElement()+BookConstant.BAL_FLAG), 
+        					//实际余额
+        					balance,
+        					//实际数量
+        					balanceNum, 
+                            //发生额方向
+                            bookDetail.getCdFlag(), 
+                            //原币发生额
+                            bookDetail.getoHappenAmt(),
+                            //发生数量
+                            bookDetail.getHappenNumber(),
+                            //本币实际余额
+                            balance_bccy,
+                            //本币发生额
+                            bookDetail.getbHappenAmt()
+                		);
+					 // 余额
+			        bookDetail.setoAmtHappenDate(
+			                ArithmeticUtil.round((BigDecimal)mapHappenDate.get("balance"), NumberEnum.MONEY));
+			        // 本币余额
+			        bookDetail.setbAmtHappenDate(
+			                ArithmeticUtil.round((BigDecimal)mapHappenDate.get("benbalance"), NumberEnum.MONEY));
+			        // 数量
+			        bookDetail.setNumAmtHappenDate(
+			                ArithmeticUtil.round((BigDecimal)mapHappenDate.get("num"), NumberEnum.MONEY));
+			        // 余额方向
+			        bookDetail.setBalFlagHappenDate((String)mapHappenDate.get("balDirect"));
+            	}
+            	else{
+            	/**add by wujie on 20201111 end remark:指定基础科目性质科目进行余额更新**/
+            	
+	                String key = bookDetail.getBooksetId() + GlobalConstant.COMMA + bookDetail.getBokDetailId() + GlobalConstant.COMMA
+	                    + bookDetail.getBaseSubjectNature() + GlobalConstant.COMMA + bookDetail.getHappenDate() + GlobalConstant.COMMA
+	                    + bookDetail.getBookDate();
+	                // 计算原币余额、数量、余额方向
+	                calBalance(accountEntry, bookDetail, tempDetailMap.get(key));
+	                tempDetailMap.put(key, bookDetail);
+	                // 原币余额
+	                bookDetail.setoAmtHappenDate(bookDetail.getoAmtHappenDate());
+	                // 本币余额
+	                bookDetail.setbAmtHappenDate(bookDetail.getbAmtHappenDate());
+	                
+	            /**add by wujie on 20201111 start remark:指定基础科目性质科目进行余额更新**/
+            	}
+            	/**add by wujie on 20201111 end remark:指定基础科目性质科目进行余额更新**/
             }
             bookDetail.setOnwayDate((Date)accountSceneMap.get(BookConstant.ONWAY_DATE));
             // 科目类别
@@ -323,6 +415,33 @@ public class BookAccountGenLogic {
             bookDetail.setIsexeZeroAmt((String) accountSceneMap.get(BookConstant.IS_ZERO_ACCOUNT));
             //add by yanya 20191218 增加收息已结清份额 <-	金额元素.收息已结清份额 **/
             bookDetail.setShareAmtClean(accountAmountMap.get(BookConstant.SHARE_AMT_CLEAN));
+            
+            subjectBalance.setBooksetId(bookDetail.getBooksetId());
+            subjectBalance.setBokDetailId(bookDetail.getBokDetailId());
+            
+            subjectBalance.setTableId(bookDetail.getTableId());
+            subjectBalance.setSubjectNo(bookDetail.getSubjectNo());
+            
+            subjectBalance.setOCcy(bookDetail.getoCcy());
+            subjectBalance.setbCcy(bookDetail.getbCcy());
+            subjectBalance.setBalFlagHappenDate(bookDetail.getBalFlagHappenDate());
+            subjectBalance.setBalance(bookDetail.getoAmtHappenDate());
+            subjectBalance.setbAmt(bookDetail.getbAmtHappenDate());
+            subjectBalance.setNum(bookDetail.getNumAmtHappenDate());
+            subjectBalance.setShareAmtClean(bookDetail.getShareAmtClean());
+            subjectBalance.setHappenDate(DateUtil.format(bookDetail.getHappenDate()));
+            subjectBalance.setBaseSubjectNature(bookDetail.getBaseSubjectNature());
+            subjectBalance.setDetailSubjectNo(bookDetail.getDetailSubjectNo());
+            subjectBalance.setBalFlag(accountEntry.getBalFlag());
+            subjectBalance.setMdate(bookDetail.getMdate());
+            subjectBalance.setBranch(bookDetail.getBranch());
+            subjectBalance.setTaskPri(bookDetail.getTaskPri());
+            subjectBalance.setBtTaskPri(bookDetail.getTaskPri());
+            subjectBalance.setOffsetDate(bookDetail.getOffsetDate());
+            subjectBalance.setBookDate(bookDetail.getBookDate());
+            subjectBalance.setBookOrder(bookDetail.getBookOrder());
+            subjectBalance.setSubjectType(bookDetail.getSubjectType());
+            bookDetail.setSubjectBalance(subjectBalance);
             // 添加到list中
             bookDetailList.add(bookDetail);
         }

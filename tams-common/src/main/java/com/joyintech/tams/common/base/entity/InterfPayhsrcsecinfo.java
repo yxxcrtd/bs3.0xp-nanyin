@@ -328,6 +328,38 @@ CNY 人民币、HKD 港币、JPY 日元、USD 美元"
      */
     private String issuerinstitutionssecond;
     // 20200819 龙江银行修改-查询债券接口信息表增加查询字段 wangwei end
+	/**
+     *是否私募债
+     */
+    private String isPpb;
+    /**
+     * 是否净价交易
+     */
+    private String isNetprice;
+    /**
+     *正股代码
+     */
+    private String conFinprodId;
+    /**
+     *转股代码
+     */
+    private String conShareId;
+    /**
+     *转股起始日
+     */
+    private Date conVdate;
+    /**
+     *转股价格
+     */
+    private BigDecimal conPrice;
+    /**
+     *回售触发价
+     */
+    private BigDecimal resalePrice;
+    /**
+     *赎回触发价
+     */
+    private BigDecimal redeemPrice;
 
     /**
      * 取得 债券简称
@@ -1331,4 +1363,67 @@ CNY 人民币、HKD 港币、JPY 日元、USD 美元"
         this.issuerinstitutionssecond = issuerinstitutionssecond;
     }
     // 20200819 龙江银行修改-查询债券接口信息表增加查询字段 wangwei end
+	public String getIsPpb() {
+		return isPpb;
+	}
+
+	public void setIsPpb(String isPpb) {
+		this.isPpb = isPpb;
+	}
+
+	public String getIsNetprice() {
+		return isNetprice;
+	}
+
+	public void setIsNetprice(String isNetprice) {
+		this.isNetprice = isNetprice;
+	}
+
+	public String getConFinprodId() {
+		return conFinprodId;
+	}
+
+	public void setConFinprodId(String conFinprodId) {
+		this.conFinprodId = conFinprodId;
+	}
+
+	public String getConShareId() {
+		return conShareId;
+	}
+
+	public void setConShareId(String conShareId) {
+		this.conShareId = conShareId;
+	}
+
+	public Date getConVdate() {
+		return conVdate;
+	}
+
+	public void setConVdate(Date conVdate) {
+		this.conVdate = conVdate;
+	}
+
+	public BigDecimal getConPrice() {
+		return conPrice;
+	}
+
+	public void setConPrice(BigDecimal conPrice) {
+		this.conPrice = conPrice;
+	}
+
+	public BigDecimal getResalePrice() {
+		return resalePrice;
+	}
+
+	public void setResalePrice(BigDecimal resalePrice) {
+		this.resalePrice = resalePrice;
+	}
+
+	public BigDecimal getRedeemPrice() {
+		return redeemPrice;
+	}
+
+	public void setRedeemPrice(BigDecimal redeemPrice) {
+		this.redeemPrice = redeemPrice;
+	}
 }

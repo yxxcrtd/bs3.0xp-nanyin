@@ -331,6 +331,11 @@ public class TrdProductDeal extends BaseEntity {
      */
     private String tgBusiType;
 
+    /**
+     * 席位号
+     */
+    private String seatId;
+
     //add by zhangnian 20200304 start
     private String inputValue1;
     private String inputValue2;
@@ -341,6 +346,11 @@ public class TrdProductDeal extends BaseEntity {
      * 持有目的 HOLD_PURPOSE 中债新增 20200409
      */
     private String holdPurpose;
+    
+    /**
+     * 交收方式
+     */
+    private String settlemenType;
     
     /**
      * 多组合交易使用 最大组合交易金额
@@ -1420,4 +1430,23 @@ public class TrdProductDeal extends BaseEntity {
         this.liBranch = liBranch;
     }
     // 合并by华兴 end
+
+
+    public String getSeatId() {
+        return seatId;
+    }
+
+    public void setSeatId(String seatId) {
+        this.seatId = seatId;
+    }
+
+	public String getSettlemenType() {
+		return settlemenType;
+	}
+
+	public void setSettlemenType(String settlemenType) {
+		this.settlemenType = settlemenType;
+	}
+    
+    
 }

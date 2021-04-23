@@ -101,7 +101,9 @@
 	        DETAIL.INV_AIM invAim,
 	        DETAIL.SEC_MANAGE_ACCT_ID secManageAcctId,
 			SB.BASE_SUBJECT_NATURE baseSubjectNature,
-			DETAIL.b_Happen_Amt bHappenAmt
+			DETAIL.b_Happen_Amt bHappenAmt,
+			SB.BAL_FLAG balFlag,
+		    SB.SUBJECT_TYPE subjectType
 		FROM TRD_VOUCH_DEAL_DETAIL DETAIL
 		INNER JOIN BOK_BOOKSET C 
 		ON DETAIL.BOOKSET_ID = C.BOOKSET_ID 

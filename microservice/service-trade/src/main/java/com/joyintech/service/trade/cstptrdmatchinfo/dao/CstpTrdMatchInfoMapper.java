@@ -1,6 +1,8 @@
 package com.joyintech.service.trade.cstptrdmatchinfo.dao;
 
 import com.joyintech.service.trade.cstp.dto.CstpSelectDto;
+import com.joyintech.tams.common.base.entity.TrdMatchInfo;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,5 +18,7 @@ import java.util.Map;
 @Repository
 public interface CstpTrdMatchInfoMapper {
     List<CstpSelectDto> findPage(Map<String,Object> map);
+    
+    int deleteTrdPledgeMatchInfo(TrdMatchInfo trdMatchInfo);
 }
 

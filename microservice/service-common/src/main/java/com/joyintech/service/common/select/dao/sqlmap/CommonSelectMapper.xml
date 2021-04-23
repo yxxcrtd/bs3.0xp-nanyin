@@ -799,7 +799,7 @@
                     INNER JOIN PTL_PORTFOLIO PP ON PSP.PORTFOLIO_ID = PP.PORTFOLIO_ID AND PP.INVEST_YESORNO = 'Y'
                     WHERE PSP.FINPROD_ID = A.FINPROD_ID AND T1.EXERCISE_DATE >= PSP.CDATE
                     GROUP BY PSP.PORTFOLIO_ID, PSP.SEC_ACCT_ID, PSP.FINPROD_ID
-                    HAVING SUM(PSP.AMOUNT) > 0)
+                    <!--HAVING SUM(PSP.AMOUNT) > 0-->)
                 </if>
             </if>
         </if>

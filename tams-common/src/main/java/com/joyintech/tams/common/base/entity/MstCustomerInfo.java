@@ -59,19 +59,39 @@ public class MstCustomerInfo extends BaseEntity {
     private String isRatingAgencies;
 
     /**
-     * null
+     * 是否出质人
      */
     private String isPledgor;
 
     /**
-     * null
+     * 是否存放行
      */
     private String isDepositBank;
 
     /**
-     * null
+     * 是否投资顾问
      */
     private String isInvestAdviser;
+
+    /**
+     * 是否券商
+     */
+    private String isBroker;
+
+    /**
+     * 是否交易对手
+     */
+    private String isCounter;
+
+    /**
+     * 是否银行
+     */
+    private String isBank;
+
+    /**
+     * 是否期货公司
+     */
+    private String isFutureCom;
 
     /**
      * 取得 客户代码
@@ -250,50 +270,114 @@ public class MstCustomerInfo extends BaseEntity {
     }
 
     /**
-     * 取得 null
-     * @return null
+     * 取得 是否出质人
+     * @return 是否出质人
      */
     public String getIsPledgor() {
         return isPledgor;
     }
 
     /**
-     * 设置 null
-     * @param isPledgor null
+     * 设置 是否出质人
+     * @param isPledgor 是否出质人
      */
     public void setIsPledgor(String isPledgor) {
         this.isPledgor = isPledgor == null ? null : isPledgor.trim();
     }
 
     /**
-     * 取得 null
-     * @return null
+     * 取得 是否存放行
+     * @return 是否存放行
      */
     public String getIsDepositBank() {
         return isDepositBank;
     }
 
     /**
-     * 设置 null
-     * @param isDepositBank null
+     * 设置 是否存放行
+     * @param isDepositBank 是否存放行
      */
     public void setIsDepositBank(String isDepositBank) {
         this.isDepositBank = isDepositBank == null ? null : isDepositBank.trim();
     }
 
     /**
-     * 取得 null
-     * @return null
+     * 取得 是否投资顾问
+     * @return 是否投资顾问
      */
     public String getIsInvestAdviser() {
         return isInvestAdviser;
     }
 
     /**
-     * 设置 null
-     * @param isInvestAdviser null
+     * 设置 是否投资顾问
+     * @param isInvestAdviser 是否投资顾问
      */
     public void setIsInvestAdviser(String isInvestAdviser) {
         this.isInvestAdviser = isInvestAdviser == null ? null : isInvestAdviser.trim();
+    }
+
+    /**
+     * 取得 是否券商
+     * @return 是否券商
+     */
+    public String getIsBroker() {
+        return isBroker;
+    }
+
+    /**
+     * 设置 是否券商
+     * @param isBroker 是否券商
+     */
+    public void setIsBroker(String isBroker) {
+        this.isBroker = isBroker == null ? null : isBroker.trim();
+    }
+
+    /**
+     * 取得 是否交易对手
+     * @return 是否交易对手
+     */
+    public String getIsCounter() {
+        return isCounter;
+    }
+
+    /**
+     * 设置 是否交易对手
+     * @param isCounter 是否交易对手
+     */
+    public void setIsCounter(String isCounter) {
+        this.isCounter = isCounter == null ? null : isCounter.trim();
+    }
+
+    /**
+     * 取得 是否银行
+     * @return 是否银行
+     */
+    public String getIsBank() {
+        return isBank;
+    }
+
+    /**
+     * 设置 是否银行
+     * @param isBank 是否银行
+     */
+    public void setIsBank(String isBank) {
+        this.isBank = isBank == null ? null : isBank.trim();
+    }
+
+    /**
+     * 取得 是否期货公司
+     * @return 是否期货公司
+     */
+    public String getIsFutureCom() {
+        return isFutureCom;
+    }
+
+    /**
+     * 设置 是否期货公司
+     * @param isFutureCom 是否期货公司
+     */
+    public void setIsFutureCom(String isFutureCom) {
+        this.isFutureCom = isFutureCom == null ? null : isFutureCom.trim();
     }
 }

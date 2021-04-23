@@ -39,6 +39,9 @@
 		A.CREATE_TIME createTime,
 		A.UPDATE_USER updateUser,
 		A.UPDATE_TIME updateTime
+		<!-- add by wujie on 20210303 start -->
+		,A.PARAM_TYPE paramType
+		<!-- add by wujie on 20210303 end -->
 		FROM
 		BOK_BOOKSET_EXT A
 		WHERE
@@ -413,6 +416,14 @@
 		<if test="orgClass != null and orgClass !='' ">
 			AND A.ORG_CLASS = #{orgClass,jdbcType=VARCHAR}
 		</if>
+		<if test="finprodType == 'F17' ">
+			AND A.PROFIT_TYPE = #{profitType,jdbcType=VARCHAR}
+		</if>
+		<if test="finprodType == 'F06' ">
+			<if test="trmFundType != null and trmFundType != '' ">
+				AND A.TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR}
+			</if>
+		</if>
 		AND ROWNUM = 1   
 	</select>
 	
@@ -427,7 +438,24 @@
 		     FIN_PRODUCT_CLASS A                               
 		  WHERE                                 
 		    A.FINPROD_TYPE =  #{finprodType,jdbcType=VARCHAR}                            
-		    AND A.ASSET_TYPE = #{assetType,jdbcType=VARCHAR}                         
+		    AND A.ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+			<if test="tradeMarket != null and tradeMarket !='' ">
+				AND A.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
+			</if>
+			<if test="blnArea != null and blnArea !='' ">
+				AND A.BLN_AREA = #{blnArea,jdbcType=VARCHAR}
+			</if>
+			<if test="orgClass != null and orgClass !='' ">
+				AND A.ORG_CLASS = #{orgClass,jdbcType=VARCHAR}
+			</if>
+			<if test="finprodType == 'F17' ">
+				AND A.PROFIT_TYPE = #{profitType,jdbcType=VARCHAR}
+			</if>
+			<if test="finprodType == 'F06' ">
+				<if test="trmFundType != null and trmFundType != '' ">
+					AND A.TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR}
+				</if>
+			</if>
 		    GROUP BY A.TAX_CLASS                                
 		) T WHERE ROWNUM = 1 
 	</select>
@@ -688,6 +716,29 @@
 		<if test="busiType != null and busiType =='02' ">
 			AND INV_AIM = #{invAim,jdbcType=VARCHAR}
 		</if>
+		<!-- add by yanya on 20210317 债券行权改造 -->
+		<if test="busiType != null and '24'.equals(busiType)">
+			<choose>
+				<when test="invAim != null and !invAim.equals('')">
+					AND INV_AIM = #{invAim,jdbcType=VARCHAR}
+				</when>
+				<otherwise>
+					AND INV_AIM IS NULL
+				</otherwise>
+			</choose>
+		</if>
+		<!-- add by wujie on 20201015 start remark:计划类收益型资产改造 -->
+		<if test="busiType != null and busiType =='09' ">
+			<choose>
+				<when test="invAim != null and !invAim.equals('')">
+					AND INV_AIM = #{invAim,jdbcType=VARCHAR}
+				</when>
+				<otherwise>
+					AND INV_AIM IS NULL
+				</otherwise>
+			</choose>
+		</if>
+		<!-- add by wujie on 20201015 end -->
 	</select>
 
 
@@ -975,4 +1026,53 @@
         GROUP BY E.ADD_TAX_TYPE
     </select>
 
+	<!-- 行权申请交易更新-->
+	<update id="updateExecApplyDealBatch">
+		UPDATE TRD_PRODUCT_DEAL_ADD
+		SET
+			EXERCISE_STATUS = #{exerciseStatus,jdbcType=VARCHAR},
+			CANCEL_EXERCISE_DATE = #{cancelExerciseDate,jdbcType=DATE},
+			UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+			1 = 1
+			AND (TRADE_ID in
+			<foreach collection="list"  index="index" item="item" open="(" separator="," close=")">
+				<if test="(index % 998) == 0">
+					null) OR TRADE_ID in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		)
+	</update>
+
+	<!-- 根据交易编号删除入账信息-->
+	<delete id="deleteBokDealAccountingBatch">
+		delete from bok_deal_accounting
+		WHERE
+			1 = 1
+			AND (BUSI_NO in
+			<foreach collection="list"  index="index" item="item" open="(" separator="," close=")">
+				<if test="(index % 998) == 0">
+					null) OR BUSI_NO in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			)
+	</delete>
+
+	<!-- 根据入账信息删除入账信息明细表-->
+	<delete id="deleteBokDealAccountingDetailBatch">
+		delete from bok_deal_accounting_detail
+		WHERE
+			1 = 1
+			AND (BUSI_NO in
+			<foreach collection="list"  index="index" item="item" open="(" separator="," close=")">
+				<if test="(index % 998) == 0">
+					null) OR BUSI_NO in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			)
+	</delete>
 </mapper>

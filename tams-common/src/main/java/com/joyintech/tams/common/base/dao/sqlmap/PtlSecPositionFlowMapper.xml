@@ -7,6 +7,7 @@
         <result column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR" />
         <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
         <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
         <result column="HODING_TYPE" property="hodingType" jdbcType="VARCHAR" />
         <result column="CDATE" property="cdate" jdbcType="DATE" />
         <result column="CCY" property="ccy" jdbcType="VARCHAR" />
@@ -18,13 +19,16 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="OFFSET_ID" property="offsetId" jdbcType="VARCHAR" />
+        <result column="OFFSET_FLAG" property="offsetFlag" jdbcType="VARCHAR" />
+        <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, PORTFOLIO_ID PORTFOLIO_ID, SEC_ACCT_ID SEC_ACCT_ID, FINPROD_ID FINPROD_ID, 
-        BRANCH BRANCH, HODING_TYPE HODING_TYPE, CDATE CDATE, CCY CCY, AMOUNT AMOUNT, P_FINPROD_ID P_FINPROD_ID, 
-        TRADE_ID TRADE_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
-        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, INV_AIM INV_AIM
+        BRANCH BRANCH, INV_AIM INV_AIM, HODING_TYPE HODING_TYPE, CDATE CDATE, CCY CCY, AMOUNT AMOUNT, 
+        P_FINPROD_ID P_FINPROD_ID, TRADE_ID TRADE_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, OFFSET_ID OFFSET_ID, 
+        OFFSET_FLAG OFFSET_FLAG, ENTRUST_ID ENTRUST_ID
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -48,17 +52,19 @@
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionFlow" >
         insert into PTL_SEC_POSITION_FLOW (SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, 
-            FINPROD_ID, BRANCH, HODING_TYPE, 
-            CDATE, CCY, AMOUNT, 
-            P_FINPROD_ID, TRADE_ID, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, INV_AIM)
+            FINPROD_ID, BRANCH, INV_AIM, 
+            HODING_TYPE, CDATE, CCY, 
+            AMOUNT, P_FINPROD_ID, TRADE_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, OFFSET_ID, 
+            OFFSET_FLAG, ENTRUST_ID)
         values (#{seqno,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
-            #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{hodingType,jdbcType=VARCHAR}, 
-            #{cdate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, 
-            #{pFinprodId,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
-            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{invAim,jdbcType=VARCHAR})
+            #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{invAim,jdbcType=VARCHAR}, 
+            #{hodingType,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, 
+            #{amount,jdbcType=DECIMAL}, #{pFinprodId,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{offsetId,jdbcType=VARCHAR}, 
+            #{offsetFlag,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionFlow" >
         insert into PTL_SEC_POSITION_FLOW
@@ -77,6 +83,9 @@
             </if>
             <if test="branch != null" >
                 BRANCH,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
             </if>
             <if test="hodingType != null" >
                 HODING_TYPE,
@@ -111,8 +120,14 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
-            <if test="invAim != null" >
-                INV_AIM,
+            <if test="offsetId != null" >
+                OFFSET_ID,
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG,
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -130,6 +145,9 @@
             </if>
             <if test="branch != null" >
                 #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
             </if>
             <if test="hodingType != null" >
                 #{hodingType,jdbcType=VARCHAR},
@@ -164,18 +182,24 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="invAim != null" >
-                #{invAim,jdbcType=VARCHAR},
+            <if test="offsetId != null" >
+                #{offsetId,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetFlag != null" >
+                #{offsetFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionFlow" >
         insert into PTL_SEC_POSITION_FLOW(SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, 
-        HODING_TYPE, CDATE, CCY, AMOUNT, P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME, INV_AIM)
+        INV_AIM, HODING_TYPE, CDATE, CCY, AMOUNT, P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, OFFSET_ID, OFFSET_FLAG, ENTRUST_ID)
         select SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, 
-            HODING_TYPE, CDATE, CCY, AMOUNT, P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, INV_AIM
+            INV_AIM, HODING_TYPE, CDATE, CCY, AMOUNT, P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, OFFSET_ID, OFFSET_FLAG, ENTRUST_ID
              from PTL_SEC_POSITION_FLOW
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -193,6 +217,9 @@
             </if>
             <if test="branch != null" >
                 BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
             </if>
             <if test="hodingType != null" >
                 HODING_TYPE = #{hodingType,jdbcType=VARCHAR},
@@ -218,8 +245,14 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="invAim != null" >
-                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            <if test="offsetId != null" >
+                OFFSET_ID = #{offsetId,jdbcType=VARCHAR},
+            </if>
+            <if test="offsetFlag != null" >
+                OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
             </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
@@ -230,6 +263,7 @@
             SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
             FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
             BRANCH = #{branch,jdbcType=DECIMAL},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
             HODING_TYPE = #{hodingType,jdbcType=VARCHAR},
             CDATE = #{cdate,jdbcType=DATE},
             CCY = #{ccy,jdbcType=VARCHAR},
@@ -238,7 +272,69 @@
             TRADE_ID = #{tradeId,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            INV_AIM = #{invAim,jdbcType=VARCHAR}
+            OFFSET_ID = #{offsetId,jdbcType=VARCHAR},
+            OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectSecFlow" resultType="com.joyintech.tams.common.base.entity.PtlSecPositionFlow">
+        select SEQNO,
+                PORTFOLIO_ID,
+                SEC_ACCT_ID,
+                FINPROD_ID,
+                BRANCH,
+                INV_AIM,
+                HODING_TYPE,
+                CDATE,
+                CCY,
+                NVL(AMOUNT*-1, 0) AMOUNT,
+                P_FINPROD_ID,
+                TRADE_ID
+             from PTL_SEC_POSITION_FLOW
+             where TRADE_ID = #{finprodId,jdbcType=VARCHAR} AND HODING_TYPE = #{holdingType}
+    </select>
+
+    <update id="insertSelect04Sec" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionFlow">
+        UPDATE PTL_SEC_POSITION
+        SET AMOUNT = AMOUNT + #{amount},
+        UPDATE_TIME=#{updateTime, jdbcType=TIMESTAMP}
+        WHERE BRANCH = #{branch}
+               AND SEC_ACCT_ID = #{secAcctId}
+               AND CDATE = #{cdate}
+               AND HODING_TYPE = #{hodingType}
+               AND INV_AIM = #{invAim}
+               AND PORTFOLIO_ID = #{portfolioId}
+               AND FINPROD_ID = #{finprodId}
+    </update>
+
+    <insert id="insertSelect04SecFlowByDate">
+        INSERT INTO PTL_SEC_POSITION_FLOW
+        (SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, HODING_TYPE, CDATE, CCY, AMOUNT,
+        P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INV_AIM)
+        select '${seqNo}', PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, HODING_TYPE, #{mDate, jdbcType=DATE}, CCY,
+        <if test="isRevoke == null or isRevoke == ''">
+            AMOUNT*-1,
+        </if>
+        <if test="isRevoke != null and isRevoke != ''">
+            AMOUNT,
+        </if>
+        P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INV_AIM
+        from PTL_SEC_POSITION_FLOW
+        where
+        TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+        AND HODING_TYPE = #{holdingType}
+        AND CDATE = #{vDate, jdbcType=DATE}
+        AND FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </insert>
+
+    <select id="selectTradeReleaseStatus" resultType="map">
+	    SELECT  T1.RELEASE_STATUS ,T1.IS_MANUAL_RELEASE
+        FROM TRD_PRODUCT_DEAL_ADD T1
+        LEFT JOIN TRD_PRODUCT_DEAL T2 on T2.TRADE_ID = T1.TRADE_ID
+        LEFT JOIN FIN_PRODUCT_TYPE FPT ON FPT.FINPROD_ID = T2.TRADE_ID AND FPT.BRANCH = '0'
+        WHERE T1.TRADE_ID = #{tradeid,jdbcType=VARCHAR}
+        AND FPT.TYPE_6 = 'H01'
+
+</select>
 </mapper>

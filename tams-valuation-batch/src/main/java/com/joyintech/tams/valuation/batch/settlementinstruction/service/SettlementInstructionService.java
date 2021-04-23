@@ -39,12 +39,16 @@ import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.Account
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.BookGenerateResult;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.TreeNode;
 import com.joyintech.tams.valuation.batch.common.base.entity.extcommon.ValBokBookdetailBatch;
+import com.joyintech.tams.valuation.batch.common.finproduct.service.FinProductCommonService;
 import com.joyintech.tams.valuation.batch.settlementinstruction.dao.SettlementInstructionMapper;
 import com.joyintech.tams.valuation.batch.settlementinstruction.dto.SettlementInstructionDTO;
 import com.joyintech.tams.valuation.batch.settlementinstruction.dto.SettlementInstructionResult;
 import com.joyintech.tams.valuation.batch.settlementinstruction.dto.TrdProductDealDTO;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProduct;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchDto;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 
 /**
@@ -78,6 +82,13 @@ public class SettlementInstructionService {
 
     @Autowired
     private InterfCommonService interfCommonService;
+
+    /**
+     * 共通方法service
+     * add by yanya on 20201216
+     */
+    @Autowired
+    private FinProductCommonService finProductCommonService;
     
 
     /**
@@ -296,7 +307,52 @@ public class SettlementInstructionService {
 	                accountSceneMap.put(BookConstant.BOK_DETAIL_ID3,deal.getBokDetailId3());
             	}
             }
-           
+
+            /**针对【资金划款-拆出到期2735】业务场景特殊处理 by yanya on 20201216 start**/
+            if(StringUtil.equals(DictCodeListTableId.会计场景代码_资金划款_拆出到期.getValue(), dto.getOrderType())
+                    && StringUtil.isNotEmpty(dto.getFinprodId()) && StringUtil.isNotEmpty(dto.getFinprodType())) {
+                //获取交易类标的信息-拆出
+                TargetFinProduct targetFinProduct = this.getTargetInfo(dto.getFinprodId(), dto.getFinprodType(), BookConstant.DEFALUT_BRANCH);
+                accountCurrencyMap.put(BookConstant.TYPE_2, targetFinProduct.getType2());
+            }
+            /**针对【资金划款-拆出到期2735】业务场景特殊处理 by yanya on 20201216 end**/
+
+            /**针对【2752、2753、2754、2755、2756、2757】业务场景特殊处理 by yanya on 20201217 start**/
+            if((StringUtil.equals(DictCodeListTableId.会计场景代码_资金收款_摊余成本类其他债权投资收息.getValue(), dto.getOrderType())
+                    || StringUtil.equals(DictCodeListTableId.会计场景代码_资金收款_公允价值变动类其他债权投资收息.getValue(), dto.getOrderType())
+                    || StringUtil.equals(DictCodeListTableId.会计场景代码_资金收款_综合收益类其他债权投资收息.getValue(), dto.getOrderType())
+                    || StringUtil.equals(DictCodeListTableId.会计场景代码_资金收款_摊余成本类其他债权投资还本.getValue(), dto.getOrderType())
+                    || StringUtil.equals(DictCodeListTableId.会计场景代码_资金收款_公允价值变动类其他债权投资还本.getValue(), dto.getOrderType())
+                    || StringUtil.equals(DictCodeListTableId.会计场景代码_资金收款_综合收益类其他债权投资还本.getValue(), dto.getOrderType())
+                ) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+                //获取其他债权投资标的信息
+                TargetFinProduct targetFinProduct = this.getTargetInfo(dto.getFinprodId(), dto.getFinprodType(),null);
+                accountCurrencyMap.put(BookConstant.BLN_AREA, targetFinProduct.getBlnArea());
+            }
+            /**针对【2752、2753、2754、2755、2756、2757】业务场景特殊处理 by yanya on 20201217 end **/
+
+            /**针对【2901】业务场景特殊处理 by yanya on 20201217 start**/
+            if(StringUtil.equals(DictCodeListTableId.会计场景代码_逾期款收款.getValue(), dto.getOrderType())
+                && StringUtil.isNotEmpty(dto.getFinprodId())) {
+                //获取标的信息
+                TargetFinProduct targetFinProduct = this.getTargetInfo(dto.getFinprodId(), dto.getFinprodType(),null);
+                accountCurrencyMap.put(BookConstant.IS_QTZQ, targetFinProduct.getIsQtzq());
+            }
+            /**针对【2901】业务场景特殊处理 by yanya on 20201217 end **/
+
+            /**针对【2903】业务场景特殊处理 by yanya on 20201217 start**/
+            if(StringUtil.equals(DictCodeListTableId.会计场景代码_逾期款转出.getValue(), dto.getOrderType())
+                    && StringUtil.isNotEmpty(dto.getFinprodId())) {
+                //获取标的信息
+                TargetFinProduct targetFinProduct = this.getTargetInfo(dto.getFinprodId(), dto.getFinprodType(),null);
+                accountCurrencyMap.put(BookConstant.IS_QTZQ, targetFinProduct.getIsQtzq());
+                accountCurrencyMap.put(BookConstant.INV_AIM, dto.getInvAim());
+                accountCurrencyMap.put(BookConstant.TYPE_2, targetFinProduct.getType2());
+                accountCurrencyMap.put(BookConstant.BLN_AREA, targetFinProduct.getBlnArea());
+            }
+            /**针对【2903】业务场景特殊处理 by yanya on 20201217 end **/
+
+
             // map塞入场景要素管理中
             ad.setAccountSceneMap(accountSceneMap);// 记账场景要素
             ad.setAccountAmountMap(accountAmountMap);// 记账金额要素
@@ -342,4 +398,38 @@ public class SettlementInstructionService {
     	}
     	return dto;
     }
+
+
+    /**
+     * 调用共通方法：[标的类共通方法-查询标的信息]
+     * add by yanya on 20201217
+     * @param finprodId 金融产品代码【必输项】
+     * @param finprodType 金融产品类型【必输项】
+     * @param branch 分支序号
+     * @return ValFinProductDeal 标的查询
+     * @see
+     * @since 1.0
+     */
+    private TargetFinProduct getTargetInfo(String finprodId, String finprodType, Long branch) {
+        // 查询条件
+        List<TargetSearchDto> queryCriteria = new ArrayList<TargetSearchDto>();
+        // 标的信息条件
+        TargetSearchDto searchBaseinfo = new TargetSearchDto();
+        searchBaseinfo.setQueryType(ValDictCodeList.标的_信息.getValue());
+        if(StringUtil.isNotEmpty(finprodType)) {
+            searchBaseinfo.setFinprodType(finprodType);
+        }
+        if(StringUtil.isNotEmpty(branch)) {
+            searchBaseinfo.setBranch(branch);
+        }
+        queryCriteria.add(searchBaseinfo);
+        Map<TargetSearchDto, Object> targetSearchMap = finProductCommonService.getTargetInfo(finprodId, queryCriteria);
+        TargetFinProduct targetFinProduct = (TargetFinProduct) targetSearchMap.get(searchBaseinfo);
+        // 确保不为null
+        if (targetFinProduct == null) {
+            targetFinProduct = new TargetFinProduct();
+        }
+        return targetFinProduct;
+    }
+
 }

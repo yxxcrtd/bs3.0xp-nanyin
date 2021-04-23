@@ -51,6 +51,18 @@ public class TrdMatchInfo extends BaseEntity {
     private String fSysId;
 
     /**
+     * 匹配额度(中债)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal matchNumCb;
+
+    /**
+     * 结算服务费(上清)
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal matchNumSc;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -177,5 +189,37 @@ public class TrdMatchInfo extends BaseEntity {
      */
     public void setfSysId(String fSysId) {
         this.fSysId = fSysId == null ? null : fSysId.trim();
+    }
+
+    /**
+     * 取得 匹配额度(中债)
+     * @return 匹配额度(中债)
+     */
+    public BigDecimal getMatchNumCb() {
+        return matchNumCb;
+    }
+
+    /**
+     * 设置 匹配额度(中债)
+     * @param matchNumCb 匹配额度(中债)
+     */
+    public void setMatchNumCb(BigDecimal matchNumCb) {
+        this.matchNumCb = matchNumCb;
+    }
+
+    /**
+     * 取得 结算服务费(上清)
+     * @return 结算服务费(上清)
+     */
+    public BigDecimal getMatchNumSc() {
+        return matchNumSc;
+    }
+
+    /**
+     * 设置 结算服务费(上清)
+     * @param matchNumSc 结算服务费(上清)
+     */
+    public void setMatchNumSc(BigDecimal matchNumSc) {
+        this.matchNumSc = matchNumSc;
     }
 }

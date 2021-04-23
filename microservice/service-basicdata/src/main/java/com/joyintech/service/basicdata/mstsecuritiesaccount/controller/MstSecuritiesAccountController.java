@@ -10,6 +10,7 @@
  
 package com.joyintech.service.basicdata.mstsecuritiesaccount.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -100,6 +101,19 @@ public class MstSecuritiesAccountController {
     }
     
     /**
+     * 
+     * @param companyNo
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("getFuturesCompany")
+    public List<SelectOptionDto> getFuturesCompany(String companyNo)
+            throws Exception {
+        List<SelectOptionDto> temp = mstSecuritiesAccountService.getFuturesCompany(companyNo);
+        return temp;
+    }
+    
+    /**
      * 回款账户以及资金结算账户联想文本框 <功能详细描述>
      * 
      * @return List
@@ -118,8 +132,6 @@ public class MstSecuritiesAccountController {
      * 
      * @param dto
      *            页面选中的数据
-     * @param br
-     *            br
      * @return 结果
      * @throws Exception
      *             异常
@@ -135,8 +147,6 @@ public class MstSecuritiesAccountController {
      * 
      * @param dto
      *            页面选中的数据
-     * @param br
-     *            br
      * @return 结果
      * @throws Exception
      *             异常
@@ -152,8 +162,6 @@ public class MstSecuritiesAccountController {
      * 
      * @param dto
      *            页面选中的数据
-     * @param br
-     *            br
      * @return 结果
      * @throws Exception
      *             异常
@@ -168,7 +176,7 @@ public class MstSecuritiesAccountController {
      * 检查证券账户账号是否用过
      * <一句话功能简述>
      * <功能详细描述>
-     * @param param
+     * @param dto
      * @return List
      * @see
      * @since 1.0  
@@ -183,7 +191,7 @@ public class MstSecuritiesAccountController {
      * 检查证券账户名称是否用过
      * <一句话功能简述>
      * <功能详细描述>
-     * @param param
+     * @param dto
      * @return List
      * @see
      * @since 1.0  
@@ -198,7 +206,7 @@ public class MstSecuritiesAccountController {
      * 检查资金结算账户是否存在
      * <一句话功能简述>
      * <功能详细描述>
-     * @param param
+     * @param dto
      * @return List
      * @see
      * @since 1.0  
@@ -279,5 +287,84 @@ public class MstSecuritiesAccountController {
 //        public int deleteFileByBusinessId(String businessId)
 //            throws Exception {
 //            return mstSecuritiesAccountService.deleteFileByBusinessId(businessId);
-//        }         
+//        }  
+    /**
+     * 获取证券账户表
+     * @param map
+     * @return
+     * @throws Exception
+     */
+	@PostMapping("getSecAcctInfo")
+	public List<SelectOptionDto> getSecAcctInfo(@RequestBody Map<String, Object> map) throws Exception {
+		return mstSecuritiesAccountService.getSecAcctInfo(map);
+	}
+
+	/**
+	 * 获取组合资金账户
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("getPtlSecAcctInfo")
+	public List<SelectOptionDto> getPtlSecAcctInfo(@RequestBody Map<String, Object> map) throws Exception {
+		return mstSecuritiesAccountService.getPtlSecAcctInfo(map);
+	}
+	
+	/**
+	 * 获取证券代码
+	 * 
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("getFinprodMarketInfo/{page}/{length}")
+	public Page<SelectOptionDto> getFinprodMarketInfo(@RequestBody Map<String, Object> map,
+			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+		return mstSecuritiesAccountService.getFinprodMarketInfo(page, length, map);
+	}
+
+    /**
+     * 场内指令 - 持仓页面-获取资产代码下拉框数据
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("getFinprodMarketInfoPosition/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketInfoPosition(@RequestBody Map<String, Object> map,
+                                                      @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        return mstSecuritiesAccountService.getFinprodMarketInfoPosition(page, length, map);
+    }
+	
+	/**
+	 * 获取标的信息
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("getFinprodId")
+	public List<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> map) throws Exception {
+		return mstSecuritiesAccountService.getFinprodId(map);
+	}
+
+    /**
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("getFinprodIdByMarketId")
+    public List<SelectOptionDto> getFinprodIdByMarketId(@RequestBody Map<String, Object> map) throws Exception {
+        return mstSecuritiesAccountService.getFinprodIdByMarketId(map);
+    }
+
+    /**
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("getFaceValueList")
+    public List<Map<String, Object>> getFaceValueList(@RequestBody Map<String, Object> map) throws Exception {
+        return mstSecuritiesAccountService.getFaceValueList(map);
+    }
 }

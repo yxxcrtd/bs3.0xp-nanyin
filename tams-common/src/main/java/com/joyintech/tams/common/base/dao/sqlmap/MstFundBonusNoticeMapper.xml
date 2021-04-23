@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstFundBonusNoticeMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstFundBonusNotice" >
+        <id column="FUND_ID" property="fundId" jdbcType="VARCHAR" />
+        <id column="REG_DATE" property="regDate" jdbcType="DATE" />
+        <result column="DEL_DATE" property="delDate" jdbcType="DATE" />
+        <result column="DEVIDENT_DATE" property="devidentDate" jdbcType="DATE" />
+        <result column="UNIT_BONUS_UNIT_VALUE" property="unitBonusUnitValue" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FUND_ID FUND_ID, REG_DATE REG_DATE, DEL_DATE DEL_DATE, DEVIDENT_DATE DEVIDENT_DATE, 
+        UNIT_BONUS_UNIT_VALUE UNIT_BONUS_UNIT_VALUE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstFundBonusNoticeMapper.Base_Column_List" />
+        from MST_FUND_BONUS_NOTICE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstFundBonusNoticeMapper.Base_Column_List" />
+        from MST_FUND_BONUS_NOTICE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MstFundBonusNoticeKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstFundBonusNoticeMapper.Base_Column_List" />
+        from MST_FUND_BONUS_NOTICE
+        where FUND_ID = #{fundId,jdbcType=VARCHAR}
+          and REG_DATE = #{regDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstFundBonusNoticeKey" >
+        delete from MST_FUND_BONUS_NOTICE
+        where FUND_ID = #{fundId,jdbcType=VARCHAR}
+          and REG_DATE = #{regDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstFundBonusNotice" >
+        insert into MST_FUND_BONUS_NOTICE (FUND_ID, REG_DATE, DEL_DATE, 
+            DEVIDENT_DATE, UNIT_BONUS_UNIT_VALUE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{fundId,jdbcType=VARCHAR}, #{regDate,jdbcType=DATE}, #{delDate,jdbcType=DATE}, 
+            #{devidentDate,jdbcType=DATE}, #{unitBonusUnitValue,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstFundBonusNotice" >
+        insert into MST_FUND_BONUS_NOTICE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="fundId != null" >
+                FUND_ID,
+            </if>
+            <if test="regDate != null" >
+                REG_DATE,
+            </if>
+            <if test="delDate != null" >
+                DEL_DATE,
+            </if>
+            <if test="devidentDate != null" >
+                DEVIDENT_DATE,
+            </if>
+            <if test="unitBonusUnitValue != null" >
+                UNIT_BONUS_UNIT_VALUE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="fundId != null" >
+                #{fundId,jdbcType=VARCHAR},
+            </if>
+            <if test="regDate != null" >
+                #{regDate,jdbcType=DATE},
+            </if>
+            <if test="delDate != null" >
+                #{delDate,jdbcType=DATE},
+            </if>
+            <if test="devidentDate != null" >
+                #{devidentDate,jdbcType=DATE},
+            </if>
+            <if test="unitBonusUnitValue != null" >
+                #{unitBonusUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstFundBonusNotice" >
+        insert into MST_FUND_BONUS_NOTICE(FUND_ID, REG_DATE, DEL_DATE, DEVIDENT_DATE, UNIT_BONUS_UNIT_VALUE, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select FUND_ID, REG_DATE, DEL_DATE, DEVIDENT_DATE, UNIT_BONUS_UNIT_VALUE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_FUND_BONUS_NOTICE
+             where 1 = 1 and FUND_ID = #{fundId,jdbcType=VARCHAR} and REG_DATE = #{regDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstFundBonusNotice" >
+        update MST_FUND_BONUS_NOTICE
+        <set >
+            <if test="delDate != null" >
+                DEL_DATE = #{delDate,jdbcType=DATE},
+            </if>
+            <if test="devidentDate != null" >
+                DEVIDENT_DATE = #{devidentDate,jdbcType=DATE},
+            </if>
+            <if test="unitBonusUnitValue != null" >
+                UNIT_BONUS_UNIT_VALUE = #{unitBonusUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where FUND_ID = #{fundId,jdbcType=VARCHAR}
+          and REG_DATE = #{regDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstFundBonusNotice" >
+        update MST_FUND_BONUS_NOTICE
+        set DEL_DATE = #{delDate,jdbcType=DATE},
+            DEVIDENT_DATE = #{devidentDate,jdbcType=DATE},
+            UNIT_BONUS_UNIT_VALUE = #{unitBonusUnitValue,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where FUND_ID = #{fundId,jdbcType=VARCHAR}
+          and REG_DATE = #{regDate,jdbcType=DATE}
+    </update>
+</mapper>

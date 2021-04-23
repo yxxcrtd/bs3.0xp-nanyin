@@ -33,7 +33,7 @@ import com.joyintech.service.trade.cstp.service.CstpSelectService;
  * @since 1.0
  */
 @RestController
-@RequestMapping("/CSTPSelect")
+@RequestMapping("CSTPSelect")
 public class CstpSelectController {
     /**
      * 注入Service
@@ -78,6 +78,14 @@ public class CstpSelectController {
     public Page<SelectOptionDto> getExecid(@RequestBody Map<String,Object> param,@PathVariable("page") int page,
                                            @PathVariable("length") int length){
         return cstpSelectService.getExecid(page,length,param);
+    }
+    
+    
+    
+    @RequestMapping("getBusiCode/{page}/{length}")
+    public Page<SelectOptionDto> getBusiCode(@RequestBody Map<String,Object> param,@PathVariable("page") int page,
+                                           @PathVariable("length") int length){
+        return cstpSelectService.getBusiCode(page,length,param);
     }
     /**
      * 获取资产代码下拉框

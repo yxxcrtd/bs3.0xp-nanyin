@@ -275,6 +275,14 @@ public class ValItemValueGenAop {
             targetTalbleObj.setRepBondtostockFlag(coverNo(targetTalbleObj.getRepBondtostockFlag()));
             targetTalbleObj.setRepPrivateprdFlag(coverNo(targetTalbleObj.getRepPrivateprdFlag()));
         }
+        //交易费用明细表
+        else if(paramObject instanceof TrdTradeFeeDetail){
+            TrdTradeFeeDetail targetTalbleObj = (TrdTradeFeeDetail) paramObject;
+            String registOrg = "999999";
+            if(StringUtil.isEmpty(targetTalbleObj.getRegistOrg())) {
+                targetTalbleObj.setRegistOrg(registOrg);
+            }
+        }
         logger.info("估值核算相关字段值获取设值aop处理结束--------------------------------");
     }
 

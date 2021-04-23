@@ -36,6 +36,16 @@ public class PtlSecPositionFlowDto extends PtlSecPositionFlow {
      * 是否是通道
      */
     private boolean channel;
+    /**
+     * 交易方向
+     */
+    private String ps;
+    
+    /**
+     * 非此投资目的字段
+     */
+    private String notInvAim;
+
 
     /**
      * 获取 channel
@@ -126,4 +136,20 @@ public class PtlSecPositionFlowDto extends PtlSecPositionFlow {
     public void setEntrust(boolean entrust) {
         this.entrust = entrust;
     }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+	public String getNotInvAim() {
+		return notInvAim;
+	}
+
+	public void setNotInvAim(String notInvAim) {
+		this.notInvAim = notInvAim;
+	}
 }

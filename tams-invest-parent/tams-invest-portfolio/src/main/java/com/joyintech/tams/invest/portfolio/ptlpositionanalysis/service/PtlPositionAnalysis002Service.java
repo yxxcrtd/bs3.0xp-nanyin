@@ -138,7 +138,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             pageList.add(portfolioName);
 
                             // 拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
-                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass);
+                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass,map);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
                                 for (PtlPositionAnalysis003Dto entity : finpordTypeList) {
                                     PtlPositionAnalysis003Dto oneType = new PtlPositionAnalysis003Dto();
@@ -182,7 +182,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             pageList.add(typeName);
 
                             // 二级分类
-                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass);
+                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass,map);
                             //根据parent查询出下一行的汇总额
                            // List<PtlPositionAnalysis003Dto> selectSumByParentpList = selectSumByParentp("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
@@ -221,7 +221,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             pageList.add(portfolioName);
 
                             // 拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
-                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass);
+                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass,map);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
                                 for (PtlPositionAnalysis003Dto entity : finpordTypeList) {
                                     PtlPositionAnalysis003Dto oneType = new PtlPositionAnalysis003Dto();
@@ -235,7 +235,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     oneType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(oneType);
                                     //二级分类
-                                    List<PtlPositionAnalysis003Dto> twoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass);
+                                    List<PtlPositionAnalysis003Dto> twoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass,map);
                                     if (!StringUtil.isEmptyList(twoList) && twoList.size() > 0) {
                                         for (PtlPositionAnalysis003Dto twoEntity : twoList) {
                                             PtlPositionAnalysis003Dto twoType = new PtlPositionAnalysis003Dto();
@@ -282,7 +282,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             pageList.add(typeName);
 
                             // 二级分类
-                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass);
+                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass,map);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
                                 for (PtlPositionAnalysis003Dto entity : finpordTypeList) {
                                     PtlPositionAnalysis003Dto twoType = new PtlPositionAnalysis003Dto();
@@ -298,7 +298,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     twoType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(twoType);
                                     //三级分类
-                                    List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType("", searchDate, "03", displayType, v.get(0).getPinanAssetType(), pass);
+                                    List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType("", searchDate, "03", displayType, v.get(0).getPinanAssetType(), pass,map);
                                     if (!StringUtil.isEmptyList(typeThreeList) && typeThreeList.size() > 0) {
                                         for (PtlPositionAnalysis003Dto threeEntity : typeThreeList) {
                                             PtlPositionAnalysis003Dto threeType = new PtlPositionAnalysis003Dto();
@@ -343,7 +343,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             portfolioName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(portfolioName);
                             //拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
-                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass);
+                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass,map);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
                                 for (PtlPositionAnalysis003Dto entity : finpordTypeList) {
                                     PtlPositionAnalysis003Dto oneType = new PtlPositionAnalysis003Dto();
@@ -359,7 +359,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     oneType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(oneType);
                                     //二级分类
-                                    List<PtlPositionAnalysis003Dto> typeTwoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass);
+                                    List<PtlPositionAnalysis003Dto> typeTwoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass,map);
                                     if (!StringUtil.isEmptyList(typeTwoList) && typeTwoList.size() > 0) {
                                         for (PtlPositionAnalysis003Dto twoEntity : typeTwoList) {
                                             PtlPositionAnalysis003Dto twoType = new PtlPositionAnalysis003Dto();
@@ -375,7 +375,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             twoType.setTdyIntincexp(twoEntity.getTdyIntincexp());
                                             pageList.add(twoType);
                                             //三级分类
-                                            List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "03", displayType, twoEntity.getPinanAssetType(), pass);
+                                            List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "03", displayType, twoEntity.getPinanAssetType(), pass,map);
                                             if (!StringUtil.isEmptyList(typeThreeList) && typeThreeList.size() > 0) {
                                                 for (PtlPositionAnalysis003Dto threeEntity : typeThreeList) {
                                                     PtlPositionAnalysis003Dto threeType = new PtlPositionAnalysis003Dto();
@@ -438,7 +438,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             typeName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(typeName);
                             //二级分类
-                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass);
+                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass,map);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
                                 for (PtlPositionAnalysis003Dto entity : finpordTypeList) {
                                     PtlPositionAnalysis003Dto twoType = new PtlPositionAnalysis003Dto();
@@ -454,7 +454,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     twoType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(twoType);
                                     //三级分类
-                                    List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType("", searchDate, "03", displayType, v.get(0).getPinanAssetType(), pass);
+                                    List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType("", searchDate, "03", displayType, v.get(0).getPinanAssetType(), pass,map);
                                     if (!StringUtil.isEmptyList(typeThreeList) && typeThreeList.size() > 0) {
                                         for (PtlPositionAnalysis003Dto threeEntity : typeThreeList) {
                                             PtlPositionAnalysis003Dto threeType = new PtlPositionAnalysis003Dto();
@@ -471,7 +471,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             pageList.add(threeType);
 
                                             //四级分类
-                                            List<PtlPositionAnalysis003Dto> fourTypeList = getFinpordType("", searchDate, "04", displayType, v.get(0).getPinanAssetType(), pass);
+                                            List<PtlPositionAnalysis003Dto> fourTypeList = getFinpordType("", searchDate, "04", displayType, v.get(0).getPinanAssetType(), pass,map);
                                             if (!StringUtil.isEmptyList(fourTypeList) && fourTypeList.size() > 0) {
                                                 for (PtlPositionAnalysis003Dto fourEntity : fourTypeList) {
                                                     PtlPositionAnalysis003Dto fourType = new PtlPositionAnalysis003Dto();
@@ -519,7 +519,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             portfolioName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(portfolioName);
                             //拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
-                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass);
+                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass,map);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
                                 for (PtlPositionAnalysis003Dto entity : finpordTypeList) {
                                     PtlPositionAnalysis003Dto oneType = new PtlPositionAnalysis003Dto();
@@ -535,7 +535,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     oneType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(oneType);
                                     //二级分类
-                                    List<PtlPositionAnalysis003Dto> typeTwoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass);
+                                    List<PtlPositionAnalysis003Dto> typeTwoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass,map);
                                     if (!StringUtil.isEmptyList(typeTwoList) && typeTwoList.size() > 0) {
                                         for (PtlPositionAnalysis003Dto twoEntity : typeTwoList) {
                                             PtlPositionAnalysis003Dto twoType = new PtlPositionAnalysis003Dto();
@@ -552,7 +552,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             twoType.setTdyIntincexp(twoEntity.getTdyIntincexp());
                                             pageList.add(twoType);
                                             //三级分类
-                                            List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "03", displayType, twoEntity.getPinanAssetType(), pass);
+                                            List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "03", displayType, twoEntity.getPinanAssetType(), pass,map);
                                             if (!StringUtil.isEmptyList(typeThreeList) && typeThreeList.size() > 0) {
                                                 for (PtlPositionAnalysis003Dto threeEntity : typeThreeList) {
                                                     PtlPositionAnalysis003Dto threeType = new PtlPositionAnalysis003Dto();
@@ -569,7 +569,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                     pageList.add(threeType);
 
                                                     //四级分类
-                                                    List<PtlPositionAnalysis003Dto> fourTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "04", displayType, threeEntity.getPinanAssetType(), pass);
+                                                    List<PtlPositionAnalysis003Dto> fourTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "04", displayType, threeEntity.getPinanAssetType(), pass,map);
                                                     if (!StringUtil.isEmptyList(fourTypeList) && fourTypeList.size() > 0) {
                                                         for (PtlPositionAnalysis003Dto fourEntity : fourTypeList) {
                                                             PtlPositionAnalysis003Dto fourType = new PtlPositionAnalysis003Dto();
@@ -636,7 +636,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             typeName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(typeName);
                             //二级分类
-                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass);
+                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType("", searchDate, "02", displayType, v.get(0).getPinanAssetType(), pass,map);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
                                 for (PtlPositionAnalysis003Dto entity : finpordTypeList) {
                                     PtlPositionAnalysis003Dto twoType = new PtlPositionAnalysis003Dto();
@@ -653,7 +653,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                                     pageList.add(twoType);
                                     //三级分类
-                                    List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType("", searchDate, "03", displayType, v.get(0).getPinanAssetType(), pass);
+                                    List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType("", searchDate, "03", displayType, v.get(0).getPinanAssetType(), pass,map);
                                     if (!StringUtil.isEmptyList(typeThreeList) && typeThreeList.size() > 0) {
                                         for (PtlPositionAnalysis003Dto threeEntity : typeThreeList) {
                                             PtlPositionAnalysis003Dto threeType = new PtlPositionAnalysis003Dto();
@@ -669,7 +669,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             threeType.setTdyIntincexp(threeEntity.getTdyIntincexp());
                                             pageList.add(threeType);
                                             //四级分类
-                                            List<PtlPositionAnalysis003Dto> fourTypeList = getFinpordType("", searchDate, "04", displayType, v.get(0).getPinanAssetType(), pass);
+                                            List<PtlPositionAnalysis003Dto> fourTypeList = getFinpordType("", searchDate, "04", displayType, v.get(0).getPinanAssetType(), pass,map);
                                             if (!StringUtil.isEmptyList(fourTypeList) && fourTypeList.size() > 0) {
                                                 for (PtlPositionAnalysis003Dto fourEntity : fourTypeList) {
                                                     PtlPositionAnalysis003Dto fourType = new PtlPositionAnalysis003Dto();
@@ -688,7 +688,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
 
                                                     //五级分类
 
-                                                    List<PtlPositionAnalysis003Dto> fiveTypeList = getFinpordType("", searchDate, "05", displayType, v.get(0).getPinanAssetType(), pass);
+                                                    List<PtlPositionAnalysis003Dto> fiveTypeList = getFinpordType("", searchDate, "05", displayType, v.get(0).getPinanAssetType(), pass,map);
                                                     if (!StringUtil.isEmptyList(fiveTypeList) && fiveTypeList.size() > 0) {
                                                         for (PtlPositionAnalysis003Dto fiveEntity : fiveTypeList) {
                                                             PtlPositionAnalysis003Dto fiveType = new PtlPositionAnalysis003Dto();
@@ -737,7 +737,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                             portfolioName.setTdyIntincexp(v.get(0).getTdyIntincexp());
                             pageList.add(portfolioName);
                             //拼接一级分类[根据组合代码查询对应下面的所有一级分类名称]
-                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass);
+                            List<PtlPositionAnalysis003Dto> finpordTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "01", displayType, "", pass,map);
                             if (!StringUtil.isEmptyList(finpordTypeList) && finpordTypeList.size() > 0) {
                                 for (PtlPositionAnalysis003Dto entity : finpordTypeList) {
                                     PtlPositionAnalysis003Dto oneType = new PtlPositionAnalysis003Dto();
@@ -753,7 +753,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                     oneType.setTdyIntincexp(entity.getTdyIntincexp());
                                     pageList.add(oneType);
                                     //二级分类
-                                    List<PtlPositionAnalysis003Dto> typeTwoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass);
+                                    List<PtlPositionAnalysis003Dto> typeTwoList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "02", displayType, entity.getPinanAssetType(), pass,map);
                                     if (!StringUtil.isEmptyList(typeTwoList) && typeTwoList.size() > 0) {
                                         for (PtlPositionAnalysis003Dto twoEntity : typeTwoList) {
                                             PtlPositionAnalysis003Dto twoType = new PtlPositionAnalysis003Dto();
@@ -770,7 +770,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                             twoType.setTdyIntincexp(twoEntity.getTdyIntincexp());
                                             pageList.add(twoType);
                                             //三级分类
-                                            List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "03", displayType, twoEntity.getPinanAssetType(), pass);
+                                            List<PtlPositionAnalysis003Dto> typeThreeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "03", displayType, twoEntity.getPinanAssetType(), pass,map);
                                             if (!StringUtil.isEmptyList(typeThreeList) && typeThreeList.size() > 0) {
                                                 for (PtlPositionAnalysis003Dto threeEntity : typeThreeList) {
                                                     PtlPositionAnalysis003Dto threeType = new PtlPositionAnalysis003Dto();
@@ -787,7 +787,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                     pageList.add(threeType);
 
                                                     //四级分类
-                                                    List<PtlPositionAnalysis003Dto> fourTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "04", displayType, threeEntity.getPinanAssetType(), pass);
+                                                    List<PtlPositionAnalysis003Dto> fourTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "04", displayType, threeEntity.getPinanAssetType(), pass,map);
                                                     if (!StringUtil.isEmptyList(fourTypeList) && fourTypeList.size() > 0) {
                                                         for (PtlPositionAnalysis003Dto fourEntity : fourTypeList) {
                                                             PtlPositionAnalysis003Dto fourType = new PtlPositionAnalysis003Dto();
@@ -804,7 +804,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
                                                             pageList.add(fourType);
                                                             //五级分类
 
-                                                            List<PtlPositionAnalysis003Dto> fiveTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "05", displayType, fourEntity.getPinanAssetType(), pass);
+                                                            List<PtlPositionAnalysis003Dto> fiveTypeList = getFinpordType(v.get(0).getPortfolioId(), searchDate, "05", displayType, fourEntity.getPinanAssetType(), pass,map);
                                                             if (!StringUtil.isEmptyList(fiveTypeList) && fiveTypeList.size() > 0) {
                                                                 for (PtlPositionAnalysis003Dto fiveEntity : fiveTypeList) {
                                                                     PtlPositionAnalysis003Dto fiveType = new PtlPositionAnalysis003Dto();
@@ -1496,7 +1496,7 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
      * @param
      * @return
      */
-    public List<PtlPositionAnalysis003Dto> getFinpordType(String portfolioId, String searchDate, String searchCondition, String displayType, String type, String pass) {
+    public List<PtlPositionAnalysis003Dto> getFinpordType(String portfolioId, String searchDate, String searchCondition, String displayType, String type, String pass,Map<String, Object> param) {
 
         List<PtlPositionAnalysis003Dto> typelist = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
@@ -1508,6 +1508,9 @@ public class PtlPositionAnalysis002Service extends CommonExportService<PtlPositi
         map.put("displayType", displayType);
         map.put("type", type);
         map.put("pass", pass);
+        if(StringUtil.isNotEmpty(param.get("finprodMarketId"))){
+            map.put("finprodMarketIdList", StringUtil.splitToList(null, param.get("finprodMarketId").toString()));
+        }
         typelist = restTemplate.postForList(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/getFinpordType",
                 map, PtlPositionAnalysis003Dto.class);

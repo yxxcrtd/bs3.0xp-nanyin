@@ -153,8 +153,11 @@ public class NPlannedBaseInfoTemplateRecService {
         valFinProduct.setTradeMarket(dto.getTradeMarket());
         // 发行方式 = A.发行方式 模板上提示字段不用
         valFinProduct.setIdate(null);
+        /** modify by yanya on 20210222 增加发行人字段入库 start**/
         //发行人
-        valFinProduct.setIssuer(null);    
+        //valFinProduct.setIssuer(null);
+        valFinProduct.setIssuer(dto.getManagerId());
+        /** modify by yanya on 20210222 增加发行人字段入库 end**/
         // 发行日= A.起息日
         valFinProduct.setIdate(dto.getVdate());
         // 起息日= A.起息日
@@ -171,9 +174,8 @@ public class NPlannedBaseInfoTemplateRecService {
 //        valFinProduct.setoFinprodType(DictCodeListExt1.金融产品类型_计划类资产.getValue());
         //本金收益特征 = A.本金收益特征
         valFinProduct.setCapiIncomeFeature(dto.getCapiProfFeature());
-        //add by liupengfei for 多级法人改造 S
-        valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
+		valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
         return valFinProduct;
     }
     /**
@@ -205,7 +207,11 @@ public class NPlannedBaseInfoTemplateRecService {
         //资产分类
         fdto.setAssetType(dto.getAssetClass());
         /**add by wujie on 20181108 end**/
-        
+
+        /*add by sunshuaishuai 计划类资产添加收益类型区分 20210315 start*/
+        fdto.setProfitType(DictCodeList.收益类型_净值型.getValue());
+        /*add by sunshuaishuai 计划类资产添加收益类型区分 20210315 end*/
+
         valFinProductType.setType2(interfCommonService.getFinanceProductClass(fdto));
         
         // 分类3 = 调用共通方法查询税务分类

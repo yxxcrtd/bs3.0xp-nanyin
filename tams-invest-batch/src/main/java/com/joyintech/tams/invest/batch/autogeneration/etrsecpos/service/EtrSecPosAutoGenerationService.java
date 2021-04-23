@@ -65,5 +65,11 @@ public class EtrSecPosAutoGenerationService {
         paramMap.put("POSITION_TYPE_E01", DictCodeListExt1.持仓类型_委托指令可用.getValue());
         paramMap.put("lastDate", DateUtil.addDay(batchDate, -1));
         secPosAutoGenerationMapper.insertTodaySecPosData(paramMap);
+        
+        // 删除批处理执行日的标准券持仓数据
+        secPosAutoGenerationMapper.deleteTodayStaSecPosData(paramMap);
+        //
+        secPosAutoGenerationMapper.insertTodayStaSecPosData(paramMap);
+        
     }
 }

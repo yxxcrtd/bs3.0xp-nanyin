@@ -268,4 +268,27 @@ public class MstSecuritiesAccountDto extends StlSecAcctInfo{
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+    
+    private String futuresCompany;
+
+    public String getFuturesCompany() {
+        return futuresCompany;
+    }
+
+    public void setFuturesCompany(String futuresCompany) {
+        this.futuresCompany = futuresCompany;
+    }
+
+    /**
+     * 交易编号
+     */
+    private String tradeNo;
+
+    public String getTradeNo() {
+		return tradeNo;
+	}
+
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
 }

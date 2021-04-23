@@ -36,6 +36,8 @@
         <result column="ACCRUEDINTERESTAMT" property="accruedinterestamt" jdbcType="DECIMAL" />
         <result column="SETTLE_SPEED" property="settleSpeed" jdbcType="VARCHAR" />
         <result column="UNIT_INT" property="unitInt" jdbcType="DECIMAL" />
+        <result column="DEAL_FEEAMT" property="dealFeeamt" jdbcType="DECIMAL" />
+        <result column="SETT_FEEAMT" property="settFeeamt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         DEALNO DEALNO, SECID SECID, PROFOLIO_ID PROFOLIO_ID, CCY CCY, INVTYPE INVTYPE, PS PS, 
@@ -45,7 +47,7 @@
         UPDATECOUNTER UPDATECOUNTER, FEDEALNO FEDEALNO, DEALTEXT DEALTEXT, LSTMNTDATE LSTMNTDATE, 
         CLIENTTRADER CLIENTTRADER, COUNTERTELEPHONE COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER OURDEPOSITACCOUNTNUMBER, 
         STRIKEYIELD STRIKEYIELD, DIRTYPRICE DIRTYPRICE, ACCRUEDINTERESTAMT ACCRUEDINTERESTAMT, 
-        SETTLE_SPEED SETTLE_SPEED, UNIT_INT UNIT_INT
+        SETTLE_SPEED SETTLE_SPEED, UNIT_INT UNIT_INT, DEAL_FEEAMT DEAL_FEEAMT, SETT_FEEAMT SETT_FEEAMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -79,7 +81,8 @@
             DEALTEXT, LSTMNTDATE, CLIENTTRADER, 
             COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER, 
             STRIKEYIELD, DIRTYPRICE, ACCRUEDINTERESTAMT, 
-            SETTLE_SPEED, UNIT_INT)
+            SETTLE_SPEED, UNIT_INT, DEAL_FEEAMT, 
+            SETT_FEEAMT)
         values (#{dealno,jdbcType=VARCHAR}, #{secid,jdbcType=VARCHAR}, #{profolioId,jdbcType=VARCHAR}, 
             #{ccy,jdbcType=VARCHAR}, #{invtype,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
             #{price8,jdbcType=DECIMAL}, #{yield8,jdbcType=DECIMAL}, #{cno,jdbcType=VARCHAR}, 
@@ -91,7 +94,8 @@
             #{dealtext,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}, #{clienttrader,jdbcType=VARCHAR}, 
             #{countertelephone,jdbcType=VARCHAR}, #{ourdepositaccountnumber,jdbcType=VARCHAR}, 
             #{strikeyield,jdbcType=DECIMAL}, #{dirtyprice,jdbcType=DECIMAL}, #{accruedinterestamt,jdbcType=DECIMAL}, 
-            #{settleSpeed,jdbcType=VARCHAR}, #{unitInt,jdbcType=DECIMAL})
+            #{settleSpeed,jdbcType=VARCHAR}, #{unitInt,jdbcType=DECIMAL}, #{dealFeeamt,jdbcType=DECIMAL}, 
+            #{settFeeamt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfTradSecdeal" >
         insert into INTERF_TRAD_SECDEAL
@@ -198,6 +202,12 @@
             <if test="unitInt != null" >
                 UNIT_INT,
             </if>
+            <if test="dealFeeamt != null" >
+                DEAL_FEEAMT,
+            </if>
+            <if test="settFeeamt != null" >
+                SETT_FEEAMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="dealno != null" >
@@ -302,6 +312,12 @@
             <if test="unitInt != null" >
                 #{unitInt,jdbcType=DECIMAL},
             </if>
+            <if test="dealFeeamt != null" >
+                #{dealFeeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeamt != null" >
+                #{settFeeamt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfTradSecdeal" >
@@ -309,12 +325,12 @@
         YIELD_8, CNO, FACEAMT, PRINAMT, SETTAMT, PRODUCT, PRODTYPE, TRAD, CONVINTAMT, EFFECTFLAG, 
         BROK, INPUTDATE, DEALDATE, SETTDATE, REVDATE, UPDATECOUNTER, FEDEALNO, DEALTEXT, 
         LSTMNTDATE, CLIENTTRADER, COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER, STRIKEYIELD, 
-        DIRTYPRICE, ACCRUEDINTERESTAMT, SETTLE_SPEED, UNIT_INT)
+        DIRTYPRICE, ACCRUEDINTERESTAMT, SETTLE_SPEED, UNIT_INT, DEAL_FEEAMT, SETT_FEEAMT)
         select DEALNO, SECID, PROFOLIO_ID, CCY, INVTYPE, PS, PRICE_8, 
             YIELD_8, CNO, FACEAMT, PRINAMT, SETTAMT, PRODUCT, PRODTYPE, TRAD, CONVINTAMT, EFFECTFLAG, 
             BROK, INPUTDATE, DEALDATE, SETTDATE, REVDATE, UPDATECOUNTER, FEDEALNO, DEALTEXT, 
             LSTMNTDATE, CLIENTTRADER, COUNTERTELEPHONE, OURDEPOSITACCOUNTNUMBER, STRIKEYIELD, 
-            DIRTYPRICE, ACCRUEDINTERESTAMT, SETTLE_SPEED, UNIT_INT
+            DIRTYPRICE, ACCRUEDINTERESTAMT, SETTLE_SPEED, UNIT_INT, DEAL_FEEAMT, SETT_FEEAMT
              from INTERF_TRAD_SECDEAL
              where 1 = 1 and DEALNO = #{dealno,jdbcType=VARCHAR}
     </insert>
@@ -420,6 +436,12 @@
             <if test="unitInt != null" >
                 UNIT_INT = #{unitInt,jdbcType=DECIMAL},
             </if>
+            <if test="dealFeeamt != null" >
+                DEAL_FEEAMT = #{dealFeeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeamt != null" >
+                SETT_FEEAMT = #{settFeeamt,jdbcType=DECIMAL},
+            </if>
         </set>
         where DEALNO = #{dealno,jdbcType=VARCHAR}
     </update>
@@ -457,7 +479,9 @@
             DIRTYPRICE = #{dirtyprice,jdbcType=DECIMAL},
             ACCRUEDINTERESTAMT = #{accruedinterestamt,jdbcType=DECIMAL},
             SETTLE_SPEED = #{settleSpeed,jdbcType=VARCHAR},
-            UNIT_INT = #{unitInt,jdbcType=DECIMAL}
+            UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+            DEAL_FEEAMT = #{dealFeeamt,jdbcType=DECIMAL},
+            SETT_FEEAMT = #{settFeeamt,jdbcType=DECIMAL}
         where DEALNO = #{dealno,jdbcType=VARCHAR}
     </update>
 </mapper>

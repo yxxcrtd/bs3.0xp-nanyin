@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
-import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.batch.manualvoucher.dao.ManualVoucherMapper;
 import com.joyintech.tams.valuation.batch.manualvoucher.dto.ManualVoucherReaderResult;
 
@@ -46,11 +46,15 @@ public class ManualVoucherReader extends BaseReader<ManualVoucherReaderResult>{
     	Map<String, Object> params = this.getParams();
     	String taskId =  (String) params.get("taskId");
     	if(taskId.equals("201")){
-    		params.put("accountOder", "01");
+    		params.put("accountOder", DictCodeListExt3.记账顺序_交易前.getValue());
     	}else{
-    		params.put("accountOder", "02");
+    		params.put("accountOder", DictCodeListExt3.记账顺序_计提后.getValue());
     	}
-        return manualVoucherMapper.getTradVouchDealList(params);
+        List<ManualVoucherReaderResult> list = manualVoucherMapper.getTradVouchDealList(params);
+    	for (ManualVoucherReaderResult result:list){
+    	    result.setProdId(result.getBooksetId());
+        }
+    	return list;
     }
 
 }

@@ -34,6 +34,16 @@ public interface EtrSecPosAutoGenerationMapper {
      * @since 1.0
      */
     int deleteTodaySecPosData(Map<String, Object> paramMap);
+    
+    /**
+     * 删除批处理执行日的标准券持仓数据
+     *
+     * @param paramMap 参数
+     * @return 执行结果
+     * @see
+     * @since 1.0
+     */
+    int deleteTodayStaSecPosData(Map<String, Object> paramMap);
 
     /**
      * 生成当日持仓数据
@@ -44,4 +54,14 @@ public interface EtrSecPosAutoGenerationMapper {
      * @since 1.0
      */
     int insertTodaySecPosData(Map<String, Object> paramMap);
+    
+    /**
+     * 生成当日标准券持仓数据
+     *
+     * @param paramMap 参数
+     * @return 执行结果
+     * @see
+     * @since 1.0
+     */
+    int insertTodayStaSecPosData(Map<String, Object> paramMap);
 }

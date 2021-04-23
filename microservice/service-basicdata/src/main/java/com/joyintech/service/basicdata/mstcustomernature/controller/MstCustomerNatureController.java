@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @RestController("MstCustomerNatureCtr_dtx")
 @RequestMapping("/MstCustomerNature")
-public class MstCustomerNatureController  {
+class MstCustomerNatureController  {
 
     /**
      *  客服性质管理业务类

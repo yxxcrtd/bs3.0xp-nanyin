@@ -11,7 +11,9 @@
 package com.joyintech.service.entrust.common.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,5 +90,44 @@ public class EntrustCommonBaseController {
     @GetMapping("findInvAim/{portfolioId}/{finprodId:.+}")
     public String findInvAim(@PathVariable("portfolioId") String portfolioId, @PathVariable("finprodId") String finprodId) {
         return baseEtrInvestInfoServiceImpl.findInvAim(portfolioId, finprodId);
+    }
+	
+	/**
+     * 插入指令流程中的数据
+     * @param entity
+     * @return
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doInsertEtrFlow")
+    public boolean doInsertEtrFlow(@RequestBody
+                                       BaseEtrInvestInfoDto entity){
+        try {
+            baseEtrInvestInfoServiceImpl.newDelegateFlow(entity);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    /**
+     * 插入指令流程中的数据
+     * @param param
+     * @return
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doDeleteEtrFlow")
+    public boolean doDeleteEtrFlow(@RequestBody
+                                       Map<String,Object> param){
+        try {
+            baseEtrInvestInfoServiceImpl.deleteDelegateFlow(param);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

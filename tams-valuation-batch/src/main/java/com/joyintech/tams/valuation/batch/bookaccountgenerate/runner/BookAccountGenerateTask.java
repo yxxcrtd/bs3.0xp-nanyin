@@ -132,6 +132,8 @@ public class BookAccountGenerateTask extends BatchBaseService {
         params.put("seqNo", this.getBatchExecuteDetail().getSeqNo());
         params.put("taskId", this.getBatchExecuteInfo().getTaskId());
         params.put(BookConstant.IS_SUB_BOOKSET, dimValueMap.get(BookConstant.IS_SUB_BOOKSET));
+        params.put("bottomLevel", BookConstant.MAX_SUBJECT_LEVEL);
+        
         // params.put("booksetIdList", new ArrayList<String>(bookSetIds));
         // 各步骤设置参数
         step1Reader.setParams(params);

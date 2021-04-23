@@ -155,8 +155,66 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     private String industry;
 
     private String industry2;
+    
+    private String isNetSett;
+    
+    private String tradePlat;
+    
+    /**
+     * 是否私募债
+     */
+    private String isPPB;
+    private String isPPBStr;
+    
+    /**
+     * 是否净价交易
+     */
+    private String isNetprice;
+    private String isNetpriceStr;
+    
 
-    @NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
+    public String getIsNetSett() {
+		return isNetSett;
+	}
+
+	public void setIsNetSett(String isNetSett) {
+		this.isNetSett = isNetSett;
+	}
+
+	public String getTradePlat() {
+		return tradePlat;
+	}
+
+	public void setTradePlat(String tradePlat) {
+		this.tradePlat = tradePlat;
+	}
+
+	@NotEmpty(fieldName = "FinBondTargetAsset002.isPpb", groups = {ValidateGroupEdit.class})
+	public String getIsPPB() {
+		return isPPB;
+	}
+	
+	public String getIsPPBStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsPPB());
+    }
+
+	public void setIsPPB(String isPPB) {
+		this.isPPB = isPPB;
+	}
+
+	public String getIsNetprice() {
+		return isNetprice;
+	}
+
+	public void setIsNetprice(String isNetprice) {
+		this.isNetprice = isNetprice;
+	}
+	
+	public String getIsNetpriceStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsNetprice());
+    }
+
+	@NotEmpty(fieldName = "BussRepEquityInfo.repAssetType", groups = {ValidateGroupEdit.class})
     public String getRepAssetType() {
         return repAssetType;
     }

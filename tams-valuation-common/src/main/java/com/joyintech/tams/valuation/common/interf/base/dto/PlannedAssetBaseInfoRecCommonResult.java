@@ -13,15 +13,7 @@ package com.joyintech.tams.valuation.common.interf.base.dto;
 import java.util.ArrayList;
 import java.util.List;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.common.base.entity.MstBenchmarkCompo;
-import com.joyintech.tams.common.base.entity.MstBenchmarkInfo;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.common.base.entity.*;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -74,6 +66,11 @@ public class PlannedAssetBaseInfoRecCommonResult extends BaseEntity {
      * 日志
      */
     private List<ValInterflog> valInterflog = new ArrayList<ValInterflog>();
+
+    /**
+     * 标的类金融产品扩展表
+     */
+    private List<FinProductAdd> listValFinProductExt = new ArrayList<FinProductAdd>();
 
     /**
      * 获取 listValFinProduct
@@ -234,4 +231,12 @@ public class PlannedAssetBaseInfoRecCommonResult extends BaseEntity {
 	}
     
     /**add by wujie on 20180822 end**/
+
+    public List<FinProductAdd> getListValFinProductExt() {
+        return listValFinProductExt;
+    }
+
+    public void setListValFinProductExt(List<FinProductAdd> listValFinProductExt) {
+        this.listValFinProductExt = listValFinProductExt;
+    }
 }

@@ -1116,4 +1116,24 @@ public class TrdCommonBaseService extends BaseService {
         map.put("tradeIdL",tradeId);
         return trdCommonBaseMapper.checkRevokeBTrade(map)>0;
     }
+
+    // add by etliu 20210421 权益类资产相关代码合并 start
+    /**
+     * 根据资产代码查询流程中已录入金额
+     * @param map 查询参数
+     * @return BigDecimal
+     * @author chaowei
+     * @since 1.0
+     */
+    public BigDecimal queryWflPrinAmtByAssetId(Map<String,Object> map) {
+        String finprod_id = (String) map.get("finprod_id");
+        if(StringUtil.isEmpty(finprod_id)){
+            return BigDecimal.ZERO;
+        }
+        map.put("TRADE_STATUS", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        BigDecimal wflPrinAmt = trdCommonBaseMapper.queryWflPrinAmtByAssetId(map);
+        return wflPrinAmt;
+    };
+    // add by etliu 20210421 权益类资产相关代码合并 end
 }

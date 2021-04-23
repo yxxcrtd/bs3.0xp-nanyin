@@ -362,6 +362,8 @@ public class RepoNDealDrawBookDetailProcessService {
             accountSceneMap.put(BookConstant.TYPE_1, dealInfoForTarget.getType1());
             // 分类2 - 变量.交易信息.分类2
             accountSceneMap.put(BookConstant.TYPE_2, dealInfoForTarget.getType2());
+            /**modify by yanya on 20201215 回购计提增加元素，利息计提分支：交易市场**/
+            accountSceneMap.put(BookConstant.TRADE_MARKET, dealInfoForTarget.getTradeMarket());
 
             // 交易标的DTO.金融产品类型 = “债券质押式正回购”
             if (DictCodeListExt1.金融产品类型_债券质押式正回购.getValue().equals(dto.getBusiDetailType())) {// 分录场景为【债券质押式正回购】
