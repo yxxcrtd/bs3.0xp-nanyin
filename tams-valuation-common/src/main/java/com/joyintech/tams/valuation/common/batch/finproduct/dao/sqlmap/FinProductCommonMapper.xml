@@ -503,7 +503,7 @@
 	<select id="getTargetPerfRewardRuleDetailList"
 		resultType="com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetPerfRewardCalRuleDetail"
 		parameterType="java.util.Map">
-		SELECT
+<!-- 	SELECT
 		CASH_ID AS cashId, /**现金流代码**/
 		EFF_DATE AS effDate, /**生效日期**/
 		LEV AS "LEVEL", /**层级**/
@@ -525,7 +525,34 @@
 		AND
 		EFF_DATE =
 		#{effDate,jdbcType=DATE} /**生效日期**/
-		ORDER BY "LEVEL" ASC
+		ORDER BY "LEVEL" ASC 
+		-->
+		SELECT a.CASH_ID       AS cashId, /**现金流代码**/
+		       a.EFF_DATE      AS effDate, /**生效日期**/
+		       a.LEV           AS "LEVEL", /**层级**/
+		       a.BASE_RULE_ID  AS basicRate, /**基准利率**/
+		       a."COEFFICIENT", /**调整系数**/
+		       a.SPREAD_RATE   AS spreadRate, /**利差**/
+		       a.CHARGE_RATIO  AS chargeRatio, /**银行收取比例**/
+		       a.SALE_RATIO    AS saleRatio, /**研发部门收取比例**/
+		       intRateInfo.intRate  as /**基准利率**/
+		  FROM FIN_FLOAT_CALC_RULE_DETAIL a
+		  left join (SELECT INT_RATE_ID AS intRateId, /**行情代码**/
+		                    EFF_DATE    AS effDate, /**生效日**/
+		                    INT_RATE    AS intRate /**利率**/
+		               FROM (SELECT rateInfo.INT_RATE_ID,
+		                            rateInfo.EFF_DATE,
+		                            rateInfo.INT_RATE,
+		                            ROW_NUMBER() OVER(PARTITION BY rateInfo.INT_RATE_ID ORDER BY rateInfo.EFF_DATE desc) AS rn
+		                       FROM MST_INT_RATE_INFO rateInfo
+		                      WHERE rateInfo.EFF_DATE <![CDATA[<=]]>#{effDate}
+		                      ORDER BY rateInfo.EFF_DATE desc)
+		              WHERE rn = 1) intRateInfo
+		    on intRateInfo.intRateId = a.base_rule_id
+		 WHERE 1 = 1
+		   AND a.CASH_ID = #{cashId,jdbcType=VARCHAR} 
+		   AND a.EFF_DATE = #{effDate,jdbcType=DATE}
+		 ORDER BY "LEVEL" ASC   
 	</select>
 
 	<!-- 交易信息的查询 -->

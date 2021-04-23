@@ -32,6 +32,8 @@
         <result column="CLOSE_DAYS" property="closeDays" jdbcType="DECIMAL" />
         <result column="FACE_VALUE" property="faceValue" jdbcType="DECIMAL" />
         <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <!-- add by yanya on 20210318 增加数据来源-->
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
     </resultMap>
       <sql id="Base_Column_List" >
         FINPROD_ID FINPROD_ID, SALE_DEPARTMENT SALE_DEPARTMENT, SALE_LAYER SALE_LAYER, SALE_PERIOD SALE_PERIOD, 
@@ -41,19 +43,20 @@
         SALE_MODE SALE_MODE, CHB_ID CHB_ID, TMPL_ID TMPL_ID, ISSUE_STATUS ISSUE_STATUS, IS_COMPOUND_INT IS_COMPOUND_INT, 
         TERM_TYPE TERM_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, ISSUE_STATUS_REMARK ISSUE_STATUS_REMARK, 
-        CLOSE_DAYS CLOSE_DAYS, FACE_VALUE FACE_VALUE, PORTFOLIO_ID PORTFOLIO_ID
+        CLOSE_DAYS CLOSE_DAYS, FACE_VALUE FACE_VALUE, PORTFOLIO_ID PORTFOLIO_ID, DATA_SOURCE DATA_SOURCE
     </sql>
     <insert id="insertBatch" parameterType="java.util.List" >
         insert into FIN_PRODUCT_ADD (FINPROD_ID, SALE_DEPARTMENT, SALE_LAYER, 
-            SALE_PERIOD, PUR_SPEED, RED_SPEED, 
-            IS_SEC_BOND, WIND_ID, IS_AUTO_UPDATE, 
-            PROD_REGIST_CODE, IS_CYCLE, IS_LAY, 
-            LAY_TYPE, INVEST_NATURE, PROFIT_FLAG, 
-            SALE_MODE, CHB_ID, TMPL_ID, 
-            ISSUE_STATUS, IS_COMPOUND_INT, TERM_TYPE, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME, ISSUE_STATUS_REMARK, 
-            CLOSE_DAYS, FACE_VALUE, PORTFOLIO_ID
+                SALE_PERIOD, PUR_SPEED, RED_SPEED,
+                IS_SEC_BOND, WIND_ID, IS_AUTO_UPDATE,
+                PROD_REGIST_CODE, IS_CYCLE, IS_LAY,
+                LAY_TYPE, INVEST_NATURE, PROFIT_FLAG,
+                SALE_MODE, CHB_ID, TMPL_ID,
+                ISSUE_STATUS, IS_COMPOUND_INT, TERM_TYPE,
+                CREATE_USER, CREATE_DEPT, CREATE_TIME,
+                UPDATE_USER, UPDATE_TIME, ISSUE_STATUS_REMARK,
+                CLOSE_DAYS, FACE_VALUE, PORTFOLIO_ID,
+                IS_QTZQ, DATA_SOURCE, TRM_FUND_TYPE
             )
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close=" from dual)">
@@ -66,7 +69,12 @@
             #{item.issueStatus,jdbcType=VARCHAR}, #{item.isCompoundInt,jdbcType=VARCHAR}, #{item.termType,jdbcType=VARCHAR}, 
             #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
             #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.issueStatusRemark,jdbcType=VARCHAR}, 
-            #{item.closeDays,jdbcType=DECIMAL}, #{item.faceValue,jdbcType=DECIMAL}, #{item.portfolioId,jdbcType=VARCHAR}
+            #{item.closeDays,jdbcType=DECIMAL}, #{item.faceValue,jdbcType=DECIMAL}, #{item.portfolioId,jdbcType=VARCHAR},
+            /** add by yanya on 20201222 增加是否其他债券字段**/
+            #{item.isQtzq,jdbcType=VARCHAR},
+            /** add by yanya on 20210318 增加数据来源**/
+            #{item.dataSource,jdbcType=VARCHAR},
+            #{item.trmFundType,jdbcType=VARCHAR}
         </foreach>
     </insert>
     

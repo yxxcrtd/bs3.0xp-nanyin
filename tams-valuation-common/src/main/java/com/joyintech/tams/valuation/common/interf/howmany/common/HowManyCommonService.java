@@ -159,8 +159,12 @@ public class HowManyCommonService {
 			bokBussDetsub = new BokBussDetsub();
 			//变量.业务明细科目.四级科目号 =	输入.账套科目.科目号 + 	输入.账务明细代码表.四级科目尾号
 			bokBussDetsub.setDetailSubjectNo(bokSubject.getSubjectNo()+(bokDetailId.getDetailSubjectNoTail()==null?"":bokDetailId.getDetailSubjectNoTail()));
-			//变量.业务明细科目.四级科目名称 = 输入.账套科目.科目名称 + 输入.账务明细代码表.四级科目尾号名称	
-			bokBussDetsub.setDetailSubjectName(bokSubject.getSubjectName());
+			/** modify by yanya on 20210108 四级科目号修正(科目名称 + 四级科目尾号名称) start**/
+			//变量.业务明细科目.四级科目名称 = 输入.账套科目.科目名称 + 输入.账务明细代码表.四级科目尾号名称
+			//bokBussDetsub.setDetailSubjectName(bokSubject.getSubjectName());
+			bokBussDetsub.setDetailSubjectName(bokSubject.getSubjectName() +
+					(StringUtil.isNotEmpty(bokDetailId.getDetailSubnameTail()) ? bokDetailId.getDetailSubnameTail() : ""));
+			/** modify by yanya on 20210108 四级科目号修正(科目名称 + 四级科目尾号名称) end**/
 			//变量.业务明细科目.四级科目尾号 =	输入.账务明细代码表.四级科目尾号	
 			bokBussDetsub.setDetailSubjectNoTail(bokDetailId.getDetailSubjectNoTail());
 			//变量.业务明细科目.四级科目尾号名称 =	输入.账务明细代码表.四级科目尾号名称

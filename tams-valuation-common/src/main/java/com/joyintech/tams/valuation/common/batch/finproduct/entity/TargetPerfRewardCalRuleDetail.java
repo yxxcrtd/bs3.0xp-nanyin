@@ -92,6 +92,15 @@ public class TargetPerfRewardCalRuleDetail {
      * 修改时间
      */
     private Date updateTime;
+    /**
+     * 按年化收益率控制是否扣收
+     */
+    private String isYearBackDeduct;
+    /**
+     * 按年化收益率控制是否扣收
+     */
+    private BigDecimal intRate;
+    
 
     /**
      * 获取 createUser
@@ -264,5 +273,23 @@ public class TargetPerfRewardCalRuleDetail {
     public void setSaleRatio(BigDecimal saleRatio) {
         this.saleRatio = saleRatio;
     }
+
+	public String getIsYearBackDeduct() {
+		return isYearBackDeduct;
+	}
+
+	public void setIsYearBackDeduct(String isYearBackDeduct) {
+		this.isYearBackDeduct = isYearBackDeduct;
+	}
+
+	public BigDecimal getIntRate() {
+		return intRate;
+	}
+
+	public void setIntRate(BigDecimal intRate) {
+		this.intRate = intRate;
+	}
+    
+    
 
 }
