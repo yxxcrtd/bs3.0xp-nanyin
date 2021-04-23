@@ -106,7 +106,7 @@
         SUBMIT_FEEDBACK_STATUS,EQUITY_CONF_DATE, UPDATE_USER, UPDATE_TIME,
         CREATE_USER, CREATE_TIME, REPORT_NO,
         SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
-        <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
+        <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual) aa">
             #{item.seqno,jdbcType=VARCHAR}, #{item.submitNum,jdbcType=VARCHAR}, #{item.submitType,jdbcType=VARCHAR},
             #{item.submitFeedbackStatus,jdbcType=VARCHAR},#{item.equityConfDate,jdbcType=DATE}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
             #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.reportNo,jdbcType=VARCHAR},
