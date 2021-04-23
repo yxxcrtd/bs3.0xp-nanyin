@@ -144,6 +144,8 @@ public class BookDetailSubjectCurrentReaderService {
                 valBokBookdetailBatch.setBookOrder(item.getBookOrder());
                 //分支序号
                 valBokBookdetailBatch.setBranch(item.getBranch());
+                //账务明细代码
+                valBokBookdetailBatch.setBokDetailId(item.getBokDetailId());
                 valBokBookdetailList.add(valBokBookdetailBatch);
                 result.setValBokBookdetailList(valBokBookdetailList);
                 result.setBooksetId(item.getBooksetId());

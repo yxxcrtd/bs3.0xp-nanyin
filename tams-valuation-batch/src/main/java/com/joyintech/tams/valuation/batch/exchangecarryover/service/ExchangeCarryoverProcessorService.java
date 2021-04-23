@@ -124,6 +124,7 @@ public class ExchangeCarryoverProcessorService {
         searchCurrDto.setBookDate(acctEntity.getBookDate());
         searchCurrDto.setSubjectTypeList(listSubjectType);
         searchCurrDto.setBaseSubjectNatureList(listBaseSubjectNature);
+        searchCurrDto.setBranchHandleFlag("01");
         List<SubjectBalance> listCurrBalance = accountingCommonService.getSubjectLatestBalance(
                 searchCurrDto);
 
@@ -244,7 +245,7 @@ public class ExchangeCarryoverProcessorService {
             // 账务明细.账务明细代码 = 损益entity.账务明细代码
             bokDetail.setBokDetailId(item.getBokDetailId());
             // 账务明细.分支序号 = 损益entity.分支序号 (没有)
-            bokDetail.setBranch(0L);
+            bokDetail.setBranch(item.getBranch()==null?0L:item.getBranch());
             // 账务明细.科目号 = 损益entity.科目号
             bokDetail.setSubjectNo(item.getSubjectNo());
             // 账务明细.四级科目号 = 损益entity.四级科目号

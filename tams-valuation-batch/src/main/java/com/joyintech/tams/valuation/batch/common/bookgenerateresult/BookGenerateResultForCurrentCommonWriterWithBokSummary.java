@@ -10,9 +10,13 @@
 
 package com.joyintech.tams.valuation.batch.common.bookgenerateresult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.joyintech.tams.valuation.batch.common.accountingmethod.dao.AccountingMethodMapper;
+import com.joyintech.tams.valuation.common.batch.bookcommon.dao.BokBatchMarketwarningInfoWriterMapper;
+import com.joyintech.tams.valuation.common.batch.losscommon.service.LossCommonService;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +26,14 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.common.base.dao.BokBatchMarketwarningInfoMapper;
-import com.joyintech.tams.common.base.dao.BokStatDetPosiitonMapper;
+import com.joyintech.tams.common.base.dao.BokStatLossPosiitonMapper;
 import com.joyintech.tams.common.base.entity.BokBatchMarketwarningInfo;
 import com.joyintech.tams.common.base.entity.BokBookdetailCurrentExt;
 import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookAccountGenLogic;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.BookGenerateResultWithBokSummary;
 import com.joyintech.tams.valuation.batch.common.base.dao.BaseAccountWriterMapper;
+import com.joyintech.tams.valuation.batch.common.base.entity.extcommon.ValBokBookdetailBatch;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 
 /**
@@ -53,8 +57,8 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
 	/**
 	 * 账务汇总表（账套）表,数据库操作
 	 */
-	@Autowired
-	private BokStatDetPosiitonMapper bokSummaryTableMapper;
+/*	@Autowired
+	private BokStatDetPosiitonMapper bokSummaryTableMapper;*/
 	
     /**
      * BokKeepaccountdetailMapper
@@ -64,7 +68,7 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
     
     
     @Autowired
-    private BokBatchMarketwarningInfoMapper bokBatchMarketwarningInfoMapper;
+    private BokBatchMarketwarningInfoWriterMapper bokBatchMarketwarningInfoMapper;
     
 
 	@SuppressWarnings("unused")
@@ -72,6 +76,10 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
 
     @Autowired
     private AccountingMethodMapper accountingMethodMapper;
+
+	@Autowired
+	private LossCommonService lossCommonService;
+
 
 
     /**
@@ -86,12 +94,15 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
   
         
         // 第一步：此处和【BookGenerateResultForCurrentCommonWriter】逻辑一致
+        List<ValBokBookdetailBatch> valBokBookdetailBatchList = new ArrayList<>();
         // 循环记账凭证list，对每个记账凭证进行操作，
         for (BookGenerateResultWithBokSummary bookGenerateResult : resultList) {
             // 插入记账凭证主表信息 和 插入记账凭证明细表信息
             bookAccountGenLogic.insertKeepAccount(bookGenerateResult);  
+            if (bookGenerateResult.getValBokBookdetailBatch() != null) {
+			    valBokBookdetailBatchList.addAll(bookGenerateResult.getValBokBookdetailBatch());
+			}
         }
-        
         //第二步：循环数据，插入【账务汇总表（账套）】表
         for(BookGenerateResultWithBokSummary bookGenerateResult : resultList){
         	this.insertBokSummary(bookGenerateResult.getBokSummaryList());
@@ -106,6 +117,10 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
         for(BookGenerateResultWithBokSummary bookGenerateResult : resultList){
             this.insertBokBatchMarketwarningInfo(bookGenerateResult.getBokBatchMarketwarningInfoList());
         }
+      // 第五步：循环数据，插入【统计分析明细表（资产减值）】数据
+      for(BookGenerateResultWithBokSummary bookGenerateResult : resultList){
+    	  lossCommonService.insertBokStatLossPosiitonList(bookGenerateResult.getBokStatLossPosiitonList());
+      }
 
     }
     
@@ -122,10 +137,15 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
     	//数据存在
     	if(bokBatchMarketwarningInfoList!=null && !bokBatchMarketwarningInfoList.isEmpty()){
     	    //循环列表进行插入
-            for(BokBatchMarketwarningInfo vo: bokBatchMarketwarningInfoList){
-                //插入
-                sucessNum = sucessNum + bokBatchMarketwarningInfoMapper.insert(vo);
+//            for(BokBatchMarketwarningInfo vo: bokBatchMarketwarningInfoList){
+//                //插入
+//                sucessNum = sucessNum + bokBatchMarketwarningInfoMapper.insert(vo);
+//            }
+            List<List<BokBatchMarketwarningInfo>> list = DataHandleUtil.splitList(bokBatchMarketwarningInfoList);
+            for(List<BokBatchMarketwarningInfo> bokBatchMarketwarningInfos : list){
+                bokBatchMarketwarningInfoMapper.insertbatch(bokBatchMarketwarningInfos);
             }
+
     	}
     	return sucessNum;
 	}
@@ -143,22 +163,11 @@ public class BookGenerateResultForCurrentCommonWriterWithBokSummary extends Base
     	
     	//数据存在
     	if(bokSummaryList!=null && !bokSummaryList.isEmpty()){
-    	    //循环列表进行插入
-            for(BokStatDetPosiiton vo: bokSummaryList){
 
-                // update by: 当重复跑某天的批，出现序列不同的【统计分析明细表（账务明细）】重复数据。 故重写删除，删除主键不包含序列。 yangjian 2019/06/17============beign
-                //判断当前数据是否存在，若存在直接进行删除(因为有序列存在，理论上是不会有重复的。 故为了方便，发现存在的直接进行删除操作。)
-//                BokStatDetPosiiton bokSummaryTable = bokSummaryTableMapper.selectByPrimaryKey(vo);
-//                if(bokSummaryTable!=null){
-//                    bokSummaryTableMapper.deleteByPrimaryKey(vo);
-//                }
-
-                //不包含【处理序列】的主键删除
-                accountingMethodMapper.deleteBokStatDetPosiiton(vo);
-                // update by: 当重复跑某天的批，出现序列不同的【统计分析明细表（账务明细）】重复数据。 故重写删除，删除主键不包含序列。 yangjian 2019/06/17============end
-
-                //插入
-                sucessNum = sucessNum + bokSummaryTableMapper.insert(vo);
+            List<List<BokStatDetPosiiton>> list = DataHandleUtil.splitList(bokSummaryList);
+            for(List<BokStatDetPosiiton> bokStatDetPosiitons : list){
+                accountingMethodMapper.deleteBokStatDetPosiitonBatch(bokStatDetPosiitons);
+                accountingMethodMapper.insertBokStatDetPosiitonBatch(bokStatDetPosiitons);
             }
     	}
     	

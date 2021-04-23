@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.common.base.entity.BokStatBokPosition;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.StayDrawSubprdEntity;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListTableId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
-import com.joyintech.tams.common.base.entity.BokStatBokPosition;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 净值型产品TA交易入账 process相关业务处理
@@ -449,6 +450,31 @@ public class TaDealAccountsProcessorService {
         //
         // // 定义变量：净值日未实现损益 = 未分配利润-未实现+公允价值变动损益+汇兑
         // BigDecimal jzrwsxsy = ArithmeticUtil.doAdd(wfplr_wsx, gyjzbdsy, hzsy);
+
+
+        //modify jinmaodong 20210312 START
+        // 上农商反馈问题修复：
+        // 重现步骤
+        //1.产品损益结转频率设置为月结
+        //2.产品投资FVTPL\FVOCI资产
+        //3.产品进行申购
+        //测试结果
+        //1.损益平准金计算没有包含上公允价值变动损益
+        //原因定位：在申赎交易出账计算损益平准金未实现的时候，公式如下：
+        //【损益平准金-未实现】=净值日未实现损益*交易金额/净值日资产净值；
+        //净值日为交易信息上的“净值日”；
+        //净值日未实现损益=（41040302未分配利润（未实现））+（6101（公允价值变动损益））+（6112（汇兑损益））+（40110101损益平准金（未实现）历史余额）；
+        //【损益平准金-已实现】= 交易金额 - 实收资本 - 【损益平准金-未实现】；
+        //查询条件中带了产品的账务明细代码，导致查询不到6101和6112科目的余额（这些科目的账务明细代码是资产）；
+        //修复建议：根据产品类型进行判断：如果是非分层产品，则查询的时候不带账务明细代码；如果是分层产品，则做业务要求:损益结转频率必须设置为日结
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("booksetId", booksetId);
+        List<StayDrawSubprdEntity> stayDrawSubprdEntityList = accountingCommonService.querySubBokAcctInfo(params);
+        //如果核算分层信息为空，或者只有一条，则认为该产品为非分层产品，则查询未实现损益时，不带账务明细代码查。
+        if(CollectionUtils.isEmpty(stayDrawSubprdEntityList)||stayDrawSubprdEntityList.size()==1){
+            searchDto.setBokDetailId(null);
+        }
+        //modify jinmaodong 20210312 END
         ArrayList<String> baseSubjectNatureList = new ArrayList<>();
         baseSubjectNatureList.addAll(
                 accountingCommonService.getValSubjectNatureList(DictCodeListExt1.分组代码_损益平准交_未实现对应查询科目.getValue()));

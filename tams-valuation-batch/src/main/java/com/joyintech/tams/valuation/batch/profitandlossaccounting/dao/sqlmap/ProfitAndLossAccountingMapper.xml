@@ -69,7 +69,8 @@
 	SELECT																						
 		bs.SUBJECT_NO subjectNo,
 		bs.BASE_SUBJECT_NATURE baseSubjectNature,
-        bs.BAL_FLAG balFlag
+        bs.BAL_FLAG balFlag,
+        bs.SUBJECT_TYPE subjectType
 	FROM
 		BOK_SUBJECT bs,BOK_BOOKSET bb
 	WHERE

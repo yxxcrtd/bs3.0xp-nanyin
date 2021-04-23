@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.BokBookdetailCurrentExt;
 import com.joyintech.tams.common.base.entity.BokBussDetsub;
+import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
 import com.joyintech.tams.common.base.entity.BokSubjectDetail;
 import com.joyintech.tams.valuation.batch.common.base.entity.extcommon.ValBokBookdetailBatch;
 
@@ -77,4 +78,12 @@ public interface BaseAccountWriterMapper {
     void insertBokBookdetailCurrentExt(List<BokBookdetailCurrentExt> BokBookdetailCurrentExt);
 
     int mergeValBokBussDetsub(List<BokBussDetsub> list);
+    /**
+     * 插入统计分析明细表（资产减值）
+     * @param valBokSubjectDetail 批处理用账务明细
+     * @see
+     * @since 1.0
+     */
+    void insertBokStatLossPosiiton(List<BokStatLossPosiiton> bokStatLossPosiiton);
+
 }

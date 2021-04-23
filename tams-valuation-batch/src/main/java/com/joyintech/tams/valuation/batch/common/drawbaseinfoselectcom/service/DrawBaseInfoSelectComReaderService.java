@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.BokMatchRlat;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.dao.AccountingMethodMapper;
 import org.apache.commons.collections.CollectionUtils;
@@ -86,7 +87,10 @@ public class DrawBaseInfoSelectComReaderService {
         // 匹配类型
         sqlMap.put("matchType", DictCodeListExt1.匹配类型_任务代码_科目性质.getValue());
         sqlMap.put("matchType2", DictCodeListExt1.匹配类型_任务代码_计提成本会计场景.getValue());
-
+        /** add by caoguo on 20201031 for 增加减值P3的枚举传入 strat */
+        sqlMap.put("stageP3", DictCodeListExt3.阶段_买入后出现减值_P3.getValue());
+        /** add by caoguo on 20201031 end*/
+        sqlMap.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         sqlMap.putAll(param);
         // 2.1、从当前表中，读取计提基础信息数据
         // List<DrawBaseInfoSelectComDTO> listCurrDrawBaseInfoSelectComDTO = new

@@ -332,4 +332,29 @@
         )
     </insert>
 
+        <!-- 插入统计分析明细表（资产减值）  -->
+    <insert id="insertBokStatLossPosiiton">
+        insert into BOK_STAT_LOSS_POSIITON (SEQNO, BOK_SEQNO, BOOKSET_ID, 
+            HAPPEN_DATE, BOOK_DATE, BOOKSET_DATE, 
+            BOK_DETAIL_ID, BUSI_ID, SCHEME_DETAIL_ID, 
+            TRADE_ID, LOSS_EXE_TYPE, CCY, 
+            B_CCY, TDY_COST_AMT, TDY_INT_AMT, 
+            TDY_LOSSAMT_ADD, TDY_LOSSAMT, TDY_LOSSAMT_ADD_B, 
+            TDY_LOSSAMT_B, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.seqno,jdbcType=VARCHAR}, #{item.bokSeqno,jdbcType=VARCHAR}, #{item.booksetId,jdbcType=VARCHAR}, 
+            #{item.happenDate,jdbcType=DATE}, #{item.bookDate,jdbcType=DATE}, #{item.booksetDate,jdbcType=DATE}, 
+            #{item.bokDetailId,jdbcType=VARCHAR}, #{item.busiId,jdbcType=VARCHAR}, #{item.schemeDetailId,jdbcType=VARCHAR}, 
+            #{item.tradeId,jdbcType=VARCHAR}, #{item.lossExeType,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR}, 
+            #{item.bCcy,jdbcType=VARCHAR}, #{item.tdyCostAmt,jdbcType=DECIMAL}, #{item.tdyIntAmt,jdbcType=DECIMAL}, 
+            #{item.tdyLossamtAdd,jdbcType=DECIMAL}, #{item.tdyLossamt,jdbcType=DECIMAL}, #{item.tdyLossamtAddB,jdbcType=DECIMAL}, 
+            #{item.tdyLossamtB,jdbcType=DECIMAL}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, 
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+
+        </foreach>    
+    </insert>      
+
 </mapper>

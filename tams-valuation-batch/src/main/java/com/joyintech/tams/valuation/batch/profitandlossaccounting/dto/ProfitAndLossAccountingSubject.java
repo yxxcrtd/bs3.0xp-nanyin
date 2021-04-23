@@ -21,6 +21,14 @@ public class ProfitAndLossAccountingSubject {
      */
     private String baseSubjectNature;
     /**
+     * 余额方向
+     */
+    private String balFlag;
+    /**
+     * 科目类型
+     */
+    private String subjectType;
+    /**
      * 获取 subjectNo
      * @return subjectNo.
      */
@@ -51,6 +59,22 @@ public class ProfitAndLossAccountingSubject {
     public void setBaseSubjectNature(String baseSubjectNature) {
         this.baseSubjectNature = baseSubjectNature;
     }
+
+	public String getBalFlag() {
+		return balFlag;
+	}
+
+	public void setBalFlag(String balFlag) {
+		this.balFlag = balFlag;
+	}
+
+	public String getSubjectType() {
+		return subjectType;
+	}
+
+	public void setSubjectType(String subjectType) {
+		this.subjectType = subjectType;
+	}
     
     
 }

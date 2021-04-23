@@ -465,15 +465,17 @@ public class FinProductCommonService {
                             }
                         }
                         //modify by mashukai 合并修改 TISHKBS-1631 20201123	start
-                        //理论估值日期
-                        String isHoliday = calculationCommonService.getIsHoliday(queryDate,targetFinProduct.getCalendarId());
-                        if("0".equals(isHoliday)){
-                            marketPriceDto.setSchemeValDate(queryDate);
-                        }else{
-                            marketPriceDto.setSchemeValDate(calculationCommonService.getCDate(queryDate,targetFinProduct.getCalendarId() ));
-                        }
+                	    if(queryDate != null){
+                             //理论估值日期
+                            String isHoliday = calculationCommonService.getIsHoliday(queryDate,targetFinProduct.getCalendarId());
+                            if("0".equals(isHoliday)){
+                                marketPriceDto.setSchemeValDate(queryDate);
+                            }else{
+                                marketPriceDto.setSchemeValDate(calculationCommonService.getCDate(queryDate,targetFinProduct.getCalendarId() ));
+                            }
+                    	}
                         //modify by mashukai 合并修改 TISHKBS-1631 20201123	end
-                    }
+					}
                 }
                 return marketPriceDto;
             }
@@ -984,6 +986,19 @@ public class FinProductCommonService {
                     return marketPriceDto;
                 }
             }
+            /**add by wujie on 20201015 start remark:计划类收益型资产改造**/
+            //市价查询-计划类收益型资产
+            else if (DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(queryType)) {
+                List<FinProductValuationDto> listFinProductValuationDto = finProductCommonMapper.getFinProValuation(
+                    queryDate, finprodMarketId, DictCodeList.基金类型_货币基金.getValue());
+                if (!CollectionUtils.isEmpty(listFinProductValuationDto)) {
+                    MarketPriceDto marketPriceDto = new MarketPriceDto();
+                    marketPriceDto.setValDate(listFinProductValuationDto.get(0).getValDate());
+                    marketPriceDto.setPrice(listFinProductValuationDto.get(0).getValuation());
+                    return marketPriceDto;
+                }
+            }
+            /**add by wujie on 20201015 end**/
             // 市价查询-债券--债券时估值市价不为空，否则不查
             else if (StringUtil.isNotEmpty(valuePrice)) {
                 // 变量.债券行情 = 【4.1】查询结果.get(0);

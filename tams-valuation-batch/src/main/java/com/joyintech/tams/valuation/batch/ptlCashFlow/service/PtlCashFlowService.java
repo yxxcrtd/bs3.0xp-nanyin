@@ -88,12 +88,12 @@ public class PtlCashFlowService {
 
 
         for(FinProductDealInfoComDTO dealDto:listFinProductDealInfoComDTONow) {
-            // 变量 - 交易信息（标的交易信息）
-            TradeInfoDto dealInfoForTarget = this.getTargetInfo(dealDto.getFinprodId(),dealDto.getFinprodType(),dealDto.getBranch());
-            // 保证获取的标的交易信息不为空
-            if (dealInfoForTarget == null) {
-                dealInfoForTarget = new TradeInfoDto();
-            }
+//            // 变量 - 交易信息（标的交易信息）
+//            TradeInfoDto dealInfoForTarget = this.getTargetInfo(dealDto.getFinprodId(),dealDto.getFinprodType(),dealDto.getBranch());
+//            // 保证获取的标的交易信息不为空
+//            if (dealInfoForTarget == null) {
+//                dealInfoForTarget = new TradeInfoDto();
+//            }
 
             AccountDriver ad = new AccountDriver();
             // 初始化定义 - 存放该笔记账的场景要素 map定义
@@ -116,7 +116,10 @@ public class PtlCashFlowService {
                 accountSceneMap = bookCommonLogic.transactionElementAssign(acctEntity, dealDto);
                 accountSceneMap.put("TRADE_MARKET", dealDto.getTradeMarket());
                 // 金融产品类型+交易方向+"交易登账"
-                String finprodTypeName = DictCodeList.from(DictCode.金融产品类型, dealDto.getFinprodType()).getCodeName();
+                String finprodTypeName  = "";
+                if(dealDto.getFinprodType()!=null){
+                    finprodTypeName = DictCodeList.from(DictCode.金融产品类型, dealDto.getFinprodType()).getCodeName();
+                }
                 String psName = DictCodeList.from(DictCode.交易方向, dealDto.getPs()).getCodeName();
                 accountSceneMap.put(BookConstant.BOOK_REMARK, finprodTypeName + psName + "交易登账");
 
@@ -143,7 +146,10 @@ public class PtlCashFlowService {
                 accountSceneMap = bookCommonLogic.transactionElementAssign(acctEntity, dealDto);
                 accountSceneMap.put("TRADE_MARKET", dealDto.getTradeMarket());
                 // 金融产品类型+交易方向+"交易登账"
-                String finprodTypeName = DictCodeList.from(DictCode.金融产品类型, dealDto.getFinprodType()).getCodeName();
+                String finprodTypeName  = "";
+                if(dealDto.getFinprodType()!=null){
+                    finprodTypeName = DictCodeList.from(DictCode.金融产品类型, dealDto.getFinprodType()).getCodeName();
+                }         
                 String psName = DictCodeList.from(DictCode.交易方向, dealDto.getPs()).getCodeName();
                 accountSceneMap.put(BookConstant.BOOK_REMARK, finprodTypeName + psName + "交易登账");
 
@@ -176,30 +182,30 @@ public class PtlCashFlowService {
     }
 
 
-    /**
-     * 调用共通方法：[标的类共通方法-查询交易信息]，获取标的交易信息
-     *
-     * @param finprodId 金融产品代码【必输项】
-     * @param finprodType 金融产品类型【必输项】
-     * @param branch 分支序号
-     * @return ValFinProductDeal 标的查询
-     * @see
-     * @since 1.0
-     */
-    private TradeInfoDto getTargetInfo(String finprodId, String finprodType, Long branch) {
-        // 定义返回值 - 标的交易信息
-        TradeInfoDto tradeInfoDtoForReturn = null;
-
-        // 调用共通方法：[标的类共通方法 - 交易信息查询]，获取标的交易信息
-        List<TradeInfoDto> tradeInfoDtoList = finProductCommonService.getTradeInfoDtoList(finprodId, finprodType, branch);
-
-        // 当查询结果不为空
-        if (tradeInfoDtoList != null && tradeInfoDtoList.size() > 0) {
-            // 默认取第一条标的信息
-            tradeInfoDtoForReturn = tradeInfoDtoList.get(0);
-        }
-
-        return tradeInfoDtoForReturn;
-    }
+//    /**
+//     * 调用共通方法：[标的类共通方法-查询交易信息]，获取标的交易信息
+//     *
+//     * @param finprodId 金融产品代码【必输项】
+//     * @param finprodType 金融产品类型【必输项】
+//     * @param branch 分支序号
+//     * @return ValFinProductDeal 标的查询
+//     * @see
+//     * @since 1.0
+//     */
+//    private TradeInfoDto getTargetInfo(String finprodId, String finprodType, Long branch) {
+//        // 定义返回值 - 标的交易信息
+//        TradeInfoDto tradeInfoDtoForReturn = null;
+//
+//        // 调用共通方法：[标的类共通方法 - 交易信息查询]，获取标的交易信息
+//        List<TradeInfoDto> tradeInfoDtoList = finProductCommonService.getTradeInfoDtoList(finprodId, finprodType, branch);
+//
+//        // 当查询结果不为空
+//        if (tradeInfoDtoList != null && tradeInfoDtoList.size() > 0) {
+//            // 默认取第一条标的信息
+//            tradeInfoDtoForReturn = tradeInfoDtoList.get(0);
+//        }
+//
+//        return tradeInfoDtoForReturn;
+//    }
 
 }
