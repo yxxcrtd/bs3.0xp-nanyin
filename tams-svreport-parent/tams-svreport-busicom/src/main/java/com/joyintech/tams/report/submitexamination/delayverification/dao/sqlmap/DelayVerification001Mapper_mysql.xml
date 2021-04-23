@@ -137,7 +137,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp1
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -210,7 +210,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp2
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -283,7 +283,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp3
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -356,7 +356,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp4
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -429,7 +429,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp5
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -502,7 +502,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp6
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -575,7 +575,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp7
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -648,7 +648,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp8
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -721,7 +721,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp9
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -782,7 +782,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp10
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -856,7 +856,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp11
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -899,7 +899,7 @@
             where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
             and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
             and ces.STATUS = '01'
-            ) temp12
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -969,7 +969,7 @@
                 </foreach>
             </if>
             /* add by songyawei 20200702 end */
-            ) temp13
+            ) temp
             <where>
                 <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -981,7 +981,7 @@
                     </foreach>
                 </if>
             </where>
-        ) temp
+        ) aa
     </select>
 
     <!-- edit by songyawei 20200703 二级法人修改 -->
@@ -991,58 +991,30 @@
                 nosubmit 未提交的状态值
                 -->
         select
-        unSubmitNum,
-        total,
-        (case total
-        <!-- 总数为0时，合格率为0 -->
-        when 0 THEN 0
-        else ROUND((1-(unSubmitNum/total))*100,2) end)as rate,
-        pageType
+            unSubmitNum,
+            total,
+            (case total
+            <!-- 总数为0时，合格率为0 -->
+            when 0 THEN 0
+            else ROUND((1-(unSubmitNum/total))*100,2) end)as rate,
+            pageType
         from(
-        <!-- 1.人行单产品报表-资产池基本信息 -->
-        select
-        count(temp.SEND_STATUS) as total,
-        ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '1' as pageType
-        from(
-        select
-        case when ces.SEND_STATUS != #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
-        when ces.SEND_STATUS = #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
-        else 0 end lateNums,  <!-- 统计延时数据 -->
-        ces.SEND_STATUS,
-        ces.ORG_CODE,
-        ces.CREATE_DEPT
-        from PBC_PRD_ACCOUNT_SUB ces
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            LEFT JOIN FIN_PRODUCT FP ON ces.ACCOUNT_ID = FP.FINPROD_MARKET_ID
-            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
-        </if>
-        /* add by songyawei 20200702 end */
-        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        <!--and ces.STATUS = '01'-->
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            and inst.institution_code IN
-            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        /* add by songyawei 20200702 end */
-        <choose>
-            <when test="hisTableId != null and hisTableId != ''">
-                union all
-                <!-- 履历表数据 -->
+            <!-- 1.人行单产品报表-资产池基本信息 -->
+            select
+                count(temp.SEND_STATUS) as total,
+                ifnull(sum(temp.lateNums),0) as unSubmitNum,
+                '1' as pageType
+            from(
                 select
-                case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
-                else 0 end lateNums, <!-- 统计延时数据 -->
-                ces.SEND_STATUS,
-                ces.ORG_CODE,
-                ces.CREATE_DEPT
-                from PBC_PRD_ACCOUNT_SUB_HIS ces
+                    case when ces.SEND_STATUS != #{nosubmit}
+                        and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+                        when ces.SEND_STATUS = #{nosubmit}
+                        and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+                    else 0 end lateNums,  <!-- 统计延时数据 -->
+                    ces.SEND_STATUS,
+                    ces.ORG_CODE,
+                    ces.CREATE_DEPT
+                from PBC_PRD_ACCOUNT_SUB ces
                 /* add by songyawei 20200702 start */
                 <if test="flag">
                     LEFT JOIN FIN_PRODUCT FP ON ces.ACCOUNT_ID = FP.FINPROD_MARKET_ID
@@ -1050,75 +1022,75 @@
                 </if>
                 /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                and ces.STATUS = '01'
-                /* add by songyawei 20200702 start */
-                <if test="flag">
-                    and inst.institution_code IN
-                    <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                    <!--and ces.STATUS = '01'-->
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        and inst.institution_code IN
+                        <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                /* add by songyawei 20200702 end */
+                <choose>
+                    <when test="hisTableId != null and hisTableId != ''">
+                        union all
+                        <!-- 履历表数据 -->
+                        select
+                            case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                            else 0 end lateNums, <!-- 统计延时数据 -->
+                            ces.SEND_STATUS,
+                            ces.ORG_CODE,
+                            ces.CREATE_DEPT
+                        from PBC_PRD_ACCOUNT_SUB_HIS ces
+                        /* add by songyawei 20200702 start */
+                        <if test="flag">
+                            LEFT JOIN FIN_PRODUCT FP ON ces.ACCOUNT_ID = FP.FINPROD_MARKET_ID
+                            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                        </if>
+                        /* add by songyawei 20200702 end */
+                        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                            and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                            and ces.STATUS = '01'
+                            /* add by songyawei 20200702 start */
+                            <if test="flag">
+                                and inst.institution_code IN
+                                <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                        /* add by songyawei 20200702 end */
+                    </when>
+                </choose>
+            ) temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
+                </if>
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
-            </when>
-        </choose>
-        ) temp1
-        <where>
-            <if test="isNotCount !=null and isNotCount=='01'">
-                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
-                temp.SEND_STATUS != #{manualSub}
-            </if>
-            <if test="createDeptList != null and createDeptList.size>0">
-                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-        <!-- 2.人行单产品报表-产品基本信息 -->
-        union all
-        select
-        count(temp.SEND_STATUS) as total,
-        ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '2' as pageType
-        from(
-        select
-        case when ces.SEND_STATUS != #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
-        when ces.SEND_STATUS = #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
-        else 0 end lateNums,  <!-- 统计延时数据 -->
-        ces.SEND_STATUS,
-        ces.ORG_CODE,
-        ces.CREATE_DEPT
-        from PBC_PRD_BASEINFO_SUB ces
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
-        </if>
-        /* add by songyawei 20200702 end */
-        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        <!--and ces.STATUS = '01'-->
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            and inst.institution_code IN
-            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        /* add by songyawei 20200702 end */
-        <choose>
-            <when test="hisTableId != null and hisTableId != ''">
-                union all
-                <!-- 履历表数据 -->
+            </where>
+            <!-- 2.人行单产品报表-产品基本信息 -->
+            union all
+            select
+                count(temp.SEND_STATUS) as total,
+                ifnull(sum(temp.lateNums),0) as unSubmitNum,
+                '2' as pageType
+            from(
                 select
-                case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
-                else 0 end lateNums, <!-- 统计延时数据 -->
-                ces.SEND_STATUS,
-                ces.ORG_CODE,
-                ces.CREATE_DEPT
-                from PBC_PRD_BASEINFO_SUB_HIS ces
+                    case when ces.SEND_STATUS != #{nosubmit}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+                    when ces.SEND_STATUS = #{nosubmit}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+                    else 0 end lateNums,  <!-- 统计延时数据 -->
+                    ces.SEND_STATUS,
+                    ces.ORG_CODE,
+                    ces.CREATE_DEPT
+                from PBC_PRD_BASEINFO_SUB ces
                 /* add by songyawei 20200702 start */
                 <if test="flag">
                     LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
@@ -1126,76 +1098,75 @@
                 </if>
                 /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                and ces.STATUS = '01'
-                /* add by songyawei 20200702 start */
-                <if test="flag">
-                    and inst.institution_code IN
-                    <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                    <!--and ces.STATUS = '01'-->
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        and inst.institution_code IN
+                        <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                /* add by songyawei 20200702 end */
+                <choose>
+                    <when test="hisTableId != null and hisTableId != ''">
+                        union all
+                        <!-- 履历表数据 -->
+                        select
+                            case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                            else 0 end lateNums, <!-- 统计延时数据 -->
+                            ces.SEND_STATUS,
+                            ces.ORG_CODE,
+                            ces.CREATE_DEPT
+                        from PBC_PRD_BASEINFO_SUB_HIS ces
+                        /* add by songyawei 20200702 start */
+                        <if test="flag">
+                            LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
+                            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                        </if>
+                        /* add by songyawei 20200702 end */
+                        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                            and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                            and ces.STATUS = '01'
+                            /* add by songyawei 20200702 start */
+                            <if test="flag">
+                                and inst.institution_code IN
+                                <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                        /* add by songyawei 20200702 end */
+                    </when>
+                </choose>
+            ) temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
+                </if>
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
-            </when>
-        </choose>
-        ) temp2
-        <where>
-            <if test="isNotCount !=null and isNotCount=='01'">
-                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
-                temp.SEND_STATUS != #{manualSub}
-            </if>
-            <if test="createDeptList != null and createDeptList.size>0">
-                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-        <!-- 3.人行单产品报表-产品起始募集信息 -->
-        union all
-        select
-        count(temp.SEND_STATUS) as total,
-        ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '3' as pageType
-        from(
-        select
-        case when ces.SEND_STATUS != #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
-        when ces.SEND_STATUS = #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
-        else 0 end lateNums,  <!-- 统计延时数据 -->
-        ces.SEND_STATUS,
-        ces.ORG_CODE,
-        ces.CREATE_DEPT
-        from PBC_INIT_PROD_RAISING_SUB ces
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
-            LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
-        </if>
-        /* add by songyawei 20200702 end */
-        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        <!-- and ces.STATUS = '01'-->
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            and inst.institution_code IN
-            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        /* add by songyawei 20200702 end */
-        <choose>
-            <when test="hisTableId != null and hisTableId != ''">
-                union all
-                <!-- 履历表数据 -->
+            </where>
+            <!-- 3.人行单产品报表-产品起始募集信息 -->
+            union all
+            select
+                count(temp.SEND_STATUS) as total,
+                ifnull(sum(temp.lateNums),0) as unSubmitNum,
+                '3' as pageType
+            from(
                 select
-                case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
-                else 0 end lateNums, <!-- 统计延时数据 -->
-                ces.SEND_STATUS,
-                ces.ORG_CODE,
-                ces.CREATE_DEPT
-                from PBC_INIT_PROD_RAISING_SUB_HIS ces
+                    case when ces.SEND_STATUS != #{nosubmit}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+                    when ces.SEND_STATUS = #{nosubmit}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+                    else 0 end lateNums,  <!-- 统计延时数据 -->
+                    ces.SEND_STATUS,
+                    ces.ORG_CODE,
+                    ces.CREATE_DEPT
+                from PBC_INIT_PROD_RAISING_SUB ces
                 /* add by songyawei 20200702 start */
                 <if test="flag">
                     Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
@@ -1204,77 +1175,76 @@
                 </if>
                 /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                and ces.STATUS = '01'
-                /* add by songyawei 20200702 start */
-                <if test="flag">
-                    and inst.institution_code IN
-                    <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                    <!-- and ces.STATUS = '01'-->
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        and inst.institution_code IN
+                        <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    /* add by songyawei 20200702 end */
+                <choose>
+                    <when test="hisTableId != null and hisTableId != ''">
+                        union all
+                        <!-- 履历表数据 -->
+                        select
+                            case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                            else 0 end lateNums, <!-- 统计延时数据 -->
+                            ces.SEND_STATUS,
+                            ces.ORG_CODE,
+                            ces.CREATE_DEPT
+                        from PBC_INIT_PROD_RAISING_SUB_HIS ces
+                        /* add by songyawei 20200702 start */
+                        <if test="flag">
+                            Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
+                            LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
+                            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                        </if>
+                        /* add by songyawei 20200702 end */
+                        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                            and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                            and ces.STATUS = '01'
+                            /* add by songyawei 20200702 start */
+                            <if test="flag">
+                                and inst.institution_code IN
+                                <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                        /* add by songyawei 20200702 end */
+                    </when>
+                </choose>
+            ) temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
+                </if>
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
-            </when>
-        </choose>
-        ) temp3
-        <where>
-            <if test="isNotCount !=null and isNotCount=='01'">
-                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
-                temp.SEND_STATUS != #{manualSub}
-            </if>
-            <if test="createDeptList != null and createDeptList.size>0">
-                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-        <!-- 4.人行单产品报表-产品终止信息 -->
-        union all
-        select
-        count(temp.SEND_STATUS) as total,
-        ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '4' as pageType
-        from(
-        select
-        case when ces.SEND_STATUS != #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
-        when ces.SEND_STATUS = #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
-        else 0 end lateNums,  <!-- 统计延时数据 -->
-        ces.SEND_STATUS,
-        ces.ORG_CODE,
-        ces.CREATE_DEPT
-        from PBC_PRD_BASEINFO_END_SUB ces
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
-            LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
-        </if>
-        /* add by songyawei 20200702 end */
-        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        <!--and ces.STATUS = '01'-->
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            and inst.institution_code IN
-            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        /* add by songyawei 20200702 end */
-        <choose>
-            <when test="hisTableId != null and hisTableId != ''">
-                union all
-                <!-- 履历表数据 -->
+            </where>
+            <!-- 4.人行单产品报表-产品终止信息 -->
+            union all
+            select
+                count(temp.SEND_STATUS) as total,
+                ifnull(sum(temp.lateNums),0) as unSubmitNum,
+                '4' as pageType
+            from(
                 select
-                case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
-                else 0 end lateNums, <!-- 统计延时数据 -->
-                ces.SEND_STATUS,
-                ces.ORG_CODE,
-                ces.CREATE_DEPT
-                ,FP.FINPROD_ID /* add by songyawei 20200702 */
-                from PBC_PRD_BASEINFO_END_SUB_HIS ces
+                    case when ces.SEND_STATUS != #{nosubmit}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+                    when ces.SEND_STATUS = #{nosubmit}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+                    else 0 end lateNums,  <!-- 统计延时数据 -->
+                    ces.SEND_STATUS,
+                    ces.ORG_CODE,
+                    ces.CREATE_DEPT
+                from PBC_PRD_BASEINFO_END_SUB ces
                 /* add by songyawei 20200702 start */
                 <if test="flag">
                     Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
@@ -1283,8 +1253,87 @@
                 </if>
                 /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                and ces.STATUS = '01'
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                    <!--and ces.STATUS = '01'-->
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        and inst.institution_code IN
+                        <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    /* add by songyawei 20200702 end */
+                <choose>
+                    <when test="hisTableId != null and hisTableId != ''">
+                        union all
+                        <!-- 履历表数据 -->
+                        select
+                            case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                            else 0 end lateNums, <!-- 统计延时数据 -->
+                            ces.SEND_STATUS,
+                            ces.ORG_CODE,
+                            ces.CREATE_DEPT
+                            ,FP.FINPROD_ID /* add by songyawei 20200702 */
+                        from PBC_PRD_BASEINFO_END_SUB_HIS ces
+                        /* add by songyawei 20200702 start */
+                        <if test="flag">
+                            Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
+                            LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
+                            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                        </if>
+                        /* add by songyawei 20200702 end */
+                        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                            and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                            and ces.STATUS = '01'
+                            /* add by songyawei 20200702 start */
+                            <if test="flag">
+                                and inst.institution_code IN
+                                <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                            /* add by songyawei 20200702 end */
+                    </when>
+                </choose>
+            ) temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
+                </if>
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+            <!-- 5.人行单产品报表-资产池终止信息 -->
+            union all
+            select
+                count(temp.SEND_STATUS) as total,
+                ifnull(sum(temp.lateNums),0) as unSubmitNum,
+                '5' as pageType
+            from(
+                select
+                case when ces.SEND_STATUS != #{nosubmit}
+                and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+                when ces.SEND_STATUS = #{nosubmit}
+                and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+                else 0 end lateNums,  <!-- 统计延时数据 -->
+                ces.SEND_STATUS,
+                ces.ORG_CODE,
+                ces.CREATE_DEPT
+            from PBC_PRD_ACCOUNT_END_SUB ces
+            /* add by songyawei 20200702 start */
+            <if test="flag">
+                Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_ACCOUNT_ID
+                LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+            </if>
+            /* add by songyawei 20200702 end */
+            where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                <!--and ces.STATUS = '01'-->
                 /* add by songyawei 20200702 start */
                 <if test="flag">
                     and inst.institution_code IN
@@ -1293,146 +1342,67 @@
                     </foreach>
                 </if>
                 /* add by songyawei 20200702 end */
-            </when>
-        </choose>
-        ) temp4
-        <where>
-            <if test="isNotCount !=null and isNotCount=='01'">
-                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
-                temp.SEND_STATUS != #{manualSub}
-            </if>
-            <if test="createDeptList != null and createDeptList.size>0">
-                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-        <!-- 5.人行单产品报表-资产池终止信息 -->
-        union all
-        select
-        count(temp.SEND_STATUS) as total,
-        ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '5' as pageType
-        from(
-        select
-        case when ces.SEND_STATUS != #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
-        when ces.SEND_STATUS = #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
-        else 0 end lateNums,  <!-- 统计延时数据 -->
-        ces.SEND_STATUS,
-        ces.ORG_CODE,
-        ces.CREATE_DEPT
-        from PBC_PRD_ACCOUNT_END_SUB ces
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_ACCOUNT_ID
-            LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
-        </if>
-        /* add by songyawei 20200702 end */
-        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        <!--and ces.STATUS = '01'-->
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            and inst.institution_code IN
-            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        /* add by songyawei 20200702 end */
-        <choose>
-            <when test="hisTableId != null and hisTableId != ''">
-                union all
-                <!-- 履历表数据 -->
-                select
-                case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
-                else 0 end lateNums, <!-- 统计延时数据 -->
-                ces.SEND_STATUS,
-                ces.ORG_CODE,
-                ces.CREATE_DEPT
-                ,FP.FINPROD_ID /* add by songyawei 20200702 */
-                from PBC_PRD_ACCOUNT_END_SUB_HIS ces
-                /* add by songyawei 20200702 start */
-                <if test="flag">
-                    Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_ACCOUNT_ID
-                    LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-                    LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+            <choose>
+                <when test="hisTableId != null and hisTableId != ''">
+                    union all
+                    <!-- 履历表数据 -->
+                    select
+                        case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                        else 0 end lateNums, <!-- 统计延时数据 -->
+                        ces.SEND_STATUS,
+                        ces.ORG_CODE,
+                        ces.CREATE_DEPT
+                        ,FP.FINPROD_ID /* add by songyawei 20200702 */
+                    from PBC_PRD_ACCOUNT_END_SUB_HIS ces
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_ACCOUNT_ID
+                        LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                    </if>
+                    /* add by songyawei 20200702 end */
+                    where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                        and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                        and ces.STATUS = '01'
+                        /* add by songyawei 20200702 start */
+                        <if test="flag">
+                            and inst.institution_code IN
+                            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                                #{item,jdbcType=VARCHAR}
+                            </foreach>
+                        </if>
+                        /* add by songyawei 20200702 end */
+                </when>
+            </choose>
+            ) temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
                 </if>
-                /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                and ces.STATUS = '01'
-                /* add by songyawei 20200702 start */
-                <if test="flag">
-                    and inst.institution_code IN
-                    <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
-            </when>
-        </choose>
-        ) temp5
-        <where>
-            <if test="isNotCount !=null and isNotCount=='01'">
-                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
-                temp.SEND_STATUS != #{manualSub}
-            </if>
-            <if test="createDeptList != null and createDeptList.size>0">
-                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-        <!-- 6.人行单产品报表-产品资金募集信息 -->
-        union all
-        select
-        count(temp.SEND_STATUS) as total,
-        ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '6' as pageType
-        from(
-        select
-        case when ces.SEND_STATUS != #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
-        when ces.SEND_STATUS = #{nosubmit}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
-        else 0 end lateNums,  <!-- 统计延时数据 -->
-        ces.SEND_STATUS,
-        ces.ORG_CODE,
-        ces.CREATE_DEPT
-        from PBC_PROD_RAISING_SUB ces
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
-            LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
-        </if>
-        /* add by songyawei 20200702 end */
-        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-        and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        <!--and ces.STATUS = '01'-->
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            and inst.institution_code IN
-            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        /* add by songyawei 20200702 end */
-        <choose>
-            <when test="hisTableId != null and hisTableId != ''">
-                union all
-                <!-- 履历表数据 -->
+            </where>
+            <!-- 6.人行单产品报表-产品资金募集信息 -->
+            union all
+            select
+                count(temp.SEND_STATUS) as total,
+                ifnull(sum(temp.lateNums),0) as unSubmitNum,
+                '6' as pageType
+            from(
                 select
-                case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
-                else 0 end lateNums, <!-- 统计延时数据 -->
-                ces.SEND_STATUS,
-                ces.ORG_CODE,
-                ces.CREATE_DEPT
-                ,FP.FINPROD_ID /* add by songyawei 20200702 */
-                from PBC_PROD_RAISING_SUB_HIS ces
+                    case when ces.SEND_STATUS != #{nosubmit}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+                    when ces.SEND_STATUS = #{nosubmit}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+                    else 0 end lateNums,  <!-- 统计延时数据 -->
+                    ces.SEND_STATUS,
+                    ces.ORG_CODE,
+                    ces.CREATE_DEPT
+                from PBC_PROD_RAISING_SUB ces
                 /* add by songyawei 20200702 start */
                 <if test="flag">
                     Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
@@ -1441,175 +1411,203 @@
                 </if>
                 /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                and ces.STATUS = '01'
-                /* add by songyawei 20200702 start */
-                <if test="flag">
-                    and inst.institution_code IN
-                    <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                    <!--and ces.STATUS = '01'-->
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        and inst.institution_code IN
+                        <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    /* add by songyawei 20200702 end */
+                <choose>
+                    <when test="hisTableId != null and hisTableId != ''">
+                        union all
+                        <!-- 履历表数据 -->
+                        select
+                            case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                            else 0 end lateNums, <!-- 统计延时数据 -->
+                            ces.SEND_STATUS,
+                            ces.ORG_CODE,
+                            ces.CREATE_DEPT
+                            ,FP.FINPROD_ID /* add by songyawei 20200702 */
+                        from PBC_PROD_RAISING_SUB_HIS ces
+                        /* add by songyawei 20200702 start */
+                        <if test="flag">
+                            Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
+                            LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
+                            LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                        </if>
+                        /* add by songyawei 20200702 end */
+                        where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                            and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                            and ces.STATUS = '01'
+                            /* add by songyawei 20200702 start */
+                            <if test="flag">
+                                and inst.institution_code IN
+                                <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                            /* add by songyawei 20200702 end */
+                    </when>
+                </choose>
+            ) temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
+                </if>
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
-            </when>
-        </choose>
-        ) temp6
-        <where>
-            <if test="isNotCount !=null and isNotCount=='01'">
-                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
-                temp.SEND_STATUS != #{manualSub}
-            </if>
-            <if test="createDeptList != null and createDeptList.size>0">
-                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-        union all
-        <!-- 7.人行单产品报表-资产负债信息 -->
-        select
-        count(temp.SEND_STATUS) as total,
-        ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '7' as pageType
-        from(
-        select
-        case when ces.SEND_STATUS != #{nosubmit}
-        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
-        when ces.SEND_STATUS = #{nosubmit}
-        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
-        else 0 end lateNums,  <!-- 统计延时数据 -->
-        ces.SEND_STATUS,
-        ces.ORG_CODE,
-        ces.CREATE_DEPT
-        from PBC_REPORT ces
-        where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-        and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        <!--and ces.STATUS = '01'-->
-        and ces.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            and ces.ORG_CODE IN
-            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        /* add by songyawei 20200702 end */
-        <choose>
-            <when test="hisTableId != null and hisTableId != ''">
-                union all
-                <!-- 履历表数据 -->
+            </where>
+            union all
+            <!-- 7.人行单产品报表-资产负债信息 -->
+            select
+                count(temp.SEND_STATUS) as total,
+                ifnull(sum(temp.lateNums),0) as unSubmitNum,
+                '7' as pageType
+            from(
                 select
-                case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
-                else 0 end lateNums, <!-- 统计延时数据 -->
-                ces.SEND_STATUS,
-                ces.ORG_CODE,
-                ces.CREATE_DEPT
-                from PBC_REPORT_HIS ces
+                    case when ces.SEND_STATUS != #{nosubmit}
+                    and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+                    when ces.SEND_STATUS = #{nosubmit}
+                    and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+                    else 0 end lateNums,  <!-- 统计延时数据 -->
+                    ces.SEND_STATUS,
+                    ces.ORG_CODE,
+                    ces.CREATE_DEPT
+                from PBC_REPORT ces
                 where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                and ces.STATUS = '01'
-                and ces.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 不查询资产负债信息 -->
-                /* add by songyawei 20200702 start */
-                <if test="flag">
-                    and ces.ORG_CODE IN
-                    <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                    and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                    <!--and ces.STATUS = '01'-->
+                    and ces.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        and ces.ORG_CODE IN
+                        <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    /* add by songyawei 20200702 end */
+                <choose>
+                    <when test="hisTableId != null and hisTableId != ''">
+                        union all
+                        <!-- 履历表数据 -->
+                        select
+                            case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                            else 0 end lateNums, <!-- 统计延时数据 -->
+                            ces.SEND_STATUS,
+                            ces.ORG_CODE,
+                            ces.CREATE_DEPT
+                        from PBC_REPORT_HIS ces
+                        where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                            and ces.STATUS = '01'
+                            and ces.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 不查询资产负债信息 -->
+                            /* add by songyawei 20200702 start */
+                            <if test="flag">
+                                and ces.ORG_CODE IN
+                                <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                            /* add by songyawei 20200702 end */
+                    </when>
+                </choose>
+            ) temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
+                </if>
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" open="and temp.CREATE_DEPT in(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
-            </when>
-        </choose>
-        ) temp7
-        <where>
-            <if test="isNotCount !=null and isNotCount=='01'">
-                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
-                temp.SEND_STATUS != #{manualSub}
-            </if>
-            <if test="createDeptList != null and createDeptList.size>0">
-                <foreach collection="createDeptList" open="and temp.CREATE_DEPT in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-        union all
-        <!-- 8.人行月报登记-->
-        select
-        count(temp.SEND_STATUS) as total,
-        ifnull(sum(temp.lateNums),0) as unSubmitNum,
-        '8' as pageType
-        from(
-        select
-        case when ces.SEND_STATUS != #{nosubmit}
-        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
-        when ces.SEND_STATUS = #{nosubmit}
-        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
-        else 0 end lateNums,  <!-- 统计延时数据 -->
-        ces.SEND_STATUS,
-        ces.ORG_CODE,
-        ces.CREATE_DEPT
-        from PBC_REPORT ces
-        where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-        and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-        <!--and ces.STATUS = '01'-->
-        and ces.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 不查询资产负债信息 -->
-        /* add by songyawei 20200702 start */
-        <if test="flag">
-            and ces.ORG_CODE IN
-            <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        /* add by songyawei 20200702 end */
-        <choose>
-            <when test="hisTableId != null and hisTableId != ''">
-                union all
-                <!-- 履历表数据 -->
+            </where>
+            union all
+            <!-- 8.人行月报登记-->
+            select
+                count(temp.SEND_STATUS) as total,
+                ifnull(sum(temp.lateNums),0) as unSubmitNum,
+                '8' as pageType
+            from(
                 select
-                case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
-                else 0 end lateNums, <!-- 统计延时数据 -->
-                ces.SEND_STATUS,
-                ces.ORG_CODE,
-                ces.CREATE_DEPT
-                from PBC_REPORT_HIS ces
+                    case when ces.SEND_STATUS != #{nosubmit}
+                    and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+                    when ces.SEND_STATUS = #{nosubmit}
+                    and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+                    else 0 end lateNums,  <!-- 统计延时数据 -->
+                    ces.SEND_STATUS,
+                    ces.ORG_CODE,
+                    ces.CREATE_DEPT
+                from PBC_REPORT ces
                 where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                and ces.STATUS = '01'
-                and ces.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 不查询资产负债信息 -->
-                /* add by songyawei 20200702 start */
-                <if test="flag">
-                    and ces.ORG_CODE IN
-                    <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                    and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                    <!--and ces.STATUS = '01'-->
+                    and ces.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 不查询资产负债信息 -->
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        and ces.ORG_CODE IN
+                        <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    /* add by songyawei 20200702 end */
+                <choose>
+                    <when test="hisTableId != null and hisTableId != ''">
+                        union all
+                        <!-- 履历表数据 -->
+                        select
+                            case when ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                            else 0 end lateNums, <!-- 统计延时数据 -->
+                            ces.SEND_STATUS,
+                            ces.ORG_CODE,
+                            ces.CREATE_DEPT
+                        from PBC_REPORT_HIS ces
+                        where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                            and ces.STATUS = '01'
+                            and ces.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 不查询资产负债信息 -->
+                            /* add by songyawei 20200702 start */
+                            <if test="flag">
+                                and ces.ORG_CODE IN
+                                <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                                    #{item,jdbcType=VARCHAR}
+                                </foreach>
+                            </if>
+                            /* add by songyawei 20200702 end */
+                    </when>
+                </choose>
+            ) temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
+                </if>
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-                /* add by songyawei 20200702 end */
-            </when>
-        </choose>
-        ) temp8
-        <where>
-            <if test="isNotCount !=null and isNotCount=='01'">
-                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
-                temp.SEND_STATUS != #{manualSub}
-            </if>
-            <if test="createDeptList != null and createDeptList.size>0">
-                <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-        )  temp
+            </where>
+        )  cc
     </select>
     <select id="countUnquaData">
-SELECT
-    count(1)
-    from ${tableId} info
-    WHERE
-    ( info.CHB_SUBMIT_DEADLINE &lt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
-                    and info.SUBMIT_STATUS = #{nosubmit} )
-                    or(info.SUBMIT_STATUS != #{nosubmit}
-                    and info.SUBMIT_TIME &gt; info.CHB_SUBMIT_DEADLINE
-                    and info.SUBMIT_TIME &lt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
-    )
+        SELECT
+            count(1)
+        from ${tableId} info
+        WHERE
+            ( info.CHB_SUBMIT_DEADLINE &lt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d') and info.SUBMIT_STATUS = #{nosubmit})
+             or(info.SUBMIT_STATUS != #{nosubmit}
+                            and info.SUBMIT_TIME &gt; info.CHB_SUBMIT_DEADLINE
+                            and info.SUBMIT_TIME &lt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d'))
 </select>
     <select id="countTotalData" >
 SELECT
@@ -2080,9 +2078,6 @@ SELECT
         order by temp.submitDeadline DESC
 
     </select>
-
-
-
     <select id="searchTablePbc" parameterType="java.util.Map" resultType="com.joyintech.tams.report.submitexamination.delayverification.dto.DelayVerification002Dto">
         SELECT
         <!-- #{reportIndex} repName, -->
@@ -2245,12 +2240,12 @@ SELECT
                 <choose>
                     <!-- 1. 人行单产品月报-资产池基本信息 -->
                     <when test="tableId != null and tableId == 'PBC_PRD_ACCOUNT_SUB'">
-                        concat_ws('','资产池代码:'，info.PBC_ACCOUNT_ID） as code,
+                        concat_ws('','资产池代码:',info.PBC_ACCOUNT_ID) as code,
                         info.PBC_SUBMIT_DEADLINE as submitDeadline,
                     </when>
                     <!-- 2. 人行单产品月报-产品基本信息 -->
                     <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
-                        concat_ws('','理财产品代码:',info.PBC_PROD_ID） as code,
+                        concat_ws('','理财产品代码:',info.PBC_PROD_ID) as code,
                         info.PBC_SUBMIT_DEADLINE as submitDeadline,
                     </when>
                     <!-- 3. 人行单产品月报-产品起始募集信息 -->

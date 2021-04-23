@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<classPathEntry location="lib/ojdbc14-10.2.0.4.0.jar" />
+
+	<context id="MySql2Tables" targetRuntime="MyBatis3">
+		<commentGenerator>
+			<!-- 避免生成注解 -->
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@192.168.70.132:1521/orcl" userId="HGCS"
+			password="HGCS">
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- dto class -->
+		<javaModelGenerator targetPackage="com.joyintech.tams.common.base.entity"
+			targetProject="G:\joyintech">
+			<property name="enableSubPackages" value="false" />
+			<property name="trimStrings" value="true" />
+			<property name="rootClass" value="com.joyintech.framework.base.BaseEntity" />
+		</javaModelGenerator>
+		<!-- mybatis xml file -->
+		<sqlMapGenerator targetPackage="com.joyintech.tams.common.base.dao.sqlmap"
+			targetProject="G:\joyintech">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<!-- mapper class -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.joyintech.tams.common.base.dao"
+			targetProject="G:\joyintech">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+
+
+		<!--不生成帮助类（Exmaples） -->
+		<!-- enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" 
+			enableSelectByExample="false" selectByExampleQueryId="false" -->
+		<!--已生成的表 <table schema="demo" tableName="USER" domainObjectName="User"></table> -->
+
+		<table schema="HGCS" tableName="FISP_PERSONINFO"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+	</context>
+</generatorConfiguration>
+

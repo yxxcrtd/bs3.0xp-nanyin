@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.prorate.dao.ProRateInfo001Mapper_mysql">
+	<select id="queryForPage" resultType="com.joyintech.tams.report.system.prorate.dto.ProRateInfo001Dto">
+		SELECT
+		a. STATUS,
+		a.PROD_ID,
+		a.PROD_NAME,
+		a.START_DATE,
+		a.CASH_TYPE_2,
+		a.FEE_RATE,
+		a.CREATE_USER,
+		a.CREATE_TIME,
+		a.UPDATE_USER,
+		a.UPDATE_TIME,
+		a.DATA_SOURCE,
+		a.DATAUUID as DATAUUID
+		FROM
+		PRD_FEE_RATE_DATA a
+		<where>
+			not EXISTS (
+			SELECT 1 from DIS_PRD_FEE_RATE_ERRORDATA b where b.PROD_ID=a.PROD_ID
+			and b.CASH_TYPE_2=a.CASH_TYPE_2
+			and b.START_DATE=a.START_DATE
+			and b.STATUS in('A','E')
+			)
+			<if test="prodId != null and prodId != ''">
+				and a.PROD_ID in(#{prodId})
+			</if>
+			<if test="cashType2 != null and cashType2 != ''">
+				and a.CASH_TYPE_2 in(#{cashType2})
+			</if>
+			<if test="status != null and status != ''">
+				and a.STATUS in(#{status})
+			</if>
+
+		</where>
+		union all
+		SELECT
+		c.PROD_ID,
+		c.PROD_NAME,
+		c.START_DATE,
+		c.CASH_TYPE_2,
+		c.FEE_RATE,
+		c.CREATE_USER,
+		c.CREATE_TIME,
+		c.UPDATE_USER,
+		c.UPDATE_TIME,
+		c.DATAUUID
+		FROM
+		dis_prd_fee_rate_errordata c
+		<where>
+			c.STATUS in('A','E')
+			<if test="prodId != null and prodId != ''">
+				and c.PROD_ID in(#{prodId})
+			</if>
+			<if test="cashType2 != null and cashType2 != ''">
+				and c.CASH_TYPE_2 in(#{cashType2})
+			</if>
+			<if test="status != null and status != ''">
+				and c.STATUS in(#{status})
+			</if>
+		</where>
+	</select>
+
+	<select id="getProdinfo" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" parameterType="java.util.Map">
+		SELECT p.prod_id,p.prod_name FROM chb_prd_baseinfo p
+		where p.status in ('E')
+		<if test="search != null and search !='' ">
+			AND P.PROD_ID LIKE concat_ws(concat_ws('%', #{search}),'%') or p.prod_name like concat_ws(concat_ws('%', #{search}),'%')
+		</if>
+		<if test="initValue != null and initValue != ''">
+			AND P.PROD_ID = #{initValue}
+		</if>
+	</select>
+
+	<select id="getSysDataDict" resultType="com.joyintech.tams.systemtools.dto.SysDataDict" parameterType="java.util.Map">
+		SELECT ITEM_CODE itemCode, ITEM_VALUE itemValue FROM SYS_DATADICT_LIST
+		WHERE DICT_CODE=#{code}
+	</select>
+
+	<select id="selectPrdFeeData" resultType="java.lang.Integer" parameterType="java.util.List">
+			SELECT count(1) from (
+		SELECT 1 from PRD_FEE_RATE_DATA a
+			where a.STATUS in('A','E')
+			and not EXISTS (
+			 SELECT 1 from 	DIS_PRD_FEE_RATE_ERRORDATA b
+					WHERE b.PROD_ID=a.PROD_ID
+						and b.CASH_TYPE_2=a.CASH_TYPE_2
+					and b.START_DATE=a.START_DATE
+					and b.STATUS in('A','E')
+			)
+		<foreach collection="list" index="index" item="item" open="(" separator="or" close=")">
+			a.PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+			and a.START_DATE = #{item.startDate,jdbcType=DATE}
+			and a.CASH_TYPE_2 = #{item.cashType2,jdbcType=VARCHAR}
+		</foreach>
+			union all
+			SELECT 1 from DIS_PRD_FEE_RATE_ERRORDATA c
+			where c.STATUS in('A','E')
+		<foreach collection="list" index="index" item="item" open="(" separator="or" close=")">
+			c.PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+			and c.START_DATE = #{item.startDate,jdbcType=DATE}
+			and c.CASH_TYPE_2 = #{item.cashType2,jdbcType=VARCHAR}
+		</foreach>
+		)tmp
+
+	</select>
+</mapper>

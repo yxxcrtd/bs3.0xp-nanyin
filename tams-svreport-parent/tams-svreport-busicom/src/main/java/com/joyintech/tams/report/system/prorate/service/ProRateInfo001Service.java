@@ -3,17 +3,13 @@ package com.joyintech.tams.report.system.prorate.service;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.system.prorate.dao.sqlmap.ProRateInfo001Mapper;
+import com.joyintech.tams.report.system.prorate.dao.ProRateInfo001Mapper;
 import com.joyintech.tams.report.system.prorate.dto.ProRateInfo001Dto;
-import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto;
+import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,5 +44,16 @@ public class ProRateInfo001Service extends CommonExportService<ProRateInfo001Dto
             item.setCashType2(SysDataUtil.getZZDictCodeAndName(
                     DictCode.信披费用类型, item.getCashType2()));
         });
+    }
+
+    public List<ChbPrdBaseinfo> getProdinfo(Map<String, Object> param) {
+        return proRateInfo001Mapper.getProdinfo( param);
+    }
+    public List<SysDataDict> getSysDataDict(Map<String, Object> param) {
+        return proRateInfo001Mapper.getSysDataDict( param);
+    }
+
+    public List<Integer> selectPrdFeeData(List<ProRateInfo001Dto> dtoList) {
+        return proRateInfo001Mapper.selectPrdFeeData(dtoList);
     }
 }

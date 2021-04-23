@@ -21,9 +21,9 @@
         	#{isModify,jdbcType=CHAR} ,
         	#{remark,jdbcType=VARCHAR} ,
         	#{updateUser,jdbcType=VARCHAR},
-        	sysdate,
+        	now(),
        		#{createUser,jdbcType=VARCHAR},
-        	sysdate,
+        	now(),
        		#{createDept,jdbcType=VARCHAR})
 	</insert>
 
@@ -101,7 +101,7 @@
 			STATUS='E',
 			FIELD_UNICODE= #{fieldUnicode,jdbcType=VARCHAR} ,
 			UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
-			UPDATE_TIME=sysdate
+			UPDATE_TIME=now()
 		</set>
 		where SEQNO=#{seqno}
 	</update>

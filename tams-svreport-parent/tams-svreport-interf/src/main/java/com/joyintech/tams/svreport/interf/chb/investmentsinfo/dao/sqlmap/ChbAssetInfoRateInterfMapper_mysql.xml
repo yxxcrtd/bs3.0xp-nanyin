@@ -242,8 +242,6 @@
         ) a
         where 1=1 and a.idx=1
     </select>
-
-
     <insert id="mergeChbAssetInfoRatedData"
             parameterType="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbAssetInfoRate">
         insert into CHB_ASSET_RATE(SEQNO, ASSET_ID,FINPROD_TYPE2,PROFIT_TYPE, CHANGE_TYPE,

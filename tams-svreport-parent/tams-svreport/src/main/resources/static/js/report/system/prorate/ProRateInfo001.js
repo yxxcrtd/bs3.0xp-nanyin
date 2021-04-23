@@ -3,8 +3,9 @@
     var getPageParams = function() {
         var regCode = $('#ProRegistCodeManage001_regCode').val();
         return {
-            // 产品
-            prodname : $('#ProRegistCodeManage001_prod').val(),
+            // 产品代码
+            prodId : $('#prod_id').val() == null ? null : $('#prod_id').val()
+                .join(","),
             //投资者类型
             investor : $('#ProRegistCodeManage001_investor').val(),
             //产品登记编码
@@ -87,6 +88,13 @@
         $('#ProRateInfo001_btn_export').click(function() {
 
         });
+
+        //新增点击事件
+        $('#ProRateInfo001_btn_add').click(function() {
+            var data={"operateType":"add"};
+            Joyin.dialog('产品费率信息新建',basePath+'svreport/system/prorate/ProRateInfo002/init', '98%', '95%',data,function(){table.reload();});
+        });
+
         //修改、删除事件绑定
         tableBind();
     });

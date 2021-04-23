@@ -49,7 +49,7 @@
         where REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
         and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
         and PRODID = #{prodid,jdbcType=VARCHAR}
-        and HOLD_DATE = STR_TO_DATE (#{holdDate,jdbcType=DATE},'%Y-%m-%d %H:%i:%s')
+        and DATE_FORMAT(HOLD_DATE,'%Y-%m-%d')  =  #{holdDate,jdbcType=DATE}
         and CCY = #{ccy,jdbcType=VARCHAR}
         and STATUS = #{status,jdbcType=VARCHAR}
     </select>
