@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -407,12 +408,14 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 BeanUtils.copyProperties(resultDto, resultDtozt);
                 resultDtozt.setHodingType(DictCodeList.持仓类型_在途.getValue());
                 result.add(resultDtozt);
-                //抵消赎回提交时的可用持仓
-                PtlSecPositionFlowDto resultDtoky = new PtlSecPositionFlowDto();
-                BeanUtils.copyProperties(resultDto, resultDtoky);
-                resultDtoky.setHodingType(DictCodeList.持仓类型_可用.getValue());
-                resultDtoky.setAmount(resultDtoky.getAmount().negate());
-                result.add(resultDtoky);
+                if (!DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2())) {
+                    //抵消赎回提交时的可用持仓
+                    PtlSecPositionFlowDto resultDtoky = new PtlSecPositionFlowDto();
+                    BeanUtils.copyProperties(resultDto, resultDtoky);
+                    resultDtoky.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                    resultDtoky.setAmount(resultDtoky.getAmount().negate());
+                    result.add(resultDtoky);
+                }
             }
             return result;
         }
@@ -532,6 +535,22 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             result.add(resultDtozt);
             return result;
         }
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        else if (DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(deal.getFinprodType2())
+                && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs())) {
+            PtlSecPositionFlowDto resultDtozt = new PtlSecPositionFlowDto();
+            BeanUtils.copyProperties(resultDto, resultDtozt);
+            resultDtozt.setCdate(deal.getTradeDate());
+            BigDecimal netValue = EtrCommonCashPositionDealService.getPlanNetValue(deal.getFinprodId(),
+                    deal.getTradeDate());
+            resultDtozt.setAmount(StringUtil.isNotEmpty(
+                    deal.getShareAmt()) ? deal.getShareAmt().negate() : ArithmeticUtil.divide(deal.getPrinAmt(), netValue, 2).negate());
+            result.add(resultDtozt);
+            if (DictCodeList.持仓类型_可用.getValue().equals(resultDto.getHodingType())) {
+                return result;
+            }
+        }
+        // add by etliu 20210421 权益类资产相关代码合并 end
 
         if (DictCodeList.持仓类型_实际.getValue().equals(inputDto.getPositionType())) {
 

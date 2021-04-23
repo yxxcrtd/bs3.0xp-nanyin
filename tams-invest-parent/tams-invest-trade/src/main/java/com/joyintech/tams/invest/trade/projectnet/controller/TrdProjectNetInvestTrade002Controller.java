@@ -197,6 +197,8 @@ public class TrdProjectNetInvestTrade002Controller extends BaseController {
                     }
                     if (eeAdto!=null){
                         dto.setType9(eeAdto.getAssetType1());
+                        dto.setType10(eeAdto.getAssetType10());
+                        dto.setType11(eeAdto.getAssetType11());
                     }
                 }
                 dto.setEntrustId(entrustId);
