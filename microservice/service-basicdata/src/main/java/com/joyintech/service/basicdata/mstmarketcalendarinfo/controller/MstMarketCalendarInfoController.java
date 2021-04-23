@@ -170,4 +170,36 @@ public class MstMarketCalendarInfoController{
         map.put("tradeDate",tradeDate);
         return map;
     }
+
+    /***
+     * 是否交易日查询接口
+     * @param para
+     * @return
+     */
+    @PostMapping("/queryIsTradeDate")
+    public Map<String,Object> queryIsTradeDate(@RequestBody Map<String,Object> para){
+        //日历类型
+        String tradeCalendarType = (String)para.get("tradeCalendarType");
+        //日期
+        String cdate = (String)para.get("CDATE");
+
+        MstMarketCalendarInfo001Dto dto = new MstMarketCalendarInfo001Dto();
+        if("3".equals(tradeCalendarType)) {
+            dto.setCalendarId("04");
+        } else if("4".equals(tradeCalendarType)) {
+            dto.setCalendarId("05");
+        }
+        dto.setCdate(DateUtil.parse(cdate));
+        MstMarketCalendarInfo001Dto result = mstMarketCalendarInfo001Service.getMstMarketCalendarInfo001DtoByKey(dto);
+
+        Map<String,Object> map = new HashMap<String,Object>();
+        if(result!=null && result.getIsHoliday()==0) {
+            map.put("tradeDayFlag","0");//0-是交易日
+        } else {
+            map.put("tradeDayFlag","1");//0-不是交易日
+        }
+
+        return map;
+    }
+
 }

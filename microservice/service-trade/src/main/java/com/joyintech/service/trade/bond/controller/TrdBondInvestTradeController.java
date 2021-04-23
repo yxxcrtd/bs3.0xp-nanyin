@@ -15,7 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.service.trade.bond.service.TrdBondCalcService;
 import com.joyintech.tams.invest.common.dto.period.trdfundduration.TrdFundDurationCommonDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +63,9 @@ public class TrdBondInvestTradeController {
      */
     @Autowired
     private TrdBondInvestTradeService trdBondInvestTradeService;
+
+    @Autowired
+    private TrdBondCalcService trdBondCalcService;
 
     /**
      * 分页查询
@@ -576,5 +582,34 @@ public class TrdBondInvestTradeController {
     @PostMapping("getType7")
     public String getType7(@RequestBody TrdBondInvestTradeDto dto) {
         return trdBondInvestTradeService.getType7(dto);
+    }
+
+
+
+    // 按照净价计算
+    @PostMapping("calculate01Data")
+    public AjaxResult calculate01Data(@RequestBody Map<String, Object> map) {
+        TrdBondInvestTradeDto inputDto = JSON.parseObject(
+                JSON.toJSONString(map), TrdBondInvestTradeDto.class);
+        inputDto.setCalculateField("unitCprice");
+        return trdBondCalcService.calculateData(inputDto);
+    }
+
+    // 按照全价总额计算
+    @PostMapping("calculate02Data")
+    public AjaxResult calculate02Data(@RequestBody Map<String, Object> map) {
+        TrdBondInvestTradeDto inputDto = JSON.parseObject(
+                JSON.toJSONString(map), TrdBondInvestTradeDto.class);
+        inputDto.setCalculateField("fpriceAmt");
+        return trdBondCalcService.calculateData(inputDto);
+    }
+
+    // 按照到期收益率计算
+    @PostMapping("calculate03Data")
+    public AjaxResult calculate03Data(@RequestBody Map<String, Object> map) {
+        TrdBondInvestTradeDto inputDto = JSON.parseObject(
+                JSON.toJSONString(map), TrdBondInvestTradeDto.class);
+        inputDto.setCalculateField("yield");
+        return trdBondCalcService.calculateData(inputDto);
     }
 }

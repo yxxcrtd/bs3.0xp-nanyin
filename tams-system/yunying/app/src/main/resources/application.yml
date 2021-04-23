@@ -274,52 +274,6 @@ application:
 flag: false
 
 
-# 场内交易使用配置
-netty:
-  port: 9190
-  buffer:
-    recv: 4194304
-    send: 4194304
-    write:
-      high: 81960
-      low: 10240
-  idle:
-    read: 20
-    write: 10
-    all: 0
-  thread:
-    num:
-      boss: 1
-      worker: 10
-scheduled:
-  token:
-    enable: false
-    fixedRate: 20000
-    node: trade1
-  history:
-    cron: 0 30 20 ? * MON-FRI
-  instrument:
-    cron: 0 0 8 ? * MON-FRI
-    price: 0 15 9 ? * MON-FRI
-    flushData: 0 0 9 ? * MON-FRI
-  cacheData:
-    fixedRate: 60000
-  login:
-    fixedRate: 20000
-  tradeAgent:
-    fixedRate: 3000
-terminal:
-  default: default
-trade:
-  thread:
-    msg:
-      num: 8
-    risk:
-      alive: 5000
-      capacity: 128
-
-position:
-  flag: false #是否控制账户持仓，true控制，false不控制
 
 ---
 spring:
@@ -393,6 +347,54 @@ xinping:
 tx-lcn:
   client:
     managerAddress: 192.168.90.197:8070
+
+# 场内交易使用配置
+netty:
+  port: 9190
+  buffer:
+    recv: 4194304
+    send: 4194304
+    write:
+      high: 81960
+      low: 10240
+  idle:
+    read: 20
+    write: 10
+    all: 0
+  thread:
+    num:
+      boss: 1
+      worker: 10
+scheduled:
+  token:
+    enable: false
+    fixedRate: 20000
+    node: trade1
+  history:
+    cron: 0 30 20 ? * MON-FRI
+  instrument:
+    cron: 0 0 8 ? * MON-FRI
+    price: 0 15 9 ? * MON-FRI
+    flushData: 0 0 9 ? * MON-FRI
+  cacheData:
+    fixedRate: 60000
+  login:
+    fixedRate: 20000
+  tradeAgent:
+    fixedRate: 3000
+terminal:
+  default: default
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+
+position:
+  flag: false #是否控制账户持仓，true控制，false不控制
+
 ---
 spring:
   profiles: dtx

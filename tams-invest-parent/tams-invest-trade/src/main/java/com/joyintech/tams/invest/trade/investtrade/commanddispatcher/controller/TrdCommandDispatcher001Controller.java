@@ -123,7 +123,6 @@ public class TrdCommandDispatcher001Controller extends BaseController{
 
         model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-        model.addAttribute("TRADE_PLACE_12", DictCodeListExt1.交易场所_中国金融期货交易所.getValue());
         
         //add by gejiaao start
         model.addAttribute("PINAN_ASSET_TYPE_F17", DictCodeListExt2.平安资产类型_一级市场债.getValue());

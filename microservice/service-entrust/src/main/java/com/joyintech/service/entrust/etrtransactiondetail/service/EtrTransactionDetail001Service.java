@@ -73,7 +73,6 @@ public class EtrTransactionDetail001Service extends BaseService{
     public Page<EtrTransactionDetailDto> selectForPage(int page, int length,Map<String, Object> param) throws Exception{
     	param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
     	param.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-    	param.put("TRADE_PLACE_12", DictCodeListExt1.交易场所_中国金融期货交易所.getValue());
     	
     	param.put("ASSET_TYPE_01", DictCodeList.平安资产类型_债券.getValue());
     	param.put("ASSET_TYPE_02", DictCodeList.平安资产类型_基金.getValue());
@@ -130,7 +129,6 @@ public class EtrTransactionDetail001Service extends BaseService{
 			throws Exception {
     	param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
     	param.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-    	param.put("TRADE_PLACE_12", DictCodeListExt1.交易场所_中国金融期货交易所.getValue());
         Page<TrdProductDealDetailDto> pageDto = super.queryForPage(page, length,() -> etrTransactionDetailMapper.selectTransDetailPage(param));
 		return pageDto;
 	}

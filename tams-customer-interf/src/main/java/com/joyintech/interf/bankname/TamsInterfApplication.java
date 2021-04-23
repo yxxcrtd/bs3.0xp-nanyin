@@ -12,6 +12,7 @@ package com.joyintech.interf.bankname;
 
 import com.joyintech.framework.JoyinApplication;
 import com.joyintech.framework.config.Application;
+import org.activiti.spring.boot.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -33,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
         "org.activiti.spring.boot.SecurityAutoConfiguration",
         "org.activiti.spring.boot.JpaProcessEngineAutoConfiguration"})
 @EnableEurekaClient
-@SpringBootApplication
+@SpringBootApplication(exclude= SecurityAutoConfiguration.class)
 public class TamsInterfApplication extends Application {
 
     public static void main(String [] args) {

@@ -63,41 +63,45 @@ public class InterfRiskController {
     @RequestMapping("doOccupyBatchData")
     public Map<String, Object> doOccupyBatchData(@RequestBody Map<String, Object> dataMap)
             throws IOException {
-		ClientData szcliendata =new ClientData();
-		logger.info("==========风险三合一服务开始==========");
-		try {
-			if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_否)) {
-				logger.info("==========系统参数中未开启风险试算开关==========");
-				return doSuccessMsg("系统参数中未开启风险试算开关");
-			}
-
-			logger.info("==========风险批量占有:{} start==========");
-			if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
-				return doExceptionMsg("请求报文为空");
-			} else {
-				String resStr = JsonUtils.object2Json(dataMap);
-				logger.info("请求报文:{}", resStr);
-			}
-
-			Map<String, Object> occupyBatchDataMap = interfRiskRdsService.doOccupyBatchData(dataMap, szcliendata);
-			logger.info("==========风险三合一服务结束==========");
-
-			String resStr = JsonUtils.object2Json(occupyBatchDataMap);
-			logger.info("返回报文:{}", resStr);
-
-			return occupyBatchDataMap;
-
-		}
-        catch (Exception e) {
-            logger.info("==========风险三合一服务异常结束 Exception==========\r\n {}", e.getMessage());
-            if("指标状态_不通过".equals(e.getMessage())) {
-				String resStr = JsonUtils.object2Json(szcliendata.getBody());
-				logger.info("返回报文:{}", resStr);
-				return szcliendata.getBody();
-			}
-
-			return doExceptionMsg("接口异常");
-        }
+//		ClientData szcliendata =new ClientData();
+//		logger.info("==========风险三合一服务开始==========");
+//		try {
+//			if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_否)) {
+//				logger.info("==========系统参数中未开启风险试算开关==========");
+//				return doSuccessMsg("系统参数中未开启风险试算开关");
+//			}
+//
+//			logger.info("==========风险批量占有:{} start==========");
+//			if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
+//				return doExceptionMsg("请求报文为空");
+//			} else {
+//				String resStr = JsonUtils.object2Json(dataMap);
+//				logger.info("请求报文:{}", resStr);
+//			}
+//
+//			Map<String, Object> occupyBatchDataMap = interfRiskRdsService.doOccupyBatchData(dataMap, szcliendata);
+//			logger.info("==========风险三合一服务结束==========");
+//
+//			String resStr = JsonUtils.object2Json(occupyBatchDataMap);
+//			logger.info("返回报文:{}", resStr);
+//
+//			return occupyBatchDataMap;
+//
+//		}
+//        catch (Exception e) {
+//            logger.info("==========风险三合一服务异常结束 Exception==========\r\n {}", e.getMessage());
+//            if("指标状态_不通过".equals(e.getMessage())) {
+//				String resStr = JsonUtils.object2Json(szcliendata.getBody());
+//				logger.info("返回报文:{}", resStr);
+//				return szcliendata.getBody();
+//			}
+//
+//			return doExceptionMsg("接口异常");
+//        }
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("rskStatus","0");
+		resultMap.put("message","成功");
+		return  resultMap;
     }
     
     /**
@@ -111,42 +115,46 @@ public class InterfRiskController {
     public Map<String, Object> doOccupyReleasBatchData(@RequestBody Map<String, Object> dataMap)
             throws IOException {
 		logger.info("==========风险批量释放服务开始==========");
-		ClientData szcliendata =new ClientData();
-        try {
-        	
-            if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_否)) {
-            	 logger.info("==========系统参数中未开启风险试算开关==========");
-                 return doSuccessMsg("系统参数中未开启风险试算开关");
-            }
-			logger.info("==========风险批量释放API:{} start==========");
-			if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
-				return doExceptionMsg("请求报文为空");
-			}else {
-				String resStr = JsonUtils.object2Json(dataMap);
-				logger.info("请求报文:{}", resStr);
-			}
-			String assetType = (String) dataMap.get("assetType");
-			String eventType = (String) dataMap.get("eventType");
-
-			if (StringUtil.isEmpty(eventType)) {
-				return doExceptionMsg("请求参数eventType为空");
-			}
-
-			Map<String, Object> occupyBatchDataMap = interfRiskRdsService.doOccupyReleasBatchData(dataMap, szcliendata);
-			logger.info("==========风险批量释放服务结束==========");
-			String resStr = JsonUtils.object2Json(occupyBatchDataMap);
-			logger.info("返回报文:{}", resStr);
-
-			return occupyBatchDataMap;
-
-        }
-        catch (Exception e) {
-            logger.info("==========风险批量释放服务异常结束 Exception==========\r\n {}", e.getMessage());
-			if("指标状态_不通过".equals(e.getMessage())) {
-				return doExceptionMsg((String)szcliendata.getHead().get("stdrtninfo"));
-			}
-            return doExceptionMsg("接口异常");
-        }
+//		ClientData szcliendata =new ClientData();
+//        try {
+//
+//            if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_否)) {
+//            	 logger.info("==========系统参数中未开启风险试算开关==========");
+//                 return doSuccessMsg("系统参数中未开启风险试算开关");
+//            }
+//			logger.info("==========风险批量释放API:{} start==========");
+//			if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
+//				return doExceptionMsg("请求报文为空");
+//			}else {
+//				String resStr = JsonUtils.object2Json(dataMap);
+//				logger.info("请求报文:{}", resStr);
+//			}
+//			String assetType = (String) dataMap.get("assetType");
+//			String eventType = (String) dataMap.get("eventType");
+//
+//			if (StringUtil.isEmpty(eventType)) {
+//				return doExceptionMsg("请求参数eventType为空");
+//			}
+//
+//			Map<String, Object> occupyBatchDataMap = interfRiskRdsService.doOccupyReleasBatchData(dataMap, szcliendata);
+//			logger.info("==========风险批量释放服务结束==========");
+//			String resStr = JsonUtils.object2Json(occupyBatchDataMap);
+//			logger.info("返回报文:{}", resStr);
+//
+//			return occupyBatchDataMap;
+//
+//        }
+//        catch (Exception e) {
+//            logger.info("==========风险批量释放服务异常结束 Exception==========\r\n {}", e.getMessage());
+//			if("指标状态_不通过".equals(e.getMessage())) {
+//				return doExceptionMsg((String)szcliendata.getHead().get("stdrtninfo"));
+//			}
+//            return doExceptionMsg("接口异常");
+//        }
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("rskStatus","0");
+		resultMap.put("message","成功");
+		return resultMap;
     }
 
     /**
@@ -161,52 +169,54 @@ public class InterfRiskController {
             throws IOException {
 		logger.info("==========订单触发风控审批服务开始==========");
 		Map<String, Object> resultMap = new HashMap<>();
-        try {
-
-            if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_否)) {
-                logger.info("==========系统参数中未开启风险试算开关==========");
-                return doSuccessMsg("系统参数中未开启风险试算开关");
-            }
-            logger.info("==========订单触发风控审批:{} start==========");
-            if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
-				return doExceptionMsg("请求报文为空");
-            }else {
-				String resStr = JsonUtils.object2Json(dataMap);
-				logger.info("请求报文:{}", resStr);
-			}
-            String orderID = (String) dataMap.get("orderID");
-
-            if (StringUtil.isEmpty(orderID)) {
-				return doExceptionMsg("请求参数orderID为空");
-            }
-
-            InterfRiskRdsDto interfRiskRdsDto = new InterfRiskRdsDto();
-
-            //调用订单触发风控审批接口
-            interfRiskRdsDto.setInfCode(BussinessDictCodeListRds.接口系统ID_批量风险审批接口.getValue());
-            ClientData szsfclientData = interfRiskRdsService.sendRiskRdsDataCommon(dataMap, interfRiskRdsDto);
-
-			logger.info("==========订单触发风控审批服务结束==========");
-            if(szsfclientData!=null) {
-				String statu = (String)szsfclientData.getBody().get("flowStatus");
-				//不通过，返回
-				if("0".equals(statu)){
-					resultMap.put("flowStatus","0");
-					return resultMap;
-				} else {
-					resultMap.put("flowStatus","1");
-					return resultMap;
-				}
-			} else {
-				resultMap.put("flowStatus","1");
-				return resultMap;
-			}
-        }
-        catch (Exception e) {
-            logger.info("==========订单触发风控审批服务异常结束 Exception==========\r\n {}", e.getMessage());
-			resultMap.put("flowStatus","1");
-			return resultMap;
-        }
+//        try {
+//
+//            if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_否)) {
+//                logger.info("==========系统参数中未开启风险试算开关==========");
+//                return doSuccessMsg("系统参数中未开启风险试算开关");
+//            }
+//            logger.info("==========订单触发风控审批:{} start==========");
+//            if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
+//				return doExceptionMsg("请求报文为空");
+//            }else {
+//				String resStr = JsonUtils.object2Json(dataMap);
+//				logger.info("请求报文:{}", resStr);
+//			}
+//            String orderID = (String) dataMap.get("orderID");
+//
+//            if (StringUtil.isEmpty(orderID)) {
+//				return doExceptionMsg("请求参数orderID为空");
+//            }
+//
+//            InterfRiskRdsDto interfRiskRdsDto = new InterfRiskRdsDto();
+//
+//            //调用订单触发风控审批接口
+//            interfRiskRdsDto.setInfCode(BussinessDictCodeListRds.接口系统ID_批量风险审批接口.getValue());
+//            ClientData szsfclientData = interfRiskRdsService.sendRiskRdsDataCommon(dataMap, interfRiskRdsDto);
+//
+//			logger.info("==========订单触发风控审批服务结束==========");
+//            if(szsfclientData!=null) {
+//				String statu = (String)szsfclientData.getBody().get("flowStatus");
+//				//不通过，返回
+//				if("0".equals(statu)){
+//					resultMap.put("flowStatus","0");
+//					return resultMap;
+//				} else {
+//					resultMap.put("flowStatus","1");
+//					return resultMap;
+//				}
+//			} else {
+//				resultMap.put("flowStatus","1");
+//				return resultMap;
+//			}
+//        }
+//        catch (Exception e) {
+//            logger.info("==========订单触发风控审批服务异常结束 Exception==========\r\n {}", e.getMessage());
+//			resultMap.put("flowStatus","1");
+//			return resultMap;
+//        }
+		resultMap.put("flowStatus","0");
+		return resultMap;
     }
 
 	/**
@@ -220,37 +230,41 @@ public class InterfRiskController {
 	public Map<String, Object> doPreOccupyReleasBatchData(@RequestBody Map<String, Object> dataMap)
 			throws IOException {
 		logger.info("==========风险批量释放预占服务开始==========");
-		ClientData szcliendata =new ClientData();
-		try {
-
-			if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_否)) {
-				logger.info("==========系统参数中未开启风险试算开关==========");
-				return doSuccessMsg("系统参数中未开启风险试算开关");
-			}
-			logger.info("==========风险批量释放预占API:{} start==========");
-			if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
-				return doExceptionMsg("请求报文为空");
-			}else {
-				String resStr = JsonUtils.object2Json(dataMap);
-				logger.info("请求报文:{}", resStr);
-			}
-
-
-			Map<String, Object> occupyBatchDataMap = interfRiskRdsService.doPreOccupyReleasBatchData(dataMap, szcliendata);
-			logger.info("==========风险批量释放预占服务结束==========");
-			String resStr = JsonUtils.object2Json(occupyBatchDataMap);
-			logger.info("返回报文:{}", resStr);
-
-			return occupyBatchDataMap;
-
-		}
-		catch (Exception e) {
-			logger.info("==========风险批量释放预占服务异常结束 Exception==========\r\n {}", e.getMessage());
-			if("指标状态_不通过".equals(e.getMessage())) {
-				return doExceptionMsg((String)szcliendata.getHead().get("stdrtninfo"));
-			}
-			return doExceptionMsg("接口异常");
-		}
+//		ClientData szcliendata =new ClientData();
+//		try {
+//
+//			if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_否)) {
+//				logger.info("==========系统参数中未开启风险试算开关==========");
+//				return doSuccessMsg("系统参数中未开启风险试算开关");
+//			}
+//			logger.info("==========风险批量释放预占API:{} start==========");
+//			if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
+//				return doExceptionMsg("请求报文为空");
+//			}else {
+//				String resStr = JsonUtils.object2Json(dataMap);
+//				logger.info("请求报文:{}", resStr);
+//			}
+//
+//
+//			Map<String, Object> occupyBatchDataMap = interfRiskRdsService.doPreOccupyReleasBatchData(dataMap, szcliendata);
+//			logger.info("==========风险批量释放预占服务结束==========");
+//			String resStr = JsonUtils.object2Json(occupyBatchDataMap);
+//			logger.info("返回报文:{}", resStr);
+//
+//			return occupyBatchDataMap;
+//
+//		}
+//		catch (Exception e) {
+//			logger.info("==========风险批量释放预占服务异常结束 Exception==========\r\n {}", e.getMessage());
+//			if("指标状态_不通过".equals(e.getMessage())) {
+//				return doExceptionMsg((String)szcliendata.getHead().get("stdrtninfo"));
+//			}
+//			return doExceptionMsg("接口异常");
+//		}
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("rskStatus","0");
+		resultMap.put("message","成功");
+		return resultMap;
 	}
 
 

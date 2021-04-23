@@ -211,9 +211,9 @@ public class MstSeatInfo002Controller extends BaseController {
 /*	        			if(StringUtil.equals(dto.getId(),DictCodeListExt1.交易场所_上海期货交易所.getValue())){
 	        				listFeeTypeQs.add(dto);
 	        			}*/
-	        			if(StringUtil.equals(dto.getId(),DictCodeListExt1.交易场所_中国金融期货交易所.getValue())){
-	        				listFeeTypeQs.add(dto);
-	        			}
+//	        			if(StringUtil.equals(dto.getId(),DictCodeListExt1.交易场所_中国金融期货交易所.getValue())){
+//	        				listFeeTypeQs.add(dto);
+//	        			}
 	        		}
 	        	}
 	        }

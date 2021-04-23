@@ -53,7 +53,7 @@
             data.pageModel = PAGE_MODEL_REFERENCE;
             tradeMarket = data.tradeMarket;
             //交易所（上交和深交）的指令
-            if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04 || tradeMarket == TRADE_PLACE_12) {
+            if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04 ) {
             	assetType = data.assetType;
             	entrustId = data.entrustId;
                 assetType1 = data.assetType1;
@@ -167,7 +167,7 @@
         		   var data = res[0];
         		   tradeMarket = data.tradeMarket;
                    //交易所（上交和深交）的指令
-                   if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04 || tradeMarket == TRADE_PLACE_12) {
+                   if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04 ) {
                    	assetType = data.assetType;
                    	assetType1 = data.assetType1;
                    	entrustId = data.entrustId;

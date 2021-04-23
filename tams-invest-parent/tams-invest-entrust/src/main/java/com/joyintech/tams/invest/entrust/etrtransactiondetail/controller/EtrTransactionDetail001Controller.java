@@ -74,7 +74,6 @@ public class EtrTransactionDetail001Controller  extends BaseController{
         model.addAttribute("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
         model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-        model.addAttribute("TRADE_PLACE_12", DictCodeListExt1.交易场所_中国金融期货交易所.getValue());
         model.addAttribute("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
         
         model.addAttribute("entrustStatus", DictCodeList.委托状态_已接收.getValue());
@@ -124,8 +123,7 @@ public class EtrTransactionDetail001Controller  extends BaseController{
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.交易场所, null);
 		List<SelectOptionDto> tradePlace = selectDto.getOptions().stream().filter(option -> {
 			return StringUtil.equals(option.getId(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
-					|| StringUtil.equals(option.getId(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())
-					|| StringUtil.equals(option.getId(), DictCodeListExt1.交易场所_中国金融期货交易所.getValue());
+					|| StringUtil.equals(option.getId(), DictCodeListExt1.交易场所_深圳证券交易所.getValue());
 		}).collect(Collectors.toList());
 		model.addAttribute("TRADE_PLACE", JsonUtils.objectArray2Json(tradePlace.toArray()));
 	}
@@ -133,7 +131,7 @@ public class EtrTransactionDetail001Controller  extends BaseController{
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
 	 * 
-	 * @param Model model
+	 * @param  model
 	 */
 	private void setPsSelectOptions(Model model) {
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.交易方向, null);

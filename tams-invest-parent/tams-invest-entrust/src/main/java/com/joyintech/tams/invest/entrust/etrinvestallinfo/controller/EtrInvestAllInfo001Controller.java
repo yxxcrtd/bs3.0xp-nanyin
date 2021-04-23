@@ -99,7 +99,6 @@ public class EtrInvestAllInfo001Controller extends BaseController {
         
         model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-        model.addAttribute("TRADE_PLACE_12", DictCodeListExt1.交易场所_中国金融期货交易所.getValue());
         model.addAttribute("F19", DictCodeListExt3.平安资产类型_权益类资产.getValue());
 
 

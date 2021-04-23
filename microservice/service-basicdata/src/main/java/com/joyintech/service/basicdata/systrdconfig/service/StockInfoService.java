@@ -31,7 +31,6 @@ public class StockInfoService extends BaseService<StockInfoDto> {
     public Map<String,Object> selectStockInfo(Map<String, Object> params) {
         params.put("TRADE_MARKET_03",DictCodeListExt1.交易场所_上海证券交易所.getValue());
         params.put("TRADE_MARKET_04",DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-        params.put("TRADE_MARKET_12",DictCodeListExt1.交易场所_中国金融期货交易所.getValue());
         params.put("ASSET_TYPE_F01", DictCodeList.平安资产类型_债券.getValue());
         params.put("ASSET_TYPE_F02", DictCodeList.平安资产类型_基金.getValue());
         params.put("ASSET_TYPE_F11", DictCodeListExt2.平安资产类型_股票.getValue());
