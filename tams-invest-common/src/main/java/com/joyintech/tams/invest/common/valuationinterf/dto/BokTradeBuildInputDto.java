@@ -77,6 +77,21 @@ public class BokTradeBuildInputDto extends BaseEntity {
      * ADD BY WUJIE ON 20191119
      */
     private List<PtlTrade> ptlTradeList;
+    
+    
+    /**ADD BY WUJIE ON 20210129 START REMARK:回购到期区分 到期、到期续作、逾期贩售**/
+    private String psType;//回购交易方向：到期续作、逾期贩售
+    
+    public String getPsType() {
+		return psType;
+	}
+
+	public void setPsType(String psType) {
+		this.psType = psType;
+	}
+
+	/**ADD BY WUJIE ON 20210129 END**/
+	
 
     public TrdFinProductBarter getTrdFinProductBarter() {
         return trdFinProductBarter;

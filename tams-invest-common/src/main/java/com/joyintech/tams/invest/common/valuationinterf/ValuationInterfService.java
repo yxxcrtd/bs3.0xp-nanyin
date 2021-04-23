@@ -884,7 +884,7 @@ public class ValuationInterfService {
         }
 
         ResultObject resultObject = valInterfCommonServiceApi.lendMdateAdd(prodid, prodFinprodType,
-                branch, trdProductDealList, inputDto.getTrdTradeFeeDetail(),inputDto.getPtlTradeList(),stlOrders);
+                branch, trdProductDealList, inputDto.getTrdTradeFeeDetail(),inputDto.getPtlTradeList(),stlOrders,inputDto.getPsType());
 
         logger.info("调用【拆入到期_新增】接口处理汇总交易编号：" + totalTradeId);
         logger.info("调用【拆入到期_新增】接口处理结果代码：" + resultObject.getResultCode());

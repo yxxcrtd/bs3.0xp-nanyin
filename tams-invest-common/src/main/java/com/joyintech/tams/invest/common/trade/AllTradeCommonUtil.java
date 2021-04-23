@@ -522,7 +522,14 @@ public class AllTradeCommonUtil {
             /** ADD BY WUJIE ON 20191119 END **/
             bokTradeBuildInputDto.setStlPayOrders(inputDto.getStlPayOrders());
 
+            /**ADD BY WUJIE ON 20210129 START REMARK:回购交易方向：到期续作、逾期贩售**/
+            bokTradeBuildInputDto.setPsType(inputDto.getPsType());
+            /**ADD BY WUJIE ON 20210129 END**/
+
             valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
+
+            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
+
             // 调用授信共通
             for (TrdProductDeal trdProductDeal : inputDto.getTrdProductDealList()) {
                 AllTradeCommonInputDto input = new AllTradeCommonInputDto();
@@ -556,6 +563,12 @@ public class AllTradeCommonUtil {
             /** ADD BY WUJIE ON 20191119 START **/
             bokTradeBuildInputDto.setPtlTradeList(inputDto.getPtlTradeList());
             /** ADD BY WUJIE ON 20191119 END **/
+
+            /**ADD BY WUJIE ON 20210129 START REMARK:回购交易方向：到期续作、逾期贩售**/
+            bokTradeBuildInputDto.setPsType(inputDto.getPsType());
+            /**ADD BY WUJIE ON 20210129 END**/
+
+            valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
 
             valuationInterfService.lendMdateAdd(bokTradeBuildInputDto);
             // 调用授信共通
