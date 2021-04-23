@@ -411,46 +411,25 @@
           	</foreach>
 	       </if>
          </where>
-      )
-      where 1 = 1 limit 1
+      )as t
+      where ranknum = 1
 	</insert>
 	<delete id="deleteLastSubmitHis" parameterType="java.util.Map">
       delete from CHB_PRD_DEAL_SUB_HIS
       where 1 =1 
       and HIS_NO in (
-			  select a.HIS_NO from (
-			SELECT
-			@rownum:=@rownum+1 rownum,
-			A.HIS_NO,
-			IF
-			(
-			(
-			@prod_id = A.prod_id
-			AND @vdate = A.vdate
-			),
-			@rank := @rank + 1,
-			@rank := 1
-			) AS myrank,
-			@prod_id := A.prod_id,
-			@vdate := A.vdate
-			FROM
-			( SELECT * FROM CHB_PRD_DEAL_SUB_HIS ORDER BY prod_id,vdate, ifnull( UPDATE_TIME, CREATE_TIME ) DESC ) A,
-			(
-			SELECT
-			@rownum := 0,
-			@prod_id := NULL,
-			@vdate := NULL,
-			@rank := 0
-			) B
-		where 1=1
-			   <if test="registList !=null and registList.size()>0">
-					 <foreach collection="registList" item="regist" open=" AND (PROD_ID,vdate) IN (" separator="union all"  close=")">
-					   select #{regist.prodId,jdbcType=VARCHAR}, STR_TO_DATE(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d') from dual
-					 </foreach>
-				  </if>
-		  )a
-		  where 1=1 limit 1
-  )
+				select a.HIS_NO from (
+					select HIS_NO,row_number() over(partition by prod_id,vdate order by ifnull(UPDATE_TIME,CREATE_TIME) desc) myrank
+					from CHB_PRD_DEAL_SUB_HIS
+					where 1=1
+				   <if test="registList !=null and registList.size()>0">
+						 <foreach collection="registList" item="regist" open=" AND (PROD_ID,vdate) IN (" separator="union all"  close=")">
+						   select #{regist.prodId,jdbcType=VARCHAR}, STR_TO_DATE(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d') from dual
+						 </foreach>
+					  </if>
+			   )as a
+			   where a.myrank = 1
+             )
   </delete>
   <select id="selectByPrimaryKey" resultType="com.joyintech.tams.common.base.entity.ChbPrdDealSub" parameterType="string">
   	select 
@@ -494,37 +473,52 @@
 		where REGIST_SEQNO=#{registSeqno,jdbcType=VARCHAR}
   </select>
      <select id="selectAllDataByList" resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
-select  
-sub.PROD_REGIST_CODE  prodRegistCode,
-sub.ISSUE_PARTY_ID  issuePartyId,
-sub.ORIGINAL_VALUE  originalValue,
-sub.PRD_VALUE  prdValue,
-sub.TOTAL_VALUE totalValue,
-sub.VALUE_CCY  valueCcy,
-sub.CNY_ORL_VALUE  cnyOrlValue,
-sub.CNY_PRD_VALUE  cnyPrdValue,
-sub.CNY_TAL_VALUE  cnyTalValue,
-sub.REA_YIELD*100   reaYield,
-sub.NEW_EXP_YIELD*100 newExpYield ,
-sub.BANK_IMP_INT  bankImpInt,
-sub.VDATE  vdate,
-sub.MDATE  mdate,
-sub.PURCHASE_QTY purchaseQty,
-sub.REDEEM_QTY  redeemQty,
-sub.SHARE_AMT_WAN shareAmtWan,
-sub.CASH_AMT_WAN  cashAmtWan, 
-sub.BALANCE_AMT  balanceAmt,
-sub.PRD_QTY  prdQty,
-sub.CCY_PURCHASE  ccyPurchase,
-sub.REMARK
+		select
+		sub.PROD_REGIST_CODE  prodRegistCode,
+		sub.ISSUE_PARTY_ID  issuePartyId,
+		sub.ORIGINAL_VALUE  originalValue,
+		sub.PRD_VALUE  prdValue,
+		sub.TOTAL_VALUE totalValue,
+		sub.VALUE_CCY  valueCcy,
+		sub.CNY_ORL_VALUE  cnyOrlValue,
+		sub.CNY_PRD_VALUE  cnyPrdValue,
+		sub.CNY_TAL_VALUE  cnyTalValue,
+		sub.REA_YIELD*100   reaYield,
+		sub.NEW_EXP_YIELD*100 newExpYield ,
+		sub.BANK_IMP_INT  bankImpInt,
+		sub.VDATE  vdate,
+		sub.MDATE  mdate,
+		sub.PURCHASE_QTY purchaseQty,
+		sub.REDEEM_QTY  redeemQty,
+		sub.SHARE_AMT_WAN shareAmtWan,
+		sub.CASH_AMT_WAN  cashAmtWan,
+		sub.BALANCE_AMT  balanceAmt,
+		sub.PRD_QTY  prdQty,
+		sub.CCY_PURCHASE  ccyPurchase,
+		sub.REMARK
 
-from CHB_PRD_DEAL_SUB sub
-    where 1=1
-    <if test="keyList != null and keyList.size()>0">
-    <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
-    #{items.registSeqno,jdbcType=VARCHAR}
-    </foreach>
-    </if>
-    order by sub.SUBMIT_DEADLINE
+		from CHB_PRD_DEAL_SUB sub
+			where 1=1
+			<if test="keyList != null and keyList.size()>0">
+			<foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+			#{items.registSeqno,jdbcType=VARCHAR}
+			</foreach>
+			</if>
+			order by sub.SUBMIT_DEADLINE
+ </select>
+
+ <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
+	select REGIST_SEQNO
+	from CHB_PRD_DEAL_SUB
+	where
+	<if test="flag == '02'">
+		SEND_STATUS in ('02','03')
+	</if>
+	<if test="flag == '01'">
+		SEND_STATUS = '01'
+	</if>
+	<foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+		(CONCAT(PROD_ID,DATE_FORMAT(MDATE,'%Y-%m-%d'))) = (CONCAT(#{item.prodId,jdbcType=VARCHAR},#{item.mdate,jdbcType=VARCHAR}))
+	</foreach>
  </select>
 </mapper>

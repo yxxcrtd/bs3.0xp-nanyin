@@ -627,7 +627,7 @@ public class ViewCompareDetailController extends BaseController {
             }
             // 数值类型
             else if (value instanceof Number) {
-                v = StringUtil.numberToString((BigDecimal)value);
+                v = StringUtil.numberToString(((Number) value).intValue());
             }
             else if(value instanceof String){
                 v = value.toString();
