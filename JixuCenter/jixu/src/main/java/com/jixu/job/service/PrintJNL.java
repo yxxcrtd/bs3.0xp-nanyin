@@ -13,24 +13,24 @@ import com.jixu.journal.obj.GLCOOABase;
 import com.orm.obj.VoucherDetails;
 
 public abstract class PrintJNL {
-	
+
 	@Autowired
 	protected SystemSelect systemSelect;
-	
+
 	public abstract ResultContainer printJNL(List<GLCOOABase> pursaleJnlList);
-	
+
 	protected List<VoucherDetails> mergetSameAcctJNL(List<VoucherDetails> jnlobjList) {
 		List<VoucherDetails> newJnlList = new ArrayList<VoucherDetails>();
 		int index = 0;
 		//double gap = 0.0;
 		for (VoucherDetails obj : jnlobjList) {
-			/** modify by yanya on 20210109 ÅÐ¶¨¿ÆÄ¿ºÅ±ÒÖÖÊÇ·ñÒ»ÖÂ£¬ÐÂ±àÐ´·½·¨ start**/
-			/** modify by yanya on 20210107 ºÏ²¢ÏàÍ¬¿ÆÄ¿Ê±£¬Çø·Ö±ÒÖÖ£¬Èç¹û±ÒÖÖ²»Ò»ÖÂ£¬²»½øÐÐºÏ²¢ start**/
+			/** modify by yanya on 20210109 åˆ¤å®šç§‘ç›®å·å¸ç§æ˜¯å¦ä¸€è‡´ï¼Œæ–°ç¼–å†™æ–¹æ³• start**/
+			/** modify by yanya on 20210107 åˆå¹¶ç›¸åŒç§‘ç›®æ—¶ï¼ŒåŒºåˆ†å¸ç§ï¼Œå¦‚æžœå¸ç§ä¸ä¸€è‡´ï¼Œä¸è¿›è¡Œåˆå¹¶ start**/
 			//index = findExistingJNL(obj.getAccountNum(), newJnlList);
 			//index = findExistingJNL(obj.getAccountNum() + "_" + obj.getLocalCurrency(), newJnlList);
 			index = findExistingJNLCurrency(obj.getAccountNum(), obj.getLocalCurrency(), newJnlList);
-			/** modify by yanya on 20210107 ºÏ²¢ÏàÍ¬¿ÆÄ¿Ê±£¬Çø·Ö±ÒÖÖ£¬Èç¹û±ÒÖÖ²»Ò»ÖÂ£¬²»½øÐÐºÏ²¢ end**/
-			/** modify by yanya on 20210109 ÅÐ¶¨¿ÆÄ¿ºÅ±ÒÖÖÊÇ·ñÒ»ÖÂ£¬ÐÂ±àÐ´·½·¨ end**/
+			/** modify by yanya on 20210107 åˆå¹¶ç›¸åŒç§‘ç›®æ—¶ï¼ŒåŒºåˆ†å¸ç§ï¼Œå¦‚æžœå¸ç§ä¸ä¸€è‡´ï¼Œä¸è¿›è¡Œåˆå¹¶ end**/
+			/** modify by yanya on 20210109 åˆ¤å®šç§‘ç›®å·å¸ç§æ˜¯å¦ä¸€è‡´ï¼Œæ–°ç¼–å†™æ–¹æ³• end**/
 			if (index >=0 ) {
 				newJnlList.get(index).setCr_func(RoundUtil.roundMoney2Dec(newJnlList.get(index).getCr_func() + obj.getCr_func()));
 				newJnlList.get(index).setCr_local(RoundUtil.roundMoney2Dec(newJnlList.get(index).getCr_local() + obj.getCr_local()));
@@ -40,7 +40,7 @@ public abstract class PrintJNL {
 				newJnlList.add(obj);
 			}
 		}
-		
+
 		VoucherDetails obj = null;
 		for (int i = 0; i < newJnlList.size(); i++) {
 			double gap=0;
@@ -49,14 +49,14 @@ public abstract class PrintJNL {
 			if (gap > 0) {
 				obj.setDr_func(RoundUtil.roundMoney2Dec(gap));
 				obj.setCr_func(0);
-				
+
 				gap = RoundUtil.roundMoney2Dec(obj.getDr_local() - obj.getCr_local());
 				obj.setDr_local(RoundUtil.roundMoney2Dec(Math.abs(gap)));
 				obj.setCr_local(0);
 			} else if (gap < 0) {
 				obj.setCr_func(RoundUtil.roundMoney2Dec(Math.abs(gap)));
 				obj.setDr_func(0);
-				
+
 				gap = RoundUtil.roundMoney2Dec(obj.getDr_local() - obj.getCr_local());
 				obj.setCr_local(RoundUtil.roundMoney2Dec(Math.abs(gap)));
 				obj.setDr_local(0);
@@ -65,10 +65,10 @@ public abstract class PrintJNL {
 				i--;
 			}
 		}
-		
+
 		return newJnlList;
 	}
-	
+
 	protected List<VoucherDetails> removeZeroJNL(List<VoucherDetails> jnlobjList) {
 		for(int i=0;i<jnlobjList.size();i++){
 			VoucherDetails vd=jnlobjList.get(i);
@@ -77,12 +77,12 @@ public abstract class PrintJNL {
 				i=i-1;
 			}
 		}
-		
+
 		return jnlobjList;
 	}
 
 	/**
-	 * ²éÕÒÊÇ·ñÓÐÏàÍ¬¿ÆÄ¿µÄÊý¾Ý£¨·ÏÆú²»ÓÃ£©
+	 * æŸ¥æ‰¾æ˜¯å¦æœ‰ç›¸åŒç§‘ç›®çš„æ•°æ®ï¼ˆåºŸå¼ƒä¸ç”¨ï¼‰
 	 * modify by yanya in 20210109
 	 * @param acctnum
 	 * @param jnlList
@@ -100,7 +100,7 @@ public abstract class PrintJNL {
 	}
 
 	/**
-	 * ²éÕÒÊÇ·ñÓÐÏàÍ¬¿ÆÄ¿µÄÊý¾Ý£¬Çø·Ö±ÒÖÖ
+	 * æŸ¥æ‰¾æ˜¯å¦æœ‰ç›¸åŒç§‘ç›®çš„æ•°æ®ï¼ŒåŒºåˆ†å¸ç§
 	 * modify by yanya on 20210109
 	 * @param acctnum
 	 * @param currency
@@ -110,7 +110,7 @@ public abstract class PrintJNL {
 	private int findExistingJNLCurrency(String acctnum, String currency, List<VoucherDetails> jnlList) {
 		int position = -1;
 		for (int i = 0; i < jnlList.size(); i++) {
-			//ÅÐ¶¨¿ÆÄ¿ºÅ£¬ÇÒ±ÒÖÖÊ±Ò»Ö±
+			//åˆ¤å®šç§‘ç›®å·ï¼Œä¸”å¸ç§æ—¶ä¸€ç›´
 			if (jnlList.get(i).getAccountNum() != null && jnlList.get(i).getAccountNum().equals(acctnum)
 					&& jnlList.get(i).getLocalCurrency() != null && jnlList.get(i).getLocalCurrency().equals(currency)) {
 				position = i;
@@ -119,7 +119,7 @@ public abstract class PrintJNL {
 		}
 		return position;
 	}
-	
+
 	public boolean checkJournalRunable(String portNum, Date journalDate, int journalType){
 		return false;
 	}
