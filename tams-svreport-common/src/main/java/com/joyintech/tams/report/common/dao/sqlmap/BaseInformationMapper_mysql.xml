@@ -365,10 +365,7 @@
 		</foreach>
 	</insert>
 	<insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.BaseInformationDto">
-		INSERT ALL
-		<foreach collection="insertList" item="item" index="index" separator="" >
-			INTO CHB_INFOMGR_CONFIG
-			(
+		INSERT INTO CHB_INFOMGR_CONFIG (
 			BASEINFORMATIONID,
 			BASETABLEID,
 			BASECOLUMNID,
@@ -376,18 +373,18 @@
 			BASECOLUMNTYPE,
 			BUSINESSPKFLAG,
 			DICTCODE
-			) VALUES
+		) VALUES
+		<foreach collection="insertList" item="item" index="index" separator="," >
 			(
-			#{item.baseInformationId, jdbcType=VARCHAR},
-			#{item.baseTableId, jdbcType=VARCHAR},
-			#{item.baseColumnId, jdbcType=VARCHAR},
-			#{item.baseColumnName, jdbcType=VARCHAR},
-			#{item.baseColumnType, jdbcType=VARCHAR},
-			#{item.businesspkFlag, jdbcType=VARCHAR},
-			#{item.dictCode, jdbcType=VARCHAR}
+				#{item.baseInformationId, jdbcType=VARCHAR},
+				#{item.baseTableId, jdbcType=VARCHAR},
+				#{item.baseColumnId, jdbcType=VARCHAR},
+				#{item.baseColumnName, jdbcType=VARCHAR},
+				#{item.baseColumnType, jdbcType=VARCHAR},
+				#{item.businesspkFlag, jdbcType=VARCHAR},
+				#{item.dictCode, jdbcType=VARCHAR}
 			)
 		</foreach>
-		SELECT 1 FROM DUAL
 	</insert>
 	<delete id="deleteDataWithOutStatus" parameterType="java.util.Map" statementType="STATEMENT">
 		<if test="map != null and map.size() > 0">

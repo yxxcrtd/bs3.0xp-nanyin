@@ -11,35 +11,28 @@
     
 package com.joyintech.tams.svreport.infomanagement.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
+import com.joyintech.tams.common.base.entity.BaseInformationDto;
+import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
+import com.joyintech.tams.common.base.entity.ColumnTypeDto;
 import com.joyintech.tams.common.base.entity.FilterInformationDetailDto;
+import com.joyintech.tams.report.common.dao.BaseInformationMapper;
+import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
+import com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper;
+import com.joyintech.tams.report.common.dao.ColumnTypeMapper;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.infomanagement.dao.OperationalInfo004Mapper;
 import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BaseInformationDto;
-import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
-import com.joyintech.tams.common.base.entity.ColumnTypeDto;
-import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
-import com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper;
-import com.joyintech.tams.report.common.dao.ColumnTypeMapper;
-import com.joyintech.tams.report.common.dao.BaseInformationMapper;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import java.util.*;
 
 /**
 * @ClassName: OperationalInfo004Service
@@ -208,7 +201,7 @@ public class OperationalInfo004Service extends CommonExportService<ChbInfoMgrRes
 				}
 				// 日期类型检查
 				if (StringUtil.equals("D", columnType)) {
-					if (!realColumnType.contains("DATE") && !realColumnType.contains("TIMESTAMP")) {
+					if (!realColumnType.contains("DATE") && !realColumnType.contains("TIMESTAMP") && !realColumnType.contains("datetime")) {
 						ExcelValidDto exc=new ExcelValidDto();
 						exc.setCheckResult("01");
 						exc.setValidKey(column);
