@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProRate.xlsx" name="产品费率信息">
+	<Worksheet javaBean="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+		<Row>
+			<Cell order="1" name="操作类型">type</Cell><!-- 操作类型 -->
+			<Cell order="2" name="产品代码">busiId</Cell><!-- 产品代码 -->
+		    <Cell order="3" name="启用日期">startDate</Cell><!-- 启用日期 -->
+			<Cell order="4" name="信披费用类型">cashType2</Cell><!-- 信披费用类型 -->
+			<Cell order="5" name="费率">rate</Cell><!-- 费率 -->
+		</Row>
+	</Worksheet>
+</Workbook>

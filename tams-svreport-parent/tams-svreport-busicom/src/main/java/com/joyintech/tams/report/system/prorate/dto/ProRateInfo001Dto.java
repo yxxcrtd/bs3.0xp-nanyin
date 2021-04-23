@@ -1,18 +1,30 @@
 package com.joyintech.tams.report.system.prorate.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.report.common.base.annotate.TableName;
+import com.joyintech.tams.report.system.prorate.validator.DisPrdFeeRateValidator;
+import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class ProRateInfo001Dto extends BaseEntity implements ITableRow {
+@TableName("REP_CASH_YIELD")
+@PageId("DisPrdFeeRate002")
+@ValidLogic(targetClass = DisPrdFeeRateValidator.class, groups = { ValidateGroupEdit.class,
+        ValidateGroupDelete.class })
+public class ProRateInfo001Dto extends DisRepCashYield implements ITableRow, ProcessEntity {
 
     /**
      * uuid主键
-     */
+     *//*
     private String datauuid;
 
     public String getDatauuid() {
@@ -23,50 +35,50 @@ public class ProRateInfo001Dto extends BaseEntity implements ITableRow {
         this.datauuid = datauuid;
     }
 
-    /**
+    *//**
      * 数据状态
-     */
+     *//*
     private String status;
-    /**
+    *//**
      * 产品代码
-     */
+     *//*
     private String prodId;
-    /**
+    *//**
      * 产品名称
-     */
+     *//*
     private String prodName;
-    /**
+    *//**
      * 启用日
-     */
+     *//*
     private Date startDate;
-    /**
+    *//**
      * 信披费用类型
-     */
+     *//*
     private String cashType2;
-    /**
+    *//**
      * 费率
-     */
+     *//*
     @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal feeRate;
-    /**
+    *//**
      * 创建人
-     */
+     *//*
     private String createUser;
-    /**
+    *//**
      * 创建时间
-     */
+     *//*
     private Date createTime;
-    /**
+    *//**
      * 更新人
-     */
+     *//*
     private String updateUser;
-    /**
+    *//**
      * 更新时间
-     */
+     *//*
     private Date updateTime;
-    /**
+    *//**
      * 数据来源
-     */
+     *//*
     private String dataSource;
 
     @Override
@@ -165,5 +177,5 @@ public class ProRateInfo001Dto extends BaseEntity implements ITableRow {
 
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
-    }
+    }*/
 }

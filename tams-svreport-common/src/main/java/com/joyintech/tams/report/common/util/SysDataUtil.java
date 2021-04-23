@@ -133,8 +133,8 @@ public final class SysDataUtil {
         for (String string : codeList) {
             String name = SysDataUtil.getNameFromDataDict(dictCode, string);
             if (StringUtil.isNotEmpty(name)){
-                nameList.add(
-                        string + StringUtil.SPACE + name);
+                /*nameList.add(string + StringUtil.SPACE + name);*/
+                nameList.add(name);
             }
         }
         return StringUtil.joinString(nameList, GlobalConstant.COMMA);

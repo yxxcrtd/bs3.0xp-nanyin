@@ -2,8 +2,10 @@ package com.joyintech.service.svrcom.system.prorate.controller;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.report.system.prorate.dto.ProRateInfo001Dto;
 import com.joyintech.tams.report.system.prorate.service.ProRateInfo001Service;
+import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +24,7 @@ public class ProrateController {
     private ProRateInfo001Service proRateInfo001Service;
 
     @PostMapping("findPage/{page}/{length}")
-    public Page<ProRateInfo001Dto> search(@RequestBody Map<String,Object> paramMap) {
+    public Page<DisRepCashYield> search(@RequestBody Map<String,Object> paramMap) {
         return proRateInfo001Service.searchForPage(paramMap);
     }
     @PostMapping("getProdinfo")
@@ -36,8 +38,38 @@ public class ProrateController {
         return list;
     }
     @PostMapping("selectPrdFeeData")
-    public List<Integer> selectPrdFeeData (List<ProRateInfo001Dto> dtoList){
+    public List<Integer> selectPrdFeeData (@RequestBody List<DisRepCashYield> dtoList){
         List<Integer> intList =proRateInfo001Service.selectPrdFeeData(dtoList);
         return intList;
+    }
+    @PostMapping("insertPrdFeeData")
+    public void insertPrdFeeData(@RequestBody List<DisRepCashYield> dtoList) {
+        proRateInfo001Service.insertPrdFeeData(dtoList);
+        return ;
+    }
+    @PostMapping("updateDisRepCashYield")
+    public void updateDisRepCashYield(@RequestBody List<DisRepCashYield> dtoList) {
+        proRateInfo001Service.updateDisRepCashYield(dtoList);
+        return ;
+    }
+    @PostMapping("deleteDisRepCashYieldErrorData")
+    public void deleteDisRepCashYieldErrorData(@RequestBody List<DisRepCashYield> dtoList) {
+        proRateInfo001Service.deleteDisRepCashYieldErrorData(dtoList);
+        return ;
+    }
+    @PostMapping("queryReportList")
+    public List<DisRepCashYield> queryReportList(@RequestBody Map<String, Object> param) {
+        List<DisRepCashYield> list = proRateInfo001Service.queryReportList(param);
+        return list;
+    }
+    @PostMapping("selectOneDate")
+    public List<DisRepCashYield> selectOneDate(@RequestBody Map<String, Object> param) {
+        List<DisRepCashYield> list = proRateInfo001Service.selectOneDate(param);
+        return list;
+    }
+    @PostMapping("selectdisPrdFeeRateErrordata")
+    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(String datauuid) {
+        List<DisPrdFeeRateInfoErrodataWithBLOBs> list = proRateInfo001Service.selectdisPrdFeeRateErrordata(datauuid);
+        return list;
     }
 }
