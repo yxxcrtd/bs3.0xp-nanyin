@@ -499,6 +499,12 @@ public class TrdProjectDurationService extends BaseService {
         return queryForPageForSelectReturn(page, length, () -> trdProjectDurationMapper.getFinprodMarketId(param));
     }
     //add by liupengfei for 多级法人E
+
+    /**
+     * 资产是否还本带息，若还本带息，还本日是否等于付息日
+     * @param map
+     * @return
+     */
     public boolean isPayIntDate(Map<String, Object> map) {
         //若针对，还本带息，返回 true，针对还本不带息，若有付息日=还本日，返回true
         int count=trdProjectDurationMapper.isNoPayInt(map);

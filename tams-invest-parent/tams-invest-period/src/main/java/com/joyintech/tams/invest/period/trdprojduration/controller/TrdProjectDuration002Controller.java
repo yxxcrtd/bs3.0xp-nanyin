@@ -215,8 +215,7 @@ public class TrdProjectDuration002Controller extends BaseController {
         return new AjaxResult(msg);
     }
     /**
-     * 是否付息日　
-     *
+     *  资产是否还本带息，若还本带息，还本日是否等于付息日
      * @param ccy 币种
      * @param acctNo 网点账号
      * @return 清算账户表

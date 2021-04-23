@@ -1660,10 +1660,9 @@ public class FinProductCommonService {
         return finProductCommonMapper.selectHBFXData(map);
     }
     /**
-     * 公用方法：标的类共通方法 - 标的信息查询
+     * 公用方法：标的类共通方法 - 标的信息查询，查询是否还本不带息
      * @param finprodId 标的代码【必输项】
-     * @param queryCriteria 查询类型【必输项】
-     * @return Map<TargetSearchDto, Object> 返回值获取，直接用查询实体类作为key值获取。
+     * @return　返回值获取，直接查询是否还本不带息
      */
     public String getIsPayInt(String finprodId) {
         return  finProductCommonMapper.getIsPayInt(finprodId);

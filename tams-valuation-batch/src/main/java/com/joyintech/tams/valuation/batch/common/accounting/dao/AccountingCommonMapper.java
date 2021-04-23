@@ -501,7 +501,7 @@ public interface AccountingCommonMapper {
     BigDecimal selectFloatSubjectBalance(Map<String, Object> map);
     /**
      *
-     * 凭证最新账务查询
+     * 最新账务查询
      * @param paMap
      * @return
      * @see

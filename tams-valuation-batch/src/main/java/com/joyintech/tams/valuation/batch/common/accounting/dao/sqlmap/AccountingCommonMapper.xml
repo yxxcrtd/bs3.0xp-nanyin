@@ -1250,7 +1250,7 @@ FROM
               #{item}
             </foreach>
     </select>
-	<!-- 凭证最新账务查询 -->
+	<!-- 最新账务查询 -->
 	<select id="getBookRePayListInfo" parameterType="java.util.Map" resultType="com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto">
 		SELECT
 		crt.*

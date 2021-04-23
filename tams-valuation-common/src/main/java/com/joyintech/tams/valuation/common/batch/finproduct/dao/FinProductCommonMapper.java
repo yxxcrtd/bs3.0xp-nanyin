@@ -520,6 +520,11 @@ public interface FinProductCommonMapper {
      */
     Map<String, Object> selectHBFXData(Map<String, Object> map);
 
+    /**
+     * 资产是否还本不带息
+     * @param finprodId
+     * @return
+     */
     String getIsPayInt(@Param("finprodId") String finprodId);
 	
 	TrdFinProductBarterDto selectTrdFinProductBarter(@Param("tradeId") String tradeId);

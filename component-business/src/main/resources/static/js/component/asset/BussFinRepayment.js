@@ -330,7 +330,13 @@
         //仅项目类资产 点击生成计划按钮 才会重新调用付息计划 重新计算区间利息
         if(iscallbackPay){
             if(callback&&$.isFunction(callback)){
-                callback(true,flag);
+                if(INT_ASSET_TYPE==FINPROD_TYPE_TG_F18){
+                    //若为项目类资产，点击生成计划按钮，重新调用付息计划 重新计算区间利息
+                    callback(true,flag);
+                }else{
+                    callback(flag,true);
+                }
+
             } 
         }
         disableBussFinRepay();

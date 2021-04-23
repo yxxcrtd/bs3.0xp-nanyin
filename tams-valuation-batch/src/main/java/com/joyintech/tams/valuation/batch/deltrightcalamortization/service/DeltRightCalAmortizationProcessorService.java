@@ -30,6 +30,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BokBooksetExt;
 import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -57,6 +58,7 @@ import com.joyintech.tams.valuation.common.constants.*;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -345,6 +347,7 @@ public class DeltRightCalAmortizationProcessorService {
                         accurIntCalOutParameter.getInterest(), costQuantity);
                     interestBalanceToday = ArithmeticUtil.divide(interestBalanceToday, faceValue);
 
+                    //获取该资产是否还本不带息
                     String isPayInt = finProductCommonService.getIsPayInt(acctEntityEx.getBusiId());
                      if(StringUtil.isNotEmpty(isPayInt) && isPayInt.equals("N")){
                          //若该资产规定还本不付息，该区间出现中间还本，使用分段计算还本利息
@@ -370,8 +373,19 @@ public class DeltRightCalAmortizationProcessorService {
                         /*BigDecimal interestAmt= calculationCommonService.calCommon(cashPlanCalc.getVdate(),
                                 item.getBookDate(), principalInfoList,
                                 quoteInfoList).getTotalInterestAmt();*/
+                             //还本在该区间内的应计利息
 
-                             BigDecimal interestAmt = this.calcRePayAddInt(targetFinProduct,interestPayList,payRuleList,quotationList,item.getoHappenAmt(),item.getBookDate());
+                             //BigDecimal interestAmt = this.calcRePayAddInt(targetFinProduct,interestPayList,payRuleList,quotationList,item.getoHappenAmt(),item.getBookDate());
+                             DrawBaseInfoSelectComResult acctEntityInt= new DrawBaseInfoSelectComResult();
+                             BeanUtils.copyProperties(acctEntity, acctEntityInt);
+                             acctEntityInt.setHappenDate(item.getBookDate());
+                             // 调用债权类资产应计利息共通
+                             AccurIntCalOutParameter accurIntCalOutParameterInt = this.getCalculate(
+                                     acctEntityEx, targetFinProduct, interestPayList, quotationList,
+                                     payRuleList, faceValue, acctEntityInt);
+                             // 变量.本日应计利息余额 = 返回值 调用金额共通方法设置有效小数位
+                             BigDecimal interestAmt  = ArithmeticUtil.multiply(accurIntCalOutParameterInt.getInterest(), item.getoHappenAmt());
+                             interestAmt = ArithmeticUtil.divide(interestAmt, faceValue);
                              totalInterestAmt=totalInterestAmt.add(interestAmt);
                          }
                          interestBalanceToday=interestBalanceToday.add(totalInterestAmt);
@@ -890,6 +904,7 @@ public class DeltRightCalAmortizationProcessorService {
      * @param happenDate    计算日
      * @return
      */
+/*
     private BigDecimal calcRePayAddInt(TargetFinProduct targetFinProduct, List<TargetCashPlan> interestPayList, List<TargetCashPayRule> payRuleList, List<TargetCashCalcRule> quotationList, BigDecimal costBalance, Date happenDate) {
         //计算结果，计算日每日新增得计划类资产利息
         BigDecimal calInterestBalanceNow = null;
@@ -1049,6 +1064,7 @@ public class DeltRightCalAmortizationProcessorService {
         calInterestBalanceNow = ArithmeticUtil.round(calInterestBalanceNow,NumberEnum.MONEY);
         return calInterestBalanceNow;
     }
+*/
 
     /**
      * 将计息基础 转为 算法能识别得计息基础

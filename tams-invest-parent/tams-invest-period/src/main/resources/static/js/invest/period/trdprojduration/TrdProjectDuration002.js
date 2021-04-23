@@ -22,21 +22,19 @@
                 $('#repayIntAmt_div').show();
             }
             if($("#finAssetInfo_finprodMarketId").val() && $("#cashType").val()&&($("#cashType").val()=='02'||$("#cashType").val()=='03') ){
-                   var objectPayInt = {
-                                    finprodId: $('#finAssetInfo_finprodMarketId').val(),
-                                    settleDate: $('#interestPayDay').val()
-                                 }
-                              Joyin.ajaxJson(basePath+ "invest/period/trdprojduration/TrdProjectDuration002/isPayIntDate",objectPayInt,function(result){
-                                             if(!result){
-                                                //若针对，还本带息，返回 true，针对还本不带息，若有付息日=还本日，返回true
-                                                    $("#isClean").attr("disabled",true);
-                                                　　 $("#isClean").val('N').trigger('change');
-                                             }
+                var objectPayInt = {
+                    finprodId: $('#finAssetInfo_finprodMarketId').val(),
+                    settleDate: $('#interestPayDay').val()
+                }
+                Joyin.ajaxJson(basePath+ "invest/period/trdprojduration/TrdProjectDuration002/isPayIntDate",objectPayInt,function(result){
+                    if(!result){
+                      //若针对，还本带息，返回 true，针对还本不带息，若有付息日=还本日，返回true
+                      $("#isClean").attr("disabled",true);
+                      $("#isClean").val('N').trigger('change');
+                    }
 
-                            });
+                });
             }
-
-
 
             $("#fpriceAmt,#channelFee,#isClean").change(function () {
                 var channelFee = $("#channelFee").val();
