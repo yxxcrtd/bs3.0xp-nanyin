@@ -631,8 +631,7 @@
 	
 	<!-- 批量更新 投资者持有信息检查序列号-->
 	<update id="updateInvestRegistCheckSeqno" parameterType="com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto">
-		MERGE INTO CHB_EQUDET_SUB CII
-		USING (
+		INSERT INTO CHB_EQUDET_SUB  (REGIST_BANK_CODE,INDENTIFY_MARK,REG_CODE,BUSI_SEQNO,CHECK_SEQNO,SUBMIT_STATUS,STATUS)
 		<foreach collection="list" item="item" open="select * from("
 			close=")" separator="union all">
 			SELECT 
@@ -640,20 +639,12 @@
 			#{item.indentifyMark} INDENTIFY_MARK,
 			#{item.regCode,jdbcType=VARCHAR} REG_CODE,
 			#{item.busiSeqno} BUSI_SEQNO,
-			#{item.checkSeqno} CHECK_SEQNO
-			FROM
-			dual
+			#{item.checkSeqno} CHECK_SEQNO,
+			'01' SUBMIT_STATUS,'01' STATUS
 		</foreach>
-		) TEMP
-		<!-- 业务主键匹配 -->
-		ON(CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE 
-		AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
-		AND CII.REG_CODE = TEMP.REG_CODE
-		AND CII.BUSI_SEQNO = TEMP.BUSI_SEQNO
-		AND CII.SUBMIT_STATUS = '01'
-		)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN UPDATE SET CII.CHECK_SEQNO = TEMP.CHECK_SEQNO
+		 TEMP
+		on  DUPLICATE key update
+		CHECK_SEQNO = TEMP.CHECK_SEQNO
 	</update>
 	
     <select id="selectNoendCountByTaskBeanName" parameterType="string" resultType="int">
