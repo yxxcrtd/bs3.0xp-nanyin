@@ -599,7 +599,7 @@
 	<delete id="deleteReportDataHis" parameterType="java.util.Map">
 		delete
         from CHB_MONTH_REPORT_HIS  his
-       where his.CREATE_TIME=((
+       where his.CREATE_TIME=(select * from (
         SELECT max(CREATE_TIME) CREATE_TIME from CHB_MONTH_REPORT_HIS
          <where>
          <if test="registList !=null and registList.size()>0">
