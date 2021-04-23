@@ -13,7 +13,7 @@ package com.joyintech.tams.invest.asset.plan.plancur.valid;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,8 +52,8 @@ public class FinPlanAssetCValidator implements BeanValidator {
     @Autowired
     private FinPlanAssetCService finPlanAssetCService;
 
-    @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+//    @Autowired
+//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     /**
      * {@inheritDoc}
