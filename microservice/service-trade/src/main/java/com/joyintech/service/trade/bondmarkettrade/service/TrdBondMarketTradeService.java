@@ -471,6 +471,18 @@ public class TrdBondMarketTradeService extends BaseService {
     }
 
     /**
+     * 查询交易是否存在流程中的撤销数据
+     *
+     * @param dto 画面参数dto
+     * @see
+     * @since 2.1.7
+     */
+    public int selectRevokeDeal(TrdBondMarketTradeDto dto) {
+        dto.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+        return  trdBondMarkettTradeMapper.selectRevokeDeal(dto);
+    }
+
+    /**
      * 查询是否有当日以及后续交易数据
      * @param dto
      * @return

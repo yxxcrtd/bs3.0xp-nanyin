@@ -163,6 +163,18 @@ public class TrdBondMarketTradeController {
     }
 
     /**
+     * 查询交易是否存在流程中的撤销数据
+     *
+     * @param dto 画面参数dto
+     * @see
+     * @since 2.1.7
+     */
+    @PostMapping("selectRevokeDeal")
+    public int selectRevokeDeal(@RequestBody TrdBondMarketTradeDto dto){
+        return trdBondMarketTradeService.selectRevokeDeal(dto);
+    }
+
+    /**
      * 查询是否有当日以及后续交易数据
      * @param dto
      * @return

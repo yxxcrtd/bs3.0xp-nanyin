@@ -75,6 +75,13 @@ public interface TrdBondMarketTradeMapper {
      * @param dto
      * @return
      */
+    int selectRevokeDeal(TrdBondMarketTradeDto dto);
+    
+    /**
+     * 查询是否有当日交易数据
+     * @param dto
+     * @return
+     */
     int selectIsInWorkflow(TrdBondMarketTradeDto dto);
 
     /**

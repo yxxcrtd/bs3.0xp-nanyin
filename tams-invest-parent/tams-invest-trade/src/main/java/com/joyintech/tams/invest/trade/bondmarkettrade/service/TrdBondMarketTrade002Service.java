@@ -375,6 +375,18 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
     }
 
     /**
+     * 查询交易是否存在流程中的撤销数据
+     *
+     * @param dto 画面参数dto
+     * @see
+     * @since 1.0
+     */
+    public int selectRevokeDeal(TrdBondMarketTradeDto dto) {
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/selectRevokeDeal", dto,
+                Integer.class);
+    }
+
+    /**
      * 撤销doComplete
      *
      * @param entity 参数

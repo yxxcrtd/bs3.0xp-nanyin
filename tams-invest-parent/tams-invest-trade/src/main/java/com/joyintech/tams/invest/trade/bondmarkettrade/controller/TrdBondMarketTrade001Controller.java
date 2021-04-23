@@ -172,7 +172,6 @@ public class TrdBondMarketTrade001Controller extends BaseController {
         }
         AjaxResult res= new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
-
         
         if(!StringUtil.equals(DateUtil.format(inputDto.getTradeDate()),iPlatformDate.getSysDateStr())){
             ValidMessage validMessage = new ValidMessage(
@@ -192,6 +191,14 @@ public class TrdBondMarketTrade001Controller extends BaseController {
             return res;
         }
         
+        count = trdBondMarketTrade002Service.selectRevokeDeal(inputDto);
+        if (count > 0){
+            ValidMessage validMessage = new ValidMessage("已存在流程中的撤销交易");
+            errorList.add(validMessage);
+            res.setErrorList(errorList);
+            res.setMessageType(MessageType.错误消息);
+            return res;
+        }
         return commonCheck(result, inputDto.getOperateType());
     }
 }

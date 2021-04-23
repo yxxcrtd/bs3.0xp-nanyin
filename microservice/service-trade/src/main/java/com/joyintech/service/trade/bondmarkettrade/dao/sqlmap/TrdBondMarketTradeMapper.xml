@@ -251,6 +251,19 @@
         
     </select>
 
+    <select id="selectRevokeDeal" resultType="java.lang.Integer">
+        select
+        count (1)
+        from(
+            SELECT
+            WTFPDT.FINPROD_ID
+            FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL WTFPDT
+            <where>
+                WTFPDT.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                AND WTFPDT.TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR}
+            </where>
+        )
+    </select>
 
     <select id="selectDealNums" resultType="java.lang.Integer">
         select
