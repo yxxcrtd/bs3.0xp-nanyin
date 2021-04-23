@@ -779,7 +779,7 @@
 	
 	<!-- 接口报送更新报送流水号 （解决插入流水表时，报送流水号为空问题） -->
 	<update id="updateInterfSubmitSeq" parameterType="java.util.Map">
-		/*begin*/
+		begin
 		<foreach collection="equityInfoRegistList" item="item" index="index" separator=";" > 
 			update chb_equ_sub  sub
 				set 
@@ -790,7 +790,7 @@
 		 			and sub.INDENTIFY_MARK = #{item.indentifyMark}
 		 			and sub.SUBMIT_STATUS = '02'
 		</foreach>
-		;/*end;*/
+		;end;
 	</update>
 	<!-- 批量插入报送状态表 -->
 	 <insert id="insertSubmitStatus" parameterType="java.util.List" >
@@ -1151,7 +1151,7 @@
     
     	<!-- 批量更新投资者身份信息检查序列号 -->
 	<update id="updateEquityRegistCheckSeqno" parameterType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
-       /* begin*/
+        begin
 		<foreach collection="list" item="item" index="index" separator=";" > 
 			update chb_equ_sub  sub
 				set 
@@ -1161,7 +1161,7 @@
 		 			sub.INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR}
 		 			and sub.SUBMIT_STATUS = '01'
 		</foreach>
-		;/*end;*/
+		;end;
     </update>
 	
 	<!-- 查询投资身份信息待检查的数据 -->

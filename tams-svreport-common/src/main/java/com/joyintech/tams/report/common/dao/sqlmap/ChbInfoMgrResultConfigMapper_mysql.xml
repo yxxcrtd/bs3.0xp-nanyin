@@ -38,8 +38,10 @@
 		WHERE MGRTABLE_ID = #{mgrTableId,jdbcType=VARCHAR}
 	</select>
     <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig">
-        INSERT INTO CHB_INFOMGR_RESULT_CONFIG
-        (
+        INSERT ALL
+        <foreach collection="insertList" item="item" index="index" separator="" >
+            INTO CHB_INFOMGR_RESULT_CONFIG
+            (
             RESULT_ID,
             MGRTABLE_ID,
             COLUMN_ID,
@@ -47,18 +49,18 @@
             DICTCODE,
             ORDER_NO,
             SHOWFLAG
-        ) VALUES
-        <foreach collection="insertList" item="item" index="index" separator="," >
+            ) VALUES
             (
-                #{item.resultId, jdbcType=VARCHAR},
-                #{item.mgrTableName, jdbcType=VARCHAR},
-                #{item.columnId, jdbcType=VARCHAR},
-                #{item.columnName, jdbcType=VARCHAR},
-                #{item.resultdictCode, jdbcType=VARCHAR},
-                #{item.orderNo, jdbcType=DOUBLE},
-                #{item.showFlag, jdbcType=VARCHAR}
+            #{item.resultId, jdbcType=VARCHAR},
+            #{item.mgrTableName, jdbcType=VARCHAR},
+            #{item.columnId, jdbcType=VARCHAR},
+            #{item.columnName, jdbcType=VARCHAR},
+            #{item.resultdictCode, jdbcType=VARCHAR},
+            #{item.orderNo, jdbcType=DOUBLE},
+            #{item.showFlag, jdbcType=VARCHAR}
             )
         </foreach>
+        SELECT 1 FROM DUAL
     </insert>
     <delete id="deleteQueryResult" parameterType="java.util.Map">
 		DELETE FROM CHB_INFOMGR_RESULT_CONFIG WHERE MGRTABLE_ID = #{mgrTableId, jdbcType=VARCHAR}

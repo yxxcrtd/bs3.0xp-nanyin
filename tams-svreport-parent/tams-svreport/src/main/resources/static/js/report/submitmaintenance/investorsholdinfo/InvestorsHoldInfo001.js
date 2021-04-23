@@ -111,6 +111,7 @@ $(function() {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
+        data.holdDate = Date.ofDate(data.holdDate).format();
         var object = {selectedItem: [data], operateType:"delete"};
         deleteList(object);
     });

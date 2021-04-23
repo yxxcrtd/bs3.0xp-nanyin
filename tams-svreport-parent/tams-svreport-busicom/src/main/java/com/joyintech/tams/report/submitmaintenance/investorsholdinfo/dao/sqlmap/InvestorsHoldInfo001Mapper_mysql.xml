@@ -154,7 +154,7 @@ where
 			<foreach collection="keyList" item="item" open="and (" separator="or" close=")">
 			(cii.REGIST_BANK_CODE = #{item.registBankCode}
 			and cii.INDENTIFY_MARK=#{item.indentifyMark} and cii.PRODID=#{item.prodid} and
-				DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d')=#{item.holdDate} and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
+			cii.HOLD_DATE=#{item.holdDate} and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
 			</foreach>
 		</if>
 	</where>
@@ -164,7 +164,7 @@ where
 		update CHB_INVESTHOLD_INFO cii
 		set STATUS = #{stautsD}
 		where
-		<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY,STATUS) in(" separator="," close=")">
+		<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS) in(" separator="," close=")">
 			(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy},#{item.statusCode})
 		</foreach>
 	</update>
@@ -172,7 +172,7 @@ where
 		delete 
 		CHB_INVESTHOLD_INFO cii
 		where
-		<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY,STATUS) in(" separator="," close=")">
+		<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS) in(" separator="," close=")">
 			(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy},#{item.statusCode})
 		</foreach>
 	</delete>
@@ -405,7 +405,7 @@ where
 		(cii.REGIST_BANK_CODE =#{item.registBankCode} 
 			and cii.INDENTIFY_MARK=#{item.indentifyMark}
 			and cii.PRD_REGIST_CODE=#{item.prdRegistCode}
-			and DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d') =#{item.holdDate}
+			and cii.HOLD_DATE =#{item.holdDate} 
 			and cii.CCY =#{item.ccy})
 	</foreach>
     </where>
@@ -428,7 +428,7 @@ where
 	from 
 	CHB_INVESTHOLD_INFO_SUB ciis
 	where
-	<foreach collection="newKeyList" item="item" open="(ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d'),ciis.CCY) in(" separator="," close=")">
+	<foreach collection="newKeyList" item="item" open="(ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,ciis.HOLD_DATE,ciis.CCY) in(" separator="," close=")">
 		(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
 	</foreach>
 	</select>
@@ -471,7 +471,7 @@ where
 	<delete id="deleteUnSubByKeyList">
 		delete CHB_INVESTHOLD_INFO_SUB
 		where SEND_STATUS =#{unSubmit}
-		<foreach collection="keyList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
+		<foreach collection="keyList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in(" separator="," close=")">
 				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
 		</foreach>
 	</delete>
@@ -676,7 +676,7 @@ where
 			<foreach collection="keyList" item="item" open="and (" separator="or" close=")">
 			(cii.REGIST_BANK_CODE = #{item.registBankCode}
 			and cii.INDENTIFY_MARK=#{item.indentifyMark} and cii.PRODID=#{item.prodid} and
-			DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d')=#{item.holdDate} and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
+			cii.HOLD_DATE=#{item.holdDate} and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
 			</foreach>
 		</if>
 	</where>
@@ -792,7 +792,7 @@ where
 		PRD_REGIST_CODE as prdRegistCode
   		from CHB_INVESTHOLD_INFO_SUB
     	where 
-    	<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
+    	<foreach collection="keyList" item="item" open="(REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in(" separator="," close=")">
 			(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
 		</foreach>
 	</select>
@@ -801,7 +801,7 @@ where
         delete from CHB_INVESTHOLD_INFO_SUB
         <where>
         	SEND_STATUS = '01'
-        	<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
+        	<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in(" separator="," close=")">
 				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
 			</foreach>
         </where>
@@ -839,7 +839,7 @@ where
         </set>
         <where>
         	SEND_STATUS = '01'
-        	<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
+        	<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in(" separator="," close=")">
 				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
 			</foreach>
         </where>
@@ -854,7 +854,7 @@ where
             (cii.REGIST_BANK_CODE =#{item.registBankCode} 
                 and cii.INDENTIFY_MARK=#{item.indentifyMark}
                 and cii.PRODID=#{item.prodid}
-                and DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d') =#{item.holdDate}
+                and cii.HOLD_DATE =#{item.holdDate} 
                 and cii.CCY =#{item.ccy})
         </foreach>
     </update>
@@ -864,7 +864,7 @@ where
         delete from CHB_INVESTHOLD_INFO_SUB
         <where>
             STATUS = '03'
-            <foreach collection="dataList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
+            <foreach collection="dataList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in(" separator="," close=")">
                 (#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
             </foreach>
         </where>

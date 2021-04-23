@@ -597,10 +597,10 @@
 	</insert>
 	
 	<delete id="deleteReportDataHis" parameterType="java.util.Map">
-		delete 
+		delete
         from CHB_MONTH_REPORT_HIS  his
-       where his.CREATE_TIME=(
-        SELECT max(CREATE_TIME) CREATE_TIME from CHB_MONTH_REPORT_HIS 
+       where his.CREATE_TIME=(select * from (
+        SELECT max(CREATE_TIME) CREATE_TIME from CHB_MONTH_REPORT_HIS
          <where>
          <if test="registList !=null and registList.size()>0">
 		       TERMID IN
@@ -608,8 +608,8 @@
 		            #{regist.termid,jdbcType=VARCHAR}
 		        </foreach>
 			 </if>
-  		</where> ) 
-        
+  		</where> ) aa
+        )
 	</delete>
 	<select id="searchByKeys" parameterType="java.util.List" resultMap="BaseResultMap">
 	   select <include refid="Base_Column_List" /> from CHB_MONTH_REPORT
