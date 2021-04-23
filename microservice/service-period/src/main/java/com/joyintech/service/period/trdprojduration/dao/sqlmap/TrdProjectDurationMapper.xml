@@ -600,7 +600,7 @@
                 TOTAL.PORTFOLIO_ID,
                 T2.CASH_ID,
                 T2.CASH_TYPE,
-                T3.CALC_RULE,
+                T3.PAY_CYCLE as CALC_RULE,
                 CASE WHEN NVL(pp1.PARENT_PORTFOLIO_ID,'null') = 'null'
                 THEN T1.PRIN_AMT
                 ELSE NULL
