@@ -528,10 +528,10 @@
     	 SELECT REPORTUUID from PBC_REPORT
 	   where 1=1
 	   <if test="startdate!=null">
-	   	and to_char(startdate,'yyyy-MM-dd') >= to_char(#{startdate,jdbcType=DATE},'yyyy-MM-dd')
+	   	and date_format(startdate,'%Y-%m-%d') >= date_format(#{startdate,jdbcType=DATE},'%Y-%m-%d')
 	   </if>
 	   <if test="enddate!=null">
-	   	and to_char(enddate,'yyyy-MM-dd') >= to_char(#{enddate,jdbcType=DATE},'yyyy-MM-dd')
+	   	and date_format(enddate,'%Y-%m-%d') >= date_format(#{enddate,jdbcType=DATE},'%Y-%m-%d')
 	   </if>
 	   <if test="reporttype!=null">
 	   	and REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
