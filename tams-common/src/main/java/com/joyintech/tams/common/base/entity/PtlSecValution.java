@@ -189,6 +189,13 @@ public class PtlSecValution extends PtlSecValutionKey {
     private String genType;
 
     /**
+     * 到期收益率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal yield;
+
+
+    /**
      * 减值余额_本币
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -695,6 +702,23 @@ public class PtlSecValution extends PtlSecValutionKey {
     public void setGenType(String genType) {
         this.genType = genType == null ? null : genType.trim();
     }
+
+    /**
+     * 取得 到期收益率
+     * @return 到期收益率
+     */
+    public BigDecimal getYield() {
+        return yield;
+    }
+
+    /**
+     * 设置 到期收益率
+     * @param yield 到期收益率
+     */
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+
 
     /**
      * 取得 减值余额_本币
