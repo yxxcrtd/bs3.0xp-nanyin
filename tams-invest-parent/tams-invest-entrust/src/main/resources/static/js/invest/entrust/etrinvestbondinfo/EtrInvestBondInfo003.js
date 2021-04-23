@@ -327,6 +327,15 @@
         var tradeMarketMode = $('#tradeMarketMode').val();
         var $tradePlat = $('#tradePlat');
 
+        if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT && $('#tradeMarketMode').val() == SHARES_TRADE_MARKET_02){
+            if ($('#finprodId').val != null && $('#finprodId').val != ''){
+                var data = $('#finprodId').select2('data')[0].object;
+                if (data && data.isIssueAsset == 'Y' && $("#tradeMarketMode").val() == SHARES_TRADE_MARKET_02){
+                    $('#finprodId').val('').trigger("change");
+                }
+            }
+        }
+        
         if (pageModel != PAGE_MODEL_REFERENCE) {
             var key = tradeMarket + tradeMarketMode;
             switch (key) {
