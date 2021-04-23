@@ -24,7 +24,6 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -2408,6 +2407,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			List<String> bisinessPkList = baseInformationMapper.queryBisinessPkListByTable(tableId);
 			// 对应表日期类型字段集合
 			List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableName);
+			// 对应表数字字段集合
+			List<String> numColumnList =  baseInformationMapper.queryNumberColumnList(tableName);
 			List<List<String>> dataList = new ArrayList<List<String>>();
 			if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
 				dataList = handleAssetData(originalDataList, tableId, bisinessPkList, dateColumnList);
@@ -2549,10 +2550,39 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 									}
 									// 时间类型字段全存入当前时间
 								} else if (timeColumnList.contains(column)) {
+									/** 作特殊处理 **/
+									if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
+										//columnData = "SYSDATE";
+										columnData = "TIMESTAMP'" + timestamp.toString().substring(0,19) + "'";
+									}
+									else {
+										if (!("").equals(columnData)) {
+											columnData = columnData.substring(0,10);
+											String dateStr = formatDateStr(columnData);
+											if (null != dateStr) {
+												columnData = "DATE'" + dateStr + "'";
+											} else {
+												columnData = "null";
+											}
+										} else {
+											columnData = "null";
+										}
+									}
 									//columnData = "SYSDATE";
-									columnData = "'" + timestamp.toString().substring(0,19) + "'";
-									// 创建者和修改者均设置为当前用户
-								} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
+									//columnData = "'" + timestamp.toString().substring(0,19) + "'";
+
+								}
+								//数字类型
+								else if(numColumnList.contains(column)) {
+									if (!("").equals(columnData)) {
+
+									}
+									else {
+										columnData = "null";
+									}
+								}
+								// 创建者和修改者均设置为当前用户
+								else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
 									columnData = "'" + userName + "'";
 								}  else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
 									columnData = "'" +columnData.replace("'", "''")+ "'";
@@ -2653,14 +2683,14 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 									// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  start
 									if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
 										//columnData = "SYSDATE";
-										columnData = "'" + timestamp.toString().substring(0,19) + "'";
+										columnData = "TIMESTAMP'" + timestamp.toString().substring(0,19) + "'";
 										// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  end
 									}else{
 										String dateStr = formatDateStr(columnData);
 										if (null != dateStr) {
 											columnData = "DATE'" + dateStr + "'";
 										} else {
-											columnData = null;
+											columnData = "null";
 										}
 //            					columnData = "DATE'" + columnData.substring(0, 10) +"'";
 									}
@@ -2726,12 +2756,38 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 									// 修改时间变动,其余时间不变
 									if(column.indexOf("UPDATE") > -1) {
 										//columnData = "SYSDATE";
-										columnData = "'" + timestamp.toString().substring(0,19) + "'";
-									} else {
+										columnData = "TIMESTAMP'" + timestamp.toString().substring(0,19) + "'";
+									}
+									else if("CREATE_TIME".equals(column)) {
 										continue;
 									}
-									// 修改者改为当前用户
-								} else if ("UPDATE_USER".equals(column)) {
+									else {
+										//特殊处理
+										if (!("").equals(columnData)) {
+											columnData = columnData.substring(0,10);
+											String dateStr = formatDateStr(columnData);
+											if (null != dateStr) {
+												columnData = "DATE'" + dateStr + "'";
+											} else {
+												columnData = "null";
+											}
+										} else {
+											columnData = "null";
+										}
+									}
+
+								}
+								//数字类型
+								else if(numColumnList.contains(column)) {
+									if (!("").equals(columnData)) {
+
+									}
+									else {
+										columnData = "null";
+									}
+								}
+								// 修改者改为当前用户
+								else if ("UPDATE_USER".equals(column)) {
 									columnData = "'" + userName + "'";
 									// 数据状态改为 M
 								} else if ("STATUS".equals(column)){
