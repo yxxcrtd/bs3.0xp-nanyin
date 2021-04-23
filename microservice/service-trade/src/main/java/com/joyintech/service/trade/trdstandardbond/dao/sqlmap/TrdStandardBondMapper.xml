@@ -629,7 +629,9 @@
             A.IS_RIGHT,
             A.REGIST_ORG
         FROM
-                    FIN_PRODUCT A
+        FIN_PRODUCT A
+        LEFT JOIN FIN_PRODUCT_ADD FPA
+            ON FPA.FINPROD_ID = A.FINPROD_ID
         LEFT JOIN   FIN_PRODUCT_TYPE B
                 ON  B.FINPROD_ID = A.FINPROD_ID
         LEFT JOIN   (
@@ -662,6 +664,9 @@
                 <if test="FINPROD_TYPE_TG_F01 != null and FINPROD_TYPE_TG_F01 != ''">
                     AND A.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
                 </if>
+            </if>
+            <if test="pageId != null and pageId != '' and pageId == 'TrdStandardBond002'">
+                AND (FPA.IS_ISSUE_ASSET = 'N' OR FPA.IS_ISSUE_ASSET IS NULL)
             </if>
         </where>
     </select>

@@ -179,7 +179,7 @@ public class TrdProjectDurationController {
     //add by liupengfei for多级法人 E
 
     /**
-     * 投资委托组件.完成委托
+     * 是否付息日
      *
      * @return 查询结果集
      * @throws Exception 异常

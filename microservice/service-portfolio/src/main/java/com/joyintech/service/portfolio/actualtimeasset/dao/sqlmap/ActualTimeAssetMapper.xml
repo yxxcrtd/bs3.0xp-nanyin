@@ -223,13 +223,17 @@
 			        ETR_FLOW_AMOUNTE01 as instructionsAmount,
 					decode(mm.TYPE8,'F03',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									'F09',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
+									'F06',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									'F07',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									'F01',(ETR_FLOW_AMOUNT04 - PTL_AMOUNT09 + PTL_AMOUNT10),
+									'F02',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									ETR_FLOW_AMOUNT04
 									) as pledgeAmount, 
 					decode(mm.TYPE8,'F03' ,0,
 									'F09' ,0,
+									'F06',0,
 									'F07',ETR_FLOW_AMOUNT04,
+									'F02',ETR_FLOW_AMOUNT04,
 									(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 )
 									) as preReductionAmount
 			       from
@@ -277,7 +281,27 @@
 								 nvl(t5.type_7, t5.type_6) as type7
 				            from PTL_PORTFOLIO t
 								INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
-								INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								INNER JOIN (
+								select tpd.trade_id,
+                                          tfpb.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join TRD_FIN_PRODUCT_BARTER tfpb on tfpb.TRADE_ID = tpd.trade_id
+                                          left JOIN PTL_TRADE pt ON tpd.trade_id = pt.BUSI_NO
+                                          where tfpb.finprod_id != 'null'
+                                          union all 
+                                          select tpd.trade_id,
+                                          tpd.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join PTL_TRADE pt on pt.BUSI_NO = tpd.trade_id
+								   )  t2 ON t2.trade_id = t3.BUSI_NO
 								INNER JOIN FIN_PRODUCT fin on fin.finprod_id = t2.finprod_id <!-- 标的类资产 -->
 								INNER JOIN fin_product_type t5
 						            on t5.finprod_id = t2.finprod_id
@@ -386,7 +410,27 @@
 								nvl(t5.type_7, t5.type_6) as type7
 				            from PTL_PORTFOLIO t
 								INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
-								INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								INNER JOIN (
+								select tpd.trade_id,
+                                          tfpb.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join TRD_FIN_PRODUCT_BARTER tfpb on tfpb.TRADE_ID = tpd.trade_id
+                                          left JOIN PTL_TRADE pt ON tpd.trade_id = pt.BUSI_NO
+                                          where tfpb.finprod_id != 'null'
+                                          union all 
+                                          select tpd.trade_id,
+                                          tpd.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join PTL_TRADE pt on pt.BUSI_NO = tpd.trade_id
+								   ) t2 ON t2.trade_id = t3.BUSI_NO
 								INNER JOIN FIN_TRADE_PRODUCT fin <!--on fin.finprod_id = t2.TRADE_ID-->
 		  						on (fin.finprod_id = t2.TRADE_ID or (fin.finprod_id = t2.TOTLE_TRADE_ID and fin.finprod_type='F35'))
 								<!-- 交易类标的资产,对期权资产进行特殊处理， FIN_TRADE_PRODUCT.finprod_id为交易表中的TOTLE_TRADE_ID-->
@@ -510,7 +554,27 @@
 								   FROM
 								    	PTL_PORTFOLIO t
 								   INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
-								   INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								   INNER JOIN (
+								select tpd.trade_id,
+                                          tfpb.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join TRD_FIN_PRODUCT_BARTER tfpb on tfpb.TRADE_ID = tpd.trade_id
+                                          left JOIN PTL_TRADE pt ON tpd.trade_id = pt.BUSI_NO
+                                          where tfpb.finprod_id != 'null'
+                                          union all 
+                                          select tpd.trade_id,
+                                          tpd.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join PTL_TRADE pt on pt.BUSI_NO = tpd.trade_id
+								   ) t2 ON t2.trade_id = t3.BUSI_NO
 								   INNER JOIN FIN_TRADE_PRODUCT fin ON fin.finprod_id = t2.finprod_id
 								   INNER JOIN FIN_DEAL_PLEDGE FDP ON t2.FINPROD_ID = FDP.FINPROD_ID
 								   INNER JOIN fin_product_type t5 ON FDP.PLEDGE_FINPROD_ID = t5.finprod_id
@@ -564,7 +628,27 @@
 								   FROM
 								    	PTL_PORTFOLIO t
 								   INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
-								   INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								   INNER JOIN (
+								select tpd.trade_id,
+                                          tfpb.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join TRD_FIN_PRODUCT_BARTER tfpb on tfpb.TRADE_ID = tpd.trade_id
+                                          left JOIN PTL_TRADE pt ON tpd.trade_id = pt.BUSI_NO
+                                          where tfpb.finprod_id != 'null'
+                                          union all 
+                                          select tpd.trade_id,
+                                          tpd.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join PTL_TRADE pt on pt.BUSI_NO = tpd.trade_id
+								   )  t2 ON t2.trade_id = t3.BUSI_NO
 								   INNER JOIN FIN_TRADE_PRODUCT fin ON fin.finprod_id = t2.finprod_id
 								   INNER JOIN FIN_DEAL_TARGET FDT ON T2.FINPROD_ID = FDT.FINPROD_ID
 								   INNER JOIN fin_product_type t5 ON FDT.PLEDGE_FINPROD_ID = t5.finprod_id

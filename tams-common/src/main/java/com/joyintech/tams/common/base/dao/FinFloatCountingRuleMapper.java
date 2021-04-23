@@ -19,4 +19,6 @@ public interface FinFloatCountingRuleMapper {
     int updateByPrimaryKeySelective(FinFloatCountingRule record);
 
     int updateByPrimaryKey(FinFloatCountingRule record);
+    
+    int updateEndAccrDate(FinFloatCountingRule record);
 }

@@ -2272,6 +2272,9 @@ public class SecDealAccountsService {
             else if (DictCodeList.交易方向_应收款项转出.getValue().equals(dealNow.getPs())) {
                 this.getReceivablesOut(rstBaseinfo, returnResult, dealNow, acctEntity, param);
             }
+            else if(DictCodeList.交易方向_上市流通.getValue().equals(dealNow.getPs())){
+                this.getListingCirculation(rstBaseinfo, returnResult, dealNow, acctEntity, param);
+            }
         }
     }
 
@@ -3577,7 +3580,9 @@ public class SecDealAccountsService {
             else if (DictCodeList.交易方向_应收款项转出.getValue().equals(dealNow.getPs())) {
                 this.getReceivablesOut(rstBaseinfo, returnResult, dealNow, acctEntity, param);
             }
-
+            else if(DictCodeList.交易方向_上市流通.getValue().equals(dealNow.getPs())){
+                this.getListingCirculation(rstBaseinfo, returnResult, dealNow, acctEntity, param);
+            }
         }
     }
 

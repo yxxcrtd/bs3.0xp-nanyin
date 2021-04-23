@@ -61,4 +61,5 @@ public interface TrdProjectDurationMapper {
     List<SelectOptionDto> getBusiCode(Map<String, Object> param);
     //add by liupengfei for 多级法人E
     int isPayIntDate(Map<String, Object> map);
+    int isNoPayInt(Map<String, Object> map);
 }

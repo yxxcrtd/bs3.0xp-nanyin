@@ -71,7 +71,7 @@ $(function() {
     	/**
     	 * 绑定事件：删除
     	 */
-        table.bind('click', '.delete', function(data, index) {
+        table.bind('click', '.delt', function(data, index) {
     		var object = {};
     		object.booksetId = data.booksetId;
         	object.finprodId = data.finprodId;

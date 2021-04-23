@@ -13,6 +13,7 @@
             <div class="joyin-form-wrap condition-area curr-form">
                 <form class="layui-form" id="submitForm">
                     <div class="layui-form-item">
+                        <input type="hidden" id="pageId" name="pageId" th:value="${pageId}" />
                         <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
                             <label class="layui-form-label form-lable"
                                    th:utext="#{TrdStandardBond002.portfolioId}">组合代码</label>
@@ -37,6 +38,7 @@
                                         th:placeholder="#{SysCommon.placeholder}"
                                         th:data-url="@{/invest/trade/trdstandardbond/TrdStandardBond001/getBondCode}"
                                         allowClear="true" multiple="true"
+                                        parentIds="pageId"
                                         th:initValue="${entity?.bondCode}">
                                 </select>
                             </div>

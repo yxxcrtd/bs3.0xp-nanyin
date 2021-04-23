@@ -166,6 +166,7 @@
                                            th:text="#{TrdBondInvestTrade002.finprodName}">资产代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select type="text" id="finprodId" name="finprodId"
+                                                parentIds="tradeMarketMode"
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/trade/bond/TrdBondInvestTrade002/getFinprodId}"
                                                 allowClear="true" th:initValue="${entity?.finprodId}"></select>

@@ -253,7 +253,11 @@ public class FinBondTargetAssetValidator implements BeanValidator{
 //        if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
 //            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getRepAssetType(), ValidMessage.class);
 //        }
-
+        if(dto.getBussFinBondRepInfoDto().getRepSectype().equals("99")){
+            if(StringUtil.isEmpty(dto.getBussFinBondRepInfoDto().getRepRemark())){
+                resultList.add(new ValidMessage("当中债报送信息中具体类别为其他债券时，备注必填。"));
+            }
+        }
         return resultList;
     }
 }

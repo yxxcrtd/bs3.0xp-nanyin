@@ -653,6 +653,15 @@ var table;
             }*/
         } else {
             // $("#commissionAmt").prop("disabled", false).val(commissionAmt).trigger('blur').trigger('change');
+            //编辑模式或者新建模式下交易市场为二级市场时影响资产代码，对应资产不能为发行标的
+            if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT){
+                if ($('#finprodId').val != null && $('#finprodId').val != ''){
+                    var data = $('#finprodId').select2('data')[0].object;
+                    if (data && data.isIssueAsset == 'Y' && $("#tradeMarketMode").val() == '02'){
+                        $('#finprodId').val('').trigger("change");
+                    }
+                }
+            }
             if ($("#entrustId").val()) {
                 $("#ps").attr("disabled", true);
             }else if ($("#fTradeId").val()){

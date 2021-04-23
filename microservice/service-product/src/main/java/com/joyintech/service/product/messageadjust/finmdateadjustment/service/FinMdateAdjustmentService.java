@@ -471,7 +471,10 @@ public class FinMdateAdjustmentService extends BaseService<FinMdateAdjustmentDto
 			
 			//更新计提规则表
 			countRule.seteAccrDate(new_eAccrDate);
-			finFloatCountingRuleMapper.updateByPrimaryKeySelective(countRule);
+			//modify by tuqirong 2021-02-25 start 更新计提规则表中该产品所有的数据
+//			finFloatCountingRuleMapper.updateByPrimaryKeySelective(countRule);
+			finFloatCountingRuleMapper.updateEndAccrDate(countRule);
+			//modify by tuqirong 2021-02-25 end 更新计提规则表中该产品所有的数据
 		   }
         }
     /**

@@ -363,41 +363,8 @@
 			<if test="tradeMarket != null and tradeMarket != ''">
 				AND FP.TRADE_MARKET = #{tradeMarket}
 			</if>
-			AND FPA.IS_ISSUE_ASSET = 'Y'
-            AND FPA.APPEAR_MARKET_ID IS NULL
+			AND (FPA.IS_ISSUE_ASSET = 'N' OR FPA.IS_ISSUE_ASSET IS NULL)
 		</where> 
-		    
-        UNION ALL
-        
-        SELECT
-        FP.FINPROD_ID id,
-        FP.FINPROD_MARKET_ID || ':' || FP.FINPROD_ABBR text,
-        FP.FINPROD_ABBR object
-        FROM FIN_PRODUCT FP
-        LEFT JOIN FIN_PRODUCT_ADD FPA
-        ON FPA.FINPROD_ID = FP.FINPROD_ID
-        <where>
-            <if test="search != null and search != ''">
-                (
-                FP.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
-                OR
-                FP.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
-                )
-            </if>
-            <if test="initValue != null and initValue != ''">
-                and FP.FINPROD_ID = #{initValue}
-            </if>
-            <if test="FINPROD_TYPE_TG != null and FINPROD_TYPE_TG != ''">
-                AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG}
-            </if>
-            <if test="PROFIT_TYPE != null and PROFIT_TYPE != ''">
-                AND FP.PROFIT_TYPE = #{PROFIT_TYPE}
-            </if>
-            <if test="tradeMarket != null and tradeMarket != ''">
-                AND FP.TRADE_MARKET = #{tradeMarket}
-            </if>
-            AND (FPA.IS_ISSUE_ASSET = 'N' OR FPA.IS_ISSUE_ASSET IS NULL)
-        </where>
     </select>
     
     <select id="queryBuyOutRepoByTradeId" resultType="com.joyintech.service.trade.buyoutrepo.dto.TrdOutRightRepoTradeDetailDto">
