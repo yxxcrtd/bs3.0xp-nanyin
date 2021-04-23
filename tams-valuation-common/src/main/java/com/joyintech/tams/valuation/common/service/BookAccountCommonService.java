@@ -103,6 +103,15 @@ public class BookAccountCommonService {
             }
 
         }
+        /**add by wujie on 20201015 start remark:计划类收益型资产改造**/
+        else if (DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(valBokDetailId.getBusiDetailType())) {
+            tempBokDetailId = I1 + ValStringUtil.getNotNullStr(valBokDetailId.getBusiId()) + I2
+                              + ValStringUtil.getNotNullStr(valBokDetailId.getBusiDetailType());
+        	if(StringUtil.isNotEmpty(valBokDetailId.getInvAim())){
+        		 tempBokDetailId += I3 + ValStringUtil.getNotNullStr(valBokDetailId.getInvAim());
+        	}
+        }
+        /**add by wujie on 20201015 end**/
         else {
             // 账务明细代码 = 业务明细代码 + 业务明细类型  
             tempBokDetailId = I1 + ValStringUtil.getNotNullStr(valBokDetailId.getBusiId()) + I2
