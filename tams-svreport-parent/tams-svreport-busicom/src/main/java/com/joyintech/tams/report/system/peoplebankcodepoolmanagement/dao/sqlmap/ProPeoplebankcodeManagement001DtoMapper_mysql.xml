@@ -229,7 +229,7 @@
         t1.STATUS=#{statusEffective}
         <if test="search != null and search != ''">
             and
-            t1.INSIDE_PROD_ID LIKE  CONCAT_WS('%', CONCAT_WS(#{search}, '%'))
+            t1.INSIDE_PROD_ID LIKE  CONCAT('%', CONCAT(#{search}, '%'))
         </if>
     </select>
     <select id="getProPeopleBankExcelList" resultType="string">
@@ -238,7 +238,7 @@
         from PBC_PROD_ASSETPOOL_CODE
         where
         1=1
-        <foreach collection="list" item="bankCode" open="AND INSIDE_PROD_ID || '|' || CODE_TYPE IN (" close=")" separator=",">
+        <foreach collection="list" item="bankCode" open="AND CONCAT_WS('|', INSIDE_PROD_ID, CODE_TYPE) IN (" close=")" separator=",">
             #{bankCode.insideProdIdAndCodeType}
         </foreach>
     </select>
