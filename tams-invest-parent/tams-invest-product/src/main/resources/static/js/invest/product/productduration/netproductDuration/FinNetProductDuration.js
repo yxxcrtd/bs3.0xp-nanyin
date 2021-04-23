@@ -1189,7 +1189,9 @@ $(function() {
 //        		if(!$('#expirePayDate').val()){
 //        			$('#expirePayDate').val(Date.ofDate($('#mDate').val()).format('yyyy-MM-dd')).trigger("change");
 //        		}
+        		if(pageModel === PAGE_MODEL_NEW){
         		getNextWorkDay($('#mDate').val());
+        		}
         		//modify by wm 净值型产品提前终止支付日修改为下一工作日 end 2019-06-20
         		if("11"==dealMode){
         			$('#FinNetProductDuration_div_expire_layering').prop('hidden', false);
@@ -2823,7 +2825,7 @@ $(function() {
     		//layui-btn-disabled
     	}else{
     		$('#FinNetProductDuration_btn_revoke').hide();
-    	}
+    	}   	
     };
     
     /**
@@ -3171,7 +3173,9 @@ $(function() {
         	$("#FinNetProductDuration_btn_revoke").hide();
         }
 		if($("#pageModel").val()=='1'){
+			if($('#isCycle').val() == "Y"){
 			expireCycleDataTableCheck();
+              }
 		}
     });
 }());
