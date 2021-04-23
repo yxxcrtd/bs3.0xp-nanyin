@@ -40,7 +40,7 @@ $(function () {
          ,{field:'marketValueRatio', title: '市值比例%',type: 'number',digit:2}//市值比例%
          ,{field:'childInfo', visible: false}
          ,{field:'parentInfo', visible: false}
-         ,{field:'belongInstitutionNameNew', title: '机构名称',visible:AUTHORITY_TYPE=='02'}//组合名称
+         ,{field:'belongInstitutionNameNew',minWidth:260,title: '机构名称',visible:AUTHORITY_TYPE=='02'}//组合名称
          ]
     });
     /*var table=$("#dataTable").joyintable({
