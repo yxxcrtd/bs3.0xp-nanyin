@@ -56,14 +56,15 @@
             BUSI_ID, CCY, TRADE_ID, 
             DETAIL_SUBJECT_NO, BOOK_TYPE, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME,B_CCY,B_HAPPEN_AMT)
+            UPDATE_TIME,B_CCY,B_HAPPEN_AMT,SUBJECT_NAME,DETAIL_SUBJECT_NAME)
         values (#{vouchSubnum,jdbcType=VARCHAR}, #{vouchNum,jdbcType=VARCHAR}, #{busVouchsubnum,jdbcType=VARCHAR}, 
             #{happenDate,jdbcType=DATE}, #{tableId,jdbcType=VARCHAR}, #{cdFlag,jdbcType=VARCHAR}, 
             #{subjectNo,jdbcType=VARCHAR}, #{happenAmt,jdbcType=DECIMAL}, #{happenNumber,jdbcType=DECIMAL}, 
             #{busiId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, 
             #{detailSubjectNo,jdbcType=VARCHAR}, #{bookType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP},#{bCcy,jdbcType=VARCHAR},#{bHappenAmt,jdbcType=VARCHAR})
+            #{updateTime,jdbcType=TIMESTAMP},#{bCcy,jdbcType=VARCHAR},#{bHappenAmt,jdbcType=VARCHAR},
+            #{subjectName,jdbcType=VARCHAR},#{detailSubjectName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokVouchDetail" >
         insert into BOK_VOUCH_DETAIL

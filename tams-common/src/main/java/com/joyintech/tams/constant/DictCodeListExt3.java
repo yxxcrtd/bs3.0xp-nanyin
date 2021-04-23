@@ -1044,6 +1044,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     减值资产第三阶段利息计提摊销差额计入科目_原科目(DictCode.减值资产第三阶段利息计提摊销差额计入科目,"02","原科目"),
     减值资产第三阶段是否重新计算实际利率_不重算(DictCode.减值资产第三阶段是否重新计算实际利率,"01","不重算"),
     减值资产第三阶段是否重新计算实际利率_重算(DictCode.减值资产第三阶段是否重新计算实际利率,"02","重算"),
+    /**add by wujie on 20201130 start remark:累计科目余额**/
+    累计余额_部分(DictCode.是否累计余额,"03","部分更新"),
+    /**add by wujie on 20201130 end remark:累计科目余额**/
 
     交易方向_正回购(DictCode.交易方向, "03", "正回购"),
     交易方向_逆回购(DictCode.交易方向, "04", "逆回购"),
@@ -1170,6 +1173,16 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
             DictCode.上农商_指令业务类型, "22", "协议回购解除质押指令"
     ),
 
+    // add by zwq on 2021/02/26 start为账套参数管理增加字段：参数类型
+    账套参数类型_资产类(DictCode.账套参数类型,"01","资产类"),
+    账套参数类型_费用类(DictCode.账套参数类型,"02","费用类"),
+    账套参数类型_产品类(DictCode.账套参数类型,"03","产品类"),
+    账套参数类型_其他类(DictCode.账套参数类型,"04","其他类"),
+    账套参数类型_估值表(DictCode.账套参数类型,"05","估值表"),
+    账套参数类型_增值税(DictCode.账套参数类型,"06","增值税"),
+    账套参数类型_减值类(DictCode.账套参数类型,"07","减值类"),
+    // add by zwq on 2021/02/26 end为账套参数管理增加字段：参数类型
+
     /**协议回购指令 end**/
 
     交易方向_买入开仓(DictCode.交易方向,"T100","买入开仓"),
@@ -1281,6 +1294,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     平安业务类型_权益类资产_现金分红(DictCode.平安业务类型,"162","权益类资产现金分红"),
     共通业务类型_权益类资产估值行情信息(DictCode.共通业务类型,"MST30","权益类资产估值行情信息"),
     // add by etliu 2021-04-20 权益类资产功能合并 end
+
+    /** add by yanya on 20210309 添加现金流一级类型-行权 start**/
+    现金流一级类型_行权(DictCode.现金流一级类型,"05","行权"),
+    /** add by yanya on 20210309 添加现金流一级类型-行权 end**/
     
     //add by yzg 20210422 start
     佣金计算方式_按证券代码汇总(DictCode.佣金计算方式, "01", "按证券代码汇总"),

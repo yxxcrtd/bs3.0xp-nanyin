@@ -344,6 +344,16 @@ public class FinProductAdd extends BaseEntity {
     private String tradePlat;
 
     /**
+     * 是否其他债权，其他资产都为空，只有项目类资产为：Y；
+     */
+    private String isQtzq;
+
+    /**
+     * 数据来源
+     */
+    private String dataSource;
+
+    /**
      * 取得 金融产品代码
      * @return 金融产品代码
      */
@@ -1400,5 +1410,37 @@ public class FinProductAdd extends BaseEntity {
      */
     public void setTradePlat(String tradePlat) {
         this.tradePlat = tradePlat == null ? null : tradePlat.trim();
+    }
+
+    /**
+     * 取得 是否其他债权，其他资产都为空，只有项目类资产为：Y；
+     * @return 是否其他债权，其他资产都为空，只有项目类资产为：Y；
+     */
+    public String getIsQtzq() {
+        return isQtzq;
+    }
+
+    /**
+     * 设置 是否其他债权，其他资产都为空，只有项目类资产为：Y；
+     * @param isQtzq 是否其他债权，其他资产都为空，只有项目类资产为：Y；
+     */
+    public void setIsQtzq(String isQtzq) {
+        this.isQtzq = isQtzq == null ? null : isQtzq.trim();
+    }
+
+    /**
+     * 取得 数据来源；
+     * @return 数据来源；
+     */
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    /**
+     * 设置 数据来源；
+     * @param dataSource 数据来源；
+     */
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource == null ? null : dataSource.trim();
     }
 }

@@ -81,6 +81,34 @@ public class BokVouchDetail extends BaseEntity {
      */
     private String bookType;
 
+    // add by zwq 2020-12-25 start
+    /**
+     * 科目名称
+     */
+    private String subjectName;
+
+    /**
+     * 科目尾号名称
+     */
+    private String detailSubjectName;
+    // add by zwq 2020-12-25 end
+
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getDetailSubjectName() {
+        return detailSubjectName;
+    }
+
+    public void setDetailSubjectName(String detailSubjectName) {
+        this.detailSubjectName = detailSubjectName;
+    }
 
     /*start 20190520 add by chufengjie*/
     //本位币
