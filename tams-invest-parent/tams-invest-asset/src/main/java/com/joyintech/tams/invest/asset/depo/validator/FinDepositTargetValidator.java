@@ -10,7 +10,7 @@
  
 package com.joyintech.tams.invest.asset.depo.validator;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -55,8 +55,8 @@ public class FinDepositTargetValidator implements BeanValidator{
     @Autowired
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
-    @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+//    @Autowired
+//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     /**
      * {@inheritDoc}

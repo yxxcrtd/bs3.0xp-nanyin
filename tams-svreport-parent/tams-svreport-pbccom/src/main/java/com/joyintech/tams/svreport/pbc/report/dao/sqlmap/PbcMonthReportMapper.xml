@@ -928,10 +928,7 @@
    </select>
 
   <select id="findProductByName" resultType="java.lang.String">
-    select
-    BOOKSET_ID prodId,
-    BOOKSET_NAME prodName
-    from BOK_BOOKSET
+    select PROD_ID prodId from chb_prd_baseinfo
   </select>
 
 </mapper>
