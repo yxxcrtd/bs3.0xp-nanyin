@@ -283,7 +283,7 @@ $(function() {
             substitutionDataTable.load();
         });
 
-//TISHKBS-2014 wyn 组合代码和交易日期不是必填 start
+ //TISHKBS-2014 wyn 组合代码和交易日期不是必填 start
 //        $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
 ////            if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
 ////                Joyin.error('请选择组合代码!');
@@ -295,7 +295,7 @@ $(function() {
 ////            }
 //            pledgeSummaryDataTable.load();
 //        });
-//TISHKBS-2014 wyn 组合代码和交易日期不是必填 end
+ //TISHKBS-2014 wyn 组合代码和交易日期不是必填 end
 
         // 绑定按钮事件
         $('.substitutionSearchDiv #PtlRepoPledgeSearch001_btn_export').click(function() {
