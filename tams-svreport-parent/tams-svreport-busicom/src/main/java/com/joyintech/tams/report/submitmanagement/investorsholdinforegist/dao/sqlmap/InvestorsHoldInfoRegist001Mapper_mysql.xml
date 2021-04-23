@@ -578,30 +578,32 @@
 
 		UPDATE  CHB_INVESTHOLD_INFO_SUB as A,
 		(
-		select CHECK_SEQNO from
+		select REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY,CHECK_SEQNO,REGIST_SEQNO from
 		(
-		select TEMP.* from
+		select TEMP.REGIST_BANK_CODE ,TEMP.INDENTIFY_MARK ,TEMP.PRD_REGIST_CODE ,TEMP.HOLD_DATE ,TEMP.CCY ,TEMP.CHECK_SEQNO,TEMP.REGIST_SEQNO from
 		(
-		<foreach collection="list" item="item"  separator="union all">
+		<foreach collection="list" item="item" separator="union all">
 			SELECT
 			#{item.registBankCode} REGIST_BANK_CODE,
 			#{item.indentifyMark} INDENTIFY_MARK,
 			#{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
 			#{item.holdDate} HOLD_DATE,
 			#{item.ccy} CCY,
-			#{item.checkSeqno} CHECK_SEQNO
+			#{item.checkSeqno} CHECK_SEQNO,
+			#{item.registSeqno} REGIST_SEQNO
 			FROM
 			dual
 		</foreach>
-		) TEMP
-		) de
-		) AS B
-		set  A.* = B.* where exisits (select 1 from CHB_INVESTHOLD_INFO_SUB CII where CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
+		) TEMP,CHB_INVESTHOLD_INFO_SUB CII
+		where CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
 		AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
 		AND CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE
 		AND CII.HOLD_DATE = TEMP.HOLD_DATE
 		AND CII.CCY = TEMP.CCY
-		AND CII.SEND_STATUS = '01');
+		AND CII.SEND_STATUS = '01'
+		) de
+		) AS B
+		set  A.CHECK_SEQNO = B.CHECK_SEQNO where A.REGIST_SEQNO = B.REGIST_SEQNO ;
 	</update>
 	<!-- 批量更新投资者身份信息发送状态 -->
 	<update id="updateInvestorsHoldInfoRegistSendStatus" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">

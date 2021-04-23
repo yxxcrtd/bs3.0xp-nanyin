@@ -100,10 +100,9 @@
 		ERROR_INFO,
 		WARN_INFO,
 		IS_LOGIC_CHECK,
-		REF_SEQNO)
-		<foreach collection="list" item="dto" open=" select * from (select "
-			close="from dual) aa" separator="from dual union all select ">
-			#{dto.checkSeqno},
+		REF_SEQNO) VALUES
+		<foreach collection="list" item="dto"  separator=",">
+		(	#{dto.checkSeqno},
 			#{dto.repCode},
 			#{dto.repName},
 			#{dto.validKey},
@@ -119,6 +118,7 @@
 			#{dto.warnInfo},
 			#{dto.isLogicCheck},
 			#{dto.refseqno}
+			)
 		</foreach>
 	</insert>
 
