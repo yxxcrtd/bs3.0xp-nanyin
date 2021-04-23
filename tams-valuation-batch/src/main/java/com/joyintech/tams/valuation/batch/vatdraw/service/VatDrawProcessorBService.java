@@ -1379,13 +1379,29 @@ public class VatDrawProcessorBService {
                         taxBokDetail.setIncomeCarryAmtB(taxBokDetail.getIncomeCarryAmt());
                     }
                 }
-
+                //add by lby on 20201226 start
+                /**
+                 * 调用共通方法：共通【基础科目性质查询】
+                 * 参数名					基础科目性质查询
+                 * 分组代码					增值税损益科目(对应CODE） TAX_LXSR_KMCX
+                 * 返回值：					基础科目性质集合
+                 *
+                 * 定义变量：增值税损益科目列表 = 返回值.基础科目性质集合
+                 */
+                //定义变量：增值税损益科目列表 = 返回值.基础科目性质集合
+                List<String> valSubjectNatureList = accountingCommonService.getValSubjectNatureList(
+                        DictCodeListNatureGroup.分组代码_增值税损益科目查询.getValue());
+                //账务明细（当前表） 当前损益科目 = 当期凭证.filter(基础科目性质 in （变量：增值税损益科目列表）)
+                List<BookLatestInfoDto> listInfoDto = listBookLatestInfo.stream().filter(
+                        item -> valSubjectNatureList.contains(item.getBaseSubjectNature())).collect(
+                        Collectors.toList());
+                //add by lby on 20201226 end
                 // List<账务明细（当前表）> 当期凭证 = list<账务明细（当前表）>.filter(凭证编号 = 账务明细（当前表）M.凭证编号)
                 // 账务明细（当前表） 当前损益科目 = 当期凭证.filter(科目号 like '6011%')
-                List<BookLatestInfoDto> listInfoDto = listBookLatestInfo.stream().filter(
+                /*List<BookLatestInfoDto> listInfoDto = listBookLatestInfo.stream().filter(
                     item -> item.getBookId().equals(infoDto.getBookId())
                             && item.getSubjectNo().startsWith("6011")).collect(
-                                Collectors.toList());
+                                Collectors.toList());*/
                 // IF (账务明细（当前表） 当前损益科目 != NULL
                 if (!CollectionUtils.isEmpty(listInfoDto)) {
                     // 增值税账务明细.收入科目号 = 账务明细（当前表）.当前损益科目

@@ -199,6 +199,13 @@ public class FixedFeeCalBookProcessorService {
         // 查询标的现金流计算规则
         List<TargetCashCalcRule> listTargetCashCalcRule = (List<TargetCashCalcRule>)targetInfo.get(
             ValDictCodeList.标的_现金流计算规则.getValue());
+        
+        /**ADD BY WUJIE ON 20210125 START REMARK:费用无对应现金流计算规则数据时不做计提处理**/
+        if(listTargetCashCalcRule==null || listTargetCashCalcRule.size()==0){
+        	return null;
+        }
+        /**ADD BY WUJIE ON 20210125 END REMARK:费用无对应现金流计算规则数据时不做计提处理**/
+        
         // 查询标的信息
         TargetFinProduct targetFinProduct = (TargetFinProduct)targetInfo.get(
             ValDictCodeList.标的_信息.getValue());

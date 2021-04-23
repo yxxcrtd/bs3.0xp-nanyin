@@ -567,6 +567,7 @@ public class MoneyFundDealAccountingProcessorService {
                             accountAmountMap.put("DEALAMT" + BookConstant.BCCYAMT, ArithmeticUtil.round(dealAmtBccy, NumberEnum.MONEY.getCode(), null));
                         }
                     } else {
+                    	/**modify by wujie on 20201228 start
                     	BigDecimal varMmjcBccy;
                     	// 变量.冲减公允价值变动 > 0
                         if(BigDecimal.ZERO.compareTo(varCjgyjzbdSubjectAmt) < 0){
@@ -609,6 +610,28 @@ public class MoneyFundDealAccountingProcessorService {
                         	varMmjcBccy = ArithmeticUtil.doSub(ArithmeticUtil.doAdd(dealAmtBccy, commissionOutBccy, feeAmtBccy, floatdBccy)
         							, ArithmeticUtil.doAdd(redeemQtyBccy, commissionBccy, floatIngplcBccy));
                         }
+                        **/
+                    	//  变量.赎回金额_本位币
+                		BigDecimal dealAmtBccy = accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT);
+                    	//  变量.赎回份额_本位币
+                		BigDecimal redeemQtyBccy = accountAmountMap.get(BookConstant.REDEEM_QTY + BookConstant.BCCYAMT);
+                		// 变量.利息_本位币
+                		BigDecimal intamtBccy = accountAmountMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT);
+                		//  变量.佣金_本位币 
+                		BigDecimal commissionOutBccy = accountAmountMap.get(BookConstant.COMMISSION_OUT + BookConstant.BCCYAMT);
+                		//  变量.应付佣金 _本位币 
+                		BigDecimal commissionBccy = accountAmountMap.get(BookConstant.COMMISSION + BookConstant.BCCYAMT);
+                		//  变量.交易费用_本位币
+                		BigDecimal feeAmtBccy = accountAmountMap.get(BookConstant.FEEAMT + BookConstant.BCCYAMT);
+                		// 变量.利息调整_借方
+                		BigDecimal incomeamtdBccy = accountAmountMap.get(BookConstant.INCOMEAMT_D + BookConstant.BCCYAMT);
+                		// 变量.利息调整_贷方
+                		BigDecimal incomeamtcBccy = accountAmountMap.get(BookConstant.INCOMEAMT_C + BookConstant.BCCYAMT);
+                		
+                		//变量.买卖价差_本位币 =(赎回金额_本位币 + 佣金_本位币 + 交易费用_本位币 + 利息调整_本位币_借)-(赎回份额_本位币 + 应付佣金_本位币 + 利息金额_本位币 + 利息调整_本位币_贷)	
+                		BigDecimal varMmjcBccy = ArithmeticUtil.doSub(ArithmeticUtil.doAdd(dealAmtBccy, commissionOutBccy, feeAmtBccy, incomeamtdBccy)
+    							, ArithmeticUtil.doAdd(redeemQtyBccy, commissionBccy,intamtBccy, incomeamtcBccy));
+                    	/**modify by wujie on 20201228 end**/
                         if (varMmjcBccy.compareTo(BigDecimal.ZERO) > 0) {
                             accountAmountMap.put(BookConstant.DSCLOSS_C + BookConstant.BCCYAMT, ArithmeticUtil.round(varMmjcBccy, NumberEnum.MONEY.getCode(), null));
                         }
@@ -616,7 +639,6 @@ public class MoneyFundDealAccountingProcessorService {
                             accountAmountMap.put(BookConstant.DSCLOSS_D + BookConstant.BCCYAMT, ArithmeticUtil.round(varMmjcBccy.negate(), NumberEnum.MONEY.getCode(), null));
                         }
                     }
-                    /**add by taoran 20191231 end**/
                     
                     // 变量.成本科目余额 =	变量.成本科目余额 - 变量.冲减成本
                     glb_subjectAmt = ArithmeticUtil.doSub(glb_subjectAmt,varCjcbSubjectAmt);
@@ -1220,21 +1242,16 @@ public class MoneyFundDealAccountingProcessorService {
                     	bccyAmountMap.put(key + BookConstant.BCCYAMT, calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null, accountAmountMap.get(key), changeRate));
                     }
                     accountAmountMap.putAll(bccyAmountMap);
-                    // 交易金额_本位币	<- 	交易份额_本位币 + 应收红利_本位币 + 应付佣金_本位币 + 交易费用_本位币 - 佣金_本位币
-                    // 交易金额_本位币	<- 	交易份额_本位币 + 应收红利_本位币 + 佣金_本位币 + 交易费用_本位币 - 应付佣金_本位币  update by caiqun 20200826
+                    //	交易金额_本位币	<- 	交易份额_本位币 + 应收红利_本位币 + 应付佣金_本位币 + 交易费用_本位币 - 佣金_本位币																									
                     BigDecimal tradeQtyBccy = accountAmountMap.get(BookConstant.TRADE_QTY + BookConstant.BCCYAMT);
                     BigDecimal bonusAmtBccy = accountAmountMap.get(BookConstant.BONUSAMT + BookConstant.BCCYAMT);
                     BigDecimal commissionBccy = accountAmountMap.get(BookConstant.COMMISSION + BookConstant.BCCYAMT);
                     BigDecimal feeAmtBccy = accountAmountMap.get(BookConstant.FEEAMT + BookConstant.BCCYAMT);
                     BigDecimal commissionOutBccy = accountAmountMap.get(BookConstant.COMMISSION_OUT + BookConstant.BCCYAMT);
-                    //BigDecimal dealAmtBccy = ArithmeticUtil.doSub(
-                    //		ArithmeticUtil.doAdd(tradeQtyBccy,bonusAmtBccy,commissionBccy,feeAmtBccy), commissionOutBccy);
-                    //accountAmountMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT,ArithmeticUtil.round(dealAmtBccy, NumberEnum.MONEY.getCode(), null));
-                    // 交易金额_本位币	<- 	交易份额_本位币 + 应收红利_本位币 + 佣金_本位币 + 交易费用_本位币 - 应付佣金_本位币  update by caiqun 20200826
                     BigDecimal dealAmtBccy = ArithmeticUtil.doSub(
-                            ArithmeticUtil.doAdd(tradeQtyBccy,bonusAmtBccy,commissionOutBccy,feeAmtBccy), commissionBccy);
+                    		ArithmeticUtil.doAdd(tradeQtyBccy,bonusAmtBccy,commissionBccy,feeAmtBccy), commissionOutBccy);
                     accountAmountMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT,ArithmeticUtil.round(dealAmtBccy, NumberEnum.MONEY.getCode(), null));
-
+                    
                     // 全局变量的更新
                     // 变量.成本科目余额  =	变量.成本科目余额 + 交易明细.交易本金
                     glb_subjectAmt = ArithmeticUtil.doAdd(glb_subjectAmt, dealDto.getPrinAmt());

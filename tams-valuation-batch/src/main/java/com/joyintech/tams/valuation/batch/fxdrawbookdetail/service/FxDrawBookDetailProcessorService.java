@@ -20,6 +20,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListTableId;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
@@ -277,8 +278,15 @@ public class FxDrawBookDetailProcessorService {
                 accountNatrueBranchMap.put(BookConstant.BRANCH, dto.getBranch());
                 //accountNatrueMap.put("逾期资产应计利息", accountNatrueBranchMap);
                 accountNatrueMap.put(DictCodeBaseSubjectNatrue.逾期资产应计利息.getValue(), accountNatrueBranchMap);
-                
+                /**modify by wujie on 20201130
                 accountSceneMap.put(BookConstant.IS_ACC_BALANCE,DictCodeList.是否_否.getValue());
+                **/
+                //部分科目余额更新
+                accountSceneMap.put(BookConstant.IS_ACC_BALANCE,DictCodeListExt3.累计余额_部分.getValue());
+                Map<String,String> accountNatrueBalanceMap = new HashMap<String,String>();
+                accountNatrueBalanceMap.put(DictCodeBaseSubjectNatrue.逾期资产应计利息.getValue(), DictCodeList.是否_是.getValue());
+                ad.setAccountNatrueBalanceMap(accountNatrueBalanceMap);
+                /**modify by wujie on 20201130 end**/
 
                 // map塞入场景要素管理中
                 ad.setAccountSceneMap(accountSceneMap);// 记账场景要素
@@ -510,6 +518,25 @@ public class FxDrawBookDetailProcessorService {
                 }
                 //变量.计息基础计算器输入参数DTO.计息基础 =	变量.计息基础DTO
                 basisInput.setBasis(basis);
+                // 利息分配方式
+                basisInput.setAllocationType(allocationType);
+                //定义 变量.计息年度计算参数DTO	SecCalYearInputParameter
+                SecCalYearInputParameter secInput = new SecCalYearInputParameter();
+                //变量.计息年度计算参数DTO.计算日 =	BasicUtil.dateToLocal(输入.计提日).plusDays(1)
+                secInput.setCalDate(BasicUtil.dateToLocal(happenDate));
+                //变量.计息年度计算参数DTO.息票品种 =Variety.附息
+                secInput.setVariety(Variety.附息);
+                //变量.计息年度计算参数DTO.推算方式 = SecIntSchCalMethod.起息日向后
+                secInput.setCalMethod(SecIntSchCalMethod.起息日向后);
+                //变量.计息年度计算参数DTO.起息日（债券起始日） =	输入.现金流计划DTO.起息日
+                secInput.setStartDate(BasicUtil.dateToLocal(cashPlan.getVdate()));
+                //变量.计息年度计算参数DTO.到期日（债券到期日） =	输入.现金流计划DTO.到期日
+                secInput.setEndDate(BasicUtil.dateToLocal(cashPlan.getMdate()));
+                //定义 变量.计息年度天数输出DTO SecCalYearDayCountOutputParameter
+                //变量.计息年度天数输出DTO = CalculatorFactory.createSecCalYearDayCountCalculator().calculate(变量.计息年度计算参数DTO)
+                SecCalYearDayCountOutputParameter yearDayCount = CalculatorFactory.createSecCalYearDayCountCalculator().calculate(secInput);
+                //变量.计息基础计算器输入参数DTO.计息年度天数 = 变量.计息年度天数输出DTO.计息年度天数
+                basisInput.setYearTotalDays((int) yearDayCount.getDay());
                 //定义 变量.计息基础计算结果DTO	BasisIntOutputParameter = 变量.计息基础算法DTO.calculate(变量.计息基础计算器输入参数DTO)
                 BasisIntOutputParameter basisOutput = basisCal.calculate(basisInput);
                 //变量.应收利息 = 变量.计息基础计算结果DTO.应计利息 * 输入.计息基数 * 变量.现金流计算规则DTO.生效利率
@@ -523,7 +550,6 @@ public class FxDrawBookDetailProcessorService {
                 //定义 变量.计息年度计算参数DTO	SecCalYearInputParameter
                 SecCalYearInputParameter secInput = new SecCalYearInputParameter();
                 //变量.计息年度计算参数DTO.计算日 =	BasicUtil.dateToLocal(输入.计提日).plusDays(1)
-                // modify by jiangpeng on 20200730 跑批倒数第二天报错 计息日等于到期日故删去 plusDays(1)
                 secInput.setCalDate(BasicUtil.dateToLocal(happenDate));
                 //变量.计息年度计算参数DTO.息票品种 =Variety.附息
                 secInput.setVariety(Variety.附息);

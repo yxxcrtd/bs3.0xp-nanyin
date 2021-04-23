@@ -455,7 +455,11 @@ public class NonMonetaryFundDealProcessorService {
                 ad.setTableId(DictCodeListTableId.会计场景代码_非货币基金及净值型资产_份额调增.getValue());//
 
                 // ********** accountSceneMap设置如下，共通**********
+                /**MODIFY BY WUJIE ON 20210129 START REMARK:金额为0也出凭证
                 accountSceneMap.put(BookConstant.IS_ZERO_ACCOUNT,DictCodeList.是否_否.getValue() );
+                **/
+                accountSceneMap.put(BookConstant.IS_ZERO_ACCOUNT,DictCodeList.是否_是.getValue());
+                /**MODIFY BY WUJIE ON 20210129 END **/
                 
                 accountSceneMap.put(BookConstant.ACCT_TYPE,dealNow.getAcctType());
 
@@ -499,6 +503,10 @@ public class NonMonetaryFundDealProcessorService {
                     "非货币基金" + DictCodeList.交易方向_份额强减.getCodeName() + "交易登账");
                 
                 accountSceneMap.put(BookConstant.ACCT_TYPE,dealNow.getAcctType());
+                
+                /**ADD BY WUJIE ON 20210129 START REMARK:金额为0也出凭证**/
+                accountSceneMap.put(BookConstant.IS_ZERO_ACCOUNT,DictCodeList.是否_是.getValue());
+                /**ADD BY WUJIE ON 20210129 END **/
 
                 // ********** accountAmountMap设置如下**********
                 // 发生数量	<-	交易明细.交易份额
@@ -629,8 +637,7 @@ public class NonMonetaryFundDealProcessorService {
                 accountAmountMap.putAll(bccyAmountMap);
                 //定义 本币_变量.买卖价差
             	BigDecimal varMmjcBccy = BigDecimal.ZERO;
-            	
-				//变量.买卖价差_本位币 = (实收金额_本位币 + 随交易支付_佣金_本位币 + 交易费用_本位币) -(成本金额_本位币 + 应付佣金_本位币)                                                                                                    
+            	//变量.买卖价差_本位币 = (实收金额_本位币 + 随交易支付_佣金_本位币 + 交易费用_本位币) -(成本金额_本位币 + 应付佣金_本位币)                                                                                                    
                 BigDecimal dealAmtBccy = accountAmountMap.get(BookConstant.DEALAMT + BookConstant.BCCYAMT);
                 BigDecimal commissionOutBccy = accountAmountMap.get(BookConstant.COMMISSION_OUT + BookConstant.BCCYAMT);
                 BigDecimal feeAmtBccy = accountAmountMap.get(BookConstant.FEEAMT + BookConstant.BCCYAMT);
@@ -638,8 +645,7 @@ public class NonMonetaryFundDealProcessorService {
                 BigDecimal commissionBccy = accountAmountMap.get(BookConstant.COMMISSION + BookConstant.BCCYAMT);
                 varMmjcBccy = ArithmeticUtil.doSub(ArithmeticUtil.doAdd(dealAmtBccy, commissionOutBccy, feeAmtBccy)
                         , ArithmeticUtil.doAdd(dcostAmtBccy, commissionBccy));
-				
-				if(varMmjcBccy.compareTo(BigDecimal.ZERO)>0) {
+            	if(varMmjcBccy.compareTo(BigDecimal.ZERO)>0) {
             		accountAmountMap.put(BookConstant.DSCLOSS_C + BookConstant.BCCYAMT, ArithmeticUtil.round(varMmjcBccy, NumberEnum.MONEY.getCode(), null));
             	}
             	else {
@@ -657,7 +663,6 @@ public class NonMonetaryFundDealProcessorService {
                     varCjgyjzbdSubjectAmt);
 
             }
-
 
             /** modify by yanya on 20200111 非货币基金增加转换交易处理，转入方向变更为转换申购确认 start**/
             //else if (DictCodeList.交易方向_转入.getValue().equals(dealPsNow)) {

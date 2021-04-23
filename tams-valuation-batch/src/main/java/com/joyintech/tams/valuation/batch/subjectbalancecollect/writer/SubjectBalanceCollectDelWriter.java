@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.valuation.batch.subjectbalancecollect.dao.SubjectBalanceCollectMapper;
-import com.joyintech.tams.valuation.batch.subjectbalancecollect.dto.SubjectBalanceCollectDelProcessorDto;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -46,6 +45,8 @@ public class SubjectBalanceCollectDelWriter extends BaseWriter<NeedToWriteEntity
         throws Exception {
         // 删除同一任务Id对应的之前的记录
         subjectBalanceCollectMapper.deleteBalanceByKey(this.getParams());
+        // 删除同一任务Id对应的日初科目余额数据
+        subjectBalanceCollectMapper.deleteBalanceBefByKey(this.getParams());
     }
 
 }

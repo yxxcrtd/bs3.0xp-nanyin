@@ -345,8 +345,14 @@ public class SecLendFinDealBookDetailService {
                 // 调用 金融负债收息处理 共通处理。返回值： 应计利息
                 returnYglix = BigDecimal.ZERO;
                 returnYglix = this.getFinLiabilIntHandle(rstBaseinfo, acctEntity, dealDto);
+                /**modify by wujie on 20210109 start remark:全局变量应计利息科目余额计算错误问题修复
                 // 变量.应计利息科目余额 = 变量.应计利息余额 - 返回值.应计利息
                 yjlikmye = ArithmeticUtil.doSub(yjlixye, returnYglix);
+                **/
+                // 变量.应计利息科目余额 = 变量.应计利息余额 - 返回值.应计利息
+                yjlikmye = ArithmeticUtil.doSub(yjlikmye, returnYglix);
+                /**moidfy by wujie on 20210109 end**/
+                
                 // 应付利息 <- 返回值.应计利息
                 putAccountAmountMap(accountAmountMap,BookConstant.INTAMT,returnYglix);
                 // 变量.应付融出方利息 = 变量.应付融出方利息 + 返回值.应付利息                                  
@@ -402,7 +408,11 @@ public class SecLendFinDealBookDetailService {
             }
             // else if（交易方向 = "卖空债券还本" OR 交易方向 = "还本"）
             else if (DictCodeList.交易方向_卖空债券还本.getValue().equals(ps) ||
-            		DictCodeList.交易方向_还本.getValue().equals(ps)) {
+            		DictCodeList.交易方向_还本.getValue().equals(ps)
+            		//add by wujie on 20210109 start remark:理论结息日结转，标的券处理交易还本交易有区分还本、到期
+            		|| DictCodeList.交易方向_到期.getValue().equals(ps)
+            		//add by wujie on 20210109 end 
+            		) {
                 // ad.会计场景代码="债券借贷-融入债券卖出后还本"
                 tableId = DictCodeListTableId.会计场景代码_债券借贷_融入债券卖出后还本.getValue();
                 // 备注 <- "债券借贷-融入债券卖出后还本交易登账"

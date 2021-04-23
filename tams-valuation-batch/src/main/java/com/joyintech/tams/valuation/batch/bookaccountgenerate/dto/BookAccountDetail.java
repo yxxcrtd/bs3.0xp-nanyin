@@ -48,6 +48,41 @@ public class BookAccountDetail {
     /*start 20191010 add by zhangzhao*/
     private String isexeZeroAmt;
     /*end 20191010 add by zhangzhao*/
+    
+    //科目级别
+    private Long subjectLevel;
+    
+    //父类科目
+    private String fsubjectId;
+    
+    //是否核算数量 add by wujie on 20201116
+    private String accQuaFlag;
+
+    /**
+     * 科目名称
+     */
+    private String subjectName;
+
+    /**
+     * 科目尾号名称
+     */
+    private String detailSubjectName;
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getDetailSubjectName() {
+        return detailSubjectName;
+    }
+
+    public void setDetailSubjectName(String detailSubjectName) {
+        this.detailSubjectName = detailSubjectName;
+    }
 
     public BigDecimal getHappenNumber() {
         return happenNumber;
@@ -267,4 +302,38 @@ public class BookAccountDetail {
     public void setIsexeZeroAmt(String isexeZeroAmt) {
         this.isexeZeroAmt = isexeZeroAmt;
     }
+
+
+
+
+	public String getFsubjectId() {
+		return fsubjectId;
+	}
+
+
+	public void setFsubjectId(String fsubjectId) {
+		this.fsubjectId = fsubjectId;
+	}
+
+
+	public Long getSubjectLevel() {
+		return subjectLevel;
+	}
+
+
+	public void setSubjectLevel(Long subjectLevel) {
+		this.subjectLevel = subjectLevel;
+	}
+
+
+	public String getAccQuaFlag() {
+		return accQuaFlag;
+	}
+
+
+	public void setAccQuaFlag(String accQuaFlag) {
+		this.accQuaFlag = accQuaFlag;
+	}
+	
+	
 }

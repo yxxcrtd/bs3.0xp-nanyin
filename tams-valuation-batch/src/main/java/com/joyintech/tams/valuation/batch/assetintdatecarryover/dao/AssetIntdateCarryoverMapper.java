@@ -10,21 +10,16 @@
 
 package com.joyintech.tams.valuation.batch.assetintdatecarryover.dao;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverExecReaderDetail;
+import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderDetail;
+import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.SecIsnotPledgeDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.AssetIntdateCarryoverReaderDetail;
-import com.joyintech.tams.valuation.batch.assetintdatecarryover.dto.SecIsnotPledgeDto;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 资产理论结息日结转 - 数据库数据获取
@@ -226,5 +221,19 @@ public interface AssetIntdateCarryoverMapper {
      * @since 1.0
      */
     List<AssetIntdateCarryoverReaderDetail> queryAssetIntdateCarryoverReaderTransaction(Map<String,Object> paramsMap);
-    
+
+    /**
+     * 查询债券行权计划
+     * @param paramsMap
+     * @return
+     */
+    List<AssetIntdateCarryoverExecReaderDetail> selectSecExerciseList(Map<String,Object> paramsMap);
+
+    /**
+     * 查询债券行权计划交易数量
+     * @param paramsMap
+     * @return
+     */
+    Integer selectExecTradeCount(Map<String,Object> paramsMap);
+
 }

@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.valuation.batch.subjectbalancecollect.writer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -20,9 +21,10 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.common.base.dao.BokBalanceMapper;
+import com.joyintech.tams.valuation.batch.subjectbalancecollect.dao.SubjectBalanceCollectMapper;
 import com.joyintech.tams.valuation.batch.subjectbalancecollect.dto.SubjectBalanceBatch;
 import com.joyintech.tams.valuation.batch.subjectbalancecollect.dto.SubjectBalanceGenerateResult;
+import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 
 /**
  * 〈一句话功能简述〉
@@ -41,7 +43,7 @@ public class SubjectBalanceCollectWriter extends BaseWriter<NeedToWriteEntity>{
      * 科目余额汇总mapper
      */
     @Autowired
-    private BokBalanceMapper valBokBalanceMapper;
+    private SubjectBalanceCollectMapper subjectBalanceCollectMapper;
 
     /**
      * {@inheritDoc}
@@ -51,19 +53,20 @@ public class SubjectBalanceCollectWriter extends BaseWriter<NeedToWriteEntity>{
     public void write(List<? extends NeedToWriteEntity> items) throws Exception {
         //获取process返回组合的list值 - 记账凭证list
         List<SubjectBalanceGenerateResult> resultList = (List<SubjectBalanceGenerateResult>) items;
-        
+        List<SubjectBalanceBatch> listBatches = new ArrayList<SubjectBalanceBatch>();
         //循环科目余额list，对每个记账凭证进行操作
         for(SubjectBalanceGenerateResult result : resultList){
             //入库科目余额数据 
-            List<SubjectBalanceBatch> listBatches = result.getSubjectBalanceBatchs();
-            if(CollectionUtils.isNotEmpty(listBatches)){
-                listBatches.forEach(item ->{
-                	logger.debug(item.getSubjectNo()+":"+item.getbCcy()+":"+item.getoCcy()+":"+item.getBooksetId());
-                    //循环录入库中
-                    valBokBalanceMapper.insert(item);
-                });
+            if(CollectionUtils.isNotEmpty(result.getSubjectBalanceBatchs())){
+            	listBatches.addAll(result.getSubjectBalanceBatchs());
             }
-            
+        }
+        List<List<SubjectBalanceBatch>> list = DataHandleUtil.splitList(listBatches);
+        for (List<SubjectBalanceBatch> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+            	subjectBalanceCollectMapper.insertBatch(listInsert);
+            	logger.debug("批量插入成功");
+            }
         }
         
     }

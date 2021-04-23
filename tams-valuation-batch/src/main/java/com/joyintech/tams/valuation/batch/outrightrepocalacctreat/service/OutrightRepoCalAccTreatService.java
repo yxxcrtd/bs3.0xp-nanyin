@@ -379,6 +379,9 @@ public class OutrightRepoCalAccTreatService {
             accountSceneMap.put(BookConstant.TYPE_2, dealInfoForTarget.getType2());// 分类2 -
                                                                                    // 变量.交易信息.分类2
 
+            /**modify by yanya on 20201215 回购计提增加元素，利息计提分支：交易市场**/
+            accountSceneMap.put(BookConstant.TRADE_MARKET, dealInfoForTarget.getTradeMarket());
+
             // 交易标的DTO.金融产品类型 = “债券买断式正回购”
             if (DictCodeListExt1.金融产品类型_债券买断式正回购.getValue().equals(dto.getBusiDetailType())) {// 分录场景为【债券买断式正回购】
                 // 设置账务引擎参数

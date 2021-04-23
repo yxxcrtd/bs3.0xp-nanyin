@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.batch.common.accounting.service;
 import com.google.common.collect.Lists;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -328,12 +329,12 @@ public class AccountingCommonService {
             balDirect = subBalanceDirect;
             if (balDirect.equals(accrualDirect)) {
                 balance = ArithmeticUtil.doAdd(balance, accrual);
-                benbalance = ArithmeticUtil.doAdd(actBenBalance, benaccrual);
+                benbalance = ArithmeticUtil.doAdd(benbalance, benaccrual);
                 num = ArithmeticUtil.doAdd(num, accnum);
             }
             else {
                 balance = ArithmeticUtil.doSub(balance, accrual);
-                benbalance = ArithmeticUtil.doSub(actBenBalance, benaccrual);
+                benbalance = ArithmeticUtil.doSub(benbalance, benaccrual);
                 num = ArithmeticUtil.doSub(num, accnum);
             }
         }
@@ -443,7 +444,6 @@ public class AccountingCommonService {
 
         return subjectBalanceList;
     }
-
     /**
      * 公用处理：余额表生成处理
      *
@@ -744,15 +744,11 @@ public class AccountingCommonService {
             fSubjectId = subject.getFsubjectId();
         }
         //定义变量：是否统计原币科目余额：如果是损益科目或者非叶子节点科目的话则不统计原币科目余额
-       /* boolean isCountBBalance = true;
+        boolean isCountBBalance = true;
         if(subject.getSubjectType().equals("05")||DictCodeList.是否_否.getValue().equals(isleaf)){
             isCountBBalance = false;
-        }*/
-        //定义变量：是否统计原币科目余额：如果是非叶子节点科目的话则不统计原币科目余额
-        boolean isCountBBalance = true;
-        if(DictCodeList.是否_否.getValue().equals(isleaf)){
-            isCountBBalance = false;
         }
+
         // if(参数.是否叶子节点 = "是" && 入参.子余额明细.场景代码 in
         // && 入参.子余额明细.场景代码 in ("产品-已实现损益结转",
         // "产品-本期利润已实现结转",
@@ -1357,6 +1353,16 @@ public class AccountingCommonService {
             dto.setoHappenAmt(new BigDecimal(map.get("balance").toString()));
             // 18.发生数量 返回值..数量
             dto.setHappenNumber(new BigDecimal(map.get("num").toString()));
+
+
+            /**add by wujie on 20210113 start remark:本位币处理**/
+            // 本币币种 账务明细(历史表).本币币种
+            dto.setbCcy(valBokBookdetailCurrent.getbCcy());
+            // 本币发生额 返回值.余额
+            dto.setbHappenAmt(new BigDecimal(map.get("benbalance").toString()));
+            /**add by wujie on 20210113 end remark:本位币处理**/
+
+
             // 19.结息日 账务明细（历史）.结息日
             dto.setMdate(valBokBookdetailAll.getMdate());
             // 20.凭证编号 按凭证编号生成规则正常生成
@@ -1406,73 +1412,95 @@ public class AccountingCommonService {
      * @since 1.0
      */
     private void setDto3(BokBookdetailCurrent dto, BokBookdetailAll model, Date bookDate) {
+        BeanUtil.copyPropertiesIgnoreNull(dto, model);
         // 1.流水号: 自动生成，规则为BKS+"YYYYMMDD"+9位序列号
         // DateTime date = new DateTime(dBUtil.getSysDate());
         dto.setSeqno(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
-        // 2.账套代码 账务明细（历史）.账套代码
-        dto.setBooksetId(model.getBooksetId());
-        // 3.场景代码 账务明细（历史）.场景代码
-        dto.setTableId(model.getTableId());
-        // 4.交易编号 账务明细（历史）.交易编号
-        dto.setTradeId(model.getTradeId());
-        // 5.业务明细代码 账务明细（历史）.业务明细代码
-        dto.setBusiId(model.getBusiId());
-        // 6.任务代码 账务明细（历史）.任务代码
-        dto.setTaskId(model.getTaskId());
-        // 7.发生日期 账务明细（历史）.发生日期
-        dto.setHappenDate(model.getHappenDate());
-        // 8.入账日期 账务明细（历史）.入账日期
-        dto.setBookDate(bookDate);
-        // 9.基础科目性质 账务明细（历史）.基础科目性质
-        dto.setBaseSubjectNature(model.getBaseSubjectNature());
-        // 10.分支序号 账务明细（历史）.分支序号
-        dto.setBranch(model.getBranch());
-        // 11.科目号 账务明细（历史）.科目号
-        dto.setSubjectNo(model.getSubjectNo());
-        // 12.四级科目号 账务明细（历史）.四级科目号
-        dto.setDetailSubjectNo(model.getDetailSubjectNo());
-        // 13.借贷方向 账务明细（历史）.借贷方向
-        dto.setCdFlag(model.getCdFlag());
-        // 14.原币币种 账务明细（历史）.原币币种
-        dto.setoCcy(model.getoCcy());
         // 15.原币发生额 返回值.余额 原币发生额 *-1
         dto.setoHappenAmt(
                 model.getoHappenAmt() == null ? BigDecimal.ZERO : model.getoHappenAmt().negate());
-        // 16.本币币种 账务明细（历史）.本币币种
-        // dto.setbCcy(model.getbCcy());
         // 17.本币发生额 账务明细（历史）.本币发生额
-        // dto.setbHappenAmt(model.getbHappenAmt());
+        dto.setbHappenAmt(model.getbHappenAmt() == null ? BigDecimal.ZERO : model.getbHappenAmt().negate());
         // 18.发生数量 账务明细（历史）.发生数量*-1
         dto.setHappenNumber(
                 model.getHappenNumber() == null ? BigDecimal.ZERO : model.getHappenNumber().negate());
-        // 19.结息日 账务明细（历史）.结息日
-        dto.setMdate(model.getMdate());
-        // 20.凭证编号 账务明细（历史）.凭证编号
-        dto.setBookId(model.getBookId());
-        // 21.凭证说明 账务明细（历史）.凭证说明
-        dto.setBookRemark(model.getBookRemark());
         // 22.冲正标识 账务明细（历史）.冲正标识
         dto.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
-        // 反向流水号
-        dto.setrSeqno(model.getrSeqno());
-        // 23.凭证类型 账务明细（历史）.凭证类型
-        dto.setBookType(model.getBookType());
         // 24.处理序列 账务明细（历史）.凭证序列
         dto.setBookOrder(new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.处理序列)));
-        // 25.换汇日期 账务明细（历史）.换汇日期
-        dto.setExDate(model.getExDate());
-        // 26.折算汇率 账务明细（历史）.折算汇率
-        dto.setExRate(model.getExRate());
         // 27.创建时间 当前时间
         dto.setCreateTime(new Date());
         // 28.更新时间 当前时间
         dto.setUpdateTime(new Date());
-        // 账套日期
-        dto.setBooksetDate(model.getBooksetDate());
-        // 账务明细代码
-        dto.setBokDetailId(model.getBokDetailId());
-        // 任务优先级
-        dto.setTaskPri(model.getTaskPri());
+
+//
+//        // 1.流水号: 自动生成，规则为BKS+"YYYYMMDD"+9位序列号
+//        // DateTime date = new DateTime(dBUtil.getSysDate());
+//        dto.setSeqno(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
+//        // 2.账套代码 账务明细（历史）.账套代码
+//        dto.setBooksetId(model.getBooksetId());
+//        // 3.场景代码 账务明细（历史）.场景代码
+//        dto.setTableId(model.getTableId());
+//        // 4.交易编号 账务明细（历史）.交易编号
+//        dto.setTradeId(model.getTradeId());
+//        // 5.业务明细代码 账务明细（历史）.业务明细代码
+//        dto.setBusiId(model.getBusiId());
+//        // 6.任务代码 账务明细（历史）.任务代码
+//        dto.setTaskId(model.getTaskId());
+//        // 7.发生日期 账务明细（历史）.发生日期
+//        dto.setHappenDate(model.getHappenDate());
+//        // 8.入账日期 账务明细（历史）.入账日期
+//        dto.setBookDate(bookDate);
+//        // 9.基础科目性质 账务明细（历史）.基础科目性质
+//        dto.setBaseSubjectNature(model.getBaseSubjectNature());
+//        // 10.分支序号 账务明细（历史）.分支序号
+//        dto.setBranch(model.getBranch());
+//        // 11.科目号 账务明细（历史）.科目号
+//        dto.setSubjectNo(model.getSubjectNo());
+//        // 12.四级科目号 账务明细（历史）.四级科目号
+//        dto.setDetailSubjectNo(model.getDetailSubjectNo());
+//        // 13.借贷方向 账务明细（历史）.借贷方向
+//        dto.setCdFlag(model.getCdFlag());
+//        // 14.原币币种 账务明细（历史）.原币币种
+//        dto.setoCcy(model.getoCcy());
+//        // 15.原币发生额 返回值.余额 原币发生额 *-1
+//        dto.setoHappenAmt(
+//                model.getoHappenAmt() == null ? BigDecimal.ZERO : model.getoHappenAmt().negate());
+//        // 16.本币币种 账务明细（历史）.本币币种
+//        // dto.setbCcy(model.getbCcy());
+//        // 17.本币发生额 账务明细（历史）.本币发生额
+//        // dto.setbHappenAmt(model.getbHappenAmt());
+//        // 18.发生数量 账务明细（历史）.发生数量*-1
+//        dto.setHappenNumber(
+//                model.getHappenNumber() == null ? BigDecimal.ZERO : model.getHappenNumber().negate());
+//        // 19.结息日 账务明细（历史）.结息日
+//        dto.setMdate(model.getMdate());
+//        // 20.凭证编号 账务明细（历史）.凭证编号
+//        dto.setBookId(model.getBookId());
+//        // 21.凭证说明 账务明细（历史）.凭证说明
+//        dto.setBookRemark(model.getBookRemark());
+//        // 22.冲正标识 账务明细（历史）.冲正标识
+//        dto.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
+//        // 反向流水号
+//        dto.setrSeqno(model.getrSeqno());
+//        // 23.凭证类型 账务明细（历史）.凭证类型
+//        dto.setBookType(model.getBookType());
+//        // 24.处理序列 账务明细（历史）.凭证序列
+//        dto.setBookOrder(new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.处理序列)));
+//        // 25.换汇日期 账务明细（历史）.换汇日期
+//        dto.setExDate(model.getExDate());
+//        // 26.折算汇率 账务明细（历史）.折算汇率
+//        dto.setExRate(model.getExRate());
+//        // 27.创建时间 当前时间
+//        dto.setCreateTime(new Date());
+//        // 28.更新时间 当前时间
+//        dto.setUpdateTime(new Date());
+//        // 账套日期
+//        dto.setBooksetDate(model.getBooksetDate());
+//        // 账务明细代码
+//        dto.setBokDetailId(model.getBokDetailId());
+//        // 任务优先级
+//        dto.setTaskPri(model.getTaskPri());
     }
 
     /**
@@ -1485,71 +1513,91 @@ public class AccountingCommonService {
      * @since 1.0
      */
     private void setDto2(BokBookdetailCurrent dto, BokBookdetailAll model, Date bookDate) {
+        BeanUtil.copyPropertiesIgnoreNull(dto, model);
         // 1.流水号: 自动生成，规则为BKS+"YYYYMMDD"+9位序列号
         // DateTime date = new DateTime(dBUtil.getSysDate());
         dto.setSeqno(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
-        // 2.账套代码 账务明细（历史）.账套代码
-        dto.setBooksetId(model.getBooksetId());
-        // 3.场景代码 账务明细（历史）.场景代码
-        dto.setTableId(model.getTableId());
-        // 4.交易编号 账务明细（历史）.交易编号
-        dto.setTradeId(model.getTradeId());
-        // 5.业务明细代码 账务明细（历史）.业务明细代码
-        dto.setBusiId(model.getBusiId());
-        // 6.任务代码 账务明细（历史）.任务代码
-        dto.setTaskId(model.getTaskId());
-        // 7.发生日期 账务明细（历史）.发生日期
-        dto.setHappenDate(model.getHappenDate());
-        // 8.入账日期 账务明细（历史）.入账日期
-        dto.setBookDate(bookDate);
-        // 9.基础科目性质 账务明细（历史）.基础科目性质
-        dto.setBaseSubjectNature(model.getBaseSubjectNature());
-        // 10.分支序号 账务明细（历史）.分支序号
-        dto.setBranch(model.getBranch());
-        // 11.科目号 账务明细（历史）.科目号
-        dto.setSubjectNo(model.getSubjectNo());
-        // 12.四级科目号 账务明细（历史）.四级科目号
-        dto.setDetailSubjectNo(model.getDetailSubjectNo());
-        // 13.借贷方向 账务明细（历史）.借贷方向
-        dto.setCdFlag(model.getCdFlag());
-        // 14.原币币种 账务明细（历史）.原币币种
-        dto.setoCcy(model.getoCcy());
         // 15.原币发生额 返回值.余额 原币发生额 *-1
         dto.setoHappenAmt(
                 model.getoHappenAmt() == null ? BigDecimal.ZERO : model.getoHappenAmt().negate());
-        // 16.本币币种 账务明细（历史）.本币币种
-        // dto.setbCcy(model.getbCcy());
         // 17.本币发生额 账务明细（历史）.本币发生额
-        // dto.setbHappenAmt(model.getbHappenAmt());
+         dto.setbHappenAmt(model.getbHappenAmt() == null ? BigDecimal.ZERO : model.getbHappenAmt().negate());
         // 18.发生数量 账务明细（历史）.发生数量*-1
         dto.setHappenNumber(
                 model.getHappenNumber() == null ? BigDecimal.ZERO : model.getHappenNumber().negate());
-        // 19.结息日 账务明细（历史）.结息日
-        dto.setMdate(model.getMdate());
-        // 20.凭证编号 账务明细（历史）.凭证编号
-        dto.setBookId(model.getBookId());
-        // 21.凭证说明 账务明细（历史）.凭证说明
-        dto.setBookRemark(model.getBookRemark());
-        // 22.冲正标识 账务明细（历史）.冲正标识
-        dto.setOffsetFlag(model.getOffsetFlag());
-        // 23.凭证类型 账务明细（历史）.凭证类型
-        dto.setBookType(model.getBookType());
         // 24.处理序列 账务明细（历史）.凭证序列
         dto.setBookOrder(new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.处理序列)));
-        // 25.换汇日期 账务明细（历史）.换汇日期
-        dto.setExDate(model.getExDate());
-        // 26.折算汇率 账务明细（历史）.折算汇率
-        dto.setExRate(model.getExRate());
         // 27.创建时间 当前时间
         dto.setCreateTime(new Date());
         // 28.更新时间 当前时间
         dto.setUpdateTime(new Date());
-        // 账套日期
-        dto.setBooksetDate(model.getBooksetDate());
-        // 账务明细代码
-        dto.setBokDetailId(model.getBokDetailId());
-        // 任务优先级
-        dto.setTaskPri(model.getTaskPri());
+
+
+//        // 1.流水号: 自动生成，规则为BKS+"YYYYMMDD"+9位序列号
+//        // DateTime date = new DateTime(dBUtil.getSysDate());
+//        dto.setSeqno(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
+//        // 2.账套代码 账务明细（历史）.账套代码
+//        dto.setBooksetId(model.getBooksetId());
+//        // 3.场景代码 账务明细（历史）.场景代码
+//        dto.setTableId(model.getTableId());
+//        // 4.交易编号 账务明细（历史）.交易编号
+//        dto.setTradeId(model.getTradeId());
+//        // 5.业务明细代码 账务明细（历史）.业务明细代码
+//        dto.setBusiId(model.getBusiId());
+//        // 6.任务代码 账务明细（历史）.任务代码
+//        dto.setTaskId(model.getTaskId());
+//        // 7.发生日期 账务明细（历史）.发生日期
+//        dto.setHappenDate(model.getHappenDate());
+//        // 8.入账日期 账务明细（历史）.入账日期
+//        dto.setBookDate(bookDate);
+//        // 9.基础科目性质 账务明细（历史）.基础科目性质
+//        dto.setBaseSubjectNature(model.getBaseSubjectNature());
+//        // 10.分支序号 账务明细（历史）.分支序号
+//        dto.setBranch(model.getBranch());
+//        // 11.科目号 账务明细（历史）.科目号
+//        dto.setSubjectNo(model.getSubjectNo());
+//        // 12.四级科目号 账务明细（历史）.四级科目号
+//        dto.setDetailSubjectNo(model.getDetailSubjectNo());
+//        // 13.借贷方向 账务明细（历史）.借贷方向
+//        dto.setCdFlag(model.getCdFlag());
+//        // 14.原币币种 账务明细（历史）.原币币种
+//        dto.setoCcy(model.getoCcy());
+//        // 15.原币发生额 返回值.余额 原币发生额 *-1
+//        dto.setoHappenAmt(
+//                model.getoHappenAmt() == null ? BigDecimal.ZERO : model.getoHappenAmt().negate());
+//        // 16.本币币种 账务明细（历史）.本币币种
+//        // dto.setbCcy(model.getbCcy());
+//        // 17.本币发生额 账务明细（历史）.本币发生额
+//        // dto.setbHappenAmt(model.getbHappenAmt());
+//        // 18.发生数量 账务明细（历史）.发生数量*-1
+//        dto.setHappenNumber(
+//                model.getHappenNumber() == null ? BigDecimal.ZERO : model.getHappenNumber().negate());
+//        // 19.结息日 账务明细（历史）.结息日
+//        dto.setMdate(model.getMdate());
+//        // 20.凭证编号 账务明细（历史）.凭证编号
+//        dto.setBookId(model.getBookId());
+//        // 21.凭证说明 账务明细（历史）.凭证说明
+//        dto.setBookRemark(model.getBookRemark());
+//        // 22.冲正标识 账务明细（历史）.冲正标识
+//        dto.setOffsetFlag(model.getOffsetFlag());
+//        // 23.凭证类型 账务明细（历史）.凭证类型
+//        dto.setBookType(model.getBookType());
+//        // 24.处理序列 账务明细（历史）.凭证序列
+//        dto.setBookOrder(new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.处理序列)));
+//        // 25.换汇日期 账务明细（历史）.换汇日期
+//        dto.setExDate(model.getExDate());
+//        // 26.折算汇率 账务明细（历史）.折算汇率
+//        dto.setExRate(model.getExRate());
+//        // 27.创建时间 当前时间
+//        dto.setCreateTime(new Date());
+//        // 28.更新时间 当前时间
+//        dto.setUpdateTime(new Date());
+//        // 账套日期
+//        dto.setBooksetDate(model.getBooksetDate());
+//        // 账务明细代码
+//        dto.setBokDetailId(model.getBokDetailId());
+//        // 任务优先级
+//        dto.setTaskPri(model.getTaskPri());
     }
 
     /**
@@ -1561,70 +1609,75 @@ public class AccountingCommonService {
      * @since 1.0
      */
     private void setDto1(BokBookdetailCurrent dto, BokBookdetailCurrent model) {
+        BeanUtil.copyPropertiesIgnoreNull(dto, model);
         // 1.流水号: 自动生成，规则为BKS+"YYYYMMDD"+9位序列号
         // DateTime date = new DateTime(dBUtil.getSysDate());
         dto.setSeqno(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
-        // 2.账套代码 账务明细（当前）.账套代码
-        dto.setBooksetId(model.getBooksetId());
-        // 3.场景代码 账务明细（当前）.场景代码
-        dto.setTableId(model.getTableId());
-        // 4.交易编号 账务明细（当前）.交易编号
-        dto.setTradeId(model.getTradeId());
-        // 5.业务明细代码 账务明细（当前）.业务明细代码
-        dto.setBusiId(model.getBusiId());
-        // 6.任务代码 账务明细（当前）.任务代码
-        dto.setTaskId(model.getTaskId());
-        // 7.发生日期 账务明细（当前）.发生日期
-        dto.setHappenDate(model.getHappenDate());
-        // 8.入账日期 账务明细（当前）.入账日期
-        dto.setBookDate(model.getBookDate());
-        // 9.基础科目性质 账务明细（当前）.基础科目性质
-        dto.setBaseSubjectNature(model.getBaseSubjectNature());
-        // 10.分支序号 账务明细（当前）.分支序号
-        dto.setBranch(model.getBranch());
-        // 11.科目号 账务明细（当前）.科目号
-        dto.setSubjectNo(model.getSubjectNo());
-        // 12.四级科目号 账务明细（当前）.四级科目号
-        dto.setDetailSubjectNo(model.getDetailSubjectNo());
-        // 13.借贷方向 账务明细（当前）.借贷方向
-        dto.setCdFlag(model.getCdFlag());
-        // 14.原币币种 账务明细（当前）.原币币种
-        dto.setoCcy(model.getoCcy());
-        // 15.原币发生额 返回值.余额 原币发生额
-        dto.setoHappenAmt(model.getoHappenAmt());
-        // 16.本币币种 账务明细（当前）.本币币种
-        dto.setbCcy(model.getbCcy());
-        // 17.本币发生额 账务明细（当前）.本币发生额
-        dto.setbHappenAmt(model.getbHappenAmt());
-        // 18.发生数量 账务明细（当前）.发生数量
-        dto.setHappenNumber(model.getHappenNumber());
-        // 19.结息日 账务明细（历史）.结息日
-        dto.setMdate(model.getMdate());
-        // 20.凭证编号 账务明细（当前）.凭证编号
-        dto.setBookId(model.getBookId());
-        // 21.凭证说明 账务明细（当前）.凭证说明
-        dto.setBookRemark(model.getBookRemark());
-        // 22.冲正标识 账务明细（当前）.冲正标识
-        dto.setOffsetFlag(model.getOffsetFlag());
-        // 23.凭证类型 账务明细（当前）.凭证类型
-        dto.setBookType(model.getBookType());
-        // 24.处理序列 账务明细（当前）.凭证序列
-        // 先使用当前表处理序列，排序好后再生出新的
-        dto.setBookOrder(model.getBookOrder());
-        // 25.换汇日期 账务明细（当前）.换汇日期
-        dto.setExDate(model.getExDate());
-        // 26.折算汇率 账务明细（当前）.折算汇率
-        dto.setExRate(model.getExRate());
-        // 27.创建时间 当前时间
-        dto.setCreateTime(model.getCreateTime());
-        // 28.更新时间 当前时间
-        dto.setUpdateTime(model.getUpdateTime());
-        // 账套日期
-        dto.setBooksetDate(model.getBooksetDate());
-        // 账务明细代码
-        dto.setBokDetailId(model.getBokDetailId());
-        // 任务优先级
-        dto.setTaskPri(model.getTaskPri());
+
+//        // 1.流水号: 自动生成，规则为BKS+"YYYYMMDD"+9位序列号
+//        // DateTime date = new DateTime(dBUtil.getSysDate());
+//        dto.setSeqno(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
+//        // 2.账套代码 账务明细（当前）.账套代码
+//        dto.setBooksetId(model.getBooksetId());
+//        // 3.场景代码 账务明细（当前）.场景代码
+//        dto.setTableId(model.getTableId());
+//        // 4.交易编号 账务明细（当前）.交易编号
+//        dto.setTradeId(model.getTradeId());
+//        // 5.业务明细代码 账务明细（当前）.业务明细代码
+//        dto.setBusiId(model.getBusiId());
+//        // 6.任务代码 账务明细（当前）.任务代码
+//        dto.setTaskId(model.getTaskId());
+//        // 7.发生日期 账务明细（当前）.发生日期
+//        dto.setHappenDate(model.getHappenDate());
+//        // 8.入账日期 账务明细（当前）.入账日期
+//        dto.setBookDate(model.getBookDate());
+//        // 9.基础科目性质 账务明细（当前）.基础科目性质
+//        dto.setBaseSubjectNature(model.getBaseSubjectNature());
+//        // 10.分支序号 账务明细（当前）.分支序号
+//        dto.setBranch(model.getBranch());
+//        // 11.科目号 账务明细（当前）.科目号
+//        dto.setSubjectNo(model.getSubjectNo());
+//        // 12.四级科目号 账务明细（当前）.四级科目号
+//        dto.setDetailSubjectNo(model.getDetailSubjectNo());
+//        // 13.借贷方向 账务明细（当前）.借贷方向
+//        dto.setCdFlag(model.getCdFlag());
+//        // 14.原币币种 账务明细（当前）.原币币种
+//        dto.setoCcy(model.getoCcy());
+//        // 15.原币发生额 返回值.余额 原币发生额
+//        dto.setoHappenAmt(model.getoHappenAmt());
+//        // 16.本币币种 账务明细（当前）.本币币种
+//        dto.setbCcy(model.getbCcy());
+//        // 17.本币发生额 账务明细（当前）.本币发生额
+//        dto.setbHappenAmt(model.getbHappenAmt());
+//        // 18.发生数量 账务明细（当前）.发生数量
+//        dto.setHappenNumber(model.getHappenNumber());
+//        // 19.结息日 账务明细（历史）.结息日
+//        dto.setMdate(model.getMdate());
+//        // 20.凭证编号 账务明细（当前）.凭证编号
+//        dto.setBookId(model.getBookId());
+//        // 21.凭证说明 账务明细（当前）.凭证说明
+//        dto.setBookRemark(model.getBookRemark());
+//        // 22.冲正标识 账务明细（当前）.冲正标识
+//        dto.setOffsetFlag(model.getOffsetFlag());
+//        // 23.凭证类型 账务明细（当前）.凭证类型
+//        dto.setBookType(model.getBookType());
+//        // 24.处理序列 账务明细（当前）.凭证序列
+//        // 先使用当前表处理序列，排序好后再生出新的
+//        dto.setBookOrder(model.getBookOrder());
+//        // 25.换汇日期 账务明细（当前）.换汇日期
+//        dto.setExDate(model.getExDate());
+//        // 26.折算汇率 账务明细（当前）.折算汇率
+//        dto.setExRate(model.getExRate());
+//        // 27.创建时间 当前时间
+//        dto.setCreateTime(model.getCreateTime());
+//        // 28.更新时间 当前时间
+//        dto.setUpdateTime(model.getUpdateTime());
+//        // 账套日期
+//        dto.setBooksetDate(model.getBooksetDate());
+//        // 账务明细代码
+//        dto.setBokDetailId(model.getBokDetailId());
+//        // 任务优先级
+//        dto.setTaskPri(model.getTaskPri());
     }
 
     /**
@@ -1914,7 +1967,6 @@ public class AccountingCommonService {
 
         return result;
     }
-
     /**
      * 凭证最新账务查询
      *
@@ -2559,7 +2611,7 @@ public class AccountingCommonService {
 		}
 		return result;
 	}
-	
+
     /**
      * 共通【银行账场景配置查询】
      *

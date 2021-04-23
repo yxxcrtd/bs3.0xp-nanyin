@@ -49,6 +49,8 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.MarketPriceDt
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListNatureGroup;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -93,20 +95,29 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
         String booksetId = acctEntity.getBooksetId();
         // 定义全局变量--入账日
         Date bookDate = acctEntity.getBookDate();
-        List<String> 公允价值变动列表 = Arrays.asList(DictCodeBaseSubjectNatrue.综合收益类_公允价值变动.getValue(),
-            DictCodeBaseSubjectNatrue.公允价值损益类_公允价值变动.getValue(),
-            DictCodeBaseSubjectNatrue.公允价值变动.getValue(),
-            DictCodeBaseSubjectNatrue.公允价值损益类_计划类资产_公允价值变动.getValue(),
-                DictCodeBaseSubjectNatrue.基金投资_估值增值.getValue(),
-                DictCodeBaseSubjectNatrue.股票_公允价值变动.getValue(),
-                /** add by yanya on 20200220 增加期权买入、卖出公允变动 start**/
-                DictCodeBaseSubjectNatrue.买入期权公允价值变动.getValue(),
-                DictCodeBaseSubjectNatrue.卖出期权公允价值变动.getValue()
-        );
-        List<String> 利息调整列表 = Arrays.asList(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue(),
-            DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue(),
-            DictCodeBaseSubjectNatrue.计划类资产_利息调整.getValue());
+//        List<String> 公允价值变动列表 = Arrays.asList(DictCodeBaseSubjectNatrue.综合收益类_公允价值变动.getValue(),
+//            DictCodeBaseSubjectNatrue.公允价值损益类_公允价值变动.getValue(),
+//            DictCodeBaseSubjectNatrue.公允价值变动.getValue(),
+//            DictCodeBaseSubjectNatrue.公允价值损益类_计划类资产_公允价值变动.getValue(),
+//                DictCodeBaseSubjectNatrue.基金投资_估值增值.getValue(),
+//                DictCodeBaseSubjectNatrue.股票_公允价值变动.getValue(),
+//                /** add by yanya on 20200220 增加期权买入、卖出公允变动 start**/
+//                DictCodeBaseSubjectNatrue.买入期权公允价值变动.getValue(),
+//                DictCodeBaseSubjectNatrue.卖出期权公允价值变动.getValue()
+//        );
+        //科目性质分组：分组代码_估值表_公允价值变动列表
+        List<String> 公允价值变动列表 = accountingCommonService.getValSubjectNatureListWithAcctStandardId(
+        		DictCodeListNatureGroup.分组代码_估值表_公允价值变动列表.getValue(),
+                DictCodeListExt2.会计准则_企业准则.getValue());
+        
+//        List<String> 利息调整列表 = Arrays.asList(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue(),
+//            DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue(),
+//            DictCodeBaseSubjectNatrue.计划类资产_利息调整.getValue());
 
+      //科目性质分组：分组代码_估值表_利息调整列表
+        List<String> 利息调整列表 = accountingCommonService.getValSubjectNatureListWithAcctStandardId(
+        		DictCodeListNatureGroup.分组代码_估值表_利息调整列表.getValue(),
+                DictCodeListExt2.会计准则_企业准则.getValue());
         // 收益类型查询-共通：账套参数查询
         List<String> paramCodeList = new ArrayList<>();
         paramCodeList.add(ValDictCodeList.账套配置表参数项_收益类型.getValue());
@@ -220,13 +231,34 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
                 DictCodeBaseSubjectNatrue.摊余成本类成本.getValue())
                 && BookConstant.MAX_SUBJECT_LEVEL.equals(dto.getSubjectLevel())) {
                 // 变量.科目信息列表 = 调用账务类共通【对应科目查询（参数.账套代码，基础科目性质列表{摊余成本类利息调整}，变量.科目明细.上级科目号）】
-                List<CorrespondSubjectEntity> 科目信息列表 = accountingCommonService.getCorrespondSubject(
+                List<CorrespondSubjectEntity> 利息调整科目数据 = accountingCommonService.getCorrespondSubject(
                     dto.getFsubjectNo(), booksetId,
                     Arrays.asList(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue()));
+                //add jinmaodong 20201019 减值相关设计变更 START
+                // 变量.科目信息列表-摊余成本类资产减值 = 调用账务类共通【对应科目查询（参数.账套代码，基础科目性质列表{摊余成本类利息调整}，变量.科目明细.上级科目号）】
+                List<CorrespondSubjectEntity> 资产减值科目数据 = accountingCommonService.getCorrespondSubject(
+                    dto.getFsubjectNo(), booksetId,
+                    Arrays.asList(DictCodeBaseSubjectNatrue.摊余成本类资产减值.getValue()));
+                
+                ValSchemeBatchDto 资产减值明细 = null;
+                if (!CollectionUtils.isEmpty(资产减值科目数据)) {
+                	资产减值明细 = 科目明细集合.get(
+                			资产减值科目数据.get(0).getSubjectNo() + dto.getDetailSubjectNoTail());
+                }
+                if(null != 资产减值明细) {
+                	// 变量.偏离金额 = 变量.偏离金额 + 变量.利息调整明细.余额(贷方)
+                	if (StringUtil.equals(资产减值明细.getBalFlag(), DictCodeList.余额方向_贷方.getValue())) {
+                    	deviationAmt = ArithmeticUtil.doAdd(NumberEnum.MONEY.getCode(), null, deviationAmt,资产减值明细.getoAmt());                	
+                    }else {
+                    	deviationAmt = ArithmeticUtil.subtract(deviationAmt,资产减值明细.getoAmt(),NumberEnum.MONEY.getCode(), null); 
+                    }
+                }
+                //add jinmaodong 20201019 减值相关设计变更 END
+
                 ValSchemeBatchDto 利息调整明细 = null;
-                if (!CollectionUtils.isEmpty(科目信息列表)) {
+                if (!CollectionUtils.isEmpty(利息调整科目数据)) {
                     利息调整明细 = 科目明细集合.get(
-                        科目信息列表.get(0).getSubjectNo() + dto.getDetailSubjectNoTail());
+                        利息调整科目数据.get(0).getSubjectNo() + dto.getDetailSubjectNoTail());
                 }
                 BigDecimal 单位成本tmp = BigDecimal.ZERO;
                 if (利息调整明细 != null) {
@@ -305,7 +337,6 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
                     }
 
                 }
-
             }
             else if (StringUtil.equals(dto.getBaseSubjectNature(),
                 DictCodeBaseSubjectNatrue.公允价值损益类_成本.getValue())
@@ -547,6 +578,115 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
                     原币估值 = dto.getoAmt();
                     //变量.本币估值 = 变量.科目明细.本币余额
                     本币估值 = dto.getbAmt();
+                }
+            }
+
+            //else if（（变量.科目明细.基础科目性质 = "公允价值类计划类收益型资产_成本" ）  and 变量.科目明细.科目级别 = 全局变量【底层科目级别】）
+            else if (StringUtil.equals(dto.getBaseSubjectNature(),
+                    DictCodeBaseSubjectNatrue.公允价值类计划类收益型资产_成本.getValue())
+                         && BookConstant.MAX_SUBJECT_LEVEL.equals(dto.getSubjectLevel())) {
+
+                    // 变量.科目信息列表 = 调用账务类共通【对应科目查询（参数.账套代码，基础科目性质列表{公允价值损益类-公允价值变动}，变量.科目明细.上级科目号）】
+                    List<CorrespondSubjectEntity> 科目信息列表 = accountingCommonService.getCorrespondSubject(
+                        dto.getFsubjectNo(), booksetId,
+                        Arrays.asList(DictCodeBaseSubjectNatrue.公允价值类计划类收益型资产_公允价值变动.getValue()));
+                    // 变量.公允价值明细 = 科目明细Map.get(变量.科目信息列表.get（0）.科目号,变量.科目明细.四级科目号尾号)
+                    ValSchemeBatchDto 公允价值明细 = null;
+                    if (!CollectionUtils.isEmpty(科目信息列表)) {
+                        公允价值明细 = 科目明细集合.get(
+                            科目信息列表.get(0).getSubjectNo() + dto.getDetailSubjectNoTail());
+                    }
+                    if (公允价值明细 != null) {
+                        if (StringUtil.equals(公允价值明细.getBalFlag(), DictCodeList.余额方向_贷方.getValue())) {
+                            //变量.原币估值增值 = -变量.公允价值明细 .原币余额
+                            原币估值增值 = 公允价值明细.getoAmt().negate();
+                            //变量.本币估值增值 = -变量.公允价值明细 .本位币余额
+                            本币估值增值 = 公允价值明细.getbAmt().negate();
+                        }
+                        else {
+                            //变量.原币估值增值 = 变量.公允价值明细 .原币余额
+                            原币估值增值 = 公允价值明细.getoAmt();
+                            //变量.本币估值增值 = 变量.公允价值明细 .本位币余额
+                            本币估值增值 = 公允价值明细.getbAmt();
+                        }
+                    }
+                    // 变量.原币估值 = 变量.科目明细.原币币余额 + 变量.原币估值增值（为空取0）
+                    原币估值 = ArithmeticUtil.doAdd(dto.getoAmt(),(原币估值增值==null ? BigDecimal.ZERO : 原币估值增值));
+                    // 变量.本币估值 = 变量.科目明细.本币余额 + 变量.本币估值增值（为空取0）
+                    本币估值 = ArithmeticUtil.doAdd(dto.getbAmt(),(本币估值增值==null ? BigDecimal.ZERO : 本币估值增值));
+                    // 变量.行情价格 = 变量.原币估值/ 变量.科目明细.数量余额
+                    行情价格 = ArithmeticUtil.divide(原币估值, dto.getNumAmt(), 4);
+            }
+            //else if（（变量.科目明细.基础科目性质 = "综合收益类计划类收益型资产_成本" ）  and 变量.科目明细.科目级别 = 全局变量【底层科目级别】）
+            else if (StringUtil.equals(dto.getBaseSubjectNature(),
+                    DictCodeBaseSubjectNatrue.综合收益类计划类收益型资产_成本.getValue())
+                         && BookConstant.MAX_SUBJECT_LEVEL.equals(dto.getSubjectLevel())) {
+                // 变量.科目信息列表 = 调用账务类共通【对应科目查询】
+                List<CorrespondSubjectEntity> 科目信息列表 = accountingCommonService.getCorrespondSubject(
+                    dto.getFsubjectNo(), booksetId,
+                    Arrays.asList(DictCodeBaseSubjectNatrue.综合收益类计划类收益型资产_利息调整.getValue(),
+                        DictCodeBaseSubjectNatrue.综合收益类计划类收益型资产_公允价值变动.getValue()));
+                ValSchemeBatchDto 利息调整明细 = null;
+                ValSchemeBatchDto 公允价值明细 = null;
+                // 变量.科目信息列表 = 调用账务类共通【对应科目查询（参数.账套代码，基础科目性质列表{计划类资产-利息调整}，变量.科目明细.上级科目号）】
+
+                for (CorrespondSubjectEntity correspondSubjectEntity : 科目信息列表) {
+                    if (StringUtil.equals(correspondSubjectEntity.getBaseSubjectNature(),
+                        DictCodeBaseSubjectNatrue.综合收益类计划类收益型资产_利息调整.getValue())) {
+                        利息调整明细 = 科目明细集合.get(
+                            correspondSubjectEntity.getSubjectNo() + dto.getDetailSubjectNoTail());
+                    }
+                    else if (StringUtil.equals(correspondSubjectEntity.getBaseSubjectNature(),
+                        DictCodeBaseSubjectNatrue.综合收益类计划类收益型资产_公允价值变动.getValue())) {
+                        公允价值明细 = 科目明细集合.get(
+                            correspondSubjectEntity.getSubjectNo() + dto.getDetailSubjectNoTail());
+                    }
+
+                }
+                // 变量.原币成本 = 变量.科目明细.原币余额
+                BigDecimal 原币成本 = dto.getoAmt();
+                // 变量.本币成本 = 变量.科目明细.本币余额
+                BigDecimal 本币成本 = dto.getoAmt();
+                if (利息调整明细 != null) {
+                    if (StringUtil.equals(利息调整明细.getBalFlag(), DictCodeList.余额方向_贷方.getValue())) {
+
+                        //变量.原币成本 =  变量.科目明细.原币余额 - 变量.利息调整明细.原币余额
+                        原币成本 = ArithmeticUtil.doSub(dto.getoAmt(),利息调整明细.getoAmt());
+                        //变量.本币成本 =  变量.科目明细.本币余额 - 变量.利息调整明细.本币余额
+                        本币成本 = ArithmeticUtil.doSub(dto.getbAmt(),利息调整明细.getbAmt());
+                    }
+                    else {
+
+                        //变量.原币成本 =  变量.科目明细.原币余额 + 变量.利息调整明细.原币余额
+                        原币成本 = ArithmeticUtil.doAdd(dto.getoAmt(),利息调整明细.getoAmt());
+                        //变量.本币成本 =  变量.科目明细.本币余额 + 变量.利息调整明细.本币余额
+                        本币成本 = ArithmeticUtil.doAdd(dto.getbAmt(),利息调整明细.getbAmt());
+                    }
+                }
+                // 变量.单位成本 = 变量.成本/变量.科目明细.数量
+                // 单位成本 = ArithmeticUtil.divide(成本, dto.getNumAmt());
+                if (公允价值明细 != null) {
+                    if (StringUtil.equals(公允价值明细.getBalFlag(), DictCodeList.余额方向_贷方.getValue())) {
+                        //变量.原币估值增值 = -变量.公允价值明细 .原币余额
+                        原币估值增值 = 公允价值明细.getoAmt().negate();
+                        //变量.本币估值增值 = -变量.公允价值明细 .本币余额
+                        本币估值增值 = 公允价值明细.getbAmt().negate();
+                    }
+                    else {
+                        //变量.原币估值增值 = 变量.公允价值明细 .原币余额
+                        原币估值增值 = 公允价值明细.getoAmt();
+                        //变量.本币估值增值 = 变量.公允价值明细 .本币余额
+                        本币估值增值 = 公允价值明细.getbAmt();
+                    }
+                }
+                //变量.原币估值 = 变量.原币成本 + 变量.原币估值增值
+                原币估值 = ArithmeticUtil.doAdd(原币成本,(原币估值增值==null ? BigDecimal.ZERO : 原币估值增值));
+                //变量.本币估值 = 变量.本币成本 + 变量.本币估值增值
+                本币估值 = ArithmeticUtil.doAdd(本币成本,(本币估值增值==null ? BigDecimal.ZERO : 本币估值增值));
+
+                if (公允价值明细 != null) {
+                    //变量.行情价格 = 变量.原币估值/ 变量.科目明细.数量余额
+                    行情价格 = ArithmeticUtil.divide(原币估值, dto.getNumAmt(), 4);
                 }
             }
             //else if（变量.科目明细.基础科目性质 = "股票-成本" and 变量.科目明细.科目级别 = 全局变量【底层科目级别】）

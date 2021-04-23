@@ -49,6 +49,15 @@ public class AccountDriver {
     private Map<String, Map<String, Object>> accountNatrueMap;
     
     /**
+     * 是否累计余额：部分科目累计余额
+     * key:基础科目性质  value:是否累计余额
+     * add by wujie on 20201130
+     */
+    private Map<String,String> accountNatrueBalanceMap;
+    
+    
+    
+    /**
      * 记账场景树节点
      */
     private TreeNode treeNode;
@@ -160,4 +169,15 @@ public class AccountDriver {
     public void setTreeNode(TreeNode treeNode) {
         this.treeNode = treeNode;
     }
+
+	public Map<String, String> getAccountNatrueBalanceMap() {
+		return accountNatrueBalanceMap;
+	}
+
+	public void setAccountNatrueBalanceMap(Map<String, String> accountNatrueBalanceMap) {
+		this.accountNatrueBalanceMap = accountNatrueBalanceMap;
+	}
+    
+    
+    
 }

@@ -17,7 +17,10 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.joyintech.tams.common.base.entity.BokVouchDetail;
+import com.joyintech.tams.common.base.entity.BokVouchMain;
 import com.joyintech.tams.valuation.batch.bookaccountgenerate.dto.BookAccountDetail;
+import com.joyintech.tams.valuation.batch.subjectbalancecollect.dto.SubjectBalanceBatch;
 
 @Repository
 public interface BookAccountGenerateMapper {
@@ -30,4 +33,19 @@ public interface BookAccountGenerateMapper {
 
     List<BookAccountDetail> selectData(Map<String, Object> params);
     void updateHistory(@Param("vouchYear") String vouchYear,@Param("vouchMonth") String vouchMonth);
+
+    /**
+     * 批量插入
+     * @param list 数据
+     * @return 插入条数
+     * 
+     */
+    int insertBokMainBatch(List<BokVouchMain> list);
+    /**
+     * 批量插入
+     * @param list 数据
+     * @return 插入条数
+     * 
+     */
+    int insertBokDetailBatch(List<BokVouchDetail> list);
 }

@@ -32,6 +32,15 @@ public class TradVouchDealDetailDto extends TrdVouchDealDetail {
      * 基础科目性质
      */
     private String baseSubjectNature;
+    
+    /**
+     * 科目余额方向
+     */
+    private String balFlag;
+    /**
+     * 科目类型
+     */
+    private String subjectType;
 
     
     /**
@@ -50,5 +59,25 @@ public class TradVouchDealDetailDto extends TrdVouchDealDetail {
     public void setBaseSubjectNature(String baseSubjectNature) {
         this.baseSubjectNature = baseSubjectNature;
     }
+
+
+	public String getBalFlag() {
+		return balFlag;
+	}
+
+
+	public void setBalFlag(String balFlag) {
+		this.balFlag = balFlag;
+	}
+
+
+	public String getSubjectType() {
+		return subjectType;
+	}
+
+
+	public void setSubjectType(String subjectType) {
+		this.subjectType = subjectType;
+	}
     
 }

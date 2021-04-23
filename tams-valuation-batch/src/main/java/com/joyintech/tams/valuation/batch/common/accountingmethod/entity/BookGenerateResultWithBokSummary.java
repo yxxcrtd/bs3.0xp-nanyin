@@ -42,8 +42,8 @@ public class BookGenerateResultWithBokSummary extends BookGenerateResult {
      */
     private List<BokBatchMarketwarningInfo> bokBatchMarketwarningInfoList = new ArrayList<BokBatchMarketwarningInfo>();
     
-    
-
+ 
+        
     public List<BokStatDetPosiiton> getBokSummaryList() {
         return bokSummaryList;
     }
