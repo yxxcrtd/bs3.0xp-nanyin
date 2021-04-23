@@ -24,13 +24,13 @@ public abstract class PrintJNL {
 		int index = 0;
 		//double gap = 0.0;
 		for (VoucherDetails obj : jnlobjList) {
-			/** modify by yanya on 20210109 åˆ¤å®šç§‘ç›®å·å¸ç§æ˜¯å¦ä¸€è‡´ï¼Œæ–°ç¼–å†™æ–¹æ³• start**/
-			/** modify by yanya on 20210107 åˆå¹¶ç›¸åŒç§‘ç›®æ—¶ï¼ŒåŒºåˆ†å¸ç§ï¼Œå¦‚æœå¸ç§ä¸ä¸€è‡´ï¼Œä¸è¿›è¡Œåˆå¹¶ start**/
+			/** modify by yanya on 20210109 ÅĞ¶¨¿ÆÄ¿ºÅ±ÒÖÖÊÇ·ñÒ»ÖÂ£¬ĞÂ±àĞ´·½·¨ start**/
+			/** modify by yanya on 20210107 ºÏ²¢ÏàÍ¬¿ÆÄ¿Ê±£¬Çø·Ö±ÒÖÖ£¬Èç¹û±ÒÖÖ²»Ò»ÖÂ£¬²»½øĞĞºÏ²¢ start**/
 			//index = findExistingJNL(obj.getAccountNum(), newJnlList);
 			//index = findExistingJNL(obj.getAccountNum() + "_" + obj.getLocalCurrency(), newJnlList);
 			index = findExistingJNLCurrency(obj.getAccountNum(), obj.getLocalCurrency(), newJnlList);
-			/** modify by yanya on 20210107 åˆå¹¶ç›¸åŒç§‘ç›®æ—¶ï¼ŒåŒºåˆ†å¸ç§ï¼Œå¦‚æœå¸ç§ä¸ä¸€è‡´ï¼Œä¸è¿›è¡Œåˆå¹¶ end**/
-			/** modify by yanya on 20210109 åˆ¤å®šç§‘ç›®å·å¸ç§æ˜¯å¦ä¸€è‡´ï¼Œæ–°ç¼–å†™æ–¹æ³• end**/
+			/** modify by yanya on 20210107 ºÏ²¢ÏàÍ¬¿ÆÄ¿Ê±£¬Çø·Ö±ÒÖÖ£¬Èç¹û±ÒÖÖ²»Ò»ÖÂ£¬²»½øĞĞºÏ²¢ end**/
+			/** modify by yanya on 20210109 ÅĞ¶¨¿ÆÄ¿ºÅ±ÒÖÖÊÇ·ñÒ»ÖÂ£¬ĞÂ±àĞ´·½·¨ end**/
 			if (index >=0 ) {
 				newJnlList.get(index).setCr_func(RoundUtil.roundMoney2Dec(newJnlList.get(index).getCr_func() + obj.getCr_func()));
 				newJnlList.get(index).setCr_local(RoundUtil.roundMoney2Dec(newJnlList.get(index).getCr_local() + obj.getCr_local()));
@@ -82,7 +82,7 @@ public abstract class PrintJNL {
 	}
 
 	/**
-	 * æŸ¥æ‰¾æ˜¯å¦æœ‰ç›¸åŒç§‘ç›®çš„æ•°æ®ï¼ˆåºŸå¼ƒä¸ç”¨ï¼‰
+	 * ²éÕÒÊÇ·ñÓĞÏàÍ¬¿ÆÄ¿µÄÊı¾İ£¨·ÏÆú²»ÓÃ£©
 	 * modify by yanya in 20210109
 	 * @param acctnum
 	 * @param jnlList
@@ -100,7 +100,7 @@ public abstract class PrintJNL {
 	}
 
 	/**
-	 * æŸ¥æ‰¾æ˜¯å¦æœ‰ç›¸åŒç§‘ç›®çš„æ•°æ®ï¼ŒåŒºåˆ†å¸ç§
+	 * ²éÕÒÊÇ·ñÓĞÏàÍ¬¿ÆÄ¿µÄÊı¾İ£¬Çø·Ö±ÒÖÖ
 	 * modify by yanya on 20210109
 	 * @param acctnum
 	 * @param currency
@@ -110,7 +110,7 @@ public abstract class PrintJNL {
 	private int findExistingJNLCurrency(String acctnum, String currency, List<VoucherDetails> jnlList) {
 		int position = -1;
 		for (int i = 0; i < jnlList.size(); i++) {
-			//åˆ¤å®šç§‘ç›®å·ï¼Œä¸”å¸ç§æ—¶ä¸€ç›´
+			//ÅĞ¶¨¿ÆÄ¿ºÅ£¬ÇÒ±ÒÖÖÊ±Ò»Ö±
 			if (jnlList.get(i).getAccountNum() != null && jnlList.get(i).getAccountNum().equals(acctnum)
 					&& jnlList.get(i).getLocalCurrency() != null && jnlList.get(i).getLocalCurrency().equals(currency)) {
 				position = i;
