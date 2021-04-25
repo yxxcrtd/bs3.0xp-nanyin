@@ -86,7 +86,8 @@ public class RepayScheduleCal {
                 isamt = ArithmeticUtil.doAdd(12, null, isamt, isamtsub);
             }
             if(StringUtil.equals(DictCodeList.是否_否.getValue(), rsd.getIsPayInt())){//业务场景，是还本不带息的
-                rsd.setIntAmt(BigDecimal.ZERO);
+               // rsd.setIntAmt(BigDecimal.ZERO);
+                rsd.setIntAmt(isamt);
                 rsd.setRepayWithoutInt(isamt);
             }else {
             // 还本区间应计利息
