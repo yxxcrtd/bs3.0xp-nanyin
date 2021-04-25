@@ -897,4 +897,18 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                 ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectCountByOFinprodId?oFinprodId="+oFinprodId+"&finprodId="+finprodId,
                 Integer.class);
     }
+
+    /**
+     * 根据资产代码查询是否是上市标的
+     *
+     * @param finprodId
+     * @return 是否是上市标的，大于0则为是
+     * @see
+     * @since 1.0
+     */
+    public int selectIsIssueAsset(String finprodId){
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectIsIssueAsset?finprodId="+finprodId,
+                Integer.class);
+    }
 }

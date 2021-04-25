@@ -73,4 +73,13 @@ public interface FinBondTargetAssetMapper {
 
     int selectCountByOFinprodId(@Param("oFinprodId") String oFinprodId,@Param("finprodId") String finprodId);
 
+    /**
+     * 根据资产代码查询是否是上市标的
+     *
+     * @param finprodId
+     * @return 是否是上市标的，大于0则为是
+     * @see
+     * @since 1.0
+     */
+    int selectIsIssueAsset(@Param("finprodId") String finprodId);
 }
