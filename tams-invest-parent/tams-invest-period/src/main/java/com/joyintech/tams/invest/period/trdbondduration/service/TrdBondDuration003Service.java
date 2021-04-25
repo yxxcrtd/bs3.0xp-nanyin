@@ -1,18 +1,32 @@
 package com.joyintech.tams.invest.period.trdbondduration.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.calculation.CalculatorFactory;
+import com.joyintech.calculation.bonds.PaperIrReset;
+import com.joyintech.calculation.bonds.SecIntSchedule;
+import com.joyintech.calculation.bonds.constant.IntRateType;
+import com.joyintech.calculation.shell.AccurIntCalculator;
+import com.joyintech.calculation.shell.param.AccurIntCalInParameter;
+import com.joyintech.calculation.shell.param.AccurIntCalOutParameter;
+import com.joyintech.calculation.shell.param.SecInfoModel;
+import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.SecPositionExerciseInfoDto;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondPtlSecExerciseInfo;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
+import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -50,6 +64,9 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.CommentFunction;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.toLocalDate;
+import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcService.toSecInfoModel;
 
 /**
  * @author : 强成西
@@ -406,7 +423,8 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         trdFinProductDealTotal.setCpriceAmt(entity.getcPriceAmt());
         trdFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getQty(), new BigDecimal(100), 4));
         trdFinProductDealTotal.setPrinAmt(entity.getcPriceAmt());
-        trdFinProductDealTotal.setIntAmt(BigDecimal.ZERO);
+        //trdFinProductDealTotal.setIntAmt(BigDecimal.ZERO);
+        trdFinProductDealTotal.setIntAmt(entity.getIntAmtReal());
         trdFinProductDealTotal.setFpriceAmt(entity.getcPriceAmt());
         if (DictCodeListExt2.收取方式_回款前扣除.getValue().equals(entity.getCollectType())) {
             trdFinProductDealTotal.setFeeAmtPay(entity.getChannelFee());
@@ -441,6 +459,7 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         PaTrdFinProductDealTotal paTrdFinProductDealTotal = new PaTrdFinProductDealTotal();
         paTrdFinProductDealTotal.setTotleTradeId(entity.getBizCode());
         paTrdFinProductDealTotal.setPaBussType(DictCodeListExt1.平安业务类型_债券类资产行权.getValue());
+        paTrdFinProductDealTotal.setTheoryInt(entity.getIntAmtTheory());
         entity.setPaTrdFinProductDealTotal(paTrdFinProductDealTotal);
 
         List<BussTrdTransferOrderDto> bussTrdTransferOrderDtos = bussTrdTransferOrderImplService.save(
@@ -495,7 +514,8 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
             deal.setCpriceAmt(trdBondPtlSecExerciseInfo.getcPriceAmt());
             deal.setShareAmt(ArithmeticUtil.divide(trdBondPtlSecExerciseInfo.getQty(), new BigDecimal(100), 4));
             deal.setPrinAmt(trdBondPtlSecExerciseInfo.getcPriceAmt());
-            deal.setIntAmt(BigDecimal.ZERO);
+            //deal.setIntAmt(BigDecimal.ZERO);
+            deal.setIntAmt(trdBondPtlSecExerciseInfo.getIntAmtReal());
             deal.setFpriceAmt(trdBondPtlSecExerciseInfo.getcPriceAmt());
             if (DictCodeListExt2.收取方式_回款前扣除.getValue().equals(entity.getCollectType())) {
                 deal.setFeeAmtPay(trdBondPtlSecExerciseInfo.getChannelFee());
@@ -544,6 +564,7 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
             PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
             paTrdProductDeal.setTradeId(deal.getTradeId());
             paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_债券类资产行权.getValue());
+            paTrdProductDeal.setTheoryInt(trdBondPtlSecExerciseInfo.getIntAmtTheory());
             paTrdProductDeals.add(paTrdProductDeal);
 
             PtlTrade ptlTrade = new PtlTrade();
@@ -629,8 +650,114 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
 
     public List<SecPositionExerciseInfo003Dto> findSecPosition(Map<String, Object> pageParam) {
         pageParam.put("loginUserName", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForList(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/findSecPosition", pageParam,
+        List<SecPositionExerciseInfo003Dto> list = restTemplate.postForList(
+                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/findSecPosition", pageParam,
             SecPositionExerciseInfo003Dto.class);
+        BigDecimal intAmt = this.calc(pageParam);
+        if(list !=null && list.size() >0){
+            list.get(0).setIntAmt(intAmt);
+        }
+        return list;
+    }
+
+    /**
+     * 计算债券单位应计利息
+     *
+     * @param pageParam 业务实体
+     * @return 单位应计利息
+     * @see
+     * @since 1.0
+     */
+    private BigDecimal calc(Map<String, Object> pageParam) {
+        //查询债券单位应计利息
+        AccurIntCalInParameter accurIntCalInParameter = new AccurIntCalInParameter();
+        // 百元面值应计利息
+        BigDecimal accurInt = BigDecimal.ZERO;
+        //单位利息
+        BigDecimal unitInt = BigDecimal.ZERO;
+
+        final int SCALE = 12;
+        // 计算日
+        accurIntCalInParameter.setCalDate(toLocalDate(DateUtil.parse((String)pageParam.get("exerciseDate"))));
+
+        // a.当前债券面额取得（根据还本计划计算）
+        Map<String, Object> paraMap = new HashMap<String, Object>();
+        paraMap.put("finprodId", pageParam.get("finprodId"));
+        paraMap.put("settleDate", DateUtil.formatDate((String)pageParam.get("exerciseDate")));
+        BigDecimal curSecAmt = restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getCurSecAmt", paraMap, BigDecimal.class);
+
+        Map<String, Object> tempParamMap = new HashMap<String, Object>();
+        tempParamMap.put("finprodId", pageParam.get("finprodId"));
+        // b.获取计息区间投资端利率报价信息（债券的利率重置信息）
+        // List<BondsIntReset> bondsIntResetList = transactionBond001Mapper.getInvRateQuo(dto);
+        List<FinCashCalcRule> finCashCalcRuleList = restTemplate.postForList(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/selectBondsIntResetList", tempParamMap,
+                FinCashCalcRule.class);
+
+        // c.获取债券的付息计划信息
+        List<FinCashPlanDto> finCashPlanList = restTemplate.postForList(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getFinCashPlan", tempParamMap, FinCashPlanDto.class);
+        List<SecIntSchedule> invScheduleList = new ArrayList<>();
+        List<FinCashPlanDto> intSchList = new ArrayList<FinCashPlanDto>();
+        for (FinCashPlanDto item : finCashPlanList) {
+            if (StringUtil.equals(item.getCashType1(), DictCodeListExt1.现金流一级类型_利息.getValue())
+                    && item.getVdateUnadjust() != null) {
+                SecIntSchedule schedule = new SecIntSchedule();
+                schedule.setTheoryStartDate(toLocalDate(item.getVdateUnadjust()));
+                schedule.setTheoryCutoffDate(toLocalDate(item.getMdateUnadjust()));
+                schedule.setActualStartDate(toLocalDate(item.getVdate()));
+                schedule.setActualCutoffDate(toLocalDate(item.getMdate()));
+                schedule.setAmount(item.getIntAmt());
+                invScheduleList.add(schedule);
+                intSchList.add(item);
+            }
+        }
+        // 计算行权收益率，非行权时，取大于当日的行权日
+        tempParamMap.put("ps", DictCodeList.交易方向_行权_赎回);
+        // d.获取债券基本资料信息
+        SecInfoModelDto secInfoModelDto = restTemplate.postForObject(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getSecInfoModel", tempParamMap, SecInfoModelDto.class);
+        SecInfoModel secInfoModel = toSecInfoModel(secInfoModelDto);
+
+        List<PaperIrReset> paperIrResetList = finCashCalcRuleList.stream().map(item -> {
+            PaperIrReset ret = new PaperIrReset();
+            // BeanUtil.copyPropertiesIgnoreNull(ret, item);
+            ret.setBaseRateEffDate(BasicUtil.dateToLocal(item.getEffDate()));
+            ret.setParRate(item.getYield());
+            ret.setParRateEffDate(BasicUtil.dateToLocal(item.getEffDate()));
+            return ret;
+        }).collect(Collectors.toList());
+        if (paperIrResetList != null && paperIrResetList.size() > 0) {
+            paperIrResetList.get(0).setBaseRateEffDate(BasicUtil.dateToLocal(secInfoModelDto.getStartDate()));
+        }
+        if (paperIrResetList != null && paperIrResetList.size() > 1) {
+            // 多重利率则计算按浮动利率算
+            secInfoModel.setIntRateType(IntRateType.浮动利率);
+        }
+        if (paperIrResetList != null && paperIrResetList.size() > 1) {
+            // 多重利率则计算按浮动利率算
+            secInfoModel.setIntRateType(IntRateType.浮动利率);
+        }
+        // 债券基本资料
+        accurIntCalInParameter.setSecInfoModel(secInfoModel);
+        // 付息计划
+        accurIntCalInParameter.setSecIntScheduleList(invScheduleList);
+        // 利率重置信息
+        accurIntCalInParameter.setPaperIrResetList(paperIrResetList);
+        // 从计算工厂中创建应计利息计算器
+        AccurIntCalculator calc = CalculatorFactory.createAccurIntCalculator();
+        // 计算利息
+        AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
+        accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
+
+        if(StringUtil.isNotEmpty(accurInt)){
+            unitInt = ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
+                    Integer.parseInt(StringUtils.isEmpty(
+                            CacheUtil.getSysParam("SEC_INT_SCALE_BANK")) ? "12" : CacheUtil.getSysParam("SEC_INT_SCALE_BANK")),
+                    RoundingMode.HALF_UP);
+        }
+        return unitInt;
     }
 
     public TrdBondDuration003ProcessDto findEffectiveData(Map<String, Object> params) {

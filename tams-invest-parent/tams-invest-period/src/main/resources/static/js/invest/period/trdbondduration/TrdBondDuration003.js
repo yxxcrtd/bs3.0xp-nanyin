@@ -23,12 +23,22 @@ var TrdBondDuration003 = function () {
             , {field: 'portfolioName', width: "200", title: '组合名称', sortable: false}
             , {field: 'secAcctId', width: "200", title: '证券账户/通道', sortable: false}
             , {field: 'invAimString', width: "200", title: '投资目的', sortable: false}
-            , {field: 'qty', width: "200", title: '持有面额', type: 'money', sortable: false}
-            , {field: 'cPriceAmt', width: "200", title: '净价总额', type: 'money', sortable: false}
-            , {field: 'channelFee', width: "120", title: '通道费', type: 'money', sortable: false}
-            , {field: 'settleAmt', width: "120", title: '到账金额', type: 'money', sortable: false}
+            , {field: 'qty', width: "100", title: '持有面额', type: 'money', sortable: false}
+            , {field: 'cPriceAmt', width: "100", title: '净价总额', type: 'money', sortable: false}
+            , {field: 'intAmtTheory', width: "100", title: '理论应计利息', type: 'money', sortable: false}
+            , {field: 'intAmtReal', width: "100", title: '实收利息总额', type: 'money', edit:true, sortable: false}
+            , {field: 'channelFee', width: "100", title: '通道费', type: 'money', sortable: false}
+            , {field: 'settleAmt', width: "110", title: '到账金额', type: 'money', sortable: false}
         ],
         done: function () {
+        },
+        editCell: function(value, data, field, cell, column){
+            //列表中到账金额=净价总额+实收利息总额-通道费
+            if("intAmtReal"==field){
+                let settleAmt = JoyinMath.doAdd(data.cPriceAmt,value);
+                settleAmt =JoyinMath.doMinus(settleAmt,data.channelFee);
+                finAssetIntInfoTable.renderRow(data.LAY_TABLE_INDEX, {"settleAmt": settleAmt});
+            }
         },
         data: []
     }
@@ -144,7 +154,7 @@ var TrdBondDuration003 = function () {
         }
     }
 
-    function resetTableData(result) {
+    function resetTableData(result,isUpdateAmtflag) {
         if (result && result.length > 0) {
             let index = layer.open({
                 type: 1,
@@ -168,6 +178,15 @@ var TrdBondDuration003 = function () {
                 }
             })
 
+            //理论应计利息
+            let intAmt = result[0].intAmt;
+            let intAmtTheory = JoyinMath.doMul(intAmt,JoyinMath.doDiv(券面总额,100),2, JoyinMath.ROUND_HALF_UP);
+            if(isUpdateAmtflag){
+                $("#intAmtTheory").val(intAmtTheory).trigger('blur');
+                //实收利息总额
+                $("#intAmtReal").val($("#intAmtTheory").val()).trigger('blur');
+            }
+
             if ($("#channelFee").val() && Number($("#channelFee").val()) > 0) {
                 let channelFee = $("#channelFee").val();
                 let 非最大持仓组合通道费合计 = 0;
@@ -186,14 +205,49 @@ var TrdBondDuration003 = function () {
                 })
             }
 
-            $.each(result, function (i, v) {
-                if (v.cPriceAmt) {
-                    let fPriceAmt = v.cPriceAmt;
-                    if ($("#chlId").val() && $("#chlId").select2('data')[0].object && $("#chlId").select2('data')[0].object.collectType == '01') {
-                        fPriceAmt = JoyinMath.doMinus(fPriceAmt, v.channelFee);
-                    }
-                    v.settleAmt = fPriceAmt;
+//            $.each(result, function (i, v) {
+//                if (v.cPriceAmt) {
+//                    let fPriceAmt = v.cPriceAmt;
+//                    if ($("#chlId").val() && $("#chlId").select2('data')[0].object && $("#chlId").select2('data')[0].object.collectType == '01') {
+//                        fPriceAmt = JoyinMath.doMinus(fPriceAmt, v.channelFee);
+//                    }
+//                    v.settleAmt = fPriceAmt;
+//                }
+//            })
+              //理论应计利息、实收利息总额
+              var itemArr = ['intAmtTheory','intAmtReal'];
+              //所有的钱
+              var itemObj = {};
+              //已分配的钱
+              var sumObj = {};
+              //初始化所有的钱和已分配的钱
+              $.each(itemArr,function(index,val){
+                itemObj[val] = $('#'+val).val()||0;
+                sumObj[val] = 0;
+              })
+              $.each(result, function (i, v) {
+                //最后一个
+                if (i == result.length - 1) {
+                    //将剩余的钱放入对应值
+                    $.each(itemArr,function(index,val){
+                        result[i][val] = JoyinMath.doMinus(itemObj[val], sumObj[val]);
+                    })
+                }else{
+                    //计算占比
+                    var prop = JoyinMath.doDiv(result[i].qty, 券面总额, 12, JoyinMath.ROUND_HALF_UP);
+                    //根据占比处理所有的钱
+                    $.each(itemArr,function(index,val){
+                        //计算当前需要的钱
+                        var thisNum = JoyinMath.doMul(itemObj[val], prop, 2, JoyinMath.ROUND_HALF_UP);
+                        //处理已分配的钱
+                        sumObj[val] = JoyinMath.doAdd(sumObj[val], thisNum);
+                        //把钱放入对应数据
+                        result[i][val] = thisNum;
+                    })
                 }
+                //列表中：到账金额=净价总额+实收利息总额-通道费
+                let settleAmt = JoyinMath.doAdd(v.cPriceAmt, v.intAmtReal);
+                v.settleAmt = JoyinMath.doMinus(settleAmt, v.channelFee);
             })
 
             finAssetIntInfoTable.clear(function () {
@@ -210,7 +264,7 @@ var TrdBondDuration003 = function () {
         }
     }
 
-    function resetTable() {
+    function resetTable(isUpdateAmtflag) {
         if (!$('#finprodMarketId').val()) {
             return;
         }
@@ -222,8 +276,21 @@ var TrdBondDuration003 = function () {
         var param = {finprodId: finprodObject.finprodId, exerciseDate : finprodObject.exerciseDate, chlId: $("#chlId").val()}
         Joyin.ajaxJson(basePath + 'invest/period/trdbondduration/TrdBondDuration003/findSecPosition', param,
             function (result) {
-                resetTableData(result);
+                resetTableData(result,isUpdateAmtflag);
             });
+    }
+    //重新联动计算到账金额
+    var reValfPriceAmt = function () {
+        if ($('#cPriceAmt').val()) {
+            let fPriceAmt =$('#cPriceAmt').val();
+            if ($("#intAmtReal").val()) {
+                fPriceAmt = JoyinMath.doAdd(fPriceAmt, $("#intAmtReal").val())
+            }
+            if ($("#chlId").val() && $("#chlId").select2('data')[0].object && $("#chlId").select2('data')[0].object.collectType == '01') {
+                fPriceAmt = JoyinMath.doMinus(fPriceAmt, $("#channelFee").val())
+            }
+            $("#fPriceAmt").val(fPriceAmt).trigger('blur');
+        }
     }
 
     return {
@@ -234,12 +301,22 @@ var TrdBondDuration003 = function () {
             $("#bussTrdTransferOrder_btn_generate").on("click", function () {TrdBondDuration003.generateOrder();});
             $("#channelFee").prop("disabled", true);
             $('#cPriceAmt').change(function () {
-                if ($('#cPriceAmt').val()) {
-                    let fPriceAmt =$('#cPriceAmt').val();
+                //到账金额重新赋值
+                reValfPriceAmt();
+            });
+            $('#intAmtReal').change(function () {
+                //到账金额重新赋值
+                reValfPriceAmt();
+                resetTable(false);
+            });
+            $('#fPriceAmt').change(function () {
+                if ($('#fPriceAmt').val() && $('#cPriceAmt').val()) {
+                    let intAmtReal = JoyinMath.doMinus($('#fPriceAmt').val(),$('#cPriceAmt').val());
                     if ($("#chlId").val() && $("#chlId").select2('data')[0].object && $("#chlId").select2('data')[0].object.collectType == '01') {
-                        fPriceAmt = JoyinMath.doMinus(fPriceAmt, $("#channelFee").val())
+                        intAmtReal = JoyinMath.doAdd(intAmtReal, $("#channelFee").val())
                     }
-                    $("#fPriceAmt").val(fPriceAmt).trigger('blur');
+                    $("#intAmtReal").val(intAmtReal).trigger('blur');
+                    resetTable(false);
                 }
             });
             $('#TrdBondDuration003_btn_save').click(function () {
@@ -255,11 +332,11 @@ var TrdBondDuration003 = function () {
                 else {
                     $("#channelFee").val('').prop("disabled", true);
                 }
-                resetTable();
+                resetTable(true);
             })
             $("#netPrice,#channelFee").change(function () {
                 let allData = finAssetIntInfoTable.getAllRows();
-                resetTableData(allData);
+                resetTableData(allData,true);
             })
             $('#finprodMarketId').change(function () {
                 if ($('#finprodMarketId').val()) {
@@ -270,7 +347,7 @@ var TrdBondDuration003 = function () {
                     $("#mdate").val(finprodObject.exerciseMdate);
                     $("#payDate").val(finprodObject.exerciseDate);
                     $("#netPrice").val(finprodObject.exercisePrice);
-                    resetTable();
+                    resetTable(true);
                 }
                 else {
                     $("#finprodMarketIdShow").val('');
