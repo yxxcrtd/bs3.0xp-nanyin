@@ -278,7 +278,38 @@ implements BaseProcessService<FinBondTargetAssetDto>{
 
         //add by mashukai 20201124 JNZGEQUAT-57 wind利率调整数据未接到问题 start
         if(entity.getFinCashCalcRuleList().size() > 0){
-            entity.getBaseFinProductBaseInfoList().get(0).setFinCashCalcRuleList(entity.getFinCashCalcRuleList());
+            List<String> strings = new ArrayList<>();
+            List<FinCashCalcRule> finCashCalcRulesAdd = new ArrayList<FinCashCalcRule>();
+            List<FinCashCalcRule> finCashCalcRules = new ArrayList<FinCashCalcRule>();
+            if (entity.getBaseFinProductBaseInfoList() != null && entity.getBaseFinProductBaseInfoList().size() > 0
+                    && entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList() != null
+                    && entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList().size() > 0){
+                finCashCalcRules = entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList();
+                //获取生效日list
+                for (FinCashCalcRule finCashCalcRule : entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList()) {
+                    strings.add(DateUtil.format(finCashCalcRule.getEffDate()));
+                }
+            }
+            
+            for (FinCashCalcRule finCashCalcRule : entity.getFinCashCalcRuleList()) {
+                //判断快录接入的数据资产代码与新建标的的资产代码是否一致
+                if (StringUtil.equals(finCashCalcRule.getFinprodId(),entity.getFinprodId())){
+                    //一致则继续判断是否存在生效日相同的数据，没有则新增
+                    if (!strings.contains(DateUtil.format(finCashCalcRule.getEffDate()))){
+                        FinCashCalcRule finCashCalcRuleNew = new FinCashCalcRule();
+                        BeanUtil.copyPropertiesIgnoreNull(finCashCalcRuleNew,finCashCalcRule);
+                        if (finCashCalcRules.size() > 0){
+                            finCashCalcRuleNew.setCashId(finCashCalcRules.get(0).getCashId());
+                        }
+                        finCashCalcRulesAdd.add(finCashCalcRuleNew);
+                    }    
+                }
+                
+            }
+            //新增现金流计算规则数据
+            if(finCashCalcRulesAdd.size() > 0){
+                entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList().addAll(finCashCalcRulesAdd);
+            }
         }
         //add by mashukai 20201124 JNZGEQUAT-57 wind利率调整数据未接到问题 end
         restTemplate.postForObject(
@@ -392,7 +423,8 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                 finRateInfoList.addAll(finInterestFactorDto.getRateList());
                 List<FinCashCalcRule> finCashCalcRuleList = new ArrayList<FinCashCalcRule>();
                 finCashCalcRuleList.addAll(finInterestFactorDto.getCalcRuleList());
-                baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfoList);baseFinProductBaseInfoDto.setFinCashCalcRuleList(finCashCalcRuleList);
+                baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfoList);
+                baseFinProductBaseInfoDto.setFinCashCalcRuleList(finCashCalcRuleList);
             }
         }
 
