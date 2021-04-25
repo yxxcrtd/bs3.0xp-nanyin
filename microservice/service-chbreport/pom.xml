@@ -18,6 +18,12 @@
 		</dependency>
 
         <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>tams-svreport-chbreportcom</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
           <groupId>com.joyintech</groupId>
           <artifactId>framework-log</artifactId>
         </dependency>

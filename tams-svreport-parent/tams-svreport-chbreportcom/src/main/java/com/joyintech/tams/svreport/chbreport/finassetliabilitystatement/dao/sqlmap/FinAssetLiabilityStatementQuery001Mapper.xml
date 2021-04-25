@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dao.FinAssetLiabilityStatementQuery001Mapper">
+    <select id="selectAllData"
+            resultType="com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto">
+        select
+        baseinfo.prod_id prodId,
+        baseinfo.prod_name prodName,
+        substring(bal2.busi_date,1,7) reportDate,
+        bal2.busi_date as busiDate
+        from chb_prd_baseinfo baseinfo
+        left join (
+        SELECT
+        distinct
+        real_prd_id, busi_date
+        FROM prd_balance bal
+        <where>
+            <if test="reportDate != null and reportDate != ''">
+                substring(busi_date,1,7) = #{reportDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ) bal2
+        on bal2.real_prd_id = baseinfo.prod_id
+        <where>
+            <if test="prodIdList != null and prodIdList.size() > 0">
+                <foreach collection="prodIdList" item="items" open="and baseinfo.prod_id in (" separator="," close=")">
+                    #{items,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectFinAssetLiabilityData"
+            resultType="com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.PrdBalance">
+        select
+        bal.real_prd_id realPrdId,
+        bal.subject_id subjectId,
+        bal.subject_name subjectName,
+        bal.ccy ccy,
+        bal.end_bal endBal,
+        bal.begin_bal beginBal,
+        bal.busi_date busiDate,
+        bal.lia_subject_name liaSubjectName,
+        bal.lia_end_bal liaEndBal,
+        bal.lia_begin_bal liaBeginBal
+        from prd_balance bal
+        <where>
+            <if test="reportDate != null and reportDate != ''">
+                substring(bal.busi_date,1,7) = #{reportDate,jdbcType=VARCHAR}
+            </if>
+            <if test="prodId != null and prodId != ''">
+                AND bal.real_prd_id = #{prodId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY bal.subject_id
+    </select>
+
+    <select id="selectAllPrdBaseInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select DISTINCT
+        PROD_ID id,
+        PROD_NAME text
+        from CHB_PRD_BASEINFO
+        where
+        STATUS='E'
+        <if test="search != null and search !=''">
+            AND (PROD_ID LIKE concat(concat('%', #{search}),'%')
+            OR PROD_NAME LIKE concat(concat('%', #{search}),'%'))
+        </if>
+    </select>
+</mapper>

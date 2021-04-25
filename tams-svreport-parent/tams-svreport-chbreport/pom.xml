@@ -9,7 +9,11 @@
 	<artifactId>tams-svreport-chbreport</artifactId>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>tams-svreport-chbreportcom</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 	   <plugins>
