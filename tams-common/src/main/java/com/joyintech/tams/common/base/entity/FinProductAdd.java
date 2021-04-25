@@ -151,14 +151,6 @@ public class FinProductAdd extends BaseEntity {
     private String isCashManage;
 
     /**
-     * 是否合规新产品
-     */
-    private String isFhxgcp;
-    /**
-     * 是否养老理财产品
-     */
-    private String isYllccp;
-    /**
      * 产品风险等级
      */
     private String riskLevel;
@@ -317,43 +309,39 @@ public class FinProductAdd extends BaseEntity {
     private String valOrg;
 
     /**
-     * 计息利率方式
-     * add by jiangPeng on 20200721
+     * 计息利率方式 01买断利率计提 02净投资收益率计提
      */
     private String calRateType;
 
     /**
-     * 是否非标
+     * 行内识别码
      */
-    private String isNonStandard;
+    private String repFinprodInsId;
+
+    /**
+     * 存款类标的否可提前支取，用于风险限额，不影响存续期操作
+     */
+    private String isInadvance;
 
     /**
      * 无固定期限
      */
     private String noFixedTerm;
 
-    public String getIsNonStandard() {
-        return isNonStandard;
-    }
+    /**
+     * 是否纳入净额结算 Y:是 N:否
+     */
+    private String isNetSett;
 
-    public void setIsNonStandard(String isNonStandard) {
-        this.isNonStandard = isNonStandard;
-    }
+    /**
+     * 是否私募债 Y:是 N:否
+     */
+    private String isPpb;
 
     /**
      * 交易平台
      */
     private String tradePlat;
-
-    /**
-     * 是否其他债权，其他资产都为空，只有项目类资产为：Y；
-     */
-    private String isQtzq;
-
-    /**
-     * 数据来源
-     */
-    private String dataSource;
 
     /**
      * 是否其他债权，其他资产都为空，只有项目类资产为：Y；
@@ -1313,29 +1301,51 @@ public class FinProductAdd extends BaseEntity {
     }
 
     /**
-     * 计息利率方式
+     * 取得 计息利率方式 01买断利率计提 02净投资收益率计提
+     * @return 计息利率方式 01买断利率计提 02净投资收益率计提
      */
     public String getCalRateType() {
         return calRateType;
     }
 
-
     /**
-     * 计息利率方式
+     * 设置 计息利率方式 01买断利率计提 02净投资收益率计提
+     * @param calRateType 计息利率方式 01买断利率计提 02净投资收益率计提
      */
     public void setCalRateType(String calRateType) {
-        this.calRateType = calRateType;
+        this.calRateType = calRateType == null ? null : calRateType.trim();
     }
 
-
-    private String repFinprodInsId;
-
+    /**
+     * 取得 行内识别码
+     * @return 行内识别码
+     */
     public String getRepFinprodInsId() {
         return repFinprodInsId;
     }
 
+    /**
+     * 设置 行内识别码
+     * @param repFinprodInsId 行内识别码
+     */
     public void setRepFinprodInsId(String repFinprodInsId) {
-        this.repFinprodInsId = repFinprodInsId;
+        this.repFinprodInsId = repFinprodInsId == null ? null : repFinprodInsId.trim();
+    }
+
+    /**
+     * 取得 存款类标的否可提前支取，用于风险限额，不影响存续期操作
+     * @return 存款类标的否可提前支取，用于风险限额，不影响存续期操作
+     */
+    public String getIsInadvance() {
+        return isInadvance;
+    }
+
+    /**
+     * 设置 存款类标的否可提前支取，用于风险限额，不影响存续期操作
+     * @param isInadvance 存款类标的否可提前支取，用于风险限额，不影响存续期操作
+     */
+    public void setIsInadvance(String isInadvance) {
+        this.isInadvance = isInadvance == null ? null : isInadvance.trim();
     }
 
     /**
@@ -1354,61 +1364,52 @@ public class FinProductAdd extends BaseEntity {
         this.noFixedTerm = noFixedTerm == null ? null : noFixedTerm.trim();
     }
 
-    public String getIsFhxgcp() {
-        return isFhxgcp;
-    }
-
-    public void setIsFhxgcp(String isFhxgcp) {
-        this.isFhxgcp = isFhxgcp == null ? null : isFhxgcp.trim();
-    }
-
-    public String getIsYllccp() {
-        return isYllccp;
-    }
-
-    public void setIsYllccp(String isYllccp) {
-        this.isYllccp = isYllccp == null ? null : isYllccp.trim();
+    /**
+     * 取得 是否纳入净额结算 Y:是 N:否
+     * @return 是否纳入净额结算 Y:是 N:否
+     */
+    public String getIsNetSett() {
+        return isNetSett;
     }
 
     /**
-     * 是否可提前支取，风险限额用，不影响存续期
+     * 设置 是否纳入净额结算 Y:是 N:否
+     * @param isNetSett 是否纳入净额结算 Y:是 N:否
      */
-    private String isInAdvance;
-
-    public String getIsInAdvance() {
-        return isInAdvance;
+    public void setIsNetSett(String isNetSett) {
+        this.isNetSett = isNetSett == null ? null : isNetSett.trim();
     }
 
     /**
-     * 取得 是否其他债权，其他资产都为空，只有项目类资产为：Y；
-     * @return 是否其他债权，其他资产都为空，只有项目类资产为：Y；
+     * 取得 是否私募债 Y:是 N:否
+     * @return 是否私募债 Y:是 N:否
      */
-    public String getIsQtzq() {
-        return isQtzq;
+    public String getIsPpb() {
+        return isPpb;
     }
 
     /**
-     * 设置 是否其他债权，其他资产都为空，只有项目类资产为：Y；
-     * @param isQtzq 是否其他债权，其他资产都为空，只有项目类资产为：Y；
+     * 设置 是否私募债 Y:是 N:否
+     * @param isPpb 是否私募债 Y:是 N:否
      */
-    public void setIsQtzq(String isQtzq) {
-        this.isQtzq = isQtzq == null ? null : isQtzq.trim();
+    public void setIsPpb(String isPpb) {
+        this.isPpb = isPpb == null ? null : isPpb.trim();
     }
 
     /**
-     * 取得 数据来源；
-     * @return 数据来源；
+     * 取得 交易平台
+     * @return 交易平台
      */
-    public String getDataSource() {
-        return dataSource;
+    public String getTradePlat() {
+        return tradePlat;
     }
 
     /**
-     * 设置 数据来源；
-     * @param dataSource 数据来源；
+     * 设置 交易平台
+     * @param tradePlat 交易平台
      */
-    public void setDataSource(String dataSource) {
-        this.dataSource = dataSource == null ? null : dataSource.trim();
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat == null ? null : tradePlat.trim();
     }
 
     /**

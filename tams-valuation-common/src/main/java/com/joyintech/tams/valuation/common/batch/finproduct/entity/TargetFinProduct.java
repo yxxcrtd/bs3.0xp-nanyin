@@ -262,12 +262,6 @@ public class TargetFinProduct {
      * 分支序号类型
      */
     private String branchType;
-
-    /**
-     * 是否其他债权，其他资产都为空，只有项目类资产为：Y；
-     */
-    private String isQtzq;
-    
     
     public String getBranchType() {
 		return branchType;

@@ -157,11 +157,6 @@ public class BaseTradeProductDealDto {
     private String bondFirstSign;
     
     /**
-     * 来自场内交易下单标识
-     */
-    private String isFromExchange;
-    
-    /**
      * 是否走工作流（结算下行过来的数据没有流程中的记录）
      */
     private boolean isNotWorkflow;
