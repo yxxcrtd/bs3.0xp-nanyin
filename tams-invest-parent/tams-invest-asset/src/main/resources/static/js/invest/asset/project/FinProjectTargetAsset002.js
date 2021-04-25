@@ -704,7 +704,8 @@ $(function() {
             //update by  zhangnian 20191120  start
             // 增加推荐方与推荐费率 modify by renping 20191014 start
             $('#finInterestFactorDto_loadRate').change(function () {
-                FinInterestFactor.calBuyOutRateByTable('loadRate')
+                FinInterestFactor.calBuyOutRateByTable('loadRate');
+                $('#buyOutRate').attr('disabled',true).trigger('change');
             });
             $('#finInterestFactorDto_investRate').change(FinInterestFactor.calBuyOutRateByTable).trigger('change');
             // 增加推荐方与推荐费率 modify by renping 20191014 end
