@@ -1094,7 +1094,9 @@
                     AND B.TYPE_4 = #{windtypeone}
                 </if>
                 AND Q.IS_ISSUE_ASSET = 'Y'
-                AND Q.APPEAR_MARKET_ID IS NULL
+                <if test="pageModel != null and pageModel != '2'.toString() and pageModel != ''">
+                    AND Q.APPEAR_MARKET_ID IS NULL
+                </if>    
             </where>
 
             UNION ALL    
