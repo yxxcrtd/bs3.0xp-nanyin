@@ -2581,7 +2581,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 									}
 								}
 									// 创建者和修改者均设置为当前用户
-								} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
+								else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
 									columnData = "'" + userName + "'";
 								}  else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
 									columnData = "'" +columnData.replace("'", "''")+ "'";
