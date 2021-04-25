@@ -1,6 +1,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dao.HxBalanceMapper">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance">
+<mapper namespace="com.joyintech.tams.common.base.dao.HxBalanceMapper">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.HxBalance">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="crt_mon" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -47,7 +47,7 @@
     delete from hx_balance
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance">
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.HxBalance">
     insert into hx_balance (id, crt_mon, pbc_assetscode,
                             curr_type, qc_qm_flag, deposit,
                             curr_invest, cred_invest, bond_invest,
@@ -69,7 +69,7 @@
             #{undisProfit,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{busiDate,jdbcType=VARCHAR}
            )
   </insert>
-  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance">
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.HxBalance">
     insert into hx_balance
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -238,7 +238,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance">
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.HxBalance">
     update hx_balance
     <set>
       <if test="crtMon != null">
@@ -322,7 +322,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance">
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.HxBalance">
     update hx_balance
     set crt_mon = #{crtMon,jdbcType=VARCHAR},
         pbc_assetscode = #{pbcAssetscode,jdbcType=VARCHAR},

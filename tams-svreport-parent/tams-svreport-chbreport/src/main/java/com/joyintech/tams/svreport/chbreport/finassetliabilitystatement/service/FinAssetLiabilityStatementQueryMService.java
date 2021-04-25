@@ -8,6 +8,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.tams.common.base.entity.PrdBalance;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.*;
 import com.joyintech.tools.util.ExcelTools;
@@ -52,7 +53,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
      */
     public List<SelectOptionDto> getPrdBaseinfo(Map<String, Object> param) {
         return restTemplate.postForList(
-                SvrServiceApplication.CHB_SERVICE_NAME + "/FinAssetLiabilityStatementQuery/getPrdBaseinfo", param,
+                SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/FinAssetLiabilityStatementQuery/getPrdBaseinfo", param,
                 SelectOptionDto.class);
     }
 
@@ -65,7 +66,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
      */
     public Page<FinAssetLiabilityStatementQuery001Dto> selectForPage(Map<String, Object> param) throws Exception {
         return restTemplate.postForPage(
-                SvrServiceApplication.CHB_SERVICE_NAME + "/FinAssetLiabilityStatementQuery/findPage", param,
+                SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/FinAssetLiabilityStatementQuery/findPage", param,
                 FinAssetLiabilityStatementQuery001Dto.class);
     }
 
@@ -147,7 +148,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
         param.put("reportDate", reportDate);
 
         List<PrdBalance> finAssetLiabilityList = restTemplate.postForList(
-                SvrServiceApplication.CHB_SERVICE_NAME + "/FinAssetLiabilityStatementQuery/selectFinAssetLiabilityList", param,
+                SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/FinAssetLiabilityStatementQuery/selectFinAssetLiabilityList", param,
                 PrdBalance.class);
         List<FinAssetLiabilityStatementQuery003Dto> mergeList = getMergerList(finAssetLiabilityList);
 

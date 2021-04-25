@@ -2,7 +2,7 @@ package com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto;
 
 
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance;
+import com.joyintech.tams.common.base.entity.HxBalance;
 
 import java.math.BigDecimal;
 

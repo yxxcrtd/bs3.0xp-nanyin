@@ -43,6 +43,11 @@ public class SvrServiceApplication {
      * 中债一期服务
      */
     public static String CHB_SERVICE_NAME = "http://chbService";
+
+    /**
+     * 中债报表服务
+     */
+    public static String CHBREPORT_SERVICE_NAME = "http://chbreportService";
     
     /**
      * 人行报表服务
@@ -64,6 +69,8 @@ public class SvrServiceApplication {
         private String chb3Service;
         
         private String chbService;
+
+        private String chbreportService;
         
         private String pbcService;
         
@@ -111,6 +118,14 @@ public class SvrServiceApplication {
 			this.chbService = chbService;
 		}
 
+        public String getChbreportService() {
+            return chbreportService;
+        }
+
+        public void setChbreportService(String chbreportService) {
+            this.chbreportService = chbreportService;
+        }
+
 		public String getPbcService() {
 			return pbcService;
 		}
@@ -136,6 +151,8 @@ public class SvrServiceApplication {
                 CHB3_SERVICE_NAME  = CHB3_SERVICE_NAME + this.getChb3Service();
             	if(this.getChbService()!=null)
                 CHB_SERVICE_NAME  = CHB_SERVICE_NAME + this.getChbService();
+                if(this.getChbreportService()!=null)
+                    CHBREPORT_SERVICE_NAME  = CHBREPORT_SERVICE_NAME + this.getChbreportService();
             	if(this.getPbcService()!=null)
                 PBC_SERVICE_NAME  = PBC_SERVICE_NAME + this.getPbcService();
             	if(this.getCustomerInterfService()!=null)
@@ -145,6 +162,7 @@ public class SvrServiceApplication {
                 COMMON_SERVICE_NAME = this.getSvrcomService();
                 CHB3_SERVICE_NAME = this.getChb3Service();
                 CHB_SERVICE_NAME = this.getChbService();
+                CHBREPORT_SERVICE_NAME = this.getChbreportService();
                 PBC_SERVICE_NAME = this.getPbcService();
                 CUSTOMER_INTERF_NAME = this.getCustomerInterfService();
             }

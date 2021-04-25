@@ -1,8 +1,8 @@
 package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.common.base.entity.PrdBalance;
 import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto;
-import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.PrdBalance;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

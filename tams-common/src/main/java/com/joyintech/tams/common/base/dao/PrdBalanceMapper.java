@@ -1,6 +1,6 @@
-package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dao;
+package com.joyintech.tams.common.base.dao;
 
-import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.PrdBalance;
+import com.joyintech.tams.common.base.entity.PrdBalance;
 import org.springframework.stereotype.Repository;
 
 @Repository

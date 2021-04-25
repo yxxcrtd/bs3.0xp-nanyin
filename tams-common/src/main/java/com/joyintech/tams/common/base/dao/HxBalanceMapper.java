@@ -1,7 +1,7 @@
-package com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dao;
+package com.joyintech.tams.common.base.dao;
 
 
-import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance;
+import com.joyintech.tams.common.base.entity.HxBalance;
 
 public interface HxBalanceMapper {
     int deleteByPrimaryKey(Integer id);

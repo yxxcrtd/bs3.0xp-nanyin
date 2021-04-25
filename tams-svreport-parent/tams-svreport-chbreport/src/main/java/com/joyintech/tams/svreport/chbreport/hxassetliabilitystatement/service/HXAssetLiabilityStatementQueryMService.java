@@ -6,11 +6,11 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.tams.common.base.entity.HxBalance;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.ExportFileDto;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery001Dto;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery002Dto;
-import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance;
 import com.joyintech.tools.util.ExcelTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
      */
     public Page<HXAssetLiabilityStatementQuery001Dto> selectForPage(Map<String, Object> param) throws Exception {
         return restTemplate.postForPage(
-                SvrServiceApplication.CHB_SERVICE_NAME + "/HXAssetLiabilityStatementQuery/findPage", param,
+                SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/HXAssetLiabilityStatementQuery/findPage", param,
                 HXAssetLiabilityStatementQuery001Dto.class);
     }
 
@@ -187,11 +187,11 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
         paraMap.put("reportMon", reportDate);
         paraMap.put("flag", "1");
         List<HxBalance> qcList = restTemplate.postForList(
-                SvrServiceApplication.CHB_SERVICE_NAME + "/HXAssetLiabilityStatementQuery/selectHXAssetLiabilityList", paraMap,
+                SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/HXAssetLiabilityStatementQuery/selectHXAssetLiabilityList", paraMap,
                 HxBalance.class);
         paraMap.put("flag", "2");
         List<HxBalance> qmList = restTemplate.postForList(
-                SvrServiceApplication.CHB_SERVICE_NAME + "/HXAssetLiabilityStatementQuery/selectHXAssetLiabilityList", paraMap,
+                SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/HXAssetLiabilityStatementQuery/selectHXAssetLiabilityList", paraMap,
                 HxBalance.class);
 
         HXAssetLiabilityStatementQuery002Dto balance = new HXAssetLiabilityStatementQuery002Dto();

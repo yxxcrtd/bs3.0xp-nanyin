@@ -37,8 +37,6 @@ public class FinAssetLiabilityStatementQuery001Controller extends BaseController
 
     @Override
     public String init(Model model) {
-
-
         return super.init(model);
     }
 

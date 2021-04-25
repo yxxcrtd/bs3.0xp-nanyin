@@ -16,7 +16,7 @@
     </select>
 
     <select id="selectHxAssetLiabilityData"
-            resultType="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance">
+            resultType="com.joyintech.tams.common.base.entity.HxBalance">
         SELECT
         bal.crt_mon,
         bal.busi_date,

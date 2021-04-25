@@ -1,8 +1,8 @@
 package com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dao;
 
 
+import com.joyintech.tams.common.base.entity.HxBalance;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery001Dto;
-import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

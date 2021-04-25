@@ -1,8 +1,6 @@
-package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto;
+package com.joyintech.tams.common.base.entity;
 
 import com.joyintech.framework.base.BaseEntity;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class PrdBalance extends BaseEntity {

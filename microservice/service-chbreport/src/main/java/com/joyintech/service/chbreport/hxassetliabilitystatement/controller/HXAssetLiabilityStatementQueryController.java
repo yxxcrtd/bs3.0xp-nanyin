@@ -2,8 +2,8 @@ package com.joyintech.service.chbreport.hxassetliabilitystatement.controller;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.service.chbreport.hxassetliabilitystatement.service.HXAssetLiabilityStatementQuery001Service;
+import com.joyintech.tams.common.base.entity.HxBalance;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery001Dto;
-import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HxBalance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
