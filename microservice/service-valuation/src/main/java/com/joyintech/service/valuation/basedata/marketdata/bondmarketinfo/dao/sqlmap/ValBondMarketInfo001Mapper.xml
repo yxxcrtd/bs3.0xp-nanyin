@@ -75,6 +75,9 @@
     		FIN_PRODUCT  FP
 		WHERE
     	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
+    	<!-- add by qk start HFZG-5 基础数据管理-每日债券行情 -->
+    	AND FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+		<!-- add by qk end HFZG-5 基础数据管理-每日债券行情 -->
     </select>
     
     <select id="checkFinprodIdAndFinprodName" resultType="java.lang.String">
@@ -86,5 +89,8 @@
     	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
     	AND
     	FP.FINPROD_ABBR = #{finprodName,jdbcType=VARCHAR}
+		<!-- add by qk start HFZG-5 基础数据管理-每日债券行情 -->
+    	AND FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+		<!-- add by qk end HFZG-5 基础数据管理-每日债券行情 -->
     </select>
 </mapper>
