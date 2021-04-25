@@ -15,6 +15,7 @@ import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoServic
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,13 @@ public class BussEtrInvestPersonInfoImplService implements BussEtrInvestPersonIn
                 param.put("counterIdList", counterIdList);
             }
         }
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        if (StringUtil.equals((String)param.get("ps"), DictCodeList.交易方向_卖出.getValue())
+                && StringUtil.equals((String)param.get("finprodType2"), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())) {
+            param.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
+        }
+        // add by etliu 20210421 权益类资产相关代码合并 end
+
         if ((StringUtil.equals((String)param.get("ps"), DictCodeList.交易方向_申购.getValue())
              || StringUtil.equals((String)param.get("ps"), DictCodeList.交易方向_赎回.getValue())
              || StringUtil.equals((String)param.get("ps"), DictCodeListExt2.交易方向_转换申请.getValue())

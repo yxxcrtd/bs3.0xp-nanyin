@@ -680,7 +680,10 @@ public class AllTradeCommonUtil {
                 || DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue().equals(busiType)
                 || DictCodeList.共通业务类型_计划类资产_货币型_交易.getValue().equals(busiType)
                 || DictCodeList.共通业务类型_项目类资产交易.getValue().equals(busiType)
-                || DictCodeListExt2.共通业务类型_股票投资交易.getValue().equals(busiType))
+                || DictCodeListExt2.共通业务类型_股票投资交易.getValue().equals(busiType)
+                // add by etliu 20210421 权益类资产相关代码合并 start
+                || DictCodeListExt3.共通业务类型_权益类资产投资交易.getValue().equals(busiType))
+                // add by etliu 20210421 权益类资产相关代码合并 start
             && (DictCodeList.交易方向_买入.getValue().equals(trdProductDeal.getPs())
                 || DictCodeList.交易方向_卖出.getValue().equals(trdProductDeal.getPs()))) {
 
@@ -792,6 +795,11 @@ public class AllTradeCommonUtil {
                             }else if(DictCodeList.共通业务类型_项目类资产交易.getValue().equals(busiType)){
                                 paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_项目类资产卖出.getValue());
                             }
+                            // add by etliu 20210421 权益类资产相关代码合并 start
+                            else if(DictCodeListExt3.共通业务类型_权益类资产投资交易.getValue().equals(busiType)){
+                                paTrdProductDeal.setPaBussType(DictCodeListExt3.平安业务类型_权益类资产_卖出.getValue());
+                            }
+                            // add by etliu 20210421 权益类资产相关代码合并 end
                             else {
                                 paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_存款类资产卖出.getValue());
                             }
@@ -810,6 +818,11 @@ public class AllTradeCommonUtil {
                             }else if(DictCodeList.共通业务类型_项目类资产交易.getValue().equals(busiType)){
                                 paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_项目类资产买入.getValue());
                             }
+                            // add by etliu 20210421 权益类资产相关代码合并 start
+                            else if(DictCodeListExt3.共通业务类型_权益类资产投资交易.getValue().equals(busiType)){
+                                paTrdProductDeal.setPaBussType(DictCodeListExt3.平安业务类型_权益类资产_买入.getValue());
+                            }
+                            // add by etliu 20210421 权益类资产相关代码合并 end
                             else {
                                 paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_存款类资产买入.getValue());
                             }
@@ -1199,7 +1212,10 @@ public class AllTradeCommonUtil {
                     && DictCodeList.交易平台_外汇交易中心.getValue().equals(deal.getTradePlat()))
                 || (DictCodeList.共通业务类型_基金类资产交易.getValue().equals(busiType)
                     || DictCodeList.共通业务类型_计划类资产_货币型_交易.getValue().equals(busiType)
-                    || DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue().equals(busiType)))) {
+                    || DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue().equals(busiType)
+                // add by etliu 20210421 权益类资产相关代码合并 start
+                    || DictCodeListExt3.共通业务类型_权益类资产投资交易.getValue().equals(busiType)))) {
+                // add by etliu 20210421 权益类资产相关代码合并 end
             resultDto.setCdate(deal.getSettleDate());
             resultDto.setAmount(ArithmeticUtil.multiply(stl.getSettleAmt(), new BigDecimal(-1)));
         }
@@ -1227,7 +1243,10 @@ public class AllTradeCommonUtil {
                      || DictCodeList.共通业务类型_计划类资产_货币型_交易.getValue().equals(busiType)
                      || DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue().equals(busiType)
                      || DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue().equals(busiType)
-                     || DictCodeListExt2.共通业务类型_股票投资交易.getValue().equals(busiType))) {
+                     || DictCodeListExt2.共通业务类型_股票投资交易.getValue().equals(busiType))
+                // add by etliu 20210421 权益类资产相关代码合并 start
+                     || DictCodeListExt3.共通业务类型_权益类资产投资交易.getValue().equals(busiType)) {
+                // add by etliu 20210421 权益类资产相关代码合并 end
             resultDto.setCdate(deal.getSettleDate());
             resultDto.setAmount(stl.getSettleAmt());
         } else if (DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())
@@ -1278,7 +1297,10 @@ public class AllTradeCommonUtil {
                   || DictCodeList.共通业务类型_计划类资产_货币型_交易.getValue().equals(busiType)
                   || DictCodeList.共通业务类型_项目类资产交易.getValue().equals(busiType)
                   || DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue().equals(busiType)
-                  || DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue().equals(busiType))
+                  || DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue().equals(busiType)
+                // add by etliu 20210421 权益类资产相关代码合并 start
+                  || DictCodeListExt3.共通业务类型_权益类资产投资交易.getValue().equals(busiType))
+                // add by etliu 20210421 权益类资产相关代码合并 end
                  && DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())) {
             resultDto.setCdate(deal.getTradeDate());
             resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
@@ -1296,7 +1318,10 @@ public class AllTradeCommonUtil {
                   || DictCodeList.共通业务类型_计划类资产_货币型_交易.getValue().equals(busiType)
                   || DictCodeList.共通业务类型_项目类资产交易.getValue().equals(busiType)
                   || DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue().equals(busiType)
-                  || DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue().equals(busiType))
+                  || DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue().equals(busiType)
+                // add by etliu 20210421 权益类资产相关代码合并 start
+                  || DictCodeListExt3.共通业务类型_权益类资产投资交易.getValue().equals(busiType))
+                // add by etliu 20210421 权益类资产相关代码合并 end
                  && DictCodeList.交易方向_买入.getValue().equals(deal.getPs())) {
             resultDto.setCdate(deal.getTradeDate());
             resultDto.setAmount(deal.getShareAmt());
@@ -1441,6 +1466,11 @@ public class AllTradeCommonUtil {
 
                 codeParameter.setType1(类型转换(finProductType.getType6()));
             }
+            // add by etliu 20210421 权益类资产相关代码合并 start
+            else if (DictCodeListExt3.共通业务类型_权益类资产投资交易.getValue().equals(busiType)) {
+                codeParameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_权益类资产投资交易);
+            }
+            // add by etliu 20210421 权益类资产相关代码合并 end
         }
         return codeParameter;
     }

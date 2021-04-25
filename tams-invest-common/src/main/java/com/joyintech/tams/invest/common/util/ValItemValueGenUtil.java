@@ -844,7 +844,8 @@ public class ValItemValueGenUtil {
             assetSecondType = null;
             blnArea = null;
         }
-        else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue(), finprodType2)) {
+        else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue(), finprodType2)
+                || StringUtil.equals(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue(), finprodType2)) {
             assetSecondType = null;
             tradeMarket = null;
         }

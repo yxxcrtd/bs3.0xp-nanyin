@@ -872,7 +872,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         }
         if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_货币型.getValue(),v.getAssetType())
                 ||StringUtil.equals(DictCodeList.平安资产类型_计划类资产_净值型.getValue(),v.getAssetType())
-                ||StringUtil.equals(DictCodeList.平安资产类型_基金.getValue(),v.getAssetType())) {
+                ||StringUtil.equals(DictCodeList.平安资产类型_基金.getValue(),v.getAssetType())
+                || StringUtil.equals(DictCodeListExt3.平安资产类型_权益类资产.getValue(),v.getAssetType())) {
             if(finDto.getPs().equals(DictCodeListExt2.交易方向_份额折算.getValue())){
                 if(StringUtil.isNotEmpty(dataMap.get("conversionTime"))) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date(Long.parseLong(dataMap.get("conversionTime").toString())), DateUtil.DEFAULT_DATE_FORMAT_EN));

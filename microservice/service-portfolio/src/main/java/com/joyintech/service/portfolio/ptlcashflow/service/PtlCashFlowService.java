@@ -24,10 +24,7 @@ import com.joyintech.service.portfolio.ptlcashflow.dto.PtlCashFlowDto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.core.impl.PlatformDateImpl;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
@@ -199,6 +196,9 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         map.put("FINPROD_TYPE_TG_F07",  DictCodeListExt1.金融产品类型_投管用_存款.getValue());
         map.put("FINPROD_TYPE_TG_F17",  DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         map.put("FINPROD_TYPE_TG_F18",  DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        map.put("FINPROD_TYPE_TG_F37",  DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue());
+        // add by etliu 20210421 权益类资产相关代码合并 end
         return ptlCashFlowMapper.getFinprodMarketId(map);
     }
 
@@ -237,6 +237,10 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         param.put("FINPROD_TYPE_TG_F07",  DictCodeListExt1.金融产品类型_投管用_存款.getValue());
         param.put("FINPROD_TYPE_TG_F17",  DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         param.put("FINPROD_TYPE_TG_F18",  DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        param.put("FINPROD_TYPE_TG_F37",  DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue());
+        param.put("PINAN_ASSET_TYPE_F19", DictCodeListExt3.平安资产类型_权益类资产.getValue());
+        // add by etliu 20210421 权益类资产相关代码合并 end
         param.put("PINAN_ASSET_TYPE_F01", DictCodeList.平安资产类型_债券.getValue());
         param.put("PINAN_ASSET_TYPE_F02", DictCodeList.平安资产类型_基金.getValue());
         param.put("PINAN_ASSET_TYPE_F04", DictCodeList.平安资产类型_计划类资产_净值型.getValue());

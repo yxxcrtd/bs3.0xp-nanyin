@@ -18,6 +18,7 @@ import com.joyintech.tams.component.business.project.dto.BussParticipantInfoDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -98,6 +99,19 @@ public class BussParticipantInfoValidator implements BeanValidator{
                 }
             }
         }
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())){
+            if(null!=dto.getBussParticipantInfoDtoList()&&!dto.getBussParticipantInfoDtoList().isEmpty()){
+                for(BussParticipantInfoDto item : dto.getBussParticipantInfoDtoList()){
+                    if(StringUtil.equals(item.getPayType(), DictCodeListExt2.划款方式_一次性划款.getValue())){
+                        resultList.add(new ValidMessage("",
+                                getMessage("该资产不能挂一次性划款")));
+                        break;
+                    }
+                }
+            }
+        }
+        // add by etliu 20210421 权益类资产相关代码合并 end
         //add by zhangnian  20191230  start
         return resultList;
     }

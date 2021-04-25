@@ -191,6 +191,11 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
                 else if(StringUtil.equals(DictCodeListExt3.平安资产类型_期权.getValue(), finprodType2)){
                     list1.add(DictCodeListExt3.金融产品类型_投管用_期权.getValue());
                 }
+				// add by etliu 20210421 权益类资产相关代码合并 start
+				else if (StringUtil.equals(DictCodeListExt3.平安资产类型_权益类资产.getValue(), finprodType2)){
+					list1.add(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue());
+				}
+				// add by etliu 20210421 权益类资产相关代码合并 end
             }
             //交易方向买入卖出
 //            if( list1.isEmpty() ){

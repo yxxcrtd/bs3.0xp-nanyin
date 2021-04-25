@@ -111,6 +111,15 @@ var showDetailByFinprodId=function(finprodId,finprodType2){
 				finprodId:finprodId
 			});
 	}
+	else if(finprodType2 == PINAN_ASSET_TYPE_F19){
+		label='FinProjectNetTargetAsset002.reference';
+		pagePath = "invest/asset/projectnet/FinProjectNetTargetAsset002/init";
+		Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+			"95%", "90%",{
+				pageModel:PAGE_MODEL_REFERENCE,
+				finprodId:finprodId
+			});
+	}
 };
 $(function(){
     /**
@@ -387,6 +396,17 @@ $(function(){
 			}else if(data.finprodType2 == PINAN_ASSET_TYPE_F18){
 				label='TrdOptionTrade002';
 				pagePath = "invest/trade/option/TrdOptionTrade002/init";
+				Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+					"95%", "90%",{
+						pageModel:PAGE_MODEL_REFERENCE,
+						tradeId:tradeId,
+						workflowId : workflowId,
+						workflowStatus : data.validStatus
+					});
+			}
+			else if(data.finprodType2 == PINAN_ASSET_TYPE_F19){
+				label='TrdProjectNetInvestTrade002.reference';
+				pagePath = "invest/trade/projectnet/TrdProjectNetInvestTrade002/init";
 				Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
 					"95%", "90%",{
 						pageModel:PAGE_MODEL_REFERENCE,

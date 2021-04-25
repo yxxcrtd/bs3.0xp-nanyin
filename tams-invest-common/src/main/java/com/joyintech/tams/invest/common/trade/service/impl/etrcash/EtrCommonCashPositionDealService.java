@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -1262,8 +1263,14 @@ public class EtrCommonCashPositionDealService extends BaseService {
      */
     public static BigDecimal getPlanNetValue(String finprodId, Date dealDate) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("FIN_PROD_TYPE_F17", BussinessDictCodeList.金融产品类型_计划类资产.getValue());
-        params.put("FIN_PROD_TYPE_2_F17", BussinessDictCodeList.金融产品类型_投管用_计划类资产.getValue());
+        FinProduct finProduct = SpringContextUtil.getBean(FinProductMapper.class).selectByPrimaryKey(finprodId);
+        if(null!=finProduct&&StringUtil.equals(finProduct.getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())){
+            params.put("FIN_PROD_TYPE_2_F37", DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue());
+        }
+        else{
+            params.put("FIN_PROD_TYPE_F17", BussinessDictCodeList.金融产品类型_计划类资产.getValue());
+            params.put("FIN_PROD_TYPE_2_F17", BussinessDictCodeList.金融产品类型_投管用_计划类资产.getValue());
+        }
         params.put("finprodId", finprodId);
         params.put("dealDate", dealDate);
         BigDecimal netValue = etrCommonCashPositionMapper.selectPlanNetValue(params);

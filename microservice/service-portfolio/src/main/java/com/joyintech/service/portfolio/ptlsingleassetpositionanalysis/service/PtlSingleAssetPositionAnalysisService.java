@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -114,6 +115,9 @@ public class PtlSingleAssetPositionAnalysisService extends BaseService<PtlSingle
         list.add(DictCodeListExt1.金融产品类型_投管用_债券借贷.getValue());
         list.add(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         list.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        list.add(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue());
+        // add by etliu 20210421 权益类资产相关代码合并 end
         list.add(DictCodeListExt1.金融产品类型_投管用_其他.getValue());
         list.add(DictCodeListExt1.金融产品类型_投管用_同业借款.getValue());
         list.add(DictCodeListExt1.金融产品类型_投管用_自定义现金流.getValue());

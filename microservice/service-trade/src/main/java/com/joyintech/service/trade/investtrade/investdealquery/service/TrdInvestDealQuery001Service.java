@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -221,6 +222,11 @@ public class TrdInvestDealQuery001Service extends BaseService<TrdInvestDealQuery
                 else if (StringUtil.equals(finType2, DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue())) {
                     dto.setFinprodType2(DictCodeListExt2.平安资产类型_一级市场债.getValue());
                 }
+				// add by etliu 20210421 权益类资产相关代码合并 start
+				else if (StringUtil.equals(finType2, DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())){
+					dto.setFinprodType2(DictCodeListExt3.平安资产类型_权益类资产.getValue());
+				}
+				// add by etliu 20210421 权益类资产相关代码合并 end
             }    
         }
 	    return list;
