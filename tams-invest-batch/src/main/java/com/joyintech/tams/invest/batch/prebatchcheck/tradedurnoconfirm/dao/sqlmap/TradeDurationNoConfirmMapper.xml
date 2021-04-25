@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.batch.prebatchcheck.tradedurnoconfirm.dao.TradeDurationNoConfirmMapper">
+
+    <select id="selectZQDurationList"
+            resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
+
+        select
+        t8.SEC_ACCT_ID secManageAcctId,
+        nvl(SAI.SEC_ACCT_NAME, fp.FINPROD_NAME) secAcctName,
+        t10.FINPROD_MARKET_ID,
+        T8.FINPROD_ID finprodId,
+        t10.FINPROD_ABBR finprodName,
+        t8.qty * 100 qty,
+        to_char(t8.PAY_DATE, 'yyyy-MM-dd') PAY_DATE,
+        ROUND(SUM(t8.fpriceAmt), 2) tradeAmt
+        ,'债券存续期-账户/通道'||SAI.SEC_ACCT_NAME|| fp.FINPROD_NAME remark
+        from (
+        select T6.FINPROD_ID,
+        SUM(T6.AMOUNT) QTY,
+        SUM(T6.CASH_AMT * T6.AMOUNT) fpriceAmt,
+        T6.SEC_ACCT_ID,
+        ROUND(SUM(t6.INT_AMT * T6.AMOUNT), 2) intAmt,
+        t6.PAY_DATE
+        from (select *
+        from (SELECT T1.FINPROD_ID,
+        DECODE(T1.HODING_TYPE,
+        '06',
+        T1.AMOUNT * -1,
+        '11',
+        T1.AMOUNT * -1,
+        T1.AMOUNT) AMOUNT,
+        T1.SEC_ACCT_ID,
+        t2.vdate,
+        t2.mdate,
+        t2.cash_amt,
+        t2.prin_amt,
+        t2.int_amt,
+        t2.cash_id,
+        t2.cash_type,
+        t2.pay_date,
+        t1.portfolio_id,
+        rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank
+        FROM PTL_SEC_POSITION T1
+        INNER JOIN FIN_CASH_PLAN T2
+        ON T1.FINPROD_ID =
+        T2.FINPROD_ID
+        AND T2.FINPROD_TYPE2 = 'F01'
+        AND t1.CDATE <![CDATA[<]]> t2.MDATE
+                       LEFT JOIN PTL_PORTFOLIO pp
+                       on pp.PORTFOLIO_ID = T1.PORTFOLIO_ID
+        <if test="PRE_INST_CODE != null and PRE_INST_CODE != ''">
+        INNER JOIN DATA_AUTH_NOTIFY_INST dani
+                       on dani.BUSINESS_ID =
+                       T1.PORTFOLIO_ID
+                       AND dani.DATA_TYPE = 'PTL01'
+                       AND dani.INSTITUTION_CODE = #{PRE_INST_CODE,jdbcType=VARCHAR}
+        </if>
+
+        WHERE T1.AMOUNT > 0
+        AND T1.HODING_TYPE IN
+        ('03', '05', '06', '11')
+        and nvl(pp.PARENT_PORTFOLIO_ID,
+        'null') = 'null'
+        and T2.CASH_TYPE IN   ('01', '02', '03', '04')
+        and (t2.INT_AMT > 0 or
+        t2.PRIN_AMT > 0)
+        and NOT EXISTS
+        (SELECT 1
+        FROM TRD_FIN_PRODUCT_DEAL_TOTAL TPDA
+        LEFT JOIN TRD_DEAL_TOTAL_ADD TDTA
+        ON TPDA.TOTLE_TRADE_ID =
+        TDTA.TOTLE_TRADE_ID
+        where TDTA.MP_FINPROD_ID IS NULL
+        AND TPDA.TRADE_STATUS = '01'
+        AND TPDA.BUSI_TYPE =    'TRD10'
+        AND TPDA.IS_CANCEL = 'N'
+        and T2.MDATE = TPDA.MDATE
+        AND TPDA.FINPROD_ID =  T1.FINPROD_ID
+        AND T1.PORTFOLIO_ID =   TPDA.PORTFOLIO_ID
+        AND (TPDA.SEC_MANAGE_ACCT_ID =
+        T1.SEC_ACCT_ID OR
+        TPDA.CHL_ID =
+        T1.SEC_ACCT_ID))
+        AND NOT EXISTS
+        (SELECT 1
+        FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL TPDA
+        LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD TDTA
+        ON TPDA.TOTLE_TRADE_ID =
+        TDTA.TOTLE_TRADE_ID
+        where TDTA.MP_FINPROD_ID IS NULL
+        AND TPDA.TRADE_STATUS = '01'
+        AND TPDA.BUSI_TYPE = 'TRD10'
+        AND TPDA.IS_CANCEL = 'N'
+        and T2.MDATE >=
+        TPDA.MDATE
+        AND TPDA.FINPROD_ID =
+        T1.FINPROD_ID
+        AND T1.PORTFOLIO_ID =
+        TPDA.PORTFOLIO_ID
+        AND (TPDA.SEC_MANAGE_ACCT_ID =
+        T1.SEC_ACCT_ID OR
+        TPDA.CHL_ID =
+        T1.SEC_ACCT_ID))
+        AND NOT EXISTS
+        (SELECT 1
+        FROM PTL_SEC_POSITION tpsp
+        where tpsp.HODING_TYPE =
+        T1.HODING_TYPE
+        and tpsp.PORTFOLIO_ID =
+        T1.PORTFOLIO_ID
+        and tpsp.SEC_ACCT_ID =
+        T1.SEC_ACCT_ID
+        and tpsp.FINPROD_ID =
+        T1.FINPROD_ID
+        and tpsp.CDATE >
+        T1.CDATE
+        and tpsp.CDATE <![CDATA[<]]> t2.MDATE )
+        and T2.PAY_DATE <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+        )
+        where rank = 1) T6
+        GROUP BY T6.FINPROD_ID,
+        T6.CASH_TYPE,
+        T6.CASH_ID,
+        T6.VDATE,
+        T6.MDATE,
+        T6.CASH_AMT,
+        T6.PRIN_AMT,
+        T6.SEC_ACCT_ID,
+        t6.INT_AMT,
+        t6.PAY_DATE
+        ) T8
+        LEFT JOIN FIN_PRODUCT T10
+        ON T10.FINPROD_ID = T8.FINPROD_ID
+        LEFT JOIN STL_SEC_ACCT_INFO SAI
+        ON T8.SEC_ACCT_ID = SAI.SEC_ACCT_ID
+        LEFT JOIN FIN_PRODUCT FP
+        ON T8.SEC_ACCT_ID = FP.FINPROD_ID
+        where t8.PAY_DATE <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+        GROUP BY t8.SEC_ACCT_ID,
+        SAI.SEC_ACCT_NAME,
+        fp.FINPROD_NAME,
+        t10.FINPROD_MARKET_ID,
+        t10.FINPROD_ABBR,
+        t8.qty,
+        t8.PAY_DATE,
+        T8.FINPROD_ID
+
+    </select>
+</mapper>

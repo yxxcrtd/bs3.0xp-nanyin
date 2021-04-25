@@ -238,7 +238,7 @@ values ('88600', 'INV', '流程中产品定义', null, 'processProductTask', 1, 
 
  insert into sys_prebatch_task_add (GROUP_ID, TASK_ID, STOP_FLAG, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
  select  a.seq_no,'88600'
- , '01', null, 'system', null, sysdate, 'system', sysdate
+ , '00', null, 'system', null, sysdate, 'system', sysdate
   from sys_batch_grp a where BATCH_NAME = '批前检查';
 
 
