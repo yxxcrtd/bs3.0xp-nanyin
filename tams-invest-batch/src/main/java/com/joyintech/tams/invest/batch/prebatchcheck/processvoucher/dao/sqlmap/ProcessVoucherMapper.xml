@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.batch.prebatchcheck.processvoucher.dao.ProcessVoucherMapper">
+
+    <select id="selectProcessVoucherList" parameterType="java.util.Map"
+            resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
+      		with TEMP AS (
+				SELECT * FROM(
+					select 
+						sys_data_process_mark.*,rank() over(partition by workflow_id order by HIS_NO desc) as rank
+					from sys_data_process_mark 
+					where page_id in ('ValManualVoucher003')
+				) WHERE rank = 1
+			)
+			select
+				nvl(fp.FINPROD_ID,ftp.finprod_id) finprodId,
+				nvl(fp.finprod_name,fp.finprod_abbr) finprodName,
+				pp.PORTFOLIO_ID portfolioId,
+				pp.PORTFOLIO_NAME portfolioName,
+				a.tradeId,
+				launchUser,
+				nextUser,
+				createTaskTime,
+				instCode
+			from(
+				select 
+					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"booksetId":"[^"]+"',1,1)),'"booksetId":"',''),'"','') booksetId,
+					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"seqno":"[^"]+"',1,1)),'"seqno":"',''),'"','') tradeId,
+					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"busiId":"[^"]+"',1,1)),'"busiId":"',''),'"','') busiId,
+					replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"busiName":"[^"]+"',1,1)),'"busiName":"',''),'"','') busiName,
+					to_number(replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"bookDate":[^,]+,',1,1)),'"bookDate":',''),',','')) bookDate,
+					T.create_user as launchUser,
+					T.NEXT_USER  AS nextUser,
+					T.CRT_DATE AS createTaskTime,
+					sd.institution_code instCode
+				FROM SYS_WFL_BUSINESS_LIST T 
+				INNER JOIN TEMP on T.seq_no = temp.workflow_id and T.PROCESS_STATE != 'END'
+				LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+				LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
+			)A
+			left join PTL_PORTFOLIO pp on 'F16_'||pp.PORTFOLIO_ID = a.booksetId or pp.PORTFOLIO_ID = a.booksetId
+			left join FIN_PRODUCT fp on fp.finprod_id = a.busiId or fp.finprod_market_id = a.busiId
+			left join fin_trade_product ftp on ftp.finprod_id = a.busiId
+			where a.bookDate/ (1000 * 60 * 60 * 24) +TO_DATE('1970-01-01 08:00:00', 'YYYY-MM-DD HH:MI:SS')&lt;#{checkDate,jdbcType=DATE}+1
+    </select>
+</mapper>

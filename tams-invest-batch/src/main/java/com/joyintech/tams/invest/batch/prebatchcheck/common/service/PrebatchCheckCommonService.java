@@ -73,7 +73,14 @@ public class PrebatchCheckCommonService extends BaseService {
 
             dto.setDetailCount(details.size());
 
-            prebatchCheckCommonMapper.insertBatchResultDetail(details);
+            int singleInsert = 50;
+            for(int i=0;i*singleInsert<details.size();i++) {
+            	 int endIndex = (i+1)*singleInsert;
+            	 if(endIndex>details.size()) {
+            		 endIndex = details.size();
+            	 }
+            	 prebatchCheckCommonMapper.insertBatchResultDetail(details.subList(i*singleInsert, endIndex));	
+            }
 
         }else{
             dto.setTaskStatus(DictCodeListExt3.批前检查_执行状态_成功.getValue());
