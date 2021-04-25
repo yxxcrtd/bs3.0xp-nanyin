@@ -598,7 +598,7 @@
 		    CHB_INVESTHOLD_INFO_SUB
 		WHERE
 		    (REGIST_BANK_CODE, PRD_REGIST_CODE, CCY, INDENTIFY_MARK, HOLD_DATE) IN
-		    (
+		    ( SELECT * FROM (
 		        SELECT
 		            REGIST_BANK_CODE,
 		            PRD_REGIST_CODE,
@@ -614,7 +614,8 @@
 		            INDENTIFY_MARK,
 		            HOLD_DATE
 		        HAVING
-		            COUNT(1) > 1) a
+		            COUNT(1) > 1) aa
+		            )
 		       and (SEND_STATUS = '02' or SEND_STATUS = '03')
     </delete>
     <!-- 接口报送更新并且更新 报送流水号-->

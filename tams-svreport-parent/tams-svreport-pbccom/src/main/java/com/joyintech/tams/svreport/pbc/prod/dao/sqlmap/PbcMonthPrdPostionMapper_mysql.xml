@@ -791,7 +791,7 @@
 	  P_INTERF_PRO_CUSTOM_DEAL dl
 	  WHERE
 	  1 = 1
-	  AND to_date(dl.DEALDATE,'yyyyMMdd') BETWEEN #{reportStartDate,jdbcType=DATE} AND #{reportEndDate,jdbcType=DATE}
+	  AND to_date(dl.DEALDATE,'%Y%m%d') BETWEEN #{reportStartDate,jdbcType=DATE} AND #{reportEndDate,jdbcType=DATE}
 	  AND dl.DEALTYPE != '4'
 	  <!--   AND dl.status in ('E','M') -->
 	  GROUP BY
@@ -940,20 +940,20 @@
 	  FROM
 	  P_INTERF_PRO_CUSTOM_DEAL
 	  WHERE
-	  to_date(DEALDATE,'yyyyMMdd') <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+	  to_date(DEALDATE,'%Y%m%d') <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
 	  GROUP BY
 	  FINPROD_ID
 	  ) a
 	  LEFT JOIN (
 	  SELECT
 	  FINPROD_ID prod_id,
-	  MAX(to_date(DEALDATE,'yyyyMMdd')) settdate_date,
+	  MAX(to_date(DEALDATE,'%Y%m%d')) settdate_date,
 	  COUNT(1) terminatecounts
 	  FROM
 	  P_INTERF_PRO_CUSTOM_DEAL
 	  WHERE
 	  DEALTYPE = '6'
-	  and to_date(DEALDATE,'yyyyMMdd') <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
+	  and to_date(DEALDATE,'%Y%m%d') <![CDATA[<=]]> #{reportEndDate,jdbcType=DATE}
 	  GROUP BY
 	  FINPROD_ID
 	  ) b ON a.prod_id = b.prod_id
@@ -979,7 +979,7 @@
 	  WHERE
 	  d.DEALTYPE = '6'
 	  AND d.FINPROD_ID = info.prod_id
-	  AND to_date(d.DEALDATE,'yyyyMMdd') <![CDATA[<]]> #{reportStartDate,jdbcType=DATE}
+	  AND to_date(d.DEALDATE,'%Y%m%d') <![CDATA[<]]> #{reportStartDate,jdbcType=DATE}
 	  )
 	  )
 

@@ -102,22 +102,22 @@
 		IS_LOGIC_CHECK,
 		REF_SEQNO) VALUES
 		<foreach collection="list" item="dto"  separator=",">
-		(	#{dto.checkSeqno},
-			#{dto.repCode},
-			#{dto.repName},
-			#{dto.validKey},
-			#{dto.checkResult},
-			#{dto.orgCode},
-			#{dto.dataTime},
-			#{dto.createDept},
-			#{dto.updateUser},
-			#{dto.updateTime},
-			#{dto.createUser},
-			#{dto.createTime},
-			#{dto.errorInfo},
-			#{dto.warnInfo},
-			#{dto.isLogicCheck},
-			#{dto.refseqno}
+		(	#{dto.checkSeqno,jdbcType=VARCHAR},
+			#{dto.repCode,jdbcType=VARCHAR},
+			#{dto.repName,jdbcType=VARCHAR},
+			#{dto.validKey,jdbcType=VARCHAR},
+			#{dto.checkResult,jdbcType=VARCHAR},
+			#{dto.orgCode,jdbcType=VARCHAR},
+			#{dto.dataTime,jdbcType=TIMESTAMP},
+			#{dto.createDept,jdbcType=VARCHAR},
+			#{dto.updateUser,jdbcType=VARCHAR},
+			#{dto.updateTime,jdbcType=TIMESTAMP},
+			#{dto.createUser,jdbcType=VARCHAR},
+			#{dto.createTime,jdbcType=TIMESTAMP},
+			#{dto.errorInfo,jdbcType=VARCHAR},
+			#{dto.warnInfo,jdbcType=VARCHAR},
+			#{dto.isLogicCheck,jdbcType=VARCHAR},
+			#{dto.refseqno,jdbcType=VARCHAR}
 			)
 		</foreach>
 	</insert>

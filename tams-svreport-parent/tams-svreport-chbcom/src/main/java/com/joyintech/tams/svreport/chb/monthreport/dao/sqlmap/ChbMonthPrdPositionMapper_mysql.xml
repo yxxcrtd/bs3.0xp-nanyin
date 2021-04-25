@@ -411,7 +411,7 @@
         pd as(
         select DISTINCT info.prod_id,
         case info.ISSUING_STATUS when '01' then (
-             case when info.vdate<![CDATA[<=]]>#{enddate,jdbcType=DATE}  then IF(ISNULL(prod_id),'02','01')
+             case when info.vdate<![CDATA[<=]]>#{enddate,jdbcType=DATE}  then IF(ISNULL(deal.prod_id),'02','01')
                      else '03'  end)
              else '03'  end DURATIONFLAG
         from CHB_PRD_BASEINFO info
@@ -863,7 +863,7 @@
         )
         left join rate on pi.prod_value_ccy=rate.ccyOriginal
         where 1=1
-        and ADD_MONTHS(pos1.STARTDATE, 1) = #{startdate,jdbcType=DATE}
+        and ADDDATE(str_to_date(pos1.STARTDATE,'%y-%m-%d'),INTERVAL -1 MONTH)= #{startdate,jdbcType=DATE}
         and prod.status in ('E','M')
         and prod.vdate <![CDATA[<=]]> #{enddate,jdbcType=DATE}
         and not exists ( select 1 from chb_prd_deal deal

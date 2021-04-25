@@ -357,12 +357,8 @@
             STATUS_DATE, CREATE_USER, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, ORG_CODE, 
             DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID,
-            if
-            (@TERMID = TERMID and @REPORTTYPE = REPORTTYPE, @rank := @rank + 1,@rank :=1) as ranknum,
-            (@TERMID := TERMID) ,
-            (@REPORTTYPE := REPORTTYPE)
-         from PBC_REPORT_HIS  his,
-            (select @rank := 0, @TERMID := null, @REPORTTYPE := null) b
+            rank() over (partition by TERMID, REPORTTYPE order by nvl(update_time,create_time) desc) ranknum
+         from PBC_REPORT_HIS  his
          <where>
            <if test="registList !=null and registList.size()>0">
              <foreach collection="registList" item="regist" open="(TERMID,REPORTTYPE,ifnull(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
@@ -372,11 +368,8 @@
              </foreach>
            </if>
          </where>
-        order by
-        TERMID,REPORTTYPE,
-        ifnull(update_time,create_time) desc
       ) temp
-      where 1 = 1 limit 1
+      where ranknum = 1
   </insert>
   <delete id="deleteLastSubmitHis" parameterType="java.util.Map">
       delete from PBC_REPORT_HIS

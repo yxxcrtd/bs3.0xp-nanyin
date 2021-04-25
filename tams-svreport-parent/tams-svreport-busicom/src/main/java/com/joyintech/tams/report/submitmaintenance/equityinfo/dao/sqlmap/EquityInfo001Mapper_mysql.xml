@@ -204,6 +204,7 @@
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
 		DATA_SOURCE,ORG_CODE ,AGENT, CREATE_DEPT)
 		values
+		(
 		<foreach collection="list" item="item" index="index" separator="union all">
 			select
 			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
@@ -244,7 +245,7 @@
 			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
 			from dual
 		</foreach>
-
+		)
 	</insert>
 	<!-- 批量更新 -->
 	<update id="updateBatchEquityInfo" parameterType="java.util.List">
