@@ -61,6 +61,7 @@ import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.invest.interf.service.InterfComponentService;
 import com.joyintech.tams.invest.trade.bondlend.dto.TrdBondLendInvestTradeDto;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
@@ -199,6 +200,12 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
+
+    @Autowired
+    private TrdTradeFeeTotalMapper trdTradeFeeTotalMapper;
 
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。
@@ -435,6 +442,12 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
             this.doCompleteRevoke(entity);
 
         }
+        // add by jiangpeng on 20210425 start
+        // ZGBSSE-131 债券借贷融出，理财账有误，费用科目未出账
+        // 费用数据入库
+        feeSaveData(entity,operationType);
+        // add by jiangpeng on 20210425 end
+
 //        调用接口  add by zhuyongkang 20191127 start
         List<String> tradeIds = new ArrayList<>();
         tradeIds.add(entity.getTradeId());
@@ -446,6 +459,53 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
 
         }
 //        调用接口  add by zhuyongkang 20191127 end
+    }
+    /**
+     * 生成费用数据并入库
+     * ZGBSSE-131 债券借贷融出，理财账有误，费用科目未出账
+     * @param entity 页面数据
+     */
+    private void feeSaveData(TrdBondLendInvestTradeDto entity,OperationType operationType) {
+        // 汇总交易费用明细表
+        TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
+        // 交易费用明细表
+        TrdTradeFeeTotal trdTradeFeeTotal = new TrdTradeFeeTotal();
+        if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
+            if (StringUtil.isNotEmpty(entity.getFinTradeProduct()) && StringUtil.isNotEmpty(entity.getFinTradeProduct().getmIntAmt())) {
+                // 交易编号
+                String tradeId = entity.getTradeId();
+                trdTradeFeeDetail.setTradeId(tradeId);
+                trdTradeFeeTotal.setTotleTradeId(tradeId);
+                // 费用类型
+                trdTradeFeeDetail.setFeeType(DictCodeListExt1.一次性费用类型_结算手续费.getValue());
+                trdTradeFeeTotal.setFeeType(DictCodeListExt1.一次性费用类型_结算手续费.getValue());
+                // 是否随交易支付
+                trdTradeFeeDetail.setIsPayWithTrade(DictCodeList.是否_否.getValue());
+                trdTradeFeeTotal.setIsPayWithTrade(DictCodeList.是否_否.getValue());
+                // 费用金额
+                trdTradeFeeDetail.setFeeAmt(entity.getFinTradeProduct().getmIntAmt());
+                trdTradeFeeTotal.setFeeAmt(entity.getFinTradeProduct().getmIntAmt());
+                // 创建人
+                trdTradeFeeDetail.setCreateUser(CommonUtil.getUserName());
+                trdTradeFeeTotal.setCreateUser(CommonUtil.getUserName());
+                // 创建部门
+                trdTradeFeeDetail.setCreateDept(CommonUtil.getDeptCode());
+                trdTradeFeeTotal.setCreateDept(CommonUtil.getDeptCode());
+                // 创建时间
+                trdTradeFeeDetail.setCreateTime(new Date());
+                trdTradeFeeTotal.setCreateTime(new Date());
+                // 更新人
+                trdTradeFeeDetail.setUpdateUser(CommonUtil.getUserName());
+                trdTradeFeeTotal.setUpdateUser(CommonUtil.getUserName());
+                // 更新时间
+                trdTradeFeeDetail.setUpdateTime(new Date());
+                trdTradeFeeTotal.setUpdateTime(new Date());
+                // 数据入库
+                TrdTradeFeeDetail trdTradeFeeDetail1 = trdTradeFeeDetailMapper.selectByPrimaryKey(trdTradeFeeDetail);
+                trdTradeFeeDetailMapper.insertSelective(trdTradeFeeDetail);
+                trdTradeFeeTotalMapper.insertSelective(trdTradeFeeTotal);
+            }
+        }
     }
 
     /**

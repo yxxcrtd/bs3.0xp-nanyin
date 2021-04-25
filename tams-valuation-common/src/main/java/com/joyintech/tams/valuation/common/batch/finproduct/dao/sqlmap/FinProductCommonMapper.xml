@@ -547,8 +547,8 @@
 		<!--b.O_FINPROD_TYPE AS oFinprodType, /**原金融产品类型**/-->
 
 		b.FINPROD_TYPE AS oFinprodType, /**原金融产品类型**/
-
-		d.REGIST_ORG AS registOrg, /**登记托管机构**/
+		/** modify by jiangpeng on 20210425 ZGBSSE-131 债券借贷融出，理财账有误，费用科目未出账 **/
+		case when d.REGIST_ORG is null then TPD.REGIST_ORG else d.REGIST_ORG end AS registOrg, /**登记托管机构**/
 		<!-- 		b.MATCH_TYPE AS matchType, /**匹配类型**/ -->
 		c.TYPE_1 AS type1,/**分类1**/
 		c.TYPE_2 AS type2,/**分类2**/
@@ -570,6 +570,10 @@
 		<!--AND c.FINPROD_TYPE = b.FINPROD_TYPE-->
 		LEFT JOIN FIN_TRADE_PRODUCT_ADD d
 		ON d.FINPROD_ID = b.FINPROD_ID
+		/** add by jiangpeng on 20210425 ZGBSSE-131 债券借贷融出，理财账有误，费用科目未出账 **/
+		LEFT JOIN TRD_PRODUCT_DEAL TPD
+		ON TPD.FINPROD_ID = b.FINPROD_ID AND TPD.IS_CANCEL='N'
+		/** add by jiangpeng on 20210425 ZGBSSE-131 债券借贷融出，理财账有误，费用科目未出账 **/
 		/** 取消该条件 by yanya on 20200208 AND d.FINPROD_TYPE = b.FINPROD_TYPE **/
 		AND b.BRANCH = d.BRANCH
 		left join fin_product_valuation_para e
