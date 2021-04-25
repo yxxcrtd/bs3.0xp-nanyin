@@ -119,10 +119,13 @@ public class BusiAutoAddSecInfoService {
         List<BusiAutoAddTradeProductDealDto> busiAutoAddTradeProductDealDtoList = new ArrayList<BusiAutoAddTradeProductDealDto>();
 
         for(FinProduct finProduct : listFinProduct){
-            String secId = busiAutoAddSecInfoMapper.getSecId(finProduct);
-            if(StringUtil.isBlank(secId)){
+            //查询接口表债券代码、全称
+            InterfPayhsrcsecinfo interfPayhsrcsecinfo = busiAutoAddSecInfoMapper.getSecId(finProduct);
+            if(interfPayhsrcsecinfo == null){
                 continue;
             }
+            //资产上市代码
+            String secId = interfPayhsrcsecinfo.getSecid();
 
             BusiAutoAddFinProductBaseInfoDto baseFinProductBaseInfoDto = new BusiAutoAddFinProductBaseInfoDto();
             //2.1、复制未上市债券信息，并修改金融产品代码为上市金融产品代码
@@ -130,6 +133,7 @@ public class BusiAutoAddSecInfoService {
             FinProduct finProductNew = new FinProduct();
             BeanUtil.copyPropertiesIgnoreNull(finProductNew, finProduct);
             finProductNew.setFinprodId("F01_"+secId);
+            finProductNew.setFinprodName(interfPayhsrcsecinfo.getSecfullname());
             finProductNew.setFinprodMarketId(secId);
             baseFinProductBaseInfoDto.setFinProduct(finProductNew);
 

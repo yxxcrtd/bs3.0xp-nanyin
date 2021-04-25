@@ -46,7 +46,7 @@ public interface BusiAutoAddSecInfoMapper {
      * @see
      * @since 1.0
      */
-    String getSecId(FinProduct finProduct);
+    InterfPayhsrcsecinfo getSecId(FinProduct finProduct);
 
     List<FinCashInfo> selectFinCashInfo(@Param("finprodId") String finprodId);
 

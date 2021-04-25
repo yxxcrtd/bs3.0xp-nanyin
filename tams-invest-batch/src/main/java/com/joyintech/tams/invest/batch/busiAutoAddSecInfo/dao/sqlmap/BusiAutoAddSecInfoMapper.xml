@@ -20,8 +20,8 @@
         AND fp.FINPROD_TYPE2 = #{FINPRODTYPE2F01}
     </select>
 
-    <select id="getSecId" resultType="java.lang.String">
-        SELECT inp.SECID FROM INTERF_PAYHSRCSECINFO inp
+    <select id="getSecId" resultType="com.joyintech.tams.common.base.entity.InterfPayhsrcsecinfo">
+        SELECT inp.SECID,inp.secfullname FROM INTERF_PAYHSRCSECINFO inp
         LEFT JOIN FIN_PRODUCT fp ON inp.SECID = fp.FINPROD_MARKET_ID
         WHERE fp.FINPROD_ID IS NULL
         AND inp.SECNAME = #{finprodAbbr,jdbcType=VARCHAR}
