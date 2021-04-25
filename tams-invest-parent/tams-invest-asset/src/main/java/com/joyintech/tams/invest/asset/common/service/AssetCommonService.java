@@ -1136,7 +1136,16 @@ public class AssetCommonService extends BaseService{
         scheList = InterestScheduleCalReset.interestScheduleCalA(scheList, scai, invRepayList, null,
             rateList, is, holidayList,platDate, null, FinCashPlanDetailDto.class);
         // 计算完整周期天数，年付息次数
-        String finprodType2 =  StringUtil.isNotEmpty(scheList) ? scheList.get(0).getFinprodType2() : "";
+        String finprodType2 =  "";
+        if(StringUtil.isNotEmpty(scheList)){
+            for(FinCashPlanDto it:scheList){
+                if(StringUtil.isNotEmpty(it.getFinprodType2())){
+                    finprodType2=it.getFinprodType2();
+                    break;
+                }
+            }
+        }
+
         for (FinCashPlanDto entity2 : scheList) {
             entity2.setCashId(intCashId);
             entity2.setTermdays(DateUtil.getBetweenDayNumber(entity2.getVdate(), entity2.getMdate()));
