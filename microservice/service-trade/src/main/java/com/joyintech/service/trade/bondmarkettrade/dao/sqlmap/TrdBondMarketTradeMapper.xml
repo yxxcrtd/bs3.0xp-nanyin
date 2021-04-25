@@ -259,8 +259,8 @@
             WTFPDT.FINPROD_ID
             FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL WTFPDT
             <where>
-                WTFPDT.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-                AND WTFPDT.TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR}
+                WTFPDT.FINPROD_ID = 'F01_'||#{appearMarketId,jdbcType=VARCHAR}
+                AND (WTFPDT.TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR} OR WTFPDT.TRADE_STATUS = '3')
             </where>
         )
     </select>
