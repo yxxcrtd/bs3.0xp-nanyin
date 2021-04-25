@@ -12,6 +12,7 @@ package com.joyintech.tams.component.business.trade;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
@@ -73,6 +74,13 @@ public interface BussRepoSecService {
     public PledgeBondInfoDto portfolioName(Map<String, Object> param);
     
     /**
+     * 根据画面条件检索可质押券信息（分页）
+     * @param params
+     * @return
+     */
+    public Page<PledgeBondInfoDto> selectAvaPledgeBondDetailPage(Map<String, Object> params);
+    
+    /**
      * 根据画面条件检索可质押券信息
      *
      * @param params 画面参数
@@ -121,4 +129,13 @@ public interface BussRepoSecService {
      * @since 1.0
      */
 	public List<PledgeBondInfoDto> selectAutoPledge(Map<String, String> param) ;
+
+    int deleteAndInsert(String entrustId, String pageFrom, BussRepoSecDto bussRepoSec);
+
+    /**
+     *查询证券账户信息
+     * @param params
+     * @return
+     */
+    public String querySecAcctId(Map<String, Object> params);
 }

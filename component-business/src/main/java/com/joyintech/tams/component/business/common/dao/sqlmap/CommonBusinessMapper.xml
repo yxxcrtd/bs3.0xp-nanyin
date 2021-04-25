@@ -136,10 +136,350 @@
 		) WHERE ROWNUM = 1
 	</select>
     <!-- 资产类型改为授权类型 add by renping 2019-08-19  end -->
+
+    <delete id="deletePledgeBond">
+        <if test="pageFrom == 'EtrRepo002' or pageFrom == 'EtrSecLend002'">
+            DELETE FROM
+            ETR_PLEDGE
+            where
+            ENTRUST_ID = #{bizCode}
+        </if>
+        <if test="pageFrom == 'TrdRepoTrade002'">
+            DELETE FROM FIN_DEAL_PLEDGE
+            where
+            FINPROD_ID = #{bizCode}
+        </if>
+    </delete>
+
+    <insert id="insertNewFileInfo">
+        INSERT INTO SYS_UPLOAD_FILE_INFO (SEQ_NO, FILE_NAME, PATH, BUSINESS_ID, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        SELECT #{newFileNo}, FILE_NAME, PATH, #{fileNo}, #{createUser}, #{time}, #{createUser}, #{time} FROM SYS_UPLOAD_FILE_INFO WHERE SEQ_NO = #{fileNo}
+    </insert>
+
     <select id="selectFaceValue" resultType="java.math.BigDecimal">
         SELECT 100 - sum(nvl(PRIN_AMT,0 ))
         FROM FIN_CASH_PLAN
         WHERE FINPROD_ID=#{finprodId}
         AND TO_DATE(#{sysDate}, 'yyyy-MM-dd') >= MDATE
     </select>
+    
+    <select id="selectPtlCapacctInfo" resultType="com.joyintech.tams.common.base.entity.PtlCapacctInfo" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlCapacctInfoMapper.Base_Column_List" />
+        from PTL_CAPACCT_INFO
+        where ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+    </select>
+    
+       <select id="querySecAcctId" resultType="string">
+        select
+            B.SEC_ACCT_ID
+        from PTL_SEC_ACCT A
+        inner join STL_SEC_ACCT_INFO B on A.ACCT_NO=B.SEC_ACCT_ID AND B.Sec_Acct_Type='SEC'
+        where A.Portfolio_Id=#{portfolioId, jdbcType=VARCHAR}
+        and exists (select 1 from fin_product p where finprod_type2='F01'
+        and p.trade_market=B.TRADE_PLACE and p.regist_org=B.REGIST_ORG
+        and p.finprod_id=#{finprodId, jdbcType=VARCHAR})
+    </select>
+    
+    <!-- 判断债券wind接过来的有没有维护过-->
+    <select id="selectBondNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+    --债券
+   select (FIN_PRODUCT + FIN_PRODUCT_TYPE + FIN_CASH_INFO + FIN_CASH_PAY_RULE +
+       FIN_CASH_PLAN + FIN_CASH_CALC_RULE + FIN_RATE_INFO+FIN_EXERCISE_RULE+FIN_EXERCISE_PLAN
+       +REP_ASSET_BOND+REP_ASSET_DEPT+MST_BOND_CREDIT_RATING
+       +REP_ASSET_OTHER+FIN_PRODUCT_RECOMMENT) bondNum
+   from (select (case
+                 when (select t.update_user
+                         from FIN_PRODUCT t
+                        where t.finprod_id = #{finprodId, jdbcType=VARCHAR}) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_PRODUCT,
+               (case
+                 when (select t.update_user
+                         from FIN_PRODUCT_TYPE t
+                        where t.finprod_id = #{finprodId, jdbcType=VARCHAR}) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_PRODUCT_TYPE,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_CASH_INFO t
+                        where t.finprod_id = #{finprodId, jdbcType=VARCHAR}
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_CASH_INFO,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_CASH_PAY_RULE t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id = #{finprodId, jdbcType=VARCHAR})),'wind') from dual) =
+                      'wind' then
+                  0
+                 else
+                  1
+               end) FIN_CASH_PAY_RULE,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_CASH_PLAN t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id =#{finprodId, jdbcType=VARCHAR})
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_CASH_PLAN,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_CASH_CALC_RULE t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id =#{finprodId, jdbcType=VARCHAR})
+                                and t.update_user!='interf'
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_CASH_CALC_RULE,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_RATE_INFO t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id = #{finprodId, jdbcType=VARCHAR})
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_RATE_INFO,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_EXERCISE_RULE t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id =#{finprodId, jdbcType=VARCHAR})
+                        group by t.update_user),'wind') from dual
+                      ) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_EXERCISE_RULE,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_EXERCISE_PLAN t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id = #{finprodId, jdbcType=VARCHAR})
+                        group by t.update_user),'wind') from dual)
+                       = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_EXERCISE_PLAN,
+               (case
+                 when (select nvl((select t.update_user
+                         from REP_ASSET_BOND t
+                        where t.rep_finprod_id = #{finprodId, jdbcType=VARCHAR}),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) REP_ASSET_BOND,
+               (case
+                 when (select nvl((select t.update_user
+                         from REP_ASSET_DEPT t
+                        where t.rep_finprod_id = #{finprodId, jdbcType=VARCHAR}),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) REP_ASSET_DEPT,
+               (case
+                 when (select distinct nvl(t.update_user,'wind')
+                         from fin_product t1 left join MST_BOND_CREDIT_RATING t
+                        on t.o_code = t1.finprod_market_id
+                        where t1.finprod_id = #{finprodId, jdbcType=VARCHAR}
+                        and t.update_user!='interf'
+                        ) = 'wind' then
+                  0
+                 else
+                  1
+               end) MST_BOND_CREDIT_RATING,
+               (case
+                 when (select nvl((select t.update_user
+                         from REP_ASSET_OTHER t
+                        where t.rep_finprod_id = #{finprodId, jdbcType=VARCHAR}),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) REP_ASSET_OTHER,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_PRODUCT_RECOMMENT t
+                        where t.finprod_id = #{finprodId, jdbcType=VARCHAR}
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_PRODUCT_RECOMMENT
+          from dual)
+  </select>
+
+
+    <!-- 判断基金wind接过来的有没有维护过-->
+    <select id="selectFundNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+     --基金
+   select (FIN_PRODUCT + FIN_PRODUCT_TYPE + FIN_CASH_INFO + FIN_CASH_PAY_RULE +
+       FIN_CASH_PLAN + FIN_CASH_CALC_RULE + FIN_RATE_INFO+FIN_EXERCISE_RULE+FIN_EXERCISE_PLAN
+       +REP_FUND+REP_ASSET_DEPT+MST_BOND_CREDIT_RATING
+       +FIN_PRODUCT_RECOMMENT) fundNum
+   from (select (case
+                 when (select t.update_user
+                         from FIN_PRODUCT t
+                        where t.finprod_id = #{finprodId, jdbcType=VARCHAR}) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_PRODUCT,
+               (case
+                 when (select t.update_user
+                         from FIN_PRODUCT_TYPE t
+                        where t.finprod_id = #{finprodId, jdbcType=VARCHAR}) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_PRODUCT_TYPE,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_CASH_INFO t
+                        where t.finprod_id = #{finprodId, jdbcType=VARCHAR}
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_CASH_INFO,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_CASH_PAY_RULE t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id = #{finprodId, jdbcType=VARCHAR})),'wind') from dual) =
+                      'wind' then
+                  0
+                 else
+                  1
+               end) FIN_CASH_PAY_RULE,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_CASH_PLAN t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id =#{finprodId, jdbcType=VARCHAR})
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_CASH_PLAN,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_CASH_CALC_RULE t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id =#{finprodId, jdbcType=VARCHAR})
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_CASH_CALC_RULE,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_RATE_INFO t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id = #{finprodId, jdbcType=VARCHAR})
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_RATE_INFO,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_EXERCISE_RULE t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id =#{finprodId, jdbcType=VARCHAR})
+                        group by t.update_user),'wind') from dual
+                      ) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_EXERCISE_RULE,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_EXERCISE_PLAN t
+                        where t.cash_id in
+                              (select t.cash_id
+                                 from FIN_CASH_INFO t
+                                where t.finprod_id = #{finprodId, jdbcType=VARCHAR})
+                        group by t.update_user),'wind') from dual)
+                       = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_EXERCISE_PLAN,
+            (case
+                 when (select nvl((select t.update_user
+                         from REP_FUND t
+                        where t.rep_finprod_id = #{finprodId, jdbcType=VARCHAR}),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) REP_FUND,
+               (case
+                 when (select nvl((select t.update_user
+                         from REP_ASSET_DEPT t
+                        where t.rep_finprod_id = #{finprodId, jdbcType=VARCHAR}),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) REP_ASSET_DEPT,
+               (case
+                 when (select distinct nvl(t.update_user,'wind')
+                         from fin_product t1 left join MST_BOND_CREDIT_RATING t
+                        on t.o_code = t1.finprod_market_id
+                        where t1.finprod_id = #{finprodId, jdbcType=VARCHAR}
+                        ) = 'wind' then
+                  0
+                 else
+                  1
+               end) MST_BOND_CREDIT_RATING,
+               (case
+                 when (select nvl((select t.update_user
+                         from FIN_PRODUCT_RECOMMENT t
+                        where t.finprod_id = #{finprodId, jdbcType=VARCHAR}
+                        group by t.update_user),'wind') from dual) = 'wind' then
+                  0
+                 else
+                  1
+               end) FIN_PRODUCT_RECOMMENT
+          from dual)
+  </select>
+
 </mapper>

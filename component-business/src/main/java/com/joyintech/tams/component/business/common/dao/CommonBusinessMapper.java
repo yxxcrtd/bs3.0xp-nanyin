@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.PtlCapacctInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -48,7 +49,43 @@ public interface CommonBusinessMapper {
      * @since 1.0
      */
     MstExchargeQuote getExchangeRate(Map<String, Object> map);
+
+    int deletePledgeBond(Map<String, Object> params);
     // 资产类型改为授权类型 add by renping 2019-08-19  end
 
+    void insertNewFileInfo(Map<String, Object> params);
+
     BigDecimal selectFaceValue(Map<String, Object> params);
+    
+    /**
+     * 
+     * 组合资金账户信息
+     * @param params
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<PtlCapacctInfo> selectPtlCapacctInfo(Map<String, Object> params);
+	
+   /**
+     *查询证券账户信息
+     * @param params
+     * @return
+     */
+    String querySecAcctId(Map<String, Object> params);
+    
+    /**  20200730 njl add
+     *判断债券wind接过来的有没有维护过
+     * @param finprodId
+     * @return int
+     */
+    int selectBondNum(@Param("finprodId") String finprodId);
+
+
+    /**  20200730 njl add
+     *判断基金wind接过来的有没有维护过
+     * @param finprodId
+     * @return int
+     */
+    int selectFundNum(@Param("finprodId") String finprodId);
 }

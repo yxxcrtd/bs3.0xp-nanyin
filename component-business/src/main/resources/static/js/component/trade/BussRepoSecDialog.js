@@ -4,6 +4,13 @@
     var getElementById = function (id) {
         return $("#" + entityName + "_" + id);
     };
+    
+    //产品化_逆回购时左侧可质押债券不预加载（即置空）add by zhangpei 20201117 start
+    var avaPledgeBondDetailNeedInitFlag = true;
+    if(getElementById("ps").val() == BACK_LEND_DIRECTION_04){
+    	avaPledgeBondDetailNeedInitFlag=false;
+    }
+    //产品化_逆回购时左侧可质押债券不预加载（即置空）add by zhangpei 20201117 end
 
     /**
      * 定义可质押券列表（Detail）
@@ -12,6 +19,7 @@
         ajax: {
             url: 'selectAvaPledgeBondDetailList',
             type: 'POST',
+            height:350,
             data: function () {
                 var param = {};
 
@@ -30,18 +38,46 @@
                 param.endDays1End = getElementById("endDays1End").val();
                 // 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191012 end
                 
+                //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 start
+                param.pageFromTz = getElementById("pageFromTz").val();
+                //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 end
+                
                 // 将质押列表数据传入后台，用于过滤已经全额质押的债券
                 param.pledgeList = JSON.stringify(pledgeBondDetailTbl.getAllRows());
                 // 获取请求参数
+                
+                // add by etliu 20210303 银行间上下行 start
+                param.ignoreFlowTradeId = ignoreFlowTradeId;
+                // add by etliu 20210303 银行间上下行 end
+                param.isDzh = isDzh;
                 return param;
             }
         },
-        searchOnInit: true,
-        page: false,
-        loadonce: true,
+        //产品化_逆回购时左侧可质押债券不预加载（即置空）add by zhangpei 20201117 start
+        //searchOnInit: true,
+        searchOnInit: avaPledgeBondDetailNeedInitFlag,
+        //产品化_逆回购时左侧可质押债券不预加载（即置空）add by zhangpei 20201117 end
+        //page: false,
+        //loadonce: true,
         cols: [
             //add by zhangnian 20191126 start
+            // 组合代码
             {
+                field: 'portfolioId',
+                width: 150,
+                title: '组合代码',
+                sortable: false,
+                visible:(isDzh=='Y'&&getElementById('ps').val()=='03')?true:false
+            }
+            // 组合名称
+            , {
+                field: 'portfolioName',
+                width: 150,
+                title: '组合名称',
+                sortable: false,
+                visible:(isDzh=='Y'&&getElementById('ps').val()=='03')?true:false
+            }
+            , {
                 field: 'finprodId',
                 width: 150,
                 title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.bondCode',
@@ -67,19 +103,21 @@
             , {
                 field: 'prin',
                 width: 150,
-                title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.prin',
+                title: isDzh=='Y'?'券面总额(万元)':'BussRepoSec.avaPledgeBondDetailTBL.colmodel.prin',
                 sortable: false,
                 type: 'money',
                 digit: 2,
+                visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 已质押券面总额
             , {
                 field: 'pledgePrin',
                 width: 150,
-                title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.pledgePrin',
+                title: isDzh=='Y'?'已质押券面总额(万元)':'BussRepoSec.avaPledgeBondDetailTBL.colmodel.pledgePrin',
                 sortable: false,
                 type: 'money',
                 digit: 2,
+                visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 已质押券面总额（初始）
             , {
@@ -94,9 +132,10 @@
             , {
                 field: 'avaPledgePrin',
                 width: 150,
-                title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.avaPledgePrin',
+                title: isDzh=='Y'?'可质押券面总额(万元)':'BussRepoSec.avaPledgeBondDetailTBL.colmodel.avaPledgePrin',
                 sortable: false, type: 'money',
                 digit: 2,
+                visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191012 start
             // 债项评级
@@ -105,6 +144,7 @@
                 width: 100,
                 title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.gradeResult',
                 sortable: false,
+                visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 到期日
             , {
@@ -112,13 +152,15 @@
                 width: 100,
                 title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.mdate',
                 sortable: false, type: 'date',
+                visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 登记托管机构
             , {
                 field: 'repRegistOrgStr',
                 width: 150,
                 title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.repRegistOrg',
-                sortable: false, type: 'money',
+                sortable: false,
+                visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 剩余期限
             , {
@@ -127,6 +169,7 @@
                 title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.endDays1',
                 sortable: false, type: 'number',
                 digit: 2,
+                visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
             }
             // 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191012 end
         ],
@@ -153,9 +196,26 @@
         data: (entity && entity.pledgeBondList) ? entity.pledgeBondList : [],
         page: false,
         loadonce: true,
+        height:350,
         cols: [
             //add by zhangnian 20191126 start
+            // 组合代码
             {
+                field: 'portfolioId',
+                width: 150,
+                title: '组合代码',
+                sortable: false,
+                visible:(isDzh=='Y'&&getElementById('ps').val()=='03')?true:false
+            }
+            // 组合名称
+            , {
+                field: 'portfolioName',
+                width: 150,
+                title: '组合名称',
+                sortable: false,
+                visible:(isDzh=='Y'&&getElementById('ps').val()=='03')?true:false
+            }
+            , {
                 field: 'finprodId',
                 width: 150,
                 title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.bondCode',
@@ -176,7 +236,7 @@
             , {
                 field: 'avaPledgePrin',
                 width: 150,
-                title: 'BussRepoSec.pledgeBondDetailTbl.colmodel.avaPledgePrin',
+                title: isDzh=='Y'?'可质押券面总额(万元)':'BussRepoSec.pledgeBondDetailTbl.colmodel.avaPledgePrin',
                 type: 'money',
                 digit: 2,
                 sortable: false
@@ -185,7 +245,7 @@
             , {
                 field: 'pledgePrin',
                 width: 150,
-                title: 'BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrin',
+                title: isDzh=='Y'?'质押券面总额(万元)':'BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrin',
                 type: 'money',
                 digit: 2,
                 edit: true,
@@ -199,6 +259,13 @@
                 digit: 2,
                 sortable: false,
                 visible: false
+            }
+            // 登记托管机构
+            , {
+                field: 'repRegistOrgStr',
+                width: 150,
+                title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.repRegistOrg',
+                sortable: false,
             }
             // 首次净价
             , {
@@ -226,24 +293,40 @@
         },
         editCell: function (value, data, field, cell, column) {
             if (field === "pledgePrin" && getElementById("ps").val() == BACK_LEND_DIRECTION_03 && data.pledgePrin * 1 > data.avaPledgePrin * 1) {
-                var datas = pledgeBondDetailTbl.getAllRows();
-                datas[data.LAY_TABLE_INDEX].pledgePrin = tempPledgePrin;
-                pledgeBondDetailTbl.reload({data: datas});
-                Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0003",
-                    [JoyinUtil.getLabel("BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrin"),
-                        JoyinUtil.getLabel("BussRepoSec.pledgeBondDetailTbl.colmodel.avaPledgePrin")]));
+                //CFET质押式支持软硬空
+                if(getElementById("pageFromTz").val() == 'CfetsRepoDealQuotedPrice002'&&ibuFlag_repoOverAvaCanContinue=='02'){
+                    Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_E_0003",
+                        [JoyinUtil.getLabel("BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrin"),
+                            JoyinUtil.getLabel("BussRepoSec.pledgeBondDetailTbl.colmodel.avaPledgePrin")]), function () {},'',function () {
+                        var datas = pledgeBondDetailTbl.getAllRows();
+                        datas[data.LAY_TABLE_INDEX].pledgePrin = tempPledgePrin;
+                        pledgeBondDetailTbl.reload({data: datas});
+                    })
+                }else{
+                    var datas = pledgeBondDetailTbl.getAllRows();
+                    datas[data.LAY_TABLE_INDEX].pledgePrin = tempPledgePrin;
+                    pledgeBondDetailTbl.reload({data: datas});
+                    Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0003",
+                        [JoyinUtil.getLabel("BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrin"),
+                            JoyinUtil.getLabel("BussRepoSec.pledgeBondDetailTbl.colmodel.avaPledgePrin")]));
+                }
             }
             // 汇总券面总额字段增加 add by renping 20190920 start
             refreshTotalPrinAmt();
             // 汇总券面总额字段增加 add by renping 20190920 end
+            window.CfetsPledgedBond.refreshCfetsPldegeBond(pledgeBondDetailTbl.getAllRows());
         },
         done:function () {
             if(pledgeBondDetailTblNeedInit){
                 pledgeBondDetailTblNeedInit = false;
                 var ps = getElementById("ps").val();
                 if(BACK_LEND_DIRECTION_04 == ps){
-                    pledgeBondDetailTbl.showColumns([{field:'avaPledgePrin',visible:false}
-                    ,{field:'pledgePrin',visible:true,title:'BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrinTotle'}]);
+                    if(isDzh == 'Y'){
+                        pledgeBondDetailTbl.showColumns([{field:'avaPledgePrin',visible:false}]);
+                    }else{
+                        pledgeBondDetailTbl.showColumns([{field:'avaPledgePrin',visible:false}
+                            ,{field:'pledgePrin',visible:true,title:'BussRepoSec.pledgeBondDetailTbl.colmodel.pledgePrinTotle'}]);
+                    }
                 }
             }
             // 汇总券面总额字段增加 add by renping 20190920 start
@@ -261,14 +344,19 @@
         var totalPrinAmt = Number(0);
         for (var i in allRows) {
             var pledgeRatioVal = 100;
-            if(allRows[i].pledgeRatio){
+            if (allRows[i].pledgeRatio) {
                 pledgeRatioVal = allRows[i].pledgeRatio;
             }
             var pledgePrinVal = 0;
-            if(allRows[i].pledgePrin){
+            if (allRows[i].pledgePrin) {
                 pledgePrinVal = allRows[i].pledgePrin;
             }
-            totalPrinAmt += pledgePrinVal * pledgeRatioVal / 100;
+            if (isDzh == 'Y') {
+                //多组合以万元为单位
+                totalPrinAmt += pledgePrinVal * pledgeRatioVal * 100;
+            } else {
+                totalPrinAmt += pledgePrinVal * pledgeRatioVal / 100;
+            }
         }
         getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
     };
@@ -328,11 +416,21 @@
             // 倒序删除，正序会存在问题
             for (var i = avaSelectedRows.length - 1; i >= 0; i--) {
                 for (var j in pledgeAllRows) {
-                    if (pledgeAllRows[j].bondCode == avaSelectedRows[i].bondCode) {
+                    // modify by etliu 20210326 银行间上下行多组合 start
+                    if (isDzh == 'Y') {
+                        if (pledgeAllRows[j].bondCode == avaSelectedRows[i].bondCode
+                                && pledgeAllRows[j].portfolioId == avaSelectedRows[i].portfolioId) {
+                            isConfirm = true;
+                            confirmMessageArray.push("【债券代码：" + avaSelectedRows[i].bondCode + " 组合代码：" + avaSelectedRows[i].portfolioId + "】");
+                            break;
+                        }
+                    }
+                    else if (pledgeAllRows[j].bondCode == avaSelectedRows[i].bondCode) {
                         isConfirm = true;
                         confirmMessageArray.push(avaSelectedRows[i].bondCode);
                         break;
                     }
+                    // modify by etliu 20210326 银行间上下行多组合 end
                 }
             }
             if (isConfirm) {
@@ -346,9 +444,17 @@
                         });
                         for (var j in pledgeAllRows) {
                             // 覆盖质押券列表中重复记录
-                            if (pledgeAllRows[j].bondCode == avaSelectedRows[i].bondCode) {
+                            // modify by etliu 20210326 银行间上下行多组合 start
+                            if (isDzh == 'Y') {
+                                if (pledgeAllRows[j].bondCode == avaSelectedRows[i].bondCode
+                                    && pledgeAllRows[j].portfolioId == avaSelectedRows[i].portfolioId) {
+                                    pledgeBondDetailTbl.removeRow(pledgeAllRows[j]);
+                                }
+                            }
+                            else if (pledgeAllRows[j].bondCode == avaSelectedRows[i].bondCode) {
                                 pledgeBondDetailTbl.removeRow(pledgeAllRows[j]);
                             }
+                            // modify by etliu 20210326 银行间上下行多组合 end
                         }
 //                        avaPledgeBondDetailTBL.removeRow(avaSelectedRows[i]);
                         avaSelectedRows[i].pledgePrin = avaSelectedRows[i].avaPledgePrin;
@@ -413,9 +519,10 @@
                 if(!pledgeAllRows[i]["pledgePrin"])
                 {
                     if (pledgeAllRows[i]["pledgePrin"] != 0){
-                        pledgeAllRows[i]["pledgePrin"] = undefined;
+                        pledgeAllRows[i]["pledgePrin"] = null;
                     }
                 }
+                pledgeBondDetailTbl.removeRow(pledgeAllRows[i]);
                 if (!isAvaHave) {
                     pledgeAllRows[i].pledgePrin = pledgeAllRows[i].pledgePrinInit;
                     avaPledgeBondDetailTBL.addRow(pledgeAllRows[i]);
@@ -479,6 +586,15 @@
         }
     }
 
+    window.componentLoadCallback = function (isDone, pagePath, params) {
+        if(isDone){
+            //查询click事件被off
+            getElementById("btn_search").click(function () {
+                // 检索可质押债券列表
+                avaPledgeBondDetailTBL.table ? avaPledgeBondDetailTBL.reload() : avaPledgeBondDetailTBL.load();
+            });
+        }
+    }
     /**
      * 画面加载完成
      */
@@ -494,7 +610,7 @@
         // 添加检索事件
         getElementById("btn_search").click(function () {
             // 检索可质押债券列表
-            avaPledgeBondDetailTBL.load();
+            avaPledgeBondDetailTBL.table ? avaPledgeBondDetailTBL.reload() : avaPledgeBondDetailTBL.load();
         });
         // 债券新建按钮
         getElementById("btn_add").click(showSecCreateDialog);
@@ -513,5 +629,12 @@
         getElementById("bondCode").change(function(){
             bongCodeChange();
         })
+        if(isDzh == 'Y'){
+            $('#portfolioId_div').hide();
+        }
+    	setTimeout(function () {
+            window.CfetsPledgedBond.refreshCfetsPldegeBond((entity && entity.pledgeBondList) ? entity.pledgeBondList : []);
+        },1000);
+
     });
 }());

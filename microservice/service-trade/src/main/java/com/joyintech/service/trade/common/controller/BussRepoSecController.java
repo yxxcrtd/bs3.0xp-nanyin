@@ -10,6 +10,7 @@
 package com.joyintech.service.trade.common.controller;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.invest.common.trade.service.BussRepoSecService;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
@@ -17,10 +18,7 @@ import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.trade.dto.PledgeInsertDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -72,6 +70,11 @@ public class BussRepoSecController {
      * 张庚林
      * 20190723
      */   
+    @PostMapping("selectAvaPledgeBondDetailListPage/{page}/{length}")
+    public Page<PledgeBondInfoDto> selectAvaPledgeBondDetailListPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) {
+        Page<PledgeBondInfoDto> pledgeBondInfoDto=bussRepoSecService.selectAvaPledgeBondDetailPage(param,page,length);
+        return pledgeBondInfoDto;
+    }
     @PostMapping("selectAvaPledgeBondDetailList")
     public List<PledgeBondInfoDto> selectAvaPledgeBondDetailList(@RequestBody Map<String, Object> param) {
         List<PledgeBondInfoDto> pledgeBondInfoDto=bussRepoSecService.selectAvaPledgeBondDetailList(param);

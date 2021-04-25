@@ -2301,43 +2301,50 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
                     }
 
                     if (CollectionUtils.isNotEmpty(oldQuoteRepoDto.getIbuQuoteCrepPledgeDtoList())) {
-                        List<IbuQuoteCrepPledgeDto> quoteCrepPledgeFinalList = new ArrayList<>(quoteCrepPledgeList);
+                        //AI报文调佣该逻辑 quoteCrepPledgeList为空
+                        if(CollectionUtils.isNotEmpty(quoteCrepPledgeList)){
+                            List<IbuQuoteCrepPledgeDto> quoteCrepPledgeFinalList = new ArrayList<>(quoteCrepPledgeList);
+                            // 与数据库中已存在的押品合并信息
+                            List<IbuQuoteCrepPledgeDto> updatedCrepPledgeList = oldQuoteRepoDto.getIbuQuoteCrepPledgeDtoList()
+                                .stream().map(p -> {
+                                Optional<IbuQuoteCrepPledgeDto> detOpt = quoteCrepPledgeFinalList.stream()
+                                    .filter(q -> StringUtils.equals(q.getQuoteId(), p.getQuoteId())
+                                             && Long.compare(q.getBranch(), p.getBranch()) == 0
+                                             && StringUtils.equals(q.getPledgeFinprodId(), p.getPledgeFinprodId()))
+                                    .findFirst();
 
-                        // 与数据库中已存在的押品合并信息
-                        List<IbuQuoteCrepPledgeDto> updatedCrepPledgeList = oldQuoteRepoDto.getIbuQuoteCrepPledgeDtoList()
-                            .stream().map(p -> {
-                            Optional<IbuQuoteCrepPledgeDto> detOpt = quoteCrepPledgeFinalList.stream()
-                                .filter(q -> StringUtils.equals(q.getQuoteId(), p.getQuoteId())
-                                         && Long.compare(q.getBranch(), p.getBranch()) == 0
-                                         && StringUtils.equals(q.getPledgeFinprodId(), p.getPledgeFinprodId()))
-                                .findFirst();
+                                if (detOpt.isPresent()) {
+                                    BeanUtil.copyPropertiesIgnoreNull(p, detOpt.get());
+                                    return p;
+                                }
+                                else {
+                                    // 质押式报价押品全删全插
+                                    return null;
+                                }
+                            }).filter(w -> w != null).collect(Collectors.toList());
 
-                            if (detOpt.isPresent()) {
-                                BeanUtil.copyPropertiesIgnoreNull(p, detOpt.get());
-                                return p;
+                            if (CollectionUtils.isNotEmpty(updatedCrepPledgeList)) {
+                                List<String> existsPledgeIds = updatedCrepPledgeList.stream().map(
+                                    p -> p.getQuoteId() + "$" + p.getBranch() + "$"
+                                         + p.getPledgeFinprodId()).collect(Collectors.toList());
+
+                                // 添加数据库中不存在的押品信息
+                                allCrepPledgeList.addAll(quoteCrepPledgeFinalList.stream().filter(
+                                    p -> !existsPledgeIds.contains(
+                                        p.getQuoteId() + "$" + p.getBranch() + "$" + p.getPledgeFinprodId())).collect(
+                                            Collectors.toList()));
+
+                                // 添加与数据库中合并过的押品信息
+                                allCrepPledgeList.addAll(updatedCrepPledgeList);
                             }
                             else {
-                                // 质押式报价押品全删全插
-                                return null;
+                                allCrepPledgeList.addAll(quoteCrepPledgeList);
                             }
-                        }).filter(w -> w != null).collect(Collectors.toList());
-
-                        if (CollectionUtils.isNotEmpty(updatedCrepPledgeList)) {
-                            List<String> existsPledgeIds = updatedCrepPledgeList.stream().map(
-                                p -> p.getQuoteId() + "$" + p.getBranch() + "$"
-                                     + p.getPledgeFinprodId()).collect(Collectors.toList());
-
-                            // 添加数据库中不存在的押品信息
-                            allCrepPledgeList.addAll(quoteCrepPledgeFinalList.stream().filter(
-                                p -> !existsPledgeIds.contains(
-                                    p.getQuoteId() + "$" + p.getBranch() + "$" + p.getPledgeFinprodId())).collect(
-                                        Collectors.toList()));
-                            
-                            // 添加与数据库中合并过的押品信息
-                            allCrepPledgeList.addAll(updatedCrepPledgeList);
-                        }
-                        else {
-                            allCrepPledgeList.addAll(quoteCrepPledgeList);
+                        }else{
+                            //保留数据库业务明细表数据
+                            allCrepPledgeList.addAll(oldQuoteRepoDto.getIbuQuoteCrepPledgeDtoList());
+                            inputBean.setIbuQuoteEtrReDtoList(oldQuoteRepoDto.getIbuQuoteEtrReDtoList());
+                            inputBean.setIbuQuoteEntCrepPledgeDtoList(oldQuoteRepoDto.getIbuQuoteEntCrepPledgeDtoList());
                         }
                     }
                     else {

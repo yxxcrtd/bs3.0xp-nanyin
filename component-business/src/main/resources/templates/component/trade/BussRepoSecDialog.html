@@ -1,6 +1,6 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       xmlns:th="http://www.springframework.org/schema/mvc"
       layout:decorator="~{layout/default}">
 
 <body>
@@ -28,6 +28,9 @@
                             <!-- add by gaopeng 2019/10/12 添加委托代码回显 start -->
                             <input type="hidden" th:id="|${entityName}_entrustId|" th:name="|${entityName}.entrustId|" th:value="${entrustId}"></input>
                             <!-- add by gaopeng 2019/10/12 添加委托代码回显 end -->
+                            <!--产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 start -->
+                            <input type="hidden" th:id="|${entityName}_pageFromTz|" th:name="|${entityName}.pageFromTz|" th:value="${pageFromTz}"></input>
+                            <!--产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 end -->
                         </div>
                     </div>
                     <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
@@ -91,6 +94,9 @@
                 </div>
             </form>
         </div>
+        <!--银行间上下行-->
+        <div class="page-component" th:data-path="@{/invest/bankuplink/common/CfetsPledgedBond/init}"
+             th:data-params="|{pageFrom: 'BussRepoSecDialog',quoteId:'${quoteId}'}|"></div>
         <!-- 汇总券面总额字段增加 add by renping 20190920 start -->
         <div class="pro-module-wrap">
             <div class="pro-module">
@@ -206,6 +212,11 @@
         var operationType = /*[[${operationType}]]*/'';
         var BACK_LEND_DIRECTION_04 = /*[[${BACK_LEND_DIRECTION_04}]]*/'';
         var BACK_LEND_DIRECTION_03 = /*[[${BACK_LEND_DIRECTION_03}]]*/'';
+        var ibuFlag_repoOverAvaCanContinue = /*[[${ibuFlag_repoOverAvaCanContinue}]]*/'';
+        // add by etliu 20210303 银行间上下行 start
+        var ignoreFlowTradeId = /*[[${ignoreFlowTradeId}]]*/'';
+        // add by etliu 20210303 银行间上下行 end
+        var isDzh = /*[[${isDzh}]]*/'';
     </script>
     <script data-th-src="@{/js/component/trade/BussRepoSecDialog.js}" type="text/javascript"></script>
 </div>

@@ -40,6 +40,16 @@ public class BussRepoSecDto extends BaseEntity {
      * 汇总券面总额
      */
     private BigDecimal totalPrinAmt;
+
+    /**
+     * 中债登质押券折算券面总额
+     */
+    private BigDecimal zzdTotalPrinAmt;
+
+    /**
+     * 上清所质押券折算券面总额
+     */
+    private BigDecimal sqsTotalPrinAmt;
     
     /**
      * 分配方式
@@ -316,5 +326,21 @@ public class BussRepoSecDto extends BaseEntity {
      */
     public void setFinprodId(String finprodId) {
         this.finprodId = finprodId;
+    }
+
+    public BigDecimal getZzdTotalPrinAmt() {
+        return zzdTotalPrinAmt;
+    }
+
+    public void setZzdTotalPrinAmt(BigDecimal zzdTotalPrinAmt) {
+        this.zzdTotalPrinAmt = zzdTotalPrinAmt;
+    }
+
+    public BigDecimal getSqsTotalPrinAmt() {
+        return sqsTotalPrinAmt;
+    }
+
+    public void setSqsTotalPrinAmt(BigDecimal sqsTotalPrinAmt) {
+        this.sqsTotalPrinAmt = sqsTotalPrinAmt;
     }
 }
