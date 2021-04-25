@@ -10,7 +10,7 @@
           select ${sequenceName}.nextVal from dual
         </if>
         <if test="databaseType == 'Mysql'">
-          select ${sequenceName}.nextVal from dual
+            select _NEXTINDEX(${sequenceName}) from dual
         </if>
     </select>
     <!-- 查询所有有权限的机构代码 -->
