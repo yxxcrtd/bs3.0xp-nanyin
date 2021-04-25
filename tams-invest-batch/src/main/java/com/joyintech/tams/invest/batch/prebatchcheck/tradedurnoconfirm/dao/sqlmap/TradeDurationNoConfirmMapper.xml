@@ -147,4 +147,9 @@
         T8.FINPROD_ID
 
     </select>
+    <select id="selectZYSHGDurationList"
+            resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
+
+
+    </select>
 </mapper>

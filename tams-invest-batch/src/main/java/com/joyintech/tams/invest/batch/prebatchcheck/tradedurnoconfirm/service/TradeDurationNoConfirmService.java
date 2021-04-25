@@ -42,7 +42,10 @@ public class TradeDurationNoConfirmService {
         }
 
         //质押式回购存续期  待处理
-
+        List<SysPrebatchResultDetail> details2 = tradeDurationNoConfirmMapper.selectZYSHGDurationList(param);
+        if(!StringUtil.isEmptyList(details1)){
+            details.addAll(details1);
+        }
 
         //存款存续期 待处理
 
