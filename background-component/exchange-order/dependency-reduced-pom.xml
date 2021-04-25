@@ -3,7 +3,7 @@
   <parent>
     <artifactId>tams-parent</artifactId>
     <groupId>com.joyintech</groupId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <relativePath>../pom.xml/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
