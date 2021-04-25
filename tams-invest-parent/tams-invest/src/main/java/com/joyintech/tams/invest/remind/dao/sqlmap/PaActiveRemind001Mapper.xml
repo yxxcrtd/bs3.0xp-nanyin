@@ -2577,7 +2577,7 @@ select #{R7S1} as remType,
 		AND T1.EXERCISE_DATE-T3.CONFIGURATIONDAYS &lt;= #{quaryDate}
 		<!--Modify by jyl end 20200113 OPEX-788 申请开始日改为理论行权日（计划行权日）VDATE改为EXERCISE_DATE -->
 		<!--OPEX-606 【主动提醒-行权】债券行权提醒，目前是只能申请开始日提醒，其他均查询不到，期望按照需求从申请开始日到申请截止日都能查到 guyunfei 20191230 start-->
-		AND T1.MDATE >= #{quaryDate}
+		AND T1.ACT_EXERCISE_DATE >= #{quaryDate}
 		<!--OPEX-606 【主动提醒-行权】债券行权提醒，目前是只能申请开始日提醒，其他均查询不到，期望按照需求从申请开始日到申请截止日都能查到 guyunfei 20191230 end-->
 		AND T1.EXERCISE_STATUS = #{unauthorized}
 
@@ -2589,12 +2589,16 @@ select #{R7S1} as remType,
 		AND
 		SYS_ACTIVEREMINDER_INFO.EFFFLAG = #{noFlag}
 		AND
-		SYS_ACTIVEREMINDER_INFO.FINPROD_ID = T2.FINPROD_ID
+		SYS_ACTIVEREMINDER_INFO.FINPROD_ID = T2.FINPROD_MARKET_ID
 		<!-- 多级法人改造-公共资产投资交易存续期主动提醒关闭过滤本机构数据 add by caiqun 20200619 -->
 		<if test="institutionCode != null" >
 			and SYS_ACTIVEREMINDER_INFO.INSTITUTION_CODE = #{institutionCode}
 		</if>
 		<!-- 多级法人改造-公共资产投资交易存续期主动提醒关闭过滤本机构数据 add by caiqun 20200619 -->
+		<!-- add by qk HFZG-19 债券行权主动提醒-->
+		and T1.EXERCISE_DATE - T3.CONFIGURATIONDAYS &lt;= SYS_ACTIVEREMINDER_INFO.CDATE
+		and T1.ACT_EXERCISE_DATE >= SYS_ACTIVEREMINDER_INFO.CDATE
+		<!-- add by qk HFZG-19 债券行权主动提醒-->
 		)
 		) as R4S1,
 		(SELECT count(*)

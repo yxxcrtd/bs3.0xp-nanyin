@@ -2169,6 +2169,10 @@ select #{R7S1} as remType,
 			and SYS_ACTIVEREMINDER_INFO.INSTITUTION_CODE = #{institutionCode}
 		</if>
 		<!-- 多级法人改造-公共资产投资交易存续期主动提醒关闭过滤本机构数据 add by caiqun 20200619 -->
+		<!-- add by qk HFZG-19 债券行权主动提醒-->
+		and T1.EXERCISE_DATE - REMINDER_SET.DAYS &lt;= SYS_ACTIVEREMINDER_INFO.CDATE
+		and T1.ACT_EXERCISE_DATE >= SYS_ACTIVEREMINDER_INFO.CDATE
+		<!-- add by qk HFZG-19 债券行权主动提醒-->
 		)
 	</select>
 	<!-- 债券覆盖 -->
