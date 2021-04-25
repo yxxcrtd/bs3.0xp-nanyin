@@ -34,7 +34,7 @@ $(function() {
          * 定义表头
          */
         cols:[
-            {field:'busEntrustStatus', title: 'EtrInvestBondInfo001.entrustStatus', width:'10%'}
+            {field:'busEntrustStatus', title: 'EtrInvestBondInfo001.entrustStatus', sortField:"entrustStatus",width:'10%'}
             ,{field:'entrustId',visible:false}
             ,{field:'portfolioName', title: 'EtrInvestBondInfo001.portfolioName', width:'10%',
                 render : function(data, type, row, meta) {
@@ -52,11 +52,11 @@ $(function() {
             ,{field:'winlotteryAmt', title:'EtrConBond001.winlotteryAmt',width:'10%'}
             ,{field:'entrustDate', title:'EtrConBond001.purchDate',width:'10%',type:'date'}
             ,{field:'purchModle',visible:false}
-            ,{field:'purchModleStr', title:'EtrConBond001.purchModle',width:'10%'}
+            ,{field:'purchModleStr', title:'EtrConBond001.purchModle',sortField:"purchModle",width:'10%'}
             ,{field:'purchType', visible:false}
-            ,{field:'purchTypeStr', title:'EtrConBond001.purchType',width:'10%'}
+            ,{field:'purchTypeStr', title:'EtrConBond001.purchType',sortField:"purchType",width:'10%'}
             ,{field:'TradeMarket', visible:false}
-            ,{field:'busTradeMarket', title: 'EtrInvestBondInfo001.tradeMarket', width:'10%'}
+            ,{field:'busTradeMarket', title: 'EtrInvestBondInfo001.tradeMarket', sortField:"tradeMarket",width:'10%'}
             ,{field:'ccy',visible:false}
             ,{field:'busCcy', title: 'EtrInvestBondInfo001.ccy', width:'10%',sortField:"ccy"}
             ,{field:'remark', title: 'EtrInvestBondInfo001.remark', width:'10%',sortable:false}
