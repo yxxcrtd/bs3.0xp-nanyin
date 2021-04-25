@@ -350,4 +350,69 @@
 		WHERE FP.FINPROD_ID = #{finprodId}
 	</select>
 
+	<select id="getFinCashPayRuleList"
+			resultType="com.joyintech.tams.common.base.entity.FinCashPayRule">
+		SELECT
+		fcpr.CASH_ID, fcpr.EFF_DATE,fcpr.PAY_CYCLE_VAL, fcpr.PAY_CYCLE,
+		fcpr.DAY_TYPE, fcpr.DAY_VALUE, fcpr.END_TDAY_RULE, fcpr.PAY_TDAY_RULE,
+		fcpr.CALC_RULE, fcpr.FIRST_PAY_DATE, fcpr.CASH_UNIT_TYPE,
+		fcpr.FINPROD_ID, fcpr.FINPROD_TYPE,fcpr.FINPROD_TYPE2, fcpr.BRANCH,
+		fcpr.PAY_TYPE, fcpr.REMARK,fcpr.CREATE_USER, fcpr.CREATE_DEPT,
+		fcpr.UPDATE_USER,fcpr.PAY_MONTH
+		FROM
+		FIN_CASH_PAY_RULE fcpr
+		WHERE fcpr.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} /**金融产品代码**/
+	</select>
+
+	<select id="getFinCashPlanList"
+			resultType="com.joyintech.tams.common.base.entity.FinCashPlan">
+		SELECT
+		fcp.CASH_ID, fcp.MDATE, fcp.CASH_NUM, fcp.CASH_TYPE, fcp.VDATE_UNADJUST,
+		fcp.MDATE_UNADJUST, fcp.PAY_DATE_UNADJUST, fcp.VDATE,fcp.PAY_DATE, fcp.TERMDAYS,
+		fcp.VDATE_Y, fcp.VDATE_TERM, fcp.MDATE_TERM,fcp.TERMDAYS_TERM, fcp.PRIN_AMT,fcp.INT_PRIN_AMT,
+		fcp.INT_AMT,fcp.IS_PAY_INT, fcp.CASH_AMT, fcp.CASH_BASEAMT, fcp.CASH_UNIT_TYPE,
+		fcp.CALC_FUNCTION, fcp.FREQUENCY, fcp.FINPROD_ID, fcp.FINPROD_TYPE,fcp.FINPROD_TYPE2, fcp.BRANCH,
+		fcp.PAY_TYPE PAY_TYPE, fcp.RANGE_YIELD,fcp.REMARK, fcp.CREATE_USER, fcp.CREATE_DEPT,
+		fcp.UPDATE_USER,fcp.REPAY_WITHOUT_INT
+		FROM
+		FIN_CASH_PLAN fcp
+		WHERE fcp.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} /**金融产品代码**/
+	</select>
+
+	<select id="getTargetCashCalcRuleList"
+			resultType="com.joyintech.tams.common.base.entity.FinCashCalcRule">
+		SELECT
+		fccr.CASH_ID CASH_ID, fccr.EFF_DATE EFF_DATE, fccr.CALC_TYPE CALC_TYPE, fccr.BASE_TYPE BASE_TYPE,
+		fccr.BASE_DATE_TYPE BASE_DATE_TYPE,fccr.BASIS BASIS, fccr.YIELD YIELD, fccr.IS_INITIAL IS_INITIAL,
+		fccr.FINPROD_ID FINPROD_ID, fccr.FINPROD_TYPE FINPROD_TYPE,fccr.FINPROD_TYPE2 FINPROD_TYPE2,
+		fccr.BRANCH BRANCH, fccr.REMARK REMARK, fccr.CREATE_USER CREATE_USER,fccr.CREATE_DEPT CREATE_DEPT,
+		fccr.UPDATE_USER UPDATE_USER
+		FROM
+		FIN_CASH_CALC_RULE fccr
+		WHERE fccr.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} /**金融产品代码**/
+	</select>
+
+	<select id="selectFinCashInfo" resultType="com.joyintech.tams.common.base.entity.FinCashInfo">
+		SELECT
+		CASH_ID CASH_ID, CASH_TYPE_1 CASH_TYPE_1, CASH_TYPE_2 CASH_TYPE_2, CCY CCY, FINPROD_ID FINPROD_ID,
+		FINPROD_TYPE FINPROD_TYPE, BRANCH BRANCH, FEE_ID FEE_ID, CHL_FINPROD_ID CHL_FINPROD_ID,
+		CHL_LEVEL CHL_LEVEL, IS_CALC IS_CALC, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+		UPDATE_USER UPDATE_USER,COLLECT_TYPE COLLECT_TYPE
+		FROM FIN_CASH_INFO
+		WHERE FINPROD_ID =#{finprodId}
+	</select>
+
+	<select id="getFinRateInfoList"
+			resultType="com.joyintech.tams.common.base.entity.FinRateInfo">
+		SELECT
+		fri.CASH_ID, fri.EFF_DATE, fri.INT_TYPE, fri.BASIS, fri.RESET_TYPE,
+		fri.RESET_FREQ, fri.FIRST_RESET_DATE, fri.RESET_DATE,fri.OBSERVE_BEF_DAY,
+		fri.OBSERVE_BEF_UNIT, fri.RATE, fri.COEFFICIENT,fri.SPREAD_RATE,fri.HIGHEST_RATE,
+		fri.LOWEST_RATE, fri.BENCHMARK_ID,fri.BENCHMARK_TYPE,fri.FINPROD_ID,fri.BRANCH,
+		fri.FINPROD_TYPE,fri.FINPROD_TYPE2, fri.REMARK,fri.CREATE_USER, fri.CREATE_DEPT,
+		fri.UPDATE_USER,fri.FIRST_CONFIRM_DATE
+		FROM
+		FIN_RATE_INFO fri
+		WHERE fri.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} /**金融产品代码**/
+	</select>
 </mapper>

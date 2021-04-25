@@ -911,4 +911,19 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                 ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectIsIssueAsset?finprodId="+finprodId,
                 Integer.class);
     }
+
+
+    /**
+     * 查询业务表资产信息
+     *
+     * @param finprodId 资产代码
+     * @return 资产付息等现金流信息
+     * @see
+     * @since 1.0
+     */
+    public FinBondTargetAssetDto getFinPlanList(String finprodId) {
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getFinPlanList?finprodId="+finprodId,
+                FinBondTargetAssetDto.class);
+    }
 }

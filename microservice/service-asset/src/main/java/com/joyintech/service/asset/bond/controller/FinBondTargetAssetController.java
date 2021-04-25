@@ -15,6 +15,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.service.asset.bond.service.FinBondTargetAssetService;
+import com.joyintech.service.asset.common.dto.FinPayInterestStdInfoDto;
+import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -190,4 +192,17 @@ public class FinBondTargetAssetController {
     public int selectIsIssueAsset(String finprodId) {
         return finBondTargetAssetService.selectIsIssueAsset(finprodId);
     }
+    /**
+     * 查询资产相关行权计划
+     * <功能详细描述>
+     * @param finprodId
+     * @return 资产相关计划
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("getFinPlanList")
+    public FinBondTargetAssetDto getFinPlanList(String finprodId) {
+        return finBondTargetAssetService.getFinPlanList(finprodId);
+    }
+
 }

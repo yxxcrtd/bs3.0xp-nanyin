@@ -12,15 +12,21 @@ package com.joyintech.tams.invest.asset.bond.controller;
 
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.FinCashPlan;
+import com.joyintech.tams.component.business.asset.dto.BussFinRepaymentDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRepInfoDto;
+import com.joyintech.tams.component.business.report.asset.project.dto.BussRepEquityInfoDto;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,11 +48,8 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.tams.invest.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.tams.invest.asset.bond.service.FinBondTargetAssetService;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -210,9 +213,69 @@ public class FinBondTargetAsset001Controller extends BaseController{
                 entity.getFinprodAbbr()+GlobalConstant.CLOSE_PARENTHESIS);
         });
         processParameter.setWorkFlowParameter(params);
-        String msg = finBondTargetAssetService.start(processParameter,
-            dto.getSelectedItem().toArray(
-                new FinBondTargetAssetDto[dto.getSelectedItem().size()]));
+//        String msg = finBondTargetAssetService.start(processParameter,
+//                dto.getSelectedItem().toArray(
+//                        new FinBondTargetAssetDto[dto.getSelectedItem().size()]));
+        //债券交易自动加券、上市流通交易自动加券，加的券没有在留痕表存值，导致删除报错特殊处理
+        String msg =null;
+        ProcessMark pk = new ProcessMark();
+        pk.setPageId("FinBondTargetAsset002");
+        pk.setBusinessDataPk1(dto.getSelectedItem().get(0).getFinprodId());
+        FinBondTargetAssetDto temp = finBondTargetAssetService.getBussinessEntityByPk(pk);
+        if (null == temp || null == temp.getFinPayInterestStdInfoDto()) {
+            dto = finBondTargetAssetService.getBondDto(dto.getSelectedItem().get(0).getFinprodId());
+            //查询业务表资产信息
+            FinBondTargetAssetDto finBondTargetAssetDto = finBondTargetAssetService.getFinPlanList(dto.getFinprodId());
+            if(finBondTargetAssetDto != null){
+                //资产信息
+                dto.setBaseFinProductBaseInfoList(finBondTargetAssetDto.getBaseFinProductBaseInfoList());
+                //待办事项中直接从FinPayInterestStdInfoDto取现金流计划
+                List<FinCashPlanDto> finCashPlanList =new ArrayList<FinCashPlanDto>();
+                //还本现金流
+                List<FinCashPlanDto> finCashPlanRayList =new ArrayList<FinCashPlanDto>();
+                BussFinRepaymentDto bussFinRepaymentDto =new BussFinRepaymentDto();
+                for(FinCashPlan finCashPlan : finBondTargetAssetDto.getBaseFinProductBaseInfoList().get(0).getFinCashPlanList()){
+                    if(null == finCashPlan.getPrinAmt()){
+                        FinCashPlanDto finCashPlanDto =new FinCashPlanDto();
+                        BeanUtils.copyProperties(finCashPlan,finCashPlanDto);
+                        finCashPlanList.add(finCashPlanDto);
+                    }else{
+                        FinCashPlanDto finCashPlanRayDto =new FinCashPlanDto();
+                        BeanUtils.copyProperties(finCashPlan,bussFinRepaymentDto);
+                        bussFinRepaymentDto.setIsPayIntFlag(DictCodeList.是否_否.getValue());
+                        BeanUtils.copyProperties(finCashPlan,finCashPlanRayDto);
+                        finCashPlanRayList.add(finCashPlanRayDto);
+                    }
+                }
+                dto.getFinPayInterestStdInfoDto().setFinCashPlanList(finCashPlanList);
+                dto.setBussFinRepaymentDto(bussFinRepaymentDto);
+                dto.getBussFinRepaymentDto().setFinCashPlanList(finCashPlanRayList);
+                dto.setFinCashCalcRuleList(finBondTargetAssetDto.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList());
+                //中债信息
+                dto.setBaseRepAssetDeptInfoDto(finBondTargetAssetDto.getBaseRepAssetDeptInfoDto());
+                dto.setBaseRepAssetEquityInfoDto(finBondTargetAssetDto.getBaseRepAssetEquityInfoDto());
+                dto.setBaseRepOtherDto(finBondTargetAssetDto.getBaseRepOtherDto());
+                dto.setBaseRepBondAssetInfoDto(finBondTargetAssetDto.getBaseRepBondAssetInfoDto());
+                BussFinBondRepInfoDto bussFinBondRepInfoDto =new BussFinBondRepInfoDto();
+                BussRepEquityInfoDto bussRepEquityInfoDto =new BussRepEquityInfoDto();
+                if(finBondTargetAssetDto.getBaseRepBondAssetInfoDto()!= null
+                        && finBondTargetAssetDto.getBaseRepBondAssetInfoDto().getRepAssetBondList() !=null
+                            && finBondTargetAssetDto.getBaseRepBondAssetInfoDto().getRepAssetBondList().size() > 0){
+                    BeanUtils.copyProperties(finBondTargetAssetDto.getBaseRepBondAssetInfoDto().getRepAssetBondList().get(0),bussFinBondRepInfoDto);
+                }
+                if(finBondTargetAssetDto.getBaseRepAssetEquityInfoDto()!= null
+                        && finBondTargetAssetDto.getBaseRepAssetEquityInfoDto().getRepAssetEquityList() !=null
+                        && finBondTargetAssetDto.getBaseRepAssetEquityInfoDto().getRepAssetEquityList().size() > 0){
+                    BeanUtils.copyProperties(finBondTargetAssetDto.getBaseRepAssetEquityInfoDto().getRepAssetEquityList().get(0),bussRepEquityInfoDto);
+                }
+                dto.setBussFinBondRepInfoDto(bussFinBondRepInfoDto);
+                dto.setBussRepEquityInfoDto(bussRepEquityInfoDto);
+            }
+            msg = finBondTargetAssetService.start(processParameter,dto);
+        }else{
+            msg = finBondTargetAssetService.start(processParameter,
+                dto.getSelectedItem().toArray(new FinBondTargetAssetDto[dto.getSelectedItem().size()]));
+        }
         return new AjaxResult(msg);
     }
     
