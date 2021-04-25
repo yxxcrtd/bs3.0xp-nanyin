@@ -1212,4 +1212,105 @@
 		 where tmp.isNeedCrn > 0
 		 order by assetRiskType
     </select>
+    
+    <insert id="insertTodayStaSecPosData">
+      insert into ptl_sec_position
+  (portfolio_id,
+   sec_acct_id,
+   finprod_id,
+   branch,
+   inv_aim,
+   hoding_type,
+   cdate,
+   amount,
+   ccy,
+   p_finprod_id,
+   face_value,
+   create_user,
+   create_dept,
+   create_time,
+   update_user,
+   update_time)
+  select temp.portfolio_id,
+         temp.sec_acct_id,
+         'XN_PRODID999' as finprod_id,
+         temp.branch,
+         '999999' as inv_aim,
+         #{POSITION_TYPE_03} as hoding_type,
+         trunc(sysdate) cdate,
+         sum(temp.amount) amount,
+         'CNY' ccy,
+         null p_finprod_id,
+         null face_value,
+         'system' create_user,
+         null create_dept,
+         cast (sysdate as timestamp) create_time,
+         'system' update_user,
+         cast (sysdate as timestamp) update_time
+    from (select temp.portfolio_id,
+                 temp.sec_acct_id,
+                 detail.branch,
+                 sum((case when temp.ps = 'T68' then detail.amt else -1 * detail.amt end) * nvl(fscr.scale, 1)) as amount
+            from trd_temp_stasec_flow temp
+           inner join trd_temp_stasec_flow_detail detail
+              on temp.seqno = detail.seqno
+            left join fin_stdsec_converse_radio fscr
+              on detail.finprod_id = fscr.finprod_id
+             and fscr.vdate = #{batchDate,jdbcType=DATE}
+           <![CDATA[where temp.cdate <= #{batchDate,jdbcType=DATE}]]>
+          <if test="productIdList != null and !productIdList.isEmpty()">
+	                and (
+	            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+	            )
+	        </if>
+           group by temp.portfolio_id, temp.sec_acct_id, detail.branch
+          union all
+          select temp.portfolio_id,
+                 temp.sec_acct_id,
+                 detail.branch,
+                 sum((case when temp.ps = 'T68' then detail.amt else -1 * detail.amt end) * nvl(fscr.scale, 1)) as amount
+            from trd_stasec_flow temp
+           inner join trd_stasec_flow_detail detail
+              on temp.seqno = detail.seqno
+            left join fin_stdsec_converse_radio fscr
+              on detail.finprod_id = fscr.finprod_id
+             and fscr.vdate = #{batchDate,jdbcType=DATE}
+           <![CDATA[where temp.cdate <= #{batchDate,jdbcType=DATE}]]>
+          <if test="productIdList != null and !productIdList.isEmpty()">
+	                and (
+	            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+	            )
+	        </if>
+           group by temp.portfolio_id, temp.sec_acct_id, detail.branch
+          union all
+          select ptl_cpf.portfolio_id,
+                 ptl_cpf.sec_acct_id,
+                 ptl_cpf.branch,
+                 sum(ptl_cpf.amount) as amount
+            from ptl_sec_position_flow ptl_cpf
+           where ptl_cpf.finprod_id = 'XN_PRODID999'
+                <if test="productIdList != null and !productIdList.isEmpty()">
+	                and (
+	            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+	            )
+	        </if>
+	         and ptl_cpf.hoding_type = #{POSITION_TYPE_03}
+             and ptl_cpf.trade_id not in
+                 (select ee.entrust_id from etr_entrust ee where ee.ps in ('T68', 'T69')
+                  union
+                  select tsf.seqno from trd_stasec_flow tsf)
+           group by ptl_cpf.portfolio_id,
+                    ptl_cpf.sec_acct_id,
+                    ptl_cpf.branch) temp
+   group by temp.portfolio_id, temp.sec_acct_id, temp.branch
+     </insert>
+     
+     <delete id="deleteTodayStaSecPosData">
+        delete from PTL_SEC_POSITION where CDATE = #{batchDate,jdbcType=DATE} and finprod_id='XN_PRODID999'
+        <if test="productIdList != null and !productIdList.isEmpty()">
+        and (
+            <include refid="com.joyintech.tams.invest.batch.autogeneration.cashpos.dao.CashPosAutoGenerationMapper.portfolio_id_in_sql" />
+            )
+        </if>
+    </delete>
 </mapper>

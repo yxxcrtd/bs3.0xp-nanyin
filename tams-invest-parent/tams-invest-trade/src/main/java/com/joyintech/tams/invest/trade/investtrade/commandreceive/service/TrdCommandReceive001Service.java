@@ -278,6 +278,11 @@ public class TrdCommandReceive001Service extends CommonExportService<TrdCommandR
             pageParam.put("entrustStatus1", DictCodeList.委托状态_待接收.getValue());
             pageParam.put("entrustStatus2", DictCodeList.委托状态_已接收.getValue());
         }
+        pageParam.put("TRADE_PLACE_05",DictCodeListExt1.交易场所_机构间私募系统.getValue());
+        pageParam.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
+        pageParam.put("TRADE_PLACE_09",DictCodeListExt1.交易场所_OTC场外.getValue());
+        pageParam.put("TRADE_PLACE_03",DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        pageParam.put("TRADE_PLACE_04",DictCodeListExt1.交易场所_深圳证券交易所.getValue());
     }
 
     /**
@@ -406,6 +411,11 @@ public class TrdCommandReceive001Service extends CommonExportService<TrdCommandR
             pageParam.put("IRS_TYPE", DictCode.互换方式.getValue());
             pageParam.put("PS", DictCode.交易方向.getValue());
             pageParam.put("finprodType2List", finprodType2ListOld);
+            pageParam.put("TRADE_PLACE_05",DictCodeListExt1.交易场所_机构间私募系统.getValue());
+            pageParam.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
+            pageParam.put("TRADE_PLACE_09",DictCodeListExt1.交易场所_OTC场外.getValue());
+            pageParam.put("TRADE_PLACE_03",DictCodeListExt1.交易场所_上海证券交易所.getValue());
+            pageParam.put("TRADE_PLACE_04",DictCodeListExt1.交易场所_深圳证券交易所.getValue());
 //            pageParam.put("list3", list3);
         }
 

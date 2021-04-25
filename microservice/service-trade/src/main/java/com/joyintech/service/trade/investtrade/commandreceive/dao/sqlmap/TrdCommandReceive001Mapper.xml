@@ -112,6 +112,8 @@
 					)
 					)
 			</if>	 -->
+			AND (ETR_ENTRUST.TRADE_MARKET IN(#{TRADE_PLACE_01},#{TRADE_PLACE_05},#{TRADE_PLACE_09})
+			OR ETR_ENTRUST.TRADE_MARKET is null)
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND ETR_ENTRUST_ADD.ASSET_TYPE IN(
 				<foreach item="item" index="index" collection="finprodType2List" separator=",">
@@ -748,6 +750,7 @@
   					</foreach>
 				) 
 			</if>
+			AND (ETR_ENTRUST.TRADE_MARKET IN(#{TRADE_PLACE_01},#{TRADE_PLACE_05},#{TRADE_PLACE_09}) OR ETR_ENTRUST.TRADE_MARKET is null)
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND ((FIN_PRODUCT.FINPROD_MARKET_ID
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')

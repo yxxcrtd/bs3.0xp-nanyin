@@ -152,4 +152,24 @@ public interface SecPosAutoGenerationMapper {
      */
     int insertTodaySecPosDetailData(Map<String, Object> paramMap);
     //add for 华兴 by liupengfei E
+	
+	    /**
+     * 生成当日持仓数据
+     *
+     * @param paramMap 参数
+     * @return 执行结果
+     * @see
+     * @since 1.0
+     */
+    int insertTodayStaSecPosData(Map<String, Object> paramMap);
+
+    /**
+     * 删除当日持仓数据->组合持仓分析报表
+     *
+     * @param paramMap 参数
+     * @return 执行结果
+     * @see
+     * @since 1.0
+     */
+    int deleteTodayStaSecPosData(Map<String, Object> paramMap);
 }
