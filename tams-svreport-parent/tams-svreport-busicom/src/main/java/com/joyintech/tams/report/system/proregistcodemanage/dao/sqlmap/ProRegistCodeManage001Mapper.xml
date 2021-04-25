@@ -346,4 +346,10 @@
          cpc.PRODID = #{prodId}
         </where>
     </select>
+	<select id="selectProCodeList" resultType="java.lang.String">
+	</select>
+	<delete id="deleteBySeqNo" parameterType="java.lang.String" >
+	</delete>
+	<insert id="insertSysUploadFileInfo" parameterType="com.joyintech.tams.common.base.entity.SysUploadFileInfo" >
+	</insert>
 </mapper>

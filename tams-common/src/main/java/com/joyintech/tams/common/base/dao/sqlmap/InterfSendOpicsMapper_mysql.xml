@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfSendOpicsMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfSendOpics" >
+        <id column="UUID" property="uuid" jdbcType="VARCHAR" />
+        <result column="ASSETPOOL" property="assetpool" jdbcType="VARCHAR" />
+        <result column="CASHNO" property="cashno" jdbcType="VARCHAR" />
+        <result column="BUSINESSID" property="businessid" jdbcType="VARCHAR" />
+        <result column="SENDMODULE" property="sendmodule" jdbcType="VARCHAR" />
+        <result column="SENDMODE" property="sendmode" jdbcType="VARCHAR" />
+        <result column="SENDDIRECTION" property="senddirection" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="SENDFLAG" property="sendflag" jdbcType="VARCHAR" />
+        <result column="SN" property="sn" jdbcType="VARCHAR" />
+        <result column="DEALTYPE" property="dealtype" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="VARCHAR" />
+        <result column="TRAD" property="trad" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="VARCHAR" />
+        <result column="CNO" property="cno" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="RATECODE" property="ratecode" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="INTRATE" property="intrate" jdbcType="DECIMAL" />
+        <result column="SPREAD" property="spread" jdbcType="DECIMAL" />
+        <result column="BROK" property="brok" jdbcType="VARCHAR" />
+        <result column="PORT" property="port" jdbcType="VARCHAR" />
+        <result column="COST" property="cost" jdbcType="VARCHAR" />
+        <result column="DEALDATE" property="dealdate" jdbcType="VARCHAR" />
+        <result column="DEALTIME" property="dealtime" jdbcType="VARCHAR" />
+        <result column="TENOR" property="tenor" jdbcType="VARCHAR" />
+        <result column="VERIND" property="verind" jdbcType="VARCHAR" />
+        <result column="DEALTEXT" property="dealtext" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="RET_DEALNO" property="retDealno" jdbcType="VARCHAR" />
+        <result column="RET_BR" property="retBr" jdbcType="VARCHAR" />
+        <result column="RET_PRODUCT" property="retProduct" jdbcType="VARCHAR" />
+        <result column="RET_PRODTYPE" property="retProdtype" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="SENDNUM" property="sendnum" jdbcType="DECIMAL" />
+        <result column="SEND_DATE" property="sendDate" jdbcType="DATE" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="ORDER_REC_STATUS" property="orderRecStatus" jdbcType="VARCHAR" />
+        <result column="ORDER_RET_STATUS" property="orderRetStatus" jdbcType="VARCHAR" />
+        <result column="LSTSENDUSER" property="lstsenduser" jdbcType="VARCHAR" />
+        <result column="LSTSENDDATE" property="lstsenddate" jdbcType="DATE" />
+        <result column="LSTMNTUSER" property="lstmntuser" jdbcType="VARCHAR" />
+        <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        UUID UUID, ASSETPOOL ASSETPOOL, CASHNO CASHNO, BUSINESSID BUSINESSID, SENDMODULE SENDMODULE, 
+        SENDMODE SENDMODE, SENDDIRECTION SENDDIRECTION, CDATE CDATE, SENDFLAG SENDFLAG, SN SN, 
+        DEALTYPE DEALTYPE, BRANCH BRANCH, TRAD TRAD, VDATE VDATE, MDATE MDATE, CNO CNO, CCY CCY, 
+        AMT AMT, RATECODE RATECODE, BASIS BASIS, INTRATE INTRATE, SPREAD SPREAD, BROK BROK, 
+        PORT PORT, COST COST, DEALDATE DEALDATE, DEALTIME DEALTIME, TENOR TENOR, VERIND VERIND, 
+        DEALTEXT DEALTEXT, REMARK REMARK, RET_DEALNO RET_DEALNO, RET_BR RET_BR, RET_PRODUCT RET_PRODUCT, 
+        RET_PRODTYPE RET_PRODTYPE, YIELD YIELD, SENDNUM SENDNUM, SEND_DATE SEND_DATE, SEND_STATUS SEND_STATUS, 
+        ORDER_REC_STATUS ORDER_REC_STATUS, ORDER_RET_STATUS ORDER_RET_STATUS, LSTSENDUSER LSTSENDUSER, 
+        LSTSENDDATE LSTSENDDATE, LSTMNTUSER LSTMNTUSER, LSTMNTDATE LSTMNTDATE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfSendOpicsMapper.Base_Column_List" />
+        from INTERF_SEND_OPICS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfSendOpicsMapper.Base_Column_List" />
+        from INTERF_SEND_OPICS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfSendOpicsMapper.Base_Column_List" />
+        from INTERF_SEND_OPICS
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_SEND_OPICS
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfSendOpics" >
+        insert into INTERF_SEND_OPICS (UUID, ASSETPOOL, CASHNO, 
+            BUSINESSID, SENDMODULE, SENDMODE, 
+            SENDDIRECTION, CDATE, SENDFLAG, 
+            SN, DEALTYPE, BRANCH, 
+            TRAD, VDATE, MDATE, 
+            CNO, CCY, AMT, RATECODE, 
+            BASIS, INTRATE, SPREAD, 
+            BROK, PORT, COST, 
+            DEALDATE, DEALTIME, TENOR, 
+            VERIND, DEALTEXT, REMARK, 
+            RET_DEALNO, RET_BR, RET_PRODUCT, 
+            RET_PRODTYPE, YIELD, SENDNUM, 
+            SEND_DATE, SEND_STATUS, ORDER_REC_STATUS, 
+            ORDER_RET_STATUS, LSTSENDUSER, LSTSENDDATE, 
+            LSTMNTUSER, LSTMNTDATE)
+        values (#{uuid,jdbcType=VARCHAR}, #{assetpool,jdbcType=VARCHAR}, #{cashno,jdbcType=VARCHAR}, 
+            #{businessid,jdbcType=VARCHAR}, #{sendmodule,jdbcType=VARCHAR}, #{sendmode,jdbcType=VARCHAR}, 
+            #{senddirection,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{sendflag,jdbcType=VARCHAR}, 
+            #{sn,jdbcType=VARCHAR}, #{dealtype,jdbcType=VARCHAR}, #{branch,jdbcType=VARCHAR}, 
+            #{trad,jdbcType=VARCHAR}, #{vdate,jdbcType=VARCHAR}, #{mdate,jdbcType=VARCHAR}, 
+            #{cno,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL}, #{ratecode,jdbcType=VARCHAR}, 
+            #{basis,jdbcType=VARCHAR}, #{intrate,jdbcType=DECIMAL}, #{spread,jdbcType=DECIMAL}, 
+            #{brok,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR}, #{cost,jdbcType=VARCHAR}, 
+            #{dealdate,jdbcType=VARCHAR}, #{dealtime,jdbcType=VARCHAR}, #{tenor,jdbcType=VARCHAR}, 
+            #{verind,jdbcType=VARCHAR}, #{dealtext,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{retDealno,jdbcType=VARCHAR}, #{retBr,jdbcType=VARCHAR}, #{retProduct,jdbcType=VARCHAR}, 
+            #{retProdtype,jdbcType=VARCHAR}, #{yield,jdbcType=DECIMAL}, #{sendnum,jdbcType=DECIMAL}, 
+            #{sendDate,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR}, #{orderRecStatus,jdbcType=VARCHAR}, 
+            #{orderRetStatus,jdbcType=VARCHAR}, #{lstsenduser,jdbcType=VARCHAR}, #{lstsenddate,jdbcType=DATE}, 
+            #{lstmntuser,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfSendOpics" >
+        insert into INTERF_SEND_OPICS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                UUID,
+            </if>
+            <if test="assetpool != null" >
+                ASSETPOOL,
+            </if>
+            <if test="cashno != null" >
+                CASHNO,
+            </if>
+            <if test="businessid != null" >
+                BUSINESSID,
+            </if>
+            <if test="sendmodule != null" >
+                SENDMODULE,
+            </if>
+            <if test="sendmode != null" >
+                SENDMODE,
+            </if>
+            <if test="senddirection != null" >
+                SENDDIRECTION,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="sendflag != null" >
+                SENDFLAG,
+            </if>
+            <if test="sn != null" >
+                SN,
+            </if>
+            <if test="dealtype != null" >
+                DEALTYPE,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="trad != null" >
+                TRAD,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="cno != null" >
+                CNO,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="amt != null" >
+                AMT,
+            </if>
+            <if test="ratecode != null" >
+                RATECODE,
+            </if>
+            <if test="basis != null" >
+                BASIS,
+            </if>
+            <if test="intrate != null" >
+                INTRATE,
+            </if>
+            <if test="spread != null" >
+                SPREAD,
+            </if>
+            <if test="brok != null" >
+                BROK,
+            </if>
+            <if test="port != null" >
+                PORT,
+            </if>
+            <if test="cost != null" >
+                COST,
+            </if>
+            <if test="dealdate != null" >
+                DEALDATE,
+            </if>
+            <if test="dealtime != null" >
+                DEALTIME,
+            </if>
+            <if test="tenor != null" >
+                TENOR,
+            </if>
+            <if test="verind != null" >
+                VERIND,
+            </if>
+            <if test="dealtext != null" >
+                DEALTEXT,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="retDealno != null" >
+                RET_DEALNO,
+            </if>
+            <if test="retBr != null" >
+                RET_BR,
+            </if>
+            <if test="retProduct != null" >
+                RET_PRODUCT,
+            </if>
+            <if test="retProdtype != null" >
+                RET_PRODTYPE,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="sendnum != null" >
+                SENDNUM,
+            </if>
+            <if test="sendDate != null" >
+                SEND_DATE,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="orderRecStatus != null" >
+                ORDER_REC_STATUS,
+            </if>
+            <if test="orderRetStatus != null" >
+                ORDER_RET_STATUS,
+            </if>
+            <if test="lstsenduser != null" >
+                LSTSENDUSER,
+            </if>
+            <if test="lstsenddate != null" >
+                LSTSENDDATE,
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER,
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="assetpool != null" >
+                #{assetpool,jdbcType=VARCHAR},
+            </if>
+            <if test="cashno != null" >
+                #{cashno,jdbcType=VARCHAR},
+            </if>
+            <if test="businessid != null" >
+                #{businessid,jdbcType=VARCHAR},
+            </if>
+            <if test="sendmodule != null" >
+                #{sendmodule,jdbcType=VARCHAR},
+            </if>
+            <if test="sendmode != null" >
+                #{sendmode,jdbcType=VARCHAR},
+            </if>
+            <if test="senddirection != null" >
+                #{senddirection,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="sendflag != null" >
+                #{sendflag,jdbcType=VARCHAR},
+            </if>
+            <if test="sn != null" >
+                #{sn,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtype != null" >
+                #{dealtype,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=VARCHAR},
+            </if>
+            <if test="trad != null" >
+                #{trad,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=VARCHAR},
+            </if>
+            <if test="cno != null" >
+                #{cno,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="amt != null" >
+                #{amt,jdbcType=DECIMAL},
+            </if>
+            <if test="ratecode != null" >
+                #{ratecode,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="intrate != null" >
+                #{intrate,jdbcType=DECIMAL},
+            </if>
+            <if test="spread != null" >
+                #{spread,jdbcType=DECIMAL},
+            </if>
+            <if test="brok != null" >
+                #{brok,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null" >
+                #{port,jdbcType=VARCHAR},
+            </if>
+            <if test="cost != null" >
+                #{cost,jdbcType=VARCHAR},
+            </if>
+            <if test="dealdate != null" >
+                #{dealdate,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtime != null" >
+                #{dealtime,jdbcType=VARCHAR},
+            </if>
+            <if test="tenor != null" >
+                #{tenor,jdbcType=VARCHAR},
+            </if>
+            <if test="verind != null" >
+                #{verind,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtext != null" >
+                #{dealtext,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="retDealno != null" >
+                #{retDealno,jdbcType=VARCHAR},
+            </if>
+            <if test="retBr != null" >
+                #{retBr,jdbcType=VARCHAR},
+            </if>
+            <if test="retProduct != null" >
+                #{retProduct,jdbcType=VARCHAR},
+            </if>
+            <if test="retProdtype != null" >
+                #{retProdtype,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="sendnum != null" >
+                #{sendnum,jdbcType=DECIMAL},
+            </if>
+            <if test="sendDate != null" >
+                #{sendDate,jdbcType=DATE},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRecStatus != null" >
+                #{orderRecStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRetStatus != null" >
+                #{orderRetStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="lstsenduser != null" >
+                #{lstsenduser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstsenddate != null" >
+                #{lstsenddate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                #{lstmntdate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfSendOpics" >
+        insert into INTERF_SEND_OPICS(UUID, ASSETPOOL, CASHNO, BUSINESSID, SENDMODULE, SENDMODE, 
+        SENDDIRECTION, CDATE, SENDFLAG, SN, DEALTYPE, BRANCH, TRAD, VDATE, MDATE, CNO, CCY, 
+        AMT, RATECODE, BASIS, INTRATE, SPREAD, BROK, PORT, COST, DEALDATE, DEALTIME, TENOR, 
+        VERIND, DEALTEXT, REMARK, RET_DEALNO, RET_BR, RET_PRODUCT, RET_PRODTYPE, YIELD, SENDNUM, 
+        SEND_DATE, SEND_STATUS, ORDER_REC_STATUS, ORDER_RET_STATUS, LSTSENDUSER, LSTSENDDATE, 
+        LSTMNTUSER, LSTMNTDATE)
+        select UUID, ASSETPOOL, CASHNO, BUSINESSID, SENDMODULE, SENDMODE, 
+            SENDDIRECTION, CDATE, SENDFLAG, SN, DEALTYPE, BRANCH, TRAD, VDATE, MDATE, CNO, CCY, 
+            AMT, RATECODE, BASIS, INTRATE, SPREAD, BROK, PORT, COST, DEALDATE, DEALTIME, TENOR, 
+            VERIND, DEALTEXT, REMARK, RET_DEALNO, RET_BR, RET_PRODUCT, RET_PRODTYPE, YIELD, SENDNUM, 
+            SEND_DATE, SEND_STATUS, ORDER_REC_STATUS, ORDER_RET_STATUS, LSTSENDUSER, LSTSENDDATE, 
+            LSTMNTUSER, LSTMNTDATE
+             from INTERF_SEND_OPICS
+             where 1 = 1 and UUID = #{uuid,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfSendOpics" >
+        update INTERF_SEND_OPICS
+        <set >
+            <if test="assetpool != null" >
+                ASSETPOOL = #{assetpool,jdbcType=VARCHAR},
+            </if>
+            <if test="cashno != null" >
+                CASHNO = #{cashno,jdbcType=VARCHAR},
+            </if>
+            <if test="businessid != null" >
+                BUSINESSID = #{businessid,jdbcType=VARCHAR},
+            </if>
+            <if test="sendmodule != null" >
+                SENDMODULE = #{sendmodule,jdbcType=VARCHAR},
+            </if>
+            <if test="sendmode != null" >
+                SENDMODE = #{sendmode,jdbcType=VARCHAR},
+            </if>
+            <if test="senddirection != null" >
+                SENDDIRECTION = #{senddirection,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                CDATE = #{cdate,jdbcType=DATE},
+            </if>
+            <if test="sendflag != null" >
+                SENDFLAG = #{sendflag,jdbcType=VARCHAR},
+            </if>
+            <if test="sn != null" >
+                SN = #{sn,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtype != null" >
+                DEALTYPE = #{dealtype,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=VARCHAR},
+            </if>
+            <if test="trad != null" >
+                TRAD = #{trad,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=VARCHAR},
+            </if>
+            <if test="cno != null" >
+                CNO = #{cno,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="amt != null" >
+                AMT = #{amt,jdbcType=DECIMAL},
+            </if>
+            <if test="ratecode != null" >
+                RATECODE = #{ratecode,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                BASIS = #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="intrate != null" >
+                INTRATE = #{intrate,jdbcType=DECIMAL},
+            </if>
+            <if test="spread != null" >
+                SPREAD = #{spread,jdbcType=DECIMAL},
+            </if>
+            <if test="brok != null" >
+                BROK = #{brok,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null" >
+                PORT = #{port,jdbcType=VARCHAR},
+            </if>
+            <if test="cost != null" >
+                COST = #{cost,jdbcType=VARCHAR},
+            </if>
+            <if test="dealdate != null" >
+                DEALDATE = #{dealdate,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtime != null" >
+                DEALTIME = #{dealtime,jdbcType=VARCHAR},
+            </if>
+            <if test="tenor != null" >
+                TENOR = #{tenor,jdbcType=VARCHAR},
+            </if>
+            <if test="verind != null" >
+                VERIND = #{verind,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtext != null" >
+                DEALTEXT = #{dealtext,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="retDealno != null" >
+                RET_DEALNO = #{retDealno,jdbcType=VARCHAR},
+            </if>
+            <if test="retBr != null" >
+                RET_BR = #{retBr,jdbcType=VARCHAR},
+            </if>
+            <if test="retProduct != null" >
+                RET_PRODUCT = #{retProduct,jdbcType=VARCHAR},
+            </if>
+            <if test="retProdtype != null" >
+                RET_PRODTYPE = #{retProdtype,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="sendnum != null" >
+                SENDNUM = #{sendnum,jdbcType=DECIMAL},
+            </if>
+            <if test="sendDate != null" >
+                SEND_DATE = #{sendDate,jdbcType=DATE},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRecStatus != null" >
+                ORDER_REC_STATUS = #{orderRecStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRetStatus != null" >
+                ORDER_RET_STATUS = #{orderRetStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="lstsenduser != null" >
+                LSTSENDUSER = #{lstsenduser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstsenddate != null" >
+                LSTSENDDATE = #{lstsenddate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE = #{lstmntdate,jdbcType=DATE},
+            </if>
+        </set>
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfSendOpics" >
+        update INTERF_SEND_OPICS
+        set ASSETPOOL = #{assetpool,jdbcType=VARCHAR},
+            CASHNO = #{cashno,jdbcType=VARCHAR},
+            BUSINESSID = #{businessid,jdbcType=VARCHAR},
+            SENDMODULE = #{sendmodule,jdbcType=VARCHAR},
+            SENDMODE = #{sendmode,jdbcType=VARCHAR},
+            SENDDIRECTION = #{senddirection,jdbcType=VARCHAR},
+            CDATE = #{cdate,jdbcType=DATE},
+            SENDFLAG = #{sendflag,jdbcType=VARCHAR},
+            SN = #{sn,jdbcType=VARCHAR},
+            DEALTYPE = #{dealtype,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=VARCHAR},
+            TRAD = #{trad,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=VARCHAR},
+            MDATE = #{mdate,jdbcType=VARCHAR},
+            CNO = #{cno,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            AMT = #{amt,jdbcType=DECIMAL},
+            RATECODE = #{ratecode,jdbcType=VARCHAR},
+            BASIS = #{basis,jdbcType=VARCHAR},
+            INTRATE = #{intrate,jdbcType=DECIMAL},
+            SPREAD = #{spread,jdbcType=DECIMAL},
+            BROK = #{brok,jdbcType=VARCHAR},
+            PORT = #{port,jdbcType=VARCHAR},
+            COST = #{cost,jdbcType=VARCHAR},
+            DEALDATE = #{dealdate,jdbcType=VARCHAR},
+            DEALTIME = #{dealtime,jdbcType=VARCHAR},
+            TENOR = #{tenor,jdbcType=VARCHAR},
+            VERIND = #{verind,jdbcType=VARCHAR},
+            DEALTEXT = #{dealtext,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            RET_DEALNO = #{retDealno,jdbcType=VARCHAR},
+            RET_BR = #{retBr,jdbcType=VARCHAR},
+            RET_PRODUCT = #{retProduct,jdbcType=VARCHAR},
+            RET_PRODTYPE = #{retProdtype,jdbcType=VARCHAR},
+            YIELD = #{yield,jdbcType=DECIMAL},
+            SENDNUM = #{sendnum,jdbcType=DECIMAL},
+            SEND_DATE = #{sendDate,jdbcType=DATE},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            ORDER_REC_STATUS = #{orderRecStatus,jdbcType=VARCHAR},
+            ORDER_RET_STATUS = #{orderRetStatus,jdbcType=VARCHAR},
+            LSTSENDUSER = #{lstsenduser,jdbcType=VARCHAR},
+            LSTSENDDATE = #{lstsenddate,jdbcType=DATE},
+            LSTMNTUSER = #{lstmntuser,jdbcType=VARCHAR},
+            LSTMNTDATE = #{lstmntdate,jdbcType=DATE}
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

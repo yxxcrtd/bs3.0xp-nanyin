@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PlTargetDbMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PlTargetDb" >
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="ASSET_VALUE" property="assetValue" jdbcType="DECIMAL" />
+        <result column="ASSET_NETVALUE" property="assetNetvalue" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE" property="unitValue" jdbcType="DECIMAL" />
+        <result column="TOT_UNIIT_VALUE" property="totUniitValue" jdbcType="DECIMAL" />
+        <result column="TDY_YIELD" property="tdyYield" jdbcType="DECIMAL" />
+        <result column="YIELD_7" property="yield7" jdbcType="DECIMAL" />
+        <result column="ASSET_RATE" property="assetRate" jdbcType="DECIMAL" />
+        <result column="ASSET_GR_D" property="assetGrD" jdbcType="DECIMAL" />
+        <result column="ASSET_GR_W" property="assetGrW" jdbcType="DECIMAL" />
+        <result column="ASSET_GR_M" property="assetGrM" jdbcType="DECIMAL" />
+        <result column="ASSET_GR_S" property="assetGrS" jdbcType="DECIMAL" />
+        <result column="ASSET_GR_Y" property="assetGrY" jdbcType="DECIMAL" />
+        <result column="NETASSET_GR_D" property="netassetGrD" jdbcType="DECIMAL" />
+        <result column="NETASSET_GR_W" property="netassetGrW" jdbcType="DECIMAL" />
+        <result column="NETASSET_GR_M" property="netassetGrM" jdbcType="DECIMAL" />
+        <result column="NETASSET_GR_S" property="netassetGrS" jdbcType="DECIMAL" />
+        <result column="NETASSET_GR_Y" property="netassetGrY" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_D" property="netunitGrD" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_W" property="netunitGrW" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_M" property="netunitGrM" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_S" property="netunitGrS" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_Y" property="netunitGrY" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_D2" property="netunitGrD2" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_W2" property="netunitGrW2" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_M2" property="netunitGrM2" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_S2" property="netunitGrS2" jdbcType="DECIMAL" />
+        <result column="NETUNIT_GR_Y2" property="netunitGrY2" jdbcType="VARCHAR" />
+        <result column="PL_VDATE" property="plVdate" jdbcType="DATE" />
+        <result column="PL_MDATE" property="plMdate" jdbcType="DATE" />
+        <result column="INV_MANAGER" property="invManager" jdbcType="VARCHAR" />
+        <result column="VIX_W" property="vixW" jdbcType="DECIMAL" />
+        <result column="VIX_M" property="vixM" jdbcType="DECIMAL" />
+        <result column="VIX_S" property="vixS" jdbcType="DECIMAL" />
+        <result column="VIX_Y" property="vixY" jdbcType="DECIMAL" />
+        <result column="VIX_R" property="vixR" jdbcType="DECIMAL" />
+        <result column="VIX_LONE_M" property="vixLoneM" jdbcType="DECIMAL" />
+        <result column="VIX_LTHREE_M" property="vixLthreeM" jdbcType="DECIMAL" />
+        <result column="VIX_L_HY" property="vixLHy" jdbcType="DECIMAL" />
+        <result column="VIX_L_Y" property="vixLY" jdbcType="DECIMAL" />
+        <result column="SHARPE_W" property="sharpeW" jdbcType="DECIMAL" />
+        <result column="SHARPE_M" property="sharpeM" jdbcType="DECIMAL" />
+        <result column="SHARPE_S" property="sharpeS" jdbcType="DECIMAL" />
+        <result column="SHARPE_Y" property="sharpeY" jdbcType="DECIMAL" />
+        <result column="SHARPE_R" property="sharpeR" jdbcType="DECIMAL" />
+        <result column="SHARPE_LONE_M" property="sharpeLoneM" jdbcType="DECIMAL" />
+        <result column="SHARPE_LTHREE_M" property="sharpeLthreeM" jdbcType="DECIMAL" />
+        <result column="SHARPE_L_HY" property="sharpeLHy" jdbcType="DECIMAL" />
+        <result column="SHARPE_L_Y" property="sharpeLY" jdbcType="DECIMAL" />
+        <result column="SORTINO_W" property="sortinoW" jdbcType="DECIMAL" />
+        <result column="SORTINO_M" property="sortinoM" jdbcType="DECIMAL" />
+        <result column="SORTINO_S" property="sortinoS" jdbcType="DECIMAL" />
+        <result column="SORTINO_Y" property="sortinoY" jdbcType="DECIMAL" />
+        <result column="SORTINO_R" property="sortinoR" jdbcType="DECIMAL" />
+        <result column="SORTINO_LONE_M" property="sortinoLoneM" jdbcType="DECIMAL" />
+        <result column="SORTINO_LTHREE_M" property="sortinoLthreeM" jdbcType="DECIMAL" />
+        <result column="SORTINO_L_HY" property="sortinoLHy" jdbcType="DECIMAL" />
+        <result column="SORTINO_L_Y" property="sortinoLY" jdbcType="DECIMAL" />
+        <result column="MAX_DR_W" property="maxDrW" jdbcType="DECIMAL" />
+        <result column="MAX_DR_M" property="maxDrM" jdbcType="DECIMAL" />
+        <result column="MAX_DR_S" property="maxDrS" jdbcType="DECIMAL" />
+        <result column="MAX_DR_Y" property="maxDrY" jdbcType="DECIMAL" />
+        <result column="MAX_DR_R" property="maxDrR" jdbcType="DECIMAL" />
+        <result column="MAX_DR_LONE_M" property="maxDrLoneM" jdbcType="DECIMAL" />
+        <result column="MAX_DR_LTHREE_M" property="maxDrLthreeM" jdbcType="DECIMAL" />
+        <result column="MAX_DR_L_HY" property="maxDrLHy" jdbcType="DECIMAL" />
+        <result column="MAX_DR_L_Y" property="maxDrLY" jdbcType="DECIMAL" />
+        <result column="DSCLOSS_EXP" property="dsclossExp" jdbcType="DECIMAL" />
+        <result column="INTINCEXP" property="intincexp" jdbcType="DECIMAL" />
+        <result column="VALUE_ADD" property="valueAdd" jdbcType="DECIMAL" />
+        <result column="TOTAL_VALUE_ADD" property="totalValueAdd" jdbcType="DECIMAL" />
+        <result column="TOTAL_FLOAT_INGPL" property="totalFloatIngpl" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PORTFOLIO_ID PORTFOLIO_ID, CDATE CDATE, PORTFOLIO_NAME PORTFOLIO_NAME, PROFIT_TYPE PROFIT_TYPE, 
+        ASSET_VALUE ASSET_VALUE, ASSET_NETVALUE ASSET_NETVALUE, UNIT_VALUE UNIT_VALUE, TOT_UNIIT_VALUE TOT_UNIIT_VALUE, 
+        TDY_YIELD TDY_YIELD, YIELD_7 YIELD_7, ASSET_RATE ASSET_RATE, ASSET_GR_D ASSET_GR_D, 
+        ASSET_GR_W ASSET_GR_W, ASSET_GR_M ASSET_GR_M, ASSET_GR_S ASSET_GR_S, ASSET_GR_Y ASSET_GR_Y, 
+        NETASSET_GR_D NETASSET_GR_D, NETASSET_GR_W NETASSET_GR_W, NETASSET_GR_M NETASSET_GR_M, 
+        NETASSET_GR_S NETASSET_GR_S, NETASSET_GR_Y NETASSET_GR_Y, NETUNIT_GR_D NETUNIT_GR_D, 
+        NETUNIT_GR_W NETUNIT_GR_W, NETUNIT_GR_M NETUNIT_GR_M, NETUNIT_GR_S NETUNIT_GR_S, 
+        NETUNIT_GR_Y NETUNIT_GR_Y, NETUNIT_GR_D2 NETUNIT_GR_D2, NETUNIT_GR_W2 NETUNIT_GR_W2, 
+        NETUNIT_GR_M2 NETUNIT_GR_M2, NETUNIT_GR_S2 NETUNIT_GR_S2, NETUNIT_GR_Y2 NETUNIT_GR_Y2, 
+        PL_VDATE PL_VDATE, PL_MDATE PL_MDATE, INV_MANAGER INV_MANAGER, VIX_W VIX_W, VIX_M VIX_M, 
+        VIX_S VIX_S, VIX_Y VIX_Y, VIX_R VIX_R, VIX_LONE_M VIX_LONE_M, VIX_LTHREE_M VIX_LTHREE_M, 
+        VIX_L_HY VIX_L_HY, VIX_L_Y VIX_L_Y, SHARPE_W SHARPE_W, SHARPE_M SHARPE_M, SHARPE_S SHARPE_S, 
+        SHARPE_Y SHARPE_Y, SHARPE_R SHARPE_R, SHARPE_LONE_M SHARPE_LONE_M, SHARPE_LTHREE_M SHARPE_LTHREE_M, 
+        SHARPE_L_HY SHARPE_L_HY, SHARPE_L_Y SHARPE_L_Y, SORTINO_W SORTINO_W, SORTINO_M SORTINO_M, 
+        SORTINO_S SORTINO_S, SORTINO_Y SORTINO_Y, SORTINO_R SORTINO_R, SORTINO_LONE_M SORTINO_LONE_M, 
+        SORTINO_LTHREE_M SORTINO_LTHREE_M, SORTINO_L_HY SORTINO_L_HY, SORTINO_L_Y SORTINO_L_Y, 
+        MAX_DR_W MAX_DR_W, MAX_DR_M MAX_DR_M, MAX_DR_S MAX_DR_S, MAX_DR_Y MAX_DR_Y, MAX_DR_R MAX_DR_R, 
+        MAX_DR_LONE_M MAX_DR_LONE_M, MAX_DR_LTHREE_M MAX_DR_LTHREE_M, MAX_DR_L_HY MAX_DR_L_HY, 
+        MAX_DR_L_Y MAX_DR_L_Y, DSCLOSS_EXP DSCLOSS_EXP, INTINCEXP INTINCEXP, VALUE_ADD VALUE_ADD, 
+        TOTAL_VALUE_ADD TOTAL_VALUE_ADD, TOTAL_FLOAT_INGPL TOTAL_FLOAT_INGPL, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PlTargetDbMapper.Base_Column_List" />
+        from PL_TARGET_DB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PlTargetDbMapper.Base_Column_List" />
+        from PL_TARGET_DB
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.PlTargetDbKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PlTargetDbMapper.Base_Column_List" />
+        from PL_TARGET_DB
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PlTargetDbKey" >
+        delete from PL_TARGET_DB
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PlTargetDb" >
+        insert into PL_TARGET_DB (PORTFOLIO_ID, CDATE, PORTFOLIO_NAME, 
+            PROFIT_TYPE, ASSET_VALUE, ASSET_NETVALUE, 
+            UNIT_VALUE, TOT_UNIIT_VALUE, TDY_YIELD, 
+            YIELD_7, ASSET_RATE, ASSET_GR_D, 
+            ASSET_GR_W, ASSET_GR_M, ASSET_GR_S, 
+            ASSET_GR_Y, NETASSET_GR_D, NETASSET_GR_W, 
+            NETASSET_GR_M, NETASSET_GR_S, NETASSET_GR_Y, 
+            NETUNIT_GR_D, NETUNIT_GR_W, NETUNIT_GR_M, 
+            NETUNIT_GR_S, NETUNIT_GR_Y, NETUNIT_GR_D2, 
+            NETUNIT_GR_W2, NETUNIT_GR_M2, NETUNIT_GR_S2, 
+            NETUNIT_GR_Y2, PL_VDATE, PL_MDATE, 
+            INV_MANAGER, VIX_W, VIX_M, 
+            VIX_S, VIX_Y, VIX_R, 
+            VIX_LONE_M, VIX_LTHREE_M, VIX_L_HY, 
+            VIX_L_Y, SHARPE_W, SHARPE_M, 
+            SHARPE_S, SHARPE_Y, SHARPE_R, 
+            SHARPE_LONE_M, SHARPE_LTHREE_M, SHARPE_L_HY, 
+            SHARPE_L_Y, SORTINO_W, SORTINO_M, 
+            SORTINO_S, SORTINO_Y, SORTINO_R, 
+            SORTINO_LONE_M, SORTINO_LTHREE_M, SORTINO_L_HY, 
+            SORTINO_L_Y, MAX_DR_W, MAX_DR_M, 
+            MAX_DR_S, MAX_DR_Y, MAX_DR_R, 
+            MAX_DR_LONE_M, MAX_DR_LTHREE_M, MAX_DR_L_HY, 
+            MAX_DR_L_Y, DSCLOSS_EXP, INTINCEXP, 
+            VALUE_ADD, TOTAL_VALUE_ADD, TOTAL_FLOAT_INGPL, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{portfolioId,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{portfolioName,jdbcType=VARCHAR}, 
+            #{profitType,jdbcType=VARCHAR}, #{assetValue,jdbcType=DECIMAL}, #{assetNetvalue,jdbcType=DECIMAL}, 
+            #{unitValue,jdbcType=DECIMAL}, #{totUniitValue,jdbcType=DECIMAL}, #{tdyYield,jdbcType=DECIMAL}, 
+            #{yield7,jdbcType=DECIMAL}, #{assetRate,jdbcType=DECIMAL}, #{assetGrD,jdbcType=DECIMAL}, 
+            #{assetGrW,jdbcType=DECIMAL}, #{assetGrM,jdbcType=DECIMAL}, #{assetGrS,jdbcType=DECIMAL}, 
+            #{assetGrY,jdbcType=DECIMAL}, #{netassetGrD,jdbcType=DECIMAL}, #{netassetGrW,jdbcType=DECIMAL}, 
+            #{netassetGrM,jdbcType=DECIMAL}, #{netassetGrS,jdbcType=DECIMAL}, #{netassetGrY,jdbcType=DECIMAL}, 
+            #{netunitGrD,jdbcType=DECIMAL}, #{netunitGrW,jdbcType=DECIMAL}, #{netunitGrM,jdbcType=DECIMAL}, 
+            #{netunitGrS,jdbcType=DECIMAL}, #{netunitGrY,jdbcType=DECIMAL}, #{netunitGrD2,jdbcType=DECIMAL}, 
+            #{netunitGrW2,jdbcType=DECIMAL}, #{netunitGrM2,jdbcType=DECIMAL}, #{netunitGrS2,jdbcType=DECIMAL}, 
+            #{netunitGrY2,jdbcType=VARCHAR}, #{plVdate,jdbcType=DATE}, #{plMdate,jdbcType=DATE}, 
+            #{invManager,jdbcType=VARCHAR}, #{vixW,jdbcType=DECIMAL}, #{vixM,jdbcType=DECIMAL}, 
+            #{vixS,jdbcType=DECIMAL}, #{vixY,jdbcType=DECIMAL}, #{vixR,jdbcType=DECIMAL}, 
+            #{vixLoneM,jdbcType=DECIMAL}, #{vixLthreeM,jdbcType=DECIMAL}, #{vixLHy,jdbcType=DECIMAL}, 
+            #{vixLY,jdbcType=DECIMAL}, #{sharpeW,jdbcType=DECIMAL}, #{sharpeM,jdbcType=DECIMAL}, 
+            #{sharpeS,jdbcType=DECIMAL}, #{sharpeY,jdbcType=DECIMAL}, #{sharpeR,jdbcType=DECIMAL}, 
+            #{sharpeLoneM,jdbcType=DECIMAL}, #{sharpeLthreeM,jdbcType=DECIMAL}, #{sharpeLHy,jdbcType=DECIMAL}, 
+            #{sharpeLY,jdbcType=DECIMAL}, #{sortinoW,jdbcType=DECIMAL}, #{sortinoM,jdbcType=DECIMAL}, 
+            #{sortinoS,jdbcType=DECIMAL}, #{sortinoY,jdbcType=DECIMAL}, #{sortinoR,jdbcType=DECIMAL}, 
+            #{sortinoLoneM,jdbcType=DECIMAL}, #{sortinoLthreeM,jdbcType=DECIMAL}, #{sortinoLHy,jdbcType=DECIMAL}, 
+            #{sortinoLY,jdbcType=DECIMAL}, #{maxDrW,jdbcType=DECIMAL}, #{maxDrM,jdbcType=DECIMAL}, 
+            #{maxDrS,jdbcType=DECIMAL}, #{maxDrY,jdbcType=DECIMAL}, #{maxDrR,jdbcType=DECIMAL}, 
+            #{maxDrLoneM,jdbcType=DECIMAL}, #{maxDrLthreeM,jdbcType=DECIMAL}, #{maxDrLHy,jdbcType=DECIMAL}, 
+            #{maxDrLY,jdbcType=DECIMAL}, #{dsclossExp,jdbcType=DECIMAL}, #{intincexp,jdbcType=DECIMAL}, 
+            #{valueAdd,jdbcType=DECIMAL}, #{totalValueAdd,jdbcType=DECIMAL}, #{totalFloatIngpl,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PlTargetDb" >
+        insert into PL_TARGET_DB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="portfolioName != null" >
+                PORTFOLIO_NAME,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="assetValue != null" >
+                ASSET_VALUE,
+            </if>
+            <if test="assetNetvalue != null" >
+                ASSET_NETVALUE,
+            </if>
+            <if test="unitValue != null" >
+                UNIT_VALUE,
+            </if>
+            <if test="totUniitValue != null" >
+                TOT_UNIIT_VALUE,
+            </if>
+            <if test="tdyYield != null" >
+                TDY_YIELD,
+            </if>
+            <if test="yield7 != null" >
+                YIELD_7,
+            </if>
+            <if test="assetRate != null" >
+                ASSET_RATE,
+            </if>
+            <if test="assetGrD != null" >
+                ASSET_GR_D,
+            </if>
+            <if test="assetGrW != null" >
+                ASSET_GR_W,
+            </if>
+            <if test="assetGrM != null" >
+                ASSET_GR_M,
+            </if>
+            <if test="assetGrS != null" >
+                ASSET_GR_S,
+            </if>
+            <if test="assetGrY != null" >
+                ASSET_GR_Y,
+            </if>
+            <if test="netassetGrD != null" >
+                NETASSET_GR_D,
+            </if>
+            <if test="netassetGrW != null" >
+                NETASSET_GR_W,
+            </if>
+            <if test="netassetGrM != null" >
+                NETASSET_GR_M,
+            </if>
+            <if test="netassetGrS != null" >
+                NETASSET_GR_S,
+            </if>
+            <if test="netassetGrY != null" >
+                NETASSET_GR_Y,
+            </if>
+            <if test="netunitGrD != null" >
+                NETUNIT_GR_D,
+            </if>
+            <if test="netunitGrW != null" >
+                NETUNIT_GR_W,
+            </if>
+            <if test="netunitGrM != null" >
+                NETUNIT_GR_M,
+            </if>
+            <if test="netunitGrS != null" >
+                NETUNIT_GR_S,
+            </if>
+            <if test="netunitGrY != null" >
+                NETUNIT_GR_Y,
+            </if>
+            <if test="netunitGrD2 != null" >
+                NETUNIT_GR_D2,
+            </if>
+            <if test="netunitGrW2 != null" >
+                NETUNIT_GR_W2,
+            </if>
+            <if test="netunitGrM2 != null" >
+                NETUNIT_GR_M2,
+            </if>
+            <if test="netunitGrS2 != null" >
+                NETUNIT_GR_S2,
+            </if>
+            <if test="netunitGrY2 != null" >
+                NETUNIT_GR_Y2,
+            </if>
+            <if test="plVdate != null" >
+                PL_VDATE,
+            </if>
+            <if test="plMdate != null" >
+                PL_MDATE,
+            </if>
+            <if test="invManager != null" >
+                INV_MANAGER,
+            </if>
+            <if test="vixW != null" >
+                VIX_W,
+            </if>
+            <if test="vixM != null" >
+                VIX_M,
+            </if>
+            <if test="vixS != null" >
+                VIX_S,
+            </if>
+            <if test="vixY != null" >
+                VIX_Y,
+            </if>
+            <if test="vixR != null" >
+                VIX_R,
+            </if>
+            <if test="vixLoneM != null" >
+                VIX_LONE_M,
+            </if>
+            <if test="vixLthreeM != null" >
+                VIX_LTHREE_M,
+            </if>
+            <if test="vixLHy != null" >
+                VIX_L_HY,
+            </if>
+            <if test="vixLY != null" >
+                VIX_L_Y,
+            </if>
+            <if test="sharpeW != null" >
+                SHARPE_W,
+            </if>
+            <if test="sharpeM != null" >
+                SHARPE_M,
+            </if>
+            <if test="sharpeS != null" >
+                SHARPE_S,
+            </if>
+            <if test="sharpeY != null" >
+                SHARPE_Y,
+            </if>
+            <if test="sharpeR != null" >
+                SHARPE_R,
+            </if>
+            <if test="sharpeLoneM != null" >
+                SHARPE_LONE_M,
+            </if>
+            <if test="sharpeLthreeM != null" >
+                SHARPE_LTHREE_M,
+            </if>
+            <if test="sharpeLHy != null" >
+                SHARPE_L_HY,
+            </if>
+            <if test="sharpeLY != null" >
+                SHARPE_L_Y,
+            </if>
+            <if test="sortinoW != null" >
+                SORTINO_W,
+            </if>
+            <if test="sortinoM != null" >
+                SORTINO_M,
+            </if>
+            <if test="sortinoS != null" >
+                SORTINO_S,
+            </if>
+            <if test="sortinoY != null" >
+                SORTINO_Y,
+            </if>
+            <if test="sortinoR != null" >
+                SORTINO_R,
+            </if>
+            <if test="sortinoLoneM != null" >
+                SORTINO_LONE_M,
+            </if>
+            <if test="sortinoLthreeM != null" >
+                SORTINO_LTHREE_M,
+            </if>
+            <if test="sortinoLHy != null" >
+                SORTINO_L_HY,
+            </if>
+            <if test="sortinoLY != null" >
+                SORTINO_L_Y,
+            </if>
+            <if test="maxDrW != null" >
+                MAX_DR_W,
+            </if>
+            <if test="maxDrM != null" >
+                MAX_DR_M,
+            </if>
+            <if test="maxDrS != null" >
+                MAX_DR_S,
+            </if>
+            <if test="maxDrY != null" >
+                MAX_DR_Y,
+            </if>
+            <if test="maxDrR != null" >
+                MAX_DR_R,
+            </if>
+            <if test="maxDrLoneM != null" >
+                MAX_DR_LONE_M,
+            </if>
+            <if test="maxDrLthreeM != null" >
+                MAX_DR_LTHREE_M,
+            </if>
+            <if test="maxDrLHy != null" >
+                MAX_DR_L_HY,
+            </if>
+            <if test="maxDrLY != null" >
+                MAX_DR_L_Y,
+            </if>
+            <if test="dsclossExp != null" >
+                DSCLOSS_EXP,
+            </if>
+            <if test="intincexp != null" >
+                INTINCEXP,
+            </if>
+            <if test="valueAdd != null" >
+                VALUE_ADD,
+            </if>
+            <if test="totalValueAdd != null" >
+                TOTAL_VALUE_ADD,
+            </if>
+            <if test="totalFloatIngpl != null" >
+                TOTAL_FLOAT_INGPL,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="portfolioName != null" >
+                #{portfolioName,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetValue != null" >
+                #{assetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="assetNetvalue != null" >
+                #{assetNetvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValue != null" >
+                #{unitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="totUniitValue != null" >
+                #{totUniitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyYield != null" >
+                #{tdyYield,jdbcType=DECIMAL},
+            </if>
+            <if test="yield7 != null" >
+                #{yield7,jdbcType=DECIMAL},
+            </if>
+            <if test="assetRate != null" >
+                #{assetRate,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrD != null" >
+                #{assetGrD,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrW != null" >
+                #{assetGrW,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrM != null" >
+                #{assetGrM,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrS != null" >
+                #{assetGrS,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrY != null" >
+                #{assetGrY,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrD != null" >
+                #{netassetGrD,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrW != null" >
+                #{netassetGrW,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrM != null" >
+                #{netassetGrM,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrS != null" >
+                #{netassetGrS,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrY != null" >
+                #{netassetGrY,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrD != null" >
+                #{netunitGrD,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrW != null" >
+                #{netunitGrW,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrM != null" >
+                #{netunitGrM,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrS != null" >
+                #{netunitGrS,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrY != null" >
+                #{netunitGrY,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrD2 != null" >
+                #{netunitGrD2,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrW2 != null" >
+                #{netunitGrW2,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrM2 != null" >
+                #{netunitGrM2,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrS2 != null" >
+                #{netunitGrS2,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrY2 != null" >
+                #{netunitGrY2,jdbcType=VARCHAR},
+            </if>
+            <if test="plVdate != null" >
+                #{plVdate,jdbcType=DATE},
+            </if>
+            <if test="plMdate != null" >
+                #{plMdate,jdbcType=DATE},
+            </if>
+            <if test="invManager != null" >
+                #{invManager,jdbcType=VARCHAR},
+            </if>
+            <if test="vixW != null" >
+                #{vixW,jdbcType=DECIMAL},
+            </if>
+            <if test="vixM != null" >
+                #{vixM,jdbcType=DECIMAL},
+            </if>
+            <if test="vixS != null" >
+                #{vixS,jdbcType=DECIMAL},
+            </if>
+            <if test="vixY != null" >
+                #{vixY,jdbcType=DECIMAL},
+            </if>
+            <if test="vixR != null" >
+                #{vixR,jdbcType=DECIMAL},
+            </if>
+            <if test="vixLoneM != null" >
+                #{vixLoneM,jdbcType=DECIMAL},
+            </if>
+            <if test="vixLthreeM != null" >
+                #{vixLthreeM,jdbcType=DECIMAL},
+            </if>
+            <if test="vixLHy != null" >
+                #{vixLHy,jdbcType=DECIMAL},
+            </if>
+            <if test="vixLY != null" >
+                #{vixLY,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeW != null" >
+                #{sharpeW,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeM != null" >
+                #{sharpeM,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeS != null" >
+                #{sharpeS,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeY != null" >
+                #{sharpeY,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeR != null" >
+                #{sharpeR,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeLoneM != null" >
+                #{sharpeLoneM,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeLthreeM != null" >
+                #{sharpeLthreeM,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeLHy != null" >
+                #{sharpeLHy,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeLY != null" >
+                #{sharpeLY,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoW != null" >
+                #{sortinoW,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoM != null" >
+                #{sortinoM,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoS != null" >
+                #{sortinoS,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoY != null" >
+                #{sortinoY,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoR != null" >
+                #{sortinoR,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoLoneM != null" >
+                #{sortinoLoneM,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoLthreeM != null" >
+                #{sortinoLthreeM,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoLHy != null" >
+                #{sortinoLHy,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoLY != null" >
+                #{sortinoLY,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrW != null" >
+                #{maxDrW,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrM != null" >
+                #{maxDrM,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrS != null" >
+                #{maxDrS,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrY != null" >
+                #{maxDrY,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrR != null" >
+                #{maxDrR,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrLoneM != null" >
+                #{maxDrLoneM,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrLthreeM != null" >
+                #{maxDrLthreeM,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrLHy != null" >
+                #{maxDrLHy,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrLY != null" >
+                #{maxDrLY,jdbcType=DECIMAL},
+            </if>
+            <if test="dsclossExp != null" >
+                #{dsclossExp,jdbcType=DECIMAL},
+            </if>
+            <if test="intincexp != null" >
+                #{intincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="valueAdd != null" >
+                #{valueAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="totalValueAdd != null" >
+                #{totalValueAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="totalFloatIngpl != null" >
+                #{totalFloatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PlTargetDb" >
+        insert into PL_TARGET_DB(PORTFOLIO_ID, CDATE, PORTFOLIO_NAME, PROFIT_TYPE, ASSET_VALUE, 
+        ASSET_NETVALUE, UNIT_VALUE, TOT_UNIIT_VALUE, TDY_YIELD, YIELD_7, ASSET_RATE, ASSET_GR_D, 
+        ASSET_GR_W, ASSET_GR_M, ASSET_GR_S, ASSET_GR_Y, NETASSET_GR_D, NETASSET_GR_W, NETASSET_GR_M, 
+        NETASSET_GR_S, NETASSET_GR_Y, NETUNIT_GR_D, NETUNIT_GR_W, NETUNIT_GR_M, NETUNIT_GR_S, 
+        NETUNIT_GR_Y, NETUNIT_GR_D2, NETUNIT_GR_W2, NETUNIT_GR_M2, NETUNIT_GR_S2, NETUNIT_GR_Y2, 
+        PL_VDATE, PL_MDATE, INV_MANAGER, VIX_W, VIX_M, VIX_S, VIX_Y, VIX_R, VIX_LONE_M, VIX_LTHREE_M, 
+        VIX_L_HY, VIX_L_Y, SHARPE_W, SHARPE_M, SHARPE_S, SHARPE_Y, SHARPE_R, SHARPE_LONE_M, 
+        SHARPE_LTHREE_M, SHARPE_L_HY, SHARPE_L_Y, SORTINO_W, SORTINO_M, SORTINO_S, SORTINO_Y, 
+        SORTINO_R, SORTINO_LONE_M, SORTINO_LTHREE_M, SORTINO_L_HY, SORTINO_L_Y, MAX_DR_W, 
+        MAX_DR_M, MAX_DR_S, MAX_DR_Y, MAX_DR_R, MAX_DR_LONE_M, MAX_DR_LTHREE_M, MAX_DR_L_HY, 
+        MAX_DR_L_Y, DSCLOSS_EXP, INTINCEXP, VALUE_ADD, TOTAL_VALUE_ADD, TOTAL_FLOAT_INGPL, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select PORTFOLIO_ID, CDATE, PORTFOLIO_NAME, PROFIT_TYPE, ASSET_VALUE, 
+            ASSET_NETVALUE, UNIT_VALUE, TOT_UNIIT_VALUE, TDY_YIELD, YIELD_7, ASSET_RATE, ASSET_GR_D, 
+            ASSET_GR_W, ASSET_GR_M, ASSET_GR_S, ASSET_GR_Y, NETASSET_GR_D, NETASSET_GR_W, NETASSET_GR_M, 
+            NETASSET_GR_S, NETASSET_GR_Y, NETUNIT_GR_D, NETUNIT_GR_W, NETUNIT_GR_M, NETUNIT_GR_S, 
+            NETUNIT_GR_Y, NETUNIT_GR_D2, NETUNIT_GR_W2, NETUNIT_GR_M2, NETUNIT_GR_S2, NETUNIT_GR_Y2, 
+            PL_VDATE, PL_MDATE, INV_MANAGER, VIX_W, VIX_M, VIX_S, VIX_Y, VIX_R, VIX_LONE_M, VIX_LTHREE_M, 
+            VIX_L_HY, VIX_L_Y, SHARPE_W, SHARPE_M, SHARPE_S, SHARPE_Y, SHARPE_R, SHARPE_LONE_M, 
+            SHARPE_LTHREE_M, SHARPE_L_HY, SHARPE_L_Y, SORTINO_W, SORTINO_M, SORTINO_S, SORTINO_Y, 
+            SORTINO_R, SORTINO_LONE_M, SORTINO_LTHREE_M, SORTINO_L_HY, SORTINO_L_Y, MAX_DR_W, 
+            MAX_DR_M, MAX_DR_S, MAX_DR_Y, MAX_DR_R, MAX_DR_LONE_M, MAX_DR_LTHREE_M, MAX_DR_L_HY, 
+            MAX_DR_L_Y, DSCLOSS_EXP, INTINCEXP, VALUE_ADD, TOTAL_VALUE_ADD, TOTAL_FLOAT_INGPL, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PL_TARGET_DB
+             where 1 = 1 and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PlTargetDb" >
+        update PL_TARGET_DB
+        <set >
+            <if test="portfolioName != null" >
+                PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetValue != null" >
+                ASSET_VALUE = #{assetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="assetNetvalue != null" >
+                ASSET_NETVALUE = #{assetNetvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValue != null" >
+                UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="totUniitValue != null" >
+                TOT_UNIIT_VALUE = #{totUniitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyYield != null" >
+                TDY_YIELD = #{tdyYield,jdbcType=DECIMAL},
+            </if>
+            <if test="yield7 != null" >
+                YIELD_7 = #{yield7,jdbcType=DECIMAL},
+            </if>
+            <if test="assetRate != null" >
+                ASSET_RATE = #{assetRate,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrD != null" >
+                ASSET_GR_D = #{assetGrD,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrW != null" >
+                ASSET_GR_W = #{assetGrW,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrM != null" >
+                ASSET_GR_M = #{assetGrM,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrS != null" >
+                ASSET_GR_S = #{assetGrS,jdbcType=DECIMAL},
+            </if>
+            <if test="assetGrY != null" >
+                ASSET_GR_Y = #{assetGrY,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrD != null" >
+                NETASSET_GR_D = #{netassetGrD,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrW != null" >
+                NETASSET_GR_W = #{netassetGrW,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrM != null" >
+                NETASSET_GR_M = #{netassetGrM,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrS != null" >
+                NETASSET_GR_S = #{netassetGrS,jdbcType=DECIMAL},
+            </if>
+            <if test="netassetGrY != null" >
+                NETASSET_GR_Y = #{netassetGrY,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrD != null" >
+                NETUNIT_GR_D = #{netunitGrD,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrW != null" >
+                NETUNIT_GR_W = #{netunitGrW,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrM != null" >
+                NETUNIT_GR_M = #{netunitGrM,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrS != null" >
+                NETUNIT_GR_S = #{netunitGrS,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrY != null" >
+                NETUNIT_GR_Y = #{netunitGrY,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrD2 != null" >
+                NETUNIT_GR_D2 = #{netunitGrD2,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrW2 != null" >
+                NETUNIT_GR_W2 = #{netunitGrW2,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrM2 != null" >
+                NETUNIT_GR_M2 = #{netunitGrM2,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrS2 != null" >
+                NETUNIT_GR_S2 = #{netunitGrS2,jdbcType=DECIMAL},
+            </if>
+            <if test="netunitGrY2 != null" >
+                NETUNIT_GR_Y2 = #{netunitGrY2,jdbcType=VARCHAR},
+            </if>
+            <if test="plVdate != null" >
+                PL_VDATE = #{plVdate,jdbcType=DATE},
+            </if>
+            <if test="plMdate != null" >
+                PL_MDATE = #{plMdate,jdbcType=DATE},
+            </if>
+            <if test="invManager != null" >
+                INV_MANAGER = #{invManager,jdbcType=VARCHAR},
+            </if>
+            <if test="vixW != null" >
+                VIX_W = #{vixW,jdbcType=DECIMAL},
+            </if>
+            <if test="vixM != null" >
+                VIX_M = #{vixM,jdbcType=DECIMAL},
+            </if>
+            <if test="vixS != null" >
+                VIX_S = #{vixS,jdbcType=DECIMAL},
+            </if>
+            <if test="vixY != null" >
+                VIX_Y = #{vixY,jdbcType=DECIMAL},
+            </if>
+            <if test="vixR != null" >
+                VIX_R = #{vixR,jdbcType=DECIMAL},
+            </if>
+            <if test="vixLoneM != null" >
+                VIX_LONE_M = #{vixLoneM,jdbcType=DECIMAL},
+            </if>
+            <if test="vixLthreeM != null" >
+                VIX_LTHREE_M = #{vixLthreeM,jdbcType=DECIMAL},
+            </if>
+            <if test="vixLHy != null" >
+                VIX_L_HY = #{vixLHy,jdbcType=DECIMAL},
+            </if>
+            <if test="vixLY != null" >
+                VIX_L_Y = #{vixLY,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeW != null" >
+                SHARPE_W = #{sharpeW,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeM != null" >
+                SHARPE_M = #{sharpeM,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeS != null" >
+                SHARPE_S = #{sharpeS,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeY != null" >
+                SHARPE_Y = #{sharpeY,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeR != null" >
+                SHARPE_R = #{sharpeR,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeLoneM != null" >
+                SHARPE_LONE_M = #{sharpeLoneM,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeLthreeM != null" >
+                SHARPE_LTHREE_M = #{sharpeLthreeM,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeLHy != null" >
+                SHARPE_L_HY = #{sharpeLHy,jdbcType=DECIMAL},
+            </if>
+            <if test="sharpeLY != null" >
+                SHARPE_L_Y = #{sharpeLY,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoW != null" >
+                SORTINO_W = #{sortinoW,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoM != null" >
+                SORTINO_M = #{sortinoM,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoS != null" >
+                SORTINO_S = #{sortinoS,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoY != null" >
+                SORTINO_Y = #{sortinoY,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoR != null" >
+                SORTINO_R = #{sortinoR,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoLoneM != null" >
+                SORTINO_LONE_M = #{sortinoLoneM,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoLthreeM != null" >
+                SORTINO_LTHREE_M = #{sortinoLthreeM,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoLHy != null" >
+                SORTINO_L_HY = #{sortinoLHy,jdbcType=DECIMAL},
+            </if>
+            <if test="sortinoLY != null" >
+                SORTINO_L_Y = #{sortinoLY,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrW != null" >
+                MAX_DR_W = #{maxDrW,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrM != null" >
+                MAX_DR_M = #{maxDrM,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrS != null" >
+                MAX_DR_S = #{maxDrS,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrY != null" >
+                MAX_DR_Y = #{maxDrY,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrR != null" >
+                MAX_DR_R = #{maxDrR,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrLoneM != null" >
+                MAX_DR_LONE_M = #{maxDrLoneM,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrLthreeM != null" >
+                MAX_DR_LTHREE_M = #{maxDrLthreeM,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrLHy != null" >
+                MAX_DR_L_HY = #{maxDrLHy,jdbcType=DECIMAL},
+            </if>
+            <if test="maxDrLY != null" >
+                MAX_DR_L_Y = #{maxDrLY,jdbcType=DECIMAL},
+            </if>
+            <if test="dsclossExp != null" >
+                DSCLOSS_EXP = #{dsclossExp,jdbcType=DECIMAL},
+            </if>
+            <if test="intincexp != null" >
+                INTINCEXP = #{intincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="valueAdd != null" >
+                VALUE_ADD = #{valueAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="totalValueAdd != null" >
+                TOTAL_VALUE_ADD = #{totalValueAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="totalFloatIngpl != null" >
+                TOTAL_FLOAT_INGPL = #{totalFloatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PlTargetDb" >
+        update PL_TARGET_DB
+        set PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR},
+            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            ASSET_VALUE = #{assetValue,jdbcType=DECIMAL},
+            ASSET_NETVALUE = #{assetNetvalue,jdbcType=DECIMAL},
+            UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
+            TOT_UNIIT_VALUE = #{totUniitValue,jdbcType=DECIMAL},
+            TDY_YIELD = #{tdyYield,jdbcType=DECIMAL},
+            YIELD_7 = #{yield7,jdbcType=DECIMAL},
+            ASSET_RATE = #{assetRate,jdbcType=DECIMAL},
+            ASSET_GR_D = #{assetGrD,jdbcType=DECIMAL},
+            ASSET_GR_W = #{assetGrW,jdbcType=DECIMAL},
+            ASSET_GR_M = #{assetGrM,jdbcType=DECIMAL},
+            ASSET_GR_S = #{assetGrS,jdbcType=DECIMAL},
+            ASSET_GR_Y = #{assetGrY,jdbcType=DECIMAL},
+            NETASSET_GR_D = #{netassetGrD,jdbcType=DECIMAL},
+            NETASSET_GR_W = #{netassetGrW,jdbcType=DECIMAL},
+            NETASSET_GR_M = #{netassetGrM,jdbcType=DECIMAL},
+            NETASSET_GR_S = #{netassetGrS,jdbcType=DECIMAL},
+            NETASSET_GR_Y = #{netassetGrY,jdbcType=DECIMAL},
+            NETUNIT_GR_D = #{netunitGrD,jdbcType=DECIMAL},
+            NETUNIT_GR_W = #{netunitGrW,jdbcType=DECIMAL},
+            NETUNIT_GR_M = #{netunitGrM,jdbcType=DECIMAL},
+            NETUNIT_GR_S = #{netunitGrS,jdbcType=DECIMAL},
+            NETUNIT_GR_Y = #{netunitGrY,jdbcType=DECIMAL},
+            NETUNIT_GR_D2 = #{netunitGrD2,jdbcType=DECIMAL},
+            NETUNIT_GR_W2 = #{netunitGrW2,jdbcType=DECIMAL},
+            NETUNIT_GR_M2 = #{netunitGrM2,jdbcType=DECIMAL},
+            NETUNIT_GR_S2 = #{netunitGrS2,jdbcType=DECIMAL},
+            NETUNIT_GR_Y2 = #{netunitGrY2,jdbcType=VARCHAR},
+            PL_VDATE = #{plVdate,jdbcType=DATE},
+            PL_MDATE = #{plMdate,jdbcType=DATE},
+            INV_MANAGER = #{invManager,jdbcType=VARCHAR},
+            VIX_W = #{vixW,jdbcType=DECIMAL},
+            VIX_M = #{vixM,jdbcType=DECIMAL},
+            VIX_S = #{vixS,jdbcType=DECIMAL},
+            VIX_Y = #{vixY,jdbcType=DECIMAL},
+            VIX_R = #{vixR,jdbcType=DECIMAL},
+            VIX_LONE_M = #{vixLoneM,jdbcType=DECIMAL},
+            VIX_LTHREE_M = #{vixLthreeM,jdbcType=DECIMAL},
+            VIX_L_HY = #{vixLHy,jdbcType=DECIMAL},
+            VIX_L_Y = #{vixLY,jdbcType=DECIMAL},
+            SHARPE_W = #{sharpeW,jdbcType=DECIMAL},
+            SHARPE_M = #{sharpeM,jdbcType=DECIMAL},
+            SHARPE_S = #{sharpeS,jdbcType=DECIMAL},
+            SHARPE_Y = #{sharpeY,jdbcType=DECIMAL},
+            SHARPE_R = #{sharpeR,jdbcType=DECIMAL},
+            SHARPE_LONE_M = #{sharpeLoneM,jdbcType=DECIMAL},
+            SHARPE_LTHREE_M = #{sharpeLthreeM,jdbcType=DECIMAL},
+            SHARPE_L_HY = #{sharpeLHy,jdbcType=DECIMAL},
+            SHARPE_L_Y = #{sharpeLY,jdbcType=DECIMAL},
+            SORTINO_W = #{sortinoW,jdbcType=DECIMAL},
+            SORTINO_M = #{sortinoM,jdbcType=DECIMAL},
+            SORTINO_S = #{sortinoS,jdbcType=DECIMAL},
+            SORTINO_Y = #{sortinoY,jdbcType=DECIMAL},
+            SORTINO_R = #{sortinoR,jdbcType=DECIMAL},
+            SORTINO_LONE_M = #{sortinoLoneM,jdbcType=DECIMAL},
+            SORTINO_LTHREE_M = #{sortinoLthreeM,jdbcType=DECIMAL},
+            SORTINO_L_HY = #{sortinoLHy,jdbcType=DECIMAL},
+            SORTINO_L_Y = #{sortinoLY,jdbcType=DECIMAL},
+            MAX_DR_W = #{maxDrW,jdbcType=DECIMAL},
+            MAX_DR_M = #{maxDrM,jdbcType=DECIMAL},
+            MAX_DR_S = #{maxDrS,jdbcType=DECIMAL},
+            MAX_DR_Y = #{maxDrY,jdbcType=DECIMAL},
+            MAX_DR_R = #{maxDrR,jdbcType=DECIMAL},
+            MAX_DR_LONE_M = #{maxDrLoneM,jdbcType=DECIMAL},
+            MAX_DR_LTHREE_M = #{maxDrLthreeM,jdbcType=DECIMAL},
+            MAX_DR_L_HY = #{maxDrLHy,jdbcType=DECIMAL},
+            MAX_DR_L_Y = #{maxDrLY,jdbcType=DECIMAL},
+            DSCLOSS_EXP = #{dsclossExp,jdbcType=DECIMAL},
+            INTINCEXP = #{intincexp,jdbcType=DECIMAL},
+            VALUE_ADD = #{valueAdd,jdbcType=DECIMAL},
+            TOTAL_VALUE_ADD = #{totalValueAdd,jdbcType=DECIMAL},
+            TOTAL_FLOAT_INGPL = #{totalFloatIngpl,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+</mapper>

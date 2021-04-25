@@ -502,8 +502,8 @@
        <foreach collection="list" open="(" close=")" separator="," item="item">
       		#{item.pbcAccountId,jdbcType=CHAR}
       </foreach>
-      )
-      where 1 = 1 limit 1
+      )AS T
+      where  ranknum = 1
 </insert>
 <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
 	delete from PBC_PRD_ACCOUNT_SUB_HIS
@@ -518,8 +518,8 @@
 	       <foreach collection="list" open="(" close=")" separator="," item="item">
 	      		#{item.pbcAccountId,jdbcType=CHAR}
 	      </foreach>
-	      )
-	      where 1 = 1 limit 1
+	      )AS T
+	      where  ranknum = 1
     )
 </delete>
 <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
@@ -546,7 +546,7 @@
         <if test="search != null and search !='' ">
         AND PBC_ACCOUNT_ID LIKE concat_ws('','%', #{search},'%')
         </if>
-    )
+    ) tmp
     where 1 = 1 limit 1
  </select>
 <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">

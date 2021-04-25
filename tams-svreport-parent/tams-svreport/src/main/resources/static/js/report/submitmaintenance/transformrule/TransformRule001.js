@@ -44,7 +44,7 @@ $(function() {
     	
     	//新建按钮的事件
         $('#TransformRule001_btn_add').click(function() {
-            Joyin.dialog(JoyinUtil.getLabel("SvrTransformRule002"),
+            Joyin.dialog("变形转换规则新建",
                     basePath + "svreport/submitmaintenance/transformrule/SvrTransformRule002/init",
                     "80%", "70%", {pageModel:PAGE_MODEL_NEW},function(){
                         //防止出现查询转圈圈

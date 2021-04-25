@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIsupTrialMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIsupTrial" >
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="IND_ID" property="indId" jdbcType="VARCHAR" />
+        <result column="SUP_DATE" property="supDate" jdbcType="DATE" />
+        <result column="SUP_VAL" property="supVal" jdbcType="VARCHAR" />
+        <result column="SUP_STAT" property="supStat" jdbcType="VARCHAR" />
+        <result column="UNITE_SUP_STAT" property="uniteSupStat" jdbcType="VARCHAR" />
+        <result column="WARN_COND" property="warnCond" jdbcType="VARCHAR" />
+        <result column="APPROVE_COND" property="approveCond" jdbcType="VARCHAR" />
+        <result column="FOUL_COND" property="foulCond" jdbcType="VARCHAR" />
+        <result column="CONCLUSION" property="conclusion" jdbcType="VARCHAR" />
+        <result column="OLD_SUP_VAL" property="oldSupVal" jdbcType="VARCHAR" />
+        <result column="SUP_TREND" property="supTrend" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="UUID" property="uuid" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrial" >
+        insert into RSK_ISUP_TRIAL (TRADE_ID, TRADE_TYPE, PORTFOLIO_ID, 
+            IND_ID, SUP_DATE, SUP_VAL, 
+            SUP_STAT, UNITE_SUP_STAT, WARN_COND, 
+            APPROVE_COND, FOUL_COND, CONCLUSION, 
+            OLD_SUP_VAL, SUP_TREND, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, UUID, ASSET_CODE, 
+            SEQ_NO)
+        values (#{tradeId,jdbcType=VARCHAR}, #{tradeType,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, 
+            #{indId,jdbcType=VARCHAR}, #{supDate,jdbcType=DATE}, #{supVal,jdbcType=VARCHAR}, 
+            #{supStat,jdbcType=VARCHAR}, #{uniteSupStat,jdbcType=VARCHAR}, #{warnCond,jdbcType=VARCHAR}, 
+            #{approveCond,jdbcType=VARCHAR}, #{foulCond,jdbcType=VARCHAR}, #{conclusion,jdbcType=VARCHAR}, 
+            #{oldSupVal,jdbcType=VARCHAR}, #{supTrend,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{uuid,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
+            #{seqNo,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrial" >
+        insert into RSK_ISUP_TRIAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="tradeType != null" >
+                TRADE_TYPE,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="indId != null" >
+                IND_ID,
+            </if>
+            <if test="supDate != null" >
+                SUP_DATE,
+            </if>
+            <if test="supVal != null" >
+                SUP_VAL,
+            </if>
+            <if test="supStat != null" >
+                SUP_STAT,
+            </if>
+            <if test="uniteSupStat != null" >
+                UNITE_SUP_STAT,
+            </if>
+            <if test="warnCond != null" >
+                WARN_COND,
+            </if>
+            <if test="approveCond != null" >
+                APPROVE_COND,
+            </if>
+            <if test="foulCond != null" >
+                FOUL_COND,
+            </if>
+            <if test="conclusion != null" >
+                CONCLUSION,
+            </if>
+            <if test="oldSupVal != null" >
+                OLD_SUP_VAL,
+            </if>
+            <if test="supTrend != null" >
+                SUP_TREND,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="uuid != null" >
+                UUID,
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE,
+            </if>
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeType != null" >
+                #{tradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="supDate != null" >
+                #{supDate,jdbcType=DATE},
+            </if>
+            <if test="supVal != null" >
+                #{supVal,jdbcType=VARCHAR},
+            </if>
+            <if test="supStat != null" >
+                #{supStat,jdbcType=VARCHAR},
+            </if>
+            <if test="uniteSupStat != null" >
+                #{uniteSupStat,jdbcType=VARCHAR},
+            </if>
+            <if test="warnCond != null" >
+                #{warnCond,jdbcType=VARCHAR},
+            </if>
+            <if test="approveCond != null" >
+                #{approveCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulCond != null" >
+                #{foulCond,jdbcType=VARCHAR},
+            </if>
+            <if test="conclusion != null" >
+                #{conclusion,jdbcType=VARCHAR},
+            </if>
+            <if test="oldSupVal != null" >
+                #{oldSupVal,jdbcType=VARCHAR},
+            </if>
+            <if test="supTrend != null" >
+                #{supTrend,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="uuid != null" >
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrial" >
+        insert into RSK_ISUP_TRIAL(TRADE_ID, TRADE_TYPE, PORTFOLIO_ID, IND_ID, SUP_DATE, 
+        SUP_VAL, SUP_STAT, UNITE_SUP_STAT, WARN_COND, APPROVE_COND, FOUL_COND, CONCLUSION, 
+        OLD_SUP_VAL, SUP_TREND, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        UUID, ASSET_CODE, SEQ_NO)
+        select TRADE_ID, TRADE_TYPE, PORTFOLIO_ID, IND_ID, SUP_DATE, 
+            SUP_VAL, SUP_STAT, UNITE_SUP_STAT, WARN_COND, APPROVE_COND, FOUL_COND, CONCLUSION, 
+            OLD_SUP_VAL, SUP_TREND, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            UUID, ASSET_CODE, SEQ_NO
+             from RSK_ISUP_TRIAL
+             where 1 = 1
+    </insert>
+</mapper>

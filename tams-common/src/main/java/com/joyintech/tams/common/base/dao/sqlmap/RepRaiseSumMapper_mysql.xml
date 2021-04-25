@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepRaiseSumMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepRaiseSum" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <result column="REP_ISSUE_PARTY_NAME" property="repIssuePartyName" jdbcType="VARCHAR" />
+        <result column="REP_ISSUE_PARTY_ID" property="repIssuePartyId" jdbcType="VARCHAR" />
+        <result column="REP_FINPROD_REG_ID" property="repFinprodRegId" jdbcType="VARCHAR" />
+        <result column="REP_BANK_PROD_CODE" property="repBankProdCode" jdbcType="VARCHAR" />
+        <result column="REP_PER_SUM" property="repPerSum" jdbcType="DECIMAL" />
+        <result column="REP_LEGALPERSON_SUM" property="repLegalpersonSum" jdbcType="DECIMAL" />
+        <result column="REP_N_LEGALPERSON_SUM" property="repNLegalpersonSum" jdbcType="DECIMAL" />
+        <result column="REP_SUBSCRIPTION_CCY" property="repSubscriptionCcy" jdbcType="VARCHAR" />
+        <result column="REP_SUBSCRIPTION_MON" property="repSubscriptionMon" jdbcType="DECIMAL" />
+        <result column="REP_CONVERT_CNY" property="repConvertCny" jdbcType="DECIMAL" />
+        <result column="REP_SALE_AREA" property="repSaleArea" jdbcType="VARCHAR" />
+        <result column="REP_AREA_RAISE_SUM" property="repAreaRaiseSum" jdbcType="DECIMAL" />
+        <result column="REP_ACT_RAISE_SUM" property="repActRaiseSum" jdbcType="DECIMAL" />
+        <result column="REP_SHARE_SUM" property="repShareSum" jdbcType="DECIMAL" />
+        <result column="REP_IS_OTHER_SALE" property="repIsOtherSale" jdbcType="VARCHAR" />
+        <result column="REP_OTHER_SALE_SUM" property="repOtherSaleSum" jdbcType="DECIMAL" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" />
+        <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_ISSUE_PARTY_NAME REP_ISSUE_PARTY_NAME, REP_ISSUE_PARTY_ID REP_ISSUE_PARTY_ID, 
+        REP_FINPROD_REG_ID REP_FINPROD_REG_ID, REP_BANK_PROD_CODE REP_BANK_PROD_CODE, REP_PER_SUM REP_PER_SUM, 
+        REP_LEGALPERSON_SUM REP_LEGALPERSON_SUM, REP_N_LEGALPERSON_SUM REP_N_LEGALPERSON_SUM, 
+        REP_SUBSCRIPTION_CCY REP_SUBSCRIPTION_CCY, REP_SUBSCRIPTION_MON REP_SUBSCRIPTION_MON, 
+        REP_CONVERT_CNY REP_CONVERT_CNY, REP_SALE_AREA REP_SALE_AREA, REP_AREA_RAISE_SUM REP_AREA_RAISE_SUM, 
+        REP_ACT_RAISE_SUM REP_ACT_RAISE_SUM, REP_SHARE_SUM REP_SHARE_SUM, REP_IS_OTHER_SALE REP_IS_OTHER_SALE, 
+        REP_OTHER_SALE_SUM REP_OTHER_SALE_SUM, REP_REMARK REP_REMARK, REP_SEND_STATUS REP_SEND_STATUS, 
+        REP_STATUS_DATE REP_STATUS_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepRaiseSumMapper.Base_Column_List" />
+        from REP_RAISE_SUM
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepRaiseSumMapper.Base_Column_List" />
+        from REP_RAISE_SUM
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepRaiseSumMapper.Base_Column_List" />
+        from REP_RAISE_SUM
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_RAISE_SUM
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepRaiseSum" >
+        insert into REP_RAISE_SUM (REP_FINPROD_ID, REP_ISSUE_PARTY_NAME, 
+            REP_ISSUE_PARTY_ID, REP_FINPROD_REG_ID, REP_BANK_PROD_CODE, 
+            REP_PER_SUM, REP_LEGALPERSON_SUM, REP_N_LEGALPERSON_SUM, 
+            REP_SUBSCRIPTION_CCY, REP_SUBSCRIPTION_MON, 
+            REP_CONVERT_CNY, REP_SALE_AREA, REP_AREA_RAISE_SUM, 
+            REP_ACT_RAISE_SUM, REP_SHARE_SUM, REP_IS_OTHER_SALE, 
+            REP_OTHER_SALE_SUM, REP_REMARK, REP_SEND_STATUS, 
+            REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repIssuePartyName,jdbcType=VARCHAR}, 
+            #{repIssuePartyId,jdbcType=VARCHAR}, #{repFinprodRegId,jdbcType=VARCHAR}, #{repBankProdCode,jdbcType=VARCHAR}, 
+            #{repPerSum,jdbcType=DECIMAL}, #{repLegalpersonSum,jdbcType=DECIMAL}, #{repNLegalpersonSum,jdbcType=DECIMAL}, 
+            #{repSubscriptionCcy,jdbcType=VARCHAR}, #{repSubscriptionMon,jdbcType=DECIMAL}, 
+            #{repConvertCny,jdbcType=DECIMAL}, #{repSaleArea,jdbcType=VARCHAR}, #{repAreaRaiseSum,jdbcType=DECIMAL}, 
+            #{repActRaiseSum,jdbcType=DECIMAL}, #{repShareSum,jdbcType=DECIMAL}, #{repIsOtherSale,jdbcType=VARCHAR}, 
+            #{repOtherSaleSum,jdbcType=DECIMAL}, #{repRemark,jdbcType=VARCHAR}, #{repSendStatus,jdbcType=VARCHAR}, 
+            #{repStatusDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepRaiseSum" >
+        insert into REP_RAISE_SUM
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repIssuePartyName != null" >
+                REP_ISSUE_PARTY_NAME,
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID,
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID,
+            </if>
+            <if test="repBankProdCode != null" >
+                REP_BANK_PROD_CODE,
+            </if>
+            <if test="repPerSum != null" >
+                REP_PER_SUM,
+            </if>
+            <if test="repLegalpersonSum != null" >
+                REP_LEGALPERSON_SUM,
+            </if>
+            <if test="repNLegalpersonSum != null" >
+                REP_N_LEGALPERSON_SUM,
+            </if>
+            <if test="repSubscriptionCcy != null" >
+                REP_SUBSCRIPTION_CCY,
+            </if>
+            <if test="repSubscriptionMon != null" >
+                REP_SUBSCRIPTION_MON,
+            </if>
+            <if test="repConvertCny != null" >
+                REP_CONVERT_CNY,
+            </if>
+            <if test="repSaleArea != null" >
+                REP_SALE_AREA,
+            </if>
+            <if test="repAreaRaiseSum != null" >
+                REP_AREA_RAISE_SUM,
+            </if>
+            <if test="repActRaiseSum != null" >
+                REP_ACT_RAISE_SUM,
+            </if>
+            <if test="repShareSum != null" >
+                REP_SHARE_SUM,
+            </if>
+            <if test="repIsOtherSale != null" >
+                REP_IS_OTHER_SALE,
+            </if>
+            <if test="repOtherSaleSum != null" >
+                REP_OTHER_SALE_SUM,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS,
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyName != null" >
+                #{repIssuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repBankProdCode != null" >
+                #{repBankProdCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repPerSum != null" >
+                #{repPerSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repLegalpersonSum != null" >
+                #{repLegalpersonSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repNLegalpersonSum != null" >
+                #{repNLegalpersonSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repSubscriptionCcy != null" >
+                #{repSubscriptionCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repSubscriptionMon != null" >
+                #{repSubscriptionMon,jdbcType=DECIMAL},
+            </if>
+            <if test="repConvertCny != null" >
+                #{repConvertCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repSaleArea != null" >
+                #{repSaleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="repAreaRaiseSum != null" >
+                #{repAreaRaiseSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repActRaiseSum != null" >
+                #{repActRaiseSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repShareSum != null" >
+                #{repShareSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repIsOtherSale != null" >
+                #{repIsOtherSale,jdbcType=VARCHAR},
+            </if>
+            <if test="repOtherSaleSum != null" >
+                #{repOtherSaleSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repSendStatus != null" >
+                #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepRaiseSum" >
+        insert into REP_RAISE_SUM(REP_FINPROD_ID, REP_ISSUE_PARTY_NAME, REP_ISSUE_PARTY_ID, 
+        REP_FINPROD_REG_ID, REP_BANK_PROD_CODE, REP_PER_SUM, REP_LEGALPERSON_SUM, REP_N_LEGALPERSON_SUM, 
+        REP_SUBSCRIPTION_CCY, REP_SUBSCRIPTION_MON, REP_CONVERT_CNY, REP_SALE_AREA, REP_AREA_RAISE_SUM, 
+        REP_ACT_RAISE_SUM, REP_SHARE_SUM, REP_IS_OTHER_SALE, REP_OTHER_SALE_SUM, REP_REMARK, 
+        REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select REP_FINPROD_ID, REP_ISSUE_PARTY_NAME, REP_ISSUE_PARTY_ID, 
+            REP_FINPROD_REG_ID, REP_BANK_PROD_CODE, REP_PER_SUM, REP_LEGALPERSON_SUM, REP_N_LEGALPERSON_SUM, 
+            REP_SUBSCRIPTION_CCY, REP_SUBSCRIPTION_MON, REP_CONVERT_CNY, REP_SALE_AREA, REP_AREA_RAISE_SUM, 
+            REP_ACT_RAISE_SUM, REP_SHARE_SUM, REP_IS_OTHER_SALE, REP_OTHER_SALE_SUM, REP_REMARK, 
+            REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_RAISE_SUM
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepRaiseSum" >
+        update REP_RAISE_SUM
+        <set >
+            <if test="repIssuePartyName != null" >
+                REP_ISSUE_PARTY_NAME = #{repIssuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repBankProdCode != null" >
+                REP_BANK_PROD_CODE = #{repBankProdCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repPerSum != null" >
+                REP_PER_SUM = #{repPerSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repLegalpersonSum != null" >
+                REP_LEGALPERSON_SUM = #{repLegalpersonSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repNLegalpersonSum != null" >
+                REP_N_LEGALPERSON_SUM = #{repNLegalpersonSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repSubscriptionCcy != null" >
+                REP_SUBSCRIPTION_CCY = #{repSubscriptionCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repSubscriptionMon != null" >
+                REP_SUBSCRIPTION_MON = #{repSubscriptionMon,jdbcType=DECIMAL},
+            </if>
+            <if test="repConvertCny != null" >
+                REP_CONVERT_CNY = #{repConvertCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repSaleArea != null" >
+                REP_SALE_AREA = #{repSaleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="repAreaRaiseSum != null" >
+                REP_AREA_RAISE_SUM = #{repAreaRaiseSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repActRaiseSum != null" >
+                REP_ACT_RAISE_SUM = #{repActRaiseSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repShareSum != null" >
+                REP_SHARE_SUM = #{repShareSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repIsOtherSale != null" >
+                REP_IS_OTHER_SALE = #{repIsOtherSale,jdbcType=VARCHAR},
+            </if>
+            <if test="repOtherSaleSum != null" >
+                REP_OTHER_SALE_SUM = #{repOtherSaleSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepRaiseSum" >
+        update REP_RAISE_SUM
+        set REP_ISSUE_PARTY_NAME = #{repIssuePartyName,jdbcType=VARCHAR},
+            REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            REP_BANK_PROD_CODE = #{repBankProdCode,jdbcType=VARCHAR},
+            REP_PER_SUM = #{repPerSum,jdbcType=DECIMAL},
+            REP_LEGALPERSON_SUM = #{repLegalpersonSum,jdbcType=DECIMAL},
+            REP_N_LEGALPERSON_SUM = #{repNLegalpersonSum,jdbcType=DECIMAL},
+            REP_SUBSCRIPTION_CCY = #{repSubscriptionCcy,jdbcType=VARCHAR},
+            REP_SUBSCRIPTION_MON = #{repSubscriptionMon,jdbcType=DECIMAL},
+            REP_CONVERT_CNY = #{repConvertCny,jdbcType=DECIMAL},
+            REP_SALE_AREA = #{repSaleArea,jdbcType=VARCHAR},
+            REP_AREA_RAISE_SUM = #{repAreaRaiseSum,jdbcType=DECIMAL},
+            REP_ACT_RAISE_SUM = #{repActRaiseSum,jdbcType=DECIMAL},
+            REP_SHARE_SUM = #{repShareSum,jdbcType=DECIMAL},
+            REP_IS_OTHER_SALE = #{repIsOtherSale,jdbcType=VARCHAR},
+            REP_OTHER_SALE_SUM = #{repOtherSaleSum,jdbcType=DECIMAL},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

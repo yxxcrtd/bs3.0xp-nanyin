@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.manage.workmonitor.dao.ReportWorkMonitor001Mapper_mysql">
+	<select id="selectJobidList" resultType="com.joyintech.tams.disclosure.information.manage.workmonitor.dto.ReportWorkMonitor001Dto">
+		SELECT
+		  job_id jobId,
+		  job_name jobName
+		FROM
+		  rep_job
+		WHERE
+		  1=1
+    </select>
 	<select id="queryPageList" resultType="com.joyintech.tams.disclosure.information.manage.workmonitor.dto.ReportWorkMonitor001Dto">
 		SELECT
 		  rm.JOB_ID jobId ,
@@ -51,7 +60,6 @@
 		    ril.EXEC_RESULT   execResult,
 		    IFNULL(ril.EXEC_DETAIL,'')   execResultExplain,
 		    DATE_FORMAT(ril.LASTEXEC_DATE,'%Y-%m-%d %h:%i:%s')  lastexecDate
-		<!--     ril.LASTEXEC_DATE lastexecDate    -->
 		FROM
 		    REP_INSTALL_LOG ril
 		WHERE

@@ -2,8 +2,10 @@ package com.joyintech.tams.svreport.chb.perprodeclarereg.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
@@ -19,6 +21,31 @@ public class PerProDeclareRegDto extends BaseEntity implements ITableRow{
     private String sendStatusSTR;
     private String submitFeedbackStatusSTR;
     private String subsendstatus;
+
+    /**
+     * 附件信息DTO
+     */
+    private List<UploadFile> fileArray;
+
+    /**
+     * 获取 fileArray
+     *
+     * @return fileArray.
+     */
+    public List<UploadFile> getFileArray() {
+        return fileArray;
+    }
+
+    /**
+     * 设置 fileArray
+     *
+     * @param fileArray
+     *            fileArray
+     */
+    public void setFileArray(List<UploadFile> fileArray) {
+        this.fileArray = fileArray;
+    }
+
 	/**
      * 登记序列
      */

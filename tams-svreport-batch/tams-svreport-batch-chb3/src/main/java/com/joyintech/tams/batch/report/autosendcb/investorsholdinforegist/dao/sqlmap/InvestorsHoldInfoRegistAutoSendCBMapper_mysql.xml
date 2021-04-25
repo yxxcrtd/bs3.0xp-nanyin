@@ -14,7 +14,42 @@
             and HOLD_DATE = str_to_date(#{holdDate,jdbcType=VARCHAR}, '%Y-%m-%d')
         </if>
     </select>
-
+    <select id="selectAllUnregistCheckOkData" parameterType="map" resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
+        select  ciis.REGIST_SEQNO           registSeqno,
+                ciis.REGIST_BANK_CODE       registBankCode,
+                ciis.CHB_SUBMIT_DEADLINE    chbSubmitDeadline,
+                ciis.PRD_REGIST_CODE        prdRegistCode,
+                ciis.INDENTIFY_MARK         indentifyMark,
+                ciis.CCY                    ccy,
+                ciis.HOLD_DATE              holdDate,
+                ciis.AMOUNT                 amount,
+                ciis.AMOUNT                 amountExportExcel,
+                ciis.QTY                    qty,
+                ciis.QTY                    qtyExportExcel,
+                ciis.CNY_AMT                cnyAmt,
+                ciis.CNY_AMT                cnyAmtExportExcel,
+                ciis.REMARK                 remark,
+                ciis.SUBMIT_DEADLINE        submitDeadline,
+                ciis.WORKFLOW_ID            workflowId,
+                ciis.SEND_STATUS            sendStatus,
+                ciis.STATUS_DATE            statusDate,
+                ciis.STATUS                 status,
+                ciis.CREATE_USER            createUser,
+                ciis.CREATE_TIME            createTime,
+                ciis.UPDATE_USER            updateUser,
+                ciis.UPDATE_TIME            updateTime,
+                ciis.ORG_CODE               orgCode,
+                ciis.DEPT_CODE              deptCode,
+                ciis.SUBMIT_TIME            submitTime,
+                ciis.SUMIT_SEQ              sumitSeq,
+                ciis.CHECK_SEQNO            checkSeqno
+        from CHB_INVESTHOLD_INFO_SUB ciis
+        inner join CHB_SEND_CB_TEMP tempTable
+            on ciis.REGIST_SEQNO = tempTable.REGIST_SEQNO
+        where
+            ciis.SEND_STATUS = '01'
+            and ciis.STATUS != '03'
+    </select>
     <select id="selectAllUnregistCheckNgDataCount" resultType="java.lang.Integer">
         SELECT
         COUNT(1)
@@ -95,7 +130,6 @@
             AND HOLD_DATE = str_to_date(#{holdDate,jdbcType=VARCHAR}, '%Y-%m-%d')
         </if>
     </delete>
-
     <insert id="insertUnregistCheckOkDataToTempTable">
         insert into CHB_SEND_CB_TEMP (REGIST_SEQNO)
         select
@@ -132,7 +166,6 @@
         and ROWNUM &lt;= #{dataCountPerTime,jdbcType=DECIMAL}
         ) targetTable
     </insert>
-
     <update id="updateSubmitStatus">
         update CHB_INVESTHOLD_INFO_SUB sub
         set sub.SEND_STATUS = '02',
@@ -142,7 +175,6 @@
         and sub.SEND_STATUS = '01'
         <!-- and exists (select 1 from CHB_SEND_CB_TEMP tempTable where sub.SUMIT_SEQ = tempTable.SUMIT_SEQ) -->
     </update>
-
     <select id="selectUnregistDataRepeatDataByFiveElem"  parameterType="map" resultType="java.lang.String">
         select ciis.regist_seqno from CHB_INVESTHOLD_INFO_SUB ciis
         where   (ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,ciis.HOLD_DATE,ciis.CCY) in

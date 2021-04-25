@@ -66,6 +66,7 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.sql.Clob;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -88,10 +89,10 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	 * 日志管理
 	 */
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	// excel表格最大列数
 	private static final int MAX_SHEET_ROWS = 1 << 20;
-	
+
 	// 错误信息表名
 	private static final String CHB_INTERF_ERRODATA = "CHB_INTERF_ERRODATA";
 
@@ -100,7 +101,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	// 资产要素字段数据临界值（该字段为备注所在的索引值）
 	private static final Integer CAI_BASE_COUNT = 274;
-	
+
 	@Autowired
 	private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
@@ -115,34 +116,35 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	@Autowired
 	private ColumnTypeMapper columnTypeMapper;
-	
+
 	@Autowired
-    private DataCheckService dataCheckService;
-	
+	private DataCheckService dataCheckService;
+
 	@Autowired
 	private SvrReportGenetorService svrReportGenetorService;
-	
+
 	@Autowired
 	private ChbInfoMgrResultConfigMapper chbInfoMgrResultConfigMapper;
 
 	@Autowired
 	private TamsBaseMapper tamsBaseMapper;
-	
+
 	@Autowired
 	private ChbMgrTableInfoMapper chbMgrTableInfoMapper;
-	
-	// 需要存入数据来源的接口 
+
+	// 需要存入数据来源的接口
 	private static final String[] INTERF_DATASOURCE = new String[] {"CHB_ASSET_INFO","CHB_BOT_AST_POS"};
 	//投资者交易
 	private static final String CHB_PRD_DEAL = "CHB_PRD_DEAL";
-
+	//产品申报登记
+	private static final String CHB_PRD_DECLARE_SUB_TMP = "CHB_PRD_DECLARE_SUB_TMP";
 	//贷款明细维护
 	private static final String CHB_LOAN_DETAIL_INFO = "CHB_LOAN_DETAIL_INFO";
 	// 资产要素表表头合并单元格数据key(起始下标-结束下标) value(存值)
 	private static final Map<String, String> headerMap = new HashMap<String, String>();
 
 	static {
-        headerMap.put("2-6", "00:公共信息（必填）");
+		headerMap.put("2-6", "00:公共信息（必填）");
 		headerMap.put("7-15", "01:本行/他行存款||大额存单");
 		headerMap.put("16-26", "03:债券类资产/理财直接融资工具/同业存单");
 		headerMap.put("27-34", "02:拆放同业及买入返售/同业拆入及卖出回购");
@@ -185,7 +187,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		nameMap.put("另类资产","18");
 		//nameMap.put("私募基金","19");
 	}
-	
+
 	private static final Map<String,String> assetMap=new HashMap<String,String>();
 	static{
 		assetMap.put("1002","01:7-15");
@@ -292,13 +294,13 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		assetMap.put("2899","16:249-268");
 		assetMap.put("2000","17:269-273");
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * 获取所有基础表信息
-	 * 
+	 *
 	 * @return 所有基础表信息
 	 */
 	public List<BaseInformationDto> queryAllTableInfo() {
@@ -306,15 +308,15 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		baseInfomationList = baseInformationMapper.queryAllTableInfo();
 		return baseInfomationList;
 	}
-	
+
 	/**
-	* @Title: queryAllBaseInformation
-	* @Description: 查询所有待维护表查询条件集合
-	* @param @return    参数
-	* @return List<BaseInformationDto> 查询条件集合
-	* @throws
-	*/
-	    
+	 * @Title: queryAllBaseInformation
+	 * @Description: 查询所有待维护表查询条件集合
+	 * @param @return    参数
+	 * @return List<BaseInformationDto> 查询条件集合
+	 * @throws
+	 */
+
 	public List<BaseInformationDto> queryAllBaseInformation() {
 		List<BaseInformationDto> baseInfomationList = new ArrayList<BaseInformationDto>();
 		baseInfomationList = baseInformationMapper.queryAllBaseInformation();
@@ -323,7 +325,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	/**
 	 * 根据基础表代码获取字段代码和名字
-	 * 
+	 *
 	 * @param tableId 基础表代码
 	 * @return 字段代码和名字组成的Json字符串
 	 */
@@ -336,16 +338,16 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		});
 		return JSON.toJSONString(data);
 	}
-	
+
 	public String getTableNameByTableId(String tableId){
 		String tableName=chbInfoMgrResultConfigMapper.getTableNameByTableId(tableId);
 		return tableName;
 	}
-	
+
 
 	/**
 	 * 根据基础表代码获取字段代码和类型
-	 * 
+	 *
 	 * @param tableId 基础表代码
 	 * @return 字段代码和类型组成的Json字符串
 	 */
@@ -361,7 +363,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	/**
 	 * 根据前台传入的条件动态查询结果
-	 * 
+	 *
 	 * @param param 前台条件组成的map
 	 * @return 动态结果
 	 */
@@ -374,11 +376,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		String tableId = (String) param.get("tableId");
 		//获取表名
 		ChbMgrTableInfo  chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyTableId(tableId);
-		
+
 		String tableName=chbMgrTableInfo.getMgrTableName();
 		String mgrTableChiName=chbMgrTableInfo.getMgrTableChiName();
 		String headerNum=chbMgrTableInfo.getHeaderNum();
-		
+
 		if(CHB_ASSET_INFO_LIST.contains(tableName)&&StringUtil.equals("1", headerNum)){
 			//是资产基本信息并且是配置的单表头
 			//DictCodeListExt2 dictCodeListExt2=DictCodeListExt2.from(DictCode.资产_负债类别, mgrTableChiName);
@@ -386,9 +388,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			String assetType=nameMap.get(mgrTableChiName);
 			param.put("assetType", assetType);
 		}
-		
+
 		param.put("tableName", tableName);
-		
+
 		List<String> dateColumnList = new ArrayList<String>();
 		List<String> timeColumnList = new ArrayList<String>();
 		dateColumnList = baseInformationMapper.queryDateColumnList(tableName);
@@ -429,8 +431,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			for (String str : newMap.keySet()) {
 				String realStr = "";
 				if (CHB_ASSET_INFO_LIST.contains(tableName)) {
-				//代码合并删除此行代码
-				//	String assetType = map.get("ASSET_TYPE") == null ? "" : map.get("ASSET_TYPE").toString();
+					//代码合并删除此行代码
+					//	String assetType = map.get("ASSET_TYPE") == null ? "" : map.get("ASSET_TYPE").toString();
 					if (str.endsWith(assetType)) {
 						realStr = str.replace(assetType, "");
 					}
@@ -441,7 +443,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					if (null != dateObj) {
 						newMap.put(str, DateUtil.format((Date) dateObj));
 					}
-					
+
 				}
 				// 查询结果为时间类型字段处理
 				if (timeColumnList.contains(str) || timeColumnList.contains(realStr)) {
@@ -501,33 +503,33 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				continue;
 			}
 			switch (columns[1]) {
-			// 文本类型
-			case "T":
-				BaseInformationDto baseInfo1 = new BaseInformationDto();
-				baseInfo1.setBaseColumnId(columns[0]);
-				baseInfo1.setBaseColumnType("T");
-				baseInfo1.setColumnText(columns[2]);
-				baseInformationList.add(baseInfo1);
-				break;
-			// 多选框类型
-			case "S":
-				BaseInformationDto baseInfo2 = new BaseInformationDto();
-				baseInfo2.setBaseColumnId(columns[0]);
-				baseInfo2.setBaseColumnType("S");
-				baseInfo2.setColumnSeq(StringUtil.splitToList(GlobalConstant.COMMA, columns[2]));
-				baseInformationList.add(baseInfo2);
-				break;
-			// 日期类型
-			case "D":
-				BaseInformationDto baseInfo3 = new BaseInformationDto();
-				baseInfo3.setBaseColumnId(columns[0]);
-				baseInfo3.setBaseColumnType("D");
-				String[] dateList = columns[2].split(GlobalConstant.COMMA);
-				baseInfo3.setStartDate(dateList[0]);
-				baseInfo3.setEndDate(dateList[1]);
-				baseInformationList.add(baseInfo3);
-				break;
-			default:
+				// 文本类型
+				case "T":
+					BaseInformationDto baseInfo1 = new BaseInformationDto();
+					baseInfo1.setBaseColumnId(columns[0]);
+					baseInfo1.setBaseColumnType("T");
+					baseInfo1.setColumnText(columns[2]);
+					baseInformationList.add(baseInfo1);
+					break;
+				// 多选框类型
+				case "S":
+					BaseInformationDto baseInfo2 = new BaseInformationDto();
+					baseInfo2.setBaseColumnId(columns[0]);
+					baseInfo2.setBaseColumnType("S");
+					baseInfo2.setColumnSeq(StringUtil.splitToList(GlobalConstant.COMMA, columns[2]));
+					baseInformationList.add(baseInfo2);
+					break;
+				// 日期类型
+				case "D":
+					BaseInformationDto baseInfo3 = new BaseInformationDto();
+					baseInfo3.setBaseColumnId(columns[0]);
+					baseInfo3.setBaseColumnType("D");
+					String[] dateList = columns[2].split(GlobalConstant.COMMA);
+					baseInfo3.setStartDate(dateList[0]);
+					baseInfo3.setEndDate(dateList[1]);
+					baseInformationList.add(baseInfo3);
+					break;
+				default:
 			}
 		}
 		boolean flag = isHaveStatus(tableName);
@@ -541,7 +543,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	/**
 	 * 查询出基础信息表按表名分组的所有信息
-	 * 
+	 *
 	 * @return 基础信息表按表名分组的所有信息
 	 */
 	public Map<String, List<BaseInformationDto>> queryAllBaseInfo() {
@@ -566,7 +568,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	/**
 	 * 查询多选框参数
-	 * 
+	 *
 	 * @param param 表名和字段名
 	 * @return 多选框参数
 	 */
@@ -615,7 +617,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	/**
 	 * 获取字段信息
-	 * 
+	 *
 	 * @param param 页面传入信息
 	 * @return 字段信息
 	 */
@@ -630,15 +632,15 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		if (null !=  tableId && !("").equals(tableId)) {
 			list = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(param);
 			ChbMgrTableInfo  chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyTableId(tableId);
-			
+
 			tableName=chbMgrTableInfo.getMgrTableName();
 			headerNum=chbMgrTableInfo.getHeaderNum();
-			
+
 			if(!StringUtil.isNotEmpty(headerNum)){
 				headerNum="0";
 			}
 		}
-		
+
 
 		int size = list.size();
 		for (int i = 0; i < size; i ++) {
@@ -657,30 +659,30 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		}
 		//针对单独维护页面，无需tableName,headerNum 故增加判断 add by wm 2020-06-29 end
 		return JSON.toJSONString(resultData);
-		
+
 //		if("CHB_ASSET_INFO".equals(tableName)){
 //			//List<Map<String, Integer>> title1StrList = new ArrayList<Map<String, Integer>>();
 //			//List<Map<String, String>> title2StrList = new ArrayList<Map<String, String>>();
-//			
+//
 //			Map<String,Integer>title1Map=new HashMap<String,Integer>();
 //			Map<String,String>title2Map=new HashMap<String,String>();
-//			
+//
 //			int[] titleList = new int[titleMap.size()];
 //			Arrays.fill(titleList, 0);
-//			
+//
 //			for(int i = 0; i < size; i ++){
 //				ChbInfoMgrResultConfig info = list.get(i);
 //				String columnName=info.getColumnName() == null || "".equals(info.getColumnName()) ? info.getColumnId()
 //						: info.getColumnName();
 //				data.put(info.getColumnId(),columnName);
-//				
+//
 //				title2Map.put(info.getColumnId(),columnName);
-//								
+//
 //				String titleName=mappingMap.get(info.getColumnId());
 //				String indexStr=titleMap.get(titleName);
 //				if(StringUtil.isNotEmpty(indexStr)){
 //					int index=Integer.parseInt(indexStr);
-//					
+//
 //					titleList[index]++;
 //				}
 //
@@ -691,7 +693,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //				if(titleList[index]>0){
 //					title1Map.put(key, titleList[index]);
 //				}
-//				
+//
 //			}
 //			resultData.put("title1", JSON.toJSONString(title1Map));
 //			resultData.put("title2", JSON.toJSONString(title2Map));
@@ -707,12 +709,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //		}
 
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 查询方案名是否重复
-	 * 
+	 *
 	 * @param param 页面数据
 	 * @return 方案名是否重复
 	 */
@@ -729,7 +731,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	/**
 	 * 保存方案
-	 * 
+	 *
 	 * @param param 页面参数
 	 * @return 是否保存成功
 	 */
@@ -761,12 +763,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		} else {
 			return false;
 		}
-		
+
 	}
-	
+
 	/**
 	 * 修改方案名称
-	 * 
+	 *
 	 * @param param 页面参数
 	 * @return 是否修改成功
 	 */
@@ -787,7 +789,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	/**
 	 * 根据用户ID获取已保存方案信息
-	 * 
+	 *
 	 * @return 已保存方案信息
 	 */
 	public Page<FilterInformationDto> queryFilterInfoByUserId(Map<String, Object> pageParam) {
@@ -795,15 +797,15 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		String searchKey = (String) pageParam.get("searchKey");
 //		pageParam.put("userId", pageParam.get("userId"));
 		pageParam.put("searchCondition","%" + searchKey + "%");
-        int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
-        int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
+		int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
+		int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
 		Page<FilterInformationDto> page = queryForPage(pagenum,legth,()->filterInformationMapper.queryFilterInfoByUserId(pageParam));
 		return page;
 	}
 
 	/**
 	 * 根据用户ID获取已保存方案
-	 * 
+	 *
 	 * @param param 页面参数
 	 * @return 已保存方案
 	 */
@@ -897,7 +899,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 		}
 		//否则直接根据条件获取 资产要素导出--根据选择条件导出
-		else { 
+		else {
 			List<Object> list = queryDataList(param);
 			List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableName);
 			List<String> timeColumnList =  baseInformationMapper.queryTimeColumnList(tableName);
@@ -919,14 +921,14 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 						if (str.endsWith(assetType)) {
 							realStr = str.replace(assetType, "");
 						}
-						
+
 						//查询结果为日期类型字段处理
 						if (dateColumnList.contains(str) || dateColumnList.contains(realStr)) {
 							Object dateObj = newMap.get(str);
 							if (null != dateObj) {
 								newMap.put(str, DateUtil.format((Date) dateObj));
 							}
-							
+
 						}
 						// 查询结果为时间类型字段处理
 						if (timeColumnList.contains(str) || timeColumnList.contains(realStr)) {
@@ -945,9 +947,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					}
 					listMap.add(newMap);
 				}
-				
+
 			}
-		 }
+		}
 		/*
 		 * else { list = queryDataList(param); for (Object obj : list) { HashMap<String,
 		 * Object> map = (HashMap<String, Object>) obj; String assetType =
@@ -1012,9 +1014,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	}
 	/**
 	 * 根据页面参数导出查询结果
-	 * 
+	 *
 	 * @param param 页面参数
-	 * @return 
+	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	private ResponseEntity<byte[]> exportInfo(Map<String, Object> param) {
@@ -1027,7 +1029,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		String tableName=chbMgrTableInfo.getMgrTableName();
 		String headerNum=chbMgrTableInfo.getHeaderNum();
 		String mgrTableChiName=chbMgrTableInfo.getMgrTableChiName();
-		
+
 		if(CHB_ASSET_INFO_LIST.contains(tableName)&&StringUtil.equals("1", headerNum)){
 			//是资产基本信息并且是配置的单表头
 			//DictCodeListExt2 dictCodeListExt2=DictCodeListExt2.from(DictCode.资产_负债类别, mgrTableChiName);
@@ -1035,7 +1037,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			String assetType=nameMap.get(mgrTableChiName);
 			param.put("assetType", assetType);
 		}
-		
+
 		String dataObj = (String) param.get("jasonData");
 		param.put("tableName", tableName);
 		param.put("flag", false);
@@ -1056,7 +1058,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				}
 				listMap.add((HashMap<String, Object>) itemMap);
 			}
-			
+
 		} else {
 			list = queryDataList(param);
 			List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableName);
@@ -1073,13 +1075,13 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					/**添加日期格式的字段处理  ZZOTZL-114  add  by  dongxiangyang  start 20201021*/
 					//如果为日期类型
 					if(dateColumnList.contains(str)){
-	            		Object dateObj = map.get(str);
+						Object dateObj = map.get(str);
 						if (null != dateObj) {
 							map.put(str, DateUtil.format((Date) dateObj));
 						}
-	            	}
+					}
 					/**添加日期格式的字段处理  ZZOTZL-114   add  by  dongxiangyang  start 20201021*/
-					
+
 				}
 				listMap.add(map);
 			}
@@ -1137,29 +1139,29 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		return responseEntity;
 	}
 	/**
-	* 替换一个字符串中的某些指定字符
-	* @param strData String 原始字符串
-	* @param regex String 要替换的字符串
-	* @param replacement String 替代字符串
-	* @return String 替换后的字符串
-	*/
+	 * 替换一个字符串中的某些指定字符
+	 * @param strData String 原始字符串
+	 * @param regex String 要替换的字符串
+	 * @param replacement String 替代字符串
+	 * @return String 替换后的字符串
+	 */
 	public static String replaceString(String strData, String regex, String replacement) {
-	    if (strData == null) {
-	        return null;
-	    }
-	    int index;
-	    index = strData.indexOf(regex);
-	    String strNew = "";
-	    if (index >= 0) {
-	        while (index >= 0) {
-	            strNew += strData.substring(0, index) + replacement;
-	            strData = strData.substring(index + regex.length());
-	            index = strData.indexOf(regex);
-	        }
-	        strNew += strData;
-	        return strNew;
-	    }
-	    return strData;
+		if (strData == null) {
+			return null;
+		}
+		int index;
+		index = strData.indexOf(regex);
+		String strNew = "";
+		if (index >= 0) {
+			while (index >= 0) {
+				strNew += strData.substring(0, index) + replacement;
+				strData = strData.substring(index + regex.length());
+				index = strData.indexOf(regex);
+			}
+			strNew += strData;
+			return strNew;
+		}
+		return strData;
 	}
 
 	/**
@@ -1188,7 +1190,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				// 错误数据
 				String errorData = this.clobToString((Clob) map.get("ORG_DATA"));
 				/**关于ORG_DATA中值会出现逗号的情况，导致分割错误，ZZOTZL-125     add by  dongxiangyang  20201023*/
-			    Map<String,String> errorMap=JsonUtils.json2Object(errorData, HashMap.class);
+				Map<String,String> errorMap=JsonUtils.json2Object(errorData, HashMap.class);
 //				String[] errorDataList = errorData.split(GlobalConstant.COMMA);
 //				Map<String, String> errorMap = new HashMap<String, String>(1 << 4);
 //				int dataSize = errorDataList.length;
@@ -1199,175 +1201,175 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //					} else {
 //						errorMap.put(errorArray[0], "");
 //					}
-//					 
+//
 //				}
 				/**关于ORG_DATA中值会出现逗号的情况，导致分割错误， ZZOTZL-125   add by  dongxiangyang  20201023*/
 				tableMap.put(tableName, errorMap);
 				mapList.add(tableMap);
 			}
 		}
-		
+
 		Map<String, List<Map<String, String>>> groupMap = convertListToMap(mapList);
 		Iterator<Entry<String, List<Map<String, String>>>> iterator = groupMap.entrySet().iterator();
 //		while (iterator.hasNext()) {
-			Entry<String, List<Map<String, String>>> entity = iterator.next();
-			// 根据接口类型找到表名
-			List<String> tableIds = baseInformationMapper.queryTableIdByDataObject(entity.getKey());
+		Entry<String, List<Map<String, String>>> entity = iterator.next();
+		// 根据接口类型找到表名
+		List<String> tableIds = baseInformationMapper.queryTableIdByDataObject(entity.getKey());
 
-			Map<String,Object> selectParam = new HashMap<>();
-			selectParam.put("tableId", tableIds.get(0));
-            List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
-            Map<String, String> resultMap = new HashMap<String, String>(16);
+		Map<String,Object> selectParam = new HashMap<>();
+		selectParam.put("tableId", tableIds.get(0));
+		List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
+		Map<String, String> resultMap = new HashMap<String, String>(16);
 //            List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = new ArrayList<ChbInfoMgrResultConfig>();
-            // 资产要素表导出需要合并单元格的列号索引
-    		List<Integer> mergeIndexList = new ArrayList<Integer>();
-    		if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
-    			List<SysDataDict> dictList = tamsBaseMapper.selectSysDatadictValueList("SVR_ASSETDEBT_TYPE");
-    			chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfoEx(selectParam);
-    			mergeIndexList.add(0);
-        		mergeIndexList.add(1);
-        		int columnSize = chbInfoMgrResultConfigList.size();
-        		if (columnSize >= CAI_BASE_COUNT) {
-        			for (int i = CAI_BASE_COUNT; i <=  columnSize; i ++) {
-        				mergeIndexList.add(i);
-        			}
-        		}
-        		for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
-        			if (StringUtil.isNotEmpty(chbInfoMgrResultConfig.getResultdictCode())) {
-        				resultMap.put(chbInfoMgrResultConfig.getRealColumnId(), chbInfoMgrResultConfig.getResultdictCode());
-        				for (SysDataDict sysDataDict : dictList) {
-        					resultMap.put(chbInfoMgrResultConfig.getRealColumnId() + sysDataDict.getItemCode(), chbInfoMgrResultConfig.getResultdictCode());
-        				}
-        			}
-
-        		}
-        		
-        		for (Map<String, String> map : entity.getValue()) {
-        			if (StringUtil.isNotEmpty(map.get("ASSET_TYPE"))) {
-        				if(StringUtil.equals("ASSET_TYPE", map.get("ASSET_TYPE"))){
-        					continue;
-        				}
-        				List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableIds.get(0));
-        				List<String> timeColumnList =  baseInformationMapper.queryTimeColumnList(tableIds.get(0));
-    					String assetType = map.get("ASSET_TYPE").toString();
-    					if(StringUtil.equals("19", assetType)){
-    						assetType = "15";
-    					}
-    					HashMap<String, String> newMap = new HashMap<String, String>();
-    					// 资产要素表特殊处理
-    					for (String str : map.keySet()) {
-    						newMap.put(str, map.get(str));
-    						newMap.put(str + assetType, map.get(str));
-    					}
-    					for (String str : newMap.keySet()) {
-    						String realStr = "";
-    						if (str.endsWith(assetType)) {
-    							realStr = str.replace(assetType, "");
-    						}
-    						
-    						//查询结果为日期类型字段处理
-    						if (dateColumnList.contains(str) || dateColumnList.contains(realStr)) {
-    							Object dateObj = newMap.get(str);
-    							if (null != dateObj) {
-    								newMap.put(str, (String) dateObj);
-    							}
-    							
-    						}
-    						// 查询结果为时间类型字段处理
-    						if (timeColumnList.contains(str) || timeColumnList.contains(realStr)) {
-    							Object dateObj = newMap.get(str);
-    							if (null != dateObj) {
-    								newMap.put(str, dateObj.toString());
-    							}
-    						}
-    						// 查询结果为枚举类型字段处理
-    						String resultDictCode = resultMap.get(str);
-    						if (StringUtil.isNotEmpty(resultDictCode) && null != newMap.get(str) ) {
-    							String dateObj = newMap.get(str).toString();
-    							String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
-    							newMap.put(str, value);
-    						}
-    					}
-    					listMap.add(newMap);
-    				}
-        			else{
-        				for (String str : map.keySet()) {
-        					String resultDictCode = resultMap.get(str);
-        					if (StringUtil.isNotEmpty(resultDictCode) && StringUtil.isNotEmpty(map.get(str)) ) {
-        						String dateObj = map.get(str).toString();
-        						String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
-        						map.put(str, value);
-        					}
-        				}
-        				listMap.add(map);
-        			}
-    			}
-    		}
-    		else{
-                chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
-                for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
-                    resultMap.put(chbInfoMgrResultConfig.getColumnId(), chbInfoMgrResultConfig.getResultdictCode());
-                }
-    			for (Map<String, String> map : entity.getValue()) {
-    				for (String str : map.keySet()) {
-    					String resultDictCode = resultMap.get(str);
-    					if (StringUtil.isNotEmpty(resultDictCode) && StringUtil.isNotEmpty(map.get(str)) ) {
-    						String dateObj = map.get(str).toString();
-    						String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
-    						map.put(str, value);
-    					}
-    				}
-    				listMap.add(map);
-    			}
-    		}
-            
-
-            int size = chbInfoMgrResultConfigList.size();
-			String[] title = new String[size + 1];
-			String[] titleCode = new String[size + 1];
-			title[0] = "操作类型";
-			if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
-				titleCode[0] = "操作类型";
+		// 资产要素表导出需要合并单元格的列号索引
+		List<Integer> mergeIndexList = new ArrayList<Integer>();
+		if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
+			List<SysDataDict> dictList = tamsBaseMapper.selectSysDatadictValueList("SVR_ASSETDEBT_TYPE");
+			chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfoEx(selectParam);
+			mergeIndexList.add(0);
+			mergeIndexList.add(1);
+			int columnSize = chbInfoMgrResultConfigList.size();
+			if (columnSize >= CAI_BASE_COUNT) {
+				for (int i = CAI_BASE_COUNT; i <=  columnSize; i ++) {
+					mergeIndexList.add(i);
+				}
 			}
-			int i = 1;
-            for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
-                title[i] = chbInfoMgrResultConfig.getColumnName();
-                // modify by dubaojun 2020-10-31 在上面已经设置了带有ASSET_TYPE的字段值，此处直接取即可 start
+			for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
+				if (StringUtil.isNotEmpty(chbInfoMgrResultConfig.getResultdictCode())) {
+					resultMap.put(chbInfoMgrResultConfig.getRealColumnId(), chbInfoMgrResultConfig.getResultdictCode());
+					for (SysDataDict sysDataDict : dictList) {
+						resultMap.put(chbInfoMgrResultConfig.getRealColumnId() + sysDataDict.getItemCode(), chbInfoMgrResultConfig.getResultdictCode());
+					}
+				}
+
+			}
+
+			for (Map<String, String> map : entity.getValue()) {
+				if (StringUtil.isNotEmpty(map.get("ASSET_TYPE"))) {
+					if(StringUtil.equals("ASSET_TYPE", map.get("ASSET_TYPE"))){
+						continue;
+					}
+					List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableIds.get(0));
+					List<String> timeColumnList =  baseInformationMapper.queryTimeColumnList(tableIds.get(0));
+					String assetType = map.get("ASSET_TYPE").toString();
+					if(StringUtil.equals("19", assetType)){
+						assetType = "15";
+					}
+					HashMap<String, String> newMap = new HashMap<String, String>();
+					// 资产要素表特殊处理
+					for (String str : map.keySet()) {
+						newMap.put(str, map.get(str));
+						newMap.put(str + assetType, map.get(str));
+					}
+					for (String str : newMap.keySet()) {
+						String realStr = "";
+						if (str.endsWith(assetType)) {
+							realStr = str.replace(assetType, "");
+						}
+
+						//查询结果为日期类型字段处理
+						if (dateColumnList.contains(str) || dateColumnList.contains(realStr)) {
+							Object dateObj = newMap.get(str);
+							if (null != dateObj) {
+								newMap.put(str, (String) dateObj);
+							}
+
+						}
+						// 查询结果为时间类型字段处理
+						if (timeColumnList.contains(str) || timeColumnList.contains(realStr)) {
+							Object dateObj = newMap.get(str);
+							if (null != dateObj) {
+								newMap.put(str, dateObj.toString());
+							}
+						}
+						// 查询结果为枚举类型字段处理
+						String resultDictCode = resultMap.get(str);
+						if (StringUtil.isNotEmpty(resultDictCode) && null != newMap.get(str) ) {
+							String dateObj = newMap.get(str).toString();
+							String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
+							newMap.put(str, value);
+						}
+					}
+					listMap.add(newMap);
+				}
+				else{
+					for (String str : map.keySet()) {
+						String resultDictCode = resultMap.get(str);
+						if (StringUtil.isNotEmpty(resultDictCode) && StringUtil.isNotEmpty(map.get(str)) ) {
+							String dateObj = map.get(str).toString();
+							String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
+							map.put(str, value);
+						}
+					}
+					listMap.add(map);
+				}
+			}
+		}
+		else{
+			chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
+			for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
+				resultMap.put(chbInfoMgrResultConfig.getColumnId(), chbInfoMgrResultConfig.getResultdictCode());
+			}
+			for (Map<String, String> map : entity.getValue()) {
+				for (String str : map.keySet()) {
+					String resultDictCode = resultMap.get(str);
+					if (StringUtil.isNotEmpty(resultDictCode) && StringUtil.isNotEmpty(map.get(str)) ) {
+						String dateObj = map.get(str).toString();
+						String value = queryValueByDictAndKeyCache(resultDictCode, dateObj);
+						map.put(str, value);
+					}
+				}
+				listMap.add(map);
+			}
+		}
+
+
+		int size = chbInfoMgrResultConfigList.size();
+		String[] title = new String[size + 1];
+		String[] titleCode = new String[size + 1];
+		title[0] = "操作类型";
+		if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
+			titleCode[0] = "操作类型";
+		}
+		int i = 1;
+		for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
+			title[i] = chbInfoMgrResultConfig.getColumnName();
+			// modify by dubaojun 2020-10-31 在上面已经设置了带有ASSET_TYPE的字段值，此处直接取即可 start
 //                if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
 //                    titleCode[i] = chbInfoMgrResultConfig.getRealColumnId();
 //                }
 //                else{
-                titleCode[i] = chbInfoMgrResultConfig.getColumnId();
+			titleCode[i] = chbInfoMgrResultConfig.getColumnId();
 //                }
-                // modify by dubaojun 2020-10-31 在上面已经设置了带有ASSET_TYPE的字段值，此处直接取即可 end
-                i++;
-            }
-			List<Object[]> dataList = new ArrayList<Object[]>();
-            Object[] objs = new Object[size + 1];
-            Map<Integer, String> enumIndexMap = new HashMap<Integer, String>(16);
-            if(listMap.size()>0){
-            	for (int j = 0; j < listMap.size(); j++) {
-                    Map<String,String> data = listMap.get(j);
-    				objs = new Object[size + 1];
-                    objs[0] = "导出";
-                    for (int k = 1; k < size + 1; k++) {
-                        objs[k] = data.get(titleCode[k]);
-                        String resultDictCode = resultMap.get(titleCode[k]);
-                        if (StringUtil.isNotEmpty(resultDictCode)) {
-                            enumIndexMap.put(k,resultDictCode);
-                        }
-                    }
-                    dataList.add(objs);
-                }
-            }
-            else{
-            	for (int k = 1; k < size + 1; k++) {
-                    String resultDictCode = resultMap.get(titleCode[k]);
-                    if (StringUtil.isNotEmpty(resultDictCode)) {
-                        enumIndexMap.put(k,resultDictCode);
-                    }
-                }
-            }
+			// modify by dubaojun 2020-10-31 在上面已经设置了带有ASSET_TYPE的字段值，此处直接取即可 end
+			i++;
+		}
+		List<Object[]> dataList = new ArrayList<Object[]>();
+		Object[] objs = new Object[size + 1];
+		Map<Integer, String> enumIndexMap = new HashMap<Integer, String>(16);
+		if(listMap.size()>0){
+			for (int j = 0; j < listMap.size(); j++) {
+				Map<String,String> data = listMap.get(j);
+				objs = new Object[size + 1];
+				objs[0] = "导出";
+				for (int k = 1; k < size + 1; k++) {
+					objs[k] = data.get(titleCode[k]);
+					String resultDictCode = resultMap.get(titleCode[k]);
+					if (StringUtil.isNotEmpty(resultDictCode)) {
+						enumIndexMap.put(k,resultDictCode);
+					}
+				}
+				dataList.add(objs);
+			}
+		}
+		else{
+			for (int k = 1; k < size + 1; k++) {
+				String resultDictCode = resultMap.get(titleCode[k]);
+				if (StringUtil.isNotEmpty(resultDictCode)) {
+					enumIndexMap.put(k,resultDictCode);
+				}
+			}
+		}
 
 
 //		}
@@ -1384,7 +1386,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		}
 		return responseEntity;
 	}
-	
+
 	/**
 	 * 查找指定元素在数组中的下标
 	 * @param strArr 数组
@@ -1402,7 +1404,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		}
 		return index;
 	}
-	
+
 	/**
 	 * Json数组转为List
 	 * @param jsonList Json数组
@@ -1421,7 +1423,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			errorData = errorData.replaceAll("&apos;", "'");
 			//add by wm 针对特殊字符处理  jason 识别“'”字符时转换会有问题，因为在js里进行了转换，故这里给转换回来 end
 			/**关于ORG_DATA中值会出现逗号的情况，导致分割错误，  ZZOTZL-125  add by  dongxiangyang  20201023*/
-		    Map<String,String> errorMap=JsonUtils.json2Object(errorData, HashMap.class);
+			Map<String,String> errorMap=JsonUtils.json2Object(errorData, HashMap.class);
 //			String[] errorDataList = errorData.split(GlobalConstant.COMMA);
 //			Map<String, String> errorMap = new HashMap<String, String>(1 << 4);
 //			int dataSize = errorDataList.length;
@@ -1432,7 +1434,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //				} else {
 //					errorMap.put(errorArray[0], "");
 //				}
-//				 
+//
 //			}
 			/**关于ORG_DATA中值会出现逗号的情况，导致分割错误，  ZZOTZL-125   add by  dongxiangyang  20201023*/
 			tableMap.put(tableName, errorMap);
@@ -1440,7 +1442,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		}
 		return mapList;
 	}
-	
+
 	/**
 	 * List<Map> 按 Key值分组转为Map
 	 * @param mapList Map集合
@@ -1455,7 +1457,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				if (map.containsKey(entity.getKey())) {
 					List<Map<String, String>> lm = map.get(entity.getKey());
 					lm.add(entity.getValue());
-                    map.replace(entity.getKey(), lm);
+					map.replace(entity.getKey(), lm);
 				} else {
 					List<Map<String, String>> listAndMap = new ArrayList<>();
 					listAndMap.add(entity.getValue());
@@ -1621,7 +1623,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		}
 		return responseEntity;
 	}
-	
+
 	/**
 	 * 导出excel
 	 * @param tableName 表名
@@ -1649,14 +1651,14 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			chiName = baseInformationDtoList.get(0).getBaseTableName();
 		}
 		if (flag) {
-	        // modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 start
+			// modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 start
 			fileName = exportFilePath + File.separator + tableName + "错误信息" + createTime + ".xlsx";
-	        // modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 end
+			// modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 end
 			exportFileName = chiName + "错误信息" + createTime + ".xlsx";
 		} else {
-	        // modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 start
+			// modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 start
 			fileName = exportFilePath + File.separator + tableName + createTime + ".xlsx";
-	        // modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 end
+			// modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 end
 			exportFileName = chiName + createTime + ".xlsx";
 		}
 		try {
@@ -1677,7 +1679,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				cellRowName.setCellType(CellType.STRING); // 设置列头单元格的数据类型
 				XSSFRichTextString text = new XSSFRichTextString(title[n]);
 				cellRowName.setCellValue(text); // 设置列头单元格的值
-				sheet.autoSizeColumn(n, true); 
+				sheet.autoSizeColumn(n, true);
 			}
 
 			// 将查询出的数据设置到sheet对应的单元格中
@@ -1730,12 +1732,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			setBoxs(sheet, refAddressMap,1);
 //			sheet.addValidationData(validate);
 			// 必须在单元格设值以后进行
-            // 设置为根据内容自动调整列宽    
-            for (int k = 0; k < columnNum; k++) {
-                sheet.autoSizeColumn(k);
-            }
-            // 处理中文不能自动调整列宽的问题
-            this.setSizeColumn(sheet, columnNum);
+			// 设置为根据内容自动调整列宽
+			for (int k = 0; k < columnNum; k++) {
+				sheet.autoSizeColumn(k);
+			}
+			// 处理中文不能自动调整列宽的问题
+			this.setSizeColumn(sheet, columnNum);
 			if (workbook != null) {
 				try {
 					File exportFile = new File(fileName);
@@ -1755,7 +1757,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		}
 		return responseEntity;
 	}
-	
+
 	/**
 	 * 设置操作类型一列的枚举值
 	 * @return 枚举值方案
@@ -1780,44 +1782,44 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			sheet.addValidationData(validation1);
 		}
 	}
-	 /**
-     * 导入文件之前检查
-     *
-     * @param fileName 导入的文件绝对路径
-     * @return 检查结果
-     * @see
-     * @since 1.0
-     */
-    public List<ExcelValidDto> checkConfirmMsgForImportData(String tableName, String fileName, List<List<String>> originalDataList) {
-    	String sheetName=tableName;
-    	List<ExcelValidDto> checkResult = new ArrayList<>();
-    	//先通过tableName获取CHB_MGRTABLE_INFO中对应的MGRTABLE_ID
-    	ChbMgrTableInfo chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyChiName(tableName);
-    	if(null==chbMgrTableInfo){
-    		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "导入文件sheet名为："+ tableName +", 在配置表中定义未定义或者重复定义了！"));
-    		return checkResult;
-    	}
-    	
+	/**
+	 * 导入文件之前检查
+	 *
+	 * @param fileName 导入的文件绝对路径
+	 * @return 检查结果
+	 * @see
+	 * @since 1.0
+	 */
+	public List<ExcelValidDto> checkConfirmMsgForImportData(String tableName, String fileName, List<List<String>> originalDataList) {
+		String sheetName=tableName;
+		List<ExcelValidDto> checkResult = new ArrayList<>();
+		//先通过tableName获取CHB_MGRTABLE_INFO中对应的MGRTABLE_ID
+		ChbMgrTableInfo chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyChiName(tableName);
+		if(null==chbMgrTableInfo){
+			checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "导入文件sheet名为："+ tableName +", 在配置表中定义未定义或者重复定义了！"));
+			return checkResult;
+		}
+
 //    	List<BaseInformationDto> tableInfoList = baseInformationMapper.queryTableInfoByTableName(tableName);
 //    	if (StringUtil.isEmptyList(tableInfoList) || tableInfoList.size() > 1) {
 //    		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "导入文件sheet名为："+ tableName +", 在配置表中定义未定义或者重复定义了！"));
 //    		return checkResult;
 //    	}
-    	// 导入文件相关表信息
-    	//BaseInformationDto baseInformationDto = tableInfoList.get(0);
-    	String tableId = chbMgrTableInfo.getMgrTableName();
-    	String headerNum=chbMgrTableInfo.getHeaderNum();
-    	tableName=chbMgrTableInfo.getMgrTableName();
+		// 导入文件相关表信息
+		//BaseInformationDto baseInformationDto = tableInfoList.get(0);
+		String tableId = chbMgrTableInfo.getMgrTableName();
+		String headerNum=chbMgrTableInfo.getHeaderNum();
+		tableName=chbMgrTableInfo.getMgrTableName();
 
 //    	AjaxResult webResult = new AjaxResult();
-    	if (!StringUtil.isEmptyList(originalDataList)) {
-    		if (!fileName.toLowerCase().endsWith("xlsx")) {
-    			checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "请导入2007以上版本的excel文件！"));
-    			return checkResult;
+		if (!StringUtil.isEmptyList(originalDataList)) {
+			if (!fileName.toLowerCase().endsWith("xlsx")) {
+				checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "请导入2007以上版本的excel文件！"));
+				return checkResult;
 //    			webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 //	           	webResult.setMessage("请导入2007以上版本的excel文件！");
 //	            return webResult;
-    		}
+			}
 //    		File file = new File(fileName);
 //    		XSSFWorkbook xssfWorkBook = null;
 //    		String tableId = null;
@@ -1831,20 +1833,20 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //			} catch (IOException e1) {
 //				e1.printStackTrace();
 //			}
-            // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
-    		// 所有字段集合
-            List<String> allColumnList = baseInformationMapper.queryAllColumns(tableId);
-            // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
-    		// 业务主键集合
-        	List<String> bisinessPkList = baseInformationMapper.queryBisinessPkListByTable(tableId);
-        	 // 对应表日期类型字段集合
-            List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableName);
-    		List<List<String>> dataList = new ArrayList<List<String>>();
-    		if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-    			dataList = handleAssetData(originalDataList, tableId, bisinessPkList, dateColumnList);
-    		} else {
-    			dataList = handleData(originalDataList, tableId);
-    		}
+			// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
+			// 所有字段集合
+			List<String> allColumnList = baseInformationMapper.queryAllColumns(tableId);
+			// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
+			// 业务主键集合
+			List<String> bisinessPkList = baseInformationMapper.queryBisinessPkListByTable(tableId);
+			// 对应表日期类型字段集合
+			List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableName);
+			List<List<String>> dataList = new ArrayList<List<String>>();
+			if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+				dataList = handleAssetData(originalDataList, tableId, bisinessPkList, dateColumnList);
+			} else {
+				dataList = handleData(originalDataList, tableId);
+			}
 
 			List<BaseInformationDto> baseInformationList = baseInformationMapper.queryBaseInfoByTableId(tableId);
 
@@ -1856,72 +1858,86 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //	           	webResult.setMessage("导入文件指定的表"+ tableId +"未在配置表中定义！");
 //	            return webResult;
 			}
-            if (null != dataList && dataList.size() > 0) {
-            	// 错误列名集合
-            	List<String> errorLists = new LinkedList<String>();
-            	// 文件列名集合
-            	List<String> excelHeadList = dataList.get(0);
-            	// 文件第一行没有数据
-            	if(StringUtil.isEmptyList(excelHeadList)) {
-            		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "文件没有列名！"));
-            		return checkResult;
+			if (null != dataList && dataList.size() > 0) {
+				// 错误列名集合
+				List<String> errorLists = new LinkedList<String>();
+				// 文件列名集合
+				List<String> excelHeadList = dataList.get(0);
+				// 文件第一行没有数据
+				if(StringUtil.isEmptyList(excelHeadList)) {
+					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "文件没有列名！"));
+					return checkResult;
 //            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 //    	           	webResult.setMessage("文件没有列名！");
 //    	            return webResult;
-            	}
-            	// 数据库中表的列集合
-            	List<String> columnTypeList = columnTypeMapper.queryAllColumnByTableId(tableName);
-            	for (String excelHead : excelHeadList) {
-            		if ("操作类型".equals(excelHead)) {
-            			continue;
-            		}
-            		if (!columnTypeList.contains(excelHead)) {
-            			errorLists.add(excelHead);
-            		}
-            	}
-            	// 文件中存在数据库中没有的字段
-            	if (errorLists.size() > 0) {
-            		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),
-            				"表" + tableName + "中无以下字段：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)));
-            		return checkResult;
+				}
+				// 数据库中表的列集合
+				List<String> columnTypeList = columnTypeMapper.queryAllColumnByTableId(tableName);
+				//针对业务要求可导入另一种模版，但与系统自身模版存在字段差异，采用map存值比较排除特殊列
+				Map <String,String> colMap=new HashMap<String,String>();
+				colMap.put("ROW_DATE","数据日期");
+				colMap.put("DATA_SOURCE","数据来源");
+				colMap.put("STATUS","数据状态");
+				colMap.put("REG_CODE","产品登记编码");
+				colMap.put("ORG_CODE","机构代码");
+				colMap.put("DEPT_CODE","部门代码");
+				colMap.put("CREATE_USER","创建人");
+				colMap.put("CREATE_DEPT","创建部门");
+				colMap.put("CREATE_TIME","创建时间");
+				colMap.put("UPDATE_USER","更新人");
+				colMap.put("UPDATE_TIME","更新时间");
+				for (String excelHead : excelHeadList) {
+					if ("操作类型".equals(excelHead)) {
+						continue;
+					}
+					if (!columnTypeList.contains(excelHead) && !colMap.containsValue(excelHead)) {
+						errorLists.add(excelHead);
+					}
+				}
+
+				// 文件中存在数据库中没有的字段
+				if (errorLists.size() > 0) {
+					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),
+							"表" + tableName + "中无以下字段：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)));
+					return checkResult;
 //            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 //    	           	webResult.setMessage("表" + tableId + "中无以下字段：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)
 //    	           		+ ", 请检查导入文件");
 //    	            return webResult;
-            	}
-
-            	if (null != bisinessPkList && bisinessPkList.size() > 0) {
-            		bisinessPkList.forEach(bisinessPk -> {
-            			if (!excelHeadList.contains(bisinessPk)) {
-            				errorLists.add(bisinessPk);
-            			}
-            		});
 				}
-            	// 文件缺少业务主键
-            	if (errorLists.size() > 0) {
-            		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "导入文件中缺少以下业务主键：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)));
-            		return checkResult;
+
+				if (null != bisinessPkList && bisinessPkList.size() > 0) {
+					bisinessPkList.forEach(bisinessPk -> {
+						if (!excelHeadList.contains(bisinessPk) && !"ROW_DATE".equals(bisinessPk)) {
+							errorLists.add(bisinessPk);
+						}
+					});
+				}
+				// 文件缺少业务主键
+				if (errorLists.size() > 0) {
+					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "导入文件中缺少以下业务主键：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)));
+					return checkResult;
 //            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 //    	           	webResult.setMessage("导入文件中缺少以下业务主键：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA));
 //    	            return webResult;
-            	}
-            	List<Map<String, String>> listDupError = new ArrayList<Map<String,String>>();
+				}
+				List<Map<String, String>> listDupError = new ArrayList<Map<String,String>>();
 //            	List<String> dupErrorStrList = new LinkedList<String>();
-            	// 解析出的文件转换为Map集合
-            	List<Map<String, String>> dataMapList = new ArrayList<Map<String,String>>();
-            	// 对应表日期类型字段集合
+				// 解析出的文件转换为Map集合
+				List<Map<String, String>> dataMapList = new ArrayList<Map<String,String>>();
+				// 对应表日期类型字段集合
 //                List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableId);
-            	// 主键相关数据集合,用来检查新增数据是否和数据库数据有重复
+				// 主键相关数据集合,用来检查新增数据是否和数据库数据有重复
 //            	List<Map<String, String>> pkDataMapList = new ArrayList<Map<String,String>>();
-            	List<String> columnList = dataList.get(0);
-            	int size = columnList.size();
-            	// 存储业务主键对应的索引
-            	List<Integer> pkIndex = new ArrayList<Integer>();
-            	for (int i = 1; i < size; i ++) {
-            		if (bisinessPkList.contains(columnList.get(i))) {
-            			pkIndex.add(i);
-            		}
-            	}
+				List<String> columnList = dataList.get(0);
+				int size = columnList.size();
+				// 存储业务主键对应的索引
+				List<Integer> pkIndex = new ArrayList<Integer>();
+				for (int i = 1; i < size; i ++) {
+					if (bisinessPkList.contains(columnList.get(i))) {
+						pkIndex.add(i);
+					}
+				}
 //            	// 存储有空值的业务主键
 //            	List<String> noDataPkList = new LinkedList<String>();
 //            	// 跳出循环标志
@@ -1944,71 +1960,71 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //    	            return webResult;
 //            	}
 
-            	List<SysDataDict> secondIndustryList = tamsBaseMapper.queryFirstIndustryBySecondIndustry();
-            	Map<String, String> secondIndustryMap = new HashMap<String, String>();
-            	for (SysDataDict sysDataDict : secondIndustryList) {
-            		secondIndustryMap.put(sysDataDict.getItemCode(), sysDataDict.getLinkedItemCode());
-            	}
-            	for (int j = 0; j < dataList.size(); j ++) {
+				List<SysDataDict> secondIndustryList = tamsBaseMapper.queryFirstIndustryBySecondIndustry();
+				Map<String, String> secondIndustryMap = new HashMap<String, String>();
+				for (SysDataDict sysDataDict : secondIndustryList) {
+					secondIndustryMap.put(sysDataDict.getItemCode(), sysDataDict.getLinkedItemCode());
+				}
+				for (int j = 0; j < dataList.size(); j ++) {
 					/**定义当有新增修改和删除的数据时 的标识  add  by dongxiangyang  20201028  start*/
 					boolean   isContans=false;
 					/**定义当有新增修改和删除的数据时 的标识  add  by dongxiangyang  20201028  end*/
 //            	for (List<String> strList : dataList) {
-            		List<String> strList = dataList.get(j);
-            		if ("操作类型".equals(strList.get(0))) {
-            			continue;
-            		}
-            		Map<String, String> dataMap = new HashMap<String, String>();
-            		// 新增状态数据需要和数据库数据核对是否有主键冲突
+					List<String> strList = dataList.get(j);
+					if ("操作类型".equals(strList.get(0))) {
+						continue;
+					}
+					Map<String, String> dataMap = new HashMap<String, String>();
+					// 新增状态数据需要和数据库数据核对是否有主键冲突
 					// add by zhangliang 20201026 修改删除的时候需要判断是否是否存在 start
-            		if ("新增".equals(strList.get(0)) || StringUtil.equals(strList.get(0), "修改") || StringUtil.equals(strList.get(0), "删除")|| StringUtil.equals(strList.get(0), "导出")) {
-            			Map<String, String> pkDataMap = new HashMap<String, String>();
-            			pkIndex.forEach(index -> {
-            				String key = columnList.get(index);
-            				String value = "";
-            				// 日期类型字段处理
-            				if (dateColumnList.contains(key)) {
-            					String dateStr = formatDateStr(strList.get(index));
-            					if (null != dateStr) {
-            						value = "DATE'" + dateStr + "'";
-            					} else {
-            						value = "";
-            					}
-            				} else {
-            					value = "'" + strList.get(index) + "'";
-            				}
-            				pkDataMap.put(key, value);
-            			});
-            			if (pkDataMap.size() > 0) {
-                    		/** start 添加模板导入A列为导出时,应该提示“不要使用“操作类型”为“导出”的进行导入 add by  dongxiangyang 20201028*/
-            				if(StringUtil.equals(strList.get(0), "导出")){
-            					int rowNum = j + 1;
-            					if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-            						rowNum = j + 2;
-            					}
-            					List<String> strList1 = new ArrayList<String>();
-            					for (String key : pkDataMap.keySet()) {
-            						strList1.add(pkDataMap.get(key));
-            					}
-            					checkResult.add(new ExcelValidDto(StringUtil.joinString(strList1, GlobalConstant.COMMA), String.valueOf(rowNum), "不要使用“操作类型”为“导出”的进行导入"));
-            					isContans=true;
-            				}
-                    		/** end 添加模板导入A列为导出时,应该提示“不要使用“操作类型”为“导出”的进行导入 add by  dongxiangyang 20201028*/
-            				boolean flag = checkSingleData(pkDataMap, tableName);
-            				if (flag && StringUtil.equals(strList.get(0), "新增")) {
-            					int rowNum = j + 1;
-            					if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-            						rowNum = j + 2;
-            					}
-            					List<String> strList1 = new ArrayList<String>();
-            					for (String key : pkDataMap.keySet()) {
-            						strList1.add(pkDataMap.get(key));
-            					}
-            					checkResult.add(new ExcelValidDto(StringUtil.joinString(strList1, GlobalConstant.COMMA), String.valueOf(rowNum), "新增数据已存在"));
+					if ("新增".equals(strList.get(0)) || StringUtil.equals(strList.get(0), "修改") || StringUtil.equals(strList.get(0), "删除")|| StringUtil.equals(strList.get(0), "导出")) {
+						Map<String, String> pkDataMap = new HashMap<String, String>();
+						pkIndex.forEach(index -> {
+							String key = columnList.get(index);
+							String value = "";
+							// 日期类型字段处理
+							if (dateColumnList.contains(key)) {
+								String dateStr = formatDateStr(strList.get(index));
+								if (null != dateStr) {
+									value = "DATE'" + dateStr + "'";
+								} else {
+									value = "";
+								}
+							} else {
+								value = "'" + strList.get(index) + "'";
+							}
+							pkDataMap.put(key, value);
+						});
+						if (pkDataMap.size() > 0) {
+							/** start 添加模板导入A列为导出时,应该提示“不要使用“操作类型”为“导出”的进行导入 add by  dongxiangyang 20201028*/
+							if(StringUtil.equals(strList.get(0), "导出")){
+								int rowNum = j + 1;
+								if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+									rowNum = j + 2;
+								}
+								List<String> strList1 = new ArrayList<String>();
+								for (String key : pkDataMap.keySet()) {
+									strList1.add(pkDataMap.get(key));
+								}
+								checkResult.add(new ExcelValidDto(StringUtil.joinString(strList1, GlobalConstant.COMMA), String.valueOf(rowNum), "不要使用“操作类型”为“导出”的进行导入"));
+								isContans=true;
+							}
+							/** end 添加模板导入A列为导出时,应该提示“不要使用“操作类型”为“导出”的进行导入 add by  dongxiangyang 20201028*/
+							boolean flag = checkSingleData(pkDataMap, tableName);
+							if (flag && StringUtil.equals(strList.get(0), "新增")) {
+								int rowNum = j + 1;
+								if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+									rowNum = j + 2;
+								}
+								List<String> strList1 = new ArrayList<String>();
+								for (String key : pkDataMap.keySet()) {
+									strList1.add(pkDataMap.get(key));
+								}
+								checkResult.add(new ExcelValidDto(StringUtil.joinString(strList1, GlobalConstant.COMMA), String.valueOf(rowNum), "新增数据已存在"));
 //            				    return  checkResult;
-            					isContans=true;
-            				}
-            				else if (!flag && (StringUtil.equals(strList.get(0), "修改") || StringUtil.equals(strList.get(0), "删除"))){
+								isContans=true;
+							}
+							else if (!flag && (StringUtil.equals(strList.get(0), "修改") || StringUtil.equals(strList.get(0), "删除"))){
 								int rowNum = j + 1;
 								if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
 									rowNum = j + 2;
@@ -2019,21 +2035,21 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 								}
 								checkResult.add(new ExcelValidDto(StringUtil.joinString(strList1, GlobalConstant.COMMA), String.valueOf(rowNum), strList.get(0) + "数据不存在"));
 //            				    return  checkResult;
-            					isContans=true;
-            				}
+								isContans=true;
+							}
 //            				pkDataMapList.add(pkDataMap);
-            			}
-            		}
+						}
+					}
 					// add by zhangliang 20201026 修改删除的时候需要判断是否是否存在 end
-            		// 资产要素导入数据不全标识
+					// 资产要素导入数据不全标识
 //        			boolean assetInfoFlag = true;
 
 
-        			int beginIndex = 0;
-            		int endIndex = 0;
-            		String assetType = "";
-            		// 资产要素表数据处理
-            		if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+					int beginIndex = 0;
+					int endIndex = 0;
+					String assetType = "";
+					// 资产要素表数据处理
+					if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
 //            			String dataPara = "";
 //            			for (int i = 7; i <= 274; i ++) {
 //                			String str = strList.get(i);
@@ -2053,19 +2069,19 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //                			endIndex = Integer.parseInt(dataParaArr[0].split("-")[1]);
 //                			assetType = dataParaArr[1];
 //                		}
-            			
-            			//更换获取assetType的方法，根据导入文件的资产/负债类别来获取
-            			String assetType2=strList.get(4);
-            			if(assetMap.get(assetType2)!=null){
-            				String[] dataParaArr = assetMap.get(assetType2).split(":");
-                			beginIndex = Integer.parseInt(dataParaArr[1].split("-")[0]);
-                			endIndex = Integer.parseInt(dataParaArr[1].split("-")[1]);
-                			assetType = dataParaArr[0];
-            			}
-            		}else if(CHB_ASSET_INFO_LIST.contains(tableName)&&"1".equals(headerNum)){
-            			//单表头的资产基本信息
-            			assetType=nameMap.get(sheetName);
-            		}else if (StringUtil.equals(CHB_LOAN_DETAIL_INFO, tableName)){
+
+						//更换获取assetType的方法，根据导入文件的资产/负债类别来获取
+						String assetType2=strList.get(4);
+						if(assetMap.get(assetType2)!=null){
+							String[] dataParaArr = assetMap.get(assetType2).split(":");
+							beginIndex = Integer.parseInt(dataParaArr[1].split("-")[0]);
+							endIndex = Integer.parseInt(dataParaArr[1].split("-")[1]);
+							assetType = dataParaArr[0];
+						}
+					}else if(CHB_ASSET_INFO_LIST.contains(tableName)&&"1".equals(headerNum)){
+						//单表头的资产基本信息
+						assetType=nameMap.get(sheetName);
+					}else if (StringUtil.equals(CHB_LOAN_DETAIL_INFO, tableName)){
 						String loantype = strList.get(2) ;
 						if(StringUtil.isNotEmpty(loantype) && !StringUtil.equals(loantype, DictCodeListExt3.中债_中债贷款分类_除回购或拆借外贷款.getValue())){
 							try {
@@ -2084,144 +2100,144 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 							}
 						}
 					}
-            		List<Integer> indexList = new ArrayList<Integer>();
-            		if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-            			for (int i = 1; i < 7; i ++) {
-            				indexList.add(i);
-            			}
-            			for (int i = beginIndex; i <= endIndex; i ++) {
-            				indexList.add(i);
-            			}
-            			for (int i = 275; i < size; i ++) {
-            				indexList.add(i);
-            			}
-            		} else {
-            			for (int i = 1; i < size; i ++) {
-            				indexList.add(i);
-            			}
-            		}
+					List<Integer> indexList = new ArrayList<Integer>();
+					if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+						for (int i = 1; i < 7; i ++) {
+							indexList.add(i);
+						}
+						for (int i = beginIndex; i <= endIndex; i ++) {
+							indexList.add(i);
+						}
+						for (int i = 275; i < size; i ++) {
+							indexList.add(i);
+						}
+					} else {
+						for (int i = 1; i < size; i ++) {
+							indexList.add(i);
+						}
+					}
 
-        			for (Integer i : indexList) {
+					for (Integer i : indexList) {
 //            		for (int i = 1; i < size; i ++) {
-            			if (StringUtil.isEmpty(dataMap.get(columnList.get(i)))) {
-            				dataMap.put(columnList.get(i), strList.get(i));
-            			}
+						if (StringUtil.isEmpty(dataMap.get(columnList.get(i)))) {
+							dataMap.put(columnList.get(i), strList.get(i));
+						}
 //            			if (CHB_ASSET_INFO.equals(tableId) && i > 6 && i < 232 && StringUtil.isNotEmpty(strList.get(i))) {
 //            				assetInfoFlag = false;
 //            			}
-            		}
-        			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
-        				dataMap.put("ASSET_TYPE", assetType);
-        				dataMap.put("STATUS", "E");
-        				// 行业二级分类
-        				String industryShares2 = dataMap.get("INDUSTRY_SHARES2");
-        				if (StringUtil.isNotEmpty(industryShares2)) {
-        					String industryShares1 = secondIndustryMap.get(industryShares2);
-        					dataMap.put("INDUSTRY_SHARES", industryShares1);
-        				}
-        				String industryLevel2 = dataMap.get("INDUSTRY_LEVEL2");
-        				if (StringUtil.isNotEmpty(industryLevel2)) {
-        					String industry = secondIndustryMap.get(industryLevel2);
-        					dataMap.put("INDUSTRY", industry);
-        				}
-        				String industryLevel2Type = dataMap.get("INDUSTRY_LEVEL2_TYPE");
-        				if (StringUtil.isNotEmpty(industryLevel2Type)) {
-        					String industry1 = secondIndustryMap.get(industryLevel2Type);
-        					dataMap.put("INDUSTRY1", industry1);
-        					dataMap.put("INDUSTRY_PBC", industry1);
-        				}
-        				String proIndustryLevel2 = dataMap.get("PRO_INDUSTRY_LEVEL2");
-        				if (StringUtil.isNotEmpty(proIndustryLevel2)) {
-        					String proIndustry = secondIndustryMap.get(proIndustryLevel2);
-        					dataMap.put("PRO_INDUSTRY", proIndustry);
-        				}
-        				String capUseInduLevel2 = dataMap.get("CAP_USE_INDU_LEVEL2");
-        				if (StringUtil.isNotEmpty(capUseInduLevel2)) {
-        					String capUseIndu = secondIndustryMap.get(capUseInduLevel2);
-        					dataMap.put("CAP_USE_INDU", capUseIndu);
-        				}
-        				//獲取remark
-            			String remark=strList.get(CAI_BASE_COUNT);
-    					dataMap.put("REMARK", remark);
-        			}
+					}
+					if (CHB_ASSET_INFO_LIST.contains(tableName)) {
+						dataMap.put("ASSET_TYPE", assetType);
+						dataMap.put("STATUS", "E");
+						// 行业二级分类
+						String industryShares2 = dataMap.get("INDUSTRY_SHARES2");
+						if (StringUtil.isNotEmpty(industryShares2)) {
+							String industryShares1 = secondIndustryMap.get(industryShares2);
+							dataMap.put("INDUSTRY_SHARES", industryShares1);
+						}
+						String industryLevel2 = dataMap.get("INDUSTRY_LEVEL2");
+						if (StringUtil.isNotEmpty(industryLevel2)) {
+							String industry = secondIndustryMap.get(industryLevel2);
+							dataMap.put("INDUSTRY", industry);
+						}
+						String industryLevel2Type = dataMap.get("INDUSTRY_LEVEL2_TYPE");
+						if (StringUtil.isNotEmpty(industryLevel2Type)) {
+							String industry1 = secondIndustryMap.get(industryLevel2Type);
+							dataMap.put("INDUSTRY1", industry1);
+							dataMap.put("INDUSTRY_PBC", industry1);
+						}
+						String proIndustryLevel2 = dataMap.get("PRO_INDUSTRY_LEVEL2");
+						if (StringUtil.isNotEmpty(proIndustryLevel2)) {
+							String proIndustry = secondIndustryMap.get(proIndustryLevel2);
+							dataMap.put("PRO_INDUSTRY", proIndustry);
+						}
+						String capUseInduLevel2 = dataMap.get("CAP_USE_INDU_LEVEL2");
+						if (StringUtil.isNotEmpty(capUseInduLevel2)) {
+							String capUseIndu = secondIndustryMap.get(capUseInduLevel2);
+							dataMap.put("CAP_USE_INDU", capUseIndu);
+						}
+						//獲取remark
+						String remark=strList.get(CAI_BASE_COUNT);
+						dataMap.put("REMARK", remark);
+					}
 //            		if (assetInfoFlag) {
 //            			webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 //        	           	webResult.setMessage("资产要素导入需要填写资产/负债类别相关信息");
 //        	            return webResult;
 //            		}
-        			// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
-        			Set<String> keySet = new HashSet<>(dataMap.keySet());
-        			for (String key : keySet) {
-        			    if(!allColumnList.contains(key)) {
-        			        dataMap.remove(key);
-        			    }
-                    }
-        			// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
+					// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
+					Set<String> keySet = new HashSet<>(dataMap.keySet());
+					for (String key : keySet) {
+						if(!allColumnList.contains(key)) {
+							dataMap.remove(key);
+						}
+					}
+					// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
 
 					dataMap.put("ERRMSG_ROW", String.valueOf(j));
 
 					/**A列为删除列的  不进行规则代码check了  add by dongxiangyang  20201029*/
 					//当有新增和修改或者删除的时候已经存在时,返回检查结果,不进行下面的检查
 					if(!StringUtil.equals(strList.get(0), "删除") || isContans){
-	            		dataMapList.add(dataMap);
+						dataMapList.add(dataMap);
 					}
 					/**A列为删除列的  不进行规则check了       add by  dongxiangyang  20201029 */
-            	}
-            	// 数据重复性检查
-            	// 新增数据是否和数据库已有数据重复
+				}
+				// 数据重复性检查
+				// 新增数据是否和数据库已有数据重复
 //            	List<String> existDataList = checkDataIsExist(pkDataMapList, tableId);
 //            	if (null != existDataList && existDataList.size() > 0) {
 //            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 //    	           	webResult.setMessage("导入文件中以下业务主键数据和数据库重复：" + StringUtil.joinString(existDataList, GlobalConstant.COMMA));
 //    	            return webResult;
 //            	}
-            	List<String> dataObjectList = baseInformationMapper.querydataObjectByTable(tableName);
-            	String dataObject = dataObjectList.get(0);
-            	if (null != bisinessPkList && bisinessPkList.size() > 0) {
-            		// 业务主键数组
-            		String[] bisinessPkArray = (String[]) bisinessPkList.toArray(new String[0]);
-            		listDupError = DataCheckService.checkDuplicatedData(dataMapList, bisinessPkArray);
+				List<String> dataObjectList = baseInformationMapper.querydataObjectByTable(tableName);
+				String dataObject = dataObjectList.get(0);
+				if (null != bisinessPkList && bisinessPkList.size() > 0) {
+					// 业务主键数组
+					String[] bisinessPkArray = (String[]) bisinessPkList.toArray(new String[0]);
+					listDupError = DataCheckService.checkDuplicatedData(dataMapList, bisinessPkArray);
 //            		listDupError.forEach(dupError -> {
 //            			bisinessPkList.forEach(bisinessPk -> {
 //            				dupErrorStrList.add(bisinessPk + "=" + dupError.get(bisinessPk));
 //            			});
 //            		});
-            		// 没有定义业务主键,检查所有数据
-            	} else {
-            		listDupError = DataCheckService.checkDuplicatedData(dataMapList);
+					// 没有定义业务主键,检查所有数据
+				} else {
+					listDupError = DataCheckService.checkDuplicatedData(dataMapList);
 //            		listDupError.forEach(dupError -> {
 //            			for (String key : dupError.keySet()) {
 //            				dupErrorStrList.add(key + "=" + dupError.get(key));
 //            			}
 //            		});
-            	}
-            	// 业务主键重复
-            	if (listDupError.size() > 0) {
-            		for (Map<String, String> map : listDupError) {
-            			/**start    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
-            			String  vailkey=getBusinessKeyStr(bisinessPkList, map);
-            			/**end    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
-            			String indexStr = map.get("ERRMSG_ROW");
-            			int index = 0;
-            			if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-            				index = Integer.parseInt(indexStr) + 2;
-            			} else {
-            				index = Integer.parseInt(indexStr) + 1;
-            			}
-            			checkResult.add(new ExcelValidDto(vailkey, String.valueOf(index), "主键数据重复"));
-            		}
+				}
+				// 业务主键重复
+				if (listDupError.size() > 0) {
+					for (Map<String, String> map : listDupError) {
+						/**start    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
+						String  vailkey=getBusinessKeyStr(bisinessPkList, map);
+						/**end    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
+						String indexStr = map.get("ERRMSG_ROW");
+						int index = 0;
+						if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+							index = Integer.parseInt(indexStr) + 2;
+						} else {
+							index = Integer.parseInt(indexStr) + 1;
+						}
+						checkResult.add(new ExcelValidDto(vailkey, String.valueOf(index), "主键数据重复"));
+					}
 //            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 //    	           	webResult.setMessage("导入文件中以下业务主键数据重复：" + StringUtil.joinString(dupErrorStrList, GlobalConstant.COMMA));
 //    	            return webResult;
-            	}
-            	List<String>checkColumnList=chbInfoMgrResultConfigMapper.getAllColumnByTableId(tableId);
+				}
+				List<String>checkColumnList=chbInfoMgrResultConfigMapper.getAllColumnByTableId(tableId);
 
-            	// 已配置规则检查
-            	//List<CheckRule> listRules = dataCheckService.queryCheckRules(dataObject);
-            	List<CheckRule> listRules = dataCheckService.queryCheckRulesByDataTypeAndColumns(dataObject, checkColumnList);
-                DataCheckService.checkDataList(dataMapList,listRules, false);
+				// 已配置规则检查
+				//List<CheckRule> listRules = dataCheckService.queryCheckRules(dataObject);
+				List<CheckRule> listRules = dataCheckService.queryCheckRulesByDataTypeAndColumns(dataObject, checkColumnList);
+				DataCheckService.checkDataList(dataMapList,listRules, false);
 
-                // add by zhangliang 20210127 添加代码校验 start
+				// add by zhangliang 20210127 添加代码校验 start
 				ChbCheckTableInfo chbCheckTableInfo = ChbCheckTableInfo.genChbCheckTableInfo(tableId);
 				if (chbCheckTableInfo != null){
 					commonCodeCheckBatchService.codeCheckCommonOnly(dataMapList, chbCheckTableInfo);
@@ -2230,215 +2246,217 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //                listError.forEach(errorMap -> {
 //                	errorLists.add(errorMap.get("ERRMSG"));
 //                });
-                // 文件中有不符合规则配置的数据
-            	if (dataMapList.size() > 0) {
-            		for (Map<String, String> map : dataMapList) {
-            			if(StringUtil.isEmpty(map.get("ERRMSG"))){
-            				continue;
+				// 文件中有不符合规则配置的数据
+				if (dataMapList.size() > 0) {
+					for (Map<String, String> map : dataMapList) {
+						if(StringUtil.isEmpty(map.get("ERRMSG"))){
+							continue;
 						}
 
 //业务主键凭借  List<String> bisinessPkList
-            			/**start    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
-            			String  vailkey=getBusinessKeyStr(bisinessPkList, map);
-            			/**end    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
-            			String indexStr = map.get("ERRMSG_ROW");
-            			int index = 0;
-            			if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-            				index = Integer.parseInt(indexStr) + 2;
-            			} else {
-            				index = Integer.parseInt(indexStr) + 1;
-            			}
-            			checkResult.add(new ExcelValidDto(vailkey, String.valueOf(index), map.get("ERRMSG")));
-            		}
+						/**start    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
+						String  vailkey=getBusinessKeyStr(bisinessPkList, map);
+						/**end    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
+						String indexStr = map.get("ERRMSG_ROW");
+						int index = 0;
+						if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+							index = Integer.parseInt(indexStr) + 2;
+						} else {
+							index = Integer.parseInt(indexStr) + 1;
+						}
+						checkResult.add(new ExcelValidDto(vailkey, String.valueOf(index), map.get("ERRMSG")));
+					}
 //            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 //    	           	webResult.setMessage("以下数据不满足已配置规则：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)
 //    	           		+ ", 请检查导入文件");
 //    	            return webResult;
-            	}
-            }
-    	}
+				}
+			}
+		}
 //    	webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 //    	return webResult;
 //    	checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "请导入2007以上版本的excel文件！"));
-    	// add by zhangliang 20201024 合并显示错误信息  start
-    		List<ExcelValidDto> resResult = new ArrayList<>();
-    		if (!StringUtil.isEmptyList(checkResult)){
-    				Map<String, List<ExcelValidDto>> rowNumListMap = checkResult.stream().collect(JoyinCollectors.groupingBy(x -> x.getRowNum()));
-    				for (String rowNum : rowNumListMap.keySet()){
-    					List<ExcelValidDto> rowNumList= rowNumListMap.get(rowNum);
-    					String errorMsg = "";
-    					String validKey = StringUtil.EMPTY;
-    					StringBuffer sb = new StringBuffer();
-    					for (ExcelValidDto validDto : rowNumList){
-    						sb.append(validDto.getErrorInfo());
-    						sb.append(GlobalConstant.VERTICAL_LINE);
+		// add by zhangliang 20201024 合并显示错误信息  start
+		List<ExcelValidDto> resResult = new ArrayList<>();
+		if (!StringUtil.isEmptyList(checkResult)){
+			Map<String, List<ExcelValidDto>> rowNumListMap = checkResult.stream().collect(JoyinCollectors.groupingBy(x -> x.getRowNum()));
+			for (String rowNum : rowNumListMap.keySet()){
+				List<ExcelValidDto> rowNumList= rowNumListMap.get(rowNum);
+				String errorMsg = "";
+				String validKey = StringUtil.EMPTY;
+				StringBuffer sb = new StringBuffer();
+				for (ExcelValidDto validDto : rowNumList){
+					sb.append(validDto.getErrorInfo());
+					sb.append(GlobalConstant.VERTICAL_LINE);
 
-    						if (StringUtil.isNotEmpty(validDto.getValidKey()) && validDto.getValidKey().length() > validKey.length()){
-    							validKey = validDto.getValidKey();
-    						}
-    					}
-    					if (sb.length() > 0){
-    						errorMsg = sb.substring(0, sb.length() - GlobalConstant.VERTICAL_LINE.length());
-    					}
-    					resResult.add(new ExcelValidDto(validKey, rowNum, errorMsg));
-    				}
+					if (StringUtil.isNotEmpty(validDto.getValidKey()) && validDto.getValidKey().length() > validKey.length()){
+						validKey = validDto.getValidKey();
+					}
+				}
+				if (sb.length() > 0){
+					errorMsg = sb.substring(0, sb.length() - GlobalConstant.VERTICAL_LINE.length());
+				}
+				resResult.add(new ExcelValidDto(validKey, rowNum, errorMsg));
+			}
 
-    				resResult = resResult.stream().sorted((validDto1, validDto2) ->
-    						{if(Integer.parseInt(validDto1.getRowNum()) < Integer.parseInt(validDto2.getRowNum())){
-    							return -1;
-    						}
-    							return 1;
-    						}).collect(Collectors.toList());
-    			}
-    			// add by zhangliang 20201024 合并显示错误信息  end
-    	return resResult;
-    }
+			resResult = resResult.stream().sorted((validDto1, validDto2) ->
+			{if(Integer.parseInt(validDto1.getRowNum()) < Integer.parseInt(validDto2.getRowNum())){
+				return -1;
+			}
+				return 1;
+			}).collect(Collectors.toList());
+		}
+		// add by zhangliang 20201024 合并显示错误信息  end
+		return resResult;
+	}
 
 
-    /**
-     * 根据索引位置判断资产要素表ASSET_TYPE
-     * @Description TODO
-     * @Author      高健
-     * @Date        2019年12月7日 下午4:50:11
-     * @param @param index
-     * @param @return 参数
-     * @return String 返回类型
-     * @throws
-     */
-    private String queryAssetType(int index) {
-    	String assetType = "";
-    	for (String key : headerMap.keySet()) {
-    		String[] indexArr = key.split("-");
-    		int beginIndex = Integer.parseInt(indexArr[0]);
-    		int endIndex = Integer.parseInt(indexArr[1]);
-    		if (index >= beginIndex && index <= endIndex) {
-    			String assetTypeName = headerMap.get(key);
-    			assetType = key + ":" + assetTypeName;
+	/**
+	 * 根据索引位置判断资产要素表ASSET_TYPE
+	 * @Description TODO
+	 * @Author      高健
+	 * @Date        2019年12月7日 下午4:50:11
+	 * @param @param index
+	 * @param @return 参数
+	 * @return String 返回类型
+	 * @throws
+	 */
+	private String queryAssetType(int index) {
+		String assetType = "";
+		for (String key : headerMap.keySet()) {
+			String[] indexArr = key.split("-");
+			int beginIndex = Integer.parseInt(indexArr[0]);
+			int endIndex = Integer.parseInt(indexArr[1]);
+			if (index >= beginIndex && index <= endIndex) {
+				String assetTypeName = headerMap.get(key);
+				assetType = key + ":" + assetTypeName;
 				break;
-    		}
-    	}
-    	return assetType;
-    }
+			}
+		}
+		return assetType;
+	}
 
-    private boolean checkSingleData(Map<String, String> pkDataMap, String tableId) {
-    	boolean flag = false;
-    	/**添加异常捕获， start by dongxiangyang  20201026 */
-    	try
-    	{int count = baseInformationMapper.checkDataIsExist(pkDataMap, tableId);
-    	if (count > 0) {
-    		flag = true;
-    	}
-    	}catch(Exception e){
-    		return flag;
-    	}
-    	/**添加异常捕获， end by dongxiangyang  20201026 */
+	private boolean checkSingleData(Map<String, String> pkDataMap, String tableId) {
+		boolean flag = false;
+		/**添加异常捕获， start by dongxiangyang  20201026 */
+		try
+		{int count = baseInformationMapper.checkDataIsExist(pkDataMap, tableId);
+			if (count > 0) {
+				flag = true;
+			}
+		}catch(Exception e){
+			return flag;
+		}
+		/**添加异常捕获， end by dongxiangyang  20201026 */
 
-    	return flag;
-    }
-    
-    /**
-     * 检查传入数据和指定表的数据是否主键冲突并返回主键冲突数据
-     * @param pkDataMapList 传入数据集合
-     * @param tableId 待检查表
-     * @return 主键冲突数据集合
-     */
-    private List<String> checkDataIsExist(List<Map<String, String>> pkDataMapList, String tableId) {
-    	List<String> existDataList = new ArrayList<String>();
-    	pkDataMapList.forEach(pkDataMap -> {
-    		int count = baseInformationMapper.checkDataIsExist(pkDataMap, tableId);
-    		if (count > 0) {
-    			StringBuilder stringBuilder = new StringBuilder();
-    			for (String key : pkDataMap.keySet()) {
-    				stringBuilder.append(key + "=" + pkDataMap.get(key) + ",");
-    			}
-    			stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-    			if (!existDataList.contains(stringBuilder.toString())) {
-    				existDataList.add(stringBuilder.toString());
-    			}
-    			
-    		}
-    		
-    	});
-    	return existDataList;
-    }
-    
-    /**
-     * 数据导入
-     * @param fileName 文件名
-     * @return 导入成功条数
-     */
-    public AjaxResult importData(String tableName,String userName,List<List<String>> originalDataList) {
-    	String sheetName=tableName;
-    	int count = 0;
-    	AjaxResult webResult = new AjaxResult();
-    	//List<BaseInformationDto> tableInfoList = baseInformationMapper.queryTableInfoByTableName(tableName);
-    	// 导入文件相关表信息
-    	//BaseInformationDto baseInformationDto = tableInfoList.get(0);
-    	//String tableId = baseInformationDto.getBaseTableId();
-    	
-    	ChbMgrTableInfo chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyChiName(tableName);
-    	String tableId = chbMgrTableInfo.getMgrTableName();
-    	String headerNum=chbMgrTableInfo.getHeaderNum();
-    	tableName=chbMgrTableInfo.getMgrTableName();
-    	
-    	if (originalDataList!=null&&!originalDataList.isEmpty()) {
-            // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
-            // 所有字段集合
-            List<String> allColumnList = baseInformationMapper.queryAllColumns(tableId);
-            // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
-    		// 导入表业务主键集合
-            List<String> bisinessPkList = baseInformationMapper.queryBisinessPkListByTable(tableId);
-            // 对应表日期类型字段集合
-            List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableName);
-    		List<List<String>> dataList = new ArrayList<List<String>>();
-    		if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-    			dataList = handleAssetData(originalDataList, tableId, bisinessPkList, dateColumnList);
-    		} else {
-    			dataList = handleData(originalDataList, tableId);
-    		}
+		return flag;
+	}
+
+	/**
+	 * 检查传入数据和指定表的数据是否主键冲突并返回主键冲突数据
+	 * @param pkDataMapList 传入数据集合
+	 * @param tableId 待检查表
+	 * @return 主键冲突数据集合
+	 */
+	private List<String> checkDataIsExist(List<Map<String, String>> pkDataMapList, String tableId) {
+		List<String> existDataList = new ArrayList<String>();
+		pkDataMapList.forEach(pkDataMap -> {
+			int count = baseInformationMapper.checkDataIsExist(pkDataMap, tableId);
+			if (count > 0) {
+				StringBuilder stringBuilder = new StringBuilder();
+				for (String key : pkDataMap.keySet()) {
+					stringBuilder.append(key + "=" + pkDataMap.get(key) + ",");
+				}
+				stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+				if (!existDataList.contains(stringBuilder.toString())) {
+					existDataList.add(stringBuilder.toString());
+				}
+
+			}
+
+		});
+		return existDataList;
+	}
+
+	/**
+	 * 数据导入
+	 * @param fileName 文件名
+	 * @return 导入成功条数
+	 */
+	public AjaxResult importData(String tableName,String userName,List<List<String>> originalDataList) {
+		String sheetName=tableName;
+		int count = 0;
+		AjaxResult webResult = new AjaxResult();
+		//List<BaseInformationDto> tableInfoList = baseInformationMapper.queryTableInfoByTableName(tableName);
+		// 导入文件相关表信息
+		//BaseInformationDto baseInformationDto = tableInfoList.get(0);
+		//String tableId = baseInformationDto.getBaseTableId();
+
+		ChbMgrTableInfo chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyChiName(tableName);
+		String tableId = chbMgrTableInfo.getMgrTableName();
+		String headerNum=chbMgrTableInfo.getHeaderNum();
+		tableName=chbMgrTableInfo.getMgrTableName();
+		//适配mysql系统时间改造
+		Date date=new Date();
+		Timestamp timestamp=new Timestamp(date.getTime());
+		if (originalDataList!=null&&!originalDataList.isEmpty()) {
+			// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
+			// 所有字段集合
+			List<String> allColumnList = baseInformationMapper.queryAllColumns(tableId);
+			// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
+			// 导入表业务主键集合
+			List<String> bisinessPkList = baseInformationMapper.queryBisinessPkListByTable(tableId);
+			// 对应表日期类型字段集合
+			List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableName);
+			List<List<String>> dataList = new ArrayList<List<String>>();
+			if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+				dataList = handleAssetData(originalDataList, tableId, bisinessPkList, dateColumnList);
+			} else {
+				dataList = handleData(originalDataList, tableId);
+			}
 //			List<List<String>> dataList = handleData(originalDataList, tableId);
-            // 导入表主键集合
-            List<String> primarykeyList = baseInformationMapper.queryPrimarykeyByTableName(tableId);
+			// 导入表主键集合
+			List<String> primarykeyList = baseInformationMapper.queryPrimarykeyByTableName(tableId);
 
-            // 需要修改的数据集合
-            List<HashMap<String, String>> dataInsertList = new ArrayList<HashMap<String,String>>();
-            // 需要删除的数据集合
-            List<HashMap<String, String>> dataDeleteList = new ArrayList<HashMap<String,String>>();
-            // 需要修改的数据集合
-            List<HashMap<String, String>> dataUpdateList = new ArrayList<HashMap<String,String>>();
-            // 对应表时间类型字段集合
-            List<String> timeColumnList =  baseInformationMapper.queryTimeColumnList(tableName);
-            List<SysDataDict> secondIndustryList = tamsBaseMapper.queryFirstIndustryBySecondIndustry();
-        	Map<String, String> secondIndustryMap = new HashMap<String, String>();
-        	for (SysDataDict sysDataDict : secondIndustryList) {
-        		secondIndustryMap.put(sysDataDict.getItemCode(), sysDataDict.getLinkedItemCode());
-        	}
-            if (null != dataList && dataList.size() > 1) {
-            	List<String> columnList = dataList.get(0);
-            	//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) ----->>>>>
-            	if(!columnList.contains("CREATE_USER")){
-                	columnList.add("CREATE_USER");
-            	}
-            	if(!columnList.contains("UPDATE_USER")){
-            		columnList.add("UPDATE_USER");
-            	}
-            	if(!columnList.contains("UPDATE_TIME")){
-            		columnList.add("UPDATE_TIME");
-            	}
-            	//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) -----<<<<<
-            	int size = columnList.size();
-            	for(int  j=1;j<dataList.size();j++){
-            		List<String>	strList = dataList.get(j);
-                	//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) ----->>>>>
-            		strList.add("admin");//创建人
-            		strList.add("admin");//更新人
-            		strList.add(DateUtil.getCurrentDate());//更新时间
-                	//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) -----<<<<<
-            		int beginIndex = 0;
-            		int endIndex = 0;
-            		String assetType = "";
-            		// 资产要素表数据处理
-            		if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+			// 需要修改的数据集合
+			List<HashMap<String, String>> dataInsertList = new ArrayList<HashMap<String,String>>();
+			// 需要删除的数据集合
+			List<HashMap<String, String>> dataDeleteList = new ArrayList<HashMap<String,String>>();
+			// 需要修改的数据集合
+			List<HashMap<String, String>> dataUpdateList = new ArrayList<HashMap<String,String>>();
+			// 对应表时间类型字段集合
+			List<String> timeColumnList =  baseInformationMapper.queryTimeColumnList(tableName);
+			List<SysDataDict> secondIndustryList = tamsBaseMapper.queryFirstIndustryBySecondIndustry();
+			Map<String, String> secondIndustryMap = new HashMap<String, String>();
+			for (SysDataDict sysDataDict : secondIndustryList) {
+				secondIndustryMap.put(sysDataDict.getItemCode(), sysDataDict.getLinkedItemCode());
+			}
+			if (null != dataList && dataList.size() > 1) {
+				List<String> columnList = dataList.get(0);
+				//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) ----->>>>>
+				if(!columnList.contains("CREATE_USER")){
+					columnList.add("CREATE_USER");
+				}
+				if(!columnList.contains("UPDATE_USER")){
+					columnList.add("UPDATE_USER");
+				}
+				if(!columnList.contains("UPDATE_TIME")){
+					columnList.add("UPDATE_TIME");
+				}
+				//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) -----<<<<<
+				int size = columnList.size();
+				for(int  j=1;j<dataList.size();j++){
+					List<String>	strList = dataList.get(j);
+					//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) ----->>>>>
+					strList.add("admin");//创建人
+					strList.add("admin");//更新人
+					strList.add(DateUtil.getCurrentDate());//更新时间
+					//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) -----<<<<<
+					int beginIndex = 0;
+					int endIndex = 0;
+					String assetType = "";
+					// 资产要素表数据处理
+					if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
 //            			String dataPara = "";
 //            			for (int i = 7; i <= 274; i ++) {
 //                			String str = strList.get(i);
@@ -2454,463 +2472,482 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //                		beginIndex = Integer.parseInt(dataParaArr[0].split("-")[0]);
 //                		endIndex = Integer.parseInt(dataParaArr[0].split("-")[1]);
 //                		assetType = dataParaArr[1];
-            			
-            			String assetType2=strList.get(4);
-            			String[] dataParaArr = assetMap.get(assetType2).split(":");
-            			beginIndex = Integer.parseInt(dataParaArr[1].split("-")[0]);
-            			endIndex = Integer.parseInt(dataParaArr[1].split("-")[1]);
-            			assetType = dataParaArr[0];
-            		
-            		}else if(CHB_ASSET_INFO_LIST.contains(tableName)&&"1".equals(headerNum)){
-            			//单表头的资产基本信息
-            			assetType=nameMap.get(sheetName);
-            		}
-            		List<Integer> indexList = new ArrayList<Integer>();
-            		if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-            			for (int i = 1; i < 7; i ++) {
-            				indexList.add(i);
-            			}
-            			for (int i = beginIndex; i <= endIndex; i ++) {
-            				indexList.add(i);
-            			}
-            			for (int i = 275; i < size; i ++) {
-            				indexList.add(i);
-            			}
-            		} else {
-            			for (int i = 1; i < size; i ++) {
-            				indexList.add(i);
-            			}
-            		}
 
-            		// 新增数据Map
-            		HashMap<String, String> insertMap = new HashMap<String, String>();
-            		// 删除数据Map
-            		HashMap<String, String> deleteMap = new HashMap<String, String>();
-            		// 修改数据Map
-            		HashMap<String, String> updateMap = new HashMap<String, String>();
-            		switch(strList.get(0)) {
-            		case "新增" :
+						String assetType2=strList.get(4);
+						String[] dataParaArr = assetMap.get(assetType2).split(":");
+						beginIndex = Integer.parseInt(dataParaArr[1].split("-")[0]);
+						endIndex = Integer.parseInt(dataParaArr[1].split("-")[1]);
+						assetType = dataParaArr[0];
+
+					}else if(CHB_ASSET_INFO_LIST.contains(tableName)&&"1".equals(headerNum)){
+						//单表头的资产基本信息
+						assetType=nameMap.get(sheetName);
+					}
+					List<Integer> indexList = new ArrayList<Integer>();
+					if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+						for (int i = 1; i < 7; i ++) {
+							indexList.add(i);
+						}
+						for (int i = beginIndex; i <= endIndex; i ++) {
+							indexList.add(i);
+						}
+						for (int i = 275; i < size; i ++) {
+							indexList.add(i);
+						}
+					} else {
+						for (int i = 1; i < size; i ++) {
+							indexList.add(i);
+						}
+					}
+
+					// 新增数据Map
+					HashMap<String, String> insertMap = new HashMap<String, String>();
+					// 删除数据Map
+					HashMap<String, String> deleteMap = new HashMap<String, String>();
+					// 修改数据Map
+					HashMap<String, String> updateMap = new HashMap<String, String>();
+					switch(strList.get(0)) {
+						case "新增" :
 //            			for (int i = 1; i < size; i ++) {
-            			for (Integer i : indexList) {
-            				String column = columnList.get(i);
-            				String columnData = strList.get(i);
-            				//资产要素放置后续空覆盖前有有值选项
-            				if(i>=CAI_BASE_COUNT&&StringUtil.isNotEmpty(insertMap.get(column))
-            						&&StringUtil.isEmpty(columnData)
-            						&&CHB_ASSET_INFO_LIST.contains(tableName)){
-            					continue;
-            				}
-            				//资产名称覆盖问题修复，防止被覆盖
-            				if("ASSET_NAME".equals(column)&&StringUtil.isEmpty(columnData)){
-            					continue;
-            				}
-            				// 数据状态定为E
-            				if ("STATUS".equals(column)) {
-            					columnData = "'" + "E" + "'";
-            					// 新增操作主键需要单独生成(非组合主键)
-            				} else if (null != primarykeyList && primarykeyList.contains(column)) {
-            					columnData = "'" + UUID.randomUUID().toString()+ "'";
-            					// 日期类型字段处理
-            				} else if (dateColumnList.contains(column) && !("").equals(columnData)) {
-            					// 特殊情况,CREATE_TIME和UPDATE_TIME为DATE类型
-            					if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-            						columnData = "SYSDATE";
-            					} else {
-            						//excel中输入了时间戳数据处理
-            						if(columnData.length() > 10){
-            							columnData = columnData.substring(0,10);
-            						}
-            						String dateStr = formatDateStr(columnData);
-                					if (null != dateStr) {
-                						columnData = "DATE'" + dateStr + "'";
-                					} else {
-                						columnData = null;
-                					}
-//            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
-            					}
-            					// 时间类型字段全存入当前时间
-            				} else if (timeColumnList.contains(column)) {
-            					columnData = "SYSDATE";
-            					// 创建者和修改者均设置为当前用户
-            				} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
-            					columnData = "'" + userName + "'";
-            				}  else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
-            					columnData = "'" +columnData.replace("'", "''")+ "'";
-            				} else {
-            					columnData = "'" + columnData + "'";
-            				}
-            				insertMap.put(column, columnData);
-                		}
-            			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 start
-            			if(StringUtil.isEmpty(insertMap.get("DATA_SOURCE"))&&
-            					Arrays.asList(INTERF_DATASOURCE).contains(tableName)){
-            				insertMap.put("DATA_SOURCE", "'" + DictCodeListExt3.数据来源_手工维护.getValue()+ "'");
-            			}
-            			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 end
-            			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
-            				insertMap.put("ASSET_TYPE", "'" + assetType + "'");
-            				insertMap.put("STATUS", "'" + "E" + "'");
-            				insertMap.put("CREATE_TIME", "SYSDATE");
-            				insertMap.put("UPDATE_TIME", "SYSDATE");
-            				insertMap.put("CREATE_USER", "'" + userName + "'");
-            				insertMap.put("UPDATE_USER", "'" + userName + "'");
-            				String industryShares2 = insertMap.get("INDUSTRY_SHARES2");
-            				if (StringUtil.isNotEmpty(industryShares2)) {
-            					String industryShares1 = secondIndustryMap.get(industryShares2.replace("'", ""));
-            					insertMap.put("INDUSTRY_SHARES", "'" + industryShares1 + "'");
-            				}
-            				String industryLevel2 = insertMap.get("INDUSTRY_LEVEL2");
-            				if (StringUtil.isNotEmpty(industryLevel2)) {
-            					String industry = secondIndustryMap.get(industryLevel2.replace("'", ""));
-            					insertMap.put("INDUSTRY", "'" + industry + "'");
-            				}
-            				String industryLevel2Type = insertMap.get("INDUSTRY_LEVEL2_TYPE");
-            				if (StringUtil.isNotEmpty(industryLevel2Type)) {
-            					String industry1 = secondIndustryMap.get(industryLevel2Type.replace("'", ""));
-            					insertMap.put("INDUSTRY1", "'" + industry1 + "'");
-            					insertMap.put("INDUSTRY_PBC", "'" + industry1 + "'");
-            				}
-            				String proIndustryLevel2 = insertMap.get("PRO_INDUSTRY_LEVEL2");
-            				if (StringUtil.isNotEmpty(proIndustryLevel2)) {
-            					String proIndustry = secondIndustryMap.get(proIndustryLevel2.replace("'", ""));
-            					insertMap.put("PRO_INDUSTRY", "'" + proIndustry + "'");
-            				}
-            				String capUseInduLevel2 = insertMap.get("CAP_USE_INDU_LEVEL2");
-            				if (StringUtil.isNotEmpty(capUseInduLevel2)) {
-            					String capUseIndu = secondIndustryMap.get(capUseInduLevel2.replace("'", ""));
-            					insertMap.put("CAP_USE_INDU", "'" + capUseIndu + "'");
-            				}
-                            // add by dubaojun 2020-10-31 增加备注字段的取值 start
-                            // 获取remark
-                            String remark=strList.get(CAI_BASE_COUNT);
-                            insertMap.put("REMARK", "'" + remark + "'");
-                            // add by dubaojun 2020-10-31 增加备注字段的取值 end
-            			}
-					else if(StringUtil.equals(CHB_PRD_DEAL, tableName)){
-            				//当模板中办含了识别标识，但是未填写或者模板中不包含识别标识
-            				if((StringUtil.isNotEmpty(insertMap.get("INDENTIFY_MARK"))&&
-            						StringUtil.equals(insertMap.get("INDENTIFY_MARK"), "''"))||
-            						StringUtil.isEmpty(insertMap.get("INDENTIFY_MARK"))){
-            					String indentifyMark = insertMap.get("PROD_ID")+"="
-            							+insertMap.get("CUSTOMER_TYPE1")+"="+insertMap.get("CUSTOMER_TYPE2");
-            					if(StringUtil.isNotEmpty(indentifyMark)){
-            						indentifyMark = "'"+indentifyMark.replace("'", "")+"'";
-            					}
-            					insertMap.put("INDENTIFY_MARK", indentifyMark);
-            				}
-            			}
-                        // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
-                        Set<String> keySet = new HashSet<>(insertMap.keySet());
-                        for (String key : keySet) {
-                            if(!allColumnList.contains(key)) {
-                                insertMap.remove(key);
-                            }
-                        }
-                        // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
-            			dataInsertList.add(insertMap);
-            			break;
-            		case "删除" :
-//            			for (int i = 1; i < size; i ++) {
-            			for (Integer i : indexList) {
-            				String column = columnList.get(i);
-            				String columnData = strList.get(i);
-            				if ((dateColumnList.contains(column) && !("").equals(columnData)) ||
-            						(timeColumnList.contains(column) && !("").equals(columnData))) {
-            					// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  start
-								if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-									columnData = "SYSDATE";
-								// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  end
-								}else{
-									String dateStr = formatDateStr(columnData);
-									if (null != dateStr) {
-										columnData = "DATE'" + dateStr + "'";
-									} else {
-										columnData = null;
-									}
-//            					columnData = "DATE'" + columnData.substring(0, 10) +"'";
+							for (Integer i : indexList) {
+								String column = columnList.get(i);
+								String columnData = strList.get(i);
+								//资产要素放置后续空覆盖前有有值选项
+								if(i>=CAI_BASE_COUNT&&StringUtil.isNotEmpty(insertMap.get(column))
+										&&StringUtil.isEmpty(columnData)
+										&&CHB_ASSET_INFO_LIST.contains(tableName)){
+									continue;
 								}
-            				} else {
-            					columnData = "'" + columnData + "'";
-            				}
-            				deleteMap.put(column, columnData);
-                		}
-            			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
-            				deleteMap.put("ASSET_TYPE", "'" + assetType + "'");
+								//资产名称覆盖问题修复，防止被覆盖
+								if("ASSET_NAME".equals(column)&&StringUtil.isEmpty(columnData)){
+									continue;
+								}
+								// 数据状态定为E
+								if ("STATUS".equals(column)) {
+									columnData = "'" + "E" + "'";
+									// 新增操作主键需要单独生成(非组合主键)
+								} else if (null != primarykeyList && primarykeyList.contains(column)) {
+									columnData = "'" + UUID.randomUUID().toString()+ "'";
+									// 日期类型字段处理
+								} else if (dateColumnList.contains(column) && !("").equals(columnData)) {
+									// 特殊情况,CREATE_TIME和UPDATE_TIME为DATE类型
+									if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
+										//columnData = "SYSDATE";
+										columnData = "'" + timestamp.toString().substring(0,19) + "'";
+									} else {
+										//excel中输入了时间戳数据处理
+										if(columnData.length() > 10){
+											columnData = columnData.substring(0,10);
+										}
+										String dateStr = formatDateStr(columnData);
+										if (null != dateStr) {
+											columnData = "DATE'" + dateStr + "'";
+										} else {
+											columnData = null;
+										}
+//            						columnData = "DATE'" + columnData.substring(0, 10) +"'";
+									}
+									// 时间类型字段全存入当前时间
+								} else if (timeColumnList.contains(column)) {
+									//columnData = "SYSDATE";
+									columnData = "'" + timestamp.toString().substring(0,19) + "'";
+									// 创建者和修改者均设置为当前用户
+								} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
+									columnData = "'" + userName + "'";
+								}  else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
+									columnData = "'" +columnData.replace("'", "''")+ "'";
+								} else {
+									columnData = "'" + columnData + "'";
+								}
+								insertMap.put(column, columnData);
+							}
+
+							//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 start
+							if(StringUtil.isEmpty(insertMap.get("DATA_SOURCE"))&&
+									Arrays.asList(INTERF_DATASOURCE).contains(tableName)){
+								insertMap.put("DATA_SOURCE", "'" + DictCodeListExt3.数据来源_手工维护.getValue()+ "'");
+							}
+							//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 end
+							if (CHB_ASSET_INFO_LIST.contains(tableName)) {
+								insertMap.put("ASSET_TYPE", "'" + assetType + "'");
+								insertMap.put("STATUS", "'" + "E" + "'");
+								insertMap.put("CREATE_TIME", "'" + timestamp.toString().substring(0,19) + "'");
+								insertMap.put("UPDATE_TIME", "'" + timestamp.toString().substring(0,19) + "'");
+								insertMap.put("CREATE_USER", "'" + userName + "'");
+								insertMap.put("UPDATE_USER", "'" + userName + "'");
+								String industryShares2 = insertMap.get("INDUSTRY_SHARES2");
+								if (StringUtil.isNotEmpty(industryShares2)) {
+									String industryShares1 = secondIndustryMap.get(industryShares2.replace("'", ""));
+									insertMap.put("INDUSTRY_SHARES", "'" + industryShares1 + "'");
+								}
+								String industryLevel2 = insertMap.get("INDUSTRY_LEVEL2");
+								if (StringUtil.isNotEmpty(industryLevel2)) {
+									String industry = secondIndustryMap.get(industryLevel2.replace("'", ""));
+									insertMap.put("INDUSTRY", "'" + industry + "'");
+								}
+								String industryLevel2Type = insertMap.get("INDUSTRY_LEVEL2_TYPE");
+								if (StringUtil.isNotEmpty(industryLevel2Type)) {
+									String industry1 = secondIndustryMap.get(industryLevel2Type.replace("'", ""));
+									insertMap.put("INDUSTRY1", "'" + industry1 + "'");
+									insertMap.put("INDUSTRY_PBC", "'" + industry1 + "'");
+								}
+								String proIndustryLevel2 = insertMap.get("PRO_INDUSTRY_LEVEL2");
+								if (StringUtil.isNotEmpty(proIndustryLevel2)) {
+									String proIndustry = secondIndustryMap.get(proIndustryLevel2.replace("'", ""));
+									insertMap.put("PRO_INDUSTRY", "'" + proIndustry + "'");
+								}
+								String capUseInduLevel2 = insertMap.get("CAP_USE_INDU_LEVEL2");
+								if (StringUtil.isNotEmpty(capUseInduLevel2)) {
+									String capUseIndu = secondIndustryMap.get(capUseInduLevel2.replace("'", ""));
+									insertMap.put("CAP_USE_INDU", "'" + capUseIndu + "'");
+								}
+								// add by dubaojun 2020-10-31 增加备注字段的取值 start
+								// 获取remark
+								String remark=strList.get(CAI_BASE_COUNT);
+								insertMap.put("REMARK", "'" + remark + "'");
+								// add by dubaojun 2020-10-31 增加备注字段的取值 end
+							}
+							else if(StringUtil.equals(CHB_PRD_DEAL, tableName)){
+								//当模板中办含了识别标识，但是未填写或者模板中不包含识别标识
+								if((StringUtil.isNotEmpty(insertMap.get("INDENTIFY_MARK"))&&
+										StringUtil.equals(insertMap.get("INDENTIFY_MARK"), "''"))||
+										StringUtil.isEmpty(insertMap.get("INDENTIFY_MARK"))){
+									String indentifyMark = insertMap.get("PROD_ID")+"="
+											+insertMap.get("CUSTOMER_TYPE1")+"="+insertMap.get("CUSTOMER_TYPE2");
+									if(StringUtil.isNotEmpty(indentifyMark)){
+										indentifyMark = "'"+indentifyMark.replace("'", "")+"'";
+									}
+									insertMap.put("INDENTIFY_MARK", indentifyMark);
+								}
+							}
+							// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
+							Set<String> keySet = new HashSet<>(insertMap.keySet());
+							for (String key : keySet) {
+								if(!allColumnList.contains(key)) {
+									insertMap.remove(key);
+								}
+							}
+							//针对产品申报登记导入模版不存在的字段 给与默认值 add by yushengyuan 2021-04-13
+
+							if(StringUtil.equals(CHB_PRD_DECLARE_SUB_TMP, tableName)){
+								if(StringUtil.isEmpty(insertMap.get("STATUS"))){
+									insertMap.put("STATUS", "'" + "E" + "'");
+									insertMap.put("DATA_SOURCE","'" + "02" + "'");
+									insertMap.put("CREATE_TIME", "'" + timestamp.toString().substring(0,19) + "'");
+									insertMap.put("UPDATE_TIME", "'" + timestamp.toString().substring(0,19) + "'");
+									insertMap.put("CREATE_USER", "'" + userName + "'");
+									insertMap.put("UPDATE_USER", "'" + userName + "'");
+
+								}
+							}
+							// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
+							dataInsertList.add(insertMap);
+							break;
+						case "删除" :
+//            			for (int i = 1; i < size; i ++) {
+							for (Integer i : indexList) {
+								String column = columnList.get(i);
+								String columnData = strList.get(i);
+								if ((dateColumnList.contains(column) && !("").equals(columnData)) ||
+										(timeColumnList.contains(column) && !("").equals(columnData))) {
+									// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  start
+									if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
+										//columnData = "SYSDATE";
+										columnData = "'" + timestamp.toString().substring(0,19) + "'";
+										// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  end
+									}else{
+										String dateStr = formatDateStr(columnData);
+										if (null != dateStr) {
+											columnData = "DATE'" + dateStr + "'";
+										} else {
+											columnData = null;
+										}
+//            					columnData = "DATE'" + columnData.substring(0, 10) +"'";
+									}
+								} else {
+									columnData = "'" + columnData + "'";
+								}
+								deleteMap.put(column, columnData);
+							}
+							if (CHB_ASSET_INFO_LIST.contains(tableName)) {
+								deleteMap.put("ASSET_TYPE", "'" + assetType + "'");
 //            				String industryShares2 = deleteMap.get("INDUSTRY_SHARES2");
 //            				if (StringUtil.isNotEmpty(industryShares2)) {
 //            					String industryShares1 = tamsBaseMapper.queryFirstIndustryBySecondIndustry(industryShares2.replace("'", ""));
 //            					deleteMap.put("INDUSTRY_SHARES", "'" + industryShares1 + "'");
 //            				}
-            			}
-            			dataDeleteList.add(deleteMap);
-            			break;
-            		case "修改" :
+							}
+							dataDeleteList.add(deleteMap);
+							break;
+						case "修改" :
 //            			for (int i = 1; i < size; i ++) {
-            			for (Integer i : indexList) {
-            				String column = columnList.get(i);
-            				String columnData = strList.get(i);
-            				//资产要素放置后续空覆盖前有有值选项
-            				if(i>=CAI_BASE_COUNT&&StringUtil.isNotEmpty(updateMap.get(column))
-            						&&StringUtil.isEmpty(columnData)
-            						&&CHB_ASSET_INFO_LIST.contains(tableName)){
-            					continue;
-            				}
-            				// 修改操作主键不修改UUID(非组合主键)
-            				if (null != primarykeyList && primarykeyList.size() == 1 && primarykeyList.get(0).equals(column)) {
-            					continue;
-            				}
-            				//创建人以及时间无需修改
-            				if ("CREATE_USER".equals(column)|| "CREATE_TIME".equals(column)) {
-            					continue;
-            				}
-            				//资产名称覆盖问题修复，防止被覆盖
-            				else if("ASSET_NAME".equals(column)&&StringUtil.isEmpty(columnData)){
-            					continue;
-            				}
-            				// 日期类型字段处理
-            				if (dateColumnList.contains(column) && !("").equals(columnData)) {
-            					// 特殊情况,UPDATE_TIME为DATE类型
-            					if ("UPDATE_TIME".equals(column)) {
-            						columnData = "SYSDATE";
-            					} else {
-            						//excel中输入了时间戳数据处理
-            						if(columnData.length() > 10){
-            							columnData = columnData.substring(0,10);
-            						}
-            						String dateStr = formatDateStr(columnData);
-                					if (null != dateStr) {
-                						columnData = "DATE'" + dateStr + "'";
-                					} else {
-                						columnData = null;
-                					}
-//            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
-            					}
-            				// 时间类型字段
-            				} else if (timeColumnList.contains(column)) {
-            					// 修改时间变动,其余时间不变
-            					if(column.indexOf("UPDATE") > -1) {
-            						columnData = "SYSDATE";
-            					} else {
-            						continue;
-            					}
-            					// 修改者改为当前用户
-            				} else if ("UPDATE_USER".equals(column)) {
-            					columnData = "'" + userName + "'";
-            					// 数据状态改为 M
-            				} else if ("STATUS".equals(column)){
-            					columnData = "'" + "M" + "'";
-            				} else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
-            					columnData = "'" +columnData.replace("'", "''")+ "'";
-            				} else {
-            					columnData = "'" + columnData + "'";
-            				}
-            				updateMap.put(column, columnData);
-                		}
-            			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 start
-            			if(StringUtil.isEmpty(insertMap.get("DATA_SOURCE"))&&
-            					Arrays.asList(INTERF_DATASOURCE).contains(tableName)){
-            				updateMap.put("DATA_SOURCE","'" + DictCodeListExt3.数据来源_手工维护.getValue()+ "'");
-            			}
-            			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 end
-            			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
-            				updateMap.put("ASSET_TYPE", "'" + assetType + "'");
-            				updateMap.put("STATUS", "'" + "M" + "'");
-            				updateMap.put("UPDATE_TIME", "SYSDATE");
-            				updateMap.put("UPDATE_USER", "'" + userName + "'");
-            				String industryShares2 = updateMap.get("INDUSTRY_SHARES2");
-            				if (StringUtil.isNotEmpty(industryShares2)) {
-            					String industryShares1 = secondIndustryMap.get(industryShares2.replace("'", ""));
-            					updateMap.put("INDUSTRY_SHARES", "'" + industryShares1 + "'");
-            				}
-            				String industryLevel2 = updateMap.get("INDUSTRY_LEVEL2");
-            				if (StringUtil.isNotEmpty(industryLevel2)) {
-            					String industry = secondIndustryMap.get(industryLevel2.replace("'", ""));
-            					updateMap.put("INDUSTRY", "'" + industry + "'");
-            				}
-            				String industryLevel2Type = updateMap.get("INDUSTRY_LEVEL2_TYPE");
-            				if (StringUtil.isNotEmpty(industryLevel2Type)) {
-            					String industry1 = secondIndustryMap.get(industryLevel2Type.replace("'", ""));
-            					updateMap.put("INDUSTRY1", "'" + industry1 + "'");
-            					updateMap.put("INDUSTRY_PBC", "'" + industry1 + "'");
-            				}
-            				String proIndustryLevel2 = updateMap.get("PRO_INDUSTRY_LEVEL2");
-            				if (StringUtil.isNotEmpty(proIndustryLevel2)) {
-            					String proIndustry = secondIndustryMap.get(proIndustryLevel2.replace("'", ""));
-            					updateMap.put("PRO_INDUSTRY", "'" + proIndustry + "'");
-            				}
-            				String capUseInduLevel2 = updateMap.get("CAP_USE_INDU_LEVEL2");
-            				if (StringUtil.isNotEmpty(capUseInduLevel2)) {
-            					String capUseIndu = secondIndustryMap.get(capUseInduLevel2.replace("'", ""));
-            					updateMap.put("CAP_USE_INDU", "'" + capUseIndu + "'");
-            				}
-            				// add by dubaojun 2020-10-31 增加备注字段的取值 start
-                            // 获取remark
-                            String remark=strList.get(CAI_BASE_COUNT);
-                            updateMap.put("REMARK", "'" + remark + "'");
-                            // add by dubaojun 2020-10-31 增加备注字段的取值 end
-            			}
-					else if(StringUtil.equals(CHB_PRD_DEAL, tableName)){
-            				//当模板中办含了识别标识，但是未填写或者模板中不包含识别标识
-            				if((StringUtil.isNotEmpty(updateMap.get("INDENTIFY_MARK"))&&
-            						StringUtil.equals(updateMap.get("INDENTIFY_MARK"), "''"))||
-            						StringUtil.isEmpty(updateMap.get("INDENTIFY_MARK"))){
-            					String indentifyMark = updateMap.get("PROD_ID")+"="
-            							+updateMap.get("CUSTOMER_TYPE1")+"="+updateMap.get("CUSTOMER_TYPE2");
-            					if(StringUtil.isNotEmpty(indentifyMark)){
-            						indentifyMark = "'"+indentifyMark.replace("'", "")+"'";
-            					}
-            					updateMap.put("INDENTIFY_MARK", indentifyMark);
-            				}
-            			}
-                        // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
-                        keySet = new HashSet<>(updateMap.keySet());
-                        for (String key : keySet) {
-                            if(!allColumnList.contains(key)) {
-                                updateMap.remove(key);
-                            }
-                        }
-                        // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
-            			dataUpdateList.add(updateMap);
-            			break;
-            			default:
-            		}
-            		
-            		
-            	}
-            	
-            	// 按主键删除数据
-            	boolean flag = isHaveStatus(tableName);
-            	for (HashMap<String, String> dataMap : dataDeleteList) {
-            		Map<String, String> itemMap = new HashMap<String, String>();
-            		for (String key : dataMap.keySet()) {
-        				if (null != bisinessPkList && bisinessPkList.contains(key)) {
-        					itemMap.put(key, (String) dataMap.get(key));
-        				}
-        			}
-            		if (flag) {
-            			count += baseInformationMapper.deleteData(tableName, itemMap);
-            		} else {
-            			count += baseInformationMapper.deleteDataWithOutStatus(tableName, itemMap);
-            		}
-            	}
-            	//按主键修改数据
-            	for (HashMap<String, String> dataMap : dataUpdateList) {
-            		Map<String, String> itemMap = new HashMap<String, String>();
-            		for (String key : dataMap.keySet()) {
-        				if (null != bisinessPkList && bisinessPkList.contains(key)) {
-        					itemMap.put(key, (String) dataMap.get(key));
-        				}
-        			}
-            		count += baseInformationMapper.updateData(tableName, dataMap, itemMap);
-            	}
-            	//向数据库写入数据
-            	for (HashMap<String, String> dataMap : dataInsertList) {
-            		count += baseInformationMapper.insertData(tableName, dataMap);
-            	}
-            }
-           
-            
-    	}
-    	webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-    	return webResult;
-    }
-    
-    /**
-     * 连接报表生成器
-     * @param tableId
+							for (Integer i : indexList) {
+								String column = columnList.get(i);
+								String columnData = strList.get(i);
+								//资产要素放置后续空覆盖前有有值选项
+								if(i>=CAI_BASE_COUNT&&StringUtil.isNotEmpty(updateMap.get(column))
+										&&StringUtil.isEmpty(columnData)
+										&&CHB_ASSET_INFO_LIST.contains(tableName)){
+									continue;
+								}
+								// 修改操作主键不修改UUID(非组合主键)
+								if (null != primarykeyList && primarykeyList.size() == 1 && primarykeyList.get(0).equals(column)) {
+									continue;
+								}
+								//创建人以及时间无需修改
+								if ("CREATE_USER".equals(column)|| "CREATE_TIME".equals(column)) {
+									continue;
+								}
+								//资产名称覆盖问题修复，防止被覆盖
+								else if("ASSET_NAME".equals(column)&&StringUtil.isEmpty(columnData)){
+									continue;
+								}
+								// 日期类型字段处理
+								if (dateColumnList.contains(column) && !("").equals(columnData)) {
+									// 特殊情况,UPDATE_TIME为DATE类型
+									if ("UPDATE_TIME".equals(column)) {
+										//columnData = "SYSDATE";
+										columnData = "'" + timestamp.toString().substring(0,19) + "'";
+									} else {
+										//excel中输入了时间戳数据处理
+										if(columnData.length() > 10){
+											columnData = columnData.substring(0,10);
+										}
+										String dateStr = formatDateStr(columnData);
+										if (null != dateStr) {
+											columnData = "DATE'" + dateStr + "'";
+										} else {
+											columnData = null;
+										}
+//            						columnData = "DATE'" + columnData.substring(0, 10) +"'";
+									}
+									// 时间类型字段
+								} else if (timeColumnList.contains(column)) {
+									// 修改时间变动,其余时间不变
+									if(column.indexOf("UPDATE") > -1) {
+										//columnData = "SYSDATE";
+										columnData = "'" + timestamp.toString().substring(0,19) + "'";
+									} else {
+										continue;
+									}
+									// 修改者改为当前用户
+								} else if ("UPDATE_USER".equals(column)) {
+									columnData = "'" + userName + "'";
+									// 数据状态改为 M
+								} else if ("STATUS".equals(column)){
+									columnData = "'" + "M" + "'";
+								} else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
+									columnData = "'" +columnData.replace("'", "''")+ "'";
+								} else {
+									columnData = "'" + columnData + "'";
+								}
+								updateMap.put(column, columnData);
+							}
+							//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 start
+							if(StringUtil.isEmpty(insertMap.get("DATA_SOURCE"))&&
+									Arrays.asList(INTERF_DATASOURCE).contains(tableName)){
+								updateMap.put("DATA_SOURCE","'" + DictCodeListExt3.数据来源_手工维护.getValue()+ "'");
+							}
+							//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 end
+							if (CHB_ASSET_INFO_LIST.contains(tableName)) {
+								updateMap.put("ASSET_TYPE", "'" + assetType + "'");
+								updateMap.put("STATUS", "'" + "M" + "'");
+								updateMap.put("UPDATE_TIME", "'" + timestamp.toString().substring(0,19) + "'");
+								updateMap.put("UPDATE_USER", "'" + userName + "'");
+								String industryShares2 = updateMap.get("INDUSTRY_SHARES2");
+								if (StringUtil.isNotEmpty(industryShares2)) {
+									String industryShares1 = secondIndustryMap.get(industryShares2.replace("'", ""));
+									updateMap.put("INDUSTRY_SHARES", "'" + industryShares1 + "'");
+								}
+								String industryLevel2 = updateMap.get("INDUSTRY_LEVEL2");
+								if (StringUtil.isNotEmpty(industryLevel2)) {
+									String industry = secondIndustryMap.get(industryLevel2.replace("'", ""));
+									updateMap.put("INDUSTRY", "'" + industry + "'");
+								}
+								String industryLevel2Type = updateMap.get("INDUSTRY_LEVEL2_TYPE");
+								if (StringUtil.isNotEmpty(industryLevel2Type)) {
+									String industry1 = secondIndustryMap.get(industryLevel2Type.replace("'", ""));
+									updateMap.put("INDUSTRY1", "'" + industry1 + "'");
+									updateMap.put("INDUSTRY_PBC", "'" + industry1 + "'");
+								}
+								String proIndustryLevel2 = updateMap.get("PRO_INDUSTRY_LEVEL2");
+								if (StringUtil.isNotEmpty(proIndustryLevel2)) {
+									String proIndustry = secondIndustryMap.get(proIndustryLevel2.replace("'", ""));
+									updateMap.put("PRO_INDUSTRY", "'" + proIndustry + "'");
+								}
+								String capUseInduLevel2 = updateMap.get("CAP_USE_INDU_LEVEL2");
+								if (StringUtil.isNotEmpty(capUseInduLevel2)) {
+									String capUseIndu = secondIndustryMap.get(capUseInduLevel2.replace("'", ""));
+									updateMap.put("CAP_USE_INDU", "'" + capUseIndu + "'");
+								}
+								// add by dubaojun 2020-10-31 增加备注字段的取值 start
+								// 获取remark
+								String remark=strList.get(CAI_BASE_COUNT);
+								updateMap.put("REMARK", "'" + remark + "'");
+								// add by dubaojun 2020-10-31 增加备注字段的取值 end
+							}
+							else if(StringUtil.equals(CHB_PRD_DEAL, tableName)){
+								//当模板中办含了识别标识，但是未填写或者模板中不包含识别标识
+								if((StringUtil.isNotEmpty(updateMap.get("INDENTIFY_MARK"))&&
+										StringUtil.equals(updateMap.get("INDENTIFY_MARK"), "''"))||
+										StringUtil.isEmpty(updateMap.get("INDENTIFY_MARK"))){
+									String indentifyMark = updateMap.get("PROD_ID")+"="
+											+updateMap.get("CUSTOMER_TYPE1")+"="+updateMap.get("CUSTOMER_TYPE2");
+									if(StringUtil.isNotEmpty(indentifyMark)){
+										indentifyMark = "'"+indentifyMark.replace("'", "")+"'";
+									}
+									updateMap.put("INDENTIFY_MARK", indentifyMark);
+								}
+							}
+							// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
+							keySet = new HashSet<>(updateMap.keySet());
+							for (String key : keySet) {
+								if(!allColumnList.contains(key)) {
+									updateMap.remove(key);
+								}
+							}
+							// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
+							dataUpdateList.add(updateMap);
+							break;
+						default:
+					}
+
+
+				}
+
+				// 按主键删除数据
+				boolean flag = isHaveStatus(tableName);
+				for (HashMap<String, String> dataMap : dataDeleteList) {
+					Map<String, String> itemMap = new HashMap<String, String>();
+					for (String key : dataMap.keySet()) {
+						if (null != bisinessPkList && bisinessPkList.contains(key)) {
+							itemMap.put(key, (String) dataMap.get(key));
+						}
+					}
+					if (flag) {
+						count += baseInformationMapper.deleteData(tableName, itemMap);
+					} else {
+						count += baseInformationMapper.deleteDataWithOutStatus(tableName, itemMap);
+					}
+				}
+				//按主键修改数据
+				for (HashMap<String, String> dataMap : dataUpdateList) {
+					Map<String, String> itemMap = new HashMap<String, String>();
+					for (String key : dataMap.keySet()) {
+						if (null != bisinessPkList && bisinessPkList.contains(key)) {
+							itemMap.put(key, (String) dataMap.get(key));
+						}
+					}
+					count += baseInformationMapper.updateData(tableName, dataMap, itemMap);
+				}
+				//向数据库写入数据
+				for (HashMap<String, String> dataMap : dataInsertList) {
+					count += baseInformationMapper.insertData(tableName, dataMap);
+				}
+			}
+
+
+		}
+		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+		return webResult;
+	}
+
+	/**
+	 * 连接报表生成器
+	 * @param tableId
 	 * @param originalDataList
-     */
-    public int linkSvrReport(String tableId,List<List<String>> originalDataList) {
-    	int count = 0;
-    	if (CHB_ASSET_INFO_LIST.contains(tableId)) {
-    		return count;
-    	}
-    	if (!StringUtil.isEmptyList(originalDataList)) {
+	 */
+	public int linkSvrReport(String tableId,List<List<String>> originalDataList) {
+		int count = 0;
+		if (CHB_ASSET_INFO_LIST.contains(tableId)) {
+			return count;
+		}
+		if (!StringUtil.isEmptyList(originalDataList)) {
 			List<String> dataObjectList = baseInformationMapper.querydataObjectByTable(tableId);
 			if (StringUtil.isEmptyList(dataObjectList)) {
 				return count;
 			}
-	        String dataObject = dataObjectList.get(0);
-	        if (StringUtil.isEmpty(dataObject)) {
-	        	return count;
-	        }
-	        String date = DateUtil.getCurrentDate();
-	        DateFormat format = new SimpleDateFormat("yyyy-MM-dd"); 
-            // 产品列表
-            List<String> prodList = new LinkedList<String>();
-            // 资产列表
-            List<String> assetList = new LinkedList<String>();
-            List<List<String>> dataList = handleData(originalDataList, tableId);
-            if (null != dataList && dataList.size() > 1) {
-            	List<String> columnList = dataList.get(0);
-            	// "PROD_ID" 字段对应的下标
-            	Integer prodIndex = columnList.indexOf("PROD_ID");
-            	// "ASSET_CODE" 字段对应的下标
-            	Integer assetIndex = columnList.indexOf("ASSET_CODE");
-            	for (List<String> strList : dataList) {
-            		String operType = strList.get(0);
-            		if ("新增".equals(operType) || "修改".equals(operType) || "删除".equals(operType)) {
-            			// 存在"PROD_ID"字段
-            			if (prodIndex > -1) {
-            				prodList.add(strList.get(prodIndex));
-            			}
-            			// 存在"ASSET_CODE"字段
-            			if (assetIndex > -1) {
-            				assetList.add(strList.get(assetIndex));
-            			}
-            		}
-            	}
-            }
+			String dataObject = dataObjectList.get(0);
+			if (StringUtil.isEmpty(dataObject)) {
+				return count;
+			}
+			String date = DateUtil.getCurrentDate();
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			// 产品列表
+			List<String> prodList = new LinkedList<String>();
+			// 资产列表
+			List<String> assetList = new LinkedList<String>();
+			List<List<String>> dataList = handleData(originalDataList, tableId);
+			if (null != dataList && dataList.size() > 1) {
+				List<String> columnList = dataList.get(0);
+				// "PROD_ID" 字段对应的下标
+				Integer prodIndex = columnList.indexOf("PROD_ID");
+				// "ASSET_CODE" 字段对应的下标
+				Integer assetIndex = columnList.indexOf("ASSET_CODE");
+				for (List<String> strList : dataList) {
+					String operType = strList.get(0);
+					if ("新增".equals(operType) || "修改".equals(operType) || "删除".equals(operType)) {
+						// 存在"PROD_ID"字段
+						if (prodIndex > -1) {
+							prodList.add(strList.get(prodIndex));
+						}
+						// 存在"ASSET_CODE"字段
+						if (assetIndex > -1) {
+							assetList.add(strList.get(assetIndex));
+						}
+					}
+				}
+			}
 			try {
 				Date businessDate = format.parse(date);
 				svrReportGenetorService.generateReport(businessDate, dataObject, prodList, assetList);
 			} catch (ParseException e) {
 				logger.error(e.getMessage(),e);
 				e.printStackTrace();
-			}  
-    	}
-    	return count;
-    }
-    
-    /**
-     * 获取具体表所有日期类型的字段
-     * @param param 页面参数
-     * @return 所有日期类型字段
-     */
-    public String queryDateColumnList(Map<String, Object> param) {
-    	String tableId = (String) param.get("tableId");
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * 获取具体表所有日期类型的字段
+	 * @param param 页面参数
+	 * @return 所有日期类型字段
+	 */
+	public String queryDateColumnList(Map<String, Object> param) {
+		String tableId = (String) param.get("tableId");
 		List<String> dateColumnList = baseInformationMapper.queryDateColumnList(tableId);
 		Map<String, String> data = new HashMap<String, String>();
 		dateColumnList.forEach(dateColumn -> {
 			data.put(dateColumn, dateColumn);
 		});
 		return JSON.toJSONString(data);
-    }
-    
-    
-    /**
-     * 获取具体表所有时间类型的字段
-     * @param param 页面参数
-     * @return 所有时间类型字段
-     */
-    public String queryTimeColumnList(Map<String, Object> param) {
-    	String tableId = (String) param.get("tableId");
+	}
+
+
+	/**
+	 * 获取具体表所有时间类型的字段
+	 * @param param 页面参数
+	 * @return 所有时间类型字段
+	 */
+	public String queryTimeColumnList(Map<String, Object> param) {
+		String tableId = (String) param.get("tableId");
 		List<String> timeColumnList = baseInformationMapper.queryTimeColumnList(tableId);
 		Map<String, String> data = new HashMap<String, String>();
 		timeColumnList.forEach(dateColumn -> {
 			data.put(dateColumn, dateColumn);
 		});
 		return JSON.toJSONString(data);
-    }
-    
-    /**
-     * 根据页面传来的条件删除数据
-     * @return 是否删除成功
-     */
-    @SuppressWarnings("unchecked")
+	}
+
+	/**
+	 * 根据页面传来的条件删除数据
+	 * @return 是否删除成功
+	 */
+	@SuppressWarnings("unchecked")
 	public int deleteData(Map<String, Object> param) {
-    	int count = 0;
-    	String tableId = (String) param.get("tableId");
+		int count = 0;
+		String tableId = (String) param.get("tableId");
 //    	String tableName = (String) param.get("tableName");
 		String dataObj = (String) param.get("jasonData");
 		List<String> primarykeyList = baseInformationMapper.queryBisinessPkListByTable(tableId);
@@ -2924,75 +2961,75 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			for (String key : jsonMap.keySet()) {
 				if (null != primarykeyList && primarykeyList.contains(key)) {
 					if ((dateColumnList.contains(key) && !("").equals(key)) ||
-    						(timeColumnList.contains(key) && !("").equals(key))) {
+							(timeColumnList.contains(key) && !("").equals(key))) {
 						String dateStr = formatDateStr((String) jsonMap.get(key));
-    					if (null != dateStr) {
-    						itemMap.put(key, "DATE'" + dateStr +"'");
-    					} else {
-    						itemMap.put(key, null);
-    					}
+						if (null != dateStr) {
+							itemMap.put(key, "DATE'" + dateStr +"'");
+						} else {
+							itemMap.put(key, null);
+						}
 //    					itemMap.put(key, "DATE'" + ((String) jsonMap.get(key)).substring(0, 10) +"'");
-    				} else {
-    					if(StringUtil.isNotEmpty(jsonMap.get(key))){
-    						String keyTemp = (String) jsonMap.get(key);
-    						if(keyTemp.contains(StringUtil.SPACE)){
-            					itemMap.put(key, "'" + keyTemp.substring(0,keyTemp.indexOf(StringUtil.SPACE)) + "'");
-    						}
-    						else{
-            					itemMap.put(key, "'" + keyTemp + "'");
-    						}
-    					}
-    					else{
-        					itemMap.put(key, "");
-    					}
-    				}
+					} else {
+						if(StringUtil.isNotEmpty(jsonMap.get(key))){
+							String keyTemp = (String) jsonMap.get(key);
+							if(keyTemp.contains(StringUtil.SPACE)){
+								itemMap.put(key, "'" + keyTemp.substring(0,keyTemp.indexOf(StringUtil.SPACE)) + "'");
+							}
+							else{
+								itemMap.put(key, "'" + keyTemp + "'");
+							}
+						}
+						else{
+							itemMap.put(key, "");
+						}
+					}
 				}
 			}
 			if (flag) {
-    			count += baseInformationMapper.deleteData(tableId, itemMap);
-    		} else {
-    			count += baseInformationMapper.deleteDataWithOutStatus(tableId, itemMap);
-    		}
+				count += baseInformationMapper.deleteData(tableId, itemMap);
+			} else {
+				count += baseInformationMapper.deleteDataWithOutStatus(tableId, itemMap);
+			}
 		}
 		return count;
-    }
-    
-    /**
-     *  数据删除成功之后触发报表连接器
-     * @param param
-     * @return
-     */
-    @SuppressWarnings("unchecked")
+	}
+
+	/**
+	 *  数据删除成功之后触发报表连接器
+	 * @param param
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	public int linkSvrReportAfterDelete(Map<String, Object> param) {
-    	int count = 0;
-    	String tableName = (String) param.get("tableId");
+		int count = 0;
+		String tableName = (String) param.get("tableId");
 		String dataObj = (String) param.get("jasonData");
 		List<JSONObject> jsonList = JSONArray.parseArray(dataObj).toJavaList(JSONObject.class);
 		List<String> dataObjectList = baseInformationMapper.querydataObjectByTable(tableName);
 		if (StringUtil.isEmptyList(dataObjectList)) {
 			return count;
 		}
-        String dataObject = dataObjectList.get(0);
-        if (StringUtil.isEmpty(dataObject)) {
-        	return count;
-        }
-        String date = DateUtil.getCurrentDate();
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");  
+		String dataObject = dataObjectList.get(0);
+		if (StringUtil.isEmpty(dataObject)) {
+			return count;
+		}
+		String date = DateUtil.getCurrentDate();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		// 产品列表
-        List<String> prodList = new LinkedList<String>();
-        // 资产列表
-        List<String> assetList = new LinkedList<String>();
+		List<String> prodList = new LinkedList<String>();
+		// 资产列表
+		List<String> assetList = new LinkedList<String>();
 		for (JSONObject jsonObj : jsonList) {
 			Map<String, Object> jsonMap = JSONObject.toJavaObject(jsonObj, Map.class);
 			for (String key : jsonMap.keySet()) {
 				// 存在"PROD_ID"字段
-    			if ("PROD_ID".equals(key)) {
-    				prodList.add((String) jsonMap.get(key));
-    			}
-    			// 存在"ASSET_CODE"字段
-    			if ("ASSET_CODE".equals(key)) {
-    				assetList.add((String) jsonMap.get(key));
-    			}
+				if ("PROD_ID".equals(key)) {
+					prodList.add((String) jsonMap.get(key));
+				}
+				// 存在"ASSET_CODE"字段
+				if ("ASSET_CODE".equals(key)) {
+					assetList.add((String) jsonMap.get(key));
+				}
 			}
 		}
 		try {
@@ -3001,111 +3038,111 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		} catch (ParseException e) {
 			logger.error(e.getMessage(),e);
 			e.printStackTrace();
-		}  
-    	return count;
-    }
-    
-    /**
-     * 删除指定方案
-     * @param param
-     * @return  删除方案的名称
-     */
-    public String deleteFilter(Map<String, Object> param) {
-    	String filterName = "";
-    	String filterId = (String) param.get("filterId");
-    	filterName = filterInformationMapper.queryFilterNameById(filterId);
-    	filterInformationMapper.deleteFilterInfo(filterId);
-    	filterInformationDetailMapper.deleteFilterInfoDetail(filterId);
-    	return filterName;
-    }
-    
-    /**
+		}
+		return count;
+	}
+
+	/**
+	 * 删除指定方案
+	 * @param param
+	 * @return  删除方案的名称
+	 */
+	public String deleteFilter(Map<String, Object> param) {
+		String filterName = "";
+		String filterId = (String) param.get("filterId");
+		filterName = filterInformationMapper.queryFilterNameById(filterId);
+		filterInformationMapper.deleteFilterInfo(filterId);
+		filterInformationDetailMapper.deleteFilterInfoDetail(filterId);
+		return filterName;
+	}
+
+	/**
 	 * 检查传入的参数是不是一张表的，作为错误信息表导出前检查
 	 * @return 是否是同一张表
 	 */
-    public boolean checkIsSingleTable(Map<String, Object> param) {
-    	boolean flag = false;
-    	String dataObj = (String) param.get("jasonData");
-    	if (dataObj != null && dataObj.length() > 0 && !"[]".equals(dataObj)) {
-    		List<JSONObject> jsonList = JSONArray.parseArray(dataObj).toJavaList(JSONObject.class);
-        	List<Map<String, Map<String, String>>> mapList = convertJasonToList(jsonList);
-    		Map<String, List<Map<String, String>>> groupMap = convertListToMap(mapList);
-    		if (groupMap.size() > 1) {
-    			flag = true;
-    		}
-    	}
-    	else{
-    		String tableName=chbInfoMgrResultConfigMapper.getTableNameByTableId((String) param.get("serachInterf"));
+	public boolean checkIsSingleTable(Map<String, Object> param) {
+		boolean flag = false;
+		String dataObj = (String) param.get("jasonData");
+		if (dataObj != null && dataObj.length() > 0 && !"[]".equals(dataObj)) {
+			List<JSONObject> jsonList = JSONArray.parseArray(dataObj).toJavaList(JSONObject.class);
+			List<Map<String, Map<String, String>>> mapList = convertJasonToList(jsonList);
+			Map<String, List<Map<String, String>>> groupMap = convertListToMap(mapList);
+			if (groupMap.size() > 1) {
+				flag = true;
+			}
+		}
+		else{
+			String tableName=chbInfoMgrResultConfigMapper.getTableNameByTableId((String) param.get("serachInterf"));
 
-    		if(StringUtil.isEmpty(tableName)){
-    			flag = true;
-    		}
-    	}
-    	return flag;
-    }
-    
-    /**
-     * 根据页面条件获取对应字段类型
-     * @param param 页面参数
-     * @return 字段类型
-     */
-    public String queryColumnTypeByCondition(Map<String, Object> param) {
-    	String tableId = (String) param.get("tableId");
-    	String curColumn = (String) param.get("curColumn");
-    	return baseInformationMapper.queryColumnTypeByCondition(tableId, curColumn);
-    }
-    
-    
-    /**
-     * 根据页面条件获取对应字段名称
-     * @param param 页面参数
-     * @return 字段名称
-     */
-    public String queryColumnNameByCondition(Map<String, Object> param) {
-    	String tableId = (String) param.get("tableId");
-    	String curColumn = (String) param.get("curColumn");
-    	return baseInformationMapper.queryColumnNameByCondition(tableId, curColumn);
-    }
-    
-    /**
-     * 根据数据类型查询基础表信息
-     * @param interfType 数据类型
-     * @return 基础表信息
-     */
-    public List<BaseInformationDto> queryTableIdByInterfType(String interfType) {
-    	return baseInformationMapper.queryTableIdByInterfType(interfType);
-    }
-    
-    /**
-     * 判断指定表是否含有STATUS字段
-     * @param tableId 表名
-     * @return 是否含有STATUS字段
-     */
-    private boolean isHaveStatus(String tableId) {
-    	boolean flag = false;
-    	List<String> columnList = baseInformationMapper.queryAllColumns(tableId);
-    	if (columnList.contains("STATUS")) {
-    		flag = true;
-    	}
-    	return flag;
-    }
-    
-    /**
-    * @Title: formatDateStr
-    * @Description: (将日期类型字段转换为 yyyy-MM-dd 类型)
-    * @param @param dateStr
-    * @param @return    参数
-    * @return String    返回类型
-    * @throws
-    */
-    private String formatDateStr(String dateStr) {
-    	Date date = DateUtil.parse(dateStr);
-    	String formatDateStr = null;
-    	if (null !=  date) {
-    		formatDateStr = DateUtil.format(date);
-    	} 
-    	return formatDateStr;
-    }
+			if(StringUtil.isEmpty(tableName)){
+				flag = true;
+			}
+		}
+		return flag;
+	}
+
+	/**
+	 * 根据页面条件获取对应字段类型
+	 * @param param 页面参数
+	 * @return 字段类型
+	 */
+	public String queryColumnTypeByCondition(Map<String, Object> param) {
+		String tableId = (String) param.get("tableId");
+		String curColumn = (String) param.get("curColumn");
+		return baseInformationMapper.queryColumnTypeByCondition(tableId, curColumn);
+	}
+
+
+	/**
+	 * 根据页面条件获取对应字段名称
+	 * @param param 页面参数
+	 * @return 字段名称
+	 */
+	public String queryColumnNameByCondition(Map<String, Object> param) {
+		String tableId = (String) param.get("tableId");
+		String curColumn = (String) param.get("curColumn");
+		return baseInformationMapper.queryColumnNameByCondition(tableId, curColumn);
+	}
+
+	/**
+	 * 根据数据类型查询基础表信息
+	 * @param interfType 数据类型
+	 * @return 基础表信息
+	 */
+	public List<BaseInformationDto> queryTableIdByInterfType(String interfType) {
+		return baseInformationMapper.queryTableIdByInterfType(interfType);
+	}
+
+	/**
+	 * 判断指定表是否含有STATUS字段
+	 * @param tableId 表名
+	 * @return 是否含有STATUS字段
+	 */
+	private boolean isHaveStatus(String tableId) {
+		boolean flag = false;
+		List<String> columnList = baseInformationMapper.queryAllColumns(tableId);
+		if (columnList.contains("STATUS")) {
+			flag = true;
+		}
+		return flag;
+	}
+
+	/**
+	 * @Title: formatDateStr
+	 * @Description: (将日期类型字段转换为 yyyy-MM-dd 类型)
+	 * @param @param dateStr
+	 * @param @return    参数
+	 * @return String    返回类型
+	 * @throws
+	 */
+	private String formatDateStr(String dateStr) {
+		Date date = DateUtil.parse(dateStr);
+		String formatDateStr = null;
+		if (null !=  date) {
+			formatDateStr = DateUtil.format(date);
+		}
+		return formatDateStr;
+	}
 
 	/**
 	 * @Title: queryValueByDictAndKeyCache
@@ -3146,19 +3183,19 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		}
 		return value;
 	}
-    
-    /**
-    * @Title: queryValueByDictAndKey
-    * @Description: (根据数据字典code和key值获取value)
-    * @param @param dictCode 数据字典code
-    * @param @param key key值
-    * @param @return    参数 value值
-    * @return String    返回类型
-    * @throws
-    */
-    private String queryValueByDictAndKey(String resultDictCode, String dataObj) {
-    	DictCode dictCode = DictCode.get(resultDictCode);
-    	//modify by wm code值直接从缓存中获取 start 20201031
+
+	/**
+	 * @Title: queryValueByDictAndKey
+	 * @Description: (根据数据字典code和key值获取value)
+	 * @param @param dictCode 数据字典code
+	 * @param @param key key值
+	 * @param @return    参数 value值
+	 * @return String    返回类型
+	 * @throws
+	 */
+	private String queryValueByDictAndKey(String resultDictCode, String dataObj) {
+		DictCode dictCode = DictCode.get(resultDictCode);
+		//modify by wm code值直接从缓存中获取 start 20201031
 //		DictCodeList dictCodeList = DictCodeList.from(dictCode, dataObj);
 //		DictCodeListExt1 dictCodeListExt1 = DictCodeListExt1.from(dictCode, dataObj);
 //		DictCodeListExt2 dictCodeListExt2 = DictCodeListExt2.from(dictCode, dataObj);
@@ -3200,73 +3237,73 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //		}
 		// add by  zhangliang 20201030 画面展示需要把itemCode_转成itemCode_itemValue  end
 		return value;
-    }
-    
-    /**
-    * @Title: setSizeColumn
-    * @Description: (列宽适应中文)
-    * @param @param sheet
-    * @param @param size    参数
-    * @return void    返回类型
-    * @throws
-    */
-    private void setSizeColumn(XSSFSheet sheet, int size) {
-        for (int columnNum = 0; columnNum < size; columnNum++) {
-            int columnWidth = sheet.getColumnWidth(columnNum) / 256;
-            for (int rowNum = 0; rowNum < sheet.getLastRowNum(); rowNum++) {
-                XSSFRow currentRow;
-                //当前行未被使用过
-                if (sheet.getRow(rowNum) == null) {
-                    currentRow = sheet.createRow(rowNum);
-                } else {
-                    currentRow = sheet.getRow(rowNum);
-                }
- 
-                if (currentRow.getCell(columnNum) != null) {
-                    XSSFCell currentCell = currentRow.getCell(columnNum);
-                    if (CellType.STRING.equals(currentCell.getCellType())) {
-                        int length = currentCell.getStringCellValue().getBytes().length;
-                        if (columnWidth < length) {
-                            columnWidth = length;
-                        }
-                    }
-                }
-            }
-            
-            if(columnWidth<255){
-            	sheet.setColumnWidth(columnNum, columnWidth * 256);
-            }else{
-                sheet.setColumnWidth(columnNum,6000 );
-            }
-        }
-    }
-    
-    /**
-    * @Title: getDictCodeList
-    * @Description: (根据数据字典名称获取所有枚举值列表)
-    * @param @param dictCode 数据字典名称
-    * @param @return    参数 枚举值列表
-    * @return String[]    返回类型 字符串数组
-    * @throws
-    */
-    private String[] getDictCodeList(String dictCode) {
-    	DictCode dict = DictCode.get(dictCode);
-    	Map<String, String> dictMap = SvrDataUtil.getSysDictDataMap(dict);
-    	if (dictMap!=null && !dictMap.isEmpty()) {
-    		String[] dictCodeArr = new String[dictMap.size()];
-    		Set set = dictMap.keySet();
-            Object[] arr = set.toArray();
-            Arrays.sort(arr);
-            int i = 0;
-            for(Object key : arr) {
-            	dictCodeArr[i] = key + " " + dictMap.get(key);
+	}
+
+	/**
+	 * @Title: setSizeColumn
+	 * @Description: (列宽适应中文)
+	 * @param @param sheet
+	 * @param @param size    参数
+	 * @return void    返回类型
+	 * @throws
+	 */
+	private void setSizeColumn(XSSFSheet sheet, int size) {
+		for (int columnNum = 0; columnNum < size; columnNum++) {
+			int columnWidth = sheet.getColumnWidth(columnNum) / 256;
+			for (int rowNum = 0; rowNum < sheet.getLastRowNum(); rowNum++) {
+				XSSFRow currentRow;
+				//当前行未被使用过
+				if (sheet.getRow(rowNum) == null) {
+					currentRow = sheet.createRow(rowNum);
+				} else {
+					currentRow = sheet.getRow(rowNum);
+				}
+
+				if (currentRow.getCell(columnNum) != null) {
+					XSSFCell currentCell = currentRow.getCell(columnNum);
+					if (CellType.STRING.equals(currentCell.getCellType())) {
+						int length = currentCell.getStringCellValue().getBytes().length;
+						if (columnWidth < length) {
+							columnWidth = length;
+						}
+					}
+				}
+			}
+
+			if(columnWidth<255){
+				sheet.setColumnWidth(columnNum, columnWidth * 256);
+			}else{
+				sheet.setColumnWidth(columnNum,6000 );
+			}
+		}
+	}
+
+	/**
+	 * @Title: getDictCodeList
+	 * @Description: (根据数据字典名称获取所有枚举值列表)
+	 * @param @param dictCode 数据字典名称
+	 * @param @return    参数 枚举值列表
+	 * @return String[]    返回类型 字符串数组
+	 * @throws
+	 */
+	private String[] getDictCodeList(String dictCode) {
+		DictCode dict = DictCode.get(dictCode);
+		Map<String, String> dictMap = SvrDataUtil.getSysDictDataMap(dict);
+		if (dictMap!=null && !dictMap.isEmpty()) {
+			String[] dictCodeArr = new String[dictMap.size()];
+			Set set = dictMap.keySet();
+			Object[] arr = set.toArray();
+			Arrays.sort(arr);
+			int i = 0;
+			for(Object key : arr) {
+				dictCodeArr[i] = key + " " + dictMap.get(key);
 				i++;
-            }
-            return dictCodeArr;
-    	} else {
-    		return null;
-    	}
-    }
+			}
+			return dictCodeArr;
+		} else {
+			return null;
+		}
+	}
 
 	/**
 	 * @Title: getDictCodeList
@@ -3290,98 +3327,98 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			return null;
 		}
 	}
-    
-    /**
-    * @Title: getSelectBoxRef
-    * @Description: (获取时间有效性引用位置)
-    * @param @param row 行数
-    * @param @param length 引用数据长度 
-    * @param @param sheetName 引用表格Sheet名称
-    * @param @return    参数 数据有效性引用位置
-    * @return String    返回类型
-    * @throws
-    */
-    private String getSelectBoxRef(int row, int length, String sheetName) {
-    	int col = length;
-    	StringBuilder colRef = new StringBuilder(2);
-    	while(length > 0) {
-            int thisPart = length % 26;
-            if(thisPart == 0) { thisPart = 26; }
-            length = (length - thisPart) / 26;
 
-            // The letter A is at 65
-            char colChar = (char)(thisPart+64);
-            colRef.insert(0, colChar);
-        }
-        String colName = colRef.toString();
-        StringBuilder formula = new StringBuilder();
-        formula.append(sheetName)
-        .append("!$A$")
-        .append(row)
-        .append(":$")
-        .append(colName)
-        .append("$")
-        .append(row);
-        return formula.toString();
-    }
-    
-    /**
-    * @Title: handleData
-    * @Description: (对从excel中解析出来的数据进行处理，使其可以正常写入数据库)
-    * @param @param originalDataList 原始数据
-    * @param @return    参数 处理之后数据集合
-    * @return List<List<String>>    返回类型 数据集合
-    * @throws
-    */
-    private List<List<String>> handleData(List<List<String>> originalDataList, String tableId) {
-    	List<List<String>> dataList = new ArrayList<List<String>>();
-    	Map<String, Object> param = new HashMap<String, Object>();
-    	param.put("tableId", tableId);
-    	param.put("flag", false);
-    	List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(param);
-    	// 导出字段情况，key值为字段中文名，value为字段名称
-    	Map<String, String> columnMap = new HashMap<String, String>();
-    	chbInfoMgrResultConfigList.forEach((info) -> {
-    		columnMap.put(info.getColumnName(), info.getColumnId());
-    	}); 
-    	// 导出字段情况，key值为字段名，value为数据字典值
-    	Map<String, String> dictCodeMap = new HashMap<String, String>();
-    	chbInfoMgrResultConfigList.forEach((info) -> {
-    		dictCodeMap.put(info.getColumnId(), info.getResultdictCode());
-    	});
-    	// 第一行数据，需要把字段中文名转成字段名称,同时记录下那些列的数据是数据字典枚举值(第一列不动)
-    	List<Integer> dictIndex = new ArrayList<Integer>();
-    	// 原始第一行数据集合
-    	List<String> firstOriginalData = originalDataList.get(0);
-    	int firstOriginalDataSize = firstOriginalData.size();
-    	// 处理后第一行数据集合
-    	List<String> firstData = new ArrayList<String>();
-    	for (int i = 0; i < firstOriginalDataSize; i ++) {
-    		String value = firstOriginalData.get(i);
-    		if (i > 0) {
-    			value = columnMap.get(value);
-    		} 
-    		firstData.add(i, value);
-    		String dictCode = dictCodeMap.get(value);
-    		// 数据字典不为空，则改字段对应的数据需要独立处理
-    		if (StringUtil.isNotEmpty(dictCode)) {
-    			dictIndex.add(i);
-    		}
-    	}
-    	dataList.add(0, firstData);
-    	// 后续数据处理
-    	int size = originalDataList.size();
-    	for (int i = 1; i < size; i ++) {
-    		List<String> originalData = originalDataList.get(i);
-    		int dataSize = originalData.size();
-    		List<String> data = new ArrayList<String>();
-    		for (int j = 0; j < dataSize; j ++) {
-    			// 实际需要的数据
-    			String realData = "";
-    			// 原始数据
-    			String columnName = originalData.get(j);
-    			// 数据字典类型数据处理
-    			if (dictIndex.contains(j) && StringUtil.isNotEmpty(columnName)) {
+	/**
+	 * @Title: getSelectBoxRef
+	 * @Description: (获取时间有效性引用位置)
+	 * @param @param row 行数
+	 * @param @param length 引用数据长度
+	 * @param @param sheetName 引用表格Sheet名称
+	 * @param @return    参数 数据有效性引用位置
+	 * @return String    返回类型
+	 * @throws
+	 */
+	private String getSelectBoxRef(int row, int length, String sheetName) {
+		int col = length;
+		StringBuilder colRef = new StringBuilder(2);
+		while(length > 0) {
+			int thisPart = length % 26;
+			if(thisPart == 0) { thisPart = 26; }
+			length = (length - thisPart) / 26;
+
+			// The letter A is at 65
+			char colChar = (char)(thisPart+64);
+			colRef.insert(0, colChar);
+		}
+		String colName = colRef.toString();
+		StringBuilder formula = new StringBuilder();
+		formula.append(sheetName)
+				.append("!$A$")
+				.append(row)
+				.append(":$")
+				.append(colName)
+				.append("$")
+				.append(row);
+		return formula.toString();
+	}
+
+	/**
+	 * @Title: handleData
+	 * @Description: (对从excel中解析出来的数据进行处理，使其可以正常写入数据库)
+	 * @param @param originalDataList 原始数据
+	 * @param @return    参数 处理之后数据集合
+	 * @return List<List<String>>    返回类型 数据集合
+	 * @throws
+	 */
+	private List<List<String>> handleData(List<List<String>> originalDataList, String tableId) {
+		List<List<String>> dataList = new ArrayList<List<String>>();
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("tableId", tableId);
+		param.put("flag", false);
+		List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(param);
+		// 导出字段情况，key值为字段中文名，value为字段名称
+		Map<String, String> columnMap = new HashMap<String, String>();
+		chbInfoMgrResultConfigList.forEach((info) -> {
+			columnMap.put(info.getColumnName(), info.getColumnId());
+		});
+		// 导出字段情况，key值为字段名，value为数据字典值
+		Map<String, String> dictCodeMap = new HashMap<String, String>();
+		chbInfoMgrResultConfigList.forEach((info) -> {
+			dictCodeMap.put(info.getColumnId(), info.getResultdictCode());
+		});
+		// 第一行数据，需要把字段中文名转成字段名称,同时记录下那些列的数据是数据字典枚举值(第一列不动)
+		List<Integer> dictIndex = new ArrayList<Integer>();
+		// 原始第一行数据集合
+		List<String> firstOriginalData = originalDataList.get(0);
+		int firstOriginalDataSize = firstOriginalData.size();
+		// 处理后第一行数据集合
+		List<String> firstData = new ArrayList<String>();
+		for (int i = 0; i < firstOriginalDataSize; i ++) {
+			String value = firstOriginalData.get(i);
+			if (i > 0) {
+				value = columnMap.get(value);
+			}
+			firstData.add(i, value);
+			String dictCode = dictCodeMap.get(value);
+			// 数据字典不为空，则改字段对应的数据需要独立处理
+			if (StringUtil.isNotEmpty(dictCode)) {
+				dictIndex.add(i);
+			}
+		}
+		dataList.add(0, firstData);
+		// 后续数据处理
+		int size = originalDataList.size();
+		for (int i = 1; i < size; i ++) {
+			List<String> originalData = originalDataList.get(i);
+			int dataSize = originalData.size();
+			List<String> data = new ArrayList<String>();
+			for (int j = 0; j < dataSize; j ++) {
+				// 实际需要的数据
+				String realData = "";
+				// 原始数据
+				String columnName = originalData.get(j);
+				// 数据字典类型数据处理
+				if (dictIndex.contains(j) && StringUtil.isNotEmpty(columnName)) {
 					// add by zhangliang 20201110 多选数据字典展示处理  start
 					if(columnName.contains(GlobalConstant.COMMA)) {
 						List<String> targetTypeList = StringUtil.splitToList(GlobalConstant.COMMA, columnName);
@@ -3400,101 +3437,101 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 						String[] dataArr = columnName.split(" ");
 						realData = dataArr[0];
 					}
-    			} else {
-    				realData = columnName;
-    			}
-    			data.add(j, realData);
-    		}
-    		dataList.add(i, data);
-    	}
-    	return dataList;
-    }
+				} else {
+					realData = columnName;
+				}
+				data.add(j, realData);
+			}
+			dataList.add(i, data);
+		}
+		return dataList;
+	}
 
 
-    /**
-     *
-     * @Description 资产要素表导入时数据处理
-     * @Author      高健
-     * @Date        2019年12月7日 下午2:54:26
-     * @param @param originalDataList
-     * @param @param tableId
-     * @param @return 参数
-     * @return List<List<String>> 返回类型
-     * @throws
-     */
-    private List<List<String>> handleAssetData(List<List<String>> originalDataList, String tableId, List<String> bisinessPkList, List<String> dateColumnList) {
-    	List<List<String>> dataList = new ArrayList<List<String>>();
-    	Map<String, Object> param = new HashMap<String, Object>();
-    	String tableName=chbInfoMgrResultConfigMapper.getTableNameByTableId(tableId);
-    	param.put("tableId", tableId);
-    	List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfoEx(param);
-    	// 导出字段情况，key值为字段序号，value为字段名称
-    	Map<Integer, String> columnMap = new HashMap<Integer, String>();
-    	chbInfoMgrResultConfigList.forEach((info) -> {
-    		columnMap.put(info.getOrderNo(), info.getRealColumnId());
-    	});
-    	// 导出字段情况，key值为字段名，value为数据字典值
-    	Map<String, String> dictCodeMap = new HashMap<String, String>();
-    	chbInfoMgrResultConfigList.forEach((info) -> {
-    		dictCodeMap.put(info.getRealColumnId(), info.getResultdictCode());
-    	});
-    	// 第一行数据，需要把字段中文名转成字段名称,同时记录下那些列的数据是数据字典枚举值(第一列不动)
-    	List<Integer> dictIndex = new ArrayList<Integer>();
-    	// 原始第一行数据集合
-    	List<String> firstOriginalData = originalDataList.get(0);
-    	int firstOriginalDataSize = firstOriginalData.size();
-    	// 处理后第一行数据集合
-    	List<String> firstData = new ArrayList<String>();
-    	// 是否中债标准模板标识
-    	boolean flag = false;
-    	if (!StringUtil.equals("操作类型", firstOriginalData.get(0))) {
-    		flag = true;
-    		firstData.add(0, "操作类型");
-    		firstData.add(1, "ASSET_UUID");
-    	}
-    	// 主键对应位置索引集合
-    	List<Integer> pkIndexList = new ArrayList<Integer>();
-    	for (int i = 0; i < firstOriginalDataSize; i ++) {
-    		String value = firstOriginalData.get(i);
-    		if (i > 0 &&  !flag) {
-    			value = columnMap.get(i);
-    		}
-    		if (flag) {
-    			value = columnMap.get(i + 2);
-    		}
-    		if (bisinessPkList.contains(value)) {
-    			pkIndexList.add(i);
-    		}
-    		if (flag) {
-    			firstData.add(i + 2, value);
-    		} else {
-    			firstData.add(i, value);
-    		}
-    		String dictCode = dictCodeMap.get(value);
-    		// 数据字典不为空，则改字段对应的数据需要独立处理
-    		if (StringUtil.isNotEmpty(dictCode)) {
-    			dictIndex.add(i);
-    		}
-    	}
-    	dataList.add(0, firstData);
-    	// 后续数据处理
-    	int size = originalDataList.size();
-    	for (int i = 1; i < size; i ++) {
-    		List<String> originalData = originalDataList.get(i);
-    		int dataSize = originalData.size();
-    		List<String> data = new ArrayList<String>();
-    		Map<String, String> pkDataMap = new HashMap<String, String>();
-    		if (flag) {
-        		data.add(0, "新增");
-        		data.add(1, UUID.randomUUID().toString());
-    		}
-    		for (int j = 0; j < dataSize; j ++) {
-    			// 实际需要的数据
-    			String realData = "";
-    			// 原始数据
-    			String columnName = originalData.get(j);
-    			// 数据字典类型数据处理
-    			if (dictIndex.contains(j) && StringUtil.isNotEmpty(columnName)) {
+	/**
+	 *
+	 * @Description 资产要素表导入时数据处理
+	 * @Author      高健
+	 * @Date        2019年12月7日 下午2:54:26
+	 * @param @param originalDataList
+	 * @param @param tableId
+	 * @param @return 参数
+	 * @return List<List<String>> 返回类型
+	 * @throws
+	 */
+	private List<List<String>> handleAssetData(List<List<String>> originalDataList, String tableId, List<String> bisinessPkList, List<String> dateColumnList) {
+		List<List<String>> dataList = new ArrayList<List<String>>();
+		Map<String, Object> param = new HashMap<String, Object>();
+		String tableName=chbInfoMgrResultConfigMapper.getTableNameByTableId(tableId);
+		param.put("tableId", tableId);
+		List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfoEx(param);
+		// 导出字段情况，key值为字段序号，value为字段名称
+		Map<Integer, String> columnMap = new HashMap<Integer, String>();
+		chbInfoMgrResultConfigList.forEach((info) -> {
+			columnMap.put(info.getOrderNo(), info.getRealColumnId());
+		});
+		// 导出字段情况，key值为字段名，value为数据字典值
+		Map<String, String> dictCodeMap = new HashMap<String, String>();
+		chbInfoMgrResultConfigList.forEach((info) -> {
+			dictCodeMap.put(info.getRealColumnId(), info.getResultdictCode());
+		});
+		// 第一行数据，需要把字段中文名转成字段名称,同时记录下那些列的数据是数据字典枚举值(第一列不动)
+		List<Integer> dictIndex = new ArrayList<Integer>();
+		// 原始第一行数据集合
+		List<String> firstOriginalData = originalDataList.get(0);
+		int firstOriginalDataSize = firstOriginalData.size();
+		// 处理后第一行数据集合
+		List<String> firstData = new ArrayList<String>();
+		// 是否中债标准模板标识
+		boolean flag = false;
+		if (!StringUtil.equals("操作类型", firstOriginalData.get(0))) {
+			flag = true;
+			firstData.add(0, "操作类型");
+			firstData.add(1, "ASSET_UUID");
+		}
+		// 主键对应位置索引集合
+		List<Integer> pkIndexList = new ArrayList<Integer>();
+		for (int i = 0; i < firstOriginalDataSize; i ++) {
+			String value = firstOriginalData.get(i);
+			if (i > 0 &&  !flag) {
+				value = columnMap.get(i);
+			}
+			if (flag) {
+				value = columnMap.get(i + 2);
+			}
+			if (bisinessPkList.contains(value)) {
+				pkIndexList.add(i);
+			}
+			if (flag) {
+				firstData.add(i + 2, value);
+			} else {
+				firstData.add(i, value);
+			}
+			String dictCode = dictCodeMap.get(value);
+			// 数据字典不为空，则改字段对应的数据需要独立处理
+			if (StringUtil.isNotEmpty(dictCode)) {
+				dictIndex.add(i);
+			}
+		}
+		dataList.add(0, firstData);
+		// 后续数据处理
+		int size = originalDataList.size();
+		for (int i = 1; i < size; i ++) {
+			List<String> originalData = originalDataList.get(i);
+			int dataSize = originalData.size();
+			List<String> data = new ArrayList<String>();
+			Map<String, String> pkDataMap = new HashMap<String, String>();
+			if (flag) {
+				data.add(0, "新增");
+				data.add(1, UUID.randomUUID().toString());
+			}
+			for (int j = 0; j < dataSize; j ++) {
+				// 实际需要的数据
+				String realData = "";
+				// 原始数据
+				String columnName = originalData.get(j);
+				// 数据字典类型数据处理
+				if (dictIndex.contains(j) && StringUtil.isNotEmpty(columnName)) {
 					// add by zhangliang 20201110 多选数据字典展示处理  start
 					if(columnName.contains(GlobalConstant.COMMA)) {
 						List<String> targetTypeList = StringUtil.splitToList(GlobalConstant.COMMA, columnName);
@@ -3509,92 +3546,92 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 						String[] dataArr = columnName.split(" ");
 						realData = dataArr[0];
 					}
-    			} else {
-    				realData = columnName;
-    			}
-    			if (flag) {
-    				data.add(j + 2, realData);
-    			} else {
-    				data.add(j, realData);
-    			}
-    			if (pkIndexList.contains(j)) {
-    				String key = "";
-    				if (flag) {
-    					key = firstData.get(j + 2);
-    	    		} else {
-    	    			key = firstData.get(j);
-    	    		}
-    				String value = realData;
-    				if (dateColumnList.contains(key) && StringUtil.isNotEmpty(realData)) {
-    					String dateStr = formatDateStr(value);
-    					if (null != dateStr) {
-    						value = "DATE'" + dateStr + "'";
-    					} else {
-    						value = null;
-    					}
-    				} else {
-    					value = "'" + value + "'";
-    				}
-    				pkDataMap.put(key, value);
-    			}
-    		}
-    		if (flag) {
-    			int count = baseInformationMapper.checkDataIsExist(pkDataMap, tableName);
-        		if (count > 0) {
-        			data.remove(0);
-        			data.add(0, "修改");
-        		}
-    		}
-    		dataList.add(i, data);
-    	}
-    	return dataList;
-    }
-    
-    public Integer selectHeaderNumByChiName(String chiName){
-        Integer headerNum = baseInformationMapper.selectHeaderNumByChiName(chiName);
-    	return headerNum == null ? 1 : headerNum;
+				} else {
+					realData = columnName;
+				}
+				if (flag) {
+					data.add(j + 2, realData);
+				} else {
+					data.add(j, realData);
+				}
+				if (pkIndexList.contains(j)) {
+					String key = "";
+					if (flag) {
+						key = firstData.get(j + 2);
+					} else {
+						key = firstData.get(j);
+					}
+					String value = realData;
+					if (dateColumnList.contains(key) && StringUtil.isNotEmpty(realData)) {
+						String dateStr = formatDateStr(value);
+						if (null != dateStr) {
+							value = "DATE'" + dateStr + "'";
+						} else {
+							value = null;
+						}
+					} else {
+						value = "'" + value + "'";
+					}
+					pkDataMap.put(key, value);
+				}
+			}
+			if (flag) {
+				int count = baseInformationMapper.checkDataIsExist(pkDataMap, tableName);
+				if (count > 0) {
+					data.remove(0);
+					data.add(0, "修改");
+				}
+			}
+			dataList.add(i, data);
+		}
+		return dataList;
 	}
-    //clob转换为string方法
-    public  String clobToString(Clob clob){
-    	if(clob == null) {   
-            return null;   
-        }   
-        try{   
-            Reader inStreamDoc = clob.getCharacterStream();   
-               
-            char[] tempDoc = new char[(int) clob.length()];   
-            inStreamDoc.read(tempDoc);   
-            inStreamDoc.close();   
-            return new String(tempDoc);   
-        }   
-        catch (IOException e)   
-        {   
-            e.printStackTrace();   
-        }   
-        catch (SQLException es)   
-        {   
-            es.printStackTrace();
-          }   
-             
-          return null;   
-      }
-    
-    
-    /**
-     * 获取业务主键拼接的字符串
-     * 
-     * @param sub 数据
-     * @return 业务主键
-     */
-    private String getBusinessKeyStr(List<String>  bussinesKey,Map<String,String> map) {
-        StringBuffer buffer = new StringBuffer();
-        for(String str:bussinesKey){
-        	 buffer.append(map.get(str));
-        	 buffer.append("|");
-        }
-        if (buffer.length() > 0){
+
+	public Integer selectHeaderNumByChiName(String chiName){
+		Integer headerNum = baseInformationMapper.selectHeaderNumByChiName(chiName);
+		return headerNum == null ? 1 : headerNum;
+	}
+	//clob转换为string方法
+	public  String clobToString(Clob clob){
+		if(clob == null) {
+			return null;
+		}
+		try{
+			Reader inStreamDoc = clob.getCharacterStream();
+
+			char[] tempDoc = new char[(int) clob.length()];
+			inStreamDoc.read(tempDoc);
+			inStreamDoc.close();
+			return new String(tempDoc);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		catch (SQLException es)
+		{
+			es.printStackTrace();
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * 获取业务主键拼接的字符串
+	 *
+	 * @param sub 数据
+	 * @return 业务主键
+	 */
+	private String getBusinessKeyStr(List<String>  bussinesKey,Map<String,String> map) {
+		StringBuffer buffer = new StringBuffer();
+		for(String str:bussinesKey){
+			buffer.append(map.get(str));
+			buffer.append("|");
+		}
+		if (buffer.length() > 0){
 			return buffer.substring(0, buffer.length() - 1);
 		}
-        return buffer.toString();
-    }
+		return buffer.toString();
+	}
 }

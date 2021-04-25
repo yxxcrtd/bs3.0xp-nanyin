@@ -1,7 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.common.base.dao.ChbWflBusinessNodeMapper_mysql">
-	<insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
+        <id column="C_W_B_N_SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <id column="C_W_B_N_HIS_NO" property="hisNo" jdbcType="DECIMAL" />
+        <result column="C_W_B_N_WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_BUSINESS_ID" property="businessId" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_HI_USER" property="hiUser" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_NODE_ID" property="nodeId" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_NODE_NAME" property="nodeName" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_DISMOUNT" property="dismount" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_CHARACTER" property="character" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_W_B_N_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_W_B_N_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO as C_W_B_N_SEQNO, HIS_NO as C_W_B_N_HIS_NO, WORKFLOW_ID as C_W_B_N_WORKFLOW_ID,
+        BUSINESS_ID as C_W_B_N_BUSINESS_ID, HI_USER as C_W_B_N_HI_USER, NODE_ID as C_W_B_N_NODE_ID,
+        NODE_NAME as C_W_B_N_NODE_NAME, DISMOUNT as C_W_B_N_DISMOUNT, CHARACTER as C_W_B_N_CHARACTER,
+        CREATE_USER as C_W_B_N_CREATE_USER, CREATE_DEPT as C_W_B_N_CREATE_DEPT, CREATE_TIME as C_W_B_N_CREATE_TIME,
+        UPDATE_USER as C_W_B_N_UPDATE_USER, UPDATE_TIME as C_W_B_N_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbWflBusinessNodeMapper.Base_Column_List" />
+        from CHB_WFL_BUSINESS_NODE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbWflBusinessNodeMapper.Base_Column_List" />
+        from CHB_WFL_BUSINESS_NODE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNodeKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbWflBusinessNodeMapper.Base_Column_List" />
+        from CHB_WFL_BUSINESS_NODE
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+        and HIS_NO = #{hisNo,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNodeKey" >
+        delete from CHB_WFL_BUSINESS_NODE
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+          and HIS_NO = #{hisNo,jdbcType=DECIMAL}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_WFL_BUSINESS_NODE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
+        insert into CHB_WFL_BUSINESS_NODE (SEQNO, HIS_NO, WORKFLOW_ID,
+            BUSINESS_ID, HI_USER, NODE_ID,
+            NODE_NAME, DISMOUNT, CHARACTER,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{hisNo,jdbcType=DECIMAL}, #{workflowId,jdbcType=VARCHAR},
+            #{businessId,jdbcType=VARCHAR}, #{hiUser,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR},
+            #{nodeName,jdbcType=VARCHAR}, #{dismount,jdbcType=VARCHAR}, #{character,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
+        insert into CHB_WFL_BUSINESS_NODE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="hisNo != null" >
+                HIS_NO,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="businessId != null" >
+                BUSINESS_ID,
+            </if>
+            <if test="hiUser != null" >
+                HI_USER,
+            </if>
+            <if test="nodeId != null" >
+                NODE_ID,
+            </if>
+            <if test="nodeName != null" >
+                NODE_NAME,
+            </if>
+            <if test="dismount != null" >
+                DISMOUNT,
+            </if>
+            <if test="character != null" >
+                CHARACTER,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="hisNo != null" >
+                #{hisNo,jdbcType=DECIMAL},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="businessId != null" >
+                #{businessId,jdbcType=VARCHAR},
+            </if>
+            <if test="hiUser != null" >
+                #{hiUser,jdbcType=VARCHAR},
+            </if>
+            <if test="nodeId != null" >
+                #{nodeId,jdbcType=VARCHAR},
+            </if>
+            <if test="nodeName != null" >
+                #{nodeName,jdbcType=VARCHAR},
+            </if>
+            <if test="dismount != null" >
+                #{dismount,jdbcType=VARCHAR},
+            </if>
+            <if test="character != null" >
+                #{character,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
         insert into CHB_WFL_BUSINESS_NODE(SEQNO, HIS_NO, WORKFLOW_ID, BUSINESS_ID, HI_USER, 
         NODE_ID, NODE_NAME, DISMOUNT, CHARACTER, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
         UPDATE_TIME)
@@ -21,4 +173,103 @@
              from CHB_WFL_BUSINESS_NODE
              where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
+        update CHB_WFL_BUSINESS_NODE
+        <set >
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="businessId != null" >
+                BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+            </if>
+            <if test="hiUser != null" >
+                HI_USER = #{hiUser,jdbcType=VARCHAR},
+            </if>
+            <if test="nodeId != null" >
+                NODE_ID = #{nodeId,jdbcType=VARCHAR},
+            </if>
+            <if test="nodeName != null" >
+                NODE_NAME = #{nodeName,jdbcType=VARCHAR},
+            </if>
+            <if test="dismount != null" >
+                DISMOUNT = #{dismount,jdbcType=VARCHAR},
+            </if>
+            <if test="character != null" >
+                CHARACTER = #{character,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+        and HIS_NO = #{hisNo,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
+        update CHB_WFL_BUSINESS_NODE
+        <set >
+            <if test="seqno != null" >
+                SEQNO = #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="hisNo != null" >
+                HIS_NO = #{hisNo,jdbcType=DECIMAL},
+            </if>
+            <if test="businessId != null" >
+                BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+            </if>
+            <if test="hiUser != null" >
+                HI_USER = #{hiUser,jdbcType=VARCHAR},
+            </if>
+            <if test="nodeId != null" >
+                NODE_ID = #{nodeId,jdbcType=VARCHAR},
+            </if>
+            <if test="nodeName != null" >
+                NODE_NAME = #{nodeName,jdbcType=VARCHAR},
+            </if>
+            <if test="dismount != null" >
+                DISMOUNT = #{dismount,jdbcType=VARCHAR},
+            </if>
+            <if test="character != null" >
+                CHARACTER = #{character,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
+        update CHB_WFL_BUSINESS_NODE
+        set
+        SEQNO = #{seqno,jdbcType=VARCHAR},
+        HIS_NO = #{hisNo,jdbcType=DECIMAL},
+        BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+        HI_USER = #{hiUser,jdbcType=VARCHAR},
+        NODE_ID = #{nodeId,jdbcType=VARCHAR},
+        NODE_NAME = #{nodeName,jdbcType=VARCHAR},
+        DISMOUNT = #{dismount,jdbcType=VARCHAR},
+        CHARACTER = #{character,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbWflBusinessNode" >
+        update CHB_WFL_BUSINESS_NODE
+        set WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+            HI_USER = #{hiUser,jdbcType=VARCHAR},
+            NODE_ID = #{nodeId,jdbcType=VARCHAR},
+            NODE_NAME = #{nodeName,jdbcType=VARCHAR},
+            DISMOUNT = #{dismount,jdbcType=VARCHAR},
+            CHARACTER = #{character,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+          and HIS_NO = #{hisNo,jdbcType=DECIMAL}
+    </update>
 </mapper>

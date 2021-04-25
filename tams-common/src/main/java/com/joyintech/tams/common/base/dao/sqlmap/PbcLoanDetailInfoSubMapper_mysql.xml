@@ -1,15 +1,537 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.common.base.dao.PbcLoanDetailInfoSubMapper_mysql">
-	<delete id="deleteByModel" parameterType="java.util.Map">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PbcLoanDetailInfoSubMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PbcLoanDetailInfoSub" >
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PBC_ACCOUNT_ID" property="pbcAccountId" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="LOANS_TYPE" property="loansType" jdbcType="VARCHAR" />
+        <result column="BORROWER_TYPE" property="borrowerType" jdbcType="CHAR" />
+        <result column="BORROWER_ID" property="borrowerId" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_INFO" property="industryInfo" jdbcType="CHAR" />
+        <result column="BORROWER_NATIONALITY" property="borrowerNationality" jdbcType="VARCHAR" />
+        <result column="BORROWER_COUNTY" property="borrowerCounty" jdbcType="VARCHAR" />
+        <result column="ENTERPRISE_INVESTOR_TYPE_FIRST" property="enterpriseInvestorTypeFirst" jdbcType="CHAR" />
+        <result column="ENTERPRISE_INVESTOR_TYPE_SEC" property="enterpriseInvestorTypeSec" jdbcType="CHAR" />
+        <result column="ENTERPRISE_INVESTOR_TYPE_THIRD" property="enterpriseInvestorTypeThird" jdbcType="CHAR" />
+        <result column="ENTERPRISE_SCALE" property="enterpriseScale" jdbcType="CHAR" />
+        <result column="LOAN_BASIS_ID" property="loanBasisId" jdbcType="VARCHAR" />
+        <result column="LOAN_PRD_TYPE" property="loanPrdType" jdbcType="CHAR" />
+        <result column="LOAN_ACTUAL_INVEST" property="loanActualInvest" jdbcType="VARCHAR" />
+        <result column="LOAN_VDATE" property="loanVdate" jdbcType="DATE" />
+        <result column="LOAN_MDATE" property="loanMdate" jdbcType="DATE" />
+        <result column="LOAN_EXTENSION_DUE_DATE" property="loanExtensionDueDate" jdbcType="DATE" />
+        <result column="LOAN_TRANSFEROR_ID" property="loanTransferorId" jdbcType="VARCHAR" />
+        <result column="LOAN_TRANSFEROR_NAME" property="loanTransferorName" jdbcType="VARCHAR" />
+        <result column="LOAN_CONTRACT_ORG_ID" property="loanContractOrgId" jdbcType="VARCHAR" />
+        <result column="LOAN_CONTRACT_ORG_NAME" property="loanContractOrgName" jdbcType="VARCHAR" />
+        <result column="LOAN_CONTRACT_ORG_COUNTY" property="loanContractOrgCounty" jdbcType="VARCHAR" />
+        <result column="RATE_FIXED" property="rateFixed" jdbcType="VARCHAR" />
+        <result column="RATE_LEVEL" property="rateLevel" jdbcType="DECIMAL" />
+        <result column="LOAN_GUARANTEE_MODE" property="loanGuaranteeMode" jdbcType="CHAR" />
+        <result column="LOAN_QUALITY" property="loanQuality" jdbcType="CHAR" />
+        <result column="LOAN_STATE" property="loanState" jdbcType="CHAR" />
+        <result column="LOAN_TRANSFEROR_RATE" property="loanTransferorRate" jdbcType="DECIMAL" />
+        <result column="ORIG_CCY" property="origCcy" jdbcType="CHAR" />
+        <result column="ORIG_CONTRACT_AMOUNT" property="origContractAmount" jdbcType="DECIMAL" />
+        <result column="ORIG_CONTRACT_AMOUNT_CNY" property="origContractAmountCny" jdbcType="DECIMAL" />
+        <result column="AMT_CCY" property="amtCcy" jdbcType="CHAR" />
+        <result column="CONTRACT_AMOUNT" property="contractAmount" jdbcType="DECIMAL" />
+        <result column="CONTRACT_AMOUNT_CNY" property="contractAmountCny" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REGIST_SEQNO REGIST_SEQNO, REPORTUUID REPORTUUID, PROD_ID PROD_ID, PBC_ACCOUNT_ID PBC_ACCOUNT_ID, 
+        ASSET_CODE ASSET_CODE, LOANS_TYPE LOANS_TYPE, BORROWER_TYPE BORROWER_TYPE, BORROWER_ID BORROWER_ID, 
+        INDUSTRY_INFO INDUSTRY_INFO, BORROWER_NATIONALITY BORROWER_NATIONALITY, BORROWER_COUNTY BORROWER_COUNTY, 
+        ENTERPRISE_INVESTOR_TYPE_FIRST ENTERPRISE_INVESTOR_TYPE_FIRST, ENTERPRISE_INVESTOR_TYPE_SEC ENTERPRISE_INVESTOR_TYPE_SEC, 
+        ENTERPRISE_INVESTOR_TYPE_THIRD ENTERPRISE_INVESTOR_TYPE_THIRD, ENTERPRISE_SCALE ENTERPRISE_SCALE, 
+        LOAN_BASIS_ID LOAN_BASIS_ID, LOAN_PRD_TYPE LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST LOAN_ACTUAL_INVEST, 
+        LOAN_VDATE LOAN_VDATE, LOAN_MDATE LOAN_MDATE, LOAN_EXTENSION_DUE_DATE LOAN_EXTENSION_DUE_DATE, 
+        LOAN_TRANSFEROR_ID LOAN_TRANSFEROR_ID, LOAN_TRANSFEROR_NAME LOAN_TRANSFEROR_NAME, 
+        LOAN_CONTRACT_ORG_ID LOAN_CONTRACT_ORG_ID, LOAN_CONTRACT_ORG_NAME LOAN_CONTRACT_ORG_NAME, 
+        LOAN_CONTRACT_ORG_COUNTY LOAN_CONTRACT_ORG_COUNTY, RATE_FIXED RATE_FIXED, RATE_LEVEL RATE_LEVEL, 
+        LOAN_GUARANTEE_MODE LOAN_GUARANTEE_MODE, LOAN_QUALITY LOAN_QUALITY, LOAN_STATE LOAN_STATE, 
+        LOAN_TRANSFEROR_RATE LOAN_TRANSFEROR_RATE, ORIG_CCY ORIG_CCY, ORIG_CONTRACT_AMOUNT ORIG_CONTRACT_AMOUNT, 
+        ORIG_CONTRACT_AMOUNT_CNY ORIG_CONTRACT_AMOUNT_CNY, AMT_CCY AMT_CCY, CONTRACT_AMOUNT CONTRACT_AMOUNT, 
+        CONTRACT_AMOUNT_CNY CONTRACT_AMOUNT_CNY
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcLoanDetailInfoSubMapper.Base_Column_List" />
+        from PBC_LOAN_DETAIL_INFO_SUB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcLoanDetailInfoSubMapper.Base_Column_List" />
+        from PBC_LOAN_DETAIL_INFO_SUB
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcLoanDetailInfoSubMapper.Base_Column_List" />
+        from PBC_LOAN_DETAIL_INFO_SUB
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PBC_LOAN_DETAIL_INFO_SUB
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PbcLoanDetailInfoSub" >
+        insert into PBC_LOAN_DETAIL_INFO_SUB (REGIST_SEQNO, REPORTUUID, PROD_ID, 
+            PBC_ACCOUNT_ID, ASSET_CODE, LOANS_TYPE, 
+            BORROWER_TYPE, BORROWER_ID, INDUSTRY_INFO, 
+            BORROWER_NATIONALITY, BORROWER_COUNTY, 
+            ENTERPRISE_INVESTOR_TYPE_FIRST, ENTERPRISE_INVESTOR_TYPE_SEC, 
+            ENTERPRISE_INVESTOR_TYPE_THIRD, ENTERPRISE_SCALE, 
+            LOAN_BASIS_ID, LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST, 
+            LOAN_VDATE, LOAN_MDATE, LOAN_EXTENSION_DUE_DATE, 
+            LOAN_TRANSFEROR_ID, LOAN_TRANSFEROR_NAME, 
+            LOAN_CONTRACT_ORG_ID, LOAN_CONTRACT_ORG_NAME, 
+            LOAN_CONTRACT_ORG_COUNTY, RATE_FIXED, RATE_LEVEL, 
+            LOAN_GUARANTEE_MODE, LOAN_QUALITY, LOAN_STATE, 
+            LOAN_TRANSFEROR_RATE, ORIG_CCY, ORIG_CONTRACT_AMOUNT, 
+            ORIG_CONTRACT_AMOUNT_CNY, AMT_CCY, CONTRACT_AMOUNT, 
+            CONTRACT_AMOUNT_CNY)
+        values (#{registSeqno,jdbcType=CHAR}, #{reportuuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, 
+            #{pbcAccountId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{loansType,jdbcType=VARCHAR}, 
+            #{borrowerType,jdbcType=CHAR}, #{borrowerId,jdbcType=VARCHAR}, #{industryInfo,jdbcType=CHAR}, 
+            #{borrowerNationality,jdbcType=VARCHAR}, #{borrowerCounty,jdbcType=VARCHAR}, 
+            #{enterpriseInvestorTypeFirst,jdbcType=CHAR}, #{enterpriseInvestorTypeSec,jdbcType=CHAR}, 
+            #{enterpriseInvestorTypeThird,jdbcType=CHAR}, #{enterpriseScale,jdbcType=CHAR}, 
+            #{loanBasisId,jdbcType=VARCHAR}, #{loanPrdType,jdbcType=CHAR}, #{loanActualInvest,jdbcType=VARCHAR}, 
+            #{loanVdate,jdbcType=DATE}, #{loanMdate,jdbcType=DATE}, #{loanExtensionDueDate,jdbcType=DATE}, 
+            #{loanTransferorId,jdbcType=VARCHAR}, #{loanTransferorName,jdbcType=VARCHAR}, 
+            #{loanContractOrgId,jdbcType=VARCHAR}, #{loanContractOrgName,jdbcType=VARCHAR}, 
+            #{loanContractOrgCounty,jdbcType=VARCHAR}, #{rateFixed,jdbcType=VARCHAR}, #{rateLevel,jdbcType=DECIMAL}, 
+            #{loanGuaranteeMode,jdbcType=CHAR}, #{loanQuality,jdbcType=CHAR}, #{loanState,jdbcType=CHAR}, 
+            #{loanTransferorRate,jdbcType=DECIMAL}, #{origCcy,jdbcType=CHAR}, #{origContractAmount,jdbcType=DECIMAL}, 
+            #{origContractAmountCny,jdbcType=DECIMAL}, #{amtCcy,jdbcType=CHAR}, #{contractAmount,jdbcType=DECIMAL}, 
+            #{contractAmountCny,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcLoanDetailInfoSub" >
+        insert into PBC_LOAN_DETAIL_INFO_SUB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                REGIST_SEQNO,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="pbcAccountId != null" >
+                PBC_ACCOUNT_ID,
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE,
+            </if>
+            <if test="loansType != null" >
+                LOANS_TYPE,
+            </if>
+            <if test="borrowerType != null" >
+                BORROWER_TYPE,
+            </if>
+            <if test="borrowerId != null" >
+                BORROWER_ID,
+            </if>
+            <if test="industryInfo != null" >
+                INDUSTRY_INFO,
+            </if>
+            <if test="borrowerNationality != null" >
+                BORROWER_NATIONALITY,
+            </if>
+            <if test="borrowerCounty != null" >
+                BORROWER_COUNTY,
+            </if>
+            <if test="enterpriseInvestorTypeFirst != null" >
+                ENTERPRISE_INVESTOR_TYPE_FIRST,
+            </if>
+            <if test="enterpriseInvestorTypeSec != null" >
+                ENTERPRISE_INVESTOR_TYPE_SEC,
+            </if>
+            <if test="enterpriseInvestorTypeThird != null" >
+                ENTERPRISE_INVESTOR_TYPE_THIRD,
+            </if>
+            <if test="enterpriseScale != null" >
+                ENTERPRISE_SCALE,
+            </if>
+            <if test="loanBasisId != null" >
+                LOAN_BASIS_ID,
+            </if>
+            <if test="loanPrdType != null" >
+                LOAN_PRD_TYPE,
+            </if>
+            <if test="loanActualInvest != null" >
+                LOAN_ACTUAL_INVEST,
+            </if>
+            <if test="loanVdate != null" >
+                LOAN_VDATE,
+            </if>
+            <if test="loanMdate != null" >
+                LOAN_MDATE,
+            </if>
+            <if test="loanExtensionDueDate != null" >
+                LOAN_EXTENSION_DUE_DATE,
+            </if>
+            <if test="loanTransferorId != null" >
+                LOAN_TRANSFEROR_ID,
+            </if>
+            <if test="loanTransferorName != null" >
+                LOAN_TRANSFEROR_NAME,
+            </if>
+            <if test="loanContractOrgId != null" >
+                LOAN_CONTRACT_ORG_ID,
+            </if>
+            <if test="loanContractOrgName != null" >
+                LOAN_CONTRACT_ORG_NAME,
+            </if>
+            <if test="loanContractOrgCounty != null" >
+                LOAN_CONTRACT_ORG_COUNTY,
+            </if>
+            <if test="rateFixed != null" >
+                RATE_FIXED,
+            </if>
+            <if test="rateLevel != null" >
+                RATE_LEVEL,
+            </if>
+            <if test="loanGuaranteeMode != null" >
+                LOAN_GUARANTEE_MODE,
+            </if>
+            <if test="loanQuality != null" >
+                LOAN_QUALITY,
+            </if>
+            <if test="loanState != null" >
+                LOAN_STATE,
+            </if>
+            <if test="loanTransferorRate != null" >
+                LOAN_TRANSFEROR_RATE,
+            </if>
+            <if test="origCcy != null" >
+                ORIG_CCY,
+            </if>
+            <if test="origContractAmount != null" >
+                ORIG_CONTRACT_AMOUNT,
+            </if>
+            <if test="origContractAmountCny != null" >
+                ORIG_CONTRACT_AMOUNT_CNY,
+            </if>
+            <if test="amtCcy != null" >
+                AMT_CCY,
+            </if>
+            <if test="contractAmount != null" >
+                CONTRACT_AMOUNT,
+            </if>
+            <if test="contractAmountCny != null" >
+                CONTRACT_AMOUNT_CNY,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                #{registSeqno,jdbcType=CHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAccountId != null" >
+                #{pbcAccountId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="loansType != null" >
+                #{loansType,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerType != null" >
+                #{borrowerType,jdbcType=CHAR},
+            </if>
+            <if test="borrowerId != null" >
+                #{borrowerId,jdbcType=VARCHAR},
+            </if>
+            <if test="industryInfo != null" >
+                #{industryInfo,jdbcType=CHAR},
+            </if>
+            <if test="borrowerNationality != null" >
+                #{borrowerNationality,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerCounty != null" >
+                #{borrowerCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseInvestorTypeFirst != null" >
+                #{enterpriseInvestorTypeFirst,jdbcType=CHAR},
+            </if>
+            <if test="enterpriseInvestorTypeSec != null" >
+                #{enterpriseInvestorTypeSec,jdbcType=CHAR},
+            </if>
+            <if test="enterpriseInvestorTypeThird != null" >
+                #{enterpriseInvestorTypeThird,jdbcType=CHAR},
+            </if>
+            <if test="enterpriseScale != null" >
+                #{enterpriseScale,jdbcType=CHAR},
+            </if>
+            <if test="loanBasisId != null" >
+                #{loanBasisId,jdbcType=VARCHAR},
+            </if>
+            <if test="loanPrdType != null" >
+                #{loanPrdType,jdbcType=CHAR},
+            </if>
+            <if test="loanActualInvest != null" >
+                #{loanActualInvest,jdbcType=VARCHAR},
+            </if>
+            <if test="loanVdate != null" >
+                #{loanVdate,jdbcType=DATE},
+            </if>
+            <if test="loanMdate != null" >
+                #{loanMdate,jdbcType=DATE},
+            </if>
+            <if test="loanExtensionDueDate != null" >
+                #{loanExtensionDueDate,jdbcType=DATE},
+            </if>
+            <if test="loanTransferorId != null" >
+                #{loanTransferorId,jdbcType=VARCHAR},
+            </if>
+            <if test="loanTransferorName != null" >
+                #{loanTransferorName,jdbcType=VARCHAR},
+            </if>
+            <if test="loanContractOrgId != null" >
+                #{loanContractOrgId,jdbcType=VARCHAR},
+            </if>
+            <if test="loanContractOrgName != null" >
+                #{loanContractOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="loanContractOrgCounty != null" >
+                #{loanContractOrgCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="rateFixed != null" >
+                #{rateFixed,jdbcType=VARCHAR},
+            </if>
+            <if test="rateLevel != null" >
+                #{rateLevel,jdbcType=DECIMAL},
+            </if>
+            <if test="loanGuaranteeMode != null" >
+                #{loanGuaranteeMode,jdbcType=CHAR},
+            </if>
+            <if test="loanQuality != null" >
+                #{loanQuality,jdbcType=CHAR},
+            </if>
+            <if test="loanState != null" >
+                #{loanState,jdbcType=CHAR},
+            </if>
+            <if test="loanTransferorRate != null" >
+                #{loanTransferorRate,jdbcType=DECIMAL},
+            </if>
+            <if test="origCcy != null" >
+                #{origCcy,jdbcType=CHAR},
+            </if>
+            <if test="origContractAmount != null" >
+                #{origContractAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="origContractAmountCny != null" >
+                #{origContractAmountCny,jdbcType=DECIMAL},
+            </if>
+            <if test="amtCcy != null" >
+                #{amtCcy,jdbcType=CHAR},
+            </if>
+            <if test="contractAmount != null" >
+                #{contractAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="contractAmountCny != null" >
+                #{contractAmountCny,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PbcLoanDetailInfoSub" >
+        insert into PBC_LOAN_DETAIL_INFO_SUB(REGIST_SEQNO, REPORTUUID, PROD_ID, PBC_ACCOUNT_ID, 
+        ASSET_CODE, LOANS_TYPE, BORROWER_TYPE, BORROWER_ID, INDUSTRY_INFO, BORROWER_NATIONALITY, 
+        BORROWER_COUNTY, ENTERPRISE_INVESTOR_TYPE_FIRST, ENTERPRISE_INVESTOR_TYPE_SEC, ENTERPRISE_INVESTOR_TYPE_THIRD, 
+        ENTERPRISE_SCALE, LOAN_BASIS_ID, LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST, LOAN_VDATE, LOAN_MDATE, 
+        LOAN_EXTENSION_DUE_DATE, LOAN_TRANSFEROR_ID, LOAN_TRANSFEROR_NAME, LOAN_CONTRACT_ORG_ID, 
+        LOAN_CONTRACT_ORG_NAME, LOAN_CONTRACT_ORG_COUNTY, RATE_FIXED, RATE_LEVEL, LOAN_GUARANTEE_MODE, 
+        LOAN_QUALITY, LOAN_STATE, LOAN_TRANSFEROR_RATE, ORIG_CCY, ORIG_CONTRACT_AMOUNT, ORIG_CONTRACT_AMOUNT_CNY, 
+        AMT_CCY, CONTRACT_AMOUNT, CONTRACT_AMOUNT_CNY)
+        select REGIST_SEQNO, REPORTUUID, PROD_ID, PBC_ACCOUNT_ID, 
+            ASSET_CODE, LOANS_TYPE, BORROWER_TYPE, BORROWER_ID, INDUSTRY_INFO, BORROWER_NATIONALITY, 
+            BORROWER_COUNTY, ENTERPRISE_INVESTOR_TYPE_FIRST, ENTERPRISE_INVESTOR_TYPE_SEC, ENTERPRISE_INVESTOR_TYPE_THIRD, 
+            ENTERPRISE_SCALE, LOAN_BASIS_ID, LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST, LOAN_VDATE, LOAN_MDATE, 
+            LOAN_EXTENSION_DUE_DATE, LOAN_TRANSFEROR_ID, LOAN_TRANSFEROR_NAME, LOAN_CONTRACT_ORG_ID, 
+            LOAN_CONTRACT_ORG_NAME, LOAN_CONTRACT_ORG_COUNTY, RATE_FIXED, RATE_LEVEL, LOAN_GUARANTEE_MODE, 
+            LOAN_QUALITY, LOAN_STATE, LOAN_TRANSFEROR_RATE, ORIG_CCY, ORIG_CONTRACT_AMOUNT, ORIG_CONTRACT_AMOUNT_CNY, 
+            AMT_CCY, CONTRACT_AMOUNT, CONTRACT_AMOUNT_CNY
+             from PBC_LOAN_DETAIL_INFO_SUB
+             where 1 = 1 and REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PbcLoanDetailInfoSub" >
+        update PBC_LOAN_DETAIL_INFO_SUB
+        <set >
+            <if test="reportuuid != null" >
+                REPORTUUID = #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAccountId != null" >
+                PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="loansType != null" >
+                LOANS_TYPE = #{loansType,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerType != null" >
+                BORROWER_TYPE = #{borrowerType,jdbcType=CHAR},
+            </if>
+            <if test="borrowerId != null" >
+                BORROWER_ID = #{borrowerId,jdbcType=VARCHAR},
+            </if>
+            <if test="industryInfo != null" >
+                INDUSTRY_INFO = #{industryInfo,jdbcType=CHAR},
+            </if>
+            <if test="borrowerNationality != null" >
+                BORROWER_NATIONALITY = #{borrowerNationality,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerCounty != null" >
+                BORROWER_COUNTY = #{borrowerCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseInvestorTypeFirst != null" >
+                ENTERPRISE_INVESTOR_TYPE_FIRST = #{enterpriseInvestorTypeFirst,jdbcType=CHAR},
+            </if>
+            <if test="enterpriseInvestorTypeSec != null" >
+                ENTERPRISE_INVESTOR_TYPE_SEC = #{enterpriseInvestorTypeSec,jdbcType=CHAR},
+            </if>
+            <if test="enterpriseInvestorTypeThird != null" >
+                ENTERPRISE_INVESTOR_TYPE_THIRD = #{enterpriseInvestorTypeThird,jdbcType=CHAR},
+            </if>
+            <if test="enterpriseScale != null" >
+                ENTERPRISE_SCALE = #{enterpriseScale,jdbcType=CHAR},
+            </if>
+            <if test="loanBasisId != null" >
+                LOAN_BASIS_ID = #{loanBasisId,jdbcType=VARCHAR},
+            </if>
+            <if test="loanPrdType != null" >
+                LOAN_PRD_TYPE = #{loanPrdType,jdbcType=CHAR},
+            </if>
+            <if test="loanActualInvest != null" >
+                LOAN_ACTUAL_INVEST = #{loanActualInvest,jdbcType=VARCHAR},
+            </if>
+            <if test="loanVdate != null" >
+                LOAN_VDATE = #{loanVdate,jdbcType=DATE},
+            </if>
+            <if test="loanMdate != null" >
+                LOAN_MDATE = #{loanMdate,jdbcType=DATE},
+            </if>
+            <if test="loanExtensionDueDate != null" >
+                LOAN_EXTENSION_DUE_DATE = #{loanExtensionDueDate,jdbcType=DATE},
+            </if>
+            <if test="loanTransferorId != null" >
+                LOAN_TRANSFEROR_ID = #{loanTransferorId,jdbcType=VARCHAR},
+            </if>
+            <if test="loanTransferorName != null" >
+                LOAN_TRANSFEROR_NAME = #{loanTransferorName,jdbcType=VARCHAR},
+            </if>
+            <if test="loanContractOrgId != null" >
+                LOAN_CONTRACT_ORG_ID = #{loanContractOrgId,jdbcType=VARCHAR},
+            </if>
+            <if test="loanContractOrgName != null" >
+                LOAN_CONTRACT_ORG_NAME = #{loanContractOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="loanContractOrgCounty != null" >
+                LOAN_CONTRACT_ORG_COUNTY = #{loanContractOrgCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="rateFixed != null" >
+                RATE_FIXED = #{rateFixed,jdbcType=VARCHAR},
+            </if>
+            <if test="rateLevel != null" >
+                RATE_LEVEL = #{rateLevel,jdbcType=DECIMAL},
+            </if>
+            <if test="loanGuaranteeMode != null" >
+                LOAN_GUARANTEE_MODE = #{loanGuaranteeMode,jdbcType=CHAR},
+            </if>
+            <if test="loanQuality != null" >
+                LOAN_QUALITY = #{loanQuality,jdbcType=CHAR},
+            </if>
+            <if test="loanState != null" >
+                LOAN_STATE = #{loanState,jdbcType=CHAR},
+            </if>
+            <if test="loanTransferorRate != null" >
+                LOAN_TRANSFEROR_RATE = #{loanTransferorRate,jdbcType=DECIMAL},
+            </if>
+            <if test="origCcy != null" >
+                ORIG_CCY = #{origCcy,jdbcType=CHAR},
+            </if>
+            <if test="origContractAmount != null" >
+                ORIG_CONTRACT_AMOUNT = #{origContractAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="origContractAmountCny != null" >
+                ORIG_CONTRACT_AMOUNT_CNY = #{origContractAmountCny,jdbcType=DECIMAL},
+            </if>
+            <if test="amtCcy != null" >
+                AMT_CCY = #{amtCcy,jdbcType=CHAR},
+            </if>
+            <if test="contractAmount != null" >
+                CONTRACT_AMOUNT = #{contractAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="contractAmountCny != null" >
+                CONTRACT_AMOUNT_CNY = #{contractAmountCny,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PbcLoanDetailInfoSub" >
+        update PBC_LOAN_DETAIL_INFO_SUB
+        set REPORTUUID = #{reportuuid,jdbcType=CHAR},
+            PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR},
+            ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            LOANS_TYPE = #{loansType,jdbcType=VARCHAR},
+            BORROWER_TYPE = #{borrowerType,jdbcType=CHAR},
+            BORROWER_ID = #{borrowerId,jdbcType=VARCHAR},
+            INDUSTRY_INFO = #{industryInfo,jdbcType=CHAR},
+            BORROWER_NATIONALITY = #{borrowerNationality,jdbcType=VARCHAR},
+            BORROWER_COUNTY = #{borrowerCounty,jdbcType=VARCHAR},
+            ENTERPRISE_INVESTOR_TYPE_FIRST = #{enterpriseInvestorTypeFirst,jdbcType=CHAR},
+            ENTERPRISE_INVESTOR_TYPE_SEC = #{enterpriseInvestorTypeSec,jdbcType=CHAR},
+            ENTERPRISE_INVESTOR_TYPE_THIRD = #{enterpriseInvestorTypeThird,jdbcType=CHAR},
+            ENTERPRISE_SCALE = #{enterpriseScale,jdbcType=CHAR},
+            LOAN_BASIS_ID = #{loanBasisId,jdbcType=VARCHAR},
+            LOAN_PRD_TYPE = #{loanPrdType,jdbcType=CHAR},
+            LOAN_ACTUAL_INVEST = #{loanActualInvest,jdbcType=VARCHAR},
+            LOAN_VDATE = #{loanVdate,jdbcType=DATE},
+            LOAN_MDATE = #{loanMdate,jdbcType=DATE},
+            LOAN_EXTENSION_DUE_DATE = #{loanExtensionDueDate,jdbcType=DATE},
+            LOAN_TRANSFEROR_ID = #{loanTransferorId,jdbcType=VARCHAR},
+            LOAN_TRANSFEROR_NAME = #{loanTransferorName,jdbcType=VARCHAR},
+            LOAN_CONTRACT_ORG_ID = #{loanContractOrgId,jdbcType=VARCHAR},
+            LOAN_CONTRACT_ORG_NAME = #{loanContractOrgName,jdbcType=VARCHAR},
+            LOAN_CONTRACT_ORG_COUNTY = #{loanContractOrgCounty,jdbcType=VARCHAR},
+            RATE_FIXED = #{rateFixed,jdbcType=VARCHAR},
+            RATE_LEVEL = #{rateLevel,jdbcType=DECIMAL},
+            LOAN_GUARANTEE_MODE = #{loanGuaranteeMode,jdbcType=CHAR},
+            LOAN_QUALITY = #{loanQuality,jdbcType=CHAR},
+            LOAN_STATE = #{loanState,jdbcType=CHAR},
+            LOAN_TRANSFEROR_RATE = #{loanTransferorRate,jdbcType=DECIMAL},
+            ORIG_CCY = #{origCcy,jdbcType=CHAR},
+            ORIG_CONTRACT_AMOUNT = #{origContractAmount,jdbcType=DECIMAL},
+            ORIG_CONTRACT_AMOUNT_CNY = #{origContractAmountCny,jdbcType=DECIMAL},
+            AMT_CCY = #{amtCcy,jdbcType=CHAR},
+            CONTRACT_AMOUNT = #{contractAmount,jdbcType=DECIMAL},
+            CONTRACT_AMOUNT_CNY = #{contractAmountCny,jdbcType=DECIMAL}
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </update>
+    
+    <delete id="deleteByModel" parameterType="java.util.Map">
     	DELETE FROM PBC_LOAN_DETAIL_INFO_SUB WHERE REPORTUUID IN (
     	 SELECT REPORTUUID from PBC_REPORT
 	   where 1=1
 	   <if test="startdate!=null">
-	   	and DATE_FORMAT(startdate,'%Y-%m-%d') >= DATE_FORMAT(#{startdate,jdbcType=DATE},'%Y-%m-%d')
+	   	and date_format(startdate,'%Y-%m-%d') >= date_format(#{startdate,jdbcType=DATE},'%Y-%m-%d')
 	   </if>
 	   <if test="enddate!=null">
-	   	and DATE_FORMAT(enddate,'%Y-%m-%d') >= DATE_FORMAT(#{enddate,jdbcType=DATE},'%Y-%m-%d')
+	   	and date_format(enddate,'%Y-%m-%d') >= date_format(#{enddate,jdbcType=DATE},'%Y-%m-%d')
 	   </if>
 	   <if test="reporttype!=null">
 	   	and REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
@@ -23,7 +545,7 @@
        <if test="pbcAccountId == null" >
          and PBC_ACCOUNT_ID is null
        </if> 
-        and send_status = '01'
+        and send_status = '01'/*只删除未报送数据*/
     	
     	)
     	

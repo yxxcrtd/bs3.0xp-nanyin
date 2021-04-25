@@ -142,40 +142,56 @@
 
 <insert id="mergeHolidayData"
 	parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
-	MERGE INTO MST_HOLIDAY CII
-	USING (
-	<foreach collection="list" item="item" open="select * from("
-		close=")" separator="union all">
-		SELECT
-		#{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID, 
-		#{item.cdate,jdbcType=TIMESTAMP} CDATE, 
-		#{item.isHoliday,jdbcType=DECIMAL} IS_HOLIDAY, 
-      #{item.createUser,jdbcType=VARCHAR} CREATE_USER, 
-      #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT, 
-      NOW() CREATE_TIME,
-      #{item.createUser,jdbcType=VARCHAR} UPDATE_USER, 
-      NOW() UPDATE_TIME
-		FROM
-		DUAL
-	</foreach>
-	) TEMP
-	<!-- 业务主键匹配 -->
-	ON(CII.CALENDAR_ID = TEMP.CALENDAR_ID
-	AND DATE_FORMAT(CII.CDATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CDATE,'%Y-%m-%d')
-	)
-	<!-- 匹配到则更新 -->
-	WHEN MATCHED THEN UPDATE SET
-	CII.IS_HOLIDAY = TEMP.IS_HOLIDAY,
-	CII.UPDATE_USER = TEMP.UPDATE_USER,
-	CII.UPDATE_TIME = TEMP.UPDATE_TIME
-	<!-- 未匹配到这插入 -->
-	WHEN NOT MATCHED THEN INSERT 
-	(CALENDAR_ID, CDATE, IS_HOLIDAY, 
-      CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-      UPDATE_USER, UPDATE_TIME)
-	VALUES(TEMP.CALENDAR_ID, TEMP.CDATE, TEMP.IS_HOLIDAY, 
-      TEMP.CREATE_USER, TEMP.CREATE_DEPT, TEMP.CREATE_TIME, 
-      TEMP.UPDATE_USER, TEMP.UPDATE_TIME)
+    insert into MST_HOLIDAY(CALENDAR_ID, CDATE, IS_HOLIDAY,
+    CREATE_USER, CREATE_DEPT, CREATE_TIME,
+    UPDATE_USER, UPDATE_TIME)
+    select CALENDAR_ID, CDATE, IS_HOLIDAY,
+    CREATE_USER, CREATE_DEPT, CREATE_TIME,
+    UPDATE_USER, UPDATE_TIME from
+    (
+    select TEMP.* from
+    (
+    <foreach collection="list" item="item"  separator="union all">
+        SELECT
+        #{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID,
+        #{item.cdate,jdbcType=TIMESTAMP} CDATE,
+        #{item.isHoliday,jdbcType=DECIMAL} IS_HOLIDAY,
+        #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+        #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+        NOW() CREATE_TIME,
+        #{item.createUser,jdbcType=VARCHAR} UPDATE_USER,
+        NOW() UPDATE_TIME
+        FROM   DUAL
+    </foreach>
+    ) TEMP where not exisits (select 1 from MST_HOLIDAY CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID
+    AND DATE_FORMAT(CII.CDATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CDATE,'%Y-%m-%d'))
+    ) de ;
+
+    UPDATE  MST_HOLIDAY as A,
+    (
+    select IS_HOLIDAY,
+    UPDATE_USER,
+    UPDATE_TIME from
+    (
+    select TEMP.* from
+    (
+    <foreach collection="list" item="item"  separator="union all">
+        SELECT
+        #{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID,
+        #{item.cdate,jdbcType=TIMESTAMP} CDATE,
+        #{item.isHoliday,jdbcType=DECIMAL} IS_HOLIDAY,
+        #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+        #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+        NOW() CREATE_TIME,
+        #{item.createUser,jdbcType=VARCHAR} UPDATE_USER,
+        NOW() UPDATE_TIME
+        FROM   DUAL
+    </foreach>
+    ) TEMP
+    ) de
+    ) AS B
+    set  A.* = B.* where exisits (select 1 from MST_HOLIDAY CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID
+    AND DATE_FORMAT(CII.CDATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CDATE,'%Y-%m-%d'));
 </insert>
 
 <delete id="deleteAllData">

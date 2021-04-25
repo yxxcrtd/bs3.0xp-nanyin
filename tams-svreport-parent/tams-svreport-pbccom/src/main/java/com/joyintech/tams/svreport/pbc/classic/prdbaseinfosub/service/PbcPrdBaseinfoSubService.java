@@ -156,7 +156,7 @@ public class PbcPrdBaseinfoSubService extends PbcClassicsSubService<PbcPrdBasein
 	        	if(pbcProdIdMap.containsKey(sub.getProdId())){
 	        		pbcProdId=pbcProdIdMap.get(sub.getProdId());
 	        	}else{
-	        		pbcProdId=PbcClassicsUtil.getPbcProdId(sub.getIssuePartyId(), sub.getProfitType(), PBC_PROD_BASEINFO_SEQCODE,sub.getRaiseVdate());
+	        		pbcProdId=PbcClassicsUtil.getPbcProdId(sub.getIssuePartyId(), sub.getProfitType(), PBC_PROD_BASEINFO_SEQCODE,sub.getVdate());
 	        	}
 	        	sub.setPbcProdId(pbcProdId);
 	        	if(pbcAccountIdMap.containsKey(sub.getProdId())){

@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import org.apache.commons.collections4.CollectionUtils;
@@ -49,10 +50,6 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdresistCodeMapper;
-import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
-import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
-import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
-import com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey;
 import com.joyintech.tams.report.common.TxtParseUtil;
 import com.joyintech.tams.report.common.XmlParseUtil;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
@@ -744,5 +741,18 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             proRegistCodeManage001Dto.setOperateMode(map.get("OPERATE_MODE"));
             entities.add(proRegistCodeManage001Dto);
         }
+    }
+
+    //查询产品申报通过的产品的登记编码
+    public List<String> selectProCodeList() {
+        return proRegistCodeManage001Mapper.selectProCodeList();
+    }
+    //插入上传文件
+    public int insertSysUploadFileInfo(SysUploadFileInfo sysUploadFileInfo){
+        return proRegistCodeManage001Mapper.insertSysUploadFileInfo(sysUploadFileInfo);
+    }
+    //删除数据库记录的上传文件信息
+    public int deleteBySeqNo(String seqNo){
+        return proRegistCodeManage001Mapper.deleteBySeqNo(seqNo);
     }
 }

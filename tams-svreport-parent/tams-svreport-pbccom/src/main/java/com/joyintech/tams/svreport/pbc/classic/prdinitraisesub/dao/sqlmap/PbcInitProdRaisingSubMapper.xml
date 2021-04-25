@@ -1131,7 +1131,6 @@
       	and SEND_STATUS in ('02','03')
   </insert>
   
-  
   <select id="selectCountReg"
 	parameterType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub">
 	select count(1) from PBC_INIT_PROD_RAISING_SUB
@@ -1351,59 +1350,58 @@
       PBC_PROD_ID = #{item.pbcProdId,jdbcType=VARCHAR}
       </foreach>
    </select>
-   
-   
-      
-<!--    
+
+
+<!--
    根据条件查询 产品基本信息页面导出人行Excel报表中的第二个sheet页 起始募集信息的明细数据
    <select id="searchListDetail" parameterType="map" resultMap="SearchResultMap">
    		WITH zhrmb as (select 'ZHRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM zhrmbje,a.INIT_RAISING_QTY zhrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zhmy as (select 'ZHMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM zhmyje,a.INIT_RAISING_QTY zhmyfe,a.INIT_RAISING_AMTSUMCNY zhmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		zfrmb as (select 'ZFRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM zfrmbje,a.INIT_RAISING_QTY zfrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zfmy as (select 'ZFMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM zfmyje,a.INIT_RAISING_QTY zfmyfe,a.INIT_RAISING_AMTSUMCNY zfmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		fjrrmb as (select 'FJRRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM fjrrmbje,a.INIT_RAISING_QTY fjrrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		fjrmy as (select 'FJRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM fjrmyje,a.INIT_RAISING_QTY fjrmyfe,a.INIT_RAISING_AMTSUMCNY fjrmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		jrjgrmb as (select 'JRJZRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM jrjgrmbje,a.INIT_RAISING_QTY jrjgrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jrjgmy as (select 'JRJZRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM jrjgmyje,a.INIT_RAISING_QTY jrjgmyfe,a.INIT_RAISING_AMTSUMCNY jrjgmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		tdztrmb as (select 'TDZTRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM tdztrmbje,a.INIT_RAISING_QTY tdztrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		tdztmy as (select 'TDZTMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM tdztmyje,a.INIT_RAISING_QTY tdztmyfe,a.INIT_RAISING_AMTSUMCNY tdztmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
-		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),       
-		
+		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
+
 		jwrmb as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM jwrmbje,a.INIT_RAISING_QTY jwrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jwmy as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM jwmyje,a.INIT_RAISING_QTY jwmyfe,a.INIT_RAISING_AMTSUMCNY jwmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
-		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})     
+		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})
 		查询字段一一对应导出的Excel模板
 		SELECT
 		    sys.ITEM_VALUE,
@@ -1416,76 +1414,76 @@
 		    jwrmb.jwrmbje,jwrmb.jwrmbfe,jwmy.jwmyje,jwmy.jwmyfe,jwmy.jwmyzrmb,nvl(jwrmb.jwrmbje,0) + nvl(jwmy.jwmyzrmb,0)  sumjw
 		FROM SYS_DATADICT_LIST sys
 		LEFT JOIN zhrmb ON sys.ITEM_CODE=zhrmb.BUY_PLACEZHRMB
-		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE 
-		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB 
-		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE 
-		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB 
-		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE 
-		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE 
-		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB 
-		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE 
-		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE 
+		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE
+		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB
+		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE
+		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB
+		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE
+		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB
+		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE
+		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB
+		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE
+		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB
+		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE
 		WHERE sys.DICT_CODE='SVR_BUY_PLACE'
-		
+
 		求出全国和总行的起始募集信息值
 		UNION All
 		SELECT '全国','000000','全国','buyplaceSheet3000000',
 		      sum(zhrmbje) zhrmbje,sum(zhrmbfe) zhrmbfe,sum(zhmyje) zhmyje,sum(zhmyfe) zhmyfe,sum(zhmyzrmb) zhmyzrmb,sum(nvl(zhrmbje,0) + nvl(zhmyzrmb,0)) sumzh,
 		      sum(zfrmbje) zfrmbje,sum(zfrmbfe) zfrmbfe,sum(zfmyje) zfmyje,sum(zfmyfe) zfmyfe,sum(zfmyzrmb) zfmyzrmb,sum(nvl(zfrmbje,0) + nvl(zfmyzrmb,0)) sumzf,
 		      sum(fjrrmbje) fjrrmbje,sum(fjrrmbfe) fjrrmbfe,sum(fjrmyje) fjrmyje,sum(fjrmyfe) fjrmyfe,sum(fjrmyzrmb) fjrmyzrmb,sum(nvl(fjrrmbje,0) + nvl(fjrmyzrmb,0)) sumfjr,
-		      sum(jrjgrmbje) jrjgrmbje,sum(jrjgrmbfe) jrjgrmbfe,sum(jrjgmyje) jrjgmyje,sum(jrjgmyfe) jrjgmyfe,sum(jrjgmyzrmb) jrjgmyzrmb,sum(nvl(jrjgrmbje,0) + nvl(jrjgmyzrmb,0)) sumjrjg,       
+		      sum(jrjgrmbje) jrjgrmbje,sum(jrjgrmbfe) jrjgrmbfe,sum(jrjgmyje) jrjgmyje,sum(jrjgmyfe) jrjgmyfe,sum(jrjgmyzrmb) jrjgmyzrmb,sum(nvl(jrjgrmbje,0) + nvl(jrjgmyzrmb,0)) sumjrjg,
 		      sum(tdztrmbje) tdztrmbje,sum(tdztrmbfe) tdztrmbfe,sum(tdztmyje) tdztmyje,sum(tdztmyfe) tdztmyfe,sum(tdztmyzrmb) tdztmyzrmb,sum(nvl(tdztrmbje,0) + nvl(tdztmyzrmb,0)) sumtdzt,
 		      sum(jwrmbje) jwrmbje,sum(jwrmbfe) jwrmbfe,sum(jwmyje) jwmyje,sum(jwmyfe) jwmyfe,sum(jwmyzrmb) jwmyzrmb,sum(nvl(jwrmbje,0) + nvl(jwmyzrmb,0)) sumjw
-		from 
+		from
 		(WITH zhrmb as (select 'ZHRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM zhrmbje,a.INIT_RAISING_QTY zhrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zhmy as (select 'ZHMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM zhmyje,a.INIT_RAISING_QTY zhmyfe,a.INIT_RAISING_AMTSUMCNY zhmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		zfrmb as (select 'ZFRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM zfrmbje,a.INIT_RAISING_QTY zfrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zfmy as (select 'ZFMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM zfmyje,a.INIT_RAISING_QTY zfmyfe,a.INIT_RAISING_AMTSUMCNY zfmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		fjrrmb as (select 'FJRRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM fjrrmbje,a.INIT_RAISING_QTY fjrrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		fjrmy as (select 'FJRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM fjrmyje,a.INIT_RAISING_QTY fjrmyfe,a.INIT_RAISING_AMTSUMCNY fjrmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		jrjgrmb as (select 'JRJZRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM jrjgrmbje,a.INIT_RAISING_QTY jrjgrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jrjgmy as (select 'JRJZRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM jrjgmyje,a.INIT_RAISING_QTY jrjgmyfe,a.INIT_RAISING_AMTSUMCNY jrjgmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		tdztrmb as (select 'TDZTRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM tdztrmbje,a.INIT_RAISING_QTY tdztrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		tdztmy as (select 'TDZTMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM tdztmyje,a.INIT_RAISING_QTY tdztmyfe,a.INIT_RAISING_AMTSUMCNY tdztmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
-		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),       
-		
+		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
+
 		jwrmb as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.INIT_RAISING_AMTSUM jwrmbje,a.INIT_RAISING_QTY jwrmbfe
 		       from PBC_INIT_PROD_RAISING_SUB a
 		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jwmy as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.INIT_RAISING_AMTSUM jwmyje,a.INIT_RAISING_QTY jwmyfe,a.INIT_RAISING_AMTSUMCNY jwmyzrmb
 		       from PBC_INIT_PROD_RAISING_SUB a
-		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})     
+		       left join view_PBC_INIT_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})
 		SELECT
 		    sys.ITEM_VALUE,
 		    sys.ITEM_CODE,
@@ -1497,22 +1495,22 @@
 		    jwrmb.jwrmbje,jwrmb.jwrmbfe,jwmy.jwmyje,jwmy.jwmyfe,jwmy.jwmyzrmb,nvl(jwrmb.jwrmbje,0) + nvl(jwmy.jwmyzrmb,0)  sumjw
 		FROM SYS_DATADICT_LIST sys
 		LEFT JOIN zhrmb ON sys.ITEM_CODE=zhrmb.BUY_PLACEZHRMB
-		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE 
-		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB 
-		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE 
-		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB 
-		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE 
-		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE 
-		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB 
-		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE 
-		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE 
+		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE
+		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB
+		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE
+		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB
+		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE
+		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB
+		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE
+		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB
+		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE
+		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB
+		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE
 		WHERE sys.DICT_CODE='SVR_BUY_PLACE') tab
    </select> -->
-   
+
     <select id="searchListDetailCNY" parameterType="map" resultMap="SearchResultMap">
-    <!-- select 
+    <!-- select
         'buyplace'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
         a.REGIST_SEQNO,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM zhrmbje, a.INIT_RAISING_QTY zhrmbfe
 	from PBC_INIT_PROD_RAISING_SUB a

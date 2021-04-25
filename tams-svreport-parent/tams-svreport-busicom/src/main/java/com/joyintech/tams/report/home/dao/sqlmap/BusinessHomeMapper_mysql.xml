@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.report.home.dao.BusinessHomeMapper_mysql">
-<select id="selectBusinessHomeInfo" resultType="com.joyintech.tams.report.home.dto.BusinessHomeDto">
+	<select id="selectBusinessHomeInfo" resultType="com.joyintech.tams.report.home.dto.BusinessHomeDto">
 	select c.htmlindex as interfFileType,
 	(select count(1) from chb_file_read_monitor_info a
 	where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
@@ -17,7 +17,7 @@
         #{item,jdbcType=VARCHAR}
         </foreach>
     </if>
-	) as accessFilenum,/*接入文件*/
+	) as accessFilenum,
 	(select count(1) from chb_file_read_monitor_info a
 	where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
 	and a.FILE_HANDLE_STATUS = '03'/*异常结束*/
@@ -33,10 +33,10 @@
         #{item,jdbcType=VARCHAR}
         </foreach>
     </if>
-	) as exceptionnum,/*异常结束个数*/
+	) as exceptionnum,
 	(select count(1) from chb_file_read_monitor_info a
 	where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
-	and a.FILE_HANDLE_STATUS = '02'/*正常结束*/
+	and a.FILE_HANDLE_STATUS = '02'
 	and DATE_FORMAT(a.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 	and DATE_FORMAT(a.FILE_READ_END_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 	<if test="createDeptList != null and createDeptList.size>0">
@@ -49,10 +49,10 @@
         #{item,jdbcType=VARCHAR}
         </foreach>
     </if>
-	) as normalnum,/*正常结束个数*/
+	) as normalnum,
 	ifnull((select sum(ifnull(a.FILE_DATA_COUNT,0)) from chb_file_read_monitor_info a
 	where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
-	and a.FILE_HANDLE_STATUS = '02'/*正常结束*/
+	and a.FILE_HANDLE_STATUS = '02'
 	and DATE_FORMAT(a.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 	and DATE_FORMAT(a.FILE_READ_END_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 	<if test="createDeptList != null and createDeptList.size>0">
@@ -65,7 +65,7 @@
         #{item,jdbcType=VARCHAR}
         </foreach>
     </if>
-	),0) as datanum /*数据接入总数*/
+	) temp,0) as datanum
 	from (select '01' reportcode,'CHB_EQU_HOLD' htmlindex from dual
 	union all select '02' reportcode,'CHB_INVESTHOLD_INFO' htmlindex from dual
 	union all select '03' reportcode,'MST_EXCHANGE_QUOTE' htmlindex from dual
@@ -83,7 +83,7 @@
 	union all select '15' reportcode,'CHB_SUBJECT_BALANCE' htmlindex from dual
 	union all select '16' reportcode,'MST_BOND_CREDIT_RATING' htmlindex from dual
 	union all select '17' reportcode,'MST_CUSTOMER_INFO' htmlindex from dual
-	<!-- 添加投资者明细信息 -->
+
 	union all select '27' reportcode,'CHB_EQUDET' htmlindex from dual) c
 	left join chb_file_read_monitor_info b
 	on b.HANDLE_FILE_TYPE = c.reportcode
@@ -101,9 +101,9 @@
     </if>
     group by b.HANDLE_FILE_TYPE,c.htmlindex
     order by interfFileType desc
-</select>
+	</select>
 
-<select id="selectDateCheckInfo" resultType="com.joyintech.tams.report.home.dto.BusinessHomeDto">
+	<select id="selectDateCheckInfo" resultType="com.joyintech.tams.report.home.dto.BusinessHomeDto">
 	select a.INTERF_TYPE interfFileType, count(a.INTERF_TYPE) as datanum,
 	(select count(1) from CHB_INTERF_ERRODATA b
 	where b.INTERF_TYPE=a.INTERF_TYPE
@@ -123,7 +123,7 @@
         #{item,jdbcType=VARCHAR}
         </foreach>
     </if>
-	) as checkfailnum /*检查不通过*/
+	) as checkfailnum
 	from CHB_INTERF_ERRODATA a
 	where DATE_FORMAT(a.CREATE_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 	<if test="createDeptList != null and createDeptList.size>0">
@@ -142,9 +142,9 @@
         </foreach>
     </if>
 	group by INTERF_TYPE
-</select>
+	</select>
 
-<select id="selectMergenum" resultType="java.lang.Integer">
+	<select id="selectMergenum" resultType="java.lang.Integer">
 	SELECT
 	count(1) as mergenum
 	FROM
@@ -169,18 +169,58 @@
 			#{item,jdbcType=VARCHAR}
 		</foreach>
 	</if>
-</select>
+	</select>
 
-<select id="selectChbInvestTrade" resultType="java.lang.Integer">
-select count(1) from CHB_INVESTHOLD_INFO
+	<select id="selectChbInvestTrade" resultType="java.lang.Integer">
+	select count(1) from CHB_INVESTHOLD_INFO
 	where STATUS = 'A'
 	and DATE_FORMAT(HOLD_DATE,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
-</select>
+	</select>
 
-<select id="selectChbEqudet" resultType="java.lang.Integer">
+	<select id="selectChbEqudet" resultType="java.lang.Integer">
 	select count(1) from CHB_EQUDET
 	where STATUS = 'A'
 	and DATE_FORMAT(EQUITY_CONF_DATE,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
-</select>
-
+	</select>
+	<select id="selectRegistnum" resultType="java.lang.Integer">
+		SELECT
+		count(1) as prodRegistnum
+		FROM
+		CHB_PRDRESIST_CODE cpc
+		WHERE (cpc.REG_CODE is NULL or cpc.REG_CODE = '')
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item="item"
+					 open="and cpc.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item="item" open=" and cpc.ORG_CODE in("
+					 separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item="item"
+					 open=" and cpc.DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+	</select>
+	<select id="selectInterfType" resultType="java.lang.String">
+        select INTERF_ID id from CHB_INTERF_CONFIG
+        where STATUS = 'E'
+  	</select>
+	<select id="selectMenulist" resultType="java.lang.String" parameterType="java.lang.String">
+		select page_id from sys_menu
+		where
+		<foreach collection="list" item="item" open="page_id in ("
+				 separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+	<select id="selectChbEquHold" resultType="java.lang.Integer">
+	select count(1) from CHB_EQU_HOLD
+	where STATUS = 'A'
+	</select>
 </mapper>

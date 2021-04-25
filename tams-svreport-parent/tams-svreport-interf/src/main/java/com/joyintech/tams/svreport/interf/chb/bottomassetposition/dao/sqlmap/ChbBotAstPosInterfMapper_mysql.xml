@@ -180,94 +180,112 @@ GROUP BY asset.POS_DATE,
   
   <insert id="mergeData"
 		parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
-		MERGE INTO CHB_BOT_AST_POS CII
-		USING (
-		<foreach collection="newDataList" item="item" open="select * from("
-			close=")" separator="union all">
-	SELECT
-	  #{item.posId,jdbcType=CHAR} POS_ID, 
-	  #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID, 
-	  #{item.posDate,jdbcType=TIMESTAMP} POS_DATE, 
+    insert into CHB_BOT_AST_POS(POS_ID, ISSUE_PARTY_ID, POS_DATE,
+    PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
+    ISSUE_AMT, UNINVEST_CASH, POS_NUM,
+    POS_AMT, ISFINAPLAN, ISCHL,
+    WORKFLOW_ID, STATUS, ORG_CODE,
+    DEPT_CODE, CREATE_USER, CREATE_DEPT,
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+    DATASOURCE)
+    select POS_ID, ISSUE_PARTY_ID, POS_DATE,
+    PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
+    ISSUE_AMT, UNINVEST_CASH, POS_NUM,
+    POS_AMT, ISFINAPLAN, ISCHL,
+    WORKFLOW_ID, STATUS, ORG_CODE,
+    DEPT_CODE, CREATE_USER, CREATE_DEPT,
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+    DATASOURCE from
+    (
+    select TEMP.* from
+    (
+    <foreach collection="list" item="item"  separator="union all">
+      SELECT
+      #{item.posId,jdbcType=CHAR} POS_ID,
+      #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+      #{item.posDate,jdbcType=TIMESTAMP} POS_DATE,
       #{item.planAssetId,jdbcType=VARCHAR} PLAN_ASSET_ID,
-      #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE, 
-      #{item.totalNum,jdbcType=DECIMAL} TOTAL_NUM, 
-      #{item.issueAmt,jdbcType=DECIMAL} ISSUE_AMT, 
-      #{item.uninvestCash,jdbcType=DECIMAL} UNINVEST_CASH, 
-      #{item.posNum,jdbcType=DECIMAL} POS_NUM, 
-      #{item.posAmt,jdbcType=DECIMAL} POS_AMT, 
-      #{item.isfinaplan,jdbcType=CHAR} ISFINAPLAN, 
-      #{item.ischl,jdbcType=CHAR} ISCHL, 
+      #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+      #{item.totalNum,jdbcType=DECIMAL} TOTAL_NUM,
+      #{item.issueAmt,jdbcType=DECIMAL} ISSUE_AMT,
+      #{item.uninvestCash,jdbcType=DECIMAL} UNINVEST_CASH,
+      #{item.posNum,jdbcType=DECIMAL} POS_NUM,
+      #{item.posAmt,jdbcType=DECIMAL} POS_AMT,
+      #{item.isfinaplan,jdbcType=CHAR} ISFINAPLAN,
+      #{item.ischl,jdbcType=CHAR} ISCHL,
       #{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
-      #{item.status,jdbcType=VARCHAR} STATUS, 
-      #{item.orgCode,jdbcType=VARCHAR} ORG_CODE, 
-      #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE, 
+      #{item.status,jdbcType=VARCHAR} STATUS,
+      #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+      #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
       #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
       #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT ,
       NOW() CREATE_TIME,
-      #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+      #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
       NOW() UPDATE_TIME,
       #{item.datasource,jdbcType=VARCHAR} DATASOURCE
-	FROM DUAL
-		</foreach>
-		) TEMP
-		<!-- 业务主键匹配 -->
-		ON(CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID 
-		and CII.ASSET_CODE = TEMP.ASSET_CODE
-		and CII.POS_DATE = TEMP.POS_DATE)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN UPDATE
-		SET  
-		 CII.POS_ID = TEMP.POS_ID,
-		 CII.ISSUE_PARTY_ID = TEMP.ISSUE_PARTY_ID,
-		 CII.TOTAL_NUM = TEMP.TOTAL_NUM,
-		 CII.ISSUE_AMT = TEMP.ISSUE_AMT,
-		 CII.UNINVEST_CASH = TEMP.UNINVEST_CASH,
-		 CII.POS_NUM = TEMP.POS_NUM,
-		 CII.POS_AMT = TEMP.POS_AMT,
-		 CII.ISFINAPLAN = TEMP.ISFINAPLAN,
-		 CII.ISCHL = TEMP.ISCHL,
-		 CII.WORKFLOW_ID = TEMP.WORKFLOW_ID,
-		 CII.STATUS = TEMP.STATUS,
-		 CII.ORG_CODE = TEMP.ORG_CODE,
-		 CII.DEPT_CODE = TEMP.DEPT_CODE,
-		 CII.CREATE_USER = TEMP.CREATE_USER,
-		 CII.CREATE_DEPT = TEMP.CREATE_DEPT,
-		 CII.CREATE_TIME = TEMP.CREATE_TIME,
-		 CII.UPDATE_USER = TEMP.UPDATE_USER,
-		 CII.UPDATE_TIME = TEMP.UPDATE_TIME,
-		 CII.DATASOURCE = TEMP.DATASOURCE
-		<!-- 未匹配到这插入 -->
-		WHEN NOT MATCHED THEN INSERT (POS_ID, ISSUE_PARTY_ID, POS_DATE, 
-      PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, 
-      ISSUE_AMT, UNINVEST_CASH, POS_NUM, 
-      POS_AMT, ISFINAPLAN, ISCHL, 
-      WORKFLOW_ID, STATUS, ORG_CODE, 
-      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
-      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-      DATASOURCE)
-		VALUES( TEMP.POS_ID,
-		 TEMP.ISSUE_PARTY_ID,
-		 TEMP.POS_DATE,
-		 TEMP.PLAN_ASSET_ID,
-		 TEMP.ASSET_CODE,
-		 TEMP.TOTAL_NUM,
-		 TEMP.ISSUE_AMT,
-		 TEMP.UNINVEST_CASH,
-		 TEMP.POS_NUM,
-		 TEMP.POS_AMT,
-		 TEMP.ISFINAPLAN,
-		 TEMP.ISCHL,
-		 TEMP.WORKFLOW_ID,
-		 TEMP.STATUS,
-		 TEMP.ORG_CODE,
-		 TEMP.DEPT_CODE,
-		 TEMP.CREATE_USER,
-		 TEMP.CREATE_DEPT,
-		 TEMP.CREATE_TIME,
-		 TEMP.UPDATE_USER,
-		 TEMP.UPDATE_TIME,
-		 TEMP.DATASOURCE
-			)
+      FROM DUAL
+    </foreach>
+    ) TEMP where not exisits (select 1 from CHB_BOT_AST_POS CII where CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID
+    and CII.ASSET_CODE = TEMP.ASSET_CODE
+    and CII.POS_DATE = TEMP.POS_DATE)
+    ) de ;
+
+    UPDATE  CHB_BOT_AST_POS as A,
+    (
+    select POS_ID,
+    ISSUE_PARTY_ID,
+    TOTAL_NUM,
+    ISSUE_AMT,
+    UNINVEST_CASH,
+    POS_NUM,
+    POS_AMT,
+    ISFINAPLAN,
+    ISCHL,
+    WORKFLOW_ID,
+    STATUS,
+    ORG_CODE,
+    DEPT_CODE,
+    CREATE_USER,
+    CREATE_DEPT,
+    CREATE_TIME,
+    UPDATE_USER,
+    UPDATE_TIME,
+    DATASOURCE from
+    (
+    select TEMP.* from
+    (
+    <foreach collection="list" item="item"  separator="union all">
+      SELECT
+      #{item.posId,jdbcType=CHAR} POS_ID,
+      #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+      #{item.posDate,jdbcType=TIMESTAMP} POS_DATE,
+      #{item.planAssetId,jdbcType=VARCHAR} PLAN_ASSET_ID,
+      #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+      #{item.totalNum,jdbcType=DECIMAL} TOTAL_NUM,
+      #{item.issueAmt,jdbcType=DECIMAL} ISSUE_AMT,
+      #{item.uninvestCash,jdbcType=DECIMAL} UNINVEST_CASH,
+      #{item.posNum,jdbcType=DECIMAL} POS_NUM,
+      #{item.posAmt,jdbcType=DECIMAL} POS_AMT,
+      #{item.isfinaplan,jdbcType=CHAR} ISFINAPLAN,
+      #{item.ischl,jdbcType=CHAR} ISCHL,
+      #{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+      #{item.status,jdbcType=VARCHAR} STATUS,
+      #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+      #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+      #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+      #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT ,
+      NOW() CREATE_TIME,
+      #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+      NOW() UPDATE_TIME,
+      #{item.datasource,jdbcType=VARCHAR} DATASOURCE
+      FROM DUAL
+    </foreach>
+    ) TEMP
+    ) de
+    ) AS B
+    set  A.* = B.* where exisits (select 1 from CHB_BOT_AST_POS CII where CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID
+    and CII.ASSET_CODE = TEMP.ASSET_CODE
+    and CII.POS_DATE = TEMP.POS_DATE);
 	</insert>
 	
 	<select id="selectPtlChlBtmByPosdate" parameterType="java.util.Map" resultMap="BaseResultMap"

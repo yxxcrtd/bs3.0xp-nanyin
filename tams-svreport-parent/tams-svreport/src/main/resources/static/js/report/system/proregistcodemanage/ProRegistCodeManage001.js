@@ -5,11 +5,11 @@
             regCode = null;
         }
         if (regCode) {
-        	regCode = regCode.join();
+            regCode = regCode.join();
         }
         var orgCode = $("#orgCode").val();
         if (orgCode) {
-        	orgCode = orgCode.join();
+            orgCode = orgCode.join();
         }
         return {
             // 产品
@@ -19,20 +19,20 @@
             //产品登记编码
             regCode : regCode,
             //起息日开始
-          //  vdateStart : $('#ProRegistCodeManage001_vdate').startDate(),
+            //  vdateStart : $('#ProRegistCodeManage001_vdate').startDate(),
             //起息日结束
-           // vdateEnd : $('#ProRegistCodeManage001_vdate').endDate(),
+            // vdateEnd : $('#ProRegistCodeManage001_vdate').endDate(),
 //            vdate : $('#ProRegistCodeManage001_vdate').val(),
             //到期日开始
-          //  mdateStart : $('#ProRegistCodeManage001_mdate').startDate(),
+            //  mdateStart : $('#ProRegistCodeManage001_mdate').startDate(),
             //到期日结束
-          //  mdateEnd : $('#ProRegistCodeManage001_mdate').endDate(),
+            //  mdateEnd : $('#ProRegistCodeManage001_mdate').endDate(),
 //            mdate : $('#ProRegistCodeManage001_mdate').val()
             //登记编码是否为空
             isNotNull : $("#ProRegistCodeManage001_isNotNull").prop("checked"),
-           // raisevdateStart : $('#raise_vdate').startDate(),
-           // raisevdateEnd : $('#raise_vdate').endDate(),
-            
+            // raisevdateStart : $('#raise_vdate').startDate(),
+            // raisevdateEnd : $('#raise_vdate').endDate(),
+
             orgCode : orgCode,
             //发送状态
             //sendStatus : $('#ProRegistCodeManage001_sendStatus').val()
@@ -57,6 +57,7 @@
             { title: "募集开始日", field:'raiseVdate', visible: isSvr,width:'8%'},
             { title: "募集起始日期（从）", field:'raisePstrDate', visible: isSvr,width:'10%'},
             { title: "募集起始日期（到）", field:'raisePendDate', visible: isSvr,width:'10%'},
+
             { title: "发送状态", field:'sendStatusStr',  visible: isSendStatusTableShow === YES,
                 render : function(data, type, row, meta) {
                     //alert(isSendStatusTableLinkShow+'*'+row.sendStatusStr+'*');
@@ -65,7 +66,18 @@
                     }
                     return "<a  class='pro-link sendStatusLink' style='cursor: pointer;'>"+row.sendStatusStr+"</ a>";
                 },sortField:"sendStatus"},
-            { title: "发送备注", field:'sendRemark',  visible: isSendRemarkTableShow === YES}
+            { title: "发送备注", field:'sendRemark',  visible: isSendRemarkTableShow === YES},
+            {
+                title : '操作附件',
+                field : 'operation',
+                type : 'action',
+                width : 150,
+                buttons : [   {
+                    text : '&#xe601;',
+                    clas : 'download',
+                    title : '下载'
+                }  ]
+            }
 
         ]
     });
@@ -82,6 +94,22 @@
                 prodId: row.prodId
             });
     });
+    table.bind('click', '.download', function(data, index) {
+        if (!data.regCode || data.regCode == null ||data.path==null) {
+            Joyin.error("未上传附件，不能下载！");
+            return;
+        }
+        parm = {};
+        var url = JoyinUtil.getRealPath('/framework/download/' + data.regCode);
+        Joyin.ajax(url, parm, function downloadFileByForm() {
+                Joyin.exportExcel('/framework/download/' + data.regCode, parm);
+            },
+            function errorDownload(){
+                Joyin.error("文件未找到！");
+            }
+        );
+    });
+
     /*
      * 页面的初始化函数 dingzhipeng add
      */
@@ -89,7 +117,7 @@
         $('#ProRegistCodeManage001_vdate').val('');
         $('#ProRegistCodeManage001_mdate').val('');
         if(!isSvr){
-        	$("#raiseDiv").hide();
+            $("#raiseDiv").hide();
         }
         if(isFromMain=="01"){
             $("#ProRegistCodeManage001_isNotNull").prop("checked",true);
@@ -144,9 +172,14 @@
         var data={"operateType":"add"};
         Joyin.dialog('产品登记编码新建',basePath+'svreport/system/proregistcodemanage/ProRegistCodeManage003/init', '98%', '95%',data,function(){table.reload();});
     }
-    
+
     $(function() {
         init();
+        //批量上传 不选择产品代码 不允许批量上传文件
+        $('#ProRegistCodeManage001_btn_batchUpload').click(function() {
+            var data={"operateType":"1"};
+            Joyin.dialog('产品登记通知书批量上传',basePath+'svreport/system/proregistcodemanage/ProRegistCodeManage004/init', '98%', '95%',data,function(){table.reload();});
+        });
         //新建按钮点击事件
         $('#ProRegistCodeManage001_btn_add').click(function() {
             showDialog();
@@ -213,14 +246,14 @@
             }
             Joyin.exportExcel("export",param);
         });
-        
+
         // 导入报送按钮点击事件
         $('#ProRegistCodeManage001_btn_importnew').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
-            	var options = {};
-        		options.pageId = "ProRegistCodeManage001_2";
+                var options = {};
+                options.pageId = "ProRegistCodeManage001_2";
                 Joyin.uploadFile(function(fileName) {
-                	Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                    Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
                         Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage001/importFile', {fileName: fileName});
                     });
                 },function() {
@@ -228,7 +261,7 @@
                 });
             });
         });
-        
+
         // 发送按钮点击事件
         $('#ProRegistCodeManage001_btn_sendSale').click(function() {
             sendRegistCodeToSale();

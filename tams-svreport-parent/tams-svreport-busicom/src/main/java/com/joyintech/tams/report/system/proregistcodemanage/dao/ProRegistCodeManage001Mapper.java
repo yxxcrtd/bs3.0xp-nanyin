@@ -13,6 +13,7 @@ package com.joyintech.tams.report.system.proregistcodemanage.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -129,4 +130,10 @@ public interface ProRegistCodeManage001Mapper {
     Map<String, Object> selectId(Map<String, Object> map);
     
     Map<String, Object> selectCode(Map<String, Object> map);
+
+    List<String> selectProCodeList();
+
+    int insertSysUploadFileInfo(SysUploadFileInfo sysUploadFileInfo);
+
+    int deleteBySeqNo(String seqNo);
 }

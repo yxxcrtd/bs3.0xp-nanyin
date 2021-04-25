@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValInterfDtoMatchMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ValInterfDtoMatch" >
+        <id column="TMP_E_NAME" property="tmpEName" jdbcType="VARCHAR" />
+        <id column="DTO_NAME" property="dtoName" jdbcType="VARCHAR" />
+        <id column="TMP_COL_E_NAME" property="tmpColEName" jdbcType="VARCHAR" />
+        <result column="TMP_C_NAME" property="tmpCName" jdbcType="VARCHAR" />
+        <result column="TMP_COL_C_NAME" property="tmpColCName" jdbcType="VARCHAR" />
+        <result column="DTO_COL_E_NAME" property="dtoColEName" jdbcType="VARCHAR" />
+        <result column="DTO_COL_C_NAME" property="dtoColCName" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TMP_E_NAME TMP_E_NAME, DTO_NAME DTO_NAME, TMP_COL_E_NAME TMP_COL_E_NAME, TMP_C_NAME TMP_C_NAME, 
+        TMP_COL_C_NAME TMP_COL_C_NAME, DTO_COL_E_NAME DTO_COL_E_NAME, DTO_COL_C_NAME DTO_COL_C_NAME, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfDtoMatchMapper.Base_Column_List" />
+        from VAL_INTERF_DTO_MATCH
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfDtoMatchMapper.Base_Column_List" />
+        from VAL_INTERF_DTO_MATCH
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ValInterfDtoMatchKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfDtoMatchMapper.Base_Column_List" />
+        from VAL_INTERF_DTO_MATCH
+        where TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR}
+          and DTO_NAME = #{dtoName,jdbcType=VARCHAR}
+          and TMP_COL_E_NAME = #{tmpColEName,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValInterfDtoMatchKey" >
+        delete from VAL_INTERF_DTO_MATCH
+        where TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR}
+          and DTO_NAME = #{dtoName,jdbcType=VARCHAR}
+          and TMP_COL_E_NAME = #{tmpColEName,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ValInterfDtoMatch" >
+        insert into VAL_INTERF_DTO_MATCH (TMP_E_NAME, DTO_NAME, TMP_COL_E_NAME, 
+            TMP_C_NAME, TMP_COL_C_NAME, DTO_COL_E_NAME, 
+            DTO_COL_C_NAME, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{tmpEName,jdbcType=VARCHAR}, #{dtoName,jdbcType=VARCHAR}, #{tmpColEName,jdbcType=VARCHAR}, 
+            #{tmpCName,jdbcType=VARCHAR}, #{tmpColCName,jdbcType=VARCHAR}, #{dtoColEName,jdbcType=VARCHAR}, 
+            #{dtoColCName,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ValInterfDtoMatch" >
+        insert into VAL_INTERF_DTO_MATCH
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tmpEName != null" >
+                TMP_E_NAME,
+            </if>
+            <if test="dtoName != null" >
+                DTO_NAME,
+            </if>
+            <if test="tmpColEName != null" >
+                TMP_COL_E_NAME,
+            </if>
+            <if test="tmpCName != null" >
+                TMP_C_NAME,
+            </if>
+            <if test="tmpColCName != null" >
+                TMP_COL_C_NAME,
+            </if>
+            <if test="dtoColEName != null" >
+                DTO_COL_E_NAME,
+            </if>
+            <if test="dtoColCName != null" >
+                DTO_COL_C_NAME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tmpEName != null" >
+                #{tmpEName,jdbcType=VARCHAR},
+            </if>
+            <if test="dtoName != null" >
+                #{dtoName,jdbcType=VARCHAR},
+            </if>
+            <if test="tmpColEName != null" >
+                #{tmpColEName,jdbcType=VARCHAR},
+            </if>
+            <if test="tmpCName != null" >
+                #{tmpCName,jdbcType=VARCHAR},
+            </if>
+            <if test="tmpColCName != null" >
+                #{tmpColCName,jdbcType=VARCHAR},
+            </if>
+            <if test="dtoColEName != null" >
+                #{dtoColEName,jdbcType=VARCHAR},
+            </if>
+            <if test="dtoColCName != null" >
+                #{dtoColCName,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ValInterfDtoMatch" >
+        insert into VAL_INTERF_DTO_MATCH(TMP_E_NAME, DTO_NAME, TMP_COL_E_NAME, TMP_C_NAME, 
+        TMP_COL_C_NAME, DTO_COL_E_NAME, DTO_COL_C_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select TMP_E_NAME, DTO_NAME, TMP_COL_E_NAME, TMP_C_NAME, 
+            TMP_COL_C_NAME, DTO_COL_E_NAME, DTO_COL_C_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from VAL_INTERF_DTO_MATCH
+             where 1 = 1 and TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR} and DTO_NAME = #{dtoName,jdbcType=VARCHAR} and TMP_COL_E_NAME = #{tmpColEName,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ValInterfDtoMatch" >
+        update VAL_INTERF_DTO_MATCH
+        <set >
+            <if test="tmpCName != null" >
+                TMP_C_NAME = #{tmpCName,jdbcType=VARCHAR},
+            </if>
+            <if test="tmpColCName != null" >
+                TMP_COL_C_NAME = #{tmpColCName,jdbcType=VARCHAR},
+            </if>
+            <if test="dtoColEName != null" >
+                DTO_COL_E_NAME = #{dtoColEName,jdbcType=VARCHAR},
+            </if>
+            <if test="dtoColCName != null" >
+                DTO_COL_C_NAME = #{dtoColCName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR}
+          and DTO_NAME = #{dtoName,jdbcType=VARCHAR}
+          and TMP_COL_E_NAME = #{tmpColEName,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValInterfDtoMatch" >
+        update VAL_INTERF_DTO_MATCH
+        set TMP_C_NAME = #{tmpCName,jdbcType=VARCHAR},
+            TMP_COL_C_NAME = #{tmpColCName,jdbcType=VARCHAR},
+            DTO_COL_E_NAME = #{dtoColEName,jdbcType=VARCHAR},
+            DTO_COL_C_NAME = #{dtoColCName,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TMP_E_NAME = #{tmpEName,jdbcType=VARCHAR}
+          and DTO_NAME = #{dtoName,jdbcType=VARCHAR}
+          and TMP_COL_E_NAME = #{tmpColEName,jdbcType=VARCHAR}
+    </update>
+</mapper>

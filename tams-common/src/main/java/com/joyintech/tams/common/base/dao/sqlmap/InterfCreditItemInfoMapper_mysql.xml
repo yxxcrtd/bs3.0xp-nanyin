@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCreditItemInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCreditItemInfo" >
+        <id column="CASH_OUT_NO" property="cashOutNo" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="REL_CONTRACT_NO" property="relContractNo" jdbcType="VARCHAR" />
+        <result column="IS_GOV" property="isGov" jdbcType="VARCHAR" />
+        <result column="IS_HIGH_POLLUTION" property="isHighPollution" jdbcType="VARCHAR" />
+        <result column="IS_GOVT_LIMIT" property="isGovtLimit" jdbcType="VARCHAR" />
+        <result column="IS_GOVT_NEW_STRATEGY" property="isGovtNewStrategy" jdbcType="VARCHAR" />
+        <result column="FUND_USE_TYPE" property="fundUseType" jdbcType="VARCHAR" />
+        <result column="REPAYMENT_TYPE" property="repaymentType" jdbcType="VARCHAR" />
+        <result column="BUSI_CONTRACT_PROD" property="busiContractProd" jdbcType="VARCHAR" />
+        <result column="IS_LOW_RISK" property="isLowRisk" jdbcType="VARCHAR" />
+        <result column="APPROVE_NO" property="approveNo" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="APROVE_AMOUNT" property="aproveAmount" jdbcType="DECIMAL" />
+        <result column="APROVE_LIMIT" property="aproveLimit" jdbcType="DECIMAL" />
+        <result column="LAST_APROVE_INS" property="lastAproveIns" jdbcType="VARCHAR" />
+        <result column="USED_AMOUNT" property="usedAmount" jdbcType="DECIMAL" />
+        <result column="SIGN_DATE" property="signDate" jdbcType="DATE" />
+        <result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+        <result column="ASSURE_PATTERN" property="assurePattern" jdbcType="VARCHAR" />
+        <result column="ASSURE_MARK" property="assureMark" jdbcType="VARCHAR" />
+        <result column="BRANCH_INS_NO" property="branchInsNo" jdbcType="VARCHAR" />
+        <result column="BECIF" property="becif" jdbcType="VARCHAR" />
+        <result column="CREDIT_CUSTOMER_NO" property="creditCustomerNo" jdbcType="VARCHAR" />
+        <result column="CREDIT_CUSTOMER_NAME" property="creditCustomerName" jdbcType="VARCHAR" />
+        <result column="CREDIT_BUSINESS_NO" property="creditBusinessNo" jdbcType="VARCHAR" />
+        <result column="CREDIT_BUSINESS_NAME" property="creditBusinessName" jdbcType="VARCHAR" />
+        <result column="BUSI_CONTRACT_NO" property="busiContractNo" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="PAYMENT_AMOUNT" property="paymentAmount" jdbcType="DECIMAL" />
+        <result column="REMAIN_AVAIL_AMT" property="remainAvailAmt" jdbcType="DECIMAL" />
+        <result column="REASON" property="reason" jdbcType="VARCHAR" />
+        <result column="IS_REVOKE" property="isRevoke" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_OUT_NO CASH_OUT_NO, CCY CCY, REL_CONTRACT_NO REL_CONTRACT_NO, IS_GOV IS_GOV, 
+        IS_HIGH_POLLUTION IS_HIGH_POLLUTION, IS_GOVT_LIMIT IS_GOVT_LIMIT, IS_GOVT_NEW_STRATEGY IS_GOVT_NEW_STRATEGY, 
+        FUND_USE_TYPE FUND_USE_TYPE, REPAYMENT_TYPE REPAYMENT_TYPE, BUSI_CONTRACT_PROD BUSI_CONTRACT_PROD, 
+        IS_LOW_RISK IS_LOW_RISK, APPROVE_NO APPROVE_NO, CREDIT_TYPE CREDIT_TYPE, APROVE_AMOUNT APROVE_AMOUNT, 
+        APROVE_LIMIT APROVE_LIMIT, LAST_APROVE_INS LAST_APROVE_INS, USED_AMOUNT USED_AMOUNT, 
+        SIGN_DATE SIGN_DATE, RISK_TYPE RISK_TYPE, ASSURE_PATTERN ASSURE_PATTERN, ASSURE_MARK ASSURE_MARK, 
+        BRANCH_INS_NO BRANCH_INS_NO, BECIF BECIF, CREDIT_CUSTOMER_NO CREDIT_CUSTOMER_NO, 
+        CREDIT_CUSTOMER_NAME CREDIT_CUSTOMER_NAME, CREDIT_BUSINESS_NO CREDIT_BUSINESS_NO, 
+        CREDIT_BUSINESS_NAME CREDIT_BUSINESS_NAME, BUSI_CONTRACT_NO BUSI_CONTRACT_NO, VDATE VDATE, 
+        MDATE MDATE, YIELD YIELD, PAYMENT_AMOUNT PAYMENT_AMOUNT, REMAIN_AVAIL_AMT REMAIN_AVAIL_AMT, 
+        REASON REASON, IS_REVOKE IS_REVOKE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCreditItemInfoMapper.Base_Column_List" />
+        from INTERF_CREDIT_ITEM_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCreditItemInfoMapper.Base_Column_List" />
+        from INTERF_CREDIT_ITEM_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCreditItemInfoMapper.Base_Column_List" />
+        from INTERF_CREDIT_ITEM_INFO
+        where CASH_OUT_NO = #{cashOutNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_CREDIT_ITEM_INFO
+        where CASH_OUT_NO = #{cashOutNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCreditItemInfo" >
+        insert into INTERF_CREDIT_ITEM_INFO (CASH_OUT_NO, CCY, REL_CONTRACT_NO, 
+            IS_GOV, IS_HIGH_POLLUTION, IS_GOVT_LIMIT, 
+            IS_GOVT_NEW_STRATEGY, FUND_USE_TYPE, REPAYMENT_TYPE, 
+            BUSI_CONTRACT_PROD, IS_LOW_RISK, APPROVE_NO, 
+            CREDIT_TYPE, APROVE_AMOUNT, APROVE_LIMIT, 
+            LAST_APROVE_INS, USED_AMOUNT, SIGN_DATE, 
+            RISK_TYPE, ASSURE_PATTERN, ASSURE_MARK, 
+            BRANCH_INS_NO, BECIF, CREDIT_CUSTOMER_NO, 
+            CREDIT_CUSTOMER_NAME, CREDIT_BUSINESS_NO, 
+            CREDIT_BUSINESS_NAME, BUSI_CONTRACT_NO, VDATE, 
+            MDATE, YIELD, PAYMENT_AMOUNT, 
+            REMAIN_AVAIL_AMT, REASON, IS_REVOKE
+            )
+        values (#{cashOutNo,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{relContractNo,jdbcType=VARCHAR}, 
+            #{isGov,jdbcType=VARCHAR}, #{isHighPollution,jdbcType=VARCHAR}, #{isGovtLimit,jdbcType=VARCHAR}, 
+            #{isGovtNewStrategy,jdbcType=VARCHAR}, #{fundUseType,jdbcType=VARCHAR}, #{repaymentType,jdbcType=VARCHAR}, 
+            #{busiContractProd,jdbcType=VARCHAR}, #{isLowRisk,jdbcType=VARCHAR}, #{approveNo,jdbcType=VARCHAR}, 
+            #{creditType,jdbcType=VARCHAR}, #{aproveAmount,jdbcType=DECIMAL}, #{aproveLimit,jdbcType=DECIMAL}, 
+            #{lastAproveIns,jdbcType=VARCHAR}, #{usedAmount,jdbcType=DECIMAL}, #{signDate,jdbcType=DATE}, 
+            #{riskType,jdbcType=VARCHAR}, #{assurePattern,jdbcType=VARCHAR}, #{assureMark,jdbcType=VARCHAR}, 
+            #{branchInsNo,jdbcType=VARCHAR}, #{becif,jdbcType=VARCHAR}, #{creditCustomerNo,jdbcType=VARCHAR}, 
+            #{creditCustomerName,jdbcType=VARCHAR}, #{creditBusinessNo,jdbcType=VARCHAR}, 
+            #{creditBusinessName,jdbcType=VARCHAR}, #{busiContractNo,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, 
+            #{mdate,jdbcType=DATE}, #{yield,jdbcType=DECIMAL}, #{paymentAmount,jdbcType=DECIMAL}, 
+            #{remainAvailAmt,jdbcType=DECIMAL}, #{reason,jdbcType=VARCHAR}, #{isRevoke,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCreditItemInfo" >
+        insert into INTERF_CREDIT_ITEM_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashOutNo != null" >
+                CASH_OUT_NO,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="relContractNo != null" >
+                REL_CONTRACT_NO,
+            </if>
+            <if test="isGov != null" >
+                IS_GOV,
+            </if>
+            <if test="isHighPollution != null" >
+                IS_HIGH_POLLUTION,
+            </if>
+            <if test="isGovtLimit != null" >
+                IS_GOVT_LIMIT,
+            </if>
+            <if test="isGovtNewStrategy != null" >
+                IS_GOVT_NEW_STRATEGY,
+            </if>
+            <if test="fundUseType != null" >
+                FUND_USE_TYPE,
+            </if>
+            <if test="repaymentType != null" >
+                REPAYMENT_TYPE,
+            </if>
+            <if test="busiContractProd != null" >
+                BUSI_CONTRACT_PROD,
+            </if>
+            <if test="isLowRisk != null" >
+                IS_LOW_RISK,
+            </if>
+            <if test="approveNo != null" >
+                APPROVE_NO,
+            </if>
+            <if test="creditType != null" >
+                CREDIT_TYPE,
+            </if>
+            <if test="aproveAmount != null" >
+                APROVE_AMOUNT,
+            </if>
+            <if test="aproveLimit != null" >
+                APROVE_LIMIT,
+            </if>
+            <if test="lastAproveIns != null" >
+                LAST_APROVE_INS,
+            </if>
+            <if test="usedAmount != null" >
+                USED_AMOUNT,
+            </if>
+            <if test="signDate != null" >
+                SIGN_DATE,
+            </if>
+            <if test="riskType != null" >
+                RISK_TYPE,
+            </if>
+            <if test="assurePattern != null" >
+                ASSURE_PATTERN,
+            </if>
+            <if test="assureMark != null" >
+                ASSURE_MARK,
+            </if>
+            <if test="branchInsNo != null" >
+                BRANCH_INS_NO,
+            </if>
+            <if test="becif != null" >
+                BECIF,
+            </if>
+            <if test="creditCustomerNo != null" >
+                CREDIT_CUSTOMER_NO,
+            </if>
+            <if test="creditCustomerName != null" >
+                CREDIT_CUSTOMER_NAME,
+            </if>
+            <if test="creditBusinessNo != null" >
+                CREDIT_BUSINESS_NO,
+            </if>
+            <if test="creditBusinessName != null" >
+                CREDIT_BUSINESS_NAME,
+            </if>
+            <if test="busiContractNo != null" >
+                BUSI_CONTRACT_NO,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="paymentAmount != null" >
+                PAYMENT_AMOUNT,
+            </if>
+            <if test="remainAvailAmt != null" >
+                REMAIN_AVAIL_AMT,
+            </if>
+            <if test="reason != null" >
+                REASON,
+            </if>
+            <if test="isRevoke != null" >
+                IS_REVOKE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashOutNo != null" >
+                #{cashOutNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="relContractNo != null" >
+                #{relContractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isGov != null" >
+                #{isGov,jdbcType=VARCHAR},
+            </if>
+            <if test="isHighPollution != null" >
+                #{isHighPollution,jdbcType=VARCHAR},
+            </if>
+            <if test="isGovtLimit != null" >
+                #{isGovtLimit,jdbcType=VARCHAR},
+            </if>
+            <if test="isGovtNewStrategy != null" >
+                #{isGovtNewStrategy,jdbcType=VARCHAR},
+            </if>
+            <if test="fundUseType != null" >
+                #{fundUseType,jdbcType=VARCHAR},
+            </if>
+            <if test="repaymentType != null" >
+                #{repaymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="busiContractProd != null" >
+                #{busiContractProd,jdbcType=VARCHAR},
+            </if>
+            <if test="isLowRisk != null" >
+                #{isLowRisk,jdbcType=VARCHAR},
+            </if>
+            <if test="approveNo != null" >
+                #{approveNo,jdbcType=VARCHAR},
+            </if>
+            <if test="creditType != null" >
+                #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="aproveAmount != null" >
+                #{aproveAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="aproveLimit != null" >
+                #{aproveLimit,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAproveIns != null" >
+                #{lastAproveIns,jdbcType=VARCHAR},
+            </if>
+            <if test="usedAmount != null" >
+                #{usedAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="signDate != null" >
+                #{signDate,jdbcType=DATE},
+            </if>
+            <if test="riskType != null" >
+                #{riskType,jdbcType=VARCHAR},
+            </if>
+            <if test="assurePattern != null" >
+                #{assurePattern,jdbcType=VARCHAR},
+            </if>
+            <if test="assureMark != null" >
+                #{assureMark,jdbcType=VARCHAR},
+            </if>
+            <if test="branchInsNo != null" >
+                #{branchInsNo,jdbcType=VARCHAR},
+            </if>
+            <if test="becif != null" >
+                #{becif,jdbcType=VARCHAR},
+            </if>
+            <if test="creditCustomerNo != null" >
+                #{creditCustomerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="creditCustomerName != null" >
+                #{creditCustomerName,jdbcType=VARCHAR},
+            </if>
+            <if test="creditBusinessNo != null" >
+                #{creditBusinessNo,jdbcType=VARCHAR},
+            </if>
+            <if test="creditBusinessName != null" >
+                #{creditBusinessName,jdbcType=VARCHAR},
+            </if>
+            <if test="busiContractNo != null" >
+                #{busiContractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="paymentAmount != null" >
+                #{paymentAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="remainAvailAmt != null" >
+                #{remainAvailAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="reason != null" >
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="isRevoke != null" >
+                #{isRevoke,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCreditItemInfo" >
+        insert into INTERF_CREDIT_ITEM_INFO(CASH_OUT_NO, CCY, REL_CONTRACT_NO, IS_GOV, IS_HIGH_POLLUTION, 
+        IS_GOVT_LIMIT, IS_GOVT_NEW_STRATEGY, FUND_USE_TYPE, REPAYMENT_TYPE, BUSI_CONTRACT_PROD, 
+        IS_LOW_RISK, APPROVE_NO, CREDIT_TYPE, APROVE_AMOUNT, APROVE_LIMIT, LAST_APROVE_INS, 
+        USED_AMOUNT, SIGN_DATE, RISK_TYPE, ASSURE_PATTERN, ASSURE_MARK, BRANCH_INS_NO, BECIF, 
+        CREDIT_CUSTOMER_NO, CREDIT_CUSTOMER_NAME, CREDIT_BUSINESS_NO, CREDIT_BUSINESS_NAME, 
+        BUSI_CONTRACT_NO, VDATE, MDATE, YIELD, PAYMENT_AMOUNT, REMAIN_AVAIL_AMT, REASON, 
+        IS_REVOKE)
+        select CASH_OUT_NO, CCY, REL_CONTRACT_NO, IS_GOV, IS_HIGH_POLLUTION, 
+            IS_GOVT_LIMIT, IS_GOVT_NEW_STRATEGY, FUND_USE_TYPE, REPAYMENT_TYPE, BUSI_CONTRACT_PROD, 
+            IS_LOW_RISK, APPROVE_NO, CREDIT_TYPE, APROVE_AMOUNT, APROVE_LIMIT, LAST_APROVE_INS, 
+            USED_AMOUNT, SIGN_DATE, RISK_TYPE, ASSURE_PATTERN, ASSURE_MARK, BRANCH_INS_NO, BECIF, 
+            CREDIT_CUSTOMER_NO, CREDIT_CUSTOMER_NAME, CREDIT_BUSINESS_NO, CREDIT_BUSINESS_NAME, 
+            BUSI_CONTRACT_NO, VDATE, MDATE, YIELD, PAYMENT_AMOUNT, REMAIN_AVAIL_AMT, REASON, 
+            IS_REVOKE
+             from INTERF_CREDIT_ITEM_INFO
+             where 1 = 1 and CASH_OUT_NO = #{cashOutNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCreditItemInfo" >
+        update INTERF_CREDIT_ITEM_INFO
+        <set >
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="relContractNo != null" >
+                REL_CONTRACT_NO = #{relContractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isGov != null" >
+                IS_GOV = #{isGov,jdbcType=VARCHAR},
+            </if>
+            <if test="isHighPollution != null" >
+                IS_HIGH_POLLUTION = #{isHighPollution,jdbcType=VARCHAR},
+            </if>
+            <if test="isGovtLimit != null" >
+                IS_GOVT_LIMIT = #{isGovtLimit,jdbcType=VARCHAR},
+            </if>
+            <if test="isGovtNewStrategy != null" >
+                IS_GOVT_NEW_STRATEGY = #{isGovtNewStrategy,jdbcType=VARCHAR},
+            </if>
+            <if test="fundUseType != null" >
+                FUND_USE_TYPE = #{fundUseType,jdbcType=VARCHAR},
+            </if>
+            <if test="repaymentType != null" >
+                REPAYMENT_TYPE = #{repaymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="busiContractProd != null" >
+                BUSI_CONTRACT_PROD = #{busiContractProd,jdbcType=VARCHAR},
+            </if>
+            <if test="isLowRisk != null" >
+                IS_LOW_RISK = #{isLowRisk,jdbcType=VARCHAR},
+            </if>
+            <if test="approveNo != null" >
+                APPROVE_NO = #{approveNo,jdbcType=VARCHAR},
+            </if>
+            <if test="creditType != null" >
+                CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="aproveAmount != null" >
+                APROVE_AMOUNT = #{aproveAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="aproveLimit != null" >
+                APROVE_LIMIT = #{aproveLimit,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAproveIns != null" >
+                LAST_APROVE_INS = #{lastAproveIns,jdbcType=VARCHAR},
+            </if>
+            <if test="usedAmount != null" >
+                USED_AMOUNT = #{usedAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="signDate != null" >
+                SIGN_DATE = #{signDate,jdbcType=DATE},
+            </if>
+            <if test="riskType != null" >
+                RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+            </if>
+            <if test="assurePattern != null" >
+                ASSURE_PATTERN = #{assurePattern,jdbcType=VARCHAR},
+            </if>
+            <if test="assureMark != null" >
+                ASSURE_MARK = #{assureMark,jdbcType=VARCHAR},
+            </if>
+            <if test="branchInsNo != null" >
+                BRANCH_INS_NO = #{branchInsNo,jdbcType=VARCHAR},
+            </if>
+            <if test="becif != null" >
+                BECIF = #{becif,jdbcType=VARCHAR},
+            </if>
+            <if test="creditCustomerNo != null" >
+                CREDIT_CUSTOMER_NO = #{creditCustomerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="creditCustomerName != null" >
+                CREDIT_CUSTOMER_NAME = #{creditCustomerName,jdbcType=VARCHAR},
+            </if>
+            <if test="creditBusinessNo != null" >
+                CREDIT_BUSINESS_NO = #{creditBusinessNo,jdbcType=VARCHAR},
+            </if>
+            <if test="creditBusinessName != null" >
+                CREDIT_BUSINESS_NAME = #{creditBusinessName,jdbcType=VARCHAR},
+            </if>
+            <if test="busiContractNo != null" >
+                BUSI_CONTRACT_NO = #{busiContractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="paymentAmount != null" >
+                PAYMENT_AMOUNT = #{paymentAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="remainAvailAmt != null" >
+                REMAIN_AVAIL_AMT = #{remainAvailAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="reason != null" >
+                REASON = #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="isRevoke != null" >
+                IS_REVOKE = #{isRevoke,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CASH_OUT_NO = #{cashOutNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCreditItemInfo" >
+        update INTERF_CREDIT_ITEM_INFO
+        set CCY = #{ccy,jdbcType=VARCHAR},
+            REL_CONTRACT_NO = #{relContractNo,jdbcType=VARCHAR},
+            IS_GOV = #{isGov,jdbcType=VARCHAR},
+            IS_HIGH_POLLUTION = #{isHighPollution,jdbcType=VARCHAR},
+            IS_GOVT_LIMIT = #{isGovtLimit,jdbcType=VARCHAR},
+            IS_GOVT_NEW_STRATEGY = #{isGovtNewStrategy,jdbcType=VARCHAR},
+            FUND_USE_TYPE = #{fundUseType,jdbcType=VARCHAR},
+            REPAYMENT_TYPE = #{repaymentType,jdbcType=VARCHAR},
+            BUSI_CONTRACT_PROD = #{busiContractProd,jdbcType=VARCHAR},
+            IS_LOW_RISK = #{isLowRisk,jdbcType=VARCHAR},
+            APPROVE_NO = #{approveNo,jdbcType=VARCHAR},
+            CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+            APROVE_AMOUNT = #{aproveAmount,jdbcType=DECIMAL},
+            APROVE_LIMIT = #{aproveLimit,jdbcType=DECIMAL},
+            LAST_APROVE_INS = #{lastAproveIns,jdbcType=VARCHAR},
+            USED_AMOUNT = #{usedAmount,jdbcType=DECIMAL},
+            SIGN_DATE = #{signDate,jdbcType=DATE},
+            RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+            ASSURE_PATTERN = #{assurePattern,jdbcType=VARCHAR},
+            ASSURE_MARK = #{assureMark,jdbcType=VARCHAR},
+            BRANCH_INS_NO = #{branchInsNo,jdbcType=VARCHAR},
+            BECIF = #{becif,jdbcType=VARCHAR},
+            CREDIT_CUSTOMER_NO = #{creditCustomerNo,jdbcType=VARCHAR},
+            CREDIT_CUSTOMER_NAME = #{creditCustomerName,jdbcType=VARCHAR},
+            CREDIT_BUSINESS_NO = #{creditBusinessNo,jdbcType=VARCHAR},
+            CREDIT_BUSINESS_NAME = #{creditBusinessName,jdbcType=VARCHAR},
+            BUSI_CONTRACT_NO = #{busiContractNo,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            YIELD = #{yield,jdbcType=DECIMAL},
+            PAYMENT_AMOUNT = #{paymentAmount,jdbcType=DECIMAL},
+            REMAIN_AVAIL_AMT = #{remainAvailAmt,jdbcType=DECIMAL},
+            REASON = #{reason,jdbcType=VARCHAR},
+            IS_REVOKE = #{isRevoke,jdbcType=VARCHAR}
+        where CASH_OUT_NO = #{cashOutNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

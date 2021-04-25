@@ -9,7 +9,7 @@
 			PTL_SEC_PIERCE_VALUTION.FINPROD_ID                     finprodId,
 			PTL_SEC_PIERCE_VALUTION.CCY                            ccy,
 			PTL_SEC_PIERCE_VALUTION.SHARE_AMT                      shareAmt,
-		    nvl(PTL_SEC_PIERCE_VALUTION.MARKET_VALUE,0)+nvl(PTL_SEC_PIERCE_VALUTION.TDY_INTINCEXP,0)-nvl(T5.dscCostAmt,0)  dscCostAmt,
+		    IFNULL(PTL_SEC_PIERCE_VALUTION.MARKET_VALUE,0)+IFNULL(PTL_SEC_PIERCE_VALUTION.TDY_INTINCEXP,0)-IFNULL(T5.dscCostAmt,0)  dscCostAmt,
 			PTL_SEC_PIERCE_VALUTION.DSC_CLEAN_PRICE                dscCleanPrice,
 			PTL_SEC_PIERCE_VALUTION.BUY_COST_AMT                   buyCostAmt,
 			PTL_SEC_PIERCE_VALUTION.BUY_CLEAN_PRICE                buyCleanPrice,
@@ -24,15 +24,16 @@
 			PTL_SEC_PIERCE_VALUTION.ACCU_NET_VALUE                 accuNetValue,
 			PTL_SEC_PIERCE_VALUTION.SUB_CODE                       subCode,
 			PTL_SEC_PIERCE_VALUTION.ZGPLAN_ID                      zgplanId,
-			decode(T2.Type_8,'${fzq}',T1.ISSUER,'${fck}',T1.ISSUER,'${fxml}',T1.FINANCIER,
-			'${gp}',T1.ISSUER,T1.MANAGER)                          organId,
-			decode(T2.Type_8,'${gp}',T2.TYPE_8,'${zqjz}',T2.TYPE_8,'${whjq}'
-			,T2.TYPE_8,'${whyq}',T2.TYPE_8,'${whdq}',T2.TYPE_8,T2.TYPE_6)  varietyType1,
+			case when T2.Type_8 in ('${fzq}','${fck}','${gp}') then T1.ISSUER
+			     when T2.Type_8 = '${fxml}' then T1.FINANCIER
+			     else T1.MANAGER end  organId,
+			case when T2.Type_8 in ('${gp}','${zqjz}','${whjq}','${whyq}','${whdq}') then T2.TYPE_8
+			     else T2.TYPE_6 end  varietyType1,
 			T2.TYPE_7                                              varietyType2,
 			T2.TYPE_8                                              assetType
 		from PTL_SEC_PIERCE_VALUTION
 		LEFT JOIN (
-		          select SUM(nvl(DSC_COST_AMT,0)+nvl(TDY_FLOAT_INGPL,0)+nvl(TDY_INTINCEXP,0)+ nvl(DELAY_PAY_AMT,0)) dscCostAmt,
+		          select SUM(IFNULL(DSC_COST_AMT,0)+IFNULL(TDY_FLOAT_INGPL,0)+IFNULL(TDY_INTINCEXP,0)+ IFNULL(DELAY_PAY_AMT,0)) dscCostAmt,
 		          CDATE,PORTFOLIO_ID,FINPROD_ID
 		          from PTL_SEC_VALUTION GROUP BY CDATE,PORTFOLIO_ID,FINPROD_ID
 		  ) T5
@@ -43,7 +44,7 @@
 		   ON T1.FINPROD_ID = PTL_SEC_PIERCE_VALUTION.FINPROD_ID
 		LEFT JOIN FIN_PRODUCT_TYPE T2
 		   ON T1.FINPROD_ID = T2.FINPROD_ID
-		where PTL_SEC_PIERCE_VALUTION.CDATE = to_date(#{currentDate},'yyyy-MM-dd')
+		where PTL_SEC_PIERCE_VALUTION.CDATE = STR_TO_DATE(#{currentDate},'%Y-%m-%d')
 	</select>
 
 	<select id="selectCreditMstInfoList" resultType="com.joyintech.tams.common.base.entity.CreditMstInfo">
@@ -59,8 +60,17 @@
 
 	<delete id="deleteCreditPierce">
         delete from CREDIT_LINES_PIERCE
-        where CDATE = to_date(#{currentDate,jdbcType=VARCHAR},'yyyy-MM-dd')
+        where CDATE = STR_TO_DATE(#{currentDate,jdbcType=VARCHAR},'%Y-%m-%d')
           and CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
     </delete>
+
+	<select id="getCustomerid" resultType="java.lang.String" >
+		select SD.INSTITUTION_CODE from MST_CUSTOMER_INFO MCI
+		left join SYS_DEPARTMENT SD on MCI.CREATE_DEPT = SD.DEPT_CODE
+		WHERE 1=1
+		<if test="customerId !=null and customerId !=''">
+			AND MCI.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+		</if>
+	</select>
 
 </mapper>

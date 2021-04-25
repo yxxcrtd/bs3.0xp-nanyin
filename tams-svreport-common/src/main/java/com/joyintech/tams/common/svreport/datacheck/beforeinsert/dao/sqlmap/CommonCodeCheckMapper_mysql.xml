@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.svreport.datacheck.beforeinsert.dao.CommonCodeCheckMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdDeclareSub" >
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
+        <result column="PROD_BRAND" property="prodBrand" jdbcType="VARCHAR" />
+        <result column="PROD_STAGE" property="prodStage" jdbcType="DECIMAL" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="APPROVER_ID" property="approverId" jdbcType="VARCHAR" />
+        <result column="APPROVER_NAME" property="approverName" jdbcType="VARCHAR" />
+        <result column="DESIGNER_ID" property="designerId" jdbcType="VARCHAR" />
+        <result column="DESIGNER_NAME" property="designerName" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="MANAGER_NAME" property="managerName" jdbcType="VARCHAR" />
+        <result column="LIAISON_NAME" property="liaisonName" jdbcType="VARCHAR" />
+        <result column="LIAISON_TEL" property="liaisonTel" jdbcType="VARCHAR" />
+        <result column="LIAISON_MOBILE" property="liaisonMobile" jdbcType="VARCHAR" />
+        <result column="LIAISON_EMAIL" property="liaisonEmail" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+        <result column="INVEST_ARAE" property="investArae" jdbcType="VARCHAR" />
+        <result column="INVEST_COUNTRY" property="investCountry" jdbcType="VARCHAR" />
+        <result column="FINAN_SER_MODEL" property="finanSerModel" jdbcType="VARCHAR" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="CMMODE" property="cmmode" jdbcType="VARCHAR" />
+        <result column="PMMODE" property="pmmode" jdbcType="VARCHAR" />
+        <result column="MNAME" property="mname" jdbcType="VARCHAR" />
+        <result column="PRICED_MODE" property="pricedMode" jdbcType="VARCHAR" />
+        <result column="CONT_MODE" property="contMode" jdbcType="VARCHAR" />
+        <result column="COOPERATION_NAME" property="cooperationName" jdbcType="VARCHAR" />
+        <result column="INV_TYPE_RAT" property="invTypeRat" jdbcType="VARCHAR" />
+        <result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+        <result column="SALE_AREA" property="saleArea" jdbcType="VARCHAR" />
+        <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+        <result column="CASH_PRIN_CCY" property="cashPrinCcy" jdbcType="VARCHAR" />
+        <result column="CASH_PROF_CCY" property="cashProfCcy" jdbcType="VARCHAR" />
+        <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
+        <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+        <result column="RAISE_PSTRDATE" property="raisePstrdate" jdbcType="DATE" />
+        <result column="RAISE_PENDDATE" property="raisePenddate" jdbcType="DATE" />
+        <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+        <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+        <result column="IN_DEP_NAME" property="inDepName" jdbcType="VARCHAR" />
+        <result column="IN_DEP_CODE" property="inDepCode" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_CTRY" property="outDepCtry" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_NAME" property="outDepName" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+        <result column="TERM_RIGHT_FLAG" property="termRightFlag" jdbcType="VARCHAR" />
+        <result column="CUS_REDEEM_FLAG" property="cusRedeemFlag" jdbcType="VARCHAR" />
+        <result column="CREDIT_FLAG" property="creditFlag" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="CREDIT_MODE" property="creditMode" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+        <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+        <result column="EXC_FIN_SECTOR" property="excFinSector" jdbcType="VARCHAR" />
+        <result column="IS_SHORT_TERM" property="isShortTerm" jdbcType="VARCHAR" />
+        <result column="SHORT_TERM" property="shortTerm" jdbcType="DECIMAL" />
+        <result column="IS_FREE_REDEM" property="isFreeRedem" jdbcType="VARCHAR" />
+        <result column="CASH_MANA_CATE" property="cashManaCate" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="INVEST_FEE_RATE" property="investFeeRate" jdbcType="DECIMAL" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+        <result column="SALE_FEE_RATE" property="saleFeeRate" jdbcType="DECIMAL" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ROW_DATE" property="rowDate" jdbcType="DATE" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!--add by zhangliang 20201010 start-->
+    <select id="queryChbPrdDeclareSubByRegCode" resultType="com.joyintech.tams.common.base.entity.ChbPrdDeclareSub">
+        select
+        REGIST_SEQNO registSeqno,
+        RAISE_PSTRDATE raisePstrdate,
+        RAISE_PENDDATE raisePenddate,
+        OPERATE_MODE operateMode,
+        SALE_AREA saleArea
+        from
+        CHB_PRD_DECLARE_SUB
+        <where>
+            <if test="prodId != null and prodId != ''">
+                and PROD_INS_ID = #{prodId}
+            </if>
+            <if test="regCode != null and regCode != ''">
+                and REG_CODE = #{regCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryChbBotAstPosByInfo" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub" resultType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
+        select
+              ASSET_CODE assetCode,
+              TOTAL_NUM totalNum,
+              ISSUE_AMT issueAmt,
+              UNINVEST_CASH uninvestCash
+        from
+            CHB_BOT_AST_POS
+        where PLAN_ASSET_ID = #{planAssetId}
+          and POS_DATE = #{posDate}
+          and ASSET_CODE != #{assetCode}
+    </select>
+    <select id="genChbPrdDeclareSub1ByProdInsId" resultType="java.lang.String">
+		SELECT
+		     st.PROD_INS_ID
+		FROM
+		    CHB_PRD_BASEINFO st
+		WHERE
+		    PROD_INS_ID =#{prodInsId, jdbcType=VARCHAR}
+		AND EXISTS
+		    (
+		        SELECT
+		            1
+		        FROM
+		            CHB_PRD_BASEINFO stp
+		        WHERE
+		            st.PROD_NAME=stp.PROD_NAME
+		        AND st.PROD_STAGE=stp.PROD_STAGE
+		        AND PROD_INS_ID !=#{prodInsId, jdbcType=VARCHAR} )
+ 	</select>
+
+    <select id="genChbPrdDeclareSub2ByProdInsId" resultType="java.lang.String">
+		 SELECT
+		    st.PROD_INS_ID
+		FROM
+		    CHB_PRD_DECLARE_SUB st
+		WHERE
+		    PROD_INS_ID =#{prodInsId, jdbcType=VARCHAR}
+		AND EXISTS
+		    (
+		        SELECT
+		            1
+		        FROM
+		            CHB_PRD_DECLARE_SUB stp
+		        WHERE
+		            st.PROD_NAME=stp.PROD_NAME
+		        AND st.PROD_STAGE=stp.PROD_STAGE
+		        AND PROD_INS_ID !=#{prodInsId, jdbcType=VARCHAR}
+		        AND stp.SEND_STATUS IN ('02', '03') )
+ 	</select>
+
+    <select id="getChbPrdIssueSubByProdId"  resultType="com.joyintech.tams.common.base.entity.ChbPrdIssueSub">
+   	select
+   	RAISE_VDATE  raiseVdate,
+    PRD_VDATE prdVdate
+   	from  CHB_PRD_ISSUE_SUB
+   	where  PROD_ID = #{prodId,jdbcType=VARCHAR}
+   	</select>
+
+
+</mapper>

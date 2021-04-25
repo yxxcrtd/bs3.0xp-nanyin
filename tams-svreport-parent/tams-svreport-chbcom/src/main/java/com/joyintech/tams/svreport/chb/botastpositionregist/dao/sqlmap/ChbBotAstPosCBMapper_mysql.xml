@@ -5,124 +5,181 @@
 
 	<select id="queryGenerateList" resultType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
 		SELECT
-		    POS.ISSUE_PARTY_ID  as issuePartyId,
-		    STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as posDate,
-		    POS.PLAN_ASSET_ID as planAssetId, 
-		    POS.ASSET_CODE as assetCode,
-		    POS.TOTAL_NUM as totalNum,
-		    POS.ISSUE_AMT as issueAmt,
-		    POS.UNINVEST_CASH as uninvestCash,
-		    POS.POS_NUM as posNum,
-		    POS.POS_AMT as posAmt,
-		    '01'  status	    
+		POS.ISSUE_PARTY_ID  as issuePartyId,
+		STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as posDate,
+		POS.PLAN_ASSET_ID as planAssetId,
+		POS.ASSET_CODE as assetCode,
+		POS.TOTAL_NUM as totalNum,
+		POS.ISSUE_AMT as issueAmt,
+		POS.UNINVEST_CASH as uninvestCash,
+		POS.POS_NUM as posNum,
+		POS.POS_AMT as posAmt,
+		'01'  status
 		FROM CHB_BOT_AST_POS POS
 		WHERE DATE_FORMAT(POS.POS_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
 		<if test="ischbbtm != null and ischbbtm == '02'">
 			and POS.ISCHL = '02'
 		</if>
-		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB 
-			where SUB.POS_DATE = POS.POS_DATE
-			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID 
-			  and SUB.ASSET_CODE = POS.ASSET_CODE 
-			  and SUB.SEND_STATUS in ('02','03'))
+		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB
+		where SUB.POS_DATE = POS.POS_DATE
+		and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID
+		and SUB.ASSET_CODE = POS.ASSET_CODE
+		and SUB.SEND_STATUS in ('02','03'))
 	</select>
 
-	<insert id="queryGenerateListAndInsert" parameterType="map">
-		insert into CHB_BOT_AST_POS_SUB 
-		  (REGIST_SEQNO,ISSUE_PARTY_ID,POS_DATE,PLAN_ASSET_ID,ASSET_CODE,TOTAL_NUM,ISSUE_AMT,
-    UNINVEST_CASH,POS_NUM,POS_AMT,STATUS,SEND_STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
-    ORG_CODE, DEPT_CODE, CREATE_USER,  CREATE_TIME, UPDATE_USER, UPDATE_TIME,STATUS_DATE)
-		select 
-		    F_GUID() REGIST_SEQNO,
-			POS.ISSUE_PARTY_ID  as ISSUE_PARTY_ID,
-		    STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as POS_DATE,
-		    ifnull(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE) as PLAN_ASSET_ID,
-		    ifnull(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE) as ASSET_CODE,
-		    POS.TOTAL_NUM as TOTAL_NUM,
-		    POS.ISSUE_AMT as ISSUE_AMT,
-		    POS.UNINVEST_CASH as UNINVEST_CASH,
-		    POS.POS_NUM as POS_NUM,
-		    POS.POS_AMT as POS_AMT,
-		    '01'  STATUS,
-		    '01' SEND_STATUS,
-		    #{chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
-		    #{submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
-		    POS.ORG_CODE ORG_CODE,
-		    POS.DEPT_CODE DEPT_CODE,
-		    'system' CREATE_USER,
-		    NOW() CREATE_TIME,
-		    'system' UPDATE_USER,
-		    NOW() UPDATE_TIME,
-		    #{statusDate,jdbcType=TIMESTAMP} STATUS_DATE
+	<select id="queryInsertGenerateList" parameterType="map" resultMap="com.joyintech.tams.common.base.dao.ChbBotAstPositionSubMapper.BaseResultMap">
+		select
+		f_guid() REGIST_SEQNO,
+		POS.ISSUE_PARTY_ID  as ISSUE_PARTY_ID,
+		STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as POS_DATE,
+		IFNULL(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE) as PLAN_ASSET_ID,
+		IFNULL(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE) as ASSET_CODE,
+		POS.TOTAL_NUM as TOTAL_NUM,
+		POS.ISSUE_AMT as ISSUE_AMT,
+		POS.UNINVEST_CASH as UNINVEST_CASH,
+		POS.POS_NUM as POS_NUM,
+		POS.POS_AMT as POS_AMT,
+		'01'  STATUS,
+		'01' SEND_STATUS,
+		#{chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+		#{submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+		POS.ORG_CODE ORG_CODE,
+		POS.DEPT_CODE DEPT_CODE,
+		'system' CREATE_USER,
+		sysdate CREATE_TIME,
+		'system' UPDATE_USER,
+		sysdate UPDATE_TIME,
+		#{statusDate,jdbcType=TIMESTAMP} STATUS_DATE
 		FROM CHB_BOT_AST_POS POS
-        LEFT JOIN CHB_ASSET_INFO PLANASSET
-        ON PLANASSET.ASSET_CODE = POS.PLAN_ASSET_ID
-        LEFT JOIN CHB_ASSET_INFO BOTASSET
-        ON BOTASSET.ASSET_CODE = POS.ASSET_CODE
+		LEFT JOIN CHB_ASSET_INFO PLANASSET
+		ON PLANASSET.ASSET_CODE = POS.PLAN_ASSET_ID
+		LEFT JOIN CHB_ASSET_INFO BOTASSET
+		ON BOTASSET.ASSET_CODE = POS.ASSET_CODE
+		<if test="InstitutionCode != null and InstitutionCode != '' ">
+			left join chb_asset_info_sub csb on csb.ASSET_CODE=POS.ASSET_CODE
+			LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
+			LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
+			LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+			WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
+			LEFT JOIN (
+			SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
+			WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
+			) DA
+			ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		</if>
 		WHERE DATE_FORMAT(POS.POS_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
 		<if test="ischbbtm != null and ischbbtm == '02'">
 			and POS.ISCHL = '02'
 		</if>
-		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB 
-			where SUB.POS_DATE = POS.POS_DATE
-			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID 
-			  and SUB.ASSET_CODE = POS.ASSET_CODE 
-			  and SUB.SEND_STATUS in ('02','03'))
-	</insert>
-	
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			AND( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
+			or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR}
+			and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+		</if>
+		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB
+		where SUB.POS_DATE = POS.POS_DATE
+		and SUB.PLAN_ASSET_ID = IFNULL(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE)
+		and SUB.ASSET_CODE = IFNULL(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE)
+		and SUB.SEND_STATUS in ('02','03')
+		and SUB.STATUS != '03')
+		and POS.STATUS != 'D'
+	</select>
+	<!-- modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end -->
+
 	<select id="queryUpdateOrDelList" resultType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
+		<!-- 因为存在历史已报送的记录资管计划代码和底层资产代码发生变更，重新生成修改或删除记录时需要根据ASSET_CODE_OLD关联 -->
 		SELECT
-			sub.REGIST_SEQNO as registSeqno,
-		    POS.ISSUE_PARTY_ID  as issuePartyId,
-		    STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as posDate,
-		    ifnull(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE) as planAssetId,
-		    ifnull(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE) as assetCode,
-		    POS.TOTAL_NUM as totalNum,
-		    POS.ISSUE_AMT as issueAmt,
-		    POS.UNINVEST_CASH as uninvestCash,
-		    POS.POS_NUM as posNum,
-		    POS.POS_AMT as posAmt,
-		    '02'  status
+		sub.REGIST_SEQNO as registSeqno,
+		POS.ISSUE_PARTY_ID  as issuePartyId,
+		STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as posDate,
+		sub.PLAN_ASSET_ID as planAssetId,
+		sub.ASSET_CODE as assetCode,
+		POS.TOTAL_NUM as totalNum,
+		POS.ISSUE_AMT as issueAmt,
+		POS.UNINVEST_CASH as uninvestCash,
+		POS.POS_NUM as posNum,
+		POS.POS_AMT as posAmt,
+		'02'  status
 		FROM CHB_BOT_AST_POS_SUB sub
-		left join  CHB_BOT_AST_POS POS 
-               on SUB.POS_DATE = POS.POS_DATE
-			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID 
-			  and SUB.ASSET_CODE = POS.ASSET_CODE 
-			  and pos.status in ('M','E')
-	    LEFT JOIN CHB_ASSET_INFO PLANASSET
-	    ON PLANASSET.ASSET_CODE = sub.PLAN_ASSET_ID
-        LEFT JOIN CHB_ASSET_INFO BOTASSET
-        ON BOTASSET.ASSET_CODE = sub.ASSET_CODE
+		LEFT JOIN CHB_ASSET_INFO PLANASSET
+		ON IFNULL(PLANASSET.ASSET_CODE_OLD , PLANASSET.ASSET_CODE) = sub.PLAN_ASSET_ID
+		LEFT JOIN CHB_ASSET_INFO BOTASSET
+		ON IFNULL(BOTASSET.ASSET_CODE_OLD , BOTASSET.ASSET_CODE) = sub.ASSET_CODE
+		left join  CHB_BOT_AST_POS POS
+		on SUB.POS_DATE = POS.POS_DATE
+		and POS.PLAN_ASSET_ID = PLANASSET.ASSET_CODE
+		and POS.ASSET_CODE = BOTASSET.ASSET_CODE
+		and POS.status in ('M','E')
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
+			LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
+			LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
+			LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+			WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
+			LEFT JOIN (
+			SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
+			WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
+			) DA
+			ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		</if>
 		WHERE DATE_FORMAT(sub.POS_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
-		  and SUB.SEND_STATUS in ('02','03')
-          and (SUB.STATUS ='03' or(POS.POS_NUM is not null
-		  and SUB.POS_NUM &lt;&gt; POS.POS_NUM))
+		and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
+		and ((POS.POS_NUM is not null and SUB.POS_NUM &lt;&gt; POS.POS_NUM)
+		or (POS.TOTAL_NUM is not null and SUB.TOTAL_NUM &lt;&gt; POS.TOTAL_NUM)
+		or (POS.ISSUE_AMT is not null and SUB.ISSUE_AMT &lt;&gt; POS.ISSUE_AMT)
+		or (POS.UNINVEST_CASH is not null and SUB.UNINVEST_CASH &lt;&gt; POS.UNINVEST_CASH)
+		or (POS.POS_AMT is not null and SUB.POS_AMT &lt;&gt; POS.POS_AMT))
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			AND( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
+			or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR}
+			and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+		</if>
 		union all
 		SELECT
-		    sub.REGIST_SEQNO as registSeqno,
-		    sub.ISSUE_PARTY_ID  as issuePartyId,
-		    STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as posDate,
-            ifnull(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE) as planAssetId,
-            ifnull(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE) as assetCode,
-		    sub.TOTAL_NUM as totalNum,
-		    sub.ISSUE_AMT as issueAmt,
-		    sub.UNINVEST_CASH as uninvestCash,
-		    sub.POS_NUM as posNum,
-		    sub.POS_AMT as posAmt,
-		    '03'  status	
+		sub.REGIST_SEQNO as registSeqno,
+		sub.ISSUE_PARTY_ID  as issuePartyId,
+		STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as posDate,
+		sub.PLAN_ASSET_ID as planAssetId,
+		sub.ASSET_CODE as assetCode,
+		sub.TOTAL_NUM as totalNum,
+		sub.ISSUE_AMT as issueAmt,
+		sub.UNINVEST_CASH as uninvestCash,
+		sub.POS_NUM as posNum,
+		sub.POS_AMT as posAmt,
+		'03'  status
 		FROM CHB_BOT_AST_POS_SUB sub
-        LEFT JOIN CHB_ASSET_INFO PLANASSET
-        ON PLANASSET.ASSET_CODE = sub.PLAN_ASSET_ID
-        LEFT JOIN CHB_ASSET_INFO BOTASSET
-        ON BOTASSET.ASSET_CODE = sub.ASSET_CODE
+		LEFT JOIN CHB_ASSET_INFO PLANASSET
+		ON IFNULL(PLANASSET.ASSET_CODE_OLD , PLANASSET.ASSET_CODE) = sub.PLAN_ASSET_ID
+		LEFT JOIN CHB_ASSET_INFO BOTASSET
+		ON IFNULL(BOTASSET.ASSET_CODE_OLD , BOTASSET.ASSET_CODE) = sub.ASSET_CODE
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
+			LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
+			LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
+			LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+			WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
+			LEFT JOIN (
+			SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
+			WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
+			) DA
+			ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		</if>
 		WHERE DATE_FORMAT(sub.POS_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
-		  and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
+		and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			AND( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
+			or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR}
+			and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+		</if>
 		and not exists  (
-		select 1 from CHB_BOT_AST_POS POS 
-			where DATE_FORMAT(SUB.POS_DATE,'%Y-%m-%d') = DATE_FORMAT(POS.POS_DATE,'%Y-%m-%d')
-			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID
-			  and SUB.ASSET_CODE = POS.ASSET_CODE
-			  and POS.STATUS != 'D')
+		select 1 from CHB_BOT_AST_POS POS
+		where DATE_FORMAT(SUB.POS_DATE,'%Y-%m-%d') = DATE_FORMAT(POS.POS_DATE,'%Y-%m-%d')
+		and PLANASSET.ASSET_CODE = POS.PLAN_ASSET_ID
+		and BOTASSET.ASSET_CODE = POS.ASSET_CODE
+		and POS.STATUS != 'D')
 	</select>
 
 	<select id="queryRegistedList" resultType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
@@ -130,7 +187,7 @@
 			sub.REGIST_SEQNO as registSeqno,
 		    sub.ISSUE_PARTY_ID  as issuePartyId,
 		    sub.POS_DATE  as posDate,
-		    sub.PLAN_ASSET_ID as planAssetId, 
+		    sub.PLAN_ASSET_ID as planAssetId,
 		    sub.ASSET_CODE as assetCode,
 		    sub.TOTAL_NUM as totalNum,
 		    sub.ISSUE_AMT as issueAmt,
@@ -145,51 +202,70 @@
 
 	<!-- 批量 插入登记表-->
 	<insert id="insertRegistBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
-		insert into CHB_BOT_AST_POS_SUB (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, 
-		      POS_DATE, PLAN_ASSET_ID, ASSET_CODE, 
-		      TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, 
-		      POS_NUM, POS_AMT, SEND_STATUS, 
-		      CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-		      SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, 
-		      STATUS, STATUS_DATE, ORG_CODE, 
-		      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
-		      CREATE_TIME, UPDATE_USER, UPDATE_TIME
-            )
+		insert into CHB_BOT_AST_POS_SUB (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID,
+		POS_DATE, PLAN_ASSET_ID, ASSET_CODE,
+		TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH,
+		POS_NUM, POS_AMT, SEND_STATUS,
+		CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+		SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS,
+		STATUS, STATUS_DATE, ORG_CODE,
+		DEPT_CODE, CREATE_USER, CREATE_DEPT,
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME
+		)
 		<foreach collection="chbBotAstPositionSubList" item="dto" open=" select * from (select " close="from dual)" separator="from dual union all select ">
-		  #{dto.registSeqno,jdbcType=CHAR}, #{dto.registBankCode,jdbcType=VARCHAR}, #{dto.issuePartyId,jdbcType=VARCHAR}, 
-	      #{dto.posDate,jdbcType=TIMESTAMP}, #{dto.planAssetId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=OTHER}, 
-	      #{dto.totalNum,jdbcType=DECIMAL}, #{dto.issueAmt,jdbcType=DECIMAL}, #{dto.uninvestCash,jdbcType=DECIMAL}, 
-	      #{dto.posNum,jdbcType=DECIMAL}, #{dto.posAmt,jdbcType=DECIMAL}, #{dto.sendStatus,jdbcType=VARCHAR}, 
-	      #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{dto.submitDeadline,jdbcType=TIMESTAMP}, 
-	      #{dto.submitTime,jdbcType=TIMESTAMP}, #{dto.sumitSeq,jdbcType=VARCHAR}, #{dto.submitFeedbackStatus,jdbcType=VARCHAR}, 
-	      #{dto.status,jdbcType=VARCHAR},  #{dto.statusDate,jdbcType=TIMESTAMP} STATUS_DATE, #{dto.orgCode,jdbcType=VARCHAR}, 
-	      #{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, 
-	      NOW() CREATE_TIME,#{dto.updateUser,jdbcType=VARCHAR},NOW() UPDATE_TIME
-        </foreach>
+			#{dto.registSeqno,jdbcType=CHAR}, #{dto.registBankCode,jdbcType=VARCHAR}, #{dto.issuePartyId,jdbcType=VARCHAR},
+			#{dto.posDate,jdbcType=TIMESTAMP}, #{dto.planAssetId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=OTHER},
+			#{dto.totalNum,jdbcType=DECIMAL}, #{dto.issueAmt,jdbcType=DECIMAL}, #{dto.uninvestCash,jdbcType=DECIMAL},
+			#{dto.posNum,jdbcType=DECIMAL}, #{dto.posAmt,jdbcType=DECIMAL}, #{dto.sendStatus,jdbcType=VARCHAR},
+			#{dto.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{dto.submitDeadline,jdbcType=TIMESTAMP},
+			#{dto.submitTime,jdbcType=TIMESTAMP}, #{dto.sumitSeq,jdbcType=VARCHAR}, #{dto.submitFeedbackStatus,jdbcType=VARCHAR},
+			#{dto.status,jdbcType=VARCHAR},  #{dto.statusDate,jdbcType=TIMESTAMP} STATUS_DATE, #{dto.orgCode,jdbcType=VARCHAR},
+			#{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR},
+			sysdate CREATE_TIME,#{dto.updateUser,jdbcType=VARCHAR},sysdate UPDATE_TIME
+		</foreach>
 	</insert>
-	
+
 	<delete id="delete"  parameterType="map">
-		delete from CHB_BOT_AST_POS_SUB
+		delete from CHB_BOT_AST_POS_SUB c
 		<where>
 			<if test="posDate != null and posDate != ''">
-				DATE_FORMAT(POS_DATE,'%Y-%m-%d') = #{posDate,jdbcType=VARCHAR}
+				DATE_FORMAT(c.POS_DATE,'%Y-%m-%d') = #{posDate,jdbcType=VARCHAR}
 			</if>
 			<if test="status != null and status!= ''">
-				and STATUS  = #{status,jdbcType=VARCHAR}
+				and c.STATUS  = #{status,jdbcType=VARCHAR}
 			</if>
 			<if test="sendStatus != null and sendStatus!= ''">
-				and SEND_STATUS  = #{sendStatus,jdbcType=VARCHAR}
+				and c.SEND_STATUS  = #{sendStatus,jdbcType=VARCHAR}
+			</if>
+
+			<if test="InstitutionCode != null and InstitutionCode != '' "  >
+				and c.regist_seqno in (select  d.regist_seqno from CHB_BOT_AST_POS_SUB d
+				left join chb_asset_info_sub csb on csb.ASSET_CODE=d.ASSET_CODE
+				LEFT JOIN FIN_PRODUCT F ON csb.ASSET_CODE=F.FINPROD_MARKET_ID
+				LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  csb.ASSET_CODE = PDD.TRADE_ID
+				LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+				WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = csb.ASSET_CODE
+				LEFT JOIN (
+				SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D
+				WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE
+				) DA
+				ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
+				LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+				where ( (CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR} and  F.TRADE_MARKET IS NOT NULL)
+				or (F.TRADE_MARKET IS NULL and  DA.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR}
+				and CS.INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+				)
 			</if>
 		</where>
-	
+
 	</delete>
-	
+
 	<select id="queryUpdateDate" resultType="java.util.Date">
 		SELECT
-			distinct POS_DATE
+		distinct POS_DATE
 		FROM CHB_BOT_AST_POS pos
 		WHERE DATE_FORMAT(pos.UPDATE_TIME,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
-		  and pos.status = 'E'
+		<!-- and pos.status = 'E'-->
 	</select>
-	
+
 </mapper>

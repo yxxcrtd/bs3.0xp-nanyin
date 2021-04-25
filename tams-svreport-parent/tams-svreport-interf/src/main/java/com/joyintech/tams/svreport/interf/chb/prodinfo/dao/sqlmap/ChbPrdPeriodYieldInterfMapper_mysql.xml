@@ -59,20 +59,6 @@
 	and b.branch = 0 ---取母产品报价
 	and ifnull(rul.UPDATE_TIME,rul.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
 	union all
-	<!-- select DECODE(info.P_FINPROD_ID,NULL,NULL,info.FINPROD_MARKET_ID) AS FPROD_ID,
-	DECODE(info.P_FINPROD_ID,NULL,info.FINPROD_MARKET_ID,info.FINPROD_ID) AS PROD_ID,
-	val.CDATE as CHANGE_DATE,TDY_UNIT_VALUE as PROD_VALUE,'01' as CHANG_TYPE,val.TDY_UNIT_VALUE_SUM as unitValueTotal,
-	ifnull(val.UPDATE_TIME,val.CREATE_TIME) updatetime
-	from PTL_PORTFOLIO_VALUATION val
-	LEFT JOIN PTL_MANAGE_OBJ obj
-	ON obj.PORTFOLIO_ID = val.PORTFOLIO_ID
-	LEFT JOIN FIN_PRODUCT info
-	on info.FINPROD_ID = obj.MANAGE_OBJ_ID
-	where info.FINPROD_TYPE2 = 'F16'
-	AND info.PROFIT_TYPE = '01'
-	and
-	info.P_FINPROD_ID IS NULL
-	and ifnull(val.UPDATE_TIME,val.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP} -->
 	<!-- 净值型产品单位净值取估值核算系统 -->
 	select (case info.P_FINPROD_ID when NULL then NULL else info.FINPROD_MARKET_ID end) AS FPROD_ID,
 	(case info.P_FINPROD_ID when NULL then info.FINPROD_MARKET_ID else info.FINPROD_ID end) AS PROD_ID,
@@ -83,13 +69,6 @@
 	on info.FINPROD_ID = val.FINPROD_ID
 	where info.FINPROD_TYPE2 = 'F16'
 	AND info.PROFIT_TYPE = '01'
-	<!-- delete by QuJianZhong 20200508 接入估值系统单位净值不考虑净值确认下发状态 start
-	<if test="valStatusFlag == null  or valStatusFlag == '01'.toString()">
-		and val.NOTICE_STATUS = '1'
-	</if>
-	<if test="valStatusFlag == '02'.toString()">
-		and val.CONFIRM_STATUS = '1'
-	</if> delete by QuJianZhong 20200508 接入估值单位净值不考虑净值确认下发状态 end-->
 	and ifnull(val.UPDATE_TIME,val.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
 	) a
 	where 1=1
@@ -110,9 +89,11 @@
 	REV_DATE, DATA_SOURCE, UPDATE_USER,
 	UPDATE_TIME, CREATE_USER, CREATE_TIME,
 	REMARK,UNIT_VALUE_TOTAL,CCY)
-	<foreach collection="list" item="dto" separator="union all">
-		select #{dto.seqno,jdbcType=CHAR}, #{dto.fprodId,jdbcType=VARCHAR},
-		#{dto.prodId,jdbcType=VARCHAR},
+	values (
+	<foreach collection="list" item="dto" separator="union all">select #{dto.seqno,jdbcType=CHAR},
+		#{dto.fprodId,jdbcType=VARCHAR},
+		#{
+		  dto.prodId,jdbcType=VARCHAR},
 		#{dto.changeDate,jdbcType=TIMESTAMP}, #{dto.changType,jdbcType=VARCHAR}, #{dto.prodValue,jdbcType=DECIMAL},
 		#{dto.orgCode,jdbcType=VARCHAR}, #{dto.deptCode,jdbcType=VARCHAR},
 		#{dto.status,jdbcType=VARCHAR},
@@ -122,6 +103,7 @@
 		#{dto.remark,jdbcType=VARCHAR},#{dto.unitValueTotal,jdbcType=DECIMAL},
 		#{dto.ccy,jdbcType=VARCHAR} from dual
 	</foreach>
+	)
 </insert>
 
  <insert id="insert"
@@ -185,10 +167,26 @@
 
 <insert id="mergeChbPrdPeriodYieldData"
 	parameterType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
-	MERGE INTO CHB_PRD_PERIODYIELD CII
-	USING (
-	<foreach collection="list" item="item" open="select * from("
-		close=")" separator="union all">
+	insert into CHB_PRD_PERIODYIELD(SEQNO, FPROD_ID, PROD_ID,
+	CHANGE_DATE,
+	CHANG_TYPE, PROD_VALUE,
+	ORG_CODE, DEPT_CODE, STATUS,
+	REV_DATE,
+	DATA_SOURCE, UPDATE_USER,
+	UPDATE_TIME, CREATE_USER, CREATE_TIME,
+	REMARK,UNIT_VALUE_TOTAL,CCY)
+	select SEQNO, FPROD_ID, PROD_ID,
+	CHANGE_DATE,
+	CHANG_TYPE, PROD_VALUE,
+	ORG_CODE, DEPT_CODE, STATUS,
+	REV_DATE,
+	DATA_SOURCE, UPDATE_USER,
+	UPDATE_TIME, CREATE_USER, CREATE_TIME,
+	REMARK,UNIT_VALUE_TOTAL,CCY from
+	(
+	select TEMP.* from
+	(
+	<foreach collection="list" item="item"  separator="union all">
 		SELECT
 		#{item.seqno,jdbcType=CHAR} SEQNO,
 		#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
@@ -208,44 +206,56 @@
 		#{item.remark,jdbcType=VARCHAR} REMARK,
 		#{item.unitValueTotal,jdbcType=DECIMAL} UNIT_VALUE_TOTAL,
 		#{item.ccy,jdbcType=VARCHAR} ccy
-		FROM
-		DUAL
+		FROM  DUAL
+	</foreach>
+	) TEMP where not exisits (select 1 from CHB_PRD_PERIODYIELD CII  where CII.PROD_ID = TEMP.PROD_ID
+	AND DATE_FORMAT(CII.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CHANGE_DATE,'%Y-%m-%d')
+	AND CII.CHANG_TYPE = TEMP.CHANG_TYPE)
+	) de ;
+
+	UPDATE  CHB_PRD_PERIODYIELD as A,
+	(
+	select PROD_VALUE,
+	UNIT_VALUE_TOTAL,
+	ORG_CODE,
+	DEPT_CODE,
+	REV_DATE,
+	STATUS,
+	REMARK,
+	UPDATE_USER,
+	UPDATE_TIME,
+	CCY from
+	(
+	select TEMP.* from
+	(
+	<foreach collection="list" item="item"  separator="union all">
+		SELECT
+		#{item.seqno,jdbcType=CHAR} SEQNO,
+		#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
+		#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+		#{item.changeDate,jdbcType=TIMESTAMP} CHANGE_DATE,
+		#{item.changType,jdbcType=VARCHAR} CHANG_TYPE,
+		#{item.prodValue,jdbcType=DECIMAL} PROD_VALUE,
+		#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+		#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+		#{item.status,jdbcType=VARCHAR} STATUS,
+		#{item.revDate,jdbcType=TIMESTAMP} REV_DATE,
+		#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+		NOW() UPDATE_TIME,
+		#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+		NOW() CREATE_TIME,
+		#{item.remark,jdbcType=VARCHAR} REMARK,
+		#{item.unitValueTotal,jdbcType=DECIMAL} UNIT_VALUE_TOTAL,
+		#{item.ccy,jdbcType=VARCHAR} ccy
+		FROM	DUAL
 	</foreach>
 	) TEMP
-	<!-- 业务主键匹配 -->
-	ON(CII.PROD_ID = TEMP.PROD_ID
+	) de
+	) AS B
+	set  A.* = B.* where exisits (select 1 from CHB_PRD_PERIODYIELD CII where CII.PROD_ID = TEMP.PROD_ID
 	AND DATE_FORMAT(CII.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CHANGE_DATE,'%Y-%m-%d')
-	AND CII.CHANG_TYPE = TEMP.CHANG_TYPE
-	)
-	<!-- 匹配到则更新 -->
-	WHEN MATCHED THEN UPDATE SET
-	CII.PROD_VALUE = TEMP.PROD_VALUE,
-	CII.UNIT_VALUE_TOTAL = TEMP.UNIT_VALUE_TOTAL,
-	CII.ORG_CODE = TEMP.ORG_CODE,
-	CII.DEPT_CODE = TEMP.DEPT_CODE,
-	CII.REV_DATE = TEMP.REV_DATE,
-	CII.STATUS = (case TEMP.STATUS when 'E' then 'M' else 'D' end),
-	CII.REMARK = TEMP.REMARK,
-	CII.UPDATE_USER = TEMP.UPDATE_USER,
-	CII.UPDATE_TIME = TEMP.UPDATE_TIME,
-	CII.CCY = TEMP.CCY
-	<!-- 未匹配到这插入 -->
-	WHEN NOT MATCHED THEN INSERT (SEQNO, FPROD_ID, PROD_ID,
-	CHANGE_DATE,
-	CHANG_TYPE, PROD_VALUE,
-	ORG_CODE, DEPT_CODE, STATUS,
-	REV_DATE,
-	DATA_SOURCE, UPDATE_USER,
-	UPDATE_TIME, CREATE_USER, CREATE_TIME,
-	REMARK,UNIT_VALUE_TOTAL,CCY)
-	VALUES(TEMP.SEQNO, TEMP.FPROD_ID, TEMP.PROD_ID,
-	TEMP.CHANGE_DATE, TEMP.CHANG_TYPE,
-	TEMP.PROD_VALUE,
-	TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.STATUS,
-	TEMP.REV_DATE, TEMP.DATA_SOURCE, TEMP.UPDATE_USER,
-	TEMP.UPDATE_TIME, TEMP.CREATE_USER,
-	TEMP.CREATE_TIME,
-	TEMP.REMARK,TEMP.UNIT_VALUE_TOTAL,TEMP.CCY)
+	AND CII.CHANG_TYPE = TEMP.CHANG_TYPE);
 </insert>
 
 <delete id="deleteTodayData">

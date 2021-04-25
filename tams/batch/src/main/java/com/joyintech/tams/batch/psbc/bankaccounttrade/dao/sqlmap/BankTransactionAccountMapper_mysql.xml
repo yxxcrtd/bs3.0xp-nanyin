@@ -53,17 +53,67 @@
 			)TEMP
 	</select>
 
-    <select id="queryFeeAmtByFeeType" resultType="java.math.BigDecimal">
+	<select id="selectVouchNum" resultType="String">
+	       select distinct B.Vouch_Num
+	        from BOK_VOUCH_DETAIL B
+	        inner join BOK_VOUCH_MAIN A
+	              on A.VOUCH_NUM = B.VOUCH_NUM
+	        inner join BOK_BATCH_TASK_TODO todo
+	              on todo.bookset_id = A.BOOKSET_ID
+	        where B.VOUCH_NUM = A.VOUCH_NUM
+	        and A.Book_Date <![CDATA[>=]]> #{bookDate}
+	        and a.bookset_id = #{booksetId}
+			    and A.Trade_Id is not null
+	</select>
+
+	<delete id="deleteBokVouchDetail">
+		delete from BOK_VOUCH_DETAIL bvd
+		where bvd.vouch_num in
+		<foreach collection="vouchNum" item="item" index="index" open="(" separator="," close=")">
+			<if test="(index % 999) == 998">
+				null) OR bvd.vouch_num in (
+			</if>
+			#{item}
+		</foreach>
+	</delete>
+
+	<delete id="deleteBokVouchMain">
+		delete from BOK_VOUCH_MAIN bvm
+		where bvm.vouch_num in
+		<foreach collection="vouchNum" item="item" index="index" open="(" separator="," close=")">
+			<if test="(index % 999) == 998">
+				null) OR bvm.vouch_num in (
+			</if>
+			#{item}
+		</foreach>
+	</delete>
+
+	<select id="selectSubjectBalance" resultType="java.math.BigDecimal">
+        select
+           SUM(bb.tdy_o_d_amt - bb.tdy_o_c_amt + bb.tdy_o_co_c_amt - bb.tdy_o_co_d_amt ) as tdyAmt
+        from BOK_BALANCE bb
+        inner join bok_bookset bok
+		  on bb.bookset_id = bok.bookset_id
+		left join BOK_SUBJECT bs
+		  on bok.bookset_id_tmpl = bs.bookset_id
+		 and bb.subject_no = bs.subject_no
+		 and bb.is_leaf = 'Y'
+        where bb.balance_date = #{bookDate,jdbcType=DATE}
+            and bb.bookset_id = #{booksetId,jdbcType=VARCHAR}
+            and bb.SUBJECT_NO = '100201'
+    </select>
+
+	<select id="queryFeeAmtByFeeType" resultType="java.math.BigDecimal">
 		SELECT SUM(IFNULL(TDY_UNPAID_INTINCEXP, 0)) FROM (
 			select TDY_UNPAID_INTINCEXP from BOK_POSITION_PRDFEE
 			where FEE_TYPE = #{feeType}
-			  and CDATE = str_to_date(#{cdate}, 'yyyy-MM-dd')
+			  and CDATE = str_to_date(#{cdate}, '%Y-%m-%d')
 			  and FINPROD_ID = #{finprodId}
 			  and P_FINPROD_ID IS NULL
 			UNION ALL
 			select TDY_UNPAID_INTINCEXP from BOK_POSITION_PRDFEE
 			where FEE_TYPE = #{feeType}
-			  and CDATE = str_to_date(#{cdate}, 'yyyy-MM-dd')
+			  and CDATE = str_to_date(#{cdate}, '%Y-%m-%d')
 			  and FINPROD_ID = #{finprodId}
 			  and P_FINPROD_ID IS not NULL
 			) a

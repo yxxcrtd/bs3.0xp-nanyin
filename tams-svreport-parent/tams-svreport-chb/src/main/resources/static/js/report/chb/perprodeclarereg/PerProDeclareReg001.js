@@ -836,9 +836,9 @@ $(function() {
 			return;
 		}
 		parm = {};
-		var url = JoyinUtil.getRealPath('/framework/download/' + data.fileNo);
+		var url = JoyinUtil.getRealPath('/framework/download/' + data.registSeqno);
 		Joyin.ajax(url, parm, function downloadFileByForm() {
-			Joyin.exportExcel('/framework/download/' + data.fileNo, parm);
+			Joyin.exportExcel('/framework/download/' + data.registSeqno, parm);
 		},
 		function errorDownload(){
 			Joyin.error("文件未找到！");
@@ -941,6 +941,13 @@ $(function() {
 		$('#SvrPerProDeclareReg001_btn_fileUpload').click(function() {
 			nineFileUpload();
 		});
+
+		//批量上传
+		$('#SvrPerProDeclareReg001_btn_batchfileUpload').click(function() {
+			var data={"operateType":"1"};
+			Joyin.dialog('产品申报登记批量上传',basePath+'chb/perprodeclarereg/PerProDeclareReg002/init', '98%', '95%',data,function(){table.reload();});
+		});
+
 	});
 
 

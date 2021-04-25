@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.submitmaintenance.businessdetailed.dao.EquityBusiDetails001Mapper_mysql">
-	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbEqudet" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbEqudet" >
         <id column="BUSI_SEQNO" property="busiSeqno" jdbcType="VARCHAR" />
         <id column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
         <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
@@ -43,103 +43,103 @@
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="IS_SUBMIT" property="isSubmit" jdbcType="CHAR" />
     </resultMap>
-	<!-- 投资者明细信息列表数据查询 -->
-	<select id="queryForPage" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
-		SELECT
-		    cequdet.STATUS dataStatus, /*1、数据状态*/
-		    cequdet.REGIST_BANK_CODE registBankCode,/*2、发行机构代码*/
-		    cequdet.INDENTIFY_MARK indentifyMark,/*3、识别标识*/
-		    cequdet.REG_CODE regCode,/*4、产品登记编码*/
-		    cequdet.BUSI_TYPE busiType,/*5、业务种类*/
-		    cequdet.EQUITY_CONF_DATE eQuityConfDate,/*6、业务确认日期*/
-		    cequdet.SHARE_CONF_DATETIME shareConfDatetime,/*7、业务确认时间*/
-		    cequdet.CCY ccy,/*8、币种*/
-		    cequdet.AMOUNT amount,/*9、金额*/
-		    cequdet.AMOUNT_CNY amountCny,/*10、折算人民币金额*/
-		    cequdet.PROD_VALUE prodValue,/*11、确认净值*/
-		    cequdet.SHARES shares,/*12、份额*/
-		    cequdet.FEE_AMT feeAmt,/*13、费用*/
-		    cequdet.CHANNEL channel,/*14、渠道*/
-		    cequdet.CONTRACT_NO contractNo,/*15、销售合同号*/
-		    cequdet.BUSI_SEQNO busiSeqno,/*16、核心交易流水号*/
-		    cequdet.FIN_ACC finAcc,/*17、理财账号*/
-		    cequdet.CUST_CONTRACT_NO custContractNo,/*18、客户统一编号*/
-		    cequdet.CUST_NAME custName,/*19、客户姓名*/
-		    cequdet.FUND_ACC fundAcc,/*20、关联活期存款账号*/
-		    cequdet.FUND_ACC_PLACE fundAccPlace,/*21、关联账号开户所在地*/
-		    cequdet.IS_CONSIGN isConsign,/*22、是否代销*/
-		    cequdet.AGENCY_CODE agencyCode,/*23、代销机构代码*/
-		    cequdet.AGENCY_NAME agencyName,/*24、代销机构名称*/
-		    cequdet.AGENCY_FSA agencyFsa,/*25、代销机构所属监管机构*/
-		    cequdet.BUSI_FSA busiFsa,/*26、业务发生地所属监管*/
-		    cequdet.TRAN_TELL_NAME tranTellName,/*27、交易柜员号*/
-		    cequdet.REMARK remark/*28、备注*/
-		    ,cequdet.INTERF_CHECK_RESULT interfCheckResult /*29、导入检查结果*/
-		    ,cequdet.ACCOUNT account /*产品代码*/
-		FROM CHB_EQUDET cequdet
-		where 1=1
-		<if test="regCodeList != null and regCodeList.size() > 0">
-		    <foreach collection="regCodeList" item="regCode" open=" AND cequdet.REG_CODE IN (" close=")" separator=",">
-		        #{regCode,jdbcType=VARCHAR}
-		    </foreach>
-		</if>
-		<if test="accountList != null and accountList.size() > 0">
-		    <foreach collection="accountList" item="account" open=" AND cequdet.account IN (" close=")" separator=",">
-		        #{account,jdbcType=VARCHAR}
-		    </foreach>
-		</if>
-		<if test="indentifyMark != null and indentifyMark != ''">
-		    AND cequdet.INDENTIFY_MARK LIKE concat_ws('','%',#{indentifyMark},'%')
-		</if>
-		<!-- 业务种类 -->
-		<if test="busiTypeList != null and busiTypeList.size() > 0">
-		    <foreach collection="busiTypeList" item="busiType" open=" AND cequdet.BUSI_TYPE IN (" close=")" separator=",">
-		        #{busiType,jdbcType=VARCHAR}
-		    </foreach>
-		</if>
-		<if test="equityConfDateStart != null and equityConfDateStart != ''" >
-		AND cequdet.EQUITY_CONF_DATE <![CDATA[>=]]> STR_TO_DATE( #{equityConfDateStart},'%Y-%m-%d')
-		</if>
-		<if test="equityConfDateEnd != null and equityConfDateEnd != ''" >
-		AND cequdet.EQUITY_CONF_DATE <![CDATA[<=]]> STR_TO_DATE( #{equityConfDateEnd},'%Y-%m-%d')
-		</if>
-		<!-- 渠道 -->
-		<if test="channelList != null and channelList.size() > 0">
-		    <foreach collection="channelList" item="channel" open=" AND cequdet.CHANNEL IN (" close=")" separator=",">
-		        #{channel,jdbcType=VARCHAR}
-		    </foreach>
-		</if>
-		<!-- 数据状态 -->
-		<if test="statusList != null and statusList.size() > 0">
-		    <foreach collection="statusList" item="status" open=" AND cequdet.STATUS IN (" close=")" separator=",">
-		        #{status,jdbcType=VARCHAR}
-		    </foreach>
-		</if>
-		<if test="busiSeqno != null and busiSeqno != ''">
-			and cequdet.BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
-		</if>
-		
-		<!-- 选中导出使用的参数 -->
-		<if test="keyList != null and keyList.size() > 0">
-		    <foreach collection="keyList" item="item" open=" AND ( " close=")" separator="or">
-		    (cequdet.BUSI_SEQNO=#{item.busiSeqnoKey}
-		        and cequdet.REG_CODE=#{item.regCodeKey}
-		        and cequdet.REGIST_BANK_CODE=#{item.registBankCodeKey})
-		    </foreach>
-		</if>
-		ORDER BY cequdet.REG_CODE ASC, cequdet.EQUITY_CONF_DATE DESC, cequdet.SHARE_CONF_DATETIME DESC
-	</select>
-	
-	<!-- 根据主键查询投资者明细信息 -->
-	<select id="selectByPrimaryKey" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto" 
-		parameterType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto" >
-        select 
-        	BUSI_SEQNO busiSeqno, REG_CODE regCode, ACCOUNT account, REGIST_BANK_CODE registBankCode, 
-	        INDENTIFY_MARK indentifyMark, EQUITY_CONF_DATE equityConfDate, SHARE_CONF_DATETIME shareConfDatetime, 
-	        FUND_ACC_PLACE fundAccPlace, BUSI_TYPE busiType, CCY ccy, AMOUNT amount, AMOUNT_CNY amountCny, 
-	        SHARES shares, CHANNEL channel, FUND_ACC fundAcc, IS_CONSIGN isConsign, REMARK remark, 
-	        CONTRACT_NO contractNo, FIN_ACC finAcc, CUST_CONTRACT_NO custContractNo, CUST_NAME custName, 
-	        AGENCY_CODE agencyCode, AGENCY_NAME agencyName, AGENCY_FSA agencyFsa, BUSI_FSA busiFsa, 
+    <!-- 投资者明细信息列表数据查询 -->
+    <select id="queryForPage" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
+        SELECT
+        cequdet.STATUS dataStatus, /*1、数据状态*/
+        cequdet.REGIST_BANK_CODE registBankCode,/*2、发行机构代码*/
+        cequdet.INDENTIFY_MARK indentifyMark,/*3、识别标识*/
+        cequdet.REG_CODE regCode,/*4、产品登记编码*/
+        cequdet.BUSI_TYPE busiType,/*5、业务种类*/
+        cequdet.EQUITY_CONF_DATE eQuityConfDate,/*6、业务确认日期*/
+        cequdet.SHARE_CONF_DATETIME shareConfDatetime,/*7、业务确认时间*/
+        cequdet.CCY ccy,/*8、币种*/
+        cequdet.AMOUNT amount,/*9、金额*/
+        cequdet.AMOUNT_CNY amountCny,/*10、折算人民币金额*/
+        cequdet.PROD_VALUE prodValue,/*11、确认净值*/
+        cequdet.SHARES shares,/*12、份额*/
+        cequdet.FEE_AMT feeAmt,/*13、费用*/
+        cequdet.CHANNEL channel,/*14、渠道*/
+        cequdet.CONTRACT_NO contractNo,/*15、销售合同号*/
+        cequdet.BUSI_SEQNO busiSeqno,/*16、核心交易流水号*/
+        cequdet.FIN_ACC finAcc,/*17、理财账号*/
+        cequdet.CUST_CONTRACT_NO custContractNo,/*18、客户统一编号*/
+        cequdet.CUST_NAME custName,/*19、客户姓名*/
+        cequdet.FUND_ACC fundAcc,/*20、关联活期存款账号*/
+        cequdet.FUND_ACC_PLACE fundAccPlace,/*21、关联账号开户所在地*/
+        cequdet.IS_CONSIGN isConsign,/*22、是否代销*/
+        cequdet.AGENCY_CODE agencyCode,/*23、代销机构代码*/
+        cequdet.AGENCY_NAME agencyName,/*24、代销机构名称*/
+        cequdet.AGENCY_FSA agencyFsa,/*25、代销机构所属监管机构*/
+        cequdet.BUSI_FSA busiFsa,/*26、业务发生地所属监管*/
+        cequdet.TRAN_TELL_NAME tranTellName,/*27、交易柜员号*/
+        cequdet.REMARK remark/*28、备注*/
+        ,cequdet.INTERF_CHECK_RESULT interfCheckResult /*29、导入检查结果*/
+        ,cequdet.ACCOUNT account /*产品代码*/
+        FROM CHB_EQUDET cequdet
+        where 1=1
+        <if test="regCodeList != null and regCodeList.size() > 0">
+            <foreach collection="regCodeList" item="regCode" open=" AND cequdet.REG_CODE IN (" close=")" separator=",">
+                #{regCode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="accountList != null and accountList.size() > 0">
+            <foreach collection="accountList" item="account" open=" AND cequdet.account IN (" close=")" separator=",">
+                #{account,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="indentifyMark != null and indentifyMark != ''">
+            AND cequdet.INDENTIFY_MARK LIKE concat_ws(concat_ws('%',#{indentifyMark}),'%')
+        </if>
+        <!-- 业务种类 -->
+        <if test="busiTypeList != null and busiTypeList.size() > 0">
+            <foreach collection="busiTypeList" item="busiType" open=" AND cequdet.BUSI_TYPE IN (" close=")" separator=",">
+                #{busiType,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="equityConfDateStart != null and equityConfDateStart != ''" >
+            AND cequdet.EQUITY_CONF_DATE <![CDATA[>=]]> STR_TO_DATE( #{equityConfDateStart},'%Y-%m-%d')
+        </if>
+        <if test="equityConfDateEnd != null and equityConfDateEnd != ''" >
+            AND cequdet.EQUITY_CONF_DATE <![CDATA[<=]]> STR_TO_DATE( #{equityConfDateEnd},'%Y-%m-%d')
+        </if>
+        <!-- 渠道 -->
+        <if test="channelList != null and channelList.size() > 0">
+            <foreach collection="channelList" item="channel" open=" AND cequdet.CHANNEL IN (" close=")" separator=",">
+                #{channel,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 数据状态 -->
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND cequdet.STATUS IN (" close=")" separator=",">
+                #{status,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="busiSeqno != null and busiSeqno != ''">
+            and cequdet.BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
+        </if>
+
+        <!-- 选中导出使用的参数 -->
+        <if test="keyList != null and keyList.size() > 0">
+            <foreach collection="keyList" item="item" open=" AND ( " close=")" separator="or">
+                (cequdet.BUSI_SEQNO=#{item.busiSeqnoKey}
+                and cequdet.REG_CODE=#{item.regCodeKey}
+                and cequdet.REGIST_BANK_CODE=#{item.registBankCodeKey})
+            </foreach>
+        </if>
+        ORDER BY cequdet.REG_CODE ASC, cequdet.EQUITY_CONF_DATE DESC, cequdet.SHARE_CONF_DATETIME DESC
+    </select>
+
+    <!-- 根据主键查询投资者明细信息 -->
+    <select id="selectByPrimaryKey" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto"
+            parameterType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto" >
+        select
+        	BUSI_SEQNO busiSeqno, REG_CODE regCode, ACCOUNT account, REGIST_BANK_CODE registBankCode,
+	        INDENTIFY_MARK indentifyMark, EQUITY_CONF_DATE equityConfDate, SHARE_CONF_DATETIME shareConfDatetime,
+	        FUND_ACC_PLACE fundAccPlace, BUSI_TYPE busiType, CCY ccy, AMOUNT amount, AMOUNT_CNY amountCny,
+	        SHARES shares, CHANNEL channel, FUND_ACC fundAcc, IS_CONSIGN isConsign, REMARK remark,
+	        CONTRACT_NO contractNo, FIN_ACC finAcc, CUST_CONTRACT_NO custContractNo, CUST_NAME custName,
+	        AGENCY_CODE agencyCode, AGENCY_NAME agencyName, AGENCY_FSA agencyFsa, BUSI_FSA busiFsa,
 	        PROD_VALUE prodValue, FEE_AMT feeAmt, TRAN_TELL_NAME tranTellName, STATUS dataStatus
 	        ,ORG_INDENTIFY_MARK orgIndentifyMark
         from CHB_EQUDET
@@ -147,8 +147,8 @@
           and ACCOUNT = #{account,jdbcType=VARCHAR}
           and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
     </select>
-	
-	<!-- 根据主键更新投资者明细信息状态 -->
+
+    <!-- 根据主键更新投资者明细信息状态 -->
     <update id="updateByKeyList">
         update CHB_EQUDET
         set STATUS = #{stautsD}
@@ -157,12 +157,12 @@
             (#{item.busiSeqno},#{item.account},#{item.registBankCode})
         </foreach>
     </update>
-	
-	<!-- 根据产品登记编码获取产品代码 -->
-	<select id="queryProdidByRegCode" resultType="string">
+
+    <!-- 根据产品登记编码获取产品代码 -->
+    <select id="queryProdidByRegCode" resultType="string">
      SELECT max(PRODID) FROM CHB_PRDRESIST_CODE where REG_CODE = #{prdRegistCode}
     </select>
-    
+
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto" >
         update CHB_EQUDET
         <set >
@@ -173,7 +173,7 @@
                 BUSI_TYPE = #{busiType,jdbcType=CHAR},
             </if>
             <!-- 业务确认日期跨区间时不做修改 -->
-           	<if test="equityConfDate != null" >
+            <if test="equityConfDate != null" >
                 EQUITY_CONF_DATE = #{equityConfDate,jdbcType=DATE},
             </if>
             <if test="shareConfDatetime != null" >
@@ -242,7 +242,7 @@
             <if test="remark != null" >
                 REMARK = #{remark,jdbcType=VARCHAR},
             </if>
-        	<if test="dataStatus != null" >
+            <if test="dataStatus != null" >
                 STATUS = #{dataStatus,jdbcType=VARCHAR},
             </if>
             <if test="workflowId != null" >
@@ -269,82 +269,82 @@
             <if test="isSubmit != null" >
                 IS_SUBMIT = #{isSubmit,jdbcType=CHAR},
             </if>
-          INTERF_CHECK_RESULT = #{interfCheckResult,jdbcType=VARCHAR}
+            INTERF_CHECK_RESULT = #{interfCheckResult,jdbcType=VARCHAR}
         </set>
-        where BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR} 
-	        and ACCOUNT=#{account,jdbcType=VARCHAR}
-	        and REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
+        where BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
+        and ACCOUNT=#{account,jdbcType=VARCHAR}
+        and REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
     </update>
-    
+
     <!-- 根据主键批量获取维护表中数据 -->
     <select id="selectAllChbEqudetData" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
         select
-            BUSI_SEQNO as busiSeqno,
-            REGIST_BANK_CODE as registBankCode,
-            ACCOUNT as account,
-            STATUS as dataStatus,
-            EQUITY_CONF_DATE equityConfDate
+        BUSI_SEQNO as busiSeqno,
+        REGIST_BANK_CODE as registBankCode,
+        ACCOUNT as account,
+        STATUS as dataStatus,
+        EQUITY_CONF_DATE equityConfDate
         from
-            CHB_EQUDET
+        CHB_EQUDET
         <where>
             <foreach collection="keyList" index="index" item="item" open="(" separator="or" close=")">
-              BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
-              and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
-              and ACCOUNT = #{item.account,jdbcType=VARCHAR}
+                BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
+                and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
+                and ACCOUNT = #{item.account,jdbcType=VARCHAR}
             </foreach>
-         </where>
+        </where>
     </select>
-    
+
     <!-- 批量插入投资者明细信息维护表中 -->
     <insert id="insertChbEqudetData">
         insert into CHB_EQUDET (
-            BUSI_SEQNO, REG_CODE, ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK, 
-	        EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE, BUSI_TYPE, CCY, AMOUNT, AMOUNT_CNY, 
-	        SHARES, CHANNEL, FUND_ACC, IS_CONSIGN, REMARK, CONTRACT_NO, FIN_ACC, CUST_CONTRACT_NO, 
-	        CUST_NAME, AGENCY_CODE, AGENCY_NAME, AGENCY_FSA, BUSI_FSA, PROD_VALUE, FEE_AMT, TRAN_TELL_NAME, 
-	        STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
-	        DATA_SOURCE, ORG_CODE, AGENT, CREATE_DEPT, IS_SUBMIT,INTERF_CHECK_RESULT,ORG_INDENTIFY_MARK
-         )
+        BUSI_SEQNO, REG_CODE, ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
+        EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE, BUSI_TYPE, CCY, AMOUNT, AMOUNT_CNY,
+        SHARES, CHANNEL, FUND_ACC, IS_CONSIGN, REMARK, CONTRACT_NO, FIN_ACC, CUST_CONTRACT_NO,
+        CUST_NAME, AGENCY_CODE, AGENCY_NAME, AGENCY_FSA, BUSI_FSA, PROD_VALUE, FEE_AMT, TRAN_TELL_NAME,
+        STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
+        DATA_SOURCE, ORG_CODE, AGENT, CREATE_DEPT, IS_SUBMIT,INTERF_CHECK_RESULT,ORG_INDENTIFY_MARK
+        )
         <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
-        	#{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR}, 
-            #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR}, #{item.equityConfDate,jdbcType=DATE}, 
-            #{item.shareConfDatetime,jdbcType=TIMESTAMP}, #{item.fundAccPlace,jdbcType=VARCHAR}, #{item.busiType,jdbcType=CHAR}, 
-            #{item.ccy,jdbcType=CHAR}, #{item.amount,jdbcType=DECIMAL}, #{item.amountCny,jdbcType=DECIMAL}, 
-            #{item.shares,jdbcType=DECIMAL}, #{item.channel,jdbcType=CHAR}, #{item.fundAcc,jdbcType=VARCHAR}, 
-            #{item.isConsign,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.contractNo,jdbcType=VARCHAR}, 
-            #{item.finAcc,jdbcType=VARCHAR}, #{item.custContractNo,jdbcType=VARCHAR}, #{item.custName,jdbcType=VARCHAR}, 
-            #{item.agencyCode,jdbcType=VARCHAR}, #{item.agencyName,jdbcType=VARCHAR}, #{item.agencyFsa,jdbcType=CHAR}, 
-            #{item.busiFsa,jdbcType=CHAR}, #{item.prodValue,jdbcType=DECIMAL}, #{item.feeAmt,jdbcType=DECIMAL}, 
-            #{item.tranTellName,jdbcType=VARCHAR}, #{item.dataStatus,jdbcType=VARCHAR}, #{item.workflowId,jdbcType=VARCHAR}, 
-            #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, 
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.dataSource,jdbcType=CHAR}, 
-            #{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, 
+            #{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
+            #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR}, #{item.equityConfDate,jdbcType=DATE},
+            #{item.shareConfDatetime,jdbcType=TIMESTAMP}, #{item.fundAccPlace,jdbcType=VARCHAR}, #{item.busiType,jdbcType=CHAR},
+            #{item.ccy,jdbcType=CHAR}, #{item.amount,jdbcType=DECIMAL}, #{item.amountCny,jdbcType=DECIMAL},
+            #{item.shares,jdbcType=DECIMAL}, #{item.channel,jdbcType=CHAR}, #{item.fundAcc,jdbcType=VARCHAR},
+            #{item.isConsign,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.contractNo,jdbcType=VARCHAR},
+            #{item.finAcc,jdbcType=VARCHAR}, #{item.custContractNo,jdbcType=VARCHAR}, #{item.custName,jdbcType=VARCHAR},
+            #{item.agencyCode,jdbcType=VARCHAR}, #{item.agencyName,jdbcType=VARCHAR}, #{item.agencyFsa,jdbcType=CHAR},
+            #{item.busiFsa,jdbcType=CHAR}, #{item.prodValue,jdbcType=DECIMAL}, #{item.feeAmt,jdbcType=DECIMAL},
+            #{item.tranTellName,jdbcType=VARCHAR}, #{item.dataStatus,jdbcType=VARCHAR}, #{item.workflowId,jdbcType=VARCHAR},
+            #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.dataSource,jdbcType=CHAR},
+            #{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
             #{item.isSubmit,jdbcType=CHAR},#{item.interfCheckResult,jdbcType=VARCHAR}, #{item.orgIndentifyMark,jdbcType=VARCHAR}
         </foreach>
     </insert>
-    
+
     <!-- 根据主键批量查询投资者明细信息登记表中数据 -->
     <select id="selectAllChbEqudetSubData" parameterType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto"
-    	resultType="com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto">
+            resultType="com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto">
         select
-            BUSI_SEQNO busiSeqno,
-            ACCOUNT account,
-            REG_CODE regCode,
-            REGIST_BANK_CODE registBankCode,
-            INDENTIFY_MARK indentifyMark,
-            SUBMIT_STATUS submitStatus
+        BUSI_SEQNO busiSeqno,
+        ACCOUNT account,
+        REG_CODE regCode,
+        REGIST_BANK_CODE registBankCode,
+        INDENTIFY_MARK indentifyMark,
+        SUBMIT_STATUS submitStatus
         from
-            CHB_EQUDET_SUB
+        CHB_EQUDET_SUB
         <where>
             <foreach collection="keyList" index="index" item="item" open="(" separator="or" close=")">
-              BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
-              and REG_CODE = #{item.regCode,jdbcType=VARCHAR}
-              and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
+                BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
+                and REG_CODE = #{item.regCode,jdbcType=VARCHAR}
+                and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
             </foreach>
-         </where>
+        </where>
     </select>
-    
-	<!-- 批量删除投资者明细信息登记表中未报送数据 -->
+
+    <!-- 批量删除投资者明细信息登记表中未报送数据 -->
     <delete id="deleteByPrimaryBatch" parameterType="com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto" >
         delete from CHB_EQUDET_SUB
         <where>
@@ -355,7 +355,7 @@
         </where>
     </delete>
 
-	<!-- 批量更新投资者明细信息登记表中未报送数据 -->
+    <!-- 批量更新投资者明细信息登记表中未报送数据 -->
     <update id="updateByPrimaryKeySelectedBatch" parameterType="com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto" >
         update CHB_EQUDET_SUB
         <set >
@@ -369,28 +369,28 @@
                 (#{item.busiSeqno},#{item.regCode},#{item.registBankCode},#{item.indentifyMark})
             </foreach>
         </where>
-	</update>
-	
-   	<!-- 查询所有产品登记编码 -->
+    </update>
+
+    <!-- 查询所有产品登记编码 -->
     <select id="queryAllRegCode" resultType="java.util.Map">
      	SELECT PRODID, REG_CODE, OPERATE_MODE FROM CHB_PRDRESIST_CODE
     </select>
-    
+
     <!-- 通过主键获取投资者身份登记信息 -->
     <select id="selectEquityInfoByPrimaryKey" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
-		select 
+		select
 			INDENTIFY_MARK as indentifyMark,
          	REGIST_BANK_CODE as bankCode,
          	ORG_INDENTIFY_MARK as orgIndentifyMark,
         	DATA_SOURCE dataSource
    		from CHB_EQU_HOLD A
 	    where status !='D'
-        	and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} 
+        	and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
         	and REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
 	</select>
-	
-	<!-- 通过主键获取权益人信息检查表数据 -->
-	<select id="selectChbEquHoldCheckByPrimaryKey" resultType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto" >
+
+    <!-- 通过主键获取权益人信息检查表数据 -->
+    <select id="selectChbEquHoldCheckByPrimaryKey" resultType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto" >
     	select INDENTIFY_MARK indentifyMark,MERGER_INDENTIFY_MARK mergerindentifymark
     	from chb_equ_hold_check
 		where INDENTIFY_MARK!=MERGER_INDENTIFY_MARK
@@ -398,7 +398,7 @@
 			and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
 			and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
     </select>
-	
+
 
 
 
@@ -414,16 +414,16 @@
             </if>
         </where>
     </select>
-    
+
     <!-- 根据产品id与产品名称拿产品登记编码 -->
     <select id="queryRegCode" resultType="java.lang.String">
-        SELECT 
-        	A.REG_CODE regCode
+        SELECT
+        A.REG_CODE regCode
         FROM CHB_PRDRESIST_CODE A
         <where>
-              A.PRODID = #{account}
-              and A.REG_CODE is not null
-                <!-- //and A.PRODNAME=#{accountName} -->
+            A.PRODID = #{account}
+            and A.REG_CODE is not null
+            <!-- //and A.PRODNAME=#{accountName} -->
             <if test="orgCodeList != null and orgCodeList.size() > 0">
                 AND (A.ORG_CODE IN
                 <foreach collection="orgCodeList" item="orgCode" index="index" open=" (" close=")" separator=",">
@@ -432,12 +432,12 @@
                     </if>
                     #{orgCode}
                 </foreach>)
-		 	</if>
+            </if>
         </where>
     </select>
-    
-	<!-- 产品代码下拉框查询 -->
-	<select id="queryPrdName" resultType="com.joyintech.framework.select.SelectOptionDto">
+
+    <!-- 产品代码下拉框查询 -->
+    <select id="queryPrdName" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
         A.PRODID id,
         A.PRODNAME text
@@ -448,9 +448,9 @@
             </if>
         </where>
         order by A.PRODID
-	</select>
-	
-	<insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto" >
+    </select>
+
+    <insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto" >
         INSERT into CHB_EQUDET
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="dataStatus != null" >
@@ -571,124 +571,124 @@
             </if>
         </trim>
     </insert>
-    
+
     <!-- 权益业务明细列表数据查询 -->
-	<select id="checkBusiInfoExist" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquityBusiInfo001Dto">
-		SELECT
-		  A.STATUS status,
-		  A.UPDATE_TIME updateTime,
-		  A.SUBMIT_STATUS submitStatus,
-		  A.SUBMIT_TIME submitTime,
-		  DATE_FORMAT(A.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') chbSubmitDeadline,
-		  DATE_FORMAT(A.SUBMIT_DEADLINE,'%Y-%m-%d') submitDeadline,
-		  A.REGIST_BANK_CODE registBankCode,
-          A.ACCOUNT account,
-          A.ACCOUNT_NAME accountName,
-		  A.BUSI_SEQNO busiSeqno,
-		  A.EQUITY_CONF_DATE equityConfDate,
-		  A.INDENTIFY_MARK indentifyMark,
-		  A.BUY_PLACE buyPlace,
-		  A.BUSI_TYPE busiType,
-		  A.CCY ccy,
-		  A.AMOUNT amount,
-		  A.CONVER_CNY_AMOUNT converCnyAmount,
-		  A.SHARES shares,
-		  A.CHANNEL channel,
-		  A.FUND_ACC fundAcc,
-		  A.FUND_ACC_BANK fundAccBank,
-		  A.ORG_CODE orgCode,
-		  A.REMARK remark	  		  		  		  
-		 FROM CHB_EQUDET_SUB A
-		 INNER JOIN CHB_EQUDET_IMP_TMP B
-		 	ON A.ORG_CODE = B.ORG_CODE AND A.INDENTIFY_MARK = B.INDENTIFY_MARK AND A.BUSI_SEQNO = B.BUSI_SEQNO
-         <where>
-         A.SUBMIT_STATUS !='01'
-		 </where>
-	</select>
-	
-	<!-- 插入数据到临时表 -->
-	<insert id="insertIntoImportTable" parameterType="java.util.List">
-		insert into CHB_EQUDET_IMP_TMP(BUSI_SEQNO,REGIST_BANK_CODE,ACCOUNT,INDENTIFY_MARK)
-		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
-	        #{item.BUSI_SEQNO, jdbcType=VARCHAR} BUSI_SEQNO,
-	        #{item.REGIST_BANK_CODE, jdbcType=VARCHAR} REGIST_BANK_CODE,
-	        #{item.ACCOUNT,jdbcType=VARCHAR} ACCOUNT,
-	        #{item.INDENTIFY_MARK,jdbcType=VARCHAR} INDENTIFY_MARK
-	    </foreach>
-	</insert>
-	
-	<!-- 删除临时表 -->
-	<delete id="deleteTmpTable">
+    <select id="checkBusiInfoExist" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquityBusiInfo001Dto">
+        SELECT
+        A.STATUS status,
+        A.UPDATE_TIME updateTime,
+        A.SUBMIT_STATUS submitStatus,
+        A.SUBMIT_TIME submitTime,
+        to_char(A.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') chbSubmitDeadline,
+        to_char(A.SUBMIT_DEADLINE,'%Y-%m-%d') submitDeadline,
+        A.REGIST_BANK_CODE registBankCode,
+        A.ACCOUNT account,
+        A.ACCOUNT_NAME accountName,
+        A.BUSI_SEQNO busiSeqno,
+        A.EQUITY_CONF_DATE equityConfDate,
+        A.INDENTIFY_MARK indentifyMark,
+        A.BUY_PLACE buyPlace,
+        A.BUSI_TYPE busiType,
+        A.CCY ccy,
+        A.AMOUNT amount,
+        A.CONVER_CNY_AMOUNT converCnyAmount,
+        A.SHARES shares,
+        A.CHANNEL channel,
+        A.FUND_ACC fundAcc,
+        A.FUND_ACC_BANK fundAccBank,
+        A.ORG_CODE orgCode,
+        A.REMARK remark
+        FROM CHB_EQUDET_SUB A
+        INNER JOIN CHB_EQUDET_IMP_TMP B
+        ON A.ORG_CODE = B.ORG_CODE AND A.INDENTIFY_MARK = B.INDENTIFY_MARK AND A.BUSI_SEQNO = B.BUSI_SEQNO
+        <where>
+            A.SUBMIT_STATUS !='01'
+        </where>
+    </select>
+
+    <!-- 插入数据到临时表 -->
+    <insert id="insertIntoImportTable" parameterType="java.util.List">
+        insert into CHB_EQUDET_IMP_TMP(BUSI_SEQNO,REGIST_BANK_CODE,ACCOUNT,INDENTIFY_MARK)
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
+            #{item.BUSI_SEQNO, jdbcType=VARCHAR} BUSI_SEQNO,
+            #{item.REGIST_BANK_CODE, jdbcType=VARCHAR} REGIST_BANK_CODE,
+            #{item.ACCOUNT,jdbcType=VARCHAR} ACCOUNT,
+            #{item.INDENTIFY_MARK,jdbcType=VARCHAR} INDENTIFY_MARK
+        </foreach>
+    </insert>
+
+    <!-- 删除临时表 -->
+    <delete id="deleteTmpTable">
 		truncate table CHB_EQUDET_IMP_TMP
 	</delete>
-	
-	<select id="selectTmpCount" resultType="java.lang.Long">
+
+    <select id="selectTmpCount" resultType="java.lang.Long">
 		select count(0) from CHB_EQUDET_IMP_TMP
 	</select>
-	
-	<!-- 根据主键查询投资者信息 -->
-	<select id="selectChbEqudetByKey" resultMap="BaseResultMap" >
-        select 
+
+    <!-- 根据主键查询投资者信息 -->
+    <select id="selectChbEqudetByKey" resultMap="BaseResultMap" >
+        select
            A.*
         from CHB_EQUDET A
         INNER JOIN CHB_EQUDET_IMP_TMP B ON A.BUSI_SEQNO = B.BUSI_SEQNO
           and A.REGIST_BANK_CODE = B.REGIST_BANK_CODE
           and A.ACCOUNT = B.ACCOUNT
     </select>
-	
-	<!-- 查询业务流水号是否存在 -->
-	<select id="selectBusiSeqno" parameterType="map" resultType="int">
-		select count(*) from CHB_EQUDET 
+
+    <!-- 查询业务流水号是否存在 -->
+    <select id="selectBusiSeqno" parameterType="map" resultType="int">
+		select count(*) from CHB_EQUDET
 		where REGIST_BANK_CODE=#{registBankCode}
 		and INDENTIFY_MARK=#{indentifyMark}
 		and BUSI_SEQNO = #{busiSeqno}
 	</select>
-	<!-- 判断当前数据对应的投资者信息是否是已存在且有效的 -->
-	<select id="isExistPeo" resultType="int">
-	select 
-	count(1) 
+    <!-- 判断当前数据对应的投资者信息是否是已存在且有效的 -->
+    <select id="isExistPeo" resultType="int">
+	select
+	count(1)
 	from CHB_EQU_SUB ces
-	where 
+	where
 	ces.INDENTIFY_MARK=#{indentifyMark}
 	and ces.ORG_CODE=#{orgCode}
 	and ces.SUBMIT_STATUS !='01'
 	and ces.STATUS != 'D'
 	</select>
-    
+
     <insert id="insertChbEqudetSubData">
-        insert into CHB_EQUDET_SUB (BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK, 
-            SUBMIT_STATUS, ACCOUNT_NAME, ACCOUNT, 
-            EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE, 
-            CCY, AMOUNT, CHANNEL, FUND_ACC, 
-            FUND_ACC_BANK, IS_CONSIGN, TYPE, 
-            REMARK, SUBMIT_TIME, SUBMIT_DEADLINE, 
-            CHB_SUBMIT_DEADLINE, STATUS, SUMIT_SEQ, 
-            DEPT_CODE, UPDATE_USER, UPDATE_TIME, 
-            CREATE_USER, CREATE_TIME, CONVER_CNY_AMOUNT, 
-            SHARES, ORG_CODE, REG_CODE
-            )
+        insert into CHB_EQUDET_SUB (BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK,
+        SUBMIT_STATUS, ACCOUNT_NAME, ACCOUNT,
+        EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE,
+        CCY, AMOUNT, CHANNEL, FUND_ACC,
+        FUND_ACC_BANK, IS_CONSIGN, TYPE,
+        REMARK, SUBMIT_TIME, SUBMIT_DEADLINE,
+        CHB_SUBMIT_DEADLINE, STATUS, SUMIT_SEQ,
+        DEPT_CODE, UPDATE_USER, UPDATE_TIME,
+        CREATE_USER, CREATE_TIME, CONVER_CNY_AMOUNT,
+        SHARES, ORG_CODE, REG_CODE
+        )
         <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
-            #{item.busiSeqno,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR}, 
-            #{item.submitStatus,jdbcType=CHAR}, #{item.accountName,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR}, 
-            #{item.equityConfDate,jdbcType=DATE}, #{item.buyPlace,jdbcType=VARCHAR}, #{item.busiType,jdbcType=CHAR}, 
-            #{item.ccy,jdbcType=CHAR}, #{item.amount,jdbcType=DECIMAL}, #{item.channel,jdbcType=CHAR}, #{item.fundAcc,jdbcType=VARCHAR}, 
-            #{item.fundAccBank,jdbcType=VARCHAR}, #{item.isConsign,jdbcType=VARCHAR}, #{item.type,jdbcType=CHAR}, 
-            #{item.remark,jdbcType=VARCHAR}, #{item.submitTime,jdbcType=TIMESTAMP}, #{item.submitDeadline,jdbcType=TIMESTAMP}, 
-            #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}, #{item.sumitSeq,jdbcType=VARCHAR}, 
-            #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, 
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.converCnyAmount,jdbcType=DECIMAL}, 
+            #{item.busiSeqno,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR},
+            #{item.submitStatus,jdbcType=CHAR}, #{item.accountName,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
+            #{item.equityConfDate,jdbcType=DATE}, #{item.buyPlace,jdbcType=VARCHAR}, #{item.busiType,jdbcType=CHAR},
+            #{item.ccy,jdbcType=CHAR}, #{item.amount,jdbcType=DECIMAL}, #{item.channel,jdbcType=CHAR}, #{item.fundAcc,jdbcType=VARCHAR},
+            #{item.fundAccBank,jdbcType=VARCHAR}, #{item.isConsign,jdbcType=VARCHAR}, #{item.type,jdbcType=CHAR},
+            #{item.remark,jdbcType=VARCHAR}, #{item.submitTime,jdbcType=TIMESTAMP}, #{item.submitDeadline,jdbcType=TIMESTAMP},
+            #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}, #{item.sumitSeq,jdbcType=VARCHAR},
+            #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.converCnyAmount,jdbcType=DECIMAL},
             #{item.shares,jdbcType=DECIMAL}, #{item.orgCode,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}
         </foreach>
     </insert>
-    
+
     <select id="getAllRegistBankCodeSet" resultType="map">
 		select INDENTIFY_MARK,ORG_CODE from CHB_EQU_HOLD where STATUS='E'
 	</select>
-	<select id="isDefend" parameterType="string" resultType="int">
+    <select id="isDefend" parameterType="string" resultType="int">
 		select count(*) from CHB_MST_EXCHANGE_INFO where CCY_ORIGINAL = #{ccy}
 	</select>
-	    <select id="getAllChbEquInfoOneTime" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
-    	select 
+    <select id="getAllChbEquInfoOneTime" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+    	select
         	ch.INDENTIFY_MARK         as indentifyMark,
        		ch.REGIST_BANK_CODE          as bankCode,
        		ch.PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
@@ -698,7 +698,7 @@
    		on ch.REGIST_BANK_CODE=ct.REGIST_BANK_CODE
    		and ch.INDENTIFY_MARK=ct.INDENTIFY_MARK
     </select>
-	 <select id="selectBusiFeedBackData" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
+    <select id="selectBusiFeedBackData" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
         SELECT
         ce.STATUS dataStatus, /*1、数据状态*/
         ce.REGIST_BANK_CODE registBankCode,/*2、发行机构代码*/
@@ -751,51 +751,51 @@
     </select>
     <select id="selectAllBusiFeedBackData" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
         SELECT
-            ce.STATUS dataStatus, /*1、数据状态*/
-            ce.REGIST_BANK_CODE registBankCode,/*2、发行机构代码*/
-            ce.INDENTIFY_MARK indentifyMark,/*3、识别标识*/
-            ce.REG_CODE regCode,/*4、产品登记编码*/
-            ce.BUSI_TYPE busiType,/*5、业务种类*/
-            ce.EQUITY_CONF_DATE eQuityConfDate,/*6、业务确认日期*/
-            ce.SHARE_CONF_DATETIME shareConfDatetime,/*7、业务确认时间*/
-            ce.CCY ccy,/*8、币种*/
-            ce.AMOUNT amount,/*9、金额*/
-            ce.AMOUNT_CNY amountCny,/*10、折算人民币金额*/
-            ce.PROD_VALUE prodValue,/*11、确认净值*/
-            ce.SHARES shares,/*12、份额*/
-            ce.FEE_AMT feeAmt,/*13、费用*/
-            ce.CHANNEL channel,/*14、渠道*/
-            ce.CONTRACT_NO contractNo,/*15、销售合同号*/
-            ce.BUSI_SEQNO busiSeqno,/*16、核心交易流水号*/
-            ce.FIN_ACC finAcc,/*17、理财账号*/
-            ce.CUST_CONTRACT_NO custContractNo,/*18、客户统一编号*/
-            ce.CUST_NAME custName,/*19、客户姓名*/
-            ce.FUND_ACC fundAcc,/*20、关联活期存款账号*/
-            ce.FUND_ACC_PLACE fundAccPlace,/*21、关联账号开户所在地*/
-            ce.IS_CONSIGN isConsign,/*22、是否代销*/
-            ce.AGENCY_CODE agencyCode,/*23、代销机构代码*/
-            ce.AGENCY_NAME agencyName,/*24、代销机构名称*/
-            ce.AGENCY_FSA agencyFsa,/*25、代销机构所属监管机构*/
-            ce.BUSI_FSA busiFsa,/*26、业务发生地所属监管*/
-            ce.TRAN_TELL_NAME tranTellName,/*27、交易柜员号*/
-            ce.REMARK remark/*28、备注*/
-            ,ce.ACCOUNT account /*产品代码*/
-            ,'' as interfCheckResult
-            ,'' as agent
-            ,cess.SUBMIT_FEEDBACK_MSG repFailedInfo
+        ce.STATUS dataStatus, /*1、数据状态*/
+        ce.REGIST_BANK_CODE registBankCode,/*2、发行机构代码*/
+        ce.INDENTIFY_MARK indentifyMark,/*3、识别标识*/
+        ce.REG_CODE regCode,/*4、产品登记编码*/
+        ce.BUSI_TYPE busiType,/*5、业务种类*/
+        ce.EQUITY_CONF_DATE eQuityConfDate,/*6、业务确认日期*/
+        ce.SHARE_CONF_DATETIME shareConfDatetime,/*7、业务确认时间*/
+        ce.CCY ccy,/*8、币种*/
+        ce.AMOUNT amount,/*9、金额*/
+        ce.AMOUNT_CNY amountCny,/*10、折算人民币金额*/
+        ce.PROD_VALUE prodValue,/*11、确认净值*/
+        ce.SHARES shares,/*12、份额*/
+        ce.FEE_AMT feeAmt,/*13、费用*/
+        ce.CHANNEL channel,/*14、渠道*/
+        ce.CONTRACT_NO contractNo,/*15、销售合同号*/
+        ce.BUSI_SEQNO busiSeqno,/*16、核心交易流水号*/
+        ce.FIN_ACC finAcc,/*17、理财账号*/
+        ce.CUST_CONTRACT_NO custContractNo,/*18、客户统一编号*/
+        ce.CUST_NAME custName,/*19、客户姓名*/
+        ce.FUND_ACC fundAcc,/*20、关联活期存款账号*/
+        ce.FUND_ACC_PLACE fundAccPlace,/*21、关联账号开户所在地*/
+        ce.IS_CONSIGN isConsign,/*22、是否代销*/
+        ce.AGENCY_CODE agencyCode,/*23、代销机构代码*/
+        ce.AGENCY_NAME agencyName,/*24、代销机构名称*/
+        ce.AGENCY_FSA agencyFsa,/*25、代销机构所属监管机构*/
+        ce.BUSI_FSA busiFsa,/*26、业务发生地所属监管*/
+        ce.TRAN_TELL_NAME tranTellName,/*27、交易柜员号*/
+        ce.REMARK remark/*28、备注*/
+        ,ce.ACCOUNT account /*产品代码*/
+        ,'' as interfCheckResult
+        ,'' as agent
+        ,cess.SUBMIT_FEEDBACK_MSG repFailedInfo
         FROM CHB_EQUDET_SUB ce
         LEFT JOIN CHB_EQUDET_SUBMIT_STATUS cess ON
-            cess.SEQNO = ce.SUMIT_SEQ
+        cess.SEQNO = ce.SUMIT_SEQ
         <where>
-          <if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-              cess.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
-          </if>
-          <if test="reportNo !=null and reportNo !=''">
-              AND cess.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
-          </if>
-      </where>
+            <if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
+                cess.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+            </if>
+            <if test="reportNo !=null and reportNo !=''">
+                AND cess.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+            </if>
+        </where>
     </select>
-	<select id="selectEquiteBusiDetailsForTrans" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
+    <select id="selectEquiteBusiDetailsForTrans" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
     	SELECT
 		    cequdet.STATUS dataStatus, /*1、数据状态*/
 		    cequdet.REGIST_BANK_CODE registBankCode,/*2、发行机构代码*/

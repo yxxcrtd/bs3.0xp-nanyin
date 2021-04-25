@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepTradeMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepTrade" >
+        <id column="REP_BANK_TRADE_CODE" property="repBankTradeCode" jdbcType="VARCHAR" />
+        <id column="REP_MONEY_FLOW_TYPE" property="repMoneyFlowType" jdbcType="VARCHAR" />
+        <result column="REP_FINPROD_REG_ID" property="repFinprodRegId" jdbcType="VARCHAR" />
+        <result column="REP_ISSUE_PARTY_ID" property="repIssuePartyId" jdbcType="VARCHAR" />
+        <result column="REP_BANK_ASSET_CODE" property="repBankAssetCode" jdbcType="VARCHAR" />
+        <result column="REP_CCY" property="repCcy" jdbcType="VARCHAR" />
+        <result column="REP_OCCUR_MONEY" property="repOccurMoney" jdbcType="DECIMAL" />
+        <result column="REP_MONEY_CNY" property="repMoneyCny" jdbcType="DECIMAL" />
+        <result column="REP_COUNT" property="repCount" jdbcType="DECIMAL" />
+        <result column="REP_MONEY_FLOW_TYPE_EXP" property="repMoneyFlowTypeExp" jdbcType="VARCHAR" />
+        <result column="REP_TRADE_DATE" property="repTradeDate" jdbcType="DATE" />
+        <result column="REP_TRADE_COMPONENT" property="repTradeComponent" jdbcType="VARCHAR" />
+        <result column="REP_UNIT_PRICE_FULL" property="repUnitPriceFull" jdbcType="DECIMAL" />
+        <result column="REP_UNIT_PRICE_NET" property="repUnitPriceNet" jdbcType="DECIMAL" />
+        <result column="REP_EXPIRE_YIELD" property="repExpireYield" jdbcType="DECIMAL" />
+        <result column="REP_DEL_CODE" property="repDelCode" jdbcType="VARCHAR" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        <result column="REP_TRADE_REG_DATE" property="repTradeRegDate" jdbcType="DATE" />
+        <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" />
+        <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_BANK_TRADE_CODE REP_BANK_TRADE_CODE, REP_MONEY_FLOW_TYPE REP_MONEY_FLOW_TYPE, 
+        REP_FINPROD_REG_ID REP_FINPROD_REG_ID, REP_ISSUE_PARTY_ID REP_ISSUE_PARTY_ID, REP_BANK_ASSET_CODE REP_BANK_ASSET_CODE, 
+        REP_CCY REP_CCY, REP_OCCUR_MONEY REP_OCCUR_MONEY, "REP_MONEY_CNY" "REP_MONEY_CNY", 
+        REP_COUNT REP_COUNT, REP_MONEY_FLOW_TYPE_EXP REP_MONEY_FLOW_TYPE_EXP, REP_TRADE_DATE REP_TRADE_DATE, 
+        REP_TRADE_COMPONENT REP_TRADE_COMPONENT, REP_UNIT_PRICE_FULL REP_UNIT_PRICE_FULL, 
+        REP_UNIT_PRICE_NET REP_UNIT_PRICE_NET, REP_EXPIRE_YIELD REP_EXPIRE_YIELD, REP_DEL_CODE REP_DEL_CODE, 
+        REP_REMARK REP_REMARK, REP_TRADE_REG_DATE REP_TRADE_REG_DATE, REP_SEND_STATUS REP_SEND_STATUS, 
+        REP_STATUS_DATE REP_STATUS_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepTradeMapper.Base_Column_List" />
+        from REP_TRADE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepTradeMapper.Base_Column_List" />
+        from REP_TRADE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RepTradeKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepTradeMapper.Base_Column_List" />
+        from REP_TRADE
+        where REP_BANK_TRADE_CODE = #{repBankTradeCode,jdbcType=VARCHAR}
+          and REP_MONEY_FLOW_TYPE = #{repMoneyFlowType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepTradeKey" >
+        delete from REP_TRADE
+        where REP_BANK_TRADE_CODE = #{repBankTradeCode,jdbcType=VARCHAR}
+          and REP_MONEY_FLOW_TYPE = #{repMoneyFlowType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepTrade" >
+        insert into REP_TRADE (REP_BANK_TRADE_CODE, REP_MONEY_FLOW_TYPE, 
+            REP_FINPROD_REG_ID, REP_ISSUE_PARTY_ID, REP_BANK_ASSET_CODE, 
+            REP_CCY, REP_OCCUR_MONEY, "REP_MONEY_CNY", 
+            REP_COUNT, REP_MONEY_FLOW_TYPE_EXP, REP_TRADE_DATE, 
+            REP_TRADE_COMPONENT, REP_UNIT_PRICE_FULL, 
+            REP_UNIT_PRICE_NET, REP_EXPIRE_YIELD, REP_DEL_CODE, 
+            REP_REMARK, REP_TRADE_REG_DATE, REP_SEND_STATUS, 
+            REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{repBankTradeCode,jdbcType=VARCHAR}, #{repMoneyFlowType,jdbcType=VARCHAR}, 
+            #{repFinprodRegId,jdbcType=VARCHAR}, #{repIssuePartyId,jdbcType=VARCHAR}, #{repBankAssetCode,jdbcType=VARCHAR}, 
+            #{repCcy,jdbcType=VARCHAR}, #{repOccurMoney,jdbcType=DECIMAL}, #{repMoneyCny,jdbcType=DECIMAL}, 
+            #{repCount,jdbcType=DECIMAL}, #{repMoneyFlowTypeExp,jdbcType=VARCHAR}, #{repTradeDate,jdbcType=DATE}, 
+            #{repTradeComponent,jdbcType=VARCHAR}, #{repUnitPriceFull,jdbcType=DECIMAL}, 
+            #{repUnitPriceNet,jdbcType=DECIMAL}, #{repExpireYield,jdbcType=DECIMAL}, #{repDelCode,jdbcType=VARCHAR}, 
+            #{repRemark,jdbcType=VARCHAR}, #{repTradeRegDate,jdbcType=DATE}, #{repSendStatus,jdbcType=VARCHAR}, 
+            #{repStatusDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepTrade" >
+        insert into REP_TRADE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repBankTradeCode != null" >
+                REP_BANK_TRADE_CODE,
+            </if>
+            <if test="repMoneyFlowType != null" >
+                REP_MONEY_FLOW_TYPE,
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID,
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID,
+            </if>
+            <if test="repBankAssetCode != null" >
+                REP_BANK_ASSET_CODE,
+            </if>
+            <if test="repCcy != null" >
+                REP_CCY,
+            </if>
+            <if test="repOccurMoney != null" >
+                REP_OCCUR_MONEY,
+            </if>
+            <if test="repMoneyCny != null" >
+                "REP_MONEY_CNY",
+            </if>
+            <if test="repCount != null" >
+                REP_COUNT,
+            </if>
+            <if test="repMoneyFlowTypeExp != null" >
+                REP_MONEY_FLOW_TYPE_EXP,
+            </if>
+            <if test="repTradeDate != null" >
+                REP_TRADE_DATE,
+            </if>
+            <if test="repTradeComponent != null" >
+                REP_TRADE_COMPONENT,
+            </if>
+            <if test="repUnitPriceFull != null" >
+                REP_UNIT_PRICE_FULL,
+            </if>
+            <if test="repUnitPriceNet != null" >
+                REP_UNIT_PRICE_NET,
+            </if>
+            <if test="repExpireYield != null" >
+                REP_EXPIRE_YIELD,
+            </if>
+            <if test="repDelCode != null" >
+                REP_DEL_CODE,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            <if test="repTradeRegDate != null" >
+                REP_TRADE_REG_DATE,
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS,
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repBankTradeCode != null" >
+                #{repBankTradeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repMoneyFlowType != null" >
+                #{repMoneyFlowType,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repBankAssetCode != null" >
+                #{repBankAssetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repCcy != null" >
+                #{repCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repOccurMoney != null" >
+                #{repOccurMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="repMoneyCny != null" >
+                #{repMoneyCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repCount != null" >
+                #{repCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repMoneyFlowTypeExp != null" >
+                #{repMoneyFlowTypeExp,jdbcType=VARCHAR},
+            </if>
+            <if test="repTradeDate != null" >
+                #{repTradeDate,jdbcType=DATE},
+            </if>
+            <if test="repTradeComponent != null" >
+                #{repTradeComponent,jdbcType=VARCHAR},
+            </if>
+            <if test="repUnitPriceFull != null" >
+                #{repUnitPriceFull,jdbcType=DECIMAL},
+            </if>
+            <if test="repUnitPriceNet != null" >
+                #{repUnitPriceNet,jdbcType=DECIMAL},
+            </if>
+            <if test="repExpireYield != null" >
+                #{repExpireYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repDelCode != null" >
+                #{repDelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repTradeRegDate != null" >
+                #{repTradeRegDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepTrade" >
+        insert into REP_TRADE(REP_BANK_TRADE_CODE, REP_MONEY_FLOW_TYPE, REP_FINPROD_REG_ID, 
+        REP_ISSUE_PARTY_ID, REP_BANK_ASSET_CODE, REP_CCY, REP_OCCUR_MONEY, "REP_MONEY_CNY", 
+        REP_COUNT, REP_MONEY_FLOW_TYPE_EXP, REP_TRADE_DATE, REP_TRADE_COMPONENT, REP_UNIT_PRICE_FULL, 
+        REP_UNIT_PRICE_NET, REP_EXPIRE_YIELD, REP_DEL_CODE, REP_REMARK, REP_TRADE_REG_DATE, 
+        REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select REP_BANK_TRADE_CODE, REP_MONEY_FLOW_TYPE, REP_FINPROD_REG_ID, 
+            REP_ISSUE_PARTY_ID, REP_BANK_ASSET_CODE, REP_CCY, REP_OCCUR_MONEY, "REP_MONEY_CNY", 
+            REP_COUNT, REP_MONEY_FLOW_TYPE_EXP, REP_TRADE_DATE, REP_TRADE_COMPONENT, REP_UNIT_PRICE_FULL, 
+            REP_UNIT_PRICE_NET, REP_EXPIRE_YIELD, REP_DEL_CODE, REP_REMARK, REP_TRADE_REG_DATE, 
+            REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_TRADE
+             where 1 = 1 and REP_BANK_TRADE_CODE = #{repBankTradeCode,jdbcType=VARCHAR} and REP_MONEY_FLOW_TYPE = #{repMoneyFlowType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepTrade" >
+        update REP_TRADE
+        <set >
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repBankAssetCode != null" >
+                REP_BANK_ASSET_CODE = #{repBankAssetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repCcy != null" >
+                REP_CCY = #{repCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="repOccurMoney != null" >
+                REP_OCCUR_MONEY = #{repOccurMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="repMoneyCny != null" >
+                "REP_MONEY_CNY" = #{repMoneyCny,jdbcType=DECIMAL},
+            </if>
+            <if test="repCount != null" >
+                REP_COUNT = #{repCount,jdbcType=DECIMAL},
+            </if>
+            <if test="repMoneyFlowTypeExp != null" >
+                REP_MONEY_FLOW_TYPE_EXP = #{repMoneyFlowTypeExp,jdbcType=VARCHAR},
+            </if>
+            <if test="repTradeDate != null" >
+                REP_TRADE_DATE = #{repTradeDate,jdbcType=DATE},
+            </if>
+            <if test="repTradeComponent != null" >
+                REP_TRADE_COMPONENT = #{repTradeComponent,jdbcType=VARCHAR},
+            </if>
+            <if test="repUnitPriceFull != null" >
+                REP_UNIT_PRICE_FULL = #{repUnitPriceFull,jdbcType=DECIMAL},
+            </if>
+            <if test="repUnitPriceNet != null" >
+                REP_UNIT_PRICE_NET = #{repUnitPriceNet,jdbcType=DECIMAL},
+            </if>
+            <if test="repExpireYield != null" >
+                REP_EXPIRE_YIELD = #{repExpireYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repDelCode != null" >
+                REP_DEL_CODE = #{repDelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repTradeRegDate != null" >
+                REP_TRADE_REG_DATE = #{repTradeRegDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_BANK_TRADE_CODE = #{repBankTradeCode,jdbcType=VARCHAR}
+          and REP_MONEY_FLOW_TYPE = #{repMoneyFlowType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepTrade" >
+        update REP_TRADE
+        set REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            REP_BANK_ASSET_CODE = #{repBankAssetCode,jdbcType=VARCHAR},
+            REP_CCY = #{repCcy,jdbcType=VARCHAR},
+            REP_OCCUR_MONEY = #{repOccurMoney,jdbcType=DECIMAL},
+            "REP_MONEY_CNY" = #{repMoneyCny,jdbcType=DECIMAL},
+            REP_COUNT = #{repCount,jdbcType=DECIMAL},
+            REP_MONEY_FLOW_TYPE_EXP = #{repMoneyFlowTypeExp,jdbcType=VARCHAR},
+            REP_TRADE_DATE = #{repTradeDate,jdbcType=DATE},
+            REP_TRADE_COMPONENT = #{repTradeComponent,jdbcType=VARCHAR},
+            REP_UNIT_PRICE_FULL = #{repUnitPriceFull,jdbcType=DECIMAL},
+            REP_UNIT_PRICE_NET = #{repUnitPriceNet,jdbcType=DECIMAL},
+            REP_EXPIRE_YIELD = #{repExpireYield,jdbcType=DECIMAL},
+            REP_DEL_CODE = #{repDelCode,jdbcType=VARCHAR},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            REP_TRADE_REG_DATE = #{repTradeRegDate,jdbcType=DATE},
+            REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_BANK_TRADE_CODE = #{repBankTradeCode,jdbcType=VARCHAR}
+          and REP_MONEY_FLOW_TYPE = #{repMoneyFlowType,jdbcType=VARCHAR}
+    </update>
+</mapper>

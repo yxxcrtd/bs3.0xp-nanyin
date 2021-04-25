@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PtlSecValutionMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PtlSecValution" >
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <id column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR" />
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="SHARE_AMT" property="shareAmt" jdbcType="DECIMAL" />
+        <result column="TDY_FLOAT_INGPL" property="tdyFloatIngpl" jdbcType="DECIMAL" />
+        <result column="DSC_COST_AMT" property="dscCostAmt" jdbcType="DECIMAL" />
+        <result column="DSC_CLEAN_PRICE" property="dscCleanPrice" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP" property="tdyIntincexp" jdbcType="DECIMAL" />
+        <result column="BUY_COST_AMT" property="buyCostAmt" jdbcType="DECIMAL" />
+        <result column="BUY_CLEAN_PRICE" property="buyCleanPrice" jdbcType="DECIMAL" />
+        <result column="MARKET_VALUE" property="marketValue" jdbcType="DECIMAL" />
+        <result column="MARKET_CLEAN_PRICE" property="marketCleanPrice" jdbcType="DECIMAL" />
+        <result column="TDY_DSCINCEXP_ADD" property="tdyDscincexpAdd" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP_ADD" property="tdyIntincexpAdd" jdbcType="DECIMAL" />
+        <result column="TDY_DSCLOSS_ADD" property="tdyDsclossAdd" jdbcType="DECIMAL" />
+        <result column="TDY_FLOAT_INGPL_ADD" property="tdyFloatIngplAdd" jdbcType="DECIMAL" />
+        <result column="TDY_FEE_ADD" property="tdyFeeAdd" jdbcType="DECIMAL" />
+        <result column="ACCU_NET_VALUE" property="accuNetValue" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ACT_D_YIELD" property="actDYield" jdbcType="DECIMAL" />
+        <result column="DELAY_PAY_AMT" property="delayPayAmt" jdbcType="DECIMAL" />
+        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+        <result column="TDY_FLOAT_INGPL_B" property="tdyFloatIngplB" jdbcType="DECIMAL" />
+        <result column="DSC_COST_AMT_B" property="dscCostAmtB" jdbcType="DECIMAL" />
+        <result column="DSC_CLEAN_PRICE_B" property="dscCleanPriceB" jdbcType="DECIMAL" />
+        <result column="DELAY_PAY_AMT_B" property="delayPayAmtB" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP_B" property="tdyIntincexpB" jdbcType="DECIMAL" />
+        <result column="IN_TDY_INTINCEXP" property="inTdyIntincexp" jdbcType="DECIMAL" />
+        <result column="OUT_TDY_INTINCEXP" property="outTdyIntincexp" jdbcType="DECIMAL" />
+        <result column="END_DAYS_1" property="endDays1" jdbcType="DECIMAL" />
+        <result column="END_DAYS_2" property="endDays2" jdbcType="DECIMAL" />
+        <result column="INT_RATE" property="intRate" jdbcType="DECIMAL" />
+        <result column="TDY_DSCLOSS_ADD_B" property="tdyDsclossAddB" jdbcType="DECIMAL" />
+        <result column="GEN_TYPE" property="genType" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CDATE CDATE, PORTFOLIO_ID PORTFOLIO_ID, SEC_ACCT_ID SEC_ACCT_ID, FINPROD_ID FINPROD_ID, 
+        INV_AIM INV_AIM, CCY CCY, SHARE_AMT SHARE_AMT, TDY_FLOAT_INGPL TDY_FLOAT_INGPL, DSC_COST_AMT DSC_COST_AMT, 
+        DSC_CLEAN_PRICE DSC_CLEAN_PRICE, TDY_INTINCEXP TDY_INTINCEXP, BUY_COST_AMT BUY_COST_AMT, 
+        BUY_CLEAN_PRICE BUY_CLEAN_PRICE, MARKET_VALUE MARKET_VALUE, MARKET_CLEAN_PRICE MARKET_CLEAN_PRICE, 
+        TDY_DSCINCEXP_ADD TDY_DSCINCEXP_ADD, TDY_INTINCEXP_ADD TDY_INTINCEXP_ADD, TDY_DSCLOSS_ADD TDY_DSCLOSS_ADD, 
+        TDY_FLOAT_INGPL_ADD TDY_FLOAT_INGPL_ADD, TDY_FEE_ADD TDY_FEE_ADD, ACCU_NET_VALUE ACCU_NET_VALUE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, ACT_D_YIELD ACT_D_YIELD, DELAY_PAY_AMT DELAY_PAY_AMT, B_CCY B_CCY, 
+        TDY_FLOAT_INGPL_B TDY_FLOAT_INGPL_B, DSC_COST_AMT_B DSC_COST_AMT_B, DSC_CLEAN_PRICE_B DSC_CLEAN_PRICE_B, 
+        DELAY_PAY_AMT_B DELAY_PAY_AMT_B, TDY_INTINCEXP_B TDY_INTINCEXP_B, IN_TDY_INTINCEXP IN_TDY_INTINCEXP, 
+        OUT_TDY_INTINCEXP OUT_TDY_INTINCEXP, END_DAYS_1 END_DAYS_1, END_DAYS_2 END_DAYS_2, 
+        INT_RATE INT_RATE, TDY_DSCLOSS_ADD_B TDY_DSCLOSS_ADD_B, GEN_TYPE GEN_TYPE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecValutionMapper.Base_Column_List" />
+        from PTL_SEC_VALUTION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecValutionMapper.Base_Column_List" />
+        from PTL_SEC_VALUTION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.PtlSecValutionKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecValutionMapper.Base_Column_List" />
+        from PTL_SEC_VALUTION
+        where CDATE = #{cdate,jdbcType=DATE}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and INV_AIM = #{invAim,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PtlSecValutionKey" >
+        delete from PTL_SEC_VALUTION
+        where CDATE = #{cdate,jdbcType=DATE}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and INV_AIM = #{invAim,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PtlSecValution" >
+        insert into PTL_SEC_VALUTION (CDATE, PORTFOLIO_ID, SEC_ACCT_ID, 
+            FINPROD_ID, INV_AIM, CCY, 
+            SHARE_AMT, TDY_FLOAT_INGPL, DSC_COST_AMT, 
+            DSC_CLEAN_PRICE, TDY_INTINCEXP, BUY_COST_AMT, 
+            BUY_CLEAN_PRICE, MARKET_VALUE, MARKET_CLEAN_PRICE, 
+            TDY_DSCINCEXP_ADD, TDY_INTINCEXP_ADD, TDY_DSCLOSS_ADD, 
+            TDY_FLOAT_INGPL_ADD, TDY_FEE_ADD, ACCU_NET_VALUE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, ACT_D_YIELD, 
+            DELAY_PAY_AMT, B_CCY, TDY_FLOAT_INGPL_B, 
+            DSC_COST_AMT_B, DSC_CLEAN_PRICE_B, DELAY_PAY_AMT_B, 
+            TDY_INTINCEXP_B, IN_TDY_INTINCEXP, OUT_TDY_INTINCEXP, 
+            END_DAYS_1, END_DAYS_2, INT_RATE, 
+            TDY_DSCLOSS_ADD_B, GEN_TYPE)
+        values (#{cdate,jdbcType=DATE}, #{portfolioId,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
+            #{finprodId,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
+            #{shareAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{dscCostAmt,jdbcType=DECIMAL}, 
+            #{dscCleanPrice,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, #{buyCostAmt,jdbcType=DECIMAL}, 
+            #{buyCleanPrice,jdbcType=DECIMAL}, #{marketValue,jdbcType=DECIMAL}, #{marketCleanPrice,jdbcType=DECIMAL}, 
+            #{tdyDscincexpAdd,jdbcType=DECIMAL}, #{tdyIntincexpAdd,jdbcType=DECIMAL}, #{tdyDsclossAdd,jdbcType=DECIMAL}, 
+            #{tdyFloatIngplAdd,jdbcType=DECIMAL}, #{tdyFeeAdd,jdbcType=DECIMAL}, #{accuNetValue,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{actDYield,jdbcType=DECIMAL}, 
+            #{delayPayAmt,jdbcType=DECIMAL}, #{bCcy,jdbcType=VARCHAR}, #{tdyFloatIngplB,jdbcType=DECIMAL}, 
+            #{dscCostAmtB,jdbcType=DECIMAL}, #{dscCleanPriceB,jdbcType=DECIMAL}, #{delayPayAmtB,jdbcType=DECIMAL}, 
+            #{tdyIntincexpB,jdbcType=DECIMAL}, #{inTdyIntincexp,jdbcType=DECIMAL}, #{outTdyIntincexp,jdbcType=DECIMAL}, 
+            #{endDays1,jdbcType=DECIMAL}, #{endDays2,jdbcType=DECIMAL}, #{intRate,jdbcType=DECIMAL}, 
+            #{tdyDsclossAddB,jdbcType=DECIMAL}, #{genType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlSecValution" >
+        insert into PTL_SEC_VALUTION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT,
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                TDY_FLOAT_INGPL,
+            </if>
+            <if test="dscCostAmt != null" >
+                DSC_COST_AMT,
+            </if>
+            <if test="dscCleanPrice != null" >
+                DSC_CLEAN_PRICE,
+            </if>
+            <if test="tdyIntincexp != null" >
+                TDY_INTINCEXP,
+            </if>
+            <if test="buyCostAmt != null" >
+                BUY_COST_AMT,
+            </if>
+            <if test="buyCleanPrice != null" >
+                BUY_CLEAN_PRICE,
+            </if>
+            <if test="marketValue != null" >
+                MARKET_VALUE,
+            </if>
+            <if test="marketCleanPrice != null" >
+                MARKET_CLEAN_PRICE,
+            </if>
+            <if test="tdyDscincexpAdd != null" >
+                TDY_DSCINCEXP_ADD,
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                TDY_INTINCEXP_ADD,
+            </if>
+            <if test="tdyDsclossAdd != null" >
+                TDY_DSCLOSS_ADD,
+            </if>
+            <if test="tdyFloatIngplAdd != null" >
+                TDY_FLOAT_INGPL_ADD,
+            </if>
+            <if test="tdyFeeAdd != null" >
+                TDY_FEE_ADD,
+            </if>
+            <if test="accuNetValue != null" >
+                ACCU_NET_VALUE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="actDYield != null" >
+                ACT_D_YIELD,
+            </if>
+            <if test="delayPayAmt != null" >
+                DELAY_PAY_AMT,
+            </if>
+            <if test="bCcy != null" >
+                B_CCY,
+            </if>
+            <if test="tdyFloatIngplB != null" >
+                TDY_FLOAT_INGPL_B,
+            </if>
+            <if test="dscCostAmtB != null" >
+                DSC_COST_AMT_B,
+            </if>
+            <if test="dscCleanPriceB != null" >
+                DSC_CLEAN_PRICE_B,
+            </if>
+            <if test="delayPayAmtB != null" >
+                DELAY_PAY_AMT_B,
+            </if>
+            <if test="tdyIntincexpB != null" >
+                TDY_INTINCEXP_B,
+            </if>
+            <if test="inTdyIntincexp != null" >
+                IN_TDY_INTINCEXP,
+            </if>
+            <if test="outTdyIntincexp != null" >
+                OUT_TDY_INTINCEXP,
+            </if>
+            <if test="endDays1 != null" >
+                END_DAYS_1,
+            </if>
+            <if test="endDays2 != null" >
+                END_DAYS_2,
+            </if>
+            <if test="intRate != null" >
+                INT_RATE,
+            </if>
+            <if test="tdyDsclossAddB != null" >
+                TDY_DSCLOSS_ADD_B,
+            </if>
+            <if test="genType != null" >
+                GEN_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null" >
+                #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="shareAmt != null" >
+                #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                #{tdyFloatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="dscCostAmt != null" >
+                #{dscCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dscCleanPrice != null" >
+                #{dscCleanPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexp != null" >
+                #{tdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="buyCostAmt != null" >
+                #{buyCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="buyCleanPrice != null" >
+                #{buyCleanPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="marketValue != null" >
+                #{marketValue,jdbcType=DECIMAL},
+            </if>
+            <if test="marketCleanPrice != null" >
+                #{marketCleanPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyDscincexpAdd != null" >
+                #{tdyDscincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyDsclossAdd != null" >
+                #{tdyDsclossAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngplAdd != null" >
+                #{tdyFloatIngplAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFeeAdd != null" >
+                #{tdyFeeAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="accuNetValue != null" >
+                #{accuNetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="actDYield != null" >
+                #{actDYield,jdbcType=DECIMAL},
+            </if>
+            <if test="delayPayAmt != null" >
+                #{delayPayAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCcy != null" >
+                #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyFloatIngplB != null" >
+                #{tdyFloatIngplB,jdbcType=DECIMAL},
+            </if>
+            <if test="dscCostAmtB != null" >
+                #{dscCostAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="dscCleanPriceB != null" >
+                #{dscCleanPriceB,jdbcType=DECIMAL},
+            </if>
+            <if test="delayPayAmtB != null" >
+                #{delayPayAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpB != null" >
+                #{tdyIntincexpB,jdbcType=DECIMAL},
+            </if>
+            <if test="inTdyIntincexp != null" >
+                #{inTdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="outTdyIntincexp != null" >
+                #{outTdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays1 != null" >
+                #{endDays1,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays2 != null" >
+                #{endDays2,jdbcType=DECIMAL},
+            </if>
+            <if test="intRate != null" >
+                #{intRate,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyDsclossAddB != null" >
+                #{tdyDsclossAddB,jdbcType=DECIMAL},
+            </if>
+            <if test="genType != null" >
+                #{genType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PtlSecValution" >
+        insert into PTL_SEC_VALUTION(CDATE, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, INV_AIM, 
+        CCY, SHARE_AMT, TDY_FLOAT_INGPL, DSC_COST_AMT, DSC_CLEAN_PRICE, TDY_INTINCEXP, BUY_COST_AMT, 
+        BUY_CLEAN_PRICE, MARKET_VALUE, MARKET_CLEAN_PRICE, TDY_DSCINCEXP_ADD, TDY_INTINCEXP_ADD, 
+        TDY_DSCLOSS_ADD, TDY_FLOAT_INGPL_ADD, TDY_FEE_ADD, ACCU_NET_VALUE, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, ACT_D_YIELD, DELAY_PAY_AMT, B_CCY, TDY_FLOAT_INGPL_B, 
+        DSC_COST_AMT_B, DSC_CLEAN_PRICE_B, DELAY_PAY_AMT_B, TDY_INTINCEXP_B, IN_TDY_INTINCEXP, 
+        OUT_TDY_INTINCEXP, END_DAYS_1, END_DAYS_2, INT_RATE, TDY_DSCLOSS_ADD_B, GEN_TYPE)
+        select CDATE, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, INV_AIM, 
+            CCY, SHARE_AMT, TDY_FLOAT_INGPL, DSC_COST_AMT, DSC_CLEAN_PRICE, TDY_INTINCEXP, BUY_COST_AMT, 
+            BUY_CLEAN_PRICE, MARKET_VALUE, MARKET_CLEAN_PRICE, TDY_DSCINCEXP_ADD, TDY_INTINCEXP_ADD, 
+            TDY_DSCLOSS_ADD, TDY_FLOAT_INGPL_ADD, TDY_FEE_ADD, ACCU_NET_VALUE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ACT_D_YIELD, DELAY_PAY_AMT, B_CCY, TDY_FLOAT_INGPL_B, 
+            DSC_COST_AMT_B, DSC_CLEAN_PRICE_B, DELAY_PAY_AMT_B, TDY_INTINCEXP_B, IN_TDY_INTINCEXP, 
+            OUT_TDY_INTINCEXP, END_DAYS_1, END_DAYS_2, INT_RATE, TDY_DSCLOSS_ADD_B, GEN_TYPE
+             from PTL_SEC_VALUTION
+             where 1 = 1 and CDATE = #{cdate,jdbcType=DATE} and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR} and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and INV_AIM = #{invAim,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PtlSecValution" >
+        update PTL_SEC_VALUTION
+        <set >
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                TDY_FLOAT_INGPL = #{tdyFloatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="dscCostAmt != null" >
+                DSC_COST_AMT = #{dscCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dscCleanPrice != null" >
+                DSC_CLEAN_PRICE = #{dscCleanPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexp != null" >
+                TDY_INTINCEXP = #{tdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="buyCostAmt != null" >
+                BUY_COST_AMT = #{buyCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="buyCleanPrice != null" >
+                BUY_CLEAN_PRICE = #{buyCleanPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="marketValue != null" >
+                MARKET_VALUE = #{marketValue,jdbcType=DECIMAL},
+            </if>
+            <if test="marketCleanPrice != null" >
+                MARKET_CLEAN_PRICE = #{marketCleanPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyDscincexpAdd != null" >
+                TDY_DSCINCEXP_ADD = #{tdyDscincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                TDY_INTINCEXP_ADD = #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyDsclossAdd != null" >
+                TDY_DSCLOSS_ADD = #{tdyDsclossAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngplAdd != null" >
+                TDY_FLOAT_INGPL_ADD = #{tdyFloatIngplAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFeeAdd != null" >
+                TDY_FEE_ADD = #{tdyFeeAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="accuNetValue != null" >
+                ACCU_NET_VALUE = #{accuNetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="actDYield != null" >
+                ACT_D_YIELD = #{actDYield,jdbcType=DECIMAL},
+            </if>
+            <if test="delayPayAmt != null" >
+                DELAY_PAY_AMT = #{delayPayAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCcy != null" >
+                B_CCY = #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyFloatIngplB != null" >
+                TDY_FLOAT_INGPL_B = #{tdyFloatIngplB,jdbcType=DECIMAL},
+            </if>
+            <if test="dscCostAmtB != null" >
+                DSC_COST_AMT_B = #{dscCostAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="dscCleanPriceB != null" >
+                DSC_CLEAN_PRICE_B = #{dscCleanPriceB,jdbcType=DECIMAL},
+            </if>
+            <if test="delayPayAmtB != null" >
+                DELAY_PAY_AMT_B = #{delayPayAmtB,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpB != null" >
+                TDY_INTINCEXP_B = #{tdyIntincexpB,jdbcType=DECIMAL},
+            </if>
+            <if test="inTdyIntincexp != null" >
+                IN_TDY_INTINCEXP = #{inTdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="outTdyIntincexp != null" >
+                OUT_TDY_INTINCEXP = #{outTdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays1 != null" >
+                END_DAYS_1 = #{endDays1,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays2 != null" >
+                END_DAYS_2 = #{endDays2,jdbcType=DECIMAL},
+            </if>
+            <if test="intRate != null" >
+                INT_RATE = #{intRate,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyDsclossAddB != null" >
+                TDY_DSCLOSS_ADD_B = #{tdyDsclossAddB,jdbcType=DECIMAL},
+            </if>
+            <if test="genType != null" >
+                GEN_TYPE = #{genType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CDATE = #{cdate,jdbcType=DATE}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and INV_AIM = #{invAim,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PtlSecValution" >
+        update PTL_SEC_VALUTION
+        set CCY = #{ccy,jdbcType=VARCHAR},
+            SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+            TDY_FLOAT_INGPL = #{tdyFloatIngpl,jdbcType=DECIMAL},
+            DSC_COST_AMT = #{dscCostAmt,jdbcType=DECIMAL},
+            DSC_CLEAN_PRICE = #{dscCleanPrice,jdbcType=DECIMAL},
+            TDY_INTINCEXP = #{tdyIntincexp,jdbcType=DECIMAL},
+            BUY_COST_AMT = #{buyCostAmt,jdbcType=DECIMAL},
+            BUY_CLEAN_PRICE = #{buyCleanPrice,jdbcType=DECIMAL},
+            MARKET_VALUE = #{marketValue,jdbcType=DECIMAL},
+            MARKET_CLEAN_PRICE = #{marketCleanPrice,jdbcType=DECIMAL},
+            TDY_DSCINCEXP_ADD = #{tdyDscincexpAdd,jdbcType=DECIMAL},
+            TDY_INTINCEXP_ADD = #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            TDY_DSCLOSS_ADD = #{tdyDsclossAdd,jdbcType=DECIMAL},
+            TDY_FLOAT_INGPL_ADD = #{tdyFloatIngplAdd,jdbcType=DECIMAL},
+            TDY_FEE_ADD = #{tdyFeeAdd,jdbcType=DECIMAL},
+            ACCU_NET_VALUE = #{accuNetValue,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ACT_D_YIELD = #{actDYield,jdbcType=DECIMAL},
+            DELAY_PAY_AMT = #{delayPayAmt,jdbcType=DECIMAL},
+            B_CCY = #{bCcy,jdbcType=VARCHAR},
+            TDY_FLOAT_INGPL_B = #{tdyFloatIngplB,jdbcType=DECIMAL},
+            DSC_COST_AMT_B = #{dscCostAmtB,jdbcType=DECIMAL},
+            DSC_CLEAN_PRICE_B = #{dscCleanPriceB,jdbcType=DECIMAL},
+            DELAY_PAY_AMT_B = #{delayPayAmtB,jdbcType=DECIMAL},
+            TDY_INTINCEXP_B = #{tdyIntincexpB,jdbcType=DECIMAL},
+            IN_TDY_INTINCEXP = #{inTdyIntincexp,jdbcType=DECIMAL},
+            OUT_TDY_INTINCEXP = #{outTdyIntincexp,jdbcType=DECIMAL},
+            END_DAYS_1 = #{endDays1,jdbcType=DECIMAL},
+            END_DAYS_2 = #{endDays2,jdbcType=DECIMAL},
+            INT_RATE = #{intRate,jdbcType=DECIMAL},
+            TDY_DSCLOSS_ADD_B = #{tdyDsclossAddB,jdbcType=DECIMAL},
+            GEN_TYPE = #{genType,jdbcType=VARCHAR}
+        where CDATE = #{cdate,jdbcType=DATE}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and INV_AIM = #{invAim,jdbcType=VARCHAR}
+    </update>
+</mapper>

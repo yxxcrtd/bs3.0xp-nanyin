@@ -17,15 +17,59 @@
     <result column="ORG_DATA" jdbcType="CLOB" property="orgData" />
     <result column="ERR_MSG" jdbcType="CLOB" property="errMsg" />
   </resultMap>
-  <sql id="base_view">
+    <sql id="base_view">
      select DATAID dataid, INTERF_TYPE interfType, FIRE_NAME fireName, STATUS status, UPDATE_USER updateUser,
       CREATE_USER createUser, UPDATE_TIME updateTime,  CREATE_TIME createTime, WORKFLOW_ID workflowId, 
       ORG_CODE orgCode, DEPT_CODE deptCode, CREATE_DEPT createDept, ORG_DATA orgData, ERR_MSG errMsg
     from CHB_INTERF_ERRODATA
-  </sql>
-  <select id="queryPage" resultType="com.joyintech.tams.report.errormessage.dto.ErrorMessage001" parameterType="map">
+    </sql>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CHB_INTERF_ERRODATA
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.report.errormessage.dto.ErrorMessage001">
+    insert into CHB_INTERF_ERRODATA (DATAID, INTERF_TYPE, FIRE_NAME,
+      STATUS, UPDATE_USER, CREATE_USER,
+      UPDATE_TIME, CREATE_TIME, WORKFLOW_ID,
+      ORG_CODE, DEPT_CODE, CREATE_DEPT,
+      ORG_DATA, ERR_MSG)
+    values (#{dataid,jdbcType=VARCHAR}, #{interfType,jdbcType=VARCHAR}, #{fireName,jdbcType=VARCHAR},
+      #{status,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR},
+      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+      #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.report.errormessage.dto.ErrorMessage001">
+    update CHB_INTERF_ERRODATA
+    set INTERF_TYPE = #{interfType,jdbcType=VARCHAR},
+      FIRE_NAME = #{fireName,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      ORG_DATA = #{orgData,jdbcType=CLOB},
+      ERR_MSG = #{errMsg,jdbcType=CLOB}
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+    </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select DATAID, INTERF_TYPE, FIRE_NAME, STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME,
+    CREATE_TIME, WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT, ORG_DATA, ERR_MSG
+    from CHB_INTERF_ERRODATA
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select DATAID, INTERF_TYPE, FIRE_NAME, STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME,
+    CREATE_TIME, WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT, ORG_DATA, ERR_MSG
+    from CHB_INTERF_ERRODATA
+    </select>
+    <select id="queryPage" resultType="com.joyintech.tams.report.errormessage.dto.ErrorMessage001" parameterType="map">
     select *
-    from (<include refid="base_view"></include>)
+    from (<include refid="base_view"></include>) temp
     <where>
         <if test="createTimeStart != null and createTimeStart != ''">
             DATE_FORMAT(createTime,'%Y-%m-%d') &gt;= #{createTimeStart}
@@ -56,4 +100,13 @@
         </if>
     </where>
   </select>
+    <select id="selectInterfTypeSelects" parameterType="map" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select INTERF_ID id,REMARK text from CHB_INTERF_CONFIG
+        <where>
+            <if test="prodId !=null">
+                INTERF_ID like concat_ws(concat_ws('%',#{prodId, jdbcType=VARCHAR}),'%')
+                or REMARK like concat_ws(concat_ws('%',#{prodId, jdbcType=VARCHAR}),'%')
+            </if>
+        </where>
+    </select>
 </mapper>

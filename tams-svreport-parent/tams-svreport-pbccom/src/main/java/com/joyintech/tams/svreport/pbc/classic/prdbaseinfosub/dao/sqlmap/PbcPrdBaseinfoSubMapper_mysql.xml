@@ -162,7 +162,10 @@
 		#{creditFlag,jdbcType=CHAR}, #{creditType,jdbcType=VARCHAR}, #{creditMode,jdbcType=VARCHAR},
 		#{inDepName,jdbcType=VARCHAR}, #{inDepCode,jdbcType=VARCHAR},
 		#{outDepCtry,jdbcType=VARCHAR},
-		#{outDepName,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP},
+		#{outDepName,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP},
+		case  when
+		 (select code_type from pbc_prod_assetpool_code
+		 where inside_prod_id = #{prodId,jdbcType=VARCHAR}) in ('03','04') then null else #{mdate,jdbcType=TIMESTAMP} end,
 		#{accountId,jdbcType=VARCHAR}, #{isConstracte,jdbcType=CHAR},
 		#{transferType,jdbcType=CHAR},
 		#{identiFlag,jdbcType=CHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP},
@@ -742,7 +745,7 @@
 		end PROD_NAME,
 		PROD_BRAND,
 		case
-		when length(PROD_STAGE)>4
+		when char length(PROD_STAGE)>4
 		then CAST(substring(PROD_STAGE,1,4) AS decimal(30,4))
 		else PROD_STAGE
 		end PROD_STAGE,
@@ -1100,15 +1103,18 @@
 		CREATE_DEPT, NOW(), UPDATE_USER, NOW()
       from (
       	select <include refid="Base_Column_List2"></include>,
-      	rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-      	from PBC_PRD_BASEINFO_SUB_HIS
+		  rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+		  from PBC_PRD_BASEINFO_SUB_HIS
       	where 
       	PBC_PROD_ID in
        <foreach collection="list" open="(" close=")" separator="," item="item">
       		#{item.pbcProdId,jdbcType=CHAR}
       </foreach>
-      )
-      where 1 = 1 limit 1
+	  order by
+	  PBC_PROD_ID,
+	  ifnull(update_time,create_time) desc
+      )as t
+      where ranknum = 1
 </insert>
 <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
 	delete from PBC_PRD_BASEINFO_SUB_HIS
@@ -1116,15 +1122,18 @@
 	    select  PBC_PROD_ID
 	      from (
 	      	select PBC_PROD_ID ,
-	      	rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-	      	from PBC_PRD_BASEINFO_SUB_HIS
+			rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+			from PBC_PRD_BASEINFO_SUB_HIS
 	      	where 
 	      	PBC_PROD_ID in
 	       <foreach collection="list" open="(" close=")" separator="," item="item">
 	      		#{item.pbcProdId,jdbcType=CHAR}
 	      </foreach>
-	      )
-	      where 1 = 1 limit 1
+			order by
+			PBC_PROD_ID,
+			ifnull(update_time,create_time) desc
+	      )as t
+	      where ranknum = 1
     )
 </delete>
 <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
@@ -1140,15 +1149,21 @@
     select PBC_PROD_ID, prod_name,ACCOUNT_ID,PROD_ID
     from (
 		select PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,
-		rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-		from PBC_PRD_BASEINFO_SUB
+	 	if
+	 	(@PBC_PROD_ID = PBC_PROD_ID, @rank := @rank + 1,@rank :=1) as ranknum,
+	 	(@PBC_PROD_ID := PBC_PROD_ID)
+		from PBC_PRD_BASEINFO_SUB,
+	 	(select @rank := 0, @PBC_PROD_ID := null) b
 		where STATUS != 'D'
 		<if test="search != null and search !='' ">
 		AND (PBC_PROD_ID LIKE concat_ws('','%', #{search},'%')
 		or prod_name LIKE concat_ws('','%', #{search},'%'))
 		</if>
-	)
-	where 1 = 1 limit 1
+	 	order by
+	 	PBC_PROD_ID,
+	 	ifnull(update_time,create_time) desc
+	) tmp
+	where ranknum = 1
  </select>
 	<select id="selectAllRegisteAccountData" resultType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
 		select DISTINCT trim(ACCOUNT_ID) accountId,trim(PBC_ACCOUNT_ID) pbcAccountId  

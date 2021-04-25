@@ -24,11 +24,11 @@
 			</foreach>
 		</if>
 		<if test="prodId != null and prodId != ''">
-			and PROD_ID like concat(concat('%',#{prodId,jdbcType=VARCHAR}),'%')
+			and PROD_ID like concat_ws(concat_ws('%',#{prodId,jdbcType=VARCHAR}),'%')
 
 		</if>
 		<if test="prodName != null and prodName != ''">
-			and IFNULL(PROD_ABBR,PROD_NAME) like concat(concat('%',#{prodName,jdbcType=VARCHAR}),'%')
+			and IFNULL(PROD_ABBR,PROD_NAME) like concat_ws(concat_ws('%',#{prodName,jdbcType=VARCHAR}),'%')
 		</if>
 		ORDER BY PROD_ID
     </select>

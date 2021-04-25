@@ -558,7 +558,6 @@
             else bottomassetsub.POS_AMT
             end)  BOT_ASSET_AMT,
 		  bottomassetsub.POS_DATE CHECK_DATE
-		  <!--, rank() over (order by bottomassetsub.POS_DATE desc) rowIndex -->
 		  from chb_asset_info_sub assetinfosub
 		  left join (
 		    select investdealsub.asset_code asset_code,sum((case investdealsub.CUR_ASSET_TYPE when '01' then 1 else -1 end)*investdealsub.num) asset_deal_num
@@ -772,6 +771,9 @@
             (case investdealsub.num when 0 then 0 else investdealsub.CNY_AMT/investdealsub.num end) unit_price,
 		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num desc) rowindexlast,
 		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num asc) rowindexfirst
+          if
+          (@PBC_PROD_ID = PBC_PROD_ID, @rank := @rank + 1,@rank :=1) as ranknum,
+          (@PBC_PROD_ID := PBC_PROD_ID) PBC_PROD_ID
 		    from chb_invest_trade_sub investdealsub
 		    left join chb_asset_info_sub assetinfosub
 		    on assetinfosub.asset_code = investdealsub.asset_code
