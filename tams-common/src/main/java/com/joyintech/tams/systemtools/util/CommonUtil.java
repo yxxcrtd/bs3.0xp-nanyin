@@ -273,7 +273,7 @@ public class CommonUtil {
 		Map<String, String> param = new HashMap<>();
 		String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_DEPARTMENT_KEY, "database_type_code");
 
-		databaseType = StringUtil.defaultString(databaseType, "Oracle");
+		databaseType = StringUtil.defaultString(databaseType, "Mysql");
 
 		param.put("databaseType", databaseType);
 		param.put("sequenceName", sequenceType.getSequenceName());
