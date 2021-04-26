@@ -50,8 +50,8 @@ public class PrdProfitQueryController {
      * @see
      * @since 1.0
      */
-    @PostMapping("selectFinAssetLiabilityList")
-    public List<PrdProfit> selectFinAssetLiabilityList(@RequestBody Map<String, Object> param) throws Exception {
+    @PostMapping("selectPrdProfitList")
+    public List<PrdProfit> selectPrdProfitList(@RequestBody Map<String, Object> param) throws Exception {
         return prdProfitQuery001Service.selectPrdProfitList(param);
     }
 }

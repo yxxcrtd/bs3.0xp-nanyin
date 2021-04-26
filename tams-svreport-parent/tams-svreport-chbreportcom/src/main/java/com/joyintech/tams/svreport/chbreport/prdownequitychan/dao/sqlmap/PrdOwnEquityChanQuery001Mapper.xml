@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.prdownequitychan.dao.PrdOwnEquityChanQuery001Mapper">
+    <select id="selectAllData"
+            resultType="com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto">
+        select
+        baseinfo.prod_id prodId,
+        baseinfo.prod_name prodName,
+        substring(chan2.busi_date,1,7) reportDate,
+        chan2.busi_date as busiDate
+        from chb_prd_baseinfo baseinfo
+        inner join (
+        SELECT
+        distinct
+        real_prd_id, busi_date
+        FROM prd_own_equity_chan chan
+        <where>
+            <if test="reportDate != null and reportDate != ''">
+                substring(busi_date,1,7) = #{reportDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ) chan2
+        on chan2.real_prd_id = baseinfo.prod_id
+        <where>
+            <if test="prodIdList != null and prodIdList.size() > 0">
+                <foreach collection="prodIdList" item="items" open="and baseinfo.prod_id in (" separator="," close=")">
+                    #{items,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPrdOwnEquityChanList"
+                resultType="com.joyintech.tams.common.base.entity.PrdOwnEquityChan">
+        select
+        chan.real_prd_id realPrdId,
+        chan.subject_id subjectId,
+        chan.subject_name subjectName,
+        chan.ccy ccy,
+        chan.paid_fund paidFund,
+        chan.undistribut_profits undistributProfits,
+        chan.total_owner_equity totalOwnerEquity,
+        chan.busi_date busiDate
+        from prd_own_equity_chan chan
+        <where>
+            <if test="reportDate != null and reportDate != ''">
+                substring(chan.busi_date,1,7) = #{reportDate,jdbcType=VARCHAR}
+            </if>
+            <if test="prodId != null and prodId != ''">
+                AND chan.real_prd_id = #{prodId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY chan.subject_id
+    </select>
+</mapper>

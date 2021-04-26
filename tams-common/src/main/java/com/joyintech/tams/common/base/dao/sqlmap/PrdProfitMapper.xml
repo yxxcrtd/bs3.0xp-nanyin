@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.common.base.dao.PrdProfitMapper">
   <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PrdProfit">
     <constructor>
-      <arg column="real_prd_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="real_prd_id" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="subject_id" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="subject_name" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="ccy" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -16,7 +16,7 @@
     insert into prd_profit (real_prd_id, subject_id, subject_name,
                             ccy, current_amt, current_year_accumu_amt,
                             busi_date)
-    values (#{realPrdId,jdbcType=INTEGER}, #{subjectId,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR},
+    values (#{realPrdId,jdbcType=VARCHAR}, #{subjectId,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR},
             #{ccy,jdbcType=VARCHAR}, #{currentAmt,jdbcType=DECIMAL}, #{currentYearAccumuAmt,jdbcType=DECIMAL},
             #{busiDate,jdbcType=VARCHAR})
   </insert>
@@ -47,7 +47,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="realPrdId != null">
-        #{realPrdId,jdbcType=INTEGER},
+        #{realPrdId,jdbcType=VARCHAR},
       </if>
       <if test="subjectId != null">
         #{subjectId,jdbcType=VARCHAR},
