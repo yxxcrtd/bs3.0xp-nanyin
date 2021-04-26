@@ -60,13 +60,17 @@
 		on c.PROD_ID=d.PROD_ID
 		<where>
 			c.STATUS in('A','E')
-			<if test="busiId != null and busiId != ''">
-				and c.PROD_ID in(#{busiId})
+			<if test="selectbusiId != null and selectbusiId.size() > 0">
+				<foreach collection="selectbusiId" item="busiId" open="AND c.PROD_ID IN (" close=")" separator=",">
+					#{busiId,jdbcType=VARCHAR}
+				</foreach>
 			</if>
-			<if test="cashType2 != null and cashType2 != ''">
-				and c.CASH_TYPE_2 in(#{cashType2})
+			<if test="selectcashType2 != null and selectcashType2.size() > 0">
+				<foreach collection="selectcashType2" item="cashType2" open="AND c.CASH_TYPE_2 IN (" close=")" separator=",">
+					#{cashType2,jdbcType=VARCHAR}
+				</foreach>
 			</if>
-			<if test='status != null and !status.equals("") and !status.contains("A") '>
+			<if test='selectStatus != null and !selectStatus.equals("") and !selectStatus.contains("A") '>
 				and 1 = 2
 			</if>
 		</where>
@@ -143,7 +147,7 @@
 	<update id="updateDisRepCashYield" parameterType="java.util.List" >
 		UPDATE REP_CASH_YIELD
 		set
-		STATUS = "D"
+		STATUS = 'D'
 		where
 		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
 			BUSI_ID = #{item.busiId,jdbcType=VARCHAR}
@@ -186,7 +190,9 @@
 		a.SVR_DATA_SOURCES as dataSource,
 		DATE_FORMAT(a.START_DATE, '%Y-%m-%d') as 旧启用日期,
 		a.CASH_TYPE2 as 旧信披费用类型,
-		a.CASH_NAME
+		a.CASH_NAME,
+		a.CASH_ID,
+		a.ADAPTER_ID
 		FROM
 		REP_CASH_YIELD a
 		where
@@ -214,4 +220,45 @@
 		WHERE
 			c.DATAUUID =#{datauuid,jdbcType=DATE}
 	</select>
+	<insert id="insertOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
+		insert into REP_CASH_YIELD
+		(STATUS,BUSI_ID,CASH_ID,CASH_NAME,START_DATE,CASH_TYPE2,RATE,CREATE_USER,CREATE_TIME,SVR_DATA_SOURCES,ADAPTER_ID)
+		values (
+			#{status,jdbcType=VARCHAR} ,
+			#{busiId,jdbcType=VARCHAR} ,
+			#{cashId,jdbcType=VARCHAR} ,
+			#{cashName,jdbcType=VARCHAR} ,
+			#{startDate,jdbcType=DATE} ,
+			#{cashType2,jdbcType=VARCHAR} ,
+			#{rate,jdbcType=DECIMAL} ,
+			#{createUser,jdbcType=VARCHAR} ,
+			#{createTime,jdbcType=DATE} ,
+			#{dataSource,jdbcType=VARCHAR},
+			#{adapterId,jdbcType=VARCHAR}
+		)
+    </insert>
+	<update id="updateOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+		update REP_CASH_YIELD set STATUS = 'E',SVR_DATA_SOURCES='02',
+		RATE= #{rate,jdbcType=DECIMAL}
+		where
+			BUSI_ID = #{busiId,jdbcType=VARCHAR}
+			AND START_DATE = #{startDate,jdbcType=DATE}
+			AND CASH_TYPE2 = #{cashType2,jdbcType=VARCHAR}
+	</update>
+	<update id="deleteOne" >
+		UPDATE REP_CASH_YIELD
+		set
+		STATUS = 'D'
+		where
+			BUSI_ID = #{busiId,jdbcType=VARCHAR}
+			AND START_DATE = #{date,jdbcType=DATE}
+			AND CASH_TYPE2 = #{cashType2,jdbcType=VARCHAR}
+	</update>
+	<delete id="deleteErrorDataOne" >
+		delete from REP_CASH_YIELD_ERRORDATA a
+		where
+		PROD_ID= #{busiId,jdbcType=VARCHAR}
+		AND START_DATE = #{date,jdbcType=DATE}
+		AND CASH_TYPE_2 = #{cashType2,jdbcType=VARCHAR}
+	</delete>
 </mapper>

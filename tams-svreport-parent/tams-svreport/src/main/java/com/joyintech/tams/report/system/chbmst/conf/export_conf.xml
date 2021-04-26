@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChbMstCounterParty.xlsx" name="交易对手接口数据">
+	<Worksheet javaBean="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+		<Row>
+			<Cell order="1" name="操作类型">type</Cell><!-- 操作类型 -->
+			<Cell order="2" name="交易对手代码">counterId</Cell><!-- 交易对手代码 -->
+		    <Cell order="3" name="交易对手名称">counterName</Cell><!-- 交易对手名称 -->
+			<Cell order="4" name="交易对手二级类型">counterType2</Cell><!-- 交易对手二级类型 -->
+		</Row>
+	</Worksheet>
+</Workbook>

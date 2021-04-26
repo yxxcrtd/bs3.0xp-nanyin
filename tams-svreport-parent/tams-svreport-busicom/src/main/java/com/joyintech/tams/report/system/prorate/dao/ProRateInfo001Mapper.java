@@ -8,6 +8,7 @@ import com.joyintech.tams.systemtools.dto.SysDataDict;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,4 +34,13 @@ public interface ProRateInfo001Mapper {
     List<DisRepCashYield> selectOneDate(Map<String, Object> param);
 
     List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(@Param("datauuid")String datauuid);
+
+    void insertOne(DisRepCashYield entity);
+
+    void updateOne(DisRepCashYield disRepCashYield);
+
+    void deleteOne(@Param("busiId")String busiId, @Param("date")Date date, @Param("cashType2")String cashType2);
+
+    void deleteErrorDataOne(@Param("busiId")String busiId, @Param("date")Date date, @Param("cashType2")String cashType2);
+
 }

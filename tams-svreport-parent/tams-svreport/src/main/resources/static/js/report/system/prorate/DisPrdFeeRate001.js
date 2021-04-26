@@ -97,6 +97,19 @@
     };
 
     $(function() {
+        // 导入按钮点击事件
+        $('#DisPrdFeeRate001_btn_import').click(function() {
+            Joyin.confirm("请确认是否要导入数据？", function() {
+                Joyin.uploadFile(function(fileName) {
+                    Joyin.ajax(basePath + 'svreport/system/prorate/DisPrdFeeRate001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                        Joyin.ajax(basePath + 'svreport/system/prorate/DisPrdFeeRate001/importFile', {fileName: fileName});
+                    });
+                },function() {
+                    table.reload();
+                });
+            });
+        });
+
         // 导出按钮点击事件
         $('#DisPrdFeeRate001_btn_export').click(function() {
             var param ={};

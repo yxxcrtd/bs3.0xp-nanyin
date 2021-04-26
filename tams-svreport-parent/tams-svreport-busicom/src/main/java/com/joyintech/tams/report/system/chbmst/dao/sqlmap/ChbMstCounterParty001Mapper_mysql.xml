@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.chbmst.dao.ChbMstCounterParty001Mapper_mysql">
+	<select id="queryForPage" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+		SELECT
+		a.STATUS,
+		a.COUNTER_ID,
+		a.COUNTER_NAME,
+		a.COUNTER_TYPE1,
+		a.COUNTER_TYPE2,
+		a.CREATE_USER,
+		a.CREATE_TIME as createTime,
+		a.UPDATE_USER,
+		a.UPDATE_TIME as updateTime,
+		a.SVR_DATA_SOURCES as dataSource,
+		'' as uuid,
+		FROM
+		chb_mst_counter_party a
+		<where>
+			not EXISTS (
+			SELECT 1 from chb_mst_counter_party_errordata c where c.COUNTER_ID=a.COUNTER_ID
+			and c.STATUS in('A','E')
+			)
+			<if test="selectcounterId != null and selectcounterId.size() > 0">
+				<foreach collection="selectcounterId" item="counterId" open="AND a.COUNTER_ID IN (" close=")" separator=",">
+					#{counterId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="selectcounterType2 != null and selectcounterType2.size() > 0">
+				<foreach collection="selectcounterType2" item="counterType2" open="AND a.COUNTER_TYPE2 IN (" close=")" separator=",">
+					#{counterType2,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="selectStatus != null and selectStatus.size() > 0">
+				<foreach collection="selectStatus" item="status" open="AND a.STATUS IN (" close=")" separator=",">
+					#{status,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+		union all
+		SELECT
+		'A' as 数据状态,
+		c.COUNTER_ID,
+		c.COUNTER_NAME,
+		c.COUNTER_TYPE1,
+		c.COUNTER_TYPE2,
+		c.CREATE_USER,
+		c.CREATE_TIME as createTime,
+		c.UPDATE_USER,
+		c.UPDATE_TIME as updateTime,
+		'DB' as dataSource,
+		c.DATAUUID as uuid,
+		FROM
+		chb_mst_counter_party_errordata c
+		<where>
+			c.STATUS in('A','E')
+			<if test="selectcounterId != null and selectcounterId.size() > 0">
+				<foreach collection="selectcounterId" item="counterId" open="AND c.COUNTER_ID IN (" close=")" separator=",">
+					#{counterId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="selectcounterType2 != null and selectcounterType2.size() > 0">
+				<foreach collection="selectcounterType2" item="counterType2" open="AND c.COUNTER_TYPE2 IN (" close=")" separator=",">
+					#{counterType2,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test='selectStatus != null and !selectStatus.equals("") and !selectStatus.contains("A") '>
+				and 1 = 2
+			</if>
+		</where>
+	</select>
+	<update id="updateChbMstCounterParty" parameterType="java.util.List" >
+		UPDATE chb_mst_counter_party
+		set
+		STATUS = 'D'
+		where
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			COUNTER_ID = #{item.counterId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<delete id="deleteChbMstCounterPartyErrorData" parameterType="java.util.List">
+		delete from chb_mst_counter_party_errordata a
+		where 1=1
+		and a.DATAUUID
+		IN
+		<foreach collection="dtoList" item="item" open="(" separator=","  close=")">
+			#{item.uuid,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<select id="getCounterId" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty" parameterType="java.util.Map">
+		SELECT p.COUNTER_ID,p.COUNTER_NAME FROM chb_mst_counter_party p
+		<where>
+			p.STATUS in ('A','E') and
+			not EXISTS (
+			SELECT 1 from chb_mst_counter_party_errordata c where c.COUNTER_ID=p.COUNTER_ID
+			and c.STATUS in('A','E')
+			)
+			<if test="search != null and search !='' ">
+				AND P.COUNTER_ID LIKE concat_ws(concat_ws('%', #{search}),'%') or p.COUNTER_NAME like concat_ws(concat_ws('%', #{search}),'%')
+			</if>
+		</where>
+		union all
+		SELECT q.COUNTER_ID,q.COUNTER_NAME FROM chb_mst_counter_party_errordata q
+		<where>
+			q.STATUS in ('A','E') and
+			<if test="search != null and search !='' ">
+				AND q.COUNTER_ID LIKE concat_ws(concat_ws('%', #{search}),'%') or q.COUNTER_NAME like concat_ws(concat_ws('%', #{search}),'%')
+			</if>
+		</where>
+	</select>
+	<select id="queryReportList" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+		SELECT
+		'导出' as type,
+		a.COUNTER_ID,a.COUNTER_NAME,a.COUNTER_TYPE2
+		FROM
+		chb_mst_counter_party a
+	</select>
+	<select id="selectOneDate" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+		SELECT
+		a.STATUS,
+		a.COUNTER_ID,
+		a.COUNTER_NAME,
+		a.COUNTER_TYPE1,
+		a.COUNTER_TYPE2,
+		a.CREATE_USER,
+		a.CREATE_TIME as createTime,
+		a.UPDATE_USER,
+		a.UPDATE_TIME as updateTime,
+		a.SVR_DATA_SOURCES as dataSource,
+		'' as uuid,
+		FROM
+		chb_mst_counter_party a
+		where
+			COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+	</select>
+	<update id="updateOne" parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+		update chb_mst_counter_party set STATUS = 'E',SVR_DATA_SOURCES='02',
+		COUNTER_NAME= #{counterName,jdbcType=VARCHAR},COUNTER_TYPE2= #{counterType2,jdbcType=VARCHAR}
+		where
+			COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+	</update>
+	<insert id="insertOne" parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty" >
+		insert into CHB_MST_COUNTER_PARTY (COUNTER_ID, COUNTER_NAME,
+      CREATE_USER, CREATE_DEPT, CREATE_TIME,
+      UPDATE_USER, UPDATE_TIME,SVR_DATA_SOURCES,COUNTER_TYPE2,STATUS)
+    values (#{counterId,jdbcType=VARCHAR}, #{counterName,jdbcType=VARCHAR},
+      #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+      #{dataSource,jdbcType=VARCHAR},#{counterType2,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR})
+    </insert>
+	<update id="deleteOne" >
+		UPDATE CHB_MST_COUNTER_PARTY
+		set
+		STATUS = 'D'
+		where
+			COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+	</update>
+	<delete id="deleteErrorDataOne" >
+		delete from chb_mst_counter_party_errordata a
+		where
+		COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+	</delete>
+
+
+
+
+
+
+	<select id="getSysDataDict" resultType="com.joyintech.tams.systemtools.dto.SysDataDict" parameterType="java.util.Map">
+		SELECT ITEM_CODE itemCode, ITEM_VALUE itemValue FROM SYS_DATADICT_LIST
+		WHERE DICT_CODE=#{code}
+	</select>
+
+	<select id="selectPrdFeeData" resultType="java.lang.Integer" parameterType="java.util.List">
+			SELECT count(1) from (
+		SELECT 1 from REP_CASH_YIELD a
+			where a.STATUS in('A','E')
+			and not EXISTS (
+			 SELECT 1 from 	REP_CASH_YIELD_ERRORDATA b
+					WHERE b.PROD_ID=a.BUSI_ID
+						and b.CASH_TYPE_2=a.CASH_TYPE2
+					and b.START_DATE=a.START_DATE
+					and b.STATUS in('A','E')
+			) and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			a.BUSI_ID = #{item.busiId,jdbcType=VARCHAR}
+			and a.START_DATE = #{item.startDate,jdbcType=DATE}
+			and a.CASH_TYPE2 = #{item.cashType2,jdbcType=VARCHAR}
+		</foreach>
+
+			union all
+			SELECT 1 from rep_cash_yield_errordata c
+			where c.STATUS in('A','E')
+		and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			c.PROD_ID = #{item.busiId,jdbcType=VARCHAR}
+			and c.START_DATE = #{item.startDate,jdbcType=DATE}
+			and c.CASH_TYPE_2 = #{item.cashType2,jdbcType=VARCHAR}
+		</foreach>
+
+		)tmp
+
+	</select>
+
+	<insert id="insertPrdFeeData" parameterType="java.util.List">
+		insert into
+		REP_CASH_YIELD
+		(STATUS,BUSI_ID,CASH_ID,CASH_NAME,START_DATE,CASH_TYPE2,RATE,CREATE_USER,CREATE_TIME,SVR_DATA_SOURCES,ADAPTER_ID)
+		values (
+		<foreach collection="dtoList" item="item" index="index" separator=",">
+			#{item.status,jdbcType=VARCHAR} ,
+			#{item.busiId,jdbcType=VARCHAR} ,
+			#{item.cashId,jdbcType=VARCHAR} ,
+			#{item.cashName,jdbcType=VARCHAR} ,
+			#{item.startDate,jdbcType=DATE} ,
+			#{item.cashType2,jdbcType=VARCHAR} ,
+			#{item.rate,jdbcType=DECIMAL} ,
+			#{item.createUser,jdbcType=VARCHAR} ,
+			#{item.createTime,jdbcType=DATE} ,
+			#{item.dataSource,jdbcType=VARCHAR},
+			#{item.adapterId,jdbcType=VARCHAR}
+		</foreach>
+		)
+	</insert>
+
+	<select id="selectdisPrdFeeRateErrordata" resultType="com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs">
+			SELECT
+			c. STATUS,
+			c.PROD_ID,
+			DATE_FORMAT(c.START_DATE, '%Y-%m-%d') AS startDate,
+			c.CASH_TYPE_2,
+			c.FEE_RATE,
+			c.CREATE_USER,
+			DATE_FORMAT(c.CREATE_TIME, '%Y-%m-%d') AS createTime,
+			c.UPDATE_USER,
+			DATE_FORMAT(c.UPDATE_TIME, '%Y-%m-%d') AS updateTime,
+			'DB' AS dataSource,
+			c.DATAUUID AS datauuid,
+			c.ORG_DATA,
+			c.ERR_MSG
+		FROM
+			REP_CASH_YIELD_ERRORDATA c
+		WHERE
+			c.DATAUUID =#{datauuid,jdbcType=DATE}
+	</select>
+
+
+</mapper>

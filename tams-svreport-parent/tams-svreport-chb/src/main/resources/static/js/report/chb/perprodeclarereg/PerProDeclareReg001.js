@@ -892,7 +892,6 @@ $(function() {
 	});
 
 	function init() {
-		console.log(111)
 		if (isMain == '01') {
 			setTimeout(function() {
 				if($('#sendStatus').val()=='02'||$('#sendStatus').val()=='03'){
@@ -945,7 +944,7 @@ $(function() {
 		//批量上传
 		$('#SvrPerProDeclareReg001_btn_batchfileUpload').click(function() {
 			var data={"operateType":"1"};
-			Joyin.dialog('产品申报登记批量上传',basePath+'chb/perprodeclarereg/PerProDeclareReg002/init', '98%', '95%',data,function(){table.reload();});
+			Joyin.dialog('产品申报登记批量上传',basePath+'chb/perprodeclarereg/PerProDeclareReg002/init', '900', '90%',data,function(){table.reload();});
 		});
 
 	});

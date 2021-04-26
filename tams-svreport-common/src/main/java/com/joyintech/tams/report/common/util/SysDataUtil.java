@@ -139,6 +139,21 @@ public final class SysDataUtil {
         }
         return StringUtil.joinString(nameList, GlobalConstant.COMMA);
     }
+    public static String getZZDictCodeAndNameNew(DictCode dictCode, final String code) {
+        if (StringUtil.isEmpty(code)) {
+            return null;
+        }
+        List<String> codeList = StringUtil.splitToList(GlobalConstant.COMMA, code);
+        List<String> nameList = new ArrayList<>();
+        for (String string : codeList) {
+            String name = SysDataUtil.getNameFromDataDict(dictCode, string);
+            if (StringUtil.isNotEmpty(name)){
+                nameList.add(string + StringUtil.SPACE + name);
+                //nameList.add(name);
+            }
+        }
+        return StringUtil.joinString(nameList, GlobalConstant.COMMA);
+    }
 
     /**
      *

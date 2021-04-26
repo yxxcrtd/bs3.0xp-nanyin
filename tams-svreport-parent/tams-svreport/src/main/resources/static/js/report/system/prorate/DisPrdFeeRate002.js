@@ -1,6 +1,9 @@
 (function() {
+    function init(){
+        $(".layui-fixbar").hide();
+    };
     $(function() {
-
+        init();
         function validationNumber(e, num) {
             var regu = /^[0-9]+\.?[0-9]*$/;
             var index=e.lastIndexOf("\.");
