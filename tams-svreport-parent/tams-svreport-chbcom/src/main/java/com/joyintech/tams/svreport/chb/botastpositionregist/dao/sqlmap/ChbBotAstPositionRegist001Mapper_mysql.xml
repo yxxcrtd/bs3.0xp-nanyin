@@ -228,9 +228,9 @@
 		<set>
 			sub.SEND_STATUS = '03',
 			sub.SUBMIT_FEEDBACK_STATUS = '03',
-			sub.submit_time = sysdate,
-			sub.UPDATE_TIME = sysdate
-			<!--  ,sub.STATUS_DATE = sysdate -->
+			sub.submit_time = NOW(),
+			sub.UPDATE_TIME = NOW(),
+			sub.STATUS_DATE = NOW()
 		</set>
 		<where>
 			<foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
