@@ -17,7 +17,7 @@
     </modules>
     
     <properties>
-        <framework.version>0.0.3</framework.version>
+        <framework.version>0.1.0</framework.version>
         <!-- <joyintech-tools.version>2.0.7.6.8</joyintech-tools.version>
         <batch-framework.version>2.0.7.6.8</batch-framework.version> -->
     </properties>   
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>framework-log</artifactId>
-            <version>0.0.3</version>
+            <version>0.1.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
