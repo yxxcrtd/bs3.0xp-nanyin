@@ -77,15 +77,15 @@
         WORKFLOW_ID, CREATE_USER, CREATE_DEPT,
         CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TYPE
         )
-        <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
-            #{item.reportNo,jdbcType=VARCHAR}, #{item.repMesNo,jdbcType=VARCHAR}, #{item.uploadResult,jdbcType=VARCHAR},
-            #{item.uploadResultMsg,jdbcType=VARCHAR}, #{item.uploadFileId,jdbcType=VARCHAR}, #{item.checkFileId,jdbcType=VARCHAR},
-            #{item.checkResult,jdbcType=VARCHAR}, #{item.checkResultMsg,jdbcType=VARCHAR}, #{item.checkFileName,jdbcType=VARCHAR},
-            #{item.checkTotalCount,jdbcType=DECIMAL}, #{item.checkSuccessCount,jdbcType=DECIMAL}, #{item.checkFailedCount,jdbcType=DECIMAL},
-            #{item.insideFileId,jdbcType=VARCHAR}, #{item.sendTime,jdbcType=DATE}, #{item.replyTime,jdbcType=TIMESTAMP},
-            #{item.workflowId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
-            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
-            #{item.submitType,jdbcType=VARCHAR}
+        <foreach collection="dataList" item="item" separator=" union all select" open=" (select " close=")">
+            #{item.reportNo} as reportNo , #{item.repMesNo} as repMesNo , #{item.uploadResult} as uploadResult ,
+            #{item.uploadResultMsg} as uploadResultMsg, #{item.uploadFileId} as uploadFileId, #{item.checkFileId} as checkFileId,
+            #{item.checkResult} as checkResult, #{item.checkResultMsg} as checkResultMsg, #{item.checkFileName} as checkFileName,
+            #{item.checkTotalCount} as checkTotalCount, #{item.checkSuccessCount} as checkSuccessCount, #{item.checkFailedCount} as checkFailedCount,
+            #{item.insideFileId} as insideFileId, #{item.sendTime} as sendTime, #{item.replyTime} as replyTime,
+            #{item.workflowId} as workflowId, #{item.createUser} as createUser, #{item.createDept} as createDept,
+            #{item.createTime} as createTime, #{item.updateUser} as updateUser, #{item.updateTime} as updateTime,
+            #{item.submitType} as submitType
         </foreach>
     </insert>
 
@@ -94,11 +94,11 @@
         SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,
         CREATE_USER, CREATE_TIME, REPORT_NO,
         SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
-        <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
-            #{item.seqno,jdbcType=VARCHAR}, #{item.submitNum,jdbcType=VARCHAR}, #{item.submitType,jdbcType=VARCHAR},
-            #{item.submitFeedbackStatus,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.reportNo,jdbcType=VARCHAR},
-            #{item.submitFeedbackMsg,jdbcType=VARCHAR},#{item.uniqueIdenti,jdbcType=VARCHAR}
+        <foreach collection="dataList" item="item" separator=" union all select" open="(select " close=")">
+            #{item.seqno} as seqno, #{item.submitNum} as submitNum, #{item.submitType} as submitType ,
+            #{item.submitFeedbackStatus} as submitFeedbackStatus, #{item.updateUser} as updateUser, #{item.updateTime} as updateTime,
+            #{item.createUser} as createUser, #{item.createTime} as createTime, #{item.reportNo} as reportNo,
+            #{item.submitFeedbackMsg} as submitFeedbackMsg,#{item.uniqueIdenti} as uniqueIdenti
         </foreach>
     </insert>
     <insert id="insertChbEquDetSubmitStatusList">
@@ -106,11 +106,12 @@
         SUBMIT_FEEDBACK_STATUS,EQUITY_CONF_DATE, UPDATE_USER, UPDATE_TIME,
         CREATE_USER, CREATE_TIME, REPORT_NO,
         SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
-        <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
-            #{item.seqno,jdbcType=VARCHAR}, #{item.submitNum,jdbcType=VARCHAR}, #{item.submitType,jdbcType=VARCHAR},
-            #{item.submitFeedbackStatus,jdbcType=VARCHAR},#{item.equityConfDate,jdbcType=DATE}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.reportNo,jdbcType=VARCHAR},
-            #{item.submitFeedbackMsg,jdbcType=VARCHAR},#{item.uniqueIdenti,jdbcType=VARCHAR}
+        <foreach collection="dataList" item="item" separator=" union all select" open="(select " close=")">
+            #{item.seqno} as seqno , #{item.submitNum} as submitNum , #{item.submitType} as submitType ,
+            #{item.submitFeedbackStatus} as submitFeedbackStatus ,#{item.equityConfDate} as equityConfDate,
+            #{item.updateUser} as updateUser, #{item.updateTime} as updateTime,
+            #{item.createUser} as createUser, #{item.createTime} as createTime , #{item.reportNo} as reportNo,
+            #{item.submitFeedbackMsg} as submitFeedbackMsg,#{item.uniqueIdenti} as uniqueIdenti
         </foreach>
     </insert>
     <select id="selectOrgCodeByRegistBankCode" resultType="java.lang.String">
