@@ -1419,6 +1419,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			if (dataCount <= maxDataCountOneTime) {
 			    logger.info("单次执行insertChbSubHoldInfoData处理开始 " + DateUtil.getCurrentDateTime());
 				investorsHoldInfo001Mapper.insertChbSubHoldInfoData(subList);
+				investorsHoldInfo001Mapper.insertChbSubHoldInfoDataMerge(subList);
 			    logger.info("单次执行insertChbSubHoldInfoData处理结束 " + DateUtil.getCurrentDateTime());
 				return;
 			}
@@ -1431,6 +1432,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			for (int i = 0; i < part; i++) {
 			    logger.info("单次执行insertChbSubHoldInfoData处理开始 " + DateUtil.getCurrentDateTime());
 				investorsHoldInfo001Mapper.insertChbSubHoldInfoData(newDataList.subList(0, maxDataCountOneTime));
+				investorsHoldInfo001Mapper.insertChbSubHoldInfoDataMerge(newDataList.subList(0, maxDataCountOneTime));
 				newDataList.subList(0, maxDataCountOneTime).clear();
 			    logger.info("单次执行insertChbSubHoldInfoData处理结束 " + DateUtil.getCurrentDateTime());
 			}
@@ -1438,6 +1440,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			if (CollectionUtils.isNotEmpty(newDataList)) {
 			    logger.info("单次执行insertChbSubHoldInfoData处理开始 " + DateUtil.getCurrentDateTime());
 				investorsHoldInfo001Mapper.insertChbSubHoldInfoData(newDataList);
+				investorsHoldInfo001Mapper.insertChbSubHoldInfoDataMerge(newDataList);
 			    logger.info("单次执行insertChbSubHoldInfoData处理结束 " + DateUtil.getCurrentDateTime());
 			}
 		}
@@ -1457,6 +1460,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			int dataCount = dataList.size();
 			if (dataCount <= maxDataCountOneTime) {
 				investorsHoldInfo001Mapper.insertChbHoldInfoData(dataList);
+				investorsHoldInfo001Mapper.insertChbHoldInfoDataMerge(dataList);
 				return;
 			}
 
@@ -1467,11 +1471,13 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			int part = dataCount / maxDataCountOneTime; // 分批数
 			for (int i = 0; i < part; i++) {
 				investorsHoldInfo001Mapper.insertChbHoldInfoData(newDataList.subList(0, maxDataCountOneTime));
+				investorsHoldInfo001Mapper.insertChbHoldInfoDataMerge(dataList);
 				newDataList.subList(0, maxDataCountOneTime).clear();
 			}
 			// 最后剩下的数据
 			if (CollectionUtils.isNotEmpty(newDataList)) {
 				investorsHoldInfo001Mapper.insertChbHoldInfoData(newDataList);
+				investorsHoldInfo001Mapper.insertChbHoldInfoDataMerge(dataList);
 			}
 		}
 	}
