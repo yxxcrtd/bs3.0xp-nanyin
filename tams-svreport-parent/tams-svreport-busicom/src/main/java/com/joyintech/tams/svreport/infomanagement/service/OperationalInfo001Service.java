@@ -2755,7 +2755,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 									// 修改时间变动,其余时间不变
 									if (column.indexOf("UPDATE") > -1) {
 										//columnData = "SYSDATE";
-										columnData = "TIMESTAMP" + timestamp.toString().substring(0, 19) + "'";
+										columnData = "TIMESTAMP'" + timestamp.toString().substring(0, 19) + "'";
 									} else if ("CREATE_TIME".equals(column)) {
 										continue;
 									} else {
