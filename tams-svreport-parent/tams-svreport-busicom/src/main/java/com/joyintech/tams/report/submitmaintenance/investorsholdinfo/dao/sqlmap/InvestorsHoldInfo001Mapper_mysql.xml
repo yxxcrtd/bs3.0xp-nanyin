@@ -934,6 +934,6 @@ where
 		SELECT INDENTIFY_MARK
 		FROM CHB_EQU_HOLD_CHECK
 		WHERE INDENTIFY_MARK= #{indentifyMark,jdbcType=VARCHAR}
-		)
+		) aa
 	</select>
 </mapper>
