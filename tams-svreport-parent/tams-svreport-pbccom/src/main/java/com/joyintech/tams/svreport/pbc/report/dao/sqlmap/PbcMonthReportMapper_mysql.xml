@@ -385,13 +385,9 @@
       and ifnull(update_time,create_time) = (
 	      select ct 
 	      from(
-		      select ifnull(update_time,create_time) ct,
-              if
-              (@TERMID = TERMID and @REPORTTYPE = REPORTTYPE, @rank := @rank + 1,@rank :=1) as ranknum,
-              (@TERMID := TERMID) ,
-              (@REPORTTYPE := REPORTTYPE)
-		      from PBC_REPORT_HIS,
-              (select @rank := 0, @TERMID := null, @REPORTTYPE := null) b
+              select ifnull(update_time,create_time) ct,
+              rank() over (partition by TERMID, REPORTTYPE order by ifnull(update_time,create_time) desc) ranknum
+		      from PBC_REPORT_HIS
 		      where 1 =1
 		      <if test="registList !=null and registList.size()>0">
 		         <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,ifnull(PBC_ACCOUNT_ID,'')) IN (" separator="UNION all"  close=")">
@@ -401,11 +397,8 @@
 		         </foreach>
 		      </if>
 		      and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-              order by
-              TERMID,REPORTTYPE,
-              ifnull(update_time,create_time) desc
 	      ) tmp
-	      where 1 = 1 limit 1
+	      where ranknum = 1
       )
   </delete>
   <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List">
