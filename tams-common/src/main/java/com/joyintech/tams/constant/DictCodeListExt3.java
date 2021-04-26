@@ -1307,6 +1307,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     分档条件_小于等于(DictCode.分档条件,"01", "小于等于"),
     分档条件_大于(DictCode.分档条件,"02", "大于"),
     //add by yzg 20210422 end
+    /** add by yanya on 20210316 增加一次性费用赎回费（产品留存）**/
+    一次性费用类型_赎回费_产品留存(DictCode.一次性费用类型, "B16", "赎回费（产品留存）"),
 ;
     /**
      * 对应于数据字典code
