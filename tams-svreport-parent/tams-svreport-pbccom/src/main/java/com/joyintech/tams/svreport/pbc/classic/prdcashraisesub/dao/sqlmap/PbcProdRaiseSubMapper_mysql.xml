@@ -1486,10 +1486,10 @@
            and DATE_FORMAT(a.PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
         </if>
         <if test="vdateStart != null and vdateStart != ''">
-           and DATE_FORMAT(a.RAISING_DATE,'yyyy-MM') &gt;= #{vdateStart,jdbcType=VARCHAR}
+           and DATE_FORMAT(a.RAISING_DATE,'%Y-%m') &gt;= #{vdateStart,jdbcType=VARCHAR}
         </if>
         <if test="vdateEnd != null and vdateEnd != ''">
-           and DATE_FORMAT(a.RAISING_DATE,'yyyy-MM') &lt;= #{vdateEnd,jdbcType=VARCHAR}
+           and DATE_FORMAT(a.RAISING_DATE,'%Y-%m') &lt;= #{vdateEnd,jdbcType=VARCHAR}
         </if>
         <if test="updateTime != null and updateTime != ''">
            and DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
