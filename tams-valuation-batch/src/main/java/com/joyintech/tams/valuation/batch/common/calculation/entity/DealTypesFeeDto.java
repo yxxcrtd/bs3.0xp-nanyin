@@ -16,7 +16,7 @@ import com.joyintech.tams.common.base.entity.BokDetailId;
 
 /**
  * 交易各类费用
- * 
+ *
  * @author chengzhong
  * @version 1.0 2018年6月7日
  * @see DealTypesFeeDto
@@ -213,90 +213,120 @@ public class DealTypesFeeDto {
      * 随交易支付_结算手续费账务明细代码
      */
     private BokDetailId settlementFeeCodeForDealPay;
-    
+
     /**
      * 其他费用
      */
     private BigDecimal otherFee;
-    
+
     /**
      * 申购费
      */
     private BigDecimal subscriptionFee;
-    
+
     /**
      * 赎回费
      */
     private BigDecimal redemptionFee;
-    
+
     /**
      * 认购费
      */
     private BigDecimal offerFee;
-    
+
+
+    /**
+     * 账户维护费
+     * add jinmaodong 处理预提费用 20200317
+     */
+    private BigDecimal accountManageFee;
+
+    /**
+     * 账户维护费 账务明细代码
+     * add jinmaodong 处理预提费用 20200317
+     */
+    private BokDetailId accountManageFeeCode;
+
+    public BigDecimal getAccountManageFee() {
+        return accountManageFee;
+    }
+
+    public void setAccountManageFee(BigDecimal accountManageFee) {
+        this.accountManageFee = accountManageFee;
+    }
+
+    public BokDetailId getAccountManageFeeCode() {
+        return accountManageFeeCode;
+    }
+
+    public void setAccountManageFeeCode(BokDetailId accountManageFeeCode) {
+        this.accountManageFeeCode = accountManageFeeCode;
+    }
+
     /**
      * 其他费用账务明细代码
      */
     private BokDetailId otherFeeCode;
-    
+
     /**
      * 申购费账务明细代码
      */
     private BokDetailId subscriptionFeeCode;
-    
+
     /**
      * 赎回费账务明细代码
      */
     private BokDetailId redemptionFeeCode;
-    
+
     /**
      * 认购费账务明细代码
      */
     private BokDetailId offerFeeCode;
-    
+
     /**
      * 随交易支付_其他费用
      */
     private BigDecimal otherFeeForDealPay;
-    
+
     /**
      * 随交易支付_申购费
      */
     private BigDecimal subscriptionFeeForDealPay;
-    
+
     /**
      * 随交易支付_赎回费
      */
     private BigDecimal redemptionFeeForDealPay;
-    
+
     /**
      * 随交易支付_认购费
      */
     private BigDecimal offerFeeForDealPay;
-    
+
     /**
      * 随交易支付_其他费用账务明细代码
      */
     private BokDetailId otherFeeCodeForDealPay;
-    
+
     /**
      * 随交易支付_申购费账务明细代码
      */
     private BokDetailId subscriptionFeeCodeForDealPay;
-    
+
     /**
      * 随交易支付_赎回费账务明细代码
      */
     private BokDetailId redemptionFeeCodeForDealPay;
-    
+
     /**
      * 随交易支付_认购费账务明细代码
      */
     private BokDetailId offerFeeCodeForDealPay;
 
+
     /**
      * 获取 通道管理费
-     * 
+     *
      * @return chlGlFee.
      */
     public BigDecimal getChlGlFee() {
@@ -305,7 +335,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 通道管理费
-     * 
+     *
      * @param chlGlFee 通道管理费
      */
     public void setChlGlFee(BigDecimal chlGlFee) {
@@ -314,7 +344,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 通道销售费
-     * 
+     *
      * @return chlXsFee.
      */
     public BigDecimal getChlXsFee() {
@@ -323,7 +353,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 通道销售费
-     * 
+     *
      * @param chlXsFee 通道销售费
      */
     public void setChlXsFee(BigDecimal chlXsFee) {
@@ -332,7 +362,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 通道托管费
-     * 
+     *
      * @return chlTgFee.
      */
     public BigDecimal getChlTgFee() {
@@ -341,7 +371,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 通道托管费
-     * 
+     *
      * @param chlTgFee 通道托管费
      */
     public void setChlTgFee(BigDecimal chlTgFee) {
@@ -350,7 +380,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 通道管理费账务明细代码
-     * 
+     *
      * @return chlGlFeeCode.
      */
     public BokDetailId getChlGlFeeCode() {
@@ -359,7 +389,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 通道管理费账务明细代码
-     * 
+     *
      * @param chlGlFeeCode 通道管理费账务明细代码
      */
     public void setChlGlFeeCode(BokDetailId chlGlFeeCode) {
@@ -368,7 +398,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 通道销售费账务明细代码
-     * 
+     *
      * @return chlXsFeeCode.
      */
     public BokDetailId getChlXsFeeCode() {
@@ -377,7 +407,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 通道销售费账务明细代码
-     * 
+     *
      * @param chlXsFeeCode 通道销售费账务明细代码
      */
     public void setChlXsFeeCode(BokDetailId chlXsFeeCode) {
@@ -386,7 +416,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 通道托管费账务明细代码
-     * 
+     *
      * @return chlTgFeeCode.
      */
     public BokDetailId getChlTgFeeCode() {
@@ -395,7 +425,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 通道托管费账务明细代码
-     * 
+     *
      * @param chlTgFeeCode 通道托管费账务明细代码
      */
     public void setChlTgFeeCode(BokDetailId chlTgFeeCode) {
@@ -404,7 +434,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 通道费
-     * 
+     *
      * @return chlFee
      */
     public BigDecimal getChlFee() {
@@ -413,7 +443,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 通道费
-     * 
+     *
      * @param chlFee 通道费
      */
     public void setChlFee(BigDecimal chlFee) {
@@ -422,7 +452,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 不随交易费用
-     * 
+     *
      * @return noFeeAmt.
      */
     public BigDecimal getNoFeeAmt() {
@@ -431,7 +461,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 不随交易费用
-     * 
+     *
      * @param noFeeAmt 不随交易费用
      */
     public void setNoFeeAmt(BigDecimal noFeeAmt) {
@@ -440,7 +470,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 印花税账务明细代码
-     * 
+     *
      * @return stampDutyCode.
      */
     public BokDetailId getStampDutyCode() {
@@ -449,7 +479,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 印花税账务明细代码
-     * 
+     *
      * @param stampDutyCode 印花税账务明细代码
      */
     public void setStampDutyCode(BokDetailId stampDutyCode) {
@@ -458,7 +488,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 经手费账务明细代码
-     * 
+     *
      * @return brokerageCode.
      */
     public BokDetailId getBrokerageCode() {
@@ -467,7 +497,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 经手费账务明细代码
-     * 
+     *
      * @param brokerageCode 经手费账务明细代码
      */
     public void setBrokerageCode(BokDetailId brokerageCode) {
@@ -476,7 +506,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 证管费账务明细代码
-     * 
+     *
      * @return certificateFeeCode.
      */
     public BokDetailId getCertificateFeeCode() {
@@ -485,7 +515,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 证管费账务明细代码
-     * 
+     *
      * @param certificateFeeCode 证管费账务明细代码
      */
     public void setCertificateFeeCode(BokDetailId certificateFeeCode) {
@@ -494,7 +524,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 结算费账务明细代码
-     * 
+     *
      * @return clearingFeeCode.
      */
     public BokDetailId getClearingFeeCode() {
@@ -503,7 +533,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 结算费账务明细代码
-     * 
+     *
      * @param clearingFeeCode 结算费账务明细代码
      */
     public void setClearingFeeCode(BokDetailId clearingFeeCode) {
@@ -512,7 +542,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 佣金账务明细代码
-     * 
+     *
      * @return commissionCode.
      */
     public BokDetailId getCommissionCode() {
@@ -521,7 +551,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 佣金账务明细代码
-     * 
+     *
      * @param commissionCode 佣金账务明细代码
      */
     public void setCommissionCode(BokDetailId commissionCode) {
@@ -530,7 +560,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 交易手续费账务明细代码
-     * 
+     *
      * @return transactionFeeCode.
      */
     public BokDetailId getTransactionFeeCode() {
@@ -539,7 +569,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 交易手续费账务明细代码
-     * 
+     *
      * @param transactionFeeCode 交易手续费账务明细代码
      */
     public void setTransactionFeeCode(BokDetailId transactionFeeCode) {
@@ -548,7 +578,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 结算手续费账务明细代码
-     * 
+     *
      * @return settlementFeeCode.
      */
     public BokDetailId getSettlementFeeCode() {
@@ -557,7 +587,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 结算手续费账务明细代码
-     * 
+     *
      * @param settlementFeeCode 结算手续费账务明细代码
      */
     public void setSettlementFeeCode(BokDetailId settlementFeeCode) {
@@ -566,7 +596,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 通道费账务明细代码
-     * 
+     *
      * @return chlFeeCode.
      */
     public BokDetailId getChlFeeCode() {
@@ -575,7 +605,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 通道费账务明细代码
-     * 
+     *
      * @param chlFeeCode 通道费账务明细代码
      */
     public void setChlFeeCode(BokDetailId chlFeeCode) {
@@ -584,7 +614,7 @@ public class DealTypesFeeDto {
 
     /**
      * 取得 交易费用
-     * 
+     *
      * @return 交易费用
      */
     public BigDecimal getFeeAmt() {
@@ -593,7 +623,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 交易费用
-     * 
+     *
      * @param feeAmt 交易费用
      */
     public void setFeeAmt(BigDecimal feeAmt) {
@@ -602,7 +632,7 @@ public class DealTypesFeeDto {
 
     /**
      * 取得 印花税
-     * 
+     *
      * @return 印花税
      */
     public BigDecimal getStampDuty() {
@@ -611,7 +641,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 印花税
-     * 
+     *
      * @param stampDuty 印花税
      */
     public void setStampDuty(BigDecimal stampDuty) {
@@ -620,7 +650,7 @@ public class DealTypesFeeDto {
 
     /**
      * 取得 经手费
-     * 
+     *
      * @return 经手费
      */
     public BigDecimal getBrokerage() {
@@ -629,7 +659,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 经手费
-     * 
+     *
      * @param brokerage 经手费
      */
     public void setBrokerage(BigDecimal brokerage) {
@@ -638,7 +668,7 @@ public class DealTypesFeeDto {
 
     /**
      * 取得 证管费
-     * 
+     *
      * @return 证管费
      */
     public BigDecimal getCertificateFee() {
@@ -647,7 +677,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 证管费
-     * 
+     *
      * @param certificateFee 证管费
      */
     public void setCertificateFee(BigDecimal certificateFee) {
@@ -656,7 +686,7 @@ public class DealTypesFeeDto {
 
     /**
      * 取得 结算费
-     * 
+     *
      * @return 结算费
      */
     public BigDecimal getClearingFee() {
@@ -665,7 +695,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 结算费
-     * 
+     *
      * @param clearingFee 结算费
      */
     public void setClearingFee(BigDecimal clearingFee) {
@@ -674,7 +704,7 @@ public class DealTypesFeeDto {
 
     /**
      * 取得 佣金
-     * 
+     *
      * @return 佣金
      */
     public BigDecimal getCommission() {
@@ -683,7 +713,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 佣金
-     * 
+     *
      * @param commission 佣金
      */
     public void setCommission(BigDecimal commission) {
@@ -692,7 +722,7 @@ public class DealTypesFeeDto {
 
     /**
      * 取得 交易手续费
-     * 
+     *
      * @return 交易手续费
      */
     public BigDecimal getTransactionFee() {
@@ -701,7 +731,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 交易手续费
-     * 
+     *
      * @param transactionFee 交易手续费
      */
     public void setTransactionFee(BigDecimal transactionFee) {
@@ -710,7 +740,7 @@ public class DealTypesFeeDto {
 
     /**
      * 取得 结算手续费
-     * 
+     *
      * @return 结算手续费
      */
     public BigDecimal getSettlementFee() {
@@ -719,7 +749,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 结算手续费
-     * 
+     *
      * @param settlementFee 结算手续费
      */
     public void setSettlementFee(BigDecimal settlementFee) {
@@ -728,7 +758,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 stampDutyForDealPay
-     * 
+     *
      * @return stampDutyForDealPay.
      */
     public BigDecimal getStampDutyForDealPay() {
@@ -737,7 +767,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 stampDutyForDealPay
-     * 
+     *
      * @param stampDutyForDealPay stampDutyForDealPay
      */
     public void setStampDutyForDealPay(BigDecimal stampDutyForDealPay) {
@@ -746,7 +776,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 brokerageForDealPay
-     * 
+     *
      * @return brokerageForDealPay.
      */
     public BigDecimal getBrokerageForDealPay() {
@@ -755,7 +785,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 brokerageForDealPay
-     * 
+     *
      * @param brokerageForDealPay brokerageForDealPay
      */
     public void setBrokerageForDealPay(BigDecimal brokerageForDealPay) {
@@ -764,7 +794,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 certificateFeeForDealPay
-     * 
+     *
      * @return certificateFeeForDealPay.
      */
     public BigDecimal getCertificateFeeForDealPay() {
@@ -773,7 +803,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 certificateFeeForDealPay
-     * 
+     *
      * @param certificateFeeForDealPay certificateFeeForDealPay
      */
     public void setCertificateFeeForDealPay(BigDecimal certificateFeeForDealPay) {
@@ -782,7 +812,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 clearingFeeForDealPay
-     * 
+     *
      * @return clearingFeeForDealPay.
      */
     public BigDecimal getClearingFeeForDealPay() {
@@ -791,7 +821,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 clearingFeeForDealPay
-     * 
+     *
      * @param clearingFeeForDealPay clearingFeeForDealPay
      */
     public void setClearingFeeForDealPay(BigDecimal clearingFeeForDealPay) {
@@ -800,7 +830,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 commissionForDealPay
-     * 
+     *
      * @return commissionForDealPay.
      */
     public BigDecimal getCommissionForDealPay() {
@@ -809,7 +839,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 commissionForDealPay
-     * 
+     *
      * @param commissionForDealPay commissionForDealPay
      */
     public void setCommissionForDealPay(BigDecimal commissionForDealPay) {
@@ -818,7 +848,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 transactionFeeForDealPay
-     * 
+     *
      * @return transactionFeeForDealPay.
      */
     public BigDecimal getTransactionFeeForDealPay() {
@@ -827,7 +857,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 transactionFeeForDealPay
-     * 
+     *
      * @param transactionFeeForDealPay transactionFeeForDealPay
      */
     public void setTransactionFeeForDealPay(BigDecimal transactionFeeForDealPay) {
@@ -836,7 +866,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 settlementFeeForDealPay
-     * 
+     *
      * @return settlementFeeForDealPay.
      */
     public BigDecimal getSettlementFeeForDealPay() {
@@ -845,7 +875,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 settlementFeeForDealPay
-     * 
+     *
      * @param settlementFeeForDealPay settlementFeeForDealPay
      */
     public void setSettlementFeeForDealPay(BigDecimal settlementFeeForDealPay) {
@@ -854,7 +884,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 stampDutyCodeForDealPay
-     * 
+     *
      * @return stampDutyCodeForDealPay.
      */
     public BokDetailId getStampDutyCodeForDealPay() {
@@ -863,7 +893,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 stampDutyCodeForDealPay
-     * 
+     *
      * @param stampDutyCodeForDealPay stampDutyCodeForDealPay
      */
     public void setStampDutyCodeForDealPay(BokDetailId stampDutyCodeForDealPay) {
@@ -872,7 +902,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 brokerageCodeForDealPay
-     * 
+     *
      * @return brokerageCodeForDealPay.
      */
     public BokDetailId getBrokerageCodeForDealPay() {
@@ -881,7 +911,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 brokerageCodeForDealPay
-     * 
+     *
      * @param brokerageCodeForDealPay brokerageCodeForDealPay
      */
     public void setBrokerageCodeForDealPay(BokDetailId brokerageCodeForDealPay) {
@@ -890,7 +920,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 certificateFeeCodeForDealPay
-     * 
+     *
      * @return certificateFeeCodeForDealPay.
      */
     public BokDetailId getCertificateFeeCodeForDealPay() {
@@ -899,7 +929,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 certificateFeeCodeForDealPay
-     * 
+     *
      * @param certificateFeeCodeForDealPay certificateFeeCodeForDealPay
      */
     public void setCertificateFeeCodeForDealPay(BokDetailId certificateFeeCodeForDealPay) {
@@ -908,7 +938,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 clearingFeeCodeForDealPay
-     * 
+     *
      * @return clearingFeeCodeForDealPay.
      */
     public BokDetailId getClearingFeeCodeForDealPay() {
@@ -917,7 +947,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 clearingFeeCodeForDealPay
-     * 
+     *
      * @param clearingFeeCodeForDealPay clearingFeeCodeForDealPay
      */
     public void setClearingFeeCodeForDealPay(BokDetailId clearingFeeCodeForDealPay) {
@@ -926,7 +956,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 commissionCodeForDealPay
-     * 
+     *
      * @return commissionCodeForDealPay.
      */
     public BokDetailId getCommissionCodeForDealPay() {
@@ -935,7 +965,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 commissionCodeForDealPay
-     * 
+     *
      * @param commissionCodeForDealPay commissionCodeForDealPay
      */
     public void setCommissionCodeForDealPay(BokDetailId commissionCodeForDealPay) {
@@ -944,7 +974,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 transactionFeeCodeForDealPay
-     * 
+     *
      * @return transactionFeeCodeForDealPay.
      */
     public BokDetailId getTransactionFeeCodeForDealPay() {
@@ -953,7 +983,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 transactionFeeCodeForDealPay
-     * 
+     *
      * @param transactionFeeCodeForDealPay transactionFeeCodeForDealPay
      */
     public void setTransactionFeeCodeForDealPay(BokDetailId transactionFeeCodeForDealPay) {
@@ -962,7 +992,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 settlementFeeCodeForDealPay
-     * 
+     *
      * @return settlementFeeCodeForDealPay.
      */
     public BokDetailId getSettlementFeeCodeForDealPay() {
@@ -971,7 +1001,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 settlementFeeCodeForDealPay
-     * 
+     *
      * @param settlementFeeCodeForDealPay settlementFeeCodeForDealPay
      */
     public void setSettlementFeeCodeForDealPay(BokDetailId settlementFeeCodeForDealPay) {
@@ -980,7 +1010,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 otherFee
-     * 
+     *
      * @return otherFee.
      */
     public BigDecimal getOtherFee() {
@@ -989,7 +1019,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 otherFee
-     * 
+     *
      * @param otherFee
      */
     public void setOtherFee(BigDecimal otherFee) {
@@ -998,7 +1028,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 subscriptionFee
-     * 
+     *
      * @return subscriptionFee.
      */
     public BigDecimal getSubscriptionFee() {
@@ -1007,7 +1037,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 subscriptionFee
-     * 
+     *
      * @param subscriptionFee
      */
     public void setSubscriptionFee(BigDecimal subscriptionFee) {
@@ -1016,7 +1046,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 redemptionFee
-     * 
+     *
      * @return redemptionFee.
      */
     public BigDecimal getRedemptionFee() {
@@ -1025,7 +1055,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 redemptionFee
-     * 
+     *
      * @param redemptionFee
      */
     public void setRedemptionFee(BigDecimal redemptionFee) {
@@ -1034,7 +1064,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 offerFee
-     * 
+     *
      * @return offerFee.
      */
     public BigDecimal getOfferFee() {
@@ -1043,7 +1073,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 offerFee
-     * 
+     *
      * @param offerFee
      */
     public void setOfferFee(BigDecimal offerFee) {
@@ -1052,7 +1082,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 otherFeeCode
-     * 
+     *
      * @return otherFeeCode.
      */
     public BokDetailId getOtherFeeCode() {
@@ -1061,7 +1091,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 otherFeeCode
-     * 
+     *
      * @param otherFeeCode
      */
     public void setOtherFeeCode(BokDetailId otherFeeCode) {
@@ -1070,7 +1100,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 subscriptionFeeCode
-     * 
+     *
      * @return subscriptionFeeCode.
      */
     public BokDetailId getSubscriptionFeeCode() {
@@ -1079,7 +1109,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 subscriptionFeeCode
-     * 
+     *
      * @param subscriptionFeeCode
      */
     public void setSubscriptionFeeCode(BokDetailId subscriptionFeeCode) {
@@ -1088,7 +1118,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 redemptionFeeCode
-     * 
+     *
      * @return redemptionFeeCode.
      */
     public BokDetailId getRedemptionFeeCode() {
@@ -1097,7 +1127,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 redemptionFeeCode
-     * 
+     *
      * @param redemptionFeeCode
      */
     public void setRedemptionFeeCode(BokDetailId redemptionFeeCode) {
@@ -1106,7 +1136,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 offerFeeCode
-     * 
+     *
      * @return offerFeeCode.
      */
     public BokDetailId getOfferFeeCode() {
@@ -1115,7 +1145,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 offerFeeCode
-     * 
+     *
      * @param offerFeeCode
      */
     public void setOfferFeeCode(BokDetailId offerFeeCode) {
@@ -1124,7 +1154,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 otherFeeForDealPay
-     * 
+     *
      * @return otherFeeForDealPay.
      */
     public BigDecimal getOtherFeeForDealPay() {
@@ -1133,7 +1163,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 otherFeeForDealPay
-     * 
+     *
      * @param otherFeeForDealPay
      */
     public void setOtherFeeForDealPay(BigDecimal otherFeeForDealPay) {
@@ -1142,7 +1172,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 subscriptionFeeForDealPay
-     * 
+     *
      * @return subscriptionFeeForDealPay.
      */
     public BigDecimal getSubscriptionFeeForDealPay() {
@@ -1151,7 +1181,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 subscriptionFeeForDealPay
-     * 
+     *
      * @param subscriptionFeeForDealPay
      */
     public void setSubscriptionFeeForDealPay(BigDecimal subscriptionFeeForDealPay) {
@@ -1160,7 +1190,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 redemptionFeeForDealPay
-     * 
+     *
      * @return redemptionFeeForDealPay.
      */
     public BigDecimal getRedemptionFeeForDealPay() {
@@ -1169,7 +1199,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 redemptionFeeForDealPay
-     * 
+     *
      * @param redemptionFeeForDealPay
      */
     public void setRedemptionFeeForDealPay(BigDecimal redemptionFeeForDealPay) {
@@ -1178,7 +1208,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 offerFeeForDealPay
-     * 
+     *
      * @return offerFeeForDealPay.
      */
     public BigDecimal getOfferFeeForDealPay() {
@@ -1187,7 +1217,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 offerFeeForDealPay
-     * 
+     *
      * @param offerFeeForDealPay
      */
     public void setOfferFeeForDealPay(BigDecimal offerFeeForDealPay) {
@@ -1196,7 +1226,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 otherFeeCodeForDealPay
-     * 
+     *
      * @return otherFeeCodeForDealPay.
      */
     public BokDetailId getOtherFeeCodeForDealPay() {
@@ -1205,7 +1235,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 otherFeeCodeForDealPay
-     * 
+     *
      * @param otherFeeCodeForDealPay
      */
     public void setOtherFeeCodeForDealPay(BokDetailId otherFeeCodeForDealPay) {
@@ -1214,7 +1244,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 subscriptionFeeCodeForDealPay
-     * 
+     *
      * @return subscriptionFeeCodeForDealPay.
      */
     public BokDetailId getSubscriptionFeeCodeForDealPay() {
@@ -1223,7 +1253,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 subscriptionFeeCodeForDealPay
-     * 
+     *
      * @param subscriptionFeeCodeForDealPay
      */
     public void setSubscriptionFeeCodeForDealPay(BokDetailId subscriptionFeeCodeForDealPay) {
@@ -1232,7 +1262,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 redemptionFeeCodeForDealPay
-     * 
+     *
      * @return redemptionFeeCodeForDealPay.
      */
     public BokDetailId getRedemptionFeeCodeForDealPay() {
@@ -1241,7 +1271,7 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 redemptionFeeCodeForDealPay
-     * 
+     *
      * @param redemptionFeeCodeForDealPay
      */
     public void setRedemptionFeeCodeForDealPay(BokDetailId redemptionFeeCodeForDealPay) {
@@ -1250,7 +1280,7 @@ public class DealTypesFeeDto {
 
     /**
      * 获取 offerFeeCodeForDealPay
-     * 
+     *
      * @return offerFeeCodeForDealPay.
      */
     public BokDetailId getOfferFeeCodeForDealPay() {
@@ -1259,12 +1289,12 @@ public class DealTypesFeeDto {
 
     /**
      * 设置 offerFeeCodeForDealPay
-     * 
+     *
      * @param offerFeeCodeForDealPay
      */
     public void setOfferFeeCodeForDealPay(BokDetailId offerFeeCodeForDealPay) {
         this.offerFeeCodeForDealPay = offerFeeCodeForDealPay;
     }
 
-    
+
 }

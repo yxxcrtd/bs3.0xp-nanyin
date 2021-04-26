@@ -648,6 +648,10 @@ public class CalculationCommonService {
         BigDecimal chlTgFee = BigDecimal.ZERO;
         // 不随交易费用
         BigDecimal noFeeAmt = BigDecimal.ZERO;
+        //账户维护费
+        BigDecimal accountManageFee = BigDecimal.ZERO;
+        // 账户维护费账务明细代码
+        BokDetailId accountManageFeeCode = null;
         // 印花税账务明细代码
         BokDetailId stampDutyCode = null;
         // 经手费账务明细代码
@@ -1090,10 +1094,20 @@ public class CalculationCommonService {
                         chlFeeCode = bokDetailId;//根据代码来改动，跟设计有点差别
                     }
                     /** add by yanya on 20200228 增加一次性通道费处理  end**/
+                    /**add jinmaodong 20210317 增加账户维护费预提功能时增加 start**/
+                    else if(DictCodeListExt1.一次性费用类型_账户维护费.getValue().equals(valTradeFeeDetail.getFeeType())){
+                        accountManageFee = ArithmeticUtil.doAdd(accountManageFee, valTradeFeeDetail.getFeeAmt());
+                        accountManageFeeCode = bokDetailId;
+                    }
+                    /**add jinmaodong 20210317 增加账户维护费预提功能时增加 end**/
                 }
             }
-            
+
         }
+        /**add jinmaodong 20210317 增加账户维护费预提功能时增加 start**/
+        dealTypesFeeDto.setAccountManageFee(ArithmeticUtil.round(accountManageFee, NumberEnum.MONEY));
+        dealTypesFeeDto.setAccountManageFeeCode(accountManageFeeCode);
+        /**add jinmaodong 20210317 增加账户维护费预提功能时增加 end**/
         /** modify by dongjun on 20181119 start**/
         dealTypesFeeDto.setFeeAmt(ArithmeticUtil.round(feeAmt, NumberEnum.MONEY));
         dealTypesFeeDto.setNoFeeAmt(ArithmeticUtil.round(noFeeAmt, NumberEnum.MONEY));
@@ -1837,6 +1851,9 @@ public class CalculationCommonService {
         else if (DictCodeList.利率类型_浮动利率.getValue().equals(intRateTypeString)) {
             intRateType = IntRateType.浮动利率;
         }
+        //20200820 DENGYU 修改 债券中间利率变更，利率变更后付息日前一日债券计提错误，计提值仍是按照利率变更前的利率来计算的 start
+        intRateType = IntRateType.浮动利率;
+        //20200820 DENGYU 修改 债券中间利率变更，利率变更后付息日前一日债券计提错误，计提值仍是按照利率变更前的利率来计算的 end
         secInfoModel.setIntRateType(intRateType);
         // 利息分配方式
         AllocationType allocationType = null;
