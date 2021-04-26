@@ -260,6 +260,8 @@ application:
       investInterfService: http://127.0.0.1:${server.port}/tams
       adapterService: http://127.0.0.1:${server.port}/tams
       bankuplinkService: http://127.0.0.1:${server.port}/tams
+      exchangeService: http://127.0.0.1:${server.port}/tams/service
+      quoteService: http://127.0.0.1:${server.port}/tams/service
 
 # 使用服务注册中心的方式
 #  loadbalance: true
