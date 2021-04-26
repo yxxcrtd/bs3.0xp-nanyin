@@ -741,7 +741,7 @@
 		ciis.SEND_STATUS != #{unSubmit} and ciis.STATUS != #{statusD}
 		GROUP BY
 		ciis.INDENTIFY_MARK
-		)
+		) tmp
 		where qty>0
 	</select>
 	<!-- 查询登记表的检查序列号 -->
