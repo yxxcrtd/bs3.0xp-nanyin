@@ -20,10 +20,10 @@ import java.util.Map;
  * 
  * @author yanya
  * @version 1.0 2020-03-04
- * @see DateCalcMapper
+ * @see ValDateCalcMapper
  * @since 1.0
  */
-public interface DateCalcMapper {
+public interface ValDateCalcMapper {
 
     /**
      * 交易日历的节假日取得

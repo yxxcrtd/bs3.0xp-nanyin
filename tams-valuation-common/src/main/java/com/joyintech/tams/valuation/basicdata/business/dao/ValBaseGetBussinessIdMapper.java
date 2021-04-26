@@ -22,11 +22,11 @@ import java.util.List;
  * 〈功能详细描述〉
  * @author dingzhipeng
  * @version 1.0 2018年8月14日
- * @see BaseGetBussinessIdMapper
+ * @see ValBaseGetBussinessIdMapper
  * @since 1.0
  */
 @Repository
-public interface BaseGetBussinessIdMapper {
+public interface ValBaseGetBussinessIdMapper {
 
     /**
      * 查询所需要的参数

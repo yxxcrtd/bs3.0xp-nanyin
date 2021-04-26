@@ -11,18 +11,16 @@
 package com.joyintech.tams.valuation.component.business.dao;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 组件共通服务
  * 
  * @author yanya
  * @version 1.0 2020-03-04
- * @see CommonBusinessMapper
+ * @see ValCommonBusinessMapper
  * @since 1.0
  */
-public interface CommonBusinessMapper {
+public interface ValCommonBusinessMapper {
 
     Date getMaxTradeDate(String finprodId);
 

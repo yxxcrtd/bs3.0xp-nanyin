@@ -3,12 +3,11 @@ package com.joyintech.tams.valuation.component.business.service;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.valuation.component.business.dao.ComponentWorkflowCommonMapper;
+import com.joyintech.tams.valuation.component.business.dao.ValComponentWorkflowCommonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -23,7 +22,7 @@ import java.util.Map;
 public class ComponentWorkflowCommonService {
 
     @Autowired
-    private ComponentWorkflowCommonMapper componentWorkflowCommonMapper;
+    private ValComponentWorkflowCommonMapper componentWorkflowCommonMapper;
 
 
     /**

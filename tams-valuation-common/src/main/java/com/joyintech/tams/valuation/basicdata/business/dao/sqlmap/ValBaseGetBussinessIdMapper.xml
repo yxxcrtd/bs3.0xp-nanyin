@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.valuation.basicdata.business.dao.BaseGetBussinessIdMapper" >
+<mapper namespace="com.joyintech.tams.valuation.basicdata.business.dao.ValBaseGetBussinessIdMapper" >
 	<select id="selectRuleByParameter" parameterType="com.joyintech.tams.valuation.basicdata.business.dto.BussinessCodeParameter"
 	resultMap="com.joyintech.tams.common.base.dao.MstBusinessIdRuleMapper.BaseResultMap">
 		SELECT

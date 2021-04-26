@@ -3,7 +3,7 @@ package com.joyintech.tams.valuation.component.business.service;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.valuation.component.business.dao.DateCalcMapper;
+import com.joyintech.tams.valuation.component.business.dao.ValDateCalcMapper;
 import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class DateCalService {
      * 付息计划，开放计划，利率重置，申购计划，赎回计划计算用和日期关联的Mapper
      */
     @Autowired(required = false)
-    private DateCalcMapper dateCalcMapper;
+    private ValDateCalcMapper dateCalcMapper;
 
     /**
      * 交易日历的节假日取得

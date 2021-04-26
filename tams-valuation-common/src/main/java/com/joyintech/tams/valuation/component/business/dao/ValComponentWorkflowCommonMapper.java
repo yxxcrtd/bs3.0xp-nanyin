@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
  * @create 2021-03-03 9:58
  */
 @Repository
-public interface ComponentWorkflowCommonMapper {
+public interface ValComponentWorkflowCommonMapper {
     /**
      * 根据工作ID获取提交流程数据
      * @param workFlowId

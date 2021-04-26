@@ -4,7 +4,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.MstBusinessIdRule;
-import com.joyintech.tams.valuation.basicdata.business.dao.BaseGetBussinessIdMapper;
+import com.joyintech.tams.valuation.basicdata.business.dao.ValBaseGetBussinessIdMapper;
 import com.joyintech.tams.valuation.basicdata.business.dto.BussinessCodeParameter;
 import com.joyintech.tams.valuation.common.service.BaseCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class BaseGetBussinessIdService {
      * 业务编号生成规则mapper
      */
     @Autowired
-    private BaseGetBussinessIdMapper baseGetBussinessIdMapper;
+    private ValBaseGetBussinessIdMapper valBaseGetBussinessIdMapper;
 
 //    /**
 //     *
@@ -50,7 +50,7 @@ public class BaseGetBussinessIdService {
         // 生成的业务编号
         String bussinessCode = null;
         // 多条规则时直接取第一条 modify by renping 20190924 start
-        List<MstBusinessIdRule> ruleList = baseGetBussinessIdMapper.selectRuleByParameter(parameter);
+        List<MstBusinessIdRule> ruleList = valBaseGetBussinessIdMapper.selectRuleByParameter(parameter);
         MstBusinessIdRule rule = null;
         if (!StringUtil.isEmptyList(ruleList)) {
             rule = ruleList.get(0);
@@ -98,7 +98,7 @@ public class BaseGetBussinessIdService {
         // 前缀生成用序列名称是否为空
         if (StringUtil.isNotEmpty(rule.getPrefixSequenceName())) {
             // 根据名字获取序列号
-            String nextVal = baseGetBussinessIdMapper.getNextValBySequenceName(
+            String nextVal = valBaseGetBussinessIdMapper.getNextValBySequenceName(
                     rule.getPrefixSequenceName());
             String bussinessCode = getFormatCode(nextVal, rule.getPrefixSequenceLen().toString());
             return bussinessCode;
@@ -123,14 +123,14 @@ public class BaseGetBussinessIdService {
         if (StringUtil.isNotEmpty(rule.getPrefixSequenceName())) {
             // 根据名字获取前缀序列号
             prefixSequence = getFormatCode(
-                    baseGetBussinessIdMapper.getNextValBySequenceName(rule.getPrefixSequenceName()),
+                    valBaseGetBussinessIdMapper.getNextValBySequenceName(rule.getPrefixSequenceName()),
                     rule.getPrefixSequenceLen().toString());
         }
         // 后缀生成用序列名称不为空
         if (StringUtil.isNotEmpty(rule.getPostfixSequenceName())) {
             // 根据名字获取后缀序列号
             postfixSequence = getFormatCode(
-                    baseGetBussinessIdMapper.getNextValBySequenceName(rule.getPostfixSequenceName()),
+                    valBaseGetBussinessIdMapper.getNextValBySequenceName(rule.getPostfixSequenceName()),
                     rule.getPostfixSequenceLen().toString());
         }
         // 生成的业务编号
@@ -183,14 +183,14 @@ public class BaseGetBussinessIdService {
         if (StringUtil.isNotEmpty(rule.getPrefixSequenceName())) {
             // 根据名字获取前缀序列号
             prefixSequence = getFormatCode(
-                    baseGetBussinessIdMapper.getNextValBySequenceName(rule.getPrefixSequenceName()),
+                    valBaseGetBussinessIdMapper.getNextValBySequenceName(rule.getPrefixSequenceName()),
                     rule.getPrefixSequenceLen().toString());
         }
         // 后缀生成用序列名称不为空
         if (StringUtil.isNotEmpty(rule.getPostfixSequenceName())) {
             // 根据名字获取后缀序列号
             postfixSequence = getFormatCode(
-                    baseGetBussinessIdMapper.getNextValBySequenceName(rule.getPostfixSequenceName()),
+                    valBaseGetBussinessIdMapper.getNextValBySequenceName(rule.getPostfixSequenceName()),
                     rule.getPostfixSequenceLen().toString());
         }
         // 生成的业务编号
