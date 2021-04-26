@@ -45,6 +45,8 @@ public class BusiAutoAddTradeProductDealDto {
      */
     private TrdDealTotalAdd trdDealTotalAdd;
 
+    private List<PtlTrade> ptlTrades;
+
     /**
      * 实体组合代码
      */
@@ -136,5 +138,13 @@ public class BusiAutoAddTradeProductDealDto {
 
     public void setTrdFinProductBarterTotal(TrdFinProductBarterTotal trdFinProductBarterTotal) {
         this.trdFinProductBarterTotal = trdFinProductBarterTotal;
+    }
+
+    public List<PtlTrade> getPtlTrades() {
+        return ptlTrades;
+    }
+
+    public void setPtlTrades(List<PtlTrade> ptlTrades) {
+        this.ptlTrades = ptlTrades;
     }
 }

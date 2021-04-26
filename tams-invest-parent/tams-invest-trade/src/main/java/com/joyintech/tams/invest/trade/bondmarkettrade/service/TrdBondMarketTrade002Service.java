@@ -209,6 +209,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
                 trdProductDeal.setInvAim(ptlSecPositionFlowDto.getInvAim());
                 trdProductDeal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+                trdProductDeal.setSecManageAcctId(ptlSecPositionFlowDto.getSecAcctId());
                 baseTradeInfoDto.setTrdProductDeal(trdProductDeal);
 
                 TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
@@ -226,6 +227,19 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 trdFinProductBarter.setBranch(branchLong);
                 trdFinProductBarter.setInvAim(ptlSecPositionFlowDto.getInvAim());
                 baseTradeInfoDto.setTrdFinProductBarter(trdFinProductBarter);
+
+                //生成组合交易表(PTL_TRADE)
+                PtlTrade ptlTrade = new PtlTrade();
+                ptlTrade.setPortfolioId(ptlSecPositionFlowDto.getPortfolioId());
+                ptlTrade.setBusiNo(ptlSecPositionFlowDto.getTradeId());
+                ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+                ptlTrade.setBusiId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + entity.getAppearMarketId());
+                ptlTrade.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
+                ptlTrade.setInvAim(ptlSecPositionFlowDto.getInvAim());
+                ptlTrade.setSecManageAcctId(ptlSecPositionFlowDto.getSecAcctId());
+                ptlTrade.setSettleDate(entity.getTradeDate());
+                baseTradeInfoDto.setPtlTrade(Arrays.asList(ptlTrade));
+
                 tradeInfoDtoList.add(baseTradeInfoDto);
                 AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
                 inputDto.setProdid(trdProductDealAdd.getPortfolioId());

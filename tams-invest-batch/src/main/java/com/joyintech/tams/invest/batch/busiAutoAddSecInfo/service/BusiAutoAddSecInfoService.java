@@ -97,6 +97,8 @@ public class BusiAutoAddSecInfoService {
     private TrdProductDealAddMapper trdProductDealAddMapper;
     @Autowired
     private TrdFinProductBarterMapper trdFinProductBarterMapper;
+    @Autowired
+    private PtlTradeMapper ptlTradeMapper;
 
     /**
      *  债券自动上市流通批处理
@@ -431,9 +433,11 @@ public class BusiAutoAddSecInfoService {
         List<TrdProductDeal> deals = new ArrayList<>();
         List<TrdProductDealAdd> dealAdds = new ArrayList<>();
         List<TrdFinProductBarter> dealBarters = new ArrayList<>();
+        List<PtlTrade> dealPtlTrade = new ArrayList<>();
         busiAutoAddTradeProductDealDto.setTrdProductDeals(deals);
         busiAutoAddTradeProductDealDto.setTrdProductDealAdds(dealAdds);
         busiAutoAddTradeProductDealDto.setTrdFinProductBarterList(dealBarters);
+        busiAutoAddTradeProductDealDto.setPtlTrades(dealPtlTrade);
 
         //金融产品交易汇总表
         TrdFinProductDealTotal trdFinProductDealTotal =new TrdFinProductDealTotal();
@@ -474,6 +478,7 @@ public class BusiAutoAddSecInfoService {
                 trdProductDeal.setBranch(0L);
                 trdProductDeal.setCcy(DictCodeList.币种_人民币_CNY.getValue());
                 trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
+                trdProductDeal.setSecManageAcctId(ptlSecPositionFlow.getSecAcctId());
                 deals.add(trdProductDeal);
                 //金融产品交易扩展表
                 TrdProductDealAdd trdProductDealAdd =new TrdProductDealAdd();
@@ -489,6 +494,18 @@ public class BusiAutoAddSecInfoService {
                 trdFinProductBarter.setInvAim(ptlSecPositionFlow.getInvAim());
                 trdFinProductBarter.setBranch(0L);
                 dealBarters.add(trdFinProductBarter);
+
+                //生成组合交易表(PTL_TRADE)
+                PtlTrade ptlTrade = new PtlTrade();
+                ptlTrade.setPortfolioId(ptlSecPositionFlow.getPortfolioId());
+                ptlTrade.setBusiNo(ptlSecPositionFlow.getTradeId());
+                ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+                ptlTrade.setBusiId("F01_"+secId);
+                ptlTrade.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
+                ptlTrade.setInvAim(ptlSecPositionFlow.getInvAim());
+                ptlTrade.setSecManageAcctId(ptlSecPositionFlow.getSecAcctId());
+                ptlTrade.setSettleDate(batchDate);
+                dealPtlTrade.add(ptlTrade);
 
             AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
 //            inputDto.setPageId("TrdBondInvestTrade002");
@@ -524,6 +541,11 @@ public class BusiAutoAddSecInfoService {
             if (!StringUtil.isEmptyList(busiAutoAddTradeProductDealDto.getTrdFinProductBarterList())) {
                 for (TrdFinProductBarter trdFinProductBarter : busiAutoAddTradeProductDealDto.getTrdFinProductBarterList()) {
                     trdFinProductBarterMapper.insert(trdFinProductBarter);
+                }
+            }
+            if (!StringUtil.isEmptyList(busiAutoAddTradeProductDealDto.getPtlTrades())) {
+                for (PtlTrade ptlTrade : busiAutoAddTradeProductDealDto.getPtlTrades()) {
+                    ptlTradeMapper.insert(ptlTrade);
                 }
             }
         }

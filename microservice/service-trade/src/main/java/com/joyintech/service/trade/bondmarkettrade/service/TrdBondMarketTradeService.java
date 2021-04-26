@@ -136,6 +136,9 @@ public class TrdBondMarketTradeService extends BaseService {
 
     @Autowired(required = false)
     private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
+
+    @Autowired(required = false)
+    private PtlTradeMapper ptlTradeMapper;
     
     /**
      * 分页查询
@@ -253,6 +256,7 @@ public class TrdBondMarketTradeService extends BaseService {
                 trdProductDealMapper.insertSelective(baseTradeInfoDto.getTrdProductDeal());
                 trdProductDealAddMapper.insertSelective(baseTradeInfoDto.getTrdProductDealAdd());
                 trdFinProductBarterMapper.insertSelective(baseTradeInfoDto.getTrdFinProductBarter());
+                ptlTradeMapper.insert(baseTradeInfoDto.getPtlTrade().get(0));
             }    
         }
     }
