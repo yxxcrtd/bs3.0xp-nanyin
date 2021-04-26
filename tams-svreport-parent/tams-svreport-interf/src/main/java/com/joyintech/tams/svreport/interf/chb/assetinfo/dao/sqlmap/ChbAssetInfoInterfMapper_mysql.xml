@@ -220,9 +220,9 @@
         <result column="PBC_ASSET_TYPE3" property="pbcAssetType3"
             jdbcType="VARCHAR" />
         <result column="TRM_FUND_TYPE" property="trmFundType" jdbcType="VARCHAR" />
-            
+
       <result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
-	
+
 	<result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
 	<result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
 	<result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
@@ -261,7 +261,7 @@
     <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
     <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
-              
+
     </resultMap>
     <resultMap id="PsbcBaseResultMap"
         type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
@@ -474,9 +474,9 @@
         <result column="ORG_ASSET_TYPE4" property="orgAssetType4"
             jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE5" property="orgAssetType5"
-            jdbcType="VARCHAR" />  
+            jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE_EX" property="orgAssetTypeEx"
-            jdbcType="VARCHAR"/>      
+            jdbcType="VARCHAR"/>
         <result column="BUY_PLACE" property="buyPlace"
             jdbcType="VARCHAR" />
         <result column="ASSET_TYPE3" property="assetType3"
@@ -491,7 +491,7 @@
             jdbcType="VARCHAR" />
         <result column="TRM_FUND_TYPE" property="trmFundType" jdbcType="VARCHAR" />
     </resultMap>
-    
+
     <sql id="Base_Column_List">
         ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE,
         DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT,
@@ -538,7 +538,7 @@
         BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,
         ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,BUY_PLACE,ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3
     </sql>
-    
+
     <sql id="Psbc_Base_Column_List">
         ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE,
         DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT,
@@ -585,7 +585,7 @@
         BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,ORG_ASSET_TYPE1,
         ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3
     </sql>
-    
+
     <insert id="insertBatch"
         parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         insert into CHB_ASSET_INFO (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -1486,7 +1486,7 @@
         </foreach>
         ;end;
     </update>
-    
+
     <update id="updateBatchPsbc"
         parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         begin
@@ -1976,34 +1976,34 @@
         </foreach>
         ;end;
     </update>
-    
+
     <select id="selectIsExistAssetByAssetCode" parameterType="java.lang.String" resultType="java.lang.Integer">
     select count(*)
     from chb_asset_info
     where  ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
-    
+
     </select>
-    
+
     <delete id="deleteByAssetCodeList" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
       delete from chb_asset_info
       <where>
         <foreach collection="insertList" item="item" index="index" open="ASSET_CODE in (" close=")" separator=",">
-        #{item.assetCode,jdbcType=VARCHAR} 
+        #{item.assetCode,jdbcType=VARCHAR}
         </foreach>
       </where>
     </delete>
-    
+
     <delete id="deleteByAssetCode" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
       delete from chb_asset_info
       <where>
-        ASSET_CODE = #{assetCode,jdbcType=VARCHAR} 
+        ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
       </where>
     </delete>
-    
+
     <select id="selectAssetCodeByAssetType" parameterType="java.util.Map" resultType="java.lang.String">
         select ASSET_CODE
         from chb_asset_info
-        where  1 =1 
+        where  1 =1
         <if test='assetTypeList != null'>
         <foreach collection="assetTypeList" item="assetType" index="index" open="and ASSET_TYPE in (" close=")" separator=",">
             #{assetType,jdbcType=VARCHAR}
@@ -2013,12 +2013,12 @@
             and DATE_FORMAT(status_date,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
         </if>
     </select>
-    
-  
+
+
     <select id="selectAssetCodeBySysdate" parameterType="java.util.Map" resultType="java.lang.String">
         select ASSET_CODE
         from chb_asset_info
-        where  1 =1 
+        where  1 =1
         <if test='isToday != null '>
             <choose >
                 <when test=' isToday == true'>
@@ -2476,12 +2476,12 @@
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
         DETAIL.REP_BANK_SEC_CAPITAL as BANK_SEC_CAPITAL,
-		
+
 		DETAIL.REP_BANK_SEC_PERPETUAL as BANK_SEC_PERPETUAL,
-		
-		NULL BANK_SEC_PREFER 
-		
-		
+
+		NULL BANK_SEC_PREFER
+
+
         FROM REP_ASSET_BOND DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -2768,7 +2768,7 @@
         left join MST_COUNTER_PARTY mcp
         on tradeproduct.COUNTER_ID=mcp.COUNTER_ID
         left join MST_CUSTOMER_INFO_ADD issueraddq
-        on info.issuer = issueraddq.CUSTOMER_ID 
+        on info.issuer = issueraddq.CUSTOMER_ID
         WHERE 1 =1
         and ifnull(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
@@ -2777,7 +2777,7 @@
         <![CDATA[or ifnull(info.UPDATE_TIME,info.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(infotp.UPDATE_TIME,infotp.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(customerinfo.UPDATE_TIME,customerinfo.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
-        <![CDATA[or ifnull(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>        
+        <![CDATA[or ifnull(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(mcp.UPDATE_TIME,mcp.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
          /*拆放同业及买入返售报送信息、负债(同业拆入/卖出回购)报送信息*/
         UNION ALL
@@ -3002,11 +3002,11 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
-		
+
         FROM REP_LIABILITIES DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -3085,7 +3085,7 @@
              case when T22.INT_TYPE = '02' and T22.COEFFICIENT != 1 then
                  (T22.COEFFICIENT - 1) * 100
               else null end
-         end as FLOAT_FACTOR,    
+         end as FLOAT_FACTOR,
         detail.REP_SPREAD_RATE SPREAD_RATE,
         detail.REP_FINANCIER FINANCIE,
         detail.REP_FIN_ORG_CODE FIN_ORG_CODE,
@@ -3237,14 +3237,14 @@
                   else null
              end
         end  as COUPON_SPECIES,
-        case when ASSET.REP_ASSET_TYPE ='2201' then null 
-             when ASSET.REP_ASSET_TYPE ='2202' then null 
+        case when ASSET.REP_ASSET_TYPE ='2201' then null
+             when ASSET.REP_ASSET_TYPE ='2202' then null
         else case when T31.PAY_CYCLE='08' then '02'
                   else '01'
                   END
         end as INTEREST_RULE_FLAG,
-        case when ASSET.REP_ASSET_TYPE ='2201' then null 
-             when ASSET.REP_ASSET_TYPE ='2202' then null 
+        case when ASSET.REP_ASSET_TYPE ='2201' then null
+             when ASSET.REP_ASSET_TYPE ='2202' then null
         else DETAIL.REP_INTPAY_RULE
         end as INTPAY_RULE,
         case when ASSET.REP_ASSET_TYPE ='2201' then null
@@ -3301,7 +3301,7 @@
         end as CREDIT_ORG_CODE,
         case when ASSET.REP_ASSET_TYPE ='2201' then null
              when ASSET.REP_ASSET_TYPE ='2202' then null
-        else b.CUSTOMER_NAME 
+        else b.CUSTOMER_NAME
         end as CREDIT_ORG_NAME,
         null EQUITY_QUIT,
         null DEPT_EQUITY,
@@ -3324,7 +3324,7 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
-        
+
         left join  FIN_CASH_INFO T11
         on T11.FINPROD_ID =detail.REP_FINPROD_ID  AND T11.CASH_TYPE_2 = 'C02'
         LEFT JOIN FIN_RATE_INFO T21
@@ -3332,7 +3332,7 @@
         LEFT JOIN FIN_CASH_PAY_RULE T31
         ON (T31.CASH_ID = T11.CASH_ID
             AND T31.EFF_DATE = info.VDATE)
-        
+
         left join FIN_CASH_INFO T12
         on T12.FINPROD_ID = detail.REP_FINPROD_ID  and T12.CASH_TYPE_2 = 'C02'
         left join FIN_RATE_INFO T22
@@ -3348,11 +3348,11 @@
         left join fin_product_credit tt
         on tt.FINPROD_ID = detail.REP_FINPROD_ID
         left join mst_customer_info_add a
-        on tt.credit_flag = a.customer_id	
-        left join mst_customer_info b	
+        on tt.credit_flag = a.customer_id
+        left join mst_customer_info b
         on b.customer_id = a.customer_id
 
-        
+
         WHERE 1 =1
         and ifnull(info.IS_CHL,'N') = 'N'<!-- 去除通道资产的信息，通道资产的信息单独查询 -->
         and ASSET.IS_REP_TARGET = 'Y'
@@ -3567,7 +3567,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
@@ -4030,7 +4030,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
@@ -4259,11 +4259,11 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
-		
+
         FROM REP_ASSET_AST_QDII_SEC DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -4489,11 +4489,11 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
-		
+
         FROM REP_ASSET_AST_QDII_REV DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -4719,11 +4719,11 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
-		
+
         FROM REP_AST_QDII_SHARE DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -4949,11 +4949,11 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
-		
+
         FROM REP_AST_QDII_STRUCT DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -5415,7 +5415,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
@@ -5645,7 +5645,7 @@
         DETAIL.REP_DEPT_EQUITY DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
@@ -5878,7 +5878,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
@@ -6108,7 +6108,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         DETAIL.REP_FINANCIAL_COMISSUE FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
@@ -6342,7 +6342,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
@@ -6573,11 +6573,11 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
-		
+
         FROM REP_LIABILITIES_OTHER DETAIL
         left JOIN REP_ASSET_DEPT ASSET
         on detail.REP_FINPROD_ID = ASSET.REP_FINPROD_ID
@@ -6823,7 +6823,7 @@
         null DEPT_EQUITY,
         FTP.hold_purpose HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
@@ -7092,7 +7092,7 @@
         null DEPT_EQUITY,
         null HOLD_PURPOSE,
         null FINANCIAL_COMISSUE,
-		
+
 		NULL  BANK_SEC_CAPITAL,
 		NULL BANK_SEC_PERPETUAL,
 		NULL BANK_SEC_PREFER
@@ -11526,7 +11526,7 @@
             #{pbcAssetTyp3,jdbcType=VARCHAR},
         )
     </insert>
-    
+
      <insert id="insertPsbc"
         parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         insert into CHB_ASSET_INFO (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -11733,29 +11733,29 @@
             #{pbcAssetTyp3,jdbcType=VARCHAR},
         )
     </insert>
-    
+
     <delete id="deleteAllData">
       truncate table chb_asset_info
     </delete>
-    
+
     <delete id="deleteBySysTime" parameterType="java.util.Map">
         delete from chb_asset_info
         <where>
             <if test="isToday != null ">
                 <choose>
                     <when test="isToday == true">
-                        DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d') 
+                        DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d')
                         = DATE_FORMAT(NOW(),'%Y-%m-%d')
                     </when>
                     <otherwise>
-                        DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d') 
+                        DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d')
                         &lt;= DATE_FORMAT(NOW(),'%Y-%m-%d')
                     </otherwise>
                 </choose>
             </if>
         </where>
-    </delete>   
-    
+    </delete>
+
     <insert id="mergeInfoList"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         insert into CHB_ASSET_INFO(ASSET_UUID, ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
@@ -11847,7 +11847,22 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL)
+        BANK_SEC_PERPETUAL,
+        BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ,
+        ISUNLISTED,
+        IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+        CHB_ISSUER_ID,
+        CHB_MANAGER_ID,
+        CHB_FINANCIER_ID,
+        PERPETUAL_FLAG,
+        OPTION_FLAG,
+        IS_BJSZQ,
+        IS_PERPETUAL,
+        IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
+        ,PRIVATE_FLAG)
         select ASSET_UUID, ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE, DISCOUNT_YIELD,
@@ -11938,9 +11953,239 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL from
+        BANK_SEC_PERPETUAL,
+        BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ,
+        ISUNLISTED,
+        IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+        CHB_ISSUER_ID,
+        CHB_MANAGER_ID,
+        CHB_FINANCIER_ID,
+        PERPETUAL_FLAG,
+        OPTION_FLAG,
+        IS_BJSZQ,
+        IS_PERPETUAL,
+        IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
+        ,PRIVATE_FLAG from
         (
-        select TEMP.* from
+        select TEMP.ASSET_UUID,
+        TEMP.ASSET_CODE,
+        TEMP.ASSET_TYPE,
+        TEMP.ASSET_TYPE2,
+        TEMP.CCY,
+        TEMP.TRADE_MARKET,
+        TEMP.VDATE,
+        TEMP.MDATE,
+        TEMP.DISCOUNT_YIELD,
+        TEMP.ASSET_YIELD,
+        TEMP.BASIS,
+        TEMP.AMT,
+        TEMP.BANK_NAME,
+        TEMP.IS_STRUCT,
+        TEMP.TARGET_TYPE,
+        TEMP.TARGET,
+        TEMP.ASSET_ID,
+        TEMP.ASSET_NAME,
+        TEMP.CHB_SECTYPE,
+        TEMP.ISSUE_MODE,
+        TEMP.PARTY_GRADE,
+        TEMP.INSTIT_SIZE,
+        TEMP.PARTY_TYPE1,
+        TEMP.PARTY_TYPE3,
+        TEMP.PARTY_TYPE2,
+        TEMP.INDUSTRY,
+        TEMP.INDUSTRY_LEVEL2,
+        TEMP.REGIST_ORG,
+        TEMP.REGISTORG_COMMENT,
+        TEMP.RIVAL_PARTY,
+        TEMP.TARGET_TYPE1,
+        TEMP.TARGET_AMT,
+        TEMP.COUNTRY_AREA,
+        TEMP.PROFIT_TYPE,
+        TEMP.IS_RESALE,
+        TEMP.TERM_DATE,
+        TEMP.RATE_FLAG,
+        TEMP.INTPAY_CYCLE,
+        TEMP.REPAY_CMT,
+        TEMP.BASIS_TYPE,
+        TEMP.FLOAT_FACTOR,
+        TEMP.SPREAD_RATE,
+        TEMP.FINANCIE,
+        TEMP.FIN_ORG_CODE,
+        TEMP.FCR_GRADE_IN,
+        TEMP.FCR_GRADE_OUT,
+        TEMP.FINANCIER_TYPE1,
+        TEMP.FINANCIER_TYPE2,
+        TEMP.FINANCIER_TYPE3,
+        TEMP.FINANCE_PROJ,
+        TEMP.INDUSTRY1,
+        TEMP.INDUSTRY_LEVEL2_TYPE,
+        TEMP.PRO_INDUSTRY,
+        TEMP.PRO_INDUSTRY_LEVEL2,
+        TEMP.INDUSTRY_FLAG,
+        TEMP.MONIT_TYPE,
+        TEMP.MON_TYPE_COMM,
+        TEMP.GUA_TYPE,
+        TEMP.GUA_TYPE_REMARK,
+        TEMP.FINANCIER_GRADE,
+        TEMP.IN_GRADE,
+        TEMP.OUT_GRADE,
+        TEMP.CHOSE,
+        TEMP.CONDITION_CMM,
+        TEMP.FIN_AREA,
+        TEMP.TOTAL_FEE_RATE,
+        TEMP.IS_RIGHT,
+        TEMP.NOTSTAND_SEC_TYPE,
+        TEMP.NOTSTAND_SEC_NUM,
+        TEMP.REMAIN_TERM,
+        TEMP.MAX_REMAIN_TERM,
+        TEMP.MIN_REMAIN_TERM,
+        TEMP.SHARES_TYPE,
+        TEMP.INDUSTRY_SHARES,
+        TEMP.INDUSTRY_SHARES2,
+        TEMP.INVEST_STAGE,
+        TEMP.SHARES_TYPE1,
+        TEMP.SHARES_TYPE2,
+        TEMP.SHARES_TYPE3,
+        TEMP.IS_PLEDGE,
+        TEMP.NOM_CAPI,
+        TEMP.TARGET_TYPE3,
+        TEMP.ISSUE_PARTY_ID,
+        TEMP.TERM_MONTH,
+        TEMP.GUARANTEE_CMT,
+        TEMP.SPECIAL_CMT,
+        TEMP.CONTRACT_NAME,
+        TEMP.INCOME_RATIO,
+        TEMP.DER_INSTR_RATIO,
+        TEMP.DER_INSTR_INV_TYPE,
+        TEMP.DER_INSTR_TARGET,
+        TEMP.ACCT_MODE,
+        TEMP.SPECIAL_CMT1,
+        TEMP.MAX_YIELD,
+        TEMP.MIN_YIELD,
+        TEMP.BASIC_PRICE,
+        TEMP.REG_DATE_PRICE,
+        TEMP.TRADE_FEE,
+        TEMP.PARTY_CODE,
+        TEMP.CHECK_CODE,
+        TEMP.MANAGER_ID,
+        TEMP.TRUSTEE_ID,
+        TEMP.TRU_ACT_TYPE,
+        TEMP.INVEST_TYPE,
+        TEMP.CAP_USE_INDU,
+        TEMP.PLAN_SDATE,
+        TEMP.PLAN_EDATE,
+        TEMP.PRO_PROPERTY,
+        TEMP.MAX_RATE,
+        TEMP.MIN_RATE,
+        TEMP.DEBT_SCALE,
+        TEMP.BUY_STRUCT,
+        TEMP.MANAGE_TYPE,
+        TEMP.IS_CTRL_BOTTOM,
+        TEMP.MGR_FEE_RATE,
+        TEMP.TRU_FEE_RATE,
+        TEMP.TRADE_FEE_RATE,
+        TEMP.AGENCY_FEE_RATE,
+        TEMP.OTHER_FEE_RATE,
+        TEMP.ASSET_VALUE,
+        TEMP.REGIST_ORG1,
+        TEMP.MNG_ORG_NAME,
+        TEMP.TRU_ORG_NAME,
+        TEMP.FUND_INVEST_ASSET,
+        TEMP.IN_ASSET_TYPE,
+        TEMP.IN_ASSET_TYPE_CMM,
+        TEMP.REMARK,
+        TEMP.IS_UNDER_ASSET,
+        TEMP.IS_GOVERN_FUND,
+        TEMP.GOVERN_INVEST_FUND,
+        TEMP.FUND_ENPE_NAME,
+        TEMP.TRUSTEE,
+        'E' STATUS,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.DEPT_CODE,
+        TEMP.ORG_CODE,
+        TEMP.DATA_SOURCE,
+        TEMP.PRIVATEFUND_FLAG,
+        TEMP.PRIVATEPRD_FLAG,
+        TEMP.BONDTOSTOCK_FLAG,
+        TEMP.PPPFLAG,
+        TEMP.STATUS_DATE,
+        TEMP.CAP_USE_INDU_LEVEL2,
+        TEMP.ISSUE_PARTY_NAME,
+        TEMP.SEC_CREDIT_GRADE_TYPE,
+        TEMP.SEC_MAIN_GRADE,
+        TEMP.BLN_AREA,
+        TEMP.INDUSTRY_PBC,
+        TEMP.CUSTOMER_OBJ_TYPE,
+        TEMP.ORG_ASSET_TYPE1,
+        TEMP.ORG_ASSET_TYPE2,
+        TEMP.ORG_ASSET_TYPE3,
+        TEMP.BUY_PLACE,
+        TEMP.ASSET_TYPE3,
+        TEMP.PBC_ASSET_TYPE1,
+        TEMP.PBC_ASSET_TYPE2,
+        TEMP.PBC_ASSET_TYPE3,
+        TEMP.ASSET_CODE_OLD,
+        TEMP.TRM_FUND_TYPE,
+        TEMP.DEPO_TYPE,
+        TEMP.RIVAL_PARTY_TYPE,
+        TEMP.PRIN_BASEAMT,
+        TEMP.FMDATE,
+        TEMP.COUPON_SPECIES,
+        TEMP.INTEREST_RULE_FLAG,
+        TEMP.INTPAY_RULE,
+        TEMP.FLOAT_FACTOR_FLAG,
+        TEMP.STRUCT_GRADE,
+        TEMP.REPAYMENT_TYPE,
+        TEMP.PERIOD_REPAYMENT_FLAG,
+        TEMP.BASIC_ASSET_TYPE,
+        TEMP.EXCESS_PROFIT_RATE,
+        TEMP.PLEDGE_TYPE,
+        TEMP.PLEDGE_VALUE,
+        TEMP.NATURE_GUARANTEE,
+        TEMP.RELATION_FINAN,
+        TEMP.CONTAIN_TYPE,
+        TEMP.EXERCISE_TYPE,
+        TEMP.EXERCISE_DATE,
+        TEMP.FIRST_EXERCISE_DATE,
+        TEMP.EXERCISE_PERIOD,
+        TEMP.EXERCISE_PRICE,
+        TEMP.PERPETUAL_CLAUSE_TYPE,
+        TEMP.DEFERRED_INTEREST_TYPE,
+        TEMP.DEFERRED_INTEREST_INT,
+        TEMP.FIRST_REPRCE_DATE,
+        TEMP.REPRCE_CYCLE,
+        TEMP.PART_REDEM_FLAG,
+        TEMP.PART_REDEM_RATE,
+        TEMP.CREDIT_ORG_CODE,
+        TEMP.CREDIT_ORG_NAME,
+        TEMP.EQUITY_QUIT,
+        TEMP.DEPT_EQUITY,
+        TEMP.HOLD_PURPOSE,
+        TEMP.FINANCIAL_COMISSUE,
+        TEMP.BANK_SEC_CAPITAL,
+        TEMP.BANK_SEC_PREFER,
+        TEMP.BANK_SEC_PERPETUAL,
+        TEMP.BANK_SEC_KZZQ,
+        TEMP.BANK_SEC_ZXZQ,
+        TEMP.ISUNLISTED,
+        TEMP.IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+        TEMP.CHB_ISSUER_ID,
+        TEMP.CHB_MANAGER_ID,
+        TEMP.CHB_FINANCIER_ID,
+        TEMP.PERPETUAL_FLAG,
+        TEMP.OPTION_FLAG,
+        TEMP.IS_BJSZQ,
+        TEMP.IS_PERPETUAL,
+        TEMP.IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
+        ,TEMP.PRIVATE_FLAG from
         (
         <foreach collection="newDataList" item="item"  separator="union all">
             select
@@ -12144,15 +12389,29 @@
             #{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
             #{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
             #{item.bankSecPrefer,jdbcType=VARCHAR}  BANK_SEC_PREFER,
-            #{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL
+            #{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
+            #{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
+            #{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
+            #{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
+            #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
+            <!-- add by zhangliang G06升级字段新增  start -->
+            #{item.chbIssuerId,jdbcType=VARCHAR} CHB_ISSUER_ID,
+            #{item.chbManagerId,jdbcType=VARCHAR} CHB_MANAGER_ID,
+            #{item.chbFinancierId,jdbcType=VARCHAR} CHB_FINANCIER_ID,
+            #{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
+            #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
+            #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
+            #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
+            #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
+            <!-- add by zhangliang G06升级字段新增  end -->
+            ,#{item.privateFlag,jdbcType=VARCHAR} PRIVATE_FLAG
             from dual
         </foreach>
-        ) TEMP where not exisits (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
+        ) TEMP where not EXISTS (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
         ) de ;
-
         UPDATE  CHB_ASSET_INFO as A,
         (
-        select  ASSET_UUID, ASSET_CODE, ASSET_TYPE,
+        select ASSET_UUID, ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE, DISCOUNT_YIELD,
         ASSET_YIELD, BASIS, AMT,
@@ -12242,9 +12501,239 @@
         FINANCIAL_COMISSUE,
         BANK_SEC_CAPITAL,
         BANK_SEC_PREFER,
-        BANK_SEC_PERPETUAL from
+        BANK_SEC_PERPETUAL,
+        BANK_SEC_KZZQ,
+        BANK_SEC_ZXZQ,
+        ISUNLISTED,
+        IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+        CHB_ISSUER_ID,
+        CHB_MANAGER_ID,
+        CHB_FINANCIER_ID,
+        PERPETUAL_FLAG,
+        OPTION_FLAG,
+        IS_BJSZQ,
+        IS_PERPETUAL,
+        IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
+        ,PRIVATE_FLAG from
         (
-        select TEMP.* from
+        select TEMP.ASSET_UUID,
+        TEMP.ASSET_CODE,
+        TEMP.ASSET_TYPE,
+        TEMP.ASSET_TYPE2,
+        TEMP.CCY,
+        TEMP.TRADE_MARKET,
+        TEMP.VDATE,
+        TEMP.MDATE,
+        TEMP.DISCOUNT_YIELD,
+        TEMP.ASSET_YIELD,
+        TEMP.BASIS,
+        TEMP.AMT,
+        TEMP.BANK_NAME,
+        TEMP.IS_STRUCT,
+        TEMP.TARGET_TYPE,
+        TEMP.TARGET,
+        TEMP.ASSET_ID,
+        TEMP.ASSET_NAME,
+        TEMP.CHB_SECTYPE,
+        TEMP.ISSUE_MODE,
+        TEMP.PARTY_GRADE,
+        TEMP.INSTIT_SIZE,
+        TEMP.PARTY_TYPE1,
+        TEMP.PARTY_TYPE3,
+        TEMP.PARTY_TYPE2,
+        TEMP.INDUSTRY,
+        TEMP.INDUSTRY_LEVEL2,
+        TEMP.REGIST_ORG,
+        TEMP.REGISTORG_COMMENT,
+        TEMP.RIVAL_PARTY,
+        TEMP.TARGET_TYPE1,
+        TEMP.TARGET_AMT,
+        TEMP.COUNTRY_AREA,
+        TEMP.PROFIT_TYPE,
+        TEMP.IS_RESALE,
+        TEMP.TERM_DATE,
+        TEMP.RATE_FLAG,
+        TEMP.INTPAY_CYCLE,
+        TEMP.REPAY_CMT,
+        TEMP.BASIS_TYPE,
+        TEMP.FLOAT_FACTOR,
+        TEMP.SPREAD_RATE,
+        TEMP.FINANCIE,
+        TEMP.FIN_ORG_CODE,
+        TEMP.FCR_GRADE_IN,
+        TEMP.FCR_GRADE_OUT,
+        TEMP.FINANCIER_TYPE1,
+        TEMP.FINANCIER_TYPE2,
+        TEMP.FINANCIER_TYPE3,
+        TEMP.FINANCE_PROJ,
+        TEMP.INDUSTRY1,
+        TEMP.INDUSTRY_LEVEL2_TYPE,
+        TEMP.PRO_INDUSTRY,
+        TEMP.PRO_INDUSTRY_LEVEL2,
+        TEMP.INDUSTRY_FLAG,
+        TEMP.MONIT_TYPE,
+        TEMP.MON_TYPE_COMM,
+        TEMP.GUA_TYPE,
+        TEMP.GUA_TYPE_REMARK,
+        TEMP.FINANCIER_GRADE,
+        TEMP.IN_GRADE,
+        TEMP.OUT_GRADE,
+        TEMP.CHOSE,
+        TEMP.CONDITION_CMM,
+        TEMP.FIN_AREA,
+        TEMP.TOTAL_FEE_RATE,
+        TEMP.IS_RIGHT,
+        TEMP.NOTSTAND_SEC_TYPE,
+        TEMP.NOTSTAND_SEC_NUM,
+        TEMP.REMAIN_TERM,
+        TEMP.MAX_REMAIN_TERM,
+        TEMP.MIN_REMAIN_TERM,
+        TEMP.SHARES_TYPE,
+        TEMP.INDUSTRY_SHARES,
+        TEMP.INDUSTRY_SHARES2,
+        TEMP.INVEST_STAGE,
+        TEMP.SHARES_TYPE1,
+        TEMP.SHARES_TYPE2,
+        TEMP.SHARES_TYPE3,
+        TEMP.IS_PLEDGE,
+        TEMP.NOM_CAPI,
+        TEMP.TARGET_TYPE3,
+        TEMP.ISSUE_PARTY_ID,
+        TEMP.TERM_MONTH,
+        TEMP.GUARANTEE_CMT,
+        TEMP.SPECIAL_CMT,
+        TEMP.CONTRACT_NAME,
+        TEMP.INCOME_RATIO,
+        TEMP.DER_INSTR_RATIO,
+        TEMP.DER_INSTR_INV_TYPE,
+        TEMP.DER_INSTR_TARGET,
+        TEMP.ACCT_MODE,
+        TEMP.SPECIAL_CMT1,
+        TEMP.MAX_YIELD,
+        TEMP.MIN_YIELD,
+        TEMP.BASIC_PRICE,
+        TEMP.REG_DATE_PRICE,
+        TEMP.TRADE_FEE,
+        TEMP.PARTY_CODE,
+        TEMP.CHECK_CODE,
+        TEMP.MANAGER_ID,
+        TEMP.TRUSTEE_ID,
+        TEMP.TRU_ACT_TYPE,
+        TEMP.INVEST_TYPE,
+        TEMP.CAP_USE_INDU,
+        TEMP.PLAN_SDATE,
+        TEMP.PLAN_EDATE,
+        TEMP.PRO_PROPERTY,
+        TEMP.MAX_RATE,
+        TEMP.MIN_RATE,
+        TEMP.DEBT_SCALE,
+        TEMP.BUY_STRUCT,
+        TEMP.MANAGE_TYPE,
+        TEMP.IS_CTRL_BOTTOM,
+        TEMP.MGR_FEE_RATE,
+        TEMP.TRU_FEE_RATE,
+        TEMP.TRADE_FEE_RATE,
+        TEMP.AGENCY_FEE_RATE,
+        TEMP.OTHER_FEE_RATE,
+        TEMP.ASSET_VALUE,
+        TEMP.REGIST_ORG1,
+        TEMP.MNG_ORG_NAME,
+        TEMP.TRU_ORG_NAME,
+        TEMP.FUND_INVEST_ASSET,
+        TEMP.IN_ASSET_TYPE,
+        TEMP.IN_ASSET_TYPE_CMM,
+        TEMP.REMARK,
+        TEMP.IS_UNDER_ASSET,
+        TEMP.IS_GOVERN_FUND,
+        TEMP.GOVERN_INVEST_FUND,
+        TEMP.FUND_ENPE_NAME,
+        TEMP.TRUSTEE,
+        TEMP.STATUS,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.DEPT_CODE,
+        TEMP.ORG_CODE,
+        TEMP.DATA_SOURCE,
+        TEMP.PRIVATEFUND_FLAG,
+        TEMP.PRIVATEPRD_FLAG,
+        TEMP.BONDTOSTOCK_FLAG,
+        TEMP.PPPFLAG,
+        TEMP.STATUS_DATE,
+        TEMP.CAP_USE_INDU_LEVEL2,
+        TEMP.ISSUE_PARTY_NAME,
+        TEMP.SEC_CREDIT_GRADE_TYPE,
+        TEMP.SEC_MAIN_GRADE,
+        TEMP.BLN_AREA,
+        TEMP.INDUSTRY_PBC,
+        TEMP.CUSTOMER_OBJ_TYPE,
+        TEMP.ORG_ASSET_TYPE1,
+        TEMP.ORG_ASSET_TYPE2,
+        TEMP.ORG_ASSET_TYPE3,
+        TEMP.BUY_PLACE,
+        TEMP.ASSET_TYPE3,
+        TEMP.PBC_ASSET_TYPE1,
+        TEMP.PBC_ASSET_TYPE2,
+        TEMP.PBC_ASSET_TYPE3,
+        TEMP.ASSET_CODE_OLD,
+        TEMP.TRM_FUND_TYPE,
+        TEMP.DEPO_TYPE,
+        TEMP.RIVAL_PARTY_TYPE,
+        TEMP.PRIN_BASEAMT,
+        TEMP.FMDATE,
+        TEMP.COUPON_SPECIES,
+        TEMP.INTEREST_RULE_FLAG,
+        TEMP.INTPAY_RULE,
+        TEMP.FLOAT_FACTOR_FLAG,
+        TEMP.STRUCT_GRADE,
+        TEMP.REPAYMENT_TYPE,
+        TEMP.PERIOD_REPAYMENT_FLAG,
+        TEMP.BASIC_ASSET_TYPE,
+        TEMP.EXCESS_PROFIT_RATE,
+        TEMP.PLEDGE_TYPE,
+        TEMP.PLEDGE_VALUE,
+        TEMP.NATURE_GUARANTEE,
+        TEMP.RELATION_FINAN,
+        TEMP.CONTAIN_TYPE,
+        TEMP.EXERCISE_TYPE,
+        TEMP.EXERCISE_DATE,
+        TEMP.FIRST_EXERCISE_DATE,
+        TEMP.EXERCISE_PERIOD,
+        TEMP.EXERCISE_PRICE,
+        TEMP.PERPETUAL_CLAUSE_TYPE,
+        TEMP.DEFERRED_INTEREST_TYPE,
+        TEMP.DEFERRED_INTEREST_INT,
+        TEMP.FIRST_REPRCE_DATE,
+        TEMP.REPRCE_CYCLE,
+        TEMP.PART_REDEM_FLAG,
+        TEMP.PART_REDEM_RATE,
+        TEMP.CREDIT_ORG_CODE,
+        TEMP.CREDIT_ORG_NAME,
+        TEMP.EQUITY_QUIT,
+        TEMP.DEPT_EQUITY,
+        TEMP.HOLD_PURPOSE,
+        TEMP.FINANCIAL_COMISSUE,
+        TEMP.BANK_SEC_CAPITAL,
+        TEMP.BANK_SEC_PREFER,
+        TEMP.BANK_SEC_PERPETUAL,
+        TEMP.BANK_SEC_KZZQ,
+        TEMP.BANK_SEC_ZXZQ,
+        TEMP.ISUNLISTED,
+        TEMP.IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+        TEMP.CHB_ISSUER_ID,
+        TEMP.CHB_MANAGER_ID,
+        TEMP.CHB_FINANCIER_ID,
+        TEMP.PERPETUAL_FLAG,
+        TEMP.OPTION_FLAG,
+        TEMP.IS_BJSZQ,
+        TEMP.IS_PERPETUAL,
+        TEMP.IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
+        ,TEMP.PRIVATE_FLAG from
         (
         <foreach collection="newDataList" item="item"  separator="union all">
             select
@@ -12448,17 +12937,244 @@
             #{item.financialComissue,jdbcType=VARCHAR} FINANCIAL_COMISSUE,
             #{item.bankSecCapital,jdbcType=VARCHAR} BANK_SEC_CAPITAL,
             #{item.bankSecPrefer,jdbcType=VARCHAR}  BANK_SEC_PREFER,
-            #{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL
+            #{item.bankSecPerpetual,jdbcType=VARCHAR} BANK_SEC_PERPETUAL,
+            #{item.bankSecKzzq,jdbcType=VARCHAR} BANK_SEC_KZZQ,
+            #{item.bankSecZxzq,jdbcType=VARCHAR} BANK_SEC_ZXZQ,
+            #{item.isunlisted,jdbcType=VARCHAR} ISUNLISTED,
+            #{item.isBzhpj,jdbcType=VARCHAR} IS_BZHPJ,
+            <!-- add by zhangliang G06升级字段新增  start -->
+            #{item.chbIssuerId,jdbcType=VARCHAR} CHB_ISSUER_ID,
+            #{item.chbManagerId,jdbcType=VARCHAR} CHB_MANAGER_ID,
+            #{item.chbFinancierId,jdbcType=VARCHAR} CHB_FINANCIER_ID,
+            #{item.perpetualFlag,jdbcType=VARCHAR} PERPETUAL_FLAG,
+            #{item.optionFlag,jdbcType=VARCHAR} OPTION_FLAG,
+            #{item.isBjszq,jdbcType=VARCHAR} IS_BJSZQ,
+            #{item.isPerpetual,jdbcType=VARCHAR} IS_PERPETUAL,
+            #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
+            <!-- add by zhangliang G06升级字段新增  end -->
+            ,#{item.privateFlag,jdbcType=VARCHAR} PRIVATE_FLAG
             from dual
         </foreach>
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where  exisits (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE);
-
-
+        set  A.ASSET_TYPE = B.ASSET_TYPE,
+        A.ASSET_TYPE2 = B.ASSET_TYPE2,
+        A.CCY = B.CCY,
+        A.TRADE_MARKET = B.TRADE_MARKET,
+        A.VDATE = B.VDATE,
+        A.MDATE = B.MDATE,
+        A.DISCOUNT_YIELD = B.DISCOUNT_YIELD,
+        A.ASSET_YIELD = B.ASSET_YIELD,
+        A.BASIS = B.BASIS,
+        A.AMT = B.AMT,
+        A.BANK_NAME = B.BANK_NAME,
+        A.IS_STRUCT = B.IS_STRUCT,
+        A.TARGET_TYPE = B.TARGET_TYPE,
+        A.TARGET = B.TARGET,
+        A.ASSET_ID = B.ASSET_ID,
+        A.ASSET_NAME = B.ASSET_NAME,
+        A.CHB_SECTYPE = B.CHB_SECTYPE,
+        A.ISSUE_MODE = B.ISSUE_MODE,
+        A.PARTY_GRADE = B.PARTY_GRADE,
+        A.INSTIT_SIZE = B.INSTIT_SIZE,
+        A.PARTY_TYPE1 = B.PARTY_TYPE1,
+        A.PARTY_TYPE3 = B.PARTY_TYPE3,
+        A.PARTY_TYPE2 = B.PARTY_TYPE2,
+        A.INDUSTRY = B.INDUSTRY,
+        A.INDUSTRY_LEVEL2 = B.INDUSTRY_LEVEL2,
+        A.REGIST_ORG = B.REGIST_ORG,
+        A.REGISTORG_COMMENT = B.REGISTORG_COMMENT,
+        A.RIVAL_PARTY = B.RIVAL_PARTY,
+        A.TARGET_TYPE1 = B.TARGET_TYPE1,
+        A.TARGET_AMT = B.TARGET_AMT,
+        A.COUNTRY_AREA = B.COUNTRY_AREA,
+        A.PROFIT_TYPE = B.PROFIT_TYPE,
+        A.IS_RESALE = B.IS_RESALE,
+        A.TERM_DATE = B.TERM_DATE,
+        A.RATE_FLAG = B.RATE_FLAG,
+        A.INTPAY_CYCLE = B.INTPAY_CYCLE,
+        A.REPAY_CMT = B.REPAY_CMT,
+        A.BASIS_TYPE = B.BASIS_TYPE,
+        A.FLOAT_FACTOR = B.FLOAT_FACTOR,
+        A.SPREAD_RATE = B.SPREAD_RATE,
+        A.FINANCIE = B.FINANCIE,
+        A.FIN_ORG_CODE = B.FIN_ORG_CODE,
+        A.FCR_GRADE_IN = B.FCR_GRADE_IN,
+        A.FCR_GRADE_OUT = B.FCR_GRADE_OUT,
+        A.FINANCIER_TYPE1 = B.FINANCIER_TYPE1,
+        A.FINANCIER_TYPE2 = B.FINANCIER_TYPE2,
+        A.FINANCIER_TYPE3 = B.FINANCIER_TYPE3,
+        A.FINANCE_PROJ = B.FINANCE_PROJ,
+        A.INDUSTRY1 = B.INDUSTRY1,
+        A.INDUSTRY_LEVEL2_TYPE = B.INDUSTRY_LEVEL2_TYPE,
+        A.PRO_INDUSTRY = B.PRO_INDUSTRY,
+        A.PRO_INDUSTRY_LEVEL2 = B.PRO_INDUSTRY_LEVEL2,
+        A.INDUSTRY_FLAG = B.INDUSTRY_FLAG,
+        A.MONIT_TYPE = B.MONIT_TYPE,
+        A.MON_TYPE_COMM = B.MON_TYPE_COMM,
+        A.GUA_TYPE = B.GUA_TYPE,
+        A.GUA_TYPE_REMARK = B.GUA_TYPE_REMARK,
+        A.FINANCIER_GRADE = B.FINANCIER_GRADE,
+        A.IN_GRADE = B.IN_GRADE,
+        A.OUT_GRADE = B.OUT_GRADE,
+        A.CHOSE = B.CHOSE,
+        A.CONDITION_CMM = B.CONDITION_CMM,
+        A.FIN_AREA = B.FIN_AREA,
+        A.TOTAL_FEE_RATE = B.TOTAL_FEE_RATE,
+        A.IS_RIGHT = B.IS_RIGHT,
+        A.NOTSTAND_SEC_TYPE = B.NOTSTAND_SEC_TYPE,
+        A.NOTSTAND_SEC_NUM = B.NOTSTAND_SEC_NUM,
+        A.REMAIN_TERM = B.REMAIN_TERM,
+        A.MAX_REMAIN_TERM = B.MAX_REMAIN_TERM,
+        A.MIN_REMAIN_TERM = B.MIN_REMAIN_TERM,
+        A.SHARES_TYPE = B.SHARES_TYPE,
+        A.INDUSTRY_SHARES = B.INDUSTRY_SHARES,
+        A.INDUSTRY_SHARES2 = B.INDUSTRY_SHARES2,
+        A.INVEST_STAGE = B.INVEST_STAGE,
+        A.SHARES_TYPE1 = B.SHARES_TYPE1,
+        A.SHARES_TYPE2 = B.SHARES_TYPE2,
+        A.SHARES_TYPE3 = B.SHARES_TYPE3,
+        A.IS_PLEDGE = B.IS_PLEDGE,
+        A.NOM_CAPI = B.NOM_CAPI,
+        A.TARGET_TYPE3 = B.TARGET_TYPE3,
+        A.ISSUE_PARTY_ID = B.ISSUE_PARTY_ID,
+        A.TERM_MONTH = B.TERM_MONTH,
+        A.GUARANTEE_CMT = B.GUARANTEE_CMT,
+        A.SPECIAL_CMT = B.SPECIAL_CMT,
+        A.CONTRACT_NAME = B.CONTRACT_NAME,
+        A.INCOME_RATIO = B.INCOME_RATIO,
+        A.DER_INSTR_RATIO = B.DER_INSTR_RATIO,
+        A.DER_INSTR_INV_TYPE = B.DER_INSTR_INV_TYPE,
+        A.DER_INSTR_TARGET = B.DER_INSTR_TARGET,
+        A.ACCT_MODE = B.ACCT_MODE,
+        A.SPECIAL_CMT1 = B.SPECIAL_CMT1,
+        A.MAX_YIELD = B.MAX_YIELD,
+        A.MIN_YIELD = B.MIN_YIELD,
+        A.BASIC_PRICE = B.BASIC_PRICE,
+        A.REG_DATE_PRICE = B.REG_DATE_PRICE,
+        A.TRADE_FEE = B.TRADE_FEE,
+        A.PARTY_CODE = B.PARTY_CODE,
+        A.CHECK_CODE = B.CHECK_CODE,
+        A.MANAGER_ID = B.MANAGER_ID,
+        A.TRUSTEE_ID = B.TRUSTEE_ID,
+        A.TRU_ACT_TYPE = B.TRU_ACT_TYPE,
+        A.INVEST_TYPE = B.INVEST_TYPE,
+        A.CAP_USE_INDU = B.CAP_USE_INDU,
+        A.PLAN_SDATE = B.PLAN_SDATE,
+        A.PLAN_EDATE = B.PLAN_EDATE,
+        A.PRO_PROPERTY = B.PRO_PROPERTY,
+        A.MAX_RATE = B.MAX_RATE,
+        A.MIN_RATE = B.MIN_RATE,
+        A.DEBT_SCALE = B.DEBT_SCALE,
+        A.BUY_STRUCT = B.BUY_STRUCT,
+        A.MANAGE_TYPE = B.MANAGE_TYPE,
+        A.IS_CTRL_BOTTOM = B.IS_CTRL_BOTTOM,
+        A.MGR_FEE_RATE = B.MGR_FEE_RATE,
+        A.TRU_FEE_RATE = B.TRU_FEE_RATE,
+        A.TRADE_FEE_RATE = B.TRADE_FEE_RATE,
+        A.AGENCY_FEE_RATE = B.AGENCY_FEE_RATE,
+        A.OTHER_FEE_RATE = B.OTHER_FEE_RATE,
+        A.ASSET_VALUE = B.ASSET_VALUE,
+        A.REGIST_ORG1 = B.REGIST_ORG1,
+        A.MNG_ORG_NAME = B.MNG_ORG_NAME,
+        A.TRU_ORG_NAME = B.TRU_ORG_NAME,
+        A.FUND_INVEST_ASSET = B.FUND_INVEST_ASSET,
+        A.IN_ASSET_TYPE = B.IN_ASSET_TYPE,
+        A.IN_ASSET_TYPE_CMM = B.IN_ASSET_TYPE_CMM,
+        A.REMARK = B.REMARK,
+        A.IS_UNDER_ASSET = B.IS_UNDER_ASSET,
+        A.IS_GOVERN_FUND = B.IS_GOVERN_FUND,
+        A.GOVERN_INVEST_FUND = B.GOVERN_INVEST_FUND,
+        A.FUND_ENPE_NAME = B.FUND_ENPE_NAME,
+        A.TRUSTEE = B.TRUSTEE,
+        A.STATUS = (case B.STATUS when 'E' then 'M' else 'D' end),
+        A.CREATE_USER = B.CREATE_USER,
+        /*A.CREATE_TIME = B.CREATE_TIME,*/
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME,
+        A.DEPT_CODE = B.DEPT_CODE,
+        A.ORG_CODE = B.ORG_CODE,
+        A.DATA_SOURCE = B.DATA_SOURCE,
+        A.PRIVATEFUND_FLAG = B.PRIVATEFUND_FLAG,
+        A.PRIVATEPRD_FLAG = B.PRIVATEPRD_FLAG,
+        A.BONDTOSTOCK_FLAG = B.BONDTOSTOCK_FLAG,
+        A.PPPFLAG = B.PPPFLAG,
+        A.STATUS_DATE = B.STATUS_DATE,
+        A.CAP_USE_INDU_LEVEL2 = B.CAP_USE_INDU_LEVEL2,
+        A.ISSUE_PARTY_NAME = B.ISSUE_PARTY_NAME,
+        A.SEC_CREDIT_GRADE_TYPE = B.SEC_CREDIT_GRADE_TYPE,
+        A.SEC_MAIN_GRADE = B.SEC_MAIN_GRADE,
+        A.BLN_AREA = B.BLN_AREA,
+        A.INDUSTRY_PBC = B.INDUSTRY_PBC,
+        A.CUSTOMER_OBJ_TYPE = B.CUSTOMER_OBJ_TYPE,
+        A.ORG_ASSET_TYPE1 = B.ORG_ASSET_TYPE1,
+        A.ORG_ASSET_TYPE2 = B.ORG_ASSET_TYPE2,
+        A.ORG_ASSET_TYPE3 = B.ORG_ASSET_TYPE3,
+        A.BUY_PLACE = B.BUY_PLACE,
+        A.ASSET_TYPE3 = B.ASSET_TYPE3,
+        A.PBC_ASSET_TYPE1 = B.PBC_ASSET_TYPE1,
+        A.PBC_ASSET_TYPE2 = B.PBC_ASSET_TYPE2,
+        A.PBC_ASSET_TYPE3 = B.PBC_ASSET_TYPE3,
+        A.TRM_FUND_TYPE = B.TRM_FUND_TYPE,
+        A.ASSET_CODE_OLD=B.ASSET_CODE_OLD,
+        A.DEPO_TYPE=B.DEPO_TYPE,
+        A.RIVAL_PARTY_TYPE=B.RIVAL_PARTY_TYPE,
+        A.PRIN_BASEAMT=B.PRIN_BASEAMT,
+        A.FMDATE=B.FMDATE,
+        A.COUPON_SPECIES=B.COUPON_SPECIES,
+        A.INTEREST_RULE_FLAG=B.INTEREST_RULE_FLAG,
+        A.INTPAY_RULE=B.INTPAY_RULE,
+        A.FLOAT_FACTOR_FLAG=B.FLOAT_FACTOR_FLAG,
+        A.STRUCT_GRADE=B.STRUCT_GRADE,
+        A.REPAYMENT_TYPE=B.REPAYMENT_TYPE,
+        A.PERIOD_REPAYMENT_FLAG=B.PERIOD_REPAYMENT_FLAG,
+        A.BASIC_ASSET_TYPE=B.BASIC_ASSET_TYPE,
+        A.EXCESS_PROFIT_RATE=B.EXCESS_PROFIT_RATE,
+        A.PLEDGE_TYPE=B.PLEDGE_TYPE,
+        A.PLEDGE_VALUE=B.PLEDGE_VALUE,
+        A.NATURE_GUARANTEE=B.NATURE_GUARANTEE,
+        A.RELATION_FINAN=B.RELATION_FINAN,
+        A.CONTAIN_TYPE=B.CONTAIN_TYPE,
+        A.EXERCISE_TYPE=B.EXERCISE_TYPE,
+        A.EXERCISE_DATE=B.EXERCISE_DATE,
+        A.FIRST_EXERCISE_DATE=B.FIRST_EXERCISE_DATE,
+        A.EXERCISE_PERIOD=B.EXERCISE_PERIOD,
+        A.EXERCISE_PRICE=B.EXERCISE_PRICE,
+        A.PERPETUAL_CLAUSE_TYPE=B.PERPETUAL_CLAUSE_TYPE,
+        A.DEFERRED_INTEREST_TYPE=B.DEFERRED_INTEREST_TYPE,
+        A.DEFERRED_INTEREST_INT=B.DEFERRED_INTEREST_INT,
+        A.FIRST_REPRCE_DATE=B.FIRST_REPRCE_DATE,
+        A.REPRCE_CYCLE=B.REPRCE_CYCLE,
+        A.PART_REDEM_FLAG=B.PART_REDEM_FLAG,
+        A.PART_REDEM_RATE=B.PART_REDEM_RATE,
+        A.CREDIT_ORG_CODE=B.CREDIT_ORG_CODE,
+        A.CREDIT_ORG_NAME=B.CREDIT_ORG_NAME,
+        A.EQUITY_QUIT=B.EQUITY_QUIT,
+        A.DEPT_EQUITY=B.DEPT_EQUITY,
+        A.HOLD_PURPOSE=B.HOLD_PURPOSE,
+        A.FINANCIAL_COMISSUE=B.FINANCIAL_COMISSUE,
+        A.BANK_SEC_CAPITAL=B.BANK_SEC_CAPITAL,
+        A.BANK_SEC_PREFER=B.BANK_SEC_PREFER,
+        A.BANK_SEC_PERPETUAL=B.BANK_SEC_PERPETUAL,
+        A.BANK_SEC_KZZQ=B.BANK_SEC_KZZQ,
+        A.BANK_SEC_ZXZQ=B.BANK_SEC_ZXZQ,
+        A.ISUNLISTED=B.ISUNLISTED,
+        A.IS_BZHPJ=B.IS_BZHPJ,
+        <!-- add by zhangliang G06升级字段新增  start -->
+        A.CHB_ISSUER_ID	=	B.CHB_ISSUER_ID,
+        A.CHB_MANAGER_ID	=	B.CHB_MANAGER_ID,
+        A.CHB_FINANCIER_ID	=	B.CHB_FINANCIER_ID,
+        A.PERPETUAL_FLAG	=	B.PERPETUAL_FLAG,
+        A.OPTION_FLAG	=	B.OPTION_FLAG,
+        A.IS_BJSZQ	=	B.IS_BJSZQ,
+        A.IS_PERPETUAL	=	B.IS_PERPETUAL,
+        A.IS_FBZB	=	B.IS_FBZB
+        <!-- add by zhangliang G06升级字段新增  end -->
+        ,A.PRIVATE_FLAG	=	B.PRIVATE_FLAG
+        where A.ASSET_CODE = B.ASSET_CODE  ;
     </insert>
-    
+
      <insert id="mergeInfoListPsbc"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
         MERGE INTO CHB_ASSET_INFO CII
         USING (
@@ -12633,8 +13349,8 @@
         <!-- 业务主键匹配 -->
         ON (CII.ASSET_CODE = TEMP.ASSET_CODE)
         <!-- 匹配到则更新 -->
-        WHEN MATCHED THEN 
-        UPDATE 
+        WHEN MATCHED THEN
+        UPDATE
         SET <!-- CII.ASSET_UUID = TEMP.ASSET_UUID,
             CII.ASSET_CODE = TEMP.ASSET_CODE, -->
             CII.ASSET_TYPE = TEMP.ASSET_TYPE,
@@ -12798,7 +13514,7 @@
             CII.PBC_ASSET_TYPE2 = TEMP.PBC_ASSET_TYPE2,
             CII.PBC_ASSET_TYPE3 = TEMP.PBC_ASSET_TYPE3
         <!-- 未匹配到这插入 -->
-        WHEN NOT MATCHED THEN 
+        WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE, DISCOUNT_YIELD,
@@ -12850,7 +13566,7 @@
         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
         SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,
         ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,
-        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD) 
+        ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD)
         values(
             TEMP.ASSET_UUID,
             TEMP.ASSET_CODE,
@@ -12984,7 +13700,7 @@
             TEMP.GOVERN_INVEST_FUND,
             TEMP.FUND_ENPE_NAME,
             TEMP.TRUSTEE,
-            'E',
+            'E' STATUS,
             TEMP.CREATE_USER,
             TEMP.CREATE_TIME,
             TEMP.UPDATE_USER,
@@ -14397,8 +15113,8 @@
         TEMP.TRM_FUND_TYPE
         )
     </insert>
-    
-    <select id="selectChlAssetByInterfdateBatch" parameterType="map" 
+
+    <select id="selectChlAssetByInterfdateBatch" parameterType="map"
         resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT null ASSET_UUID,
         asset.FINPROD_MARKET_ID asset_code,
@@ -14578,7 +15294,7 @@
         on DETAIL.REP_MANAGER_ID=mci.CUSTOMER_ID
         left join mst_customer_info mci1
         on DETAIL.REP_TRUSTEE_ID=mci1.CUSTOMER_ID
-        WHERE 1 =1 
+        WHERE 1 =1
         and info.IS_CHL = 'Y'<!-- 通道资产的信息单独查询 -->
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( ifnull(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
@@ -14586,8 +15302,8 @@
         <![CDATA[OR ifnull(CUSTOMERINFO.UPDATE_TIME,CUSTOMERINFO.CREATE_TIME) > #{INTERFDATE,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(addq.UPDATE_TIME,addq.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
     </select>
-    
-     <select id="selectChlAssetByInterfdateBatchPsbc" parameterType="map" 
+
+     <select id="selectChlAssetByInterfdateBatchPsbc" parameterType="map"
         resultMap="PsbcBaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT null ASSET_UUID,
         asset.FINPROD_MARKET_ID asset_code,
@@ -14801,7 +15517,7 @@
         on info.FINANCIER=addq.CUSTOMER_ID
         left join mst_customer_info customerinfo
         on info.FINANCIER=customerinfo.CUSTOMER_ID
-        WHERE 1 =1 
+        WHERE 1 =1
         and info.IS_CHL = 'Y'<!-- 通道资产的信息单独查询 -->
         /*根据创建时间、更新时间和接口接入时间接入数据*/
         <![CDATA[AND( ifnull(asset.UPDATE_TIME,asset.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
