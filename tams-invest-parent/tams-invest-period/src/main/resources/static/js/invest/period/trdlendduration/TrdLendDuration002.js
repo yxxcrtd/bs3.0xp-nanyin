@@ -67,5 +67,16 @@ $(function() {
         $('#TrdLendDuration002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
+        //add by jiangpeng on 20210422 start TISHKBS-1803
+        $("#settleDate").change(function () {
+            if(isTodo){
+                let param = {};
+                let dateMap = {};
+                param.isOnlyOneDate = true;
+                dateMap.settleDate = $("#settleDate").val();
+                window.BussTrdTransferOrder['bussTrdTransferOrder'].updateGenerateOrders(dateMap,param);
+            }
+        });
+        //add by jiangpeng on 20210422 end TISHKBS-1803
     });
 }());

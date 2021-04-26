@@ -11,7 +11,8 @@
                 <input type="hidden" th:id="|${entityName}_recAcctNo|" th:name="selectValue" value="[]">
                 <a th:id="|${entityName}_btn_generate|" class="layui-btn layui-btn-sm" th:text="#{BussTrdTransferOrder.generate}">生成指令</a>
             </div>
-            <table class="layui-table" th:id="|${entityName}_table|" th:name="bussTrdTransferOrder"></table>
+            <!--modify by jiangpeng on 20210422 TISHKBS-1803-->
+            <table class="layui-table" th:id="|${entityName}_table|" th:name="bussTrdTransferOrder" data-th-data-ignore="${isTodo==null?false:isTodo}"></table>
         </div>
     </div>
 </div>

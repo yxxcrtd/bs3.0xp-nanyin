@@ -52,7 +52,28 @@
                     resetTableData();}
 
                 //resetTableData();
-            })
+            });
+            //add by jiangpeng on 20210422 start TISHKBS-1803
+            $("#arrivalDate").change(function () {
+                if(isTodo) {
+                    var index = layer.open({
+                        type: 1,
+                        icon : 16,
+                        area: ['200px', '100px'],
+                        content: '数据加载中',closeBtn: 0
+                    });
+                    var orderTabel = table.getAllRows();
+                    for (var i = 0; i < orderTabel.length; i++) {
+                        orderTabel[i].settleDateText = $("#arrivalDate").val();
+                        orderTabel[i].settleDate = $("#arrivalDate").val();
+                    }
+                    table.clear(function () {
+                        layui.layer.close(index);
+                        table.addRow(orderTabel)
+                    });
+                }
+            });
+            //add by jiangpeng on 20210422 end TISHKBS-1803
         }
         
         

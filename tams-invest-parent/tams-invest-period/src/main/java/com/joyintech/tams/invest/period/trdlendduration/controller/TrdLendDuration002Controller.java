@@ -19,6 +19,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -65,6 +66,9 @@ public class TrdLendDuration002Controller extends BaseController {
      */
     @Autowired
     private TrdLendDuration001Service trdLendDuration001Service;
+    //add by jiangpeng on 20210422 TISHKBS-1803
+    @Autowired
+    private CommonBusinessService commonBusinessService;
 
     /**
      * {@inheritDoc}
@@ -78,6 +82,11 @@ public class TrdLendDuration002Controller extends BaseController {
         String workflowId = (String)map.get(GlobalConstant.WORKFLOW_ID);
         if (StringUtil.isNotEmpty(workflowId)&&(!WorkFlowUtil.isNotFromToDoList())) {
             entity = trdLendDuration001Service.getBussinessEntityByWorkflowId(workflowId);
+            //add by jiangpeng on 20210422 TISHKBS-1803
+            if(entity != null) {
+                model.addAttribute("isTodo", commonBusinessService.isBackCheckNode(entity.getBusiCode()));
+            }
+            //add by jiangpeng on 20210422 TISHKBS-1803
         }
         else {
             entity = trdLendDuration001Service.getMyEntity(map);
