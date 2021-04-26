@@ -43,6 +43,13 @@
 		  <version>1.1.0</version>
 		</dependency>
 
+		<!-- 集成产品端服务 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>service-product</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+
 		<!-- 资产管理服务 -->
 		<dependency>
 			<groupId>com.joyintech</groupId>
