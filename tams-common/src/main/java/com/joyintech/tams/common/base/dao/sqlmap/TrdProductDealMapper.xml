@@ -65,6 +65,8 @@
         <result column="ACCR_NUM" property="accrNum" jdbcType="DECIMAL" />
         <result column="TG_BUSI_TYPE" property="tgBusiType" jdbcType="VARCHAR" />
         <result column="PS_PAYMENT" property="psPayment" jdbcType="VARCHAR" />
+        <result column="SPLIT_TRADE_ID" property="splitTradeId" jdbcType="VARCHAR" />
+        <result column="IS_SWAP_TRANSACTION" property="isSwapTransaction" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, BUSI_TYPE BUSI_TYPE, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, 
@@ -81,7 +83,8 @@
         F_TRADE_ID F_TRADE_ID, CASH_ID CASH_ID, REGIST_ORG REGIST_ORG, REMARK REMARK, CANCEL_REMARK CANCEL_REMARK, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME, DELIVERY_TYPE DELIVERY_TYPE, PAY_DATE PAY_DATE, SALE_CODE SALE_CODE, 
-        ACCR_NUM ACCR_NUM, TG_BUSI_TYPE TG_BUSI_TYPE, PS_PAYMENT PS_PAYMENT
+        ACCR_NUM ACCR_NUM, TG_BUSI_TYPE TG_BUSI_TYPE, PS_PAYMENT PS_PAYMENT, SPLIT_TRADE_ID SPLIT_TRADE_ID,
+        IS_SWAP_TRANSACTION IS_SWAP_TRANSACTION
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -555,7 +558,7 @@
         COUNTER_ID, IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT, TRADE_MARKET_MODE, TRADER, COUNTER_TRADER, 
         COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID, CASH_ID, REGIST_ORG, REMARK, CANCEL_REMARK, 
         CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DELIVERY_TYPE, PAY_DATE, 
-        SALE_CODE, ACCR_NUM, TG_BUSI_TYPE, PS_PAYMENT)
+        SALE_CODE, ACCR_NUM, TG_BUSI_TYPE, PS_PAYMENT, SPLIT_TRADE_ID, IS_SWAP_TRANSACTION)
         select TRADE_ID, BUSI_TYPE, FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, 
             BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, SETTLE_SPEED, CCY, CPRICE_DATE, UNIT_CPRICE, 
             UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, 
@@ -564,7 +567,7 @@
             COUNTER_ID, IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT, TRADE_MARKET_MODE, TRADER, COUNTER_TRADER, 
             COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID, CASH_ID, REGIST_ORG, REMARK, CANCEL_REMARK, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DELIVERY_TYPE, PAY_DATE, 
-            SALE_CODE, ACCR_NUM, TG_BUSI_TYPE, PS_PAYMENT
+            SALE_CODE, ACCR_NUM, TG_BUSI_TYPE, PS_PAYMENT, SPLIT_TRADE_ID, IS_SWAP_TRANSACTION
              from TRD_PRODUCT_DEAL
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </insert>
@@ -748,6 +751,12 @@
             <if test="psPayment != null" >
                 PS_PAYMENT = #{psPayment,jdbcType=VARCHAR},
             </if>
+            <if test="splitTradeId != null" >
+                SPLIT_TRADE_ID = #{splitTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="isSwapTransaction != null" >
+                IS_SWAP_TRANSACTION = #{isSwapTransaction,jdbcType=VARCHAR},
+            </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
@@ -811,7 +820,9 @@
             SALE_CODE = #{saleCode,jdbcType=VARCHAR},
             ACCR_NUM = #{accrNum,jdbcType=DECIMAL},
             TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR},
-            PS_PAYMENT = #{psPayment,jdbcType=VARCHAR}
+            PS_PAYMENT = #{psPayment,jdbcType=VARCHAR},
+            SPLIT_TRADE_ID = #{splitTradeId,jdbcType=VARCHAR},
+            IS_SWAP_TRANSACTION = #{isSwapTransaction,jdbcType=VARCHAR}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
 
