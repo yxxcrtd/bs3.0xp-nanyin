@@ -203,8 +203,7 @@
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
 		DATA_SOURCE,ORG_CODE ,AGENT, CREATE_DEPT)
-		values
-		(
+		select A.* from (
 		<foreach collection="list" item="item" index="index" separator="union all">
 			select
 			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
@@ -236,16 +235,16 @@
 			'' WORKFLOW_ID,
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
 			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			sysdate UPDATE_TIME,
+			now() UPDATE_TIME,
 			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			sysdate CREATE_TIME,
+			now() CREATE_TIME,
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
 			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
 			#{item.agent,jdbcType=VARCHAR} AGENT,
 			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
 			from dual
 		</foreach>
-		)
+		) A
 	</insert>
 	<!-- 批量更新 -->
 	<update id="updateBatchEquityInfo" parameterType="java.util.List">
