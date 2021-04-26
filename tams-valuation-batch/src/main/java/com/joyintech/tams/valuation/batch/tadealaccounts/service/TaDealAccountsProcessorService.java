@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.constant.DictCodeListNatureGroup;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
@@ -477,7 +478,7 @@ public class TaDealAccountsProcessorService {
         //modify jinmaodong 20210312 END
         ArrayList<String> baseSubjectNatureList = new ArrayList<>();
         baseSubjectNatureList.addAll(
-                accountingCommonService.getValSubjectNatureList(DictCodeListExt1.分组代码_损益平准交_未实现对应查询科目.getValue()));
+                accountingCommonService.getValSubjectNatureList(DictCodeListNatureGroup.分组代码_损益平准交_未实现对应查询科目.getValue()));
         searchDto.setBaseSubjectNatureList(baseSubjectNatureList);
         BigDecimal jzrwsxsy = accountingCommonService.getSubjectBalanceCollection(searchDto, DictCodeList.借贷方向_贷.getValue(),DictCodeList.是否_否.getValue()).get(
                 ccy);

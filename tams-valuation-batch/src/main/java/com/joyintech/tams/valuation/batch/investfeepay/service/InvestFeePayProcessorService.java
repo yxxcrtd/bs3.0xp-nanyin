@@ -18,7 +18,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListTableId;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -100,6 +100,8 @@ public class InvestFeePayProcessorService {
     @Autowired
     private BookAccountCommonService bookAccountCommonService;
 
+    Logger logger = Logger.getLogger(this.getClass());
+
 	/**
 	 * <一句话功能简述> <功能详细描述>
 	 * 
@@ -131,8 +133,7 @@ public class InvestFeePayProcessorService {
 		// 交易明细 ： 交易类账务处理结果.交易明细列表
 		for (FinProductDealInfoComDTO item : listFinProductDealInfoComDTONow) {
 
-			if (DictCodeListExt1.金融产品类型_交易费用.getValue().equals(item.getFinprodType())
-					|| DictCodeListExt1.金融产品类型_预提费用.getValue().equals(item.getFinprodType())) {
+			if (DictCodeListExt1.金融产品类型_交易费用.getValue().equals(item.getFinprodType())) {
 				getDealFee(returnResult, item, listFeeTableSet, acctEntity, batchExecuteInfo);
 			} else {
 				// 其他处理
@@ -231,8 +232,7 @@ public class InvestFeePayProcessorService {
 //		}
 		for (BokFeeTableSet feeTableSet : listFeeTableSet) {
 			// 结算手续费去重复
-			if ((DictCodeListExt1.金融产品类型_交易费用.getValue().equals(feeTableSet.getFinprodType())
-					|| DictCodeListExt1.金融产品类型_预提费用.getValue().equals(feeTableSet.getFinprodType()))
+			if (DictCodeListExt1.金融产品类型_交易费用.getValue().equals(feeTableSet.getFinprodType())
 					&& item.getPs().equals(feeTableSet.getPs())
 					&& feeList.contains(feeTableSet.getFeeTypeId())) {
 				String key = feeTableSet.getFinprodType() + feeTableSet.getPs() + feeTableSet.getTableId();
@@ -252,7 +252,23 @@ public class InvestFeePayProcessorService {
 							listFeeListDto.add(feeTableSet);
 							resultMap.put(key, listFeeListDto);
 						}
-					} else {
+					}
+					//add jinmaodong 账户维护费去重 start 20200317
+					else if (DictCodeListExt1.一次性费用类型_账户维护费.getValue().equals(feeTableSet.getFeeTypeId())){
+						// if 交易明细.登记托管机构 = “上清所”
+						if ((DictCodeList.登记托管机构_上海清算所.getValue().equals(item.getRegistOrg())
+								&& DictCodeBaseSubjectNatrue.应付中债登账户维护费.getValue()
+								.equals(feeTableSet.getBaseSubjectNature()))
+								|| (DictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue().equals(item.getRegistOrg())
+								&& DictCodeBaseSubjectNatrue.应付中债登账户维护费.getValue()
+								.equals(feeTableSet.getBaseSubjectNature()))) {
+							List<BokFeeTableSet> listFeeListDto = new ArrayList<BokFeeTableSet>();
+							listFeeListDto.add(feeTableSet);
+							resultMap.put(key, listFeeListDto);
+						}
+					}
+					//add jinmaodong 账户维护费去重 end 20200317
+					else {
 						List<BokFeeTableSet> listFeeListDto = new ArrayList<BokFeeTableSet>();
 						listFeeListDto.add(feeTableSet);
 						resultMap.put(key, listFeeListDto);
@@ -273,7 +289,22 @@ public class InvestFeePayProcessorService {
 							list.add(feeTableSet);
 							resultMap.put(key, list);
 						}
-					} else {
+					}
+					//add jinmaodong 账户维护费去重 start 20200317
+					else if (DictCodeListExt1.一次性费用类型_账户维护费.getValue().equals(feeTableSet.getFeeTypeId())){
+						// if 交易明细.登记托管机构 = “上清所”
+						if ((DictCodeList.登记托管机构_上海清算所.getValue().equals(item.getRegistOrg())
+								&& DictCodeBaseSubjectNatrue.应付中债登账户维护费.getValue()
+								.equals(feeTableSet.getBaseSubjectNature()))
+								|| (DictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue().equals(item.getRegistOrg())
+								&& DictCodeBaseSubjectNatrue.应付中债登账户维护费.getValue()
+								.equals(feeTableSet.getBaseSubjectNature()))) {
+							list.add(feeTableSet);
+							resultMap.put(key, list);
+						}
+					}
+					//add jinmaodong 账户维护费去重 end 20200317
+					else {
 						list.add(feeTableSet);
 						resultMap.put(key, list);
 					}
@@ -389,11 +420,14 @@ public class InvestFeePayProcessorService {
 			else if (dealTypesFeeDto.getSettlementFeeCode() != null
 					&& !StringUtils.isEmpty(dealTypesFeeDto.getSettlementFeeCode().getBokDetailId())) {
 				bokDetailId = dealTypesFeeDto.getSettlementFeeCode().getBokDetailId();
-			} 
+			}
 			else if (dealTypesFeeDto.getSettlementFeeCodeForDealPay() != null
 					&& !StringUtils.isEmpty(dealTypesFeeDto.getSettlementFeeCodeForDealPay().getBokDetailId())) {
 				bokDetailId = dealTypesFeeDto.getSettlementFeeCodeForDealPay().getBokDetailId();
-			} 
+			}else if (dealTypesFeeDto.getAccountManageFee() != null
+					&& !StringUtils.isEmpty(dealTypesFeeDto.getAccountManageFeeCode().getBokDetailId())) {
+				bokDetailId = dealTypesFeeDto.getAccountManageFeeCode().getBokDetailId();
+			}
 			else {
 				bokDetailId = item.getBokDetailId();
 
@@ -680,51 +714,59 @@ public class InvestFeePayProcessorService {
 							// 金额元素.应付费用 变量.交易各种费用.结算手续费
 							accountAmountMap.put(BookConstant.SETTLEMENTFEE, dealTypesFeeDto.getSettlementFee());
 						}
-					}else if (DictCodeBaseSubjectNatrue.预提费用.getValue().equals(fee.getBaseSubjectNature())
-							&& !StringUtils.isEmpty(bokDetailId)) {
-//						// 变量.交易各种费用.账户维护费
-//				        accountSceneMap.put(BookConstant.BOK_DETAIL_COMMISSION, dealTypesFeeDto.getCommissionCode());
+					}
+					// add jinmaodong 20200317 增加账户维护费处理 start
+					else if (!StringUtils.isEmpty(bokDetailId)
+							&& (DictCodeBaseSubjectNatrue.应付中债登账户维护费.getValue().equals(fee.getBaseSubjectNature())
+							|| DictCodeBaseSubjectNatrue.应付上清所账户维护费.getValue()
+							.equals(fee.getBaseSubjectNature()))) {
+						// 变量.交易各种费用.账户维护费
+						accountSceneMap.put(BookConstant.BOK_DETAIL_SETTLEMENTFEE,
+								dealTypesFeeDto.getSettlementFeeCode());
 						if (DictCodeList.是否_是.getValue().equals(item.getIsClean())) {
-							// 取账务明细代码，下面直接用该账务明细代码即可
-//							BokDetailId bdiDto = bookCommonLogic.selectBokdetailIdYT(item.getProdId(), 
-//			            			DateUtil.format(item.getTradeDate(), "yyyy-MM-dd"), DictCodeListExt1.金融产品类型_预提费用.getValue());
-//							bokDetailId = bdiDto.getBokDetailId();
 							SubjectBalanceSearchDto searchDto = setSubjectBalanceSearchDto(item, fee, bokDetailId);
-//							// 调用共通方法：科目余额汇总查询
-//							Map<String, BigDecimal> map = accountingCommonService.getSubjectBalanceCollection(searchDto,
-//									DictCodeList.余额方向_贷方.getValue(),null);
-//							// 科目余额
-//							BigDecimal subjectBalance = map.get(item.getCcy());
-//							// 金额元素.预提金额<--返回值.科目余额
-							
-							// 跨季度支付的原因改为从交易表获取理论支付金额
-							Map<String, Object> paMap = new HashMap<>();
-							paMap.put("tradeId", item.getTradeId());
-							PaTrdProductDeal paTrdProductDeal = bookCommonLogic.getPaTrdProductDeal(paMap);
-							BigDecimal theoryAmt = paTrdProductDeal.getTheoryAmt();
-							accountAmountMap.put(BookConstant.YTAMT, theoryAmt);
-							// 金额元素.实付金额
-							accountAmountMap.put(BookConstant.SFAMT, item.getTradeAmt());
-							// if 变量.交易各种费用.账户维护费 - 金额元素.应付费用 >0
-							BigDecimal v1 = item.getTradeAmt() == null ? BigDecimal.ZERO : item.getTradeAmt();
-							BigDecimal v2 = theoryAmt == null ? BigDecimal.ZERO : theoryAmt;
-
-							if (v1.compareTo(v2) < 0) {
-								// 金额元素.账户维护费调整_贷 = -1*(变量.交易各种费用.账户维护费 - 金额元素.应付费用)
-								accountAmountMap.put(BookConstant.NETAMT_C,
-										ArithmeticUtil.multiply(new BigDecimal("-1"), ArithmeticUtil.subtract(v1, v2)));
-							} else if (v1.compareTo(v2) > 0) {
-								// 金额元素.佣金费用调整_借 = 变量.交易各种费用.账户维护费 - 金额元素.应付费用
-								accountAmountMap.put(BookConstant.NETAMT_D, ArithmeticUtil.subtract(v1, v2));
+							if (DictCodeList.登记托管机构_上海清算所.getValue().equals(item.getRegistOrg())) {
+								List<String> baseSubjectNatureList = new ArrayList<>();
+								baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.应付上清所账户维护费.getValue());
+								searchDto.setBaseSubjectNatureList(baseSubjectNatureList);
+							} else if (DictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue().equals(item.getRegistOrg())) {
+								List<String> baseSubjectNatureList = new ArrayList<>();
+								baseSubjectNatureList.add(DictCodeBaseSubjectNatrue.应付中债登账户维护费.getValue());
+								searchDto.setBaseSubjectNatureList(baseSubjectNatureList);
+							} else {
+								logger.error("预提费用配置信息中的登记托管机构信息为空，请确认正确性.");
+								continue;
 							}
+							// 调用共通方法：科目余额汇总查询
+							Map<String, BigDecimal> map = accountingCommonService.getSubjectBalanceCollection(searchDto,
+									DictCodeList.余额方向_贷方.getValue(),null);
+							// 科目余额
+							BigDecimal subjectBalance = map.get(item.getCcy());
+							// 金额元素.应付费用 <--返回值.科目余额
+							accountAmountMap.put(BookConstant.ACCOUNTS_FEE, subjectBalance);
+							// if 变量.交易各种费用.账户维护费 - 金额元素.应付费用 >0
+							BigDecimal v1 = dealTypesFeeDto.getAccountManageFee() == null ? BigDecimal.ZERO
+									: dealTypesFeeDto.getAccountManageFee();
+							BigDecimal v2 = subjectBalance == null ? BigDecimal.ZERO : subjectBalance;
+							if (v1.compareTo(v2) < 0) {
+								// 金额元素.费用差额_贷 =
+								// -1*(变量.交易各种费用.账户维护费 - 金额元素.应付费用)
+								accountAmountMap.put(BookConstant.MARGINAL_COST_C,
+										ArithmeticUtil.multiply(new BigDecimal("-1"), ArithmeticUtil.subtract(v1, v2)));
+
+							} else {
+								// 金额元素.费用差额_借 = 变量.交易各种费用.账户维护费 -
+								// 金额元素.应付费用
+								accountAmountMap.put(BookConstant.MARGINAL_COST_D, ArithmeticUtil.subtract(v1, v2));
+							}
+
 						} else {
-							// 金额元素.预提金额
-							accountAmountMap.put(BookConstant.YTAMT, item.getTradeAmt());
-							// 金额元素.实付金额
-							accountAmountMap.put(BookConstant.SFAMT, item.getTradeAmt());
-						
+							// 金额元素.应付费用 变量.交易各种费用.账户维护费
+							accountAmountMap.put(BookConstant.ACCOUNTS_FEE, dealTypesFeeDto.getSettlementFee());
 						}
-					} else {
+					}
+					// add jinmaodong 20200317 增加账户维护费处理 end
+					else {
 						// 金额元素.交易金额 = 交易明细.交易金额
 						accountAmountMap.put(BookConstant.DEALAMT, item.getTradeAmt());
 					}
@@ -752,7 +794,7 @@ public class InvestFeePayProcessorService {
 
 	/**
 	 * 查询费用配置信息
-	 * 
+	 *
 	 * @param ps
 	 *            交易方向
 	 * @return List<FeeTableSet>
