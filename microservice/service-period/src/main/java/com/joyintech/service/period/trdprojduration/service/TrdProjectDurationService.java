@@ -79,7 +79,7 @@ public class TrdProjectDurationService extends BaseService {
         for (TrdProjectDurationDto dto : list){
             //查询区间净投资收益率
             Map<String, Object> map = new HashMap<>();
-            map.put("busiCode", dto.getBusiCode());
+           // map.put("busiCode", dto.getBusiCode());
             map.put("vDate", dto.getvDate());
             map.put("mDate", dto.getmDate());
             map.put("C02", DictCodeListExt1.现金流二级类型_利息.getValue());
