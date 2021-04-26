@@ -165,6 +165,7 @@ public class AssetIntdateCarryoverDealProcessorService {
             searchDao.setBusiId(detail.getFinprodId());
             searchDao.setOnwayDate(detail.getBooksetDate());
             searchDao.setBaseSubjectNatureList(subjectNatureList);
+            searchDao.setoCcy(detail.getCcy());
             List<SubjectBalance> listSubjectBalance = accountingCommonService.getSubjectBalanceExpectDirection(
                 searchDao, DictCodeList.余额方向_借方.getValue());
             if (listSubjectBalance != null && listSubjectBalance.size() > 0) {

@@ -21,24 +21,23 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
-import com.joyintech.tams.common.base.entity.BokValbalTableStatusKey;
+import com.joyintech.tams.valuation.common.batch.bookcommon.dao.BokValTableDateWriterMapper;
+import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-
+import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-//import com.joyintech.tams.common.base.dao.BokFileGenMapper;
-import com.joyintech.tams.common.base.dao.BokValTableDataMapper;
+import com.joyintech.tams.common.base.entity.BokValbalTableStatus;
+import com.joyintech.tams.common.base.entity.BokValbalTableStatusKey;
 import com.joyintech.tams.common.base.dao.BokValbalTableLogMapper;
 import com.joyintech.tams.common.base.dao.BokValbalTableStatusMapper;
 //import com.joyintech.tams.common.base.entity.BokFileGen;
@@ -80,7 +79,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 //    private BokFileGenMapper valFileGenMapper;
 
     @Autowired
-    private BokValTableDataMapper bokValTableDataMapper;
+    private BokValTableDateWriterMapper bokValTableDateWriterMapper;
 
     @Autowired
     private DBUtil dBUtil;
@@ -105,6 +104,9 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
         List<ValSchemeGenerateResult> resultList = (List<ValSchemeGenerateResult>)items;
         // 估值模板选择
         String schemeMode = CacheUtil.getSysParam("SCHEME_MODE");
+
+        //估值表数据批量入库 lijun modify by 20200819 start
+        List<BokValTableData> batchBokValTableDatas = new ArrayList<>();
         // 循环科目余额list，对每个记账凭证进行操作
         for (ValSchemeGenerateResult result : resultList) {
             /** modfiy by dongjun on 20181205 start **/
@@ -118,7 +120,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             // 科目明细
             if(list != null && list.size()>0){
                 list.forEach(item -> {
-                    bokValTableDataMapper.insert(item.toBokValTableData(
+                    batchBokValTableDatas.add(item.toBokValTableData(
                         dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_科目明细列表.getValue()));
@@ -130,7 +132,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 实收资本
             if (result.getActRecAmount() != null) {
-                bokValTableDataMapper.insert(result.getActRecAmount().toBokValTableData(
+                batchBokValTableDatas.add(result.getActRecAmount().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_实收资本.getValue()));
@@ -140,7 +142,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             // 损益平准金未实现
             if (result.getProfLossUnrealAmount() != null) {
 
-                bokValTableDataMapper.insert(result.getProfLossUnrealAmount().toBokValTableData(
+                batchBokValTableDatas.add(result.getProfLossUnrealAmount().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_损益平准金未实现.getValue()));
@@ -148,7 +150,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 损益平准金已实现
             if (result.getProfLossRealAmount() != null) {
-                bokValTableDataMapper.insert(result.getProfLossRealAmount().toBokValTableData(
+                batchBokValTableDatas.add(result.getProfLossRealAmount().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_损益平准金已实现.getValue()));
@@ -156,7 +158,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 资产类合计
             if (result.getAssetTotal() != null) {
-                bokValTableDataMapper.insert(result.getAssetTotal().toBokValTableData(
+                batchBokValTableDatas.add(result.getAssetTotal().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_资产类合计.getValue()));
@@ -164,7 +166,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 负债类合计
             if (result.getDebtTotal() != null) {
-                bokValTableDataMapper.insert(result.getDebtTotal().toBokValTableData(
+                batchBokValTableDatas.add(result.getDebtTotal().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_负债类合计.getValue()));
@@ -179,7 +181,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             if (!DictCodeList.收益类型_净值型.getValue().equals(result.getProfitType())) {
                 // 产品资产净值
                 if (result.getProdAssetVal() != null) {
-                    bokValTableDataMapper.insert(result.getProdAssetVal().toBokValTableData(
+                    batchBokValTableDatas.add(result.getProdAssetVal().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                             result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                             DictCodeList.估值表类型_产品资产净值.getValue()));
@@ -191,7 +193,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                             result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                             DictCodeList.估值表类型_产品单位净值.getValue());
-                    bokValTableDataMapper.insert(record);
+                    batchBokValTableDatas.add(record);
                     listSum.add(result.getProdUnitVal());
                 }
             }
@@ -200,7 +202,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 证券投资合计
             if (result.getSecurityInvTotal() != null) {
-                bokValTableDataMapper.insert(result.getSecurityInvTotal().toBokValTableData(
+                batchBokValTableDatas.add(result.getSecurityInvTotal().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_证券投资合计.getValue()));
@@ -208,7 +210,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 其中股票投资
             if (result.getShareInvInside() != null) {
-                bokValTableDataMapper.insert(result.getShareInvInside().toBokValTableData(
+                batchBokValTableDatas.add(result.getShareInvInside().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_其中股票投资.getValue()));
@@ -216,7 +218,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 其中债券投资
             if (result.getBondInvInside() != null) {
-                bokValTableDataMapper.insert(result.getBondInvInside().toBokValTableData(
+                batchBokValTableDatas.add(result.getBondInvInside().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_其中债券投资.getValue()));
@@ -224,7 +226,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 其中基金投资
             if (result.getFundInvInside() != null) {
-                bokValTableDataMapper.insert(result.getFundInvInside().toBokValTableData(
+                batchBokValTableDatas.add(result.getFundInvInside().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_其中基金投资.getValue()));
@@ -232,7 +234,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 其中权证投资
             if (result.getWarrantInvInside() != null) {
-                bokValTableDataMapper.insert(result.getWarrantInvInside().toBokValTableData(
+                batchBokValTableDatas.add(result.getWarrantInvInside().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_其中权证投资.getValue()));
@@ -240,7 +242,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 融资业务合计
             if (result.getFinancBusiTotal() != null) {
-                bokValTableDataMapper.insert(result.getFinancBusiTotal().toBokValTableData(
+                batchBokValTableDatas.add(result.getFinancBusiTotal().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_融资业务合计.getValue()));
@@ -249,7 +251,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 融券业务合计
             if (result.getMarginBusiTotal() != null) {
-                bokValTableDataMapper.insert(result.getMarginBusiTotal().toBokValTableData(
+                batchBokValTableDatas.add(result.getMarginBusiTotal().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_融券业务合计.getValue()));
@@ -258,7 +260,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 今日可用头寸
             if (result.getTdyAvailPosition() != null) {
-                bokValTableDataMapper.insert(result.getTdyAvailPosition().toBokValTableData(
+                batchBokValTableDatas.add(result.getTdyAvailPosition().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_今日可用头寸.getValue()));
@@ -267,7 +269,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 产品累计单位净值
             if (result.getProdTotalUnitPrice() != null) {
-                bokValTableDataMapper.insert(result.getProdTotalUnitPrice().toBokValTableData(
+                batchBokValTableDatas.add(result.getProdTotalUnitPrice().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_产品累计单位净值.getValue()));
@@ -275,7 +277,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 昨日单位净值
             if (result.getYstUnitPrice() != null) {
-                bokValTableDataMapper.insert(result.getYstUnitPrice().toBokValTableData(
+                batchBokValTableDatas.add(result.getYstUnitPrice().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_昨日单位净值.getValue()));
@@ -286,7 +288,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
                 // 成立以来净值增长率(%)
                 if (result.getPriceGrowRateSince() != null) {
-                    bokValTableDataMapper.insert(result.getPriceGrowRateSince().toBokValTableData(
+                    batchBokValTableDatas.add(result.getPriceGrowRateSince().toBokValTableData(
                         dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_成立以来净值增长率.getValue()));
@@ -295,7 +297,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
                 // 净值年增长率(%)
                 if (result.getPriceGrowRateYear() != null) {
-                    bokValTableDataMapper.insert(result.getPriceGrowRateYear().toBokValTableData(
+                    batchBokValTableDatas.add(result.getPriceGrowRateYear().toBokValTableData(
                         dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_净值年增长率.getValue()));
@@ -304,7 +306,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
                 // 净值季度增长率(%)
                 if (result.getPriceGrowRateQuarter() != null) {
-                    bokValTableDataMapper.insert(
+                    batchBokValTableDatas.add(
                         result.getPriceGrowRateQuarter().toBokValTableData(
                             dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                             result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
@@ -314,7 +316,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
                 // 净值月增长率(%)
                 if (result.getPriceGrowRateMonth() != null) {
-                    bokValTableDataMapper.insert(result.getPriceGrowRateMonth().toBokValTableData(
+                    batchBokValTableDatas.add(result.getPriceGrowRateMonth().toBokValTableData(
                         dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_净值月增长率.getValue()));
@@ -323,7 +325,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
                 // 净值周增长率(%)
                 if (result.getPriceGrowRateWeek() != null) {
-                    bokValTableDataMapper.insert(result.getPriceGrowRateWeek().toBokValTableData(
+                    batchBokValTableDatas.add(result.getPriceGrowRateWeek().toBokValTableData(
                         dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_净值周增长率.getValue()));
@@ -332,7 +334,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
                 // 净值日增长率(%)
                 if (result.getPriceGrowRateDay() != null) {
-                    bokValTableDataMapper.insert(result.getPriceGrowRateDay().toBokValTableData(
+                    batchBokValTableDatas.add(result.getPriceGrowRateDay().toBokValTableData(
                         dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_净值日增长率.getValue()));
@@ -341,7 +343,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 影子价格单位净值
             if (result.getShandowUnitPrice() != null) {
-                bokValTableDataMapper.insert(result.getShandowUnitPrice().toBokValTableData(
+                batchBokValTableDatas.add(result.getShandowUnitPrice().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_影子价格单位净值.getValue()));
@@ -351,7 +353,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             //add by tanxuan 20200102 start
             //待抵扣投资收益税
             if(result.getDeductInvestIncomeTax() != null){
-                bokValTableDataMapper.insert(result.getDeductInvestIncomeTax().toBokValTableData(
+                batchBokValTableDatas.add(result.getDeductInvestIncomeTax().toBokValTableData(
                         dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeListExt3.估值表类型_待抵扣投资收益税.getValue()));
@@ -359,7 +361,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             //待抵扣暂估投资收益税
             if(result.getExtDeductInvestIncomeTax() != null){
-                bokValTableDataMapper.insert(result.getExtDeductInvestIncomeTax().toBokValTableData(
+                batchBokValTableDatas.add(result.getExtDeductInvestIncomeTax().toBokValTableData(
                         dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeListExt3.估值表类型_待抵扣暂估投资收益税.getValue()));
@@ -369,7 +371,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 偏离金额
             if (result.getDeviationAmount() != null) {
-                bokValTableDataMapper.insert(result.getDeviationAmount().toBokValTableData(
+                batchBokValTableDatas.add(result.getDeviationAmount().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_偏离金额.getValue()));
@@ -378,7 +380,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 偏离度
             if (result.getDeviationDegree() != null) {
-                bokValTableDataMapper.insert(result.getDeviationDegree().toBokValTableData(
+                batchBokValTableDatas.add(result.getDeviationDegree().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_偏离度.getValue()));
@@ -387,7 +389,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 产品本日收益
             if (result.getTdyProdProfit() != null) {
-                bokValTableDataMapper.insert(result.getTdyProdProfit().toBokValTableData(
+                batchBokValTableDatas.add(result.getTdyProdProfit().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_产品本日收益_费后.getValue()));
@@ -396,7 +398,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 万份收益
             if (result.getPYield() != null) {
-                bokValTableDataMapper.insert(result.getPYield().toBokValTableData(
+                batchBokValTableDatas.add(result.getPYield().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_万份收益_费后.getValue()));
@@ -405,7 +407,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 本年累积万份收益
             if (result.getPYieldYear() != null) {
-                bokValTableDataMapper.insert(result.getPYieldYear().toBokValTableData(
+                batchBokValTableDatas.add(result.getPYieldYear().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_本年累积万份收益.getValue()));
@@ -414,7 +416,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 从成立以来累计万份收益
             if (result.getPYieldSince() != null) {
-                bokValTableDataMapper.insert(result.getPYieldSince().toBokValTableData(
+                batchBokValTableDatas.add(result.getPYieldSince().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_从成立以来累计万份收益.getValue()));
@@ -423,7 +425,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 本日年化收益率
             if (result.getTdyYield() != null) {
-                bokValTableDataMapper.insert(result.getTdyYield().toBokValTableData(
+                batchBokValTableDatas.add(result.getTdyYield().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_本日年化收益率.getValue()));
@@ -432,7 +434,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 7日年化收益率
             if (result.getYield7() != null) {
-                bokValTableDataMapper.insert(result.getYield7().toBokValTableData(
+                batchBokValTableDatas.add(result.getYield7().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_7日年化收益率.getValue()));
@@ -440,7 +442,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 投资组合平均到期日
             if (result.getInvGroupAvrMday() != null) {
-                bokValTableDataMapper.insert(result.getInvGroupAvrMday().toBokValTableData(
+                batchBokValTableDatas.add(result.getInvGroupAvrMday().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_投资组合平均到期日.getValue()));
@@ -448,7 +450,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 剩余存续期
             if (result.getRemainDuration() != null) {
-                bokValTableDataMapper.insert(result.getRemainDuration().toBokValTableData(
+                batchBokValTableDatas.add(result.getRemainDuration().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_剩余存续期.getValue()));
@@ -456,7 +458,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 当日客户收益
             if (result.getTdyCustProfit() != null) {
-                bokValTableDataMapper.insert(result.getTdyCustProfit().toBokValTableData(
+                batchBokValTableDatas.add(result.getTdyCustProfit().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_当日客户收益.getValue()));
@@ -464,7 +466,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 累计客户收益
             if (result.getTotalCustProfit() != null) {
-                bokValTableDataMapper.insert(result.getTotalCustProfit().toBokValTableData(
+                batchBokValTableDatas.add(result.getTotalCustProfit().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_累计客户收益.getValue()));
@@ -472,7 +474,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             }
             // 当日客户收益率
             if (result.getTdyCustProfitRate() != null) {
-                bokValTableDataMapper.insert(result.getTdyCustProfitRate().toBokValTableData(
+                batchBokValTableDatas.add(result.getTdyCustProfitRate().toBokValTableData(
                     dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                     result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                     DictCodeList.估值表类型_当日客户收益率.getValue()));
@@ -481,7 +483,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             // 分层
             if(result.getLayeredProdValDtoList() != null && result.getLayeredProdValDtoList().size()>0){
                 result.getLayeredProdValDtoList().forEach(item -> {
-                    bokValTableDataMapper.insert(item.toBokValTableData(
+                    batchBokValTableDatas.add(item.toBokValTableData(
                         dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         null));
@@ -519,7 +521,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
             /** modify by dongjun on 20190425 估值表添加指标 start**/
             // 产品资产净值-费后
             if(result.getNetAssetValue() != null){
-                bokValTableDataMapper.insert(result.getNetAssetValue().toBokValTableData(
+                batchBokValTableDatas.add(result.getNetAssetValue().toBokValTableData(
                         String.valueOf(dBUtil.getSequenceIndex(DataIndexSequenceType.记账类型)),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_产品资产净值_费后.getValue()));
@@ -528,7 +530,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 产品单位净值-费后
             if(result.getNetUnitValue() != null){
-                bokValTableDataMapper.insert(result.getNetUnitValue().toBokValTableData(
+                batchBokValTableDatas.add(result.getNetUnitValue().toBokValTableData(
                         String.valueOf(dBUtil.getSequenceIndex(DataIndexSequenceType.记账类型)),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_产品单位净值_费后.getValue()));
@@ -537,7 +539,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 产品资产净值-费前
             if(result.getNetAssetValueBef() != null){
-                bokValTableDataMapper.insert(result.getNetAssetValueBef().toBokValTableData(
+                batchBokValTableDatas.add(result.getNetAssetValueBef().toBokValTableData(
                         String.valueOf(dBUtil.getSequenceIndex(DataIndexSequenceType.记账类型)),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_产品资产净值_费前.getValue()));
@@ -546,7 +548,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 产品单位净值-费前
             if(result.getNetUnitValueBef() != null){
-                bokValTableDataMapper.insert(result.getNetUnitValueBef().toBokValTableData(
+                batchBokValTableDatas.add(result.getNetUnitValueBef().toBokValTableData(
                         String.valueOf(dBUtil.getSequenceIndex(DataIndexSequenceType.记账类型)),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_产品单位净值_费前.getValue()));
@@ -555,7 +557,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 周期年化收益率
             if(result.getYieldTerm() != null){
-                bokValTableDataMapper.insert(result.getYieldTerm().toBokValTableData(
+                batchBokValTableDatas.add(result.getYieldTerm().toBokValTableData(
                         String.valueOf(dBUtil.getSequenceIndex(DataIndexSequenceType.记账类型)),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_周期年化收益率.getValue()));
@@ -577,7 +579,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 产品本日收益-费前
             if(result.getTdyIncomeBef() != null){
-                bokValTableDataMapper.insert(result.getTdyIncomeBef().toBokValTableData(
+                batchBokValTableDatas.add(result.getTdyIncomeBef().toBokValTableData(
                         String.valueOf(dBUtil.getSequenceIndex(DataIndexSequenceType.记账类型)),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_产品本日收益_费前.getValue()));
@@ -586,7 +588,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 万份收益-费前
             if(result.getpYieldBef() != null){
-                bokValTableDataMapper.insert(result.getpYieldBef().toBokValTableData(
+                batchBokValTableDatas.add(result.getpYieldBef().toBokValTableData(
                         String.valueOf(dBUtil.getSequenceIndex(DataIndexSequenceType.记账类型)),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_万份收益_费前.getValue()));
@@ -595,7 +597,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 
             // 成立以来年化收益率
             if(result.getToTdyyield() != null){
-                bokValTableDataMapper.insert(result.getToTdyyield().toBokValTableData(
+                batchBokValTableDatas.add(result.getToTdyyield().toBokValTableData(
                         String.valueOf(dBUtil.getSequenceIndex(DataIndexSequenceType.记账类型)),
                         result.getBooksetId(), result.getBooksetName(), result.getBookDate(),
                         DictCodeList.估值表类型_成立以来年化收益率.getValue()));
@@ -793,7 +795,7 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 //                    String sftpLoginType = CacheUtil.getSysParam("SFTP_LOGIN_TYPE");// SFTP登录方式
 //                    String remotePath = CacheUtil.getSysParam("FILESERVER_REMOTE_PATH");
 //                    sftpTools.login(username, password, ip, port, sftpLoginType );
-//                    
+//
 //                    if (StringUtils.isEmpty(hzSchemeSwitch)
 //                        || DictCodeList.估值模板_基金模板.getValue().equals(hzSchemeSwitch)) {
 //                        sftpTools.putFile(outPath, remotePath);
@@ -827,7 +829,14 @@ public class ValSchemeWriter extends BaseWriter<NeedToWriteEntity> {
 //                valFileGen.setUploadStatus(GlobalConstant.TYPE_02);
 //                valFileGenMapper.insert(valFileGen);
             }
-
+            if(!StringUtil.isEmptyList(batchBokValTableDatas)){
+                List<List<BokValTableData>> batchBokValTableDatasList = DataHandleUtil.splitList(batchBokValTableDatas);
+                for(List<BokValTableData> batchBokValTableDatasTmp : batchBokValTableDatasList){
+                    bokValTableDateWriterMapper.insertBatchBokValTableData(batchBokValTableDatasTmp);
+                }
+                batchBokValTableDatas.clear();
+            }
+            //估值表数据批量入库 lijun modify by 20200819 end
             // 估值表余额表状态表 入库
             if (result.getBokValbalTableStatus() != null) {
                 //增加一个估值参数，通过参数控制是否修改状态 IS_CHANGE_STATUS_VALNETVALUECONFIRM
