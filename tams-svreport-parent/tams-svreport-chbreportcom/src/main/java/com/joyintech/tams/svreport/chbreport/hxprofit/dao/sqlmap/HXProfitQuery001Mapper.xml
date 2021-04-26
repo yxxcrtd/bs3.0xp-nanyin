@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.hxprofit.dao.HXProfitQuery001Mapper">
+    <select id="selectAllData"
+            resultType="com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto">
+        SELECT
+        profit.crt_mon reportDate,
+        profit.busi_date as busiDate
+        FROM hx_profit profit
+        <where>
+            profit.acc_code='1'
+            <if test="reportDate != null and reportDate != ''">
+                AND profit.crt_mon = #{reportDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectHxProfitData"
+            resultType="com.joyintech.tams.common.base.entity.HxProfit">
+        SELECT
+        profit.crt_mon,
+        profit.busi_date,
+        SUM(profit.lixi_inc) lixiInc,
+        SUM(profit.lixi_pay) lixiPay,
+        SUM(profit.invest_lixi_inc) investLixiInc,
+        SUM(profit.invest_lixi_pay) investLixiPay,
+        SUM(profit.fina_lixi_inc) finaLixiInc,
+        SUM(profit.fina_lixi_pay) finaLixiPay,
+        SUM(profit.fee_lixi_inc) feeLixiInc,
+        SUM(profit.invest_inc) investInc,
+        SUM(profit.change_inc) changeInc,
+        SUM(profit.year_profit) yearProfit,
+        SUM(profit.exch_inc) exchInc,
+        SUM(profit.prod_pay) prodPay,
+        SUM(profit.busi_fee) busiFee,
+        SUM(profit.asset_imp) assetImp,
+        SUM(profit.oper_profit) operProfit
+        FROM hx_profit profit
+        <where>
+        <if test="reportMon != null and reportMon != ''">
+            AND profit.crt_mon = #{reportMon,jdbcType=VARCHAR}
+        </if>
+        <if test="flag != null and flag != ''">
+            AND profit.acc_code = #{flag,jdbcType=VARCHAR}
+        </if>
+        </where>
+        GROUP BY profit.crt_mon,profit.busi_date
+    </select>
+</mapper>

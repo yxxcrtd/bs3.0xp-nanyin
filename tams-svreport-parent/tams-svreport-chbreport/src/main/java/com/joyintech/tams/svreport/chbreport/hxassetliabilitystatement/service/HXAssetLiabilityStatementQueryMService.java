@@ -48,7 +48,7 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
     private final Logger logger = LoggerFactory.getLogger(HXAssetLiabilityStatementQueryMService.class);
 
     /**
-     * 理财产品资产负债表分页查询
+     * 华夏资产负债表分页查询
      *
      * @return
      * @see
