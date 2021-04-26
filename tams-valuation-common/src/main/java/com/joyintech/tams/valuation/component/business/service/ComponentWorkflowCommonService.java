@@ -18,7 +18,7 @@ import java.util.Map;
  * @Date 2021/3/4 0004 
  * @Version V1.0
  **/
-@Service
+@Service("valComponentWorkflowCommonService")
 @Transactional(rollbackFor = Exception.class)
 public class ComponentWorkflowCommonService {
 
