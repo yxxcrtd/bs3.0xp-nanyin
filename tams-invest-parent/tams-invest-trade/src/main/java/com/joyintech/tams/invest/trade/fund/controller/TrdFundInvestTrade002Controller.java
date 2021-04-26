@@ -235,11 +235,11 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         else if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             dto = trdFundInvestTrade002Service.getBussinessEntityByWorkflowId(workflowId);
           //买入卖出时，页面交易金额显示为交易本金，联动出划款金额为交易金额
-            if(StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dto.getPs())
+//            if(StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dto.getPs())
 //                ||StringUtil.equals(DictCodeList.交易方向_卖出.getValue(), dto.getPs())
-                ){
-            	dto.setTradeAmt(dto.getPrinAmt());
-            }
+//                ){
+//            	dto.setTradeAmt(dto.getPrinAmt());
+//            }
             // dto.setChlId(dto.getChannelId());
             if (dto.getBussTrdTransferOrder() != null && dto.getBussTrdTransferOrder().size() > 0) {
                 BussTrdTransferOrderDto bttoDto = dto.getBussTrdTransferOrder().get(0);

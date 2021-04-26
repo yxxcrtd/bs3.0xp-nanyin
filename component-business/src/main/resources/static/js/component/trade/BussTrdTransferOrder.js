@@ -639,7 +639,60 @@
             }
         }
     };
-
+    //add by jiangpeng on 20210422 start TISHKBS-1803
+    /**
+     * 指令日期更新
+     * @param dateMap 日期参数
+     * @param param 条件参数
+     */
+    var updateGenerateOrders = function (dateMap,param) {
+        let isOnlyOneDate = param.isOnlyOneDate;//日期参数唯一
+        let isTrdIRS = param.isTrdIRS;//利率互换存续期特殊处理
+        if (isOnlyOneDate) {
+            let settleDate = dateMap.settleDate;
+            let index = layer.open({
+                type: 1,
+                icon: 16,
+                area: ['200px', '100px'],
+                content: '数据加载中', closeBtn: 0
+            });
+            let orderTable = table.getAllRows();
+            for (let i = 0; i < orderTable.length; i++) {
+                orderTable[i].settleDateText = settleDate;
+                orderTable[i].settleDate = settleDate;
+            }
+            table.clear(function () {
+                layui.layer.close(index);
+                table.addRow(orderTable)
+            });
+        }
+        //利率互换存续期特殊处理
+        if (isTrdIRS) {
+            let index = layer.open({
+                type: 1,
+                icon: 16,
+                area: ['200px', '100px'],
+                content: '数据加载中', closeBtn: 0
+            });
+            let orderTable = table.getAllRows();
+            var ps_pay = param.ps_pay;
+            for (let i = 0; i < orderTable.length; i++) {
+                debugger;
+                if ((param.irsType && orderTable[i].ps === ps_pay) || (!param.irsType && orderTable[i].ps !== ps_pay)) {
+                    orderTable[i].settleDateText = dateMap.floatMdate;
+                    orderTable[i].settleDate = dateMap.floatMdate;
+                } else {
+                    orderTable[i].settleDateText = dateMap.fixMdate;
+                    orderTable[i].settleDate = dateMap.fixMdate;
+                }
+            }
+            table.clear(function () {
+                layui.layer.close(index);
+                table.addRow(orderTable)
+            });
+        }
+    }
+    //add by jiangpeng on 20210422 end TISHKBS-1803
     // 划款指令共通组件公开接口
     if (window.BussTrdTransferOrder == undefined) {
         window.BussTrdTransferOrder = {};
@@ -657,7 +710,10 @@
         saveCalcCondition: saveCalcCondition,
         generateClick: generateClick,
         generateOrders: generateOrders,
-        "bussTrdTransferOrderTable":table
+        "bussTrdTransferOrderTable":table,
+        //add by jiangpeng on 20210422 start TISHKBS-1803
+        updateGenerateOrders:updateGenerateOrders
+        //add by jiangpeng on 20210422 end TISHKBS-1803
     };
     init();
 }());

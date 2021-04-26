@@ -316,6 +316,10 @@ $(function() {
                     width : 200
                 },
                 {
+                    field : 'appearMarketId',
+                    visible : false
+                },
+                {
                     field : 'assetCode',
                     title : 'PaActiveRemind002.assetCode',
                     width : 200
@@ -645,11 +649,22 @@ $(function() {
      * 处理按钮绑定事件
      */
     tableR2.bind('click','#PaActiveRemind002_btnDeal_action', function(row) {
-    	if(row.remType=='R7S1')
+        if(row.remType=='R7S1')
     		dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.odateStr);
         if(row.remType=='R3S5')
             dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.mdateStr,row.orgId,row.orgName,row.dDateStr);
-    	else
+        else if (row.remType == 'R10S1'){
+            //债券上市流通交易新建页面单独打开
+            var data = {};
+            data.pageModel=PAGE_MODEL_NEW;
+            data.finprodId = row.finprodId;
+            data.appearMarketId = row.appearMarketId;
+            Joyin.dialog(JoyinUtil.getLabel("TrdBondMarketTrade002"),
+                JoyinUtil.getRealPath("invest/trade/bondmarkettrade/TrdBondMarketTrade002/init"),
+                "99%", "99%", data,
+                    function(){tableR2.reload();});
+        }
+        else
             dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.mdateStr,row.orgId,row.orgName);
     });
 

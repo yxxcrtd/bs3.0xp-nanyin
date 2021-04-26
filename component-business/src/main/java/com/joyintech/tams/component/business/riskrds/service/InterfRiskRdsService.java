@@ -10,23 +10,12 @@
 
 package com.joyintech.tams.component.business.riskrds.service;
 
-import java.math.BigDecimal;
-
-import com.joyintech.framework.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory; 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
@@ -52,8 +41,14 @@ import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDt
 import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
 import com.joyintech.tams.invest.common.riskinfrds.info.entity.IAssetInfo;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.AssetInfoRedisService;
-import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;  
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -952,7 +947,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             	infRiskRdsDto.setCalendarCode(calendars.get(0));
             }
             if(StringUtil.isNotEmpty(dataMap.get("mdate"))) {
-            	infRiskRdsDto.setMdate((Date)dataMap.get("mdate"));
+                // add by jiangpeng on 20210423 start
+                // ZGBSSE-139 债券借贷存续期-融出，待办事项提交报错
+                //时间戳
+                if (dataMap.get("mdate") instanceof Long) {
+                    infRiskRdsDto.setMdate(new Date((long) dataMap.get("mdate")));
+                } else {
+                    infRiskRdsDto.setMdate((Date) dataMap.get("mdate"));
+                }
+//            	infRiskRdsDto.setMdate((Date)dataMap.get("mdate"));
+                // add by jiangpeng on 20210423 end
             }
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())||

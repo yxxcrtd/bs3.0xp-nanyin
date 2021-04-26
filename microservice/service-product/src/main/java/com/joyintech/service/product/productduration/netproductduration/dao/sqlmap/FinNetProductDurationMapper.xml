@@ -163,6 +163,9 @@
 		       ftpr.term purTermDays,
 		       ftpr.period_id purPeriodId,
 		       pur.mdate purCycleEndDate,
+				<!--【产品存续期交易查询】交易查看页面，期次支付日为空,不等产品修改，这里暂时存pay_date jianxx 20210331 start-->
+				total.pay_date as purCyclePayDate,
+				<!--【产品存续期交易查询】交易查看页面，期次支付日为空,不等产品修改，这里暂时存pay_date jianxx 20210331 end-->
        		</if>
 	       	<if test="dealType=='C4' or dealType=='C17' or dealType=='C18'">
 		       red.trade_date redConfirmDate,
@@ -682,7 +685,13 @@
 	           		AND fin_trade_product.branch = ptl.branch
 	        	left join FIN_PRODUCT ON FIN_PRODUCT.FINPROD_ID = FIN_TRADE_PRODUCT.FINPROD_ID 
 	        WHERE FIN_PRODUCT.p_finprod_id = #{finprodId,jdbcType=VARCHAR} AND ptl.cdate = #{cDate,jdbcType=DATE}
-	          AND ptl.amount > 0 AND #{confirmDate,jdbcType=DATE} > fin_trade_product.vdate
+	          AND ptl.amount > 0
+		      <if test="confirmDate != null ">
+				  AND #{confirmDate,jdbcType=DATE} > fin_trade_product.vdate
+			  </if>
+			  <if test="confirmDate != null ">
+				 AND #{confirmDate,jdbcType=DATE} >= fin_trade_product.mdate
+			  </if>
 		)ORDER BY  M_DATE ASC 
 		
 	</select>

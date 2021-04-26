@@ -499,4 +499,13 @@ public interface AccountingCommonMapper {
      * @return
      */
     BigDecimal selectFloatSubjectBalance(Map<String, Object> map);
+    /**
+     *
+     * 最新账务查询
+     * @param paMap
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<BookLatestInfoDto> getBookRePayListInfo(Map<String, Object> paMap);
 }

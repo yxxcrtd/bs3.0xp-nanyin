@@ -157,6 +157,11 @@ public class BaseTradeProductDealDto {
 
 	/**add by taoran 20200303*/
     
+	 /**
+     * 申购方式(可转债交易字段)
+     */
+    private String purchModle;
+    
     public String getfTradeId() {
         return fTradeId;
     }
@@ -486,4 +491,66 @@ public class BaseTradeProductDealDto {
     public void setTrdDealTotalAdd(TrdDealTotalAdd trdDealTotalAdd) {
         this.trdDealTotalAdd = trdDealTotalAdd;
     }
+
+    /**
+     * 是否自动批处理
+     */
+    private boolean isBatch;
+
+    public boolean isBatch() {
+        if(isBatch){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void setBatch(boolean batch) {
+        isBatch = batch;
+    }
+
+	public String getPurchModle() {
+		return purchModle;
+	}
+
+	public void setPurchModle(String purchModle) {
+		this.purchModle = purchModle;
+	}
+
+    //add by jiangpeng on 20210416 start
+    // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+    /**
+     * 是否现金交割
+     */
+    private String isCashPay;
+    /**
+     * 是否现金交割
+     */
+    public String getIsCashPay() {
+        return isCashPay;
+    }
+    /**
+     * 是否现金交割
+     */
+    public void setIsCashPay(String isCashPay) {
+        this.isCashPay = isCashPay;
+    }
+
+    /**
+     * 是否借贷交易
+     */
+    private String isSLDeal;
+    /**
+     * 是否借贷交易
+     */
+    public String getIsSLDeal() {
+        return isSLDeal;
+    }
+    /**
+     * 是否借贷交易
+     */
+    public void setIsSLDeal(String isSLDeal) {
+        this.isSLDeal = isSLDeal;
+    }
+    //add by jiangpeng on 20210416 end
 }

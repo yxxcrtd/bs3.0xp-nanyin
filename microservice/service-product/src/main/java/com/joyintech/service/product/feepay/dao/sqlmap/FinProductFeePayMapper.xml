@@ -184,7 +184,7 @@
         FIN_CASH_PLAN.VDATE vdate,
         FIN_CASH_PLAN.MDATE mdate,
         FIN_CASH_PLAN.PAY_DATE payDate,
-        BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP as feeAmt,
+        BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP +nvl(uct.unclearAmt,0) as feeAmt,
         NULL tradeId,
         FIN_PRODUCT.FINPROD_ABBR finprodAbbr,
         STL_FIN_PRODUCT_ACCT.ACCT_NO manageAcctount,
@@ -202,10 +202,29 @@
         INNER JOIN MST_FEEINFO
         ON FIN_CASH_INFO.FEE_ID=MST_FEEINFO.FEE_ID
         AND MST_FEEINFO.charge_type = #{chargeType}
-        INNER JOIN BOK_POSITION_PRDFEE
+       <!-- INNER JOIN BOK_POSITION_PRDFEE
+        ON FIN_CASH_INFO.FINPROD_ID=BOK_POSITION_PRDFEE.FINPROD_ID
+        AND FIN_CASH_INFO.BRANCH=BOK_POSITION_PRDFEE.BRANCH
+        AND BOK_POSITION_PRDFEE.FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2-->
+
+        inner join ( select  b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        ,fcp.vdate,fcp.mdate,sum(nvl(b.tdy_intincexp_add,0)) as TDY_UNPAID_INTINCEXP
+        from fin_cash_plan fcp
+        left join fin_cash_info fci
+        on fci.cash_id=fcp.cash_id
+        left join BOK_POSITION_PRDFEE b
+        on b.finprod_id=fci.finprod_id
+        and b.branch=fci.branch
+        and b.FEE_TYPE = fci.CASH_TYPE_2
+        where 1=1
+        and b.cdate>=fcp.vdate
+        and b.cdate&lt; fcp.mdate
+        group by b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        ,fcp.vdate,fcp.mdate)BOK_POSITION_PRDFEE
         ON FIN_CASH_INFO.FINPROD_ID=BOK_POSITION_PRDFEE.FINPROD_ID
         AND FIN_CASH_INFO.BRANCH=BOK_POSITION_PRDFEE.BRANCH
         AND BOK_POSITION_PRDFEE.FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2
+
         LEFT JOIN FIN_PRODUCT
         ON FIN_CASH_INFO.FINPROD_ID=FIN_PRODUCT.FINPROD_ID
         LEFT JOIN FIN_PRODUCT_ADD
@@ -220,6 +239,30 @@
         ON STL_FIN_PRODUCT_ACCT1.FINPROD_ID=FIN_CASH_INFO.FINPROD_ID
         AND STL_FIN_PRODUCT_ACCT1.CCY=FIN_CASH_INFO.CCY
         AND STL_FIN_PRODUCT_ACCT1.CASH_ID = FIN_CASH_INFO.CASH_ID
+
+        left join (
+        select TPD.FINPROD_ID,TTFD.FEE_ID , fcp.vdate,sum(PTPD.THEORY_AMT) - sum(TTFD.FEE_AMT) as unclearAmt
+        from PA_TRD_PRODUCT_DEAL  PTPD,
+        TRD_TRADE_FEE_DETAIL TTFD,
+        TRD_PRODUCT_DEAL     TPD,
+        FIN_PRODUCT_ADD      FPA,
+        fin_cash_info   fci,
+        fin_cash_plan  fcp
+        WHERE TTFD.TRADE_ID = PTPD.TRADE_ID
+        AND TPD.TRADE_ID = PTPD.TRADE_ID
+        AND FPA.FINPROD_ID = TPD.FINPROD_ID
+        and TPD.FINPROD_ID=fci.finprod_id
+        and TTFD.fee_type=fci.cash_type_2
+        and fci.cash_id=fcp.cash_id
+        AND TPD.IS_CANCEL = 'N'
+        AND TPD.TRADE_STATUS = '01'
+        AND TPD.MDATE = fcp.vdate
+        AND TPD.IS_CLEAN = 'N'
+        group by TPD.FINPROD_ID ,TTFD.FEE_ID,fcp.vdate
+        )uct
+        on uct.finprod_id=FIN_CASH_INFO.finprod_id
+        and uct.FEE_ID =MST_FEEINFO.FEE_ID
+        and uct.vdate =FIN_CASH_PLAN.vdate
         WHERE FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
         AND BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP >0
         AND FIN_CASH_PLAN.MDATE &lt;= #{platDate}
@@ -230,15 +273,16 @@
         AND BOK_POSITION_PRDFEE.FEE_TYPE=TRD_PRODUCT_DEAL.FINPROD_TYPE2
         and TRD_PRODUCT_DEAL.IS_CANCEL = #{noFlag}
         and TRD_PRODUCT_DEAL.TRADE_STATUS = #{tradeStatus})
-        AND BOK_POSITION_PRDFEE.CDATE =
-        <!-- 优化max函数 yzg 20200107 start oracle11不支持双层子查询还原sql 20200108-->
+      <!--  AND BOK_POSITION_PRDFEE.CDATE =
+        &lt;!&ndash; 优化max函数 yzg 20200107 start oracle11不支持双层子查询还原sql 20200108&ndash;&gt;
         (SELECT MAX(B.CDATE) FROM BOK_POSITION_PRDFEE B
         WHERE B.FINPROD_ID = BOK_POSITION_PRDFEE.FINPROD_ID
         AND B.BRANCH = BOK_POSITION_PRDFEE.BRANCH
         AND B.FEE_TYPE = BOK_POSITION_PRDFEE.FEE_TYPE
         AND B.CDATE &lt;
         FIN_CASH_PLAN.MDATE
-        )
+        )-->
+        AND BOK_POSITION_PRDFEE.mDATE=FIN_CASH_PLAN.MDATE
         <!-- 优化max函数 yzg 20200107 end-->
         <if test="ptlId != null and ptlId.size() > 0">
             <!-- 一体化对应etliu -->
@@ -305,8 +349,8 @@
         select '${pendingStatus}' effectStatus,
         <!-- 一体化对应etliu -->
         FIN_PRODUCT_ADD.PORTFOLIO_ID ptlId,
-        FIN_PRODUCT1.FINPROD_MARKET_ID finprodMarketId,
-        FIN_PRODUCT1.Finprod_Id finprodId,
+        FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,
+        FIN_PRODUCT.Finprod_Id finprodId,
         FIN_PRODUCT_ADD.SALE_DEPARTMENT saleDepartment,
         MST_FEEINFO.FEE_ID feeId,
         MST_FEEINFO.Fee_Name feeName,
@@ -318,7 +362,7 @@
         FIN_CASH_PLAN.VDATE vdate,
         FIN_CASH_PLAN.MDATE mdate,
         FIN_CASH_PLAN.PAY_DATE payDate,
-        sum(BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP) as feeAmt,
+        sum(BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP)+sum(nvl(uct.unclearAmt,0) ) as feeAmt,
         NULL tradeId,
         FIN_PRODUCT1.FINPROD_ABBR finprodAbbr,
         STL_FIN_PRODUCT_ACCT.ACCT_NO manageAcctount,
@@ -336,10 +380,29 @@
         INNER JOIN MST_FEEINFO
         ON FIN_CASH_INFO.FEE_ID=MST_FEEINFO.FEE_ID
         AND MST_FEEINFO.charge_type = #{chargeType}
-        INNER JOIN BOK_POSITION_PRDFEE
+        <!--INNER JOIN BOK_POSITION_PRDFEE
+        ON FIN_CASH_INFO.FINPROD_ID=BOK_POSITION_PRDFEE.FINPROD_ID
+        AND FIN_CASH_INFO.BRANCH=BOK_POSITION_PRDFEE.BRANCH
+        AND BOK_POSITION_PRDFEE.FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2-->
+
+        inner join ( select  b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        ,fcp.vdate,fcp.mdate,b.p_finprod_id,sum(nvl(b.tdy_intincexp_add,0)) as TDY_UNPAID_INTINCEXP
+        from fin_cash_plan fcp
+        left join fin_cash_info fci
+        on fci.cash_id=fcp.cash_id
+        left join BOK_POSITION_PRDFEE b
+        on b.finprod_id=fci.finprod_id
+        and b.branch=fci.branch
+        and b.FEE_TYPE = fci.CASH_TYPE_2
+        where 1=1
+        and b.cdate>=fcp.vdate
+        and b.cdate&lt; fcp.mdate
+        group by b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        ,fcp.vdate,fcp.mdate,b.p_finprod_id)BOK_POSITION_PRDFEE
         ON FIN_CASH_INFO.FINPROD_ID=BOK_POSITION_PRDFEE.FINPROD_ID
         AND FIN_CASH_INFO.BRANCH=BOK_POSITION_PRDFEE.BRANCH
         AND BOK_POSITION_PRDFEE.FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2
+
         LEFT JOIN FIN_PRODUCT
         ON FIN_CASH_INFO.FINPROD_ID=FIN_PRODUCT.FINPROD_ID
         LEFT JOIN FIN_PRODUCT FIN_PRODUCT1
@@ -356,6 +419,31 @@
         ON STL_FIN_PRODUCT_ACCT1.FINPROD_ID=FIN_CASH_INFO.FINPROD_ID
         AND STL_FIN_PRODUCT_ACCT1.CCY=FIN_CASH_INFO.CCY
         AND STL_FIN_PRODUCT_ACCT1.CASH_ID = FIN_CASH_INFO.CASH_ID
+
+        left join (
+        select TPD.FINPROD_ID,TTFD.FEE_ID , fcp.vdate,sum(PTPD.THEORY_AMT) - sum(TTFD.FEE_AMT) as unclearAmt
+        from PA_TRD_PRODUCT_DEAL  PTPD,
+        TRD_TRADE_FEE_DETAIL TTFD,
+        TRD_PRODUCT_DEAL     TPD,
+        FIN_PRODUCT_ADD      FPA,
+        fin_cash_info   fci,
+        fin_cash_plan  fcp
+        WHERE TTFD.TRADE_ID = PTPD.TRADE_ID
+        AND TPD.TRADE_ID = PTPD.TRADE_ID
+        AND FPA.FINPROD_ID = TPD.FINPROD_ID
+        and TPD.FINPROD_ID=fci.finprod_id
+        and TTFD.fee_type=fci.cash_type_2
+        and fci.cash_id=fcp.cash_id
+        AND TPD.IS_CANCEL = 'N'
+        AND TPD.TRADE_STATUS = '01'
+        AND TPD.MDATE = fcp.vdate
+        AND TPD.IS_CLEAN = 'N'
+        group by TPD.FINPROD_ID ,TTFD.FEE_ID,fcp.vdate
+        )uct
+        on uct.finprod_id=FIN_CASH_INFO.finprod_id
+        and uct.FEE_ID =MST_FEEINFO.FEE_ID
+        and uct.vdate =FIN_CASH_PLAN.vdate
+
         WHERE FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
         AND BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP >0
         AND FIN_CASH_PLAN.MDATE &lt;= #{platDate}
@@ -368,15 +456,16 @@
         AND BOK_POSITION_PRDFEE.FEE_TYPE=TRD_PRODUCT_DEAL.FINPROD_TYPE2
         and TRD_PRODUCT_DEAL.IS_CANCEL = #{noFlag}
         and TRD_PRODUCT_DEAL.TRADE_STATUS = #{tradeStatus})
-        AND BOK_POSITION_PRDFEE.CDATE =
-        <!-- 优化max函数 yzg 20200107 start-->
+     <!--   AND BOK_POSITION_PRDFEE.CDATE =
+        &lt;!&ndash; 优化max函数 yzg 20200107 start&ndash;&gt;
         (SELECT MAX(B.CDATE) FROM BOK_POSITION_PRDFEE B
         WHERE B.FINPROD_ID = BOK_POSITION_PRDFEE.FINPROD_ID
         AND B.BRANCH = BOK_POSITION_PRDFEE.BRANCH
         AND B.FEE_TYPE = BOK_POSITION_PRDFEE.FEE_TYPE
         AND B.CDATE &lt;
         FIN_CASH_PLAN.MDATE
-        )
+        )-->
+        AND BOK_POSITION_PRDFEE.mDATE=FIN_CASH_PLAN.MDATE
         <!-- 优化max函数 yzg 20200107 end-->
         <if test="ptlId != null and ptlId.size() > 0">
             <!-- 一体化对应etliu -->
@@ -432,8 +521,8 @@
             and PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
         </if>
         GROUP BY FIN_PRODUCT_ADD.PORTFOLIO_ID,
-        FIN_PRODUCT1.FINPROD_MARKET_ID,
-        FIN_PRODUCT1.Finprod_Id,
+        FIN_PRODUCT.FINPROD_MARKET_ID,
+        FIN_PRODUCT.Finprod_Id,
         FIN_PRODUCT_ADD.SALE_DEPARTMENT,
         FIN_PRODUCT1.FINPROD_ABBR,
         BOK_POSITION_PRDFEE.FEE_TYPE,
@@ -1164,10 +1253,10 @@
         ,STL_PAY_ORDERS.CCY as CCY
         ,TRD_FIN_PRODUCT_DEAL_TOTAL.VDATE positionStartDate
         ,TRD_FIN_PRODUCT_DEAL_TOTAL.MDATE positionEndDate
-        ,TRD_TRADE_FEE_DETAIL.is_prepaid isPerpaid
         <!-- 分层产品明细需要 add by yzg start 20191227 -->
         ,FIN_CASH_INFO.CASH_ID cashId
         <!-- 分层产品明细需要 add by yzg end 20191227 -->
+        ,TRD_TRADE_FEE_DETAIL.is_prepaid isPerpaid
         FROM
         TRD_FIN_PRODUCT_DEAL_TOTAL
         INNER JOIN PTL_TRADE
@@ -1280,10 +1369,10 @@
         ,STL_PAY_ORDERS.CCY as CCY
         ,TRD_PRODUCT_DEAL.VDATE positionStartDate
         ,TRD_PRODUCT_DEAL.MDATE positionEndDate
-        ,TRD_TRADE_FEE_DETAIL.is_prepaid isPerpaid
         <!-- 分层产品明细需要 add by yzg start 20191227 -->
         ,FIN_CASH_INFO.CASH_ID cashId
         <!-- 分层产品明细需要 add by yzg end 20191227 -->
+        ,TRD_TRADE_FEE_DETAIL.is_prepaid isPerpaid
         FROM
         TRD_FIN_PRODUCT_DEAL_TOTAL
         INNER JOIN PTL_TRADE
@@ -1919,8 +2008,8 @@
         THEN FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE
         ELSE to_date(#{calcEndDate}, 'yyyy-MM-dd') END as calcEndDate
         ,FIN_CASH_INFO.ccy
-        ,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP as actPayAmt
-        ,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP as payAmt
+        ,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP +nvl(uct.unclearAmt,0) as actPayAmt
+        ,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP +nvl(uct.unclearAmt,0) as payAmt
         FROM
         FIN_CASH_INFO
         INNER JOIN FIN_CASH_PAY_RULE
@@ -1934,10 +2023,58 @@
         INNER JOIN MST_FEEINFO
         ON FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
         AND MST_FEEINFO.CHARGE_TYPE IN(#{chargeType})
-        INNER JOIN BOK_POSITION_PRDFEE
+    <!--    INNER JOIN BOK_POSITION_PRDFEE
+        ON FIN_CASH_INFO.FINPROD_ID = BOK_POSITION_PRDFEE.FINPROD_ID
+        AND FIN_CASH_INFO.BRANCH = BOK_POSITION_PRDFEE.BRANCH
+        and FIN_CASH_INFO.CASH_TYPE_2 = BOK_POSITION_PRDFEE.FEE_TYPE-->
+        inner join ( select  b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        ,fcp.vdate,fcp.mdate,sum(nvl(b.tdy_intincexp_add,0)) as TDY_UNPAID_INTINCEXP
+        from fin_cash_plan fcp
+        left join fin_cash_info fci
+        on fci.cash_id=fcp.cash_id
+        left join BOK_POSITION_PRDFEE b
+        on b.finprod_id=fci.finprod_id
+        and b.branch=fci.branch
+        and b.FEE_TYPE = fci.CASH_TYPE_2
+        where 1=1
+        and b.cdate>=fcp.vdate
+        and b.cdate&lt; fcp.mdate
+        group by b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        ,fcp.vdate,fcp.mdate
+        <!--不规则费用保持原来逻辑-->
+        union all
+        select b.finprod_id,
+        b.branch,
+        b.fee_type,
+        fci.cash_id,
+        null vdate,
+        to_date(#{calcEndDate}, 'yyyy-MM-dd') as mdate,
+        b.tdy_unpaid_intincexp as TDY_UNPAID_INTINCEXP
+        from  fin_cash_info fci
+        inner join fin_cash_pay_rule fcr
+        on fci.cash_id= fcr.cash_id
+        and fcr.Pay_Cycle='08'
+        inner join BOK_POSITION_PRDFEE b
+        on b.finprod_id = fci.finprod_id
+        and b.branch = fci.branch
+        and b.FEE_TYPE = fci.CASH_TYPE_2
+        where 1 = 1
+        and b.cdate =(
+        SELECT max(B1.CDATE)
+        FROM BOK_POSITION_PRDFEE B1
+        WHERE B1.FINPROD_ID = b.FINPROD_ID
+        AND B1.BRANCH = b.BRANCH
+        AND B1.FEE_TYPE = b.FEE_TYPE
+        AND B1.CDATE &lt;to_date(#{calcEndDate}, 'yyyy-MM-dd')
+        )
+
+        )BOK_POSITION_PRDFEE
         ON FIN_CASH_INFO.FINPROD_ID = BOK_POSITION_PRDFEE.FINPROD_ID
         AND FIN_CASH_INFO.BRANCH = BOK_POSITION_PRDFEE.BRANCH
         and FIN_CASH_INFO.CASH_TYPE_2 = BOK_POSITION_PRDFEE.FEE_TYPE
+
+
+
         LEFT JOIN (select FINPROD_ID, BRANCH, FINPROD_TYPE2, mdate
         from (select d.*,
         row_number() over(partition by FINPROD_ID, BRANCH, FINPROD_TYPE2 order by MDATE desc) as rnum
@@ -1956,13 +2093,64 @@
         ON FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         LEFT JOIN FIN_FLOAT_COUNTING_RULE ON
         FIN_FLOAT_COUNTING_RULE.CASH_ID = FIN_CASH_INFO.CASH_ID
+        left join (
+        select TPD.FINPROD_ID,TTFD.FEE_ID , fcp.mdate,sum(PTPD.THEORY_AMT) - sum(TTFD.FEE_AMT) as unclearAmt
+        from PA_TRD_PRODUCT_DEAL  PTPD,
+        TRD_TRADE_FEE_DETAIL TTFD,
+        TRD_PRODUCT_DEAL     TPD,
+        FIN_PRODUCT_ADD      FPA,
+        fin_cash_info   fci,
+        fin_cash_plan  fcp
+        WHERE TTFD.TRADE_ID = PTPD.TRADE_ID
+        AND TPD.TRADE_ID = PTPD.TRADE_ID
+        AND FPA.FINPROD_ID = TPD.FINPROD_ID
+        and TPD.FINPROD_ID=fci.finprod_id
+        and TTFD.fee_type=fci.cash_type_2
+        and fci.cash_id=fcp.cash_id
+        AND TPD.IS_CANCEL = 'N'
+        AND TPD.TRADE_STATUS = '01'
+        AND TPD.MDATE = fcp.vdate
+        AND TPD.IS_CLEAN = 'N'
+        group by TPD.FINPROD_ID ,TTFD.FEE_ID,fcp.mdate
+
+     <!--   union all
+        select TPD.FINPROD_ID,
+        TTFD.FEE_ID,
+        to_date(#{calcEndDate}, 'yyyy-MM-dd'),
+        sum(PTPD.THEORY_AMT) - sum(TTFD.FEE_AMT) as unclearAmt
+        from PA_TRD_PRODUCT_DEAL  PTPD,
+        TRD_TRADE_FEE_DETAIL TTFD,
+        TRD_PRODUCT_DEAL     TPD,
+        FIN_PRODUCT_ADD      FPA,
+        fin_cash_info        fci,
+        fin_cash_pay_rule        fcr
+        WHERE TTFD.TRADE_ID = PTPD.TRADE_ID
+        AND TPD.TRADE_ID = PTPD.TRADE_ID
+        AND FPA.FINPROD_ID = TPD.FINPROD_ID
+        and TPD.FINPROD_ID = fci.finprod_id
+        and TTFD.fee_type = fci.cash_type_2
+        and  fci.cash_id= fcr.cash_id
+        and fcr.Pay_Cycle='08'
+        AND TPD.IS_CANCEL = 'N'
+        AND TPD.TRADE_STATUS = '01'
+        <if test="calcStartDate != null">
+            AND TPD.MDATE =to_date(#{calcStartDate}, 'yyyy-MM-dd')
+        </if>
+        AND TPD.IS_CLEAN = 'N'
+        group by TPD.FINPROD_ID, TTFD.FEE_ID, to_date(#{calcEndDate}, 'yyyy-MM-dd')-->
+
+        )uct
+        on uct.finprod_id=FIN_CASH_INFO.finprod_id
+        and uct.FEE_ID =MST_FEEINFO.FEE_ID
+        and uct.mdate =to_date(#{calcEndDate}, 'yyyy-MM-dd')
+
         WHERE
         FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
         AND FIN_PRODUCT.P_FINPROD_ID is null
         AND FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
         AND FIN_PRODUCT.FINPROD_ID = #{finprodId}
         AND MST_FEEINFO.FEE_ID = #{feeId}
-        AND BOK_POSITION_PRDFEE.CDATE =
+        <!--AND BOK_POSITION_PRDFEE.CDATE =
         (SELECT max(B.CDATE)
         FROM BOK_POSITION_PRDFEE B
         WHERE B.FINPROD_ID =
@@ -1971,7 +2159,9 @@
         BOK_POSITION_PRDFEE.BRANCH
         AND BOK_POSITION_PRDFEE.FEE_TYPE =
         B.FEE_TYPE
-        AND B.CDATE &lt;to_date(#{calcEndDate}, 'yyyy-MM-dd'))
+        AND B.CDATE &lt;to_date(#{calcEndDate}, 'yyyy-MM-dd'))-->
+        AND BOK_POSITION_PRDFEE.mDATE=to_date(#{calcEndDate}, 'yyyy-MM-dd')
+
         UNION
         SELECT
         FIN_PRODUCT_ADD.PORTFOLIO_ID finprodMarketId
@@ -1989,8 +2179,8 @@
         ELSE to_date(#{calcEndDate}, 'yyyy-MM-dd') END as calcEndDate
 
         ,FIN_CASH_INFO.ccy
-        ,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP as actPayAmt
-        ,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP as payAmt
+        ,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP+nvl(uct.unclearAmt,0) as actPayAmt
+        ,BOK_POSITION_PRDFEE.TDY_UNPAID_INTINCEXP+nvl(uct.unclearAmt,0) as payAmt
         FROM
         FIN_CASH_INFO
         INNER JOIN FIN_CASH_PAY_RULE
@@ -2004,10 +2194,57 @@
         INNER JOIN MST_FEEINFO
         ON FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
         AND MST_FEEINFO.CHARGE_TYPE IN(#{chargeType})
-        INNER JOIN BOK_POSITION_PRDFEE
+     <!--   INNER JOIN BOK_POSITION_PRDFEE
+        ON FIN_CASH_INFO.FINPROD_ID = BOK_POSITION_PRDFEE.FINPROD_ID
+        AND FIN_CASH_INFO.BRANCH = BOK_POSITION_PRDFEE.BRANCH
+        and FIN_CASH_INFO.CASH_TYPE_2 = BOK_POSITION_PRDFEE.FEE_TYPE-->
+        inner join ( select  b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        ,fcp.vdate,fcp.mdate,sum(nvl(b.tdy_intincexp_add,0)) as TDY_UNPAID_INTINCEXP
+        from fin_cash_plan fcp
+        left join fin_cash_info fci
+        on fci.cash_id=fcp.cash_id
+        left join BOK_POSITION_PRDFEE b
+        on b.finprod_id=fci.finprod_id
+        and b.branch=fci.branch
+        and b.FEE_TYPE = fci.CASH_TYPE_2
+        where 1=1
+        and b.cdate>=fcp.vdate
+        and b.cdate&lt; fcp.mdate
+        group by b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        ,fcp.vdate,fcp.mdate
+        <!--不规则费用保持原来逻辑-->
+        union all
+        select b.finprod_id,
+        b.branch,
+        b.fee_type,
+        fci.cash_id,
+        null vdate,
+        to_date(#{calcEndDate}, 'yyyy-MM-dd') as mdate,
+        b.tdy_unpaid_intincexp as TDY_UNPAID_INTINCEXP
+        from  fin_cash_info fci
+        inner join fin_cash_pay_rule fcr
+        on fci.cash_id= fcr.cash_id
+        and fcr.Pay_Cycle='08'
+        inner join BOK_POSITION_PRDFEE b
+        on b.finprod_id = fci.finprod_id
+        and b.branch = fci.branch
+        and b.FEE_TYPE = fci.CASH_TYPE_2
+        where 1 = 1
+        and b.cdate =(
+        SELECT max(B1.CDATE)
+        FROM BOK_POSITION_PRDFEE B1
+        WHERE B1.FINPROD_ID = b.FINPROD_ID
+        AND B1.BRANCH = b.BRANCH
+        AND B1.FEE_TYPE = b.FEE_TYPE
+        AND B1.CDATE &lt;to_date(#{calcEndDate}, 'yyyy-MM-dd')
+        )
+
+        )BOK_POSITION_PRDFEE
         ON FIN_CASH_INFO.FINPROD_ID = BOK_POSITION_PRDFEE.FINPROD_ID
         AND FIN_CASH_INFO.BRANCH = BOK_POSITION_PRDFEE.BRANCH
         and FIN_CASH_INFO.CASH_TYPE_2 = BOK_POSITION_PRDFEE.FEE_TYPE
+
+
         LEFT JOIN (select FINPROD_ID, BRANCH, FINPROD_TYPE2, mdate
         from (select d.*,
         row_number() over(partition by FINPROD_ID, BRANCH, FINPROD_TYPE2 order by MDATE desc) as rnum
@@ -2029,13 +2266,63 @@
         ON FIN_PRODUCT1.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
         LEFT JOIN FIN_FLOAT_COUNTING_RULE ON
         FIN_FLOAT_COUNTING_RULE.CASH_ID = FIN_CASH_INFO.CASH_ID
+        left join (
+        select TPD.FINPROD_ID,TTFD.FEE_ID , fcp.mdate,sum(PTPD.THEORY_AMT) - sum(TTFD.FEE_AMT) as unclearAmt
+        from PA_TRD_PRODUCT_DEAL  PTPD,
+        TRD_TRADE_FEE_DETAIL TTFD,
+        TRD_PRODUCT_DEAL     TPD,
+        FIN_PRODUCT_ADD      FPA,
+        fin_cash_info   fci,
+        fin_cash_plan  fcp
+        WHERE TTFD.TRADE_ID = PTPD.TRADE_ID
+        AND TPD.TRADE_ID = PTPD.TRADE_ID
+        AND FPA.FINPROD_ID = TPD.FINPROD_ID
+        and TPD.FINPROD_ID=fci.finprod_id
+        and TTFD.fee_type=fci.cash_type_2
+        and fci.cash_id=fcp.cash_id
+        AND TPD.IS_CANCEL = 'N'
+        AND TPD.TRADE_STATUS = '01'
+        AND TPD.MDATE = fcp.vdate
+        AND TPD.IS_CLEAN = 'N'
+        group by TPD.FINPROD_ID ,TTFD.FEE_ID,fcp.mdate
+
+    <!--    union all
+        select TPD.FINPROD_ID,
+        TTFD.FEE_ID,
+        to_date(#{calcEndDate}, 'yyyy-MM-dd'),
+        sum(PTPD.THEORY_AMT) - sum(TTFD.FEE_AMT) as unclearAmt
+        from PA_TRD_PRODUCT_DEAL  PTPD,
+        TRD_TRADE_FEE_DETAIL TTFD,
+        TRD_PRODUCT_DEAL     TPD,
+        FIN_PRODUCT_ADD      FPA,
+        fin_cash_info        fci,
+        fin_cash_pay_rule        fcr
+        WHERE TTFD.TRADE_ID = PTPD.TRADE_ID
+        AND TPD.TRADE_ID = PTPD.TRADE_ID
+        AND FPA.FINPROD_ID = TPD.FINPROD_ID
+        and TPD.FINPROD_ID = fci.finprod_id
+        and TTFD.fee_type = fci.cash_type_2
+        and  fci.cash_id= fcr.cash_id
+        and fcr.Pay_Cycle='08'
+        AND TPD.IS_CANCEL = 'N'
+        AND TPD.TRADE_STATUS = '01'
+        <if test="calcStartDate != null">
+            AND TPD.MDATE =to_date(#{calcStartDate}, 'yyyy-MM-dd')
+        </if>
+        AND TPD.IS_CLEAN = 'N'
+        group by TPD.FINPROD_ID, TTFD.FEE_ID, to_date(#{calcEndDate}, 'yyyy-MM-dd')-->
+
+        )uct
+        on uct.finprod_id=FIN_CASH_INFO.finprod_id
+        and uct.FEE_ID =MST_FEEINFO.FEE_ID
+        and uct.mdate =to_date(#{calcEndDate}, 'yyyy-MM-dd')
         WHERE
         FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
         AND FIN_PRODUCT.P_FINPROD_ID is not null
         AND FIN_PRODUCT_ADD.PORTFOLIO_ID = #{ptlId}
-        AND FIN_PRODUCT.P_FINPROD_ID = #{finprodId}
+        AND FIN_PRODUCT.FINPROD_ID = #{finprodId}
         AND MST_FEEINFO.FEE_ID = #{feeId}
-        AND BOK_POSITION_PRDFEE.CDATE =
+       <!-- AND BOK_POSITION_PRDFEE.CDATE =
         (SELECT max(B.CDATE)
         FROM BOK_POSITION_PRDFEE B
         WHERE B.FINPROD_ID =
@@ -2045,7 +2332,8 @@
         AND BOK_POSITION_PRDFEE.FEE_TYPE =
         B.FEE_TYPE
 
-        AND B.CDATE &lt;to_date(#{calcEndDate}, 'yyyy-MM-dd'))
+        AND B.CDATE &lt;to_date(#{calcEndDate}, 'yyyy-MM-dd'))-->
+        AND BOK_POSITION_PRDFEE.mDATE=to_date(#{calcEndDate}, 'yyyy-MM-dd')
         <!-- 过滤分层子产品 add by yzg 20191227 start-->
         <if test="cashId != null and cashId != ''">
             AND FIN_CASH_INFO.CASH_ID = #{cashId}
@@ -2209,7 +2497,8 @@
             AND TTFD.FEE_ID = #{feeId}
         </if>
         <if test="payDate != null and payDate != ''">
-            AND TPD.TRADE_DATE &lt;= to_date(#{payDate},'yyyy-MM-dd')
+           <!-- AND TPD.TRADE_DATE &lt;= to_date(#{payDate},'yyyy-MM-dd')-->
+            AND TPD.MDATE = to_date(#{payDate},'yyyy-MM-dd')
         </if>
         AND TPD.IS_CLEAN = #{isClean}
     </select>

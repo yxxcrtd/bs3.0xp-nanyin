@@ -634,6 +634,7 @@
 	};
 	var investmentCycleChangeAction=function(){
 		var investmentCycleArr = [];
+	//导致待办事项中周期天数必填星号多了两个  wyn 20210402
 		var investmentCycle=$('#FinNetValueProductBuild002_investmentCycle').val();
 		if(investmentCycle){
 			investmentCycleArr[0] = {id: investmentCycle, text : investmentCycle};

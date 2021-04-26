@@ -10,20 +10,20 @@
  
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.valid;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.invest.common.util.ExcelUtilForRisk;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service.RskValStructure003Service;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service.RskValStructureService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -92,6 +92,11 @@ public class RskValStructureValidator implements BeanValidator{
                         errorList.add(new ValidMessage(this.getMessage("FW_E_0006",getMessage("RskValStructure003.tgtIndex"))));
                     }
                   //查询映射明细
+                    try {
+                        dto.setSrcColIndex(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter())));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     RskValStructureDto entity = rskValStructure003Service.select(dto);
                     if(entity != null && entity.getId() != null){
                         errorList.add(new ValidMessage(getMessage("RSK_W_0025",getMessage("RskValStructure003.srcColIndex"))));

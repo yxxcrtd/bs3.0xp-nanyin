@@ -60,6 +60,8 @@
                         <!-- add by wangguoxian 费用设置 20190807 start-->
                         <input type="hidden" id="isPayWithTrade" name="isPayWithTrade" th:value="${entity?.isPayWithTrade}" />
                         <!-- add by wangguoxian 费用设置 20190807 end-->
+                        <input type="hidden" id="settleIsPayWithTrade" name="settleIsPayWithTrade" th:value="${entity?.settleIsPayWithTrade}" />
+                        <input type="hidden" id="exchangeIsPayWithTrade" name="exchangeIsPayWithTrade" th:value="${entity?.exchangeIsPayWithTrade}" />
                         <!-- 起息日 -->
                         <input type="hidden" id="vdate" name="vdate"
                                class="layui-input form-input" placeholder="请输入内容"
@@ -164,6 +166,7 @@
                                            th:text="#{TrdBondInvestTrade002.finprodName}">资产代码</label>
                                     <div class="layui-input-inline input-inline">
                                         <select type="text" id="finprodId" name="finprodId"
+                                                parentIds="tradeMarketMode"
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/trade/bond/TrdBondInvestTrade002/getFinprodId}"
                                                 allowClear="true" th:initValue="${entity?.finprodId}"></select>

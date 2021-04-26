@@ -57,6 +57,7 @@ $(function() {
 	        object.entrustNum = entrustNum; // 委托金额
 	        object.entrustIntRate = entrustIntRate; // 委托所输利率
 	        object.avalibleCash = $("#bussTrdAvailableCashQuery_avalibleCash").val(); // 组合T日可用现金
+	        object.secAcctBalance = $("#bussTrdAvailableCashQuery_secAcctBalance").val(); // 托管户剩余现金
 	        if(FileCommon) {
 	            object.fileArray = FileCommon.getUploadFileInfo();
 	        }

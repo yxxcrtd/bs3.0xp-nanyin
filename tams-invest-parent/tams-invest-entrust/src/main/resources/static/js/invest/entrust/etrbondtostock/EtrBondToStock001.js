@@ -105,7 +105,7 @@ $(function () {
             ,{field:'conPrice', title:'EtrBondToStock001.conPrice',width:'10%',sortable:"conPrice"}
             ,{field:'prec', title:'EtrBondToStock001.prec',width:'10%',sortable:"prec"}
             ,{field:'preb', title:'EtrBondToStock001.preb',width:'10%',sortable:"preb"}
-            ,{field:'invAimName', title:'EtrInvestBondInfo002.invAim',width:'10%',sortable:"invAim"}
+            ,{field:'invAimName', title:'EtrInvestBondInfo002.invAim',width:'10%',sortable:"invAim",sortField:"invAim"}
             ,{field:'tradeMarket', visible:false}
             ,{field:'busTradeMarket', title: 'EtrInvestBondInfo001.tradeMarket', width:'10%',sortField:"tradeMarket"}
             ,{field:'ccy',visible:false}

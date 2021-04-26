@@ -55,12 +55,11 @@ import com.joyintech.tams.invest.common.calculator.RepayScheduleCal;
 import com.joyintech.tams.invest.common.calculator.WeightedInterestRateCal;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.workflow.engine.constant.OperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -396,7 +395,8 @@ public class AssetCommonService extends BaseService{
 
         // 一体化对应etliu 现金流支付规则表，支付频率没存值，可能有问题
         if (StringUtil.isBlank(finCashPayRule.getPayCycle())) {
-			finCashPayRule.setPayCycle(BussinessConstant.DEFAULT_PAY_CYCLE);
+            //modify by jiangpeng on 20210426 TISHKBS-2051 CLONE - 贴现债数据错误
+			finCashPayRule.setPayCycle(BussinessDictCodeList.频率_到期一次.getValue());
 		}
         if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                 &&(StringUtil.equals(dto.getCouponSpecies(), DictCodeList.息票品种_零息.getValue())
@@ -1136,7 +1136,16 @@ public class AssetCommonService extends BaseService{
         scheList = InterestScheduleCalReset.interestScheduleCalA(scheList, scai, invRepayList, null,
             rateList, is, holidayList,platDate, null, FinCashPlanDetailDto.class);
         // 计算完整周期天数，年付息次数
-        String finprodType2 =  StringUtil.isNotEmpty(scheList) ? scheList.get(0).getFinprodType2() : "";
+        String finprodType2 =  "";
+        if(StringUtil.isNotEmpty(scheList)){
+            for(FinCashPlanDto it:scheList){
+                if(StringUtil.isNotEmpty(it.getFinprodType2())){
+                    finprodType2=it.getFinprodType2();
+                    break;
+                }
+            }
+        }
+
         for (FinCashPlanDto entity2 : scheList) {
             entity2.setCashId(intCashId);
             entity2.setTermdays(DateUtil.getBetweenDayNumber(entity2.getVdate(), entity2.getMdate()));

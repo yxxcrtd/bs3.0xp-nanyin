@@ -174,7 +174,9 @@ $(function() {
         
         Joyin.ajaxJson(basePath + 'invest/asset/project/FinProjectTargetAsset002/check', object, function(
                     result) {
-        	if(FinPayInterestStdInfo &&FinPayInterestStdInfo.check()&& FinPayInterestStdInfo.comfirmCheck()&&BussFinRepayment.check()&&BussFinRepayment.isComfirmCheck()) {
+        	if(FinPayInterestStdInfo &&FinPayInterestStdInfo.check()&& FinPayInterestStdInfo.comfirmCheck()&&BussFinRepayment.check()&&BussFinRepayment.isComfirmCheck()
+        	  && FinPayInterestStdInfo.saveCheck()  && BussFinRepayment.saveCheck()
+        	  ) {
                 Joyin.ajaxJson(basePath + 'invest/asset/common/isHoliday', {
                     mdate: object.mdate,
                     calendarId: object.calendarId
@@ -702,7 +704,8 @@ $(function() {
             //update by  zhangnian 20191120  start
             // 增加推荐方与推荐费率 modify by renping 20191014 start
             $('#finInterestFactorDto_loadRate').change(function () {
-                FinInterestFactor.calBuyOutRateByTable('loadRate')
+                FinInterestFactor.calBuyOutRateByTable('loadRate');
+                $('#buyOutRate').attr('disabled',true).trigger('change');
             });
             $('#finInterestFactorDto_investRate').change(FinInterestFactor.calBuyOutRateByTable).trigger('change');
             // 增加推荐方与推荐费率 modify by renping 20191014 end

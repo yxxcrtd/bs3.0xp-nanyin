@@ -43,7 +43,7 @@ public class BussTrdAvailableCashQueryController extends BaseController {
     @Override
     public String init(Model model) {
         model.addAttribute("entityName",
-            StringUtil.defaultString(this.getParam("entityName"), BussTrdAvailableCashQueryService.DEFAULT_ENTITY_NAME));
+                StringUtil.defaultString(this.getParam("entityName"), BussTrdAvailableCashQueryService.DEFAULT_ENTITY_NAME));
 
         model.addAttribute("ACCT_TYPE_A01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
         model.addAttribute("ACCT_TYPE_A07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
@@ -65,14 +65,14 @@ public class BussTrdAvailableCashQueryController extends BaseController {
     @RequestMapping("getAvailableCash")
     public Map<String, BigDecimal> getAvailableCash(@RequestBody Map<String, Object> param) {
         if (bussTrdAvailableCashQueryService != null) {
-            String tradeDateStr = (String)param.get("tradeDate");
+            String tradeDateStr = (String) param.get("tradeDate");
             Date tradeDate = DateUtil.parse(tradeDateStr);
 
-            String dateId = (String)param.get("calendarId");
-            String finprodId = (String)param.get("finprodId");
+            String dateId = (String) param.get("calendarId");
+            String finprodId = (String) param.get("finprodId");
             if (StringUtil.isBlank(dateId) && StringUtil.isNotBlank(finprodId)) {
                 dateId = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class,
-                    param.get("finprodId").toString(), FinProduct.class).getCalendarId();
+                        param.get("finprodId").toString(), FinProduct.class).getCalendarId();
             }
             List<String> holidayList = dateCalService.getDealCalendarHoliday(tradeDate, DateUtil.addDay(tradeDate, 15), dateId);
             param.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(tradeDate, 1, holidayList, "1")));
@@ -94,9 +94,9 @@ public class BussTrdAvailableCashQueryController extends BaseController {
     public BigDecimal getSecManageAvailableCash(@RequestBody Map<String, Object> param) {
         // TODO 需要调接口
         //需求确认托管剩余现金没有接口时就为空 yjm 20190730
-       /* if (bussTrdAvailableCashQueryService != null && param.get("tradeDate") != null) {
+        if (bussTrdAvailableCashQueryService != null && param.get("tradeDate") != null) {
             return bussTrdAvailableCashQueryService.getSecManageAvailableCash(param);
-        }*/
+        }
         return BigDecimal.ZERO;
     }
 

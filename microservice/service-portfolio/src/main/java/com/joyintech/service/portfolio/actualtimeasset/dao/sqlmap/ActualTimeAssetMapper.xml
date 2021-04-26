@@ -13,7 +13,10 @@
 				nvl(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
 				nvl(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
 				nvl(sum(case when hoding_type = '06' then AMOUNT end),0) PTL_AMOUNT06,
-				nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08
+				nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08,
+				/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+				nvl(sum(case when hoding_type = '09' then AMOUNT end),0) PTL_AMOUNT09,
+				nvl(sum(case when hoding_type = '10' then AMOUNT end),0) PTL_AMOUNT10
 			from PTL_SEC_POSITION
 			where cdate = to_date(#{cdate},'yyyy-MM-dd') /**to_date('2019-10-18','yyyy-MM-dd')**/
 				/**and t6.hoding_type in ('03', '04', '05', '06','08')**/
@@ -93,6 +96,7 @@
 		INNER JOIN TRD_STASEC_FLOW_DETAIL TSFT
 		ON TSF.SEQNO=TSFT.SEQNO
 		WHERE TSF.CDATE  = to_date(#{cdate},'yyyy-MM-dd')
+        and (TSF.ps = '01' or not exists (select 1 from PTL_SEC_POSITION_FLOW pspf where TSF.SEQNO = PSPF.TRADE_ID and pspf.hoding_type='13'))
 		group by
 		TSF.portfolio_id,
 		TSF.sec_acct_id,
@@ -113,7 +117,10 @@
 		nvl(sum(case when hoding_type = '04' then AMOUNT end),0) PTL_AMOUNT04,
 		nvl(sum(case when hoding_type = '05' then AMOUNT end),0) PTL_AMOUNT05,
 		nvl(sum(case when hoding_type = '06' then AMOUNT end),0) PTL_AMOUNT06,
-		nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08
+		nvl(sum(case when hoding_type = '08' then AMOUNT end),0) PTL_AMOUNT08,
+		/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+		nvl(sum(case when hoding_type = '09' then AMOUNT end),0) PTL_AMOUNT09,
+		nvl(sum(case when hoding_type = '10' then AMOUNT end),0) PTL_AMOUNT10
 		from PTL_SEC_POSITION
 		where cdate = to_date(#{cdate},'yyyy-MM-dd') /**to_date('2019-10-18','yyyy-MM-dd')**/
 		/**and t6.hoding_type in ('03', '04', '05', '06','08')**/
@@ -193,6 +200,7 @@
 		INNER JOIN TRD_STASEC_FLOW_DETAIL TSFT
 		ON TSF.SEQNO=TSFT.SEQNO
 		WHERE TSF.CDATE  = to_date(#{cdate},'yyyy-MM-dd')
+        and (TSF.ps = '01' or not exists (select 1 from PTL_SEC_POSITION_FLOW pspf where TSF.SEQNO = PSPF.TRADE_ID and pspf.hoding_type='13'))
 		group by
 		TSF.portfolio_id,
 		TSF.sec_acct_id,
@@ -210,14 +218,22 @@
 		     (
 		     	select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr,type8,type7,
 			        (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06) as actualPositionAmount,
-			        (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08) as tradePositionAmount,
+					/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+			        (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08+ PTL_AMOUNT09 - PTL_AMOUNT10) as tradePositionAmount,
 			        ETR_FLOW_AMOUNTE01 as instructionsAmount,
 					decode(mm.TYPE8,'F03',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									'F09',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
+									'F06',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
+									'F07',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
+									'F01',(ETR_FLOW_AMOUNT04 - PTL_AMOUNT09 + PTL_AMOUNT10),
+									'F02',(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 ),
 									ETR_FLOW_AMOUNT04
 									) as pledgeAmount, 
 					decode(mm.TYPE8,'F03' ,0,
 									'F09' ,0,
+									'F06',0,
+									'F07',ETR_FLOW_AMOUNT04,
+									'F02',ETR_FLOW_AMOUNT04,
 									(PTL_AMOUNT04 - PTL_FLOW_AMOUNT01 - PTL_AMOUNT08 )
 									) as preReductionAmount
 			       from
@@ -236,9 +252,14 @@
 				            nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
 				            nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
 				            nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+							/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+							nvl(sum(PTL_AMOUNT09),0) as PTL_AMOUNT09,
+							nvl(sum(PTL_AMOUNT10),0) as PTL_AMOUNT10,
 				            nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
 				            /*标准券出入库的指令可用持仓取标准券入出库表（TRD_STASEC_FLOW）中的持仓*/
-							decode(TYPE8,'F01',NVL(SUM(ETR_FLOW_AMOUNTE01),0)+ nvl(SUM(AMT),0),NVL(SUM(ETR_FLOW_AMOUNTE01),0)) AS ETR_FLOW_AMOUNTE01,
+							/*decode(TYPE8,'F01',NVL(SUM(ETR_FLOW_AMOUNTE01),0)+ nvl(SUM(AMT),0),NVL(SUM(ETR_FLOW_AMOUNTE01),0)) AS ETR_FLOW_AMOUNTE01,*/
+							/* modify by jiangpeng on 20210420 start ZGBSS-1229 */
+							NVL(SUM(ETR_FLOW_AMOUNTE01),0) AS ETR_FLOW_AMOUNTE01,
 				            nvl(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04
 				     from  (
 					        select t.portfolio_id as portfolioId,
@@ -260,7 +281,27 @@
 								 nvl(t5.type_7, t5.type_6) as type7
 				            from PTL_PORTFOLIO t
 								INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
-								INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								INNER JOIN (
+								select tpd.trade_id,
+                                          tfpb.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join TRD_FIN_PRODUCT_BARTER tfpb on tfpb.TRADE_ID = tpd.trade_id
+                                          left JOIN PTL_TRADE pt ON tpd.trade_id = pt.BUSI_NO
+                                          where tfpb.finprod_id != 'null'
+                                          union all 
+                                          select tpd.trade_id,
+                                          tpd.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join PTL_TRADE pt on pt.BUSI_NO = tpd.trade_id
+								   )  t2 ON t2.trade_id = t3.BUSI_NO
 								INNER JOIN FIN_PRODUCT fin on fin.finprod_id = t2.finprod_id <!-- 标的类资产 -->
 								INNER JOIN fin_product_type t5
 						            on t5.finprod_id = t2.finprod_id
@@ -344,6 +385,9 @@
 				             	nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
 				             	nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
 				             	nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+								/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+								nvl(sum(PTL_AMOUNT09),0) as PTL_AMOUNT09,
+								nvl(sum(PTL_AMOUNT10),0) as PTL_AMOUNT10,
 				             	nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
 				             	nvl(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
 				             	nvl(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04
@@ -366,7 +410,27 @@
 								nvl(t5.type_7, t5.type_6) as type7
 				            from PTL_PORTFOLIO t
 								INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
-								INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								INNER JOIN (
+								select tpd.trade_id,
+                                          tfpb.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join TRD_FIN_PRODUCT_BARTER tfpb on tfpb.TRADE_ID = tpd.trade_id
+                                          left JOIN PTL_TRADE pt ON tpd.trade_id = pt.BUSI_NO
+                                          where tfpb.finprod_id != 'null'
+                                          union all 
+                                          select tpd.trade_id,
+                                          tpd.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join PTL_TRADE pt on pt.BUSI_NO = tpd.trade_id
+								   ) t2 ON t2.trade_id = t3.BUSI_NO
 								INNER JOIN FIN_TRADE_PRODUCT fin <!--on fin.finprod_id = t2.TRADE_ID-->
 		  						on (fin.finprod_id = t2.TRADE_ID or (fin.finprod_id = t2.TOTLE_TRADE_ID and fin.finprod_type='F35'))
 								<!-- 交易类标的资产,对期权资产进行特殊处理， FIN_TRADE_PRODUCT.finprod_id为交易表中的TOTLE_TRADE_ID-->
@@ -447,6 +511,9 @@
 				             	nvl(sum(PTL_AMOUNT05),0) as PTL_AMOUNT05,
 				             	nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
 				             	nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
+								/*modify by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
+								nvl(sum(PTL_AMOUNT09),0) as PTL_AMOUNT09,
+								nvl(sum(PTL_AMOUNT10),0) as PTL_AMOUNT10,
 				             	nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
 				             	nvl(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
 				             	nvl(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04
@@ -487,11 +554,31 @@
 								   FROM
 								    	PTL_PORTFOLIO t
 								   INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
-								   INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								   INNER JOIN (
+								select tpd.trade_id,
+                                          tfpb.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join TRD_FIN_PRODUCT_BARTER tfpb on tfpb.TRADE_ID = tpd.trade_id
+                                          left JOIN PTL_TRADE pt ON tpd.trade_id = pt.BUSI_NO
+                                          where tfpb.finprod_id != 'null'
+                                          union all 
+                                          select tpd.trade_id,
+                                          tpd.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join PTL_TRADE pt on pt.BUSI_NO = tpd.trade_id
+								   ) t2 ON t2.trade_id = t3.BUSI_NO
 								   INNER JOIN FIN_TRADE_PRODUCT fin ON fin.finprod_id = t2.finprod_id
 								   INNER JOIN FIN_DEAL_PLEDGE FDP ON t2.FINPROD_ID = FDP.FINPROD_ID
 								   INNER JOIN fin_product_type t5 ON FDP.PLEDGE_FINPROD_ID = t5.finprod_id
-								   INNER JOIN FIN_PRODUCT fin1 on fin1.finprod_id = FDP.PLEDGE_FINPROD_ID <!-- 标的类资产 -->
+								   INNER JOIN FIN_PRODUCT fin1 on fin1.finprod_id = t2.finprod_id <!-- 标的类资产 -->
 								   LEFT JOIN PTL_SEC_ACCT t1 ON t1.portfolio_id = t.portfolio_id AND t1.acct_no = t2.sec_manage_acct_id
 								   LEFT JOIN STL_SEC_ACCT_INFO t4 ON t4.sec_acct_id = t1.acct_no
 								   <!-- modify by wj 20200515  TISHKBS-447 项目类通道TRD_PRODUCT_DEAL的chlId为空。关联TRD_FIN_PRODUCT_DEAL_TOTAL表的ChlId  -->
@@ -541,7 +628,27 @@
 								   FROM
 								    	PTL_PORTFOLIO t
 								   INNER JOIN PTL_TRADE t3 ON t3.portfolio_id = t.portfolio_id
-								   INNER JOIN TRD_PRODUCT_DEAL t2 ON t2.trade_id = t3.BUSI_NO
+								   INNER JOIN (
+								select tpd.trade_id,
+                                          tfpb.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join TRD_FIN_PRODUCT_BARTER tfpb on tfpb.TRADE_ID = tpd.trade_id
+                                          left JOIN PTL_TRADE pt ON tpd.trade_id = pt.BUSI_NO
+                                          where tfpb.finprod_id != 'null'
+                                          union all 
+                                          select tpd.trade_id,
+                                          tpd.finprod_id,
+                                          tpd.sec_manage_acct_id,
+                                          tpd.CHL_ID,
+                                          tpd.TOTLE_TRADE_ID,
+                                          pt.PORTFOLIO_ID
+                                          from TRD_PRODUCT_DEAL tpd
+                                          left join PTL_TRADE pt on pt.BUSI_NO = tpd.trade_id
+								   )  t2 ON t2.trade_id = t3.BUSI_NO
 								   INNER JOIN FIN_TRADE_PRODUCT fin ON fin.finprod_id = t2.finprod_id
 								   INNER JOIN FIN_DEAL_TARGET FDT ON T2.FINPROD_ID = FDT.FINPROD_ID
 								   INNER JOIN fin_product_type t5 ON FDT.PLEDGE_FINPROD_ID = t5.finprod_id

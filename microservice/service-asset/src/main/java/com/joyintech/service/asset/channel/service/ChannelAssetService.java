@@ -23,6 +23,7 @@ import com.joyintech.tams.common.base.dao.StlFinProductAcctMapper;
 import com.joyintech.tams.common.base.entity.PaFinProduct;
 import com.joyintech.tams.common.base.entity.RepAssetDept;
 import com.joyintech.tams.common.base.entity.RepAssetMngPlan;
+import com.joyintech.tams.common.base.entity.RepAssetOther;
 import com.joyintech.tams.common.base.entity.StlFinProductAcctKey;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
@@ -40,6 +41,8 @@ import com.joyintech.tams.component.base.report.asset.BaseRepAssetDeptInfoServic
 import com.joyintech.tams.component.base.report.asset.BaseRepMngAssetPlanInfoService;
 import com.joyintech.tams.component.base.report.dto.BaseRepAssetDeptInfoDto;
 import com.joyintech.tams.component.base.report.dto.BaseRepMngAssetPlanInfoDto;
+import com.joyintech.tams.component.base.report.dto.BaseRepOtherDto;
+import com.joyintech.tams.component.base.report.impl.asset.BaseRepOtherInfoImplService;
 
 /**
  * 
@@ -79,6 +82,12 @@ public class ChannelAssetService extends BaseService<ChannelAssetDto> {
      */
     @Autowired
     private BaseRepAssetDeptInfoService baseRepAssetDeptInfoService;
+    
+    /**
+     * 中债资产其他要素组件
+     */
+    @Autowired
+    private BaseRepOtherInfoImplService baseRepOtherInfoImplService;
     
     /**
      * 分页查询
@@ -161,6 +170,11 @@ public class ChannelAssetService extends BaseService<ChannelAssetDto> {
         List<RepAssetDept> repAssetDeptList = new ArrayList<>();
         repAssetDeptList.add(entity.getRepAssetDept());
         baseRepAssetDeptInfoService.insert(repAssetDeptList);
+        //插入中债资产其他要素数据（TISHKBS-1923 "是否投向金融资产投资公司发行的私募资产管理产品"字段存值）
+        List<RepAssetOther> repAssetOtherList = new ArrayList<>();
+        repAssetOtherList.add(entity.getRepAssetOther());
+        baseRepOtherInfoImplService.insert(repAssetOtherList);
+        
     }
     
     /**
@@ -196,6 +210,17 @@ public class ChannelAssetService extends BaseService<ChannelAssetDto> {
         finProdIdList.add(entity.getFinprodId());
         baseRepAssetDeptInfoDto.setFinprodIdList(finProdIdList);
         baseRepAssetDeptInfoService.updateBaseRepAssetDeptInfoDto(baseRepAssetDeptInfoDto);
+        
+        //调用中债资产其他要素组件修改数据
+        BaseRepOtherDto baseRepOtherDto = new BaseRepOtherDto();
+        List<RepAssetOther> repAssetOtherList = new ArrayList<>();
+        repAssetOtherList.add(entity.getRepAssetOther());
+        baseRepOtherDto.setRepAssetOtherList(repAssetOtherList);
+        List<String> repfinProdIdList = new ArrayList<>();
+        repfinProdIdList.add(entity.getFinprodId());
+        baseRepOtherDto.setRepFinprodIdList(finProdIdList);
+        baseRepOtherInfoImplService.update(baseRepOtherDto);
+        
         // 通道增加“增值税税率，附加税率字段” add by renping 20191019 start
         //构建标的类金融产品扩展dto
         PaFinProduct paFinProduct = new PaFinProduct();
@@ -237,6 +262,9 @@ public class ChannelAssetService extends BaseService<ChannelAssetDto> {
         BaseRepAssetDeptInfoDto baseRepAssetDeptInfoDto = new BaseRepAssetDeptInfoDto();
         baseRepAssetDeptInfoDto.setFinprodIdList(finprodIdList);
         baseRepAssetDeptInfoService.deleteByPrimaryKey(baseRepAssetDeptInfoDto);
+        BaseRepOtherDto baseRepOtherDto = new BaseRepOtherDto();
+        baseRepOtherDto.setRepFinprodIdList(finprodIdList);
+        baseRepOtherInfoImplService.delete(baseRepOtherDto);
     }
     
     /**

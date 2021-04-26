@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,10 +30,6 @@ import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeDto;
 import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeExportMailDto;
 import com.joyintech.service.trade.trdrepotrade.dto.TrdRepoTradeReferenceDto;
 import com.joyintech.service.trade.trdrepotrade.service.TrdRepoTradeService;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.InterfTradRepoasst;
-import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
-import com.joyintech.tams.common.base.entity.TrdMatchInfo;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 
@@ -87,6 +84,20 @@ public class TrdRepoTradeController {
     @RequestMapping("selectPtlSecPositionFlow/{bizCode}")
     public List<PtlSecPositionFlow> selectPtlSecPositionFlow(@PathVariable("bizCode") String bizCode) {
         return trdRepoTradeService.selectPtlSecPositionFlow(bizCode);
+    }
+
+    /**
+     * 根据交易编号检索指令持仓流水（持仓类型为E01）
+     * ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+     * @author jiangpeng
+     *
+     * @param param - bizCode 交易编号
+     * @return List<PtlSecPositionFlowDto>
+     * @since 1.0
+     */
+    @RequestMapping("selectEtrSecPositionFlow")
+    public List<EtrSecPositionFlow> selectEtrSecPositionFlow(@RequestBody Map<String, Object> param) {
+        return trdRepoTradeService.selectEtrSecPositionFlow(param);
     }
 
     /**

@@ -46,6 +46,17 @@
             $("#channelFee_div").show();
         }
 
+        //add by jiangpeng on 20210422 start TISHKBS-1803
+        $("#settleDate").change(function () {
+            if (isTodo && $("#ps").val() !== PS_TQZZ) {
+                let param = {};
+                let dateMap = {};
+                param.isOnlyOneDate = true;
+                dateMap.settleDate = $("#settleDate").val();
+                window.BussTrdTransferOrder['bussTrdTransferOrder'].updateGenerateOrders(dateMap, param);
+            }
+        });
+        //add by jiangpeng on 20210422 end TISHKBS-1803
     }
 
 

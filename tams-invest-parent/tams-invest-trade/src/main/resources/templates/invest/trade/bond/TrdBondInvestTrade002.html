@@ -206,7 +206,7 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{TrdBondInvestTrade002.finprodName}">资产代码</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="finprodId" name="finprodId" parentIds="portfolioId,ps" required
+                                        <select type="text" id="finprodId" name="finprodId" parentIds="portfolioId,ps,tradeMarketMode,pageModel" required
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/trade/bond/TrdBondInvestTrade002/getFinprodId}"
                                                 allowClear="true" th:initValue="${entity?.finprodId}"></select>
@@ -370,6 +370,17 @@
                                     </div>
                                 </div>
                                  <!-- 转仓投资目的  新增 wangyang1 20191023 end-->
+                                 <div class="form-inline-wrap" id="tradeMarketCash_div">
+                                    <label class="layui-form-label form-label-wrap"
+                                    data-th-text="#{EtrConBond002.tradeMarketCash}">交易所资金账户可用现金</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" id="tradeMarketCash" name="tradeMarketCash"
+                                                placeholder="请输入内容" data-pattern="" data-fixtype="2"
+                                                class="layui-input form-input text-number" disabled="disabled"
+                                               data-th-value="${entity?.tradeMarketCash}"/>
+                                                <span class="input-right-show">元</span>
+                                    </div>
+                                </div>
                             </div>
                             <!-- 通道交易 新增 强成西 2019/03/26 end -->
                             <div class="layui-form-item">

@@ -61,6 +61,33 @@ public class TrdBondPtlSecExerciseInfo {
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal settleAmt;
 
+    /**
+     * 理论应计利息
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal intAmtTheory;
+
+    /**
+     * 实收利息总额
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal intAmtReal;
+
+    public BigDecimal getIntAmtTheory() {
+        return intAmtTheory;
+    }
+
+    public void setIntAmtTheory(BigDecimal intAmtTheory) {
+        this.intAmtTheory = intAmtTheory;
+    }
+
+    public BigDecimal getIntAmtReal() {
+        return intAmtReal;
+    }
+
+    public void setIntAmtReal(BigDecimal intAmtReal) {
+        this.intAmtReal = intAmtReal;
+    }
 
     public String getInvAimString() {
         if (StringUtil.isNotEmpty(getInvAim())) {

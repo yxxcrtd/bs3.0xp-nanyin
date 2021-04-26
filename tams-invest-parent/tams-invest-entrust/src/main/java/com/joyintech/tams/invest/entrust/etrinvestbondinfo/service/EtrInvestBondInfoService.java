@@ -452,7 +452,12 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
 //        // 一体化对应etliu start
 //        data.invAim = $('#invAim').val();
         Map<String,Object>ret = new HashMap<>();
-        ret.put("position",etrCommonService.getAssetAvailablePosition(dto1));
+        BigDecimal position = etrCommonService.getAssetAvailablePosition(dto1);
+        /*指令持仓需考虑入库的券*/
+        position = ArithmeticUtil.doSub(position, restTemplate.postForObject(
+	            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getStdPosition",param,
+	            BigDecimal.class));
+        ret.put("position",position);
         if(StringUtil.isNotEmpty(calId)&&sysDate_1!=null){
             dto1.setCdate(sysDate_1);
             ret.put("positionT1",etrCommonService.getAssetAvailablePosition(dto1));

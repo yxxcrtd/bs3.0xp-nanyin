@@ -1,6 +1,5 @@
 package com.joyintech.service.period.trdbondduration.service;
 
-import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -9,6 +8,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.dao.PeriodCommonMapper;
 import com.joyintech.tams.invest.common.autoperiod.common.service.InvestPeriodCommonService;
 import com.joyintech.service.period.trdbondduration.dao.TrdBondDurationMapper;
@@ -235,6 +235,13 @@ public class TrdBondDurationService extends BaseService {
             // 删除其他表
             return Boolean.TRUE.toString();
         }
+        // 债券存续期中间付息、还本的有效数据增加理论支付日
+        if (StringUtil.isNotEmpty(durationDto.getBaseTotalTradeInfoDto())
+                && StringUtil.isNotEmpty(durationDto.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal())
+                && !StringUtil.isNotEmpty(durationDto.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal().getPayDate())){
+            durationDto.getBaseTotalTradeInfoDto().getTrdFinProductDealTotal().setPayDate(DateUtil.parse(durationDto.getPayDate()));
+        }
+         // 债券存续期中间付息、还本的有效数据增加理论支付日
         investPeriodCommonService.doInsertAndDelete(durationDto.getBaseTotalTradeInfoDto(), updateUser, updateTime,
             durationDto.getWorkflowId());
 

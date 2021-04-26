@@ -851,4 +851,8 @@
         from ETR_SEC_POSITION_FLOW
         where TRADE_ID = #{entrustId,jdbcType=VARCHAR}
     </select>
+
+    <select id="selectAcctId" resultType="string">
+        select TRD_ACCT_ID from STL_SEC_ACCT_INFO where SEC_ACCT_ID = #{secAcctId}
+    </select>
 </mapper>

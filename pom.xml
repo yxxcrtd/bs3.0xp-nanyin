@@ -50,6 +50,9 @@
         <!-- 接口 -->
         <module>tams-valuation-interf</module>
         <module>tams-customer-interf</module>
+
+        <!-- 移动审批 -->
+        <module>mobileApproval</module>
         
 		<!--         微服务 -->
         <module>microservice/service-asset</module>
@@ -81,6 +84,6 @@
 
         <module>microservice/tams-service-container</module>
         <module>tams/app</module>
-        
+
     </modules>
 </project>

@@ -430,48 +430,52 @@
 	     <select id="getFinprodIdToNew" resultType="com.joyintech.framework.select.SelectOptionDto">
 	     SELECT
 	     	distinct
-	     	FINPROD_ID AS object,
-	     	FINPROD_MARKET_ID AS id,
-	     	FINPROD_ABBR AS text,
-			 FINPROD_TYPE2
-	     FROM FIN_PRODUCT
+			 FP.FINPROD_ID AS object,
+			 FP.FINPROD_MARKET_ID AS id,
+			 FP.FINPROD_ABBR AS text,
+			 FP.FINPROD_TYPE2
+	     FROM FIN_PRODUCT FP
+	     LEFT JOIN FIN_PRODUCT_ADD FPA
+	     	ON FPA.FINPROD_ID = FP.FINPROD_ID
 	     <where>
+	        1=1
 	     	<if test="finprodType2 == null or finprodType2 == ''">
-	     	AND FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F01,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F06,jdbcType=VARCHAR},
+	     	AND FP.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F01,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F06,jdbcType=VARCHAR},
 	  	#{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR},#{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR})
 	     	</if>
 	     	<if test="finprodType2 != null and finprodType2 != ''">
 		     	<choose>
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F01">
-					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01,jdbcType=VARCHAR}
+					AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01,jdbcType=VARCHAR}
 					</when>
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F02">
-					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F06,jdbcType=VARCHAR}
+					AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F06,jdbcType=VARCHAR}
 					</when>
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F04">
-					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
-					AND PROFIT_TYPE = #{PROFIT_TYPE_01,jdbcType=VARCHAR}
+					AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+					AND FP.PROFIT_TYPE = #{PROFIT_TYPE_01,jdbcType=VARCHAR}
 					</when>
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F03">
-					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
-					AND PROFIT_TYPE = #{PROFIT_TYPE_02,jdbcType=VARCHAR}
+					AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17,jdbcType=VARCHAR}
+					AND FP.PROFIT_TYPE = #{PROFIT_TYPE_02,jdbcType=VARCHAR}
 					</when>
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F05">
-					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR}
+					AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F07,jdbcType=VARCHAR}
 					</when>
 					<when test="finprodType2 == PINAN_ASSET_TYPE_F06">
-					AND FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR}
+					AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F18,jdbcType=VARCHAR}
 					</when>
 				</choose>
 			</if>
 			<if test="search != null and search != ''">
-			AND (FINPROD_MARKET_ID LIKE CONCAT('%',CONCAT(#{search,jdbcType=VARCHAR},'%'))
-			OR FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search,jdbcType=VARCHAR},'%'))
+			AND (FP.FINPROD_MARKET_ID LIKE CONCAT('%',CONCAT(#{search,jdbcType=VARCHAR},'%'))
+			OR FP.FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{search,jdbcType=VARCHAR},'%'))
 			)
 			</if>
 			<if test="initValue != null and initValue != ''">
-				AND	FINPROD_MARKET_ID = #{initValue,jdbcType=VARCHAR}
+				AND	FP.FINPROD_MARKET_ID = #{initValue,jdbcType=VARCHAR}
 			</if>
+			AND FPA.APPEAR_MARKET_ID IS NULL
 	     </where>
 	     </select>
 	     <!-- 

@@ -134,6 +134,16 @@ public class FinNetProductDuration002Controller extends BaseController{
 
             }
 
+            if (StringUtil.isNotEmpty(finNetProductDurationDto.getFinprodMarketId())){
+                Map<String,Object> map = new HashMap<>();
+                map.put("initValue",finNetProductDurationDto.getFinprodMarketId());
+                map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+                List<SelectOptionDto> list = finNetProductDurationService.getFinprodMarketIdList(map);
+                if (!StringUtil.isEmptyList(list)) {
+                    String [] str = list.get(0).getObject().toString().split(",");
+                    model.addAttribute("continueFlag",str.length>=15?str[15]:"");
+                }
+            }
 
             model.addAttribute("entity", finNetProductDurationDto);
         }else if(StringUtil.isNotEmpty(tradeId) && (!StringUtil.isNotEmpty(workflowId) || WorkFlowUtil.isNotFromToDoList())){
@@ -168,6 +178,16 @@ public class FinNetProductDuration002Controller extends BaseController{
             //净值型周期型新增	期次管理方式	系统参数	20190923
         	finNetProductDurationDto.setManeWay(
         			finNetProductDurationService.getSysParameter(DictCodeListExt1.子系统代码_投管.getValue(), BussinessConstant.PERIODIC_MANAGE_INFORMATION));		//debug
+            if (StringUtil.isNotEmpty(finNetProductDurationDto.getFinprodMarketId())){
+                Map<String,Object> map = new HashMap<>();
+                map.put("initValue",finNetProductDurationDto.getFinprodMarketId());
+                map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+                List<SelectOptionDto> list = finNetProductDurationService.getFinprodMarketIdList(map);
+                if (!StringUtil.isEmptyList(list)) {
+                    String [] str = list.get(0).getObject().toString().split(",");
+                    model.addAttribute("continueFlag",str.length>=15?str[15]:"");
+                }
+            }
             model.addAttribute("entity", finNetProductDurationDto);
             //交易类型下拉枚举值根据产品代码联动
             Map<String,Object> map = new HashMap<String,Object>();
@@ -211,6 +231,16 @@ public class FinNetProductDuration002Controller extends BaseController{
             FinNetProductDurationDto finNetProductDurationDto = finNetProductDurationService.getBussinessEntityByWorkflowId(workflowId);
             // 设置到model中
             model.addAttribute("entity", finNetProductDurationDto);
+            if (StringUtil.isNotEmpty(finNetProductDurationDto.getFinprodMarketId())){
+                Map<String,Object> map = new HashMap<>();
+                map.put("initValue",finNetProductDurationDto.getFinprodMarketId());
+                map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+                List<SelectOptionDto> list = finNetProductDurationService.getFinprodMarketIdList(map);
+                if (!StringUtil.isEmptyList(list)) {
+                    String [] str = list.get(0).getObject().toString().split(",");
+                    model.addAttribute("continueFlag",str.length>=15?str[15]:"");
+                }
+            }
             if(finNetProductDurationDto.getBussTrdTransferOrder()!=null 
                 && finNetProductDurationDto.getBussTrdTransferOrder().size()>0){
                 model.addAttribute("entity_bussRepFinProductInfoDto", 
@@ -262,6 +292,7 @@ public class FinNetProductDuration002Controller extends BaseController{
             model.addAttribute("BANK_CODE", "004");
         }
         //添加004权限控制 add by liupeilin 2020-01-15 end
+
         return super.init(model);
     }
     

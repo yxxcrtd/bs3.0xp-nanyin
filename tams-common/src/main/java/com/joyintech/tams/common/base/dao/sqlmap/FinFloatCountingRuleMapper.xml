@@ -257,4 +257,50 @@
         where CASH_ID = #{cashId,jdbcType=VARCHAR}
           and EFF_DATE = #{effDate,jdbcType=DATE}
     </update>
+    
+    <update id="updateEndAccrDate" parameterType="com.joyintech.tams.common.base.entity.FinFloatCountingRule" >
+        update FIN_FLOAT_COUNTING_RULE
+        <set >
+            <if test="accrType != null" >
+                ACCR_TYPE = #{accrType,jdbcType=VARCHAR},
+            </if>
+            <if test="accrCycle != null" >
+                ACCR_CYCLE = #{accrCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="accrCycleUnit != null" >
+                ACCR_CYCLE_UNIT = #{accrCycleUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="accrDayType != null" >
+                ACCR_DAY_TYPE = #{accrDayType,jdbcType=VARCHAR},
+            </if>
+            <if test="accrDayValue != null" >
+                ACCR_DAY_VALUE = #{accrDayValue,jdbcType=VARCHAR},
+            </if>
+            <if test="accrTdayRule != null" >
+                ACCR_TDAY_RULE = #{accrTdayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="fAccrDate != null" >
+                F_ACCR_DATE = #{fAccrDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eAccrDate != null" >
+                E_ACCR_DATE = #{eAccrDate,jdbcType=DATE},
+            </if>
+            <if test="intervalRule != null" >
+                INTERVAL_RULE = #{intervalRule,jdbcType=VARCHAR},
+            </if>
+            <if test="fAccrEndDate != null" >
+                F_ACCR_END_DATE = #{fAccrEndDate,jdbcType=DATE},
+            </if>
+            <if test="firstBaseType != null" >
+                FIRST_BASE_TYPE = #{firstBaseType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+    </update>
 </mapper>

@@ -255,7 +255,7 @@
 		LEFT JOIN	FIN_PRODUCT
 			ON	FIN_PRODUCT.FINPROD_ID = TRD_PRODUCT_DEAL.FINPROD_ID
 		LEFT JOIN   FIN_PRODUCT fp1     ON  fp1.FINPROD_ID = TRD_PRODUCT_DEAL.CHL_ID
-		INNER JOIN	PA_TRD_PRODUCT_DEAL
+		LEFT JOIN	PA_TRD_PRODUCT_DEAL
 			ON 	TRD_PRODUCT_DEAL.TRADE_ID = PA_TRD_PRODUCT_DEAL.TRADE_ID
 		LEFT JOIN MST_COUNTER_PARTY ON MST_COUNTER_PARTY.COUNTER_ID = TRD_PRODUCT_DEAL.COUNTER_ID
 		LEFT JOIN PTL_PORTFOLIO PTL_PORTFOLIO1
@@ -1193,7 +1193,8 @@
 	<select id="allSelectForPage" resultType="com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto">
 			SELECT * FROM( ( <include refid="BASE_COLUMNS"></include>
 		<where>
-		 	WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null
+		 	1=1 /*WFL_TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null*/
+			and WFL_TRD_PRODUCT_DEAL.FINPROD_TYPE2 not in ('F01','F18')
 			<if test="portfolioId != null and !portfolioId.isEmpty()">
 				AND (
 				PTL_PORTFOLIO.PORTFOLIO_ID  IN (<foreach collection="portfolioId" item="item" separator=",">#{item}</foreach> )
@@ -1353,7 +1354,8 @@
 		UNION ALL
 			(<include refid="VALID_COLUMNS"></include>
 		<where>
-			PTL_PORTFOLIO.INVEST_YESORNO = 'Y' AND TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null
+			PTL_PORTFOLIO.INVEST_YESORNO = 'Y' /* AND TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null */
+			and TRD_PRODUCT_DEAL.FINPROD_TYPE2 not in ('F01','F18')
 			<if test="etridList != null and !etridList.isEmpty() ">
 				and TRD_PRODUCT_DEAL.TRADE_ID in 
 				<foreach collection="etridList" index="index"  item="item" open="(" close=")" separator=",">
@@ -1536,7 +1538,8 @@
 		UNION ALL
 			( <include refid="CANCEL_COLUMNS"></include>
 		<where>
-			PTL_PORTFOLIO.INVEST_YESORNO = 'Y' AND TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null
+			PTL_PORTFOLIO.INVEST_YESORNO = 'Y' /*AND TRD_PRODUCT_DEAL.TOTLE_TRADE_ID is null*/
+			and TRD_PRODUCT_DEAL.FINPROD_TYPE2 not in ('F01','F18')
 			<if test="etridList != null and !etridList.isEmpty() ">
 				and TRD_PRODUCT_DEAL.TRADE_ID in 
 				<foreach collection="etridList" index="index"  item="item" open="(" close=")" separator=",">

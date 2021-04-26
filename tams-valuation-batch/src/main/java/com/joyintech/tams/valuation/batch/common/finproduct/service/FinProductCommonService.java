@@ -31,6 +31,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCo
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCode;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.dto.TrdFinProductBarterDto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1657,5 +1658,22 @@ public class FinProductCommonService {
      */
     public Map<String, Object> selectHBFXData(Map<String, Object> map) {
         return finProductCommonMapper.selectHBFXData(map);
+    }
+    /**
+     * 公用方法：标的类共通方法 - 标的信息查询，查询是否还本不带息
+     * @param finprodId 标的代码【必输项】
+     * @return　返回值获取，直接查询是否还本不带息
+     */
+    public String getIsPayInt(String finprodId) {
+        return  finProductCommonMapper.getIsPayInt(finprodId);
+    }
+
+    /**
+     * 实物查询交易信息
+     * @param tradeId
+     * @return
+     */
+    public TrdFinProductBarterDto selectTrdFinProductBarter(String tradeId) {
+        return finProductCommonMapper.selectTrdFinProductBarter(tradeId);
     }
 }

@@ -49,7 +49,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
 
     @Override
     public CommonResult executeEtrCashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
-                                               boolean needNegative,String ieFlag,String isOverdueDeal) {
+                                               boolean needNegative,String ieFlag,String isOverdueDeal,String 交易流程状态) {
         // 资产类型
         String finprodType = finProductTradeDto.getTrdProductDeal().getFinprodType2();
         // 处理结果
@@ -72,8 +72,12 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
         }
 
         if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-                && !(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_申购确认.getValue())
-                ||StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))
+                && !(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())
+                || StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))
+                // add by jiangpeng on 20210416 start
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                && !StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsSLDeal())
+            // add by jiangpeng on 20210416 end
         ) {
             EtrSecCashPositionDealService.deal债券CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
@@ -92,7 +96,11 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             EtrProjectCashPositionDealService.deal项目类资产CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())
-                 || StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())) {
+                || StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())
+                // add by jiangpeng on 20210421 start
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                || StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsSLDeal())) {
+            // add by jiangpeng on 20210421 end
             EtrSecLendCashPositionDealService.deal债券借贷CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
@@ -116,7 +124,7 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
         else if (StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                 && (StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(),DictCodeList.交易方向_申购确认.getValue())
                 ||StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue()))) {
-            EtrConBondCashPositionDealService.deal可转债CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto);
+            EtrConBondCashPositionDealService.deal可转债CashPosition(finProductTradeDto, 持仓类型, etrPositionHoldDto,交易流程状态);
         }
         else if (StringUtil.equals(finprodType, DictCodeListExt1.一次性费用类型_通道费.getValue())) {
             if (DictCodeList.持仓类型_实际.equals(持仓类型)) { // 有效
@@ -425,7 +433,8 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
             }
             else if (StringUtil.equals(ps, DictCodeList.交易方向_产品赎回.getValue())
         			|| StringUtil.equals(ps, DictCodeList.交易方向_产品到期.getValue())
-                     || StringUtil.equals(ps, DictCodeList.交易方向_产品现金分红.getValue())) {
+                     || StringUtil.equals(ps, DictCodeList.交易方向_产品现金分红.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_产品提前赎回.getValue()) ) {
                 ret.setAmount(stlPayOrdersDto.getSettleAmt().negate());
             }
             if(cashInputDto.getNeedNegative()){//确定是撤销交易，交易金额取反

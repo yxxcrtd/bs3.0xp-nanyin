@@ -1563,7 +1563,10 @@ public class AllTradeCommonUtil {
                 if (DictCodeList.持仓类型_在途.getValue().equals(ptlSecPositionFlow.getHodingType())
                     || DictCodeList.持仓类型_质押.getValue().equals(ptlSecPositionFlow.getHodingType())
                     || DictCodeList.持仓类型_融入.getValue().equals(ptlSecPositionFlow.getHodingType())
-                    || DictCodeList.持仓类型_融出.getValue().equals(ptlSecPositionFlow.getHodingType())) {
+                    || DictCodeList.持仓类型_融出.getValue().equals(ptlSecPositionFlow.getHodingType())
+                    // add by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                    || DictCodeListExt1.持仓类型_借贷融入.getValue().equals(ptlSecPositionFlow.getHodingType())
+                    || DictCodeListExt1.持仓类型_借贷融出.getValue().equals(ptlSecPositionFlow.getHodingType())) {
                     baseAssetCashPositionCommMapper.updateSecPositionAmt(ptlSecPositionFlow);
                 }
             });
@@ -1620,7 +1623,10 @@ public class AllTradeCommonUtil {
                         if (DictCodeList.持仓类型_在途.getValue().equals(ptlSecPositionFlow.getHodingType())
                                 || DictCodeList.持仓类型_质押.getValue().equals(ptlSecPositionFlow.getHodingType())
                                 || DictCodeList.持仓类型_融入.getValue().equals(ptlSecPositionFlow.getHodingType())
-                                || DictCodeList.持仓类型_融出.getValue().equals(ptlSecPositionFlow.getHodingType())) {
+                                || DictCodeList.持仓类型_融出.getValue().equals(ptlSecPositionFlow.getHodingType())
+                                // add by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                                || DictCodeListExt1.持仓类型_借贷融入.getValue().equals(ptlSecPositionFlow.getHodingType())
+                                || DictCodeListExt1.持仓类型_借贷融出.getValue().equals(ptlSecPositionFlow.getHodingType())) {
                             baseAssetCashPositionCommMapper.updateSecPositionAmt(ptlSecPositionFlow);
                         }
                     });

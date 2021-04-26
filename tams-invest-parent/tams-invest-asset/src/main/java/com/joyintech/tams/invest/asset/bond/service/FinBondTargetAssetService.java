@@ -10,24 +10,6 @@
 
 package com.joyintech.tams.invest.asset.bond.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.component.business.report.asset.project.BussRepEquityInfoService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.asset.interfaceDto.*;
-import com.joyintech.tams.invest.asset.common.dto.*;
-import com.joyintech.tams.invest.common.service.InvestInterfCommService;
-import com.joyintech.tams.invest.common.util.MapParseUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -35,6 +17,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.asset.BussFinRepaymentService;
 import com.joyintech.tams.component.business.asset.FinInterestFactorService;
 import com.joyintech.tams.component.business.asset.FinPayInterestStdInfoService;
@@ -53,16 +37,29 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.component.business.core.dto.FileCommonDto;
 import com.joyintech.tams.component.business.core.service.MstFileCommonService;
 import com.joyintech.tams.component.business.report.asset.bond.BussFinBondRepInfoService;
+import com.joyintech.tams.component.business.report.asset.project.BussRepEquityInfoService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.asset.bond.dto.FinBondTargetAssetDto;
+import com.joyintech.tams.invest.asset.common.dto.*;
 import com.joyintech.tams.invest.asset.common.service.AssetCommonService;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 债券标的信息新建
@@ -269,7 +266,8 @@ implements BaseProcessService<FinBondTargetAssetDto>{
 				if (!StringUtil.isEmptyList(productBaseInfoDto.getFinCashPayRuleList())) {
 					for (FinCashPayRule finCashPayRule : productBaseInfoDto.getFinCashPayRuleList()) {
 						if (StringUtil.isBlank(finCashPayRule.getPayCycle())) {
-							finCashPayRule.setPayCycle(BussinessConstant.DEFAULT_PAY_CYCLE);
+                            //modify by jiangpeng on 20210426 TISHKBS-2051 CLONE - 贴现债数据错误
+							finCashPayRule.setPayCycle(BussinessDictCodeList.频率_到期一次.getValue());
 						}
 					}
 				}
@@ -278,7 +276,38 @@ implements BaseProcessService<FinBondTargetAssetDto>{
 
         //add by mashukai 20201124 JNZGEQUAT-57 wind利率调整数据未接到问题 start
         if(entity.getFinCashCalcRuleList().size() > 0){
-            entity.getBaseFinProductBaseInfoList().get(0).setFinCashCalcRuleList(entity.getFinCashCalcRuleList());
+            List<String> strings = new ArrayList<>();
+            List<FinCashCalcRule> finCashCalcRulesAdd = new ArrayList<FinCashCalcRule>();
+            List<FinCashCalcRule> finCashCalcRules = new ArrayList<FinCashCalcRule>();
+            if (entity.getBaseFinProductBaseInfoList() != null && entity.getBaseFinProductBaseInfoList().size() > 0
+                    && entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList() != null
+                    && entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList().size() > 0){
+                finCashCalcRules = entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList();
+                //获取生效日list
+                for (FinCashCalcRule finCashCalcRule : entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList()) {
+                    strings.add(DateUtil.format(finCashCalcRule.getEffDate()));
+                }
+            }
+            
+            for (FinCashCalcRule finCashCalcRule : entity.getFinCashCalcRuleList()) {
+                //判断快录接入的数据资产代码与新建标的的资产代码是否一致
+                if (StringUtil.equals(finCashCalcRule.getFinprodId(),entity.getFinprodId())){
+                    //一致则继续判断是否存在生效日相同的数据，没有则新增
+                    if (!strings.contains(DateUtil.format(finCashCalcRule.getEffDate()))){
+                        FinCashCalcRule finCashCalcRuleNew = new FinCashCalcRule();
+                        BeanUtil.copyPropertiesIgnoreNull(finCashCalcRuleNew,finCashCalcRule);
+                        if (finCashCalcRules.size() > 0){
+                            finCashCalcRuleNew.setCashId(finCashCalcRules.get(0).getCashId());
+                        }
+                        finCashCalcRulesAdd.add(finCashCalcRuleNew);
+                    }    
+                }
+                
+            }
+            //新增现金流计算规则数据
+            if(finCashCalcRulesAdd.size() > 0){
+                entity.getBaseFinProductBaseInfoList().get(0).getFinCashCalcRuleList().addAll(finCashCalcRulesAdd);
+            }
         }
         //add by mashukai 20201124 JNZGEQUAT-57 wind利率调整数据未接到问题 end
         restTemplate.postForObject(
@@ -392,7 +421,8 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                 finRateInfoList.addAll(finInterestFactorDto.getRateList());
                 List<FinCashCalcRule> finCashCalcRuleList = new ArrayList<FinCashCalcRule>();
                 finCashCalcRuleList.addAll(finInterestFactorDto.getCalcRuleList());
-                baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfoList);baseFinProductBaseInfoDto.setFinCashCalcRuleList(finCashCalcRuleList);
+                baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfoList);
+                baseFinProductBaseInfoDto.setFinCashCalcRuleList(finCashCalcRuleList);
             }
         }
 
@@ -860,9 +890,38 @@ implements BaseProcessService<FinBondTargetAssetDto>{
      * @param oFinprodId
      * @return
      */
-    public int selectCountByOFinprodId(String oFinprodId) {
+    public int selectCountByOFinprodId(String oFinprodId,String finprodId) {
         return restTemplate.getForObject(
-                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectCountByOFinprodId?oFinprodId="+oFinprodId,
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectCountByOFinprodId?oFinprodId="+oFinprodId+"&finprodId="+finprodId,
                 Integer.class);
+    }
+
+    /**
+     * 根据资产代码查询是否是上市标的
+     *
+     * @param finprodId
+     * @return 是否是上市标的，大于0则为是
+     * @see
+     * @since 1.0
+     */
+    public int selectIsIssueAsset(String finprodId){
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/selectIsIssueAsset?finprodId="+finprodId,
+                Integer.class);
+    }
+
+
+    /**
+     * 查询业务表资产信息
+     *
+     * @param finprodId 资产代码
+     * @return 资产付息等现金流信息
+     * @see
+     * @since 1.0
+     */
+    public FinBondTargetAssetDto getFinPlanList(String finprodId) {
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinBondTargetAsset/getFinPlanList?finprodId="+finprodId,
+                FinBondTargetAssetDto.class);
     }
 }

@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.RepAssetDept;
 import com.joyintech.tams.common.base.entity.RepAssetMngPlan;
+import com.joyintech.tams.common.base.entity.RepAssetOther;
 import com.joyintech.tams.common.base.entity.StlFinProductAcct;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
@@ -178,6 +179,10 @@ public class ChannelAssetDto extends FinProduct implements ITableRow,ProcessEnti
      * 资产管理计划报送信息entity
      */
     private RepAssetMngPlan repAssetMngPlan;
+    /**
+     * 中债资产其他要素entity
+     */
+    private RepAssetOther repAssetOther;
     
     /**
      * 通道费用类型
@@ -863,6 +868,14 @@ public class ChannelAssetDto extends FinProduct implements ITableRow,ProcessEnti
 
 	public void setCollectType(String collectType) {
 		this.collectType = collectType;
+	}
+
+	public RepAssetOther getRepAssetOther() {
+		return repAssetOther;
+	}
+
+	public void setRepAssetOther(RepAssetOther repAssetOther) {
+		this.repAssetOther = repAssetOther;
 	}
     
 }

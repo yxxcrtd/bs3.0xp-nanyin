@@ -17,6 +17,8 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -87,7 +89,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
 	@Override
 	@RequestMapping(PAGE_INIT)
 	public String init(Model model) {
-		this.setSelectOptionToModel(model, BussinessDictCodeRds.资产类型分类, BussinessDictCodeRds.是否, BussinessDictCodeRds.指标参数分类维度, BussinessDictCodeRds.评级分类,
+		this.setSelectOptionToModel(model, BussinessDictCodeRds.资产类型分类, BussinessDictCodeRds.是否, BussinessDictCodeRds.指标参数分类维度,
 				BussinessDictCodeRds.日期类型, BussinessDictCodeRds.日期范围类型, BussinessDictCodeRds.所属行业分类, BussinessDictCodeRds.复合模板取值类型);
 		List<SelectOptionDto> listFirstIndustry = addIndustry();
 		List<SelectOptionDto> listSecondIndustry = addSecondIndustry();
@@ -125,6 +127,12 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
 	        	rskSupervisionIndicatorParamInfo.setValidDate(DateUtil.platDateFromCache());
 	        	model.addAttribute("entity",rskSupervisionIndicatorParamInfo);*/
 	        }
+		List<SelectOptionDto> listGradePj = new ArrayList<SelectOptionDto>();
+		SelectDto selectDto1 = this.getSelectDataFromDataDic(BussinessDictCodeRds.评级类型, DictCodeListExt3.评级来源类型_外部.getValue());
+		for (SelectOptionDto dto : selectDto1.getOptions()) {
+			listGradePj.add(dto);
+		}
+		model.addAttribute("GRADE_TYPE",JsonUtils.objectArray2Json(listGradePj.toArray()));
 		return super.init(model);
 	}
 

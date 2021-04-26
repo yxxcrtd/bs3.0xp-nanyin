@@ -100,6 +100,21 @@ public class TrdOutRightRepoTradeController {
     }
 
     /**
+     * 写入融入券的组合持仓流水(持仓类型为借贷融入/借贷融出)
+     *  ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+     * @author jiangpeng
+     *
+     * @param bizCode 交易编号
+     * @return List<PtlSecPositionFlowDto>
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("selectPtlSecPositionFlowForSL/{bizCode}")
+    public List<PtlSecPositionFlow> selectPtlSecPositionFlowForSL(@PathVariable("bizCode") String bizCode) {
+        return trdOutRightRepoTradeService.selectPtlSecPositionFlowForSL(bizCode, null);
+    }
+
+    /**
      * 根据交易编号删除组合持仓流水（持仓类型为融入融出）
      *
      * @param bizCode 交易编号

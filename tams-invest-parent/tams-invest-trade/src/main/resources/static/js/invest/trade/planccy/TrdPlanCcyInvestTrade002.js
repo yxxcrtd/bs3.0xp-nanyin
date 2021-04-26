@@ -154,6 +154,11 @@ $(function() {
 //                $("#trdInvestPersonInfo_counterId").textSelect('setValue',data.issuer);
                     selectManeger();
                 }
+                if($('#ps').val()==ps_T04){
+                    $("#settleSpreed").val(data.purSpreed).change();
+                }else if($('#ps').val()==ps_T06){
+                    $("#settleSpreed").val(data.redSpreed).change();
+                }
                 if (ps == ps_T06) {
                     $('#settleSpreed').trigger('change');
 				}
@@ -213,6 +218,12 @@ $(function() {
                     $('#trdInvestPersonInfo_counterId option').remove()
                     $("#trdInvestPersonInfo_counterId").textSelect('setValue',$('#finprodId').select2('data')[0].object.manager);
                 }
+                if(finprodId){
+                    $('#trdInvestPersonInfo_counterId option').remove()
+                    selectManeger();
+                    var data = $('#finprodId').select2('data')[0].object;
+                    $("#settleSpreed").val(data.purSpreed);
+                }
                 if(finprodId && portfolioId && ccy){
                     getPtlCashPositionInfo();
                 }
@@ -246,6 +257,12 @@ $(function() {
                 }
                 if(finprodId && portfolioId){
                     getPtlSecPositionInfo();
+                }
+                if(finprodId){
+                    $('#trdInvestPersonInfo_counterId option').remove()
+                    selectManeger();
+                    var data = $('#finprodId').select2('data')[0].object;
+                    $("#settleSpreed").val(data.redSpreed);
                 }
                 //-----add by 裴家俊 切换到赎回时清空风险试算列表 start ----
                 if($("#baseRiskMathCommTable").data('joyintable')!=null) {
@@ -326,6 +343,23 @@ $(function() {
             $('#trdInvestPersonInfo_counterId').val('').trigger('change');
             $('#trdInvestPersonInfo_counterTrader').val('');
             $('#trdInvestPersonInfo_contactInfo').val('');
+        }
+
+        var calcCfmDate = function() {
+            var tradedate = $('#tradeDate').val();
+            var settleSpeed = $('#settleSpreed').val();
+            var calendarId = $('#calendarId').val();
+            if (!tradedate || !settleSpeed || !calendarId) {
+                return;
+            }
+            Joyin.ajaxSync(basePath + 'invest/trade/TrdCommonController/getNextWorkDay', {
+                'calendarId': calendarId,
+                'tradeDate': tradedate,
+                'settleSpreed':settleSpeed
+            }, function (result) {
+                $("#purCfmDate").val(result).trigger("change");
+                $('#expectedArrivalDate').val(result).trigger("change");
+            });
         }
 
         /**
@@ -418,33 +452,43 @@ $(function() {
                 $('#finprodId').attr('disabled',false);
             }
         });
-        
+
+        $('#purCfmDate').change(function(){
+            var purCfmDate = $('#purCfmDate').val();
+            if(purCfmDate){
+                $('#expectedArrivalDate').val(purCfmDate).trigger('change');
+            }
+        });
         /**
          * 清算速度change事件
          */
         $('#settleSpreed').change(function(){
             var settleSpeed = $('#settleSpreed').val();
         	var tradeDate = $('#tradeDate').val();
-        	if (settleSpeed && settleSpeed != '' && tradeDate && tradeDate != ''){
-        		var num = 0;
-        		if (settleSpeed === settlet1){
-        			num = 1;
-        		}else if(settleSpeed === settlet2){
-        			num = 2;
-        		} 
-        		var finprodId = $('#finprodId').val();
-        		if (finprodId && finprodId != '') {
-        		    var param = {expectedArrivalDate:DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd'),finprodId:finprodId}
-     		        Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade002/getRedCfmDate',param,
-     		                function(result) {
-     		        	$('#expectedArrivalDate').val(DateUtil.parse(result.redCfmDate).Format('yyyy-MM-dd')).trigger('change');
-     		        }); 
-				} 
-        	}
-        	if($("#settleSpreed_div").is(":hidden")){
-        		var num = 0;
-        		$('#expectedArrivalDate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
-        	}
+            if(pageModel==PAGE_MODEL_NEW) {
+                // if (settleSpeed && settleSpeed != '' && tradeDate && tradeDate != ''){
+                // 	var num = 0;
+                // 	if (settleSpeed === settlet1){
+                // 		num = 1;
+                // 	}else if(settleSpeed === settlet2){
+                // 		num = 2;
+                // 	}
+                // 	var finprodId = $('#finprodId').val();
+                // 	if (finprodId && finprodId != '') {
+                // 	    var param = {expectedArrivalDate:DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd'),finprodId:finprodId}
+                //         Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade002/getRedCfmDate',param,
+                //                 function(result) {
+                //         	$('#expectedArrivalDate').val(DateUtil.parse(result.redCfmDate).Format('yyyy-MM-dd')).trigger('change');
+                //         });
+                // 	}
+                // }
+                if ($("#settleSpreed_div").is(":hidden")) {
+                    var num = 0;
+                    $('#expectedArrivalDate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
+                }
+                //计算确认日期
+                calcCfmDate();
+            }
         });
         
         /**

@@ -14,6 +14,7 @@ import com.joyintech.tams.invest.common.util.ExcelUtilForRisk;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -52,7 +53,14 @@ public class RskValStructure003Service extends CommonExportService<RskValStructu
      * @since 1.0
      */
     public int update(RskValStructureDto dto) throws Exception {
-        dto.setSrcColIndex(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter())));
+    	String srcColIndex = "";
+    	if(StringUtil.isNotEmpty(dto.getSrcColIndex())&&dto.getSrcColIndex().matches("^[\\d]+$")) {
+    		srcColIndex = dto.getSrcColIndex();
+    	}
+    	else {
+    		srcColIndex = String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter()));	
+    	}
+    	dto.setSrcColIndex(srcColIndex);
         return restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure003/update",
             dto,Integer.class);

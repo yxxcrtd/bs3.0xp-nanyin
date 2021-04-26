@@ -64,7 +64,12 @@ $(function() {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        var object = {selectedItem: [data], operateType:"delete"};
+        var object = {selectedItem: [data], operateType:"delete"};        
+        Joyin.ajaxJson(basePath + 'invest/basicdata/mstcalendartype/MstCalendarType001/calendarIdIsUsed', object, function(result) {
+        	if(result == true){
+        		Joyin.error(JoyinUtil.getMessage("该日历类型已经被使用，不允许删除"));
+        		return;
+        	}else{
         Joyin.ajaxJson(basePath + 'invest/basicdata/mstcalendartype/MstCalendarType001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                 WorkFlow.doDeleteList(basePath + 'invest/basicdata/mstcalendartype/MstCalendarType001/delete', object, 
@@ -73,6 +78,8 @@ $(function() {
                 });
             });
         });
+        	}
+       });
     });
     /**
      * 绑定导出事件
@@ -111,13 +118,20 @@ $(function() {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
             }
-            var object = {selectedItem: selArr, operateType:"delete"};
+            var object = {selectedItem: selArr, operateType:"delete"};           
+            Joyin.ajaxJson(basePath + 'invest/basicdata/mstcalendartype/MstCalendarType001/calendarIdIsUsed', object, function(result) {
+            	if(result == true){
+            		Joyin.error(JoyinUtil.getMessage("该日历类型已经被使用，不允许删除"));
+            		return;
+            	}else{
             Joyin.ajaxJson(basePath + 'invest/basicdata/mstcalendartype/MstCalendarType001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(basePath + 'invest/basicdata/mstcalendartype/MstCalendarType001/delete', object, 
                             "MstCalendarType001_btn_delete","MstCalendarType002");
                 });
             });
+            	}
+         });
         });
         //交易日历名称链接事件
         table.bind('click','.pro-link', function(row) {

@@ -11,6 +11,7 @@ package com.joyintech.service.settle.order.service;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.settle.order.dao.BussSettleOrderCommMapper;
@@ -244,11 +245,12 @@ public class BussSettleOrderCommService {
                     // add by renping 利率互换划款指令用行内统一账户 20190826 end
                     // add by renping 场内基金新增 20191117 start
                     || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
-                            && ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+                            && (/*(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                                     && (StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHANGHAI)
                                     || StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHENZHEN)))
-                                || ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
-                                        || StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue()))
+                                ||*/ ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
+                                        || StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue())
+                                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()))
                                     && (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
                                         || StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
                                     && StringUtil.isNotEmpty(dto.getSecManageAcctId()))))
@@ -391,11 +393,12 @@ public class BussSettleOrderCommService {
                             StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_机构间私募系统.getValue())))
                     // add by renping 场内基金新增 20191117 start
                     || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
-                            && ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
+                            && (/*(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
                                     && (StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHANGHAI)
                                         || StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHENZHEN)))
-                                || ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())
-                                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回到账.getValue()))
+                                ||*/ ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回到账.getValue())
+                                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))
                                     && (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
                                         || StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
                                     && StringUtil.isNotEmpty(dto.getSecManageAcctId()))))
@@ -536,13 +539,13 @@ public class BussSettleOrderCommService {
                     // modify by renping 场内基金新增 20191117 start
                     || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
                         && (((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
-                            || StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue()))
+                            || StringUtil.equals(dto.getPs(), DictCodeListExt2.交易方向_认购.getValue())||StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()))
                                 && ((!StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
                                     && !StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
                                     || StringUtil.isEmpty(dto.getSecManageAcctId())))
-                            || (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+                            /*|| (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                                 && (!StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHANGHAI)
-                                    && !StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHENZHEN)))))
+                                    && !StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHENZHEN)))*/))
                     // modify by renping 场内基金新增 20191117 end
                     || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())
                         && StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue())
@@ -621,8 +624,11 @@ public class BussSettleOrderCommService {
                             || StringUtil.isEmpty(dto.getSecManageAcctId())))
                     || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())
                         && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
-                            && (!StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHANGHAI)
-                                && !StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHENZHEN))))
+                            && ((!StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                            && !StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()))
+                            || StringUtil.isEmpty(dto.getSecManageAcctId()))
+                            /*(!StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHANGHAI)
+                                && !StringUtil.equals(dto.getCounterId(), BussinessConstant.COUNTER_PARTY_ID_SHENZHEN))*/))
                     // modify by renping 场内基金新增 20191117 end
                     || (StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())
                         && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())
@@ -1937,6 +1943,14 @@ public class BussSettleOrderCommService {
             }
         }
         // 撤销数据查看时，根据“R”结尾的total_trade_id查找R结尾的交易表数据，并查找对应的指令 add by renping 20190916 end
+        if (!StringUtil.isEmptyList(result)){
+             result.forEach(item->{
+                 if (StringUtil.isNotEmpty(item.getPayAcctNo())
+                         && StringUtil.equals(item.getPayAcctNo(), CacheUtil.getSysParam("settle_acct_no"))){
+                     item.setPayAcctName(CacheUtil.getSysParam("settle_acct_name"));
+                 }
+             });
+        }
         return result;
     }
 

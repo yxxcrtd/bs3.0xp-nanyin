@@ -12,7 +12,9 @@ package com.joyintech.tams.valuation.finexercisepara.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,4 +67,20 @@ public class ValFinExercisePara001Service extends CommonExportService<ValFinExer
         valFinExercisePara002Service.insertBokAmoConfig(dto, type);
     }
 
+    /**
+     * 检索资产（债券）
+     *
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> findFinprod(Map<String, Object> param) {
+        Page<SelectOptionDto> page = super.queryForPageForSelectReturn(
+                () -> valFinExercisePara001Mapper.findFinprod(param));
+        List<SelectOptionDto> root = page.getRoot().stream().map(item -> {
+            item.setText(item.getId() + "(" + item.getText() + ")");
+            return item;
+        }).collect(Collectors.toList());
+        page.setRoot(root);
+        return page;
+    }
 }

@@ -210,7 +210,7 @@ public class ValAssetsAmortizeSet002Controller extends BaseController {
     @ResponseBody
     public Page<SelectOptionDto> getSubjectNo(HttpServletRequest request) {
         Map<String, Object> param =RequestUtil.getPageParam();
-        return valAssetsAmortizeSet001Service.getFinprodId2(param);
+        return valAssetsAmortizeSet002Service.getFinprodId2(param);
     }
 
 }

@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.remind.service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,6 +107,8 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
         param.put("R4S1", BussinessDictCodeList.提醒类型_小分类_债券行权.getValue());
         param.put("R4S2", BussinessDictCodeList.提醒类型_小分类_债券覆盖.getValue());
         param.put("R9S1", BussinessDictCodeList.提醒类型_小分类_数据修改.getValue());
+        param.put("R10S1", BussinessDictCodeList.提醒类型_小分类_债券上市流通操作.getValue());
+        param.put("R10S2", BussinessDictCodeList.提醒类型_小分类_资产要素登记修改.getValue());
         param.put("noFlag", BussinessDictCodeList.是否_否.getValue());
         param.put("yesFlag", BussinessDictCodeList.是否_是.getValue());
         param.put("tradeStatus_01", BussinessDictCodeList.交易状态_初始.getValue());
@@ -224,6 +227,8 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
             result.putAll(searchCountR8(param));
             //公共数据变更
             result.putAll(searchCountR9(param));
+            //债券上市流通
+            result.putAll(searchCountR10(param));
         }
         // 查询主动提醒数据表
         else {
@@ -485,6 +490,19 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
     }
 
     /**
+     * 公共数据变更
+     * @param param
+     * @return
+     */
+    public Map<String, Object> searchCountR10(Map<String, Object> param){
+        Map<String, Object> resultMap = new HashMap<>();
+        param.put("quaryDateStr",DateUtil.format((Date)param.get("quaryDate")));
+        resultMap.putAll(this.searchCountR10S1(param));
+        resultMap.putAll(this.searchCountR10S2(param));
+        return resultMap;
+    }
+
+    /**
      * 公共数据变更-数据修改
      * @param param
      * @return
@@ -492,5 +510,23 @@ public class PaActiveRemind001Service extends BaseService<PaActiveRemind001Dto> 
     private Map<String, Object> searchCountR9S1(Map<String,Object> param){
         param.put("R9S1", BussinessDictCodeList.提醒类型_小分类_数据修改.getValue());
         return paActiveRemind001Mapper.searchCountR9S1(param);
+    }
+
+    /**
+     * 债券上市流通操作
+     *
+     * @param param
+     */
+    public Map<String, Object> searchCountR10S1(Map<String, Object> param) {
+        return paActiveRemind001Mapper.searchCountR10S1(param);
+    }
+
+    /**
+     * 资产要素登记修改
+     *
+     * @param param
+     */
+    public Map<String, Object> searchCountR10S2(Map<String, Object> param) {
+        return paActiveRemind001Mapper.searchCountR10S2(param);
     }
 }

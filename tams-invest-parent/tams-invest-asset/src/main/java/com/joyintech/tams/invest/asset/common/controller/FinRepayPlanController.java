@@ -122,7 +122,7 @@ public class FinRepayPlanController extends BaseController{
             params.put("stateNew", DictCodeList.流程状态_新建.getValue());
             params.put("tradeId", dto.getFinprodId());
             if (finPayPlanService.isNotIng(params)) {
-                ValidMessage addRst = new ValidMessage("已存在流程中数据，不能重复提交。!");
+                ValidMessage addRst = new ValidMessage("已存在流程中数据，不能重复提交。");
                 List<ValidMessage> errorList = new ArrayList<>();
                 errorList.add(addRst);
                 rst.setErrorList(errorList);

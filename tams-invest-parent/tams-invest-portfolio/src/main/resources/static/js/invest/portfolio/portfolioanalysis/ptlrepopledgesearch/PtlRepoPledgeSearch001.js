@@ -282,18 +282,21 @@ $(function() {
         $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
             substitutionDataTable.load();
         });
-        
-        $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
-            if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
-                Joyin.error('请选择组合代码!');
-                return;
-            }
-            if ($('#pledgeSummaryTradeDate').val() == null || $('#pledgeSummaryTradeDate').val() == ''){
-                Joyin.error('请选择交易日期!');
-                return;
-            }
-            pledgeSummaryDataTable.load();
-        });
+
+ //TISHKBS-2014 wyn 组合代码和交易日期不是必填 start
+//        $('.condition-area-substitution #PtlRepoPledgeSearch001_btn_search').click(function() {
+////            if ($('#pledgeSummaryPortfolioId').val() == null || $('#pledgeSummaryPortfolioId').val() == ''){
+////                Joyin.error('请选择组合代码!');
+////                return;
+////            }
+////            if ($('#pledgeSummaryTradeDate').val() == null || $('#pledgeSummaryTradeDate').val() == ''){
+////                Joyin.error('请选择交易日期!');
+////                return;
+////            }
+//            pledgeSummaryDataTable.load();
+//        });
+ //TISHKBS-2014 wyn 组合代码和交易日期不是必填 end
+
         // 绑定按钮事件
         $('.substitutionSearchDiv #PtlRepoPledgeSearch001_btn_export').click(function() {
             exportSubstitutionExcel();

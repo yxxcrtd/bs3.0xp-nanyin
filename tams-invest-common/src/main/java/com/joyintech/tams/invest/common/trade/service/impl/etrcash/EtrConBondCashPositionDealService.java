@@ -135,8 +135,47 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
      * 可转债 以持仓数量（张数）统计
      */
     public static void deal可转债CashPosition(BaseTradeProductDealDto finProductTradeDto, DictCodeList 持仓类型,
-                                           EtrPositionHoldDto etrPositionHoldDto) {
+                                           EtrPositionHoldDto etrPositionHoldDto,String 交易流程状态) {
             if(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeListExt3.交易方向_债转股.getValue())){
+            	//流程中减少债券指令可用持仓
+            	if(StringUtil.isEmpty(finProductTradeDto.getTrdProductDealAdd().getEntrustId())&&DictCodeListExt1.交易流程状态_流程中.getValue().equals(交易流程状态)){
+            		TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
+            		 // 交易生成的持仓流水 (债券)
+            		EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                            finProductTradeDto);
+            		etrSecPositionFlowDto.setAmount(deal.getShareAmt().negate());
+            		etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);           		
+            	}
+            	//交易生效（无委托）	增加股票指令可用持仓
+            	if(StringUtil.isEmpty(finProductTradeDto.getTrdProductDealAdd().getEntrustId())&&DictCodeListExt1.交易流程状态_有效.getValue().equals(交易流程状态)){
+            		TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
+                    TrdFinProductBarter barterDeal = finProductTradeDto.getTrdFinProductBarterList().get(0);
+                    // 交易生成的持仓流水 (股票)
+                    EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                            finProductTradeDto);
+                    etrSecPositionFlowDto.setAmount(barterDeal.getShareAmt());
+                    etrSecPositionFlowDto.setFinprodId(barterDeal.getFinprodId());
+                    etrSecPositionFlowDto.setCdate(deal.getTradeDate());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);     		
+            	}
+            	//交易撤销（无委托）	更新债券、股票指令可用持仓
+            	if(StringUtil.isEmpty(finProductTradeDto.getTrdProductDealAdd().getEntrustId())&&DictCodeListExt1.交易流程状态_撤销.getValue().equals(交易流程状态)){
+            		TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
+                    TrdFinProductBarter barterDeal = finProductTradeDto.getTrdFinProductBarterList().get(0);
+                    // 交易生成的持仓流水 (债券)
+            		EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                            finProductTradeDto);
+            		etrSecPositionFlowDto.setAmount(deal.getShareAmt().negate());
+            		etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);    
+                    // 交易生成的持仓流水 (股票)
+                    EtrSecPositionFlowDto etrSecPositionFlowDto1 = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
+                            finProductTradeDto);
+                    etrSecPositionFlowDto1.setAmount(barterDeal.getShareAmt());
+                    etrSecPositionFlowDto1.setFinprodId(barterDeal.getFinprodId());
+                    etrSecPositionFlowDto1.setCdate(deal.getTradeDate());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto1);     		
+            	}
+            	
 //                交易生效（有委托）	增加股票指令可用持仓		增加股票指令可用持仓
                 if(StringUtil.isNotEmpty(finProductTradeDto.getTrdProductDealAdd().getEntrustId())&&持仓类型.equals(DictCodeList.持仓类型_实际)){
                     TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
@@ -176,8 +215,7 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
             }
             
             if(StringUtil.equals(finProductTradeDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())){
-//              交易生效 增加债券持仓
-              if(持仓类型.equals(DictCodeList.持仓类型_实际)){
+//              交易生效 增加债券持仓             
                   TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
                   TrdProductDealAdd dealAdd = finProductTradeDto.getTrdProductDealAdd();
 //                  TrdFinProductBarter barterDeal = finProductTradeDto.getTrdFinProductBarterList().get(0);
@@ -195,6 +233,7 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                   // 交易日期
                   Date tradeDate = finProductTradeDto.getTrdProductDeal().getTradeDate();
                   // 交易生成的持仓流水 (债券)
+                  if(持仓类型.equals(DictCodeList.持仓类型_实际)){
                   EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
                           finProductTradeDto);
                   etrSecPositionFlowDto.setAmount(deal.getShareAmt());
@@ -202,6 +241,8 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                   etrSecPositionFlowDto.setCdate(deal.getTradeDate());
                   etrSecPositionFlowDto.setSecAcctId(deal.getSecManageAcctId());
                   etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                  }
+                  if(DictCodeListExt1.交易流程状态_流程中.getValue().equals(交易流程状态) || DictCodeListExt1.交易流程状态_撤销.getValue().equals(交易流程状态)){
                   /**add by taoran 20200303 委托申购确认更新实时现金 start*/
                   if(stlPayOrdersDtos!= null && stlPayOrdersDtos.size()>0 && StringUtil.isNotEmpty(finProductTradeDto.getEntrustId())
                 		  && DictCodeListExt2.申购类型_普通申购.getValue().equals(finProductTradeDto.getPurchType())){
@@ -215,6 +256,19 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                       etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                   }
                   /**add by taoran 20200303 委托申购确认更新实时现金 end*/
+                  
+                  /**add by yujiaping 20210409 申购确认更新资金账户指令可用现金 end*/
+                  if(stlPayOrdersDtos!= null && stlPayOrdersDtos.size()>0 && !StringUtil.isNotEmpty(finProductTradeDto.getEntrustId())
+                		  && DictCodeListExt2.申购类型_普通申购.getValue().equals(finProductTradeDto.getPurchType())){                  
+                      EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
+                              finProductTradeDto);
+                      etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTradeId());
+                      etrCashPositionFlowDto.setAcctId(gen账号(deal.getChlId(),deal.getCcy(),deal.getSecManageAcctId(), dealAdd.getPortfolioId(), dealAdd.getPurchModle(),etrCashPositionFlowDto));
+                      etrCashPositionFlowDto.setAmount(stlPayOrdersDtos.get(0).getSettleAmt().negate());
+                      etrCashPositionFlowDto.setCdate(stlPayOrdersDtos.get(0).getSettleDate());
+                      etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+                  }
+                  /**add by yujiaping 20210409 申购确认更新资金账户指令可用现金 end*/
               }
           }
 

@@ -428,6 +428,7 @@
                 t6.COUNTER_NAME counterName,
                 T1.COUNTER_TRADER,
                 T1.TRADER,
+                T1.SEC_MANAGE_ACCT_ID,
                 T4.FINPROD_ID,
                 T1.PORTFOLIO_ID,
                 PP.PORTFOLIO_ID ACT_PORTFOLIO_ID,
@@ -710,6 +711,7 @@
             AND HODING_TYPE = #{holdingType}
             AND CDATE = #{vDate, jdbcType=DATE}
             AND FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND INV_AIM = #{invAim,jdbcType=VARCHAR}
     </insert>
 
     <select id="findAddDealByWorkflowId" resultMap="com.joyintech.tams.common.base.dao.WflTrdProductDealAddMapper.BaseResultMap">

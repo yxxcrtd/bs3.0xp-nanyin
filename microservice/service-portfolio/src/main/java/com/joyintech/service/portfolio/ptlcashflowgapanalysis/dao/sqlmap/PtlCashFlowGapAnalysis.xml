@@ -279,23 +279,23 @@
             </foreach>
 
         </if>
-        and not exists (
-        SELECT 1
+        and ftp.finprod_id not in (
+        SELECT nvl(nvl(trd.FINPROD_ID,TRD1.FINPROD_ID),tfpdt.FINPROD_ID) FINPROD_ID
         FROM
         PTL_CASH_POSITION_FLOW pcpf
-        left join PTL_PORTFOLIO pp on pcpf.PORTFOLIO_ID = pp.PORTFOLIO_ID
+        /*left join PTL_PORTFOLIO pp on pcpf.PORTFOLIO_ID = pp.PORTFOLIO_ID*/
         left join STL_PAY_ORDERS spo on pcpf.ORDER_ID = spo.ORDER_ID
         left join TRD_PRODUCT_DEAL trd on spo.TRADE_ID = trd.TRADE_ID
         left join PA_TRD_PRODUCT_DEAL ptpd on ptpd.TRADE_ID = trd.TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL TRD1 ON TRD1.TRADE_ID = PCPF.ORDER_ID
-        LEFT JOIN PA_TRD_PRODUCT_DEAL PTPD1 ON PTPD1.TRADE_ID = TRD1.TRADE_ID
+        /*LEFT JOIN PA_TRD_PRODUCT_DEAL PTPD1 ON PTPD1.TRADE_ID = TRD1.TRADE_ID*/
         left join TRD_FIN_PRODUCT_DEAL_TOTAL tfpdt on spo.TRADE_ID = tfpdt.TOTLE_TRADE_ID
-        left join PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptfpdt on ptfpdt.TOTLE_TRADE_ID = tfpdt.TOTLE_TRADE_ID
-        left join FIN_PRODUCT fp on fp.FINPROD_ID = nvl(trd.FINPROD_ID,tfpdt.FINPROD_ID)
-        left join FIN_TRADE_PRODUCT FTP on FTP.FINPROD_ID = nvl(trd.FINPROD_ID,tfpdt.FINPROD_ID)
-        left join FIN_PRODUCT_ADD on fp.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-        left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pp.portfolio_id
-        left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pcpf.acct_id
+        /*left join PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptfpdt on ptfpdt.TOTLE_TRADE_ID = tfpdt.TOTLE_TRADE_ID*/
+        /*left join FIN_PRODUCT fp on fp.FINPROD_ID = nvl(trd.FINPROD_ID,tfpdt.FINPROD_ID)*/
+        /*left join FIN_TRADE_PRODUCT FTP on FTP.FINPROD_ID = nvl(trd.FINPROD_ID,tfpdt.FINPROD_ID)*/
+        left join FIN_PRODUCT_ADD on FIN_PRODUCT_ADD.FINPROD_ID = nvl(trd.FINPROD_ID,tfpdt.FINPROD_ID)
+        left join PTL_PORTFOLIO_AUTHORITY pa on pa.portfolio_id = pcpf.PORTFOLIO_ID
+        /*left join STL_CAPACCT_INFO sci on sci.ACCT_NO = pcpf.acct_id*/
         where (
         (trd.TRADE_ID is not null and trd.TRADE_STATUS = '01' AND trd.IS_CANCEL='N')
         or (TRD1.TRADE_ID is not null and TRD1.TRADE_STATUS = '01' AND TRD1.IS_CANCEL='N')

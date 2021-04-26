@@ -10,11 +10,7 @@
  
 package com.joyintech.tams.component.business.bond.validator;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.stereotype.Component;
 
@@ -48,8 +44,26 @@ public class BusiFinExercisePlanValidator implements BeanValidator{
         List<FinExercisePlan> finExercisePlanList = dto.getFinExercisePlanList();
         List<FinCashPlan> finCashPlanList = dto.getFinCashPlanList();
         Set<Date> set = new  HashSet<Date>();
-        boolean execDateEqualsMdate = false;  //行权日期 必须等于一条计息结束日
-		boolean execDateErrorFlg = false;  //行权日期 必须等于一条计息结束日
+//        boolean execDateEqualsMdate = false;  //行权日期 必须等于一条计息结束日
+//		boolean execDateErrorFlg = false;  //行权日期 必须等于一条计息结束日
+        //资产起息日
+        Date vdate = null;
+        //资产到期日
+        Date mdate = null;
+        if(finCashPlanList!= null && finCashPlanList.size()>0){
+            Collections.sort(finCashPlanList, new Comparator<FinCashPlan>() {
+                @Override
+                public int compare(FinCashPlan o1, FinCashPlan o2) {
+                    if(o1.getVdate().compareTo(o2.getVdate()) == 1){
+                        return o1.getVdate().compareTo(o2.getVdate());
+                    }
+                    return 0;
+                }
+            });
+            vdate = finCashPlanList.get(0).getVdate();
+            mdate = finCashPlanList.get(finCashPlanList.size()-1).getMdate();
+        }
+
         if(null!=finExercisePlanList&&!finExercisePlanList.isEmpty()){
             for(FinExercisePlan entity:finExercisePlanList){
                 //add  by  张年 20190903  start
@@ -93,8 +107,17 @@ public class BusiFinExercisePlanValidator implements BeanValidator{
                                 getMessage("BusiFinExercisePlan.vdate"))));
                     }
                 }
-                if(null!=entity.getExerciseDate()&&null!=dto.getMdate()){
-                    if(DateUtil.compareDate(entity.getExerciseDate(), dto.getMdate())==1){
+                if(null!=entity.getExerciseDate()&&null!=vdate){
+                    if(DateUtil.compareDate(entity.getExerciseDate(), vdate)==-1){
+                        resultList.add(new ValidMessage("",
+                                getMessage("BUSS_COM_E_0004",
+                                        getMessage("BusiFinExercisePlan.exerciseDate"),
+                                        getMessage("FinBondTargetAsset002.vdate"))));
+                    }
+                }
+
+                if(null!=entity.getExerciseDate()&&null!=mdate){
+                    if(DateUtil.compareDate(entity.getExerciseDate(), mdate)==1){
                         resultList.add(new ValidMessage("",
                             getMessage("BUSS_COM_E_0003", 
                                 getMessage("BusiFinExercisePlan.exerciseDate"),
@@ -118,9 +141,9 @@ public class BusiFinExercisePlanValidator implements BeanValidator{
 //                        }
 //                    }
 //                }
-                if (!this.isContainsDate(finCashPlanList, entity.getExerciseDate())) {
-                    execDateErrorFlg = true;
-                }
+//                if (!this.isContainsDate(finCashPlanList, entity.getExerciseDate())) {
+//                    execDateErrorFlg = true;
+//                }
             }
             // 行权计划行权日在同一天可以回售和赎回 by 赵东东 20191209  by 赵东东 start
             for(int i=0;i<finExercisePlanList.size();i++) {
@@ -145,13 +168,13 @@ public class BusiFinExercisePlanValidator implements BeanValidator{
             }
             }
            // 行权计划行权日在同一天可以回售和赎回 by 赵东东 20191209  by 赵东东 end
-            if(execDateErrorFlg){
-                resultList.add(new ValidMessage("",
-                    getMessage("FIN_ASSET_E_0017", 
-                        getMessage("BusiFinExercisePlan.exerciseDate"),
-                        getMessage("BUSS_COM_E_0003"),
-                        getMessage("FinBondTargetAsset002.mdate"))));
-            }
+//            if(execDateErrorFlg){
+//                resultList.add(new ValidMessage("",
+//                    getMessage("FIN_ASSET_E_0017",
+//                        getMessage("BusiFinExercisePlan.exerciseDate"),
+//                        getMessage("BUSS_COM_E_0003"),
+//                        getMessage("FinBondTargetAsset002.mdate"))));
+//            }
         }
         return resultList;
     }

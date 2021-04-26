@@ -87,6 +87,7 @@ public class RepayScheduleCal {
             }
             if(StringUtil.equals(DictCodeList.是否_否.getValue(), rsd.getIsPayInt())){//业务场景，是还本不带息的
                 rsd.setIntAmt(BigDecimal.ZERO);
+                // rsd.setIntAmt(isamt);
                 rsd.setRepayWithoutInt(isamt);
             }else {
             // 还本区间应计利息
@@ -95,7 +96,11 @@ public class RepayScheduleCal {
             }
             rsd.setNewRate(lisd.get(lisd.size()-1).getYield());
             //本息和
-            rsd.setCashAmt(ArithmeticUtil.doAdd(12, null, rsd.getPrinAmt(), rsd.getIntAmt()));
+            if(StringUtil.equals(DictCodeList.是否_否.getValue(), rsd.getIsPayInt())){//业务场景，是还本不带息的
+                rsd.setCashAmt(rsd.getPrinAmt());
+            }else{
+                rsd.setCashAmt(ArithmeticUtil.doAdd(12, null, rsd.getPrinAmt(), rsd.getIntAmt()));
+            }
             // 当期本金
             curAmt = curAmt.subtract(rsd.getPrinAmt());
         }

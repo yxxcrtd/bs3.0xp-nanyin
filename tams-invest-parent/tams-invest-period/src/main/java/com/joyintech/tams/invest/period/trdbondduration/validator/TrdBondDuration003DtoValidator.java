@@ -1,11 +1,13 @@
 package com.joyintech.tams.invest.period.trdbondduration.validator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondPtlSecExerciseInfo;
 import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration003ProcessDto;
 import com.joyintech.tams.invest.period.trdbondduration.service.TrdBondDuration003Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +72,22 @@ public class TrdBondDuration003DtoValidator implements PeriodCommonValidator {
                     errorList.add(
                             new ValidMessage("finprodMarketId", "存在流程中数据！"));
                 }
+            }
+            //组合列表实收利息之和=实收利息总额
+            //组合列表到账金额之和=到账金额
+            BigDecimal intAmtReal = BigDecimal.ZERO;
+            BigDecimal settleAmt = BigDecimal.ZERO;
+            if(dto.getTrdBondPtlSecExerciseInfos() != null && dto.getTrdBondPtlSecExerciseInfos().size() >0 ){
+                for(TrdBondPtlSecExerciseInfo trdBondPtlSecExerciseInfo : dto.getTrdBondPtlSecExerciseInfos()){
+                    intAmtReal = intAmtReal.add(trdBondPtlSecExerciseInfo.getIntAmtReal());
+                    settleAmt  = settleAmt.add(trdBondPtlSecExerciseInfo.getSettleAmt());
+                }
+            }
+            if(intAmtReal.compareTo(dto.getIntAmtReal()) != 0){
+                errorList.add(new ValidMessage("金额明细信息列表实收利息之和必须等于金额信息中的实收利息总额"));
+            }
+            if(settleAmt.compareTo(dto.getfPriceAmt()) != 0 ){
+                errorList.add(new ValidMessage("金额明细信息列表组合列表到账金额之和必须等于金额信息中的到账金额"));
             }
         }
         return errorList;

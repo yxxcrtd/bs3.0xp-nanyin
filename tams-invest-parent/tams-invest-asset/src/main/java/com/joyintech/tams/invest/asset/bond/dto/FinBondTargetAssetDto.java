@@ -347,7 +347,29 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     /**
      * 现金流计算规则dtolist
      */
-    private List<FinCashCalcRule> finCashCalcRuleList;  
+    private List<FinCashCalcRule> finCashCalcRuleList;
+
+    /**
+     * 是否发行标的
+     */
+    public String isIssueAsset;
+
+    /**
+     * 获取 isIssueAsset
+     * @return isIssueAsset.
+     */
+    public String getIsIssueAsset() {
+        return isIssueAsset;
+    }
+
+    /**
+     * 设置 isIssueAsset
+     * @param isIssueAsset isIssueAsset
+     */
+    public void setIsIssueAsset(String isIssueAsset) {
+        this.isIssueAsset = isIssueAsset;
+    }
+
     /**
      * 获取 ztGradeResult
      * @return ztGradeResult.
@@ -1784,6 +1806,11 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     public String getIsCityBondStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsCityBond());
     }
+
+    public String getIsIssueAssetStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsIssueAsset());
+    }
+    
     public String getIndustryStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业一级分类, this.getIndustry());
     }

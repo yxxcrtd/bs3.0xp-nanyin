@@ -13,13 +13,10 @@ package com.joyintech.service.valuation.assetsamortize.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseController;
@@ -90,5 +87,10 @@ public class ValAssetsAmortizeSet002Controller extends BaseController {
     	 return valAssetsAmortizeSet002Service.doComplete(dto,OperationType.NEW);
     }
 
+    @PostMapping("/getFinprodId2/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodId2(@RequestBody Map<String, Object> pageParam,
+                                               @PathVariable("page") int page, @PathVariable("length") int length) {
+        return valAssetsAmortizeSet002Service.getFinprodId2(page,length,pageParam);
+    }
 
 }

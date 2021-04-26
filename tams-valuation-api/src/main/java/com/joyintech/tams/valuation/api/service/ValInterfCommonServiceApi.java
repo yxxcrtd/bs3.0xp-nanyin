@@ -776,7 +776,8 @@ public class ValInterfCommonServiceApi {
             bokBooksetPlanBatchMapper.insertBatch(listBokBooksetPlan);
         }
         // 变量.入库账套清算账户List 账套清算账户表 BOK_BOOKSET_CAPACCT_INFO 以账套代码进行删除，然后再入库
-        if (CollectionUtils.isNotEmpty(listBokBooksetCapacctInfo)) {
+        //modify by jiangpeng on 20210401 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+        if (CollectionUtils.isNotEmpty(listBokBooksetCapacctInfo) && !prodInfoDto.isProductEdit()) {
             valBooksetCapacctInfoBatchMapper.deleteBatch(listBokBooksetCapacctInfo);
             valBooksetCapacctInfoBatchMapper.insertBatch(listBokBooksetCapacctInfo);
         }
@@ -1199,6 +1200,14 @@ public class ValInterfCommonServiceApi {
 	        	dealOrdersBuild = false;
 	        }
         }
+        // add by jiangpeng on 20210426 start
+        // TISHKBS-2046 CLONE - 场内货币基金-存续期-基金份额折算交易审批报错
+        // 基金份额折算不生成指令
+        if (DictCodeListExt1.金融产品类型_基金.getValue().equals(trdProductDeal.getFinprodType())
+                && DictCodeList.交易方向_份额强增.getValue().equals(trdProductDeal.getPs())) {
+            dealOrdersBuild = false;
+        }
+        // add by jiangpeng on 20210426 end
         if(dealOrdersBuild){
         	map = interfCommonService.instructionGenerate_Branch(trdProductDeal, prodid,prodFinprodType,branch,ptlTradeList);
         }

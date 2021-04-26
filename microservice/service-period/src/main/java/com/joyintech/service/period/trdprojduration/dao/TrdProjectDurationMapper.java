@@ -60,4 +60,18 @@ public interface TrdProjectDurationMapper {
     List<SelectOptionDto> getFinprodMarketId(Map<String, Object> param);
     List<SelectOptionDto> getBusiCode(Map<String, Object> param);
     //add by liupengfei for 多级法人E
+
+    /**
+     * 还本不带息资产，还本日是否是付息日
+     * @param map
+     * @return
+     */
+    int isPayIntDate(Map<String, Object> map);
+
+    /**
+     * 是否是还本不带息资产
+     * @param map
+     * @return
+     */
+    int isNoPayInt(Map<String, Object> map);
 }

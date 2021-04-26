@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
@@ -27,6 +28,7 @@ import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.product.addreduce.ReduceInfoDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
@@ -34,14 +36,18 @@ import com.joyintech.tams.invest.common.trade.service.TradeProductDealCommServic
 import com.joyintech.tams.invest.common.trade.service.impl.BaseEtrCashPositionCommServiceImpl;
 import com.joyintech.tams.invest.product.common.service.ProductCommonService;
 import com.joyintech.tams.invest.product.payint.dto.*;
+import com.joyintech.tams.invest.product.productduration.addreduce.dto.FinProductAddReduce002Dto;
 import com.joyintech.tams.valuation.common.service.BooksetCommonService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,6 +154,24 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
     
     @Autowired
     private BooksetCommonService booksetCommonService;
+    
+    /**
+     * 组合可用持仓和实际持仓查询更新组件Mapper
+     */
+    @Autowired
+    private BasePtlCashPositionInfoMapper basePtlCashPositionInfoMapper;
+
+    /**
+     * 组合可用持仓和实际持仓查询更新组件系统生成Mapper
+     */
+    @Autowired
+    private PtlCashPositionMapper ptlCashPositionMapper;
+    
+    @Autowired(required = false)
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+    
+    @Autowired
+    private EtrCashPositionMapper etrCashPositionMapper;
 
     /**
      * 1.6.1产品基本信息
@@ -423,7 +447,7 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
         }
         entity.setBranch("0");
         this.prepareEntity(entity);
-
+        entity.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
         // 6.1.插入新建记录到金融产品业务流程信息表中
         if (!StringUtil.isEmptyList(entity.getTradeDtoList())) {
             for (FinProductPayInt002TradeDto tradeDto : entity.getTradeDtoList()) {
@@ -512,7 +536,11 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
         ptlSecPositionFlowDto.setSecAcctId("999999");
         ptlSecPositionFlowDto.setFinprodId(entity.getFinprodId());
         ptlSecPositionFlowDto.setBranch(0L);
+        if(DictCodeListExt1.交易流程状态_流程中.getValue().equals(entity.getWorkflowStatus())){
+        ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+        }else {
         ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+        }
         ptlSecPositionFlowDto.setCcy(entity.getCcy());
         ptlSecPositionFlowDto.setTradeId(needNegate ? entity.getBussId() + "R" : entity.getBussId());
         ptlSecPositionFlowDto.setCdate(entity.getPayDate()); // 日期
@@ -544,7 +572,11 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
             // ptlCashPositionFlowDto.setOrderId(entity.getBussTrdTransferOrder().get(0).getOrderId()); // 指令编号
             for (StlPayOrdersDto stlPayOrdersDto : entity.getBussTrdTransferOrder()) {
                 ptlCashPositionFlowDto.setAcctId(stlPayOrdersDto.getMyAcctNo());
-                ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                if(DictCodeListExt1.交易流程状态_流程中.getValue().equals(entity.getWorkflowStatus())){
+                	 ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                }else {                	
+                	ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                }
                 ptlCashPositionFlowDto.setCdate(entity.getPayDate());
                 ptlCashPositionFlowDto.setCcy(entity.getCcy());
                 ptlCashPositionFlowDto.setAmount(
@@ -564,17 +596,72 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
         if (ptlPositionHoldDto.getPtlSecPositionFlows() != null
                 && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
             for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
+            	 if (DictCodeList.持仓类型_实际.getValue().equals(ptlSecPositionFlow.getHodingType())){
                 basePtlSecPositionInfoServiceImpl.inertSecPositionFlow(ptlSecPositionFlow);
+            	 }
            }
         }
         if (ptlPositionHoldDto.getPtlCashPositionFlows() != null
                 && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
             for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
+            	 if (DictCodeListExt1.交易流程状态_流程中.getValue().equals(entity.getWorkflowStatus())
+            			 ||DictCodeListExt1.交易流程状态_撤销.getValue().equals(entity.getWorkflowStatus())) {
                 basePtlCashPositionInfoServiceImpl.insertCashPositionFlow(ptlCashPositionFlow);
+            	 }
+             	if(DictCodeListExt1.交易流程状态_有效.getValue().equals(entity.getWorkflowStatus())) {
+            	 if (DictCodeList.持仓类型_实际.getValue().equals(ptlCashPositionFlow.getHodingType())
+                         || DictCodeList.持仓类型_在途.getValue().equals(ptlCashPositionFlow.getHodingType())) {
+                     PtlCashPosition position = new PtlCashPosition();
+                     BeanUtils.copyProperties(ptlCashPositionFlow, position);
+                     ptlCashPositionFlow.setNeedAcctType(false);
+                     BigDecimal amount = basePtlCashPositionInfoMapper.selectCashPosition(ptlCashPositionFlow);
+                     if (amount == null) {
+                         // 如果当天的持仓数据没有，取当天之前最近一天的数据
+                         // 查询最近的那一天
+                         Date maxCdate = basePtlCashPositionInfoMapper.selectCashPositionMaxCdate(ptlCashPositionFlow);
+                         if (maxCdate == null) {
+                             ptlCashPositionMapper.insert(position);
+                         }
+                         else {
+                             PtlCashPositionFlowDto tempPositionFlowDto = new PtlCashPositionFlowDto();
+                             BeanUtils.copyProperties(ptlCashPositionFlow, tempPositionFlowDto);
+                             tempPositionFlowDto.setCdate(maxCdate);
+
+                             BigDecimal tempAmount = basePtlCashPositionInfoMapper.selectCashPosition(tempPositionFlowDto);
+                             position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), tempAmount));
+                             ptlCashPositionMapper.insert(position);
+                         }
+                     } else {
+                         position.setAmount(ArithmeticUtil.doAdd(position.getAmount(), amount));
+                         ptlCashPositionMapper.updateByPrimaryKeySelective(position);
+                     }
+
+                     // 2.2.2 检索组合持仓的最大日期
+                     String maxCdate = basePtlCashPositionInfoMapper.selectMaxCdate(ptlCashPositionFlow);
+                     String cDate = DateUtil.format(ptlCashPositionFlow.getCdate());
+                     // 2.2.3 上面检索出的最大日期 <> 输入参数.日期，将输入参数.日期到2.2.2检索出来的最大日期的数据全部更新
+                     if (maxCdate != null && !maxCdate.equals(cDate)) {
+                         String minDate = maxCdate.compareTo(cDate) > 0 ? DateUtil.addDay(cDate, 1) : maxCdate;
+                         String maxDate = maxCdate.compareTo(cDate) < 0 ? DateUtil.addDay(cDate, -1) : maxCdate;
+                         Map<String, Object> params = BeanUtil.object2Map(ptlCashPositionFlow);
+                         params.put("minDate", minDate);
+                         params.put("maxDate", maxDate);
+                         basePtlCashPositionInfoMapper.updatePosition(params);
+                     }
+                     // 2.2.4 if 输入参数.持仓类型 = 数据字典缓存.持仓类型.实际
+                     if (DictCodeList.持仓类型_实际.getValue().equals(ptlCashPositionFlow.getHodingType())) {
+                    	 ptlCashPositionFlow.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                    	 basePtlCashPositionInfoService.deleteCashPosition(ptlCashPositionFlow);
+                     }
+                 }
+            }
             }
         }
+        if (DictCodeListExt1.交易流程状态_流程中.getValue().equals(entity.getWorkflowStatus())
+   			 ||DictCodeListExt1.交易流程状态_撤销.getValue().equals(entity.getWorkflowStatus())) {
         ptlPositionHoldDto.setPtlSecPositionFlows(null);//委托持仓不变动
         baseEtrCashPositionCommServiceImpl.portfolioEtrCashPosition(ptlPositionHoldDto, false);
+        }
     }
 
 
@@ -582,7 +669,8 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
     public void doInsert(FinProductPayInt003Dto entity, OperationType operationType) {
         // 新建交易
         if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
-            this.insertBussFlowData(entity);
+            this.insertBussFlowData(entity);           
+            this.handleCashSecFlowData(entity, false);
         }
         // 撤销交易
         else {
@@ -590,6 +678,53 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
         }
         //
     }
+    
+    @Override
+    public void doBack(FinProductPayInt003Dto entity) {      
+        if (!StringUtil.equals("revoke", entity.getOperateType())
+                && !StringUtil.equals("delete", entity.getOperateType())) {
+	    	 this.delhandleBussFlowData(entity);
+	    	 }
+    }
+    
+    private void delhandleBussFlowData(FinProductPayInt003Dto entity) {
+   	 // 划款指令
+        if (entity.getBussTrdTransferOrder() != null && entity.getBussTrdTransferOrder().size() > 0) {
+       	 for (BussTrdTransferOrderDto orderDto : entity.getBussTrdTransferOrder()) {
+                StlPayOrders stlPayOrdersDto = new StlPayOrders();
+                BeanUtil.copyPropertiesIgnoreNull(stlPayOrdersDto, orderDto);
+                stlPayOrdersDto.setOrderId(orderDto.getOrderId());               
+                stlPayOrdersDto.setOrderType(orderDto.getOrderType());
+                stlPayOrdersDto.setIsTotalTrade(DictCodeList.是否_是.getValue());               
+                stlPayOrdersDto.setSettleAmt(orderDto.getSettleAmt());
+                stlPayOrdersDto.setCcy(orderDto.getCcy());
+                stlPayOrdersDto.setSettleDate(orderDto.getSettleDate());                
+                /**
+                 * 指令现金流水
+                 */                    
+                EtrCashPosition tempPosition = new EtrCashPosition();            
+                tempPosition.setPortfolioId(stlPayOrdersDto.getPortfolioId());
+                tempPosition.setAcctId(orderDto.getPayAcctNo());                   
+                tempPosition.setAmount(stlPayOrdersDto.getSettleAmt());                     
+                tempPosition.setCcy(stlPayOrdersDto.getCcy());
+                tempPosition.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                tempPosition.setCdate(stlPayOrdersDto.getSettleDate());
+                EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
+                BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
+                EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
+                tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));                    
+               	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);        
+               	 
+             // 组合现金流水
+               PtlCashPositionFlowDto ptlCashPositionFlowDto = new PtlCashPositionFlowDto();
+               ptlCashPositionFlowDto.setPortfolioId(stlPayOrdersDto.getPortfolioId()); 
+               ptlCashPositionFlowDto.setCdate(stlPayOrdersDto.getSettleDate());
+               ptlCashPositionFlowDto.setOrderId(orderDto.getOrderId());
+               basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);     
+            }  
+        }
+        
+   }
 
     private void doInsertRevoke(FinProductPayInt003Dto entity) {
         // 根据汇总交易编号查询金融产品交易汇总
@@ -797,6 +932,7 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
 
             // 重新insert
             this.insertBussFlowData(entity);
+            this.handleCashSecFlowData(entity, false);            
         }
     }
 
@@ -815,7 +951,7 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
     public void doComplete(FinProductPayInt003Dto entity, OperationType operationType) {
         if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
             this.prepareEntity(entity);
-
+            entity.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
             // 7.1删除原业务流程表数据
             // this.doDelete(entity.getWorkflowId());
 
@@ -906,7 +1042,7 @@ public class FinProductPayInt003Service extends BaseService<FinProductPayInt003D
         }
         else {
             this.doCompleteRevoke(entity);
-
+            entity.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
             // 7.3写入[实际]的组合持仓流水及现金流水
             this.handleCashSecFlowData(entity, true);
         }

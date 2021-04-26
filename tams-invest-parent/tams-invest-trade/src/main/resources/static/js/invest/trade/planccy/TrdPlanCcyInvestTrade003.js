@@ -33,11 +33,11 @@ $(function() {
 	        object.operateType = operateType;
 	        object.tradeId = $('#tradeId').val();
 	        object.bTradeId = $('#bTradeId').val();
-	        if($('#ps').val() == ps_T05){
-	        	object.prinAmt = $('#tradeAmtHid2').val();
-	        }else{
+	        // if($('#ps').val() == ps_T05){
+	        // 	object.prinAmt = $('#tradeAmtHid2').val();
+	        // }else{
 	        	object.prinAmt = $('#tradeAmtHid').val();
-	        }
+	        // }
 	        
 	        if(FileCommon) {
 	            if(pageModel == PAGE_MODEL_REFERENCE) {
@@ -52,7 +52,6 @@ $(function() {
 	                });
 	            }
 	        }
-	        debugger;
 	        Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade003/check', object, function(result) {
 	        	Joyin.ajaxJson(basePath + 'invest/trade/planccy/TrdPlanCcyInvestTrade003/checkAuthorization', object, function(result1) {
 	        		Joyin.confirm(result.data, function() {
@@ -223,19 +222,20 @@ $(function() {
 	            //var channelFee = $('#channelFee').val();
                 //feeAmtPay = JoyinMath.doAdd(feeAmtPay, channelFee);   
                 // 查看页面重复减费用 yjm start 20190909
+                debugger;
                 if(feeAmtPay && tradeAmt && unitCprice){
                     if (pageModel != PAGE_MODEL_REFERENCE) {
                         $('#shareAmt').val((tradeAmt - feeAmtPay) / unitCprice).trigger('blur');
-                        $('#tradeAmtHid2').val(tradeAmt - feeAmtPay);
-                    }else {
+                        // $('#tradeAmtHid2').val(tradeAmt - feeAmtPay);
+                    }/*else {
                         //$('#shareAmt').val(tradeAmt / unitCprice).trigger('blur');
                         $('#tradeAmtHid2').val(tradeAmt);
-                    }
+                    }*/
                 }else if(!feeAmtPay){
                     if (pageModel != PAGE_MODEL_REFERENCE) {
                         $('#tradeAmt').val(tradeAmt).change().trigger('blur');
                     }
-                    $('#tradeAmtHid2').val(tradeAmt);
+                    // $('#tradeAmtHid2').val(tradeAmt);
                 }
                 // 查看页面重复减费用 yjm end 20190909
                  
@@ -260,8 +260,10 @@ $(function() {
             var unitCprice = $('#unitCprice').val();
             var shareAmt = $('#shareAmt').val();
             if(unitCprice && shareAmt){
-                $('#tradeAmt').val(unitCprice*shareAmt).trigger('blur');
-                $('#tradeAmtHid').val(unitCprice*shareAmt);
+                if($('#ps').val()==ps_T19){
+                    $('#tradeAmt').val(unitCprice*shareAmt).trigger('blur');
+                    $('#tradeAmtHid').val(unitCprice*shareAmt);
+                }
                 $('#carryAmt').change();
             }
         });

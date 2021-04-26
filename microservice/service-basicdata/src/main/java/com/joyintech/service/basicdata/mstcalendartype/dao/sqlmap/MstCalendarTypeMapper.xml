@@ -271,4 +271,28 @@
 		SELECT CALENDAR_ID code,CALENDAR_NAME name,CALENDAR_NAME shortName,CALENDAR_ID hidCode FROM MST_CALENDAR_INFO
 		where IS_TRADE_CALENDAR  = #{isTradeCalendar}
 </select>
+
+<!-- TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 start-->
+	<select id="calendarIdIsUsed" resultType="java.lang.Integer" >                
+           select COUNT(1) FROM(
+             select distinct calendarId from(
+                 select distinct ftp.CALENDAR_ID calendarId
+                 from FIN_TRADE_PRODUCT ftp
+                 inner join TRD_PRODUCT_DEAL tpd on (case when tpd.IS_OUT_TRADE='N'
+                 and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = ftp.FINPROD_ID
+                 and tpd.IS_CANCEL = 'N'
+                 where ftp.CALENDAR_ID != 'null'
+                 union all
+                 select distinct fp.CALENDAR_ID calendarId
+                from FIN_PRODUCT fp
+                  )
+                 ) C 
+                 <if test="calendarIdList !=null and calendarIdList.size() > 0 ">
+      	        WHERE C.calendarId  in
+      	         <foreach collection="calendarIdList" item="item" open="( " close=" )" separator=",">
+                    #{item}
+                </foreach>
+   	            </if>
+    </select>
+    <!-- TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 end -->
 </mapper>   

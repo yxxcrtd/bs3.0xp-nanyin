@@ -21,6 +21,7 @@
                         <input type="hidden" id="finmdate" name="finmdate" >
                         <input type="hidden" id="isRight" name="isRight" >
                         <input type="hidden" id="profitType" name="profitType" >
+                        <input type="hidden" id="pageId" name="pageId" th:value="${pageId}" />
                         <div class="pro-module-item">
                             <div class="layui-form-item">
                                 <div class="form-inline-wrap">
@@ -72,6 +73,7 @@
                                                 class="layui-input form-input input-select" allowClear="true"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                                 required="required" data-formatoption="true"
+                                                parentIds="pageId,tradeMarketMode"
                                                 data-th-data-url="@{/invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getfinprodIdForAdd}"
                                                 data-th-initvalue="${entity?.finprodMarketId}">
                                         </select>

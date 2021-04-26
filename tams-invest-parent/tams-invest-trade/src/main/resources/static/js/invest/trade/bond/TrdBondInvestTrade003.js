@@ -10,7 +10,9 @@ var table;
         channelFee:0,
         stampDutyAmt:0,
         exchangeAmt:0,
-        stampDutyIsPayWithTrade:'Y'
+        stampDutyIsPayWithTrade:'Y',
+        settleIsPayWithTrade:'Y',
+        exchangeIsPayWithTrade:'Y'
     };
     var entrustNum; // 委托时的券面总额
     var entrustPrice; // 委托时的净价
@@ -34,6 +36,10 @@ var table;
     // add by wangguoxian 费用设置 20190807 end
     var stampDutyIsPayWithTrade = $("#stampDutyIsPayWithTrade").val()?$("#stampDutyIsPayWithTrade").val():YES_OR_NO_Y;//印花是否随交易支付，默认为是
     $("#stampDutyIsPayWithTrade").val(stampDutyIsPayWithTrade);
+    var settleIsPayWithTrade = $("#settleIsPayWithTrade").val()?$("#settleIsPayWithTrade").val():YES_OR_NO_Y;//结算费是否随交易支付，默认为是
+    var exchangeIsPayWithTrade = $("#exchangeIsPayWithTrade").val()?$("#exchangeIsPayWithTrade").val():YES_OR_NO_Y;//经手费是否随交易支付，默认为是
+    $("#settleIsPayWithTrade").val(settleIsPayWithTrade);
+    $("#exchangeIsPayWithTrade").val(exchangeIsPayWithTrade);
     var getriskdata = function () {
         var mun=null;
         var object = $.serializeToObject('#submitForm', true);
@@ -453,6 +459,15 @@ var table;
         var tradeMarketMode = $('#tradeMarketMode').val();
         var $tradePlat = $('#tradePlat');
 
+        if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT && $('#tradeMarketMode').val() == SHARES_TRADE_MARKET_02){
+            if ($('#finprodId').val != null && $('#finprodId').val != ''){
+                var data = $('#finprodId').select2('data')[0].object;
+                if (data && data.isIssueAsset == 'Y' && $("#tradeMarketMode").val() == SHARES_TRADE_MARKET_02){
+                    $('#finprodId').val('').trigger("change");
+                }
+            }
+        }
+        
         if (pageModel != PAGE_MODEL_REFERENCE&&!$("#entrustId").val()) {
             var key = tradeMarket + tradeMarketMode;
             switch (key) {
@@ -819,15 +834,19 @@ var table;
             }
              if (isPayWithTrade == YES_OR_NO_Y) {
                  $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#commissionAmt").val(), 2)).trigger('blur');
-                //若结算费不为空
-                if($("#settleAmt").val()){
+             }
+            //若结算费不为空
+            if($("#settleAmt").val()){
+                if (settleIsPayWithTrade == YES_OR_NO_Y) {
                     $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#settleAmt").val(), 2)).trigger('blur');
                 }
-                //若经手费不为空
-                if($("#exchangeAmt").val()){
+            }
+            //若经手费不为空
+            if($("#exchangeAmt").val()){
+                if (exchangeIsPayWithTrade == YES_OR_NO_Y) {
                     $("#tradeAmtAndFee").val(JoyinMath.doAdd($("#tradeAmtAndFee").val(), $("#exchangeAmt").val(), 2)).trigger('blur');
                 }
-             }
+            }
              //内转买入 减去通道费
              if ($("#trdInvestPersonInfo_counterId").val()&&$("#trdInvestPersonInfo_counterId").select2('data')[0].object=='N') {
             	 $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#channelFee").val(), 2)).trigger('blur');
@@ -839,12 +858,16 @@ var table;
             }
             if (isPayWithTrade == YES_OR_NO_Y) {
                 $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#commissionAmt").val(), 2)).trigger('blur');
-                //若结算费不为空
-                if($("#settleAmt").val()){
+            }
+            //若结算费不为空
+            if($("#settleAmt").val()){
+                if (settleIsPayWithTrade == YES_OR_NO_Y) {
                     $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#settleAmt").val(), 2)).trigger('blur');
                 }
-                //若经手费不为空
-                if($("#exchangeAmt").val()){
+            }
+            //若经手费不为空
+            if($("#exchangeAmt").val()){
+                if (exchangeIsPayWithTrade == YES_OR_NO_Y) {
                     $("#tradeAmtAndFee").val(JoyinMath.doMinus($("#tradeAmtAndFee").val(), $("#exchangeAmt").val(), 2)).trigger('blur');
                 }
             }
@@ -1132,10 +1155,10 @@ var table;
                                     if (table.getAllRows()[i].commissionAmt && isPayWithTrade==YES_OR_NO_Y) {
                                         numberTwo = JoyinMath.doAdd(numberTwo, table.getAllRows()[i].commissionAmt, 2);
                                     }
-                                    if (table.getAllRows()[i].settleAmt && isPayWithTrade==YES_OR_NO_Y) {
+                                    if (table.getAllRows()[i].settleAmt && settleIsPayWithTrade==YES_OR_NO_Y) {
                                         numberTwo = JoyinMath.doAdd(numberTwo, table.getAllRows()[i].settleAmt, 2);
                                     }
-                                    if (table.getAllRows()[i].exchangeAmt && isPayWithTrade==YES_OR_NO_Y) {
+                                    if (table.getAllRows()[i].exchangeAmt && exchangeIsPayWithTrade==YES_OR_NO_Y) {
                                         numberTwo = JoyinMath.doAdd(numberTwo, table.getAllRows()[i].exchangeAmt, 2);
                                     }
                                     //印花是否随交易支付
@@ -1149,10 +1172,10 @@ var table;
                                     if (table.getAllRows()[i].commissionAmt && isPayWithTrade==YES_OR_NO_Y) {
                                         numberTwo = JoyinMath.doMinus(numberTwo, table.getAllRows()[i].commissionAmt, 2);
                                     }
-                                    if (table.getAllRows()[i].settleAmt && isPayWithTrade==YES_OR_NO_Y) {
+                                    if (table.getAllRows()[i].settleAmt && settleIsPayWithTrade==YES_OR_NO_Y) {
                                         numberTwo = JoyinMath.doMinus(numberTwo, table.getAllRows()[i].settleAmt, 2);
                                     }
-                                    if (table.getAllRows()[i].exchangeAmt && isPayWithTrade==YES_OR_NO_Y) {
+                                    if (table.getAllRows()[i].exchangeAmt && exchangeIsPayWithTrade==YES_OR_NO_Y) {
                                         numberTwo = JoyinMath.doMinus(numberTwo, table.getAllRows()[i].exchangeAmt, 2);
                                     }
                                     //印花是否随交易支付
@@ -1299,12 +1322,32 @@ var table;
                         //加入结算费经手费
                         if(v.feeType==FEE_TYPE_07&&v.feeAmt){
                             cntS++;
-                            $("#settleAmt").val(v.feeAmt).trigger("blur");
+                            settleIsPayWithTrade = v.isPayWithTrade;
+                            $("#settleIsPayWithTrade").val(settleIsPayWithTrade);
+                            var feeAmt = v.feeAmt;
+                            if (feeAmt) {
+                                $("#settleAmt").val(v.feeAmt).prop('disabled', false).trigger("blur").trigger("change");
+                            }
+                            changeTradeAmtAndFee();
                         }
-                        if(v.feeType==FEE_TYPE_01&&v.feeAmt){
+                        // if(v.feeType==FEE_TYPE_07&&v.feeAmt){
+                        //     cntS++;
+                        //     $("#settleAmt").val(v.feeAmt).trigger("blur");
+                        // }
+                        if(v.feeType==FEE_TYPE_07&&v.feeAmt){
                             cntM++;
-                            $("#exchangeAmt").val(v.feeAmt).trigger("blur");
+                            exchangeIsPayWithTrade = v.isPayWithTrade;
+                            $("#exchangeIsPayWithTrade").val(exchangeIsPayWithTrade);
+                            var feeAmt = v.feeAmt;
+                            if (feeAmt) {
+                                $("#exchangeAmt").val(v.feeAmt).prop('disabled', false).trigger("blur").trigger("change");
+                            }
+                            changeTradeAmtAndFee();
                         }
+                        // if(v.feeType==FEE_TYPE_01&&v.feeAmt){
+                        //     cntM++;
+                        //     $("#exchangeAmt").val(v.feeAmt).trigger("blur");
+                        // }
                         extracted();//平均分配方式
                         // update by zhanggenglin 费用的计算保持与单组合一致 20290109 end
                     });
@@ -1384,7 +1427,9 @@ var table;
             commissionAmt:0,
             channelFee:0,
             stampDutyAmt:0,
-            stampDutyIsPayWithTrade:'Y'
+            stampDutyIsPayWithTrade:'Y',
+            settleIsPayWithTrade:'Y',
+            exchangeIsPayWithTrade:'Y'
         };
         var paramObj = getCalcParam('02',data);
         if(isOpen){
@@ -1427,16 +1472,28 @@ var table;
                             table.renderRow(data.LAY_TABLE_INDEX, {"settleServiceAmt": isNaN(v.feeAmt)?0:v.feeAmt});
                         }
                         //加入结算费经手费
-                        if(v.feeType==FEE_TYPE_07&&v.feeAmt){
+                        // if(v.feeType==FEE_TYPE_07&&v.feeAmt){
+                        //     cntS++;
+                        //     returnVal.settleAmt = v.feeAmt;
+                        //     table.renderRow(data.LAY_TABLE_INDEX, {"settleAmt": isNaN(v.feeAmt)?0:v.feeAmt});
+                        // }
+                        if (v.feeType == FEE_TYPE_07 && v.feeAmt) {
                             cntS++;
+                            returnVal.settleIsPayWithTrade = v.isPayWithTrade;
                             returnVal.settleAmt = v.feeAmt;
                             table.renderRow(data.LAY_TABLE_INDEX, {"settleAmt": isNaN(v.feeAmt)?0:v.feeAmt});
                         }
-                        if(v.feeType==FEE_TYPE_01&&v.feeAmt){
+                        if (v.feeType == FEE_TYPE_01 && v.feeAmt) {
                             cntM++;
+                            returnVal.exchangeIsPayWithTrade = v.isPayWithTrade;
                             returnVal.exchangeAmt = v.feeAmt;
                             table.renderRow(data.LAY_TABLE_INDEX, {"exchangeAmt": isNaN(v.feeAmt)?0:v.feeAmt});
                         }
+                        // if(v.feeType==FEE_TYPE_01&&v.feeAmt){
+                        //     cntM++;
+                        //     returnVal.exchangeAmt = v.feeAmt;
+                        //     table.renderRow(data.LAY_TABLE_INDEX, {"exchangeAmt": isNaN(v.feeAmt)?0:v.feeAmt});
+                        // }
                     });
                     // 按照最新费用规则计算相关费用无结果则清空相关费用
                     if (cntP == 0) {
@@ -3578,11 +3635,11 @@ var table;
                                                numberTwo = JoyinMath.doAdd(numberTwo, data.commissionAmt, 2);
                                            }
                                            //结算费
-                                           if (data.settleAmt && returnVal.isPayWithTrade=='Y') {
+                                           if (data.settleAmt && returnVal.settleIsPayWithTrade=='Y') {
                                                numberTwo = JoyinMath.doAdd(numberTwo, data.settleAmt, 2);
                                            }
                                            //经手费
-                                           if (data.exchangeAmt && returnVal.isPayWithTrade=='Y') {
+                                           if (data.exchangeAmt && returnVal.exchangeIsPayWithTrade=='Y') {
                                                numberTwo = JoyinMath.doAdd(numberTwo, data.exchangeAmt, 2);
                                            }
 
@@ -3602,11 +3659,11 @@ var table;
                                                numberTwo = JoyinMath.doMinus(numberTwo, data.stampDutyAmt, 2);
                                            }
                                            //结算费
-                                           if (data.settleAmt && returnVal.isPayWithTrade=='Y') {
+                                           if (data.settleAmt && returnVal.settleIsPayWithTrade=='Y') {
                                                numberTwo = JoyinMath.doMinus(numberTwo, data.settleAmt, 2);
                                            }
                                            //经手费
-                                           if (data.exchangeAmt && returnVal.isPayWithTrade=='Y') {
+                                           if (data.exchangeAmt && returnVal.exchangeIsPayWithTrade=='Y') {
                                                numberTwo = JoyinMath.doMinus(numberTwo, data.exchangeAmt, 2);
                                            }
                                            if (($("#trdInvestPersonInfo_counterId").val()&&$("#trdInvestPersonInfo_counterId").select2('data')[0].object=='N')

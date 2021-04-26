@@ -34,18 +34,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class PtlSingleAssetPositionAnalysis001Controller extends BaseController {
     @Autowired
     private PtlSingleAssetPositionAnalysis001Service ptlSingleAssetPositionAnalysis001Service;
+
     @Override
     @RequestMapping(PAGE_INIT)
-    public String init(Model model){
+    public String init(Model model) {
         Date sysDate = DateUtil.platDateFromCache();
         String morenDate = DateUtil.format(sysDate);
         model.addAttribute("sysDate", morenDate);
         model.addAttribute("AUTHORITY_TYPE", CacheUtil.getSysParam("AUTHORITY_TYPE"));
         return super.init(model);
     }
-    
+
     /**
      * 画面查询方法
+     *
      * @return 查询结果集
      * @throws Exception 异常
      */
@@ -53,12 +55,14 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
     @RequestMapping("findPage")
     public Page<PtlSingleAssetPositionAnalysis001Dto> selectAll()
             throws Exception {
-        Map<String,Object> map = RequestUtil.getPageParam();
+        Map<String, Object> map = RequestUtil.getPageParam();
         Page<PtlSingleAssetPositionAnalysis001Dto> page = ptlSingleAssetPositionAnalysis001Service.selectForPage(map);
         return page;
     }
+
     /**
      * 画面查询方法
+     *
      * @return 查询结果集
      * @throws Exception 异常
      */
@@ -66,10 +70,11 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
     @RequestMapping("findList")
     public List<PtlSingleAssetPositionAnalysis001Dto> selectAllList()
             throws Exception {
-        Map<String,Object> map = RequestUtil.getPageParam();
+        Map<String, Object> map = RequestUtil.getPageParam();
         List<PtlSingleAssetPositionAnalysis001Dto> list = ptlSingleAssetPositionAnalysis001Service.selectForList(map);
         return list;
     }
+
     /**
      * 资产代码的下拉框事件
      *
@@ -79,8 +84,8 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketId")
-    public Page<SelectOptionDto> getFinprodMarketId(){
-        Map<String,Object> map = RequestUtil.getPageParam();
+    public Page<SelectOptionDto> getFinprodMarketId() {
+        Map<String, Object> map = RequestUtil.getPageParam();
         Page<SelectOptionDto> temp = ptlSingleAssetPositionAnalysis001Service.getFinprodMarketId(map);
         return temp;
     }
@@ -106,7 +111,7 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
 //                                 + SystemGlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 //            outFile, true);
 //    }
-    
+
     /**
      * 导出信息excel
      *
@@ -120,6 +125,7 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
     public ResponseEntity<byte[]> export()
             throws Exception {
         return ptlSingleAssetPositionAnalysis001Service.export(this.getPageId(),
-                RequestUtil.getParameters(getRequest()));
+                //TISHKBS-2036 【单一资产持仓分析】：当前导出excel的日期是以平台日为准，请优化为已查询日为准 wyn 2021/4/25
+                RequestUtil.getParameters(getRequest()),"searchDate");
     }
 }

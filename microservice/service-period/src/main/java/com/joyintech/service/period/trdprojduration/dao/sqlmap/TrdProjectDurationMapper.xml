@@ -495,6 +495,7 @@
         <result column="channelFee" property="channelFee"/>
         <result column="COLLECT_TYPE" property="collectType"/>
         <result column="channel" property="channel"/>
+        <result column="REMARK" property="remark"/>
         
         <association property="finAssetInfo" select="findAssetInfo"
                      column="{interestPayDay=interestPayDay,finprodId=finprodId,CASH_TYPE_1_02=CASH_TYPE_1_02,CASH_TYPE_2_C02=CASH_TYPE_2_C02,statusValid=statusValid}"/>
@@ -599,7 +600,7 @@
                 TOTAL.PORTFOLIO_ID,
                 T2.CASH_ID,
                 T2.CASH_TYPE,
-                T3.CALC_RULE,
+                T3.PAY_CYCLE as CALC_RULE,
                 CASE WHEN NVL(pp1.PARENT_PORTFOLIO_ID,'null') = 'null'
                 THEN T1.PRIN_AMT
                 ELSE NULL
@@ -1154,7 +1155,7 @@
             AND t3.mdate =TO_DATE(#{mDate}, 'yyyy-mm-dd')
         </if>      
         <if test="busiCode == null or  busiCode == ''">
-            SELECT DISTINCT T4.RANGE_YIELD * 100 yield
+           select yield from(SELECT T4.RANGE_YIELD * 100 yield,t4.vdate
               FROM PTL_SEC_POSITION T1
              INNER JOIN FIN_CASH_PLAN T2
                 ON T1.FINPROD_ID = T2.FINPROD_ID
@@ -1166,8 +1167,9 @@
                 ON T4.CASH_ID = T2.CASH_ID
              WHERE  T1.FINPROD_ID = #{finprodId}
                AND T3.CASH_TYPE_2 = #{C02}
-               AND T4.vdate = TO_DATE(#{vDate}, 'yyyy-mm-dd')
-               AND T4.mdate =TO_DATE(#{mDate}, 'yyyy-mm-dd')
+               AND T4.vdate <![CDATA[<=]]> TO_DATE(#{vDate}, 'yyyy-mm-dd')
+               <!--AND T4.mdate =TO_DATE(#{mDate}, 'yyyy-mm-dd')-->
+               order by T4.vdate desc)where ROWNUM = 1
         </if>         
     </select>
     <!-- 查询区间净投资收益率 yjm end 20190822-->
@@ -1263,4 +1265,27 @@
         <!--add by yujinfa for 添加流程中的业务编号显示 End-->
     </select>
     <!--add by liupengfei for 多级法人改造E-->
+    <select id="isPayIntDate" resultType="java.lang.Integer">
+        select count(1)  from fin_cash_plan plan
+        left join fin_product fp
+        on plan.finprod_id=fp.finprod_id
+        inner join (
+        select distinct p.finprod_id from fin_cash_plan p
+        where p.is_pay_int='N'
+        )payplan
+        on plan.finprod_id=payplan.finprod_id
+        where fp.finprod_market_id =#{finprodId}
+        and plan.cash_type in ('01','04') and plan.pay_date=to_date(#{settleDate},'yyyy-MM-dd')
+    </select>
+    <select id="isNoPayInt" resultType="java.lang.Integer">
+        select count(1)  from fin_cash_plan plan
+        left join fin_product fp
+        on plan.finprod_id=fp.finprod_id
+        inner join (
+        select distinct p.finprod_id from fin_cash_plan p
+        where p.is_pay_int='N'
+        )payplan
+        on plan.finprod_id=payplan.finprod_id
+        where fp.finprod_market_id =#{finprodId}
+    </select>
 </mapper>

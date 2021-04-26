@@ -533,119 +533,6 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
     }
 
     /**
-     * @description: 2.写入类型为[实际]的组合持仓流水与组合现金流水
-     * @param: [BaseTradeProductDealDtoList, 持仓类型]
-     * @return: void
-     * @date: 2018/9/29
-     */
-    @Override
-    public Boolean insertPosition(FinProductTradeDto finProductTradeDto) {
-        DictCodeList 持仓类型 = null;
-        boolean needNegative = false;
-        if (DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
-            持仓类型 = DictCodeList.持仓类型_实际;
-            needNegative = true;
-        }
-        else if (DictCodeListExt1.交易流程状态_流程中.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
-            持仓类型 = DictCodeList.持仓类型_可用;
-            needNegative = false;
-        }
-        else if (DictCodeListExt1.交易流程状态_有效.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
-            持仓类型 = DictCodeList.持仓类型_实际;
-            needNegative = false;
-        }
-        if (持仓类型 == null) {
-            return false;
-        }
-
-        List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
-        List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();
-        for (BaseTradeProductDealDto baseTradeProductDealDto : finProductTradeDto.getBaseTradeProductDealDtos()) {
-            PortfolioPositionsFlowInputDto inputDto = new PortfolioPositionsFlowInputDto();
-            inputDto.setPositionType(持仓类型.getValue());
-            inputDto.setTrdProductDeal(baseTradeProductDealDto.getTrdProductDeal());
-//            增加附属表dto
-            inputDto.setTrdFinProductBarterList(baseTradeProductDealDto.getTrdFinProductBarterList());
-            inputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
-            inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
-            inputDto.setAssetType2(finProductTradeDto.getAssetType2());
-            List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);
-            //买断式回购持仓特殊处理
-            for (PtlSecPositionFlowDto dto : ptlSecPositionFlowDtoss){
-                if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
-                        && DictCodeList.交易方向_买入.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())
-                            && (DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2())
-                            || DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2()))){
-                    dto.setAmount(baseTradeProductDealDto.getSecAmount());           
-                }   
-            }
-            ptlSecPositionFlows.addAll(ptlSecPositionFlowDtoss);
-
-            if (baseTradeProductDealDto.getStlPayOrdersList() != null && !baseTradeProductDealDto.getStlPayOrdersList().isEmpty()) {
-                PortfolioCashPositionsFlowInputDto cashInputDto = new PortfolioCashPositionsFlowInputDto();
-                cashInputDto.setPositionType(持仓类型.getValue());
-                cashInputDto.setTrdProductDeal(baseTradeProductDealDto.getTrdProductDeal());
-                cashInputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
-                cashInputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
-                cashInputDto.setAssetType2(finProductTradeDto.getAssetType2());
-                cashInputDto.setStlPayOrders(baseTradeProductDealDto.getStlPayOrdersList());
-                cashInputDto.setIeFlag(finProductTradeDto.getIeFlag());
-                List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);
-                ptlCashPositionFlows.addAll(resultList);
-            }
-            //        现金与持仓执行共同
-            if(baseEtrCashPositionCommService != null && !finProductTradeDto.isNeedExecuteEtrPosition()){
-                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 start 
-                if(finProductTradeDto.getBussRepoSec() != null){
-                    baseTradeProductDealDto.setBussRepoSec(finProductTradeDto.getBussRepoSec());
-                }
-                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 end 
-                baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
-                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
-            }
-        }
-        if (needNegative) {
-            if (ptlCashPositionFlows != null && !ptlCashPositionFlows.isEmpty()) {
-                for (PtlCashPositionFlowDto ptlCashPosition : ptlCashPositionFlows) {
-                    if (ptlCashPosition.getAmount() != null) {
-                        ptlCashPosition.setAmount(ptlCashPosition.getAmount().negate());
-                    }
-                    if (ptlCashPosition.getOrderId().lastIndexOf('R') != ptlCashPosition.getOrderId().length() - 1) {
-                        ptlCashPosition.setOrderId(ptlCashPosition.getOrderId() + "R");
-                    }
-                }
-            }
-            if (ptlSecPositionFlows != null && !ptlSecPositionFlows.isEmpty()) {
-                for (PtlSecPositionFlowDto ptlSecPosition : ptlSecPositionFlows) {
-                    if (ptlSecPosition.getAmount() != null) {
-                        ptlSecPosition.setAmount(ptlSecPosition.getAmount().negate());
-                    }
-                    if (ptlSecPosition.getTradeId().lastIndexOf('R') != ptlSecPosition.getTradeId().length() - 1) {
-                        ptlSecPosition.setTradeId(ptlSecPosition.getTradeId() + "R");
-                    }
-                }
-            }
-        }
-        PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
-        ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
-        ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
-        //不是逾期交易，更新持仓流水
-        if(!(StringUtil.isNotEmpty(finProductTradeDto.getIsOverdueDeal())&&StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsOverdueDeal()))){
-        	if (ptlPositionHoldDto.getPtlSecPositionFlows() != null && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
-                for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
-                    basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
-                }
-            }
-        }
-        if (ptlPositionHoldDto.getPtlCashPositionFlows() != null && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
-            for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
-                basePtlCashPositionInfoService.insertCashPositionFlow(ptlCashPositionFlow);
-            }
-        }
-        return Boolean.TRUE;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -729,6 +616,131 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             }
         }
         return new CommonResult(CommonResult.SUCCED, "处理完成");
+    }
+
+    /**
+     * @description: 2.写入类型为[实际]的组合持仓流水与组合现金流水
+     * @param: [BaseTradeProductDealDtoList, 持仓类型]
+     * @return: void
+     * @date: 2018/9/29
+     */
+    @Override
+    public Boolean insertPosition(FinProductTradeDto finProductTradeDto) {
+        DictCodeList 持仓类型 = null;
+        boolean needNegative = false;
+        if (DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
+            持仓类型 = DictCodeList.持仓类型_实际;
+            needNegative = true;
+        }
+        else if (DictCodeListExt1.交易流程状态_流程中.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
+            持仓类型 = DictCodeList.持仓类型_可用;
+            needNegative = false;
+        }
+        else if (DictCodeListExt1.交易流程状态_有效.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
+            持仓类型 = DictCodeList.持仓类型_实际;
+            needNegative = false;
+        }
+        if (持仓类型 == null) {
+            return false;
+        }
+
+        List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
+        List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();
+        for (BaseTradeProductDealDto baseTradeProductDealDto : finProductTradeDto.getBaseTradeProductDealDtos()) {
+            PortfolioPositionsFlowInputDto inputDto = new PortfolioPositionsFlowInputDto();
+            inputDto.setPositionType(持仓类型.getValue());
+            inputDto.setTrdProductDeal(baseTradeProductDealDto.getTrdProductDeal());
+//            增加附属表dto
+            inputDto.setTrdFinProductBarterList(baseTradeProductDealDto.getTrdFinProductBarterList());
+            inputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
+            inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
+            inputDto.setAssetType2(finProductTradeDto.getAssetType2());
+            List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);//组合持仓流水
+            //买断式回购持仓特殊处理
+            for (PtlSecPositionFlowDto dto : ptlSecPositionFlowDtoss){
+                if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
+                        && DictCodeList.交易方向_买入.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())
+                        && (DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2())
+                        || DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2()))){
+                    dto.setAmount(baseTradeProductDealDto.getSecAmount());
+                }
+                // add by jiangpeng on 20210421 start
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                // 融入的资产，还需要根据选择的投资目的，从融入增加的持仓变成该投资目的减少的持仓。
+                // 融出的资产，还需要根据选择的投资目的，从融出减少的持仓变成该投资目的减少的持仓。
+                if (StringUtil.equals(DictCodeList.是否_是.getValue(), baseTradeProductDealDto.getIsCashPay())
+                        && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2())
+                        && DictCodeList.交易方向_到期.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())) {
+                    dto.setAmount(dto.getAmount().negate());
+                }
+                // add by jiangpeng on 20210421 end
+            }
+            ptlSecPositionFlows.addAll(ptlSecPositionFlowDtoss);
+
+            if (baseTradeProductDealDto.getStlPayOrdersList() != null && !baseTradeProductDealDto.getStlPayOrdersList().isEmpty()) {
+                PortfolioCashPositionsFlowInputDto cashInputDto = new PortfolioCashPositionsFlowInputDto();
+                cashInputDto.setPositionType(持仓类型.getValue());
+                cashInputDto.setTrdProductDeal(baseTradeProductDealDto.getTrdProductDeal());
+                cashInputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
+                cashInputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
+                cashInputDto.setAssetType2(finProductTradeDto.getAssetType2());
+                cashInputDto.setStlPayOrders(baseTradeProductDealDto.getStlPayOrdersList());
+                cashInputDto.setIeFlag(finProductTradeDto.getIeFlag());
+                List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);//组合现金流水
+                ptlCashPositionFlows.addAll(resultList);
+            }
+            //        现金与持仓执行共同
+            if(baseEtrCashPositionCommService != null && !finProductTradeDto.isNeedExecuteEtrPosition()){
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 start
+                if(finProductTradeDto.getBussRepoSec() != null){
+                    baseTradeProductDealDto.setBussRepoSec(finProductTradeDto.getBussRepoSec());
+                }
+                //modify by mashukai 20210306 修复债券借贷融入交易后指令可用持仓未改变问题 end
+                baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
+                String 交易流程状态 = finProductTradeDto.getWorkflowStatus();
+                baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal(),交易流程状态);
+            }
+        }
+        if (needNegative) {
+            if (ptlCashPositionFlows != null && !ptlCashPositionFlows.isEmpty()) {
+                for (PtlCashPositionFlowDto ptlCashPosition : ptlCashPositionFlows) {
+                    if (ptlCashPosition.getAmount() != null) {
+                        ptlCashPosition.setAmount(ptlCashPosition.getAmount().negate());
+                    }
+                    if (ptlCashPosition.getOrderId().lastIndexOf('R') != ptlCashPosition.getOrderId().length() - 1) {
+                        ptlCashPosition.setOrderId(ptlCashPosition.getOrderId() + "R");
+                    }
+                }
+            }
+            if (ptlSecPositionFlows != null && !ptlSecPositionFlows.isEmpty()) {
+                for (PtlSecPositionFlowDto ptlSecPosition : ptlSecPositionFlows) {
+                    if (ptlSecPosition.getAmount() != null) {
+                        ptlSecPosition.setAmount(ptlSecPosition.getAmount().negate());
+                    }
+                    if (ptlSecPosition.getTradeId().lastIndexOf('R') != ptlSecPosition.getTradeId().length() - 1) {
+                        ptlSecPosition.setTradeId(ptlSecPosition.getTradeId() + "R");
+                    }
+                }
+            }
+        }
+        PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
+        ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
+        ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
+        //不是逾期交易，更新组合持仓流水
+        if(!(StringUtil.isNotEmpty(finProductTradeDto.getIsOverdueDeal())&&StringUtil.equals(DictCodeList.是否_是.getValue(), finProductTradeDto.getIsOverdueDeal()))){
+            if (ptlPositionHoldDto.getPtlSecPositionFlows() != null && !ptlPositionHoldDto.getPtlSecPositionFlows().isEmpty()) {
+                for (PtlSecPositionFlowDto ptlSecPositionFlow : ptlPositionHoldDto.getPtlSecPositionFlows()) {
+                    basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlow);
+                }
+            }
+        }
+        // 更新组合现金流水
+        if (ptlPositionHoldDto.getPtlCashPositionFlows() != null && !ptlPositionHoldDto.getPtlCashPositionFlows().isEmpty()) {
+            for (PtlCashPositionFlowDto ptlCashPositionFlow : ptlPositionHoldDto.getPtlCashPositionFlows()) {
+                basePtlCashPositionInfoService.insertCashPositionFlow(ptlCashPositionFlow);
+            }
+        }
+        return Boolean.TRUE;
     }
 
     /**

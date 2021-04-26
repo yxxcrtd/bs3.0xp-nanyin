@@ -288,7 +288,7 @@
     }
     
     window.componentLoadCallback = function(isDone, pagePath, params){
-    	$('#etrInvestPersonInfo_trader').attr('multiple',false);
+    	$('#etrInvestPersonInfo_trader').attr('multiple',true);
 //    	$('#etrInvestPersonInfo_counterId').val('').prop('disabled',false).prop('required',true).trigger('change');
     }
 

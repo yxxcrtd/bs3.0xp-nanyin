@@ -151,6 +151,10 @@ public class TrdStandardBond002Controller extends BaseController {
         workFlowParameter.setComment((entity) -> WorkFlowUtil.concatComment("质押券入库"+"_"+getMessage("组合代码") + GlobalConstant.OPEN_PARENTHESIS + entity.getPledgeBondList().get(0).getPortfolioId() + GlobalConstant.CLOSE_PARENTHESIS,
                 getMessage("证券账户") + GlobalConstant.OPEN_PARENTHESIS +  entity.getPledgeBondList().get(0).getSecAcctId() + GlobalConstant.CLOSE_PARENTHESIS,
                 getMessage("债券代码") + GlobalConstant.OPEN_PARENTHESIS + entity.getPledgeBondList().get(0).getBondCode() + GlobalConstant.CLOSE_PARENTHESIS));
+        //当类型为提交时需要提前生成交易编号，从而保存到留痕表
+        if(StringUtil.equals(dto.getOperateType(), "submit")) {
+        	trdStandardBond002Service.setTradeIdList(dto);
+        }
         String msg = trdStandardBond002Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }

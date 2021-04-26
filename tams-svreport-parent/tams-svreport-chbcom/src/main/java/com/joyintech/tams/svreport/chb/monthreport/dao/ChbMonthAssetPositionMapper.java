@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
@@ -78,7 +79,7 @@ public interface ChbMonthAssetPositionMapper {
      * @param cdate
      * @return
      */
-    int deleteByDate(Date cdate);
+    int deleteByDate(ChbMonthPrdPosition para);
     /**
      * 查询剩余现金 产品端
      * @param cdate

@@ -6,6 +6,7 @@
 </head>
 <body>
 <div layout:fragment="content">
+  <div class="pro-module-container" style="margin-bottom: 20px;">
     <form class="layui-form joyin-form-wrap pro-module-form" id="informationForm">
         <div class="pro-module-container">
             <div class="pro-module-wrapper pro-module-base">
@@ -108,6 +109,20 @@
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap cash-type-02">
+                                    <label class="layui-form-label form-label-wrap">理论应计利息</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" id="intAmtTheory" name="intAmtTheory" data-th-value="${entity?.intAmtTheory}" class="layui-input form-input text-number" disabled/>
+                                    </div>
+                                </div>
+                                <div class="form-inline-wrap cash-type-02">
+                                    <label class="layui-form-label form-label-wrap">实收利息总额</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <input type="text" id="intAmtReal" name="intAmtReal" data-th-value="${entity?.intAmtReal}" class="layui-input form-input text-number" maxlength="17"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="form-inline-wrap cash-type-02">
                                     <label class="layui-form-label form-label-wrap" >通道费</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="text" id="channelFee" name="channelFee" data-th-value="${entity?.channelFee}" class="layui-input form-input text-number"  data-textrange="2" maxlength="16" />
@@ -119,8 +134,6 @@
                                         <input type="text" id="fPriceAmt" name="fPriceAmt" data-th-value="${entity?.fPriceAmt}" class="layui-input form-input text-number"  data-textrange="2" maxlength="16" required/>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" >资金到账日</label>
                                     <div class="layui-input-inline input-inline">
@@ -197,6 +210,7 @@
             <a id="TrdBondDuration003_btn_cancel" class="layui-btn layui-btn-sm  btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
         </div>
     </form>
+    </div>
 </div>
 <div layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">

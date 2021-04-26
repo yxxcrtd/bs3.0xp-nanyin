@@ -28,6 +28,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.util.ExcelUtilForRisk;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service.RskValStructure003Service;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service.RskValStructureService;
@@ -58,7 +59,16 @@ public class RskValStructure003Controller extends BaseController {
         String srcColIndex = getParam("srcColIndex");
         if(srcColIndex != null && !"".equals(srcColIndex)){
             dto.setSrcColIndex(srcColIndex);
-            model.addAttribute(GlobalConstant.ENTITY, rskValStructure003Service.select(dto));
+            RskValStructureDto entity =  rskValStructure003Service.select(dto);
+        	if(StringUtil.isNotEmpty(entity.getSrcColIndex())&&entity.getSrcColIndex().matches("^[\\d]+$")) {
+        		try {
+					entity.setSrcColIndex(ExcelUtilForRisk.indexToColumn(Integer.parseInt(dto.getSrcColIndex())));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+            model.addAttribute(GlobalConstant.ENTITY, entity);
         }
         else{
             dto.setId(id);

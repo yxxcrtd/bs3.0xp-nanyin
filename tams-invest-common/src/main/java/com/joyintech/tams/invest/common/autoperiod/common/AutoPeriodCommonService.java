@@ -10,35 +10,17 @@
 
 package com.joyintech.tams.invest.common.autoperiod.common;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.joyintech.tams.common.base.entity.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.PtlTradeMapper;
-import com.joyintech.tams.common.base.dao.StlPayOrdersMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.WflPaTrdFinDealTotalMapper;
-import com.joyintech.tams.common.base.dao.WflStlPayOrdersMapper;
-import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.autoperiod.common.dao.AutoPeriodCommonMapper;
+import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlSecPositionInfoMapper;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTrdDurDbInertDto;
@@ -46,6 +28,13 @@ import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDt
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 自动存续期共通service
@@ -118,6 +107,17 @@ public class AutoPeriodCommonService extends BaseService {
      */
     @Autowired
     private PtlTradeMapper ptlTradeMapper;
+
+    @Autowired
+    private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
+
+    @Autowired
+    private BasePtlSecPositionInfoMapper basePtlSecPositionInfoMapper;
+    /**
+     * 持仓头寸
+     */
+    @Autowired
+    private PtlSecPositionMapper ptlSecPositionMapper;
 
     /**
      * AutoPeriodCommonMapper
@@ -233,6 +233,7 @@ public class AutoPeriodCommonService extends BaseService {
 
         if (baseTrdDurDbInertDto.getTrdFinProductDealTotal() != null) {
             trdFinProductDealTotalMapper.insert(baseTrdDurDbInertDto.getTrdFinProductDealTotal());
+            deletePledgeSecPosition(finProductTradeDto,baseTrdDurDbInertDto.getTrdFinProductDealTotal());
         }
 
         if (!StringUtil.isEmptyList(baseTrdDurDbInertDto.getStlPayOrdersList())) {
@@ -275,6 +276,7 @@ public class AutoPeriodCommonService extends BaseService {
             inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
             inputDto.setTrdProductDealList(baseTrdDurDbInertDto.getTrdProductDealList());
             inputDto.setRepoType(finProductTradeDto.getAssetType2());
+            inputDto.setStlPayOrders(baseTrdDurDbInertDto.getStlPayOrdersList().get(0));
             AllTradeCommonUtil.lendMdateAdd(inputDto);
             if (StringUtil.isNotEmpty(baseTrdDurDbInertDto.getActPortfolioId())
                 && !StringUtil.equals(
@@ -287,8 +289,126 @@ public class AutoPeriodCommonService extends BaseService {
                 AllTradeCommonUtil.lendMdateAdd(inputDto);
             }
         }
-        
 
+    }
+
+    /**
+     * 质押回购交易释放状态
+     * @param finProductTradeDto
+     * @param trdFinProductDealTotal
+     */
+    public void updateRelease(FinProductTradeDto finProductTradeDto,TrdFinProductDealTotal trdFinProductDealTotal){
+        /***质押回购交易释放状态判断*chenlei1**add*start***/
+        if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(trdFinProductDealTotal.getFinprodType2())
+                || DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(trdFinProductDealTotal.getFinprodType2()))
+                &&
+                DictCodeList.回购类型_质押式协议回购.getValue().equals(finProductTradeDto.getAssetType2())
+                &&
+                (DictCodeListExt3.交易方向_投资端_提前终止.getValue().equals(trdFinProductDealTotal.getPs())
+                        || DictCodeList.交易方向_到期 .getValue().equals(trdFinProductDealTotal.getPs()))){
+            Map<String, Object> statusMap = ptlSecPositionFlowMapper.selectTradeReleaseStatus(trdFinProductDealTotal.getFinprodId());
+            String releaseStatus = statusMap == null ? null : (String)statusMap.get("RELEASE_STATUS");
+            String isManualRelease = statusMap == null ? null : (String)statusMap.get("IS_MANUAL_RELEASE");
+            if(!DictCodeList.释放状态_已释放.getValue().equals(releaseStatus)){//IF  未释放
+                ptlSecPositionFlowMapper.updateReleaseStatus(trdFinProductDealTotal.getFinprodId());
+            }
+        }
+        // add by yujiaping 20210205 ZGBSS-489质押式回购交易—银行间正回购交易已做到期交易，质押式回购新建交易添加质押券，查看该债券信息有误start
+    }
+
+    /**
+     * 处理质押券持仓
+     * @param trdFinProductDealTotal
+     */
+    public void deletePledgeSecPosition(FinProductTradeDto finProductTradeDto,TrdFinProductDealTotal trdFinProductDealTotal) {
+        String updateUser = trdFinProductDealTotal.getUpdateUser();
+        Date updateTime = new Date();
+        if(StringUtil.equals(trdFinProductDealTotal.getPs(),DictCodeList.交易方向_到期.getValue())) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("finprodId", trdFinProductDealTotal.getFinprodId());
+            params.put("holdingType", DictCodeList.持仓类型_质押.getValue());
+            List<PtlSecPositionFlow> flows = ptlSecPositionFlowMapper.selectSecFlow(params);
+            if (flows != null && !flows.isEmpty()) {
+                flows.forEach(flow -> {
+                    if (trdFinProductDealTotal.getVdate().equals(flow.getCdate())){
+                        flow.setAmount(flow.getAmount());
+                        flow.setCdate(trdFinProductDealTotal.getSettleDate());
+                        ptlSecPositionFlowMapper.insertSelect04Sec(flow);
+                        params.put("seqNo", IDGenerator.generate());
+                        params.put("mDate", trdFinProductDealTotal.getSettleDate());
+                        params.put("vDate", trdFinProductDealTotal.getVdate());
+                        params.put("finprodId", flow.getFinprodId());
+                        params.put("tradeId", trdFinProductDealTotal.getFinprodId());
+                        params.put("invAim", flow.getInvAim());
+                        //生成持仓流水数据，如果没有生成流水，重复跑当天的批处理会导致持仓数据错误
+                        ptlSecPositionFlowMapper.insertSelect04SecFlowByDate(params);
+                    }
+                });
+            }
+        }
+        //add by yujiaping 20210205 ZGBSS-489质押式回购交易—银行间正回购交易已做到期交易，质押式回购新建交易添加质押券，查看该债券信息有误end
+        if (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(trdFinProductDealTotal.getFinprodType2())
+                && DictCodeList.回购类型_质押式协议回购.getValue().equals(finProductTradeDto.getAssetType2())) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("finprodId", trdFinProductDealTotal.getFinprodId());
+            params.put("holdingType", DictCodeList.持仓类型_质押.getValue());
+            if(StringUtil.equals(trdFinProductDealTotal.getPs(),DictCodeListExt3.交易方向_投资端_提前终止.getValue())){//质押券提前终止是终止日，其他是资金到账日
+                params.put("mDate", trdFinProductDealTotal.getMdate());
+            }
+            else{
+                params.put("mDate", trdFinProductDealTotal.getSettleDate());
+            }
+
+            /**质押式正回购释放判断***chenlei1***add*start*/
+            Map<String, Object> statusMap = ptlSecPositionFlowMapper.selectTradeReleaseStatus(trdFinProductDealTotal.getFinprodId());
+            String releaseStatus = statusMap == null ? null : (String)statusMap.get("RELEASE_STATUS");
+            String isManualRelease = statusMap == null ? null : (String)statusMap.get("IS_MANUAL_RELEASE");
+            if(!DictCodeList.释放状态_已释放.getValue().equals(releaseStatus)){
+                /**质押式正回购释放判断***chenlei1***add*end*/
+                List<PtlSecPositionFlow> flows = ptlSecPositionFlowMapper.selectSecFlow(params);
+                if (flows != null && !flows.isEmpty()) {
+                    flows.forEach(flow -> {
+                        if(StringUtil.equals(trdFinProductDealTotal.getPs(),DictCodeListExt3.交易方向_投资端_提前终止.getValue())){
+                            flow.setCdate(trdFinProductDealTotal.getMdate());
+                        }
+                        else{
+                            flow.setCdate(trdFinProductDealTotal.getSettleDate());
+                        }
+                        flow.setCreateTime(updateTime);
+                        flow.setCreateUser(updateUser);
+                        flow.setUpdateTime(updateTime);
+                        //                   trdRepoDurationMapper.insertSelect04Sec(flow);
+                        flow.setSeqno(IDGenerator.generate());
+                        flow.setTradeId(trdFinProductDealTotal.getFinprodId());
+                        ptlSecPositionFlowMapper.insert(flow);
+                        PtlSecPositionFlowDto secPositionFlowDto =new PtlSecPositionFlowDto();//汇总头寸表
+                        PtlSecPosition secPosition= new PtlSecPosition();
+                        BeanUtil.copyPropertiesIgnoreNull(secPositionFlowDto,flow);
+                        BeanUtil.copyPropertiesIgnoreNull(secPosition,flow);
+                        BigDecimal amount = basePtlSecPositionInfoMapper.selectSecPosition(secPositionFlowDto);
+                        if(amount==null) {//当天没余额
+                            // 如果当天的持仓数据没有，取当天之前最近一天的数据
+                            // 查询最近的那一天
+                            Date maxCdate = basePtlSecPositionInfoMapper.selectSecPositionMaxCdate(secPositionFlowDto);
+                            if (maxCdate == null) {
+                                ptlSecPositionMapper.insertSelective(secPosition);
+                            } else {
+                                PtlSecPositionFlowDto tempPositionFlowDto = new PtlSecPositionFlowDto();
+                                BeanUtils.copyProperties(secPositionFlowDto, tempPositionFlowDto);
+                                tempPositionFlowDto.setCdate(maxCdate);
+                                BigDecimal tempAmount = basePtlSecPositionInfoMapper.selectSecPosition(tempPositionFlowDto);
+                                secPosition.setAmount(ArithmeticUtil.doAdd(secPosition.getAmount(), tempAmount));
+                                ptlSecPositionMapper.insertSelective(secPosition);
+                            }
+                        }
+                        else{//当天有余额
+                            ptlSecPositionFlowMapper.insertSelect04Sec(flow);
+                        }
+
+                    });
+                }
+            }
+        }
     }
 
     /**

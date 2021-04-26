@@ -85,4 +85,6 @@ public interface PtlFundAcctPosiMapper {
 	 * @since 1.0
 	 */
 	List<PtlFundAcctPosiDto> select2(Map<String, Object> pageParam);
+	
+	List<String> getAllCcy(Map<String,Object> pageParam);
 }

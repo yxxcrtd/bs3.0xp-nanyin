@@ -282,4 +282,10 @@ public class EtrInvestBondInfoController {
     public List<SuggestDto> getSecManageAcctId(@RequestBody Map<String, Object> param) {
         return etrInvestBondInfoService.getSecManageAcctId(param);
     }
+    
+    
+    @RequestMapping("getStdPosition")
+    public BigDecimal getStdPosition(@RequestBody Map<String,Object> param) {
+    	return etrInvestBondInfoService.getStdPosition(param);
+    }
 }

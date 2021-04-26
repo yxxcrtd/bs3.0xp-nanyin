@@ -517,7 +517,8 @@
                   T1.COUNTER_ID counterId,
                   T1.TRADER trader,
                   T1.TRADE_AMT tradeAmt,
-                  T1.FINPROD_ID
+                  T1.FINPROD_ID,
+                  T1.REMARK
                 FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
                 LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
                 <!-- 关联交易收息 -->
@@ -569,7 +570,8 @@
                 T1.CCY,
                 T4.BASIS,
                 T1.FINPROD_ID,
-                T6.TYPE_6 bankLendingType
+                T6.TYPE_6 bankLendingType,
+                T1.REMARK
             FROM TRD_PRODUCT_DEAL T1
             left join PA_TRD_PRODUCT_DEAL T5 on T5.TRADE_ID = T1.TRADE_ID
             LEFT JOIN PTL_TRADE T3 ON T1.TRADE_ID = T3.BUSI_NO

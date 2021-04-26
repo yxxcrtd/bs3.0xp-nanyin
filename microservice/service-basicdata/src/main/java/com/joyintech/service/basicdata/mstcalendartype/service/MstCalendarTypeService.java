@@ -207,4 +207,14 @@ public class MstCalendarTypeService extends BaseService<MstCalendarType001Dto>{
     public List<SuggestDto> getTradeCalendarName(Map<String, Object> map) {
         return mstCalendarType001mapper.getTradeCalendarName(map);
     }
+    
+    //TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 start
+    public boolean calendarIdIsUsed(Map<String,Object> param) {       
+        int dataCount = mstCalendarType001mapper.calendarIdIsUsed(param);
+        if (dataCount > 0) {
+            return true;
+        }
+        return false;
+    }
+    //TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 end
 }

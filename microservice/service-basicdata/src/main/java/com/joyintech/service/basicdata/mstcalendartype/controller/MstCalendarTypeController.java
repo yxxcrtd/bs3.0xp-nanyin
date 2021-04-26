@@ -195,4 +195,10 @@ public class MstCalendarTypeController {
     public List<SuggestDto> getTradeCalendarName(@RequestBody Map<String, Object> map) {
         return mstCalendarTypeService.getTradeCalendarName(map);
     }
+    //TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 start
+    @PostMapping("calendarIdIsUsed")
+    public boolean calendarIdIsUsed(@RequestBody Map<String,Object> param){
+        return mstCalendarTypeService.calendarIdIsUsed(param);
+    }
+    //TISHKBS-1919日历类型管理】资产标的或者交易中选择新建的日历类型后，该日历类型依旧不可以被删除  add by yujiaping 20210419 end
 }

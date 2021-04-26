@@ -369,5 +369,18 @@ public interface PaActiveRemind001Mapper {
      * @return
      */
     Map<String, Object> searchCountR9S1(Map<String, Object> param);
-    
+
+    /**
+     查询数据修改 R10S1数量
+     * @param param
+     * @return
+     */
+    Map<String, Object> searchCountR10S1(Map<String, Object> param);
+
+    /**
+     查询数据修改 R10S2数量
+     * @param param
+     * @return
+     */
+    Map<String, Object> searchCountR10S2(Map<String, Object> param);
 }

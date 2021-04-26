@@ -66,6 +66,8 @@
         cols:[
              {field:'finprodId',  title: 'FinBondTargetAsset002.finprodId',visible:false} //金融产品代码
             ,{field:'finprodMarketId',  title: 'FinBondTargetAsset002.finprodId',sortField:'FINPROD_MARKET_ID',width:200}//资产代码
+            ,{field:'isIssueAsset',sortField:"isIssueAsset",title:'FinBondTargetAsset002.isIssueAsset',width:150,visible:false}//是否发行标的
+            ,{field:'isIssueAssetStr',sortField:"isIssueAsset",title:'FinBondTargetAsset002.isIssueAsset',width:150}//是否城投债
             ,{field:'finprodAbbr',  title: 'FinBondTargetAsset002.finprodAbbr',sortField:'FINPROD_ABBR',width:200}//资产简称
             ,{field:'vdate',title:'FinBondTargetAsset002.vdate',type:'date',width:150}//起息日
             ,{field:'mdate',title:'FinBondTargetAsset002.mdate',type:'date',width:150}//到期日
@@ -87,14 +89,14 @@
             ,{field:'spreadRate',title:'FinBondTargetAsset002.spreadRate',sortField:'SPREAD_RATE',type:'number',width:150}//利差
             ,{field:'basisName',title:'FinBondTargetAsset002.basis',sortField:'basis',width:150}//计息基础
             ,{field:'isSecBondName',title:'FinBondTargetAsset002.isSecBond',sortField:'IS_SEC_BOND',width:150}//是否次级债
-            ,{field:'partyType2Name',title:'FinBondTargetAsset002.qyxz',sortField:'partyType2',width:150}//企业性质
+            ,{field:'partyType2Name',title:'FinBondTargetAsset002.qyxz',sortField:'PARTY_TYPE2',width:150}//企业性质
             ,{field:'industryStr',title:'MstMarketInstitutions002.industry',sortField:'industry',width:150}//所属行业
             ,{field:'industry2Str',title:'MstMarketInstitutions002.industrySecondClass',sortField:'industry2',width:150}//行业二级分类
             ,{field:'tradeMarketName',title:'FinBondTargetAsset002.tradeMarket',sortField:'TRADE_MARKET',width:150}//交易场所
             ,{field:'idate',title:'FinBondTargetAsset002.idate',width:150,type:'date'}//发行日
             ,{field:'issuer', visible:false}//发行人
             ,{field:'issuerName',title:'FinBondTargetAsset002.issuer',width:150}//发行人
-            ,{field:'registOrgName',title:'FinBondTargetAsset002.registOrg',width:150}//登记托管机构
+            ,{field:'registOrgName',title:'FinBondTargetAsset002.registOrg',sortField:'REGIST_ORG',width:150}//登记托管机构
             ,{field:'issueAmt',title:'FinBondTargetAsset001.issueAmt',width:150,type:'money',sortField:'ISSUE_AMT'}//发行金额
             ,{field:'payCycleStr',sortField:"payCycle",title:'FinBondTargetAsset002.payCycle',width:150}//付息频率
             ,{field:'ztGradeResultStr',sortable: false,title:'FinBondTargetAsset001.ztGradeResult',width:150}//主体评级结果

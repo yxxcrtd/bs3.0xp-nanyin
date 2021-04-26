@@ -87,7 +87,8 @@ public class ActualTimeAssetService extends BaseService<ActualTimeAssetDto> {
         //组合持仓类型
         List<String> hodingTypeList = Arrays.asList(DictCodeList.持仓类型_实际.getValue(), 
             DictCodeList.持仓类型_融入.getValue(), DictCodeList.持仓类型_融出.getValue(), 
-            DictCodeList.持仓类型_质押.getValue(), DictCodeListExt1.持仓类型_预占用.getValue());
+            DictCodeList.持仓类型_质押.getValue(), DictCodeListExt1.持仓类型_预占用.getValue(),
+            DictCodeListExt1.持仓类型_借贷融入.getValue(), DictCodeListExt1.持仓类型_借贷融出.getValue());
         pageParam.put("hodingTypeList", hodingTypeList);
         //组合持仓流水类型
         List<String> secFlowHodingTypeList =Arrays.asList(DictCodeList.持仓类型_可用.getValue());

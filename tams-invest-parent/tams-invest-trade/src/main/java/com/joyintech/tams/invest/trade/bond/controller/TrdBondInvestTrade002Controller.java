@@ -151,7 +151,14 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(tradeId);
-
+            Map<String, Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("portfolioId", dto.getPortfolioId());
+            paramMap.put("secAcctId", dto.getSecManageAcctId());
+            paramMap.put("tradeDate", DateUtil.format(dto.getTradeDate()));
+            paramMap.put("ccy", dto.getCcy());    
+            Map<String, Object> result = new HashMap<>();
+            result = trdBondInvestTrade002Service.getTradeMarketCash(paramMap);
+            dto.setTradeMarketCash((BigDecimal)result.get("cashS"));
             //转仓交易目的 显示为转仓交易的 交易目的
             if(dto!=null){
                 String turnInvAim = trdBondInvestTrade002Service.getReverseTradeDtoInvAim(tradeId);
@@ -876,5 +883,19 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         Boolean allTradeAmtByPreTradeId = trdBondInvestTrade002Service.isAllTradeAmtByPreTradeId(params);
         ajaxResult.setData(allTradeAmtByPreTradeId);
         return ajaxResult;
+    }
+    
+    /**
+     * 获取交易所资金账户可用现金
+     *
+     * @param 
+     * @return 计算结果
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getTradeMarketCash")
+    @ResponseBody
+    public Map<String, Object> getTradeMarketCash(@RequestBody Map<String, Object> params) {
+        return trdBondInvestTrade002Service.getTradeMarketCash(params);
     }
 }

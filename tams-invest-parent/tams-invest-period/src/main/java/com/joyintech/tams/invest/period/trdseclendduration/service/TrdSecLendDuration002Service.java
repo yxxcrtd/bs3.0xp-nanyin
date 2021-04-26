@@ -1,11 +1,15 @@
 package com.joyintech.tams.invest.period.trdseclendduration.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.invest.common.dto.common.InvestInterfCommDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -109,6 +113,13 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
             else {
                 getInterfInputDto(item, DictCodeListExt1.交易流程状态_有效);
             }
+            // add by jiangpeng on 20210421 start
+            // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+            if (StringUtil.isNotEmpty(entity.getIsCashPay())){
+                item.setIsCashPay(entity.getIsCashPay());
+            }
+            item.setIsSLDeal(DictCodeList.是否_是.getValue());
+            //add by jiangpeng on 20210421 end
         });
 
         baseTradeProductDealCommServiceImpl.execute(tradeDto);
@@ -132,10 +143,42 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
         }
 
         // 写入质押品的组合持仓流水
-        this.ptlPredgeSecPositionFlowLogic(entity, OperationType.REVOKE == operationType?true:false);
+        this.ptlPredgeSecPositionFlowLogic(entity, OperationType.REVOKE == operationType);
 
-        // 写入融入券组合持仓流水
-        this.ptlBlendSecPositionFlowLogic(entity,  OperationType.REVOKE == operationType?true:false);
+        // add by jiangpeng on 20210416 start
+        // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融出到期交易产生的错误
+        if(OperationType.REVOKE == operationType) {
+            // modify by jiangpeng on 20210419 start
+            //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融出到期交易产生的错误
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())) {
+                // 写入融入券指令持仓流水
+                this.etrBlendSecPositionFlowLogic(entity, true);
+            }
+            // modify by jiangpeng on 20210419 end
+            // 写入融入券组合持仓流水
+            this.ptlBlendSecPositionFlowLogic(entity, true);
+            // add by jiangpeng on 20210416 end
+        }else{
+            // modify by jiangpeng on 20210419 start
+            //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融出到期交易产生的错误
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())
+                    && StringUtil.equals(DictCodeList.是否_否.getValue(), entity.getIsCashPay())) {
+                // 写入融入券组合持仓流水(借贷融入/借贷融出->融入/融出)
+                this.ptlBlendSecPositionFlowLogicEffect(entity);
+            }else {
+                // 写入融入券组合持仓流水
+                this.ptlBlendSecPositionFlowLogic(entity, false);
+            }
+            // modify by jiangpeng on 20210419 end
+            // add by jiangpeng on 20210421 start
+            // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+            if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())
+                    && StringUtil.equals(DictCodeList.是否_是.getValue(), entity.getIsCashPay())){
+                // 写入融入券指令持仓流水
+                this.etrBlendSecPositionFlowLogic(entity, false);
+            }
+            // add by jiangpeng on 20210421 end
+        }
 
         // 新建交易撤销数据 或 插入Entity到对应的业务DB中, 并删除流程表中的数据
         entity.setIssuePartyId(CacheUtil.getSysParam("issue_party_id"));//为了登陆交易报送表中登记产品机构用，取系统参数
@@ -242,6 +285,19 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                     tradeDto.getBaseTradeProductDealDtos().forEach(
                             baseTradeProductDealDto1 -> baseTradeProductDealDto1.getTrdProductDealAdd().setPortfolioId(entity.getPortfolioId()));
                 }
+                // add by jiangpeng on 20210416 start
+                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+                // modify by jiangpeng on 20210419 start
+                //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融入到期交易产生的错误
+                if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())
+                        && StringUtil.equals(DictCodeList.是否_否, entity.getIsCashPay())) {
+                    // modify by jiangpeng on 20210419 end
+                    // 写入融入券组合持仓流水
+                    this.ptlBlendSecPositionFlowLogic(entity, false);
+                    // 写入融入券指令持仓流水
+                    this.etrBlendSecPositionFlowLogic(entity, false);
+                }
+                // add by jiangpeng on 20210416 end
             }
         }
     }
@@ -328,7 +384,7 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
         List<PtlSecPositionFlowDto> lstPtlSecPositionFlowDto = new ArrayList<>();
         // 冲销时（撤销）
         // 根据交易编号检索组合持仓流水（持仓类型为实际）
-        List<PtlSecPositionFlow> lstReal = this.selectPtlSecPositionFlow(isNegate?input.getBusiCode():input.getFinprodId(),false);
+        List<PtlSecPositionFlow> lstReal = this.selectPtlSecPositionFlow(isNegate ? input.getBusiCode() : input.getFinprodId(), false);
         if (!StringUtil.isEmptyList(lstReal)) {
             PtlSecPositionFlowDto resultDto;
             for (PtlSecPositionFlow ptlSecPositionFlow : lstReal) {
@@ -341,8 +397,19 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                 resultDto.setFinprodId(ptlSecPositionFlow.getFinprodId());
                 // 分支序号
                 resultDto.setBranch(ptlSecPositionFlow.getBranch());
+                // add by jiangpeng on 20210416 start
+                // ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
                 // 持仓类型
-                resultDto.setHodingType(ptlSecPositionFlow.getHodingType());
+                if (isNegate || StringUtil.equals(DictCodeList.是否_是.getValue(), input.getIsCashPay())) {
+                    resultDto.setHodingType(ptlSecPositionFlow.getHodingType());
+                } else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), input.getFinprodType2())) {
+                    resultDto.setHodingType(DictCodeListExt1.持仓类型_借贷融入.getValue());
+                } else if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), input.getFinprodType2())) {
+                    // modify by jiangpeng on 20210419 ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融出到期交易产生的错误
+//                    resultDto.setHodingType(DictCodeListExt1.持仓类型_借贷融出.getValue());
+                    resultDto.setHodingType(ptlSecPositionFlow.getHodingType());
+                }
+                // add by jiangpeng on 20210416 end
                 // 日期
                 resultDto.setCdate(input.getMdate());
                 // 数量
@@ -364,6 +431,118 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
             ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
             return restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/common/ptlposition/insertPosition",
                 ptlPositionHoldDto, Boolean.class);
+        }
+    }
+
+    /**
+     * 写入融入券的组合持仓流水(持仓类型为借贷融入/借贷融出)
+     *  ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+     * @author jiangpeng
+     * @param input    画面参数Dto
+     */
+    private boolean ptlBlendSecPositionFlowLogicEffect(TrdSecLendDuration002Dto input) {
+        List<PtlSecPositionFlowDto> lstPtlSecPositionFlowDto = new ArrayList<>();
+        // 冲销时（撤销）
+        // 根据交易编号检索组合持仓流水（持仓类型为借贷融入/借贷融出）
+        List<PtlSecPositionFlow> lstReal = this.selectPtlSecPositionFlowForSL(input.getBusiCode());
+        if (!StringUtil.isEmptyList(lstReal)) {
+            PtlSecPositionFlowDto resultDto;
+            for (PtlSecPositionFlow ptlSecPositionFlow : lstReal) {
+                resultDto = new PtlSecPositionFlowDto();
+                // 组合代码
+                resultDto.setPortfolioId(ptlSecPositionFlow.getPortfolioId());
+                // 证券管理账户/通道代码
+                resultDto.setSecAcctId(ptlSecPositionFlow.getSecAcctId());
+                // 金融产品代码
+                resultDto.setFinprodId(ptlSecPositionFlow.getFinprodId());
+                // 分支序号
+                resultDto.setBranch(ptlSecPositionFlow.getBranch());
+                // 持仓类型
+                if (StringUtil.equals(DictCodeListExt1.持仓类型_借贷融入.getValue(), ptlSecPositionFlow.getHodingType())) {
+                    resultDto.setHodingType(DictCodeListExt1.持仓类型_融入.getValue());
+                } else if (StringUtil.equals(DictCodeListExt1.持仓类型_借贷融出.getValue(), ptlSecPositionFlow.getHodingType())) {
+                    resultDto.setHodingType(DictCodeListExt1.持仓类型_融出.getValue());
+                }
+                // 日期
+                resultDto.setCdate(input.getMdate());
+                // 数量
+                resultDto.setAmount(ptlSecPositionFlow.getAmount());
+                // 币种
+                resultDto.setCcy(ptlSecPositionFlow.getCcy());
+                // 交易编号
+                resultDto.setTradeId(input.getBusiCode());
+                // 投资目的
+                resultDto.setInvAim(ptlSecPositionFlow.getInvAim());
+                // 流水号
+//                resultDto.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                lstPtlSecPositionFlowDto.add(resultDto);
+                // 流程中的持仓冲销掉
+                PtlSecPositionFlowDto ptlSecPositionFlowDtoTemp = new PtlSecPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(ptlSecPositionFlowDtoTemp,ptlSecPositionFlow);
+                // 数量取反
+                ptlSecPositionFlowDtoTemp.setAmount(ptlSecPositionFlowDtoTemp.getAmount().negate());
+                // 流水号
+//                ptlSecPositionFlowDtoTemp.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                lstPtlSecPositionFlowDto.add(ptlSecPositionFlowDtoTemp);
+            }
+        }
+        if (StringUtil.isEmptyList(lstPtlSecPositionFlowDto)) {
+            return true;
+        } else {
+            PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
+            ptlPositionHoldDto.setPtlSecPositionFlows(lstPtlSecPositionFlowDto);
+            return restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/common/ptlposition/insertPosition",
+                    ptlPositionHoldDto, Boolean.class);
+        }
+    }
+
+    /**
+     * 写入融入券的指令持仓流水
+     *  ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+     * @author jiangpeng
+     *@param input    画面参数Dto
+     * @param isNegate 是否冲销
+     */
+    private void etrBlendSecPositionFlowLogic(TrdSecLendDuration002Dto input, boolean isNegate) {
+        List<EtrSecPositionFlowDto> lstEtrSecPositionFlowDto = new ArrayList<>();
+        // 冲销时（撤销）
+        // 根据交易编号检索指令持仓流水（持仓类型为E01）
+        List<EtrSecPositionFlow> lstReal = this.selectEtrSecPositionFlow(isNegate ? input.getBusiCode() : input.getFinprodId(), input.getPledgeFinprodId(), false);
+        if (!StringUtil.isEmptyList(lstReal)) {
+            EtrSecPositionFlowDto resultDto;
+            for (EtrSecPositionFlow etrSecPositionFlow : lstReal) {
+                resultDto = new EtrSecPositionFlowDto();
+                // 组合代码
+                resultDto.setPortfolioId(etrSecPositionFlow.getPortfolioId());
+                // 证券管理账户/通道代码
+                resultDto.setSecAcctId(etrSecPositionFlow.getSecAcctId());
+                // 金融产品代码
+                resultDto.setFinprodId(etrSecPositionFlow.getFinprodId());
+                // 分支序号
+                resultDto.setBranch(etrSecPositionFlow.getBranch());
+                // 持仓类型
+                resultDto.setHodingType(etrSecPositionFlow.getHodingType());
+                // 日期
+                resultDto.setCdate(input.getMdate());
+                // 数量
+                resultDto.setAmount(etrSecPositionFlow.getAmount().negate());
+                // 币种
+                resultDto.setCcy(etrSecPositionFlow.getCcy());
+                // 交易编号
+                resultDto.setTradeId(input.getBusiCode());
+                // 投资目的
+                resultDto.setInvAim(etrSecPositionFlow.getInvAim());
+                // 流水号
+                resultDto.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+
+                lstEtrSecPositionFlowDto.add(resultDto);
+            }
+        }
+        if (!StringUtil.isEmptyList(lstEtrSecPositionFlowDto)) {
+            EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+            etrPositionHoldDto.setPtlSecPositionFlows(lstEtrSecPositionFlowDto);
+            etrPositionHoldDto.setPtlCashPositionFlows(new ArrayList<>());
+            EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);//流水入库
         }
     }
 
@@ -487,6 +666,42 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdOutRightRepoTrade/selectPtlSecPositionFlow/" + bizCode,
                 null, PtlSecPositionFlow.class);
         }
+    }
+
+    /**
+     * 写入融入券的组合持仓流水(持仓类型为借贷融入/借贷融出)
+     *  ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+     * @author jiangpeng
+     *
+     * @param bizCode 交易编号
+     * @return List<PtlSecPositionFlowDto>
+     * @see
+     * @since 1.0
+     */
+    public List<PtlSecPositionFlow> selectPtlSecPositionFlowForSL(String bizCode) {
+            return restTemplate.postForList(
+                    ServiceApplication.TRADE_SERVICE_NAME + "/TrdOutRightRepoTrade/selectPtlSecPositionFlowForSL/" + bizCode,
+                    null, PtlSecPositionFlow.class);
+    }
+
+    /**
+     * 根据交易编号检索指令持仓流水（持仓类型为E01）
+     * ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误
+     * @author jiangpeng
+     *
+     * @param bizCode 交易编号
+     * @param finprodId 资产代码
+     * @return List<EtrSecPositionFlow>
+     * @since 1.0
+     */
+    public List<EtrSecPositionFlow> selectEtrSecPositionFlow(String bizCode,String finprodId, boolean isDoComplete) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("bizCode", bizCode);
+        param.put("finprodId", finprodId);
+        List<EtrSecPositionFlow> list = restTemplate.postForList(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/selectEtrSecPositionFlow/", param,
+                EtrSecPositionFlow.class);
+        return list;
     }
 
     public void prepareEntity(TrdSecLendDuration002Dto entity) {

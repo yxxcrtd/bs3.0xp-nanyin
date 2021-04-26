@@ -81,7 +81,7 @@ public class TrdSecOverdueDuration003DtoValidator implements PeriodCommonValidat
             }
 //        未支付本金、转让未支付利息不可超过对应的持有值；
             if((compareTwoNum(dto.getTheoryInt(),dto.getIntAmt())<0)){
-                errorList.add(new ValidMessage("intAmt",getMessage("BUSS_COM_E_0003",
+                errorList.add(new ValidMessage("intAmt",getMessage("BUSS_COM_E_0004",
                         getMessage("TrdSecOverdueDuration003.theoryInt"),getMessage("TrdSecOverdueDuration003.intAmt"))));
             }
             if((compareTwoNum(dto.getTheoryPrin(),dto.getPrinAmt())<0)){

@@ -525,8 +525,12 @@ $(function() {
                     });
 
                     //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 start
+                    var finExercisePlanList = baseFinProductBaseInfoList[0].finExercisePlanList;
+                    if(finExercisePlanList == undefined || finExercisePlanList == null){
+                        finExercisePlanList = result.data.busiFinExercisePlanDto.finExercisePlanList;
+                    }
                     $('#busiFinExercisePlanTable').data('joyintable').reload({
-                        data : baseFinProductBaseInfoList[0].finExercisePlanList,
+                        data : finExercisePlanList,
                         url : null
                     });
                     //add by mashukai 20201124 JNZGEQUAT-57 行权计划理论行权日不对问题 end
@@ -618,7 +622,10 @@ $(function() {
         }
     }
     var init = function(){
-    	
+        if ($('#isAllowModify').val() == 'N'){
+            $('#isIssueAsset').attr('disabled', true).trigger('change');
+        }
+        
        //资产代码拆分
        var finprodMarketId =  $('#finprodMarketId').val();
        if (finprodMarketId){

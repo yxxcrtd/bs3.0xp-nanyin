@@ -10,8 +10,11 @@
 
 package com.joyintech.tams.valuation.batch.investfeepay.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.tams.valuation.batch.common.dealinfoselectcom.dto.FinProductDealInfoComDTO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -50,5 +53,9 @@ public interface InvestFeePayMapper {
     List<String> getTableIdByFee(@Param("ps")String ps,
                                          @Param("finprodType")String finprodType,
                                          @Param("feeType")String feeType);
+    /**
+     * 根据交易信息，查询理论金额
+     */
+    BigDecimal queryTheoryInt(FinProductDealInfoComDTO item);
 
 }

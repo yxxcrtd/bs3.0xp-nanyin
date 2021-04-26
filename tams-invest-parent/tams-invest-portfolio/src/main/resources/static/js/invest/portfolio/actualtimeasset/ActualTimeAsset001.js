@@ -51,6 +51,7 @@ $(function() {
             ,{field:'tradePositionAmount', title: 'ActualTimeAsset001.tradePositionAmount',type:'number', width : 200}//交易可用持仓
             ,{field:'pledgeAmount', title: 'ActualTimeAsset001.pledgeAmount',type:'number', width : 200}//预减持仓
             ,{field:'preReductionAmount', title: 'ActualTimeAsset001.preReductionAmount',type:'number', width : 200}//质押持仓
+           
             
         ]
     });
