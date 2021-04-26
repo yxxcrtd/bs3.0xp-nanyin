@@ -37,18 +37,18 @@
         <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
-    OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
-    CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
-    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE
-  </sql>
+        POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
+        OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM,
+        CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT,
+        TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE
+    </sql>
 
     <sql id="Base_Column_List_inst" >
-    POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
-    OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
-    CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
-    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, INSTITUTION_CODE
-  </sql>
+        POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
+        OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM,
+        CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT,
+        TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, INSTITUTION_CODE
+    </sql>
 
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -65,29 +65,29 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from CHB_MONTH_PRD_POSITION
-    where POSUUID = #{posuuid,jdbcType=CHAR}
-  </delete>
+        delete from CHB_MONTH_PRD_POSITION
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </delete>
     <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
-    insert into CHB_MONTH_PRD_POSITION (POSUUID, PRODID, STARTDATE, 
-      ENDDATE, BOOKDATE, CCY, 
-      RAISEMODE, IVSTORIENTATION, TERMTYPE,
-      OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, 
-      CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
-      CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, 
-      ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
-      TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, 
-      VDATE)
-    values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{startdate,jdbcType=TIMESTAMP}, 
-      #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR}, 
-      #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{termtype,jdbcType=VARCHAR},
-      #{operateMode,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{saleTarget,jdbcType=VARCHAR}, 
-      #{conPrdTraget,jdbcType=VARCHAR}, #{ordIdentified,jdbcType=VARCHAR}, #{dirtyamtsum,jdbcType=DECIMAL}, 
-      #{cleanamtsum,jdbcType=DECIMAL}, #{redeemamt,jdbcType=DECIMAL}, #{terminationamt,jdbcType=DECIMAL}, 
-      #{endamtsumOth,jdbcType=DECIMAL}, #{customeramt,jdbcType=DECIMAL}, #{redeemintamt,jdbcType=DECIMAL}, 
-      #{terminationintamt,jdbcType=DECIMAL}, #{cashamt,jdbcType=DECIMAL}, #{durationflag,jdbcType=VARCHAR}, 
-      #{vdate,jdbcType=TIMESTAMP})
-  </insert>
+        insert into CHB_MONTH_PRD_POSITION (POSUUID, PRODID, STARTDATE,
+        ENDDATE, BOOKDATE, CCY,
+        RAISEMODE, IVSTORIENTATION, TERMTYPE,
+        OPERATE_MODE, PROFIT_TYPE, SALE_TARGET,
+        CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM,
+        CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT,
+        ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT,
+        TERMINATIONINTAMT, CASHAMT, DURATIONFLAG,
+        VDATE)
+        values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{startdate,jdbcType=TIMESTAMP},
+        #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR},
+        #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{termtype,jdbcType=VARCHAR},
+        #{operateMode,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{saleTarget,jdbcType=VARCHAR},
+        #{conPrdTraget,jdbcType=VARCHAR}, #{ordIdentified,jdbcType=VARCHAR}, #{dirtyamtsum,jdbcType=DECIMAL},
+        #{cleanamtsum,jdbcType=DECIMAL}, #{redeemamt,jdbcType=DECIMAL}, #{terminationamt,jdbcType=DECIMAL},
+        #{endamtsumOth,jdbcType=DECIMAL}, #{customeramt,jdbcType=DECIMAL}, #{redeemintamt,jdbcType=DECIMAL},
+        #{terminationintamt,jdbcType=DECIMAL}, #{cashamt,jdbcType=DECIMAL}, #{durationflag,jdbcType=VARCHAR},
+        #{vdate,jdbcType=TIMESTAMP})
+    </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
         insert into CHB_MONTH_PRD_POSITION
         <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -324,33 +324,33 @@
         where POSUUID = #{posuuid,jdbcType=CHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
-    update CHB_MONTH_PRD_POSITION
-    set PRODID = #{prodid,jdbcType=VARCHAR},
-      STARTDATE = #{startdate,jdbcType=TIMESTAMP},
-      ENDDATE = #{enddate,jdbcType=TIMESTAMP},
-      BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
-      CCY = #{ccy,jdbcType=VARCHAR},
-      RAISEMODE = #{raisemode,jdbcType=VARCHAR},
-      IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
-      TERMTYPE = #{termtype,jdbcType=VARCHAR},
-      OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
-      PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
-      SALE_TARGET = #{saleTarget,jdbcType=VARCHAR},
-      CON_PRD_TRAGET = #{conPrdTraget,jdbcType=VARCHAR},
-      ORD_IDENTIFIED = #{ordIdentified,jdbcType=VARCHAR},
-      DIRTYAMTSUM = #{dirtyamtsum,jdbcType=DECIMAL},
-      CLEANAMTSUM = #{cleanamtsum,jdbcType=DECIMAL},
-      REDEEMAMT = #{redeemamt,jdbcType=DECIMAL},
-      TERMINATIONAMT = #{terminationamt,jdbcType=DECIMAL},
-      ENDAMTSUM_OTH = #{endamtsumOth,jdbcType=DECIMAL},
-      CUSTOMERAMT = #{customeramt,jdbcType=DECIMAL},
-      REDEEMINTAMT = #{redeemintamt,jdbcType=DECIMAL},
-      TERMINATIONINTAMT = #{terminationintamt,jdbcType=DECIMAL},
-      CASHAMT = #{cashamt,jdbcType=DECIMAL},
-      DURATIONFLAG = #{durationflag,jdbcType=VARCHAR},
-      VDATE = #{vdate,jdbcType=TIMESTAMP}
-    where POSUUID = #{posuuid,jdbcType=CHAR}
-  </update>
+        update CHB_MONTH_PRD_POSITION
+        set PRODID = #{prodid,jdbcType=VARCHAR},
+        STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+        ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+        BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
+        CCY = #{ccy,jdbcType=VARCHAR},
+        RAISEMODE = #{raisemode,jdbcType=VARCHAR},
+        IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+        TERMTYPE = #{termtype,jdbcType=VARCHAR},
+        OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+        PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+        SALE_TARGET = #{saleTarget,jdbcType=VARCHAR},
+        CON_PRD_TRAGET = #{conPrdTraget,jdbcType=VARCHAR},
+        ORD_IDENTIFIED = #{ordIdentified,jdbcType=VARCHAR},
+        DIRTYAMTSUM = #{dirtyamtsum,jdbcType=DECIMAL},
+        CLEANAMTSUM = #{cleanamtsum,jdbcType=DECIMAL},
+        REDEEMAMT = #{redeemamt,jdbcType=DECIMAL},
+        TERMINATIONAMT = #{terminationamt,jdbcType=DECIMAL},
+        ENDAMTSUM_OTH = #{endamtsumOth,jdbcType=DECIMAL},
+        CUSTOMERAMT = #{customeramt,jdbcType=DECIMAL},
+        REDEEMINTAMT = #{redeemintamt,jdbcType=DECIMAL},
+        TERMINATIONINTAMT = #{terminationintamt,jdbcType=DECIMAL},
+        CASHAMT = #{cashamt,jdbcType=DECIMAL},
+        DURATIONFLAG = #{durationflag,jdbcType=VARCHAR},
+        VDATE = #{vdate,jdbcType=TIMESTAMP}
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </update>
 
     <select id="select" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
         select
@@ -411,9 +411,9 @@
         pd as(
         select DISTINCT info.prod_id,
         case info.ISSUING_STATUS when '01' then (
-             case when info.vdate<![CDATA[<=]]>#{enddate,jdbcType=DATE}  then IF(ISNULL(deal.prod_id),'02','01')
-                     else '03'  end)
-             else '03'  end DURATIONFLAG
+        case when info.vdate<![CDATA[<=]]>#{enddate,jdbcType=DATE}  then IF(ISNULL(deal.prod_id),'02','01')
+        else '03'  end)
+        else '03'  end DURATIONFLAG
         from CHB_PRD_BASEINFO info
         left join chb_prd_deal deal
         on IFNULL(deal.fprod_id,deal.prod_id)=info.prod_id and deal.TRADE_TYPE='16' and  deal.SETTDATE_DATE <![CDATA[<=]]>#{enddate,jdbcType=DATE}
@@ -440,7 +440,7 @@
         '01' end)
         end openduration
         ,info.PROFIT_TYPE
-        ,decode(info.EXC_FIN_SECTOR,'01','04',info.SALETARGET) saletarget
+        ,(case info.EXC_FIN_SECTOR when '01' then '04' else info.SALETARGET end) saletarget
         ,info.CON_PRD_TRAGET
         ,pd.DURATIONFLAG
         ,info.vdate
@@ -450,6 +450,7 @@
         ,IFNULL(val.prod_value,1) prod_value
         ,IFNULL(val.CCY,'CNY') prod_value_ccy
         from chb_prd_baseinfo info
+
         left join
         (
         select prod_id,ccy,prod_value from (
@@ -457,7 +458,7 @@
         my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
         where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
         AND STATUS IN ('E','M')
-        ) where my_rank=1
+        )as t where my_rank=1
         )val
         on IFNULL (info.fprod_id,info.prod_id)=val.prod_id
         left join pd on info.prod_id=pd.prod_id
@@ -529,13 +530,16 @@
         ,d.DEPT_CODE
         ,d.DATA_SOURCE
         from chb_prd_deal d
-        left join
-        chb_type_mapping_ex m
+
+        left join chb_type_mapping_ex m
         on d.CUSTOMER_TYPE2=m.srcfield1
         and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
+
         left join chb_prd_baseinfo i
-        on IFNULL(d.fprod_id,d.prod_id)=IFNULL(i.fprod_id,i.prod_id) and i.status !='D'
+        on IFNULL(d.fprod_id,d.prod_id)=IFNULL(i.fprod_id,i.prod_id)
+        and i.status !='D'
         and i.fprod_id is null
+
         where d.status !='D'
         and (d.BUY_PLACE not in('210200','330200','350200','370200','440300') or d.BUY_PLACE is null)
         and d.TRADE_PRINCE>0
@@ -577,7 +581,8 @@
         on d.CUSTOMER_TYPE2=m.srcfield1
         and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
         left join chb_prd_baseinfo i
-        on IFNULL(d.fprod_id,d.prod_id)=IFNULL(i.fprod_id,i.prod_id) and i.status='E'
+        on IFNULL(d.fprod_id,d.prod_id)=IFNULL(i.fprod_id,i.prod_id)
+        and i.status='E'
         and i.fprod_id is null
         where d.status !='D' and d.TRADE_TYPE in ('03','16','17')
         and (d.BUY_PLACE not in('210200','330200','350200','370200','440300') or d.BUY_PLACE is null)
@@ -587,24 +592,35 @@
         select IFNULL(d.INT_AMT,0)  ,d.prod_id,d.ccy,
         m.objfield1 ord_identified,i.prodtype
         from chb_prd_deal  d
-        left join
-        chb_type_mapping_ex m
+
+        left join chb_type_mapping_ex m
         on d.CUSTOMER_TYPE2=m.srcfield1
         and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
+
         left join chb_prd_baseinfo i
         on IFNULL(d.fprod_id,d.prod_id)=IFNULL(i.fprod_id,i.prod_id) and i.status='E'
         and i.fprod_id is null
         where d.status !='D' and d.TRADE_TYPE in ('04','05')
         and (d.BUY_PLACE not in('210200','330200','350200','370200','440300') or d.BUY_PLACE is null)
-        and d.INTEREST_DATE BETWEEN #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}) ds
+        and d.INTEREST_DATE BETWEEN #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
+        )as ds
         group by ds.prod_id ,ds.ccy, ds.ord_identified,ds.prodtype
         )
         /*产品头寸表，映射投资者类型*/
         ,pp as (
         select p.prod_id,p.indentify_mark,p.ccy,p.balance_amt,p.total_intamt,p.balance_qty,p.cdate,m.objfield1 ord_identified
         from chb_prd_position p
-        left join (select DISTINCT IFNULL(fprod_id,prod_id) prod_id,ccy,indentify_mark,CUSTOMER_TYPE2,buy_place from chb_prd_deal) deal
-        on p.prod_id=deal.prod_id and deal.ccy=p.ccy and deal.indentify_mark=p.indentify_mark and p.buy_place=deal.buy_place
+        left join (
+        select
+        DISTINCT IFNULL(fprod_id,prod_id) prod_id,
+        ccy,indentify_mark,CUSTOMER_TYPE2,buy_place
+        from chb_prd_deal
+        ) deal
+        on p.prod_id=deal.prod_id
+        and deal.ccy=p.ccy
+        and deal.indentify_mark=p.indentify_mark
+        and p.buy_place=deal.buy_place
+
         left join chb_type_mapping_ex m
         on deal.CUSTOMER_TYPE2=m.srcfield1
         and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
@@ -625,7 +641,7 @@
         /*头寸主表：本期与上期的差额*/
         ,pm as (
         SELECT
-        tdy.prod_id       prodid,
+        tdy.prod_id  prodid,
         tdy.ord_identified,
         tdy.ccy,
         IFNULL(tdy.balance_amt,0) - IFNULL(yst.balance_amt,0) cleanamtsum /*净募集金额*/,
@@ -643,24 +659,16 @@
         FROM
         (
         SELECT
-        RANK() OVER(
-        PARTITION BY prod_id
-        ORDER BY
-        cdate DESC
-        ) my_rank,
+        RANK() OVER(PARTITION BY prod_id ORDER BY cdate DESC) my_rank,
         prod_id,
         ord_identified,
         ccy,
         balance_qty,
         balance_amt,
         total_intamt
-        FROM
-        ps
-        WHERE
-        cdate <![CDATA[<=]]> #{enddate,jdbcType=DATE}
-        )
-        WHERE
-        my_rank = 1
+        FROM ps
+        WHERE cdate <![CDATA[<=]]> #{enddate,jdbcType=DATE}
+        )AS T WHERE my_rank = 1
 
         ) tdy
         LEFT JOIN (
@@ -674,24 +682,17 @@
         FROM
         (
         SELECT
-        RANK() OVER(
-        PARTITION BY prod_id
-        ORDER BY
-        cdate desc
-        ) my_rank,
+        RANK() OVER(PARTITION BY prod_id ORDER BY cdate desc) my_rank,
         prod_id,
         ord_identified,
         ccy,
         balance_qty,
         balance_amt,
         total_intamt
-        FROM
-        ps
-        WHERE
-        cdate <![CDATA[<=]]> #{startdate,jdbcType=DATE}-1
-        )
-        WHERE
-        my_rank = 1
+        FROM ps
+        WHERE cdate <![CDATA[<=]]> date_sub(#{startdate,jdbcType=DATE},interval 1 day)
+        )AS T
+        WHERE my_rank = 1
         ) yst ON tdy.prod_id = yst.prod_id
         AND tdy.ccy = yst.ccy
         AND (tdy.ord_identified = yst.ord_identified or (tdy.ord_identified is null and yst.ord_identified is null))
@@ -720,7 +721,7 @@
         ,#{enddate,jdbcType=DATE} enddate
         ,#{statusDate,jdbcType=DATE} bookdate
         ,IFNULL(deal.ccy,prod.prod_value_ccy) ccy
-        ,DECODE(prod.RAISE_TYPE, '01', '01', '02', '02', null)
+        ,(CASE PROD.RAISE_TYPE WHEN '01' THEN '01' WHEN '02' THEN '02' ELSE NULL END) RAISE_TYPE
         ,prod.IVSTORIENTATION
         ,prod.TERMTYPE
         ,prod.OPERATE_MODE
@@ -768,20 +769,30 @@
         /*add  新加2个字段   by  dongxiangyang  end*/
 
         from  pi prod
-        left join dm deal  on deal.prodid=prod.prodid
-        left join pm on deal.prodid=pm.prodid and deal.ccy=pm.ccy
+
+        left join dm deal
+        on deal.prodid=prod.prodid
+
+        left join pm
+        on deal.prodid=pm.prodid
+        and deal.ccy=pm.ccy
         and  (deal.ord_identified=pm.ord_identified
-        or (deal.ord_identified is null and pm.ord_identified is null)
-        )
-        left join pm2 on deal.prodid=pm2.prodid and deal.ccy=pm2.ccy
+        or (deal.ord_identified is null and pm.ord_identified is null))
+
+        left join pm2
+        on deal.prodid=pm2.prodid
+        and deal.ccy=pm2.ccy
         and  (deal.ord_identified=pm2.ord_identified
-        or (deal.ord_identified is null and pm2.ord_identified is null)
-        )
-        left join rate on prod.prod_value_ccy=rate.ccyOriginal
-        left join di on deal.prodid=di.prodid and deal.ccy=di.ccy
+        or (deal.ord_identified is null and pm2.ord_identified is null))
+
+        left join rate
+        on prod.prod_value_ccy=rate.ccyOriginal
+
+        left join di
+        on deal.prodid=di.prodid
+        and deal.ccy=di.ccy
         and  (deal.ord_identified=di.ord_identified
-        or (deal.ord_identified is null and di.ord_identified is null)
-        )
+        or (deal.ord_identified is null and di.ord_identified is null))
         where 1=1
         and (prod.vdate >= #{startdate,jdbcType=DATE} or deal.prodid is not null)
 
@@ -820,12 +831,12 @@
         then null
         else prod.raise_ccy
         end )) ccy,
-        DECODE(prod.raise_type, '01', '01', '02', '02', null),
+        (CASE PROD.RAISE_TYPE WHEN '01' THEN '01' WHEN '02' THEN '02' ELSE NULL END),
         prod.ivstorientation,
         prod.termtype,
         prod.operate_mode,
         prod.profit_type,
-        decode(prod.EXC_FIN_SECTOR,'01','04',prod.SALETARGET) saletarget,
+        (CASE prod.EXC_FIN_SECTOR WHEN '01' THEN '04' ELSE prod.SALETARGET END) saletarget,
         prod.vdate,
         '03' openduration,
         prod.CASH_MANA_CATE,
@@ -853,23 +864,30 @@
         /* chb_prd_baseinfo prod */
         /* left join CHB_MONTH_PRD_POSITION pos1*/
         CHB_MONTH_PRD_POSITION pos1
+
         left join  chb_prd_baseinfo prod
         on pos1.PRODID = prod.PROD_ID
+
         left join pi on pi.prodid=prod.prod_id
         /*left join pm on pm.prodid=prod.prod_id*/
+
         LEFT JOIN PM ON PM.PRODID=POS1.PRODID
         and  (PM.ord_identified=pos1.ord_identified
-        or (PM.ord_identified is null and pos1.ord_identified is null)
-        )
-        left join rate on pi.prod_value_ccy=rate.ccyOriginal
+        or (PM.ord_identified is null and pos1.ord_identified is null))
+
+        left join rate
+        on pi.prod_value_ccy=rate.ccyOriginal
+
         where 1=1
-        and ADDDATE(str_to_date(pos1.STARTDATE,'%y-%m-%d'),INTERVAL -1 MONTH)= #{startdate,jdbcType=DATE}
+        and DATE_SUB(pos1.STARTDATE,interval 1 month) = #{startdate,jdbcType=DATE}
         and prod.status in ('E','M')
         and prod.vdate <![CDATA[<=]]> #{enddate,jdbcType=DATE}
-        and not exists ( select 1 from chb_prd_deal deal
+        and not exists (select 1 from chb_prd_deal deal
+
         left join chb_type_mapping_ex m
         on deal.CUSTOMER_TYPE2=m.srcfield1
         and m.mappingcode='MONTH_REPORT_INVESTOR_TYPE'
+
         where SETTDATE_DATE between #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
         and IFNULL(m.objfield1,'0')=IFNULL(pos1.ord_identified,'0')
         and IFNULL(prod.fprod_id,prod.prod_id)=IFNULL(deal.fprod_id,deal.prod_id)
@@ -919,12 +937,12 @@
         </if>
     </delete>
     <select id="selectPrciceByProdAndDate"   resultType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield" parameterType="date" >
-  	 select prod_id prodId,ccy,prod_value prodValue from (
-	        select rank() over(partition by prod_id order by change_date desc) 
-	        my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
-	        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
-	        ) where my_rank=1
-  </select>
+        select prod_id prodId,ccy,prod_value prodValue from (
+        select rank() over(partition by prod_id order by change_date desc)
+        my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
+        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
+        )AS T where my_rank=1
+    </select>
 
 
 </mapper>
