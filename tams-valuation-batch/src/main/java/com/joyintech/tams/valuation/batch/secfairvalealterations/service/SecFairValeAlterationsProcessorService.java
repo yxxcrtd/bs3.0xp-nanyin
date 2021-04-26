@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.batch.secfairvalealterations.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import com.joyintech.tams.constant.*;
@@ -26,6 +27,7 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BokBatchMarketwarningInfo;
 import com.joyintech.tams.common.base.entity.BokBooksetExt;
 import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
@@ -137,6 +139,22 @@ public class SecFairValeAlterationsProcessorService {
             drawBaseInfoSelectComResult.getHappenDate(), drawBaseInfoSelectComResult.getBookDate(),
             drawBaseInfoSelectComResult.getBooksetId(),
             drawBaseInfoSelectComResult.getBokDetailId(), null, null);
+        /**
+         * ADD BY WUJIE ON 20200527 START
+         */
+         // 账套核算参数查询
+        // 定义账套参数查询参数项list
+        List<String> paramCodeList = new ArrayList<String>();
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_债券公允价值变动计算过程小数位.getValue());// 债券交易费用损益计入方式
+        Map<String, Object> getValBokBooksetExtMap = accountingCommonService.getValBokBooksetExtForMap(
+        		drawBaseInfoSelectComResult.getBooksetId(), paramCodeList);
+        Integer 债券公允价值变动计算过程小数位 = null;
+        if(getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_债券公允价值变动计算过程小数位.getValue())!=null){
+        	债券公允价值变动计算过程小数位 = Integer.valueOf((String) getValBokBooksetExtMap.get(ValDictCodeList.账套配置表参数项_债券公允价值变动计算过程小数位.getValue()));
+        }
+        
+        
+        /**ADD BY WUJIE ON 20200527 END**/
 
         for (DrawBaseInfoSelectComDTO acctEntityEx : acctEntityList) {
             // 成本科目余额
@@ -158,7 +176,13 @@ public class SecFairValeAlterationsProcessorService {
             // 估值日期
             Date valDate = null;
             
-
+            /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+            // 公允价值变动科目余额_本位币
+            BigDecimal secFairValeAltBalance_bccy = BigDecimal.ZERO;
+            // 公允价值变动_本位币
+            BigDecimal secFairValeAlt_bccy = BigDecimal.ZERO;
+            /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
+            
             // 防止报空指针异常
             if (rtnResult.getValBokBookdetailBatch() == null) {
                 rtnResult.setValBokBookdetailBatch(new ArrayList<ValBokBookdetailBatch>());
@@ -213,12 +237,17 @@ public class SecFairValeAlterationsProcessorService {
                 subjectBalance = this.getSubjectBalanceExpectDirection(booksetId, bokDetailId,
                     happenDate, baseSubjectNature, expBalanceDirect, taskPri);
                 secFairValeAltBalance = subjectBalance.getBalance() == null ? BigDecimal.ZERO : subjectBalance.getBalance();
+                
+                secFairValeAltBalance_bccy = subjectBalance.getbAmt() == null ? BigDecimal.ZERO : subjectBalance.getbAmt();//add by wujie on 20201119 remark:公允价值变动本位币处理改造
+                
             }
             else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(invAim)) {
                 baseSubjectNature = DictCodeBaseSubjectNatrue.综合收益类_公允价值变动.getValue();
                 subjectBalance = this.getSubjectBalanceExpectDirection(booksetId, bokDetailId,
                     happenDate, baseSubjectNature, expBalanceDirect, taskPri);
                 secFairValeAltBalance = subjectBalance.getBalance() == null ? BigDecimal.ZERO : subjectBalance.getBalance();
+                
+                secFairValeAltBalance_bccy = subjectBalance.getbAmt() == null ? BigDecimal.ZERO : subjectBalance.getbAmt();//add by wujie on 20201119 remark:公允价值变动本位币处理改造
             }
 
             // 调用共通方法【科目余额查询-期待方向】,获取溢折价科目余额
@@ -262,6 +291,10 @@ public class SecFairValeAlterationsProcessorService {
             BigDecimal varDrjsyjlxKmye = varYjlxKmye;
             // 变量.当日计算公允价值变动科目余额 = 变量.公允价值变动科目余额
             BigDecimal varDrjsgyjzbdKmye = secFairValeAltBalance;
+            
+            // 变量.当日计算公允价值变动科目余额_本位币 = 变量.公允价值变动科目余额_本位币
+            BigDecimal varDrjsgyjzbdKmye_bccy = secFairValeAltBalance_bccy;//add by wujie on 20201119 remark:公允价值变动本位币处理改造
+            
             // // 变量.次日计算成本科目数量 = 变量.当日成本科目数量
             // BigDecimal varCrjscbKmsl = cbkmNum;
             // // 变量.次日计算成本科目余额 = 变量.当日成本科目余额
@@ -358,11 +391,23 @@ public class SecFairValeAlterationsProcessorService {
                                 // 变量.当日计算公允价值变动科目余额 -= 变量.账务明细.原币发生额
                                 varDrjsgyjzbdKmye = ArithmeticUtil.subtract(varDrjsgyjzbdKmye,
                                     var.getoHappenAmt());
+                                
+                                /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                                // 变量.当日计算公允价值变动科目余额_本位币 -= 变量.账务明细.本币发生额
+                                varDrjsgyjzbdKmye_bccy = ArithmeticUtil.subtract(varDrjsgyjzbdKmye_bccy,
+                                    var.getbHappenAmt());
+                                /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
                             }
                             else {
                                 // 变量.当日计算公允价值变动科目余额 += 变量.账务明细.原币发生额
                                 varDrjsgyjzbdKmye = ArithmeticUtil.doAdd(varDrjsgyjzbdKmye,
                                     var.getoHappenAmt());
+                                
+                                /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                                // 变量.当日计算公允价值变动科目余额_本位币 += 变量.账务明细.本币发生额
+                                varDrjsgyjzbdKmye_bccy = ArithmeticUtil.doAdd(varDrjsgyjzbdKmye_bccy,
+                                    var.getbHappenAmt());
+                                /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
                             }
                         }
                     }
@@ -442,11 +487,23 @@ public class SecFairValeAlterationsProcessorService {
                                 // 变量.当日计算公允价值变动科目余额 -= 变量.账务明细.原币发生额
                                 varDrjsgyjzbdKmye = ArithmeticUtil.subtract(varDrjsgyjzbdKmye,
                                     var.getoHappenAmt());
+                                
+                                /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                                // 变量.当日计算公允价值变动科目余额_本位币 -= 变量.账务明细.本币发生额
+                                varDrjsgyjzbdKmye_bccy = ArithmeticUtil.subtract(varDrjsgyjzbdKmye_bccy,
+                                    var.getbHappenAmt());
+                                /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
                             }
                             else {
                                 // 变量.当日计算公允价值变动科目余额 += 变量.账务明细.原币发生额
                                 varDrjsgyjzbdKmye = ArithmeticUtil.doAdd(varDrjsgyjzbdKmye,
                                     var.getoHappenAmt());
+                                
+                                /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                                // 变量.当日计算公允价值变动科目余额_本位币 += 变量.账务明细.本币发生额
+                                varDrjsgyjzbdKmye_bccy = ArithmeticUtil.doAdd(varDrjsgyjzbdKmye_bccy,
+                                    var.getbHappenAmt());
+                                /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
                             }
                         }
                     }
@@ -513,12 +570,30 @@ public class SecFairValeAlterationsProcessorService {
             if (rstBaseinfo == null) {
                 break;
             }
+            
+            /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+            // 汇率
+            BigDecimal changeRate = BigDecimal.ONE;
+            if(StringUtil.isNotEmpty(rstBaseinfo.getCcy()) && !rstBaseinfo.getCcy().equals(acctEntityEx.getStandardCcy())){
+                // 调用共通汇率查询
+                List<CurrencyMarketDto> currencyMarketList = finProductCommonService.getCurrencyMarket(bookDate, booksetId,
+                        acctEntityEx.getStandardCcy(), rstBaseinfo.getCcy());
+                if(!StringUtil.isEmptyList(currencyMarketList) && currencyMarketList.get(0) != null){
+                    changeRate = currencyMarketList.get(0).getClosePrice();
+                }
+            }
+            /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
 
             // else if（变量.当日成本科目数量 = 0 and 变量.当日计算成本科目数量 = 0 ）
             if (cbkmNum.compareTo(BigDecimal.ZERO) == 0
                 && varDrjscbKmsl.compareTo(BigDecimal.ZERO) == 0) {
                 // 变量.公允价值变动 = -1*变量.公允价值变动科目余额
                 secFairValeAlt = secFairValeAltBalance.negate();
+                
+                /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                // 变量.公允价值变动 = -1*变量.公允价值变动科目余额
+                secFairValeAlt_bccy = secFairValeAltBalance_bccy.negate();
+                /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
             }
             else {
                 // 变量.标的信息.息票品种为零息或贴现时
@@ -530,29 +605,36 @@ public class SecFairValeAlterationsProcessorService {
                         marketPrice = ArithmeticUtil.divide(
                             ArithmeticUtil.doAdd(varDrjscbKmye, varDrjstxzyjKmye), varDrjscbKmsl,
                             NumberEnum.HIGH_PREC_NUM.getCode());
-                    } 
-                    // modified by wangzhiang 零息贴现综合收益逻辑到取市价共通里 20181212 start
-//                    else if (DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(
-//                            drawBaseInfoSelectComResult.getInvAim())) {
-//                    	//变量.市价 = round（变量.市价 +（计提类账务处理结果.发生日-变量.标的信息.起息日+1）/（变量.标的信息.实际到期日-变量.标的信息.起息日）*（100-C.发行价），2）
-//                    	//（计提类账务处理结果.发生日-变量.标的信息.起息日+1）
-//                        long day1 = DateUtil.getBetweenDayNumber(rstBaseinfo.getVdate(), happenDate) + 1;
-//                        // （变量.标的信息.实际到期日-变量.标的信息.起息日））
-//                        long day2 = DateUtil.getBetweenDayNumber(rstBaseinfo.getVdate(),
-//                        		rstBaseinfo.getActmdate());
-//                        BigDecimal day = ArithmeticUtil.divide(new BigDecimal(day1), new BigDecimal(day2));
-//                        BigDecimal priceAdd = ArithmeticUtil.multiply(day,
-//                            ArithmeticUtil.subtract(new BigDecimal(100), rstBaseinfo.getIssuePrice()));
-//                        marketPrice = ArithmeticUtil.round(ArithmeticUtil.doAdd(marketPrice, priceAdd),
-//                            NumberEnum.MONEY);
-//                    }
-                    // modified by wangzhiang 零息贴现综合收益逻辑到取市价共通里 20181212 end
+                    }
+                    /** modify by yanya on 20210316 债券行权改造 start**/
                     // 变量.公允价值变动 =
                     // （变量.市价*变量.当日计算成本科目数量 - （变量.当日计算成本科目余额 + 变量.当日计算溢折价余额 ））
                     // -变量.当日计算公允价值变动科目余额
-                    secFairValeAlt = ArithmeticUtil.multiply(marketPrice, varDrjscbKmsl);
+                    //secFairValeAlt = ArithmeticUtil.multiply(marketPrice, varDrjscbKmsl);
+                    //调用共通设计->【详细设计-标的类共通方法设计.xlsx】->债券公允价值变动计算SHEET
+                    secFairValeAlt = finProductCommonService.calculationSecFairValue(booksetId, rstBaseinfo.getFinprodId(), invAim, marketPrice,
+                            varDrjscbKmsl, happenDate);
+                    /** modify by yanya on 20210316 债券行权改造 end**/
+                    if(债券公允价值变动计算过程小数位!=null && 债券公允价值变动计算过程小数位.compareTo(-1)!=0){
+                    	secFairValeAlt = ArithmeticUtil.round(secFairValeAlt,债券公允价值变动计算过程小数位, RoundingMode.HALF_UP);
+                    }
+                    
+                    /**modify by wujie on 20201119 start remark:公允价值变动本位币处理改造
                     secFairValeAlt = ArithmeticUtil.subtract(secFairValeAlt,
                         ArithmeticUtil.doAdd(varDrjscbKmye, varDrjstxzyjKmye, varDrjsgyjzbdKmye));
+                    **/
+                    
+                    secFairValeAlt = ArithmeticUtil.doSub(secFairValeAlt, varDrjscbKmye,varDrjstxzyjKmye);
+            		
+                    secFairValeAlt_bccy = calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null, secFairValeAlt, changeRate);
+                    
+                    secFairValeAlt = ArithmeticUtil.doSub(secFairValeAlt,varDrjsgyjzbdKmye);
+                    
+                    secFairValeAlt_bccy = ArithmeticUtil.doSub(secFairValeAlt_bccy,varDrjsgyjzbdKmye_bccy);
+                    
+                    /**modify by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
+
+                    
                 } // 变量.公允价值变动 = （变量.市价*变量.当日计算成本科目数量 -
                   // （变量.当日计算成本科目余额+变量.当日计算溢折价科目余额））-变量.当日计算公允价值变动科目余额
                 else {
@@ -563,9 +645,29 @@ public class SecFairValeAlterationsProcessorService {
                             ArithmeticUtil.doAdd(varDrjscbKmye, varDrjstxzyjKmye), varDrjscbKmsl,
                             NumberEnum.HIGH_PREC_NUM.getCode());
                     }
-                    secFairValeAlt = ArithmeticUtil.multiply(marketPrice, varDrjscbKmsl);
+                    /** modify by yanya on 20210316 债券行权改造 start**/
+                    //secFairValeAlt = ArithmeticUtil.multiply(marketPrice, varDrjscbKmsl);
+                    //调用共通设计->【详细设计-标的类共通方法设计.xlsx】->债券公允价值变动计算SHEET
+                    secFairValeAlt = finProductCommonService.calculationSecFairValue(booksetId, rstBaseinfo.getFinprodId(), invAim, marketPrice,
+                            varDrjscbKmsl, happenDate);
+                    /** modify by yanya on 20210316 债券行权改造 end**/
+                    
+                    if(债券公允价值变动计算过程小数位!=null && 债券公允价值变动计算过程小数位.compareTo(-1)!=0){
+                    	secFairValeAlt = ArithmeticUtil.round(secFairValeAlt,债券公允价值变动计算过程小数位, RoundingMode.HALF_UP);
+                    }
+                    /**modify by wujie on 20201119 start remark:公允价值变动本位币处理改造
                     secFairValeAlt = ArithmeticUtil.subtract(secFairValeAlt,
                         ArithmeticUtil.doAdd(varDrjscbKmye, varDrjstxzyjKmye, varDrjsgyjzbdKmye));
+                        **/
+                    secFairValeAlt = ArithmeticUtil.doSub(secFairValeAlt, varDrjscbKmye,varDrjstxzyjKmye);
+            		
+                    secFairValeAlt_bccy = calculationCommonService.doMultiply(NumberEnum.MONEY.getCode(), null, secFairValeAlt, changeRate);
+                    
+                    secFairValeAlt = ArithmeticUtil.doSub(secFairValeAlt,varDrjsgyjzbdKmye);
+                    
+                    secFairValeAlt_bccy = ArithmeticUtil.doSub(secFairValeAlt_bccy,varDrjsgyjzbdKmye_bccy);
+                    
+                    /**modify by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
                 }
             }
 
@@ -616,6 +718,16 @@ public class SecFairValeAlterationsProcessorService {
                     accountAmountMap.put(BookConstant.FLOAT_1_C,
                         ArithmeticUtil.round(secFairValeAlt, NumberEnum.MONEY));
                     accountCurrencyMap.put(BookConstant.FLOAT_1_C, oCcy);
+                    
+                    
+                    /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                    accountAmountMap.put(BookConstant.FLOAT_D+ BookConstant.BCCYAMT,ArithmeticUtil.round(secFairValeAlt_bccy, NumberEnum.MONEY));
+                    accountAmountMap.put(BookConstant.FLOAT_1_C+ BookConstant.BCCYAMT,ArithmeticUtil.round(secFairValeAlt_bccy, NumberEnum.MONEY));
+                    
+                    accountCurrencyMap.put(BookConstant.FLOAT_D+ BookConstant.BCCYAMT, acctEntityEx.getStandardCcy());
+                    accountCurrencyMap.put(BookConstant.FLOAT_1_C+ BookConstant.BCCYAMT, acctEntityEx.getStandardCcy());
+                    
+                    /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
                 }
                 else {
                     accountAmountMap.put(BookConstant.FLOAT_C,
@@ -628,11 +740,27 @@ public class SecFairValeAlterationsProcessorService {
                             ArithmeticUtil.multiply(secFairValeAlt, new BigDecimal(-1)),
                             NumberEnum.MONEY));
                     accountCurrencyMap.put(BookConstant.FLOAT_1_D, oCcy);
+                    
+                    /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                    accountAmountMap.put(BookConstant.FLOAT_C+ BookConstant.BCCYAMT,ArithmeticUtil.round(secFairValeAlt_bccy.negate(), NumberEnum.MONEY));
+                    accountAmountMap.put(BookConstant.FLOAT_1_D+ BookConstant.BCCYAMT,ArithmeticUtil.round(secFairValeAlt_bccy.negate(), NumberEnum.MONEY));
+                    
+                    accountCurrencyMap.put(BookConstant.FLOAT_C+ BookConstant.BCCYAMT, acctEntityEx.getStandardCcy());
+                    accountCurrencyMap.put(BookConstant.FLOAT_1_D+ BookConstant.BCCYAMT, acctEntityEx.getStandardCcy());
+                    
+                    /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
                 }
 
                 // 全局变量 公允价值变动科目余额 更新
                 secFairValeAltBalance = ArithmeticUtil.doAdd(secFairValeAltBalance,
                     secFairValeAlt);
+                
+                /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                secFairValeAltBalance_bccy = ArithmeticUtil.doAdd(secFairValeAltBalance_bccy,secFairValeAlt_bccy);
+                
+                accountCurrencyMap.put(BookConstant.B_CCY, acctEntityEx.getStandardCcy());
+                
+                /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
 
                 // map塞入场景要素管理中
                 ad.setAccountSceneMap(accountSceneMap);// 记账场景要素
@@ -753,6 +881,19 @@ public class SecFairValeAlterationsProcessorService {
                     bokSummaryTableNew.setBusiId(drawBaseInfoSelectComResult.getBusiId());
                
                     bokSummaryTableNew.setCcy(rstBaseinfo.getCcy());
+                    
+                    
+                    
+                    /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                    // 变量.当日统计分析账务明细汇总信息.当日公允价值变动_本位币 = 变量.公允价值变动_本位币
+                    bokSummaryTableNew.setTdyFloatIngplB(secFairValeAlt_bccy);
+                    
+                    //变量.当日统计分析账务明细汇总信息.当日累计公允价值变动_本位币 = 变量.公允价值变动科目余额_本位币 + 变量.公允价值变动_本位币 
+                    bokSummaryTableNew.setTdyFloatIngplExp(secFairValeAltBalance_bccy);
+                    
+                    /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
+                    
+                    
                 }
                 else {
                     BeanUtil.copyPropertiesIgnoreNull(bokSummaryTableNew, bokSummaryTableYestdy);
@@ -764,6 +905,15 @@ public class SecFairValeAlterationsProcessorService {
                     bokSummaryTableNew.setFinprodType(acctEntityEx.getBusiDetailType());
                     // 变量.当日统计分析账务明细汇总信息.行情日期= 计提类账务处理结果.估值日期
                     bokSummaryTableNew.setValDate(valDate);
+                    
+                    /**add by wujie on 20201119 start remark:公允价值变动本位币处理改造**/
+                    // 变量.当日统计分析账务明细汇总信息.当日公允价值变动_本位币 = 变量.公允价值变动_本位币
+                    bokSummaryTableNew.setTdyFloatIngplB(secFairValeAlt_bccy);
+                    
+                    //变量.当日统计分析账务明细汇总信息.当日累计公允价值变动_本位币 = 变量.公允价值变动科目余额_本位币 + 变量.公允价值变动_本位币 
+                    bokSummaryTableNew.setTdyFloatIngplExp(secFairValeAltBalance_bccy);
+                    
+                    /**add by wujie on 20201119 end remark:公允价值变动本位币处理改造**/
                 }
 
 
