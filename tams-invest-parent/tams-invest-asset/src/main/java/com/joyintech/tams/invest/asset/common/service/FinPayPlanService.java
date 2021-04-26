@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -141,6 +142,24 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
             scai.setInvRepayList(bussFinRepaymentService.getFinCashPlanByProductId(scai.getFinprodId(), DictCodeListExt1.现金流二级类型_本金.getValue(), DictCodeListExt1.现金流业务类型_金融产品.getValue(),null));
         }else{
             scai.setInvRepayList(entity.getBussFinRepaymentDto().getFinCashPlanList());
+            //对前台传入的还本计划，是否还本不带息，进行重新赋值
+            String isPayIntS =  "";
+            if(!StringUtil.isEmptyList(scai.getInvRepayList()) && scai.getInvRepayList().size()>0){
+                 for(FinCashPlanDto it:scai.getInvRepayList()){
+                     if(StringUtil.isNotEmpty(it.getIsPayInt()) && it.getIsPayInt().equals(DictCodeList.是否_否.getValue())){
+                         isPayIntS=DictCodeList.是否_否.getValue();
+                         break;
+                     }
+                 }
+                 if(StringUtil.isNotEmpty(isPayIntS) && isPayIntS.equals(DictCodeList.是否_否.getValue())){
+                     for(FinCashPlanDto it:scai.getInvRepayList()){
+                         if(StringUtil.isEmpty(it.getIsPayInt())){
+                             it.setIsPayInt(isPayIntS);
+                         }
+                     }
+                 }
+            }
+
         }
         try {
             scai = assetCommonService.againCalCashPlan(scai,finAssetRateAdjList);
