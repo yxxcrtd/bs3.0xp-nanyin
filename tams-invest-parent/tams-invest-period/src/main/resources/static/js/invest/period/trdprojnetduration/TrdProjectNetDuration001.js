@@ -151,6 +151,17 @@
             var object = selArr[0];
             object.operateType="revoke";
             object.mode="revoke";
+
+            if (object.arriveDate) {
+                object.arriveDate = new Date(object.arriveDate).format('yyyy-MM-dd');
+            }
+            if (object.exRightsDate) {
+                object.exRightsDate = new Date(object.exRightsDate).format('yyyy-MM-dd');
+            }
+            if (object.registDate) {
+                object.registDate = new Date(object.registDate).format('yyyy-MM-dd');
+            }
+
             Joyin.ajaxJson(basePath + 'invest/period/trdprojnetduration/TrdProjectNetDuration001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.revoke")), function(){
                     Joyin.prompt(JoyinUtil.getLabel("TrdDepoDuration001.revokeReason"),2,function(res){
