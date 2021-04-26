@@ -21,6 +21,7 @@
         <result column="LSTMNTUSER" property="lstmntuser" jdbcType="VARCHAR" />
         <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
         <result column="SECNAME" property="secname" jdbcType="VARCHAR" />
+        <result column="OURDEPOSITACCOUNTNUMBER" property="ourdepositaccountnumber" jdbcType="VARCHAR" />
     </resultMap>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfTradRepoasst" >
         insert into INTERF_TRAD_REPOASST (SECID, TRADEID, SEQ_NO, 
@@ -29,14 +30,14 @@
             CPRICEAMT, ACCUIR, ACCUIRAMT, 
             MCPRICE, MCPRICEAMT, MDPRICE, 
             MDPRICEAMT, LSTMNTUSER, LSTMNTDATE, 
-            SECNAME)
+            SECNAME, OURDEPOSITACCOUNTNUMBER)
         values (#{secid,jdbcType=VARCHAR}, #{tradeid,jdbcType=VARCHAR}, #{seqNo,jdbcType=DECIMAL}, 
             #{convrate,jdbcType=DECIMAL}, #{facetotalamt,jdbcType=DECIMAL}, #{dealamt,jdbcType=DECIMAL}, 
             #{dprice,jdbcType=DECIMAL}, #{cprice,jdbcType=DECIMAL}, #{dpriceamt,jdbcType=DECIMAL}, 
             #{cpriceamt,jdbcType=DECIMAL}, #{accuir,jdbcType=DECIMAL}, #{accuiramt,jdbcType=DECIMAL}, 
             #{mcprice,jdbcType=DECIMAL}, #{mcpriceamt,jdbcType=DECIMAL}, #{mdprice,jdbcType=DECIMAL}, 
             #{mdpriceamt,jdbcType=DECIMAL}, #{lstmntuser,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}, 
-            #{secname,jdbcType=VARCHAR})
+            #{secname,jdbcType=VARCHAR}, #{ourdepositaccountnumber,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfTradRepoasst" >
         insert into INTERF_TRAD_REPOASST
@@ -98,6 +99,9 @@
             <if test="secname != null" >
                 SECNAME,
             </if>
+            <if test="ourdepositaccountnumber != null" >
+                OURDEPOSITACCOUNTNUMBER,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="secid != null" >
@@ -157,15 +161,18 @@
             <if test="secname != null" >
                 #{secname,jdbcType=VARCHAR},
             </if>
+            <if test="ourdepositaccountnumber != null" >
+                #{ourdepositaccountnumber,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfTradRepoasst" >
         insert into INTERF_TRAD_REPOASST(SECID, TRADEID, SEQ_NO, CONVRATE, FACETOTALAMT, 
         DEALAMT, DPRICE, CPRICE, DPRICEAMT, CPRICEAMT, ACCUIR, ACCUIRAMT, MCPRICE, MCPRICEAMT, 
-        MDPRICE, MDPRICEAMT, LSTMNTUSER, LSTMNTDATE, SECNAME)
+        MDPRICE, MDPRICEAMT, LSTMNTUSER, LSTMNTDATE, SECNAME, OURDEPOSITACCOUNTNUMBER)
         select SECID, TRADEID, SEQ_NO, CONVRATE, FACETOTALAMT, 
             DEALAMT, DPRICE, CPRICE, DPRICEAMT, CPRICEAMT, ACCUIR, ACCUIRAMT, MCPRICE, MCPRICEAMT, 
-            MDPRICE, MDPRICEAMT, LSTMNTUSER, LSTMNTDATE, SECNAME
+            MDPRICE, MDPRICEAMT, LSTMNTUSER, LSTMNTDATE, SECNAME, OURDEPOSITACCOUNTNUMBER
              from INTERF_TRAD_REPOASST
              where 1 = 1
     </insert>

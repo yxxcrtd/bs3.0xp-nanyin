@@ -482,7 +482,7 @@ public class CfetsQuotedTradeCommonService{
 
         // 如果是质押式，需要插入或更新质押品信息
         if (StringUtil.isNotEmpty(seList)) {
-            insertOrUpdateRepoAsset(seList, execid);
+            insertOrUpdateRepoAsset(seList, execid,iCstpTrade.getOurdepositaccountnumber());
         }
         return interfOpicsTradRepo;
     }
@@ -496,7 +496,7 @@ public class CfetsQuotedTradeCommonService{
      * @see
      * @since 1.0
      */
-    private int insertOrUpdateRepoAsset(List<NoUnderlyings> seList, String execid) {
+    private int insertOrUpdateRepoAsset(List<NoUnderlyings> seList, String execid,String ourdepositaccountnumber) {
         int count = 0;
         for (NoUnderlyings sEntity : seList) {
             InterfTradRepoasst interfTradRepoasst = new InterfTradRepoasst();
@@ -516,6 +516,7 @@ public class CfetsQuotedTradeCommonService{
             interfTradRepoasst.setDealamt(ArithmeticUtil.multiply(interfTradRepoasst.getConvrate(),sEntity.getUnderlyingQty()));
             interfTradRepoasst.setSecid(sEntity.getUnderlyingSecurityID());
             interfTradRepoasst.setSecname(sEntity.getUnderlyingSymbol());
+            interfTradRepoasst.setOurdepositaccountnumber(ourdepositaccountnumber);
             // 判断抵押品信息是否存在，若存在则更新，否则插入
             String tradeid = cstpMapper.selectrepoAsset(sEntity.getUnderlyingSecurityID(), execid);
             interfTradRepoasst.setSeqNo(Long.parseLong(cstpMapper.selectSeqNo()));

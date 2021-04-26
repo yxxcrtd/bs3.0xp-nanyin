@@ -30,7 +30,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
+import com.joyintech.tams.invest.common.dto.cstp.TrdRepoTradeCSTPDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.service.TrdRepoTrade002Service;
 
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
@@ -773,9 +773,9 @@ public class TrdOutRightRepoTrade003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("queryRepoCstpInfoByNo")
-	public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(String fedealno){
+	public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(@RequestBody Map<String,Object> map){
 		String prodType = BussinessDictCodeList.回购交易_买断式.getValue();
-		return trdRepoTrade002Service.queryRepoCstpInfoByNo(fedealno,null,null,prodType,null);
+		return trdRepoTrade002Service.queryRepoCstpInfoByNo(map);
 	}
 	
 	/**

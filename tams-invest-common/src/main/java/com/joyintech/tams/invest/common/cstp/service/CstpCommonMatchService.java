@@ -71,6 +71,7 @@ public class CstpCommonMatchService {
                 }
             }
         }catch (Exception e){
+            e.printStackTrace();
             log.error("下行成交匹配异常!"+e.getMessage());
         }
         log.info("下行成交匹配结束");
