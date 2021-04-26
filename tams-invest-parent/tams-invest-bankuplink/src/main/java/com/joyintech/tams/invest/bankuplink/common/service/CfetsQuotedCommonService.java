@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/*import com.joyintech.system.base.entity.SysUserAdd;*/
+import com.joyintech.system.base.entity.SysUserAdd;
 import com.joyintech.tams.constant.DictCodeList;
 
 import org.apache.commons.lang3.StringUtils;
@@ -690,12 +690,12 @@ public class CfetsQuotedCommonService extends BaseService {
     public String queryLoginTraderId(Map<String, Object> param) {
         param.put("loginUserId", LoginUserUtil.getUserName());
         //TODO
-        /*List<SysUserAdd> sysUserList = restTemplate.postForList(
+        List<SysUserAdd> sysUserList = restTemplate.postForList(
                 ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsQuotedCommon/queryLoginTraderId",
                 param, SysUserAdd.class);
         if (!StringUtil.isEmptyList(sysUserList)) {
         	return sysUserList.get(0).getIbuTrader();
-        }*/
+        }
         return StringUtil.EMPTY;
     }
     

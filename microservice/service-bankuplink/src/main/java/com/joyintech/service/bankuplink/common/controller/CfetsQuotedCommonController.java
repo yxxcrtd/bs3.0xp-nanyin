@@ -25,7 +25,7 @@ import com.joyintech.service.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.service.bankuplink.common.service.CfetsQuotedTradeCommonService;
 import com.joyintech.service.bankuplink.ibu.service.IbuComponentReceiveService;
 import com.joyintech.system.base.entity.SysUser;
-/*import com.joyintech.system.base.entity.SysUserAdd;*/
+import com.joyintech.system.base.entity.SysUserAdd;
 import com.joyintech.tams.invest.common.service.DateCalCommonService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -368,13 +368,9 @@ public class CfetsQuotedCommonController {
      * @since 1.0
      */
     @PostMapping("queryLoginTraderId")
-    /*public List<SysUserAdd> queryLoginTraderId(@RequestBody Map<String, Object> param){
+    public List<SysUserAdd> queryLoginTraderId(@RequestBody Map<String, Object> param){
         return cfetsQuotedCommonService.queryLoginTraderId(param);
-    }*/
-    public List<SysUser> queryLoginTraderId(@RequestBody Map<String, Object> param){
-        return new ArrayList<>();
     }
-    
     /**
      * 根据组合代码和本方机构查询账户来源
      * 

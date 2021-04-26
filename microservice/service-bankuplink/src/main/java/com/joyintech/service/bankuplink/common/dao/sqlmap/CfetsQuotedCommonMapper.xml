@@ -246,7 +246,7 @@
 		SELECT FINPROD_MARKET_ID FROM FIN_PRODUCT WHERE FINPROD_TYPE2 = #{assestType}
 	</select>
     
-    <!--<select id="queryLoginTraderId" resultType="com.joyintech.system.base.entity.SysUserAdd">
+    <select id="queryLoginTraderId" resultType="com.joyintech.system.base.entity.SysUserAdd">
        /*SELECT SYS_USER.USER_NAME userName, SYS_USER_ADD.IBU_TRADER ibuTrader*/
 		SELECT SYS_USER_ADD.IBU_TRADER ibuTrader
          FROM SYS_USER, SYS_USER_ADD
@@ -257,7 +257,7 @@
         	<if test="ibuTrader != null and !ibuTrader.equals('')">
         		AND SYS_USER_ADD.IBU_TRADER = #{ibuTrader}
         	</if>
-    </select>-->
+    </select>
     
     <select id="querySecAcctSourceByPtlIdPartyId" resultType="java.lang.String">
     	SELECT CFETS_ACCT_TYPE FROM IBU_PORTFOLIO_ACCT_RELA WHERE PORTFOLIO_ID = #{portfolioId} and PARTY_ID = #{partyId} and rownum = 1

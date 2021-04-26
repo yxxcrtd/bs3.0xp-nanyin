@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-/*import com.joyintech.system.base.entity.SysUserAdd;*/
+import com.joyintech.system.base.entity.SysUserAdd;
 import com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp;
 import com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus;
 
@@ -115,7 +115,7 @@ public interface CfetsQuotedCommonMapper {
      * @see
      * @since 1.0
      */
-    //List<SysUserAdd> queryLoginTraderId(Map<String, Object> param);
+    List<SysUserAdd> queryLoginTraderId(Map<String, Object> param);
     
     /**
      * 查询市场代码列表

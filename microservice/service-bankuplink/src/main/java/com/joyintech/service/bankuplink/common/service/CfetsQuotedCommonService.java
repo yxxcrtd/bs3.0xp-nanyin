@@ -54,7 +54,7 @@ import com.joyintech.service.bankuplink.ibu.service.IbuComponentCommonService;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.service.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
-/*import com.joyintech.system.base.entity.SysUserAdd;*/
+import com.joyintech.system.base.entity.SysUserAdd;
 import com.joyintech.tams.common.base.dao.EtrDistributeInterfTmpMapper;
 import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
@@ -1093,9 +1093,9 @@ public class CfetsQuotedCommonService extends BaseService {
      * @see
      * @since 1.0
      */
-    /*public List<SysUserAdd> queryLoginTraderId(Map<String, Object> param) {
+    public List<SysUserAdd> queryLoginTraderId(Map<String, Object> param) {
         return cfetsQuotedCommonMapper.queryLoginTraderId(param);
-    }*/
+    }
     
     /**
      * 根据组合代码和本方机构查询账户来源
