@@ -88,11 +88,12 @@
             //  表格增加估值偏离度，净价by赵东东 2019.9.20 end
         	,{field:'tradeDate', sortField:'TRADE_DATE',width:100, title: 'TrdBondInvestTrade001.tradeDate', type: 'date'}
         	,{field:'settleDate',sortField:'SETTLE_DATE', width:100, title: 'TrdBondInvestTrade001.settleDate', type: 'date'}
-        	,{field:'fTradeId',sortField:'F_TRADE_ID', width:180, title: 'TrdBondInvestTrade002.fTradeId'}
+        	//,{field:'fTradeId',sortField:'F_TRADE_ID', width:180, title: 'TrdBondInvestTrade002.fTradeId'}
         	,{field:'orderRetStatusStr',sortField:'ORDER_RET_STATUS', width:150, title: 'TrdBondInvestTrade001.importStatus', type: 'date'}
             // <!-- 资产推荐方 新增 zhuyongkang 20191023 start-->
             ,{field:'assetRecommandOrg',sortField:'ASSET_RECOMMAND_ORG', width:150, title: 'TrdBondInvestTrade001.assetRecommandOrg'}
             // <!-- 资产推荐方 新增 zhuyongkang 20191023 end-->
+            ,{field:'fTradeId',sortField:'F_TRADE_ID', width:180, title: '银行家成交编号'}
         	,{field:'remark', sortField:'',width:400, title: 'TrdBondInvestTrade001.remark'}
         	,{field:'validStatus', visible: false}
         	,{field:'ps', visible: false}

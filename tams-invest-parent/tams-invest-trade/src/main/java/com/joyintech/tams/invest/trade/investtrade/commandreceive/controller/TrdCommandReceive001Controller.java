@@ -70,7 +70,7 @@ public class TrdCommandReceive001Controller extends BaseController{
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         // TODO Auto-generated method stub
-        setSelectOptionToModel(model,DictCode.币种,DictCode.委托状态,DictCode.平安资产类型,DictCode.交易场所);
+        setSelectOptionToModel(model,DictCode.币种,DictCode.委托状态,DictCode.平安资产类型,DictCode.交易场所,DictCode.是否);
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.委托状态, null);
         List<SelectOptionDto> selectOption2=selectDto.getOptions();
         List<SelectOptionDto> selectOption3=new ArrayList<>();

@@ -564,5 +564,19 @@ public class BaseTradeProductDealDto {
 		this.bondFirstSign = bondFirstSign;
 	}
 
+	/**
+	 * 获取 isNotWorkflow
+	 * @return isNotWorkflow.
+	 */
+	public boolean isNotWorkflow() {
+		return isNotWorkflow;
+	}
 
+	/**
+	 * 设置 isNotWorkflow
+	 * @param isNotWorkflow isNotWorkflow
+	 */
+	public void setNotWorkflow(boolean isNotWorkflow) {
+		this.isNotWorkflow = isNotWorkflow;
+	}
 }

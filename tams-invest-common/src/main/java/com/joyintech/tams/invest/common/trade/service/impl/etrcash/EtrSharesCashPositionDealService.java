@@ -177,7 +177,7 @@ public class EtrSharesCashPositionDealService extends EtrCashPositionBaseService
                 // 交易生效
                 if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
                     // etrCashPositionFlowDto.setAmount(每股派息.multiply(交易数量));
-                    deal(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
+                    deal(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId, finProductTradeDto.isNotWorkflow());
                 }
                 // 交易提交
                 if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
@@ -254,7 +254,7 @@ public class EtrSharesCashPositionDealService extends EtrCashPositionBaseService
         return ret;
     }
     private static void deal(EtrPositionHoldDto etrPositionHoldDto, List<StlPayOrdersDto> stlPayOrdersDtos,
-                             EtrCashPositionFlowDto etrCashPositionFlowDto, String acctId) {
+                             EtrCashPositionFlowDto etrCashPositionFlowDto, String acctId, boolean isNotWorkflow) {
         stlPayOrdersDtos.forEach(stlPayOrdersDto -> {
             // 可用现金 资金到账日增加到账金额
             EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto();
@@ -266,16 +266,18 @@ public class EtrSharesCashPositionDealService extends EtrCashPositionBaseService
             etrCashPositionFlowDto1.setOrderId(stlPayOrdersDto.getOrderId());
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
 
-            // 预增现金 资金到账日减少到账金额
-            EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
-            BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto1);
-            etrCashPositionFlowDto2.setAmount(stlPayOrdersDto.getSettleAmt().negate());
-            etrCashPositionFlowDto2.setAcctId(stlPayOrdersDto.getMyAcctNo());
-            etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
-            etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
-            etrCashPositionFlowDto2.setSeqno(getSeqNo());
-            etrCashPositionFlowDto1.setOrderId(stlPayOrdersDto.getOrderId());
-            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
+            if (!isNotWorkflow){
+            	// 预增现金 资金到账日减少到账金额
+                EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto1);
+                etrCashPositionFlowDto2.setAmount(stlPayOrdersDto.getSettleAmt().negate());
+                etrCashPositionFlowDto2.setAcctId(stlPayOrdersDto.getMyAcctNo());
+                etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
+                etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
+                etrCashPositionFlowDto2.setSeqno(getSeqNo());
+                etrCashPositionFlowDto1.setOrderId(stlPayOrdersDto.getOrderId());
+                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
+            }
         });
     }
 

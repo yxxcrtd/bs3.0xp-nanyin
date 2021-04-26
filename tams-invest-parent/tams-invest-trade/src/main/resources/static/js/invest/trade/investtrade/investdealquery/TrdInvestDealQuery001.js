@@ -450,6 +450,7 @@ $(function(){
         	,{field:'remark', title: 'TrdInvestDealQuery001.remark',width:100}
 			,{field:'counterName', title: '交易对手',width:100}
 			,{field:'isOutTradeStr',sortField:'isOutTrade', title: '是否转仓',width:100}
+			,{field:'fTradeId',sortField:'fTradeId', width:180, title: '银行间成交编号'}
         	,{field:'finprodType2', visible:false}
         	,{field:'finprodId', visible:false}
         ]

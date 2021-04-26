@@ -4,6 +4,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.TrdFinProductBarter;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
@@ -15,6 +16,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.business.common.BaseAssetCashPositionCommService;
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioCashPositionsFlowInputDto;
 import com.joyintech.tams.invest.common.component.business.common.dto.PortfolioPositionsFlowInputDto;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -100,6 +102,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
         Map<String, Object> vDateNato = baseAssetCashPositionCommMapper.selectVDateNato(
             inputDto.getTrdProductDeal().getFinprodId());
         TrdProductDeal deal = inputDto.getTrdProductDeal();
+        TrdProductDealAdd dealAdd = inputDto.getTrdProductDealAdd();
         // 起息日
         Date vDate = vDateNato == null ? null : (Date)vDateNato.get("VDATE");
         /**
@@ -635,7 +638,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             else if (((DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
                        || 正回购_逆回购.contains(deal.getFinprodType2()))
                       && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
-                      && DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))
+                      && (DictCodeList.交易方向_买入.getValue().equals(deal.getPs()) || DictCodeListExt3.交易方向_配债.getValue().equals(deal.getPs())))
 
                      || (DictCodeListExt1.金融产品类型_投管用_存款.getValue().equals(deal.getFinprodType2())
                          && DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))
@@ -662,6 +665,19 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
 
             ) {
                 resultDto.setCdate(deal.getTradeDate());
+                // 可转债申购确认需要设置成结算日期
+                if ((DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2()))
+                        && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
+                        && dealAdd != null && StringUtil.equals(DictCodeListExt2.申购方式_网上申购.getValue(), dealAdd.getPurchModle())
+                        && DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())) {
+                	resultDto.setCdate(deal.getSettleDate());
+                }
+                // 日间成交回报不应该这么处理，应该是将成交数据明细的成交数量放到Dto的交易份额里面，该处代码复旧。
+//				if (正回购_逆回购.contains(deal.getFinprodType2()) && (DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(deal.getTradeMarket()) || DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(deal.getTradeMarket())) && (DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))) {
+//					resultDto.setAmount(deal.getTradeAmt());
+//				} else {
+//					resultDto.setAmount(deal.getShareAmt());
+//				}
                 resultDto.setAmount(deal.getShareAmt());
                 if (DictCodeListExt1.投资目的_卖空.getValue().equals(deal.getInvAim())) {
                     resultDto.setInvAim(DictCodeListExt1.投资目的_卖空.getValue());
@@ -674,6 +690,26 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                     resultDto.setAmount(deal.getShareAmt().negate());
                 }
                 result.add(resultDto);
+                // 结算数据下行，日终成交回报、质押式竞价回购、增加组合的标准券持仓登陆处理 start by chenzhuo
+                if ((StringUtils.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), deal.getFinprodType2()))
+                	   && (StringUtils.equals(DictCodeList.回购类型_质押式竞价回购.getValue(), inputDto.getAssetType2()))
+                       && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
+                       && (DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))) {
+                	PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
+                	ptlSecPositionFlowDto.setSeqno(IDGenerator.generate(20));
+                	ptlSecPositionFlowDto.setPortfolioId(inputDto.getPortfolioId());
+                	ptlSecPositionFlowDto.setSecAcctId(deal.getSecManageAcctId());
+                	ptlSecPositionFlowDto.setFinprodId(BussinessConstant.XN_STANDARD_BOND_PRODID);
+                	ptlSecPositionFlowDto.setBranch(0L);
+                	ptlSecPositionFlowDto.setInvAim("999999");
+                	ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                	ptlSecPositionFlowDto.setCdate(deal.getTradeDate());
+                	ptlSecPositionFlowDto.setCcy(deal.getCcy());
+                	ptlSecPositionFlowDto.setAmount(ArithmeticUtil.divide(deal.getPrinAmt(), new BigDecimal(100), 2).negate());
+                	ptlSecPositionFlowDto.setTradeId(deal.getTradeId());
+                	result.add(ptlSecPositionFlowDto);
+                }
+                // 日终成交回报、质押式竞价回购、增加组合的标准券持仓登陆处理 end by chenzhuo
                 return result;
             }
 

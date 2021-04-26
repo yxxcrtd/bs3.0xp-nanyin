@@ -334,6 +334,15 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
         for(String tradeId:tradeIdList){
             List<BaseTradeProductDealDto> baseTradeProductDealDto =new ArrayList<>();
             baseTradeProductDealDto = baseTradeProductDealMapper.selectByTradeId(tradeId);
+            // 针对回购，需要但素设置assetType2
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tradeId", tradeId);
+            List<String> repoAssetType2List = baseTradeProductDealMapper.selectRepoAssetType2(map);
+            if (repoAssetType2List != null && repoAssetType2List.size() > 0) {
+            	for(BaseTradeProductDealDto entity : baseTradeProductDealDto){
+                    entity.setAssetType2(repoAssetType2List.get(0));
+                }
+            }
             MstFileOutputParameter mstFileOutputParameter = mstFileCommonService.getFileInfoByBusiId(tradeId);
             for(BaseTradeProductDealDto entity : baseTradeProductDealDto){
                 entity.setMstFileOutputParameter(mstFileOutputParameter);

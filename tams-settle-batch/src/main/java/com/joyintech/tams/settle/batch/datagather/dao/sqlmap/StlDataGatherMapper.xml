@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper">
+	<sql id="settleTransDataSql">
+			std.TRADE_ID TRADE_ID,
+			std.DEAL_DATE DEAL_DATE,
+			std.SEC_TYPE SEC_TYPE,
+			std.APPLY_TRADE_ID APPLY_TRADE_ID,
+			std.FINPROD_ID FINPROD_ID,
+			std.FINPROD_TYPE FINPROD_TYPE,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.BRANCH BRANCH,
+			std.BUSI_TYPE BUSI_TYPE,
+			std.TRADE_DATE TRADE_DATE,
+			std.SETTLE_DATE SETTLE_DATE,
+			std.VDATE VDATE,
+			std.MDATE MDATE,
+			std.VPAY_DATE VPAY_DATE,
+			std.MPAY_DATE MPAY_DATE,
+			std.TERM_TYPE TERM_TYPE,
+			std.SETTLE_SPEED SETTLE_SPEED,
+			std.CCY CCY,
+			std.UNIT_CPRICE UNIT_CPRICE,
+			std.UNIT_INT UNIT_INT,
+			std.UNIT_FPRICE UNIT_FPRICE,
+			std.PAR_VALUE PAR_VALUE,
+			std.CPRICE_AMT CPRICE_AMT,
+			std.SHARE_AMT SHARE_AMT,
+			std.PRIN_AMT PRIN_AMT,
+			std.INT_AMT INT_AMT,
+			std.FPRICE_AMT FPRICE_AMT,
+			std.STAMP_FEE STAMP_FEE,
+			std.JSF_AMT JSF_AMT,
+			std.GHF_AMT GHF_AMT,
+			std.ZGF_AMT ZGF_AMT,
+			std.SXF_AMT SXF_AMT,
+			std.SETTLE_FEE SETTLE_FEE,
+			std.COMMISSION_AMT COMMISSION_AMT,
+			std.IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE,
+			std.TRADE_AMT TRADE_AMT,
+			std.PS PS,
+			std.TRADE_MARKET TRADE_MARKET,
+			std.TRADE_MARKET_MODE TRADE_MARKET_MODE,
+			std.TRADE_PLAT TRADE_PLAT,
+			std.PLEDGE_SEC_NUM PLEDGE_SEC_NUM,
+			std.SEAT_NUMBER SEAT_NUMBER,
+			std.PORTFOLIO_ID PORTFOLIO_ID,
+			std.SEC_ACCT_ID SEC_ACCT_ID,
+			std.ACCT_NO ACCT_NO,
+			std.BATCH_NUMBER BATCH_NUMBER,
+			std.M_PRIN_AMT M_PRIN_AMT,
+			std.M_INT_AMT M_INT_AMT,
+			std.M_TRADE_AMT M_TRADE_AMT,
+			std.INT_RATE INT_RATE,
+			std.BASIS BASIS,
+			std.BUSI_SCENE_CALSS BUSI_SCENE_CALSS,
+			std.SETTLE_MODE SETTLE_MODE,
+			std.STAMP_FEE_RAW STAMP_FEE_RAW,
+			std.JSF_AMT_RAW JSF_AMT_RAW,
+			std.GHF_AMT_RAW GHF_AMT_RAW,
+			std.ZGF_AMT_RAW ZGF_AMT_RAW,
+			std.SXF_AMT_RAW SXF_AMT_RAW,
+			std.SETTLE_FEE_RAW SETTLE_FEE_RAW,
+			std.COMMISSION_AMT_RAW COMMISSION_AMT_RAW,
+			std.TRADE_AMT_RAW TRADE_AMT_RAW,
+			std.TRADE_ID_RAW TRADE_ID_RAW,
+			std.SEQ_NO SEQ_NO,
+			std.IS_PURCH_TYPE_YX IS_PURCH_TYPE_YX
+		FROM
+			SETTLE_TRANS_DATA std
+	</sql>
+    <select id="selectSettleTransData" parameterType="java.util.Map"
+            resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT
+			NVL(NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID), NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID)) ORDER_ID,
+			case when ptl.PROFIT_TYPE = '01' then 'FVTPL' else 'AC' end as invAim,
+			<include refid="settleTransDataSql"></include>
+			LEFT JOIN T_ENTRUSTHISTORY teh ON std.APPLY_TRADE_ID = teh.BROKER_ENTRUST_ID and teh.ENTRUST_STATUS IN ('2', '5', '8')
+			LEFT JOIN T_ENTRUST te ON std.APPLY_TRADE_ID = te.BROKER_ENTRUST_ID and te.ENTRUST_STATUS IN ('2', '5', '8')
+			LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh ON std.APPLY_TRADE_ID = tieh.BROKER_ENTRUST_ID and tieh.ENTRUST_STATUS IN ('2', '5', '8')
+			LEFT JOIN T_INTEGRATED_ENTRUST tie ON std.APPLY_TRADE_ID = tie.BROKER_ENTRUST_ID and tie.ENTRUST_STATUS IN ('2', '5', '8')
+			LEFT JOIN ETR_ENTRUST ee ON (ee.ENTRUST_ID = NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID) OR ee.ENTRUST_ID = NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID))
+			LEFT JOIN PTL_PORTFOLIO ptl ON (ptl.PORTFOLIO_ID = std.PORTFOLIO_ID)
+		<where>
+			(te.BROKER_ENTRUST_ID IS NOT NULL OR teh.BROKER_ENTRUST_ID IS NOT NULL OR tie.BROKER_ENTRUST_ID IS NOT NULL OR tieh.BROKER_ENTRUST_ID IS NOT NULL)
+			<if test="dealDate != null">
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="finprodIdList != null and finprodIdList.size() > 0">
+				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
+           			#{finprodId,jdbcType=VARCHAR}
+           		</foreach>
+			</if>
+			<if test="busiType != null">
+				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			</if>
+			<if test="busiTypeList != null and busiTypeList.size() > 0">
+				<foreach collection="busiTypeList" item="busiType" open="AND std.BUSI_TYPE IN (" close=")" separator=",">
+           			#{busiType,jdbcType=VARCHAR}
+           		</foreach>
+			</if>
+            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+           		<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+           			#{portfolioId,jdbcType=VARCHAR}
+           		</foreach>
+       		</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+        </where>
+    </select>
+
+	<!-- 前置交易编号查询 -->
+	<select id="selectBTradeId" resultType="java.lang.String">
+		SELECT DISTINCT
+			TRADE_ID_TG
+		FROM
+			SETTLE_TRANS_DATA t1
+		INNER JOIN SETTLE_TRANS_TG_MAPPING t2
+			ON t1.TRADE_ID = t2.TRADE_ID
+		<where>
+			t1.APPLY_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+			<if test="ps != null">
+				and t1.PS = #{ps,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<!-- 从成交数据明细表获取债券质押式回购到期续作（续作前期到期）交易明细数据 -->
+	<select id="selectContinuationSettleTransData" resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT
+		<include refid="settleTransDataSql"></include>
+		<where>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="tradeIdList != null and tradeIdList.size() > 0">
+				<foreach collection="tradeIdList" item="tradeId" open="AND std.TRADE_ID_RAW IN (" close=")" separator=",">
+					#{tradeId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<!-- 从成交数据明细表获取债券质押式协议回购提前终止、到期交易明细数据 -->
+	<select id="selectEndSettleTransData" resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT
+		NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID) ORDER_ID,
+		ee.INV_AIM invAim,
+		stda.REPO_TYPE,
+		<include refid="settleTransDataSql"></include>
+		INNER JOIN SETTLE_TRANS_DATA_ADD stda ON stda.TRADE_ID=std.TRADE_ID
+		LEFT JOIN T_ENTRUSTHISTORY teh ON std.APPLY_TRADE_ID = teh.ENTRUST_ID
+		LEFT JOIN T_ENTRUST te ON std.APPLY_TRADE_ID = te.ID
+		LEFT JOIN ETR_ENTRUST ee ON ee.ENTRUST_ID = NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID)
+		<where>
+			(te.ID IS NOT NULL OR teh.ENTRUST_ID IS NOT NULL)
+			<if test="dealDate != null">
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="busiType != null">
+				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			</if>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="repoType != null">
+				AND stda.REPO_TYPE = #{repoType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<!-- 从成交数据明细表获取债券质押式竞价回购到期交易明细数据 -->
+	<select id="selectBiddingSettleTransData" resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT DISTINCT
+		stda.REPO_TYPE,
+		sttm.TRADE_ID_TG,
+		<include refid="settleTransDataSql"></include>
+		INNER JOIN SETTLE_TRANS_DATA_ADD stda ON stda.TRADE_ID=std.TRADE_ID
+		INNER JOIN SETTLE_TRANS_TG_MAPPING sttm ON sttm.TRADE_ID=std.TRADE_ID
+		<where>
+			<if test="dealDate != null">
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="busiType != null">
+				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			</if>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="repoType != null">
+				AND stda.REPO_TYPE = #{repoType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectFundDelSettleTransData" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto">
+		SELECT
+			PSP.PORTFOLIO_ID as portfolioId,/* 组合持仓.组合代码*/
+			PSP.FINPROD_ID as finprodId, /* 组合持仓.金融产品代码*/
+			FP.FINPROD_TYPE2 as finprodType2, /* 标的类金融产品.金融产品类型（投管）*/
+			FP.CCY as ccy, /*标的类金融产品.币种 */
+			FP.TRADE_MARKET as tradeMarket,  /*标的类金融产品.币种*/
+			PSP.AMOUNT as redDateAmt, /*组合持仓.数量 */
+			MFBN.REG_DATE as regDate, /*基金分红公告.权益登记日*/
+			MFBN.DEL_DATE as delDate, /*基金分红公告.除权日*/
+			MFBN.DEVIDENT_DATE as devidentDate, /*基金分红公告.派息日*/
+			MFBN.UNIT_BONUS_UNIT_VALUE as unitBonusUnitValue, /*基金分红公告.单位分红净值*/
+			(MFBN.UNIT_BONUS_UNIT_VALUE * PSP.AMOUNT) as bonusAmt, /*基金分红公告.单位分红净值*组合持仓.数量*/
+			'02' as bonusMode, /*现金流支付规则表.支付方式 */
+			PSP.SEC_ACCT_ID as secAcctId /*组合持仓.证券账户代码*/
+		FROM
+			PTL_SEC_POSITION PSP /*组合持仓*/
+		JOIN
+			FIN_PRODUCT FP /*标的类金融产品*/
+		ON
+			FP.FINPROD_ID = PSP.FINPROD_ID
+		AND
+			FP.FINPROD_TYPE2 = 'F06' AND FP.PROFIT_TYPE != '03'
+		JOIN
+			MST_FUND_BONUS_NOTICE MFBN /*基金分红公告*/
+		ON
+			MFBN.FUND_ID = FP.FINPROD_MARKET_ID
+		AND
+			MFBN.REG_DATE = PSP.CDATE
+		JOIN
+			FIN_CASH_INFO FCI /*现金流信息*/
+		ON
+			FCI.FINPROD_ID = FP.FINPROD_ID
+		AND
+			FCI.CASH_TYPE_2 = 'C02'
+		<where>
+			<if test="dealDate != null">
+				AND MFBN.DEL_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND PSP.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+    <select id="selectSettleDelDealDetail" parameterType="java.util.Map"
+            resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto">
+		SELECT
+			A.PORTFOLIO_ID as portfolioId,
+			A.FINPROD_ID as finprodId,
+			C.FINPROD_TYPE2 as finprodType2,
+			C.CCY as ccy,
+			A.AMOUNT as redDateAmt,
+			B.REG_DATE as regDate,
+			B.DEL_DATE as delDate,
+			B.DEVIDENT_DATE as devidentDate,
+			B.REDSHARE_LISTING_DATE as redShareListingDate,
+			B.PER_DEVIDENT_AMT as preDevidengAmt,
+			B.PER_DEVIDENT_CASH as preDevidengCash,
+			B.PER_DEVIDENT_CASH * A.AMOUNT as bonusAmt,
+			B.PER_DEVIDENT_AMT * A.AMOUNT as bonusQty,
+			A.SEC_ACCT_ID as secAcctId,
+			C.TRADE_MARKET as tradeMarket
+		FROM
+			PTL_SEC_POSITION A,
+			MST_SHARE_BONUS_NOTICE B,
+			FIN_PRODUCT C
+        <where>
+			A.FINPROD_ID = C.FINPROD_ID AND C.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR} AND C.FINPROD_MARKET_ID = B.SHARES_ID AND A.CDATE = B.REG_DATE
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+           		<foreach collection="portfolioIdList" item="portfolioId" open="AND A.PORTFOLIO_ID IN (" close=")" separator=",">
+           			#{portfolioId,jdbcType=VARCHAR}
+           		</foreach>
+       		</if>
+			<if test="startDate != null">
+				AND B.DEL_DATE &gt;= #{startDate,jdbcType=DATE}
+			</if>
+			<if test="endDate != null">
+				AND B.DEL_DATE &lt;= #{endDate,jdbcType=DATE}
+			</if>
+        </where>
+    </select>
+
+	<select id="selectCashBonusSettleTransData" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT
+		<include refid="settleTransDataSql"></include>
+		<where>
+			<!-- <if test="dealDate != null">
+				AND std.TRADE_DATE = #{dealDate,jdbcType=DATE}
+			</if> -->
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="busiType != null">
+				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			</if>
+			<if test="busiTypeList != null and busiTypeList.size() > 0">
+				<foreach collection="busiTypeList" item="busiType" open="AND std.BUSI_TYPE IN (" close=")" separator=",">
+           			#{busiType,jdbcType=VARCHAR}
+           		</foreach>
+			</if>
+			<if test="finprodIdList != null and finprodIdList.size() > 0">
+				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
+           			#{finprodId,jdbcType=VARCHAR}
+           		</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateSettleTransTgMapping" parameterType="java.util.Map">
+		UPDATE SETTLE_TRANS_TG_MAPPING
+		<set>
+			TRADE_ID_TG = #{tradeIdTg,jdbcType=VARCHAR},
+			TG_DATA_STATUS = #{tgDataStatus,jdbcType=VARCHAR}
+		</set>
+		<where>
+			<foreach collection="tradeIdList" item="tradeId" open="AND TRADE_ID IN (" close=")" separator=",">
+				#{tradeId,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</update>
+
+	<delete id="deleteParam">
+		delete from SETTLE_BATCH_PARA
+		where DEAL_DATE = #{dealDate, jdbcType=DATE}
+	</delete>
+
+	<select id="selectNhfTotalTrdProductDealDto" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.TotalTrdProductDealDto">
+		SELECT
+			A.TOTLE_TRADE_ID
+		FROM
+			TRD_FIN_PRODUCT_DEAL_TOTAL A,
+			PA_TRD_FIN_PRODUCT_DEAL_TOTAL B
+		<where>
+			A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND A.PS = #{ps,jdbcType=VARCHAR} AND A.TRADE_DATE &lt;= #{fhDate,jdbcType=DATE} 
+			AND A.TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR} AND A.IS_CANCEL = #{isCancel,jdbcType=VARCHAR} 
+			AND A.TOTLE_TRADE_ID = B.TOTLE_TRADE_ID AND B.BONUS_CFM_DATE = #{fhDate,jdbcType=DATE}
+		</where>
+	</select>
+	
+	<select id="queryTotalAddByTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper.BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper.Base_Column_List" />
+		from TRD_DEAL_TOTAL_ADD
+		where TOTLE_TRADE_ID = (select TOTLE_TRADE_ID from trd_product_deal where trade_id = #{tradeId,jdbcType=VARCHAR})
+	</select>
+</mapper>

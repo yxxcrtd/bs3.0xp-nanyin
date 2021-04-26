@@ -186,6 +186,8 @@
 	        <result column="TPDA_WITH_LOCK_PERIOD" property="withLockPeriod" jdbcType="VARCHAR" />
 	        <result column="TPDA_REF_RATE" property="refRate" jdbcType="VARCHAR" />
 	        <!-- 新增表字段对应 add by renping 2019-07-24 end -->
+	        <!-- 新增字段：申购方式，结算数据下行需要 -->
+	        <result column="TPDA_PURCH_MODLE" property="purchModle" jdbcType="VARCHAR" />
         </association>
 		<association property="paTrdProductDeal" javaType="com.joyintech.tams.common.base.entity.PaTrdProductDeal">
 			<id     column="PTPD_TRADE_ID " property="tradeId" jdbcType="VARCHAR" />
@@ -647,6 +649,7 @@
 			TPDA.WITH_LOCK_PERIOD TPDA_WITH_LOCK_PERIOD,
 			TPDA.REF_RATE TPDA_REF_RATE,
 		    <!-- 新增表字段对应 add by renping 2019-07-24 end -->
+		    TPDA.PURCH_MODLE TPDA_PURCH_MODLE,
 			PTPD.TRADE_ID PTPD_TRADE_ID,
 			PTPD.BRANCH PTPD_BRANCH,
 			PTPD.PA_BUSS_TYPE PTPD_PA_BUSS_TYPE,
@@ -853,6 +856,7 @@
 			TPDA.WITH_LOCK_PERIOD TPDA_WITH_LOCK_PERIOD,
 			TPDA.REF_RATE TPDA_REF_RATE,
 		    <!-- 新增表字段对应 add by renping 2019-07-24 end -->
+		    TPDA.PURCH_MODLE TPDA_PURCH_MODLE,
 			PTPD.TRADE_ID PTPD_TRADE_ID,
 			PTPD.BRANCH PTPD_BRANCH,
 			PTPD.PA_BUSS_TYPE PTPD_PA_BUSS_TYPE,
@@ -1118,6 +1122,7 @@
 	TPDA.LOCK_MDATE TPDA_LOCK_MDATE,
 	TPDA.WITH_LOCK_PERIOD TPDA_WITH_LOCK_PERIOD,
 	TPDA.REF_RATE TPDA_REF_RATE,
+	TPDA.PURCH_MODLE TPDA_PURCH_MODLE,
 	PTPD.TRADE_ID PTPD_TRADE_ID,
 	PTPD.BRANCH PTPD_BRANCH,
 	PTPD.PA_BUSS_TYPE PTPD_PA_BUSS_TYPE,
@@ -1134,8 +1139,8 @@
 	PTPD.DEPT_CODE PTPD_DEPT_CODE,
 	PTPD.BACK_LEND_DIRECTION PTPD_BACK_LEND_DIRECTION,
 	tfpb.TRADE_ID TFPB_TRADE_ID,
-	tfpb.FINPROD_ID TFPB_,
-	tfpb.FINPROD_TYPE TFPB_FINPROD_ID,
+	tfpb.FINPROD_ID TFPB_FINPROD_ID,
+	tfpb.FINPROD_TYPE TFPB_FINPROD_TYPE,
 	tfpb.BRANCH TFPB_BRANCH,
 	tfpb.UNIT_CPRICE TFPB_UNIT_CPRICE,
 	tfpb.PRIN_AMT TFPB_PRIN_AMT,
@@ -1323,4 +1328,13 @@
 		set order_status = #{tradeStatus,jdbcType=VARCHAR}
 		WHERE TRADE_ID =#{trdProductDealList,jdbcType=VARCHAR}
 	</update>
+	
+	<select id="selectRepoAssetType2" resultType="java.lang.String">
+		SELECT
+			TYPE_6
+		FROM
+			FIN_PRODUCT_TYPE
+		WHERE
+			FINPROD_ID = #{tradeId,jdbcType=VARCHAR}
+	</select>
 </mapper>

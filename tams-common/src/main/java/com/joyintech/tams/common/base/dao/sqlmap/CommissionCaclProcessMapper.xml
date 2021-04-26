@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.CommissionCaclProcessMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.CommissionCaclProcess" >
+        <id column="BUSI_NO" property="busiNo" jdbcType="VARCHAR" />
+        <result column="CALC_WAY" property="calcWay" jdbcType="VARCHAR" />
+        <result column="CALC_BASE" property="calcBase" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="INCLUDE_JSF_AMT" property="includeJsfAmt" jdbcType="DECIMAL" />
+        <result column="INCLUDE_SETTLE_FEE" property="includeSettleFee" jdbcType="DECIMAL" />
+        <result column="INCLUDE_ZGF_AMT" property="includeZgfAmt" jdbcType="DECIMAL" />
+        <result column="INCLUDE_GHF_AMT" property="includeGhfAmt" jdbcType="DECIMAL" />
+        <result column="INCLUDE_STAMP_FEE" property="includeStampFee" jdbcType="DECIMAL" />
+        <result column="MAX_QUOTA_AMT" property="maxQuotaAmt" jdbcType="DECIMAL" />
+        <result column="MIN_QUOTA_AMT" property="minQuotaAmt" jdbcType="DECIMAL" />
+        <result column="COMMISSION_AMT" property="commissionAmt" jdbcType="DECIMAL" />
+        <result column="BATCH_NUMBER" property="batchNumber" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BUSI_NO BUSI_NO, CALC_WAY CALC_WAY, CALC_BASE CALC_BASE, YIELD YIELD, INCLUDE_JSF_AMT INCLUDE_JSF_AMT, 
+        INCLUDE_SETTLE_FEE INCLUDE_SETTLE_FEE, INCLUDE_ZGF_AMT INCLUDE_ZGF_AMT, INCLUDE_GHF_AMT INCLUDE_GHF_AMT, 
+        INCLUDE_STAMP_FEE INCLUDE_STAMP_FEE, MAX_QUOTA_AMT MAX_QUOTA_AMT, MIN_QUOTA_AMT MIN_QUOTA_AMT, 
+        COMMISSION_AMT COMMISSION_AMT, BATCH_NUMBER BATCH_NUMBER, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CommissionCaclProcessMapper.Base_Column_List" />
+        from COMMISSION_CACL_PROCESS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CommissionCaclProcessMapper.Base_Column_List" />
+        from COMMISSION_CACL_PROCESS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.CommissionCaclProcessMapper.Base_Column_List" />
+        from COMMISSION_CACL_PROCESS
+        where BUSI_NO = #{busiNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from COMMISSION_CACL_PROCESS
+        where BUSI_NO = #{busiNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.CommissionCaclProcess" >
+        insert into COMMISSION_CACL_PROCESS (BUSI_NO, CALC_WAY, CALC_BASE, 
+            YIELD, INCLUDE_JSF_AMT, INCLUDE_SETTLE_FEE, 
+            INCLUDE_ZGF_AMT, INCLUDE_GHF_AMT, INCLUDE_STAMP_FEE, 
+            MAX_QUOTA_AMT, MIN_QUOTA_AMT, COMMISSION_AMT, 
+            BATCH_NUMBER, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{busiNo,jdbcType=VARCHAR}, #{calcWay,jdbcType=VARCHAR}, #{calcBase,jdbcType=VARCHAR}, 
+            #{yield,jdbcType=DECIMAL}, #{includeJsfAmt,jdbcType=DECIMAL}, #{includeSettleFee,jdbcType=DECIMAL}, 
+            #{includeZgfAmt,jdbcType=DECIMAL}, #{includeGhfAmt,jdbcType=DECIMAL}, #{includeStampFee,jdbcType=DECIMAL}, 
+            #{maxQuotaAmt,jdbcType=DECIMAL}, #{minQuotaAmt,jdbcType=DECIMAL}, #{commissionAmt,jdbcType=DECIMAL}, 
+            #{batchNumber,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CommissionCaclProcess" >
+        insert into COMMISSION_CACL_PROCESS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="busiNo != null" >
+                BUSI_NO,
+            </if>
+            <if test="calcWay != null" >
+                CALC_WAY,
+            </if>
+            <if test="calcBase != null" >
+                CALC_BASE,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="includeJsfAmt != null" >
+                INCLUDE_JSF_AMT,
+            </if>
+            <if test="includeSettleFee != null" >
+                INCLUDE_SETTLE_FEE,
+            </if>
+            <if test="includeZgfAmt != null" >
+                INCLUDE_ZGF_AMT,
+            </if>
+            <if test="includeGhfAmt != null" >
+                INCLUDE_GHF_AMT,
+            </if>
+            <if test="includeStampFee != null" >
+                INCLUDE_STAMP_FEE,
+            </if>
+            <if test="maxQuotaAmt != null" >
+                MAX_QUOTA_AMT,
+            </if>
+            <if test="minQuotaAmt != null" >
+                MIN_QUOTA_AMT,
+            </if>
+            <if test="commissionAmt != null" >
+                COMMISSION_AMT,
+            </if>
+            <if test="batchNumber != null" >
+                BATCH_NUMBER,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="busiNo != null" >
+                #{busiNo,jdbcType=VARCHAR},
+            </if>
+            <if test="calcWay != null" >
+                #{calcWay,jdbcType=VARCHAR},
+            </if>
+            <if test="calcBase != null" >
+                #{calcBase,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="includeJsfAmt != null" >
+                #{includeJsfAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="includeSettleFee != null" >
+                #{includeSettleFee,jdbcType=DECIMAL},
+            </if>
+            <if test="includeZgfAmt != null" >
+                #{includeZgfAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="includeGhfAmt != null" >
+                #{includeGhfAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="includeStampFee != null" >
+                #{includeStampFee,jdbcType=DECIMAL},
+            </if>
+            <if test="maxQuotaAmt != null" >
+                #{maxQuotaAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="minQuotaAmt != null" >
+                #{minQuotaAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="commissionAmt != null" >
+                #{commissionAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="batchNumber != null" >
+                #{batchNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CommissionCaclProcess" >
+        insert into COMMISSION_CACL_PROCESS(BUSI_NO, CALC_WAY, CALC_BASE, YIELD, INCLUDE_JSF_AMT, 
+        INCLUDE_SETTLE_FEE, INCLUDE_ZGF_AMT, INCLUDE_GHF_AMT, INCLUDE_STAMP_FEE, MAX_QUOTA_AMT, 
+        MIN_QUOTA_AMT, COMMISSION_AMT, BATCH_NUMBER, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select BUSI_NO, CALC_WAY, CALC_BASE, YIELD, INCLUDE_JSF_AMT, 
+            INCLUDE_SETTLE_FEE, INCLUDE_ZGF_AMT, INCLUDE_GHF_AMT, INCLUDE_STAMP_FEE, MAX_QUOTA_AMT, 
+            MIN_QUOTA_AMT, COMMISSION_AMT, BATCH_NUMBER, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from COMMISSION_CACL_PROCESS
+             where 1 = 1 and BUSI_NO = #{busiNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.CommissionCaclProcess" >
+        update COMMISSION_CACL_PROCESS
+        <set >
+            <if test="calcWay != null" >
+                CALC_WAY = #{calcWay,jdbcType=VARCHAR},
+            </if>
+            <if test="calcBase != null" >
+                CALC_BASE = #{calcBase,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="includeJsfAmt != null" >
+                INCLUDE_JSF_AMT = #{includeJsfAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="includeSettleFee != null" >
+                INCLUDE_SETTLE_FEE = #{includeSettleFee,jdbcType=DECIMAL},
+            </if>
+            <if test="includeZgfAmt != null" >
+                INCLUDE_ZGF_AMT = #{includeZgfAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="includeGhfAmt != null" >
+                INCLUDE_GHF_AMT = #{includeGhfAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="includeStampFee != null" >
+                INCLUDE_STAMP_FEE = #{includeStampFee,jdbcType=DECIMAL},
+            </if>
+            <if test="maxQuotaAmt != null" >
+                MAX_QUOTA_AMT = #{maxQuotaAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="minQuotaAmt != null" >
+                MIN_QUOTA_AMT = #{minQuotaAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="commissionAmt != null" >
+                COMMISSION_AMT = #{commissionAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="batchNumber != null" >
+                BATCH_NUMBER = #{batchNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where BUSI_NO = #{busiNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.CommissionCaclProcess" >
+        update COMMISSION_CACL_PROCESS
+        set CALC_WAY = #{calcWay,jdbcType=VARCHAR},
+            CALC_BASE = #{calcBase,jdbcType=VARCHAR},
+            YIELD = #{yield,jdbcType=DECIMAL},
+            INCLUDE_JSF_AMT = #{includeJsfAmt,jdbcType=DECIMAL},
+            INCLUDE_SETTLE_FEE = #{includeSettleFee,jdbcType=DECIMAL},
+            INCLUDE_ZGF_AMT = #{includeZgfAmt,jdbcType=DECIMAL},
+            INCLUDE_GHF_AMT = #{includeGhfAmt,jdbcType=DECIMAL},
+            INCLUDE_STAMP_FEE = #{includeStampFee,jdbcType=DECIMAL},
+            MAX_QUOTA_AMT = #{maxQuotaAmt,jdbcType=DECIMAL},
+            MIN_QUOTA_AMT = #{minQuotaAmt,jdbcType=DECIMAL},
+            COMMISSION_AMT = #{commissionAmt,jdbcType=DECIMAL},
+            BATCH_NUMBER = #{batchNumber,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where BUSI_NO = #{busiNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

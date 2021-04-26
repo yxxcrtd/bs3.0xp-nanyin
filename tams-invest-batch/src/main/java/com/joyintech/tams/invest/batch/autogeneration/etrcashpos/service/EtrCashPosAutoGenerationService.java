@@ -100,7 +100,10 @@ public class EtrCashPosAutoGenerationService {
                 BigDecimal 剩余数量 = ArithmeticUtil.subtract(etrEntrust.getEntrustNum(), etrFinish == null ? BigDecimal.ZERO : etrFinish);
                 BigDecimal 最新市价 = etrEntrust.getPrice();
                 if (etrEntrust.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-                    最新市价 = EtrSecCashPositionDealService.gen委托全价(etrEntrust.getEntrustId(), batchDate);
+                	//添加新的参数  add by zhangpei 20201119 start
+                    //最新市价 = EtrSecCashPositionDealService.gen委托全价(etrEntrust.getEntrustId(), batchDate, etrEntrust.getTradeMarket());
+                    最新市价 = EtrSecCashPositionDealService.gen委托全价(etrEntrust.getEntrustId(), batchDate, etrEntrust.getTradeMarket(),null);
+                    //添加新的参数  add by zhangpei 20201119 end
                 } else if (etrEntrust.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
                     最新市价 = EtrCommonCashPositionDealService.getClosePrice(etrEntrust.getEntrustId(), batchDate);
                 }

@@ -17,7 +17,7 @@
             , ps: $('#ps').val()
             // 有效状态
             , validStatus: $('#validStatus').val()
-            ,fTradeId:fTradeId?fTradeId:''
+            ,fTradeId:fTradeId ? fTradeId : $('#fTradeId').val()
             ,chlFinprodId: $('#chlFinprodId').val()
             ,finprodId: $('#finprodId').val()
         };
@@ -72,7 +72,7 @@
             {field: 'validStatusText', width:120, sortField:'validStatus', title: 'TrdRepoTrade001.colModel.validStatus'}
             , {field: 'tradeId', width:180, sortField:'tradeId', title: 'TrdRepoTrade001.colModel.tradeId'}
             , {field: 'entrustId', width:180, sortField:'entrustId', title: 'TrdRepoTrade001.colModel.entrustId'}
-            ,{field:'fTradeId',sortField:'fTradeId', width:180, title: 'TrdBondInvestTrade002.fTradeId'}
+            //,{field:'fTradeId',sortField:'fTradeId', width:180, title: 'TrdBondInvestTrade002.fTradeId'}
             , {
                 field: 'portfolioId', width:180, sortField:'portfolioId', title: 'TrdRepoTrade001.colModel.portfolioId',
                 render: function (data, type, row, meta) {
@@ -89,6 +89,7 @@
             , {field: 'tradeDate', width:120, sortField:'tradeDate', title: 'TrdRepoTrade001.colModel.tradeDate', type: 'date'}
             , {field: 'prinAmt', width:120, sortField:'prinAmt', title: 'TrdRepoTrade001.colModel.prinAmt', type: 'money'}
             , {field: 'ccyText', width:120, sortField:'ccy', title: 'TrdRepoTrade001.colModel.ccy'}
+            , {field:'fTradeId',sortField:'fTradeId', width:180, title: '银行间成交编号'}
             , {field: 'remark', width:120, sortable:false, title: 'TrdRepoTrade001.colModel.remark'}
             , {field: 'ps', visible: false}
             , {field: 'repoType', visible: false}

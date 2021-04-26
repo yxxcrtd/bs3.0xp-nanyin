@@ -838,12 +838,22 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         EtrFinishStatus etrFinishStatus = new EtrFinishStatus();
         etrFinishStatus.setEntrustId(entrustId);
         etrFinishStatus.setTradeId(tradeId);
-        int count = etrInvestInfoMapper.deleteEtrFinishStatusByPrimaryKey(etrFinishStatus);
-        // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已接收”
-        boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_已接收.getValue());
-        // 判断取消完成委托是否完成
-        if (flag && count >= 1) {
-            return true;
+        int count = baseEtrInvestInfoMapper.deleteEtrFinishStatusByPrimaryKey(etrFinishStatus);
+        // 指令释放后撤销交易，如果指令是待接收状态，则不改变指令状态 modify by yufei 20200804 start
+        // 委托指令查询
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
+        if (etrEntrust != null) {
+	        String entrustStatus = DictCodeList.委托状态_已接收.getValue();
+	        if(StringUtil.equals(etrEntrust.getEntrustStatus(),DictCodeList.委托状态_待接收.getValue())){
+	            entrustStatus = DictCodeList.委托状态_待接收.getValue();
+	        }
+	        // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已接收”
+	        boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, entrustStatus);
+	        // 指令释放后撤销交易，如果指令是待接收状态，则不改变指令状态 modify by yufei 20200804 end
+	        // 判断取消完成委托是否完成
+	        if (flag && count >= 1) {
+	            return true;
+	        }
         }
         return false;
     }

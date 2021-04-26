@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
@@ -245,7 +246,9 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             // 是否包含通道
             if (StringUtil.isEmpty(chlId)) {
                 // 委托直投买入（包括外部买入、内转买入）
-                if (StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())) {
+            	// add by zhangliang 20200901 配债生成指令持仓和现金逻辑同债券买入处理 start
+                if (StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue()) || StringUtil.equals(ps, DictCodeListExt3.交易方向_配债.getValue())) {
+                // add by zhangliang 20200901 配债生成指令持仓和现金逻辑同债券买入处理 end
                     债券_银行间_委托直投买入(finProductTradeDto, 持仓类型, etrPositionHoldDto);
                 }
                 // 委托直投卖出/行权（包括外部卖出、内转卖出）
@@ -521,7 +524,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                 // 添加现金流水到目标dto
                 etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 // TODO 委托冲销流水生成
-                etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易券份额));
+                etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易券份额,finProductTradeDto.getTrdProductDeal().getSettleDate(), finProductTradeDto.getTrdProductDeal().getTradeMarket()));
             }
             // 无委托
             else {
@@ -673,7 +676,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                 // 添加现金流水到目标dto
                 etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 // TODO 委托冲销流水生成
-                etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量));
+                etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量,finProductTradeDto.getTrdProductDeal().getSettleDate(),finProductTradeDto.getTrdProductDeal().getTradeMarket()));
             }
             // 无委托
             else {
@@ -813,13 +816,20 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                 etrSecPositionFlowDto.setAmount(交易日数量);
                 // 添加持仓流水到目标dto
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
-                // 交割日减少(交易金额-交易券面总额*委托全价/债券面值）
-                etrCashPositionFlowDto.setAmount(交易日减少金额);
 
-                // 添加现金流水到目标dto
-                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
-                // TODO 委托冲销流水生成
-                etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量));
+                //场内交易下单成交交易日间不产生流水影响指令现金 add by chendijun
+                if (!StringUtil.equals(finProductTradeDto.getIsFromExchange(), DictCodeList.是否_是.getValue())) {
+                    // 交割日减少(交易金额-交易券面总额*委托全价/债券面值）
+                    etrCashPositionFlowDto.setAmount(交易日减少金额);
+                    // 添加现金流水到目标dto
+                    etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+// 汇总确认和中标结果维护已经把未中标的部分释放了，这里正常冲销就行了
+//                if(StringUtil.isNotEmpty(finProductTradeDto.getBondFirstSign())){
+//                	etrPositionHoldDto.getPtlCashPositionFlows().add(gen一级市场冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量));
+//                }else{
+                        etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量,finProductTradeDto.getTrdProductDeal().getSettleDate(), finProductTradeDto.getTrdProductDeal().getTradeMarket()));
+//                }
+                }
             }
             // 无委托
             else {
@@ -946,8 +956,19 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
             // 交易方向
             String ps = etrEntrust.getPs();
-            BigDecimal 委托全价 = gen委托全价(etrEntrust.getEntrustId(), entrustCommonDto.getEtrEntrust().getEntrustDate());
-            if (DictCodeList.交易方向_买入.getValue().equals(ps)) {
+            Date settledate = etrEntrust.getVdate();
+            if(StringUtil.isNotEmpty(entrustCommonDto.getSettleDate())){//清算速度对应的交割日期
+                settledate =entrustCommonDto.getSettleDate();
+            }
+            //添加新的参数 add by zhangpei 20201119 start
+            //BigDecimal 委托全价 = gen委托全价(etrEntrust.getEntrustId(), settledate, etrEntrust.getTradeMarket());
+            BigDecimal 委托全价 = gen委托全价(etrEntrust.getEntrustId(), settledate, etrEntrust.getTradeMarket(),entrustCommonDto);
+            //添加新的参数 add by zhangpei 20201119 end
+            if (DictCodeList.交易方向_买入.getValue().equals(ps)
+                    // add by dubaojun 2020-08-14 场内交易增加配债逻辑 start
+                    || DictCodeListExt3.交易方向_配债.getValue().equals(ps)
+                    || DictCodeList.交易方向_申购.getValue().equals(ps)) {
+                    // add by dubaojun 2020-08-14 场内交易增加配债逻辑 end
                 // 委托生成的现金流水
                 EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDtoFromEtr(
                     entrustCommonDto);
@@ -1023,11 +1044,27 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
      * @param dealDate 日期
      * @return 委托全价
      */
-    public static BigDecimal gen委托全价(String entrustId, Date dealDate) {
+    public static BigDecimal gen委托全价(String entrustId, Date dealDate, String tradePlace,EntrustCommonDto entrustCommons) {
         EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(entrustId);
+        //产品化_债券二级指令 如果entrustCommonDto为空，则赋值为流程中的数据  add by zhangpei 20201119 start
+        if(StringUtil.isNotEmpty(entrustCommonDto)){
+        	 if(!StringUtil.isNotEmpty(entrustCommonDto.getEtrEntrust())||!StringUtil.isNotEmpty(entrustCommonDto.getEtrEntrustAdd())){
+             	if(StringUtil.isNotEmpty(entrustCommonDto)){
+             		BeanUtil.copyPropertiesIgnoreNull(entrustCommonDto, entrustCommons);
+             	}
+             }
+        }
+        //产品化_债券二级指令 如果entrustCommonDto为空，则赋值为流程中的数据  add by zhangpei 20201119 end
+        
         // 价格模式_指定价格(DictCode.价格模式,"PRM01","指定价格"),
         // 价格模式_限价指令(DictCode.价格模式,"PRM02","限价指令"),
         // 价格模式_市价指令(DictCode.价格模式,"PRM03","市价指令"),
+        // add by zhangliang 20200902 交易所取委托信息里的全价 start
+        if (StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_上海证券交易所.getValue())
+    		||StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_深圳证券交易所.getValue()) ){
+        	return entrustCommonDto.getEtrEntrustAdd().getFullPrice();
+        }
+        // add by zhangliang 20200902 交易所取委托信息里的全价 end
         if (StringUtil.equals(entrustCommonDto.getEtrEntrust().getPriceModel(), DictCodeListExt2.价格模式_指定价格.getValue())
             || StringUtil.equals(entrustCommonDto.getEtrEntrust().getPriceModel(), DictCodeListExt2.价格模式_限价指令.getValue())) {
             BigDecimal 委托净价 = entrustCommonDto.getEtrEntrust().getPrice();
@@ -1073,6 +1110,10 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             BigDecimal 最新市价 = EtrCommonCashPositionDealService.find最新市价(map);
             if (最新市价 == null) {
                 最新市价 = 债券面值;
+            } else {
+                EtrCommonCashPositionDealService etrCommonCashPositionDealService = SpringContextUtil.getBean(EtrCommonCashPositionDealService.class);
+                BigDecimal 单位应计利息 = etrCommonCashPositionDealService.gen应计利息(entrustCommonDto.getEtrEntrust().getFinprodId(),dealDate);
+                最新市价 = ArithmeticUtil.doAdd(单位应计利息,最新市价);
             }
             return 最新市价;
         }
@@ -1086,16 +1127,41 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
      * @return 冲销流水
      */
     public static EtrCashPositionFlowDto gen冲销现金流水生成(EtrCashPositionFlowDto etrCashPositionFlowDto, String entrustId,
-                                                     BigDecimal amount) {
+                                                     BigDecimal amount,Date settleDate, String tradePlace) {
         EtrCashPositionFlowDto ret = new EtrCashPositionFlowDto();
         BeanUtil.copyPropertiesIgnoreNull(ret, etrCashPositionFlowDto);
         ret.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
         ret.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
         ret.setOffsetId(entrustId);
-        EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(entrustId);
-        BigDecimal 委托全价 = gen委托全价(entrustId, etrCashPositionFlowDto.getCdate());
+        //添加新的参数 add by zhangpei 20201119 start
+        //BigDecimal 委托全价 = gen委托全价(entrustId, settleDate, tradePlace);
+        BigDecimal 委托全价 = gen委托全价(entrustId, settleDate, tradePlace,null);
+        //添加新的参数 add by zhangpei 20201119 end
         BigDecimal amountReal = ArithmeticUtil.multiply(amount, 委托全价 == null ? new BigDecimal(100) : 委托全价);
         ret.setAmount(amountReal == null ? amount : amountReal);
+        ret.setSeqno(getSeqNo());
+        return ret;
+    }
+
+    /**
+     * gen冲销现金流水生成(一级市场债使用)
+     *
+     * @param etrCashPositionFlowDto 正常流水
+     * @param entrustId 委托代码
+     * @return 冲销流水
+     */
+    public static EtrCashPositionFlowDto gen一级市场冲销现金流水生成(EtrCashPositionFlowDto etrCashPositionFlowDto, String entrustId,
+                                                     BigDecimal amount) {
+    	EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(entrustId);
+    	BigDecimal 委托数量 = entrustCommonDto.getEtrEntrust().getEntrustNum();
+    	EtrCashPositionFlowDto ret = new EtrCashPositionFlowDto();
+        BeanUtil.copyPropertiesIgnoreNull(ret, etrCashPositionFlowDto);
+        ret.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
+        ret.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+        ret.setOffsetId(entrustId);
+        BigDecimal 委托全价 = 债券面值;
+        BigDecimal amountReal = ArithmeticUtil.multiply(委托数量, 委托全价 == null ? new BigDecimal(100) : 委托全价);
+        ret.setAmount(amountReal);
         ret.setSeqno(getSeqNo());
         return ret;
     }

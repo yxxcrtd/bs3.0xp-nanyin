@@ -583,7 +583,13 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             inputDto.setTrdFinProductBarterList(baseTradeProductDealDto.getTrdFinProductBarterList());
             inputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
             inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
-            inputDto.setAssetType2(finProductTradeDto.getAssetType2());
+            if (StringUtil.isNotEmpty(finProductTradeDto.getAssetType2())) {
+            	inputDto.setAssetType2(finProductTradeDto.getAssetType2());
+            }
+            else {
+            	inputDto.setAssetType2(baseTradeProductDealDto.getAssetType2());
+            }
+			inputDto.setTrdProductDealAdd(baseTradeProductDealDto.getTrdProductDealAdd());
             List<PtlSecPositionFlowDto> ptlSecPositionFlowDtoss = assetPositionsCashCommServiceImpl.positionDeal(inputDto);
             //买断式回购持仓特殊处理
             for (PtlSecPositionFlowDto dto : ptlSecPositionFlowDtoss){

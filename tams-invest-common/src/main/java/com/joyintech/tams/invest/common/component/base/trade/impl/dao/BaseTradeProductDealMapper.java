@@ -121,5 +121,12 @@ public interface BaseTradeProductDealMapper {
      * @since 1.0
      */
     int updateStlTrdProDeal(Map<String, Object> map);
+    
+    /**
+     * 检索回购类型
+     * @param map Map<String, Object>
+     * @return 回购类型
+     */
+    List<String> selectRepoAssetType2(Map<String, Object> map);
 
 }

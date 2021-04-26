@@ -37,12 +37,15 @@
 			</when>
 			<otherwise>
 			    <!-- 支持数据字典的ext1和ext2对应 修改 by renping 2019-07-19 start-->
-		        <if test="commonBusinessType != null">
-			    COMMON_BUSINESS_TYPE = #{commonBusinessType.value}
+		        <if test="commonBusinessType != null and commonBusinessExtType == null">
+			    	and COMMON_BUSINESS_TYPE = #{commonBusinessType.value}
 		        </if>
-		        <if test="commonBusinessExtType != null">
-			    and COMMON_BUSINESS_TYPE = #{commonBusinessExtType.value}
+		        <if test="commonBusinessExtType != null and commonBusinessType == null">
+			    	and COMMON_BUSINESS_TYPE = #{commonBusinessExtType.value}
 		        </if>
+				<if test="commonBusinessType != null and commonBusinessExtType != null">
+					and COMMON_BUSINESS_TYPE = #{commonBusinessExtType.value}
+				</if>
 			    <!-- 支持数据字典的ext1和ext2对应 修改 by renping 2019-07-19 end-->
 		        <if test="type1 != null">
 		            and TYPE_1 = #{type1.value}

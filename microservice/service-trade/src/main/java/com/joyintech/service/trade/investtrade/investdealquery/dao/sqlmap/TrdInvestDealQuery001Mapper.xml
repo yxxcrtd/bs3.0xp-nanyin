@@ -48,7 +48,8 @@
 		WFL_TRD_PRODUCT_DEAL.WORKFLOW_STATUS	workflowStatus,
 		WFL_PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION backLendDirection,
 		WFL_TRD_PRODUCT_DEAL.COUNTER_ID COUNTER_ID,
-	MST_COUNTER_PARTY.COUNTER_NAME counterName
+	    MST_COUNTER_PARTY.COUNTER_NAME counterName,
+	    WFL_TRD_PRODUCT_DEAL.f_Trade_Id fTradeId
 		FROM
 			WFL_TRD_PRODUCT_DEAL
 		LEFT JOIN 
@@ -97,7 +98,8 @@
 		WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.WORKFLOW_STATUS	workflowStatus,
 		null backLendDirection,
 		WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.COUNTER_ID COUNTER_ID,
-		MST_COUNTER_PARTY.COUNTER_NAME counterName
+		MST_COUNTER_PARTY.COUNTER_NAME counterName,
+		WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.F_TRADE_ID fTradeId 
 		  FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL 
 		  LEFT JOIN     WFL_TRD_DEAL_TOTAL_ADD 	ON	 	WFL_TRD_DEAL_TOTAL_ADD.TOTLE_TRADE_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID
 		  LEFT JOIN 	PTL_PORTFOLIO			ON		PTL_PORTFOLIO.PORTFOLIO_ID = WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PORTFOLIO_ID	
@@ -145,7 +147,8 @@
 		null AS workflowStatus,
 		PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION backLendDirection,
 		TRD_PRODUCT_DEAL.COUNTER_ID COUNTER_ID,
-		MST_COUNTER_PARTY.COUNTER_NAME  counterName
+		MST_COUNTER_PARTY.COUNTER_NAME  counterName,
+		TRD_PRODUCT_DEAL.F_TRADE_ID fTradeId 
 		FROM	
 			TRD_PRODUCT_DEAL
 		LEFT JOIN	TRD_PRODUCT_DEAL_ADD
@@ -195,7 +198,8 @@
 		null AS workflowStatus,
 		null backLendDirection,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.COUNTER_ID COUNTER_ID,
-		MST_COUNTER_PARTY.COUNTER_NAME  counterName
+		MST_COUNTER_PARTY.COUNTER_NAME  counterName,
+		TRD_FIN_PRODUCT_DEAL_TOTAL.F_TRADE_ID fTradeId 
 		FROM	
 		TRD_FIN_PRODUCT_DEAL_TOTAL
 		LEFT JOIN	TRD_DEAL_TOTAL_ADD	ON	TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_DEAL_TOTAL_ADD.TOTLE_TRADE_ID
@@ -243,7 +247,8 @@
 		null AS workflowStatus,
 		PA_TRD_PRODUCT_DEAL.BACK_LEND_DIRECTION backLendDirection,
 		TRD_PRODUCT_DEAL.COUNTER_ID COUNTER_ID,
-		MST_COUNTER_PARTY.COUNTER_NAME  counterName
+		MST_COUNTER_PARTY.COUNTER_NAME  counterName,
+		TRD_PRODUCT_DEAL.F_TRADE_ID fTradeId 
 		FROM	
 			TRD_PRODUCT_DEAL
 		LEFT JOIN	TRD_PRODUCT_DEAL_ADD
@@ -292,7 +297,8 @@
 		null AS workflowStatus,
 		null backLendDirection,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.COUNTER_ID COUNTER_ID,
-		MST_COUNTER_PARTY.COUNTER_NAME  counterName
+		MST_COUNTER_PARTY.COUNTER_NAME  counterName,
+		TRD_FIN_PRODUCT_DEAL_TOTAL.F_TRADE_ID fTradeId 
 		FROM	
 			TRD_FIN_PRODUCT_DEAL_TOTAL
 		LEFT JOIN		TRD_DEAL_TOTAL_ADD		ON	TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_DEAL_TOTAL_ADD.TOTLE_TRADE_ID
@@ -342,6 +348,9 @@
 				AND WFL_TRD_PRODUCT_DEAL_ADD.ENTRUST_ID 
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
 			</if>	
+            <if test="fTradeId != null and fTradeId !='' ">
+                AND WFL_TRD_PRODUCT_DEAL.f_Trade_Id LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
+            </if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
@@ -514,6 +523,9 @@
 				AND WFL_TRD_DEAL_TOTAL_ADD.ENTRUST_ID 
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
 			</if>	
+            <if test="fTradeId != null and fTradeId !='' ">
+                AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
+            </if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
@@ -629,6 +641,9 @@
 			<if test="entrustId != null and entrustId !='' ">
 				AND TRD_PRODUCT_DEAL_ADD.ENTRUST_ID 
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="fTradeId != null and fTradeId !='' ">
+                		AND TRD_PRODUCT_DEAL.F_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
@@ -1089,6 +1104,9 @@
 				AND TRD_DEAL_TOTAL_ADD.ENTRUST_ID
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
 			</if>
+            <if test="fTradeId != null and fTradeId !='' ">
+                AND TRD_FIN_PRODUCT_DEAL_TOTAL.F_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
+            </if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
@@ -1135,6 +1153,9 @@
 			<if test="tradeMarketMode != null and tradeMarketMode !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE = #{tradeMarketMode}
 			</if>
+		<if test="fTradeId != null and fTradeId !='' ">
+                	AND TRD_PRODUCT_DEAL.F_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
+            	</if>
 			<if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
 				AND (TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID IN
 				<foreach collection="chlFinprodIdList" item="item" index="index" open="("
@@ -1146,6 +1167,9 @@
 				</foreach>
 				)
 			</if>
+			<if test="fTradeId != null and fTradeId !='' ">
+                		AND TRD_FIN_PRODUCT_DEAL_TOTAL.F_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
+            		</if>
 			<if test="ps != null and ps !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{ps}
 			</if>
@@ -1203,6 +1227,9 @@
 			<if test="entrustId != null and entrustId !='' ">
 				ANd WFL_TRD_PRODUCT_DEAL_ADD.ENTRUST_ID 
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="fTradeId != null and fTradeId !='' ">
+				AND WFL_TRD_PRODUCT_DEAL.f_Trade_Id LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
 			</if>	
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
@@ -1369,6 +1396,9 @@
 			<if test="entrustId != null and entrustId !='' ">
 				AND TRD_PRODUCT_DEAL_ADD.ENTRUST_ID 
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')	
+			</if>
+			<if test="fTradeId != null and fTradeId !='' ">
+				AND TRD_PRODUCT_DEAL.F_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
@@ -1553,6 +1583,9 @@
 				AND TRD_PRODUCT_DEAL_ADD.ENTRUST_ID
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
 			</if>
+			<if test="fTradeId != null and fTradeId !='' ">
+				AND TRD_PRODUCT_DEAL.F_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
+			</if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
@@ -1729,7 +1762,10 @@
 			<if test="entrustId != null and entrustId !='' ">
 				AND WFL_TRD_DEAL_TOTAL_ADD.ENTRUST_ID 
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
-			</if>	
+			</if>
+			<if test="fTradeId != null and fTradeId !='' ">
+				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
+			</if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID
 				LIKE concat(concat('%',#{finprodMarketId,jdbcType=VARCHAR}),'%')
@@ -1838,6 +1874,9 @@
 			<if test="entrustId != null and entrustId !='' ">
 				AND TRD_DEAL_TOTAL_ADD.ENTRUST_ID 
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="fTradeId != null and fTradeId !='' ">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.F_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 
@@ -1964,6 +2003,9 @@
 			<if test="entrustId != null and entrustId !='' ">
 				AND TRD_DEAL_TOTAL_ADD.ENTRUST_ID
 				LIKE concat(concat('%',#{entrustId,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="fTradeId != null and fTradeId !='' ">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.F_TRADE_ID LIKE concat(concat('%',#{fTradeId,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="finprodMarketId != null and finprodMarketId !='' ">
 				AND (FIN_PRODUCT.FINPROD_MARKET_ID 

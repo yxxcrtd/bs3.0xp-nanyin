@@ -166,7 +166,7 @@
                     <!--添加查询条件登记托管机构 add by lishuping 20191010 end-->
                     and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
                     <if test="fTradeId!=null and fTradeId!='' ">
-                        and wtpd.f_trade_id=#{fTradeId}
+                        and wtpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_02">
@@ -306,7 +306,7 @@
                     and (wtpd.IS_CANCEL is null or wtpd.IS_CANCEL = #{YES_NO_NO})
                     and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
                     <if test="fTradeId!=null and fTradeId!='' ">
-                        and wtpd.f_trade_id=#{fTradeId}
+                        and wtpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_03">
@@ -444,7 +444,7 @@
                     and wtpd.IS_CANCEL = #{YES_NO_YES}
                     and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
                     <if test="fTradeId!=null and fTradeId!='' ">
-                        and wtpd.f_trade_id=#{fTradeId}
+                        and wtpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
             </if>
         </trim>

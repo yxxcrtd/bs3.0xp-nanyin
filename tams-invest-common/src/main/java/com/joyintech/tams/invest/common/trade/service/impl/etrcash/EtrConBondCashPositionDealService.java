@@ -155,19 +155,25 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                     String secManageAcctId = finProductTradeDto.getTrdProductDeal().getSecManageAcctId();
                     // 交易日期
                     Date tradeDate = finProductTradeDto.getTrdProductDeal().getTradeDate();
+                    
+                    // 交易生成的持仓流水 (债券)
+                    EtrSecPositionFlowDto etrSecPositionFlowDtoBond = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(finProductTradeDto);
+                    etrSecPositionFlowDtoBond.setAmount(deal.getShareAmt().negate());
+                    etrSecPositionFlowDtoBond.setFinprodId(deal.getFinprodId());
+                    etrSecPositionFlowDtoBond.setCdate(deal.getTradeDate());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoBond);
                     // 交易生成的持仓流水 (股票)
-                    EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
-                            finProductTradeDto);
-                    etrSecPositionFlowDto.setAmount(barterDeal.getShareAmt());
-                    etrSecPositionFlowDto.setFinprodId(barterDeal.getFinprodId());
-                    etrSecPositionFlowDto.setCdate(deal.getTradeDate());
-                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    EtrSecPositionFlowDto etrSecPositionFlowDtoShare = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(finProductTradeDto);
+                    etrSecPositionFlowDtoShare.setAmount(barterDeal.getShareAmt());
+                    etrSecPositionFlowDtoShare.setFinprodId(barterDeal.getFinprodId());
+                    etrSecPositionFlowDtoShare.setCdate(deal.getTradeDate());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoShare);
                     if(stlPayOrdersDtos!= null && stlPayOrdersDtos.size()>0){
                         // 交易生成的现金流水
                         EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
                                 finProductTradeDto);
                         etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTradeId());
-                        etrCashPositionFlowDto.setAcctId(gen账号(deal.getChlId(),deal.getCcy(),deal.getSecManageAcctId(), dealAdd.getPortfolioId(), dealAdd.getPurchModle(),etrCashPositionFlowDto));
+                        etrCashPositionFlowDto.setAcctId(stlPayOrdersDtos.get(0).getMyAcctNo());
                         etrCashPositionFlowDto.setAmount(stlPayOrdersDtos.get(0).getSettleAmt());
                         etrCashPositionFlowDto.setCdate(stlPayOrdersDtos.get(0).getSettleDate());
                         etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
@@ -224,8 +230,10 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                       etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTradeId());
                       etrCashPositionFlowDto.setAcctId(gen账号(deal.getChlId(),deal.getCcy(),deal.getSecManageAcctId(), dealAdd.getPortfolioId(), dealAdd.getPurchModle(),etrCashPositionFlowDto));
                       etrCashPositionFlowDto.setAmount(stlPayOrdersDtos.get(0).getSettleAmt().negate());
-                      etrCashPositionFlowDto.setCdate(stlPayOrdersDtos.get(0).getSettleDate());
-                      etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+                      // 指令的现金流水的日期应该是确认日
+					  //etrCashPositionFlowDto.setCdate(stlPayOrdersDtos.get(0).getSettleDate());
+                      etrCashPositionFlowDto.setCdate(finProductTradeDto.getTrdProductDeal().getTradeDate());
+					  etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                   }
                   /**add by yujiaping 20210409 申购确认更新资金账户指令可用现金 end*/
               }

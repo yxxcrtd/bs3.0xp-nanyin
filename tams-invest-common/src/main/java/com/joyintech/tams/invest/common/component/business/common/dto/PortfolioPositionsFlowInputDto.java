@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.joyintech.tams.common.base.entity.TrdFinProductBarter;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 
 /**
  * 组合持仓流水输入DTO
@@ -38,6 +39,11 @@ public class PortfolioPositionsFlowInputDto {
      * 金融产品实物交易表
      */
     private List<TrdFinProductBarter> trdFinProductBarterList;
+
+    /**
+     * 金融产品交易Entity
+     */
+    private TrdProductDealAdd trdProductDealAdd;
 
     /**
      * 获取 positionType
@@ -136,4 +142,11 @@ public class PortfolioPositionsFlowInputDto {
     public void setTrdFinProductBarterList(List<TrdFinProductBarter> trdFinProductBarterList) {
         this.trdFinProductBarterList = trdFinProductBarterList;
     }
+	public TrdProductDealAdd getTrdProductDealAdd() {
+		return trdProductDealAdd;
+	}
+
+	public void setTrdProductDealAdd(TrdProductDealAdd trdProductDealAdd) {
+		this.trdProductDealAdd = trdProductDealAdd;
+	}
 }

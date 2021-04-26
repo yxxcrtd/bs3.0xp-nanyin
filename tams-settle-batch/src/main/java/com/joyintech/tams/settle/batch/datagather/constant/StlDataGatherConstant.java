@@ -1,0 +1,15 @@
+package com.joyintech.tams.settle.batch.datagather.constant;
+
+/**
+ * @author 何阳阳
+ * @date 2020/7/2
+ * @see StlDataGatherConstant
+ * @since 1.0
+ */
+public interface StlDataGatherConstant {
+
+    /**
+     * 上中登结算明细数据
+     */
+    String STL_DATA_GATHER_REMARK = "数据清算自动处理";
+}
