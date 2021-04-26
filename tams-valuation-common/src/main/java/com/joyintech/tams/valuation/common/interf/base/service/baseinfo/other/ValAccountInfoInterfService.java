@@ -15,9 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +22,6 @@ import com.joyintech.tams.common.base.entity.FinCashInfo;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.OtherBaseInfoCommonResult;
@@ -176,10 +172,8 @@ public class ValAccountInfoInterfService {
 //        valMstCapacctInfo.setIsDvp("");
         // TODO 是否允许透支 = 待定
         valMstCapacctInfo.setIsOverdraw("");
-        //add by liupengfei for 多级法人改造 S
-        valMstCapacctInfo.setSeqNo(IDGenerator.generate());
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
         valMstCapacctInfo.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
         return valMstCapacctInfo;
     }
 	/**

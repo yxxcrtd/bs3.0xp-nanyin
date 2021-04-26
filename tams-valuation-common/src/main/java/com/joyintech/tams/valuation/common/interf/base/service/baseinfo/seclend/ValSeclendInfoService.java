@@ -26,8 +26,6 @@ import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.common.base.entity.FinTradeProductAdd;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.SecLendInfoCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
@@ -199,9 +197,8 @@ public class ValSeclendInfoService {
         finTradeProduct.setTradeMarket(dto.getTradeMarket());
         // 交易日历 = 共通
         finTradeProduct.setCalendarId(interfCommonService.getCalendarId(dto.getTradeMarket()));
-        //add by liupengfei for 多级法人改造 S
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
         finTradeProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
         // 返回结果集
         return finTradeProduct;
     }

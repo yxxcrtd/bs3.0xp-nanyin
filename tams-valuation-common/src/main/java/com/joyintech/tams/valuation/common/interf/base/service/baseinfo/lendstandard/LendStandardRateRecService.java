@@ -10,18 +10,8 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.lendstandard;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.LendStandardCommonResult;
@@ -31,6 +21,12 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValDlTargetRateAdjust;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 拆借利率调整
@@ -99,7 +95,9 @@ public class LendStandardRateRecService {
     private FinCashCalcRule getValDlTargetRateAdjust(ValDlTargetRateAdjust dto) {
         FinCashCalcRule finCashCalcRule = new FinCashCalcRule();
         // 现金流代码 = InterfHelper.getMd5CashId_(D.资产代码,D.业务类型,数据字典：现金流二级类型.利息）
-        finCashCalcRule.setCashId(InterfHelper.getMd5CashId_(dto.getProdId(), DictCodeListExt1.现金流二级类型_利息.getValue()));
+        /*modify by sunshuaishuai 20210322 start*/
+        finCashCalcRule.setCashId(InterfHelper.getMd5CashId_(dto.getProdId(),dto.getBusiType(), DictCodeListExt1.现金流二级类型_利息.getValue()));
+        /*modify by sunshuaishuai 20210322 end*/
         // 生效日期 = D.生效日
         finCashCalcRule.setEffDate(dto.getEffDate());
         // 计算类型 = D.利率类型

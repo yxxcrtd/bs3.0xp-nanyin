@@ -338,5 +338,11 @@ public class TempConstant {
      */
     public static final String 场外期权交易="ValOtcOptTrade";
 
+    /**
+     * 债券行权交易
+     * add by yanya on 20210309
+     */
+    public static final String 债券行权交易="ValSecExecDeal";
+
 }
 

@@ -484,6 +484,9 @@ public class PlannedReceicableTradeTemplateRecService {
         trdProductDeal.setCreateTime(dto.getCreateTime());
         //通道代码 = a.通道代码
         trdProductDeal.setChlId(dto.getChannelId());
+        /** 投资目的  add by libingyan on 20210125 start */
+        trdProductDeal.setInvAim(dto.getInvAim());
+        /** 投资目的  add by libingyan on 20210125 end  */
         return trdProductDeal;
     }
 

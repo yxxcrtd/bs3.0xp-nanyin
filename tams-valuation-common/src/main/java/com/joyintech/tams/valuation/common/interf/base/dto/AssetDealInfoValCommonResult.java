@@ -78,6 +78,11 @@ public class AssetDealInfoValCommonResult extends BaseEntity {
      * 交易类金融产品
      */
     private List<FinTradeProduct> listValFinTradeProduct = new ArrayList<FinTradeProduct>();
+
+    /**
+     * 行权申请更新list
+     */
+    private List<SecExecApplyDto> listSecExecApply = new ArrayList<>();
     
     /**
      * 日志
@@ -328,5 +333,13 @@ public class AssetDealInfoValCommonResult extends BaseEntity {
      */
     public void setListValFinTradeProduct(List<FinTradeProduct> listValFinTradeProduct) {
         this.listValFinTradeProduct = listValFinTradeProduct;
+    }
+
+    public List<SecExecApplyDto> getListSecExecApply() {
+        return listSecExecApply;
+    }
+
+    public void setListSecExecApply(List<SecExecApplyDto> listSecExecApply) {
+        this.listSecExecApply = listSecExecApply;
     }
 }

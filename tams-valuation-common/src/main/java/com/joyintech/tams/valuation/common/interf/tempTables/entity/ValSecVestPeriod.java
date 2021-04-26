@@ -151,6 +151,11 @@ public class ValSecVestPeriod extends BaseEntity {
     private Date fundSettleDate;
 
     /**
+     * 计提份额
+     */
+    private BigDecimal accrNum;
+
+  /**
      * 取得 产品代码
      * @return 产品代码
      */
@@ -585,5 +590,13 @@ public class ValSecVestPeriod extends BaseEntity {
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setFundSettleDate(Date fundSettleDate) {
         this.fundSettleDate = fundSettleDate;
+    }
+
+    public BigDecimal getAccrNum() {
+        return accrNum;
+    }
+
+    public void setAccrNum(BigDecimal accrNum) {
+        this.accrNum = accrNum;
     }
 }

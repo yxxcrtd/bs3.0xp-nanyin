@@ -10,27 +10,23 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.yprd;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.dto.YPrdBaseInfoValCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
+import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdOpenPlan;
-import com.joyintech.framework.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * 
  *预期收益型产品开放计划表(Val_PRD_OPEN_PLAN) 〈一句话功能简述〉 〈功能详细描述〉〉
@@ -109,6 +105,9 @@ public class YPrdOpenPlanTemplateRecService {
 		} else {
 		    prodId = dto.getProdId();
 		}
+		/** modify by yanya on 20210224 增加现金流ID生成 start**/
+		String cashId = InterfHelper.getMd5CashId_(prodId,DictCodeListExt1.现金流二级类型_本金.getValue());
+		/** modify by yanya on 20210224 增加现金流ID生成 end**/
 		valOpenPlan.setFinprodId(prodId);
 	    /** modify by dongjun on 20181029 end **/
 		// 开放周期起始日 =B.开始周期起始日
@@ -121,8 +120,13 @@ public class YPrdOpenPlanTemplateRecService {
 		
 		//TODO  估值系统表结构改动 
 //		开放计划表-->开放计划（FIN_VAL_OPEN_PLAN---FIN_OPEN_PLAN）
-		valOpenPlan.setCashId("");
-		valOpenPlan.setOpenType("");
+		/** modify by yanya on 20210224 增加现金流ID、开放类型、募集结束日 start**/
+		//valOpenPlan.setCashId("");
+		//valOpenPlan.setOpenType("");
+		valOpenPlan.setCashId(cashId);
+		valOpenPlan.setOpenType("03");
+		valOpenPlan.setOpenDateEndUn(dto.getProdVdate());
+		/** modify by yanya on 20210224 增加现金流ID、开放类型、募集结束日 start**/
 		return valOpenPlan;
 	}
 }

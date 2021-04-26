@@ -94,6 +94,12 @@ public class ValPrdPeriodDealN extends BaseEntity {
     private Date prodVdate;
 
     /**
+     * 费用留存收入
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal retainFee;
+
+    /**
      * 取得 产品代码
      * @return 产品代码
      */
@@ -351,5 +357,21 @@ public class ValPrdPeriodDealN extends BaseEntity {
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setProdVdate(Date prodVdate) {
         this.prodVdate = prodVdate;
+    }
+
+    /**
+     * 取得 费用留存收入
+     * @return 费用留存收入
+     */
+    public BigDecimal getRetainFee() {
+        return retainFee;
+    }
+
+    /**
+     * 设置 费用留存收入
+     * @param retainFee 费用留存收入
+     */
+    public void setRetainFee(BigDecimal retainFee) {
+        this.retainFee = retainFee;
     }
 }

@@ -10,21 +10,13 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.fund;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductClass;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.common.constants.ValInterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.FundBaseInfoForInterfRecCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
@@ -33,6 +25,14 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValFundNBaseInfoN;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 净值型基金基础信息 基金类资产定义净值型基金基础信息 = "VAL_FUND_N_BASE_INFO_N
@@ -154,6 +154,10 @@ public class FundBaseInfoNFundRecService {
 //        result.setoFinprodType(DictCodeListExt1.金融产品类型_基金.getValue());
         // 本金收益特征 = A.本金收益特征
         result.setCapiIncomeFeature(dto.getCapiProfFeature());
+        /** modify by yanya on 20210222 增加发行人字段入库 start**/
+        result.setIssuer(dto.getManagerId());
+        /** modify by yanya on 20210222 增加发行人字段入库 end**/
+        result.setManager(dto.getManagerId());
         return result;
     }
 
@@ -175,6 +179,9 @@ public class FundBaseInfoNFundRecService {
         result.setRedSpeed(dto.getRedSpeed());
         //面值  = A.面值
         result.setFaceValue(dto.getFaceValue());
+        //add by yanya on 20210318 数据来源 = 常量.估值数据来源
+        result.setDataSource(ValInterfCommonConstant.getValDataSource());
+        result.setTrmFundType(dto.getTrmFundType());
         return result;
     }
 
@@ -200,12 +207,15 @@ public class FundBaseInfoNFundRecService {
         fdto.setAssetType(dto.getFundType());
         //境内外
         fdto.setBlnArea(dto.getBlnArea());
+        // 场内基金类型
+        fdto.setTrmFundType(dto.getTrmFundType());
         //交易场所
         fdto.setTradeMarket(dto.getTradeMarket());
         result.setType2(interfCommonService.getFinanceProductClass(fdto));
         // 分类3 = 调用共通方法查询税务分类
         result.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
         result.setBranch(InterfCommonConstant.分支序号_默认);
+        result.setType6(dto.getFundType());
         return result;
     }
 }

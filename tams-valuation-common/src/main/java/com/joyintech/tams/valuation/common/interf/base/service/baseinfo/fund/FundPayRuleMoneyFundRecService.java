@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -24,8 +23,6 @@ import org.springframework.stereotype.Service;
 import com.joyintech.tams.common.base.entity.FinCashInfo;
 import com.joyintech.tams.common.base.entity.FinCashPayRule;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.FundBaseInfoForInterfRecCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
@@ -158,6 +155,12 @@ public class FundPayRuleMoneyFundRecService {
         result.setPayCycle(dto.getPayCycle());
         // 营业日准则 = B.营业日准则
 //        result.setTdayRule(dto.getTdayRule());
+        
+        /**add by wujie on 20210219 start**/
+		//支付日营业日准则 = B.营业日准则
+        result.setPayTdayRule(dto.getTdayRule());
+		/**add by wujie on 20210219 end**/
+		
         //
         // result.setCalcRule(dto.getCalcRule());
         // 现金流单位 = 02：总额
@@ -170,6 +173,7 @@ public class FundPayRuleMoneyFundRecService {
         result.setPayType(dto.getPayType());
         //分支序号
         result.setBranch(InterfCommonConstant.分支序号_默认);
+        result.setEndTdayRule(dto.getTdayRule());
         return result;
     }
 }

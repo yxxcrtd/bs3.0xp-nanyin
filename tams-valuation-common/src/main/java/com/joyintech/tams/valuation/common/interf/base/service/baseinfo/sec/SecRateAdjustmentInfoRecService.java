@@ -105,6 +105,10 @@ public class SecRateAdjustmentInfoRecService {
             /**add by jinmaodong 20180916 end**/
             // 备注
             valCashCalcRule.setRemark("");
+//            /** modify by yanya on 20210319 增加是否初始利率字段 start**/
+//            // 是否初始利率 = B.是否初始利率
+//            valCashCalcRule.setIsInitial(item.getIsInitial());
+//            /** modify by yanya on 20210319 增加是否初始利率字段 end**/
             result.add(valCashCalcRule);
         }
         return result;

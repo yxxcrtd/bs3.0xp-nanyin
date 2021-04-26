@@ -103,6 +103,11 @@ public class ValMngReceicableTrade extends BaseEntity {
     private String channelId;
 
     /**
+     * 投资目的
+     */
+    private String invAim;
+
+    /**
      * 取得 产品代码
      * @return 产品代码
      */
@@ -392,5 +397,13 @@ public class ValMngReceicableTrade extends BaseEntity {
      */
     public void setChannelId(String channelId) {
         this.channelId = channelId == null ? null : channelId.trim();
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
     }
 }

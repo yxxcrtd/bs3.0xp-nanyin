@@ -461,9 +461,9 @@ public class NPrdBaseinfoTemplateRecService {
         // 原金融产品类型 = F16：理财产品
 //        valFinProduct.setoFinprodType(dto.getFinprodType());
         // 创建人 = SYS
-        //add by liupengfei for 多级法人改造 S
-        valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
+        
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
+		valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
         return valFinProduct;
     }
 

@@ -10,21 +10,12 @@
 
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.common.base.entity.MstBenchmarkCompo;
-import com.joyintech.tams.common.base.entity.MstBenchmarkInfo;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.ValInterflog;
 
 /**
  * 基础数据接口--债券
@@ -42,6 +33,11 @@ public class SecBaseInfoRecProcessorRecCommonResult extends BaseEntity {
      * 标的类金融产品
      */
     private List<FinProduct> listValFinProduct = new ArrayList<FinProduct>();
+
+    /**
+     * 金融产品扩展表
+     */
+    List<FinProductAdd> listValFinProductExt = new ArrayList<>();
 
     /**
      * 金融产品分类
@@ -82,6 +78,11 @@ public class SecBaseInfoRecProcessorRecCommonResult extends BaseEntity {
      * 基准成分表
      */
     private List<MstBenchmarkCompo> listBenchmarkCompo = new ArrayList<MstBenchmarkCompo>();
+
+    /**
+     * 现金流利率信息表
+     */
+    private List<FinRateInfo> listValCashIntInfo = new ArrayList<FinRateInfo>();
     /**
      * 日志
      */
@@ -259,4 +260,24 @@ public class SecBaseInfoRecProcessorRecCommonResult extends BaseEntity {
 	}
     
     /**add by wujie on 20180815 end**/
+
+    /** 标的类金融产品扩展表 add by yanya on 20210318 start**/
+    public List<FinProductAdd> getListValFinProductExt() {
+        return listValFinProductExt;
+    }
+
+    public void setListValFinProductExt(List<FinProductAdd> listValFinProductExt) {
+        this.listValFinProductExt = listValFinProductExt;
+    }
+    /** 标的类金融产品扩展表 add by yanya on 20210318 end**/
+
+    /** 现金流利率信息表 add by yanya on 20210318 end**/
+    public List<FinRateInfo> getListValCashIntInfo() {
+        return listValCashIntInfo;
+    }
+
+    public void setListValCashIntInfo(List<FinRateInfo> listValCashIntInfo) {
+        this.listValCashIntInfo = listValCashIntInfo;
+    }
+    /** 现金流利率信息表 add by yanya on 20210318 end**/
 }

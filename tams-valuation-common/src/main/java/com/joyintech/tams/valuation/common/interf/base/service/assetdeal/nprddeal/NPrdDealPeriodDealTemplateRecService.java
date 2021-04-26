@@ -10,44 +10,26 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.assetdeal.nprddeal;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
+import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
+import com.joyintech.tams.valuation.common.interf.base.dto.*;
+import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
+import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdPeriodDealN;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.StlOrders;
-import com.joyintech.tams.common.base.entity.StlOrdersExt;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
-import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
-import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
-import com.joyintech.tams.valuation.common.interf.base.dto.InterfProductDealBookCommonDto;
-import com.joyintech.tams.valuation.common.interf.base.dto.NProdDealInfoValCommonResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
-import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
-import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdPeriodDealN;
-import com.joyintech.framework.util.StringUtil;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 净值型产品存续期交易表 模板处理Service(VAL_PRD_PERIOD_DEAL) 〈功能详细描述〉
@@ -442,8 +424,14 @@ public class NPrdDealPeriodDealTemplateRecService {
         fpriceAmt = fpriceAmt.multiply(dto.getTradeQty()==null?BigDecimal.ZERO:dto.getTradeQty());
         valFinProductDeal.setFpriceAmt(fpriceAmt);
         /**modify by wujie on 20180827 end**/
-        // 总交易费用 = A.费用
-        valFinProductDeal.setFeeAmt(dto.getFee());
+        /** modify by yanya on 20210316 增加费用留存 start**/
+        //// 总交易费用 = A.费用
+        //valFinProductDeal.setFeeAmt(dto.getFee());
+        // 未随交易支付费用 = A.费用留存收入
+        valFinProductDeal.setFeeAmtUnpay(dto.getRetainFee());
+        // 总交易费用 = A.费用+A.费用留存收入
+        valFinProductDeal.setFeeAmt(ArithmeticUtil.doAdd(dto.getFee(),dto.getRetainFee()));
+        /** modify by yanya on 20210316 增加费用留存 end**/
         
         /**modify by wujie on 20180827 start**/
         // 交易金额 = A.交易金额+A.费用
@@ -529,7 +517,24 @@ public class NPrdDealPeriodDealTemplateRecService {
             // 创建时间 = 系统时间
             valTradeFeeDetail.setCreateTime(dto.getCreateTime());
             return valTradeFeeDetail;
-    	}else{
+    	}
+        else if(dto != null&&dto.getRetainFee() != null && dto.getRetainFee().compareTo(BigDecimal.ZERO) > 0){
+            TrdTradeFeeDetail valTradeFeeDetail = new TrdTradeFeeDetail();
+            // 交易编号 = T1.交易编号
+            valTradeFeeDetail.setTradeId(valFinProductDeal.getTradeId());
+            // 一次性费用类型 = 赎回费（产品留存）
+            valTradeFeeDetail.setFeeType(DictCodeListExt3.一次性费用类型_赎回费_产品留存.getValue());
+            // 是否随交易支付 = 固定值：否
+            valTradeFeeDetail.setIsPayWithTrade(DictCodeList.是否_否.getValue());
+            // 费用金额 = A.费用留存收入
+            valTradeFeeDetail.setFeeAmt(dto.getRetainFee());
+            // 费用代码 = 赎回费（产品留存）
+            valTradeFeeDetail.setFeeId(DictCodeListExt3.一次性费用类型_赎回费_产品留存.getValue());
+            // 创建时间 = 系统时间
+            valTradeFeeDetail.setCreateTime(dto.getCreateTime());
+            return valTradeFeeDetail;
+        }
+    	else{
     		//如果费用未空不生成
     		return null;
     	}

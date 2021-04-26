@@ -40,6 +40,11 @@ public class ServiceApplication {
      */
     public static String CUSTOMER_INTERF_NAME = "http://customerInterfService";
 
+	/**
+	 * 自定义接口服务
+	 */
+	public static String VALUATION_BASICDATA_SERVICE_NAME = "http://valuationBasicdataService";
+
 	@Configuration
 	@ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "valuationService")
 	@EnableConfigurationProperties(ContextPathConfiguration.class)
@@ -53,10 +58,12 @@ public class ServiceApplication {
 			if(!config.isSingle()) {
 				VALUATION_SERVICE_NAME = VALUATION_SERVICE_NAME + config.getValuationService();
 				CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
+				VALUATION_BASICDATA_SERVICE_NAME = VALUATION_BASICDATA_SERVICE_NAME + config.getValuationBasicdataService();
 			}
 			else {
 				VALUATION_SERVICE_NAME = config.getValuationService();
 				CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
+				VALUATION_BASICDATA_SERVICE_NAME = config.getValuationBasicdataService();
 			}
 		}
 	}
@@ -71,6 +78,8 @@ public class ServiceApplication {
 		private String valuationService;
 
 		private String customerInterfService;
+
+		private String valuationBasicdataService;
 
         public String getCustomerInterfService() {
             return customerInterfService;
@@ -96,7 +105,13 @@ public class ServiceApplication {
 			this.valuationService = valuationService;
 		}
 
+		public String getValuationBasicdataService() {
+			return valuationBasicdataService;
+		}
 
-    }
+		public void setValuationBasicdataService(String valuationBasicdataService) {
+			this.valuationBasicdataService = valuationBasicdataService;
+		}
+	}
 
 }

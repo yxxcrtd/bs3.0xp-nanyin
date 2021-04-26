@@ -89,6 +89,10 @@ public class CPrdPerformanceBenchmarkInfoTemplateRecService {
         List<FinBaseRuleInfo> valFinBenchmarkDetailList = new ArrayList<FinBaseRuleInfo>();
         for (ValPrdBenchmarkDetailC item : listValPrdBenchmarkDetailC) {
             FinBaseRuleInfo dto = new FinBaseRuleInfo();
+            /** modify by yanya on 20210222 业绩基准代码 start**/
+            // 基准代码   自动生成
+            dto.setBaseRuleId(InterfHelper.getUUid());
+            /** modify by yanya on 20210222 业绩基准代码 end**/
             // modify by wangzhiang 错误代码注释 20190920 start
             // 基准代码 自动生成
 //            dto.setBmCode(InterfHelper.getUUid());

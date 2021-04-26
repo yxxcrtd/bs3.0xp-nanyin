@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -24,10 +22,10 @@ import org.springframework.stereotype.Service;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinCashInfo;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductClass;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.PlannedAssetBaseInfoRecCommonResult;
@@ -98,6 +96,11 @@ public class PlannedAssetBaseInfoTemplateRecService {
             List<FinProductType> ValFinProductType = (List<FinProductType>)resultMap.get("ValFinProductType"); 
             result.setListValFinProductType(ValFinProductType); 
             /**add by wujie on 20180822 end**/
+
+            /** add by yanya on 20201222 标的类金融产品扩展表 start **/
+            List<FinProductAdd> listValFinProductExt = (List<FinProductAdd>) resultMap.get("ValFinProductExt");
+            result.setListValFinProductExt(listValFinProductExt);
+            /** add by yanya on 20201222 标的类金融产品扩展表 end **/
         }
         // 添加日志
         result.setValInterflog(returnResult.getValInterflog());
@@ -120,6 +123,8 @@ public class PlannedAssetBaseInfoTemplateRecService {
         /**add by wujie on 20180822 end**/
         List<FinCashInfo> valCashInfoList = new ArrayList<FinCashInfo>();
         List<FinCashCalcRule> valCashCalcRuleList = new ArrayList<FinCashCalcRule>();
+        //add by yanya on 20201222 增加金融产品扩展表数据
+        List<FinProductAdd> valFinProductExtList = new ArrayList<FinProductAdd>();
 //        List<MstBenchmarkInfo> listBenchmarkInfo = new ArrayList<MstBenchmarkInfo>();
 //        List<MstBenchmarkCompo> listBenchmarkCompo = new ArrayList<MstBenchmarkCompo>();
         // 获取基础信息
@@ -145,6 +150,10 @@ public class PlannedAssetBaseInfoTemplateRecService {
             // 现金流计算规则信息  处理
             FinCashCalcRule valCashCalcRule = getValCashCalcRule(dto,benchmarkNo);
             valCashCalcRuleList.add(valCashCalcRule);
+
+            // 标的类金融产品扩展信息 add by yanya on 20201222
+            FinProductAdd valFinProductExt = getValFinProductExt(dto);
+            valFinProductExtList.add(valFinProductExt);
         }
         resultMap.put("ValFinProduct", valFinProductList);
         resultMap.put("ValCashInfo", valCashInfoList);
@@ -154,8 +163,26 @@ public class PlannedAssetBaseInfoTemplateRecService {
         /**add by wujie on 20180822 start**/
         resultMap.put("ValFinProductType", valFinProductTypeList);
         /**add by wujie on 20180822 end**/
+        /**标的类金融产品扩展信息 add by yanya on 20201222 start**/
+        resultMap.put("ValFinProductExt", valFinProductExtList);
+        /**标的类金融产品扩展信息 add by yanya on 20201222 end**/
 
         return resultMap;
+    }
+
+    /**
+     * 标的类金融产品扩展表 接收
+     * @param dto
+     * @return 标的类金融产品扩展表
+     */
+    private FinProductAdd getValFinProductExt(ValMngAssetInfo dto) {
+        // 标的类金融产品扩展表
+        FinProductAdd valFinProductExt = new FinProductAdd();
+        //金融产品代码 = A.资产代码
+        valFinProductExt.setFinprodId(dto.getAssetId());
+        //是否其他债券 = A.是否其他债券
+        valFinProductExt.setIsQtzq(dto.getIsQtzq());
+        return valFinProductExt;
     }
     
     /**
@@ -213,9 +240,8 @@ public class PlannedAssetBaseInfoTemplateRecService {
 //        valFinProduct.setoFinprodType(DictCodeListExt1.金融产品类型_计划类资产.getValue());
         //本金收益特征 = A.本金收益特征
         valFinProduct.setCapiIncomeFeature(dto.getCapiProfFeature());
-        //add by liupengfei for 多级法人改造 S
-        valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
+		valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
         return valFinProduct;
     }
     
@@ -247,7 +273,9 @@ public class PlannedAssetBaseInfoTemplateRecService {
         fdto.setBlnArea(dto.getBlnArea());
         //分类1
         fdto.setAssetType(dto.getAssetClass());
-        
+        /*add by sunshuaishuai 计划类资产添加收益类型区分 20210315 start*/
+        fdto.setProfitType(DictCodeList.收益类型_收益型.getValue());
+        /*add by sunshuaishuai 计划类资产添加收益类型区分 20210315 end*/
         valFinProductType.setType2(interfCommonService.getFinanceProductClass(fdto));
         
         // 分类3 = 调用共通方法查询税务分类

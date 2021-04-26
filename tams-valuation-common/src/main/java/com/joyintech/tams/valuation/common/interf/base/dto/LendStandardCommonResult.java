@@ -10,12 +10,12 @@
 
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.common.base.entity.*;
 
 /**
  * 拆借类资产-基础数据接口模板处理返回共通结果
@@ -70,7 +70,15 @@ public class LendStandardCommonResult extends BaseEntity {
 	 */
 	private List<FinProduct> listValFinProduct = new ArrayList<FinProduct>();
 
+	/**
+	 * 金融产品扩展表
+	 */
+	List<FinProductAdd> listValFinProductExt = new ArrayList<>();
 
+	/**
+	 * 现金流利率信息表
+	 */
+	private List<FinRateInfo> listValCashIntInfo = new ArrayList<FinRateInfo>();
 
 	/**
      * 获取 listValTradeFinProduct
@@ -215,4 +223,23 @@ public class LendStandardCommonResult extends BaseEntity {
 	}
     
     /**add by wujie on 20180823 end**/
+
+	/**  add by sunshuaishuai on 20210322 start**/
+	public List<FinProductAdd> getListValFinProductExt() {
+		return listValFinProductExt;
+	}
+
+	public void setListValFinProductExt(List<FinProductAdd> listValFinProductExt) {
+		this.listValFinProductExt = listValFinProductExt;
+	}
+
+	// 现金流利率信息表
+	public List<FinRateInfo> getListValCashIntInfo() {
+		return listValCashIntInfo;
+	}
+
+	public void setListValCashIntInfo(List<FinRateInfo> listValCashIntInfo) {
+		this.listValCashIntInfo = listValCashIntInfo;
+	}
+	/**  add by sunshuaishuai on 20210322 end**/
 }

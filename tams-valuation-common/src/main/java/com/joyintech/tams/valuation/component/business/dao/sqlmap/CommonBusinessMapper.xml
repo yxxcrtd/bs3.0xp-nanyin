@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.valuation.component.business.dao.CommonBusinessMapper">
+	<select id="getMaxTradeDate" resultType="java.util.Date">
+		SELECT
+		Max(TRADE_DATE) TRADE_DATE
+		FROM(
+		SELECT Max(TRADE_DATE) TRADE_DATE
+		FROM TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId} AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
+		UNION ALL
+		SELECT Max(TRADE_DATE) TRADE_DATE
+		FROM WFL_TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId}
+		)
+	</select>
+
+	<select id = "isTransInAsset" resultType="java.lang.Integer">
+		SELECT
+		SUM (num)
+		FROM(
+		SELECT COUNT(TRADE_ID) num
+		FROM TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId} AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
+		UNION ALL
+		SELECT COUNT(TRADE_ID) num
+		FROM WFL_TRD_PRODUCT_DEAL
+		WHERE FINPROD_ID = #{finprodId})
+	</select>
+</mapper>

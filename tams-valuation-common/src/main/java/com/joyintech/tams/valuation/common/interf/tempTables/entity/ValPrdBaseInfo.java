@@ -878,4 +878,15 @@ public class ValPrdBaseInfo extends BaseEntity {
     public void setIsReconciliation(String isReconciliation) {
         this.isReconciliation = isReconciliation == null ? null : isReconciliation.trim();
     }
+    
+    private String belongInstitutionCode;
+
+    public String getBelongInstitutionCode() {
+        return belongInstitutionCode;
+    }
+
+    public void setBelongInstitutionCode(String belongInstitutionCode) {
+        this.belongInstitutionCode = belongInstitutionCode;
+    }
+    
 }

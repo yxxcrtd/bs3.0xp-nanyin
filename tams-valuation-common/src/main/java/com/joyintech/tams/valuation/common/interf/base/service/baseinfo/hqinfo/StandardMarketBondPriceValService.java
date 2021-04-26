@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.valuation.common.interf.base.constant.DictCodeInterfList;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.HqInfoForInterfRecCommonResult;
@@ -30,6 +31,7 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnRe
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
+import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.HqBondValuationInfo;
 
 /**
@@ -119,9 +121,9 @@ public class StandardMarketBondPriceValService {
 		if("ON".equals(valueSourceKg)){
 			valueSource = CacheUtil.getSysParam(InterfCommonConstant.估值来源_资讯_默认值);
 		}else{
-			//TODO 该数据字典不存在
-//			valueSource = InterfHelper.getDictColdeList_ItemName(DictCode.估值来源_资讯.getValue(),
-//			dto.getValueource());
+//			TODO 该数据字典不存在
+			valueSource = InterfHelper.getDictColdeList_ItemName(DictCode.估值来源_资讯.getValue(),
+			dto.getValueource());
 		}
 		/**add by wujie on 20181105 end remark:估值来源**/
 		

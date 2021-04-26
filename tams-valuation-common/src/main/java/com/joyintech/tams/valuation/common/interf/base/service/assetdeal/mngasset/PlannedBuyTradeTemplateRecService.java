@@ -414,7 +414,9 @@ public class PlannedBuyTradeTemplateRecService {
         if(valFinProductDeal.getTradeStatus().equals(DictCodeListExt1.交易状态_撤销.getValue())){
         	valFinProductDeal.setpTradeId(interfCommonService.getFTradeId(valFinProductDeal));
         }
-
+        /** 投资目的  add by libingyan on 20210125 start */
+        valFinProductDeal.setInvAim(dto.getInvAim());
+        /** 投资目的  add by libingyan on 20210125 end  */
         return valFinProductDeal;
     }
 

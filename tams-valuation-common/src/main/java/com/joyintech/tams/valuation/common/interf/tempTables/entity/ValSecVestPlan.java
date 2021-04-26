@@ -41,6 +41,12 @@ public class ValSecVestPlan extends BaseEntity {
     private BigDecimal execCprice;
 
     /**
+     * 实际行权日
+     * add by yanya on 20210309
+     */
+    private Date payDate;
+
+    /**
      * 新增、修改、删除
      */
     private String dataActionSign;
@@ -142,6 +148,22 @@ public class ValSecVestPlan extends BaseEntity {
      */
     public void setExecCprice(BigDecimal execCprice) {
         this.execCprice = execCprice;
+    }
+
+    /**
+     * 取得 实际行权日
+     * @return 实际行权日
+     */
+    public Date getPayDate() {
+        return payDate;
+    }
+
+    /**
+     * 设置 实际行权日
+     * @param payDate 实际行权日
+     */
+    public void setPayDate(Date payDate) {
+        this.payDate = payDate;
     }
 
     /**

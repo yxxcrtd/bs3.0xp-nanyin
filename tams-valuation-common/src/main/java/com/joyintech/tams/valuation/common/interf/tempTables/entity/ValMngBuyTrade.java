@@ -163,6 +163,11 @@ public class ValMngBuyTrade extends BaseEntity {
     private String isChlFeeAmt;
 
     /**
+     * 投资目的
+     */
+    private String invAim;
+
+    /**
      * 取得 产品代码
      * @return 产品代码
      */
@@ -610,5 +615,13 @@ public class ValMngBuyTrade extends BaseEntity {
      */
     public void setIsChlFeeAmt(String isChlFeeAmt) {
         this.isChlFeeAmt = isChlFeeAmt == null ? null : isChlFeeAmt.trim();
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
     }
 }

@@ -131,6 +131,9 @@ public class NPrdOpenPlanTemplateRecService {
 //		开放计划表-->开放计划（FIN_VAL_OPEN_PLAN---FIN_OPEN_PLAN）
         valOpenPlan.setCashId(cashId);
         valOpenPlan.setOpenType("03");
+        /** modify by yanya on 20210224 增加募集结束日 start**/
+        valOpenPlan.setOpenDateEndUn(dto.getProdVdate());
+        /** modify by yanya on 20210224 增加募集结束日 end**/
         return valOpenPlan;
     }
 }

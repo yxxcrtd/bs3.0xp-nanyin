@@ -10,22 +10,11 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.lendstandard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.common.constants.ValInterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.LendStandardCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
@@ -35,6 +24,14 @@ import com.joyintech.tams.valuation.common.interf.base.service.common.InterfComm
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValDlTarget;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 拆借标的 ValDlTarget
@@ -105,7 +102,12 @@ public class LendStandardRecService {
             List<FinCashPlan>  listFinCashPlan =  (List<FinCashPlan>)map.get(
                     "FinCashPlan");
             result.setListValCashPlan(listFinCashPlan);
-            
+
+            //add by sunshuaishuai on 20210322  增加标的类金融产品扩展表 现金流利率信息list start
+            result.setListValFinProductExt((List<FinProductAdd>)map.get("listValFinProductAdd"));
+            result.setListValCashIntInfo((List<FinRateInfo>)map.get("ValFinCashIntInfo"));
+            //add by sunshuaishuai on 20210322 end
+
             /**add by wujie on 20180823 end**/
             
         }
@@ -137,7 +139,12 @@ public class LendStandardRecService {
         List<FinCashPayRule> listFinCashPayRule = new ArrayList<FinCashPayRule>();
         List<FinCashPlan> listFinCashPlan = new ArrayList<FinCashPlan>();
         /**add by wujie on 20180823 end**/
-        
+
+        //modify by sunshuaishuai on 20210322 增加标的类金融产品扩展表 增加现金流利率信息list start
+        List<FinProductAdd> listValFinProductAdd = new ArrayList<FinProductAdd>();
+        List<FinRateInfo> listFinCashIntInfo = new ArrayList<FinRateInfo>();
+        //modify by sunshuaishuai on 20210322 end
+
         for (ValDlTarget item : listValDlTarget) {
             /**
              * modify by chendijun 2019/04/29 start
@@ -178,7 +185,12 @@ public class LendStandardRecService {
             listValCashInfo.add(valCashInfo);
             
             /**add by wujie on 20180823 end**/
-            
+
+            //modify by sunshuaishuai on 20210322 增加标的类金融产品扩展表 增加现金流利率信息list start
+            listValFinProductAdd.add(this.getValFinProductAdd(item));
+            listFinCashIntInfo.add(this.getFinCashIntInfo(item, valCashCalcRule));
+            //modify by sunshuaishuai on 20210322 end
+
             // 拆出 初始化还本支付规则、付息支付规则、还本计划、付息计划信息
             if(!DictCodeListExt1.金融产品类型_同业借款.getValue().equals(item.getBusiType())){
             	Map<String,Object> map = interfCommonService.getFinTradProduct(item);
@@ -195,6 +207,11 @@ public class LendStandardRecService {
         resultMap.put("FinCashPayRule", listFinCashPayRule);
         resultMap.put("FinCashPlan", listFinCashPlan);
         /**add by wujie on 20180823 end**/
+        //modify by sunshuaishuai on 20210322 增加标的类金融产品扩展表
+        resultMap.put("listValFinProductAdd", listValFinProductAdd);
+        //modify by sunshuaishuai on 20210319 增加现金流利率信息list
+        resultMap.put("ValFinCashIntInfo", listFinCashIntInfo);
+
         return resultMap;
     }
 
@@ -248,15 +265,13 @@ public class LendStandardRecService {
         result.setTermType(dto.getTermKind());
         //本金收益特征 = A.本金收益特征
         result.setCapiIncomeFeature(dto.getCapiProfFeature());
-        
-        
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
+        result.setBelongInstitutionCode(dto.getBelongInstitutionCode());
         /**add by wujie on 20190115 start**/
         //收益类型 = 数据字典：收益类型.预期收益
         result.setProfitType(DictCodeList.收益类型_收益型.getValue());
         /**add by wujie on 20190115 end**/
-        //add by liupengfei for 多级法人改造 S
-        result.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
+        
         return result;
 
     }
@@ -300,10 +315,8 @@ public class LendStandardRecService {
         finProduct.setCapiIncomeFeature(dto.getCapiProfFeature());
         //发现规模 = A.名义本金
         finProduct.setIssueAmt(dto.getCapital());
-        //add by liupengfei for 多级法人改造 S
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
         finProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
-
         return finProduct;
     }
 
@@ -410,5 +423,60 @@ public class LendStandardRecService {
         // 分支序号 = 设置全局变量(默认为0）
         valCashCalcRule.setBranch(InterfCommonConstant.分支序号_默认);
         return valCashCalcRule;
+    }
+
+    /**
+     * 构建标的类金融产品扩展表
+     * @param dto
+     * @return
+     */
+    private FinProductAdd getValFinProductAdd(ValDlTarget dto) {
+        FinProductAdd result = new FinProductAdd();
+        // 金融产品代码 = A.资产代码
+        result.setFinprodId(dto.getDlId());
+        //数据来源 = 常量.估值数据来源
+        result.setDataSource(ValInterfCommonConstant.getValDataSource());
+        return result;
+    }
+
+    /**
+     * 现金流信息表构建
+     * @param dto 接口数据dto
+     * @param calcDto 已经构建的现金流计算规则
+     * @return
+     */
+    private FinRateInfo getFinCashIntInfo(ValDlTarget dto, FinCashCalcRule calcDto) {
+        //现金流利率信息
+        FinRateInfo valFinCashIntInfo = new FinRateInfo();
+        //现金流代码=MD5(A.资金账户账号+数据字典：金融产品类型.资金账户+数据字典：现金流二级类型.利息)
+        valFinCashIntInfo.setCashId(calcDto.getCashId());
+        //生效日=A.生效日
+        valFinCashIntInfo.setEffDate(calcDto.getEffDate());
+        //利率类型=A.利率类型
+        valFinCashIntInfo.setIntType(calcDto.getCalcType());
+        //初始利率=A.初始利率
+        valFinCashIntInfo.setRate(calcDto.getYield());
+        //计算基础=A.计息基础
+        valFinCashIntInfo.setBasis(dto.getBasis());
+//        //系数=A.系数
+//        valFinCashIntInfo.setCoefficient(dto.getRatio());
+//        //利差=A.利差
+//        valFinCashIntInfo.setSpreadRate(dto.getSpreadRate());
+//        //利率上限=A.利率上限
+//        valFinCashIntInfo.setHighestRate(dto.getRateMax());
+//        //利率下限=A.利率下限
+//        valFinCashIntInfo.setLowestRate(dto.getRateMin());
+//        //基准编号=A.基准利率编号
+//        valFinCashIntInfo.setBenchmarkId(dto.getIntRateId());
+        //金融产品代码=A.资金账户账号
+        valFinCashIntInfo.setFinprodId(calcDto.getFinprodId());
+        //金融产品类型=数据字典：金融产品类型.资金账户
+        valFinCashIntInfo.setFinprodType(calcDto.getFinprodType());
+        valFinCashIntInfo.setFinprodType2(calcDto.getFinprodType2());
+        //基准类型
+        valFinCashIntInfo.setBenchmarkType(calcDto.getBaseType());
+        //分支序号 = 设置全局变量(默认为0）
+        valFinCashIntInfo.setBranch(InterfCommonConstant.分支序号_默认);
+        return valFinCashIntInfo;
     }
 }

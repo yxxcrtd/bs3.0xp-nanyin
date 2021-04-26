@@ -516,9 +516,9 @@ public class CPrdBaseinfoTemplateRecService {
 //        valFinProduct.setoFinprodType(dto.getFinprodType());
         /**modify by niuqianyu on 20190117 end**/
         // 创建人 = SYS
-        //add by liupengfei for 多级法人改造 S
+        
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
         valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
         return valFinProduct;
 	}
 

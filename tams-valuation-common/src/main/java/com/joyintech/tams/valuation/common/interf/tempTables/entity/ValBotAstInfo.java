@@ -499,32 +499,15 @@ public class ValBotAstInfo extends BaseEntity {
     public void setSpreadRate(BigDecimal spreadRate) {
         this.spreadRate = spreadRate;
     }
-    //add by liupengfei for 多级法人改造 S
-    /**
-     * 所属机构
-     */
+    
     private String belongInstitutionCode;
 
-    /**
-     * Gets the value of belongInstitutionCode.
-     *
-     * @return the value of belongInstitutionCode
-     */
-    @Override
     public String getBelongInstitutionCode() {
         return belongInstitutionCode;
     }
 
-    /**
-     * Sets the belongInstitutionCode.
-     *
-     * <p>You can use getBelongInstitutionCode() to get the value of belongInstitutionCode</p>
-     *
-     * @param belongInstitutionCode belongInstitutionCode
-     */
-    @Override
     public void setBelongInstitutionCode(String belongInstitutionCode) {
         this.belongInstitutionCode = belongInstitutionCode;
     }
-    //add by liupengfei for 多级法人改造 E
+    
 }

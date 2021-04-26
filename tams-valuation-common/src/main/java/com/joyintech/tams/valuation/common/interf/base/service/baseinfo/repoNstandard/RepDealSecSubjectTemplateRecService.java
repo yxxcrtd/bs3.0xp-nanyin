@@ -15,16 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.common.base.entity.FinProductClass;
+import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.FinProductValuationPara;
+import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.common.base.entity.FinTradeProductAdd;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.RepoNStandardCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
@@ -231,9 +233,10 @@ public class RepDealSecSubjectTemplateRecService {
             valTradeFinProduct.setActCapDays(DateUtil.getBetweenDayNumber(dto.getVpayDate(), dto.getMpayDate()));
         }
         /**add by wujie on 20190420 end**/
-        //add by liupengfei for 多级法人改造 S
+        
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
         valTradeFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
+        
         return valTradeFinProduct;
     }
 

@@ -422,6 +422,9 @@ public class YPrdBaseinfoTemplateRecService {
         // 原金融产品类型 = A.金融产品类型
 //        valFinProduct.setoFinprodType(dto.getFinprodType());//modify by dongjun on 20181023
         // 创建人 = SYS
+        
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
+		valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
         return valFinProduct;
     }
 

@@ -86,6 +86,11 @@ public class ValFundNBaseInfoN extends BaseEntity {
     private BigDecimal faceValue;
 
     /**
+     * 场内基金类型
+     */
+    private String trmFundType;
+
+    /**
      * 取得 资产代码
      * @return 资产代码
      */
@@ -324,5 +329,21 @@ public class ValFundNBaseInfoN extends BaseEntity {
      */
     public void setFaceValue(BigDecimal faceValue) {
         this.faceValue = faceValue;
+    }
+
+    /**
+     * 取得 场内基金类型
+     * @return 场内基金类型
+     */
+    public String getTrmFundType() {
+        return trmFundType;
+    }
+
+    /**
+     * 设置 场内基金类型
+     * @param trmFundType 场内基金类型
+     */
+    public void setTrmFundType(String trmFundType) {
+        this.trmFundType = trmFundType == null ? null : trmFundType.trim();
     }
 }

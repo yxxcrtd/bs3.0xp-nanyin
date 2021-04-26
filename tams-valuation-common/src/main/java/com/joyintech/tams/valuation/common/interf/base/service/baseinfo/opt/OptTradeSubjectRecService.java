@@ -147,9 +147,8 @@ public class OptTradeSubjectRecService {
         // 创建时间 = 系统时间
         result.setCreateTime(dto.getCreateTime());
         result.setCreateDept(null);
-        //add by liupengfei for 多级法人改造 S
+        // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
         result.setBelongInstitutionCode(dto.getBelongInstitutionCode());
-        //add by liupengfei for 多级法人改造 E
         return result;
     }
 

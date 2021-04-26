@@ -100,6 +100,8 @@ public class SecVestPlanService {
         	valFinExercisePlan.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
         	//分支序号 = 设置全局变量(默认为0）
         	valFinExercisePlan.setBranch(InterfCommonConstant.分支序号_默认);
+        	//实际行权日 = E.实际行权日 add by yanya on 20210309
+            valFinExercisePlan.setActExerciseDate(item.getPayDate());
             result.add(valFinExercisePlan);
         }
         return result;
