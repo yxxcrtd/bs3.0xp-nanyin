@@ -145,6 +145,15 @@ $(function () {
 			    finprodId:row.finprodId
 			});
 		}
+        else if(row.finprodType2 == PINAN_ASSET_TYPE_F19){
+            label='FinProjectNetTargetAsset002.title';
+            pagePath = "invest/asset/projectnet/FinProjectNetTargetAsset002/init";
+            Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                "95%", "90%",{
+                    pageModel:PAGE_MODEL_REFERENCE,
+                    finprodId:row.finprodId
+                });
+        }
        
     });
 
@@ -281,6 +290,15 @@ $(function () {
 			    finprodId:row.finprodId
 			});
 		}
+        else if(row.finprodType2 == PINAN_ASSET_TYPE_F19){
+            label='FinProjectNetTargetAsset002.title';
+            pagePath = "invest/asset/projectnet/FinProjectNetTargetAsset002/init";
+            Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                "95%", "90%",{
+                    pageModel:PAGE_MODEL_REFERENCE,
+                    finprodId:row.finprodId
+                });
+        }
     });
     tableTwo.bind('click', '#shouximingxi', function(data, index) {
         var param={};

@@ -93,4 +93,27 @@ public interface BussRepoSecMapper {
      * 20191129
      */
     List<PledgeBondInfoDto> selectOutPledgeBondDetailList(Map<String, Object> param);
+
+    /**
+     *查询证券账户信息
+     * @param params
+     * @return
+     */
+    String querySecAcctId(Map<String, Object> params);
+    
+    /**
+     * 产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券
+     * add by zhangpei 20201116
+     * @param params 画面参数
+     * @return List<PledgeBondInfoDto>
+     */
+    List<PledgeBondInfoDto> selectAvaPledgeBondDetailListSellRepoForEtrPledge(Map<String, Object> params);
+
+    /**
+     * 银行间上下行多组合变更
+     * add by zhangpei 20201116
+     * @param params 画面参数
+     * @return List<PledgeBondInfoDto>
+     */
+    List<PledgeBondInfoDto> selectAvaPledgeBondDetailListSellRepoForBankDzh(Map<String, Object> params);
 }

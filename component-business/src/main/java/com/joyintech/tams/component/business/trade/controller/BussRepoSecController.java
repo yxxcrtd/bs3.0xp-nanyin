@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.CacheUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -63,6 +64,10 @@ public class BussRepoSecController extends BaseController {
         String bussType = this.getParam("bussType");
         String bussBondType = this.getParam("bussBondType");
         String entrustId = this.getParam("entrustId");
+        String tradeType = this.getParam("tradeType");
+        String pageFrom = this.getParam("pageFrom");
+        String isDzh = this.getParam("isDzh");
+        String quoteId = this.getParam("quoteId");
         //Modify by gaopeng 2019/10/12 end
         if (!StringUtil.equals(this.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || Boolean.valueOf(getParam("isTodoList"))
                 || !StringUtil.equals(getParam("statusValid"), DictCodeListExt1.画面数据状态_待处理.getValue())) {
@@ -90,7 +95,11 @@ public class BussRepoSecController extends BaseController {
                     initSearchParam.put("bizCode", bizCode);
                     initSearchParam.put("bussBondType", bussBondType);
                 }
-                entity = bussRepoSecService.selectBussRepoSec(initSearchParam);
+                //质押式回购报价页面  单独处理
+                if(StringUtils.isNotEmpty(pageFrom)&&StringUtils.equals(pageFrom,"CfetsRepoDealQuotedPrice002")){
+                }else{
+                    entity = bussRepoSecService.selectBussRepoSec(initSearchParam);
+                }
             }
             if (entity != null) {
                 // 已质押券信息一览
@@ -114,9 +123,13 @@ public class BussRepoSecController extends BaseController {
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("isBondLendTrade",isBondLendTrade);
+        model.addAttribute("tradeType",tradeType);
         this.setSelectOptionToModel(model, DictCode.WIND一级分类_含债券一级分类等
                 , DictCode.登记托管机构);
-
+        model.addAttribute("ibuFlag_repoOverAvaCanContinue",
+                CacheUtil.getSysParam("ibuFlag_repoOverAvaCanContinue"));
+        model.addAttribute("isDzh",isDzh);
+        model.addAttribute("quoteId",quoteId);
         return "component/trade/BussRepoSec";
     }
 

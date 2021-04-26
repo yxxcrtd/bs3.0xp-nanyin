@@ -202,10 +202,18 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
 //        增加提前终止 与逾期贩售 end
         param.put("PST22", DictCodeList.交易方向_收息到账.getValue());
         param.put("PST23", DictCodeList.交易方向_还本到账.getValue());
+        param.put("PST93", DictCodeListExt3.交易方向_解除质押.getValue());
+        param.put("PST94", DictCodeListExt3.交易方向_中途换券.getValue());
+        param.put("PST95", DictCodeListExt3.交易方向_到期购回.getValue());
+        param.put("PST96", DictCodeListExt3.交易方向_提前购回.getValue());
         param.put("FEE_TYPE_JSF", DictCodeListExt1.一次性费用类型_结算费.getValue());
+        param.put("TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        param.put("TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+		param.put("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
         param.put("SysDate", platformDateImpl.getSysDate());
         //有回购类型查询条件是 不显示银行间的数据
         param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
+		
     }
 
     public TrdRepoDurationDto findEffectiveData(Map<String, Object> params) {
@@ -867,6 +875,16 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
         param.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         param.put("IS_CANCEL_N", DictCodeList.是否_否.getValue());
         param.put("PS_T07", DictCodeList.交易方向_到期.getValue());
+
+        param.put("PST56", DictCodeListExt3.交易方向_到期续做.getValue());
+        param.put("PST93", DictCodeListExt3.交易方向_解除质押.getValue());
+        param.put("PST94", DictCodeListExt3.交易方向_中途换券.getValue());
+        param.put("PST95", DictCodeListExt3.交易方向_到期购回.getValue());
+        param.put("PST96", DictCodeListExt3.交易方向_提前购回.getValue());
+
+        param.put("TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        param.put("TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+
         return queryForPageForSelectReturn(page, length, () -> trdRepoDurationMapper.getBusiCode(param));
     }
 

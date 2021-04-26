@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
@@ -87,6 +88,13 @@ public class EtrNetCashPositionDealService extends EtrCashPositionBaseService {
 
             // 交易方向
             String ps = etrEntrust.getPs();
+
+            // add by etliu 20210421 权益类资产相关代码合并 start
+            //权益类资产  标的挂逐笔划款通道，从组合托管户出流水，通道置空，否则造成主键冲突
+            if(null!=entrustCommonDto.getEtrEntrust()&&StringUtil.equals(entrustCommonDto.getEtrEntrust().getFinprodType2(), DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())){
+                entrustCommonDto.getEtrEntrust().setChlId(StringUtil.EMPTY);
+            }
+            // add by etliu 20210421 权益类资产相关代码合并 end
 
             if (DictCodeList.交易方向_申购.getValue().equals(ps)) {
                 // 委托生成的现金流水
@@ -463,6 +471,15 @@ public class EtrNetCashPositionDealService extends EtrCashPositionBaseService {
         // 交易生成的现金流水
         EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
             finProductTradeDto);
+
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        //生成现金流数据  不带通道
+        if((StringUtil.equals(finProductTradeDto.getTrdProductDeal().getFinprodType2(),DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue()))
+                &&StringUtil.isNotEmpty(etrCashPositionFlowDto.getChlFinprodId())){
+            etrCashPositionFlowDto.setChlFinprodId(StringUtil.EMPTY);
+        }
+        // add by etliu 20210421 权益类资产相关代码合并 end
+
         // 委托代码
         String entrustId = finProductTradeDto.getEntrustId();
         if (DictCodeList.持仓类型_实际.equals(持仓类型)) { // 有效

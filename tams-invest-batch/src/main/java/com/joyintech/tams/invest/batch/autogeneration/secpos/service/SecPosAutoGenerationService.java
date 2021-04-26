@@ -10,6 +10,18 @@
 
 package com.joyintech.tams.invest.batch.autogeneration.secpos.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -26,12 +38,6 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.autogeneration.secpos.dao.SecPosAutoGenerationMapper;
 import com.joyintech.tams.invest.batch.autogeneration.secpos.dto.AssetTargetDbDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 组合持仓自动生成批处理Service
@@ -91,6 +97,10 @@ public class SecPosAutoGenerationService {
         paramMap.put("POSITION_TYPE_06", DictCodeList.持仓类型_融出.getValue());
         secPosAutoGenerationMapper.insertTodaySecPosDetailData(paramMap);
         //add for 华兴 by liupengfei E
+		
+		secPosAutoGenerationMapper.deleteTodayStaSecPosData(paramMap);
+        
+        secPosAutoGenerationMapper.insertTodayStaSecPosData(paramMap);
     }
 
 
@@ -143,7 +153,6 @@ public class SecPosAutoGenerationService {
         paramMap.put("CUSTOM_ASSET_TYPE_THREE_12", DictCodeListExt3.行内资产三级分类_资产支持证券.getValue());
         paramMap.put("CUSTOM_ASSET_TYPE_FOUR_015", DictCodeListExt3.行内资产四级分类_短融.getValue());
         paramMap.put("CUSTOM_ASSET_TYPE_FOUR_016", DictCodeListExt3.行内资产四级分类_超短融.getValue());
-        
         paramMap.put("TRADE_PLACE_01", DictCodeListExt1.交易场所_银行间.getValue());
         paramMap.put("CONFIG_TYPE_PED_RISK_TYPE", DictCodeListExt2.配置类型_产品存续期风险分类.getValue());
 
@@ -508,11 +517,11 @@ public class SecPosAutoGenerationService {
     public   List<FinExercisePlan>  calculationSurplusExercise(String finprodId, String seachDate, String finprodType, String execMode, String exDate)
     {
         String nextExDate="";//下一行权日
-        if(exDate.equals(DictCodeList.含权债摊销日_最近赎回行权日.getValue()))
+        if(StringUtil.equals(exDate,DictCodeList.含权债摊销日_最近赎回行权日.getValue()))
         {
             execMode=DictCodeList.行权方式_赎回.getValue();
         }
-        if(exDate.equals(DictCodeList.含权债摊销日_最近回售行权日.getValue()))
+        if(StringUtil.equals(exDate,DictCodeList.含权债摊销日_最近回售行权日.getValue()))
         {
             execMode=DictCodeList.行权方式_回售.getValue();
         }
@@ -580,8 +589,10 @@ public class SecPosAutoGenerationService {
              paramsMap.put("crn", StringUtil.isNotEmpty(dto.getCrn())?dto.getCrn():BigDecimal.ZERO);
              paramsMap.put("natureOrg", StringUtil.isNotEmpty(dto.getNatureOrg())?dto.getNatureOrg():"");
              
-             List<String> assetRiskTypeList = secPosAutoGenerationMapper.getAssetRiskTypeList(paramsMap);
-             
+            List<String> assetRiskTypeList = new ArrayList<>();
+            if(!StringUtil.isEmpty(dto.getRiskAssetType1())){
+                assetRiskTypeList = secPosAutoGenerationMapper.getAssetRiskTypeList(paramsMap);
+            }
              if(!StringUtil.isEmptyList(assetRiskTypeList)) {
                  assetRiskType = assetRiskTypeList.get(0);
              }

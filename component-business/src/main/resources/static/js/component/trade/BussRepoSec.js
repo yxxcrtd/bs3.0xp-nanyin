@@ -56,10 +56,26 @@
                 title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.bondAbbrName',
                 sortable: false
             }
+            // 组合代码
+            , {
+                field: 'portfolioId',
+                width: 150,
+                title: '组合代码',
+                sortable: false,
+                visible:(isDzh=='Y'&&$('#CfetsRepoDealQuotedPrice002_ps').val()=='03')?true:false
+            }
+            // 组合名称
+            , {
+                field: 'portfolioName',
+                width: 150,
+                title: '组合名称',
+                sortable: false,
+                visible:(isDzh=='Y'&&$('#CfetsRepoDealQuotedPrice002_ps').val()=='03')?true:false
+            }
             // 可质押券面总额
             , {
                 field: 'avaPledgePrin',
-                width: 150,
+                width: 170,
                 title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.avaPledgePrin',
                 type: 'money',
                 digit: 2,
@@ -92,29 +108,68 @@
                 edit: true,
                 sortable: false
             }
+            , {
+                field: 'repRegistOrg',
+                width: 150,
+                title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.repRegistOrg',
+                sortable: false,
+                visible:false
+            }
+            , {
+                field: 'repRegistOrgStr',
+                width: 150,
+                title: 'BussRepoSec.avaPledgeBondDetailTBL.colmodel.repRegistOrg',
+                sortable: false,
+                visible:false
+            }
         ],
         beforeEditCell: function (preVal, field, rowData) {
-            if (field === "pledgePrin") {
+            if (field === "pledgePrin"||field === 'pledgeRatio') {
+                //CFET质押式回购  回复操作  不可编辑
+                if(param.data.quotaPageModel&&param.data.quotaPageModel == 'dialogueResponse'){
+                    return false;
+                }
+                //交易画面选择成交编号 table不可编辑
+                if(param.data.isFromCstp){
+                    return false;
+                }
                 tempPledgePrin = preVal.replace(/\,/g, '');
             }
             return true;
         },
         editCell: function (value, data, field, cell, column) {
             if (field === "pledgePrin" && param.data.ps == BACK_LEND_DIRECTION_03 && data.pledgePrin * 1 > data.avaPledgePrin * 1) {
-                var datas = pledgeBondTotalTbl.getAllRows();
-                datas[data.LAY_TABLE_INDEX].pledgePrin = tempPledgePrin;
-                pledgeBondTotalTbl.reload({data: datas});
-                Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0003",
-                    [JoyinUtil.getLabel("BussRepoSec.pledgeBondTotalTbl.colmodel.pledgePrin"),
-                        JoyinUtil.getLabel("BussRepoSec.pledgeBondTotalTbl.colmodel.avaPledgePrin")]));
+                //CFET质押式支持软硬空
+                if((getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice002'||getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice003')
+                &&ibuFlag_repoOverAvaCanContinue=='02'){
+                    Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_E_0003",
+                        [JoyinUtil.getLabel("BussRepoSec.pledgeBondTotalTbl.colmodel.pledgePrin"),
+                            JoyinUtil.getLabel("BussRepoSec.pledgeBondTotalTbl.colmodel.avaPledgePrin")]), function () {},'',function () {
+                        var datas = pledgeBondTotalTbl.getAllRows();
+                        datas[data.LAY_TABLE_INDEX].pledgePrin = tempPledgePrin;
+                        pledgeBondTotalTbl.reload({data: datas});
+                    })
+                }else{
+                    var datas = pledgeBondTotalTbl.getAllRows();
+                    datas[data.LAY_TABLE_INDEX].pledgePrin = tempPledgePrin;
+                    pledgeBondTotalTbl.reload({data: datas});
+                    Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0003",
+                        [JoyinUtil.getLabel("BussRepoSec.pledgeBondTotalTbl.colmodel.pledgePrin"),
+                            JoyinUtil.getLabel("BussRepoSec.pledgeBondTotalTbl.colmodel.avaPledgePrin")]));
+                }
             }
             refreshTotalPrinAmt();
+            //刷新对手方质押券信息
+
+            window.CfetsPledgedBond.refreshCfetsPldegeBond(pledgeBondTotalTbl.getAllRows());
         },done:function(data1,data2,data3){
         	var pledgeBondTotalTblDone = window.BussRepoSec[entityNameBussRepoSec].pledgeBondTotalTblDone;
         	if(typeof pledgeBondTotalTblDone != "undefined" &&$.isFunction(pledgeBondTotalTblDone)){
         		pledgeBondTotalTblDone(data1,data2,data3);
         	}
-        	
+            if(isDzh=='Y'){
+                window.CfetsPledgedBond.refreshCfetsPldegeBond(pledgeBondTotalTbl.getAllRows());
+            }
         }
     });
 
@@ -122,13 +177,39 @@
      * 添加按钮按下处理
      */
     var addProcess = function () {
+        //CFET质押式回购check
+        if(getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice002'){
+            var data = $.serializeToObject('#CfetsRepoDealQuotedPrice002_submitForm');
+            if(!data.ps){
+                Joyin.error(JoyinUtil.getMessage("CFETS_COMMON_E_024"));
+                return;
+            }
+            if(!data.portfolioId){
+                Joyin.error(JoyinUtil.getMessage("CFETS_COMMON_E_025"));
+                return;
+            }
+            if(!data.mySide){
+                Joyin.error(JoyinUtil.getMessage("CFETS_COMMON_E_026"));
+                return;
+            }
+            if(!data.term){
+                Joyin.error(JoyinUtil.getMessage("CFETS_COMMON_E_027"));
+                return;
+            }
+            if(!data.price){
+                Joyin.error(JoyinUtil.getMessage("CFETS_COMMON_E_028"));
+                return;
+            }
+        }
         Joyin.ajaxJson(basePath + 'component/trade/BussRepoSec/check',
             param, function () {
                 if (entity == null) {
                     entity = {};
                 }
                 entity.pledgeBondList = pledgeBondTotalTbl.getAllRows();
-                
+                if(!param.data.portfolioId){
+                	param.data.portfolioId="";
+                }
                 Joyin.dialog(JoyinUtil.getLabel('BussRepoSec.addPledgeInfo'),
                     '/component/trade/BussRepoSecDialog/init', '98%', '98%',
                     {
@@ -152,6 +233,16 @@
                         pageModel: pageModel,
                         operationType: operationType,
                         workflowId: workflowId
+                        //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 start
+                        ,pageFromTz:(getElementById("pageFrom").val()=='TrdRepoTrade002'||getElementById("pageFrom").val()=='CfetsRepoDealQuotedPrice002')?getElementById("pageFrom").val():''
+                        //产品化_质押式回购交易界面,正回购时：点击添加后的|可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 end
+                        // add by etliu 20210303 银行间上下行 start
+                        ,ignoreFlowTradeId: param.data.ignoreFlowTradeId
+                        // add by etliu 20210303 银行间上下行 end
+                        ,pageFromTz:(getElementById("pageFrom").val()=='TrdRepoTrade002'||getElementById("pageFrom").val()=='CfetsRepoDealQuotedPrice002'||getElementById("pageFrom").val()=='CfetsRepoDealQuotedPrice003')?getElementById("pageFrom").val():''
+                        //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 end
+                        ,isDzh:isDzh
+                        ,quoteId:quoteId
                     });
             });
     };
@@ -197,10 +288,30 @@
     var refreshTotalPrinAmt = function () {
         var allRows = pledgeBondTotalTbl.getAllRows();
         var totalPrinAmt = Number(0);
+        var zzdPrinAmt = Number(0);
+        var sqsPrinAmt = Number(0);
+        //券面总额合计  不计算折算率
+        var totalPrinAmtSum = Number(0);
         for (var i in allRows) {
-            totalPrinAmt += allRows[i].pledgePrin * allRows[i].pledgeRatio / 100;
+            var pledgePrin = allRows[i].pledgePrin;
+            if(isDzh == 'Y'){
+                pledgePrin = JoyinMath.doMul(pledgePrin,10000);
+            }
+            totalPrinAmt += pledgePrin * allRows[i].pledgeRatio / 100;
+            totalPrinAmtSum += pledgePrin / 10000;
+            if(allRows[i].repRegistOrg=='01'){
+                zzdPrinAmt+=pledgePrin * allRows[i].pledgeRatio / 100;
+            }
+            if(allRows[i].repRegistOrg=='02'){
+                sqsPrinAmt+=pledgePrin * allRows[i].pledgeRatio / 100;
+            }
         }
         getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
+        getElementById("zzdTotalPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
+        getElementById("sqsTotalPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
+        $("#zzdPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
+        $("#sqsPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
+        refreshParentFace({totalPrinAmt:totalPrinAmtSum,shareCtAmt:zzdPrinAmt+sqsPrinAmt});
     };
 
     /**
@@ -214,24 +325,57 @@
         } else {
             pledgeBondTotalTbl.clear(function () {
                 var totalPrinAmt = Number(0);
+                var zzdPrinAmt = Number(0);
+                var sqsPrinAmt = Number(0);
+                //券面总额合计  不计算折算率
+                var totalPrinAmtSum = Number(0);
                 for (var i in pledgeRows) {
-                    pledgeBondTotalTbl.addRow(pledgeRows[i]);
-                    totalPrinAmt += pledgeRows[i].pledgePrin * pledgeRows[i].pledgeRatio / 100;
+                    var obj = pledgeRows[i];
+                    totalPrinAmt += obj.pledgePrin * obj.pledgeRatio / 100;
+                    totalPrinAmtSum += obj.pledgePrin / 10000; //以万元为单位
+                    if(obj.repRegistOrg=='01'){
+                        zzdPrinAmt+=obj.pledgePrin * obj.pledgeRatio / 100;
+                    }
+                    if(obj.repRegistOrg=='02'){
+                        sqsPrinAmt+=obj.pledgePrin * obj.pledgeRatio / 100;
+                    }
+                    pledgeBondTotalTbl.addRow(obj);
+                }
+                //多组合  可质押券面额和质押券面额 以万元为单位
+                if(isDzh == 'Y'){
+                    totalPrinAmtSum = totalPrinAmtSum*10000;
+                    totalPrinAmt = totalPrinAmt*10000;
+                    zzdPrinAmt = zzdPrinAmt*10000;
+                    sqsPrinAmt = sqsPrinAmt*10000;
                 }
                 getElementById("totalPrinAmt").val(totalPrinAmt).trigger('change').trigger('blur');
-                //add by jiangpeng on 20200731 start 修改TISHKBS-844导致 添加判断质押券置换
-                if(getElementById('pageFrom').val()!="EtrRepo002"){
-	                if(getElementById('pageFrom').val()!="TrdRepoTrade004"){
-	                    window.calFee();
-	                }else{
-	                    calFee();
-	                }
-                }
-                //add by jiangpeng on 20200731 end
+                getElementById("zzdTotalPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
+                getElementById("sqsTotalPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
+                $("#zzdPrinAmt").val(zzdPrinAmt).trigger('change').trigger('blur');
+                $("#sqsPrinAmt").val(sqsPrinAmt).trigger('change').trigger('blur');
+                //更新CFETS质押式回购报价要素信息
+                refreshParentFace({totalPrinAmt:totalPrinAmtSum,shareCtAmt:zzdPrinAmt+sqsPrinAmt});
             });
         }
     };
 
+    /**
+     * 更新CFETS质押式回购报价要素信息
+     */
+    var refreshParentFace = function (result) {
+        //单组合
+    	if(getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice002'){
+    		window.CfetsRepoDealQuotedPrice002.calculateAmt(pledgeBondTotalTbl);
+            $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(result.totalPrinAmt).trigger('blur');
+            $("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger('blur');
+        }
+    	//多组合
+    	if(getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice003'){
+            window.CfetsRepoDealQuotedPrice003.calculateAmt(pledgeBondTotalTbl);
+            $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(result.totalPrinAmt).trigger('blur');
+            $("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger('blur');
+        }
+    }
     /**
      * 清除数据并隐藏质押券信息
      */
@@ -416,4 +560,12 @@
         reloadPledgeBond: reloadPledgeBond,
         "pledgeBondTotalTbl": pledgeBondTotalTbl
     };
+    if(getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice002'){
+        pledgeBondTotalTbl.showColumns([{field:'repRegistOrgStr',visible: true}]);
+    }
+    //多组合
+    if(isDzh == 'Y'){
+        pledgeBondTotalTbl.showColumns([{field:'avaPledgePrin',visible:true,title: '可质押券面总额(万元)'}]);
+        pledgeBondTotalTbl.showColumns([{field:'pledgePrin',visible:true,title: '质押券面额(万元)'}]);
+    }
 }());

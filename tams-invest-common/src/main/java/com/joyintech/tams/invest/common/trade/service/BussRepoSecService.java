@@ -9,7 +9,9 @@
  */
 package com.joyintech.tams.invest.common.trade.service;
 
+import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -30,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +40,7 @@ import java.util.Map;
  * 质押劵管理共通组件-微服务Service
  */
 @Service
-public class BussRepoSecService {
+public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
 
     @Autowired
     private IPlatformDate platformDateImpl;
@@ -118,11 +121,21 @@ public class BussRepoSecService {
             }
         }
         BigDecimal totalPrinAmt = BigDecimal.ZERO;
+        BigDecimal zzdPrinAmt = BigDecimal.ZERO;
+        BigDecimal sqsPrinAmt = BigDecimal.ZERO;
         for (PledgeBondInfoDto pbi : pledgeList) {
             totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(pbi.getPledgePrin(), pbi.getPledgeRatio()).divide(new BigDecimal("100")));
+            if("01".equals(pbi.getRepRegistOrg())) {
+                zzdPrinAmt = ArithmeticUtil.doAdd(zzdPrinAmt, ArithmeticUtil.multiply(pbi.getPledgePrin(), pbi.getPledgeRatio()).divide(new BigDecimal("100")));
+            }
+            if("02".equals(pbi.getRepRegistOrg())) {
+                sqsPrinAmt = ArithmeticUtil.doAdd(sqsPrinAmt, ArithmeticUtil.multiply(pbi.getPledgePrin(), pbi.getPledgeRatio()).divide(new BigDecimal("100")));
+            }
         }
         bussRepoSecDto.setPledgeBondList(pledgeList);
         bussRepoSecDto.setTotalPrinAmt(totalPrinAmt);
+        bussRepoSecDto.setZzdTotalPrinAmt(zzdPrinAmt);
+        bussRepoSecDto.setSqsTotalPrinAmt(sqsPrinAmt);
         //债券借贷交易设置质押劵置换安排字段信息
         if(StringUtils.isNotBlank(bussBondType)){
             FinTradeProductAdd finTradeProductAdd = new FinTradeProductAdd();
@@ -160,7 +173,14 @@ public class BussRepoSecService {
             params.put("plateDate", platformDateImpl.getSysDateStr());
             params.put("repRegistOrg", StringUtil.splitToList(GlobalConstant.COMMA, (String) params.get("repRegistOrg")));
             params.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params);
+            //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201116 start
+            //resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params);
+            if(DictCodeList.回购拆借方向_正回购.getValue().equals(ps)&&StringUtil.equals(params.get("pageFromTz"), "TrdRepoTrade002")){
+            	resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepoForEtrPledge(params);
+            }else{
+            	resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params);
+            }
+            //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201116 end
             if (params.get("isWithInvAim") != null && (Boolean) params.get("isWithInvAim") && resultList != null && !resultList.isEmpty()) {
                 // 用融入的持仓（投资目的999999）减去卖空和卖空可用的持仓，并且最后结果没有卖空的数据
                 List<PledgeBondInfoDto> resultList1 = new ArrayList<>();
@@ -189,6 +209,95 @@ public class BussRepoSecService {
             params.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             params.put("tradeMarket",tradeMarket);
             resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListAntiRepo(params);
+        }
+        return resultList;
+    }
+    
+    
+    /**
+     * 根据画面条件检索可质押券信息
+     *
+     * @param params 画面参数
+     * @return List<PledgeBondInfoDto>
+     */
+    public Page<PledgeBondInfoDto> selectAvaPledgeBondDetailPage(Map<String, Object> params,int page,int length) {
+        String ps = (String) params.get("ps");
+        String bondType = (String) params.get("bondType");
+        String tradeMarket = (String) params.get("tradeMarket");
+        if(StringUtil.isNotEmpty(bondType)){
+            params.put("bondTypeArr", StringUtil.split(bondType,","));
+        }
+        //CFETS质押式回购报价界面，质押券维护界面 仅展示银行间的债券
+        if(StringUtils.equals(params.get("pageFromTz").toString(),"CfetsRepoDealQuotedPrice002")){
+            tradeMarket = DictCodeList.交易流通场所_银行间债券市场.getValue();
+        }
+        Page<PledgeBondInfoDto> resultList = new Page<>();
+        if (DictCodeList.回购拆借方向_正回购.getValue().equals(ps)||DictCodeList.回购拆借方向_融入.getValue().equals(ps)) {
+            params.put("POSITION_TYPE_01", DictCodeList.持仓类型_可用.getValue());
+            params.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
+            params.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
+            params.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
+            params.put("POSITION_TYPE_06", DictCodeList.持仓类型_融出.getValue());
+            params.put("tradeMarket",tradeMarket);
+            params.put("plateDate", platformDateImpl.getSysDateStr());
+            params.put("repRegistOrg", StringUtil.splitToList(GlobalConstant.COMMA, (String) params.get("repRegistOrg")));
+            params.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            
+            // add by etliu 20210303 银行间上下行 start
+//            param.ignoreFlowTradeId = ignoreFlowTradeId;
+            if (StringUtil.isNotBlank((String) params.get("ignoreFlowTradeId"))) {
+                params.put("folwtradeId", (String) params.get("ignoreFlowTradeId"));
+            }
+            // add by etliu 20210303 银行间上下行 end
+            
+            //resultList = this.queryForPage(page, length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params));
+            //resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params);
+            //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201116 start
+            if(DictCodeList.回购拆借方向_正回购.getValue().equals(ps)&&StringUtil.equals(params.get("pageFromTz"), "TrdRepoTrade002")){
+            	resultList = this.queryForPage(page, length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepoForEtrPledge(params));
+            }
+            //银行间上下行多组合 正回购
+            else if(DictCodeList.回购拆借方向_正回购.getValue().equals(ps)&&StringUtil.equals(params.get("pageFromTz"), "CfetsRepoDealQuotedPrice003")){
+                String portfolioId = (String)params.get("portfolioId");
+                List<String> portfolioIds = Arrays.asList(portfolioId.split(","));
+                if(StringUtil.isNotEmpty(portfolioIds)&&portfolioIds.size()>0){
+                    params.put("portfolioIds", Arrays.asList(portfolioId.split(",")));
+                    resultList = this.queryForPage(page, length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepoForBankDzh(params));
+                }
+            }
+            else{
+            	resultList = this.queryForPage(page, length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListSellRepo(params));
+            }
+            //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201116 end
+            if (params.get("isWithInvAim") != null && (Boolean) params.get("isWithInvAim") && resultList != null && !resultList.getRoot().isEmpty()) {
+                // 用融入的持仓（投资目的999999）减去卖空和卖空可用的持仓，并且最后结果没有卖空的数据
+                List<PledgeBondInfoDto> resultList1 = new ArrayList<>();
+                PledgeBondInfoDto 融入券 = null;
+                PledgeBondInfoDto 卖空 = null;
+                for (PledgeBondInfoDto pledgeBondInfoDto : resultList.getRoot()) {
+                    if ("999999".equals(pledgeBondInfoDto.getInvAim())) {
+                        融入券 = pledgeBondInfoDto;
+                    }
+                    if (DictCodeListExt1.投资目的_卖空.getValue().equals(pledgeBondInfoDto.getInvAim())) {
+                        卖空 = pledgeBondInfoDto;
+                    }
+
+                    if (!DictCodeListExt1.投资目的_卖空.getValue().equals(pledgeBondInfoDto.getInvAim())) {
+                        resultList1.add(pledgeBondInfoDto);
+                    }
+                }
+                if (融入券 != null && 卖空 != null) {
+                    融入券.setAvaPledgePrin(ArithmeticUtil.doAdd(融入券.getAvaPledgePrin(), 卖空.getAvaPledgePrin()));
+                }
+                return resultList;
+            }
+        } else if (DictCodeList.回购拆借方向_逆回购.getValue().equals(ps)||DictCodeList.回购拆借方向_融出.getValue().equals(ps)) {
+            params.put("plateDate", platformDateImpl.getSysDateStr());
+            params.put("repRegistOrg", StringUtil.splitToList(GlobalConstant.COMMA, (String) params.get("repRegistOrg")));
+            params.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            params.put("tradeMarket",tradeMarket);
+            resultList = this.queryForPage(page,length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListAntiRepo(params));
+            //resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListAntiRepo(params);
         }
         return resultList;
     }
@@ -235,5 +344,14 @@ public class BussRepoSecService {
         param.put("plateDate", platformDateImpl.getSysDateStr());
         resultList=bussRepoSecMapper.selectOutPledgeBondDetailList(param);
         return resultList;
+    }
+
+    /**
+     *查询证券账户信息
+     * @param params
+     * @return
+     */
+    public String querySecAcctId(Map<String, Object> params){
+        return bussRepoSecMapper.querySecAcctId(params);
     }
 }

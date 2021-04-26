@@ -119,7 +119,6 @@ public class FinProductCommonBatchService {
         return faceValue;
     }
 
-
     /**
      * 公用方法：标的类共通方法 - 标的信息查询
      * 

@@ -12,7 +12,9 @@ package com.joyintech.tams.component.business.trade.controller;
 
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.trade.BussRepoSecService;
@@ -64,6 +66,8 @@ public class BussRepoSecDialogController extends BaseController {
         //Modify by gaopeng 2019/10/12 start
         String entrustId = this.getParam("entrustId");
         //Modify by gaopeng 2019/10/12 end
+        String isDzh = this.getParam("isDzh");
+        String quoteId = this.getParam("quoteId");
         if (!StringUtil.equals(this.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || !WorkFlowUtil.isNotFromToDoList()
                 || !StringUtil.equals(getParam("statusValid"), DictCodeListExt1.画面数据状态_待处理.getValue())) {
             String entityStr = this.getParam("entity");
@@ -101,6 +105,10 @@ public class BussRepoSecDialogController extends BaseController {
         //add by gaopeng  2019/10/12 start 
         model.addAttribute("entrustId", entrustId);
         //add by gaopeng  2019/10/12 end 
+        //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 start
+        String pageFromTz = this.getParam("pageFromTz");
+        model.addAttribute("pageFromTz", pageFromTz);	
+        //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 end
         model.addAttribute("ps", ps);
         model.addAttribute("secAcctId", secAcctId);
         model.addAttribute("chlId", chlId);
@@ -122,6 +130,13 @@ public class BussRepoSecDialogController extends BaseController {
         setSelectOptionToModel(model, DictCode.WIND一级分类_含债券一级分类等
                 , DictCode.登记托管机构_中债);
         /*model.addAttribute("workflowPage", false);*/
+        model.addAttribute("ibuFlag_repoOverAvaCanContinue",
+                CacheUtil.getSysParam("ibuFlag_repoOverAvaCanContinue"));
+        // add by etliu 20210303 银行间上下行 start
+        model.addAttribute("ignoreFlowTradeId", this.getParam("ignoreFlowTradeId"));
+        // add by etliu 20210303 银行间上下行 end
+        model.addAttribute("isDzh",isDzh);
+        model.addAttribute("quoteId",quoteId);
         return "component/trade/BussRepoSecDialog";
     }
 
@@ -145,8 +160,8 @@ public class BussRepoSecDialogController extends BaseController {
      */
     @RequestMapping("selectAvaPledgeBondDetailList")
     @ResponseBody
-    public List<PledgeBondInfoDto> selectAvaPledgeBondDetailList(@RequestParam Map<String, Object> params) {
-        return bussRepoSecService.selectAvaPledgeBondDetailList(params);
+    public Page<PledgeBondInfoDto> selectAvaPledgeBondDetailList(@RequestParam Map<String, Object> params) {
+        return bussRepoSecService.selectAvaPledgeBondDetailPage(params);
     }
 
 }

@@ -88,6 +88,11 @@ public class TrdSecOverdueDuration001Service extends CommonExportService<TrdSecO
             		} else if (StringUtil.equals(data, DictCodeList.平安资产类型_计划类资产_利率型.getValue())) {
             			result=DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue();
             		}
+                    // add by etliu 20210421 权益类资产相关代码合并 start
+                    else if (StringUtil.equals(data, DictCodeListExt3.平安资产类型_权益类资产.getValue())) {
+                        result=DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue();
+                    }
+                    // add by etliu 20210421 权益类资产相关代码合并 end
             		resultList.add(result);
                 }
                 params.put("finprodType2List",resultList);
@@ -147,6 +152,9 @@ public class TrdSecOverdueDuration001Service extends CommonExportService<TrdSecO
         params.put("PINAN_ASSET_TYPE_F03", DictCodeList.平安资产类型_计划类资产_利率型.getValue());
         params.put("PINAN_ASSET_TYPE_F06", DictCodeList.平安资产类型_项目类资产.getValue());
         params.put("PINAN_ASSET_TYPE_F05", DictCodeList.平安资产类型_存款.getValue());
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        params.put("PINAN_ASSET_TYPE_F19", DictCodeListExt3.平安资产类型_权益类资产.getValue());
+        // add by etliu 20210421 权益类资产相关代码合并 end
         params.put("CASH_TYPE_2_C01", DictCodeListExt1.现金流二级类型_本金.getValue());
         params.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
     }

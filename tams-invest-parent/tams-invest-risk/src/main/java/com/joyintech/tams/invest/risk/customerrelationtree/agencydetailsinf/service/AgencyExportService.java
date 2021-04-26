@@ -141,7 +141,11 @@ public class AgencyExportService<T extends ITableRow> extends BaseService<T> imp
         // 生成导出文件
         File outFile = null;
         try {
-            outFile = export(param.getSelect(), param.getConfigFile(), pageId, selectParam);
+            ISelect iSelect = null;
+            if (!StringUtil.isEmptyList(param.getSelect())) {
+                iSelect = param.getSelect().get(0);
+            }
+            outFile = export(iSelect, param.getConfigFile(), pageId, selectParam);
         }
         catch (Exception e) {
             progressBarService.removePercent(pageId, PROCESS_KEY);

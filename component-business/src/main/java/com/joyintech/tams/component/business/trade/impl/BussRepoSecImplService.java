@@ -10,6 +10,7 @@
 package com.joyintech.tams.component.business.trade.impl;
 
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.ArithmeticUtil;
@@ -23,6 +24,7 @@ import com.joyintech.tams.common.base.entity.EtrSecPriority;
 import com.joyintech.tams.common.base.entity.FinDealPledge;
 import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
 import com.joyintech.tams.component.business.basicdata.service.BusiProductRatingService;
+import com.joyintech.tams.component.business.common.dao.CommonBusinessMapper;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.trade.BussRepoSecService;
 import com.joyintech.tams.constant.DictCodeList;
@@ -67,6 +69,9 @@ public class BussRepoSecImplService implements BussRepoSecService {
      */
     @Autowired(required = false)
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private CommonBusinessMapper commonBusinessMapper;
 
     /**
      * 债券代码：下拉框
@@ -140,6 +145,52 @@ public class BussRepoSecImplService implements BussRepoSecService {
         }
         return list ;
     }
+    
+    /**
+     * 根据画面条件检索可质押券信息
+     *
+     * @param params 画面参数
+     * @return List<PledgeBondInfoDto>
+     */
+    @Override
+    public Page<PledgeBondInfoDto> selectAvaPledgeBondDetailPage(Map<String, Object> params) {
+        List<PledgeBondInfoDto> pledgeList = new ArrayList<PledgeBondInfoDto>();
+        Page<PledgeBondInfoDto> list = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME + "/BussRepoSec/selectAvaPledgeBondDetailListPage",
+            params, PledgeBondInfoDto.class);
+        if(!StringUtil.isEmptyList(list.getRoot())){
+            try {
+                // 获取质押列表数据，用于过滤可质押列表已经全额质押的债券 
+                pledgeList = JsonUtils.json2List(String.valueOf(params.get("pledgeList")), PledgeBondInfoDto.class);
+                if(!StringUtil.isEmptyList(pledgeList)){
+                    for (int i = 0; i < pledgeList.size(); i++ ) {
+                        PledgeBondInfoDto pledgeDto = pledgeList.get(i) ;
+                        for (int j = 0; j < list.getRoot().size(); j++ ) {
+                            PledgeBondInfoDto avaPledgeDto = list.getRoot().get(j) ;
+                            if(StringUtil.isNotEmpty(avaPledgeDto.getAvaPledgePrin())){
+                                if(StringUtil.equals(avaPledgeDto.getBondCode(), pledgeDto.getBondCode())
+                                    &&avaPledgeDto.getAvaPledgePrin().compareTo(pledgeDto.getPledgePrin())==0){
+                                    list.getRoot().remove(avaPledgeDto) ;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            if(StringUtil.equals(params.get("isDzh"),"Y")&&!StringUtil.isEmptyList(list.getRoot())){
+                //银行间上下行多组合  以万元为单位
+                    list.getRoot().stream().forEach(avaPledgeDto -> {
+                        avaPledgeDto.setPrin(ArithmeticUtil.divide(avaPledgeDto.getPrin(),new BigDecimal(10000),2));
+                        avaPledgeDto.setPledgePrin(ArithmeticUtil.divide(avaPledgeDto.getPledgePrin(),new BigDecimal(10000),2));
+                        avaPledgeDto.setAvaPledgePrin(ArithmeticUtil.divide(avaPledgeDto.getAvaPledgePrin(),new BigDecimal(10000),2));
+                    });
+            }
+        }
+        return list ;
+    }
 
     /**
      * 7.6写入回购质押品信息
@@ -191,9 +242,7 @@ public class BussRepoSecImplService implements BussRepoSecService {
                     // 质押率 = 输出质押品DTO.质押率
                     finDealPledge.setPledgeRatio(ArithmeticUtil.divide(pledgeBond.getPledgeRatio(), new BigDecimal("100"), 4));
                     // 质押金额 = 输出质押品DTO.质押金额
-                    //finDealPledge.setPledgeAmt(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), finDealPledge.getPledgeRatio()));
-                    finDealPledge.setPledgeAmt(pledgeBond.getPledgePrin());
-
+                    finDealPledge.setPledgeAmt(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), finDealPledge.getPledgeRatio()));
                     finDealPledgeMapper.insertSelective(finDealPledge);
                 }
             }
@@ -308,6 +357,9 @@ public class BussRepoSecImplService implements BussRepoSecService {
                     .thenComparing(PledgeBondInfoDto::getLastPeriod)
                     .thenComparing(PledgeBondInfoDto::getGradeResult).reversed()
                     .thenComparing(PledgeBondInfoDto::getAvaPledgePrin).reversed());
+            } else if(StringUtil.isEmpty(etrSecPriority.getLastPeriodPri())&& StringUtil.isEmpty(etrSecPriority.getSecGradePri()) ) {
+                    pledgeList.sort(Comparator.comparing(PledgeBondInfoDto::getPledgePri).reversed()
+                            .thenComparing(PledgeBondInfoDto::getAvaPledgePrin).reversed());
             }
             // 输出排序结果，用于测试排序
             pledgeList.stream().forEach(dto -> log.info(dto.getFinprodId()+"===" 
@@ -330,4 +382,14 @@ public class BussRepoSecImplService implements BussRepoSecService {
         return dataList ;
     }
     
+    @Override
+    public int deleteAndInsert(String bizCode, String pageFrom, BussRepoSecDto bussRepoSec) {
+        deletePledgeBond(bizCode, pageFrom);
+        return insert(bussRepoSec, bizCode);
+    }
+
+    @Override
+    public String querySecAcctId(Map<String, Object> params) {
+        return this.commonBusinessMapper.querySecAcctId(params);
+    }
 }

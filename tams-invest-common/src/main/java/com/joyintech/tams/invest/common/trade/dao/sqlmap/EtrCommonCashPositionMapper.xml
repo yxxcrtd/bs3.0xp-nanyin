@@ -704,18 +704,27 @@
 
     <select id="selectPlanNetValue" resultType="java.math.BigDecimal">
         select VALUATION from (
-            select fpv.VALUATION,
-            rownum rn
-            from FIN_PRODUCT_VALUATION fpv
-            inner join FIN_PRODUCT fp
-            on fpv.FINPROD_ID = fp.FINPROD_MARKET_ID
+        <!-- 计划类净值型指令最新净价取值错误修改 modify by yufei 20200722 start -->
+        select fpv.VALUATION
+        <!-- rownum rn -->
+        from FIN_PRODUCT_VALUATION fpv
+        inner join FIN_PRODUCT fp
+        on fpv.FINPROD_ID = fp.FINPROD_MARKET_ID
+        <if test="FIN_PROD_TYPE_F17 != null and FIN_PROD_TYPE_F17 != ''">
             and fpv.FINPROD_TYPE = #{FIN_PROD_TYPE_F17}
+        </if>
+        <if test="FIN_PROD_TYPE_2_F17 != null and FIN_PROD_TYPE_2_F17 != ''">
             and fpv.FINPROD_TYPE2 = #{FIN_PROD_TYPE_2_F17}
-            and fp.FINPROD_ID=#{finprodId}
-            and fpv.VAL_DATE<![CDATA[<=]]>#{dealDate}
-            order by fpv.VAL_DATE desc
+        </if>
+        <if test="FIN_PROD_TYPE_2_F37 != null and FIN_PROD_TYPE_2_F37 != ''">
+            AND fpv.FINPROD_TYPE2 = #{FIN_PROD_TYPE_2_F37}
+        </if>
+        and fp.FINPROD_ID=#{finprodId}
+        and fpv.VAL_DATE<![CDATA[<=]]>#{dealDate}
+        order by fpv.VAL_DATE desc
         )
-        where rn = 1
+        where rownum = 1
+        <!-- 计划类净值型指令最新净价取值错误修改 modify by yufei 20200722 end -->
     </select>
     <select id="getSecInfoModel" resultType="com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto">
         SELECT

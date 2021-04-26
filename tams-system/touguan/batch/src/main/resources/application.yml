@@ -7,7 +7,7 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   profiles:
-    active: dtx1    #一体化使用yitihua-jicheng
+    active: allinone    #一体化使用yitihua-jicheng
   thymeleaf:
     cache: false
   #数据源配置
@@ -24,8 +24,10 @@ spring:
     removeAbandonedOnMaintenance: true
     logAbandoned: true   
   activemq:
-    systemId: valuation_batch
+    systemId: touguan_batch
     active: false
+    brokerUrl: tcp://localhost:61616
+    password: manager
 #base数据源配置  
 base:
   datasource:
@@ -100,7 +102,7 @@ batch:
     maxJobPoolSize: 5 #job线程池
     maxExeUser: 2 #最大并发用户数
     maxThreadPerUser: 5 #任务并发数
-    sleeptime: 1000 #轮询时间 
+    sleeptime: 10000 #轮询时间
     maxSqlNum: 50 #批量提交数
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -116,20 +118,23 @@ threadpool:
 
 ---
 spring:
-  profiles: yitihua-jicheng
+  profiles: allinone
   redis:
-    cluster:
-      nodes: 192.168.90.180:6379,192.168.90.180:6380,192.168.90.181:6381,192.168.90.181:6382,192.168.90.182:6383,192.168.90.182:6384
+    database: 1
+    password: joyin!234
+    host: 192.168.90.198
+    port: 6379
+    timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2121_test
-    password: zjtams2121_test 
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: tams30
+    password: tams30
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zjtams2121_test
-  sqldirpassword: zjtams2121_test
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldiruserName: tams30
+  sqldirpassword: tams30
   #以下根据实际ip和端口进行修改
   micorservice:
     contextPath:
@@ -160,25 +165,30 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2121_test
-    password: zjtams2121_test
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: tams30
+    password: tams30
 #interf数据源配置
 interf:  
    datasource:
-    url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zjtams2121_test
-    password: zjtams2121_test
+     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+     username: tams30
+     password: tams30
 #日志路径配置
 log:
   path: /home/tams/logs/batch
-  level: info
+  level: debug
 logging:
   path: /home/tams/logs/batch
 #注册中心配置
 eureka:
   client:
     enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.197:8070
+
+
 ---
 spring:
   profiles: dtx

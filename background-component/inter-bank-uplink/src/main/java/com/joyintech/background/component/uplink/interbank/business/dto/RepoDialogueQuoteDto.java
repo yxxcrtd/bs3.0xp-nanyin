@@ -192,6 +192,16 @@ public class RepoDialogueQuoteDto extends BaseEntity {
                 ibuQuoteCrepPledgeDto.setVersion(version);
             }
         }
+        if (CollectionUtils.isNotEmpty(this.ibuQuoteEtrReDtoList)) {
+            for(IbuQuoteEtrReDto ibuQuoteEtrReDto : ibuQuoteEtrReDtoList){
+                ibuQuoteEtrReDto.setVersion(version);
+            }
+        }
+        if (CollectionUtils.isNotEmpty(this.ibuQuoteEntCrepPledgeDtoList)) {
+            for(IbuQuoteEntCrepPledgeDto ibuQuoteEntCrepPledgeDto : ibuQuoteEntCrepPledgeDtoList){
+                ibuQuoteEntCrepPledgeDto.setVersion(version);
+            }
+        }
     }
     
     public void setIbuQuoteRepoDtoByHis(IbuQuoteCrepHis ibuQuoteCrepHis) {

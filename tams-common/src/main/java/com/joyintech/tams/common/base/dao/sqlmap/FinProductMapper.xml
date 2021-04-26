@@ -69,17 +69,17 @@
         LIQUIDATION_YESNO LIQUIDATION_YESNO
     </sql>
     <sql id="Sql_All_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.FinProductMapper.Base_Column_List" />
         from FIN_PRODUCT
     </sql>
     <sql id="Sql_All_Effective_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.FinProductMapper.Base_Column_List" />
         from FIN_PRODUCT
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.FinProductMapper.Base_Column_List" />
         from FIN_PRODUCT
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
@@ -89,40 +89,40 @@
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
-        insert into FIN_PRODUCT (FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, 
-            FINPROD_ABBR, FINPROD_NAME, PROFIT_TYPE, 
-            COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, 
-            ISSUE_ID, ISSUE_PRICE, ISSUE_AMT, 
-            CCY, BLN_AREA, TRADE_MARKET, 
-            CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE, 
-            ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID, 
-            ISSUER, MANAGER, FINANCIER, 
-            IDATE, VDATE, MDATE, TERM_DAYS, 
-            ACTMDATE, LIQUIDATION_DATE, IS_CHL, 
-            IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT, 
-            CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID, 
-            REGIST_ORG, EXE_DATE, REMARK, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME, CONTRACT_NO, 
-            IS_FIN_ORG, SPONSOR, INVEST_ADVISER, 
-            LIQUIDATION_YESNO)
-        values (#{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
-            #{finprodAbbr,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, 
-            #{couponSpecies,jdbcType=VARCHAR}, #{chlFinprodId,jdbcType=VARCHAR}, #{finprodMarketId,jdbcType=VARCHAR}, 
-            #{issueId,jdbcType=VARCHAR}, #{issuePrice,jdbcType=DECIMAL}, #{issueAmt,jdbcType=DECIMAL}, 
-            #{ccy,jdbcType=VARCHAR}, #{blnArea,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
-            #{calendarId,jdbcType=VARCHAR}, #{issueType,jdbcType=VARCHAR}, #{operationType,jdbcType=VARCHAR}, 
-            #{entrustType,jdbcType=VARCHAR}, #{entruster,jdbcType=VARCHAR}, #{trusteeId,jdbcType=VARCHAR}, 
-            #{issuer,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{financier,jdbcType=VARCHAR}, 
-            #{idate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{termDays,jdbcType=DECIMAL}, 
-            #{actmdate,jdbcType=DATE}, #{liquidationDate,jdbcType=DATE}, #{isChl,jdbcType=VARCHAR}, 
-            #{isSus,jdbcType=VARCHAR}, #{sustainableRemark,jdbcType=VARCHAR}, #{isRight,jdbcType=VARCHAR}, 
-            #{capiIncomeFeature,jdbcType=VARCHAR}, #{pFinprodId,jdbcType=VARCHAR}, #{oFinprodId,jdbcType=VARCHAR}, 
-            #{registOrg,jdbcType=VARCHAR}, #{exeDate,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{contractNo,jdbcType=VARCHAR}, 
-            #{isFinOrg,jdbcType=VARCHAR}, #{sponsor,jdbcType=VARCHAR}, #{investAdviser,jdbcType=VARCHAR}, 
-            #{liquidationYesno,jdbcType=VARCHAR})
+        insert into FIN_PRODUCT (FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2,
+                                 FINPROD_ABBR, FINPROD_NAME, PROFIT_TYPE,
+                                 COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID,
+                                 ISSUE_ID, ISSUE_PRICE, ISSUE_AMT,
+                                 CCY, BLN_AREA, TRADE_MARKET,
+                                 CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE,
+                                 ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID,
+                                 ISSUER, MANAGER, FINANCIER,
+                                 IDATE, VDATE, MDATE, TERM_DAYS,
+                                 ACTMDATE, LIQUIDATION_DATE, IS_CHL,
+                                 IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT,
+                                 CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID,
+                                 REGIST_ORG, EXE_DATE, REMARK,
+                                 CREATE_USER, CREATE_DEPT, CREATE_TIME,
+                                 UPDATE_USER, UPDATE_TIME, CONTRACT_NO,
+                                 IS_FIN_ORG, SPONSOR, INVEST_ADVISER,
+                                 LIQUIDATION_YESNO)
+        values (#{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR},
+                #{finprodAbbr,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR},
+                #{couponSpecies,jdbcType=VARCHAR}, #{chlFinprodId,jdbcType=VARCHAR}, #{finprodMarketId,jdbcType=VARCHAR},
+                #{issueId,jdbcType=VARCHAR}, #{issuePrice,jdbcType=DECIMAL}, #{issueAmt,jdbcType=DECIMAL},
+                #{ccy,jdbcType=VARCHAR}, #{blnArea,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR},
+                #{calendarId,jdbcType=VARCHAR}, #{issueType,jdbcType=VARCHAR}, #{operationType,jdbcType=VARCHAR},
+                #{entrustType,jdbcType=VARCHAR}, #{entruster,jdbcType=VARCHAR}, #{trusteeId,jdbcType=VARCHAR},
+                #{issuer,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{financier,jdbcType=VARCHAR},
+                #{idate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{termDays,jdbcType=DECIMAL},
+                #{actmdate,jdbcType=DATE}, #{liquidationDate,jdbcType=DATE}, #{isChl,jdbcType=VARCHAR},
+                #{isSus,jdbcType=VARCHAR}, #{sustainableRemark,jdbcType=VARCHAR}, #{isRight,jdbcType=VARCHAR},
+                #{capiIncomeFeature,jdbcType=VARCHAR}, #{pFinprodId,jdbcType=VARCHAR}, #{oFinprodId,jdbcType=VARCHAR},
+                #{registOrg,jdbcType=VARCHAR}, #{exeDate,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+                #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{contractNo,jdbcType=VARCHAR},
+                #{isFinOrg,jdbcType=VARCHAR}, #{sponsor,jdbcType=VARCHAR}, #{investAdviser,jdbcType=VARCHAR},
+                #{liquidationYesno,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
         insert into FIN_PRODUCT
@@ -432,24 +432,24 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
-        insert into FIN_PRODUCT(FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, FINPROD_ABBR, FINPROD_NAME, 
-        PROFIT_TYPE, COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, ISSUE_ID, ISSUE_PRICE, 
-        ISSUE_AMT, CCY, BLN_AREA, TRADE_MARKET, CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE, 
-        ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID, ISSUER, MANAGER, FINANCIER, IDATE, VDATE, MDATE, 
-        TERM_DAYS, ACTMDATE, LIQUIDATION_DATE, IS_CHL, IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT, 
-        CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID, REGIST_ORG, EXE_DATE, REMARK, CREATE_USER, 
-        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CONTRACT_NO, IS_FIN_ORG, SPONSOR, 
-        INVEST_ADVISER, LIQUIDATION_YESNO)
-        select FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, FINPROD_ABBR, FINPROD_NAME, 
-            PROFIT_TYPE, COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, ISSUE_ID, ISSUE_PRICE, 
-            ISSUE_AMT, CCY, BLN_AREA, TRADE_MARKET, CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE, 
-            ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID, ISSUER, MANAGER, FINANCIER, IDATE, VDATE, MDATE, 
-            TERM_DAYS, ACTMDATE, LIQUIDATION_DATE, IS_CHL, IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT, 
-            CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID, REGIST_ORG, EXE_DATE, REMARK, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CONTRACT_NO, IS_FIN_ORG, SPONSOR, 
-            INVEST_ADVISER, LIQUIDATION_YESNO
-             from FIN_PRODUCT
-             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        insert into FIN_PRODUCT(FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, FINPROD_ABBR, FINPROD_NAME,
+                                PROFIT_TYPE, COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, ISSUE_ID, ISSUE_PRICE,
+                                ISSUE_AMT, CCY, BLN_AREA, TRADE_MARKET, CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE,
+                                ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID, ISSUER, MANAGER, FINANCIER, IDATE, VDATE, MDATE,
+                                TERM_DAYS, ACTMDATE, LIQUIDATION_DATE, IS_CHL, IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT,
+                                CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID, REGIST_ORG, EXE_DATE, REMARK, CREATE_USER,
+                                CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CONTRACT_NO, IS_FIN_ORG, SPONSOR,
+                                INVEST_ADVISER, LIQUIDATION_YESNO)
+        select FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, FINPROD_ABBR, FINPROD_NAME,
+               PROFIT_TYPE, COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, ISSUE_ID, ISSUE_PRICE,
+               ISSUE_AMT, CCY, BLN_AREA, TRADE_MARKET, CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE,
+               ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID, ISSUER, MANAGER, FINANCIER, IDATE, VDATE, MDATE,
+               TERM_DAYS, ACTMDATE, LIQUIDATION_DATE, IS_CHL, IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT,
+               CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID, REGIST_ORG, EXE_DATE, REMARK, CREATE_USER,
+               CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CONTRACT_NO, IS_FIN_ORG, SPONSOR,
+               INVEST_ADVISER, LIQUIDATION_YESNO
+        from FIN_PRODUCT
+        where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinProduct" >
         update FIN_PRODUCT

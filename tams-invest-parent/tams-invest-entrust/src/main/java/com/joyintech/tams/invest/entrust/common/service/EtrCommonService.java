@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.entrust.etrplanassetn.dto.EtrPlanAssetNDto;
 import com.joyintech.tams.invest.entrust.etrplanassetr.dto.EtrPlanAssetRDto;
 import com.joyintech.tams.invest.entrust.etrproject.dto.EtrProjectDto;
 //import com.joyintech.tams.invest.entrust.etrprojectnet.dto.EtrProjectNetDto;
+import com.joyintech.tams.invest.entrust.etrprojectnet.dto.EtrProjectNetDto;
 import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
 import com.joyintech.tams.invest.entrust.etrseclend.dto.EtrSecLendDto;
 import org.slf4j.Logger;
@@ -807,32 +808,34 @@ public class EtrCommonService extends BaseCommonService {
                 creditLinesInputDto.setShareAmt(inputDto.getEntrustAmt());
             }
         }
-//        //权益类资产
-//        if(object instanceof EtrProjectNetDto){
-//            EtrProjectNetDto inputDto = (EtrProjectNetDto) object;
-//            if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(),inputDto.getPs())
-//                    ||StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())){
-//                creditLinesInputDto = new CreditLinesInputDto();
-//                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
-//                creditLinesInputDto.setTradeId(inputDto.getEntrustId());
-//                creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
-//                creditLinesInputDto.setTradeDate(inputDto.getVdate());
-//                creditLinesInputDto.setTradeStatus(status);
-//                creditLinesInputDto.setPs(inputDto.getPs());
-//                creditLinesInputDto.setFinprodType2(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue());
-//                if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
-//                    creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
-//                }
-//                //最新净值
-//                BigDecimal lastPrice = creditLinesDealsMapper.getLastPrice(inputDto.getFinprodId(),iPlatformDate.getSysDate());
-//                creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
-//                if (lastPrice == null){
-//                    lastPrice = BigDecimal.ONE;
-//                }
-//                creditLinesInputDto.setNetPrice(lastPrice);
-//                creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(inputDto.getEntrustAmt(),lastPrice,2));
-//            }
-//        }
+        // add by etliu 20210421 权益类资产相关代码合并 start
+        //权益类资产
+        if(object instanceof EtrProjectNetDto){
+            EtrProjectNetDto inputDto = (EtrProjectNetDto) object;
+            if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(),inputDto.getPs())
+                    ||StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())){
+                creditLinesInputDto = new CreditLinesInputDto();
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+                creditLinesInputDto.setTradeId(inputDto.getEntrustId());
+                creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
+                creditLinesInputDto.setTradeDate(inputDto.getVdate());
+                creditLinesInputDto.setTradeStatus(status);
+                creditLinesInputDto.setPs(inputDto.getPs());
+                creditLinesInputDto.setFinprodType2(DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
+                    creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
+                }
+                //最新净值
+                BigDecimal lastPrice = creditLinesDealsMapper.getLastPrice(inputDto.getFinprodId(),iPlatformDate.getSysDate());
+                creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
+                if (lastPrice == null){
+                    lastPrice = BigDecimal.ONE;
+                }
+                creditLinesInputDto.setNetPrice(lastPrice);
+                creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(inputDto.getEntrustAmt(),lastPrice,2));
+            }
+        }
+        // add by etliu 20210421 权益类资产相关代码合并 end
         //计划类货币型
         if(object instanceof EtrPlanAssetCDto){
             EtrPlanAssetCDto inputDto = (EtrPlanAssetCDto) object;
