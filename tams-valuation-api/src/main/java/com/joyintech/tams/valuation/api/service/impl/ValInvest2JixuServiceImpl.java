@@ -275,10 +275,17 @@ public class ValInvest2JixuServiceImpl implements ValInvest2JixuService {
             result.setTradeType(BussinessJixuConstant.交易类型_利率互换开仓);
             // 产品代码 port Y 产品代码
             //根据组合代码查询金融产品：净值型和货币型可以找到，预期收益型会返回空
-            FinProduct finProduct = dealCommonService.queryFinProductByPortfolidId(trdCommDto.getTrdProductDealAdd().getPortfolioId());
-            String booksetid = ((finProduct == null || finProduct.getFinprodId() == null) ? trdCommDto.getTrdProductDealAdd().getPortfolioId() : finProduct.getFinprodId());
+            String booksetId = null;
+            if (trdCommDto.getTrdProductDealAdd() != null) {
+                FinProduct finProduct = dealCommonService.queryFinProductByPortfolidId(trdCommDto.getTrdProductDealAdd().getPortfolioId());
+                booksetId = (finProduct == null || finProduct.getFinprodId() == null ? trdCommDto.getTrdProductDealAdd().getPortfolioId() : finProduct.getFinprodId());
+            }
+            else if (trdCommDto.getTrdFinProductDealTotal() != null) {
+                FinProduct finProduct = dealCommonService.queryFinProductByPortfolidId(trdCommDto.getTrdFinProductDealTotal().getPortfolioId());
+                booksetId = (finProduct == null || finProduct.getFinprodId() == null ? trdCommDto.getTrdFinProductDealTotal().getPortfolioId() : finProduct.getFinprodId());
+            }
             // 产品代码  = 金融产品交易附属.投资组合代码
-            result.setPort(booksetid);
+            result.setPort(booksetId);
 //            result.setPort(trdCommDto.getTrdProductDealAdd().getPortfolioId());
             // 基金经理 manager Y 1：默认经理组 默认经理组
             result.setManager(BussinessJixuConstant.基金经理_经理组);
