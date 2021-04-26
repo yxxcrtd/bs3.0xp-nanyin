@@ -1264,4 +1264,25 @@
         <!--add by yujinfa for 添加流程中的业务编号显示 End-->
     </select>
     <!--add by liupengfei for 多级法人改造E-->
+
+    <!--add by etliu 20210426 权益类资产相关代码合并 start-->
+    <!--除权登记获取对应的现金分红指令-->
+    <select id="getGroupPayByList" resultType="com.joyintech.tams.invest.common.dto.StlPayOrdersDto">
+        SELECT
+        T1.B_TRADE_ID TRADE_ID,
+        T2.ORDER_ID
+        FROM
+        TRD_PRODUCT_DEAL T1
+        LEFT JOIN STL_PAY_ORDERS T2 ON
+        T1.TRADE_ID = T2.TRADE_ID
+        <where>
+            <if test="groupTradeId != null and groupTradeId.size() > 0">
+                T1.B_TRADE_ID in
+                <foreach collection="groupTradeId" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <!--add by etliu 20210426 权益类资产相关代码合并 end-->
 </mapper>

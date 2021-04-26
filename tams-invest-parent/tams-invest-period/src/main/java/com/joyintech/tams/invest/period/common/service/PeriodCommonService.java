@@ -761,4 +761,12 @@ public class PeriodCommonService extends BaseService {
         return preTrdCommonMapper.selectRevokedDataCount(paramMap) > 0;
 
     }
+
+    // add by etliu 20210426 权益类资产相关代码合并 start
+    public List<StlPayOrdersDto> getGroupPayByList(Map<String,Object> param) {
+        return restTemplate.postForList(
+                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdProjectDuration" + "/getGroupPayByList",
+                param, StlPayOrdersDto.class);
+    }
+    // add by etliu 20210426 权益类资产相关代码合并 end
 }

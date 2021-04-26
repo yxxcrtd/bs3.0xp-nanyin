@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPosition
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonDeleteDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
@@ -498,4 +499,10 @@ public class TrdProjectDurationService extends BaseService {
         return queryForPageForSelectReturn(page, length, () -> trdProjectDurationMapper.getFinprodMarketId(param));
     }
     //add by liupengfei for 多级法人E
+
+    // add by etliu 20210426 权益类资产相关代码合并 start
+    public List<StlPayOrdersDto> getGroupPayByList(Map<String,Object> param){
+        return trdProjectDurationMapper.getGroupPayByList(param);
+    }
+    // add by etliu 20210426 权益类资产相关代码合并 end
 }

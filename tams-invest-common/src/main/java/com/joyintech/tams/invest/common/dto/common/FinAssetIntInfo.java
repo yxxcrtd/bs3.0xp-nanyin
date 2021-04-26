@@ -177,6 +177,14 @@ public class FinAssetIntInfo extends BaseEntity {
      */
     private String isFromCopy;
 
+    // add by etliu 20210426 权益类资产相关代码合并 start
+    /**
+     * 随交易支付费用
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal feeAmtPay;
+    // add by etliu 20210426 权益类资产相关代码合并 end
+
     public String getIsFromCopy() {
         return isFromCopy;
     }
@@ -1284,4 +1292,14 @@ public class FinAssetIntInfo extends BaseEntity {
     public void setActrRepaymentUnpayInterest(BigDecimal actrRepaymentUnpayInterest) {
         this.actrRepaymentUnpayInterest = actrRepaymentUnpayInterest;
     }
+
+    // add by etliu 20210426 权益类资产相关代码合并 start
+    public BigDecimal getFeeAmtPay() {
+        return feeAmtPay;
+    }
+
+    public void setFeeAmtPay(BigDecimal feeAmtPay) {
+        this.feeAmtPay = feeAmtPay;
+    }
+    // add by etliu 20210426 权益类资产相关代码合并 end
 }

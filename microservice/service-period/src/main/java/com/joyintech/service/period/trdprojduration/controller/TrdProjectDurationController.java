@@ -3,6 +3,7 @@ package com.joyintech.service.period.trdprojduration.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -176,4 +177,9 @@ public class TrdProjectDurationController {
         return trdProjectDurationService.getFinprodMarketId(page, length, param);
     }
     //add by liupengfei for多级法人 E
+
+    @PostMapping("getGroupPayByList")
+    public List<StlPayOrdersDto> getGroupPayByList(@RequestBody Map<String, Object> params) {
+        return trdProjectDurationService.getGroupPayByList(params);
+    }
 }

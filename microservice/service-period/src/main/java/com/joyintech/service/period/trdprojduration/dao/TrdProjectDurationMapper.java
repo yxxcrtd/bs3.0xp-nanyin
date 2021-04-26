@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
@@ -60,4 +61,8 @@ public interface TrdProjectDurationMapper {
     List<SelectOptionDto> getFinprodMarketId(Map<String, Object> param);
     List<SelectOptionDto> getBusiCode(Map<String, Object> param);
     //add by liupengfei for 多级法人E
+
+    // add by etliu 20210426 权益类资产相关代码合并 start
+    List<StlPayOrdersDto> getGroupPayByList(Map<String,Object> param);
+    // add by etliu 20210426 权益类资产相关代码合并 end
 }
