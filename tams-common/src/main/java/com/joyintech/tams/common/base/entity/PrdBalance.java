@@ -1,6 +1,9 @@
 package com.joyintech.tams.common.base.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
+
 import java.math.BigDecimal;
 
 public class PrdBalance extends BaseEntity {
@@ -30,11 +33,13 @@ public class PrdBalance extends BaseEntity {
     /**
      * 期末余额
      */
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal endBal;
 
     /**
      * 年初余额
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal beginBal;
 
     /**
@@ -50,11 +55,13 @@ public class PrdBalance extends BaseEntity {
     /**
      * 负债期末余额
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal liaEndBal;
 
     /**
      * 负债年初余额负债年初余额
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal liaBeginBal;
 
     public String getRealPrdId() {
