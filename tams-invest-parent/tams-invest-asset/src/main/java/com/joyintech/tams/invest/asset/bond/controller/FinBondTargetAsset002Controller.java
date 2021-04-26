@@ -139,12 +139,6 @@ public class FinBondTargetAsset002Controller extends BaseController{
             //commonBusinessService.setTradeMarketId(finBondTargetAssetDto,model);
             //设置到model中
             model.addAttribute("entity", finBondTargetAssetDto);
-            
-            //add by mashukai 20210426 债券存在交易则是否发行标的字段不可修改 start
-            if (finBondTargetAssetDto.getFinprodId() != null && commonBusinessService.isTransInAsset(finBondTargetAssetDto.getFinprodId())>0){
-                model.addAttribute("isAllowModify", DictCodeList.是否_否.getValue());
-            }
-            //add by mashukai 20210426 债券存在交易则是否发行标的字段不可修改 end
         }else{
             FinBondTargetAssetDto finBondTargetAssetDto = new FinBondTargetAssetDto();
             finBondTargetAssetDto.setFinprodId(IDGenerator.generate());
