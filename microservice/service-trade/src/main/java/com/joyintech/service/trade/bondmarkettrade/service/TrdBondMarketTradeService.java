@@ -342,11 +342,13 @@ public class TrdBondMarketTradeService extends BaseService {
             //处理债券资产报送信息Entity
             if(repAssetBond != null){
                 repAssetBond.setRepFinprodId(newFinprodId);
+                repAssetBond.setSecId(dto.getAppearMarketId());
             }
             
             //处理资产负债报送信息Entity
             if (repAssetDept != null){
                 repAssetDept.setRepFinprodId(newFinprodId);
+                repAssetDept.setFinprodMarketId(dto.getAppearMarketId());
             }
             
             //处理中债资产其他要素Entity
@@ -358,6 +360,7 @@ public class TrdBondMarketTradeService extends BaseService {
             //处理权益类资产报送信息Entity
             if (repAssetEquity != null){
                 repAssetEquity.setRepFinprodId(newFinprodId);
+                repAssetEquity.setRepSharesId(dto.getAppearMarketId());
                 repAssetEquityMapper.insertSelective(repAssetEquity);
             }
             
