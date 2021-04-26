@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dao.HXAssetLiabilityStatementQuery001Mapper">
     <select id="selectAllData"
-            resultType="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery001Dto">
+            resultType="com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto">
         SELECT
         bal.crt_mon reportDate,
         bal.busi_date as busiDate

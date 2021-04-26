@@ -3,6 +3,7 @@ package com.joyintech.service.chbreport.hxassetliabilitystatement.controller;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.service.chbreport.hxassetliabilitystatement.service.HXAssetLiabilityStatementQuery001Service;
 import com.joyintech.tams.common.base.entity.HxBalance;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,7 @@ public class HXAssetLiabilityStatementQueryController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<HXAssetLiabilityStatementQuery001Dto> selectForPage(@RequestBody Map<String, Object> param) throws Exception {
+    public Page<ChbreportPrdInfoDto> selectForPage(@RequestBody Map<String, Object> param) throws Exception {
         return hxAssetLiabilityStatementQuery001Service.selectForPage(param);
     }
 

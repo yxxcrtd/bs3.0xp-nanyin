@@ -6,8 +6,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.PrdBalance;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dao.FinAssetLiabilityStatementQuery001Mapper;
-import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +34,6 @@ public class FinAssetLiabilityStatementQuery001Service extends BaseService {
     private FinAssetLiabilityStatementQuery001Mapper finAssetLiabilityStatementQuery001Mapper;
 
     /**
-     * 查询产品代码和产品名称
-     *
-     * @param map
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public List<SelectOptionDto> getPrdBaseinfo(Map<String, Object> map) {
-        return finAssetLiabilityStatementQuery001Mapper.selectAllPrdBaseInfo(map);
-    }
-
-    /**
      * 根据条件获取表格信息
      *
      * @param pageParam 筛选条件
@@ -53,7 +41,7 @@ public class FinAssetLiabilityStatementQuery001Service extends BaseService {
      * @see
      * @since 1.0
      */
-    public Page<FinAssetLiabilityStatementQuery001Dto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public Page<ChbreportPrdInfoDto> selectForPage(Map<String, Object> pageParam) throws Exception {
         // 查询参数条件
         // 将产品代码当做多选下拉框处理
         String prodId = (String) pageParam.get("prodId");
@@ -64,13 +52,12 @@ public class FinAssetLiabilityStatementQuery001Service extends BaseService {
                 && pageParam.get(GlobalConstant.PARAM_LENGTH) != null) {
             int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
             int length = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
-            Page<FinAssetLiabilityStatementQuery001Dto> page = super.queryForPage(
+            Page<ChbreportPrdInfoDto> page = super.queryForPage(
                     pagenum, length, () -> finAssetLiabilityStatementQuery001Mapper.selectAllData(pageParam));
             return page;
         } else {
-            Page<FinAssetLiabilityStatementQuery001Dto> page = queryForPage(FinAssetLiabilityStatementQuery001Mapper.class, "selectAllData", pageParam);
+            Page<ChbreportPrdInfoDto> page = queryForPage(FinAssetLiabilityStatementQuery001Mapper.class, "selectAllData", pageParam);
             return page;
-
         }
     }
 

@@ -6,7 +6,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery001Dto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.service.HXAssetLiabilityStatementQueryMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class HXAssetLiabilityStatementQuery001Controller extends BaseController 
      */
     @ResponseBody
     @RequestMapping(SVReportGlobalConstant.SEARCH_PAGE)
-    public Page<HXAssetLiabilityStatementQuery001Dto> selectAllData() throws Exception {
+    public Page<ChbreportPrdInfoDto> selectAllData() throws Exception {
         return hxAssetLiabilityStatementQueryMService.selectForPage(RequestUtil.getPageParam());
     }
 
@@ -62,7 +63,7 @@ public class HXAssetLiabilityStatementQuery001Controller extends BaseController 
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export() throws Exception {
         String datas = this.getParam("datas");
-        List<HXAssetLiabilityStatementQuery001Dto> list = JsonUtils.json2List(datas, HXAssetLiabilityStatementQuery001Dto.class);
+        List<ChbreportExportDto> list = JsonUtils.json2List(datas, ChbreportExportDto.class);
         return hxAssetLiabilityStatementQueryMService.exportExcel(list);
     }
 }

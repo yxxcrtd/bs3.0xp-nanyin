@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dao.FinAssetLiabilityStatementQuery001Mapper">
     <select id="selectAllData"
-            resultType="com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto">
+            resultType="com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto">
         select
         baseinfo.prod_id prodId,
         baseinfo.prod_name prodName,
         substring(bal2.busi_date,1,7) reportDate,
         bal2.busi_date as busiDate
         from chb_prd_baseinfo baseinfo
-        left join (
+        inner join (
         SELECT
         distinct
         real_prd_id, busi_date
@@ -53,18 +53,5 @@
             </if>
         </where>
         ORDER BY bal.subject_id
-    </select>
-
-    <select id="selectAllPrdBaseInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
-        select DISTINCT
-        PROD_ID id,
-        PROD_NAME text
-        from CHB_PRD_BASEINFO
-        where
-        STATUS='E'
-        <if test="search != null and search !=''">
-            AND (PROD_ID LIKE concat(concat('%', #{search}),'%')
-            OR PROD_NAME LIKE concat(concat('%', #{search}),'%'))
-        </if>
     </select>
 </mapper>

@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dao;
 
 
 import com.joyintech.tams.common.base.entity.HxBalance;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery001Dto;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +28,7 @@ public interface HXAssetLiabilityStatementQuery001Mapper {
      * @see
      * @since 1.0
      */
-    List<HXAssetLiabilityStatementQuery001Dto> selectAllData(Map<String, Object> map);
+    List<ChbreportPrdInfoDto> selectAllData(Map<String, Object> map);
 
     /**
      * 查询华夏资产负债表数据

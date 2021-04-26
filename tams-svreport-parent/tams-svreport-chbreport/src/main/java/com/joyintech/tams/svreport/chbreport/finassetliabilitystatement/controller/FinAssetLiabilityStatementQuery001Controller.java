@@ -3,12 +3,11 @@ package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.control
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto;
-import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery002Dto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.service.FinAssetLiabilityStatementQueryMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,22 +48,8 @@ public class FinAssetLiabilityStatementQuery001Controller extends BaseController
      */
     @ResponseBody
     @RequestMapping(SVReportGlobalConstant.SEARCH_PAGE)
-    public Page<FinAssetLiabilityStatementQuery001Dto> selectAllData() throws Exception {
+    public Page<ChbreportPrdInfoDto> selectAllData() throws Exception {
         return finAssetLiabilityStatementQueryMService.selectForPage(RequestUtil.getPageParam());
-    }
-
-    /**
-     * 检索产品代码
-     *
-     * @return 产品代码联想框内容
-     * @throws Exception
-     * @see
-     * @since 1.0
-     */
-    @ResponseBody
-    @RequestMapping("/getPrdBaseinfo")
-    public List<SelectOptionDto> getPrdBaseinfo() {
-        return finAssetLiabilityStatementQueryMService.getPrdBaseinfo(RequestUtil.getPageParam());
     }
 
     /**
@@ -78,8 +63,8 @@ public class FinAssetLiabilityStatementQuery001Controller extends BaseController
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export() throws Exception {
         String datas = this.getParam("datas");
-        List<FinAssetLiabilityStatementQuery002Dto> list = JsonUtils.json2List(datas,
-                FinAssetLiabilityStatementQuery002Dto.class);
+        List<ChbreportExportDto> list = JsonUtils.json2List(datas,
+                ChbreportExportDto.class);
         return finAssetLiabilityStatementQueryMService.exportExcel(list);
     }
 }

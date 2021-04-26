@@ -10,7 +10,10 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.common.base.entity.PrdBalance;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
-import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.*;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
+import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto;
 import com.joyintech.tools.util.ExcelTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +56,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
      */
     public List<SelectOptionDto> getPrdBaseinfo(Map<String, Object> param) {
         return restTemplate.postForList(
-                SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/FinAssetLiabilityStatementQuery/getPrdBaseinfo", param,
+                SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/ChbreportCommon/getPrdBaseinfo", param,
                 SelectOptionDto.class);
     }
 
@@ -64,10 +67,10 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
      * @see
      * @since 1.0
      */
-    public Page<FinAssetLiabilityStatementQuery001Dto> selectForPage(Map<String, Object> param) throws Exception {
+    public Page<ChbreportPrdInfoDto> selectForPage(Map<String, Object> param) throws Exception {
         return restTemplate.postForPage(
                 SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/FinAssetLiabilityStatementQuery/findPage", param,
-                FinAssetLiabilityStatementQuery001Dto.class);
+                ChbreportPrdInfoDto.class);
     }
 
     /**
@@ -78,9 +81,9 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> exportExcel(List<FinAssetLiabilityStatementQuery002Dto> list) throws Exception {
-        List<ExportFileDto> listFileDto = new ArrayList<ExportFileDto>();
-        for (FinAssetLiabilityStatementQuery002Dto dto : list) {
+    public ResponseEntity<byte[]> exportExcel(List<ChbreportExportDto> list) throws Exception {
+        List<ChbreportExportFileDto> listFileDto = new ArrayList<ChbreportExportFileDto>();
+        for (ChbreportExportDto dto : list) {
             listFileDto.add(this.createExcel(dto.getProdId(), dto.getProdName(), dto.getReportDate()));
         }
 
@@ -101,7 +104,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
                 stream = new FileOutputStream(zipFile);
                 zipOut = new ZipOutputStream(stream);
                 InputStream input = null;
-                for (ExportFileDto item : listFileDto) {
+                for (ChbreportExportFileDto item : listFileDto) {
                     try {
                         File file = new File(item.getFilePath());
                         input = new FileInputStream(file);
@@ -140,7 +143,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
         }
     }
 
-    private ExportFileDto createExcel(String prodId, String prodName, String reportDate)
+    private ChbreportExportFileDto createExcel(String prodId, String prodName, String reportDate)
             throws Exception {
         // 获取资产List和负债及所有者权益List
         Map<String, Object> param = new HashMap<String, Object>();
@@ -150,11 +153,11 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
         List<PrdBalance> finAssetLiabilityList = restTemplate.postForList(
                 SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/FinAssetLiabilityStatementQuery/selectFinAssetLiabilityList", param,
                 PrdBalance.class);
-        List<FinAssetLiabilityStatementQuery003Dto> mergeList = getMergerList(finAssetLiabilityList);
+        List<FinAssetLiabilityStatementQuery001Dto> mergeList = getMergerList(finAssetLiabilityList);
 
         // 解决报表数据为空导出模板公式的问题
         if (mergeList.isEmpty()) {
-            FinAssetLiabilityStatementQuery003Dto emptyDto = new FinAssetLiabilityStatementQuery003Dto();
+            FinAssetLiabilityStatementQuery001Dto emptyDto = new FinAssetLiabilityStatementQuery001Dto();
             emptyDto.setInitialBalance(null);
             emptyDto.setInitialBalance1(null);
             emptyDto.setEndingBalance(null);
@@ -170,7 +173,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
         String tplPath = FileNameUtil.getTplFile(tplFlodPath);
         String outPath = exportFilePath + File.separator + fileName;
 
-        ExportFileDto exportFileDto = new ExportFileDto();
+        ChbreportExportFileDto exportFileDto = new ChbreportExportFileDto();
         exportFileDto.setFileName(fileName);
         exportFileDto.setFilePath(outPath);
 
@@ -218,7 +221,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
      * @param finAssetLiabilityList
      * @return
      */
-    private List<FinAssetLiabilityStatementQuery003Dto> getMergerList(List<PrdBalance> finAssetLiabilityList) {
+    private List<FinAssetLiabilityStatementQuery001Dto> getMergerList(List<PrdBalance> finAssetLiabilityList) {
         List<PrdBalance> assetList = finAssetLiabilityList.stream().filter(dto -> {
             return StringUtil.isNotEmpty(dto.getSubjectName());
         }).collect(Collectors.toList());
@@ -242,11 +245,11 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
             flag = false;
         }
 
-        List<FinAssetLiabilityStatementQuery003Dto> mergerList = new ArrayList<>();
+        List<FinAssetLiabilityStatementQuery001Dto> mergerList = new ArrayList<>();
         PrdBalance dto = null;
-        FinAssetLiabilityStatementQuery003Dto mergerDto = null;
+        FinAssetLiabilityStatementQuery001Dto mergerDto = null;
         for (int i = 0; i < maxList.size(); i++) {
-            mergerDto = new FinAssetLiabilityStatementQuery003Dto();
+            mergerDto = new FinAssetLiabilityStatementQuery001Dto();
             if (i < minList.size()) {
                 dto = minList.get(i);
             } else {
