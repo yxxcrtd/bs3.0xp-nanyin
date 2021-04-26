@@ -83,6 +83,8 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
         String action = StringUtil.EMPTY;
         //处理付息计划
         entity = encapFinPayPlanDto(entity);
+        //针对还本不付息资产，还本时，计划应付利息应等于区间还本未付利息
+        entity =encapFinCashPlanIntAmt(entity);
         if (OperationType.DELETE.equals(type)) {
             action = "delete";
         }
@@ -241,6 +243,17 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
         catch (ParseException e) {
             e.printStackTrace();
         }
+        return entity;
+    }
+    private FinPayPlanDto encapFinCashPlanIntAmt(FinPayPlanDto entity){
+        if(!StringUtil.isEmptyList(entity.getFinCashPlanList()) && entity.getFinCashPlanList().size()>0){
+            for(FinCashPlan plan:entity.getFinCashPlanList()){
+                if(StringUtil.isNotEmpty(plan.getIsPayInt()) && StringUtil.equals(DictCodeList.是否_否.getValue(), plan.getIsPayInt())){//业务场景，是还本不带息的
+                    plan.setIntAmt(plan.getRepayWithoutInt());
+                }
+            }
+        }
+
         return entity;
     }
 
