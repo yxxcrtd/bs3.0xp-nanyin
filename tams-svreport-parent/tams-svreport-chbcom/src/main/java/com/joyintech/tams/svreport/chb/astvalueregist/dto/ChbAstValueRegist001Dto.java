@@ -65,11 +65,17 @@ public class ChbAstValueRegist001Dto extends ChbAstValueSub implements ITableRow
 	}
 	
 	public String getUnitValNet4Scale(){
-		return this.getUnitValNet().setScale(4, BigDecimal.ROUND_HALF_UP).toString();
+		if(null != this.getUnitValTotal()) {
+			return this.getUnitValNet().setScale(4, BigDecimal.ROUND_HALF_UP).toString();
+		}
+		return null;
 	}
 	
 	public String getUnitValTotal4Scale(){
-		return this.getUnitValTotal().setScale(4, BigDecimal.ROUND_HALF_UP).toString();
+		if(null != this.getUnitValTotal()){
+			return this.getUnitValTotal().setScale(4, BigDecimal.ROUND_HALF_UP).toString();
+		}
+		return  null;
 	}
 
 	public String getAssetCode() {
