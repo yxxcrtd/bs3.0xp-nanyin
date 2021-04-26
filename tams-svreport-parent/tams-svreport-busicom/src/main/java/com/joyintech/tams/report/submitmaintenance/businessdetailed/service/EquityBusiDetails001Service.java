@@ -1374,11 +1374,14 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 		EquiteBusiDetails001Dto chbEqudet = allChbEqudetDataMap.get(dataKey);
 //                    	int monthnew = DateUtil.getMonth(DateUtil.formatDateAddSplit(item.get("equityConfDate")));
 //                    	int monthold = DateUtil.getMonth(DateUtil.format(chbEqudet.getEquityConfDate()));
-                		String equityConfDateNEW = DateUtil.formatDateAddSplit(item.get("equityConfDate")).substring(0, 7);
-                    	String equityConfDateOLD = DateUtil.format(chbEqudet.getEquityConfDate()).substring(0, 7);
-                    	if(!StringUtil.equals(equityConfDateNEW, equityConfDateOLD)){
-                    		message.add(this.getMessage("CHB_EQUITY_EQUITYCONFDATE"));
-                    	}
+                        String equityConfDateNEW =
+                                StringUtil.isNotEmpty(item.get("equityConfDate")) ?
+                                        DateUtil.formatDateAddSplit(item.get("equityConfDate")).substring(0, 7):"";
+                        String equityConfDateOLD = StringUtil.isNotEmpty(chbEqudet.getEquityConfDate()) ?
+                                DateUtil.format(chbEqudet.getEquityConfDate()).substring(0, 7):"";
+                        if (!StringUtil.equals(equityConfDateNEW, equityConfDateOLD)) {
+                            message.add(this.getMessage("CHB_EQUITY_EQUITYCONFDATE"));
+                        }
                     }
                 }
 
