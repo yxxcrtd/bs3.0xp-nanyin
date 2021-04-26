@@ -19,7 +19,7 @@ import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsServic
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
-import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
+import com.joyintech.tams.invest.common.dto.cstp.TrdRepoTradeCSTPDto;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.lang.StringUtils;
@@ -719,10 +719,9 @@ public class TrdRepoTrade002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryRepoCstpInfoByNo")
-    public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(String fedealno,
-                                                     String entrustId,String preTradeId,String isCstpSure){
+    public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(@RequestBody  Map<String,Object> map){
         String prodType = BussinessDictCodeList.回购交易_质押式.getValue();
-        return trdRepoTrade002Service.queryRepoCstpInfoByNo(fedealno,entrustId,preTradeId,prodType,isCstpSure);
+        return trdRepoTrade002Service.queryRepoCstpInfoByNo(map);
     }
 
 

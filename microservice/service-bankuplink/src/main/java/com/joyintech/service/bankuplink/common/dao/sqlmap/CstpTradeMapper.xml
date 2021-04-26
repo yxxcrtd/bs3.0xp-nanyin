@@ -137,6 +137,7 @@
     	<if test="facetotalamt != null">facetotalamt= #{facetotalamt,jdbcType=VARCHAR},</if>
     	<if test="convrate != null">convrate= #{convrate,jdbcType=VARCHAR},</if>
     	<if test="dealamt != null">dealamt= #{dealamt,jdbcType=VARCHAR},</if>
+        <if test="ourdepositaccountnumber != null">ourdepositaccountnumber= #{ourdepositaccountnumber,jdbcType=VARCHAR},</if>
     	<if test="seqNo != null">seq_no= #{seqNo,jdbcType=VARCHAR},</if>
     </trim>
      where tradeid =  #{tradeid,jdbcType=VARCHAR}

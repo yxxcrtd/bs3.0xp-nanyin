@@ -1489,5 +1489,7 @@
 					AND IS_CANCEL ='N')
 			GROUP BY fee_type
 	</select>
-
+    <select id="queryRepoEntrustInfo" resultType="com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt">
+    	SELECT PORTFOLIO_ID, ENTRUST_ID, OU_PARTY_ID,QUOTE_ID,CB_FPRICE_AMT,SC_FPRICE_AMT,CP_PARTY_ID ,CP_TRADER_ID cpTrader,REPO_PS ps,OU_TRADER_ID ouTrader FROM IBU_QUOTE_CREP WHERE EXECID = #{oritradeId,jdbcType=VARCHAR}
+    </select>
 </mapper>

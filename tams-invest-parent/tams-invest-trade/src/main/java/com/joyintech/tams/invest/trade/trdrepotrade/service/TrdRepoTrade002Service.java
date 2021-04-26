@@ -46,10 +46,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.*;
 import com.joyintech.tams.invest.common.dto.common.*;
-import com.joyintech.tams.invest.common.dto.cstp.CfetsRepoDealQuotedPriceDto;
-import com.joyintech.tams.invest.common.dto.cstp.CfetsRepoPledgeBondDto;
-import com.joyintech.tams.invest.common.dto.cstp.IbuQuoteEntCrepPledgeCommonDto;
-import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
+import com.joyintech.tams.invest.common.dto.cstp.*;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
@@ -68,7 +65,6 @@ import com.joyintech.tams.invest.interf.service.InterfComponentService;
 import com.joyintech.tams.invest.interf.service.InterfComponentService.OrderCaller;
 import com.joyintech.tams.invest.trade.lend.dto.FinTradeProductDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
-import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeCSTPDto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
@@ -2650,82 +2646,110 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
      * @param fedealno 成交编号
      * @return cstp交易信息
      */
-    public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(String fedealno, String entrustId,String preTradeId, String prodType,String isCstpSure) {
+    public TrdRepoTradeCSTPDto queryRepoCstpInfoByNo(Map<String,Object> mapInit) {
+        String fedealno = (String)mapInit.get("fedealno");
+        //isCstpSure = true  由cstp下行交易跳转
+        boolean isCstpSure = Boolean.valueOf(mapInit.containsKey("isCstpSure")?(String) mapInit.get("isCstpSure"):"false");
+        BigDecimal   zzdPrinAmt = BigDecimal.ZERO;
+        BigDecimal   sqsPrinAmt = BigDecimal.ZERO;
         TrdRepoTradeCSTPDto trdRepoTradeCSTPDto = restTemplate.getForObject(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/queryRepoCstpInfoByNo?fedealno="
                         + fedealno
-                        +"&entrustId="+entrustId
-                        +"&preTradeId="+preTradeId
                         + "&loginUserName="
-                        + LoginUserUtil.getUserName()
-                        +"&prodType="+prodType
-                +"&isCstpSure="+isCstpSure,
-                TrdRepoTradeCSTPDto.class);
+                        + LoginUserUtil.getUserName(),
+                com.joyintech.tams.invest.common.dto.cstp.TrdRepoTradeCSTPDto.class);
+        List<PledgeBondInfoDto> pledgeBondInfoDtoList = new ArrayList<PledgeBondInfoDto>();
         if (trdRepoTradeCSTPDto != null) {
-            String market = trdRepoTradeCSTPDto.getMarket();
-            if (StringUtil.equals(trdRepoTradeCSTPDto.getMarket(),
-                    BussinessDictCodeList.交易场所_银行间.getValue())) {
-                market = BussinessDictCodeList.wind交易场所_银行间.getValue();
+            List<InterfTradRepoasstDto> interfTradRepoasstList = new ArrayList<>();
+            //处理匹配数据
+            if(isCstpSure){
+                interfTradRepoasstList = restTemplate.postForList(
+                        ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/getMatchpledgeBondInfo",mapInit,
+                        InterfTradRepoasstDto.class);
             }
-            else if (StringUtil.equals(trdRepoTradeCSTPDto.getMarket(),
-                    BussinessDictCodeList.交易场所_上海证券交易所.getValue())) {
-                market = BussinessDictCodeList.wind交易场所_上交所.getValue();
+            else{
+                interfTradRepoasstList = restTemplate.getForList(
+                        ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/queryRepoAssetByNo?fedealno="
+                                + fedealno,
+                        InterfTradRepoasstDto.class);
             }
-            else if (StringUtil.equals(trdRepoTradeCSTPDto.getMarket(),
-                    BussinessDictCodeList.交易场所_深圳证券交易所.getValue())) {
-                market = BussinessDictCodeList.wind交易场所_深交所.getValue();
-            }
-
-            List<InterfTradRepoasst> interfTradRepoasstList = restTemplate.getForList(
-                    ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/queryRepoAssetByNo?fedealno="
-                            + fedealno,
-                    InterfTradRepoasst.class);
             if (!StringUtil.isEmptyList(interfTradRepoasstList)) {
-                List<PledgeBondInfoDto> pledgeBondInfoDtoList = new ArrayList<PledgeBondInfoDto>();
-                BigDecimal totalAmt = BigDecimal.ZERO;
-                for (InterfTradRepoasst interfTradRepoasst : interfTradRepoasstList) {
-                	totalAmt = ArithmeticUtil.doAdd(totalAmt, interfTradRepoasst.getDealamt());
-                    PledgeBondInfoDto pledgeBondInfoDto = new PledgeBondInfoDto();
-                    if(market == null || "".equals(market)){
-                    	pledgeBondInfoDto.setBondCode(
-                                interfTradRepoasst.getSecid());
-                    }else{
-                    pledgeBondInfoDto.setBondCode(
-                            interfTradRepoasst.getSecid() + GlobalConstant.POINT + market);
-                    }
-                    //封装产品代码 add by gejiaao 20191211 start
-                    FinProduct finProduct = this.getFinProduct(pledgeBondInfoDto.getBondCode());
-                    if(finProduct!=null){
-                        pledgeBondInfoDto.setFinprodId(finProduct.getFinprodId());
-                    }
-                    //封装产品代码 add by gejiaao 20191211 end
-                    pledgeBondInfoDto.setBondAbbrName(interfTradRepoasst.getSecname());
-                    pledgeBondInfoDto.setAvaPledgePrin(interfTradRepoasst.getFacetotalamt());
-                    pledgeBondInfoDto.setPledgePrin(interfTradRepoasst.getDealamt());
-                    pledgeBondInfoDto.setFirstNetPrice(interfTradRepoasst.getCprice());
-                    if(interfTradRepoasst.getConvrate()!=null){
-                        DecimalFormat df = new DecimalFormat("0.00%");
-                        BigDecimal convrate = interfTradRepoasst.getConvrate();
-                        String format = df.format(convrate);
-                        BigDecimal decimal = new BigDecimal(format.substring(0,format.length()-1));
-                        pledgeBondInfoDto.setPledgeRatio(decimal);
-                    }
-                    pledgeBondInfoDtoList.add(pledgeBondInfoDto);
+                String market = trdRepoTradeCSTPDto.getMarket();
+                if (StringUtil.equals(trdRepoTradeCSTPDto.getMarket(),
+                        BussinessDictCodeList.交易场所_银行间.getValue())) {
+                    market = BussinessDictCodeList.wind交易场所_银行间.getValue();
                 }
-                BigDecimal avgAmt = trdRepoTradeCSTPDto.getRepoamt();
-				for (int i = 0; i < pledgeBondInfoDtoList.size(); i++) {
-					if (i == pledgeBondInfoDtoList.size() - 1) {
-						pledgeBondInfoDtoList.get(i).setPledgePrin(avgAmt);
-					} else {
-						BigDecimal amt = ArithmeticUtil.divide(pledgeBondInfoDtoList.get(i).getPledgePrin(), totalAmt,
-								8);
-						amt = ArithmeticUtil.multiply(trdRepoTradeCSTPDto.getRepoamt(), amt).setScale(2);
-						pledgeBondInfoDtoList.get(i).setPledgePrin(amt);
-						avgAmt = ArithmeticUtil.subtract(avgAmt, amt);
-					}
-				}
+                else if (StringUtil.equals(trdRepoTradeCSTPDto.getMarket(),
+                        BussinessDictCodeList.交易场所_上海证券交易所.getValue())) {
+                    market = BussinessDictCodeList.wind交易场所_上交所.getValue();
+                }
+                else if (StringUtil.equals(trdRepoTradeCSTPDto.getMarket(),
+                        BussinessDictCodeList.交易场所_深圳证券交易所.getValue())) {
+                    market = BussinessDictCodeList.wind交易场所_深交所.getValue();
+                }
+                Map<String,Object> map = new HashMap<>();
+                List<String> finprodMarketIdList = new ArrayList<>();
+                for (InterfTradRepoasstDto interfTradRepoasst : interfTradRepoasstList) {
+                    if(isCstpSure){
+                        trdRepoTradeCSTPDto.setPortfolioId(interfTradRepoasst.getPortfolioId());
+                        finprodMarketIdList.add(interfTradRepoasst.getFinprodMarketId());
+                    }
+                    else{
+                        finprodMarketIdList.add(interfTradRepoasst.getSecid() + GlobalConstant.POINT + market);
+                    }
+                }
+                if(StringUtil.isNotEmpty(trdRepoTradeCSTPDto.getPortfolioId())){
+                    map.put("portfolioId",trdRepoTradeCSTPDto.getPortfolioId());
+                    map.put("platDate",StringUtil.isNotEmpty(trdRepoTradeCSTPDto.getDealdateStr())?trdRepoTradeCSTPDto.getDealdateStr():iPlatformDate.getSysDateStr());
+                }
+                map.put("finprodMarketIdList",finprodMarketIdList);
+                map.put("platDate",iPlatformDate.getSysDateStr());
+                //处理托管机构
+                List<FinProduct> finProducts = restTemplate.postForList(
+                        ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/selectFinProduct",map,
+                        FinProduct.class);
+                String finprodId = StringUtil.EMPTY;
+                String finprodMarketId = StringUtil.EMPTY;
+                for (InterfTradRepoasst interfTradRepoasst : interfTradRepoasstList) {
+                    finprodMarketId = interfTradRepoasst.getSecid() + GlobalConstant.POINT + market;
+                    finprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue()+"_"+finprodMarketId;
+                    PledgeBondInfoDto pledgeBondInfoDto = new PledgeBondInfoDto();
+                    pledgeBondInfoDto.setBondCode(finprodMarketId);
+                    pledgeBondInfoDto.setPledgeRatio(ArithmeticUtil.multiply(interfTradRepoasst.getConvrate(),new BigDecimal(100)));
+                    pledgeBondInfoDto.setPledgePrin(interfTradRepoasst.getFacetotalamt());
+                    BigDecimal pledgePrin = ArithmeticUtil.multiply(pledgeBondInfoDto.getPledgePrin(),interfTradRepoasst.getConvrate());
+                    pledgeBondInfoDto.setFirstNetPrice(new BigDecimal(100));
+                    if(StringUtil.isNotEmpty(finProducts)){
+                        for(FinProduct item : finProducts){
+                            if(StringUtil.equals(item.getFinprodId(),finprodId)){
+                                if(StringUtil.equals(item.getRegistOrg(),DictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue())){
+                                    zzdPrinAmt = ArithmeticUtil.doAdd(zzdPrinAmt,pledgePrin);
+                                }
+                                if(StringUtil.equals(item.getRegistOrg(),DictCodeList.登记托管机构_上海清算所.getValue())){
+                                    sqsPrinAmt = ArithmeticUtil.doAdd(sqsPrinAmt,pledgePrin);
+                                }
+                                pledgeBondInfoDto.setAvaPledgePrin(item.getIssueAmt());
+                                pledgeBondInfoDto.setFirstNetPrice(null!=item.getIssuePrice()?item.getIssuePrice():new BigDecimal(100));
+                            }
+                        }
+                    }
+                    pledgeBondInfoDto.setBondAbbrName(interfTradRepoasst.getSecname());
+                    pledgeBondInfoDto.setFinprodId(finprodId);
+                    pledgeBondInfoDtoList.add(pledgeBondInfoDto);
+                    finprodMarketIdList.add(pledgeBondInfoDto.getBondCode());
+                }
                 trdRepoTradeCSTPDto.setPledgeBondInfoDtoList(pledgeBondInfoDtoList);
             }
+            //清算速度处理
+            if(!StringUtil.equals(trdRepoTradeCSTPDto.getVdateStr(),trdRepoTradeCSTPDto.getDealdateStr())){
+                trdRepoTradeCSTPDto.setSettleSpeed(DictCodeList.清算速度_T_1.getValue());
+            }else{
+                trdRepoTradeCSTPDto.setSettleSpeed(DictCodeList.清算速度_T_0.getValue());
+            }
+            trdRepoTradeCSTPDto.setPledgeBondInfoDtoList(pledgeBondInfoDtoList);
+            trdRepoTradeCSTPDto.setZzdPrinAmt(zzdPrinAmt);
+            trdRepoTradeCSTPDto.setSqsPrinAmt(sqsPrinAmt);
+            trdRepoTradeCSTPDto.setFacetotalamt(ArithmeticUtil.doAdd(zzdPrinAmt,sqsPrinAmt));
         }
 
         return trdRepoTradeCSTPDto;

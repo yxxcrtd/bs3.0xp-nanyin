@@ -118,6 +118,11 @@ public class InterfTradRepoasst extends BaseEntity {
     private String secname;
 
     /**
+     * 托管账号
+     */
+    private String ourdepositaccountnumber;
+
+    /**
      * 取得 债券ID
      * @return 债券ID
      */
@@ -420,5 +425,13 @@ public class InterfTradRepoasst extends BaseEntity {
      */
     public void setSecname(String secname) {
         this.secname = secname == null ? null : secname.trim();
+    }
+
+    public String getOurdepositaccountnumber() {
+        return ourdepositaccountnumber;
+    }
+
+    public void setOurdepositaccountnumber(String ourdepositaccountnumber) {
+        this.ourdepositaccountnumber = ourdepositaccountnumber;
     }
 }

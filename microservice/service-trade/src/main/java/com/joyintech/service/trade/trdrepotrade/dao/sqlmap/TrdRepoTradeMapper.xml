@@ -698,11 +698,20 @@
     <select id="queryRepoCstpInfoByNo" resultType="com.joyintech.service.trade.trdrepotrade.dto.InterfOpicsTradRepoDto">
         select T1.*,T2.CASHHOLDINGDAYS cashHoldingDays
         from INTERF_OPICS_TRAD_REPO T1
-        left join interf_cstp_trade T2 ON T2.EXECID = T1.ORITRADEID
-        AND T2.updatetime = (select max(t.updatetime)
-                         from interf_cstp_trade t
-                        where  t.execid = #{fedealno,jdbcType=VARCHAR}
-                         and  t.businesstype = 'REPO')
+        LEFT JOIN (
+        SELECT
+            *
+        FROM
+            (
+            SELECT
+                t.*,
+                (ROW_NUMBER() OVER(PARTITION BY t.EXECID ORDER BY t.updatetime DESC)) rn
+            FROM
+                interf_cstp_trade t
+            WHERE t.execid = #{fedealno,jdbcType=VARCHAR} and  t.businesstype = 'REPO')
+        WHERE
+            rn = 1 ) T2 ON
+        T2.EXECID = T1.ORITRADEID
         where T1.ORITRADEID = #{fedealno}
     </select>
     <!--<select id="queryRepoCstpInfoByNo" resultType="com.joyintech.service.trade.trdrepotrade.dto.InterfOpicsTradRepoDto">

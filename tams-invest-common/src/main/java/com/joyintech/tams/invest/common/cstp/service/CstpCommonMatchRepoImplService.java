@@ -202,7 +202,7 @@ public class CstpCommonMatchRepoImplService{
                 trdPledgeMatchInfo.setSecAcctId(secAcctId);
                 trdPledgeMatchInfo.setPledgeFinprodId(interfTradRepoasstDto.getFinprodId());
                 trdPledgeMatchInfo.setTradeDate(interfOpicsTradRepo.getDealdate());
-                trdPledgeMatchInfo.setMatchNum(subSec);
+                trdPledgeMatchInfo.setMatchNum(ArithmeticUtil.divide(subSec,new BigDecimal("100"),2));
                 trdPledgeMatchInfo.setMatchType(matchType);
                 trdPledgeMatchInfo.setfSysId(CFTES);
                 trdMatchInfos.add(trdMatchInfo);
@@ -262,12 +262,12 @@ public class CstpCommonMatchRepoImplService{
                     dealamt = ArithmeticUtil.subtract(dealamt,avaNum);
                     avaNum = BigDecimal.ZERO;
                 }
-                if(trdMatchInfo.getMatchNum().compareTo(BigDecimal.ZERO)>=0){
-                    subSec = 本金折算券面(trdMatchInfo.getMatchNum(),interfTradRepoasstDto.getConvrate(),repoamt,repoAssetConversionDealAmtTotal);
+                matchNum = ArithmeticUtil.subtract(interfTradRepoasstDto.getDealamt(),dealamt);
+                if(matchNum.compareTo(BigDecimal.ZERO)>=0){
+                    subSec = 本金折算券面(matchNum,interfTradRepoasstDto.getConvrate(),repoamt,repoAssetConversionDealAmtTotal);
                 }
                 //该委托额度 递归减少
                 item.setAvailableNum(avaNum);
-                matchNum = ArithmeticUtil.subtract(interfTradRepoasstDto.getDealamt(),dealamt);
                 if(StringUtil.equals(isktg,"Y")){
                     //匹配额度
                     if(StringUtil.equals(registOrg,DictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue())){
@@ -286,11 +286,12 @@ public class CstpCommonMatchRepoImplService{
                 trdMatchInfo.setMatchType(matchType);
                 trdMatchInfo.setfSysId(CFTES);
                 trdMatchInfos.add(trdMatchInfo);
+                trdPledgeMatchInfo.setCstpTradeId(execId);
                 trdPledgeMatchInfo.setEntrustId(item.getEntrustId());
                 trdPledgeMatchInfo.setSecAcctId(secAcctId);
                 trdPledgeMatchInfo.setPledgeFinprodId(interfTradRepoasstDto.getFinprodId());
                 trdPledgeMatchInfo.setTradeDate(interfOpicsTradRepo.getDealdate());
-                trdPledgeMatchInfo.setMatchNum(subSec);
+                trdPledgeMatchInfo.setMatchNum(ArithmeticUtil.divide(subSec,new BigDecimal("100"),2));
                 trdPledgeMatchInfo.setMatchType(matchType);
                 trdPledgeMatchInfo.setfSysId(CFTES);
                 trdPledgeMatchInfos.add(trdPledgeMatchInfo);
