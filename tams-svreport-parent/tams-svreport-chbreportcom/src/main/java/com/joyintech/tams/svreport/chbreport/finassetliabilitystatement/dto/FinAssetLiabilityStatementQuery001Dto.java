@@ -1,69 +1,154 @@
 package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
+
+import java.math.BigDecimal;
 
 /**
- * 理财产品资产负债表查询Dto
- * 
+ * 理财产品资产负债表导出Dto
+ *
  * @author WanShiwei
- * @version 1.0 2021年4月20日
- * @see
- * @since 1.0
+ * @version 2.1.6 2021年4月20日
+ * @see FinAssetLiabilityStatementQuery001Dto
+ * @since 2.1.6
  */
 public class FinAssetLiabilityStatementQuery001Dto extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -1493892052117293624L;
 
     /**
-     * 产品代码
+     * 资产.项目名
      */
-    private String prodId;
+    private String itemName;
 
     /**
-     * 产品名称
+     * 资产.期末余额
      */
-    private String prodName;
-    
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal endingBalance = BigDecimal.ZERO;
+
     /**
-     * 报告期
+     * 资产.年初余额
      */
-    private String reportDate;
-    
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal initialBalance = BigDecimal.ZERO;
+
     /**
-     * 业务日期
+     * 负债和所有者权益.项目名
      */
-    private String busiDate;
+    private String itemName1;
 
-    public String getProdId() {
-        return prodId;
+    /**
+     * 负债和所有者权益.期末余额
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal endingBalance1 = BigDecimal.ZERO;
+
+    /**
+     * 负债和所有者权益.年初余额
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal initialBalance1 = BigDecimal.ZERO;
+
+    public FinAssetLiabilityStatementQuery001Dto() {
+        super();
     }
 
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
+    public FinAssetLiabilityStatementQuery001Dto(String itemName) {
+        super();
+        this.itemName = itemName;
     }
 
-    public String getProdName() {
-        return prodName;
+    public FinAssetLiabilityStatementQuery001Dto(String itemName, BigDecimal endingBalance, BigDecimal initialBalance) {
+        super();
+        this.itemName = itemName;
+        this.endingBalance = endingBalance;
+        this.initialBalance = initialBalance;
     }
 
-    public void setProdName(String prodName) {
-        this.prodName = prodName;
+    public static long getSerialversionuid() {
+        return serialVersionUID;
     }
 
-    public String getReportDate() {
-        return reportDate;
+    public String getItemName() {
+        return itemName;
     }
 
-    public void setReportDate(String reportDate) {
-        this.reportDate = reportDate;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
-    public String getBusiDate() {
-        return busiDate;
+    public BigDecimal getEndingBalance() {
+        return endingBalance;
     }
 
-    public void setBusiDate(String busiDate) {
-        this.busiDate = busiDate;
+    public void setEndingBalance(BigDecimal endingBalance) {
+        this.endingBalance = endingBalance;
+    }
+
+    public BigDecimal getInitialBalance() {
+        return initialBalance;
+    }
+
+    public void setInitialBalance(BigDecimal initialBalance) {
+        this.initialBalance = initialBalance;
+    }
+
+    /**
+     * 获取 itemName1
+     *
+     * @return itemName1.
+     */
+    public String getItemName1() {
+        return itemName1;
+    }
+
+    /**
+     * 设置 itemName1
+     *
+     * @param itemName1 itemName1
+     */
+    public void setItemName1(String itemName1) {
+        this.itemName1 = itemName1;
+    }
+
+    /**
+     * 获取 endingBalance1
+     *
+     * @return endingBalance1.
+     */
+    public BigDecimal getEndingBalance1() {
+        return endingBalance1;
+    }
+
+    /**
+     * 设置 endingBalance1
+     *
+     * @param endingBalance1 endingBalance1
+     */
+    public void setEndingBalance1(BigDecimal endingBalance1) {
+        this.endingBalance1 = endingBalance1;
+    }
+
+    /**
+     * 获取 initialBalance1
+     *
+     * @return initialBalance1.
+     */
+    public BigDecimal getInitialBalance1() {
+        return initialBalance1;
+    }
+
+    /**
+     * 设置 initialBalance1
+     *
+     * @param initialBalance1 initialBalance1
+     */
+    public void setInitialBalance1(BigDecimal initialBalance1) {
+        this.initialBalance1 = initialBalance1;
     }
 }
+

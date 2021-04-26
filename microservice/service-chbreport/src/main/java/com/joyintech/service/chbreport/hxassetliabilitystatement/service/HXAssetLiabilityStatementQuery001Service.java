@@ -4,6 +4,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.HxBalance;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dao.HXAssetLiabilityStatementQuery001Mapper;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery001Dto;
 import org.slf4j.Logger;
@@ -39,8 +40,8 @@ public class HXAssetLiabilityStatementQuery001Service extends BaseService {
      * @see
      * @since 1.0
      */
-    public Page<HXAssetLiabilityStatementQuery001Dto> selectForPage(Map<String, Object> pageParam) throws Exception {
-        Page<HXAssetLiabilityStatementQuery001Dto> page;
+    public Page<ChbreportPrdInfoDto> selectForPage(Map<String, Object> pageParam) throws Exception {
+        Page<ChbreportPrdInfoDto> page;
         pageParam.put("reportDate", ((String) pageParam.get("reportDate")).replace("-", ""));
         if (pageParam.get(GlobalConstant.PARAM_PAGE) != null
                 && pageParam.get(GlobalConstant.PARAM_LENGTH) != null) {

@@ -4,7 +4,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.chbreport.finassetliabilitystatement.service.FinAssetLiabilityStatementQuery001Service;
 import com.joyintech.tams.common.base.entity.PrdBalance;
-import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,35 +33,20 @@ public class FinAssetLiabilityStatementQueryController {
     private FinAssetLiabilityStatementQuery001Service finAssetLiabilityStatementQuery001Service;
 
     /**
-     * 产品代码下拉框取得值
-     *
-     * @param map
-     * @return 下拉框值
-     * @see
-     * @since 1.0
-     */
-    @PostMapping("getPrdBaseinfo")
-    public List<SelectOptionDto> getPrdBaseinfo(@RequestBody Map<String, Object> map) {
-        return finAssetLiabilityStatementQuery001Service.getPrdBaseinfo(map);
-    }
-
-    /**
      * 业务画面查询事件
      *
-     * @return
-     * @see
+     * @return page
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<FinAssetLiabilityStatementQuery001Dto> selectForPage(@RequestBody Map<String, Object> param) throws Exception {
+    public Page<ChbreportPrdInfoDto> selectForPage(@RequestBody Map<String, Object> param) throws Exception {
         return finAssetLiabilityStatementQuery001Service.selectForPage(param);
     }
 
     /**
      * 查询产品资产负债表导出数据
      *
-     * @return
-     * @see
+     * @return list
      * @since 1.0
      */
     @PostMapping("selectFinAssetLiabilityList")

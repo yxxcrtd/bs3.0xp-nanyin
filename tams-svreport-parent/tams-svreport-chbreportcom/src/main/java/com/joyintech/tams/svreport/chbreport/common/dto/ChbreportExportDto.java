@@ -1,17 +1,17 @@
-package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto;
+package com.joyintech.tams.svreport.chbreport.common.dto;
 
 
 import com.joyintech.framework.base.BaseEntity;
 
 /**
- * 理财产品资产负债表查询Dto
+ * 导出列表Dto
  * 
  * @author WanShiwei
  * @version 2.1.6 2021年4月20日
- * @see FinAssetLiabilityStatementQuery002Dto
+ * @see ChbreportExportDto
  * @since 2.1.6
  */
-public class FinAssetLiabilityStatementQuery002Dto extends BaseEntity{
+public class ChbreportExportDto extends BaseEntity{
 
     private static final long serialVersionUID = 1L;
 

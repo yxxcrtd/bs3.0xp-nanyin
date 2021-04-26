@@ -1,4 +1,4 @@
-package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto;
+package com.joyintech.tams.svreport.chbreport.common.dto;
 
 
 /**
@@ -6,10 +6,10 @@ package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto;
  *
  * @author WanShiwei
  * @version 1.0 2021年4月20日
- * @see ExportFileDto
+ * @see ChbreportExportFileDto
  * @since 1.0
  */
-public class ExportFileDto {
+public class ChbreportExportFileDto {
 
     /**
      * 文件名称

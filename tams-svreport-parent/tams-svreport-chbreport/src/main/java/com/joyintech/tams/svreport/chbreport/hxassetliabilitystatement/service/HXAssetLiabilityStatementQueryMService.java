@@ -8,8 +8,9 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.common.base.entity.HxBalance;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
-import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.ExportFileDto;
-import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery001Dto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dto.HXAssetLiabilityStatementQuery002Dto;
 import com.joyintech.tools.util.ExcelTools;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ import java.util.zip.ZipOutputStream;
  * @since 1.0
  */
 @Service
-public class HXAssetLiabilityStatementQueryMService extends CommonExportService<HXAssetLiabilityStatementQuery001Dto> {
+public class HXAssetLiabilityStatementQueryMService extends CommonExportService<ChbreportPrdInfoDto> {
 
     /**
      * 针对weblogic部署无法获取模版问题
@@ -53,10 +54,10 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
      * @see
      * @since 1.0
      */
-    public Page<HXAssetLiabilityStatementQuery001Dto> selectForPage(Map<String, Object> param) throws Exception {
+    public Page<ChbreportPrdInfoDto> selectForPage(Map<String, Object> param) throws Exception {
         return restTemplate.postForPage(
                 SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/HXAssetLiabilityStatementQuery/findPage", param,
-                HXAssetLiabilityStatementQuery001Dto.class);
+                ChbreportPrdInfoDto.class);
     }
 
     /**
@@ -67,9 +68,9 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> exportExcel(List<HXAssetLiabilityStatementQuery001Dto> list) throws Exception {
-        List<ExportFileDto> listFileDto = new ArrayList<ExportFileDto>();
-        for (HXAssetLiabilityStatementQuery001Dto dto : list) {
+    public ResponseEntity<byte[]> exportExcel(List<ChbreportExportDto> list) throws Exception {
+        List<ChbreportExportFileDto> listFileDto = new ArrayList<ChbreportExportFileDto>();
+        for (ChbreportExportDto dto : list) {
             listFileDto.add(this.createExcel(dto.getReportDate()));
         }
 
@@ -90,7 +91,7 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
                 stream = new FileOutputStream(zipFile);
                 zipOut = new ZipOutputStream(stream);
                 InputStream input = null;
-                for (ExportFileDto item : listFileDto) {
+                for (ChbreportExportFileDto item : listFileDto) {
                     try {
                         File file = new File(item.getFilePath());
                         input = new FileInputStream(file);
@@ -129,7 +130,7 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
         }
     }
 
-    private ExportFileDto createExcel(String reportDate) throws Exception {
+    private ChbreportExportFileDto createExcel(String reportDate) throws Exception {
         // 设置文件信息
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         String fileName = "华夏理财资产负债表 " + reportDate + ".xls";
@@ -138,7 +139,7 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
         String tplPath = FileNameUtil.getTplFile(tplFlodPath);
         String outPath = exportFilePath + File.separator + fileName;
 
-        ExportFileDto exportFileDto = new ExportFileDto();
+        ChbreportExportFileDto exportFileDto = new ChbreportExportFileDto();
         exportFileDto.setFileName(fileName);
         exportFileDto.setFilePath(outPath);
 

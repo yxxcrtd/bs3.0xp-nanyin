@@ -1,8 +1,7 @@
 package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dao;
 
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.PrdBalance;
-import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto;
+import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,16 +19,6 @@ import java.util.Map;
 public interface FinAssetLiabilityStatementQuery001Mapper {
 
     /**
-     * 查询产品代码和产品名称
-     *
-     * @param map
-     * @return
-     * @see
-     * @since 1.0
-     */
-    List<SelectOptionDto> selectAllPrdBaseInfo(Map<String, Object> map);
-
-    /**
      * 根据条件查询理财产品资产负债表画面数据
      *
      * @param map
@@ -37,7 +26,7 @@ public interface FinAssetLiabilityStatementQuery001Mapper {
      * @see
      * @since 1.0
      */
-    List<FinAssetLiabilityStatementQuery001Dto> selectAllData(Map<String, Object> map);
+    List<ChbreportPrdInfoDto> selectAllData(Map<String, Object> map);
 
     /**
      * 查询导出数据
