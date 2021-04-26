@@ -622,7 +622,10 @@ $(function() {
         }
     }
     var init = function(){
-    	
+        if ($('#isAllowModify').val() == 'N'){
+            $('#isIssueAsset').attr('disabled', true).trigger('change');
+        }
+        
        //资产代码拆分
        var finprodMarketId =  $('#finprodMarketId').val();
        if (finprodMarketId){

@@ -10,24 +10,6 @@
 
 package com.joyintech.tams.invest.asset.bond.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.component.business.report.asset.project.BussRepEquityInfoService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.asset.interfaceDto.*;
-import com.joyintech.tams.invest.asset.common.dto.*;
-import com.joyintech.tams.invest.common.service.InvestInterfCommService;
-import com.joyintech.tams.invest.common.util.MapParseUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -35,6 +17,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.asset.BussFinRepaymentService;
 import com.joyintech.tams.component.business.asset.FinInterestFactorService;
 import com.joyintech.tams.component.business.asset.FinPayInterestStdInfoService;
@@ -53,16 +37,29 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.component.business.core.dto.FileCommonDto;
 import com.joyintech.tams.component.business.core.service.MstFileCommonService;
 import com.joyintech.tams.component.business.report.asset.bond.BussFinBondRepInfoService;
+import com.joyintech.tams.component.business.report.asset.project.BussRepEquityInfoService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.asset.bond.dto.FinBondTargetAssetDto;
+import com.joyintech.tams.invest.asset.common.dto.*;
 import com.joyintech.tams.invest.asset.common.service.AssetCommonService;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 债券标的信息新建
@@ -269,7 +266,8 @@ implements BaseProcessService<FinBondTargetAssetDto>{
 				if (!StringUtil.isEmptyList(productBaseInfoDto.getFinCashPayRuleList())) {
 					for (FinCashPayRule finCashPayRule : productBaseInfoDto.getFinCashPayRuleList()) {
 						if (StringUtil.isBlank(finCashPayRule.getPayCycle())) {
-							finCashPayRule.setPayCycle(BussinessConstant.DEFAULT_PAY_CYCLE);
+                            //modify by jiangpeng on 20210426 TISHKBS-2051 CLONE - 贴现债数据错误
+							finCashPayRule.setPayCycle(BussinessDictCodeList.频率_到期一次.getValue());
 						}
 					}
 				}
