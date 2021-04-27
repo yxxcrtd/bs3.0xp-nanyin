@@ -675,7 +675,7 @@
         DATA_SOURCE, ORG_CODE, AGENT, CREATE_DEPT, IS_SUBMIT,INTERF_CHECK_RESULT,ORG_INDENTIFY_MARK
         )
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
-                 close="from dual)">
+                 close="from dual) tmp">
             #{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
             #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR},
             #{item.equityConfDate,jdbcType=DATE},
@@ -707,7 +707,7 @@
         ORG_CODE, CREATE_DEPT
         )
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
-                 close="from dual)">
+                 close="from dual) tmp">
             #{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
             #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR},
             #{item.equityConfDate,jdbcType=DATE},
@@ -865,7 +865,7 @@
         UPDATE_TIME, CREATE_USER, CREATE_TIME,
         DATA_SOURCE, ORG_CODE, AGENT,
         CREATE_DEPT, IS_SUBMIT)
-        select seq_equity_busi.NEXTVAL,
+        select _NEXTINDEX('seq_equity_busi') ,
         BUSI_SEQNO, REG_CODE,
         ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
         EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE,
