@@ -254,6 +254,11 @@
 			 <if test="theSendStatus != null and theSendStatus != ''">
 				and cds.SEND_STATUS = #{sendStatus}
 			</if>
+		   <if test="keyList != null and keyList.size() > 0">
+			   <foreach collection="keyList" item="items" open="and cds.REGIST_SEQNO in (" separator="," close=")">
+				   #{items,jdbcType=VARCHAR}
+			   </foreach>
+		   </if>
    </select>
    
    <select id="selcteDataByList" resultMap="PerProDeclareRegDtoRM" parameterType="java.util.List">
