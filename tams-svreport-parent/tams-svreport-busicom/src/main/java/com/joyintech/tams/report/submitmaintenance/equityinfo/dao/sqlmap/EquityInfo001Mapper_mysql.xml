@@ -379,7 +379,7 @@
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
 		DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT)
-		select  seq_equity_info.NEXTVAL,
+		select  _NEXTINDEX('seq_equity_info'),
 		A.Indentify_Mark,A.Regist_Bank_Code,A.Org_Indentify_Mark,
 		A.Is_Belong_Bank,A.The_Bank_Name,A.The_Bank_Code,A.Holder_Mark,
 		A.Holder_Region,A.Holder_Type,A.Personal_Identify_Type,A.Institution_Identify_Type,
@@ -538,6 +538,7 @@
 				INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and
 			</if>
 			REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
+			limit 1
 		</where>
 	</select>
 
@@ -680,7 +681,7 @@
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
 		DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT)
-		select  seq_equity_info.NEXTVAL,
+		select  _NEXTINDEX('seq_equity_info'),
 		A.Indentify_Mark,A.Regist_Bank_Code,A.Org_Indentify_Mark,
 		A.Is_Belong_Bank,A.The_Bank_Name,A.The_Bank_Code,A.Holder_Mark,
 		A.Holder_Region,A.Holder_Type,A.Personal_Identify_Type,A.Institution_Identify_Type,
