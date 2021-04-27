@@ -117,7 +117,7 @@ public class CstpCommonMatchRepoImplService{
         //成交质押券信息
         List<InterfTradRepoasstDto> interfTradRepoasstDtos = cstpCommonMatchMapper.getInterfTradRepoasst(execId);
         //成交后折算后总金额
-        BigDecimal repoAssetConversionDealAmtTotal = interfTradRepoasstDtos.stream().map(InterfTradRepoasstDto::getDealamt).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal repoAssetConversionDealAmtTotal = interfTradRepoasstDtos.stream().map(InterfTradRepoasstDto::getFacetotalamt).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal repoamt = interfOpicsTradRepo.getRepoamt();
         BigDecimal positionGroupByPtl = BigDecimal.ZERO;
         for(InterfTradRepoasstDto interfTradRepoasstDto : interfTradRepoasstDtos){
@@ -173,7 +173,7 @@ public class CstpCommonMatchRepoImplService{
                     //折算后的大于成交单质押券券面
                     subSec = facetotalamt;
                 }
-                subAvaNum = 券面折算本金(subSec,rate,facetotalamt,repoAssetConversionDealAmtTotal);
+                subAvaNum = 券面折算匹配额度(subSec,rate,repoamt,repoAssetConversionDealAmtTotal);
                 if(StringUtil.equals(isktg,"Y")){
                     if(StringUtil.equals(registOrg,DictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue())){
                         matchNumCB = ArithmeticUtil.doAdd(matchNumCB,subAvaNum);
@@ -202,7 +202,7 @@ public class CstpCommonMatchRepoImplService{
                 trdPledgeMatchInfo.setSecAcctId(secAcctId);
                 trdPledgeMatchInfo.setPledgeFinprodId(interfTradRepoasstDto.getFinprodId());
                 trdPledgeMatchInfo.setTradeDate(interfOpicsTradRepo.getDealdate());
-                trdPledgeMatchInfo.setMatchNum(ArithmeticUtil.divide(subSec,new BigDecimal("100"),2));
+                trdPledgeMatchInfo.setMatchNum(subSec);
                 trdPledgeMatchInfo.setMatchType(matchType);
                 trdPledgeMatchInfo.setfSysId(CFTES);
                 trdMatchInfos.add(trdMatchInfo);
@@ -291,7 +291,7 @@ public class CstpCommonMatchRepoImplService{
                 trdPledgeMatchInfo.setSecAcctId(secAcctId);
                 trdPledgeMatchInfo.setPledgeFinprodId(interfTradRepoasstDto.getFinprodId());
                 trdPledgeMatchInfo.setTradeDate(interfOpicsTradRepo.getDealdate());
-                trdPledgeMatchInfo.setMatchNum(ArithmeticUtil.divide(subSec,new BigDecimal("100"),2));
+                trdPledgeMatchInfo.setMatchNum(subSec);
                 trdPledgeMatchInfo.setMatchType(matchType);
                 trdPledgeMatchInfo.setfSysId(CFTES);
                 trdPledgeMatchInfos.add(trdPledgeMatchInfo);
@@ -305,15 +305,29 @@ public class CstpCommonMatchRepoImplService{
 
 
     /**
-     * 本金折算券面
-     * @param initValue 券面
+     *  券面折算本金
+     * @param initValue 券面  传入是百元券  计算时 应按照元为单位计算
      * @param rate
      * @param dealNum
      * @param total
      * @return
      */
     private BigDecimal 券面折算本金(BigDecimal initValue,BigDecimal rate,BigDecimal dealNum,BigDecimal total){
+        initValue = ArithmeticUtil.multiply(initValue,new BigDecimal(100));
+        dealNum = ArithmeticUtil.multiply(dealNum,new BigDecimal(100));
        return ArithmeticUtil.divide(ArithmeticUtil.multiply(ArithmeticUtil.multiply(initValue,rate),ArithmeticUtil.multiply(dealNum,rate)),total,2);
+    }
+
+    /**
+     *  券面折算匹配额度
+     * @param initValue
+     * @param rate
+     * @param dealNum
+     * @param total
+     * @return
+     */
+    private BigDecimal 券面折算匹配额度(BigDecimal initValue,BigDecimal rate,BigDecimal dealNum,BigDecimal total){
+        return ArithmeticUtil.divide(ArithmeticUtil.multiply(ArithmeticUtil.multiply(initValue,rate),ArithmeticUtil.multiply(dealNum,rate)),ArithmeticUtil.divide(total,new BigDecimal(100),2),2);
     }
 
     /**
@@ -325,7 +339,7 @@ public class CstpCommonMatchRepoImplService{
      * @return
      */
     private BigDecimal 本金折算券面(BigDecimal initValue,BigDecimal rate,BigDecimal dealAmt,BigDecimal total){
-        return ArithmeticUtil.divide(ArithmeticUtil.multiply(initValue,total),ArithmeticUtil.multiply(dealAmt,rate),2);
+        return ArithmeticUtil.divide(ArithmeticUtil.divide(ArithmeticUtil.multiply(initValue,total),ArithmeticUtil.multiply(dealAmt,rate),2),new BigDecimal(100),2);
     }
 
     private String  处理证券账户(String isKtg,String registOrg,List<String> acctNoList) {

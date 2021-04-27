@@ -711,7 +711,8 @@ public class CfetsInterfReceiveService {
                     CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto = new CfetsRepoDealQuotedPrice003Dto();
                     BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto,item);
                     cfetsRepoDealQuotedPrice003Dto.setFinprodId(item.getPledgeFinprodId());
-                    cfetsRepoDealQuotedPrice003Dto.setPledgePrin(item.getPledgeNumber());
+                    cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal("100")));
+                    cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal("100")));
                     cfetsRepoDealQuotedPrice003Dto.setPledgeRate(ArithmeticUtil.multiply(item.getPledgeRatio(), BigDecimal.valueOf(100)));
                     pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
                 });
@@ -719,6 +720,7 @@ public class CfetsInterfReceiveService {
                 cfetsRepoDealQuotedPrice001Dto.setPledgeBondList(pledgeBondList);
                 cfetsRepoDealQuotedPrice001Dto.setPtlAllocationList(ptlAllocations);
                 cfetsRepoDealQuotedPrice001Dto.setIsKtg(isKtg);
+                cfetsRepoDealQuotedPrice001Dto.setIsMq("Y");
                 ibuQuoteEntCrepPledges= ibuComponentCommonService.质押券拆分(cfetsRepoDealQuotedPrice001Dto);
                 resultDto.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
                 resultDto.setIbuQuoteEntCrepPledgeDtoList(ibuQuoteEntCrepPledges);

@@ -192,7 +192,7 @@
   				<!-- 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191011 end -->
  				)ava
                LEFT JOIN (<!-- 增加flow表的可用 2020.01.02 -->
-                   select sum(decode(PSP.HODING_TYPE, '12', -1*psp.AMOUNT, psp.amount)) AMOUNT, psp.finprod_id
+                   select sum(decode(PSP.HODING_TYPE, '12', -1*psp.AMOUNT, psp.amount)) AMOUNT, psp.finprod_id, psp.SEC_ACCT_ID
                    <if test="isWithInvAim">
                        ,INV_AIM
                    </if>
@@ -486,7 +486,7 @@
 <!--                        GROUP BY-->
 <!--                          FINPROD_ID-->
 
-       select PSP.FINPROD_ID FINPROD_ID,
+       select PSP.FINPROD_ID FINPROD_ID,PSP.SEC_ACCT_ID,
        SUM(DECODE(PSP.HODING_TYPE,'06',-PSP.AMOUNT,'11',-PSP.AMOUNT,PSP.AMOUNT)) AMOUNT
        from PTL_SEC_POSITION PSP
        LEFT JOIN FIN_PRODUCT T ON PSP.FINPROD_ID = T.FINPROD_ID
@@ -507,10 +507,46 @@
        and tt.hoding_type = psp.hoding_type
        and tt.ccy = psp.ccy
        )
-       GROUP BY psp.finprod_id
+       GROUP BY psp.finprod_id,psp.SEC_ACCT_ID
 
        ) ava
                   ON  ava.FINPROD_ID = pledgeList.pledgeId
+       LEFT JOIN (
+       select sum(decode(PSP.HODING_TYPE, '12', -1*psp.AMOUNT, psp.amount)) AMOUNT,
+       psp.finprod_id, psp.SEC_ACCT_ID
+       <if test="isWithInvAim">
+           ,INV_AIM
+       </if>
+       from PTL_SEC_POSITION_FLOW PSP INNER JOIN FIN_PRODUCT T ON
+       PSP.FINPROD_ID = T.FINPROD_ID AND T.FINPROD_TYPE2 = 'F01'
+       and psp.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
+       AND psp.CDATE &lt;= TO_DATE(#{plateDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
+       and PSP.HODING_TYPE IN ('01', '12')
+       <if
+               test="secAcctId != null and secAcctId != '' and secAcctId !='undefined'">
+           AND PSP.SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
+       </if>
+       <if test="chlId != null and chlId != '' and chlId !='undefined'">
+           AND PSP.SEC_ACCT_ID = #{chlId, jdbcType=VARCHAR}
+       </if>
+       <if test="folwtradeId !=null and folwtradeId !=''">
+           and PSP.TRADE_ID != #{folwtradeId, jdbcType=VARCHAR}
+       </if>
+       AND NOT EXISTS (SELECT 1 FROM PTL_SEC_POSITION_FLOW PSP1 WHERE
+       PSP1.portfolio_id = psp.portfolio_id
+       and PSP1.sec_acct_id = psp.sec_acct_id
+       and PSP1.finprod_id = psp.finprod_id
+       AND PSP1.CDATE &lt;= TO_DATE(#{plateDate, jdbcType=VARCHAR},'yyyy-MM-dd')
+       and PSP1.CDATE > psp.CDATE
+       and PSP1.branch = psp.branch
+       and PSP1.inv_aim = psp.inv_aim
+       and PSP1.hoding_type = psp.hoding_type
+       and PSP1.ccy = psp.ccy)
+       group by PSP.finprod_id, psp.SEC_ACCT_ID
+       <if test="isWithInvAim">
+           ,INV_AIM
+       </if>
+       ) AVA_FLOW ON ava.FINPROD_ID = AVA_FLOW.FINPROD_ID and ava.SEC_ACCT_ID= AVA_FLOW.SEC_ACCT_ID
            LEFT JOIN (
                        SELECT
                            FINPROD_ID,

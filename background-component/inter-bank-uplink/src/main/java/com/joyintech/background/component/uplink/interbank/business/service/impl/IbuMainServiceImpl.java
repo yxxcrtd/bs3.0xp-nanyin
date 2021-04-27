@@ -2343,12 +2343,17 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
                         }else{
                             //保留数据库业务明细表数据
                             allCrepPledgeList.addAll(oldQuoteRepoDto.getIbuQuoteCrepPledgeDtoList());
-                            inputBean.setIbuQuoteEtrReDtoList(oldQuoteRepoDto.getIbuQuoteEtrReDtoList());
-                            inputBean.setIbuQuoteEntCrepPledgeDtoList(oldQuoteRepoDto.getIbuQuoteEntCrepPledgeDtoList());
                         }
                     }
                     else {
                         allCrepPledgeList.addAll(quoteCrepPledgeList);
+                    }
+                    //AI报文特殊处理
+                    if(CollectionUtils.isEmpty(inputBean.getIbuQuoteEtrReDtoList())){
+                        inputBean.setIbuQuoteEtrReDtoList(oldQuoteRepoDto.getIbuQuoteEtrReDtoList());
+                    }
+                    if(CollectionUtils.isEmpty(inputBean.getIbuQuoteEntCrepPledgeDtoList())){
+                        inputBean.setIbuQuoteEntCrepPledgeDtoList(oldQuoteRepoDto.getIbuQuoteEntCrepPledgeDtoList());
                     }
                 }
                 catch (BeansException e) {

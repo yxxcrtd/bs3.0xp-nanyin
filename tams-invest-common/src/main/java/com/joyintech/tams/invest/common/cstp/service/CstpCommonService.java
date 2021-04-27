@@ -156,6 +156,7 @@ public class CstpCommonService{
         List<CfetsRepoPledgeBondDto>  pledgeBondLists =   cfetsRepoDealQuotedPriceDto.getPledgeBondList();
         String isDzh = cfetsRepoDealQuotedPriceDto.getIsDzh();
         String  ps = cfetsRepoDealQuotedPriceDto.getPs();
+        String isMq = cfetsRepoDealQuotedPriceDto.getIsMq(); //从接口接入数据是  质押券没有关联组合  key处理同逆回购
         if(StringUtil.equals(isDzh,"Y")){
             List<PtlAllocationDto> ptlAllocations = cfetsRepoDealQuotedPriceDto.getPtlAllocationList();
             //默认比例分配 尾差给交易金额最大
@@ -168,7 +169,7 @@ public class CstpCommonService{
                     fpriceAmtTotalGroupByPtlMap.put(entry.getKey(),entry.getValue().stream().map(PtlAllocationDto::getFpriceAmt).reduce(BigDecimal.ZERO, BigDecimal::add));
                 }
                 //券面总额(正回购 按组合+债分组   逆回购  按债分组)
-                Map<String, List<CfetsRepoPledgeBondDto>> map2 = pledgeBondLists.stream().collect(Collectors.groupingBy((a -> StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())?a.getPortfolioId()+a.getFinprodId():a.getFinprodId())));
+                Map<String, List<CfetsRepoPledgeBondDto>> map2 = pledgeBondLists.stream().collect(Collectors.groupingBy((a -> StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())&&StringUtils.isEmpty(isMq)?a.getPortfolioId()+a.getFinprodId():a.getFinprodId())));
                 for (Map.Entry<String, List<CfetsRepoPledgeBondDto>> entry : map2.entrySet()) {
                     pledgePrinTotalByPtlMap.put(entry.getKey(),entry.getValue().stream().map(CfetsRepoPledgeBondDto::getPledgePrin).reduce(BigDecimal.ZERO, BigDecimal::add));
                 }
@@ -178,9 +179,9 @@ public class CstpCommonService{
                 for(PtlAllocationDto item : ptlAllocations){
                     BigDecimal fpriceAmtTotal  = (BigDecimal) fpriceAmtTotalGroupByPtlMap.get(item.getPortfolioId());
                     for(CfetsRepoPledgeBondDto item2 : pledgeBondLists){
-                        if((StringUtils.equals(ps,BussinessDictCodeList.回购拆借方向_正回购.getValue())&&StringUtils.equals(item.getPortfolioId(),item2.getPortfolioId()))
+                        if((StringUtils.equals(ps,BussinessDictCodeList.回购拆借方向_正回购.getValue())&&(StringUtils.equals(isMq,"Y")||StringUtils.equals(item.getPortfolioId(),item2.getPortfolioId())))
                         ||StringUtils.equals(ps,BussinessDictCodeList.回购拆借方向_逆回购.getValue())){
-                            String key = StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())?item2.getPortfolioId()+item2.getFinprodId():item2.getFinprodId();
+                            String key = StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())&&StringUtils.isEmpty(isMq)?item2.getPortfolioId()+item2.getFinprodId():item2.getFinprodId();
                             IbuQuoteEntCrepPledgeCommonDto ibuQuoteEntCrepPledge = new IbuQuoteEntCrepPledgeCommonDto();
                             ibuQuoteEntCrepPledge.setQuoteId(cfetsRepoDealQuotedPriceDto.getQuoteId());
                             ibuQuoteEntCrepPledge.setVersion(StringUtil.isNotEmpty(cfetsRepoDealQuotedPriceDto.getVersion())?cfetsRepoDealQuotedPriceDto.getVersion():-1L);// 版本号
@@ -207,7 +208,7 @@ public class CstpCommonService{
                 //尾差处理  尾差放在指令的交易金额最大的记录
                 ibuQuoteEntCrepPledges.stream().forEach(item -> {
                     if(maxFpriceAmtMap.containsKey(item.getEntrustId()+item.getPortfolioId())){
-                        String key = StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())?item.getPortfolioId()+item.getPledgeFinprodId():item.getPledgeFinprodId();
+                        String key = StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())&&StringUtils.isEmpty(isMq)?item.getPortfolioId()+item.getPledgeFinprodId():item.getPledgeFinprodId();
                         if (pledgePrinTotalByPtlMap.containsKey(key)) {
                             item.setPledgeNumber(ArithmeticUtil.divide(ArithmeticUtil.doAdd(item.getPledgeNumber(),new BigDecimal(pledgePrinTotalByPtlMap.get(key).toString())),new BigDecimal(100),2));
                         }
@@ -226,6 +227,7 @@ public class CstpCommonService{
         List<CfetsRepoPledgeBondDto>  pledgeBondLists =   cfetsRepoDealQuotedPriceDto.getPledgeBondList();
         String isDzh = cfetsRepoDealQuotedPriceDto.getIsDzh();
         String  ps = cfetsRepoDealQuotedPriceDto.getPs();
+        String isMq = cfetsRepoDealQuotedPriceDto.getIsMq();
         if(StringUtil.equals(isDzh,"Y")){
             List<PtlAllocationDto> ptlAllocations = cfetsRepoDealQuotedPriceDto.getPtlAllocationList();
             //默认比例分配 尾差给交易金额最大
@@ -239,7 +241,7 @@ public class CstpCommonService{
                     fpriceAmtTotalGroupByPtlMap.put(entry.getKey()+"02",entry.getValue().stream().map(PtlAllocationDto::getScFpriceAmt).reduce(BigDecimal.ZERO, BigDecimal::add));
                 }
                 //券面总额(正回购 按组合+债分组   逆回购  按债分组)
-                Map<String, List<CfetsRepoPledgeBondDto>> map2 = pledgeBondLists.stream().collect(Collectors.groupingBy((a -> StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())?a.getPortfolioId()+a.getFinprodId():a.getFinprodId())));
+                Map<String, List<CfetsRepoPledgeBondDto>> map2 = pledgeBondLists.stream().collect(Collectors.groupingBy((a -> StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())&&StringUtils.isEmpty(isMq)?a.getPortfolioId()+a.getFinprodId():a.getFinprodId())));
                 for (Map.Entry<String, List<CfetsRepoPledgeBondDto>> entry : map2.entrySet()) {
                     pledgePrinTotalByPtlMap.put(entry.getKey(),entry.getValue().stream().map(CfetsRepoPledgeBondDto::getPledgePrin).reduce(BigDecimal.ZERO, BigDecimal::add));
                 }
@@ -252,7 +254,7 @@ public class CstpCommonService{
                     BigDecimal cbFpriceAmtTotal  = (BigDecimal) fpriceAmtTotalGroupByPtlMap.get(item.getPortfolioId()+"01");
                     BigDecimal scFpriceAmtTotal  = (BigDecimal) fpriceAmtTotalGroupByPtlMap.get(item.getPortfolioId()+"02");
                     for(CfetsRepoPledgeBondDto item2 : pledgeBondLists){
-                        String key = StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())?item2.getPortfolioId()+item2.getFinprodId():item2.getFinprodId();
+                        String key = StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())&&StringUtils.isEmpty(isMq)?item2.getPortfolioId()+item2.getFinprodId():item2.getFinprodId();
                         IbuQuoteEntCrepPledgeCommonDto ibuQuoteEntCrepPledge = new IbuQuoteEntCrepPledgeCommonDto();
                         ibuQuoteEntCrepPledge.setQuoteId(cfetsRepoDealQuotedPriceDto.getQuoteId());
                         ibuQuoteEntCrepPledge.setVersion(StringUtil.isNotEmpty(cfetsRepoDealQuotedPriceDto.getVersion())?cfetsRepoDealQuotedPriceDto.getVersion():-1L);// 版本号
@@ -284,7 +286,7 @@ public class CstpCommonService{
                 }
                 //尾差处理  尾差放在指令的交易金额最大的记录
                 ibuQuoteEntCrepPledges.stream().forEach(item -> {
-                    String key = StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())?item.getPortfolioId()+item.getPledgeFinprodId():item.getPledgeFinprodId();
+                    String key = StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())&&StringUtils.isEmpty(isMq)?item.getPortfolioId()+item.getPledgeFinprodId():item.getPledgeFinprodId();
                     if(StringUtils.equals(item.getRepRegistOrg(),"01")&&maxcbFpriceAmtMap.containsKey(item.getEntrustId()+item.getPortfolioId())){
                         if (pledgePrinTotalByPtlMap.containsKey(key)) {
                             item.setPledgeNumber(ArithmeticUtil.divide(ArithmeticUtil.doAdd(item.getPledgeNumber(),new BigDecimal(pledgePrinTotalByPtlMap.get(key).toString())),new BigDecimal(100),2));

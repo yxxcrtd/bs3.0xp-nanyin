@@ -169,7 +169,9 @@ public class BussRepoSecController extends BaseController {
         if (!(StringUtil.equals((String)data.get("ps"), DictCodeList.回购拆借方向_逆回购.getValue()))
                 && !(StringUtil.isNotEmpty(data.get("secAcctId")) || StringUtil.isNotEmpty(data.get("chlId")) ||
                         StringUtil.isNotEmpty(data.get("securitiesCust")))){
-            messages.add(new ValidMessage("BUS_REPO_SEC_001",getMessage("BUS_REPO_SEC_002")));
+            if("03".equals(data.get("tradeMarketId")) || "04".equals(data.get("tradeMarketId"))) {
+                messages.add(new ValidMessage("BUS_REPO_SEC_001", getMessage("BUS_REPO_SEC_002")));
+            }
         }
 
        if (messages.size() > 0) {

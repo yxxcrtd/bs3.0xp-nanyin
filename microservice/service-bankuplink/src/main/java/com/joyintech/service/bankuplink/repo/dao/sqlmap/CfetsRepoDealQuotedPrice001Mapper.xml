@@ -937,7 +937,7 @@
         AND HODING_TYPE = '01'
         AND (FPSAI.FINPROD_ID is null  or FPSAI.FINPROD_TYPE2 !='F28')
         <if test="quoteId != null and quoteId != ''">
-            AND PTL_SEC_POSITION_FLOW.TRADE_ID != #{quoteId}
+            AND PTL_SEC_POSITION_FLOW.TRADE_ID = #{quoteId}
         </if>
         GROUP BY
         PTL_SEC_POSITION_FLOW.PORTFOLIO_ID,PTL_SEC_POSITION_FLOW.FINPROD_ID
