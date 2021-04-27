@@ -3,10 +3,10 @@
 	<Worksheet javaBean="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
 		<Row>
 			<Cell order="1"  name="数据状态"> status</Cell><!-- 数据状态 -->
-			<Cell order="2"  name="数据日期"> updateTime</Cell><!-- 数据日期 -->
+			<Cell order="2"  name="数据日期"> updateSTimeStr</Cell><!-- 数据日期 -->
 			<Cell order="3"  name="报送状态"> submitStatus</Cell><!-- 报送状态 -->
-			<Cell order="4"  name="报送日期"> submitTime</Cell><!-- 报送日期 -->
-			<Cell order="5"  name="报送截止日"> chbSubmitDeadline</Cell><!-- 报送截止日 -->
+			<Cell order="4"  name="报送日期"> submitSTimeStr</Cell><!-- 报送日期 -->
+			<Cell order="5"  name="报送截止日"> chbSubmitSDeadlineStr</Cell><!-- 报送截止日 -->
 			<Cell order="6"  name="反馈状态"> submitFeedbackStatus</Cell><!-- 反馈状态 -->
 			<Cell order="7"  name="数据类型"> type</Cell><!-- 数据类型 -->
 			<Cell order="8"  name="登记银行代码"> bankCode</Cell><!-- 登记银行代码 -->

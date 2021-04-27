@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.report.common.util.ExcelUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,8 +113,11 @@ public class EquityInfoController {
     @SuppressWarnings("unchecked")
 	@PostMapping("importData")
     public List<ExcelValidDto> importData(@RequestBody  Map<String, Object> param) {
-    	List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-    	List<List<String>> tempList = (List<List<String>>) param.get("tempList");
+        String fileName = param.get("fileName").toString();
+        List<List<String>> dataList = (List<List<String>>) ExcelUtil.getDataList(fileName);
+        List<List<String>> tempList = (List<List<String>>) ExcelUtil.getTempList(fileName);
+//    	List<List<String>> dataList = (List<List<String>>) param.get("dataList");
+//    	List<List<String>> tempList = (List<List<String>>) param.get("tempList");
     	String bankCode =  null!=param.get("bankCode")?param.get("bankCode").toString():"";
     	String deptCode =  null!=param.get("deptCode")?param.get("deptCode").toString():"";
     	String orgCode =  null!=param.get("orgCode")?param.get("orgCode").toString():"";
@@ -131,9 +135,13 @@ public class EquityInfoController {
     @PostMapping("importChbData")
     @SuppressWarnings("unchecked")
     public List<ExcelValidDto> importChbData(@RequestBody Map<String, Object> param){
-		List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-		List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-    	List<List<String>> dataTypeList = (List<List<String>>) param.get("dataTypeList");
+        String fileName = param.get("fileName").toString();
+        List<List<String>> dataList = (List<List<String>>) ExcelUtil.getDataList(fileName);
+        List<List<String>> tempList = (List<List<String>>) ExcelUtil.getTempList(fileName);
+        List<List<String>> dataTypeList = (List<List<String>>) ExcelUtil.getDataList(fileName);
+//		List<List<String>> dataList = (List<List<String>>) param.get("dataList");
+//		List<List<String>> tempList = (List<List<String>>) param.get("tempList");
+//    	List<List<String>> dataTypeList = (List<List<String>>) param.get("dataTypeList");
     	String bankCode =  null!=param.get("bankCode")?param.get("bankCode").toString():"";
     	String deptCode =  null!=param.get("deptCode")?param.get("deptCode").toString():"";
     	String orgCode =  null!=param.get("orgCode")?param.get("orgCode").toString():"";
@@ -147,7 +155,9 @@ public class EquityInfoController {
      * @return 处理结果
      */
     @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody List<List<String>> dataList) {
+    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param) {
+        String fileName = param.get("fileName").toString();
+        List<List<String>> dataList = (List<List<String>>) ExcelUtil.getDataList(fileName);
         return equityInfo001Service.checkConfirmMsgForImportData(dataList);
     }
 

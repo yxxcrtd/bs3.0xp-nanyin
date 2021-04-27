@@ -601,12 +601,9 @@
 			0 DEALAMT,/*交易金额*/              
 			0 DEALQTY,/*交易份额*/
 			<if test="monthReport!=null and monthReport=='01'">
-			case when ASSETINFO.ASSET_TYPE2='1405'
-        		 then NVL(ASSETBASIS.TDY_INTINCEXP,0)
-     		 else (NVL(ASSETBASIS.TDY_COST_AMT,0) + NVL(ASSETBASIS.TDY_FLOAT_INGPL,0)
-      				+ NVL(ASSETBASIS.TDY_INTINCEXP,0) + NVL(ASSETBASIS.DELAY_PAY_AMT,0))
-      			end ACCUAMT,/*剩余金额*/ 
-			</if>
+                NVL(ASSETBASIS.TDY_COST_AMT,0) + NVL(ASSETBASIS.TDY_FLOAT_INGPL,0)
+                + NVL(ASSETBASIS.TDY_INTINCEXP,0) + NVL(ASSETBASIS.DELAY_PAY_AMT,0) ACCUAMT,/*剩余金额*/
+            </if>
 			<if test="monthReport!=null and monthReport=='02'">
 			case when ASSETINFO.ASSET_TYPE!='07'
 				then ASSETBASIS.POS_AMT
@@ -760,8 +757,8 @@
         ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
         LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
         ON PROD.FINPROD_MARKET_ID = BALANCE.BOOKSET_ID
-        WHERE 1 =1 
-        AND BALANCE.BALANCE_DATE = #{cdate,jdbcType=DATE}
+        WHERE 1 =1
+        AND to_char(BALANCE.BALANCE_DATE,'yyyy-MM-dd') = to_char(#{cdate,jdbcType=DATE},'yyyy-MM-dd')
 		/*标的类金融产品.投管分类=理财产品*/
 		AND PROD.FINPROD_TYPE2 = 'F16'
 		and BOOKSET.ACCT_SUBJECT_TYPE = 'F18'/*取账套表的主体核算类型为F18投资组合*/
@@ -793,8 +790,8 @@
         ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
         LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
         ON PROD.FINPROD_ID = BALANCE.BOOKSET_ID
-        WHERE 1 =1 
-        AND BALANCE.BALANCE_DATE = #{cdate,jdbcType=DATE}
+        WHERE 1 =1
+        AND to_char(BALANCE.BALANCE_DATE,'yyyy-MM-dd') = to_char(#{cdate,jdbcType=DATE},'yyyy-MM-dd')
 		/*标的类金融产品.投管分类=理财产品*/
 		AND PROD.FINPROD_TYPE2 = 'F16'
 		AND BOOKSET.ACCT_SUBJECT_TYPE = 'F16'/*取账套表的主体核算类型为F16净值型产品货币性产品*/
@@ -824,8 +821,8 @@
 			    VAL.CDATE CDATE,/*生成日*/
 			    VAL.CCY CCY /*币种*/
             from ptl_cash_position VAL
-			WHERE 1 =1 
-			AND VAL.CDATE = #{cdate,jdbcType=DATE}
+			WHERE 1 =1
+            AND to_char(VAL.CDATE,'yyyy-MM-dd') = to_char(#{cdate,jdbcType=DATE},'yyyy-MM-dd')
 	        and exists (select 1 from fin_product_add d where d.portfolio_id = val.portfolio_id and d.profit_flag = '03')/*只取非保本理财产品*/
 	        and val.HODING_TYPE = '03' /*只取实际*/
 	        and VAL.CHL_FINPROD_ID is not null ---只取通道id不为空的数据

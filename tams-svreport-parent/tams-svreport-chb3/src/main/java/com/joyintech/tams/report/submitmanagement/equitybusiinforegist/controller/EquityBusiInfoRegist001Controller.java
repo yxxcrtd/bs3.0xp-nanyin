@@ -64,7 +64,7 @@ import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.In
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
- * 
+ *
  * @author zyf
  * @version 1.0 2017年9月19日
  * @see EquityBusiInfoRegist001Controller
@@ -91,7 +91,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     @Autowired
     private EquityBusiInfoRegist001Mapper equityBusiInfoRegist001Mapper;
 
-    
+
 
 //    @Autowired
 //    private ChbBatchParaMapper chbBatchParaMapper;
@@ -104,6 +104,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
      * {@inheritDoc}
      */
     @Override
+    @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         Map<String, Object> map = RequestUtil.getPageParam();
         if (StringUtil.isNotEmpty(map.get("submitStatus"))) {
@@ -111,23 +112,23 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
             if (StringUtil.isNotEmpty(map.get("status"))) {
                 model.addAttribute("status", map.get("status").toString().trim());
             }
-			if(StringUtil.isNotEmpty(map.get("submitFeedbackStatus"))){
-            	model.addAttribute("submitFeedbackStatus", map.get("submitFeedbackStatus").toString().trim());
+            if(StringUtil.isNotEmpty(map.get("submitFeedbackStatus"))){
+                model.addAttribute("submitFeedbackStatus", map.get("submitFeedbackStatus").toString().trim());
             }
             model.addAttribute("searchDataStart", map.get("searchDataStart"));
             model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
             model.addAttribute("isMain", "01");
         }
         super.setSelectOptionToModel(model, DictCode.报送状态, DictCode.业务种类,
-            DictCode.报送数据状态, DictCode.报送反馈状态, DictCode.投资者明细渠道);
+                DictCode.报送数据状态, DictCode.报送反馈状态, DictCode.投资者明细渠道);
         List<SelectOptionDto> listSendStatus = querySendStatus();
         // 增加发送状态
         model.addAttribute("SUBMIT_SEND_STATUS",
-            JsonUtils.objectArray2Json(listSendStatus.toArray()));
+                JsonUtils.objectArray2Json(listSendStatus.toArray()));
         if (StringUtil.isNotEmpty(RequestUtil.getParam("validKey"))) {
             // 报送前检查链接数据主键解析
             String[] validKeyArr = StringUtil.split(RequestUtil.getParam("validKey"),
-                GlobalConstant.COMMA);
+                    GlobalConstant.COMMA);
             InvestorsHoldInfoRegist001Dto dto = new InvestorsHoldInfoRegist001Dto();
             dto.setPrdRegistCode(StringUtil.split(validKeyArr[0], " ")[1]);
             dto.setIndentifyMark(StringUtil.split(validKeyArr[1], " ")[1]);
@@ -136,23 +137,23 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
             dto.setRegistBankCode(StringUtil.split(validKeyArr[4], " ")[1]);
             model.addAttribute("validKey", dto);
         }
-      //业务确认日-市场节假日表中有值则取前一个工作日，无则取前一天
+        //业务确认日-市场节假日表中有值则取前一个工作日，无则取前一天
         String dateStr = null;
         Date ywDate = equityBusiInfoRegist001Service.getLastWeekDay(
-        		CacheUtil.getSysParam(SVReportGlobalConstant.SVR_CALENDAR_ID),DateUtil.getCurrentDate());
+                CacheUtil.getSysParam(SVReportGlobalConstant.SVR_CALENDAR_ID),DateUtil.getCurrentDate());
         if(StringUtil.isNotEmpty(ywDate)){
-        	dateStr = DateUtil.format(ywDate);
+            dateStr = DateUtil.format(ywDate);
         }else{
-        	dateStr = DateUtil.plusDays(DateUtil.getCurrentDate(), -1);
+            dateStr = DateUtil.plusDays(DateUtil.getCurrentDate(), -1);
         }
         String svrSystemType=SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SEND_EQUDET);
         if(svrSystemType!=null&&svrSystemType.equals("01")){
-        	model.addAttribute("isSend",true);
+            model.addAttribute("isSend",true);
         }else{
-        	model.addAttribute("isSend",false);
+            model.addAttribute("isSend",false);
         }
         String dayselectRange = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,
-        		SVReportGlobalConstant.SVR_EQUITY_CONF_DATE_SELECT_RANGE);
+                SVReportGlobalConstant.SVR_EQUITY_CONF_DATE_SELECT_RANGE);
         model.addAttribute("DATE_START",dateStr);
         model.addAttribute("DATE_END",dateStr);
         model.addAttribute("DAY_SELECT_RANGE",dayselectRange);
@@ -170,13 +171,13 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     @RequestMapping("findPage")
     public Page<EquityBusiInfoRegist001Dto> selectAllData() {
         Page<EquityBusiInfoRegist001Dto> page = equityBusiInfoRegistMService.selectForPage(
-            RequestUtil.getPageParam());
+                RequestUtil.getPageParam());
         return page;
     }
 
     /**
      * 产品名称下拉框
-     * 
+     *
      * @return 产品名称列表
      */
     @RequestMapping("getPrdName")
@@ -198,29 +199,29 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
         if (RequestUtil.getPageParam().containsKey("keyList")) {
             String flag = (String)RequestUtil.getPageParam().get("flag");
             List<EquityBusiInfoRegist001Dto> dtoList = equityBusiInfoRegist001Service.selectAllList(
-                RequestUtil.getParameters(getRequest()));
+                    RequestUtil.getParameters(getRequest()));
             File outFile = null;
             if (StringUtil.equals("0", flag)) {
                 outFile = equityBusiInfoRegist001Service.makeFile(
-                    "/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf.xml",
-                    dtoList);
+                        "/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf.xml",
+                        dtoList);
             }
             else if (StringUtil.equals("1", flag)) {
                 outFile = equityBusiInfoRegist001Service.makeFile(
-                    "/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf_all.xml",
-                    dtoList);
+                        "/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf_all.xml",
+                        dtoList);
             }
             return ExportUtil.export(
-                this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
-                                     + DateUtil.format(new Date())
-                                     + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
-                                     + FileNameUtil.getFileExtName(outFile),
-                outFile, true);
+                    this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
+                            + DateUtil.format(new Date())
+                            + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
+                            + FileNameUtil.getFileExtName(outFile),
+                    outFile, true);
         }
         else {
-        	
-        	return equityBusiInfoRegist001Service.export(this.getPageId(), RequestUtil.getPageParam());
-        	
+
+            return equityBusiInfoRegist001Service.export(this.getPageId(), RequestUtil.getPageParam());
+
 //            String flag = (String)RequestUtil.getPageParam().get("flag");
 //            if (StringUtil.equals("2", flag)) {
 //                return equityBusiInfoRegist001Service.export(this.getPageId(), RequestUtil.getPageParam());
@@ -272,14 +273,14 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
         private String pageId;
         private Integer size;
         public MultiThread(String pageId,Integer size) {
-                     this.pageId = pageId;
-                     this.size = size;
-                }
+            this.pageId = pageId;
+            this.size = size;
+        }
         @Override
         public void run() {
             try {
                 int a =size/1000;
-                double d=0.1; 
+                double d=0.1;
                 for(int i=0;i<a;i++){
                     d=d+0.01d;
                     if(d>0.98d){
@@ -292,9 +293,9 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            
+
         }
-        
+
     }
     // /**
     // * 将选择的数据导出成excel
@@ -310,7 +311,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
 
     /**
      * 导出删除模板
-     * 
+     *
      * @return 返回需要的格式
      * @see
      * @since 1.0
@@ -321,19 +322,19 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
         String exportKeys = (String)map.get("expKeys");
         // String flag = (String) RequestUtil.getPageParam().get("flag");
         List<EquityBusiInfoRegist001Dto> dtoList = equityBusiInfoRegist001Service.queryExportSelectRegistList(
-            exportKeys);
+                exportKeys);
         File outFile = null;
 
         // 导出删除模板
         outFile = equityBusiInfoRegist001Service.makeFile(
-            "/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf_del.xml",
-            dtoList);
+                "/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf_del.xml",
+                dtoList);
 
         return ExportUtil.export(
-            this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
-                                 + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
-                                 + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-            outFile, true);
+                this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
+                        + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
 
     }
 
@@ -353,8 +354,8 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("submitBeforeCheck")
     public List<ExcelValidDto> submitBeforeCheck() {
-    	 Map<String, Object> param = RequestUtil.getPageParam();
-         return equityBusiInfoRegistMService.submitBeforeCheck(param);
+        Map<String, Object> param = RequestUtil.getPageParam();
+        return equityBusiInfoRegistMService.submitBeforeCheck(param);
     }
     /**
      * 中债直连报送
@@ -384,7 +385,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/submitCbAgain", method = RequestMethod.POST)
     public AjaxResult doSubmitAgain(@RequestBody Map<String, Object> map) {
-    	equityBusiInfoRegistMService.doSubmit(map);
+        equityBusiInfoRegistMService.doSubmit(map);
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
     }
 
@@ -399,7 +400,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("doManual")
     public AjaxResult doUpdate(@RequestParam Map<String, Object> map) {
-    	return equityBusiInfoRegistMService.doUpdate(map);
+        return equityBusiInfoRegistMService.doUpdate(map);
     }
 
     /**
@@ -417,8 +418,8 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
         Map<String, Object> map = equityBusiInfoRegistMService.selectDeletedAndUnsubmittedData();
 
         if (equityBusiInfoRegistMService.checkIfInBatchByTaskBeanName(
-            BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
-        	equityBusiInfoRegistMService.updateSumStausAll(map);
+                BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
+            equityBusiInfoRegistMService.updateSumStausAll(map);
         }
         else {
             return new AjaxResult(this.getMessage("REPORT_MANUAL_0008"));
@@ -438,7 +439,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/cancelMannul", method = RequestMethod.POST)
     public AjaxResult cancelMannul(@RequestBody Map<String, Object> map) {
-    	return equityBusiInfoRegistMService.cancelMannul(map);
+        return equityBusiInfoRegistMService.cancelMannul(map);
     }
 
     /**
@@ -471,7 +472,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     public AjaxResult checkConfirmMsgForAllManual(String fileName) {
         AjaxResult ajaxResult = new AjaxResult();
         if (!equityBusiInfoRegistMService.checkIfInBatchByTaskBeanName(
-            BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
+                BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
             ajaxResult.setMessage(this.getMessage("REPORT_MANUAL_0008"), MessageType.错误消息);
         }
 
@@ -489,7 +490,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     public AjaxResult checkConfirmMsgForAllCheck(String fileName) {
         AjaxResult ajaxResult = new AjaxResult();
         if (!equityBusiInfoRegistMService.checkIfInBatchByTaskBeanName(
-            BatchBeanName.投资者明细信息数据检查批处理.getTaskId())) {
+                BatchBeanName.投资者明细信息数据检查批处理.getTaskId())) {
             ajaxResult.setMessage(this.getMessage("REPORT_MANUAL_0014"), MessageType.错误消息);
         }
 
@@ -506,7 +507,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
         // record.setParaId(IDGenerator.generate());
         // record.setParas(map.get("key").toString());
         // chbBatchParaMapper.insert(record);
-    	equityBusiInfoRegistMService.executeBatch();
+        equityBusiInfoRegistMService.executeBatch();
         return new AjaxResult(this.getMessage("REPORT_MANUAL_0009"));
 
     }
@@ -533,25 +534,25 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "checkExport")
-	public AjaxResult checkExport(@RequestBody Map<String, Object> param) {
-		AjaxResult ajaxResult = new AjaxResult();
-		boolean batchExport = false;
-		// 未勾选
-		if (!RequestUtil.getPageParam().containsKey("keyList")) {
-			// 中债报送批处理导出数据量。大于等于此参数则需要批处理导出。
-			String batchExportNum = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SUBINFO_BATCH_EXPORT_NUM);
-			if (!StringUtil.isNotEmpty(batchExportNum)) {
-				batchExportNum = "1000000"; // 默认为100w
-			}
-			int dataNum = equityBusiInfoRegistMService.countExportNum(param);
-			if (dataNum >= Integer.parseInt(batchExportNum)) {
-				batchExport = true;
-			}
-		}
-		ajaxResult.setData(batchExport);
-		return ajaxResult;
-	}
-    
+    public AjaxResult checkExport(@RequestBody Map<String, Object> param) {
+        AjaxResult ajaxResult = new AjaxResult();
+        boolean batchExport = false;
+        // 未勾选
+        if (!RequestUtil.getPageParam().containsKey("keyList")) {
+            // 中债报送批处理导出数据量。大于等于此参数则需要批处理导出。
+            String batchExportNum = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SUBINFO_BATCH_EXPORT_NUM);
+            if (!StringUtil.isNotEmpty(batchExportNum)) {
+                batchExportNum = "1000000"; // 默认为100w
+            }
+            int dataNum = equityBusiInfoRegistMService.countExportNum(param);
+            if (dataNum >= Integer.parseInt(batchExportNum)) {
+                batchExport = true;
+            }
+        }
+        ajaxResult.setData(batchExport);
+        return ajaxResult;
+    }
+
     /**
      * 启动批处理导出
      * @param param
@@ -559,7 +560,17 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "batchExport")
-	public AjaxResult batchExport(@RequestParam Map<String, Object> param) {
-    	return equityBusiInfoRegistMService.batchExport(param);
-	}
+    public AjaxResult batchExport(@RequestParam Map<String, Object> param) {
+        return equityBusiInfoRegistMService.batchExport(param);
+    }
+    /**
+     * 启动批处理导出
+     * @param param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "batchExportAndDoManual")
+    public AjaxResult batchExportAndDoManual(@RequestParam Map<String, Object> param) {
+        return equityBusiInfoRegistMService.batchExportAndDoManual(param);
+    }
 }

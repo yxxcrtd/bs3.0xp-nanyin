@@ -84,22 +84,16 @@
 	</select>
 	<select id="queryForPageOld" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
 		SELECT
-		  A.PRODID prodId,
-		  A.ORG_CODE orgCode,
-		  nvl(b.prod_name,a.reg_code) orgName,
-		  b.PROD_NAME prodName,
-		  A.REG_CODE regCode,
-		  b.OPERATE_MODE operateMode,
-		  to_char(b.VDATE,'yyyy-MM-dd') vdate,
-		  to_char(b.MDATE,'yyyy-MM-dd') mdate,
-		  psp.INVESTOR_TYPE investor,
-		  to_char(A.CREATE_TIME,'yyyy-MM-dd') generateDate,
-		  A.REMARK remark
-		 FROM CHB_PRDRESIST_CODE A
-		 left join chb_prd_baseinfo b
-		 on b.prod_id = a.PRODID
-		 left join PRD_SALE_PARAM  psp
-		 on psp.FINPROD_ID = 'F16_'||a.PRODID
+		A.PRODID prodId,
+		A.ORG_CODE orgCode,
+		A.PRODNAME prodName,
+		A.REG_CODE regCode,
+		A.OPERATE_MODE operateMode,
+		to_char(A.VDATE,'yyyy-MM-dd') vdate,
+		to_char(A.MDATE,'yyyy-MM-dd') mdate,
+		A.INVESTOR investor,
+		A.REMARK remark
+		FROM CHB_PRDRESIST_CODE A
 		 <where>
 		    <if test="prodList != null and prodList.size() > 0">
 		 	<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">
@@ -352,4 +346,30 @@
 	</delete>
 	<insert id="insertSysUploadFileInfo" parameterType="com.joyintech.tams.common.base.entity.SysUploadFileInfo" >
 	</insert>
+
+	<select id="getRegistCodeInfoByProdId" parameterType="java.util.Map" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto" >
+		SELECT
+			A.PRODID prodId,
+			A.PRODNAME prodName,
+			A.REG_CODE regCode,
+			A.OPERATE_MODE operateMode,
+			A.ORG_CODE orgCode,
+			to_char(A.VDATE,'yyyy-MM-dd') vdate,
+			to_char(A.MDATE,'yyyy-MM-dd') mdate
+		FROM CHB_PRDRESIST_CODE A
+		where A.PRODID=#{prodId, jdbcType=VARCHAR}
+		  AND A.ORG_CODE=#{orgCode, jdbcType=VARCHAR}
+	</select>
+
+	<!--修改保存 -->
+	<update id="updateRegCode" parameterType="java.util.Map">
+		update CHB_PRDRESIST_CODE
+		<set>
+			REG_CODE=#{regCode,jdbcType=VARCHAR},
+			UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+			UPDATE_TIME=sysdate
+		</set>
+		where PRODID=#{prodId, jdbcType=VARCHAR}
+		AND ORG_CODE=#{orgCode, jdbcType=VARCHAR}
+	</update>
 </mapper>

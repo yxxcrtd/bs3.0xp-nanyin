@@ -73,5 +73,7 @@ public class ProdConstants {
 	public final static String CCY_USD="USD";
 	public final static String CCY_EUR="EUR";
 	public final static String CCY_OTH="OTH";
+
+	public final static String EXCHANGE_SOURCE_SPJ = "02";
 	
 }

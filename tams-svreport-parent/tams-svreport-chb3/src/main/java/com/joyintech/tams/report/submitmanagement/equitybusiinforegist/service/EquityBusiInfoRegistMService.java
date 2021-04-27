@@ -47,7 +47,7 @@ import com.joyintech.tams.report.system.subinfobatchlog.service.ChbSubinfoBatchL
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
- * 
+ *
  * @author zyf
  * @version 1.0 2017年9月19日
  * @see EquityBusiInfoRegistMService
@@ -77,7 +77,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
      */
     @Autowired
     private ChbSubinfoBatchLogService chbSubinfoBatchLogService;
-    
+
     /**
      * 进度条ID
      */
@@ -93,19 +93,19 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
      */
     @ResponseBody
     public Page<EquityBusiInfoRegist001Dto> selectForPage(Map<String, Object> param) {
-    	 return restTemplate.postForPage(
- 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/findPage", param,
- 	       	EquityBusiInfoRegist001Dto.class);
+        return simpleRestTemplate.postForPage(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/findPage", param,
+                EquityBusiInfoRegist001Dto.class);
     }
     @ResponseBody
     public List<SuggestDto> queryPrdNameList(String param) {
-    	return restTemplate.postForList(
- 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/queryPrdNameList", param,
- 	       	SuggestDto.class);
+        return simpleRestTemplate.postForList(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/queryPrdNameList", param,
+                SuggestDto.class);
     }
     /**
      * 产品名称下拉框
-     * 
+     *
      * @return 产品名称列表
      */
     @RequestMapping("getPrdName")
@@ -114,19 +114,19 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
         return checkReport001Service.queryPrdNameList(paramMap);
     }
 
-    
+
     class MultiThread implements Runnable {
         private String pageId;
         private Integer size;
         public MultiThread(String pageId,Integer size) {
-                     this.pageId = pageId;
-                     this.size = size;
-                }
+            this.pageId = pageId;
+            this.size = size;
+        }
         @Override
         public void run() {
             try {
                 int a =size/1000;
-                double d=0.1; 
+                double d=0.1;
                 for(int i=0;i<a;i++){
                     d=d+0.01d;
                     if(d>0.98d){
@@ -139,9 +139,9 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            
+
         }
-        
+
     }
 
 
@@ -154,9 +154,9 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
      */
     @ResponseBody
     public List<ExcelValidDto> sendBeforeCheck(Map<String, Object> param) {
-    	return restTemplate.postForList(
- 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/sendBeforeCheck", param,
- 	       	ExcelValidDto.class);
+        return simpleRestTemplate.postForList(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/sendBeforeCheck", param,
+                ExcelValidDto.class);
     }
     /**
      * 报送检查
@@ -167,24 +167,24 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
      */
     @ResponseBody
     public List<ExcelValidDto> submitBeforeCheck(Map<String, Object> param) {
-    	return restTemplate.postForList(
- 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/submitBeforeCheck", param,
- 	       	ExcelValidDto.class);
+        return simpleRestTemplate.postForList(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/submitBeforeCheck", param,
+                ExcelValidDto.class);
     }
     /**
-	 * 中债直连报送
-	 *
-	 * @param map
-	 *            传入需要报送的主键
-	 * @return 反馈信息
-	 * @see
-	 * @since 1.0
-	 */
-	public void doSubmit(Map<String, Object> map) {
-		restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/submitChb", map,
-	       		Integer.class);
-	}
+     * 中债直连报送
+     *
+     * @param map
+     *            传入需要报送的主键
+     * @return 反馈信息
+     * @see
+     * @since 1.0
+     */
+    public void doSubmit(Map<String, Object> map) {
+        simpleRestTemplate.postForObject(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/submitChb", map,
+                Integer.class);
+    }
     /**
      * 手工处理功能
      *
@@ -196,11 +196,11 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
     @ResponseBody
     public AjaxResult doUpdate(@RequestParam Map<String, Object> map) {
 //    	String message=
-//    	restTemplate.postForObject(
+//    	simpleRestTemplate.postForObject(
 // 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/doUpdate", map,
 // 	       	String.class);
 //    	return new AjaxResult(this.getMessage(message));
-    	if (map.get("flag") != null && "01".equals(map.get("flag"))) {
+        if (map.get("flag") != null && "01".equals(map.get("flag"))) {
             // if(equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(BatchBeanName.投资者明细信息登记手工处理.getBeanName())){
             // 处理全部数据
             ChbBatchPara record = new ChbBatchPara();
@@ -209,9 +209,9 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
             if (map.get("key") != null) {
                 record.setParas(map.get("key").toString());
 //                chbBatchParaMapper.insert(record);
-                restTemplate.postForObject(
-         	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/insert", record,
-         	       	ChbBatchPara.class);
+                simpleRestTemplate.postForList(
+                        SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/insert", record,
+                        ChbBatchPara.class);
             }
             sysBatchStart001Service.executeBatch();
             return new AjaxResult(this.getMessage("REPORT_MANUAL_0009"));
@@ -221,13 +221,13 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
         }
         else {
             if (equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(
-                BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
+                    BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
 //                equityBusiInfoRegist001Service.updateSumStaus(map);
-                
-                restTemplate.postForObject(
-         	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStaus",map, 
-         	       	boolean.class);
-                
+
+                simpleRestTemplate.postForObject(
+                        SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStaus",map,
+                        boolean.class);
+
             }
             else {
                 return new AjaxResult(this.getMessage("REPORT_MANUAL_0008"));
@@ -237,26 +237,26 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
     }
     @SuppressWarnings("unchecked")
-	public Map<String, Object>selectDeletedAndUnsubmittedData(){
-    	return restTemplate.getForObject(
- 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/selectDeletedAndUnsubmittedData", 
- 	       	Map.class);
+    public Map<String, Object>selectDeletedAndUnsubmittedData(){
+        return simpleRestTemplate.getForObject(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/selectDeletedAndUnsubmittedData",
+                Map.class);
     }
     public boolean checkIfInBatchByTaskBeanName(String beanname) {
-    	return restTemplate.getForObject(
- 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/checkIfInBatchByTaskBeanName", 
- 	       	boolean.class);
+        return simpleRestTemplate.getForObject(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/checkIfInBatchByTaskBeanName",
+                boolean.class);
     }
     public void updateSumStaus(Map<String, Object> map) {
-    	 restTemplate.getForObject(
- 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStaus", 
- 	       	boolean.class);
+        simpleRestTemplate.getForObject(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStaus",
+                boolean.class);
     }
     public void updateSumStausAll(Map<String, Object> map) {
-   	 	restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStausAll",map,
-	       	boolean.class);
-   }
+        simpleRestTemplate.getForObject(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStausAll",
+                boolean.class);
+    }
     /**
      * 取消手工处理功能
      *
@@ -272,16 +272,16 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
         // add by liubin
         if (map.get("flag") != null && "01".equals(map.get("flag"))) {
             // 取消手工处理全部数据
-            restTemplate.postForObject(
-     	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/cancelMannulAll",map, 
-     	       	boolean.class);
+            simpleRestTemplate.postForObject(
+                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/cancelMannulAll",map,
+                    boolean.class);
             return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
         }
         else {
-            List<ValidMessage> errorList = 
-            		restTemplate.postForList(
-             	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/checkIsNotSubmit",map, 
-             	       	ValidMessage.class);
+            List<ValidMessage> errorList =
+                    simpleRestTemplate.postForList(
+                            SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/checkIsNotSubmit",map,
+                            ValidMessage.class);
 //            		equityBusiInfoRegist001Service.checkIsNotSubmit(map);
             if (CollectionUtils.isNotEmpty(errorList)) {
                 AjaxResult webResult = new AjaxResult();
@@ -289,16 +289,16 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
                 webResult.setData(errorList.get(0).getMessage());
                 return webResult;
             }
-            restTemplate.postForObject(
-     	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/cancelMannul",map, 
-     	       	boolean.class);
+            simpleRestTemplate.postForObject(
+                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/cancelMannul",map,
+                    boolean.class);
         }
 
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
     }
 
     public void executeBatch(){
-    	sysBatchStart001Service.executeBatch();
+        sysBatchStart001Service.executeBatch();
     }
     /**
      * 导入数据文件之前检查数据
@@ -311,7 +311,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
     public AjaxResult checkConfirmMsgForAllManual(String fileName) {
         AjaxResult ajaxResult = new AjaxResult();
         if (!equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(
-            BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
+                BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
             ajaxResult.setMessage(this.getMessage("REPORT_MANUAL_0008"), MessageType.错误消息);
         }
 
@@ -329,7 +329,7 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
     public AjaxResult checkConfirmMsgForAllCheck(String fileName) {
         AjaxResult ajaxResult = new AjaxResult();
         if (!equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(
-            BatchBeanName.投资者明细信息数据检查批处理.getTaskId())) {
+                BatchBeanName.投资者明细信息数据检查批处理.getTaskId())) {
             ajaxResult.setMessage(this.getMessage("REPORT_MANUAL_0014"), MessageType.错误消息);
         }
 
@@ -365,39 +365,91 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
         return dataNum;
 
     }
-    
+
     /**
      * 启动批处理导出
      * @param param
      */
-	public AjaxResult batchExport(Map<String, Object> param) {
-		AjaxResult ajaxResult = new AjaxResult();
-		// 是否未执行或正在执行中
-		if (!equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(
-            BatchBeanName.投资者明细信息登记导出.getTaskId())) {
+    public AjaxResult batchExport(Map<String, Object> param) {
+        AjaxResult ajaxResult = new AjaxResult();
+        // 是否未执行或正在执行中
+        if (!equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(
+                BatchBeanName.投资者明细信息登记导出.getTaskId())) {
             ajaxResult.setMessage("投资者明细信息登记导出批处理正在执行中或待执行！", MessageType.错误消息);
             return ajaxResult;
         }
-		ChbSubinfoBatchLog log = new ChbSubinfoBatchLog();
-		log.setBatchExeId(IDGenerator.generate());
-		log.setTaskId(BatchBeanName.投资者明细信息登记导出.getTaskId());
-		log.setBusiConfirmDate(param.get("busiConfirmDate")==null?"":param.get("busiConfirmDate").toString());
-		log.setOperator(LoginUserUtil.getUserName());
-		log.setFileType(DictCodeListExt3.报送文件类别_投资者明细信息登记.getValue());
-		log.setDealStatus(DictCodeListExt3.报送处理状态_未处理.getValue());
-		log.setGenCondition(param.get("key")==null?"":param.get("key").toString());
-		log.setCreateUser(LoginUserUtil.getUserName());
-		log.setCreateTime(new Date());
-		log.setUpdateUser(LoginUserUtil.getUserName());
-		log.setUpdateTime(new Date());
-		// 日志存表
-		restTemplate.postForObject(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/insert", log,
-				ChbSubinfoBatchLog.class);
-		// 启动批处理
-		sysBatchStart001Service.executeBatch();
-		// 批处理启动成功，可在批处理监控页面查看进度
+        ChbSubinfoBatchLog log = new ChbSubinfoBatchLog();
+        log.setBatchExeId(IDGenerator.generate());
+        log.setTaskId(BatchBeanName.投资者明细信息登记导出.getTaskId());
+        log.setBusiConfirmDate(param.get("busiConfirmDate")==null?"":param.get("busiConfirmDate").toString());
+        log.setOperator(LoginUserUtil.getUserName());
+        log.setFileType(DictCodeListExt3.报送文件类别_投资者明细信息登记.getValue());
+        log.setDealStatus(DictCodeListExt3.报送处理状态_未处理.getValue());
+        log.setGenCondition(param.get("key")==null?"":param.get("key").toString());
+        log.setCreateUser(LoginUserUtil.getUserName());
+        log.setCreateTime(new Date());
+        log.setUpdateUser(LoginUserUtil.getUserName());
+        log.setUpdateTime(new Date());
+        // 日志存表
+        simpleRestTemplate.postForObject(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/insert", log,
+                ChbSubinfoBatchLog.class);
+        // 启动批处理
+        sysBatchStart001Service.executeBatch();
+        // 批处理启动成功，可在批处理监控页面查看进度
 //		return new AjaxResult("导出excel文件批处理启动成功，可在批处理监控页面查看进度");
-		ajaxResult.setData(true);
-		return ajaxResult;
-	}
+        ajaxResult.setData(true);
+        return ajaxResult;
+    }
+    //add zhangjinyang 2020-12-21
+    /**
+     * 启动批处理导出
+     * @param param
+     */
+    public AjaxResult batchExportAndDoManual(Map<String, Object> param) {
+        AjaxResult ajaxResult = new AjaxResult();
+        // 是否未执行或正在执行中
+        if (!equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(
+                BatchBeanName.投资者明细信息登记导出.getTaskId())) {
+            ajaxResult.setMessage("投资者明细信息登记导出批处理正在执行中或待执行！", MessageType.错误消息);
+            return ajaxResult;
+        }
+        else if (!equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(
+                BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
+            ajaxResult.setMessage("投资者明细信息手工批处理正在执行中或待执行！", MessageType.错误消息);
+            return ajaxResult;
+        }
+        ChbSubinfoBatchLog log = new ChbSubinfoBatchLog();
+        log.setBatchExeId(IDGenerator.generate());
+        log.setTaskId(BatchBeanName.投资者明细信息登记导出.getTaskId());
+        log.setBusiConfirmDate(param.get("busiConfirmDate")==null?"":param.get("busiConfirmDate").toString());
+        log.setOperator(LoginUserUtil.getUserName());
+        log.setFileType(DictCodeListExt3.报送文件类别_投资者明细信息登记.getValue());
+        log.setDealStatus(DictCodeListExt3.报送处理状态_未处理.getValue());
+        log.setGenCondition(param.get("key")==null?"":param.get("key").toString());
+        log.setCreateUser(LoginUserUtil.getUserName());
+        log.setCreateTime(new Date());
+        log.setUpdateUser(LoginUserUtil.getUserName());
+        log.setUpdateTime(new Date());
+        // 日志存表
+        simpleRestTemplate.postForObject(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/insert", log,
+                ChbSubinfoBatchLog.class);
+        //手工处理相关
+        ChbBatchPara record = new ChbBatchPara();
+        record.setTaskId(BatchBeanName.投资者明细信息登记手工处理.getTaskId());
+        record.setParaId(IDGenerator.generate());
+        if (param.get("key") != null) {
+            record.setParas(param.get("key").toString());
+//             chbBatchParaMapper.insert(record);
+            simpleRestTemplate.postForObject(
+                    SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/insert", record,
+                    ChbBatchPara.class);
+        }
+
+        // 启动批处理
+        sysBatchStart001Service.executeBatch();
+        // 批处理启动成功，可在批处理监控页面查看进度
+//		return new AjaxResult("导出excel文件批处理启动成功，可在批处理监控页面查看进度");
+        ajaxResult.setData(true);
+        return ajaxResult;
+    }
 }

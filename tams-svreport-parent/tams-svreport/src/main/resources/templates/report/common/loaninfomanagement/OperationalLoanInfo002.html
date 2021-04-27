@@ -12,7 +12,8 @@
 		<input type="text" name="assetUuid" data-th-value='${assetUuid}' hidden>
 		<div class="layui-form-item">
 			<div class="layui-inline layui-col-md6">
-				<label class="layui-form-label form-label-wrap">资产代码</label>
+				<label class="layui-form-label form-label-wrap"
+					   data-th-text="#{OperationalLoanInfo002.assetCode}">资产代码</label>
 				<div class="layui-input-inline input-inline">
 					<select id="assetCode" name="assetCode" class="input-select" placeholder="请选择"
 							data-th-data-url='@{/svreport/loaninfomanagement/OperationalLoanInfo002/queryPbcAssetCode}'
@@ -22,7 +23,8 @@
 				</div>
 			</div>
 			<div class="layui-inline layui-col-md6">
-				<label class="layui-form-label form-label-wrap">资产分类</label>
+				<label class="layui-form-label form-label-wrap"
+					   data-th-text="#{OperationalLoanInfo002.assetType}">资产类型</label>
 				<div class="layui-input-inline input-inline">
 					<select id="assetType" name="assetType"
 							class="layui-input form-input input-select"
@@ -36,7 +38,8 @@
 		<div id="syqDiv" style="display:none">
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">基础资产投向分类</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.assetsInvest}">基础资产投向分类</label>
 					<div class="layui-input-inline input-inline">
 						<select id="assetsInvest" name="assetsInvest"
 								class="layui-input form-input input-select"
@@ -47,7 +50,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">各比例</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.eachProportion}">各比例</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="eachProportion" id="eachProportion"
 							   class="layui-input form-input"
@@ -60,7 +64,8 @@
 		<div id="loannDiv" style="display:none">
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款种类</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loansType}">贷款种类</label>
 					<div class="layui-input-inline input-inline">
 						<select id="loansType" name="loansType"
 								class="layui-input form-input input-select"
@@ -71,7 +76,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款转让方机构代码</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanTransferorId}">贷款转让方机构代码</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="loanTransferorId" id="loanTransferorId"
 							   class="layui-input form-input"
@@ -82,7 +88,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款转让方机构名称</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanTransferorName}">贷款转让方机构名称</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="loanTransferorName" id="loanTransferorName"
 							   class="layui-input form-input"
@@ -91,7 +98,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款合同原始发放机构代码</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanContractOrgId}">贷款合同原始发放机构代码</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="loanContractOrgId" id="loanContractOrgId"
 							   class="layui-input form-input"
@@ -102,7 +110,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款合同原始发放机构名称</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanContractOrgName}">贷款合同原始发放机构名称</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="loanContractOrgName" id="loanContractOrgName"
 							   class="layui-input form-input"
@@ -111,7 +120,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款合同原始发放机构所在地(省)</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanContractOrgProvince}">贷款合同原始发放机构所在地(省)</label>
 					<div class="layui-input-inline input-inline">
 						<select name="loanContractOrgProvince" id="loanContractOrgProvince"
 								class="layui-input form-input input-select"
@@ -125,7 +135,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款合同原始发放机构所在地(市)</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanContractOrgCity}">贷款合同原始发放机构所在地(市)</label>
 					<div class="layui-input-inline input-inline">
 						<select name="loanContractOrgCity" id="loanContractOrgCity"
 								class="layui-input form-input input-select"
@@ -137,7 +148,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款合同原始发放机构所在地(县)</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanContractOrgCounty}">贷款合同原始发放机构所在地(县)</label>
 					<div class="layui-input-inline input-inline">
 						<select id="loanContractOrgCounty" name="loanContractOrgCounty"
 								class="layui-input form-input input-select"
@@ -151,7 +163,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">借款人类型</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.borrowerType}">借款人类型</label>
 					<div class="layui-input-inline input-inline">
 						<select name="borrowerType" id="borrowerType"
 								class="layui-input form-input input-select"
@@ -162,7 +175,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">行业信息</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.industryInfo}">行业信息</label>
 					<div class="layui-input-inline input-inline">
 						<select name="industryInfo" id="industryInfo"
 								class="layui-input form-input input-select"
@@ -175,7 +189,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">借款人国别</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.borrowerNationality}">借款人国别</label>
 					<div class="layui-input-inline input-inline">
 						<select name="borrowerNationality" id="borrowerNationality"
 								class="layui-input form-input input-select"
@@ -186,7 +201,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">借款人地区(省)</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.borrowerProvince}">借款人地区(省)</label>
 					<div class="layui-input-inline input-inline">
 						<select name="borrowerProvince" id="borrowerProvince"
 								class="layui-input form-input input-select"
@@ -200,7 +216,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">借款人地区(市)</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.borrowerCity}">借款人地区(市)</label>
 					<div class="layui-input-inline input-inline">
 						<select name="borrowerCity" id="borrowerCity"
 								class="layui-input form-input input-select"
@@ -212,7 +229,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">借款人地区(县)</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.borrowerCounty}">借款人地区(县)</label>
 					<div class="layui-input-inline input-inline">
 						<select name="borrowerCounty" id="borrowerCounty"
 								class="layui-input form-input input-select"
@@ -226,7 +244,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">借款人代码</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.borrowerId}">借款人代码</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="borrowerId" id="borrowerId"
 							   class="layui-input form-input"
@@ -235,7 +254,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">企业出资人经济成分（一级）</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.enterpriseInvestorTypeFirst}">企业出资人经济成分（一级）</label>
 					<div class="layui-input-inline input-inline">
 						<select name="enterpriseInvestorTypeFirst" id="enterpriseInvestorTypeFirst"
 								class="layui-input form-input input-select"
@@ -249,7 +269,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">企业出资人经济成分（二级）</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.enterpriseInvestorTypeSec}">企业出资人经济成分（二级）</label>
 					<div class="layui-input-inline input-inline">
 						<select name="enterpriseInvestorTypeSec" id="enterpriseInvestorTypeSec"
 								class="layui-input form-input input-select"
@@ -261,7 +282,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">企业出资人经济成分（三级）</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.enterpriseInvestorTypeThird}">企业出资人经济成分（三级）</label>
 					<div class="layui-input-inline input-inline">
 						<select name="enterpriseInvestorTypeThird" id="enterpriseInvestorTypeThird"
 								class="layui-input form-input input-select"
@@ -275,7 +297,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">企业规模</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.enterpriseScale}">企业规模</label>
 					<div class="layui-input-inline input-inline">
 						<select name="enterpriseScale" id="enterpriseScale"
 								class="layui-input form-input input-select"
@@ -286,7 +309,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款借据编码</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanBasisId}">贷款借据编码</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="loanBasisId" id="loanBasisId"
 							   class="layui-input form-input"
@@ -297,7 +321,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款产品类别</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanPrdType}">贷款产品类别</label>
 					<div class="layui-input-inline input-inline">
 						<select name="loanPrdType" id="loanPrdType"
 								class="layui-input form-input input-select"
@@ -308,7 +333,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款实际投向</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanActualInvest}">贷款实际投向</label>
 					<div class="layui-input-inline input-inline">
 						<select name="loanActualInvest" id="loanActualInvest"
 								class="layui-input form-input input-select"
@@ -321,7 +347,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款发放日期</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanVdate}">贷款发放日期</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="loanVdate" id="loanVdate"
 							   class="layui-input form-input input-dateSelect"
@@ -329,7 +356,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款到期日期</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanMdate}">贷款到期日期</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="loanMdate" id="loanMdate"
 							   class="layui-input form-input input-dateSelect"
@@ -340,7 +368,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款展期到期日期</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanExtensionDueDate}">贷款展期到期日期</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="loanExtensionDueDate" id="loanExtensionDueDate"
 							   class="layui-input form-input input-dateSelect"
@@ -348,7 +377,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">利率是否固定</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.rateFixed}">利率是否固定</label>
 					<div class="layui-input-inline input-inline">
 						<select name="rateFixed" id="rateFixed"
 								class="layui-input form-input input-select"
@@ -361,7 +391,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">利率水平(%)</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.rateLevel}">利率水平(%)</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="rateLevel" id="rateLevel"
 							   class="layui-input form-input text-number"
@@ -370,7 +401,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款担保方式</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanGuaranteeMode}">贷款担保方式</label>
 					<div class="layui-input-inline input-inline">
 						<select name="loanGuaranteeMode" id="loanGuaranteeMode"
 								class="layui-input form-input input-select"
@@ -383,7 +415,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款质量</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanQuality}">贷款质量</label>
 					<div class="layui-input-inline input-inline">
 						<select name="loanQuality" id="loanQuality"
 								class="layui-input form-input input-select"
@@ -394,7 +427,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款状态</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanState}">贷款状态</label>
 					<div class="layui-input-inline input-inline">
 						<select name="loanState" id="loanState"
 								class="layui-input form-input input-select"
@@ -407,7 +441,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">贷款转让折扣率(%)</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.loanTransferorRate}">贷款转让折扣率(%)</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="loanTransferorRate" id="loanTransferorRate"
 							   class="layui-input form-input text-number"
@@ -416,7 +451,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">原始合同币种代码</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.origCcy}">原始合同币种代码</label>
 					<div class="layui-input-inline input-inline">
 						<select name="origCcy" id="origCcy"
 								class="layui-input form-input input-select"
@@ -429,7 +465,8 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">原始合同金额</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.origContractAmount}">原始合同金额</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="origContractAmount" id="origContractAmount"
 							   class="layui-input form-input text-number"
@@ -438,7 +475,8 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-label-wrap">原始合同金额折人民币</label>
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{OperationalLoanInfo002.origContractAmountCny}">原始合同金额折人民币</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" name="origContractAmountCny" id="origContractAmountCny"
 							   class="layui-input form-input text-number"

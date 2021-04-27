@@ -1,12 +1,12 @@
 package com.joyintech.tams.report.common.dao;
 
-import com.joyintech.tams.common.base.entity.BaseInformationDto;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
+import com.joyintech.tams.common.base.entity.BaseInformationDto;
 
 
 /**
@@ -119,13 +119,6 @@ public interface BaseInformationMapper {
 	 * @return 时间类型字段名集合
 	 */
 	List<String> queryTimeColumnList(@Param("tableId") String tableId);
-
-	/**
-	 * 根据表名获取number
-	 * @param tableId 表名
-	 * @return 时间类型字段名集合
-	 */
-	List<String> queryNumberColumnList(@Param("tableId") String tableId);
 	
 	/**
 	 * 根据表名获取主键集合

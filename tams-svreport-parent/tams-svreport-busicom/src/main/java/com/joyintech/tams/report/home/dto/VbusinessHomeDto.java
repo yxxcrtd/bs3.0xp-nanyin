@@ -5,33 +5,51 @@ import java.util.List;
 public class VbusinessHomeDto {
 
 	private String reportCode;
-	
+
 	private List<HomeCellDto> cells;
-	
+
 	/**
 	 * 产品登记编码
 	 */
 	private int prodRegistnum;
-	
+
 	/**
 	 * 识别标识合并
 	 */
 	private int mergenum;
-	
+
 	/**
 	 * 接口文件总数
 	 */
 	private int accessFiletotal;
-	
+
 	/**
 	 * 数据检查总数
 	 */
 	private int checkDatatotal;
-	
+
 	/**
 	 * 数据维护总数
 	 */
 	private int processedDatatotal;
+
+	/**
+	 * 排序no
+	 * @return
+	 */
+	private  int  orderNo;
+
+
+
+
+
+	public int getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(int orderNo) {
+		this.orderNo = orderNo;
+	}
 
 	public int getProdRegistnum() {
 		return prodRegistnum;
@@ -88,5 +106,5 @@ public class VbusinessHomeDto {
 	public void setCells(List<HomeCellDto> cells) {
 		this.cells = cells;
 	}
-	
+
 }
