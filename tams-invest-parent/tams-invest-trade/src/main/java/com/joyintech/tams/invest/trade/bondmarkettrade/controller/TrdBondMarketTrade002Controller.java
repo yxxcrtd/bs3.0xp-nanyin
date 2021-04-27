@@ -193,4 +193,28 @@ public class TrdBondMarketTrade002Controller extends BaseController {
         }
         return ar;
     }
+
+    /**
+     * 提交时自动加券
+     *
+     * @param dto 画面输入参数
+     * @return 加券结果
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("autoAddBond")
+    @ResponseBody
+    public AjaxResult autoAddBond(@RequestBody TrdBondMarketTradeDto dto) {
+        
+        AjaxResult res= new AjaxResult();
+        
+        //资产代码和上市代码不为空则去判断是否需要加券
+        if (StringUtil.isNotEmpty(dto.getFinprodId()) &&  StringUtil.isNotEmpty(dto.getAppearMarketId())){
+            trdBondMarketTrade002Service.autoAddBond(dto);
+        }else{
+            return res;    
+        }
+        return res;
+    }
+    
 }

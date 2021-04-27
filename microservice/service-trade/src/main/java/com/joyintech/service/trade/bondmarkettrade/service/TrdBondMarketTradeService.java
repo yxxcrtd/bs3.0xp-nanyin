@@ -282,6 +282,7 @@ public class TrdBondMarketTradeService extends BaseService {
     public void autoAddBond(TrdBondMarketTradeDto dto) {
         BaseFinProductBaseInfoDto baseFinProductBaseInfoDto = new BaseFinProductBaseInfoDto();
 
+        //加券债券的资产代码
         String newFinprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + dto.getAppearMarketId();
 
         FinProduct finProduct1 = finProductMapper.selectByPrimaryKey(newFinprodId);
