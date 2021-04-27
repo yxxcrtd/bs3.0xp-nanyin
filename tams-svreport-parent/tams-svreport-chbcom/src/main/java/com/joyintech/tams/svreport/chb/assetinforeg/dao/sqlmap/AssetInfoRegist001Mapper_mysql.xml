@@ -4491,11 +4491,11 @@
         FINANCIAL_COMISSUE
       from CHB_ASSET_INFO_SUB
       where 1 =1
-      <if test="registList !=null and registList.size()>0">
-         <foreach collection="registList" item="regist" open="and ASSET_CODE IN (" separator=","  close=")">
-           #{regist.assetCode,jdbcType=VARCHAR}
-         </foreach>
-      </if>
+		<if test="registList !=null and registList.size()>0">
+			<foreach collection="registList" item="regist" open="and ((" separator=") OR ("  close="))">
+				ASSET_CODE = #{regist.assetCode,jdbcType=VARCHAR} and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
+			</foreach>
+		</if>
       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
     </insert>
     <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
