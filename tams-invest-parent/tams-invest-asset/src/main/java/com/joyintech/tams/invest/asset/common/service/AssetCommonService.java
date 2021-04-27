@@ -396,7 +396,8 @@ public class AssetCommonService extends BaseService{
 
         // 一体化对应etliu 现金流支付规则表，支付频率没存值，可能有问题
         if (StringUtil.isBlank(finCashPayRule.getPayCycle())) {
-			finCashPayRule.setPayCycle(BussinessConstant.DEFAULT_PAY_CYCLE);
+            //modify by jiangpeng on 20210426 TISHKBS-2051 CLONE - 贴现债数据错误
+			finCashPayRule.setPayCycle(BussinessDictCodeList.频率_到期一次.getValue());
 		}
         if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                 &&(StringUtil.equals(dto.getCouponSpecies(), DictCodeList.息票品种_零息.getValue())
