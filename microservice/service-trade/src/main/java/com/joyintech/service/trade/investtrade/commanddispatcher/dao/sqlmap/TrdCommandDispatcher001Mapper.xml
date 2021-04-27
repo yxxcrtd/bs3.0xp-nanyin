@@ -8,6 +8,9 @@
 		resultType="com.joyintech.service.trade.investtrade.commanddispatcher.dto.TrdCommandDispatcher001Dto">
 		SELECT
 			ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
+			<!-- add by etliu 20210427 交易所协议回购相关代码合并 start -->
+			ETR_ENTRUST.ENTRUST_TYPE entrustType,
+			<!-- add by etliu 20210427 交易所协议回购相关代码合并 end -->
 			ETR_ENTRUST.ENTRUST_ID entrustId,
 			ETR_ENTRUST.INV_MANAGER_ID invManagerId,
 			ETR_ENTRUST.PORTFOLIO_ID portfolioId,
@@ -195,6 +198,9 @@
 		union all
 		SELECT
 		ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
+		<!-- add by etliu 20210427 交易所协议回购相关代码合并 start -->
+		ETR_ENTRUST.ENTRUST_TYPE entrustType,
+		<!-- add by etliu 20210427 交易所协议回购相关代码合并 end -->
 		ETR_ENTRUST.ENTRUST_ID entrustId,
 		ETR_ENTRUST.INV_MANAGER_ID invManagerId,
 		ETR_ENTRUST.PORTFOLIO_ID portfolioId,

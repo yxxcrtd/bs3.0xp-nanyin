@@ -180,6 +180,7 @@ $(function(){
                     || entrustType == ENTRUST_BUSS_TYPE_20 || entrustType == ENTRUST_BUSS_TYPE_19
                     || entrustType == ENTRUST_BUSS_TYPE_18 || entrustType == ENTRUST_BUSS_TYPE_17) {
                     pagePath = "invest/entrust/etragrereptrade/EtrAgreRepTrade001/init";
+					label = "EtrAgreRepTrade001.detail";
                     Joyin.dialog(JoyinUtil.getLabel(label), basePath + pagePath,
                         "95%", "90%", {
                             pageModel: PAGE_MODEL_REFERENCE,

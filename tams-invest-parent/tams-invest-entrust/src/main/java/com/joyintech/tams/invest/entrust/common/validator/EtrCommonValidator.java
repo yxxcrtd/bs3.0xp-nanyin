@@ -176,7 +176,14 @@ public interface EtrCommonValidator extends BeanValidator {
                 Object vdateObject = ReflectionUtils.getField(vdate, value);
                 if (StringUtil.isNotEmpty(vdateObject) ) {
                 	Date sysDate = DateUtil.platDateFromCache();
-                	Date  vd=(Date)vdateObject;
+                    Date  vd;
+                    if(vdateObject instanceof String) {
+                        vd = DateUtil.parse((String) vdateObject);
+                    }
+                    else {
+                        vd=(Date)vdateObject;
+                    }
+
                 	if(DateUtil.compareDate(DateUtil.format(vd), DateUtil.format(sysDate))<0){
                 		validMessageList.add(new ValidMessage("vdate", "委托开始日不得小于平台日"));
                 	}

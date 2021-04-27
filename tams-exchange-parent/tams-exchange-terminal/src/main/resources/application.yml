@@ -146,16 +146,16 @@ log:
 spring:
   profiles: joyin-210
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
-    username: hgcs01
-    password: hgcs01
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: tams30
+    password: tams30
     maxTotal: 50
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
-    username: hgcs01
-    password: hgcs01
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: tams30
+    password: tams30
     maxTotal: 50
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 eureka:

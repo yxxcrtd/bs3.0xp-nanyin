@@ -45,11 +45,12 @@
                     || entrustType == ENTRUST_BUSS_TYPE_20 || entrustType == ENTRUST_BUSS_TYPE_19
                     || entrustType == ENTRUST_BUSS_TYPE_18 || entrustType == ENTRUST_BUSS_TYPE_17) {
                     pagePath = "invest/entrust/etragrereptrade/EtrAgreRepTrade001/init";
-                    Joyin.dialog(JoyinUtil.getLabel('EtrExchangeTrade001.detail'), basePath + pagePath,
+                    Joyin.dialog(JoyinUtil.getLabel('EtrAgreRepTrade001.detail'), basePath + pagePath,
                         "95%", "90%", {
                             pageModel: PAGE_MODEL_REFERENCE,
                             entrustId: data.entrustId,
                         });//交易所指令详情
+                    return;
                 }
             	//债券申购进可转债页面
             	else if(data.assetType == F01 && data.ps == PS_T04 ){
