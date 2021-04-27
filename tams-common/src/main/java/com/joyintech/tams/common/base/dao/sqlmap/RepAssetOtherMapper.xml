@@ -15,26 +15,31 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="REP_INSTIT_SIZE" property="repInstitSize" jdbcType="VARCHAR" />
         <result column="REP_ASSIGNEE" property="repAssignee" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
+        <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
+        <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        REP_FINPROD_ID REP_FINPROD_ID, REP_PRIVATEFUND_FLAG REP_PRIVATEFUND_FLAG, REP_PPPFLAG REP_PPPFLAG,
-        REP_SMALLCREDIT REP_SMALLCREDIT, REP_BONDTOSTOCK_FLAG REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG REP_PRIVATEPRD_FLAG,
-        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
-        UPDATE_TIME UPDATE_TIME, REP_INSTIT_SIZE REP_INSTIT_SIZE, REP_ASSIGNEE REP_ASSIGNEE,BANK_SEC_KZZQ BANK_SEC_KZZQ,
-        BANK_SEC_ZXZQ BANK_SEC_ZXZQ,ISUNLISTED ISUNLISTED,IS_BZHPJ IS_BZHPJ
+        REP_FINPROD_ID REP_FINPROD_ID, REP_PRIVATEFUND_FLAG REP_PRIVATEFUND_FLAG, REP_PPPFLAG REP_PPPFLAG, 
+        REP_SMALLCREDIT REP_SMALLCREDIT, REP_BONDTOSTOCK_FLAG REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG REP_PRIVATEPRD_FLAG, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, REP_INSTIT_SIZE REP_INSTIT_SIZE, REP_ASSIGNEE REP_ASSIGNEE, 
+        BANK_SEC_KZZQ BANK_SEC_KZZQ, BANK_SEC_ZXZQ BANK_SEC_ZXZQ, ISUNLISTED ISUNLISTED, 
+        IS_BZHPJ IS_BZHPJ
     </sql>
     <sql id="Sql_All_Data" >
-        select
+        select 
         <include refid="com.joyintech.tams.common.base.dao.RepAssetOtherMapper.Base_Column_List" />
         from REP_ASSET_OTHER
     </sql>
     <sql id="Sql_All_Effective_Data" >
-        select
+        select 
         <include refid="com.joyintech.tams.common.base.dao.RepAssetOtherMapper.Base_Column_List" />
         from REP_ASSET_OTHER
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-        select
+        select 
         <include refid="com.joyintech.tams.common.base.dao.RepAssetOtherMapper.Base_Column_List" />
         from REP_ASSET_OTHER
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
@@ -44,19 +49,20 @@
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
-        insert into REP_ASSET_OTHER (REP_FINPROD_ID, REP_PRIVATEFUND_FLAG,
-            REP_PPPFLAG, REP_SMALLCREDIT, REP_BONDTOSTOCK_FLAG,
-            REP_PRIVATEPRD_FLAG, IS_BZHPJ,ISUNLISTED,BANK_SEC_KZZQ, BANK_SEC_ZXZQ,           
-            CREATE_USER, CREATE_DEPT,
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-            REP_INSTIT_SIZE, REP_ASSIGNEE)
-        values (#{repFinprodId,jdbcType=VARCHAR}, #{repPrivatefundFlag,jdbcType=VARCHAR},
-            #{repPppflag,jdbcType=VARCHAR}, #{repSmallcredit,jdbcType=VARCHAR}, #{repBondtostockFlag,jdbcType=VARCHAR},
-            #{repPrivateprdFlag,jdbcType=VARCHAR},#{isBzhpj,jdbcType=VARCHAR},#{isUnlisted,jdbcType=VARCHAR}, 
-            #{bankSecKzzq,jdbcType=VARCHAR}, #{bankSecZxzq,jdbcType=VARCHAR}, 
-            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
-            #{repInstitSize,jdbcType=VARCHAR}, #{repAssignee,jdbcType=VARCHAR})
+        insert into REP_ASSET_OTHER (REP_FINPROD_ID, REP_PRIVATEFUND_FLAG, 
+            REP_PPPFLAG, REP_SMALLCREDIT, REP_BONDTOSTOCK_FLAG, 
+            REP_PRIVATEPRD_FLAG, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            REP_INSTIT_SIZE, REP_ASSIGNEE, BANK_SEC_KZZQ, 
+            BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ
+            )
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repPrivatefundFlag,jdbcType=VARCHAR}, 
+            #{repPppflag,jdbcType=VARCHAR}, #{repSmallcredit,jdbcType=VARCHAR}, #{repBondtostockFlag,jdbcType=VARCHAR}, 
+            #{repPrivateprdFlag,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{repInstitSize,jdbcType=VARCHAR}, #{repAssignee,jdbcType=VARCHAR}, #{bankSecKzzq,jdbcType=VARCHAR}, 
+            #{bankSecZxzq,jdbcType=VARCHAR}, #{isunlisted,jdbcType=VARCHAR}, #{isBzhpj,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
         insert into REP_ASSET_OTHER
@@ -100,6 +106,18 @@
             <if test="repAssignee != null" >
                 REP_ASSIGNEE,
             </if>
+            <if test="bankSecKzzq != null" >
+                BANK_SEC_KZZQ,
+            </if>
+            <if test="bankSecZxzq != null" >
+                BANK_SEC_ZXZQ,
+            </if>
+            <if test="isunlisted != null" >
+                ISUNLISTED,
+            </if>
+            <if test="isBzhpj != null" >
+                IS_BZHPJ,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="repFinprodId != null" >
@@ -141,15 +159,29 @@
             <if test="repAssignee != null" >
                 #{repAssignee,jdbcType=VARCHAR},
             </if>
+            <if test="bankSecKzzq != null" >
+                #{bankSecKzzq,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecZxzq != null" >
+                #{bankSecZxzq,jdbcType=VARCHAR},
+            </if>
+            <if test="isunlisted != null" >
+                #{isunlisted,jdbcType=VARCHAR},
+            </if>
+            <if test="isBzhpj != null" >
+                #{isBzhpj,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
-        insert into REP_ASSET_OTHER(REP_FINPROD_ID, REP_PRIVATEFUND_FLAG, REP_PPPFLAG, REP_SMALLCREDIT,
-        REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG, CREATE_USER, CREATE_DEPT, CREATE_TIME,
-        UPDATE_USER, UPDATE_TIME, REP_INSTIT_SIZE, REP_ASSIGNEE)
-        select REP_FINPROD_ID, REP_PRIVATEFUND_FLAG, REP_PPPFLAG, REP_SMALLCREDIT,
-            REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG, CREATE_USER, CREATE_DEPT, CREATE_TIME,
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REP_INSTIT_SIZE, REP_ASSIGNEE
+        insert into REP_ASSET_OTHER(REP_FINPROD_ID, REP_PRIVATEFUND_FLAG, REP_PPPFLAG, REP_SMALLCREDIT, 
+        REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, REP_INSTIT_SIZE, REP_ASSIGNEE, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, 
+        ISUNLISTED, IS_BZHPJ)
+        select REP_FINPROD_ID, REP_PRIVATEFUND_FLAG, REP_PPPFLAG, REP_SMALLCREDIT, 
+            REP_BONDTOSTOCK_FLAG, REP_PRIVATEPRD_FLAG, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REP_INSTIT_SIZE, REP_ASSIGNEE, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, 
+            ISUNLISTED, IS_BZHPJ
              from REP_ASSET_OTHER
              where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </insert>
@@ -183,6 +215,18 @@
             <if test="repAssignee != null" >
                 REP_ASSIGNEE = #{repAssignee,jdbcType=VARCHAR},
             </if>
+            <if test="bankSecKzzq != null" >
+                BANK_SEC_KZZQ = #{bankSecKzzq,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecZxzq != null" >
+                BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
+            </if>
+            <if test="isunlisted != null" >
+                ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
+            </if>
+            <if test="isBzhpj != null" >
+                IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
+            </if>
         </set>
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </update>
@@ -196,7 +240,11 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             REP_INSTIT_SIZE = #{repInstitSize,jdbcType=VARCHAR},
-            REP_ASSIGNEE = #{repAssignee,jdbcType=VARCHAR}
+            REP_ASSIGNEE = #{repAssignee,jdbcType=VARCHAR},
+            BANK_SEC_KZZQ = #{bankSecKzzq,jdbcType=VARCHAR},
+            BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
+            ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
+            IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR}
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </update>
 </mapper>

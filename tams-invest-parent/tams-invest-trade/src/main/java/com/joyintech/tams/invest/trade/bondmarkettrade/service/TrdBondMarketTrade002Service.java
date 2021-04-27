@@ -267,11 +267,6 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 AllTradeCommonUtil.handleAfterTradeComplete(allTradeCommonInputDto);
             }
             
-            //债券如果没有加券，则自动加券
-            if(StringUtil.equals("false",entity.getIsAdded())){
-                restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/autoAddBond", entity,
-                        String.class);
-            }
         }else{
             this.doCompleteRevoke(entity);    
         }
@@ -521,6 +516,20 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
     public int selectDealNums(TrdBondMarketTradeDto dto) {
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/selectDealNums", dto,
                 Integer.class);
+    }
+
+    /**
+     * 提交时自动加券
+     *
+     * @param dto 画面输入参数
+     * @return 加券结果
+     * @see
+     * @since 1.0
+     */
+    public void autoAddBond(TrdBondMarketTradeDto dto) {
+        //债券如果没有加券，则自动加券
+        restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/autoAddBond", dto,
+                String.class);
     }
 }
 

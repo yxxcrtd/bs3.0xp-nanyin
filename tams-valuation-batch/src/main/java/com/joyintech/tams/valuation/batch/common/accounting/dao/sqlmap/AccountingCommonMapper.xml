@@ -289,7 +289,16 @@
 		WHERE GROUP_ID = #{groupId}
 		<if test="acctStandardId != null"> AND ACCT_STANDARD_ID = #{acctStandardId} </if>
 	</select>
-    
+	<!-- TISHKBS-1998 【估值核算-估值表】货币型产品估值表中的“本日收益-费后”统计的是当日应付利润发生额，但是并未将手工账的应付利润发生额统计进去 -->
+	<select id="getVouchAmt" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		select sum(detail.O_HAPPEN_AMT)
+		from TRD_VOUCH_DEAL deal
+				 left join TRD_VOUCH_DEAL_DETAIL detail on deal.TRADE_ID = detail.TRADE_ID
+		where deal.BOOKSET_ID = #{booksetId}
+		and detail.CD_FLAG = #{cdFlag}
+		and deal.BOOK_DATE = #{bookDate}
+		group by deal.BOOKSET_ID,deal.BOOK_DATE,detail.CD_FLAG
+	</select>
     <!-- 帐套资产负债查询 -->
     <select id="getValStatBokPosition" resultType="com.joyintech.tams.common.base.entity.BokStatBokPosition" 
     			parameterType="com.joyintech.tams.valuation.batch.common.base.entity.BokStatBokPositionDto">

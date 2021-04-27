@@ -399,11 +399,12 @@ public class RepProdDeclare extends BaseEntity {
     private String repManageMode;
     
     /**
-     * 是否合规新产品
+     * 新老产品标记
      */
     private String isFhxgcp;
+
     /**
-     * 是否养老理财产品
+     * 是否养老理财
      */
     private String isYllccp;
 
@@ -1625,7 +1626,7 @@ public class RepProdDeclare extends BaseEntity {
      */
     public void setRepFiduciaryDuty(String repFiduciaryDuty) {
         this.repFiduciaryDuty = repFiduciaryDuty == null ? null : repFiduciaryDuty.trim();
-    }
+    }    
 
 	public String getRepManageMode() {
 		return repManageMode;
@@ -1635,20 +1636,35 @@ public class RepProdDeclare extends BaseEntity {
 		this.repManageMode = repManageMode;
 	}
 
-	public String getIsFhxgcp() {
-		return isFhxgcp;
-	}
+    /**
+     * 取得 新老产品标记
+     * @return 新老产品标记
+     */
+    public String getIsFhxgcp() {
+        return isFhxgcp;
+    }
 
-	public void setIsFhxgcp(String isFhxgcp) {
-		 this.isFhxgcp = isFhxgcp == null ? null : isFhxgcp.trim();
-	}
+    /**
+     * 设置 新老产品标记
+     * @param isFhxgcp 新老产品标记
+     */
+    public void setIsFhxgcp(String isFhxgcp) {
+        this.isFhxgcp = isFhxgcp == null ? null : isFhxgcp.trim();
+    }
 
-	public String getIsYllccp() {
-		return isYllccp;
-	}
+    /**
+     * 取得 是否养老理财
+     * @return 是否养老理财
+     */
+    public String getIsYllccp() {
+        return isYllccp;
+    }
 
-	public void setIsYllccp(String isYllccp) {
-		this.isYllccp = isYllccp == null ? null : isYllccp.trim();
-	}
-    
+    /**
+     * 设置 是否养老理财
+     * @param isYllccp 是否养老理财
+     */
+    public void setIsYllccp(String isYllccp) {
+        this.isYllccp = isYllccp == null ? null : isYllccp.trim();
+    }
 }
