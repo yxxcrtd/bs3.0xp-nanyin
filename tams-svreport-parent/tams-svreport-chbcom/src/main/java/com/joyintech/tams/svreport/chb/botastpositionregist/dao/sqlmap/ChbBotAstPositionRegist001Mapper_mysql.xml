@@ -125,7 +125,8 @@
 				and upper(POS.PLAN_ASSET_ID) like CONCAT(CONCAT('%',upper(#{planAssetIdLike,jdbcType=VARCHAR})),'%')
 			</if>
 		</where>
-		) AS T　 order by posDate,planAssetId
+		  order by POS.POS_DATE,POS.PLAN_ASSET_ID
+		) AS T　
 	</select>
 
 

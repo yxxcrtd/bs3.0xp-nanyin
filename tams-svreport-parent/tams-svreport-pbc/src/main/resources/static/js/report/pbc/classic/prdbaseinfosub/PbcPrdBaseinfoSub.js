@@ -46,7 +46,7 @@ $(function(){
 				{ title: "产品代码", field: 'pbcProdIdShow',width:150,sortField:'pbcProdIdShow'},
 				{ title: "反馈产品代码", field: 'pbcCode',width:150,sortField:'pbcCode'},
 				{ title: "发起机构代码", field: 'issuePartyId',width:150,sortField:'issuePartyId'},
-				{ title: "发起机构名称", field: 'issuePartyName',width:150,sortField:'issuePartyName'},
+				{ title: "发起机构名称", field: 'issuePartyName',width:150,sortField:'issuePartyId'},
 				{ title: "产品种类", field: 'pbcProdType',width:150,sortField:'pbcProdType'},
 				{ title: "产品名称", field: 'prodName',width:150,sortField:'prodName'},
 				{ title: "产品品牌", field: 'prodBrand',width:150,sortField:'prodBrand'},
