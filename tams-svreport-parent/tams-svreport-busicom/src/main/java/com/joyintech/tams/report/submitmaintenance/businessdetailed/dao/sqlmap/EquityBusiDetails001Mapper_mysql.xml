@@ -89,7 +89,7 @@
             </foreach>
         </if>
         <if test="indentifyMark != null and indentifyMark != ''">
-            AND cequdet.INDENTIFY_MARK LIKE concat_ws(concat_ws('%',#{indentifyMark}),'%')
+            AND cequdet.INDENTIFY_MARK LIKE concat(concat('%',#{indentifyMark}),'%')
         </if>
         <!-- 业务种类 -->
         <if test="busiTypeList != null and busiTypeList.size() > 0">
