@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
@@ -545,8 +546,10 @@ public class TrdBondMarketTradeService extends BaseService {
             etrSecPositionFlowDto.setSeqno(IDGenerator.generate());
             etrSecListAll.add(etrSecPositionFlowDto);
         }
-        for (EtrSecPositionFlowDto etrSecPositionFlowDto :etrSecListAll){
-            etrCommonCashPositionDealService.dealCommandPosition(etrSecPositionFlowDto);
+        if (!etrSecListAll.isEmpty()){
+            EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+            etrPositionHoldDto.setPtlSecPositionFlows(etrSecListAll);
+            EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
         }
         
         if (entity!= null){
