@@ -83,6 +83,8 @@
         <result column="REP_IS_CASH_MANAGE" property="repIsCashManage" jdbcType="VARCHAR" />
         <result column="REP_INVEST_FEE_RATE" property="repInvestFeeRate" jdbcType="VARCHAR" />
         <result column="REP_FIDUCIARY_DUTY" property="repFiduciaryDuty" jdbcType="VARCHAR" />
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+        <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         REP_FINPROD_ID REP_FINPROD_ID, REP_FINPROD_NAME REP_FINPROD_NAME, REP_FINPROD_REG_ID REP_FINPROD_REG_ID, 
@@ -97,7 +99,6 @@
         REP_PRICED_MODE REP_PRICED_MODE, REP_INV_ASSET_TYPE REP_INV_ASSET_TYPE, REP_CON_PRD_TRAGET REP_CON_PRD_TRAGET, 
         REP_CONT_MODE REP_CONT_MODE, REP_COOP_NAME REP_COOP_NAME, REP_INV_TYPE_RAT REP_INV_TYPE_RAT, 
         REP_IS_YIELD REP_IS_YIELD, REP_HIGH_YIELD REP_HIGH_YIELD, REP_LOW_YIELD REP_LOW_YIELD, 
-        IS_FHXGCP IS_FHXGCP,IS_YLLCCP IS_YLLCCP,
         REP_IS_YIELD_BASIS REP_IS_YIELD_BASIS, REP_RISK_TYPE REP_RISK_TYPE, REP_SALE_AREA REP_SALE_AREA, 
         REP_RAISE_CCY REP_RAISE_CCY, REP_CASH_PRIN_CCY REP_CASH_PRIN_CCY, REP_CASH_PROF_CCY REP_CASH_PROF_CCY, 
         REP_SALE_AMT_STR REP_SALE_AMT_STR, REP_RAISE_AMT_PLAN REP_RAISE_AMT_PLAN, REP_RAISE_PSTRDATE REP_RAISE_PSTRDATE, 
@@ -112,7 +113,8 @@
         EXC_FIN_SECTOR EXC_FIN_SECTOR, IS_SHORT_TERM IS_SHORT_TERM, SHORT_TERM SHORT_TERM, 
         IS_FREE_REDEM IS_FREE_REDEM, CUSTOMER_TYPE CUSTOMER_TYPE, REP_ISSUE_TYPE REP_ISSUE_TYPE, 
         REP_YIELD REP_YIELD, REP_INVEST_NATURE REP_INVEST_NATURE, REP_IS_CASH_MANAGE REP_IS_CASH_MANAGE, 
-        REP_INVEST_FEE_RATE REP_INVEST_FEE_RATE, REP_FIDUCIARY_DUTY REP_FIDUCIARY_DUTY
+        REP_INVEST_FEE_RATE REP_INVEST_FEE_RATE, REP_FIDUCIARY_DUTY REP_FIDUCIARY_DUTY, IS_FHXGCP IS_FHXGCP, 
+        IS_YLLCCP IS_YLLCCP
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -161,8 +163,8 @@
             UPDATE_TIME, EXC_FIN_SECTOR, IS_SHORT_TERM, 
             SHORT_TERM, IS_FREE_REDEM, CUSTOMER_TYPE, 
             REP_ISSUE_TYPE, REP_YIELD, REP_INVEST_NATURE, 
-            REP_IS_CASH_MANAGE, REP_INVEST_FEE_RATE, REP_FIDUCIARY_DUTY
-            )
+            REP_IS_CASH_MANAGE, REP_INVEST_FEE_RATE, REP_FIDUCIARY_DUTY, 
+            IS_FHXGCP, IS_YLLCCP)
         values (#{repFinprodId,jdbcType=VARCHAR}, #{repFinprodName,jdbcType=VARCHAR}, #{repFinprodRegId,jdbcType=VARCHAR}, 
             #{repFinprodInsId,jdbcType=VARCHAR}, #{repFinprodBrand,jdbcType=VARCHAR}, #{repFinprodStage,jdbcType=DECIMAL}, 
             #{repIssuePartyId,jdbcType=VARCHAR}, #{repApproverId,jdbcType=VARCHAR}, #{repApproverName,jdbcType=VARCHAR}, 
@@ -189,8 +191,8 @@
             #{updateTime,jdbcType=TIMESTAMP}, #{excFinSector,jdbcType=VARCHAR}, #{isShortTerm,jdbcType=VARCHAR}, 
             #{shortTerm,jdbcType=DECIMAL}, #{isFreeRedem,jdbcType=VARCHAR}, #{customerType,jdbcType=VARCHAR}, 
             #{repIssueType,jdbcType=VARCHAR}, #{repYield,jdbcType=VARCHAR}, #{repInvestNature,jdbcType=VARCHAR}, 
-            #{repIsCashManage,jdbcType=VARCHAR}, #{repInvestFeeRate,jdbcType=VARCHAR}, #{repFiduciaryDuty,jdbcType=VARCHAR}
-            )
+            #{repIsCashManage,jdbcType=VARCHAR}, #{repInvestFeeRate,jdbcType=VARCHAR}, #{repFiduciaryDuty,jdbcType=VARCHAR}, 
+            #{isFhxgcp,jdbcType=VARCHAR}, #{isYllccp,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdDeclare" >
         insert into REP_PROD_DECLARE
@@ -713,8 +715,8 @@
         REP_CREDIT_TYPE, REP_CREDIT_MODE, REP_REMARK, REP_DECLARE_DATE, REP_SEND_STATUS, 
         REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
         EXC_FIN_SECTOR, IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CUSTOMER_TYPE, REP_ISSUE_TYPE, 
-        REP_YIELD, REP_INVEST_NATURE, REP_IS_CASH_MANAGE, REP_INVEST_FEE_RATE, REP_FIDUCIARY_DUTY
-        )
+        REP_YIELD, REP_INVEST_NATURE, REP_IS_CASH_MANAGE, REP_INVEST_FEE_RATE, REP_FIDUCIARY_DUTY, 
+        IS_FHXGCP, IS_YLLCCP)
         select REP_FINPROD_ID, REP_FINPROD_NAME, REP_FINPROD_REG_ID, 
             REP_FINPROD_INS_ID, REP_FINPROD_BRAND, REP_FINPROD_STAGE, REP_ISSUE_PARTY_ID, REP_APPROVER_ID, 
             REP_APPROVER_NAME, REP_DESIGNER_ID, REP_DESIGNER_NAME, REP_MANAGER_ID, REP_MANAGER_NAME, 
@@ -730,8 +732,8 @@
             REP_CREDIT_TYPE, REP_CREDIT_MODE, REP_REMARK, REP_DECLARE_DATE, REP_SEND_STATUS, 
             REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
             EXC_FIN_SECTOR, IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CUSTOMER_TYPE, REP_ISSUE_TYPE, 
-            REP_YIELD, REP_INVEST_NATURE, REP_IS_CASH_MANAGE, REP_INVEST_FEE_RATE, REP_FIDUCIARY_DUTY
-            
+            REP_YIELD, REP_INVEST_NATURE, REP_IS_CASH_MANAGE, REP_INVEST_FEE_RATE, REP_FIDUCIARY_DUTY, 
+            IS_FHXGCP, IS_YLLCCP
              from REP_PROD_DECLARE
              where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </insert>
@@ -969,10 +971,15 @@
             <if test="repFiduciaryDuty != null" >
                 REP_FIDUCIARY_DUTY = #{repFiduciaryDuty,jdbcType=VARCHAR},
             </if>
+            <if test="isFhxgcp != null" >
+                IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="isYllccp != null" >
+                IS_YLLCCP = #{isYllccp,jdbcType=VARCHAR},
+            </if>
         </set>
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </update>
-
     <update id="updateByRepFinprodInsId" parameterType="com.joyintech.tams.common.base.entity.RepProdDeclare" >
         update REP_PROD_DECLARE
         <set >
@@ -1217,7 +1224,6 @@
         where  REP_FINPROD_INS_ID = #{repFinprodInsId,jdbcType=VARCHAR}
 
     </update>
-
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdDeclare" >
         update REP_PROD_DECLARE
         set REP_FINPROD_NAME = #{repFinprodName,jdbcType=VARCHAR},
@@ -1296,7 +1302,9 @@
             REP_INVEST_NATURE = #{repInvestNature,jdbcType=VARCHAR},
             REP_IS_CASH_MANAGE = #{repIsCashManage,jdbcType=VARCHAR},
             REP_INVEST_FEE_RATE = #{repInvestFeeRate,jdbcType=VARCHAR},
-            REP_FIDUCIARY_DUTY = #{repFiduciaryDuty,jdbcType=VARCHAR}
+            REP_FIDUCIARY_DUTY = #{repFiduciaryDuty,jdbcType=VARCHAR},
+            IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+            IS_YLLCCP = #{isYllccp,jdbcType=VARCHAR}
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </update>
 </mapper>
