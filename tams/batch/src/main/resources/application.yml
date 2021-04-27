@@ -167,6 +167,7 @@ application:
       disclosureService: http://127.0.0.1:8080/tams/service
       valuationService: http://127.0.0.1:8080/tams/service
       chbService: http://127.0.0.1:8080/tams/service
+      chbreportService: http://127.0.0.1:8080/tams/service
       chb3Service: http://127.0.0.1:8080/tams/service
       svrcomService: http://127.0.0.1:8080/tams/service
       pbcService: http://127.0.0.1:8080/tams/service
@@ -255,6 +256,7 @@ application:
       disclosureService: http://127.0.0.1:8080/tams
       valuationService: http://127.0.0.1:8080/tams
       chbService: http://127.0.0.1:8080/tams
+      chbreportService: http://127.0.0.1:8080/tams/service
       chb3Service: http://127.0.0.1:8080/tams
       svrcomService: http://127.0.0.1:8080/tams
       pbcService: http://127.0.0.1:8080/tams

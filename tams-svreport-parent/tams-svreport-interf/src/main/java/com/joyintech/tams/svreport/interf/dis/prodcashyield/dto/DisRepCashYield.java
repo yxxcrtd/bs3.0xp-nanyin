@@ -7,12 +7,44 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class DisRepCashYield extends BaseEntity {
+
+
+
+
+    /**
+     * 导出类型
+     */
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * uuid主键
+     */
+    private String datauuid;
+
+    public String getDatauuid() {
+        return datauuid;
+    }
+
+    public void setDatauuid(String datauuid) {
+        this.datauuid = datauuid;
+    }
+
     /**
      * 产品代码
      */
     private String busiId;
+    private String busiIdName;
 
     /**
      * 现金流代码
@@ -33,6 +65,7 @@ public class DisRepCashYield extends BaseEntity {
      * 现金流二级类型
      */
     private String cashType2;
+    private String cashType2Name;
 
     /**
      * 启用日
@@ -59,6 +92,112 @@ public class DisRepCashYield extends BaseEntity {
 
      */
     private String adapterId;
+
+    /**
+     * 数据状态
+
+     */
+    private String status;
+    private String statusName;
+    /**
+     * 创建人
+
+     */
+    private String createUser;
+    /**
+     * 创建时间
+
+     */
+    private Date createTime;
+    /**
+     * 数据来源
+
+     */
+    private String dataSource;
+    private String dataSourceName;
+
+    public String getBusiIdName() {
+        return busiIdName;
+    }
+
+    public void setBusiIdName(String busiIdName) {
+        this.busiIdName = busiIdName;
+    }
+
+    public String getCashType2Name() {
+        return cashType2Name;
+    }
+
+    public void setCashType2Name(String cashType2Name) {
+        this.cashType2Name = cashType2Name;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public String getDataSourceName() {
+        return dataSourceName;
+    }
+
+    public void setDataSourceName(String dataSourceName) {
+        this.dataSourceName = dataSourceName;
+    }
+
+    /**
+     * 选择项
+     */
+    private List<DisRepCashYield> selectedItem;
+
+    public List<DisRepCashYield> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<DisRepCashYield> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    @Override
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    @Override
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Override
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     /**
      * 费率/收益率

@@ -1,64 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.system.prorate.dao.ProRateInfo001Mapper_mysql">
-	<select id="queryForPage" resultType="com.joyintech.tams.report.system.prorate.dto.ProRateInfo001Dto">
+	<select id="queryForPage" resultType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
 		SELECT
-		a. STATUS,
-		a.PROD_ID,
-		a.PROD_NAME,
-		a.START_DATE,
-		a.CASH_TYPE_2,
-		a.FEE_RATE,
+		a.STATUS,
+		a.BUSI_ID,
+		a.START_DATE as startDate,
+		a.CASH_TYPE2,
+		a.RATE,
 		a.CREATE_USER,
-		a.CREATE_TIME,
+		a.CREATE_TIME as createTime,
 		a.UPDATE_USER,
-		a.UPDATE_TIME,
-		a.DATA_SOURCE,
-		a.DATAUUID as DATAUUID
+		a.UPDATE_TIME as updateTime,
+		'' as datauuid,
+		a.SVR_DATA_SOURCES as dataSource
 		FROM
-		PRD_FEE_RATE_DATA a
+		REP_CASH_YIELD a
+		LEFT JOIN  chb_prd_baseinfo b
+		on a.BUSI_ID=b.PROD_ID
 		<where>
 			not EXISTS (
-			SELECT 1 from DIS_PRD_FEE_RATE_ERRORDATA b where b.PROD_ID=a.PROD_ID
-			and b.CASH_TYPE_2=a.CASH_TYPE_2
-			and b.START_DATE=a.START_DATE
-			and b.STATUS in('A','E')
+			SELECT 1 from REP_CASH_YIELD_ERRORDATA c where c.PROD_ID=a.BUSI_ID
+			and c.CASH_TYPE_2=a.CASH_TYPE2
+			and c.START_DATE=a.START_DATE
+			and c.STATUS in('A','E')
 			)
-			<if test="prodId != null and prodId != ''">
-				and a.PROD_ID in(#{prodId})
+			<if test="selectbusiId != null and selectbusiId.size() > 0">
+				<foreach collection="selectbusiId" item="busiId" open="AND a.BUSI_ID IN (" close=")" separator=",">
+					#{busiId,jdbcType=VARCHAR}
+				</foreach>
 			</if>
-			<if test="cashType2 != null and cashType2 != ''">
-				and a.CASH_TYPE_2 in(#{cashType2})
+			<if test="selectcashType2 != null and selectcashType2.size() > 0">
+				<foreach collection="selectcashType2" item="cashType2" open="AND a.CASH_TYPE2 IN (" close=")" separator=",">
+					#{cashType2,jdbcType=VARCHAR}
+				</foreach>
 			</if>
-			<if test="status != null and status != ''">
-				and a.STATUS in(#{status})
+			<if test="selectStatus != null and selectStatus.size() > 0">
+				<foreach collection="selectStatus" item="status" open="AND a.STATUS IN (" close=")" separator=",">
+					#{status,jdbcType=VARCHAR}
+				</foreach>
 			</if>
-
 		</where>
 		union all
 		SELECT
+		'A' as 数据状态,
 		c.PROD_ID,
-		c.PROD_NAME,
-		c.START_DATE,
+		c.START_DATE as startDate,
 		c.CASH_TYPE_2,
 		c.FEE_RATE,
 		c.CREATE_USER,
-		c.CREATE_TIME,
+		c.CREATE_TIME as createTime,
 		c.UPDATE_USER,
-		c.UPDATE_TIME,
-		c.DATAUUID
+		c.UPDATE_TIME as updateTime,
+		c.DATAUUID as datauuid,
+		'DB' as dataSource
 		FROM
-		dis_prd_fee_rate_errordata c
+		REP_CASH_YIELD_ERRORDATA c
+	    LEFT JOIN  chb_prd_baseinfo d
+		on c.PROD_ID=d.PROD_ID
 		<where>
 			c.STATUS in('A','E')
-			<if test="prodId != null and prodId != ''">
-				and c.PROD_ID in(#{prodId})
+			<if test="selectbusiId != null and selectbusiId.size() > 0">
+				<foreach collection="selectbusiId" item="busiId" open="AND c.PROD_ID IN (" close=")" separator=",">
+					#{busiId,jdbcType=VARCHAR}
+				</foreach>
 			</if>
-			<if test="cashType2 != null and cashType2 != ''">
-				and c.CASH_TYPE_2 in(#{cashType2})
+			<if test="selectcashType2 != null and selectcashType2.size() > 0">
+				<foreach collection="selectcashType2" item="cashType2" open="AND c.CASH_TYPE_2 IN (" close=")" separator=",">
+					#{cashType2,jdbcType=VARCHAR}
+				</foreach>
 			</if>
-			<if test="status != null and status != ''">
-				and c.STATUS in(#{status})
+			<if test='selectStatus != null and !selectStatus.equals("") and !selectStatus.contains("A") '>
+				and 1 = 2
 			</if>
 		</where>
 	</select>
@@ -81,29 +94,171 @@
 
 	<select id="selectPrdFeeData" resultType="java.lang.Integer" parameterType="java.util.List">
 			SELECT count(1) from (
-		SELECT 1 from PRD_FEE_RATE_DATA a
+		SELECT 1 from REP_CASH_YIELD a
 			where a.STATUS in('A','E')
 			and not EXISTS (
-			 SELECT 1 from 	DIS_PRD_FEE_RATE_ERRORDATA b
-					WHERE b.PROD_ID=a.PROD_ID
-						and b.CASH_TYPE_2=a.CASH_TYPE_2
+			 SELECT 1 from 	REP_CASH_YIELD_ERRORDATA b
+					WHERE b.PROD_ID=a.BUSI_ID
+						and b.CASH_TYPE_2=a.CASH_TYPE2
 					and b.START_DATE=a.START_DATE
 					and b.STATUS in('A','E')
-			)
-		<foreach collection="list" index="index" item="item" open="(" separator="or" close=")">
-			a.PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+			) and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			a.BUSI_ID = #{item.busiId,jdbcType=VARCHAR}
 			and a.START_DATE = #{item.startDate,jdbcType=DATE}
-			and a.CASH_TYPE_2 = #{item.cashType2,jdbcType=VARCHAR}
+			and a.CASH_TYPE2 = #{item.cashType2,jdbcType=VARCHAR}
 		</foreach>
+
 			union all
-			SELECT 1 from DIS_PRD_FEE_RATE_ERRORDATA c
+			SELECT 1 from rep_cash_yield_errordata c
 			where c.STATUS in('A','E')
-		<foreach collection="list" index="index" item="item" open="(" separator="or" close=")">
-			c.PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+		and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			c.PROD_ID = #{item.busiId,jdbcType=VARCHAR}
 			and c.START_DATE = #{item.startDate,jdbcType=DATE}
 			and c.CASH_TYPE_2 = #{item.cashType2,jdbcType=VARCHAR}
 		</foreach>
+
 		)tmp
 
 	</select>
+
+	<insert id="insertPrdFeeData" parameterType="java.util.List">
+		insert into
+		REP_CASH_YIELD
+		(STATUS,BUSI_ID,CASH_ID,CASH_NAME,START_DATE,CASH_TYPE2,RATE,CREATE_USER,CREATE_TIME,SVR_DATA_SOURCES,ADAPTER_ID)
+		values (
+		<foreach collection="dtoList" item="item" index="index" separator=",">
+			#{item.status,jdbcType=VARCHAR} ,
+			#{item.busiId,jdbcType=VARCHAR} ,
+			#{item.cashId,jdbcType=VARCHAR} ,
+			#{item.cashName,jdbcType=VARCHAR} ,
+			#{item.startDate,jdbcType=DATE} ,
+			#{item.cashType2,jdbcType=VARCHAR} ,
+			#{item.rate,jdbcType=DECIMAL} ,
+			#{item.createUser,jdbcType=VARCHAR} ,
+			#{item.createTime,jdbcType=DATE} ,
+			#{item.dataSource,jdbcType=VARCHAR},
+			#{item.adapterId,jdbcType=VARCHAR}
+		</foreach>
+		)
+	</insert>
+
+	<update id="updateDisRepCashYield" parameterType="java.util.List" >
+		UPDATE REP_CASH_YIELD
+		set
+		STATUS = 'D'
+		where
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			BUSI_ID = #{item.busiId,jdbcType=VARCHAR}
+			AND START_DATE = #{item.startDate,jdbcType=DATE}
+			AND CASH_TYPE2 = #{item.cashType2,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<delete id="deleteDisRepCashYieldErrorData" parameterType="java.util.List">
+		delete from REP_CASH_YIELD_ERRORDATA a
+		where 1=1
+		and a.DATAUUID
+		IN
+		<foreach collection="dtoList" item="item" open="(" separator=","  close=")">
+			#{item.datauuid,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	<select id="queryReportList" resultType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+		SELECT
+		'导出' as type,
+		a.BUSI_ID,
+		DATE_FORMAT(a.START_DATE, '%Y-%m-%d') AS startDate,
+		a.CASH_TYPE2,
+		a.RATE
+		FROM
+		REP_CASH_YIELD a
+	</select>
+
+	<select id="selectOneDate" resultType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+		SELECT
+		a.STATUS,
+		a.BUSI_ID,
+		DATE_FORMAT(a.START_DATE, '%Y-%m-%d') as startDate,
+		a.CASH_TYPE2 ,
+		a.RATE,
+		a.CREATE_USER,
+		DATE_FORMAT(a.CREATE_TIME, '%Y-%m-%d') as createTime,
+		a.UPDATE_USER,
+		DATE_FORMAT(a.UPDATE_TIME, '%Y-%m-%d') as updateTime,
+		a.SVR_DATA_SOURCES as dataSource,
+		DATE_FORMAT(a.START_DATE, '%Y-%m-%d') as 旧启用日期,
+		a.CASH_TYPE2 as 旧信披费用类型,
+		a.CASH_NAME,
+		a.CASH_ID,
+		a.ADAPTER_ID
+		FROM
+		REP_CASH_YIELD a
+		where
+			BUSI_ID = #{busiId,jdbcType=VARCHAR}
+			AND START_DATE = #{startDate,jdbcType=DATE}
+			AND CASH_TYPE2 = #{cashType2,jdbcType=VARCHAR}
+	</select>
+	<select id="selectdisPrdFeeRateErrordata" resultType="com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs">
+			SELECT
+			c. STATUS,
+			c.PROD_ID,
+			DATE_FORMAT(c.START_DATE, '%Y-%m-%d') AS startDate,
+			c.CASH_TYPE_2,
+			c.FEE_RATE,
+			c.CREATE_USER,
+			DATE_FORMAT(c.CREATE_TIME, '%Y-%m-%d') AS createTime,
+			c.UPDATE_USER,
+			DATE_FORMAT(c.UPDATE_TIME, '%Y-%m-%d') AS updateTime,
+			'DB' AS dataSource,
+			c.DATAUUID AS datauuid,
+			c.ORG_DATA,
+			c.ERR_MSG
+		FROM
+			REP_CASH_YIELD_ERRORDATA c
+		WHERE
+			c.DATAUUID =#{datauuid,jdbcType=DATE}
+	</select>
+	<insert id="insertOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
+		insert into REP_CASH_YIELD
+		(STATUS,BUSI_ID,CASH_ID,CASH_NAME,START_DATE,CASH_TYPE2,RATE,CREATE_USER,CREATE_TIME,SVR_DATA_SOURCES,ADAPTER_ID)
+		values (
+			#{status,jdbcType=VARCHAR} ,
+			#{busiId,jdbcType=VARCHAR} ,
+			#{cashId,jdbcType=VARCHAR} ,
+			#{cashName,jdbcType=VARCHAR} ,
+			#{startDate,jdbcType=DATE} ,
+			#{cashType2,jdbcType=VARCHAR} ,
+			#{rate,jdbcType=DECIMAL} ,
+			#{createUser,jdbcType=VARCHAR} ,
+			#{createTime,jdbcType=DATE} ,
+			#{dataSource,jdbcType=VARCHAR},
+			#{adapterId,jdbcType=VARCHAR}
+		)
+    </insert>
+	<update id="updateOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+		update REP_CASH_YIELD set STATUS = 'E',SVR_DATA_SOURCES='02',
+		RATE= #{rate,jdbcType=DECIMAL}
+		where
+			BUSI_ID = #{busiId,jdbcType=VARCHAR}
+			AND START_DATE = #{startDate,jdbcType=DATE}
+			AND CASH_TYPE2 = #{cashType2,jdbcType=VARCHAR}
+	</update>
+	<update id="deleteOne" >
+		UPDATE REP_CASH_YIELD
+		set
+		STATUS = 'D'
+		where
+			BUSI_ID = #{busiId,jdbcType=VARCHAR}
+			AND START_DATE = #{date,jdbcType=DATE}
+			AND CASH_TYPE2 = #{cashType2,jdbcType=VARCHAR}
+	</update>
+	<delete id="deleteErrorDataOne" >
+		delete from REP_CASH_YIELD_ERRORDATA a
+		where
+		PROD_ID= #{busiId,jdbcType=VARCHAR}
+		AND START_DATE = #{date,jdbcType=DATE}
+		AND CASH_TYPE_2 = #{cashType2,jdbcType=VARCHAR}
+	</delete>
 </mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.prdprofit.dao.PrdProfitQuery001Mapper">
+    <select id="selectAllData"
+            resultType="com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto">
+        select
+        baseinfo.prod_id prodId,
+        baseinfo.prod_name prodName,
+        substring(profit2.busi_date,1,7) reportDate,
+        profit2.busi_date as busiDate
+        from chb_prd_baseinfo baseinfo
+        inner join (
+        SELECT
+        distinct
+        real_prd_id, busi_date
+        FROM prd_profit profit
+        <where>
+            <if test="reportDate != null and reportDate != ''">
+                substring(busi_date,1,7) = #{reportDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ) profit2
+        on profit2.real_prd_id = baseinfo.prod_id
+        <where>
+            <if test="prodIdList != null and prodIdList.size() > 0">
+                <foreach collection="prodIdList" item="items" open="and baseinfo.prod_id in (" separator="," close=")">
+                    #{items,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPrdProfitList"
+                resultType="com.joyintech.tams.common.base.entity.PrdProfit">
+        select
+        profit.real_prd_id realPrdId,
+        profit.subject_id subjectId,
+        profit.subject_name subjectName,
+        profit.ccy ccy,
+        profit.current_amt currentAmt,
+        profit.current_year_accumu_amt currentYearAccumuAmt,
+        profit.busi_date busiDate
+        from prd_profit profit
+        <where>
+            <if test="reportDate != null and reportDate != ''">
+                substring(profit.busi_date,1,7) = #{reportDate,jdbcType=VARCHAR}
+            </if>
+            <if test="prodId != null and prodId != ''">
+                AND profit.real_prd_id = #{prodId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY profit.subject_id
+    </select>
+</mapper>

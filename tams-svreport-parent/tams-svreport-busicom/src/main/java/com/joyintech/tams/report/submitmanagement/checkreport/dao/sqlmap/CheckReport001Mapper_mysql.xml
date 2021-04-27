@@ -101,9 +101,8 @@
 		WARN_INFO,
 		IS_LOGIC_CHECK,
 		REF_SEQNO) VALUES
-		<foreach collection="list" item="dto" separator=",">
-			(
-			#{dto.checkSeqno,jdbcType=VARCHAR},
+		<foreach collection="list" item="dto"  separator=",">
+		(	#{dto.checkSeqno,jdbcType=VARCHAR},
 			#{dto.repCode,jdbcType=VARCHAR},
 			#{dto.repName,jdbcType=VARCHAR},
 			#{dto.validKey,jdbcType=VARCHAR},

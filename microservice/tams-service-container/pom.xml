@@ -71,6 +71,13 @@
 			<version>3.1.0</version>
 		</dependency>
 
+		<!-- 中债报表 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>service-chbreport</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
 		<!-- 中债三期 -->
 		<dependency>
 			<groupId>com.joyintech</groupId>

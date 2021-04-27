@@ -81,7 +81,7 @@
                and CAVS.STATUS = #{status,jdbcType=VARCHAR}
            </if>-->
 			<if test="assetCodeLike != null and assetcodelike != ''">
-				and upper(CAVS.ASSET_CODE) like concat_ws(concat_ws('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
+				and upper(CAVS.ASSET_CODE) like concat(concat('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
 		</where>
 		) temp order by valDate,assetCode
@@ -198,7 +198,7 @@
                and CAVS.STATUS = #{status,jdbcType=VARCHAR}
            </if>-->
 			<if test="assetCodeLike != null and assetcodelike != ''">
-				and upper(CAVS.ASSET_CODE) like concat_ws(concat_ws('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
+				and upper(CAVS.ASSET_CODE) like concat(concat('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
 
 
@@ -298,7 +298,7 @@
                and CAVS.STATUS = #{status,jdbcType=VARCHAR}
            </if>-->
 			<if test="assetCodeLike != null and assetcodelike != ''">
-				and upper(CAVS.ASSET_CODE) like concat_ws(concat_ws('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
+				and upper(CAVS.ASSET_CODE) like concat(concat('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
 		</where>
 		) temp order by valDate,assetCode
@@ -481,8 +481,8 @@
 		<set>
 			sub.SEND_STATUS = '03',
 			sub.SUBMIT_FEEDBACK_STATUS = '03',
-			sub.submit_time = sysdate,
-			sub.UPDATE_TIME = sysdate
+			sub.submit_time = NOW(),
+			sub.UPDATE_TIME =  NOW()
 			<!-- 去掉更新数据日期 -->
 			<!--,sub.STATUS_DATE = sysdate-->
 		</set>
@@ -499,7 +499,7 @@
 		update CHB_AST_VAL_SUB
 		<set>
 			SEND_STATUS = '01',
-			UPDATE_TIME = sysdate,
+			UPDATE_TIME =  NOW(),
 			SUBMIT_TIME = null,
 			SUBMIT_FEEDBACK_STATUS = null
 		</set>
@@ -542,7 +542,7 @@
 		SEND_STATUS, SUBMIT_TIME,
 		SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, STATUS_DATE, ORG_CODE, DEPT_CODE,
 		CREATE_USER,
-		CREATE_DEPT, sysdate, UPDATE_USER, sysdate
+		CREATE_DEPT, NOW(), UPDATE_USER, NOW()
 		from CHB_AST_VAL_SUB_HIS
 		where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
 		<if test="regList !=null and regList.size()>0">

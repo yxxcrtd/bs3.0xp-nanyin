@@ -601,7 +601,7 @@
 	          on cek.INDENTIFY_MARK=cic.INDENTIFY_MARK
 	          and cek.REGIST_BANK_CODE=cic.REGIST_BANK_CODE
 	          )cicc
-          )  	WHERE rn = 1
+          ) aa 	WHERE rn = 1
    	) s2
 	 on
    	 s2.MERGER_INDENTIFY_MARK=s1.INDENTIFY_MARK

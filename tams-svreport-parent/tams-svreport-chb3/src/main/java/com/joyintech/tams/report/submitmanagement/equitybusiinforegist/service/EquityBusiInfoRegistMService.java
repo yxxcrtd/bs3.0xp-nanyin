@@ -253,8 +253,8 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
  	       	boolean.class);
     }
     public void updateSumStausAll(Map<String, Object> map) {
-   	 	restTemplate.getForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStausAll", 
+   	 	restTemplate.postForObject(
+	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/updateSumStausAll",map,
 	       	boolean.class);
    }
     /**

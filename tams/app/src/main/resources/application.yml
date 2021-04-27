@@ -195,6 +195,7 @@ application:
 #      disclosureService: http://127.0.0.1:8114
 #      valuationService: http://127.0.0.1:8114
 #      chbService: http://127.0.0.1:8114
+#      chbreportService: http://127.0.0.1:8114
 #      chb3Service: http://127.0.0.1:8114
 #      svrcomService: http://127.0.0.1:8114
 #      pbcService: http://127.0.0.1:8114
@@ -227,6 +228,7 @@ application:
       disclosureService: http://127.0.0.1:${server.port}/tams
       valuationService: http://127.0.0.1:${server.port}/tams
       chbService: http://127.0.0.1:${server.port}/tams
+      chbreportService: http://127.0.0.1:${server.port}/tams
       chb3Service: http://127.0.0.1:${server.port}/tams
       svrcomService: http://127.0.0.1:${server.port}/tams
       pbcService: http://127.0.0.1:${server.port}/tams
@@ -259,6 +261,7 @@ application:
 #      disclosureService: http://TamsMicroservice
 #      valuationService: http://TamsMicroservice
 #      chbService: http://TamsMicroservice
+#      chbreportService: http://TamsMicroservice
 #      chb3Service: http://TamsMicroservice
 #      svrcomService: http://TamsMicroservice
 #      pbcService: http://TamsMicroservice
@@ -297,7 +300,7 @@ application:
   sqldiruserName: root
   sqldirpassword: joyin123
 shiro:
-  ssoEnable: true
+  ssoEnable: false
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
     /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
     /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,

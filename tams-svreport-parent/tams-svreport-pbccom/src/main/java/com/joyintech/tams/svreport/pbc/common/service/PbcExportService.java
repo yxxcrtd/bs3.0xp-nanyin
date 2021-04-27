@@ -10,28 +10,28 @@
 
 package com.joyintech.tams.svreport.pbc.common.service;
 
-import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.report.system.instregbankcode.dao.SysInstRegBankCode001Mapper;
 import com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode001Dto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.util.PbcExcelUtil;
 import com.joyintech.tams.svreport.pbc.common.util.XlsxToHtml;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 人行报表导出预览共通service
@@ -101,7 +101,8 @@ public class PbcExportService extends BaseService<ITableRow>{
 			Map pbcReport = (Map)data.get("report");
 			if(null!=pbcReport.get("enddate")){
 				Date enddate = new Date(Long.parseLong(pbcReport.get("enddate").toString()));
-				pbcReport.put("enddate",enddate);
+				//pbcReport.put("enddate",enddate);
+				pbcReport.put("enddate", DateUtil.format(enddate));
 			}
 			if(!MultilevelDataAuthorityUtil.isEnabled()) {
         		//银行模式

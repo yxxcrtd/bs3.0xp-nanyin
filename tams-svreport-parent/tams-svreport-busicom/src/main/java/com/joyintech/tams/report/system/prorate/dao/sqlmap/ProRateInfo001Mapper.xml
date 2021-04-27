@@ -9,4 +9,24 @@
 	</select>
 	<select id="selectPrdFeeData" resultType="java.lang.Integer" parameterType="com.joyintech.tams.report.system.prorate.dto.ProRateInfo001Dto">
 	</select>
+	<insert id="insertPrdFeeData" parameterType="java.util.List">
+	</insert>
+	<update id="updateDisRepCashYield" parameterType="java.util.List" >
+	</update>
+	<delete id="deleteDisRepCashYieldErrorData" parameterType="java.util.List">
+	</delete>
+	<select id="queryReportList" resultType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+	</select>
+	<select id="selectOneDate" resultType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+	</select>
+	<select id="selectdisPrdFeeRateErrordata" resultType="com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs">
+	</select>
+	<insert id="insertOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
+    </insert>
+	<update id="updateOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+	</update>
+	<update id="deleteOne" parameterType="java.lang.String">
+	</update>
+	<delete id="deleteErrorDataOne" parameterType="java.util.List">
+	</delete>
 </mapper>

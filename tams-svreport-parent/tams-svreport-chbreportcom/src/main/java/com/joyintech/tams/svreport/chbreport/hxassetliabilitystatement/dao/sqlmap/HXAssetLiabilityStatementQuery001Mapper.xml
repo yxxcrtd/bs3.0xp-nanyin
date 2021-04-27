@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.hxassetliabilitystatement.dao.HXAssetLiabilityStatementQuery001Mapper">
+    <select id="selectAllData"
+            resultType="com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto">
+        SELECT
+        bal.crt_mon reportDate,
+        bal.busi_date as busiDate
+        FROM hx_balance bal
+        <where>
+            bal.qc_qm_flag='2'
+            <if test="reportDate != null and reportDate != ''">
+                AND bal.crt_mon = #{reportDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectHxAssetLiabilityData"
+            resultType="com.joyintech.tams.common.base.entity.HxBalance">
+        SELECT
+        bal.crt_mon,
+        bal.busi_date,
+        SUM(bal.deposit) deposit,
+        SUM(bal.curr_invest) currInvest,
+        SUM(bal.cred_invest) credInvest,
+        SUM(bal.bond_invest) bondInvest,
+        SUM(bal.feibiao_invest) feibiaoInvest,
+        SUM(bal.quanyi_invest) quanyiInvest,
+        SUM(bal.deriva_invest) derivaInvest,
+        SUM(bal.other_invest) otherInvest,
+        SUM(bal.inter_accr) interAccr,
+        SUM(bal.in_fund) inFund,
+        SUM(bal.huigou_fund) huigouFund,
+        SUM(bal.deriva_debt) derivaDebt,
+        SUM(bal.accr_profit) accrProfit,
+        SUM(bal.capital_shouyi) capitalShouyi,
+        SUM(bal.capital_jingzhi) capitalJingzhi,
+        SUM(bal.accr_income) accrIncome,
+        SUM(bal.tax_pay) taxPay,
+        SUM(bal.yuji_fuzhai) yujiFuzhai,
+        SUM(bal.other_pay) otherPay,
+        SUM(bal.undis_profit) undisProfit
+        FROM hx_balance bal
+        <where>
+        <if test="reportMon != null and reportMon != ''">
+            AND bal.crt_mon = #{reportMon,jdbcType=VARCHAR}
+        </if>
+        <if test="flag != null and flag != ''">
+            AND bal.qc_qm_flag = #{flag,jdbcType=VARCHAR}
+        </if>
+        </where>
+        GROUP BY bal.crt_mon,bal.busi_date
+    </select>
+</mapper>

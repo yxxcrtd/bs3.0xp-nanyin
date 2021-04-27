@@ -208,7 +208,7 @@ public class OperationalInfo004Service extends CommonExportService<ChbInfoMgrRes
 				}
 				// 日期类型检查
 				if (StringUtil.equals("D", columnType)) {
-					if (!realColumnType.contains("DATE") && !realColumnType.contains("TIMESTAMP")) {
+					if (!realColumnType.contains("DATE") && !realColumnType.contains("TIMESTAMP") && !realColumnType.contains("datetime")) {
 						ExcelValidDto exc=new ExcelValidDto();
 						exc.setCheckResult("01");
 						exc.setValidKey(column);

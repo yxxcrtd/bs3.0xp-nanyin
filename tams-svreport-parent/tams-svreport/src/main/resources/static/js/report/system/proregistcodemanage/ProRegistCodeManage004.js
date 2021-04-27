@@ -1,5 +1,10 @@
 (function() {
+    function init(){
+        $(".layui-fixbar").hide();
+    };
+
     $(function() {
+        init();
         //新建按钮点击事件
         $('#ProRegistCodeManage004_btn_save').click(function() {
             var object = $.serializeToObject('#submitForm',true);

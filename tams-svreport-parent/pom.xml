@@ -13,9 +13,11 @@
 	    <module>tams-svreport</module>
 		<module>tams-svreport-busicom</module>
 		<module>tams-svreport-chb</module>
+		<module>tams-svreport-chbreport</module>
 		<module>tams-svreport-chb3</module>
 		<module>tams-svreport-pbc</module>
 		<module>tams-svreport-chbcom</module>
+		<module>tams-svreport-chbreportcom</module>
 		<module>tams-svreport-chbcom3</module>
 		<module>tams-svreport-pbccom</module>
 		<module>tams-svreport-interf</module>

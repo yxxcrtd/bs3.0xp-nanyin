@@ -9,6 +9,9 @@
         <if test="databaseType == 'Oracle'"> 
           select ${sequenceName}.nextVal from dual
         </if>
+        <if test="databaseType == 'Mysql'">
+            select _NEXTINDEX(${sequenceName}) from dual
+        </if>
     </select>
     <!-- 查询所有有权限的机构代码 -->
 <!--     <select id="selectOrgCode" parameterType="java.lang.String" resultType="java.lang.String">

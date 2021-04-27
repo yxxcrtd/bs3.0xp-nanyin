@@ -59,24 +59,12 @@
   	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
   </sql>
   <sql id="PBC_PRD_BASEINFO_SUB">
-   select a.* from (
-        SELECT
-        @rownum:=@rownum+1 rownum,
-        PBC_PROD_ID,
-        PROD_ID,
-        OPERATE_MODE,
-        IVSTORIENTATION,
-        VDATE,
-        STATUS,
-        RAISE_ENDDATE,
-        ORG_CODE,
-        IF( @PBC_PROD_ID = a.PBC_PROD_ID, @rank := @rank + 1, @rank := 1 ) AS myrank,
-        @PBC_PROD_ID := a.PBC_PROD_ID
-      FROM
-        ( SELECT * FROM pbc_prd_baseinfo_sub  ORDER BY PBC_PROD_ID, ifnull( UPDATE_TIME, CREATE_TIME ) DESC ) a,
-        ( SELECT @rownum := 0, @PBC_PROD_ID := NULL, @rank := 0 )b
-	) a
-	WHERE 1=1 limit 1
+    select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+    row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+    DESC) AS myrank
+    FROM pbc_prd_baseinfo_sub
+    where PBC_PROD_ID is not null) a
+    WHERE a.myrank=1
   </sql>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub" >
     insert into PBC_INIT_PROD_RAISING_SUB (REGIST_SEQNO, PBC_PROD_ID, BUY_PLACE, 
@@ -1033,12 +1021,16 @@
   	</if>
   </select>
   <select id="searchListDetailCNY" parameterType="map" resultMap="SearchResultMap">
-	SELECT tab.code,tab.rmbje,tab.rmbfe from (select
-        concat_ws('','buyplace', a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
-        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM rmbje, a.INIT_RAISING_QTY rmbfe
+	 with tab as (
+	    select
+          concat_ws('','buyplace', a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+          list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM rmbje, a.INIT_RAISING_QTY rmbfe
         from PBC_INIT_PROD_RAISING_SUB a
         LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-        where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}) tab
+        where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+    )
+
+    SELECT tab.code,tab.rmbje,tab.rmbfe from tab
 	union all
 	select 'buyplace4000000',sum(rmbje),sum(rmbfe) from tab WHERE tab.CUSTOMER_TYPE1='4'
 	union all
@@ -1053,12 +1045,15 @@
 	select 'buyplace9000000',sum(rmbje),sum(rmbfe) from tab WHERE tab.CUSTOMER_TYPE1='9'
     </select>
   <select id="searchListDetailOth" parameterType="map" resultMap="SearchResultMap">
-      SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from (select
+     WITH tab as (
+        select
           concat_ws('','buyplace', a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
           list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM je,a.INIT_RAISING_AMTSUMCNY zrmb,a.INIT_RAISING_QTY fe
-          from PBC_INIT_PROD_RAISING_SUB a
-          LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-          where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}) tab
+        from PBC_INIT_PROD_RAISING_SUB a
+        LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+        where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+      )
+      SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
       union all
       select 'buyplace4000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
       union all
