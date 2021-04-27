@@ -355,7 +355,9 @@ public class FundCashDividendDealRecService {
      */
     private StlOrders getStlOrders(ValCashBonusTrade dto){
     	StlOrders result = new StlOrders();
-    	if(dto.getMyAcctNo() == null && dto.getCounterAcctNo() == null){
+        //modify by yanya on 20210204 判定为空包含空字符
+        //if(dto.getMyAcctNo() == null && dto.getCounterAcctNo() == null){
+        if(StringUtil.isEmpty(dto.getMyAcctNo()) && StringUtil.isEmpty(dto.getCounterAcctNo()) ){
     		return null;
     	}
     	result.setMyAcctNo(dto.getMyAcctNo());
