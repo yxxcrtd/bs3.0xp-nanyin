@@ -7,7 +7,7 @@
 		<artifactId>tams-parent</artifactId>
 		<version>0.0.3</version>
 	</parent>
-	
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>tams-base</artifactId>
     <version>2.1.2</version>
@@ -39,18 +39,18 @@
         <module>tams-valuation-common</module>
         <module>tams-valuation-parent</module>
         <module>tams-valuation-report</module>
-        
+
         <!-- 批处理  -->
         <module>tams-disclosure-batch</module>
         <module>tams-valuation-batch</module>
         <module>tams-invest-batch</module>
         <module>tams-svreport-batch</module>
         <module>tams/batch</module>
-        
+
         <!-- 接口 -->
         <module>tams-valuation-interf</module>
         <module>tams-customer-interf</module>
-        
+
 		<!--         微服务 -->
         <module>microservice/service-asset</module>
         <module>microservice/service-basicdata</module>
@@ -63,7 +63,7 @@
         <module>microservice/service-entrust</module>
 <!--         <module>microservice/service-interf</module> -->
         <module>microservice/service-pbc</module>
-        <module>microservice/service-period</module>        
+        <module>microservice/service-period</module>
         <module>microservice/service-portfolio</module>
         <module>microservice/service-product</module>
         <module>microservice/service-report</module>
@@ -81,7 +81,11 @@
 
         <module>microservice/tams-service-container</module>
         <module>tams/app</module>
-        
+        <module>tams-system/yunying/app</module>
+        <module>tams-system/yunying/batch</module>
+        <module>tams-system/touguan/app</module>
+        <module>tams-system/touguan/batch</module>
+
         <module>tams-common-basicdata</module>
         <module>microservice/service-common-basicdata</module>
     </modules>
