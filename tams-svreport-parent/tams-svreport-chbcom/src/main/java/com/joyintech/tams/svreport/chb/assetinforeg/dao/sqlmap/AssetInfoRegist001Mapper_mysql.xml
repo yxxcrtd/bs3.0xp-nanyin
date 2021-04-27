@@ -4501,11 +4501,11 @@
     <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
       delete from CHB_ASSET_INFO_SUB
       where 1 =1
-      <if test="registList !=null and registList.size()>0">
-         <foreach collection="registList" item="regist" open="and ASSET_CODE IN (" separator=","  close=")">
-           #{regist.assetCode,jdbcType=VARCHAR}
-         </foreach>
-      </if>
+		<if test="registList !=null and registList.size()>0">
+			<foreach collection="registList" item="regist" open="and ((" separator=") OR ("  close="))">
+				ASSET_CODE = #{regist.assetCode,jdbcType=VARCHAR} and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
+			</foreach>
+		</if>
       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
     </delete>
     <insert id="insertReportDataFromHis" parameterType="java.util.Map">
@@ -4785,8 +4785,8 @@
 		GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE,
 		SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE,
 		SUBMIT_TIME, STATUS_DATE, STATUS,
-		CREATE_USER, sysdate CREATE_TIME, UPDATE_USER,
-		sysdate UPDATE_TIME, ORG_CODE, DEPT_CODE,
+		CREATE_USER, NOW()  CREATE_TIME, UPDATE_USER,
+		NOW()  UPDATE_TIME, ORG_CODE, DEPT_CODE,
 		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
 		DATA_SOURCE,
 		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,
@@ -4836,7 +4836,7 @@
 				</foreach>
 			</if>
 		</where>
-		)
+		)as t
 		where ranknum = 1
     </insert>
     <delete id="deleteLastSubmitHis" parameterType="java.util.Map">
