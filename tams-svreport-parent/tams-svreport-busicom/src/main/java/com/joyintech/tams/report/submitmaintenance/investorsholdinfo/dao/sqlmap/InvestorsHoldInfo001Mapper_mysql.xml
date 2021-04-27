@@ -228,13 +228,9 @@ where
 
 		<insert id="insertChbHoldInfoDataMerge" >
 			UPDATE  CHB_INVESTHOLD_INFO as A,
+		(select * from
+		(select TEMP.* from
 			(
-			select REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,PRD_REGIST_CODE,HOLD_DATE,CCY,AMOUNT,
-			QTY,CNY_AMT,REMARK,DATA_SOURCE,STATUS,ORG_CODE,DEPT_CODE,UPDATE_USER,UPDATE_TIME,
-			CREATE_USER,CREATE_TIME,AGENT,CREATE_DEPT,INTERF_CHECK_RESULT
-			from
-			(
-			select TEMP.* from (
 			<foreach collection="newDataList" item="item"  separator="union all">
 				SELECT
 				#{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
@@ -260,23 +256,23 @@ where
 				#{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT
 				FROM dual
 			</foreach>
-			) TEMP
-			) de
-			) AS B
-			SET A.AMOUNT = B.AMOUNT,
-			A.QTY = B.QTY,
-			A.CNY_AMT = B.CNY_AMT,
-			A.STATUS = B.STATUS,
-			A.REMARK = B.REMARK,
-			A.UPDATE_USER = B.UPDATE_USER,
-			A.UPDATE_TIME = B.UPDATE_TIME,
-			A.AGENT = B.AGENT
-			where
-			A.REGIST_BANK_CODE = B.REGIST_BANK_CODE
-			AND A.INDENTIFY_MARK = B.INDENTIFY_MARK
-			AND A.PRD_REGIST_CODE = B.PRD_REGIST_CODE
-			AND A.HOLD_DATE = B.HOLD_DATE
-			AND A.CCY = B.CCY
+		) TEMP where exists (select 1 from CHB_INVESTHOLD_INFO CII where CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
+		AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
+		AND CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE
+		AND CII.HOLD_DATE = TEMP.HOLD_DATE
+		AND CII.CCY = TEMP.CCY)) B) AS C  set A.AMOUNT=C.AMOUNT,
+		A.QTY=C.QTY,
+		A.CNY_AMT=C.CNY_AMT,
+		A.STATUS=C.STATUS,
+		A.REMARK=C.REMARK,
+		A.UPDATE_USER=C.UPDATE_USER,
+		A.UPDATE_TIME=C.UPDATE_TIME,
+		A.AGENT=C.AGENT  where A.REGIST_BANK_CODE = C.REGIST_BANK_CODE
+		AND A.INDENTIFY_MARK = C.INDENTIFY_MARK
+		AND A.PRD_REGIST_CODE = C.PRD_REGIST_CODE
+		AND A.HOLD_DATE = C.HOLD_DATE
+		AND A.CCY = C.CCY;
+
 		</insert>
 		<insert id="insertChbSubHoldInfoData" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
 			insert into CHB_INVESTHOLD_INFO_SUB(
@@ -306,8 +302,22 @@ where
 					#{item.qty,jdbcType=DECIMAL} QTY,
 					#{item.cnyAmt,jdbcType=DECIMAL} CNY_AMT,
 					#{item.remark,jdbcType=VARCHAR} REMARK,
-					#{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
-					#{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+				<choose>
+					<when test="item.chbSubmitDeadline != null">
+						#{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+					</when>
+					<otherwise>
+						null CHB_SUBMIT_DEADLINE,
+					</otherwise>
+				</choose>
+				<choose>
+					<when test="item.submitDeadline != null">
+						#{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+					</when>
+					<otherwise>
+						null SUBMIT_DEADLINE,
+					</otherwise>
+				</choose>
 					#{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
 					#{item.statusDate,jdbcType=DATE} STATUS_DATE,
 					#{item.status,jdbcType=VARCHAR} STATUS,
@@ -324,7 +334,7 @@ where
 					FROM
 					DUAL
 				</foreach>
-			) TEMP where not EXISTS (select 1 from CHB_INVESTHOLD_INFO_SUB CII where CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
+			) TEMP where not exists (select 1 from CHB_INVESTHOLD_INFO_SUB CII where CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
 			AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
 			AND CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE
 			AND CII.HOLD_DATE = TEMP.HOLD_DATE
@@ -335,31 +345,11 @@ where
 			) de
 	</insert>
 
-	<insert id="insertChbSubHoldInfoDataMerge" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+
+
 		UPDATE  CHB_INVESTHOLD_INFO_SUB as A,
-		(
-		select AMOUNT,
-		QTY,
-		CNY_AMT,
-		STATUS,
-		REMARK,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CHB_SUBMIT_DEADLINE,
-		SUBMIT_DEADLINE,
-		STATUS_DATE,
-		CHECK_SEQNO,
-		SUMIT_SEQ ,
-		REGIST_BANK_CODE,
-		INDENTIFY_MARK,
-		PRD_REGIST_CODE,
-		HOLD_DATE,
-		CCY,
-		PRODID,
-		SEND_STATUS
-		from
-		(
-		select TEMP.* from
+			(select * from
+			(select TEMP.* from
 		(
 		<foreach collection="subList" item="item"  separator="union all">
 			SELECT
@@ -373,8 +363,22 @@ where
 			#{item.qty,jdbcType=DECIMAL} QTY,
 			#{item.cnyAmt,jdbcType=DECIMAL} CNY_AMT,
 			#{item.remark,jdbcType=VARCHAR} REMARK,
-			#{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
-			#{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+				<choose>
+					<when test="item.chbSubmitDeadline != null">
+						#{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+					</when>
+					<otherwise>
+						null CHB_SUBMIT_DEADLINE,
+					</otherwise>
+				</choose>
+				<choose>
+					<when test="item.submitDeadline != null">
+						#{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+					</when>
+					<otherwise>
+						null SUBMIT_DEADLINE,
+					</otherwise>
+				</choose>
 			#{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
 			#{item.statusDate,jdbcType=DATE} STATUS_DATE,
 			#{item.status,jdbcType=VARCHAR} STATUS,
@@ -391,31 +395,32 @@ where
 			FROM
 			DUAL
 		</foreach>
-		) TEMP
-		) de
-		) AS B
-		set
-		A.AMOUNT = B.AMOUNT,
-		A.QTY = B.QTY,
-		A.CNY_AMT = B.CNY_AMT,
-		A.STATUS = B.STATUS,
-		A.REMARK = B.REMARK,
-		A.UPDATE_USER = B.UPDATE_USER,
-		A.UPDATE_TIME = B.UPDATE_TIME,
-		A.CHB_SUBMIT_DEADLINE = B.CHB_SUBMIT_DEADLINE,
-		A.SUBMIT_DEADLINE = B.SUBMIT_DEADLINE,
-		A.STATUS_DATE = B.STATUS_DATE,
-		A.CHECK_SEQNO = B.CHECK_SEQNO,
-		A.SUMIT_SEQ	= B.SUMIT_SEQ
-		where
-		A.REGIST_BANK_CODE = B.REGIST_BANK_CODE
-		AND A.INDENTIFY_MARK = B.INDENTIFY_MARK
-		AND A.PRD_REGIST_CODE = B.PRD_REGIST_CODE
-		AND A.HOLD_DATE = B.HOLD_DATE
-		AND A.CCY = B.CCY
-		AND A.INDENTIFY_MARK = B.INDENTIFY_MARK
-		AND A.PRODID = B.PRODID
-		AND A.SEND_STATUS = B.SEND_STATUS
+			) TEMP where  exists (select 1 from CHB_INVESTHOLD_INFO_SUB CII where CII.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
+			AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
+			AND CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE
+			AND CII.HOLD_DATE = TEMP.HOLD_DATE
+			AND CII.CCY = TEMP.CCY
+			AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
+			AND CII.PRODID = TEMP.PRODID
+			AND CII.SEND_STATUS = TEMP.SEND_STATUS)
+			) B ) AS C SET A.AMOUNT=C.AMOUNT,
+			A.QTY=C.QTY,
+			A.CNY_AMT=C.CNY_AMT,
+			A.STATUS=C.STATUS,
+			A.REMARK=C.REMARK,
+			A.UPDATE_USER=C.UPDATE_USER,
+			A.UPDATE_TIME=C.UPDATE_TIME,
+			A.CHB_SUBMIT_DEADLINE=C.CHB_SUBMIT_DEADLINE,
+			A.STATUS_DATE=C.STATUS_DATE,
+			A.CHECK_SEQNO=C.CHECK_SEQNO,
+			A.SUMIT_SEQ=C.SUMIT_SEQ where A.REGIST_BANK_CODE = C.REGIST_BANK_CODE
+			AND A.INDENTIFY_MARK = C.INDENTIFY_MARK
+			AND A.PRD_REGIST_CODE = C.PRD_REGIST_CODE
+			AND A.HOLD_DATE = C.HOLD_DATE
+			AND A.CCY = C.CCY
+			AND A.INDENTIFY_MARK = C.INDENTIFY_MARK
+			AND A.PRODID = C.PRODID
+			AND A.SEND_STATUS = C.SEND_STATUS;
 	</insert>
 	<select id="selectAllHoldInfoData" resultType = "com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 	select
@@ -524,16 +529,16 @@ where
     </select>
 	<insert id="insertProdRegInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode">
 		insert into CHB_PRDRESIST_CODE(PRODID,ORG_CODE,REG_CODE,DEPT_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME,CREATE_DEPT)
-		<foreach collection="prodRegInfoList" item="dto" open=" select * from (select " close="from dual)" separator="from dual union all select ">
-		#{dto.prodid,jdbcType=VARCHAR}, 
-		#{dto.orgCode,jdbcType=VARCHAR}, 
-		#{dto.regCode,jdbcType=VARCHAR}, 
-        #{dto.deptCode,jdbcType=VARCHAR}, 
-        #{dto.updateUser,jdbcType=TIMESTAMP}, 
-        #{dto.updateTime,jdbcType=VARCHAR},
-        #{dto.createUser,jdbcType=TIMESTAMP},
-        #{dto.createTime,jdbcType=TIMESTAMP}, 
-        #{dto.createDept,jdbcType=VARCHAR}
+		<foreach collection="prodRegInfoList" item="dto" open=" select * from (select " close="from dual) a" separator="from dual union all select ">
+		#{dto.prodid,jdbcType=VARCHAR} as PRODID,
+		#{dto.orgCode,jdbcType=VARCHAR} as ORG_CODE,
+		#{dto.regCode,jdbcType=VARCHAR} as REG_CODE,
+        #{dto.deptCode,jdbcType=VARCHAR} as DEPT_CODE,
+        #{dto.updateUser,jdbcType=TIMESTAMP} as UPDATE_USER ,
+        #{dto.updateTime,jdbcType=VARCHAR} as UPDATE_TIME,
+        #{dto.createUser,jdbcType=TIMESTAMP} as CREATE_USER,
+        #{dto.createTime,jdbcType=TIMESTAMP} as CREATE_TIME,
+        #{dto.createDept,jdbcType=VARCHAR} as CREATE_DEPT
         </foreach>
 	</insert>
 	

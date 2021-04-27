@@ -3529,6 +3529,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
 //                    equityInfoCheck = equityInfoCheckList.get(0);
 //                }
                 if (DictCodeList.是否_中债_是.getValue().equals(equityInfo001Dto.getIsNull())) {
+                    if(!StringUtil.isNotEmpty(equityInfo001Dto.getIsSubmit())){
+                        equityInfo001Dto.setIsSubmit("");
+                    }
                 	listN.add(equityInfo001Dto);
                 }
                 else if(DictCodeList.是否_中债_是.getValue().equals(equityInfo001Dto.getIsNull())&&

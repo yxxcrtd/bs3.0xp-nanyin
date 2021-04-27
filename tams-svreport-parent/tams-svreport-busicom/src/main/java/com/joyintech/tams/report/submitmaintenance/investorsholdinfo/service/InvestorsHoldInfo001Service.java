@@ -952,6 +952,17 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			String subStatus = StringUtil.EMPTY;
 			chbInvestholdInfoSub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 			chbInvestholdInfoSub.setStatusDate(new Date());
+			//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空  add by zoujiamin 2021/04/25
+			if(!StringUtil.isNotEmpty(action.getPrdRegistCode())){
+				action.setPrdRegistCode("");
+			}
+			if(!StringUtil.isNotEmpty(action.getOrgCode())){
+				action.setOrgCode("");
+			}
+			if(!StringUtil.isNotEmpty(action.getRemark())){
+				action.setRemark("");
+			}
+			//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空 add by zoujiamin 2021/04/25
 			if (allHoldInfoDataMap.containsKey(dataKeyNew)) {
 				listUp.add(action);
 			} else {
@@ -992,6 +1003,19 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				    chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
 				}
 				// add by etliu 20180829 end
+
+				//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空  add by zoujiamin 2021/04/25
+				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getPrdRegistCode())){
+					chbInvestholdInfoSub.setPrdRegistCode("");
+				}
+				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getOrgCode())){
+					chbInvestholdInfoSub.setOrgCode("");
+				}
+				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getRemark())){
+					chbInvestholdInfoSub.setRemark("");
+				}
+				//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空 add by zoujiamin
+
 				subListUp.add(chbInvestholdInfoSub);
 			} else {
 				if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
@@ -999,7 +1023,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				}else{
 					// 早期mysql改造代码合并 add by zoujiamin  2021/04/20 start
 //				chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-				chbInvestholdInfoSub.setRegistSeqno(IDGenerator.generate());
+				chbInvestholdInfoSub.setRegistSeqno(IDGenerator.generate(20));
 					// 早期mysql改造代码合并 add by zoujiamin  2021/04/20 end
 				}
 				// add by etliu 20180829 start
@@ -1007,6 +1031,19 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
                     chbInvestholdInfoSub.setSumitSeq(chbInvestholdInfoSub.getRegistSeqno());
                 }
 				// add by etliu 20180829 end
+
+				//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空  add by zoujiamin 2021/04/25
+				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getPrdRegistCode())){
+					chbInvestholdInfoSub.setPrdRegistCode("");
+				}
+				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getOrgCode())){
+					chbInvestholdInfoSub.setOrgCode("");
+				}
+				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getRemark())) {
+					chbInvestholdInfoSub.setRemark("");
+				}
+				//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空 add by zoujiamin
+
 				subListIn.add(chbInvestholdInfoSub);
 			}
 		}
@@ -2355,8 +2392,8 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
                     prodRegInfoDto.setProdid(account);
                     prodRegInfoDto.setRegCode(regCode);
                     prodRegInfoDto.setOrgCode(orgCode);
-                    prodRegInfoDto.setDeptCode(null);
-                    prodRegInfoDto.setCreateDept(null);
+                    prodRegInfoDto.setDeptCode("");
+                    prodRegInfoDto.setCreateDept("");
                     prodRegInfoList.add(prodRegInfoDto);
 
                     tempDataKeyMap.put(account, account);
@@ -2986,9 +3023,11 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			List<InvestorsHoldInfo001Dto> listA = new ArrayList<>();
 			checkDataInfo(dataList, false, listE, listA, prodRegInfoList, paraDto,null,null,null);
 			logger.info("listE.size:"+listE.size()+"###listA.size:"+listA.size());
-			if (listE.size() > 0 || listA.size() > 0) {
+			if (listE.size() > 10 || listA.size() > 10) {
 				afterCheckDeal(listE, listA, type, tmpPath, table, subTable, paraDto);
 				
+			} else {
+				afterCheckDeal(listE, listA, type, null, table, subTable, paraDto);
 			}
 			return true;
 		}

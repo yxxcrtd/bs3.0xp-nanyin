@@ -1012,8 +1012,11 @@ public class EquityInfoDistinctService {
         map.put("HOLDER_CELLPHONE",equityInfo001Dto.getHolderCellphone());
         map.put("HOLDER_TELEPHONE",equityInfo001Dto.getHolderTelephone());
         map.put("HOLDER_EMAIL", equityInfo001Dto.getHolderEmail());
-        map.put("REMARK",equityInfo001Dto.getRemark());
-        map.put("ORG_CODE",equityInfo001Dto.getOrgCode());
+        map.put("REMARK",equityInfo001Dto.getRemark()== null ? "" : equityInfo001Dto.getRemark());
+        map.put("ORG_CODE",equityInfo001Dto.getOrgCode()== null ? "" : equityInfo001Dto.getOrgCode() );
+
+//        map.put("REMARK",equityInfo001Dto.getRemark());
+//        map.put("ORG_CODE",equityInfo001Dto.getOrgCode());
         map.put("AGENT",equityInfo001Dto.getAgent());
         map.put("DEPT_CODE",equityInfo001Dto.getDeptCode());
 		}

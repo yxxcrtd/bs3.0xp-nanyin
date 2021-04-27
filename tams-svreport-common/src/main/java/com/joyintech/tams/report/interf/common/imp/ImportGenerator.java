@@ -172,6 +172,9 @@ public final class ImportGenerator {
                     else if (type.equals(JDBCType.TIMESTAMP)) {
                         value = InterfUtil.formatDateTimeWithQuotation((Date)value);
                     }
+                    else if (type.equals(JDBCType.VARCHAR)) {
+                        value = InterfUtil.formatDateTimeWithQuotation((Date)value);
+                    }
                 }
                 // 如果值为空，则判断该字段是否需要设置默认值
                 if (!StringUtil.isNotEmpty(value)
@@ -204,7 +207,7 @@ public final class ImportGenerator {
                 }
                 else {
                     // oracle版本原处理
-                    if (sb.length() == 0) {
+                    if (sb.length() == 0 && columns.get(0).getName().equals(col.getName())) {
                         sb.append(CommonUtil.getNotNullString(value));
                     }
                     else {
@@ -380,7 +383,7 @@ public final class ImportGenerator {
 	            }
 	            
 	            // 删除ftp服务器数据文件
-	            sftp.rm(repMysqlServerFtpFilepath+"/"+dataFileName);
+//	            sftp.rm(repMysqlServerFtpFilepath+"/"+dataFileName);
 	            
 			} catch (JSchException | SftpException e) {
 				e.printStackTrace();
