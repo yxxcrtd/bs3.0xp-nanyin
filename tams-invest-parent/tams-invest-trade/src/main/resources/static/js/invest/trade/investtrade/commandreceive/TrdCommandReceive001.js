@@ -1258,6 +1258,7 @@ var TrdCommandReceive001 = function () {
                                     //$('#TrdCommandReceive001_entrustStatus').val('').trigger('change');//完成状态
                                     //$('#TrdCommandReceive001_entrustStatus').attr("disabled",true);
                                     $('#entrustStatus').hide();
+                                    $('#secondaryMarketTradeDiv').hide();
                                     otherTable.reload();
                                     Joyin
                                         .ajax(
@@ -1279,6 +1280,7 @@ var TrdCommandReceive001 = function () {
                                                 false);
                                     }
                                     $('#entrustStatus').show();
+                                    $('#secondaryMarketTradeDiv').show();
                                     $(
                                         '#TrdCommandReceive001_btn_transaction')
                                         .attr("style",

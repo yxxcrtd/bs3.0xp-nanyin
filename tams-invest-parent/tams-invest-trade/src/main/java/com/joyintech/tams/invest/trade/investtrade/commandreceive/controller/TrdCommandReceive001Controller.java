@@ -132,6 +132,7 @@ public class TrdCommandReceive001Controller extends BaseController{
         //add by daizhiwei 2020-02-04,交易场所：银行间 start
         model.addAttribute("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
         //add by daizhiwei 2020-02-04,交易场所：银行间 end
+        model.addAttribute("YES_OR_NO_N",DictCodeList.是否_否.getValue());
         return super.init(model);
     }
     /**

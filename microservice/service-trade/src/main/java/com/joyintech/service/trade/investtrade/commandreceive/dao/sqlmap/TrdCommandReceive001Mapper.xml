@@ -2,6 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
 	namespace="com.joyintech.service.trade.investtrade.commandreceive.dao.TrdCommandReceive001Mapper">
+
+    <!-- 不显示二级市场的非通道投资和非内部转仓的交易(银行间债券的二级市场买入卖出指令、银行间质押式回购指令) -->
+	<sql id="notShowEntrustData">
+	   <if test = "secondaryMarketTrade != null and secondaryMarketTrade == 'N'.toString()">
+	        AND ETR_ENTRUST.ENTRUST_ID NOT IN (
+	            SELECT
+	                ENTRUST_ID
+	            FROM
+	                ETR_ENTRUST
+	            WHERE
+	                ETR_ENTRUST.TRADE_MARKET = '01'
+	                AND ETR_ENTRUST.CHL_ID IS NULL
+	                AND ( (ETR_ENTRUST.FINPROD_TYPE2 = 'F01' AND ETR_ENTRUST.TRADE_MARKET_MODE = '02' AND ETR_ENTRUST.PS IN('T01', 'T02'))
+	                    OR ETR_ENTRUST.FINPROD_TYPE2 IN ('F02', 'F03') 
+	                ) 
+	        )
+        </if>
+	</sql>
+	
 	<!-- 已接收查询 -->
 	<!-- modify by  gaopeng 20191126 增加可转债转股 委托额度查询 start -->
 	<select id="selectForPage"
@@ -198,6 +217,10 @@
 			<if test="secAcctId!=null and secAcctId!=''">
 				and ETR_ENTRUST_ADD.SEC_ACCT_ID = #{secAcctId}
 			</if>
+			<!-- <if test = "secondaryMarketTrade != null and secondaryMarketTrade == 'N'.toString()">
+				and (ETR_ENTRUST.TRADE_MARKET_MODE != #{SHARES_TRADE_MARKET_02} OR ETR_ENTRUST.TRADE_MARKET_MODE IS null)
+			</if> -->
+			<include refid="notShowEntrustData"></include>
 			</where>
 		union all
 		SELECT
@@ -349,6 +372,10 @@
 			<if test="secAcctId!=null and secAcctId!=''">
 				and ETR_ENTRUST_ADD.SEC_ACCT_ID = #{secAcctId}
 			</if>
+            <!-- <if test = "secondaryMarketTrade != null and secondaryMarketTrade == 'N'.toString()">
+                and (ETR_ENTRUST.TRADE_MARKET_MODE != #{SHARES_TRADE_MARKET_02} OR ETR_ENTRUST.TRADE_MARKET_MODE IS null)
+            </if> -->
+            <include refid="notShowEntrustData"></include>
 		</where>
 	</select>
 
@@ -802,6 +829,10 @@
 			<if test="busiPs != null and busiPs!='' ">
 				AND ETR_ENTRUST_ADD.BUSI_PS = #{busiPs}
 			</if>
+            <!-- <if test = "secondaryMarketTrade != null and secondaryMarketTrade == 'N'.toString()">
+                and (ETR_ENTRUST.TRADE_MARKET_MODE != #{SHARES_TRADE_MARKET_02} OR ETR_ENTRUST.TRADE_MARKET_MODE IS null)
+            </if> -->
+            <include refid="notShowEntrustData"></include>
 			</where>
 		UNION  all
 		SELECT
@@ -936,6 +967,10 @@
 			<if test="busiPs != null and busiPs!='' ">
 				AND ETR_ENTRUST_ADD.BUSI_PS = #{busiPs}
 			</if>
+            <!-- <if test = "secondaryMarketTrade != null and secondaryMarketTrade == 'N'.toString()">
+                and (ETR_ENTRUST.TRADE_MARKET_MODE != #{SHARES_TRADE_MARKET_02} OR ETR_ENTRUST.TRADE_MARKET_MODE IS null)
+            </if> -->
+            <include refid="notShowEntrustData"></include>
 		</where>
 	</select>
 	<!-- modify by  gaopeng 20191126 增加可转债转股 委托额度查询 END -->
