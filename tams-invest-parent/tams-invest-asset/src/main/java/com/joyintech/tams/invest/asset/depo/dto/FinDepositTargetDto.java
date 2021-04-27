@@ -1298,7 +1298,7 @@ public class FinDepositTargetDto extends FinProduct implements ITableRow, Proces
     @Override
     @Length(fieldName = "FinDepositTarget002.contractNo", max = 400, groups = {ValidateGroupEdit.class})
     //TISHKBS-2052 存款类标的合同编号需求是选填 王亚宁 2021/4/27
-//	@NotEmpty(fieldName = "FinDepositTarget002.contractNo", groups = {ValidateGroupEdit.class})
+    //	@NotEmpty(fieldName = "FinDepositTarget002.contractNo", groups = {ValidateGroupEdit.class})
     public String getContractNo() {
         return super.getContractNo();
     }
