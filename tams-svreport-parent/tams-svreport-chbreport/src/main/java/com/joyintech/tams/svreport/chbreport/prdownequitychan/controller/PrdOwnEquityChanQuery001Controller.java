@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Controller
 @PageId("SvrPrdOwnEquityChanQuery001")
-@RequestMapping("/chbreport/PrdOwnEquityChan/PrdOwnEquityChanQuery001")
+@RequestMapping("/chbreport/prdownequitychan/PrdOwnEquityChanQuery001")
 public class PrdOwnEquityChanQuery001Controller extends BaseController {
 
     @Autowired
