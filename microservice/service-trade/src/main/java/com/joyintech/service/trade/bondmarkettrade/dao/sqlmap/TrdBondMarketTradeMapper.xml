@@ -83,6 +83,8 @@
                 A.FINPROD_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
                 or
                 A.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                or
+                A.FINPROD_ABBR LIKE CONCAT('%', CONCAT(#{search}, '%'))
                 )
             </if>
             <if test="initValue != null and initValue != ''">
@@ -115,6 +117,8 @@
                 A.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
                 or
                 A.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                or
+                A.FINPROD_ABBR LIKE CONCAT('%', CONCAT(#{search}, '%'))
                 )
             </if>
             <if test="initValue != null and initValue != ''">
