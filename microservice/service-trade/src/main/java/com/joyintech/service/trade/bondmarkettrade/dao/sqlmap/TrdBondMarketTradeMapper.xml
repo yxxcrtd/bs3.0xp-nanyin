@@ -277,7 +277,7 @@
         TPD.FINPROD_ID
         FROM TRD_PRODUCT_DEAL TPD
         <where>
-            TPD.FINPROD_ID = 'F01'||#{appearMarketId,jdbcType=VARCHAR}
+            TPD.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
             AND TPD.TRADE_DATE = #{tradeDate,jdbcType=DATE}
         </where>
 
@@ -287,7 +287,7 @@
         TFPDT.FINPROD_ID
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
         <where>
-            TFPDT.FINPROD_ID = 'F01'||#{appearMarketId,jdbcType=VARCHAR}
+            TFPDT.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
             AND TFPDT.TRADE_DATE = #{tradeDate,jdbcType=DATE}
         </where>
 
@@ -297,7 +297,7 @@
         WTPD.FINPROD_ID
         FROM WFL_TRD_PRODUCT_DEAL WTPD
         <where>
-            WTPD.FINPROD_ID = 'F01'||#{appearMarketId,jdbcType=VARCHAR}
+            WTPD.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </where>
 
         UNION
@@ -306,7 +306,7 @@
         WTFPDT.FINPROD_ID
         FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL WTFPDT
         <where>
-            WTFPDT.FINPROD_ID = 'F01'||#{appearMarketId,jdbcType=VARCHAR}
+            WTFPDT.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </where>
         )
 
