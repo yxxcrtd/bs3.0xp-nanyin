@@ -153,6 +153,19 @@ public class EtrInvestBondInfo002Controller extends BaseController {
             EtrInvestBondInfoDto dto = etrInvestBondInfoService.selectByKey(entrustId,finprodId,portfolioId);
             /*dto.setCalflag("price");
             etrInvestBondInfoService.calcAmt(dto);*/
+            //单位以万元展示
+            if(dto.getEntrustNum() != null) {
+            	dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+            }
+            if(dto.getMinAmt() != null) {
+            	dto.setMinAmt(dto.getMinAmt().divide(new BigDecimal(10000)));
+            }
+            if(dto.getEntrustOwnNum() != null) {
+            	dto.setEntrustOwnNum(dto.getEntrustOwnNum().divide(new BigDecimal(10000)));
+            }
+            if(dto.getEntrustIntegrateNum() != null) {
+            	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
+            }
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("tradeId", dto.getEntrustId());
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
@@ -164,6 +177,18 @@ public class EtrInvestBondInfo002Controller extends BaseController {
             entity.setVdate(sysDate);
             entity.setMdate(sysDate);
             entity.setEntrustStatus(DictCodeList.委托状态_新建.getValue());
+            if(entity.getEntrustNum() != null) {
+            	entity.setEntrustNum(entity.getEntrustNum().divide(new BigDecimal(10000)));
+            }
+            if(entity.getMinAmt() != null) {
+            	entity.setMinAmt(entity.getMinAmt().divide(new BigDecimal(10000)));
+            }
+            if(entity.getEntrustOwnNum() != null) {
+            	entity.setEntrustOwnNum(entity.getEntrustOwnNum().divide(new BigDecimal(10000)));
+            }
+            if(entity.getEntrustIntegrateNum() != null) {
+            	entity.setEntrustIntegrateNum(entity.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
+            }
             model.addAttribute(GlobalConstant.ENTITY, entity);
         }
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());

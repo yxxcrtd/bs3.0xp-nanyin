@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.entrust.etrinvestbondinfo.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -204,6 +205,20 @@ public class EtrInvestBondInfo004Controller extends BaseController {
     @RequestMapping("save")
     public AjaxResult save(@RequestBody List<EtrInvestBondInfoDto> dtoList, BindingResult br)
             throws Exception {
+    	for(EtrInvestBondInfoDto dto : dtoList) {
+        	if(dto.getEntrustNum()!=null) {
+        		dto.setEntrustNum(dto.getEntrustNum().multiply(new BigDecimal(10000)));//万元转成元
+        	}
+            if(dto.getMinAmt()!=null) {
+            	dto.setMinAmt(dto.getMinAmt().multiply(new BigDecimal(10000)));//万元转成元
+            }
+            if(dto.getEntrustOwnNum() != null) {
+            	dto.setEntrustOwnNum(dto.getEntrustOwnNum().multiply(new BigDecimal(10000)));
+            }
+            if(dto.getEntrustIntegrateNum() != null) {
+            	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().multiply(new BigDecimal(10000)));
+            }
+        }
         AjaxResult ajaxResult = this.check(dtoList, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;

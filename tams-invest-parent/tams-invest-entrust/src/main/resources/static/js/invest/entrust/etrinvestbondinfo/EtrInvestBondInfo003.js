@@ -25,7 +25,11 @@
 			var objects = new Array();
 	    	for(var index in bussCombDistribtList){
 	    		var item = bussCombDistribtList[index];
-	    		var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:item.portfolioId,tradeAmount:item.entrustNum, assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
+		var entrustNum =item.entrustNum;
+                 if (entrustNum) {
+                    entrustNum=entrustNum*10000;//万元转成元
+                 }
+	    		var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:item.portfolioId,tradeAmount:entrustNum, assetType:fintype,assetSecType:$('#assetType1').val(),isEnabled:'01',assetCode:$('#finprodIdhid').val()}
 	            var object = {tradeDirection:['ps','EtrInvestBondInfo002.ps'],portfolioCode:['portfolioId','EtrInvestBondInfo002.portfolioId'],tradeAmount:['entrustNum','EtrInvestBondInfo002.entrustAmt'],assetType:['assetType1','EtrInvestBondInfo002.bondType'],data:obj}
 	            objects.push(object);
 	    	}
@@ -235,6 +239,7 @@
             }
         }
         var objects = new Array();
+	var entrustNum = 0;
         for(var index in object.bussCombDistribtList){
         	var item = object.bussCombDistribtList[index];
         	var temp = JSON.parse(JSON.stringify(object));
@@ -250,7 +255,8 @@
             temp.counterId = temp.counterIdName;
             // 指令授信 end
         	temp.portfolioId = item.portfolioId;
-        	temp.entrustNum = item.entrustNum;
+        	temp.entrustNum = item.entrustNum*10000;//万元转成元
+        	entrustNum = entrustNum + item.entrustNum*1;
         	temp.invAim = item.invAim;
         	temp.secAcctId = item.secManageAcctId;
         	temp.proAvailableCash = item.proAvailableCash;
@@ -260,6 +266,7 @@
             temp.riskTrialRetDto = object.riskTrialRetDto;
         	objects.push(temp);
         }
+	
         var isautobond = EtrInvestBondInfo002.getIsautobond();
         if(objects.length>0){
             Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/check',objects,

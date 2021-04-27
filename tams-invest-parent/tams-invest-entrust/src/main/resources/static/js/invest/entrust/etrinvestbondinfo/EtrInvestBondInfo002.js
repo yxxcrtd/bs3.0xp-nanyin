@@ -6,12 +6,17 @@
     var initFlag = true;
     var isautobond = false;
     var getriskdata = function () {
+		var entrustNum=$('#entrustNum').val();
+         if (entrustNum) {
+              //万元转成元
+              entrustNum=entrustNum*10000;
+         }
         var obj = {
             tradeDirection: $('#ps').val(),
             timePoint: MY_SUP_TIME_TYPE_02,
             valDate: sysDate,
             portfolioCode: $('#portfolioId').val(),
-            tradeAmount: $('#entrustNum').val(),
+            tradeAmount: entrustNum,
             assetType: fintype,
             isEnabled: '01',
             assetCode: $('#finprodIdhid').val()
@@ -87,6 +92,23 @@
                 });
             }
         }
+
+		var entrustNum=$('#entrustNum').val();
+         if (entrustNum) {
+			  object.entrustNum = entrustNum*10000;//万元转成元
+         }
+		 var minAmt=$('#minAmt').val();
+         if (minAmt) {
+			  object.minAmt = minAmt*10000;//万元转成元
+         }
+         var entrustOwnNum = $("#entrustOwnNum").val();
+         if (entrustOwnNum) {
+			  object.entrustOwnNum = entrustOwnNum*10000;//万元转成元
+         }
+         var entrustIntegrateNum = $("#entrustIntegrateNum").val();
+         if (entrustIntegrateNum) {
+			  object.entrustIntegrateNum = entrustIntegrateNum*10000;//万元转成元
+         }
         /*if($('#priceModel').val() == PRICEMODEL_03){
             Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getClosePriceByPara',{finprodMarketId:object.finprodMarketId},
                     function(result) {
@@ -236,7 +258,10 @@
                         if (item.entrustNum == null || item.entrustNum == '') return;
                         entrustNum += parseFloat(item.entrustNum);
                     }
+					entrustNum = entrustNum*10000;//万元转成元
                     object.entrustNum = String(entrustNum);
+                } else {
+                    return;
                 }
             }
             if (typeof FileCommon != "undefined") {
@@ -357,6 +382,10 @@
         $('#EtrInvestBondInfo002_btn_riskcal').click(function () {
             // window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
             var object = $.serializeToObject('#searchForm');
+			var entrustNum=$('#entrustNum').val();
+            if (entrustNum) {
+	             object.entrustNum=entrustNum*10000;//万元转成元
+            }
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F01', object,getriskdata());
         });
         /**

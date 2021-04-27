@@ -318,6 +318,8 @@ public class EtrInvestBondInfo003Controller extends BaseController {
                 String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
                 dto.setEntrustId(code);
             }
+        	dto.setEntrustOwnNum(dto.getEntrustNum());
+            dto.setEntrustIntegrateNum(BigDecimal.ZERO);
         	dto.setWorkflowParameter("new|||1|EtrInvestBondInfo003|EtrInvestBondInfo003_btn_submit|true"); 
         }
         //多组合风险试算结果处理
