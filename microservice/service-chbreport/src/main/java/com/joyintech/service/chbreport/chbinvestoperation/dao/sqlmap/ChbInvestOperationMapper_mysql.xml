@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.chbreport.chbinvestoperation.dao.ChbInvestOperationMapper_mysql">
+
+	<select id="queryPrdInfoList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+			p.PROD_ID id,
+			p.PROD_NAME text
+		from CHB_PRD_BASEINFO p
+		where
+			p.`STATUS` = 'E'
+			<if test="initValue != null and initValue != ''">
+				and p.PROD_ID IN (#{initValue})
+			</if>
+			<if test="search != null and search != ''">
+				and ( p.PROD_ID like concat(concat('%',#{search}),'%') or p.PROD_NAME like concat(concat('%',#{search}),'%'))
+			</if>
+	</select>
+
+	<select id="qryInvestOperation" resultType="com.joyintech.service.chbreport.chbinvestoperation.dto.ChbInvestPrdInfo">
+		select
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			p.REG_CODE as regCode, /** 理财信息系统登记编码**/
+			p.IVSTORIENTATION as ivstorientation,/** 投资性质**/
+		  	p.CASH_PRIN_CCY as cashPrinCcy,/** 兑付本金币种**/
+		  	p.RISK_LEVEL as riskLevel,/** 产品风险等级**/
+		  	p.VDATE as vdate,/** 起息日**/
+			r.DEALDATE as dealdate,/** 报告日期**/
+			p.IN_DEP_NAME as inDepName,/** 境内托管机构名称**/
+			p.OUT_DEP_NAME as outDepName, /** 境外托管机构名称**/
+			case when p.IN_DEP_NAME is not null and p.OUT_DEP_NAME is not null then concat_ws('、',p.IN_DEP_NAME,p.OUT_DEP_NAME)
+				when p.IN_DEP_NAME is not null and  p.OUT_DEP_NAME is null then p.IN_DEP_NAME
+				when p.IN_DEP_NAME is null and  p.OUT_DEP_NAME is not null then p.OUT_DEP_NAME
+				else ''
+			end as depName, /** 境内托管机构名称 + 境外托管机构名称**/
+			'华夏理财有限责任公司' as managerName /** 产品管理人**/
+		from
+			CHB_PRD_BASEINFO p
+		inner join (
+			select
+				distinct t.DEALDATE, t.PROD_ID
+			from CHB_INVEST_TRADE t, CHB_ASSET_INFO a
+			where
+				t.ASSET_CODE = a.ASSET_CODE
+				and a.`STATUS` = 'E'
+				and t.`STATUS` = 'E'
+				and a.ASSET_TYPE2 in (
+					select SRCFIELD1 from chb_type_mapping_ex where MAPPINGCODE = 'ChbInvestOperation001'
+				) /** 指定非标资产的类别**/
+				and t.CUR_ASSET_TYPE in ('01', '02') /** 买入或者卖出/到期**/
+				<if test="dealdateStart != null">
+					and t.DEALDATE <![CDATA[ >= ]]> #{dealdateStart,jdbcType=DATE}
+				</if>
+				<if test="dealdateEnd != null">
+					and t.DEALDATE <![CDATA[ <= ]]>  #{dealdateEnd,jdbcType=DATE}
+				</if>
+		) r on r.PROD_ID = p.PROD_ID
+		where
+			p.`STATUS` = 'E'
+			<if test="prodIdList != null and prodIdList.size > 0">
+				and p.PROD_ID in
+				<foreach collection="prodIdList" item="prodId" open="(" separator="," close=")">
+					#{prodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+	</select>
+
+	<select id="qryChbInvestPrdInfo" resultType="com.joyintech.service.chbreport.chbinvestoperation.dto.ChbInvestPrdInfo">
+		select
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			p.REG_CODE as regCode, /** 理财信息系统登记编码**/
+			p.IVSTORIENTATION as ivstorientation,/** 投资性质**/
+			p.CASH_PRIN_CCY as cashPrinCcy,/** 兑付本金币种**/
+			p.RISK_LEVEL as riskLevel,/** 产品风险等级**/
+			p.VDATE as vdate,/** 起息日**/
+			p.IN_DEP_NAME as inDepName,/** 境内托管机构名称**/
+			p.OUT_DEP_NAME as outDepName, /** 境外托管机构名称**/
+			case when p.IN_DEP_NAME is not null and p.OUT_DEP_NAME is not null then concat_ws('、',p.IN_DEP_NAME,p.OUT_DEP_NAME)
+				when p.IN_DEP_NAME is not null and  p.OUT_DEP_NAME is null then p.IN_DEP_NAME
+				when p.IN_DEP_NAME is null and  p.OUT_DEP_NAME is not null then p.OUT_DEP_NAME
+				else ''
+			end as depName, /** 境内托管机构名称 + 境外托管机构名称**/
+			'华夏理财有限责任公司' as managerName /** 产品管理人**/
+		from
+			CHB_PRD_BASEINFO p
+		where
+			p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryChbInvsetAssetInfo" resultType="com.joyintech.service.chbreport.chbinvestoperation.dto.ChbInvsetAssetInfo">
+		select
+			distinct
+			a.ASSET_CODE as assetCode,/** 行内资产负债编码**/
+			a.ASSET_NAME as assetName,/** 资产名称**/
+			a.ASSET_TYPE as assetType,/** 资产类型**/
+			a.ASSET_TYPE2 as assetType2,/** 资产/负债二级类别**/
+			a.FINANCIE as financie,/** 融资人**/
+			a.ASSET_YIELD as assetYield,/** 项目收益率(利率)%**/
+			a.MDATE as mdate /** 到期日 **/
+		from CHB_INVEST_TRADE t, CHB_ASSET_INFO a
+		where
+			t.ASSET_CODE = a.ASSET_CODE
+			and a.`STATUS` = 'E'
+			and t.`STATUS` = 'E'
+			and a.ASSET_TYPE2 in (
+				select SRCFIELD1 from chb_type_mapping_ex where MAPPINGCODE = 'ChbInvestOperation001'
+			) /** 指定非标资产的类别**/
+			and t.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			and t.DEALDATE = #{dealdate,jdbcType=DATE}
+			and t.CUR_ASSET_TYPE = #{curAssetType,jdbcType=VARCHAR}
+		order by a.ASSET_TYPE2, a.ASSET_CODE
+	</select>
+
+</mapper>
