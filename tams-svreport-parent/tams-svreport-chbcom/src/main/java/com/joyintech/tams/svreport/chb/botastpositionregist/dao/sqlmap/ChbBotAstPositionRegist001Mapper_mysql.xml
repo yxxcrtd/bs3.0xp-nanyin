@@ -119,10 +119,10 @@
                and POS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
            </if> -->
 			<if test="assetCodeLike != null and assetCodeLike != ''">
-				and upper(POS.ASSET_CODE) like CONCAT_WS(CONCAT_WS('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
+				and upper(POS.ASSET_CODE) like CONCAT(CONCAT('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
 			<if test="planAssetIdLike != null and planAssetIdLike != ''">
-				and upper(POS.PLAN_ASSET_ID) like CONCAT_WS(CONCAT_WS('%',upper(#{planAssetIdLike,jdbcType=VARCHAR})),'%')
+				and upper(POS.PLAN_ASSET_ID) like CONCAT(CONCAT('%',upper(#{planAssetIdLike,jdbcType=VARCHAR})),'%')
 			</if>
 		</where>
 		) AS T　 order by posDate,planAssetId
