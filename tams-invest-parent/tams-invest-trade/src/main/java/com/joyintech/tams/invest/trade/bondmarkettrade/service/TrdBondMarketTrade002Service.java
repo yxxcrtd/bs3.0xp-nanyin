@@ -16,6 +16,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
@@ -162,10 +163,12 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 etrSecPositionFlowDto.setAmount(etrSecPosition.getAmount());
                 etrSecPositionFlowDto.setpFinprodId(etrSecPosition.getpFinprodId());
                 etrSecPositionFlowDto.setTradeId(entity.getTotleTradeId());
+                etrSecPositionFlowDto.setSeqno(IDGenerator.generate());
                 etrSecList.add(etrSecPositionFlowDto);
                 BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDtoNe,etrSecPositionFlowDto);
                 etrSecPositionFlowDtoNe.setFinprodId(entity.getFinprodId());
                 etrSecPositionFlowDtoNe.setAmount(etrSecPositionFlowDtoNe.getAmount().negate());
+                etrSecPositionFlowDtoNe.setSeqno(IDGenerator.generate());
                 oldEtrSecList.add(etrSecPositionFlowDtoNe);
             }
             
@@ -178,9 +181,12 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
             pltSecListAll.addAll(ptlSecList);
             pltSecListAll.addAll(oldPtlSecList);
             
-            for (EtrSecPositionFlowDto etrSecPositionFlowDto :etrSecListAll){
-                etrCommonCashPositionDealService.dealCommandPosition(etrSecPositionFlowDto);
+            if (!etrSecListAll.isEmpty()){
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                etrPositionHoldDto.setPtlSecPositionFlows(etrSecListAll);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);    
             }
+            
             for (PtlSecPositionFlowDto ptlSecPositionFlowDto: pltSecListAll){
                 basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlowDto);
             }
