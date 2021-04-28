@@ -10,6 +10,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.dealrevoke.dao.InvestDealRevokeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,18 @@ import java.util.*;
 @Lazy
 public class InvestDealRevokeService {
 
+    /**
+     * 是否单体服务
+     */
+    @Value("${application.micorservice.contextPath.single:false}")
+    private boolean isSingle;
+
     @Autowired(required = false)
     private JoyinRestTemplate restTemplate;
+
+    @Autowired(required = false)
+    @Qualifier("simpleRestTemplate")
+    protected JoyinRestTemplate simpleRestTemplate;
 
     @Value("${application.micorservice.contextPath.tamsServer:http://tams-server}")
     private String tamsSerever;
@@ -223,7 +234,13 @@ public class InvestDealRevokeService {
         param.put("updateUser", GlobalConstant.SYSTEM_USER);
         param.put("revokeReason", "数据清算批处理");
         // 调用债券交易撤销逻辑
-        restTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
+        if(isSingle) {
+            simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
+        }
+        else {
+            restTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
+        }
+
     }
 
     /**
@@ -235,6 +252,12 @@ public class InvestDealRevokeService {
         param.put("updateUser", GlobalConstant.SYSTEM_USER);
         param.put("revokeReason", "数据清算批处理");
         // 调用债券交易撤销逻辑
-        restTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
+        if(isSingle) {
+            simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
+        }
+        else {
+            restTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
+        }
+
     }
 }

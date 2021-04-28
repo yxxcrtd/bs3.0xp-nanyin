@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,18 @@ import com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto;
 @Service
 public class SettleCommonService {
 
+	/**
+	 * 是否单体服务
+	 */
+	@Value("${application.micorservice.contextPath.single:false}")
+	private boolean isSingle;
+
 	@Autowired(required = false)
 	private JoyinRestTemplate restTemplate;
+
+	@Autowired(required = false)
+	@Qualifier("simpleRestTemplate")
+	protected JoyinRestTemplate simpleRestTemplate;
 
     @Autowired
     private SettleCommonMapper settleCommonMapper;
@@ -127,9 +138,16 @@ public class SettleCommonService {
 		Map<String, Object> param = new HashMap<>(1);
 		param.put("commonBusinessExtType", retMap);
 		// 生成的业务编号(此处对性能影响比较大)
-		return restTemplate.postForObject(
-				commonServiceName + "/core/selectRule", param,
-				String.class);
+		if(isSingle) {
+			return simpleRestTemplate.postForObject(
+					commonServiceName + "/core/selectRule", param,
+					String.class);
+		}
+		else {
+			return restTemplate.postForObject(
+					commonServiceName + "/core/selectRule", param,
+					String.class);
+		}
 	}
 
     /**
@@ -142,8 +160,16 @@ public class SettleCommonService {
         Map<String, Object> param = new HashMap<>(1);
         param.put("seqNo", seqno);
         // 生成的业务编号(此处对性能影响比较大)
-        return restTemplate.postForObject(
-                commonServiceName + "/core/selectRule", param,
-                String.class);
+		if (isSingle) {
+			return simpleRestTemplate.postForObject(
+					commonServiceName + "/core/selectRule", param,
+					String.class);
+		}
+		else {
+			return restTemplate.postForObject(
+					commonServiceName + "/core/selectRule", param,
+					String.class);
+		}
+
     }
 }

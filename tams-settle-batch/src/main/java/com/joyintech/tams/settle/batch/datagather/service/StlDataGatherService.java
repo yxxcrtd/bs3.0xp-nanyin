@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -78,8 +79,18 @@ import com.joyintech.tams.settle.common.service.SettleCommonService;
 @Service
 public class StlDataGatherService {
 
+    /**
+     * 是否单体服务
+     */
+    @Value("${application.micorservice.contextPath.single:false}")
+    private boolean isSingle;
+
     @Autowired(required = false)
     private JoyinRestTemplate restTemplate;
+
+    @Autowired(required = false)
+    @Qualifier("simpleRestTemplate")
+    protected JoyinRestTemplate simpleRestTemplate;
 
     @Value("${application.micorservice.contextPath.tamsServer:http://tams-server}")
     private String tamsSerever;
@@ -196,7 +207,13 @@ public class StlDataGatherService {
         dealParam.setInvAim(productDeal.getInvAim());
 
         // 调用债券交易计算逻辑
-        Map ajaxResult = restTemplate.postForObject(tamsSerever + "/invest/trade/bond/TrdBondInvestTrade002/calculateData", dealParam, Map.class);
+        // 调用债券交易计算逻辑
+        Map ajaxResult = new HashMap();
+        if (isSingle) {
+            ajaxResult = simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/bond/TrdBondInvestTrade002/calculateData", dealParam, Map.class);
+        } else {
+            ajaxResult = restTemplate.postForObject(tamsSerever + "/invest/trade/bond/TrdBondInvestTrade002/calculateData", dealParam, Map.class);
+        }
         if (ajaxResult != null && ajaxResult.containsKey("data")) {
 	        Object result = ajaxResult.get("data");
 	        if(result instanceof Map) {
@@ -227,7 +244,13 @@ public class StlDataGatherService {
 
     public void excutePosition(Map<String, Object> param) {
         // 调用债券交易计算逻辑
-        restTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
+        if(isSingle) {
+            simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
+        }
+        else {
+            restTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
+        }
+
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

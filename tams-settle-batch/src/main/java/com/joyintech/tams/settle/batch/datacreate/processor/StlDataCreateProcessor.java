@@ -133,28 +133,28 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     	szdJsmx.setJyfs(StlDataDealProcessConstant.JYFS_001);
     	szdJsmx.setJsfs(StlDataDealProcessConstant.JSFS_001);
     	if (StringUtil.equals(stlDataCreateDto.getTradePlat(), DictCodeList.交易平台_固定收益平台.getValue())) {
-    		if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_国债.getValue())) {
+    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_601);
     		}
-    		if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_公司债.getValue())) {
+    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_611);
     		}
     	}
     	else {
-    		if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_国债.getValue())) {
+    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_003);
     		}
-    		if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_企业债.getValue())) {
+    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_004);
     		}
     	}
-    	if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_国债.getValue())) {
+    	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     		szdJsmx.setQsbz(StlDataDealProcessConstant.QSBZ_000);
     	}
-    	if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_企业债.getValue())) {
+    	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
     		szdJsmx.setQsbz(StlDataDealProcessConstant.QSBZ_010);
     	}
-    	if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_公司债.getValue())) {
+    	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
     		szdJsmx.setQsbz(StlDataDealProcessConstant.QSBZ_011);
     	}
     	szdJsmx.setGhlx(StlDataDealProcessConstant.GHLX_00A);
@@ -234,28 +234,28 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     		szdJsmx.setJyfs(StlDataDealProcessConstant.JYFS_002);
     	}
     	if (StringUtil.equals(stlDataCreateDto.getTradePlat(), DictCodeList.交易平台_固定收益平台.getValue())) {
-    		if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_国债.getValue())) {
+    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_601);
     		}
-    		if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_公司债.getValue())) {
+    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_611);
     		}
     	}
     	else {
-    		if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_国债.getValue())) {
+    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_003);
     		}
-    		if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_企业债.getValue())) {
+    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_004);
     		}
     	}
-    	if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_国债.getValue())) {
+    	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     		szdJsmx.setQsbz(StlDataDealProcessConstant.QSBZ_000);
     	}
-    	if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_企业债.getValue())) {
+    	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
     		szdJsmx.setQsbz(StlDataDealProcessConstant.QSBZ_010);
     	}
-    	if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_公司债.getValue())) {
+    	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
     		szdJsmx.setQsbz(StlDataDealProcessConstant.QSBZ_011);
     	}
     	szdJsmx.setGhlx(StlDataDealProcessConstant.GHLX_00A);
@@ -361,25 +361,25 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     		szdSjsmx.setMxqsjg(new BigDecimal(stlDataCreateDto.getUnitCprice()));
     	}
     	szdSjsmx.setMxxyjy(StlDataCreateConstant.SJSMX_MXXYJY_1);
-    	if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_国债.getValue())) {
+    	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_10);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_企业债.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_11);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_公司债.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_1C);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_可转债.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_可转债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_12);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_金融债.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_金融债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_1R);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_优先股.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_优先股.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_1Y);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_资产支持证券.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_资产支持证券.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_1Z);
     	}
     	else {
@@ -442,25 +442,25 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     		szdSjsmx.setMxqsjg(new BigDecimal(stlDataCreateDto.getUnitCprice()));
     	}
     	szdSjsmx.setMxxyjy(StlDataCreateConstant.SJSMX_MXXYJY_1);
-    	if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_国债.getValue())) {
+    	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_10);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_企业债.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_11);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_公司债.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_1C);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_可转债.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_可转债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_12);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_金融债.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_金融债.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_1R);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_优先股.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_优先股.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_1Y);
     	}
-    	else if (StringUtil.equals(stlDataCreateDto.getType9(), DictCodeListStl.资产二级分类_资产支持证券.getValue())) {
+    	else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_资产支持证券.getValue())) {
     		szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_1Z);
     	}
     	else {

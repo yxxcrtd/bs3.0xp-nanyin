@@ -12,6 +12,7 @@ import com.joyintech.tams.settle.batch.datadeal.dao.StlDownDataDealMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.BondTradeDealParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +37,18 @@ import java.util.Map;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StlDownDataDealService {
 
+    /**
+     * 是否单体服务
+     */
+    @Value("${application.micorservice.contextPath.single:false}")
+    private boolean isSingle;
+
     @Autowired(required = false)
     private JoyinRestTemplate restTemplate;
+
+    @Autowired(required = false)
+    @Qualifier("simpleRestTemplate")
+    protected JoyinRestTemplate simpleRestTemplate;
 
     @Value("${application.micorservice.contextPath.tamsServer:http://tams-server}")
     private String tamsSerever;
@@ -80,7 +92,12 @@ public class StlDownDataDealService {
         }
         
         // 调用债券交易计算逻辑
-        Map ajaxResult = restTemplate.postForObject(tamsSerever + "/invest/trade/bond/TrdBondInvestTrade002/calculateData", dealParam, Map.class);
+        Map ajaxResult = new HashMap();
+        if (isSingle) {
+            ajaxResult = simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/bond/TrdBondInvestTrade002/calculateData", dealParam, Map.class);
+        } else {
+            ajaxResult = restTemplate.postForObject(tamsSerever + "/invest/trade/bond/TrdBondInvestTrade002/calculateData", dealParam, Map.class);
+        }
         if (ajaxResult != null && ajaxResult.containsKey("data")) {
             Object result = ajaxResult.get("data");
             if(result instanceof Map) {

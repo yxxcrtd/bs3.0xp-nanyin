@@ -274,6 +274,14 @@ public enum DictCodeListStl implements BaseDictCodeList {
 		资产二级分类_金融债(DictCode.资产二级分类,"B05","金融债"),
 		资产二级分类_优先股(DictCode.资产二级分类,"B17","优先股"),
 		资产二级分类_资产支持证券(DictCode.资产二级分类,"B13","资产支持证券"),
+
+		WIND一级分类_含债券一级分类等_国债(DictCode.WIND一级分类_含债券一级分类等,"B01","国债"),
+		WIND一级分类_含债券一级分类等_金融债(DictCode.WIND一级分类_含债券一级分类等,"B05","金融债"),
+		WIND一级分类_含债券一级分类等_企业债(DictCode.WIND一级分类_含债券一级分类等,"B06","企业债"),
+		WIND一级分类_含债券一级分类等_公司债(DictCode.WIND一级分类_含债券一级分类等,"B07","公司债"),
+		WIND一级分类_含债券一级分类等_资产支持证券(DictCode.WIND一级分类_含债券一级分类等,"B13","资产支持证券"),
+		WIND一级分类_含债券一级分类等_可转债(DictCode.WIND一级分类_含债券一级分类等,"B14","可转债"),
+		WIND一级分类_含债券一级分类等_优先股(DictCode.WIND一级分类_含债券一级分类等,"B17","优先股"),
 	;
     /**
      * 对应于数据字典code
