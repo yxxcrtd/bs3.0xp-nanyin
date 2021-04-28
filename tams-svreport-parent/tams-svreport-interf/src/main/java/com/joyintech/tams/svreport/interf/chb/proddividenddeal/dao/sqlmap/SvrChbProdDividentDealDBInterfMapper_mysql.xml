@@ -114,53 +114,14 @@
 	
 	
 	<insert id="insertChbPrdBonusDeal" >
-        insert into CHB_PRD_BONUS_DEAL(SEQNO, TRADE_ID,FPROD_ID,  PROD_ID, TRADE_TYPE,REG_DATE, SETTDATE_DATE,
-        PAY_DATE, REG_TRADE_QTY, TRADE_QTY,TRADE_AMT, INT_AMT, STATUS, REV_DATE,REMARK,
-        UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
-        ORG_CODE, CREATE_DEPT)
-        select SEQNO, TRADE_ID,FPROD_ID,  PROD_ID, TRADE_TYPE,REG_DATE, SETTDATE_DATE,
-        PAY_DATE, REG_TRADE_QTY, TRADE_QTY,TRADE_AMT, INT_AMT, STATUS, REV_DATE,REMARK,
-        UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
-        ORG_CODE, CREATE_DEPT from
-        (
-        select TEMP.* from
-        (
-        <foreach collection="list" item="item"  separator="union all">
-            SELECT
-            #{item.seqno,jdbcType=VARCHAR} SEQNO,
-            #{item.tradeId,jdbcType=VARCHAR} TRADE_ID,
-            #{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
-            #{item.prodId,jdbcType=VARCHAR} PROD_ID,
-            #{item.tradeType,jdbcType=VARCHAR} TRADE_TYPE,
-            #{item.regDate,jdbcType=DATE} REG_DATE,
-            #{item.settdateDate,jdbcType=DATE} SETTDATE_DATE,
-            #{item.payDate,jdbcType=DATE} PAY_DATE,
-            #{item.regTradeQty,jdbcType=DECIMAL} REG_TRADE_QTY,
-            #{item.tradeQty,jdbcType=DECIMAL} TRADE_QTY,
-            #{item.tradeAmt,jdbcType=DECIMAL} TRADE_AMT,
-            #{item.intAmt,jdbcType=DECIMAL} INT_AMT,
-            #{item.status,jdbcType=VARCHAR} STATUS,
-            #{item.revDate,jdbcType=DATE} REV_DATE,
-            #{item.remark,jdbcType=VARCHAR} REMARK,
-            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
-            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
-            FROM   DUAL
-        </foreach>
-        ) TEMP where not exisits (select 1 from CHB_PRD_BONUS_DEAL CII where CII.TRADE_ID = TEMP.TRADE_ID)
-        ) de ;
-
-        UPDATE  CHB_PRD_BONUS_DEAL as A,
-        (
-        select SEQNO,
-        PROD_ID,
+        insert into CHB_PRD_BONUS_DEAL(
+        SEQNO,
+        TRADE_ID,
         FPROD_ID,
+        PROD_ID,
         TRADE_TYPE,
-        SETTDATE_DATE,
         REG_DATE,
+        SETTDATE_DATE,
         PAY_DATE,
         REG_TRADE_QTY,
         TRADE_QTY,
@@ -174,11 +135,54 @@
         CREATE_USER,
         CREATE_TIME,
         ORG_CODE,
-        CREATE_DEPT from
-        (
-        select TEMP.* from
-        (
-        <foreach collection="list" item="item"  separator="union all">
+        CREATE_DEPT
+        )select
+        SEQNO,
+        TRADE_ID,
+        FPROD_ID,
+        PROD_ID,
+        TRADE_TYPE,
+        REG_DATE,
+        SETTDATE_DATE,
+        PAY_DATE,
+        REG_TRADE_QTY,
+        TRADE_QTY,
+        TRADE_AMT,
+        INT_AMT,
+        STATUS,
+        REV_DATE,
+        REMARK,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        ORG_CODE,
+        CREATE_DEPT
+        from(
+        select
+        TEMP.SEQNO,
+        TEMP.TRADE_ID,
+        TEMP.FPROD_ID,
+        TEMP.PROD_ID,
+        TEMP.TRADE_TYPE,
+        TEMP.REG_DATE,
+        TEMP.SETTDATE_DATE,
+        TEMP.PAY_DATE,
+        TEMP.REG_TRADE_QTY,
+        TEMP.TRADE_QTY,
+        TEMP.TRADE_AMT,
+        TEMP.INT_AMT,
+        TEMP.STATUS,
+        TEMP.REV_DATE,
+        TEMP.REMARK,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.ORG_CODE,
+        TEMP.CREATE_DEPT
+        from(
+        <foreach collection="newDataList" item="item"  separator="union all">
             SELECT
             #{item.seqno,jdbcType=VARCHAR} SEQNO,
             #{item.tradeId,jdbcType=VARCHAR} TRADE_ID,
@@ -201,12 +205,109 @@
             #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
             #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
             #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
-            FROM   DUAL
+            FROM DUAL
+        </foreach>
+        ) TEMP where not EXISTS (select 1 from CHB_PRD_BONUS_DEAL CII  where CII.TRADE_ID = TEMP.TRADE_ID)
+        ) de ;
+
+        UPDATE  CHB_PRD_BONUS_DEAL as A,
+        (
+        select
+        SEQNO,
+        TRADE_ID,
+        FPROD_ID,
+        PROD_ID,
+        TRADE_TYPE,
+        REG_DATE,
+        SETTDATE_DATE,
+        PAY_DATE,
+        REG_TRADE_QTY,
+        TRADE_QTY,
+        TRADE_AMT,
+        INT_AMT,
+        STATUS,
+        REV_DATE,
+        REMARK,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        ORG_CODE,
+        CREATE_DEPT
+        from(
+        select
+        TEMP.SEQNO,
+        TEMP.TRADE_ID,
+        TEMP.FPROD_ID,
+        TEMP.PROD_ID,
+        TEMP.TRADE_TYPE,
+        TEMP.REG_DATE,
+        TEMP.SETTDATE_DATE,
+        TEMP.PAY_DATE,
+        TEMP.REG_TRADE_QTY,
+        TEMP.TRADE_QTY,
+        TEMP.TRADE_AMT,
+        TEMP.INT_AMT,
+        TEMP.STATUS,
+        TEMP.REV_DATE,
+        TEMP.REMARK,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.ORG_CODE,
+        TEMP.CREATE_DEPT
+        from(
+        <foreach collection="newDataList" item="item"  separator="union all">
+            SELECT
+            #{item.seqno,jdbcType=VARCHAR} SEQNO,
+            #{item.tradeId,jdbcType=VARCHAR} TRADE_ID,
+            #{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+            #{item.tradeType,jdbcType=VARCHAR} TRADE_TYPE,
+            #{item.regDate,jdbcType=DATE} REG_DATE,
+            #{item.settdateDate,jdbcType=DATE} SETTDATE_DATE,
+            #{item.payDate,jdbcType=DATE} PAY_DATE,
+            #{item.regTradeQty,jdbcType=DECIMAL} REG_TRADE_QTY,
+            #{item.tradeQty,jdbcType=DECIMAL} TRADE_QTY,
+            #{item.tradeAmt,jdbcType=DECIMAL} TRADE_AMT,
+            #{item.intAmt,jdbcType=DECIMAL} INT_AMT,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.revDate,jdbcType=DATE} REV_DATE,
+            #{item.remark,jdbcType=VARCHAR} REMARK,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            FROM DUAL
         </foreach>
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from CHB_PRD_BONUS_DEAL CII where CII.TRADE_ID = TEMP.TRADE_ID);
+        set
+        A.SEQNO = B.SEQNO,
+        A.PROD_ID = B.PROD_ID,
+        A.FPROD_ID = B.FPROD_ID,
+        A.TRADE_TYPE = B.TRADE_TYPE,
+        A.SETTDATE_DATE = B.SETTDATE_DATE,
+        A.REG_DATE = B.REG_DATE,
+        A.PAY_DATE = B.PAY_DATE,
+        A.REG_TRADE_QTY = B.REG_TRADE_QTY,
+        A.TRADE_QTY = B.TRADE_QTY,
+        A.TRADE_AMT = B.TRADE_AMT,
+        A.INT_AMT = B.INT_AMT,
+        A.STATUS = B.STATUS,
+        A.REV_DATE = B.REV_DATE,
+        A.REMARK = B.REMARK,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME,
+        A.CREATE_USER = B.CREATE_USER,
+        A.CREATE_TIME = B.CREATE_TIME,
+        A.ORG_CODE = B.ORG_CODE,
+        A.CREATE_DEPT = B.CREATE_DEPT
+        where A.TRADE_ID = B.TRADE_ID ;
 	</insert>
 
  <delete id="deleteByUpdateTime">
