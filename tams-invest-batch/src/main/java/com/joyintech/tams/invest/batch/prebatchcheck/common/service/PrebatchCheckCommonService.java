@@ -1,20 +1,27 @@
 package com.joyintech.tams.invest.batch.prebatchcheck.common.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.BatchDictCodeList;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.prebatchcheck.common.dao.PrebatchCheckCommonMapper;
 import com.joyintech.tams.invest.batch.prebatchcheck.common.dto.SysPrebatchResultDto;
+import com.joyintech.tams.invest.batch.prebatchcheck.common.dto.SysPrebatchTaskAddDto;
 import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PrebatchCheckCommonService extends BaseService {
@@ -85,5 +92,62 @@ public class PrebatchCheckCommonService extends BaseService {
         }else{
             dto.setTaskStatus(DictCodeListExt3.批前检查_执行状态_成功.getValue());
         }
+    }
+
+
+    /**
+     *
+     * @param batchExecuteInfo
+     * @return
+     */
+    public List<SysPrebatchResultDto> selectAllInstAndPackageDto(SysBatchExecInfo batchExecuteInfo) {
+
+        List<SysPrebatchResultDto> results = new ArrayList<>();
+        SysPrebatchTaskAddDto taskInfo = prebatchCheckCommonMapper.selectTaskList(batchExecuteInfo.getTaskId());
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            List<String> instCodeLists = prebatchCheckCommonMapper.selectAllInst();
+
+            if (!StringUtil.isEmptyList(instCodeLists)) {
+                for (String instCode : instCodeLists) {
+                    SysPrebatchResultDto result =  packageResultDto(batchExecuteInfo,taskInfo);
+                    result.setInstitutionCode(instCode);
+                    results.add(result);
+                }
+            }
+        }else{
+
+            SysPrebatchResultDto result =  packageResultDto(batchExecuteInfo,taskInfo);
+            results.add(result);
+        }
+
+        if (!StringUtil.isEmptyList(results)){
+            prebatchCheckCommonMapper.insertBatchPrebatchResultList(results);
+        }
+        return results;
+
+    }
+
+    private SysPrebatchResultDto packageResultDto(SysBatchExecInfo batchExecuteInfo, SysPrebatchTaskAddDto taskInfo) {
+        SysPrebatchResultDto result = new SysPrebatchResultDto();
+        result.setSeqNo(IDGenerator.generate());
+        result.setTaskId(batchExecuteInfo.getTaskId());
+        result.setBeanName(taskInfo == null ? "" : taskInfo.getBeanName());
+        result.setStopFlag(taskInfo == null ? "00" : taskInfo.getStopFlag());
+        result.setStartMode(batchExecuteInfo.getStartMode());
+        result.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
+        result.setCheckDate(batchExecuteInfo.getExecuteDate());
+        result.setExecuteDate(new Date());
+        result.setTaskStatus(DictCodeListExt3.批前检查_执行状态_执行中.getValue());
+        result.setStartTime(new Date());
+        result.setCreateUser(GlobalConstant.SYSTEM_USER);
+        result.setUpdateUser(GlobalConstant.SYSTEM_USER);
+        return result;
+
+    }
+
+
+    public void deleteResultAndDetailList(Map<String, Object> param) {
+        prebatchCheckCommonMapper.deleteResultDetailList(param);
+        prebatchCheckCommonMapper.deleteResultList(param);
     }
 }

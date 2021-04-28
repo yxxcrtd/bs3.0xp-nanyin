@@ -43,14 +43,58 @@ public class TradeDurationNoConfirmService {
 
         //质押式回购存续期  待处理
         List<SysPrebatchResultDetail> details2 = tradeDurationNoConfirmMapper.selectZYSHGDurationList(param);
-        if(!StringUtil.isEmptyList(details1)){
-            details.addAll(details1);
+        if(!StringUtil.isEmptyList(details2)){
+            details.addAll(details2);
         }
 
         //存款存续期 待处理
 
+        List<SysPrebatchResultDetail> details3 = tradeDurationNoConfirmMapper.selectCKDurationList(param);
+        if(!StringUtil.isEmptyList(details3)){
+            details.addAll(details3);
+        }
+
 
         //拆借存续期 待处理
+
+        List<SysPrebatchResultDetail> details4 = tradeDurationNoConfirmMapper.selectCJDurationList(param);
+        if(!StringUtil.isEmptyList(details4)){
+            details.addAll(details4);
+        }
+
+        // 计划类利率型  存续期 待处理
+
+        List<SysPrebatchResultDetail> details5 = tradeDurationNoConfirmMapper.selectJHLLLXDurationList(param);
+        if(!StringUtil.isEmptyList(details5)){
+            details.addAll(details5);
+        }
+
+
+        // 买断式回购存续期 待处理
+        List<SysPrebatchResultDetail> details6 = tradeDurationNoConfirmMapper.selectMDSHGDurationList(param);
+        if(!StringUtil.isEmptyList(details6)){
+            details.addAll(details6);
+        }
+
+        // 项目类 存续期 待处理
+        List<SysPrebatchResultDetail> details7 = tradeDurationNoConfirmMapper.selectXMLDurationList(param);
+        if(!StringUtil.isEmptyList(details7)){
+            details.addAll(details7);
+        }
+
+        // 债券借贷 存续期 待处理
+        List<SysPrebatchResultDetail> details8 = tradeDurationNoConfirmMapper.selectZQJDDurationList(param);
+        if(!StringUtil.isEmptyList(details8)){
+            details.addAll(details8);
+        }
+
+
+        // 9. 计划类 净值型 货币型  现金分红  赎回到账 现金流日期
+        //  货币/非货币 基金 现金分红 赎回到账
+        List<SysPrebatchResultDetail> details9 = tradeDurationNoConfirmMapper.selectJZXJHJJTradeList(param);
+        if(!StringUtil.isEmptyList(details9)){
+            details.addAll(details9);
+        }
 
 
 

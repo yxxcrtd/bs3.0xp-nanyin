@@ -11,6 +11,19 @@ public interface TradeDurationNoConfirmMapper {
 
     List<SysPrebatchResultDetail> selectZQDurationList(Map<String, Object> param);
 
-
     List<SysPrebatchResultDetail> selectZYSHGDurationList(Map<String, Object> param);
+
+    List<SysPrebatchResultDetail> selectCKDurationList(Map<String, Object> param);
+
+    List<SysPrebatchResultDetail> selectCJDurationList(Map<String, Object> param);
+
+    List<SysPrebatchResultDetail> selectJHLLLXDurationList(Map<String, Object> param);
+
+    List<SysPrebatchResultDetail> selectMDSHGDurationList(Map<String, Object> param);
+
+    List<SysPrebatchResultDetail> selectXMLDurationList(Map<String, Object> param);
+
+    List<SysPrebatchResultDetail> selectZQJDDurationList(Map<String, Object> param);
+
+    List<SysPrebatchResultDetail> selectJZXJHJJTradeList(Map<String, Object> param);
 }

@@ -144,6 +144,16 @@
         where t.CONFIG_ID = #{configId,jdbcType = VARCHAR}
         order by t.ORDER_NO
     </select>
+    <select id="selectErrorPrebatchResult"
+            resultType="java.lang.String">
+        SELECT
+        SEQ_NO seqNo
+        FROM SYS_PREBATCH_RESULT where  task_status = 'ERROR' AND
+        STOP_FLAG = '01'
+        AND DETAIL_COUNT > 0
+        AND check_date =  #{checkDate,jdbcType=DATE}
+
+    </select>
 
 
 </mapper>

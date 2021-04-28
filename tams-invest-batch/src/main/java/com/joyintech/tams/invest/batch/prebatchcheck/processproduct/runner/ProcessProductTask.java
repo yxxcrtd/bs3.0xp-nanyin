@@ -5,6 +5,7 @@ import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.base.entity.SysBatchgrpExecInfo;
 import com.joyintech.framework.constant.BatchDictCodeList;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -20,6 +21,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("processProductTask")
 @Scope("prototype")
@@ -50,6 +54,40 @@ public class ProcessProductTask extends BatchBaseService {
         if (batchExecuteInfo == null) {
             logger.info("无启动参数，批处理退出。");
             return null;
+        }
+
+        if(StringUtil.equals(BatchDictCodeList.批处理启动模式_自动.getValue(),batchExecuteInfo.getStartMode())){
+
+            // 先删除 已经存在的结果 根据 taskId 及日期  自动跑批 所有机构 结果都删除。
+            Map<String,Object> param = new HashMap<>();
+            param.put("checkDate",batchExecuteInfo.getExecuteDate());
+            param.put("taskId",batchExecuteInfo.getTaskId());
+            prebatchCheckCommonService.deleteResultAndDetailList(param);
+
+            // 查询所有机构  并生成对应的 List<SysPrebatchResultDto>
+            List<SysPrebatchResultDto>  resultList = prebatchCheckCommonService.selectAllInstAndPackageDto(batchExecuteInfo);
+
+            if(!StringUtil.isEmptyList(resultList)) {
+                for (SysPrebatchResultDto dto : resultList) {
+                    try {
+                        processProductService.execute(batchExecuteInfo,dto,dto.getInstitutionCode());
+                        result.setStatus(BatchStatus.COMPLETED);
+                    }
+                    catch (Exception e) {
+                        dto.setTaskStatus(DictCodeListExt3.批前检查_执行状态_异常.getValue());
+                        logger.error(e.getMessage());
+                    }
+
+                    // 更新 最终处理状态
+                    dto.setStartTime(null);
+                    dto.setEndTime(new Date());
+                    prebatchCheckCommonService.updateSysPrebatchResult(dto);
+
+                }
+            }
+
+            result.setStatus(BatchStatus.COMPLETED);
+            return result;
         }
 
         String instCode = batchExecuteDetail.getOtherParam4();
