@@ -313,7 +313,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                 String seqNo = baseGetBussinessId.buildBussinessCode(parameter);
                 */
             	String seqNo = dto.getTradeIdList().get(tradeIdIndex);
-
+                tradeIdIndex++;
                 TrdStasecFlow tsf = new TrdStasecFlow();
                 tsf.setSeqno(seqNo);
                 tsf.setPortfolioId(entry.getValue().get(0).getPortfolioId());
@@ -331,7 +331,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                     tsfd.setBranch(dto.getBranch());
                     tsfd.setAmt(ArithmeticUtil.divide(tsb.getPledgePrinAmt(), new BigDecimal("100"), 4));
                     saveCount += trdStasecFlowDetailMapper.insert(tsfd);
-                 // 标准券出入库头寸处理
+                    // 标准券出入库头寸处理
                     EtrSecPositionFlowDto ret = new EtrSecPositionFlowDto();
                     ret.setSeqno(IDGenerator.generate());
                     String secAcctId = entry.getValue().get(0).getSecAcctId() ;
