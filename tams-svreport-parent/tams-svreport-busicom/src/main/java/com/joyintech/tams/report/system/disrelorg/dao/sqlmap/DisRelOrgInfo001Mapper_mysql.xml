@@ -48,6 +48,14 @@
 		a.ORGAN_NAME
 		FROM
 		rep_relorg a
+		<where>
+			<if test="selectrelorgIds != null and selectrelorgIds.size() > 0">
+				<foreach collection="selectrelorgIds" item="relorgId" open="AND a.RELORG_ID IN (" close=")" separator=",">
+					#{relorgId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+
 	</select>
 	<insert id="insertOne" parameterType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions" >
 		insert into REP_RELORG (RELORG_ID,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ORGAN_NAME,STATUS,SVR_DATA_SOURCES)
@@ -75,7 +83,7 @@
 	<update id="updateOne" parameterType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions" >
 		UPDATE rep_relorg
 		set
-		STATUS = 'E',SVR_DATA_SOURCES='02',
+		STATUS = #{status,jdbcType=VARCHAR},SVR_DATA_SOURCES=#{svrDataSources,jdbcType=VARCHAR},
 		ORGAN_NAME= #{organName,jdbcType=VARCHAR}
 		where
 		RELORG_ID= #{relorgId,jdbcType=VARCHAR}

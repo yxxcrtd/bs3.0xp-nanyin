@@ -26,10 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
@@ -49,6 +46,7 @@ public class DisPrdFeeRate002Controller extends BaseController {
         Map<String,Object> map= RequestUtil.getPageParam();
         String datauuid= (String) map.get("datauuid");
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+        DisRepCashYield disRepCashYield =new DisRepCashYield();
         if(null!=map.get("startDate")){
             String startDate = dfs.format(Long.parseLong(String.valueOf(map.get("startDate"))));
             map.put("startDate",startDate);
@@ -56,9 +54,15 @@ public class DisPrdFeeRate002Controller extends BaseController {
         //UUID为空 查询产品费率信息表
          if("".equals(datauuid)){
              List<DisRepCashYield> disRepCashYieldList =prorateService.selectOneDate(map);
-             model.addAttribute("entity", disRepCashYieldList.get(0));
+             if(null!=disRepCashYieldList && disRepCashYieldList.size()>0){
+                 DisRepCashYield d=disRepCashYieldList.get(0);
+                 d.setType("update");
+                 model.addAttribute("entity", d);
+             }else{
+                 disRepCashYield.setType("add");
+                 model.addAttribute("entity", disRepCashYield);
+             }
          }else{
-             DisRepCashYield disRepCashYield =new DisRepCashYield();
              //根据UUID 查询数据库对应记录 错误表
              List<DisPrdFeeRateInfoErrodataWithBLOBs> disPrdFeeRateErrordataList=prorateService.selectdisPrdFeeRateErrordata(datauuid);
              if(disPrdFeeRateErrordataList!=null && disPrdFeeRateErrordataList.size()>0){
@@ -83,10 +87,25 @@ public class DisPrdFeeRate002Controller extends BaseController {
         dto.setStatus("E");
         dto.setAdapterId("无");
         dtoList.add(dto);
-        List<Integer> intList =prorateService.selectPrdFeeData(dtoList);
-        if(intList.size()>0){
-            webResult.setMessage("已存在相同产品代码,启用日期,信披费用类型的数据");
-        }else{
+        Map<String, Object> map=new HashMap<>();
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+        map.put("busiId",dto.getBusiId());
+        map.put("cashType2",dto.getCashType2());
+        String startDate = dfs.format(dto.getStartDate());
+        map.put("startDate",startDate);
+        List<DisRepCashYield> disRepCashYieldList =prorateService.selectOneDate(map);
+        if(null!=disRepCashYieldList && disRepCashYieldList.size()>0){
+            if(null!=dto && "add".equals(dto.getType())){
+                webResult.setMessage("已存在相同产品代码,启用日期,信披费用类型的数据");
+            }
+            if(null!=dto && "update".equals(dto.getType())){
+                DisRepCashYield d=disRepCashYieldList.get(0);
+                d.setRate(dto.getRate());
+                d.setStatus("E");
+                prorateService.updateOne(d);
+                webResult.setMessage("保存成功");
+            }
+        } else{
             try{
                 prorateService.insertPrdFeeData(dtoList);
                 webResult.setMessage("保存成功");

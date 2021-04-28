@@ -2,6 +2,7 @@ package com.joyintech.tams.report.system.chbmst.dao;
 
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
@@ -35,15 +36,15 @@ public interface ChbMstCounterParty001Mapper {
 
     void deleteErrorDataOne(@Param("counterId")String counterId);
 
-
+    List<ChbMstCounterPartyErrodataWithBLOBs> selectChbMstCounterPartyErrordata(@Param("datauuid")String datauuid);
 
     List<SysDataDict> getSysDataDict(Map<String, Object> param);
 
-    List<Integer> selectPrdFeeData(@Param("dtoList") List<DisRepCashYield> dtoList);
+    List<Integer> selectChbMstCounterPartyData(@Param("dtoList") List<ChbMstCounterParty> dtoList);
 
-    void insertPrdFeeData(@Param("dtoList") List<DisRepCashYield> dtoList);
+    void insertChbMstCounterPartyData(@Param("dtoList") List<ChbMstCounterParty> dtoList);
 
-    List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(@Param("datauuid")String datauuid);
+
 
 
 

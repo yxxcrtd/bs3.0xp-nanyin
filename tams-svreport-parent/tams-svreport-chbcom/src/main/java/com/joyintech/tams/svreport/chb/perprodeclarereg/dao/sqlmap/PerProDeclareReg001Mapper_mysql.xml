@@ -1100,12 +1100,35 @@
 		</if>
 	</select>
 	<select id="queryPrdDeclareList" parameterType="java.util.Map" resultType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
+		SELECT REGIST_SEQNO,PROD_ID from chb_prd_declare_sub
+		WHERE SEND_STATUS='01' and STATUS='01'
+		<if test="columnList != null and columnList.size() > 0">
+			<foreach collection="columnList" item="column"
+					 open=" AND PROD_ID IN (" close=")" separator=",">
+				#{column,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</select>
 
 	<delete id="deleteBySeqNo" parameterType="java.lang.String" >
+		delete from SYS_UPLOAD_FILE_INFO
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
 	</delete>
 	<insert id="insertSysUploadFileInfo" parameterType="com.joyintech.tams.common.base.entity.SysUploadFileInfo" >
+		insert into SYS_UPLOAD_FILE_INFO (SEQ_NO, FILE_NAME, PATH,
+            BUSINESS_ID, CREATE_USER, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR},
+            #{businessId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
 	</insert>
 	<update id="updateChbPrdDeclare" parameterType="java.util.Map">
+		update CHB_PRD_DECLARE_SUB
+		<set>
+			<if test="fileNo != null and fileNo != ''">
+				FILE_NO = #{fileNo}
+			</if>
+		</set>
+		where 	REGIST_SEQNO=#{seqNo}
 	</update>
 </mapper>

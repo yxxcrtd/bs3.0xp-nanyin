@@ -14,6 +14,7 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.system.chbmst.dao.ChbMstCounterParty001Mapper;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
@@ -65,6 +66,8 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
      */
     private void dealDataList(List<ChbMstCounterParty> list) {
         list.forEach(item -> {
+            item.setCounterType1Name (SysDataUtil.getZZDictCodeAndNameNew(
+                    DictCode.客户一级类型, item.getCounterType1()));
             item.setCounterType2Name (SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.客户二级类型, item.getCounterType2()));
             item.setStatusName(SysDataUtil.getZZDictCodeAndNameNew(
@@ -93,12 +96,12 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
         return chbMstCounterParty001Mapper.getSysDataDict( param);
     }
 
-    public List<Integer> selectPrdFeeData(List<DisRepCashYield> dtoList) {
-        return chbMstCounterParty001Mapper.selectPrdFeeData(dtoList);
+    public List<Integer> selectChbMstCounterPartyData(List<ChbMstCounterParty> dtoList) {
+        return chbMstCounterParty001Mapper.selectChbMstCounterPartyData(dtoList);
     }
 
-    public void insertPrdFeeData(List<DisRepCashYield> dtoList) {
-         chbMstCounterParty001Mapper.insertPrdFeeData(dtoList);
+    public void insertChbMstCounterPartyData(List<ChbMstCounterParty> dtoList) {
+         chbMstCounterParty001Mapper.insertChbMstCounterPartyData(dtoList);
         return;
     }
 
@@ -114,6 +117,9 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
     }
 
     public List<ChbMstCounterParty> queryReportList(Map<String, Object> param) {
+        String keys = (String)param.get("keys");
+        List<String> selectkeys = StringUtil.splitToList(GlobalConstant.COMMA, keys);
+        param.put("selectkeys", selectkeys);
         return chbMstCounterParty001Mapper.queryReportList( param);
     }
 
@@ -224,6 +230,8 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
                 ChbMstCounterParty chbMstCounterParty=chbMstCounterPartys.get(0);
                 chbMstCounterParty.setCounterName(counterName);
                 chbMstCounterParty.setCounterType2(counterType2);
+                chbMstCounterParty.setStatus("E");
+                chbMstCounterParty.setDataSource("02");
                 chbMstCounterParty001Mapper.updateOne(chbMstCounterParty);
             }
         }
@@ -236,9 +244,14 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
         return chbMstCounterParty001Mapper.selectOneDate( param);
     }
 
-    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(String datauuid) {
-        return chbMstCounterParty001Mapper.selectdisPrdFeeRateErrordata( datauuid);
+    public List<ChbMstCounterPartyErrodataWithBLOBs> selectChbMstCounterPartyErrordata(String datauuid) {
+        return chbMstCounterParty001Mapper.selectChbMstCounterPartyErrordata( datauuid);
     }
+
+    public void updateOne(ChbMstCounterParty chb) {
+        chbMstCounterParty001Mapper.updateOne(chb);
+    }
+
 
     private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,List<DisRepCashYield> entities,String userName,String deptCode) throws ParseException {
         List<ExcelValidDto> checkResult = new ArrayList<>();
@@ -290,4 +303,6 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
         }
         return checkResult;
     }
+
+
 }

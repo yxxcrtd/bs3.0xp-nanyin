@@ -102,8 +102,8 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		return perProDeclareReg001Mapper.deleteBySeqNo(seqNo);
 	}
 
-	public void updateChbPrdDeclare(String seqNo, String filename) {
-		perProDeclareReg001Mapper.updateChbPrdDeclare(seqNo, filename);
+	public void updateChbPrdDeclare(String fileNo, String seqNo) {
+		perProDeclareReg001Mapper.updateChbPrdDeclare(fileNo, seqNo);
 		return;
 	}
 

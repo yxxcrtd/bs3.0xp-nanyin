@@ -55,6 +55,7 @@
                 return;
             }else{
                 data.pageModel = PAGE_MODEL_EDIT;
+                data.type="update";
                 Joyin.dialog(JoyinUtil.getLabel("编辑关联机构信息"),
                     basePath + "svreport/system/disrelorg/DisRelOrg002/init",
                     "95%", "95%", data,function(){
@@ -113,9 +114,10 @@
             if(rows.length > 0) {
                 var keyList = [];
                 $.each(rows, function(i, row) {
-                    keyList.push(row.orgCode + '|' + row.prodId);
+                    alert(row.relorgId)
+                    keyList.push(row.relorgId);
                 });
-                param.keys = keyList.join(',');
+                param.keys = keyList.join();
             }
             else{
                 //有勾选优先勾选数据

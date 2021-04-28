@@ -9,6 +9,7 @@
             var object = $.serializeToObject('#submitForm',true);
             object.relorgId = $("#relorgId").val();
             object.organName = $("#organName").val();
+            object.type =$("#type").val();
             if(object.relorgId==''){
                 alert("关联机构代码不能为空");
             }

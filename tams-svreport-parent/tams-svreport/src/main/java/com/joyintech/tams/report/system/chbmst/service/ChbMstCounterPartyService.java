@@ -8,6 +8,7 @@ import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
@@ -91,7 +92,33 @@ public class ChbMstCounterPartyService extends BaseService<ChbMstCounterParty> {
                 param,
                 ExcelValidDto.class);
     }
-
+    public List<ChbMstCounterParty> selectOneDate(Map<String, Object> map) {
+        return restTemplate.postForList(
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbMstCounterParty/selectOneDate",map,
+                ChbMstCounterParty.class);
+    }
+    public List<ChbMstCounterPartyErrodataWithBLOBs> selectChbMstCounterPartyErrordata(String datauuid) {
+        return restTemplate.postForList(
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbMstCounterParty/selectChbMstCounterPartyErrordata",datauuid,
+                ChbMstCounterPartyErrodataWithBLOBs.class);
+    }
+    public List<Integer> selectChbMstCounterPartyData(List<ChbMstCounterParty> dtoList) {
+        return restTemplate.postForList(
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbMstCounterParty/selectChbMstCounterPartyData",dtoList,
+                Integer.class);
+    }
+    public void insertChbMstCounterPartyData(List<ChbMstCounterParty> dtoList) {
+        restTemplate.postForList(
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbMstCounterParty/insertChbMstCounterPartyData",dtoList,
+                ChbMstCounterParty.class);
+        return;
+    }
+    public void updateOne(ChbMstCounterParty chb) {
+        restTemplate.postForList(
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbMstCounterParty/updateOne",chb,
+                ChbMstCounterParty.class);
+        return;
+    }
 
 
 
@@ -101,35 +128,6 @@ public class ChbMstCounterPartyService extends BaseService<ChbMstCounterParty> {
                 SysDataDict.class);
     }
 
-    public List<Integer> selectPrdFeeData(List<DisRepCashYield> dtoList) {
-        return restTemplate.postForList(
-                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/selectPrdFeeData",dtoList,
-                Integer.class);
-    }
-
-    public void insertPrdFeeData(List<DisRepCashYield> dtoList) {
-        restTemplate.postForList(
-                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/insertPrdFeeData",dtoList,
-                DisRepCashYield.class);
-        return;
-    }
-
-
-
-
-
-
-    public List<DisRepCashYield> selectOneDate(Map<String, Object> map) {
-        return restTemplate.postForList(
-                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/selectOneDate",map,
-                DisRepCashYield.class);
-    }
-
-    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(String datauuid) {
-        return restTemplate.postForList(
-                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/selectdisPrdFeeRateErrordata",datauuid,
-                DisPrdFeeRateInfoErrodataWithBLOBs.class);
-    }
 
 
 }

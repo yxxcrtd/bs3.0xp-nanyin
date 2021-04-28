@@ -82,6 +82,9 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
     }
 
     public List<DisAssociatedInstitutions> queryReportList(Map<String, Object> param) {
+        String relorgIds = (String)param.get("keys");
+        List<String> selectrelorgIds = StringUtil.splitToList(GlobalConstant.COMMA, relorgIds);
+        param.put("selectrelorgIds", selectrelorgIds);
         return disRelOrgInfo001Mapper.queryReportList( param);
     }
 
@@ -142,6 +145,8 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
                         if(null!=entitys.get(0) && !"".equals(entitys.get(0).getRelorgId())){
                             DisAssociatedInstitutions entity=entitys.get(0);
                             entity.setOrganName(organName);
+                            entity.setStatus("E");
+                            entity.setSvrDataSources("02");
                             disRelOrgInfo001Mapper.updateOne(entity);
                         }else{
                             addDisAssociatedInstitutions(relorgId,userName,organName);
@@ -214,5 +219,9 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
 
     public void insertOne(DisAssociatedInstitutions disAssociatedInstitutions) {
         disRelOrgInfo001Mapper.insertOne(disAssociatedInstitutions);
+    }
+
+    public void updateOne(DisAssociatedInstitutions disAssociatedInstitutions) {
+        disRelOrgInfo001Mapper.updateOne(disAssociatedInstitutions);
     }
 }

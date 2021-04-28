@@ -2,6 +2,7 @@ package com.joyintech.service.svrcom.system.prorate.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
@@ -95,5 +96,11 @@ public class ProrateController {
         String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
         String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
         return this.proRateInfo001Service.importData(dataList,tempList,userName,orgCode,deptCode);
+    }
+
+    @PostMapping("updateOne")
+    public void updateOne(@RequestBody DisRepCashYield d) {
+        proRateInfo001Service.updateOne(d);
+        return ;
     }
 }

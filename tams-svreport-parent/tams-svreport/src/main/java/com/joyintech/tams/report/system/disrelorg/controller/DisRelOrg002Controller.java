@@ -46,8 +46,16 @@ public class DisRelOrg002Controller extends BaseController {
         if(!"add".equals(map.get("operateType"))){
             String relorgId= (String) map.get("relorgId");
             List<DisAssociatedInstitutions> entitys=disRelOrgService.selectOne(relorgId);
-            model.addAttribute("entity", entitys.get(0));
+            if(null!=entitys && entitys.size()>0){
+                DisAssociatedInstitutions d=entitys.get(0);
+                d.setType("update");
+                model.addAttribute("entity", d);
+            }else{
+                disAssociatedInstitutions.setType("add");
+                model.addAttribute("entity",disAssociatedInstitutions);
+            }
         }else{
+            disAssociatedInstitutions.setType("add");
             model.addAttribute("entity",disAssociatedInstitutions);
         }
         return super.init(model);
@@ -72,9 +80,18 @@ public class DisRelOrg002Controller extends BaseController {
         dto.setSvrDataSources("01");
         dto.setStatus("E");
         List<DisAssociatedInstitutions> entitys=disRelOrgService.selectOne(dto.getRelorgId());
-        if(entitys.size()>0){
-            webResult.setMessage("已存在管理机构代码的数据");
-        }else{
+        if(null!=entitys && entitys.size()>0){
+            if(null!=dto && "add".equals(dto.getType())){
+                webResult.setMessage("已存在管理机构代码的数据");
+            }
+            if(null!=dto && "update".equals(dto.getType())){
+                DisAssociatedInstitutions d=entitys.get(0);
+                d.setOrganName(dto.getOrganName());
+                d.setStatus("E");
+                disRelOrgService.updateOne(d);
+                webResult.setMessage("保存成功");
+            }
+        } else{
             try{
                 disRelOrgService.insertOne(dto);
                 webResult.setMessage("保存成功");

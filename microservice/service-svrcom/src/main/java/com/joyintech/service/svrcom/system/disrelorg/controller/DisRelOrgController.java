@@ -77,4 +77,9 @@ public class DisRelOrgController {
         disRelOrgInfo001Service.insertOne(disAssociatedInstitutions);
         return ;
     }
+    @PostMapping("updateOne")
+    public void updateOne(@RequestBody DisAssociatedInstitutions disAssociatedInstitutions){
+        disRelOrgInfo001Service.updateOne(disAssociatedInstitutions);
+        return ;
+    }
 }

@@ -17,11 +17,12 @@
             }
         },
         cols: [
-            { title: "数据状态", field:'statusName',width:'8%'},
+            { title: "数据状态", field:'statusName',sortField:'status',width:'5%'},
             { title: "status",  visible:false, field:'status'},
             { title: "交易对手代码", field:'counterId',width:'8%'},
             { title: "交易对手名称", field:'counterName',width:'8%'},
-            { title: "交易对手一级类型", field:'counterType1',width:'12%'},
+            { title: "交易对手一级类型", field:'counterType1Name',width:'12%'},
+            {  field:'counterType1',visible:false,width:'10%'},
             { title: "交易对手二级类型", field:'counterType2Name',width:'10%'},
             {  field:'counterType2',visible:false,width:'10%'},
             { title: "创建人", field:'createUser',width:'8%'},
@@ -35,7 +36,7 @@
                 title : '操作',
                 field : 'operation',
                 type : 'action',
-                width : 150,
+                width : 130,
                 buttons : [
                     {text: '&#xe642;',clas: 'edit',title: '编辑'},
                     {text: '&#xe640;',clas: 'delt',title: '删除'}
@@ -58,6 +59,7 @@
                 return;
             }else{
                 data.pageModel = PAGE_MODEL_EDIT;
+                data.type="update";
                 Joyin.dialog(JoyinUtil.getLabel("编辑交易对手信息"),
                     basePath + "svreport/system/chbmst/ChbMstCounterParty002/init",
                     "95%", "95%", data,function(){
@@ -116,9 +118,9 @@
             if(rows.length > 0) {
                 var keyList = [];
                 $.each(rows, function(i, row) {
-                    keyList.push(row.orgCode + '|' + row.prodId);
+                    keyList.push(row.counterId);
                 });
-                param.keys = keyList.join(',');
+                param.keys = keyList.join();
             }
             else{
                 //有勾选优先勾选数据
