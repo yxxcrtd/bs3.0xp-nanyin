@@ -369,6 +369,7 @@ public class BusiAutoAddSecInfoService {
                 orgetrSecPositionFlow.setSeqno(IDGenerator.generate());
                 orgetrSecPositionFlow.setAmount(ArithmeticUtil.multiply(etrSecPosition.getAmount(),new BigDecimal("-1")));
                 orgetrSecPositionFlow.setTradeId(tradeid);
+                orgetrSecPositionFlow.setCdate(batchDate);
                 etrSecPositionflowlist.add(orgetrSecPositionFlow);
 
                 //上市流通代码对应持仓
@@ -377,6 +378,7 @@ public class BusiAutoAddSecInfoService {
                 targetrSecPositionFlow.setAmount(ArithmeticUtil.multiply(targetrSecPositionFlow.getAmount(),new BigDecimal("-1")));
                 targetrSecPositionFlow.setFinprodId("F01_"+secId);
                 targetrSecPositionFlow.setTradeId(tradeid);
+                targetrSecPositionFlow.setCdate(batchDate);
                 etrSecPositionflowlist.add(targetrSecPositionFlow);
             }
             baseFinProductBaseInfoDto.setEtrSecPositionFlowlist(etrSecPositionflowlist);
@@ -394,6 +396,7 @@ public class BusiAutoAddSecInfoService {
                 orgptlSecPositionFlow.setSeqno(IDGenerator.generate());
                 orgptlSecPositionFlow.setAmount(ArithmeticUtil.multiply(ptlSecPosition.getAmount(),new BigDecimal("-1")));
                 orgptlSecPositionFlow.setTradeId(ptlsectradeid);
+                orgptlSecPositionFlow.setCdate(batchDate);
                 ptlSecPositionflowList.add(orgptlSecPositionFlow);
 
                 //上市流通代码对应持仓
@@ -402,6 +405,7 @@ public class BusiAutoAddSecInfoService {
                 targptlSecPositionFlow.setAmount(ArithmeticUtil.multiply(targptlSecPositionFlow.getAmount(),new BigDecimal("-1")));
                 targptlSecPositionFlow.setFinprodId("F01_"+secId);
                 targptlSecPositionFlow.setTradeId(ptlsectradeid);
+                targptlSecPositionFlow.setCdate(batchDate);
                 ptlSecPositionflowList.add(targptlSecPositionFlow);
                 ptlSecPositionflowTempList.add(targptlSecPositionFlow);
             }
