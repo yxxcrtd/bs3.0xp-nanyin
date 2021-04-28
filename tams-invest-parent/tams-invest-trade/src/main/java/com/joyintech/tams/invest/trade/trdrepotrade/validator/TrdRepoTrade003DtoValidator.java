@@ -358,6 +358,17 @@ public class TrdRepoTrade003DtoValidator implements TradeCommonValidator {
             }
         }
 
+        if(StringUtil.equals(inputDto.getOperateType(), "save") || StringUtil.equals(inputDto.getOperateType(), "submit")){
+            if(inputDto.getBussRepoSecPtl().getPledgeBondListDetailed().size()>0){
+                for(PledgeBondInfoDto dto:inputDto.getBussRepoSecPtl().getPledgeBondListDetailed()){
+                    if(dto.getPledgePrin()==null){
+                        errorList.add(new ValidMessage("质押券汇总信息中“质押券汇总券面总额”字段不能为空。"));
+                        break;
+                    }
+                }
+            }
+        }
+
         return errorList;
     }
 }
