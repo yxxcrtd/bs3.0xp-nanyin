@@ -220,6 +220,7 @@
                     #{item}
                 </foreach>
             </if>
+            order by A.PS,C.TERM_TYPE,C.SETTLE_SPREED,C.SEC_ACCT_ID desc
     </select>
     
     <resultMap id="entrustInfoMap" type="com.joyintech.framework.select.SelectOptionDto">

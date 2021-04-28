@@ -264,6 +264,7 @@
                 #{item}
             </foreach>
         </if>
+        order by ETR_ENTRUST.FINPROD_ID,ETR_ENTRUST_ADD.SETTLE_SPREED,ETR_ENTRUST.PS desc
 	</select>
 
 	<resultMap id="entrustInfoMap" type="com.joyintech.framework.select.SelectOptionDto">
