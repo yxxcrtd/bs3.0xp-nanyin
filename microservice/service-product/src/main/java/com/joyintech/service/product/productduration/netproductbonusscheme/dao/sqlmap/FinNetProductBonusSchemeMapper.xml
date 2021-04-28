@@ -618,6 +618,9 @@
 		      TRADE_ID
 		 from TRD_PRODUCT_DEAL 
 		 where TOTLE_TRADE_ID= #{totleTradeId, jdbcType = VARCHAR}
+		 /*ADD BY JIANGPENG ON 20210427 TISHKBS-2042 CLONE - 【产品存续期查询】净值型周期型红利再投交易，撤销，审批人审批报错*/
+		   and BRANCH= #{branch, jdbcType = VARCHAR}
+		 /*ADD BY JIANGPENG ON 20210427 TISHKBS-2042 CLONE - 【产品存续期查询】净值型周期型红利再投交易，撤销，审批人审批报错*/
 		   and TRADE_STATUS='01'
 	</select>	  
 </mapper>
