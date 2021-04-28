@@ -37,7 +37,9 @@
         select
         <include refid="com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper.Base_Column_List" />
         from PTL_SEC_POSITION_FLOW
-        where TRADE_ID = #{tradeId,jdbcType=VARCHAR} AND HODING_TYPE IN ('01', '02', '04', '05', '06', '12')
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR} AND HODING_TYPE IN ('01', '02', '04', '05', '06', '09','10','12')
+        /* modify by jiangpeng on 20210428 借贷融入流程中数据 退回持仓更新错误
+            ZGBSS-1149【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
     </select>
 
     <select id="selectAllEtrPosition" resultType="com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto"
