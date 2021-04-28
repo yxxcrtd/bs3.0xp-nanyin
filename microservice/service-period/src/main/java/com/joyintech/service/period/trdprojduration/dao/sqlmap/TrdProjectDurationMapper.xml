@@ -1155,21 +1155,40 @@
             AND t3.mdate =TO_DATE(#{mDate}, 'yyyy-mm-dd')
         </if>      
         <if test="busiCode == null or  busiCode == ''">
-           select yield from(SELECT T4.RANGE_YIELD * 100 yield,t4.vdate
-              FROM PTL_SEC_POSITION T1
-             INNER JOIN FIN_CASH_PLAN T2
+            <if test="ISPAYINT != null and ISPAYINT =='Y'.toString()">
+                select yield from(SELECT T4.RANGE_YIELD * 100 yield,t4.vdate
+                FROM PTL_SEC_POSITION T1
+                INNER JOIN FIN_CASH_PLAN T2
                 ON T1.FINPROD_ID = T2.FINPROD_ID
-               AND T2.FINPROD_TYPE2 = #{F18}
-               AND T1.CDATE = T2.MDATE
-             INNER JOIN FIN_CASH_INFO T3
+                AND T2.FINPROD_TYPE2 = #{F18}
+                AND T1.CDATE = T2.MDATE
+                INNER JOIN FIN_CASH_INFO T3
                 ON T3.CASH_ID = T2.CASH_ID
-              LEFT JOIN FIN_CASH_PLAN T4
+                LEFT JOIN FIN_CASH_PLAN T4
                 ON T4.CASH_ID = T2.CASH_ID
-             WHERE  T1.FINPROD_ID = #{finprodId}
-               AND T3.CASH_TYPE_2 = #{C02}
-               AND T4.vdate <![CDATA[<=]]> TO_DATE(#{vDate}, 'yyyy-mm-dd')
-               <!--AND T4.mdate =TO_DATE(#{mDate}, 'yyyy-mm-dd')-->
-               order by T4.vdate desc)where ROWNUM = 1
+                WHERE  T1.FINPROD_ID = #{finprodId}
+                AND T3.CASH_TYPE_2 = #{C02}
+                AND T4.vdate <![CDATA[<=]]> TO_DATE(#{vDate}, 'yyyy-mm-dd')
+                <!--AND T4.mdate =TO_DATE(#{mDate}, 'yyyy-mm-dd')-->
+                order by T4.vdate desc)where ROWNUM = 1
+            </if>
+            <if test="ISPAYINT != null and ISPAYINT =='N'.toString()">
+               SELECT DISTINCT T4.RANGE_YIELD * 100 yield
+                FROM PTL_SEC_POSITION T1
+                INNER JOIN FIN_CASH_PLAN T2
+                ON T1.FINPROD_ID = T2.FINPROD_ID
+                AND T2.FINPROD_TYPE2 = #{F18}
+                AND T1.CDATE = T2.MDATE
+                INNER JOIN FIN_CASH_INFO T3
+                ON T3.CASH_ID = T2.CASH_ID
+                LEFT JOIN FIN_CASH_PLAN T4
+                ON T4.CASH_ID = T2.CASH_ID
+                WHERE  T1.FINPROD_ID = #{finprodId}
+                AND T3.CASH_TYPE_2 = #{C02}
+                AND T4.vdate = TO_DATE(#{vDate}, 'yyyy-mm-dd')
+                AND T4.mdate =TO_DATE(#{mDate}, 'yyyy-mm-dd')
+            </if>
+
         </if>         
     </select>
     <!-- 查询区间净投资收益率 yjm end 20190822-->
