@@ -469,10 +469,9 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
                 String value = map.get(string);
                  Field field = ReflectionUtils.findField(chbMstCounterParty.getClass(),
                         this.subBlank(StringUtil.lowerCase(string)));
-//                if(field==null){
-//                  System.out.println(string);
-//                  continue;
-//                }
+                if(field==null){
+                  continue;
+                }
                 field.setAccessible(true);
                  Type type = field.getGenericType();
                 if ("java.math.BigDecimal".equals(type.getTypeName())) {
@@ -525,7 +524,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
             // 创建人
             chbMstCounterParty.setCreateUser(CommonUtil.getUserName());
             // 创建部门
-            chbMstCounterParty.setCreateDept(CommonUtil.getDeptCode());
+            chbMstCounterParty.setCreateDept(null == CommonUtil.getDeptCode() ? "" : CommonUtil.getDeptCode());
             // 设置uuid
             chbMstCounterParty.setUuid(UUID.randomUUID().toString());
         
