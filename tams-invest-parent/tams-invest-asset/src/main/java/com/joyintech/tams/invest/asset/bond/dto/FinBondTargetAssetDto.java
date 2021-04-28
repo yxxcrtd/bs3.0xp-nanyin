@@ -355,6 +355,25 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     public String isIssueAsset;
 
     /**
+     * 上市代码
+     */
+    public String appearMarketId;
+
+    /**
+     * 获取上市代码
+     */
+    public String getAppearMarketId() {
+        return appearMarketId;
+    }
+
+    /**
+     * 设置上市代码
+     */
+    public void setAppearMarketId(String appearMarketId) {
+        this.appearMarketId = appearMarketId;
+    }
+
+    /**
      * 获取 isIssueAsset
      * @return isIssueAsset.
      */

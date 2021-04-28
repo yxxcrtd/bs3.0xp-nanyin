@@ -136,6 +136,9 @@
             </if>
             <if test="isIssueAsset != null" >
                 ,IS_ISSUE_ASSET
+            </if>
+            <if test="appearMarketId != null" >
+                ,APPEAR_MARKET_ID
             </if>)
         values (#{finprodId,jdbcType=VARCHAR}, #{saleDepartment,jdbcType=VARCHAR}, #{saleLayer,jdbcType=VARCHAR}, 
             #{salePeriod,jdbcType=DECIMAL}, #{purSpeed,jdbcType=DECIMAL}, #{redSpeed,jdbcType=DECIMAL}, 
@@ -164,6 +167,9 @@
             </if>
             <if test="isIssueAsset != null" >
                 ,#{isIssueAsset,jdbcType=VARCHAR}
+            </if>
+            <if test="appearMarketId != null" >
+                ,#{appearMarketId,jdbcType=VARCHAR}
             </if>)
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductAdd" >
