@@ -21,8 +21,12 @@ import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddFinProd
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddTradeProductDealDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
+import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
@@ -99,6 +103,12 @@ public class BusiAutoAddSecInfoService {
     private TrdFinProductBarterMapper trdFinProductBarterMapper;
     @Autowired
     private PtlTradeMapper ptlTradeMapper;
+    
+    @Autowired
+    private IPlatformDate iPlatformDate;
+    
+    @Autowired
+    private RiskRedisInitService<ImplCond> redisRriter;
 
     /**
      *  债券自动上市流通批处理
@@ -412,6 +422,20 @@ public class BusiAutoAddSecInfoService {
         //入库加券信息
         if(baseFinProductBaseInfolist != null && baseFinProductBaseInfolist.size() > 0){
             this.insert(baseFinProductBaseInfolist);
+            //加券后资产信息载入redis
+            if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+            	if(redisRriter!=null&&iPlatformDate!=null) {
+                    ImplCond cond = new ImplCond();
+                    cond.setDel(false);
+                    cond.setPlateDate(iPlatformDate.getSysDate());
+                    for (BusiAutoAddFinProductBaseInfoDto dto : baseFinProductBaseInfolist) {
+                    	if(dto.getFinProduct()!=null&&StringUtil.isNotEmpty(dto.getFinProduct().getFinprodId())) {
+                    		cond.setAssetIdArray(dto.getFinProduct().getFinprodId());
+                            redisRriter.dealAssetData(cond);
+                    	}
+                    }	
+            	}
+            }
         }
         //入库交易信息
         if(busiAutoAddTradeProductDealDtoList !=null && busiAutoAddTradeProductDealDtoList.size() > 0){

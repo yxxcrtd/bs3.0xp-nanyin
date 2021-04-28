@@ -473,7 +473,7 @@ public class TrdBondMarketTradeService extends BaseService {
             
             //接风险redis-资产基本信息
             if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
-            	if(redisRriter!=null&&iPlatformDate!=null&StringUtil.isNotEmpty(newFinprodId)) {
+            	if(redisRriter!=null&&iPlatformDate!=null&&StringUtil.isNotEmpty(newFinprodId)) {
                     ImplCond cond = new ImplCond();
                     cond.setDel(false);
                     cond.setAssetIdArray(newFinprodId);
