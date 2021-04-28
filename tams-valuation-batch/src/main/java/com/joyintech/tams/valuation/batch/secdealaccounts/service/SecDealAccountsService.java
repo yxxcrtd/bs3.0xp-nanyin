@@ -6542,8 +6542,8 @@ public class SecDealAccountsService {
         BigDecimal origyzjkmye = BigDecimal.ZERO;
         // 调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
         SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
-        searchDto.setHappenDate(DateUtil.addDay(acctEntity.getHappenDate(),-1));
-        searchDto.setBookDate(DateUtil.addDay(acctEntity.getHappenDate(),-1));
+        searchDto.setHappenDate(acctEntity.getHappenDate());
+        searchDto.setBookDate(acctEntity.getHappenDate());
         searchDto.setBooksetId(acctEntity.getBooksetId());
         searchDto.setBokDetailId(trdFinProductBarterDto.getBokDetailId());
         searchDto.setTaskPri(acctEntity.getListFinProductDealInfoComDTO().get(0).getTaskPri());
