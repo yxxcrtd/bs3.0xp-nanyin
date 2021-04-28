@@ -134,6 +134,12 @@ public class PtlCashFlow002Controller extends BaseController{
                 wflTrdProductDeal.setTradeId(busiNo);
                 wflTrdProductDeal = bussCommonMapperDelegateService.selectByMultiPrimaryKey(WflTrdProductDealMapper.class, wflTrdProductDeal, WflTrdProductDeal.class);
             }
+            WflTrdProductDeal wflTrdProductDeal1 = new WflTrdProductDeal();
+            if(bussCommonMapperDelegateService != null){
+                wflTrdProductDeal1.setWorkflowStatus(DictCodeList.数据状态_修改中.getValue());
+                wflTrdProductDeal1.setTradeId(busiNo);
+                wflTrdProductDeal1 = bussCommonMapperDelegateService.selectByMultiPrimaryKey(WflTrdProductDealMapper.class, wflTrdProductDeal1, WflTrdProductDeal.class);
+            }
 
             if(wflTrdProductDeal != null){
                 String workFlowId = wflTrdProductDeal.getWorkflowId();
@@ -152,7 +158,25 @@ public class PtlCashFlow002Controller extends BaseController{
                     }
                 }
 
-            }else {
+            }else if(wflTrdProductDeal1 != null){
+                String workFlowId = wflTrdProductDeal1.getWorkflowId();
+                if(workFlowId != null && !workFlowId.isEmpty()){
+                    PtlCashFlowDto entity = ptlCashFlowService.getBussinessEntityByWorkflowId(
+                            workFlowId);
+
+                    if (StringUtil.isEmpty(entity.getFinprodType2())) {
+                        entity.setFinprodType2(finprodType2);
+                    }
+
+                    model.addAttribute("entity",entity);
+
+                    if(entity.getBussTrdTransferOrder() != null && entity.getBussTrdTransferOrder().size()>0){
+                        model.addAttribute("entity_bussTrdTransferOrderDto",JsonUtils.object2Json(entity.getBussTrdTransferOrder().get(0)));
+                    }
+                }
+
+            }
+            else {
 
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("busiNo", busiNo);

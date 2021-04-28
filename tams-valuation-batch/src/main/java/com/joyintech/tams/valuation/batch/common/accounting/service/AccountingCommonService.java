@@ -1210,6 +1210,15 @@ public class AccountingCommonService {
     }
 
     /**
+     * TISHKBS-1998 【估值核算-估值表】货币型产品估值表中的“本日收益-费后”统计的是当日应付利润发生额，但是并未将手工账的应付利润发生额统计进去
+     * @param params
+     * @return
+     */
+    public BigDecimal getVouchAmt(Map<String, Object> params) {
+        return accountingCommonMapper.getVouchAmt(params);
+    }
+
+    /**
      * 公用方法：帐套资产负债插入及更新
      *
      * @param valStatBokPosition CDate 统计日期 bookSetId 账套代码

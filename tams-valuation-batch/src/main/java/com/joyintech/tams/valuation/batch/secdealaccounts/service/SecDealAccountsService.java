@@ -5956,7 +5956,7 @@ public class SecDealAccountsService {
                 NumberEnum.MONEY);
         //定义		变量.冲减溢折价（贷）_本位币 = round(变量.冲减溢折价,共通金额小数位) * 变量.汇率
         BigDecimal 冲减溢折价贷本位币 = ArithmeticUtil.round(
-                ArithmeticUtil.multiply(ArithmeticUtil.round(cjGyjzbd, NumberEnum.MONEY), 汇率),
+                ArithmeticUtil.multiply(ArithmeticUtil.round(cjYzj, NumberEnum.MONEY), 汇率),
                 NumberEnum.MONEY);
         /**定义 变量.买卖价差_本位币	 =	(交易金额_本位币  + 实付通道费_本位币)
          - 	(成本金额_本位币 + 印花税_本位币 + 经手费_本位币 + 证管费_本位币 + 结算费_本位币 + 佣金_本位币 + 交易手续费_本位币
@@ -6542,8 +6542,8 @@ public class SecDealAccountsService {
         BigDecimal origyzjkmye = BigDecimal.ZERO;
         // 调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
         SubjectBalanceSearchDto searchDto = new SubjectBalanceSearchDto();
-        searchDto.setHappenDate(DateUtil.addDay(acctEntity.getHappenDate(),-1));
-        searchDto.setBookDate(DateUtil.addDay(acctEntity.getHappenDate(),-1));
+        searchDto.setHappenDate(acctEntity.getHappenDate());
+        searchDto.setBookDate(acctEntity.getHappenDate());
         searchDto.setBooksetId(acctEntity.getBooksetId());
         searchDto.setBokDetailId(trdFinProductBarterDto.getBokDetailId());
         searchDto.setTaskPri(acctEntity.getListFinProductDealInfoComDTO().get(0).getTaskPri());

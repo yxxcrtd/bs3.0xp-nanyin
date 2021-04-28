@@ -721,7 +721,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
 //                    etrCashPositionFlowDto.setAcctId(
 //                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
 //                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
-                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getPayAcctNo());
+                    etrCashPositionFlowDto.setAcctId((finProductTradeDto.getStlPayOrdersList().get(0)).getMyAcctNo());
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.无委托通道

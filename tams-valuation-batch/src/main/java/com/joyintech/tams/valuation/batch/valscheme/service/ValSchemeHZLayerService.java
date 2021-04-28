@@ -1412,14 +1412,24 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
             tdyIncomeBef.setSubjectName(String.valueOf(ArithmeticUtil.doSub(tdyBokPosition.getNetAssetValueBef(),tdyBokPosition.getCapital()).setScale(NumberEnum.MONEY.getCode(),
                     RoundingMode.HALF_UP)));
             result.setTdyIncomeBef(tdyIncomeBef);
-            
+            // add by jiangpeng on 20210427 start
+            // TISHKBS-1998 【估值核算-估值表】货币型产品估值表中的“本日收益-费后”统计的是当日应付利润发生额，但是并未将手工账的应付利润发生额统计进去
+            Map<String, Object> param = new HashMap<>();
+            param.put("booksetId", position.getBooksetId());
+            param.put("cdFlag", DictCodeList.借贷方向_贷.getValue());
+            param.put("bookDate", position.getBookDate());
+            BigDecimal vouchAmt = accountingCommonService.getVouchAmt(param);
+            BigDecimal profitAmt = ArithmeticUtil.doAdd(vouchAmt, tdyBokPosition.getProfitAmt());
+            // add by jiangpeng on 20210427 end
             // 出参.结构集.产品本日收益： 设置
             ProdValuationDto tdyProdProfit = new ProdValuationDto();
             // 科目代码 <- "产品本日收益："
             tdyProdProfit.setSubjectNo("产品本日收益-费后：");
             // 科目名称 <- 变量.当日账套汇总信息.应付利润
-            tdyProdProfit.setSubjectName(
-                (tdyBokPosition.getProfitAmt() == null) ? BigDecimal.ZERO.toString() : tdyBokPosition.getProfitAmt().toString());
+            // add by modify on 20210427 start
+            // TISHKBS-1998 【估值核算-估值表】货币型产品估值表中的“本日收益-费后”统计的是当日应付利润发生额，但是并未将手工账的应付利润发生额统计进去
+            tdyProdProfit.setSubjectName(StringUtil.isNotEmpty(profitAmt) ? profitAmt.toString() : BigDecimal.ZERO.toString());
+            // add by modify on 20210427 end
             result.setTdyProdProfit(tdyProdProfit);
 
             

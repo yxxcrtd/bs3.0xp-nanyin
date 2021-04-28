@@ -930,7 +930,8 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                                 boolean is卖出,
                                 EtrCashPositionFlowDto etrCashPositionFlowDto){
         String chlType = StringUtil.isEmpty(chlId) ? null : EtrCommonCashPositionDealService.queryChlType(chlId);
-        if (StringUtil.equals(chlType, DictCodeListExt2.划款方式_一次性划款.getValue())) {
+        if (StringUtil.equals(chlType, DictCodeListExt2.划款方式_一次性划款.getValue())
+            || (StringUtil.equals(chlType, DictCodeListExt2.划款方式_逐笔划款.getValue()) && StringUtil.isBlank(counterId))) {
             etrCashPositionFlowDto.setChlFinprodId(chlId);
             return EtrCommonCashPositionDealService.select通道资金账户(chlId);
         }

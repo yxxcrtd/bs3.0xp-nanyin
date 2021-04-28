@@ -4,6 +4,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.bondmarkettrade.dao.TrdBondMarketTradeMapper;
@@ -17,10 +18,16 @@ import com.joyintech.tams.component.base.core.dto.BaseFinProductExerciseRuleDto;
 import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
+import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +53,12 @@ public class TrdBondMarketTradeService extends BaseService {
 
     @Autowired
     private TrdProductDealAddMapper trdProductDealAddMapper;
+    
+    @Autowired
+    private IPlatformDate iPlatformDate;
+    
+    @Autowired
+    private RiskRedisInitService<ImplCond> redisRriter;
 
     /**
      * 实物交易表
@@ -269,6 +282,7 @@ public class TrdBondMarketTradeService extends BaseService {
     public void autoAddBond(TrdBondMarketTradeDto dto) {
         BaseFinProductBaseInfoDto baseFinProductBaseInfoDto = new BaseFinProductBaseInfoDto();
 
+        //加券债券的资产代码
         String newFinprodId = DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + dto.getAppearMarketId();
 
         FinProduct finProduct1 = finProductMapper.selectByPrimaryKey(newFinprodId);
@@ -455,7 +469,18 @@ public class TrdBondMarketTradeService extends BaseService {
             List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoDtos = new ArrayList<>();
             baseFinProductBaseInfoDtos.add(baseFinProductBaseInfoDto);
             //调用接口入库
-            baseFinProductBaseInfoService.insert(baseFinProductBaseInfoDtos);    
+            baseFinProductBaseInfoService.insert(baseFinProductBaseInfoDtos);
+            
+            //接风险redis-资产基本信息
+            if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+            	if(redisRriter!=null&&iPlatformDate!=null&StringUtil.isNotEmpty(newFinprodId)) {
+                    ImplCond cond = new ImplCond();
+                    cond.setDel(false);
+                    cond.setAssetIdArray(newFinprodId);
+                    cond.setPlateDate(iPlatformDate.getSysDate());
+                    redisRriter.dealAssetData(cond);	
+            	}
+            }
         }
     }
 
@@ -545,8 +570,10 @@ public class TrdBondMarketTradeService extends BaseService {
             etrSecPositionFlowDto.setSeqno(IDGenerator.generate());
             etrSecListAll.add(etrSecPositionFlowDto);
         }
-        for (EtrSecPositionFlowDto etrSecPositionFlowDto :etrSecListAll){
-            etrCommonCashPositionDealService.dealCommandPosition(etrSecPositionFlowDto);
+        if (!etrSecListAll.isEmpty()){
+            EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+            etrPositionHoldDto.setPtlSecPositionFlows(etrSecListAll);
+            EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
         }
         
         if (entity!= null){

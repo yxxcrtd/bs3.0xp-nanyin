@@ -8,6 +8,7 @@ package com.joyintech.service.common.core.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.common.core.dao.SysCoreMapper;
 import com.joyintech.service.common.core.dto.AutoCouponDto;
@@ -15,8 +16,15 @@ import com.joyintech.service.common.core.dto.InfChinamutualfunddescriptionDto;
 import com.joyintech.service.common.core.dto.InterfPayhsrcsecinfoDto;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.core.BaseFinProductBaseInfoService;
+import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
+import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +53,12 @@ public class SysCoreService extends BaseService {
     @Autowired
     private BaseFinProductBaseInfoService baseFinProductBaseInfoService;
 
+    @Autowired
+    private IPlatformDate iPlatformDate;
+    
+    @Autowired
+    private RiskRedisInitService<ImplCond> redisRriter;
+    
     /**
      * 利用币种与交易日查询汇率行情表中最新的收盘价
      *
@@ -210,6 +224,20 @@ public class SysCoreService extends BaseService {
     public void autoBondCoupon(InterfPayhsrcsecinfoDto dto) {
         if (null != dto.getBaseFinProductBaseInfoList() && !dto.getBaseFinProductBaseInfoList().isEmpty()) {
             baseFinProductBaseInfoService.insert(dto.getBaseFinProductBaseInfoList());
+            //自动加券添加刷新风险redis-资产基本信息
+            if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+                ImplCond cond = new ImplCond();
+                cond.setDel(false);
+                if(iPlatformDate!=null&&redisRriter!=null) {
+                    for (BaseFinProductBaseInfoDto infoDto : dto.getBaseFinProductBaseInfoList()) {
+                    	if(infoDto.getFinProduct() != null&&StringUtil.isNotEmpty(infoDto.getFinProduct().getFinprodId())) {
+                        	cond.setAssetIdArray(infoDto.getFinProduct().getFinprodId());
+                        	cond.setPlateDate(iPlatformDate.getSysDate());
+                        	redisRriter.dealAssetData(cond);	
+                    	}
+                    }	
+                }
+            }
         }
     }
 
@@ -223,6 +251,20 @@ public class SysCoreService extends BaseService {
     public void autoFundCoupon(InfChinamutualfunddescriptionDto dto) {
         if (null != dto.getBaseFinProductBaseInfoList() && !dto.getBaseFinProductBaseInfoList().isEmpty()) {
             baseFinProductBaseInfoService.insert(dto.getBaseFinProductBaseInfoList());
+            //自动加券添加刷新风险redis-资产基本信息
+            if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+                ImplCond cond = new ImplCond();
+                cond.setDel(false);
+                if(iPlatformDate!=null&&redisRriter!=null) {
+                    for (BaseFinProductBaseInfoDto infoDto : dto.getBaseFinProductBaseInfoList()) {
+                    	if(infoDto.getFinProduct() != null&&StringUtil.isNotEmpty(infoDto.getFinProduct().getFinprodId())) {
+                        	cond.setAssetIdArray(infoDto.getFinProduct().getFinprodId());
+                        	cond.setPlateDate(iPlatformDate.getSysDate());
+                        	redisRriter.dealAssetData(cond);	
+                    	}
+                    }	
+                }
+            }
         }
     }
 

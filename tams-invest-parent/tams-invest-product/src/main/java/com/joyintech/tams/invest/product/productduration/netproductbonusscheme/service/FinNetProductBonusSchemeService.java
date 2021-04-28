@@ -812,6 +812,9 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
 					if (isRevoke) {
 					    Map<String, Object> map = new HashMap<String, Object>(); 
 					    map.put("totleTradeId", trdProductDealtmp.getTotleTradeId());
+                        //ADD BY JIANGPENG ON 20210427 TISHKBS-2042 CLONE - 【产品存续期查询】净值型周期型红利再投交易，撤销，审批人审批报错
+                        map.put("branch", dtoTmp.getBranch());
+                        //ADD BY JIANGPENG ON 20210427 TISHKBS-2042 CLONE - 【产品存续期查询】净值型周期型红利再投交易，撤销，审批人审批报错
 					    tradeId = restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductBonusScheme/queryTradeIdByTotle",
 				            map, String.class);
                     } 

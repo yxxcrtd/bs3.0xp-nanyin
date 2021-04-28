@@ -16,6 +16,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
@@ -162,10 +163,12 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 etrSecPositionFlowDto.setAmount(etrSecPosition.getAmount());
                 etrSecPositionFlowDto.setpFinprodId(etrSecPosition.getpFinprodId());
                 etrSecPositionFlowDto.setTradeId(entity.getTotleTradeId());
+                etrSecPositionFlowDto.setSeqno(IDGenerator.generate());
                 etrSecList.add(etrSecPositionFlowDto);
                 BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDtoNe,etrSecPositionFlowDto);
                 etrSecPositionFlowDtoNe.setFinprodId(entity.getFinprodId());
                 etrSecPositionFlowDtoNe.setAmount(etrSecPositionFlowDtoNe.getAmount().negate());
+                etrSecPositionFlowDtoNe.setSeqno(IDGenerator.generate());
                 oldEtrSecList.add(etrSecPositionFlowDtoNe);
             }
             
@@ -178,9 +181,12 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
             pltSecListAll.addAll(ptlSecList);
             pltSecListAll.addAll(oldPtlSecList);
             
-            for (EtrSecPositionFlowDto etrSecPositionFlowDto :etrSecListAll){
-                etrCommonCashPositionDealService.dealCommandPosition(etrSecPositionFlowDto);
+            if (!etrSecListAll.isEmpty()){
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                etrPositionHoldDto.setPtlSecPositionFlows(etrSecListAll);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);    
             }
+            
             for (PtlSecPositionFlowDto ptlSecPositionFlowDto: pltSecListAll){
                 basePtlSecPositionInfoService.inertSecPositionFlow(ptlSecPositionFlowDto);
             }
@@ -261,11 +267,6 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 AllTradeCommonUtil.handleAfterTradeComplete(allTradeCommonInputDto);
             }
             
-            //债券如果没有加券，则自动加券
-            if(StringUtil.equals("false",entity.getIsAdded())){
-                restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/autoAddBond", entity,
-                        String.class);
-            }
         }else{
             this.doCompleteRevoke(entity);    
         }
@@ -515,6 +516,20 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
     public int selectDealNums(TrdBondMarketTradeDto dto) {
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/selectDealNums", dto,
                 Integer.class);
+    }
+
+    /**
+     * 提交时自动加券
+     *
+     * @param dto 画面输入参数
+     * @return 加券结果
+     * @see
+     * @since 1.0
+     */
+    public void autoAddBond(TrdBondMarketTradeDto dto) {
+        //债券如果没有加券，则自动加券
+        restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/autoAddBond", dto,
+                String.class);
     }
 }
 
