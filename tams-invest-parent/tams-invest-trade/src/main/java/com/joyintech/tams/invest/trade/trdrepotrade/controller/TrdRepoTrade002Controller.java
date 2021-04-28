@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.cstp.TrdRepoTradeCSTPDto;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import org.apache.commons.lang.StringUtils;
@@ -657,11 +658,16 @@ public class TrdRepoTrade002Controller extends BaseController {
         }
         //----------add by jjpei 20200114 核风险版本 start----------
         if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
-            AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
-                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_质押式回购.getValue(),
-                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
-            if (StringUtil.isNotEmpty(ar)) {
-                return ar;
+            // 选择的成交编号存在对应的报价，则不影响风险
+            if (!(StringUtil.isNotBlank(dto.getfTradeId())
+                    && StringUtil.equals(DictCodeList.是否_是.getValue(),
+                    tradeCommonService.checkExecIdHasQuote(dto.getfTradeId())))) {
+                AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                        BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_质押式回购.getValue(),
+                        (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
+                if (StringUtil.isNotEmpty(ar)) {
+                    return ar;
+                }
             }
         }
         //----------add by jjpei 20200114 核风险版本 end----------

@@ -243,4 +243,21 @@ public class TradeCommonService extends BaseService {
         return wflPrinAmt;
     }
     // add by etliu 20210421 权益类资产相关代码合并 end
+
+    // add by etliu 20210129 start
+    /**
+     * 检查画面选择的成交编号是否存在对应的报价
+     * 目前债券二级交易和回购交易画面会用到
+     *
+     * @return 是否存在对应的报价
+     * @see
+     * @since 1.0
+     */
+    public String checkExecIdHasQuote(String execId) {
+        return restTemplate.getForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                        + "/CfetsQuotedCommon/checkExecIdHasQuote?execId="
+                        + execId,
+                String.class);
+    }
+    // add by etliu 20210129 end
 }

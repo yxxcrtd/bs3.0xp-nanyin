@@ -232,4 +232,20 @@ public AjaxResult checkTrd(@RequestBody TrdProductDeal trdProductDeal) {
     }
     return wr;
 }
+
+// add by etliu 20210129 start
+    /**
+     * 检查画面选择的成交编号是否存在对应的报价
+     * 目前债券二级交易和回购交易画面会用到
+     *
+     * @return 是否存在对应的报价(Y、N)
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/checkExecIdHasQuote")
+    public String checkExecIdHasQuote(@RequestParam Map<String, Object> params) {
+        return tradeCommonService.checkExecIdHasQuote((String) params.get("execId"));
+    }
+    // add by etliu 20210129 end
 }

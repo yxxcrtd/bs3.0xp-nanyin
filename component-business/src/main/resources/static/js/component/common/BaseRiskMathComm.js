@@ -576,6 +576,19 @@
         param2 = {
             data: checkParam.data
         }
+        // add by etliu 20210129 start
+        if (initParam.isSkipRisk == 'Y') {
+            table.reload({data:[]});
+            if (initParam.isSkipRiskMsg) {
+                $("#riskTrialSpan").html("&nbsp;&nbsp;" + initParam.isSkipRiskMsg);
+            }
+            else {
+                $("#riskTrialSpan").html("&nbsp;&nbsp;" + JoyinUtil.getLabel("BaseRiskMathComm.clusion"));
+            }
+            $("#riskMathFlag").val("02");//----置为已点击风险试算---
+            return;
+        }
+        // add by etliu 20210129 end
         var forbidFlag=false;
         if(null!=checkParam&&Array.isArray(checkParam.data)){
             Joyin.ajaxJson(basePath + 'component/common/BaseRiskMathComm/check', checkParam, function() {

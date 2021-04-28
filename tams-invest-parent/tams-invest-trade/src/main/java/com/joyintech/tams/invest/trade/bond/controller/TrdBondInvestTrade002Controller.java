@@ -23,6 +23,7 @@ import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.pretrdbondtrade.dto.PreTrdBondInvestTrade002Dto;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
@@ -747,11 +748,16 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         //----------add by jjpei 20200114 核风险版本 start----------
         if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&&CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
             for (TrdBondInvestTradeDto bondDto : dtoList) {
-                AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
-                        BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_债券.getValue(),
-                        (en)->interfRiskRdsService.sendRiskRdsData(bondDto,en));
-                if (StringUtil.isNotEmpty(ar)) {
-                    return ar;
+                // 选择的成交编号存在对应的报价，则不影响风险
+                if (!(StringUtil.isNotBlank(bondDto.getfTradeId())
+                        && StringUtil.equals(DictCodeList.是否_是.getValue(),
+                        tradeCommonService.checkExecIdHasQuote(bondDto.getfTradeId())))) {
+                        AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                                BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_债券.getValue(),
+                                (en)->interfRiskRdsService.sendRiskRdsData(bondDto,en));
+                        if (StringUtil.isNotEmpty(ar)) {
+                            return ar;
+                        }
                 }
             }
         }
