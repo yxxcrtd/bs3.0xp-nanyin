@@ -58,7 +58,7 @@
 			           		ccy,
 			           		sum(nvl(AMOUNT,0)) CASH_AMOUNT03
 			           	from PTL_CASH_POSITION 
-			           	where cdate = to_date(#{checkDate,jdbcType=DATE},'yyyy-MM-dd') and  hoding_type = '03'
+			           	where cdate =#{checkDate,jdbcType=DATE} and  hoding_type = '03'
 						group by 
 							portfolio_id,
 			           		acct_id,
@@ -71,7 +71,7 @@
 			          		ccy,
 					        sum(nvl(AMOUNT,0)) CASH_FLOW_AMOUNT99 /**手工调整**/
 					    from  PTL_CASH_POSITION_FLOW 
-					    where cdate = to_date(#{checkDate,jdbcType=DATE},'yyyy-MM-dd')  and hoding_type = '99'
+					    where cdate =#{checkDate,jdbcType=DATE}  and hoding_type = '99'
 					    group by 
 							portfolio_id,
 			          		acct_id,
