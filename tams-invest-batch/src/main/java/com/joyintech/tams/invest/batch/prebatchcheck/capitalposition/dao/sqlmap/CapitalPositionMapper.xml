@@ -81,7 +81,7 @@
 			)zz
             inner join PTL_PORTFOLIO pp on pp.portfolio_id = zz.portfolioId
             inner join sys_department sd on sd.dept_code = pp.create_dept
-            where cashBalance<0
+            where cashBalance &lt; 0
 	        order by portfolioId desc,acctNo desc
     </select>
 </mapper>
