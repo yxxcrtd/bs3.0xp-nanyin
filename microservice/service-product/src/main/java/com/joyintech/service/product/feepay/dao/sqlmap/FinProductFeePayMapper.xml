@@ -2049,7 +2049,7 @@
         fci.cash_id,
         null vdate,
         to_date(#{calcEndDate}, 'yyyy-MM-dd') as mdate,
-        b.tdy_unpaid_intincexp as TDY_UNPAID_INTINCEXP
+        sum(nvl(b.tdy_intincexp_add,0)) as TDY_UNPAID_INTINCEXP
         from  fin_cash_info fci
         inner join fin_cash_pay_rule fcr
         on fci.cash_id= fcr.cash_id
@@ -2059,15 +2059,12 @@
         and b.branch = fci.branch
         and b.FEE_TYPE = fci.CASH_TYPE_2
         where 1 = 1
-        and b.cdate =(
-        SELECT max(B1.CDATE)
-        FROM BOK_POSITION_PRDFEE B1
-        WHERE B1.FINPROD_ID = b.FINPROD_ID
-        AND B1.BRANCH = b.BRANCH
-        AND B1.FEE_TYPE = b.FEE_TYPE
-        AND B1.CDATE &lt;to_date(#{calcEndDate}, 'yyyy-MM-dd')
-        )
-
+        and b.cdate &lt; to_date(#{calcEndDate}, 'yyyy-MM-dd')
+        and b.cdate &gt;= to_date(#{calcStartDate}, 'yyyy-MM-dd')
+        group by b.finprod_id,
+        b.branch,
+        b.fee_type,
+        fci.cash_id,NULL
         )BOK_POSITION_PRDFEE
         ON FIN_CASH_INFO.FINPROD_ID = BOK_POSITION_PRDFEE.FINPROD_ID
         AND FIN_CASH_INFO.BRANCH = BOK_POSITION_PRDFEE.BRANCH
