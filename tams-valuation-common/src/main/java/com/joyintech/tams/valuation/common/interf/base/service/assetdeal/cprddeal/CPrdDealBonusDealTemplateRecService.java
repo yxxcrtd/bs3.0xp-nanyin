@@ -290,12 +290,18 @@ public class CPrdDealBonusDealTemplateRecService {
         }
         else if (DictCodeList.支付方式_红利再投.getValue().equals(dto.getBonusMode())) {
             trdProductDeal.setPs(DictCodeList.交易方向_产品红利转投.getValue());
-            /**add by wujie on 20180827 start**/
+
+            /**modify by wujie on 20210428 start
             // 交易份额 = B.红利再投份额
             trdProductDeal.setShareAmt(dto.getBonusTotalAmt());
             // 交易本金 =B.分红总金额
             trdProductDeal.setPrinAmt(dto.getBonusTotalAmt());
-            /**add by wujie on 20180827 end**/
+             **/
+            //交易份额 = B.红利再投份额
+            trdProductDeal.setShareAmt(dto.getUnitBonusAmt());
+            //全价总额 = B.分红总金额
+            trdProductDeal.setFpriceAmt(dto.getBonusTotalAmt());
+            /**modify by wujie on 20210428 end**/
         }
         // 交易编号 = 调用共通方法生成
         trdProductDeal.setTradeId(
