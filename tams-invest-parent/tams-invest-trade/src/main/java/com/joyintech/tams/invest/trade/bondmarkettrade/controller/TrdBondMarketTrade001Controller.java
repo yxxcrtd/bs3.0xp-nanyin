@@ -149,6 +149,7 @@ public class TrdBondMarketTrade001Controller extends BaseController {
                 getMessage("TrdBondInvestTrade002.finprodName") + GlobalConstant.COLON + inputDto.getFinprodAbbr(),
                 getMessage("TrdBondInvestTrade002.tradeDate") + GlobalConstant.COLON + DateUtil.format(inputDto.getTradeDate())));
 
+        trdBondMarketTrade002Service.setRevokeEntity(inputDto);
         String msg = trdBondMarketTrade002Service.start(processParameter, inputDto);
 
         return new AjaxResult(msg);

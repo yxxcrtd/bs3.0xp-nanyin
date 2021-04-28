@@ -2,6 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.service.trade.bondmarkettrade.dao.TrdBondMarketTradeMapper" >
 
+    <resultMap id="baseTradeInfoResultMap" type="com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto">
+        <association property="trdProductDeal"
+                     javaType="com.joyintech.tams.common.base.entity.TrdProductDeal">
+            <result column="totleTradeId" property="totleTradeId" jdbcType="VARCHAR"/>
+            <result column="tradeId" property="tradeId" jdbcType="VARCHAR"/>
+            <result column="finprodId" property="finprodId" jdbcType="VARCHAR"/>
+            <result column="ps" property="ps" jdbcType="VARCHAR"/>
+            <result column="busiType" property="busiType" jdbcType="VARCHAR"/>
+            <result column="finprodType2" property="finprodType2" jdbcType="VARCHAR"/>
+            <result column="shareAmt" property="shareAmt" jdbcType="DECIMAL"/>
+            <result column="tradeDate" property="tradeDate" jdbcType="DATE"/>
+            <result column="invAim" property="invAim" jdbcType="VARCHAR"/>
+        </association>
+        <association property="trdProductDealAdd"
+                     javaType="com.joyintech.tams.common.base.entity.TrdProductDealAdd">
+            <result column="tradeId" property="tradeId" jdbcType="DECIMAL"/>
+            <result column="portfolioId" property="portfolioId" jdbcType="DECIMAL"/>
+        </association>
+    </resultMap>
+
+    <select id="selectbaseTradeInfoDtos" resultMap="baseTradeInfoResultMap">
+        select
+        TPD.TOTLE_TRADE_ID  totleTradeId,
+        TPD.TRADE_ID tradeId,
+        TPD.FINPROD_ID finprodId,
+        TPD.PS ps,
+        TPD.BUSI_TYPE busiType,
+        TPD.FINPROD_TYPE2 finprodType2,
+        PSPF.AMOUNT shareAmt,
+        TPD.TRADE_DATE tradeDate,
+        TPD.INV_AIM invAim,
+        TPDA.PORTFOLIO_ID portfolioId
+        from TRD_PRODUCT_DEAL TPD
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA ON TPD.TRADE_ID = TPDA.TRADE_ID
+        LEFT JOIN PTL_SEC_POSITION_FLOW PSPF ON TPD.TRADE_ID = PSPF.TRADE_ID
+        <where>
+            TPD.PS = 'T41'
+            AND TPD.TRADE_STATUS = '01'
+            AND TPD.IS_CANCEL = 'N'
+            AND TPD.TOTLE_TRADE_ID = #{bizCode,jdbcType=VARCHAR}
+            AND PSPF.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </where>
+    </select>
+    
     <select id="selectDeal" resultType="com.joyintech.service.trade.bondmarkettrade.dto.TrdBondMarketTradeDto">
         select
             TFPDT.TOTLE_TRADE_ID  totleTradeId,
@@ -376,5 +420,6 @@
             ESPF.TRADE_ID = #{bizCode,jdbcType=VARCHAR}
         </where>
     </select>
+    
     
 </mapper>

@@ -582,4 +582,22 @@ public class TrdBondMarketTradeService extends BaseService {
             trdBondMarkettTradeMapper.updateByPrimaryKey(entity);
         }    
     }
+
+    /**
+     * 撤销时根据交易编号查询交易
+     * @param entity
+     * @return
+     */
+    public TrdBondMarketTradeDto getRevokeEntity(TrdBondMarketTradeDto entity) {
+        String bizCode = entity.getTotleTradeId();
+        if (bizCode.lastIndexOf('R') == bizCode.length() - 1) {
+            bizCode = bizCode.substring(0, bizCode.length() - 1);
+        }
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("bizCode",bizCode);
+        param.put("finprodId",DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + entity.getAppearMarketId());
+        List<BaseTradeInfoDto> baseTradeInfoDtos =  trdBondMarkettTradeMapper.selectbaseTradeInfoDtos(param);
+        entity.setBaseTradeInfoDtos(baseTradeInfoDtos);
+        return entity;
+    }
 }

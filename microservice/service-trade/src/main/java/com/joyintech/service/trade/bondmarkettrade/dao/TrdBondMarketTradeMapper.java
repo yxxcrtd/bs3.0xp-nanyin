@@ -5,6 +5,7 @@ import com.joyintech.service.trade.bondmarkettrade.dto.TrdBondMarketTradeDto;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -118,4 +119,13 @@ public interface TrdBondMarketTradeMapper {
      * @return
      */
     int selectDealNums(TrdBondMarketTradeDto dto);
+
+    /**
+     * 根据汇总交易编号查询数据
+     *
+     * @param param 汇总交易编号
+     * @see
+     * @since 1.0
+     */
+    List<BaseTradeInfoDto> selectbaseTradeInfoDtos(Map<String,Object> param);
 }
