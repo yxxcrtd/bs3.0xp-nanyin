@@ -216,8 +216,10 @@ public class TrdBondInvestTradeService extends BaseService {
                 || resultDto.getEtrEntrustAdd().getSettleSpreed() == 0L) {
                 resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_0.getValue());
             }
-            else {
+            else if(resultDto.getEtrEntrustAdd().getSettleSpreed() == 1L){
                 resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_1.getValue());
+            }else if(resultDto.getEtrEntrustAdd().getSettleSpreed() == 2L){
+                resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_2.getValue());
             }
 
             // 到期收益率

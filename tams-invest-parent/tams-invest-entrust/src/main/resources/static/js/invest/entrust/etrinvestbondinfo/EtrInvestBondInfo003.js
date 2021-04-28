@@ -213,6 +213,13 @@
         if ($('#select2-finprodId-container').attr('title')){
             object.finprodName = $('#select2-finprodId-container').attr('title');
         }
+        if(object.settleSpreed=='01'){
+            object.settleSpreed=0;
+        }else if(object.settleSpreed=='02'){
+            object.settleSpreed=1;
+        }else if(object.settleSpreed=='03'){
+            object.settleSpreed=2;
+        }
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.entrustId = $('#entrustId').val();
