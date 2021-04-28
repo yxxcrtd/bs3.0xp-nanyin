@@ -537,6 +537,7 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
             deal.setAccrNum(deal.getShareAmt());
             deal.setTgBusiType(DictCodeListExt1.平安业务类型_债券类资产行权.getValue());
             deal.setInvAim(trdBondPtlSecExerciseInfo.getInvAim());
+            deal.setParValue(entity.getParValue());
             trdProductDeals.add(deal);
 
             BussTrdTransferOrderDto bussTrdTransferOrderDto =new BussTrdTransferOrderDto();
