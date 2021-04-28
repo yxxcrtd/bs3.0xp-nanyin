@@ -31,6 +31,8 @@
         <module>tams-disclosure-interf</module>
         <module>tams-disclosure-parent</module>
         <module>tams-invest-common</module>
+        <!--        清结算共通包-->
+        <module>tams-settle-common</module>
         <module>tams-invest-interf</module>
         <module>tams-invest-parent</module>
         <module>tams-svreport-common</module>
@@ -44,6 +46,7 @@
         <!-- 批处理  -->
         <module>tams-disclosure-batch</module>
         <module>tams-valuation-batch</module>
+        <module>tams-settle-batch</module>
         <module>tams-invest-batch</module>
         <module>tams-svreport-batch</module>
         <module>tams/batch</module>

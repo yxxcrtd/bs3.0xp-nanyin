@@ -11,7 +11,7 @@
 		<repository>
 			<id>Ali-Repository</id>
 			<name>aliyun maven</name>
-			<url>http://192.168.45.38:8081/nexus/content/repositories/thirdparty/</url>
+			<url>http://192.168.90.83:8082/nexus/content/repositories/thirdparty/</url>
 			<layout>default</layout>
 			<snapshots>
 				<enabled>false</enabled>
