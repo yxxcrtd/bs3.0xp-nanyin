@@ -20,6 +20,8 @@ public interface FinTradeProductMapper {
 
     FinTradeProduct selectByPrimaryKey(FinTradeProductKey key);
 
+    List<FinTradeProduct> selectByFinprodId(String finprodId);
+
     int updateByPrimaryKeySelective(FinTradeProduct record);
 
     int updateByPrimaryKey(FinTradeProduct record);
