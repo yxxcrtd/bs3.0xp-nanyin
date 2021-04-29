@@ -27,7 +27,7 @@
     </select>
 
     <select id="getTableColumnList" resultType="string">
-        select COLUMN_NAME
+        select DISTINCT COLUMN_NAME
         from  information_schema.`COLUMNS`
         where Table_Name = #{tableName,jdbcType=VARCHAR}
     </select>
