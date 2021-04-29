@@ -121,6 +121,8 @@ threadpool:
   queueCapacity: 600 #线程队列大小
   keepAliveSeconds: 60 #线程池维护线程所允许的空闲时间（秒）
   namePrefix: batch-thread- #线程池中的线程的名称前缀
+shiro:
+   allowUrl: /FinproductCommon/*
 
 ---
 spring:

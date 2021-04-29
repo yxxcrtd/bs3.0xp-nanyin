@@ -26,7 +26,12 @@
 							sd.institution_code,
 							rank() over(partition by BOOKSET_ID,BOK_DETAIL_ID order by BOOK_SUMMARY_ORDER desc)rn
 						from BOK_STAT_DET_POSIITON  bsdp
-						left join ptl_portfolio pp on regexp_replace(REGEXP_SUBSTR(regexp_replace(bsdp.BOOKSET_ID,'^F16_',''),'^[^_]+(_F28)?',1,1),'_F28$','') = pp.portfolio_id
+						left join ptl_portfolio pp on 
+                            (case 
+                                when bsdp.BOOKSET_ID like '%_F28_%' THEN regexp_replace(substr(bsdp.BOOKSET_ID,0, INSTR(bsdp.BOOKSET_ID, '_F28_', 1, 1)-1), '^F16_','')
+                                else regexp_replace(bsdp.BOOKSET_ID,  '^F16_','')
+                                end 
+                            ) = pp.portfolio_id
 						left join sys_department sd on nvl(pp.create_dept,bsdp.create_dept) = sd.dept_code
 						where 
 							bsdp.BOOK_DATE = #{checkDate,jdbcType=DATE}-1 and bsdp.HAPPEN_DATE = #{checkDate,jdbcType=DATE}-1
@@ -44,8 +49,16 @@
 					inner join BOK_DEAL_ACCOUNTING bda on bda.busi_no = deal.trade_Id
 						and bda.BUSI_TABLE = '02'
 					left join trd_product_deal_add tpda on tpda.trade_id = deal.trade_id 
-					left join ptl_portfolio pp on regexp_replace(REGEXP_SUBSTR(regexp_replace(bda.BOOKSET_ID,'^F16_',''),'^[^_]+(_F28)?',1,1),'_F28$','') =  pp.portfolio_id or regexp_replace(REGEXP_SUBSTR(regexp_replace(tpda.portfolio_id,'^F16_',''),'^[^_]+(_F28)?',1,1),'_F28$','') = pp.portfolio_id
-					left join sys_department sd on nvl(pp.create_dept,deal.create_dept) = sd.dept_code
+					left join ptl_portfolio pp on 
+                        (case 
+                            when bda.BOOKSET_ID like '%_F28_%' then regexp_replace(substr(bda.BOOKSET_ID,0, INSTR(bda.BOOKSET_ID, '_F28_', 1, 1)-1), '^F16_','') 
+                            else regexp_replace(bda.BOOKSET_ID,  '^F16_','')
+                        end) = pp.portfolio_id or
+                        (case 
+                            when tpda.portfolio_id like '%_F28_%' then regexp_replace(substr(tpda.portfolio_id,0, INSTR(tpda.portfolio_id, '_F28_', 1, 1)-1), '^F16_','') 
+                            else regexp_replace(tpda.portfolio_id,  '^F16_','')
+                        end) = pp.portfolio_id
+                    left join sys_department sd on nvl(pp.create_dept,deal.create_dept) = sd.dept_code
 					where deal.trade_date =  #{checkDate,jdbcType=DATE}
 				)A
 				inner join fin_product fp on fp.finprod_id = A.busi_id
