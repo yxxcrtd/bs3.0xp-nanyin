@@ -11,7 +11,6 @@
             <result column="ps" property="ps" jdbcType="VARCHAR"/>
             <result column="busiType" property="busiType" jdbcType="VARCHAR"/>
             <result column="finprodType2" property="finprodType2" jdbcType="VARCHAR"/>
-            <result column="shareAmt" property="shareAmt" jdbcType="DECIMAL"/>
             <result column="tradeDate" property="tradeDate" jdbcType="DATE"/>
             <result column="invAim" property="invAim" jdbcType="VARCHAR"/>
         </association>
@@ -30,7 +29,6 @@
         TPD.PS ps,
         TPD.BUSI_TYPE busiType,
         TPD.FINPROD_TYPE2 finprodType2,
-        PSPF.AMOUNT shareAmt,
         TPD.TRADE_DATE tradeDate,
         TPD.INV_AIM invAim,
         TPDA.PORTFOLIO_ID portfolioId
@@ -421,5 +419,17 @@
         </where>
     </select>
     
-    
+    <select id="selectTrdProductDealsInfo" resultType="java.util.Map">
+        select 
+            nvl(DSC_COST_AMT, 0) + nvl(TDY_FLOAT_INGPL, 0) + nvl(TDY_INTINCEXP, 0) + nvl(DELAY_PAY_AMT, 0) as price,
+            t1.PORTFOLIO_ID portfolioId
+        from PTL_SEC_VALUTION t1
+        inner join FIN_PRODUCT t2 on t1.FINPROD_ID = t2.FINPROD_ID
+        inner join FIN_PRODUCT_ADD FRD ON T2.FINPROD_ID = FRD.FINPROD_ID  
+        AND FRD.APPEAR_MARKET_ID IS NOT NULL  AND FRD.IS_ISSUE_ASSET = 'Y'
+         where  t1.CDATE = (#{tradeDate,jdbcType=DATE} - 1)
+           and t1.FINPROD_ID = #{finprodId,jdbcType = VARCHAR}
+           AND t1.PORTFOLIO_ID != t1.FINPROD_ID
+           and t2.FINPROD_TYPE2 ='F01'
+    </select>
 </mapper>
