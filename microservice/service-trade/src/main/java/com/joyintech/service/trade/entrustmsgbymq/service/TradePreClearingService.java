@@ -1722,7 +1722,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         // 金融产品类型（投管分类）
         dto.setFinprodType2(DictCodeListExt3.金融产品类型_投管用_期货.getValue());
         // 交易保证金
-        dto.setDealMargin(infContractDetailfile.getDealMargin());
+//        dto.setDealMargin(infContractDetailfile.getDealMargin());
         TrdProductTempDeal trdProductTempDeal = new TrdProductTempDeal();
         BeanUtil.copyPropertiesIgnoreNull(trdProductTempDeal, dto);
         trdProductTempDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());

@@ -43,6 +43,10 @@ import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
 import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfo;
 import com.joyintech.tams.valuation.common.interf.base.dto.ChannelProdDeal;
 import com.joyintech.tams.valuation.common.interf.howmany.dto.TrdProductDealDto;
+import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.dao.WorkflowMapper;
+import com.joyintech.workflow.engine.dto.WflStatusDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -106,6 +110,8 @@ public class AllTradeCommonUtil {
      */
     private static InvestInterfCommService investInterfCommService;
     // 调用投管接口 add by renping 20190205 end
+
+    private static WorkflowMapper workflowMapper;
 
     /**
      * 所有交易生效后调用的共通方法
@@ -899,7 +905,7 @@ public class AllTradeCommonUtil {
                                 stlPayOrdersMapper.insert(stl);
                                 stlPayOrders.add(stl);
                                 ptlCashPositionFlows.addAll(
-                                    getPtlCashPositionFlowDto(deal, trdProductDealAdd, stl, busiType, 交易对手_子组合, 交易对手的母组合));
+                                    getPtlCashPositionFlowDto(deal, trdProductDealAdd, stl, 交易对手_子组合, 交易对手的母组合,DictCodeList.持仓类型_实际));
                             }
                         }
 
@@ -1167,10 +1173,11 @@ public class AllTradeCommonUtil {
         trdCommonBaseMapper.insertSelectFileInfoByFileNo(params);
     }
 
-    private static List<PtlCashPositionFlowDto> getPtlCashPositionFlowDto(TrdProductDeal deal,
+    public static List<PtlCashPositionFlowDto> getPtlCashPositionFlowDto(TrdProductDeal deal,
                                                                           TrdProductDealAdd trdProductDealAdd,
-                                                                          StlPayOrdersDto stl, String busiType, String 交易对手_子组合,
-                                                                          String 交易对手的母组合) {
+                                                                          StlPayOrdersDto stl,String 交易对手_子组合,
+                                                                          String 交易对手的母组合, DictCodeList 持仓类型) {
+        String busiType = deal.getBusiType();
         List<PtlCashPositionFlowDto> resultDtos = new ArrayList<>();
         PtlCashPositionFlowDto resultDto = new PtlCashPositionFlowDto();
         // 输入参数.组合代码
@@ -2129,4 +2136,49 @@ public class AllTradeCommonUtil {
         return new HashMap<>();
     }
     // add by zahngrui1 20200703 批量抽取反向交易编号内部就交易对手 end
+
+
+    /**
+     *
+     * @param workflowId
+     * @param 持仓类型
+     * @return
+     */
+    public static boolean 是否处理持仓(String workflowId, String userName, DictCodeList 持仓类型) {
+        if (StringUtil.isEmpty(workflowId)) {
+            return true;
+        }
+        List<WflStatusDto> list = workflowMapper.listByPrimaryKey(workflowId);
+        if (list == null || list.isEmpty()) { // 没有流程实例是还没有发起流程
+            return true;
+        }
+        boolean 当前节点是否经办节点 = true;
+        try {
+            当前节点是否经办节点 = WorkflowContext.getProcessService().isFirstUserTask(list.get(0).getWorkflowId(), userName);
+            boolean 是最后一个节点 = WorkflowContext.getProcessService().isLastUserTask(list.get(0).getWorkflowId());
+            当前节点是否经办节点 = 当前节点是否经办节点 || (是最后一个节点 && 持仓类型 != DictCodeList.持仓类型_可用);
+        } catch (WorkFlowException e) {
+            logger.error("获取当前节点错误", e);
+        }
+        return 当前节点是否经办节点;
+    }
+
+    public static boolean 自动生成反向交易(String finprodType2, String ps, String counterId) {
+        if ((DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)
+                || DictCodeListExt1.金融产品类型_投管用_存款.getValue().equals(finprodType2)
+                || DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2)
+                || DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(finprodType2)
+                || DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue().equals(finprodType2)
+                || DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)
+                || DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue().equals(finprodType2))
+                && (DictCodeList.交易方向_买入.getValue().equals(ps)
+                || DictCodeList.交易方向_卖出.getValue().equals(ps))) {
+            String autoGenerateNegateDealFlag = CacheUtil.getSysParam(BussinessConstant.IS_AUTO_GENERATE_NEGATE_DEAL);
+            if (DictCodeList.是否_是.getValue().equals(autoGenerateNegateDealFlag)) {
+                PtlPortfolio mcp = ptlPortfolioMapper.selectByPrimaryKey(counterId);
+                return mcp != null;
+            }
+        }
+        return false;
+    }
 }

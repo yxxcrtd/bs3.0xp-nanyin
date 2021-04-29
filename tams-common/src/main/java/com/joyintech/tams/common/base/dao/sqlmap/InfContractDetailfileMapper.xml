@@ -23,27 +23,26 @@
         <result column="VDATE" property="vdate" jdbcType="DATE" />
         <result column="MDATE" property="mdate" jdbcType="DATE" />
         <result column="V_TRADE_ID" property="vTradeId" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
-        <result column="DEAL_MARGIN" property="dealMargin" jdbcType="DECIMAL" />
-        <result column="SETTLE_DAY" property="settleDay" jdbcType="DATE" />
-        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
         <result column="SCALE" property="scale" jdbcType="DECIMAL" />
         <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+        <result column="SETTLE_DAY" property="settleDay" jdbcType="DATE" />
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, ENTRUST_ID ENTRUST_ID, ORDER_ID ORDER_ID, ORDER_NO ORDER_NO, DEAL_NO DEAL_NO, 
         PORTFOLIO_ID PORTFOLIO_ID, ACCT_NO ACCT_NO, BOND_ID BOND_ID, FINPROD_ID FINPROD_ID, 
         PS PS, TRADE_MARKET TRADE_MARKET, TRADE_PLAT TRADE_PLAT, FINPROD_MARKET_ID FINPROD_MARKET_ID, 
         SHARE_AMT SHARE_AMT, UNIT_CPRICE UNIT_CPRICE, UNIT_FPRICE UNIT_FPRICE, TRADE_AMT TRADE_AMT, 
-        TRADE_DATE TRADE_DATE, VDATE VDATE, MDATE MDATE, V_TRADE_ID V_TRADE_ID, CREATE_USER CREATE_USER, 
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        CCY CCY, DEAL_MARGIN DEAL_MARGIN, SETTLE_DAY SETTLE_DAY, BUSI_TYPE BUSI_TYPE, SCALE SCALE, 
-        COUNTER_ID COUNTER_ID
+        TRADE_DATE TRADE_DATE, VDATE VDATE, MDATE MDATE, V_TRADE_ID V_TRADE_ID, CCY CCY, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, SCALE SCALE, COUNTER_ID COUNTER_ID, SETTLE_DAY SETTLE_DAY, 
+        BUSI_TYPE BUSI_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -73,10 +72,10 @@
             FINPROD_MARKET_ID, SHARE_AMT, UNIT_CPRICE, 
             UNIT_FPRICE, TRADE_AMT, TRADE_DATE, 
             VDATE, MDATE, V_TRADE_ID, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME, CCY, 
-            DEAL_MARGIN, SETTLE_DAY, BUSI_TYPE, 
-            SCALE, COUNTER_ID)
+            CCY, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            SCALE, COUNTER_ID, SETTLE_DAY, 
+            BUSI_TYPE)
         values (#{seqno,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
             #{orderNo,jdbcType=VARCHAR}, #{dealNo,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, 
             #{acctNo,jdbcType=VARCHAR}, #{bondId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
@@ -84,10 +83,10 @@
             #{finprodMarketId,jdbcType=VARCHAR}, #{shareAmt,jdbcType=DECIMAL}, #{unitCprice,jdbcType=DECIMAL}, 
             #{unitFprice,jdbcType=DECIMAL}, #{tradeAmt,jdbcType=DECIMAL}, #{tradeDate,jdbcType=DATE}, 
             #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{vTradeId,jdbcType=VARCHAR}, 
-            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR}, 
-            #{dealMargin,jdbcType=DECIMAL}, #{settleDay,jdbcType=DATE}, #{busiType,jdbcType=VARCHAR}, 
-            #{scale,jdbcType=DECIMAL}, #{counterId,jdbcType=VARCHAR})
+            #{ccy,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{scale,jdbcType=DECIMAL}, #{counterId,jdbcType=VARCHAR}, #{settleDay,jdbcType=DATE}, 
+            #{busiType,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InfContractDetailfile" >
         insert into INF_CONTRACT_DETAILFILE
@@ -155,6 +154,9 @@
             <if test="vTradeId != null" >
                 V_TRADE_ID,
             </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
             <if test="createUser != null" >
                 CREATE_USER,
             </if>
@@ -170,23 +172,17 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
-            <if test="ccy != null" >
-                CCY,
+            <if test="scale != null" >
+                SCALE,
             </if>
-            <if test="dealMargin != null" >
-                DEAL_MARGIN,
+            <if test="counterId != null" >
+                COUNTER_ID,
             </if>
             <if test="settleDay != null" >
                 SETTLE_DAY,
             </if>
             <if test="busiType != null" >
                 BUSI_TYPE,
-            </if>
-            <if test="scale != null" >
-                SCALE,
-            </if>
-            <if test="counterId != null" >
-                COUNTER_ID,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -253,6 +249,9 @@
             <if test="vTradeId != null" >
                 #{vTradeId,jdbcType=VARCHAR},
             </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
             <if test="createUser != null" >
                 #{createUser,jdbcType=VARCHAR},
             </if>
@@ -268,11 +267,11 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="ccy != null" >
-                #{ccy,jdbcType=VARCHAR},
+            <if test="scale != null" >
+                #{scale,jdbcType=DECIMAL},
             </if>
-            <if test="dealMargin != null" >
-                #{dealMargin,jdbcType=DECIMAL},
+            <if test="counterId != null" >
+                #{counterId,jdbcType=VARCHAR},
             </if>
             <if test="settleDay != null" >
                 #{settleDay,jdbcType=DATE},
@@ -280,25 +279,19 @@
             <if test="busiType != null" >
                 #{busiType,jdbcType=VARCHAR},
             </if>
-            <if test="scale != null" >
-                #{scale,jdbcType=DECIMAL},
-            </if>
-            <if test="counterId != null" >
-                #{counterId,jdbcType=VARCHAR},
-            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InfContractDetailfile" >
         insert into INF_CONTRACT_DETAILFILE(SEQNO, ENTRUST_ID, ORDER_ID, ORDER_NO, DEAL_NO, 
         PORTFOLIO_ID, ACCT_NO, BOND_ID, FINPROD_ID, PS, TRADE_MARKET, TRADE_PLAT, FINPROD_MARKET_ID, 
         SHARE_AMT, UNIT_CPRICE, UNIT_FPRICE, TRADE_AMT, TRADE_DATE, VDATE, MDATE, V_TRADE_ID, 
-        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CCY, DEAL_MARGIN, 
-        SETTLE_DAY, BUSI_TYPE, SCALE, COUNTER_ID)
+        CCY, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SCALE, COUNTER_ID, 
+        SETTLE_DAY, BUSI_TYPE)
         select SEQNO, ENTRUST_ID, ORDER_ID, ORDER_NO, DEAL_NO, 
             PORTFOLIO_ID, ACCT_NO, BOND_ID, FINPROD_ID, PS, TRADE_MARKET, TRADE_PLAT, FINPROD_MARKET_ID, 
             SHARE_AMT, UNIT_CPRICE, UNIT_FPRICE, TRADE_AMT, TRADE_DATE, VDATE, MDATE, V_TRADE_ID, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CCY, DEAL_MARGIN, 
-            SETTLE_DAY, BUSI_TYPE, SCALE, COUNTER_ID
+            CCY, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SCALE, COUNTER_ID, 
+            SETTLE_DAY, BUSI_TYPE
              from INF_CONTRACT_DETAILFILE
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -365,29 +358,26 @@
             <if test="vTradeId != null" >
                 V_TRADE_ID = #{vTradeId,jdbcType=VARCHAR},
             </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="ccy != null" >
-                CCY = #{ccy,jdbcType=VARCHAR},
+            <if test="scale != null" >
+                SCALE = #{scale,jdbcType=DECIMAL},
             </if>
-            <if test="dealMargin != null" >
-                DEAL_MARGIN = #{dealMargin,jdbcType=DECIMAL},
+            <if test="counterId != null" >
+                COUNTER_ID = #{counterId,jdbcType=VARCHAR},
             </if>
             <if test="settleDay != null" >
                 SETTLE_DAY = #{settleDay,jdbcType=DATE},
             </if>
             <if test="busiType != null" >
                 BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
-            </if>
-            <if test="scale != null" >
-                SCALE = #{scale,jdbcType=DECIMAL},
-            </if>
-            <if test="counterId != null" >
-                COUNTER_ID = #{counterId,jdbcType=VARCHAR},
             </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
@@ -414,14 +404,13 @@
             VDATE = #{vdate,jdbcType=DATE},
             MDATE = #{mdate,jdbcType=DATE},
             V_TRADE_ID = #{vTradeId,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            CCY = #{ccy,jdbcType=VARCHAR},
-            DEAL_MARGIN = #{dealMargin,jdbcType=DECIMAL},
-            SETTLE_DAY = #{settleDay,jdbcType=DATE},
-            BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
             SCALE = #{scale,jdbcType=DECIMAL},
-            COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+            COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            SETTLE_DAY = #{settleDay,jdbcType=DATE},
+            BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>

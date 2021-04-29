@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.component.business.common.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.joyintech.tams.common.base.entity.TrdFinProductBarter;
@@ -29,6 +30,11 @@ public class PortfolioPositionsFlowInputDto {
      * 资产二级类型
      */
     private String assetType2;
+
+    /**
+     * 买断式回购特殊处理(债券数量)
+     */
+    private BigDecimal secAmount;
 
     /**
      * 金融产品交易Entity
@@ -149,4 +155,12 @@ public class PortfolioPositionsFlowInputDto {
 	public void setTrdProductDealAdd(TrdProductDealAdd trdProductDealAdd) {
 		this.trdProductDealAdd = trdProductDealAdd;
 	}
+
+    public BigDecimal getSecAmount() {
+        return secAmount;
+    }
+
+    public void setSecAmount(BigDecimal secAmount) {
+        this.secAmount = secAmount;
+    }
 }

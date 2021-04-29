@@ -124,10 +124,15 @@ public class InfContractDetailfile extends BaseEntity {
     private String ccy;
 
     /**
-     * 交易保证金
+     * 折算比例
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal dealMargin;
+    private BigDecimal scale;
+
+    /**
+     * 交易对手
+     */
+    private String counterId;
 
     /**
      * 交收日
@@ -138,17 +143,6 @@ public class InfContractDetailfile extends BaseEntity {
      * 业务类别,数据字典DELIVERY_BUS_TYPE;01 上交所固定收益平台债券买入;02 上交所固定收益平台债券卖出
      */
     private String busiType;
-
-    /**
-     * 折算比例
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal scale;
-
-    /**
-     * 交易对手
-     */
-    private String counterId;
 
     /**
      * 取得 流水号
@@ -506,19 +500,35 @@ public class InfContractDetailfile extends BaseEntity {
     }
 
     /**
-     * 取得 交易保证金
-     * @return 交易保证金
+     * 取得 折算比例
+     * @return 折算比例
      */
-    public BigDecimal getDealMargin() {
-        return dealMargin;
+    public BigDecimal getScale() {
+        return scale;
     }
 
     /**
-     * 设置 交易保证金
-     * @param dealMargin 交易保证金
+     * 设置 折算比例
+     * @param scale 折算比例
      */
-    public void setDealMargin(BigDecimal dealMargin) {
-        this.dealMargin = dealMargin;
+    public void setScale(BigDecimal scale) {
+        this.scale = scale;
+    }
+
+    /**
+     * 取得 交易对手
+     * @return 交易对手
+     */
+    public String getCounterId() {
+        return counterId;
+    }
+
+    /**
+     * 设置 交易对手
+     * @param counterId 交易对手
+     */
+    public void setCounterId(String counterId) {
+        this.counterId = counterId == null ? null : counterId.trim();
     }
 
     /**
@@ -552,37 +562,5 @@ public class InfContractDetailfile extends BaseEntity {
      */
     public void setBusiType(String busiType) {
         this.busiType = busiType == null ? null : busiType.trim();
-    }
-
-    /**
-     * 取得 折算比例
-     * @return 折算比例
-     */
-    public BigDecimal getScale() {
-        return scale;
-    }
-
-    /**
-     * 设置 折算比例
-     * @param scale 折算比例
-     */
-    public void setScale(BigDecimal scale) {
-        this.scale = scale;
-    }
-
-    /**
-     * 取得 交易对手
-     * @return 交易对手
-     */
-    public String getCounterId() {
-        return counterId;
-    }
-
-    /**
-     * 设置 交易对手
-     * @param counterId 交易对手
-     */
-    public void setCounterId(String counterId) {
-        this.counterId = counterId == null ? null : counterId.trim();
     }
 }
