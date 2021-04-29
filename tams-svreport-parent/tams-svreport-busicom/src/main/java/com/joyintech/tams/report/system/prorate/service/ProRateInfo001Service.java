@@ -127,6 +127,23 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
     }
 
     public List<DisRepCashYield> queryReportList(Map<String, Object> param) {
+        String busiIds = (String)param.get("keybusiIdList");
+        String cashType2s = (String)param.get("keycashType2List");
+        String startDates = (String)param.get("keystartDateList");
+        List<String> selectbusiIds = StringUtil.splitToList(GlobalConstant.COMMA, busiIds);
+        List<String> selectcashType2s = StringUtil.splitToList(GlobalConstant.COMMA, cashType2s);
+        List<String> selectstartDates = StringUtil.splitToList(GlobalConstant.COMMA, startDates);
+        param.put("selectbusiIds", selectbusiIds);
+        param.put("selectcashType2s", selectcashType2s);
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+        if(null!=selectstartDates && selectstartDates.size()>0){
+            selectstartDates.clear();
+            for(String s:selectstartDates){
+                String startDate = dfs.format(Long.parseLong(String.valueOf(s)));
+                selectstartDates.add(startDate);
+            }
+        }
+        param.put("selectstartDates", selectstartDates);
         return proRateInfo001Mapper.queryReportList( param);
     }
 
@@ -260,6 +277,8 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
             if(!"".equals(disRepCashYields.get(0).getBusiId())){
                 DisRepCashYield disRepCashYield=disRepCashYields.get(0);
                 disRepCashYield.setRate(bigDecimal);
+                disRepCashYield.setStatus("E");
+                disRepCashYield.setDataSource("02");
                 proRateInfo001Mapper.updateOne(disRepCashYield);
             }
         }
@@ -318,5 +337,9 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
             }
         }
         return checkResult;
+    }
+
+    public void updateOne(DisRepCashYield d) {
+        proRateInfo001Mapper.updateOne(d);
     }
 }

@@ -287,9 +287,9 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
             
             for (String string : listCloumn) {
                 String value = map.get(string);
-//                if(value==null){
-//                	continue;
-//                }
+                if(value==null){
+                	continue;
+                }
                 Field field = ReflectionUtils.findField(chbAssetInfo.getClass(),
 //                  StringUtil.dealString(StringUtil.lowerCase(string), false));
                         this.subBlank(StringUtil.lowerCase(string)));
@@ -303,8 +303,6 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                     try {
                         if (StringUtil.isNotEmpty(value)){
                             field.set(chbAssetInfo,new BigDecimal(value));
-                        }else{
-                            field.set(chbAssetInfo,null);
                         }
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
@@ -316,8 +314,6 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                     try {
                         if (StringUtil.isNotEmpty(value)){
                             field.set(chbAssetInfo,Integer.valueOf(value));
-                        }else{
-                            field.set(chbAssetInfo,null);
                         }
                     } catch (IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
@@ -328,8 +324,6 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                     try {
                         if (StringUtil.isNotEmpty(value)){
                             field.set(chbAssetInfo, Long.valueOf(value));
-                        }else{
-                            field.set(chbAssetInfo,null);
                         }
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
@@ -340,8 +334,6 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                     try {
                         if (StringUtil.isNotEmpty(value)){
                             field.set(chbAssetInfo,Short.valueOf(value));
-                        }else{
-                            field.set(chbAssetInfo,null);
                         }
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
@@ -358,8 +350,6 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
                             logger.error(e.getMessage(),e);
                             return entities;
                         }
-                    }else{
-                        field.set(chbAssetInfo,null);
                     }
                 }
                 else {

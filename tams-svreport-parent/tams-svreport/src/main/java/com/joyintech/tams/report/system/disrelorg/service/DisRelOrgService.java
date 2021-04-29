@@ -93,4 +93,11 @@ public class DisRelOrgService extends BaseService<DisAssociatedInstitutions> {
                 DisRepCashYield.class);
         return;
     }
+
+    public void updateOne(DisAssociatedInstitutions dto) {
+        restTemplate.postForList(
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/Disrelorg/updateOne",dto,
+                DisRepCashYield.class);
+        return;
+    }
 }

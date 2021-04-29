@@ -55,7 +55,7 @@ public class PerProDeclareReg002Controller extends BaseController {
         //取出产品申报的产品代码
         if(dtoList.size()>0){
             for(PerProDeclareRegDto po:dtoList){
-                regCodeMap.put(po.getRegCode(),po.getRegistSeqno());
+                regCodeMap.put(po.getProdId(),po.getRegistSeqno());
             }
         }
         if(CollectionUtils.isNotEmpty(dto.getFileArray())){
@@ -63,7 +63,7 @@ public class PerProDeclareReg002Controller extends BaseController {
                 //文件名称
                 String filename=uploadFile.getSrcName().substring(0,uploadFile.getSrcName().indexOf("."));
                 if(!regCodeMap.containsKey(filename)){
-                    stringBuffer.append(filename+"无法匹配到申报登记数据;");
+                    stringBuffer.append("文件"+filename+"无法匹配到申报登记数据,上传失败;");
                 }
             }
             webResult.setMessage(stringBuffer.toString());
@@ -73,12 +73,15 @@ public class PerProDeclareReg002Controller extends BaseController {
                 for(UploadFile uploadFile:dto.getFileArray()){
                     //文件名称
                     String filename=uploadFile.getSrcName().substring(0,uploadFile.getSrcName().indexOf("."));
-                    perProDeclareReg001Service.updateChbPrdDeclare(regCodeMap.get(filename),filename);
+                    //由于数据库字段长度为32位,此处需要把查出的REGIST_SEQNO 多余的四个"-" 祛除,保证正常入库
+                    String FILE_NO=regCodeMap.get(filename).replaceAll("-","");
+                    //perProDeclareReg001Service.updateChbPrdDeclare(regCodeMap.get(filename),filename);
+                    perProDeclareReg001Service.updateChbPrdDeclare(FILE_NO,regCodeMap.get(filename));
                     //删除已存在的数据重新插入
-                    perProDeclareReg001Service.deleteBySeqNo(regCodeMap.get(filename));
+                    perProDeclareReg001Service.deleteBySeqNo(FILE_NO);
                     //插入数据
                     SysUploadFileInfo sysUploadFileInfo=new SysUploadFileInfo();
-                    sysUploadFileInfo.setSeqNo(regCodeMap.get(filename));
+                    sysUploadFileInfo.setSeqNo(FILE_NO);
                     sysUploadFileInfo.setFileName(uploadFile.getSrcName());
                     sysUploadFileInfo.setPath(uploadFile.getFileName());
                     sysUploadFileInfo.setCreateTime(new Date());

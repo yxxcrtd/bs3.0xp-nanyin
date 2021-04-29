@@ -41,7 +41,7 @@ public class ChbMstCounterParty001Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        super.setSelectOptionToModel(model, DictCode.客户二级类型, DictCode.维护数据状态);
+        super.setSelectOptionToModel(model, DictCode.客户二级类型, DictCode.维护数据状态,DictCode.客户一级类型);
         return super.init(model);
     }
 
@@ -117,36 +117,6 @@ public class ChbMstCounterParty001Controller extends BaseController {
         }
         return resultList;
     }
-
-    /**
-     *
-     * 数据状态下拉框取得值
-     *
-     * @return 下拉框值
-     * @see
-     * @since 1.0
-     */
-    /*@ResponseBody
-    @RequestMapping("/getDataStatus")
-    public List<SelectOptionDto> getDataStatus() {
-        Map<String , Object> map =new HashMap<>();
-        map.put("code", "MAINTAIN_STATUS");
-        List<SysDataDict> list = prorateService.getSysDataDict(map);
-        List<SelectOptionDto> resultList = new ArrayList<>();
-        commenData(list,resultList);
-        return resultList;
-    }
-
-    public void commenData(List<SysDataDict> list,List<SelectOptionDto> resultList){
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (SysDataDict sysDataDict : list) {
-                SelectOptionDto resultDto = new SelectOptionDto();
-                resultDto.setId(sysDataDict.getItemCode());
-                resultDto.setText(sysDataDict.getItemValue());
-                resultList.add(resultDto);
-            }
-        }
-    }*/
 
     /**
      * 导出excel

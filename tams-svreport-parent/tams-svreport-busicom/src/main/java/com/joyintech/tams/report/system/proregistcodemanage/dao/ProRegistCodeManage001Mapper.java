@@ -136,4 +136,8 @@ public interface ProRegistCodeManage001Mapper {
     int insertSysUploadFileInfo(SysUploadFileInfo sysUploadFileInfo);
 
     int deleteBySeqNo(String seqNo);
+
+    ProRegistCodeManage001Dto getRegistCodeInfoByProdId(Map<String, Object> param);
+
+    int updateRegCode(Map<String, Object> param);
 }

@@ -59,6 +59,7 @@
                 return;
             }else{
                 data.pageModel = PAGE_MODEL_EDIT;
+                data.type="update";
                 Joyin.dialog(JoyinUtil.getLabel("编辑产品费率信息"),
                     basePath + "svreport/system/prorate/DisPrdFeeRate002/init",
                     "95%", "95%", data,function(){
@@ -115,11 +116,17 @@
             var param ={};
             var rows = table.getAllCheckedRows();
             if(rows.length > 0) {
-                var keyList = [];
+                var busiIdList = [];
+                var cashType2List = [];
+                var startDateList = [];
                 $.each(rows, function(i, row) {
-                    keyList.push(row.orgCode + '|' + row.prodId);
+                    busiIdList.push(row.busiId);
+                    cashType2List.push(row.cashType2);
+                    startDateList.push(row.startDate);
                 });
-                param.keys = keyList.join(',');
+                param.keybusiIdList = busiIdList.join();
+                param.keycashType2List = cashType2List.join();
+                param.keystartDateList = startDateList.join();
             }
             else{
                 //有勾选优先勾选数据

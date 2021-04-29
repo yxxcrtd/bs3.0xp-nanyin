@@ -110,12 +110,10 @@
 </select>
   
   <delete id="deletePrdOpensch" parameterType="java.lang.String">
-	 begin
-     <foreach collection="prodidlist" item="prodid" index="index" separator=";">
-	     delete from CHB_PRD_OPENSCH
-	     where PROD_ID = #{prodid,jdbcType=VARCHAR} 
-     </foreach>
-    ;end;
+      <foreach collection="prodidlist" item="prodid" index="index" separator=";">
+          delete from CHB_PRD_OPENSCH
+          where PROD_ID = #{prodid,jdbcType=VARCHAR}
+      </foreach>
   </delete>
   
   <delete id="deleteAllData">

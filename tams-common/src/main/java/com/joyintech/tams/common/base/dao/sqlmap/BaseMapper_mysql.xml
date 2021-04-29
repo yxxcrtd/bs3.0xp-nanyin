@@ -3,9 +3,7 @@
 <mapper namespace="com.joyintech.tams.common.base.dao.BaseMapper_mysql">
     <select id="getSequenceIndexData" parameterType="java.util.Map"
             resultType="java.lang.Long" useCache="false" flushCache="true">
-        <if test="databaseType == 'mysql'">
-            SELECT _nextIndex('WFL_SEQUENCE')
-        </if>
+        SELECT _nextIndex(#{sequenceName})
     </select>
 
     <select id="selectBankCode" parameterType="java.lang.String" resultType="java.lang.String">

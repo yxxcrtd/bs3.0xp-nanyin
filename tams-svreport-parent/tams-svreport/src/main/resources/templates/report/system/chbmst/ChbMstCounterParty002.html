@@ -2,58 +2,54 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layout/default}">
 <head>
-  <title data-th-text="#{DisPrdFeeRate002}">产品费率信息新建</title>
+  <title data-th-text="#{ChbMstCounterParty002}">交易对手信息新建</title>
 </head>
 <body>
 <div layout:fragment="content">
   <form class="layui-form joyin-form-wrap" id="submitForm"style="padding:0 0 5px 0;" >
     <div class="layui-form-item">
       <div class="form-inline-wrap">
-        <label class="layui-form-label form-lable">产品代码</label>
+        <label class="layui-form-label form-lable">交易对手代码</label>
         <div class="layui-input-inline input-inline">
-          <select id="busiId" name="busiId"
-                  data-th-data-url='@{/svreport/system/prorate/DisPrdFeeRate001/getProdID}'
-                  data-th-data-formatoption=true data-th-data-parentids="orgCode"
-                  class="input-select" placeholder="请选择"
-                  data-th-placeholder="#{SysCommon.selectplaceholder}"
-                  allowClear="true"
-                  data-th-initValue="${entity?.busiId}">
-          </select>
+          <input type="text" id="counterId" name="counterId" data-th-value="${entity?.counterId}" class="layui-input form-input" placeholder="请输入内容">
+          <input type="hidden" id="uuid" name="uuid" data-th-value="${entity?.uuid}" class="layui-input form-input" >
+          <input type="hidden" id="type" name="type" data-th-value="${entity?.type}" class="layui-input form-input" >
         </div>
       </div>
       <div class="form-inline-wrap">
-        <label class="layui-form-label form-lable">信披费用类型</label>
+        <label class="layui-form-label form-lable">交易对手名称</label>
         <div class="layui-input-inline input-inline">
-          <select id="DisPrdFeeRate002_prdFeeType"  data-th-initValue="${entity?.cashType2}" data-th-data-url='@{/svreport/system/prorate/DisPrdFeeRate001/getPrdFeeType}' data-th-data-formatoption=true  class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" >
-          </select>
+          <input type="text" id="counterName" name="counterName" data-th-value="${entity?.counterName}" class="layui-input form-input" placeholder="请输入内容">
         </div>
       </div>
     </div>
     <div class="layui-form-item">
       <div class="form-inline-wrap">
-        <label class="layui-form-label form-label-wrap" >费率</label>
+        <label class="layui-form-label form-label-wrap" >交易对手一级类型</label>
         <div class="layui-input-inline input-inline">
-          <input type="text" id="rate" name="rate" class="layui-input form-input"
-                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" maxlength="32"
-                 data-th-value="${entity?.rate}"
-                 >
+          <select id="counterType1"  data-th-initValue="${entity?.counterType1}"
+                  data-th-data-result='${SVR_CUSTOMER_TYPE1}'
+                  data-th-data-formatoption=true
+                  class="input-select" placeholder="请选择"
+                  data-th-placeholder="#{SysCommon.selectplaceholder}"
+                  allowClear="true"
+                  onchange="change(this.value)">
+          </select>
         </div>
       </div>
       <div class="form-inline-wrap">
-        <label class="layui-form-label form-lable">启用日期</label>
+        <label class="layui-form-label form-lable">交易对手二级类型</label>
         <div class="layui-input-inline input-inline">
-          <input id="startDate" type="text" name="startDate"
-                 class="layui-input form-input input-dateSelect"
-                 placeholder="请选择启用日期"
-                 data-th-value="${entity?.startDate}"/>
+          <select id="counterType2"  data-th-initValue="${entity?.counterType2}" data-th-data-result='${SVR_CUSTOMER_TYPE2}' data-th-data-formatoption=true  class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" >
+          </select>
         </div>
       </div>
     </div>
   </form>
   <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin:50px;">
     <div class="text-center">
-      <a id="DisPrdFeeRate002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
-      <a id="DisPrdFeeRate002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
+      <a id="ChbMstCounterParty002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
+      <a id="ChbMstCounterParty002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
     </div>
   </div>
 </div>
@@ -61,7 +57,7 @@
   <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
   <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
   <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
-  <script data-th-src="@{/js/report/system/prorate/DisPrdFeeRate002.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/system/chbmst/ChbMstCounterParty002.js}" type="text/javascript"></script>
 </div>
 </body>
 

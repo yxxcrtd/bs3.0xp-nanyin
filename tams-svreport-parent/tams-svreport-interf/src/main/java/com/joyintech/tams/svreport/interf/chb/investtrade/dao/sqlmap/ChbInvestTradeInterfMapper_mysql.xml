@@ -2749,7 +2749,8 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         )
       </insert>
 	<insert id="mergeInfoList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTrade">
-        insert into CHB_INVEST_TRADE(TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,
+        insert into CHB_INVEST_TRADE(
+        TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,
         INVEST_TYPE, PROD_ID, REGIST_BANK_CODE,
         ASSET_CODE, CCY, AMT,
         CNY_AMT, NUM, CUR_ASSET_TYPE,
@@ -2762,8 +2763,9 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         UPDATE_TIME, STATUS_DATE, REV_DATE,
         DATA_SOURCE, RATE, BASIS,
         DEALTYPE, FACEVALUE
-        ,ASSET_METHOD,RIVAL_PARTY_TYPE)
-        select TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,
+        ,ASSET_METHOD,RIVAL_PARTY_TYPE )
+        select
+        TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,
         INVEST_TYPE, PROD_ID, REGIST_BANK_CODE,
         ASSET_CODE, CCY, AMT,
         CNY_AMT, NUM, CUR_ASSET_TYPE,
@@ -2776,11 +2778,51 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         UPDATE_TIME, STATUS_DATE, REV_DATE,
         DATA_SOURCE, RATE, BASIS,
         DEALTYPE, FACEVALUE
-        ,ASSET_METHOD,RIVAL_PARTY_TYPE from
-        (
-        select TEMP.* from
-        (
-        <foreach collection="newDataList" item="item"  separator="union all">
+        ,ASSET_METHOD,RIVAL_PARTY_TYPE
+        from (
+        select
+        TEMP.TRADE_SEQNO,
+        TEMP.TRADE_CODE,
+        TEMP.INVEST_VARIETY,
+        TEMP.INVEST_TYPE,
+        TEMP.PROD_ID,
+        TEMP.REGIST_BANK_CODE,
+        TEMP.ASSET_CODE,
+        TEMP.CCY,
+        TEMP.AMT,
+        TEMP.CNY_AMT,
+        TEMP.NUM,
+        TEMP.CUR_ASSET_TYPE,
+        TEMP.CUR_ASSETDET_TYPE,
+        TEMP.DEALDATE,
+        TEMP.TRADE_COUNTER,
+        TEMP.UNIT_PRICE_FULL,
+        TEMP.UNIT_PRICE_NET,
+        TEMP.END_RATE,
+        TEMP.CONTRACT_CODE,
+        TEMP.REMARK,
+        TEMP.CHL_CPCT_ID,
+        TEMP.TRADE_TYPE,
+        TEMP.CHL_AGRT_NAME,
+        TEMP.IS_UNDER_TRADE,
+        TEMP.STATUS,
+        TEMP.ORG_CODE,
+        TEMP.DEPT_CODE,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.STATUS_DATE,
+        TEMP.REV_DATE,
+        TEMP.DATA_SOURCE,
+        TEMP.RATE,
+        TEMP.BASIS,
+        TEMP.DEALTYPE,
+        TEMP.FACEVALUE,
+        TEMP.ASSET_METHOD,
+        TEMP.RIVAL_PARTY_TYPE
+        from (
+        <foreach collection="newDataList" item="item" separator="union all">
             select
             #{item.tradeSeqno,jdbcType=CHAR} TRADE_SEQNO,
             #{item.tradeCode,jdbcType=VARCHAR}  TRADE_CODE,
@@ -2819,57 +2861,75 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
             #{item.rate,jdbcType=DECIMAL}  RATE,
             #{item.basis,jdbcType=VARCHAR}  BASIS,
             #{item.dealtype,jdbcType=VARCHAR}  DEALTYPE,
-            #{item.facevalue,jdbcType=DECIMAL}  FACEVALUE
-            ,#{item.assetMethod,jdbcType=VARCHAR}  ASSET_METHOD
-            ,#{item.rivalPartyType,jdbcType=VARCHAR}  RIVAL_PARTY_TYPE
+            #{item.facevalue,jdbcType=DECIMAL}  FACEVALUE,
+            #{item.assetMethod,jdbcType=VARCHAR}  ASSET_METHOD,
+            #{item.rivalPartyType,jdbcType=VARCHAR}  RIVAL_PARTY_TYPE
             from dual
         </foreach>
-        ) TEMP where not exisits (select 1 from CHB_INVEST_TRADE CII where CII.TRADE_CODE = TEMP.TRADE_CODE)
+        ) TEMP where not EXISTS (select 1 from CHB_INVEST_TRADE CII where CII.TRADE_CODE = TEMP.TRADE_CODE)
         ) de ;
 
         UPDATE  CHB_INVEST_TRADE as A,
         (
-        select INVEST_VARIETY,
-        INVEST_TYPE,
-        PROD_ID,
-        REGIST_BANK_CODE,
-        ASSET_CODE,
-        CCY,
-        AMT,
-        CNY_AMT,
-        NUM,
-        CUR_ASSET_TYPE,
-        CUR_ASSETDET_TYPE,
-        DEALDATE,
-        TRADE_COUNTER,
-        UNIT_PRICE_FULL,
-        UNIT_PRICE_NET,
-        END_RATE,
-        CONTRACT_CODE,
-        REMARK,
-        CHL_CPCT_ID,
-        TRADE_TYPE,
-        CHL_AGRT_NAME,
-        IS_UNDER_TRADE,
-        STATUS,
-        ORG_CODE,
-        DEPT_CODE,
-        CREATE_USER,
-        UPDATE_USER,
-        UPDATE_TIME,
-        STATUS_DATE,
-        REV_DATE,
-        DATA_SOURCE,
-        RATE,
-        BASIS,
-        DEALTYPE,
-        FACEVALUE,
-        ASSET_METHOD,
-        RIVAL_PARTY_TYPE from
-        (
-        select TEMP.* from
-        (
-        <foreach collection="newDataList" item="item"  separator="union all">
+        select
+        TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,
+        INVEST_TYPE, PROD_ID, REGIST_BANK_CODE,
+        ASSET_CODE, CCY, AMT,
+        CNY_AMT, NUM, CUR_ASSET_TYPE,
+        CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
+        UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
+        CONTRACT_CODE, REMARK, CHL_CPCT_ID,
+        TRADE_TYPE, CHL_AGRT_NAME, IS_UNDER_TRADE,
+        STATUS, ORG_CODE, DEPT_CODE,
+        CREATE_USER, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, STATUS_DATE, REV_DATE,
+        DATA_SOURCE, RATE, BASIS,
+        DEALTYPE, FACEVALUE
+        ,ASSET_METHOD,RIVAL_PARTY_TYPE
+        from (
+        select
+        TEMP.TRADE_SEQNO,
+        TEMP.TRADE_CODE,
+        TEMP.INVEST_VARIETY,
+        TEMP.INVEST_TYPE,
+        TEMP.PROD_ID,
+        TEMP.REGIST_BANK_CODE,
+        TEMP.ASSET_CODE,
+        TEMP.CCY,
+        TEMP.AMT,
+        TEMP.CNY_AMT,
+        TEMP.NUM,
+        TEMP.CUR_ASSET_TYPE,
+        TEMP.CUR_ASSETDET_TYPE,
+        TEMP.DEALDATE,
+        TEMP.TRADE_COUNTER,
+        TEMP.UNIT_PRICE_FULL,
+        TEMP.UNIT_PRICE_NET,
+        TEMP.END_RATE,
+        TEMP.CONTRACT_CODE,
+        TEMP.REMARK,
+        TEMP.CHL_CPCT_ID,
+        TEMP.TRADE_TYPE,
+        TEMP.CHL_AGRT_NAME,
+        TEMP.IS_UNDER_TRADE,
+        TEMP.STATUS,
+        TEMP.ORG_CODE,
+        TEMP.DEPT_CODE,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.STATUS_DATE,
+        TEMP.REV_DATE,
+        TEMP.DATA_SOURCE,
+        TEMP.RATE,
+        TEMP.BASIS,
+        TEMP.DEALTYPE,
+        TEMP.FACEVALUE,
+        TEMP.ASSET_METHOD,
+        TEMP.RIVAL_PARTY_TYPE
+        from (
+        <foreach collection="newDataList" item="item" separator="union all">
             select
             #{item.tradeSeqno,jdbcType=CHAR} TRADE_SEQNO,
             #{item.tradeCode,jdbcType=VARCHAR}  TRADE_CODE,
@@ -2908,15 +2968,53 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
             #{item.rate,jdbcType=DECIMAL}  RATE,
             #{item.basis,jdbcType=VARCHAR}  BASIS,
             #{item.dealtype,jdbcType=VARCHAR}  DEALTYPE,
-            #{item.facevalue,jdbcType=DECIMAL}  FACEVALUE
-            ,#{item.assetMethod,jdbcType=VARCHAR}  ASSET_METHOD
-            ,#{item.rivalPartyType,jdbcType=VARCHAR}  RIVAL_PARTY_TYPE
+            #{item.facevalue,jdbcType=DECIMAL}  FACEVALUE,
+            #{item.assetMethod,jdbcType=VARCHAR}  ASSET_METHOD,
+            #{item.rivalPartyType,jdbcType=VARCHAR}  RIVAL_PARTY_TYPE
             from dual
         </foreach>
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from CHB_INVEST_TRADE CII where CII.TRADE_CODE = TEMP.TRADE_CODE);
+        SET
+        A.INVEST_VARIETY = B.INVEST_VARIETY,
+        A.INVEST_TYPE = B.INVEST_TYPE,
+        A.PROD_ID = B.PROD_ID,
+        A.REGIST_BANK_CODE = B.REGIST_BANK_CODE,
+        A.ASSET_CODE = B.ASSET_CODE,
+        A.CCY = B.CCY,
+        A.AMT = B.AMT,
+        A.CNY_AMT = B.CNY_AMT,
+        A.NUM = B.NUM,
+        A.CUR_ASSET_TYPE = B.CUR_ASSET_TYPE,
+        A.CUR_ASSETDET_TYPE = B.CUR_ASSETDET_TYPE,
+        A.DEALDATE = B.DEALDATE,
+        A.TRADE_COUNTER = B.TRADE_COUNTER,
+        A.UNIT_PRICE_FULL = B.UNIT_PRICE_FULL,
+        A.UNIT_PRICE_NET = B.UNIT_PRICE_NET,
+        A.END_RATE = B.END_RATE,
+        A.CONTRACT_CODE = B.CONTRACT_CODE,
+        A.REMARK = B.REMARK,
+        A.CHL_CPCT_ID = B.CHL_CPCT_ID,
+        A.TRADE_TYPE = B.TRADE_TYPE,
+        A.CHL_AGRT_NAME = B.CHL_AGRT_NAME,
+        A.IS_UNDER_TRADE = B.IS_UNDER_TRADE,
+        A.STATUS = CASE WHEN B.STATUS='E' THEN 'M' ELSE 'D' END,
+        A.ORG_CODE = B.ORG_CODE,
+        A.DEPT_CODE = B.DEPT_CODE,
+        A.CREATE_USER = B.CREATE_USER,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME,
+        A.STATUS_DATE = B.STATUS_DATE,
+        A.REV_DATE = CASE WHEN B.STATUS='E' THEN NULL ELSE NOW() END,
+        A.DATA_SOURCE = B.DATA_SOURCE,
+        A.RATE = B.RATE,
+        A.BASIS = B.BASIS,
+        A.DEALTYPE = B.DEALTYPE,
+        A.FACEVALUE = B.FACEVALUE
+        ,A.ASSET_METHOD = B.ASSET_METHOD
+        ,A.RIVAL_PARTY_TYPE = B.RIVAL_PARTY_TYPE
+        where A.TRADE_CODE = B.TRADE_CODE ;
     </insert>
 	<insert id="mergeInfoListEx" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTrade">
         insert into CHB_INVEST_TRADE(TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,

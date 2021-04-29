@@ -836,6 +836,8 @@ $(function() {
 			return;
 		}
 		parm = {};
+		var Seqno=data.registSeqno.replaceAll("-","");
+		data.registSeqno=Seqno;
 		var url = JoyinUtil.getRealPath('/framework/download/' + data.registSeqno);
 		Joyin.ajax(url, parm, function downloadFileByForm() {
 			Joyin.exportExcel('/framework/download/' + data.registSeqno, parm);

@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.report.system.chbmst.service.ChbMstCounterParty001Service;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
@@ -71,33 +72,40 @@ public class ChbMstCounterPartyController {
         return this.chbMstCounterParty001Service.importData(dataList,tempList,userName,orgCode,deptCode);
     }
 
-
+    @PostMapping("selectOneDate")
+    public List<ChbMstCounterParty> selectOneDate(@RequestBody Map<String, Object> param) {
+        List<ChbMstCounterParty> list = chbMstCounterParty001Service.selectOneDate(param);
+        return list;
+    }
+    @PostMapping("selectChbMstCounterPartyErrordata")
+    public List<ChbMstCounterPartyErrodataWithBLOBs> selectChbMstCounterPartyErrordata(String datauuid) {
+        List<ChbMstCounterPartyErrodataWithBLOBs> list = chbMstCounterParty001Service.selectChbMstCounterPartyErrordata(datauuid);
+        return list;
+    }
+    @PostMapping("selectChbMstCounterPartyData")
+    public List<Integer> selectChbMstCounterPartyData (@RequestBody List<ChbMstCounterParty> dtoList){
+        List<Integer> intList =chbMstCounterParty001Service.selectChbMstCounterPartyData(dtoList);
+        return intList;
+    }
+    @PostMapping("insertChbMstCounterPartyData")
+    public void insertChbMstCounterPartyData(@RequestBody List<ChbMstCounterParty> dtoList) {
+        chbMstCounterParty001Service.insertChbMstCounterPartyData(dtoList);
+        return ;
+    }
+    @PostMapping("updateOne")
+    public void updateOne(@RequestBody ChbMstCounterParty chb) {
+        chbMstCounterParty001Service.updateOne(chb);
+        return ;
+    }
 
     @PostMapping("getSysDataDict")
     public List<SysDataDict> getSysDataDict(@RequestBody Map<String, Object> param) {
         List<SysDataDict> list = chbMstCounterParty001Service.getSysDataDict(param);
         return list;
     }
-    @PostMapping("selectPrdFeeData")
-    public List<Integer> selectPrdFeeData (@RequestBody List<DisRepCashYield> dtoList){
-        List<Integer> intList =chbMstCounterParty001Service.selectPrdFeeData(dtoList);
-        return intList;
-    }
-    @PostMapping("insertPrdFeeData")
-    public void insertPrdFeeData(@RequestBody List<DisRepCashYield> dtoList) {
-        chbMstCounterParty001Service.insertPrdFeeData(dtoList);
-        return ;
-    }
 
-    @PostMapping("selectOneDate")
-    public List<ChbMstCounterParty> selectOneDate(@RequestBody Map<String, Object> param) {
-        List<ChbMstCounterParty> list = chbMstCounterParty001Service.selectOneDate(param);
-        return list;
-    }
-    @PostMapping("selectdisPrdFeeRateErrordata")
-    public List<DisPrdFeeRateInfoErrodataWithBLOBs> selectdisPrdFeeRateErrordata(String datauuid) {
-        List<DisPrdFeeRateInfoErrodataWithBLOBs> list = chbMstCounterParty001Service.selectdisPrdFeeRateErrordata(datauuid);
-        return list;
-    }
+
+
+
 
 }

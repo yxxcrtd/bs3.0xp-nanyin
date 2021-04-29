@@ -28,28 +28,28 @@ import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog00
 
 /**
  * 中债报送信息登记生成日志Service
- * 
+ *
  * @author zhangyf
  */
 @Service
 public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog001Dto> {
 	@Autowired
-    private FileAttachmentProcess fileAttachmentProcess;
+	private FileAttachmentProcess fileAttachmentProcess;
 
 	public List<SelectOptionDto> getUserList() {
-		return restTemplate.getForList(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/selectUserList",
+		return simpleRestTemplate.getForList(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/selectUserList",
 				SelectOptionDto.class);
 	}
 
 	public Page<ChbSubinfoBatchLog001Dto> queryBatchResult(Map<String, Object> param) {
-		return restTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/findPage",
+		return simpleRestTemplate.postForPage(SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbSubinfoBatchLog/findPage",
 				param, ChbSubinfoBatchLog001Dto.class);
 	}
-	
+
 	/**
-     * 检查选择的压缩文件是否存在
-     * @return 不存在的文件清单
-     */
+	 * 检查选择的压缩文件是否存在
+	 * @return 不存在的文件清单
+	 */
 	public AjaxResult checkFileExists(Map<String, Object> param) {
 		AjaxResult result = new AjaxResult();
 		StringBuilder stringBuilder = new StringBuilder();
@@ -58,7 +58,7 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 			fileList = JsonUtils.json2List(param.get("keyList").toString(), ChbSubinfoBatchLog001Dto.class);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
 		for (ChbSubinfoBatchLog001Dto dataFile : fileList) {
 			UploadFile	 upd=  fileAttachmentProcess.fetch(dataFile.getCompresFileId());
 			if(upd!=null){
@@ -83,7 +83,7 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 		result.setData(stringBuilder.toString());
 		return result;
 	}
-	
+
 	/**
 	 * 下载压缩文件
 	 * @param param 页面参数
@@ -117,10 +117,10 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 			String zipFileName = "中债报送文件" + DateUtil.getCurrentDateTime() + ".zip";
 			zipFileName = zipFileName.replaceAll(":", "-");
 			outFile = new File(exportFilePath + File.separator + zipFileName);
-            // 导出路径不存在则重新生成
-            if (!outFile.getParentFile().exists()) {
-                outFile.getParentFile().mkdirs();
-            }
+			// 导出路径不存在则重新生成
+			if (!outFile.getParentFile().exists()) {
+				outFile.getParentFile().mkdirs();
+			}
 			try {
 				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new File[] {}));
 			} catch (Exception e) {

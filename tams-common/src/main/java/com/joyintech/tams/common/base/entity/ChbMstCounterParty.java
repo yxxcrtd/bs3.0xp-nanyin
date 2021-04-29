@@ -161,6 +161,19 @@ public class ChbMstCounterParty extends BaseEntity {
      */
     private String counterType1;
     /**
+     * 交易对手一级分类名称
+     */
+    private String counterType1Name;
+
+    public String getCounterType1Name() {
+        return counterType1Name;
+    }
+
+    public void setCounterType1Name(String counterType1Name) {
+        this.counterType1Name = counterType1Name;
+    }
+
+    /**
      * 交易对手二级分类
      */
     private String counterType2;

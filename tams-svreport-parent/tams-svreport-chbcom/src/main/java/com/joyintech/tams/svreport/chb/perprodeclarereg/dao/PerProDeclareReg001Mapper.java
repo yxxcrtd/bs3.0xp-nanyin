@@ -91,6 +91,5 @@ public interface PerProDeclareReg001Mapper {
 	int insertSysUploadFileInfo(SysUploadFileInfo sysUploadFileInfo);
 
 	int deleteBySeqNo(String seqNo);
-
-	void updateChbPrdDeclare(@Param("seqNo")String seqNo, @Param("filename")String filename);
+	void updateChbPrdDeclare(@Param("fileNo")String fileNo, @Param("seqNo")String seqNo);
 }

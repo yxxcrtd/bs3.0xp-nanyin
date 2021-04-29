@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -147,6 +148,13 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     @Value("${application.reportInterfOneTimeSqlLdrDataCount}")
     private int reportInterfOneTimeSqlLdrDataCount;
+
+    /**
+     * 上游接口解析读取文件处理,单线程处理数据条数
+     */
+    @Value("${application.reportInterfOneTimeDataCount}")
+    private int reportInterfOneTimeDataCount;
+
 
     /**
      * sqlldr用数据库连接
@@ -277,7 +285,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     /**
      * 共通方法：查询界面选择的参数处理
-     * 
+     *
      * @param param
      */
     private void dealParamMap(Map<String, Object> param) {
@@ -296,35 +304,35 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     /**
      * 共通方法：查询返回结果处理
-     * 
+     *
      * @param pageList
      */
     private void dealReturnInfo(List<EquiteBusiDetails001Dto> pageList) {
         for (EquiteBusiDetails001Dto equiteBusiDetails001Dto : pageList) {
             equiteBusiDetails001Dto.setStatusStr(SysDataUtil.getNameFromDataDict(
-                DictCode.维护数据状态, equiteBusiDetails001Dto.getDataStatus()));
+                    DictCode.维护数据状态, equiteBusiDetails001Dto.getDataStatus()));
             equiteBusiDetails001Dto.setBusiType(SysDataUtil.getZZDictCodeAndName(
-                DictCode.业务种类, equiteBusiDetails001Dto.getBusiType()));
+                    DictCode.业务种类, equiteBusiDetails001Dto.getBusiType()));
             // equiteBusiDetails001Dto.setCcy(SysDataUtil.getZZDictCodeAndName(DictCode.中债币种,
             // equiteBusiDetails001Dto.getCcy()));
             equiteBusiDetails001Dto.setChannel(SysDataUtil.getZZDictCodeAndName(
-                DictCode.投资者明细渠道, equiteBusiDetails001Dto.getChannel()));
+                    DictCode.投资者明细渠道, equiteBusiDetails001Dto.getChannel()));
             equiteBusiDetails001Dto.setIsConsign(SysDataUtil.getZZDictCodeAndName(
-                DictCode.是否_中债, equiteBusiDetails001Dto.getIsConsign()));
+                    DictCode.是否_中债, equiteBusiDetails001Dto.getIsConsign()));
             equiteBusiDetails001Dto.setAgencyFsa(SysDataUtil.getZZDictCodeAndName(
-                DictCode.监管机构, equiteBusiDetails001Dto.getAgencyFsa()));
+                    DictCode.监管机构, equiteBusiDetails001Dto.getAgencyFsa()));
             equiteBusiDetails001Dto.setBusiFsa(SysDataUtil.getZZDictCodeAndName(
-                DictCode.监管机构2, equiteBusiDetails001Dto.getBusiFsa()));
+                    DictCode.监管机构2, equiteBusiDetails001Dto.getBusiFsa()));
             equiteBusiDetails001Dto.setFundAccPlace(SysDataUtil.getZZDictCodeAndName(
-                DictCode.销售区域_中债, equiteBusiDetails001Dto.getFundAccPlace()));
+                    DictCode.销售区域_中债, equiteBusiDetails001Dto.getFundAccPlace()));
             equiteBusiDetails001Dto.seteQuityConfDateStr(
-                DateUtil.format(equiteBusiDetails001Dto.getEquityConfDate(), "yyyyMMdd"));
+                    DateUtil.format(equiteBusiDetails001Dto.getEquityConfDate(), "yyyyMMdd"));
         }
     }
 
     /**
      * 删除数据 --逻辑删除 更新状态
-     * 
+     *
      * @param keyStr 主键字符串
      * @see
      * @since 1.0
@@ -332,43 +340,43 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
     @Transactional(rollbackFor = Exception.class)
     public void doDelete(EquiteBusiDetails001Dto dto) {
         List<EquiteBusiDetails001Dto> keyList = dto.getSelectedItem();
-        
+
         if (StringUtil.equals(dto.getSelectedItem().get(0).getDataStatus(),
-            DictCodeListExt1.维护数据状态_有效.getValue())) {
+                DictCodeListExt1.维护数据状态_有效.getValue())) {
             List<Map<String, String>> equityList = new ArrayList<Map<String, String>>();
             dtoToMap(keyList,equityList);
             // 删除导入用的临时的数据
             deleteImportTmpData();
             // 插入导入用的临时数据
             equityBusiDetails001Mapper.insertIntoImportTable(equityList);
-        	
-        	//更新前将数据插入历史表进行备份
-        	List<EquityBusiInfoRegist001Dto> registListnew = new ArrayList<>();
+
+            //更新前将数据插入历史表进行备份
+            List<EquityBusiInfoRegist001Dto> registListnew = new ArrayList<>();
             for (EquiteBusiDetails001Dto detail : keyList) {
-            	//购买地
-            	if(StringUtil.isNotBlank(detail.getFundAccPlace())){
-            		detail.setFundAccPlace(StringUtil.split(detail.getFundAccPlace(), StringUtil.SPACE)[0]);
-            	}
-            	if(StringUtil.isNotBlank(detail.getAgencyFsa())){
-                	//监管机构
-                	detail.setAgencyFsa(StringUtil.split(detail.getAgencyFsa(),StringUtil.SPACE)[0]);
-            	}
-            	//监管机构2
-            	if(StringUtil.isNotBlank(detail.getBusiFsa())){
-            		detail.setBusiFsa(StringUtil.split(detail.getBusiFsa(),StringUtil.SPACE)[0]);
-            	}
-            	//是否代销
-            	if(StringUtil.isNotBlank(detail.getIsConsign())){
-            		detail.setIsConsign(StringUtil.split(detail.getIsConsign(),StringUtil.SPACE)[0]);
-            	}
-            	//投资者明细渠道
-            	if(StringUtil.isNotBlank(detail.getChannel())){
-            		detail.setChannel(StringUtil.split(detail.getChannel(),StringUtil.SPACE)[0]);
-            	}           	
-            	//业务种类
-            	if(StringUtil.isNotBlank(detail.getBusiType())){
-            		detail.setBusiType(StringUtil.split(detail.getBusiType(),StringUtil.SPACE)[0]);
-            	}
+                //购买地
+                if(StringUtil.isNotBlank(detail.getFundAccPlace())){
+                    detail.setFundAccPlace(StringUtil.split(detail.getFundAccPlace(), StringUtil.SPACE)[0]);
+                }
+                if(StringUtil.isNotBlank(detail.getAgencyFsa())){
+                    //监管机构
+                    detail.setAgencyFsa(StringUtil.split(detail.getAgencyFsa(),StringUtil.SPACE)[0]);
+                }
+                //监管机构2
+                if(StringUtil.isNotBlank(detail.getBusiFsa())){
+                    detail.setBusiFsa(StringUtil.split(detail.getBusiFsa(),StringUtil.SPACE)[0]);
+                }
+                //是否代销
+                if(StringUtil.isNotBlank(detail.getIsConsign())){
+                    detail.setIsConsign(StringUtil.split(detail.getIsConsign(),StringUtil.SPACE)[0]);
+                }
+                //投资者明细渠道
+                if(StringUtil.isNotBlank(detail.getChannel())){
+                    detail.setChannel(StringUtil.split(detail.getChannel(),StringUtil.SPACE)[0]);
+                }
+                //业务种类
+                if(StringUtil.isNotBlank(detail.getBusiType())){
+                    detail.setBusiType(StringUtil.split(detail.getBusiType(),StringUtil.SPACE)[0]);
+                }
                 EquityBusiInfoRegist001Dto tempdto = new EquityBusiInfoRegist001Dto();
                 BeanUtil.copyPropertiesIgnoreNull(tempdto, detail);
                 registListnew.add(tempdto);
@@ -383,9 +391,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             List<EquityBusiInfoRegist001Dto> registList = new ArrayList<>();
             this.selectAllChbEqudetSubData(keyList, registList);
             Map<String, List<EquityBusiInfoRegist001Dto>> registMap = registList.stream().collect(
-                JoyinCollectors.groupingBy(
-                    x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getRegCode()
-                         + GlobalConstant.UNDER_LINE + x.getRegistBankCode() + GlobalConstant.UNDER_LINE + x.getIndentifyMark()));
+                    JoyinCollectors.groupingBy(
+                            x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getRegCode()
+                                    + GlobalConstant.UNDER_LINE + x.getRegistBankCode() + GlobalConstant.UNDER_LINE + x.getIndentifyMark()));
             // 删除list
             List<EquityBusiInfoRegist001Dto> delList = new ArrayList<EquityBusiInfoRegist001Dto>();
             // 更新list
@@ -409,28 +417,28 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 //                JoyinCollectors.groupingBy(
 //                    x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
 //                         + x.getIndentifyMark()));
-            
+
             allInfoList=equityBusiDetails001Mapper.getAllChbEquInfoOneTime();
             Map<String, List<EquityInfo001Dto>> equityInfo001Map = allInfoList.stream().collect(
-                JoyinCollectors.groupingBy(
-                    x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
-                         + x.getIndentifyMark()));
-            
+                    JoyinCollectors.groupingBy(
+                            x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
+                                    + x.getIndentifyMark()));
+
             for (EquiteBusiDetails001Dto equitydto : keyList) {
-            	  // 更新dto
+                // 更新dto
                 EquityBusiInfoRegist001Dto equityRegist1 = new EquityBusiInfoRegist001Dto();
                 // 删除dto
                 EquityBusiInfoRegist001Dto equityRegist2 = new EquityBusiInfoRegist001Dto();
                 String key = equitydto.getBusiSeqno() + GlobalConstant.UNDER_LINE
-                             + equitydto.getRegCode() + GlobalConstant.UNDER_LINE
-                             + equitydto.getRegistBankCode() + GlobalConstant.UNDER_LINE
-                             + equitydto.getIndentifyMark();
+                        + equitydto.getRegCode() + GlobalConstant.UNDER_LINE
+                        + equitydto.getRegistBankCode() + GlobalConstant.UNDER_LINE
+                        + equitydto.getIndentifyMark();
                 List<EquityBusiInfoRegist001Dto> regist001Dtos = registMap.get(key);
                 if (CollectionUtils.isNotEmpty(regist001Dtos)) {
                     // 报送时点通用方法
                     dateList = ChbDeadlineUtil.getChbEndDate(
-                        DictCodeListExt2.报表名称_投资者明细信息登记.getValue(),
-                        DictCodeListExt2.报送数据状态_删除.getValue(), dateMap, equitydto.getEquityConfDate());
+                            DictCodeListExt2.报表名称_投资者明细信息登记.getValue(),
+                            DictCodeListExt2.报送数据状态_删除.getValue(), dateMap, equitydto.getEquityConfDate());
                     if (CollectionUtils.isNotEmpty(dateList)) {
                         equityRegist1.setChbSubmitDeadline(dateList.get(0));
                         equityRegist1.setSubmitDeadline(dateList.get(1));
@@ -439,8 +447,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         EquityBusiInfoRegist001Dto regist001Dto = regist001Dtos.get(0);
                         // 当登记表中只有一条数据，并且是未报送状态的，直接删除该条数据
                         if (DictCodeListExt2.报送状态_未报送.getValue().equals(
-                            regist001Dto.getSubmitStatus())) {
-                        	equityRegist2 = new EquityBusiInfoRegist001Dto();
+                                regist001Dto.getSubmitStatus())) {
+                            equityRegist2 = new EquityBusiInfoRegist001Dto();
                             equityRegist2.setBusiSeqno(equitydto.getBusiSeqno());
                             equityRegist2.setRegCode(equitydto.getRegCode());
                             equityRegist2.setRegistBankCode(equitydto.getRegistBankCode());
@@ -450,9 +458,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         }
                         // 当登记表中只有一条数据，报送状态为手工处理或者接口报送时，重新插入一条删除状态的数据
                         else if (DictCodeListExt2.报送状态_接口报送.getValue().equals(
-                            regist001Dto.getSubmitStatus())
-                                 || DictCodeListExt2.报送状态_手工处理.getValue().equals(
-                                     regist001Dto.getSubmitStatus())) {
+                                regist001Dto.getSubmitStatus())
+                                || DictCodeListExt2.报送状态_手工处理.getValue().equals(
+                                regist001Dto.getSubmitStatus())) {
                             // equityRegist1.setStatus(DictCodeList.报送数据状态_删除.getValue());
                             // equityRegist1.setBusiSeqno(equitydto.getBusiSeqno());
                             // equityRegist1.setRegCode(equitydto.getRegCode());
@@ -476,26 +484,26 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             }
             // 批量执行delete
             logger.info(
-                "=======执行deleteByPrimaryBatch(投资者明细信息登记表)开始====" + DateUtil.getCurrentDateTime());
+                    "=======执行deleteByPrimaryBatch(投资者明细信息登记表)开始====" + DateUtil.getCurrentDateTime());
             this.deleteByPrimaryBatch(delList);
             logger.info(
-                "=======执行deleteByPrimaryBatch(投资者明细信息登记表)结束====" + DateUtil.getCurrentDateTime());
+                    "=======执行deleteByPrimaryBatch(投资者明细信息登记表)结束====" + DateUtil.getCurrentDateTime());
             // 批量执行insert
             logger.info("=======执行insertDeleteInvestRegBatch(投资者明细信息登记表)开始===="
-                        + DateUtil.getCurrentDateTime());
+                    + DateUtil.getCurrentDateTime());
             this.doInsertSubDataWithInfoDto(insertList,equityInfo001Map);
             logger.info("=======执行insertDeleteInvestRegBatch(投资者明细信息登记表)结束===="
-                        + DateUtil.getCurrentDateTime());
+                    + DateUtil.getCurrentDateTime());
             // 批量执行update
             logger.info("=======执行updateByPrimaryKeySelectedBatch(投资者明细信息登记表)开始===="
-                        + DateUtil.getCurrentDateTime());
+                    + DateUtil.getCurrentDateTime());
             this.updateByPrimaryKeySelectedBatch(DictCodeListExt2.报送数据状态_删除.getValue(),
-                updateList);
+                    updateList);
             logger.info("=======执行updateByPrimaryKeySelectedBatch(投资者明细信息登记表)结束===="
-                        + DateUtil.getCurrentDateTime());
+                    + DateUtil.getCurrentDateTime());
         }
         else if (StringUtil.equals(dto.getSelectedItem().get(0).getDataStatus(),
-        		DictCodeListExt1.维护数据状态_待处理.getValue())) {
+                DictCodeListExt1.维护数据状态_待处理.getValue())) {
             // 分批次逻辑删除持有者明细信息维护表
             this.updateByKeyListBatch(DictCodeListExt1.维护数据状态_删除.getValue(), keyList);
         }
@@ -505,19 +513,19 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     private void dtoToMap(List<EquiteBusiDetails001Dto> keyList,List<Map<String, String>> equityList){
         for(EquiteBusiDetails001Dto key:keyList){
-           Map<String,String>  map=new HashMap<String,String>();
-           map.put("BUSI_SEQNO", key.getBusiSeqno());
-           map.put("REGIST_BANK_CODE", key.getRegistBankCode());
-           map.put("ACCOUNT", key.getAccount());
-           map.put("INDENTIFY_MARK", key.getIndentifyMark());
-           equityList.add(map);
+            Map<String,String>  map=new HashMap<String,String>();
+            map.put("BUSI_SEQNO", key.getBusiSeqno());
+            map.put("REGIST_BANK_CODE", key.getRegistBankCode());
+            map.put("ACCOUNT", key.getAccount());
+            map.put("INDENTIFY_MARK", key.getIndentifyMark());
+            equityList.add(map);
         }
     }
-    
-    
+
+
     /**
      * 通过主键批量获取投资者明细信息登记表中数据
-     * 
+     *
      * @param keyList 主键
      * @param chbInvestList 结果集
      */
@@ -541,7 +549,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         int part = dataCount / maxDataCountOneTime; // 分批数
         for (int i = 0; i < part; i++ ) {
             registList.addAll(equityBusiDetails001Mapper.selectAllChbEqudetSubData(
-                newDataList.subList(0, maxDataCountOneTime)));
+                    newDataList.subList(0, maxDataCountOneTime)));
             newDataList.subList(0, maxDataCountOneTime).clear();
         }
         // 最后剩下的数据
@@ -552,7 +560,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     /**
      * 批量物理删除投资者明细信息登记信息表
-     * 
+     *
      * @param delList 主键
      */
     private void deleteByPrimaryBatch(List<EquityBusiInfoRegist001Dto> delList) {
@@ -574,7 +582,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         int part = dataCount / maxDataCountOneTime; // 分批数
         for (int i = 0; i < part; i++ ) {
             equityBusiDetails001Mapper.deleteByPrimaryBatch(
-                newDataList.subList(0, maxDataCountOneTime));
+                    newDataList.subList(0, maxDataCountOneTime));
             newDataList.subList(0, maxDataCountOneTime).clear();
         }
         // 最后剩下的数据
@@ -586,7 +594,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     /**
      * 批量更新投资者明细信息登记信息表
-     * 
+     *
      * @param updateList 主键
      */
     private void updateByPrimaryKeySelectedBatch(String status,
@@ -609,7 +617,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         int part = dataCount / maxDataCountOneTime; // 分批数
         for (int i = 0; i < part; i++ ) {
             equityBusiDetails001Mapper.updateByPrimaryKeySelectedBatch(status,
-                newDataList.subList(0, maxDataCountOneTime));
+                    newDataList.subList(0, maxDataCountOneTime));
             newDataList.subList(0, maxDataCountOneTime).clear();
         }
         // 最后剩下的数据
@@ -621,7 +629,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     /**
      * 批量逻辑更新维护投资者明细信息表
-     * 
+     *
      * @param stausD 删除的数据状态
      * @param keyList 主键
      */
@@ -644,7 +652,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         int part = dataCount / maxDataCountOneTime; // 分批数
         for (int i = 0; i < part; i++ ) {
             equityBusiDetails001Mapper.updateByKeyList(stausD,
-                newDataList.subList(0, maxDataCountOneTime));
+                    newDataList.subList(0, maxDataCountOneTime));
             newDataList.subList(0, maxDataCountOneTime).clear();
         }
         // 最后剩下的数据
@@ -656,7 +664,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     /**
      * 配置项中非空处理
-     * 
+     *
      * @param Count
      * @param flag
      * @return
@@ -680,7 +688,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     /**
      * 查询所有内容，不分页 --导出功能需要导出查询条件的所有内容
-     * 
+     *
      * @param param 画面查询参数
      * @return 查询结果列表
      */
@@ -715,70 +723,65 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      * @since 1.0
      */
     public AjaxResult checkConfirmMsgForImportData(Map<String,Object> param) {
-    	@SuppressWarnings("unchecked")
-		List<List<String>> dataList=(List<List<String>>)param.get("dataList");
-    	String bankCode = (String)param.get("bankCode");
-    	String deptCode = (String)param.get("deptCode");
-    	String orgCode = (String)param.get("orgCode");
-    	String userName = (String) param.get("userName");
-    	
-        AjaxResult webResult = new AjaxResult();
-       
-            try {
-               
-                if (CollectionUtils.isNotEmpty(dataList)) {
-                    List<EquiteBusiDetails001Dto> entitiesList = new ArrayList<>();
-                    List<Map<String, String>> mapList = listToMap(dataList);
-                    
-                    //add by zhengxiaolian 2019-12-24
-                    List<Map<String, String>> equityList = new ArrayList<>();
-                    List<Map<String, String>> mapListEx = listToMapEx(dataList);
-                    equityList.addAll(mapListEx);
-                    // 删除导入用的临时的数据
-                    deleteImportTmpData();
-                    // 插入导入用的临时数据
-                    equityBusiDetails001Mapper.insertIntoImportTable(equityList);
-                  //add by zhengxiaolian 2019-12-24
-                    
-                    List<ExcelValidDto> checkResult = checkDataInfo(mapList, entitiesList,bankCode,deptCode,orgCode,userName);
-                    if (checkResult.size() > 0) {
-                        webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-                        return webResult;
-                    }
+        @SuppressWarnings("unchecked")
+        List<List<String>> dataList=(List<List<String>>)param.get("dataList");
+        String bankCode = (String)param.get("bankCode");
+        String deptCode = (String)param.get("deptCode");
+        String orgCode = (String)param.get("orgCode");
+        String userName = (String) param.get("userName");
 
-                    // 查询导入文件中的数据在数据库中已经存在的数据
-                    Map<String, EquiteBusiDetails001Dto> allChbEqudetDataMap = this.selectAllChbEqudetData(
+        AjaxResult webResult = new AjaxResult();
+
+        try {
+
+            if (CollectionUtils.isNotEmpty(dataList)) {
+                List<EquiteBusiDetails001Dto> entitiesList = new ArrayList<>();
+                List<Map<String, String>> mapList = listToMap(dataList);
+
+                //add by zhengxiaolian 2019-12-24
+                List<Map<String, String>> equityList = new ArrayList<>();
+                List<Map<String, String>> mapListEx = listToMapEx(dataList);
+                equityList.addAll(mapListEx);
+                // 删除导入用的临时的数据
+                deleteImportTmpData();
+                // 插入导入用的临时数据
+                equityBusiDetails001Mapper.insertIntoImportTable(equityList);
+                //add by zhengxiaolian 2019-12-24
+
+                List<ExcelValidDto> checkResult = checkDataInfo(dataList,mapList, entitiesList,bankCode,deptCode,orgCode,userName);
+                if (checkResult.size() > 0) {
+                    webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+                    return webResult;
+                }
+
+                // 查询导入文件中的数据在数据库中已经存在的数据
+                Map<String, EquiteBusiDetails001Dto> allChbEqudetDataMap = this.selectAllChbEqudetData(
                         entitiesList);
-                    if (allChbEqudetDataMap != null && allChbEqudetDataMap.size() > 0) {
-                        // 将序号放入list中
-                        List<String> excelNumList = new ArrayList<String>();
-                        List<Integer> excelNumIntList = new ArrayList<Integer>();
-                        for (EquiteBusiDetails001Dto equite001Dto : entitiesList) {
-                            String dataKey = equite001Dto.getBusiSeqno()
-                                             + GlobalConstant.UNDER_LINE
-                                             + equite001Dto.getAccount()
-                                             + GlobalConstant.UNDER_LINE
-                                             + equite001Dto.getRegistBankCode();
-                            if (allChbEqudetDataMap.containsKey(dataKey)) {
-                                excelNumIntList.add(Integer.valueOf(equite001Dto.getExcelNum()));
-                            }
+                if (allChbEqudetDataMap != null && allChbEqudetDataMap.size() > 0) {
+                    // 将序号放入list中
+                    List<String> excelNumList = new ArrayList<String>();
+                    List<Integer> excelNumIntList = new ArrayList<Integer>();
+                    for (EquiteBusiDetails001Dto equite001Dto : entitiesList) {
+                        String dataKey = equite001Dto.getBusiSeqno()
+                                + GlobalConstant.UNDER_LINE
+                                + equite001Dto.getAccount()
+                                + GlobalConstant.UNDER_LINE
+                                + equite001Dto.getRegistBankCode();
+                        if (allChbEqudetDataMap.containsKey(dataKey)) {
+                            excelNumIntList.add(Integer.valueOf(equite001Dto.getExcelNum()));
                         }
-                        // 将list进行排序，并转化为string
-                        Collections.sort(excelNumIntList);
-                        // 若有产品未维护产品登记编码，则直接返回
-                        for (Integer rowNo : excelNumIntList) {
-                            excelNumList.add(String.valueOf(rowNo));
-                        }
-                        if (CollectionUtils.isNotEmpty(excelNumIntList)) {
-                            webResult.setMessage(
+                    }
+                    // 将list进行排序，并转化为string
+                    Collections.sort(excelNumIntList);
+                    // 若有产品未维护产品登记编码，则直接返回
+                    for (Integer rowNo : excelNumIntList) {
+                        excelNumList.add(String.valueOf(rowNo));
+                    }
+                    if (CollectionUtils.isNotEmpty(excelNumIntList)) {
+                        webResult.setMessage(
                                 this.getMessage("CHB_ISCOVER_EQU",
-                                    StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                                        StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
                                 MessageType.确认消息);
-                        }
-                        else {
-                            // 防止在进行导入前check时进行了两次的弹框
-                            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-                        }
                     }
                     else {
                         // 防止在进行导入前check时进行了两次的弹框
@@ -790,49 +793,54 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
                 }
             }
-            catch (Exception e) {
+            else {
                 // 防止在进行导入前check时进行了两次的弹框
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
             }
-        
+        }
+        catch (Exception e) {
+            // 防止在进行导入前check时进行了两次的弹框
+            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+        }
+
         return webResult;
     }
-    
+
     /**
      * 导入文件 --解析excel文件并进行验证
-     * 
+     *
      * @param fileName 导入的文件名名
      * @return 导入结果
      */
     @SuppressWarnings("unchecked")
-	public List<ExcelValidDto> importData(Map<String,Object> param) {
-    	String pageId= (String)param.get("pageId");
-    	String bankCode = (String)param.get("bankCode");
-    	String deptCode = (String)param.get("deptCode");
-    	String orgCode = (String)param.get("orgCode");
-    	String userName = (String) param.get("userName");
-    	List<List<String>> dataList=(List<List<String>>)param.get("dataList");
-            if (null != dataList) {
-                List<EquiteBusiDetails001Dto> entitiesList = new ArrayList<>(dataList.size());
-                // 根据数据规则检查数据是否合法
-                List<Map<String, String>> mapList = listToMap(dataList);
+    public List<ExcelValidDto> importData(Map<String,Object> param) {
+        String pageId= (String)param.get("pageId");
+        String bankCode = (String)param.get("bankCode");
+        String deptCode = (String)param.get("deptCode");
+        String orgCode = (String)param.get("orgCode");
+        String userName = (String) param.get("userName");
+        List<List<String>> dataList=(List<List<String>>)param.get("dataList");
+        if (null != dataList) {
+            List<EquiteBusiDetails001Dto> entitiesList = new ArrayList<>(dataList.size());
+            // 根据数据规则检查数据是否合法
+            List<Map<String, String>> mapList = listToMap(dataList);
 
-                // 检查数据是否合法
-                List<ExcelValidDto> checkResult = checkDataInfo(mapList, entitiesList,bankCode,deptCode,orgCode,userName);
-                
-                if (checkResult.isEmpty()) {
-                    try {
-                        // 判断当前画面的导出进度是否正在处理
-                        if (progressBarService.isProcessing(pageId, PROCESS_KEY)) {
-                            // throw new BusinessException("当前画面正在执行导入操作，请耐心等待！");
-                            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+            // 检查数据是否合法
+            List<ExcelValidDto> checkResult = checkDataInfo(dataList,mapList, entitiesList,bankCode,deptCode,orgCode,userName);
+
+            if (checkResult.isEmpty()) {
+                try {
+                    // 判断当前画面的导出进度是否正在处理
+                    if (progressBarService.isProcessing(pageId, PROCESS_KEY)) {
+                        // throw new BusinessException("当前画面正在执行导入操作，请耐心等待！");
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
                                 this.getMessage("CHB_EQUITY_REPORT_FILE_0001")));
-                            return checkResult;
-                        }
-                        // 设置当前画面进度为0
-                        progressBarService.updatePercent(pageId, PROCESS_KEY, 0D, false);
-                     // 查询出所有身份信息
-                        List<EquityInfo001Dto> allInfoList = new ArrayList<EquityInfo001Dto>();
+                        return checkResult;
+                    }
+                    // 设置当前画面进度为0
+                    progressBarService.updatePercent(pageId, PROCESS_KEY, 0D, false);
+                    // 查询出所有身份信息
+                    List<EquityInfo001Dto> allInfoList = new ArrayList<EquityInfo001Dto>();
 //                        template.select(
 //                            "com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dao.EquityBusiInfoRegist001Mapper.selectEquityInfoAll",
 //                            new ResultHandler() {
@@ -845,89 +853,89 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 //                            JoyinCollectors.groupingBy(
 //                                x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
 //                                     + x.getIndentifyMark()));
-                        
-                        allInfoList=equityBusiDetails001Mapper.getAllChbEquInfoOneTime();
-                        Map<String, List<EquityInfo001Dto>> equityInfo001Map = allInfoList.stream().collect(
+
+                    allInfoList=equityBusiDetails001Mapper.getAllChbEquInfoOneTime();
+                    Map<String, List<EquityInfo001Dto>> equityInfo001Map = allInfoList.stream().collect(
                             JoyinCollectors.groupingBy(
-                                x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
-                                     + x.getIndentifyMark()));
-                        
-                        
-                        List<EquiteBusiDetails001Dto> insertDataList = new ArrayList<EquiteBusiDetails001Dto>();
-                        // 查询导入文件中的数据在数据库中已经存在的数据
-                        final Map<String, EquiteBusiDetails001Dto> allChbEqudetDataMap = this.selectAllChbEqudetData(
+                                    x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
+                                            + x.getIndentifyMark()));
+
+
+                    List<EquiteBusiDetails001Dto> insertDataList = new ArrayList<EquiteBusiDetails001Dto>();
+                    // 查询导入文件中的数据在数据库中已经存在的数据
+                    final Map<String, EquiteBusiDetails001Dto> allChbEqudetDataMap = this.selectAllChbEqudetData(
                             entitiesList);
 
-                        // 更新导入的进度条（以0.3d-0.6d为范围，跟新进度）
-                        progressBarService.updatePercent(pageId, PROCESS_KEY, 0.3d, false);
-                        // 查询出所有有三要素合并身份信息
-                        List<ChbEquHoldCheckDto> allcheckList = equityBusiInfoRegist001Mapper.selectAllCheckEquHoldDto();
-                        Map<String, ChbEquHoldCheckDto> equityInfocheckMap = allcheckList.stream().collect(
+                    // 更新导入的进度条（以0.3d-0.6d为范围，跟新进度）
+                    progressBarService.updatePercent(pageId, PROCESS_KEY, 0.3d, false);
+                    // 查询出所有有三要素合并身份信息
+                    List<ChbEquHoldCheckDto> allcheckList = equityBusiInfoRegist001Mapper.selectAllCheckEquHoldDto();
+                    Map<String, ChbEquHoldCheckDto> equityInfocheckMap = allcheckList.stream().collect(
                             Collectors.toMap(ChbEquHoldCheckDto::getIndentifyMark, a -> a, (k1, k2) -> k1));
-                        entitiesList.forEach(item -> {
-                            item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                    entitiesList.forEach(item -> {
+                        item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 
-                            //主键改为产品代码
-                            String dataKey = item.getBusiSeqno() + GlobalConstant.UNDER_LINE
-                                             + item.getAccount() + GlobalConstant.UNDER_LINE
-                                             + item.getRegistBankCode();
-                            EquiteBusiDetails001Dto chbEqudet = allChbEqudetDataMap.get(dataKey);
+                        //主键改为产品代码
+                        String dataKey = item.getBusiSeqno() + GlobalConstant.UNDER_LINE
+                                + item.getAccount() + GlobalConstant.UNDER_LINE
+                                + item.getRegistBankCode();
+                        EquiteBusiDetails001Dto chbEqudet = allChbEqudetDataMap.get(dataKey);
 
-                            // item.setDataStatus(DictCodeList.维护数据状态_有效.getValue());
-                            item.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
-                            item.setDeptCode(deptCode);
-                            setOrgIndentifyMark(item,equityInfocheckMap);
-                            // 设值createDept
-                            String createDept = item.getDeptCode();
-                            if (StringUtil.isEmpty(createDept)) {
-                                createDept = item.getOrgCode();
-                            }
-                            item.setCreateDept(createDept);
+                        // item.setDataStatus(DictCodeList.维护数据状态_有效.getValue());
+                        item.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
+                        item.setDeptCode(deptCode);
+                        setOrgIndentifyMark(item,equityInfocheckMap);
+                        // 设值createDept
+                        String createDept = item.getDeptCode();
+                        if (StringUtil.isEmpty(createDept)) {
+                            createDept = item.getOrgCode();
+                        }
+                        item.setCreateDept(createDept);
 
-                            if (chbEqudet != null) {
+                        if (chbEqudet != null) {
 //                            	 EquiteBusiDetails001Dto result= equityBusiDetails001Mapper.selectByPrimaryKey(chbEqudet);
 //                               //对比数据相同则不继续
 //                               if(docheckIfchangeEx(item,result)){
 //                                   return;
 //                               }
-                                // 明细表中存在相同数据且数据状态为待处理
-                                List<EquityBusiInfoRegist001Dto> listOA = new ArrayList<>();
-                                EquityBusiInfoRegist001Dto dto = new EquityBusiInfoRegist001Dto();
-                                BeanUtil.copyPropertiesIgnoreNull(dto, item);
-                                listOA.add(dto);
-                                EquiteBusiDetails001Dto result= equityBusiDetails001Mapper.selectByPrimaryKey(item);
-                                //批量插入投资者明细HIS数据
-                                insertEquityBusiHisByPart(listOA);
-                                // 更新维护表数据
-                                equityBusiDetails001Mapper.updateByPrimaryKeySelective(item);
-                                // 更新登记表数据
-                                doUpdateSub(item,result);
-                            }
-                            else {
-                                insertDataList.add(item);
-                            }
-                        });
-                        this.insertChbEqudetDataByPart(insertDataList);
-                        // 插入登记表数据
-                        doInsertSubDataWithInfoDto(insertDataList,equityInfo001Map);
-                        // 更新导入的进度条
-                        progressBarService.updatePercent(pageId, PROCESS_KEY, 0.6d, false);
-                        // 删除导入用的临时的数据
-                        deleteImportTmpData();
-                    }
-                    catch (Exception e) {
-                        logger.error(e.getMessage(), e);
-                        // 从内存中移除当前画面的导出进度
-                        progressBarService.removePercent(pageId, PROCESS_KEY);
-                        e.printStackTrace();
-                    }
+                            // 明细表中存在相同数据且数据状态为待处理
+                            List<EquityBusiInfoRegist001Dto> listOA = new ArrayList<>();
+                            EquityBusiInfoRegist001Dto dto = new EquityBusiInfoRegist001Dto();
+                            BeanUtil.copyPropertiesIgnoreNull(dto, item);
+                            listOA.add(dto);
+                            EquiteBusiDetails001Dto result= equityBusiDetails001Mapper.selectByPrimaryKey(item);
+                            //批量插入投资者明细HIS数据
+                            insertEquityBusiHisByPart(listOA);
+                            // 更新维护表数据
+                            equityBusiDetails001Mapper.updateByPrimaryKeySelective(item);
+                            // 更新登记表数据
+                            doUpdateSub(item,result);
+                        }
+                        else {
+                            insertDataList.add(item);
+                        }
+                    });
+                    this.insertChbEqudetDataByPart(insertDataList);
+                    // 插入登记表数据
+                    doInsertSubDataWithInfoDto(insertDataList,equityInfo001Map);
+                    // 更新导入的进度条
+                    progressBarService.updatePercent(pageId, PROCESS_KEY, 0.6d, false);
+                    // 删除导入用的临时的数据
+                    deleteImportTmpData();
                 }
-                // 从内存中移除当前画面的导出进度
-                progressBarService.removePercent(pageId, PROCESS_KEY);
-                BaseCheckLib.objFiledsMap=null;
-                return checkResult;
+                catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                    // 从内存中移除当前画面的导出进度
+                    progressBarService.removePercent(pageId, PROCESS_KEY);
+                    e.printStackTrace();
+                }
             }
-        
+            // 从内存中移除当前画面的导出进度
+            progressBarService.removePercent(pageId, PROCESS_KEY);
+            BaseCheckLib.objFiledsMap=null;
+            return checkResult;
+        }
+
         return null;
     }
 
@@ -939,23 +947,38 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      */
     public List<Map<String, String>> listToMap(List<List<String>> dataList) {
         String[] fieldName = {"registBankCode", "contractNo", "busiSeqno", "finAcc",
-            "custContractNo", "indentifyMark", "custName", "fundAcc", "fundAccPlace", "isConsign",
-            "agencyCode", "agencyName", "agencyFsa", "account", "busiType", "busiFsa",
-            "equityConfDate", "shareConfDatetime", "ccy", "amount", "amountCny", "prodValue",
-            "shares", "feeAmt", "channel", "tranTellName", "remark"};
+                "custContractNo", "indentifyMark", "custName", "fundAcc", "fundAccPlace", "isConsign",
+                "agencyCode", "agencyName", "agencyFsa", "account", "busiType", "busiFsa",
+                "equityConfDate", "shareConfDatetime", "ccy", "amount", "amountCny", "prodValue",
+                "shares", "feeAmt", "channel", "tranTellName", "remark"};
+        Map<String, String> dictMap=new HashMap<String,String>(){
+            {
+                put("fundAccPlace", "");
+                put("isConsign", "");
+                put("agencyFsa", "");
+                put("busiType", "");
+                put("busiFsa", "");
+                put("ccy", "");
+                put("channel", "");
+            }
+        };
         List<Map<String, String>> result = new ArrayList<>();
         // 获取所有的产品登记编码
         List<Map<String, String>> regList = equityBusiDetails001Mapper.queryAllRegCode();
         Map<String, String> allProdIdMap = regList.stream().collect(
-            JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("OPERATE_MODE")));
+                JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("OPERATE_MODE")));
 
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
                 String cell = action.get(i).trim();
-                if (cell.contains(StringUtil.SPACE)) {
-                    String[] value = StringUtil.split(cell, StringUtil.SPACE);
-                    cell = value[0];
+                String name=fieldName[i];
+                if(dictMap.containsKey(name)){
+                    //是枚举值
+                    if (cell.contains(StringUtil.SPACE)) {
+                        String[] value = StringUtil.split(cell, StringUtil.SPACE);
+                        cell = value[0];
+                    }
                 }
                 temp.put(fieldName[i], cell);
                 if (fieldName[i].equals("account")) {
@@ -966,21 +989,36 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         });
         return result;
     }
-    
+
     public List<Map<String, String>> listToMapEx(List<List<String>> dataList) {
         String[] fieldName = {"REGIST_BANK_CODE", "CONTRACT_NO", "BUSI_SEQNO", "FIN_ACC",
-            "CUST_CONTRACT_NO", "INDENTIFY_MARK", "CUST_NAME", "FUND_ACC", "FUND_ACC_PLACE", "IS_CONSIGN",
-            "AGENCY_CODE", "AGENCY_NAME", "AGENCY_FSA", "ACCOUNT", "BUSI_TYPE", "BUSI_FSA",
-            "EQUITY_CONF_DATE", "SHARE_CONF_DATETIME", "CCY", "AMOUNT", "AMOUNT_CNY", "PROD_VALUE",
-            "SHARES", "FEE_AMT", "CHANNEL", "TRAN_TELL_NAME", "REMARK"};
+                "CUST_CONTRACT_NO", "INDENTIFY_MARK", "CUST_NAME", "FUND_ACC", "FUND_ACC_PLACE", "IS_CONSIGN",
+                "AGENCY_CODE", "AGENCY_NAME", "AGENCY_FSA", "ACCOUNT", "BUSI_TYPE", "BUSI_FSA",
+                "EQUITY_CONF_DATE", "SHARE_CONF_DATETIME", "CCY", "AMOUNT", "AMOUNT_CNY", "PROD_VALUE",
+                "SHARES", "FEE_AMT", "CHANNEL", "TRAN_TELL_NAME", "REMARK"};
+        Map<String, String> dictMap=new HashMap<String,String>(){
+            {
+                put("fundAccPlace", "");
+                put("isConsign", "");
+                put("agencyFsa", "");
+                put("busiType", "");
+                put("busiFsa", "");
+                put("ccy", "");
+                put("channel", "");
+            }
+        };
         List<Map<String, String>> result = new ArrayList<>();
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
                 String cell = action.get(i).trim();
-                if (cell.contains(StringUtil.SPACE)) {
-                    String[] value = StringUtil.split(cell, StringUtil.SPACE);
-                    cell = value[0];
+                String name=fieldName[i];
+                if(dictMap.containsKey(name)){
+                    //是枚举值
+                    if (cell.contains(StringUtil.SPACE)) {
+                        String[] value = StringUtil.split(cell, StringUtil.SPACE);
+                        cell = value[0];
+                    }
                 }
                 temp.put(fieldName[i], cell);
             }
@@ -998,20 +1036,20 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      * @since 1.0
      */
     public AjaxResult checkConfirmMsgForChbImportData(Map<String,Object> param) {
-    	String fileName = (String)param.get("fileName");
-    	String bankCode = (String)param.get("bankCode");
-    	String deptCode = (String)param.get("deptCode");
-    	String orgCode = (String)param.get("orgCode");
-    	String userName = (String) param.get("userName");
+        String fileName = (String)param.get("fileName");
+        String bankCode = (String)param.get("bankCode");
+        String deptCode = (String)param.get("deptCode");
+        String orgCode = (String)param.get("orgCode");
+        String userName = (String) param.get("userName");
         AjaxResult webResult = new AjaxResult();
         if (StringUtil.isNotEmpty(fileName)) {
             try {
                 List<List<String>> dataList = ExcelUtil.readToList(
-                    FileNameUtil.getUploadFilePath(fileName), null, null, 0, 1, 0);
+                        FileNameUtil.getUploadFilePath(fileName), null, null, 0, 1, 0);
                 if (CollectionUtils.isNotEmpty(dataList)) {
                     List<EquiteBusiDetails001Dto> entitiesList = new ArrayList<>();
                     List<Map<String, String>> mapList = listToMapChb(dataList);
-                    
+
                     List<Map<String, String>> equityList = new ArrayList<>();
                     List<Map<String, String>> mapListEx = listToMapChbEx(dataList);
                     equityList.addAll(mapListEx);
@@ -1019,8 +1057,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     deleteImportTmpData();
                     // 插入导入用的临时数据
                     equityBusiDetails001Mapper.insertIntoImportTable(equityList);
-                    
-                    List<ExcelValidDto> checkResult = checkDataInfo(mapList, entitiesList,bankCode,deptCode,orgCode,userName);
+
+                    List<ExcelValidDto> checkResult = checkDataInfo(dataList,mapList, entitiesList,bankCode,deptCode,orgCode,userName);
                     if (checkResult.size() > 0) {
                         webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
                         return webResult;
@@ -1028,17 +1066,17 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
                     // 查询导入文件中的数据在数据库中已经存在的数据
                     Map<String, EquiteBusiDetails001Dto> allChbEqudetDataMap = this.selectAllChbEqudetData(
-                        entitiesList);
+                            entitiesList);
                     if (allChbEqudetDataMap != null && allChbEqudetDataMap.size() > 0) {
                         // 将序号放入list中
                         List<String> excelNumList = new ArrayList<String>();
                         List<Integer> excelNumIntList = new ArrayList<Integer>();
                         for (EquiteBusiDetails001Dto equite001Dto : entitiesList) {
                             String dataKey = equite001Dto.getBusiSeqno()
-                                             + GlobalConstant.UNDER_LINE
-                                             + equite001Dto.getAccount()
-                                             + GlobalConstant.UNDER_LINE
-                                             + equite001Dto.getRegistBankCode();
+                                    + GlobalConstant.UNDER_LINE
+                                    + equite001Dto.getAccount()
+                                    + GlobalConstant.UNDER_LINE
+                                    + equite001Dto.getRegistBankCode();
                             if (allChbEqudetDataMap.containsKey(dataKey)) {
                                 excelNumIntList.add(Integer.valueOf(equite001Dto.getExcelNum()));
                             }
@@ -1051,9 +1089,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         }
                         if (CollectionUtils.isNotEmpty(excelNumIntList)) {
                             webResult.setMessage(
-                                this.getMessage("CHB_ISCOVER_EQU",
-                                    StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
-                                MessageType.确认消息);
+                                    this.getMessage("CHB_ISCOVER_EQU",
+                                            StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
+                                    MessageType.确认消息);
                         }
                     }
                     else {
@@ -1084,36 +1122,36 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      * @return 导入结果
      */
     @SuppressWarnings("unchecked")
-	public List<ExcelValidDto> importChbData(Map<String,Object> param) {
-    	String pageId= (String)param.get("pageId");
-    	String bankCode = (String)param.get("bankCode");
-    	String deptCode = (String)param.get("deptCode");
-    	String orgCode = (String)param.get("orgCode");
-    	String userName = (String) param.get("userName");
-    	List<List<String>> dataList=(List<List<String>>)param.get("dataList");
-            if (null != dataList) {
-                List<EquiteBusiDetails001Dto> entitiesList = new ArrayList<>(dataList.size());
-                // 根据数据规则检查数据是否合法
-                List<Map<String, String>> mapList = listToMapChb(dataList);
+    public List<ExcelValidDto> importChbData(Map<String,Object> param) {
+        String pageId= (String)param.get("pageId");
+        String bankCode = (String)param.get("bankCode");
+        String deptCode = (String)param.get("deptCode");
+        String orgCode = (String)param.get("orgCode");
+        String userName = (String) param.get("userName");
+        List<List<String>> dataList=(List<List<String>>)param.get("dataList");
+        if (null != dataList) {
+            List<EquiteBusiDetails001Dto> entitiesList = new ArrayList<>(dataList.size());
+            // 根据数据规则检查数据是否合法
+            List<Map<String, String>> mapList = listToMapChb(dataList);
 
-                // 检查数据是否合法
-                List<ExcelValidDto> checkResult = checkDataInfo(mapList, entitiesList,bankCode,deptCode,orgCode,userName);
-                // List<ExcelValidDto> checkResult = convertToEntity(dataList, entitiesList,
-                // mapList);
+            // 检查数据是否合法
+            List<ExcelValidDto> checkResult = checkDataInfo(dataList,mapList, entitiesList,bankCode,deptCode,orgCode,userName);
+            // List<ExcelValidDto> checkResult = convertToEntity(dataList, entitiesList,
+            // mapList);
 
-                if (checkResult.isEmpty()) {
-                    try {
-                        // 判断当前画面的导出进度是否正在处理
-                        if (progressBarService.isProcessing(pageId, PROCESS_KEY)) {
-                            // throw new BusinessException("当前画面正在执行导入操作，请耐心等待！");
-                            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
+            if (checkResult.isEmpty()) {
+                try {
+                    // 判断当前画面的导出进度是否正在处理
+                    if (progressBarService.isProcessing(pageId, PROCESS_KEY)) {
+                        // throw new BusinessException("当前画面正在执行导入操作，请耐心等待！");
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
                                 this.getMessage("CHB_EQUITY_REPORT_FILE_0001")));
-                            return checkResult;
-                        }
-                        // 设置当前画面进度为0
-                        progressBarService.updatePercent(pageId, PROCESS_KEY, 0D, false);
-                        // 查询出所有身份信息
-                        List<EquityInfo001Dto> allInfoList = new ArrayList<EquityInfo001Dto>();
+                        return checkResult;
+                    }
+                    // 设置当前画面进度为0
+                    progressBarService.updatePercent(pageId, PROCESS_KEY, 0D, false);
+                    // 查询出所有身份信息
+                    List<EquityInfo001Dto> allInfoList = new ArrayList<EquityInfo001Dto>();
 //                        template.select(
 //                            "com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dao.EquityBusiInfoRegist001Mapper.selectEquityInfoAll",
 //                            new ResultHandler() {
@@ -1126,82 +1164,82 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 //                            JoyinCollectors.groupingBy(
 //                                x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
 //                                     + x.getIndentifyMark()));
-                        
-                        allInfoList=equityBusiDetails001Mapper.getAllChbEquInfoOneTime();
-                        Map<String, List<EquityInfo001Dto>> equityInfo001Map = allInfoList.stream().collect(
+
+                    allInfoList=equityBusiDetails001Mapper.getAllChbEquInfoOneTime();
+                    Map<String, List<EquityInfo001Dto>> equityInfo001Map = allInfoList.stream().collect(
                             JoyinCollectors.groupingBy(
-                                x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
-                                     + x.getIndentifyMark()));
-                        List<EquiteBusiDetails001Dto> insertDataList = new ArrayList<EquiteBusiDetails001Dto>();
-                        // 查询导入文件中的数据在数据库中已经存在的数据
-                        final Map<String, EquiteBusiDetails001Dto> allChbEqudetDataMap = this.selectAllChbEqudetData(
+                                    x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
+                                            + x.getIndentifyMark()));
+                    List<EquiteBusiDetails001Dto> insertDataList = new ArrayList<EquiteBusiDetails001Dto>();
+                    // 查询导入文件中的数据在数据库中已经存在的数据
+                    final Map<String, EquiteBusiDetails001Dto> allChbEqudetDataMap = this.selectAllChbEqudetData(
                             entitiesList);
 
-                        // 更新导入的进度条（以0.3d-0.6d为范围，跟新进度）
-                        progressBarService.updatePercent(pageId, PROCESS_KEY, 0.3d, false);
-                        // 查询出所有有三要素合并身份信息
-                        List<ChbEquHoldCheckDto> allcheckList = equityBusiInfoRegist001Mapper.selectAllCheckEquHoldDto();
-                        Map<String, ChbEquHoldCheckDto> equityInfocheckMap = allcheckList.stream().collect(
+                    // 更新导入的进度条（以0.3d-0.6d为范围，跟新进度）
+                    progressBarService.updatePercent(pageId, PROCESS_KEY, 0.3d, false);
+                    // 查询出所有有三要素合并身份信息
+                    List<ChbEquHoldCheckDto> allcheckList = equityBusiInfoRegist001Mapper.selectAllCheckEquHoldDto();
+                    Map<String, ChbEquHoldCheckDto> equityInfocheckMap = allcheckList.stream().collect(
                             Collectors.toMap(ChbEquHoldCheckDto::getIndentifyMark, a -> a, (k1, k2) -> k1));
-                        entitiesList.forEach(item -> {
-                            item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                    entitiesList.forEach(item -> {
+                        item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 
-                            //主键修改为产品代码
-                            String dataKey = item.getBusiSeqno() + GlobalConstant.UNDER_LINE
-                                             + item.getAccount() + GlobalConstant.UNDER_LINE
-                                             + item.getRegistBankCode();
-                            EquiteBusiDetails001Dto chbEqudet = allChbEqudetDataMap.get(dataKey);
+                        //主键修改为产品代码
+                        String dataKey = item.getBusiSeqno() + GlobalConstant.UNDER_LINE
+                                + item.getAccount() + GlobalConstant.UNDER_LINE
+                                + item.getRegistBankCode();
+                        EquiteBusiDetails001Dto chbEqudet = allChbEqudetDataMap.get(dataKey);
 
-                            item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-                            item.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
-                            item.setDeptCode(deptCode);
-                            setOrgIndentifyMark(item,equityInfocheckMap);
-                            // 设值createDept
-                            String createDept = item.getDeptCode();
-                            if (StringUtil.isEmpty(createDept)) {
-                                createDept = item.getOrgCode();
-                            }
-                            item.setCreateDept(createDept);
+                        item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+                        item.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
+                        item.setDeptCode(deptCode);
+                        setOrgIndentifyMark(item,equityInfocheckMap);
+                        // 设值createDept
+                        String createDept = item.getDeptCode();
+                        if (StringUtil.isEmpty(createDept)) {
+                            createDept = item.getOrgCode();
+                        }
+                        item.setCreateDept(createDept);
 
-                            if (chbEqudet != null) {
-                                // 明细表中存在相同数据且数据状态为待处理
-                                List<EquityBusiInfoRegist001Dto> listOA = new ArrayList<>();
-                                EquityBusiInfoRegist001Dto dto = new EquityBusiInfoRegist001Dto();
-                                BeanUtil.copyPropertiesIgnoreNull(dto, item);
-                                listOA.add(dto);
-                                EquiteBusiDetails001Dto result= equityBusiDetails001Mapper.selectByPrimaryKey(item);
-                                insertEquityBusiHisByPart(listOA);
-                                equityBusiDetails001Mapper.updateByPrimaryKeySelective(item);
-                                // 更新登记表数据
-                                doUpdateSub(item,result);
-                            }
-                            else {
-                                insertDataList.add(item);
-                            }
-                        });
-                        this.insertChbEqudetDataByPart(insertDataList);
-                        // 插入登记表数据
-                        doInsertSubDataWithInfoDto(insertDataList,equityInfo001Map);
+                        if (chbEqudet != null) {
+                            // 明细表中存在相同数据且数据状态为待处理
+                            List<EquityBusiInfoRegist001Dto> listOA = new ArrayList<>();
+                            EquityBusiInfoRegist001Dto dto = new EquityBusiInfoRegist001Dto();
+                            BeanUtil.copyPropertiesIgnoreNull(dto, item);
+                            listOA.add(dto);
+                            EquiteBusiDetails001Dto result= equityBusiDetails001Mapper.selectByPrimaryKey(item);
+                            insertEquityBusiHisByPart(listOA);
+                            equityBusiDetails001Mapper.updateByPrimaryKeySelective(item);
+                            // 更新登记表数据
+                            doUpdateSub(item,result);
+                        }
+                        else {
+                            insertDataList.add(item);
+                        }
+                    });
+                    this.insertChbEqudetDataByPart(insertDataList);
+                    // 插入登记表数据
+                    doInsertSubDataWithInfoDto(insertDataList,equityInfo001Map);
 
-                        // 更新导入的进度条
-                        progressBarService.updatePercent(pageId, PROCESS_KEY, 0.6d, false);
-                        
-                     // 删除导入用的临时的数据
-                        deleteImportTmpData();
-                    }
-                    catch (Exception e) {
-                        logger.error(e.getMessage(), e);
-                        // 从内存中移除当前画面的导出进度
-                        progressBarService.removePercent(pageId, PROCESS_KEY);
-                        e.printStackTrace();
-                    }
+                    // 更新导入的进度条
+                    progressBarService.updatePercent(pageId, PROCESS_KEY, 0.6d, false);
+
+                    // 删除导入用的临时的数据
+                    deleteImportTmpData();
                 }
-                // 从内存中移除当前画面的导出进度
-                progressBarService.removePercent(pageId, PROCESS_KEY);
-                BaseCheckLib.objFiledsMap=null;
-                return checkResult;
+                catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                    // 从内存中移除当前画面的导出进度
+                    progressBarService.removePercent(pageId, PROCESS_KEY);
+                    e.printStackTrace();
+                }
             }
-        
+            // 从内存中移除当前画面的导出进度
+            progressBarService.removePercent(pageId, PROCESS_KEY);
+            BaseCheckLib.objFiledsMap=null;
+            return checkResult;
+        }
+
         return null;
     }
 
@@ -1213,24 +1251,39 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      */
     public List<Map<String, String>> listToMapChb(List<List<String>> dataList) {
         String[] fieldName = {"registBankCode", "contractNo", "busiSeqno", "finAcc",
-            "custContractNo", "indentifyMark", "custName", "fundAcc", "fundAccPlace", "isConsign",
-            "agencyCode", "agencyName", "agencyFsa", "regCode", "busiType", "busiFsa",
-            "equityConfDate", "shareConfDatetime", "ccy", "amount", "amountCny", "prodValue",
-            "shares", "feeAmt", "channel", "tranTellName", "remark"};
+                "custContractNo", "indentifyMark", "custName", "fundAcc", "fundAccPlace", "isConsign",
+                "agencyCode", "agencyName", "agencyFsa", "regCode", "busiType", "busiFsa",
+                "equityConfDate", "shareConfDatetime", "ccy", "amount", "amountCny", "prodValue",
+                "shares", "feeAmt", "channel", "tranTellName", "remark"};
+        Map<String, String> dictMap=new HashMap<String,String>(){
+            {
+                put("fundAccPlace", "");
+                put("isConsign", "");
+                put("agencyFsa", "");
+                put("busiType", "");
+                put("busiFsa", "");
+                put("ccy", "");
+                put("channel", "");
+            }
+        };
         List<Map<String, String>> result = new ArrayList<>();
 
         List<Map<String, String>> regList = equityBusiDetails001Mapper.queryAllRegCode();
         // 获取所有的产品登记编码
         Map<String, String> allRegCodeMap = regList.stream().collect(
-            JoyinCollectors.toMap(x -> x.get("REG_CODE"), x -> x.get("OPERATE_MODE")));
+                JoyinCollectors.toMap(x -> x.get("REG_CODE"), x -> x.get("OPERATE_MODE")));
 
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
                 String cell = action.get(i).trim();
-                if (cell.contains(StringUtil.SPACE)) {
-                    String[] value = StringUtil.split(cell, StringUtil.SPACE);
-                    cell = value[0];
+                String name=fieldName[i];
+                if(dictMap.containsKey(name)){
+                    //是枚举值
+                    if (cell.contains(StringUtil.SPACE)) {
+                        String[] value = StringUtil.split(cell, StringUtil.SPACE);
+                        cell = value[0];
+                    }
                 }
                 temp.put(fieldName[i], cell);
                 if (fieldName[i].equals("regCode")) {
@@ -1241,22 +1294,37 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         });
         return result;
     }
-    
-    
+
+
     public List<Map<String, String>> listToMapChbEx(List<List<String>> dataList) {
         String[] fieldName = {"REGIST_BANK_CODE", "CONTRACT_NO", "BUSI_SEQNO", "FIN_ACC",
-            "CUST_CONTRACT_NO", "INDENTIFY_MARK", "CUST_NAME", "FUND_ACC", "FUND_ACC_PLACE", "IS_CONSIGN",
-            "AGENCY_CODE", "AGENCY_NAME", "AGENCY_FSA", "REG_CODE", "BUSI_TYPE", "BUSI_FSA",
-            "EQUITY_CONF_DATE", "SHARE_CONF_DATETIME", "CCY", "AMOUNT", "AMOUNT_CNY", "PROD_VALUE",
-            "SHARES", "FEE_AMT", "CHANNEL", "TRAN_TELL_NAME", "REMARK"};
+                "CUST_CONTRACT_NO", "INDENTIFY_MARK", "CUST_NAME", "FUND_ACC", "FUND_ACC_PLACE", "IS_CONSIGN",
+                "AGENCY_CODE", "AGENCY_NAME", "AGENCY_FSA", "REG_CODE", "BUSI_TYPE", "BUSI_FSA",
+                "EQUITY_CONF_DATE", "SHARE_CONF_DATETIME", "CCY", "AMOUNT", "AMOUNT_CNY", "PROD_VALUE",
+                "SHARES", "FEE_AMT", "CHANNEL", "TRAN_TELL_NAME", "REMARK"};
+        Map<String, String> dictMap=new HashMap<String,String>(){
+            {
+                put("fundAccPlace", "");
+                put("isConsign", "");
+                put("agencyFsa", "");
+                put("busiType", "");
+                put("busiFsa", "");
+                put("ccy", "");
+                put("channel", "");
+            }
+        };
         List<Map<String, String>> result = new ArrayList<>();
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
                 String cell = action.get(i).trim();
-                if (cell.contains(StringUtil.SPACE)) {
-                    String[] value = StringUtil.split(cell, StringUtil.SPACE);
-                    cell = value[0];
+                String name=fieldName[i];
+                if(dictMap.containsKey(name)){
+                    //是枚举值
+                    if (cell.contains(StringUtil.SPACE)) {
+                        String[] value = StringUtil.split(cell, StringUtil.SPACE);
+                        cell = value[0];
+                    }
                 }
                 temp.put(fieldName[i], cell);
             }
@@ -1265,16 +1333,28 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         return result;
     }
 
-    public List<ExcelValidDto> checkDataInfo(List<Map<String, String>> mapList,
-            List<EquiteBusiDetails001Dto> entitiesList,
-            String bankCode,String deptCode,String orgCode,String userName) {
+    public List<ExcelValidDto> checkDataInfo(List<List<String>> dataList,List<Map<String, String>> mapList,
+                                             List<EquiteBusiDetails001Dto> entitiesList,
+                                             String bankCode,String deptCode,String orgCode,String userName) {
 
         logger.info("checkDataInfo处理开始 " + DateUtil.getCurrentDateTime());
 
         List<ExcelValidDto> result = new ArrayList<>();
+
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            for(int i = 0; i < dataList.size(); i++ ) {
+                List<String> item =dataList.get(i);
+                if (CollectionUtils.isNotEmpty(item) && item.size()>26 && item.get(24)!=null) {
+                    if(!item.get(24).equals(item.get(24).toUpperCase())){
+                        result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
+                                this.getMessage("CHB_EQUITY_CHANNEL")+" "+"[channel="+item.get(24)+"]"));
+                    }
+                }
+            }
+        }
         if (mapList.isEmpty()) {
             result.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
-                this.getMessage("REPORT_COMMON_FILE_E_0016")));
+                    this.getMessage("REPORT_COMMON_FILE_E_0016")));
         }
         else {
             // 1、根据check规则检查
@@ -1282,9 +1362,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             List<String> keyItemNameList = new ArrayList<>();
             keyItemNameList.add("busiSeqno");
             List<ExcelValidDto> rulecheckres = IBDDataCheckUtil.checkDataList(mapList,
-                ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS, keyItemNameList);
+                    ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS, keyItemNameList);
             result.addAll(rulecheckres);
-            
+
             // 2、循环判断
             for (int i = 0; i < mapList.size(); i++ ) {
                 Map<String, String> checkMapI = mapList.get(i);
@@ -1293,11 +1373,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 //                }
                 //主键修改为产品代码
                 if (checkMapI.containsKey("regCode")) {
-                	checkMapI.put("account", checkMapI.get("regCode"));
+                    checkMapI.put("account", checkMapI.get("regCode"));
                 }
                 if (StringUtil.isEmpty(checkMapI.get("registBankCode"))
-                    || StringUtil.isEmpty(checkMapI.get("busiSeqno"))
-                    || StringUtil.isEmpty(checkMapI.get("account"))) {
+                        || StringUtil.isEmpty(checkMapI.get("busiSeqno"))
+                        || StringUtil.isEmpty(checkMapI.get("account"))) {
                     continue;
                 }
                 // 判断导入的数据是否存在重复的主键
@@ -1311,12 +1391,14 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         checkMapJ.put("account", checkMapJ.get("regCode"));
                     }
                     if (checkMapI.get("registBankCode").equals(checkMapJ.get("registBankCode"))
-                        && checkMapI.get("busiSeqno").equals(checkMapJ.get("busiSeqno"))
-                        && checkMapI.get("account").equals(checkMapJ.get("account"))) {
+                            && checkMapI.get("busiSeqno").equals(checkMapJ.get("busiSeqno"))
+                            && checkMapI.get("account").equals(checkMapJ.get("account"))) {
                         result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(j + 2),
-                            this.getMessage("REPORT_COMMON_FILE_E_0027",
-                                String.valueOf(i + 2) + "," + String.valueOf(j + 2))));
-                        return result;
+                                this.getMessage("REPORT_COMMON_FILE_E_0027",
+                                        String.valueOf(i + 2) + "," + String.valueOf(j + 2))));
+                        //updateBy zhangjinyang 数据重复后继续判断 start
+                        //return result;
+                        //updateBy zhangjinyang 数据重复后继续判断 end
                     }
                 }
             }
@@ -1332,18 +1414,18 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             Map<String, String> allRegCodeMap = new HashMap<String, String>();
             List<Map<String, String>> regList = equityBusiDetails001Mapper.queryAllRegCode();
             allRegCodeMap = regList.stream().collect(
-                JoyinCollectors.toMap(x -> x.get("REG_CODE"), x -> x.get("PRODID")));
+                    JoyinCollectors.toMap(x -> x.get("REG_CODE"), x -> x.get("PRODID")));
             // 获取所有的产品代码
             Map<String, String> allProdIdMap = new HashMap<String, String>();
             allProdIdMap = regList.stream().collect(
-                JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REG_CODE")));
+                    JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REG_CODE")));
 
             /**
              * 查询导入文件中的数据在数据库中已经存在的数据
              * 存在重复数据，更新时"业务确认日"若跨区间则不能更新
              */
             Map<String, EquiteBusiDetails001Dto> allChbEqudetDataMap = this.selectAllChbEqudetData(
-                entitiesList);
+                    entitiesList);
             for (Map<String, String> item : mapList) {
                 // 验证消息
                 List<String> message = new ArrayList<>();
@@ -1363,23 +1445,20 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
                 // 判断已存在数据中 "业务确认日"是否跨区间，是则不能更新
                 if (allChbEqudetDataMap != null && allChbEqudetDataMap.size() > 0) {
-                	String account =item.get("account");
-                	if (item.containsKey("regCode")) {
-                		account =allRegCodeMap.get(item.get("regCode"));
-                	}
-                	String dataKey = item.get("busiSeqno") + GlobalConstant.UNDER_LINE
+                    String account =item.get("account");
+                    if (item.containsKey("regCode")) {
+                        account =allRegCodeMap.get(item.get("regCode"));
+                    }
+                    String dataKey = item.get("busiSeqno") + GlobalConstant.UNDER_LINE
                             + account + GlobalConstant.UNDER_LINE
                             + item.get("registBankCode");
-                	if (allChbEqudetDataMap.containsKey(dataKey)) {
-                		EquiteBusiDetails001Dto chbEqudet = allChbEqudetDataMap.get(dataKey);
+                    if (allChbEqudetDataMap.containsKey(dataKey)) {
+                        EquiteBusiDetails001Dto chbEqudet = allChbEqudetDataMap.get(dataKey);
 //                    	int monthnew = DateUtil.getMonth(DateUtil.formatDateAddSplit(item.get("equityConfDate")));
 //                    	int monthold = DateUtil.getMonth(DateUtil.format(chbEqudet.getEquityConfDate()));
-                        String equityConfDateNEW =
-                                StringUtil.isNotEmpty(item.get("equityConfDate")) ?
-                                        DateUtil.formatDateAddSplit(item.get("equityConfDate")).substring(0, 7):"";
-                        String equityConfDateOLD = StringUtil.isNotEmpty(chbEqudet.getEquityConfDate()) ?
-                                DateUtil.format(chbEqudet.getEquityConfDate()).substring(0, 7):"";
-                        if (!StringUtil.equals(equityConfDateNEW, equityConfDateOLD)) {
+                        String equityConfDateNEW = DateUtil.formatDateAddSplit(item.get("equityConfDate")).substring(0, 7);
+                        String equityConfDateOLD = DateUtil.format(chbEqudet.getEquityConfDate()).substring(0, 7);
+                        if(!StringUtil.equals(equityConfDateNEW, equityConfDateOLD)){
                             message.add(this.getMessage("CHB_EQUITY_EQUITYCONFDATE"));
                         }
                     }
@@ -1411,9 +1490,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 // 5 识别标识
                 String indentifyMark = item.get("indentifyMark");
                 String merge = registBankCode + GlobalConstant.VERTICAL_LINE + indentifyMark;
-                if(StringUtil.isNotEmpty(indentifyMark) && StringUtil.isNotEmpty(registBankCode) 
-                		&& !indentifyMap.containsKey(merge)){
-                	message.add(this.getMessage("CHB_EQUITY_INDENTIFYMARK"));
+                if(StringUtil.isNotEmpty(indentifyMark) && StringUtil.isNotEmpty(registBankCode)
+                        && !indentifyMap.containsKey(merge)){
+                    message.add(this.getMessage("CHB_EQUITY_INDENTIFYMARK"));
                 }
                 entity.setIndentifyMark(indentifyMark);
                 // entity.setOrgIndentifyMark(item.get("indentifyMark"));
@@ -1448,14 +1527,14 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     String regCode = item.get("regCode");
                     // 必填判断
                     String isNotEmpty = IBDDataCheckUtil.checkOneItem(regCode,
-                        ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS, "regCode",
-                        IBDDataCheckUtil.COMMON_CHECK_METHOD_ISNOTEMPTY);
+                            ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS, "regCode",
+                            IBDDataCheckUtil.COMMON_CHECK_METHOD_ISNOTEMPTY);
                     String lengths = IBDDataCheckUtil.checkOneItem(regCode,
-                        ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS, "regCode",
-                        IBDDataCheckUtil.COMMON_CHECK_METHOD_FIXEDLENGTH);
+                            ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS, "regCode",
+                            IBDDataCheckUtil.COMMON_CHECK_METHOD_FIXEDLENGTH);
                     String inWhitList = IBDDataCheckUtil.checkOneItem(regCode,
-                        ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS, "regCode",
-                        IBDDataCheckUtil.COMMON_CHECK_METHOD_INWHITELISTALL);
+                            ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS, "regCode",
+                            IBDDataCheckUtil.COMMON_CHECK_METHOD_INWHITELISTALL);
                     if (isNotEmpty != null && isNotEmpty.length() > 0) {
                         message.add(isNotEmpty);
                     }
@@ -1525,35 +1604,39 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     entity.setAmountCny(new BigDecimal(item.get("amountCny")));
                 }
                 catch (Exception e) {
-                    // TODO: handle exception
+                    /**add BY leipeng 20200910  折算人民币金额不能为空 begin **/
+                    if(StringUtil.isEmpty(item.get("amountCny"))){
+                        message.add(this.getMessage("REPORT_COMMON_FILE_E_0021","折算人民币"));
+                    }
+                    /**add BY leipeng 20200910  折算人民币金额不能为空 end**/
                 }
 
                 // 折算人民币处理
                 String amountCny = item.get("amountCny");
                 if (StringUtil.isNotEmpty(ccy) && StringUtil.isNotEmpty(entity.getEquityConfDate())
-                    && StringUtil.isNotEmpty(entity.getAmount())) {
+                        && StringUtil.isNotEmpty(entity.getAmount())) {
                     if (!StringUtil.isNotEmpty(amountCny)
-                        && !StringUtil.equals(ccy, DictCodeListExt1.币种_中债_人民币.getValue())) {
+                            && !StringUtil.equals(ccy, DictCodeListExt1.币种_中债_人民币.getValue())) {
                         String key = DateUtil.format(entity.getEquityConfDate()) + ccy;
                         if (rateMap.containsKey(key)) {
                             entity.setAmountCny(ArithmeticUtil.multiply(rateMap.get(key),
-                                entity.getAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                                    entity.getAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
                         }
                         else {
                             Map<String, Object> mapObj = new HashMap<String, Object>();
                             // 原币种
                             mapObj.put("CCY_ORIGINAL", entity.getCcy());
-        					// 持有日期
+                            // 持有日期
                             mapObj.put("HOLDDATE", entity.getEquityConfDate());
-        					// 折算币种
+                            // 折算币种
                             mapObj.put("CCY_CONVERT", DictCodeListExt1.币种_中债_人民币.getValue());
-        					// 汇率计算规则
+                            // 汇率计算规则
                             mapObj.put("pricetype",SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE));
                             BigDecimal rate = exchangerate001Mapper.selectNewRate(mapObj);
                             if (rate != null) {
                                 entity.setAmountCny(
-                                    ArithmeticUtil.multiply(rate, entity.getAmount()).setScale(2,
-                                        BigDecimal.ROUND_HALF_UP));
+                                        ArithmeticUtil.multiply(rate, entity.getAmount()).setScale(2,
+                                                BigDecimal.ROUND_HALF_UP));
                                 rateMap.put(key, rate);
                             }
                             else {
@@ -1562,7 +1645,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         }
                     }
                     else if (!StringUtil.isNotEmpty(amountCny)
-                             && StringUtil.equals(ccy, DictCodeListExt1.币种_中债_人民币.getValue())) {
+                            && StringUtil.equals(ccy, DictCodeListExt1.币种_中债_人民币.getValue())) {
                         entity.setAmountCny(entity.getAmount());
                     }
                 }
@@ -1616,7 +1699,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 // 判断为空check校验通过
                 if (CollectionUtils.isNotEmpty(message)) {
                     result.add(new ExcelValidDto(entity.getBusiSeqno(), String.valueOf(rowId + 1),
-                        StringUtil.joinString(message, "<br>")));
+                            StringUtil.joinString(message, "<br>")));
                 }
                 else {
                     entitiesList.add(entity);
@@ -1652,23 +1735,23 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             int part = dataCount / maxDataCountOneTime; // 分批数
             for (int i = 0; i < part; i++ ) {
                 allChbEqudetDataList.addAll(equityBusiDetails001Mapper.selectAllChbEqudetData(
-                    newKeyList.subList(0, maxDataCountOneTime)));
+                        newKeyList.subList(0, maxDataCountOneTime)));
                 newKeyList.subList(0, maxDataCountOneTime).clear();
             }
             // 最后剩下的数据
             if (CollectionUtils.isNotEmpty(newKeyList)) {
                 allChbEqudetDataList.addAll(
-                    equityBusiDetails001Mapper.selectAllChbEqudetData(newKeyList));
+                        equityBusiDetails001Mapper.selectAllChbEqudetData(newKeyList));
             }
         }
 
         //投资者明细信息维护表主键改为产品代码
         Map<String, EquiteBusiDetails001Dto> allChbEqudetDataMap = StringUtil.isEmptyList(
-            allChbEqudetDataList) ? new HashMap<String, EquiteBusiDetails001Dto>() : allChbEqudetDataList.stream().collect(
+                allChbEqudetDataList) ? new HashMap<String, EquiteBusiDetails001Dto>() : allChbEqudetDataList.stream().collect(
                 JoyinCollectors.toMap(
-                    x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getAccount()
-                         + GlobalConstant.UNDER_LINE + x.getRegistBankCode(),
-                    x -> x));
+                        x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getAccount()
+                                + GlobalConstant.UNDER_LINE + x.getRegistBankCode(),
+                        x -> x));
 
         return allChbEqudetDataMap;
     }
@@ -1694,7 +1777,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             int part = dataCount / maxDataCountOneTime; // 分批数
             for (int i = 0; i < part; i++ ) {
                 equityBusiDetails001Mapper.insertChbEqudetData(
-                    newDataList.subList(0, maxDataCountOneTime));
+                        newDataList.subList(0, maxDataCountOneTime));
                 newDataList.subList(0, maxDataCountOneTime).clear();
             }
             // 最后剩下的数据
@@ -1796,6 +1879,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         if ("xml".equals(suffix)) {
             try {
                 equityList = XmlParseUtil.parse(in);
+
+                if(StringUtil.isEmptyList(equityList)){
+                    return "success";
+                }
             }
             catch (ParserConfigurationException | SAXException | IOException e) {
                 logger.error(e.getMessage(), e);
@@ -1805,19 +1892,24 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         else if ("txt".equals(suffix)) {
             try {
                 equityList = TxtParseUtil.parse(in, reportInterfFileEncoding,
-                    reportInterfSplitCharacter);
+                        reportInterfSplitCharacter);
+
+                if(StringUtil.isEmptyList(equityList)){
+                    return "success";
+                }
             }
             catch (ParserConfigurationException | SAXException | IOException e) {
                 logger.error(e.getMessage(), e);
                 return "fail";
             }
         }
+        logger.info("解析xml文件存入List完成后equityList长度："+equityList.size());
         DataCheckService dataCheckService = SpringContextUtil.getBean(DataCheckService.class);
         //查询对应的配置检查规则
         List<CheckRule> listRules = dataCheckService.queryCheckRules(ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS);
         // 查询出所有身份信息
 //        List<EquityInfo001Dto> allInfoList = new ArrayList<EquityInfo001Dto>();
-        
+
         //edit by zhengxiaolian 2019-12-24 start
 //        template.select(
 //            "com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dao.EquityBusiInfoRegist001Mapper.selectEquityInfoAll",
@@ -1832,15 +1924,23 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 //                x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
 //                     + x.getIndentifyMark()));
         //edit by zhengxiaolian 2019-12-24 end
-        
+
         // 查询出所有有三要素合并身份信息
         List<ChbEquHoldCheckDto> allcheckList = equityBusiInfoRegist001Mapper.selectAllCheckEquHoldDto();
         Map<String, ChbEquHoldCheckDto> equityInfocheckMap = allcheckList.stream().collect(
-            Collectors.toMap(ChbEquHoldCheckDto::getIndentifyMark, a -> a, (k1, k2) -> k1));
+                Collectors.toMap(ChbEquHoldCheckDto::getIndentifyMark, a -> a, (k1, k2) -> k1));
+        //update zhangjinyang 2020-12-21 防止内存溢出
+        allcheckList.clear();
+        allcheckList=null;
+        //update zhangjinyang 2020-12-21 防止内存溢出
         // 查询产品登记编码
         List<Map<String, String>> regList = equityBusiDetails001Mapper.queryAllRegCode();
         // 解析成功或失败的标识
         boolean success = true;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date bdate=new Date();
+        Long bt=bdate.getTime();
+        logger.info("投资者明细信息入库处理开始："+sdf.format(bdate));
         if (equityList != null) {
             monitorInfoDto.setFileDataCount(BigDecimal.valueOf(equityList.size()));
             // 过滤掉主键为空的数据
@@ -1879,8 +1979,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             if (equityList.size() <= 1) {
             	//edit by zhengxiaolian 2019-12-24 start
                 success = excuteQuityBusiDetailsByStep(equityList, type,  null, null, null,
-                     equityInfocheckMap,regList,listRules);
-              //edit by zhengxiaolian 2019-12-24 end
+                        equityInfocheckMap,regList,listRules);
+                //update zhangjinyang 2020-12-21 防止内存溢出
+                equityInfocheckMap.clear();
+                //update zhangjinyang 2020-12-21 防止内存溢出
+                //edit by zhengxiaolian 2019-12-24 end
             }
             else {
                 // 创建表
@@ -1899,17 +2002,18 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     int start = 0;
                     int end = 0;
                     int size = equityList.size();
-                    int max = (int)Math.ceil((double)size / 1000);
+                    int max = (int)Math.ceil((double)size /  reportInterfOneTimeDataCount);
                     for (int i = 0; i < max; i++ ) {
                         start = end;
-                        end = Math.min(size, 1000 * (i + 1));
+                        end = Math.min(size,  reportInterfOneTimeDataCount * (i + 1));
                         List<Map<String, String>> subList = equityList.subList(start, end);
+                        logger.info("循环截取equityList处理：i="+i+";start="+start+";end="+end+" subList.size="+subList.size());
                         tasks.add(new Callable<Boolean>() {
 
                             @Override
                             public Boolean call() {
                                 return excuteQuityBusiDetailsByStep(subList, type, tmpPath,
-                                    table, subtable,equityInfocheckMap,regList,listRules);
+                                        table, subtable,equityInfocheckMap,regList,listRules);
                             }
                         });
                     }
@@ -1937,9 +2041,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 }
                 // 任务结束，停止线程池的所有线程
                 service.shutdown();
-
+                //update zhangjinyang 2020-12-21 防止内存溢出
+                equityInfocheckMap.clear();
+                //update zhangjinyang 2020-12-21 防止内存溢出
                 Collection<File> files = FileUtils.listFiles(new File(tmpPath),
-                    new String[] {"tmp"}, false);
+                        new String[] {"tmp"}, false);
 
                 List<String> content = new ArrayList<>();
                 List<String> subContent = new ArrayList<>(equityList.size());
@@ -1983,6 +2089,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             }
         }
         BaseCheckLib.objFiledsMap=null;
+        Date edate=new Date();
+        Long et=edate.getTime();
+        Long time=(et-bt)/1000;
+        logger.info("投资者明细信息入库处理结束:"+sdf.format(edate)+"耗时"+time+"秒");
+//	}
         // 数据解析完成，并导入数据库成功后，将ftp文件修改名称
         if (success) {
             return "success";
@@ -2005,12 +2116,15 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                                                  ImpTable subTable,
                                                  Map<String, ChbEquHoldCheckDto> equityInfocheckMap,
                                                  List<Map<String, String>> regList,List<CheckRule> listRules
-                                                ) {
+    ) {
         List<Map<String, String>> equityList = new ArrayList<>();
         equityList.addAll(fileEquityList);
-
+        //addBy zhangjinyang 及时清空防止内存溢出 start
+        fileEquityList=null;
+        //addBy zhangjinyang 及时清空防止内存溢出 end
         // 投资者信息接口信息不为null处理
         if (equityList != null && equityList.size() > 0) {
+            logger.info("逻辑处理前的equityList.size: " + equityList.size());
             // 定义循环投资者信息变量
             EquityBusiInfoRegist001Dto ibd = null;
             // 定义新增数据list-验证不通过数据
@@ -2032,17 +2146,19 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             List<EquityInfo001Dto> allInfoList = new ArrayList<EquityInfo001Dto>();
             allInfoList=equityBusiDetails001Mapper.getAllChbEquInfoOneTime();
             Map<String, List<EquityInfo001Dto>> equityInfo001Map = allInfoList.stream().collect(
-              JoyinCollectors.groupingBy(
-                  x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
-                       + x.getIndentifyMark()));
+                    JoyinCollectors.groupingBy(
+                            x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
+                                    + x.getIndentifyMark()));
             //add by zhengxiaolian 2019-12-24 end
-
+            //addBy zhangjinyang 及时清空防止内存溢出 start
+            allInfoList=null;
+            //addBy zhangjinyang 及时清空防止内存溢出 end
             // 获取所有的产品代码
             Map<String, String> proRegistCodeManage001Map = new HashMap<String, String>();
             proRegistCodeManage001Map = regList.stream().collect(
-                JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REG_CODE")));
+                    JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REG_CODE")));
             Map<String, String> allProdIdMap = regList.stream().collect(
-                JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("OPERATE_MODE")));
+                    JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("OPERATE_MODE")));
             // 查询库中已存在的投资者明细维护信息
             List<ChbEqudet> equdetList = equityBusiDetails001Mapper.selectChbEqudetByKey();
             // 查询库中已存在的投资者明细登记信息
@@ -2051,22 +2167,35 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 equdetRegistList = equityBusiInfoRegist001Mapper.selectChbEqudetSubByKey();
             }
             Map<String, ChbEqudet> equdetMap = equdetList.stream().collect(
-                Collectors.toMap(x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getRegistBankCode()
-                + GlobalConstant.UNDER_LINE + x.getAccount(), k1-> k1));
-
+                    Collectors.toMap(x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getRegistBankCode()
+                            + GlobalConstant.UNDER_LINE + x.getAccount(), k1-> k1));
+            //addBy zhangjinyang 及时清空防止内存溢出 start 2020-12-21
+            equdetList=null;
+            //addBy zhangjinyang 及时清空防止内存溢出 end
             Map<String, List<ChbEqudet>> equdetRegistMap = equdetRegistList.stream().collect(
-                JoyinCollectors.groupingBy(
-                    x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getRegistBankCode()
-                         + GlobalConstant.UNDER_LINE + x.getAccount()));
+                    JoyinCollectors.groupingBy(
+                            x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getRegistBankCode()
+                                    + GlobalConstant.UNDER_LINE + x.getAccount()));
+            //addBy zhangjinyang 及时清空防止内存溢出 start 2020-12-21
+            equdetRegistList=null;
+            //addBy zhangjinyang 及时清空防止内存溢出 end
             List<String> keyItemNameList = new ArrayList<>();
             keyItemNameList.add("busiSeqno");
             keyItemNameList.add("account");
             keyItemNameList.add("registBankCode");
             //加入OPERATE_MODE字段用于检查确认净值
             for (Map<String, String> x :equityList) {
-           	 if (allProdIdMap.containsKey(x.get("ACCOUNT"))) {
-                  x.put("OPERATE_MODE", allProdIdMap.get(x.get("ACCOUNT")));
-              }
+                if (allProdIdMap.containsKey(x.get("ACCOUNT"))) {
+                    x.put("OPERATE_MODE", allProdIdMap.get(x.get("ACCOUNT")));
+                }
+                /**机构和部门代码 为空时，给默认值  add by 徽商个性化 chaowei 2019-12-03 begin**/
+                if (StringUtil.isEmpty(x.get("ORG_CODE"))) {
+                    x.put("ORG_CODE", SvrDataUtil.getSysParam("CHB_ORG_CODE"));
+                }
+                if (StringUtil.isEmpty(x.get("DEPT_CODE"))) {
+                    x.put("DEPT_CODE", SvrDataUtil.getSysParam("CHB_DEPT_CODE"));
+                }
+                /**机构和部门代码 为空时，给默认值  add by 徽商个性化 chaowei 2019-12-03 end**/
             }
             // 过滤掉主键为空的数据
 //            Iterator<Map<String, String>> it = equityList.iterator();
@@ -2119,8 +2248,17 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 }
                 checkMapList.add(checkmap);
             }
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date bdate=new Date();
+            Long bt=bdate.getTime();
+            logger.info("明细信息检查规则开始："+sdf.format(bdate));
             //check判断返回每一行的错误信息
             DataCheckService.checkDataList3(checkMapList, listRules);
+            Date edate=new Date();
+            Long et = edate.getTime();
+            Long time = (et-bt)/1000;
+            logger.info("明细信息检查规则结束:"+sdf.format(edate)+"耗时"+time+"秒");
 //          List<ExcelValidDto> rulecheckres = IBDDataCheckUtil.checkDataList(checkMapList,
 //                  ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS, keyItemNameList);
 //          Map<String, String> errMap = new HashMap<String, String>();
@@ -2133,6 +2271,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
             Map<String, BigDecimal> rateMap = new HashMap<>();
             List<Date> dateList = null;
+            logger.info("逻辑处理后的equityList.size: " + equityList.size());
             for (int i = 0; i < equityList.size(); i++ ) {
 //            	String errorMessage = null;
 //            	if(errMap.containsKey(String.valueOf(i+2))){
@@ -2145,17 +2284,17 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 }
                 // 投资者信息数据验证及赋值
                 ibd = dataConversionEntity(map, regcode,checkMapList.get(i).get("ERRMSG"),
-                    rateMap);
+                        rateMap);
                 for(String key:checkMapList.get(i).keySet()){
-                	  if(key.charAt(0)>= 'A' && key.charAt(0) <= 'Z'){
-                          if(ibd.getTempMap()!=null){
-                        	  ibd.getTempMap().put( CommonUtil.dealString(key,true), checkMapList.get(i).get(key));
-                          }else{
-                              Map<String, String> tempMap=new HashMap<String, String>();
-                              tempMap.put( CommonUtil.dealString(key,true), checkMapList.get(i).get(key));
-                              ibd.setTempMap(tempMap);
-                          }
-                      }
+                    if(key.charAt(0)>= 'A' && key.charAt(0) <= 'Z'){
+                        if(ibd.getTempMap()!=null){
+                            ibd.getTempMap().put( CommonUtil.dealString(key,true), checkMapList.get(i).get(key));
+                        }else{
+                            Map<String, String> tempMap=new HashMap<String, String>();
+                            tempMap.put( CommonUtil.dealString(key,true), checkMapList.get(i).get(key));
+                            ibd.setTempMap(tempMap);
+                        }
+                    }
                 }
 
                 // 根据汇率获取折算人民币
@@ -2163,12 +2302,16 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 if (equityInfocheckMap.containsKey(ibd.getIndentifyMark())) {
                     ibd.setOrgIndentifyMark(ibd.getIndentifyMark());
                     ibd.setIndentifyMark(
-                        equityInfocheckMap.get(ibd.getIndentifyMark()).getMergerindentifymark());
+                            equityInfocheckMap.get(ibd.getIndentifyMark()).getMergerindentifymark());
                 }
-                // 报送时点通用方法
-                dateList = ChbDeadlineUtil.getChbEndDate(
-                    DictCodeListExt2.报表名称_投资者明细信息登记.getValue(),
-                    DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, ibd.getEquityConfDate());
+                /*edit by xuyang for业务确认日期为空时，防止获取报送时点报错 徽商个性化 20200822*/
+                if(ibd.getEquityConfDate()!=null) {
+                    // 报送时点通用方法
+                    dateList = ChbDeadlineUtil.getChbEndDate(
+                            DictCodeListExt2.报表名称_投资者明细信息登记.getValue(),
+                            DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, ibd.getEquityConfDate());
+                }
+
                 if (CollectionUtils.isNotEmpty(dateList)) {
                     ibd.setChbSubmitDeadline(dateList.get(0));
                     ibd.setSubmitDeadline(dateList.get(1));
@@ -2180,9 +2323,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 ibd.setUpdateTime(DateUtil.now());
                 // 根据主键查询投资人信息
                 ChbEqudet chbEqudet = equdetMap.get(
-                    ibd.getBusiSeqno() + GlobalConstant.UNDER_LINE + ibd.getRegistBankCode()
-                                                        + GlobalConstant.UNDER_LINE
-                                                        + ibd.getAccount());
+                        ibd.getBusiSeqno() + GlobalConstant.UNDER_LINE + ibd.getRegistBankCode()
+                                + GlobalConstant.UNDER_LINE
+                                + ibd.getAccount());
                 //跟库中维护数据对比
                 if(chbEqudet!=null&&docheckIfchange(ibd,chbEqudet)){
                     continue;
@@ -2199,7 +2342,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 else if (chbEqudet == null && "E".equals(ibd.getStatus())) {
                     if (tmpPath == null) {
                         ibd.setSumitSeq(
-                            CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
                     }
                     listNE.add(ibd);
                 } // 原数据“待处理”，新接入数据是“待处理”的处理
@@ -2207,7 +2350,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     listAA.add(ibd);
                 } // 原数据“待处理”，新接入数据是“有效”的处理
                 else if ("A".equals(chbEqudet.getStatus()) && "E".equals(ibd.getStatus())) {
-                        ibd.setSumitSeq(
+                    ibd.setSumitSeq(
                             CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
                     listAE.add(ibd);
                 } // 原数据“有效”，新接入数据是“待处理”的处理
@@ -2216,7 +2359,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 } // 原数据“有效”，新接入数据是“有效”的处理
                 else if ("E".equals(chbEqudet.getStatus()) && "E".equals(ibd.getStatus())) {
                     ibd.setSumitSeq(
-                        CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                            CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
                     listOE.add(ibd);
                 }
             }
@@ -2240,35 +2383,44 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     insertChbEqudetSubDataByPart(listNE);
                 }
                 else {
+                    logger.info("createDataFile处理开始 " + DateUtil.getCurrentDateTime());
                     createDataFile(tmpPath + "/CHB_EQUDET", listNE, table.getColumns());
                     changeStatusValue(listNE, false, null, equityInfo001Map);
                     createDataFile(tmpPath + "/CHB_EQUDET_SUB", listNE, subTable.getColumns());
+                    logger.info("createDataFile处理结束 " + DateUtil.getCurrentDateTime());
                 }
             }
             // 原数据为待处理,并且新数据状态为待处理，直接更新维护表
             if (listAA != null && listAA.size() > 0) {
+                logger.info("listAA处理开始  listAA = " + listAA.size());
                 // 插入维护信息表
                 updateBatchEquityBusiByPart(listAA);
+                logger.info("listAA处理结束 ");
             }
             // 原数据为待处理,并且新数据状态为有效，直接更新维护表，并入登记表
             if (listAE != null && listAE.size() > 0) {
+                logger.info("listAE处理开始  listAE = " + listAE.size());
                 // 插入维护信息表
                 updateBatchEquityBusiByPart(listAE);
                 // 插入登记表
                 changeStatusValue(listAE, false, null, equityInfo001Map);
                 insertChbEqudetSubDataByPart(listAE);
+                logger.info("listAE处理结束 ");
             }
             // 原数据为有效,并且新数据状态为待处理，将原维护表数据插入历史表，更新维护表，并入删除登记表中未报送数据
             if (listOA != null && listOA.size() > 0) {
+                logger.info("listOA处理开始  listOA = " + listOA.size());
                 // 首先将权益人信息表插入履历表中
                 insertEquityBusiHisByPart(listOA);
                 // 插入维护信息表
                 updateBatchEquityBusiByPart(listOA);
                 // 删除登记表中未报送数据
                 deleteBatchEquityBusiByPart(listOA);
+                logger.info("listOA处理结束 ");
             }
             // 原数据为有效,并且新数据状态为有效，将原维护表数据插入历史表，更新维护表，并入删除登记表中未报送数据
             if (listOE != null && listOE.size() > 0) {
+                logger.info("listOE处理开始  listOE = " + listOE.size());
                 // 首先将权益人信息表插入履历表中
                 insertEquityBusiHisByPart(listOE);
                 // 插入维护信息表
@@ -2279,7 +2431,14 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 changeStatusValue(listOE, true, equdetRegistMap, equityInfo001Map);
 
                 insertChbEqudetSubDataByPart(listOE);
+                logger.info("listOE处理结束 ");
             }
+            //addBy zhangjinyang 及时清空防止内存溢出 start 2020-12-21
+            equdetRegistMap=null;
+            equdetMap=null;
+            equityInfo001Map=null;
+            equityList=null;
+            //addBy zhangjinyang 及时清空防止内存溢出 end
 
             return (CollectionUtils.isNotEmpty(listNA) || CollectionUtils.isNotEmpty(listNE)
                     || CollectionUtils.isNotEmpty(listAA) || CollectionUtils.isNotEmpty(listAE)
@@ -2467,7 +2626,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             }
         }
         String outFileName = CHB_EQUDET_NAME + GlobalConstant.UNDER_LINE +
-                "error" + GlobalConstant.UNDER_LINE + DateUtil.getCurrentDateTime() +fileType;
+                "error" + GlobalConstant.UNDER_LINE + DateUtil.getCurrentDateTime().replaceAll(":", "") +fileType;
         String exportFilePath = FileNameUtil.createUploadFilePath("");
         File file = new File(exportFilePath + File.separator + outFileName);
         if (!file.getParentFile().exists()) {
@@ -2603,7 +2762,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     /**
      * 更新登记表所需字段 初始登记 <一句话功能简述> <功能详细描述>
-     * 
+     *
      * @param list
      */
     void changeStatusValue(List<EquityBusiInfoRegist001Dto> list, boolean ifOld,
@@ -2617,15 +2776,15 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 }
             }
             String key = single.getRegistBankCode() + GlobalConstant.VERTICAL_LINE
-                         + GlobalConstant.VERTICAL_LINE + single.getIndentifyMark();
+                    + GlobalConstant.VERTICAL_LINE + single.getIndentifyMark();
             if (equityInfo001Map.containsKey(key)) {
-            	EquityInfo001Dto eInfo001Dto = equityInfo001Map.get(key).get(0);
+                EquityInfo001Dto eInfo001Dto = equityInfo001Map.get(key).get(0);
                 if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())
-                		|| StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())){
+                        || StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())){
                     try {
                         String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
-                            single.getCustContractNo(),
-                            eInfo001Dto.getIdentifyNumber());
+                                single.getCustContractNo(),
+                                eInfo001Dto.getIdentifyNumber());
                         single.setCustContractNo(tuominStr);
                     }
                     catch (UnsupportedEncodingException e) {
@@ -2639,9 +2798,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             if (ifOld) {
                 // 根据主键查询投资人信息
                 List<ChbEqudet> tmpList = equdetRegistMap.get(
-                    single.getBusiSeqno() + GlobalConstant.UNDER_LINE + single.getRegistBankCode()
-                                                              + GlobalConstant.UNDER_LINE
-                                                              + single.getAccount());
+                        single.getBusiSeqno() + GlobalConstant.UNDER_LINE + single.getRegistBankCode()
+                                + GlobalConstant.UNDER_LINE
+                                + single.getAccount());
                 ChbEqudet chbEqudet = null;
                 if (tmpList != null && tmpList.size() > 1) {
                     single.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
@@ -2662,7 +2821,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
     void setSubProperty(EquityBusiInfoRegist001Dto dto, String status,
                         Map<String, List<Date>> dateMap) {
         List<Date> dateList = ChbDeadlineUtil.getChbEndDate(
-            DictCodeListExt2.报表名称_投资者明细信息登记.getValue(), status, dateMap, dto.getEquityConfDate());
+                DictCodeListExt2.报表名称_投资者明细信息登记.getValue(), status, dateMap, dto.getEquityConfDate());
         if (CollectionUtils.isNotEmpty(dateList)) {
             dto.setChbSubmitDeadline(dateList.get(0));
             dto.setSubmitDeadline(dateList.get(1));
@@ -2673,7 +2832,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
     }
     /**
      * 检查数据相对于库中存在的数据是否变更
-     * 
+     *
      * @param ibd
      * @param chbEqudet
      * @return
@@ -2685,7 +2844,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
     }
     /**
      * 检查数据相对于库中存在的数据是否变更
-     * 
+     *
      * @param ibd
      * @param chbEqudet
      * @return
@@ -2701,7 +2860,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     /**
      * 修改要素对登记数据处理 <一句话功能简述> <功能详细描述>
-     * 
+     *
      * @param detail
      * @return
      */
@@ -2710,7 +2869,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         List<EquiteBusiDetails001Dto> keyList = new ArrayList<EquiteBusiDetails001Dto>();
         keyList.add(detail);
         List<EquityBusiInfoRegist001Dto> registList = equityBusiDetails001Mapper.selectAllChbEqudetSubData(
-            keyList);
+                keyList);
         EquityBusiInfoRegist001Dto dto = new EquityBusiInfoRegist001Dto();
         BeanUtil.copyPropertiesIgnoreNull(dto, detail);
         if(dto.getTempMap()!=null){
@@ -2725,22 +2884,22 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         equityInfo001Dto.setBankCode(dto.getRegistBankCode());
         equityInfo001Dto.setType("01");
         EquityInfo001Dto equityInfoCheck = equityInfo001Mapper.getEquityInfo001DtoByKey(
-            equityInfo001Dto);
+                equityInfo001Dto);
         if(equityInfoCheck!=null){
-        	if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), equityInfoCheck.getPersonalIdentifyType())
-        		|| StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), equityInfoCheck.getPersonalIdentifyType())){
+            if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), equityInfoCheck.getPersonalIdentifyType())
+                    || StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), equityInfoCheck.getPersonalIdentifyType())){
                 try {
                     String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
-                        dto.getCustContractNo(),
-                        equityInfoCheck.getIdentifyNumber());
+                            dto.getCustContractNo(),
+                            equityInfoCheck.getIdentifyNumber());
                     dto.setCustContractNo(tuominStr);
                 }
                 catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-        	}
+            }
         }
-        
+
         // 数据日期
         dto.setStatusDate(new Date());
         Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
@@ -2752,7 +2911,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         }
         else if (registList.size() == 1) {
             if (registList.get(0).getSubmitStatus().equals(
-            		DictCodeListExt2.报送状态_未报送.getValue())) {
+                    DictCodeListExt2.报送状态_未报送.getValue())) {
                 setSubProperty(dto, DictCodeListExt2.报送数据状态_新建.getValue(), dateMap);
                 registListnew.add(dto);
                 equityBusiInfoRegist001Mapper.deleteBatchEquityBusi(registListnew);
@@ -2762,7 +2921,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 setSubProperty(dto, DictCodeListExt2.报送数据状态_修改.getValue(), dateMap);
                 EquiteBusiDetails001Dto dto2 = new EquiteBusiDetails001Dto();
                 BeanUtil.copyPropertiesIgnoreNull(dto2, registList.get(0));
-              //对比数据相同则不继续
+                //对比数据相同则不继续
                 if(docheckIfchangeEx(olddetail,detail)){
                     return 0;
                 }
@@ -2790,15 +2949,15 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             dto.setCustName(ChbSensitiveInfoUtil.handle汉字变形(dto.getCustName()));
             //证件类型是身份证或者临时身份证，客户编号脱敏
             String key = dto.getRegistBankCode() + GlobalConstant.VERTICAL_LINE
-                         + GlobalConstant.VERTICAL_LINE + dto.getIndentifyMark();
+                    + GlobalConstant.VERTICAL_LINE + dto.getIndentifyMark();
             if (equityInfo001Map.containsKey(key)) {
-            	EquityInfo001Dto eInfo001Dto = equityInfo001Map.get(key).get(0);
+                EquityInfo001Dto eInfo001Dto = equityInfo001Map.get(key).get(0);
                 if(StringUtil.equals(DictCodeListExt2.个人证件类别_居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())
-                		|| StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())){
+                        || StringUtil.equals(DictCodeListExt2.个人证件类别_临时居民身份证.getValue(), eInfo001Dto.getPersonalIdentifyType())){
                     try {
                         String tuominStr = ChbSensitiveInfoUtil.replaceIdNoToMd5(
-                            dto.getCustContractNo(),
-                            eInfo001Dto.getIdentifyNumber());
+                                dto.getCustContractNo(),
+                                eInfo001Dto.getIdentifyNumber());
                         dto.setCustContractNo(tuominStr);
                     }
                     catch (UnsupportedEncodingException e) {
@@ -2898,7 +3057,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 sbf.append(this.getMessage("CHB_EQUITY_CHECKREGCODE1"));
             }
         }
-        
+
         entity.setAccount(item.get("ACCOUNT"));// 产品代码
 
         // 14 业务种类
@@ -2938,29 +3097,29 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         // 折算人民币处理
         String amountCny = item.get("AMOUNT_CNY");
         if (StringUtil.isNotEmpty(ccy) && StringUtil.isNotEmpty(entity.getEquityConfDate())
-            && StringUtil.isNotEmpty(entity.getAmount())) {
+                && StringUtil.isNotEmpty(entity.getAmount())) {
             if (!StringUtil.isNotEmpty(amountCny)
-                && !StringUtil.equals(ccy, DictCodeListExt1.币种_中债_人民币.getValue())) {
+                    && !StringUtil.equals(ccy, DictCodeListExt1.币种_中债_人民币.getValue())) {
                 String key = DateUtil.format(entity.getEquityConfDate()) + ccy;
                 if (rateMap.containsKey(key)) {
                     entity.setAmountCny(ArithmeticUtil.multiply(rateMap.get(key),
-                        entity.getAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                            entity.getAmount()).setScale(2, BigDecimal.ROUND_HALF_UP));
                 }
                 else {
                     Map<String, Object> mapObj = new HashMap<String, Object>();
-                 // 原币种
+                    // 原币种
                     mapObj.put("CCY_ORIGINAL", entity.getCcy());
-					// 持有日期
+                    // 持有日期
                     mapObj.put("HOLDDATE", entity.getEquityConfDate());
-					// 折算币种
+                    // 折算币种
                     mapObj.put("CCY_CONVERT", DictCodeListExt1.币种_中债_人民币.getValue());
-					// 汇率计算规则
+                    // 汇率计算规则
                     mapObj.put("pricetype",SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE));
                     BigDecimal rate = exchangerate001Mapper.selectNewRate(mapObj);
                     if (rate != null) {
                         entity.setAmountCny(
-                            ArithmeticUtil.multiply(rate, entity.getAmount()).setScale(2,
-                                BigDecimal.ROUND_HALF_UP));
+                                ArithmeticUtil.multiply(rate, entity.getAmount()).setScale(2,
+                                        BigDecimal.ROUND_HALF_UP));
                         rateMap.put(key, rate);
                     }
                     else {
@@ -2969,7 +3128,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 }
             }
             else if (!StringUtil.isNotEmpty(amountCny)
-                     && StringUtil.equals(ccy, DictCodeListExt1.币种_中债_人民币.getValue())) {
+                    && StringUtil.equals(ccy, DictCodeListExt1.币种_中债_人民币.getValue())) {
                 entity.setAmountCny(entity.getAmount());
             }
         }
@@ -3026,7 +3185,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         }
 //        entity.setCustName(ChbSensitiveInfoUtil.handle生僻字(entity.getCustName()));
         return entity;
-            
+
     }
 
     /**
@@ -3043,8 +3202,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         equityList.forEach(item -> lines.add(ImportGenerator.buildTxt(item, columns)));
         try {
             FileUtils.writeLines(
-                new File(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
-                "UTF-8", lines, true);
+                    new File(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
+                    "UTF-8", lines, true);
         }
         catch (IOException e) {
             e.getMessage();
@@ -3070,7 +3229,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             int part = dataCount / maxDataCountOneTime; // 分批数
             for (int i = 0; i < part; i++ ) {
                 equityBusiInfoRegist001Mapper.insertBtachInterfEquityBusi(
-                    newDataList.subList(0, maxDataCountOneTime));
+                        newDataList.subList(0, maxDataCountOneTime));
                 newDataList.subList(0, maxDataCountOneTime).clear();
             }
             // 最后剩下的数据
@@ -3099,7 +3258,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             int part = dataCount / maxDataCountOneTime; // 分批数
             for (int i = 0; i < part; i++ ) {
                 equityBusiInfoRegist001Mapper.insertBtachInterfEquityBusiSub(
-                    newDataList.subList(0, maxDataCountOneTime));
+                        newDataList.subList(0, maxDataCountOneTime));
                 newDataList.subList(0, maxDataCountOneTime).clear();
             }
             // 最后剩下的数据
@@ -3128,7 +3287,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             int part = dataCount / maxDataCountOneTime; // 分批数
             for (int i = 0; i < part; i++ ) {
                 equityBusiInfoRegist001Mapper.updateBatchEquityBusi(
-                    newDataList.subList(0, maxDataCountOneTime));
+                        newDataList.subList(0, maxDataCountOneTime));
                 newDataList.subList(0, maxDataCountOneTime).clear();
             }
             // 最后剩下的数据
@@ -3157,7 +3316,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             int part = dataCount / maxDataCountOneTime; // 分批数
             for (int i = 0; i < part; i++ ) {
                 equityBusiInfoRegist001Mapper.insertEquityBusiHis(
-                    newDataList.subList(0, maxDataCountOneTime));
+                        newDataList.subList(0, maxDataCountOneTime));
                 newDataList.subList(0, maxDataCountOneTime).clear();
             }
             // 最后剩下的数据
@@ -3186,7 +3345,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             int part = dataCount / maxDataCountOneTime; // 分批数
             for (int i = 0; i < part; i++ ) {
                 equityBusiInfoRegist001Mapper.deleteBatchEquityBusi(
-                    newDataList.subList(0, maxDataCountOneTime));
+                        newDataList.subList(0, maxDataCountOneTime));
                 newDataList.subList(0, maxDataCountOneTime).clear();
             }
             // 最后剩下的数据
@@ -3211,8 +3370,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 // table.getName() + FileNameUtil.createFileName("del"), content);
                 try {
                     success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
-                        reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
-                        "del", reportSqlldrDatabaseName);
+                            reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
+                            "del", reportSqlldrDatabaseName);
                 }
                 catch (IOException | InterruptedException e) {
                     logger.error(e.getMessage(), e);
@@ -3227,8 +3386,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 // table.getName() + FileNameUtil.createFileName("txt"), content);
                 try {
                     success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
-                        reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
-                        "txt", reportSqlldrDatabaseName);
+                            reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
+                            "txt", reportSqlldrDatabaseName);
                 }
                 catch (IOException | InterruptedException e) {
                     logger.error(e.getMessage(), e);
@@ -3255,25 +3414,25 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         if (equityInfocheckMap.containsKey(item.getIndentifyMark())) {
             item.setOrgIndentifyMark(item.getIndentifyMark());
             item.setIndentifyMark(
-                equityInfocheckMap.get(item.getIndentifyMark()).getMergerindentifymark());
+                    equityInfocheckMap.get(item.getIndentifyMark()).getMergerindentifymark());
         }
     }
-    
+
     public Map<String, String> getAllIndentifyInfo(){
-    	Map<String, String> resMap = new HashMap<String, String>();
-    	// 查询出所有身份信息
+        Map<String, String> resMap = new HashMap<String, String>();
+        // 查询出所有身份信息
         List<EquityInfo001Dto> allInfoList = new ArrayList<EquityInfo001Dto>();
         allInfoList=equityBusiDetails001Mapper.getAllChbEquInfoOneTime();
         Map<String, String> equityInfo001Map = allInfoList.stream().collect(
-        		Collectors.toMap(x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + 
-        				x.getIndentifyMark(), x -> x.getIndentifyMark(),(k1, k2) -> k1));
+                Collectors.toMap(x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE +
+                        x.getIndentifyMark(), x -> x.getIndentifyMark(),(k1, k2) -> k1));
 //            JoyinCollectors.groupingBy(x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + x.getIndentifyMark()));
         resMap.putAll(equityInfo001Map);
         // 查询出所有有三要素合并身份信息
         List<ChbEquHoldCheckDto> allcheckList = equityBusiInfoRegist001Mapper.selectAllCheckEquHoldDto();
         Map<String, String> equityInfocheckMap = allcheckList.stream().collect(
-        		Collectors.toMap(x -> x.getRegistBankCode() + GlobalConstant.VERTICAL_LINE + 
-        				x.getIndentifyMark(), x -> x.getMergerindentifymark(),(k1, k2) -> k1));
+                Collectors.toMap(x -> x.getRegistBankCode() + GlobalConstant.VERTICAL_LINE +
+                        x.getIndentifyMark(), x -> x.getMergerindentifymark(),(k1, k2) -> k1));
 //            Collectors.toMap(ChbEquHoldCheckDto::getIndentifyMark, ChbEquHoldCheckDto::getMergerindentifymark, (k1, k2) -> k1));
         resMap.putAll(equityInfocheckMap);
         return resMap;
@@ -3338,14 +3497,14 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
     private String lengthZeroString(String org){
         if(org!=null){
             if(org.length()==0){
-                return null;  
+                return null;
             }else{
                 return org.trim();
             }
         }
         return null;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -3360,25 +3519,209 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         String configFile = "/com/joyintech/tams/report/submitmaintenance/businessdetailed/conf/export_conf.xml";
 
         exportParam.config(configFile).select(
-            () -> equityBusiDetails001Mapper.queryForPage(pageParam));
+                () -> equityBusiDetails001Mapper.queryForPage(pageParam));
 
     }
 
-	@Override
-	protected void beforeCreateExcel(List<EquiteBusiDetails001Dto> contents) {
-		String flag = (String) RequestUtil.getPageParam().get("flag");
-		if (StringUtil.isNotEmpty(flag) && StringUtil.equals(flag, "0") ) {
-			dealReturnInfo(contents);
-		}
-	}
-	public List<EquiteBusiDetails001Dto> selectBusiFeedBackData(Map<String, Object> map){
+    @Override
+    protected void beforeCreateExcel(List<EquiteBusiDetails001Dto> contents) {
+        String flag = (String) RequestUtil.getPageParam().get("flag");
+        if (StringUtil.isNotEmpty(flag) && StringUtil.equals(flag, "0") ) {
+            dealReturnInfo(contents);
+        }
+    }
+    public List<EquiteBusiDetails001Dto> selectBusiFeedBackData(Map<String, Object> map){
         List<EquiteBusiDetails001Dto> result= equityBusiDetails001Mapper.selectBusiFeedBackData(map);
         dealReturnInfo(result);
         return result;
-	}
-	public List<EquiteBusiDetails001Dto> selectAllBusiFeedBackData(Map<String, Object> map){
-	    List<EquiteBusiDetails001Dto> result= equityBusiDetails001Mapper.selectAllBusiFeedBackData(map);
-	    dealReturnInfo(result);
-	    return result;
-	}
+    }
+    public List<EquiteBusiDetails001Dto> selectAllBusiFeedBackData(Map<String, Object> map){
+        List<EquiteBusiDetails001Dto> result= equityBusiDetails001Mapper.selectAllBusiFeedBackData(map);
+        dealReturnInfo(result);
+        return result;
+    }
+    //add by dengyu 20201022 监管要求投资者明细修改 begin
+    /**
+     * 根据最新导入的有效的产品登记编码数据，联动处理投资者明细信息
+     *
+     * @param prdresistCodeList
+     *            最新导入的有效的产品登记编码数据
+     * @see
+     * @since 1.0
+     */
+    public void refreshStatusAData(List<ChbPrdresistCode> prdresistCodeList, String bankCode, String deptCode, String orgCode) {
+        if (StringUtil.isEmptyList(prdresistCodeList)) {
+            return;
+        }
+
+        for (ChbPrdresistCode chbPrdresistCode : prdresistCodeList) {
+            logger.info("checkDataInfo处理"+chbPrdresistCode.getProdid()+"开始 " + DateUtil.getCurrentDateTime());
+            // 根据产品代码和机构代码，查询持有者信息有效数据
+            Map<String, Object> paramMap1 = new HashMap<String, Object>();
+            paramMap1.put("prodId", chbPrdresistCode.getProdid());
+            paramMap1.put("orgCode", orgCode);
+            paramMap1.put("regCode", chbPrdresistCode.getRegCode());
+            //修改重新更新有效的产品登记编码代码 start
+            if ("01".equals(CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_REP_IS_COVER))) {
+                equityBusiDetails001Mapper.updateInfoRegCodeByProdid(paramMap1);
+                equityBusiDetails001Mapper.updateRegistRegCodeByProdid(paramMap1);
+            }
+            //修改重新更新有效的产品登记编码代码 end
+            // 根据产品代码和机构代码，查询持有者信息待处理数据（待处理，且产品登记编码为空）
+            Map<String, Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("prodId", chbPrdresistCode.getProdid());
+            paramMap.put("orgCode", orgCode);
+            paramMap.put("isCover", CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_REP_IS_COVER));
+
+            List<EquiteBusiDetails001Dto>statusAEqudetData=equityBusiDetails001Mapper.selectStatusAEqudetData(paramMap);
+
+            DataCheckService dataCheckService = SpringContextUtil.getBean(DataCheckService.class);
+            List<CheckRule> listRules = dataCheckService.queryCheckRules(ReportGlobalConstant.COMMON_CHECK_DATA_TYPE_EQUITY_DETAILS);
+            if (!StringUtil.isEmptyList(statusAEqudetData)) {
+
+                Map<String, String>dataMap=new HashMap<String, String>();
+
+                // 定义已存在数据list-原数据“待处理”，新接入数据是“待处理”
+                List<EquityBusiInfoRegist001Dto> listAA = new ArrayList<>();
+                // 定义已存在数据list-原数据“待处理”，新接入数据是“有效”
+                List<EquityBusiInfoRegist001Dto> listAE = new ArrayList<>();
+
+                EquityBusiInfoRegist001Dto ibd = null;
+
+                List<EquityInfo001Dto> allInfoList = new ArrayList<EquityInfo001Dto>();
+                allInfoList=equityBusiDetails001Mapper.getAllChbEquInfoOneTime();
+                Map<String, List<EquityInfo001Dto>> equityInfo001Map = allInfoList.stream().collect(
+                        JoyinCollectors.groupingBy(
+                                x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE + GlobalConstant.VERTICAL_LINE
+                                        + x.getIndentifyMark()));
+                Map<String, BigDecimal> rateMap = new HashMap<>();
+                for(EquiteBusiDetails001Dto equiteBusiDetails001Dto:statusAEqudetData){
+                    List<Map<String, String>> dataMapList = new ArrayList<Map<String, String>>();
+                    equiteBusiDetails001Dto.setRegCode(chbPrdresistCode.getRegCode());
+                    dataMap=this.dtoToMap(equiteBusiDetails001Dto);
+
+                    Map<String, String> checkmap = new HashMap<String, String>();
+                    for (String key : dataMap.keySet()) {
+                        if (key != null)
+                            checkmap.put(CommonUtil.dealString(key, true), dataMap.get(key));
+                    }
+
+
+                    dataMapList.add(checkmap);
+
+                    DataCheckService.checkDataList3(dataMapList, listRules);
+
+                    String regcode=chbPrdresistCode.getRegCode();
+
+                    // 投资者信息数据验证及赋值
+                    ibd = dataConversionEntity(dataMap, regcode,dataMapList.get(0).get("ERRMSG"),
+                            rateMap);
+
+                    ibd.setSubmitStatus(DictCodeListExt2.报送状态_未报送.getValue());
+                    ibd.setUpdateTime(DateUtil.now());
+
+                    if ("A".equals(ibd.getStatus())) {
+                        listAA.add(ibd);
+                    } // 原数据“待处理”，新接入数据是“有效”的处理
+                    else if ("E".equals(ibd.getStatus())) {
+                        ibd.setSumitSeq(
+                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                        listAE.add(ibd);
+                    }
+                }
+                if (listAA != null && listAA.size() > 0) {
+                    // 插入维护信息表
+                    updateBatchEquityBusiRegCodeByPart(listAA);
+                }
+                // 原数据为待处理,并且新数据状态为有效，直接更新维护表，并入登记表
+                if (listAE != null && listAE.size() > 0) {
+                    // 插入维护信息表
+                    updateBatchEquityBusiRegCodeByPart(listAE);
+                    // 插入登记表
+                    changeStatusValue(listAE, false, null, equityInfo001Map);
+                    insertChbEqudetSubDataByPart(listAE);
+                }
+
+            }
+
+            logger.info("checkDataInfo处理"+chbPrdresistCode.getProdid()+"结束 " + DateUtil.getCurrentDateTime());
+        }
+    }
+
+
+    private Map<String, String> dtoToMap(EquiteBusiDetails001Dto equiteBusiDetails001Dto){
+        Map<String, String> dataMap = new HashMap<String, String>();
+        if (equiteBusiDetails001Dto == null) {
+            return dataMap;
+        }
+        dataMap.put("BUSI_SEQNO",equiteBusiDetails001Dto.getBusiSeqno());
+        dataMap.put("CONTRACT_NO",equiteBusiDetails001Dto.getContractNo());
+        dataMap.put("REGIST_BANK_CODE",equiteBusiDetails001Dto.getRegistBankCode());
+        dataMap.put("ORG_CODE",equiteBusiDetails001Dto.getOrgCode());
+        dataMap.put("DEPT_CODE",equiteBusiDetails001Dto.getDeptCode());
+        dataMap.put("CREATE_DEPT", equiteBusiDetails001Dto.getCreateDept());
+        dataMap.put("FIN_ACC",equiteBusiDetails001Dto.getFinAcc());
+        dataMap.put("CUST_CONTRACT_NO",equiteBusiDetails001Dto.getCustContractNo());
+        dataMap.put("INDENTIFY_MARK",equiteBusiDetails001Dto.getIndentifyMark());
+        dataMap.put("CUST_NAME",equiteBusiDetails001Dto.getCustName());
+        dataMap.put("FUND_ACC",equiteBusiDetails001Dto.getFundAcc());
+        dataMap.put("FUND_ACC_PLACE",equiteBusiDetails001Dto.getFundAccPlace());
+        dataMap.put("IS_CONSIGN",equiteBusiDetails001Dto.getIsConsign());
+        dataMap.put("AGENCY_CODE",equiteBusiDetails001Dto.getAgencyCode());
+        dataMap.put("AGENCY_NAME",equiteBusiDetails001Dto.getAgencyName());
+        dataMap.put("AGENCY_FSA",equiteBusiDetails001Dto.getAgencyFsa());
+        dataMap.put("ACCOUNT",equiteBusiDetails001Dto.getAccount());
+        dataMap.put("REG_CODE",equiteBusiDetails001Dto.getRegCode());
+        dataMap.put("BUSI_FSA",equiteBusiDetails001Dto.getBusiFsa());
+        dataMap.put("BUSI_TYPE",equiteBusiDetails001Dto.getBusiType());
+        dataMap.put("EQUITY_CONF_DATE",DateUtil.format(equiteBusiDetails001Dto.getEquityConfDate(),"yyyyMMdd"));
+        dataMap.put("SHARE_CONF_DATETIME",equiteBusiDetails001Dto.getShareConfDatetime());
+        dataMap.put("CCY",equiteBusiDetails001Dto.getCcy());
+        if(equiteBusiDetails001Dto.getAmount()!=null){
+            dataMap.put("AMOUNT",equiteBusiDetails001Dto.getAmount().toString());
+        }
+        if(equiteBusiDetails001Dto.getAmountCny()!=null){
+            dataMap.put("AMOUNT_CNY",equiteBusiDetails001Dto.getAmountCny().toString());
+        }
+        if(equiteBusiDetails001Dto.getProdValue()!=null){
+            dataMap.put("PROD_VALUE",equiteBusiDetails001Dto.getProdValue().toString());
+        }
+        if(equiteBusiDetails001Dto.getShares()!=null){
+            dataMap.put("SHARES",equiteBusiDetails001Dto.getShares().toString());
+        }
+        if(equiteBusiDetails001Dto.getFeeAmt()!=null){
+            dataMap.put("FEE_AMT",equiteBusiDetails001Dto.getFeeAmt().toString());
+        }
+        dataMap.put("CHANNEL",equiteBusiDetails001Dto.getChannel());
+        dataMap.put("TRAN_TELL_NAME",equiteBusiDetails001Dto.getTranTellName());
+        return dataMap;
+    }
+
+
+    private void updateBatchEquityBusiRegCodeByPart(List<EquityBusiInfoRegist001Dto> dataList) {
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            int maxDataCountOneTime = 50;
+            int dataCount = dataList.size();
+            if (dataCount <= maxDataCountOneTime) {
+                equityBusiInfoRegist001Mapper.updateBatchEquityBusiRegCodeByPart(dataList);
+                return;
+            }
+            List<EquityBusiInfoRegist001Dto> newDataList = new ArrayList<EquityBusiInfoRegist001Dto>();
+            newDataList.addAll(dataList);
+            // 分批处理
+            int part = dataCount / maxDataCountOneTime; // 分批数
+            for (int i = 0; i < part; i++ ) {
+                equityBusiInfoRegist001Mapper.updateBatchEquityBusiRegCodeByPart(
+                        newDataList.subList(0, maxDataCountOneTime));
+                newDataList.subList(0, maxDataCountOneTime).clear();
+            }
+            // 最后剩下的数据
+            if (CollectionUtils.isNotEmpty(newDataList)) {
+                equityBusiInfoRegist001Mapper.updateBatchEquityBusiRegCodeByPart(newDataList);
+            }
+        }
+    }
+
+
+    //add by dengyu 20201022 监管要求投资者明细修改 end
 }

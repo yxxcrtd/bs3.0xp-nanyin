@@ -3,6 +3,7 @@ package com.joyintech.tams.report.system.prorate.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
@@ -125,5 +126,12 @@ public class ProrateService extends BaseService<DisRepCashYield> {
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/importData",
                 param,
                 ExcelValidDto.class);
+    }
+
+    public void updateOne(DisRepCashYield d) {
+        restTemplate.postForList(
+                SvrServiceApplication.COMMON_SERVICE_NAME + "/Prorate/updateOne",d,
+                DisRepCashYield.class);
+        return;
     }
 }

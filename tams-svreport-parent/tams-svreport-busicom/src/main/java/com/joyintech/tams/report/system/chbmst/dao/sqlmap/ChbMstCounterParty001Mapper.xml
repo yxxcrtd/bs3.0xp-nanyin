@@ -17,20 +17,16 @@
 	</insert>
 	<update id="updateOne" parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 	</update>
-
-
-	<select id="getSysDataDict" resultType="com.joyintech.tams.systemtools.dto.SysDataDict">
-	</select>
-	<select id="selectPrdFeeData" resultType="java.lang.Integer" parameterType="com.joyintech.tams.report.system.prorate.dto.ProRateInfo001Dto">
-	</select>
-	<insert id="insertPrdFeeData" parameterType="java.util.List">
-	</insert>
-
-	<select id="selectdisPrdFeeRateErrordata" resultType="com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs">
-	</select>
-
 	<update id="deleteOne" parameterType="java.lang.String">
 	</update>
 	<delete id="deleteErrorDataOne" parameterType="java.util.List">
 	</delete>
+	<select id="selectChbMstCounterPartyErrordata" resultType="com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs">
+	</select>
+	<select id="selectChbMstCounterPartyData" resultType="java.lang.Integer" parameterType="java.util.List">
+	</select>
+	<insert id="insertChbMstCounterPartyData" parameterType="java.util.List">
+	</insert>
+	<select id="getSysDataDict" resultType="com.joyintech.tams.systemtools.dto.SysDataDict">
+	</select>
 </mapper>
