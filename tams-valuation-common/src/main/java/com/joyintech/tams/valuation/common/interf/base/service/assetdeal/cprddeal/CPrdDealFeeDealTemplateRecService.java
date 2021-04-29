@@ -329,6 +329,10 @@ public class CPrdDealFeeDealTemplateRecService {
         FinCashInfo finCashInfo = interfCommonService.queryCashInfo(paramMap);
         if(finCashInfo!=null){
     	  trdProductDeal.setFinprodType(finCashInfo.getCashType2());
+        }else{
+            if(DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+                trdProductDeal.setFinprodType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            }
         }
           
         /**modify by niuqianyu on 20190118 start**/ 

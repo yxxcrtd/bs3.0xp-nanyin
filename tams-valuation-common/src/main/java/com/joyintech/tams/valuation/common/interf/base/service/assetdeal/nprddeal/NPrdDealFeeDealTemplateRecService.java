@@ -329,6 +329,11 @@ public class NPrdDealFeeDealTemplateRecService {
         if(finCashInfo!=null){
         	valFinProductDeal.setFinprodType(finCashInfo.getCashType2());
         }
+        else{
+            if(DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+                valFinProductDeal.setFinprodType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            }
+        }
         
         //交割日 = C.支付日
         valFinProductDeal.setSettleDate(dto.getPayDate());

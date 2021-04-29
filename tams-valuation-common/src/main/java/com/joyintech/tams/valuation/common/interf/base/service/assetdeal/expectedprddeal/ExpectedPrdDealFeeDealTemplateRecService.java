@@ -336,7 +336,12 @@ public class ExpectedPrdDealFeeDealTemplateRecService {
         FinCashInfo finCashInfo = interfCommonService.queryCashInfo(paramMap);
         if(finCashInfo!=null){
             trdProductDeal.setFinprodType(finCashInfo.getCashType2());
-        }        
+        }
+        else{
+            if(DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+                trdProductDeal.setFinprodType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            }
+        }
         
         // 分支序号 = 设置全局变量(默认为0）
         /** modify by dongjun on 20181029 start **/
