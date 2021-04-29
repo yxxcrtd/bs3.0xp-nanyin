@@ -23,12 +23,13 @@ from
 union all
   select nvl(DSC_COST_AMT, 0) + nvl(TDY_FLOAT_INGPL, 0) + nvl(TDY_INTINCEXP, 0) + nvl(DELAY_PAY_AMT, 0) as VALUE,
        ''F01_''||FRD.APPEAR_MARKET_ID as ASSETCODE,
-       t2.FINPROD_NAME as ASSETNAME
+       nvl(t3.FINPROD_NAME,t2.FINPROD_NAME) as ASSETNAME
   from PTL_SEC_VALUTION t1
   inner join FIN_PRODUCT t2
     on t1.FINPROD_ID = t2.FINPROD_ID
   inner join FIN_PRODUCT_ADD FRD
     ON T2.FINPROD_ID = FRD.FINPROD_ID  AND FRD.APPEAR_MARKET_ID IS NOT NULL  AND FRD.IS_ISSUE_ASSET = ''Y''
+  left join FIN_PRODUCT t3 on t3.finprod_id = ''F01_''||FRD.APPEAR_MARKET_ID
  where t1.PORTFOLIO_ID in ${portfolioCode}
    and t1.CDATE = date ''${valDate}'' - 1
    AND t1.PORTFOLIO_ID != t1.FINPROD_ID
@@ -136,32 +137,6 @@ from PTL_SEC_VALUTION t1
   on t1.FINPROD_ID = t3.FINPROD_ID
 where t1.PORTFOLIO_ID in ${portfolioCode} and  t1.CDATE = date''${valDate}''
 and ((t3.FINPROD_TYPE2 is null and t2.FINPROD_TYPE2 is not null) or (t3.FINPROD_TYPE2 not in (''F02'',''F04'',''F08'',''F11'',''F12'',''F13'',''F14'',''F15'',''F25'') AND t3.BRANCH=0))
-union all 	   
-  select nvl(DSC_COST_AMT, 0) + nvl(TDY_FLOAT_INGPL, 0) + nvl(TDY_INTINCEXP, 0) + nvl(DELAY_PAY_AMT, 0) as VALUE,
-       ''F01_''||FRD.APPEAR_MARKET_ID as ASSETCODE,
-       t2.FINPROD_NAME as ASSETNAME
-  from PTL_SEC_VALUTION t1
-  inner join FIN_PRODUCT t2
-    on t1.FINPROD_ID = t2.FINPROD_ID 
-  inner join FIN_PRODUCT_ADD FRD
-    ON T2.FINPROD_ID = FRD.FINPROD_ID  AND FRD.APPEAR_MARKET_ID IS NOT NULL  AND FRD.IS_ISSUE_ASSET = ''Y'' 
- where t1.PORTFOLIO_ID in ${portfolioCode}
-   and t1.CDATE = date ''${valDate}''  
-   AND t1.PORTFOLIO_ID != t1.FINPROD_ID
-   and t2.FINPROD_TYPE2 =''F01''
-union all 	   
-  select -(nvl(DSC_COST_AMT, 0) + nvl(TDY_FLOAT_INGPL, 0) + nvl(TDY_INTINCEXP, 0) + nvl(DELAY_PAY_AMT, 0)) as VALUE,
-       T2.FINPROD_ID as ASSETCODE,
-       t2.FINPROD_NAME as ASSETNAME
-  from PTL_SEC_VALUTION t1
-  inner join FIN_PRODUCT t2
-    on t1.FINPROD_ID = t2.FINPROD_ID 
-  inner join FIN_PRODUCT_ADD FRD
-    ON T2.FINPROD_ID = FRD.FINPROD_ID  AND FRD.APPEAR_MARKET_ID IS NOT NULL  AND FRD.IS_ISSUE_ASSET = ''Y'' 
- where t1.PORTFOLIO_ID in ${portfolioCode}
-   and t1.CDATE = date ''${valDate}''  
-   AND t1.PORTFOLIO_ID != t1.FINPROD_ID
-   and t2.FINPROD_TYPE2 =''F01''
 ) targetData
 group by targetData.ASSETCODE, targetData.ASSETNAME';
 	sql03 clob:='select nvl(sum(nvl(RVALUE, 0)),0) as RVALUE,s1.FINPROD_ID as RKEY,s1.FINPROD_NAME RKEYCN from   
@@ -180,12 +155,13 @@ group by targetData.ASSETCODE, targetData.ASSETNAME';
   group by m.FINPROD_ID, n.FINPROD_NAME
 union all	   
   select  ''F01_''||FRD.APPEAR_MARKET_ID as FINPROD_ID,
-        t2.FINPROD_NAME as FINPROD_NAME, 
+        nvl(t3.FINPROD_NAME,t2.FINPROD_NAME) as FINPROD_NAME, 
         nvl(sum(nvl(DSC_COST_AMT, 0) + nvl(TDY_FLOAT_INGPL, 0) + nvl(TDY_INTINCEXP, 0) + nvl(DELAY_PAY_AMT, 0)),0) as RVALUE   
   from PTL_SEC_VALUTION t1
   inner join FIN_PRODUCT t2
     on t1.FINPROD_ID = t2.FINPROD_ID 
   inner join FIN_PRODUCT_ADD FRD ON T2.FINPROD_ID = FRD.FINPROD_ID  AND FRD.APPEAR_MARKET_ID IS NOT NULL AND FRD.IS_ISSUE_ASSET = ''Y'' 
+  left join FIN_PRODUCT t3 on t3.finprod_id = ''F01_''||FRD.APPEAR_MARKET_ID
  where t1.PORTFOLIO_ID in ${portfolioCode}
    and t1.CDATE = date ''${valDate}'' - 1 
    and t2.FINPROD_TYPE2 =''F01''
@@ -301,27 +277,7 @@ union all
 	sql04 clob:='SELECT nvl(sum(nvl(RVALUE, 0)),0) as RVALUE,s1.FINPROD_ID as RKEY,s1.FINPROD_NAME RKEYCN FROM (	
    select nvl(sum(nvl(DSC_COST_AMT,0)+nvl(TDY_FLOAT_INGPL,0)+nvl(TDY_INTINCEXP,0)+ nvl(DELAY_PAY_AMT,0)),0) as RVALUE,m.FINPROD_ID ,n.FINPROD_NAME  from PTL_SEC_VALUTION m	
  INNER JOIN FIN_PRODUCT n on m.FINPROD_ID=n.FINPROD_ID and n.FINPROD_TYPE2 IN (''F01'',''F06'',''F10'')	
- where m.PORTFOLIO_ID in ${portfolioCode}  and  m.CDATE =date''${valDate}'' group by m.FINPROD_ID,n.FINPROD_NAME	
- union all 
- select nvl(sum(nvl(DSC_COST_AMT, 0) + nvl(TDY_FLOAT_INGPL, 0) + nvl(TDY_INTINCEXP, 0) + nvl(DELAY_PAY_AMT, 0)),0) as RVALUE, 
- 	''F01_''||FRD.APPEAR_MARKET_ID as FINPROD_ID,
-    t2.FINPROD_NAME as FINPROD_NAME
- from PTL_SEC_VALUTION t1
- inner join FIN_PRODUCT t2 on t1.FINPROD_ID = t2.FINPROD_ID  and t2.FINPROD_TYPE2 =''F01'' 
- inner join FIN_PRODUCT_ADD FRD ON T2.FINPROD_ID = FRD.FINPROD_ID  AND FRD.APPEAR_MARKET_ID IS NOT NULL AND FRD.IS_ISSUE_ASSET = ''Y'' 
- where t1.CDATE = date ''${valDate}''  
-   AND t1.PORTFOLIO_ID in ${portfolioCode} 
-   group by FRD.APPEAR_MARKET_ID,t2.FINPROD_NAME
-  union all 
- select -nvl(sum(nvl(DSC_COST_AMT, 0) + nvl(TDY_FLOAT_INGPL, 0) + nvl(TDY_INTINCEXP, 0) + nvl(DELAY_PAY_AMT, 0)),0) as RVALUE, 
- 	 t2.FINPROD_ID as FINPROD_ID,
-    t2.FINPROD_NAME as FINPROD_NAME
- from PTL_SEC_VALUTION t1
- inner join FIN_PRODUCT t2 on t1.FINPROD_ID = t2.FINPROD_ID  and t2.FINPROD_TYPE2 =''F01'' 
- inner join FIN_PRODUCT_ADD FRD ON T2.FINPROD_ID = FRD.FINPROD_ID  AND FRD.APPEAR_MARKET_ID IS NOT NULL AND FRD.IS_ISSUE_ASSET = ''Y'' 
- where t1.CDATE = date ''${valDate}''  
-   AND t1.PORTFOLIO_ID in ${portfolioCode} 
-   group by FRD.APPEAR_MARKET_ID,t2.FINPROD_NAME
+ where m.PORTFOLIO_ID in ${portfolioCode}  and  m.CDATE =date''${valDate}'' group by m.FINPROD_ID,n.FINPROD_NAME
  ) s1 group by s1.FINPROD_ID,s1.FINPROD_NAME';
 begin
 	update rsk_isup_indicator_para_dtl set content=sql01 where para_code ='DYZCGM' and para_granularity = '04';
