@@ -85,6 +85,12 @@
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
     </select>
+    <select id="selectByFinprodId" resultType="com.joyintech.tams.common.base.entity.FinTradeProduct" parameterType="String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinTradeProductMapper.Base_Column_List" />
+        from FIN_TRADE_PRODUCT
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinTradeProductKey" >
         delete from FIN_TRADE_PRODUCT
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
