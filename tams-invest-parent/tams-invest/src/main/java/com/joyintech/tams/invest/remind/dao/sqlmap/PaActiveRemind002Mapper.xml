@@ -3433,7 +3433,7 @@ select #{R7S1} as remType,
 		FP.FINPROD_MARKET_ID as assetCode,
 		FP.FINPROD_NAME as assetName,
 		FP.FINPROD_ID as finprodId,
-		IP.SECCODE appearMarketId,
+		IP.SECID appearMarketId,
 		'资产' || FP.FINPROD_MARKET_ID||'可与资产'|| IP.SECID||'进行上市流通' AS reminder
 		FROM FIN_PRODUCT FP
 		LEFT JOIN FIN_PRODUCT_ADD FPA
