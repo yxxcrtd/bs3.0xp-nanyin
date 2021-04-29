@@ -129,10 +129,10 @@ public class EntrustMsgbyMQService extends BaseService<InfContractDetailfile>{
 			infContractDetailfile.setSettleDay(DateUtil.parse(tradeMessage.getSettleDay()));
 			infContractDetailfile.setBusiType(tradeMessage.getBusiType());
 		}
-		// 手工交收判断 add by yufei 20201022 end
-		// 期货 交易保证金  add by lijie 20201113 start
-    	infContractDetailfile.setDealMargin(tradeMessage.getDealMargin());
-    	// 期货 交易保证金 add by lijie 20201113 end
+//		// 手工交收判断 add by yufei 20201022 end
+//		// 期货 交易保证金  add by lijie 20201113 start
+//    	infContractDetailfile.setDealMargin(tradeMessage.getDealMargin());
+//    	// 期货 交易保证金 add by lijie 20201113 end
 
 		//折算比例
 		if(StringUtil.isNotEmpty(tradeMessage.getPledgeRatio())) {
