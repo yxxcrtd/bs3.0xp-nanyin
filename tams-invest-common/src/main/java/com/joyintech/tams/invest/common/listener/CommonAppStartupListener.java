@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.common.listener;
 
+import com.joyintech.tams.invest.common.position.service.CommonPositionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -28,12 +30,17 @@ import com.joyintech.tams.invest.common.util.xmlrelation.XmlRelationUtil;
 @Component
 public class CommonAppStartupListener implements AppStartupListener {
 
+    @Autowired
+    private CommonPositionService commonPositionService;
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void onApplicationStartup(ContextRefreshedEvent event) {
         XmlRelationUtil.getXmlRelationData();
+        // 头寸处理基础数据配置加载
+        commonPositionService.init();
     }
 
     /**
