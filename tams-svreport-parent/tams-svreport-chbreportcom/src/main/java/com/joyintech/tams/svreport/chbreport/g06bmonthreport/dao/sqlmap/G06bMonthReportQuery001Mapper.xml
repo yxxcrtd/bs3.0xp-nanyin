@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.g06bmonthreport.dao.G06bMonthReportQuery001Mapper">
+    <select id="selectAllData"
+            resultType="com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto">
+        SELECT distinct
+        detail.termid reportDate
+        FROM chb_month_report_g06b_detail detail
+        <where>
+            detail.reporttype='BALANCE'
+            <if test="reportDate != null and reportDate != ''">
+                AND detail.termid = #{reportDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectG06bMonthReportData"
+            resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportG06bDetail">
+        SELECT
+        detail.PROPERTYCODE,
+        detail.BALANCE_A,
+        detail.BALANCE_B
+        FROM chb_month_report_g06b_detail detail
+        <where>
+            detail.reporttype='BALANCE'
+            <if test="reportMon != null and reportMon != ''">
+                AND detail.termid = #{reportMon,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

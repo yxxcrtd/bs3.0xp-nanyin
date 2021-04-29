@@ -17,7 +17,7 @@ public class ChbMonthReportG06bDetail extends BaseEntity implements Serializable
     private String termid;
 
     /**
-     * 报表类型：PROD-产品，ASSET-资产
+     * 报表类型：PROD-产品，BALANCE-资产
      */
     private String reporttype;
 
