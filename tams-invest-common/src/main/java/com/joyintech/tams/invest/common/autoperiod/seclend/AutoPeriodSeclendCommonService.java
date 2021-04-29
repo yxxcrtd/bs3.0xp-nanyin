@@ -202,6 +202,11 @@ public class AutoPeriodSeclendCommonService extends BaseService {
                         deal2.setTradeAmt(deal2.getFpriceAmt());
                         deal2.setCpriceAmt(ArithmeticUtil.subtract(deal2.getFpriceAmt(), deal2.getIntAmt()));
                         deal2.setPrinAmt(ArithmeticUtil.subtract(deal2.getTradeAmt(), deal2.getIntAmt()));
+                        // add by jiangpeng on 20210429 start
+                        // TISHKBS-2068 CLONE - 债券借贷融入到期， 融入券可用持仓 < 融入券到期交易.交易份额，选择现金交割时，自动生成的债券买入交易的单位面值和交易员字段为空，应该有值
+                        deal2.setTrader(user);
+                        deal2.setParValue(this.getUnitPrice(deal2.getFinprodId(), deal2.getSettleDate()));
+                        // add by jiangpeng on 20210429 end
                         deals.add(deal2);
                     }
 
@@ -279,6 +284,7 @@ public class AutoPeriodSeclendCommonService extends BaseService {
                             // add by jiangpeng on 20210428 start
                             // TISHKBS-2068 CLONE - 债券借贷融入到期， 融入券可用持仓 < 融入券到期交易.交易份额，选择现金交割时，自动生成的债券买入交易的单位面值和交易员字段为空，应该有值
                             deal1.setTrader(user);
+                            deal1.setParValue(this.getUnitPrice(deal1.getFinprodId(), deal1.getSettleDate()));
                             // add by jiangpeng on 20210428 end
                             deal1.setFpriceAmt(ArithmeticUtil.round(
                                 ArithmeticUtil.multiply(deal.getShareAmt(),
