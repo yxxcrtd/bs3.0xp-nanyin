@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="~{layout/default}">
+<head>
+<style type="text/css" rel="stylesheet" link=""></style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class='layui-fluid'>
+		<ul class="debt-home-ul">
+                <li class="debt-home-item">
+                    <!-- <p class="debt-home-title">
+                    <i class="iconfont icon-horn"></i>
+                    <span class="menu-title">主动提醒</span>
+                    <div class="layui-input-inline input-inline">
+                        <input id='searchDate' name='timeControl' class="layui-input form-input input-dateSelect"
+                            placeholder="请选择时间区间" data-th-placeholder="#{SysCommon.placeholder}"
+                            data-th-value='${#dates.format(sysDate,"yyyy-MM-dd")}'>
+                    </div>
+                    </p> -->
+                    <div class="clearfix debt-home-title">
+                        <i class="iconfont icon-clock" style="float:left;line-height: 20px;"></i>
+                        <span class="menu-title" style="float: left;padding-top: 1px;padding-right: 10px;">主动提醒</span>
+                        <div class="input-append date" style="padding-top: 3px;position: relative; width:235px;">
+                             <input id="searchDate" type="text"  name="timeControl"  lay-verify="searchDate" data-th-value="${nowSysDate}" class="layui-input form-input input-dateSelect" placeholder="请选择日期" style="width: 125px;"/>
+                        </div>
+                    </div>
+                    <form class="menu-info-list" role="form">
+                    <div id="infoArea" class="clearfix">
+                    <div class="layui-col-md2 debt-home-info" style="border:1px solid transparent; width:253px;">
+                        <div style="background:#53A8FF; border-radius:5px; width:235px;" class="menu-link" href="javascript:;">
+                               <p class="debt-home-info-des">产品登记编码</p>
+                               <a class="debt-info-link black-color" id ="prodRegistnum" tab-id="REPORT_001001007" tab-pageid="ProRegistCodeManage001" tab-title="产品登记编码" data-type="svreport/system/proregistcodemanage/ProRegistCodeManage001/init">0</a>
+                        </div>
+                       </div>
+                     <div class="layui-col-md2 debt-home-info" style="border:1px solid transparent; width:253px;">
+                         <div style="background:#8BD268; border-radius:5px; width:235px;" class="menu-link" href="javascript:;">
+                             <p class="debt-home-info-des">识别标识合并</p>
+                             <a class="black-color" id ="mergenum" tab-id="REPORT_001003_005" tab-pageid="SvrInvestorMerger001" tab-title="识别标识合并" data-type="svreport/investormerger/InvestorMerger001/init">0</a>
+                         </div>
+                     </div>
+                    </div>
+                        <div class="clearfix">
+                            
+                            <div class="layui-col-md2 debt-home-info" id="investormergerDiv" style="border:1px solid transparent; width:253px;">
+                                <div style="background:#F78080; border-radius:5px; width:235px;" class="menu-link" href="javascript:;" >
+                                    <p class="debt-home-info-des">接口文件</p>
+                                    <a class="black-color" id ="accessFiletotal" tab-title="接口文件">0</a>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 debt-home-info" id="chbDiv" style="border:1px solid transparent; width:253px;">
+                                <div style="background:#FFB973; border-radius:5px; width:235px;" class="menu-link" href="javascript:;" >
+                                    <p class="debt-home-info-des">数据检查</p>
+                                    <a class="black-color" id ="checkDatatotal" tab-title="数据检查">0</a>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 debt-home-info" id="chbHoldDiv" style="border:1px solid transparent; width:253px;">
+                                <div style="background:#CC99FF; border-radius:5px; width:235px;" class="menu-link" href="javascript:;" >
+                                    <p class="debt-home-info-des">数据维护</p>
+                                    <a class="black-color" id ="processedDatatotal" tab-title="数据维护">0</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </li>
+                <li class="debt-home-item">
+                    <table id="subInfoTable" class="layui-table menu-table">
+                        <thead>
+                        <tbody class="menu-body">
+                        <tr>
+                            <td style="width:10%;">业务数据</td>
+                            <td style="width:9%;" bgcolor="#FDD7D7">接口文件个数</td>
+                            <td style="width:9%;" bgcolor="#FDD7D7">异常结束个数</td>
+                            <td style="width:9%;" bgcolor="#FDD7D7">正常结束个数</td>
+                            <td style="width:9%;" bgcolor="#FDD7D7">数据接入总数</td>
+                            <td style="width:9%;" bgcolor="#FFECD9">检查通过</td>
+                            <td style="width:9%;" bgcolor="#FFECD9">检查不通过</td>
+                            <td style="width:9%;" bgcolor="#EEDFFF">待处理</td>
+                        </tr>
+                        </tbody>
+                        </thead>
+                    </table>
+                </li>
+            </ul>
+		</div>
+    </div>
+    <div layout:fragment="script">
+    <script data-th-inline="javascript" type="text/javascript">
+    var isFromMain="${isFromMain}";
+  </script>
+  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+     <script data-th-src="@{/js/report/system/svrBusinessHome.js}" type="text/javascript"></script>
+  <style>
+               /*By zhengyan*/
+               /*首页样式*/
+               .menu-todo a {
+                   color: #337ab7 !important;
+               }#FFB973
+
+               .debt-nav {
+                   padding: 4px 6px;
+               }
+
+               .debt-logo {
+                   width: 100%;
+               }
+
+               .menu-link {
+                   display: block;
+                   text-align: center;
+                   padding: 5px 0;
+               }
+               .tab-home-link{
+                   float: left;
+                   /*background: #ebebeb;*/
+               }
+               .tab-home-link a{
+                   padding: 10px 15px;
+                   line-height: 42px;
+               }
+               /*.menu-link:hover {
+                   background: #D5F3FF;
+               }*/
+
+               .debt-info-link {
+                   color: #007fff;
+                   font-size: 22px;
+               }
+
+               .debt-info-link:hover {
+                   color: #007fff;
+               }
+
+               .debt-home-info-des {
+                   color: #333333;
+                   margin: 0;
+                   font-size: 14px;
+                   font-weight: bold;
+                   padding-bottom: 3px;
+               }
+
+               .debt-home-disabled {
+                   background: #f2f2f2;
+                   cursor: not-allowed!important;
+               }
+               .debt-home-disabled:hover{
+                   background: #f2f2f2!important;
+               }
+               .debt-info-disabled {
+                   color: #999999 !important;
+                   font-size: 12px !important;
+                   font-weight: normal!important;
+               }
+
+               .menu-link-disabled:hover {
+                   background: none;
+               }
+
+               .debt-link-disabled {
+                   color: #999999;
+                   /* font-weight: normal;
+                   font-size: 12px!important; */
+                   font-size: 22px;
+               }
+
+               .menu-table-width {
+                   width: 4%;
+               }
+
+               .menu-todo {
+                   cursor: not-allowed;
+               }
+
+               .debt-home-ul {
+                   padding-left: 0;
+               }
+
+               .debt-home-item {
+                   margin: 5px 0;
+               }
+
+               .menu-item-wrap {
+                   padding-left: 0;
+                   padding-right: 0;
+                   height: 89px;
+               }
+
+               .debt-home-info {
+                   padding: 0;
+                   height: 65px;
+                   border-left: 1px solid #cccccc;
+                   border-top: 1px solid #cccccc;
+                   border-bottom: 1px solid #cccccc;
+                   cursor: pointer;
+               }
+               .debt-home-info:hover{
+                   background: #D5F3FF;
+               }
+               .debt-home-title i {
+                   font-size: 22px;
+                   color: #aaaaaa;
+                   vertical-align: sub;
+               }
+
+               .debt-home-down.open > a {
+                   background-color: #8acaf5 !important;
+               }
+
+               .debt-home-menu {
+                   background-color: #fff;
+                   top: 50px !important;
+                   border: none;
+                   border-radius: 5px;
+                   padding-right: 20px;
+               }
+
+               .debt-info-maintain {
+                   position: fixed;
+                   left: 14%;
+               }
+               .debt-home-fast{
+                   /*top: 166px;
+                   position: fixed;
+                   right: 1px;
+                   z-index: 10;*/
+               }
+               .debt-home-check{
+                   top: 97px;
+                   z-index: 10;
+                   position: fixed;
+                   right: 2px;
+               }
+               .debt-home-message{
+                   top: 130px;
+                   z-index: 10;
+                   position: fixed;
+                   right: 2px;
+               }
+               .debt-check-wrap{
+                   background: #8ed93c;
+                   display: inline-block;
+                   height: 32px;
+               }
+               .debt-check-wrap img{
+                   float: left;
+                   vertical-align: middle;
+               }
+               .debt-check-wrap:hover{
+                   width: 120px;
+               }
+               .debt-info-wrap{
+                   background: #4da6ff;
+                   display: inline-block;
+                   height: 32px;
+               }
+               .debt-info-wrap img{
+                   float: left;
+                   vertical-align: middle;
+               }
+               .debt-fast-text{
+                   color: #fff;
+                   display: inline-block;
+                   line-height: 32px;
+               }
+               .exp-wrap{
+                   padding: 0 5px 7px 5px;
+               }
+               .fast-text{
+                   display: none;
+               }
+               .fast-wrap:hover .fast-text{
+                   display: inline;
+               }
+               /*.debt-home-width{
+                   width: 20%;
+               }*/
+               .home-nav {
+                   border-bottom: 2px solid #006dd9;
+               }
+
+               .debt-home-bar {
+                   position: relative;
+               }
+               .home-link{
+                   padding: 10px 0!important;
+               }
+
+               .debt-home-link:hover {
+                   color: #3f9fff;
+                   /* text-decoration: underline!important;*/
+               }
+
+               .debt-hover:hover {
+                   color: #3f9fff !important;
+                   text-decoration: underline !important;
+               }
+
+               .debt-home-save {
+                   /* min-width: 41%; */
+               }
+
+               .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+                   background-color: #fff;
+               }
+
+               .debt-home-li {
+                   float: left;
+                   /*padding-top: 0;*/
+                   padding: 5px 0 0 20px;
+                   line-height: 25px;
+               }
+
+               .debt-home-li dl dd a {
+                   line-height: 25px;
+               }
+
+               .debt-home-manage {
+                   min-width: 880px;
+                   left: -151px;
+               }
+
+               .debt-home-system {
+                   min-width: 435px;
+                   left: -160px;
+               }
+
+               .debt-sys-set {
+                   width: 50%;
+               }
+
+               .debt-home-admin.open > a {
+                   background-color: #57b3f0 !important;
+               }
+
+               .debt-home-admin-wrap {
+                   min-width: 130px;
+               }
+               .debt-home-admin-wrap li a{
+                   padding: 5px 0 5px 20px!important;
+               }
+               .debt-home-admin-wrap li a:hover{
+                   background: #cce6ff;
+               }
+               .debt-home-maintain {
+                   color: #797979;
+                   padding-right: 10px;
+                   font-size: 12px;
+               }
+
+               .debt-home-wrap {
+                   padding: 15px 0;
+               }
+
+               .debt-maintain-link {
+                   color: #3f9fff;
+                   font-size: 12px;
+                   padding-left: 10px;
+               }
+
+               .debt-home-result {
+                   border-left: 4px solid #1d8ce7;
+                   float: left;
+               }
+               .text-area{
+                   margin:10px;
+               }
+               .debt-home-result-title {
+                   padding-left: 10px;
+               }
+
+               .menu-title-wrap {
+                   margin: 25px 0 10px 0;
+                   border-left: 5px solid #1d8ce7;
+               }
+
+               .menu-title {
+                   color: #666666;
+                   font-size: 16px;
+                   padding-left: 10px;
+               }
+
+               .menu-list-wrap {
+                   display: inline-block;
+                   width: 15%;
+               }
+
+               .menu-num {
+                   color: #fff;
+                   font-size: 25px;
+                   text-align: center;
+               }
+
+               .menu-num img {
+                   height: 33px;
+               }
+
+               .menu-input {
+                   /* width: 115px !important;*/
+                   height: 25px !important;
+               }
+
+               .menu-export-wrap {
+                   border: 1px solid #cccccc;
+                   padding: 15px 0;
+               }
+
+               .menu-export-num {
+                   color: #666666;
+                   text-align: center;
+                   font-size: 25px;
+               }
+
+               .menu-time-icon {
+                   height: 25px !important;
+                   padding: 0px 10px !important;
+               }
+
+               .menu-export-text {
+                   color: #666666;
+                   text-align: center;
+                   font-size: 15px;
+               }
+
+               .menu-distance {
+                   margin-left: 1.7%;
+               }
+
+               .menu-info-list {
+                   overflow: hidden;
+               }
+
+               .menu-info-title {
+                   color: #fff;
+                   text-align: center;
+                   font-size: 15px;
+                   margin: 0;
+               }
+
+               .menu-info-blue {
+                   background: #78c0f1;
+                   padding: 5px 0;
+                   cursor: pointer;
+               }
+
+               .menu-info-green {
+                   background: #a8de78;
+                   padding: 5px 0;
+                   cursor: pointer;
+               }
+
+               .menu-info-orange {
+                   background: #ffc78f;
+                   padding: 5px 0;
+                   cursor: pointer;
+               }
+
+               .menu-info-stro-blue {
+                   background: #52a4e0;
+                   padding: 5px 0;
+                   cursor: pointer;
+               }
+
+               .menu-info-stro-green {
+                   background: #8ed93c;
+                   padding: 5px 0;
+                   cursor: pointer;
+               }
+
+               .menu-info-stro-orange {
+                   background: #ffb973;
+                   padding: 5px 0;
+                   cursor: pointer;
+               }
+
+               .menu-table {
+                   text-align: center;
+                   margin-bottom: 0;
+               }
+
+               .menu-table td {
+                   border-left: 1px solid #dddddd;
+                   /* width: 6.2%;*/
+               }
+
+               .menu-table tbody td {
+                   padding: 4px 0 !important;
+               }
+
+               .menu-table thead td {
+                   padding: 6px 2px !important;
+                   font-size: 14px;
+                   color: #333;
+                   font-weight: bold;
+                   /* font-family: "微软雅黑";*/
+               }
+
+               .menu-table > thead {
+                   background: #E3F1ff !important;
+               }
+               .debt-home-title {
+                   margin-bottom: 5px;
+               }
+
+               .menu-item {
+                   line-height: 33px !important;
+               }
+
+               .menu-delay-text {
+                   background: #ff7373;
+                   color: #fff !important;
+                   border-left: none !important;
+                   border-top: none !important;
+                   font-size: 15px !important;
+               }
+
+               .menu-delaying-text {
+                   background: #ffb973;
+                   color: #fff !important;
+                   border-left: none !important;
+                   border-top: none !important;
+                   font-size: 15px !important;
+               }
+
+               .menu-send-text {
+                   background: #8ed93c;
+                   color: #fff !important;
+                   border-left: none !important;
+                   border-top: none !important;
+                   font-size: 15px !important;
+               }
+
+               .menu-total-text {
+                   background: #52a4e0;
+                   color: #fff !important;
+                   border-left: none !important;
+                   border-top: none !important;
+                   font-size: 15px !important;
+               }
+
+               .menu-name {
+                   background: #c7c7c7;
+                   color: #fff;
+                   border-left: none !important;
+                   border-top: none !important;
+                   font-size: 15px !important;
+                   line-height: 53px !important;
+               }
+
+               .menu-delay {
+                   background: #ffe6e6;
+               }
+
+               .menu-delay td {
+                   font-size: 16px !important;
+                   color: #ff4d4d !important;
+               }
+
+               .menu-delay td a {
+                   font-weight: bold;
+                   color: #ff4d4d;
+                   font-size: 24px;
+               }
+
+               .menu-delaying {
+                   background: #fff7db;
+               }
+
+               .menu-delaying td {
+                   font-size: 16px !important;
+                   color: #ff7f00 !important;
+               }
+
+               .menu-delaying td a {
+                   font-weight: bold;
+                   color: #ff7f00;
+                   font-size: 24px;
+               }
+
+               .menu-send {
+                   background: #eeffdd;
+               }
+
+               .menu-send td {
+                   font-size: 16px !important;
+                   color: #59b200 !important;
+               }
+
+               .menu-send td a {
+                   font-weight: bold;
+                   color: #59b200;
+                   font-size: 24px;
+               }
+
+               .menu-total {
+                   border-bottom: 1px solid #dddddd;
+               }
+
+               .menu-total td {
+                   font-size: 24px !important;
+               }
+
+               /* .menu-body tr td a{
+                  color: #007fff;
+               } */
+               .menu-body tr td a:hover {
+                   text-decoration: underline !important;
+               }
+               /*版本样式*/
+               .home-edition li a{
+                   padding: 10px 0;
+               }
+               .edition-container{
+                   background: #2e2d2d;
+               }
+               .edition-wrap{
+                   background: url("../images/copy-bg.png") no-repeat;
+                   height: 458px;
+               }
+               .edition-wrapper{
+                   padding-top: 80px;
+               }
+               .edition-logo{
+                   text-align: center;
+                   margin-bottom: 0;
+               }
+               .edition-title{
+                   color: #006CD8;
+                   font-size: 30px;
+                   margin: 25px 0;
+                   text-align: center;
+               }
+               .edition-des{
+                   color: #000000;
+                   font-size: 20px;
+                   margin-bottom: 20px;
+                   text-align: center;
+               }
+               .black-color{
+               	   color: #FFFFFF;
+               	   font-size: 22px;
+               }
+               .div-remind {
+                   bgcolor: #FFB973;
+               }
+               .edition-item-wrap{
+                   text-align: center;
+                   width: 18%;
+                   margin: 0 auto;
+               }
+               .edition-item-wrap ul{
+                   padding-left: 0;
+               }
+               .edition-item-wrap li{
+                   float: left;
+               }
+               .edition-type{
+                   font-size: 14px;
+                   color: #000;
+                   padding-top: 10px;
+               }
+               .edition-item{
+                   padding-left: 10px;
+               }
+               /*鏁翠綋妫�鏌�*/
+               .whole-tab-wrap {
+                   border: 1px solid #cccccc;
+               }
+
+               .tab-table.dataTable {
+                   margin-top: 1px !important;
+               }
+
+               .whole-form-wrap {
+                   width: 14%;
+                   float: left;
+               }
+
+               .whole-title {
+                   text-align: center;
+                   color: #666666;
+               }
+
+               .whole-form-list {
+                   width: 100%;
+                   height: 100%;
+               }
+
+               /*濞戞搩鍘奸敓鐣屽劋婵倝鏌呮担铚傜箚闁诡収鍨遍悡锛勬嫚閿燂拷*/
+               .debt-img {
+                   display: inline-block;
+               }
+
+               .send-info {
+                   color: #0f87ff;
+               }
+
+               .send-info:hover {
+                   color: #0f87ff;
+               }
+
+               /*闁圭數鎳撻ˇ鈺呮偠閿燂拷*/
+               .batch-col {
+                   float: left;
+                   margin: 0;
+                   line-height: 40px;
+               }
+
+               .batch-img {
+                   float: right;
+               }
+
+               /*濞存籂鍐╂儌閻庢稒顭囬悽濠氬嫉閻旂儤顏㈤悹渚婃嫹*/
+               .pro-link {
+                   color: #73b9ff;
+               }
+
+               .pro-link:hover {
+                   color: #73b9ff;
+               }
+
+               /*闁哄牆鐗嗙�瑰磭绱掗悢娲诲悁閻炴稏鍔庡▍銉ф媼閿燂拷*/
+               .month-tab {
+                   border-right: 1px solid #dddddd;
+                   border-left: 1px solid #dddddd;
+                   border-bottom: 1px solid #dddddd;
+               }
+
+               .month-item {
+                   color: #666666;
+               }
+
+               .month-item:hover {
+                   border-color: #fff #fff #ddd !important;
+                   background-color: #fff !important;
+               }
+
+               .pro-classify-title {
+                   text-align: center;
+                   color: #666666;
+                   font-size: 20px;
+                   padding: 25px 0 15px 0;
+                   width: 95%;
+                   margin: 0 auto;
+                   border-bottom: 1px solid #dddddd;
+               }
+
+               .pro-classify-list {
+                   width: 95%;
+                   margin: 0 auto;
+               }
+
+               .pro-classify-list ul {
+                   padding-left: 0;
+                   padding-right: 0;
+               }
+
+               .pro-classify-list ul li {
+                   color: #666666;
+                   padding: 10px 0 0 0;
+               }
+
+               .month-table-head {
+                   text-align: center;
+                   background: #e0f2fe;
+               }
+
+               /*.month-table-head td{
+                   font-size: 15px!important;
+               }*/
+               .month-table tr td {
+                   border-left: 1px solid #dddddd;
+               }
+
+               .month-table {
+                   margin-bottom: 0;
+               }
+
+               .month-project {
+                   vertical-align: middle !important;
+               }
+
+               .month-table-item {
+                   color: #333333 !important;
+                   font-weight: bold;
+                   text-align: left !important;
+               }
+
+               .month-table-td {
+                   color: #797979 !important;
+                   text-align: left !important;
+               }
+
+               .month-table-tr td {
+                   text-align: right;
+               }
+
+               .month-table-tr td a {
+                   color: #007fff;
+               }
+
+               .month-table-tr td a:hover {
+                   color: #007fff;
+                   text-decoration: underline !important;
+               }
+
+               .month-table-left {
+                   text-align: left !important;
+               }
+
+               .month-table-gray {
+                   background: #eeeeee;
+               }
+
+               .customer-type {
+                   position: absolute;
+                   right: 0;
+                   font-style: normal;
+                   font-size: 16px;
+               }
+
+               .pro-type {
+                   position: absolute;
+                   bottom: 0;
+                   font-style: normal;
+                   font-size: 16px;
+               }
+
+               .kinds-buy {
+                   position: relative;
+                   /*width: 300px;*/
+               }
+
+               /*.table-kinds{
+                   height: 83px;
+               }*/
+               .table-kinds-head {
+                   background: #e0f2fe;
+               }
+
+               .table-kinds-head td {
+                   vertical-align: middle !important;
+               }
+
+               .menu-todo {
+                   background: #F2F2F2 !important;
+               }
+
+               /*延时报送检查*/
+               .delay-des-wrap {
+                   border: 1px solid #bcbcbc;
+                   background: #fff;
+                   z-index: 64;
+                   right: 154px;
+                   top: -27px;
+                   position: absolute;
+                   /*width: 20%;*/
+                   line-height: 15px;
+               }
+
+               .delay-des-wrap ul li {
+                   float: left;
+               }
+               /*日历样式*/
+               .fc-today .fc-day-cnDate{
+                   color: #fff;
+               }
+               .fc-other-month.fc-today{
+                   background: #fff!important;
+                   color: #999!important;
+               }
+               .fc-other-month.fc-today .fc-day-cnDate{
+                   color: #999;
+               }
+               /*by yelingling*/
+               .debt-batch-toolbar {
+                   background: #e0f2fe;
+                   padding: 15px 0 15px 0px;
+                   border-top:5px;
+                   font-weight:bold !important;
+                   color: #444444;
+                   margin-bottom:0px
+               }
+               .debt-norecordleft{
+                   float: left;
+                   width: 30%;
+                   height:350px;
+                   text-align:left;
+                   border:1px solid #bcbcbc;
+                   padding-left:10px;
+               }
+               .debt-record-emprty{
+                   padding-top:5px;
+                   float: left;
+                   text-align: center;
+                   width: 70%;
+                   height:350px;
+                   line-height:350px;
+                   padding-bottom:5px;
+                   border:1px solid #bcbcbc;
+               }
+               .debt-recordright{
+                   padding-top:5px;
+                   float: left;
+                   text-align: left;
+                   width: 70%;
+                   height:350px;
+                   padding-bottom:5px;
+                   border:1px solid #bcbcbc;
+                   font-size:13px;
+                   color:#444444;
+                   overflow-y: auto;
+                   overflow-x: false;
+
+               }
+               .debt-icon-norecord{
+                   font-size: 100px;
+                   color: #bcbcbc;
+                   vertical-align:middle;
+               }
+               .debt-batch-center{
+                   vertical-align:middle;
+                   color:#bcbcbc;
+                   font-size:20px;
+               }
+               .debt-tablist-a{
+                   color:#333;
+                   padding:5px 10px !important;
+
+               }
+               .debt-tablist-a:hover,.debt-tablist-a:focus{
+                   background: #8acaf5 !important;
+                   color: #fff;
+                   border-top: none;
+                   border-left: none;
+                   border-right: none;
+                   border-radius: 5px;
+               }
+               .nav>.debt-presebtation{
+                   display:inline-block;
+
+               }
+               .debt-ul-bottom{
+                   padding:5px 20px !important;
+               }
+               .debt-inProgress{
+                   background:#0f87ff;
+                   color:#fff;
+                   padding: 4px 5px;
+                   border-radius: 3px;
+               }
+               .debt-execution{
+                   background:#9cca38;
+                   color:#fff;
+                   padding: 4px 5px;
+                   border-radius: 3px;
+               }
+               .debt-ul-bottom>li.active>a{
+                   background: #57b3f0 !important;
+                   color: #fff;
+                   border-top: none;
+                   border-left: none;
+                   border-right: none;
+                   border-radius: 5px;
+               }
+               .debt-tables{
+                   margin-bottom:0;
+               }
+               .debt-batch-border td{
+                   border-top: none!important;
+               }
+               .batch-des{
+                   width: 329px!important;
+                   display: inline-block;
+               }
+               .debt-tables>tbody>tr:nth-of-type(odd){
+                   background-color:#fff;
+               }
+               .debt-notopboder{
+                   border-top:0 !important;
+               }
+               .debt-no-line{
+                   line-height:normal !important;
+               }
+
+               /*Excel规则引擎配置*/
+               .excel-container{
+                   overflow: hidden;
+                   border: 1px solid #cccccc;
+                   margin-top: 10px;
+               }
+               .excel-ul-wrap{
+                   float: left;
+                   width: 260px;
+                   background: #eeeeee;
+                   min-height: 503px;
+                   border-bottom: none;
+               }
+               .excel-ul-wrap li{
+                   float: none;
+               }
+               .excel-ul-wrap .active a .excel-des{
+                   color: #0f87ff;
+               }
+               .excel-ul-wrap .active a{
+                   border-bottom: none!important;
+               }
+               .excel-checkbox{
+                   float: left;
+               }
+               .excel-ul-wrap li a:hover{
+                   border-color: #ccc #eee;
+               }
+               .excel-ul-wrap li a{
+                   border-bottom: 1px solid #cccccc;
+                   padding: 5px 15px;
+               }
+               .excel-des{
+                   float: left;
+                   line-height: 29px;
+                   color: #666666;
+               }
+               .excel-btn{
+                   float: right;
+                   line-height: 25px;
+               }
+               .excel-btn-wrap{
+                   padding-top: 10px;
+               }
+               .excel-right-wrap{
+                   margin-left: 270px;
+                   margin-right: 10px;
+               }
+               .excel-input{
+                   padding: 10px;
+               }
+               .excel-input input{
+                   border-radius: 0;
+               }
+               .excel-text{
+                   color: #666666;
+                   margin: 10px 0;
+               }
+               /*新建Excel规则引擎配置*/
+               .excel-col-wrap{
+                   width: 11%;
+                   padding-left: 0;
+               }
+               .excel-input-container{
+                   width: 50%;
+               }
+               .excel-input-container input{
+                   width: 100%;
+               }
+               .excel-input-wrapper{
+                   width: 20%;
+               }
+               .excel-input-wrapper input{
+                   width: 100%;
+               }
+               .excel-input-left{
+                   float: left;
+                   width: 50%;
+               }
+               .excel-two-wrap{
+                   width: 13%;
+               }
+               .excel-two-form{
+                   width: 69%;
+               }
+               .excel-wrap-left{
+                   float: left;
+               }
+               .excel-wrap-right{
+                   float: left;
+               }
+               .excel-left-list{
+                   float: left;
+               }
+               .excel-form-wrap{
+                   padding: 0 0 10px 0!important;
+               }
+           </style>
+   </div>
+</body>
+</html>

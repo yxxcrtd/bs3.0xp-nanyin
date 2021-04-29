@@ -13,7 +13,9 @@ package com.joyintech.tams.report.submitmanagement.equityinforegist.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.report.common.base.TableRow;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
@@ -288,7 +290,7 @@ public class EquityInfoRegist001Dto extends TableRow {
     /**
      * 风险偏好
      */
-    @DictFormat(DictCode.投资风险偏好)
+//    @DictFormat(DictCode.投资风险偏好)
     private String holderRiskPrefer;
 
     /**
@@ -394,6 +396,27 @@ public class EquityInfoRegist001Dto extends TableRow {
         this.updateTime = updateTime;
     }
 
+    public String getUpdateTimeStr() {
+        if(StringUtil.isNotEmpty(this.getUpdateTime())){
+            return DateUtil.formatDateTime(this.getUpdateTime());
+        }
+        return null;
+    }
+
+    public String getSubmitTimeStr() {
+        if(StringUtil.isNotEmpty(this.getSubmitTime())){
+            return DateUtil.formatDateTime(this.getSubmitTime());
+        }
+        return null;
+    }
+
+    public String getChbSubmitDeadlineStr() {
+        if(StringUtil.isNotEmpty(this.getChbSubmitDeadline())){
+            return DateUtil.formatDateTime(this.getChbSubmitDeadline());
+        }
+        return null;
+    }
+
     /**
      * 获取 submitFeedbackStatus
      *
@@ -403,6 +426,9 @@ public class EquityInfoRegist001Dto extends TableRow {
         return submitFeedbackStatus == null ? "" : submitFeedbackStatus;
     }
 
+    public String getSubmitFeedbackStatusStr() {
+        return submitFeedbackStatus==null?null:SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, this.submitFeedbackStatus);
+    }
     /**
      * 设置 submitFeedbackStatus
      *
@@ -1140,45 +1166,77 @@ public class EquityInfoRegist001Dto extends TableRow {
     }
 
 
-	public String getTypeCode() {
-		return typeCode;
-	}
+    public String getTypeCode() {
+        return typeCode;
+    }
 
 
-	public void setTypeCode(String typeCode) {
-		this.typeCode = typeCode;
-	}
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode;
+    }
 
 
-	public String getSeqList() {
-		return seqList;
-	}
+    public String getSeqList() {
+        return seqList;
+    }
 
 
-	public void setSeqList(String seqList) {
-		this.seqList = seqList;
-	}
+    public void setSeqList(String seqList) {
+        this.seqList = seqList;
+    }
 
 
-	public String getSubmitFeedbackStatusCode() {
-		return submitFeedbackStatusCode;
-	}
+    public String getSubmitFeedbackStatusCode() {
+        return submitFeedbackStatusCode;
+    }
 
 
-	public void setSubmitFeedbackStatusCode(String submitFeedbackStatusCode) {
-		this.submitFeedbackStatusCode = submitFeedbackStatusCode;
-	}
-	/**
-	* @Fields sendStatus : (发送状态)
-	*/
-	private String sendStatus;
-	
-	public String getSendStatus() {
-		return sendStatus;
-	}
+    public void setSubmitFeedbackStatusCode(String submitFeedbackStatusCode) {
+        this.submitFeedbackStatusCode = submitFeedbackStatusCode;
+    }
+    /**
+     * @Fields sendStatus : (发送状态)
+     */
+    private String sendStatus;
+
+    public String getSendStatus() {
+        return sendStatus;
+    }
 
 
-	public void setSendStatus(String sendStatus) {
-		this.sendStatus = sendStatus;
-	}
+    public void setSendStatus(String sendStatus) {
+        this.sendStatus = sendStatus;
+    }
+
+    // 导出报错新添加的 （徽商） njl  start
+    /**
+     * 获取 updateTime
+     *
+     * @return updateTime.
+     */
+    public String getUpdateSTimeStr() {
+        return DateUtil.formatDateTime(this.getUpdateTime());
+    }
+
+
+    /**
+     * 获取 submitTime
+     *
+     * @return submitTime.
+     */
+    public String getSubmitSTimeStr() {
+        return DateUtil.formatDateTime(this.getSubmitTime());
+    }
+
+
+    /**
+     * 获取 chbSubmitDeadline
+     *
+     * @return chbSubmitDeadline.
+     */
+    public String getChbSubmitSDeadlineStr() {
+        return DateUtil.formatDateTime(this.getChbSubmitDeadline());
+    }
+
+    // 导出报错新添加的 （徽商） njl  end
 }

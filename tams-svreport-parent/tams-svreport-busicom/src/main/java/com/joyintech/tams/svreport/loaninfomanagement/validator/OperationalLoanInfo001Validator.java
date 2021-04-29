@@ -37,8 +37,8 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 		}else if(StringUtil.equals(dto.getOperateType(), "submit")){
 			//资产代码必填
 			if(StringUtil.isEmpty(dto.getAssetCode())){
-				errorList.add(new ValidMessage("assetCode", getMessage("REPORT_COMMON_E_0001",
-						"资产代码")));
+				errorList.add(new ValidMessage("assetCode", this.getMessage("REPORT_COMMON_E_0001",
+						this.getMessage("OperationalLoanInfo002.assetCode"))));
 			}
 
 			if (StringUtil.isNotEmpty(dto.getAssetCode()) &&
@@ -51,12 +51,12 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 			if(StringUtil.isNotEmpty(dto.getAssetType()) && !StringUtil.equals(dto.getAssetType(), DictCodeListExt3.中债_中债贷款分类_除回购或拆借外贷款.getValue())){
 				//基础资产投向分类/各比例 必填
 				if(StringUtil.isEmpty(dto.getAssetsInvest())){
-					errorList.add(new ValidMessage("assetsInvest", getMessage("REPORT_COMMON_E_0001",
-							"基础资产投向分类")));
+					errorList.add(new ValidMessage("assetsInvest", this.getMessage("REPORT_COMMON_E_0001",
+							this.getMessage("OperationalLoanInfo002.assetsInvest"))));
 				}
 				if(StringUtil.isEmpty(dto.getEachProportion())){
-					errorList.add(new ValidMessage("eachProportion", getMessage("REPORT_COMMON_E_0001",
-							"各比例")));
+					errorList.add(new ValidMessage("eachProportion", this.getMessage("REPORT_COMMON_E_0001",
+							this.getMessage("OperationalLoanInfo002.eachProportion"))));
 				}else{
 					try {
 						int each = 0;
@@ -108,36 +108,36 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 
 
 					if(!StringUtil.isNotEmpty(dto.getLoanTransferorId())){
-						errorList.add(new ValidMessage("loanTransferorId", getMessage("BUSS_COM_E_0038",
-								"贷款转让方机构代码")));
+						errorList.add(new ValidMessage("loanTransferorId", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanTransferorId"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getLoanTransferorName())){
-						errorList.add(new ValidMessage("loanTransferorName", getMessage("BUSS_COM_E_0038",
-								"贷款转让方机构名称")));
+						errorList.add(new ValidMessage("loanTransferorName", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanTransferorName"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getLoanContractOrgId())){
-						errorList.add(new ValidMessage("loanContractOrgId", getMessage("BUSS_COM_E_0038",
-								"贷款合同原始发放机构代码")));
+						errorList.add(new ValidMessage("loanContractOrgId", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanContractOrgId"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getLoanContractOrgName())){
-						errorList.add(new ValidMessage("loanContractOrgName", getMessage("BUSS_COM_E_0038",
-								"贷款合同原始发放机构名称")));
+						errorList.add(new ValidMessage("loanContractOrgName", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanContractOrgName"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getLoanContractOrgProvince())){
-						errorList.add(new ValidMessage("loanContractOrgProvince", getMessage("BUSS_COM_E_0038",
-								"贷款合同原始发放机构所在地(省)")));
+						errorList.add(new ValidMessage("loanContractOrgProvince", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanContractOrgProvince"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getLoanContractOrgCity())){
-						errorList.add(new ValidMessage("loanContractOrgCity", getMessage("BUSS_COM_E_0038",
-								"贷款合同原始发放机构所在地(市)")));
+						errorList.add(new ValidMessage("loanContractOrgCity", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanContractOrgCity"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getLoanContractOrgCounty())){
-						errorList.add(new ValidMessage("loanContractOrgCounty", getMessage("BUSS_COM_E_0038",
-								"贷款合同原始发放机构所在地(县)")));
+						errorList.add(new ValidMessage("loanContractOrgCounty", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanContractOrgCounty"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getLoanTransferorRate())){
-						errorList.add(new ValidMessage("loanTransferorRate", getMessage("BUSS_COM_E_0038",
-								"贷款转让折扣率(%)")));
+						errorList.add(new ValidMessage("loanTransferorRate", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanTransferorRate"))));
 					}
 				}
 
@@ -145,8 +145,8 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 				if (StringUtil.isNotEmpty(dto.getLoansType()) &&
 						!StringUtil.equals(dto.getLoansType(), DictCodeListExt3.贷款种类_其他债权收益权.getValue())) {
 					if(!StringUtil.isNotEmpty(dto.getLoanBasisId())){
-						errorList.add(new ValidMessage("loanBasisId", getMessage("BUSS_COM_E_0038",
-								"贷款借据编码")));
+						errorList.add(new ValidMessage("loanBasisId", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanBasisId"))));
 					}
 					try {
 						/**发放,转让**/
@@ -164,12 +164,12 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 						errorList.add(new ValidMessage("loanPrdType", "只有贷款种类为其他债权时才能选择“F99-其他贷款”"));
 					}
 					if(!StringUtil.isNotEmpty(dto.getLoanQuality())){
-						errorList.add(new ValidMessage("loanQuality", getMessage("BUSS_COM_E_0038",
-								"贷款质量")));
+						errorList.add(new ValidMessage("loanQuality", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanQuality"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getLoanState())){
-						errorList.add(new ValidMessage("loanState", getMessage("BUSS_COM_E_0038",
-								"贷款状态")));
+						errorList.add(new ValidMessage("loanState", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanState"))));
 					}
 				}
 
@@ -177,8 +177,8 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 				if(StringUtil.isNotEmpty(dto.getIndustryInfo())){
 					if(StringUtil.equals(dto.getIndustryInfo(), DictCodeListExt3.行业门内编码_非居民.getValue())){
 						if(!StringUtil.isNotEmpty(dto.getBorrowerNationality())){
-							errorList.add(new ValidMessage("borrowerNationality", getMessage("BUSS_COM_E_0038",
-									"借款人国别")));
+							errorList.add(new ValidMessage("borrowerNationality", this.getMessage("BUSS_COM_E_0038",
+									this.getMessage("OperationalLoanInfo002.borrowerNationality"))));
 						}
 					}
 				}
@@ -187,16 +187,16 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 				if(!StringUtil.equals(dto.getIndustryInfo(), DictCodeListExt3.行业门内编码_境内个人.getValue())
 						&& !StringUtil.equals(dto.getIndustryInfo(), DictCodeListExt3.行业门内编码_非居民.getValue())){
 					if(!StringUtil.isNotEmpty(dto.getBorrowerProvince())){
-						errorList.add(new ValidMessage("borrowerProvince", getMessage("BUSS_COM_E_0038",
-								"借款人地区(省)")));
+						errorList.add(new ValidMessage("borrowerProvince", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.borrowerProvince"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getBorrowerCity())){
-						errorList.add(new ValidMessage("borrowerCity", getMessage("BUSS_COM_E_0038",
-								"借款人地区(市)")));
+						errorList.add(new ValidMessage("borrowerCity", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.borrowerCity"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getBorrowerCounty())){
-						errorList.add(new ValidMessage("borrowerCounty", getMessage("BUSS_COM_E_0038",
-								"借款人地区(县)")));
+						errorList.add(new ValidMessage("borrowerCounty", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.borrowerCounty"))));
 					}
 				}
 
@@ -205,16 +205,16 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 						StringUtil.equals(dto.getBorrowerType(), DictCodeListExt3.借款人类型_非金融企业.getValue())
 						|| StringUtil.equals(dto.getBorrowerType(), DictCodeListExt3.借款人类型_金融机构.getValue())){
 					if(!StringUtil.isNotEmpty(dto.getEnterpriseInvestorTypeFirst())){
-						errorList.add(new ValidMessage("enterpriseInvestorTypeFirst", getMessage("BUSS_COM_E_0038",
-								"企业出资人经济成分(一级)")));
+						errorList.add(new ValidMessage("enterpriseInvestorTypeFirst", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.enterpriseInvestorTypeFirst"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getEnterpriseInvestorTypeSec())){
 						errorList.add(new ValidMessage("enterpriseInvestorTypeSec", this.getMessage("BUSS_COM_E_0038",
-								"企业出资人经济成分(二级)")));
+								this.getMessage("OperationalLoanInfo002.enterpriseInvestorTypeSec"))));
 					}
 					if(!StringUtil.isNotEmpty(dto.getEnterpriseInvestorTypeThird())){
 						errorList.add(new ValidMessage("enterpriseInvestorTypeThird", this.getMessage("BUSS_COM_E_0038",
-								"企业出资人经济成分(三级)")));
+								this.getMessage("OperationalLoanInfo002.enterpriseInvestorTypeThird"))));
 					}
 				}
 
@@ -223,8 +223,8 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 						!StringUtil.equals(dto.getBorrowerType(), DictCodeListExt3.借款人类型_住户.getValue())
 						&& !StringUtil.equals(dto.getBorrowerType(), DictCodeListExt3.借款人类型_境外.getValue())){
 					if(!StringUtil.isNotEmpty(dto.getEnterpriseScale())){
-						errorList.add(new ValidMessage("enterpriseScale", getMessage("BUSS_COM_E_0038",
-								"企业规模")));
+						errorList.add(new ValidMessage("enterpriseScale", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.enterpriseScale"))));
 					}
 				}
 
@@ -232,8 +232,8 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 				if(StringUtil.isNotEmpty(dto.getLoanState()) &&
 						StringUtil.equals(dto.getLoanState(), DictCodeListExt3.贷款状态_展期.getValue())){
 					if(!StringUtil.isNotEmpty(dto.getLoanExtensionDueDate())){
-						errorList.add(new ValidMessage("loanExtensionDueDate", getMessage("BUSS_COM_E_0038",
-								"贷款展期到期日期")));
+						errorList.add(new ValidMessage("loanExtensionDueDate", this.getMessage("BUSS_COM_E_0038",
+								this.getMessage("OperationalLoanInfo002.loanExtensionDueDate"))));
 					}
 
 					//投资封闭期（到）> 资产到期日
@@ -241,7 +241,7 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 						if (DateUtil.compareDate(dto.getLoanExtensionDueDate(), dto.getLoanMdate()) <= 0) {
 							errorList.add(new ValidMessage("loanExtensionDueDate",
 									getMessage("REPORT_COMMON_E_0059", getMessage("贷款展期到期日期"),
-											"贷款到期日期")));
+											getMessage("OperationalLoanInfo002.loanMdate"))));
 						}
 					}
 				}else if(StringUtil.isNotEmpty(dto.getLoanState()) &&
@@ -265,65 +265,65 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 	 */
 	private void dataCheck(OperationalLoanInfo001Dto dto,List<ValidMessage> errorList){
 		if(StringUtil.isEmpty(dto.getLoansType())){
-			errorList.add(new ValidMessage("loansType", getMessage("REPORT_COMMON_E_0001",
-					"贷款种类")));
+			errorList.add(new ValidMessage("loansType", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.loansType"))));
 		}
 		if(StringUtil.isEmpty(dto.getBorrowerType())){
-			errorList.add(new ValidMessage("borrowerType", getMessage("REPORT_COMMON_E_0001",
-					"借款人类型")));
+			errorList.add(new ValidMessage("borrowerType", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.borrowerType"))));
 		}
 		if(StringUtil.isEmpty(dto.getIndustryInfo())){
-			errorList.add(new ValidMessage("industryInfo", getMessage("REPORT_COMMON_E_0001",
-					"行业信息")));
+			errorList.add(new ValidMessage("industryInfo", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.industryInfo"))));
 		}
 		if(StringUtil.isEmpty(dto.getBorrowerId())){
-			errorList.add(new ValidMessage("borrowerId", getMessage("REPORT_COMMON_E_0001",
-					"借款人代码")));
+			errorList.add(new ValidMessage("borrowerId", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.borrowerId"))));
 		}
 		if(StringUtil.isEmpty(dto.getLoanPrdType())){
-			errorList.add(new ValidMessage("loanPrdType", getMessage("REPORT_COMMON_E_0001",
-					"贷款产品类别")));
+			errorList.add(new ValidMessage("loanPrdType", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.loanPrdType"))));
 		}
 		if(StringUtil.isEmpty(dto.getLoanActualInvest())){
-			errorList.add(new ValidMessage("loanActualInvest", getMessage("REPORT_COMMON_E_0001",
-					"贷款实际投向")));
+			errorList.add(new ValidMessage("loanActualInvest", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.loanActualInvest"))));
 		}
 		if(!StringUtil.isNotEmpty(dto.getLoanVdate())){
-			errorList.add(new ValidMessage("loanVdate", getMessage("REPORT_COMMON_E_0001",
-					"贷款发放日期")));
+			errorList.add(new ValidMessage("loanVdate", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.loanVdate"))));
 		}
 		if(!StringUtil.isNotEmpty(dto.getLoanMdate())){
-			errorList.add(new ValidMessage("loanMdate", getMessage("REPORT_COMMON_E_0001",
-					"贷款到期日期")));
+			errorList.add(new ValidMessage("loanMdate", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.loanMdate"))));
 		}
 		//贷款发放日期  <= 贷款到期日期
 		if (StringUtil.isNotEmpty(dto.getLoanVdate()) && StringUtil.isNotEmpty(dto.getLoanMdate())) {
 			if (DateUtil.compareDate(dto.getLoanVdate(), dto.getLoanMdate()) > 0) {
 				errorList.add(new ValidMessage("loanMdate",
 						getMessage("REPORT_COMMON_E_0106", getMessage("贷款发放日期"),
-								"贷款到期日期")));
+								getMessage("OperationalLoanInfo002.loanMdate"))));
 			}
 		}
 		if(StringUtil.isEmpty(dto.getRateFixed())){
-			errorList.add(new ValidMessage("rateFixed", getMessage("REPORT_COMMON_E_0001",
-					"利率是否固定")));
+			errorList.add(new ValidMessage("rateFixed", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.rateFixed"))));
 		}
 		if(!StringUtil.isNotEmpty(dto.getRateLevel())){
-			errorList.add(new ValidMessage("rateLevel", getMessage("REPORT_COMMON_E_0001",
-					"利率水平(%)")));
+			errorList.add(new ValidMessage("assetCode", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.rateLevel"))));
 		}
 		if(StringUtil.isEmpty(dto.getLoanGuaranteeMode())){
-			errorList.add(new ValidMessage("loanGuaranteeMode", getMessage("REPORT_COMMON_E_0001",
-					"贷款担保方式")));
+			errorList.add(new ValidMessage("loanGuaranteeMode", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.loanGuaranteeMode"))));
 		}
 
 		if(StringUtil.isEmpty(dto.getOrigCcy())){
-			errorList.add(new ValidMessage("origCcy", getMessage("REPORT_COMMON_E_0001",
-					"原始合同币种代码")));
+			errorList.add(new ValidMessage("origCcy", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.origCcy"))));
 		}
 		if(!StringUtil.isNotEmpty(dto.getOrigContractAmount())){
-			errorList.add(new ValidMessage("origContractAmount", getMessage("REPORT_COMMON_E_0001",
-					"原始合同金额")));
+			errorList.add(new ValidMessage("origContractAmount", this.getMessage("REPORT_COMMON_E_0001",
+					this.getMessage("OperationalLoanInfo002.origContractAmount"))));
 		}
 		if(!StringUtil.isEmpty(dto.getOrigCcy()) &&  "CNY".equals(dto.getOrigCcy())){
 			if(StringUtil.isNotEmpty(dto.getOrigContractAmount()) && StringUtil.isNotEmpty(dto.getOrigContractAmountCny())){
@@ -333,8 +333,8 @@ public class OperationalLoanInfo001Validator implements BeanValidator{
 			}
 		}else {
 			if(!StringUtil.isNotEmpty(dto.getOrigContractAmountCny())){
-				errorList.add(new ValidMessage("origContractAmountCny", getMessage("REPORT_COMMON_E_0001",
-						"原始合同金额折人民币")));
+				errorList.add(new ValidMessage("origContractAmountCny", this.getMessage("REPORT_COMMON_E_0001",
+						this.getMessage("OperationalLoanInfo002.origContractAmountCny"))));
 			}
 		}
 		/*校验修复 zc add by start*/

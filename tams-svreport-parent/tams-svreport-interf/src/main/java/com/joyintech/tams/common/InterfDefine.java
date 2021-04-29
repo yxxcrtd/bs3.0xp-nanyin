@@ -67,7 +67,19 @@ public enum InterfDefine {
     产品分红交易接口数据("CHB_PRD_BONUS_DEAL","产品分红交易接口数据"),
 	监管区域客户组别接口数据("SALE_CUST_SVRREPORT","监管区域客户组别接口数据"),
 	产品利率基本信息接口数据("CHB_PRD_RATE","产品利率基本信息接口数据"),
-    资产利率基本信息接口数据("CHB_ASSET_RATE","资产利率基本信息接口数据")
+    资产利率基本信息接口数据("CHB_ASSET_RATE","资产利率基本信息接口数据"),
+
+    产品汇总交易接口数据("CHB_PRD_DEAL_TOTAL","产品汇总交易接口数据"),
+    //add by wm 20201113 增加一体化报送页面参数 start
+    产品申报登记信息("CHB_PRD_DECLARE_SUB","产品申报登记信息"),
+    产品发行登记信息("CHB_PRD_ISSUE_SUB","产品发行登记信息"),
+    产品募集总量登记信息("CHB_PRD_RAISETOT_SUB","产品募集总量登记信息"),
+    产品存续期登记信息("CHB_PRD_DEAL_SUB","产品存续期登记信息"),
+    产品终止登记信息("CHB_PRD_END_SUB","产品终止登记信息"),
+    资产要素登记信息("CHB_ASSET_INFO_SUB","资产要素登记信息"),
+    资产交易登记信息("CHB_INVEST_TRADE_SUB","资产交易登记信息"),
+    底层资产持仓登记("CHB_BOT_AST_POS_SUB","底层资产持仓登记"),
+    资产估值登记信息("CHB_AST_VAL_SUB","资产估值登记信息")
     ;
     
     /*两个属性*/

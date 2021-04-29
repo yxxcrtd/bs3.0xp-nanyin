@@ -92,7 +92,7 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 	 */
 	@Autowired
 	private InvestorsHoldInfoRegist001Mapper investorsHoldInfoRegist001Mapper;
-	
+
 	@Autowired
 	private CnBondInterfService cnBondInterfService;
 
@@ -114,40 +114,40 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 	 */
 	@Autowired
 	private CheckReport001Mapper checkReport001Mapper;
-	
-	@Autowired
-    private InvestorsHoldInfoDistinctService investorsHoldInfoDistinctService;
-	
-	@Autowired
-    private ChbBatchParaMapper chbBatchParaMapper;
-	
-    /**
-     * 长sql最大一次插入或者更新条数
-     */
-    @Value("${application.reportInsertLongCount}")
-    public  String reportInsertLongCount;
-    /**
-     * sql最大一次最大删除条数
-     */
-    @Value("${application.reportSelectOrDeleteCount}")
-    public  String reportSelectOrDeleteCount;
-    /**
-     * 短sql最大一次最大插入条数
-     */
-    @Value("${application.reportInsertCount}")
-    public  String reportInsertCount;
-    /**
-     * 短sql最大一次最大插入条数
-     */
-    @Value("${application.reportSelectOrDeleteCountForShenFen}")
-    public  int reportSelectOrDeleteCountForShenFen;
 
-    /**
-     * 检查通过标志
-     */
-    private static final String IS_SUCESS_INVESTORS_CHECK = "01";
+	@Autowired
+	private InvestorsHoldInfoDistinctService investorsHoldInfoDistinctService;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+	@Autowired
+	private ChbBatchParaMapper chbBatchParaMapper;
+
+	/**
+	 * 长sql最大一次插入或者更新条数
+	 */
+	@Value("${application.reportInsertLongCount}")
+	public  String reportInsertLongCount;
+	/**
+	 * sql最大一次最大删除条数
+	 */
+	@Value("${application.reportSelectOrDeleteCount}")
+	public  String reportSelectOrDeleteCount;
+	/**
+	 * 短sql最大一次最大插入条数
+	 */
+	@Value("${application.reportInsertCount}")
+	public  String reportInsertCount;
+	/**
+	 * 短sql最大一次最大插入条数
+	 */
+	@Value("${application.reportSelectOrDeleteCountForShenFen}")
+	public  int reportSelectOrDeleteCountForShenFen;
+
+	/**
+	 * 检查通过标志
+	 */
+	private static final String IS_SUCESS_INVESTORS_CHECK = "01";
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 查询页面数据
@@ -163,7 +163,7 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		//将发送状态改为空
 //		pageParam.put("sendStatus", "");
 		int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
-	    int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
+		int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
 		Page<InvestorsHoldInfoRegist001Dto> page = queryForPage(
 				pagenum,legth,()->investorsHoldInfoRegist001Mapper.selectAllData(pageParam));
 		dealDataList(page.getRoot(), false);
@@ -187,7 +187,7 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 				pageParam.put("investList", investList);
 			} catch (IOException e) {
 //				e.printStackTrace();
-	            logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(),e);
 			}
 		} else {
 			// 查询参数条件
@@ -242,7 +242,9 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 			item.setCcyCode(item.getCcy());
 			item.setStatus(SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, item.getStatus()));
 			item.setSendStatus(SysDataUtil.getNameFromDataDict(DictCode.报送状态, item.getSendStatus()));
-			item.setCcy(SysDataUtil.getNameFromDataDict(DictCode.币种_中债, item.getCcy()));
+			if(!isExport){
+				item.setCcy(SysDataUtil.getNameFromDataDict(DictCode.币种_中债, item.getCcy()));
+			}
 		});
 	}
 
@@ -313,7 +315,7 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 	 * @return 验证信息
 	 */
 	private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,
-			List<InvestorsHoldInfoRegist001Dto> entities,String orgCode) {
+												List<InvestorsHoldInfoRegist001Dto> entities,String orgCode) {
 		List<ExcelValidDto> checkResult = new ArrayList<>();
 		InvestorsHoldInfoRegist001Dto entity = null;
 		for (int i = 0; i < dataList.size(); i++) {
@@ -387,9 +389,9 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		//查询条数
 		int count=dataList.size();
 		if(count <= maxDataCountOneTime) {
-		    logger.info("investorsHoldInfoRegist001Mapper.selectAllDataKeyByList单次查询数据开始start===");
+			logger.info("investorsHoldInfoRegist001Mapper.selectAllDataKeyByList单次查询数据开始start===");
 //			dtoList.addAll(investorsHoldInfoRegist001Mapper.selectAllDataByList(true,dataList));
-		    dtoList.addAll(investorsHoldInfoRegist001Mapper.selectAllDataKeyByList(dataList));
+			dtoList.addAll(investorsHoldInfoRegist001Mapper.selectAllDataKeyByList(dataList));
 			logger.info("investorsHoldInfoRegist001Mapper.selectAllDataKeyByList单次查询数据结束End===");
 			return;
 		}
@@ -397,57 +399,57 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		// 获取所有持有日期
 		Map<String, String> holdDateMap = new HashMap<String, String>();
 		for (InvestorsHoldInfoRegist001Dto tempDataDto : dataList) {
-		    String holdDateStr = DateUtil.format(tempDataDto.getHoldDate());
-            if (!holdDateMap.containsKey(holdDateStr)) {
-                holdDateMap.put(holdDateStr, holdDateStr);
-            }
-        }
+			String holdDateStr = DateUtil.format(tempDataDto.getHoldDate());
+			if (!holdDateMap.containsKey(holdDateStr)) {
+				holdDateMap.put(holdDateStr, holdDateStr);
+			}
+		}
 
 		int dataCount = 0;
 		for (String holdDateStr : holdDateMap.keySet()) {
-		    Map<String, Object> paramMap = new HashMap<String, Object>();
-		    paramMap.put("holdDateStr", holdDateStr);
-		    dataCount = dataCount + investorsHoldInfoRegist001Mapper.selectAlreadySubmitDataCount(paramMap);
-        }
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("holdDateStr", holdDateStr);
+			dataCount = dataCount + investorsHoldInfoRegist001Mapper.selectAlreadySubmitDataCount(paramMap);
+		}
 
 		if (dataCount == 0) {
-		    return;
+			return;
 		}
 
 		List<InvestorsHoldInfoRegist001Dto> allSendDataList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
-        for (String holdDateStr : holdDateMap.keySet()) {
-            Map<String, Object> paramMap = new HashMap<String, Object>();
-            paramMap.put("holdDateStr", holdDateStr);
-            allSendDataList.addAll(investorsHoldInfoRegist001Mapper.selectAlreadySubmitData(paramMap));
-        }
+		for (String holdDateStr : holdDateMap.keySet()) {
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("holdDateStr", holdDateStr);
+			allSendDataList.addAll(investorsHoldInfoRegist001Mapper.selectAlreadySubmitData(paramMap));
+		}
 
-        if (allSendDataList.size() == 0) {
-            return;
-        }
+		if (allSendDataList.size() == 0) {
+			return;
+		}
 
-        // 报送数据key
-        Map<String, String> dataKeyMap = dataList.stream().collect(
-            JoyinCollectors.toMap(x -> x.getRegistBankCode()
-                    + GlobalConstant.UNDER_LINE + x.getPrdRegistCode()
-                    + GlobalConstant.UNDER_LINE + x.getIndentifyMark()
-                    + GlobalConstant.UNDER_LINE + x.getCcy()
-                    + GlobalConstant.UNDER_LINE + DateUtil.format(x.getHoldDate()),
-                x -> x.getRegistBankCode()
-                    + GlobalConstant.UNDER_LINE + x.getPrdRegistCode()
-                    + GlobalConstant.UNDER_LINE + x.getIndentifyMark()
-                    + GlobalConstant.UNDER_LINE + x.getCcy()
-                    + GlobalConstant.UNDER_LINE + DateUtil.format(x.getHoldDate())));
-        for (InvestorsHoldInfoRegist001Dto x : allSendDataList) {
-            String dataKey = x.getRegistBankCode()
-                + GlobalConstant.UNDER_LINE + x.getPrdRegistCode()
-                + GlobalConstant.UNDER_LINE + x.getIndentifyMark()
-                + GlobalConstant.UNDER_LINE + x.getCcy()
-                + GlobalConstant.UNDER_LINE + DateUtil.format(x.getHoldDate());
+		// 报送数据key
+		Map<String, String> dataKeyMap = dataList.stream().collect(
+				JoyinCollectors.toMap(x -> x.getRegistBankCode()
+								+ GlobalConstant.UNDER_LINE + x.getPrdRegistCode()
+								+ GlobalConstant.UNDER_LINE + x.getIndentifyMark()
+								+ GlobalConstant.UNDER_LINE + x.getCcy()
+								+ GlobalConstant.UNDER_LINE + DateUtil.format(x.getHoldDate()),
+						x -> x.getRegistBankCode()
+								+ GlobalConstant.UNDER_LINE + x.getPrdRegistCode()
+								+ GlobalConstant.UNDER_LINE + x.getIndentifyMark()
+								+ GlobalConstant.UNDER_LINE + x.getCcy()
+								+ GlobalConstant.UNDER_LINE + DateUtil.format(x.getHoldDate())));
+		for (InvestorsHoldInfoRegist001Dto x : allSendDataList) {
+			String dataKey = x.getRegistBankCode()
+					+ GlobalConstant.UNDER_LINE + x.getPrdRegistCode()
+					+ GlobalConstant.UNDER_LINE + x.getIndentifyMark()
+					+ GlobalConstant.UNDER_LINE + x.getCcy()
+					+ GlobalConstant.UNDER_LINE + DateUtil.format(x.getHoldDate());
 
-            if (dataKeyMap.containsKey(dataKey)) {
-                dtoList.add(x);
-            }
-        }
+			if (dataKeyMap.containsKey(dataKey)) {
+				dtoList.add(x);
+			}
+		}
 
 //		List<InvestorsHoldInfoRegist001Dto> newDataList=new ArrayList<InvestorsHoldInfoRegist001Dto>();
 //		newDataList.addAll(dataList);
@@ -492,14 +494,14 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		// 分批数
 		int part=count/maxDataCountOneTime;
 
-        for (int i = 0; i < part; i++ ) {
-        	dtoList.addAll(investorsHoldInfoRegist001Mapper.selectAllDataByList(false,newDataList.subList(0, maxDataCountOneTime)));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-        	dtoList.addAll(investorsHoldInfoRegist001Mapper.selectAllDataByList(false,newDataList));
-        }
+		for (int i = 0; i < part; i++ ) {
+			dtoList.addAll(investorsHoldInfoRegist001Mapper.selectAllDataByList(false,newDataList.subList(0, maxDataCountOneTime)));
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {
+			dtoList.addAll(investorsHoldInfoRegist001Mapper.selectAllDataByList(false,newDataList));
+		}
 
 
 
@@ -535,26 +537,26 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		}
 
 
-			exportParam.config(configFile).select(() -> investorsHoldInfoRegist001Mapper.selectAllData(pageParam));
+		exportParam.config(configFile).select(() -> investorsHoldInfoRegist001Mapper.selectAllData(pageParam));
 
 	}
 
-//    @Override
-//    public com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto> selectPageData(Map<String, Object> pageParam) {
-////        List<InvestorsHoldInfoRegist001Dto> data = restTemplate.postForList(
-////                    SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfoRegist/selectAllData",pageParam,
-////                    InvestorsHoldInfoRegist001Dto.class);
-////        com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto>();
-////        page.setRoot(data);
-////        page.setTotal(data.size());
-////        return  selectForPage(pageParam);
-//    	return null;
-//    }
-    
-    public List<InvestorsHoldInfoRegist001Dto> selectAllData(Map<String,Object> map){
-        return investorsHoldInfoRegist001Mapper.selectAllData(map);
-    }
-    
+	@Override
+	public com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto> selectPageData(Map<String, Object> pageParam) {
+		List<InvestorsHoldInfoRegist001Dto> data = simpleRestTemplate.postForList(
+				SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfoRegist/selectAllData",pageParam,
+				InvestorsHoldInfoRegist001Dto.class);
+		com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<InvestorsHoldInfoRegist001Dto>();
+		page.setRoot(data);
+//        page.setTotal(data.size());
+//        return  selectForPage(pageParam);
+		return page;
+	}
+
+	public List<InvestorsHoldInfoRegist001Dto> selectAllData(Map<String,Object> map){
+		return investorsHoldInfoRegist001Mapper.selectAllData(map);
+	}
+
 
 	@Override
 	protected void beforeCreateExcel(List<InvestorsHoldInfoRegist001Dto> contents) {
@@ -568,12 +570,12 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		}
 	}
 	private void dealBigDecmailData(List<InvestorsHoldInfoRegist001Dto> contents) {
-        contents.forEach(item -> {
-            item.setAmountExportExcel((item.getAmount()==null?null:item.getAmount().setScale(2,RoundingMode.HALF_UP).toString()));
-            item.setQtyExportExcel((item.getQty()==null?null:item.getQty().setScale(5,RoundingMode.HALF_UP).toString()));
-            item.setCnyAmtExportExcel((item.getCnyAmt()==null?null:item.getCnyAmt().setScale(2,RoundingMode.HALF_UP).toString()));
-        });
-    }
+		contents.forEach(item -> {
+			item.setAmountExportExcel((item.getAmount()==null?null:item.getAmount().setScale(2,RoundingMode.HALF_UP).toString()));
+			item.setQtyExportExcel((item.getQty()==null?null:item.getQty().setScale(5,RoundingMode.HALF_UP).toString()));
+			item.setCnyAmtExportExcel((item.getCnyAmt()==null?null:item.getCnyAmt().setScale(2,RoundingMode.HALF_UP).toString()));
+		});
+	}
 
 	/**
 	 * 报送前检查
@@ -625,16 +627,16 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 			selectAllDataBach(paramList,investorsHoldInfoRegistList);
 		}
 		else{
-		    // modify by etliu 20180818 start
+			// modify by etliu 20180818 start
 //			investorsHoldInfoRegistList = investorsHoldInfoRegist001Mapper.selectAllData(map);
-		    @SuppressWarnings("unchecked")
-            List<InvestorsHoldInfoRegist001Dto> batchExeDataList = (List<InvestorsHoldInfoRegist001Dto>) map.get("batchExeDataList");
-            if (StringUtil.isEmptyList(batchExeDataList)) {
-                investorsHoldInfoRegistList = investorsHoldInfoRegist001Mapper.selectAllData(map);
-            } else {
-                investorsHoldInfoRegistList = batchExeDataList;
-            }
-            // modify by etliu 20180818 end
+			@SuppressWarnings("unchecked")
+			List<InvestorsHoldInfoRegist001Dto> batchExeDataList = (List<InvestorsHoldInfoRegist001Dto>) map.get("batchExeDataList");
+			if (StringUtil.isEmptyList(batchExeDataList)) {
+				investorsHoldInfoRegistList = investorsHoldInfoRegist001Mapper.selectAllData(map);
+			} else {
+				investorsHoldInfoRegistList = batchExeDataList;
+			}
+			// modify by etliu 20180818 end
 		}
 		// 存储已经批量进行过数据检查的数据
 		List<String> isCheckedDataList = new ArrayList<>();
@@ -796,24 +798,24 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		List<InvestorsHoldInfoRegist001Dto> cklist=investorsHoldInfoDistinctService.checkBeforeSubmit(null,"01");
 		if(cklist!=null&&!cklist.isEmpty()){
 			for(InvestorsHoldInfoRegist001Dto single:cklist){
-	        	for(Iterator<ExcelValidDto> it=checkResult.iterator();it.hasNext();){
-	        		ExcelValidDto excelValidDto=it.next();
-	        		 String validKey = "产品登记编码 "+single.getPrdRegistCode()+GlobalConstant.COMMA
-				                +"识别标识 "+single.getIndentifyMark()+GlobalConstant.COMMA
-				                +"持有日期 "+DateUtil.format(single.getHoldDate(),"yyyy-MM-dd")+GlobalConstant.COMMA
-				                +"币种  "+single.getCcy()+GlobalConstant.COMMA
-				                +"登记银行代码  "+single.getRegistBankCode();
-	        		if(excelValidDto.getValidKey().equals(validKey)){
-	        			it.remove();
-	        		}
-	        	}
-	        }
+				for(Iterator<ExcelValidDto> it=checkResult.iterator();it.hasNext();){
+					ExcelValidDto excelValidDto=it.next();
+					String validKey = "产品登记编码 "+single.getPrdRegistCode()+GlobalConstant.COMMA
+							+"识别标识 "+single.getIndentifyMark()+GlobalConstant.COMMA
+							+"持有日期 "+DateUtil.format(single.getHoldDate(),"yyyy-MM-dd")+GlobalConstant.COMMA
+							+"币种  "+single.getCcy()+GlobalConstant.COMMA
+							+"登记银行代码  "+single.getRegistBankCode();
+					if(excelValidDto.getValidKey().equals(validKey)){
+						it.remove();
+					}
+				}
+			}
 			for(InvestorsHoldInfoRegist001Dto single:cklist){
-				  String validKey = "产品登记编码 "+single.getPrdRegistCode()+GlobalConstant.COMMA
-			                +"识别标识 "+single.getIndentifyMark()+GlobalConstant.COMMA
-			                +"持有日期 "+DateUtil.format(single.getHoldDate(),"yyyy-MM-dd")+GlobalConstant.COMMA
-			                +"币种  "+single.getCcy()+GlobalConstant.COMMA
-			                +"登记银行代码  "+single.getRegistBankCode();
+				String validKey = "产品登记编码 "+single.getPrdRegistCode()+GlobalConstant.COMMA
+						+"识别标识 "+single.getIndentifyMark()+GlobalConstant.COMMA
+						+"持有日期 "+DateUtil.format(single.getHoldDate(),"yyyy-MM-dd")+GlobalConstant.COMMA
+						+"币种  "+single.getCcy()+GlobalConstant.COMMA
+						+"登记银行代码  "+single.getRegistBankCode();
 				ExcelValidDto ed=new ExcelValidDto();
 				ed.setValidKey(validKey);
 				ed.setErrorInfo("检查不通过，该投资者存在多个识别标识！");
@@ -851,16 +853,16 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 			selectAllDataBach(paramList,investorsHoldInfoRegistList);
 		}
 		else{
-		    // modify by etliu 20180818 start
+			// modify by etliu 20180818 start
 //			investorsHoldInfoRegistList = investorsHoldInfoRegist001Mapper.selectAllData(map);
-		    @SuppressWarnings("unchecked")
-            List<InvestorsHoldInfoRegist001Dto> batchExeNeedSendDataList = (List<InvestorsHoldInfoRegist001Dto>) map.get("batchExeNeedSendDataList");
-            if (StringUtil.isEmptyList(batchExeNeedSendDataList)) {
-                investorsHoldInfoRegistList = investorsHoldInfoRegist001Mapper.selectAllData(map);
-            } else {
-                investorsHoldInfoRegistList = batchExeNeedSendDataList;
-            }
-            // modify by etliu 20180818 end
+			@SuppressWarnings("unchecked")
+			List<InvestorsHoldInfoRegist001Dto> batchExeNeedSendDataList = (List<InvestorsHoldInfoRegist001Dto>) map.get("batchExeNeedSendDataList");
+			if (StringUtil.isEmptyList(batchExeNeedSendDataList)) {
+				investorsHoldInfoRegistList = investorsHoldInfoRegist001Mapper.selectAllData(map);
+			} else {
+				investorsHoldInfoRegistList = batchExeNeedSendDataList;
+			}
+			// modify by etliu 20180818 end
 		}
 
 		Map<String, List<InvestorsHoldInfoRegist001Dto>> resultMap = new HashMap<>();
@@ -932,11 +934,11 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		int maxDataCountOneTime = Integer.parseInt(reportInsertCount);
 		int dataCount = investList.size();
 		if (dataCount <= maxDataCountOneTime) {
-		    // modify by etliu 20180818 start
+			// modify by etliu 20180818 start
 //			investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeq(sendStatus, investList);
 //			;
-		    investorsHoldInfoRegist001Mapper.updateInterfSeq(investList);
-            // modify by etliu 20180818 end
+			investorsHoldInfoRegist001Mapper.updateInterfSeq(investList);
+			// modify by etliu 20180818 end
 			return;
 		}
 
@@ -947,25 +949,25 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		// 分批处理
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++) {
-		    // modify by etliu 20180818 start
+			// modify by etliu 20180818 start
 //			investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeq(sendStatus,
 //					newDataList.subList(0, maxDataCountOneTime));
 			logger.info("单次更新登记表start===");
-		    investorsHoldInfoRegist001Mapper.updateInterfSeq(newDataList.subList(0, maxDataCountOneTime));
-        // modify by etliu 20180818 end
+			investorsHoldInfoRegist001Mapper.updateInterfSeq(newDataList.subList(0, maxDataCountOneTime));
+			// modify by etliu 20180818 end
 			newDataList.subList(0, maxDataCountOneTime).clear();
 			logger.info("单次更新登记表end===");
 		}
 		// 最后剩下的数据
 		if (CollectionUtils.isNotEmpty(newDataList)) {
-		    // modify by etliu 20180818 start
+			// modify by etliu 20180818 start
 			logger.info("单次更新登记表start===");
 			investorsHoldInfoRegist001Mapper.updateInterfSeq(newDataList);
 			logger.info("单次更新登记表end===");
 
 //			;
 //		    investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
-            // modify by etliu 20180818 end
+			// modify by etliu 20180818 end
 		}
 	}
 	/**
@@ -984,21 +986,21 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		int maxDataCountOneTime = reportSelectOrDeleteCountForShenFen;
 		int dataCount = investList.size();
 		if (dataCount <= maxDataCountOneTime) {
-		    // modify by etliu 20180818 start
+			// modify by etliu 20180818 start
 //			investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeq(sendStatus, investList);
 //			;
-		    investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
-            // modify by etliu 20180818 end
+			investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
+			// modify by etliu 20180818 end
 			return;
 		}
 
 		// 对于批处理报送全量的数据，直接更新所有检查通过的未报送数据，状态修改为接口报送
 		if (isSendAllData) {
-		    logger.info("updateAllInterfSubmitAndSeqBatch全量更新登记表start===");
-		    investorsHoldInfoRegist001Mapper.updateAllInterfSubmitAndSeqBatch(sendStatus);
-		    logger.info("updateAllInterfSubmitAndSeqBatch全量更新登记表end===");
+			logger.info("updateAllInterfSubmitAndSeqBatch全量更新登记表start===");
+			investorsHoldInfoRegist001Mapper.updateAllInterfSubmitAndSeqBatch(sendStatus);
+			logger.info("updateAllInterfSubmitAndSeqBatch全量更新登记表end===");
 
-		    return;
+			return;
 		}
 
 		List<InvestorsHoldInfoRegist001Dto> newDataList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
@@ -1007,26 +1009,26 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		// 分批处理
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++) {
-		    // modify by etliu 20180818 start
+			// modify by etliu 20180818 start
 //			investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeq(sendStatus,
 //					newDataList.subList(0, maxDataCountOneTime));
 			logger.info("单次更新登记表start===");
-		    investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus,
-                newDataList.subList(0, maxDataCountOneTime));
-        // modify by etliu 20180818 end
+			investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus,
+					newDataList.subList(0, maxDataCountOneTime));
+			// modify by etliu 20180818 end
 			newDataList.subList(0, maxDataCountOneTime).clear();
 			logger.info("单次更新登记表end===");
 		}
 		// 最后剩下的数据
 		if (CollectionUtils.isNotEmpty(newDataList)) {
-		    // modify by etliu 20180818 start
+			// modify by etliu 20180818 start
 			logger.info("单次更新登记表start===");
 			investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
 			logger.info("单次更新登记表end===");
 
 //			;
 //		    investorsHoldInfoRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
-            // modify by etliu 20180818 end
+			// modify by etliu 20180818 end
 		}
 	}
 
@@ -1040,7 +1042,7 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	public void doUpdateSubmtitStatus(List<InvestorsHoldInfoRegist001Dto> investList, boolean isSendAllData, List<InvestorsHoldInfoRegist001Dto> unSeqList) {
-	    // modfiy by etliu 20180818 start
+		// modfiy by etliu 20180818 start
 		// 检查报送的数据中是否存在已报送数据
 //		Map<String, Object> map = new HashMap<>();
 //		map.put("investList", investList);
@@ -1072,29 +1074,29 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 //			this.deleteSubmitRegistBatch(list);
 //			logger.info("deleteSubmitRegistBatch登记表数据删除end===");
 //		}
-        // modfiy by etliu 20180818 end
-	    if (isSendAllData) {
-	        logger.info("deleteAllAlreadySubmitRegistData删除重复已报送数据start===");
-	        investorsHoldInfoRegist001Mapper.deleteAllAlreadySubmitRegistData();
-	        logger.info("deleteAllAlreadySubmitRegistData删除重复已报送数据end===");
-	    }
-	    else {
-            List<InvestorsHoldInfoRegist001Dto> unSumitList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
-            for (InvestorsHoldInfoRegist001Dto investorsHoldInfoRegist001Dto : investList) {
-                if (StringUtil.isEmpty(investorsHoldInfoRegist001Dto.getSubmitFeedbackStatus())) {
-                    unSumitList.add(investorsHoldInfoRegist001Dto);
-                }
-            }
-            logger.info("selectAllDataBachSend查询数据开始start===");
-            List<InvestorsHoldInfoRegist001Dto> list = new ArrayList<InvestorsHoldInfoRegist001Dto>();
-            this.selectAllDataBachSend(unSumitList, list);
-            logger.info("selectAllDataBachSend查询数据结束end===");
-            if (CollectionUtils.isNotEmpty(list)) {
-                logger.info("deleteSubmitRegistBatch登记表数据删除start===");
-                this.deleteSubmitRegistBatch(list);
-                logger.info("deleteSubmitRegistBatch登记表数据删除end===");
-            }
-        }
+		// modfiy by etliu 20180818 end
+		if (isSendAllData) {
+			logger.info("deleteAllAlreadySubmitRegistData删除重复已报送数据start===");
+			investorsHoldInfoRegist001Mapper.deleteAllAlreadySubmitRegistData();
+			logger.info("deleteAllAlreadySubmitRegistData删除重复已报送数据end===");
+		}
+		else {
+			List<InvestorsHoldInfoRegist001Dto> unSumitList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+			for (InvestorsHoldInfoRegist001Dto investorsHoldInfoRegist001Dto : investList) {
+				if (StringUtil.isEmpty(investorsHoldInfoRegist001Dto.getSubmitFeedbackStatus())) {
+					unSumitList.add(investorsHoldInfoRegist001Dto);
+				}
+			}
+			logger.info("selectAllDataBachSend查询数据开始start===");
+			List<InvestorsHoldInfoRegist001Dto> list = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+			this.selectAllDataBachSend(unSumitList, list);
+			logger.info("selectAllDataBachSend查询数据结束end===");
+			if (CollectionUtils.isNotEmpty(list)) {
+				logger.info("deleteSubmitRegistBatch登记表数据删除start===");
+				this.deleteSubmitRegistBatch(list);
+				logger.info("deleteSubmitRegistBatch登记表数据删除end===");
+			}
+		}
 
 		// 批量更新报送状态
 		// investorsHoldInfoRegist001Mapper.updateInterfSubmit("02", investList);
@@ -1136,7 +1138,7 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++) {
 //			investorsHoldInfoRegist001Mapper.deleteSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
-		    investorsHoldInfoRegist001Mapper.deleteSubmitRegistByPK(newDataList.subList(0, maxDataCountOneTime));
+			investorsHoldInfoRegist001Mapper.deleteSubmitRegistByPK(newDataList.subList(0, maxDataCountOneTime));
 			newDataList.subList(0, maxDataCountOneTime).clear();
 		}
 		// 最后剩下的数据
@@ -1196,10 +1198,10 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		ChbSubmitStatus chbSubmitStatus = null;
 		List<ChbSubmitStatus> listStatus = new ArrayList<ChbSubmitStatus>();
 
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
-        List<String> sumitSeqList = new ArrayList<String>();
-        List<InvestorsHoldInfoRegist001Dto> alreadySendList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
-        List<InvestorsHoldInfoRegist001Dto> notSendList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+		// 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
+		List<String> sumitSeqList = new ArrayList<String>();
+		List<InvestorsHoldInfoRegist001Dto> alreadySendList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+		List<InvestorsHoldInfoRegist001Dto> notSendList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
 
 		for (InvestorsHoldInfoRegist001Dto dto : investorsHoldInfoRegistList) {
 			// 报送状态表插入组装
@@ -1214,12 +1216,12 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 			chbSubmitStatus.setSubmitType(DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
 
 			if (StringUtil.equals(DictCodeListExt2.报送状态_未报送.getValue(), dto.getSendStatus())) {
-			    listStatus.add(chbSubmitStatus);
-			    notSendList.add(dto);
+				listStatus.add(chbSubmitStatus);
+				notSendList.add(dto);
 			}
 			else {
-			    sumitSeqList.add(dto.getSumitSeq());
-			    alreadySendList.add(dto);
+				sumitSeqList.add(dto.getSumitSeq());
+				alreadySendList.add(dto);
 			}
 		}
 		// 检查报送的数据中是否存在已报送数据
@@ -1254,65 +1256,65 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 //                }
 //            }
 //        }
-        // 未报送的数据 插入报送状态表
-        if (!StringUtil.isEmptyList(listStatus)) {
-            // 分批处理
-            int maxDataCountOneTime = 50;
-            int dataCount = listStatus.size();
-            if (dataCount <= maxDataCountOneTime) {
-                investorsHoldInfoRegist001Mapper.insertSubmitStatus(listStatus);
-            }
-            else {
-                List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
-                newDataList.addAll(listStatus);
+		// 未报送的数据 插入报送状态表
+		if (!StringUtil.isEmptyList(listStatus)) {
+			// 分批处理
+			int maxDataCountOneTime = 50;
+			int dataCount = listStatus.size();
+			if (dataCount <= maxDataCountOneTime) {
+				investorsHoldInfoRegist001Mapper.insertSubmitStatus(listStatus);
+			}
+			else {
+				List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
+				newDataList.addAll(listStatus);
 
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    investorsHoldInfoRegist001Mapper.insertSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    investorsHoldInfoRegist001Mapper.insertSubmitStatus(newDataList);
-                }
-            }
-        }
+				// 分批处理
+				int part = dataCount / maxDataCountOneTime; // 分批数
+				for (int i = 0; i < part; i++ ) {
+					investorsHoldInfoRegist001Mapper.insertSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
+					newDataList.subList(0, maxDataCountOneTime).clear();
+				}
+				// 最后剩下的数据
+				if (CollectionUtils.isNotEmpty(newDataList)) {
+					investorsHoldInfoRegist001Mapper.insertSubmitStatus(newDataList);
+				}
+			}
+		}
 
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
-        if (!StringUtil.isEmptyList(sumitSeqList)) {
-            // 分批处理
-            int maxDataCountOneTime = 300;
-            int dataCount = sumitSeqList.size();
-            if (dataCount <= maxDataCountOneTime) {
-                investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(sumitSeqList);
-            }
-            else {
-                List<String> newDataList = new ArrayList<String>();
-                newDataList.addAll(sumitSeqList);
+		// 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
+		if (!StringUtil.isEmptyList(sumitSeqList)) {
+			// 分批处理
+			int maxDataCountOneTime = 300;
+			int dataCount = sumitSeqList.size();
+			if (dataCount <= maxDataCountOneTime) {
+				investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(sumitSeqList);
+			}
+			else {
+				List<String> newDataList = new ArrayList<String>();
+				newDataList.addAll(sumitSeqList);
 
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(newDataList);
-                }
-            }
-        }
-        /*手工处理增加留痕处理以及已报送数据登记表删除 add by yuluan 2019-03-29 begin*/
-        SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
+				// 分批处理
+				int part = dataCount / maxDataCountOneTime; // 分批数
+				for (int i = 0; i < part; i++ ) {
+					investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(newDataList.subList(0, maxDataCountOneTime));
+					newDataList.subList(0, maxDataCountOneTime).clear();
+				}
+				// 最后剩下的数据
+				if (CollectionUtils.isNotEmpty(newDataList)) {
+					investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(newDataList);
+				}
+			}
+		}
+		/*手工处理增加留痕处理以及已报送数据登记表删除 add by yuluan 2019-03-29 begin*/
+		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
 //		List<InvestorsHoldInfoRegist001Dto> list = investorsHoldInfoRegist001Mapper.selectAllData(map);
-        List<String> keys1 = new ArrayList<>();
-    	for(InvestorsHoldInfoRegist001Dto single:investorsHoldInfoRegistList){
+		List<String> keys1 = new ArrayList<>();
+		for(InvestorsHoldInfoRegist001Dto single:investorsHoldInfoRegistList){
 			String key=single.getRegistBankCode()+GlobalConstant.UNDER_LINE +single.getIndentifyMark()
-			+GlobalConstant.UNDER_LINE +single.getPrdRegistCode()
-			+GlobalConstant.UNDER_LINE +single.getCcy()+GlobalConstant.UNDER_LINE 
-			+sdf.format(single.getHoldDate());
-			
+					+GlobalConstant.UNDER_LINE +single.getPrdRegistCode()
+					+GlobalConstant.UNDER_LINE +single.getCcy()+GlobalConstant.UNDER_LINE
+					+sdf.format(single.getHoldDate());
+
 			keys1.add(key);
 		}
 		if (CollectionUtils.isNotEmpty(investorsHoldInfoRegistList)) {
@@ -1328,7 +1330,7 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 //		// 插入报送状态表
 //		investorsHoldInfoRegist001Mapper.insertSubmitStatus(listStatus);
 	}
-	
+
 	/**
 	 * 手工处理符合查询条件的全部数据
 	 * @param map
@@ -1336,17 +1338,17 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 	 */
 	@SuppressWarnings("unchecked")
 	public void updateSumStausAll(Map<String, Object> map){
-        //先查询出参数表的参数
-        List<ChbBatchPara> chbBatchParas=chbBatchParaMapper.selectAllData();
-        if(!StringUtil.isEmptyList(chbBatchParas)){
-            for(ChbBatchPara single:chbBatchParas){
-                if(single.getTaskId().equals(BatchBeanName.投资者持有信息登记手工处理.getTaskId())){
-                    Map<String,Object> ssmap=(Map<String,Object>)JSON.parse(single.getParas());
-                    map=ssmap;
-                }
-            }
-        }
-		
+		//先查询出参数表的参数
+		List<ChbBatchPara> chbBatchParas=chbBatchParaMapper.selectAllData();
+		if(!StringUtil.isEmptyList(chbBatchParas)){
+			for(ChbBatchPara single:chbBatchParas){
+				if(single.getTaskId().equals(BatchBeanName.投资者持有信息登记手工处理.getTaskId())){
+					Map<String,Object> ssmap=(Map<String,Object>)JSON.parse(single.getParas());
+					map=ssmap;
+				}
+			}
+		}
+
 		dealSearchParam(map);
 
 		List<InvestorsHoldInfoRegist001Dto> investorsHoldInfoRegistList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
@@ -1355,10 +1357,10 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		ChbSubmitStatus chbSubmitStatus = null;
 		List<ChbSubmitStatus> listStatus = new ArrayList<ChbSubmitStatus>();
 
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
-        List<String> sumitSeqList = new ArrayList<String>();
-        List<InvestorsHoldInfoRegist001Dto> alreadySendList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
-        List<InvestorsHoldInfoRegist001Dto> notSendList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+		// 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
+		List<String> sumitSeqList = new ArrayList<String>();
+		List<InvestorsHoldInfoRegist001Dto> alreadySendList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+		List<InvestorsHoldInfoRegist001Dto> notSendList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
 
 		for (InvestorsHoldInfoRegist001Dto dto : investorsHoldInfoRegistList) {
 			// 报送状态表插入组装
@@ -1373,126 +1375,126 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 			chbSubmitStatus.setSubmitType(DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
 
 			if (StringUtil.equals(DictCodeListExt2.报送状态_未报送.getValue(), dto.getSendStatus())) {
-			    listStatus.add(chbSubmitStatus);
-			    notSendList.add(dto);
+				listStatus.add(chbSubmitStatus);
+				notSendList.add(dto);
 			}
 			else {
-			    sumitSeqList.add(dto.getSumitSeq());
-			    alreadySendList.add(dto);
+				sumitSeqList.add(dto.getSumitSeq());
+				alreadySendList.add(dto);
 			}
 		}
 		// 检查报送的数据中是否存在已报送数据
 		map.put("checkFlag", true);
 
 
-        // 未报送的数据 插入报送状态表
-        if (!StringUtil.isEmptyList(listStatus)) {
-            // 分批处理
-            int maxDataCountOneTime = 50;
-            int dataCount = listStatus.size();
-            if (dataCount <= maxDataCountOneTime) {
-                investorsHoldInfoRegist001Mapper.insertSubmitStatus(listStatus);
-            }
-            else {
-                List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
-                newDataList.addAll(listStatus);
+		// 未报送的数据 插入报送状态表
+		if (!StringUtil.isEmptyList(listStatus)) {
+			// 分批处理
+			int maxDataCountOneTime = 50;
+			int dataCount = listStatus.size();
+			if (dataCount <= maxDataCountOneTime) {
+				investorsHoldInfoRegist001Mapper.insertSubmitStatus(listStatus);
+			}
+			else {
+				List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
+				newDataList.addAll(listStatus);
 
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    investorsHoldInfoRegist001Mapper.insertSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    investorsHoldInfoRegist001Mapper.insertSubmitStatus(newDataList);
-                }
-            }
-        }
+				// 分批处理
+				int part = dataCount / maxDataCountOneTime; // 分批数
+				for (int i = 0; i < part; i++ ) {
+					investorsHoldInfoRegist001Mapper.insertSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
+					newDataList.subList(0, maxDataCountOneTime).clear();
+				}
+				// 最后剩下的数据
+				if (CollectionUtils.isNotEmpty(newDataList)) {
+					investorsHoldInfoRegist001Mapper.insertSubmitStatus(newDataList);
+				}
+			}
+		}
 
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
-        if (!StringUtil.isEmptyList(sumitSeqList)) {
-            // 分批处理
-            int maxDataCountOneTime = 300;
-            int dataCount = sumitSeqList.size();
-            if (dataCount <= maxDataCountOneTime) {
-                investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(sumitSeqList);
-            }
-            else {
-                List<String> newDataList = new ArrayList<String>();
-                newDataList.addAll(sumitSeqList);
+		// 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
+		if (!StringUtil.isEmptyList(sumitSeqList)) {
+			// 分批处理
+			int maxDataCountOneTime = 300;
+			int dataCount = sumitSeqList.size();
+			if (dataCount <= maxDataCountOneTime) {
+				investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(sumitSeqList);
+			}
+			else {
+				List<String> newDataList = new ArrayList<String>();
+				newDataList.addAll(sumitSeqList);
 
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(newDataList);
-                }
-            }
-        }
-        /*手工处理增加留痕处理以及已报送数据登记表删除 add by yuluan 2019-03-29 begin*/
-        SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
+				// 分批处理
+				int part = dataCount / maxDataCountOneTime; // 分批数
+				for (int i = 0; i < part; i++ ) {
+					investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(newDataList.subList(0, maxDataCountOneTime));
+					newDataList.subList(0, maxDataCountOneTime).clear();
+				}
+				// 最后剩下的数据
+				if (CollectionUtils.isNotEmpty(newDataList)) {
+					investorsHoldInfoRegist001Mapper.updateSubmitStatusToOk(newDataList);
+				}
+			}
+		}
+		/*手工处理增加留痕处理以及已报送数据登记表删除 add by yuluan 2019-03-29 begin*/
+		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
 //		List<InvestorsHoldInfoRegist001Dto> list = investorsHoldInfoRegist001Mapper.selectAllData(map);
-        List<String> keys1 = new ArrayList<>();
-    	for(InvestorsHoldInfoRegist001Dto single:investorsHoldInfoRegistList){
+		List<String> keys1 = new ArrayList<>();
+		for(InvestorsHoldInfoRegist001Dto single:investorsHoldInfoRegistList){
 			String key=single.getRegistBankCode()+GlobalConstant.UNDER_LINE +single.getIndentifyMark()
-			+GlobalConstant.UNDER_LINE +single.getPrdRegistCode()
-			+GlobalConstant.UNDER_LINE +single.getCcy()+GlobalConstant.UNDER_LINE 
-			+sdf.format(single.getHoldDate());
-			
+					+GlobalConstant.UNDER_LINE +single.getPrdRegistCode()
+					+GlobalConstant.UNDER_LINE +single.getCcy()+GlobalConstant.UNDER_LINE
+					+sdf.format(single.getHoldDate());
+
 			keys1.add(key);
 		}
 		if (CollectionUtils.isNotEmpty(investorsHoldInfoRegistList)) {
-			 int maxDataCountOneTime = 300;
-	            int dataCount = keys1.size();
-	            if (dataCount <= maxDataCountOneTime) {
-	            	// 讲第一次报送的数据数据履历表
-	            	investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegistHis(keys1);
-	            	// 删除已报送数据
-	            	investorsHoldInfoRegist001Mapper.deleteSubmitRegist(keys1);
-	            	
-	            }else {
-	            	 List<String> newDataList = new ArrayList<String>();
-	                 newDataList.addAll(keys1);
-	              // 分批处理
-	                 int part = dataCount / maxDataCountOneTime; // 分批数
-	                 for (int i = 0; i < part; i++ ) {
-	                	// 讲第一次报送的数据数据履历表
-	 	            	investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegistHis(newDataList.subList(0, maxDataCountOneTime));
-	 	            	// 删除已报送数据
-	 	            	investorsHoldInfoRegist001Mapper.deleteSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
-	                	 newDataList.subList(0, maxDataCountOneTime).clear();
-	                 }
-	                 // 最后剩下的数据
-	                 if (CollectionUtils.isNotEmpty(newDataList)) {
-	                	// 讲第一次报送的数据数据履历表
-	 	            	investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegistHis(newDataList);
-	 	            	// 删除已报送数据
-	 	            	investorsHoldInfoRegist001Mapper.deleteSubmitRegist(newDataList); 
-	                 }
-	            }
+			int maxDataCountOneTime = 300;
+			int dataCount = keys1.size();
+			if (dataCount <= maxDataCountOneTime) {
+				// 讲第一次报送的数据数据履历表
+				investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegistHis(keys1);
+				// 删除已报送数据
+				investorsHoldInfoRegist001Mapper.deleteSubmitRegist(keys1);
+
+			}else {
+				List<String> newDataList = new ArrayList<String>();
+				newDataList.addAll(keys1);
+				// 分批处理
+				int part = dataCount / maxDataCountOneTime; // 分批数
+				for (int i = 0; i < part; i++ ) {
+					// 讲第一次报送的数据数据履历表
+					investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegistHis(newDataList.subList(0, maxDataCountOneTime));
+					// 删除已报送数据
+					investorsHoldInfoRegist001Mapper.deleteSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
+					newDataList.subList(0, maxDataCountOneTime).clear();
+				}
+				// 最后剩下的数据
+				if (CollectionUtils.isNotEmpty(newDataList)) {
+					// 讲第一次报送的数据数据履历表
+					investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegistHis(newDataList);
+					// 删除已报送数据
+					investorsHoldInfoRegist001Mapper.deleteSubmitRegist(newDataList);
+				}
+			}
 		}
 		/*手工处理增加留痕处理以及已报送数据登记表删除 add by yuluan 2019-03-29 end*/
 		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), investorsHoldInfoRegistList, false);
-        
+
 		if(!StringUtil.isEmptyList(chbBatchParas)){
-            for(ChbBatchPara single:chbBatchParas){
-                    chbBatchParaMapper.deleteByPrimaryKey(single.getParaId());
-            }
-        }
+			for(ChbBatchPara single:chbBatchParas){
+				chbBatchParaMapper.deleteByPrimaryKey(single.getParaId());
+			}
+		}
 	}
 
-    /**
-     * 对于未报送的数据进行手工处理数据库处理
-     *
-     * @param equiytRegistList 未报送的数据
-     * @see
-     * @since 1.0
-     */
+	/**
+	 * 对于未报送的数据进行手工处理数据库处理
+	 *
+	 * @param equiytRegistList 未报送的数据
+	 * @see
+	 * @since 1.0
+	 */
 //    private void doMannulForNotSubmitData(Map<String, Object> map) {
 //        List<InvestorsHoldInfoRegist001Dto> list = investorsHoldInfoRegist001Mapper.selectAllData(map);
 //        if (CollectionUtils.isNotEmpty(list)) {
@@ -1550,7 +1552,7 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegist(list);
 		investorsHoldInfoRegist001Mapper.deleteMannulSubmitRegist(listStatus);
 	}
-	
+
 	/**
 	 * 默认取消手工处理全部
 	 * @param map
@@ -1568,220 +1570,220 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 			}
 		}
 		//分批次处理
-		
-		int maxDataCountOneTime = 50;
-        int dataCount = listStatus.size();
-        int dataInvestorsHoldInfoCount = investorsHoldInfoRegistList.size();
-        if(dataInvestorsHoldInfoCount <= maxDataCountOneTime){
-        	investorsHoldInfoRegist001Mapper.updateInvestRegist(investorsHoldInfoRegistList);
-    		// 将履历表中履历号最大的数据挪回登记表
-    		investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegist(investorsHoldInfoRegistList);
-        }else{
-        	List<InvestorsHoldInfoRegist001Dto> newDataInvestorsHoldInfoList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
-        	newDataInvestorsHoldInfoList.addAll(investorsHoldInfoRegistList);
-        	// 分批处理
-            int part = dataInvestorsHoldInfoCount / maxDataCountOneTime; // 分批数
-            for (int i = 0; i < part; i++ ) {
-            	investorsHoldInfoRegist001Mapper.updateInvestRegist(newDataInvestorsHoldInfoList.subList(0, maxDataCountOneTime));
-            	investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegist(newDataInvestorsHoldInfoList.subList(0, maxDataCountOneTime));
-            	newDataInvestorsHoldInfoList.subList(0, maxDataCountOneTime).clear();
-            }
-            // 最后剩下的数据
-            if (CollectionUtils.isNotEmpty(newDataInvestorsHoldInfoList)) {
-            	investorsHoldInfoRegist001Mapper.updateInvestRegist(newDataInvestorsHoldInfoList);
-            	investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegist(newDataInvestorsHoldInfoList);
-            }
-        }
-        if (dataCount <= maxDataCountOneTime) {
-            investorsHoldInfoRegist001Mapper.deleteMannulSubmitRegist(listStatus);
-        }
-        else {
-            List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
-            newDataList.addAll(listStatus);
 
-            // 分批处理
-            int part = dataCount / maxDataCountOneTime; // 分批数
-            for (int i = 0; i < part; i++ ) {
-            	investorsHoldInfoRegist001Mapper.deleteMannulSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
-                newDataList.subList(0, maxDataCountOneTime).clear();
-            }
-            // 最后剩下的数据
-            if (CollectionUtils.isNotEmpty(newDataList)) {
-                investorsHoldInfoRegist001Mapper.deleteMannulSubmitRegist(newDataList);
-            }
-        }
+		int maxDataCountOneTime = 50;
+		int dataCount = listStatus.size();
+		int dataInvestorsHoldInfoCount = investorsHoldInfoRegistList.size();
+		if(dataInvestorsHoldInfoCount <= maxDataCountOneTime){
+			investorsHoldInfoRegist001Mapper.updateInvestRegist(investorsHoldInfoRegistList);
+			// 将履历表中履历号最大的数据挪回登记表
+			investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegist(investorsHoldInfoRegistList);
+		}else{
+			List<InvestorsHoldInfoRegist001Dto> newDataInvestorsHoldInfoList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+			newDataInvestorsHoldInfoList.addAll(investorsHoldInfoRegistList);
+			// 分批处理
+			int part = dataInvestorsHoldInfoCount / maxDataCountOneTime; // 分批数
+			for (int i = 0; i < part; i++ ) {
+				investorsHoldInfoRegist001Mapper.updateInvestRegist(newDataInvestorsHoldInfoList.subList(0, maxDataCountOneTime));
+				investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegist(newDataInvestorsHoldInfoList.subList(0, maxDataCountOneTime));
+				newDataInvestorsHoldInfoList.subList(0, maxDataCountOneTime).clear();
+			}
+			// 最后剩下的数据
+			if (CollectionUtils.isNotEmpty(newDataInvestorsHoldInfoList)) {
+				investorsHoldInfoRegist001Mapper.updateInvestRegist(newDataInvestorsHoldInfoList);
+				investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegist(newDataInvestorsHoldInfoList);
+			}
+		}
+		if (dataCount <= maxDataCountOneTime) {
+			investorsHoldInfoRegist001Mapper.deleteMannulSubmitRegist(listStatus);
+		}
+		else {
+			List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
+			newDataList.addAll(listStatus);
+
+			// 分批处理
+			int part = dataCount / maxDataCountOneTime; // 分批数
+			for (int i = 0; i < part; i++ ) {
+				investorsHoldInfoRegist001Mapper.deleteMannulSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
+				newDataList.subList(0, maxDataCountOneTime).clear();
+			}
+			// 最后剩下的数据
+			if (CollectionUtils.isNotEmpty(newDataList)) {
+				investorsHoldInfoRegist001Mapper.deleteMannulSubmitRegist(newDataList);
+			}
+		}
 //		investorsHoldInfoRegist001Mapper.updateInvestRegist(investorsHoldInfoRegistList);
 //		// 将履历表中履历号最大的数据挪回登记表
 //		investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegist(investorsHoldInfoRegistList);
 //		investorsHoldInfoRegist001Mapper.deleteMannulSubmitRegist(listStatus);
 	}
-    /**
-     * 配置项中非空处理
-     * @param Count
-     * @param flag
-     * @return
-     */
-    public int parsToInt(String count,String flag){
-   	 if(StringUtil.isNotEmpty(count)&&Integer.parseInt(count)<=0){
-   		 if("1".equals(flag)){
-   	         	return 20;
-   		 }
-   		 else if("1".equals(flag)){
-	         	return 500;
-   		 }
-   		 else {
-	         	return 100;
-   		 }
-        }
-        else{
-        	return Integer.parseInt(count);
-        }
-   }
-    
-    
-    
-    
-    
- 	/**
- 	 * 发送某登记银行代码的数据
- 	 *
- 	 * @param registList
- 	 *            发送的某个机构的投资者身份信息
- 	 * @see
- 	 * @since 1.0
- 	 */
- 	public void sendInvestorsHoldCHB(List<InvestorsHoldInfoRegist001Dto> registList, boolean isSendAllData) {
-        if (StringUtil.isEmptyList(registList)) {
-            return;
-        }
-        int sendCbMaxDataCount = Integer.valueOf(
-            SvrDataUtil.getSysParam(ReportGlobalConstant.SYS_PARA_SENDCB_MAX_COUNT));
+	/**
+	 * 配置项中非空处理
+	 * @param Count
+	 * @param flag
+	 * @return
+	 */
+	public int parsToInt(String count,String flag){
+		if(StringUtil.isNotEmpty(count)&&Integer.parseInt(count)<=0){
+			if("1".equals(flag)){
+				return 20;
+			}
+			else if("1".equals(flag)){
+				return 500;
+			}
+			else {
+				return 100;
+			}
+		}
+		else{
+			return Integer.parseInt(count);
+		}
+	}
 
-        int dataCount = registList.size();
-        if (dataCount <= sendCbMaxDataCount) {
-            this.sendInvestorsHoldCHBOneFile(registList, isSendAllData);
-            return;
-        }
 
-        // 分批处理
-        List<InvestorsHoldInfoRegist001Dto> newDataList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
-        newDataList.addAll(registList);
 
-        int part = dataCount / sendCbMaxDataCount; // 分批数
-        for (int i = 0; i < part; i++ ) {
-            this.sendInvestorsHoldCHBOneFile(newDataList.subList(0, sendCbMaxDataCount), isSendAllData);
-            newDataList.subList(0, sendCbMaxDataCount).clear();
-        }
-        // 最后剩下的数据
-        if (!StringUtil.isEmptyList(newDataList)) {
-            this.sendInvestorsHoldCHBOneFile(newDataList, isSendAllData);
-        }
-    }
 
-    
-    
-    
- 	/**
-     * 发送某登记银行代码的数据(单文件最大1000000条数据)
-     *
-     * @param registList
-     *            发送的某个机构的投资者身份信息
-     * @see
-     * @since 1.0
-     */
-    private void sendInvestorsHoldCHBOneFile(List<InvestorsHoldInfoRegist001Dto> registList, boolean isSendAllData) {
 
-        // 元素名称
-        String title = "wemax_RegistrationBankCode|wemax_ProductRegistrationCode|wemax_DiscriminationId|wemax_HoldingDate|wemax_Currency|wemax_InvestedUnits|wemax_InvestedAmount|wemax_InvestedAmountCny|wemax_RegistrationSerialNumber";
-        // 元素字符串结果集
-        StringBuffer info = new StringBuffer("\n" + "    <![CDATA[" + '\n');
-        info.append(title);
-        info.append('\n');
-        List<String> registSeq = new ArrayList<String>();
-        Map<String, String> registSeqKeyMap = new HashMap<String, String>();
-        List<InvestorsHoldInfoRegist001Dto> unSubmitSeqList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
-        if (CollectionUtils.isNotEmpty(registList)) {
-            for (InvestorsHoldInfoRegist001Dto dto : registList) {
-                // 针对取消手工处理再报送
-                String registSeqNo = "";
-                String currRegistSeq = "";
-                if(DictCodeListExt2.报送反馈状态_发送失败.getValue().equals(dto.getSubmitFeedbackStatus())
-                        ||DictCodeListExt2.报送反馈状态_中债退回.getValue().equals(dto.getSubmitFeedbackStatus())){
-                    registSeqNo = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
-                    //将报送流水为空的放入list
-                    currRegistSeq = registSeqNo;
-                    dto.setSumitSeq(currRegistSeq);
-                    unSubmitSeqList.add(dto);
-                }
-                else if (StringUtil.isEmpty(dto.getSumitSeq())) {
-                    registSeqNo = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
-                    dto.setSumitSeq(registSeqNo);
-                    currRegistSeq = registSeqNo;
-                    unSubmitSeqList.add(dto);
-                } else {
-                    registSeqNo = dto.getSumitSeq();
-                    currRegistSeq = registSeqNo;
-                }
-                registSeq.add(registSeqNo);
-                registSeqKeyMap.put(currRegistSeq, dto.getOrgCode() + "," + dto.getIndentifyMark() + ","
-                        + dto.getPrdRegistCode() + "," + DateUtil.format(dto.getHoldDate()) + "," + dto.getCcy());
+	/**
+	 * 发送某登记银行代码的数据
+	 *
+	 * @param registList
+	 *            发送的某个机构的投资者身份信息
+	 * @see
+	 * @since 1.0
+	 */
+	public void sendInvestorsHoldCHB(List<InvestorsHoldInfoRegist001Dto> registList, boolean isSendAllData) {
+		if (StringUtil.isEmptyList(registList)) {
+			return;
+		}
+		int sendCbMaxDataCount = Integer.valueOf(
+				SvrDataUtil.getSysParam(ReportGlobalConstant.SYS_PARA_SENDCB_MAX_COUNT));
 
-                String value = "    " + dto.getRegistBankCode() + "|" + dto.getPrdRegistCode() + "|"
-                        + dto.getIndentifyMark() + "|" + DateUtil.format(dto.getHoldDate()) + "|" + dto.getCcy() + "|"
-                        + dto.getQty() + "|" + dto.getAmount() + "|" + dto.getCnyAmt() + "|" + registSeqNo;
-                info.append(value);
-                info.append('\n');
-            }
-        }
-        info.append("    ]]>");
-        info.append('\n');
-        // 更新报送状态表
-        // modify by etliu 20181011 start
+		int dataCount = registList.size();
+		if (dataCount <= sendCbMaxDataCount) {
+			this.sendInvestorsHoldCHBOneFile(registList, isSendAllData);
+			return;
+		}
+
+		// 分批处理
+		List<InvestorsHoldInfoRegist001Dto> newDataList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+		newDataList.addAll(registList);
+
+		int part = dataCount / sendCbMaxDataCount; // 分批数
+		for (int i = 0; i < part; i++ ) {
+			this.sendInvestorsHoldCHBOneFile(newDataList.subList(0, sendCbMaxDataCount), isSendAllData);
+			newDataList.subList(0, sendCbMaxDataCount).clear();
+		}
+		// 最后剩下的数据
+		if (!StringUtil.isEmptyList(newDataList)) {
+			this.sendInvestorsHoldCHBOneFile(newDataList, isSendAllData);
+		}
+	}
+
+
+
+
+	/**
+	 * 发送某登记银行代码的数据(单文件最大1000000条数据)
+	 *
+	 * @param registList
+	 *            发送的某个机构的投资者身份信息
+	 * @see
+	 * @since 1.0
+	 */
+	private void sendInvestorsHoldCHBOneFile(List<InvestorsHoldInfoRegist001Dto> registList, boolean isSendAllData) {
+
+		// 元素名称
+		String title = "wemax_RegistrationBankCode|wemax_ProductRegistrationCode|wemax_DiscriminationId|wemax_HoldingDate|wemax_Currency|wemax_InvestedUnits|wemax_InvestedAmount|wemax_InvestedAmountCny|wemax_RegistrationSerialNumber";
+		// 元素字符串结果集
+		StringBuffer info = new StringBuffer("\n" + "    <![CDATA[" + '\n');
+		info.append(title);
+		info.append('\n');
+		List<String> registSeq = new ArrayList<String>();
+		Map<String, String> registSeqKeyMap = new HashMap<String, String>();
+		List<InvestorsHoldInfoRegist001Dto> unSubmitSeqList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
+		if (CollectionUtils.isNotEmpty(registList)) {
+			for (InvestorsHoldInfoRegist001Dto dto : registList) {
+				// 针对取消手工处理再报送
+				String registSeqNo = "";
+				String currRegistSeq = "";
+				if(DictCodeListExt2.报送反馈状态_发送失败.getValue().equals(dto.getSubmitFeedbackStatus())
+						||DictCodeListExt2.报送反馈状态_中债退回.getValue().equals(dto.getSubmitFeedbackStatus())){
+					registSeqNo = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+					//将报送流水为空的放入list
+					currRegistSeq = registSeqNo;
+					dto.setSumitSeq(currRegistSeq);
+					unSubmitSeqList.add(dto);
+				}
+				else if (StringUtil.isEmpty(dto.getSumitSeq())) {
+					registSeqNo = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
+					dto.setSumitSeq(registSeqNo);
+					currRegistSeq = registSeqNo;
+					unSubmitSeqList.add(dto);
+				} else {
+					registSeqNo = dto.getSumitSeq();
+					currRegistSeq = registSeqNo;
+				}
+				registSeq.add(registSeqNo);
+				registSeqKeyMap.put(currRegistSeq, dto.getOrgCode() + "," + dto.getIndentifyMark() + ","
+						+ dto.getPrdRegistCode() + "," + DateUtil.format(dto.getHoldDate()) + "," + dto.getCcy());
+
+				String value = "    " + dto.getRegistBankCode() + "|" + dto.getPrdRegistCode() + "|"
+						+ dto.getIndentifyMark() + "|" + DateUtil.format(dto.getHoldDate()) + "|" + dto.getCcy() + "|"
+						+ dto.getQty() + "|" + dto.getAmount() + "|" + dto.getCnyAmt() + "|" + registSeqNo;
+				info.append(value);
+				info.append('\n');
+			}
+		}
+		info.append("    ]]>");
+		info.append('\n');
+		// 更新报送状态表
+		// modify by etliu 20181011 start
 //        this.doUpdateSubmtitStatus(registList, isSendAllData, unSubmitSeqList);
-        if (!isSendAllData) {
-     	   this.doUpdateSubmtitStatus(registList, isSendAllData, unSubmitSeqList);
-        }
-        // modify by etliu 20181011 end
-        // 将格式转换为中债报送的固定格式
-        List<InterfCnBondSubmitPara> paras = new ArrayList<InterfCnBondSubmitPara>();
-        InterfCnBondSubmitPara it = new InterfCnBondSubmitPara();
-        List<Map<String, CnBondInterfItem>> listMap = new ArrayList<Map<String, CnBondInterfItem>>();
-        CnBondInterfItem cnBondInterfItem = new CnBondInterfItem();
-        cnBondInterfItem.setValue(info.toString());
-        Map<String, CnBondInterfItem> maps = new HashMap<String, CnBondInterfItem>();
-        maps.put("InvestorsInvestedInformationRegistrationCsvDataExplanatory", cnBondInterfItem);
-        listMap.add(maps);
-        it.setDealType(DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
-        it.setInfos(listMap);
-        it.setSysDate(DateUtil.now());
-        it.setRegistSeq(registSeq);
-        it.setRegistBankCode(registList.get(0).getRegistBankCode());
-        it.setRegistSeqKeyMap(registSeqKeyMap);
-        paras.add(it);
-         cnBondInterfService.sendCnBond(paras);
-    }
-    
-    
-    /**
-     * 检查对应的task是否有未执行或正在执行中的批处理任务 <功能详细描述>
-     * 
-     * @param beanname
-     * @return false未执行或正在执行中的任务 true 未检查到对应的未执行或正在执行中的任务
-     */
-    public boolean checkIfInBatchByTaskBeanName(String beanname) {
-    	InvestorsHoldInfoRegist001Service chbAssetInfoInterf = SpringContextUtil.getBean(
-        		InvestorsHoldInfoRegist001Service.class);
-        int count = chbAssetInfoInterf.getNoendCountByTaskBeanName(beanname);
-        if (count > 0) {
-            return false;
-        }
-        return true;
-    }
-    
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @DataSource(DataSourceType.OTHER)
-    public int getNoendCountByTaskBeanName(String beanname) {
-        return investorsHoldInfoRegist001Mapper.selectNoendCountByTaskBeanName(beanname);
-    }
-    
+		if (!isSendAllData) {
+			this.doUpdateSubmtitStatus(registList, isSendAllData, unSubmitSeqList);
+		}
+		// modify by etliu 20181011 end
+		// 将格式转换为中债报送的固定格式
+		List<InterfCnBondSubmitPara> paras = new ArrayList<InterfCnBondSubmitPara>();
+		InterfCnBondSubmitPara it = new InterfCnBondSubmitPara();
+		List<Map<String, CnBondInterfItem>> listMap = new ArrayList<Map<String, CnBondInterfItem>>();
+		CnBondInterfItem cnBondInterfItem = new CnBondInterfItem();
+		cnBondInterfItem.setValue(info.toString());
+		Map<String, CnBondInterfItem> maps = new HashMap<String, CnBondInterfItem>();
+		maps.put("InvestorsInvestedInformationRegistrationCsvDataExplanatory", cnBondInterfItem);
+		listMap.add(maps);
+		it.setDealType(DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
+		it.setInfos(listMap);
+		it.setSysDate(DateUtil.now());
+		it.setRegistSeq(registSeq);
+		it.setRegistBankCode(registList.get(0).getRegistBankCode());
+		it.setRegistSeqKeyMap(registSeqKeyMap);
+		paras.add(it);
+		cnBondInterfService.sendCnBond(paras);
+	}
+
+
+	/**
+	 * 检查对应的task是否有未执行或正在执行中的批处理任务 <功能详细描述>
+	 *
+	 * @param beanname
+	 * @return false未执行或正在执行中的任务 true 未检查到对应的未执行或正在执行中的任务
+	 */
+	public boolean checkIfInBatchByTaskBeanName(String beanname) {
+		InvestorsHoldInfoRegist001Service chbAssetInfoInterf = SpringContextUtil.getBean(
+				InvestorsHoldInfoRegist001Service.class);
+		int count = chbAssetInfoInterf.getNoendCountByTaskBeanName(beanname);
+		if (count > 0) {
+			return false;
+		}
+		return true;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@DataSource(DataSourceType.OTHER)
+	public int getNoendCountByTaskBeanName(String beanname) {
+		return investorsHoldInfoRegist001Mapper.selectNoendCountByTaskBeanName(beanname);
+	}
+
 }

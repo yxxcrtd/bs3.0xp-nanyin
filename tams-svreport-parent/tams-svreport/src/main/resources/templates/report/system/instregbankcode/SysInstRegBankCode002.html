@@ -11,17 +11,19 @@
     <form id="SysInstRegBankCode002_newForm" class="layui-form joyin-form-wrap">
         <div class="layui-form-item">
             <div class="layui-inline layui-col-md12">
-		        <label class="layui-form-label form-lable">机构代码</label>
+                <label class="layui-form-label form-lable">机构代码</label>
                 <div class="layui-input-inline input-inline ">
-	              <input type="text" id="SysInstRegBankCode002_orgCode" name="orgCode" class="layui-input form-input input-select" data-th-placeholder="#{SysCommon.placeholder}"  data-th-initValue="${entity?.orgCode}" data-th-data-result='${orgCodeDataList}' required>
-	            </div>
-	        </div>
+                    <input type="text" id="SysInstRegBankCode002_orgCode" name="orgCode" class="layui-input form-input input-select" data-th-placeholder="#{SysCommon.placeholder}"  data-th-initValue="${entity?.orgCode}" data-th-data-result='${orgCodeDataList}' required>
+                </div>
+            </div>
         </div>
         <div class="layui-form-item" >
             <div class="layui-inline layui-col-md12">
                 <label class="layui-form-label form-lable">登记银行代码</label>
                 <div class="layui-input-inline input-inline">
-                  <input type="text" id="SysInstRegBankCode002_registBankCode" name="registBankCode" data-th-value="${entity?.registBankCode}" class="layui-input form-input" placeholder="请输入内容" required>
+                    <input type="text" id="SysInstRegBankCode002_registBankCode"
+                           name="registBankCode" data-th-value="${entity?.registBankCode}"
+                           class="layui-input form-input" placeholder="请输入内容" required>
                 </div>
             </div>
         </div>
@@ -29,40 +31,44 @@
             <div class="layui-inline layui-col-md12">
                 <label class="layui-form-label form-lable">总行机构代码</label>
                 <div class="layui-input-inline input-inline">
-                  <input type="text" id="SysInstRegBankCode002_pbcBankCode" name="pbcBankCode" data-th-value="${entity?.pbcBankCode}" class="layui-input form-input" onKeyUp="value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')" onblur="checkPbcBankCode();" placeholder="请输入14位的数字和英文组合" required>
-                  <span ><font id="pbcBankCodeErrText" color="#FF0000"></font></span>
+                    <input type="text" id="SysInstRegBankCode002_pbcBankCode" name="pbcBankCode"
+                           data-th-value="${entity?.pbcBankCode}" class="layui-input form-input"
+                           onKeyUp="value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')" onblur="checkPbcBankCode();"
+                           placeholder="请输入14位的数字和英文组合" required>
+                    <span ><font id="pbcBankCodeErrText" color="#FF0000"></font></span>
                 </div>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-inline layui-col-md12">
-		        <label class="layui-form-label form-lable">是否理财子公司</label>
+                <label class="layui-form-label form-lable">是否理财子公司</label>
                 <div class="layui-input-inline input-inline ">
-	              <input type="text" id="SysInstRegBankCode002_isFinSubCompany" name="isFinSubCompany" class="layui-input form-input input-select" data-th-placeholder="#{SysCommon.placeholder}"  data-th-value="${isFinSubCompany}" data-th-data-result='${IS_FIN_SUB_COMPANY}' required>
-	            </div>
-	        </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline layui-col-md12">
-                <label class="layui-form-label form-lable" style="line-height: normal;">社会信用代码</label>
-                <div class="layui-input-inline input-inline">
-                    <input type="text" id="SysInstRegBankCode002_insitituteCode" name="insitituteCode"
-                           class="layui-input form-input"
-                           data-th-placeholder="#{SysCommon.placeholder}"
-                           maxlength="50"
-                           onkeyup="value=value.replace(/[^A-Z0-9]/g,'')"
-                           data-th-value="${entity?.insitituteCode}"
-                           onblur="checkinsitituteCode();"
-                           placeholder="请输入18位的数字或大写英文组合"  required/>
-                    <span ><font id="insitituteCodeErrText" color="#FF0000"></font></span>
+                    <input type="text" id="SysInstRegBankCode002_isFinSubCompany" name="isFinSubCompany"
+                           class="layui-input form-input input-select" data-th-placeholder="#{SysCommon.placeholder}"
+                           data-th-value="${isFinSubCompany}" data-th-data-result='${IS_FIN_SUB_COMPANY}' required
+                           onchange="upperCase(this.value)">
                 </div>
+            </div>
+        </div>
+        <div class="layui-form-item" id="fregistBankCode_div">
+            <div class="layui-inline layui-col-md12">
+                <label class="layui-form-label form-lable">母行登记银行代码</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="SysInstRegBankCode002_fregistBankCode"
+                           name="fregistBankCode"
+                           data-th-initValue="${entity?.fregistBankCode}"
+                           class="layui-input form-input" placeholder="请输入内容"
+                           data-th-placeholder="#{SysCommon.placeholder}"
+                           required/>
+                </div>
+
             </div>
         </div>
     </form>
     <div class="layui-col-md11" style="margin:15px;">
         <div class="text-center">
-        <a id="SysInstRegBankCode002_BTN_submit" class="layui-btn layui-btn-sm btn-submit">提交</a> 
-        <a id="SysInstRegBankCode002_BTN_cancel" class="layui-btn layui-btn-sm btn-cancel">取消</a> 
+            <a id="SysInstRegBankCode002_BTN_submit" class="layui-btn layui-btn-sm btn-submit">提交</a>
+            <a id="SysInstRegBankCode002_BTN_cancel" class="layui-btn layui-btn-sm btn-cancel">取消</a>
         </div>
     </div>
 </div>

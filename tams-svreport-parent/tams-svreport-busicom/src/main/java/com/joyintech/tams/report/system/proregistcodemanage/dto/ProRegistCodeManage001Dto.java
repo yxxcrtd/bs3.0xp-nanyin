@@ -31,7 +31,7 @@ import java.util.List;
  * @see ProRegistCodeManage001Dto
  * @since 1.0
  */
-public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
+public class ProRegistCodeManage001Dto extends TableRow {
     /**
      * excel 列
      */
@@ -45,11 +45,6 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
      * 机构代码
      */
     private String orgCode;
-
-    /**
-     * 机构代码名称
-     */
-    private String orgName;
 
     /**
      * 产品名称
@@ -134,12 +129,6 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
      * 募集起始日期（到）
      */
     private String raisePendDate;
-
-    /**
-     * 登记编码生成日
-     */
-    private String generateDate;
-
 
     /**
      * 上传附件的文件路径
@@ -489,22 +478,5 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
     public void setOperateMode(String operateMode) {
         this.operateMode = operateMode == null ? null : operateMode.trim();
     }
-
-    public String getOrgName() {
-        return orgName;
-    }
-
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
-    }
-
-    public String getGenerateDate() {
-        return generateDate;
-    }
-
-    public void setGenerateDate(String generateDate) {
-        this.generateDate = generateDate;
-    }
-
 
 }
