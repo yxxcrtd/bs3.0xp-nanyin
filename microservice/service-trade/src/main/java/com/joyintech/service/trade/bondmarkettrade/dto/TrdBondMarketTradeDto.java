@@ -5,8 +5,14 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.TrdFinProductBarterTotal;
 import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 债券上市流通交易Dto
@@ -68,6 +74,63 @@ public class TrdBondMarketTradeDto extends TrdFinProductDealTotal implements Pro
      * 操作类型
      */
     private String operateType;
+
+    /**
+     * 指令可用持仓流水
+     */
+    List<EtrSecPositionFlowDto> etrSecPositionFlows;
+
+    /**
+     * 组合可用持仓流水
+     */
+    List<PtlSecPositionFlowDto> ptlSecPositionFlows;
+
+    /**
+     * 组装后交易数据
+     */
+    List<BaseTradeInfoDto> baseTradeInfoDtos = new ArrayList<BaseTradeInfoDto>();
+
+    /**
+     * 获取组装后交易数据
+     */
+    public List<BaseTradeInfoDto> getBaseTradeInfoDtos() {
+        return baseTradeInfoDtos;
+    }
+
+    /**
+     * 设置组装后交易数据
+     */
+    public void setBaseTradeInfoDtos(List<BaseTradeInfoDto> baseTradeInfoDtos) {
+        this.baseTradeInfoDtos = baseTradeInfoDtos;
+    }
+
+    /**
+     * 获取指令可用持仓流水
+     */
+    public List<EtrSecPositionFlowDto> getEtrSecPositionFlows() {
+        return etrSecPositionFlows;
+    }
+
+    /**
+     * 设置指令可用持仓流水
+     */
+    public void setEtrSecPositionFlows(List<EtrSecPositionFlowDto> etrSecPositionFlows) {
+        this.etrSecPositionFlows = etrSecPositionFlows;
+    }
+
+    /**
+     * 获取组合可用持仓流水
+     */
+    public List<PtlSecPositionFlowDto> getPtlSecPositionFlows() {
+        return ptlSecPositionFlows;
+    }
+
+    /**
+     * 设置组合可用持仓流水
+     */
+    public void setPtlSecPositionFlows(List<PtlSecPositionFlowDto> ptlSecPositionFlows) {
+        this.ptlSecPositionFlows = ptlSecPositionFlows;
+    }
 
     /**
      * 获取操作类型

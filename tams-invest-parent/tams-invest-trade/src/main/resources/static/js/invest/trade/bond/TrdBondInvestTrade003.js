@@ -1740,6 +1740,7 @@ var table;
                             params.ccy=$("#ccy").val();
                             params.multiParam=100;
                             params.secAcctId=element.etrEntrustAdd.secAcctId;
+                            params.invAim = $("#invAim").val();
                             Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                                 if( cashdata.position){
                                     rowData.assetsavailablepositions =  cashdata.position;
@@ -1936,6 +1937,7 @@ var table;
                             params.ccy=$("#ccy").val();
                             params.multiParam=100;
                             params.secAcctId=element.etrEntrustAdd.secAcctId;
+                            params.invAim = $("#invAim").val();
                             Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                                 if( cashdata.position){
                                     rowData.assetsavailablepositions =  cashdata.position;
@@ -2572,6 +2574,7 @@ var table;
                 params.ccy=$("#ccy").val();
                 params.multiParam=100;
                 params.secAcctId=table.getAllRows()[i].secAcctId;
+                params.invAim = $("#invAim").val();
                 Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                     if( cashdata.position){
                         table.renderRow(i, {"assetsavailablepositions": cashdata.position});
@@ -3573,6 +3576,7 @@ var table;
                                    params.ccy=$("#ccy").val();
                                    params.multiParam=100;
                                    params.secAcctId=value;
+                                   params.invAim = $("#invAim").val();
                                    Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                                        table.renderRow(data.LAY_TABLE_INDEX, {"assetsavailablepositions": cashdata.position});
                                    });

@@ -473,7 +473,7 @@ public class TrdBondMarketTradeService extends BaseService {
             
             //接风险redis-资产基本信息
             if (CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
-            	if(redisRriter!=null&&iPlatformDate!=null&StringUtil.isNotEmpty(newFinprodId)) {
+            	if(redisRriter!=null&&iPlatformDate!=null&&StringUtil.isNotEmpty(newFinprodId)) {
                     ImplCond cond = new ImplCond();
                     cond.setDel(false);
                     cond.setAssetIdArray(newFinprodId);
@@ -581,5 +581,23 @@ public class TrdBondMarketTradeService extends BaseService {
             entity.setAppearMarketId(null);
             trdBondMarkettTradeMapper.updateByPrimaryKey(entity);
         }    
+    }
+
+    /**
+     * 撤销时根据交易编号查询交易
+     * @param entity
+     * @return
+     */
+    public TrdBondMarketTradeDto getRevokeEntity(TrdBondMarketTradeDto entity) {
+        String bizCode = entity.getTotleTradeId();
+        if (bizCode.lastIndexOf('R') == bizCode.length() - 1) {
+            bizCode = bizCode.substring(0, bizCode.length() - 1);
+        }
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("bizCode",bizCode);
+        param.put("finprodId",DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + entity.getAppearMarketId());
+        List<BaseTradeInfoDto> baseTradeInfoDtos =  trdBondMarkettTradeMapper.selectbaseTradeInfoDtos(param);
+        entity.setBaseTradeInfoDtos(baseTradeInfoDtos);
+        return entity;
     }
 }

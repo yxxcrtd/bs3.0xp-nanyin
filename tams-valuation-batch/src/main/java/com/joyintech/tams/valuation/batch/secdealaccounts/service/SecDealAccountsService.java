@@ -6523,7 +6523,11 @@ public class SecDealAccountsService {
             return;
         }
         //调用 共通【实物交易查询】  参考详细设计-标的类共通方法设计.xlsx【实物交易查询】
-        TrdFinProductBarterDto trdFinProductBarterDto = finProductCommonService.selectTrdFinProductBarter(dealNow.getTradeId());
+        Map<String, Object> mapTemp = new HashMap<>();
+        mapTemp.put("tradeId",dealNow.getTradeId());
+        mapTemp.put("portfolioId",dealNow.getPortfolioId());
+        mapTemp.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue().concat("_"));
+        TrdFinProductBarterDto trdFinProductBarterDto = finProductCommonService.selectTrdFinProductBarter(mapTemp);
 
         //查询不到返回
         if(trdFinProductBarterDto ==null){

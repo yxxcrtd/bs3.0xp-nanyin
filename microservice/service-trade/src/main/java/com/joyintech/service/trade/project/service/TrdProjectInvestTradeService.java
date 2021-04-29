@@ -143,7 +143,7 @@ public class TrdProjectInvestTradeService extends BaseService<TrdProjectInvestTr
 
 
     public Map<String, Object> findRepayFlag(Map<String, Object> param) {
-        param.put("CASH_TYPE_1_02", DictCodeListExt1.现金流一级类型_利息.getValue());
+        //param.put("CASH_TYPE_1_02", DictCodeListExt1.现金流一级类型_利息.getValue());
         String repayIntFlag=trdProjectInvestTradeMapper.getIsPayInt(param);
         Map<String, Object> map= new HashMap<>();
         if(repayIntFlag!=null && repayIntFlag.equals(DictCodeList.是否_否.getValue())) {

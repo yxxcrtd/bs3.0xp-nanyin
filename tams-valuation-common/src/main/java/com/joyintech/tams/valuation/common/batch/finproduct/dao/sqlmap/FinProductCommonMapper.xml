@@ -1485,8 +1485,10 @@ AND	fin.BRANCH = 0
 		FROM TRD_FIN_PRODUCT_BARTER A
 		LEFT JOIN BOK_DETAIL_ID B
 		ON B.BUSI_ID = A.FINPROD_ID AND B.BUSI_DETAIL_TYPE = A.FINPROD_TYPE AND A.INV_AIM = B.INV_AIM
+		left join trd_product_deal_add tpda on A.TRADE_ID = tpda.trade_id and B.BOOKSET_ID = #{FINPROD_TYPE_TG_F16}||tpda.portfolio_id
 		WHERE
 		A.TRADE_ID =  #{tradeId}
+		AND tpda.portfolio_id=#{portfolioId}
 	</select>
 
 </mapper>

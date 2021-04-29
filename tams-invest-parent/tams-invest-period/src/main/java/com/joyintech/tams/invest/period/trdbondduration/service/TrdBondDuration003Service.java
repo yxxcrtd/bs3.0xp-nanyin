@@ -425,7 +425,7 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         trdFinProductDealTotal.setPrinAmt(entity.getcPriceAmt());
         //trdFinProductDealTotal.setIntAmt(BigDecimal.ZERO);
         trdFinProductDealTotal.setIntAmt(entity.getIntAmtReal());
-        trdFinProductDealTotal.setFpriceAmt(entity.getcPriceAmt());
+        trdFinProductDealTotal.setFpriceAmt(entity.getfPriceAmt());
         if (DictCodeListExt2.收取方式_回款前扣除.getValue().equals(entity.getCollectType())) {
             trdFinProductDealTotal.setFeeAmtPay(entity.getChannelFee());
         }
@@ -460,6 +460,7 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         paTrdFinProductDealTotal.setTotleTradeId(entity.getBizCode());
         paTrdFinProductDealTotal.setPaBussType(DictCodeListExt1.平安业务类型_债券类资产行权.getValue());
         paTrdFinProductDealTotal.setTheoryInt(entity.getIntAmtTheory());
+        paTrdFinProductDealTotal.setTheoryAmt(entity.getIntAmtTheory().add(entity.getcPriceAmt()));
         entity.setPaTrdFinProductDealTotal(paTrdFinProductDealTotal);
 
         List<BussTrdTransferOrderDto> bussTrdTransferOrderDtos = bussTrdTransferOrderImplService.save(
@@ -537,6 +538,7 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
             deal.setAccrNum(deal.getShareAmt());
             deal.setTgBusiType(DictCodeListExt1.平安业务类型_债券类资产行权.getValue());
             deal.setInvAim(trdBondPtlSecExerciseInfo.getInvAim());
+            deal.setParValue(entity.getParValue());
             trdProductDeals.add(deal);
 
             BussTrdTransferOrderDto bussTrdTransferOrderDto =new BussTrdTransferOrderDto();

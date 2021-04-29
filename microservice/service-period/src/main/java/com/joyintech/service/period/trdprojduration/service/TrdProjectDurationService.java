@@ -85,6 +85,12 @@ public class TrdProjectDurationService extends BaseService {
             map.put("C02", DictCodeListExt1.现金流二级类型_利息.getValue());
             map.put("finprodId", dto.getFinprodId());
             map.put("F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+            map.put("ISPAYINT", DictCodeList.是否_是.getValue());
+            //判断资产还本不带息，若为还本不带息，则随付息计划。若为还本带息，则应是最接近的付息计划的利率
+            int count=trdProjectDurationMapper.getisPayInt(dto.getFinprodId());
+            if(count>0){
+                map.put("ISPAYINT", DictCodeList.是否_否.getValue());
+            }
             BigDecimal yield = trdProjectDurationMapper.selectYield(map);
             if (!StringUtils.isEmpty(yield)){
                 dto.setYield(yield);
@@ -180,6 +186,12 @@ public class TrdProjectDurationService extends BaseService {
         for (FinAssetIntInfo dto : list){                  
             params.put("C02", DictCodeListExt1.现金流二级类型_利息.getValue());
             params.put("F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+            params.put("ISPAYINT", DictCodeList.是否_是.getValue());
+            //判断资产还本不带息，若为还本不带息，则随付息计划。若为还本带息，则应是最接近的付息计划的利率
+            int count=trdProjectDurationMapper.getisPayInt(params.get("finprodId").toString());
+            if(count>0){
+                params.put("ISPAYINT", DictCodeList.是否_否.getValue());
+            }
             BigDecimal yield = trdProjectDurationMapper.selectYield(params);
             if (!StringUtils.isEmpty(yield)){
                 dto.setYield(yield);

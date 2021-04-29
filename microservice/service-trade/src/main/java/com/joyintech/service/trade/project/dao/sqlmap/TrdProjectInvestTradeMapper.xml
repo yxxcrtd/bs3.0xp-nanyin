@@ -531,7 +531,7 @@
     <select id="getIsPayInt" resultType="java.lang.String">
 		select IS_PAY_INT from FIN_CASH_PLAN
 			where FINPROD_ID= #{finprodId}
-				and CASH_TYPE= #{CASH_TYPE_1_02}
+				and CASH_TYPE　in ('02','03')
 				and rownum=1
 	</select>
 

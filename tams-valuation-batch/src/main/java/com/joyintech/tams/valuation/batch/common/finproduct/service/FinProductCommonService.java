@@ -1673,7 +1673,7 @@ public class FinProductCommonService {
      * @param tradeId
      * @return
      */
-    public TrdFinProductBarterDto selectTrdFinProductBarter(String tradeId) {
-        return finProductCommonMapper.selectTrdFinProductBarter(tradeId);
+    public TrdFinProductBarterDto selectTrdFinProductBarter(Map<String, Object> map) {
+        return finProductCommonMapper.selectTrdFinProductBarter(map);
     }
 }

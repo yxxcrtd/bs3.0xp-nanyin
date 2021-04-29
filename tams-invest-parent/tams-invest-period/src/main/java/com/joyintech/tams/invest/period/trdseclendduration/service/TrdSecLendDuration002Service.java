@@ -290,7 +290,7 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                 // modify by jiangpeng on 20210419 start
                 //ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融入到期交易产生的错误
                 if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue(), entity.getFinprodType2())
-                        && StringUtil.equals(DictCodeList.是否_否, entity.getIsCashPay())) {
+                        && StringUtil.equals(DictCodeList.是否_否.getValue(), entity.getIsCashPay())) {
                     // modify by jiangpeng on 20210419 end
                     // 写入融入券组合持仓流水
                     this.ptlBlendSecPositionFlowLogic(entity, false);

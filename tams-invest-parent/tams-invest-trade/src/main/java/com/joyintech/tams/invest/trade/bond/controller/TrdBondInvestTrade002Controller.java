@@ -522,7 +522,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
      * 理论行权日取得（根据画面交割日取，取不到直接使用交割日作为理论行权日）
      *
      * @param inputDto 画面参数
-     * @return 理论行权日
+     * @return 实际行权日
      * @see
      * @since 1.0
      */
@@ -541,7 +541,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         if (!StringUtil.isEmptyList(planList)) {
             for (FinExercisePlan planDto : planList) {
                 if (planDto.getActExerciseDate().compareTo(inputDto.getSettleDate()) == 0) {
-                    ajaxResult.setData(DateUtil.format(planDto.getExerciseDate()));;
+                    ajaxResult.setData(DateUtil.format(planDto.getActExerciseDate()));;
                 }
             }
         }

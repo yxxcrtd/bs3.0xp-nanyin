@@ -527,6 +527,6 @@ public interface FinProductCommonMapper {
      */
     String getIsPayInt(@Param("finprodId") String finprodId);
 	
-	TrdFinProductBarterDto selectTrdFinProductBarter(@Param("tradeId") String tradeId);
+	TrdFinProductBarterDto selectTrdFinProductBarter(Map<String, Object> map);
 
 }

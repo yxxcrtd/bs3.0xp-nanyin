@@ -183,5 +183,14 @@ public class TrdBondMarketTradeController {
     public int selectDealNums(@RequestBody TrdBondMarketTradeDto dto){
         return trdBondMarketTradeService.selectDealNums(dto);
     }
-    
+
+    /**
+     * 查询撤销时风险需要的数据
+     * @param entity
+     * @return
+     */
+    @PostMapping("getRevokeEntity")
+    public TrdBondMarketTradeDto getRevokeEntity(@RequestBody TrdBondMarketTradeDto entity){
+        return trdBondMarketTradeService.getRevokeEntity(entity);
+    }
 }

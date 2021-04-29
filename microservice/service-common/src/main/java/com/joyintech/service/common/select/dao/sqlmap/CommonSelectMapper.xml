@@ -707,7 +707,7 @@
         <if test="exercise != null and exercise != ''">
             to_char(T1.VDATE, 'yyyy-MM-dd') EXERCISE_VDATE,
             to_char(T1.MDATE, 'yyyy-MM-dd') EXERCISE_MDATE,
-            to_char(T1.EXERCISE_DATE, 'yyyy-MM-dd') EXERCISE_DATE,
+            to_char(T1.ACT_EXERCISE_DATE, 'yyyy-MM-dd') EXERCISE_DATE,
             T1.EXERCISE_PRICE,
         </if>
         A.IS_RIGHT

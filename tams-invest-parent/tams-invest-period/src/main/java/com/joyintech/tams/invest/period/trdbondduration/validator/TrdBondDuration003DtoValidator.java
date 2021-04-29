@@ -83,10 +83,10 @@ public class TrdBondDuration003DtoValidator implements PeriodCommonValidator {
                     settleAmt  = settleAmt.add(trdBondPtlSecExerciseInfo.getSettleAmt());
                 }
             }
-            if(intAmtReal.compareTo(dto.getIntAmtReal()) != 0){
+            if(dto.getIntAmtReal() !=null && (intAmtReal.compareTo(dto.getIntAmtReal()) != 0)){
                 errorList.add(new ValidMessage("金额明细信息列表实收利息之和必须等于金额信息中的实收利息总额"));
             }
-            if(settleAmt.compareTo(dto.getfPriceAmt()) != 0 ){
+            if(dto.getfPriceAmt() !=null && (settleAmt.compareTo(dto.getfPriceAmt()) != 0) ){
                 errorList.add(new ValidMessage("金额明细信息列表组合列表到账金额之和必须等于金额信息中的到账金额"));
             }
         }

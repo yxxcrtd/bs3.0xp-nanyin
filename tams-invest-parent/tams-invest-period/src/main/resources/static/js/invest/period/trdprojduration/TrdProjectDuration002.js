@@ -24,7 +24,7 @@
             if($("#finAssetInfo_finprodMarketId").val() && $("#cashType").val()&&($("#cashType").val()=='02'||$("#cashType").val()=='03') ){
                 var objectPayInt = {
                     finprodId: $('#finAssetInfo_finprodMarketId').val(),
-                    settleDate: $('#interestPayDay').val()
+                    mdate: $('#mDate').val()
                 }
                 Joyin.ajaxJson(basePath+ "invest/period/trdprojduration/TrdProjectDuration002/isPayIntDate",objectPayInt,function(result){
                     if(!result){

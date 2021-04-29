@@ -232,16 +232,21 @@ $(function() {
                 var tradeAmt = $('#tradeAmt').val();
                 if(unitCprice != null && unitCprice != '' && shareAmt){
                 	if(ps == ps_T19){
+                		if(pageModel != PAGE_MODEL_REFERENCE){
                 		$('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+                		}
                 	}
                 	else{
+                		if(pageModel != PAGE_MODEL_REFERENCE){
                 		$('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+                		}
                 	}
                     $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
                     $('#feeAmtRedem').change();
                 }else if(unitCprice != null && unitCprice != '' && unitCprice != 0 && tradeAmt){
-
+                	if(pageModel != PAGE_MODEL_REFERENCE){
                     $('#shareAmt').val(tradeAmt/unitCprice).trigger('blur');
+                	}
                 }
             }
         });
@@ -303,12 +308,16 @@ $(function() {
             //     $('#tradeAmt').val(Number(tradeAmt)-Number(feeAmtRedem)).trigger('blur');
             // }
             var isDisabled = $("#tradeAmt").prop("disabled");
-
-            if(isDisabled){
+            var isDisabled1 = $("#shareAmt").prop("disabled");
+            if(isDisabled && !isDisabled1){
                 // 如果金额不允许编辑 则影响的是份额
+            	if(pageModel != PAGE_MODEL_REFERENCE){
                 $('#shareAmt').val(JoyinMath.doDiv(JoyinMath.doAdd(tradeAmt,feeAmtRedem,2) ,unitCprice,2)  ).trigger('change');
+            	}
             }else{
+            	if(pageModel != PAGE_MODEL_REFERENCE){
                 $('#tradeAmt').val(Number(tradeAmt)-Number(feeAmtRedem)).trigger('blur');
+            	}
             }
         });
         /**
