@@ -277,6 +277,15 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
                 // 调用业务组件.【金融产品交易共通.交易产品接口】
                 FinProductTradeDto tradeDto = genFinProductTradeDto(entity, OperationType.NEW);
                 tradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                // add by jiangpeng on 20210429 start
+                tradeDto.getBaseTradeProductDealDtos().forEach(item->{
+                    // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                    if (StringUtil.isNotEmpty(entity.getIsCashPay())){
+                        item.setIsCashPay(entity.getIsCashPay());
+                    }
+                    item.setIsSLDeal(DictCodeList.是否_是.getValue());
+                });
+                //add by jiangpeng on 20210429 end
                 baseTradeProductDealCommServiceImpl.execute(tradeDto);
                 if (StringUtil.isNotEmpty(entity.getActPortfolioId()) && !StringUtil.equals(entity.getPortfolioId(), entity.getActPortfolioId())) {
                     tradeDto.getBaseTradeProductDealDtos().forEach(
