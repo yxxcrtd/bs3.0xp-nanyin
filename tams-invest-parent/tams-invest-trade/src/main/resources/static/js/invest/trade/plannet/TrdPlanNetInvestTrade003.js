@@ -237,7 +237,9 @@ $(function() {
                 		}
                 	}
                 	else{
+                		if(pageModel != PAGE_MODEL_REFERENCE){
                 		$('#tradeAmt').val(shareAmt*unitCprice).trigger('blur');
+                		}
                 	}
                     $('#tradeAmtHid').val(shareAmt*unitCprice).trigger('blur');
                     $('#feeAmtRedem').change();
