@@ -23,13 +23,13 @@
         err_message,ISNEEDWARNING,
         remark1,remark2)
         values
-        <foreach collection="list" item="item" separator=",">
-            #{item.logId,jdbcType=VARCHAR}, #{item.interfId,jdbcType=VARCHAR},
+        <foreach collection="interfLogList" item="item" separator=",">
+            (#{item.logId,jdbcType=VARCHAR}, #{item.interfId,jdbcType=VARCHAR},
             #{item.interfType,jdbcType=VARCHAR},
             #{item.fileName,jdbcType=VARCHAR}, #{item.taskStatus,jdbcType=VARCHAR},
             #{item.createTime,jdbcType=TIMESTAMP}, #{item.bizDate,jdbcType=VARCHAR},
             #{item.errMessage,jdbcType=VARCHAR}, #{item.isneedwarning,jdbcType=VARCHAR},
-            #{item.remark1,jdbcType=VARCHAR}, #{item.remark2,jdbcType=VARCHAR}
+            #{item.remark1,jdbcType=VARCHAR}, #{item.remark2,jdbcType=VARCHAR})
         </foreach>
     </insert>
     <update id="excuteDb2ImportData">
