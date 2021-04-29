@@ -566,7 +566,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
                 inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
                 inputDto.setProdVdate(null);
                 inputDto.setStlPayOrders(tempStlPayOrders);
-                inputDto.setTrdProductDeal(entity.getTrdProductDeal());
+                inputDto.setTrdProductDeal(trdProductDeal);
                 AllTradeCommonUtil.stlOrdersBokTradeBuild(inputDto);
           //  }
        // }
