@@ -1139,7 +1139,7 @@
     where a.USER_NAME = #{userName}
 </select>
 <!-- 查询区间净投资收益率 yjm start 20190822-->
-    <select id="selectYield" resultType="BigDecimal" parameterType="Map">
+    <select id="selectYield" resultType="java.math.BigDecimal" parameterType="Map">
         <if test="busiCode != null and  busiCode != ''">
             SELECT DISTINCT T3.RANGE_YIELD * 100 yield
            FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
@@ -1294,7 +1294,7 @@
         )payplan
         on plan.finprod_id=payplan.finprod_id
         where fp.finprod_market_id =#{finprodId}
-        and plan.cash_type in ('01','04') and plan.pay_date=to_date(#{settleDate},'yyyy-MM-dd')
+        and plan.cash_type in ('01','04') and plan.mdate=to_date(substr(#{mdate},1,10),'yyyy-mm-dd')
     </select>
     <select id="isNoPayInt" resultType="java.lang.Integer">
         select count(1)  from fin_cash_plan plan
