@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.workflow.engine.constant.OperationType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -130,18 +131,21 @@ public class FinBondTargetAsset001Controller extends BaseController{
         //新增撤销校验，不允许删除上市债券  add by mashukai 20210425 start
         AjaxResult res= new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
-        if (dto.getSelectedItem() != null && dto.getSelectedItem().size()>0
-                && dto.getSelectedItem().get(0).getFinprodId() != null){
-            String finprodId = dto.getSelectedItem().get(0).getFinprodId();
-            int count = finBondTargetAssetService.selectIsIssueAsset(finprodId);
-            if (count > 0){
-                ValidMessage validMessage = new ValidMessage("上市债券不允许删除,请先撤销对应的上市流通交易");
-                errorList.add(validMessage);
-                res.setErrorList(errorList);
-                res.setMessageType(MessageType.错误消息);
-                return res;
-            }
+        if("delete".equals(dto.getOperateType())){
+            if (dto.getSelectedItem() != null && dto.getSelectedItem().size()>0
+                    && dto.getSelectedItem().get(0).getFinprodId() != null){
+                String finprodId = dto.getSelectedItem().get(0).getFinprodId();
+                int count = finBondTargetAssetService.selectIsIssueAsset(finprodId);
+                if (count > 0){
+                    ValidMessage validMessage = new ValidMessage("上市债券不允许删除,请先撤销对应的上市流通交易");
+                    errorList.add(validMessage);
+                    res.setErrorList(errorList);
+                    res.setMessageType(MessageType.错误消息);
+                    return res;
+                }
+            }    
         }
+        
         //新增撤销校验，不允许删除上市债券  add by mashukai 20210425 end
         
         return commonCheck(result, dto.getOperateType());
