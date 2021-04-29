@@ -15,9 +15,9 @@
             INFORMATION_SCHEMA.TABLES TB,
             INFORMATION_SCHEMA.COLUMNS COL
             WHERE
-            TB.TABLE_SCHEMA = 'zoutest'
-            AND TB.TABLE_NAME = '${table}'
-            AND TB.TABLE_NAME = COL.TABLE_NAME
+<!--            TB.TABLE_SCHEMA = 'zoutest'  AND-->
+            TB.TABLE_NAME = '${table}'
+            AND TB.TABLE_NAME = COL.TABLE_NAME ORDER BY columnName
         </if>
         <if test="databaseType == 'Oracle'">
             SELECT

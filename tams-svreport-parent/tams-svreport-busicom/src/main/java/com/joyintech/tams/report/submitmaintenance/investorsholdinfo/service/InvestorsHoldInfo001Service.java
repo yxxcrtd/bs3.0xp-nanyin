@@ -1005,17 +1005,6 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				}
 				// add by etliu 20180829 end
 
-				//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空  add by zoujiamin 2021/04/25
-				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getPrdRegistCode())){
-					chbInvestholdInfoSub.setPrdRegistCode("");
-				}
-				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getOrgCode())){
-					chbInvestholdInfoSub.setOrgCode("");
-				}
-				if(!StringUtil.isNotEmpty(chbInvestholdInfoSub.getRemark())){
-					chbInvestholdInfoSub.setRemark("");
-				}
-				//对于一些参数没有值的话，由于null在mysql组装sql语句时有些问题，这些参数先设置成空 add by zoujiamin
 
 				subListUp.add(chbInvestholdInfoSub);
 			} else {
@@ -2773,10 +2762,10 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			InvestorsHoldInfo001FileReadParaDto paraDto = this.buildFileReadParaDto(equityList);
 			List<ChbPrdresistCode> prodRegInfoList = this.getProdRegInfoListFromFile(equityList, paraDto);
 
-//			if (equityList.size() <= 1000) {
-//				success = excuteInvestorsHoldInfoByStep(equityList, interType, result, null, null, null,
-//						prodRegInfoList, paraDto);
-//			} else {
+			if (equityList.size() <= 1000) {
+				success = excuteInvestorsHoldInfoByStep(equityList, interType, result, null, null, null,
+						prodRegInfoList, paraDto);
+			} else {
 			// 创建表
 			ImpTable table = new ImpTable(CHB_INVESTHOLD_INFO_NAME);
 			table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
@@ -2935,7 +2924,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 		Long et=edate.getTime();
 		Long time=(et-bt)/1000;
 		logger.info("持有信息入库处理结束:"+sdf.format(edate)+"耗时"+time+"秒");
-//		}
+		}
 		// 数据解析完成，并导入数据库成功后，将ftp文件修改名称
 		if (success) {
 			return "success";

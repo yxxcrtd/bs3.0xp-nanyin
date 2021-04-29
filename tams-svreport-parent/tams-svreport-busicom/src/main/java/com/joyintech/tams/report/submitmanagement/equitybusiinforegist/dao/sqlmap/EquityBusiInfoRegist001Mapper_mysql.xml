@@ -811,7 +811,6 @@
     </insert>
     <!-- 批量更新 -->
     <update id="updateBatchEquityBusi" parameterType="java.util.List">
-        begin
         <foreach collection="list" item="item" index="index" separator=";">
             update CHB_EQUDET
             <set>
@@ -920,13 +919,14 @@
                 <if test="item.isSubmit != null">
                     IS_SUBMIT = #{item.isSubmit,jdbcType=CHAR},
                 </if>
-                INTERF_CHECK_RESULT = #{item.interfCheckResult,jdbcType=VARCHAR}
+                <if test="item.interfCheckResult != null">
+                    INTERF_CHECK_RESULT = #{item.interfCheckResult,jdbcType=CHAR},
+                </if>
             </set>
             where BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
             and REG_CODE = #{item.regCode,jdbcType=VARCHAR}
             and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
         </foreach>
-        ;end;
     </update>
     <!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
     <insert id="insertEquityBusiHis" parameterType="java.util.List">
