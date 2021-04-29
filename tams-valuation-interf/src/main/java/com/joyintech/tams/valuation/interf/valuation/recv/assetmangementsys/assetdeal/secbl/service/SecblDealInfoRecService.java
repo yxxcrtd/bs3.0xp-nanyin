@@ -89,10 +89,18 @@ public class SecblDealInfoRecService {
              ps.add(DictCodeList.交易方向_本金返还.getValue());
              ps.add(DictCodeList.交易方向_融入债券还本.getValue());
              ps.add(DictCodeList.交易方向_卖空债券还本.getValue());
-             /**add by chendijun 20190412 start**/
+
+
              ps.add(DictCodeList.交易方向_融入债券派息到账.getValue());
              ps.add(DictCodeList.交易方向_融入债券派本到账.getValue());
-             /**add by chendijun 20190412 end**/
+             /**add by wujie on 20210429 start**/
+            ps.add(DictCodeList.交易方向_还本到账.getValue());
+            ps.add(DictCodeList.交易方向_收息到账.getValue());
+            /**add by wujie on 20210429 20210429 end**/
+
+
+
+
              paramMap.put("pslist", ps);//删除除这些交易方向的数据
         }else if(TempConstant.债券借贷标的券卖出与购回.equals(acctEntity.getTmpEName())){
         	 rtnResult=secSeBackDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
