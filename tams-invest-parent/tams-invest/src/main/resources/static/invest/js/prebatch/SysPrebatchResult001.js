@@ -33,21 +33,29 @@
             }
         },
         cols:[
-            {field:'checkDateStr', title: 'SysPrebatchResult001.checkDate', width:'10%',sortField:'checkDate'}
-            ,{field:'taskIdStr', title: 'SysPrebatchResult001.taskId', width:'10%',sortField:'taskId'}
-            ,{field:'taskStatusStr', title: 'SysPrebatchResult001.taskStatus', width:'10%',sortField:'taskStatus'}
-            ,{field:'detailCount', title: 'SysPrebatchResult001.detailCount', width:'10%',sortField:'detailCount'}
-            ,{field:'executeDateStr', title: 'SysPrebatchResult001.executeDate', width:'10%',sortField:'executeDate'}
+            {field:'checkDateStr', title: 'SysPrebatchResult001.checkDate', width:'8%',sortField:'checkDate'}
+            ,{field:'taskIdStr', title: 'SysPrebatchResult001.taskId', width:'16%',sortField:'taskId'}
+            ,{field:'taskStatusStr', title: 'SysPrebatchResult001.taskStatus', width:'6%',sortField:'taskStatus'}
+            ,{field:'detailCount', title: 'SysPrebatchResult001.detailCount', width:'6%',sortField:'detailCount'}
+            ,{field:'executeDateStr', title: 'SysPrebatchResult001.executeDate', width:'8%',sortField:'executeDate'}
             ,{
-                field: 'processTime', width: 200, title: '耗时(S)',sortable:false, render: function (data, type, row, meta) {
+                field: 'processTime', width:'8%', title: '耗时(S)',sortable:false, render: function (data, type, row, meta) {
                     return data*1/1000;
                 }
             }
-            ,{field:'startTimeStr', title: 'SysPrebatchResult001.startTime', width:'10%',sortField:'startTime'}
-            ,{field:'endTimeStr', title: 'SysPrebatchResult001.endTime', width:'10%',sortField:'endTime'}
+            ,{field:'startTimeStr', title: 'SysPrebatchResult001.startTime', width:'12%',sortField:'startTime'}
+            ,{field:'endTimeStr', title: 'SysPrebatchResult001.endTime', width:'12%',sortField:'endTime'}
             ,{field:'seqNo', visible: false}
             ,{field:'batchSeqNo', visible: false}
-            ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
+            ,{field:'action', title: '操作' , type:'action' , width:'10%'
+                ,render: function (data, type, row, meta) {
+                                if (row.detailCount!=null && row.detailCount && row.detailCount >0 ){
+                                    return '<i class="btn layui-icon edit" title="详情">&#xe615;</i>';
+                                }else{
+                                    return "";
+                                }
+                            }
+            }
         ],
     });
     var exportExcel = function(){
@@ -60,8 +68,8 @@
     table.bind('click', '.edit', function(data, index) {
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
-        Joyin.dialog(JoyinUtil.getLabel("SysPrebatchResult001"),
-                JoyinUtil.getRealPath("invest/prebatch/SysPrebatchResult001/init"),
+        Joyin.dialog(JoyinUtil.getLabel("SysPrebatchResult002"),
+                JoyinUtil.getRealPath("invest/prebatch/SysPrebatchResult002/init"),
                 "98%", "95%", data,
            function(){table.reload();});
     });

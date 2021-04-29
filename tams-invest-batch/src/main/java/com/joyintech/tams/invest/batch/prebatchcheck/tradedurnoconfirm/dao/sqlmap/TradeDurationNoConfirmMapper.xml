@@ -150,7 +150,6 @@
     <select id="selectZYSHGDurationList"
             resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
         SELECT
-        fp1.FINPROD_NAME,
         T4.FINPROD_ID  finprodId,
         SUBT2.PORTFOLIO_ID portfolioId,
         SUBT2.PORTFOLIO_NAME  portfolioName,
