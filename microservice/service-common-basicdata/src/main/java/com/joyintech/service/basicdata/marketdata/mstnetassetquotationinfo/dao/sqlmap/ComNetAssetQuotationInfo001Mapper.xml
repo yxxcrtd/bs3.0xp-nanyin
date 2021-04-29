@@ -15,7 +15,7 @@
         WHERE 
                A.FINPROD_MARKET_ID=B.FINPROD_ID
                AND A.PROFIT_TYPE IN (#{PROFITTYPE_VALUE_01,jdbcType=VARCHAR}, #{PROFITTYPE_VALUE_03,jdbcType=VARCHAR})
-               AND A.FINPROD_TYPE2=#{TYPE_TOUGUAN_F17,jdbcType=VARCHAR}
+               AND A.FINPROD_TYPE=#{TYPE_TOUGUAN_F17,jdbcType=VARCHAR}
 			<if test="finProdName != null and finProdName != ''">
 				AND A.FINPROD_ABBR like concat(concat('%', #{finProdName,jdbcType=VARCHAR}),'%')
 			</if>
@@ -41,7 +41,7 @@
 		       A.FINPROD_MARKET_ID=B.FINPROD_ID 
 		       AND A.FINPROD_ABBR like concat(concat('%', #{finProdName,jdbcType=VARCHAR}),'%') 
 		      AND A.PROFIT_TYPE IN (#{PROFITTYPE_VALUE_01,jdbcType=VARCHAR}, #{PROFITTYPE_VALUE_03,jdbcType=VARCHAR})
-		       AND A.FINPROD_TYPE2=#{TYPE_TOUGUAN_F17}
+		       AND A.FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
 </select>
 <select id="getAssetCode" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT DISTINCT
@@ -61,7 +61,7 @@
 		       	OR A.FINPROD_NAME like concat(concat('%', #{finProdMarketId,jdbcType=VARCHAR}),'%')
 		       	)
                AND A.PROFIT_TYPE IN (#{PROFITTYPE_VALUE_01,jdbcType=VARCHAR}, #{PROFITTYPE_VALUE_03,jdbcType=VARCHAR})
-		      AND A.FINPROD_TYPE2=#{TYPE_TOUGUAN_F17}
+		      AND A.FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
 </select>
 <select id="getAssetCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT
@@ -80,7 +80,7 @@
 		      <if test="profitType != null and profitType != ''">
 		       AND PROFIT_TYPE=#{profitType}
 		      </if>
-		       AND FINPROD_TYPE2=#{TYPE_TOUGUAN_F17}
+		       AND FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
 		       AND FINPROD_MARKET_ID IS NOT NULL
 		       <if test="search != null and search != ''">
 		       AND (FINPROD_MARKET_ID like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
@@ -156,7 +156,7 @@
                FIN_PRODUCT_VALUATION 
         WHERE 
                FINPROD_ID=#{finprodId} 
-               AND FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+               AND FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
                AND to_char(VAL_DATE,'yyyy-MM-dd') = #{valDate} 
 </select>
     <update id="update" parameterType="com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto" >
@@ -195,7 +195,7 @@
 		AND
 			A.VAL_DATE = #{valDate,jdbcType=DATE}
 		AND
-			A.FINPROD_TYPE2=#{finprodType2,jdbcType=VARCHAR}
+			A.FINPROD_TYPE=#{finprodType,jdbcType=VARCHAR}
 	</select>
 
 	<select id="checkFinprod" resultType="com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto">
@@ -206,7 +206,7 @@
 		WHERE
     	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
 		AND
-    	FP.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+    	FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
     </select>
     
     <select id="checkFinprodIdAndFinprodName" resultType="com.joyintech.service.basicdata.marketdata.mstnetassetquotationinfo.dto.ComNetAssetQuotationInfo001Dto">
@@ -217,7 +217,7 @@
 		WHERE
     	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
 		AND
-    	FP.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+    	FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
     	AND
     	FP.FINPROD_ABBR = #{finprodName,jdbcType=VARCHAR}
     </select>

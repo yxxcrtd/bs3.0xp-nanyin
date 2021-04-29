@@ -116,7 +116,7 @@ public class ComNetAssetQuotationInfo002Controller extends BaseController{
         Map<String,Object> param = RequestUtil.getPageParam();
         //map.put("finProdMarketId", param);
 		/* param.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue()); */
-        param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        param.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         List<SelectOptionDto> temp = mstnetassetquotationinfo001service.getAssetCodeList(param);
         return temp;
     }

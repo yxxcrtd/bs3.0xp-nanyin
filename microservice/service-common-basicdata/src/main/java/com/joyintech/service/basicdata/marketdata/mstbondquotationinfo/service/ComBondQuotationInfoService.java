@@ -50,7 +50,7 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
      */
     public Page<ComBondQuotationInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
         throws Exception {
-        pageParam.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        pageParam.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_债券.getValue());
         return super.queryForPage(page, length, () -> comBondQuotationInfoMapper.select(pageParam));
     }
     /**
@@ -62,7 +62,7 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
     public List<SuggestDto> getSecIdOption(String secId) {
         Map<String, Object> param = new HashMap<>(2);
         // 获取前台输入的值
-        param.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_债券.getValue());
         param.put("secId", secId);
         return comBondQuotationInfoMapper.getSecIdOption(param);
     }
@@ -73,7 +73,7 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
      * @return List
      */
     public List<SelectOptionDto> getFinprodAbbrOption(Map<String, Object> map) {
-    	map.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+    	map.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_债券.getValue());
         return comBondQuotationInfoMapper.getFinprodAbbrOption(map);
     }
 
@@ -135,7 +135,7 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
      */
     public List<SuggestDto> getFinProdAbbr(String finprodAbbr) {
         Map<String, Object> param = new HashMap<>();
-        param.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_债券.getValue());
         param.put("finprodAbbr", finprodAbbr);
         return comBondQuotationInfoMapper.getFinProdAbbr(param);
     }
@@ -172,7 +172,7 @@ public class ComBondQuotationInfoService extends BaseService<ComBondQuotationInf
      */
     public List<SuggestDto> getSecIdToNew(String secId) {
         Map<String, Object> param = new HashMap<>();
-        param.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_债券.getValue());
         // 获取前台输入的值
         param.put("secId", secId);
         return comBondQuotationInfoMapper.getSecIdToNew(param);
