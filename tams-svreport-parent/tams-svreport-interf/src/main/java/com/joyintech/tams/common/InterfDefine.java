@@ -44,7 +44,7 @@ public enum InterfDefine {
     关联机构信息("DIS_REL_ORG","关联机构信息"),
     基础日历信息数据("DIS_CALENDAR_INFO","基础日历信息数据"),
     日历管理信息数据("DIS_CALENDAR_MGR","日历管理信息数据"),
-    债券评级数据("MST_BOND_CREDIT_RATING","债券评级数据"),
+    债券评级数据("CHB_SEC_RATING","债券评级数据"),
     节假日数据("MST_HOLIDAY","节假日数据"),
     汇率信息数据("MST_EXCHARGE_QUOTE","汇率信息数据"),
     市场机构数据("MST_CUSTOMER_INFO","市场机构数据"),

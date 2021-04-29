@@ -116,7 +116,7 @@
 	  (
 	  select TEMP.* from
 	  (
-	  <foreach collection="list" item="item"  separator="union all">
+	  <foreach collection="newDataList" item="item"  separator="union all">
 		  SELECT
 		  #{item.booksetId,jdbcType=VARCHAR} BOOKSET_ID,
 		  #{item.balanceDate,jdbcType=DATE} BALANCE_DATE,
@@ -170,14 +170,20 @@
 		  #{item.tdyRedBCUlamt,jdbcType=DECIMAL} TDY_RED_B_C_ULAMT
 		  FROM DUAL
 	  </foreach>
-	  ) TEMP where not exisits (select 1 from BOK_BALANCE CII CII.BOOKSET_ID = TEMP.BOOKSET_ID
-	  AND CII.SUBJECT_NO = TEMP.SUBJECT_NO
-	  AND CII.BALANCE_DATE = TEMP.BALANCE_DATE )
+	  ) TEMP
+	    where not exists (
+	    select 1 from BOK_BALANCE CII WHERE CII.BOOKSET_ID = TEMP.BOOKSET_ID
+	    AND CII.SUBJECT_NO = TEMP.SUBJECT_NO
+	    AND CII.BALANCE_DATE = TEMP.BALANCE_DATE )
 	  ) de ;
 
 	  UPDATE  BOK_BALANCE as A,
 	  (
-	  select FSUBJECT_NO,
+	  select
+	  BOOKSET_ID,
+	  BALANCE_DATE,
+	  SUBJECT_NO,
+	  FSUBJECT_NO,
 	  SUBJECT_LEVEL,
 	  BAL_FLAG,
 	  BAL_CO_FLAG,
@@ -227,7 +233,7 @@
 	  (
 	  select TEMP.* from
 	  (
-	  <foreach collection="list" item="item"  separator="union all">
+	  <foreach collection="newDataList" item="item"  separator="union all">
 		  SELECT
 		  #{item.booksetId,jdbcType=VARCHAR} BOOKSET_ID,
 		  #{item.balanceDate,jdbcType=DATE} BALANCE_DATE,
@@ -284,9 +290,57 @@
 	  ) TEMP
 	  ) de
 	  ) AS B
-	  set  A.* = B.* where exisits (select 1 from BOK_BALANCE CII where CII.BOOKSET_ID = TEMP.BOOKSET_ID
-	  AND CII.SUBJECT_NO = TEMP.SUBJECT_NO
-	  AND CII.BALANCE_DATE = TEMP.BALANCE_DATE );
+	  SET
+	  A.FSUBJECT_NO = B.FSUBJECT_NO,
+	  A.SUBJECT_LEVEL = B.SUBJECT_LEVEL,
+	  A.BAL_FLAG = B.BAL_FLAG,
+	  A.BAL_CO_FLAG = B.BAL_CO_FLAG,
+	  A.O_CCY = B.O_CCY,
+	  A.O_AMT = B.O_AMT,
+	  A.O_C_AMT = B.O_C_AMT,
+	  A.O_D_AMT = B.O_D_AMT,
+	  A.O_CO_AMT = B.O_CO_AMT,
+	  A.O_CO_C_AMT = B.O_CO_C_AMT,
+	  A.O_CO_D_AMT = B.O_CO_D_AMT,
+	  A.B_CCY = B.B_CCY,
+	  A.B_AMT = B.B_AMT,
+	  A.B_C_AMT = B.B_C_AMT,
+	  A.B_CO_AMT = B.B_CO_AMT,
+	  A.B_CO_C_AMT = B.B_CO_C_AMT,
+	  A.B_CO_D_AMT = B.B_CO_D_AMT,
+	  A.B_D_AMT = B.B_D_AMT,
+	  A.TDY_O_AMT=B.TDY_O_AMT,
+	  A.TDY_O_C_AMT= B.TDY_O_C_AMT,
+	  A.TDY_O_D_AMT =B.TDY_O_D_AMT,
+	  A.TDY_O_CO_AMT = B.TDY_O_CO_AMT,
+	  A.TDY_O_CO_C_AMT = B.TDY_O_CO_C_AMT,
+	  A.TDY_O_CO_D_AMT = B.TDY_O_CO_D_AMT,
+	  A.TDY_B_AMT = B.TDY_B_AMT,
+	  A.TDY_B_C_AMT = B.TDY_B_C_AMT,
+	  A.TDY_B_D_AMT = B.TDY_B_D_AMT,
+	  A.TDY_B_CO_AMT = B.TDY_B_CO_AMT,
+	  A.TDY_B_CO_C_AMT = B.TDY_B_CO_C_AMT,
+	  A.TDY_B_CO_D_AMT = B.TDY_B_CO_D_AMT,
+	  A.IS_LEAF = B.IS_LEAF,
+	  A.NUM_AMT = B.NUM_AMT,
+	  A.CREATE_USER = B.CREATE_USER,
+	  A.CREATE_DEPT = B.CREATE_DEPT,
+	  A.CREATE_TIME = B.CREATE_TIME,
+	  A.UPDATE_USER = B.UPDATE_USER,
+	  A.UPDATE_TIME = B.UPDATE_TIME,
+	  A.TDY_AMT_FLAG = B.TDY_AMT_FLAG,
+	  A.TDY_CO_FLAG = B.TDY_CO_FLAG,
+	  A.TDY_PUR_O_D_ULAMT = B.TDY_PUR_O_D_ULAMT,
+	  A.TDY_RED_O_D_ULAMT = B.TDY_RED_O_D_ULAMT,
+	  A.TDY_PUR_O_C_ULAMT = B.TDY_PUR_O_C_ULAMT,
+	  A.TDY_RED_O_C_ULAMT = B.TDY_RED_O_C_ULAMT,
+	  A.TDY_PUR_B_D_ULAMT = B.TDY_PUR_B_D_ULAMT,
+	  A.TDY_RED_B_D_ULAMT = B.TDY_RED_B_D_ULAMT,
+	  A.TDY_PUR_B_C_ULAMT = B.TDY_PUR_B_C_ULAMT,
+	  A.TDY_RED_B_C_ULAMT = B.TDY_RED_B_C_ULAMT
+	  where A.BOOKSET_ID = B.BOOKSET_ID
+	  AND A.SUBJECT_NO = B.SUBJECT_NO
+	  AND A.BALANCE_DATE = B.BALANCE_DATE;
 	</insert>
 	<delete id="deleteBatchList" >
 		 begin

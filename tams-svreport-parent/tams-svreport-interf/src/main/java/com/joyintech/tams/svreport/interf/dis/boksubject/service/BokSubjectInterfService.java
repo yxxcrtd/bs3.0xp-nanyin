@@ -71,13 +71,13 @@ public class BokSubjectInterfService extends FileImpService {
 			try {
 				if (StringUtil.isNotEmpty(map.get("CREATE_TIME"))) {
 					dto.setCreateTime(DateUtil.parseDate(map.get("CREATE_TIME"),
-							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
+							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS,DateUtil.DEFAULT_DATETIME_FORMAT}));
 				} else {
 					dto.setCreateTime(new Date());
 				}
 				if (StringUtil.isNotEmpty(map.get("UPDATE_TIME"))) {
 					dto.setUpdateTime(DateUtil.parseDate(map.get("UPDATE_TIME"),
-							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS }));
+							new String[] { DateUtil.DEFAULT_DATETIME_FORMAT_ODS,DateUtil.DEFAULT_DATETIME_FORMAT }));
 				} else {
 					dto.setUpdateTime(new Date());
 				}

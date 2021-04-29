@@ -104,8 +104,10 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 			//增量
 			mergeData(bokBalanceList); 
 				
-		}else if(listData.size() <= 1000){
+		}
+//		else if(listData.size() <= 1000){
 			//增量插入 小于100000正常入库 超过100000条使用sqlldr进行入库
+		else{
 			try{
 				//先根据更新日删除当日插入的数据
 				chbSubjectBalanceInterfMapper.deleteData(DateUtil.format(new Date()));
@@ -116,63 +118,64 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 				success = false;
 			}
 			
-		}else{
-			//先根据更新日删除当日插入的数据
-			chbSubjectBalanceInterfMapper.deleteData(DateUtil.format(new Date()));
-			// 创建表
-			ImpTable table = new ImpTable(SUBJECTBALANCETableName);
-			table.setColumns(ImportGenerator.createImpTableColumns(SUBJECTBALANCETableName));
-			success = excuteSubjectBalanceDataByStep(bokBalanceList, type, tmpPath, table);
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/BOK_BALANCE/"), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(listData.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(SUBJECTBALANCETableName)) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件" + f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
-					}
-				}
-			}
-			if ("fail".equals(result)) {
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/BOK_BALANCE/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return success?"success":"fail";
-					}
-				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						logger.debug("科目余额sqlloder入库----开始-----:");
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/BOK_BALANCE/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-						logger.debug("科目余额sqlloder入库----结束-----:");
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return success?"success":"fail";
-					}
-				}
-			}
 		}
+//		else{
+//			//先根据更新日删除当日插入的数据
+//			chbSubjectBalanceInterfMapper.deleteData(DateUtil.format(new Date()));
+//			// 创建表
+//			ImpTable table = new ImpTable(SUBJECTBALANCETableName);
+//			table.setColumns(ImportGenerator.createImpTableColumns(SUBJECTBALANCETableName));
+//			success = excuteSubjectBalanceDataByStep(bokBalanceList, type, tmpPath, table);
+//			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/BOK_BALANCE/"), new String[] { "tmp" }, false);
+//			List<String> content = new ArrayList<>(listData.size());
+//			String result = "";
+//			for (File f : files) {
+//				if (f.getName().startsWith(SUBJECTBALANCETableName)) {
+//					try {
+//						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+//						logger.debug("查找sqlloder文件" + f);
+//					} catch (IOException e) {
+//						logger.debug("查找sqlloder文件异常");
+//						logger.error(e.getMessage(), e);
+//						result = "fail";
+//					} finally {
+//						f.delete();
+//					}
+//				}
+//			}
+//			if ("fail".equals(result)) {
+//				return result;
+//			}
+//			// 系统是否使用的db2数据库
+//			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+//			if (isDB2DataBase) {
+//				// db2数据库处理
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/BOK_BALANCE/", content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
+//								reportSqlldrDatabaseName);
+//					} catch (IOException | InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//						return success?"success":"fail";
+//					}
+//				}
+//			} else {
+//				// oracle原逻辑
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						logger.debug("科目余额sqlloder入库----开始-----:");
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/BOK_BALANCE/", content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
+//								reportSqlldrDatabaseName);
+//						logger.debug("科目余额sqlloder入库----结束-----:");
+//					} catch (IOException | InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//						return success?"success":"fail";
+//					}
+//				}
+//			}
+//		}
 	
 		return success?"success":"fail";
 	}
@@ -246,8 +249,8 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 	public String importDB(List<Map<String, String>> listData,InterfFile interfFile) {
 		// TODO Auto-generated method stub
 		String remoteDir = "success";
-		checkData(listData, interfFile.getFilename(), InterfDefine.科目余额数据.getCode(),
-				InterfDefine.科目余额数据.getCode(),null, new String[]{"BOOKSET_ID","SUBJECT_NO","BALANCE_DATE"});
+//		checkData(listData, interfFile.getFilename(), InterfDefine.科目余额数据.getCode(),
+//				InterfDefine.科目余额数据.getCode(),null, new String[]{"BOOKSET_ID","SUBJECT_NO","BALANCE_DATE"});
 		//有效数据入库 
 		List<Map<String, String>> allData = new ArrayList<Map<String,String>>();
 		allData.addAll(listData);
@@ -326,7 +329,7 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
                 else if ("java.util.Date".equals(type.getTypeName())) {
                     if (value != null&&""!=value) {
                         try {
-                            field.set(chbSubjectBalanceData, DateUtil.parse(value.substring(0, 8)));
+                            field.set(chbSubjectBalanceData, DateUtil.parse(value));
                         } catch ( IllegalAccessException e) {
                             logger.error(e.getMessage(),e);
                             return ;

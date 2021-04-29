@@ -107,7 +107,7 @@
         (
         select TEMP.* from
         (
-        <foreach collection="list" item="item"  separator="union all">
+        <foreach collection="newDataList" item="item"  separator="union all">
             select
             #{item.assetUuid, jdbcType=CHAR} ASSET_UUID,
             #{item.assetCode ,jdbcType=VARCHAR } ASSET_CODE,
@@ -159,12 +159,13 @@
             #{item.assetType ,jdbcType=VARCHAR } ASSET_TYPE
             from dual
         </foreach>
-        ) TEMP where not exisits (select 1 from CHB_LOAN_DETAIL_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
+        ) TEMP where not exists (select 1 from CHB_LOAN_DETAIL_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
         ) de ;
 
         UPDATE  CHB_LOAN_DETAIL_INFO as A,
         (
         select ASSET_UUID,
+        ASSET_CODE,
         ASSETS_INVEST,
         EACH_PROPORTION,
         LOANS_TYPE,
@@ -186,7 +187,7 @@
         LOAN_CONTRACT_ORG_CITY,
         LOAN_CONTRACT_ORG_COUNTY,
         ENTERPRISE_INVESTOR_TYPE_FIRST,
-        ENTERPRISE_INVESTOR_TYPE_SEC,
+        ENTERPRISE_INVESTOR_TYPE_THIRD,
         ENTERPRISE_INVESTOR_TYPE_SEC,
         ENTERPRISE_SCALE,
         LOAN_BASIS_ID,
@@ -214,7 +215,7 @@
         (
         select TEMP.* from
         (
-        <foreach collection="list" item="item"  separator="union all">
+        <foreach collection="newDataList" item="item"  separator="union all">
             select
             #{item.assetUuid, jdbcType=CHAR} ASSET_UUID,
             #{item.assetCode ,jdbcType=VARCHAR } ASSET_CODE,
@@ -269,7 +270,55 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from CHB_LOAN_DETAIL_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE);
+        set
+        A.ASSET_UUID = B.ASSET_UUID,
+        A.ASSETS_INVEST = B.ASSETS_INVEST,
+        A.EACH_PROPORTION = B.EACH_PROPORTION,
+        A.LOANS_TYPE = B.LOANS_TYPE,
+        A.ORIG_CCY = B.ORIG_CCY,
+        A.ORIG_CONTRACT_AMOUNT = B.ORIG_CONTRACT_AMOUNT,
+        A.ORIG_CONTRACT_AMOUNT_CNY = B.ORIG_CONTRACT_AMOUNT_CNY,
+        A.BORROWER_TYPE = B.BORROWER_TYPE,
+        A.BORROWER_ID = B.BORROWER_ID,
+        A.INDUSTRY_INFO = B.INDUSTRY_INFO,
+        A.BORROWER_NATIONALITY = B.BORROWER_NATIONALITY,
+        A.BORROWER_PROVINCE = B.BORROWER_PROVINCE,
+        A.BORROWER_CITY = B.BORROWER_CITY,
+        A.BORROWER_COUNTY = B.BORROWER_COUNTY,
+        A.LOAN_TRANSFEROR_ID = B.LOAN_TRANSFEROR_ID,
+        A.LOAN_TRANSFEROR_NAME = B.LOAN_TRANSFEROR_NAME,
+        A.LOAN_CONTRACT_ORG_ID = B.LOAN_CONTRACT_ORG_ID,
+        A.LOAN_CONTRACT_ORG_NAME = B.LOAN_CONTRACT_ORG_NAME,
+        A.LOAN_CONTRACT_ORG_PROVINCE = B.LOAN_CONTRACT_ORG_PROVINCE,
+        A.LOAN_CONTRACT_ORG_CITY = B.LOAN_CONTRACT_ORG_CITY,
+        A.LOAN_CONTRACT_ORG_COUNTY = B.LOAN_CONTRACT_ORG_COUNTY,
+        A.ENTERPRISE_INVESTOR_TYPE_FIRST = B.ENTERPRISE_INVESTOR_TYPE_FIRST,
+        A.ENTERPRISE_INVESTOR_TYPE_SEC = B.ENTERPRISE_INVESTOR_TYPE_SEC,
+        A.ENTERPRISE_INVESTOR_TYPE_THIRD = B.ENTERPRISE_INVESTOR_TYPE_THIRD,
+        A.ENTERPRISE_SCALE = B.ENTERPRISE_SCALE,
+        A.LOAN_BASIS_ID = B.LOAN_BASIS_ID,
+        A.LOAN_PRD_TYPE = B.LOAN_PRD_TYPE,
+        A.LOAN_ACTUAL_INVEST = B.LOAN_ACTUAL_INVEST,
+        A.LOAN_VDATE = B.LOAN_VDATE,
+        A.LOAN_MDATE = B.LOAN_MDATE,
+        A.LOAN_EXTENSION_DUE_DATE = B.LOAN_EXTENSION_DUE_DATE,
+        A.RATE_FIXED = B.RATE_FIXED,
+        A.RATE_LEVEL = B.RATE_LEVEL,
+        A.LOAN_GUARANTEE_MODE = B.LOAN_GUARANTEE_MODE ,
+        A.LOAN_QUALITY = B.LOAN_QUALITY,
+        A.LOAN_STATE = B.LOAN_STATE,
+        A.LOAN_TRANSFEROR_RATE = B.LOAN_TRANSFEROR_RATE,
+        A.CREATE_USER = B.CREATE_USER,
+        A.CREATE_TIME = B.CREATE_TIME,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME,
+        A.CREATE_DEPT = B.CREATE_DEPT,
+        A.ORG_CODE = B.ORG_CODE,
+        A.DEPT_CODE = B.DEPT_CODE,
+        A.STATUS = B.STATUS,
+        A.DATA_SOURCE = B.DATA_SOURCE,
+        A.ASSET_TYPE = B.ASSET_TYPE
+        where A.ASSET_CODE = B.ASSET_CODE;
     </insert>
     <select id="selectPbcAssetType" parameterType="java.lang.String" resultMap="pbcAssetTypeMap">
         SELECT PBC_ASSET_TYPE1,PBC_ASSET_TYPE2

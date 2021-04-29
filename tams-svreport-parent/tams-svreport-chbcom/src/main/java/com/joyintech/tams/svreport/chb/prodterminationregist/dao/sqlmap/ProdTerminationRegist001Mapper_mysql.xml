@@ -37,6 +37,8 @@
     <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
     <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
     <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     REGIST_SEQNO, PROD_ID, MDATE, ISSUE_PARTY_ID, PROFIT, CUSTOM_PROFIT, CUSTOM_PROFIT_ORI, 
@@ -44,7 +46,7 @@
     MAN_FEE_IN, COU_FEE_IN, OTHER_FEE_IN, CUST_FEE_OUT, MAN_FEE_OUT, COU_FEE_OUT, ADV_FEE_OUT, 
     OTHER_FEE_OUT, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, 
     CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-    SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+    SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -68,7 +70,7 @@
       STATUS, CREATE_USER, CREATE_DEPT, 
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ORG_CODE, DEPT_CODE)
+      ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE)
     values (#{registSeqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{mdate,jdbcType=TIMESTAMP}, 
       #{issuePartyId,jdbcType=VARCHAR}, #{profit,jdbcType=DECIMAL}, #{customProfit,jdbcType=DECIMAL}, 
       #{customProfitOri,jdbcType=VARCHAR}, #{customAmtOri,jdbcType=VARCHAR}, #{customAmt,jdbcType=DECIMAL}, 
@@ -80,7 +82,7 @@
       #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
       NOW(), #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
       #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP}, 
-      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR})
+      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto" >
     insert into CHB_PRD_END_SUB
@@ -190,6 +192,12 @@
       <if test="deptCode != null" >
         DEPT_CODE,
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ,
+      </if>
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="registSeqno != null" >
@@ -296,6 +304,12 @@
       </if>
       <if test="deptCode != null" >
         #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sumitSeq != null" >
+        #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="prodRegistCode != null" >
+        #{prodRegistCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -404,6 +418,12 @@
       <if test="deptCode != null" >
         DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
   </update>
@@ -442,7 +462,9 @@
       CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
       SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
       ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
     where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
   </update>
   <select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto">
@@ -450,7 +472,14 @@
     sub.REGIST_SEQNO registSeqno,
     sub.PROD_ID prodId,
     sub.MDATE mdate,
+    /***update by leipeng 20200628**/
+
+	<if test="model_type != null">
+		info.REG_CODE issuePartyId, /*发行机构代码*/
+	  </if>
+	  <if test="model_type == null">
     sub.ISSUE_PARTY_ID issuePartyId,
+	  </if>
     sub.PROFIT profit,
     sub.CUSTOM_PROFIT customProfit,
     sub.CUSTOM_PROFIT_ORI customProfitOri,
@@ -480,9 +509,19 @@
     sub.SUBMIT_TIME submitTime,
     sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
     sub.SUBMIT_DEADLINE submitDeadline,
-    sub.ORG_CODE orgCode,
+    <if test="model_type != null">
+		 info.REG_CODE orgCode,
+	  </if>
+	  <if test="model_type == null">
+    	sub.ORG_CODE orgCode,
+	  </if>
+
+
+
     sub.DEPT_CODE deptCode,
-    code.REG_CODE regCode
+    code.REG_CODE regCode,
+    sub.SUMIT_SEQ sumitSeq,
+    sub.PROD_REGIST_CODE prodRegistCode
   from CHB_PRD_END_SUB sub
   left join CHB_PRD_BASEINFO info
   on info.prod_id=sub.prod_id
@@ -544,11 +583,11 @@
   <select id="selectAllDataByList" parameterType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto" resultMap="BaseResultMap">
   select 
   sub.REGIST_SEQNO, sub.PROD_ID, sub.MDATE, sub.ISSUE_PARTY_ID, sub.PROFIT, sub.CUSTOM_PROFIT, sub.CUSTOM_PROFIT_ORI, 
-    sub.CUSTOM_AMT_ORI, sub.CUSTOM_AMT, sub.CUSTOM_QTY, sub.CUS_YEAR_YIELD*100 CUS_YEAR_YIELD, sub.PRD_YEAR_YIELD*100 PRD_YEAR_YIELD, sub.CUST_FEE_IN, 
+    sub.CUSTOM_AMT_ORI, sub.CUSTOM_AMT, sub.CUSTOM_QTY, sub.CUS_YEAR_YIELD CUS_YEAR_YIELD, sub.PRD_YEAR_YIELD PRD_YEAR_YIELD, sub.CUST_FEE_IN,
     sub.MAN_FEE_IN, sub.COU_FEE_IN, sub.OTHER_FEE_IN, sub.CUST_FEE_OUT, sub.MAN_FEE_OUT, sub.COU_FEE_OUT, sub.ADV_FEE_OUT, 
     sub.OTHER_FEE_OUT, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.STATUS, sub.CREATE_USER,
     sub.CREATE_DEPT, sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.SUBMIT_TIME, sub.CHB_SUBMIT_DEADLINE, 
-    sub.SUBMIT_DEADLINE, sub.ORG_CODE, sub.DEPT_CODE ,code.REG_CODE regCode
+    sub.SUBMIT_DEADLINE, sub.ORG_CODE, sub.DEPT_CODE ,code.REG_CODE regCode, sub.SUMIT_SEQ, sub.PROD_REGIST_CODE
   from CHB_PRD_END_SUB sub
   left join CHB_PRD_BASEINFO info
   on info.prod_id=sub.prod_id
@@ -564,25 +603,31 @@
   </select>
   <!-- 用REGIST_SEQNO查询产品终止登记数据 add by wangg 20190625 -->
   <select id="selectAllDataByKeyList" parameterType="java.util.List" resultMap="BaseResultMap">
-  select 
-  sub.REGIST_SEQNO, sub.PROD_ID, sub.MDATE, sub.ISSUE_PARTY_ID, sub.PROFIT, sub.CUSTOM_PROFIT, sub.CUSTOM_PROFIT_ORI, 
-    sub.CUSTOM_AMT_ORI, sub.CUSTOM_AMT, sub.CUSTOM_QTY, sub.CUS_YEAR_YIELD*100 CUS_YEAR_YIELD, sub.PRD_YEAR_YIELD*100 PRD_YEAR_YIELD, sub.CUST_FEE_IN, 
-    sub.MAN_FEE_IN, sub.COU_FEE_IN, sub.OTHER_FEE_IN, sub.CUST_FEE_OUT, sub.MAN_FEE_OUT, sub.COU_FEE_OUT, sub.ADV_FEE_OUT, 
-    sub.OTHER_FEE_OUT, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.STATUS, sub.CREATE_USER,
-    sub.CREATE_DEPT, sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.SUBMIT_TIME, sub.CHB_SUBMIT_DEADLINE, 
-    sub.SUBMIT_DEADLINE, sub.ORG_CODE, sub.DEPT_CODE ,code.REG_CODE regCode
-  from CHB_PRD_END_SUB sub
-  left join CHB_PRD_BASEINFO info
-  on info.prod_id=sub.prod_id
-  left join CHB_PRDRESIST_CODE code
-  on code.prodid=sub.prod_id
-  where 1=1
-  <if test="keyList != null and keyList.size() > 0">
-	  <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
-	  #{items,jdbcType=VARCHAR}
-	  </foreach>
-  </if>
-  order by sub.SUBMIT_DEADLINE
+      <!--select
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdEndSubMapper.Base_Column_List" />
+      from CHB_PRD_END_SUB
+      where 1=1
+      <if test="keyList != null and keyList.size() > 0">
+          <foreach collection="keyList" item="items" open="and REGIST_SEQNO in (" separator="," close=")">
+          #{items,jdbcType=VARCHAR}
+          </foreach>
+      </if>
+      order by SUBMIT_DEADLINE-->
+      select
+          sub.REGIST_SEQNO, sub.PROD_ID, sub.MDATE, sub.ISSUE_PARTY_ID, sub.PROFIT, sub.CUSTOM_PROFIT, sub.CUSTOM_PROFIT_ORI,
+          sub.CUSTOM_AMT_ORI, sub.CUSTOM_AMT, sub.CUSTOM_QTY, sub.CUS_YEAR_YIELD CUS_YEAR_YIELD, sub.PRD_YEAR_YIELD PRD_YEAR_YIELD, sub.CUST_FEE_IN,
+          sub.MAN_FEE_IN, sub.COU_FEE_IN, sub.OTHER_FEE_IN, sub.CUST_FEE_OUT, sub.MAN_FEE_OUT, sub.COU_FEE_OUT, sub.ADV_FEE_OUT,
+          sub.OTHER_FEE_OUT, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.STATUS, sub.CREATE_USER,
+          sub.CREATE_DEPT, sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.SUBMIT_TIME, sub.CHB_SUBMIT_DEADLINE,
+          sub.SUBMIT_DEADLINE, sub.ORG_CODE, sub.DEPT_CODE ,sub.PROD_REGIST_CODE, sub.SUMIT_SEQ
+      from CHB_PRD_END_SUB sub
+      where 1=1
+      <if test="keyList != null and keyList.size() > 0">
+          <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+              #{items,jdbcType=VARCHAR}
+          </foreach>
+      </if>
+      order by sub.SUBMIT_DEADLINE
   </select>
   
   <update id="updateSubmitStatusToOk" parameterType="java.util.List">
@@ -712,6 +757,85 @@
   and deal.TRADE_TYPE = '16'
   and DATE_FORMAT(deal.SETTDATE_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{batchDate,jdbcType = VARCHAR}
 	) temp
+	where 1=1
+	<if test="prodidlist!=null and prodidlist.size()>0">
+      and ifnull(temp.fprod_id,temp.prod_id) in
+      <foreach collection="prodidlist" item="item" index="index" open="(" separator="," close=")">
+        <if test="(index % 999) == 998">
+          null) OR ifnull(temp.fprod_id,temp.prod_id) in (
+        </if>
+        #{item}
+      </foreach>
+	</if>
+	group by ifnull(temp.fprod_id,temp.prod_id),temp.settdate_date
+</select>
+
+	<select id="getProdIdsByEndSubTotal"
+	resultType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdForTerminationDto">
+	select ifnull(temp.fprod_id,temp.prod_id) as prodId,temp.settdate_date as settDate
+	from (select info.prod_id, info.fprod_id, deal.settdate_date
+	from chb_prd_deal_total deal
+	left join chb_prd_baseinfo info
+	on info.prod_id=deal.prod_id
+	and info.status != 'D'
+	where ifnull(DATE_FORMAT(deal.update_time, '%Y-%m-%d'),DATE_FORMAT(deal.create_time, '%Y-%m-%d')) = #{batchDate,jdbcType = VARCHAR}
+	and deal.trade_type = #{tradType,jdbcType = VARCHAR}
+	and deal.status in ('E', 'D','M')
+	union all
+	select info.prod_id, info.fprod_id, deal.settdate_date
+	from chb_prd_deal_total deal
+	left join chb_prd_baseinfo info
+	on info.prod_id=deal.prod_id
+	and info.status != 'D'
+	where DATE_FORMAT(deal.settdate_date, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR}
+	and deal.trade_type = #{tradType,jdbcType = VARCHAR}
+	and deal.status in ('E', 'D','M')
+	union all
+	select feeinfo.prod_id, feeinfo.fprod_id,deal1.settdate_date
+	from (select info.prod_id, info.fprod_id
+	from chb_prd_fee_deal fee
+	left join chb_prd_baseinfo info
+	on info.prod_id=fee.prod_id
+	and info.status != 'D'
+	where ifnull(DATE_FORMAT(fee.update_time, '%Y-%m-%d'),DATE_FORMAT(fee.create_time, '%Y-%m-%d')) = #{batchDate,jdbcType = VARCHAR}
+	group by info.prod_id, info.fprod_id) feeinfo
+	inner join chb_prd_deal_total deal1
+	on deal1.prod_id = feeinfo.prod_id
+	and deal1.fprod_id is null
+	and deal1.trade_type = #{tradType,jdbcType = VARCHAR}
+	and DATE_FORMAT(deal1.settdate_date, '%Y-%m-%d') <![CDATA[<=]]> #{batchDate,jdbcType = VARCHAR}
+	and deal1.status in('E','M')
+	union all
+	select feeinfo.prod_id, feeinfo.fprod_id,deal1.settdate_date
+	from (select info.prod_id, info.fprod_id
+	from chb_prd_fee_deal fee
+	left join chb_prd_baseinfo info
+	on info.prod_id=fee.prod_id
+	and info.status != 'D'
+	where ifnull(DATE_FORMAT(fee.update_time, '%Y-%m-%d'),DATE_FORMAT(fee.create_time, '%Y-%m-%d')) = #{batchDate,jdbcType = VARCHAR}
+	group by info.prod_id, info.fprod_id) feeinfo
+	inner join chb_prd_deal_total deal1
+	on deal1.fprod_id = feeinfo.prod_id
+	and deal1.fprod_id is not null
+	and deal1.trade_type = #{tradType,jdbcType = VARCHAR}
+	and DATE_FORMAT(deal1.settdate_date, '%Y-%m-%d') <![CDATA[<=]]> #{batchDate,jdbcType = VARCHAR}
+	and deal1.status in('E','M')
+	union all
+	 select info.prod_id, info.fprod_id, deal.settdate_date
+  from chb_prd_deal_total deal
+  left join (
+  select ifnull(sum(ABS(ifnull(ACCUQTY,0))),0) qty,PROD_ID from CHB_ASSET_POSITION
+	where DATE_FORMAT(CDATE,'%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR}
+  group by PROD_ID
+  ) pos
+  on deal.prod_id=pos.prod_id
+  left join chb_prd_baseinfo info
+	on info.prod_id=deal.prod_id
+	and info.status != 'D'
+  where pos.qty=0
+  and deal.TRADE_TYPE = '16'
+  and DATE_FORMAT(deal.SETTDATE_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{batchDate,jdbcType = VARCHAR}
+	) temp
 	where 1=1 
 	<if test="prodidlist!=null and prodidlist.size()>0">
 	and ifnull(temp.fprod_id,temp.prod_id) in
@@ -729,7 +853,9 @@
 		info.prodtype prodtype,/*产品类型*/
 		info.VDATE VDATE,/*产品起息日*/
 		info.BASIC basic,/*产品计息基础*/
-		info.REG_CODE regCode,/*产品登记编码*/
+		code.REG_CODE regCode,/*产品登记编码*/
+		code.REG_CODE prodRegistCode,/*产品登记编码*/
+
 		sub.regist_seqno regSeq,/*已报送登记*/
 		deal.status status
 		from chb_prd_baseinfo info
@@ -739,6 +865,41 @@
 		left join chb_prd_deal deal
 		on ifnull(info.fprod_id,info.prod_id) = ifnull(deal.fprod_id,deal.prod_id)
 		and deal.TRADE_TYPE = '16'
+
+		left join CHB_PRDRESIST_CODE code
+		on code.prodid=ifnull(info.FPROD_ID,info.PROD_ID)
+
+		where info.status in ('E','M')
+    	and info.fprod_id is null
+		<foreach collection="list" item="prdEndSub" open="and ( ("
+			close=" ) )" separator=") or (">
+			info.prod_id = #{prdEndSub.prodId,jdbcType = VARCHAR}
+		</foreach>
+	</select>
+		<!-- 查询产品基础信息 -->
+	<select id="getProdInfoByEndSubTotal"
+		resultType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdForTerminationDto">
+		select info.prod_id as prodId,/*产品代码*/
+		info.org_code as orgCode,/*机构代码*/
+		info.prodtype prodtype,/*产品类型*/
+		info.VDATE VDATE,/*产品起息日*/
+		info.BASIC basic,/*产品计息基础*/
+		code.REG_CODE regCode,/*产品登记编码*/
+		sub.regist_seqno regSeq,/*已报送登记*/
+		deal.status status
+
+		from chb_prd_baseinfo info
+
+		left join chb_prd_end_sub sub
+		on info.prod_id = sub.prod_id
+		and sub.send_status in ('02','03')
+
+		left join chb_prd_deal_total deal
+		on ifnull(info.fprod_id,info.prod_id) = ifnull(deal.fprod_id,deal.prod_id)
+		and deal.TRADE_TYPE = '16'
+
+		left join CHB_PRDRESIST_CODE code
+		on code.prodid=ifnull(info.FPROD_ID,info.PROD_ID)
 		where info.status in ('E','M')
     	and info.fprod_id is null
 		<foreach collection="list" item="prdEndSub" open="and ( ("
@@ -806,7 +967,7 @@
 </select>
 	
 	<insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto">
-    insert into CHB_PRD_END_SUB (REGIST_SEQNO, PROD_ID, MDATE, 
+    insert into CHB_PRD_END_SUB (PROD_REGIST_CODE,SUMIT_SEQ,REGIST_SEQNO, PROD_ID, MDATE,
       ISSUE_PARTY_ID, PROFIT, CUSTOM_PROFIT, 
       CUSTOM_PROFIT_ORI, CUSTOM_AMT_ORI, CUSTOM_AMT, 
       CUSTOM_QTY, CUS_YEAR_YIELD, PRD_YEAR_YIELD, 
@@ -821,7 +982,9 @@
       )
       <foreach collection="insertList" item="item" index="index" separator="union all" >
       select 
-      #{item.registSeqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.mdate,jdbcType=TIMESTAMP}, 
+      #{item.prodRegistCode,jdbcType=VARCHAR},
+      #{item.sumitSeq,jdbcType=VARCHAR},
+      #{item.registSeqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.mdate,jdbcType=TIMESTAMP},
       #{item.issuePartyId,jdbcType=VARCHAR}, #{item.profit,jdbcType=DECIMAL}, #{item.customProfit,jdbcType=DECIMAL}, 
       #{item.customProfitOri,jdbcType=VARCHAR}, #{item.customAmtOri,jdbcType=VARCHAR}, #{item.customAmt,jdbcType=DECIMAL}, 
       #{item.customQty,jdbcType=DECIMAL}, #{item.cusYearYield,jdbcType=DECIMAL}, #{item.prdYearYield,jdbcType=DECIMAL}, 
@@ -942,6 +1105,12 @@
       <if test="item.deptCode != null" >
         DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
       </if>
+      <if test="item.sumitSeq != null" >
+        SUMIT_SEQ = #{item.sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="item.prodRegistCode != null" >
+        PROD_REGIST_CODE = #{item.prodRegistCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where PROD_ID = #{item.prodId,jdbcType=VARCHAR}
     and SEND_STATUS = '01'
@@ -1059,7 +1228,7 @@
       STATUS, CREATE_USER, CREATE_DEPT, 
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ORG_CODE, DEPT_CODE
+      ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
       )
       select
       REGIST_SEQNO, PROD_ID, MDATE, 
@@ -1073,7 +1242,7 @@
       STATUS, CREATE_USER, CREATE_DEPT, 
       NOW(), UPDATE_USER, NOW(),
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      ORG_CODE, DEPT_CODE
+      ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
     from CHB_PRD_END_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">
@@ -1100,17 +1269,50 @@
    <select id="selectRegPerProdList"
 	resultType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto"
 	parameterType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdForTerminationDto">
-	select PROD_ID, MDATE, ISSUE_PARTY_ID, PROFIT,
-	CUSTOM_PROFIT, CUSTOM_PROFIT_ORI,
-	CUSTOM_AMT_ORI, CUSTOM_AMT, CUSTOM_QTY, CUS_YEAR_YIELD, PRD_YEAR_YIELD, CUST_FEE_IN,
-	MAN_FEE_IN, COU_FEE_IN, OTHER_FEE_IN, CUST_FEE_OUT, MAN_FEE_OUT,
-	COU_FEE_OUT, ADV_FEE_OUT,
-	OTHER_FEE_OUT,status from CHB_PRD_END_SUB
+	select
+       REGIST_SEQNO,
+       PROD_ID,
+       MDATE,
+       ISSUE_PARTY_ID,
+       PROFIT,
+       CUSTOM_PROFIT,
+       CUSTOM_PROFIT_ORI,
+       CUSTOM_AMT_ORI,
+       CUSTOM_AMT,
+       CUS_YEAR_YIELD,
+       PRD_YEAR_YIELD,
+       CUST_FEE_IN,
+       MAN_FEE_IN,
+       COU_FEE_IN,
+       OTHER_FEE_IN,
+       CUST_FEE_OUT,
+       MAN_FEE_OUT,
+       COU_FEE_OUT,
+       ADV_FEE_OUT,
+       OTHER_FEE_OUT,
+       SEND_STATUS,
+       SUBMIT_FEEDBACK_STATUS,
+       STATUS_DATE,
+       STATUS,
+       CREATE_USER,
+       CREATE_DEPT,
+       CREATE_TIME,
+       UPDATE_USER,
+       UPDATE_TIME,
+       SUBMIT_TIME,
+       CHB_SUBMIT_DEADLINE,
+       SUBMIT_DEADLINE,
+       ORG_CODE,
+       DEPT_CODE,
+       CUSTOM_QTY,
+       SUMIT_SEQ,
+       PROD_REGIST_CODE
+	from CHB_PRD_END_SUB
 	where SEND_STATUS in ('02','03')
 	<if test="list!=null and list.size()!=0">
 		<foreach collection="list" item="item" open="and ((" close="))"
 			separator=") or (">
-			trim(prod_id)= #{item.prodId}
+			trim(prod_id)= #{item.prodId,jdbcType=VARCHAR}
 		</foreach>
 	</if>
 </select>

@@ -163,13 +163,14 @@
         NOW() UPDATE_TIME
         FROM   DUAL
     </foreach>
-    ) TEMP where not exisits (select 1 from MST_HOLIDAY CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID
+    ) TEMP where not exists (select 1 from MST_HOLIDAY CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID
     AND DATE_FORMAT(CII.CDATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CDATE,'%Y-%m-%d'))
     ) de ;
 
     UPDATE  MST_HOLIDAY as A,
     (
-    select IS_HOLIDAY,
+    select
+    CALENDAR_ID, CDATE, IS_HOLIDAY,
     UPDATE_USER,
     UPDATE_TIME from
     (
@@ -190,8 +191,12 @@
     ) TEMP
     ) de
     ) AS B
-    set  A.* = B.* where exisits (select 1 from MST_HOLIDAY CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID
-    AND DATE_FORMAT(CII.CDATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CDATE,'%Y-%m-%d'));
+    SET
+    A.IS_HOLIDAY = B.IS_HOLIDAY,
+    A.UPDATE_USER = B.UPDATE_USER,
+    A.UPDATE_TIME = B.UPDATE_TIME
+    where  A.CALENDAR_ID = B.CALENDAR_ID
+    AND DATE_FORMAT(A.CDATE,'%Y-%m-%d') = DATE_FORMAT(B.CDATE,'%Y-%m-%d');
 </insert>
 
 <delete id="deleteAllData">

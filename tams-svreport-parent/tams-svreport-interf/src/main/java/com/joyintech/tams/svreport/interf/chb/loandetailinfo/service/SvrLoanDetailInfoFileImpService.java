@@ -170,8 +170,8 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
             session.close();
         }
         // add by zhangmingming 从CHB_ASSET_INFO中读入人行资产一级分类和人行资产二级分类，用于数据校验 20191224 end
-        checkData(loanDetailInfoList, interfFile.getFilename(),
-                InterfDefine.贷款明细信息接口数据.getCode(), InterfDefine.贷款明细信息接口数据.getCode(),BUSSINESSKEY,DUPLICATIED_LIST);
+//        checkData(loanDetailInfoList, interfFile.getFilename(),
+//                InterfDefine.贷款明细信息接口数据.getCode(), InterfDefine.贷款明细信息接口数据.getCode(),BUSSINESSKEY,DUPLICATIED_LIST);
 
 
 
