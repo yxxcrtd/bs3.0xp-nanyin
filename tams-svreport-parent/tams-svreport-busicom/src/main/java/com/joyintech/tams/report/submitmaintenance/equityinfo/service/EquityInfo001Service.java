@@ -1839,8 +1839,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         boolean success = true;
         if (CollectionUtils.isNotEmpty(equityList)) {
             monitorInfoDto.setFileDataCount(BigDecimal.valueOf(equityList.size()));
-
-            if (equityList.size() <= 1000) {
+//mysql早期改造代码合并  add by zoujiamin   2021/04/20  start
+            if (equityList.size() < 10) {
+//mysql早期改造代码合并  add by zoujiamin   2021/04/20  end
                 try {
                     success = excuteEquityInfoByStepNew(equityList, interType, null, null, null,mapRegist,spzMap,objFiledsMap);
                 } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -3552,7 +3553,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
 //                    equityInfoCheck = equityInfoCheckList.get(0);
 //                }
                 if (DictCodeList.是否_中债_是.getValue().equals(equityInfo001Dto.getIsNull())) {
-                    listN.add(equityInfo001Dto);
+                    if(!StringUtil.isNotEmpty(equityInfo001Dto.getIsSubmit())){
+                        equityInfo001Dto.setIsSubmit("");
+                    }
+                	listN.add(equityInfo001Dto);
                 }
                 else if(DictCodeList.是否_中债_是.getValue().equals(equityInfo001Dto.getIsNull())&&
                         DictCodeListExt1.维护数据状态_待处理.getValue().equals(equityInfo001Dto.getEditStatus())){
