@@ -2594,7 +2594,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             // 交易所债券特殊处理start----------------------------------------------------------------
             AccurIntCalOutParameter out = null;
             // 如果交易场所为上交所、深交所的情况
-            if (isJiaoYiSuo) {
+            if (isJiaoYiSuo && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
                 // 付息债、贴现债、零息债，交割日+1
                 // if (StringUtil.equals(DictCodeList.息票品种_附息.getValue(), secInfoModelDto.getBondsType())
                 // || StringUtil.equals(DictCodeList.息票品种_贴现.getValue(), secInfoModelDto.getBondsType())
