@@ -23,7 +23,7 @@ spring:
 
 shiro:
   casClientName: invest
-  allowUrl: /invest/trade/forwex/TrdForwexInvestTrade002/autosave
+  allowUrl: /invest/trade/forwex/TrdForwexInvestTrade002/autosave,/invest/trade/bond/TrdBondInvestTrade002/calculateData,/invest/trade/api/**
 
 application:
   remindPage: invest/remindMain
