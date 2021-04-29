@@ -47,8 +47,8 @@ public class SvrTableStructService {
 
         if(StringUtil.isNotEmpty(tableName)) {
 //            String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, ReportGlobalConstant.COM_PROP_DATABASE_TYPE);
-            String databaseType = "Oracle";
-            databaseType = StringUtil.defaultString(databaseType, "Oracle");
+            String databaseType = "MYSQL";
+            databaseType = StringUtil.defaultString(databaseType, "MYSQL");
             Map<String, Object> param = new HashMap<>();
             param.put("databaseType", databaseType);
             param.put("table", tableName);

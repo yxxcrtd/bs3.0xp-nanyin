@@ -1976,8 +1976,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             monitorInfoDto.setErrorFileSeqNo(StringUtil.joinString(seqNoList,GlobalConstant.COMMA));
 
 
-            if (equityList.size() <= 1000) {
-                //edit by zhengxiaolian 2019-12-24 start
+            if (equityList.size() <= 1) {
+            	//edit by zhengxiaolian 2019-12-24 start
                 success = excuteQuityBusiDetailsByStep(equityList, type,  null, null, null,
                         equityInfocheckMap,regList,listRules);
                 //update zhangjinyang 2020-12-21 防止内存溢出

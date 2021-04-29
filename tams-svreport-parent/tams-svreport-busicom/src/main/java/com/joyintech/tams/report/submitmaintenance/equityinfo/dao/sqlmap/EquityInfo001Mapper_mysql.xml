@@ -449,14 +449,13 @@
 		HOLDER_MARK, HOLDER_REGION, HOLDER_TYPE,
 		PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE,
 		OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK,
-		OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
+		OTHER_CAP_ACC_BANK, SPV_REGIST_CODE,
 		HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
 		HOLDER_CELLPHONE, HOLDER_TELEPHONE, IS_SUBMIT,
 		HOLDER_EMAIL, REMARK, STATUS,
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
 		DATA_SOURCE, ORG_CODE ,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT)
-		values
 		<foreach collection="list" item="item" index="index" separator="union all">
 			select
 			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
@@ -475,7 +474,7 @@
 			#{item.spvCapAccBank,jdbcType=VARCHAR} SPV_CAP_ACC_BANK,
 			#{item.otherCapAccBank,jdbcType=VARCHAR} OTHER_CAP_ACC_BANK,
 			#{item.spvRegistCode,jdbcType=VARCHAR} SPV_REGIST_CODE,
-			#{item.holderDate,jdbcType=VARCHAR} HOLDER_DATE,
+<!--			#{item.holderDate,jdbcType=VARCHAR} HOLDER_DATE,-->
 			#{item.holderName,jdbcType=VARCHAR} HOLDER_NAME,
 			#{item.holderSex,jdbcType=CHAR} HOLDER_SEX,
 			#{item.holderRiskPrefer,jdbcType=VARCHAR} HOLDER_RISK_PREFER,
@@ -488,9 +487,9 @@
 			'' WORKFLOW_ID,
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
 			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			sysdate UPDATE_TIME,
+			sysdate() UPDATE_TIME,
 			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			sysdate CREATE_TIME,
+			sysdate() CREATE_TIME,
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
 			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
 			#{item.agent,jdbcType=VARCHAR} AGENT,
@@ -549,8 +548,8 @@
 			#{item.INDENTIFY_MARK,jdbcType=VARCHAR} INDENTIFY_MARK,
 			#{item.ORG_INDENTIFY_MARK,jdbcType=VARCHAR} ORG_INDENTIFY_MARK,
 			#{item.REGIST_BANK_CODE,jdbcType=VARCHAR} REGIST_BANK_CODE,
-			'01' "TYPE"
-		</foreach>
+			'01' as "TYPE"
+		</foreach> a
 	</insert>
 
 	<!-- 删除临时表 -->

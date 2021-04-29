@@ -322,4 +322,33 @@ public class ReportGlobalConstant {
      * 中债一二期直连报送每批次处理数据条数
      */
     public static final String SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST = "SEND_CB_DATA_COUNT_PER_TIME_FIRST";
+
+    // mysql早期改造代码 add by zoujiamin  2021/04/20  start
+    /**
+     * MYSQL数据库服务器FTP地址
+     */
+    public static final String SYS_PARA_REP_MYSQL_SERVER_FTP_IP = "REP_MYSQL_SERVER_FTP_IP";
+
+    /**
+     * MYSQL数据库服务器FTP用户名
+     */
+    public static final String SYS_PARA_REP_MYSQL_SERVER_FTP_USER = "REP_MYSQL_SERVER_FTP_USER";
+
+    /**
+     * MYSQL数据库服务器FTP密码
+     */
+    public static final String SYS_PARA_REP_MYSQL_SERVER_FTP_PASSWORD = "REP_MYSQL_SERVER_FTP_PASSWORD";
+
+    /**
+     * MYSQL数据库服务器FTP密码
+     */
+    public static final String SYS_PARA_REP_MYSQL_SERVER_FTP_PROT = "REP_MYSQL_SERVER_FTP_PROT";
+
+    /**
+     * MYSQL数据库服务器FTP文件路径
+     */
+    public static final String SYS_PARA_REP_MYSQL_SERVER_FTP_FILEPATH = "REP_MYSQL_SERVER_FTP_FILEPATH";
+
+    // mysql早期改造代码 add by zoujiamin  2021/04/20  end
+
 }

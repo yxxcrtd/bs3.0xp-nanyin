@@ -10,9 +10,14 @@
 
 package com.joyintech.tams.report.interf.common.imp;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +31,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
@@ -160,6 +172,9 @@ public final class ImportGenerator {
                     else if (type.equals(JDBCType.TIMESTAMP)) {
                         value = InterfUtil.formatDateTimeWithQuotation((Date)value);
                     }
+                    else if (type.equals(JDBCType.VARCHAR)) {
+                        value = InterfUtil.formatDateTimeWithQuotation((Date)value);
+                    }
                 }
                 // 如果值为空，则判断该字段是否需要设置默认值
                 if (!StringUtil.isNotEmpty(value)
@@ -192,7 +207,7 @@ public final class ImportGenerator {
                 }
                 else {
                     // oracle版本原处理
-                    if (sb.length() == 0) {
+                    if (sb.length() == 0 && columns.get(0).getName().equals(col.getName())) {
                         sb.append(CommonUtil.getNotNullString(value));
                     }
                     else {
@@ -286,6 +301,114 @@ public final class ImportGenerator {
 
             return true;
         }
+        // 合并mysql早期改造代码  add by zoujiamin  2021/04/20
+        boolean isMySqlDataBase = CommonUtil.isMySqlDataBase(); 
+        if(isMySqlDataBase){
+        	 // 将数据文件通过ftp上传到数据库服务器
+            String repMysqlServerFtpIp = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_IP);
+            String repMysqlServerFtpUser = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_USER);
+            String repMysqlServerFtpPassword = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_PASSWORD);
+            String repMysqlServerFtpProt = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_PROT);
+            String repMysqlServerFtpFilepath = CacheUtil.getSysParam(
+                ReportGlobalConstant.SYS_PARA_REP_MYSQL_SERVER_FTP_FILEPATH);
+
+            int ftpPort = Integer.valueOf(repMysqlServerFtpProt);
+
+            String importFullPath = repMysqlServerFtpFilepath;
+            if (!StringUtil.endsWith(importFullPath, "/")) {
+                importFullPath = importFullPath + "/";
+            }
+            importFullPath = importFullPath + dataFileName;
+
+            // 执行远程数据库服务器shell命令导入数据文件
+            Session session = null;
+            ChannelExec openChannel = null;
+            Channel sftpchannel = null;
+            ChannelSftp sftp = null;
+            JSch jsch = new JSch();
+            BufferedReader reader = null;
+            OutputStreamWriter osw = null;
+            FileOutputStream fout = null;
+            // getSession()只是创建一个session，需要设置必要的认证信息之后，调用connect()才能建立连接。
+            try {
+				session = jsch.getSession(repMysqlServerFtpUser, repMysqlServerFtpIp, ftpPort);
+	            java.util.Properties config = new java.util.Properties();
+	            config.put("StrictHostKeyChecking", "no");
+	            session.setConfig(config);
+	            session.setPassword(repMysqlServerFtpPassword);
+	            session.connect();
+
+	            //上传文件到数据库服务器
+	            sftpchannel = session.openChannel("sftp");
+	            sftpchannel.connect();
+	            sftp = (ChannelSftp)sftpchannel;
+	            if (!StringUtil.endsWith(importFullPath, "/")) {
+	            	sftp.put(path + dataFileName, repMysqlServerFtpFilepath);
+	            }else{
+	            	sftp.put(path + "/" + dataFileName, repMysqlServerFtpFilepath);
+	            }
+	            
+	            openChannel = (ChannelExec) session.openChannel("exec");
+	            openChannel.setInputStream(null);
+	            openChannel.setErrStream(System.err);
+	            //sh /home/tmp/test.sh home/tmp/test.txt
+	            openChannel.setCommand("sh " + repMysqlServerFtpFilepath  + "/" + table.getName()+".sh " + repMysqlServerFtpFilepath+"/"+dataFileName);
+	            openChannel.connect(); 
+
+	            reader = new BufferedReader(new InputStreamReader(openChannel.getInputStream(),Charset.forName("UTF-8")));
+	            String line = null;
+	            String sqlldrLogFilePath = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, "SQLLDRLOGFILEPATH");
+				logger.info("sqlldr输出日志路径："+sqlldrLogFilePath);
+				File file = new File(sqlldrLogFilePath+File.separator+"sqlldr_log.txt");
+       	    	//判断sqlldr输出日志路径下是否存在日志文件，若存在则加上时间戳
+				if(file.exists()){
+					file = new File(sqlldrLogFilePath+File.separator+"sqlldr_log_"+System.currentTimeMillis()+".txt");
+				}
+	            fout = new FileOutputStream(file);
+				osw = new OutputStreamWriter(fout);
+	            while ((line = reader.readLine()) != null) {
+	            	osw.append(line+"\n");
+					osw.flush();
+	            }
+	            reader.close();
+	            logger.info(line);
+
+	            // 删除数据文件
+	            if (tmpFile.exists()) {
+	                tmpFile.delete();
+	            }
+	            
+	            // 删除ftp服务器数据文件
+//	            sftp.rm(repMysqlServerFtpFilepath+"/"+dataFileName);
+	            
+			} catch (JSchException | SftpException e) {
+				e.printStackTrace();
+			}finally{
+				if (reader != null){
+					reader.close();
+				}
+	            if (openChannel != null && !openChannel.isClosed()) {
+	                openChannel.disconnect();
+	            }
+	            if (session != null && session.isConnected()) {
+	                session.disconnect();
+	            }
+	            if(sftpchannel != null && !sftpchannel.isClosed()){
+	            	sftpchannel.disconnect();
+	            }
+	            if(sftp != null && !sftp.isClosed()){
+	            	sftp.disconnect();
+	            }
+			}
+
+            return true;
+        }
+        // 合并mysql早期改造代码  add by zoujiamin  2021/04/20
+
         else {
             // oracle原有逻辑
             SqlldrImpArgument param = new SqlldrImpArgument();
