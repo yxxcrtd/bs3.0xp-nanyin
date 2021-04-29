@@ -5,17 +5,16 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.asset.dto.BondAssetCalcInputDto;
 import com.joyintech.tams.invest.common.asset.service.BondAssetCalcService;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.trdseclendduration.TrdSecLendDurationDto;
 import org.slf4j.Logger;
@@ -159,6 +158,10 @@ public class AutoPeriodSeclendCommonService extends BaseService {
             deal.setIntAmt(entity.getmTradeAmt());
             deal.setFpriceAmt(entity.getmTradeAmt());
             deal.setTradeAmt(entity.getmTradeAmt());
+            // add by jiangpeng on 20210428 start
+            // ZGZGST-157 投管系统，债券借贷到期交易未存储登记托管机构
+            deal.setRegistOrg(getRegisOrgInfo(entity.getPledgeFinprodId()));//登记托管机构
+            // add by jiangpeng on 20210428 end
             deals.add(deal);
             if (DictCodeList.是否_是.getValue().equals(entity.getIsCashPay())) {
                 BondAssetCalcInputDto bondAssetCalcInputDto = new BondAssetCalcInputDto();
@@ -308,6 +311,21 @@ public class AutoPeriodSeclendCommonService extends BaseService {
         });
 
         return deals;
+    }
+
+    /***
+     * 获取当前标的登记托管机构
+     * ZGZGST-157 投管系统，债券借贷到期交易未存储登记托管机构
+     * @param finprodId
+     * @return
+     */
+    private String getRegisOrgInfo(String finprodId){
+        FinProduct retFinBondInfo = restTemplate.getForObject(ServiceApplication.ASSET_SERVICE_NAME
+                        + "/FinBondTargetAsset/getBasicInfo?finprodId="
+                        + finprodId,
+                FinProduct.class);
+
+        return  StringUtil.isNotEmpty(retFinBondInfo)?retFinBondInfo.getRegistOrg():null;
     }
 
     /**
