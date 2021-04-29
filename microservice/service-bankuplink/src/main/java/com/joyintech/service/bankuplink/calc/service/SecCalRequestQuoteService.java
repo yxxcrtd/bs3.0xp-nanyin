@@ -477,6 +477,7 @@ public class SecCalRequestQuoteService extends BaseService {
 
         }
         catch (Exception e) {
+        	e.printStackTrace();
             throw new BusinessException("MSG:调用算法计算异常.");
         }
         // LOGGER.info("AFINISH:获取浮动利率");

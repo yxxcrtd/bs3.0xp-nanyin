@@ -9,7 +9,9 @@
 		CASE WHEN COUNTER_TYPE=#{COUNTER_TYPE} THEN #{YES_NO_N}
 		ELSE #{YES_NO_Y} END object
 		FROM MST_COUNTER_PARTY
-		where 1=1 
+		LEFT JOIN MST_CFETS_CUSTOMER_INFO
+    		ON MST_COUNTER_PARTY.COUNTER_NAME = MST_CFETS_CUSTOMER_INFO.PARTY_NAME
+		where 1=1 and MST_CFETS_CUSTOMER_INFO.PARTY_ID is null
 			<if test="innerTrade != null and !innerTrade">
 				AND not exists (select 1 from PTL_PORTFOLIO p where p.PORTFOLIO_ID = MST_COUNTER_PARTY.COUNTER_ID)
 				and NOT EXISTS (SELECT 1 FROM fin_product p WHERE p.FINPROD_MARKET_ID = MST_COUNTER_PARTY.COUNTER_ID)
@@ -19,22 +21,22 @@
 			</if>
 			<if test="search != null and search != ''">
 			AND	(
-				COUNTER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				MST_COUNTER_PARTY.COUNTER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
 				OR
-				COUNTER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				MST_COUNTER_PARTY.COUNTER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
 				)
 			</if>
 			<if test="initValue != null and initValue != ''">
-				AND COUNTER_ID = #{initValue}
+				AND (MST_COUNTER_PARTY.COUNTER_ID = #{initValue} OR MST_COUNTER_PARTY.COUNTER_NAME = #{initValue})
 			</if>
 			<if test="counterIdList != null and counterIdList.size() > 0">
                      
             	<if test="counterType != null and counterType != '' and counterType != 'null'">
-            		AND( COUNTER_TYPE = #{counterType} OR(
-                           COUNTER_ID IN
+            		AND( MST_COUNTER_PARTY.COUNTER_TYPE = #{counterType} OR(
+                           MST_COUNTER_PARTY.COUNTER_ID IN
                                 <foreach collection="counterIdList" item="item" index= "index" open="(" close=")" separator="," >
 					                <if test="(index % 998) == 0">
-					                	null) or COUNTER_ID in (
+					                	null) or MST_COUNTER_PARTY.COUNTER_ID in (
 					                </if>
 					                #{item}
 					            </foreach>
@@ -43,7 +45,7 @@
             </if>
             <if test="counterIdList == null or counterIdList.size() == 0">
                  <if test="counterType != null and counterType != '' and counterType != 'null'">
-            		AND COUNTER_TYPE = #{counterType}
+            		AND MST_COUNTER_PARTY.COUNTER_TYPE = #{counterType}
             	</if>
             </if>
 			
@@ -60,6 +62,10 @@
     		MST_CUSTOMER_INFO T2
     	ON
     		T1.LINK_ID = T2.CUSTOMER_ID
+        LEFT JOIN 
+        	MST_CFETS_CUSTOMER_INFO T3
+        ON
+        	T1.COUNTER_NAME = T3.PARTY_NAME AND T3.PARTY_ID IS NULL
     		<where>
             <if test="search != null and search != ''">
                 (
@@ -147,5 +153,80 @@
 		SELECT 1 FROM MST_COUNTER_PARTY mcp2 WHERE mcp.COUNTER_name = mcp2.COUNTER_name and
 		counter_id = #{counterId}
 		)
+	</select>
+	
+	
+	
+	<select id="getCfetsTrader" resultType="com.joyintech.framework.select.SelectOptionDto">
+				SELECT distinct MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
+       MST_CFETS_CUSTOMER_TRADER.TRADER_NAME text,
+       MST_CFETS_CUSTOMER_TRADER.MPARTY_ID   parentId
+  FROM (SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID,
+               MST_CFETS_CUSTOMER_TRADER.TRADER_NAME,
+               MST_CFETS_CUSTOMER_TRADER.MPARTY_ID
+          FROM MST_CFETS_CUSTOMER_TRADER
+          INNER JOIN(
+          	SELECT nvl(t2.mparty_id,t1.party_id) PARTY_ID 
+          	from 
+          		MST_COUNTER_PARTY t3
+          	inner join 
+          		MST_CFETS_CUSTOMER_INFO t1 
+          	on T3.COUNTER_NAME = T1.PARTY_NAME
+          	LEFT JOIN 
+          		MST_CFETS_CUSTOMER_RELA t2
+         	on t1.party_id = t2.sparty_id 
+         	WHERE 1 = 1
+         	<if test="counterId != null and !counterId.equals('')">
+             	AND t3.COUNTER_ID = #{counterId}
+          	</if>
+          ) t3 on MST_CFETS_CUSTOMER_TRADER.PARTY_ID = t3.PARTY_ID
+         WHERE 1 = 1 
+         <!-- <if test="counterId != null and !counterId.equals('')">
+             AND MST_CFETS_CUSTOMER_TRADER.PARTY_ID = #{counterId}
+          </if> -->
+        <!-- UNION ALL
+        SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID,
+               MST_CFETS_CUSTOMER_TRADER.TRADER_NAME,
+               MST_CFETS_CUSTOMER_TRADER.MPARTY_ID
+          FROM MST_CFETS_CUSTOMER_TRADER
+         WHERE EXISTS (SELECT MST_CFETS_CUSTOMER_RELA.MPARTY_ID
+                  FROM MST_CFETS_CUSTOMER_RELA
+                 WHERE 1 = 1 
+                 <if test="counterId != null and !counterId.equals('')">
+                     AND MST_CFETS_CUSTOMER_RELA.SPARTY_ID = #{counterId}
+                 </if>
+                   AND MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MST_CFETS_CUSTOMER_RELA.MPARTY_ID) -->) MST_CFETS_CUSTOMER_TRADER
+		<where>
+			<if test="param != null and !param.equals('')">
+				AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{param},'%'))
+					or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{param},'%')))
+			</if>
+			<if test="search != null and !search.equals('')">
+				AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{search},'%'))
+					or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{search},'%')))
+			</if>
+			<if test="initValue != null and initValue != ''">
+				AND MST_CFETS_CUSTOMER_TRADER.TRADER_ID = #{initValue}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getCounterIdCfets" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT T1.COUNTER_ID id,
+			   T2.PARTY_ABBR text,
+			   T2.PARTY_ID object
+		FROM MST_COUNTER_PARTY T1
+		INNER JOIN MST_CFETS_CUSTOMER_INFO T2 ON T1.COUNTER_NAME = T2.PARTY_NAME
+		WHERE 1=1
+		<if test="search != null and search != ''">
+			AND	(
+				T1.COUNTER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR
+				T2.PARTY_ABBR LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				)
+		</if>
+		<if test="initValue != null and initValue != ''">
+			AND (T1.COUNTER_ID = #{initValue} OR T1.COUNTER_NAME = #{initValue})
+		</if>
 	</select>
 </mapper>

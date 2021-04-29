@@ -35,7 +35,37 @@
         }
     }
     
+    
+    /**
+     * 交易场所
+     */
+    $('#tradeMarket').change(function () {
+    	if(callPageId && callPageId == "EtrInvestBondInfo002"){
+    		if($('#tradeMarket').val() == '01'){
+            	$('#counterTraderDiv').hide();
+    			$('#counterTraderDiv #etrInvestPersonInfo_counterTrader').val('');
+    			$('#traderDiv').show();
+    		} else {
+    			$('#counterTraderDiv').show();
+    			$('#traderDiv').hide();
+    			$('#traderDiv #etrInvestPersonInfo_counterTrader').val('');
+    		}
+    	}
+    })
+    
     $(function() {
+    	//银行间交易对手与对手方交易员取值与其他不同；
+    	var traderName = '#'+entityName+'_counterTrader';
+		if (callPageId && callPageId == "EtrInvestBondInfo002" && $('#tradeMarket').val() == '01') {
+			$('#counterTraderDiv').hide();
+			$('#counterTraderDiv '+traderName).val('');
+			$('#traderDiv').show();
+		} else {
+			$('#counterTraderDiv').show();
+			$('#traderDiv').hide();
+			$('#traderDiv '+traderName).val('');
+		}
+		
         var name = '#'+entityName+'_counterId';
         if(single == "1"){
             $(name).attr('required',true);
@@ -46,6 +76,17 @@
         star();
         $(name).change(function () {// 内部交易对手时，只能选择卖出
             if ($(name).select2('data') && $(name).select2('data')[0]) {
+              if(callPageId && callPageId == "EtrInvestBondInfo002"){
+            	  if(pageModel != PAGE_MODEL_REFERENCE){
+              		var 交易对手 =  $(name).select2('data')[0].id;
+              		if(交易对手){
+              			$("select#etrInvestPersonInfo_counterTrader").each(
+              				function(){
+              					$(this).val('').trigger('change');
+              			})
+              		}
+              	 }
+              }else {
             	if(pageModel != PAGE_MODEL_REFERENCE){
             		var 交易对手 =  $(name).select2('data')[0].object;
                     if (!$(name).val()) {
@@ -66,8 +107,8 @@
                         $('#entrustOwnNum').prop("disabled", false);
                     }
             	}
+              }
             }
         })
     });
-    
 }());

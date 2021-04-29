@@ -144,6 +144,19 @@ public class EtrInvestBondInfo002Controller extends BaseController {
             EtrInvestBondInfoDto dto = etrInvestBondInfoService.getBussinessEntityByWorkflowId(
                 workflowId); 
             dto.setRiskTrialRetDto(null);
+            //单位以万元展示
+            if(dto.getEntrustNum() != null) {
+            	dto.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(10000)));
+            }
+            if(dto.getMinAmt() != null) {
+            	dto.setMinAmt(dto.getMinAmt().divide(new BigDecimal(10000)));
+            }
+            if(dto.getEntrustOwnNum() != null) {
+            	dto.setEntrustOwnNum(dto.getEntrustOwnNum().divide(new BigDecimal(10000)));
+            }
+            if(dto.getEntrustIntegrateNum() != null) {
+            	dto.setEntrustIntegrateNum(dto.getEntrustIntegrateNum().divide(new BigDecimal(10000)));
+            }
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));

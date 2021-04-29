@@ -13,29 +13,41 @@
                 <div class="layui-form-item">
                     <div class="form-inline-wrap">
                         <label class="layui-form-label form-label-wrap" data-th-utext="#{EtrInvestPersonInfo002.trader}" >本方交易员</label>
-                        <div class="layui-input-inline input-inline">
-                            <input required disabled th:id="|${entityName}_trader|" th:name="|${entityName}.trader|"
-                                    th:value="${entity?.trader}" class="layui-input form-input"
+                        <div class="layui-input-inline input-inline" id="cfets_traderDiv">
+                            <select required disabled th:id="|${entityName}_trader|" th:name="|${entityName}.trader|" parentIds="fTradeIdShow,fTradeId,isOfferFlag"
+                                    th:data-url="|@{/component/trade/TrdInvestPersonInfo002/selectTrader}?pageModel=${pageModel}&callPageId=${callPageId}|"
+                                    th:initValue="${entity?.trader}" class="layui-input form-input input-select"
                                     th:placeholder="#{SysCommon.placeholder}">
+                            </select>
                         </div>
                     </div>
                     <div class="form-inline-wrap">
                         <label class="layui-form-label form-label-wrap" data-th-utext="#{EtrInvestPersonInfo002.counterId}" >交易对手</label>
                         <div class="layui-input-inline input-inline">
                             <!-- 场内基金改造 modify by renping 20191117 start -->
-                            <select required th:id="|${entityName}_counterId|" th:name="|${entityName}.counterId|" parentIds="ps,finprodType2,profitType,tradeMarket,chlId,portfolioId"
-                                    th:data-url="|@{/component/trade/TrdInvestPersonInfo002/selectCounterId}?innerTrade=${innerTrade}&counterType=${counterType}&pageId=${pageId}|"
-                                    formatOption="false"
+                            <select required th:id="|${entityName}_counterId|" th:name="|${entityName}.counterId|" parentIds="ps,finprodType2,profitType,tradeMarket,chlId,portfolioId,finprodMarketId,pinanAssetType,fTradeIdShow,fTradeId"
+                                    th:data-url="|@{/component/trade/TrdInvestPersonInfo002/selectCounterId}?innerTrade=${innerTrade}&counterType=${counterType}&isInnerCounter=${isInnerCounter}&callPageId=${callPageId}|"
+                                    formatOption="true"
                                     th:initValue="${entity?.counterId}" class="layui-input form-input input-select"
                                     th:placeholder="#{SysCommon.placeholder}">
                             </select>
                             <!-- 场内基金改造 modify by renping 20191117 end -->
                         </div>
                     </div>
-                    <div class="form-inline-wrap">
+                    <div class="form-inline-wrap" id = "counterTraderDiv">
                         <label class="layui-form-label form-label-wrap" data-th-utext="#{EtrInvestPersonInfo002.counterTrader}" >对手方交易员</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" maxlength="60" th:id="|${entityName}_counterTrader|" th:name="|${entityName}.counterTrader|"  th:value="${entity?.counterTrader}" class="layui-input form-input "  />
+                        </div>
+                    </div>
+                    <div class="form-inline-wrap" id="cfets_counterTraderDiv">
+                        <label class="layui-form-label form-label-wrap" data-th-utext="#{EtrInvestPersonInfo002.counterTrader}" >本方交易员</label>
+                        <div class="layui-input-inline input-inline" >
+                            <select required th:id="|${entityName}_counterTrader|" th:name="|${entityName}.counterTrader|" parentIds="fTradeIdShow,fTradeId,ps,finprodType2,profitType,tradeMarket,chlId,trdInvestPersonInfo_counterId"
+                                    th:data-url="|@{/component/trade/TrdInvestPersonInfo002/selectTrader}?callPageId=${callPageId}|"
+                                    th:initValue="${entity?.counterTrader}" class="layui-input form-input input-select"
+                                    th:placeholder="#{SysCommon.placeholder}">
+                            </select>
                         </div>
                     </div>
                 </div>

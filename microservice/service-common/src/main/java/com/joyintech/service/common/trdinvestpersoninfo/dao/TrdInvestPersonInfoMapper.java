@@ -20,4 +20,8 @@ public interface TrdInvestPersonInfoMapper {
     List<SelectOptionDto> getCounterId(Map<String, Object> param);
     
     List<SelectOptionDto> getCounterIdDepat(Map<String, Object> param);
+    
+    List<SelectOptionDto> getTrader(Map<String, Object> param);
+    
+    List<SelectOptionDto> getCfetsTrader(Map<String, Object> param);
 }

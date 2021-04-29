@@ -246,8 +246,11 @@
             object.finvdate = $('#finvdate').val();
             object.finmdate = $('#finmdate').val();
             object.finprodId = $('#finprodIdhid').val();
-            object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
-            if (object.etrInvestPersonInfo.trader != null && object.etrInvestPersonInfo.trader != '') {
+            
+            if(object.etrInvestPersonInfo){
+            	object.etrInvestPersonInfo.invManagerId = $('#etrInvestPersonInfo_invManagerId').val();
+            }
+            if (object.etrInvestPersonInfo && object.etrInvestPersonInfo.trader != null && object.etrInvestPersonInfo.trader != '') {
                 object.etrInvestPersonInfo.trader = object.etrInvestPersonInfo.trader.join(",");
             }
             if (object.bussCombDistribtList != null) {
@@ -401,6 +404,15 @@
             if (tradeMarket == shse || tradeMarket == szse) {
 
             }
+            //交易对手和对手交易员清空 add by yzg 20200120 start
+            if(!initFlag && (pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT)){
+            	$('#etrInvestPersonInfo_counterId').val('').trigger('change');
+            	$("select#etrInvestPersonInfo_counterTrader").each(
+          				function(){
+          					$(this).val('').trigger('change');
+          		})
+            }
+            //交易对手和对手交易员清空 add by yzg 20200120 end
             // 画星星
             star();
         });
@@ -436,6 +448,15 @@
          * 交易方向
          */
         $('#ps').change(function () {
+        	//交易对手和对手交易员清空 add by yzg 20200120 start
+        	if(!initFlag && (pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT)){
+        		$('#etrInvestPersonInfo_counterId').val('').trigger('change');
+        		$("select#etrInvestPersonInfo_counterTrader").each(
+          				function(){
+          					$(this).val('').trigger('change');
+          		})
+        	}
+            //交易对手和对手交易员清空 add by yzg 20200120 end
                 var ps = $('#ps').val();
                 var ccy = $('#ccy').val();
                 var portfolioId = $('#portfolioId').val();
@@ -596,6 +617,15 @@
 
         // 通道交易 新增 强成西 2019/03/26 start
         $("#chlFinprodId").change(function () {
+        	//交易对手和对手交易员清空 add by yzg 20200120 start
+        	if(!initFlag && (pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT)){
+        		$('#etrInvestPersonInfo_counterId').val('').trigger('change');
+        		$("select#etrInvestPersonInfo_counterTrader").each(
+          				function(){
+          					$(this).val('').trigger('change');
+          		})
+        	}
+            //交易对手和对手交易员清空 add by yzg 20200120 end
             if (!$("#chlFinprodId").val()) {
                 $("#accAvailableCash_c_div").hide();
                 $("#secManageAcctId").prop('disabled', false);

@@ -34,6 +34,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.department.dto.SysDepartmentDto;
 import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoService;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**
  * 投资委托人员信息controller
@@ -103,6 +105,14 @@ public class BussEtrInvestPersonInfoController extends BaseController {
     @ResponseBody
     @RequestMapping("getTrader")
     public Page<SelectOptionDto> getTrader(){
+    	Map<String, Object> params = RequestUtil.getPageParam();
+    	if (StringUtil.isNotEmpty(params.get("callPageId"))
+				&& (StringUtil.equals("EtrInvestBondInfo002", params.get("callPageId").toString()) 
+						&& !StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), params.get("ps"))
+						&& StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(), params.get("tradeMarket"))
+						&& !StringUtil.isNotEmpty(params.get("chlId")))) {
+			return bussEtrInvestPersonInfoService.getCfetsTrader(params);
+		}
         return bussEtrInvestPersonInfoService.getTrader(RequestUtil.getPageParam());
     }
     
@@ -118,6 +128,14 @@ public class BussEtrInvestPersonInfoController extends BaseController {
     @RequestMapping("getCounterId")
     public Page<SelectOptionDto> getCounterId(){
         Map<String, Object> params = RequestUtil.getPageParam();
+		if (StringUtil.isNotEmpty(params.get("callPageId"))
+				&& (StringUtil.equals("EtrInvestBondInfo002", params.get("callPageId").toString()) 
+						&& !StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), params.get("ps"))
+						&& StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(), params.get("tradeMarket"))
+						&& !StringUtil.isNotEmpty(params.get("chlId")))) {
+			//return bussEtrInvestPersonInfoService.getCfetsCounterId(params);
+			return bussEtrInvestPersonInfoService.getCounterIdCfets(params);
+		}
         if (StringUtil.isEmpty((String) params.get("innerTrade")) || "null".equals(params.get("innerTrade"))) {
             params.put("innerTrade", null);
         }

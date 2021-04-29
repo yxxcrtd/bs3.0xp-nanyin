@@ -1612,12 +1612,14 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 map.put("page", 1);
                 map.put("length", 20);
                 Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterIdCfets",
                     map, SelectOptionDto.class);
                 if (selectOptionDtoPage.getRoot().isEmpty()) {
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
                         "ETR_E_0017", getMessage("etrInvestPersonInfo.counterId"), lineNo));
-                }
+                }else {
+					rowData.set(19, selectOptionDtoPage.getRoot().get(0).getId());
+				}
             }
             if (StringUtil.isBlank(confirmMsg)) {
                 jsonArrays.add(rowData);

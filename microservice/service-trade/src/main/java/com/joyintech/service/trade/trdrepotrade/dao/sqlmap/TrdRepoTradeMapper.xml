@@ -405,7 +405,7 @@
                     AND tpd.IS_CANCEL = #{YES_NO_YES}
                     AND tpd.TRADE_STATUS = #{TRADE_STATUS_01}
                     <if test="fTradeId!=null and fTradeId!='' ">
-                        d tpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
+                        AND tpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
             </if>
     	</trim>

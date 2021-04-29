@@ -27,4 +27,6 @@ public interface TrdInvestPersonInfo002Service {
      * @return 交易对手
      */
     Page<SelectOptionDto> selectCounterId(Map<String, Object> param);
+    
+    Page<SelectOptionDto> selectTrader(Map<String, Object> param);
 }

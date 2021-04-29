@@ -135,4 +135,27 @@ public class TrdInvestPersonInfo002ImplService implements TrdInvestPersonInfo002
             return restTemplate.postForPage(ServiceApplication.COMMON_SERVICE_NAME + "/TrdInvestPersonInfo/getCounterId", param, SelectOptionDto.class);
         }
     }
+    
+    @Override
+    public Page<SelectOptionDto> selectTrader(Map<String, Object> param) {
+    	if(StringUtil.isNotEmpty(param.get("callPageId"))
+				&& StringUtil.equals("TrdBondInvestTrade002", param.get("callPageId").toString())
+				&& StringUtil.equals(param.get("pageModel"), "2")) {
+			Page<SelectOptionDto> page = restTemplate.postForPage(ServiceApplication.COMMON_SERVICE_NAME + "/TrdInvestPersonInfo/getCfetsTrader",
+    				param, SelectOptionDto.class);
+			if(!StringUtil.isEmptyList(page.getRoot())) {
+				return page;
+			}else {
+				return restTemplate.postForPage(ServiceApplication.COMMON_SERVICE_NAME + "/TrdInvestPersonInfo/getTrader",
+	    				param, SelectOptionDto.class);
+			}
+		}
+    	if((StringUtil.isNotEmpty(param.get("fTradeIdShow")) || StringUtil.isNotEmpty(param.get("fTradeId"))) && StringUtil.equals(param.get("isOfferFlag"), "01")) {
+    		return restTemplate.postForPage(ServiceApplication.COMMON_SERVICE_NAME + "/TrdInvestPersonInfo/getCfetsTrader",
+    				param, SelectOptionDto.class);
+    	}else {
+    		return restTemplate.postForPage(ServiceApplication.COMMON_SERVICE_NAME + "/TrdInvestPersonInfo/getTrader",
+    				param, SelectOptionDto.class);
+    	}
+    }
 }

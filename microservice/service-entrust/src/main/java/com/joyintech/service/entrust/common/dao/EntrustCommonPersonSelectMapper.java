@@ -83,4 +83,16 @@ public interface EntrustCommonPersonSelectMapper {
     String getRealName(@Param("userName") String userName);
 
     List<String> findSameNameCounterId(Map<String, Object> map);
+    
+    List<SelectOptionDto> getCounterIdCfets(Map<String, Object> map);
+    
+    /**
+     * 查询本方交易员列表
+     * 
+     * @param map 入参
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getCfetsTrader(Map<String, Object> map);
 }
