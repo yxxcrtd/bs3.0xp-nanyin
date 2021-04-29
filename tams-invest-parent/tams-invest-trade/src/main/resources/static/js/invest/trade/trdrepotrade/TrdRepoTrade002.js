@@ -332,8 +332,12 @@
         // 2) 当回购类型为质押式竞价回购和买断式回购时，期限品种为文本框，文本框支持输入联想，期限品种枚举值为：
         {
             if (!isInit && !isTodoList) {
-                $("#termTypeReback").val("");
-                $("#term").val("").trigger("change");
+                //modify by mashukai ZGBSSE-185 审批后双击查看交易，回购期限不显示 20210429 start
+                if (pageModel != PAGE_MODEL_REFERENCE){
+                    $("#termTypeReback").val("");
+                    $("#term").val("").trigger("change");    
+                }
+                //modify by mashukai ZGBSSE-185 审批后双击查看交易，回购期限不显示 20210429 start
             }
             /*$("#termTypeReback").attr("data-url", $("#termTypeReback").attr("data-url-hidden")).associateInput();
             $("#termTypeReback").attr("data-url-hidden", "");*/
