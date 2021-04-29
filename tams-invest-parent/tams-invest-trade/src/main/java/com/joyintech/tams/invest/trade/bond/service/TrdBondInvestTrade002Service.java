@@ -2559,9 +2559,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 // || StringUtil.equals(DictCodeList.息票品种_零息.getValue(), secInfoModelDto.getBondsType())) {
                 // add by 张年 20190909 start
                 // 行权-回售 行权-赎回 交割日不加1
-                if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue()) &&
-                        StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())) {
-                        tempSettleDate = DateUtil.addDay(tempSettleDate, 1);
+                if (!StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())
+                        && !StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())) {
+                    tempSettleDate = DateUtil.addDay(tempSettleDate, 1);
                 }
                 // add by 张年 20190909 end
                 // }
