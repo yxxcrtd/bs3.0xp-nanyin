@@ -282,4 +282,10 @@
 			</foreach>
 		</if>
   </select>
+
+	<select id="getVdate"  parameterType="java.lang.String"  resultType="java.util.Date">
+		select  VDATE  FROM CHB_PRD_BASEINFO
+		WHERE  PROD_ID=#{prodId,jdbcType = VARCHAR}
+		AND  status !='D'
+	</select>
 </mapper>
