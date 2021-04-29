@@ -116,7 +116,12 @@ public class ProdInfoDto extends BaseEntity {
      * 账套参数Map
      */
     private Map<String, String> mapBooksetParam = Maps.newHashMap();
-    
+
+    /**
+     * add by jiangpeng on 20210401
+     * 是否是产品编辑 TISHKBS-1952 用于处理产品编辑时覆盖 BOK_BOOKSET_CAPACCT_INFO(账套清算账户表)的问题
+     */
+    private boolean isProductEdit = false;
     
     public Date getActmdate() {
 		return actmdate;
