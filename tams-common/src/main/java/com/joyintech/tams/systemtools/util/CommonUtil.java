@@ -537,6 +537,37 @@ public class CommonUtil {
 		return resultList;
 	}
 
+	// mysql早期改造代码合并   add by zoujiamin  2021/4/20  start
+	/**
+	 * 判断系统使用的数据库是否是MySql
+	 *
+	 * @return 系统使用的数据库是否是MySql
+	 * @see
+	 * @since 1.0
+	 */
+	public static boolean isMySqlDataBase() {
+		try {
+			Map<String, List<DatabaseInfo>> databaseType = DatabaseTypeHelper.getDatabaseType();
+
+			List<DatabaseInfo> dsList = databaseType.get(DataSourceType.MASERT);
+			if (dsList != null && !dsList.isEmpty()) {
+				for (int i = 0; i < dsList.size(); i++) {
+					DatabaseInfo dbInfo = dsList.get(i);
+					if (StringUtil.equalsIgnoreCase(DatabaseType.DATABASE_TYPE_MYSQL.getValue(),
+							dbInfo.getDbType().getValue())) {
+						return true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	// mysql早期改造代码合并   add by zoujiamin  2021/4/20  end
+
 	/**
 	 * 判断系统使用的数据库是否是db2
 	 *
