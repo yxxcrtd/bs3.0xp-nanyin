@@ -1,5 +1,6 @@
 package com.joyintech.tams.report.system.chbmst.service;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
@@ -14,6 +15,7 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.system.chbmst.dao.ChbMstCounterParty001Mapper;
+import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyDto;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
@@ -33,6 +35,8 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
 
     @Autowired
     private ChbMstCounterParty001Mapper chbMstCounterParty001Mapper;
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
     /**
      * 当在做导入前的check就是判断业务数据是否需要覆盖的时候在webresult的data中塞入这个值可以不会弹框两次
      */
@@ -124,11 +128,38 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
     }
 
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
+        List<ValidMessage> resultList = new ArrayList<ValidMessage>();
+
+
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        ChbMstCounterPartyDto chbMstCounterParty=new ChbMstCounterPartyDto();
+        for (int i = 0; i < dataList.size(); i++ ) {
+            //交易对手代码
+            String counterId ="";
+            if(null!=dataList.get(i).get(1)){
+                counterId =dataList.get(i).get(1).toString();
+            }
+            //交易对手名称
+            String counterName ="";
+            if(null!=dataList.get(i).get(2)){
+                counterName=dataList.get(i).get(2).toString();
+            }
+            //交易对手二级类型
+            String counterType2 ="";
+            if(null!=dataList.get(i).get(3)){
+                String [] arr = dataList.get(i).get(3).toString().split("\\s+");
+                counterType2=arr[0];
+            }
+            chbMstCounterParty.setCounterId(counterId);
+            chbMstCounterParty.setCounterName(counterName);
+            chbMstCounterParty.setCounterType2(counterType2);
+            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, chbMstCounterParty, "ChbMstCounterParty002", "", ValidMessage.class);
+        }
+        errorList=resultList;
         //新建时,判断excel表中是否存在重复产品,启用日期,信披费用类型的数据
         //更新删除时,查询数据不存在则提示 不存在数据请核查
-        for (int i = 0; i < dataList.size(); i++ ) {
+        /*for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1)) &&
                         StringUtils.equals(dataList.get(i).get(4), dataList.get(j).get(4))){
@@ -136,7 +167,7 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
                     errorList.add(validMessage);
                 }
             }
-        }
+        }*/
 
         if(errorList.size() == 0){
             webResult.setData(NO_INFO_SHOWOUT);

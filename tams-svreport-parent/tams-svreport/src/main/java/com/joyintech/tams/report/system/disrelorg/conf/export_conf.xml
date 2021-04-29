@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workbook filePath="DisRelOrg.xlsx" name="关联机构信息">
-	<Worksheet javaBean="comcom.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
+	<Worksheet javaBean="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
 		<Row>
 			<Cell order="1" name="操作类型">type</Cell><!-- 操作类型 -->
 			<Cell order="2" name="关联机构代码">relorgId</Cell><!-- 产品代码 -->

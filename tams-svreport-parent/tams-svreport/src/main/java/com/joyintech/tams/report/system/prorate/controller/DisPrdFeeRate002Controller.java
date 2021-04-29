@@ -52,7 +52,7 @@ public class DisPrdFeeRate002Controller extends BaseController {
             map.put("startDate",startDate);
         }
         //UUID为空 查询产品费率信息表
-         if("".equals(datauuid)){
+         if("".equals(datauuid) || null==datauuid){
              List<DisRepCashYield> disRepCashYieldList =prorateService.selectOneDate(map);
              if(null!=disRepCashYieldList && disRepCashYieldList.size()>0){
                  DisRepCashYield d=disRepCashYieldList.get(0);

@@ -3,17 +3,17 @@
 <mapper namespace="com.joyintech.tams.report.system.prorate.dao.ProRateInfo001Mapper_mysql">
 	<select id="queryForPage" resultType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
 		SELECT
-		a.STATUS,
-		a.BUSI_ID,
+		a.STATUS as statusName,
+		a.BUSI_ID as busiIdName,
 		a.START_DATE as startDate,
-		a.CASH_TYPE2,
-		a.RATE,
-		a.CREATE_USER,
+		a.CASH_TYPE2 cashType2Name,
+		a.RATE as rate,
+		a.CREATE_USER as createUser,
 		a.CREATE_TIME as createTime,
-		a.UPDATE_USER,
+		a.UPDATE_USER as updateUser,
 		a.UPDATE_TIME as updateTime,
 		'' as datauuid,
-		a.SVR_DATA_SOURCES as dataSource
+		a.SVR_DATA_SOURCES as dataSourceName
 		FROM
 		REP_CASH_YIELD a
 		LEFT JOIN  chb_prd_baseinfo b

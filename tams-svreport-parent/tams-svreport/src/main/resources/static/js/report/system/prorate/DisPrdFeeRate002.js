@@ -1,6 +1,10 @@
 (function() {
     function init(){
         $(".layui-fixbar").hide();
+        if('update'==$("#type").val()){
+            $("#busiId").attr("disabled", "disabled");
+            $("#busiId").attr("style", "background-color: #EEEEEE;");
+        }
     };
     $(function() {
         init();
