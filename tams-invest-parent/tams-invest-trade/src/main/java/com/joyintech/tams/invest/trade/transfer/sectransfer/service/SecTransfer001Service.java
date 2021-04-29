@@ -609,6 +609,7 @@ public class SecTransfer001Service extends CommonExportService<SecTransfer001Dto
             	trdProductDeal.setfTradeId("");
 //            }
 //            	trdProductDeal.setTradeAmt(entity.getTradeAmt());
+            trdProductDeal.setTradeAmt(entity.getTradeRepAmt());
             trdProductDeal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
             trdProductDeal.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());//交易状态

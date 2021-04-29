@@ -554,11 +554,15 @@ public class TradeProductDealCommService {
             cashInputDto.setNeedNegative(needNegative);
             ptlCashPositionFlows.addAll(assetPositionsCashCommServiceImpl.cashDeal(cashInputDto));
             if (baseEtrCashPositionCommService != null) {
-            	if( null!=positionType &&
+                // modify by jiangpeng on 20210429 start
+                // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                // 判断条件移入 baseEtrCashPositionCommService.productEtrCashPosition 方法中
+            	if( null!=positionType /*&&
             			((positionType.equals(DictCodeList.持仓类型_实际.getValue())
     					&& DictCodeListExt1.交易流程状态_撤销.getValue().equals(bussTrdPositionDto.getWorkflowStatus()))
-    					|| DictCodeListExt1.交易流程状态_流程中.getValue().equals(bussTrdPositionDto.getWorkflowStatus()))) {//fixed BSTOZ-857BUG add by zhouxiuping at 20191029
-                baseEtrCashPositionCommService.productEtrCashPosition(cashInputDto);
+    					|| DictCodeListExt1.交易流程状态_流程中.getValue().equals(bussTrdPositionDto.getWorkflowStatus()))*/) {//fixed BSTOZ-857BUG add by zhouxiuping at 20191029
+                    // modify by jiangpeng on 20210429 end
+                    baseEtrCashPositionCommService.productEtrCashPosition(cashInputDto, positionType);
             	}
             }
         }

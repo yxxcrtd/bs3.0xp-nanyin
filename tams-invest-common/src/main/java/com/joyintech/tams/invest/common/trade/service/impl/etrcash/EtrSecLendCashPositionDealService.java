@@ -165,7 +165,10 @@ public class EtrSecLendCashPositionDealService  {
                         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
                             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                         }
-                        if ((DictCodeList.持仓类型_实际.equals(持仓类型) || DictCodeList.持仓类型_可用.equals(持仓类型))
+                        // modify by jiangpeng on 20210429 start
+                        // ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现。
+                        // 融入没有预增现金
+                        /*if ((DictCodeList.持仓类型_实际.equals(持仓类型) || DictCodeList.持仓类型_可用.equals(持仓类型))
                                 && !etrPositionHoldDto.isNeedNegative()) {
                             // 处理预增现金
                             EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto();
@@ -177,7 +180,8 @@ public class EtrSecLendCashPositionDealService  {
                             etrCashPositionFlowDto1.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
                             etrCashPositionFlowDto1.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
                             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
-                        }
+                        }*/
+                        // modify by jiangpeng on 20210429 end
                     });
                 }
                 // modify by jiangpeng on 20210416 end
@@ -223,7 +227,7 @@ public class EtrSecLendCashPositionDealService  {
                             if (DictCodeList.持仓类型_实际.equals(持仓类型)){
                                 etrCashPositionFlowDto1.setAmount(etrCashPositionFlowDto1.getAmount().negate());    
                             }
-                            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);  
+                            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
                         }
                     });
                 }

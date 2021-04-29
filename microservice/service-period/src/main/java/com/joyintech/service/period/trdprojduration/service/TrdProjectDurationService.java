@@ -173,8 +173,17 @@ public class TrdProjectDurationService extends BaseService {
         TrdProjectDurationDto trdProjectDurationDto=trdProjectDurationMapper.findEffectiveData(params);
         //查询资产是不是还本不带息资产
         int count=trdProjectDurationMapper.getisPayInt(trdProjectDurationDto.getFinprodId());
+        //该区间，是否仅仅还本，若仅仅还本，也无需展示累计还本未付金额
+        Map<String, Object> mapIsPayInt=new HashMap<>();
+        mapIsPayInt.put("finprodId",params.get("finprodMarketId").toString());
+        mapIsPayInt.put("mdate",params.get("mDate").toString());
+        int countt=trdProjectDurationMapper.isPayIntDate(mapIsPayInt);
         if(count<1){
             trdProjectDurationDto.setIntAmtUnpayFlag(false);//不是还本不带息的资产,不展示累计还本未付金额
+        }else{
+            if(countt<1){
+                trdProjectDurationDto.setIntAmtUnpayFlag(false);
+            }
         }
         return trdProjectDurationDto;
     }

@@ -691,6 +691,10 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
      * @since 1.0
      */
     private BigDecimal calc(Map<String, Object> pageParam) {
+
+        // 如果交易场所为上交所、深交所以外的情况
+        boolean isJiaoYiSuo = false;
+
         //查询债券单位应计利息
         AccurIntCalInParameter accurIntCalInParameter = new AccurIntCalInParameter();
         // 百元面值应计利息
@@ -773,11 +777,23 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
         accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
 
+        if(StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), secInfoModelDto.getTradeMarket())
+                || StringUtil.equals(DictCodeListExt1.交易场所_深圳证券交易所.getValue(), secInfoModelDto.getTradeMarket())){
+            isJiaoYiSuo = true;
+        }
         if(StringUtil.isNotEmpty(accurInt)){
-            unitInt = ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
-                    Integer.parseInt(StringUtils.isEmpty(
-                            CacheUtil.getSysParam("SEC_INT_SCALE_BANK")) ? "12" : CacheUtil.getSysParam("SEC_INT_SCALE_BANK")),
-                    RoundingMode.HALF_UP);
+            if (isJiaoYiSuo) {
+                unitInt = ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
+                                Integer.parseInt(StringUtils.isEmpty(CacheUtil.getSysParam(
+                                        "SEC_INT_SCALE_EXCHANGE")) ? "8" : CacheUtil.getSysParam("SEC_INT_SCALE_EXCHANGE")),
+                                RoundingMode.HALF_UP);
+            }
+            else {
+                unitInt = ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
+                        Integer.parseInt(StringUtils.isEmpty(
+                                CacheUtil.getSysParam("SEC_INT_SCALE_BANK")) ? "12" : CacheUtil.getSysParam("SEC_INT_SCALE_BANK")),
+                        RoundingMode.HALF_UP);
+            }
         }
         return unitInt;
     }

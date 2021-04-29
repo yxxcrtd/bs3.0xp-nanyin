@@ -1885,8 +1885,8 @@ $(function() {
         var pageParam = {
         		finprodId:$("#finprodId").val()
         		,dealType:$("#dealType").val()
-        		,confirmDate:$("#addReduceConfirmDate").val()
-        		,netValueDate:$("#addReduceNetValueDate").val()
+        		,confirmDate:$("#expireConfirmDate").val()
+        		,netValueDate:$("#expireNetValueDate").val()
         		,workflowId : workflowId
         		, tradeId : $('#tradeId').val()
 			}

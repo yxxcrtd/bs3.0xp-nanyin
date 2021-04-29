@@ -129,6 +129,18 @@ public class FinRepayPlanController extends BaseController{
                 return rst;
             }
         }
+        if(StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getBussFinRepaymentDto())){
+            List<FinCashPlanDto>  cashPlans=dto.getBussFinRepaymentDto().getFinCashPlanList();
+            for(FinCashPlanDto it:cashPlans){
+                if(null==it.getPrinAmt()){
+                    ValidMessage addRst = new ValidMessage("存在还款金额为空的数据，不能提交。");
+                    List<ValidMessage> errorList = new ArrayList<>();
+                    errorList.add(addRst);
+                    rst.setErrorList(errorList);
+                    return rst;
+                }
+            }
+        }
         StringBuffer sb = new StringBuffer();
         //校验还本计划最后一条数据的支付日是否等于付息计划最后一条数据的支付日
         if(StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getBussFinRepaymentDto())){

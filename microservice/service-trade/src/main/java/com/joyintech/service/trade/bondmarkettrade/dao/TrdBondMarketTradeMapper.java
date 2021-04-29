@@ -9,6 +9,7 @@ import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -128,4 +129,13 @@ public interface TrdBondMarketTradeMapper {
      * @since 1.0
      */
     List<BaseTradeInfoDto> selectbaseTradeInfoDtos(Map<String,Object> param);
+
+    /**
+     * 根据交易日期和资产代码查询交易数据
+     *
+     * @param param 交易数据
+     * @see
+     * @since 1.0
+     */
+    List<Map<String,Object>> selectTrdProductDealsInfo(Map<String,Object> param);
 }
