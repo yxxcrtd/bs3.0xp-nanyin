@@ -1193,7 +1193,13 @@ public class ValInterfCommonServiceApi {
         		|| DictCodeList.业务类型_债券质押式回购交易.getValue().equals(trdProductDeal.getBusiType())
         		|| DictCodeList.业务类型_债券买断式回购交易.getValue().equals(trdProductDeal.getBusiType())
         		|| DictCodeList.业务类型_债券借贷交易.getValue().equals(trdProductDeal.getBusiType())
-        		|| DictCodeList.业务类型_债券借贷标的债券交易.getValue().equals(trdProductDeal.getBusiType())){
+        		|| DictCodeList.业务类型_债券借贷标的债券交易.getValue().equals(trdProductDeal.getBusiType())
+                /**add by wujie on 20210429 start**/
+                || (DictCodeList.业务类型_指令交易.getValue().equals(trdProductDeal.getBusiType())
+                        && DictCodeListExt1.金融产品类型_债券.getValue().equals(trdProductDeal.getFinprodType())
+                     )
+                 /**add by wujie on 20210429 end**/
+        ){
 	        if(stlOrders!=null && stlOrders.getMyAcctNo()!=null){
 	        	map  = interfCommonService.instructionGenerateByFront(trdProductDeal,stlOrders, prodid,prodFinprodType,branch,ptlTradeList);
 	        	dealOrdersBuild = false;
