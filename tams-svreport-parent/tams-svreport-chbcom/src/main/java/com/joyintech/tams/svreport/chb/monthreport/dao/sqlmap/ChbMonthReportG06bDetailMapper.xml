@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportG06bDetailMapper">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportG06bDetail">
+    <constructor>
+      <idArg column="DETAILUUID" javaType="java.lang.String" jdbcType="CHAR" />
+      <arg column="TERMID" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="REPORTTYPE" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="PROPERTYCODE" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="BALANCE_A" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="BALANCE_B" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="ORG_CODE" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="DEPT_CODE" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="REPORTUUID" javaType="java.lang.String" jdbcType="CHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, BALANCE_A, BALANCE_B, ORG_CODE, DEPT_CODE, 
+    REPORTUUID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from chb_month_report_g06b_detail
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from chb_month_report_g06b_detail
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportG06bDetail">
+    insert into chb_month_report_g06b_detail (DETAILUUID, TERMID, REPORTTYPE, 
+      PROPERTYCODE, BALANCE_A, BALANCE_B, 
+      ORG_CODE, DEPT_CODE, REPORTUUID
+      )
+    values (#{detailuuid,jdbcType=CHAR}, #{termid,jdbcType=VARCHAR}, #{reporttype,jdbcType=VARCHAR}, 
+      #{propertycode,jdbcType=VARCHAR}, #{balanceA,jdbcType=DECIMAL}, #{balanceB,jdbcType=DECIMAL}, 
+      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportG06bDetail">
+    insert into chb_month_report_g06b_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="detailuuid != null">
+        DETAILUUID,
+      </if>
+      <if test="termid != null">
+        TERMID,
+      </if>
+      <if test="reporttype != null">
+        REPORTTYPE,
+      </if>
+      <if test="propertycode != null">
+        PROPERTYCODE,
+      </if>
+      <if test="balanceA != null">
+        BALANCE_A,
+      </if>
+      <if test="balanceB != null">
+        BALANCE_B,
+      </if>
+      <if test="orgCode != null">
+        ORG_CODE,
+      </if>
+      <if test="deptCode != null">
+        DEPT_CODE,
+      </if>
+      <if test="reportuuid != null">
+        REPORTUUID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="detailuuid != null">
+        #{detailuuid,jdbcType=CHAR},
+      </if>
+      <if test="termid != null">
+        #{termid,jdbcType=VARCHAR},
+      </if>
+      <if test="reporttype != null">
+        #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null">
+        #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="balanceA != null">
+        #{balanceA,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceB != null">
+        #{balanceB,jdbcType=DECIMAL},
+      </if>
+      <if test="orgCode != null">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null">
+        #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reportuuid != null">
+        #{reportuuid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportG06bDetail">
+    update chb_month_report_g06b_detail
+    <set>
+      <if test="termid != null">
+        TERMID = #{termid,jdbcType=VARCHAR},
+      </if>
+      <if test="reporttype != null">
+        REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null">
+        PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="balanceA != null">
+        BALANCE_A = #{balanceA,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceB != null">
+        BALANCE_B = #{balanceB,jdbcType=DECIMAL},
+      </if>
+      <if test="orgCode != null">
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null">
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reportuuid != null">
+        REPORTUUID = #{reportuuid,jdbcType=CHAR},
+      </if>
+    </set>
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportG06bDetail">
+    update chb_month_report_g06b_detail
+    set TERMID = #{termid,jdbcType=VARCHAR},
+      REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      BALANCE_A = #{balanceA,jdbcType=DECIMAL},
+      BALANCE_B = #{balanceB,jdbcType=DECIMAL},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+</mapper>
