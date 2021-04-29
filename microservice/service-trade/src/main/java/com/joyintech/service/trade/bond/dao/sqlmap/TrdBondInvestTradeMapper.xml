@@ -25,6 +25,7 @@
     </resultMap>
 
     <select id="selectDeal" resultMap="trdBondInvestTradeResultMap">
+        <if test="finprodId != null and finprodId != ''">
         WITH TEMP AS (
             SELECT DISTINCT 
                 FP2.FINPROD_MARKET_ID,
@@ -36,6 +37,7 @@
             WHERE FP.FINPROD_ID LIKE CONCAT('%', CONCAT(#{finprodId}, '%'))
             AND FP.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         )
+        </if>
         <trim prefixOverrides="UNION ALL">
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_01">
               select
