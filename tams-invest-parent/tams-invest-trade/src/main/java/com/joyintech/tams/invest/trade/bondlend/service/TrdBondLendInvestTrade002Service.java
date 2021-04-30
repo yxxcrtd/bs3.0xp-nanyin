@@ -451,9 +451,12 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
             // ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
             if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), entity.getFinprodType2())){
                 ptlOutSecPositionFlowLogic(entity, false, false, true);
-            }else{
-                ptlOutSecPositionFlowLogic(entity, false, false, true);
             }
+            //ZGBSSE-260
+            //【债券借贷交易】新建债券借贷融入交易，审核岗审批后，融入债券的实时资产头寸中，实际、指令、交易持仓不一致
+            /*else{
+                ptlOutSecPositionFlowLogic(entity, false, false, true);
+            }*/
             // add by jiangpeng on 20210428 end
         }
         // 撤销
@@ -461,7 +464,11 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
             this.doCompleteRevoke(entity);
             // add by jiangpeng on 20210428 start
             // ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
-            ptlOutSecPositionFlowLogic(entity, true, false, true);
+            //ZGBSSE-260
+            //【债券借贷交易】新建债券借贷融入交易，审核岗审批后，融入债券的实时资产头寸中，实际、指令、交易持仓不一致
+            if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), entity.getFinprodType2())) {
+                ptlOutSecPositionFlowLogic(entity, true, false, true);
+            }
             // add by jiangpeng on 20210428 end
         }
         // add by jiangpeng on 20210425 start
