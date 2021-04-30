@@ -155,45 +155,33 @@
       prdposition.ORG_CODE ORG_CODE
     FROM PBC_MONTH_PRD_POSITION PRDPOSITION
     inner JOIN (
-    SELECT 
+      SELECT
       PROD_ID,
       PBC_PROD_ID,
       OPERATE_MODE,
-       HIGH_YIELD_ISSUE,
+      HIGH_YIELD_ISSUE,
       LOW_YIELD_ISSUE,
-     if
-     (@PROD_ID = PROD_ID, @rank := @rank + 1,@rank :=1) as RANKNUM,
-     (@PROD_ID := PROD_ID) PROD_ID
-    from PBC_PRD_BASEINFO_SUB ,
-    (select @rank := 0, @PROD_ID := null) b
-    order by
-    PROD_ID,
-    ifnull(UPDATE_TIME,CREATE_TIME) desc
+      RANK() OVER (PARTITION BY PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
+      from PBC_PRD_BASEINFO_SUB
+      where  PBC_PROD_ID is not null
 	) prdbaseinfo
     ON PRDPOSITION.PRODID = PRDBASEINFO.PROD_ID
-	AND 1 = 1 limit 1
+    AND RANKNUM = 1
     left join (
       /*取离月末最近的净值和收益率，不需要判断CHANG_TYPE，默认净值型产品存净值，预期收益率产品存收益率*/
-      select 
+      select
         YIELD.PROD_VALUE,
         YIELD.PROD_ID,
         YIELD.UNIT_VALUE_TOTAL,
         YIELD.CCY,
-        if
-        (@PROD_ID = yield.PROD_ID and @ccy = yield.ccy, @rank := @rank + 1,@rank :=1) as ranknum,
-        (@PROD_ID := yield.PROD_ID) PROD_ID,
-        (@ccy := yield.ccy) ccy
-        FROM CHB_PRD_PERIODYIELD YIELD,
-        (select @rank := 0, @PROD_ID := null, @ccy := null) b
-      WHERE 1 =1 
-      AND YIELD.STATUS != 'D'
+        rank() over (partition by yield.PROD_ID,yield.ccy order by YIELD.CHANGE_DATE desc) ranknum/*按产品+币种维度分类，按变动日期降序排序取最大的日期的净值*/
+        FROM CHB_PRD_PERIODYIELD YIELD
+        WHERE 1 =1
+        AND YIELD.STATUS != 'D'
       AND DATE_FORMAT(YIELD.CHANGE_DATE,'%Y-%m-%d') &lt;= #{cdate,jdbcType=VARCHAR}
-      order by
-      yield.PROD_ID,yield.ccy,
-      YIELD.CHANGE_DATE desc
     ) maxyield
     on PRDPOSITION.PRODID = maxyield.PROD_ID
-	where 1 =1 limit 1
+	where maxyield.ranknum = 1
 	and DATE_FORMAT(prdposition.ENDDATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
 	<if test="ifpsbc !=null and ifpsbc='001' ">
 		 and (prdposition.BUY_PLACE not in('210200','330200','350200','370200','440300') or prdposition.BUY_PLACE is null)
@@ -215,22 +203,16 @@
     sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME,info.prod_id
     from PBC_PROD_RAISING_SUB sub
     LEFT JOIN (
-    SELECT 
+      SELECT
       PROD_ID,
       PBC_PROD_ID,
       OPERATE_MODE,
-      if
-     (@PROD_ID = PROD_ID, @rank := @rank + 1,@rank :=1) as RANKNUM,
-     (@PROD_ID := PROD_ID) PROD_ID
-    from PBC_PRD_BASEINFO_SUB ,
-    (select @rank := 0, @PROD_ID := null) b
-    order by
-    PROD_ID,
-    ifnull(UPDATE_TIME,CREATE_TIME) desc
-	) info
+      RANK() OVER (PARTITION BY PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
+      from PBC_PRD_BASEINFO_SUB
+    ) info
     ON sub.PBC_PROD_ID = info.PBC_PROD_ID
 	AND 1 = 1
-    where 1 =1 limit 1
+    AND info.RANKNUM = 1
     <!-- and sub.send_status in ('02','03') /*已报送数据*/ -->
     and DATE_FORMAT(sub.RAISING_DATE,'%Y-%m-%d') = #{cdate,jdbcType=VARCHAR}
   </select>
