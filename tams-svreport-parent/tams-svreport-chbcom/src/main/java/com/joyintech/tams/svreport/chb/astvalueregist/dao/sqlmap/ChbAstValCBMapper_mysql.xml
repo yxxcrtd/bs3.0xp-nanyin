@@ -47,9 +47,9 @@
         VAL.ORG_CODE ORG_CODE,
         VAL.DEPT_CODE DEPT_CODE,
         'system' CREATE_USER,
-        sysdate CREATE_TIME,
+        now() CREATE_TIME,
         'system' UPDATE_USER,
-        sysdate UPDATE_TIME,
+        now() UPDATE_TIME,
         #{statusDate,jdbcType=TIMESTAMP} STATUS_DATE
     FROM CHB_AST_VAL VAL
     LEFT JOIN CHB_ASSET_INFO ASSETINFO
@@ -101,9 +101,9 @@
 		VAL.ORG_CODE ORG_CODE,
 		VAL.DEPT_CODE DEPT_CODE,
 		'system' CREATE_USER,
-		sysdate CREATE_TIME,
+		now() CREATE_TIME,
 		'system' UPDATE_USER,
-		sysdate UPDATE_TIME,
+		now() UPDATE_TIME,
 		#{statusDate,jdbcType=TIMESTAMP} STATUS_DATE
 		FROM CHB_AST_VAL VAL
 		LEFT JOIN CHB_ASSET_INFO ASSETINFO
@@ -296,8 +296,8 @@
 			#{dto.submitDeadline,jdbcType=TIMESTAMP}, #{dto.sendStatus,jdbcType=VARCHAR}, #{dto.submitTime,jdbcType=TIMESTAMP},
 			#{dto.sumitSeq,jdbcType=VARCHAR}, #{dto.submitFeedbackStatus,jdbcType=VARCHAR}, #{dto.status,jdbcType=VARCHAR},
 			#{dto.statusDate,jdbcType=TIMESTAMP} STATUS_DATE, #{dto.orgCode,jdbcType=VARCHAR}, #{dto.deptCode,jdbcType=VARCHAR},
-			#{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, sysdate CREATE_TIME,
-			#{dto.updateUser,jdbcType=VARCHAR}, sysdate UPDATE_TIME
+			#{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, now() CREATE_TIME,
+			#{dto.updateUser,jdbcType=VARCHAR}, now() UPDATE_TIME
 		</foreach>
 	</insert>
 
@@ -378,8 +378,8 @@
       #{submitDeadline,jdbcType=TIMESTAMP}, #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP},
       #{sumitSeq,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
       #{statusDate,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
-      #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, sysdate,
-      #{updateUser,jdbcType=VARCHAR}, sysdate)
+      #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, now(),
+      #{updateUser,jdbcType=VARCHAR}, now())
   </insert>
 
 </mapper>
