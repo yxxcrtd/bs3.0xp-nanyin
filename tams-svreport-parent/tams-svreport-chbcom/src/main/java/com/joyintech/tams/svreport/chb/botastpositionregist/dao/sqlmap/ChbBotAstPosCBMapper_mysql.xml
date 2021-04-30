@@ -46,9 +46,9 @@
 		POS.ORG_CODE ORG_CODE,
 		POS.DEPT_CODE DEPT_CODE,
 		'system' CREATE_USER,
-		sysdate CREATE_TIME,
+		now() CREATE_TIME,
 		'system' UPDATE_USER,
-		sysdate UPDATE_TIME,
+		now() UPDATE_TIME,
 		#{statusDate,jdbcType=TIMESTAMP} STATUS_DATE
 		FROM CHB_BOT_AST_POS POS
 		LEFT JOIN CHB_ASSET_INFO PLANASSET
@@ -221,7 +221,7 @@
 			#{dto.submitTime,jdbcType=TIMESTAMP}, #{dto.sumitSeq,jdbcType=VARCHAR}, #{dto.submitFeedbackStatus,jdbcType=VARCHAR},
 			#{dto.status,jdbcType=VARCHAR},  #{dto.statusDate,jdbcType=TIMESTAMP} STATUS_DATE, #{dto.orgCode,jdbcType=VARCHAR},
 			#{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR},
-			sysdate CREATE_TIME,#{dto.updateUser,jdbcType=VARCHAR},sysdate UPDATE_TIME
+			now() CREATE_TIME,#{dto.updateUser,jdbcType=VARCHAR},now() UPDATE_TIME
 		</foreach>
 	</insert>
 
