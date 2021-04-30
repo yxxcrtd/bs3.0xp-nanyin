@@ -803,12 +803,21 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
         	etrCashPositionFlowDto.setAcctId(账号);
         }
         else {
-        String 账号 = gen账号(finProductTradeDto.getTrdProductDeal().getTradeMarket(),
-            finProductTradeDto.getTrdProductDeal().getChlId(), finProductTradeDto.getTrdProductDealAdd().getPortfolioId(),
-            finProductTradeDto.getTrdProductDeal().getCcy(), finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),
-                finProductTradeDto.getTrdProductDeal().getCounterId(),etrCashPositionFlowDto);
-        // 设置账号
-        etrCashPositionFlowDto.setAcctId(账号);
+            // 交易场所为一级市场且是交易所的交易，付款账户为托管户 add by 马数凯 20210430 
+            String 账号;
+            if (StringUtil.equals(finProductTradeDto.getTrdProductDeal().getTradeMarketMode(),DictCodeListExt1.交易市场_一级市场.getValue())
+                    && (StringUtil.equals(finProductTradeDto.getTrdProductDeal().getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                    || StringUtil.equals(finProductTradeDto.getTrdProductDeal().getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()))){
+                账号 = EtrCommonCashPositionDealService.select组合托管户(finProductTradeDto.getTrdProductDealAdd().getPortfolioId(), finProductTradeDto.getTrdProductDeal().getCcy(),DictCodeListExt2.资金账户类型_托管户.getValue());
+            }else{
+                账号 = gen账号(finProductTradeDto.getTrdProductDeal().getTradeMarket(),
+                        finProductTradeDto.getTrdProductDeal().getChlId(), finProductTradeDto.getTrdProductDealAdd().getPortfolioId(),
+                        finProductTradeDto.getTrdProductDeal().getCcy(), finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),
+                        finProductTradeDto.getTrdProductDeal().getCounterId(),etrCashPositionFlowDto);
+            }
+        
+            // 设置账号
+            etrCashPositionFlowDto.setAcctId(账号);
         }
         // 交易生效
         if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
