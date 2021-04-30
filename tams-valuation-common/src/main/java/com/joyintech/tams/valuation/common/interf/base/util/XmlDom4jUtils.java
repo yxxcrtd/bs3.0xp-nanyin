@@ -276,7 +276,7 @@ public class XmlDom4jUtils {
         finprodTypes = DictCodeListExt1.金融产品类型_债券借贷融入.getValue()
         		+","+ DictCodeListExt1.金融产品类型_债券借贷融出.getValue();
         temp = new TempCheckInfo();
-        temp.setDtoEname(TempConstant.买断式回购派息交易);
+        temp.setDtoEname(TempConstant.债券借贷交易);
         temp.setColprdName("prodId");
         temp.setInvestType("INVEST");
         temp.setAssetId("finprodId");
