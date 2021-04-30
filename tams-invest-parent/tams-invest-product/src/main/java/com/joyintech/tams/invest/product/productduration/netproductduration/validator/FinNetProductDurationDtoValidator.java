@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 
@@ -24,11 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.PrdMdateAdjust;
-import com.joyintech.tams.common.base.entity.PrdSaleParam;
-import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.util.DateUtil;
@@ -81,6 +78,11 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
     @Autowired
     private FinProductAddMapper finProductAddMapper;
     /**
+     * 清算指令共通Service TISHKBS-1688 add by jiangpeng on 20210429 start
+     */
+    @Autowired(required = false)
+    private BussSettleOrderCommService bussSettleOrderCommService;
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -104,6 +106,18 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
         boolean isCheckTrdTransferOrder = true;
         //平台日期
         Date sysDate = DateUtil.platDateFromCache();
+
+        // TISHKBS-1688 add by jiangpeng on 20210429 start
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("portfolioId", dto.getPortfolioId());
+        paramMap.put("ccy", dto.getCcy());
+        paramMap.put("capacctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
+        List<StlCapacctInfo> capacctList = bussSettleOrderCommService.selectProdCapacctInfoList(paramMap);
+        if (StringUtil.isEmptyList(capacctList) || capacctList.size() <= 0) {
+            errorList.add(new ValidMessage("请维护产品及组合的托管账户!"));
+            return errorList;
+        }
+        // TISHKBS-1688 add by jiangpeng on 20210429 end
         
         if (WorkFlowUtil.isNotFromToDoList()) {
 	        //产品不能存在其他存续期交易
