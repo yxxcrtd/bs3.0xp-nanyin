@@ -119,6 +119,13 @@ public interface BaseInformationMapper {
 	 * @return 时间类型字段名集合
 	 */
 	List<String> queryTimeColumnList(@Param("tableId") String tableId);
+
+	/**
+	 * 根据表名获取数字类型字段名集合
+	 * @param tableId 表名
+	 * @return 数字类型字段名集合
+	 */
+	List<String> queryNumberColumnList(@Param("tableId") String tableId);
 	
 	/**
 	 * 根据表名获取主键集合
