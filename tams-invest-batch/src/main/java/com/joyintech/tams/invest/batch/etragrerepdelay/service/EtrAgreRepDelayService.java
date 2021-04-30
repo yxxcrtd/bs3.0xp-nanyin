@@ -33,8 +33,12 @@ public class EtrAgreRepDelayService {
 		map.put("PS_T07", DictCodeList.交易方向_到期.getValue());
 		map.put("PS_T56", DictCodeList.交易方向_到期续做.getValue());
 		map.put("PS_C20", DictCodeList.交易方向_提前终止.getValue());
-		//map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-		map.put("TRADE_PLACE_04","01");
+		map.put("PS_T56", DictCodeListExt3.交易方向_到期续做.getValue());
+		map.put("PS_T93", DictCodeListExt3.交易方向_解除质押.getValue());
+		map.put("PS_T95", DictCodeListExt3.交易方向_到期购回.getValue());
+		map.put("PS_T96", DictCodeListExt3.交易方向_提前购回.getValue());
+
+		map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
 		map.put("sysDate", sysDate);
 		//到期指令
 		List<FinTradeProduct> finprodList = etrAgreRepDelayMapper.getExpireFinprodId(map);
