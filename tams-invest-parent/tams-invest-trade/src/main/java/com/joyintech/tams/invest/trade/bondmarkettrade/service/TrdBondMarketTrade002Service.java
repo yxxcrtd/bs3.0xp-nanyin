@@ -304,7 +304,11 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
             //设置持仓流水
             dto.setEtrSecPositionFlows(etrSecListAll);
             dto.setPtlSecPositionFlows(pltSecListAll);
-            
+
+            //根据发行代码和交易日获取风险需要的数据
+            List<Map<String,Object>> saveList = restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/getSaveParam", dto,
+                    List.class);
+
             //7.3.2根据上述返回结果组装交易数据
             List<BaseTradeInfoDto> tradeInfoDtoList = new ArrayList<>();
             for (PtlSecPositionFlowDto ptlSecPositionFlowDto: oldPtlSecList){
@@ -321,6 +325,15 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 trdProductDeal.setBranch(branchLong);
                 //原有的持仓数量被取反了，这里再取反一次
                 trdProductDeal.setShareAmt(ArithmeticUtil.multiply(ptlSecPositionFlowDto.getAmount().negate(),unitPrice));
+                //循环list根据组合赋值
+                if (saveList != null && saveList.size() > 0){
+                    for (Map<String, Object> stringObjectMap : saveList) {
+                        if (StringUtil.equals(stringObjectMap.get("PORTFOLIOID"),ptlSecPositionFlowDto.getPortfolioId()) 
+                                && StringUtil.equals(stringObjectMap.get("INVAIM"),ptlSecPositionFlowDto.getInvAim())){
+                            trdProductDeal.setTradeAmt((BigDecimal) stringObjectMap.get("PRICE")); 
+                        }
+                    }
+                }
                 trdProductDeal.setTradeDate(dto.getTradeDate());
                 trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());

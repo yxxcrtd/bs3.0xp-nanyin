@@ -193,4 +193,14 @@ public class TrdBondMarketTradeController {
     public TrdBondMarketTradeDto getRevokeEntity(@RequestBody TrdBondMarketTradeDto entity){
         return trdBondMarketTradeService.getRevokeEntity(entity);
     }
+
+    /**
+     * 查询提交时风险需要的数据
+     * @param entity
+     * @return
+     */
+    @PostMapping("getSaveParam")
+    public List<Map<String,Object>> getSaveParam(@RequestBody TrdBondMarketTradeDto entity){
+        return trdBondMarketTradeService.getSaveParam(entity);
+    }
 }

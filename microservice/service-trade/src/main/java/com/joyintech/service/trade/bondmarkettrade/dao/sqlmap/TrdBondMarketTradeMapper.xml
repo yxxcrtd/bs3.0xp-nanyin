@@ -422,11 +422,10 @@
     <select id="selectTrdProductDealsInfo" resultType="java.util.Map">
         select 
             nvl(DSC_COST_AMT, 0) + nvl(TDY_FLOAT_INGPL, 0) + nvl(TDY_INTINCEXP, 0) + nvl(DELAY_PAY_AMT, 0) as price,
+            t1.INV_AIM invAim,
             t1.PORTFOLIO_ID portfolioId
         from PTL_SEC_VALUTION t1
         inner join FIN_PRODUCT t2 on t1.FINPROD_ID = t2.FINPROD_ID
-        inner join FIN_PRODUCT_ADD FRD ON T2.FINPROD_ID = FRD.FINPROD_ID  
-        AND FRD.APPEAR_MARKET_ID IS NOT NULL  AND FRD.IS_ISSUE_ASSET = 'Y'
          where  t1.CDATE = (#{tradeDate,jdbcType=DATE} - 1)
            and t1.FINPROD_ID = #{finprodId,jdbcType = VARCHAR}
            AND t1.PORTFOLIO_ID != t1.FINPROD_ID
