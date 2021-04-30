@@ -278,7 +278,7 @@
                     AND (tpd.IS_CANCEL is null or tpd.IS_CANCEL = #{YES_NO_NO})
                     AND tpd.TRADE_STATUS = #{TRADE_STATUS_01}
                     <if test="fTradeId!=null and fTradeId!='' ">
-                        and tpd.f_trade_id=#{fTradeId}
+                        and tpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
             </if>
             <!-- 撤销 -->
@@ -405,7 +405,7 @@
                     AND tpd.IS_CANCEL = #{YES_NO_YES}
                     AND tpd.TRADE_STATUS = #{TRADE_STATUS_01}
                     <if test="fTradeId!=null and fTradeId!='' ">
-                        d tpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
+                        AND tpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
             </if>
     	</trim>

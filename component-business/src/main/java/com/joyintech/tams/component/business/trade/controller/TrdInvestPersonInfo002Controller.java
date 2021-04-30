@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoService;
 import com.joyintech.tams.component.business.trade.TrdInvestPersonInfo002Service;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCodeList;
@@ -52,6 +53,9 @@ public class TrdInvestPersonInfo002Controller extends BaseController {
      */
     @Autowired
     private TrdInvestPersonInfo002Service trdInvestPersonInfo002Service;
+    
+    @Autowired(required=false)
+    private BussEtrInvestPersonInfoService bussEtrInvestPersonInfoService;
     /**
      * {@inheritDoc}
      */
@@ -96,6 +100,15 @@ public class TrdInvestPersonInfo002Controller extends BaseController {
     @ResponseBody
     public Page<SelectOptionDto> selectCounterId(){
         Map<String, Object> params = RequestUtil.getPageParam();
+        if (StringUtil.isNotEmpty(params.get("callPageId"))
+				&& (StringUtil.equals("TrdBondInvestTrade002", params.get("callPageId").toString()) 
+						&& !StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), params.get("ps"))
+						&& StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(), params.get("tradeMarket"))
+						&&!StringUtil.isNotEmpty(params.get("chlId"))
+						&& StringUtil.isNotEmpty(params.get("fTradeId")))) {
+			//return bussEtrInvestPersonInfoService.getCfetsCounterId(params);
+			return bussEtrInvestPersonInfoService.getCounterIdCfets(params);
+		}
         // 判断转仓开关
         if (CacheUtil.getSysParam("TURN_OVER_SWITCH")!=null 
             && "01".equals(CacheUtil.getSysParam("TURN_OVER_SWITCH")) 
@@ -118,5 +131,26 @@ public class TrdInvestPersonInfo002Controller extends BaseController {
         }
         
         return trdInvestPersonInfo002Service.selectCounterId(params);
+    }
+    
+    /**
+     * 查询本方交易员
+     * @return
+     */
+    @RequestMapping("/selectTrader")
+    @ResponseBody
+    public Page<SelectOptionDto> selectTrader(){
+    	Map<String, Object> params = RequestUtil.getPageParam();
+    	if (StringUtil.isNotEmpty(params.get("callPageId"))
+				&& (StringUtil.equals("TrdBondInvestTrade002", params.get("callPageId").toString()) 
+						&& !StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), params.get("ps"))
+						&& StringUtil.equals(DictCodeListExt1.交易场所_银行间.getValue(), params.get("tradeMarket"))
+						&& !StringUtil.isNotEmpty(params.get("chlId")))) {
+    		if(StringUtil.isNotEmpty(params.get("trdInvestPersonInfo.counterId"))) {
+    			params.put("etrInvestPersonInfo.counterId", params.get("trdInvestPersonInfo.counterId"));
+    		}
+			return bussEtrInvestPersonInfoService.getCfetsTrader(params);
+		}
+    	return trdInvestPersonInfo002Service.selectTrader(RequestUtil.getPageParam());
     }
 }

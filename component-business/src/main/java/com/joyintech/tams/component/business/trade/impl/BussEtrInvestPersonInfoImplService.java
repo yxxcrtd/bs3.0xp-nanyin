@@ -147,5 +147,24 @@ public class BussEtrInvestPersonInfoImplService implements BussEtrInvestPersonIn
             ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getUser?userName=" + userName,
             Map.class);
     }
+    
+    /**
+     * 
+     */
+	@Override
+	public Page<SelectOptionDto> getCfetsTrader(Map<String, Object> map) {
+		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCfetsTrader",
+	            map, SelectOptionDto.class);
+	}
+
+	/**
+     * 交易对手
+     */
+    @Override
+    public Page<SelectOptionDto> getCounterIdCfets(Map<String, Object> param) {
+    	return restTemplate.postForPage(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterIdCfets", param,
+                SelectOptionDto.class);
+    }
 
 }

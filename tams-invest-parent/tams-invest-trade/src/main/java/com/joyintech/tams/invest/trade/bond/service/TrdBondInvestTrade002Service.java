@@ -3822,6 +3822,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 ptlAllocationDto.setEntrustId(entity.getEntrustId());
                 ptlAllocationDto.setFpriceAmt(fpriceAmt);
                 ptlAllocationDto.setShareAmt(prinamt);
+                ptlAllocationDto.setPortfolioId(entity.getPortfolioId());
                 ptlAllocationDto.setTradeFeeList(trdTradeFeeDetails);
                 ptlAllocationDtos.add(ptlAllocationDto);
             }

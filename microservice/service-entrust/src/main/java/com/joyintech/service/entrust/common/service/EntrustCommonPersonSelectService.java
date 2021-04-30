@@ -215,4 +215,37 @@ public class EntrustCommonPersonSelectService extends BaseService<ITableRow> {
         return dtoList;
     }
     // add by etliu 20210421 权益类资产相关代码合并 end
+    
+    /**
+     * 查询本方交易员列表
+     * 
+     * @param param 入参
+     * @return 交易员列表
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getCfetsTrader(int page, int length,
+                                                       Map<String, Object> param) {
+		String counterId = param.get("etrInvestPersonInfo.counterId") == null ? null
+				: param.get("etrInvestPersonInfo.counterId").toString();
+		if (StringUtil.isNotEmpty(counterId)) {
+			param.remove("etrInvestPersonInfo.counterId");
+			param.put("counterId", counterId);
+		}
+        return this.queryForPageForSelectReturn(page, length,
+            () -> entrustCommonPersonSelectMapper.getCfetsTrader(param));
+    }
+    
+    /**
+     * 
+     * 查询交易对手
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getCounterIdCfets(int page,int length,Map<String, Object> map){
+        return this.queryForPageForSelectReturn(page, length,()->entrustCommonPersonSelectMapper.getCounterIdCfets(map));
+    }
 }

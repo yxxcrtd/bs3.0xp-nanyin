@@ -54,4 +54,26 @@ public class TrdInvestPersonInfoService extends BaseService<ITableRow> {
         param.put("YES_NO_N", DictCodeList.是否_否.getValue());
         return this.queryForPageForSelectReturn(page, length,() ->trdInvestPersonInfoMapper.getCounterIdDepat(param));
     }
+    
+    /**
+     * 查用户表的本方交易员
+     * @param page
+     * @param length
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto>  getTrader(int page,int length,Map<String, Object> param){
+    	return this.queryForPageForSelectReturn(page, length, ()->trdInvestPersonInfoMapper.getTrader(param));
+    }
+    
+    /**
+     * 查交易员表的交易员
+     * @param page
+     * @param length
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto>  getCfetsTrader(int page,int length,Map<String, Object> param){
+    	return this.queryForPageForSelectReturn(page, length, ()->trdInvestPersonInfoMapper.getCfetsTrader(param));
+    }
 }

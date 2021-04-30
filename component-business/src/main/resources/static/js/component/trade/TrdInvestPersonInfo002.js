@@ -39,6 +39,45 @@
         return $('#' + entityName + '_' + id);
     };
     var init = function () {
+    	if(callPageId == "TrdBondInvestTrade002" && ($("#fTradeId").val() || $("#fTradeIdShow").val())){
+    		$("#cfets_counterTraderDiv").show();
+    		$('#counterTraderDiv #trdInvestPersonInfo_counterTrader').val('');
+    		$("#counterTraderDiv").hide();
+    	}else{
+    		$("#counterTraderDiv").show();
+    		$("#cfets_counterTraderDiv #trdInvestPersonInfo_counterTrader").val('').trigger('change');
+    		$("#cfets_counterTraderDiv").hide();
+    	}
+    	
+    	/*$("#tradeMarket #chlId #ps").change(function(){
+    		var tradeMarket = $("#tradeMarket").val();
+    		var chlId = $("#chlId").val();
+    		var ps = $("#ps").val();
+    		if(callPageId == "TrdBondInvestTrade002"){
+    			$("#trdInvestPersonInfo_counterId").textSelect('setValue','');
+    			$("select#trdInvestPersonInfo_counterTrader").textSelect('setValue','');
+    		}
+    	});*/
+    	$("#fTradeId").change(function(){
+    		var fTradeId = $("#fTradeId").val();
+    		if(fTradeId){
+    			$("#cfets_counterTraderDiv").show();
+        		$('input#trdInvestPersonInfo_counterTrader').val('');
+        		$("#counterTraderDiv").hide();
+        		$("#trdInvestPersonInfo_counterId").textSelect('setValue','');
+    		}else{
+    			$("#counterTraderDiv").show();
+        		$("select#trdInvestPersonInfo_counterTrader").textSelect('setValue','');
+        		$("#cfets_counterTraderDiv").hide();
+        		$("#trdInvestPersonInfo_counterId").textSelect('setValue','');
+    		}
+    	})
+    	
+    	if(callPageId != "TrdBondInvestTrade002"){
+    		$("#cfets_counterTraderDiv").empty();
+    	}
+    	
+    	
         var counterId = getElementById('counterId');
         if(pageId == 'TrdFundInvestTrade003' || pageId == 'TrdPlanNetInvestTrade003'){
             var trader = getElementById('trader');
@@ -58,6 +97,9 @@
             var counterIdSelect = getElementById('counterId');
             if(counterIdSelect.val()){
                 getElementById('isOutTrade').val(counterIdSelect.select2('data')[0].object).trigger('change');
+            }
+            if(counterIdSelect && $("select#trdInvestPersonInfo_counterTrader").prop("disabled") == false){
+            	$("select#trdInvestPersonInfo_counterTrader").val('').trigger('change');
             }
         });
         counterId.change(function () {// 内部交易对手时，只能选择卖出

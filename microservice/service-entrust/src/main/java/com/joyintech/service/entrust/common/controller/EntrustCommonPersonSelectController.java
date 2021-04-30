@@ -96,4 +96,35 @@ public class EntrustCommonPersonSelectController {
     public List<String> findSameNameCounterId(@RequestBody Map<String, Object> map) {
         return entrustCommonPersonSelectService.findSameNameCounterId(map);
     }
+    
+    /**
+     * 查询本方交易员列表
+     * 
+     * @param param 入参
+     * @param page 页数
+     * @param length 步长
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getCfetsTrader/{page}/{length}")
+    public Page<SelectOptionDto> getCfetsTrader(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
+                                                    @PathVariable("length") int length){
+        return entrustCommonPersonSelectService.getCfetsTrader(page,length,param);
+    }
+    
+    /**
+     * 
+     * 查询交易对手_银行间
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getCounterIdCfets/{page}/{length}")
+    @ResponseBody
+    public Page<SelectOptionDto> getCounterIdCfets(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length){
+        return entrustCommonPersonSelectService.getCounterIdCfets(page,length,map);
+    }
 }

@@ -3165,6 +3165,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                 ptlAllocationDto.setEntrustId(trdRepoTrade002Dto.getEntrustId());
                 ptlAllocationDto.setFpriceAmt(mdateSettleAmt);
                 ptlAllocationDto.setShareAmt(prinAmt);
+                ptlAllocationDto.setPortfolioId(trdRepoTrade002Dto.getPortfolioId());
                 ptlAllocationDtos.add(ptlAllocationDto);
                 ptlAllocationDto.setTradeFeeList(trdTradeFeeDetails);
                 mapPledgeBondInfoDtoByEntrustId.put(trdRepoTrade002Dto.getEntrustId(),pledgeBondInfoDtoList);

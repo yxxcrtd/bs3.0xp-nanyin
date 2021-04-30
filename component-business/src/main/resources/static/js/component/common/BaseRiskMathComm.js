@@ -20,6 +20,16 @@
         return param;
     }
 
+    // add by etliu 20210427 交易所协议回购相关代码合并 start
+    /**
+     * 重置风险试算标识---场内交易指令需要
+     * @returns
+     */
+    function resetRiskMathFlag(){
+        $("#riskMathFlag").val('01');
+    }
+    // add by etliu 20210427 交易所协议回购相关代码合并 end
+
     /**
      * 定义数据表格
      */
@@ -1105,7 +1115,10 @@
             initBaseRiskMathCommLxzlPage:initBaseRiskMathCommLxzlPage,
             reloadRiskTable:reloadRiskTable,
             getparam:getparam,
-            submitT19Check:submitT19Check
+            submitT19Check:submitT19Check,
+            // add by etliu 20210427 交易所协议回购相关代码合并 start
+            resetRiskMathFlag:resetRiskMathFlag
+            // add by etliu 20210427 交易所协议回购相关代码合并 end
     };
       
     /*吉林银行风险试算-流程控制显示   add by caojin   2019/09/23   start*/

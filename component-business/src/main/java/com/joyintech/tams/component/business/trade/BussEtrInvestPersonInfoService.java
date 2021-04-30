@@ -73,4 +73,24 @@ public interface BussEtrInvestPersonInfoService {
      */
     Map<String, Object> getUser(String userName);
     
+    /**
+     * 
+     * 本方交易员
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    Page<SelectOptionDto> getCfetsTrader(Map<String, Object> map);
+    
+    /**
+     * 
+     * 交易对手
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    Page<SelectOptionDto> getCounterIdCfets(Map<String, Object> map);
+    
 }

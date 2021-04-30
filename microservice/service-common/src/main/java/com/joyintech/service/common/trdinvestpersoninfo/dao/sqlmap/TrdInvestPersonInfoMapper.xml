@@ -23,7 +23,9 @@
 					FROM
 						MST_COUNTER_PARTY T1
 					LEFT JOIN MST_CUSTOMER_INFO T2 ON T1.LINK_ID = T2.CUSTOMER_ID
+					left join mst_cfets_customer_info T3 on T1.counter_name = T3.party_name 
 					<where>
+						AND T3.party_id IS NULL
 						<if test="innerTrade != null and !innerTrade">
 			                AND not exists (select 1 from PTL_PORTFOLIO p where p.PORTFOLIO_ID = T1.COUNTER_ID)
 			                and NOT EXISTS (SELECT 1 FROM fin_product p WHERE p.FINPROD_MARKET_ID = T1.COUNTER_ID)
@@ -62,7 +64,9 @@
 				FROM
 					MST_COUNTER_PARTY T1
 				LEFT JOIN MST_CUSTOMER_INFO T2 ON T1.LINK_ID = T2.CUSTOMER_ID
-				WHERE T1.COUNTER_ID IN (
+				left join mst_cfets_customer_info T3 on T1.counter_name = T3.party_name 
+				WHERE T3.party_id IS NULL
+					AND T1.COUNTER_ID IN (
 					SELECT
 						P .FINPROD_MARKET_ID
 					FROM
@@ -111,7 +115,9 @@
 	        MST_CUSTOMER_INFO T2
 	        ON
 	        T1.LINK_ID = T2.CUSTOMER_ID
+	        left join mst_cfets_customer_info T3 on T1.counter_name = T3.party_name 
 	        <where>
+	        	AND T3.PARTY_ID IS NULL
 	            <if test="innerTrade != null and !innerTrade">
 	                AND not exists (select 1 from PTL_PORTFOLIO p where p.PORTFOLIO_ID = T1.COUNTER_ID)
 	                and NOT EXISTS (SELECT 1 FROM fin_product p WHERE p.FINPROD_MARKET_ID = T1.COUNTER_ID)
@@ -147,7 +153,9 @@
 	        MST_CUSTOMER_INFO T2
 	        ON
 	        T1.LINK_ID = T2.CUSTOMER_ID
+	        left join mst_cfets_customer_info T3 on T1.counter_name = T3.party_name 
 	        <where>
+	        	AND T3.PARTY_ID IS NULL
 	            <if test="search != null and search != ''">
 	                AND (
 	                T1.COUNTER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
@@ -179,9 +187,11 @@
     		MST_CUSTOMER_INFO T2
     	ON
     		T1.LINK_ID = T2.CUSTOMER_ID
+    	left join mst_cfets_customer_info T3 on T1.counter_name = T3.party_name 
         <where>
+        	AND T3.PARTY_ID IS NULL
             <if test="search != null and search != ''">
-                (
+               AND (
                     T1.COUNTER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
                     OR
                     T1.COUNTER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
@@ -195,5 +205,39 @@
             </if>
         </where>
     </select>
+    
+    <select id="getTrader" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT USER_NAME id,
+				REAL_NAME text
+		FROM SYS_USER
+		WHERE 1 =1
+		<if test="search != null and search != ''">
+	        AND (
+	          USER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+	          OR
+	          REAL_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+	        )
+	     </if>
+	     <if test="initValue != null and initValue != ''">
+	         AND USER_NAME = #{initValue}
+	     </if>
+	</select>
+	
+	<select id="getCfetsTrader" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT TRADER_ID id,
+				TRADER_NAME text
+		FROM MST_CFETS_CUSTOMER_TRADER
+		WHERE 1=1
+		<if test="search != null and search != ''">
+	        AND (
+	          TRADER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+	          OR
+	          TRADER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+	        )
+	     </if>
+	     <if test="initValue != null and initValue != ''">
+	         AND TRADER_ID = #{initValue}
+	     </if>
+	</select>
     
 </mapper>

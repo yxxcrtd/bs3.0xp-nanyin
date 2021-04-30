@@ -49,4 +49,29 @@ public class TrdInvestPersonInfoController {
         return trdInvestPersonInfoService.getCounterIdDepat(page, length,param);
     }
 
+    /**
+     * 查询用户表本方交易员
+     * @param param
+     * @param page
+     * @param length
+     * @return
+     */
+    @RequestMapping("getTrader/{page}/{length}")
+    public Page<SelectOptionDto> getTrader(@RequestBody Map<String, Object> param,
+            @PathVariable("page") int page, @PathVariable("length") int length){
+    	return trdInvestPersonInfoService.getTrader(page, length, param);
+    }
+    
+    /**
+     * 查询交易员表本方交易员
+     * @param param
+     * @param page
+     * @param length
+     * @return
+     */
+    @RequestMapping("getCfetsTrader/{page}/{length}")
+    public Page<SelectOptionDto> getCfetsTrader(@RequestBody Map<String, Object> param,
+            @PathVariable("page") int page, @PathVariable("length") int length){
+    	return trdInvestPersonInfoService.getCfetsTrader(page, length, param);
+    }
 }
