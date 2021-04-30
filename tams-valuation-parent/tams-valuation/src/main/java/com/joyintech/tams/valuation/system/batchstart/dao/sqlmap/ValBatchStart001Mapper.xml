@@ -14,9 +14,12 @@
         UPDATE_TIME updateTime
         FROM SYS_BATCH_TASK
         <where>
+            1 = 1
             <if test="batchName != null and batchName != ''">
-                (UPPER(BEAN_NAME) LIKE concat(concat('%', UPPER(#{batchName})),'%') OR UPPER(TASK_NAME) LIKE concat(concat('%', UPPER(#{batchName})),'%') )
+             AND   (UPPER(BEAN_NAME) LIKE concat(concat('%', UPPER(#{batchName})),'%') OR UPPER(TASK_NAME) LIKE concat(concat('%', UPPER(#{batchName})),'%') )
             </if>
+            AND NOT EXISTS ( SELECT 1 FROM SYS_PREBATCH_TASK_ADD SPTA
+            WHERE SPTA.TASK_ID = SYS_BATCH_TASK.TASK_ID)
         </where>
     </select>
 
