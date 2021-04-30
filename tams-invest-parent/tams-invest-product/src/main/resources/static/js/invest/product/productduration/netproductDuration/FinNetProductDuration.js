@@ -1521,7 +1521,7 @@ $(function() {
                 }
 
     			Joyin.ajaxJson(basePath + 'invest/product/productduration/netproductDuration/FinNetProductDuration/getTrdValueByCdate', 
-    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value}, 
+    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value,dealType:$("#dealType").val()},
     	        	function(result) {
     	        		//修改净值
     	        		redCycleDataTable.renderRow(data.LAY_TABLE_INDEX, {redUnitNetValue: result});
@@ -1838,7 +1838,7 @@ $(function() {
         	//净值日期选择联动
     		if(field == "expireNetValueDate"){
     			Joyin.ajaxJson(basePath + 'invest/product/productduration/netproductDuration/FinNetProductDuration/getTrdValueByCdate', 
-    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value}, 
+    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value,dealType:$("#dealType").val()},
     	        	function(result) {
     	        		//修改净值
     	        		expireCycleDataTable.renderRow(data.LAY_TABLE_INDEX, {expireUnitNetValue: result});
@@ -2004,7 +2004,7 @@ $(function() {
         	//净值日期选择联动
     		if(field == "addReduceNetValueDate"){
     			Joyin.ajaxJson(basePath + 'invest/product/productduration/netproductDuration/FinNetProductDuration/getTrdValueByCdate', 
-    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value}, 
+    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value,dealType:$("#dealType").val()},
     	        	function(result) {
     	        		//修改净值
     	        		addReduceCycleDataTable.renderRow(data.LAY_TABLE_INDEX, {addReduceUnitNetValue: result});

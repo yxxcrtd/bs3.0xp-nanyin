@@ -925,6 +925,7 @@ public class FinNetProductDuration002Controller extends BaseController{
     	Map<String, Object> map = RequestUtil.getPageParam();
     	map.put("finprodId", dto.getFinprodId());
     	map.put("cDate", dto.getRedNetValueDate());
+    	map.put("dealType", dto.getDealType());
         return finNetProductDurationService.getTrdValueByCdate(map);
     }
     /**

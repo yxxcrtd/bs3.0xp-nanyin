@@ -705,6 +705,34 @@
         	finprod_id = #{finprodId,jdbcType=VARCHAR} AND BRANCH = #{branch,jdbcType=INTEGER} 
         	AND CDATE <![CDATA[<= ]]> #{cDate,jdbcType=DATE} AND rownum=1 ORDER BY CDATE DESC
 	</select>
+<!--
+	//add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 start
+-->
+
+	<!-- 获取期次子产品最新净值日、单位净值（存续期交易新建	赎回） -->
+    <select id = "getBokValbalTableStatusAdd" resultType="com.joyintech.tams.common.base.entity.BokPositionPrd">
+		SELECT
+			VAL_DATE as CDATE,NET_UNIT_VALUE as TDY_UNIT_VALUE
+		FROM
+			bok_valbal_table_status_add
+        WHERE
+        	finprod_id = #{finprodId,jdbcType=VARCHAR}
+        	AND VAL_DATE <![CDATA[<= ]]> #{cDate,jdbcType=DATE} AND rownum=1 ORDER BY VAL_DATE DESC
+	</select>
+	<!-- 获取期次子产品最新净值日、单位净值（存续期交易新建	赎回） -->
+    <select id = "getBokValbalTableStatus" resultType="com.joyintech.tams.common.base.entity.BokPositionPrd">
+		SELECT
+			VAL_DATE as CDATE,NET_UNIT_VALUE as TDY_UNIT_VALUE
+		FROM
+			bok_valbal_table_status
+        WHERE
+        	finprod_id = #{finprodId,jdbcType=VARCHAR}
+        	AND VAL_DATE <![CDATA[<= ]]> #{cDate,jdbcType=DATE} AND rownum=1 ORDER BY VAL_DATE DESC
+	</select>
+<!--
+	//add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 end
+-->
+
 	<!-- 获取已完成交易期次子产品信息（存续期交易	赎回） -->
     <select id = "getPeriodInfoListIntrade" resultType="com.joyintech.service.product.productduration.netproductduration.dto.FinNetProductDurationDto">
 		SELECT distinct * FROM(
