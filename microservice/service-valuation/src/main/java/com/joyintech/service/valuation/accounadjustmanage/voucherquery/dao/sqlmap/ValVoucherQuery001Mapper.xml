@@ -52,20 +52,15 @@
                     SELECT 
                         B.VOUCH_NUM 
                     FROM BOK_VOUCH_DETAIL B
+                    left join fin_product_add fpa
+                        on B.busi_id = fpa.finprod_id
                     WHERE 
                         B.VOUCH_NUM = A.VOUCH_NUM 
                         <!-- 资产/负债代码 -->
                         <!-- 只要满足 -->
                         <if test="busiId !=null and busiId !='' ">
-                          AND (B.BUSI_ID LIKE '%' || #{busiId}  || '%' OR
-                            (B.BUSI_ID LIKE
-                                '%' || (select (nvl((select t.finprod_id
-                                        from fin_product_add t
-                                        where (t.appear_market_id LIKE
-                                        '%' || #{busiId}  || '%' or
-                                        concat('F01_',
-                                        t.appear_market_id) LIKE '%' || #{busiId} || '%')),' '))
-                                        from dual) || '%'))
+                            AND (B.BUSI_ID LIKE '%' || #{busiId}  || '%'
+                                OR (concat('F01_',fpa.appear_market_id) LIKE '%' || #{busiId} || '%'))
                         </if>
                         <if test="subjectNo !=null and subjectNo !='' ">
                             AND NVL(B.DETAIL_SUBJECT_NO,B.SUBJECT_NO) = #{subjectNo}
@@ -175,6 +170,8 @@
                 ON fp.FINPROD_ID = B.BUSI_ID
             left join STL_CAPACCT_INFO stl
                on stl.acct_no = B.BUSI_ID
+            left join fin_product_add fpa
+               on b.busi_id = fpa.finprod_id
             <!-- <if test="userId != null and userId != ''">
 			 INNER JOIN PTL_PORTFOLIO_AUTHORITY
 		             ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = REPLACE(A.BOOKSET_ID,'F16_','')
@@ -210,15 +207,8 @@
                 <!-- 资产/负债代码 -->
                 <!-- 只要满足 -->
                 <if test="busiId !=null and busiId !='' ">
-                    AND (B.BUSI_ID LIKE '%' || #{busiId}  || '%' OR
-                        (B.BUSI_ID LIKE
-                        '%' || (select (nvl((select t.finprod_id
-                                from fin_product_add t
-                                where (t.appear_market_id LIKE
-                                '%' || #{busiId}  || '%' or
-                                concat('F01_',
-                                t.appear_market_id) LIKE '%' || #{busiId} || '%')),' '))
-                                from dual) || '%'))
+                    AND (B.BUSI_ID LIKE '%' || #{busiId}  || '%'
+                            OR (concat('F01_',fpa.appear_market_id) LIKE '%' || #{busiId} || '%'))
                 </if>
                 <!-- 记账日期 -->
                 <if test="bookDateBegin !=null">
