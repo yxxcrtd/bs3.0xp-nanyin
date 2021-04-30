@@ -1169,10 +1169,10 @@
 	 select 
 	 PROD_ID,
 	 CDATE,
-	 RANK() over(partition BY PROD_ID order by CDATE DESC) RANK
+	 RANK() over(partition BY PROD_ID order by CDATE DESC) MYRANK
 	 from CHB_PRD_FEE_POSITION
-	 )
-	 where 1 = 1 limit 1) a
+	 )AS T
+	 where MYRANK = 1) a
 		on a.PROD_ID=POS.PROD_ID
 		and a.CDATE=POS.CDATE
 	<if test="list != null and list.size() > 0">
