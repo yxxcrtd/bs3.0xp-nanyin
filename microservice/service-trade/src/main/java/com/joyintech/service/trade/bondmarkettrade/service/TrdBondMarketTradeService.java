@@ -396,6 +396,8 @@ public class TrdBondMarketTradeService extends BaseService {
             
             if (finProductAdd != null){
                 finProductAdd.setFinprodId(newFinprodId);
+                finProductAdd.setIsIssueAsset(DictCodeList.是否_否.getValue());
+                finProductAdd.setAppearMarketId(null);
             }
 
             if (finProductType != null){
