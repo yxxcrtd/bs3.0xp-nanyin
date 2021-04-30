@@ -162,6 +162,7 @@ application:
       pbcService: http://127.0.0.1:8080/tams
       investInterfService: http://127.0.0.1:8080/tams
       tamsServer: http://127.0.0.1:8080/tams
+      exchangeService: http://127.0.0.1:8080/tams/service
 #base数据库配置
 base:
   datasource:
@@ -176,7 +177,7 @@ interf:
      password: tams30
 #日志路径配置
 log:
-  path: /home/tams/logs/batch
+  path: D:/home/tams/logs/batch
   level: debug
 logging:
   path: /home/tams/logs/batch
@@ -235,6 +236,7 @@ application:
       pbcService: http://127.0.0.1:8080/tams
       investInterfService: http://127.0.0.1:8080/tams
       tamsServer: http://127.0.0.1:8080/tams
+      exchangeService: http://127.0.0.1:8080/tams/service
 #base数据库配置
 base:
   datasource:
