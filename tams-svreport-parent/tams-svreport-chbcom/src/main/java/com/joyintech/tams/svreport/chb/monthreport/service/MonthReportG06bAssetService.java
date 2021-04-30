@@ -215,9 +215,15 @@ public class MonthReportG06bAssetService {
     public void insertDetail(Map<String, ChbMonthReportG06bDetail> assetMonthReportG06bDetailMap, ChbMonthReport report) {
         if (assetMonthReportG06bDetailMap != null
                 && assetMonthReportG06bDetailMap.size() != 0) {
-            Collection<ChbMonthReportG06bDetail> details = assetMonthReportG06bDetailMap.values();
+            List<ChbMonthReportG06bDetail> details = new ArrayList<ChbMonthReportG06bDetail>();
+            for (Map.Entry<String, ChbMonthReportG06bDetail> entry : assetMonthReportG06bDetailMap.entrySet()) {
+                details.add(entry.getValue());
+            }
+
             // 插入数据
             if (!CollectionUtils.isEmpty(details)) {
+                chbMonthReportG06bDetailMapper.deleteByTermId(details.get(0).getTermid(),
+            				ChbMonthReportPrdConstants.REPORT_TYPE_ASSET, null);
                 chbMonthReportG06bDetailMapper.insertBatch((List<ChbMonthReportG06bDetail>) details);
             }
         }

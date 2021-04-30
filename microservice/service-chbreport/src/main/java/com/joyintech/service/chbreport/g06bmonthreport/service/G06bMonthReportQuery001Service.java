@@ -55,7 +55,7 @@ public class G06bMonthReportQuery001Service extends BaseService {
     }
 
     /**
-     * 查询华夏利润表导出数据
+     * 查询G06b风险资本计算表明细表导出数据
      *
      * @param pageParam 筛选条件
      * @return 列表信息

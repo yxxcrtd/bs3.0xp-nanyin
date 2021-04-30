@@ -130,7 +130,7 @@ public class G06bMonthReportQueryMService extends CommonExportService<ChbreportP
     private ChbreportExportFileDto createExcel(String reportDate) throws Exception {
         // 设置文件信息
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-        String fileName = "G06b_II银行理财子公司风险资本计算表 " + reportDate + ".xls";
+        String fileName = "G06b_II银行理财子公司风险资本计算表_" + reportDate + ".xls";
         String tempName = "G06bMonthReport.xls";
         String tplFlodPath = "g06bmonthreport/G06bMonthReport.xls";
         String tplPath = FileNameUtil.getTplFile(tplFlodPath);
