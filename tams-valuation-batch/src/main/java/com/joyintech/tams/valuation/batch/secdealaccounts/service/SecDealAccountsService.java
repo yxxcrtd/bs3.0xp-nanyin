@@ -6778,33 +6778,6 @@ public class SecDealAccountsService {
 
         //记账金额元素 putALl 随记账本位币金额map
         accountAmountMap.putAll(accountAmountBCCYAMTMap);
-//        //accountAmountMap再次设置如下：
-//        /** 交易金额_本位币	<-	(印花税支出_本位币 + 经手费支出_本位币 + 证管费支出_本位币 + 结算费支出_本位币 + 佣金支出_本位币 + 交易手续费支出
-//         + 结算手续费支出 + 成本金额_本位币 + 利息金额_本位币)
-//         -（印花税_本位币 + 经手费_本位币 + 证管费_本位币 + 结算费_本位币 + 佣金_本位币 + 交易手续费_本位币
-//         + 结算手续费_本位币)
-//         **/
-//        BigDecimal 交易金额本位币1 = ArithmeticUtil.doAdd(accountAmountBCCYAMTMap.get(BookConstant.STAMPTAX_OUT + BookConstant.BCCYAMT),//印花税支出_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.HANDFEE_OUT + BookConstant.BCCYAMT),//经手费支出_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.CERTIFEE_OUT + BookConstant.BCCYAMT),//证管费支出_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.SETTLEFEE_OUT + BookConstant.BCCYAMT),//结算费支出_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.COMMISSION_OUT + BookConstant.BCCYAMT),//佣金支出_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.TRADEFEE_OUT + BookConstant.BCCYAMT),//交易手续费支出_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.SETTLEMENTFEE_OUT + BookConstant.BCCYAMT),//结算手续费支出_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.FACEVALUE + BookConstant.BCCYAMT),//成本金额_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.INTAMT + BookConstant.BCCYAMT));//利息金额_本位币
-//
-//        BigDecimal 交易金额本位币2 = ArithmeticUtil.doAdd(
-//                accountAmountBCCYAMTMap.get(BookConstant.STAMPTAX + BookConstant.BCCYAMT),//印花税_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.HANDFEE + BookConstant.BCCYAMT),//经手费_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.CERTIFEE + BookConstant.BCCYAMT),//证管费_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.SETTLEFEE + BookConstant.BCCYAMT),//结算费_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.COMMISSION + BookConstant.BCCYAMT),//佣金_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.TRADEFEE + BookConstant.BCCYAMT),//交易手续费_本位币
-//                accountAmountBCCYAMTMap.get(BookConstant.SETTLEMENTFEE + BookConstant.BCCYAMT));//结算手续费_本位币
-//        BigDecimal 交易金额本位币 = ArithmeticUtil.doSub(交易金额本位币1, 交易金额本位币2);
-//        accountAmountMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT, ArithmeticUtil.round(交易金额本位币, NumberEnum.MONEY));
-//        accountCurrencyMap.put(BookConstant.DEALAMT + BookConstant.BCCYAMT, standardCcyNow);// value值塞入当前交易币种
 
         // map塞入场景要素管理中
         // 记账场景要素
@@ -6820,18 +6793,16 @@ public class SecDealAccountsService {
         returnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
 
         // 全局变量的更新
-//        // 变量.成本科目余额 =变量.成本科目余额 + 交易明细.交易本金
-//        param.setVarCostSubjectAmt(
-//                ArithmeticUtil.doAdd(param.getVarCostSubjectAmt(), dealNow.getPrinAmt()));
-//        // 变量.成本科目数量=变量.成本科目数量 + 交易明细.交易份额
-//        param.setVarCostSubjectNum(
-//                ArithmeticUtil.doAdd(param.getVarCostSubjectNum(), dealNow.getShareAmt()));
-//        // 变量.应计利息科目余额=变量.应计利息科目余额 + 交易明细.利息总额
-//        param.setVarLxSubjectAmt(
-//                ArithmeticUtil.doAdd(param.getVarLxSubjectAmt(), dealNow.getIntAmt()));
-//        // 变量.公允价值变动科目余额     =	变量.公允价值变动科目余额 - 变量.冲减公允价值变动
-//        param.setVarGySubjectAmt(
-//                ArithmeticUtil.doSub(param.getVarGySubjectAmt(),varCjgyjzbdSubjectAmt));
+        // 变量.成本科目余额 =发行标的科目余额
+        param.setVarCostSubjectAmt(origCbkmye);
+        // 变量.成本科目数量=发行标的科目数量
+        param.setVarCostSubjectNum(origCbkmsl);
+        // 变量.应计利息科目余额=发行标的应计利息科目余额
+        param.setVarLxSubjectAmt(origyjlxkmye);
+        // 变量.公允价值变动科目余额=发行标的公允价值变动科目余额
+        param.setVarGySubjectAmt(origgyjzbdkmye);
+        // 变量.溢折价科目余额=发行标的溢折价科目
+        param.setVarYzjSubjectAmt(origyzjkmye);
     }
 
     /**
