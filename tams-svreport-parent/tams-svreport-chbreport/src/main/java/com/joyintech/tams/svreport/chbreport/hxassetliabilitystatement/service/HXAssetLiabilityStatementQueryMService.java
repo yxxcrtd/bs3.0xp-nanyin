@@ -133,7 +133,7 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
     private ChbreportExportFileDto createExcel(String reportDate) throws Exception {
         // 设置文件信息
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-        String fileName = "华夏理财资产负债表 " + reportDate + ".xls";
+        String fileName = "华夏理财资产负债表_" + reportDate + ".xls";
         String tempName = "HXAssetLiabilityStatement.xls";
         String tplFlodPath = "hxassetliabilitystatement/HXAssetLiabilityStatement.xls";
         String tplPath = FileNameUtil.getTplFile(tplFlodPath);

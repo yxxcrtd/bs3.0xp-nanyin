@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <meta charset="utf-8">
+    <title>G06b银行理财子公司风险资本计算表</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="form-button-area" export="false">
+        <a id="SvrG06bMonthReportQuery001_btn_export"
+            class="layui-btn layui-btn-sm btn-export btn-default">导出</a>
+    </div>
+    <div class="joyin-form-wrap joyin-filter-form condition-area">
+        <form class="layui-form" id="searchForm">
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md4">
+                    <label class="layui-form-label form-lable">报告期</label>
+                    <div class="layui-input-inline input-inline" >
+                        <input type="text" class="layui-input form-input" id="month_reportDate" name="reportDate"
+                               placeholder="请选择日期">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <table class="layui-table" id="dataTable">
+        </table>
+    </div>
+</div>
+</body>
+
+<div layout:fragment="script">
+    <script data-th-src="@{/js/report/chbreport/g06bmonthreport/G06bMonthReportQuery001.js}"
+            type="text/javascript"></script>
+</div>
+
+</html>
