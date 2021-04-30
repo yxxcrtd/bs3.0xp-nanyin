@@ -1150,7 +1150,7 @@
             position.PROD_ID,
             position.ASSETTYPE2,
             T.ASSETVALUE_B qcAssetValue,
-            position.assetvalue_b qmAssetValue,
+            position.ASSETVALUE_B qmAssetValue,
             assinfo.FINANCIER_GRADE RATING ,
             assinfo.GUA_TYPE,
             assinfo.TRADE_MARKET,
@@ -1162,7 +1162,7 @@
             lastmonth.asset_code,
             lastmonth.assetvalue_b
             FROM CHB_MONTH_ASSET_POSITION lastmonth
-            WHERE ENDDATE = ADDDATE(str_to_date(#{cdate,jdbcType=DATE}, '%Y-%m-%d'),INTERVAL -1 MONTH);
+            WHERE ENDDATE = ADDDATE(str_to_date(#{cdate,jdbcType=DATE}, '%Y-%m-%d'),INTERVAL -1 MONTH)
             )T
         ON T.PROD_ID = position.PROD_ID
             and T.ASSET_CODE = position.ASSET_CODE

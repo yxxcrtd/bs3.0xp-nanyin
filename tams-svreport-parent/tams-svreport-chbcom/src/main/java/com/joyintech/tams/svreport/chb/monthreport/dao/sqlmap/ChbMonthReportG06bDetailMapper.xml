@@ -141,4 +141,35 @@
       REPORTUUID = #{reportuuid,jdbcType=CHAR}
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </update>
+  <insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportG06bDetail" >
+    insert into chb_month_report_g06b_detail
+        (DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, BALANCE_A,
+         BALANCE_B, ORG_CODE, DEPT_CODE, REPORTUUID)
+    <foreach collection="insertList" item="item" index="index" separator="union all">
+      select
+      #{item.detailuuid,jdbcType=CHAR},
+      #{item.termid,jdbcType=VARCHAR},
+      #{item.reporttype,jdbcType=VARCHAR},
+      #{item.propertycode,jdbcType=VARCHAR},
+      #{item.balanceA,jdbcType=DECIMAL},
+      #{item.balanceB,jdbcType=DECIMAL},
+      #{item.orgCode,jdbcType=VARCHAR},
+      #{item.deptCode,jdbcType=VARCHAR},
+      #{item.reportuuid,jdbcType=CHAR}
+      from dual
+    </foreach>
+  </insert>
+  <delete id="deleteByTermId" parameterType="java.lang.String" >
+    delete from chb_month_report_g06b_detail
+    where 1 =1
+    <if test="termid != null and termid != ''">
+      and termid = #{termid,jdbcType=VARCHAR}
+    </if>
+    <if test="reportType != null and reportType != ''">
+      and REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+    </if>
+    <if test="reportuuid != null and reportuuid != ''">
+      and REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
+    </if>
+  </delete>
 </mapper>
