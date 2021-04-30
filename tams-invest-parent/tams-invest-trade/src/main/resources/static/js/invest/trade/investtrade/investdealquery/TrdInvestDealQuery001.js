@@ -150,6 +150,7 @@ $(function(){
     	if(obj.ps && $('#TrdInvestDealQuery001_ps').val()&& $('#TrdInvestDealQuery001_ps').select2('data')[0].col ==IRS_TYPE ){
     		obj.ps = IRS_TYPE+obj.ps
     	}
+    	obj.queryType = IS_QUERY_ASSETS_LOSS;
     	return obj;
     };
     

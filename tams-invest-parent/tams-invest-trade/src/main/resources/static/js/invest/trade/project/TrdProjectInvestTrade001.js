@@ -42,6 +42,9 @@
         }
         result.tradeDateStart = $('#tradeDate').startDate();//开始日
         result.tradeDateEnd = $('#tradeDate').endDate();//结束日
+        //是否查询减值清理交易 add by yzg 20201029 start
+        result.queryType = IS_QUERY_ASSETS_LOSS;
+        //是否查询减值清理交易 add by yzg 20201029 end
         return result;
     };
 

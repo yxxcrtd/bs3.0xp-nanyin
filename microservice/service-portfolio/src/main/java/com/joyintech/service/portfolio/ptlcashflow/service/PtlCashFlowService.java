@@ -34,6 +34,7 @@ import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -462,14 +463,20 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         if(baseTradeProductDealService != null){
             baseTradeProductDealService.insert(baseTradeProductDealList);
         }
+        List<PtlTrade> ptlTradeList = new ArrayList<>();
+       
         //登组合交易表
         PtlTrade entity = new PtlTrade();
         setPtlTradeEntity(entity,dto);
         entity.setBusiNo(dto.getBusiNo());
         ptlTradeMapper.insert(entity);
+        ptlTradeList.add(entity);
         if (StringUtil.isNotEmpty(dto.getActPortfolioId()) && !dto.getActPortfolioId().equals(dto.getPortfolioId())) {
-            entity.setPortfolioId(dto.getActPortfolioId());
-            ptlTradeMapper.insert(entity);
+            PtlTrade ptlTrade1 = new PtlTrade();
+            BeanUtil.copyPropertiesIgnoreNull(ptlTrade1, entity);
+            ptlTrade1.setPortfolioId(dto.getActPortfolioId());
+            ptlTradeMapper.insert(ptlTrade1);
+            ptlTradeList.add(ptlTrade1);
         }
         List<PtlCashPositionFlowDto> ptlCash = new ArrayList<>();
         //插入现金流水和现金余额表
@@ -535,6 +542,30 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
         if(repTrade != null){
             repTradeMapper.insert(repTrade);
         }
+        // 所有交易生效后调用的共通方法
+        AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+        TrdProductDeal trdProductDeal = new TrdProductDeal();
+        BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, baseTradeProductDealDto.getTrdProductDeal());
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("portfolioId", dto.getPortfolioId());
+        map.put("FINPROD_TYPE_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+        List<PtlCashFlowDto> finProductlist = ptlCashFlowMapper.selectFinprodIdByPortfolioId(map);
+        if(!StringUtil.isEmptyList(finProductlist)){
+            trdProductDeal.setFinprodId(finProductlist.get(0).getFinprodId());
+            trdProductDeal.setFinprodType(finProductlist.get(0).getFinprodType());
+        }
+        inputDto.setProdid(dto.getPortfolioId());
+        inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+        inputDto.setTrdProductDeal(trdProductDeal);
+        inputDto.setTrdProductDealAdd(baseTradeProductDealDto.getTrdProductDealAdd());
+        if (dto.getActPortfolioId() != null && !dto.getActPortfolioId().equals(dto.getPortfolioId())) {
+            inputDto.setActPortfolioId(dto.getActPortfolioId());
+        }
+        inputDto.setPtlTradeList(ptlTradeList);
+        if (baseTradeProductDealDto.getStlPayOrdersList() != null) {
+            inputDto.setStlPayOrders(baseTradeProductDealDto.getStlPayOrdersList().get(0));
+        }
+        AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
         return 1;
     }
     /**

@@ -124,7 +124,8 @@ public class TrdProjectInvestTrade003Controller extends BaseController {
             // 项目类资产五级分类改造 add by renping 2019-08-01 start
             DictCode.行内资产二级分类, DictCode.行内资产三级分类, DictCode.行内资产四级分类,
             // 项目类资产五级分类改造 add by renping 2019-08-01 end
-            DictCode.币种, DictCode.交易方向, DictCode.项目类一级分类,DictCode.分配方式};
+            DictCode.币种, DictCode.交易方向, DictCode.项目类一级分类,DictCode.分配方式,
+            DictCode.投资目的};
 
     @Override
     public String init(Model model) {

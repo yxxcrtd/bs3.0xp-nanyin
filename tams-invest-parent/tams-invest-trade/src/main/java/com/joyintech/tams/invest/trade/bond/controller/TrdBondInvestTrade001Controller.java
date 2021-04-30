@@ -14,6 +14,8 @@ import javax.validation.Valid;
 
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -24,6 +26,7 @@ import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
@@ -108,6 +111,20 @@ public class TrdBondInvestTrade001Controller extends BaseController {
         if(StringUtils.isNotBlank(entrustId)){
             model.addAttribute("entrustId",entrustId);
         }
+        //add by wp 是否查询资产减值清理交易 20210427 start
+        model.addAttribute("IS_QUERY_ASSETS_LOSS", CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"));
+        
+      //如果为是交易方向添加清理核销
+        if(StringUtil.equals(CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"), "01")) {
+ 	       SelectDto selectDto = getSelectDataFromDataDic(DictCode.交易方向,null);
+ 	       SelectOptionDto selectOptionDto = new SelectOptionDto();
+ 	       selectOptionDto.setId(DictCodeListExt3.交易方向_清理核销.getValue());
+ 	       selectOptionDto.setText(DictCodeListExt3.交易方向_清理核销.getCodeName());
+ 	       selectOptionDto.setCol(DictCode.交易方向.getValue());
+ 	       selectDto.getOptions().add(selectOptionDto);
+ 	       model.addAttribute(DictCode.交易方向.getValue(), JsonUtils.objectArray2Json(selectDto.getOptions().toArray()));
+        }
+      //add by wp 是否查询资产减值清理交易 20210427 end
         return super.init(model);
     }
     /**

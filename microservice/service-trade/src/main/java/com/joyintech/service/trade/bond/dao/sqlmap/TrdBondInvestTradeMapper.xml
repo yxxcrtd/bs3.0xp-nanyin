@@ -84,6 +84,7 @@
                 <!--添加关联表 add by lishuping 20191010 end-->
                 where
                     wtpd.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+                    AND WTPD.BUSI_TYPE in ('TRD02',#{BUSI_TYPE_T75})
 				and (wDeal.IS_CANCEL = 'Y' or wDeal.is_swap_transaction is null or wDeal.is_swap_transaction='N')
                 AND (wtpd.IS_OVERDUE_DEAL IS NULL OR wtpd.IS_OVERDUE_DEAL != 'Y')
                     <!-- 一体化对应etliu start -->
@@ -168,6 +169,11 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
+                    <!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+					<if test="'02'.equals(queryType)">
+						AND wtpd.PS != #{PS_T75}
+					</if>
+					<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_02">
                 UNION ALL
@@ -226,6 +232,7 @@
                     ) -->
                 <!--添加关联表 add by lishuping 20191010 end-->
                 where wtpd.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+                AND WTPD.BUSI_TYPE in ('TRD02',#{BUSI_TYPE_T75})
                 AND (wtpd.IS_OVERDUE_DEAL IS NULL OR wtpd.IS_OVERDUE_DEAL != 'Y')
                     <!-- 一体化对应etliu start -->
                     <if test="psList != null and psList.size() > 0">
@@ -308,6 +315,11 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
+                    <!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+					<if test="'02'.equals(queryType)">
+						AND wtpd.PS != #{PS_T75}
+					</if>
+					<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_03">
                 UNION ALL
@@ -367,6 +379,7 @@
                 )  -->
                 <!--添加关联表 add by lishuping 20191010 end-->
                 where wtpd.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+                AND WTPD.BUSI_TYPE in ('TRD02')
                 AND (wtpd.IS_OVERDUE_DEAL IS NULL OR wtpd.IS_OVERDUE_DEAL != 'Y')
                     <!-- 一体化对应etliu start -->
                     <if test="psList != null and psList.size() > 0">
@@ -446,6 +459,11 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
+                    <!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+					<if test="'02'.equals(queryType)">
+						AND wtpd.PS != #{PS_T75}
+					</if>
+					<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
             </if>
         </trim>
         ORDER BY TRADE_DATE DESC, TOTLE_TRADE_ID DESC
@@ -486,9 +504,9 @@
             tpd.SETTLE_SPEED, tpd.TRADE_DATE, tpd.SETTLE_DATE, tpd.PS,
             tpd.FINPROD_ID, fp.finprod_abbr FINPROD_NAME,fp.CALENDAR_ID, tpd.TRADE_MARKET,
             tpd.TRADE_PLAT, tpd.TRADE_MARKET_MODE,
-            tpd.INV_AIM,
+            nvl(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,
             tpd.F_TRADE_ID,
-            tpd.SEC_MANAGE_ACCT_ID, tpd.CCY,
+            tpd.SEC_MANAGE_ACCT_ID, nvl(tpd.CCY,trd_product_deal.CCY) CCY,
             tpd.SHARE_AMT * 100 as TRADE_AMT,
             nvl(tpda.LENDIN_SHARE_AMT, 0) * 100 integrateTradeAmt,
             nvl(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,
@@ -523,6 +541,7 @@
         and det.IS_PAY_WITH_TRADE=#{Y}
         <!-- 通道交易 新增 强成西 2019/03/26 end -->
         LEFT JOIN PTL_PORTFOLIO PP ON tpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
+        left join trd_product_deal on TRD_PRODUCT_DEAL.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         WHERE tpd.TOTLE_TRADE_ID = #{tradeId}
     </select>
 

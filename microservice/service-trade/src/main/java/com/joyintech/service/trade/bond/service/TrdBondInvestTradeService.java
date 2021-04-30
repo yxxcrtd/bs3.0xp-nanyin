@@ -43,6 +43,7 @@ import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
 import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -122,6 +123,8 @@ public class TrdBondInvestTradeService extends BaseService {
         pageParam.put("YES_NO_NO", DictCodeList.是否_否.getValue());
         pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+        pageParam.put("PS_T75", DictCodeListExt3.交易方向_清理核销.getValue());
+        pageParam.put("BUSI_TYPE_T75", DictCodeListExt3.共通业务类型_清理核销.getValue());
         
         // 一体化对应etliu start
         List<String> psList = new ArrayList<String>();
@@ -129,6 +132,7 @@ public class TrdBondInvestTradeService extends BaseService {
         psList.add(DictCodeList.交易方向_卖出.getValue());
         psList.add(DictCodeList.交易方向_行权_回售.getValue());
         psList.add(DictCodeList.交易方向_行权_赎回.getValue());
+        psList.add(DictCodeListExt3.交易方向_清理核销.getValue());
         pageParam.put("psList", psList);
         // 一体化对应etliu end
 

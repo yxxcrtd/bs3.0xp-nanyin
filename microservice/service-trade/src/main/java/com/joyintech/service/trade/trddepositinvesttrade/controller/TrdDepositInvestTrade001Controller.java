@@ -33,6 +33,7 @@ import com.joyintech.service.trade.trddepositinvesttrade.service.TrdDepositInves
 import com.joyintech.tams.common.base.entity.InterfSendOpics;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 
@@ -72,6 +73,7 @@ public class TrdDepositInvestTrade001Controller {
         map.put("pingTypeBuy", DictCodeListExt1.平安业务类型_存款类资产买入.getValue());
         map.put("pingTypeSale", DictCodeListExt1.平安业务类型_存款类资产卖出.getValue());
         map.put("tradeFlowStatus", DictCodeListExt1.交易流程状态_流程中.getValue());
+        map.put("PS_T75", DictCodeListExt3.交易方向_清理核销.getValue());
         return trdDepositInvestTrade001Service.selectForPage(page, length, map);
     }
     

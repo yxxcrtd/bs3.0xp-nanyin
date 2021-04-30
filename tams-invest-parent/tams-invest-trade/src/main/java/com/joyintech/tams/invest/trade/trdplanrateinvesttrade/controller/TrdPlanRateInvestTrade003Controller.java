@@ -140,7 +140,8 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
                 /* 原因、zhuyongkang 2019/7/30  end*/
                 DictCode.清算速度,DictCode.币种,
                 DictCode.是否,
-                DictCode.分配方式);
+                DictCode.分配方式,
+                DictCode.投资目的);
 
         // 一体化对应etliu start
 //        model.addAttribute("PS_PURCHASE_T04",DictCodeList.交易方向_申购.getValue());

@@ -108,6 +108,7 @@
                     AND T1.PORTFOLIO_ID =tfpdt.PORTFOLIO_ID
                     AND t1.finprod_id=tfpdt.FINPROD_ID
                     and T6.MDATE = tfpdt.MDATE
+                    AND tfpdt.PS NOT IN ('T75','T76','T77')
                 )
                 AND NOT EXISTS (SELECT 1 FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL tfpdt
                     where tfpdt.WORKFLOW_STATUS = #{STATUS_A}

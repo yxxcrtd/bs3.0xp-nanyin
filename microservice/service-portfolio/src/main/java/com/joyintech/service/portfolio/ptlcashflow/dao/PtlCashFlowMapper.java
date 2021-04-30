@@ -140,5 +140,15 @@ public interface PtlCashFlowMapper {
      * @since 1.0
      */
     String getProdRegistCode(String portfolioId);
+    
+    /**
+     * 根据组合代码查询金融产品代码
+     * <功能详细描述>
+     * @param map map
+     * @return 产品代码
+     * @see
+     * @since 1.0
+     */
+    List<PtlCashFlowDto> selectFinprodIdByPortfolioId(Map<String, Object> map);
 
 }

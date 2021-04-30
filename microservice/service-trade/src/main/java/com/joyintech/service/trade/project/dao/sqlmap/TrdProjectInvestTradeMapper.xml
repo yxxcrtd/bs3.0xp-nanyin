@@ -346,6 +346,11 @@
             and TPD.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
         </if>
         <!-- SQL错误修改 add by gaopeng 2019-10-12 end -->
+        <!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+		<if test="'02'.equals(queryType)">
+			AND TPD.PS != #{PS_T75}
+		</if>
+		<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
     </sql>
 
     <select id="findEffectiveData" resultType="com.joyintech.tams.invest.common.dto.trade.project.TrdProjectInvestTradeDto">
@@ -407,6 +412,9 @@
         TPD.TRADE_ID as tradeId
 
         <!--交易表中入库的时候进行了转换，数值转换，导致查询的时候也要进行转换 yjm end 20190809-->
+        <!-- 投资目的 add by yzg 20201019 start -->
+        ,TPD.INV_AIM
+        <!-- 投资目的 add by yzg 20201019 end -->
         from
         <!-- qiangchengxi 卖出到账流入核对 20190325 start -->
         <if test="PAGE_DATA_STATUS01 == statusValid">
@@ -586,7 +594,7 @@
             on FP.FINPROD_ID=FPT.FINPROD_ID
             where TPD.IS_CANCEL != #{YES} and TPD.TRADE_STATUS = #{TRADE_STATUS01}
             AND TPD.P_TRADE_ID IS NULL/*撤销流程中的数据不展示*/
-            AND TPD.PS IN (#{T01}, #{T02}, #{T40})
+            AND TPD.PS IN (#{T01}, #{T02}, #{T40},#{PS_T75})
             AND (DEAL.IS_OVERDUE_DEAL IS NULL OR DEAL.IS_OVERDUE_DEAL != 'Y')
 			and (tpd.is_swap_transaction is null or tpd.is_swap_transaction = 'N')
             <include refid="where_sql"/>
@@ -628,7 +636,7 @@
             LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
             where PP.INVEST_YESORNO = 'Y'
             AND TPD.IS_CANCEL != #{YES} and TPD.TRADE_STATUS = #{TRADE_STATUS01}
-            AND TPD.PS IN (#{T01}, #{T02}, #{T40})
+            AND TPD.PS IN (#{T01}, #{T02}, #{T40},#{PS_T75})
             AND (DEAL.IS_OVERDUE_DEAL IS NULL OR DEAL.IS_OVERDUE_DEAL != 'Y')
             <include refid="where_sql"/>
 
@@ -740,9 +748,9 @@
 				and (tpd.is_swap_transaction is null or tpd.is_swap_transaction = 'N')
 			</if>
             <if test="statusValid == TRADE_FLOW_STATUS03">
-                AND TPD.TRADE_STATUS = #{TRADE_STATUS03}
+                AND TPD.TRADE_STATUS = #{TRADE_STATUS03} AND TPD.PS !=#{PS_T75}
             </if>
-            AND TPD.PS IN (#{T01}, #{T02}, #{T40})
+            AND TPD.PS IN (#{T01}, #{T02}, #{T40},#{PS_T75})
             AND (DEAL.IS_OVERDUE_DEAL IS NULL OR DEAL.IS_OVERDUE_DEAL != 'Y')
             <include refid="where_sql"/>
                        

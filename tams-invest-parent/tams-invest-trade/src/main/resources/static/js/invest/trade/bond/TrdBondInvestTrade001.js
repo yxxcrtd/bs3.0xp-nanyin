@@ -25,6 +25,7 @@
             ,fTradeId:fTradeId?fTradeId:$('#fTradeId').val()
             ,chlFinprodId: $('#chlFinprodId').val()
             //添加登记托管机构、债券剩余期限 add by lishuping 20191010 end
+            ,queryType:IS_QUERY_ASSETS_LOSS
         };
         if ($("#chlFinprodId").val()) {
             pageParam.chlFinprodId = $("#chlFinprodId").val().join(",");

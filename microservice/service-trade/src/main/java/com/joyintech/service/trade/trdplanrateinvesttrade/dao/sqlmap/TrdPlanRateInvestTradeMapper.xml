@@ -279,7 +279,7 @@
 	FIN.FINPROD_MARKET_ID finprodMarketId,
 	FIN.FINPROD_NAME finprodName,
 	totalDeal.PS ps,
-	totalDeal.TRADE_AMT tradeAmt,
+	nvl(totalDeal.TRADE_AMT,0) tradeAmt,
 	totalDeal.CCY ccy,
 	totalDeal.TRADE_DATE tradeDate,
 	totalDeal.REMARK remark
@@ -301,8 +301,9 @@
 	LEFT JOIN FIN_PRODUCT_TYPE FINTYPE ON FIN.FINPROD_ID = FINTYPE.FINPROD_ID
 	<where>
 		PP.INVEST_YESORNO = 'Y'
-		AND totalDeal.PS in (#{ps_shengou},#{ps_shuhui})
+		AND totalDeal.PS in (#{ps_shengou},#{ps_shuhui},#{PS_T75})
 		and totalDeal.PS=deal.PS
+		AND (totalDeal.TRADE_STATUS !=#{validStatus_03} OR totalDeal.PS !=#{PS_T75} )
 		<if test="status != null and status.equals(validStatus_01)">
 			and (deal.IS_CANCEL = 'Y' or deal.is_swap_transaction is null or deal.is_swap_transaction='N')
 		</if>
@@ -380,6 +381,11 @@
 		<if test="tradeDateEnd != null and tradeDateEnd != ''">
 			AND totalDeal.TRADE_DATE &lt;= TO_DATE(#{tradeDateEnd},'YYYY-MM-DD')
 		</if>
+		<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+		<if test="'02'.equals(queryType)">
+			AND totalDeal.PS != #{PS_T75}
+		</if>
+		<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 	</where>
 	<if test="status == null or status == '' ">
 	UNION ALL
@@ -400,7 +406,7 @@
 	FIN.FINPROD_MARKET_ID finprodId,
 	FIN.FINPROD_NAME finprodName,
 	totalDeal.PS ps,
-	totalDeal.TRADE_AMT tradeAmt,
+	nvl(totalDeal.TRADE_AMT,0) tradeAmt,
 	totalDeal.CCY ccy,
 	totalDeal.TRADE_DATE tradeDate,
 	totalDeal.REMARK remark
@@ -413,7 +419,7 @@
 	LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = totalDeal.CHL_ID
 	LEFT JOIN FIN_PRODUCT_TYPE FINTYPE ON FIN.FINPROD_ID = FINTYPE.FINPROD_ID
 	<where>
-	totalDeal.PS in (#{ps_shengou},#{ps_shuhui})
+	totalDeal.PS in (#{ps_shengou},#{ps_shuhui},#{PS_T75})
 	and totalDeal.PS=deal.PS
 	and (deal.IS_CANCEL = 'Y' or deal.is_swap_transaction is null or deal.is_swap_transaction='N')
 	<if test="userId != null and userId != ''">
@@ -479,6 +485,11 @@
 	<if test="tradeFlowStatus != null and tradeFlowStatus != ''">
 		AND totalDeal.WORKFLOW_STATUS = #{tradeFlowStatus}
 	</if>
+		<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+		<if test="'02'.equals(queryType)">
+			AND totalDeal.PS != #{PS_T75}
+		</if>
+		<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 		</where>
 	</if>
 	</select>

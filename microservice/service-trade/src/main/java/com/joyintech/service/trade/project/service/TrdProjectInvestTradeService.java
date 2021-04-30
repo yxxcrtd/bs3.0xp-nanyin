@@ -27,6 +27,7 @@ import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.common.base.entity.WflTrdProductDealAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.trade.project.TrdProjectInvestTradeDto;
 
@@ -70,6 +71,7 @@ public class TrdProjectInvestTradeService extends BaseService<TrdProjectInvestTr
         // qiangchengxi 卖出到账流入核对 20190325 start
         param.put("T40", DictCodeList.交易方向_卖出到账.getValue());
         // qiangchengxi 卖出到账流入核对 20190325 end
+        param.put("PS_T75", DictCodeListExt3.交易方向_清理核销.getValue());
     }
 
     public Page<SelectOptionDto> getFinprodMarketId(int page, int length, Map<String, Object> param) {

@@ -473,6 +473,9 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
                 entity.setFpriceAmt(trdFinProductDealTotal.getFpriceAmt());
                 entity.setChannelFee(trdFinProductDealTotal.getFeeAmt());
                 entity.setTradeAmt(trdFinProductDealTotal.getTradeAmt());
+                if(!StringUtil.isNotEmpty(entity.getTradeAmt())) {
+                	entity.setTradeAmt(new BigDecimal(0));
+                }
                 BeanUtil.copyPropertiesIgnoreNull(trdInvestPersonInfo002Dto, trdFinProductDealTotal);
                 trdInvestPersonInfo002Dto.setContactInfo(trdFinProductDealTotal.getCounterContact());
                 entity.setTrdInvestPersonInfo002Dto(trdInvestPersonInfo002Dto);

@@ -629,4 +629,18 @@
       AND T1.FINPROD_TYPE2 = 'F16'
       </where>
       </select>
+      
+      <select id="selectFinprodIdByPortfolioId" resultType="com.joyintech.service.portfolio.ptlcashflow.dto.PtlCashFlowDto">
+            select 
+               a.FINPROD_ID finprodId,
+               a.FINPROD_TYPE finprodType
+            from FIN_PRODUCT a
+	        inner join FIN_PRODUCT_ADD b
+	           on a.FINPROD_ID = b.FINPROD_ID
+	        inner join PTL_PORTFOLIO c
+	           on b.portfolio_id = c.portfolio_id
+	        where
+	           c.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+	           and a.FINPROD_TYPE2 = #{FINPROD_TYPE_F16}
+      </select>
 </mapper>

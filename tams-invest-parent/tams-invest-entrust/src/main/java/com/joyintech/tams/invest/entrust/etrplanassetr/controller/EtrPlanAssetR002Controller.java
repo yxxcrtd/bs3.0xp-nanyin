@@ -93,7 +93,8 @@ public class EtrPlanAssetR002Controller extends BaseController {
                 /*2,3,4数据字典、zhuyongkang 2019/7/29  start */
                 , DictCode.行内资产二级分类
                 , DictCode.行内资产三级分类
-                , DictCode.行内资产四级分类);
+                , DictCode.行内资产四级分类
+                , DictCode.投资目的);
                 /*原因、zhuyongkang 2019/7/29  start */
         this.setSelectOptionToModel(model, DictCode.币种);
         Date sysDate = DateUtil.platDateFromCache();

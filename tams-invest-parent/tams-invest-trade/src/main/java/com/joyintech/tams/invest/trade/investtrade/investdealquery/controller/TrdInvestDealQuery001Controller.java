@@ -33,6 +33,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -115,6 +116,9 @@ public class TrdInvestDealQuery001Controller extends BaseController{
         model.addAttribute("PS_T18", DictCodeList.交易方向_认购确认.getValue());
         /* update by zhangpuyu 2019/12/10 end */
         model.addAttribute("IRS_TYPE", DictCode.互换方式.getValue());
+        //add by yzg 是否查询资产减值清理交易 20201022 start
+        model.addAttribute("IS_QUERY_ASSETS_LOSS", CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"));
+        //add by yzg 是否查询资产减值清理交易 20201022 end
         return super.init(model);
 	}
 	/**
@@ -139,6 +143,15 @@ public class TrdInvestDealQuery001Controller extends BaseController{
        SelectDto selectDto3 = this.getSelectDataFromDataDic(DictCode.互换方式, null);
        for (SelectOptionDto dto : selectDto3.getOptions()) {
            listFloatRate.add(dto);
+       }
+       //如果为是交易方向添加清理核销
+       if(StringUtil.equals(CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"), "01")) {
+	       SelectDto selectDto = getSelectDataFromDataDic(DictCode.交易方向,null);
+	       SelectOptionDto selectOptionDto = new SelectOptionDto();
+	       selectOptionDto.setId(DictCodeListExt3.交易方向_清理核销.getValue());
+	       selectOptionDto.setText(DictCodeListExt3.交易方向_清理核销.getCodeName());
+	       selectOptionDto.setCol(DictCode.交易方向.getValue());
+	       listFloatRate.add(selectOptionDto);
        }
        return listFloatRate;
    }

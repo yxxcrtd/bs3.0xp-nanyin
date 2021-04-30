@@ -172,7 +172,9 @@
 	
 	<sql id="VALID_COLUMNS_TOTLE">
 	    SELECT 
-   		TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID	tradeId,
+   		case when TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{PS_T75} and TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 = 'F07'
+      	then TRD_PRODUCT_DEAL.TRADE_ID
+		else TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID end tradeId,
 		fp1.FINPROD_NAME chlFinprodId,
 		#{tradeStatus02} AS	validStatus,
 		TRD_DEAL_TOTAL_ADD.ENTRUST_ID		entrustId,
@@ -189,8 +191,8 @@
         ELSE #{YES_NO_N} END 	isOutTrade,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET	tradeMarket,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE	tradeMarketMode,
-		TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_AMT	tradeAmt,
-		TRD_FIN_PRODUCT_DEAL_TOTAL.CCY	ccy,
+		NVL(TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_AMT,0)	tradeAmt,
+		NVL(TRD_FIN_PRODUCT_DEAL_TOTAL.CCY,TRD_PRODUCT_DEAL.CCY)	ccy,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_DATE		tradeDate,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.SETTLE_DATE	settleDate,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.REMARK			remark,
@@ -207,6 +209,11 @@
 		LEFT JOIN	FIN_PRODUCT			ON	FIN_PRODUCT.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID
 		LEFT JOIN   FIN_PRODUCT fp1     ON  fp1.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
 		LEFT JOIN 	MST_COUNTER_PARTY 	ON 	MST_COUNTER_PARTY.COUNTER_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.COUNTER_ID
+		<!-- add by yzg 存款类清理核销取交易ID start 20201105 -->
+		LEFT JOIN TRD_PRODUCT_DEAL on TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_PRODUCT_DEAL.TOTLE_TRADE_ID
+		and TRD_PRODUCT_DEAL.TRADE_ID not like '%R'
+		and TRD_PRODUCT_DEAL.ps = 'T75'
+		<!-- add by yzg 存款类清理核销取交易ID end 20201105-->
 	</sql>
 	
 	<sql id="CANCEL_COLUMNS">
@@ -271,7 +278,9 @@
 	
 	<sql id="CANCEL_COLUMNS_TOTLE">
       SELECT 
-		TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID	tradeId,
+		case when TRD_FIN_PRODUCT_DEAL_TOTAL.PS = #{PS_T75} and TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_TYPE2 = 'F07'
+      	then TRD_PRODUCT_DEAL.TRADE_ID
+		else TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID end tradeId,
 		fp1.FINPROD_NAME chlFinprodId,
 		#{tradeStatus03} AS	validStatus,
 		TRD_DEAL_TOTAL_ADD.ENTRUST_ID		entrustId,
@@ -288,8 +297,8 @@
         ELSE #{YES_NO_N} END 	isOutTrade, 
 		TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET	tradeMarket,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_MARKET_MODE	tradeMarketMode,
-		TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_AMT	tradeAmt,
-		TRD_FIN_PRODUCT_DEAL_TOTAL.CCY	ccy,
+		nvl(TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_AMT,0)	tradeAmt,
+		nvl(TRD_FIN_PRODUCT_DEAL_TOTAL.CCY,TRD_PRODUCT_DEAL.CCY)	ccy,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_DATE		tradeDate,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.SETTLE_DATE	settleDate,
 		TRD_FIN_PRODUCT_DEAL_TOTAL.REMARK			remark,
@@ -306,6 +315,10 @@
 		LEFT JOIN	FIN_PRODUCT			ON	FIN_PRODUCT.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.FINPROD_ID
 		LEFT JOIN   FIN_PRODUCT fp1     ON  fp1.FINPROD_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.CHL_ID
 		LEFT JOIN MST_COUNTER_PARTY ON MST_COUNTER_PARTY.COUNTER_ID = TRD_FIN_PRODUCT_DEAL_TOTAL.COUNTER_ID
+		<!-- add by yzg 存款类清理核销取交易ID start 20201105 -->
+		LEFT JOIN TRD_PRODUCT_DEAL on TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID = TRD_PRODUCT_DEAL.TOTLE_TRADE_ID
+		and TRD_PRODUCT_DEAL.TRADE_ID not like '%R'
+		<!-- add by yzg 存款类清理核销取交易ID end 20201105-->
 	</sql>
 	
 	<!-- 流程中的查询 -->
@@ -484,6 +497,11 @@
 			<if test="tradeStatus != null and tradeStatus !='' ">
 				AND WFL_TRD_PRODUCT_DEAL.TRADE_STATUS = #{tradeStatus}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND WFL_TRD_PRODUCT_DEAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -606,6 +624,11 @@
 			<if test="tradeStatus != null and tradeStatus !='' ">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{tradeStatus}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -787,6 +810,11 @@
 			<if test="tradeStatus != null and tradeStatus !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_STATUS = #{tradeStatus}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND TRD_PRODUCT_DEAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -906,6 +934,11 @@
 			<if test="tradeStatus != null and tradeStatus !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{tradeStatus}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -1076,6 +1109,11 @@
 			<if test="tradeStatus != null and tradeStatus !='' ">
 				AND TRD_PRODUCT_DEAL.TRADE_STATUS = #{tradeStatus}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND TRD_PRODUCT_DEAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -1201,6 +1239,11 @@
 			<if test="tradeStatus != null and tradeStatus !='' ">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{tradeStatus}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -1368,6 +1411,11 @@
 			<if test= "allStatus02 != null and allStatus02 != ''">
 				AND WFL_TRD_PRODUCT_DEAL.TRADE_STATUS = #{allStatus01}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND WFL_TRD_PRODUCT_DEAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -1554,6 +1602,11 @@
 			<if test= "allStatus01 != null and allStatus01 != ''">
 				AND TRD_PRODUCT_DEAL.TRADE_STATUS = #{allStatus01}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND TRD_PRODUCT_DEAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -1739,6 +1792,11 @@
 			<if test= "allStatus03 != null and allStatus03 != ''">
 				AND TRD_PRODUCT_DEAL.TRADE_STATUS = #{allStatus03}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND TRD_PRODUCT_DEAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -1849,6 +1907,11 @@
 			<if test= "allStatus02 != null and allStatus02 != ''">
 				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{allStatus01}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -1977,6 +2040,11 @@
 			<if test= "allStatus02 != null and allStatus02 != ''">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{allStatus01}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST
@@ -2106,6 +2174,11 @@
 			<if test= "allStatus03 != null and allStatus03 != ''">
 				AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS = #{allStatus03}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND TRD_FIN_PRODUCT_DEAL_TOTAL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 			<!--add by qmh 角色岗位控制权限  start-->
 				AND EXISTS (
 							SELECT 1 FROM (<include refid="USER_ROLE_POST"></include>) USER_ROLE_POST

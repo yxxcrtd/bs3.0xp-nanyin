@@ -10,6 +10,16 @@
  
 package com.joyintech.service.trade.trdplanrateinvesttrade.service;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -20,21 +30,17 @@ import com.joyintech.service.trade.trdplanrateinvesttrade.dto.TrdPlanRateInvestT
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
 import com.joyintech.tams.common.base.dao.PtlTradeMapper;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.EtrFinishStatus;
+import com.joyintech.tams.common.base.entity.FinCashPayRule;
+import com.joyintech.tams.common.base.entity.FinCashPlan;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.asset.dto.FinCashCalcRuleDto;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 计划类（利率型）投资交易
@@ -84,6 +90,7 @@ public class TrdPlanRateInvestTradeService extends BaseService<TrdPlanRateInvest
         map.put("ps_shuhui",DictCodeList.交易方向_卖出.getValue());
         map.put("PROFIT_TYPE", DictCodeList.收益类型_收益型.getValue());
         map.put("TRADE_STATUS_03", DictCodeListExt1.交易状态_撤销.getValue());
+        map.put("PS_T75", DictCodeListExt3.交易方向_清理核销.getValue());
         return super.queryForPage(page, length, () -> trdPlanRateInvestTradeMapper.findTotalPage(map));
     }
 

@@ -1070,6 +1070,13 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
 	public void setTradeAmtAndFee(BigDecimal tradeAmtAndFee) {
 		this.tradeAmtAndFee = tradeAmtAndFee;
 	}
+    
+	@NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
+    @Override
+    public String getInvAim() {
+    	return super.getInvAim();
+    }
+    
 
     public RiskCreditListCommonDto getRiskCreditListCommonDto() {
         return riskCreditListCommonDto;

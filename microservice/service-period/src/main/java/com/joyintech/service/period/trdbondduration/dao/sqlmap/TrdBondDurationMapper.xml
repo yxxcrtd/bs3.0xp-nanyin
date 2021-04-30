@@ -443,6 +443,7 @@
             AND wtdta.MP_FINPROD_ID IS NULL
             AND T1.IS_CANCEL = #{YESNO_N}
             AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
+                AND T1.PS NOT IN ('T75','T76','T77')
             <if test="busiCode != null and !busiCode.isEmpty()">
                 AND T1.TOTLE_TRADE_ID = #{busiCode}
             </if>

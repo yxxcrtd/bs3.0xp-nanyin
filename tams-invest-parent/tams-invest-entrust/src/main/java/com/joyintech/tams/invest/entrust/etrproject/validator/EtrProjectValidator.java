@@ -22,8 +22,11 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etrproject.dto.EtrProjectDto;
@@ -42,6 +45,8 @@ public class EtrProjectValidator implements EtrCommonValidator {
 
     @Autowired
     private EtrProjectService etrProjectService;
+    @Autowired
+    private FinProductMapper finProductMapper;
 
     /**
      * {@inheritDoc}
@@ -155,6 +160,27 @@ public class EtrProjectValidator implements EtrCommonValidator {
                 if (dto.getMdate().before(dto.getVdate())) {
                     errorList.add(new ValidMessage("vdate", this.getMessage("ETR_X_005")));
                 }
+            }
+            //投资目的
+            if(StringUtil.isNotEmpty(dto.getInvAim())) {
+            	if(StringUtil.equals(dto.getInvAim(), DictCodeListExt1.投资目的_摊余成本类.getValue())
+            			|| StringUtil.equals(dto.getInvAim(), DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())) {
+            		FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
+            		if(StringUtil.isNotEmpty(finProduct)) {
+            			if(StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试不通过.getValue())) {
+            				errorList.add(new ValidMessage("invAim",
+                                    getMessage("该资产SPPI测试不通过，只可以选择以出售该金融资产为目的！")));
+            			}
+            			else if(StringUtil.isEmpty(finProduct.getSppiTestStatus())
+                            ||StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_未测试.getValue())
+            					|| StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试中.getValue())
+            					//|| StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_已退回.getValue())
+                        ) {
+            				errorList.add(new ValidMessage("invAim",
+                                    getMessage("选择此投资目的时，对应的资产必须先进行SPPI测试！")));
+            			}
+            		}
+            	}
             }
             errorList.addAll(etrProjectService.check(dto));
         }

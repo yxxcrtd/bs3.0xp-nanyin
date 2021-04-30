@@ -1365,6 +1365,9 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         trdProductDeal.setRemark(entity.getRemark());
         trdProductDeal.setChlId(entity.getChlId());
         trdProductDeal.setTotleTradeId(entity.getBizCode());
+        //投资目的 add by yzg start 20201019 
+        trdProductDeal.setInvAim(entity.getInvAim());
+        //投资目的 add by yzg end 20201019
         return trdProductDeal;
     }
 
@@ -1911,6 +1914,9 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         }
         trdProductDealTotal.setPayUnpaidintAmt(entity.getPayUnpaidintAmt());
         trdProductDealTotal.setPortfolioId(entity.getActPortfolioId());//存子组合
+        //投资目的 add by yzg start 20201019 
+        trdProductDealTotal.setInvAim(entity.getInvAim());
+        //投资目的 add by yzg end 20201019
         return trdProductDealTotal;
     }
 

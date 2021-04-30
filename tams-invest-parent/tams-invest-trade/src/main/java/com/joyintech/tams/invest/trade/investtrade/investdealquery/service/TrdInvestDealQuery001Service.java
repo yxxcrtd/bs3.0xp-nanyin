@@ -243,6 +243,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
         pageParam.put("YES_NO_Y", DictCodeList.是否_是.getValue());
         pageParam.put("YES_NO_N", DictCodeList.是否_否.getValue());
 		//add by wangpeng end 
+        pageParam.put("PS_T75", DictCodeListExt3.交易方向_清理核销.getValue());
         //判断状态
         Page<TrdInvestDealQuery001Dto> returnList = new Page<TrdInvestDealQuery001Dto>(); 
 		if(StringUtil.isNotEmpty(validStatus)){

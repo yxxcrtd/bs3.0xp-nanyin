@@ -98,6 +98,21 @@
 										</select>
 									</div>
 								</div>
+								<!-- 投资目的 add by yzg 20201019 start-->
+                                	<div class="form-inline-wrap">
+	                                    <label class="layui-form-label form-lable"
+	                                           data-th-text="#{EtrInvestBondInfo002.invAim}">投资目的</label>
+	                                    <div class="layui-input-inline input-inline">
+	                                        <select type="text" id="invAim" name="invAim"
+	                                                class="layui-input form-input input-select"
+	                                                data-th-data-result='${INV_AIM}' allowClear="true"
+	                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+	                                                required="required" formatoption="true"
+	                                                data-th-initValue="${entity?.invAim}">
+	                                        </select>
+	                                    </div>
+                                	</div>
+                                    <!-- 投资目的 add by yzg 20201019 end-->
 							</div>
 						</div>
 					</div>

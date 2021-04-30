@@ -92,7 +92,8 @@ public class EtrProject002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.项目类一级分类);
         this.setSelectOptionToModel(model, DictCode.交易方向);
         // 项目类资产五级分类改造 add by renping 2019-08-01 start
-        this.setSelectOptionToModel(model, DictCode.行内资产二级分类, DictCode.行内资产三级分类, DictCode.行内资产四级分类);
+        this.setSelectOptionToModel(model, DictCode.行内资产二级分类, DictCode.行内资产三级分类, DictCode.行内资产四级分类,
+        		DictCode.投资目的);
         // 项目类资产五级分类改造 add by renping 2019-08-01 end
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));

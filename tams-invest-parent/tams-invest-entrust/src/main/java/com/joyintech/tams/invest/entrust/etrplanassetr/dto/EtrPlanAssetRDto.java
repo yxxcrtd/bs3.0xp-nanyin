@@ -675,4 +675,14 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public BigDecimal getEntrustNum(){
         return super.getEntrustNum();
     }
+    
+    /**
+     * 取得 投资目的
+     * @return 投资目的
+     */
+    @Override
+    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
+    public String getInvAim() {
+        return super.getInvAim();
+    }
 }

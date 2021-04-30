@@ -1,14 +1,31 @@
 package com.joyintech.tams.invest.trade.project.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -22,6 +39,7 @@ import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
@@ -34,17 +52,6 @@ import com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade002S
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.*;
 
 /**
  * @author : 强成西
@@ -110,7 +117,19 @@ public class TrdProjectInvestTrade001Controller extends BaseController {
         model.addAttribute("PAGE_DATA_STATUS05", DictCodeListExt1.画面数据状态_有效.getValue());
         
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
-        
+        //add by yzg 是否查询资产减值清理交易 20201022 start
+        model.addAttribute("IS_QUERY_ASSETS_LOSS", CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"));
+        //如果为是交易方向添加清理核销
+        if(StringUtil.equals(CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"), "01")) {
+ 	       SelectDto selectDto = getSelectDataFromDataDic(DictCode.交易方向,null);
+ 	       SelectOptionDto selectOptionDto = new SelectOptionDto();
+ 	       selectOptionDto.setId(DictCodeListExt3.交易方向_清理核销.getValue());
+ 	       selectOptionDto.setText(DictCodeListExt3.交易方向_清理核销.getCodeName());
+ 	       selectOptionDto.setCol(DictCode.交易方向.getValue());
+ 	       selectDto.getOptions().add(selectOptionDto);
+ 	       model.addAttribute(DictCode.交易方向.getValue(), JsonUtils.objectArray2Json(selectDto.getOptions().toArray()));
+        }
+        //add by yzg 是否查询资产减值清理交易 20201022 end
         return super.init(model);
     }
 

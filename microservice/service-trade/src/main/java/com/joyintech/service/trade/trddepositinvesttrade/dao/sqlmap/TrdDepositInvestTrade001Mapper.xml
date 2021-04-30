@@ -39,7 +39,7 @@
 		    FIN.FINPROD_MARKET_ID finprodMarketId,
 		    FIN.FINPROD_NAME finprodName,
 		    WFL.PS ps,
-		    WFL.TRADE_AMT tradeAmt,
+		    NVL(WFL.TRADE_AMT,0) tradeAmt,
 		    WFL.CCY ccy,
 		    WFL.TRADE_DATE tradeDate,
 		    WFL.REMARK remark
@@ -81,6 +81,7 @@
 			    FIN.FINPROD_ID = FINTYPE.FINPROD_ID	
 		<where>
 			PP.INVEST_YESORNO = 'Y'
+			AND (WFL.TRADE_STATUS !=#{validStatus_03} OR WFL.PS !=#{PS_T75} )
 			<if test="status != null and status.equals(validStatus_01)">
 				and (wfl.IS_CANCEL = 'Y' or wfl.is_swap_transaction is null or wfl.is_swap_transaction='N')
 			</if>
@@ -92,7 +93,8 @@
 				AND WFL.FINPROD_TYPE2 = #{finprodType2}
 			</if>
 			<if test="pingTypeBuy != null and pingTypeBuy != ''">
-				AND (WFLPA.PA_BUSS_TYPE = #{pingTypeBuy} OR WFLPA.PA_BUSS_TYPE = #{pingTypeSale})
+				AND ((WFLPA.PA_BUSS_TYPE = #{pingTypeBuy} OR WFLPA.PA_BUSS_TYPE = #{pingTypeSale})
+					or (WFL.PS = #{PS_T75} and WFLPA.PA_BUSS_TYPE is null))
 			</if>
 			<if test="portfolioId != null and !portfolioId.isEmpty()">
 				AND (
@@ -179,6 +181,11 @@
 			<if test="tradeDateEnd != null and tradeDateEnd != ''">
 				AND WFL.TRADE_DATE &lt;= TO_DATE(#{tradeDateEnd},'YYYY-MM-DD')
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND WFL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 		</where>
 		<if test="status == null or status == '' ">
 			UNION ALL 
@@ -235,7 +242,8 @@
 				AND WFL.FINPROD_TYPE2 = #{finprodType2}
 			</if>
 			<if test="pingTypeBuy != null and pingTypeBuy != ''">
-				AND (WFLPA.PA_BUSS_TYPE = #{pingTypeBuy} OR WFLPA.PA_BUSS_TYPE = #{pingTypeSale})
+				AND ((WFLPA.PA_BUSS_TYPE = #{pingTypeBuy} OR WFLPA.PA_BUSS_TYPE = #{pingTypeSale})
+					or (WFL.PS = #{PS_T75} and WFLPA.PA_BUSS_TYPE is null))
 			</if>
 			<if test="portfolioId != null ">
 				AND (
@@ -307,6 +315,11 @@
 			<if test="tradeFlowStatus != null and tradeFlowStatus != ''">
 				AND WFL.WORKFLOW_STATUS = #{tradeFlowStatus}
 			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
+			<if test="'02'.equals(queryType)">
+				AND WFL.PS != #{PS_T75}
+			</if>
+			<!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 end -->
 		</where>
 	</if>
 	</select>

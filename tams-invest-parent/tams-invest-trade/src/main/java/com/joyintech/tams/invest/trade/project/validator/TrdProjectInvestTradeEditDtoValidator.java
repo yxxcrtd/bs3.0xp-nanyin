@@ -27,6 +27,7 @@ import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.trade.common.dto.EtrInvestInfoDto;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
@@ -53,6 +54,8 @@ public class TrdProjectInvestTradeEditDtoValidator implements TradeCommonValidat
     private  BussCommonMapperDelegateService bussCommonMapperDelegateService;
     @Autowired
     private TrdProjectInvestTrade002Service trdProjectInvestTrade002Service;
+    @Autowired
+    private FinProductMapper finProductMapper;
 
     @Override
     public List<ValidMessage> bussValid(Object value) {
@@ -111,6 +114,28 @@ public class TrdProjectInvestTradeEditDtoValidator implements TradeCommonValidat
 
         if (dto.getTrdInvestPersonInfo() == null || StringUtil.isEmpty(dto.getTrdInvestPersonInfo().getCounterId())) {
             errorList.add(new ValidMessage("trdInvestPersonInfo.counterId",getMessage("BUSS_COM_E_0038", getMessage("EtrInvestPersonInfo002.counterId"))));
+        }
+        
+      //投资目的
+        if(StringUtil.isNotEmpty(dto.getInvAim())) {
+        	if(StringUtil.equals(dto.getInvAim(), DictCodeListExt1.投资目的_摊余成本类.getValue())
+        			|| StringUtil.equals(dto.getInvAim(), DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())) {
+        		FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
+        		if(StringUtil.isNotEmpty(finProduct)) {
+        			if(StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试不通过.getValue())) {
+        				errorList.add(new ValidMessage("invAim",
+                                getMessage("该资产SPPI测试不通过，只可以选择以出售该金融资产为目的！")));
+        			}
+        			else if(StringUtil.isEmpty(finProduct.getSppiTestStatus())
+                        || StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_未测试.getValue())
+        					|| StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_测试中.getValue())
+        					//|| StringUtil.equals(finProduct.getSppiTestStatus(), DictCodeListExt3.SPPI测试状态_已退回.getValue())
+                    ) {
+        				errorList.add(new ValidMessage("invAim",
+                                getMessage("选择此投资目的时，对应的资产必须先进行SPPI测试！")));
+        			}
+        		}
+        	}
         }
 
         // 项目类资产交易页面，本金金额大于可用持仓时，系统没有提示

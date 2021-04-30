@@ -503,4 +503,11 @@ public class TrdProjectInvestTrade002Dto extends TrdProjectInvestTradeDto implem
     public void setTransfer(boolean transfer) {
         isTransfer = transfer;
     }
+
+    
+    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
+    @Override
+    public String getInvAim() {
+    	return super.getInvAim();
+    }
 }

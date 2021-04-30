@@ -360,6 +360,7 @@
             AND T1.BUSI_TYPE = #{TRD15}
             AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF17}
             AND T3.PROFIT_TYPE = #{PROFIT_TYPE02}
+            AND T1.PS NOT IN ('T75','T76','T77')
             AND EXISTS (SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL DEAL
             where DEAL.P_TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID AND DEAL.PORTFOLIO_ID <include refid="com.joyintech.service.period.trdbondduration.dao.TrdBondDurationMapper.portfolioAth"/>)
             <if test="busiCode != null and !busiCode.isEmpty()">

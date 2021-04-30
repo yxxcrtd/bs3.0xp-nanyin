@@ -40,7 +40,8 @@ $(function(){
             ps:ps,
             status:$('#status').val(),
             tradeDateBegin:$('#tradeDate').startDate(),
-            tradeDateEnd:$('#tradeDate').endDate()
+            tradeDateEnd:$('#tradeDate').endDate(),
+            queryType:IS_QUERY_ASSETS_LOSS
         };
     };
     

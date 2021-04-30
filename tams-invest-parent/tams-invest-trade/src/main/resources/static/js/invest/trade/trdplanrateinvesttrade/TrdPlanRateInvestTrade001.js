@@ -25,7 +25,10 @@ $(function(){
             status:$('#status').val(),
             tradeDateBegin:$('#tradeDate').startDate(),
             tradeDateEnd:$('#tradeDate').endDate(),
-            chlFinprodId:chlFinprodId
+            chlFinprodId:chlFinprodId,
+            //是否查询减值清理交易 add by yzg 20201029 start
+            queryType:IS_QUERY_ASSETS_LOSS
+            //是否查询减值清理交易 add by yzg 20201029 end
         };
     };
     

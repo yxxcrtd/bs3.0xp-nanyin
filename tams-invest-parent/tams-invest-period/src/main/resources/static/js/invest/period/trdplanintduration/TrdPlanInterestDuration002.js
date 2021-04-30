@@ -19,6 +19,7 @@
                 , {field: 'amount', width: "200", title: '持有本金', type: 'money', sortable:false}
                 , {field: 'returnAmount', width: "200", title: '还本金额', type: 'money', sortable:false}
                 , {field: 'calcRuleString', width: "200", title: '付息周期', sortable:false}
+                , {field: 'invAim', width: "200", title: '投资目的', sortable:false,editOption:{type:'select',formatoption:true,result: INV_AIM},edit:true}
                 , {field: 'vDate', width: "200", title: '计息开始日', sortable:false}
                 , {field: 'mDate', width: "200", title: '计息结束日', sortable:false}
                 , {field: 'yield', width: "200", title: '借款利率(%)', type: 'money', sortable:false}

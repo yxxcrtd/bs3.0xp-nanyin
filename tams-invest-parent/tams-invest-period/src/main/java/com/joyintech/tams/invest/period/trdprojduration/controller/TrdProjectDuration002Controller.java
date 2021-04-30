@@ -78,7 +78,7 @@ public class TrdProjectDuration002Controller extends BaseController {
     /**
      * 需要初始化的下拉菜单
      */
-    private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.币种, DictCode.是否, DictCode.资产来源};
+    private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.币种, DictCode.是否, DictCode.资产来源,DictCode.投资目的};
 
     @Override
     public String init(Model model) {
