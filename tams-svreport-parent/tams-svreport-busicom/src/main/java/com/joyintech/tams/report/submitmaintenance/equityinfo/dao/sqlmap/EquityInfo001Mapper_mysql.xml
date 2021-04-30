@@ -433,7 +433,8 @@
 		REMARK as remark,
 		STATUS as status,
 		AGENT  as agent,
-		INTERF_CHECK_RESULT as interfCheckResult
+		INTERF_CHECK_RESULT as interfCheckResult,
+		ORG_CODE as orgCode
 		from CHB_EQU_HOLD A
 		<where>
 			<foreach collection="eList" item="item" open=" (" close=")" separator=") or (">

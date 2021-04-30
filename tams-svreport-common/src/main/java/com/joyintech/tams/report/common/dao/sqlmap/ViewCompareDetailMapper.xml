@@ -11,6 +11,9 @@
                     ${item.field} = ${item.value}
                 </foreach>
             </if>
+            <if test="institution != null and institution != '' and tableName == 'CHB_ASSET_SUB_STATUS' ">
+                and  INSTITUTION_CODE = #{institution}
+            </if>
         </where>
         ${order}
     </select>

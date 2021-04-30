@@ -135,9 +135,9 @@
     </select>
 
     <select id="countExportNum" parameterType="map" resultType="int">
-        select count(*)
+        select count(1)
         from CHB_EQUDET_SUB ciis
-        left join CHB_SUBMIT_STATUS status
+        left join CHB_EQUDET_SUBMIT_STATUS status
         on ciis.sumit_seq = status.seqno
         <where>
             <if test="submitDeadLineStart != null and submitDeadLineStart != ''">
@@ -524,6 +524,7 @@
         ciis.REG_CODE regCode,
         ciis.BUSI_TYPE busiType,
         ciis.EQUITY_CONF_DATE equityConfDate,
+        DATE_FORMAT(ciis.EQUITY_CONF_DATE,'%Y%m%d')       equityConfDateStr,
         ciis.SHARE_CONF_DATETIME shareConfDatetime,
         ciis.CCY ccy,
         ciis.AMOUNT amount,
@@ -1351,4 +1352,124 @@
 		and ciis.SUBMIT_STATUS='01'
 		and ciis.STATUS !='03'
 	</select>
+
+    <update id="updateBatchEquityBusiRegCodeByPart" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";" >
+            update CHB_EQUDET
+            <set >
+                <if test="item.account != null" >
+                    REG_CODE = #{item.regCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.registBankCode != null" >
+                    REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.indentifyMark != null" >
+                    INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR},
+                </if>
+                <if test="item.equityConfDate != null" >
+                    EQUITY_CONF_DATE = #{item.equityConfDate,jdbcType=DATE},
+                </if>
+                <if test="item.shareConfDatetime != null" >
+                    SHARE_CONF_DATETIME = #{item.shareConfDatetime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.fundAccPlace != null" >
+                    FUND_ACC_PLACE = #{item.fundAccPlace,jdbcType=VARCHAR},
+                </if>
+                <if test="item.busiType != null" >
+                    BUSI_TYPE = #{item.busiType,jdbcType=CHAR},
+                </if>
+                <if test="item.ccy != null" >
+                    CCY = #{item.ccy,jdbcType=CHAR},
+                </if>
+                <if test="item.amount != null" >
+                    AMOUNT = #{item.amount,jdbcType=DECIMAL},
+                </if>
+                <if test="item.amountCny != null" >
+                    AMOUNT_CNY = #{item.amountCny,jdbcType=DECIMAL},
+                </if>
+                <if test="item.shares != null" >
+                    SHARES = #{item.shares,jdbcType=DECIMAL},
+                </if>
+                <if test="item.channel != null" >
+                    CHANNEL = #{item.channel,jdbcType=CHAR},
+                </if>
+                <if test="item.fundAcc != null" >
+                    FUND_ACC = #{item.fundAcc,jdbcType=VARCHAR},
+                </if>
+                <if test="item.isConsign != null" >
+                    IS_CONSIGN = #{item.isConsign,jdbcType=VARCHAR},
+                </if>
+                <if test="item.remark != null" >
+                    REMARK = #{item.remark,jdbcType=VARCHAR},
+                </if>
+                <if test="item.contractNo != null" >
+                    CONTRACT_NO = #{item.contractNo,jdbcType=VARCHAR},
+                </if>
+                <if test="item.finAcc != null" >
+                    FIN_ACC = #{item.finAcc,jdbcType=VARCHAR},
+                </if>
+                <if test="item.custContractNo != null" >
+                    CUST_CONTRACT_NO = #{item.custContractNo,jdbcType=VARCHAR},
+                </if>
+                <if test="item.custName != null" >
+                    CUST_NAME = #{item.custName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.agencyCode != null" >
+                    AGENCY_CODE = #{item.agencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.agencyName != null" >
+                    AGENCY_NAME = #{item.agencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.agencyFsa != null" >
+                    AGENCY_FSA = #{item.agencyFsa,jdbcType=CHAR},
+                </if>
+                <if test="item.busiFsa != null" >
+                    BUSI_FSA = #{item.busiFsa,jdbcType=CHAR},
+                </if>
+                <if test="item.prodValue != null" >
+                    PROD_VALUE = #{item.prodValue,jdbcType=DECIMAL},
+                </if>
+                <if test="item.feeAmt != null" >
+                    FEE_AMT = #{item.feeAmt,jdbcType=DECIMAL},
+                </if>
+                <if test="item.tranTellName != null" >
+                    TRAN_TELL_NAME = #{item.tranTellName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.status != null" >
+                    STATUS = #{item.status,jdbcType=VARCHAR},
+                </if>
+                <if test="item.workflowId != null" >
+                    WORKFLOW_ID = #{item.workflowId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.deptCode != null" >
+                    DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.updateUser != null" >
+                    UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="item.updateTime != null" >
+                    UPDATE_TIME = #{item.updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.dataSource != null" >
+                    DATA_SOURCE = #{item.dataSource,jdbcType=CHAR},
+                </if>
+                <if test="item.orgCode != null" >
+                    ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.agent != null" >
+                    AGENT = #{item.agent,jdbcType=VARCHAR},
+                </if>
+                <if test="item.isSubmit != null" >
+                    IS_SUBMIT = #{item.isSubmit,jdbcType=CHAR},
+                </if>
+                <if test="item.interfCheckResult != null" >
+                    INTERF_CHECK_RESULT = #{item.interfCheckResult,jdbcType=VARCHAR}
+                </if>
+
+            </set>
+            where BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
+            and ACCOUNT = #{item.account,jdbcType=VARCHAR}
+            and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
+        </foreach>
+    </update>
 </mapper>
