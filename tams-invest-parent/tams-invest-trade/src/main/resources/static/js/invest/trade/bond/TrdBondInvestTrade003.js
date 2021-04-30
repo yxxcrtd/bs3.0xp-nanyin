@@ -1926,7 +1926,7 @@ var table;
                             },false);
                         }
                         //交易方向为卖出时显示资产可用持仓
-                        if(element.etrEntrustAdd.secAcctId&&element.etrEntrust.portfolioId
+                        if((element.etrEntrustAdd.secAcctId||element.etrEntrust.chlId)&&element.etrEntrust.portfolioId
                             && $("#calendarId").val() && $("#ccy").val() && $("#tradeDate").val()&&!($('#ps').val()=='T01')){
 
                             params.portfolioId=element.etrEntrust.portfolioId;
@@ -1936,7 +1936,11 @@ var table;
                             params.acctTypeList = 'A01,A07';
                             params.ccy=$("#ccy").val();
                             params.multiParam=100;
-                            params.secAcctId=element.etrEntrustAdd.secAcctId;
+                            if(element.etrEntrustAdd.secAcctId){
+                                params.secAcctId=element.etrEntrustAdd.secAcctId;
+                            }else if(element.etrEntrust.chlId){
+                                params.secAcctId=element.etrEntrust.chlId;
+                            }
                             params.invAim = $("#invAim").val();
                             Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (cashdata) {
                                 if( cashdata.position){
@@ -3444,6 +3448,7 @@ var table;
                                 return true;
                             }
                             if(field=='secManageAcctIdDuo'&&entrustId){
+                                if($('#chlId').val())return false;
                                 if(data.secManageAcctIdDuo){
                                     return false;
                                 }else{
