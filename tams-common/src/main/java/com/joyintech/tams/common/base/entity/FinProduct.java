@@ -255,6 +255,11 @@ public class FinProduct extends BaseEntity {
     // add by jiangpeng on 20200721 公募基金标的 接口 end
 
     /**
+     * SPPI测试状态：0未测试、1测试中、2测试通过、3测试不通过
+     */
+    private String sppiTestStatus;
+
+    /**
      * 取得 金融产品代码
      * @return 金融产品代码
      */
@@ -1013,6 +1018,21 @@ public class FinProduct extends BaseEntity {
 
     // add by jiangpeng on 20200721 公募基金标的 接口 end
 
+    /**
+     * 取得 SPPI测试状态：0未测试、1测试中、2测试通过、3测试不通过
+     * @return SPPI测试状态：0未测试、1测试中、2测试通过、3测试不通过
+     */
+    public String getSppiTestStatus() {
+        return sppiTestStatus;
+    }
+
+    /**
+     * 设置 SPPI测试状态：0未测试、1测试中、2测试通过、3测试不通过
+     * @param sppiTestStatus SPPI测试状态：0未测试、1测试中、2测试通过、3测试不通过
+     */
+    public void setSppiTestStatus(String sppiTestStatus) {
+        this.sppiTestStatus = sppiTestStatus == null ? null : sppiTestStatus.trim();
+    }
 
 //    private String repFinprodInsId;
 //

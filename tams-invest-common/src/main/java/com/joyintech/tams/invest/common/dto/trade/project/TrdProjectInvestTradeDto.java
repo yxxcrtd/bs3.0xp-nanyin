@@ -253,6 +253,12 @@ public class TrdProjectInvestTradeDto extends BaseEntity {
      */
     private String tradeId;
 
+    
+    /**
+     * 投资目的
+     */
+    private String invAim;
+
     /**
      * 获取 statusValid
      *
@@ -1152,4 +1158,11 @@ public class TrdProjectInvestTradeDto extends BaseEntity {
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId;
     }
-}
+	public String getInvAim() {
+		return invAim;
+	}
+
+	public void setInvAim(String invAim) {
+		this.invAim = invAim;
+	}
+    }
