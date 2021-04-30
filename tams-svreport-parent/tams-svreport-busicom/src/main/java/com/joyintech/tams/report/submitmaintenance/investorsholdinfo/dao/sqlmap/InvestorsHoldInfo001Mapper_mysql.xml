@@ -223,7 +223,58 @@ where
 		AND CII.HOLD_DATE = TEMP.HOLD_DATE
 		AND CII.CCY = TEMP.CCY
 		)
+		) de;
+
+		UPDATE  CHB_INVESTHOLD_INFO as A,
+		(
+		select REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,PRD_REGIST_CODE,HOLD_DATE,CCY,AMOUNT,
+		QTY,CNY_AMT,REMARK,DATA_SOURCE,STATUS,ORG_CODE,DEPT_CODE,UPDATE_USER,UPDATE_TIME,
+		CREATE_USER,CREATE_TIME,AGENT,CREATE_DEPT,INTERF_CHECK_RESULT
+		from
+		(
+		select TEMP.* from (
+		<foreach collection="newDataList" item="item"  separator="union all">
+			SELECT
+			#{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
+			#{item.prodid,jdbcType=VARCHAR} PRODID,
+			#{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
+			#{item.holdDate,jdbcType=DATE} HOLD_DATE,
+			#{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.amount,jdbcType=DECIMAL} AMOUNT,
+			#{item.qty,jdbcType=DECIMAL} QTY,
+			#{item.cnyAmt,jdbcType=DECIMAL} CNY_AMT,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.agent,jdbcType=VARCHAR} AGENT,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT
+			FROM dual
+		</foreach>
+		) TEMP
 		) de
+		) AS B
+		SET A.AMOUNT = B.AMOUNT,
+		A.QTY = B.QTY,
+		A.CNY_AMT = B.CNY_AMT,
+		A.STATUS = B.STATUS,
+		A.REMARK = B.REMARK,
+		A.UPDATE_USER = B.UPDATE_USER,
+		A.UPDATE_TIME = B.UPDATE_TIME,
+		A.AGENT = B.AGENT
+		where
+		A.REGIST_BANK_CODE = B.REGIST_BANK_CODE
+		AND A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		AND A.PRD_REGIST_CODE = B.PRD_REGIST_CODE
+		AND A.HOLD_DATE = B.HOLD_DATE
+		AND A.CCY = B.CCY;
 	</insert>
 
 	<insert id="insertChbHoldInfoDataMerge" >
@@ -332,7 +383,87 @@ where
 		AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
 		AND CII.PRODID = TEMP.PRODID
 		AND CII.SEND_STATUS = TEMP.SEND_STATUS)
+		) de;
+		UPDATE  CHB_INVESTHOLD_INFO_SUB as A,
+		(
+		select AMOUNT,
+		QTY,
+		CNY_AMT,
+		STATUS,
+		REMARK,
+		UPDATE_USER,
+		UPDATE_TIME,
+		CHB_SUBMIT_DEADLINE,
+		SUBMIT_DEADLINE,
+		STATUS_DATE,
+		CHECK_SEQNO,
+		SUMIT_SEQ ,
+		REGIST_BANK_CODE,
+		INDENTIFY_MARK,
+		PRD_REGIST_CODE,
+		HOLD_DATE,
+		CCY,
+		PRODID,
+		SEND_STATUS
+		from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="subList" item="item"  separator="union all">
+			SELECT
+			#{item.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO,
+			#{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
+			#{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
+			#{item.holdDate,jdbcType=DATE} HOLD_DATE,
+			#{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.amount,jdbcType=DECIMAL} AMOUNT,
+			#{item.qty,jdbcType=DECIMAL} QTY,
+			#{item.cnyAmt,jdbcType=DECIMAL} CNY_AMT,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+			#{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+			#{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
+			#{item.statusDate,jdbcType=DATE} STATUS_DATE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.checkSeqno,jdbcType=VARCHAR} CHECK_SEQNO,
+			#{item.prodid,jdbcType=VARCHAR} PRODID,
+			#{item.registSeqno,jdbcType=VARCHAR} SUMIT_SEQ
+			FROM
+			DUAL
+		</foreach>
+		) TEMP
 		) de
+		) AS B
+		set
+		A.AMOUNT = B.AMOUNT,
+		A.QTY = B.QTY,
+		A.CNY_AMT = B.CNY_AMT,
+		A.STATUS = B.STATUS,
+		A.REMARK = B.REMARK,
+		A.UPDATE_USER = B.UPDATE_USER,
+		A.UPDATE_TIME = B.UPDATE_TIME,
+		A.CHB_SUBMIT_DEADLINE = B.CHB_SUBMIT_DEADLINE,
+		A.SUBMIT_DEADLINE = B.SUBMIT_DEADLINE,
+		A.STATUS_DATE = B.STATUS_DATE,
+		A.CHECK_SEQNO = B.CHECK_SEQNO,
+		A.SUMIT_SEQ	= B.SUMIT_SEQ
+		where
+		A.REGIST_BANK_CODE = B.REGIST_BANK_CODE
+		AND A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		AND A.PRD_REGIST_CODE = B.PRD_REGIST_CODE
+		AND A.HOLD_DATE = B.HOLD_DATE
+		AND A.CCY = B.CCY
+		AND A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		AND A.PRODID = B.PRODID
+		AND A.SEND_STATUS = B.SEND_STATUS;
 	</insert>
 
 	<insert id="insertChbSubHoldInfoDataMerge" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
