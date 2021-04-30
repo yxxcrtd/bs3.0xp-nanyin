@@ -330,7 +330,9 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                     for (Map<String, Object> stringObjectMap : saveList) {
                         if (StringUtil.equals(stringObjectMap.get("PORTFOLIOID"),ptlSecPositionFlowDto.getPortfolioId()) 
                                 && StringUtil.equals(stringObjectMap.get("INVAIM"),ptlSecPositionFlowDto.getInvAim())){
-                            trdProductDeal.setTradeAmt((BigDecimal) stringObjectMap.get("PRICE")); 
+                            if ((String)stringObjectMap.get("PRICE") != null){
+                                trdProductDeal.setTradeAmt(new BigDecimal((String)stringObjectMap.get("PRICE")) );
+                            }
                         }
                     }
                 }
