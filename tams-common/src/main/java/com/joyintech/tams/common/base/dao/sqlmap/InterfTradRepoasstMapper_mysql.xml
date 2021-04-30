@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfTradRepoasstMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfTradRepoasst" >
+        <result column="SECID" property="secid" jdbcType="VARCHAR" />
+        <result column="TRADEID" property="tradeid" jdbcType="VARCHAR" />
+        <result column="SEQ_NO" property="seqNo" jdbcType="DECIMAL" />
+        <result column="CONVRATE" property="convrate" jdbcType="DECIMAL" />
+        <result column="FACETOTALAMT" property="facetotalamt" jdbcType="DECIMAL" />
+        <result column="DEALAMT" property="dealamt" jdbcType="DECIMAL" />
+        <result column="DPRICE" property="dprice" jdbcType="DECIMAL" />
+        <result column="CPRICE" property="cprice" jdbcType="DECIMAL" />
+        <result column="DPRICEAMT" property="dpriceamt" jdbcType="DECIMAL" />
+        <result column="CPRICEAMT" property="cpriceamt" jdbcType="DECIMAL" />
+        <result column="ACCUIR" property="accuir" jdbcType="DECIMAL" />
+        <result column="ACCUIRAMT" property="accuiramt" jdbcType="DECIMAL" />
+        <result column="MCPRICE" property="mcprice" jdbcType="DECIMAL" />
+        <result column="MCPRICEAMT" property="mcpriceamt" jdbcType="DECIMAL" />
+        <result column="MDPRICE" property="mdprice" jdbcType="DECIMAL" />
+        <result column="MDPRICEAMT" property="mdpriceamt" jdbcType="DECIMAL" />
+        <result column="LSTMNTUSER" property="lstmntuser" jdbcType="VARCHAR" />
+        <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
+        <result column="SECNAME" property="secname" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfTradRepoasst" >
+        insert into INTERF_TRAD_REPOASST (SECID, TRADEID, SEQ_NO, 
+            CONVRATE, FACETOTALAMT, DEALAMT, 
+            DPRICE, CPRICE, DPRICEAMT, 
+            CPRICEAMT, ACCUIR, ACCUIRAMT, 
+            MCPRICE, MCPRICEAMT, MDPRICE, 
+            MDPRICEAMT, LSTMNTUSER, LSTMNTDATE, 
+            SECNAME)
+        values (#{secid,jdbcType=VARCHAR}, #{tradeid,jdbcType=VARCHAR}, #{seqNo,jdbcType=DECIMAL}, 
+            #{convrate,jdbcType=DECIMAL}, #{facetotalamt,jdbcType=DECIMAL}, #{dealamt,jdbcType=DECIMAL}, 
+            #{dprice,jdbcType=DECIMAL}, #{cprice,jdbcType=DECIMAL}, #{dpriceamt,jdbcType=DECIMAL}, 
+            #{cpriceamt,jdbcType=DECIMAL}, #{accuir,jdbcType=DECIMAL}, #{accuiramt,jdbcType=DECIMAL}, 
+            #{mcprice,jdbcType=DECIMAL}, #{mcpriceamt,jdbcType=DECIMAL}, #{mdprice,jdbcType=DECIMAL}, 
+            #{mdpriceamt,jdbcType=DECIMAL}, #{lstmntuser,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}, 
+            #{secname,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfTradRepoasst" >
+        insert into INTERF_TRAD_REPOASST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="secid != null" >
+                SECID,
+            </if>
+            <if test="tradeid != null" >
+                TRADEID,
+            </if>
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="convrate != null" >
+                CONVRATE,
+            </if>
+            <if test="facetotalamt != null" >
+                FACETOTALAMT,
+            </if>
+            <if test="dealamt != null" >
+                DEALAMT,
+            </if>
+            <if test="dprice != null" >
+                DPRICE,
+            </if>
+            <if test="cprice != null" >
+                CPRICE,
+            </if>
+            <if test="dpriceamt != null" >
+                DPRICEAMT,
+            </if>
+            <if test="cpriceamt != null" >
+                CPRICEAMT,
+            </if>
+            <if test="accuir != null" >
+                ACCUIR,
+            </if>
+            <if test="accuiramt != null" >
+                ACCUIRAMT,
+            </if>
+            <if test="mcprice != null" >
+                MCPRICE,
+            </if>
+            <if test="mcpriceamt != null" >
+                MCPRICEAMT,
+            </if>
+            <if test="mdprice != null" >
+                MDPRICE,
+            </if>
+            <if test="mdpriceamt != null" >
+                MDPRICEAMT,
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER,
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE,
+            </if>
+            <if test="secname != null" >
+                SECNAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="secid != null" >
+                #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeid != null" >
+                #{tradeid,jdbcType=VARCHAR},
+            </if>
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=DECIMAL},
+            </if>
+            <if test="convrate != null" >
+                #{convrate,jdbcType=DECIMAL},
+            </if>
+            <if test="facetotalamt != null" >
+                #{facetotalamt,jdbcType=DECIMAL},
+            </if>
+            <if test="dealamt != null" >
+                #{dealamt,jdbcType=DECIMAL},
+            </if>
+            <if test="dprice != null" >
+                #{dprice,jdbcType=DECIMAL},
+            </if>
+            <if test="cprice != null" >
+                #{cprice,jdbcType=DECIMAL},
+            </if>
+            <if test="dpriceamt != null" >
+                #{dpriceamt,jdbcType=DECIMAL},
+            </if>
+            <if test="cpriceamt != null" >
+                #{cpriceamt,jdbcType=DECIMAL},
+            </if>
+            <if test="accuir != null" >
+                #{accuir,jdbcType=DECIMAL},
+            </if>
+            <if test="accuiramt != null" >
+                #{accuiramt,jdbcType=DECIMAL},
+            </if>
+            <if test="mcprice != null" >
+                #{mcprice,jdbcType=DECIMAL},
+            </if>
+            <if test="mcpriceamt != null" >
+                #{mcpriceamt,jdbcType=DECIMAL},
+            </if>
+            <if test="mdprice != null" >
+                #{mdprice,jdbcType=DECIMAL},
+            </if>
+            <if test="mdpriceamt != null" >
+                #{mdpriceamt,jdbcType=DECIMAL},
+            </if>
+            <if test="lstmntuser != null" >
+                #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                #{lstmntdate,jdbcType=DATE},
+            </if>
+            <if test="secname != null" >
+                #{secname,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfTradRepoasst" >
+        insert into INTERF_TRAD_REPOASST(SECID, TRADEID, SEQ_NO, CONVRATE, FACETOTALAMT, 
+        DEALAMT, DPRICE, CPRICE, DPRICEAMT, CPRICEAMT, ACCUIR, ACCUIRAMT, MCPRICE, MCPRICEAMT, 
+        MDPRICE, MDPRICEAMT, LSTMNTUSER, LSTMNTDATE, SECNAME)
+        select SECID, TRADEID, SEQ_NO, CONVRATE, FACETOTALAMT, 
+            DEALAMT, DPRICE, CPRICE, DPRICEAMT, CPRICEAMT, ACCUIR, ACCUIRAMT, MCPRICE, MCPRICEAMT, 
+            MDPRICE, MDPRICEAMT, LSTMNTUSER, LSTMNTDATE, SECNAME
+             from INTERF_TRAD_REPOASST
+             where 1 = 1
+    </insert>
+</mapper>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.DisPramsMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.DisPrams" >
+        <id column="DIS_ID" property="disId" jdbcType="VARCHAR" />
+        <result column="DIS_NAME" property="disName" jdbcType="VARCHAR" />
+        <result column="DIS_TABLE" property="disTable" jdbcType="VARCHAR" />
+        <result column="DIS_KEY" property="disKey" jdbcType="VARCHAR" />
+        <result column="DIS_VAL" property="disVal" jdbcType="VARCHAR" />
+        <result column="DIS_TYPE" property="disType" jdbcType="VARCHAR" />
+        <result column="DIS_PARAMS" property="disParams" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DIS_ID DIS_ID, DIS_NAME DIS_NAME, DIS_TABLE DIS_TABLE, DIS_KEY DIS_KEY, DIS_VAL DIS_VAL,
+        DIS_TYPE DIS_TYPE, DIS_PARAMS DIS_PARAMS, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.DisPramsMapper.Base_Column_List" />
+        from DIS_PRAMS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.DisPramsMapper.Base_Column_List" />
+        from DIS_PRAMS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.DisPramsMapper.Base_Column_List" />
+        from DIS_PRAMS
+        where DIS_ID = #{disId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from DIS_PRAMS
+        where DIS_ID = #{disId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.DisPrams" >
+        insert into DIS_PRAMS (DIS_ID, DIS_NAME, DIS_TABLE,
+            DIS_KEY, DIS_VAL, DIS_TYPE,
+            DIS_PARAMS, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{disId,jdbcType=VARCHAR}, #{disName,jdbcType=VARCHAR}, #{disTable,jdbcType=VARCHAR},
+            #{disKey,jdbcType=VARCHAR}, #{disVal,jdbcType=VARCHAR}, #{disType,jdbcType=VARCHAR},
+            #{disParams,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.DisPrams" >
+        insert into DIS_PRAMS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="disId != null" >
+                DIS_ID,
+            </if>
+            <if test="disName != null" >
+                DIS_NAME,
+            </if>
+            <if test="disTable != null" >
+                DIS_TABLE,
+            </if>
+            <if test="disKey != null" >
+                DIS_KEY,
+            </if>
+            <if test="disVal != null" >
+                DIS_VAL,
+            </if>
+            <if test="disType != null" >
+                DIS_TYPE,
+            </if>
+            <if test="disParams != null" >
+                DIS_PARAMS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="disId != null" >
+                #{disId,jdbcType=VARCHAR},
+            </if>
+            <if test="disName != null" >
+                #{disName,jdbcType=VARCHAR},
+            </if>
+            <if test="disTable != null" >
+                #{disTable,jdbcType=VARCHAR},
+            </if>
+            <if test="disKey != null" >
+                #{disKey,jdbcType=VARCHAR},
+            </if>
+            <if test="disVal != null" >
+                #{disVal,jdbcType=VARCHAR},
+            </if>
+            <if test="disType != null" >
+                #{disType,jdbcType=VARCHAR},
+            </if>
+            <if test="disParams != null" >
+                #{disParams,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.DisPrams" >
+        insert into DIS_PRAMS(DIS_ID, DIS_NAME, DIS_TABLE, DIS_KEY, DIS_VAL, DIS_TYPE, DIS_PARAMS,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select DIS_ID, DIS_NAME, DIS_TABLE, DIS_KEY, DIS_VAL, DIS_TYPE, DIS_PARAMS,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from DIS_PRAMS
+             where 1 = 1 and DIS_ID = #{disId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.DisPrams" >
+        update DIS_PRAMS
+        <set >
+            <if test="disName != null" >
+                DIS_NAME = #{disName,jdbcType=VARCHAR},
+            </if>
+            <if test="disTable != null" >
+                DIS_TABLE = #{disTable,jdbcType=VARCHAR},
+            </if>
+            <if test="disKey != null" >
+                DIS_KEY = #{disKey,jdbcType=VARCHAR},
+            </if>
+            <if test="disVal != null" >
+                DIS_VAL = #{disVal,jdbcType=VARCHAR},
+            </if>
+            <if test="disType != null" >
+                DIS_TYPE = #{disType,jdbcType=VARCHAR},
+            </if>
+            <if test="disParams != null" >
+                DIS_PARAMS = #{disParams,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where DIS_ID = #{disId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.DisPrams" >
+        update DIS_PRAMS
+        set DIS_NAME = #{disName,jdbcType=VARCHAR},
+            DIS_TABLE = #{disTable,jdbcType=VARCHAR},
+            DIS_KEY = #{disKey,jdbcType=VARCHAR},
+            DIS_VAL = #{disVal,jdbcType=VARCHAR},
+            DIS_TYPE = #{disType,jdbcType=VARCHAR},
+            DIS_PARAMS = #{disParams,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where DIS_ID = #{disId,jdbcType=VARCHAR}
+    </update>
+</mapper>

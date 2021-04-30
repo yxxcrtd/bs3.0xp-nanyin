@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinSubscriptionInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinSubscriptionInfo" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="INSTITUTION_NAME" property="institutionName" jdbcType="VARCHAR" />
+        <result column="SUBSCRIB_AMOUT" property="subscribAmout" jdbcType="DECIMAL" />
+        <result column="SUBSCRIB_DATE" property="subscribDate" jdbcType="DATE" />
+        <result column="SUBSCRIB_RATE" property="subscribRate" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, INSTITUTION_NAME INSTITUTION_NAME, SUBSCRIB_AMOUT SUBSCRIB_AMOUT, 
+        SUBSCRIB_DATE SUBSCRIB_DATE, SUBSCRIB_RATE SUBSCRIB_RATE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinSubscriptionInfoMapper.Base_Column_List" />
+        from FIN_SUBSCRIPTION_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinSubscriptionInfoMapper.Base_Column_List" />
+        from FIN_SUBSCRIPTION_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinSubscriptionInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FinSubscriptionInfoMapper.Base_Column_List" />
+        from FIN_SUBSCRIPTION_INFO
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and INSTITUTION_NAME = #{institutionName,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinSubscriptionInfoKey" >
+        delete from FIN_SUBSCRIPTION_INFO
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and INSTITUTION_NAME = #{institutionName,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinSubscriptionInfo" >
+        insert into FIN_SUBSCRIPTION_INFO (FINPROD_ID, INSTITUTION_NAME, SUBSCRIB_AMOUT, 
+            SUBSCRIB_DATE, SUBSCRIB_RATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{finprodId,jdbcType=VARCHAR}, #{institutionName,jdbcType=VARCHAR}, #{subscribAmout,jdbcType=DECIMAL}, 
+            #{subscribDate,jdbcType=DATE}, #{subscribRate,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinSubscriptionInfo" >
+        insert into FIN_SUBSCRIPTION_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="institutionName != null" >
+                INSTITUTION_NAME,
+            </if>
+            <if test="subscribAmout != null" >
+                SUBSCRIB_AMOUT,
+            </if>
+            <if test="subscribDate != null" >
+                SUBSCRIB_DATE,
+            </if>
+            <if test="subscribRate != null" >
+                SUBSCRIB_RATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionName != null" >
+                #{institutionName,jdbcType=VARCHAR},
+            </if>
+            <if test="subscribAmout != null" >
+                #{subscribAmout,jdbcType=DECIMAL},
+            </if>
+            <if test="subscribDate != null" >
+                #{subscribDate,jdbcType=DATE},
+            </if>
+            <if test="subscribRate != null" >
+                #{subscribRate,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinSubscriptionInfo" >
+        insert into FIN_SUBSCRIPTION_INFO(FINPROD_ID, INSTITUTION_NAME, SUBSCRIB_AMOUT, SUBSCRIB_DATE, 
+        SUBSCRIB_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select FINPROD_ID, INSTITUTION_NAME, SUBSCRIB_AMOUT, SUBSCRIB_DATE, 
+            SUBSCRIB_RATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from FIN_SUBSCRIPTION_INFO
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and INSTITUTION_NAME = #{institutionName,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinSubscriptionInfo" >
+        update FIN_SUBSCRIPTION_INFO
+        <set >
+            <if test="subscribAmout != null" >
+                SUBSCRIB_AMOUT = #{subscribAmout,jdbcType=DECIMAL},
+            </if>
+            <if test="subscribDate != null" >
+                SUBSCRIB_DATE = #{subscribDate,jdbcType=DATE},
+            </if>
+            <if test="subscribRate != null" >
+                SUBSCRIB_RATE = #{subscribRate,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and INSTITUTION_NAME = #{institutionName,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinSubscriptionInfo" >
+        update FIN_SUBSCRIPTION_INFO
+        set SUBSCRIB_AMOUT = #{subscribAmout,jdbcType=DECIMAL},
+            SUBSCRIB_DATE = #{subscribDate,jdbcType=DATE},
+            SUBSCRIB_RATE = #{subscribRate,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and INSTITUTION_NAME = #{institutionName,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepIndexSubMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepIndexSub" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="PRI_ID" property="priId" jdbcType="VARCHAR" />
+        <result column="INDEX_NAME" property="indexName" jdbcType="VARCHAR" />
+        <result column="INDEX_VALUE" property="indexValue" jdbcType="VARCHAR" />
+        <result column="INDEX_TYPE" property="indexType" jdbcType="VARCHAR" />
+        <result column="INDEX_DATE" property="indexDate" jdbcType="DATE" />
+        <result column="INDEX_FILE" property="indexFile" jdbcType="VARCHAR" />
+        <result column="INDEX_DETAIL" property="indexDetail" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="AUDIT_STATUS" property="auditStatus" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, PRI_ID PRI_ID, INDEX_NAME INDEX_NAME, INDEX_VALUE INDEX_VALUE, INDEX_TYPE INDEX_TYPE, 
+        INDEX_DATE INDEX_DATE, INDEX_FILE INDEX_FILE, INDEX_DETAIL INDEX_DETAIL, CREATE_DEPT CREATE_DEPT, 
+        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        AUDIT_STATUS AUDIT_STATUS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepIndexSubMapper.Base_Column_List" />
+        from REP_INDEX_SUB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepIndexSubMapper.Base_Column_List" />
+        from REP_INDEX_SUB
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepIndexSubMapper.Base_Column_List" />
+        from REP_INDEX_SUB
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_INDEX_SUB
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepIndexSub" >
+        insert into REP_INDEX_SUB (ID, PRI_ID, INDEX_NAME, 
+            INDEX_VALUE, INDEX_TYPE, INDEX_DATE, 
+            INDEX_FILE, INDEX_DETAIL, CREATE_DEPT, 
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, AUDIT_STATUS)
+        values (#{id,jdbcType=VARCHAR}, #{priId,jdbcType=VARCHAR}, #{indexName,jdbcType=VARCHAR}, 
+            #{indexValue,jdbcType=VARCHAR}, #{indexType,jdbcType=VARCHAR}, #{indexDate,jdbcType=DATE}, 
+            #{indexFile,jdbcType=VARCHAR}, #{indexDetail,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{auditStatus,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepIndexSub" >
+        insert into REP_INDEX_SUB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="priId != null" >
+                PRI_ID,
+            </if>
+            <if test="indexName != null" >
+                INDEX_NAME,
+            </if>
+            <if test="indexValue != null" >
+                INDEX_VALUE,
+            </if>
+            <if test="indexType != null" >
+                INDEX_TYPE,
+            </if>
+            <if test="indexDate != null" >
+                INDEX_DATE,
+            </if>
+            <if test="indexFile != null" >
+                INDEX_FILE,
+            </if>
+            <if test="indexDetail != null" >
+                INDEX_DETAIL,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="auditStatus != null" >
+                AUDIT_STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="priId != null" >
+                #{priId,jdbcType=VARCHAR},
+            </if>
+            <if test="indexName != null" >
+                #{indexName,jdbcType=VARCHAR},
+            </if>
+            <if test="indexValue != null" >
+                #{indexValue,jdbcType=VARCHAR},
+            </if>
+            <if test="indexType != null" >
+                #{indexType,jdbcType=VARCHAR},
+            </if>
+            <if test="indexDate != null" >
+                #{indexDate,jdbcType=DATE},
+            </if>
+            <if test="indexFile != null" >
+                #{indexFile,jdbcType=VARCHAR},
+            </if>
+            <if test="indexDetail != null" >
+                #{indexDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auditStatus != null" >
+                #{auditStatus,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepIndexSub" >
+        insert into REP_INDEX_SUB(ID, PRI_ID, INDEX_NAME, INDEX_VALUE, INDEX_TYPE, INDEX_DATE, 
+        INDEX_FILE, INDEX_DETAIL, CREATE_DEPT, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        AUDIT_STATUS)
+        select ID, PRI_ID, INDEX_NAME, INDEX_VALUE, INDEX_TYPE, INDEX_DATE, 
+            INDEX_FILE, INDEX_DETAIL, CREATE_DEPT, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            AUDIT_STATUS
+             from REP_INDEX_SUB
+             where 1 = 1 and ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepIndexSub" >
+        update REP_INDEX_SUB
+        <set >
+            <if test="priId != null" >
+                PRI_ID = #{priId,jdbcType=VARCHAR},
+            </if>
+            <if test="indexName != null" >
+                INDEX_NAME = #{indexName,jdbcType=VARCHAR},
+            </if>
+            <if test="indexValue != null" >
+                INDEX_VALUE = #{indexValue,jdbcType=VARCHAR},
+            </if>
+            <if test="indexType != null" >
+                INDEX_TYPE = #{indexType,jdbcType=VARCHAR},
+            </if>
+            <if test="indexDate != null" >
+                INDEX_DATE = #{indexDate,jdbcType=DATE},
+            </if>
+            <if test="indexFile != null" >
+                INDEX_FILE = #{indexFile,jdbcType=VARCHAR},
+            </if>
+            <if test="indexDetail != null" >
+                INDEX_DETAIL = #{indexDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auditStatus != null" >
+                AUDIT_STATUS = #{auditStatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepIndexSub" >
+        update REP_INDEX_SUB
+        set PRI_ID = #{priId,jdbcType=VARCHAR},
+            INDEX_NAME = #{indexName,jdbcType=VARCHAR},
+            INDEX_VALUE = #{indexValue,jdbcType=VARCHAR},
+            INDEX_TYPE = #{indexType,jdbcType=VARCHAR},
+            INDEX_DATE = #{indexDate,jdbcType=DATE},
+            INDEX_FILE = #{indexFile,jdbcType=VARCHAR},
+            INDEX_DETAIL = #{indexDetail,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            AUDIT_STATUS = #{auditStatus,jdbcType=VARCHAR}
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

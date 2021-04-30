@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValInterfServerInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ValInterfServerInfo" >
+        <id column="SERVERIP" property="serverip" jdbcType="VARCHAR" />
+        <id column="SYSTEMID" property="systemid" jdbcType="VARCHAR" />
+        <id column="RS" property="rs" jdbcType="VARCHAR" />
+        <result column="SERVERPORT" property="serverport" jdbcType="VARCHAR" />
+        <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+        <result column="SERVERTYPE" property="servertype" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="REMOTE_PATH" property="remotePath" jdbcType="VARCHAR" />
+        <result column="LOCAL_PATH" property="localPath" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SERVERNAME" property="servername" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SERVERIP SERVERIP, SYSTEMID SYSTEMID, RS RS, SERVERPORT SERVERPORT, USERNAME USERNAME, 
+        PASSWORD PASSWORD, SERVERTYPE SERVERTYPE, STATUS STATUS, REMOTE_PATH REMOTE_PATH, 
+        LOCAL_PATH LOCAL_PATH, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, SERVERNAME SERVERNAME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfServerInfoMapper.Base_Column_List" />
+        from VAL_INTERF_SERVER_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfServerInfoMapper.Base_Column_List" />
+        from VAL_INTERF_SERVER_INFO
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ValInterfServerInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValInterfServerInfoMapper.Base_Column_List" />
+        from VAL_INTERF_SERVER_INFO
+        where SERVERIP = #{serverip,jdbcType=VARCHAR}
+          and SYSTEMID = #{systemid,jdbcType=VARCHAR}
+          and RS = #{rs,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValInterfServerInfoKey" >
+        delete from VAL_INTERF_SERVER_INFO
+        where SERVERIP = #{serverip,jdbcType=VARCHAR}
+          and SYSTEMID = #{systemid,jdbcType=VARCHAR}
+          and RS = #{rs,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ValInterfServerInfo" >
+        insert into VAL_INTERF_SERVER_INFO (SERVERIP, SYSTEMID, RS, 
+            SERVERPORT, USERNAME, PASSWORD, 
+            SERVERTYPE, STATUS, REMOTE_PATH, 
+            LOCAL_PATH, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            SERVERNAME)
+        values (#{serverip,jdbcType=VARCHAR}, #{systemid,jdbcType=VARCHAR}, #{rs,jdbcType=VARCHAR}, 
+            #{serverport,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+            #{servertype,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{remotePath,jdbcType=VARCHAR}, 
+            #{localPath,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{servername,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ValInterfServerInfo" >
+        insert into VAL_INTERF_SERVER_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="serverip != null" >
+                SERVERIP,
+            </if>
+            <if test="systemid != null" >
+                SYSTEMID,
+            </if>
+            <if test="rs != null" >
+                RS,
+            </if>
+            <if test="serverport != null" >
+                SERVERPORT,
+            </if>
+            <if test="username != null" >
+                USERNAME,
+            </if>
+            <if test="password != null" >
+                PASSWORD,
+            </if>
+            <if test="servertype != null" >
+                SERVERTYPE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="remotePath != null" >
+                REMOTE_PATH,
+            </if>
+            <if test="localPath != null" >
+                LOCAL_PATH,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="servername != null" >
+                SERVERNAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="serverip != null" >
+                #{serverip,jdbcType=VARCHAR},
+            </if>
+            <if test="systemid != null" >
+                #{systemid,jdbcType=VARCHAR},
+            </if>
+            <if test="rs != null" >
+                #{rs,jdbcType=VARCHAR},
+            </if>
+            <if test="serverport != null" >
+                #{serverport,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null" >
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="servertype != null" >
+                #{servertype,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="remotePath != null" >
+                #{remotePath,jdbcType=VARCHAR},
+            </if>
+            <if test="localPath != null" >
+                #{localPath,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="servername != null" >
+                #{servername,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ValInterfServerInfo" >
+        insert into VAL_INTERF_SERVER_INFO(SERVERIP, SYSTEMID, RS, SERVERPORT, USERNAME, 
+        PASSWORD, SERVERTYPE, STATUS, REMOTE_PATH, LOCAL_PATH, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, SERVERNAME)
+        select SERVERIP, SYSTEMID, RS, SERVERPORT, USERNAME, 
+            PASSWORD, SERVERTYPE, #{status,jdbcType=VARCHAR} STATUS, REMOTE_PATH, LOCAL_PATH, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SERVERNAME
+             from VAL_INTERF_SERVER_INFO
+             where STATUS = 'E' and SERVERIP = #{serverip,jdbcType=VARCHAR} and SYSTEMID = #{systemid,jdbcType=VARCHAR} and RS = #{rs,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ValInterfServerInfo" >
+        update VAL_INTERF_SERVER_INFO
+        <set >
+            <if test="serverport != null" >
+                SERVERPORT = #{serverport,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null" >
+                USERNAME = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                PASSWORD = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="servertype != null" >
+                SERVERTYPE = #{servertype,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="remotePath != null" >
+                REMOTE_PATH = #{remotePath,jdbcType=VARCHAR},
+            </if>
+            <if test="localPath != null" >
+                LOCAL_PATH = #{localPath,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="servername != null" >
+                SERVERNAME = #{servername,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SERVERIP = #{serverip,jdbcType=VARCHAR}
+          and SYSTEMID = #{systemid,jdbcType=VARCHAR}
+          and RS = #{rs,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValInterfServerInfo" >
+        update VAL_INTERF_SERVER_INFO
+        set SERVERPORT = #{serverport,jdbcType=VARCHAR},
+            USERNAME = #{username,jdbcType=VARCHAR},
+            PASSWORD = #{password,jdbcType=VARCHAR},
+            SERVERTYPE = #{servertype,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            REMOTE_PATH = #{remotePath,jdbcType=VARCHAR},
+            LOCAL_PATH = #{localPath,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SERVERNAME = #{servername,jdbcType=VARCHAR}
+        where SERVERIP = #{serverip,jdbcType=VARCHAR}
+          and SYSTEMID = #{systemid,jdbcType=VARCHAR}
+          and RS = #{rs,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCbonddescriptionMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCbonddescription" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="S_INFO_WINDCODE" property="sInfoWindcode" jdbcType="VARCHAR" />
+        <result column="B_INFO_FULLNAME" property="bInfoFullname" jdbcType="VARCHAR" />
+        <result column="B_INFO_ISSUER" property="bInfoIssuer" jdbcType="VARCHAR" />
+        <result column="B_ISSUE_ANNOUNCEMENT" property="bIssueAnnouncement" jdbcType="VARCHAR" />
+        <result column="B_ISSUE_FIRSTISSUE" property="bIssueFirstissue" jdbcType="VARCHAR" />
+        <result column="B_ISSUE_LASTISSUE" property="bIssueLastissue" jdbcType="VARCHAR" />
+        <result column="B_ISSUE_AMOUNTPLAN" property="bIssueAmountplan" jdbcType="DECIMAL" />
+        <result column="B_ISSUE_AMOUNTACT" property="bIssueAmountact" jdbcType="DECIMAL" />
+        <result column="B_INFO_ISSUEPRICE" property="bInfoIssueprice" jdbcType="DECIMAL" />
+        <result column="B_INFO_PAR" property="bInfoPar" jdbcType="DECIMAL" />
+        <result column="B_INFO_COUPONRATE" property="bInfoCouponrate" jdbcType="DECIMAL" />
+        <result column="B_INFO_SPREAD" property="bInfoSpread" jdbcType="DECIMAL" />
+        <result column="B_INFO_CARRYDATE" property="bInfoCarrydate" jdbcType="VARCHAR" />
+        <result column="B_INFO_ENDDATE" property="bInfoEnddate" jdbcType="VARCHAR" />
+        <result column="B_INFO_MATURITYDATE" property="bInfoMaturitydate" jdbcType="VARCHAR" />
+        <result column="B_INFO_TERM_YEAR_" property="bInfoTermYear" jdbcType="DECIMAL" />
+        <result column="B_INFO_TERM_DAY_" property="bInfoTermDay" jdbcType="DECIMAL" />
+        <result column="B_INFO_PAYMENTDATE" property="bInfoPaymentdate" jdbcType="VARCHAR" />
+        <result column="B_INFO_PAYMENTTYPE" property="bInfoPaymenttype" jdbcType="DECIMAL" />
+        <result column="B_INFO_INTERESTFREQUENCY" property="bInfoInterestfrequency" jdbcType="VARCHAR" />
+        <result column="B_INFO_FORM" property="bInfoForm" jdbcType="VARCHAR" />
+        <result column="B_INFO_COUPON" property="bInfoCoupon" jdbcType="DECIMAL" />
+        <result column="B_INFO_INTERESTTYPE" property="bInfoInteresttype" jdbcType="DECIMAL" />
+        <result column="B_INFO_ACT" property="bInfoAct" jdbcType="DECIMAL" />
+        <result column="B_ISSUE_FEE" property="bIssueFee" jdbcType="DECIMAL" />
+        <result column="B_REDEMPTION_FEERATION" property="bRedemptionFeeration" jdbcType="DECIMAL" />
+        <result column="B_INFO_TAXRATE" property="bInfoTaxrate" jdbcType="DECIMAL" />
+        <result column="CRNCY_CODE" property="crncyCode" jdbcType="VARCHAR" />
+        <result column="S_INFO_NAME" property="sInfoName" jdbcType="VARCHAR" />
+        <result column="S_INFO_EXCHMARKET" property="sInfoExchmarket" jdbcType="VARCHAR" />
+        <result column="B_INFO_GUARANTOR" property="bInfoGuarantor" jdbcType="VARCHAR" />
+        <result column="B_INFO_GUARTYPE" property="bInfoGuartype" jdbcType="DECIMAL" />
+        <result column="B_INFO_LISTDATE" property="bInfoListdate" jdbcType="VARCHAR" />
+        <result column="B_INFO_YEARSNUMBER" property="bInfoYearsnumber" jdbcType="DECIMAL" />
+        <result column="S_DIV_RECORDDATE" property="sDivRecorddate" jdbcType="VARCHAR" />
+        <result column="B_INFO_CODEBYPLACING" property="bInfoCodebyplacing" jdbcType="VARCHAR" />
+        <result column="B_INFO_DELISTDATE" property="bInfoDelistdate" jdbcType="VARCHAR" />
+        <result column="B_INFO_ISSUETYPE" property="bInfoIssuetype" jdbcType="DECIMAL" />
+        <result column="B_INFO_GUARINTRODUCTION" property="bInfoGuarintroduction" jdbcType="VARCHAR" />
+        <result column="B_INFO_BGNDBYPLACING" property="bInfoBgndbyplacing" jdbcType="VARCHAR" />
+        <result column="B_INFO_ENDDBYPLACING" property="bInfoEnddbyplacing" jdbcType="VARCHAR" />
+        <result column="B_INFO_AMOUNTBYPLACING" property="bInfoAmountbyplacing" jdbcType="DECIMAL" />
+        <result column="B_INFO_UNDERWRITINGCODE" property="bInfoUnderwritingcode" jdbcType="DECIMAL" />
+        <result column="B_INFO_ISSUERCODE" property="bInfoIssuercode" jdbcType="VARCHAR" />
+        <result column="B_INFO_FORMERCODE" property="bInfoFormercode" jdbcType="VARCHAR" />
+        <result column="B_INFO_COUPONTXT" property="bInfoCoupontxt" jdbcType="VARCHAR" />
+        <result column="IS_FAILURE" property="isFailure" jdbcType="DECIMAL" />
+        <result column="IS_CROSSMARKET" property="isCrossmarket" jdbcType="DECIMAL" />
+        <result column="B_INFO_COUPONDATETXT" property="bInfoCoupondatetxt" jdbcType="VARCHAR" />
+        <result column="B_INFO_SUBORDINATEORNOT" property="bInfoSubordinateornot" jdbcType="DECIMAL" />
+        <result column="B_TENDRST_REFERYIELD" property="bTendrstReferyield" jdbcType="DECIMAL" />
+        <result column="B_INFO_CURPAR" property="bInfoCurpar" jdbcType="DECIMAL" />
+        <result column="S_INFO_FORMERWINDCODE" property="sInfoFormerwindcode" jdbcType="VARCHAR" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, S_INFO_WINDCODE S_INFO_WINDCODE, B_INFO_FULLNAME B_INFO_FULLNAME, 
+        B_INFO_ISSUER B_INFO_ISSUER, B_ISSUE_ANNOUNCEMENT B_ISSUE_ANNOUNCEMENT, B_ISSUE_FIRSTISSUE B_ISSUE_FIRSTISSUE, 
+        B_ISSUE_LASTISSUE B_ISSUE_LASTISSUE, B_ISSUE_AMOUNTPLAN B_ISSUE_AMOUNTPLAN, B_ISSUE_AMOUNTACT B_ISSUE_AMOUNTACT, 
+        B_INFO_ISSUEPRICE B_INFO_ISSUEPRICE, B_INFO_PAR B_INFO_PAR, B_INFO_COUPONRATE B_INFO_COUPONRATE, 
+        B_INFO_SPREAD B_INFO_SPREAD, B_INFO_CARRYDATE B_INFO_CARRYDATE, B_INFO_ENDDATE B_INFO_ENDDATE, 
+        B_INFO_MATURITYDATE B_INFO_MATURITYDATE, B_INFO_TERM_YEAR_ B_INFO_TERM_YEAR_, B_INFO_TERM_DAY_ B_INFO_TERM_DAY_, 
+        B_INFO_PAYMENTDATE B_INFO_PAYMENTDATE, B_INFO_PAYMENTTYPE B_INFO_PAYMENTTYPE, B_INFO_INTERESTFREQUENCY B_INFO_INTERESTFREQUENCY, 
+        B_INFO_FORM B_INFO_FORM, B_INFO_COUPON B_INFO_COUPON, B_INFO_INTERESTTYPE B_INFO_INTERESTTYPE, 
+        B_INFO_ACT B_INFO_ACT, B_ISSUE_FEE B_ISSUE_FEE, B_REDEMPTION_FEERATION B_REDEMPTION_FEERATION, 
+        B_INFO_TAXRATE B_INFO_TAXRATE, CRNCY_CODE CRNCY_CODE, S_INFO_NAME S_INFO_NAME, S_INFO_EXCHMARKET S_INFO_EXCHMARKET, 
+        B_INFO_GUARANTOR B_INFO_GUARANTOR, B_INFO_GUARTYPE B_INFO_GUARTYPE, B_INFO_LISTDATE B_INFO_LISTDATE, 
+        B_INFO_YEARSNUMBER B_INFO_YEARSNUMBER, S_DIV_RECORDDATE S_DIV_RECORDDATE, B_INFO_CODEBYPLACING B_INFO_CODEBYPLACING, 
+        B_INFO_DELISTDATE B_INFO_DELISTDATE, B_INFO_ISSUETYPE B_INFO_ISSUETYPE, B_INFO_GUARINTRODUCTION B_INFO_GUARINTRODUCTION, 
+        B_INFO_BGNDBYPLACING B_INFO_BGNDBYPLACING, B_INFO_ENDDBYPLACING B_INFO_ENDDBYPLACING, 
+        B_INFO_AMOUNTBYPLACING B_INFO_AMOUNTBYPLACING, B_INFO_UNDERWRITINGCODE B_INFO_UNDERWRITINGCODE, 
+        B_INFO_ISSUERCODE B_INFO_ISSUERCODE, B_INFO_FORMERCODE B_INFO_FORMERCODE, B_INFO_COUPONTXT B_INFO_COUPONTXT, 
+        IS_FAILURE IS_FAILURE, IS_CROSSMARKET IS_CROSSMARKET, B_INFO_COUPONDATETXT B_INFO_COUPONDATETXT, 
+        B_INFO_SUBORDINATEORNOT B_INFO_SUBORDINATEORNOT, B_TENDRST_REFERYIELD B_TENDRST_REFERYIELD, 
+        B_INFO_CURPAR B_INFO_CURPAR, S_INFO_FORMERWINDCODE S_INFO_FORMERWINDCODE, OPDATE OPDATE, 
+        OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbonddescriptionMapper.Base_Column_List" />
+        from INTERF_CBONDDESCRIPTION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbonddescriptionMapper.Base_Column_List" />
+        from INTERF_CBONDDESCRIPTION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbonddescriptionMapper.Base_Column_List" />
+        from INTERF_CBONDDESCRIPTION
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_CBONDDESCRIPTION
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCbonddescription" >
+        insert into INTERF_CBONDDESCRIPTION (OBJECT_ID, S_INFO_WINDCODE, B_INFO_FULLNAME, 
+            B_INFO_ISSUER, B_ISSUE_ANNOUNCEMENT, B_ISSUE_FIRSTISSUE, 
+            B_ISSUE_LASTISSUE, B_ISSUE_AMOUNTPLAN, B_ISSUE_AMOUNTACT, 
+            B_INFO_ISSUEPRICE, B_INFO_PAR, B_INFO_COUPONRATE, 
+            B_INFO_SPREAD, B_INFO_CARRYDATE, B_INFO_ENDDATE, 
+            B_INFO_MATURITYDATE, B_INFO_TERM_YEAR_, B_INFO_TERM_DAY_, 
+            B_INFO_PAYMENTDATE, B_INFO_PAYMENTTYPE, B_INFO_INTERESTFREQUENCY, 
+            B_INFO_FORM, B_INFO_COUPON, B_INFO_INTERESTTYPE, 
+            B_INFO_ACT, B_ISSUE_FEE, B_REDEMPTION_FEERATION, 
+            B_INFO_TAXRATE, CRNCY_CODE, S_INFO_NAME, 
+            S_INFO_EXCHMARKET, B_INFO_GUARANTOR, B_INFO_GUARTYPE, 
+            B_INFO_LISTDATE, B_INFO_YEARSNUMBER, S_DIV_RECORDDATE, 
+            B_INFO_CODEBYPLACING, B_INFO_DELISTDATE, 
+            B_INFO_ISSUETYPE, B_INFO_GUARINTRODUCTION, 
+            B_INFO_BGNDBYPLACING, B_INFO_ENDDBYPLACING, 
+            B_INFO_AMOUNTBYPLACING, B_INFO_UNDERWRITINGCODE, 
+            B_INFO_ISSUERCODE, B_INFO_FORMERCODE, B_INFO_COUPONTXT, 
+            IS_FAILURE, IS_CROSSMARKET, B_INFO_COUPONDATETXT, 
+            B_INFO_SUBORDINATEORNOT, B_TENDRST_REFERYIELD, 
+            B_INFO_CURPAR, S_INFO_FORMERWINDCODE, OPDATE, 
+            OPMODE)
+        values (#{objectId,jdbcType=VARCHAR}, #{sInfoWindcode,jdbcType=VARCHAR}, #{bInfoFullname,jdbcType=VARCHAR}, 
+            #{bInfoIssuer,jdbcType=VARCHAR}, #{bIssueAnnouncement,jdbcType=VARCHAR}, #{bIssueFirstissue,jdbcType=VARCHAR}, 
+            #{bIssueLastissue,jdbcType=VARCHAR}, #{bIssueAmountplan,jdbcType=DECIMAL}, #{bIssueAmountact,jdbcType=DECIMAL}, 
+            #{bInfoIssueprice,jdbcType=DECIMAL}, #{bInfoPar,jdbcType=DECIMAL}, #{bInfoCouponrate,jdbcType=DECIMAL}, 
+            #{bInfoSpread,jdbcType=DECIMAL}, #{bInfoCarrydate,jdbcType=VARCHAR}, #{bInfoEnddate,jdbcType=VARCHAR}, 
+            #{bInfoMaturitydate,jdbcType=VARCHAR}, #{bInfoTermYear,jdbcType=DECIMAL}, #{bInfoTermDay,jdbcType=DECIMAL}, 
+            #{bInfoPaymentdate,jdbcType=VARCHAR}, #{bInfoPaymenttype,jdbcType=DECIMAL}, #{bInfoInterestfrequency,jdbcType=VARCHAR}, 
+            #{bInfoForm,jdbcType=VARCHAR}, #{bInfoCoupon,jdbcType=DECIMAL}, #{bInfoInteresttype,jdbcType=DECIMAL}, 
+            #{bInfoAct,jdbcType=DECIMAL}, #{bIssueFee,jdbcType=DECIMAL}, #{bRedemptionFeeration,jdbcType=DECIMAL}, 
+            #{bInfoTaxrate,jdbcType=DECIMAL}, #{crncyCode,jdbcType=VARCHAR}, #{sInfoName,jdbcType=VARCHAR}, 
+            #{sInfoExchmarket,jdbcType=VARCHAR}, #{bInfoGuarantor,jdbcType=VARCHAR}, #{bInfoGuartype,jdbcType=DECIMAL}, 
+            #{bInfoListdate,jdbcType=VARCHAR}, #{bInfoYearsnumber,jdbcType=DECIMAL}, #{sDivRecorddate,jdbcType=VARCHAR}, 
+            #{bInfoCodebyplacing,jdbcType=VARCHAR}, #{bInfoDelistdate,jdbcType=VARCHAR}, 
+            #{bInfoIssuetype,jdbcType=DECIMAL}, #{bInfoGuarintroduction,jdbcType=VARCHAR}, 
+            #{bInfoBgndbyplacing,jdbcType=VARCHAR}, #{bInfoEnddbyplacing,jdbcType=VARCHAR}, 
+            #{bInfoAmountbyplacing,jdbcType=DECIMAL}, #{bInfoUnderwritingcode,jdbcType=DECIMAL}, 
+            #{bInfoIssuercode,jdbcType=VARCHAR}, #{bInfoFormercode,jdbcType=VARCHAR}, #{bInfoCoupontxt,jdbcType=VARCHAR}, 
+            #{isFailure,jdbcType=DECIMAL}, #{isCrossmarket,jdbcType=DECIMAL}, #{bInfoCoupondatetxt,jdbcType=VARCHAR}, 
+            #{bInfoSubordinateornot,jdbcType=DECIMAL}, #{bTendrstReferyield,jdbcType=DECIMAL}, 
+            #{bInfoCurpar,jdbcType=DECIMAL}, #{sInfoFormerwindcode,jdbcType=VARCHAR}, #{opdate,jdbcType=DATE}, 
+            #{opmode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbonddescription" >
+        insert into INTERF_CBONDDESCRIPTION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE,
+            </if>
+            <if test="bInfoFullname != null" >
+                B_INFO_FULLNAME,
+            </if>
+            <if test="bInfoIssuer != null" >
+                B_INFO_ISSUER,
+            </if>
+            <if test="bIssueAnnouncement != null" >
+                B_ISSUE_ANNOUNCEMENT,
+            </if>
+            <if test="bIssueFirstissue != null" >
+                B_ISSUE_FIRSTISSUE,
+            </if>
+            <if test="bIssueLastissue != null" >
+                B_ISSUE_LASTISSUE,
+            </if>
+            <if test="bIssueAmountplan != null" >
+                B_ISSUE_AMOUNTPLAN,
+            </if>
+            <if test="bIssueAmountact != null" >
+                B_ISSUE_AMOUNTACT,
+            </if>
+            <if test="bInfoIssueprice != null" >
+                B_INFO_ISSUEPRICE,
+            </if>
+            <if test="bInfoPar != null" >
+                B_INFO_PAR,
+            </if>
+            <if test="bInfoCouponrate != null" >
+                B_INFO_COUPONRATE,
+            </if>
+            <if test="bInfoSpread != null" >
+                B_INFO_SPREAD,
+            </if>
+            <if test="bInfoCarrydate != null" >
+                B_INFO_CARRYDATE,
+            </if>
+            <if test="bInfoEnddate != null" >
+                B_INFO_ENDDATE,
+            </if>
+            <if test="bInfoMaturitydate != null" >
+                B_INFO_MATURITYDATE,
+            </if>
+            <if test="bInfoTermYear != null" >
+                B_INFO_TERM_YEAR_,
+            </if>
+            <if test="bInfoTermDay != null" >
+                B_INFO_TERM_DAY_,
+            </if>
+            <if test="bInfoPaymentdate != null" >
+                B_INFO_PAYMENTDATE,
+            </if>
+            <if test="bInfoPaymenttype != null" >
+                B_INFO_PAYMENTTYPE,
+            </if>
+            <if test="bInfoInterestfrequency != null" >
+                B_INFO_INTERESTFREQUENCY,
+            </if>
+            <if test="bInfoForm != null" >
+                B_INFO_FORM,
+            </if>
+            <if test="bInfoCoupon != null" >
+                B_INFO_COUPON,
+            </if>
+            <if test="bInfoInteresttype != null" >
+                B_INFO_INTERESTTYPE,
+            </if>
+            <if test="bInfoAct != null" >
+                B_INFO_ACT,
+            </if>
+            <if test="bIssueFee != null" >
+                B_ISSUE_FEE,
+            </if>
+            <if test="bRedemptionFeeration != null" >
+                B_REDEMPTION_FEERATION,
+            </if>
+            <if test="bInfoTaxrate != null" >
+                B_INFO_TAXRATE,
+            </if>
+            <if test="crncyCode != null" >
+                CRNCY_CODE,
+            </if>
+            <if test="sInfoName != null" >
+                S_INFO_NAME,
+            </if>
+            <if test="sInfoExchmarket != null" >
+                S_INFO_EXCHMARKET,
+            </if>
+            <if test="bInfoGuarantor != null" >
+                B_INFO_GUARANTOR,
+            </if>
+            <if test="bInfoGuartype != null" >
+                B_INFO_GUARTYPE,
+            </if>
+            <if test="bInfoListdate != null" >
+                B_INFO_LISTDATE,
+            </if>
+            <if test="bInfoYearsnumber != null" >
+                B_INFO_YEARSNUMBER,
+            </if>
+            <if test="sDivRecorddate != null" >
+                S_DIV_RECORDDATE,
+            </if>
+            <if test="bInfoCodebyplacing != null" >
+                B_INFO_CODEBYPLACING,
+            </if>
+            <if test="bInfoDelistdate != null" >
+                B_INFO_DELISTDATE,
+            </if>
+            <if test="bInfoIssuetype != null" >
+                B_INFO_ISSUETYPE,
+            </if>
+            <if test="bInfoGuarintroduction != null" >
+                B_INFO_GUARINTRODUCTION,
+            </if>
+            <if test="bInfoBgndbyplacing != null" >
+                B_INFO_BGNDBYPLACING,
+            </if>
+            <if test="bInfoEnddbyplacing != null" >
+                B_INFO_ENDDBYPLACING,
+            </if>
+            <if test="bInfoAmountbyplacing != null" >
+                B_INFO_AMOUNTBYPLACING,
+            </if>
+            <if test="bInfoUnderwritingcode != null" >
+                B_INFO_UNDERWRITINGCODE,
+            </if>
+            <if test="bInfoIssuercode != null" >
+                B_INFO_ISSUERCODE,
+            </if>
+            <if test="bInfoFormercode != null" >
+                B_INFO_FORMERCODE,
+            </if>
+            <if test="bInfoCoupontxt != null" >
+                B_INFO_COUPONTXT,
+            </if>
+            <if test="isFailure != null" >
+                IS_FAILURE,
+            </if>
+            <if test="isCrossmarket != null" >
+                IS_CROSSMARKET,
+            </if>
+            <if test="bInfoCoupondatetxt != null" >
+                B_INFO_COUPONDATETXT,
+            </if>
+            <if test="bInfoSubordinateornot != null" >
+                B_INFO_SUBORDINATEORNOT,
+            </if>
+            <if test="bTendrstReferyield != null" >
+                B_TENDRST_REFERYIELD,
+            </if>
+            <if test="bInfoCurpar != null" >
+                B_INFO_CURPAR,
+            </if>
+            <if test="sInfoFormerwindcode != null" >
+                S_INFO_FORMERWINDCODE,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoWindcode != null" >
+                #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoFullname != null" >
+                #{bInfoFullname,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoIssuer != null" >
+                #{bInfoIssuer,jdbcType=VARCHAR},
+            </if>
+            <if test="bIssueAnnouncement != null" >
+                #{bIssueAnnouncement,jdbcType=VARCHAR},
+            </if>
+            <if test="bIssueFirstissue != null" >
+                #{bIssueFirstissue,jdbcType=VARCHAR},
+            </if>
+            <if test="bIssueLastissue != null" >
+                #{bIssueLastissue,jdbcType=VARCHAR},
+            </if>
+            <if test="bIssueAmountplan != null" >
+                #{bIssueAmountplan,jdbcType=DECIMAL},
+            </if>
+            <if test="bIssueAmountact != null" >
+                #{bIssueAmountact,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoIssueprice != null" >
+                #{bInfoIssueprice,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoPar != null" >
+                #{bInfoPar,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoCouponrate != null" >
+                #{bInfoCouponrate,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoSpread != null" >
+                #{bInfoSpread,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoCarrydate != null" >
+                #{bInfoCarrydate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoEnddate != null" >
+                #{bInfoEnddate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoMaturitydate != null" >
+                #{bInfoMaturitydate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoTermYear != null" >
+                #{bInfoTermYear,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoTermDay != null" >
+                #{bInfoTermDay,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoPaymentdate != null" >
+                #{bInfoPaymentdate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoPaymenttype != null" >
+                #{bInfoPaymenttype,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoInterestfrequency != null" >
+                #{bInfoInterestfrequency,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoForm != null" >
+                #{bInfoForm,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoCoupon != null" >
+                #{bInfoCoupon,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoInteresttype != null" >
+                #{bInfoInteresttype,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoAct != null" >
+                #{bInfoAct,jdbcType=DECIMAL},
+            </if>
+            <if test="bIssueFee != null" >
+                #{bIssueFee,jdbcType=DECIMAL},
+            </if>
+            <if test="bRedemptionFeeration != null" >
+                #{bRedemptionFeeration,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoTaxrate != null" >
+                #{bInfoTaxrate,jdbcType=DECIMAL},
+            </if>
+            <if test="crncyCode != null" >
+                #{crncyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoName != null" >
+                #{sInfoName,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoExchmarket != null" >
+                #{sInfoExchmarket,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoGuarantor != null" >
+                #{bInfoGuarantor,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoGuartype != null" >
+                #{bInfoGuartype,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoListdate != null" >
+                #{bInfoListdate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoYearsnumber != null" >
+                #{bInfoYearsnumber,jdbcType=DECIMAL},
+            </if>
+            <if test="sDivRecorddate != null" >
+                #{sDivRecorddate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoCodebyplacing != null" >
+                #{bInfoCodebyplacing,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoDelistdate != null" >
+                #{bInfoDelistdate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoIssuetype != null" >
+                #{bInfoIssuetype,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoGuarintroduction != null" >
+                #{bInfoGuarintroduction,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoBgndbyplacing != null" >
+                #{bInfoBgndbyplacing,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoEnddbyplacing != null" >
+                #{bInfoEnddbyplacing,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoAmountbyplacing != null" >
+                #{bInfoAmountbyplacing,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoUnderwritingcode != null" >
+                #{bInfoUnderwritingcode,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoIssuercode != null" >
+                #{bInfoIssuercode,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoFormercode != null" >
+                #{bInfoFormercode,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoCoupontxt != null" >
+                #{bInfoCoupontxt,jdbcType=VARCHAR},
+            </if>
+            <if test="isFailure != null" >
+                #{isFailure,jdbcType=DECIMAL},
+            </if>
+            <if test="isCrossmarket != null" >
+                #{isCrossmarket,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoCoupondatetxt != null" >
+                #{bInfoCoupondatetxt,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoSubordinateornot != null" >
+                #{bInfoSubordinateornot,jdbcType=DECIMAL},
+            </if>
+            <if test="bTendrstReferyield != null" >
+                #{bTendrstReferyield,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoCurpar != null" >
+                #{bInfoCurpar,jdbcType=DECIMAL},
+            </if>
+            <if test="sInfoFormerwindcode != null" >
+                #{sInfoFormerwindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCbonddescription" >
+        insert into INTERF_CBONDDESCRIPTION(OBJECT_ID, S_INFO_WINDCODE, B_INFO_FULLNAME, 
+        B_INFO_ISSUER, B_ISSUE_ANNOUNCEMENT, B_ISSUE_FIRSTISSUE, B_ISSUE_LASTISSUE, B_ISSUE_AMOUNTPLAN, 
+        B_ISSUE_AMOUNTACT, B_INFO_ISSUEPRICE, B_INFO_PAR, B_INFO_COUPONRATE, B_INFO_SPREAD, 
+        B_INFO_CARRYDATE, B_INFO_ENDDATE, B_INFO_MATURITYDATE, B_INFO_TERM_YEAR_, B_INFO_TERM_DAY_, 
+        B_INFO_PAYMENTDATE, B_INFO_PAYMENTTYPE, B_INFO_INTERESTFREQUENCY, B_INFO_FORM, B_INFO_COUPON, 
+        B_INFO_INTERESTTYPE, B_INFO_ACT, B_ISSUE_FEE, B_REDEMPTION_FEERATION, B_INFO_TAXRATE, 
+        CRNCY_CODE, S_INFO_NAME, S_INFO_EXCHMARKET, B_INFO_GUARANTOR, B_INFO_GUARTYPE, B_INFO_LISTDATE, 
+        B_INFO_YEARSNUMBER, S_DIV_RECORDDATE, B_INFO_CODEBYPLACING, B_INFO_DELISTDATE, B_INFO_ISSUETYPE, 
+        B_INFO_GUARINTRODUCTION, B_INFO_BGNDBYPLACING, B_INFO_ENDDBYPLACING, B_INFO_AMOUNTBYPLACING, 
+        B_INFO_UNDERWRITINGCODE, B_INFO_ISSUERCODE, B_INFO_FORMERCODE, B_INFO_COUPONTXT, 
+        IS_FAILURE, IS_CROSSMARKET, B_INFO_COUPONDATETXT, B_INFO_SUBORDINATEORNOT, B_TENDRST_REFERYIELD, 
+        B_INFO_CURPAR, S_INFO_FORMERWINDCODE, OPDATE, OPMODE)
+        select OBJECT_ID, S_INFO_WINDCODE, B_INFO_FULLNAME, 
+            B_INFO_ISSUER, B_ISSUE_ANNOUNCEMENT, B_ISSUE_FIRSTISSUE, B_ISSUE_LASTISSUE, B_ISSUE_AMOUNTPLAN, 
+            B_ISSUE_AMOUNTACT, B_INFO_ISSUEPRICE, B_INFO_PAR, B_INFO_COUPONRATE, B_INFO_SPREAD, 
+            B_INFO_CARRYDATE, B_INFO_ENDDATE, B_INFO_MATURITYDATE, B_INFO_TERM_YEAR_, B_INFO_TERM_DAY_, 
+            B_INFO_PAYMENTDATE, B_INFO_PAYMENTTYPE, B_INFO_INTERESTFREQUENCY, B_INFO_FORM, B_INFO_COUPON, 
+            B_INFO_INTERESTTYPE, B_INFO_ACT, B_ISSUE_FEE, B_REDEMPTION_FEERATION, B_INFO_TAXRATE, 
+            CRNCY_CODE, S_INFO_NAME, S_INFO_EXCHMARKET, B_INFO_GUARANTOR, B_INFO_GUARTYPE, B_INFO_LISTDATE, 
+            B_INFO_YEARSNUMBER, S_DIV_RECORDDATE, B_INFO_CODEBYPLACING, B_INFO_DELISTDATE, B_INFO_ISSUETYPE, 
+            B_INFO_GUARINTRODUCTION, B_INFO_BGNDBYPLACING, B_INFO_ENDDBYPLACING, B_INFO_AMOUNTBYPLACING, 
+            B_INFO_UNDERWRITINGCODE, B_INFO_ISSUERCODE, B_INFO_FORMERCODE, B_INFO_COUPONTXT, 
+            IS_FAILURE, IS_CROSSMARKET, B_INFO_COUPONDATETXT, B_INFO_SUBORDINATEORNOT, B_TENDRST_REFERYIELD, 
+            B_INFO_CURPAR, S_INFO_FORMERWINDCODE, OPDATE, OPMODE
+             from INTERF_CBONDDESCRIPTION
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbonddescription" >
+        update INTERF_CBONDDESCRIPTION
+        <set >
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoFullname != null" >
+                B_INFO_FULLNAME = #{bInfoFullname,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoIssuer != null" >
+                B_INFO_ISSUER = #{bInfoIssuer,jdbcType=VARCHAR},
+            </if>
+            <if test="bIssueAnnouncement != null" >
+                B_ISSUE_ANNOUNCEMENT = #{bIssueAnnouncement,jdbcType=VARCHAR},
+            </if>
+            <if test="bIssueFirstissue != null" >
+                B_ISSUE_FIRSTISSUE = #{bIssueFirstissue,jdbcType=VARCHAR},
+            </if>
+            <if test="bIssueLastissue != null" >
+                B_ISSUE_LASTISSUE = #{bIssueLastissue,jdbcType=VARCHAR},
+            </if>
+            <if test="bIssueAmountplan != null" >
+                B_ISSUE_AMOUNTPLAN = #{bIssueAmountplan,jdbcType=DECIMAL},
+            </if>
+            <if test="bIssueAmountact != null" >
+                B_ISSUE_AMOUNTACT = #{bIssueAmountact,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoIssueprice != null" >
+                B_INFO_ISSUEPRICE = #{bInfoIssueprice,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoPar != null" >
+                B_INFO_PAR = #{bInfoPar,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoCouponrate != null" >
+                B_INFO_COUPONRATE = #{bInfoCouponrate,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoSpread != null" >
+                B_INFO_SPREAD = #{bInfoSpread,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoCarrydate != null" >
+                B_INFO_CARRYDATE = #{bInfoCarrydate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoEnddate != null" >
+                B_INFO_ENDDATE = #{bInfoEnddate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoMaturitydate != null" >
+                B_INFO_MATURITYDATE = #{bInfoMaturitydate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoTermYear != null" >
+                B_INFO_TERM_YEAR_ = #{bInfoTermYear,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoTermDay != null" >
+                B_INFO_TERM_DAY_ = #{bInfoTermDay,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoPaymentdate != null" >
+                B_INFO_PAYMENTDATE = #{bInfoPaymentdate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoPaymenttype != null" >
+                B_INFO_PAYMENTTYPE = #{bInfoPaymenttype,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoInterestfrequency != null" >
+                B_INFO_INTERESTFREQUENCY = #{bInfoInterestfrequency,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoForm != null" >
+                B_INFO_FORM = #{bInfoForm,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoCoupon != null" >
+                B_INFO_COUPON = #{bInfoCoupon,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoInteresttype != null" >
+                B_INFO_INTERESTTYPE = #{bInfoInteresttype,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoAct != null" >
+                B_INFO_ACT = #{bInfoAct,jdbcType=DECIMAL},
+            </if>
+            <if test="bIssueFee != null" >
+                B_ISSUE_FEE = #{bIssueFee,jdbcType=DECIMAL},
+            </if>
+            <if test="bRedemptionFeeration != null" >
+                B_REDEMPTION_FEERATION = #{bRedemptionFeeration,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoTaxrate != null" >
+                B_INFO_TAXRATE = #{bInfoTaxrate,jdbcType=DECIMAL},
+            </if>
+            <if test="crncyCode != null" >
+                CRNCY_CODE = #{crncyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoName != null" >
+                S_INFO_NAME = #{sInfoName,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoExchmarket != null" >
+                S_INFO_EXCHMARKET = #{sInfoExchmarket,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoGuarantor != null" >
+                B_INFO_GUARANTOR = #{bInfoGuarantor,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoGuartype != null" >
+                B_INFO_GUARTYPE = #{bInfoGuartype,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoListdate != null" >
+                B_INFO_LISTDATE = #{bInfoListdate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoYearsnumber != null" >
+                B_INFO_YEARSNUMBER = #{bInfoYearsnumber,jdbcType=DECIMAL},
+            </if>
+            <if test="sDivRecorddate != null" >
+                S_DIV_RECORDDATE = #{sDivRecorddate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoCodebyplacing != null" >
+                B_INFO_CODEBYPLACING = #{bInfoCodebyplacing,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoDelistdate != null" >
+                B_INFO_DELISTDATE = #{bInfoDelistdate,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoIssuetype != null" >
+                B_INFO_ISSUETYPE = #{bInfoIssuetype,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoGuarintroduction != null" >
+                B_INFO_GUARINTRODUCTION = #{bInfoGuarintroduction,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoBgndbyplacing != null" >
+                B_INFO_BGNDBYPLACING = #{bInfoBgndbyplacing,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoEnddbyplacing != null" >
+                B_INFO_ENDDBYPLACING = #{bInfoEnddbyplacing,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoAmountbyplacing != null" >
+                B_INFO_AMOUNTBYPLACING = #{bInfoAmountbyplacing,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoUnderwritingcode != null" >
+                B_INFO_UNDERWRITINGCODE = #{bInfoUnderwritingcode,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoIssuercode != null" >
+                B_INFO_ISSUERCODE = #{bInfoIssuercode,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoFormercode != null" >
+                B_INFO_FORMERCODE = #{bInfoFormercode,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoCoupontxt != null" >
+                B_INFO_COUPONTXT = #{bInfoCoupontxt,jdbcType=VARCHAR},
+            </if>
+            <if test="isFailure != null" >
+                IS_FAILURE = #{isFailure,jdbcType=DECIMAL},
+            </if>
+            <if test="isCrossmarket != null" >
+                IS_CROSSMARKET = #{isCrossmarket,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoCoupondatetxt != null" >
+                B_INFO_COUPONDATETXT = #{bInfoCoupondatetxt,jdbcType=VARCHAR},
+            </if>
+            <if test="bInfoSubordinateornot != null" >
+                B_INFO_SUBORDINATEORNOT = #{bInfoSubordinateornot,jdbcType=DECIMAL},
+            </if>
+            <if test="bTendrstReferyield != null" >
+                B_TENDRST_REFERYIELD = #{bTendrstReferyield,jdbcType=DECIMAL},
+            </if>
+            <if test="bInfoCurpar != null" >
+                B_INFO_CURPAR = #{bInfoCurpar,jdbcType=DECIMAL},
+            </if>
+            <if test="sInfoFormerwindcode != null" >
+                S_INFO_FORMERWINDCODE = #{sInfoFormerwindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCbonddescription" >
+        update INTERF_CBONDDESCRIPTION
+        set S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            B_INFO_FULLNAME = #{bInfoFullname,jdbcType=VARCHAR},
+            B_INFO_ISSUER = #{bInfoIssuer,jdbcType=VARCHAR},
+            B_ISSUE_ANNOUNCEMENT = #{bIssueAnnouncement,jdbcType=VARCHAR},
+            B_ISSUE_FIRSTISSUE = #{bIssueFirstissue,jdbcType=VARCHAR},
+            B_ISSUE_LASTISSUE = #{bIssueLastissue,jdbcType=VARCHAR},
+            B_ISSUE_AMOUNTPLAN = #{bIssueAmountplan,jdbcType=DECIMAL},
+            B_ISSUE_AMOUNTACT = #{bIssueAmountact,jdbcType=DECIMAL},
+            B_INFO_ISSUEPRICE = #{bInfoIssueprice,jdbcType=DECIMAL},
+            B_INFO_PAR = #{bInfoPar,jdbcType=DECIMAL},
+            B_INFO_COUPONRATE = #{bInfoCouponrate,jdbcType=DECIMAL},
+            B_INFO_SPREAD = #{bInfoSpread,jdbcType=DECIMAL},
+            B_INFO_CARRYDATE = #{bInfoCarrydate,jdbcType=VARCHAR},
+            B_INFO_ENDDATE = #{bInfoEnddate,jdbcType=VARCHAR},
+            B_INFO_MATURITYDATE = #{bInfoMaturitydate,jdbcType=VARCHAR},
+            B_INFO_TERM_YEAR_ = #{bInfoTermYear,jdbcType=DECIMAL},
+            B_INFO_TERM_DAY_ = #{bInfoTermDay,jdbcType=DECIMAL},
+            B_INFO_PAYMENTDATE = #{bInfoPaymentdate,jdbcType=VARCHAR},
+            B_INFO_PAYMENTTYPE = #{bInfoPaymenttype,jdbcType=DECIMAL},
+            B_INFO_INTERESTFREQUENCY = #{bInfoInterestfrequency,jdbcType=VARCHAR},
+            B_INFO_FORM = #{bInfoForm,jdbcType=VARCHAR},
+            B_INFO_COUPON = #{bInfoCoupon,jdbcType=DECIMAL},
+            B_INFO_INTERESTTYPE = #{bInfoInteresttype,jdbcType=DECIMAL},
+            B_INFO_ACT = #{bInfoAct,jdbcType=DECIMAL},
+            B_ISSUE_FEE = #{bIssueFee,jdbcType=DECIMAL},
+            B_REDEMPTION_FEERATION = #{bRedemptionFeeration,jdbcType=DECIMAL},
+            B_INFO_TAXRATE = #{bInfoTaxrate,jdbcType=DECIMAL},
+            CRNCY_CODE = #{crncyCode,jdbcType=VARCHAR},
+            S_INFO_NAME = #{sInfoName,jdbcType=VARCHAR},
+            S_INFO_EXCHMARKET = #{sInfoExchmarket,jdbcType=VARCHAR},
+            B_INFO_GUARANTOR = #{bInfoGuarantor,jdbcType=VARCHAR},
+            B_INFO_GUARTYPE = #{bInfoGuartype,jdbcType=DECIMAL},
+            B_INFO_LISTDATE = #{bInfoListdate,jdbcType=VARCHAR},
+            B_INFO_YEARSNUMBER = #{bInfoYearsnumber,jdbcType=DECIMAL},
+            S_DIV_RECORDDATE = #{sDivRecorddate,jdbcType=VARCHAR},
+            B_INFO_CODEBYPLACING = #{bInfoCodebyplacing,jdbcType=VARCHAR},
+            B_INFO_DELISTDATE = #{bInfoDelistdate,jdbcType=VARCHAR},
+            B_INFO_ISSUETYPE = #{bInfoIssuetype,jdbcType=DECIMAL},
+            B_INFO_GUARINTRODUCTION = #{bInfoGuarintroduction,jdbcType=VARCHAR},
+            B_INFO_BGNDBYPLACING = #{bInfoBgndbyplacing,jdbcType=VARCHAR},
+            B_INFO_ENDDBYPLACING = #{bInfoEnddbyplacing,jdbcType=VARCHAR},
+            B_INFO_AMOUNTBYPLACING = #{bInfoAmountbyplacing,jdbcType=DECIMAL},
+            B_INFO_UNDERWRITINGCODE = #{bInfoUnderwritingcode,jdbcType=DECIMAL},
+            B_INFO_ISSUERCODE = #{bInfoIssuercode,jdbcType=VARCHAR},
+            B_INFO_FORMERCODE = #{bInfoFormercode,jdbcType=VARCHAR},
+            B_INFO_COUPONTXT = #{bInfoCoupontxt,jdbcType=VARCHAR},
+            IS_FAILURE = #{isFailure,jdbcType=DECIMAL},
+            IS_CROSSMARKET = #{isCrossmarket,jdbcType=DECIMAL},
+            B_INFO_COUPONDATETXT = #{bInfoCoupondatetxt,jdbcType=VARCHAR},
+            B_INFO_SUBORDINATEORNOT = #{bInfoSubordinateornot,jdbcType=DECIMAL},
+            B_TENDRST_REFERYIELD = #{bTendrstReferyield,jdbcType=DECIMAL},
+            B_INFO_CURPAR = #{bInfoCurpar,jdbcType=DECIMAL},
+            S_INFO_FORMERWINDCODE = #{sInfoFormerwindcode,jdbcType=VARCHAR},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIsupTrialClsMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIsupTrialCls" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <id column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="STOP_TYPE" property="stopType" jdbcType="VARCHAR" />
+        <result column="CONCLUSION" property="conclusion" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, TRADE_TYPE TRADE_TYPE, SEQ_NO SEQ_NO, STOP_TYPE STOP_TYPE, CONCLUSION CONCLUSION, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupTrialClsMapper.Base_Column_List" />
+        from RSK_ISUP_TRIAL_CLS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupTrialClsMapper.Base_Column_List" />
+        from RSK_ISUP_TRIAL_CLS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrialClsKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIsupTrialClsMapper.Base_Column_List" />
+        from RSK_ISUP_TRIAL_CLS
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and TRADE_TYPE = #{tradeType,jdbcType=VARCHAR}
+          and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrialClsKey" >
+        delete from RSK_ISUP_TRIAL_CLS
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and TRADE_TYPE = #{tradeType,jdbcType=VARCHAR}
+          and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrialCls" >
+        insert into RSK_ISUP_TRIAL_CLS (TRADE_ID, TRADE_TYPE, SEQ_NO, 
+            STOP_TYPE, CONCLUSION, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{tradeId,jdbcType=VARCHAR}, #{tradeType,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR}, 
+            #{stopType,jdbcType=VARCHAR}, #{conclusion,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrialCls" >
+        insert into RSK_ISUP_TRIAL_CLS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="tradeType != null" >
+                TRADE_TYPE,
+            </if>
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="stopType != null" >
+                STOP_TYPE,
+            </if>
+            <if test="conclusion != null" >
+                CONCLUSION,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeType != null" >
+                #{tradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="stopType != null" >
+                #{stopType,jdbcType=VARCHAR},
+            </if>
+            <if test="conclusion != null" >
+                #{conclusion,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrialCls" >
+        insert into RSK_ISUP_TRIAL_CLS(TRADE_ID, TRADE_TYPE, SEQ_NO, STOP_TYPE, CONCLUSION, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, TRADE_TYPE, SEQ_NO, STOP_TYPE, CONCLUSION, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_ISUP_TRIAL_CLS
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and TRADE_TYPE = #{tradeType,jdbcType=VARCHAR} and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrialCls" >
+        update RSK_ISUP_TRIAL_CLS
+        <set >
+            <if test="stopType != null" >
+                STOP_TYPE = #{stopType,jdbcType=VARCHAR},
+            </if>
+            <if test="conclusion != null" >
+                CONCLUSION = #{conclusion,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and TRADE_TYPE = #{tradeType,jdbcType=VARCHAR}
+          and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIsupTrialCls" >
+        update RSK_ISUP_TRIAL_CLS
+        set STOP_TYPE = #{stopType,jdbcType=VARCHAR},
+            CONCLUSION = #{conclusion,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and TRADE_TYPE = #{tradeType,jdbcType=VARCHAR}
+          and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

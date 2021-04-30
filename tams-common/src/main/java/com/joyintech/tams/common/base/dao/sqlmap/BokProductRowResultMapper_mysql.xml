@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokProductRowResultMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokProductRowResult" >
+        <id column="COMPARE_ID" property="compareId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="SCHEME_ID" property="schemeId" jdbcType="VARCHAR" />
+        <result column="COMPARE_DATE" property="compareDate" jdbcType="DATE" />
+        <result column="COMPARE_TYPE" property="compareType" jdbcType="VARCHAR" />
+        <result column="COMPARE_ROWNO" property="compareRowno" jdbcType="DECIMAL" />
+        <result column="MY_SUBJECT_ID" property="mySubjectId" jdbcType="VARCHAR" />
+        <result column="MY_SUBJECT_NAME" property="mySubjectName" jdbcType="VARCHAR" />
+        <result column="OTHERSIDE_SUBJECT_ID" property="othersideSubjectId" jdbcType="VARCHAR" />
+        <result column="OTHERSIDE_SUBJECT_NAME" property="othersideSubjectName" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        COMPARE_ID COMPARE_ID, PROD_ID PROD_ID, SCHEME_ID SCHEME_ID, COMPARE_DATE COMPARE_DATE,
+        COMPARE_TYPE COMPARE_TYPE, COMPARE_ROWNO COMPARE_ROWNO, MY_SUBJECT_ID MY_SUBJECT_ID,
+        MY_SUBJECT_NAME MY_SUBJECT_NAME, OTHERSIDE_SUBJECT_ID OTHERSIDE_SUBJECT_ID, OTHERSIDE_SUBJECT_NAME OTHERSIDE_SUBJECT_NAME,
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokProductRowResultMapper.Base_Column_List" />
+        from BOK_PRODUCT_ROW_RESULT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokProductRowResultMapper.Base_Column_List" />
+        from BOK_PRODUCT_ROW_RESULT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokProductRowResultMapper.Base_Column_List" />
+        from BOK_PRODUCT_ROW_RESULT
+        where COMPARE_ID = #{compareId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from BOK_PRODUCT_ROW_RESULT
+        where COMPARE_ID = #{compareId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokProductRowResult" >
+        insert into BOK_PRODUCT_ROW_RESULT (COMPARE_ID, PROD_ID, SCHEME_ID,
+            COMPARE_DATE, COMPARE_TYPE, COMPARE_ROWNO,
+            MY_SUBJECT_ID, MY_SUBJECT_NAME, OTHERSIDE_SUBJECT_ID,
+            OTHERSIDE_SUBJECT_NAME, REMARK, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME)
+        values (#{compareId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{schemeId,jdbcType=VARCHAR},
+            #{compareDate,jdbcType=DATE}, #{compareType,jdbcType=VARCHAR}, #{compareRowno,jdbcType=DECIMAL},
+            #{mySubjectId,jdbcType=VARCHAR}, #{mySubjectName,jdbcType=VARCHAR}, #{othersideSubjectId,jdbcType=VARCHAR},
+            #{othersideSubjectName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokProductRowResult" >
+        insert into BOK_PRODUCT_ROW_RESULT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="compareId != null" >
+                COMPARE_ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="schemeId != null" >
+                SCHEME_ID,
+            </if>
+            <if test="compareDate != null" >
+                COMPARE_DATE,
+            </if>
+            <if test="compareType != null" >
+                COMPARE_TYPE,
+            </if>
+            <if test="compareRowno != null" >
+                COMPARE_ROWNO,
+            </if>
+            <if test="mySubjectId != null" >
+                MY_SUBJECT_ID,
+            </if>
+            <if test="mySubjectName != null" >
+                MY_SUBJECT_NAME,
+            </if>
+            <if test="othersideSubjectId != null" >
+                OTHERSIDE_SUBJECT_ID,
+            </if>
+            <if test="othersideSubjectName != null" >
+                OTHERSIDE_SUBJECT_NAME,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="compareId != null" >
+                #{compareId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeId != null" >
+                #{schemeId,jdbcType=VARCHAR},
+            </if>
+            <if test="compareDate != null" >
+                #{compareDate,jdbcType=DATE},
+            </if>
+            <if test="compareType != null" >
+                #{compareType,jdbcType=VARCHAR},
+            </if>
+            <if test="compareRowno != null" >
+                #{compareRowno,jdbcType=DECIMAL},
+            </if>
+            <if test="mySubjectId != null" >
+                #{mySubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="mySubjectName != null" >
+                #{mySubjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="othersideSubjectId != null" >
+                #{othersideSubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="othersideSubjectName != null" >
+                #{othersideSubjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokProductRowResult" >
+        insert into BOK_PRODUCT_ROW_RESULT(COMPARE_ID, PROD_ID, SCHEME_ID, COMPARE_DATE,
+        COMPARE_TYPE, COMPARE_ROWNO, MY_SUBJECT_ID, MY_SUBJECT_NAME, OTHERSIDE_SUBJECT_ID,
+        OTHERSIDE_SUBJECT_NAME, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        select COMPARE_ID, PROD_ID, SCHEME_ID, COMPARE_DATE,
+            COMPARE_TYPE, COMPARE_ROWNO, MY_SUBJECT_ID, MY_SUBJECT_NAME, OTHERSIDE_SUBJECT_ID,
+            OTHERSIDE_SUBJECT_NAME, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_PRODUCT_ROW_RESULT
+             where 1 = 1 and COMPARE_ID = #{compareId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokProductRowResult" >
+        update BOK_PRODUCT_ROW_RESULT
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeId != null" >
+                SCHEME_ID = #{schemeId,jdbcType=VARCHAR},
+            </if>
+            <if test="compareDate != null" >
+                COMPARE_DATE = #{compareDate,jdbcType=DATE},
+            </if>
+            <if test="compareType != null" >
+                COMPARE_TYPE = #{compareType,jdbcType=VARCHAR},
+            </if>
+            <if test="compareRowno != null" >
+                COMPARE_ROWNO = #{compareRowno,jdbcType=DECIMAL},
+            </if>
+            <if test="mySubjectId != null" >
+                MY_SUBJECT_ID = #{mySubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="mySubjectName != null" >
+                MY_SUBJECT_NAME = #{mySubjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="othersideSubjectId != null" >
+                OTHERSIDE_SUBJECT_ID = #{othersideSubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="othersideSubjectName != null" >
+                OTHERSIDE_SUBJECT_NAME = #{othersideSubjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where COMPARE_ID = #{compareId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokProductRowResult" >
+        update BOK_PRODUCT_ROW_RESULT
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            SCHEME_ID = #{schemeId,jdbcType=VARCHAR},
+            COMPARE_DATE = #{compareDate,jdbcType=DATE},
+            COMPARE_TYPE = #{compareType,jdbcType=VARCHAR},
+            COMPARE_ROWNO = #{compareRowno,jdbcType=DECIMAL},
+            MY_SUBJECT_ID = #{mySubjectId,jdbcType=VARCHAR},
+            MY_SUBJECT_NAME = #{mySubjectName,jdbcType=VARCHAR},
+            OTHERSIDE_SUBJECT_ID = #{othersideSubjectId,jdbcType=VARCHAR},
+            OTHERSIDE_SUBJECT_NAME = #{othersideSubjectName,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where COMPARE_ID = #{compareId,jdbcType=VARCHAR}
+    </update>
+</mapper>

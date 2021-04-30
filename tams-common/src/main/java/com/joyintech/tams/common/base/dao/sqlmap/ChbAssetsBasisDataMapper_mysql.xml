@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper_mysql">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+    <id column="VAL_ID" property="valId" jdbcType="CHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="VALUE_DATE" property="valueDate" jdbcType="TIMESTAMP" />
+    <result column="MDATE" property="mdate" jdbcType="TIMESTAMP" />
+    <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
+    <result column="TDY_COST_AMT" property="tdyCostAmt" jdbcType="DECIMAL" />
+    <result column="TDY_FLOAT_INGPL" property="tdyFloatIngpl" jdbcType="DECIMAL" />
+    <result column="TDY_INTINCEXP" property="tdyIntincexp" jdbcType="DECIMAL" />
+    <result column="DELAY_PAY_AMT" property="delayPayAmt" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="MD5PRIMARYKEY" property="md5primarykey" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    VAL_ID, PROD_ID, ASSET_ID,CCY, VALUE_DATE, MDATE, POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL,
+    TDY_INTINCEXP, DELAY_PAY_AMT, REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE,
+    DEPT_CODE, CREATE_USER, UPDATE_USER, STATUS, DATA_SOURCE, MD5PRIMARYKEY
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from CHB_ASSETS_BASIS_DATA
+    where VAL_ID = #{valId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_ASSETS_BASIS_DATA
+    where VAL_ID = #{valId,jdbcType=CHAR}
+  </delete>
+	<insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+    insert into CHB_ASSETS_BASIS_DATA (VAL_ID, PROD_ID, ASSET_ID,CCY, 
+      VALUE_DATE, MDATE, POS_AMT, 
+      TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, 
+      DELAY_PAY_AMT, REMARK, CREATE_TIME, 
+      UPDATE_TIME, CREATE_DEPT, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, UPDATE_USER, 
+      STATUS, DATA_SOURCE, MD5PRIMARYKEY
+      )
+    values (#{valId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
+      #{valueDate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, #{posAmt,jdbcType=DECIMAL}, 
+      #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, 
+      #{delayPayAmt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, NOW(), 
+      NOW(), #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+      #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{md5primarykey,jdbcType=CHAR}
+      )
+  </insert>
+	<insert id="insertNoBtm" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+    insert into CHB_ASSETS_BASIS_DATA_NOBTM (VAL_ID, PROD_ID, ASSET_ID,CCY, 
+      VALUE_DATE, MDATE, POS_AMT, 
+      TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, 
+      DELAY_PAY_AMT, REMARK, CREATE_TIME, 
+      UPDATE_TIME, CREATE_DEPT, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, UPDATE_USER, 
+      STATUS, DATA_SOURCE, MD5PRIMARYKEY
+      )
+    values (#{valId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
+      #{valueDate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, #{posAmt,jdbcType=DECIMAL}, 
+      #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, 
+      #{delayPayAmt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, NOW(), 
+      NOW(), #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+      #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{md5primarykey,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+    insert into CHB_ASSETS_BASIS_DATA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="valId != null" >
+        VAL_ID,
+      </if>
+      <if test="prodId != null" >
+        PROD_ID,
+      </if>
+      <if test="assetId != null" >
+        ASSET_ID,
+      </if>
+      <if test="valueDate != null" >
+        VALUE_DATE,
+      </if>
+      <if test="mdate != null" >
+        MDATE,
+      </if>
+      <if test="posAmt != null" >
+        POS_AMT,
+      </if>
+      <if test="tdyCostAmt != null" >
+        TDY_COST_AMT,
+      </if>
+      <if test="tdyFloatIngpl != null" >
+        TDY_FLOAT_INGPL,
+      </if>
+      <if test="tdyIntincexp != null" >
+        TDY_INTINCEXP,
+      </if>
+      <if test="delayPayAmt != null" >
+        DELAY_PAY_AMT,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT,
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE,
+      </if>
+      <if test="deptCode != null" >
+        DEPT_CODE,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE,
+      </if>
+      <if test="md5primarykey != null" >
+        MD5PRIMARYKEY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="valId != null" >
+        #{valId,jdbcType=CHAR},
+      </if>
+      <if test="prodId != null" >
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="assetId != null" >
+        #{assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="valueDate != null" >
+        #{valueDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mdate != null" >
+        #{mdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="posAmt != null" >
+        #{posAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="tdyCostAmt != null" >
+        #{tdyCostAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="tdyFloatIngpl != null" >
+        #{tdyFloatIngpl,jdbcType=DECIMAL},
+      </if>
+      <if test="tdyIntincexp != null" >
+        #{tdyIntincexp,jdbcType=DECIMAL},
+      </if>
+      <if test="delayPayAmt != null" >
+        #{delayPayAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDept != null" >
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null" >
+        #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null" >
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="md5primarykey != null" >
+        #{md5primarykey,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+    update CHB_ASSETS_BASIS_DATA
+    <set >
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="assetId != null" >
+        ASSET_ID = #{assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="valueDate != null" >
+        VALUE_DATE = #{valueDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mdate != null" >
+        MDATE = #{mdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="posAmt != null" >
+        POS_AMT = #{posAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="tdyCostAmt != null" >
+        TDY_COST_AMT = #{tdyCostAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="tdyFloatIngpl != null" >
+        TDY_FLOAT_INGPL = #{tdyFloatIngpl,jdbcType=DECIMAL},
+      </if>
+      <if test="tdyIntincexp != null" >
+        TDY_INTINCEXP = #{tdyIntincexp,jdbcType=DECIMAL},
+      </if>
+      <if test="delayPayAmt != null" >
+        DELAY_PAY_AMT = #{delayPayAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null" >
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="md5primarykey != null" >
+        MD5PRIMARYKEY = #{md5primarykey,jdbcType=CHAR},
+      </if>
+    </set>
+    where VAL_ID = #{valId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+    update CHB_ASSETS_BASIS_DATA
+    set PROD_ID = #{prodId,jdbcType=VARCHAR},
+      ASSET_ID = #{assetId,jdbcType=VARCHAR},
+      VALUE_DATE = #{valueDate,jdbcType=TIMESTAMP},
+      MDATE = #{mdate,jdbcType=TIMESTAMP},
+      POS_AMT = #{posAmt,jdbcType=DECIMAL},
+      TDY_COST_AMT = #{tdyCostAmt,jdbcType=DECIMAL},
+      TDY_FLOAT_INGPL = #{tdyFloatIngpl,jdbcType=DECIMAL},
+      TDY_INTINCEXP = #{tdyIntincexp,jdbcType=DECIMAL},
+      DELAY_PAY_AMT = #{delayPayAmt,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      MD5PRIMARYKEY = #{md5primarykey,jdbcType=CHAR}
+    where VAL_ID = #{valId,jdbcType=CHAR}
+  </update>
+</mapper>

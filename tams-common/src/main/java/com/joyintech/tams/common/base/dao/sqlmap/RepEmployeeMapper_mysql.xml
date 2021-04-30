@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepEmployeeMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepEmployee" >
+        <id column="REP_EMPLOYEE__SYSTEM_CODE" property="repEmployeeSystemCode" jdbcType="VARCHAR" />
+        <result column="REP_NAME" property="repName" jdbcType="VARCHAR" />
+        <result column="REP_SEX" property="repSex" jdbcType="VARCHAR" />
+        <result column="REP_ISSUE_PARTY_ID" property="repIssuePartyId" jdbcType="VARCHAR" />
+        <result column="REP_CREDIT_ID" property="repCreditId" jdbcType="VARCHAR" />
+        <result column="REP_EMPLOYEE_BANK" property="repEmployeeBank" jdbcType="VARCHAR" />
+        <result column="REP_REGION" property="repRegion" jdbcType="VARCHAR" />
+        <result column="REP_COMPANY_NAME" property="repCompanyName" jdbcType="VARCHAR" />
+        <result column="REP_DEPARTMENT_NAME" property="repDepartmentName" jdbcType="VARCHAR" />
+        <result column="REP_POST" property="repPost" jdbcType="VARCHAR" />
+        <result column="REP_EDUCATION" property="repEducation" jdbcType="VARCHAR" />
+        <result column="REP_DEGREE" property="repDegree" jdbcType="VARCHAR" />
+        <result column="REP_FIRST_WORK_TIME" property="repFirstWorkTime" jdbcType="DECIMAL" />
+        <result column="REP_FIRST_FINANCING_TIME" property="repFirstFinancingTime" jdbcType="DECIMAL" />
+        <result column="REP_PRO_TECH_TITLE" property="repProTechTitle" jdbcType="VARCHAR" />
+        <result column="REP_FINANCING_CERTIFICATE" property="repFinancingCertificate" jdbcType="VARCHAR" />
+        <result column="REP_REWORD" property="repReword" jdbcType="VARCHAR" />
+        <result column="REP_TELEPHONE" property="repTelephone" jdbcType="VARCHAR" />
+        <result column="REP_MOBILEPHONE" property="repMobilephone" jdbcType="VARCHAR" />
+        <result column="REP_EMAIL" property="repEmail" jdbcType="VARCHAR" />
+        <result column="REP_REG_DATE" property="repRegDate" jdbcType="DATE" />
+        <result column="REP_REMARK" property="repRemark" jdbcType="VARCHAR" />
+        <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" />
+        <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_EMPLOYEE__SYSTEM_CODE REP_EMPLOYEE__SYSTEM_CODE, REP_NAME REP_NAME, REP_SEX REP_SEX, 
+        REP_ISSUE_PARTY_ID REP_ISSUE_PARTY_ID, REP_CREDIT_ID REP_CREDIT_ID, REP_EMPLOYEE_BANK REP_EMPLOYEE_BANK, 
+        REP_REGION REP_REGION, REP_COMPANY_NAME REP_COMPANY_NAME, REP_DEPARTMENT_NAME REP_DEPARTMENT_NAME, 
+        REP_POST REP_POST, REP_EDUCATION REP_EDUCATION, REP_DEGREE REP_DEGREE, REP_FIRST_WORK_TIME REP_FIRST_WORK_TIME, 
+        REP_FIRST_FINANCING_TIME REP_FIRST_FINANCING_TIME, REP_PRO_TECH_TITLE REP_PRO_TECH_TITLE, 
+        REP_FINANCING_CERTIFICATE REP_FINANCING_CERTIFICATE, REP_REWORD REP_REWORD, REP_TELEPHONE REP_TELEPHONE, 
+        REP_MOBILEPHONE REP_MOBILEPHONE, REP_EMAIL REP_EMAIL, REP_REG_DATE REP_REG_DATE, 
+        REP_REMARK REP_REMARK, REP_SEND_STATUS REP_SEND_STATUS, REP_STATUS_DATE REP_STATUS_DATE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepEmployeeMapper.Base_Column_List" />
+        from REP_EMPLOYEE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepEmployeeMapper.Base_Column_List" />
+        from REP_EMPLOYEE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepEmployeeMapper.Base_Column_List" />
+        from REP_EMPLOYEE
+        where REP_EMPLOYEE__SYSTEM_CODE = #{repEmployeeSystemCode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_EMPLOYEE
+        where REP_EMPLOYEE__SYSTEM_CODE = #{repEmployeeSystemCode,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepEmployee" >
+        insert into REP_EMPLOYEE (REP_EMPLOYEE__SYSTEM_CODE, REP_NAME, REP_SEX, 
+            REP_ISSUE_PARTY_ID, REP_CREDIT_ID, REP_EMPLOYEE_BANK, 
+            REP_REGION, REP_COMPANY_NAME, REP_DEPARTMENT_NAME, 
+            REP_POST, REP_EDUCATION, REP_DEGREE, 
+            REP_FIRST_WORK_TIME, REP_FIRST_FINANCING_TIME, 
+            REP_PRO_TECH_TITLE, REP_FINANCING_CERTIFICATE, 
+            REP_REWORD, REP_TELEPHONE, REP_MOBILEPHONE, 
+            REP_EMAIL, REP_REG_DATE, REP_REMARK, 
+            REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{repEmployeeSystemCode,jdbcType=VARCHAR}, #{repName,jdbcType=VARCHAR}, #{repSex,jdbcType=VARCHAR}, 
+            #{repIssuePartyId,jdbcType=VARCHAR}, #{repCreditId,jdbcType=VARCHAR}, #{repEmployeeBank,jdbcType=VARCHAR}, 
+            #{repRegion,jdbcType=VARCHAR}, #{repCompanyName,jdbcType=VARCHAR}, #{repDepartmentName,jdbcType=VARCHAR}, 
+            #{repPost,jdbcType=VARCHAR}, #{repEducation,jdbcType=VARCHAR}, #{repDegree,jdbcType=VARCHAR}, 
+            #{repFirstWorkTime,jdbcType=DECIMAL}, #{repFirstFinancingTime,jdbcType=DECIMAL}, 
+            #{repProTechTitle,jdbcType=VARCHAR}, #{repFinancingCertificate,jdbcType=VARCHAR}, 
+            #{repReword,jdbcType=VARCHAR}, #{repTelephone,jdbcType=VARCHAR}, #{repMobilephone,jdbcType=VARCHAR}, 
+            #{repEmail,jdbcType=VARCHAR}, #{repRegDate,jdbcType=DATE}, #{repRemark,jdbcType=VARCHAR}, 
+            #{repSendStatus,jdbcType=VARCHAR}, #{repStatusDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepEmployee" >
+        insert into REP_EMPLOYEE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repEmployeeSystemCode != null" >
+                REP_EMPLOYEE__SYSTEM_CODE,
+            </if>
+            <if test="repName != null" >
+                REP_NAME,
+            </if>
+            <if test="repSex != null" >
+                REP_SEX,
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID,
+            </if>
+            <if test="repCreditId != null" >
+                REP_CREDIT_ID,
+            </if>
+            <if test="repEmployeeBank != null" >
+                REP_EMPLOYEE_BANK,
+            </if>
+            <if test="repRegion != null" >
+                REP_REGION,
+            </if>
+            <if test="repCompanyName != null" >
+                REP_COMPANY_NAME,
+            </if>
+            <if test="repDepartmentName != null" >
+                REP_DEPARTMENT_NAME,
+            </if>
+            <if test="repPost != null" >
+                REP_POST,
+            </if>
+            <if test="repEducation != null" >
+                REP_EDUCATION,
+            </if>
+            <if test="repDegree != null" >
+                REP_DEGREE,
+            </if>
+            <if test="repFirstWorkTime != null" >
+                REP_FIRST_WORK_TIME,
+            </if>
+            <if test="repFirstFinancingTime != null" >
+                REP_FIRST_FINANCING_TIME,
+            </if>
+            <if test="repProTechTitle != null" >
+                REP_PRO_TECH_TITLE,
+            </if>
+            <if test="repFinancingCertificate != null" >
+                REP_FINANCING_CERTIFICATE,
+            </if>
+            <if test="repReword != null" >
+                REP_REWORD,
+            </if>
+            <if test="repTelephone != null" >
+                REP_TELEPHONE,
+            </if>
+            <if test="repMobilephone != null" >
+                REP_MOBILEPHONE,
+            </if>
+            <if test="repEmail != null" >
+                REP_EMAIL,
+            </if>
+            <if test="repRegDate != null" >
+                REP_REG_DATE,
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK,
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS,
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repEmployeeSystemCode != null" >
+                #{repEmployeeSystemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="repName != null" >
+                #{repName,jdbcType=VARCHAR},
+            </if>
+            <if test="repSex != null" >
+                #{repSex,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repCreditId != null" >
+                #{repCreditId,jdbcType=VARCHAR},
+            </if>
+            <if test="repEmployeeBank != null" >
+                #{repEmployeeBank,jdbcType=VARCHAR},
+            </if>
+            <if test="repRegion != null" >
+                #{repRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="repCompanyName != null" >
+                #{repCompanyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repDepartmentName != null" >
+                #{repDepartmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="repPost != null" >
+                #{repPost,jdbcType=VARCHAR},
+            </if>
+            <if test="repEducation != null" >
+                #{repEducation,jdbcType=VARCHAR},
+            </if>
+            <if test="repDegree != null" >
+                #{repDegree,jdbcType=VARCHAR},
+            </if>
+            <if test="repFirstWorkTime != null" >
+                #{repFirstWorkTime,jdbcType=DECIMAL},
+            </if>
+            <if test="repFirstFinancingTime != null" >
+                #{repFirstFinancingTime,jdbcType=DECIMAL},
+            </if>
+            <if test="repProTechTitle != null" >
+                #{repProTechTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancingCertificate != null" >
+                #{repFinancingCertificate,jdbcType=VARCHAR},
+            </if>
+            <if test="repReword != null" >
+                #{repReword,jdbcType=VARCHAR},
+            </if>
+            <if test="repTelephone != null" >
+                #{repTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="repMobilephone != null" >
+                #{repMobilephone,jdbcType=VARCHAR},
+            </if>
+            <if test="repEmail != null" >
+                #{repEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="repRegDate != null" >
+                #{repRegDate,jdbcType=DATE},
+            </if>
+            <if test="repRemark != null" >
+                #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repSendStatus != null" >
+                #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepEmployee" >
+        insert into REP_EMPLOYEE(REP_EMPLOYEE__SYSTEM_CODE, REP_NAME, REP_SEX, REP_ISSUE_PARTY_ID, 
+        REP_CREDIT_ID, REP_EMPLOYEE_BANK, REP_REGION, REP_COMPANY_NAME, REP_DEPARTMENT_NAME, 
+        REP_POST, REP_EDUCATION, REP_DEGREE, REP_FIRST_WORK_TIME, REP_FIRST_FINANCING_TIME, 
+        REP_PRO_TECH_TITLE, REP_FINANCING_CERTIFICATE, REP_REWORD, REP_TELEPHONE, REP_MOBILEPHONE, 
+        REP_EMAIL, REP_REG_DATE, REP_REMARK, REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REP_EMPLOYEE__SYSTEM_CODE, REP_NAME, REP_SEX, REP_ISSUE_PARTY_ID, 
+            REP_CREDIT_ID, REP_EMPLOYEE_BANK, REP_REGION, REP_COMPANY_NAME, REP_DEPARTMENT_NAME, 
+            REP_POST, REP_EDUCATION, REP_DEGREE, REP_FIRST_WORK_TIME, REP_FIRST_FINANCING_TIME, 
+            REP_PRO_TECH_TITLE, REP_FINANCING_CERTIFICATE, REP_REWORD, REP_TELEPHONE, REP_MOBILEPHONE, 
+            REP_EMAIL, REP_REG_DATE, REP_REMARK, REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_EMPLOYEE
+             where 1 = 1 and REP_EMPLOYEE__SYSTEM_CODE = #{repEmployeeSystemCode,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepEmployee" >
+        update REP_EMPLOYEE
+        <set >
+            <if test="repName != null" >
+                REP_NAME = #{repName,jdbcType=VARCHAR},
+            </if>
+            <if test="repSex != null" >
+                REP_SEX = #{repSex,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repCreditId != null" >
+                REP_CREDIT_ID = #{repCreditId,jdbcType=VARCHAR},
+            </if>
+            <if test="repEmployeeBank != null" >
+                REP_EMPLOYEE_BANK = #{repEmployeeBank,jdbcType=VARCHAR},
+            </if>
+            <if test="repRegion != null" >
+                REP_REGION = #{repRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="repCompanyName != null" >
+                REP_COMPANY_NAME = #{repCompanyName,jdbcType=VARCHAR},
+            </if>
+            <if test="repDepartmentName != null" >
+                REP_DEPARTMENT_NAME = #{repDepartmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="repPost != null" >
+                REP_POST = #{repPost,jdbcType=VARCHAR},
+            </if>
+            <if test="repEducation != null" >
+                REP_EDUCATION = #{repEducation,jdbcType=VARCHAR},
+            </if>
+            <if test="repDegree != null" >
+                REP_DEGREE = #{repDegree,jdbcType=VARCHAR},
+            </if>
+            <if test="repFirstWorkTime != null" >
+                REP_FIRST_WORK_TIME = #{repFirstWorkTime,jdbcType=DECIMAL},
+            </if>
+            <if test="repFirstFinancingTime != null" >
+                REP_FIRST_FINANCING_TIME = #{repFirstFinancingTime,jdbcType=DECIMAL},
+            </if>
+            <if test="repProTechTitle != null" >
+                REP_PRO_TECH_TITLE = #{repProTechTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinancingCertificate != null" >
+                REP_FINANCING_CERTIFICATE = #{repFinancingCertificate,jdbcType=VARCHAR},
+            </if>
+            <if test="repReword != null" >
+                REP_REWORD = #{repReword,jdbcType=VARCHAR},
+            </if>
+            <if test="repTelephone != null" >
+                REP_TELEPHONE = #{repTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="repMobilephone != null" >
+                REP_MOBILEPHONE = #{repMobilephone,jdbcType=VARCHAR},
+            </if>
+            <if test="repEmail != null" >
+                REP_EMAIL = #{repEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="repRegDate != null" >
+                REP_REG_DATE = #{repRegDate,jdbcType=DATE},
+            </if>
+            <if test="repRemark != null" >
+                REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_EMPLOYEE__SYSTEM_CODE = #{repEmployeeSystemCode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepEmployee" >
+        update REP_EMPLOYEE
+        set REP_NAME = #{repName,jdbcType=VARCHAR},
+            REP_SEX = #{repSex,jdbcType=VARCHAR},
+            REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            REP_CREDIT_ID = #{repCreditId,jdbcType=VARCHAR},
+            REP_EMPLOYEE_BANK = #{repEmployeeBank,jdbcType=VARCHAR},
+            REP_REGION = #{repRegion,jdbcType=VARCHAR},
+            REP_COMPANY_NAME = #{repCompanyName,jdbcType=VARCHAR},
+            REP_DEPARTMENT_NAME = #{repDepartmentName,jdbcType=VARCHAR},
+            REP_POST = #{repPost,jdbcType=VARCHAR},
+            REP_EDUCATION = #{repEducation,jdbcType=VARCHAR},
+            REP_DEGREE = #{repDegree,jdbcType=VARCHAR},
+            REP_FIRST_WORK_TIME = #{repFirstWorkTime,jdbcType=DECIMAL},
+            REP_FIRST_FINANCING_TIME = #{repFirstFinancingTime,jdbcType=DECIMAL},
+            REP_PRO_TECH_TITLE = #{repProTechTitle,jdbcType=VARCHAR},
+            REP_FINANCING_CERTIFICATE = #{repFinancingCertificate,jdbcType=VARCHAR},
+            REP_REWORD = #{repReword,jdbcType=VARCHAR},
+            REP_TELEPHONE = #{repTelephone,jdbcType=VARCHAR},
+            REP_MOBILEPHONE = #{repMobilephone,jdbcType=VARCHAR},
+            REP_EMAIL = #{repEmail,jdbcType=VARCHAR},
+            REP_REG_DATE = #{repRegDate,jdbcType=DATE},
+            REP_REMARK = #{repRemark,jdbcType=VARCHAR},
+            REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_EMPLOYEE__SYSTEM_CODE = #{repEmployeeSystemCode,jdbcType=VARCHAR}
+    </update>
+</mapper>
