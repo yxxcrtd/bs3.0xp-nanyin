@@ -473,6 +473,81 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
             result.add(BeanUtil.object2Map(szDto));
         }
+        else if(StringUtil.equals(DictCodeList.交易方向_上市流通.getValue(),ps)) {
+        	//上市流通可能存在多个组合交易，每个组合需要拆分为原资产卖出和上市资产买入两笔交易
+        	if(StringUtil.isNotEmpty(dataMap.get("baseTradeInfoDtos"))) {
+        		List<Map> baseTradeInfoDtos = (List<Map>)dataMap.get("baseTradeInfoDtos");
+        		String regionFinprodId = (String)dataMap.get("finprodId");
+        		String newFinprodId = "F01_"+(String)dataMap.get("appearMarketId");
+        		String eventDate = null;
+        		for(Map<String,Object> map:baseTradeInfoDtos) {
+        			//获取 组合代码
+        			String portfolioId = null,invAim=null,tradeId=null;
+        			BigDecimal tradeAmt = BigDecimal.ZERO,shareAmt = BigDecimal.ZERO;
+        			if(StringUtil.isNotEmpty(map.get("trdProductDeal"))) {
+        				Map<String,Object> trdProductDeal = (Map<String,Object>)map.get("trdProductDeal");
+        				//交易金额：市价
+        				if(StringUtil.isNotEmpty(trdProductDeal.get("tradeAmt"))) {
+        					tradeAmt = new BigDecimal(trdProductDeal.get("tradeAmt").toString());
+        				}
+        				//交易数量：券面总额
+        				if(StringUtil.isNotEmpty(trdProductDeal.get("shareAmt"))) {
+        					shareAmt = new BigDecimal(trdProductDeal.get("shareAmt").toString());
+        				}
+        				if(StringUtil.isEmpty(eventDate)&&StringUtil.isNotEmpty(trdProductDeal.get("tradeDate"))) {
+        					Object tradeDate = trdProductDeal.get("tradeDate");
+        					String type = tradeDate.getClass().toString();
+        					if("Long".equals( type.substring(type.lastIndexOf('.') + 1, type.length()))) {
+        						eventDate = DateUtil.format(new Date((long)tradeDate));
+        					}
+        					else {
+        						eventDate = DateUtil.format(DateUtil.parse(tradeDate.toString()));
+        					}
+        				}
+        				invAim = (String)trdProductDeal.get("invAim");
+        				tradeId = (String)trdProductDeal.get("tradeId");
+        			}
+        			if(StringUtil.isNotEmpty(map.get("trdProductDealAdd"))) {
+        				Map<String,Object> trdProductDealAdd = (Map<String,Object>)map.get("trdProductDealAdd");
+        				portfolioId = (String)trdProductDealAdd.get("portfolioId");
+        			}
+        			if(StringUtil.isNotEmpty(tradeId)&&StringUtil.isNotEmpty(eventDate)) {
+        				//买入
+        				 InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
+        				 infRiskRdsDto.setEventStatus(tradeId);
+        				 infRiskRdsDto.setEventDate(eventDate);
+        				 infRiskRdsDto.setPortfolioCode(portfolioId);
+        				 infRiskRdsDto.setAssetCode(newFinprodId);
+        				 infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+        				 infRiskRdsDto.setAmount(tradeAmt);
+        				 infRiskRdsDto.setTradeNum(shareAmt);
+        				 infRiskRdsDto.setDeliveryDate(DateUtil.parse(eventDate));
+        				 infRiskRdsDto.setMarketCode(newFinprodId);
+        				 infRiskRdsDto.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+        			     infRiskRdsDto.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+        			     infRiskRdsDto.setTradeAmtReal(tradeAmt);
+        			     infRiskRdsDto.setInvAim(invAim);
+        			     result.add(BeanUtil.object2Map(infRiskRdsDto));
+        			     //卖出
+        				 infRiskRdsDto=new InterfRiskRdsDto();
+        				 infRiskRdsDto.setEventStatus(tradeId);
+        				 infRiskRdsDto.setEventDate(eventDate);
+        				 infRiskRdsDto.setPortfolioCode(portfolioId);
+        				 infRiskRdsDto.setAssetCode(regionFinprodId);
+        				 infRiskRdsDto.setPs(DictCodeList.交易方向_卖出.getValue());
+        				 infRiskRdsDto.setAmount(tradeAmt);
+        				 infRiskRdsDto.setTradeNum(shareAmt);
+        				 infRiskRdsDto.setDeliveryDate(DateUtil.parse(eventDate));
+        				 infRiskRdsDto.setMarketCode(newFinprodId);
+        				 infRiskRdsDto.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+        			     infRiskRdsDto.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+        			     infRiskRdsDto.setTradeAmtReal(tradeAmt);
+        			     infRiskRdsDto.setInvAim(invAim);
+        			     result.add(BeanUtil.object2Map(infRiskRdsDto));
+        			}
+        		}
+        	}
+        }
         return result;
     }
 

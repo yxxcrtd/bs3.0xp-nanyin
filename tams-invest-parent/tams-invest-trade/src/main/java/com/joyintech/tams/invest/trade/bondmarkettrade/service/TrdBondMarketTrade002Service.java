@@ -31,6 +31,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -229,6 +230,11 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
             paraMap.put("tradeDate", DateUtil.format(dto.getTradeDate()));
             Map<String,Object> positonMap = restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/getPosition", paraMap,
                     Map.class);
+            //获取债券面值
+            paraMap.put("settleDate", DateUtil.format(dto.getTradeDate()));
+            BigDecimal unitPrice =restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getUnitPrice", paraMap,
+                    BigDecimal.class);
+            
             List<Map<String,Object>> ptlSecPositionMap = (List<Map<String, Object>>) positonMap.get("ptlSecPositions");
             List<PtlSecPosition> ptlSecPositions = new ArrayList<>();
             for (Map<String, Object> stringObjectMap : ptlSecPositionMap) {
@@ -314,7 +320,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                 trdProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
                 trdProductDeal.setBranch(branchLong);
                 //原有的持仓数量被取反了，这里再取反一次
-                trdProductDeal.setShareAmt(ptlSecPositionFlowDto.getAmount().negate());
+                trdProductDeal.setShareAmt(ArithmeticUtil.multiply(ptlSecPositionFlowDto.getAmount().negate(),unitPrice));
                 trdProductDeal.setTradeDate(dto.getTradeDate());
                 trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
