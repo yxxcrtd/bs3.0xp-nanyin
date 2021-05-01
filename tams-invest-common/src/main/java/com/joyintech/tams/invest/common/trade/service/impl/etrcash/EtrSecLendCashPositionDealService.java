@@ -79,7 +79,9 @@ public class EtrSecLendCashPositionDealService  {
         EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
                 finProductTradeDto);
         // 交易生成的现金流水
-        if (DictCodeList.交易方向_买入.getValue().equals(deal.getPs())) {// 首期
+        if (DictCodeList.交易方向_买入.getValue().equals(deal.getPs())
+        //modify by jiangpeng on 20210430 ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现
+                && !StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {// 首期
             if (StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())) {
                 if (DictCodeList.持仓类型_实际.equals(持仓类型) && StringUtil.isNotEmpty(finProductTradeDto.getSecLendFinprodId())) {
                     etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId());

@@ -116,10 +116,11 @@ public class TradeRdsCommonAop {
                 return;
             }
             //债券上市流通交易不走实占接口代码
+            String infCode = BussinessDictCodeListRds.接口系统ID_实占接口.getValue();
             if (mapTrd.get("ps") != null && StringUtil.equals(mapTrd.get("ps"),DictCodeList.交易方向_上市流通.getValue())){
-                return;
+                infCode = BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue();
             }
-        	revokeBackRiskCommon(mapTrd,BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),joinPoint);
+        	revokeBackRiskCommon(mapTrd,infCode,joinPoint);
         }
     }
 
@@ -131,8 +132,12 @@ public class TradeRdsCommonAop {
         Object[] args = joinPoint.getArgs();
         OperationType operationType = (OperationType) args[1];
         Map<String,Object> mapTrd=JsonUtils.object2Map(args[0]);
+        String infCode = BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue();
+        if (mapTrd.get("ps") != null && StringUtil.equals(mapTrd.get("ps"),DictCodeList.交易方向_上市流通.getValue())){
+            infCode = BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue();
+        }
         if (operationType.equals(OperationType.REVOKE)||operationType.equals(OperationType.DELETE)) {
-            revokeBackRiskCommon(mapTrd,BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),joinPoint);
+            revokeBackRiskCommon(mapTrd,infCode,joinPoint);
         }
     }
     @After("backPoint()")
@@ -151,7 +156,11 @@ public class TradeRdsCommonAop {
         if(!checkRevokeAction(mapTrd.get("workflowId"))){
             return;
         }
-        revokeBackRiskCommon(mapTrd,BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue(),joinPoint);
+        String infCode = BussinessDictCodeListRds.接口系统ID_实占释放接口.getValue();
+        if (mapTrd.get("ps") != null && StringUtil.equals(mapTrd.get("ps"),DictCodeList.交易方向_上市流通.getValue())){
+            infCode = BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue();
+        }
+        revokeBackRiskCommon(mapTrd,infCode,joinPoint);
     }
 
     private void revokeBackRiskCommon(Map<String,Object> mapTrd,String infCode,JoinPoint joinPoint) throws BusinessException {

@@ -1165,6 +1165,9 @@ $(function() {
             			$('#expireProfit').attr("disabled",false);
             			$('#expireCost').attr("disabled",false);
             			$('#expireManaFreeVal').attr("disabled",false);
+            			//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 start
+            			$('#expireNetValueDate').attr("disabled",false);
+            			//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 end
             		}else{
             			//期次模块展示，并初始化和加载数据
             			$('#expireCycleModel').show();
@@ -1174,8 +1177,11 @@ $(function() {
             			$('#expireProfit').attr("disabled",true);
             			$('#expireCost').attr("disabled",true);
             			$('#expireManaFreeVal').attr("disabled",true);
+            			//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 start
+            			$('#expireNetValueDate').attr("disabled",true);
+            			//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 end
             		}
-        			$('#expireNetValueDate').attr("disabled",false);
+        			//$('#expireNetValueDate').attr("disabled",false);
         		}
         		$('#expireModel').show();
         	}else if("C20"==dealType){
@@ -1208,6 +1214,9 @@ $(function() {
             			$('#expireProfit').attr("disabled",false);
             			$('#expireCost').attr("disabled",false);
             			$('#expireManaFreeVal').attr("disabled",false);
+            			//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 start
+            			$('#expireNetValueDate').attr("disabled",false);
+            			//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 end
             		}else{
             			//期次模块展示，并初始化和加载数据
             			$('#expireCycleModel').show();
@@ -1217,8 +1226,11 @@ $(function() {
             			$('#expireProfit').attr("disabled",true);
             			$('#expireCost').attr("disabled",true);
             			$('#expireManaFreeVal').attr("disabled",true);
+            			//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 start
+            			$('#expireNetValueDate').attr("disabled",true);
+            			//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 end
             		}
-        			$('#expireNetValueDate').attr("disabled",false);
+        			//$('#expireNetValueDate').attr("disabled",false);
         		}
         		$('#expireModel').show();
         	}else if("C3"==dealType || "C6"==dealType){
@@ -1521,7 +1533,7 @@ $(function() {
                 }
 
     			Joyin.ajaxJson(basePath + 'invest/product/productduration/netproductDuration/FinNetProductDuration/getTrdValueByCdate', 
-    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value}, 
+    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value,dealType:$("#dealType").val()},
     	        	function(result) {
     	        		//修改净值
     	        		redCycleDataTable.renderRow(data.LAY_TABLE_INDEX, {redUnitNetValue: result});
@@ -1838,7 +1850,7 @@ $(function() {
         	//净值日期选择联动
     		if(field == "expireNetValueDate"){
     			Joyin.ajaxJson(basePath + 'invest/product/productduration/netproductDuration/FinNetProductDuration/getTrdValueByCdate', 
-    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value}, 
+    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value,dealType:$("#dealType").val()},
     	        	function(result) {
     	        		//修改净值
     	        		expireCycleDataTable.renderRow(data.LAY_TABLE_INDEX, {expireUnitNetValue: result});
@@ -2004,7 +2016,7 @@ $(function() {
         	//净值日期选择联动
     		if(field == "addReduceNetValueDate"){
     			Joyin.ajaxJson(basePath + 'invest/product/productduration/netproductDuration/FinNetProductDuration/getTrdValueByCdate', 
-    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value}, 
+    	        	{finprodId:$('#finprodId').val(),redNetValueDate:value,dealType:$("#dealType").val()},
     	        	function(result) {
     	        		//修改净值
     	        		addReduceCycleDataTable.renderRow(data.LAY_TABLE_INDEX, {addReduceUnitNetValue: result});
@@ -3176,6 +3188,13 @@ $(function() {
 			if($('#isCycle').val() == "Y"){
 			expireCycleDataTableCheck();
               }
+		}	
+		//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 start
+		if($("#dealType").val()=="C5" || $("#dealType").val()=="C20"){
+			if($('#isCycle').val() == "Y"){
+				$('#expireNetValueDate').attr("disabled",true);
+	              }
 		}
+		//TISHKBS-2081 CLONE - 周期型产品到期、提前终止流程中修改 净值日没有置灰 end
     });
 }());

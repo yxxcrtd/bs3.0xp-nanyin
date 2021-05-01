@@ -70,6 +70,12 @@
         addclick: function(row) {
         	row.invAim = $('#invAim').val();
         },
+        beforeEditCell:function (preVal, field, rowData){
+            if(field=="secManageAcctId"){
+                if($('#chlFinprodId').val())return false;
+            }
+            return true;
+        },
         editCell : function(value, data, field, cell, column){
             if (field == "portfolioId"){
                 var rowData = {};
@@ -91,7 +97,7 @@
                 	});
                 }
                 if(value != null && value != '' && ($('#ps').val() == T02 ||$('#ps').val() == T03 ||$('#ps').val() == T39) && $('#ccy').val() != ''
-                   && $('#finprodId').val() != '' && rowData.secManageAcctId != '' && $('#invAim').val() != ''){
+                   && $('#finprodId').val() != '' && (rowData.secManageAcctId != ''||$('#chlFinprodId').val()) && $('#invAim').val() != ''){
                 	var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(), 
             				finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), invAim: data.invAim,
             				secAcctId: data.secManageAcctId, chlId: $('#chlFinprodId').val()};
@@ -428,7 +434,7 @@
     /**
      * 组合可用现金和资产可用持仓的联动
      */
-    $('#finprodId,#ps,#ccy').change(function(){
+    $('#finprodId,#ps,#ccy,#chlFinprodId').change(function(){
     	var rowsData = table.getAllRows();
     	if(rowsData.length>0 && $('#ccy').val() != ''){
     		switch($('#ps').val()){

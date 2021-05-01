@@ -7,14 +7,22 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.bondmarkettrade.dto.TrdBondMarketTradeDto;
 import com.joyintech.tams.invest.trade.bondmarkettrade.service.TrdBondMarketTrade001Service;
 import com.joyintech.tams.invest.trade.bondmarkettrade.service.TrdBondMarketTrade002Service;
@@ -54,6 +62,9 @@ public class TrdBondMarketTrade002Controller extends BaseController {
 
     @Autowired
     TrdBondMarketTrade001Service trdBondMarketTrade001Service;
+    
+    @Autowired
+    private InterfRiskRdsService<InterfRiskRdsDto> interfRiskRdsService;
     
     @Autowired
     private IPlatformDate iPlatformDate;
@@ -129,6 +140,15 @@ public class TrdBondMarketTrade002Controller extends BaseController {
                 getMessage("TrdBondInvestTrade002.finprodName") + GlobalConstant.COLON + entity.getFinprodAbbr(),
                 getMessage("TrdBondInvestTrade002.tradeDate") + GlobalConstant.COLON + DateUtil.format(entity.getTradeDate())));
         trdBondMarketTrade002Service.setEntity(dto);
+        //添加风险接口
+        if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&&CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
+            AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue(),DictCodeList.平安资产类型_债券.getValue(),
+                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
         String msg = trdBondMarketTrade002Service.start(processParameter, dto);
 
         return new AjaxResult(msg);

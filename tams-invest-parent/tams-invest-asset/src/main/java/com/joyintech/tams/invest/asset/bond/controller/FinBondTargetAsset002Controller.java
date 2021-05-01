@@ -271,6 +271,8 @@ public class FinBondTargetAsset002Controller extends BaseController{
                 finprodMarketId + tradeMarketId);
         if (StringUtil.isNotEmpty(dto)) {
             dto.setFinprodMarketId(finprodMarketId);
+            //快录时不带出上市代码
+            dto.setAppearMarketId(null);
             //债券快录时不考虑  授信
             dto.setCreditFlag("");
             ar.setData(dto);

@@ -396,6 +396,8 @@ public class TrdBondMarketTradeService extends BaseService {
             
             if (finProductAdd != null){
                 finProductAdd.setFinprodId(newFinprodId);
+                finProductAdd.setIsIssueAsset(DictCodeList.是否_否.getValue());
+                finProductAdd.setAppearMarketId(null);
             }
 
             if (finProductType != null){
@@ -595,27 +597,24 @@ public class TrdBondMarketTradeService extends BaseService {
             bizCode = bizCode.substring(0, bizCode.length() - 1);
         }
         Map<String,Object> param = new HashMap<String,Object>();
-        param.put("finprodId",entity.getFinprodId());
-        param.put("tradeDate",entity.getTradeDate());
-        List<Map<String,Object>> maps = trdBondMarkettTradeMapper.selectTrdProductDealsInfo(param);
-
         param.put("bizCode",bizCode);
         param.put("finprodId",DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + entity.getAppearMarketId());
         List<BaseTradeInfoDto> baseTradeInfoDtos =  trdBondMarkettTradeMapper.selectbaseTradeInfoDtos(param);
-
-        if (baseTradeInfoDtos != null && baseTradeInfoDtos.size() > 0){
-            for (BaseTradeInfoDto baseTradeInfoDto : baseTradeInfoDtos) {
-                if (maps != null && maps.size()>0){
-                    for (Map<String, Object> map : maps) {
-                        if (StringUtil.equals((String)map.get("PORTFOLIOID"),baseTradeInfoDto.getTrdProductDealAdd().getPortfolioId())){
-                            baseTradeInfoDto.getTrdProductDeal().setTradeAmt((BigDecimal) map.get("PRICE"));    
-                        }
-                    }    
-                }
-            }    
-        }
-        
         entity.setBaseTradeInfoDtos(baseTradeInfoDtos);
         return entity;
+    }
+
+    /**
+     * 提交时根据资产代码查询风险需要的数据
+     * @param entity
+     * @return
+     */
+    public List<Map<String,Object>> getSaveParam(TrdBondMarketTradeDto entity) {
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("finprodId",entity.getFinprodId());
+        param.put("tradeDate",entity.getTradeDate());
+        
+        List<Map<String,Object>> maps = trdBondMarkettTradeMapper.selectTrdProductDealsInfo(param);
+        return maps;
     }
 }

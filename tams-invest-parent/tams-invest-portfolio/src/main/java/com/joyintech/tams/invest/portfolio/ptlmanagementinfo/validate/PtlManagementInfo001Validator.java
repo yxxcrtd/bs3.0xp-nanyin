@@ -169,7 +169,8 @@ public class PtlManagementInfo001Validator implements BeanValidator{
             }
             param.put("busiAcctNoList", acctList);
             param.put("F28", DictCodeListExt1.金融产品类型_投管用_通道.getValue());
-            if(ptlManagementInfo001Service.getReAcct(param) > 0){
+            if (!StringUtil.isEmptyList(acctList) && acctList.size() > 0// add by jiangpeng on 20210422 TISHKBS-1688 账户为空时不提示
+                    && ptlManagementInfo001Service.getReAcct(param) > 0) {
                 errorList.add(new ValidMessage("资金账户已被合作资产使用,请重新选择资金账户"));
             }
             //add by 马数凯 20210202 新增校验，组合新建页面资金账户不能是通道所使过的资金账户 end
@@ -181,7 +182,9 @@ public class PtlManagementInfo001Validator implements BeanValidator{
         if(dto.getFundAccountInfoDto() == null || dto.getFundAccountInfoDto().isEmpty()){
             if(dto.getOperateType() != null && (StringUtil.equals(dto.getOperateType(),"save") ||
                     StringUtil.equals(dto.getOperateType(),"submit"))){
-                errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("FW_E_0006",getMessage("PtlManagementInfo001.funInfo"))));
+                // modify by jiangpeng on 20210422 start TISHKBS-1688 存在产品创建时未申请托管户的情况
+//                errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("FW_E_0006",getMessage("PtlManagementInfo001.funInfo"))));
+                // modify by jiangpeng on 20210422 end
             }
         }else{
             boolean hasSecManageAcct = false;
@@ -206,10 +209,12 @@ public class PtlManagementInfo001Validator implements BeanValidator{
             if(set.size() < dto.getFundAccountInfoDto().size()){
                 errorList.add(new ValidMessage("fundAccountInfoDto",getMessage("BUSS_COM_E_0006",getMessage("PtlManagementInfo001.funInfo"),getMessage("FundAccountInfo.acctNo"))));
             }
+            // modify by jiangpeng on 20210422 start TISHKBS-1688 存在产品创建时未申请托管户的情况,故取消组合创建时校验托管户
             //必须存在托管账户
-            if(!hasSecManageAcct){
-                errorList.add(new ValidMessage(getMessage("PtlManagementInfo001.selectAcct")));
-            }
+//            if(!hasSecManageAcct){
+//                errorList.add(new ValidMessage(getMessage("PtlManagementInfo001.selectAcct")));
+//            }
+            // modify by jiangpeng on 20210422 end
         }
     }
 

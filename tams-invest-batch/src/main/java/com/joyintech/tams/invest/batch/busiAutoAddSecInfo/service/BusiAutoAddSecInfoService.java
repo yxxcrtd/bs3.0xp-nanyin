@@ -207,6 +207,7 @@ public class BusiAutoAddSecInfoService {
             finProductAddNew.setFinprodId("F01_"+secId);
             finProductAddNew.setWindId(secId);
             finProductAddNew.setIsAutoUpdate(DictCodeList.是否_是.getValue());
+            finProductAddNew.setIsIssueAsset(DictCodeList.是否_否.getValue());
             baseFinProductBaseInfoDto.setFinProductAdd(finProductAddNew);
 
             //金融产品分类表

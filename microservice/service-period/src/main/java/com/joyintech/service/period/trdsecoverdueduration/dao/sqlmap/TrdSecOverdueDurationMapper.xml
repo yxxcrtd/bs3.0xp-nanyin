@@ -1111,9 +1111,13 @@ with rece_all as(
     <!--根据资产代码查询有效的计息维护信息-->
     <select id="selectJxwuFromFinprodId" resultType="com.joyintech.tams.invest.common.dto.period.trdsecoverdueduration.TrdSecOverdueDurationDto">
                  select
-                  (select distinct basis from FIN_CASH_CALC_RULE where finprod_id=ftp.finprod_id and branch=0 and EFF_DATE=
+                 /* modify by jiangpeng on 20210430 TISHKBS-2089 运营端-逾期标的信息导入报错 */
+                  /*(select distinct basis from FIN_CASH_CALC_RULE where finprod_id=ftp.finprod_id and branch=0 and EFF_DATE=
                   (select min(vdate) from fin_trade_product WHERE finprod_id =ftp.finprod_id) and basis is not null
-                   ) basis,
+                   ) basis,*/
+                   (select distinct rule.BASIS from FIN_CASH_CALC_RULE rule
+                            left join FIN_CASH_INFO info on rule.CASH_ID = info.CASH_ID
+                            where info.FINPROD_ID = ftp.finprod_id and CASH_TYPE_2 = #{cashType2} and rule.BASIS is not null) basis,
                  listagg(fcp.cash_id, ',') within group ( order by ftp.branch) cashIds,
                   (select item_value
                   from sys_datadict_list

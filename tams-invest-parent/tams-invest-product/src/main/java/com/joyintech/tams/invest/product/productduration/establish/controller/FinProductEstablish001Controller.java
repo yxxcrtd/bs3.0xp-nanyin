@@ -10,20 +10,6 @@
 
 package com.joyintech.tams.invest.product.productduration.establish.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -33,9 +19,10 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.StlCapacctInfo;
+import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.product.productduration.establish.dto.FinProductEstablish002Dto;
@@ -46,6 +33,20 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 产品成立
@@ -71,6 +72,11 @@ public class FinProductEstablish001Controller extends BaseController {
      */
     @Autowired
     private FinProductEstablish002Service finProductEstablish002Service;
+    /**
+     * 清算指令共通Service TISHKBS-1688 add by jiangpeng on 20210429
+     */
+    @Autowired(required = false)
+    private BussSettleOrderCommService bussSettleOrderCommService;
 
     /**
      * {@inheritDoc}
@@ -125,6 +131,16 @@ public class FinProductEstablish001Controller extends BaseController {
 	public AjaxResult check(@Valid @RequestBody FinProductEstablish002Dto finProductEstablishDto, BindingResult br) {
 		AjaxResult result = new AjaxResult();
 		List<ValidMessage> errorList = new ArrayList<ValidMessage>();
+		// TISHKBS-1688 add by jiangpeng on 20210429 start
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("portfolioId", finProductEstablishDto.getPortfolioId());
+        paramMap.put("ccy", finProductEstablishDto.getCcy());
+        paramMap.put("capacctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
+        List<StlCapacctInfo> capacctList = bussSettleOrderCommService.selectProdCapacctInfoList(paramMap);
+        if (StringUtil.isEmptyList(capacctList) || capacctList.size() <= 0) {
+            errorList.add(new ValidMessage("请维护产品及组合的托管账户!"));
+        }
+        // TISHKBS-1688 add by jiangpeng on 20210429 end
 		if (StringUtil.isNotEmpty(finProductEstablishDto.getFinprodId())) {
 			int num = finProductEstablish001Service.selectDealAdd(
 					finProductEstablishDto.getFinprodId().substring(4, finProductEstablishDto.getFinprodId().length()),
