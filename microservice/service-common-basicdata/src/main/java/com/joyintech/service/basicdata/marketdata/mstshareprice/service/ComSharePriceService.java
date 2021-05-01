@@ -81,7 +81,7 @@ public class ComSharePriceService extends BaseService<ComSharePriceDto>{
      * @return
      */
     public Page<SelectOptionDto> getFinprodIdForAdd(int page, int length,Map<String, String> map) {
-        map.put("planasset", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        map.put("planasset", DictCodeListExt1.金融产品类型_股票.getValue());
         /*map.put("notworth", DictCodeList.收益类型_货币型.getValue());*/
         return this.queryForPageForSelectReturn(page, length,()-> comSharePrice001Mapper.getFinprodIdForAdd(map));
     }

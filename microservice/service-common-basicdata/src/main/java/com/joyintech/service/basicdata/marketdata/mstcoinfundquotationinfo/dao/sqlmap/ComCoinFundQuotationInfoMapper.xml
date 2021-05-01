@@ -21,7 +21,7 @@
     	INNER JOIN
     		FIN_PRODUCT_VALUATION  V
     	ON 
-    		P.FINPROD_MARKET_ID = V.FINPROD_ID and p.FINPROD_TYPE2 = V.FINPROD_TYPE2
+    		P.FINPROD_MARKET_ID = V.FINPROD_ID and p.FINPROD_TYPE = V.FINPROD_TYPE
     	INNER JOIN
     		FIN_PRODUCT_TYPE TYPE
     	ON 
@@ -29,7 +29,7 @@
 		LEFT JOIN 
 			MST_CUSTOMER_INFO CUST ON CUST.CUSTOMER_ID = P.MANAGER AND CUST.IS_ASSTE_MANAGER = #{yes,jdbcType=VARCHAR}
 		<where>
-	        P.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+	        P.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
 		<if test="finprodId != null and finprodId != ''">
 			AND P.FINPROD_MARKET_ID like concat(concat('%',#{finprodId,jdbcType=VARCHAR}),'%')
 		</if>
@@ -57,9 +57,9 @@
     		( FIN.FINPROD_MARKET_ID LIKE concat(concat('%',#{param,jdbcType=VARCHAR}),'%')
 			or FIN.FINPROD_ABBR LIKE concat(concat('%',#{param,jdbcType=VARCHAR}),'%') )
 		AND
-    		FIN.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+    		FIN.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
 		AND
-    		VAL.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+    		VAL.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
     </select>
     <!--画面一的基金管理人的联想文本框-->
     <select id="queryManagement" resultType="com.joyintech.framework.select.SuggestDto" >
@@ -76,7 +76,7 @@
         where 
         	MST.CUSTOMER_NAME like concat(concat('%',#{param,jdbcType=VARCHAR}),'%')
         AND
-            FIN.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+            FIN.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
         AND
             MST.IS_ASSTE_MANAGER = #{yes,jdbcType=VARCHAR}
     </select>
@@ -92,7 +92,7 @@
     		( FINPROD_MARKET_ID LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
 		OR FINPROD_ABBR LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%') )
 		AND
-    		FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+    		FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
     </select>
     <!-- 界面二基金类型 -->
     <select id="selectByfinprodId"  resultType="java.lang.String">
@@ -106,7 +106,7 @@
     		F.FINPROD_ID = T.FINPROD_ID
 		WHERE
     		F.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR} 
-    	AND F.FINPROD_TYPE2 = #{finprodType2}
+    	AND F.FINPROD_TYPE = #{finprodType}
     </select>
     <!-- 界面二获取基金管理人 -->
     <select id="selectManagement" resultType="com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto" >
@@ -119,7 +119,7 @@
 		ON 
 			FIN.MANAGER = MST.CUSTOMER_ID
         where 
-            FIN.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+            FIN.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
         AND
             MST.IS_ASSTE_MANAGER = #{yes,jdbcType=VARCHAR}
        	AND
@@ -133,7 +133,7 @@
     		FIN_PRODUCT_VALUATION
 		WHERE
     		FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-    		AND FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+    		AND FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
     		AND VAL_DATE = TO_DATE(#{valDate},'YYYY-MM-DD')
     </select>
 
@@ -155,7 +155,7 @@
 		INNER JOIN
 		FIN_PRODUCT_VALUATION  V
 		ON
-		P.FINPROD_MARKET_ID = V.FINPROD_ID and p.FINPROD_TYPE2 = V.FINPROD_TYPE2
+		P.FINPROD_MARKET_ID = V.FINPROD_ID and p.FINPROD_TYPE = V.FINPROD_TYPE
 		INNER JOIN
 		FIN_PRODUCT_TYPE TYPE
 		ON
@@ -163,7 +163,7 @@
 		LEFT JOIN
 		MST_CUSTOMER_INFO CUST ON CUST.CUSTOMER_ID = P.MANAGER AND CUST.IS_ASSTE_MANAGER = #{yes,jdbcType=VARCHAR}
 		<where>
-			P.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+			P.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
 			<if test="finprodId != null and finprodId != ''">
 				AND P.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
 			</if>
@@ -182,7 +182,7 @@
 		AND
 			A.VAL_DATE = #{valDate,jdbcType=DATE}
 		AND
-			A.FINPROD_TYPE2=#{finprodType2,jdbcType=VARCHAR}
+			A.FINPROD_TYPE=#{finprodType,jdbcType=VARCHAR}
 	</select>
 
 	<select id="checkFinprod" resultType="com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto">
@@ -193,7 +193,7 @@
 		WHERE
     	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
 		AND
-    	FP.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+    	FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
     </select>
     
     <select id="checkType" resultType="com.joyintech.service.basicdata.marketdata.mstcoinfundquotationinfo.dto.ComCoinFundQuotationInfo001Dto">
@@ -208,7 +208,7 @@
 		WHERE
     	FP.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
 		AND
-    	FP.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+    	FP.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
     	AND
     	TYPE.TYPE_6 = #{type,jdbcType=VARCHAR}
     </select>

@@ -115,7 +115,7 @@ public class ComNetAssetQuotationInfo001Controller extends BaseController{
         map.put("finProdName", param);
         map.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue());
         map.put("PROFITTYPE_VALUE_03", DictCodeList.收益类型_货币型.getValue());
-        map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         List<SuggestDto> temp = mstnetassetquotationinfo001service.getAssetName(map);
         return temp;
     }
@@ -137,7 +137,7 @@ public class ComNetAssetQuotationInfo001Controller extends BaseController{
         map.put("finProdMarketId", param);
         map.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue());
         map.put("PROFITTYPE_VALUE_03", DictCodeList.收益类型_货币型.getValue());
-        map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         List<SuggestDto> temp = mstnetassetquotationinfo001service.getAssetCode(map);
         return temp;
     }

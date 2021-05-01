@@ -99,6 +99,13 @@ public class CProdDealInfoRecService {
             ps.add(DictCodeList.交易方向_产品到期.getValue());
             ps.add(DictCodeList.交易方向_产品到期分红.getValue());
             ps.add(DictCodeList.交易方向_赎回收益确认.getValue());
+
+            /**add by wujie on 20210428 start**/
+            ps.add(DictCodeList.交易方向_产品提前赎回.getValue());
+            ps.add(DictCodeList.交易方向_产品违约赎回.getValue());
+            ps.add(DictCodeList.交易方向_份额强增.getValue());
+            ps.add(DictCodeList.交易方向_份额强减.getValue());
+            /**add by wujie on 20210428 start**/
             
             paramMap.put("pslist", ps);
             

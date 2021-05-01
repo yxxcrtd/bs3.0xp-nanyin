@@ -329,6 +329,11 @@ public class NPrdDealFeeDealTemplateRecService {
         if(finCashInfo!=null){
         	valFinProductDeal.setFinprodType(finCashInfo.getCashType2());
         }
+        else{
+            if(DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+                valFinProductDeal.setFinprodType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            }
+        }
         
         //交割日 = C.支付日
         valFinProductDeal.setSettleDate(dto.getPayDate());
@@ -420,6 +425,11 @@ public class NPrdDealFeeDealTemplateRecService {
         FinCashInfo finCashInfo = interfCommonService.queryCashInfo(paramMap);
         if(finCashInfo!=null){
         	valTradeFeeDetail.setFeeType(finCashInfo.getCashType2());
+        }
+        else{
+            if(DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+                valTradeFeeDetail.setFeeType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            }
         }
         // 是否随交易支付 = 固定值：Y 是 默认随交易支付
         valTradeFeeDetail.setIsPayWithTrade(DictCodeList.是否_是.getValue());

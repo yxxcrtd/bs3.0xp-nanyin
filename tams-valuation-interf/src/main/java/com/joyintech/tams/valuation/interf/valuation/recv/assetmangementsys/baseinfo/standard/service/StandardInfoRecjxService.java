@@ -81,9 +81,11 @@ public class StandardInfoRecjxService {
     	//银行账户名
     	jjBkCashAcctDto.setAcct_name(StlCapacctInfo.getAcctName());
     	//账套名称
-    	jjBkCashAcctDto.setBookset_id(booksetId); 
+    	jjBkCashAcctDto.setBookset_id(booksetId);
+    	/**modify by wujie on 20210429
     	//银行信息
     	jjBkCashAcctDto.setBank_dep(StlCapacctInfo.getBankDep());
+		 **/
     	//货币
     	jjBkCashAcctDto.setCcy(StlCapacctInfo.getCcy());
         //账户   	
