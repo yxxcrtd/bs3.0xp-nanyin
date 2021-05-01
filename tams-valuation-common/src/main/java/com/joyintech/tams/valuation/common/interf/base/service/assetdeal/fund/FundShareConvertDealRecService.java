@@ -165,25 +165,25 @@ public class FundShareConvertDealRecService {
             valBokDetailId.setDetailSubnameTail(item.getAssetName());
             listValBokDetailId.add(valBokDetailId);
 
-
-            Map<String, Object> map = interfCommonService.instructionGenerate(valFinProductDeal,
-                    item.getProdId(), interfProductDealBookCommonDto.getAcctSubjectType(),null);
-            if(map.get("ORDERS")!=null){
-            	listValOrders.addAll((List<StlOrders>)map.get("ORDERS"));
+            if(valFinProductDeal.getTradeAmt() != null && BigDecimal.ZERO.compareTo(valFinProductDeal.getTradeAmt())!= 0){
+                Map<String, Object> map = interfCommonService.instructionGenerate(valFinProductDeal,
+                        item.getProdId(), interfProductDealBookCommonDto.getAcctSubjectType(),null);
+                if(map.get("ORDERS")!=null){
+                    listValOrders.addAll((List<StlOrders>)map.get("ORDERS"));
+                }
+                if(map.get("ORDERS_EXT")!=null){
+                    listValOrdersExt.addAll((List<StlOrdersExt>)map.get("ORDERS_EXT"));
+                }
+                if(map.get("ACCOUNTING")!=null){
+                    listValDealAccounting.addAll((List<BokDealAccounting>)map.get("ACCOUNTING"));
+                }
+                if(map.get("ACCOUNTING_DETAI")!=null){
+                    listValDealAccountingDetail.addAll(( List<BokDealAccountingDetail>)map.get("ACCOUNTING_DETAI"));
+                }
+                if(map.get("BOK_DETAIL_ID")!=null){
+                    listValBokDetailId.addAll((List<BokDetailId>)map.get("BOK_DETAIL_ID"));
+                }
             }
-            if(map.get("ORDERS_EXT")!=null){
-            	listValOrdersExt.addAll((List<StlOrdersExt>)map.get("ORDERS_EXT"));
-            }
-            if(map.get("ACCOUNTING")!=null){
-            	 listValDealAccounting.addAll((List<BokDealAccounting>)map.get("ACCOUNTING"));
-            }
-            if(map.get("ACCOUNTING_DETAI")!=null){
-            	listValDealAccountingDetail.addAll(( List<BokDealAccountingDetail>)map.get("ACCOUNTING_DETAI"));
-            }
-            if(map.get("BOK_DETAIL_ID")!=null){
-            	listValBokDetailId.addAll((List<BokDetailId>)map.get("BOK_DETAIL_ID"));
-            }
-
             ChannelFeeInfoDeal channelFeeInfoDeal = this.getChannelFeeInfoDeal(item, interfProductDealBookCommonDto.getAcctSubjectType());
             if(channelFeeInfoDeal != null){
                 Map<String,Object> feedealMap = interfCommonService.assetChlFeeLend(valFinProductDeal, channelFeeInfoDeal);
