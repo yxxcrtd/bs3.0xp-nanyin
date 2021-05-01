@@ -60,6 +60,6 @@
         <module>../../tams-invest-interf</module>
         <module>../../tams-invest-parent</module>
         <module>../../tams-system/touguan/app</module>
-		
+		<module>../../tams-common-basicdata</module>
     </modules>
 </project>
