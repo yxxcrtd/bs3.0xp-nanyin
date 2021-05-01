@@ -244,6 +244,9 @@ public class TrdOverdueCalcuPenaltyService extends CommonExportService<TrdOverdu
                 param.put("liBranch",liBranch);
             }
         }
+        /* add by jiangpeng on 20210430 TISHKBS-2089 运营端-逾期标的信息导入报错 */
+        param.put("cashType2",DictCodeListExt1.现金流二级类型_利息.getValue());
+        /* add by jiangpeng on 20210430 TISHKBS-2089 运营端-逾期标的信息导入报错 */
         TrdSecOverdueDuration001Dto trdSecOverdueDurationDto = restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdSecOverdueDuration/selectJxwuFromFinprodId",
                 param, TrdSecOverdueDuration001Dto.class);
         return trdSecOverdueDurationDto;
