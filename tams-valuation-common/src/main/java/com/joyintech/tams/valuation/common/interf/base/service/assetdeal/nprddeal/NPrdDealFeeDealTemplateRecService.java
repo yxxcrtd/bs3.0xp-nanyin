@@ -360,8 +360,17 @@ public class NPrdDealFeeDealTemplateRecService {
         valFinProductDeal.setPs(DictCodeList.交易方向_产品付费.getValue());
         // 交易状态 = C.数据动作标志
         valFinProductDeal.setTradeStatus(dto.getDataActionSign());
+        /**MODIFY BY WUJIE ON 20210501 START
         // 是否结清 = 固定值: ---收息付费时用
         valFinProductDeal.setIsClean(InterfCommonConstant.是否结清_默认);
+         **/
+        if(StringUtil.isNotEmpty(dto.getIsClean2())){
+            valFinProductDeal.setIsClean(dto.getIsClean2());
+        }else{
+            valFinProductDeal.setIsClean(InterfCommonConstant.是否结清_默认);
+        }
+
+        /**MODIFY BY WUJIE ON 20210501 END**/
         // 关联系统交易编号 = C.成交编号
         valFinProductDeal.setfTradeId(dto.getTradeId());
         //20181012 leipeng 原交易编号 = 交易状态为撤销时： 原交易编号=调用共通设计->【详细设计-接口共通方法设计.xlsx】->撤销交易对应的原交易编号查询SHEET 交易状态为非撤销时：原交易编号为空

@@ -365,8 +365,19 @@ public class CPrdDealFeeDealTemplateRecService {
         trdProductDeal.setPs(DictCodeList.交易方向_产品付费.getValue());
         // 交易状态 = A.数据动作标志 新增 --> 01:初始 撤销 --> 03:撤销
         trdProductDeal.setTradeStatus(dto.getDataActionSign());
+        /**MODIFY BY WUJIE ON 20210501 START
         // 是否结清 = 固定值 (非收息付费时设置默认值)
         trdProductDeal.setIsClean(InterfCommonConstant.是否结清_默认);
+        **/
+        if(StringUtil.isNotEmpty(dto.getIsClean2())){
+            trdProductDeal.setIsClean(dto.getIsClean2());
+        }else{
+            trdProductDeal.setIsClean(InterfCommonConstant.是否结清_默认);
+        }
+
+        /**MODIFY BY WUJIE ON 20210501 END**/
+
+
         // 关联系统交易编号 = A.成交编号
         trdProductDeal.setfTradeId(dto.getTradeId());
         // 创建时间 = 系统时间
