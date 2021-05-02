@@ -89,6 +89,12 @@ public class ValMngMnfAffirmPurTrade extends BaseEntity {
     private String channelId;
 
     /**
+     * 费用
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal fee;
+
+    /**
      * 取得 产品代码
      * @return 产品代码
      */
@@ -296,6 +302,25 @@ public class ValMngMnfAffirmPurTrade extends BaseEntity {
     public void setChlFeeAmt(BigDecimal chlFeeAmt) {
         this.chlFeeAmt = chlFeeAmt;
     }
+
+
+    /**
+     * 取得 费用
+     * @return 费用
+     */
+    public BigDecimal getFee() {
+        return fee;
+    }
+
+    /**
+     * 设置 费用
+     * @param fee
+     */
+    public void setFee(BigDecimal fee) {
+        this.fee = fee;
+    }
+
+
 
     /**
      * 取得 通道费是否随交易支付

@@ -92,6 +92,12 @@ public class ValMngMnfRedAffirm extends BaseEntity {
      * 通道代码
      */
     private String channelId;
+    /**
+     * 费用
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal fee;
+
 
     /**
      * 取得 产品代码
@@ -350,4 +356,21 @@ public class ValMngMnfRedAffirm extends BaseEntity {
     public void setChannelId(String channelId) {
         this.channelId = channelId == null ? null : channelId.trim();
     }
+
+    /**
+     * 取得 费用
+     * @return 费用
+     */
+    public BigDecimal getFee() {
+        return fee;
+    }
+
+    /**
+     * 设置 费用
+     * @param fee
+     */
+    public void setFee(BigDecimal fee) {
+        this.fee = fee;
+    }
+
 }
