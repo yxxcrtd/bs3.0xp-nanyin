@@ -16,8 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -31,8 +34,6 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.ValInterflog;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.InterfProductDealBookCommonDto;
 import com.joyintech.tams.valuation.common.interf.base.dto.PrdSupplementDealRecCommonResult;
@@ -55,6 +56,11 @@ import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdSupple
 @Service
 @Scope("prototype")
 public class PrdSupplementDealTemplateRecService {
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private InterfCommonService interfCommonService;
@@ -82,20 +88,22 @@ public class PrdSupplementDealTemplateRecService {
         // 获取数据数量
         result.setDataNum(listValPrdSupplementDeal.size());
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
-
         Map<String, Object> map = this.handleValPrdSupplementDeal(listValPrdSupplementDeal,
                 acctEntity, params,returnResult.getValInterflog());
         if (map != null) {
             result.setListValFinProductDeal((List<TrdProductDeal>)map.get("listValFinProductDeal"));
             result.setListValFinProductDealExt(
-                (List<TrdProductDealAdd>)map.get("listValFinProductDealExt"));
+                    (List<TrdProductDealAdd>)map.get("listValFinProductDealExt"));
             result.setBokDealAccountingList((List<BokDealAccounting>)map.get("listValDealAccounting"));
             result.setBokDealAccountingDetailList(
-                (List<BokDealAccountingDetail>)map.get("listValDealAccountingDetail"));
+                    (List<BokDealAccountingDetail>)map.get("listValDealAccountingDetail"));
             result.setBokDetailIdList((List<BokDetailId>)map.get("listValBokDetailId"));
             // 添加日志
             result.setListValInterflog((List<ValInterflog>)map.get("valInterflogList"));
         }
+
+
+
         return result;
     }
 
@@ -142,19 +150,37 @@ public class PrdSupplementDealTemplateRecService {
             listValFinProductDealExt.add(valFinProductDealExt);
 
             // 入账信息表 账务明细表调用共通
-            InterfProductDealBookCommonDto dealAccounting = interfCommonService.dealAccounting(
-                valFinProductDeal, item.getProdId());
+            InterfProductDealBookCommonDto dealAccounting = interfCommonService.dealAccounting_Layering(valFinProductDeal,
+                    item.getProdId(),item.getProdVdate(),item.getFinprodType());
 
-            listValDealAccounting.add(dealAccounting.getBokDealAccounting());
-            listValDealAccountingDetail.add(dealAccounting.getBokDealAccountingDetail());
-            listValBokDetailId.add(dealAccounting.getBokDetailId());
 
-            resultMap.put("listValFinProductDeal", listValFinProductDeal);
-            resultMap.put("listValFinProductDealExt", listValFinProductDealExt);
-            resultMap.put("listValDealAccounting", listValDealAccounting);
-            resultMap.put("listValDealAccountingDetail", listValDealAccountingDetail);
-            resultMap.put("listValBokDetailId", listValBokDetailId);
+            if (CollectionUtils.isNotEmpty(dealAccounting.getBokDealAccountingList())) {
+                listValDealAccounting.addAll(dealAccounting.getBokDealAccountingList());
+            }
+            if (CollectionUtils.isNotEmpty(dealAccounting.getBokDealAccountingDetailList())) {
+                listValDealAccountingDetail.addAll(dealAccounting.getBokDealAccountingDetailList());
+            }
+            if (CollectionUtils.isNotEmpty(dealAccounting.getBokDetailIdList())) {
+                //设置账务明细代码表的四级科目号
+                String detailSubjectNoTail = item.getProdId();
+                String detailSubnameTail = item.getProdName();
+                if(DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(item.getFinprodType())){
+                    detailSubjectNoTail += new SimpleDateFormat("yyyyMMdd").format(item.getProdVdate());
+                    detailSubnameTail += new SimpleDateFormat("yyyyMMdd").format(item.getProdVdate());
+                }
+                detailSubjectNoTail = detailSubjectNoTail+ FinalString.LAYERING_SPLIT+item.getFinprodType();
+                interfCommonService.setDetailSubjectNoTail(dealAccounting.getBokDetailIdList(),
+                        detailSubjectNoTail, detailSubnameTail);
+                listValBokDetailId.addAll(dealAccounting.getBokDetailIdList());
+            }
         }
+
+        resultMap.put("listValFinProductDeal", listValFinProductDeal);
+        resultMap.put("listValFinProductDealExt", listValFinProductDealExt);
+        resultMap.put("listValDealAccounting", listValDealAccounting);
+        resultMap.put("listValDealAccountingDetail", listValDealAccountingDetail);
+        resultMap.put("listValBokDetailId", listValBokDetailId);
+
         valInterflogList = interfCommonService.filterValInterflogList(valInterflog, bookSetIds, valModel);
     	resultMap.put("valInterflogList", valInterflogList);
         return resultMap;
@@ -196,6 +222,9 @@ public class PrdSupplementDealTemplateRecService {
         FinCashInfo finCashInfo = interfCommonService.queryCashInfo(paramMap);
         if(finCashInfo!=null){
         	result.setFinprodType(finCashInfo.getCashType2());
+        }
+        else{
+            result.setFinprodType(DictCodeListExt1.现金流二级类型_回补.getValue());
         }
         // 分支序号
         result.setBranch(branch);
