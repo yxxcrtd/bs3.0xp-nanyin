@@ -121,7 +121,7 @@ public class EtrInvestBondInfo001Controller extends BaseController {
     @RequestMapping("/getfinprodId")
     public List<SuggestDto> getfinprodId(String param)
         throws Exception {
-        List<SuggestDto> temp = etrInvestBondInfoService.getfinprodId(param);
+        List<SuggestDto> temp = etrInvestBondInfoService.getfinprodId(param, this.getParam("pageId"));
         return temp;
     }
     /**
