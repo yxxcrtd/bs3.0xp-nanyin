@@ -14,14 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.StlOrders;
-import com.joyintech.tams.common.base.entity.StlOrdersExt;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.valuation.common.interf.base.dto.PlanAssetCurrencyDealCommonResult;
 
@@ -50,6 +43,9 @@ public class PlanAssetCurrencyDealRecProcessorResult extends BaseEntity {
         this.listTrdProductDeal = result.getListTrdProductDeal();
         this.listTrdProductDealExt = result.getListTrdProductDealExt();
         this.valInterflog = result.getValInterflog();
+        /**ADD BY WUJIE ON 20210501 START**/
+        this.listValTradeFeeDetail = result.getListValTradeFeeDetail();
+        /**ADD BY WUJIE ON 20210501 END**/
         this.paramMap = result.getParamMap();
     }
 
@@ -94,6 +90,13 @@ public class PlanAssetCurrencyDealRecProcessorResult extends BaseEntity {
      * 结算指令扩展表
      */
     private List<StlOrdersExt> listStlOrdersExt = new ArrayList<StlOrdersExt>();
+
+    /**
+     * 交易费用明细表
+     * ADD BY WUJIE ON 20210501
+     */
+    private List<TrdTradeFeeDetail> listValTradeFeeDetail = new ArrayList<TrdTradeFeeDetail>();
+
 
     /**
      * 获取 listTrdProductDeal
@@ -273,4 +276,21 @@ public class PlanAssetCurrencyDealRecProcessorResult extends BaseEntity {
         this.paramMap = paramMap;
     }
 
+    /**
+     * 获取 listValTradeFeeDetail
+     *
+     * @return listValTradeFeeDetail.
+     */
+    public List<TrdTradeFeeDetail> getListValTradeFeeDetail() {
+        return listValTradeFeeDetail;
+    }
+
+    /**
+     * 设置 listValTradeFeeDetail
+     *
+     * @param listValTradeFeeDetail listValTradeFeeDetail
+     */
+    public void setListValTradeFeeDetail(List<TrdTradeFeeDetail> listValTradeFeeDetail) {
+        this.listValTradeFeeDetail = listValTradeFeeDetail;
+    }
 }

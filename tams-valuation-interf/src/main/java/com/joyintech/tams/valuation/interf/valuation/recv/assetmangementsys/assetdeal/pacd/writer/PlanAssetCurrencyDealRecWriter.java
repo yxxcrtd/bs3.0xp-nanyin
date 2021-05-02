@@ -15,28 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.StlOrders;
-import com.joyintech.tams.common.base.entity.StlOrdersExt;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.ValInterflog;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValBokDetailIdBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValDealAccountingBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValDealAccountingDetailBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductDealBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValInterflogBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValOrdersBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValOrdersExtBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValTrdProductDealAddBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
 import com.joyintech.tams.valuation.interf.core.entity.InterfExecuteInfo;
@@ -104,6 +90,13 @@ public class PlanAssetCurrencyDealRecWriter extends InterfBaseWriter<BaseEntity>
     
     @Autowired
     private InterfCommonService interfCommonService;
+
+    /**
+     * 交易费用明细表
+     * add by wujie on 20210501
+     */
+    @Autowired
+    private ValTradeFeeDetailBatchMapper valTradeFeeDetailBatchMapper;
     
     
     @Value("${interf.properties.maxSqlNum}")
@@ -276,6 +269,30 @@ public class PlanAssetCurrencyDealRecWriter extends InterfBaseWriter<BaseEntity>
                     valBokDetailIdBatchMapper.insertBatch(listInsert);
                 }
             }
+            /**add by wujie on 20210501 start**/
+            // 交易费用明细表
+            List<TrdTradeFeeDetail> listValTradeFeeDetail = result.getListValTradeFeeDetail();
+            // 入库
+            if (CollectionUtils.isNotEmpty(listValTradeFeeDetail)) {
+                // 定义一个固定大小插入存放集合
+                List<TrdTradeFeeDetail> listInsert = new ArrayList<TrdTradeFeeDetail>();
+                for (TrdTradeFeeDetail e : listValTradeFeeDetail) {
+                    // 小于最大值
+                    if (listInsert.size() < maxSqlNum) {
+                        listInsert.add(e);
+                    }
+                    else if (listInsert.size() >= maxSqlNum) {
+                        valTradeFeeDetailBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                // 如果循环结束，小于最大值
+                if (CollectionUtils.isNotEmpty(listInsert)) {
+                    valTradeFeeDetailBatchMapper.insertBatch(listInsert);
+                }
+            }
+            /**add by wujie on 20210501 end**/
             
             //指令
             List<StlOrders> listValOrders = result.getListStlOrders();
