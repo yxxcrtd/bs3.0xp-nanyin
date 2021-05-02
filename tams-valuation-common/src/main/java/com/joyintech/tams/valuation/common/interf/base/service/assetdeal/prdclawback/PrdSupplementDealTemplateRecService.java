@@ -203,29 +203,20 @@ public class PrdSupplementDealTemplateRecService {
         String tradeId = interfCommonService.getTradeid(DictCodeList.交易方向_回补.getValue(),
             dto.getPayDate(), "A");
         result.setTradeId(tradeId);
+
+
         // 金融产品代码
-        String cashId;
         Long branch;
         if (StringUtil.equals(dto.getFinprodType(), DictCodeListExt1.金融产品类型_理财子产品)) {
-            cashId = InterfHelper.getMd5CashId_(
-                dto.getProdId() + new SimpleDateFormat("yyyyMMdd").format(dto.getProdVdate()), DictCodeListExt1.现金流二级类型_回补.getValue());
             branch = Long.valueOf(new SimpleDateFormat("yyyyMMdd").format(dto.getProdVdate()));
-        }
+         }
         else {
-            cashId = InterfHelper.getMd5CashId_(dto.getProdId(),DictCodeListExt1.现金流二级类型_回补.getValue());
             branch = InterfCommonConstant.分支序号_默认;
         }
-        result.setFinprodId(cashId);
+        result.setFinprodId(dto.getProdId());
         // 金融产品类型
-        Map<String,Object> paramMap = new HashMap<String,Object>();
-        paramMap.put("cashId", InterfHelper.getMd5CashId_(dto.getProdId() , dto.getFeeId()));
-        FinCashInfo finCashInfo = interfCommonService.queryCashInfo(paramMap);
-        if(finCashInfo!=null){
-        	result.setFinprodType(finCashInfo.getCashType2());
-        }
-        else{
-            result.setFinprodType(DictCodeListExt1.现金流二级类型_回补.getValue());
-        }
+        result.setFinprodType(DictCodeListExt1.现金流二级类型_固定管理费.getValue());
+
         // 分支序号
         result.setBranch(branch);
         // 交易日
