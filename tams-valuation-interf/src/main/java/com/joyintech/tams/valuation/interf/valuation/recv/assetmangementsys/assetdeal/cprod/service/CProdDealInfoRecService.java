@@ -105,6 +105,7 @@ public class CProdDealInfoRecService {
             ps.add(DictCodeList.交易方向_产品违约赎回.getValue());
             ps.add(DictCodeList.交易方向_份额强增.getValue());
             ps.add(DictCodeList.交易方向_份额强减.getValue());
+            ps.add(DictCodeList.交易方向_提前终止.getValue());
             /**add by wujie on 20210428 start**/
             
             paramMap.put("pslist", ps);
