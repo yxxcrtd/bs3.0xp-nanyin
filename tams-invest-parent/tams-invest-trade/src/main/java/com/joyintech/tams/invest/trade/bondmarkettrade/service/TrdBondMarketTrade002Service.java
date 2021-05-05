@@ -588,5 +588,9 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
         
         inputDto.setBaseTradeInfoDtos(dto.getBaseTradeInfoDtos());
     }
+    
+    @Override
+    public void doBack(TrdBondMarketTradeDto entity) {
+    }
 }
 
