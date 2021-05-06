@@ -4,13 +4,13 @@
 	<select id="queryForPage" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 		SELECT
 		a.STATUS as status,
-		a.COUNTER_ID,
-		a.COUNTER_NAME,
-		a.COUNTER_TYPE1,
-		a.COUNTER_TYPE2,
-		a.CREATE_USER,
+		a.COUNTER_ID as counterId,
+		a.COUNTER_NAME as counterName,
+		a.COUNTER_TYPE1 as counterType1,
+		a.COUNTER_TYPE2 as counterType2,
+		a.CREATE_USER as createUser,
 		a.CREATE_TIME as createTime,
-		a.UPDATE_USER,
+		a.UPDATE_USER as updateUser,
 		a.UPDATE_TIME as updateTime,
 		a.SVR_DATA_SOURCES as dataSource,
 		'' as uuid
@@ -40,13 +40,13 @@
 		union all
 		SELECT
 		'A' as status,
-		c.COUNTER_ID,
-		c.COUNTER_NAME,
-		c.COUNTER_TYPE1,
-		c.COUNTER_TYPE2,
-		c.CREATE_USER,
+		c.COUNTER_ID as counterId,
+		c.COUNTER_NAME as counterName,
+		c.COUNTER_TYPE1 as  counterType1,
+		c.COUNTER_TYPE2 as counterType2 ,
+		c.CREATE_USER as createUser,
 		c.CREATE_TIME as createTime,
-		c.UPDATE_USER,
+		c.UPDATE_USER as updateUser,
 		c.UPDATE_TIME as updateTime,
 		'DB' as dataSource,
 		c.DATAUUID as uuid

@@ -18,15 +18,15 @@
             }
         },
         cols: [
-            { title: "数据状态", field:'statusName',width:'8%'},
+            { title: "数据状态", field:'statusName',width:'8%', sortField:'status'},
             { title: "status",  visible:false, field:'status'},
-            { title: "关联机构代码", field:'relorgId',width:'8%'},
-            { title: "关联机构代码名称", field:'organName',width:'12%'},
-            { title: "创建人", field:'createUser',width:'8%'},
-            { title: "创建时间", field:'createTime',type:'date',width:'12%'},
-            { title: "更新人", field:'updateUser',width:'8%'},
-            { title: "更新时间", field:'updateTime',type:'date', width:'8%'},
-            { title: "数据来源", field:'svrDataSourcesName', width:'10%'},
+            { title: "关联机构代码", field:'relorgId',width:'8%', sortField:'relorgId'},
+            { title: "关联机构代码名称", field:'organName',width:'12%', sortField:'organName'},
+            { title: "创建人", field:'createUser',width:'8%', sortField:'createUser'},
+            { title: "创建时间", field:'createTime',type:'date',width:'12%', sortField:'createTime'},
+            { title: "更新人", field:'updateUser',width:'8%', sortField:'updateUser'},
+            { title: "更新时间", field:'updateTime',type:'date', width:'8%', sortField:'updateTime'},
+            { title: "数据来源", field:'svrDataSourcesName', width:'10%', sortField:'svrDataSources'},
             {  visible:false, field:'svrDataSources'},
             {
                 title : '操作',
