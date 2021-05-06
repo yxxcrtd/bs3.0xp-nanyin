@@ -129,6 +129,7 @@
 		    INNER JOIN BOK_BOOKSET C ON A.BOOKSET_ID = C.BOOKSET_ID /**账套表**/
 		    LEFT JOIN FIN_PRODUCT D ON D.FINPROD_ID = B.BUSI_ID /**标的类金融产品(金融产品代码=业务明细代码)**/
 		    INNER JOIN BOK_SUBJECT E ON E.BOOKSET_ID = C.BOOKSET_ID_TMPL AND B.SUBJECT_NO =  E.SUBJECT_NO /**账套科目表**/
+			left join fin_product_add fpa on b.busi_id = fpa.finprod_id
 		WHERE C.BOOKSET_TYPE = #{booksetType}
 			<!-- 业务类别 -->
             <!-- <if test="comTableId!=null and comTableId != ''">
@@ -163,15 +164,8 @@
             </if>
 			<!-- 资产/负债代码 -->
 			<if test="busiId!=null and busiId != ''">
-				AND (upper(B.BUSI_ID) LIKE '%' ||upper(#{busiId})|| '%' OR
-				(upper(B.BUSI_ID) LIKE
-				'%' || (select (nvl((select upper(t.finprod_id)
-				from fin_product_add t
-				where (upper(t.appear_market_id) LIKE
-				'%' || upper(#{busiId})  || '%' or
-				concat('F01_',
-				upper(t.appear_market_id)) LIKE '%' || upper(#{busiId}) || '%')),' '))
-				from dual) || '%'))
+				AND (upper(B.BUSI_ID) LIKE '%' ||upper(#{busiId})|| '%'
+				OR (upper(concat('F01_',fpa.appear_market_id)) LIKE '%' || upper(#{busiId}) || '%'))
 			</if>
 			<!-- 币种 -->
 			<if test="ccy!=null and ccy != ''">
