@@ -49,8 +49,10 @@ $(function() {
             ,{field:'actualPositionAmount', title: 'ActualTimeAsset001.actualPositionAmount',type:'number', width : 200}//实际持仓
             ,{field:'instructionsAmount', title: 'ActualTimeAsset001.instructionsAmount',type:'number', width : 200}//指令可用持仓
             ,{field:'tradePositionAmount', title: 'ActualTimeAsset001.tradePositionAmount',type:'number', width : 200}//交易可用持仓
-            ,{field:'pledgeAmount', title: 'ActualTimeAsset001.pledgeAmount',type:'number', width : 200}//预减持仓
-            ,{field:'preReductionAmount', title: 'ActualTimeAsset001.preReductionAmount',type:'number', width : 200}//质押持仓
+            /* modify by jiangpeng on 20210416 start ZGBSSE-226 【行权债升级】通道债券行权赎回生效及流程中，交易可用头寸、实际头寸未扣减。*/
+            ,{field:'pledgeAmount', title: 'ActualTimeAsset001.pledgeAmount',type:'number', width : 200}//质押持仓
+            ,{field:'preReductionAmount', title: 'ActualTimeAsset001.preReductionAmount',type:'number', width : 200}//预减持仓
+            /* modify by jiangpeng on 20210416 end ZGBSSE-226 【行权债升级】通道债券行权赎回生效及流程中，交易可用头寸、实际头寸未扣减。*/
            
             
         ]
