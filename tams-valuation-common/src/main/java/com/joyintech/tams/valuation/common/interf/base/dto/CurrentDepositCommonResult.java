@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.ValInterflog;
 import com.joyintech.framework.base.BaseEntity;
+import org.apache.shiro.crypto.hash.Hash;
 
 /**
  * 活期存款利息-基础数据接口 模板处理返回共通结果〈一句话功能简述〉 〈功能详细描述〉
@@ -87,7 +89,7 @@ public class CurrentDepositCommonResult extends BaseEntity {
 	 */
 	private List<ValInterflog> valInterflog = new ArrayList<ValInterflog>();
 	
-    private Map<String,Object> paramMap;
+    private Map<String,Object> paramMap = new HashMap<String,Object>();
     
     /**
      * 读取数据数量

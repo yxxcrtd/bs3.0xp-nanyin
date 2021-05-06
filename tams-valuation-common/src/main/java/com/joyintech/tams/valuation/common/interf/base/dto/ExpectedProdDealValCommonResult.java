@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class ExpectedProdDealValCommonResult extends BaseEntity{
      */
     private List<StlOrdersExt> listValOrdersExt = new ArrayList<StlOrdersExt>();
     
-    private Map<String,Object> paramMap;
+    private Map<String,Object> paramMap = new HashMap<String,Object>();
     
     /**
      * 日志

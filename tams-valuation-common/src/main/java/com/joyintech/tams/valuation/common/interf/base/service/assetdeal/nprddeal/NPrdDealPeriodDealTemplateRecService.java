@@ -99,6 +99,13 @@ public class NPrdDealPeriodDealTemplateRecService {
         if (listValPrdPeriodDealN == null) {
         	listValPrdPeriodDealN = new ArrayList<ValPrdPeriodDealN>();
         }
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
+
+
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = handleValPrdPeriodDealN(listValPrdPeriodDealN,acctEntity.getResovleDate(),params,returnResult.getValInterflog());
         if(map!=null){
