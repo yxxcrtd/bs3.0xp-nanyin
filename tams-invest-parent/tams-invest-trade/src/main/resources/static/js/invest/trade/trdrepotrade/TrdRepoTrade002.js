@@ -599,7 +599,7 @@
                         checkAndAssign("#avaStandardStockPosition", data);
                     }
                     else {
-                        $("#avaStandardStockPosition").val('');
+                        $("#avaStandardStockPosition").val('0');
                     }
                 });
         }
