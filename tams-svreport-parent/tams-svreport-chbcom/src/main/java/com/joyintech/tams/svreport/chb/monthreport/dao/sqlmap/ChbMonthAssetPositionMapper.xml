@@ -872,7 +872,57 @@
           </foreach>
       </if>
   </select>
-  
+  <select id="selectOtherAssetListEx" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            parameterType="date">
+      SELECT
+          A.SUBJECT_NO AS assetCode,
+          A.B_AMT AS assetvalueA,
+          PRODINFO.PROD_ID AS prodId,
+          PRODINFO.IS_FHXGCP AS isFhxgcp
+      FROM BOK_BALANCE A
+          LEFT JOIN CHB_PRD_BASEINFO PRODINFO
+          ON PRODINFO.PROD_ID = A.BOOKSET_ID
+      WHERE A.BALANCE_DATE =  #{cdate,jdbcType=DATE}
+          AND A.SUBJECT_NO IN (SELECT OBJFIELD1 FROM CHB_TYPE_MAPPING_EX WHERE MAPPINGCODE='MAPPINGCODE_FEE_SUBJECTNO' AND STATUS='E')
+          AND A.BAL_FLAG = 'C'
+          <if test="prodids !=null and prodids.size()!=0">
+              and A.BOOKSET_ID in
+              <foreach collection="prodids" item="prodid" index="index" open="(" separator="," close=")">
+                  <if test="(index % 999) == 998">
+                      null) OR A.BOOKSET_ID in (
+                  </if>
+                  #{prodid}
+              </foreach>
+          </if>
+          AND PRODINFO.PROFIT_TYPE = '03'
+  </select>
+  <select id="selectAssetValueB" resultType="java.math.BigDecimal" >
+    SELECT
+            ROUND(
+                AA.SMV * (CC.ACCUAMT / BB.COST),
+                5
+            ) assetvalueB
+        FROM
+            RSK_VALTBL_ASSET_SUB AA
+        LEFT JOIN (
+            SELECT
+                NVL(SUM.SMV, 0) COST,
+                SUM.PTL_ID
+            FROM
+                RSK_VALTBL_SUM_ASSET_SUB SUM
+            WHERE
+                SUM.VAL_DATE = #{enddate,jdbcType=DATE}
+            AND SUM.SUB_CODE = 601
+            GROUP BY
+                SUM.PTL_ID,
+                SUM.SUB_CODE
+        ) BB ON BB.PTL_ID = AA.PTL_ID
+        LEFT JOIN CHB_ASSET_POSITION CC ON AA.PTL_ID = CC.ASSET_CODE
+        WHERE
+            AA.SUB_CODE = #{assetCode,jdbcType=VARCHAR}
+            AND CC.PROD_ID = #{prodId,jdbcType=VARCHAR}
+            AND AA.VAL_DATE = #{enddate,jdbcType=DATE}
+  </select>
     <select id="selectAssetpositionByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             resultSetType="FORWARD_ONLY" fetchSize="1000" >
         select

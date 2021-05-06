@@ -106,6 +106,13 @@ public interface ChbMonthAssetPositionMapper {
      * @return
      */
     BigDecimal selectBotCash(Date cdate);
+
+    /**
+     * 计算查询穿透后价值
+     * @param pos
+     * @return
+     */
+    BigDecimal selectAssetValueB(ChbMonthAssetPosition pos,List<ChbMonthAssetPosition> chbMonthAssetPositionList);
     
     List<ChbMonthAssetPosition> selectBotCashList(Date cdate);
     
@@ -115,6 +122,13 @@ public interface ChbMonthAssetPositionMapper {
      * @return
      */
     List<ChbMonthAssetPosition> selectBotCashListEx(@Param("cdate")Date cdate,@Param("prodids")List<String> prodids);
+
+    /**
+     *
+     * @param cdate
+     * @return
+     */
+    List<ChbMonthAssetPosition> selectOtherAssetListEx(@Param("cdate")Date cdate,@Param("prodids")List<String> prodids);
 
     /**
      *

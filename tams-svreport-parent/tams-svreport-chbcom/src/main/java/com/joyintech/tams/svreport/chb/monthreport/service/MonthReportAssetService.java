@@ -411,6 +411,29 @@ public class MonthReportAssetService {
 //    	}
 //    	chbMonthAssetPositionMapper.insert(cashPosition);
         logger.info("处理剩余现金开始结束：");
+
+		//查询其他负责
+		logger.info("处理其他负责开始：");
+		List<ChbMonthAssetPosition> otherAssetList=chbMonthAssetPositionMapper.selectOtherAssetListEx(lastday,report.getProdids());
+		if(otherAssetList!=null&&!otherAssetList.isEmpty()){
+			for(ChbMonthAssetPosition oal:otherAssetList){
+
+				oal.setPosuuid(IDGenerator.generate(36));
+				oal.setAssettype("99");
+				oal.setAssettype2("2000");
+				//oal.子公司月报资产一级分类(99);
+				//oal.子公司月报资产二级分类(9999);
+				//oal.剩余期限(1);
+				oal.setStartdate(report.getStartdate());
+				oal.setEnddate(report.getEnddate());
+				oal.setBookdate(report.getSubmitTime());
+				oal.setAssetvalueB(oal.getAssetvalueA().add(chbMonthAssetPositionMapper.selectAssetValueB(oal,otherAssetList)));
+				chbMonthAssetPositionMapper.insert(oal);
+			}
+		}
+		logger.info("处理其他负责结束：");
+
+
     }
     
 
@@ -932,18 +955,21 @@ public class MonthReportAssetService {
         
        
         //多级法人改造。不能出汇总数据，会导致分支机构数据删除错误
-//        //汇总数据合计
-//        sumDetail(assetMonthReportDetailMap);
-//        //汇总数据入库
-//        insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
-        
-        
-        //机构数据合计以及入库
-        for (Entry<String, Map<String, ChbMonthReportDetail>> details : deptMap.entrySet()) {
-        	sumDetail(details.getValue());
-            insertDetail(details.getValue(), report.getTermid(),details.getKey());
+		if(!CommonUtil.isBAmodel()){
+			//汇总数据合计
+			sumDetail(assetMonthReportDetailMap);
+			//汇总数据入库
+        	insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
+		}else{
+			//机构数据合计以及入库
+			for (Entry<String, Map<String, ChbMonthReportDetail>> details : deptMap.entrySet()) {
+				sumDetail(details.getValue());
+				insertDetail(details.getValue(), report.getTermid(),details.getKey());
+			}
 		}
-        
+
+
+
     	return assetMonthReportDetailMap;
     }
     
