@@ -332,11 +332,8 @@ public class Chb3CnBondUpInterfService extends InterfService {
 
             // 解析处理开始前，登录监控信息表，状态处理中
             ChbFileReadMonitorInfo monitorInfoDto = new ChbFileReadMonitorInfo();
-            // 合并mysql改造代码  add by zoujiamin  2021/04/20  start
-//            monitorInfoDto.setHandleSeqno(
-//                CommonUtil.getSequenceIndexData(DataIndexSequenceType.上游文件读取处理监控序列号));
-            monitorInfoDto.setHandleSeqno(IDGenerator.generate());
-            // 合并mysql改造代码  add by zoujiamin  2021/04/20  start
+            monitorInfoDto.setHandleSeqno(
+                CommonUtil.getSequenceIndexData(DataIndexSequenceType.上游文件读取处理监控序列号));
             monitorInfoDto.setHandleFileName(realName);
             monitorInfoDto.setHandleFilePath(remotePath);
             monitorInfoDto.setFileReadStartTime(new Date());

@@ -986,14 +986,12 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			// 当前批次报送时点集合
 			List<Date> dateList = null;
 			// 报送时点通用方法
-				// 早期mysql改造代码合并 add by zoujiamin  2021/04/20  start
-//			dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_投资者持有信息登记.getValue(), subStatus, dateMap,
-//					chbInvestholdInfoSub.getHoldDate());
-//			if (CollectionUtils.isNotEmpty(dateList)) {
-//				chbInvestholdInfoSub.setChbSubmitDeadline(dateList.get(0));
-//				chbInvestholdInfoSub.setSubmitDeadline(dateList.get(1));
-//			}
-				// 早期mysql改造代码合并 add by zoujiamin  2021/04/20  end
+			dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_投资者持有信息登记.getValue(), subStatus, dateMap,
+					chbInvestholdInfoSub.getHoldDate());
+			if (CollectionUtils.isNotEmpty(dateList)) {
+				chbInvestholdInfoSub.setChbSubmitDeadline(dateList.get(0));
+				chbInvestholdInfoSub.setSubmitDeadline(dateList.get(1));
+			}
 			}
 			if (allSubHoldInfoDataMap.containsKey(dataKey + GlobalConstant.UNDER_LINE + SEND_STATUS_01)) {
 				chbInvestholdInfoSub.setRegistSeqno(allSubHoldInfoDataMap
@@ -1011,10 +1009,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
 					chbInvestholdInfoSub.setRegistSeqno(getId());
 				}else{
-					// 早期mysql改造代码合并 add by zoujiamin  2021/04/20 start
-//				chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-				chbInvestholdInfoSub.setRegistSeqno(IDGenerator.generate(20));
-					// 早期mysql改造代码合并 add by zoujiamin  2021/04/20 end
+				chbInvestholdInfoSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 				}
 				// add by etliu 20180829 start
 				if (isDB2DataBase) {
@@ -1776,14 +1771,11 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				//String checkMess="";
 				InvestorsHoldInfo001Dto dto = new InvestorsHoldInfo001Dto();
 				String registBankCode = item.get("REGIST_BANK_CODE");
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  start
-				dto.setRegistBankCode(registBankCode);
 				// 登记银行代码校验
-//				if (StringUtil.isEmpty(registBankCode)) {
-//					message.add(this.getMessage("REPORT_COMMON_E_0057", "登记银行代码"));
-//					isNeed = false;
-//				}
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
+				if (StringUtil.isEmpty(registBankCode)) {
+					message.add(this.getMessage("REPORT_COMMON_E_0057", "登记银行代码"));
+					isNeed = false;
+				}
 				// excel中的登记银行代码必须与当前导入人的登记银行代码一致!
 				if (isExcel) {
 					if (!StringUtil.equals(bankCode, registBankCode)) {
@@ -1801,54 +1793,48 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				}
 				// 上游接口 为空或不存在直接移除
 				else {
-				//早期mysql改造代码合并  add by zoujiamin  2021/04/20  start
-//					if (!registMap.containsKey(registBankCode)) {
-//						isNeed = false;
-//						message.add("登记银行代码在机构管理中不存在！");
-//					} else {
-//						dto.setRegistBankCode(registBankCode);
-//						if (item.containsKey("ORG_CODE") && StringUtil.isNotEmpty(item.get("ORG_CODE"))) {
-//							dto.setOrgCode(item.get("ORG_CODE"));
-//						} else {
-//							// 未传机构代码 数据字段遗失不保存
-//							isNeed = false;
-//						}
-//					}
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
+					if (!registMap.containsKey(registBankCode)) {
+						isNeed = false;
+						message.add("登记银行代码在机构管理中不存在！");
+					} else {
+						dto.setRegistBankCode(registBankCode);
+						if (item.containsKey("ORG_CODE") && StringUtil.isNotEmpty(item.get("ORG_CODE"))) {
+							dto.setOrgCode(item.get("ORG_CODE"));
+						} else {
+							// 未传机构代码 数据字段遗失不保存
+							isNeed = false;
+						}
+					}
 				}
 
 				// 识别标识校验
 				String indentifyMark = item.get("INDENTIFY_MARK");
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  start
-//				if (StringUtil.isEmpty(indentifyMark)) {
-//					isNeed = false;
-//					message.add(this.getMessage("REPORT_COMMON_E_0057", "识别标识"));
-//				} else if (!Pattern.compile("[^\u4e00-\u9fa5]+").matcher(indentifyMark).matches()) {
-//					isNeed = false;
-//					message.add(this.getMessage("CHB_EQUITYINFO_E_012", "识别标识"));
-////				} else if (INDENTIFY_MARK.length() > 30) {
-//				} else if (EquityInfoCheckUtil.getByteLength(indentifyMark) > 30) {
-//					isNeed = false;
-//					message.add(this.getMessage("REPORT_COMMON_E_0002", "识别标识", 30));
-//				}
-//				//add by  liubin 20181108 start 判断是否是excel导入并且识别标识不存在，直接拦截
-//				else if(isExcel && investorsHoldInfo001Mapper.countInvestorByIndentifyMark(indentifyMark)==0 ){
-//					isNeed = false;
-//					message.add(this.getMessage("CHB_INVESTHOLD_INDENTIFYMARK"));
-//				}
-//				//add by liubin 20181108 end
-//				// add by etliu 20180912 start
-//                else if (EquityInfoCheckUtil.findPatern(EquityInfoValid.PATTERN_ALL, indentifyMark)) {
-//                    message.add(this.getMessage("CHB_EQUITYINFO_E_035", "识别标识"));
-//                }
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
-                // add by etliu 20180912 end
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  start
-//				else {
+				if (StringUtil.isEmpty(indentifyMark)) {
+					isNeed = false;
+					message.add(this.getMessage("REPORT_COMMON_E_0057", "识别标识"));
+				} else if (!Pattern.compile("[^\u4e00-\u9fa5]+").matcher(indentifyMark).matches()) {
+					isNeed = false;
+					message.add(this.getMessage("CHB_EQUITYINFO_E_012", "识别标识"));
+//				} else if (INDENTIFY_MARK.length() > 30) {
+				} else if (EquityInfoCheckUtil.getByteLength(indentifyMark) > 30) {
+					isNeed = false;
+					message.add(this.getMessage("REPORT_COMMON_E_0002", "识别标识", 30));
+				}
+				//add by  liubin 20181108 start 判断是否是excel导入并且识别标识不存在，直接拦截
+				else if(isExcel && investorsHoldInfo001Mapper.countInvestorByIndentifyMark(indentifyMark)==0 ){
+					isNeed = false;
+					message.add(this.getMessage("CHB_INVESTHOLD_INDENTIFYMARK"));
+				}
+				//add by liubin 20181108 end
+				// add by etliu 20180912 start
+				else if (EquityInfoCheckUtil.findPatern(EquityInfoValid.PATTERN_ALL, indentifyMark)) {
+					message.add(this.getMessage("CHB_EQUITYINFO_E_035", "识别标识"));
+				}
+				// add by etliu 20180912 end
+				else {
 					dto.setIndentifyMark(indentifyMark);
-//				}
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
-				 //判断系统是否存在该投资者的信息
+				}
+				// //判断系统是否存在该投资者的信息
 				// if(StringUtil.isNotEmpty(dto.getRegistBankCode())&&StringUtil.isNotEmpty(dto.getIndentifyMark())&&
 				// !investorMap.containsKey(dto.getRegistBankCode()+GlobalConstant.VERTICAL_LINE+dto.getIndentifyMark())){
 				// message.add(this.getMessage("REPORT_E_0015", "识别标识"));
@@ -1866,43 +1852,41 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 
 
 				Date currDate = DateUtil.now();//当前日期
-				
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  start
-//				if (StringUtil.isEmpty(holdDate)) {
-//					isNeed = false;
-//					message.add(this.getMessage("REPORT_COMMON_E_0057", "持有日期"));
-//				} else if (holdDate.length() < 8) {
-//					isNeed = false;
-//					message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "持有日期"));
-//				} else if (!DateUtil.isDateStr(holdDate, DateUtil.DEFAULT_OTHER_FORMAT,
-//						DateUtil.DEFAULT_ANOTHER_FORMAT, DateUtil.DEFAULT_DATE_FORMAT_EN)) {
-//					isNeed = false;
-//					message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "持有日期"));
-//				} else if (DateUtil.isDateStr(holdDate, DateUtil.DEFAULT_OTHER_FORMAT)
-//						&& !isDateE(holdDate, DateUtil.DEFAULT_OTHER_FORMAT)) {
-//					isNeed = false;
-//					message.add(this.getMessage("CHB_INVESTHOLD_CHECKHOLDDATE"));
-//				} else if (DateUtil.isDateStr(holdDate, DateUtil.DEFAULT_ANOTHER_FORMAT)
-//						&& !isDateE(holdDate, DateUtil.DEFAULT_ANOTHER_FORMAT)) {
-//					isNeed = false;
-//					message.add(this.getMessage("CHB_INVESTHOLD_CHECKHOLDDATE"));
-//				} else if (DateUtil.isDateStr(holdDate, DateUtil.DEFAULT_DATE_FORMAT_EN)
-//						&& !isDateE(holdDate, DateUtil.DEFAULT_DATE_FORMAT_EN)) {
-//					isNeed = false;
-//					message.add(this.getMessage("CHB_INVESTHOLD_CHECKHOLDDATE"));
-//				}
-//				// add by etliu 20180912 start
-//		        else if (EquityInfoCheckUtil.findPatern(EquityInfoValid.PATTERN_ALL, holdDate)) {
-//		            message.add(this.getMessage("CHB_EQUITYINFO_E_035", "持有日期"));
-//		        }
-//		        // add by etliu 20180912 end
-//				else if(DateUtil.compareDate(currDate, DateUtil.parse(holdDate))<0){
-//					isNeed = false;
-//					message.add(this.getMessage("CHB_INVESTHOLD_CHECKHOLDDATE_2"));
-//				}else {
+				if (StringUtil.isEmpty(holdDate)) {
+					isNeed = false;
+					message.add(this.getMessage("REPORT_COMMON_E_0057", "持有日期"));
+				} else if (holdDate.length() < 8) {
+					isNeed = false;
+					message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "持有日期"));
+				} else if (!DateUtil.isDateStr(holdDate, DateUtil.DEFAULT_OTHER_FORMAT,
+						DateUtil.DEFAULT_ANOTHER_FORMAT, DateUtil.DEFAULT_DATE_FORMAT_EN)) {
+					isNeed = false;
+					message.add(this.getMessage("REPORT_COMMON_FILE_E_0013", "持有日期"));
+				} else if (DateUtil.isDateStr(holdDate, DateUtil.DEFAULT_OTHER_FORMAT)
+						&& !isDateE(holdDate, DateUtil.DEFAULT_OTHER_FORMAT)) {
+					isNeed = false;
+					message.add(this.getMessage("CHB_INVESTHOLD_CHECKHOLDDATE"));
+				} else if (DateUtil.isDateStr(holdDate, DateUtil.DEFAULT_ANOTHER_FORMAT)
+						&& !isDateE(holdDate, DateUtil.DEFAULT_ANOTHER_FORMAT)) {
+					isNeed = false;
+					message.add(this.getMessage("CHB_INVESTHOLD_CHECKHOLDDATE"));
+				} else if (DateUtil.isDateStr(holdDate, DateUtil.DEFAULT_DATE_FORMAT_EN)
+						&& !isDateE(holdDate, DateUtil.DEFAULT_DATE_FORMAT_EN)) {
+					isNeed = false;
+					message.add(this.getMessage("CHB_INVESTHOLD_CHECKHOLDDATE"));
+				}
+				// add by etliu 20180912 start
+				else if (EquityInfoCheckUtil.findPatern(EquityInfoValid.PATTERN_ALL, holdDate)) {
+					message.add(this.getMessage("CHB_EQUITYINFO_E_035", "持有日期"));
+				}
+				// add by etliu 20180912 end
+				else if(DateUtil.compareDate(currDate, DateUtil.parse(holdDate))<0){
+					isNeed = false;
+					message.add(this.getMessage("CHB_INVESTHOLD_CHECKHOLDDATE_2"));
+				}else {
 					dto.setHoldDate(DateUtil.parse(holdDate));
-//				}
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
+				}
+
 				// 币种校验
 				String ccy = item.get("CCY");
 				if (StringUtil.isEmpty(ccy)) {
@@ -1934,35 +1918,30 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				// 持有份额
 				String qty = item.get("QTY");
 				String qtyInfo = checkMoney(qty, "持有份额", 13, 5, true);
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  start
-//				if (StringUtil.isNotEmpty(qtyInfo)) {
-//					message.add(qtyInfo);
-//				} else {
+				if (StringUtil.isNotEmpty(qtyInfo)) {
+					message.add(qtyInfo);
+				} else {
 					dto.setQty(new BigDecimal(qty));
-//				}
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
+				}
 
 				// 持有金额
 				String amount = item.get("AMOUNT");
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  start				
-//				String amountInfo = checkMoney(amount, "持有金额", 13, 2, true);
-//				if (StringUtil.isNotEmpty(amountInfo)) {
-//					message.add(amountInfo);
-//				} else {
+				String amountInfo = checkMoney(amount, "持有金额", 13, 2, true);
+				if (StringUtil.isNotEmpty(amountInfo)) {
+					message.add(amountInfo);
+				} else {
 					dto.setAmount(new BigDecimal(amount));
-//				}
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
+				}
+
 				// 折算人民币金额（元）
 				if (item.containsKey("CNY_AMT")) {
 					String cnyAmt = item.get("CNY_AMT");
 					String cnyAmtInfo = checkMoney(cnyAmt, "折算人民币金额（元）", 13, 2, false);
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  start
-//					if (StringUtil.isNotEmpty(cnyAmtInfo)) {
-//						message.add(cnyAmtInfo);
-//					} else if (StringUtil.isNotEmpty(cnyAmt)) {
+					if (StringUtil.isNotEmpty(cnyAmtInfo)) {
+						message.add(cnyAmtInfo);
+					} else if (StringUtil.isNotEmpty(cnyAmt)) {
 						dto.setCnyAmt(new BigDecimal(cnyAmt));
-//					}
-				// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
+					}
 				}
 				//如果币种是人民币时，持有金额和折算人民币金额必须保持一致
 				if (isExcel) {
@@ -2014,88 +1993,87 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				String account = item.get("ACCOUNT");
 
 				//新增产品登记编码格式校验
-// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  start
-//				String regCode = item.get("REG_CODE");
-//				if (StringUtil.isNotEmpty(regCode) && !regCode.matches("^[0-9a-zA-Z]{6}[0-9]{2}[ABC]?[0-9]{6}$")){
-////					isNeed = false;
-//					message.add(this.getMessage("CHB_INVESTHOLD_CHECKREGCODE"));
-//				}
-//                // add by etliu 20180912 start
-//                else if (StringUtil.isNotEmpty(regCode) && EquityInfoCheckUtil.findPatern(EquityInfoValid.PATTERN_ALL, regCode)) {
-//                    message.add(this.getMessage("CHB_EQUITYINFO_E_035", "产品登记编码"));
-//                }
-// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
-                // add by etliu 20180912 end
+				String regCode = item.get("REG_CODE");
+				if (StringUtil.isNotEmpty(regCode) && !regCode.matches("^[0-9a-zA-Z]{8}[ABC]?[0-9]{6}")){
+//					isNeed = false;
+					message.add(this.getMessage("CHB_INVESTHOLD_CHECKREGCODE"));
+				}
+				// add by etliu 20180912 start
+				else if (StringUtil.isNotEmpty(regCode) && EquityInfoCheckUtil.findPatern(EquityInfoValid.PATTERN_ALL, regCode)) {
+					message.add(this.getMessage("CHB_EQUITYINFO_E_035", "产品登记编码"));
+				}
+				// add by etliu 20180912 end
 
 				// 产品编码校验
 //              String ACCOUNT = item.get("ACCOUNT");
 
-                // 新加产品代码字段
-                dto.setProdid(account);
+				// 新加产品代码字段
+				dto.setProdid(account);
 
-// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  start
-//                if (StringUtil.isEmpty(account)) {
-//                    isNeed = false;
-//                    message.add(this.getMessage("CHB_INVESTHOLD_CHECKPROD"));
-//                }
-//                else {
-//                    if (!prdRegistMap.containsKey(account)) {
-//                        // if(StringUtil.isNotEmpty(item.get("REG_CODE"))){
-//                        dto.setPrdRegistCode(item.get("REG_CODE"));
-////                        boolean flag = true;
-////
-////                        // 多线程情况下需要加锁，否则报错concurrentmodificationexception
-////                        synchronized (prodRegInfoList) {
-////                            if (CollectionUtils.isNotEmpty(prodRegInfoList)) {
-////                                for (ChbPrdresistCode chbPrdresistCode : prodRegInfoList) {
-////                                    if (StringUtil.equals(ACCOUNT, chbPrdresistCode.getProdid())) {
-////                                        flag = false;
-////                                        break;
-////                                    }
-////                                }
-////                            }
-////                            if (flag) {
-////                                // 产品登记编码信息
-////                                ChbPrdresistCode prodRegInfoDto = new ChbPrdresistCode();
-////                                prodRegInfoDto.setProdid(ACCOUNT);
-////                                prodRegInfoDto.setRegCode(item.get("REG_CODE"));
-////                                prodRegInfoDto.setOrgCode(item.get("ORG_CODE"));
-////                                // prodRegInfoDto.setDeptCode(dto.getDeptCode());
-////                                // prodRegInfoDto.setCreateDept(dto.getCreateDept());
-////                                prodRegInfoDto.setDeptCode(null);
-////                                prodRegInfoDto.setCreateDept(null);
-////                                prodRegInfoList.add(prodRegInfoDto);
-////                            }
-////                        }
-//                        // }
-//                        // else{
-//                        // isNeed = false;
-//                        // message.add(this.getMessage("REPORT_E_0015", "产品登记编码"));
-//                        // }
-//                        if (!StringUtil.isNotEmpty(item.get("REG_CODE"))) {
-//                            message.add(this.getMessage("CHB_INVESTHOLD_CHECKPROD"));
-//                        } else if (StringUtil.isNotEmpty(item.get("REG_CODE")) && item.get("REG_CODE").length() != 14
-//                                && item.get("REG_CODE").length() != 15) {
-//                            message.add("产品登记编码的长度为14或15位！");
+				if (StringUtil.isEmpty(account)) {
+					isNeed = false;
+					message.add(this.getMessage("CHB_INVESTHOLD_CHECKPROD"));
+				}
+				else {
+					if (!prdRegistMap.containsKey(account)) {
+						// if(StringUtil.isNotEmpty(item.get("REG_CODE"))){
+						dto.setPrdRegistCode(item.get("REG_CODE"));
+//                        boolean flag = true;
+//
+//                        // 多线程情况下需要加锁，否则报错concurrentmodificationexception
+//                        synchronized (prodRegInfoList) {
+//                            if (CollectionUtils.isNotEmpty(prodRegInfoList)) {
+//                                for (ChbPrdresistCode chbPrdresistCode : prodRegInfoList) {
+//                                    if (StringUtil.equals(ACCOUNT, chbPrdresistCode.getProdid())) {
+//                                        flag = false;
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                            if (flag) {
+//                                // 产品登记编码信息
+//                                ChbPrdresistCode prodRegInfoDto = new ChbPrdresistCode();
+//                                prodRegInfoDto.setProdid(ACCOUNT);
+//                                prodRegInfoDto.setRegCode(item.get("REG_CODE"));
+//                                prodRegInfoDto.setOrgCode(item.get("ORG_CODE"));
+//                                // prodRegInfoDto.setDeptCode(dto.getDeptCode());
+//                                // prodRegInfoDto.setCreateDept(dto.getCreateDept());
+//                                prodRegInfoDto.setDeptCode(null);
+//                                prodRegInfoDto.setCreateDept(null);
+//                                prodRegInfoList.add(prodRegInfoDto);
+//                            }
 //                        }
-//                    } else {
-//                        if (StringUtil.isEmpty(prdRegistMap.get(account)) && StringUtil.isEmpty(item.get("REG_CODE"))) {
-//                            message.add(this.getMessage("CHB_INVESTHOLD_CHECKPROD"));
-//                        } else if (StringUtil.isNotEmpty(item.get("REG_CODE")) && item.get("REG_CODE").length() != 14
-//                                && item.get("REG_CODE").length() != 15) {
-//                            message.add("产品登记编码的长度为14或15位！");
-//                        } else if (StringUtil.equals(prdRegistMap.get(account), item.get("REG_CODE"))
-//                                || StringUtil.isEmpty(item.get("REG_CODE"))) {
-//                            dto.setPrdRegistCode(prdRegistMap.get(account));
-//                        } else if (StringUtil.isEmpty(prdRegistMap.get(account))) {
-//                            dto.setPrdRegistCode(item.get("REG_CODE"));
-//                        } else {
-//                            dto.setPrdRegistCode(item.get("REG_CODE"));
-//                            message.add(this.getMessage("REPORT_REG_MISMACTH"));
-//                        }
-//                    }
-//                }
-// 早期mysql改造代码合并  add by zoujiamin  2021/04/20  end
+						// }
+						// else{
+						// isNeed = false;
+						// message.add(this.getMessage("REPORT_E_0015", "产品登记编码"));
+						// }
+						if (!StringUtil.isNotEmpty(item.get("REG_CODE"))) {
+							message.add(this.getMessage("CHB_INVESTHOLD_CHECKPROD"));
+						} else if (StringUtil.isNotEmpty(item.get("REG_CODE")) && item.get("REG_CODE").length() != 14
+								&& item.get("REG_CODE").length() != 15) {
+							message.add("产品登记编码的长度为14或15位！");
+						} else if(StringUtil.isNotEmpty(item.get("REG_CODE")) && !Pattern.compile("^[0-9a-zA-Z]{8}[ABC]?[0-9]{6}").matcher(item.get("REG_CODE")).matches()){
+							message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
+						}
+					} else {
+						if (StringUtil.isEmpty(prdRegistMap.get(account)) && StringUtil.isEmpty(item.get("REG_CODE"))) {
+							message.add(this.getMessage("CHB_INVESTHOLD_CHECKPROD"));
+						} else if (StringUtil.isNotEmpty(item.get("REG_CODE")) && item.get("REG_CODE").length() != 14
+								&& item.get("REG_CODE").length() != 15) {
+							message.add("产品登记编码的长度为14或15位！");
+						} else if (StringUtil.equals(prdRegistMap.get(account), item.get("REG_CODE"))
+								|| StringUtil.isEmpty(item.get("REG_CODE"))) {
+							dto.setPrdRegistCode(prdRegistMap.get(account));
+						} else if (StringUtil.isEmpty(prdRegistMap.get(account))) {
+							dto.setPrdRegistCode(item.get("REG_CODE"));
+						} else {
+							dto.setPrdRegistCode(item.get("REG_CODE"));
+							message.add(this.getMessage("REPORT_REG_MISMACTH"));
+						}
+					}
+				}
+
 				dto.setRowId(String.valueOf(rowId));
 				// 判断为空check校验通过
 //				if (message.isEmpty()) {
