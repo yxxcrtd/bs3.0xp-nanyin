@@ -40,6 +40,7 @@ import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -148,6 +149,12 @@ public class EtrFundService extends BaseService<EtrFundDto> {
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         pageParam.put("endDate", DateUtil.parse((String)pageParam.get("endDate")));
         pageParam.put("startDate", DateUtil.parse((String)pageParam.get("startDate")));
+
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return super.queryForPage(page, length, () -> etrFundMapper.select(pageParam));
     }
     
@@ -175,10 +182,15 @@ public class EtrFundService extends BaseService<EtrFundDto> {
      * @see
      * @since 1.0
      */
-    public List<SuggestDto> getFinprodMarketId(String finprodId){
+    public List<SuggestDto> getFinprodMarketId(Map<String, Object> param){
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("finprodId", finprodId);
+        map.put("finprodId", param.get("finprodId"));
         map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        map.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return etrFundMapper.getFinprodMarketId(map);
     }
     
@@ -284,6 +296,11 @@ public class EtrFundService extends BaseService<EtrFundDto> {
         param.put("PS_T02", DictCodeList.交易方向_卖出.getValue());
         param.put("PS_T04", DictCodeList.交易方向_申购.getValue());
         param.put("PS_T06", DictCodeList.交易方向_赎回.getValue());
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("parentPageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         Page<SelectOptionDto> pagelist = this.queryForPageForSelectReturn(page, length,() -> etrFundMapper.getSelectFinprodMarketId(param));
         List<SelectOptionDto> list = pagelist.getRoot();
         for(SelectOptionDto dto :list){

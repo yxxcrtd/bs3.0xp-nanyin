@@ -8,6 +8,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.entrust.etrbondbiddingresult.dao.EtrbondbiddingresultMapper;
 import com.joyintech.service.entrust.etrbondbiddingresult.dto.EtrbondbiddingresultDto;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,11 @@ public class EtrbondbiddingresultService extends BaseService<Etrbondbiddingresul
 		if(StringUtil.isNotEmpty(portfolioId)){
 			pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
 		}
+
+		// add by etliu 20210501 银行间场内场外拆分 start
+		pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+		// add by etliu 20210501 银行间场内场外拆分 end
+
 		Page<EtrbondbiddingresultDto> etrbondbiddingresultDtoPage = super.queryForPage(page, length, () -> etrbondbiddingresultMapper.select(pageParam));
 		if (!etrbondbiddingresultDtoPage.getRoot().isEmpty()){
 			List<EtrbondbiddingresultDto> resultList = getResultList(etrbondbiddingresultDtoPage.getRoot());

@@ -57,6 +57,14 @@
 				<if test="endDate!=null and endDate!=''">
 					and bo.BID_DATE <![CDATA[ <= ]]> to_date(#{endDate}, 'yyyy-MM-dd')
 				</if>
+				<!-- add by etliu 20210501 银行间场内场外拆分 start -->
+				<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+					AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in
+					<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+						#{currTradeMarket}
+					</foreach>
+				</if>
+				<!-- add by etliu 20210501 银行间场内场外拆分 end -->
 			</if>
 			<if test="paymentStatus == null or paymentStatus == '' or paymentStatus == '01'or paymentStatus == '02'or paymentStatus == '03'">
 				union all
@@ -114,6 +122,14 @@
 				<if test="paymentStatus != null and paymentStatus != ''">
 					and bo.PAY_TYPE = #{paymentStatus}
 				</if>
+				<!-- add by etliu 20210501 银行间场内场外拆分 start -->
+				<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+					AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in
+					<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+						#{currTradeMarket}
+					</foreach>
+				</if>
+				<!-- add by etliu 20210501 银行间场内场外拆分 end -->
 				minus
 				select
 				bo.PAY_TYPE paymentStatus, /*缴款状态*/
@@ -167,6 +183,14 @@
 				<if test="endDate!=null and endDate!=''">
 					and bo.BID_DATE <![CDATA[ <= ]]> to_date(#{endDate}, 'yyyy-MM-dd')
 				</if>
+				<!-- add by etliu 20210501 银行间场内场外拆分 start -->
+				<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+					AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in
+					<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+						#{currTradeMarket}
+					</foreach>
+				</if>
+				<!-- add by etliu 20210501 银行间场内场外拆分 end -->
 
 			</if>
 			<if test="paymentStatus == null or paymentStatus == '' or paymentStatus == '05'">
@@ -222,6 +246,14 @@
 				<if test="endDate!=null and endDate!=''">
 					and bo.BID_DATE <![CDATA[ <= ]]> to_date(#{endDate}, 'yyyy-MM-dd')
 				</if>
+				<!-- add by etliu 20210501 银行间场内场外拆分 start -->
+				<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+					AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in
+					<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+						#{currTradeMarket}
+					</foreach>
+				</if>
+				<!-- add by etliu 20210501 银行间场内场外拆分 end -->
 			</if>
 		</trim>
 	</select>

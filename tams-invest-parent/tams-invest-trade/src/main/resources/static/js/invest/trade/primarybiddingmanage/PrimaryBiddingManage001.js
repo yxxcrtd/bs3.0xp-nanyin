@@ -128,14 +128,14 @@
      * 画面加载完成
      */
     $(function() {
-    	
-        $("#PrimaryBiddingManage001_btn_search").click(function () {
+
+        $('#'+pageId+"_btn_search").click(function () {
             $(".ptl-table1").css("display","none");
             $(".ptl-table").css("display","block");
             table.load();
         });
         //汇总投标确认
-        $("#PrimaryBiddingManage001_btn_sure").click(function () {
+        $('#'+pageId+"_btn_sure").click(function () {
         	
         	if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
@@ -168,7 +168,7 @@
 
         });
         //中标结果维护
-        $("#PrimaryBiddingManage001_btn_result").click(function () {
+        $('#'+pageId+"_btn_result").click(function () {
         	if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }
@@ -193,8 +193,8 @@
                 basePath + "invest/trade/primarybiddingmanage/PrimaryBiddingManage003/init",
                 "98%", "98%",object);
           });
-        
-        $('#PrimaryBiddingManage001_btn_revoke').click(function() {
+
+        $('#'+pageId+'_btn_revoke').click(function() {
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }
@@ -298,23 +298,23 @@
                 });
         });
         //导出
-        $('#PrimaryBiddingManage001_btn_export').click(function() {
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
 
         //是否有截标
         if (isCloseBid == '01'){
-            $("#PrimaryBiddingManage001_btn_close").show();
-            $("#PrimaryBiddingManage001_btn_cancel_close").show();
+            $('#'+pageId+"_btn_close").show();
+            $('#'+pageId+"_btn_cancel_close").show();
             $("#bidCloseStatus_div").show();
         } else {
-            $("#PrimaryBiddingManage001_btn_close").hide();
-            $("#PrimaryBiddingManage001_btn_cancel_close").hide();
+            $('#'+pageId+"_btn_close").hide();
+            $('#'+pageId+"_btn_cancel_close").hide();
             $("#bidCloseStatus_div").hide();
         }
 
         //截标按钮
-        $("#PrimaryBiddingManage001_btn_close").click(function () {
+        $('#'+pageId+"_btn_close").click(function () {
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }
@@ -347,7 +347,7 @@
             });
         });
         //取消截标按钮
-        $("#PrimaryBiddingManage001_btn_cancel_close").click(function () {
+        $('#'+pageId+"_btn_cancel_close").click(function () {
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }

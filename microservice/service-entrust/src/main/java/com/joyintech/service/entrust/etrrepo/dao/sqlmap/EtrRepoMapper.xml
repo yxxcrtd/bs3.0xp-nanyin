@@ -95,6 +95,14 @@
 			AND T1.PRICE_MODEL = #{priceModel}
 		</if>
 			AND T1.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
+		<!-- add by etliu 20210501 银行间场内场外拆分 start -->
+		<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+			AND T1.TRADE_MARKET in
+			<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+				#{currTradeMarket}
+			</foreach>
+		</if>
+		<!-- add by etliu 20210501 银行间场内场外拆分 end -->
 		</where>
 		order by T1.ENTRUST_ID DESC
 	</select>

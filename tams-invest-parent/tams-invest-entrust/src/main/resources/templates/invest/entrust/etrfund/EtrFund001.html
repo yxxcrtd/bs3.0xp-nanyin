@@ -8,12 +8,12 @@
 <body>
     <div layout:fragment="content">
         <div class="form-button-area">
-            <a id="EtrFund001_btn_add" class="layui-btn layui-btn-sm btn-create"
+            <a th:id="|${pageId}_btn_add|" class="layui-btn layui-btn-sm btn-create"
                 data-th-text="#{SysCommon.create}">新建</a>
-            <a id="EtrFund001_btn_close" class="layui-btn layui-btn-sm btn-close"><i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></span></a>
-            <a id="EtrFund001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke"><i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></span></a>
+            <a th:id="|${pageId}_btn_close|" class="layui-btn layui-btn-sm btn-close"><i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></span></a>
+            <a th:id="|${pageId}_btn_revoke|" class="layui-btn layui-btn-sm btn-revoke"><i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></span></a>
              <!-- 导入按钮 -->
-            <a id="EtrFund001_btn_import" class="layui-btn layui-btn-sm btn-import" >导入</a>
+            <a th:id="|${pageId}_btn_import|" class="layui-btn layui-btn-sm btn-import" >导入</a>
         </div>
         <div class="joyin-form-wrap joyin-filter-form condition-area ">
             <form class="layui-form" id="searchForm">
@@ -102,7 +102,7 @@
                                 data-keyfield="code"
                                 data-th-data-effectivefieldsalias='|{"code":"#{EtrFund001.finprodId}",
                                     "shortName":"#{EtrFund001.finprodName}"}|'
-                                data-th-data-url="@{/invest/entrust/etrfund/EtrFund001/getFinprodMarketId}"
+                                data-th-data-url="@{/invest/entrust/etrfund/EtrFund001/getFinprodMarketId(pageId=${pageId})}"
                                 maxlength="60">
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                 </div>
                 
                  <div class="layui-form-item">
-                	<div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
+                	<div id="exContentDiv" class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4" style="display: none">
                         <label class="layui-form-label form-lable" data-th-text="#{EtrFund002.trmFundType}">交易所基金类型</label>
                         <div class="layui-input-inline input-inline">
                              <select type="text" id="trmFundType" name="trmFundType" 

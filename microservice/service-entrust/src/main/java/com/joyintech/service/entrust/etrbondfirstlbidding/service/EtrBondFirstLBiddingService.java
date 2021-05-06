@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -136,6 +137,11 @@ public class EtrBondFirstLBiddingService extends BaseService<EtrBondFirstLBiddin
             pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
         pageParam.put("YES_OR_NO_Y", BussinessDictCodeList.是否_是.getValue());
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return super.queryForPage(page, length, () -> mapper.selectForPage(pageParam));
     }
     
@@ -160,10 +166,15 @@ public class EtrBondFirstLBiddingService extends BaseService<EtrBondFirstLBiddin
      * @see
      * @since 1.0
      */
-    public List<SuggestDto> getfinprodId(String param) {
+    public List<SuggestDto> getfinprodId(Map<String, Object> param) {
         Map<String, Object> map = new HashMap<>();
-        map.put("param", param);
+        map.put("param", param.get("finprodId"));
         map.put("assestType", BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue());
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        map.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return mapper.getfinprodId(map);
 
     }
@@ -178,6 +189,11 @@ public class EtrBondFirstLBiddingService extends BaseService<EtrBondFirstLBiddin
      */
     public Page<SelectOptionDto> getfinprodIdForAdd(int page, int length,Map<String, Object> param) {
         param.put("assestType", BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue());
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("parentPageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return this.queryForPageForSelectReturn(page, length,()->mapper.getfinprodIdForAdd(param));
     }
 

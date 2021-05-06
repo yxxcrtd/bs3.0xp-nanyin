@@ -41,6 +41,14 @@
             <if test="finprodType2 != null and finprodType2 != ''">
             AND    FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2, jdbcType=VARCHAR}    
             </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+            <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                AND TRADE_MARKET in
+                <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                    #{currTradeMarket}
+                </foreach>
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 end -->
         </where>
     </select>
     <select id="select" resultType="com.joyintech.service.entrust.etrfund.dto.EtrFundDto">
@@ -180,6 +188,14 @@
             <if test="tradeMarket != null and tradeMarket != ''">
                 AND FIN_PRODUCT.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
             </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+            <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                AND nvl(ETR_ENTRUST.TRADE_MARKET, FIN_PRODUCT.TRADE_MARKET) in
+                <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                    #{currTradeMarket}
+                </foreach>
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 end -->
         </where>
         union all
         select
@@ -263,6 +279,14 @@
                 AND ETR_ENTRUST.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
                 AND NOT EXISTS (SELECT 1 FROM FIN_PRODUCT WHERE FIN_PRODUCT.FINPROD_ID = ETR_ENTRUST.FINPROD_ID)
             </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+            <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                AND ETR_ENTRUST.TRADE_MARKET in
+                <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                    #{currTradeMarket}
+                </foreach>
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 end -->
         </where>)    
         order by entrustId  desc
     </select>
@@ -323,6 +347,14 @@
         <if test="finprodMarketId != null and finprodMarketId != ''">
             AND FIN_PRODUCT.FINPROD_MARKET_ID != #{finprodMarketId,jdbcType=VARCHAR}
         </if>
+        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+            AND FIN_PRODUCT.TRADE_MARKET in
+            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                #{currTradeMarket}
+            </foreach>
+        </if>
+        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
         union
          SELECT F_INFO_WINDCODE id,
                F_INFO_FULLNAME text,
@@ -352,6 +384,14 @@
           <if test="finprodMarketId != null and finprodMarketId != ''">
              AND F_INFO_WINDCODE != #{finprodMarketId,jdbcType=VARCHAR}
           </if>
+        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+            AND INF_CHINAMUTUALFUNDDESCRIPTION.TRADE_MARKET in
+            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                #{currTradeMarket}
+            </foreach>
+        </if>
+        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
     </select>
     <!-- 新建页面资产代码联想下拉框 条件 -->
     <sql id="getFinprodMarketIdWhere">

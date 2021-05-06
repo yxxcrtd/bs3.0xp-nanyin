@@ -138,7 +138,7 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
      */
     public List<SuggestDto> getfinprodId(Map<String, Object> param) {
         Map<String, Object> map = new HashMap<>();
-        param.put("param", param.get("finprodId"));
+        map.put("param", param.get("finprodId"));
         map.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 
         // add by etliu 20210501 银行间场内场外拆分 start

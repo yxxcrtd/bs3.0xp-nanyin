@@ -18,6 +18,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.common.select.dao.CommonSelectMapper;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionUtils;
@@ -38,6 +39,10 @@ public class CommonSelectService extends BaseService {
     private CommonSelectMapper commonSelectMapper;
 
     public List<SuggestDto> getAssetIdCommon(Map<String, Object> param) {
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return this.queryForSuggest(() -> commonSelectMapper.getAssetIdCommon(param), null);
     }
     
@@ -50,6 +55,10 @@ public class CommonSelectService extends BaseService {
      * @since 1.0
      */
     public List<SuggestDto> getFinprodAbbr(Map<String, Object> param) {
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return this.queryForSuggest(() -> commonSelectMapper.getFinprodAbbr(param), null);
     }
 

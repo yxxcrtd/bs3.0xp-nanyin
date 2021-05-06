@@ -9,6 +9,7 @@ import com.joyintech.tams.common.base.dao.BidCloseStatusMapper;
 import com.joyintech.tams.common.base.entity.BidCloseStatus;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +68,11 @@ public class PrimaryBiddingManage001Service extends BaseService<PrimaryBiddingMa
 //			list.add(map.get(finprodidcount));
 //			pageLimit.setRoot(list);
 //		}
+
+		// add by etliu 20210501 银行间场内场外拆分 start
+		param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+		// add by etliu 20210501 银行间场内场外拆分 end
+
 		return super.queryForPage(page, length, () -> primaryBiddingManage001Mapper.selectForPage(param));
 	}
 

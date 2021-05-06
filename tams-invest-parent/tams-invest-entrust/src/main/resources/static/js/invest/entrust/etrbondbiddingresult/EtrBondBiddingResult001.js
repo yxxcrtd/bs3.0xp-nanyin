@@ -74,7 +74,7 @@ $(function() {
         /**
          * 画面加载完成
          */
-        $("#EtrBondBiddingResult001_btn_search").click(function () {
+        $('#'+pageId+"_btn_search").click(function () {
             // $(".ptl-table1").css("display","none");
             // $(".ptl-table").css("display","block");
             table.load();
@@ -83,11 +83,11 @@ $(function() {
         /**
          * 导出按钮
          */
-        $('#EtrBondBiddingResult001_btn_export').click(function() {
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
         // 分销缴款
-        $("#EtrBondBiddingResult001_btn_payment").click(function () {
+        $('#'+pageId+"_btn_payment").click(function () {
 
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
