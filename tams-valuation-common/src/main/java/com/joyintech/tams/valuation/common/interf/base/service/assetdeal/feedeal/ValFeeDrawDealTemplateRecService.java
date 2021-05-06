@@ -268,7 +268,13 @@ public class ValFeeDrawDealTemplateRecService {
         // 交易编号 = 调用共通方法生成
         trdProductDeal.setTradeId(interfCommonService.getTradeid(DictCodeListExt3.交易方向_费用计提.getValue(),dto.getDrawDate(), "A"));
         // 业务类型 = 数据字典：业务类型.费用交易
-        trdProductDeal.setBusiType(DictCodeListExt3.业务类型_费用计提交易.getValue()); 
+        /**modify by wujie no 20210502 start
+        trdProductDeal.setBusiType(DictCodeListExt3.业务类型_费用计提交易.getValue());
+         **/
+        trdProductDeal.setBusiType(dto.getBusiType());
+        /**modify by wujie on 20210502 end**/
+
+
         //金融产品代码 = A.产品代码  
         trdProductDeal.setFinprodId(dto.getProdId());        
         //金融产品类型=A.产品类型 
