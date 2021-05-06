@@ -7,6 +7,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportG06bDetail;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
@@ -131,10 +132,8 @@ public class G06bMonthReportQueryMService extends CommonExportService<ChbreportP
         // 设置文件信息
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         String fileName = "G06b_II银行理财子公司风险资本计算表_" + reportDate + ".xls";
-        String tempName = "G06bMonthReport.xls";
-        String tplFlodPath = "g06bmonthreport/G06bMonthReport.xls";
-        String tplPath = FileNameUtil.getTplFile(tplFlodPath);
         String outPath = exportFilePath + File.separator + fileName;
+        String exceltemplate = "g06bmonthreport/G06bMonthReport";
 
         ChbreportExportFileDto exportFileDto = new ChbreportExportFileDto();
         exportFileDto.setFileName(fileName);
@@ -145,32 +144,8 @@ public class G06bMonthReportQueryMService extends CommonExportService<ChbreportP
         //map.put("org",CacheUtil.getSysParam(GlobalConstant.财务报表_编制单位));
         map.put("reportDate", reportDate);
         map.put("org", "华夏银行");
+        TisUtil.createFile(map, exceltemplate, fileName);
 
-        InputStream stream = null;
-        try {
-            //针对weblogic环境部署，FileNameUtil.getTplFile无法获取tpl文件夹下模版。
-            File templeteFile = new File(tplPath);
-            //文件存在情况,直接该路径获取文件流
-            if (templeteFile.exists()) {
-                stream = new FileInputStream(templeteFile);
-            }
-            //文件不存在情况，即weblogic部署情况，需要换方式获取文件流。
-            else {
-                stream = this.getClass().getResourceAsStream(TMP_DIR + tplFlodPath);
-            }
-
-            ExcelTools.writeExcel(stream, tempName, map, outPath);
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    logger.error("", e);
-                }
-            }
-        }
         return exportFileDto;
     }
 

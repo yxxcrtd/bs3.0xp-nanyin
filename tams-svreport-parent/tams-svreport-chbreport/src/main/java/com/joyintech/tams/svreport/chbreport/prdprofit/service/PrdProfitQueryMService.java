@@ -8,6 +8,7 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.common.base.entity.PrdProfit;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
@@ -155,10 +156,8 @@ public class PrdProfitQueryMService extends CommonExportService<ChbreportPrdInfo
         // 设置文件信息
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         String fileName = prodId + "_利润表_" + reportDate + ".xls";
-        String tempName = "PrdProfit.xls";
-        String tplFlodPath = "prdprofit/PrdProfit.xls";
-        String tplPath = FileNameUtil.getTplFile(tplFlodPath);
         String outPath = exportFilePath + File.separator + fileName;
+        String exceltemplate = "prdprofit/PrdProfit";
 
         ChbreportExportFileDto exportFileDto = new ChbreportExportFileDto();
         exportFileDto.setFileName(fileName);
@@ -172,32 +171,8 @@ public class PrdProfitQueryMService extends CommonExportService<ChbreportPrdInfo
         map.put("prodName", prodName);
         map.put("year", reportDate.substring(0, 4));
         map.put("dtoList", dtoList);
+        TisUtil.createFile(map, exceltemplate, fileName);
 
-        InputStream stream = null;
-        try {
-            //针对weblogic环境部署，FileNameUtil.getTplFile无法获取tpl文件夹下模版。
-            File templeteFile = new File(tplPath);
-            //文件存在情况,直接该路径获取文件流
-            if (templeteFile.exists()) {
-                stream = new FileInputStream(templeteFile);
-            }
-            //文件不存在情况，即weblogic部署情况，需要换方式获取文件流。
-            else {
-                stream = this.getClass().getResourceAsStream(TMP_DIR + tplFlodPath);
-            }
-
-            ExcelTools.writeExcel(stream, tempName, map, outPath);
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    logger.error("", e);
-                }
-            }
-        }
         return exportFileDto;
     }
 }

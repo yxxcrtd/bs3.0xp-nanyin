@@ -8,9 +8,11 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.common.base.entity.HxProfit;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
+import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto;
 import com.joyintech.tams.svreport.chbreport.hxprofit.dto.HXProfitQuery001Dto;
 import com.joyintech.tools.util.ExcelTools;
 import org.slf4j.Logger;
@@ -133,10 +135,8 @@ public class HXProfitQueryMService extends CommonExportService<ChbreportPrdInfoD
         // 设置文件信息
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         String fileName = "华夏利润表_" + reportDate + ".xls";
-        String tempName = "HXProfit.xls";
-        String tplFlodPath = "hxprofit/HXProfit.xls";
-        String tplPath = FileNameUtil.getTplFile(tplFlodPath);
         String outPath = exportFilePath + File.separator + fileName;
+        String exceltemplate = "hxprofit/HXProfit";
 
         ChbreportExportFileDto exportFileDto = new ChbreportExportFileDto();
         exportFileDto.setFileName(fileName);
@@ -148,32 +148,7 @@ public class HXProfitQueryMService extends CommonExportService<ChbreportPrdInfoD
         map.put("preCol", reportDate.substring(4, 6) + "月累计金额");
         map.put("reportDate", reportDate);
         map.put("entity", entity);
-
-        InputStream stream = null;
-        try {
-            //针对weblogic环境部署，FileNameUtil.getTplFile无法获取tpl文件夹下模版。
-            File templeteFile = new File(tplPath);
-            //文件存在情况,直接该路径获取文件流
-            if (templeteFile.exists()) {
-                stream = new FileInputStream(templeteFile);
-            }
-            //文件不存在情况，即weblogic部署情况，需要换方式获取文件流。
-            else {
-                stream = this.getClass().getResourceAsStream(TMP_DIR + tplFlodPath);
-            }
-
-            ExcelTools.writeExcel(stream, tempName, map, outPath);
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    logger.error("", e);
-                }
-            }
-        }
+        TisUtil.createFile(map, exceltemplate, fileName);
         return exportFileDto;
     }
 
@@ -194,16 +169,28 @@ public class HXProfitQueryMService extends CommonExportService<ChbreportPrdInfoD
             profitDto.setBq(bqList.get(0));
             profitDto.setBusiIncBQ(getBusiInc(profitDto.getBq()));
             profitDto.setBusiPayBQ(getBusiInc(profitDto.getBq()));
+        } else {
+            profitDto.setBq(new HxProfit());
+            profitDto.setBusiIncBQ(null);
+            profitDto.setBusiPayBQ(null);
         }
         if (!syList.isEmpty() && syList.size() > 0) {
             profitDto.setSy(syList.get(0));
             profitDto.setBusiIncSY(getBusiInc(profitDto.getSy()));
             profitDto.setBusiPaySY(getBusiInc(profitDto.getSy()));
+        } else {
+            profitDto.setSy(new HxProfit());
+            profitDto.setBusiIncSY(null);
+            profitDto.setBusiPaySY(null);
         }
         if (!bnList.isEmpty() && bnList.size() > 0) {
             profitDto.setBn(bnList.get(0));
             profitDto.setBusiIncBN(getBusiInc(profitDto.getBn()));
             profitDto.setBusiPayBN(getBusiInc(profitDto.getBn()));
+        } else {
+            profitDto.setBn(new HxProfit());
+            profitDto.setBusiIncBN(null);
+            profitDto.setBusiPayBN(null);
         }
         return profitDto;
     }
