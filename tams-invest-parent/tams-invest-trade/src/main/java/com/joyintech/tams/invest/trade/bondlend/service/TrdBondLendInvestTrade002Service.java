@@ -462,14 +462,6 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         // 撤销
         else {
             this.doCompleteRevoke(entity);
-            // add by jiangpeng on 20210428 start
-            // ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
-            //ZGBSSE-260
-            //【债券借贷交易】新建债券借贷融入交易，审核岗审批后，融入债券的实时资产头寸中，实际、指令、交易持仓不一致
-            if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), entity.getFinprodType2())) {
-                ptlOutSecPositionFlowLogic(entity, true, false, true);
-            }
-            // add by jiangpeng on 20210428 end
         }
         // add by jiangpeng on 20210425 start
         // ZGBSSE-131 债券借贷融出，理财账有误，费用科目未出账
@@ -1953,11 +1945,15 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         resultDto.setInvAim(StringUtil.isEmpty(input.getInvAim()) ? "999999" : input.getInvAim());
         // 融出交易流程最后一步
         if (!isNegate && isDoComplete && StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), input.getFinprodType2())) {
-            PtlSecPositionFlowDto ptlSecPositionFlowDtoTemp = new PtlSecPositionFlowDto();
-            BeanUtil.copyPropertiesIgnoreNull(ptlSecPositionFlowDtoTemp, resultDto);
+            // modify by jiangpeng on 20210506 start
+            // ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融入到期交易产生的错误
+            // 融出交易生效时已入库持仓流水,此处不用在重复入库,只需冲销掉提交流程时入的流程中流水
+//            PtlSecPositionFlowDto ptlSecPositionFlowDtoTemp = new PtlSecPositionFlowDto();
+//            BeanUtil.copyPropertiesIgnoreNull(ptlSecPositionFlowDtoTemp, resultDto);
             resultDto.setAmount(resultDto.getAmount().negate());// 冲销掉流程提交时的持仓数据数据
-            ptlSecPositionFlowDtoTemp.setHodingType(DictCodeListExt1.持仓类型_融出.getValue());
-            lstPtlSecPositionFlowDto.add(ptlSecPositionFlowDtoTemp);
+//            ptlSecPositionFlowDtoTemp.setHodingType(DictCodeListExt1.持仓类型_融出.getValue());
+//            lstPtlSecPositionFlowDto.add(ptlSecPositionFlowDtoTemp);
+            // modify by jiangpeng on 20210506 start
         }
         lstPtlSecPositionFlowDto.add(resultDto);
         if (StringUtil.isEmptyList(lstPtlSecPositionFlowDto)) {
