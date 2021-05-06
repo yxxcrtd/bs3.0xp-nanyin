@@ -68,6 +68,23 @@ public class TemplateCheckReturnResult<T> {
     public List<T> getT() {
         return t;
     }
-    
+
+
+    /**
+     * 是否读取到文件
+     * add by wujie on 20210502
+     */
+    private boolean isReadFile;
+
+
+    public boolean isReadFile() {
+        return isReadFile;
+    }
+
+    public void setReadFile(boolean isReadFile) {
+        this.isReadFile = isReadFile;
+    }
+
+
 
 }

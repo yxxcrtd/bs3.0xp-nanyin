@@ -247,4 +247,8 @@ public class InterfCommonConstant {
      */
     public static final String 深证通接口消息入口 = "/interfSztMsg";
 
+    /**ADD BY WUJIE ON 20210506 START**/
+    public static final String 读取文件状态 = "isDealTrade";
+    /**ADD BY WUJIE ON 20210506 END**/
+
 }

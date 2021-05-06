@@ -73,6 +73,14 @@ public class XmlDom4jUtils {
         } else {
             pathList = SearchFilePath.queryFilePath(filePath, tmpEName);
         }
+
+        /**add by wujie on 20210502 start**/
+        result.setReadFile(true);
+        if(pathList==null || pathList.size()==0){
+            result.setReadFile(false);
+        }
+        /**add by wujie on 20210502 end**/
+
         for (String path : pathList) {
             List list = new ArrayList();
             try {
@@ -96,6 +104,7 @@ public class XmlDom4jUtils {
             }
             catch (Exception e) {
             	logger.error("读取文件" + path + "错误", e);
+                result.setReadFile(false);
             }
             listAll.addAll(list);
         }
