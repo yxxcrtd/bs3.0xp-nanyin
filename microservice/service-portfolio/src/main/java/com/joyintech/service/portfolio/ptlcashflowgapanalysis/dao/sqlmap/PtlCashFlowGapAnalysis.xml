@@ -545,14 +545,14 @@
             and not exists (
             select 1 from TRD_PRODUCT_DEAL tpd
             where tpd.PS in(#{T03},#{T39})
-            and tpd.SETTLE_DATE = fep1.EXERCISE_DATE
+            and tpd.SETTLE_DATE = fep1.ACT_EXERCISE_DATE
             AND TPD.FINPROD_ID = PSP.FINPROD_ID
             and tpd.TRADE_STATUS = '01'
             AND TPD.IS_CANCEL='N'
             )
             and PSP.CDATE = to_date(#{sysDate},'YYYY-MM-DD')
             and fp.IS_RIGHT = 'Y'
-            and fep1.EXERCISE_DATE is not null
+            and fep1.ACT_EXERCISE_DATE is not null
             and pa.USER_ID = #{userId}
             <if test="ccy != null and ccy != ''">
                 and fp.CCY = #{ccy,jdbcType=VARCHAR}
