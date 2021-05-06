@@ -91,6 +91,10 @@ public class LendDealRecComForInterfService {
             List<String> fpsList = new ArrayList<String>();
             fpsList.add(DictCodeList.交易方向_收息到账.getValue());
             paramMap.put("fpsList", fpsList);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
             
         }else if(TempConstant.拆借收息.equals(acctEntity.getTmpEName())){
             result = lendRateDealService.execute(templateSourceFlgDTO, acctEntity); 
@@ -100,12 +104,21 @@ public class LendDealRecComForInterfService {
             List<String> fpsList = new ArrayList<String>();
             fpsList.add(DictCodeList.交易方向_还本到账.getValue());
             paramMap.put("fpsList", fpsList);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
+
         }else if(TempConstant.拆借应收款项转让交易.equals(acctEntity.getTmpEName())){
             result = lendRecTradeService.execute(templateSourceFlgDTO, acctEntity); 
             paramMap.put("busiType", DictCodeList.业务类型_拆借交易.getValue());
             ps.add(DictCodeList.交易方向_应收款项转入.getValue());
             ps.add(DictCodeList.交易方向_应收款项转出.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else{
         	result.setDataNum(0);

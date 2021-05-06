@@ -92,6 +92,10 @@ public class PlannedAssetDealComForInterfService {
             ps.add(DictCodeList.交易方向_买入.getValue());
             ps.add(DictCodeList.交易方向_卖出.getValue());
             paramMap.put("pslist", ps);//删除除这些交易方向的数据
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         // 02-存续期交易
         else if(TempConstant.计划类资产利率型存续期交易表.equals(acctEntity.getTmpEName())){
@@ -100,6 +104,10 @@ public class PlannedAssetDealComForInterfService {
             ps.add(DictCodeList.交易方向_收息到账.getValue());
             ps.add(DictCodeList.交易方向_还本到账.getValue());
             paramMap.put("pslist", ps);//删除除这些交易方向的数据
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         } 
         //03-应收款项转让交易
         else if(TempConstant.计划类资产利率型应收款项转让交易表.equals(acctEntity.getTmpEName())) {
@@ -108,6 +116,10 @@ public class PlannedAssetDealComForInterfService {
             ps.add(DictCodeList.交易方向_应收款项转入.getValue());
             ps.add(DictCodeList.交易方向_应收款项转出.getValue());
             paramMap.put("pslist", ps);//删除除这些交易方向的数据
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else{
         	rtnResult.setDataNum(0);

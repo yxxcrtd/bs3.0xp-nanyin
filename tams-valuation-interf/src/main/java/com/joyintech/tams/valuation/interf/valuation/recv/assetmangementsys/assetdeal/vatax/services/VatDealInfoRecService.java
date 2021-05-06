@@ -79,6 +79,10 @@ public class VatDealInfoRecService {
             ps.add(DictCodeList.交易方向_税费缴税.getValue());
             ps.add(DictCodeList.交易方向_税费退税.getValue());
             paramMap.put("pslist", ps);//删除除这些交易方向的数据
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else{
         	rtnResult.setDataNum(0);

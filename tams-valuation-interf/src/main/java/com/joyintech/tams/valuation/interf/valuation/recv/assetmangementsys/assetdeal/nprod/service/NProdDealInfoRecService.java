@@ -104,6 +104,10 @@ public class NProdDealInfoRecService {
             
             ps.add(DictCodeList.交易方向_产品除权登记.getValue());
             paramMap.put("pslistNot", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.净值型产品分红交易表.equals(acctEntity.getTmpEName())) {
             rtnResult = nPrdDealBonusDealTemplateRecService.execute(templateSourceFlgDTO,acctEntity);
@@ -112,6 +116,10 @@ public class NProdDealInfoRecService {
             ps.add(DictCodeList.交易方向_产品现金分红.getValue());
             ps.add(DictCodeList.交易方向_产品红利转投.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.净值型产品费用交易表.equals(acctEntity.getTmpEName())) {
             rtnResult = nPrdDealFeeDealTemplateRecService.execute(templateSourceFlgDTO,acctEntity);
@@ -130,12 +138,21 @@ public class NProdDealInfoRecService {
             paramMap.put("profitType", DictCodeList.收益类型_净值型.getValue());
             
             /**modify by wujie on 20190122 end**/
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
             
         } else if (TempConstant.净值型产品分红除权表.equals(acctEntity.getTmpEName())) {
             rtnResult = nPrdDelDealService.execute(templateSourceFlgDTO,acctEntity);
             paramMap.put("busiType", DictCodeList.业务类型_净值型TA交易.getValue());
             ps.add(DictCodeList.交易方向_产品除权登记.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
+
         }else{
         	rtnResult.setDatanum(0);
         	paramMap.put("busiType", "");

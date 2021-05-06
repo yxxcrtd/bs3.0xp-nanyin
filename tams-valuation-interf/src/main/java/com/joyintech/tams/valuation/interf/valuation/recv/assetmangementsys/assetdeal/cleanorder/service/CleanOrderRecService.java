@@ -67,6 +67,10 @@ public class CleanOrderRecService {
 			if(result.getParamMap()!=null){
         		paramMap.put("booksetIds", result.getParamMap().get("booksetIds"));
         	}
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }else{
         	result.setDataNum(0);
         }

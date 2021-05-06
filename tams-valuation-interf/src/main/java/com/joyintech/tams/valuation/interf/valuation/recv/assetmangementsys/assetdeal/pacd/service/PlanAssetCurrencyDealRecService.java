@@ -91,6 +91,11 @@ public class PlanAssetCurrencyDealRecService {
             ps.add(DictCodeList.交易方向_申购.getValue());
             paramMap.put("pslist", ps);
             resultcommom = pacdApplyPurDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, resultcommom.getParamMap()==null?null:resultcommom.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
+
         }
         else if (TempConstant.计划类资产货币型申购确认交易.equals(acctEntity.getTmpEName())) {
             paramMap.put("busiType", DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
@@ -102,18 +107,30 @@ public class PlanAssetCurrencyDealRecService {
             paramMap.put("pslist", ps);
 
             resultcommom = pacdAffirmPurDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, resultcommom.getParamMap()==null?null:resultcommom.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.计划类资产货币型赎回确认交易.equals(acctEntity.getTmpEName())) {
             paramMap.put("busiType", DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
             ps.add(DictCodeList.交易方向_赎回确认.getValue());
             paramMap.put("pslist", ps);
             resultcommom = pacdRedAffirmDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, resultcommom.getParamMap()==null?null:resultcommom.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.计划类资产货币型赎回到账交易.equals(acctEntity.getTmpEName())) {
             paramMap.put("busiType", DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
             ps.add(DictCodeList.交易方向_赎回到账.getValue());
             paramMap.put("pslist", ps);
             resultcommom = pacdRedAccoutDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, resultcommom.getParamMap()==null?null:resultcommom.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.计划类资产货币型存续期交易.equals(acctEntity.getTmpEName())) {
             paramMap.put("busiType", DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
@@ -122,6 +139,10 @@ public class PlanAssetCurrencyDealRecService {
             ps.add(DictCodeList.交易方向_到期.getValue());
             paramMap.put("pslist", ps);
             resultcommom = pacdCashBonusDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, resultcommom.getParamMap()==null?null:resultcommom.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.计划类资产货币型买入卖出交易.equals(acctEntity.getTmpEName())) {
 
@@ -131,6 +152,10 @@ public class PlanAssetCurrencyDealRecService {
             ps.add(DictCodeList.交易方向_卖出.getValue());
             paramMap.put("pslist", ps);
             resultcommom = pacdBuyAndSellDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, resultcommom.getParamMap()==null?null:resultcommom.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
 
         resultcommom.setParamMap(paramMap);

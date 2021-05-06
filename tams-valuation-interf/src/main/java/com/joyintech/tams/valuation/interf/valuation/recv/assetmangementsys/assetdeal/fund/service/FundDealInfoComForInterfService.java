@@ -130,6 +130,10 @@ public class FundDealInfoComForInterfService {
             ps.add(DictCodeList.交易方向_卖出.getValue());
             paramMap.put("pslist", ps);
             result = fundBuyAndSellDealRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.申购申请交易.equals(acctEntity.getTmpEName())) {
             busiTypes.add(DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
@@ -141,6 +145,10 @@ public class FundDealInfoComForInterfService {
             paramMap.put("pslist", ps);
             
             result = fundSubscribeApplyDealRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.申购确认交易.equals(acctEntity.getTmpEName())) {
             busiTypes.add(DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
@@ -158,6 +166,10 @@ public class FundDealInfoComForInterfService {
             paramMap.put("pslist", ps);
             
             result = fundSubscribeConfirmDealRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.货币基金赎回确认交易.equals(acctEntity.getTmpEName())) {
             paramMap.put("busiType", DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
@@ -165,6 +177,10 @@ public class FundDealInfoComForInterfService {
             paramMap.put("pslist", ps);
             result = fundMoneyFundRedeemConfirmDealRecService.execute(templateSourceFlgDTO,
                 acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.净值型基金赎回确认交易.equals(acctEntity.getTmpEName())) {
             paramMap.put("busiType", DictCodeList.业务类型_非货币基金交易_非货基_非类货基资产交易.getValue());
@@ -172,6 +188,10 @@ public class FundDealInfoComForInterfService {
             paramMap.put("pslist", ps);
             result = fundNMoneyFundRedeemConfirmDealRecService.execute(templateSourceFlgDTO,
                 acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.赎回到账交易.equals(acctEntity.getTmpEName())) {
             busiTypes.add(DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
@@ -182,6 +202,10 @@ public class FundDealInfoComForInterfService {
             paramMap.put("pslist", ps);
             result = fundRedeemArrivalAccountDealRecService.execute(templateSourceFlgDTO,
                 acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.现金分红交易.equals(acctEntity.getTmpEName())) {
             busiTypes.add(DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
@@ -195,6 +219,10 @@ public class FundDealInfoComForInterfService {
             List<String> fpsList = new ArrayList<String>();
             fpsList.add(DictCodeList.交易方向_除权登记.getValue());
             paramMap.put("fpsList", fpsList);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else if (TempConstant.红利再投交易.equals(acctEntity.getTmpEName())) {
             busiTypes.add(DictCodeList.业务类型_货币基金交易_货基_类货基资产交易.getValue());
@@ -208,6 +236,10 @@ public class FundDealInfoComForInterfService {
             List<String> fpsList = new ArrayList<String>();
             fpsList.add(DictCodeList.交易方向_除权登记.getValue());
             paramMap.put("fpsList", fpsList);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
             
         }
         /** add by yanya on 20191116 增加基金份额折算交易处理 start**/
@@ -220,6 +252,10 @@ public class FundDealInfoComForInterfService {
             ps.add(DictCodeList.交易方向_份额强减.getValue());
             paramMap.put("pslist", ps);
             result = fundShareConvertDealRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         /** add by yanya on 20191116 增加基金份额折算交易处理 end**/
         
@@ -233,6 +269,10 @@ public class FundDealInfoComForInterfService {
             ps.add(DictCodeListExt3.交易方向_转换赎回确认.getValue());
             paramMap.put("pslist", ps);
             result = fundChangeDealRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         /** add by tanxuan on 20200110 end**/
         

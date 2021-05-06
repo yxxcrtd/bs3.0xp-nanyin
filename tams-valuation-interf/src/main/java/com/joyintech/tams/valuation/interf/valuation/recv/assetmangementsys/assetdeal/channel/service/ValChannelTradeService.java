@@ -79,6 +79,10 @@ public class ValChannelTradeService {
             ps.add(DictCodeList.交易方向_卖出.getValue());
             paramMap.put("pslist", ps);
             /** add by wujie on 20190321 end **/
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else {
             result.setDatanum(0);

@@ -96,6 +96,10 @@ public class DepositAssetDealInfoRecService {
             ps.add(DictCodeList.交易方向_卖出.getValue());
             ps.add(DictCodeList.交易方向_提前支取.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         // 02-存款存续期表
         else if (TempConstant.存款类资产存款存续期表.equals(acctEntity.getTmpEName())) {
@@ -108,6 +112,10 @@ public class DepositAssetDealInfoRecService {
             ps.add(DictCodeList.交易方向_收息.getValue());
             */
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         // 03-存款应收款项转让交易
         else if (TempConstant.存款类资产应收款项转让交易.equals(acctEntity.getTmpEName())) {
@@ -117,6 +125,10 @@ public class DepositAssetDealInfoRecService {
             ps.add(DictCodeList.交易方向_应收款项转入.getValue());
             ps.add(DictCodeList.交易方向_应收款项转出.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else{
         	rtnResult.setDataNum(0);
