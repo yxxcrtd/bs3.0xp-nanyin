@@ -279,6 +279,40 @@ public class SvrAssetBasisInterf extends BaseService{
     	logger.info("资产基础指标数据接口导入批处理结束。用时："+(System.currentTimeMillis()-startTime)/1000+"s");
     	return isUpdated;
 	}
+
+	/**
+	 * 上游未下方估值数据，取估值资产估值信息表最近一日的数据生成资产估值信息
+	 */
+	public void genAssetValueInfoLast(){
+		String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		try (SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false)){
+			//批量插入mapper
+			ChbAstValInterfMapper batchMapper =  session.getMapper(ChbAstValInterfMapper.class);
+			// 先删后插
+			Map<String, Object> para = new HashMap<String, Object>();
+			para.put("valDate", "");
+			chbAstValInterfMapper.deleteInfo(para);
+			// 处理最近一日估值表数据
+			List<ChbAstValue> infoList = chbAstValInterfMapper.queryAssetValueInfoLastList();
+			int count = 0;
+			for (ChbAstValue info : infoList) {
+				info.setValId(IDGenerator.generate(36));
+				info.setIssuePartyId(CommonUtil.selectBankCode());
+				info.setCreateUser("system");
+				info.setUpdateUser("system");
+				//info.setStatus("E");
+
+				batchMapper.insertInfo(info);
+				count++;
+				if (count % 1000 == 0) {
+					session.commit();
+					session.clearCache();
+				}
+			}
+			session.commit();
+			session.clearCache();
+		}
+	}
     
 	/**
 	 * 根据资产基础指标生成资产估值信息

@@ -85,6 +85,32 @@
           and VAL2.UNIT_VAL_TOTAL = VAL.UNIT_VAL_TOTAL
           )
 </insert> -->
+	<select id="queryInsertGenerateLastList" parameterType="map" resultMap="com.joyintech.tams.common.base.dao.ChbAstValueSubMapper.BaseResultMap">
+		SELECT
+			REGIST_SEQNO AS registSeqno,
+			REGIST_BANK_CODE AS registBankCode,
+			ISSUE_PARTY_ID AS issuePartyId,
+			ASSET_CODE AS assetCode,
+			now() AS valDate,
+			UNIT_VAL_NET AS unitValNet,
+			UNIT_VAL_TOTAL AS unitValTotal,
+			REMARK AS remark,
+			CHB_SUBMIT_DEADLINE AS chbSubmitDeadline,
+			SUBMIT_DEADLINE AS submitDeadline,
+			SEND_STATUS AS sendStatus,
+			SUBMIT_TIME AS submitTime,
+			SUMIT_SEQ AS sumitSeq,
+			SUBMIT_FEEDBACK_STATUS AS submitFeedbackStatus,
+			STATUS AS status,
+			STATUS_DATE AS statusDate,
+			ORG_CODE AS orgCode,
+			DEPT_CODE AS deptCode,
+			CREATE_DEPT AS createDept
+		FROM
+			CHB_AST_VAL_SUB
+		WHERE
+			DATE_FORMAT(VAL_DATE,'%Y-%m-%d') = (SELECT max(DATE_FORMAT(VAL_DATE,'%Y-%m-%d'))  FROM	CHB_AST_VAL	ORDER BY VAL_DATE)
+	</select>
 	<select id="queryInsertGenerateList" parameterType="map" resultMap="com.joyintech.tams.common.base.dao.ChbAstValueSubMapper.BaseResultMap">
 		SELECT
 		f_guid() REGIST_SEQNO,

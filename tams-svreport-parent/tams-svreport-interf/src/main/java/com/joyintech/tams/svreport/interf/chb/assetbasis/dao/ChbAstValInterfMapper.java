@@ -45,4 +45,5 @@ public interface ChbAstValInterfMapper {
 	int deleteInfo(Map<String,Object> map);
 	
 	List<ChbAstValue> queryAssetValueInfoList(@Param("generateDate")String generateDate,@Param("exchangeSource")String exchangeSource,@Param("isBtm")String isBtm,@Param("InstitutionCode")String InstitutionCode);
+	List<ChbAstValue> queryAssetValueInfoLastList();
 }

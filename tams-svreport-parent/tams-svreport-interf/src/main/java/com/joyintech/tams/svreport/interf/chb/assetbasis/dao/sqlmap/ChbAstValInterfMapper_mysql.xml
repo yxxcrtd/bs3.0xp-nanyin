@@ -47,6 +47,26 @@
 		</where>
 	</delete>
 
+	<select id="queryAssetValueInfoLastList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">
+		SELECT
+			VAL_ID AS valId,
+			ISSUE_PARTY_ID AS issuePartyId,
+			ASSET_CODE AS assetCode,
+			NOW() AS valDate,
+			UNIT_VAL_NET AS unitValNet,
+			UNIT_VAL_TOTAL AS unitValTotal,
+			REMARK AS remark,
+			DATASOURCE AS datasource,
+			STATUS AS status,
+			WORKFLOW_ID AS workflowId,
+			ORG_CODE AS orgCode,
+			DEPT_CODE AS deptCode
+		FROM
+			CHB_AST_VAL
+		WHERE
+			DATE_FORMAT(VAL_DATE,'%Y-%m-%d') = (SELECT max(DATE_FORMAT(VAL_DATE,'%Y-%m-%d'))  FROM	CHB_AST_VAL	ORDER BY VAL_DATE)
+	</select>
+
 	<select id="queryAssetValueInfoList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">
 		with price as (
 		SELECT BASIS_CYY CCY,
