@@ -5,12 +5,14 @@
 
 package com.joyintech.tams.invest.period.trdplannetduration.service;
 
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -33,6 +35,8 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +45,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.joyintech.tams.invest.period.common.service.PeriodCommonService.setWorkflowId;
 
@@ -69,6 +74,13 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
 
     @Autowired
     private PeriodCommonService periodCommonService;
+    
+    /**
+     * 附件上传类
+     */
+    @Autowired(required = false)
+    private FileAttachmentProcess fileAttachmentProcess;
+
 
     /**
      * 划款指令共通
@@ -99,6 +111,12 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
      */
     @Override
     public void doInsert(TrdPlanNetDuration001Dto entity, OperationType type) {
+    	 if (CollectionUtils.isNotEmpty(entity.getUploadFileList())
+                 && com.joyintech.framework.util.StringUtil.isNotEmpty(entity.getTotleTradeId())) {
+             // 将附件和当前业务对象绑定（更新附件的业务代码）
+             fileAttachmentProcess.updateBussinessNo(
+                     entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(Collectors.toList()), entity.getTotleTradeId());
+         }
         if (BussinessConstant.SUBMIT.equals(entity.getOperateType())) {
             setWorkflowId(entity.getBaseTotalTradeInfoDto(), entity.getWorkflowId());
         }
@@ -113,6 +131,12 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
     @Override
     public void doUpdate(TrdPlanNetDuration001Dto entity) {
         entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
+        if (CollectionUtils.isNotEmpty(entity.getUploadFileList())
+                && com.joyintech.framework.util.StringUtil.isNotEmpty(entity.getTotleTradeId())) {
+            // 将附件和当前业务对象绑定（更新附件的业务代码）
+            fileAttachmentProcess.updateBussinessNo(
+                    entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(Collectors.toList()), entity.getTotleTradeId());
+        }
         setWorkflowId(entity.getBaseTotalTradeInfoDto(), entity.getWorkflowId());
         ProcessMark newEntity = null;
         try {
