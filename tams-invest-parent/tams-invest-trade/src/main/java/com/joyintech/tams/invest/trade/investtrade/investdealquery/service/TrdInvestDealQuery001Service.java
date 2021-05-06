@@ -237,6 +237,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
         pageParam.put("COUNTER_TYPE_05", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
         pageParam.put("YES_NO_Y", DictCodeList.是否_是.getValue());
         pageParam.put("YES_NO_N", DictCodeList.是否_否.getValue());
+		pageParam.put("finType_F01", DictCodeListExt1.金融产品类型_债券.getValue());
 		//add by wangpeng end 
         //判断状态
         Page<TrdInvestDealQuery001Dto> returnList = new Page<TrdInvestDealQuery001Dto>(); 
