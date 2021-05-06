@@ -14,7 +14,7 @@ $(function () {
                 return getSearchParams();
             }
         },
-        showDetail: true,//双击详情对比画面
+        showDetail: false,//双击详情对比画面
         rowno: true, // 显示行号
         searchOnInit: false, //初始化的时候就请求后台数据
         cols: [
