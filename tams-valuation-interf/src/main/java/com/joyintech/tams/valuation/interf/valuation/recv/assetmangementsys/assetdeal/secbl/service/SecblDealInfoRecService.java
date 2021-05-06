@@ -112,6 +112,11 @@ public class SecblDealInfoRecService {
         	 ps.add(DictCodeList.交易方向_融入债券卖出.getValue());
              ps.add(DictCodeList.交易方向_融入债券购回.getValue());
              ps.add(DictCodeList.交易方向_本方券交割.getValue());
+
+            ps.add(DictCodeList.交易方向_买入.getValue());
+            ps.add(DictCodeList.交易方向_卖出.getValue());
+
+
              paramMap.put("pslist", ps);//删除除这些交易方向的数据
 
             /**add by wujie on 20210506 start**/
