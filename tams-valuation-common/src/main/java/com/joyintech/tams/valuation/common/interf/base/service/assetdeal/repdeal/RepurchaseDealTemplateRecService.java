@@ -208,7 +208,10 @@ public class RepurchaseDealTemplateRecService {
             //四级科目尾号名称 
 			dealAccounting.getBokDetailId()
 					.setDetailSubnameTail(finTradeProduct == null ? null
-							: InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_回购.getValue(),
+							/**modify by wujie on 20210506 start
+                             : InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_回购.getValue(),**/
+							: InterfHelper.getDictColdeList_ItemName(DictCode.回购期限品种.getValue(),
+                            /**modify by wujie on 20210506 end**/
 									finTradeProduct.getTermType()));
             listValBokDetailId.add(dealAccounting.getBokDetailId());
             
