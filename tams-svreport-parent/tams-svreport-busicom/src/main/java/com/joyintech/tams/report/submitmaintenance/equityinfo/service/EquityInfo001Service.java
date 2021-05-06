@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
+import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ResultContext;
@@ -1346,6 +1348,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setExcelNum(String.valueOf(i + 2));
             //检查序列号设置初始值
             equityInfo001Dto.setCheckSeqno("0");
+
+            //add by lingxq on 2021-05-06 for 需求升级 ------->>>>>
+            EquityInfoMaintenanceService.updateHoldType(equityInfo001Dto);
+            //add by lingxq on 2021-05-06 for 需求升级 -------<<<<<
             returnInfoList.add(equityInfo001Dto);
         }
         return returnInfoList;
@@ -3878,5 +3884,4 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         return pageList;
 
     }
-
 }

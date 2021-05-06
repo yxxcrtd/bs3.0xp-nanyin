@@ -544,13 +544,15 @@
 
 	<!-- 插入数据到临时表 -->
 	<insert id="insertIntoImportTable" parameterType="java.util.List">
-		insert into CHB_EQU_HOLD_IMP_TMP(INDENTIFY_MARK,ORG_INDENTIFY_MARK,REGIST_BANK_CODE,TYPE)
-		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
-			#{item.INDENTIFY_MARK,jdbcType=VARCHAR} INDENTIFY_MARK,
-			#{item.ORG_INDENTIFY_MARK,jdbcType=VARCHAR} ORG_INDENTIFY_MARK,
-			#{item.REGIST_BANK_CODE,jdbcType=VARCHAR} REGIST_BANK_CODE,
-			'01' as "TYPE"
-		</foreach> a
+		insert into CHB_EQU_HOLD_IMP_TMP(INDENTIFY_MARK,ORG_INDENTIFY_MARK,REGIST_BANK_CODE,TYPE) values
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.INDENTIFY_MARK,jdbcType=VARCHAR},
+			#{item.ORG_INDENTIFY_MARK,jdbcType=VARCHAR},
+			#{item.REGIST_BANK_CODE,jdbcType=VARCHAR},
+			'01'
+			)
+		</foreach>
 	</insert>
 
 	<!-- 删除临时表 -->
