@@ -356,20 +356,21 @@ spring:
   profiles: dtx1
   #本地启动建议删除redis配置start
   redis:
-    database: 5
-    host: 127.0.0.1
+    database: 8
+    password: joyin!234
+    host: 192.168.90.198
     port: 6379
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams1214ls
-    password: zgtams1214ls 
+    username: productLS_20210318_LY
+    password: productLS_20210318_LY 
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  sqldiruserName: zgtams1214ls
-  sqldirpassword: zgtams1214ls
+  sqldiruserName: productLS_20210318_LY
+  sqldirpassword: productLS_20210318_LY
   loadbalance: false
   micorservice:
     contextPath:
@@ -401,14 +402,14 @@ application:
 base:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams1214ls
-    password: zgtams1214ls
+    username: productLS_20210318_LY
+    password: productLS_20210318_LY
 #interf数据源配置
 interf:  
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
-    username: zgtams1214ls
-    password: zgtams1214ls
+    username: productLS_20210318_LY
+    password: productLS_20210318_LY
 #日志路径配置
 log:
   path: /home/tams/logs/batch
