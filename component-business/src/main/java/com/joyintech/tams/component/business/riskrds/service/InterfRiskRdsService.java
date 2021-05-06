@@ -545,6 +545,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         			     result.add(BeanUtil.object2Map(infRiskRdsDto));
         			     //卖出
         			     infRiskRdsDto.setAssetCode(regionFinprodId);
+        			     infRiskRdsDto.setMarketCode(regionFinprodId);
         			     infRiskRdsDto.setPs(DictCodeList.交易方向_卖出.getValue());
         			     result.add(BeanUtil.object2Map(infRiskRdsDto));
         			}

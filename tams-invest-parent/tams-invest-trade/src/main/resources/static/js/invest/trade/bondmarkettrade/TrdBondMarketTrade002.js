@@ -26,19 +26,21 @@
         Joyin.ajaxJson(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
                 Joyin.ajaxJson(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/autoAddBond', object, function(result) {
-                        if(operateType === 'save') {
-                        if ($('#totleTradeId').val() != null && $('#totleTradeId').val() != ''){
-                            object.totleTradeId = $('#totleTradeId').val();
-                            Joyin.ajaxJson(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/getSaveData',object , function(result){
-                                object = result.data;
-                                WorkFlow.doSaveList(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/save', object, "TrdBondMarketTrade002_btn_save");
-                            });    
-                        }else{
-                            WorkFlow.doSaveList(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/save', object, "TrdBondMarketTrade002_btn_save");
-                        }
+                    if(operateType === 'save') {
+                    	 WorkFlow.doSaveList(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/save', object, "TrdBondMarketTrade002_btn_save");
                     }
                     else {
-                        WorkFlow.doSubmitList(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/save', object, "TrdBondMarketTrade002_btn_submit");
+                    	//待办中提交，需更新trdproductdeal
+                    	if($('#totleTradeId').val() != null && $('#totleTradeId').val() != ''&&pageModel!=PAGE_MODEL_REFERENCE){
+                    		object.totleTradeId = $('#totleTradeId').val();
+                    		Joyin.ajaxJson(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/getSaveData',object , function(result){
+                                object = result.data;
+                                WorkFlow.doSubmitList(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/save', object, "TrdBondMarketTrade002_btn_submit");
+                            }); 
+                    	}
+                    	else{
+                    		WorkFlow.doSubmitList(basePath + 'invest/trade/bondmarkettrade/TrdBondMarketTrade002/save', object, "TrdBondMarketTrade002_btn_submit");
+                    	}                    
                     }
                 },false);
             });
