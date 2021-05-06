@@ -1,4 +1,4 @@
-package com.joyintech.tams.svreport.chbreport.chbinvestoperation.dto;
+package com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
@@ -16,7 +16,7 @@ import java.util.Date;
  **/
 public class ChbInvsetAssetInfo extends BaseEntity {
 
-    private static final long serialVersionUID = 8192589479280443466L;
+    private static final long serialVersionUID = 7402821946388689926L;
     /**
      * 行内资产负债编码
      */

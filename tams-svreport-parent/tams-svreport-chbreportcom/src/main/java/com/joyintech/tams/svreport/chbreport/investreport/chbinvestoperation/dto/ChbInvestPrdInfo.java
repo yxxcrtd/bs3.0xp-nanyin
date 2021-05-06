@@ -1,4 +1,4 @@
-package com.joyintech.service.chbreport.chbinvestoperation.dto;
+package com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 
@@ -13,7 +13,7 @@ import java.util.Date;
  **/
 public class ChbInvestPrdInfo extends BaseEntity {
 
-    private static final long serialVersionUID = 4782725432727267282L;
+    private static final long serialVersionUID = 109399923067388230L;
     /**
      * 产品名称
      */
@@ -32,9 +32,19 @@ public class ChbInvestPrdInfo extends BaseEntity {
     private String ivstorientation;
 
     /**
+     * 投资性质显示名称
+     */
+    private String ivstorientationFmt;
+
+    /**
      * 兑付本金币种
      */
     private String cashPrinCcy;
+
+    /**
+     * 兑付本金币种显示名称
+     */
+    private String cashPrinCcyFmt;
 
     /**
      * 产品风险等级  01 一级（低）/02 二级（中低）/03 三级（中）/04 四级（中高）/05 五级（高）
@@ -42,9 +52,19 @@ public class ChbInvestPrdInfo extends BaseEntity {
     private String riskLevel;
 
     /**
+     * 产品风险等级显示名称
+     */
+    private String riskLevelFmt;
+
+    /**
      * 起息日
      */
     private Date vdate;
+
+    /**
+     * 起息日显示名称
+     */
+    private String vdateFmt;
 
     /**
      * 境内托管机构名称
@@ -57,14 +77,19 @@ public class ChbInvestPrdInfo extends BaseEntity {
     private String outDepName;
 
     /**
+     * 境内外显示名称
+     */
+    private String depName;
+
+    /**
      *  交易日期
      */
     private Date dealdate;
 
     /**
-     * 境内外显示名称
+     *  交易日期显示名称
      */
-    private String depName;
+    private String dealdateFmt;
 
     /**
      *  产品管理人-默认（华夏理财有限责任公司）
@@ -103,12 +128,28 @@ public class ChbInvestPrdInfo extends BaseEntity {
         this.ivstorientation = ivstorientation;
     }
 
+    public String getIvstorientationFmt() {
+        return ivstorientationFmt;
+    }
+
+    public void setIvstorientationFmt(String ivstorientationFmt) {
+        this.ivstorientationFmt = ivstorientationFmt;
+    }
+
     public String getCashPrinCcy() {
         return cashPrinCcy;
     }
 
     public void setCashPrinCcy(String cashPrinCcy) {
         this.cashPrinCcy = cashPrinCcy;
+    }
+
+    public String getCashPrinCcyFmt() {
+        return cashPrinCcyFmt;
+    }
+
+    public void setCashPrinCcyFmt(String cashPrinCcyFmt) {
+        this.cashPrinCcyFmt = cashPrinCcyFmt;
     }
 
     public String getRiskLevel() {
@@ -119,12 +160,28 @@ public class ChbInvestPrdInfo extends BaseEntity {
         this.riskLevel = riskLevel;
     }
 
+    public String getRiskLevelFmt() {
+        return riskLevelFmt;
+    }
+
+    public void setRiskLevelFmt(String riskLevelFmt) {
+        this.riskLevelFmt = riskLevelFmt;
+    }
+
     public Date getVdate() {
         return vdate;
     }
 
     public void setVdate(Date vdate) {
         this.vdate = vdate;
+    }
+
+    public String getVdateFmt() {
+        return vdateFmt;
+    }
+
+    public void setVdateFmt(String vdateFmt) {
+        this.vdateFmt = vdateFmt;
     }
 
     public String getInDepName() {
@@ -143,6 +200,14 @@ public class ChbInvestPrdInfo extends BaseEntity {
         this.outDepName = outDepName;
     }
 
+    public String getDepName() {
+        return depName;
+    }
+
+    public void setDepName(String depName) {
+        this.depName = depName;
+    }
+
     public Date getDealdate() {
         return dealdate;
     }
@@ -151,12 +216,12 @@ public class ChbInvestPrdInfo extends BaseEntity {
         this.dealdate = dealdate;
     }
 
-    public String getDepName() {
-        return depName;
+    public String getDealdateFmt() {
+        return dealdateFmt;
     }
 
-    public void setDepName(String depName) {
-        this.depName = depName;
+    public void setDealdateFmt(String dealdateFmt) {
+        this.dealdateFmt = dealdateFmt;
     }
 
     public String getManagerName() {

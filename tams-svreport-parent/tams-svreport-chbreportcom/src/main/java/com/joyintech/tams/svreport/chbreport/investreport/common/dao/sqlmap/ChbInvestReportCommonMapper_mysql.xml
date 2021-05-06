@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.investreport.common.dao.ChbInvestReportCommonMapper_mysql">
+
+	<select id="selectReprevealByParams" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+		SELECT  *
+		FROM REP_REVEAL
+		WHERE
+			1=1
+			<if test="repId !=null and repId != ''">
+				AND REP_ID = #{repId,jdbcType=VARCHAR}
+			</if>
+			<if test="reportName !=null and reportName != ''">
+				AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+			</if>
+			<if test="prodId !=null and prodId != ''">
+				AND PRODID = #{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="startDate !=null">
+				AND DATE_FORMAT(START_DATE,'%Y-%m-%d') = #{startDate,jdbcType=VARCHAR}
+			</if>
+			<if test="endDate !=null">
+				AND  DATE_FORMAT(END_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+			</if>
+			AND STATUS = 'E'
+			/** AND CONFIRM_STATUS = '01' **/
+			limit 1
+	</select>
+
+	<update id="updateReprevealByParams">
+		update REP_REVEAL
+		set STATUS = 'D'
+		WHERE
+			1=1
+			<if test="repId !=null and repId != ''">
+				AND REP_ID = #{repId,jdbcType=VARCHAR}
+			</if>
+			<if test="reportName !=null and reportName != ''">
+				AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+			</if>
+			<if test="prodId !=null and prodId != ''">
+				AND PRODID = #{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="startDate !=null">
+				AND DATE_FORMAT(START_DATE,'%Y-%m-%d') = #{startDate,jdbcType=VARCHAR}
+			</if>
+			<if test="endDate !=null">
+				AND  DATE_FORMAT(END_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+			</if>
+			AND STATUS = 'E'
+	</update>
+
+</mapper>

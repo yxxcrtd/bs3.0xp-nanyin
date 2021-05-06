@@ -1,8 +1,8 @@
-package com.joyintech.service.chbreport.chbinvestoperation.dao;
+package com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.service.chbreport.chbinvestoperation.dto.ChbInvestPrdInfo;
-import com.joyintech.service.chbreport.chbinvestoperation.dto.ChbInvsetAssetInfo;
+import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.dto.ChbInvestPrdInfo;
+import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.dto.ChbInvsetAssetInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

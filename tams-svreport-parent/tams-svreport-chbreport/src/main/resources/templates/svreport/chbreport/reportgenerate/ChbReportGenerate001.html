@@ -1,0 +1,113 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <meta charset="utf-8">
+    <title>报告生成管理</title>
+    <style>
+        .input-btn-append a{
+            background: #ffff;
+            color: #4893e6;
+            line-height:20px;
+        }
+        .joyin-form-container{
+            background:#fff;
+        }
+        .report-colla-wrap .layui-table-body table{
+            width:100%;
+        }
+        .report-colla-wrap .layui-table-body table tbody tr td .layui-table-cell{
+            width:auto;
+            float:left;
+            height: 24px;
+            line-height: 24px;
+        }
+
+    </style>
+    <style type="text/css">
+        #aaa{
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="layui-col-md3" style="width: 22%;margin-top:-5px">
+        <div class="joyin-form-wrap joyin-form-container">
+            <form class="layui-form" id="schemeForm">
+            </form>
+        </div>
+        <div class="layui-collapse">
+            <div class="layui-colla-item" style="padding: 0">
+                <div class="layui-row layui-colla-title" style="margin: 0; line-height: 30px;height:30px;">
+                    <div class="layui-col-md6">
+                        <span>披露报告</span>
+                    </div>
+                    <div class="layui-col-md3 layui-col-md-offset3">
+
+                    </div>
+                </div>
+                <!--左表格  -->
+                <div class="layui-colla-content layui-show report-colla-wrap" style="padding: 0">
+                    <table class="layui-table" id="dataTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md9" style="width: 78%;margin-top: -9px;" >
+        <div class="layui-tab layui-tab-card" lay-filter="tabContainer">
+            <div class="layui-tab-content" style="padding: 0">
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
+                        <label class="layui-form-label form-lable" style="width: 63px;">产品代码</label>
+                        <div class="layui-input-inline input-inline">
+                            <select type="text" id="prodId" name="prodId"
+                                    allowClear="true"
+                                    class="layui-input form-input input-select"
+                                    data-th-data-url="@{/svreport/chbreport/reportgenerate/ChbReportGenerate001/queryPrdInfoPage}"
+                                    formatoption="true" placeholder="请输入内容"
+                                    data-th-placeholder="#{SysCommon.selectplaceholder}">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" id="endDateDiv">
+                    <div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
+                        <label class="layui-form-label form-lable" style="width: 63px;">报告日期</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" class="layui-input form-input input-dateSelect" id="endDate" name="endDate" placeholder="请选择日期">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" id="reportTypeDiv">
+                    <div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
+                        <label class="layui-form-label form-lable" style="width: 63px;">筛选条件</label>
+                        <div class="layui-input-inline input-inline">
+                            <select type="text" class="layui-input form-input input-select" id="reportType"
+                                    name="reportType" placeholder="请选择筛选条件" allowClear="true" data-th-data-result="${REPORT_TERM_TYPE}" >
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md11" style="margin: 50px;">
+                <div class="text-center">
+                    <a id="ChbReportGenerate001_btn_add" class="layui-btn layui-btn-sm btn-create" >生成</a>
+                    <a id="ChbReportGenerate001_btn_export" class="layui-btn layui-btn-sm btn-export">导出</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script data-th-inline="javascript" type="text/javascript">
+        var CHB_DISCLOSURE_REPORT_01 =/*[[${CHB_DISCLOSURE_REPORT_01}]]*/'';
+        var CHB_DISCLOSURE_REPORT_02 =/*[[${CHB_DISCLOSURE_REPORT_02}]]*/'';
+        var CHB_DISCLOSURE_REPORT_03 =/*[[${CHB_DISCLOSURE_REPORT_03}]]*/'';
+        var CHB_DISCLOSURE_REPORT_04 =/*[[${CHB_DISCLOSURE_REPORT_04}]]*/'';
+    </script>
+    <script data-th-src="@{/js/svreport/chbreport/reportgenerate/ChbReportGenerate001.js}" type="text/javascript"></script>
+</div>
+</body>
+</html>
