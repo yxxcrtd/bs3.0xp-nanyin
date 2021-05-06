@@ -1,4 +1,4 @@
-package com.joyintech.tams.svreport.chbreport.utils;
+package com.joyintech.tams.svreport.chbreport.investreport.utils;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
@@ -31,7 +31,7 @@ public class WordBatchUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static ResponseEntity<byte[]> exportMillCertificateWord(HttpServletRequest request, HttpServletResponse response, Map map, String srcFilePath, String filename, String newWordName) throws IOException {
+	public static ResponseEntity<byte[]> exportMillCertificateWord(Map map, String srcFilePath, String filename, String newWordName) throws IOException {
 		Configuration configuration = null;
 		configuration = new Configuration();
 		configuration.setDefaultEncoding("utf-8");
@@ -96,7 +96,7 @@ public class WordBatchUtil {
 	 *思路：生成临时目录-在临时目录生成word-将临时目录打zip包-zip文件下载-删除临时目录和zip包，
 	 * 回收系统资源
 	 */
-	public static ResponseEntity<byte[]> exportWordBatch(HttpServletRequest request, HttpServletResponse response, List<Map<String, Object>> mapList, List<String> titleList, String ftlFile, String srcFilePath, String zipname) throws IOException {
+	public static ResponseEntity<byte[]> exportWordBatch(List<Map<String, Object>> mapList, List<String> titleList, String ftlFile, String srcFilePath, String zipname) throws IOException {
 		File file = null;
 		Configuration configuration = null;
 		configuration = new Configuration();
@@ -248,6 +248,32 @@ public class WordBatchUtil {
 	}
 
 
+	/**
+	 * 根据组装数据及ftl模板生成单个word文档
+	 * @param map
+	 * @param srcFilePath
+	 * @param filename
+	 * @param newWordName
+	 * @return
+	 * @throws IOException
+	 */
+	public static File createMillCertificateWord(Map map, String srcFilePath, String filename, String newWordName) throws IOException {
+		Configuration configuration = null;
+		configuration = new Configuration();
+		configuration.setDefaultEncoding("utf-8");
+		configuration.setDirectoryForTemplateLoading(new File(srcFilePath));
+		Template freemarkerTemplate = configuration.getTemplate(filename);
+		File file = null;
+		try {
+			// 调用工具类的createDoc方法生成Word文档
+			file = createDoc(map, freemarkerTemplate, newWordName);
+
+		}catch(Exception e){
+			return null;
+		}
+		return file;
+
+	}
 
 
 }
