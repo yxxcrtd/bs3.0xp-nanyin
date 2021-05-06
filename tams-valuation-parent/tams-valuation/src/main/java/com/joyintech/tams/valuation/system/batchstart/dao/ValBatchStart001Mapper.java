@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResult;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -64,4 +65,6 @@ public interface ValBatchStart001Mapper {
 	 * @return
 	 */
 	List<com.joyintech.tams.valuation.system.batchstart.dto.Product> findAllProdByInstitutionCode(@Param("institutionCode")String createInst);
+
+    List<SysPrebatchResult> selectErrorPrebatchResults(Map<String, Object> param);
 }

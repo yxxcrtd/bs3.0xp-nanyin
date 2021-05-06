@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.batch.prebatchcheck.processassettrade.dao.ProcessAssetTradeMapper">
+
+    <select id="selectProcessAssetTradeList" parameterType="java.util.Map"
+            resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
+            	select 
+	    			T.create_user as launchUser,
+					pp.PORTFOLIO_ID portfolioId,
+					pp.PORTFOLIO_NAME portfolioName,
+					deal.Finprod_id finprodId, 
+					nvl(fp.Finprod_name,fp.Finprod_abbr) finprodName,
+					deal.Trade_id tradeId,
+					deal.TOTLE_TRADE_ID totleTradeId,
+					deal.trade_amt tradeAmt,
+					T.NEXT_USER  AS nextUser,
+					T.CRT_DATE AS createTaskTime,
+        			sd.institution_code instCode
+				from SYS_WFL_BUSINESS_LIST T
+				INNER JOIN WFL_TRD_PRODUCT_DEAL DEAL ON deal.workflow_id = T.seq_no and T.PROCESS_STATE != 'END'
+				left join WFL_TRD_PRODUCT_DEAL_ADD ad on deal.workflow_id = ad.workflow_id
+				left join wfl_trd_fin_product_deal_total total on deal.TOTLE_TRADE_ID = total.TOTLE_TRADE_ID
+				LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+    			LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
+				left join fin_product fp on fp.finprod_id = deal.finprod_id
+				left join PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = nvl(ad.PORTFOLIO_ID,total.PORTFOLIO_ID)
+				where deal.trade_status = '01' and deal.is_cancel='N' 
+					and deal.finprod_type2 in('F01','F02','F03','F04','F05','F06','F07','F08','F09','F10','F14','F15','F17','F18','F35')
+					and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
+    </select>
+</mapper>

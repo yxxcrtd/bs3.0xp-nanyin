@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.batch.prebatchcheck.processproduct.dao.ProcessProductMapper">
+
+    <select id="selectProcessProductList"
+            resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
+        SELECT
+        T.create_user as launchUser,
+        T.TRADE_ID AS portfolioId,
+        NVL(fp.FINPROD_ABBR,T.TRADE_ID)  portfolioName,
+        T.NEXT_USER  AS nextUser,
+        T.CRT_DATE AS createTaskTime,
+        sd.institution_code instCode
+        FROM SYS_WFL_BUSINESS_LIST T
+        LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+        LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
+        left join fin_product fp on fp.finprod_market_id = t.TRADE_ID
+        and fp.finprod_type = 'F16'
+        WHERE T.PROCESS_STATE != 'END'
+        AND T.BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}
+        and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+
+    </select>
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.batch.prebatchcheck.processasset.dao.ProcessAssetMapper">
+
+    <select id="selectProcessAssetList" parameterType="java.util.Map"
+            resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
+        <!-- 各资产在联社模式下的隔离情况
+        	1. 需要隔离的资产
+					项目类资产 ：FinProjectTargetAsset002  
+					存款类标的：FinDepositTarget002 
+					场外期权：FinOptionTarget002
+					计划类净值：FinPlanNetAsset002 
+					利率：FinPlanProfitAsset002 
+					货币：FinPlanAssetC002 
+        	2. 不需要隔离的资产
+        	                    债券标的 FinBondTargetAsset002
+					新发债券标的：FinTenderBondTargetAsset002
+					公募基金：FinFundTarget002
+					股票标的：FinStockInfo002
+         -->
+            
+		WITH TEMP AS (
+			SELECT * FROM(
+				select 
+					sys_data_process_mark.*,rank() over(partition by workflow_id order by HIS_NO desc) as rank
+				from sys_data_process_mark 
+				where page_id in ('FinBondTargetAsset002','FinProjectTargetAsset002','FinTenderBondTargetAsset002','FinDepositTarget002',
+					'FinFundTarget002','FinStockInfo002','FinOptionTarget002','FinPlanNetAsset002','FinPlanProfitAsset002','FinPlanAssetC002')
+			) WHERE rank = 1
+		)
+		select 
+			launchUser,
+			nvl(finprodName,finprodAbbr) finprodName,
+			finprodId, 
+			nextUser,
+			createTaskTime,
+			instCode
+		from(
+			SELECT 
+		    	T.create_user as launchUser,
+				case 
+					when temp.page_id = 'FinStockInfo002' then  nvl(replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"finprodId":"[^"]+"',1,1)),'"finprodId":"',''),'"',''),temp.business_data_pk1)
+					when temp.page_id = 'FinOptionTarget002' then temp.business_data_pk1
+					else replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"finprodId":"[^"]+"',1,1)),'"finprodId":"',''),'"','')
+				end as finprodId,
+				case 
+					when temp.page_id = 'FinOptionTarget002' then replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"targetName":"[^"]+"',1,1)),'"targetName":"',''),'"','')
+					else replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"finprodName":"[^"]+"',1,1)),'"finprodName":"',''),'"','')
+				end as finprodName,
+				case 
+					when temp.page_id = 'FinOptionTarget002' then ''
+					else replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"finprodAbbr":"[^"]+"',1,1)),'"finprodAbbr":"',''),'"','')
+				end as finprodAbbr,
+				T.NEXT_USER  AS nextUser,
+				T.CRT_DATE AS createTaskTime,
+				sd.institution_code instCode
+			FROM SYS_WFL_BUSINESS_LIST T 
+			INNER JOIN TEMP on T.seq_no = temp.workflow_id and T.PROCESS_STATE != 'END'
+			LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+        	LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
+			WHERE T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+			<if test='isMultilevel=="true"'>
+		 		and (temp.page_id in ('FinBondTargetAsset002','FinTenderBondTargetAsset002','FinFundTarget002','FinStockInfo002')
+					or sd.institution_code = #{instCode,jdbcType=VARCHAR})
+		</if>
+		)
+    </select>
+</mapper>
