@@ -167,30 +167,18 @@ public class HXProfitQueryMService extends CommonExportService<ChbreportPrdInfoD
         HXProfitQuery001Dto profitDto = new HXProfitQuery001Dto();
         if (!bqList.isEmpty() && bqList.size() > 0) {
             profitDto.setBq(bqList.get(0));
-            profitDto.setBusiIncBQ(getBusiInc(profitDto.getBq()));
-            profitDto.setBusiPayBQ(getBusiInc(profitDto.getBq()));
         } else {
             profitDto.setBq(new HxProfit());
-            profitDto.setBusiIncBQ(null);
-            profitDto.setBusiPayBQ(null);
         }
         if (!syList.isEmpty() && syList.size() > 0) {
             profitDto.setSy(syList.get(0));
-            profitDto.setBusiIncSY(getBusiInc(profitDto.getSy()));
-            profitDto.setBusiPaySY(getBusiInc(profitDto.getSy()));
         } else {
             profitDto.setSy(new HxProfit());
-            profitDto.setBusiIncSY(null);
-            profitDto.setBusiPaySY(null);
         }
         if (!bnList.isEmpty() && bnList.size() > 0) {
             profitDto.setBn(bnList.get(0));
-            profitDto.setBusiIncBN(getBusiInc(profitDto.getBn()));
-            profitDto.setBusiPayBN(getBusiInc(profitDto.getBn()));
         } else {
             profitDto.setBn(new HxProfit());
-            profitDto.setBusiIncBN(null);
-            profitDto.setBusiPayBN(null);
         }
         return profitDto;
     }
@@ -205,27 +193,5 @@ public class HXProfitQueryMService extends CommonExportService<ChbreportPrdInfoD
         return restTemplate.postForList(
                 SvrServiceApplication.CHBREPORT_SERVICE_NAME + "/HXProfitQuery/selectHXProfitList", paraMap,
                 HxProfit.class);
-    }
-
-    /**
-     * 计算营业收入总值
-     */
-    private BigDecimal getBusiInc(HxProfit entity) {
-        BigDecimal busiInc = new BigDecimal(0);
-        busiInc = busiInc.add(entity.getLixiInc())
-                .add(entity.getInvestLixiInc())
-                .add(entity.getFinaLixiInc());
-        return busiInc;
-    }
-
-    /**
-     * 计算营业支出总值
-     */
-    private BigDecimal getBusiPay(HxProfit entity) {
-        BigDecimal busiPay = new BigDecimal(0);
-        busiPay = busiPay.add(entity.getProdPay())
-                .add(entity.getBusiFee())
-                .add(entity.getAssetImp());
-        return busiPay;
     }
 }
