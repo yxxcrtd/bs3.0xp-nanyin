@@ -163,7 +163,7 @@
 		#{inDepName,jdbcType=VARCHAR}, #{inDepCode,jdbcType=VARCHAR},
 		#{outDepCtry,jdbcType=VARCHAR},
 		#{outDepName,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP},
-		 #{mdate,jdbcType=TIMESTAMP},
+		case  when #{operateMode,jdbcType=VARCHAR} in ('2','3') then null else #{mdate,jdbcType=TIMESTAMP} end,
 		#{accountId,jdbcType=VARCHAR}, #{isConstracte,jdbcType=CHAR},
 		#{transferType,jdbcType=CHAR},
 		#{identiFlag,jdbcType=CHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP},
@@ -812,9 +812,13 @@
 		cbc.REGIST_BANK_CODE=info.ISSUE_PARTY_ID
 		and CBC.STATUS='E'
 		
-		where DATE_FORMAT(greatest(ifnull(ifnull(info.UPDATE_TIME,info.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),ifnull(info.VDATE,STR_TO_DATE('1900-01-01','%Y-%m-%d')))
+		where
+<!-- 		DATE_FORMAT(greatest(ifnull(ifnull(info.UPDATE_TIME,info.CREATE_TIME),
+										STR_TO_DATE('1900-01-01','%Y-%m-%d')),
+ 								ifnull(info.VDATE,STR_TO_DATE('1900-01-01','%Y-%m-%d')))
 		,'%Y-%m-%d') = DATE_FORMAT(#{statusDate,jdbcType=DATE},'%Y-%m-%d')
-		and info.fprod_id is null
+ 		and -->
+		info.fprod_id is null
 		and info.ISSUING_STATUS='01'
 		<if test="prodList !=null  and prodList.size()!=0">
 			and prod_id in
