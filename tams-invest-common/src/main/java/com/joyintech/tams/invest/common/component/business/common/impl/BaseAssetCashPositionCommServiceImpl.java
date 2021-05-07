@@ -1223,11 +1223,17 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                          // 一体化对应etliu end
                          && DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                          && DictCodeList.收益类型_收益型.getValue().equals(profitType))
-                     || (DictCodeList.交易方向_买入.getValue().equals(deal.getPs())
-                         && DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue().equals(deal.getFinprodType2()))
 
             ) {
                 resultDto.setCdate(deal.getSettleDate());
+                resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
+                resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
+                result.add(resultDto);
+                return result;
+            }
+            else if(DictCodeList.交易方向_买入.getValue().equals(deal.getPs())
+                    && DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue().equals(deal.getFinprodType2())){
+                resultDto.setCdate(deal.getTradeDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
                 resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
                 result.add(resultDto);
