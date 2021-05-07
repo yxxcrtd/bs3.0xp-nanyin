@@ -50,4 +50,113 @@
 			AND STATUS = 'E'
 	</update>
 
+	<!--成立公告数据查询-->
+	<select id="queryDetailData01" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+		select
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			concat(p.PROD_NAME, p.PROD_ID) as prodIdName, /** 产品名称 + 代码**/
+			DATE_FORMAT(p.VDATE,'%Y-%m-%d') as endDate, /** 成立日期*/
+			case when l.PRODID is null then '未生成' else '已生成' end as createStatus /** 生成状态*/
+		from
+			CHB_PRD_BASEINFO p
+		left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR} and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID and DATE_FORMAT(p.VDATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+		where
+			p.`STATUS` = 'E'
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="endDate !=null and endDate != ''">
+				and  DATE_FORMAT(p.VDATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+			</if>
+	</select>
+
+	<!--非标投资运作报告数据查询-->
+	<select id="queryDetailData02" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+		select
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			concat(p.PROD_NAME, p.PROD_ID) as prodIdName, /** 产品名称 + 代码**/
+			DATE_FORMAT(r.DEALDATE,'%Y-%m-%d') as endDate, /** 变动日*/
+			case when l.PRODID is null then '未生成' else '已生成' end as createStatus /** 生成状态*/
+		from
+			CHB_PRD_BASEINFO p
+		inner join (
+			select
+			distinct t.DEALDATE, t.PROD_ID
+			from CHB_INVEST_TRADE t, CHB_ASSET_INFO a
+			where
+				t.ASSET_CODE = a.ASSET_CODE
+				and a.`STATUS` = 'E'
+				and t.`STATUS` = 'E'
+				and a.ASSET_TYPE2 in (
+					select SRCFIELD1 from chb_type_mapping_ex where MAPPINGCODE = 'ChbInvestOperation001'
+				) /** 指定非标资产的类别**/
+				and t.CUR_ASSET_TYPE in ('01', '02') /** 买入或者卖出/到期**/
+				<if test="endDate !=null and endDate != ''">
+					and  DATE_FORMAT(t.DEALDATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+				</if>
+		) r on r.PROD_ID = p.PROD_ID
+		left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR} and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID and DATE_FORMAT(r.DEALDATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+		where
+			p.`STATUS` = 'E'
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+	</select>
+
+	<!--到期报告数据查询-->
+	<select id="queryDetailData03" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+		select
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			concat(p.PROD_NAME, p.PROD_ID) as prodIdName, /** 产品名称 + 代码**/
+			DATE_FORMAT(r.SETTDATE_DATE,'%Y-%m-%d') as endDate, /** 到期日*/
+			case when l.PRODID is null then '未生成' else '已生成' end as createStatus /** 生成状态*/
+		from
+			CHB_PRD_BASEINFO p
+		inner join (
+		select
+			distinct d.SETTDATE_DATE, d.PROD_ID
+			from CHB_PRD_DEAL d
+		where
+			d.`STATUS` = 'E'
+			and d.TRADE_TYPE = '16'
+			<if test="endDate !=null and endDate != ''">
+				and  DATE_FORMAT(d.SETTDATE_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+			</if>
+		) r on r.PROD_ID = p.PROD_ID
+		left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR} and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID and DATE_FORMAT(r.SETTDATE_DATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+		where
+			p.`STATUS` = 'E'
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+	</select>
+
+	<!--净值披露报告数据查询-->
+	<select id="queryDetailData05" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+		select
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			concat(p.PROD_NAME, p.PROD_ID) as prodIdName, /** 产品名称 + 代码**/
+			DATE_FORMAT(i.VALUE_DATE, '%Y-%m-%d') as endDate, /** 净值日期*/
+			case when l.PRODID is null then '未生成' else '已生成' end as createStatus /** 生成状态*/
+		from
+			CHB_PRD_BASEINFO p
+		inner join REP_PROD_INDEX i on i.PROD_ID = p.PROD_ID
+		left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR} and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID and DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+		where
+			p.`STATUS` = 'E'
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="endDate !=null and endDate != ''">
+				and  DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+			</if>
+	</select>
 </mapper>

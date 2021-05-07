@@ -14,8 +14,8 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto;
 import com.joyintech.tams.svreport.chbreport.investreport.common.service.ChbInvestReportCommonService;
-import com.joyintech.tams.svreport.chbreport.reportgenerate.dto.ReportGenerate001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -49,9 +49,21 @@ public class ChbReportGenerate001Controller extends BaseController {
         model.addAttribute("CHB_DISCLOSURE_REPORT_02", DictCodeListExt3.中债披露报告_理财产品非标投资运作报告.getValue());
         model.addAttribute("CHB_DISCLOSURE_REPORT_03", DictCodeListExt3.中债披露报告_到期公告.getValue());
         model.addAttribute("CHB_DISCLOSURE_REPORT_04", DictCodeListExt3.中债披露报告_产品定期公告.getValue());
-        super.setSelectOptionToModel(model, DictCode.报表期限类型);
-
+        model.addAttribute("CHB_DISCLOSURE_REPORT_05", DictCodeListExt3.中债披露报告_产品净值披露.getValue());
+        super.setSelectOptionToModel(model,DictCode.中债定期报告类型);
         return super.init(model);
+    }
+
+
+    /**
+     * 分页查询明细展示数据
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/queryDetailData")
+    public Page<ReportGenerate001Dto>  queryDetailData() throws Exception {
+        return chbInvestReportCommonService.queryDetailData(RequestUtil.getPageParam());
     }
 
     /**
@@ -64,7 +76,6 @@ public class ChbReportGenerate001Controller extends BaseController {
     public Page<RepFtpPath>  queryRepFtpPathList() throws Exception {
         return chbInvestReportCommonService.queryRepFtpPathList(RequestUtil.getPageParam());
     }
-
     /**
      * 查询分页产品下拉框
      * @return
@@ -112,34 +123,25 @@ public class ChbReportGenerate001Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody ReportGenerate001Dto dto) {
         String  repId = dto.getRepId();
+        String datas = dto.getDatas();
         if(repId != null) {
-            if (StringUtil.equals(DictCodeListExt3.中债披露报告_成立公告.getValue(), repId.toString())) {
-                if(!StringUtil.isNotEmpty(dto.getProdId())) {
-                    return new AjaxResult("请先选择要生成产品！", MessageType.错误消息);
-                }
-            }
-            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_理财产品非标投资运作报告.getValue(), repId.toString())) {
-                if(!StringUtil.isNotEmpty(dto.getProdId())) {
-                    return new AjaxResult("请先选择要生成产品！", MessageType.错误消息);
-                }
-                if(!StringUtil.isNotEmpty(dto.getEndDate())) {
-                    return new AjaxResult("请先选择要生成的数据日期！", MessageType.错误消息);
-                }
-            }
-            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_到期公告.getValue(), repId.toString())) {
-                if(!StringUtil.isNotEmpty(dto.getProdId())) {
-                    return new AjaxResult("请先选择要生成产品！", MessageType.错误消息);
+            if (StringUtil.equals(DictCodeListExt3.中债披露报告_成立公告.getValue(), repId.toString())
+            || StringUtil.equals(DictCodeListExt3.中债披露报告_理财产品非标投资运作报告.getValue(), repId.toString())
+            || StringUtil.equals(DictCodeListExt3.中债披露报告_到期公告.getValue(), repId.toString())
+            || StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
+                if(!StringUtil.isNotEmpty(datas)) {
+                    return new AjaxResult("请先勾选要生成的数据！", MessageType.错误消息);
                 }
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
-                if(!StringUtil.isNotEmpty(dto.getProdId())) {
-                    return new AjaxResult("请先选择要生成产品！", MessageType.错误消息);
-                }
-                if(!StringUtil.isNotEmpty(dto.getEndDate())) {
-                    return new AjaxResult("请先选择要生成的数据日期！", MessageType.错误消息);
+//                if(!StringUtil.isNotEmpty(dto.getProdId())) {
+//                    return new AjaxResult("请先选择要生成产品！", MessageType.错误消息);
+//                }
+                if(!StringUtil.isNotEmpty(dto.getYear())) {
+                    return new AjaxResult("请先选择要生成的查询年份！", MessageType.错误消息);
                 }
                 if(!StringUtil.isNotEmpty(dto.getReportType())) {
-                    return new AjaxResult("请先选择要生成的定期报告类型！", MessageType.错误消息);
+                    return new AjaxResult("请先选择要生成的报告类型！", MessageType.错误消息);
                 }
             }
             Map<String, Object> param = new HashMap<>();

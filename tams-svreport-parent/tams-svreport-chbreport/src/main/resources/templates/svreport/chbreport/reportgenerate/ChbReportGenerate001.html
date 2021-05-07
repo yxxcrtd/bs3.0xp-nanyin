@@ -57,44 +57,82 @@
     <div class="layui-col-md9" style="width: 78%;margin-top: -9px;" >
         <div class="layui-tab layui-tab-card" lay-filter="tabContainer">
             <div class="layui-tab-content" style="padding: 0">
-                <div class="layui-form-item">
-                    <div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
-                        <label class="layui-form-label form-lable" style="width: 63px;">产品代码</label>
-                        <div class="layui-input-inline input-inline">
-                            <select type="text" id="prodId" name="prodId"
-                                    allowClear="true"
-                                    class="layui-input form-input input-select"
-                                    data-th-data-url="@{/svreport/chbreport/reportgenerate/ChbReportGenerate001/queryPrdInfoPage}"
-                                    formatoption="true" placeholder="请输入内容"
-                                    data-th-placeholder="#{SysCommon.selectplaceholder}">
-                            </select>
+                <!--右表  -->
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form-item">
+                        <div class="layui-inline layui-col-md6" id="reportTypeDiv" style="display:none;">
+                            <label class="layui-form-label form-lable" style="width: 80px;">报告类型</label>
+                            <div class="layui-input-inline input-inline">
+                                <select type="text" class="layui-input form-input input-select" id="reportType"
+                                        name="reportType" placeholder="请选择报告类型" allowClear="true" data-th-data-result="${CHB_DISCLOSURE_REPORT_TYPE}" >
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline layui-col-md6" id="endDateDiv">
+                            <label class="layui-form-label form-lable" style="width: 80px;" id="endDateLabel">日期</label>
+                            <div class="layui-input-inline input-inline">
+                                <input type="text" class="layui-input form-input input-dateSelect" id="endDate" name="endDate" placeholder="请选择日期">
+                            </div>
+                        </div>
+                        <div class="layui-inline layui-col-md6">
+                            <label class="layui-form-label form-lable" style="width: 80px;">产品代码</label>
+                            <div class="layui-input-inline input-inline">
+                                <select type="text" id="prodId" name="prodId"
+                                        allowClear="true"
+                                        class="layui-input form-input input-select"
+                                        data-th-data-url="@{/svreport/chbreport/reportgenerate/ChbReportGenerate001/queryPrdInfoPage}"
+                                        formatoption="true" placeholder="请输入内容"
+                                        data-th-placeholder="#{SysCommon.selectplaceholder}">
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="layui-form-item" id="endDateDiv">
-                    <div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
-                        <label class="layui-form-label form-lable" style="width: 63px;">报告日期</label>
-                        <div class="layui-input-inline input-inline">
-                            <input type="text" class="layui-input form-input input-dateSelect" id="endDate" name="endDate" placeholder="请选择日期">
+                    <div class="layui-form-item">
+                        <div class="layui-inline layui-col-md6" id="yearDiv" style="display:none;">
+                            <label class="layui-form-label form-lable" style="width: 80px;" id="endDateLabel">查询年份</label>
+                            <div class="layui-input-inline input-inline">
+                                <input type="text" class="layui-input form-input" id="year" name="year" placeholder="请查询年份">
+                            </div>
+                        </div>
+                        <div class="layui-inline layui-col-md6" id="emptyDiv">
+                            <label class="layui-form-label form-lable" style="width: 80px;">&nbsp;</label>
+                        </div>
+                        <div class="layui-inline layui-col-md6">
+                            <label class="layui-form-label form-lable" style="width: 80px;" id="endDateLabel">&nbsp;&nbsp;</label>
+                            <!--<span id="span" style="line-height: 26px;display: inline-block; font-size: 12px;"></span>-->
+                            <div style="display: inline-block;">
+                                <button type="button" class="layui-btn layui-btn-sm btn-search" id="ChbReportGenerate001_btn_search">查询</button>
+                                <button type="button" class="layui-btn layui-btn-sm btn-create" id="ChbReportGenerate001_btn_add">生成</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="layui-form-item" id="reportTypeDiv">
-                    <div class="layui-inline layui-col-md6 layui-col-xs6 layui-col-sm6 layui-col-lg6">
-                        <label class="layui-form-label form-lable" style="width: 63px;">筛选条件</label>
-                        <div class="layui-input-inline input-inline">
-                            <select type="text" class="layui-input form-input input-select" id="reportType"
-                                    name="reportType" placeholder="请选择筛选条件" allowClear="true" data-th-data-result="${REPORT_TERM_TYPE}" >
-                                <option></option>
-                            </select>
-                        </div>
+                    <div id="detailTableDiv">
+                        <table class="layui-table" id="detailTable"></table>
                     </div>
-                </div>
-            </div>
-            <div class="layui-col-md11" style="margin: 50px;">
-                <div class="text-center">
-                    <a id="ChbReportGenerate001_btn_add" class="layui-btn layui-btn-sm btn-create" >生成</a>
-                    <a id="ChbReportGenerate001_btn_export" class="layui-btn layui-btn-sm btn-export">导出</a>
+                    <div id="dqTipsDiv" class="layui-form-item" style="display:none;border:1px solid #408080;">
+                        <div class="layui-inline layui-col-md12">
+                            <label class="layui-form-label form-lable" style="width: 30px;">注：</label>
+                            <label class="layui-form-label form-lable" style="text-align: left;">1）一季度报：4月第一个工作日生成；</label></div>
+                        <div class="layui-inline layui-col-md12">
+                            <label class="layui-form-label form-lable" style="width: 30px;">&nbsp;&nbsp;</label>
+                            <label class="layui-form-label form-lable" style="text-align: left;">2）二季度报：7月第一个工作日生成；</label></div>
+                        <div class="layui-inline layui-col-md12">
+                            <label class="layui-form-label form-lable" style="width: 30px;">&nbsp;&nbsp;</label>
+                            <label class="layui-form-label form-lable" style="text-align: left;">3）上半年报：7月第一个工作日生成；</label></div>
+                        <div class="layui-inline layui-col-md12">
+                            <label class="layui-form-label form-lable" style="width: 30px;">&nbsp;&nbsp;</label>
+                            <label class="layui-form-label form-lable" style="text-align: left;">4）三季度报：10月第一个工作日生成；</label></div>
+                        <div class="layui-inline layui-col-md12">
+                            <label class="layui-form-label form-lable" style="width: 30px;">&nbsp;&nbsp;</label>
+                            <label class="layui-form-label form-lable" style="text-align: left;">5）四季度报：1月第一个工作日生成；</label></div>
+                        <div class="layui-inline layui-col-md12">
+                            <label class="layui-form-label form-lable" style="width: 30px;">&nbsp;&nbsp;</label>
+                            <label class="layui-form-label form-lable" style="text-align: left;">6）下半年报：1月第一个工作日生成；</label></div>
+                        <div class="layui-inline layui-col-md12">
+                            <label class="layui-form-label form-lable" style="width: 30px;">&nbsp;&nbsp;</label>
+                            <label class="layui-form-label form-lable" style="text-align: left;">7）年报：1月第一个工作日生成。</label></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -106,6 +144,7 @@
         var CHB_DISCLOSURE_REPORT_02 =/*[[${CHB_DISCLOSURE_REPORT_02}]]*/'';
         var CHB_DISCLOSURE_REPORT_03 =/*[[${CHB_DISCLOSURE_REPORT_03}]]*/'';
         var CHB_DISCLOSURE_REPORT_04 =/*[[${CHB_DISCLOSURE_REPORT_04}]]*/'';
+        var CHB_DISCLOSURE_REPORT_05 =/*[[${CHB_DISCLOSURE_REPORT_05}]]*/'';
     </script>
     <script data-th-src="@{/js/svreport/chbreport/reportgenerate/ChbReportGenerate001.js}" type="text/javascript"></script>
 </div>

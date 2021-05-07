@@ -73,4 +73,17 @@
 		</if>
 		AND STATUS = 'E'
 	</update>
+	<select id="queryDetailData01" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+
+	</select>
+	<select id="queryDetailData02" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+
+	</select>
+	<select id="queryDetailData03" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+
+	</select>
+	<select id="queryDetailData05" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+
+	</select>
+
 </mapper>

@@ -6,7 +6,10 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
 import com.joyintech.tams.common.base.dao.RepInstallLogDetailMapper;
 import com.joyintech.tams.common.base.dao.RepRevealMapper;
@@ -17,6 +20,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.service.ChbInvestOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dao.ChbInvestReportCommonMapper;
+import com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,6 +109,59 @@ public class ChbInvestReportCommonService extends BaseService {
                     pagenum, length, () -> chbInvestReportCommonMapper.queryRepFtpPathList(param));
         } else {
             page = queryForPage(ChbInvestReportCommonMapper.class, "queryRepFtpPathList", param);
+        }
+        return page;
+    }
+
+    /**
+     * 查询报告数据
+     * @param param
+     * @return
+     */
+    public Page<ReportGenerate001Dto> queryDetailData(Map<String, Object> param) {
+        Page<ReportGenerate001Dto> page = null;
+        Object repId = param.get("repId");
+        if (param.get(GlobalConstant.PARAM_PAGE) != null
+                && param.get(GlobalConstant.PARAM_LENGTH) != null) {
+            int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
+            int length = Integer.parseInt(param.get(GlobalConstant.PARAM_LENGTH).toString());
+            if (StringUtil.equals(DictCodeListExt3.中债披露报告_成立公告.getValue(), repId.toString())) {
+                page = super.queryForPage(
+                        pagenum, length, () -> chbInvestReportCommonMapper.queryDetailData01(param));
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_理财产品非标投资运作报告.getValue(), repId.toString())) {
+                page = super.queryForPage(
+                        pagenum, length, () -> chbInvestReportCommonMapper.queryDetailData02(param));
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_到期公告.getValue(), repId.toString())) {
+                page = super.queryForPage(
+                        pagenum, length, () -> chbInvestReportCommonMapper.queryDetailData03(param));
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
+
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
+                page = super.queryForPage(
+                        pagenum, length, () -> chbInvestReportCommonMapper.queryDetailData05(param));
+            }
+
+        } else {
+            if (StringUtil.equals(DictCodeListExt3.中债披露报告_成立公告.getValue(), repId.toString())) {
+                page = queryForPage(ChbInvestReportCommonMapper.class, "queryDetailData01", param);
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_理财产品非标投资运作报告.getValue(), repId.toString())) {
+                page = queryForPage(ChbInvestReportCommonMapper.class, "queryDetailData02", param);
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_到期公告.getValue(), repId.toString())) {
+                page = queryForPage(ChbInvestReportCommonMapper.class, "queryDetailData03", param);
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
+
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
+                page = queryForPage(ChbInvestReportCommonMapper.class, "queryDetailData05", param);
+            }
+
         }
         return page;
     }
