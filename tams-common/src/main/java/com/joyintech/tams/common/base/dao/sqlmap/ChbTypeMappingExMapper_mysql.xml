@@ -56,7 +56,10 @@
       #{status,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
       #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{mappingcode,jdbcType=VARCHAR}, #{srcfield,jdbcType=VARCHAR}
-      )
+      );
+    DELETE FROM CHB_TYPE_MAPPING_EX
+    WHERE MAPPINGCODE = 'MAPPINGCODE_SUBJECTNO'
+      AND OBJFIELD1 = 'WFPLR';
   </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMappingEx">
         insert into CHB_TYPE_MAPPING_EX
@@ -128,7 +131,7 @@
                 MAPPINGCODE,
             </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <trim prefix="values (" suffix=");" suffixOverrides=",">
             <if test="mappingid != null">
                 #{mappingid,jdbcType=CHAR},
             </if>
@@ -196,6 +199,9 @@
                 #{mappingcode,jdbcType=VARCHAR},
             </if>
         </trim>
+        DELETE FROM CHB_TYPE_MAPPING_EX
+        WHERE MAPPINGCODE = 'MAPPINGCODE_SUBJECTNO'
+        AND OBJFIELD1 = 'WFPLR';
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMappingEx">
         update CHB_TYPE_MAPPING_EX

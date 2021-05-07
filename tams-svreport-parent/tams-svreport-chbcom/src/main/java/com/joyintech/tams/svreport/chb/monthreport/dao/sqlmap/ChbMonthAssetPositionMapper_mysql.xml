@@ -954,6 +954,98 @@
         (case info.BONDTOSTOCK_FLAG when '01' then '01' else null end),
         info.MANAGE_TYPE
     </select>
+    <select id="selectBotCashListEx" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            parameterType="date">
+        WITH ap AS (
+        SELECT DISTINCT UNINVEST_CASH, PLAN_ASSET_ID,TOTAL_NUM
+        FROM chb_bot_ast_pos
+        WHERE (PLAN_ASSET_ID IN (
+        SELECT DISTINCT ASSET_CODE
+        FROM chb_asset_position deal
+        LEFT JOIN CHB_PRD_BASEINFO prd
+        ON prd.PROD_ID = deal.PROD_ID
+        AND prd.status != 'D'
+        WHERE (deal.trade_type = '05'
+        AND prd.PROFIT_TYPE = '03'
+        AND deal.CDATE = #{cdate,jdbcType=DATE})
+        )
+        AND pos_date = #{cdate,jdbcType=DATE}
+        AND status != 'D'
+        AND UNINVEST_CASH != 0)
+        )
+        SELECT cp.PROD_ID AS prodId
+        , Round(cp.accuqty / ap.TOTAL_NUM * ap.UNINVEST_CASH, 2) AS cashamt
+        , AP.PLAN_ASSET_ID AS oldAssetCode, ci.ccy,prd.IS_FHXGCP  isFhxgcp
+        FROM chb_asset_position cp
+        INNER JOIN ap ON ap.PLAN_ASSET_ID = cp.ASSET_CODE
+        LEFT JOIN chb_asset_info ci
+        ON ci.ASSET_CODE = AP.PLAN_ASSET_ID
+        AND ci.status != 'D'
+        LEFT JOIN CHB_PRD_BASEINFO prd
+        ON prd.PROD_ID = cp.PROD_ID
+        WHERE cp.CDATE = #{cdate,jdbcType=DATE}
+        AND prd.PROFIT_TYPE = '03'
+        <if test="prodids !=null and prodids.size()!=0">
+            and cp.prod_id in
+            <foreach collection="prodids" item="prodid" index="index" open="(" separator="," close=")">
+                <if test="(index % 999) == 998">
+                    null) OR cp.prod_id in (
+                </if>
+                #{prodid}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectOtherAssetListEx" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            parameterType="date">
+        SELECT
+            A.SUBJECT_NO AS assetCode,
+            A.B_AMT AS assetvalueA,
+            PRODINFO.PROD_ID AS prodId,
+            PRODINFO.IS_FHXGCP AS isFhxgcp
+        FROM BOK_BALANCE A
+            LEFT JOIN CHB_PRD_BASEINFO PRODINFO
+            ON PRODINFO.PROD_ID = A.BOOKSET_ID
+        WHERE A.BALANCE_DATE =  #{cdate,jdbcType=DATE}
+            AND A.SUBJECT_NO IN (SELECT OBJFIELD1 FROM CHB_TYPE_MAPPING_EX WHERE MAPPINGCODE='MAPPINGCODE_FEE_SUBJECTNO' AND STATUS='E')
+            AND A.BAL_FLAG = 'C'
+            <if test="prodids !=null and prodids.size()!=0">
+                and A.BOOKSET_ID in
+                <foreach collection="prodids" item="prodid" index="index" open="(" separator="," close=")">
+                    <if test="(index % 999) == 998">
+                        null) OR A.BOOKSET_ID in (
+                    </if>
+                    #{prodid}
+                </foreach>
+            </if>
+            AND PRODINFO.PROFIT_TYPE = '03'
+    </select>
+    <select id="selectAssetValueB" resultType="java.math.BigDecimal" >
+        SELECT
+            ROUND(
+                AA.SMV * (CC.ACCUAMT / BB.COST),
+                5
+            ) assetvalueB
+        FROM
+            RSK_VALTBL_ASSET_SUB AA
+        LEFT JOIN (
+            SELECT
+                IFNULL(SUM.SMV, 0) COST,
+                SUM.PTL_ID
+            FROM
+                RSK_VALTBL_SUM_ASSET_SUB SUM
+            WHERE
+                SUM.VAL_DATE = #{enddate,jdbcType=DATE}
+            AND SUM.SUB_CODE = 601
+            GROUP BY
+                SUM.PTL_ID,
+                SUM.SUB_CODE
+        ) BB ON BB.PTL_ID = AA.PTL_ID
+        LEFT JOIN CHB_ASSET_POSITION CC ON AA.PTL_ID = CC.ASSET_CODE
+        WHERE
+            AA.SUB_CODE = #{assetCode,jdbcType=VARCHAR}
+            AND CC.PROD_ID = #{prodId,jdbcType=VARCHAR}
+            AND AA.VAL_DATE = #{enddate,jdbcType=DATE}
+    </select>
     <select id="selectPlanInfoByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
             flushCache="true" useCache="false">
         select
@@ -1098,4 +1190,53 @@
         info.MANAGE_TYPE
     </select>
 
+    <select id="selectChlG06bPositionByCommon" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthG06bPosition"
+            parameterType="date">
+        SELECT
+            position.PROD_ID,
+            position.ASSETTYPE2,
+            T.ASSETVALUE_B qcAssetValue,
+            position.ASSETVALUE_B qmAssetValue,
+            assinfo.FINANCIER_GRADE RATING ,
+            assinfo.GUA_TYPE,
+            assinfo.TRADE_MARKET,
+            info.IS_CONSTRACTE
+        FROM CHB_MONTH_ASSET_POSITION position
+        LEFT JOIN (
+            SELECT
+            lastmonth.prod_id,
+            lastmonth.asset_code,
+            lastmonth.assetvalue_b
+            FROM CHB_MONTH_ASSET_POSITION lastmonth
+            WHERE ENDDATE = ADDDATE(str_to_date(#{cdate,jdbcType=DATE}, '%Y-%m-%d'),INTERVAL -1 MONTH)
+            )T
+        ON T.PROD_ID = position.PROD_ID
+            and T.ASSET_CODE = position.ASSET_CODE
+            LEFT JOIN CHB_ASSET_INFO ASSINFO
+            ON position.ASSET_CODE = ASSINFO.ASSET_CODE
+            AND ASSINFO.STATUS IN ('E','M')
+            inner join CHB_PRD_BASEINFO info
+            on info.PROD_ID = position.PROD_ID
+            and info.STATUS in ('M', 'E')
+            and info.PROFIT_TYPE = '03'
+        where position.ENDDATE = #{cdate,jdbcType=DATE}
+    </select>
+
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
+    insert into CHB_MONTH_ASSET_POSITION (POSUUID, BOOKDATE, STARTDATE,
+      ENDDATE, INVEST_VARIETY, ASSET_CODE,
+      ASSETTYPE, PROD_ID, ASSETVALUE_A,
+      ASSETVALUE_B, INDUSTRY1, IN_ASSET_TYPE,
+      PPPFLAG, MONIT_TYPE, MANAGE_TYPE,
+      IS_GOVERN_FUND1, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG,
+      BONDTOSTOCK_FLAG, RATING,ASSETTYPE2,OLD_ASSET_CODE,IS_FHXGCP)
+    values (#{posuuid,jdbcType=CHAR}, #{bookdate,jdbcType=TIMESTAMP}, #{startdate,jdbcType=TIMESTAMP},
+      #{enddate,jdbcType=TIMESTAMP}, #{investVariety,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR},
+      #{assettype,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{assetvalueA,jdbcType=DECIMAL},
+      #{assetvalueB,jdbcType=DECIMAL}, #{industry1,jdbcType=VARCHAR}, #{inAssetType,jdbcType=VARCHAR},
+      #{pppflag,jdbcType=VARCHAR}, #{monitType,jdbcType=VARCHAR}, #{manageType,jdbcType=VARCHAR},
+      #{isGovernFund1,jdbcType=VARCHAR}, #{privatefundFlag,jdbcType=VARCHAR}, #{privateprdFlag,jdbcType=VARCHAR},
+      #{bondtostockFlag,jdbcType=VARCHAR}, #{rating,jdbcType=VARCHAR},#{assettype2,jdbcType=VARCHAR},#{oldAssetCode,jdbcType=VARCHAR}
+      ,#{isFhxgcp,jdbcType=VARCHAR})
+  </insert>
 </mapper>

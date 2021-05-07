@@ -178,7 +178,7 @@
         //批量上传 不选择产品代码 不允许批量上传文件
         $('#ProRegistCodeManage001_btn_batchUpload').click(function() {
             var data={"operateType":"1"};
-            Joyin.dialog('产品登记通知书批量上传',basePath+'svreport/system/proregistcodemanage/ProRegistCodeManage004/init', '98%', '95%',data,function(){table.reload();});
+            Joyin.dialog('产品登记通知书批量上传',basePath+'svreport/system/proregistcodemanage/ProRegistCodeManage004/init', '900', '90%',data,function(){table.reload();});
         });
         //新建按钮点击事件
         $('#ProRegistCodeManage001_btn_add').click(function() {

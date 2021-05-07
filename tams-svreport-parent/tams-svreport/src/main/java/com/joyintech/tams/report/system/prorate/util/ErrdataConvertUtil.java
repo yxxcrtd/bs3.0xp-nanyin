@@ -2,8 +2,6 @@ package com.joyintech.tams.report.system.prorate.util;
 
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;

@@ -4,11 +4,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthG06bPosition;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbMonthAssetPositionMapper {
     int deleteByPrimaryKey(String posuuid);
 
@@ -103,6 +106,13 @@ public interface ChbMonthAssetPositionMapper {
      * @return
      */
     BigDecimal selectBotCash(Date cdate);
+
+    /**
+     * 计算查询穿透后价值
+     * @param pos
+     * @return
+     */
+    BigDecimal selectAssetValueB(ChbMonthAssetPosition pos,List<ChbMonthAssetPosition> chbMonthAssetPositionList);
     
     List<ChbMonthAssetPosition> selectBotCashList(Date cdate);
     
@@ -112,6 +122,13 @@ public interface ChbMonthAssetPositionMapper {
      * @return
      */
     List<ChbMonthAssetPosition> selectBotCashListEx(@Param("cdate")Date cdate,@Param("prodids")List<String> prodids);
+
+    /**
+     *
+     * @param cdate
+     * @return
+     */
+    List<ChbMonthAssetPosition> selectOtherAssetListEx(@Param("cdate")Date cdate,@Param("prodids")List<String> prodids);
 
     /**
      *
@@ -145,5 +162,15 @@ public interface ChbMonthAssetPositionMapper {
      * @since 1.0
      */
     List<ChbMonthAssetPosition> selectChlDealByCommon(ChbMonthAssetPosition pos);
+
+    /**
+     * 查询G06b银行理财子公司风险资本计算表月报资产头寸方法
+     *
+     * @param cdate
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<ChbMonthG06bPosition> selectChlG06bPositionByCommon(Date cdate);
     
 }

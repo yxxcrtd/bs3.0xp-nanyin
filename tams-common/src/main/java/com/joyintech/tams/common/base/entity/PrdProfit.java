@@ -1,6 +1,8 @@
 package com.joyintech.tams.common.base.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -9,7 +11,7 @@ public class PrdProfit extends BaseEntity implements Serializable {
     /**
      * 真实产品编码
      */
-    private Integer realPrdId;
+    private String realPrdId;
 
     /**
      * 指标项编号
@@ -29,11 +31,13 @@ public class PrdProfit extends BaseEntity implements Serializable {
     /**
      * 本期金额
      */
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal currentAmt;
 
     /**
      * 本年累计金额
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal currentYearAccumuAmt;
 
     /**
@@ -41,13 +45,9 @@ public class PrdProfit extends BaseEntity implements Serializable {
      */
     private String busiDate;
 
-    /**
-     * tianxincode@163.com
-	 * 2021-04-25T10:45:52.990
-     */
     private static final long serialVersionUID = 1L;
 
-    public PrdProfit(Integer realPrdId, String subjectId, String subjectName, String ccy, BigDecimal currentAmt, BigDecimal currentYearAccumuAmt, String busiDate) {
+    public PrdProfit(String realPrdId, String subjectId, String subjectName, String ccy, BigDecimal currentAmt, BigDecimal currentYearAccumuAmt, String busiDate) {
         this.realPrdId = realPrdId;
         this.subjectId = subjectId;
         this.subjectName = subjectName;
@@ -64,15 +64,15 @@ public class PrdProfit extends BaseEntity implements Serializable {
     /**
      * 获取 真实产品编码
      */
-    public Integer getRealPrdId() {
+    public String getRealPrdId() {
         return realPrdId;
     }
 
     /**
      * 设置 真实产品编码
      */
-    public void setRealPrdId(Integer realPrdId) {
-        this.realPrdId = realPrdId;
+    public void setRealPrdId(String realPrdId) {
+        this.realPrdId = realPrdId == null ? null : realPrdId.trim();
     }
 
     /**
@@ -156,7 +156,7 @@ public class PrdProfit extends BaseEntity implements Serializable {
      * 设置 业务日期
      */
     public void setBusiDate(String busiDate) {
-        this.busiDate = busiDate;
+        this.busiDate = busiDate == null ? null : busiDate.trim();
     }
 
     @Override
@@ -172,12 +172,12 @@ public class PrdProfit extends BaseEntity implements Serializable {
         }
         PrdProfit other = (PrdProfit) that;
         return (this.getRealPrdId() == null ? other.getRealPrdId() == null : this.getRealPrdId().equals(other.getRealPrdId()))
-            && (this.getSubjectId() == null ? other.getSubjectId() == null : this.getSubjectId().equals(other.getSubjectId()))
-            && (this.getSubjectName() == null ? other.getSubjectName() == null : this.getSubjectName().equals(other.getSubjectName()))
-            && (this.getCcy() == null ? other.getCcy() == null : this.getCcy().equals(other.getCcy()))
-            && (this.getCurrentAmt() == null ? other.getCurrentAmt() == null : this.getCurrentAmt().equals(other.getCurrentAmt()))
-            && (this.getCurrentYearAccumuAmt() == null ? other.getCurrentYearAccumuAmt() == null : this.getCurrentYearAccumuAmt().equals(other.getCurrentYearAccumuAmt()))
-            && (this.getBusiDate() == null ? other.getBusiDate() == null : this.getBusiDate().equals(other.getBusiDate()));
+                && (this.getSubjectId() == null ? other.getSubjectId() == null : this.getSubjectId().equals(other.getSubjectId()))
+                && (this.getSubjectName() == null ? other.getSubjectName() == null : this.getSubjectName().equals(other.getSubjectName()))
+                && (this.getCcy() == null ? other.getCcy() == null : this.getCcy().equals(other.getCcy()))
+                && (this.getCurrentAmt() == null ? other.getCurrentAmt() == null : this.getCurrentAmt().equals(other.getCurrentAmt()))
+                && (this.getCurrentYearAccumuAmt() == null ? other.getCurrentYearAccumuAmt() == null : this.getCurrentYearAccumuAmt().equals(other.getCurrentYearAccumuAmt()))
+                && (this.getBusiDate() == null ? other.getBusiDate() == null : this.getBusiDate().equals(other.getBusiDate()));
     }
 
     @Override

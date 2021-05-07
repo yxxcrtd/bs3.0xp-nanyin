@@ -1,6 +1,13 @@
 (function() {
+    function init(){
+        $(".layui-fixbar").hide();
+        if('update'==$("#type").val()){
+            $("#busiId").attr("disabled", "disabled");
+            $("#busiId").attr("style", "background-color: #EEEEEE;");
+        }
+    };
     $(function() {
-
+        init();
         function validationNumber(e, num) {
             var regu = /^[0-9]+\.?[0-9]*$/;
             var index=e.lastIndexOf("\.");
@@ -27,6 +34,7 @@
             object.cashType2 = $("#DisPrdFeeRate002_prdFeeType").val();
             object.rate = $("#rate").val();
             object.startDate = $("#startDate").val();
+            object.type =$("#type").val();
             validationNumber(object.rate,14);
             if(object.busiId==''){
                 alert("产品代码不能为空");

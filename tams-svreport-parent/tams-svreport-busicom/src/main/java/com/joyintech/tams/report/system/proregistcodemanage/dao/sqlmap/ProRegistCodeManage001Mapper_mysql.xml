@@ -84,22 +84,16 @@
 	</select>
 	<select id="queryForPageOld" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
 		SELECT
-		A.PRODID prodId,
-		A.ORG_CODE orgCode,
-		IFNULL(b.prod_name,a.reg_code) orgName,
-		A.PRODNAME prodName,
-		A.REG_CODE regCode,
-		b.OPERATE_MODE operateMode,
-		DATE_FORMAT(b.VDATE,'%Y-%m-%d') vdate,
-		DATE_FORMAT(b.MDATE,'%Y-%m-%d') mdate,
-		DATE_FORMAT(A.CREATE_TIME,'%Y-%m-%d') generateDate,
-		A.REMARK remark,
-		c.PATH
+			A.PRODID prodId,
+			A.ORG_CODE orgCode,
+			A.PRODNAME prodName,
+			A.REG_CODE regCode,
+			A.OPERATE_MODE operateMode,
+			DATE_FORMAT(A.VDATE,'%Y-%m-%d') vdate,
+			DATE_FORMAT(A.MDATE,'%Y-%m-%d') mdate,
+			A.INVESTOR investor,
+			A.REMARK remark
 		FROM CHB_PRDRESIST_CODE A
-		left join chb_prd_baseinfo b
-		on b.prod_id = a.PRODID
-		left join sys_upload_file_info c
-		on c.SEQ_NO=a.REG_CODE
 		<where>
 			<if test="prodList != null and prodList.size() > 0">
 				<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">
@@ -140,7 +134,7 @@
 			<!-- dingzhipeng add end 2017-10-23 -->
 			<!-- 选中导出使用的参数 -->
 			<if test="keys != null and keys.size() > 0">
-				<foreach collection="keys" item="key" open=" AND A.ORG_CODE || '|' || A.PRODID IN (" close=")" separator=",">
+				<foreach collection="keys" item="key" open=" AND concat(A.ORG_CODE,'|',A.PRODID) IN (" close=")" separator=",">
 					#{key,jdbcType=VARCHAR}
 				</foreach>
 			</if>
@@ -365,4 +359,30 @@
             #{businessId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
 	</insert>
+
+	<select id="getRegistCodeInfoByProdId" parameterType="java.util.Map" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto" >
+		SELECT
+			A.PRODID prodId,
+			A.PRODNAME prodName,
+			A.REG_CODE regCode,
+			A.OPERATE_MODE operateMode,
+			A.ORG_CODE orgCode,
+			DATE_FORMAT(A.VDATE,'%Y-%m-%d') vdate,
+			DATE_FORMAT(A.MDATE,'%Y-%m-%d') mdate
+		FROM CHB_PRDRESIST_CODE A
+		where A.PRODID=#{prodId, jdbcType=VARCHAR}
+		  AND A.ORG_CODE=#{orgCode, jdbcType=VARCHAR}
+	</select>
+
+	<!--修改保存 -->
+	<update id="updateRegCode" parameterType="java.util.Map">
+		update CHB_PRDRESIST_CODE
+		<set>
+			REG_CODE=#{regCode,jdbcType=VARCHAR},
+			UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+			UPDATE_TIME = NOW()
+		</set>
+		where PRODID=#{prodId, jdbcType=VARCHAR}
+		AND ORG_CODE=#{orgCode, jdbcType=VARCHAR}
+	</update>
 </mapper>

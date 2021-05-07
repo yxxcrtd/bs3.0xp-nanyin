@@ -49,6 +49,8 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
     private MonthReportProdService monthReportProdService;
     @Autowired
     private MonthReportAssetService monthReportAssetService;
+    @Autowired
+    private MonthReportG06bAssetService monthReportG06bAssetService;
     @Transactional(rollbackFor = Exception.class)
 	public void genReport(Date executeDate,List<String> prodids,boolean ifTrigger){
         // 设置批处理bean
@@ -56,14 +58,16 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
         // 批处理开始
         logInfoBatchStart();
 	    Calendar calendar = Calendar.getInstance();
-        calendar.setTime(executeDate);
+        calendar.add(Calendar.MONTH, 1);
+	    //        calendar.setTime(executeDate);
+
+//        if ( calendar.get(Calendar.DATE)!=1 &&!ifTrigger) {  //每月1日生成上月的数据
+//        	return;
+//        }
         
-        if ( calendar.get(Calendar.DATE)!=1 &&!ifTrigger) {  //每月1日生成上月的数据
-        	return;
-        }
-        
-        if ( prodids==null ) 
+        if ( prodids==null ) {
             prodids = new ArrayList<String>();
+        }
         // 获取上月的第一天
         calendar.add(Calendar.MONTH, -1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -167,10 +171,14 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
 
         
     	//生成产品端月报明细
-    	monthReportProdService.genReport(report,ifTrigger);
-        
-        //生成资产端月报明细
-    	monthReportAssetService.genReport(report,ifTrigger);
+//    	monthReportProdService.genReport(report,ifTrigger);
+//
+//        //生成资产端月报明细
+//    	monthReportAssetService.genReport(report,ifTrigger);
+
+    	// add by wanshiwei G06b 银行理财子公司风险资本计算表 20210428 start
+        monthReportG06bAssetService.genReport(report,ifTrigger);
+        // add by wanshiwei G06b 银行理财子公司风险资本计算表 20210428 end
         // 批处理结束
         logInfoBatchEnd();
 	}
@@ -183,7 +191,7 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
      * @param executeDate
      * @param prodList
      * @param assetList
-     * @throws BusinessException 
+     * @throws BusinessException
      * @see com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseService#execute(java.util.Date, java.util.List, java.util.List)
      */
     @Override

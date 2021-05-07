@@ -141,11 +141,12 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 		convertMapToEntity(listData, assetList, dataSource);
 		
 
-		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
-		//增量
-			mergeData(assetList); 
-			
-		}else if(listData.size() <= 100000){
+		if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)) {
+			//增量
+			mergeData(assetList);
+
+//		}else if(listData.size() <= 100000){
+		}else{
 			//增量插入 小于100000正常入库 超过100000条使用sqlldr进行入库
 			try{
 				svrChbProdDividentDealDBInterfMapper.deleteByUpdateTime();
@@ -156,62 +157,63 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 				e.printStackTrace();
 				success = false;
 			}
-		}else{
-			svrChbProdDividentDealDBInterfMapper.deleteByUpdateTime();
-			// 创建表
-			ImpTable table = new ImpTable(ASSETBASISDATATABLENAME_2);
-			table.setColumns(ImportGenerator.createImpTableColumns(ASSETBASISDATATABLENAME_2));
-			success = excuteAssetBasisDataByStep(assetList, type, tmpPath, table);
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_CASSET_INDEX/"), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(listData.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(AssetBasisDataTableName)) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件" + f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
-					}
-				}
-			}
-			if ("fail".equals(result)) {
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRDFEE_BASIS_DATA/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
-						return success?"success":"fail";
-					}
-				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRDFEE_BASIS_DATA/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
-						return success?"success":"fail";
-					}
-				}
-			}
 		}
+//		else{
+//			svrChbProdDividentDealDBInterfMapper.deleteByUpdateTime();
+//			// 创建表
+//			ImpTable table = new ImpTable(ASSETBASISDATATABLENAME_2);
+//			table.setColumns(ImportGenerator.createImpTableColumns(ASSETBASISDATATABLENAME_2));
+//			success = excuteAssetBasisDataByStep(assetList, type, tmpPath, table);
+//			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_CASSET_INDEX/"), new String[] { "tmp" }, false);
+//			List<String> content = new ArrayList<>(listData.size());
+//			String result = "";
+//			for (File f : files) {
+//				if (f.getName().startsWith(AssetBasisDataTableName)) {
+//					try {
+//						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+//						logger.debug("查找sqlloder文件" + f);
+//					} catch (IOException e) {
+//						logger.debug("查找sqlloder文件异常");
+//						logger.error(e.getMessage(), e);
+//						result = "fail";
+//					} finally {
+//						f.delete();
+//					}
+//				}
+//			}
+//			if ("fail".equals(result)) {
+//				return result;
+//			}
+//			// 系统是否使用的db2数据库
+//			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+//			if (isDB2DataBase) {
+//				// db2数据库处理
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRDFEE_BASIS_DATA/", content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
+//								reportSqlldrDatabaseName);
+//					} catch (IOException | InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//						Thread.currentThread().interrupt();
+//						return success?"success":"fail";
+//					}
+//				}
+//			} else {
+//				// oracle原逻辑
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRDFEE_BASIS_DATA/", content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
+//								reportSqlldrDatabaseName);
+//					} catch (IOException | InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//						Thread.currentThread().interrupt();
+//						return success?"success":"fail";
+//					}
+//				}
+//			}
+//		}
 		return success?"success":"fail";
 	}
 

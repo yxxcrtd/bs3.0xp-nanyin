@@ -6,20 +6,18 @@
         *
         from ${tableName}
         <where>
-        	<if test="condition != null">
-        		<foreach collection="condition" open="" close="" separator=" AND " item="item">
-        			${item.field} = ${item.value}
-        		</foreach>
-        	</if>
+            <if test="condition != null">
+                <foreach collection="condition" open="" close="" separator=" AND " item="item">
+                    ${item.field} = ${item.value}
+                </foreach>
+            </if>
             <if test="institution != null and institution != '' and tableName == 'CHB_ASSET_SUB_STATUS' ">
-                  and  INSTITUTION_CODE = #{institution}
+                and  INSTITUTION_CODE = #{institution}
             </if>
         </where>
         ${order}
     </select>
-    
-    
     <select id="selectBankCodeByOrgCode" resultType ="java.lang.String" parameterType="java.lang.String">
-    	SELECT T.REGIST_BANK_CODE FROM CHB_ORG_REGIST_BANK_CODE T WHERE T.ORG_CODE = #{orgCode, jdbcType=VARCHAR}
+        SELECT T.REGIST_BANK_CODE FROM CHB_ORG_REGIST_BANK_CODE T WHERE T.ORG_CODE = #{orgCode, jdbcType=VARCHAR}
     </select>
 </mapper>

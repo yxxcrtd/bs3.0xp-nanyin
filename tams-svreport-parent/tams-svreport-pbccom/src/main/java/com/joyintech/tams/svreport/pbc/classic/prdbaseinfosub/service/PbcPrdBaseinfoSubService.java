@@ -162,6 +162,9 @@ public class PbcPrdBaseinfoSubService extends PbcClassicsSubService<PbcPrdBasein
 	        	if(pbcAccountIdMap.containsKey(sub.getProdId())){
 	        		sub.setAccountId(pbcAccountIdMap.get(sub.getProdId()));
 	        	}
+	        	if("03".equals(sub.getOperateMode()) || "04".equals(sub.getOperateMode())){
+	        		sub.setMdate(null);
+				}
 	            sub.setRegistSeqno(IDGenerator.generate(36));
 	            sub.setCreateUser(CommonUtil.getUserName());
 	            sub.setUpdateUser(CommonUtil.getUserName());

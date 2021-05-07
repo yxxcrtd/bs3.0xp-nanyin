@@ -21,4 +21,12 @@
 	</select>
 	<select id="selectdisPrdFeeRateErrordata" resultType="com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs">
 	</select>
+	<insert id="insertOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
+    </insert>
+	<update id="updateOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+	</update>
+	<update id="deleteOne" parameterType="java.lang.String">
+	</update>
+	<delete id="deleteErrorDataOne" parameterType="java.util.List">
+	</delete>
 </mapper>

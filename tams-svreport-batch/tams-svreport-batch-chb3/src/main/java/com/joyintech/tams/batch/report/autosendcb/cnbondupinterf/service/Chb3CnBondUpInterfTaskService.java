@@ -16,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +75,12 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
             if (lock == null) {
                 return;
             }
-
+            // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  start
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        Date bdate=new Date();
+	        Long bt=bdate.getTime();
+	        logger.info("上游解析投资者身份文件开始---------:"+sdf.format(bdate));
+            // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  end
             try {
                 // 获取消息（读取前一日文件夹信息）
 //                cnBondUpInterfService.getUpInterfMessage(
@@ -81,11 +88,19 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
             	chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.getYesterDayDate());
             }
             catch (Exception e) {
+            	 logger.error("error:",e);
                 logger.error("读取前一日文件夹数据异常");
             }
 
             // 获取消息（读取当前日期文件夹信息）
             chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.getCurrentDate());
+
+            // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  start
+            Date edate=new Date();
+		    Long et=edate.getTime();
+		    Long time=(et-bt)/1000;
+			logger.info("上游解析投资者身份文件结束----------:"+sdf.format(edate)+"耗时"+time+"秒");
+            // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  end
         }
         catch (FileNotFoundException e) {
             logger.error("任务锁文件", e);

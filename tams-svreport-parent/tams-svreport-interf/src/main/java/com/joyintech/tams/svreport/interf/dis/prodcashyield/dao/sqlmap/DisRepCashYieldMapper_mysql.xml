@@ -219,16 +219,19 @@
             #{item.rate,jdbcType=DECIMAL}         as RATE
             from dual
         </foreach>
-        ) TEMP where not exisits (select 1 from REP_CASH_YIELD CII where CII.BUSI_ID=TEMP.BUSI_ID
+        ) TEMP where not exists (select 1 from REP_CASH_YIELD CII where CII.BUSI_ID=TEMP.BUSI_ID
         and CII.CASH_TYPE2 = TEMP.CASH_TYPE2
         and CII.START_DATE = TEMP.START_DATE)
         ) de ;
 
         UPDATE  REP_CASH_YIELD as A,
         (
-        select  CASH_ID,
+        select BUSI_ID,
+        CASH_ID,
         CASH_NAME,
         CASH_TYPE,
+        CASH_TYPE2,
+        START_DATE,
         REMARK,
         INPUT_TYPE,
         INPUT_USER,
@@ -267,9 +270,23 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from REP_CASH_YIELD CII where CII.BUSI_ID=TEMP.BUSI_ID
-        and CII.CASH_TYPE2 = TEMP.CASH_TYPE2
-        and CII.START_DATE = TEMP.START_DATE);
+        SET A.CASH_ID    = B.CASH_ID     ,
+        A.CASH_NAME  = B.CASH_NAME   ,
+        A.CASH_TYPE  = B.CASH_TYPE   ,
+        A.REMARK     = B.REMARK      ,
+        A.INPUT_TYPE = B.INPUT_TYPE  ,
+        A.INPUT_USER = B.INPUT_USER  ,
+        A.STATUS     = B.STATUS      ,
+        A.ADAPTER_ID = B.ADAPTER_ID  ,
+        A.CREATE_USER= B.CREATE_USER ,
+        A.CREATE_DEPT= B.CREATE_DEPT ,
+        A.CREATE_TIME= B.CREATE_TIME ,
+        A.UPDATE_USER= B.UPDATE_USER ,
+        A.UPDATE_TIME= B.UPDATE_TIME ,
+        A.RATE       = B.RATE
+        where A.BUSI_ID=B.BUSI_ID
+        and A.CASH_TYPE2 = B.CASH_TYPE2
+        and A.START_DATE = B.START_DATE;
     </update>
 
     <insert id="insertRepCashYieldList" parameterType="java.util.List">

@@ -62,7 +62,7 @@ $(function() {
               { title: "产品代码", field: 'prodId',width:100 ,sortField:'prodId'},
               { title: "产品名称", field: 'prodName',width:100 ,sortField:'prodName'},
               // modify by dubaojun 2020-10-30 产品登记编码导出为空，字段设置有误问题修复 start
-              {title: '产品登记编码', field:'prodRegistCode', width:100,sortField:'prodRegistCode'},
+              {title: '产品登记编码', field:'prodRegCode', width:100,sortField:'prodRegCode'},
               // modify by dubaojun 2020-10-30 产品登记编码导出为空，字段设置有误问题修复 end
               {title: "发行机构代码",field:'registBankCode', width:150,sortField:'registBankCode'},
               {title: '行内交易编码', field:'tradeCode', width:100,sortField:'tradeCode'},

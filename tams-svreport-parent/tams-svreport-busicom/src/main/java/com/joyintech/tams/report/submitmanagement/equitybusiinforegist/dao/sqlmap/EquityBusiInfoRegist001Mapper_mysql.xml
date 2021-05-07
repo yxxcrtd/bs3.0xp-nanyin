@@ -135,9 +135,9 @@
     </select>
 
     <select id="countExportNum" parameterType="map" resultType="int">
-        select count(*)
+        select count(1)
         from CHB_EQUDET_SUB ciis
-        left join CHB_SUBMIT_STATUS status
+        left join CHB_EQUDET_SUBMIT_STATUS status
         on ciis.sumit_seq = status.seqno
         <where>
             <if test="submitDeadLineStart != null and submitDeadLineStart != ''">
@@ -310,7 +310,7 @@
     </update>
     <!-- 接口报送更新并且更新 报送流水号-->
     <update id="updateInterfSubmitAndSeq" parameterType="java.util.Map">
-        begin
+        /*begin*/
         <foreach collection="investList" item="item" index="index" separator=";">
             update CHB_INVESTHOLD_INFO_SUB sub
             set
@@ -321,7 +321,7 @@
             where
             sub.REGIST_SEQNO = #{item.registSeqno}
         </foreach>
-        ;end;
+        /* ;end;*/
     </update>
 
     <!-- add by etliu 20180818 start-->
@@ -524,6 +524,7 @@
         ciis.REG_CODE regCode,
         ciis.BUSI_TYPE busiType,
         ciis.EQUITY_CONF_DATE equityConfDate,
+        DATE_FORMAT(ciis.EQUITY_CONF_DATE,'%Y%m%d')       equityConfDateStr,
         ciis.SHARE_CONF_DATETIME shareConfDatetime,
         ciis.CCY ccy,
         ciis.AMOUNT amount,
@@ -620,7 +621,7 @@
     </delete>
     <!-- 接口报送更新并且更新 报送流水号-->
     <update id="updateInterfSeq" parameterType="java.util.Map">
-        begin
+        /*begin*/
         <foreach collection="investList" item="item" index="index" separator=";">
             update CHB_EQUDET_SUB sub
             set
@@ -634,7 +635,7 @@
             and sub.INDENTIFY_MARK = #{item.indentifyMark}
             and sub.SUBMIT_STATUS='02'
         </foreach>
-        ;end;
+        /*;end;*/
     </update>
 
 
@@ -674,26 +675,68 @@
         STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
         DATA_SOURCE, ORG_CODE, AGENT, CREATE_DEPT, IS_SUBMIT,INTERF_CHECK_RESULT,ORG_INDENTIFY_MARK
         )
-        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
-                 close="from dual)">
-            #{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
-            #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR},
-            #{item.equityConfDate,jdbcType=DATE},
-            #{item.shareConfDatetime,jdbcType=TIMESTAMP}, #{item.fundAccPlace,jdbcType=VARCHAR},
-            #{item.busiType,jdbcType=CHAR},
-            #{item.ccy,jdbcType=CHAR}, #{item.amount,jdbcType=DECIMAL}, #{item.amountCny,jdbcType=DECIMAL},
-            #{item.shares,jdbcType=DECIMAL}, #{item.channel,jdbcType=CHAR}, #{item.fundAcc,jdbcType=VARCHAR},
-            #{item.isConsign,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.contractNo,jdbcType=VARCHAR},
-            #{item.finAcc,jdbcType=VARCHAR}, #{item.custContractNo,jdbcType=VARCHAR}, #{item.custName,jdbcType=VARCHAR},
-            #{item.agencyCode,jdbcType=VARCHAR}, #{item.agencyName,jdbcType=VARCHAR}, #{item.agencyFsa,jdbcType=CHAR},
-            #{item.busiFsa,jdbcType=CHAR}, #{item.prodValue,jdbcType=DECIMAL}, #{item.feeAmt,jdbcType=DECIMAL},
-            #{item.tranTellName,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR}, #{item.workflowId,jdbcType=VARCHAR},
-            #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR},
-            #{item.updateTime,jdbcType=TIMESTAMP},
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
-            #{item.dataSource,jdbcType=CHAR},
-            #{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
-            #{item.isSubmit,jdbcType=CHAR},#{item.interfCheckResult,jdbcType=CHAR},#{item.orgIndentifyMark,jdbcType=CHAR}
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual) a">
+        	#{item.busiSeqno,jdbcType=VARCHAR} BUSI_SEQNO, #{item.regCode,jdbcType=VARCHAR} REG_CODE, #{item.account,jdbcType=VARCHAR} ACCOUNT,
+            #{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE, #{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK, #{item.equityConfDate,jdbcType=DATE} EQUITY_CONF_DATE,
+            #{item.shareConfDatetime,jdbcType=TIMESTAMP} SHARE_CONF_DATETIME, #{item.fundAccPlace,jdbcType=VARCHAR} FUND_ACC_PLACE, #{item.busiType,jdbcType=CHAR} BUSI_TYPE,
+            #{item.ccy,jdbcType=CHAR} CCY, #{item.amount,jdbcType=DECIMAL} AMOUNT, #{item.amountCny,jdbcType=DECIMAL} AMOUNT_CNY,
+            #{item.shares,jdbcType=DECIMAL} SHARES, #{item.channel,jdbcType=CHAR} CHANNEL, #{item.fundAcc,jdbcType=VARCHAR} FUND_ACC,
+            #{item.isConsign,jdbcType=VARCHAR} IS_CONSIGN, #{item.remark,jdbcType=VARCHAR} REMARK, #{item.contractNo,jdbcType=VARCHAR} CONTRACT_NO,
+            #{item.finAcc,jdbcType=VARCHAR} FIN_ACC, #{item.custContractNo,jdbcType=VARCHAR} CUST_CONTRACT_NO, #{item.custName,jdbcType=VARCHAR} CUST_NAME,
+            #{item.agencyCode,jdbcType=VARCHAR} AGENCY_CODE , #{item.agencyName,jdbcType=VARCHAR} AGENCY_NAME, #{item.agencyFsa,jdbcType=CHAR} AGENCY_FSA,
+            #{item.busiFsa,jdbcType=CHAR} BUSI_FSA , #{item.prodValue,jdbcType=DECIMAL} PROD_VALUE, #{item.feeAmt,jdbcType=DECIMAL} FEE_AMT,
+            #{item.tranTellName,jdbcType=VARCHAR} TRAN_TELL_NAME, #{item.status,jdbcType=VARCHAR} STATUS,
+			<choose>
+				<when test="item.workflowId != null">
+					#{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+				</when>
+				<otherwise>
+					null WORKFLOW_ID,
+				</otherwise>
+			</choose>
+            #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE, #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER, #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER, #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME, #{item.dataSource,jdbcType=CHAR} DATA_SOURCE,
+            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			<choose>
+				<when test="item.agent != null">
+					#{item.agent,jdbcType=VARCHAR} AGENT,
+				</when>
+				<otherwise>
+					null AGENT,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="item.createDept != null">
+					#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+				</when>
+				<otherwise>
+					null CREATE_DEPT,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="item.isSubmit != null">
+					#{item.isSubmit,jdbcType=CHAR} IS_SUBMIT,
+				</when>
+				<otherwise>
+					null IS_SUBMIT,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="item.interfCheckResult != null">
+					#{item.interfCheckResult,jdbcType=CHAR} INTERF_CHECK_RESULT,
+				</when>
+				<otherwise>
+					null INTERF_CHECK_RESULT,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="item.orgIndentifyMark != null">
+					#{item.orgIndentifyMark,jdbcType=CHAR} ORG_INDENTIFY_MARK
+				</when>
+				<otherwise>
+					null ORG_INDENTIFY_MARK
+				</otherwise>
+			</choose>
         </foreach>
     </insert>
     <insert id="insertBtachInterfEquityBusiSub">
@@ -705,34 +748,69 @@
         SUBMIT_DEADLINE,CHB_SUBMIT_DEADLINE,CHECK_SEQNO,STATUS_DATE,SUBMIT_STATUS,SUBMIT_TIME,SUMIT_SEQ,
         STATUS, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
         ORG_CODE, CREATE_DEPT
-        )
-        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
-                 close="from dual)">
-            #{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
-            #{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR},
-            #{item.equityConfDate,jdbcType=DATE},
-            #{item.shareConfDatetime,jdbcType=TIMESTAMP}, #{item.fundAccPlace,jdbcType=VARCHAR},
-            #{item.busiType,jdbcType=CHAR},
-            #{item.ccy,jdbcType=CHAR}, #{item.amount,jdbcType=DECIMAL}, #{item.amountCny,jdbcType=DECIMAL},
-            #{item.shares,jdbcType=DECIMAL}, #{item.channel,jdbcType=CHAR}, #{item.fundAcc,jdbcType=VARCHAR},
-            #{item.isConsign,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.contractNo,jdbcType=VARCHAR},
-            #{item.finAcc,jdbcType=VARCHAR}, #{item.custContractNo,jdbcType=VARCHAR}, #{item.custName,jdbcType=VARCHAR},
-            #{item.agencyCode,jdbcType=VARCHAR}, #{item.agencyName,jdbcType=VARCHAR}, #{item.agencyFsa,jdbcType=CHAR},
-            #{item.busiFsa,jdbcType=CHAR}, #{item.prodValue,jdbcType=DECIMAL}, #{item.feeAmt,jdbcType=DECIMAL},
-            #{item.tranTellName,jdbcType=VARCHAR}, #{item.submitDeadline,jdbcType=TIMESTAMP},
-            #{item.chbSubmitDeadline,jdbcType=TIMESTAMP},#{item.checkSeqno,jdbcType=VARCHAR},
-            #{item.statusDate,jdbcType=TIMESTAMP},#{item.submitStatus,jdbcType=VARCHAR},
-            #{item.submitTime,jdbcType=TIMESTAMP},#{item.sumitSeq,jdbcType=VARCHAR},#{item.status,jdbcType=VARCHAR},
-            #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR},
-            #{item.updateTime,jdbcType=TIMESTAMP},
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
-            #{item.orgCode,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual) a">
+			#{item.busiSeqno,jdbcType=VARCHAR} BUSI_SEQNO,
+			#{item.regCode,jdbcType=VARCHAR} REG_CODE,
+			#{item.account,jdbcType=VARCHAR} ACCOUNT,
+			#{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
+			#{item.equityConfDate,jdbcType=DATE} EQUITY_CONF_DATE,
+			#{item.shareConfDatetime,jdbcType=TIMESTAMP} SHARE_CONF_DATETIME,
+			#{item.fundAccPlace,jdbcType=VARCHAR} FUND_ACC_PLACE,
+			#{item.busiType,jdbcType=CHAR} BUSI_TYPE,
+			#{item.ccy,jdbcType=CHAR} CCY,
+			#{item.amount,jdbcType=DECIMAL} AMOUNT,
+			#{item.amountCny,jdbcType=DECIMAL} AMOUNT_CNY,
+			#{item.shares,jdbcType=DECIMAL} SHARES,
+			#{item.channel,jdbcType=CHAR} CHANNEL,
+			#{item.fundAcc,jdbcType=VARCHAR} FUND_ACC,
+			#{item.isConsign,jdbcType=VARCHAR} IS_CONSIGN,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.contractNo,jdbcType=VARCHAR} CONTRACT_NO,
+			#{item.finAcc,jdbcType=VARCHAR} FIN_ACC,
+			#{item.custContractNo,jdbcType=VARCHAR} CUST_CONTRACT_NO,
+			#{item.custName,jdbcType=VARCHAR} CUST_NAME,
+			#{item.agencyCode,jdbcType=VARCHAR} AGENCY_CODE,
+			#{item.agencyName,jdbcType=VARCHAR} AGENCY_NAME,
+			#{item.agencyFsa,jdbcType=CHAR} AGENCY_FSA,
+			#{item.busiFsa,jdbcType=CHAR} BUSI_FSA,
+			#{item.prodValue,jdbcType=DECIMAL} PROD_VALUE,
+			#{item.feeAmt,jdbcType=DECIMAL} FEE_AMT,
+			#{item.tranTellName,jdbcType=VARCHAR} TRAN_TELL_NAME,
+			#{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+			#{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+			<choose>
+				<when test="item.checkSeqno != null">
+					#{item.checkSeqno,jdbcType=VARCHAR} CHECK_SEQNO,
+				</when>
+				<otherwise>
+					null CHECK_SEQNO,
+				</otherwise>
+			</choose>
+			#{item.statusDate,jdbcType=TIMESTAMP} STATUS_DATE,
+			#{item.submitStatus,jdbcType=VARCHAR} SUBMIT_STATUS,
+			<choose>
+				<when test="item.submitTime != null">
+					#{item.submitTime,jdbcType=TIMESTAMP} SUBMIT_TIME,
+				</when>
+				<otherwise>
+					null SUBMIT_TIME,
+				</otherwise>
+			</choose>
+			#{item.sumitSeq,jdbcType=VARCHAR} SUMIT_SEQ,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
 
         </foreach>
     </insert>
     <!-- 批量更新 -->
     <update id="updateBatchEquityBusi" parameterType="java.util.List">
-        begin
         <foreach collection="list" item="item" index="index" separator=";">
             update CHB_EQUDET
             <set>
@@ -841,13 +919,14 @@
                 <if test="item.isSubmit != null">
                     IS_SUBMIT = #{item.isSubmit,jdbcType=CHAR},
                 </if>
-                INTERF_CHECK_RESULT = #{item.interfCheckResult,jdbcType=VARCHAR}
+                <if test="item.interfCheckResult != null">
+                    INTERF_CHECK_RESULT = #{item.interfCheckResult,jdbcType=CHAR},
+                </if>
             </set>
             where BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
             and REG_CODE = #{item.regCode,jdbcType=VARCHAR}
             and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
         </foreach>
-        ;end;
     </update>
     <!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
     <insert id="insertEquityBusiHis" parameterType="java.util.List">
@@ -865,7 +944,7 @@
         UPDATE_TIME, CREATE_USER, CREATE_TIME,
         DATA_SOURCE, ORG_CODE, AGENT,
         CREATE_DEPT, IS_SUBMIT)
-        select seq_equity_busi.NEXTVAL,
+        select _NEXTINDEX('seq_equity_busi') ,
         BUSI_SEQNO, REG_CODE,
         ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
         EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE,
@@ -1272,4 +1351,124 @@
 		and ciis.SUBMIT_STATUS='01'
 		and ciis.STATUS !='03'
 	</select>
+
+    <update id="updateBatchEquityBusiRegCodeByPart" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";" >
+            update CHB_EQUDET
+            <set >
+                <if test="item.account != null" >
+                    REG_CODE = #{item.regCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.registBankCode != null" >
+                    REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.indentifyMark != null" >
+                    INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR},
+                </if>
+                <if test="item.equityConfDate != null" >
+                    EQUITY_CONF_DATE = #{item.equityConfDate,jdbcType=DATE},
+                </if>
+                <if test="item.shareConfDatetime != null" >
+                    SHARE_CONF_DATETIME = #{item.shareConfDatetime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.fundAccPlace != null" >
+                    FUND_ACC_PLACE = #{item.fundAccPlace,jdbcType=VARCHAR},
+                </if>
+                <if test="item.busiType != null" >
+                    BUSI_TYPE = #{item.busiType,jdbcType=CHAR},
+                </if>
+                <if test="item.ccy != null" >
+                    CCY = #{item.ccy,jdbcType=CHAR},
+                </if>
+                <if test="item.amount != null" >
+                    AMOUNT = #{item.amount,jdbcType=DECIMAL},
+                </if>
+                <if test="item.amountCny != null" >
+                    AMOUNT_CNY = #{item.amountCny,jdbcType=DECIMAL},
+                </if>
+                <if test="item.shares != null" >
+                    SHARES = #{item.shares,jdbcType=DECIMAL},
+                </if>
+                <if test="item.channel != null" >
+                    CHANNEL = #{item.channel,jdbcType=CHAR},
+                </if>
+                <if test="item.fundAcc != null" >
+                    FUND_ACC = #{item.fundAcc,jdbcType=VARCHAR},
+                </if>
+                <if test="item.isConsign != null" >
+                    IS_CONSIGN = #{item.isConsign,jdbcType=VARCHAR},
+                </if>
+                <if test="item.remark != null" >
+                    REMARK = #{item.remark,jdbcType=VARCHAR},
+                </if>
+                <if test="item.contractNo != null" >
+                    CONTRACT_NO = #{item.contractNo,jdbcType=VARCHAR},
+                </if>
+                <if test="item.finAcc != null" >
+                    FIN_ACC = #{item.finAcc,jdbcType=VARCHAR},
+                </if>
+                <if test="item.custContractNo != null" >
+                    CUST_CONTRACT_NO = #{item.custContractNo,jdbcType=VARCHAR},
+                </if>
+                <if test="item.custName != null" >
+                    CUST_NAME = #{item.custName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.agencyCode != null" >
+                    AGENCY_CODE = #{item.agencyCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.agencyName != null" >
+                    AGENCY_NAME = #{item.agencyName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.agencyFsa != null" >
+                    AGENCY_FSA = #{item.agencyFsa,jdbcType=CHAR},
+                </if>
+                <if test="item.busiFsa != null" >
+                    BUSI_FSA = #{item.busiFsa,jdbcType=CHAR},
+                </if>
+                <if test="item.prodValue != null" >
+                    PROD_VALUE = #{item.prodValue,jdbcType=DECIMAL},
+                </if>
+                <if test="item.feeAmt != null" >
+                    FEE_AMT = #{item.feeAmt,jdbcType=DECIMAL},
+                </if>
+                <if test="item.tranTellName != null" >
+                    TRAN_TELL_NAME = #{item.tranTellName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.status != null" >
+                    STATUS = #{item.status,jdbcType=VARCHAR},
+                </if>
+                <if test="item.workflowId != null" >
+                    WORKFLOW_ID = #{item.workflowId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.deptCode != null" >
+                    DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.updateUser != null" >
+                    UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="item.updateTime != null" >
+                    UPDATE_TIME = #{item.updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.dataSource != null" >
+                    DATA_SOURCE = #{item.dataSource,jdbcType=CHAR},
+                </if>
+                <if test="item.orgCode != null" >
+                    ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.agent != null" >
+                    AGENT = #{item.agent,jdbcType=VARCHAR},
+                </if>
+                <if test="item.isSubmit != null" >
+                    IS_SUBMIT = #{item.isSubmit,jdbcType=CHAR},
+                </if>
+                <if test="item.interfCheckResult != null" >
+                    INTERF_CHECK_RESULT = #{item.interfCheckResult,jdbcType=VARCHAR}
+                </if>
+
+            </set>
+            where BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
+            and ACCOUNT = #{item.account,jdbcType=VARCHAR}
+            and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
+        </foreach>
+    </update>
 </mapper>

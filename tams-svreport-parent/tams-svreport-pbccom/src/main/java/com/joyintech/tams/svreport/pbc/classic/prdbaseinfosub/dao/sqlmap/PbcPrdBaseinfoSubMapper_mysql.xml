@@ -163,9 +163,7 @@
 		#{inDepName,jdbcType=VARCHAR}, #{inDepCode,jdbcType=VARCHAR},
 		#{outDepCtry,jdbcType=VARCHAR},
 		#{outDepName,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP},
-		case  when
-		 (select code_type from pbc_prod_assetpool_code
-		 where inside_prod_id = #{prodId,jdbcType=VARCHAR}) in ('03','04') then null else #{mdate,jdbcType=TIMESTAMP} end,
+		 #{mdate,jdbcType=TIMESTAMP},
 		#{accountId,jdbcType=VARCHAR}, #{isConstracte,jdbcType=CHAR},
 		#{transferType,jdbcType=CHAR},
 		#{identiFlag,jdbcType=CHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP},
@@ -739,13 +737,13 @@
 		select info.ISSUE_PARTY_ID,
 		'1' PBC_PROD_TYPE,
 		case
-		when lengthb(PROD_NAME)>180
-		then substrb(PROD_NAME,0,180)
+		when length(PROD_NAME)>180
+		then substring(PROD_NAME,0,180)
 		else PROD_NAME
 		end PROD_NAME,
 		PROD_BRAND,
 		case
-		when char length(PROD_STAGE)>4
+		when length(PROD_STAGE)>4
 		then CAST(substring(PROD_STAGE,1,4) AS decimal(30,4))
 		else PROD_STAGE
 		end PROD_STAGE,
@@ -792,8 +790,8 @@
 		IN_DEP_CODE,
 		OUT_DEP_CTRY,
 		case
-		when lengthb(OUT_DEP_NAME)>120
-		then substrb(OUT_DEP_NAME,0,120)
+		when length(OUT_DEP_NAME)>120
+		then substring(OUT_DEP_NAME,0,120)
 		else OUT_DEP_NAME
 		end OUT_DEP_NAME,
 		VDATE,

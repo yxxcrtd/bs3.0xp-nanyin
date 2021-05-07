@@ -32,6 +32,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ChbReportCheck;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -65,10 +66,6 @@ public class CheckReport001Controller extends BaseController{
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         String myOrgCode=CommonUtil.getOrgCode();
-        //银行模式下此功能无效,联社模式下此功能未实现
-        //TODO
-//        model.addAttribute("AUTHORITY_TYPE", CacheUtil.getSysParam("AUTHORITY_TYPE"));
-        model.addAttribute("AUTHORITY_TYPE", "01");
         if(StringUtil.isNotEmpty(myOrgCode)){
             model.addAttribute("MY_AGENCY_CODE",myOrgCode);
         }
@@ -76,25 +73,25 @@ public class CheckReport001Controller extends BaseController{
         model.addAttribute("REPORT_CODE_RESULT", JsonUtils.objectArray2Json(getReportCode().getRoot().toArray()));
         Map<String, Object> map = RequestUtil.getPageParam();
         if (StringUtil.isNotEmpty(map.get("checkResult"))) {
-			model.addAttribute("checkResult", map.get("checkResult").toString().trim());
-			model.addAttribute("searchDataStart", map.get("searchDataStart"));
-			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
-			model.addAttribute("isFromMain", "01");
-			if(StringUtil.isNotEmpty(map.get("repCode"))){
-				model.addAttribute("repCode", map.get("repCode").toString().trim());
-			}
-		}else{
-			model.addAttribute("CHECK_RESULT_NG", DictCodeListExt2.检查结果_检查不通过.getValue());
-	        model.addAttribute("title01", this.getMessage("MENU_003003001"));
-	        model.addAttribute("title02", this.getMessage("InvestorsHoldInfoRegist001"));
-	        model.addAttribute("repCode01", DictCodeListExt2.报表名称_投资者身份信息登记.getValue());
-	        model.addAttribute("repCode02", DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
-	        Calendar calendar = Calendar.getInstance();
-	        Date reportStartDate = calendar.getTime();
-	        Date reportEndDate = calendar.getTime();
-	        model.addAttribute("searchDataStart", DateUtil.format(reportStartDate));
-	        model.addAttribute("searchDataEnd", DateUtil.format(reportEndDate));
-		}
+            model.addAttribute("checkResult", map.get("checkResult").toString().trim());
+            model.addAttribute("searchDataStart", map.get("searchDataStart"));
+            model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
+            model.addAttribute("isFromMain", "01");
+            if(StringUtil.isNotEmpty(map.get("repCode"))){
+                model.addAttribute("repCode", map.get("repCode").toString().trim());
+            }
+        }else{
+            model.addAttribute("CHECK_RESULT_NG", DictCodeListExt2.检查结果_检查不通过.getValue());
+            model.addAttribute("title01", this.getMessage("MENU_003003001"));
+            model.addAttribute("title02", this.getMessage("InvestorsHoldInfoRegist001"));
+            model.addAttribute("repCode01", DictCodeListExt2.报表名称_投资者身份信息登记.getValue());
+            model.addAttribute("repCode02", DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
+            Calendar calendar = Calendar.getInstance();
+            Date reportStartDate = calendar.getTime();
+            Date reportEndDate = calendar.getTime();
+            model.addAttribute("searchDataStart", DateUtil.format(reportStartDate));
+            model.addAttribute("searchDataEnd", DateUtil.format(reportEndDate));
+        }
         return super.init(model);
     }
     /**
@@ -113,7 +110,7 @@ public class CheckReport001Controller extends BaseController{
      * @since 1.7.0
      * @version 1.7.0
      * @author：weiyuqiang 2019年5月16日
-     * @return 
+     * @return
      * List<SelectOptionDto>
      */
     @ResponseBody
@@ -125,11 +122,11 @@ public class CheckReport001Controller extends BaseController{
         if(MapUtils.isNotEmpty(reportCodeMap)){
             for (String key : reportCodeMap.keySet()) {
                 if (DictCodeListExt2.报表名称_业务明细信息登记.getValue().equals(key)
-                		||DictCodeListExt2.报表名称_机构和私人银行产品发行登记.getValue().equals(key)
-                		||DictCodeListExt2.报表名称_从业人员登记.getValue().equals(key)
-                		||DictCodeListExt2.报表名称_人行月度统计报表.getValue().equals(key)
-						||DictCodeListExt2.报表名称_分类总量信息登记.getValue().equals(key)){
-                	continue;
+                        ||DictCodeListExt2.报表名称_机构和私人银行产品发行登记.getValue().equals(key)
+                        ||DictCodeListExt2.报表名称_从业人员登记.getValue().equals(key)
+                        ||DictCodeListExt2.报表名称_人行月度统计报表.getValue().equals(key)
+                        ||DictCodeListExt2.报表名称_分类总量信息登记.getValue().equals(key)){
+                    continue;
                 }
                 SelectOptionDto resultDto = new SelectOptionDto();
                 resultDto.setId(key);
@@ -137,13 +134,13 @@ public class CheckReport001Controller extends BaseController{
                 resultList.add(resultDto);
             }
         }
-        
+
         Page<SelectOptionDto> page = new Page();
         page.setRoot(resultList);
         return page;
     }
-    
-    
+
+
     /**
      *     导出信息excel
      *
@@ -155,7 +152,7 @@ public class CheckReport001Controller extends BaseController{
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+            throws Exception {
         return checkReportMService.export(this.getPageId(), RequestUtil.getPageParam());
     }
 }

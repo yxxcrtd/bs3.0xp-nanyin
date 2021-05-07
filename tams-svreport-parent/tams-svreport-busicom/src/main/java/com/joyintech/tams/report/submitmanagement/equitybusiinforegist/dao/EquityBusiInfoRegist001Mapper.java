@@ -207,42 +207,42 @@ public interface EquityBusiInfoRegist001Mapper {
      * @since 1.0
      */
     void updateInterfSeq(@Param("investList")List<EquityBusiInfoRegist001Dto> investList);
-    
-    
+
+
     /**
      * 批量更新投资者持有信息检查序列号
-     * 
+     *
      * @param investRegistUpdateList
      * @see
      * @since 1.0
      */
     void updateInvestRegistCheckSeqno(List<EquityBusiInfoRegist001Dto> investRegistUpdateList);
-    
-    
+
+
     int selectNoendCountByTaskBeanName(String beanname);
-    
-   
+
+
     /**
      * 分批量查询导出数据
      * @param investList
      * @see
      * @since 1.0
      */
-	List<EquityBusiInfoRegist001Dto> selectAllDataByKey(@Param("investList")List<EquityBusiInfoRegist001Dto> investList);
-	
-	int insertBtachInterfEquityBusi(List<EquityBusiInfoRegist001Dto> list);
+    List<EquityBusiInfoRegist001Dto> selectAllDataByKey(@Param("investList")List<EquityBusiInfoRegist001Dto> investList);
+
+    int insertBtachInterfEquityBusi(List<EquityBusiInfoRegist001Dto> list);
 
     int updateBatchEquityBusi(List<EquityBusiInfoRegist001Dto> list);
 
     int insertEquityBusiHis(List<EquityBusiInfoRegist001Dto> list);
-    
+
     int insertBtachInterfEquityBusiSub(List<EquityBusiInfoRegist001Dto> list);
-    
+
     int deleteBatchEquityBusi(List<EquityBusiInfoRegist001Dto> list);
-    
+
     List<ChbEqudet> selectChbEqudetSubByKey();
     List<ChbEquHoldCheckDto> selectAllCheckEquHoldDto();
-    
+
     /**
      * 查出所有数据状态为删除且报送状态为未报送的数据
      * @param list
@@ -255,7 +255,7 @@ public interface EquityBusiInfoRegist001Mapper {
      * @return 结果
      */
     List<EquityInfo001Dto> selectEquityInfoAll();
-    
+
     /**
      * 批量更新报送状态表为中债通过
      * @param list 报送状态
@@ -318,7 +318,7 @@ public interface EquityBusiInfoRegist001Mapper {
      * @since 1.0
      */
     void updateSubmitStatus();
-    
+
     String getChbEquSubSend(Map<String, Object> paramMap);
     /**
      * 查询当天所有通过检查的为报送数据（身份信息已报送）
@@ -328,5 +328,6 @@ public interface EquityBusiInfoRegist001Mapper {
      * @return
      */
     Integer selectAllDataUnSendCount(@Param("cdate")Date cdate,@Param("bankcode")String bankcode);
-    
+    //add zhangjinyang 2020-12-21
+    int updateBatchEquityBusiRegCodeByPart(List<EquityBusiInfoRegist001Dto> list);
 }

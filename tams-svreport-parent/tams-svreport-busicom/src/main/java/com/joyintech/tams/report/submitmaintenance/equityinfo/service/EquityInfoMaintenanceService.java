@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
+import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -233,6 +237,9 @@ public class EquityInfoMaintenanceService extends BaseService{
             equityInfo001Dto.setAgent(map.get("AGENT"));
             equityInfo001Dto.setDeptCode(map.get("DEPT_CODE"));
         }
+        //add by lingxq on 2021-05-06 for 需求升级 ------->>>>>
+        updateHoldType(equityInfo001Dto);
+        //add by lingxq on 2021-05-06 for 需求升级 -------<<<<<
     }
     /**
      * 根据配置转换dto
@@ -592,5 +599,59 @@ public class EquityInfoMaintenanceService extends BaseService{
 			equityInfo001Dto.setDeptCode(map.get("DEPT_CODE"));
 		}
 		equityInfo001Dto.setIsChangeId(isChangeId);
+    }
+
+
+    /**
+     *
+     * 投资者名称中带银行/信用社/信用合作社/资金互助社/信用合作联社字样的，投资者类别应该为“04 银行”
+     * 投资者名称中带信托且有公司，投资者类别为“05 信托公司”
+     * 投资者名称中带证券且有公司且无咨询/投资，投资者类别为“06 证券公司” ；
+     * 投资者名称中带保险且有公司且无经纪/代理/咨询/销售/公估，投资者类别为“投资者类别为“08 保险公司” ；
+     * 投资者名称中带期货且有公司，投资者类别为“投资者类别为“09 期货公司”；
+     * 投资者名称中带财务有限公司，投资者类别为“10 其他金融机构”；
+     * 投资者名称中带分公司、办事处、代表处，个体工商户、个体户、居民委员会、社区委员会、居委会，投资者类别为“26 其他非法人组织”
+     *
+     * @param equityInfo001Dto
+     */
+    public static void updateHoldType(EquityInfo001Dto equityInfo001Dto) {
+        ChbTypeMappingExMapper chbTypeMappingExMapper = SpringContextUtil.getBean(ChbTypeMappingExMapper.class);
+        List<ChbTypeMappingEx>  HoldTypeMappingList = chbTypeMappingExMapper.selectByMappingcode("HOLDTYPE");
+        if (!CollectionUtils.isEmpty(HoldTypeMappingList)){
+            boolean flag = false;
+            for(ChbTypeMappingEx mapping: HoldTypeMappingList){
+                String names[] = mapping.getSrcfield().split("\\|");
+                for(int j=0;j<names.length;j++ ){
+                    if(names[j].contains("&")){
+                        String mutiNm[] = names[j].split("&");
+                        //多条件同时满足
+                        int index = 0;
+                        for(int jj=0;jj < mutiNm.length;jj++ ){
+                            if(mutiNm[jj].startsWith("!")){
+                                if(!equityInfo001Dto.getHolderName().contains(mutiNm[jj].substring(1))){
+                                    index ++;
+                                }
+                            }else if(equityInfo001Dto.getHolderName().contains(mutiNm[jj])){
+                                index ++;
+                            }else{
+                                //nothing to do
+                            }
+                        }
+                        if(index == mutiNm.length){
+                            flag = true;
+                        }
+                    }else{
+                        if(equityInfo001Dto.getHolderName().contains(names[j])){
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+                if(flag){
+                    equityInfo001Dto.setHolderType(mapping.getSrcfield1());
+                    break;
+                }
+            }
+        }
     }
 }

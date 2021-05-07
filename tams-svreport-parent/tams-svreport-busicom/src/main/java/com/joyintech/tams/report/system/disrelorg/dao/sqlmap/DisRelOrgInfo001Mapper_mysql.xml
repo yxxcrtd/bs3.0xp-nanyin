@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.disrelorg.dao.DisRelOrgInfo001Mapper_mysql">
+	<select id="queryForPage" resultType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
+		SELECT
+		a.STATUS as status,
+		a.RELORG_ID as relorgId,
+		a.ORGAN_NAME as organName,
+		a.CREATE_USER as createUser,
+		a.CREATE_TIME as createTime,
+		a.UPDATE_USER as updateUser,
+		a.UPDATE_TIME as updateTime,
+		a.SVR_DATA_SOURCES as svrDataSources
+		FROM
+		rep_relorg a
+		<where>
+			<if test="relorgId != null and relorgId != ''">
+				and (a.RELORG_ID like concat('%',concat(#{relorgId,jdbcType=VARCHAR},'%')) or  a.ORGAN_NAME like concat('%',concat(#{relorgId,jdbcType=VARCHAR},'%')) )
+			</if>
+			<if test="selectStatus != null and selectStatus.size() > 0">
+				<foreach collection="selectStatus" item="status" open="AND a.STATUS IN (" close=")" separator=",">
+					#{status,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+
+	</select>
+
+	<update id="updateDisAssociatedInstitutions" parameterType="java.util.List" >
+		UPDATE rep_relorg
+		set
+		STATUS = "D"
+		where
+		<foreach collection="dtoList" item="status" open="RELORG_ID IN (" close=")" separator=",">
+			#{status.relorgId,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<select id="getSysDataDict" resultType="com.joyintech.tams.systemtools.dto.SysDataDict" parameterType="java.util.Map">
+		SELECT ITEM_CODE itemCode, ITEM_VALUE itemValue FROM SYS_DATADICT_LIST
+		WHERE DICT_CODE=#{code}
+	</select>
+
+	<select id="queryReportList" resultType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
+		SELECT
+		'导出' as type,
+		a.RELORG_ID,
+		a.ORGAN_NAME
+		FROM
+		rep_relorg a
+		<where>
+			<if test="selectrelorgIds != null and selectrelorgIds.size() > 0">
+				<foreach collection="selectrelorgIds" item="relorgId" open="AND a.RELORG_ID IN (" close=")" separator=",">
+					#{relorgId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+
+	</select>
+	<insert id="insertOne" parameterType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions" >
+		insert into REP_RELORG (RELORG_ID,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ORGAN_NAME,STATUS,SVR_DATA_SOURCES)
+		values (
+		#{relorgId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{updateteUser,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=TIMESTAMP},#{organName,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{svrDataSources,jdbcType=VARCHAR}
+		)
+    </insert>
+	<select id="selectOne" resultType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
+		SELECT
+		a.STATUS,
+		a.RELORG_ID,
+		a.ORGAN_NAME,
+		a.CREATE_USER,
+		a.CREATE_TIME,
+		a.UPDATE_USER,
+		a.UPDATE_TIME,
+		a.SVR_DATA_SOURCES
+		FROM
+		REP_RELORG a
+		where
+			RELORG_ID = #{relorgId,jdbcType=VARCHAR}
+	</select>
+	<update id="updateOne" parameterType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions" >
+		UPDATE rep_relorg
+		set
+		STATUS = #{status,jdbcType=VARCHAR},SVR_DATA_SOURCES=#{svrDataSources,jdbcType=VARCHAR},
+		ORGAN_NAME= #{organName,jdbcType=VARCHAR}
+		where
+		RELORG_ID= #{relorgId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateOneStatus" parameterType="java.lang.String">
+		UPDATE rep_relorg
+		set
+		STATUS = 'D'
+		where
+		RELORG_ID= #{relorgId,jdbcType=VARCHAR}
+	</update>
+</mapper>

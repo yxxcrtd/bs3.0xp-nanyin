@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.investreport.common.dao.ChbInvestReportCommonMapper">
+
+	<select id="queryPrdInfoList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+			p.PROD_ID id,
+			p.PROD_NAME text
+		from CHB_PRD_BASEINFO p
+		where
+			p.`STATUS` = 'E'
+		<if test="initValue != null and initValue != ''">
+			and p.PROD_ID IN (#{initValue})
+		</if>
+		<if test="search != null and search != ''">
+			and ( p.PROD_ID like concat(concat('%',#{search}),'%') or p.PROD_NAME like concat(concat('%',#{search}),'%'))
+		</if>
+	</select>
+
+
+	<select id="queryRepFtpPathList" resultType="com.joyintech.tams.common.base.entity.RepFtpPath">
+		select
+			p.id id,
+			p.name name
+		from REP_FTP_PATH p
+		order by p.id
+	</select>
+
+
+	<select id="selectReprevealByParams" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+		SELECT  *
+			FROM REP_REVEAL
+		WHERE
+		1=1
+		<if test="repId !=null and repId != ''">
+			AND REP_ID = #{repId,jdbcType=VARCHAR}
+		</if>
+		<if test="reportName !=null and reportName != ''">
+			AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		</if>
+		<if test="prodId !=null and prodId != ''">
+			AND PRODID = #{prodId,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate !=null">
+			AND to_char(START_DATE,'yyyy-MM-dd') = #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate !=null">
+			AND  to_char(END_DATE,'yyyy-MM-dd') = #{endDate,jdbcType=VARCHAR}
+		</if>
+		AND STATUS = 'E'
+		AND rownum = 1
+	</select>
+
+	<update id="updateReprevealByParams">
+		update REP_REVEAL
+		set STATUS = 'D'
+		WHERE
+		1=1
+		<if test="repId !=null and repId != ''">
+			AND REP_ID = #{repId,jdbcType=VARCHAR}
+		</if>
+		<if test="reportName !=null and reportName != ''">
+			AND REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+		</if>
+		<if test="prodId !=null and prodId != ''">
+			AND PRODID = #{prodId,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate !=null">
+			AND to_char(START_DATE,'yyyy-MM-dd') = #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate !=null">
+			AND  to_char(END_DATE,'yyyy-MM-dd') = #{endDate,jdbcType=VARCHAR}
+		</if>
+		AND STATUS = 'E'
+	</update>
+</mapper>

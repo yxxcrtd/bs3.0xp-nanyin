@@ -90,23 +90,29 @@
 		LINK_ID, MANAGER_ID, HEAD_BANK,
 		CONTACT, CONTACT_WAY, REMARK,
 		CREATE_USER, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS)
-		<foreach collection="insertList" item="item" index="index"
-			separator="union all ">
-			select #{item.uuid,jdbcType=VARCHAR},
-			#{item.counterId,jdbcType=VARCHAR},
-			#{item.counterType,jdbcType=VARCHAR},
-			#{item.counterName,jdbcType=VARCHAR},
-			#{item.linkId,jdbcType=VARCHAR}, #{item.managerId,jdbcType=VARCHAR},
-			#{item.headBank,jdbcType=VARCHAR},
-			#{item.contact,jdbcType=VARCHAR}, #{item.contactWay,jdbcType=VARCHAR},
-			#{item.remark,jdbcType=VARCHAR},
-			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, NOW(),
-			#{item.updateUser,jdbcType=VARCHAR},
-			NOW(),
-			#{item.counterType1,jdbcType=VARCHAR},#{item.counterType2,jdbcType=VARCHAR},#{item.isCentralCounter,jdbcType=VARCHAR},
-			'E'
-			from dual
+		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS) VALUES
+		<foreach collection="insertList" item="item" separator=",">
+			(
+				#{item.uuid,jdbcType=VARCHAR},
+				#{item.counterId,jdbcType=VARCHAR},
+				#{item.counterType,jdbcType=VARCHAR},
+				#{item.counterName,jdbcType=VARCHAR},
+				#{item.linkId,jdbcType=VARCHAR},
+			    #{item.managerId,jdbcType=VARCHAR},
+				#{item.headBank,jdbcType=VARCHAR},
+				#{item.contact,jdbcType=VARCHAR},
+			    #{item.contactWay,jdbcType=VARCHAR},
+				#{item.remark,jdbcType=VARCHAR},
+				#{item.createUser,jdbcType=VARCHAR},
+			    #{item.createDept,jdbcType=VARCHAR},
+			    NOW(),
+				#{item.updateUser,jdbcType=VARCHAR},
+				NOW(),
+				#{item.counterType1,jdbcType=VARCHAR},
+			    #{item.counterType2,jdbcType=VARCHAR},
+			    #{item.isCentralCounter,jdbcType=VARCHAR},
+				'E'
+			)
 		</foreach>
 	</insert>
     <select id="getExists" parameterType="java.util.List" resultType="java.lang.String">
@@ -322,7 +328,7 @@
 	<!-- 根据数据状态皮量更新，传入的dto数据状态为D则更新为D否则更新为M -->
 	<update id="updateBachByStatus"
         parameterType="java.util.List">
-        begin
+       /* begin*/
         <foreach collection="updateList" item="item" index="index"
             separator=";">
             update CHB_MST_COUNTER_PARTY
@@ -385,6 +391,6 @@
             where COUNTER_ID = #{item.counterId,jdbcType=VARCHAR}
             and STATUS != 'D'
         </foreach>
-        ;end;
+		/*  ;end;*/
     </update>
 </mapper>

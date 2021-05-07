@@ -154,15 +154,15 @@
         select DISTINCT A.* from (
         <foreach collection="list" item="relation" index="index" separator="union all">
             select
-            #{relation.detailid,jdbcType=CHAR},
-            #{relation.filecode,jdbcType=VARCHAR},
-            #{relation.gendate,jdbcType=DATE},
-            #{relation.busiId,jdbcType=VARCHAR},
-            #{relation.createUser,jdbcType=VARCHAR},
-            #{relation.createDept,jdbcType=VARCHAR},
-            #{relation.createTime,jdbcType=TIMESTAMP},
-            #{relation.updateUser,jdbcType=VARCHAR},
-            #{relation.updateTime,jdbcType=TIMESTAMP}
+            #{relation.detailid,jdbcType=CHAR} DETAILID,
+            #{relation.filecode,jdbcType=VARCHAR} FILECODE,
+            #{relation.gendate,jdbcType=DATE} GENDATE,
+            #{relation.busiId,jdbcType=VARCHAR} BUSI_ID,
+            #{relation.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{relation.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{relation.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{relation.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{relation.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
             from dual
         </foreach>
         )A

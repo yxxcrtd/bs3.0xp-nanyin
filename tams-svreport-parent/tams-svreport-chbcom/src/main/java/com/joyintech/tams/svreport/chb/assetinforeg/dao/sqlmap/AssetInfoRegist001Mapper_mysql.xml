@@ -463,7 +463,8 @@
 	<result column='DEPT_EQUITY' property='deptEquity' jdbcType='VARCHAR' />
 	<result column='HOLD_PURPOSE' property='holdPurpose' jdbcType='VARCHAR' />
 	<result column='FINANCIAL_COMISSUE' property='financialComissue' jdbcType='VARCHAR' />
-   
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+
     </resultMap>
 	
 	<resultMap id="BaseResultMapHis" type="com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSubHisDto" >
@@ -618,7 +619,8 @@
     <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
     <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="VARCHAR" />
     <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
-  </resultMap>
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+      </resultMap>
     <sql id="Base_Column_List_His" >
     REGIST_SEQNO HIS_NO, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE, ASSET_YIELD, 
     BASIS, AMT, BANK_NAME, IS_STRUCT, TARGET_TYPE, TARGET, ASSET_ID, ASSET_NAME, CHB_SECTYPE, 
@@ -677,7 +679,8 @@
         EQUITY_QUIT,
         DEPT_EQUITY,
         HOLD_PURPOSE,
-        FINANCIAL_COMISSUE
+        FINANCIAL_COMISSUE,
+	SUMIT_SEQ
     </sql>
 	
 	<sql id="Base_Column_List">
@@ -776,7 +779,8 @@
         EQUITY_QUIT,
         DEPT_EQUITY,
         HOLD_PURPOSE,
-        FINANCIAL_COMISSUE
+        FINANCIAL_COMISSUE,
+	SUMIT_SEQ
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -793,7 +797,7 @@
 	</delete>
     <insert id="insertBatch"
         parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto">
-        insert into CHB_ASSET_INFO_SUB (REGIST_SEQNO,
+        insert into CHB_ASSET_INFO_SUB (SUMIT_SEQ,REGIST_SEQNO,
         ASSET_CODE, ASSET_TYPE,
         ASSET_TYPE2, CCY, TRADE_MARKET,
         VDATE, MDATE,
@@ -897,7 +901,7 @@
         DEPT_EQUITY,
         HOLD_PURPOSE,
         FINANCIAL_COMISSUE)
-        values (#{registSeqno,jdbcType=CHAR},
+        values (#{sumitSeq,jdbcType=VARCHAR},#{registSeqno,jdbcType=CHAR},
         #{assetCode,jdbcType=VARCHAR},
         #{assetType,jdbcType=VARCHAR},
         #{assetType2,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
@@ -1118,7 +1122,7 @@
 		UPDATE_TIME, ORG_CODE, DEPT_CODE,
 		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
 		DATA_SOURCE,
-		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME)
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME, SUMIT_SEQ)
 		values (#{registSeqno,jdbcType=CHAR},
 		#{assetCode,jdbcType=VARCHAR},
 		#{assetType,jdbcType=VARCHAR},
@@ -1232,7 +1236,7 @@
 		#{createDept,jdbcType=VARCHAR},
 		#{dataSource,jdbcType=VARCHAR},
 		#{deleteRes,jdbcType=VARCHAR},#{secCreditGradeType,jdbcType=VARCHAR},
-		#{capUseInduLevel2,jdbcType=VARCHAR},#{issuePartyName,jdbcType=VARCHAR})
+		#{capUseInduLevel2,jdbcType=VARCHAR},#{issuePartyName,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective"
 		parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
@@ -1691,6 +1695,9 @@
             <if test="issuePartyName != null" >
               ISSUE_PARTY_NAME,
             </if>
+	      <if test="sumitSeq != null" >
+	        SUMIT_SEQ,
+	      </if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="registSeqno != null">
@@ -2146,6 +2153,9 @@
             <if test="issuePartyName != null" >
               #{issuePartyName,jdbcType=VARCHAR},
             </if>
+	      <if test="sumitSeq != null" >
+	        #{sumitSeq,jdbcType=VARCHAR},
+	      </if>
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective"
@@ -2607,6 +2617,9 @@
             <if test="issuePartyName != null" >
               ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR},
             </if>
+	      <if test="sumitSeq != null" >
+	        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+	      </if>
 		</set>
 		where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
 	</update>
@@ -2886,7 +2899,8 @@
 		#{deleteRes,jdbcType=VARCHAR},
 		sec_credit_grade_type = #{secCreditGradeType,jdbcType=VARCHAR},
 		CAP_USE_INDU_LEVEL2=#{capUseInduLevel2,jdbcType=VARCHAR},
-        ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR}
+        ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR},
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR}
 		where REGIST_SEQNO =
 		#{registSeqno,jdbcType=CHAR}
 	</update>
@@ -2923,7 +2937,7 @@
 			SEC_MAIN_GRADE		SECMAINGRADE,
 			SEC_CREDIT_GRADE		SECCREDITGRADE,
 			REGIST_ORG		REGISTORG,
-			REGISTORG_COMMENT		REGISTORGCOMMENT,
+			(case when REGIST_ORG = '99' then REGISTORG_COMMENT else '' end)		REGISTORGCOMMENT,
 			RIVAL_PARTY		RIVALPARTY,
 			TARGET_TYPE1		TARGETTYPE1,
 			TARGET_AMT		TARGETAMT,
@@ -3081,7 +3095,8 @@
 			EQUITY_QUIT  equityQuit,
 			DEPT_EQUITY  deptEquity,
 			HOLD_PURPOSE  holdPurpose,
-			FINANCIAL_COMISSUE  financialComissue
+			FINANCIAL_COMISSUE  financialComissue,
+			ASSETINFO.SUMIT_SEQ  sumitSeq
 		from CHB_ASSET_INFO_SUB ASSETINFO
 		<where>
 			<if test="assetTypeList != null and assetTypeList.size() > 0">
@@ -3097,7 +3112,8 @@
             	</foreach>
 		 	</if>
 			<if test="assetCode != null and !assetCode.isEmpty()">
-					and ASSETINFO.ASSET_CODE like concat_ws('','%',#{assetCode,jdbcType=VARCHAR},'%')
+			<!-- 	AND ASSETINFO.ASSET_CODE like '%'||#{assetCode,jdbcType=VARCHAR}||'%' -->
+					and ASSETINFO.ASSET_CODE like concat(concat('%',#{assetCode,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="sendDateStr != null and !sendDateStr.isEmpty()">
 				AND DATE_FORMAT(ASSETINFO.SUBMIT_TIME, '%Y-%m-%d') >= #{sendDateStr,jdbcType=VARCHAR}
@@ -3165,6 +3181,670 @@
         order by ASSETINFO.status_date desc
 	</select>
 	
+
+
+	<!-- 资产要素登记数据查询 -->
+	<select id="selectAssetInfoByPageEx"
+		resultType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
+
+		Select * from
+		(
+
+
+		/**公共资产数据*/
+		select
+			   ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
+		       ASSETINFO.ASSET_CODE             ASSETCODE,
+		       ASSETINFO.ASSET_TYPE             ASSETTYPE,
+		       ASSETINFO.ASSET_TYPE2            ASSETTYPE2,
+		       ASSETINFO.CCY                    CCY,
+		       ASSETINFO.TRADE_MARKET           TRADEMARKET,
+		       ASSETINFO.VDATE                  VDATE,
+		       ASSETINFO.MDATE                  MDATE,
+		       ASSETINFO.ASSET_YIELD            ASSETYIELD,
+		       ASSETINFO.BASIS                  BASIS,
+		       ASSETINFO.AMT                    AMT,
+		       ASSETINFO.BANK_NAME              BANKNAME,
+		       ASSETINFO.IS_STRUCT              ISSTRUCT,
+		       ASSETINFO.TARGET_TYPE            TARGETTYPE,
+		       ASSETINFO.TARGET                 TARGET,
+		       ASSETINFO.ASSET_ID               ASSETID,
+		       ASSETINFO.ASSET_NAME             ASSETNAME,
+		       ASSETINFO.CHB_SECTYPE            CHBSECTYPE,
+		       ASSETINFO.ISSUE_MODE             ISSUEMODE,
+		       ASSETINFO.PARTY_GRADE            PARTYGRADE,
+		       ASSETINFO.PARTY_TYPE1            PARTYTYPE1,
+		       ASSETINFO.PARTY_TYPE3            PARTYTYPE3,
+		       ASSETINFO.PARTY_TYPE2            PARTYTYPE2,
+		       ASSETINFO.INDUSTRY               INDUSTRY,
+		       ASSETINFO.INDUSTRY_LEVEL2        INDUSTRYLEVEL2,
+		       ASSETINFO.SEC_MAIN_GRADE         SECMAINGRADE,
+		       ASSETINFO.SEC_CREDIT_GRADE       SECCREDITGRADE,
+		       ASSETINFO.REGIST_ORG             REGISTORG,
+		      (case when ASSETINFO.REGIST_ORG = '99' then ASSETINFO.REGISTORG_COMMENT else '' end)		REGISTORGCOMMENT,     REGISTORGCOMMENT,
+		       ASSETINFO.RIVAL_PARTY            RIVALPARTY,
+		       ASSETINFO.TARGET_TYPE1           TARGETTYPE1,
+		       ASSETINFO.TARGET_AMT             TARGETAMT,
+		       ASSETINFO.COUNTRY_AREA           COUNTRYAREA,
+		       ASSETINFO.PROFIT_TYPE            PROFITTYPE,
+		       ASSETINFO.IS_RESALE              ISRESALE,
+		       ASSETINFO.TERM_DATE              TERMDATE,
+		       ASSETINFO.RATE_FLAG              RATEFLAG,
+		       ASSETINFO.INTPAY_CYCLE           INTPAYCYCLE,
+		       ASSETINFO.REPAY_CMT              REPAYCMT,
+		       ASSETINFO.BASIS_TYPE             BASISTYPE,
+		       ASSETINFO.FLOAT_FACTOR           FLOATFACTOR,
+		       ASSETINFO.SPREAD_RATE            SPREADRATE,
+		       ASSETINFO.FINANCIE               FINANCIE,
+		       ASSETINFO.FIN_ORG_CODE           FINORGCODE,
+		       ASSETINFO.FCR_GRADE_IN           FCRGRADEIN,
+		       ASSETINFO.FCR_GRADE_OUT          FCRGRADEOUT,
+		       ASSETINFO.FINANCIER_TYPE1        FINANCIERTYPE1,
+		       ASSETINFO.FINANCIER_TYPE2        FINANCIERTYPE2,
+		       ASSETINFO.FINANCIER_TYPE3        FINANCIERTYPE3,
+		       ASSETINFO.FINANCE_PROJ           FINANCEPROJ,
+		       ASSETINFO.INDUSTRY1              INDUSTRY1,
+		       ASSETINFO.INDUSTRY_LEVEL2_TYPE   INDUSTRYLEVEL2TYPE,
+		       ASSETINFO.PRO_INDUSTRY           PROINDUSTRY,
+		       ASSETINFO.PRO_INDUSTRY_LEVEL2    PROINDUSTRYLEVEL2,
+		       ASSETINFO.INDUSTRY_FLAG          INDUSTRYFLAG,
+		       ASSETINFO.MONIT_TYPE             MONITTYPE,
+		       ASSETINFO.MON_TYPE_COMM          MONTYPECOMM,
+		       ASSETINFO.GUA_TYPE               GUATYPE,
+		       ASSETINFO.GUA_TYPE_REMARK        GUATYPEREMARK,
+		       ASSETINFO.FINANCIER_GRADE        FINANCIERGRADE,
+		       ASSETINFO.IN_GRADE               INGRADE,
+		       ASSETINFO.OUT_GRADE              OUTGRADE,
+		       ASSETINFO.CHOSE                  CHOSE,
+		       ASSETINFO.CONDITION_CMM          CONDITIONCMM,
+		       ASSETINFO.FIN_AREA               FINAREA,
+		       ASSETINFO.TOTAL_FEE_RATE         TOTALFEERATE,
+		       ASSETINFO.IS_RIGHT               ISRIGHT,
+		       ASSETINFO.NOTSTAND_SEC_TYPE      NOTSTANDSECTYPE,
+		       ASSETINFO.NOTSTAND_SEC_NUM       NOTSTANDSECNUM,
+		       ASSETINFO.REMAIN_TERM            REMAINTERM,
+		       ASSETINFO.MAX_REMAIN_TERM        MAXREMAINTERM,
+		       ASSETINFO.MIN_REMAIN_TERM        MINREMAINTERM,
+		       ASSETINFO.SHARES_TYPE            SHARESTYPE,
+		       ASSETINFO.INDUSTRY_SHARES        INDUSTRYSHARES,
+		       ASSETINFO.INDUSTRY_SHARES2       INDUSTRYSHARES2,
+		       ASSETINFO.INVEST_STAGE           INVESTSTAGE,
+		       ASSETINFO.SHARES_TYPE1           SHARESTYPE1,
+		       ASSETINFO.SHARES_TYPE2           SHARESTYPE2,
+		       ASSETINFO.SHARES_TYPE3           SHARESTYPE3,
+		       ASSETINFO.IS_PLEDGE              ISPLEDGE,
+		       ASSETINFO.NOM_CAPI               NOMCAPI,
+		       ASSETINFO.TARGET_TYPE3           TARGETTYPE3,
+		       null         ISSUEPARTYID,
+		       ASSETINFO.TERM_MONTH             TERMMONTH,
+		       ASSETINFO.GUARANTEE_CMT          GUARANTEECMT,
+		       ASSETINFO.SPECIAL_CMT            SPECIALCMT,
+		       ASSETINFO.CONTRACT_NAME          CONTRACTNAME,
+		       ASSETINFO.INCOME_RATIO           INCOMERATIO,
+		       ASSETINFO.DER_INSTR_RATIO        DERINSTRRATIO,
+		       ASSETINFO.DER_INSTR_INV_TYPE     DERINSTRINVTYPE,
+		       ASSETINFO.DER_INSTR_TARGET       DERINSTRTARGET,
+		       ASSETINFO.ACCT_MODE              ACCTMODE,
+		       ASSETINFO.SPECIAL_CMT1           SPECIALCMT1,
+		       ASSETINFO.MAX_YIELD              MAXYIELD,
+		       ASSETINFO.MIN_YIELD              MINYIELD,
+		       ASSETINFO.BASIC_PRICE            BASICPRICE,
+		       ASSETINFO.REG_DATE_PRICE         REGDATEPRICE,
+		       ASSETINFO.TRADE_FEE              TRADEFEE,
+		       ASSETINFO.PARTY_CODE             PARTYCODE,
+		       ASSETINFO.CHECK_CODE             CHECKCODE,
+		       ASSETINFO.MANAGER_ID             MANAGERID,
+		       ASSETINFO.TRUSTEE_ID             TRUSTEEID,
+		       ASSETINFO.TRU_ACT_TYPE           TRUACTTYPE,
+		       ASSETINFO.INVEST_TYPE            INVESTTYPE,
+		       ASSETINFO.CAP_USE_INDU           CAPUSEINDU,
+		       ASSETINFO.PLAN_SDATE             PLANSDATE,
+		       ASSETINFO.PLAN_EDATE             PLANEDATE,
+		       ASSETINFO.PRO_PROPERTY           PROPROPERTY,
+		       ASSETINFO.MAX_RATE               MAXRATE,
+		       ASSETINFO.MIN_RATE               MINRATE,
+		       ASSETINFO.DEBT_SCALE             DEBTSCALE,
+		       ASSETINFO.BUY_STRUCT             BUYSTRUCT,
+		       ASSETINFO.MANAGE_TYPE            MANAGETYPE,
+		       ASSETINFO.IS_CTRL_BOTTOM         ISCTRLBOTTOM,
+		       ASSETINFO.MGR_FEE_RATE           MGRFEERATE,
+		       ASSETINFO.TRU_FEE_RATE           TRUFEERATE,
+		       ASSETINFO.TRADE_FEE_RATE         TRADEFEERATE,
+		       ASSETINFO.AGENCY_FEE_RATE        AGENCYFEERATE,
+		       ASSETINFO.OTHER_FEE_RATE         OTHERFEERATE,
+		       ASSETINFO.ASSET_VALUE            ASSETVALUE,
+		       ASSETINFO.REGIST_ORG1            REGISTORG1,
+		       ASSETINFO.MNG_ORG_NAME           MNGORGNAME,
+		       ASSETINFO.TRU_ORG_NAME           TRUORGNAME,
+		       ASSETINFO.FUND_INVEST_ASSET      FUNDINVESTASSET,
+		       ASSETINFO.IN_ASSET_TYPE          INASSETTYPE,
+		       ASSETINFO.IN_ASSET_TYPE_CMM      INASSETTYPECMM,
+		       ASSETINFO.REMARK                 REMARK,
+		       ASSETINFO.IS_UNDER_ASSET         ISUNDERASSET,
+		       ASSETINFO.IS_GOVERN_FUND         ISGOVERNFUND,
+		       ASSETINFO.GOVERN_INVEST_FUND     GOVERNINVESTFUND,
+		       ASSETINFO.FUND_ENPE_NAME         FUNDENPENAME,
+		       ASSETINFO.TRUSTEE                TRUSTEE,
+		       ASSETINFO.SUBMIT_DEADLINE        SUBMITDEADLINE,
+		       ASSETINFO.CHB_SUBMIT_DEADLINE    CHBSUBMITDEADLINE,
+		       CS.SUBMIT_TIME            SUBMITTIME,
+		       ASSETINFO.STATUS_DATE            STATUSDATE,
+		       ASSETINFO.STATUS                 STATUS,
+		       ASSETINFO.CREATE_USER            CREATEUSER,
+		       ASSETINFO.CREATE_TIME            CREATETIME,
+		       ASSETINFO.UPDATE_USER            UPDATEUSER,
+		       ASSETINFO.UPDATE_TIME            UPDATETIME,
+		       ASSETINFO.ORG_CODE               ORGCODE,
+		       ASSETINFO.DEPT_CODE              DEPTCODE,
+		       ifnull(CS.SEND_STATUS,'01')            SENDSTATUS,
+		       CS.SUBMIT_FEEDBACK_STATUS SUBMITFEEDBACKSTATUS,
+		       ASSETINFO.CREATE_DEPT            CREATEDEPT,
+		       ASSETINFO.DATA_SOURCE            DATASOURCE,
+		       ASSETINFO.DELETE_RES             DELETERES,
+		       ASSETINFO.sec_credit_grade_type  seccreditgradetype,
+		       ASSETINFO.CAP_USE_INDU_LEVEL2    CAPUSEINDULEVEL2,
+		       ASSETINFO.ISSUE_PARTY_NAME       ISSUEPARTYNAME,
+		       ASSETINFO.DEPO_TYPE              depoType,
+		       ASSETINFO.RIVAL_PARTY_TYPE       rivalPartyType,
+		       ASSETINFO.PRIN_BASEAMT           prinBaseamt,
+		       ASSETINFO.FMDATE                 fmdate,
+		       ASSETINFO.COUPON_SPECIES         couponSpecies,
+		       ASSETINFO.INTEREST_RULE_FLAG     interestRuleFlag,
+		       ASSETINFO.INTPAY_RULE            intpayRule,
+		       ASSETINFO.FLOAT_FACTOR_FLAG      floatFactorFlag,
+		       ASSETINFO.STRUCT_GRADE           structGrade,
+		       ASSETINFO.REPAYMENT_TYPE         repaymentType,
+		       ASSETINFO.PERIOD_REPAYMENT_FLAG  periodRepaymentFlag,
+		       ASSETINFO.BASIC_ASSET_TYPE       basicAssetType,
+		       ASSETINFO.EXCESS_PROFIT_RATE     excessProfitRate,
+		       ASSETINFO.PLEDGE_TYPE            pledgeType,
+		       ASSETINFO.PLEDGE_VALUE           pledgeValue,
+		       ASSETINFO.NATURE_GUARANTEE       natureGuarantee,
+		       ASSETINFO.RELATION_FINAN         relationFinan,
+		       ASSETINFO.CONTAIN_TYPE           containType,
+		       ASSETINFO.EXERCISE_TYPE          exerciseType,
+		       ASSETINFO.EXERCISE_DATE          exerciseDate,
+		       ASSETINFO.FIRST_EXERCISE_DATE    firstExerciseDate,
+		       ASSETINFO.EXERCISE_PERIOD        exercisePeriod,
+		       ASSETINFO.EXERCISE_PRICE         exercisePrice,
+		       ASSETINFO.PERPETUAL_CLAUSE_TYPE  perpetualClauseType,
+		       ASSETINFO.DEFERRED_INTEREST_TYPE deferredInterestType,
+		       ASSETINFO.DEFERRED_INTEREST_INT  deferredInterestInt,
+		       ASSETINFO.FIRST_REPRCE_DATE      firstReprceDate,
+		       ASSETINFO.REPRCE_CYCLE           reprceCycle,
+		       ASSETINFO.PART_REDEM_FLAG        partRedemFlag,
+		       ASSETINFO.PART_REDEM_RATE        partRedemRate,
+		       ASSETINFO.CREDIT_ORG_CODE        creditOrgCode,
+		       ASSETINFO.CREDIT_ORG_NAME        creditOrgName,
+		       ASSETINFO.EQUITY_QUIT            equityQuit,
+		       ASSETINFO.DEPT_EQUITY            deptEquity,
+		       ASSETINFO.HOLD_PURPOSE           holdPurpose,
+		       ASSETINFO.FINANCIAL_COMISSUE     financialComissue,
+			   NULL belongInstitutionCode,
+			  '02' model_type
+		from CHB_ASSET_INFO_SUB ASSETINFO
+		LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+		LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID
+		LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		<if test="orgCode != null and orgCode.size() > 0">
+			<foreach collection="orgCode" item="code"
+         		open=" AND CS.INSTITUTION_CODE IN (" close=")" separator=",">
+          		#{code,jdbcType=VARCHAR}
+        	</foreach>
+		</if>
+		<where>
+			1=1
+			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
+			AND F.TRADE_MARKET IS NOT NULL
+
+			/**产品投资交易数据筛选产品交易数据*/
+			and EXISTS (
+					SELECT 1 FROM TRD_PRODUCT_DEAL T
+			        left join TRD_PRODUCT_DEAL_ADD ta  on t.trade_id=ta.trade_id
+			        left join FIN_PRODUCT f1  on t.finprod_id=f1.finprod_id
+					LEFT JOIN FIN_PRODUCT F ON ta.portfolio_id=F.FINPROD_MARKET_ID
+					LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='FINPROD04'
+					WHERE ASSETINFO.ASSET_CODE=f1.FINPROD_MARKET_ID and t.trade_status='01' and t.is_cancel='N'
+					<if test="orgCode != null and orgCode.size() > 0">
+						<foreach collection="orgCode" item="code"
+								 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
+							#{code,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+                    union all
+					select 1
+			        from RSK_VALTBL_PRT_BOTASSET_MAP r
+					left join FIN_PRODUCT F on r.finprod_id = F.finprod_id
+			        LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON r.ptl_id=dA.business_id and dA.model_type = '02'
+					WHERE ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+					<if test="orgCode != null and orgCode.size() > 0">
+						<foreach collection="orgCode" item="code"
+								 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
+							#{code,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+			)
+
+
+
+			<if test="assetTypeList != null and assetTypeList.size() > 0">
+				<foreach collection="assetTypeList" item="assetType"
+            		open=" AND ASSETINFO.ASSET_TYPE IN (" close=")" separator=",">
+             		#{assetType,jdbcType=VARCHAR}
+            	</foreach>
+			</if>
+		 	<if test="assetTypeTwoList != null and assetTypeTwoList.size() > 0">
+            	<foreach collection="assetTypeTwoList" item="assetTypeTwo"
+            		open=" AND ASSETINFO.ASSET_TYPE2 IN (" close=")" separator=",">
+             		#{assetTypeTwo,jdbcType=VARCHAR}
+            	</foreach>
+		 	</if>
+		 	<if test="listParm != null and listParm.size() > 0">
+			 	<foreach collection="listParm" item="items"
+	            		open=" AND ASSETINFO.REGIST_SEQNO IN (" close=")" separator=",">
+	             		#{items,jdbcType=CHAR}
+	        	</foreach>
+        	</if>
+	       <!--  <if test="assetTypes != null and assetTypes != ''">
+	         and  ASSET_TYPE=#{assetTypes,jdbcType=VARCHAR}
+	        </if> -->
+	        <if test="assetTypeList != null and assetTypeList.size() > 0">
+					<foreach collection="assetTypeList" item="assetType"
+	            		open=" AND ASSETINFO.ASSET_TYPE IN (" close=")" separator=",">
+	             		#{assetType,jdbcType=VARCHAR}
+	            	</foreach>
+			</if>
+
+			<if test="assetCode != null and !assetCode.isEmpty()">
+			<!-- 	AND ASSETINFO.ASSET_CODE like '%'||#{assetCode,jdbcType=VARCHAR}||'%' -->
+					and ASSETINFO.ASSET_CODE like concat(concat('%',#{assetCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="sendDateStr != null and !sendDateStr.isEmpty()">
+				AND DATE_FORMAT(CS.SUBMIT_TIME, '%Y-%m-%d') >= #{sendDateStr,jdbcType=VARCHAR}
+			</if>
+			<if test="sendDateEnd != null and !sendDateEnd.isEmpty() ">
+				<![CDATA[AND DATE_FORMAT(CS.SUBMIT_TIME, '%Y-%m-%d') <= #{sendDateEnd,jdbcType=VARCHAR}]]>
+			</if>
+		 	<if test="tradeMarketList != null and tradeMarketList.size() > 0">
+            	<foreach collection="tradeMarketList" item="tradeMarket"
+            		open=" AND ASSETINFO.TRADE_MARKET IN (" close=")" separator=",">
+             		#{tradeMarket,jdbcType=VARCHAR}
+            	</foreach>
+		 	</if>
+			<if test="ccy != null and !ccy.isEmpty()">
+				AND ASSETINFO.CCY = #{ccy,jdbcType=VARCHAR}
+			</if>
+			<if test="statusDateStr != null and !statusDateStr.isEmpty() ">
+				AND DATE_FORMAT(ASSETINFO.STATUS_DATE, '%Y-%m-%d') >= #{statusDateStr,jdbcType=VARCHAR}
+			</if>
+			<if test="statusDateEnd != null and !statusDateEnd.isEmpty() ">
+				<![CDATA[AND DATE_FORMAT(ASSETINFO.STATUS_DATE, '%Y-%m-%d') <= #{statusDateEnd,jdbcType=VARCHAR}]]>
+			</if>
+		 	<if test="submitStatusList != null and submitStatusList.size() > 0">
+		 		 and(
+            	<foreach collection="submitStatusList" item="submitStatus"
+            		open=" CS.SEND_STATUS IN (" close=")" separator=",">
+             		#{submitStatus,jdbcType=VARCHAR}
+            	</foreach>
+            	 or CS.SEND_STATUS IS NULL)
+		 	</if>
+			<!-- edit by wangqidong 20191125   start -->
+<!-- 			<if test="submitFeedbackStatus != null and !submitFeedbackStatus.isEmpty() "> -->
+<!-- 				AND ASSETINFO.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+            	<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus"
+            		open=" AND CS.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+             		#{submitFeedbackStatus,jdbcType=VARCHAR}
+            	</foreach>
+		 	</if>
+		 	<!-- edit by wangqidong 20191125   end -->
+		    <!-- 数据状态 -->
+		    <if test="statusList != null and statusList.size()>0">
+		    <foreach collection="statusList" item="items" open="and ASSETINFO.STATUS in (" separator="," close=")">
+		        #{items,jdbcType=VARCHAR}
+		    </foreach>
+		    </if>
+            <if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+                and DATE_FORMAT(ASSETINFO.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+            </if>
+            <if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+                and DATE_FORMAT(ASSETINFO.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="vDateStart != null and vDateStart != ''">
+                and DATE_FORMAT(ASSETINFO.VDATE,'%Y-%m-%d') &gt;= #{vDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="vDateEnd != null and vDateEnd != ''">
+                and DATE_FORMAT(ASSETINFO.VDATE,'%Y-%m-%d') &lt;= #{vDateEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="mDateStart != null and mDateStart != ''">
+                and DATE_FORMAT(ASSETINFO.MDATE,'%Y-%m-%d') &gt;= #{mDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="mDateEnd != null and mDateEnd != ''">
+                and DATE_FORMAT(ASSETINFO.MDATE,'%Y-%m-%d') &lt;= #{mDateEnd,jdbcType=VARCHAR}
+            </if>
+		</where>
+
+		union all
+		/**私有数据*/
+		select
+		   DISTINCT ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
+	       ASSETINFO.ASSET_CODE             ASSETCODE,
+	       ASSETINFO.ASSET_TYPE             ASSETTYPE,
+	       ASSETINFO.ASSET_TYPE2            ASSETTYPE2,
+	       ASSETINFO.CCY                    CCY,
+	       ASSETINFO.TRADE_MARKET           TRADEMARKET,
+	       ASSETINFO.VDATE                  VDATE,
+	       ASSETINFO.MDATE                  MDATE,
+	       ASSETINFO.ASSET_YIELD            ASSETYIELD,
+	       ASSETINFO.BASIS                  BASIS,
+	       ASSETINFO.AMT                    AMT,
+	       ASSETINFO.BANK_NAME              BANKNAME,
+	       ASSETINFO.IS_STRUCT              ISSTRUCT,
+	       ASSETINFO.TARGET_TYPE            TARGETTYPE,
+	       ASSETINFO.TARGET                 TARGET,
+	       ASSETINFO.ASSET_ID               ASSETID,
+	       ASSETINFO.ASSET_NAME             ASSETNAME,
+	       ASSETINFO.CHB_SECTYPE            CHBSECTYPE,
+	       ASSETINFO.ISSUE_MODE             ISSUEMODE,
+	       ASSETINFO.PARTY_GRADE            PARTYGRADE,
+	       ASSETINFO.PARTY_TYPE1            PARTYTYPE1,
+	       ASSETINFO.PARTY_TYPE3            PARTYTYPE3,
+	       ASSETINFO.PARTY_TYPE2            PARTYTYPE2,
+	       ASSETINFO.INDUSTRY               INDUSTRY,
+	       ASSETINFO.INDUSTRY_LEVEL2        INDUSTRYLEVEL2,
+	       ASSETINFO.SEC_MAIN_GRADE         SECMAINGRADE,
+	       ASSETINFO.SEC_CREDIT_GRADE       SECCREDITGRADE,
+	       ASSETINFO.REGIST_ORG             REGISTORG,
+		   (case when ASSETINFO.REGIST_ORG = '99' then ASSETINFO.REGISTORG_COMMENT else '' end)       REGISTORGCOMMENT,
+	       ASSETINFO.RIVAL_PARTY            RIVALPARTY,
+	       ASSETINFO.TARGET_TYPE1           TARGETTYPE1,
+	       ASSETINFO.TARGET_AMT             TARGETAMT,
+	       ASSETINFO.COUNTRY_AREA           COUNTRYAREA,
+	       ASSETINFO.PROFIT_TYPE            PROFITTYPE,
+	       ASSETINFO.IS_RESALE              ISRESALE,
+	       ASSETINFO.TERM_DATE              TERMDATE,
+	       ASSETINFO.RATE_FLAG              RATEFLAG,
+	       ASSETINFO.INTPAY_CYCLE           INTPAYCYCLE,
+	       ASSETINFO.REPAY_CMT              REPAYCMT,
+	       ASSETINFO.BASIS_TYPE             BASISTYPE,
+	       ASSETINFO.FLOAT_FACTOR           FLOATFACTOR,
+	       ASSETINFO.SPREAD_RATE            SPREADRATE,
+	       ASSETINFO.FINANCIE               FINANCIE,
+	       ASSETINFO.FIN_ORG_CODE           FINORGCODE,
+	       ASSETINFO.FCR_GRADE_IN           FCRGRADEIN,
+	       ASSETINFO.FCR_GRADE_OUT          FCRGRADEOUT,
+	       ASSETINFO.FINANCIER_TYPE1        FINANCIERTYPE1,
+	       ASSETINFO.FINANCIER_TYPE2        FINANCIERTYPE2,
+	       ASSETINFO.FINANCIER_TYPE3        FINANCIERTYPE3,
+	       ASSETINFO.FINANCE_PROJ           FINANCEPROJ,
+	       ASSETINFO.INDUSTRY1              INDUSTRY1,
+	       ASSETINFO.INDUSTRY_LEVEL2_TYPE   INDUSTRYLEVEL2TYPE,
+	       ASSETINFO.PRO_INDUSTRY           PROINDUSTRY,
+	       ASSETINFO.PRO_INDUSTRY_LEVEL2    PROINDUSTRYLEVEL2,
+	       ASSETINFO.INDUSTRY_FLAG          INDUSTRYFLAG,
+	       ASSETINFO.MONIT_TYPE             MONITTYPE,
+	       ASSETINFO.MON_TYPE_COMM          MONTYPECOMM,
+	       ASSETINFO.GUA_TYPE               GUATYPE,
+	       ASSETINFO.GUA_TYPE_REMARK        GUATYPEREMARK,
+	       ASSETINFO.FINANCIER_GRADE        FINANCIERGRADE,
+	       ASSETINFO.IN_GRADE               INGRADE,
+	       ASSETINFO.OUT_GRADE              OUTGRADE,
+	       ASSETINFO.CHOSE                  CHOSE,
+	       ASSETINFO.CONDITION_CMM          CONDITIONCMM,
+	       ASSETINFO.FIN_AREA               FINAREA,
+	       ASSETINFO.TOTAL_FEE_RATE         TOTALFEERATE,
+	       ASSETINFO.IS_RIGHT               ISRIGHT,
+	       ASSETINFO.NOTSTAND_SEC_TYPE      NOTSTANDSECTYPE,
+	       ASSETINFO.NOTSTAND_SEC_NUM       NOTSTANDSECNUM,
+	       ASSETINFO.REMAIN_TERM            REMAINTERM,
+	       ASSETINFO.MAX_REMAIN_TERM        MAXREMAINTERM,
+	       ASSETINFO.MIN_REMAIN_TERM        MINREMAINTERM,
+	       ASSETINFO.SHARES_TYPE            SHARESTYPE,
+	       ASSETINFO.INDUSTRY_SHARES        INDUSTRYSHARES,
+	       ASSETINFO.INDUSTRY_SHARES2       INDUSTRYSHARES2,
+	       ASSETINFO.INVEST_STAGE           INVESTSTAGE,
+	       ASSETINFO.SHARES_TYPE1           SHARESTYPE1,
+	       ASSETINFO.SHARES_TYPE2           SHARESTYPE2,
+	       ASSETINFO.SHARES_TYPE3           SHARESTYPE3,
+	       ASSETINFO.IS_PLEDGE              ISPLEDGE,
+	       ASSETINFO.NOM_CAPI               NOMCAPI,
+	       ASSETINFO.TARGET_TYPE3           TARGETTYPE3,
+	       cc.regist_bank_code  ISSUEPARTYID,
+	       ASSETINFO.TERM_MONTH             TERMMONTH,
+	       ASSETINFO.GUARANTEE_CMT          GUARANTEECMT,
+	       ASSETINFO.SPECIAL_CMT            SPECIALCMT,
+	       ASSETINFO.CONTRACT_NAME          CONTRACTNAME,
+	       ASSETINFO.INCOME_RATIO           INCOMERATIO,
+	       ASSETINFO.DER_INSTR_RATIO        DERINSTRRATIO,
+	       ASSETINFO.DER_INSTR_INV_TYPE     DERINSTRINVTYPE,
+	       ASSETINFO.DER_INSTR_TARGET       DERINSTRTARGET,
+	       ASSETINFO.ACCT_MODE              ACCTMODE,
+	       ASSETINFO.SPECIAL_CMT1           SPECIALCMT1,
+	       ASSETINFO.MAX_YIELD              MAXYIELD,
+	       ASSETINFO.MIN_YIELD              MINYIELD,
+	       ASSETINFO.BASIC_PRICE            BASICPRICE,
+	       ASSETINFO.REG_DATE_PRICE         REGDATEPRICE,
+	       ASSETINFO.TRADE_FEE              TRADEFEE,
+	       ASSETINFO.PARTY_CODE             PARTYCODE,
+	       ASSETINFO.CHECK_CODE             CHECKCODE,
+	       ASSETINFO.MANAGER_ID             MANAGERID,
+	       ASSETINFO.TRUSTEE_ID             TRUSTEEID,
+	       ASSETINFO.TRU_ACT_TYPE           TRUACTTYPE,
+	       ASSETINFO.INVEST_TYPE            INVESTTYPE,
+	       ASSETINFO.CAP_USE_INDU           CAPUSEINDU,
+	       ASSETINFO.PLAN_SDATE             PLANSDATE,
+	       ASSETINFO.PLAN_EDATE             PLANEDATE,
+	       ASSETINFO.PRO_PROPERTY           PROPROPERTY,
+	       ASSETINFO.MAX_RATE               MAXRATE,
+	       ASSETINFO.MIN_RATE               MINRATE,
+	       ASSETINFO.DEBT_SCALE             DEBTSCALE,
+	       ASSETINFO.BUY_STRUCT             BUYSTRUCT,
+	       ASSETINFO.MANAGE_TYPE            MANAGETYPE,
+	       ASSETINFO.IS_CTRL_BOTTOM         ISCTRLBOTTOM,
+	       ASSETINFO.MGR_FEE_RATE           MGRFEERATE,
+	       ASSETINFO.TRU_FEE_RATE           TRUFEERATE,
+	       ASSETINFO.TRADE_FEE_RATE         TRADEFEERATE,
+	       ASSETINFO.AGENCY_FEE_RATE        AGENCYFEERATE,
+	       ASSETINFO.OTHER_FEE_RATE         OTHERFEERATE,
+	       ASSETINFO.ASSET_VALUE            ASSETVALUE,
+	       ASSETINFO.REGIST_ORG1            REGISTORG1,
+	       ASSETINFO.MNG_ORG_NAME           MNGORGNAME,
+	       ASSETINFO.TRU_ORG_NAME           TRUORGNAME,
+	       ASSETINFO.FUND_INVEST_ASSET      FUNDINVESTASSET,
+	       ASSETINFO.IN_ASSET_TYPE          INASSETTYPE,
+	       ASSETINFO.IN_ASSET_TYPE_CMM      INASSETTYPECMM,
+	       ASSETINFO.REMARK                 REMARK,
+	       ASSETINFO.IS_UNDER_ASSET         ISUNDERASSET,
+	       ASSETINFO.IS_GOVERN_FUND         ISGOVERNFUND,
+	       ASSETINFO.GOVERN_INVEST_FUND     GOVERNINVESTFUND,
+	       ASSETINFO.FUND_ENPE_NAME         FUNDENPENAME,
+	       ASSETINFO.TRUSTEE                TRUSTEE,
+	       ASSETINFO.SUBMIT_DEADLINE        SUBMITDEADLINE,
+	       ASSETINFO.CHB_SUBMIT_DEADLINE    CHBSUBMITDEADLINE,
+	       CS.SUBMIT_TIME            SUBMITTIME,
+	       ASSETINFO.STATUS_DATE            STATUSDATE,
+	       ASSETINFO.STATUS                 STATUS,
+	       ASSETINFO.CREATE_USER            CREATEUSER,
+	       ASSETINFO.CREATE_TIME            CREATETIME,
+	       ASSETINFO.UPDATE_USER            UPDATEUSER,
+	       ASSETINFO.UPDATE_TIME            UPDATETIME,
+	       ASSETINFO.ORG_CODE               ORGCODE,
+	       ASSETINFO.DEPT_CODE              DEPTCODE,
+	       ifnull(CS.SEND_STATUS,'01')            SENDSTATUS,
+	       CS.SUBMIT_FEEDBACK_STATUS SUBMITFEEDBACKSTATUS,
+	       ASSETINFO.CREATE_DEPT            CREATEDEPT,
+	       ASSETINFO.DATA_SOURCE            DATASOURCE,
+	       ASSETINFO.DELETE_RES             DELETERES,
+	       ASSETINFO.sec_credit_grade_type  seccreditgradetype,
+	       ASSETINFO.CAP_USE_INDU_LEVEL2    CAPUSEINDULEVEL2,
+	       ASSETINFO.ISSUE_PARTY_NAME       ISSUEPARTYNAME,
+	       ASSETINFO.DEPO_TYPE              depoType,
+	       ASSETINFO.RIVAL_PARTY_TYPE       rivalPartyType,
+	       ASSETINFO.PRIN_BASEAMT           prinBaseamt,
+	       ASSETINFO.FMDATE                 fmdate,
+	       ASSETINFO.COUPON_SPECIES         couponSpecies,
+	       ASSETINFO.INTEREST_RULE_FLAG     interestRuleFlag,
+	       ASSETINFO.INTPAY_RULE            intpayRule,
+	       ASSETINFO.FLOAT_FACTOR_FLAG      floatFactorFlag,
+	       ASSETINFO.STRUCT_GRADE           structGrade,
+	       ASSETINFO.REPAYMENT_TYPE         repaymentType,
+	       ASSETINFO.PERIOD_REPAYMENT_FLAG  periodRepaymentFlag,
+	       ASSETINFO.BASIC_ASSET_TYPE       basicAssetType,
+	       ASSETINFO.EXCESS_PROFIT_RATE     excessProfitRate,
+	       ASSETINFO.PLEDGE_TYPE            pledgeType,
+	       ASSETINFO.PLEDGE_VALUE           pledgeValue,
+	       ASSETINFO.NATURE_GUARANTEE       natureGuarantee,
+	       ASSETINFO.RELATION_FINAN         relationFinan,
+	       ASSETINFO.CONTAIN_TYPE           containType,
+	       ASSETINFO.EXERCISE_TYPE          exerciseType,
+	       ASSETINFO.EXERCISE_DATE          exerciseDate,
+	       ASSETINFO.FIRST_EXERCISE_DATE    firstExerciseDate,
+	       ASSETINFO.EXERCISE_PERIOD        exercisePeriod,
+	       ASSETINFO.EXERCISE_PRICE         exercisePrice,
+	       ASSETINFO.PERPETUAL_CLAUSE_TYPE  perpetualClauseType,
+	       ASSETINFO.DEFERRED_INTEREST_TYPE deferredInterestType,
+	       ASSETINFO.DEFERRED_INTEREST_INT  deferredInterestInt,
+	       ASSETINFO.FIRST_REPRCE_DATE      firstReprceDate,
+	       ASSETINFO.REPRCE_CYCLE           reprceCycle,
+	       ASSETINFO.PART_REDEM_FLAG        partRedemFlag,
+	       ASSETINFO.PART_REDEM_RATE        partRedemRate,
+	       ASSETINFO.CREDIT_ORG_CODE        creditOrgCode,
+	       ASSETINFO.CREDIT_ORG_NAME        creditOrgName,
+	       ASSETINFO.EQUITY_QUIT            equityQuit,
+	       ASSETINFO.DEPT_EQUITY            deptEquity,
+	       ASSETINFO.HOLD_PURPOSE           holdPurpose,
+	       ASSETINFO.FINANCIAL_COMISSUE     financialComissue,
+			DA.BELONG_INSTITUTION_CODE belongInstitutionCode,
+			'02' model_type
+		from CHB_ASSET_INFO_SUB ASSETINFO
+		LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+		/***场外期权类交易连接交易汇总表数据查找所属机构**/
+		LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+          WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = ASSETINFO.ASSET_CODE
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID
+          LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
+        ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
+        LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code
+        LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='01'
+
+        <where>
+			1=1
+			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
+			AND F.TRADE_MARKET IS NULL
+
+			<if test="orgCode != null and orgCode.size() > 0">
+				<foreach collection="orgCode" item="code"
+	         		open=" AND DA.BELONG_INSTITUTION_CODE IN (" close=")" separator=",">
+	          		#{code,jdbcType=VARCHAR}
+	        	</foreach>
+			</if>
+
+			<if test="assetTypeList != null and assetTypeList.size() > 0">
+				<foreach collection="assetTypeList" item="assetType"
+            		open=" AND ASSETINFO.ASSET_TYPE IN (" close=")" separator=",">
+             		#{assetType,jdbcType=VARCHAR}
+            	</foreach>
+			</if>
+
+
+			<if test="listParm != null and listParm.size() > 0">
+			 	<foreach collection="listParm" item="items"
+	            		open=" AND ASSETINFO.REGIST_SEQNO IN (" close=")" separator=",">
+	             		#{items,jdbcType=CHAR}
+	        	</foreach>
+        	</if>
+	       <!--  <if test="assetTypes != null and assetTypes != ''">
+	         and  ASSET_TYPE=#{assetTypes,jdbcType=VARCHAR}
+	        </if> -->
+	        <if test="assetTypeList != null and assetTypeList.size() > 0">
+					<foreach collection="assetTypeList" item="assetType"
+	            		open=" AND ASSETINFO.ASSET_TYPE IN (" close=")" separator=",">
+	             		#{assetType,jdbcType=VARCHAR}
+	            	</foreach>
+			</if>
+
+		 	<if test="assetTypeTwoList != null and assetTypeTwoList.size() > 0">
+            	<foreach collection="assetTypeTwoList" item="assetTypeTwo"
+            		open=" AND ASSETINFO.ASSET_TYPE2 IN (" close=")" separator=",">
+             		#{assetTypeTwo,jdbcType=VARCHAR}
+            	</foreach>
+		 	</if>
+			<if test="assetCode != null and !assetCode.isEmpty()">
+			<!-- 	AND ASSETINFO.ASSET_CODE like '%'||#{assetCode,jdbcType=VARCHAR}||'%' -->
+					and ASSETINFO.ASSET_CODE like concat(concat('%',#{assetCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="sendDateStr != null and !sendDateStr.isEmpty()">
+				AND DATE_FORMAT(ASSETINFO.SUBMIT_TIME, '%Y-%m-%d') >= #{sendDateStr,jdbcType=VARCHAR}
+			</if>
+			<if test="sendDateEnd != null and !sendDateEnd.isEmpty() ">
+				<![CDATA[AND DATE_FORMAT(ASSETINFO.SUBMIT_TIME, '%Y-%m-%d') <= #{sendDateEnd,jdbcType=VARCHAR}]]>
+			</if>
+		 	<if test="tradeMarketList != null and tradeMarketList.size() > 0">
+            	<foreach collection="tradeMarketList" item="tradeMarket"
+            		open=" AND ASSETINFO.TRADE_MARKET IN (" close=")" separator=",">
+             		#{tradeMarket,jdbcType=VARCHAR}
+            	</foreach>
+		 	</if>
+			<if test="ccy != null and !ccy.isEmpty()">
+				AND ASSETINFO.CCY = #{ccy,jdbcType=VARCHAR}
+			</if>
+			<if test="statusDateStr != null and !statusDateStr.isEmpty() ">
+				AND DATE_FORMAT(ASSETINFO.STATUS_DATE, '%Y-%m-%d') >= #{statusDateStr,jdbcType=VARCHAR}
+			</if>
+			<if test="statusDateEnd != null and !statusDateEnd.isEmpty() ">
+				<![CDATA[AND DATE_FORMAT(ASSETINFO.STATUS_DATE, '%Y-%m-%d') <= #{statusDateEnd,jdbcType=VARCHAR}]]>
+			</if>
+		 	<if test="submitStatusList != null and submitStatusList.size() > 0">
+            	 and(
+            	<foreach collection="submitStatusList" item="submitStatus"
+            		open=" CS.SEND_STATUS IN (" close=")" separator=",">
+             		#{submitStatus,jdbcType=VARCHAR}
+            	</foreach>
+            	 or CS.SEND_STATUS IS NULL)
+		 	</if>
+			<!-- edit by wangqidong 20191125   start -->
+<!-- 			<if test="submitFeedbackStatus != null and !submitFeedbackStatus.isEmpty() "> -->
+<!-- 				AND ASSETINFO.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+            	<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus"
+            		open=" AND CS.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+             		#{submitFeedbackStatus,jdbcType=VARCHAR}
+            	</foreach>
+		 	</if>
+		 	<!-- edit by wangqidong 20191125   end -->
+		    <!-- 数据状态 -->
+		    <if test="statusList != null and statusList.size()>0">
+		    <foreach collection="statusList" item="items" open="and ASSETINFO.STATUS in (" separator="," close=")">
+		        #{items,jdbcType=VARCHAR}
+		    </foreach>
+		    </if>
+            <if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+                and DATE_FORMAT(ASSETINFO.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+            </if>
+            <if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+                and DATE_FORMAT(ASSETINFO.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="vDateStart != null and vDateStart != ''">
+                and DATE_FORMAT(ASSETINFO.VDATE,'%Y-%m-%d') &gt;= #{vDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="vDateEnd != null and vDateEnd != ''">
+                and DATE_FORMAT(ASSETINFO.VDATE,'%Y-%m-%d') &lt;= #{vDateEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="mDateStart != null and mDateStart != ''">
+                and DATE_FORMAT(ASSETINFO.MDATE,'%Y-%m-%d') &gt;= #{mDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="mDateEnd != null and mDateEnd != ''">
+                and DATE_FORMAT(ASSETINFO.MDATE,'%Y-%m-%d') &lt;= #{mDateEnd,jdbcType=VARCHAR}
+            </if>
+		</where>
+
+
+		) tmp
+		order by STATUSDATE desc
+	</select>
+
 	<select id="selectExportSelectList" resultMap="BaseResultMap"
 		parameterType="java.util.List">
 		select
@@ -3197,7 +3877,505 @@
             	</foreach>
 		</if>
 	</select>
- 	
+
+
+
+	<select id="selectExportSelectListSeqEx" resultType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto"
+		parameterType="java.util.List">
+		Select * from
+		(
+
+
+		/**公共资产数据*/
+		select
+			   ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
+		       ASSETINFO.ASSET_CODE             ASSETCODE,
+		       ASSETINFO.ASSET_TYPE             ASSETTYPE,
+		       ASSETINFO.ASSET_TYPE2            ASSETTYPE2,
+		       ASSETINFO.CCY                    CCY,
+		       ASSETINFO.TRADE_MARKET           TRADEMARKET,
+		       ASSETINFO.VDATE                  VDATE,
+		       ASSETINFO.MDATE                  MDATE,
+		       ASSETINFO.ASSET_YIELD            ASSETYIELD,
+		       ASSETINFO.BASIS                  BASIS,
+		       ASSETINFO.AMT                    AMT,
+		       ASSETINFO.BANK_NAME              BANKNAME,
+		       ASSETINFO.IS_STRUCT              ISSTRUCT,
+		       ASSETINFO.TARGET_TYPE            TARGETTYPE,
+		       ASSETINFO.TARGET                 TARGET,
+		       ASSETINFO.ASSET_ID               ASSETID,
+		       ASSETINFO.ASSET_NAME             ASSETNAME,
+		       ASSETINFO.CHB_SECTYPE            CHBSECTYPE,
+		       ASSETINFO.ISSUE_MODE             ISSUEMODE,
+		       ASSETINFO.PARTY_GRADE            PARTYGRADE,
+		       ASSETINFO.PARTY_TYPE1            PARTYTYPE1,
+		       ASSETINFO.PARTY_TYPE3            PARTYTYPE3,
+		       ASSETINFO.PARTY_TYPE2            PARTYTYPE2,
+		       ASSETINFO.INDUSTRY               INDUSTRY,
+		       ASSETINFO.INDUSTRY_LEVEL2        INDUSTRYLEVEL2,
+		       ASSETINFO.SEC_MAIN_GRADE         SECMAINGRADE,
+		       ASSETINFO.SEC_CREDIT_GRADE       SECCREDITGRADE,
+		       ASSETINFO.REGIST_ORG             REGISTORG,
+		       ASSETINFO.REGISTORG_COMMENT      REGISTORGCOMMENT,
+		       ASSETINFO.RIVAL_PARTY            RIVALPARTY,
+		       ASSETINFO.TARGET_TYPE1           TARGETTYPE1,
+		       ASSETINFO.TARGET_AMT             TARGETAMT,
+		       ASSETINFO.COUNTRY_AREA           COUNTRYAREA,
+		       ASSETINFO.PROFIT_TYPE            PROFITTYPE,
+		       ASSETINFO.IS_RESALE              ISRESALE,
+		       ASSETINFO.TERM_DATE              TERMDATE,
+		       ASSETINFO.RATE_FLAG              RATEFLAG,
+		       ASSETINFO.INTPAY_CYCLE           INTPAYCYCLE,
+		       ASSETINFO.REPAY_CMT              REPAYCMT,
+		       ASSETINFO.BASIS_TYPE             BASISTYPE,
+		       ASSETINFO.FLOAT_FACTOR           FLOATFACTOR,
+		       ASSETINFO.SPREAD_RATE            SPREADRATE,
+		       ASSETINFO.FINANCIE               FINANCIE,
+		       ASSETINFO.FIN_ORG_CODE           FINORGCODE,
+		       ASSETINFO.FCR_GRADE_IN           FCRGRADEIN,
+		       ASSETINFO.FCR_GRADE_OUT          FCRGRADEOUT,
+		       ASSETINFO.FINANCIER_TYPE1        FINANCIERTYPE1,
+		       ASSETINFO.FINANCIER_TYPE2        FINANCIERTYPE2,
+		       ASSETINFO.FINANCIER_TYPE3        FINANCIERTYPE3,
+		       ASSETINFO.FINANCE_PROJ           FINANCEPROJ,
+		       ASSETINFO.INDUSTRY1              INDUSTRY1,
+		       ASSETINFO.INDUSTRY_LEVEL2_TYPE   INDUSTRYLEVEL2TYPE,
+		       ASSETINFO.PRO_INDUSTRY           PROINDUSTRY,
+		       ASSETINFO.PRO_INDUSTRY_LEVEL2    PROINDUSTRYLEVEL2,
+		       ASSETINFO.INDUSTRY_FLAG          INDUSTRYFLAG,
+		       ASSETINFO.MONIT_TYPE             MONITTYPE,
+		       ASSETINFO.MON_TYPE_COMM          MONTYPECOMM,
+		       ASSETINFO.GUA_TYPE               GUATYPE,
+		       ASSETINFO.GUA_TYPE_REMARK        GUATYPEREMARK,
+		       ASSETINFO.FINANCIER_GRADE        FINANCIERGRADE,
+		       ASSETINFO.IN_GRADE               INGRADE,
+		       ASSETINFO.OUT_GRADE              OUTGRADE,
+		       ASSETINFO.CHOSE                  CHOSE,
+		       ASSETINFO.CONDITION_CMM          CONDITIONCMM,
+		       ASSETINFO.FIN_AREA               FINAREA,
+		       ASSETINFO.TOTAL_FEE_RATE         TOTALFEERATE,
+		       ASSETINFO.IS_RIGHT               ISRIGHT,
+		       ASSETINFO.NOTSTAND_SEC_TYPE      NOTSTANDSECTYPE,
+		       ASSETINFO.NOTSTAND_SEC_NUM       NOTSTANDSECNUM,
+		       ASSETINFO.REMAIN_TERM            REMAINTERM,
+		       ASSETINFO.MAX_REMAIN_TERM        MAXREMAINTERM,
+		       ASSETINFO.MIN_REMAIN_TERM        MINREMAINTERM,
+		       ASSETINFO.SHARES_TYPE            SHARESTYPE,
+		       ASSETINFO.INDUSTRY_SHARES        INDUSTRYSHARES,
+		       ASSETINFO.INDUSTRY_SHARES2       INDUSTRYSHARES2,
+		       ASSETINFO.INVEST_STAGE           INVESTSTAGE,
+		       ASSETINFO.SHARES_TYPE1           SHARESTYPE1,
+		       ASSETINFO.SHARES_TYPE2           SHARESTYPE2,
+		       ASSETINFO.SHARES_TYPE3           SHARESTYPE3,
+		       ASSETINFO.IS_PLEDGE              ISPLEDGE,
+		       ASSETINFO.NOM_CAPI               NOMCAPI,
+		       ASSETINFO.TARGET_TYPE3           TARGETTYPE3,
+		       null         ISSUEPARTYID,
+		       ASSETINFO.TERM_MONTH             TERMMONTH,
+		       ASSETINFO.GUARANTEE_CMT          GUARANTEECMT,
+		       ASSETINFO.SPECIAL_CMT            SPECIALCMT,
+		       ASSETINFO.CONTRACT_NAME          CONTRACTNAME,
+		       ASSETINFO.INCOME_RATIO           INCOMERATIO,
+		       ASSETINFO.DER_INSTR_RATIO        DERINSTRRATIO,
+		       ASSETINFO.DER_INSTR_INV_TYPE     DERINSTRINVTYPE,
+		       ASSETINFO.DER_INSTR_TARGET       DERINSTRTARGET,
+		       ASSETINFO.ACCT_MODE              ACCTMODE,
+		       ASSETINFO.SPECIAL_CMT1           SPECIALCMT1,
+		       ASSETINFO.MAX_YIELD              MAXYIELD,
+		       ASSETINFO.MIN_YIELD              MINYIELD,
+		       ASSETINFO.BASIC_PRICE            BASICPRICE,
+		       ASSETINFO.REG_DATE_PRICE         REGDATEPRICE,
+		       ASSETINFO.TRADE_FEE              TRADEFEE,
+		       ASSETINFO.PARTY_CODE             PARTYCODE,
+		       ASSETINFO.CHECK_CODE             CHECKCODE,
+		       ASSETINFO.MANAGER_ID             MANAGERID,
+		       ASSETINFO.TRUSTEE_ID             TRUSTEEID,
+		       ASSETINFO.TRU_ACT_TYPE           TRUACTTYPE,
+		       ASSETINFO.INVEST_TYPE            INVESTTYPE,
+		       ASSETINFO.CAP_USE_INDU           CAPUSEINDU,
+		       ASSETINFO.PLAN_SDATE             PLANSDATE,
+		       ASSETINFO.PLAN_EDATE             PLANEDATE,
+		       ASSETINFO.PRO_PROPERTY           PROPROPERTY,
+		       ASSETINFO.MAX_RATE               MAXRATE,
+		       ASSETINFO.MIN_RATE               MINRATE,
+		       ASSETINFO.DEBT_SCALE             DEBTSCALE,
+		       ASSETINFO.BUY_STRUCT             BUYSTRUCT,
+		       ASSETINFO.MANAGE_TYPE            MANAGETYPE,
+		       ASSETINFO.IS_CTRL_BOTTOM         ISCTRLBOTTOM,
+		       ASSETINFO.MGR_FEE_RATE           MGRFEERATE,
+		       ASSETINFO.TRU_FEE_RATE           TRUFEERATE,
+		       ASSETINFO.TRADE_FEE_RATE         TRADEFEERATE,
+		       ASSETINFO.AGENCY_FEE_RATE        AGENCYFEERATE,
+		       ASSETINFO.OTHER_FEE_RATE         OTHERFEERATE,
+		       ASSETINFO.ASSET_VALUE            ASSETVALUE,
+		       ASSETINFO.REGIST_ORG1            REGISTORG1,
+		       ASSETINFO.MNG_ORG_NAME           MNGORGNAME,
+		       ASSETINFO.TRU_ORG_NAME           TRUORGNAME,
+		       ASSETINFO.FUND_INVEST_ASSET      FUNDINVESTASSET,
+		       ASSETINFO.IN_ASSET_TYPE          INASSETTYPE,
+		       ASSETINFO.IN_ASSET_TYPE_CMM      INASSETTYPECMM,
+		       ASSETINFO.REMARK                 REMARK,
+		       ASSETINFO.IS_UNDER_ASSET         ISUNDERASSET,
+		       ASSETINFO.IS_GOVERN_FUND         ISGOVERNFUND,
+		       ASSETINFO.GOVERN_INVEST_FUND     GOVERNINVESTFUND,
+		       ASSETINFO.FUND_ENPE_NAME         FUNDENPENAME,
+		       ASSETINFO.TRUSTEE                TRUSTEE,
+		       ASSETINFO.SUBMIT_DEADLINE        SUBMITDEADLINE,
+		       ASSETINFO.CHB_SUBMIT_DEADLINE    CHBSUBMITDEADLINE,
+		       CS.SUBMIT_TIME            SUBMITTIME,
+		       ASSETINFO.STATUS_DATE            STATUSDATE,
+		       ASSETINFO.STATUS                 STATUS,
+		       ASSETINFO.CREATE_USER            CREATEUSER,
+		       ASSETINFO.CREATE_TIME            CREATETIME,
+		       ASSETINFO.UPDATE_USER            UPDATEUSER,
+		       ASSETINFO.UPDATE_TIME            UPDATETIME,
+		       ASSETINFO.ORG_CODE               ORGCODE,
+		       ASSETINFO.DEPT_CODE              DEPTCODE,
+		       ifnull(CS.SEND_STATUS,'01')            SENDSTATUS,
+		       CS.SUBMIT_FEEDBACK_STATUS SUBMITFEEDBACKSTATUS,
+		       ASSETINFO.CREATE_DEPT            CREATEDEPT,
+		       ASSETINFO.DATA_SOURCE            DATASOURCE,
+		       ASSETINFO.DELETE_RES             DELETERES,
+		       ASSETINFO.sec_credit_grade_type  seccreditgradetype,
+		       ASSETINFO.CAP_USE_INDU_LEVEL2    CAPUSEINDULEVEL2,
+		       ASSETINFO.ISSUE_PARTY_NAME       ISSUEPARTYNAME,
+		       ASSETINFO.DEPO_TYPE              depoType,
+		       ASSETINFO.RIVAL_PARTY_TYPE       rivalPartyType,
+		       ASSETINFO.PRIN_BASEAMT           prinBaseamt,
+		       ASSETINFO.FMDATE                 fmdate,
+		       ASSETINFO.COUPON_SPECIES         couponSpecies,
+		       ASSETINFO.INTEREST_RULE_FLAG     interestRuleFlag,
+		       ASSETINFO.INTPAY_RULE            intpayRule,
+		       ASSETINFO.FLOAT_FACTOR_FLAG      floatFactorFlag,
+		       ASSETINFO.STRUCT_GRADE           structGrade,
+		       ASSETINFO.REPAYMENT_TYPE         repaymentType,
+		       ASSETINFO.PERIOD_REPAYMENT_FLAG  periodRepaymentFlag,
+		       ASSETINFO.BASIC_ASSET_TYPE       basicAssetType,
+		       ASSETINFO.EXCESS_PROFIT_RATE     excessProfitRate,
+		       ASSETINFO.PLEDGE_TYPE            pledgeType,
+		       ASSETINFO.PLEDGE_VALUE           pledgeValue,
+		       ASSETINFO.NATURE_GUARANTEE       natureGuarantee,
+		       ASSETINFO.RELATION_FINAN         relationFinan,
+		       ASSETINFO.CONTAIN_TYPE           containType,
+		       ASSETINFO.EXERCISE_TYPE          exerciseType,
+		       ASSETINFO.EXERCISE_DATE          exerciseDate,
+		       ASSETINFO.FIRST_EXERCISE_DATE    firstExerciseDate,
+		       ASSETINFO.EXERCISE_PERIOD        exercisePeriod,
+		       ASSETINFO.EXERCISE_PRICE         exercisePrice,
+		       ASSETINFO.PERPETUAL_CLAUSE_TYPE  perpetualClauseType,
+		       ASSETINFO.DEFERRED_INTEREST_TYPE deferredInterestType,
+		       ASSETINFO.DEFERRED_INTEREST_INT  deferredInterestInt,
+		       ASSETINFO.FIRST_REPRCE_DATE      firstReprceDate,
+		       ASSETINFO.REPRCE_CYCLE           reprceCycle,
+		       ASSETINFO.PART_REDEM_FLAG        partRedemFlag,
+		       ASSETINFO.PART_REDEM_RATE        partRedemRate,
+		       ASSETINFO.CREDIT_ORG_CODE        creditOrgCode,
+		       ASSETINFO.CREDIT_ORG_NAME        creditOrgName,
+		       ASSETINFO.EQUITY_QUIT            equityQuit,
+		       ASSETINFO.DEPT_EQUITY            deptEquity,
+		       ASSETINFO.HOLD_PURPOSE           holdPurpose,
+		       ASSETINFO.FINANCIAL_COMISSUE     financialComissue,
+			   NULL belongInstitutionCode,
+			  '02' model_type
+		from CHB_ASSET_INFO_SUB ASSETINFO
+		LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+		LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID
+		LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		<if test="orgCode != null and orgCode.size() > 0">
+			<foreach collection="orgCode" item="code"
+         		open=" AND CS.INSTITUTION_CODE IN (" close=")" separator=",">
+          		#{code,jdbcType=VARCHAR}
+        	</foreach>
+		</if>
+		<where>
+			1=1
+			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
+			AND F.TRADE_MARKET IS NOT NULL
+
+			/**产品投资交易数据筛选产品交易数据*/
+			and EXISTS (
+		        <!--  SELECT 1 FROM CHB_INVEST_TRADE T
+		          LEFT JOIN FIN_PRODUCT F ON t.PROD_ID=F.FINPROD_MARKET_ID
+		          LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='FINPROD04'
+		          WHERE ASSETINFO.ASSET_CODE=T.ASSET_CODE
+		          <if test="orgCode != null and orgCode.size() > 0">
+						<foreach collection="orgCode" item="code"
+			         		open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
+			          		#{code,jdbcType=VARCHAR}
+			        	</foreach>
+					</if> -->
+			SELECT 1 FROM TRD_PRODUCT_DEAL T
+			left join TRD_PRODUCT_DEAL_ADD ta  on t.trade_id=ta.trade_id
+			left join FIN_PRODUCT f1  on t.finprod_id=f1.finprod_id
+			LEFT JOIN FIN_PRODUCT F ON ta.portfolio_id=F.FINPROD_MARKET_ID
+			LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='FINPROD04'
+			WHERE ASSETINFO.ASSET_CODE=f1.FINPROD_MARKET_ID and t.trade_status='01' and t.is_cancel='N'
+			<if test="orgCode != null and orgCode.size() > 0">
+				<foreach collection="orgCode" item="code"
+						 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
+					#{code,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			union all
+			select 1
+			from RSK_VALTBL_PRT_BOTASSET_MAP r
+			left join FIN_PRODUCT F on r.finprod_id = F.finprod_id
+			LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON r.ptl_id=dA.business_id and dA.model_type = '02'
+			WHERE ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+			<if test="orgCode != null and orgCode.size() > 0">
+				<foreach collection="orgCode" item="code"
+						 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
+					#{code,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		    		)
+
+
+			<foreach collection="listParm" item="items"
+            		open=" AND ASSETINFO.REGIST_SEQNO IN (" close=")" separator=",">
+             		#{items,jdbcType=CHAR}
+	        </foreach>
+	        <if test="assetTypeList != null and assetTypeList.size() > 0">
+					<foreach collection="assetTypeList" item="assetType"
+	            		open=" AND ASSETINFO.ASSET_TYPE IN (" close=")" separator=",">
+	             		#{assetType,jdbcType=VARCHAR}
+	            	</foreach>
+			</if>
+		</where>
+
+		union all
+		/**私有数据*/
+		select
+		   DISTINCT ASSETINFO.REGIST_SEQNO           REGISTSEQNO,
+	       ASSETINFO.ASSET_CODE             ASSETCODE,
+	       ASSETINFO.ASSET_TYPE             ASSETTYPE,
+	       ASSETINFO.ASSET_TYPE2            ASSETTYPE2,
+	       ASSETINFO.CCY                    CCY,
+	       ASSETINFO.TRADE_MARKET           TRADEMARKET,
+	       ASSETINFO.VDATE                  VDATE,
+	       ASSETINFO.MDATE                  MDATE,
+	       ASSETINFO.ASSET_YIELD            ASSETYIELD,
+	       ASSETINFO.BASIS                  BASIS,
+	       ASSETINFO.AMT                    AMT,
+	       ASSETINFO.BANK_NAME              BANKNAME,
+	       ASSETINFO.IS_STRUCT              ISSTRUCT,
+	       ASSETINFO.TARGET_TYPE            TARGETTYPE,
+	       ASSETINFO.TARGET                 TARGET,
+	       ASSETINFO.ASSET_ID               ASSETID,
+	       ASSETINFO.ASSET_NAME             ASSETNAME,
+	       ASSETINFO.CHB_SECTYPE            CHBSECTYPE,
+	       ASSETINFO.ISSUE_MODE             ISSUEMODE,
+	       ASSETINFO.PARTY_GRADE            PARTYGRADE,
+	       ASSETINFO.PARTY_TYPE1            PARTYTYPE1,
+	       ASSETINFO.PARTY_TYPE3            PARTYTYPE3,
+	       ASSETINFO.PARTY_TYPE2            PARTYTYPE2,
+	       ASSETINFO.INDUSTRY               INDUSTRY,
+	       ASSETINFO.INDUSTRY_LEVEL2        INDUSTRYLEVEL2,
+	       ASSETINFO.SEC_MAIN_GRADE         SECMAINGRADE,
+	       ASSETINFO.SEC_CREDIT_GRADE       SECCREDITGRADE,
+	       ASSETINFO.REGIST_ORG             REGISTORG,
+	       ASSETINFO.REGISTORG_COMMENT      REGISTORGCOMMENT,
+	       ASSETINFO.RIVAL_PARTY            RIVALPARTY,
+	       ASSETINFO.TARGET_TYPE1           TARGETTYPE1,
+	       ASSETINFO.TARGET_AMT             TARGETAMT,
+	       ASSETINFO.COUNTRY_AREA           COUNTRYAREA,
+	       ASSETINFO.PROFIT_TYPE            PROFITTYPE,
+	       ASSETINFO.IS_RESALE              ISRESALE,
+	       ASSETINFO.TERM_DATE              TERMDATE,
+	       ASSETINFO.RATE_FLAG              RATEFLAG,
+	       ASSETINFO.INTPAY_CYCLE           INTPAYCYCLE,
+	       ASSETINFO.REPAY_CMT              REPAYCMT,
+	       ASSETINFO.BASIS_TYPE             BASISTYPE,
+	       ASSETINFO.FLOAT_FACTOR           FLOATFACTOR,
+	       ASSETINFO.SPREAD_RATE            SPREADRATE,
+	       ASSETINFO.FINANCIE               FINANCIE,
+	       ASSETINFO.FIN_ORG_CODE           FINORGCODE,
+	       ASSETINFO.FCR_GRADE_IN           FCRGRADEIN,
+	       ASSETINFO.FCR_GRADE_OUT          FCRGRADEOUT,
+	       ASSETINFO.FINANCIER_TYPE1        FINANCIERTYPE1,
+	       ASSETINFO.FINANCIER_TYPE2        FINANCIERTYPE2,
+	       ASSETINFO.FINANCIER_TYPE3        FINANCIERTYPE3,
+	       ASSETINFO.FINANCE_PROJ           FINANCEPROJ,
+	       ASSETINFO.INDUSTRY1              INDUSTRY1,
+	       ASSETINFO.INDUSTRY_LEVEL2_TYPE   INDUSTRYLEVEL2TYPE,
+	       ASSETINFO.PRO_INDUSTRY           PROINDUSTRY,
+	       ASSETINFO.PRO_INDUSTRY_LEVEL2    PROINDUSTRYLEVEL2,
+	       ASSETINFO.INDUSTRY_FLAG          INDUSTRYFLAG,
+	       ASSETINFO.MONIT_TYPE             MONITTYPE,
+	       ASSETINFO.MON_TYPE_COMM          MONTYPECOMM,
+	       ASSETINFO.GUA_TYPE               GUATYPE,
+	       ASSETINFO.GUA_TYPE_REMARK        GUATYPEREMARK,
+	       ASSETINFO.FINANCIER_GRADE        FINANCIERGRADE,
+	       ASSETINFO.IN_GRADE               INGRADE,
+	       ASSETINFO.OUT_GRADE              OUTGRADE,
+	       ASSETINFO.CHOSE                  CHOSE,
+	       ASSETINFO.CONDITION_CMM          CONDITIONCMM,
+	       ASSETINFO.FIN_AREA               FINAREA,
+	       ASSETINFO.TOTAL_FEE_RATE         TOTALFEERATE,
+	       ASSETINFO.IS_RIGHT               ISRIGHT,
+	       ASSETINFO.NOTSTAND_SEC_TYPE      NOTSTANDSECTYPE,
+	       ASSETINFO.NOTSTAND_SEC_NUM       NOTSTANDSECNUM,
+	       ASSETINFO.REMAIN_TERM            REMAINTERM,
+	       ASSETINFO.MAX_REMAIN_TERM        MAXREMAINTERM,
+	       ASSETINFO.MIN_REMAIN_TERM        MINREMAINTERM,
+	       ASSETINFO.SHARES_TYPE            SHARESTYPE,
+	       ASSETINFO.INDUSTRY_SHARES        INDUSTRYSHARES,
+	       ASSETINFO.INDUSTRY_SHARES2       INDUSTRYSHARES2,
+	       ASSETINFO.INVEST_STAGE           INVESTSTAGE,
+	       ASSETINFO.SHARES_TYPE1           SHARESTYPE1,
+	       ASSETINFO.SHARES_TYPE2           SHARESTYPE2,
+	       ASSETINFO.SHARES_TYPE3           SHARESTYPE3,
+	       ASSETINFO.IS_PLEDGE              ISPLEDGE,
+	       ASSETINFO.NOM_CAPI               NOMCAPI,
+	       ASSETINFO.TARGET_TYPE3           TARGETTYPE3,
+	       cc.regist_bank_code  ISSUEPARTYID,
+	       ASSETINFO.TERM_MONTH             TERMMONTH,
+	       ASSETINFO.GUARANTEE_CMT          GUARANTEECMT,
+	       ASSETINFO.SPECIAL_CMT            SPECIALCMT,
+	       ASSETINFO.CONTRACT_NAME          CONTRACTNAME,
+	       ASSETINFO.INCOME_RATIO           INCOMERATIO,
+	       ASSETINFO.DER_INSTR_RATIO        DERINSTRRATIO,
+	       ASSETINFO.DER_INSTR_INV_TYPE     DERINSTRINVTYPE,
+	       ASSETINFO.DER_INSTR_TARGET       DERINSTRTARGET,
+	       ASSETINFO.ACCT_MODE              ACCTMODE,
+	       ASSETINFO.SPECIAL_CMT1           SPECIALCMT1,
+	       ASSETINFO.MAX_YIELD              MAXYIELD,
+	       ASSETINFO.MIN_YIELD              MINYIELD,
+	       ASSETINFO.BASIC_PRICE            BASICPRICE,
+	       ASSETINFO.REG_DATE_PRICE         REGDATEPRICE,
+	       ASSETINFO.TRADE_FEE              TRADEFEE,
+	       ASSETINFO.PARTY_CODE             PARTYCODE,
+	       ASSETINFO.CHECK_CODE             CHECKCODE,
+	       ASSETINFO.MANAGER_ID             MANAGERID,
+	       ASSETINFO.TRUSTEE_ID             TRUSTEEID,
+	       ASSETINFO.TRU_ACT_TYPE           TRUACTTYPE,
+	       ASSETINFO.INVEST_TYPE            INVESTTYPE,
+	       ASSETINFO.CAP_USE_INDU           CAPUSEINDU,
+	       ASSETINFO.PLAN_SDATE             PLANSDATE,
+	       ASSETINFO.PLAN_EDATE             PLANEDATE,
+	       ASSETINFO.PRO_PROPERTY           PROPROPERTY,
+	       ASSETINFO.MAX_RATE               MAXRATE,
+	       ASSETINFO.MIN_RATE               MINRATE,
+	       ASSETINFO.DEBT_SCALE             DEBTSCALE,
+	       ASSETINFO.BUY_STRUCT             BUYSTRUCT,
+	       ASSETINFO.MANAGE_TYPE            MANAGETYPE,
+	       ASSETINFO.IS_CTRL_BOTTOM         ISCTRLBOTTOM,
+	       ASSETINFO.MGR_FEE_RATE           MGRFEERATE,
+	       ASSETINFO.TRU_FEE_RATE           TRUFEERATE,
+	       ASSETINFO.TRADE_FEE_RATE         TRADEFEERATE,
+	       ASSETINFO.AGENCY_FEE_RATE        AGENCYFEERATE,
+	       ASSETINFO.OTHER_FEE_RATE         OTHERFEERATE,
+	       ASSETINFO.ASSET_VALUE            ASSETVALUE,
+	       ASSETINFO.REGIST_ORG1            REGISTORG1,
+	       ASSETINFO.MNG_ORG_NAME           MNGORGNAME,
+	       ASSETINFO.TRU_ORG_NAME           TRUORGNAME,
+	       ASSETINFO.FUND_INVEST_ASSET      FUNDINVESTASSET,
+	       ASSETINFO.IN_ASSET_TYPE          INASSETTYPE,
+	       ASSETINFO.IN_ASSET_TYPE_CMM      INASSETTYPECMM,
+	       ASSETINFO.REMARK                 REMARK,
+	       ASSETINFO.IS_UNDER_ASSET         ISUNDERASSET,
+	       ASSETINFO.IS_GOVERN_FUND         ISGOVERNFUND,
+	       ASSETINFO.GOVERN_INVEST_FUND     GOVERNINVESTFUND,
+	       ASSETINFO.FUND_ENPE_NAME         FUNDENPENAME,
+	       ASSETINFO.TRUSTEE                TRUSTEE,
+	       ASSETINFO.SUBMIT_DEADLINE        SUBMITDEADLINE,
+	       ASSETINFO.CHB_SUBMIT_DEADLINE    CHBSUBMITDEADLINE,
+	       CS.SUBMIT_TIME            SUBMITTIME,
+	       ASSETINFO.STATUS_DATE            STATUSDATE,
+	       ASSETINFO.STATUS                 STATUS,
+	       ASSETINFO.CREATE_USER            CREATEUSER,
+	       ASSETINFO.CREATE_TIME            CREATETIME,
+	       ASSETINFO.UPDATE_USER            UPDATEUSER,
+	       ASSETINFO.UPDATE_TIME            UPDATETIME,
+	       ASSETINFO.ORG_CODE               ORGCODE,
+	       ASSETINFO.DEPT_CODE              DEPTCODE,
+	       ifnull(CS.SEND_STATUS,'01')            SENDSTATUS,
+	       CS.SUBMIT_FEEDBACK_STATUS SUBMITFEEDBACKSTATUS,
+	       ASSETINFO.CREATE_DEPT            CREATEDEPT,
+	       ASSETINFO.DATA_SOURCE            DATASOURCE,
+	       ASSETINFO.DELETE_RES             DELETERES,
+	       ASSETINFO.sec_credit_grade_type  seccreditgradetype,
+	       ASSETINFO.CAP_USE_INDU_LEVEL2    CAPUSEINDULEVEL2,
+	       ASSETINFO.ISSUE_PARTY_NAME       ISSUEPARTYNAME,
+	       ASSETINFO.DEPO_TYPE              depoType,
+	       ASSETINFO.RIVAL_PARTY_TYPE       rivalPartyType,
+	       ASSETINFO.PRIN_BASEAMT           prinBaseamt,
+	       ASSETINFO.FMDATE                 fmdate,
+	       ASSETINFO.COUPON_SPECIES         couponSpecies,
+	       ASSETINFO.INTEREST_RULE_FLAG     interestRuleFlag,
+	       ASSETINFO.INTPAY_RULE            intpayRule,
+	       ASSETINFO.FLOAT_FACTOR_FLAG      floatFactorFlag,
+	       ASSETINFO.STRUCT_GRADE           structGrade,
+	       ASSETINFO.REPAYMENT_TYPE         repaymentType,
+	       ASSETINFO.PERIOD_REPAYMENT_FLAG  periodRepaymentFlag,
+	       ASSETINFO.BASIC_ASSET_TYPE       basicAssetType,
+	       ASSETINFO.EXCESS_PROFIT_RATE     excessProfitRate,
+	       ASSETINFO.PLEDGE_TYPE            pledgeType,
+	       ASSETINFO.PLEDGE_VALUE           pledgeValue,
+	       ASSETINFO.NATURE_GUARANTEE       natureGuarantee,
+	       ASSETINFO.RELATION_FINAN         relationFinan,
+	       ASSETINFO.CONTAIN_TYPE           containType,
+	       ASSETINFO.EXERCISE_TYPE          exerciseType,
+	       ASSETINFO.EXERCISE_DATE          exerciseDate,
+	       ASSETINFO.FIRST_EXERCISE_DATE    firstExerciseDate,
+	       ASSETINFO.EXERCISE_PERIOD        exercisePeriod,
+	       ASSETINFO.EXERCISE_PRICE         exercisePrice,
+	       ASSETINFO.PERPETUAL_CLAUSE_TYPE  perpetualClauseType,
+	       ASSETINFO.DEFERRED_INTEREST_TYPE deferredInterestType,
+	       ASSETINFO.DEFERRED_INTEREST_INT  deferredInterestInt,
+	       ASSETINFO.FIRST_REPRCE_DATE      firstReprceDate,
+	       ASSETINFO.REPRCE_CYCLE           reprceCycle,
+	       ASSETINFO.PART_REDEM_FLAG        partRedemFlag,
+	       ASSETINFO.PART_REDEM_RATE        partRedemRate,
+	       ASSETINFO.CREDIT_ORG_CODE        creditOrgCode,
+	       ASSETINFO.CREDIT_ORG_NAME        creditOrgName,
+	       ASSETINFO.EQUITY_QUIT            equityQuit,
+	       ASSETINFO.DEPT_EQUITY            deptEquity,
+	       ASSETINFO.HOLD_PURPOSE           holdPurpose,
+	       ASSETINFO.FINANCIAL_COMISSUE     financialComissue,
+			DA.BELONG_INSTITUTION_CODE belongInstitutionCode,
+			'02' model_type
+		from CHB_ASSET_INFO_SUB ASSETINFO
+		LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+		/***场外期权类交易连接交易汇总表数据查找所属机构**/
+		LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+          WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = ASSETINFO.ASSET_CODE
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID
+        LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
+        ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
+        LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code
+        LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='01'
+
+        <where>
+			1=1
+			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
+			AND F.TRADE_MARKET IS NULL
+
+			<if test="orgCode != null and orgCode.size() > 0">
+				<foreach collection="orgCode" item="code"
+	         		open=" AND DA.BELONG_INSTITUTION_CODE IN (" close=")" separator=",">
+	          		#{code,jdbcType=VARCHAR}
+	        	</foreach>
+			</if>
+
+			<foreach collection="listParm" item="items"
+            		open=" AND ASSETINFO.REGIST_SEQNO IN (" close=")" separator=",">
+             		#{items,jdbcType=CHAR}
+	        </foreach>
+	        <if test="assetTypeList != null and assetTypeList.size() > 0">
+					<foreach collection="assetTypeList" item="assetType"
+	            		open=" AND ASSETINFO.ASSET_TYPE IN (" close=")" separator=",">
+	             		#{assetType,jdbcType=VARCHAR}
+	            	</foreach>
+			</if>
+		</where>
+
+
+		)
+		where 1 =1
+	</select>
+
+
  	<update id="updateSubmitStatusToOk" parameterType="java.util.List">
         update CHB_ASSET_INFO_SUB ASSETINFO
         <set> 
@@ -3531,6 +4709,12 @@
 	            #{assetCode,jdbcType=VARCHAR}
 	        </foreach>
 	    </if>
+		<if test ="InstitutionCode != null and InstitutionCode != '' ">
+			AND  (  (tt.INSTITUTION_CODE = #{InstitutionCode,jdbcType=VARCHAR})
+			or (  (FA.TRADE_MARKET IS NOT NULL )
+			or (FA.TRADE_MARKET IS NULL and  d1.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+			)
+		</if>
 		<!-- /*资产未登记*/
 		and not exists(
 			select 1
@@ -3609,7 +4793,7 @@
 		UPDATE_TIME, ORG_CODE, DEPT_CODE,
 		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
 		DATA_SOURCE,
-		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME)
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,SUMIT_SEQ)
 		<foreach collection="insertList" item="item" index="index" separator="union all " >
 		select
 		#{item.registSeqno,jdbcType=CHAR},
@@ -3727,7 +4911,8 @@
 		#{item.deleteRes,jdbcType=VARCHAR},
 		#{item.secCreditGradeType,jdbcType=VARCHAR},
 		#{item.capUseInduLevel2,jdbcType=VARCHAR},
-        #{item.issuePartyName,jdbcType=VARCHAR}
+        #{item.issuePartyName,jdbcType=VARCHAR},
+        #{item.sumitSeq,jdbcType=VARCHAR}
 		from dual
 		</foreach>
 	</insert>
@@ -3750,7 +4935,6 @@
 	
 	<!-- 批量更新 -->
 	<update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
-		begin
 		<foreach collection="updateList" item="item" index="index" separator=";">
 			update CHB_ASSET_INFO_SUB
 			<set>
@@ -4209,6 +5393,9 @@
                 <if test="item.issuePartyName != null" >
                   ISSUE_PARTY_NAME = #{item.issuePartyName,jdbcType=VARCHAR},
                 </if>
+                <if test="item.sumitSeq != null" >
+                  SUMIT_SEQ = #{item.sumitSeq,jdbcType=VARCHAR},
+                </if>
 			</set>
 			<!-- where REGIST_SEQNO = #{item.registSeqno,jdbcType=CHAR} -->
 			where asset_code = #{item.assetCode,jdbcType=VARCHAR}
@@ -4216,7 +5403,6 @@
 			and send_status = '01'/*未報送*/
 			and status in ('01','02')/*非刪除*/
         </foreach>
-        ;end;
 	</update>
     <delete id="deleteByAssetCode" parameterType="java.util.Map">
       delete from chb_asset_info_sub
@@ -4382,7 +5568,8 @@
         EQUITY_QUIT,
         DEPT_EQUITY,
         HOLD_PURPOSE,
-        FINANCIAL_COMISSUE
+        FINANCIAL_COMISSUE,
+        SUMIT_SEQ
       )
       select  
         REGIST_SEQNO,
@@ -4488,273 +5675,461 @@
         EQUITY_QUIT,
         DEPT_EQUITY,
         HOLD_PURPOSE,
-        FINANCIAL_COMISSUE
+        FINANCIAL_COMISSUE,
+        SUMIT_SEQ
       from CHB_ASSET_INFO_SUB
       where 1 =1
-      <if test="registList !=null and registList.size()>0">
-         <foreach collection="registList" item="regist" open="and ASSET_CODE IN (" separator=","  close=")">
-           #{regist.assetCode,jdbcType=VARCHAR}
-         </foreach>
-      </if>
+		<if test="registList !=null and registList.size()>0">
+			<foreach collection="registList" item="regist" open="and ((" separator=") OR ("  close="))">
+				ASSET_CODE = #{regist.assetCode,jdbcType=VARCHAR} and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
+			</foreach>
+		</if>
       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
     </insert>
     <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
       delete from CHB_ASSET_INFO_SUB
       where 1 =1
-      <if test="registList !=null and registList.size()>0">
-         <foreach collection="registList" item="regist" open="and ASSET_CODE IN (" separator=","  close=")">
-           #{regist.assetCode,jdbcType=VARCHAR}
-         </foreach>
-      </if>
+		<if test="registList !=null and registList.size()>0">
+			<foreach collection="registList" item="regist" open="and ((" separator=") OR ("  close="))">
+				ASSET_CODE = #{regist.assetCode,jdbcType=VARCHAR} and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
+			</foreach>
+		</if>
       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
     </delete>
     <insert id="insertReportDataFromHis" parameterType="java.util.Map">
-      insert into CHB_ASSET_INFO_SUB (
-        REGIST_SEQNO,
-        ASSET_CODE, ASSET_TYPE,
-        ASSET_TYPE2, CCY, TRADE_MARKET,
-        VDATE, MDATE,
-        ASSET_YIELD,
-        BASIS, AMT, BANK_NAME,
-        IS_STRUCT, TARGET_TYPE, TARGET,
-        ASSET_ID, ASSET_NAME, CHB_SECTYPE,
-        ISSUE_MODE, PARTY_GRADE,
-        PARTY_TYPE1,
-        PARTY_TYPE3, PARTY_TYPE2, INDUSTRY,
-        INDUSTRY_LEVEL2,
-        SEC_MAIN_GRADE, SEC_CREDIT_GRADE,
-        REGIST_ORG, REGISTORG_COMMENT,
-        RIVAL_PARTY,
-        TARGET_TYPE1, TARGET_AMT, COUNTRY_AREA,
-        PROFIT_TYPE,
-        IS_RESALE, TERM_DATE,
-        RATE_FLAG, INTPAY_CYCLE, REPAY_CMT,
-        BASIS_TYPE,
-        FLOAT_FACTOR, SPREAD_RATE,
-        FINANCIE, FIN_ORG_CODE, FCR_GRADE_IN,
-        FCR_GRADE_OUT, FINANCIER_TYPE1, FINANCIER_TYPE2,
-        FINANCIER_TYPE3,
-        FINANCE_PROJ, INDUSTRY1,
-        INDUSTRY_LEVEL2_TYPE, PRO_INDUSTRY,
-        PRO_INDUSTRY_LEVEL2,
-        INDUSTRY_FLAG, MONIT_TYPE, MON_TYPE_COMM,
-        GUA_TYPE, GUA_TYPE_REMARK, FINANCIER_GRADE,
-        IN_GRADE, OUT_GRADE, CHOSE,
-        CONDITION_CMM, FIN_AREA, TOTAL_FEE_RATE,
-        IS_RIGHT, NOTSTAND_SEC_TYPE,
-        NOTSTAND_SEC_NUM,
-        REMAIN_TERM, MAX_REMAIN_TERM, MIN_REMAIN_TERM,
-        SHARES_TYPE, INDUSTRY_SHARES, INDUSTRY_SHARES2,
-        INVEST_STAGE,
-        SHARES_TYPE1, SHARES_TYPE2,
-        SHARES_TYPE3, IS_PLEDGE, NOM_CAPI,
-        TARGET_TYPE3, ISSUE_PARTY_ID, TERM_MONTH,
-        GUARANTEE_CMT, SPECIAL_CMT,
-        CONTRACT_NAME,
-        INCOME_RATIO, DER_INSTR_RATIO, DER_INSTR_INV_TYPE,
-        DER_INSTR_TARGET, ACCT_MODE, SPECIAL_CMT1,
-        MAX_YIELD, MIN_YIELD,
-        BASIC_PRICE,
-        REG_DATE_PRICE, TRADE_FEE, PARTY_CODE,
-        CHECK_CODE,
-        MANAGER_ID, TRUSTEE_ID,
-        TRU_ACT_TYPE, INVEST_TYPE, CAP_USE_INDU,
-        PLAN_SDATE, PLAN_EDATE, PRO_PROPERTY,
-        MAX_RATE, MIN_RATE, DEBT_SCALE,
-        BUY_STRUCT, MANAGE_TYPE, IS_CTRL_BOTTOM,
-        MGR_FEE_RATE, TRU_FEE_RATE,
-        TRADE_FEE_RATE,
-        AGENCY_FEE_RATE, OTHER_FEE_RATE, ASSET_VALUE,
-        REGIST_ORG1, MNG_ORG_NAME, TRU_ORG_NAME,
-        FUND_INVEST_ASSET,
-        IN_ASSET_TYPE, IN_ASSET_TYPE_CMM,
-        REMARK, IS_UNDER_ASSET,
-        IS_GOVERN_FUND,
-        GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE,
-        SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE,
-        SUBMIT_TIME, STATUS_DATE, STATUS,
-        CREATE_USER, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME, ORG_CODE, DEPT_CODE,
-        SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
-        DATA_SOURCE,
-        DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME
-      )
-      select HIS_NO,
-        ASSET_CODE, ASSET_TYPE,
-        ASSET_TYPE2, CCY, TRADE_MARKET,
-        VDATE, MDATE,
-        ASSET_YIELD,
-        BASIS, AMT, BANK_NAME,
-        IS_STRUCT, TARGET_TYPE, TARGET,
-        ASSET_ID, ASSET_NAME, CHB_SECTYPE,
-        ISSUE_MODE, PARTY_GRADE,
-        PARTY_TYPE1,
-        PARTY_TYPE3, PARTY_TYPE2, INDUSTRY,
-        INDUSTRY_LEVEL2,
-        SEC_MAIN_GRADE, SEC_CREDIT_GRADE,
-        REGIST_ORG, REGISTORG_COMMENT,
-        RIVAL_PARTY,
-        TARGET_TYPE1, TARGET_AMT, COUNTRY_AREA,
-        PROFIT_TYPE,
-        IS_RESALE, TERM_DATE,
-        RATE_FLAG, INTPAY_CYCLE, REPAY_CMT,
-        BASIS_TYPE,
-        FLOAT_FACTOR, SPREAD_RATE,
-        FINANCIE, FIN_ORG_CODE, FCR_GRADE_IN,
-        FCR_GRADE_OUT, FINANCIER_TYPE1, FINANCIER_TYPE2,
-        FINANCIER_TYPE3,
-        FINANCE_PROJ, INDUSTRY1,
-        INDUSTRY_LEVEL2_TYPE, PRO_INDUSTRY,
-        PRO_INDUSTRY_LEVEL2,
-        INDUSTRY_FLAG, MONIT_TYPE, MON_TYPE_COMM,
-        GUA_TYPE, GUA_TYPE_REMARK, FINANCIER_GRADE,
-        IN_GRADE, OUT_GRADE, CHOSE,
-        CONDITION_CMM, FIN_AREA, TOTAL_FEE_RATE,
-        IS_RIGHT, NOTSTAND_SEC_TYPE,
-        NOTSTAND_SEC_NUM,
-        REMAIN_TERM, MAX_REMAIN_TERM, MIN_REMAIN_TERM,
-        SHARES_TYPE, INDUSTRY_SHARES, INDUSTRY_SHARES2,
-        INVEST_STAGE,
-        SHARES_TYPE1, SHARES_TYPE2,
-        SHARES_TYPE3, IS_PLEDGE, NOM_CAPI,
-        TARGET_TYPE3, ISSUE_PARTY_ID, TERM_MONTH,
-        GUARANTEE_CMT, SPECIAL_CMT,
-        CONTRACT_NAME,
-        INCOME_RATIO, DER_INSTR_RATIO, DER_INSTR_INV_TYPE,
-        DER_INSTR_TARGET, ACCT_MODE, SPECIAL_CMT1,
-        MAX_YIELD, MIN_YIELD,
-        BASIC_PRICE,
-        REG_DATE_PRICE, TRADE_FEE, PARTY_CODE,
-        CHECK_CODE,
-        MANAGER_ID, TRUSTEE_ID,
-        TRU_ACT_TYPE, INVEST_TYPE, CAP_USE_INDU,
-        PLAN_SDATE, PLAN_EDATE, PRO_PROPERTY,
-        MAX_RATE, MIN_RATE, DEBT_SCALE,
-        BUY_STRUCT, MANAGE_TYPE, IS_CTRL_BOTTOM,
-        MGR_FEE_RATE, TRU_FEE_RATE,
-        TRADE_FEE_RATE,
-        AGENCY_FEE_RATE, OTHER_FEE_RATE, ASSET_VALUE,
-        REGIST_ORG1, MNG_ORG_NAME, TRU_ORG_NAME,
-        FUND_INVEST_ASSET,
-        IN_ASSET_TYPE, IN_ASSET_TYPE_CMM,
-        REMARK, IS_UNDER_ASSET,
-        IS_GOVERN_FUND,
-        GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE,
-        SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE,
-        SUBMIT_TIME, STATUS_DATE, STATUS,
-        CREATE_USER, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME, ORG_CODE, DEPT_CODE,
-        SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
-        DATA_SOURCE,
-        DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME
-      from (
-          select  HIS_NO,
-	        ASSET_CODE, ASSET_TYPE,
-	        ASSET_TYPE2, CCY, TRADE_MARKET,
-	        VDATE, MDATE,
-	        ASSET_YIELD,
-	        BASIS, AMT, BANK_NAME,
-	        IS_STRUCT, TARGET_TYPE, TARGET,
-	        ASSET_ID, ASSET_NAME, CHB_SECTYPE,
-	        ISSUE_MODE, PARTY_GRADE,
-	        PARTY_TYPE1,
-	        PARTY_TYPE3, PARTY_TYPE2, INDUSTRY,
-	        INDUSTRY_LEVEL2,
-	        SEC_MAIN_GRADE, SEC_CREDIT_GRADE,
-	        REGIST_ORG, REGISTORG_COMMENT,
-	        RIVAL_PARTY,
-	        TARGET_TYPE1, TARGET_AMT, COUNTRY_AREA,
-	        PROFIT_TYPE,
-	        IS_RESALE, TERM_DATE,
-	        RATE_FLAG, INTPAY_CYCLE, REPAY_CMT,
-	        BASIS_TYPE,
-	        FLOAT_FACTOR, SPREAD_RATE,
-	        FINANCIE, FIN_ORG_CODE, FCR_GRADE_IN,
-	        FCR_GRADE_OUT, FINANCIER_TYPE1, FINANCIER_TYPE2,
-	        FINANCIER_TYPE3,
-	        FINANCE_PROJ, INDUSTRY1,
-	        INDUSTRY_LEVEL2_TYPE, PRO_INDUSTRY,
-	        PRO_INDUSTRY_LEVEL2,
-	        INDUSTRY_FLAG, MONIT_TYPE, MON_TYPE_COMM,
-	        GUA_TYPE, GUA_TYPE_REMARK, FINANCIER_GRADE,
-	        IN_GRADE, OUT_GRADE, CHOSE,
-	        CONDITION_CMM, FIN_AREA, TOTAL_FEE_RATE,
-	        IS_RIGHT, NOTSTAND_SEC_TYPE,
-	        NOTSTAND_SEC_NUM,
-	        REMAIN_TERM, MAX_REMAIN_TERM, MIN_REMAIN_TERM,
-	        SHARES_TYPE, INDUSTRY_SHARES, INDUSTRY_SHARES2,
-	        INVEST_STAGE,
-	        SHARES_TYPE1, SHARES_TYPE2,
-	        SHARES_TYPE3, IS_PLEDGE, NOM_CAPI,
-	        TARGET_TYPE3, ISSUE_PARTY_ID, TERM_MONTH,
-	        GUARANTEE_CMT, SPECIAL_CMT,
-	        CONTRACT_NAME,
-	        INCOME_RATIO, DER_INSTR_RATIO, DER_INSTR_INV_TYPE,
-	        DER_INSTR_TARGET, ACCT_MODE, SPECIAL_CMT1,
-	        MAX_YIELD, MIN_YIELD,
-	        BASIC_PRICE,
-	        REG_DATE_PRICE, TRADE_FEE, PARTY_CODE,
-	        CHECK_CODE,
-	        MANAGER_ID, TRUSTEE_ID,
-	        TRU_ACT_TYPE, INVEST_TYPE, CAP_USE_INDU,
-	        PLAN_SDATE, PLAN_EDATE, PRO_PROPERTY,
-	        MAX_RATE, MIN_RATE, DEBT_SCALE,
-	        BUY_STRUCT, MANAGE_TYPE, IS_CTRL_BOTTOM,
-	        MGR_FEE_RATE, TRU_FEE_RATE,
-	        TRADE_FEE_RATE,
-	        AGENCY_FEE_RATE, OTHER_FEE_RATE, ASSET_VALUE,
-	        REGIST_ORG1, MNG_ORG_NAME, TRU_ORG_NAME,
-	        FUND_INVEST_ASSET,
-	        IN_ASSET_TYPE, IN_ASSET_TYPE_CMM,
-	        REMARK, IS_UNDER_ASSET,
-	        IS_GOVERN_FUND,
-	        GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE,
-	        SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE,
-	        SUBMIT_TIME, STATUS_DATE, STATUS,
-	        CREATE_USER, NOW() CREATE_TIME, UPDATE_USER,
-	        NOW() UPDATE_TIME, ORG_CODE, DEPT_CODE,
-	        SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
-	        DATA_SOURCE,
-	        DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,
-			if
-			(@ASSET_CODE = ASSET_CODE, @rank := @rank + 1,@rank :=1) as ranknum,
-			(@ASSET_CODE := ASSET_CODE) ASSET_CODE
-         from CHB_ASSET_INFO_SUB_HIS  his,
-		(select @rank := 0, @ASSET_CODE := null) b
-         <where>
-           <if test="registList !=null and registList.size()>0">
-              <foreach collection="registList" item="regist" open="and ASSET_CODE IN (" separator=","  close=")">
-                #{regist.assetCode,jdbcType=VARCHAR}
-              </foreach>
-           </if>
-         </where>
-		order by
-		ASSET_CODE,
-		ifnull(update_time,create_time) desc
-      )
-      where ranknum = 1
+		insert into CHB_ASSET_INFO_SUB (
+		REGIST_SEQNO,
+		ASSET_CODE, ASSET_TYPE,
+		ASSET_TYPE2, CCY, TRADE_MARKET,
+		VDATE, MDATE,
+		ASSET_YIELD,
+		BASIS, AMT, BANK_NAME,
+		IS_STRUCT, TARGET_TYPE, TARGET,
+		ASSET_ID, ASSET_NAME, CHB_SECTYPE,
+		ISSUE_MODE, PARTY_GRADE,
+		PARTY_TYPE1,
+		PARTY_TYPE3, PARTY_TYPE2, INDUSTRY,
+		INDUSTRY_LEVEL2,
+		SEC_MAIN_GRADE, SEC_CREDIT_GRADE,
+		REGIST_ORG, REGISTORG_COMMENT,
+		RIVAL_PARTY,
+		TARGET_TYPE1, TARGET_AMT, COUNTRY_AREA,
+		PROFIT_TYPE,
+		IS_RESALE, TERM_DATE,
+		RATE_FLAG, INTPAY_CYCLE, REPAY_CMT,
+		BASIS_TYPE,
+		FLOAT_FACTOR, SPREAD_RATE,
+		FINANCIE, FIN_ORG_CODE, FCR_GRADE_IN,
+		FCR_GRADE_OUT, FINANCIER_TYPE1, FINANCIER_TYPE2,
+		FINANCIER_TYPE3,
+		FINANCE_PROJ, INDUSTRY1,
+		INDUSTRY_LEVEL2_TYPE, PRO_INDUSTRY,
+		PRO_INDUSTRY_LEVEL2,
+		INDUSTRY_FLAG, MONIT_TYPE, MON_TYPE_COMM,
+		GUA_TYPE, GUA_TYPE_REMARK, FINANCIER_GRADE,
+		IN_GRADE, OUT_GRADE, CHOSE,
+		CONDITION_CMM, FIN_AREA, TOTAL_FEE_RATE,
+		IS_RIGHT, NOTSTAND_SEC_TYPE,
+		NOTSTAND_SEC_NUM,
+		REMAIN_TERM, MAX_REMAIN_TERM, MIN_REMAIN_TERM,
+		SHARES_TYPE, INDUSTRY_SHARES, INDUSTRY_SHARES2,
+		INVEST_STAGE,
+		SHARES_TYPE1, SHARES_TYPE2,
+		SHARES_TYPE3, IS_PLEDGE, NOM_CAPI,
+		TARGET_TYPE3, ISSUE_PARTY_ID, TERM_MONTH,
+		GUARANTEE_CMT, SPECIAL_CMT,
+		CONTRACT_NAME,
+		INCOME_RATIO, DER_INSTR_RATIO, DER_INSTR_INV_TYPE,
+		DER_INSTR_TARGET, ACCT_MODE, SPECIAL_CMT1,
+		MAX_YIELD, MIN_YIELD,
+		BASIC_PRICE,
+		REG_DATE_PRICE, TRADE_FEE, PARTY_CODE,
+		CHECK_CODE,
+		MANAGER_ID, TRUSTEE_ID,
+		TRU_ACT_TYPE, INVEST_TYPE, CAP_USE_INDU,
+		PLAN_SDATE, PLAN_EDATE, PRO_PROPERTY,
+		MAX_RATE, MIN_RATE, DEBT_SCALE,
+		BUY_STRUCT, MANAGE_TYPE, IS_CTRL_BOTTOM,
+		MGR_FEE_RATE, TRU_FEE_RATE,
+		TRADE_FEE_RATE,
+		AGENCY_FEE_RATE, OTHER_FEE_RATE, ASSET_VALUE,
+		REGIST_ORG1, MNG_ORG_NAME, TRU_ORG_NAME,
+		FUND_INVEST_ASSET,
+		IN_ASSET_TYPE, IN_ASSET_TYPE_CMM,
+		REMARK, IS_UNDER_ASSET,
+		IS_GOVERN_FUND,
+		GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE,
+		SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE,
+		SUBMIT_TIME, STATUS_DATE, STATUS,
+		CREATE_USER, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME, ORG_CODE, DEPT_CODE,
+		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+		DATA_SOURCE,
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,
+		DEPO_TYPE,
+		RIVAL_PARTY_TYPE,
+		PRIN_BASEAMT,
+		FMDATE,
+		COUPON_SPECIES,
+		INTEREST_RULE_FLAG,
+		INTPAY_RULE,
+		FLOAT_FACTOR_FLAG,
+		STRUCT_GRADE,
+		REPAYMENT_TYPE,
+		PERIOD_REPAYMENT_FLAG,
+		BASIC_ASSET_TYPE,
+		EXCESS_PROFIT_RATE,
+		PLEDGE_TYPE,
+		PLEDGE_VALUE,
+		NATURE_GUARANTEE,
+		RELATION_FINAN,
+		CONTAIN_TYPE,
+		EXERCISE_TYPE,
+		EXERCISE_DATE,
+		FIRST_EXERCISE_DATE,
+		EXERCISE_PERIOD,
+		EXERCISE_PRICE,
+		PERPETUAL_CLAUSE_TYPE,
+		DEFERRED_INTEREST_TYPE,
+		DEFERRED_INTEREST_INT,
+		FIRST_REPRCE_DATE,
+		REPRCE_CYCLE,
+		PART_REDEM_FLAG,
+		PART_REDEM_RATE,
+		CREDIT_ORG_CODE,
+		CREDIT_ORG_NAME,
+		EQUITY_QUIT,
+		DEPT_EQUITY,
+		HOLD_PURPOSE,
+		FINANCIAL_COMISSUE,
+		SUMIT_SEQ
+		)
+		select HIS_NO,
+		ASSET_CODE, ASSET_TYPE,
+		ASSET_TYPE2, CCY, TRADE_MARKET,
+		VDATE, MDATE,
+		ASSET_YIELD,
+		BASIS, AMT, BANK_NAME,
+		IS_STRUCT, TARGET_TYPE, TARGET,
+		ASSET_ID, ASSET_NAME, CHB_SECTYPE,
+		ISSUE_MODE, PARTY_GRADE,
+		PARTY_TYPE1,
+		PARTY_TYPE3, PARTY_TYPE2, INDUSTRY,
+		INDUSTRY_LEVEL2,
+		SEC_MAIN_GRADE, SEC_CREDIT_GRADE,
+		REGIST_ORG, REGISTORG_COMMENT,
+		RIVAL_PARTY,
+		TARGET_TYPE1, TARGET_AMT, COUNTRY_AREA,
+		PROFIT_TYPE,
+		IS_RESALE, TERM_DATE,
+		RATE_FLAG, INTPAY_CYCLE, REPAY_CMT,
+		BASIS_TYPE,
+		FLOAT_FACTOR, SPREAD_RATE,
+		FINANCIE, FIN_ORG_CODE, FCR_GRADE_IN,
+		FCR_GRADE_OUT, FINANCIER_TYPE1, FINANCIER_TYPE2,
+		FINANCIER_TYPE3,
+		FINANCE_PROJ, INDUSTRY1,
+		INDUSTRY_LEVEL2_TYPE, PRO_INDUSTRY,
+		PRO_INDUSTRY_LEVEL2,
+		INDUSTRY_FLAG, MONIT_TYPE, MON_TYPE_COMM,
+		GUA_TYPE, GUA_TYPE_REMARK, FINANCIER_GRADE,
+		IN_GRADE, OUT_GRADE, CHOSE,
+		CONDITION_CMM, FIN_AREA, TOTAL_FEE_RATE,
+		IS_RIGHT, NOTSTAND_SEC_TYPE,
+		NOTSTAND_SEC_NUM,
+		REMAIN_TERM, MAX_REMAIN_TERM, MIN_REMAIN_TERM,
+		SHARES_TYPE, INDUSTRY_SHARES, INDUSTRY_SHARES2,
+		INVEST_STAGE,
+		SHARES_TYPE1, SHARES_TYPE2,
+		SHARES_TYPE3, IS_PLEDGE, NOM_CAPI,
+		TARGET_TYPE3, ISSUE_PARTY_ID, TERM_MONTH,
+		GUARANTEE_CMT, SPECIAL_CMT,
+		CONTRACT_NAME,
+		INCOME_RATIO, DER_INSTR_RATIO, DER_INSTR_INV_TYPE,
+		DER_INSTR_TARGET, ACCT_MODE, SPECIAL_CMT1,
+		MAX_YIELD, MIN_YIELD,
+		BASIC_PRICE,
+		REG_DATE_PRICE, TRADE_FEE, PARTY_CODE,
+		CHECK_CODE,
+		MANAGER_ID, TRUSTEE_ID,
+		TRU_ACT_TYPE, INVEST_TYPE, CAP_USE_INDU,
+		PLAN_SDATE, PLAN_EDATE, PRO_PROPERTY,
+		MAX_RATE, MIN_RATE, DEBT_SCALE,
+		BUY_STRUCT, MANAGE_TYPE, IS_CTRL_BOTTOM,
+		MGR_FEE_RATE, TRU_FEE_RATE,
+		TRADE_FEE_RATE,
+		AGENCY_FEE_RATE, OTHER_FEE_RATE, ASSET_VALUE,
+		REGIST_ORG1, MNG_ORG_NAME, TRU_ORG_NAME,
+		FUND_INVEST_ASSET,
+		IN_ASSET_TYPE, IN_ASSET_TYPE_CMM,
+		REMARK, IS_UNDER_ASSET,
+		IS_GOVERN_FUND,
+		GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE,
+		SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE,
+		SUBMIT_TIME, STATUS_DATE, STATUS,
+		CREATE_USER, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME, ORG_CODE, DEPT_CODE,
+		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+		DATA_SOURCE,
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,
+		DEPO_TYPE,
+		RIVAL_PARTY_TYPE,
+		PRIN_BASEAMT,
+		FMDATE,
+		COUPON_SPECIES,
+		INTEREST_RULE_FLAG,
+		INTPAY_RULE,
+		FLOAT_FACTOR_FLAG,
+		STRUCT_GRADE,
+		REPAYMENT_TYPE,
+		PERIOD_REPAYMENT_FLAG,
+		BASIC_ASSET_TYPE,
+		EXCESS_PROFIT_RATE,
+		PLEDGE_TYPE,
+		PLEDGE_VALUE,
+		NATURE_GUARANTEE,
+		RELATION_FINAN,
+		CONTAIN_TYPE,
+		EXERCISE_TYPE,
+		EXERCISE_DATE,
+		FIRST_EXERCISE_DATE,
+		EXERCISE_PERIOD,
+		EXERCISE_PRICE,
+		PERPETUAL_CLAUSE_TYPE,
+		DEFERRED_INTEREST_TYPE,
+		DEFERRED_INTEREST_INT,
+		FIRST_REPRCE_DATE,
+		REPRCE_CYCLE,
+		PART_REDEM_FLAG,
+		PART_REDEM_RATE,
+		CREDIT_ORG_CODE,
+		CREDIT_ORG_NAME,
+		EQUITY_QUIT,
+		DEPT_EQUITY,
+		HOLD_PURPOSE,
+		FINANCIAL_COMISSUE,
+		SUMIT_SEQ
+		from (
+		select  HIS_NO,
+		ASSET_CODE, ASSET_TYPE,
+		ASSET_TYPE2, CCY, TRADE_MARKET,
+		VDATE, MDATE,
+		ASSET_YIELD,
+		BASIS, AMT, BANK_NAME,
+		IS_STRUCT, TARGET_TYPE, TARGET,
+		ASSET_ID, ASSET_NAME, CHB_SECTYPE,
+		ISSUE_MODE, PARTY_GRADE,
+		PARTY_TYPE1,
+		PARTY_TYPE3, PARTY_TYPE2, INDUSTRY,
+		INDUSTRY_LEVEL2,
+		SEC_MAIN_GRADE, SEC_CREDIT_GRADE,
+		REGIST_ORG, REGISTORG_COMMENT,
+		RIVAL_PARTY,
+		TARGET_TYPE1, TARGET_AMT, COUNTRY_AREA,
+		PROFIT_TYPE,
+		IS_RESALE, TERM_DATE,
+		RATE_FLAG, INTPAY_CYCLE, REPAY_CMT,
+		BASIS_TYPE,
+		FLOAT_FACTOR, SPREAD_RATE,
+		FINANCIE, FIN_ORG_CODE, FCR_GRADE_IN,
+		FCR_GRADE_OUT, FINANCIER_TYPE1, FINANCIER_TYPE2,
+		FINANCIER_TYPE3,
+		FINANCE_PROJ, INDUSTRY1,
+		INDUSTRY_LEVEL2_TYPE, PRO_INDUSTRY,
+		PRO_INDUSTRY_LEVEL2,
+		INDUSTRY_FLAG, MONIT_TYPE, MON_TYPE_COMM,
+		GUA_TYPE, GUA_TYPE_REMARK, FINANCIER_GRADE,
+		IN_GRADE, OUT_GRADE, CHOSE,
+		CONDITION_CMM, FIN_AREA, TOTAL_FEE_RATE,
+		IS_RIGHT, NOTSTAND_SEC_TYPE,
+		NOTSTAND_SEC_NUM,
+		REMAIN_TERM, MAX_REMAIN_TERM, MIN_REMAIN_TERM,
+		SHARES_TYPE, INDUSTRY_SHARES, INDUSTRY_SHARES2,
+		INVEST_STAGE,
+		SHARES_TYPE1, SHARES_TYPE2,
+		SHARES_TYPE3, IS_PLEDGE, NOM_CAPI,
+		TARGET_TYPE3, ISSUE_PARTY_ID, TERM_MONTH,
+		GUARANTEE_CMT, SPECIAL_CMT,
+		CONTRACT_NAME,
+		INCOME_RATIO, DER_INSTR_RATIO, DER_INSTR_INV_TYPE,
+		DER_INSTR_TARGET, ACCT_MODE, SPECIAL_CMT1,
+		MAX_YIELD, MIN_YIELD,
+		BASIC_PRICE,
+		REG_DATE_PRICE, TRADE_FEE, PARTY_CODE,
+		CHECK_CODE,
+		MANAGER_ID, TRUSTEE_ID,
+		TRU_ACT_TYPE, INVEST_TYPE, CAP_USE_INDU,
+		PLAN_SDATE, PLAN_EDATE, PRO_PROPERTY,
+		MAX_RATE, MIN_RATE, DEBT_SCALE,
+		BUY_STRUCT, MANAGE_TYPE, IS_CTRL_BOTTOM,
+		MGR_FEE_RATE, TRU_FEE_RATE,
+		TRADE_FEE_RATE,
+		AGENCY_FEE_RATE, OTHER_FEE_RATE, ASSET_VALUE,
+		REGIST_ORG1, MNG_ORG_NAME, TRU_ORG_NAME,
+		FUND_INVEST_ASSET,
+		IN_ASSET_TYPE, IN_ASSET_TYPE_CMM,
+		REMARK, IS_UNDER_ASSET,
+		IS_GOVERN_FUND,
+		GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE,
+		SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE,
+		SUBMIT_TIME, STATUS_DATE, STATUS,
+		CREATE_USER, NOW()  CREATE_TIME, UPDATE_USER,
+		NOW()  UPDATE_TIME, ORG_CODE, DEPT_CODE,
+		SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+		DATA_SOURCE,
+		DELETE_RES,sec_credit_grade_type,CAP_USE_INDU_LEVEL2,ISSUE_PARTY_NAME,
+		DEPO_TYPE,
+		RIVAL_PARTY_TYPE,
+		PRIN_BASEAMT,
+		FMDATE,
+		COUPON_SPECIES,
+		INTEREST_RULE_FLAG,
+		INTPAY_RULE,
+		FLOAT_FACTOR_FLAG,
+		STRUCT_GRADE,
+		REPAYMENT_TYPE,
+		PERIOD_REPAYMENT_FLAG,
+		BASIC_ASSET_TYPE,
+		EXCESS_PROFIT_RATE,
+		PLEDGE_TYPE,
+		PLEDGE_VALUE,
+		NATURE_GUARANTEE,
+		RELATION_FINAN,
+		CONTAIN_TYPE,
+		EXERCISE_TYPE,
+		EXERCISE_DATE,
+		FIRST_EXERCISE_DATE,
+		EXERCISE_PERIOD,
+		EXERCISE_PRICE,
+		PERPETUAL_CLAUSE_TYPE,
+		DEFERRED_INTEREST_TYPE,
+		DEFERRED_INTEREST_INT,
+		FIRST_REPRCE_DATE,
+		REPRCE_CYCLE,
+		PART_REDEM_FLAG,
+		PART_REDEM_RATE,
+		CREDIT_ORG_CODE,
+		CREDIT_ORG_NAME,
+		EQUITY_QUIT,
+		DEPT_EQUITY,
+		HOLD_PURPOSE,
+		FINANCIAL_COMISSUE,
+		SUMIT_SEQ,
+		rank() over (partition by ASSET_CODE order by ifnull(update_time,create_time) desc) ranknum
+		from CHB_ASSET_INFO_SUB_HIS  his
+		<where>
+			<if test="registList !=null and registList.size()>0">
+				<foreach collection="registList" item="regist" open="and ASSET_CODE IN (" separator=","  close=")">
+					#{regist.assetCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+		)as t
+		where ranknum = 1
     </insert>
     <delete id="deleteLastSubmitHis" parameterType="java.util.Map">
-   		delete from CHB_ASSET_INFO_SUB_HIS
-      where 1 =1 
-      and HIS_NO in (
-		  select a.HIS_NO from (
-				SELECT
-				@rownum:=@rownum+1 rownum,
-				HIS_NO,
-				IF( @ASSET_CODE = a.ASSET_CODE, @rank := @rank + 1, @rank := 1 ) AS myrank,
-				@ASSET_CODE := a.ASSET_CODE
-				FROM
-				( SELECT * FROM CHB_ASSET_INFO_SUB_HIS  ORDER BY ASSET_CODE,ifnull( UPDATE_TIME, CREATE_TIME ) DESC) a,
-				( SELECT @rownum := 0, @ASSET_CODE := NULL, @rank := 0 )b
-				  where 1=1
-				   <if test="registList !=null and registList.size()>0">
-						 <foreach collection="registList" item="regist" open=" AND (ASSET_CODE) IN (" separator="union all"  close=")">
-						   select #{regist.assetCode,jdbcType=VARCHAR}from dual
-						 </foreach>
-					  </if>
-		  )a
-		  where a.myrank=1
-	  )
+		delete from CHB_ASSET_INFO_SUB_HIS
+		where 1 =1
+		and HIS_NO in (
+		select a.HIS_NO from (
+		select
+			@rownum := @rownum + 1 rownum,
+			a.HIS_NO,
+			IF( @O_CODE = a.ASSET_CODE, @rank := @rank + 1, @rank := 1 ) AS myrank,
+			@ASSET_CODE := a.ASSET_CODE
+		from (select * from CHB_ASSET_INFO_SUB_HIS order by ifnull(UPDATE_TIME,CREATE_TIME) desc) a,
+		( SELECT @rownum := 0, @ASSET_CODE := NULL, @rank := 0 ) b
+		where 1=1
+		<if test="registList !=null and registList.size()>0">
+			<foreach collection="registList" item="regist" open=" AND (ASSET_CODE) IN (" separator="union all"  close=")">
+				select #{regist.assetCode,jdbcType=VARCHAR}from dual
+			</foreach>
+		</if>
+		)a
+		where a.myrank=1
+		)
   </delete>
+
+
+
+  <insert id="mergeSubStatusList" parameterType="com.joyintech.tams.common.base.entity.ChbAssetSubStatus">
+		insert into CHB_ASSET_SUB_STATUS(REGIST_SEQNO,INSTITUTION_CODE,SEND_STATUS,SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,ASSET_TYPE,
+			create_user,create_dept,create_time,update_user,update_time)
+		select
+	 	 REGIST_SEQNO,INSTITUTION_CODE,SEND_STATUS,SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,ASSET_TYPE,
+	 	 create_user,create_dept,create_time,update_user,update_time
+	 	from (
+		  select TEMP.* from
+		  (
+		  <foreach collection="list" item="item"  separator="union all">
+			  SELECT
+				  #{dto.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO ,
+				  #{dto.institutionCode,jdbcType=VARCHAR}  INSTITUTION_CODE,
+				  #{dto.sendStatus,jdbcType=VARCHAR}  SEND_STATUS,
+				  #{dto.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
+				  #{dto.assetType,jdbcType=VARCHAR}  ASSET_TYPE,
+				  #{dto.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+				  #{dto.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+				  #{dto.createUser,jdbcType=VARCHAR} CREATE_USER,
+				  #{dto.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+				  #{dto.createTime,jdbcType=TIMESTAMP} CREATE_TIME
+			  FROM   dual
+		  </foreach>
+		  ) TEMP
+		  	where not EXISTS (select 1 from CHB_ASSET_SUB_STATUS RP where RP.INSTITUTION_CODE = TEMP.INSTITUTION_CODE and RP.REGIST_SEQNO = TEMP.REGIST_SEQNO)
+	  	) de;
+		  UPDATE  CHB_ASSET_SUB_STATUS as A,
+		  (
+			  select REGIST_SEQNO,INSTITUTION_CODE,SEND_STATUS,SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,ASSET_TYPE,
+	  			create_user,create_dept,create_time,update_user,update_time
+			  from
+			  (
+				  select TEMP.* from
+				  (
+				  <foreach collection="list" item="item"  separator="union all">
+					  SELECT
+						  #{dto.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO ,
+						  #{dto.institutionCode,jdbcType=VARCHAR}  INSTITUTION_CODE,
+						  #{dto.sendStatus,jdbcType=VARCHAR}  SEND_STATUS,
+						  #{dto.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
+						  #{dto.assetType,jdbcType=VARCHAR}  ASSET_TYPE,
+						  #{dto.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+						  #{dto.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+						  #{dto.createUser,jdbcType=VARCHAR} CREATE_USER,
+						  #{dto.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+						  #{dto.createTime,jdbcType=TIMESTAMP} CREATE_TIME
+					  FROM   dual
+				  </foreach>
+				) TEMP
+			  ) de
+		  ) AS B
+		  set
+			  A.SEND_STATUS = B.SEND_STATUS
+			  ,A.SUBMIT_TIME = NOW()
+			  ,A.SUBMIT_FEEDBACK_STATUS = B.SUBMIT_FEEDBACK_STATUS
+			  ,A.ASSET_TYPE  = B.ASSET_TYPE
+			  ,A.create_user = B.CREATE_USER
+			  ,A.create_dept = B.CREATE_DEPT
+			  ,A.create_time = B.CREATE_TIME
+			  ,A.update_user = B.UPDATE_USER
+			  ,A.update_time = B.UPDATE_TIME
+		  where A.INSTITUTION_CODE = B.INSTITUTION_CODE and A.REGIST_SEQNO = B.REGIST_SEQNO;
+	</insert>
+
+
+	<delete id="deleteSubStausEx"
+		parameterType="com.joyintech.tams.common.base.entity.ChbAssetSubStatus">
+		DELETE FROM CHB_ASSET_SUB_STATUS S
+		where exists(
+		<foreach collection="newDataList" item="dto" open="select 1 from("
+			close=") A where A.REGIST_SEQNO = S.REGIST_SEQNO and A.INSTITUTION_CODE = S.INSTITUTION_CODE and A.ASSET_TYPE = S.ASSET_TYPE" separator="union all">
+			select
+			#{dto.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO ,
+			#{dto.institutionCode,jdbcType=VARCHAR}  INSTITUTION_CODE,
+			#{dto.assetType,jdbcType=VARCHAR}  ASSET_TYPE
+			from dual
+		</foreach>)
+	</delete>
+
+
 </mapper>

@@ -29,11 +29,11 @@
 			</foreach>
 		</if>
 		<if test="tableName != null and tableName != ''">
-			AND (MGRTABLE_NAME LIKE '%${tableName}%'
-			OR MGRTABLE_CHI_NAME LIKE '%${tableName}%')
+			AND (MGRTABLE_NAME LIKE concat_ws('','%',${tableName},'%')
+			OR MGRTABLE_CHI_NAME LIKE concat_ws('','%',${tableName},'%'))
 		</if>
 		<if test="dataObject != null and dataObject != ''">
-			AND DATAOBJECT LIKE '%${dataObject}%'
+			AND DATAOBJECT LIKE concat_ws('','%',${dataObject},'%')
 		</if>
 	</select>
 	<select id="checkTableExist" parameterType="java.util.Map"
@@ -48,18 +48,18 @@
 	</select>
 	<insert id="insertData" parameterType="java.util.Map">
 		INSERT INTO
-		CHB_MGRTABLE_INFO(
-		MGRTABLE_ID,
-		MGRTABLE_NAME,
-		MGRTABLE_CHI_NAME,
-		DATAOBJECT,
-		STATUS) VALUES
+			CHB_MGRTABLE_INFO(
+			MGRTABLE_ID,
+			MGRTABLE_NAME,
+			MGRTABLE_CHI_NAME,
+			DATAOBJECT,
+			STATUS) VALUES
 		(
-	    #{mgrtableID,jdbcType=VARCHAR},
-		#{mgrTableName,jdbcType=VARCHAR},
-		#{mgrTableChiName,jdbcType=VARCHAR},
-		#{dataObject,jdbcType=VARCHAR},
-		'E'
+			#{mgrtableID,jdbcType=VARCHAR},
+			#{mgrTableName,jdbcType=VARCHAR},
+			#{mgrTableChiName,jdbcType=VARCHAR},
+			#{dataObject,jdbcType=VARCHAR},
+			'E'
 		)
 	</insert>
 	<update id="updateTableStatus" parameterType="java.util.Map">

@@ -19,8 +19,7 @@
         ORG_CODE as orgCode,
         REGIST_BANK_CODE as registBankCode,
         PBC_BANK_CODE as pbcBankCode,
-        IS_FIN_SUB_COMPANY as isFinSubCompany,
-        INSITITUTE_CODE  as insitituteCode
+        IS_FIN_SUB_COMPANY as isFinSubCompany
         from
         CHB_ORG_REGIST_BANK_CODE
         where

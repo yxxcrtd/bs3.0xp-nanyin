@@ -246,7 +246,7 @@ select * from (SELECT t.*,ROWNUM ROW_ID FROM ${tableId} t WHERE
 			AND DATA_TYPE LIKE '%NUMBER%'
 		</if>
 	</select>
-
+	
 	<select id="queryPrimarykeyByTableName" resultType="java.lang.String" parameterType="java.lang.String">
 		<if test="tableId != null">
 		SELECT BASECOLUMNID FROM CHB_INFOMGR_CONFIG WHERE BASETABLEID = #{tableId,jdbcType=VARCHAR} AND BASECOLUMNTYPE = 'U'

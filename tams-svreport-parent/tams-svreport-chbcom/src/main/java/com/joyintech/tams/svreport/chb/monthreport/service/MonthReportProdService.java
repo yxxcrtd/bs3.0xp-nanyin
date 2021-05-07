@@ -7,11 +7,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 import java.util.Map.Entry;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -383,6 +385,7 @@ public class MonthReportProdService {
 		}
 		// 汇率
 		Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
+        Map<String,ChbMonthPrdPosition> resutlMap = getMaxQtyByType(listPrdPosition);
 
 		for (ChbMonthPrdPosition pos : listPrdPosition) {
 			if (pos.getCleanamtsum() == null)
@@ -1070,49 +1073,49 @@ public class MonthReportProdService {
 			}
 			//其中：7.2.1 银行类金融机构
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
-			&&ProdConstants.ORDIDENTIFIED_YHJRJG.equals(pos.getOrdIdentified())) { // 银行类金融机构
+				&&ProdConstants.ORDIDENTIFIED_YHJRJG.equals(resutlMap.get(pos.getProdid()).getOrdIdentified())) { // 银行类金融机构
 
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_YHLJRJG);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_YHLJRJG);
 			}
 			// 7.2.2 保险业金融机构
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
-					&&ProdConstants.ORDIDENTIFIED_BXJRJG.equals(pos.getOrdIdentified())) { // 保险业金融机构
+					&&ProdConstants.ORDIDENTIFIED_BXJRJG.equals(resutlMap.get(pos.getProdid()).getOrdIdentified())) { // 保险业金融机构
 
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_BXJRJG);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_BXJRJG);
 			}
 			//  7.2.3 信托公司
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
-					&&ProdConstants.ORDIDENTIFIED_XTGS.equals(pos.getOrdIdentified())) { // 信托公司
+					&&ProdConstants.ORDIDENTIFIED_XTGS.equals(resutlMap.get(pos.getProdid()).getOrdIdentified())) { // 信托公司
 
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_XTGS);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_XTGS);
 			}
 			//  7.2.4 证券公司
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
-					&&ProdConstants.ORDIDENTIFIED_ZQGS.equals(pos.getOrdIdentified())) { // 证券公司
+					&&ProdConstants.ORDIDENTIFIED_ZQGS.equals(resutlMap.get(pos.getProdid()).getOrdIdentified())) { // 证券公司
 
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_ZQGS);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_ZQGS);
 			}
 			//   7.2.5 基金公司
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
-					&&ProdConstants.ORDIDENTIFIED_JJGS.equals(pos.getOrdIdentified())) { // 基金公司
+					&&ProdConstants.ORDIDENTIFIED_JJGS.equals(resutlMap.get(pos.getProdid()).getOrdIdentified())) { // 基金公司
 
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_JJGS);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_JJGS);
 			}
 			//     7.2.6 其他金融机构
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
-					&&ProdConstants.ORDIDENTIFIED_QTJRJG.equals(pos.getOrdIdentified())) { // 其他金融机构
+					&&ProdConstants.ORDIDENTIFIED_QTJRJG.equals(resutlMap.get(pos.getProdid()).getOrdIdentified())) { // 其他金融机构
 
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_QTJRJG);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_QTJRJG);
 			}
 			// 7.2.7 金融机构资产管理产品
 			if (ProdConstants.SALETARGET_JRTY.equals(pos.getSaleTarget())
-					&&ProdConstants.ORDIDENTIFIED_JRJGZCGLCP.equals(pos.getOrdIdentified())) { // 金融机构资产管理产品
+					&&ProdConstants.ORDIDENTIFIED_JRJGZCGLCP.equals(resutlMap.get(pos.getProdid()).getOrdIdentified())) { // 金融机构资产管理产品
 
 				buildAmt(pos, flag, result, ChbMonthReportPrdConstants.TYZS_JRJGZCGLCP);
 				buildAmt(pos, flag, deptMap.get(pos.getInstitutionCode()), ChbMonthReportPrdConstants.TYZS_JRJGZCGLCP);
@@ -1497,8 +1500,32 @@ public class MonthReportProdService {
 			result.put(k.getPropertycode(), detail);
 		}
 	}
-	
-	
+
+    /**
+     *将查询出来的头寸进行清洗，筛选出每个产品的期末份额最大的投资者类别数据
+     * @param
+     */
+    public Map<String,ChbMonthPrdPosition>  getMaxQtyByType(List<ChbMonthPrdPosition> pos) {
+        Map<String,ChbMonthPrdPosition> resultMap = null;
+        //根据产品代码对头寸LIST进行分组
+        Map<String, List<ChbMonthPrdPosition>> map = pos.stream().collect(JoyinCollectors.groupingBy(ChbMonthPrdPosition::getProdid));
+
+        for (Map.Entry<String, List<ChbMonthPrdPosition>> entry: map.entrySet()) {
+			//每个List进行排序
+			List<ChbMonthPrdPosition> tmp = entry.getValue();
+			//根据份额降序排序，相等则按照投资者类型优先级排序
+			Collections.sort(tmp, (o1, o2) -> {
+				int flag = o1.getEndamtsumOth().compareTo(o2.getEndamtsumOth());
+				if (flag == 0) {
+					return o1.getOrdIdentified().compareTo(o2.getOrdIdentified());
+				} else {
+					return flag;
+				}
+			});
+			resultMap.put(tmp.get(0).getProdid(),tmp.get(0));
+		}
+        return resultMap;
+    }
 	/**
 	 * 表内数据保存列表.利用flag字段进行表字段是否保存的逻辑判断
 	 * @param type 表保存类型

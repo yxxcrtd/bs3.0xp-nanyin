@@ -2580,7 +2580,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 										columnData = "null";
 									}
 								}
-									// 创建者和修改者均设置为当前用户
+								// 创建者和修改者均设置为当前用户
 								else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
 									columnData = "'" + userName + "'";
 								}  else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
@@ -2682,7 +2682,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 									// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  start
 									if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
 										//columnData = "SYSDATE";
-										columnData = "TIMESTAMP" + timestamp.toString().substring(0,19) + "'";
+										columnData = "TIMESTAMP'" + timestamp.toString().substring(0,19) + "'";
 										// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  end
 									}else{
 										String dateStr = formatDateStr(columnData);
@@ -2755,7 +2755,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 									// 修改时间变动,其余时间不变
 									if (column.indexOf("UPDATE") > -1) {
 										//columnData = "SYSDATE";
-										columnData = "TIMESTAMP" + timestamp.toString().substring(0, 19) + "'";
+										columnData = "TIMESTAMP'" + timestamp.toString().substring(0, 19) + "'";
 									} else if ("CREATE_TIME".equals(column)) {
 										continue;
 									} else {
@@ -2774,14 +2774,14 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 									}
 								}	//数字类型
 								else if(numColumnList.contains(column)) {
-										if (!("").equals(columnData)) {
+									if (!("").equals(columnData)) {
 
-										}
-										else {
-											columnData = "null";
-										}
+									}
+									else {
+										columnData = "null";
+									}
 								}
-									// 修改者改为当前用户
+								// 修改者改为当前用户
 								else if ("UPDATE_USER".equals(column)) {
 									columnData = "'" + userName + "'";
 									// 数据状态改为 M

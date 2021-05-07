@@ -1,0 +1,37 @@
+/**修改理财产品转型情况月度统计表的菜单代码*/
+update sys_menu set menu_id='REPORT_001_003_099',order_no='99' where page_id='SvrTransMonthReport001';
+
+
+/**业务基本信息*/
+delete  from sys_menu   where menu_id in ('REPORT_001_001_001','REPORT_001_001_006','REPORT_001_001_007','REPORT_001_001_008','REPORT_001_001_009','REPORT_001_001_010');
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_001','REP',null,'REPORT_001_001','ProRegistCodeManage001',1,'02','产品登记编码管理','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_006','REP',null,'REPORT_001_001','EquityInfo001',6,'02','投资者身份信息','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_007','REP',null,'REPORT_001_001','InvestorsHoldInfo001',7,'02','投资者持有信息','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_008','REP',null,'REPORT_001_001','SvrInvestorMerger001',12,'02','识别标识合并','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_009','SVR',null,'REPORT_001_001','SvrEquityBusinessDetails001',8,null,'投资者明细信息','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_001_010','SVR',null,'REPORT_001_001','SvrTransformRule001',10,null,'变形转换规则','system',null,sysdate,'system',sysdate);
+
+
+/**数据检查*/
+delete from sys_menu where menu_id in ('REPORT_001_002');
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)values ('REPORT_001_002', 'REP', null, 'REPORT_001', null, 2, '02', '报送检查', 'system', null, sysdate, 'system', sysdate);
+
+delete from sys_menu  where menu_id in ('REPORT_001_002_001','REPORT_001_002_002','REPORT_001_002_005','REPORT_001_002_006','REPORT_001_002_007');
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_002_001','REP',null,'REPORT_001_002','CheckReport001',1,'02','报送前检查','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_002_002','REP',null,'REPORT_001_002','DelayVerification001',2,'02','延时报送检查','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_002_005','SVR',null,'REPORT_001_002','SvrEquityShareCheck001',5,null,'投资者份额检查','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_002_006','SVR',null,'REPORT_001_002','SvrProShareCheck001',6,null,'产品份额检查','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_002_007','SVR',null,'REPORT_001_002','SvrInvestorsQualityCheck001',7,null,'投资者质量核查','system',null,sysdate,'system',sysdate);
+
+
+/**中债报送信息登记*/
+delete from sys_menu   where menu_id in ('REPORT_001_003_011','REPORT_001_003_012','REPORT_001_003_013');
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_003_011','REP',null,'REPORT_001_003','EquityInfoRegist001',11,'02','投资者身份信息登记','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_003_012','REP',null,'REPORT_001_003','InvestorsHoldInfoRegist001',12,'02','投资者持有信息登记','system',null,sysdate,'system',sysdate);
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_003_013','SVR',null,'REPORT_001_003','SvrEquityBusiInfoRegist001',13,null,'投资者明细信息登记','system',null,sysdate,'system',sysdate);
+
+/**中债报送Excel下载*/
+delete from sys_menu   where menu_id in ('REPORT_001_006','REPORT_001_006_001','REPORT_001_006_002','REPORT_001_006_003','REPORT_001_006_004','REPORT_001_006_009');
+insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values ('REPORT_001_006','REP',null,'REPORT_001',null,6,'02','报送管理','system',null,sysdate,'system',sysdate);
+insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values ('REPORT_001_006_009','SVR',null,'REPORT_001_006','ChbSubinfoBatchLog001',12,null,'中债报送Excel下载','system',null,sysdate,'system',sysdate);
+insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values ('REPORT_001_006_004','REP',null,'REPORT_001_006','ReportUpInterfMonitor001',4,'02','上游接口文件读取处理监控','system',null,sysdate,'system',sysdate);

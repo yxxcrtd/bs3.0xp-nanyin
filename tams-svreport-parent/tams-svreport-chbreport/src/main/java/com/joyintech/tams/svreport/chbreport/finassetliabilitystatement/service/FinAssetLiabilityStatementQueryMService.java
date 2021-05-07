@@ -1,6 +1,5 @@
 package com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.service;
 
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -8,8 +7,10 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.PrdBalance;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
@@ -168,10 +169,8 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
         // 设置文件信息
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         String fileName = prodId + "_资产负债表_" + reportDate + ".xls";
-        String tempName = "FinAssetLiabilityStatement.xls";
-        String tplFlodPath = "finassetliabilitystatement/FinAssetLiabilityStatement.xls";
-        String tplPath = FileNameUtil.getTplFile(tplFlodPath);
         String outPath = exportFilePath + File.separator + fileName;
+        String exceltemplate = "finassetliabilitystatement/FinAssetLiabilityStatement";
 
         ChbreportExportFileDto exportFileDto = new ChbreportExportFileDto();
         exportFileDto.setFileName(fileName);
@@ -186,32 +185,8 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
         map.put("prodName", prodName);
         map.put("year", reportDate.substring(0, 4));
         map.put("mergeList", mergeList);
+        TisUtil.createFile(map, exceltemplate, fileName);
 
-        InputStream stream = null;
-        try {
-            //针对weblogic环境部署，FileNameUtil.getTplFile无法获取tpl文件夹下模版。
-            File templeteFile = new File(tplPath);
-            //文件存在情况,直接该路径获取文件流
-            if (templeteFile.exists()) {
-                stream = new FileInputStream(templeteFile);
-            }
-            //文件不存在情况，即weblogic部署情况，需要换方式获取文件流。
-            else {
-                stream = this.getClass().getResourceAsStream(TMP_DIR + tplFlodPath);
-            }
-
-            ExcelTools.writeExcel(stream, tempName, map, outPath);
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    logger.error("", e);
-                }
-            }
-        }
         return exportFileDto;
     }
 
@@ -241,7 +216,7 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
             flag = true;
         } else {
             maxList.addAll(liabilitiesAndOwnerEquityList);
-            minList.addAll(liabilitiesAndOwnerEquityList);
+            minList.addAll(assetList);
             flag = false;
         }
 
@@ -259,28 +234,20 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
                 mergerDto.setItemName(maxList.get(i).getSubjectName());
                 mergerDto.setInitialBalance(maxList.get(i).getBeginBal());
                 mergerDto.setEndingBalance(maxList.get(i).getEndBal());
-                if (Objects.nonNull(dto)) {
+                if (Objects.nonNull(dto) && StringUtil.isNotEmpty(dto.getLiaSubjectName())) {
                     mergerDto.setItemName1(dto.getLiaSubjectName());
                     mergerDto.setEndingBalance1(dto.getLiaEndBal());
-                    mergerDto.setInitialBalance1(dto.getBeginBal());
+                    mergerDto.setInitialBalance1(dto.getLiaBeginBal());
                 }
             } else {
                 mergerDto.setItemName1(maxList.get(i).getLiaSubjectName());
                 mergerDto.setEndingBalance1(maxList.get(i).getLiaEndBal());
-                mergerDto.setInitialBalance1(maxList.get(i).getBeginBal());
-                if (Objects.nonNull(dto)) {
+                mergerDto.setInitialBalance1(maxList.get(i).getLiaBeginBal());
+                if (Objects.nonNull(dto) && StringUtil.isNotEmpty(dto.getSubjectName())) {
                     mergerDto.setItemName(dto.getSubjectName());
                     mergerDto.setInitialBalance(dto.getBeginBal());
                     mergerDto.setEndingBalance(dto.getEndBal());
                 }
-            }
-            if (Objects.isNull(mergerDto.getItemName())) {
-                mergerDto.setInitialBalance(null);
-                mergerDto.setEndingBalance(null);
-            }
-            if (Objects.isNull(mergerDto.getItemName1())) {
-                mergerDto.setInitialBalance1(null);
-                mergerDto.setEndingBalance1(null);
             }
 
             mergerList.add(mergerDto);

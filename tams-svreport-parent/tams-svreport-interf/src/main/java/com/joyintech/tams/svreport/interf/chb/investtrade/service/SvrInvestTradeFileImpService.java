@@ -217,8 +217,8 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
     public String importDB(List<Map<String, String>> investTradeList,InterfFile interfFile) {
         // 数据检查
         // 添加待处理的数据
-        checkData(investTradeList, interfFile.getFilename(), 
-                InterfDefine.投资交易信息接口数据.getCode(), InterfDefine.投资交易信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);
+//        checkData(investTradeList, interfFile.getFilename(),
+//                InterfDefine.投资交易信息接口数据.getCode(), InterfDefine.投资交易信息接口数据.getCode(),BUSSINESSKEY, DUPLICATIED_LIST);
         // 待入库为空则直接返回
         if (CollectionUtils.isEmpty(investTradeList)){
             return "success";

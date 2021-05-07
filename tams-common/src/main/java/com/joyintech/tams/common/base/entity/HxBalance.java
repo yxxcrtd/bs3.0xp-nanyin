@@ -1,6 +1,8 @@
 package com.joyintech.tams.common.base.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -34,101 +36,121 @@ public class HxBalance extends BaseEntity implements Serializable {
     /**
      * 银行存款
      */
+    @JsonSerialize(using= BigDecimalSerializer.class)
     private BigDecimal deposit;
 
     /**
      * 货币市场类投资
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal currInvest;
 
     /**
      * 其他标准债权类投资
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal credInvest;
 
     /**
      * 债券类投资
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal bondInvest;
 
     /**
      * 非标项目类投资
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal feibiaoInvest;
 
     /**
      * 权益类投资
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal quanyiInvest;
 
     /**
      * 衍生品投资
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal derivaInvest;
 
     /**
      * 其它投资
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal otherInvest;
 
     /**
      * 应收利息
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal interAccr;
 
     /**
      * 拆入资金
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal inFund;
 
     /**
      * 卖出回购资金
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal huigouFund;
 
     /**
      * 衍生金融负债
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal derivaDebt;
 
     /**
      * 应付利息
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal accrProfit;
 
     /**
      * 理财产品本金-收益型
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal capitalShouyi;
 
     /**
      * 理财产品本金-净值型
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal capitalJingzhi;
 
     /**
      * 理财产品应付收益
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal accrIncome;
 
     /**
      * 应交税费
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal taxPay;
 
     /**
      * 预计负债
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal yujiFuzhai;
 
     /**
      * 其它应付款
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal otherPay;
 
     /**
      * 未分配利润
      */
+    @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal undisProfit;
 
     /**

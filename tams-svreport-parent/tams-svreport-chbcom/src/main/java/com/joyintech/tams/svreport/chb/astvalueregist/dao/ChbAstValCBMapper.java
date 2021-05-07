@@ -44,8 +44,8 @@ public interface ChbAstValCBMapper {
 	List<ChbAstValueSub> queryInsertGenerateList(@Param("generateDate")String generateDate,@Param("statusDate")Date statusDate,
 			@Param("chbSubmitDeadline")Date chbSubmitDeadline,@Param("submitDeadline")Date submitDeadline,@Param("InstitutionCode")String InstitutionCode);
 
-	
-	
+	List<ChbAstValueSub> queryInsertGenerateLastList();
+
 	
 	/**
 	 * 查询出删除和修改的持仓登记的数据

@@ -34,6 +34,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbFileReadMonitorInfoMapper;
 import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
@@ -73,7 +74,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
      */
 //    private static final String[] XML_FILE_NAME = new String[] {"CHB_EQU_HOLD", "CHB_EQUDET","CHB_INVESTHOLD_INFO","MST_EXCHANGE_INFO", "MKT_HOLIDAY"
 //    	};
-	private static final String[] XML_FILE_NAME = new String[] {"CHB_PRDRESIST_CODE", "CHB_EQU_HOLD", "CHB_EQUDET","CHB_INVESTHOLD_INFO"};
+    private static final String[] XML_FILE_NAME = new String[] {"CHB_PRDRESIST_CODE", "CHB_EQU_HOLD", "CHB_EQUDET","CHB_INVESTHOLD_INFO"};
     /**
      * 投资者信息service
      */
@@ -84,7 +85,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
      * EquityBaseInfoBusinessDetails001Service
      */
     @Autowired
-    private ProdDurationDeal001Service prodDurationDeal001Service; 
+    private ProdDurationDeal001Service prodDurationDeal001Service;
 
     /**
      * InvestorsHoldInfo001Service
@@ -120,7 +121,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
      */
     @Autowired
     private ChbFileReadMonitorInfoMapper chbFileReadMonitorInfoMapper;
-    
+
     @Autowired
     private EquityBusiDetails001Service equityBusiDetails001Service;
 
@@ -160,13 +161,13 @@ public class Chb3CnBondUpInterfService extends InterfService {
             String username = this.getParaVauleByparaCode(ReportGlobalConstant.SYS_PARA_SALES_FTP_USER);
             // ftp密码
             String password = this.getParaVauleByparaCode(
-                ReportGlobalConstant.SYS_PARA_SALES_FTP_PASSWORD);
+                    ReportGlobalConstant.SYS_PARA_SALES_FTP_PASSWORD);
             // 销售系统ftp路径
             String salesRemotePath="";
-			if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
-            salesRemotePath = this.getParaVauleByparaCode(
-            		 DictCodeListExt2.数据来源_销售系统.getValue());
-			}
+            if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
+                salesRemotePath = this.getParaVauleByparaCode(
+                        DictCodeListExt2.数据来源_销售系统.getValue());
+            }
             // // 万德系统ftp路径
             // String windRemotePath = this.getParaVauleByparaCode(
             // GlobalConstant.SYS_PARA_WIND_FTP_FILEPATH);
@@ -182,39 +183,39 @@ public class Chb3CnBondUpInterfService extends InterfService {
 
             // 临时文件存放目录
             String localPath = this.getSysPara(null,
-                null, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-			if(!"001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
-	        Map<String, String> mapPath = SysDataUtil.getSysDictDataMap(DictCode.数据来源);
-	        Iterator<Map.Entry<String, String>> entries = mapPath.entrySet().iterator();
-            // 来源系统
-            String type;
-            // 配置读取路径
-            String remotePath;
-            while (entries.hasNext()) {
-                Map.Entry<String, String> entry = entries.next();
-                type = entry.getKey();
-                remotePath = this.getParaVauleByparaCode(entry.getKey());
-//                if(DictCodeListExt2.数据来源_销售系统.getValue().equals(type)){
-//                	Date tempDate=DateUtil.parse(currentDate);
-//                	currentDate=DateUtil.format(tempDate, DateUtil.DEFAULT_OTHER_FORMAT);
-//                }
+                    null, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+            if(!"001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
+                Map<String, String> mapPath = SysDataUtil.getSysDictDataMap(DictCode.数据来源);
+                Iterator<Map.Entry<String, String>> entries = mapPath.entrySet().iterator();
+                // 来源系统
+                String type;
+                // 配置读取路径
+                String remotePath;
+                while (entries.hasNext()) {
+                    Map.Entry<String, String> entry = entries.next();
+                    type = entry.getKey();
+                    remotePath = this.getParaVauleByparaCode(entry.getKey());
+                    if(DictCodeListExt2.数据来源_销售系统.getValue().equals(type)){
+                        Date tempDate=DateUtil.parse(currentDate);
+                        currentDate=DateUtil.format(tempDate, DateUtil.DEFAULT_OTHER_FORMAT);
+                    }
+                    try {
+                        this.getInterfInputStream(ftpType, url, StringUtil.toInt(port), username, password,
+                                remotePath + currentDate, localPath, type);
+                    } catch (FileNotFoundException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+            }else{
+                // 邮储读取销售系统
                 try {
                     this.getInterfInputStream(ftpType, url, StringUtil.toInt(port), username, password,
-                        remotePath + currentDate, localPath, type);
+                            salesRemotePath + currentDate, localPath, DictCodeListExt2.数据来源_销售系统.getValue());
                 } catch (FileNotFoundException e) {
-					logger.error(e.getMessage(),e);
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
             }
-			}else{
-	            // 邮储读取销售系统
-	             try {
-					this.getInterfInputStream(ftpType, url, StringUtil.toInt(port), username, password,
-					 salesRemotePath + currentDate, localPath, DictCodeListExt2.数据来源_销售系统.getValue());
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
             // // 读取销售系统
             // this.getInterfInputStream(ftpType, url, StringUtil.toInt(port), username, password,
             // salesRemotePath + currentDate, localPath, DictCodeList.数据来源_销售系统.getValue());
@@ -246,7 +247,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
      * @param remotePath 路径
      * @param localPath 本地存放路径
      * @param type 来源系统
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      * @see
      * @since 1.0
      */
@@ -257,24 +258,24 @@ public class Chb3CnBondUpInterfService extends InterfService {
         InterfUtil.deleteLocalTmpFile(localPath);
 
         List<File> xmlFiles = InterfUtil.downInterfFile(ftpType, url, port, username, password,
-            remotePath, localPath, Arrays.asList(XML_FILE_NAME));
+                remotePath, localPath, Arrays.asList(XML_FILE_NAME));
         if (StringUtil.isEmptyList(xmlFiles)) {
             return;
         }
 
         try {
             if (StringUtil.equals(ReportGlobalConstant.reportTinterfIsneedokfileYes,
-                reportInterfIsNeedOkFile)&&!DictCodeListExt2.数据来源_销售系统.getValue().equals(type)) {
+                    reportInterfIsNeedOkFile)&&!DictCodeListExt2.数据来源_销售系统.getValue().equals(type)) {
                 // .ok标志文件处理
                 List<String> okFileList = InterfUtil.downInterfOKFile(ftpType, url, port, username,
-                    password, remotePath, localPath, reportInterfOkFileExtension);
+                        password, remotePath, localPath, reportInterfOkFileExtension);
                 if (StringUtil.isEmptyList(okFileList)) {
                     return;
                 }
 
                 for (int i = xmlFiles.size() - 1; i >= 0; i-- ) {
                     if (!okFileList.contains(StringUtil.splitToList(GlobalConstant.POINT,
-                        xmlFiles.get(i).getName()).get(0))) {
+                            xmlFiles.get(i).getName()).get(0))) {
                         xmlFiles.remove(i);
                     }
                 }
@@ -289,42 +290,42 @@ public class Chb3CnBondUpInterfService extends InterfService {
             logger.error(e.getMessage(),e);
             return;
         }
-        
+
         //add by liubin start 对xmlFiles 进行排序 汇产品运作模式信息排在前，然后是投资者信息        
         xmlFiles.sort(new Comparator<File>() {
 
-			@Override
-			public int compare(File o1, File o2) {
-				int temp1 = 0;
-				int temp2 = 0;
-				if(o1.getName().indexOf("CHB_PRDRESIST_CODE") != -1){
-					temp1 = 1;
-				}else if(o1.getName().indexOf("CHB_EQU_HOLD") != -1){
-					temp1 = 2;
-				}else if(o1.getName().indexOf("CHB_INVESTHOLD_INFO") != -1){
-					temp1 = 3;
-				}else{
-					temp1 = 4;
-				}
-				if(o2.getName().indexOf("CHB_PRDRESIST_CODE") != -1){
-					temp2 = 1;
-				}else if(o2.getName().indexOf("CHB_EQU_HOLD") != -1){
-					temp2 = 2;
-				}else if(o2.getName().indexOf("CHB_INVESTHOLD_INFO") != -1){
-					temp2 = 3;
-				}else{
-					temp2 = 4;
-				}
-				return temp1 - temp2;
-			}
-		});
+            @Override
+            public int compare(File o1, File o2) {
+                int temp1 = 0;
+                int temp2 = 0;
+                if(o1.getName().indexOf("CHB_PRDRESIST_CODE") != -1){
+                    temp1 = 1;
+                }else if(o1.getName().indexOf("CHB_EQU_HOLD") != -1){
+                    temp1 = 2;
+                }else if(o1.getName().indexOf("CHB_INVESTHOLD_INFO") != -1){
+                    temp1 = 3;
+                }else{
+                    temp1 = 4;
+                }
+                if(o2.getName().indexOf("CHB_PRDRESIST_CODE") != -1){
+                    temp2 = 1;
+                }else if(o2.getName().indexOf("CHB_EQU_HOLD") != -1){
+                    temp2 = 2;
+                }else if(o2.getName().indexOf("CHB_INVESTHOLD_INFO") != -1){
+                    temp2 = 3;
+                }else{
+                    temp2 = 4;
+                }
+                return temp1 - temp2;
+            }
+        });
         //add by liubin end
         // 遍历文件列表
         for (File file : xmlFiles) {
             String realName = file.getName();
             String okFileExtension = "." + reportInterfOkFileExtension;
             if (StringUtil.endsWith(realName, okFileExtension)) {
-             continue;
+                continue;
             }
             String suffix = FileNameUtil.getFileExtName(realName);
             InputStream in = new FileInputStream(file);
@@ -340,33 +341,33 @@ public class Chb3CnBondUpInterfService extends InterfService {
 
             // 产品运作模式数据处理
             if (realName.contains(XML_FILE_NAME[0])) {
-            	String remoteDir = "fail";
-            	try {
-            		monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_产品运作模式信息.getValue());
-            		chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
-            		
-            		remoteDir=proRegistCodeManage001Service.getOperateModeByInterf(in, type, localPath, suffix, monitorInfoDto);
-            		
+                String remoteDir = "fail";
+                try {
+                    monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_产品运作模式信息.getValue());
+                    chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
+
+                    remoteDir=proRegistCodeManage001Service.getOperateModeByInterf(in, type, localPath, suffix, monitorInfoDto);
+
                     //add by liubin start
                     this.handleSqlldrLogMsg(monitorInfoDto);
                     //add by liubin end
                     this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
-				} 
-            	catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.error("上游接口数据处理失败：", e);
 
                     this.handleMonitorInfoAfterException(monitorInfoDto, e);
                 }
-            	finally {
+                finally {
                     // ftp文件移动
                     if (StringUtil.isNotEmpty(remoteDir)) {
                         InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
-                            realName, remoteDir);
+                                realName, remoteDir);
                     }
                     // 删除临时文件
                     file.delete();
-				}
-            }   
+                }
+            }
             // 解析投资者身份信息，并做存库处理
             else if (realName.contains(XML_FILE_NAME[1])) {
                 String remoteDir = "fail";
@@ -374,15 +375,15 @@ public class Chb3CnBondUpInterfService extends InterfService {
                     monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者身份信息.getValue());
                     chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
 
-        			if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
-        			remoteDir = equityInfo001Service.getEquityInfoByInterfYC(in, type, localPath,
-                        suffix, monitorInfoDto, realName);
-        			}else{
-                    remoteDir = equityInfo001Service.getEquityInfoByInterf(in, type, localPath,
-                        suffix, monitorInfoDto);
-        			}
-                    
-                    
+                    if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
+                        remoteDir = equityInfo001Service.getEquityInfoByInterfYC(in, type, localPath,
+                                suffix, monitorInfoDto, realName);
+                    }else{
+                        remoteDir = equityInfo001Service.getEquityInfoByInterf(in, type, localPath,
+                                suffix, monitorInfoDto);
+                    }
+
+
                     //add by liubin start 解析sqlldr日志存入monitorInfoDto中
                     this.handleSqlldrLogMsg(monitorInfoDto);
                     //add by liubin end
@@ -399,12 +400,12 @@ public class Chb3CnBondUpInterfService extends InterfService {
                         equityInfo001Service.deleteImportTmpData();
                     }
                     catch (Exception e1) {
-                    	logger.error(e1.getMessage(), e1);
+                        logger.error(e1.getMessage(), e1);
                     }
                     // ftp文件移动
                     if (StringUtil.isNotEmpty(remoteDir)) {
                         InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
-                            realName, remoteDir);
+                                realName, remoteDir);
                     }
                     // 删除临时文件
                     file.delete();
@@ -414,16 +415,16 @@ public class Chb3CnBondUpInterfService extends InterfService {
             else if (realName.contains(XML_FILE_NAME[2])) {
                 String remoteDir = "fail";
                 try {
-                	 monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者明细信息.getValue());
-                     chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
-                  // 删除导入用的临时的数据
-                     equityBusiDetails001Service.deleteImportTmpData();
-                     remoteDir = equityBusiDetails001Service.getEquityBusiDetailsByInterf(in, type,
-                         localPath, suffix, monitorInfoDto);
-                   //add by liubin start 解析sqlldr日志存入monitorInfoDto中
-                     this.handleSqlldrLogMsg(monitorInfoDto);
-                     //add by liubin end
-                     this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
+                    monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者明细信息.getValue());
+                    chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
+                    // 删除导入用的临时的数据
+                    equityBusiDetails001Service.deleteImportTmpData();
+                    remoteDir = equityBusiDetails001Service.getEquityBusiDetailsByInterf(in, type,
+                            localPath, suffix, monitorInfoDto);
+                    //add by liubin start 解析sqlldr日志存入monitorInfoDto中
+                    this.handleSqlldrLogMsg(monitorInfoDto);
+                    //add by liubin end
+                    this.handleMonitorInfoAfterMainService(monitorInfoDto, remoteDir);
                 }
                 catch (Exception e) {
                     logger.error("上游接口数据处理失败：", e);
@@ -440,7 +441,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
                     // ftp文件移动
                     if (StringUtil.isNotEmpty(remoteDir)) {
                         InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
-                            realName, remoteDir);
+                                realName, remoteDir);
                     }
                     // 删除临时文件
                     file.delete();
@@ -452,14 +453,14 @@ public class Chb3CnBondUpInterfService extends InterfService {
                 try {
                     monitorInfoDto.setHandleFileType(DictCodeListExt2.上游接口文件类型_投资者持有信息.getValue());
                     chbFileReadMonitorInfoMapper.insert(monitorInfoDto);
-        			if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
-        				remoteDir = investorsHoldInfo001Service.getInvestorsHoldInfoByInterfYC(in, type,
+                    if("001".equals(CacheUtil.getSysParam("CUSTOMER_BANK_CODE"))){
+                        remoteDir = investorsHoldInfo001Service.getInvestorsHoldInfoByInterfYC(in, type,
                                 localPath, suffix, monitorInfoDto, realName);
-        			}else{
-                    remoteDir = investorsHoldInfo001Service.getInvestorsHoldInfoByInterf(in, type,
-                        localPath, suffix, monitorInfoDto);
-        			}
-                    
+                    }else{
+                        remoteDir = investorsHoldInfo001Service.getInvestorsHoldInfoByInterf(in, type,
+                                localPath, suffix, monitorInfoDto);
+                    }
+
                     //add by liubin start
                     this.handleSqlldrLogMsg(monitorInfoDto);
                     //add by liubin end
@@ -472,7 +473,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
                 }
                 finally {
 //                    try {
-                        // 删除导入用的临时的数据
+                    // 删除导入用的临时的数据
 //                        investorsHoldInfo001Service.deleteImportTmpData();
 //                    }
 //                    catch (Exception e1) {
@@ -480,7 +481,7 @@ public class Chb3CnBondUpInterfService extends InterfService {
                     // ftp文件移动
                     if (StringUtil.isNotEmpty(remoteDir)) {
                         InterfUtil.moveFiles(ftpType, url, port, username, password, remotePath,
-                            realName, remoteDir);
+                                realName, remoteDir);
                     }
                     // 删除临时文件
                     file.delete();
@@ -631,86 +632,86 @@ public class Chb3CnBondUpInterfService extends InterfService {
             monitorInfoDto.setFileHandleStatus(DictCodeListExt2.上游接口文件读取处理状态_异常结束.getValue());
             //add by liubin start 当异常在解析时未捕获时，即handLeResultMsg为空，则处理给个默认值
             if("".equals(monitorInfoDto.getFileHandleResultMsg()) || monitorInfoDto.getFileHandleResultMsg() == null){
-            	 monitorInfoDto.setFileHandleResultMsg("数据文件有问题，已移动到fail文件夹下");
+                monitorInfoDto.setFileHandleResultMsg("数据文件有问题，已移动到fail文件夹下");
             }
             //add by liubin end
-           
+
         }
 
         chbFileReadMonitorInfoMapper.updateByPrimaryKeyWithBLOBs(monitorInfoDto);
     }
-    
+
     /**
      * 解析sqlldr日志入库
      * @author liubin
      */
     public void handleSqlldrLogMsg(ChbFileReadMonitorInfo monitorInfoDto){
-    	String sqlldrLogFilePath = this.getParaVauleByparaCode(InterfConstant.SQLLDR_LOG_FILEPATH);
-    	StringBuffer info = new StringBuffer();
-    	String line = null;
-    	BufferedReader reader = null;
-    	InputStreamReader inreader = null;
-    	BufferedInputStream bfinput = null;
-    	FileInputStream in = null;
-    	File file = new File(sqlldrLogFilePath);
-    	if(file.isDirectory() && file.listFiles().length>0){
-    		//开始解析文件内容入库
-    		for(File logFile : file.listFiles()){
-    			try {
-    				in = new FileInputStream(logFile);
-    				bfinput = new BufferedInputStream(in);
-    				inreader = new InputStreamReader(bfinput);
-					reader = new BufferedReader(inreader);
-					while((line=reader.readLine()) != null){
-						info.append(line).append("\n");
-					}
-					info.append("\n");
-				} catch (Exception e) {
-//					e.printStackTrace();
-		            logger.error(e.getMessage(),e);
-				}
-    		}
-    		//关闭流
-    		if(in!=null){
-    			try {
-					in.close();
-				} catch (Exception e) {
-//					e.printStackTrace();
-		            logger.error(e.getMessage(),e);
-				}
-    		}
-    		if(bfinput !=null){
-    			try {
-					bfinput.close();
-				} catch (IOException e) {
-//					e.printStackTrace();
-		            logger.error(e.getMessage(),e);
-				}
-    		}
-    		if(inreader != null){
-    			try {
-					inreader.close();
-				} catch (IOException e) {
+        String sqlldrLogFilePath = this.getParaVauleByparaCode(InterfConstant.SQLLDR_LOG_FILEPATH);
+        StringBuffer info = new StringBuffer();
+        String line = null;
+        BufferedReader reader = null;
+        InputStreamReader inreader = null;
+        BufferedInputStream bfinput = null;
+        FileInputStream in = null;
+        File file = new File(sqlldrLogFilePath);
+        if(file.isDirectory() && file.listFiles().length>0){
+            //开始解析文件内容入库
+            for(File logFile : file.listFiles()){
+                try {
+                    in = new FileInputStream(logFile);
+                    bfinput = new BufferedInputStream(in);
+                    inreader = new InputStreamReader(bfinput);
+                    reader = new BufferedReader(inreader);
+                    while((line=reader.readLine()) != null){
+                        info.append(line).append("\n");
+                    }
+                    info.append("\n");
+                } catch (Exception e) {
 //					e.printStackTrace();
                     logger.error(e.getMessage(),e);
-				}
-    		}
-    		if(reader != null){
-    			try {
-					reader.close();
-				} catch (IOException e) {
+                }
+            }
+            //关闭流
+            if(in!=null){
+                try {
+                    in.close();
+                } catch (Exception e) {
 //					e.printStackTrace();
                     logger.error(e.getMessage(),e);
-				}
-    		}
-    		monitorInfoDto.setFileHandleResultMsg(info.toString());
-    		//解析完成删除sqlldr对应目录下的日志文件
-    		if(file.isDirectory() && file.listFiles().length>0){
-    			for(File logFile : file.listFiles()){
-    				logFile.delete();
-    			}
-    		}
-    	}
+                }
+            }
+            if(bfinput !=null){
+                try {
+                    bfinput.close();
+                } catch (IOException e) {
+//					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            if(inreader != null){
+                try {
+                    inreader.close();
+                } catch (IOException e) {
+//					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            if(reader != null){
+                try {
+                    reader.close();
+                } catch (IOException e) {
+//					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            monitorInfoDto.setFileHandleResultMsg(info.toString());
+            //解析完成删除sqlldr对应目录下的日志文件
+            if(file.isDirectory() && file.listFiles().length>0){
+                for(File logFile : file.listFiles()){
+                    logFile.delete();
+                }
+            }
+        }
     }
 
     /**
@@ -729,5 +730,5 @@ public class Chb3CnBondUpInterfService extends InterfService {
 
         chbFileReadMonitorInfoMapper.updateByPrimaryKeyWithBLOBs(monitorInfoDto);
     }
-    
+
 }

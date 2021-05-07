@@ -108,111 +108,111 @@ public class SvrSecRatingFileImpService extends FileImpService {
 		boolean success = true;
         String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		// 数据小于1000直接入库
-		if (listData.size() <= 1000) {
+//		if (listData.size() <= 1000) {
 			success = excuteSecRatingByStep(saveFlag,listData, null, null, null, null);
-		} else {// 大于1000使用sqlloader入库
-			// 创建表
-			ImpTable table = new ImpTable(InterfDefine.债券评级数据.getCode());
-			table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.债券评级数据.getCode()));
-			// 创建一个线程池
-			if (interfMaxCorePoolSize < 1) {
-				interfMaxCorePoolSize = 20;
-			}
-			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-			List<Callable<Boolean>> tasks = new ArrayList<>();
-			if (null != listData) {
-				int start = 0;
-				int end = 0;
-				int size = listData.size();
-				int max = (int) Math.ceil((double) size / 1000);
-				for (int i = 0; i < max; i++) {
-					start = end;
-					end = Math.min(size, 1000 * (i + 1));
-					List<Map<String, String>> subList = listData.subList(start, end);
-					logger.debug("生成债券评级qlloader文件"+i);
-					tasks.add(new Callable<Boolean>() {
-						@Override
-						public Boolean call() {
-							return excuteSecRatingByStep(saveFlag,subList,null, tmpPath, table, null);
-						}
-					});
-				}
-			}
-			// 为线程池添加任务
-			List<Future<Boolean>> taskResult;
-			try {
-				taskResult = service.invokeAll(tasks);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
-				Thread.currentThread().interrupt();
-				return "fail";
-			}
-			for (Future<Boolean> res : taskResult) {
-				try {
-					success = success && res.get();
-				} catch (InterruptedException | ExecutionException e) {
-					logger.error(e.getMessage(), e);
-					Thread.currentThread().interrupt();
-					return "fail";
-				}
-			}
-			// 任务结束，停止线程池的所有线程
-			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/MST_BOND_CREDIT_RATING/"), new String[] { "tmp" }, false);
-			logger.debug("获取债券评级sqlloder文件个数"+files.size());
-			List<String> content = new ArrayList<>(listData.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(InterfDefine.债券评级数据.getCode())) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件" + f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
-					}
-				}
-			}
-			logger.debug("读取债券评级sqlloder文件共"+content.size()+"条");
-			if ("fail".equals(result)) {
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_BOND_CREDIT_RATING/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
-						return "fail";
-					}
-				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						logger.debug("sqlloader入库开始");
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_BOND_CREDIT_RATING/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-						logger.debug("sqlloader入库结束");
-					} catch (IOException | InterruptedException e) {
-						logger.debug("sqlloader入库报错");
-						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
-						return "fail";
-					}
-				}
-			}
-		}
+//		} else {// 大于1000使用sqlloader入库
+//			// 创建表
+//			ImpTable table = new ImpTable(InterfDefine.债券评级数据.getCode());
+//			table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.债券评级数据.getCode()));
+//			// 创建一个线程池
+//			if (interfMaxCorePoolSize < 1) {
+//				interfMaxCorePoolSize = 20;
+//			}
+//			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
+//			List<Callable<Boolean>> tasks = new ArrayList<>();
+//			if (null != listData) {
+//				int start = 0;
+//				int end = 0;
+//				int size = listData.size();
+//				int max = (int) Math.ceil((double) size / 1000);
+//				for (int i = 0; i < max; i++) {
+//					start = end;
+//					end = Math.min(size, 1000 * (i + 1));
+//					List<Map<String, String>> subList = listData.subList(start, end);
+//					logger.debug("生成债券评级qlloader文件"+i);
+//					tasks.add(new Callable<Boolean>() {
+//						@Override
+//						public Boolean call() {
+//							return excuteSecRatingByStep(saveFlag,subList,null, tmpPath, table, null);
+//						}
+//					});
+//				}
+//			}
+//			// 为线程池添加任务
+//			List<Future<Boolean>> taskResult;
+//			try {
+//				taskResult = service.invokeAll(tasks);
+//			} catch (InterruptedException e) {
+//				logger.error(e.getMessage(), e);
+//				Thread.currentThread().interrupt();
+//				return "fail";
+//			}
+//			for (Future<Boolean> res : taskResult) {
+//				try {
+//					success = success && res.get();
+//				} catch (InterruptedException | ExecutionException e) {
+//					logger.error(e.getMessage(), e);
+//					Thread.currentThread().interrupt();
+//					return "fail";
+//				}
+//			}
+//			// 任务结束，停止线程池的所有线程
+//			service.shutdown();
+//			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/MST_BOND_CREDIT_RATING/"), new String[] { "tmp" }, false);
+//			logger.debug("获取债券评级sqlloder文件个数"+files.size());
+//			List<String> content = new ArrayList<>(listData.size());
+//			String result = "";
+//			for (File f : files) {
+//				if (f.getName().startsWith(InterfDefine.债券评级数据.getCode())) {
+//					try {
+//						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+//						logger.debug("查找sqlloder文件" + f);
+//					} catch (IOException e) {
+//						logger.debug("查找sqlloder文件异常");
+//						logger.error(e.getMessage(), e);
+//						result = "fail";
+//					} finally {
+//						f.delete();
+//					}
+//				}
+//			}
+//			logger.debug("读取债券评级sqlloder文件共"+content.size()+"条");
+//			if ("fail".equals(result)) {
+//				return result;
+//			}
+//			// 系统是否使用的db2数据库
+//			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+//			if (isDB2DataBase) {
+//				// db2数据库处理
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_BOND_CREDIT_RATING/", content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
+//								reportSqlldrDatabaseName);
+//					} catch (IOException | InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//						Thread.currentThread().interrupt();
+//						return "fail";
+//					}
+//				}
+//			} else {
+//				// oracle原逻辑
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						logger.debug("sqlloader入库开始");
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/MST_BOND_CREDIT_RATING/", content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
+//								reportSqlldrDatabaseName);
+//						logger.debug("sqlloader入库结束");
+//					} catch (IOException | InterruptedException e) {
+//						logger.debug("sqlloader入库报错");
+//						logger.error(e.getMessage(), e);
+//						Thread.currentThread().interrupt();
+//						return "fail";
+//					}
+//				}
+//			}
+//		}
 		return "success";
 	}
 

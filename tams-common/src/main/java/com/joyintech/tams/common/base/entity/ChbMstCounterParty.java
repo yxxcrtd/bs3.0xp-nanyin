@@ -1,6 +1,7 @@
 package com.joyintech.tams.common.base.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
 
@@ -11,6 +12,80 @@ import com.joyintech.framework.base.BaseEntity;
  * @创建时间: 2019-02-19
  */
 public class ChbMstCounterParty extends BaseEntity {
+    /**
+     * 数据状态
+
+     */
+    private String status;
+    private String statusName;
+
+    @Override
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    /**
+     * 选择项
+     */
+    private List<ChbMstCounterParty> selectedItem;
+
+    public List<ChbMstCounterParty> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<ChbMstCounterParty> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    /**
+     * 数据来源
+
+     */
+    private String dataSource;
+    private String dataSourceName;
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public String getDataSourceName() {
+        return dataSourceName;
+    }
+
+    public void setDataSourceName(String dataSourceName) {
+        this.dataSourceName = dataSourceName;
+    }
+
+    /**
+     * 导出类型
+     */
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     /**
      * 交易对手代码
      */
@@ -86,9 +161,35 @@ public class ChbMstCounterParty extends BaseEntity {
      */
     private String counterType1;
     /**
+     * 交易对手一级分类名称
+     */
+    private String counterType1Name;
+
+    public String getCounterType1Name() {
+        return counterType1Name;
+    }
+
+    public void setCounterType1Name(String counterType1Name) {
+        this.counterType1Name = counterType1Name;
+    }
+
+    /**
      * 交易对手二级分类
      */
     private String counterType2;
+    /**
+     * 交易对手二级分类名称
+     */
+    private String counterType2Name;
+
+    public String getCounterType2Name() {
+        return counterType2Name;
+    }
+
+    public void setCounterType2Name(String counterType2Name) {
+        this.counterType2Name = counterType2Name;
+    }
+
     /**
      * 是否为中央交易对手方
      */

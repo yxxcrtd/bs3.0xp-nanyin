@@ -3,8 +3,85 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.json.CustomDateDeserialize;
 import java.util.Date;
+import java.util.List;
 
 public class MstBondCreditRating extends MstBondCreditRatingKey {
+
+    /**
+     * 数据状态名称
+     */
+    private String statusName;
+    /**
+     * 数据状态
+     */
+    private String status;
+    /**
+     * 数据来源
+     */
+    private String svrDataSources;
+    /**
+     * 数据来源名称
+     */
+    private String svrDataSourcesName;
+    /**
+     * 导出类型
+     */
+    private String type;
+    /**
+     * 选择项
+     */
+    private List<MstBondCreditRating> selectedItem;
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    @Override
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getSvrDataSources() {
+        return svrDataSources;
+    }
+
+    public void setSvrDataSources(String svrDataSources) {
+        this.svrDataSources = svrDataSources;
+    }
+
+    public String getSvrDataSourcesName() {
+        return svrDataSourcesName;
+    }
+
+    public void setSvrDataSourcesName(String svrDataSourcesName) {
+        this.svrDataSourcesName = svrDataSourcesName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<MstBondCreditRating> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<MstBondCreditRating> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
     /**
      * 长短期
      */
@@ -14,6 +91,42 @@ public class MstBondCreditRating extends MstBondCreditRatingKey {
      * 评级结果
      */
     private String gradeResult;
+    /**
+     * 评级结果名称
+     */
+    private String gradeResultName;
+    /**
+     * 评级类型名称
+     */
+    private String oTypeName;
+    /**
+     * 评级机构名称
+     */
+    private String gradeOrgIdName;
+
+    public String getGradeResultName() {
+        return gradeResultName;
+    }
+
+    public void setGradeResultName(String gradeResultName) {
+        this.gradeResultName = gradeResultName;
+    }
+
+    public String getoTypeName() {
+        return oTypeName;
+    }
+
+    public void setoTypeName(String oTypeName) {
+        this.oTypeName = oTypeName;
+    }
+
+    public String getGradeOrgIdName() {
+        return gradeOrgIdName;
+    }
+
+    public void setGradeOrgIdName(String gradeOrgIdName) {
+        this.gradeOrgIdName = gradeOrgIdName;
+    }
 
     /**
      * 录入方式

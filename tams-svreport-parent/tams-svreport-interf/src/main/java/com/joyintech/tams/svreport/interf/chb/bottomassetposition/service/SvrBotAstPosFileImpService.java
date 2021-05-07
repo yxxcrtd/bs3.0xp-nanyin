@@ -121,7 +121,7 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 				// 插入开放计划
 				insertData(list);
 			} else {
-				
+
 				createDataFile(tmpPath + "/CHB_BOT_AST_POS/CHB_BOT_AST_POS", list, table.getColumns());
 			}
 		}
@@ -335,105 +335,108 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 			Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
 			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
 			mergeData(list); 
-		}else if (posList.size() <= reportInterfOneTimeSqlLdrDataCount) {
-			deleteByUpdateTime(new Date());
-			success = excuteProdOpenSchByStep(posList, type, null, null,dataSource,saveFlag);
-		} else {// 大于1000使用sqlloader入库
-			deleteByUpdateTime(new Date());
-			// 创建表
-			ImpTable table = new ImpTable(InterfDefine.资管计划底层资产持仓接口数据.getCode());
-			table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.资管计划底层资产持仓接口数据.getCode()));
-			// 创建一个线程池
-			if (interfMaxCorePoolSize < 1) {
-				interfMaxCorePoolSize = 20;
-			}
-			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-			List<Callable<Boolean>> tasks = new ArrayList<>();
-			if (null != posList) {
-				int start = 0;
-				int end = 0;
-				int size = posList.size();
-				int max = (int) Math.ceil((double) size / 100000);
-				for (int i = 0; i < max; i++) {
-					start = end;
-					end = Math.min(size, 1000 * (i + 1));
-					List<Map<String, String>> subList = posList.subList(start, end);
-					tasks.add(new Callable<Boolean>() {
-						@Override
-						public Boolean call() {
-							return excuteProdOpenSchByStep(subList, type, tmpPath, table,dataSource,saveFlag);
-						}
-					});
-				}
-			}
-			// 为线程池添加任务
-			List<Future<Boolean>> taskResult;
-			try {
-				taskResult = service.invokeAll(tasks);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
-				Thread.currentThread().interrupt();
-				return success?"success":"fail";
-			}
-			for (Future<Boolean> res : taskResult) {
-				try {
-					success = success && res.get();
-				} catch (InterruptedException | ExecutionException e) {
-					logger.error(e.getMessage(), e);
-					Thread.currentThread().interrupt();
-					return success?"success":"fail";
-				}
-			}
-			// 任务结束，停止线程池的所有线程
-			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_BOT_AST_POS/"), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(posList.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(InterfDefine.资管计划底层资产持仓接口数据.getCode())) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件" + f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
-					}
-				}
-			}
-			if ("fail".equals(result)) {
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_BOT_AST_POS/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return success?"success":"fail";
-					}
-				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_BOT_AST_POS/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return success?"success":"fail";
-					}
-				}
-			}
 		}
+//		else if (posList.size() <= reportInterfOneTimeSqlLdrDataCount) {
+		else {
+			deleteByUpdateTime(new Date());
+			success = excuteProdOpenSchByStep(posList, type, null, null, dataSource, saveFlag);
+		}
+//		} else {// 大于1000使用sqlloader入库
+//			deleteByUpdateTime(new Date());
+//			// 创建表
+//			ImpTable table = new ImpTable(InterfDefine.资管计划底层资产持仓接口数据.getCode());
+//			table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.资管计划底层资产持仓接口数据.getCode()));
+//			// 创建一个线程池
+//			if (interfMaxCorePoolSize < 1) {
+//				interfMaxCorePoolSize = 20;
+//			}
+//			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
+//			List<Callable<Boolean>> tasks = new ArrayList<>();
+//			if (null != posList) {
+//				int start = 0;
+//				int end = 0;
+//				int size = posList.size();
+//				int max = (int) Math.ceil((double) size / 100000);
+//				for (int i = 0; i < max; i++) {
+//					start = end;
+//					end = Math.min(size, 1000 * (i + 1));
+//					List<Map<String, String>> subList = posList.subList(start, end);
+//					tasks.add(new Callable<Boolean>() {
+//						@Override
+//						public Boolean call() {
+//							return excuteProdOpenSchByStep(subList, type, tmpPath, table,dataSource,saveFlag);
+//						}
+//					});
+//				}
+//			}
+//			// 为线程池添加任务
+//			List<Future<Boolean>> taskResult;
+//			try {
+//				taskResult = service.invokeAll(tasks);
+//			} catch (InterruptedException e) {
+//				logger.error(e.getMessage(), e);
+//				Thread.currentThread().interrupt();
+//				return success?"success":"fail";
+//			}
+//			for (Future<Boolean> res : taskResult) {
+//				try {
+//					success = success && res.get();
+//				} catch (InterruptedException | ExecutionException e) {
+//					logger.error(e.getMessage(), e);
+//					Thread.currentThread().interrupt();
+//					return success?"success":"fail";
+//				}
+//			}
+//			// 任务结束，停止线程池的所有线程
+//			service.shutdown();
+//			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_BOT_AST_POS/"), new String[] { "tmp" }, false);
+//			List<String> content = new ArrayList<>(posList.size());
+//			String result = "";
+//			for (File f : files) {
+//				if (f.getName().startsWith(InterfDefine.资管计划底层资产持仓接口数据.getCode())) {
+//					try {
+//						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+//						logger.debug("查找sqlloder文件" + f);
+//					} catch (IOException e) {
+//						logger.debug("查找sqlloder文件异常");
+//						logger.error(e.getMessage(), e);
+//						result = "fail";
+//					} finally {
+//						f.delete();
+//					}
+//				}
+//			}
+//			if ("fail".equals(result)) {
+//				return result;
+//			}
+//			// 系统是否使用的db2数据库
+//			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+//			if (isDB2DataBase) {
+//				// db2数据库处理
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_BOT_AST_POS/", content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
+//								reportSqlldrDatabaseName);
+//					} catch (IOException | InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//						return success?"success":"fail";
+//					}
+//				}
+//			} else {
+//				// oracle原逻辑
+//				if (CollectionUtils.isNotEmpty(content)) {
+//					try {
+//						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_BOT_AST_POS/", content,
+//								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
+//								reportSqlldrDatabaseName);
+//					} catch (IOException | InterruptedException e) {
+//						logger.error(e.getMessage(), e);
+//						return success?"success":"fail";
+//					}
+//				}
+//			}
+//		}
 		logger.info("----底层资产持仓信息入库，结束-----");
 
 		return success?"success":"fail";

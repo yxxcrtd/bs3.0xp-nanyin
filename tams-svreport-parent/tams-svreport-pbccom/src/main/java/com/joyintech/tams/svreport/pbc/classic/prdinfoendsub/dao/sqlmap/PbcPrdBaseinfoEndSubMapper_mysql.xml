@@ -48,24 +48,11 @@
   	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
   </sql>
   <sql id="PBC_PRD_BASEINFO_SUB">
-  (select a.* from (
-        SELECT
-        @rownum:=@rownum+1 rownum,
-        PBC_PROD_ID,
-        PROD_ID,
-        OPERATE_MODE,
-        IVSTORIENTATION,
-        VDATE,
-        STATUS,
-        RAISE_ENDDATE,
-        ORG_CODE,
-        IF( @PBC_PROD_ID = a.PBC_PROD_ID, @rank := @rank + 1, @rank := 1 ) AS myrank,
-        @PBC_PROD_ID := a.PBC_PROD_ID
-        FROM
-        ( SELECT * FROM pbc_prd_baseinfo_sub  ORDER BY PBC_PROD_ID,ifnull( UPDATE_TIME, CREATE_TIME ) DESC) a,
-        ( SELECT @rownum := 0, @PBC_PROD_ID := NULL, @rank := 0 )b
-	) a
-	WHERE 1=1 limit 1)
+      (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+      row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+      DESC) AS myrank
+      FROM pbc_prd_baseinfo_sub) a
+      WHERE a.myrank=1)
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

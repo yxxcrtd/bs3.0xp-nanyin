@@ -17,21 +17,21 @@
             }
         },
         cols: [
-            { title: "数据状态", field:'statusName',width:'8%'},
-            { title: "产品代码", field:'busiIdName',width:'8%'},
+            { title: "数据状态", field:'statusName',width:'8%', sortField:'status'},
+            { title: "产品代码", field:'busiIdName',width:'8%', sortField:'busiId'},
             { title: "启用日期", field:'startDate',type:'date',width:'12%'},
-            { title: "信披费用类型", field:'cashType2Name',width:'10%'},
+            { title: "信披费用类型", field:'cashType2Name',width:'10%', sortField:'cashType2'},
             { title: "busiId",  visible:false, field:'busiId'},
             { title: "status",  visible:false, field:'status'},
             { title: "cashType2",  visible:false, field:'cashType2'},
             { title: "dataSource",  visible:false, field:'dataSource'},
             { title: "datauuid",  visible:false, field:'datauuid'},
-            { title: "费率", field:'rate',width:'6%'},
-            { title: "创建人", field:'createUser',width:'8%'},
+            { title: "费率", field:'rate',width:'6%', sortField:'rate'},
+            { title: "创建人", field:'createUser',width:'8%', sortField:'createUser'},
             { title: "创建时间", field:'createTime',type:'date',width:'12%'},
-            { title: "更新人", field:'updateUser',width:'8%'},
+            { title: "更新人", field:'updateUser',width:'8%', sortField:'updateUser'},
             { title: "更新时间", field:'updateTime',type:'date', width:'8%'},
-            { title: "数据来源", field:'dataSourceName', width:'10%'},
+            { title: "数据来源", field:'dataSourceName', width:'10%', sortField:'dataSource'},
             {
                 title : '操作',
                 field : 'operation',
@@ -59,6 +59,7 @@
                 return;
             }else{
                 data.pageModel = PAGE_MODEL_EDIT;
+                data.type="update";
                 Joyin.dialog(JoyinUtil.getLabel("编辑产品费率信息"),
                     basePath + "svreport/system/prorate/DisPrdFeeRate002/init",
                     "95%", "95%", data,function(){
@@ -97,16 +98,35 @@
     };
 
     $(function() {
+        // 导入按钮点击事件
+        $('#DisPrdFeeRate001_btn_import').click(function() {
+            Joyin.confirm("请确认是否要导入数据？", function() {
+                Joyin.uploadFile(function(fileName) {
+                    Joyin.ajax(basePath + 'svreport/system/prorate/DisPrdFeeRate001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                        Joyin.ajax(basePath + 'svreport/system/prorate/DisPrdFeeRate001/importFile', {fileName: fileName});
+                    });
+                },function() {
+                    table.reload();
+                });
+            });
+        });
+
         // 导出按钮点击事件
         $('#DisPrdFeeRate001_btn_export').click(function() {
             var param ={};
             var rows = table.getAllCheckedRows();
             if(rows.length > 0) {
-                var keyList = [];
+                var busiIdList = [];
+                var cashType2List = [];
+                var startDateList = [];
                 $.each(rows, function(i, row) {
-                    keyList.push(row.orgCode + '|' + row.prodId);
+                    busiIdList.push(row.busiId);
+                    cashType2List.push(row.cashType2);
+                    startDateList.push(row.startDate);
                 });
-                param.keys = keyList.join(',');
+                param.keybusiIdList = busiIdList.join();
+                param.keycashType2List = cashType2List.join();
+                param.keystartDateList = startDateList.join();
             }
             else{
                 //有勾选优先勾选数据

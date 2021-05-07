@@ -454,8 +454,8 @@ public class ViewCompareDetailController extends BaseController {
         if (StringUtil.equals(pageId, PageFiledList.产品资金募集信息.getPageId())) {
         	dataResultList.forEach(map->{
         		map.forEach((key, value)->{
-        			if(Arrays.asList(PageFiledList.产品资金募集信息.getFiledArr()).contains(key) && StringUtil.isNotEmpty(value)
-        					&& BigDecimal.ZERO.compareTo((BigDecimal)value)==0) {
+                    if(Arrays.asList(PageFiledList.产品资金募集信息.getFiledArr()).contains(key)
+                            &&(value==null?true:(BigDecimal.ZERO.compareTo((BigDecimal)value)==0))) {
         				map.put(key, null);
         			}
         		});

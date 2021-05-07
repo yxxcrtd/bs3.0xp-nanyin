@@ -10,7 +10,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.system.prorate.service.ProRateInfo001Service;
 import com.joyintech.tams.report.system.prorate.service.ProrateService;
 import com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield;
@@ -22,10 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.util.*;
@@ -188,7 +185,7 @@ public class DisPrdFeeRate001Controller extends BaseController {
         }
         List<DisRepCashYield> dtoList = this.prorateService.queryReportList(RequestUtil.getPageParam());
         dtoList.forEach(item -> {
-            item.setCashType2(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndName(
+            item.setCashType2(com.joyintech.tams.report.common.util.SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.信披费用类型, item.getCashType2()));
             item.setBusiId(map.get(item.getBusiId()));
         });
@@ -199,5 +196,30 @@ public class DisPrdFeeRate001Controller extends BaseController {
                         + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
                         + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
                 outFile, true);
+    }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+        return prorateService.checkConfirmMsgForImportData(fileName);
+    }
+
+    /**
+     * 导入数据文件
+     *
+     * @param fileName 导入的文件名
+     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     */
+    @ResponseBody
+    @RequestMapping("/importFile")
+    public List<ExcelValidDto> importData(String fileName) {
+        return this.prorateService.importData(fileName);
+
     }
 }

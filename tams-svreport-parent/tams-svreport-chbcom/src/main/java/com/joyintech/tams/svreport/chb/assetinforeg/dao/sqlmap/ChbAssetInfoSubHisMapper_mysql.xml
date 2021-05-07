@@ -153,6 +153,7 @@
     <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
     <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="VARCHAR" />
     <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="BaseResultMapReg"
         type="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
@@ -347,6 +348,7 @@
         <result column="SEC_CREDIT_GRADE_TYPE" property="secCreditGradeType" jdbcType="VARCHAR" />
         <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="TIMESTAMP" />
         <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+    	<result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
     </resultMap>
   <sql id="Base_Column_List_Reg" >
     HIS_NO REGIST_SEQNO, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE, ASSET_YIELD, 
@@ -371,7 +373,7 @@
     REMARK, IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE, 
     SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE, SUBMIT_TIME, STATUS_DATE, STATUS, CREATE_USER, 
     CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
-    CREATE_DEPT, DATA_SOURCE, DELETE_RES, CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME
+    CREATE_DEPT, DATA_SOURCE, DELETE_RES, CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SUMIT_SEQ
   </sql>
   <sql id="Base_Column_List" >
     HIS_NO, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE, ASSET_YIELD, 
@@ -396,7 +398,7 @@
     REMARK, IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE, 
     SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE, SUBMIT_TIME, STATUS_DATE, STATUS, CREATE_USER, 
     CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
-    CREATE_DEPT, DATA_SOURCE, DELETE_RES, CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME
+    CREATE_DEPT, DATA_SOURCE, DELETE_RES, CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SUMIT_SEQ
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -459,7 +461,7 @@
       UPDATE_TIME, ORG_CODE, DEPT_CODE, 
       SEND_STATUS, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT, 
       DATA_SOURCE, DELETE_RES, CAP_USE_INDU_LEVEL2, 
-      ISSUE_PARTY_NAME)
+      ISSUE_PARTY_NAME, SUMIT_SEQ)
     values (#{hisNo,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, 
       #{assetType2,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
       #{vdate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, #{assetYield,jdbcType=DECIMAL}, 
@@ -510,7 +512,7 @@
       NOW(), #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
       #{sendStatus,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
       #{dataSource,jdbcType=VARCHAR}, #{deleteRes,jdbcType=VARCHAR}, #{capUseInduLevel2,jdbcType=VARCHAR}, 
-      #{issuePartyName,jdbcType=VARCHAR})
+      #{issuePartyName,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSubHisDto" >
     insert into CHB_ASSET_INFO_SUB_HIS
@@ -968,6 +970,9 @@
       <if test="issuePartyName != null" >
         ISSUE_PARTY_NAME,
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="hisNo != null" >
@@ -1422,6 +1427,9 @@
       </if>
       <if test="issuePartyName != null" >
         #{issuePartyName,jdbcType=VARCHAR},
+      </if>
+      <if test="sumitSeq != null" >
+        #{sumitSeq,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -1878,6 +1886,9 @@
       <if test="issuePartyName != null" >
         ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      </if>
     </set>
     where HIS_NO = #{hisNo,jdbcType=CHAR}
   </update>
@@ -2032,7 +2043,8 @@
       DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
       DELETE_RES = #{deleteRes,jdbcType=VARCHAR},
       CAP_USE_INDU_LEVEL2 = #{capUseInduLevel2,jdbcType=VARCHAR},
-      ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR}
+      ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+      SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR}
     where HIS_NO = #{hisNo,jdbcType=CHAR}
   </update>
     <select id="selectAssetInfoRegByAssetCode" resultMap="BaseResultMapReg"

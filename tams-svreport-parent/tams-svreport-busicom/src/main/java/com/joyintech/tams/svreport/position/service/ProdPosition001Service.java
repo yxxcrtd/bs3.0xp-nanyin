@@ -154,6 +154,15 @@ public class ProdPosition001Service  extends SvrCBBaseService{
               +GlobalConstant.UNDER_LINE+x.getBuyplace()+GlobalConstant.UNDER_LINE+x.getCustomerType2()
               ));
 		//查询今日发生交易
+		/**add by dongxiangyang  日均余额算法  20201217 */
+		Map<String, List<ChbPrdPosition>> positionMapDate=ystPositionList.stream().collect(
+				JoyinCollectors.groupingBy(
+						x -> x.getProdId()+GlobalConstant.UNDER_LINE+x.getIndentifyMark()
+								+GlobalConstant.UNDER_LINE+x.getIssuePartyId()+GlobalConstant.UNDER_LINE+x.getCcy()
+								+GlobalConstant.UNDER_LINE+x.getBuyplace()+GlobalConstant.UNDER_LINE+x.getCustomerType2()
+								+GlobalConstant.UNDER_LINE+DateUtil.format(DateUtil.addDay(x.getCdate(), -1))
+				));
+		/**add by dongxiangyang  日均余额算法  20201217 */
 		//先处理赎回类交易（赎回、提前赎回、到期）
 		List<ChbPrdDeal> redDealList=queryDealData(bookDate,prodIdList ,new ArrayList<String>(Arrays.asList(
     		    DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue(),
@@ -318,6 +327,44 @@ public class ProdPosition001Service  extends SvrCBBaseService{
     	}
 
     	//更新新增字段字段
+		/**add by dongxiangyang  日均余额算法  20201217 */
+		//计算日均余额
+		if(StringUtil.isNotEmpty(positionMap)){
+			for(String  dealkey:positionMap.keySet()){
+				ChbPrdPosition pos = positionMap.get(dealkey).get(0);
+				List<String> list=new ArrayList<String>();
+				list.add(pos.getProdId());
+				//前一日的key
+				String dealkeydate= pos.getProdId()+GlobalConstant.UNDER_LINE+pos.getIndentifyMark()
+						+GlobalConstant.UNDER_LINE+pos.getIssuePartyId()+GlobalConstant.UNDER_LINE+pos.getCcy()
+						+GlobalConstant.UNDER_LINE+pos.getBuyplace()+GlobalConstant.UNDER_LINE+pos.getCustomerType2()
+						+GlobalConstant.UNDER_LINE+com.joyintech.framework.util.DateUtil.format(DateUtil.addDay(pos.getCdate(), -1));
+				//前一日的pos
+				ChbPrdPosition posdate=new  ChbPrdPosition();
+				//昨日日均余额
+				BigDecimal dayVqty=BigDecimal.ZERO;
+				//获取产品起息日
+				Date  vdate=chbPrdPositionMapper.getVdate(pos.getProdId());
+				if(positionMapDate.containsKey(dealkeydate)){
+					posdate = positionMapDate.get(dealkeydate).get(0);
+					dayVqty=posdate.getRaiseamt();
+				}
+				//先处理赎回类交易（赎回、提前赎回、到期）
+				List<ChbPrdDeal> dList=queryDealData(bookDate,list ,new ArrayList<String>(Arrays.asList(
+						DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue())));
+				if(dList!=null&&dList.size()>0){
+					pos.setRaiseamt(dayVqty);
+				}else{
+					pos.setRaiseamt((dayVqty.multiply(
+							new BigDecimal(DateUtil.getBetweenDayNumber(vdate,bookDate))
+					).add(pos.getBalanceQty())).divide(
+							new BigDecimal(DateUtil.getBetweenDayNumber(vdate,DateUtil.addDay(bookDate, 1)))
+							,14,BigDecimal.ROUND_HALF_UP
+					));
+				}
+			}
+		}
+		/**add by dongxiangyang  日均余额算法  20201217 */
     	// 查询交易信息
         List<ChbPrdDeal> dealList = chbPrdPositionMapper.selectPrdDeal(bookDate,prodIdList);
         for (ChbPrdDeal chbPrdDeal : dealList) {

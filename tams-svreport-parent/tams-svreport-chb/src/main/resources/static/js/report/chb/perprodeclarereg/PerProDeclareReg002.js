@@ -1,5 +1,9 @@
 (function() {
+    function init(){
+        $(".layui-fixbar").hide();
+    };
     $(function() {
+        init();
         //新建按钮点击事件
         $('#PerProDeclareReg002_btn_save').click(function() {
             var object = $.serializeToObject('#submitForm',true);
