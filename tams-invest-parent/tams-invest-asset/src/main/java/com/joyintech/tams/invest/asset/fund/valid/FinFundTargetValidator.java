@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
@@ -229,6 +230,24 @@ public class FinFundTargetValidator implements BeanValidator {
                         getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.type12"))));
             }
         }
+        //add by yjp 20210507 TISHKBS-2101 到期日<发行日/起息日，可正常提交，没有校验 start
+        if (dto != null && dto.getVdate() != null && dto.getMdate() != null) {
+        	 if (DateUtil.compareDate(dto.getVdate(),
+        			 dto.getMdate()) > 0) {
+                 ValidMessage validMessage = new ValidMessage("mdate",
+                         getMessage("到期日不可小于发行日期/成立日期"));
+                 resultList.add(validMessage);
+             }
+        }
+        if (dto != null && dto.getIdate() != null && dto.getMdate() != null) {
+       	 if (DateUtil.compareDate(dto.getIdate(),
+       			 dto.getMdate()) > 0) {
+                ValidMessage validMessage = new ValidMessage("mdate",
+                        getMessage("到期日不可小于发行日期/成立日期"));
+                resultList.add(validMessage);
+            }
+       }
+        //add by yjp 20210507 TISHKBS-2101 到期日<发行日/起息日，可正常提交，没有校验 end
         return resultList;
     }
 
