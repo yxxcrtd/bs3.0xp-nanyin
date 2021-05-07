@@ -239,13 +239,13 @@ public class XmlDom4jUtils {
         		new TempCheckInfo(TempConstant.债券存续期交易,"prodId","INVEST"));
         prdNameMap.put(TempConstant.债券应收款项转让交易, 
         		new TempCheckInfo(TempConstant.债券应收款项转让交易,"prodId","INVEST"));
-    	
+
         prdNameMap.put(TempConstant.存款类资产存款交易, 
-        		new TempCheckInfo(TempConstant.存款类资产存款交易,"prodId","INVEST"));
+        		new TempCheckInfo(TempConstant.存款类资产存款交易,"prodId","INVEST","assetId"));
         prdNameMap.put(TempConstant.存款类资产存款存续期表, 
-        		new TempCheckInfo(TempConstant.存款类资产存款存续期表,"prodId","INVEST"));
+        		new TempCheckInfo(TempConstant.存款类资产存款存续期表,"prodId","INVEST","assetId"));
         prdNameMap.put(TempConstant.存款类资产应收款项转让交易, 
-        		new TempCheckInfo(TempConstant.存款类资产应收款项转让交易,"prodId","INVEST"));
+        		new TempCheckInfo(TempConstant.存款类资产应收款项转让交易,"prodId","INVEST","assetId"));
     	
         prdNameMap.put(TempConstant.申购申请交易, 
         		new TempCheckInfo(TempConstant.申购申请交易,"prodId","INVEST"));
