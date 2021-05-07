@@ -3384,8 +3384,8 @@
 			   NULL belongInstitutionCode,
 			  '02' model_type 
 		from CHB_ASSET_INFO_SUB ASSETINFO
-		LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
-		LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID
+		<!--LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+		LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID-->
 		LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'	
 		<if test="orgCode != null and orgCode.size() > 0">
 			<foreach collection="orgCode" item="code" 
@@ -3396,28 +3396,42 @@
 		<where>
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
-			AND F.TRADE_MARKET IS NOT NULL
+			<!--AND F.TRADE_MARKET IS NOT NULL-->
+			and ASSETINFO.asset_type in ('03','06','15')
 			
 			/**产品投资交易数据筛选产品交易数据*/
 			and EXISTS (
-					SELECT 1 FROM TRD_PRODUCT_DEAL T
-			        left join TRD_PRODUCT_DEAL_ADD ta  on t.trade_id=ta.trade_id
-			        left join FIN_PRODUCT f1  on t.finprod_id=f1.finprod_id
-					LEFT JOIN FIN_PRODUCT F ON ta.portfolio_id=F.FINPROD_MARKET_ID
-					LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='FINPROD04'
-					WHERE ASSETINFO.ASSET_CODE=f1.FINPROD_MARKET_ID and t.trade_status='01' and t.is_cancel='N'
+				<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('01')">
+					select 1
+					from(select distinct cabd.prod_id,cabd.asset_id from  CHB_ASSETS_BASIS_DATA cabd)cabds
+					left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+					on cabds.asset_id=cbap.plan_asset_id
+					LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
+					where 1=1 and (ASSETINFO.ASSET_CODE=cabds.asset_id or ASSETINFO.ASSET_CODE=cbap.asset_code)
 					<if test="orgCode != null and orgCode.size() > 0">
 						<foreach collection="orgCode" item="code"
 								 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
 							#{code,jdbcType=VARCHAR}
 						</foreach>
 					</if>
+				</if>
+				<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
+					select 1
+					from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+					LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
+					where 1=1 and ASSETINFO.ASSET_CODE=cabds.asset_id
+					<if test="orgCode != null and orgCode.size() > 0">
+						<foreach collection="orgCode" item="code"
+								 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
+							#{code,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+				</if>
                     union all
 					select 1
 			        from RSK_VALTBL_PRT_BOTASSET_MAP r
-					left join FIN_PRODUCT F on r.finprod_id = F.finprod_id
 			        LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON r.ptl_id=dA.business_id and dA.model_type = '02'
-					WHERE ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+					WHERE ASSETINFO.ASSET_CODE=substr(r.finprod_id,5)
 					<if test="orgCode != null and orgCode.size() > 0">
 						<foreach collection="orgCode" item="code"
 								 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
@@ -3719,21 +3733,36 @@
 			DA.BELONG_INSTITUTION_CODE belongInstitutionCode,
 			'02' model_type 
 		from CHB_ASSET_INFO_SUB ASSETINFO
-		LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+	<!--	LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID-->
 		/***场外期权类交易连接交易汇总表数据查找所属机构**/
-		LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+		<!--LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
           WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = ASSETINFO.ASSET_CODE
-        LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID
-          LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA 
-        ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')               
+	    LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID -->
+		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('01')">
+			left join (
+			select distinct cabd.prod_id,cabd.asset_id from  CHB_ASSETS_BASIS_DATA cabd
+			union all
+			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA cabd
+			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+			on cabd.asset_id=cbap.plan_asset_id
+			)cabds　
+			on ASSETINFO.ASSET_CODE=cabds.asset_id
+		</if>
+		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
+			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+			on ASSETINFO.ASSET_CODE=cabds.asset_id
+		</if>
+		LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D  WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
+        ON (substr(DA.BUSINESS_ID,5)  = ASSETINFO.ASSET_CODE)　or (DA.BUSINESS_ID = cabds.prod_id)
         LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code	
-        LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='01'			
+        LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO
+		AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='01'
         
         <where>
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
-			AND F.TRADE_MARKET IS NULL
-			
+			<!--AND F.TRADE_MARKET IS NULL-->
+			and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null)
 			<if test="orgCode != null and orgCode.size() > 0">
 				<foreach collection="orgCode" item="code" 
 	         		open=" AND DA.BELONG_INSTITUTION_CODE IN (" close=")" separator=",">
@@ -4079,8 +4108,8 @@
 			   NULL belongInstitutionCode,
 			  '02' model_type 
 		from CHB_ASSET_INFO_SUB ASSETINFO
-		LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
-		LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID
+	<!--	LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+		LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID-->
 		LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'	
 		<if test="orgCode != null and orgCode.size() > 0">
 			<foreach collection="orgCode" item="code" 
@@ -4091,8 +4120,9 @@
 		<where>
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
-			AND F.TRADE_MARKET IS NOT NULL
-			
+		<!--	AND F.TRADE_MARKET IS NOT NULL-->
+			and ASSETINFO.asset_type in ('03','06','15')
+
 			/**产品投资交易数据筛选产品交易数据*/
 			and EXISTS (
 		        <!--  SELECT 1 FROM CHB_INVEST_TRADE T
@@ -4105,7 +4135,7 @@
 			          		#{code,jdbcType=VARCHAR}
 			        	</foreach>
 					</if> -->
-			SELECT 1 FROM TRD_PRODUCT_DEAL T
+		<!--	SELECT 1 FROM TRD_PRODUCT_DEAL T
 			left join TRD_PRODUCT_DEAL_ADD ta  on t.trade_id=ta.trade_id
 			left join FIN_PRODUCT f1  on t.finprod_id=f1.finprod_id
 			LEFT JOIN FIN_PRODUCT F ON ta.portfolio_id=F.FINPROD_MARKET_ID
@@ -4116,13 +4146,40 @@
 						 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
 					#{code,jdbcType=VARCHAR}
 				</foreach>
+			</if>-->
+			<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('01')">
+				select 1
+				from(select distinct cabd.prod_id,cabd.asset_id from  CHB_ASSETS_BASIS_DATA cabd)cabds
+				left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+				on cabds.asset_id=cbap.plan_asset_id
+				LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
+				where 1=1 and (ASSETINFO.ASSET_CODE=cabds.asset_id or ASSETINFO.ASSET_CODE=cbap.asset_code)
+				<if test="orgCode != null and orgCode.size() > 0">
+					<foreach collection="orgCode" item="code"
+							 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
+						#{code,jdbcType=VARCHAR}
+					</foreach>
+				</if>
 			</if>
+			<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
+				select 1
+				from(select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+				LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
+				where 1=1 and ASSETINFO.ASSET_CODE=cabds.asset_id
+				<if test="orgCode != null and orgCode.size() > 0">
+					<foreach collection="orgCode" item="code"
+							 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
+						#{code,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+			</if>
+
+
 			union all
 			select 1
 			from RSK_VALTBL_PRT_BOTASSET_MAP r
-			left join FIN_PRODUCT F on r.finprod_id = F.finprod_id
 			LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON r.ptl_id=dA.business_id and dA.model_type = '02'
-			WHERE ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+			WHERE ASSETINFO.ASSET_CODE=substr(r.finprod_id,5)
 			<if test="orgCode != null and orgCode.size() > 0">
 				<foreach collection="orgCode" item="code"
 						 open=" AND DA.INSTITUTION_CODE IN (" close=")" separator=",">
@@ -4337,21 +4394,43 @@
 			DA.BELONG_INSTITUTION_CODE belongInstitutionCode,
 			'02' model_type 
 		from CHB_ASSET_INFO_SUB ASSETINFO
-		LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID
+		<!--LEFT JOIN FIN_PRODUCT F ON ASSETINFO.ASSET_CODE=F.FINPROD_MARKET_ID-->
 		/***场外期权类交易连接交易汇总表数据查找所属机构**/
-		LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
+		<!--LEFT JOIN (SELECT PORTFOLIO_ID,FINPROD_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL
           WHERE PORTFOLIO_ID IS NOT NULL GROUP BY PORTFOLIO_ID,FINPROD_ID) DEAL ON DEAL.FINPROD_ID = ASSETINFO.ASSET_CODE
         LEFT JOIN TRD_PRODUCT_DEAL_ADD PDD ON  ASSETINFO.ASSET_CODE = PDD.TRADE_ID
         LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA 
-        ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')                  
-        LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code	
-        LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='01'			
-        
-        <where>
+        ON ((DA.BUSINESS_ID = F.FINPROD_ID OR DA.BUSINESS_ID=DEAL.PORTFOLIO_ID) and  DATA_TYPE != 'PTL01') or (DA.BUSINESS_ID = PDD.PORTFOLIO_ID and DATA_TYPE = 'PTL01')
+		LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code
+        LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='01'
+-->
+		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('01')">
+			left join (
+			select distinct cabd.prod_id,cabd.asset_id from  CHB_ASSETS_BASIS_DATA cabd
+			union all
+			select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA cabd
+			left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+			on cabd.asset_id=cbap.plan_asset_id
+			)cabds　
+			on ASSETINFO.ASSET_CODE=cabds.asset_id
+		</if>
+		<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
+			left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+			on ASSETINFO.ASSET_CODE=cabds.asset_id
+		</if>
+		LEFT JOIN (SELECT D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE FROM DATA_AUTH_NOTIFY_INST D  WHERE D.MODEL_TYPE = '02' GROUP BY D.BUSINESS_ID,D.BELONG_INSTITUTION_CODE,D.DATA_TYPE) DA
+		ON (substr(DA.BUSINESS_ID,5)  = ASSETINFO.ASSET_CODE)　or (DA.BUSINESS_ID = cabds.prod_id)
+		LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON da.BELONG_INSTITUTION_CODE=cc.org_code
+		LEFT JOIN CHB_ASSET_SUB_STATUS CS ON ASSETINFO.REGIST_SEQNO=CS.REGIST_SEQNO
+		AND DA.BELONG_INSTITUTION_CODE=CS.INSTITUTION_CODE AND CS.ASSET_TYPE='01'
+
+
+		<where>
 			1=1
 			/***用金融标的表的交易场所字段来区分是否是公共资产还是私有资产 leipeng 20200711**/
-			AND F.TRADE_MARKET IS NULL
-			
+		<!--	AND F.TRADE_MARKET IS NULL-->
+			and (ASSETINFO.asset_type not in ('03','06','15') or ASSETINFO.asset_type is null)
+
 			<if test="orgCode != null and orgCode.size() > 0">
 				<foreach collection="orgCode" item="code" 
 	         		open=" AND DA.BELONG_INSTITUTION_CODE IN (" close=")" separator=",">
@@ -4680,7 +4759,7 @@
         and assetinfosub.send_status in ('02','03') -->
 
 		<if test="InstitutionCode != null and InstitutionCode != ''"  >
-			left join (SELECT  distinct
+			<!--left join (SELECT  distinct
 			T.Asset_CODE,DA.INSTITUTION_CODE FROM CHB_INVEST_TRADE T
 			LEFT JOIN FIN_PRODUCT F ON t.PROD_ID=F.FINPROD_MARKET_ID
 			LEFT JOIN DATA_AUTH_NOTIFY_INST DA ON f.finprod_id=dA.business_id
@@ -4688,7 +4767,25 @@
 			on  assetinfo.ASSET_CODE=tt.ASSET_CODE AND tt.INSTITUTION_CODE = #{InstitutionCode,jdbcType=VARCHAR}
 
 			LEFT JOIN FIN_PRODUCT FA ON assetinfo.ASSET_CODE=FA.FINPROD_MARKET_ID
-			left join DATA_AUTH_NOTIFY_INST d1 on  FA.finprod_id=d1.business_id and d1.model_type = '02'
+			left join DATA_AUTH_NOTIFY_INST d1 on  FA.finprod_id=d1.business_id and d1.model_type = '02'-->
+			<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('01')">
+				left join (
+				select distinct cabd.prod_id,cabd.asset_id from  CHB_ASSETS_BASIS_DATA cabd
+				union all
+				select distinct cabd.prod_id,cbap.asset_code from  CHB_ASSETS_BASIS_DATA cabd
+				left join(select distinct cbap.plan_asset_id as plan_asset_id,cbap.asset_code from  chb_bot_ast_pos cbap) cbap
+				on cabd.asset_id=cbap.plan_asset_id
+				)cabds　
+				on assetinfo.ASSET_CODE=cabds.asset_id
+			</if>
+			<if test="isChlBtmStr != null  and isChlBtmStr!='' and isChlBtmStr.equals('02')">
+				left join (select distinct cabd.prod_id,cabd.asset_id from CHB_ASSETS_BASIS_DATA_NOBTM cabd)cabds　
+				on assetinfo.ASSET_CODE=cabds.asset_id
+			</if>
+			left join DATA_AUTH_NOTIFY_INST DA ON cabds.prod_id=dA.business_id and dA.model_type = '02' and DA.DATA_TYPE='PTL01'
+			AND DA.INSTITUTION_CODE = #{InstitutionCode,jdbcType=VARCHAR}
+			left join DATA_AUTH_NOTIFY_INST d1 on  assetinfo.ASSET_CODE=substr(d1.business_id,5) and d1.model_type = '02'
+
 		</if>
 		where 1 =1 
 		<!-- 不过滤状态 -->
@@ -4723,9 +4820,8 @@
 	        </foreach>
 	    </if>
 		<if test ="InstitutionCode != null and InstitutionCode != '' ">
-			AND  (  (tt.INSTITUTION_CODE = #{InstitutionCode,jdbcType=VARCHAR})
-			or (  (FA.TRADE_MARKET IS NOT NULL )
-			or (FA.TRADE_MARKET IS NULL and  d1.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR} ))
+			AND  (DA.INSTITUTION_CODE = #{InstitutionCode,jdbcType=VARCHAR}
+			or d1.BELONG_INSTITUTION_CODE=#{InstitutionCode,jdbcType=VARCHAR}
 			)
 		</if>
 		<!-- /*资产未登记*/

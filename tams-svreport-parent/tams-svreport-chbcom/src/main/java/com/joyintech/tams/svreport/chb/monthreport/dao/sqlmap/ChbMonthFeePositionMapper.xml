@@ -38,10 +38,9 @@
     <include refid="Base_Column_List_inst" />
     from CHB_MONTH_FEE_POSITION
     <if test="modelType != null">
-     	left join (      select f.finprod_market_id,di.institution_code 
-      from fin_product f
-      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
-      WHERE f.p_finprod_id is null) di on di.finprod_market_id = CHB_MONTH_FEE_POSITION.PRODID
+     	left join (      select distinct di.business_id　finprod_market_id,di.institution_code
+      from  DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+      ) di on di.finprod_market_id = CHB_MONTH_FEE_POSITION.PRODID
      </if>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </select>
@@ -243,10 +242,9 @@
     TRUSTFEEAMT, SALEFEEAMT, OTHERFEEAMT, MANAFEEAMT, FLOATFEEAMT, P.PROFIT_TYPE, P.CON_PRD_TRAGET,B.IS_YLLCCP, INSTITUTION_CODE
     from CHB_MONTH_FEE_POSITION p
     LEFT JOIN CHB_prd_baseinfo b on b.prod_id = p.prodid
-       left join (      select f.finprod_market_id,di.institution_code
-      from fin_product f
-      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
-      WHERE f.p_finprod_id is null) di on di.finprod_market_id = p.PRODID
+       left join (      select distinct di.business_id finprod_market_id,di.institution_code
+      from  DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+      ) di on di.finprod_market_id = p.PRODID
     where startdate = #{startdate,jdbcType=DATE}
     and enddate = #{enddate,jdbcType=DATE}
     <if test="prodids !=null and prodids.size()!=0">

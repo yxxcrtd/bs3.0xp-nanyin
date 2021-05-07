@@ -406,16 +406,11 @@
 		      <if test="modelType != null">
 		      	left join
 		      	 (      
-		      	   select 
-		      	     f.finprod_market_id,di.institution_code 
-			       from fin_product f
-			      
-			       left join DATA_AUTH_NOTIFY_INST di 
-			       on f.finprod_id=di.business_id 
-			      
-			       where di.model_type = '02' 
-			       and f.p_finprod_id is null
-			       and di.DATA_TYPE = 'FINPROD04'
+		      	   select
+                  distinct di.business_id finprod_market_id,di.institution_code
+			       from DATA_AUTH_NOTIFY_INST di
+			       where di.model_type = '02'
+			       and di.DATA_TYPE = 'PTL01'
 			      
 			      ) di on di.finprod_market_id = b.PRODID
 		      </if>
@@ -437,16 +432,11 @@
 	  select * from PBC_MONTH_PRD_POSITION b inner join chb_prd_baseinfo info on b.prodid = info.prod_id
 			<if test="modelType != null">
 		      	left join (      
-			      	select 
-		      	      f.finprod_market_id,di.institution_code 
-			         from fin_product f
-			         
-			         left join DATA_AUTH_NOTIFY_INST di 
-			         on f.finprod_id=di.business_id 
-	
+			      	select
+                     distinct di.business_id finprod_market_id,di.institution_code
+			         from DATA_AUTH_NOTIFY_INST di
 	                 where di.model_type = '02' 
-	                 and DI.DATA_TYPE='FINPROD04' 
-	                 and f.p_finprod_id is null
+	                 and DI.DATA_TYPE='PTL01'
                  ) di on di.finprod_market_id = b.PRODID
 		      </if>
 	  	where to_char(b.ENDDATE,'yyyy-MM-dd') = #{bookDate,jdbcType=VARCHAR}
@@ -1403,9 +1393,8 @@
       inner JOIN PBC_PRD_ACCOUNT_SUB PRDBASEINFO
       ON PRDBASEINFO.ACCOUNT_ID = prdposition.PRODID
       
-      left join (      select f.finprod_market_id,di.institution_code 
-      from fin_product f
-      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE = 'FINPROD04' and f.p_finprod_id is null) di on di.finprod_market_id = prdposition.PRODID
+      left join (      select distinct di.business_id　finprod_market_id,di.institution_code
+      from  DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE = 'PTL01' ) di on di.finprod_market_id = prdposition.PRODID
       where to_char(ENDDATE,'yyyy-MM-dd') = #{bookDate,jdbcType=VARCHAR}
         /**筛选到期的产品   start */
         and di.institution_code is not null

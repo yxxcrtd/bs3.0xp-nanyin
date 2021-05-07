@@ -642,10 +642,9 @@
     from CHB_MONTH_ASSET_POSITION POSITION
     LEFT JOIN CHB_ASSET_INFO ASSETINFO
     ON ASSETINFO.ASSET_CODE = POSITION.ASSET_CODE  and     ASSETINFO.status in('E','M')
-    left join (      select f.finprod_market_id,di.institution_code 
-      from fin_product f
-      left join DATA_AUTH_NOTIFY_INST di on f.finprod_id=di.business_id and di.model_type = '02' AND DI.DATA_TYPE= 'FINPROD04'
-      WHERE f.p_finprod_id is null) di on di.finprod_market_id = POSITION.PROD_ID
+    left join (select distinct di.business_id　finprod_market_id,di.institution_code
+      from  DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+     ) di on di.finprod_market_id = POSITION.PROD_ID
     where 
      to_char(POSITION.ENDDATE, 'yyyy-MM-dd') >= #{startDate,jdbcType=VARCHAR}
     <![CDATA[and to_char(POSITION.ENDDATE, 'yyyy-MM-dd') <= #{endDate,jdbcType=VARCHAR}]]>
