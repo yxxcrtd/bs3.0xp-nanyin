@@ -49,6 +49,6 @@
                 AND profit.real_prd_id = #{prodId,jdbcType=VARCHAR}
             </if>
         </where>
-        ORDER BY profit.subject_id
+        ORDER BY profit.subject_id * 1
     </select>
 </mapper>

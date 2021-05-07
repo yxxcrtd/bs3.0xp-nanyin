@@ -250,6 +250,17 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
                 }
             }
 
+            if (StringUtil.isEmpty(mergerDto.getItemName())) {
+                mergerDto.setItemName(null);
+                mergerDto.setInitialBalance(null);
+                mergerDto.setEndingBalance(null);
+            }
+            if (StringUtil.isEmpty(mergerDto.getItemName1())) {
+                mergerDto.setItemName1(null);
+                mergerDto.setInitialBalance1(null);
+                mergerDto.setEndingBalance1(null);
+            }
+
             mergerList.add(mergerDto);
         }
         return mergerList;
