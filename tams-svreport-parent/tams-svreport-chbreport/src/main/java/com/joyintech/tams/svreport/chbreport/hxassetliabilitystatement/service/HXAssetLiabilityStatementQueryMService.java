@@ -217,8 +217,7 @@ public class HXAssetLiabilityStatementQueryMService extends CommonExportService<
      */
     private BigDecimal getLiabilityTotal(HxBalance bal) {
         BigDecimal totalAmount = new BigDecimal(0);
-        totalAmount = totalAmount.add(bal.getDeposit())
-                .add(bal.getInFund())
+        totalAmount = totalAmount.add(bal.getInFund())
                 .add(bal.getHuigouFund())
                 .add(bal.getDerivaDebt())
                 .add(bal.getAccrProfit())
