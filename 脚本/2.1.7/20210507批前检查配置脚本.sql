@@ -364,7 +364,7 @@ values ('CHECK_POINT', '88612', '资产交易/存续期未确认', 10, '0', 'sys
 insert into sys_batch_task (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('88612', 'INV', '资产交易/存续期未确认', null, 'tradeDurationNoConfirmTask', 12, 'system', null, sysdate, 'system', sysdate);
 
- delete from sys_prebatch_task_add  where TASK_ID  = '88611';
+ delete from sys_prebatch_task_add  where TASK_ID  = '88612';
  insert into sys_prebatch_task_add (GROUP_ID, TASK_ID, STOP_FLAG, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
  select  a.seq_no,'88612'
  , '00', null, 'system', null, sysdate, 'system', sysdate
