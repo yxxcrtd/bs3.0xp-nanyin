@@ -394,16 +394,16 @@
 	</delete>
 	<insert id="insertChbPrdFeeDealData"
 		parameterType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal">
-		insert into CHB_PRD_FEE_DEAL(SEQNO,FPROD_ID,PROD_ID,
+		INSERT INTO CHB_PRD_FEE_DEAL(SEQNO,FPROD_ID,PROD_ID,
 		PROD_NAME,REG_CODE,FEE_ID,
 		FEE_NAME,FEE_TYPE,FEE_SECTYPE,
 		CCY,AMT,PAY_DATE,ORG_CODE,
 		DEPT_CODE,STATUS,DATA_SOURCE,
 		REV_DATE,UPDATE_USER,UPDATE_TIME,
 		CREATE_USER,CREATE_TIME,REMARK,TRADE_ID,TRADE_COUNTER,RIVAL_PARTY_TYPE)
-		select de.* from
+		SELECT DE.* FROM
 		(
-		select TEMP.SEQNO,
+		SELECT TEMP.SEQNO,
 		TEMP.FPROD_ID,
 		TEMP.PROD_ID,
 		TEMP.PROD_NAME,
@@ -427,7 +427,7 @@
 		TEMP.REMARK,
 		TEMP.TRADE_ID,
 		TEMP.TRADE_COUNTER,
-		TEMP.RIVAL_PARTY_TYPE from
+		TEMP.RIVAL_PARTY_TYPE FROM
 		(
 		<foreach collection="newDataList" item="item"  separator="union all">
 			SELECT
@@ -459,13 +459,13 @@
 			FROM
 			DUAL
 		</foreach>
-		) TEMP where not EXISTS (select 1 from CHB_PRD_FEE_DEAL CII where CII.TRADE_ID = TEMP.TRADE_ID)
-		) de ;
-		UPDATE  CHB_PRD_FEE_DEAL as A,
+		) TEMP WHERE NOT EXISTS (SELECT 1 FROM CHB_PRD_FEE_DEAL CII WHERE CII.TRADE_ID = TEMP.TRADE_ID)
+		) DE ;
+		UPDATE  CHB_PRD_FEE_DEAL AS A,
 		(
-		select de.* from
+		SELECT DE.* FROM
 		(
-		select TEMP.SEQNO,
+		SELECT TEMP.SEQNO,
 		TEMP.FPROD_ID,
 		TEMP.PROD_ID,
 		TEMP.PROD_NAME,
@@ -489,7 +489,7 @@
 		TEMP.REMARK,
 		TEMP.TRADE_ID,
 		TEMP.TRADE_COUNTER,
-		TEMP.RIVAL_PARTY_TYPE from
+		TEMP.RIVAL_PARTY_TYPE FROM
 		(
 		<foreach collection="newDataList" item="item"  separator="union all">
 			SELECT
@@ -522,9 +522,9 @@
 			DUAL
 		</foreach>
 		) TEMP
-		) de
+		) DE
 		) AS B
-		set  A.SEQNO = B.SEQNO,
+		SET  A.SEQNO = B.SEQNO,
 		A.FPROD_ID = B.FPROD_ID,
 		A.PROD_ID = B.PROD_ID,
 		A.PROD_NAME = B.PROD_NAME,
@@ -538,7 +538,7 @@
 		A.PAY_DATE = B.PAY_DATE,
 		A.ORG_CODE = B.ORG_CODE,
 		A.DEPT_CODE = B.DEPT_CODE,
-		A.STATUS = (case B.STATUS when 'E' then 'M' else 'D' end),
+		A.STATUS = (CASE B.STATUS WHEN 'E' THEN 'M' ELSE 'D' END),
 		A.REV_DATE = B.REV_DATE,
 		A.REMARK = B.REMARK,
 		A.UPDATE_USER = B.UPDATE_USER,
