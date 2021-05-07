@@ -23,6 +23,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -145,7 +147,8 @@ public class HXProfitQueryMService extends CommonExportService<ChbreportPrdInfoD
         // 设置 Excel 元素
         HXProfitQuery001Dto entity = getProfitData(reportDate);
         Map<String, Object> map = new HashMap<>(4);
-        map.put("preCol", reportDate.substring(4, 6) + "月累计金额");
+        LocalDate reportLocalDate = LocalDate.parse(reportDate,DateTimeFormatter.ofPattern("yyyyMM"));
+        map.put("preCol", DateTimeFormatter.ofPattern("MM").format(reportLocalDate.minusMonths(1)) + "月累计金额");
         map.put("reportDate", reportDate);
         map.put("entity", entity);
         TisUtil.createFile(map, exceltemplate, fileName);
