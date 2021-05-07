@@ -369,7 +369,7 @@ public class FinPlanNetAssetDto extends FinProduct implements ProcessEntity{
      * 获取合同号
      * @return contractNo.
      */
-    @NotEmpty(fieldName = "FinPlanNetAsset002.contractNo",groups={ValidateGroupEdit.class})
+   // @NotEmpty(fieldName = "FinPlanNetAsset002.contractNo",groups={ValidateGroupEdit.class})
     public String getContractNo() {
 		return contractNo;
 	}
