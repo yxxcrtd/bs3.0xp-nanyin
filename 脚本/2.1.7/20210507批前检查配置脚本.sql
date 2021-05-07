@@ -99,7 +99,7 @@ select  a.seq_no,'88600', 'system', null, sysdate, 'system', sysdate
 
 --添加字典值配置
 delete from SYS_DATADICT_LIST where dict_code ='CHECK_POINT' and item_code= '88600';
-INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('CHECK_POINT', '88601', '流程中产品定义', 1, '0', 'system', null,sysdate, 'system',sysdate, null);
+INSERT INTO SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('CHECK_POINT', '88600', '流程中产品定义', 1, '0', 'system', null,sysdate, 'system',sysdate, null);
 
 
 ------- 增加多及法人 过滤
