@@ -2,9 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.invest.prebatch.dao.SysPrebatchResult002Mapper">
     <select id="queryPortfolioIdInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT distinct detail.portfolio_id id, detail.portfolio_name text
+        SELECT distinct detail.portfolio_id id, NVL(detail.portfolio_name,detail.portfolio_id) text
         FROM sys_prebatch_result_detail detail
         where result_seq_no = #{seqNo,jdbcType=VARCHAR}
+        AND detail.portfolio_id IS NOT NULL
         <if test="search != null and search != ''">
             and (detail.portfolio_id like
             concat(concat('%',#{search}),'%')
@@ -12,9 +13,10 @@
         </if>
     </select>
     <select id="queryFinprodIdInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT distinct detail.finprod_id  id ,detail.finprod_name text
+        SELECT distinct detail.finprod_id  id ,NVL(detail.finprod_name,detail.finprod_id) text
         FROM sys_prebatch_result_detail detail
         where result_seq_no = #{seqNo,jdbcType=VARCHAR}
+        AND detail.finprod_id IS NOT NULL
         <if test="search != null and search != ''">
             and (detail.finprod_id like
             concat(concat('%',#{search}),'%')
