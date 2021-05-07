@@ -12,9 +12,22 @@
 <body>
 <div class="pro-module-wrap" th:id="|${entityName}_div|">
     <div class="pro-module">
-        <h3 class="pro-module-title"><span class="title-des">金融衍生品</span>（<span class="star-sign">*</span>必填）<i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
+        <h3 class="pro-module-title"><span class="title-des">维护信息-金融衍生品</span>（<span class="star-sign">*</span>必填）<i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
         <div class="pro-module-item">
+
 			<div class="layui-form-item">
+
+				<div class=" form-inline-wrap">
+					<label class="layui-form-label form-label-wrap"
+						   data-th-text="#{SvrBussRepFinanciallInfo.assetName}">名称</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text"
+							   class="layui-input form-input" id="assetName"
+							   th:name="|${entityName}.assetName|" data-th-value="${entity?.assetName}"
+							   required="required">
+					</div>
+				</div>
+
 				<div class=" form-inline-wrap">
 					<label class="layui-form-label form-label-wrap"
 						   data-th-text="#{SvrBussRepFinanciallInfo.nomCapi}">名义本金</label>
@@ -31,7 +44,9 @@
 				</div>
 
 			</div>
+
 			<div class="layui-form-item">
+
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepFinanciallInfo.targetType3}">标的类别</label>
 					<div class="layui-input-inline input-inline">
@@ -41,6 +56,7 @@
 						</select>
 					</div>
 				</div>
+
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepFinanciallInfo.holdPurpose}">持有目的</label>
 					<div class="layui-input-inline input-inline">
@@ -48,8 +64,11 @@
 						</select>
 					</div>
 				</div>
+
 			</div>
+
             <div class="layui-form-item">
+
                 <div class="form-inline-wrap" style="width: 100% !important;">
 					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepFinanciallInfo.remark}" style="width: 12%;">备注</label>
 					<div class="layui-input-inline input-inline" style="width: 86% !important;">
@@ -57,7 +76,57 @@
 						</input>
 					</div>
 				</div>
+
             </div>
+
+			<div class="layui-form-item">
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap">到期日</label>
+					<div class="layui-input-inline input-inline">
+
+						<input type="text" id="mdate" name="mdate" required
+							   data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
+							   class="layui-input form-input input-dateSelect" />
+					</div>
+				</div>
+
+			</div>
+
+			<div class="layui-form-item">
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType1}" >新人行一级分类</label>
+					<div class="layui-input-inline input-inline">
+						<select th:id="|${entityName}_pbcAssetType1|" th:name="|${entityName}.pbcAssetType1|" th:initValue="${entity?.pbcAssetType1}"
+								th:childrenIds="|${entityName}_pbcAssetType2|"
+								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_PBC_ASSET_TYPE_1}">
+						</select>
+					</div>
+				</div>
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType2}" >新人行二级分类</label>
+					<div class="layui-input-inline input-inline">
+						<select th:id="|${entityName}_pbcAssetType2|" th:name="|${entityName}.pbcAssetType2|" th:initValue="${entity?.pbcAssetType2}"
+								th:childrenIds="|${entityName}_pbcAssetType3|" th:parentIds="|${entityName}_pbcAssetType1|"
+								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_PBC_ASSET_TYPE_2}">
+						</select>
+					</div>
+				</div>
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType3}" >新人行三级分类</label>
+					<div class="layui-input-inline input-inline">
+						<select th:id="|${entityName}_pbcAssetType3|" th:name="|${entityName}.pbcAssetType3|" th:initValue="${entity?.pbcAssetType3}"
+								th:parentIds="|${entityName}_pbcAssetType2|"
+								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_PBC_ASSET_TYPE_3}">
+						</select>
+					</div>
+				</div>
+
+			</div>
+
         </div>
     </div>
 </div>

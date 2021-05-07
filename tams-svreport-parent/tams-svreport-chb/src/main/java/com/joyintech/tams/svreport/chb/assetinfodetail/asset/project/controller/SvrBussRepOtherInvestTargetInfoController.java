@@ -48,7 +48,7 @@ public class SvrBussRepOtherInvestTargetInfoController extends BaseController{
         setSelectOptionToModel(model,   new DictCode[] {DictCode.行内资产类别,DictCode.所属国家或地区,DictCode.是否_中债,
                 DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分,DictCode.发行机构类型_按技术领域划分,
                 DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.重点监控行业和领域类别,DictCode.资产评级,
-                DictCode.担保方式,DictCode.抵质押物类型,DictCode.担保性质,DictCode.担保人与融资人关系}
+                DictCode.担保方式,DictCode.抵质押物类型,DictCode.担保性质,DictCode.担保人与融资人关系,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类}
          );
 
         //2、当入参assetType2资产/负债二级类别 为【资产_负债类别_各类资产的其他项】进行以下处理

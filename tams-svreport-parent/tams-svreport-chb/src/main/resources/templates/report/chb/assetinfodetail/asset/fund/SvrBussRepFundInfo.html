@@ -15,15 +15,12 @@
 <div class="pro-module-wrap" th:id="|${entityName}_div|">
     <div class="pro-module">
         <h3 class="pro-module-title">
-            <span class="title-des">公募基金/私募基金</span>（<span class="star-sign">*</span>必填）<i
+            <span class="title-des">维护信息-公募基金/私募基金</span>（<span class="star-sign">*</span>必填）<i
                 class="iconfont icon-arrow-down pro-down-icon"></i>
         </h3>
         <input type="text" th:id="|${entityName}_profitType|"
                th:name="|${entityName}.profitType|" hidden>
         <div class="pro-module-item">
-
-
-
 
             <div class="layui-form-item" th:id="|${entityName}_content_one_div|">
 
@@ -106,11 +103,10 @@
                         </select>
                     </div>
                 </div>
+
             </div>
 
-
             <div class="layui-form-item">
-
 
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-lable"
@@ -125,7 +121,6 @@
 						</select>
                     </div>
                 </div>
-
 
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-lable"
@@ -154,9 +149,7 @@
 					</div>
 				</div>
 
-
             </div>
-
 
             <div class="layui-form-item">
 
@@ -194,6 +187,7 @@
 						</select>
 					</div>
 				</div>
+
             </div>
 
 			<div class="layui-form-item">
@@ -223,6 +217,7 @@
 						</select>
 					</div>
 				</div>
+
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-label-wrap"
 						   data-th-text="#{SvrBussRepFundInfo.sharesType2}">投资企业类型（按经济类型划分）</label>
@@ -235,38 +230,36 @@
 						</select>
 					</div>
 				</div>
+
 			</div>
 
+			<div class="layui-form-item">
 
-
-
-				<div class="layui-form-item">
-					<div class="form-inline-wrap">
-						<label class="layui-form-label form-lable"
-							   data-th-utext="#{SvrBussRepFundInfo.fundInvestAsset}">基金投资资产</label>
-						<div class="layui-input-inline input-inline">
-							<input type="text" th:id="|${entityName}_fundInvestAsset|"
-								   th:name="|${entityName}.fundInvestAsset|" required
-								   th:value="${entity?.fundInvestAsset}"
-								   data-fixtype="2" class="layui-input form-input"/>
-						</div>
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-lable"
+						   data-th-utext="#{SvrBussRepFundInfo.fundInvestAsset}">基金投资资产</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" th:id="|${entityName}_fundInvestAsset|"
+							   th:name="|${entityName}.fundInvestAsset|" required
+							   th:value="${entity?.fundInvestAsset}"
+							   data-fixtype="2" class="layui-input form-input"/>
 					</div>
-
-
-					<div class="form-inline-wrap">
-						<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepFundInfo.privatefundFlag}">投向金融资产投资公司或其附属机构发行的私募股权投资基金</label>
-						<div class="layui-input-inline input-inline">
-							<input type="text" th:id="|${entityName}_privatefundFlag|"
-								   th:name="|${entityName}.privatefundFlag|"
-								   th:value="${entity?.privatefundFlag}"
-								   data-fixtype="2" class="layui-input form-input"/>
-						</div>
-					</div>
-
 				</div>
 
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepFundInfo.privatefundFlag}">是否投向金融资产投资公司或其附属机构发行的私募股权投资基金</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" th:id="|${entityName}_privatefundFlag|"
+							   th:name="|${entityName}.privatefundFlag|"
+							   th:value="${entity?.privatefundFlag}"
+							   data-fixtype="2" class="layui-input form-input"/>
+					</div>
+				</div>
+
+			</div>
 
             <div class="layui-form-item">
+
                 <div class="layui-form-item">
                     <div class="form-inline-wrap" style="width:100%;">
                         <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepFundInfo.remark}"
@@ -278,7 +271,43 @@
                         </div>
                     </div>
                 </div>
+
             </div>
+
+			<div class="layui-form-item">
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType1}" >新人行一级分类</label>
+					<div class="layui-input-inline input-inline">
+						<select th:id="|${entityName}_pbcAssetType1|" th:name="|${entityName}.pbcAssetType1|" th:initValue="${entity?.pbcAssetType1}"
+								th:childrenIds="|${entityName}_pbcAssetType2|"
+								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_PBC_ASSET_TYPE_1}">
+						</select>
+					</div>
+				</div>
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType2}" >新人行二级分类</label>
+					<div class="layui-input-inline input-inline">
+						<select th:id="|${entityName}_pbcAssetType2|" th:name="|${entityName}.pbcAssetType2|" th:initValue="${entity?.pbcAssetType2}"
+								th:childrenIds="|${entityName}_pbcAssetType3|" th:parentIds="|${entityName}_pbcAssetType1|"
+								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_PBC_ASSET_TYPE_2}">
+						</select>
+					</div>
+				</div>
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType3}" >新人行三级分类</label>
+					<div class="layui-input-inline input-inline">
+						<select th:id="|${entityName}_pbcAssetType3|" th:name="|${entityName}.pbcAssetType3|" th:initValue="${entity?.pbcAssetType3}"
+								th:parentIds="|${entityName}_pbcAssetType2|"
+								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required data-th-data-result="${SVR_PBC_ASSET_TYPE_3}">
+						</select>
+					</div>
+				</div>
+
+			</div>
+
         </div>
     </div>
 </div>

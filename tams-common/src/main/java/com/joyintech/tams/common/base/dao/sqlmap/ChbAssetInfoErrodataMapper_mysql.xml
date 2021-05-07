@@ -23,6 +23,7 @@
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs" extends="BaseResultMap" >
         <result column="ORG_DATA" property="orgData" jdbcType="CLOB" />
@@ -34,7 +35,7 @@
         ORG_ASSET_TYPE3 ORG_ASSET_TYPE3, ORG_ASSET_TYPE4 ORG_ASSET_TYPE4, ORG_ASSET_TYPE5 ORG_ASSET_TYPE5,
         STATUS STATUS, UPDATE_USER UPDATE_USER, CREATE_USER CREATE_USER, UPDATE_TIME UPDATE_TIME,
         CREATE_TIME CREATE_TIME, WORKFLOW_ID WORKFLOW_ID, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE,
-        CREATE_DEPT CREATE_DEPT, ASSET_NAME ASSET_NAME
+        CREATE_DEPT CREATE_DEPT, ASSET_NAME ASSET_NAME,TRADE_MARKET TRADE_MARKET
     </sql>
     <sql id="Blob_Column_List" >
         ORG_DATA, ERR_MSG
@@ -74,11 +75,11 @@
         insert into CHB_ASSET_INFO_ERRODATA(DATAUUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2,
         VDATE, MDATE, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, ORG_ASSET_TYPE4,
         ORG_ASSET_TYPE5, STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, CREATE_TIME, WORKFLOW_ID,
-        ORG_CODE, DEPT_CODE, CREATE_DEPT, ASSET_NAME, ORG_DATA, ERR_MSG)
+        ORG_CODE, DEPT_CODE, CREATE_DEPT, ASSET_NAME, ORG_DATA, ERR_MSG,TRADE_MARKET)
         select DATAUUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2,
             VDATE, MDATE, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, ORG_ASSET_TYPE4,
             ORG_ASSET_TYPE5, #{status,jdbcType=VARCHAR} STATUS, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, CREATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_TIME, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID,
-            ORG_CODE, DEPT_CODE, CREATE_DEPT, ASSET_NAME, ORG_DATA, ERR_MSG
+            ORG_CODE, DEPT_CODE, CREATE_DEPT, ASSET_NAME, ORG_DATA, ERR_MSG,TRADE_MARKET
              from CHB_ASSET_INFO_ERRODATA
              where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
@@ -142,6 +143,9 @@
             <if test="errMsg != null" >
                 ERR_MSG = #{errMsg,jdbcType=CLOB},
             </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=CLOB},
+            </if>
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
@@ -166,7 +170,8 @@
         DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
         ASSET_NAME = #{assetName,jdbcType=VARCHAR},
         ORG_DATA = #{orgData,jdbcType=CLOB},
-        ERR_MSG = #{errMsg,jdbcType=CLOB}
+        ERR_MSG = #{errMsg,jdbcType=CLOB},
+        TRADE_MARKET = #{tradeMarket,jdbcType=CLOB}
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs" >
@@ -177,7 +182,7 @@
             UPDATE_USER, CREATE_USER, UPDATE_TIME,
             CREATE_TIME, WORKFLOW_ID, ORG_CODE,
             DEPT_CODE, CREATE_DEPT, ASSET_NAME,
-            ORG_DATA, ERR_MSG)
+            ORG_DATA, ERR_MSG,TRADE_MARKET)
         values (#{datauuid,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR},
             #{assetType2,jdbcType=VARCHAR}, #{vdate,jdbcType=VARCHAR}, #{mdate,jdbcType=VARCHAR},
             #{orgAssetType1,jdbcType=VARCHAR}, #{orgAssetType2,jdbcType=VARCHAR}, #{orgAssetType3,jdbcType=VARCHAR},
@@ -185,7 +190,7 @@
             #{updateUser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
             #{createTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
             #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{assetName,jdbcType=VARCHAR},
-            #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
+            #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB}, #{tradeMarket,jdbcType=CLOB})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs" >
         insert into CHB_ASSET_INFO_ERRODATA
@@ -259,6 +264,9 @@
             <if test="errMsg != null" >
                 ERR_MSG,
             </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="datauuid != null" >
@@ -330,17 +338,20 @@
             <if test="errMsg != null" >
                 #{errMsg,jdbcType=CLOB},
             </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=CLOB},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs" >
         insert into CHB_ASSET_INFO_ERRODATA(DATAUUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2,
         VDATE, MDATE, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, ORG_ASSET_TYPE4,
         ORG_ASSET_TYPE5, STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, CREATE_TIME, WORKFLOW_ID,
-        ORG_CODE, DEPT_CODE, CREATE_DEPT, ASSET_NAME, ORG_DATA, ERR_MSG)
+        ORG_CODE, DEPT_CODE, CREATE_DEPT, ASSET_NAME, ORG_DATA, ERR_MSG,TRADE_MARKET)
         select DATAUUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2,
             VDATE, MDATE, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, ORG_ASSET_TYPE4,
             ORG_ASSET_TYPE5, #{status,jdbcType=VARCHAR} STATUS, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, CREATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_TIME, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
-            ORG_CODE, DEPT_CODE, CREATE_DEPT, ASSET_NAME, ORG_DATA, ERR_MSG
+            ORG_CODE, DEPT_CODE, CREATE_DEPT, ASSET_NAME, ORG_DATA, ERR_MSG,TRADE_MARKET
              from CHB_ASSET_INFO_ERRODATA
              where STATUS = 'E' and DATAUUID = #{datauuid,jdbcType=CHAR}
     </insert>
@@ -404,6 +415,9 @@
             <if test="errMsg != null" >
                 ERR_MSG = #{errMsg,jdbcType=CLOB},
             </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=CLOB},
+            </if>
         </set>
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </update>
@@ -427,7 +441,8 @@
             DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
             ASSET_NAME = #{assetName,jdbcType=VARCHAR},
             ORG_DATA = #{orgData,jdbcType=CLOB},
-            ERR_MSG = #{errMsg,jdbcType=CLOB}
+            ERR_MSG = #{errMsg,jdbcType=CLOB},
+            TRADE_MARKET = #{tradeMarket,jdbcType=CLOB}
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodata" >
@@ -448,7 +463,8 @@
             WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
             ORG_CODE = #{orgCode,jdbcType=VARCHAR},
             DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
-            ASSET_NAME = #{assetName,jdbcType=VARCHAR}
+            ASSET_NAME = #{assetName,jdbcType=VARCHAR},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
         where DATAUUID = #{datauuid,jdbcType=CHAR}
     </update>
 </mapper>

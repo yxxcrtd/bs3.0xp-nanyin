@@ -100,6 +100,98 @@ public class SvrBussRepEquityInfoDto extends RepAssetEquity{
      */
     private String remark;
 
+    /**
+     * 到期日
+     */
+    private Date mdate;
+
+    /**
+     * 是否属于政府投资基金 01 是/ 02 否
+     */
+    private String isGovernFund;
+
+    /**
+     * 是否政府出资产业投资基金
+     */
+    private String isunlisted;
+
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
+
+    /**
+     * 公共PPP
+     */
+    private String pppflag;
+
+    public String getPppflag() {
+        return pppflag;
+    }
+
+    public void setPppflag(String pppflag) {
+        this.pppflag = pppflag;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
+    }
+
+    public String getIsGovernFund() {
+        return isGovernFund;
+    }
+
+    public void setIsGovernFund(String isGovernFund) {
+        this.isGovernFund = isGovernFund;
+    }
+
+    public String getIsunlisted() {
+        return isunlisted;
+    }
+
+    public void setIsunlisted(String isunlisted) {
+        this.isunlisted = isunlisted;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

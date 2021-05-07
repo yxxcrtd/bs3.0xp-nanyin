@@ -52,7 +52,7 @@ public class SvrBussRepPlacementInfoController extends BaseController {
         BigDecimal value=BigDecimal.ZERO;
         //1.赋值界面数据字典
         setSelectOptionToModel(model, new DictCode[] {DictCode.币种_中债,DictCode.交易流通场所,DictCode.交易对手类型,
-                DictCode.计息基础_中债,DictCode.回购标的类型,DictCode.对手方类型});
+                DictCode.计息基础_中债,DictCode.回购标的类型,DictCode.对手方类型,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类});
 
         //2、当入参assetType2资产/负债二级类别 为【拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_拆放同业_买入返售_资产_同业拆入_卖出回购_负债.getValue()).contains(assetType)){

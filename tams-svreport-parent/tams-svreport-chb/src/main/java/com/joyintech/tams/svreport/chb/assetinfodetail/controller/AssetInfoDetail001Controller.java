@@ -19,6 +19,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.errormessage.dto.ErrorMessage001;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
@@ -143,7 +145,24 @@ public class AssetInfoDetail001Controller extends BaseController {
 				outFile, true);
 
     }
-    
+
+	/**
+	 * 导入数据文件之前检查数据
+	 *
+	 * @param fileName 导入的文件名
+	 * @return 处理结果
+	 */
+	@ResponseBody
+	@RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
+	public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+		return assetInfoDetailMService.checkConfirmMsgForImportData(fileName);
+	}
+
+	@ResponseBody
+	@RequestMapping("/importFile")
+	public List<ExcelValidDto> importData(String fileName){
+		return this.assetInfoDetailMService.importData(fileName);
+	}
 
      
     

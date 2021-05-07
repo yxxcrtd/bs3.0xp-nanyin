@@ -17,6 +17,7 @@ import com.joyintech.tams.common.base.entity.RepAssetBond;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFinBondRepInfoValidator;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *  资产基本信息_金融衍生品类信息 DTO
@@ -54,6 +55,71 @@ public class SvrBussRepFinanciallInfoDto extends RepAssetBond{
      */
     private  String  remark;
 
+    /**
+     * 资产名称
+     */
+    private String assetName;
+
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
+
+    /**
+     * 到期日
+     */
+    private Date mdate;
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
+    }
 
     public BigDecimal getNomCapi() {
         return nomCapi;

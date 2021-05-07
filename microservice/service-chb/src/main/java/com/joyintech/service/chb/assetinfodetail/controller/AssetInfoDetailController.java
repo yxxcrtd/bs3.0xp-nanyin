@@ -1,6 +1,8 @@
 package com.joyintech.service.chb.assetinfodetail.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetail001Service;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,6 +67,21 @@ public class AssetInfoDetailController {
 	@PostMapping("doDelete")
 	public Integer doDelete(@RequestBody AssetInfoDetailDto dto) {
 		return assetInfoDetail001Service.doDelete(dto);
+	}
+
+	@SuppressWarnings("unchecked")
+	@PostMapping("checkConfirmMsgForImportData")
+	public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
+		List<AssetInfoDetailDto> dataList = (List<AssetInfoDetailDto>) param.get("dataList");
+		String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
+		String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
+		return assetInfoDetail001Service.checkConfirmMsgForImportData(dataList,orgCode,deptCode);
+	}
+
+	@SuppressWarnings("unchecked")
+	@PostMapping("importData")
+	public List<ExcelValidDto> importData(@RequestBody List<AssetInfoDetailDto> dataList ){
+		return this.assetInfoDetail001Service.importData(dataList);
 	}
 
 }

@@ -91,9 +91,13 @@
              //结构性存款挂钩标的类别/结构性存款挂钩标。该字段清空，且置灰不可修改
              $("#svrBussRepDepositInfoDto_repTargetType").val('').attr('disabled', true).trigger('change');
              $("#svrBussRepDepositInfoDto_repTarget").val('').attr("disabled",true);
+             $("#svrBussRepDepositInfoDto_repTargetType").val('').attr('required', false).trigger('change');
+             $("#svrBussRepDepositInfoDto_repTarget").val('').attr("required",false);
          }else{
              $("#svrBussRepDepositInfoDto_repTargetType").attr("disabled",false);
              $("#svrBussRepDepositInfoDto_repTarget").attr("disabled",false);
+             $("#svrBussRepDepositInfoDto_repTargetType").attr("required",true);
+             $("#svrBussRepDepositInfoDto_repTarget").attr("required",true);
          }
         });
     });

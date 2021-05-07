@@ -219,6 +219,10 @@
         <result column="IS_BJSZQ" property="isBjszq" jdbcType="VARCHAR" />
         <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
         <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY_CODE" property="rivalPartyCode" jdbcType="VARCHAR" />
+        <result column="IS_PPN" property="isPpn" jdbcType="VARCHAR" />
+        <result column="BANK_CAPITAL" property="bankCapital" jdbcType="VARCHAR" />
+
     </resultMap>
     <sql id="Base_Column_List" >
         ASSET_UUID ASSET_UUID, ASSET_CODE ASSET_CODE, ASSET_TYPE ASSET_TYPE, ASSET_TYPE2 ASSET_TYPE2,
@@ -282,7 +286,8 @@
         IS_CHL IS_CHL, BANK_SEC_KZZQ BANK_SEC_KZZQ, BANK_SEC_ZXZQ BANK_SEC_ZXZQ, ISUNLISTED ISUNLISTED,
         IS_BZHPJ IS_BZHPJ, CHB_ISSUER_ID CHB_ISSUER_ID, CHB_MANAGER_ID CHB_MANAGER_ID, CHB_FINANCIER_ID CHB_FINANCIER_ID,
         PERPETUAL_FLAG PERPETUAL_FLAG, OPTION_FLAG OPTION_FLAG, IS_BJSZQ IS_BJSZQ, IS_PERPETUAL IS_PERPETUAL,
-        IS_FBZB IS_FBZB
+        IS_FBZB IS_FBZB,RIVAL_PARTY_CODE RIVAL_PARTY_CODE,IS_PPN IS_PPN,BANK_CAPITAL BANK_CAPITAL
+
     </sql>
     <sql id="Sql_All_Data" >
         select
@@ -378,7 +383,7 @@
             BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ,
             CHB_ISSUER_ID, CHB_MANAGER_ID, CHB_FINANCIER_ID,
             PERPETUAL_FLAG, OPTION_FLAG, IS_BJSZQ,
-            IS_PERPETUAL, IS_FBZB)
+            IS_PERPETUAL, IS_FBZB, RIVAL_PARTY_CODE, IS_PPN, BANK_CAPITAL)
         values (#{assetUuid,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR},
             #{assetType2,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR},
             #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{discountYield,jdbcType=DECIMAL},
@@ -451,7 +456,7 @@
             #{bankSecZxzq,jdbcType=VARCHAR}, #{isunlisted,jdbcType=VARCHAR}, #{isBzhpj,jdbcType=VARCHAR},
             #{chbIssuerId,jdbcType=VARCHAR}, #{chbManagerId,jdbcType=VARCHAR}, #{chbFinancierId,jdbcType=VARCHAR},
             #{perpetualFlag,jdbcType=VARCHAR}, #{optionFlag,jdbcType=VARCHAR}, #{isBjszq,jdbcType=VARCHAR},
-            #{isPerpetual,jdbcType=VARCHAR}, #{isFbzb,jdbcType=VARCHAR})
+            #{isPerpetual,jdbcType=VARCHAR}, #{isFbzb,jdbcType=VARCHAR}, #{rivalPartyCode,jdbcType=VARCHAR}, #{isPpn,jdbcType=VARCHAR}, #{bankCapital,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo" >
         insert into CHB_ASSET_INFO
@@ -1107,6 +1112,15 @@
             <if test="isFbzb != null" >
                 IS_FBZB,
             </if>
+            <if test="rivalPartyCode != null" >
+                RIVAL_PARTY_CODE,
+            </if>
+            <if test="isPpn != null" >
+                IS_PPN,
+            </if>
+            <if test="bankCapital != null" >
+                BANK_CAPITAL,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="assetUuid != null" >
@@ -1760,6 +1774,15 @@
             <if test="isFbzb != null" >
                 #{isFbzb,jdbcType=VARCHAR},
             </if>
+            <if test="rivalPartyCode != null" >
+                #{rivalPartyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isPpn != null" >
+                #{isPpn,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCapital != null" >
+                #{bankCapital,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo" >
@@ -1797,7 +1820,7 @@
         DEFERRED_INTEREST_INT, FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, PART_REDEM_RATE,
         CREDIT_ORG_CODE, CREDIT_ORG_NAME, EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, FINANCIAL_COMISSUE,
         IS_CHL, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, CHB_ISSUER_ID, CHB_MANAGER_ID,
-        CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, IS_BJSZQ, IS_PERPETUAL, IS_FBZB)
+        CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, IS_BJSZQ, IS_PERPETUAL, IS_FBZB,RIVAL_PARTY_CODE, IS_PPN, BANK_CAPITAL)
         select ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY,
             TRADE_MARKET, VDATE, MDATE, DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT,
             TARGET_TYPE, TARGET, ASSET_ID, ASSET_NAME, CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE,
@@ -1832,7 +1855,7 @@
             DEFERRED_INTEREST_INT, FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, PART_REDEM_RATE,
             CREDIT_ORG_CODE, CREDIT_ORG_NAME, EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, FINANCIAL_COMISSUE,
             IS_CHL, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, CHB_ISSUER_ID, CHB_MANAGER_ID,
-            CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, IS_BJSZQ, IS_PERPETUAL, IS_FBZB
+            CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, IS_BJSZQ, IS_PERPETUAL, IS_FBZB,RIVAL_PARTY_CODE, IS_PPN, BANK_CAPITAL
              from CHB_ASSET_INFO
              where STATUS = 'E' and ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </insert>
@@ -2481,6 +2504,15 @@
             <if test="isFbzb != null" >
                 IS_FBZB = #{isFbzb,jdbcType=VARCHAR},
             </if>
+            <if test="rivalPartyCode != null" >
+                RIVAL_PARTY_CODE = #{rivalPartyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isPpn != null" >
+                IS_PPN = #{isPpn,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCapital != null" >
+                BANK_CAPITAL = #{bankCapital,jdbcType=VARCHAR},
+            </if>
         </set>
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </update>
@@ -2699,7 +2731,10 @@
             OPTION_FLAG = #{optionFlag,jdbcType=VARCHAR},
             IS_BJSZQ = #{isBjszq,jdbcType=VARCHAR},
             IS_PERPETUAL = #{isPerpetual,jdbcType=VARCHAR},
-            IS_FBZB = #{isFbzb,jdbcType=VARCHAR}
+            IS_FBZB = #{isFbzb,jdbcType=VARCHAR},
+            RIVAL_PARTY_CODE = #{rivalPartyCode,jdbcType=VARCHAR},
+            IS_PPN = #{isPpn,jdbcType=VARCHAR},
+            BANK_CAPITAL = #{bankCapital,jdbcType=VARCHAR}
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </update>
 </mapper>

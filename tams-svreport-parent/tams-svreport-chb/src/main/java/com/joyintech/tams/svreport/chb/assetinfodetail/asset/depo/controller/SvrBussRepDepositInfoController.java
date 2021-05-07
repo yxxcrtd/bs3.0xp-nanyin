@@ -55,7 +55,7 @@ public class SvrBussRepDepositInfoController extends BaseController{
 
         //1.赋值界面数据字典
         setSelectOptionToModel(model, new DictCode[] {
-                DictCode.计息基础_中债,DictCode.回购标的类型,DictCode.交易对手类型,DictCode.存款类型,DictCode.标的类别});
+                DictCode.计息基础_中债,DictCode.回购标的类型,DictCode.交易对手类型,DictCode.存款类型,DictCode.标的类别,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类});
 
         //2、当入参assetType2资产/负债二级类别 为【资产_负债类别_本行_他行存款_大额存单】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_本行_他行存款_大额存单.getValue()).contains(assetType)){

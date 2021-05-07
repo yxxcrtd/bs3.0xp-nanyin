@@ -16,6 +16,7 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.common.base.entity.RepOtherInvestTarget;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 其他资产报送信息Dto
@@ -175,6 +176,84 @@ public class SvrBussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
      * 是否为债转股
      */
     private String deptEquity;
+
+    /**
+     * 资产名称
+     */
+    private String assetName;
+
+    /**
+     * 起息日
+     */
+    private Date vdate;
+
+    /**
+     * 到期日
+     */
+    private Date mdate;
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String pbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String pbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String pbcAssetType3;
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public Date getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
+    }
+
+    public String getPbcAssetType1() {
+        return pbcAssetType1;
+    }
+
+    public void setPbcAssetType1(String pbcAssetType1) {
+        this.pbcAssetType1 = pbcAssetType1;
+    }
+
+    public String getPbcAssetType2() {
+        return pbcAssetType2;
+    }
+
+    public void setPbcAssetType2(String pbcAssetType2) {
+        this.pbcAssetType2 = pbcAssetType2;
+    }
+
+    public String getPbcAssetType3() {
+        return pbcAssetType3;
+    }
+
+    public void setPbcAssetType3(String pbcAssetType3) {
+        this.pbcAssetType3 = pbcAssetType3;
+    }
 
     public String getDeptEquity() {
         return deptEquity;

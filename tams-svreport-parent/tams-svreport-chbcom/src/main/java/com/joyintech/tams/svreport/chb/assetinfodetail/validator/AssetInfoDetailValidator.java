@@ -91,7 +91,7 @@ public class AssetInfoDetailValidator implements BeanValidator{
             }
         }
         // add by zhangliang 20210126 中债check调用 start
-        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getAssetType2(), ValidMessage.class);
+//        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getAssetType2(), ValidMessage.class);
         // add by zhangliang 20210126 中债check调用 end
 
          return resultList;

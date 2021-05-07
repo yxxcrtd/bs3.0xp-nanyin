@@ -48,7 +48,7 @@ public class SvrBussFinBondRepInfoController extends BaseController{
                 DictCode.发行机构类型_按技术领域划分,DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分,
                 DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.债券类资产发行方式,DictCode.永续债属性,
                 DictCode.登记托管机构_中债,DictCode.交易流通场所,DictCode.人行机构规模,DictCode.受让形式,DictCode.债券性质,
-                DictCode.发行方式,DictCode.主体评级_中债,DictCode.是否_中债,DictCode.登记托管机构_监管报送}
+                DictCode.发行方式,DictCode.主体评级_中债,DictCode.是否_中债,DictCode.登记托管机构_监管报送,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类}
          );
 
 

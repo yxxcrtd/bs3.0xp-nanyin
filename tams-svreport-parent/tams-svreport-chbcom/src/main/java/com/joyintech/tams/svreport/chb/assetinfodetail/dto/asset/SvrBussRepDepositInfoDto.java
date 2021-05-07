@@ -74,6 +74,45 @@ public class SvrBussRepDepositInfoDto extends RepAssetBankDeposit{
      */
     private String basis;
 
+    /**
+     * 新人行资产一级分类
+     */
+    private String repPbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String repPbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String repPbcAssetType3;
+
+    public String getRepPbcAssetType1() {
+        return repPbcAssetType1;
+    }
+
+    public void setRepPbcAssetType1(String repPbcAssetType1) {
+        this.repPbcAssetType1 = repPbcAssetType1;
+    }
+
+    public String getRepPbcAssetType2() {
+        return repPbcAssetType2;
+    }
+
+    public void setRepPbcAssetType2(String repPbcAssetType2) {
+        this.repPbcAssetType2 = repPbcAssetType2;
+    }
+
+    public String getRepPbcAssetType3() {
+        return repPbcAssetType3;
+    }
+
+    public void setRepPbcAssetType3(String repPbcAssetType3) {
+        this.repPbcAssetType3 = repPbcAssetType3;
+    }
+
     public String getBankName() {
         return bankName;
     }

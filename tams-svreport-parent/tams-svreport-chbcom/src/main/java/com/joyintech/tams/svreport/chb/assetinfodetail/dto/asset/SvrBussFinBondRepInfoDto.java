@@ -16,6 +16,8 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RepAssetBond;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFinBondRepInfoValidator;
 
+import java.util.Date;
+
 /**
  *  债券类中债报送DTO
  * 〈功能详细描述〉
@@ -66,6 +68,149 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      * 主体评级
      */
     private String repPartyGrade;
+
+    /**
+     * 行内资产负债编码
+     */
+    private String assetCode;
+
+    /**
+     * 资产名称
+     */
+    private String repAssetName;
+
+    /**
+     * 到期日
+     */
+    private Date repMdate;
+
+    /**
+     * 是否非标转标资产
+     */
+    private String isFbzb;
+
+    private String repIsFbzb;
+
+    public String getRepIsFbzb() {
+        return repIsFbzb;
+    }
+
+    public void setRepIsFbzb(String repIsFbzb) {
+        this.repIsFbzb = repIsFbzb;
+    }
+
+    /**
+     * 银行资本补充工具
+     */
+    private String RepBankCapital;
+
+    /**
+     * 是否专项债券
+     */
+    private String bankSecZxzq;
+
+    /**
+     * 是否PPN等低流动性债券
+     */
+    private String isPpn;
+
+    /**
+     * 新人行资产一级分类
+     */
+    private String repPbcAssetType1;
+
+    /**
+     * 新人行资产二级分类
+     */
+    private String repPbcAssetType2;
+
+    /**
+     * 新人行资产三级分类
+     */
+    private String repPbcAssetType3;
+
+
+
+    public String getAssetCode() {
+        return assetCode;
+    }
+
+    public void setAssetCode(String assetCode) {
+        this.assetCode = assetCode;
+    }
+
+    public String getRepAssetName() {
+        return repAssetName;
+    }
+
+    public void setRepAssetName(String repAssetName) {
+        this.repAssetName = repAssetName;
+    }
+
+    public Date getRepMdate() {
+        return repMdate;
+    }
+
+    public void setRepMdate(Date repMdate) {
+        this.repMdate = repMdate;
+    }
+
+    public String getIsFbzb() {
+        return isFbzb;
+    }
+
+    public void setIsFbzb(String isFbzb) {
+        this.isFbzb = isFbzb;
+    }
+
+    public String getRepBankCapital() {
+        return RepBankCapital;
+    }
+
+    public void setRepBankCapital(String repBankCapital) {
+        RepBankCapital = repBankCapital;
+    }
+
+    public String getBankSecZxzq() {
+        return bankSecZxzq;
+    }
+
+    public void setBankSecZxzq(String bankSecZxzq) {
+        this.bankSecZxzq = bankSecZxzq;
+    }
+
+    public String getIsPpn() {
+        return isPpn;
+    }
+
+    public void setIsPpn(String isPpn) {
+        this.isPpn = isPpn;
+    }
+
+
+    public String getRepPbcAssetType1() {
+        return repPbcAssetType1;
+    }
+
+    public void setRepPbcAssetType1(String repPbcAssetType1) {
+        this.repPbcAssetType1 = repPbcAssetType1;
+    }
+
+    public String getRepPbcAssetType2() {
+        return repPbcAssetType2;
+    }
+
+    public void setRepPbcAssetType2(String repPbcAssetType2) {
+        this.repPbcAssetType2 = repPbcAssetType2;
+    }
+
+    public String getRepPbcAssetType3() {
+        return repPbcAssetType3;
+    }
+
+    public void setRepPbcAssetType3(String repPbcAssetType3) {
+        this.repPbcAssetType3 = repPbcAssetType3;
+    }
 
     public String getRepPartyGrade() {
         return repPartyGrade;

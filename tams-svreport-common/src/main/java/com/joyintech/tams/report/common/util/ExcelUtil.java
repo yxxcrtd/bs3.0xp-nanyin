@@ -390,6 +390,17 @@ public class ExcelUtil {
         }
         return dataList;
     }
+
+    public static List<List<String>> getDataList2(String fileName){
+        List<List<String>> dataList = null;
+        try {
+            dataList = ExcelUtil.readToList(
+                    new File(fileName), 0);
+        } catch (FileNotFoundException e1) {
+            logger.error(e1.getMessage(),e1);
+        }
+        return dataList;
+    }
     
     public static List<List<String>> getTempList(String fileName){
         List<List<String>> dataList = null;

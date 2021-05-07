@@ -35,16 +35,13 @@
 		rowno:false,
 		cols:[
 			{ field: 'assetUuid',width:0,sortField:'',visible:false},
-			{ title: "反馈状态", field: 'dataStatusStr',width:80 ,sortField:'dataStatus'},
+			{ title: "报送信息维护状态", field: 'dataStatusStr',width:180 ,sortField:'dataStatus'},
 			{ title: "资产代码", field: 'assetCode',width:180 ,sortField:'asset_code'},
 			{ title: "资产名称", field: 'assetName',width:300 ,sortField:'asset_name'},
-			{ title: "资产一级类型",field:'orgAssetType1Str', width:120,sortField:'org_asset_type1'},
-			{ title: '资产二级分类', field:'orgAssetType2Str', width:120,sortField:'org_asset_type2'},
 			{ title: "起息日",width:100,sortField:'vDateStr', field: 'vDateStr'},
 			{ title: "到期日",width:100,sortField:'mDateStr', field: 'mDateStr'},
 			{ title: '资产/负债类别', field:'assetTypeStr', width:180,sortField:'asset_type'},
 			{ title: '资产/负债二级类别', field:'assetType2Str', width:130,sortField:'asset_type2'},
-			{ title: '错误信息', field:'errMsg', width:130,sortable:false},
 			{ field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:100}
 		]
 	});
@@ -84,6 +81,22 @@
 				basePath + "chb/assetinfodetail/AssetInfoDetail002/init",
 				"95%", "90%", {pageModel:PAGE_MODEL_NEW,},
 				function(){table.reload();});
+		});
+
+		// 导入按钮
+		$('#AssetInfoDetail001_btn_import').click(function() {
+			Joyin.confirm("请确认是否要导入数据？", function() {
+				var options = {};
+				options.pageId = "AssetInfoDetail001_2";
+				options.exts = 'zip|xls|xlsx';
+				Joyin.uploadFile(options,function(fileName) {
+					Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+						Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName});
+					});
+				},function() {
+					table.reload();
+				});
+			});
 		});
 
 
