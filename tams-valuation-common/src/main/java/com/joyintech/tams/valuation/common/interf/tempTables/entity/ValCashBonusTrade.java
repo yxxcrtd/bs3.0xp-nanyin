@@ -95,6 +95,27 @@ public class ValCashBonusTrade extends BaseEntity {
      * 资金交收日
      */
     private Date settleDate;
+    /**
+     * 交易场所
+     */
+    private String tradeMarket;
+
+    /**
+     * 取得 交易场所
+     * @return 交易场所
+     */
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    /**
+     * 设置 交易场所
+     * @param tradeMarket 交易场所
+     */
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket == null ? null : tradeMarket.trim();
+    }
+
 
     /**
      * 取得 产品代码
