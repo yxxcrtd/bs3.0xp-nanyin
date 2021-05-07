@@ -342,6 +342,7 @@ public class TrdPlanNetInvestTrade003Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
+        model.addAttribute("formTodoList", !WorkFlowUtil.isNotFromToDoList());
         return super.init(model);
     }
 
