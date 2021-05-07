@@ -21,6 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.service.ChbInvestOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dao.ChbInvestReportCommonMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto;
+import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportConstant;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -340,5 +342,87 @@ public class ChbInvestReportCommonService extends BaseService {
             }
         }
         return null;
+    }
+
+    /**
+     * 根据list查询 生成的数据
+     * @param list
+     * @return
+     */
+    public List<RepReveal> selectReprevealListByDatas(List<ReportGenerate001Dto> list){
+        return chbInvestReportCommonMapper.selectReprevealListByDatas(list);
+    }
+
+    /**
+     * 查询定期报告要生成的数据
+     * @param param
+     * @return
+     */
+    public List<ReportGenerate001Dto> selectDqReportList(Map<String, Object> param){
+        return chbInvestReportCommonMapper.selectDqReportList(param);
+    }
+
+    /**
+     * 获取定期报告的结束日期
+     * @param reportType
+     * @param year
+     * @return
+     */
+    public String getDqEndDate(String reportType, String year) {
+        if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_一季度.getValue())) {
+            return year + ChbInvestReportConstant.三月最后一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_二季度.getValue())) {
+            return year + ChbInvestReportConstant.六月最后一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_上半年报.getValue())) {
+            return year + ChbInvestReportConstant.六月最后一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_三季度报.getValue())) {
+            return year + ChbInvestReportConstant.九月最后一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_四季度报.getValue())) {
+            return year + ChbInvestReportConstant.十二月最后一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_下半年报.getValue())) {
+            return year + ChbInvestReportConstant.十二月最后一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_年报.getValue())) {
+            return year + ChbInvestReportConstant.十二月最后一天;
+        }
+
+        return ChbInvestReportConstant.空字符;
+    }
+
+    /**
+     * 获取定期报告数据起始日期
+     * @param reportType
+     * @param year
+     * @return
+     */
+    public String getDqStartDate(String reportType, String year) {
+        if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_一季度.getValue())) {
+            return year + ChbInvestReportConstant.一月第一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_二季度.getValue())) {
+            return year + ChbInvestReportConstant.四月第一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_上半年报.getValue())) {
+            return year + ChbInvestReportConstant.一月第一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_三季度报.getValue())) {
+            return year + ChbInvestReportConstant.十月第一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_四季度报.getValue())) {
+            return year + ChbInvestReportConstant.十二月最后一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_下半年报.getValue())) {
+            return year + ChbInvestReportConstant.七月第一天;
+        }
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_年报.getValue())) {
+            return year + ChbInvestReportConstant.一月第一天;
+        }
+
+        return ChbInvestReportConstant.空字符;
     }
 }

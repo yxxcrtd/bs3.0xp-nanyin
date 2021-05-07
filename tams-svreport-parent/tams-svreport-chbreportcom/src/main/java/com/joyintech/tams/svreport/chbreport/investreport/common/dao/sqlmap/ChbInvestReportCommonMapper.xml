@@ -86,4 +86,11 @@
 
 	</select>
 
+	<select id="selectReprevealListByDatas" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+
+	</select>
+
+	<select id="selectDqReportList" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+
+	</select>
 </mapper>

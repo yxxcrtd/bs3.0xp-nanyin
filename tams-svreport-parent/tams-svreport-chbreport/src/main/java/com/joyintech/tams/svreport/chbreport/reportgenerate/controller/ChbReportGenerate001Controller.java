@@ -5,7 +5,9 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.progressbar.ProgressBarService;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RepFtpPath;
@@ -16,6 +18,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto;
 import com.joyintech.tams.svreport.chbreport.investreport.common.service.ChbInvestReportCommonService;
+import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +47,9 @@ public class ChbReportGenerate001Controller extends BaseController {
 
     @Autowired
     private ChbInvestReportCommonService chbInvestReportCommonService;
+
+    @Autowired
+    private ProgressBarService progressBarService;
 
     @Override
     public String init(Model model) {
@@ -104,14 +112,85 @@ public class ChbReportGenerate001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("createReportDoc")
     public AjaxResult createReportDoc() throws Exception {
-        boolean flag =  chbInvestReportCommonService.createReportDoc(RequestUtil.getPageParam(),
-                DictCodeListExt1.确认类型_手动.getValue(), DictCodeListExt1.确认类型_手动.getValue());
-        if(flag) {
-
+        String pageId = this.getPageId();
+        String barId = "createReportDoc001";
+        double currentProcessD = 0.05D;//更新进度条
+        this.updatePercent(pageId, barId, currentProcessD);//更新进度
+        try {
+            String repId = this.getParam("repId");//报表id
+            String reportType = this.getParam("reportType");
+            String year = this.getParam("year");
+            Map<String, Object> param = new HashMap<>();
+            param.put("repId", repId);
+            param.put("prodId", this.getParam("prodId"));
+            param.put("endDate", chbInvestReportCommonService.getDqEndDate(reportType, year));
+            param.put("startDate", chbInvestReportCommonService.getDqStartDate(reportType, year));
+            param.put("reportType", reportType);
+            List<ReportGenerate001Dto> list = null;
+            if (StringUtil.equals(DictCodeListExt3.中债披露报告_成立公告.getValue(), repId)
+                    || StringUtil.equals(DictCodeListExt3.中债披露报告_理财产品非标投资运作报告.getValue(), repId)
+                    || StringUtil.equals(DictCodeListExt3.中债披露报告_到期公告.getValue(), repId.toString())
+                    || StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId)) {
+                String datas = this.getParam("datas");
+                list = JsonUtils.json2List(datas, ReportGenerate001Dto.class);
+            } else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId)) {
+                list = chbInvestReportCommonService.selectDqReportList(param);
+            } else {
+                currentProcessD = 1.00D;//更新进度条
+                this.updatePercent(pageId, barId, currentProcessD);//更新进度
+                return new AjaxResult("披露报告类型暂不支持！", MessageType.错误消息);
+            }
+            currentProcessD = 0.20D;//更新进度条
+            this.updatePercent(pageId, barId, currentProcessD);//更新进度
+            int totalSize = list.size();
+            String isConfirm = DictCodeListExt1.确认类型_手动.getValue();
+            String isReveal = DictCodeListExt1.确认类型_手动.getValue();
+            if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId)) {
+                isConfirm = DictCodeListExt1.确认类型_自动.getValue();
+                isReveal = DictCodeListExt1.确认类型_自动.getValue();
+            }
+            String errMsg = "";
+            double createPercent = 0.7500D;//生成占比0.75
+            this.updatePercent(pageId, barId, currentProcessD);//更新进度
+            int index = 0;
+            for(ReportGenerate001Dto item  : list) {
+                index++;
+                param.put("prodId", item.getProdId());
+                param.put("endDate", item.getEndDate());
+                param.put("startDate", item.getStartDate());
+                param.put("prodName", item.getProdName());
+                param.put("prodIdName", item.getProdIdName());
+                if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId)) {
+                    list = chbInvestReportCommonService.selectDqReportList(param);
+                }
+                boolean flag = chbInvestReportCommonService.createReportDoc(param, isConfirm, isReveal);
+                if (flag) {
+                    //return new AjaxResult("披露报告生成成功！");
+                } else {
+                    errMsg = errMsg + item.getProdIdName() + ChbInvestReportConstant.逗号;
+                    //return new AjaxResult("披露报告生成出现错误！", MessageType.错误消息);
+                }
+                if(currentProcessD + createPercent * (index / totalSize) > currentProcessD + createPercent) {
+                    this.updatePercent(pageId, barId, currentProcessD + createPercent);//更新进度
+                }
+                else {
+                    this.updatePercent(pageId, barId, currentProcessD + createPercent * (index / totalSize));//更新进度
+                }
+            }
+            if(StringUtil.isNotEmpty(errMsg)) {
+                currentProcessD = 1.00D;//更新进度条
+                this.updatePercent(pageId, barId, currentProcessD);//更新进度
+                return new AjaxResult(errMsg + "，生成出现错误！", MessageType.错误消息);
+            }
+            currentProcessD = 1.00D;//更新进度条
+            this.updatePercent(pageId, barId, currentProcessD);//更新进度
             return new AjaxResult("披露报告生成成功！");
         }
-        else {
-            return new AjaxResult("披露报告生成出现错误！", MessageType.错误消息);
+        catch (Exception e) {
+            e.printStackTrace();
+            currentProcessD = 1.00D;//更新进度条
+            this.updatePercent(pageId, barId, currentProcessD);//更新进度
+            return new AjaxResult("披露报告生成出现错误，请联系管理员！", MessageType.错误消息);
         }
     }
 
@@ -121,7 +200,7 @@ public class ChbReportGenerate001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody ReportGenerate001Dto dto) {
+    public AjaxResult check(@RequestBody ReportGenerate001Dto dto) throws IOException {
         String  repId = dto.getRepId();
         String datas = dto.getDatas();
         if(repId != null) {
@@ -131,6 +210,30 @@ public class ChbReportGenerate001Controller extends BaseController {
             || StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
                 if(!StringUtil.isNotEmpty(datas)) {
                     return new AjaxResult("请先勾选要生成的数据！", MessageType.错误消息);
+                }
+                else {
+                    List<ReportGenerate001Dto> paramsList = JsonUtils.json2List(dto.getDatas(), ReportGenerate001Dto.class);
+                    List<RepReveal> list = chbInvestReportCommonService.selectReprevealListByDatas(paramsList);
+                    if(!StringUtil.isEmptyList(list)) {
+                        String errMsg = "";
+                        String tipMsg = "";
+                        for(RepReveal item : list) {
+                            if(StringUtil.equals(item.getConfirmStatus(), DictCodeList.确认状态_已确认.getValue())) {
+                                errMsg = errMsg + item.getProdName() + ChbInvestReportConstant.左括号 + item.getProdid() +
+                                        ChbInvestReportConstant.右括号 + ChbInvestReportConstant.逗号;
+                            }
+                            else {
+                                tipMsg = tipMsg + item.getProdName() + ChbInvestReportConstant.左括号 + item.getProdid() +
+                                        ChbInvestReportConstant.右括号 + ChbInvestReportConstant.逗号;
+                            }
+                        }
+                        if(StringUtil.isNotEmpty(errMsg)) {
+                            return new AjaxResult(errMsg + "报告已确认，无法重新生成！", MessageType.错误消息);
+                        }
+                        if(StringUtil.isNotEmpty(tipMsg)) {
+                            return new AjaxResult(tipMsg + "存在相同报告，确认重新生成？", MessageType.确认消息);
+                        }
+                    }
                 }
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
@@ -143,28 +246,44 @@ public class ChbReportGenerate001Controller extends BaseController {
                 if(!StringUtil.isNotEmpty(dto.getReportType())) {
                     return new AjaxResult("请先选择要生成的报告类型！", MessageType.错误消息);
                 }
-            }
-            Map<String, Object> param = new HashMap<>();
-            param.put("repId", dto.getRepId());
-            param.put("prodId", dto.getProdId());
-            param.put("endDate", dto.getEndDate());
-            param.put("reportType", dto.getReportType());
-            RepReveal selectReprevealByParams = chbInvestReportCommonService.selectReprevealByParams(param);
-            if(selectReprevealByParams != null ) {
-                if(StringUtil.equals(selectReprevealByParams.getConfirmStatus(), DictCodeList.确认状态_已确认.getValue())) {
-                    return new AjaxResult("已确认的报告无法重新生成！", MessageType.错误消息);
+                Map<String, Object> param = new HashMap<>();
+                param.put("repId", dto.getRepId());
+                param.put("prodId", dto.getProdId());
+                param.put("endDate", chbInvestReportCommonService.getDqEndDate(dto.getReportType(), dto.getYear()));
+                param.put("startDate", chbInvestReportCommonService.getDqStartDate(dto.getReportType(), dto.getYear()));
+                param.put("reportType", dto.getReportType());
+                List<ReportGenerate001Dto> list = chbInvestReportCommonService.selectDqReportList(param);
+                if(!StringUtil.isEmptyList(list)) {
+                    String tipMsg = "";
+                    for(ReportGenerate001Dto item : list) {
+                        if (StringUtil.equals(item.getConfirmStatus(), DictCodeList.确认状态_未确认.getValue())) {
+                            tipMsg = tipMsg + item.getProdIdName() + ChbInvestReportConstant.逗号;
+                        }
+                    }
+                    if(StringUtil.isNotEmpty(tipMsg)) {
+                        return new AjaxResult(tipMsg + "存在相同报告，确认重新生成？", MessageType.确认消息);
+                    }
                 }
                 else {
-                    return new AjaxResult("存在相同报告，确认重新生成？", MessageType.确认消息);
+                    return new AjaxResult("无报告数据需要生成！", MessageType.错误消息);
                 }
             }
-            else {
-                return new AjaxResult();
-            }
+            return new AjaxResult();
         }
         else {
             return new AjaxResult("请先选择要生成的报告！", MessageType.错误消息);
         }
+    }
 
+    /**
+     * 更新进度条进度
+     * @param pageId
+     * @param barId
+     * @param processD
+     */
+    public void updatePercent(String pageId, String barId, double processD) {
+        if(StringUtil.isNotEmpty(pageId) && StringUtil.isNotEmpty(barId) && progressBarService != null) {
+            progressBarService.updatePercent(pageId, barId, processD, false);
+        }
     }
 }

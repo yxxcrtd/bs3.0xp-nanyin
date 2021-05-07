@@ -69,9 +69,15 @@ public class ReportGenerate001Dto extends BaseEntity {
     private String year;
 
     /**
+     * 确认状态
+     */
+    private String confirmStatus;
+
+    /**
      * 生成状态
      */
     private String createStatus;
+
 
     public String getRepId() {
         return repId;
@@ -174,4 +180,14 @@ public class ReportGenerate001Dto extends BaseEntity {
     public void setCreateStatus(String createStatus) {
         this.createStatus = createStatus;
     }
+
+    public String getConfirmStatus() {
+        return confirmStatus;
+    }
+
+    public void setConfirmStatus(String confirmStatus) {
+        this.confirmStatus = confirmStatus;
+    }
+
+
 }

@@ -223,6 +223,7 @@ $(function () {
 			obj,
 			function(result) {
 				if (result) {
+					JoyinProgress.showInDialog('createReportDoc001');
 					Joyin.ajax(
 							basePath + 'svreport/chbreport/reportgenerate/ChbReportGenerate001/createReportDoc',
 							obj,

@@ -4,6 +4,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.RepFtpPath;
 import com.joyintech.tams.common.base.entity.RepReveal;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -68,5 +69,19 @@ public interface ChbInvestReportCommonMapper {
      * @return
      */
     List<ReportGenerate001Dto> queryDetailData05(Map<String, Object> param);
+
+    /**
+     * 根据list数据查询报表确认数据
+     * @param params
+     * @return
+     */
+    List<RepReveal> selectReprevealListByDatas(@Param("list") List<ReportGenerate001Dto> list);
+
+    /**
+     * 根据条件查询到期公告的产品数据
+     * @param param
+     * @return
+     */
+    List<ReportGenerate001Dto> selectDqReportList(Map<String, Object> param);
 
 }
