@@ -48,7 +48,7 @@
     </delete>
 
     <delete id="deleteByDate">
-        delete FROM SYS_PREBATCH_RESULT where
+        delete FROM SYS_PREBATCH_RESULT
         where CHECK_DATE = #{checkDate,jdbcType=DATE}
     </delete>
     <delete id="deleteDetailList">
