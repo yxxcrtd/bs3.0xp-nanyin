@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ import com.joyintech.tams.common.base.entity.ValInterflog;
  * 
  * @author ruanhongming
  * @version 1.0 2018年6月25日
- * @see BookGenerateResultForCurrentCommonWriter
+ * @see PlannedAssetBaseInfoRecWriter
  * @since 1.0
  */
 @Service
@@ -202,30 +203,81 @@ public class PlannedAssetBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> 
                 }
                 mapValCashCalcRule.put(obj.getCashId()+obj.getEffDate(), obj);
             }
-            
+
+
+
+
+
             // 入库
             if (CollectionUtils.isNotEmpty(rstValCashCalcRule)) {
-                // 定义一个固定大小插入存放集合
-                List<FinCashCalcRule> listInsert = new ArrayList<FinCashCalcRule>();
-                for (FinCashCalcRule e : rstValCashCalcRule) {
-                    // 小于最大值
-                    if (listInsert.size() < maxSqlNum) {
-                        listInsert.add(e);
+                /**add by wujie on 20210507 start**/
+                String TMP_E_NAME = null;
+                if(result.getParamMap()!=null && result.getParamMap().get("TMP_E_NAME")!=null){
+                    TMP_E_NAME = (String)result.getParamMap().get("TMP_E_NAME");
+                }
+                //KEY值删除
+                if(TempConstant.计划类资产利率型基础信息表.equals(TMP_E_NAME)){
+                    // 定义一个固定大小插入存放集合
+                    List<FinCashCalcRule> listInsert = new ArrayList<FinCashCalcRule>();
+                    for (FinCashCalcRule e : rstValCashCalcRule) {
+                        // 小于最大值
+                        if (listInsert.size() < maxSqlNum) {
+                            listInsert.add(e);
+                        }
+                        else if (listInsert.size() >= maxSqlNum) {
+                            valCashCalcRuleBatchMapper.deleteBatch(listInsert);
+                            valCashCalcRuleBatchMapper.insertBatch(listInsert);
+                            listInsert.clear();
+                            listInsert.add(e);
+                        }
                     }
-                    else if (listInsert.size() >= maxSqlNum) {
+                    // 如果循环结束，小于最大值
+                    if (CollectionUtils.isNotEmpty(listInsert)) {
                         valCashCalcRuleBatchMapper.deleteBatch(listInsert);
                         valCashCalcRuleBatchMapper.insertBatch(listInsert);
-                        listInsert.clear();
-                        listInsert.add(e);
                     }
                 }
-                // 如果循环结束，小于最大值
-                if (CollectionUtils.isNotEmpty(listInsert)) {
-                    valCashCalcRuleBatchMapper.deleteBatch(listInsert);
-                    valCashCalcRuleBatchMapper.insertBatch(listInsert);
+                //批量删除
+                else{
+                    List<FinCashCalcRule> listInsert = new ArrayList<FinCashCalcRule>();
+                    for (FinCashCalcRule e : rstValCashCalcRule) {
+                        // 小于最大值
+                        if (listInsert.size() < maxSqlNum) {
+                            listInsert.add(e);
+                        }
+                        else if (listInsert.size() >= maxSqlNum) {
+                            valCashCalcRuleBatchMapper.deleteBatchC(listInsert);
+                            listInsert.clear();
+                            listInsert.add(e);
+                        }
+                    }
+                    // 如果循环结束，小于最大值
+                    if (CollectionUtils.isNotEmpty(listInsert)) {
+                        valCashCalcRuleBatchMapper.deleteBatchC(listInsert);
+                    }
+
+                    listInsert = new ArrayList<FinCashCalcRule>();
+                    for (FinCashCalcRule e : rstValCashCalcRule) {
+                        // 小于最大值
+                        if (listInsert.size() < maxSqlNum) {
+                            listInsert.add(e);
+                        }
+                        else if (listInsert.size() >= maxSqlNum) {
+                            valCashCalcRuleBatchMapper.insertBatch(listInsert);
+                            listInsert.clear();
+                            listInsert.add(e);
+                        }
+                    }
+                    // 如果循环结束，小于最大值
+                    if (CollectionUtils.isNotEmpty(listInsert)) {
+                        valCashCalcRuleBatchMapper.insertBatch(listInsert);
+                    }
                 }
-                
+                /**add by wujie on 20210507 end**/
             }
+
+
+
 
             // 现金流支付规则表
             List<FinCashPayRule> listValCashPayRule = result.getListValCashPayRule();
