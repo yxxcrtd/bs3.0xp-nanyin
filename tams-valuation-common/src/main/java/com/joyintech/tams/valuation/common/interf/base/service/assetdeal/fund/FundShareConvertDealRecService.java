@@ -12,6 +12,7 @@ package com.joyintech.tams.valuation.common.interf.base.service.assetdeal.fund;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
@@ -72,6 +73,12 @@ public class FundShareConvertDealRecService {
 
         // 获取数据数量
         result.setDataNum(listValFundTrade.size());
+
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态, DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
 
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = this.handleValFundTrade(listValFundTrade,acctEntity.getResovleDate(),params,returnResult.getValInterflog());
@@ -165,25 +172,25 @@ public class FundShareConvertDealRecService {
             valBokDetailId.setDetailSubnameTail(item.getAssetName());
             listValBokDetailId.add(valBokDetailId);
 
-
-            Map<String, Object> map = interfCommonService.instructionGenerate(valFinProductDeal,
-                    item.getProdId(), interfProductDealBookCommonDto.getAcctSubjectType(),null);
-            if(map.get("ORDERS")!=null){
-            	listValOrders.addAll((List<StlOrders>)map.get("ORDERS"));
+            if(valFinProductDeal.getTradeAmt() != null && BigDecimal.ZERO.compareTo(valFinProductDeal.getTradeAmt())!= 0){
+                Map<String, Object> map = interfCommonService.instructionGenerate(valFinProductDeal,
+                        item.getProdId(), interfProductDealBookCommonDto.getAcctSubjectType(),null);
+                if(map.get("ORDERS")!=null){
+                    listValOrders.addAll((List<StlOrders>)map.get("ORDERS"));
+                }
+                if(map.get("ORDERS_EXT")!=null){
+                    listValOrdersExt.addAll((List<StlOrdersExt>)map.get("ORDERS_EXT"));
+                }
+                if(map.get("ACCOUNTING")!=null){
+                    listValDealAccounting.addAll((List<BokDealAccounting>)map.get("ACCOUNTING"));
+                }
+                if(map.get("ACCOUNTING_DETAI")!=null){
+                    listValDealAccountingDetail.addAll(( List<BokDealAccountingDetail>)map.get("ACCOUNTING_DETAI"));
+                }
+                if(map.get("BOK_DETAIL_ID")!=null){
+                    listValBokDetailId.addAll((List<BokDetailId>)map.get("BOK_DETAIL_ID"));
+                }
             }
-            if(map.get("ORDERS_EXT")!=null){
-            	listValOrdersExt.addAll((List<StlOrdersExt>)map.get("ORDERS_EXT"));
-            }
-            if(map.get("ACCOUNTING")!=null){
-            	 listValDealAccounting.addAll((List<BokDealAccounting>)map.get("ACCOUNTING"));
-            }
-            if(map.get("ACCOUNTING_DETAI")!=null){
-            	listValDealAccountingDetail.addAll(( List<BokDealAccountingDetail>)map.get("ACCOUNTING_DETAI"));
-            }
-            if(map.get("BOK_DETAIL_ID")!=null){
-            	listValBokDetailId.addAll((List<BokDetailId>)map.get("BOK_DETAIL_ID"));
-            }
-
             ChannelFeeInfoDeal channelFeeInfoDeal = this.getChannelFeeInfoDeal(item, interfProductDealBookCommonDto.getAcctSubjectType());
             if(channelFeeInfoDeal != null){
                 Map<String,Object> feedealMap = interfCommonService.assetChlFeeLend(valFinProductDeal, channelFeeInfoDeal);

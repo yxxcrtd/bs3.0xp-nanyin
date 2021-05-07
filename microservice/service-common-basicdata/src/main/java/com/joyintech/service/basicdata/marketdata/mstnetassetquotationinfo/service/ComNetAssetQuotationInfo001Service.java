@@ -78,7 +78,7 @@ public class ComNetAssetQuotationInfo001Service extends BaseService<ComNetAssetQ
     public Page<ComNetAssetQuotationInfo001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
         pageParam.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue());
         pageParam.put("PROFITTYPE_VALUE_03", DictCodeList.收益类型_货币型.getValue());
-        pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         return super.queryForPage(page,length,()-> comNetAssetQuotationInfo001Mapper.select(pageParam));
     }   
     
@@ -221,7 +221,7 @@ public class ComNetAssetQuotationInfo001Service extends BaseService<ComNetAssetQ
      * @return
      */
     public ComNetAssetQuotationInfo001Dto selectByIdAndDate(Map<String,Object> map) {
-    	map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+    	map.put("finprodType", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         return comNetAssetQuotationInfo001Mapper.selectByIdAndDate(map);
     }
 }

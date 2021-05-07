@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.*;
+import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -135,10 +137,15 @@ public class FxDealInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                     valInterflogBatchMapper.insertBatch(listInsert);
                 }
             }
+            String isDealTrade = result.getParamMap().get(InterfCommonConstant.读取文件状态) == null? DictCodeList.是否_否.getValue():(String)result.getParamMap().get(InterfCommonConstant.读取文件状态);
             //如果没有数据就跳出循环
             if(result.getDataNum() == 0 || CollectionUtils.isEmpty(result.getListValFinProductDeal())) {
+                if(DictCodeList.是否_是.getValue().equals(isDealTrade)){
+                    interfCommonService.dealBatchTrdFinprodDeal(result.getParamMap(),interfDate);
+                }
                 continue;
             }
+
             interfCommonService.dealBatchTrdFinprodDeal(result.getParamMap(),interfDate);
             /**modify by wujie on 20190123 end**/
             // 金融产品交易

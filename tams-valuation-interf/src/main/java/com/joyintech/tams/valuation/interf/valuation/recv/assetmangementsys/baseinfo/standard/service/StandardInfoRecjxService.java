@@ -82,7 +82,7 @@ public class StandardInfoRecjxService {
     	jjBkCashAcctDto.setAcct_name(StlCapacctInfo.getAcctName());
     	//账套名称
     	jjBkCashAcctDto.setBookset_id(booksetId);
-    	/**modify by wujie on 20210426 remark:推送几许资金账户时不需要银行信息字段
+    	/**modify by wujie on 20210429
     	//银行信息
     	jjBkCashAcctDto.setBank_dep(StlCapacctInfo.getBankDep());
 		 **/

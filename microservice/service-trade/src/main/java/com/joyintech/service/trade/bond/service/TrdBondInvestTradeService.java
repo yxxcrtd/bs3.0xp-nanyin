@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -142,6 +143,11 @@ public class TrdBondInvestTradeService extends BaseService {
         psList.add(DictCodeList.交易方向_行权_赎回.getValue());
         pageParam.put("psList", psList);
         // 一体化对应etliu end
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+        pageParam.put("defaultTradePlatFormList", PageMenuSplitUtil.getTradePlatFormList((String) pageParam.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
 
         return this.queryForPage(page, length,
             () -> trdBondInvestTradeMapper.selectDeal(pageParam));
@@ -381,6 +387,11 @@ public class TrdBondInvestTradeService extends BaseService {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 //        List<SelectOptionDto> resultList = trdBondInvestTradeMapper.getFinprodId(param);
         param.put("isautobond", CacheUtil.getSysParam("IS_AUTOBOND"));
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("parentPageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return this.queryForPage(page, length,
                 () -> trdBondInvestTradeMapper.getFinprodId(param));
 

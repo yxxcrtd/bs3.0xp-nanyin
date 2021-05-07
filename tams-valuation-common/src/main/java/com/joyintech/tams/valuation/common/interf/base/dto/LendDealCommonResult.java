@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -219,7 +220,7 @@ import com.joyintech.framework.base.BaseEntity;
         /**
          * 用于存放去重数据筛选条件
          */
-        private Map<String,Object> paramMap;
+        private Map<String,Object> paramMap = new HashMap<String,Object>();
 
     	public Map<String, Object> getParamMap() {
     		return paramMap;

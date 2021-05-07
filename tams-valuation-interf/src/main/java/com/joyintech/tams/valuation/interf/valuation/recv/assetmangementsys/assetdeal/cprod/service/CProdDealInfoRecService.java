@@ -105,9 +105,14 @@ public class CProdDealInfoRecService {
             ps.add(DictCodeList.交易方向_产品违约赎回.getValue());
             ps.add(DictCodeList.交易方向_份额强增.getValue());
             ps.add(DictCodeList.交易方向_份额强减.getValue());
+            ps.add(DictCodeList.交易方向_提前终止.getValue());
             /**add by wujie on 20210428 start**/
             
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
             
         } 
         else if(TempConstant.货币型产品分红交易表.equals(acctEntity.getTmpEName())) {
@@ -116,6 +121,10 @@ public class CProdDealInfoRecService {
             ps.add(DictCodeList.交易方向_产品现金分红.getValue());
             ps.add(DictCodeList.交易方向_产品红利转投.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
             
         } 
         else if (TempConstant.货币型产品费用交易表.equals(acctEntity.getTmpEName())) {
@@ -123,6 +132,10 @@ public class CProdDealInfoRecService {
             paramMap.put("busiType", DictCodeList.业务类型_产品费用交易.getValue());
             ps.add(DictCodeList.交易方向_产品付费.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         } else {
         	result.setDatanum(0);
         }

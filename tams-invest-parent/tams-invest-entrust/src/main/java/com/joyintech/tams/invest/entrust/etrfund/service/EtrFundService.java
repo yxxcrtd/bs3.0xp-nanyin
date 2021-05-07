@@ -156,9 +156,9 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
      * @see
      * @since 1.0
      */
-    public List<SuggestDto> getFinprodMarketId(String finprodId){
+    public List<SuggestDto> getFinprodMarketId(String finprodId, String pageId){
 
-        return restTemplate.getForList(ServiceApplication.ENTRUST_SERVICE_NAME+"/EtrFund/getFinprodMarketId?finprodId="+finprodId,
+        return restTemplate.getForList(ServiceApplication.ENTRUST_SERVICE_NAME+"/EtrFund/getFinprodMarketId?finprodId="+finprodId + "&pageId="+pageId,
             SuggestDto.class);
     }
 

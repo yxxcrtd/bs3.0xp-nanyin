@@ -128,7 +128,7 @@ public class EtrFund001Controller extends BaseController{
     @RequestMapping("/getFinprodMarketId")
     public List<SuggestDto> getFinprodMarketId() {
         String finprodId = super.getRequest().getParameter("param");
-        return eteFundService.getFinprodMarketId(finprodId);
+        return eteFundService.getFinprodMarketId(finprodId, this.getParam("pageId"));
     }
     
     /**

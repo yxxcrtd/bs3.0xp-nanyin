@@ -8,13 +8,13 @@
 <body>
     <div layout:fragment="content">
         <div class="form-button-area">
-            <a id="EtrRepo001_btn_add" class="layui-btn layui-btn-sm btn-create"
+            <a th:id="|${pageId}_btn_add|" class="layui-btn layui-btn-sm btn-create"
                 data-th-text="#{SysCommon.create}">新建</a>
-            <a id="EtrRepo001_btn_import" class="layui-btn layui-btn-sm btn-import">
+            <a th:id="|${pageId}_btn_import|" class="layui-btn layui-btn-sm btn-import">
                 <i class="iconfont icon-import"></i><span data-th-text="#{EtrRepo001.import}"></span></a>
-            <a id="EtrRepo001_btn_close" class="layui-btn layui-btn-sm" ><i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></a>
-            <a id="EtrRepo001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></a>
-            <a id="EtrRepo001_btn_manage" class="layui-btn layui-btn-sm btn-default" ><i class="iconfont icon-quanka" ></i>质押券管理</a>
+            <a th:id="|${pageId}_btn_close|" class="layui-btn layui-btn-sm" ><i class="iconfont icon-close"></i><span data-th-text="#{SysCommon.close}"></a>
+            <a th:id="|${pageId}_btn_revoke|" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></a>
+            <a th:id="|${pageId}_btn_manage|" class="layui-btn layui-btn-sm btn-default" ><i class="iconfont icon-quanka" ></i>质押券管理</a>
         </div>
         <div class="joyin-form-wrap joyin-filter-form condition-area">
             <form class="layui-form" id="searchForm">

@@ -11,24 +11,11 @@
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.FinProductValuationPara;
-import com.joyintech.tams.common.base.entity.StlOrders;
-import com.joyintech.tams.common.base.entity.StlOrdersExt;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.framework.base.BaseEntity;
 
 /**
@@ -77,6 +64,12 @@ public class PlanAssetCurrencyDealCommonResult extends BaseEntity {
      * 现金流计划表
      */
     private List<FinCashPlan> listFinCashPlan = new ArrayList<FinCashPlan>();
+    /**
+     * 交易费用明细表
+     * ADD BY WUJIE ON 20210501
+     */
+    private List<TrdTradeFeeDetail> listValTradeFeeDetail = new ArrayList<TrdTradeFeeDetail>();
+
 
     /**
      * 获取 listFinProduct
@@ -407,7 +400,7 @@ public class PlanAssetCurrencyDealCommonResult extends BaseEntity {
     /**
      * 用于存放去重数据筛选条件
      */
-    private Map<String,Object> paramMap;
+    private Map<String,Object> paramMap = new HashMap<String,Object>();
 
     public Map<String, Object> getParamMap() {
         return paramMap;
@@ -416,6 +409,22 @@ public class PlanAssetCurrencyDealCommonResult extends BaseEntity {
     public void setParamMap(Map<String, Object> paramMap) {
         this.paramMap = paramMap;
     }
-    
+
+    /**
+     * 获取 listValTradeFeeDetail
+     * @return listValTradeFeeDetail.
+     */
+    public List<TrdTradeFeeDetail> getListValTradeFeeDetail() {
+        return listValTradeFeeDetail;
+    }
+
+
+    /**
+     * 设置 listValTradeFeeDetail
+     * @param listValTradeFeeDetail listValTradeFeeDetail
+     */
+    public void setListValTradeFeeDetail(List<TrdTradeFeeDetail> listValTradeFeeDetail) {
+        this.listValTradeFeeDetail = listValTradeFeeDetail;
+    }
 
 }

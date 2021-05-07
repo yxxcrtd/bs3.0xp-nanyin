@@ -17,11 +17,11 @@
 <div layout:fragment="content">
     <div class='layui-fluid'>
         <div class="form-button-area" >
-            <a class="layui-btn layui-btn-sm" id="PrimaryBiddingManage001_btn_sure">汇总确认</a>
-            <a class="layui-btn layui-btn-sm" id="PrimaryBiddingManage001_btn_result">中标结果维护</a>
-            <a class="layui-btn layui-btn-sm" id="PrimaryBiddingManage001_btn_close">截标</a>
-            <a class="layui-btn layui-btn-sm" id="PrimaryBiddingManage001_btn_cancel_close">取消截标</a>
-            <a id="PrimaryBiddingManage001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{SysCommon.revoke}"></a>
+            <a class="layui-btn layui-btn-sm" th:id="|${pageId}_btn_sure|">汇总确认</a>
+            <a class="layui-btn layui-btn-sm" th:id="|${pageId}_btn_result|">中标结果维护</a>
+            <a class="layui-btn layui-btn-sm" th:id="|${pageId}_btn_close|">截标</a>
+            <a class="layui-btn layui-btn-sm" th:id="|${pageId}_btn_cancel_close|">取消截标</a>
+            <a th:id="|${pageId}_btn_revoke|" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{SysCommon.revoke}"></a>
         </div>
         <div class="joyin-form-wrap joyin-filter-form condition-area curr-form">
             <form class="layui-form"  id="submitForm" >
@@ -33,7 +33,7 @@
                             <input type="text" id="finprodId" name="finprodId"
                                 class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
-                                data-th-data-url="@{/business/common/CommonSelect/getAssetIdPrimaryBond}"
+                                data-th-data-url="@{/business/common/CommonSelect/getAssetIdPrimaryBond(pageId=${pageId})}"
                                 data-idfield="code" data-keyfield="code"
                                 data-th-data-effectivefieldsalias='|{"code":"#{TrdBondInvestTrade001.finprodId}","shortName":"#{TrdBondInvestTrade001.finprodName}"}|'
                                 data-th-value="${entity?.finprodMarketId}">

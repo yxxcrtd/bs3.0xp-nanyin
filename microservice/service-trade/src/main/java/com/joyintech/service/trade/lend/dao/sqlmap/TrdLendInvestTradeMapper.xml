@@ -23,6 +23,7 @@
     </resultMap>
     
     <select id="selectDeal" resultMap="trdLendInvestTradeFullResultMap">
+    select * from (
     	<trim prefixOverrides="UNION ALL">
     		<if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_01">
                 SELECT
@@ -198,7 +199,7 @@
 		            and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
             </if>
     	</trim>
-    	ORDER BY TRADE_DATE DESC, TRADE_ID DESC
+    	ORDER BY TRADE_DATE DESC, TRADE_ID DESC)
     </select>
 
     <select id="getTrdLendInvestTradeDto" resultMap="trdLendInvestTradeFullResultMap">

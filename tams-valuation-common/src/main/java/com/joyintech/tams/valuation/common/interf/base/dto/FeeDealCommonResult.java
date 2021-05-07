@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.common.base.entity.ValInterflog;
 import com.joyintech.framework.base.BaseEntity;
+import org.apache.shiro.crypto.hash.Hash;
 
 /**
  * 费用交易 处理返回共通结果 〈功能详细描述〉
@@ -87,7 +89,7 @@ public class FeeDealCommonResult extends BaseEntity {
      */
     List<FinProductType> listFinProductType = new ArrayList<FinProductType>();
 
-    private Map<String, Object> paramMap;
+    private Map<String, Object> paramMap = new HashMap<String,Object>();
 
     public Map<String, Object> getParamMap() {
         return paramMap;

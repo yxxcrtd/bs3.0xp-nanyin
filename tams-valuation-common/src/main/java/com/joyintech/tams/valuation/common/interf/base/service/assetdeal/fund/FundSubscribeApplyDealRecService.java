@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import com.joyintech.framework.util.StringUtil;
 
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,12 @@ public class FundSubscribeApplyDealRecService {
         
         // 获取数据数量
         result.setDataNum(listValApplyPurTade.size());
+
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态, DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
         
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = this.handleValApplyPurTade(listValApplyPurTade,acctEntity.getResovleDate(),params,returnResult.getValInterflog());

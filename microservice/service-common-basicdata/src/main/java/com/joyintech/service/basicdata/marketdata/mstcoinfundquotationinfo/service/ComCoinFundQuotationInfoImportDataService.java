@@ -131,7 +131,7 @@ public class ComCoinFundQuotationInfoImportDataService extends CommonExportServi
             	message.add("基金代码不能为空");
             }else{
             	param.put("finprodId",list.get(0));
-                param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+                param.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
                 ComCoinFundQuotationInfo001Dto dto = comCoinFundQuotationInfoMapper.checkFinprod(param);
                 if (dto == null){
                 	flag = false;
@@ -147,7 +147,7 @@ public class ComCoinFundQuotationInfoImportDataService extends CommonExportServi
             //验证基金类型和基金代码是否匹配
             if(flag){
             	param.put("finprodId",list.get(0));
-                param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+                param.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
                 String type = "";
                 if(list.get(1).equals("货币基金")){
                 	type = "F01";
@@ -249,7 +249,7 @@ public class ComCoinFundQuotationInfoImportDataService extends CommonExportServi
             if(flag){
                 param.put("finprodId",list.get(0));
                 param.put("valDate", DateUtil.parse(list.get(2)));
-                param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+                param.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
                 String  result = comCoinFundQuotationInfoMapper.getRegistExcelList(param);
             	if(StringUtils.isNotEmpty(result)){
             		flag = false;

@@ -3848,46 +3848,29 @@ public class InterfCommonService {
                 		}
             		}
         		}
-        		
-        		/**add by wujie on 20190114 start remark:判断产品费用交易对应的费用id有没有挂到这个产品下**/
+
         		if(TempConstant.净值型产品费用交易表.equals(tmpEName) 
         				|| TempConstant.货币型产品费用交易表.equals(tmpEName)
         				|| TempConstant.预期型产品费用交易表.equals(tmpEName)){
+
         			String cashId = null;
         			String feeId = InterfHelper.getObjectFieldValue(object, "feeId");
-        			if(DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(finprodType)){
-        				cashId = InterfHelper.getMd5CashId_(finprodId + branch,feeId);   
-        			}else{
-        				cashId = InterfHelper.getMd5CashId_(finprodId,feeId);
-        			}
-        			Map<String,Object> paramMap = new HashMap<String,Object>();
-        	        paramMap.put("cashId", cashId);
-        	        FinCashInfo finCashInfo = this.queryCashInfo(paramMap);
-        	        if(finCashInfo==null){
-        	        	ischeck = false;
-            			checkError.append("prodId"+"：产品["+prodId+"]没有对应的费用["+feeId+"]现金流信息，需要联系管理员进行产品费用基础信息接入确认;");
-        	        }
+        			if(!DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(feeId)) {
+                        if (DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(finprodType)) {
+                            cashId = InterfHelper.getMd5CashId_(finprodId + branch, feeId);
+                        } else {
+                            cashId = InterfHelper.getMd5CashId_(finprodId, feeId);
+                        }
+                        Map<String, Object> paramMap = new HashMap<String, Object>();
+                        paramMap.put("cashId", cashId);
+                        FinCashInfo finCashInfo = this.queryCashInfo(paramMap);
+                        if (finCashInfo == null) {
+                            ischeck = false;
+                            checkError.append("prodId" + "：产品[" + finprodId + "]没有对应的费用[" + feeId + "]现金流信息，需要联系管理员进行产品费用基础信息接入确认;");
+                        }
+                    }
         		}
-        		/**add by wujie on 20190114 end**/
-        		if(TempConstant.净值型产品费用交易表.equals(tmpEName) 
-        				|| TempConstant.货币型产品费用交易表.equals(tmpEName)
-        				|| TempConstant.预期型产品费用交易表.equals(tmpEName)){
-        			String cashId = null;
-        			String feeId = InterfHelper.getObjectFieldValue(object, "feeId");
-        			if(DictCodeListExt1.金融产品类型_理财子产品.getValue().equals(finprodType)){
-        				cashId = InterfHelper.getMd5CashId_(finprodId + branch,feeId);   
-        			}else{
-        				cashId = InterfHelper.getMd5CashId_(finprodId,feeId);
-        			}
-        			Map<String,Object> paramMap = new HashMap<String,Object>();
-        	        paramMap.put("cashId", cashId);
-        	        FinCashInfo finCashInfo = this.queryCashInfo(paramMap);
-        	        if(finCashInfo==null){
-        	        	ischeck = false;
-            			checkError.append("prodId"+"：产品["+finprodId+"]没有对应的费用["+feeId+"]现金流信息，需要联系管理员进行产品费用基础信息接入确认;");
-        	        }
-        		}
-        		
+
         	}
     		//投资端交易-产品check
     		else if(tempCheckInfo.getColprdName()!=null 

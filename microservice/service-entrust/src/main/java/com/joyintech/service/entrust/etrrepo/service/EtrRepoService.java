@@ -21,6 +21,7 @@ import java.util.Map;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
@@ -120,6 +121,11 @@ public class EtrRepoService extends BaseService<EtrRepoDto> {
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return queryForPage(page, length, () -> etrRepoMapper.selectForPage(param));
     }
     /**

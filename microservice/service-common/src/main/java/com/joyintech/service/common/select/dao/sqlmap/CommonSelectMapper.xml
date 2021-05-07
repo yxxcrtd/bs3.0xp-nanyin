@@ -22,6 +22,14 @@
             <if test="PROFIT_TYPE != null and PROFIT_TYPE != ''">
                 AND PROFIT_TYPE = #{PROFIT_TYPE}
             </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+            <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                AND TRADE_MARKET in
+                <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                    #{currTradeMarket}
+                </foreach>
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 end -->
         </where>
     </select>
     
@@ -46,6 +54,14 @@
             <if test="PROFIT_TYPE != null and PROFIT_TYPE != ''">
                 AND PROFIT_TYPE = #{PROFIT_TYPE}
             </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+            <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                AND TRADE_MARKET in
+                <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                    #{currTradeMarket}
+                </foreach>
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 end -->
         </where>
     </select>
     

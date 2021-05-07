@@ -131,7 +131,7 @@ public class ComNetAssetQuotationInfoImportDataService extends CommonExportServi
             	message.add("资产代码不能为空");
             }else{
             	param.put("finprodId",list.get(0));
-                param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+                param.put("finprodType", DictCodeListExt1.金融产品类型_计划类资产.getValue());
                 ComNetAssetQuotationInfo001Dto dto = comNetAssetQuotationInfo001Mapper.checkFinprod(param);
                 if (dto == null){
                     message.add("资产代码错误");
@@ -145,7 +145,7 @@ public class ComNetAssetQuotationInfoImportDataService extends CommonExportServi
             //验证资产代码和资产名称是否匹配
             if(flag){
             	param.put("finprodId",list.get(0));
-            	param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+            	param.put("finprodType", DictCodeListExt1.金融产品类型_计划类资产.getValue());
                 param.put("finprodName", list.get(1));
                 ComNetAssetQuotationInfo001Dto dto = comNetAssetQuotationInfo001Mapper.checkFinprodIdAndFinprodName(param);
                 if (dto == null){
@@ -183,7 +183,7 @@ public class ComNetAssetQuotationInfoImportDataService extends CommonExportServi
             //主键校验
             if(flag){
             	param.put("finprodId",list.get(0));
-                param.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+                param.put("finprodType", DictCodeListExt1.金融产品类型_计划类资产.getValue());
                 param.put("valDate", DateUtil.parse(list.get(2)));
             	String  result = comNetAssetQuotationInfo001Mapper.getRegistExcelList(param);
             	if(StringUtils.isNotEmpty(result)){

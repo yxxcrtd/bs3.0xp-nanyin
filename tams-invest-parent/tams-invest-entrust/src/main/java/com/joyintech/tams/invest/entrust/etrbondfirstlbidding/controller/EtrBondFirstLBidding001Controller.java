@@ -94,7 +94,7 @@ public class EtrBondFirstLBidding001Controller extends BaseController {
     @RequestMapping("/getfinprodId")
     public List<SuggestDto> getfinprodId(String param)
         throws Exception {
-        return service.getfinprodId(param);
+        return service.getfinprodId(param, this.getParam("pageId"));
     }
     /**
      * 按钮点击时的check

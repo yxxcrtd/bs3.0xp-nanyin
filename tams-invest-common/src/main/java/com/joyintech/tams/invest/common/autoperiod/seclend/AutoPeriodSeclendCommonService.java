@@ -1,20 +1,20 @@
 package com.joyintech.tams.invest.common.autoperiod.seclend;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.asset.dto.BondAssetCalcInputDto;
 import com.joyintech.tams.invest.common.asset.service.BondAssetCalcService;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.trdseclendduration.TrdSecLendDurationDto;
 import org.slf4j.Logger;
@@ -24,10 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 债券借贷存续期共通Service
@@ -125,6 +122,10 @@ public class AutoPeriodSeclendCommonService extends BaseService {
         List<WflTrdProductDeal> deals = new ArrayList<>();
         BussinessCodeParameter parameter = new BussinessCodeParameter();
         parameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
+        // add by jiangpeng on 20210428 start
+        // TISHKBS-2068 CLONE - 债券借贷融入到期， 融入券可用持仓 < 融入券到期交易.交易份额，选择现金交割时，自动生成的债券买入交易的单位面值和交易员字段为空，应该有值
+        String user = LoginUserUtil.getUserName();
+        // add by jiangpeng on 20210428 end
         现金流.forEach(finCashPlan -> {
             WflTrdProductDeal deal = new WflTrdProductDeal();
             deal.setTradeId(autoPeriodCommonService.buildBussinessCode(parameter));
@@ -157,6 +158,10 @@ public class AutoPeriodSeclendCommonService extends BaseService {
             deal.setIntAmt(entity.getmTradeAmt());
             deal.setFpriceAmt(entity.getmTradeAmt());
             deal.setTradeAmt(entity.getmTradeAmt());
+            // add by jiangpeng on 20210428 start
+            // ZGZGST-157 投管系统，债券借贷到期交易未存储登记托管机构
+            deal.setRegistOrg(getRegisOrgInfo(entity.getPledgeFinprodId()));//登记托管机构
+            // add by jiangpeng on 20210428 end
             deals.add(deal);
             if (DictCodeList.是否_是.getValue().equals(entity.getIsCashPay())) {
                 BondAssetCalcInputDto bondAssetCalcInputDto = new BondAssetCalcInputDto();
@@ -197,6 +202,11 @@ public class AutoPeriodSeclendCommonService extends BaseService {
                         deal2.setTradeAmt(deal2.getFpriceAmt());
                         deal2.setCpriceAmt(ArithmeticUtil.subtract(deal2.getFpriceAmt(), deal2.getIntAmt()));
                         deal2.setPrinAmt(ArithmeticUtil.subtract(deal2.getTradeAmt(), deal2.getIntAmt()));
+                        // add by jiangpeng on 20210429 start
+                        // TISHKBS-2068 CLONE - 债券借贷融入到期， 融入券可用持仓 < 融入券到期交易.交易份额，选择现金交割时，自动生成的债券买入交易的单位面值和交易员字段为空，应该有值
+                        deal2.setTrader(user);
+                        deal2.setParValue(this.getUnitPrice(deal2.getFinprodId(), deal2.getSettleDate()));
+                        // add by jiangpeng on 20210429 end
                         deals.add(deal2);
                     }
 
@@ -236,6 +246,11 @@ public class AutoPeriodSeclendCommonService extends BaseService {
                     deal1.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
                     deal1.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
                     deal1.setCpriceAmt(ArithmeticUtil.subtract(deal1.getFpriceAmt(), deal1.getIntAmt()));
+                    // add by jiangpeng on 20210428 start
+                    // TISHKBS-2068 CLONE - 债券借贷融入到期， 融入券可用持仓 < 融入券到期交易.交易份额，选择现金交割时，自动生成的债券买入交易的单位面值和交易员字段为空，应该有值
+                    deal1.setTrader(user);
+                    deal1.setParValue(this.getUnitPrice(deal1.getFinprodId(), deal1.getSettleDate()));
+                    // add by jiangpeng on 20210428 end
                     deals.add(deal1);
                 }
                 else if (DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue().equals(entity.getFinprodType2())) {
@@ -266,6 +281,11 @@ public class AutoPeriodSeclendCommonService extends BaseService {
                             deal1.setUnitCprice(ArithmeticUtil.subtract(deal1.getUnitFprice(), deal1.getUnitInt()));
                             deal1.setShareAmt(ptlSecPosition.getAmount());
                             deal1.setIntAmt(ArithmeticUtil.multiply(deal1.getShareAmt(), deal1.getUnitInt()));
+                            // add by jiangpeng on 20210428 start
+                            // TISHKBS-2068 CLONE - 债券借贷融入到期， 融入券可用持仓 < 融入券到期交易.交易份额，选择现金交割时，自动生成的债券买入交易的单位面值和交易员字段为空，应该有值
+                            deal1.setTrader(user);
+                            deal1.setParValue(this.getUnitPrice(deal1.getFinprodId(), deal1.getSettleDate()));
+                            // add by jiangpeng on 20210428 end
                             deal1.setFpriceAmt(ArithmeticUtil.round(
                                 ArithmeticUtil.multiply(deal.getShareAmt(),
                                     ArithmeticUtil.divide(entity.getPrinAmt(), entity.getShareAmt(), 12)),
@@ -297,6 +317,38 @@ public class AutoPeriodSeclendCommonService extends BaseService {
         });
 
         return deals;
+    }
+
+    /***
+     * 获取当前标的登记托管机构
+     * ZGZGST-157 投管系统，债券借贷到期交易未存储登记托管机构
+     * @param finprodId
+     * @return
+     */
+    private String getRegisOrgInfo(String finprodId){
+        FinProduct retFinBondInfo = restTemplate.getForObject(ServiceApplication.ASSET_SERVICE_NAME
+                        + "/FinBondTargetAsset/getBasicInfo?finprodId="
+                        + finprodId,
+                FinProduct.class);
+
+        return  StringUtil.isNotEmpty(retFinBondInfo)?retFinBondInfo.getRegistOrg():null;
+    }
+
+    /**
+     * 1.8计算单位面值
+     * TISHKBS-2068 CLONE - 债券借贷融入到期， 融入券可用持仓 < 融入券到期交易.交易份额，选择现金交割时，自动生成的债券买入交易的单位面值和交易员字段为空，应该有值
+     *
+     * @param finprodId 金融产品代码
+     * @param settleDate 交割日
+     * @return 单位面值
+     * @since 1.0
+     */
+    public BigDecimal getUnitPrice(String finprodId, Date settleDate) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("finprodId", finprodId);
+        parameters.put("settleDate", DateUtil.format(settleDate));
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getUnitPrice", parameters,
+                BigDecimal.class);
     }
 
     /**

@@ -14,6 +14,9 @@ package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.ass
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -141,13 +144,17 @@ public class NProdDealInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                     valInterflogBatchMapper.insertBatch(listInsert);
                 }
             }
-        	if(result.getDatanum()==0){
-        		continue;
-        	}
-        	
-        	if(result.getDatanum()==0 || CollectionUtils.isEmpty(result.getListValFinProductDeal())){
-        		continue;
-        	}      	
+
+            String isDealTrade = result.getParamMap().get(InterfCommonConstant.读取文件状态) == null? DictCodeList.是否_否.getValue():(String)result.getParamMap().get(InterfCommonConstant.读取文件状态);
+            //如果没有数据就跳出循环
+            if(result.getDatanum() == 0 || CollectionUtils.isEmpty(result.getListValFinProductDeal())) {
+                if(DictCodeList.是否_是.getValue().equals(isDealTrade)){
+                    interfCommonService.dealBatchTrdFinprodDeal(result.getParamMap(),interfDate);
+                }
+                continue;
+            }
+
+
         	//如果没有数据就跳出循环
             interfCommonService.dealBatchTrdFinprodDeal(result.getParamMap(),interfDate);
             // 金融产品交易

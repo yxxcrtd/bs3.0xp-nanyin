@@ -65,6 +65,12 @@ public class SecblTranDealTemplateRecService {
         
         //获取数据数量
         result.setDataNum(listValSeclendDeal.size());
+
+        /**add by wujie on 20210502 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210502 end**/
         
         // 2、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = handleValSeclendDeal(listValSeclendDeal,acctEntity.getResovleDate(),params,returnResult.getValInterflog());
@@ -97,9 +103,6 @@ public class SecblTranDealTemplateRecService {
         List<StlOrdersExt> valOrdersExtList=(List<StlOrdersExt>)map.get("listValOrdersExt");
         result.setListValOrdersExt(valOrdersExtList);
         return result;
-        
-        
-        
     }
     /**
      * 01-债券借贷交易

@@ -91,6 +91,13 @@ public class CPrdDealFeeDealTemplateRecService {
         if (listValPrdFeeDealC == null) {
         	listValPrdFeeDealC = new ArrayList<ValPrdFeeDealC>();
         }
+
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
+
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = this.handleValPrdBonusDealC(listValPrdFeeDealC,
             acctEntity.getResovleDate(),params,returnResult.getValInterflog());
@@ -329,6 +336,10 @@ public class CPrdDealFeeDealTemplateRecService {
         FinCashInfo finCashInfo = interfCommonService.queryCashInfo(paramMap);
         if(finCashInfo!=null){
     	  trdProductDeal.setFinprodType(finCashInfo.getCashType2());
+        }else{
+            if(DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+                trdProductDeal.setFinprodType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            }
         }
           
         /**modify by niuqianyu on 20190118 start**/ 
@@ -361,8 +372,19 @@ public class CPrdDealFeeDealTemplateRecService {
         trdProductDeal.setPs(DictCodeList.交易方向_产品付费.getValue());
         // 交易状态 = A.数据动作标志 新增 --> 01:初始 撤销 --> 03:撤销
         trdProductDeal.setTradeStatus(dto.getDataActionSign());
+        /**MODIFY BY WUJIE ON 20210501 START
         // 是否结清 = 固定值 (非收息付费时设置默认值)
         trdProductDeal.setIsClean(InterfCommonConstant.是否结清_默认);
+        **/
+        if(StringUtil.isNotEmpty(dto.getIsClean2())){
+            trdProductDeal.setIsClean(dto.getIsClean2());
+        }else{
+            trdProductDeal.setIsClean(InterfCommonConstant.是否结清_默认);
+        }
+
+        /**MODIFY BY WUJIE ON 20210501 END**/
+
+
         // 关联系统交易编号 = A.成交编号
         trdProductDeal.setfTradeId(dto.getTradeId());
         // 创建时间 = 系统时间
@@ -436,6 +458,11 @@ public class CPrdDealFeeDealTemplateRecService {
         FinCashInfo finCashInfo = interfCommonService.queryCashInfo(paramMap);
         if(finCashInfo!=null){
         	valTradeFeeDetail.setFeeType(finCashInfo.getCashType2());
+        }
+        else{
+            if(DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+                valTradeFeeDetail.setFeeType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            }
         }
         // 是否随交易支付 = 固定值：Y 是 默认随交易支付
         valTradeFeeDetail.setIsPayWithTrade(DictCodeList.是否_是.getValue());

@@ -92,6 +92,12 @@ public class PlannedPeriodTradeTemplateRecService {
         //获取数据数量
         result.setDataNum(listValMngPeriodTrade.size());
 
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
+
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = handleListValMngPeriodTrade(listValMngPeriodTrade,acctEntity.getResovleDate(),params,returnResult.getValInterflog());
         // 判断返回结果不为空

@@ -32,6 +32,7 @@
         <module>../../tams-svreport-common</module>
         <module>../../tams-valuation-api</module>
         <module>../../tams-valuation-common</module>
+        <module>../../tams-common-basicdata</module>
 				
 		<!-- 后台服务 -->
         <module>../../microservice/service-chb</module>

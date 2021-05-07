@@ -16,7 +16,7 @@
      * 新建
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrRepo002'), basePath +'invest/entrust/etrrepo/EtrRepo002/init', '98%', '95%',function(){table.reload();});
+        Joyin.dialog(JoyinUtil.getLabel('EtrRepo002'), basePath +'invest/entrust/etrrepo/EtrRepo002/init?parentPageId=' + pageId, '98%', '95%',function(){table.reload();});
     }
     /**
      * 定义数据表格
@@ -132,25 +132,25 @@
         /**
          * 查询按钮
          */
-        $('#EtrRepo001_btn_search').click(function() {
+        $('#'+pageId+'_btn_search').click(function() {
             table.load();
-            $('#EtrRepo001_btn_close').show();
-            $('#EtrRepo001_btn_revoke').show();
+            $('#'+pageId+'_btn_close').show();
+            $('#'+pageId+'_btn_revoke').show();
         });
         /**
          * 导出按钮
          */
-        $('#EtrRepo001_btn_export').click(function() {
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
         /**
          * 新建
          */
-        $('#EtrRepo001_btn_add').click(function() {
+        $('#'+pageId+'_btn_add').click(function() {
             showDialog();
         });
         // 导入按钮点击事件
-        $('#EtrRepo001_btn_import').click(function() {
+        $('#'+pageId+'_btn_import').click(function() {
             Joyin.uploadFile({pageId : 'EtrRepo003MTM'}, function(fileName) {
                 Joyin.ajax(basePath + 'invest/entrust/etrrepo/EtrRepo003/checkImportData', {fileName: fileName}, function(checkResult) {
                     setTimeout( function () {
@@ -175,7 +175,7 @@
         /**
          * 关闭委托
          */
-        $('#EtrRepo001_btn_close').click(function() {
+        $('#'+pageId+'_btn_close').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
              }
@@ -196,7 +196,7 @@
         /**
          * 撤销
          */
-        $('#EtrRepo001_btn_revoke').click(function() {
+        $('#'+pageId+'_btn_revoke').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
              }
@@ -217,7 +217,7 @@
         /**
          * 绑定质押券管理按钮事件
          */
-        $('#EtrRepo001_btn_manage').click(function () {
+        $('#'+pageId+'_btn_manage').click(function () {
             Joyin.dialog(JoyinUtil.getLabel("EtrStandardBond001"), basePath
                 + "invest/entrust/etrstandardbond/EtrStandardBond001/init", "99%", "99%", {
                 	pageModel: PAGE_MODEL_NEW

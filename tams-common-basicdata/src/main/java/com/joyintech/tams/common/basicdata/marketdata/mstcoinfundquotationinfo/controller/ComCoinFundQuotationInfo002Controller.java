@@ -79,7 +79,7 @@ public class ComCoinFundQuotationInfo002Controller extends BaseController {
         else if (StringUtil.isNotEmpty(finprodMarketId)) {
             // 将金融代码和固定格式的日期字符串传入参数集合
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
+            map.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
             map.put("yes", DictCodeList.是否_是.getValue());
             map.put("finprodId", finprodMarketId);
             Date date = new Date();

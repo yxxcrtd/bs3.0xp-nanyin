@@ -81,23 +81,23 @@ $(function() {
      * 画面加载完成
      */
     $(function() {
-        $("#EtrBondFirstLBidding001_btn_search").click(function () {
+        $('#'+pageId+"_btn_search").click(function () {
             table.load();
         });
         /**
          * 导出按钮
          */
-        $('#EtrBondFirstLBidding001_btn_export').click(function() {
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
         //新建事件
-        $("#EtrBondFirstLBidding001_btn_add").click(function () {
+        $('#'+pageId+"_btn_add").click(function () {
             Joyin.dialog(JoyinUtil.getLabel("债券一级指令新建"),
-                basePath + "invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init",
+                basePath + "invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init?parentPageId=" + pageId,
                 "98%", "98%"); table.load(); });
         
         //撤回事件
-        $('#EtrBondFirstLBidding001_btn_revoke').click(function(){
+        $('#'+pageId+'_btn_revoke').click(function(){
 
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();

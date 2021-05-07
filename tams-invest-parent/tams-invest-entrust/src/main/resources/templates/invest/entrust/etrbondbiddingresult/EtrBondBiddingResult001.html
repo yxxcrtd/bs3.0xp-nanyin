@@ -16,7 +16,7 @@
 <div layout:fragment="content">
     <div class='layui-fluid'>
         <div class="form-button-area" >
-            <a class="layui-btn layui-btn-sm" id="EtrBondBiddingResult001_btn_payment">分销缴款</a>
+            <a class="layui-btn layui-btn-sm" th:id="|${pageId}_btn_payment|">分销缴款</a>
         </div>
         <div class="joyin-form-wrap joyin-filter-form condition-area curr-form">
             <form class="layui-form"  id="submitForm" >
@@ -38,7 +38,7 @@
                             <input type="text" id="finprodId" name="finprodId"
                                    class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
                                    data-th-placeholder="#{SysCommon.placeholder}"
-                                   data-th-data-url="@{/business/common/CommonSelect/getAssetIdPrimaryBond}"
+                                   data-th-data-url="@{/business/common/CommonSelect/getAssetIdPrimaryBond(pageId=${pageId})}"
                                    data-idfield="code" data-keyfield="code"
                                    data-th-data-effectivefieldsalias='|{"code":"#{TrdBondInvestTrade001.finprodId}","shortName":"#{TrdBondInvestTrade001.finprodName}"}|'
                                    data-th-value="${entity?.finprodMarketId}">

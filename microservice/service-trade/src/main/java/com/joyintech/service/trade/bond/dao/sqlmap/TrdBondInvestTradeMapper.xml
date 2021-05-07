@@ -168,6 +168,14 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id=#{fTradeId}
                     </if>
+                    <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                    <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                        AND fp.TRADE_MARKET in
+                        <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                            #{currTradeMarket}
+                        </foreach>
+                    </if>
+                    <!-- add by etliu 20210501 银行间场内场外拆分 end -->
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_02">
                 UNION ALL
@@ -308,6 +316,14 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id=#{fTradeId}
                     </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND fp.TRADE_MARKET in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_03">
                 UNION ALL
@@ -446,6 +462,14 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id=#{fTradeId}
                     </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND fp.TRADE_MARKET in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
             </if>
         </trim>
         ORDER BY TRADE_DATE DESC, TOTLE_TRADE_ID DESC
@@ -728,6 +752,14 @@
 	            <if test="windtypeone != null and windtypeone != ''">
 	                AND B.TYPE_4 = #{windtypeone}
 	            </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND A.TRADE_MARKET in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
 	        </where>
         <if test="isautobond != null and isautobond == 'true'">
         union

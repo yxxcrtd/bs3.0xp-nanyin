@@ -8,14 +8,14 @@
 <body>
 <div layout:fragment="content">
     <div class="form-button-area">
-        <a id="TrdRepoTrade001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
+        <a th:id="|${pageId}_btn_add|" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
         <a id="TrdRepoTrade003_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create.ptl}">多组合新建</a>
-        <a id="TrdRepoTrade001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{SysCommon.revoke}"></a>
+        <a th:id="|${pageId}_btn_revoke|" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{SysCommon.revoke}"></a>
         <!-- update by zhangpuyu 2019/11/15 start -->
-        <a id="TrdRepoTrade001_btn_manage" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-quanka" ></i>标准券管理</a>
+        <a th:id="|${pageId}_btn_manage|" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-quanka" ></i>标准券管理</a>
         <!-- update by zhangpuyu 2019/11/15 end -->
-        <a id="TrdRepoTrade001_btn_substitution" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-quanka" ></i>质押券置换</a>
-        <a id="TrdRepoTrade001_btn_export_mail_model" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-quanka"></i>导出邮件模板</a>
+        <a th:id="|${pageId}_btn_substitution|" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-quanka" ></i>质押券置换</a>
+        <a th:id="|${pageId}_btn_export_mail_model|" class="layui-btn layui-btn-sm btn-default"><i class="iconfont icon-quanka"></i>导出邮件模板</a>
     </div>
     <div class="joyin-form-wrap joyin-filter-form condition-area curr-form">
         <form class="layui-form" id="submitForm">

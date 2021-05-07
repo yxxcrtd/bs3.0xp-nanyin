@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,7 +98,7 @@ public class FundDealInfoForInterfRecCommonResult extends BaseEntity{
 	/**add by wujie on 20180809 end**/
 
 
-	private Map<String,Object> paramMap;
+	private Map<String,Object> paramMap = new HashMap<String,Object>();
 
     public Map<String, Object> getParamMap() {
         return paramMap;

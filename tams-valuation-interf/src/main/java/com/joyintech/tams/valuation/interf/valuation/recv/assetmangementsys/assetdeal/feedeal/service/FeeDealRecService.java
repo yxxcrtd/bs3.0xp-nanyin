@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -73,6 +74,10 @@ public class FeeDealRecService {
             paramMap.put("busiType", DictCodeList.业务类型_产品费用交易.getValue());
             ps.add(DictCodeList.交易方向_付费.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         } 
         else if (TempConstant.通道产品费用交易.equals(acctEntity.getTmpEName())) {
             result = valChannelProdFeeDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
@@ -85,13 +90,26 @@ public class FeeDealRecService {
             ps.add(DictCodeList.交易方向_产品申购.getValue());
             paramMap.put("pslist", ps);
             /**add by wujie on 20190321 end**/
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
             
         } 
         else if(TempConstant.费用计提交易.equals(acctEntity.getTmpEName())){
-            result = valFeeDrawDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);           
-            paramMap.put("busiType",DictCodeListExt3.业务类型_费用计提交易.getValue());          
+            result = valFeeDrawDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
+
+            List<String> busiTypes = new ArrayList<String>();
+            busiTypes.add(DictCodeListExt3.业务类型_费用计提交易.getValue());
+            busiTypes.add(DictCodeListExt2.业务类型_浮动管理费挂账交易.getValue());
+            paramMap.put("busiTypelist", busiTypes);
+
             ps.add(DictCodeListExt3.交易方向_费用计提.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         else {
             result.setDatanum(0);

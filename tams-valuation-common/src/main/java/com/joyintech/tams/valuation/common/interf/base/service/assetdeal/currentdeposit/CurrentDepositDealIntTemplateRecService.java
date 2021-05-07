@@ -87,6 +87,12 @@ public class CurrentDepositDealIntTemplateRecService {
         //设置读取数据数量
         result.setDataNum(listValCurrentDepositDealInt.size());
 
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
+
         // 3、根据有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = handleValCurrentDepositDealInt(listValCurrentDepositDealInt,
             acctEntity.getResovleDate(),params,returnResult.getValInterflog());

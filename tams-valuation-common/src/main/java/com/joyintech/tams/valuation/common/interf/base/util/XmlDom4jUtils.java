@@ -73,6 +73,14 @@ public class XmlDom4jUtils {
         } else {
             pathList = SearchFilePath.queryFilePath(filePath, tmpEName);
         }
+
+        /**add by wujie on 20210502 start**/
+        result.setReadFile(true);
+        if(pathList==null || pathList.size()==0){
+            result.setReadFile(false);
+        }
+        /**add by wujie on 20210502 end**/
+
         for (String path : pathList) {
             List list = new ArrayList();
             try {
@@ -96,6 +104,7 @@ public class XmlDom4jUtils {
             }
             catch (Exception e) {
             	logger.error("读取文件" + path + "错误", e);
+                result.setReadFile(false);
             }
             listAll.addAll(list);
         }
@@ -230,13 +239,13 @@ public class XmlDom4jUtils {
         		new TempCheckInfo(TempConstant.债券存续期交易,"prodId","INVEST"));
         prdNameMap.put(TempConstant.债券应收款项转让交易, 
         		new TempCheckInfo(TempConstant.债券应收款项转让交易,"prodId","INVEST"));
-    	
+
         prdNameMap.put(TempConstant.存款类资产存款交易, 
-        		new TempCheckInfo(TempConstant.存款类资产存款交易,"prodId","INVEST"));
+        		new TempCheckInfo(TempConstant.存款类资产存款交易,"prodId","INVEST","assetId"));
         prdNameMap.put(TempConstant.存款类资产存款存续期表, 
-        		new TempCheckInfo(TempConstant.存款类资产存款存续期表,"prodId","INVEST"));
+        		new TempCheckInfo(TempConstant.存款类资产存款存续期表,"prodId","INVEST","assetId"));
         prdNameMap.put(TempConstant.存款类资产应收款项转让交易, 
-        		new TempCheckInfo(TempConstant.存款类资产应收款项转让交易,"prodId","INVEST"));
+        		new TempCheckInfo(TempConstant.存款类资产应收款项转让交易,"prodId","INVEST","assetId"));
     	
         prdNameMap.put(TempConstant.申购申请交易, 
         		new TempCheckInfo(TempConstant.申购申请交易,"prodId","INVEST"));
@@ -276,7 +285,7 @@ public class XmlDom4jUtils {
         finprodTypes = DictCodeListExt1.金融产品类型_债券借贷融入.getValue()
         		+","+ DictCodeListExt1.金融产品类型_债券借贷融出.getValue();
         temp = new TempCheckInfo();
-        temp.setDtoEname(TempConstant.买断式回购派息交易);
+        temp.setDtoEname(TempConstant.债券借贷交易);
         temp.setColprdName("prodId");
         temp.setInvestType("INVEST");
         temp.setAssetId("finprodId");

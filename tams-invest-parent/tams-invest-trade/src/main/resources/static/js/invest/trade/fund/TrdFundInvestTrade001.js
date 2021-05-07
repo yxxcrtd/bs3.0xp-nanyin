@@ -192,20 +192,20 @@
     
     $(function () {
         // 绑定按钮事件
-        $('#TrdFundInvestTrade001_btn_search').click(function() {
+        $('#'+pageId+'_btn_search').click(function() {
             table.load();
-            $('#TrdFundInvestTrade001_btn_revoke').show();
+            $('#'+pageId+'_btn_revoke').show();
         });
-        
-        $('#TrdFundInvestTrade001_btn_export').click(function() {
+
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
-        $('#TrdFundInvestTrade001_btn_add').click(function() {
+        $('#'+pageId+'_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("TrdFundInvestTrade002"),
-                    basePath + "invest/trade/fund/TrdFundInvestTrade002/init",
+                    basePath + "invest/trade/fund/TrdFundInvestTrade002/init?parentPageId=" + pageId,
                     "98%", "90%", {pageModel:PAGE_MODEL_NEW});
         });
-        $('#TrdFundInvestTrade001_btn_revoke').click(function() {
+        $('#'+pageId+'_btn_revoke').click(function() {
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }
@@ -249,9 +249,9 @@
                 });
             }
         });
-        $('#TrdFundInvestTrade001_btn_dzhadd').click(function() {
+        $('#'+pageId+'_btn_dzhadd').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("TrdFundInvestTrade004"),
-                basePath + "invest/trade/fund/TrdFundInvestTrade004/init",
+                basePath + "invest/trade/fund/TrdFundInvestTrade004/init?parentPageId=" + pageId,
                 "98%", "90%", {pageModel:PAGE_MODEL_NEW});
         });
         //是否展示资产四五级分类

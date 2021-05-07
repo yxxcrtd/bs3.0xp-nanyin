@@ -46,6 +46,10 @@
                                 class="iconfont icon-arrow-down pro-down-icon"></i></h3>
                         <input type="hidden" id="workflowId" name="workflowId" th:value="${workflowId}"/>
                         <input type="hidden" name="finprodType2" data-th-value="${entity?.finprodType2}"/>
+                        <!--modify by jiangpeng on 20210428 start -->
+                        <!--ZGZGST-125 投管系统，债券借贷到期时，TRD_PRODUCT_DEAL表的DELIVERY_TYPE存的是汉字，应该是到期结算方式的数据字典 -->
+                        <input type="hidden" name="deliveryType" data-th-value="${entity?.deliveryType}"/>
+                        <!--modify by jiangpeng on 20210428 end -->
                         <div class="pro-module-item">
                             <div class="layui-form-item">
                                 <div class="form-inline-wrap">
@@ -123,7 +127,9 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{TrdSecLendDuration002.firstSettleType}">首次结算方式</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input disabled type="text" id="deliveryType" name="deliveryType"
+                                        <!--modify by jiangpeng on 20210428  -->
+                                        <!--ZGZGST-125 投管系统，债券借贷到期时，TRD_PRODUCT_DEAL表的DELIVERY_TYPE存的是汉字，应该是到期结算方式的数据字典 -->
+                                        <input disabled type="text" id="deliveryTypeString" name="deliveryTypeString"
                                                class="layui-input form-input" placeholder="请输入内容"
                                                th:placeholder="#{SysCommon.placeholder}"
                                                th:value="${entity?.deliveryTypeString}"/>

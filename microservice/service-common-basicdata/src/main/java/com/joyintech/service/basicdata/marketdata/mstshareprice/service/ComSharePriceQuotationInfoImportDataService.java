@@ -26,6 +26,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.MstSharePriceMapper;
 import com.joyintech.tams.common.base.entity.MstSharePrice;
+import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**股票类行情信息导入
  * @auther: 曹锦
@@ -153,7 +154,7 @@ public class ComSharePriceQuotationInfoImportDataService extends CommonExportSer
             	message.add("资产代码不能为空");
             }else{
             	param.put("finprodId",list.get(0));
-                param.put("finprodType2", "F10");
+                param.put("finprodType", DictCodeListExt1.金融产品类型_股票.getValue());
                 String result = comSharePrice001Mapper.checkFinprod(param);
                 if(StringUtils.isEmpty(result)){
                 	flag = false;
@@ -168,7 +169,7 @@ public class ComSharePriceQuotationInfoImportDataService extends CommonExportSer
             //校验资产代码和资产名称是否一致
             if(flag){
             	param.put("finprodId",list.get(0));
-                param.put("finprodType2", "F10");
+                param.put("finprodType", DictCodeListExt1.金融产品类型_股票.getValue());
                 param.put("finprodName", list.get(1));
                 String result = comSharePrice001Mapper.checkFinprodIdAndFinprodName(param);
                 if(StringUtils.isEmpty(result)){

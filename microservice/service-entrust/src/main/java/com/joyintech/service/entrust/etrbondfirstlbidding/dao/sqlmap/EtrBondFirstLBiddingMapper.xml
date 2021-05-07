@@ -142,7 +142,14 @@
 		<if test="bidStatus != null and bidStatus != ''">
 			AND T8.IS_WIN = #{bidStatus}
 		</if>
-		
+		<!-- add by etliu 20210501 银行间场内场外拆分 start -->
+		<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+			AND nvl(T1.TRADE_MARKET, T3.TRADE_MARKET) in
+			<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+				#{currTradeMarket}
+			</foreach>
+		</if>
+		<!-- add by etliu 20210501 银行间场内场外拆分 end -->
 		</where>
 		order by T1.ENTRUST_ID DESC
 	</select>
@@ -187,6 +194,14 @@
 			AND	(FINPROD_MARKET_ID like concat('%',concat(#{param},'%'))
 				or FINPROD_ABBR like concat('%',concat(#{param},'%')))
 			</if>
+			<!-- add by etliu 20210501 银行间场内场外拆分 start -->
+			<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+				AND TRADE_MARKET in
+				<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+					#{currTradeMarket}
+				</foreach>
+			</if>
+			<!-- add by etliu 20210501 银行间场内场外拆分 end -->
 		</where>
 	</select>
 	
@@ -261,6 +276,14 @@
         ON T1.FINPROD_ID = T2.FINPROD_ID
 		LEFT JOIN FIN_PRODUCT_ADD T3 ON T1.FINPROD_ID = T3.FINPROD_ID
 		<include refid="getfinprodIdForAddWhere"></include>
+		<!-- add by etliu 20210501 银行间场内场外拆分 start -->
+		<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+			AND T1.TRADE_MARKET in
+			<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+				#{currTradeMarket}
+			</foreach>
+		</if>
+		<!-- add by etliu 20210501 银行间场内场外拆分 end -->
 	</select>
 	<sql id="getfinprodIdForAddWhere">
 	<where>

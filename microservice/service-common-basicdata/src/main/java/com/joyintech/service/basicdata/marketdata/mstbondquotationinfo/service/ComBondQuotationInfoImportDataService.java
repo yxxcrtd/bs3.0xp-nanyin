@@ -131,7 +131,7 @@ public class ComBondQuotationInfoImportDataService extends CommonExportService<C
             	message.add("资产代码不能为空");
             }else{
             	param.put("secId", list.get(0));
-                param.put("prodType2", "F01");
+                param.put("prodType2", DictCodeListExt1.金融产品类型_债券.getValue());
                 String result = comBondQuotationInfoMapper.checkSecId(param);
                 if(StringUtils.isEmpty(result)){
                 	flag = false;
@@ -142,7 +142,7 @@ public class ComBondQuotationInfoImportDataService extends CommonExportService<C
             if(flag && StringUtil.isNotEmpty(list.get(1))){
             	param.put("secId", list.get(0));
                 param.put("secName", list.get(1));
-                param.put("prodType2", "F01");
+                param.put("prodType2", DictCodeListExt1.金融产品类型_债券.getValue());
                 String result = comBondQuotationInfoMapper.checkSecName(param);
                 if(StringUtils.isEmpty(result)){
                 	flag = false;

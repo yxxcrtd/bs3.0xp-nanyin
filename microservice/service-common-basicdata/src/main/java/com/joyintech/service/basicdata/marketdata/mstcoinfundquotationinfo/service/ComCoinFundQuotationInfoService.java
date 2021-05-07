@@ -69,7 +69,7 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      */
     public Page<ComCoinFundQuotationInfo001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
         throws Exception {
-        pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
+        pageParam.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
         pageParam.put("yes", DictCodeList.是否_是.getValue());
         return super.queryForPage(page,length,() -> comCoinFundQuotationInfoMapper.queryForPage(pageParam));
     }
@@ -90,7 +90,7 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      * @return SuggestDto
      */
     public List<SuggestDto> selectForCode(Map<String, Object> map) {
-        map.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
+        map.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
         return comCoinFundQuotationInfoMapper.queryCode(map);
         // return super.queryForSuggest(mstCoinFundQuotationInfo001Mapper::queryCode, param, null);
     }
@@ -137,7 +137,7 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      */
     public ComCoinFundQuotationInfo001Dto getManageAndType(String finprodId) {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
+        map.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
         map.put("yes", DictCodeList.是否_是.getValue());
         map.put("finprodId", finprodId);
         String finprodType = comCoinFundQuotationInfoMapper.selectByfinprodId(map);
@@ -206,7 +206,7 @@ public class ComCoinFundQuotationInfoService extends BaseService<ComCoinFundQuot
      * @since 1.0
      */
     public String selectByIdAndValDate(Map<String, Object> map) {
-    	map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+    	map.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
         return comCoinFundQuotationInfoMapper.selectByIdAndValDate(map);
     }
     

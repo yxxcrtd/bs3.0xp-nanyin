@@ -9,14 +9,14 @@
 <div layout:fragment="content">
     <div class='layui-fluid'>
         <div class="form-button-area" >
-            <a class="layui-btn layui-btn-sm btn-create" id="EtrBondFirstLBidding001_btn_add"
+            <a class="layui-btn layui-btn-sm btn-create" th:id="|${pageId}_btn_add|"
             data-th-text="#{SysCommon.create}">新建</a>
-            <a id="EtrBondFirstLBidding001_btn_import" class="layui-btn layui-btn-sm btn-import">
+            <a th:id="|${pageId}_btn_import|" class="layui-btn layui-btn-sm btn-import">
                 <i class="iconfont icon-import"></i><span data-th-text="#{EtrBondFirstLBidding001.import}"></span></a>
-            <a id="EtrBondFirstLBidding001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke">
+            <a th:id="|${pageId}_btn_revoke|" class="layui-btn layui-btn-sm btn-revoke">
                 <i class="iconfont icon-revoke"></i><span data-th-text="#{ETR_REVERT}"></span></a>
 
-            <a class="layui-btn layui-btn-sm btn-close" id="EtrBondFirstLBidding001_btn_close">
+            <a class="layui-btn layui-btn-sm btn-close" th:id="|${pageId}_btn_close|">
                 <i class="iconfont icon-close"></i>
                 <span data-th-text="#{SysCommon.close}"></span></a>
         </div>
@@ -49,7 +49,7 @@
                                 data-keyfield="name"
                                 data-th-data-effectivefieldsalias='|{"code":"#{EtrInvestAllInfo001.finprodId}",
                                     "shortName":"#{EtrInvestAllInfo001.finprodName}"}|'
-                                data-th-data-url="@{/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding001/getfinprodId}"
+                                data-th-data-url="@{/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding001/getfinprodId(pageId=${pageId})}"
                                 maxlength="60">
                         </div>
                     </div>
