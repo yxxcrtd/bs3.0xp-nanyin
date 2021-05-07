@@ -69,11 +69,14 @@
     }
 
     /**
-     * 交易流通市场改成其他交易流通场所时执行的方法
+     * 交易流通市场改成其他交易流通场所时执行的方法,
+     * 20210507 TISHKBS-2084资管计划属性选择其他，需在备注中说明
      */
     function repTradeMarketChang() {
         var repTradeMarket = getElementById('repTradeMarket').val();
-        if(repTradeMarket && repTradeMarket == TRADE_MARKET_99){
+        var repPlanProp = getElementById('repPlanProp').val();
+        if((repTradeMarket && repTradeMarket == TRADE_MARKET_99)
+        		||(repPlanProp && repPlanProp == "99")){
             getElementById('repRemark').prop('required', true);
             star();
         }
@@ -101,6 +104,9 @@
 		  });
         getElementById('repTradeMarket').on('change', function () {
             repTradeMarketChang();
+        });
+        getElementById('repPlanProp').on('change', function () {
+        	repTradeMarketChang();
         });
         repYieldFlagChang();
         

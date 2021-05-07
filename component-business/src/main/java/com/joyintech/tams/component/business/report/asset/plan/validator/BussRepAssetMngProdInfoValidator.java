@@ -34,8 +34,10 @@ public class BussRepAssetMngProdInfoValidator implements BeanValidator {
             errorList.add(new ValidMessage("repAssetType",
                     getMessage("COMMON_E_0057", getMessage("BussRepAssetMngProdInfo.repAssetType"))));
         }
-        if(StringUtil.isNotEmpty(dto.getRepTradeMarket())&&StringUtil.equals(dto.getRepTradeMarket(), DictCodeList.交易流通场所_其他交易流通场所.getValue())
-                &&!StringUtil.isNotEmpty(dto.getRepRemark())){
+        if((StringUtil.isNotEmpty(dto.getRepTradeMarket())&&StringUtil.equals(dto.getRepTradeMarket(), DictCodeList.交易流通场所_其他交易流通场所.getValue())
+                &&!StringUtil.isNotEmpty(dto.getRepRemark()))
+        		||(StringUtil.isNotEmpty(dto.getRepPlanProp())&&StringUtil.equals(dto.getRepPlanProp(), "99")
+                        &&!StringUtil.isNotEmpty(dto.getRepRemark()))){
             errorList.add(new ValidMessage("repRemark", getMessage("BUSS_COM_E_0038", getMessage("BussRepAssetMngProdInfo.remark"))));
         }
         if(StringUtil.equals(dto.getRepYieldFlag(),DictCodeList.是否_中债_是.getValue())){
