@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -294,8 +295,19 @@ public class ValFeeDrawDealTemplateRecService {
         trdProductDeal.setSettleDate(dto.getDrawDate());
         // 交易币种 = A.交易币种
         trdProductDeal.setCcy(dto.getCcy());
+
+        /**modify by wujie on 20210507 start
         // 全价总额 = A.计提金额
         trdProductDeal.setTradeAmt(dto.getFeeAmt());
+        **/
+        if(DictCodeListExt2.业务类型_浮动管理费挂账交易.getValue().equals(dto.getBusiType())){
+            trdProductDeal.setIntAmt(dto.getFeeAmt());
+        }else{
+            // 全价总额 = A.计提金额
+            trdProductDeal.setFpriceAmt(dto.getFeeAmt());
+        }
+        /**modify by wujie on 20210507 end**/
+
         // 交易方向 = A.交易方向
         trdProductDeal.setPs(DictCodeListExt3.交易方向_费用计提.getValue());
         // 交易状态 = A.数据动作标志--> 新增 --> 01:初始    撤销 --> 03:撤销
