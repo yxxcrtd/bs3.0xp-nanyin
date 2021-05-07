@@ -95,7 +95,7 @@ var QueryFunc=function(){
         }else if(obj["18"].indexOf(repAssetType)>=0){
             //另类资产
             $("#svrBussRepOthKindInfo_div").show();
-        }else if(obj["L01"].indexOf(repAssetType)>=0){
+        }else if(obj["19"].indexOf(repAssetType)>=0 || obj["15"].indexOf(repAssetType)>=0){
             //公募基金/私募基金
             $("#svrBussRepFundInfo_div").show();
         }
@@ -110,17 +110,21 @@ var QueryFunc=function(){
         var obj = JSON.parse(AssetTypeListLink) ;
         if(obj["01"].indexOf(repAssetType)>=0){
             //本行/他行存款||大额存单
-            if(repAssetType=='1004'||repAssetType=='1005'){
+            if(repAssetType=='1002'||repAssetType=='1003'){
                 //存款类型置灰不可修改
-                $("#svrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
-            }else{
                 $("#svrBussRepDepositInfoDto_repDepoType").attr("disabled",false);
-            }
-            if(repAssetType=='1002'||repAssetType=='1004'){
-                //资金存入银行置灰不可修改
-                $("#svrBussRepDepositInfoDto_bankName").val('').attr("disabled",true);
+                $("#svrBussRepDepositInfoDto_repDepoType").attr("required",true);
             }else{
+                $("#svrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
+                $("#svrBussRepDepositInfoDto_repDepoType").val('').attr("required",false);
+            }
+            if(repAssetType=='1003'||repAssetType=='1005'){
+                //资金存入银行必填
                 $("#svrBussRepDepositInfoDto_bankName").attr("disabled",false);
+                $("#svrBussRepDepositInfoDto_bankName").attr("required",true);
+            }else{
+                $("#svrBussRepDepositInfoDto_bankName").val('').attr("disabled",true);
+                $("#svrBussRepDepositInfoDto_bankName").val('').attr("required",false);
             }
         }else if(obj["02"].indexOf(repAssetType)>=0){
             //拆放同业/买入返售（资产）||同业拆入/卖出回购（负债）
@@ -306,7 +310,7 @@ var QueryFunc=function(){
             //其他（负债）类资产
         }else if(obj["18"].indexOf(repAssetType)>=0){
             //另类资产
-        }else if(obj["L01"].indexOf(repAssetType)>=0){
+        }else if(obj["19"].indexOf(repAssetType)>=0 || obj["15"].indexOf(repAssetType)>=0){
             //公募基金/私募基金
             if(repAssetType=='2607'||repAssetType=='2610'||repAssetType=='2613'||
                 repAssetType=='2611'||repAssetType=='2612'||repAssetType=='2617'){
@@ -422,7 +426,7 @@ var QueryFunc=function(){
         $('#AssetInfoDetail002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
-
+        var obj = JSON.parse(AssetTypeListLink) ;
         $('#assetType2').change(function(){
             showReportInfo();
             //assetType2联动子页面的内容
