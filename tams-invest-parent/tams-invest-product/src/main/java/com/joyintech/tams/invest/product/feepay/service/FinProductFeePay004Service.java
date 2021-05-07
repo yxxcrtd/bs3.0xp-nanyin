@@ -1062,6 +1062,10 @@ public class FinProductFeePay004Service extends BaseService<FinProductFeePay005D
                 requestMap.put("ptlId", dto.getPtlId());
                 requestMap.put("feeType", dto.getFeeType());
                 requestMap.put("calcEndDate", DateUtil.format(dto.getPositionEndDate()));
+                // add by jiangpeng on 20210507 start
+                // TISHKBS-2109 【产品费用支付】-待确认数据进行确认时，报错
+                requestMap.put("calcStartDate", DateUtil.format(dto.getPositionStartDate()));
+                // add by jiangpeng on 20210507 end
                 requestMap.put("finprodId", dto.getFinprodId());
                 requestMap.put("feeId", dto.getFeeId());
                 requestMap.put("flag", DictCodeList.是否_是.getValue());
