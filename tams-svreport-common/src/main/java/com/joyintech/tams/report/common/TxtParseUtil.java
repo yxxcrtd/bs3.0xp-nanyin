@@ -147,7 +147,9 @@ public final class TxtParseUtil {
                         if(StringUtil.isEmpty(key)) {
                             continue;
                         }
-                        result.put(key, columns.get(i));
+                        //result.put(key, columns.get(i));//delete by lingxq on 2021-05-07 for 空字符串插入数据时，mysql用ifnull函数无效
+                        //add by lingxq on 2021-05-07 for 空字符串插入数据时，mysql用ifnull函数无效
+                        result.put(key, (StringUtil.isBlank(columns.get(i)) == true ? null :columns.get(i)));
                     }
                 }
                 line = reader.readLine();
