@@ -53,15 +53,16 @@ select 'SYS', 'PREBATCH_GROUP_ID', a.seq_no
 
 
 ----  增加一个批  需要加的数据
-
+delete from sys_batch_task where TASK_ID = '88600';
 insert into sys_batch_task (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('88600', 'INV', '流程中产品定义', null, 'processProductTask', 1, 'system', null, sysdate, 'system', sysdate);
 
-
+delete from sys_prebatch_task_add where TASK_ID = '88600';
  insert into sys_prebatch_task_add (GROUP_ID, TASK_ID, STOP_FLAG, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
  select  a.seq_no,'88600', '00', null, 'system', null, sysdate, 'system', sysdate
   from sys_batch_grp a where BATCH_NAME = '批前检查';
 
+delete from sys_batch_job where TASK_ID = '88600';
 insert into sys_batch_job (BATCH_SEQ_NO, TASK_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 select  a.seq_no,'88600', 'system', null, sysdate, 'system', sysdate
   from sys_batch_grp a where BATCH_NAME = '批前检查';
