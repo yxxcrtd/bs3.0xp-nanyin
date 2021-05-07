@@ -369,10 +369,10 @@ public class ChbInvestReportCommonService extends BaseService {
      * @return
      */
     public String getDqEndDate(String reportType, String year) {
-        if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_一季度.getValue())) {
+        if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_一季度报.getValue())) {
             return year + ChbInvestReportConstant.三月最后一天;
         }
-        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_二季度.getValue())) {
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_二季度报.getValue())) {
             return year + ChbInvestReportConstant.六月最后一天;
         }
         else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_上半年报.getValue())) {
@@ -401,10 +401,10 @@ public class ChbInvestReportCommonService extends BaseService {
      * @return
      */
     public String getDqStartDate(String reportType, String year) {
-        if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_一季度.getValue())) {
+        if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_一季度报.getValue())) {
             return year + ChbInvestReportConstant.一月第一天;
         }
-        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_二季度.getValue())) {
+        else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_二季度报.getValue())) {
             return year + ChbInvestReportConstant.四月第一天;
         }
         else if(StringUtil.equals(reportType, DictCodeListExt3.中债定期报告类型_上半年报.getValue())) {

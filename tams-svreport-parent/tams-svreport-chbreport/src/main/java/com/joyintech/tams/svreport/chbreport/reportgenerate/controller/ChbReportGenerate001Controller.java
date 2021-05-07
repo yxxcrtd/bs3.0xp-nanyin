@@ -160,9 +160,6 @@ public class ChbReportGenerate001Controller extends BaseController {
                 param.put("startDate", item.getStartDate());
                 param.put("prodName", item.getProdName());
                 param.put("prodIdName", item.getProdIdName());
-                if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId)) {
-                    list = chbInvestReportCommonService.selectDqReportList(param);
-                }
                 boolean flag = chbInvestReportCommonService.createReportDoc(param, isConfirm, isReveal);
                 if (flag) {
                     //return new AjaxResult("披露报告生成成功！");

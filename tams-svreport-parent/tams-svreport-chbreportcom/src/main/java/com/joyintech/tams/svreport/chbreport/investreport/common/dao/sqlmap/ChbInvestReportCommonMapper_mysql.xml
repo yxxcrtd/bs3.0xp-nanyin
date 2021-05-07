@@ -59,6 +59,7 @@
 			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
 			DATE_FORMAT(p.VDATE,'%Y-%m-%d') as endDate, /** 成立日期*/
 			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
+			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
 			l.CREATE_TIME as createTime /** 生成时间**/
 		from
 			CHB_PRD_BASEINFO p
@@ -72,6 +73,9 @@
 			<if test="endDate !=null and endDate != ''">
 				and  DATE_FORMAT(p.VDATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
 			</if>
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			</if>
 	</select>
 
 	<!--非标投资运作报告数据查询-->
@@ -83,6 +87,7 @@
 			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
 			DATE_FORMAT(r.DEALDATE,'%Y-%m-%d') as endDate, /** 变动日*/
 			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
+			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
 			l.CREATE_TIME as createTime /** 生成时间**/
 		from
 			CHB_PRD_BASEINFO p
@@ -109,6 +114,9 @@
 			<if test="prodId !=null and prodId != ''">
 				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
 			</if>
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			</if>
 	</select>
 
 	<!--到期报告数据查询-->
@@ -120,6 +128,7 @@
 			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
 			DATE_FORMAT(r.SETTDATE_DATE,'%Y-%m-%d') as endDate, /** 到期日*/
 			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
+			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
 			l.CREATE_TIME as createTime /** 生成时间**/
 		from
 			CHB_PRD_BASEINFO p
@@ -141,6 +150,9 @@
 			<if test="prodId !=null and prodId != ''">
 				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
 			</if>
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			</if>
 	</select>
 
 	<!--净值披露报告数据查询-->
@@ -152,6 +164,7 @@
 			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
 			DATE_FORMAT(i.VALUE_DATE, '%Y-%m-%d') as endDate, /** 净值日期*/
 			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
+			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
 			l.CREATE_TIME as createTime /** 生成时间**/
 		from
 			CHB_PRD_BASEINFO p
@@ -165,6 +178,9 @@
 			</if>
 			<if test="endDate !=null and endDate != ''">
 				and  DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+			</if>
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
 			</if>
 	</select>
 
