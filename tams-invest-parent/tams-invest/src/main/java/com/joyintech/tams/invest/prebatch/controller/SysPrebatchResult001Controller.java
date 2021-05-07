@@ -6,6 +6,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -31,7 +32,7 @@ public class SysPrebatchResult001Controller extends BaseController {
 
         setSelectOptionToModel(model, DictCode.检查项, DictCode.批前检查_执行状态);
 
-
+        model.addAttribute("checkDate", DateUtil.format(DateUtil.platDateFromCache())+" - "+DateUtil.format(DateUtil.platDateFromCache()) );
 
         return super.init(model);
     }
