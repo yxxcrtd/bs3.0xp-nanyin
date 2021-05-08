@@ -176,8 +176,8 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
         Map<String, Object> map = new HashMap<>();
         map.put("title", String.format("%s年%s月_资产负债表_%s_月报", reportDate.substring(0, 4), reportDate.substring(5, 7), prodName));
         //map.put("org",CacheUtil.getSysParam(GlobalConstant.财务报表_编制单位));
-        map.put("reportDate", DateUtil.format(DateUtil.platDateFromCache()));
-        map.put("platDate", reportDate);
+        map.put("platDate", DateUtil.format(DateUtil.platDateFromCache()));
+        map.put("reportDate", reportDate);
         map.put("org", "华夏银行");
         map.put("ccy", finAssetLiabilityList.get(0).getCcy());
         map.put("prodName", prodName);
