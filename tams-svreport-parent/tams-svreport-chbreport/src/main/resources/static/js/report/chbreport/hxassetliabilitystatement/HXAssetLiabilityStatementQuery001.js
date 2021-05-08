@@ -86,8 +86,7 @@ $(function () {
     }
 
     function initReportDate(){
-        var t = getNextMonth(-1);
-        $("#month_reportDate").val = t.format("yyyy-MM");
+        $("#month_reportDate").val(getNextMonth(-1));
     }
 
     function init() {
