@@ -13,13 +13,13 @@
 				jdbcType="VARCHAR" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="queryAllchbMgrTableInfo" resultMap="BaseResultMap"
+	<select id="queryAllchbMgrTableInfo" resultType="com.joyintech.tams.common.base.entity.ChbMgrTableInfo"
 			parameterType="java.util.Map">
-		SELECT MGRTABLE_ID,
-		MGRTABLE_NAME,
-		MGRTABLE_CHI_NAME,
-		DATAOBJECT,
-		STATUS
+		SELECT MGRTABLE_ID mgrTableId,
+		MGRTABLE_NAME mgrTableName,
+		MGRTABLE_CHI_NAME mgrTableChiName,
+		DATAOBJECT dataobject,
+		STATUS status
 		FROM CHB_MGRTABLE_INFO
 		WHERE 1 = 1
 		<if test="statusList != null and statusList.size() > 0">
