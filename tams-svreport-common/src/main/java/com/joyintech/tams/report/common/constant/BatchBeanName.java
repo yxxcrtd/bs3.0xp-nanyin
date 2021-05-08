@@ -104,7 +104,8 @@ public enum BatchBeanName {
     资产利率基本信息接口数据接入("4101","svrAssetRateInfoInterfTaskService","SvrAssetRateInfoImpMainService","资产利率基本信息接口数据接入"),
     理财子公司月度统计表生成("3055","svrSubsidiaMonthReportTaskService","SubsidiaMonthReportRegistBatchService","理财子公司月度统计表生成"),
     产品汇总交易接口数据接入("3078","svrProddealTotalInfoTaskService","chbProddealTotalImpMainService","产品汇总交易接口数据接入"),
-    产品汇总头寸批处理("3079","svrProdTotalPositionTaskService","prodTotalPositionMainService","产品汇总头寸批处理")
+    产品汇总头寸批处理("3079","svrProdTotalPositionTaskService","prodTotalPositionMainService","产品汇总头寸批处理"),
+    中债报告生成批处理("3201","svrInvestReportTask","svrInvestReportMainService","中债报告生成批处理")
             ;
 	/**
      * taskId

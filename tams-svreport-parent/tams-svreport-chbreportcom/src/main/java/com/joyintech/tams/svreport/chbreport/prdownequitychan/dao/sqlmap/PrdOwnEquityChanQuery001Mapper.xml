@@ -50,6 +50,6 @@
                 AND chan.real_prd_id = #{prodId,jdbcType=VARCHAR}
             </if>
         </where>
-        ORDER BY chan.subject_id
+        ORDER BY chan.subject_id * 1
     </select>
 </mapper>

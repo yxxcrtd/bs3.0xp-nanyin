@@ -52,6 +52,6 @@
                 AND bal.real_prd_id = #{prodId,jdbcType=VARCHAR}
             </if>
         </where>
-        ORDER BY bal.subject_id
+        ORDER BY bal.subject_id * 1
     </select>
 </mapper>

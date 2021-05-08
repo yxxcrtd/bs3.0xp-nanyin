@@ -50,4 +50,190 @@
 			AND STATUS = 'E'
 	</update>
 
+	<!--成立公告数据查询-->
+	<select id="queryDetailData01" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+		select
+			#{repId,jdbcType=VARCHAR} as repId,/** 报表ID**/
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
+			DATE_FORMAT(p.VDATE,'%Y-%m-%d') as endDate, /** 成立日期*/
+			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
+			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
+			l.CREATE_TIME as createTime /** 生成时间**/
+		from
+			CHB_PRD_BASEINFO p
+		left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR} and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID and DATE_FORMAT(p.VDATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+		where
+			p.`STATUS` = 'E'
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="endDate !=null and endDate != ''">
+				and  DATE_FORMAT(p.VDATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+			</if>
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			</if>
+	</select>
+
+	<!--非标投资运作报告数据查询-->
+	<select id="queryDetailData02" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+		select
+			#{repId,jdbcType=VARCHAR} as repId,/** 报表ID**/
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
+			DATE_FORMAT(r.DEALDATE,'%Y-%m-%d') as endDate, /** 变动日*/
+			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
+			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
+			l.CREATE_TIME as createTime /** 生成时间**/
+		from
+			CHB_PRD_BASEINFO p
+		inner join (
+			select
+			distinct t.DEALDATE, t.PROD_ID
+			from CHB_INVEST_TRADE t, CHB_ASSET_INFO a
+			where
+				t.ASSET_CODE = a.ASSET_CODE
+				and a.`STATUS` = 'E'
+				and t.`STATUS` = 'E'
+				and a.ASSET_TYPE2 in (
+					select SRCFIELD1 from chb_type_mapping_ex where MAPPINGCODE = 'ChbInvestOperation001'
+				) /** 指定非标资产的类别**/
+				and t.CUR_ASSET_TYPE in ('01', '02') /** 买入或者卖出/到期**/
+				<if test="endDate !=null and endDate != ''">
+					and  DATE_FORMAT(t.DEALDATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+				</if>
+		) r on r.PROD_ID = p.PROD_ID
+		left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR} and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID and DATE_FORMAT(r.DEALDATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+		where
+			p.`STATUS` = 'E'
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			</if>
+	</select>
+
+	<!--到期报告数据查询-->
+	<select id="queryDetailData03" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+		select
+			#{repId,jdbcType=VARCHAR} as repId,/** 报表ID**/
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
+			DATE_FORMAT(r.SETTDATE_DATE,'%Y-%m-%d') as endDate, /** 到期日*/
+			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
+			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
+			l.CREATE_TIME as createTime /** 生成时间**/
+		from
+			CHB_PRD_BASEINFO p
+		inner join (
+		select
+			distinct d.SETTDATE_DATE, d.PROD_ID
+			from CHB_PRD_DEAL d
+		where
+			d.`STATUS` = 'E'
+			and d.TRADE_TYPE = '16'
+			<if test="endDate !=null and endDate != ''">
+				and  DATE_FORMAT(d.SETTDATE_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+			</if>
+		) r on r.PROD_ID = p.PROD_ID
+		left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR} and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID and DATE_FORMAT(r.SETTDATE_DATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+		where
+			p.`STATUS` = 'E'
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			</if>
+	</select>
+
+	<!--净值披露报告数据查询-->
+	<select id="queryDetailData05" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+		select
+			#{repId,jdbcType=VARCHAR} as repId,/** 报表ID**/
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
+			DATE_FORMAT(i.VALUE_DATE, '%Y-%m-%d') as endDate, /** 净值日期*/
+			case when l.PRODID is null then '未生成' else '已生成' end as createStatus, /** 生成状态*/
+			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
+			l.CREATE_TIME as createTime /** 生成时间**/
+		from
+			CHB_PRD_BASEINFO p
+		inner join REP_PROD_INDEX i on i.PROD_ID = p.PROD_ID
+		left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR} and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID and DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+		where
+			p.`STATUS` = 'E'
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="endDate !=null and endDate != ''">
+				and  DATE_FORMAT(i.VALUE_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+			</if>
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			</if>
+	</select>
+
+	<select id="selectReprevealListByDatas" resultType="com.joyintech.tams.common.base.entity.RepReveal">
+		SELECT  *
+		FROM REP_REVEAL
+		WHERE
+			STATUS = 'E'
+		<if test="list != null and list.size() > 0">
+			<foreach collection="list" item="item" open="and (" separator=" or " close=")">
+				(REP_ID = #{item.repId,jdbcType=VARCHAR} AND PRODID = #{item.prodId,jdbcType=VARCHAR}
+					AND DATE_FORMAT(END_DATE,'%Y-%m-%d') = #{item.endDate,jdbcType=VARCHAR})
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 根据条件查询要生成的数据报告-->
+	<select id="selectDqReportList" resultType="com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto">
+		select
+			#{repId,jdbcType=VARCHAR} as repId,/** 报表ID**/
+			p.PROD_ID as prodId,/** 产品代码**/
+			p.PROD_NAME as prodName,/** 产品名称**/
+			concat_ws('',p.PROD_NAME,'(', p.PROD_ID,')') as prodIdName, /** 产品名称 + 代码**/
+			#{endDate,jdbcType=VARCHAR} as endDate, /** 结束日期*/
+            #{startDate,jdbcType=VARCHAR} as startDate, /** 开始日期*/
+			case when l.PRODID is null then '未生成' else '已生成' end as createStatus,
+			l.CONFIRM_STATUS as confirmStatus,  /** 确认状态*/
+			l.CREATE_TIME as createTime /** 生成时间**/
+		from
+			CHB_PRD_BASEINFO p
+        left join (
+            select
+            	max(d.SETTDATE_DATE) as SETTDATEDATE, d.PROD_ID
+            from CHB_PRD_DEAL d
+            where
+                d.`STATUS` = 'E'
+                and d.TRADE_TYPE = '16'
+            group by d.PROD_ID
+        ) r on r.PROD_ID = p.PROD_ID
+		left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR} and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID and DATE_FORMAT(l.END_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+            and DATE_FORMAT(l.START_DATE,'%Y-%m-%d') = #{startDate,jdbcType=VARCHAR}
+		where
+			p.`STATUS` = 'E'
+			/** 产品未终止**/
+			and (r.SETTDATEDATE is null or DATE_FORMAT(r.SETTDATEDATE,'%Y-%m-%d') <![CDATA[>]]> #{endDate,jdbcType=VARCHAR})
+			/** 到期日 - 当前日期 大于 90**/
+			and (p.MDATE is null or TIMESTAMPDIFF(DAY, STR_TO_DATE(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d'), p.MDATE) <![CDATA[>=]]> 90)
+            /** 当前日期 - 成立日 大于 90**/
+            and (TIMESTAMPDIFF(DAY, p.VDATE, STR_TO_DATE(#{endDate,jdbcType=VARCHAR},'%Y-%m-%d')) <![CDATA[>=]]> 90)
+			and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+	</select>
 </mapper>

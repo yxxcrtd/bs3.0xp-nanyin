@@ -96,6 +96,11 @@ public class ChbInvestPrdInfo extends BaseEntity {
      */
     private String managerName;
 
+    /**
+     * 客户类型
+     */
+    private String customerType;
+
     public String getProdName() {
         return prodName;
     }
@@ -230,5 +235,13 @@ public class ChbInvestPrdInfo extends BaseEntity {
 
     public void setManagerName(String managerName) {
         this.managerName = managerName;
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
     }
 }

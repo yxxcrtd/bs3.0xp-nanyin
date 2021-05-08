@@ -29,6 +29,7 @@
 			r.DEALDATE as dealdate,/** 报告日期**/
 			p.IN_DEP_NAME as inDepName,/** 境内托管机构名称**/
 			p.OUT_DEP_NAME as outDepName, /** 境外托管机构名称**/
+			p.CUSTOMER_TYPE as customerType,/** 客户类型**/
 			case when p.IN_DEP_NAME is not null and p.OUT_DEP_NAME is not null then concat_ws('、',p.IN_DEP_NAME,p.OUT_DEP_NAME)
 				when p.IN_DEP_NAME is not null and  p.OUT_DEP_NAME is null then p.IN_DEP_NAME
 				when p.IN_DEP_NAME is null and  p.OUT_DEP_NAME is not null then p.OUT_DEP_NAME
@@ -77,6 +78,7 @@
 			p.VDATE as vdate,/** 起息日**/
 			p.IN_DEP_NAME as inDepName,/** 境内托管机构名称**/
 			p.OUT_DEP_NAME as outDepName, /** 境外托管机构名称**/
+			p.CUSTOMER_TYPE as customerType,/** 客户类型**/
 			case when p.IN_DEP_NAME is not null and p.OUT_DEP_NAME is not null then concat_ws('、',p.IN_DEP_NAME,p.OUT_DEP_NAME)
 				when p.IN_DEP_NAME is not null and  p.OUT_DEP_NAME is null then p.IN_DEP_NAME
 				when p.IN_DEP_NAME is null and  p.OUT_DEP_NAME is not null then p.OUT_DEP_NAME

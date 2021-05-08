@@ -163,7 +163,7 @@
 		#{inDepName,jdbcType=VARCHAR}, #{inDepCode,jdbcType=VARCHAR},
 		#{outDepCtry,jdbcType=VARCHAR},
 		#{outDepName,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP},
-		 #{mdate,jdbcType=TIMESTAMP},
+		case  when #{operateMode,jdbcType=VARCHAR} in ('2','3') then null else #{mdate,jdbcType=TIMESTAMP} end,
 		#{accountId,jdbcType=VARCHAR}, #{isConstracte,jdbcType=CHAR},
 		#{transferType,jdbcType=CHAR},
 		#{identiFlag,jdbcType=CHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP},

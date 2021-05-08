@@ -7,6 +7,7 @@ import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.dao.ChbInvestOperationMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.dto.ChbInvestPrdInfo;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.dto.ChbInvsetAssetInfo;
@@ -241,8 +242,9 @@ public class ChbInvestOperationService extends CommonExportService<ChbInvestPrdI
                 dataMap.put("list2", new ArrayList<>());//
             }
             mapList.add(dataMap);
-            titleList.add(chbInvestPrdInfo.getProdName() + ChbInvestReportConstant.下划线 + reportName
-                    + ChbInvestReportConstant.下划线 + param.get("endDate") + ".doc");
+            titleList.add(ChbInvestReportUtil.generateFileNameForReport(DictCodeListExt3.中债披露报告_理财产品非标投资运作报告.getValue(),
+                    chbInvestPrdInfo.getProdName(), chbInvestPrdInfo.getProdId(), chbInvestPrdInfo.getCustomerType(),
+                    param.get("endDate").toString()));
         }
     }
 
@@ -259,11 +261,11 @@ public class ChbInvestOperationService extends CommonExportService<ChbInvestPrdI
         List<String> titleList = new ArrayList<String>();
         this.createData(reportName, map, mapList, titleList);
         if(mapList.size() == 1) {
-            return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath,"ChbInvestOperation.ftl", titleList.get(0));
+            return WordBatchUtil.exportMillCertificateWord(mapList.get(0), srcFilePath,ChbInvestReportConstant.理财产品非标投资运作报告模板文件, titleList.get(0));
         }
         else {
-            String zipname = reportName + "_" + DateUtil.format(new Date(), "yyyyMMddHHmmss");
-            return WordBatchUtil.exportWordBatch(mapList, titleList, "ChbInvestOperation.ftl", srcFilePath, zipname);
+            String zipname = reportName + ChbInvestReportConstant.下划线 + DateUtil.format(new Date(), ChbInvestReportConstant.日期格式化yyyyMMddHHmmss);
+            return WordBatchUtil.exportWordBatch(mapList, titleList, ChbInvestReportConstant.理财产品非标投资运作报告模板文件, srcFilePath, zipname);
         }
     }
 
@@ -279,7 +281,7 @@ public class ChbInvestOperationService extends CommonExportService<ChbInvestPrdI
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         List<String> titleList = new ArrayList<String>();
         this.createData(reportName, map, mapList, titleList);
-        return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath,"ChbInvestOperation.ftl", titleList.get(0));
+        return WordBatchUtil.createMillCertificateWord(mapList.get(0), srcFilePath,ChbInvestReportConstant.理财产品非标投资运作报告模板文件, titleList.get(0));
     }
 
 }

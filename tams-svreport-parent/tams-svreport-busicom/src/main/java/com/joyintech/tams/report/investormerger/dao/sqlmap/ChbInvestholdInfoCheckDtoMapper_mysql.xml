@@ -720,7 +720,7 @@
 		update CHB_INVESTHOLD_INFO_CHECK
 		set MERGER_INDENTIFY_MARK = #{mergerindentifymark,jdbcType=VARCHAR},
 		OPERATE_STATUS = #{operatestatus,jdbcType=VARCHAR},
-		UPDATE_TIME = sysdate
+		UPDATE_TIME = NOW()
 		<if test="updateUser != null and updateUser != ''">
 			,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		</if>
