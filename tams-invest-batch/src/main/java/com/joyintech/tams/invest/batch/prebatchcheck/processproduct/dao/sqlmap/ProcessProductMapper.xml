@@ -7,7 +7,6 @@
         SELECT
         T.create_user as launchUser,
         T.TRADE_ID AS portfolioId,
-        NVL(fp.FINPROD_ABBR,T.TRADE_ID)  portfolioName,
         T.NEXT_USER  AS nextUser,
         T.CRT_DATE AS createTaskTime,
         sd.institution_code instCode
