@@ -16,7 +16,6 @@ import com.joyintech.tams.invest.trade.bondmarkettrade.validator.TrdBondMarketTr
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 

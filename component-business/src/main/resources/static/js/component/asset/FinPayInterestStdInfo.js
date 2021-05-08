@@ -534,21 +534,23 @@
                 }
             }
             //计息截止日和计息开始日联动(暂时取消) add by wangwei5 20200401
-//            if(field == "mdate"){
-//                var oldData = generationPlanTable.getRow(data.LAY_TABLE_INDEX+1);
-//                oldData.vdate = value;
-//                generationPlanTable.renderRow(data.LAY_TABLE_INDEX+1,oldData);   
-//            }
-//            if(field == "vdate"){
-//                if(data.LAY_TABLE_INDEX-1<0){
-//                    return;
-//                }else{
-//                    var oldData = generationPlanTable.getRow(data.LAY_TABLE_INDEX-1);
-//                    oldData.mdate = value;
-//                    generationPlanTable.renderRow(data.LAY_TABLE_INDEX-1,oldData);  
-//                }
-//                  
-//            }
+            if(field == "mdate"){
+                var oldData = generationPlanTable.getRow(data.LAY_TABLE_INDEX+1);
+                oldData.vdate = value;
+                generationPlanTable.renderRow(data.LAY_TABLE_INDEX+1,oldData);   
+                generationPlan(true);
+            }
+            if(field == "vdate"){
+                if(data.LAY_TABLE_INDEX-1<0){
+                    return;
+                }else{
+                    var oldData = generationPlanTable.getRow(data.LAY_TABLE_INDEX-1);
+                    oldData.mdate = value;
+                    generationPlanTable.renderRow(data.LAY_TABLE_INDEX-1,oldData);  
+                    generationPlan(true);
+                }
+                  
+            }
             
         },
         done:function (tables, allData) {

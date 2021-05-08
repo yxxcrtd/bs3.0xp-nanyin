@@ -12,7 +12,7 @@
 					nvl(fp.Finprod_name,fp.Finprod_abbr) finprodName,
 					deal.Trade_id tradeId,
 					deal.TOTLE_TRADE_ID totleTradeId,
-					deal.trade_amt tradeAmt,
+					decode(deal.trade_amt,'',null,deal.trade_amt) tradeAmt,
 					T.NEXT_USER  AS nextUser,
 					T.CRT_DATE AS createTaskTime,
         			sd.institution_code instCode
@@ -26,5 +26,42 @@
 				left join PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = nvl(ad.PORTFOLIO_ID,total.PORTFOLIO_ID)
 				where deal.finprod_type2 in('F01','F02','F03','F04','F05','F06','F07','F08','F09','F10','F14','F15','F17','F18','F35')
 					and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
+					
+				/*基金 */
+				union all 
+				select 
+					launchUser,
+					portfolioId,
+					portfolioName,
+					finprodId,
+					finprodName,
+					tradeId,
+					totleTradeId,
+					decode(tradeAmt,'',null,tradeAmt) tradeAmt,
+					nextUser,
+					createTaskTime,
+					instCode
+				from(
+					select 
+						T.create_user as launchUser,
+						pp.PORTFOLIO_ID portfolioId,  
+						pp.PORTFOLIO_NAME portfolioName, 
+						fp.Finprod_id finprodId,  
+						nvl(fp.Finprod_name,fp.Finprod_abbr) finprodName, 
+						mark.business_data_pk1 tradeId,
+						'' totleTradeId,
+						replace(replace(to_char(REGEXP_SUBSTR(mark.business_data,'"tradeAmt":"[^"]+"',1,1)),'"tradeAmt":"',''),'"','')  tradeAmt,
+						T.NEXT_USER  AS nextUser,
+						T.CRT_DATE AS createTaskTime,
+						sd.institution_code instCode
+					from SYS_WFL_BUSINESS_LIST T
+					inner join sys_data_process_mark mark on mark.workflow_id = T.seq_no and t.PROCESS_STATE = 'NEW'
+					left join fin_product fp on fp.finprod_id = replace(replace(to_char(REGEXP_SUBSTR(mark.business_data,'"finprodId":"[^"]+"',1,1)),'"finprodId":"',''),'"','')
+					left join PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = replace(replace(to_char(REGEXP_SUBSTR(mark.business_data,'"portfolioId":"[^"]+"',1,1)),'"portfolioId":"',''),'"','')
+					LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+					LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
+					where mark.page_id = 'TrdFundInvestTrade003'
+					and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
+				)
     </select>
 </mapper>

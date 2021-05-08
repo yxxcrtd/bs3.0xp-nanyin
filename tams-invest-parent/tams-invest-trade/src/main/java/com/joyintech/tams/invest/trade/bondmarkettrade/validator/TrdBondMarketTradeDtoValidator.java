@@ -2,7 +2,6 @@ package com.joyintech.tams.invest.trade.bondmarkettrade.validator;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.trade.bondmarkettrade.dto.TrdBondMarketTradeDto;
 import com.joyintech.tams.invest.trade.common.validator.TradeCommonValidator;
 import org.springframework.stereotype.Component;
@@ -26,12 +25,12 @@ public class TrdBondMarketTradeDtoValidator implements TradeCommonValidator {
         List<ValidMessage> errorList = new ArrayList<>();
         if (StringUtil.isEmpty(inputDto.getFinprodId())) {
             errorList.add(new ValidMessage("finprodId",
-                    getMessage("FW_E_0006", getMessage("TrdBondMarketTrade001.finprodId"))));
+                    getMessage("FW_E_0006", getMessage("TrdBondMarketTrade001.finprodAbbr"))));
         }
 
         if (StringUtil.isEmpty(inputDto.getAppearMarketId())) {
             errorList.add(new ValidMessage("appearMarketId",
-                    getMessage("FW_E_0006", getMessage("TrdBondMarketTrade001.appearMarketId"))));
+                    getMessage("FW_E_0006", getMessage("TrdBondMarketTrade001.appearMarketAbbr"))));
         }
         
         return errorList;

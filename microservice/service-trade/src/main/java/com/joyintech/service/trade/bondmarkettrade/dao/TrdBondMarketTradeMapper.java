@@ -2,14 +2,15 @@ package com.joyintech.service.trade.bondmarkettrade.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.bondmarkettrade.dto.TrdBondMarketTradeDto;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.EtrSecPosition;
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.common.base.entity.PtlSecPosition;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -105,13 +106,32 @@ public interface TrdBondMarketTradeMapper {
      */
     void updateByPrimaryKey(TrdBondMarketTradeDto entity);
 
-    
+    /**
+     * 根据资产代码查询债券信用评级
+     * @param  oCode
+     * @return 债券信用评级list
+     */
     List<MstBondCreditRating> selectByPrimaryKey(@Param("oCode")String oCode);
 
+    /**
+     * 根据汇总交易编号查询交易编号
+     * @param  bizCode
+     * @return 交易编号list
+     */
     List<String> selectTrdProductDeals(@Param("bizCode")String bizCode);
 
+    /**
+     * 查询撤销时组合可用持仓流水
+     * @param  tradeIds
+     * @return 组合可用持仓流水list
+     */
     List<PtlSecPositionFlowDto> selectRevokePtlPositinFlows(List<String> tradeIds);
 
+    /**
+     * 查询撤销时指令可用持仓流水
+     * @param  bizCode
+     * @return 指令可用持仓流水list
+     */
     List<EtrSecPositionFlowDto> selectRevokeEtrPositinFlows(@Param("bizCode")String bizCode);
 
     /**
