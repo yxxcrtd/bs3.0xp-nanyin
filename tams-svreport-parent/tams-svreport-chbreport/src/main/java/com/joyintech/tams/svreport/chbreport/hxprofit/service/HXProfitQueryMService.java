@@ -148,7 +148,8 @@ public class HXProfitQueryMService extends CommonExportService<ChbreportPrdInfoD
         HXProfitQuery001Dto entity = getProfitData(reportDate);
         Map<String, Object> map = new HashMap<>(4);
         LocalDate reportLocalDate = LocalDate.parse(reportDate,DateTimeFormatter.ofPattern("yyyyMM"));
-        map.put("preCol", DateTimeFormatter.ofPattern("MM").format(reportLocalDate.minusMonths(1)) + "月累计金额");
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM");
+        map.put("preCol", reportLocalDate.minusMonths(1).format(fmt) + "月累计金额");
         map.put("reportDate", reportDate);
         map.put("entity", entity);
         TisUtil.createFile(map, exceltemplate, fileName);
