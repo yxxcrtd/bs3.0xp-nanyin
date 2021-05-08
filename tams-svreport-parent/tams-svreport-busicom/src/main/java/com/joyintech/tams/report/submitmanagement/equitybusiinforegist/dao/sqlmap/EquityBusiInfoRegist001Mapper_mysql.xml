@@ -747,7 +747,7 @@
         CUST_NAME, AGENCY_CODE, AGENCY_NAME, AGENCY_FSA, BUSI_FSA, PROD_VALUE, FEE_AMT, TRAN_TELL_NAME,
         SUBMIT_DEADLINE,CHB_SUBMIT_DEADLINE,CHECK_SEQNO,STATUS_DATE,SUBMIT_STATUS,SUBMIT_TIME,SUMIT_SEQ,
         STATUS, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
-        ORG_CODE, CREATE_DEPT
+        ORG_CODE, CREATE_DEPT)
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual) a">
 			#{item.busiSeqno,jdbcType=VARCHAR} BUSI_SEQNO,
 			#{item.regCode,jdbcType=VARCHAR} REG_CODE,
