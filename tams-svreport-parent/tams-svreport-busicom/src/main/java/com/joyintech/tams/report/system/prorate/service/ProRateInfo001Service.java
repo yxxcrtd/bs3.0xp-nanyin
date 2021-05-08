@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
@@ -88,6 +89,9 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
             item.setDataSourceName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.数据来源, item.getDataSource()));
             item.setBusiIdName(map.get(item.getBusiId()));
+            if("DB".equals(item.getDataSource())){
+                item.setDataSourceName("DB");
+            }
         });
 
 
@@ -223,7 +227,7 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                             errorList.add(validMessage);
                         }
                     }
-                    if("修改".equals(type)){
+                    if("修改".equals(type) || "删除".equals(type)){
                         if(disRepCashYields.size()<=0){
                             ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行不存在产品、启用日期、信披费用类型的数据,请核查");
                             errorList.add(validMessage);
@@ -347,6 +351,8 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                 mapOld.put("rate",bigDecimal);
                 mapOld.put("status","E");
                 mapOld.put("dataSource","02");
+                mapOld.put("updateUser", LoginUserUtil.getUserName());
+                mapOld.put("updateTime",new Date());
                 proRateInfo001Mapper.updateOne(mapOld);
             }
         }

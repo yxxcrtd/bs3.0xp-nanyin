@@ -7,6 +7,7 @@ import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
@@ -71,7 +72,7 @@ public class ChbMstCounterPartyService extends BaseService<ChbMstCounterParty> {
         return restTemplate.postForObject(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/ChbMstCounterParty/checkConfirmMsgForImportData",
                 param,
-                AjaxResult.class);
+                SvrAjaxResult.class);
     }
 
     /**

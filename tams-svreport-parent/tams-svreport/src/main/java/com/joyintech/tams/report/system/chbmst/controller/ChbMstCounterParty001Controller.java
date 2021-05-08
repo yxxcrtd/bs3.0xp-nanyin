@@ -148,7 +148,7 @@ public class ChbMstCounterParty001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
     public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return chbMstCounterPartyService.checkConfirmMsgForImportData(fileName);
+        return this.chbMstCounterPartyService.checkConfirmMsgForImportData(fileName);
     }
 
     /**

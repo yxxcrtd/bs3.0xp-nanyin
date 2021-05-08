@@ -17,15 +17,13 @@
                 alert("关联机构代码名称不能为空");
             }
             if(object.relorgId!='' && object.organName!='' ){
-                Joyin.ajaxJson(basePath + 'svreport/system/disrelorg/DisRelOrg002/save', object, function(result) {
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-                    /*if(result){
-                        Joyin.ajaxJson(basePath + 'svreport/system/prorate/DisPrdFeeRate002/checkAndSave',object,function(result){
+                Joyin.ajaxJson(basePath + 'svreport/system/disrelorg/DisRelOrg002/check', object, function(result) {
+                    if(result){
+                        Joyin.ajaxJson(basePath + 'svreport/system/disrelorg/DisRelOrg002/save',object,function(result){
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         });
-                    }*/
+                    }
                 });
             }
         });

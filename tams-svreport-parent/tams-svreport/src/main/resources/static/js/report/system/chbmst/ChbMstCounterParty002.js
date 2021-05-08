@@ -49,13 +49,13 @@ function change(value) {
                 alert("交易对手二级类型不能为空");
             }
             if(object.counterId!='' && object.counterName!='' && object.counterType1!=''&& object.counterType2!=''){
-                Joyin.ajaxJson(basePath + 'svreport/system/chbmst/ChbMstCounterParty002/save', object, function(result) {
-                    /*if(result){
-                        Joyin.ajaxJson(basePath + 'svreport/system/prorate/DisPrdFeeRate002/checkAndSave',object,function(result){
+                Joyin.ajaxJson(basePath + 'svreport/system/chbmst/ChbMstCounterParty002/check', object, function(result) {
+                    if(result){
+                        Joyin.ajaxJson(basePath + 'svreport/system/chbmst/ChbMstCounterParty002/save',object,function(result){
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         });
-                    }*/
+                    }
                 });
             }
         });

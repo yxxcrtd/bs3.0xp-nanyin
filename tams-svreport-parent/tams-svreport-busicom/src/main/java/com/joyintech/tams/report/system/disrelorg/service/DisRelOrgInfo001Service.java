@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -89,16 +90,58 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
     }
 
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
-        List<ValidMessage> resultList = new ArrayList<ValidMessage>();
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+
         for (int i = 0; i < dataList.size(); i++ ) {
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dataList.get(i), null, dataList.get(i).toString(), ValidMessage.class);
+            for (int j = i+1; j < dataList.size(); j++ ) {
+                if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1)) &&
+                        StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))){
+                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行关联机构代码、关联机构名称与"+"第"+(j+2)+"行关联机构代码、关联机构名称相同");
+                    errorList.add(validMessage);
+                }
+            }
         }
-        if(resultList.size() == 0){
+        if(errorList.size() == 0){
+            for (int i = 0; i < dataList.size(); i++ ) {
+                //操作类型
+                String type ="";
+                if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
+                    type = dataList.get(i).get(0).toString();
+                }
+                //关联机构代码
+                String relorgId ="";
+                if(null!=dataList.get(i).get(1)&& !"".equals(dataList.get(i).get(1))){
+                    relorgId =dataList.get(i).get(1).toString();
+                }
+                //关联机构名称
+                String organName ="";
+                if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
+                    organName=dataList.get(i).get(2).toString();
+                }
+                DisAssociatedInstitutions dis=new DisAssociatedInstitutions();
+                dis.setRelorgId(relorgId);
+                dis.setOrganName(organName);
+                errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, dis, "DisRelOrg002", null, ValidMessage.class);
+                List<DisAssociatedInstitutions> entitys=disRelOrgInfo001Mapper.selectOne(relorgId);
+                if("新增".equals(type)){
+                    if(null!=entitys && entitys.size()>0){
+                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行已存在该关联机构代码的数据");
+                        errorList.add(validMessage);
+                    }
+                }
+                if("修改".equals(type) || "删除".equals(type)){
+                    if(entitys.size()<=0){
+                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行不存在该关联机构代码的数据,请核查");
+                        errorList.add(validMessage);
+                    }
+                }
+            }
+        }
+        if(errorList.size() == 0){
             webResult.setData(NO_INFO_SHOWOUT);
         }else{
-            webResult.setErrorList(resultList);
+            webResult.setErrorList(errorList);
         }
         return webResult;
     }
@@ -123,17 +166,17 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
                 for (int i = 0; i < dataList.size(); i++ ) {
                     //操作类型
                     String type ="";
-                    if(null!=dataList.get(i).get(0)){
+                    if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
                         type = dataList.get(i).get(0).toString();
                     }
                     //关联机构代码
                     String relorgId ="";
-                    if(null!=dataList.get(i).get(1)){
+                    if(null!=dataList.get(i).get(1)&& !"".equals(dataList.get(i).get(1))){
                         relorgId =dataList.get(i).get(1).toString();
                     }
                     //关联机构名称
                     String organName ="";
-                    if(null!=dataList.get(i).get(2)){
+                    if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
                         organName=dataList.get(i).get(2).toString();
                     }
                     if("新增".equals(type)){
@@ -147,6 +190,8 @@ public class DisRelOrgInfo001Service extends CommonExportService<DisAssociatedIn
                             entity.setOrganName(organName);
                             entity.setStatus("E");
                             entity.setSvrDataSources("02");
+                            entity.setUpdateteUser(LoginUserUtil.getUserName());
+                            entity.setUpdateTime(new Date());
                             disRelOrgInfo001Mapper.updateOne(entity);
                         }else{
                             addDisAssociatedInstitutions(relorgId,userName,organName);

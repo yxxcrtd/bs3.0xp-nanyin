@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.disrelorg.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -80,26 +81,32 @@ public class DisRelOrg002Controller extends BaseController {
         dto.setSvrDataSources("01");
         dto.setStatus("E");
         List<DisAssociatedInstitutions> entitys=disRelOrgService.selectOne(dto.getRelorgId());
-        if(null!=entitys && entitys.size()>0){
             if(null!=dto && "add".equals(dto.getType())){
-                webResult.setMessage("已存在管理机构代码的数据");
+                if(null!=entitys && entitys.size()>0){
+                    webResult.setMessage("已存在管理机构代码的数据", MessageType.错误消息);
+                }else{
+                    try{
+                        disRelOrgService.insertOne(dto);
+                        webResult.setMessage("保存成功");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        webResult.setMessage("保存失败", MessageType.错误消息);
+                    }
+                }
             }
             if(null!=dto && "update".equals(dto.getType())){
-                DisAssociatedInstitutions d=entitys.get(0);
-                d.setOrganName(dto.getOrganName());
-                d.setStatus("E");
-                disRelOrgService.updateOne(d);
-                webResult.setMessage("保存成功");
+                if(null!=entitys && entitys.size()>0){
+                    DisAssociatedInstitutions d=entitys.get(0);
+                    d.setOrganName(dto.getOrganName());
+                    d.setStatus("E");
+                    d.setUpdateteUser(LoginUserUtil.getUserName());
+                    d.setUpdateTime(new Date());
+                    disRelOrgService.updateOne(d);
+                    webResult.setMessage("保存成功");
+                }else{
+                    webResult.setMessage("不存在该管理机构代码的数据，修改失败", MessageType.错误消息);
+                }
             }
-        } else{
-            try{
-                disRelOrgService.insertOne(dto);
-                webResult.setMessage("保存成功");
-            }catch (Exception e){
-                e.printStackTrace();
-                webResult.setMessage("保存失败");
-            }
-        }
         return webResult;
     }
 

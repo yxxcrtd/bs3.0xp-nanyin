@@ -143,7 +143,8 @@
 	<update id="updateOne" parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 		update chb_mst_counter_party set
 		STATUS= #{status,jdbcType=VARCHAR},SVR_DATA_SOURCES= #{dataSource,jdbcType=VARCHAR},
-		COUNTER_NAME= #{counterName,jdbcType=VARCHAR},COUNTER_TYPE1= #{counterType1,jdbcType=VARCHAR},COUNTER_TYPE2= #{counterType2,jdbcType=VARCHAR}
+		COUNTER_NAME= #{counterName,jdbcType=VARCHAR},COUNTER_TYPE1= #{counterType1,jdbcType=VARCHAR},COUNTER_TYPE2= #{counterType2,jdbcType=VARCHAR},
+		UPDATE_USER= #{updateUser,jdbcType=VARCHAR},UPDATE_TIME= #{updateTime,jdbcType=DATE}
 		where
 			COUNTER_ID = #{counterId,jdbcType=VARCHAR}
 	</update>

@@ -100,7 +100,7 @@
 		update MST_BOND_CREDIT_RATING set
 		STATUS= #{status,jdbcType=VARCHAR},SVR_DATA_SOURCES= #{svrDataSources,jdbcType=VARCHAR},
 		GRADE_ORG_ID= #{gradeOrgId,jdbcType=VARCHAR},GRADE_DATE= #{gradeDate,jdbcType=DATE},O_TYPE= #{oType,jdbcType=VARCHAR},
-		GRADE_RESULT= #{gradeResult,jdbcType=VARCHAR}
+		GRADE_RESULT= #{gradeResult,jdbcType=VARCHAR},UPDATE_USER=#{updateUser,jdbcType=VARCHAR},UPDATE_TIME=#{updateTime,jdbcType=DATE}
 		where
 			O_CODE = #{oCode,jdbcType=VARCHAR}
 			and GRADE_ORG_ID = #{oldGradeOrgId,jdbcType=VARCHAR}

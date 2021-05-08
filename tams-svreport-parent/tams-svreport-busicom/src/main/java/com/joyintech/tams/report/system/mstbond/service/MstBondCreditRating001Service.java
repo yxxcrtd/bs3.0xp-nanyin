@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -144,18 +145,75 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
-        //新建时,判断excel表中是否存在重复产品,启用日期,信披费用类型的数据
-        //更新删除时,查询数据不存在则提示 不存在数据请核查
         for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1)) &&
-                        StringUtils.equals(dataList.get(i).get(4), dataList.get(j).get(4))){
-                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行利率名称、生效日期与"+"第"+(j+2)+"行利率名称、生效日期相同");
+                        StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))&&
+                        StringUtils.equals(dataList.get(i).get(3), dataList.get(j).get(3))&&
+                        StringUtils.equals(dataList.get(i).get(4), dataList.get(j).get(4))&&
+                        StringUtils.equals(dataList.get(i).get(5), dataList.get(j).get(5))){
+                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行债券代码、评级机构、评级日期、评级类型、评级结果与"+"第"+(j+2)+"行债券代码、评级机构、评级日期、评级类型、评级结果相同");
                     errorList.add(validMessage);
                 }
             }
         }
-
+        Map<String,Object> map=new HashMap<>();
+        if(errorList.size() == 0){
+            for (int i = 0; i < dataList.size(); i++ ) {
+                //操作类型
+                String type ="";
+                if(null!=dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))){
+                    type = dataList.get(i).get(0).toString();
+                }
+                //债券代码
+                String oCode ="";
+                if(null!=dataList.get(i).get(1) && !"".equals(dataList.get(i).get(1))){
+                    oCode =dataList.get(i).get(1).toString();
+                }
+                //评级机构
+                String gradeOrgId ="";
+                if(null!=dataList.get(i).get(2) && !"".equals(dataList.get(i).get(2))){
+                    String [] arr =dataList.get(i).get(2).toString().split("\\s+");
+                    gradeOrgId=arr[0];
+                }
+                //评级日期
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+                Date gradeDate=null;
+                if(null!=dataList.get(i).get(3) && !"".equals(dataList.get(i).get(3))){
+                    gradeDate=new Date(dataList.get(i).get(3));
+                }
+                //评级类型
+                String oType ="";
+                if(null!=dataList.get(i).get(4) && !"".equals(dataList.get(i).get(4))){
+                    String [] arr = dataList.get(i).get(4).toString().split("\\s+");
+                    oType=arr[0];
+                }
+                //评级结果
+                String gradeResult ="";
+                if(null!=dataList.get(i).get(5) && !"".equals(dataList.get(i).get(5))){
+                    String [] arr = dataList.get(i).get(5).toString().split("\\s+");
+                    gradeResult=arr[0];
+                }
+                //根据债券代码，评级机构，评级日期 ,评级类型 查询出数据,有数据则更新,无数据则插入
+                map.put("oCode",oCode);
+                map.put("gradeOrgId",gradeOrgId);
+                map.put("gradeDate",gradeDate);
+                map.put("oType",oType);
+                List<MstBondCreditRating> mstBondCreditRatings= mstBondCreditRating001Mapper.selectOneDate(map);
+                if("新增".equals(type)){
+                    if(null!=mstBondCreditRatings && mstBondCreditRatings.size()>0){
+                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行已存在重复债券代码、评级机构、评级日期、评级类型的数据");
+                        errorList.add(validMessage);
+                    }
+                }
+                if("修改".equals(type) || "删除".equals(type)){
+                    if(mstBondCreditRatings.size()<=0){
+                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行不存在债券代码、评级机构、评级日期、评级类型的数据,请核查");
+                        errorList.add(validMessage);
+                    }
+                }
+            }
+        }
         if(errorList.size() == 0){
             webResult.setData(NO_INFO_SHOWOUT);
         }else{
@@ -183,35 +241,35 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
                 for (int i = 0; i < dataList.size(); i++ ) {
                     //操作类型
                     String type ="";
-                    if(null!=dataList.get(i).get(0)){
+                    if(null!=dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))){
                         type = dataList.get(i).get(0).toString();
                     }
                     //债券代码
                     String oCode ="";
-                    if(null!=dataList.get(i).get(1)){
+                    if(null!=dataList.get(i).get(1) && !"".equals(dataList.get(i).get(1))){
                         oCode =dataList.get(i).get(1).toString();
                     }
                     //评级机构
                     String gradeOrgId ="";
-                    if(null!=dataList.get(i).get(2)){
+                    if(null!=dataList.get(i).get(2) && !"".equals(dataList.get(i).get(2))){
                         String [] arr =dataList.get(i).get(2).toString().split("\\s+");
                         gradeOrgId=arr[0];
                     }
                     //评级日期
                     SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
                     Date gradeDate=null;
-                    if(null!=dataList.get(i).get(3)){
+                    if(null!=dataList.get(i).get(3) && !"".equals(dataList.get(i).get(3))){
                         gradeDate=new Date(dataList.get(i).get(3));
                     }
                     //评级类型
                     String oType ="";
-                    if(null!=dataList.get(i).get(4)){
+                    if(null!=dataList.get(i).get(4) && !"".equals(dataList.get(i).get(4))){
                         String [] arr = dataList.get(i).get(4).toString().split("\\s+");
                         oType=arr[0];
                     }
                     //评级结果
                     String gradeResult ="";
-                    if(null!=dataList.get(i).get(5)){
+                    if(null!=dataList.get(i).get(5) && !"".equals(dataList.get(i).get(5))){
                         String [] arr = dataList.get(i).get(5).toString().split("\\s+");
                         gradeResult=arr[0];
                     }
@@ -261,6 +319,8 @@ public class MstBondCreditRating001Service extends CommonExportService<MstBondCr
                 //下方为固定值
                 param.put("status","E");
                 param.put("svrDataSources","02");
+                param.put("updateUser", LoginUserUtil.getUserName());
+                param.put("updateTime",new Date());
                 mstBondCreditRating001Mapper.updateOne(param);
             }
         }

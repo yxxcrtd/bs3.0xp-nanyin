@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.mstbond.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -88,35 +89,31 @@ public class MstBondCreditRating002Controller extends BaseController {
         List<MstBondCreditRating> MstBondCreditRatings= mstBondCreditRatingNewService.selectOneDate(map);
         if("add".equals(dto.getType())){
             if(null!=MstBondCreditRatings && MstBondCreditRatings.size()>0){
-                webResult.setMessage("已存债券代码、评级机构、评级日期、评级类型的数据");
+                webResult.setMessage("已存债券代码、评级机构、评级日期、评级类型的数据", MessageType.错误消息);
             }else{
                 try{
                     dto.setCreateUser(LoginUserUtil.getUserName());
                     dto.setCreateTime(new Date());
                     dto.setSvrDataSources("01");
                     dto.setStatus("E");
+                    dto.setUpdateUser(LoginUserUtil.getUserName());
+                    dto.setUpdateTime(new Date());
                     dtoList.add(dto);
                     mstBondCreditRatingNewService.insertMstBondCreditRatingData(dtoList);
                     webResult.setMessage("保存成功");
                 }catch (Exception e){
                     e.printStackTrace();
-                    webResult.setMessage("保存失败");
+                    webResult.setMessage("保存失败", MessageType.错误消息);
                 }
             }
         }
         //如果 旧评级机构 != 空 && 旧评级日期 != 空 &&旧评级类型 != 空 && 评级机构 != 旧评级机构 && 评级日期 != 旧评级日期 && 评级类型 != 旧评级类型
-
             if("update".equals(dto.getType())){
-                /*map.put("oCode",dto.getoCode());
-                map.put("gradeOrgId",dto.getOldGradeOrgId());
-                map.put("gradeDate",dto.getOldGradeDateStr());
-                map.put("oType",dto.getOldOType());
-                List<MstBondCreditRating> MstBondCreditRatings= mstBondCreditRatingNewService.selectOneDate(map);*/
                 if(null!=dto.getOldGradeOrgId() && null!=dto.getOldGradeDateStr() && null!=dto.getOldOType() &&
                         !dto.getGradeOrgId().equals(dto.getOldGradeOrgId()) &&  !gradeDate.equals(dto.getOldGradeDateStr()) &&
                         !dto.getoType().equals(dto.getOldOType())){
                     if(null!=MstBondCreditRatings && MstBondCreditRatings.size()>0){
-                        webResult.setMessage("已存债券代码、评级机构、评级日期、评级类型的数据");
+                        webResult.setMessage("已存债券代码、评级机构、评级日期、评级类型的数据", MessageType.错误消息);
                     }else{
                         mapOld.put("oCode",dto.getoCode());
                         mapOld.put("gradeOrgId",dto.getGradeOrgId());
@@ -125,6 +122,8 @@ public class MstBondCreditRating002Controller extends BaseController {
                         mapOld.put("gradeResult",dto.getGradeResult());
                         mapOld.put("status","E");
                         mapOld.put("svrDataSources","01");
+                        mapOld.put("updateUser",LoginUserUtil.getUserName());
+                        mapOld.put("updateTime",new Date());
                         mapOld.put("oldGradeOrgId",dto.getOldGradeOrgId());
                         mapOld.put("oldGradeDate",dto.getOldGradeDateStr());
                         mapOld.put("oldOType",dto.getOldOType());
@@ -139,6 +138,8 @@ public class MstBondCreditRating002Controller extends BaseController {
                     mapOld.put("gradeResult",dto.getGradeResult());
                     mapOld.put("status","E");
                     mapOld.put("svrDataSources","01");
+                    mapOld.put("updateUser",LoginUserUtil.getUserName());
+                    mapOld.put("updateTime",new Date());
                     mapOld.put("oldGradeOrgId",dto.getOldGradeOrgId());
                     mapOld.put("oldGradeDate",dto.getOldGradeDateStr());
                     mapOld.put("oldOType",dto.getOldOType());

@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.chbmst.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -81,32 +82,40 @@ public class ChbMstCounterParty002Controller extends BaseController {
         List<ChbMstCounterParty> dtoList=new ArrayList<>();
         dto.setCreateUser(LoginUserUtil.getUserName());
         dto.setCreateTime(new Date());
+        dto.setUpdateUser(LoginUserUtil.getUserName());
+        dto.setUpdateTime(new Date());
         dto.setDataSource("01");
         dto.setStatus("E");
         dtoList.add(dto);
         Map<String, Object> map=new HashMap<>();
         map.put("counterId",dto.getCounterId());
         List<ChbMstCounterParty> ChbMstCounterPartys= chbMstCounterPartyService.selectOneDate(map);
-        if(null!=ChbMstCounterPartys && ChbMstCounterPartys.size()>0){
-            if(null!=dto && "add".equals(dto.getType())){
-                webResult.setMessage("已存在相同交易对手代码的数据");
+        if(null!=dto && "add".equals(dto.getType())){
+            if(null!=ChbMstCounterPartys && ChbMstCounterPartys.size()>0){
+                webResult.setMessage("已存在相同交易对手代码的数据", MessageType.错误消息);
+            }else{
+                try{
+                    chbMstCounterPartyService.insertChbMstCounterPartyData(dtoList);
+                    webResult.setMessage("保存成功");
+                }catch (Exception e){
+                    e.printStackTrace();
+                    webResult.setMessage("保存失败", MessageType.错误消息);
+                }
             }
-            if(null!=dto && "update".equals(dto.getType())){
+        }
+        if(null!=dto && "update".equals(dto.getType())){
+            if(null!=ChbMstCounterPartys && ChbMstCounterPartys.size()>0){
                 ChbMstCounterParty chb=ChbMstCounterPartys.get(0);
                 chb.setCounterName(dto.getCounterName());
                 chb.setCounterType1(dto.getCounterType1());
                 chb.setCounterType2(dto.getCounterType2());
+                chb.setUpdateUser(LoginUserUtil.getUserName());
+                chb.setUpdateTime(new Date());
                 chb.setStatus("E");
                 chbMstCounterPartyService.updateOne(chb);
                 webResult.setMessage("保存成功");
-            }
-        }else{
-            try{
-                chbMstCounterPartyService.insertChbMstCounterPartyData(dtoList);
-                webResult.setMessage("保存成功");
-            }catch (Exception e){
-                e.printStackTrace();
-                webResult.setMessage("保存失败");
+            }else{
+                webResult.setMessage("不存在该交易对手代码的数据,修改失败", MessageType.错误消息);
             }
         }
         return webResult;

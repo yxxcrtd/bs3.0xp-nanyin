@@ -33,13 +33,13 @@
                 alert("评级结果不能为空");
             }
             if(object.gradeOrgId!='' && object.gradeDate!='' && object.oType!=''&& object.gradeResult!=''){
-                Joyin.ajaxJson(basePath + 'svreport/system/mstbond/MstBondCreditRating002/save', object, function(result) {
-                    /*if(result){
-                        Joyin.ajaxJson(basePath + 'svreport/system/prorate/DisPrdFeeRate002/checkAndSave',object,function(result){
+                Joyin.ajaxJson(basePath + 'svreport/system/mstbond/MstBondCreditRating002/check', object, function(result) {
+                    if(result){
+                        Joyin.ajaxJson(basePath + 'svreport/system/mstbond/MstBondCreditRating002/save',object,function(result){
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         });
-                    }*/
+                    }
                 });
             }
         });

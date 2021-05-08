@@ -126,7 +126,7 @@
 	<insert id="insertPrdFeeData" parameterType="java.util.List">
 		insert into
 		REP_CASH_YIELD
-		(STATUS,BUSI_ID,CASH_ID,CASH_NAME,START_DATE,CASH_TYPE2,RATE,CREATE_USER,CREATE_TIME,SVR_DATA_SOURCES,ADAPTER_ID)
+		(STATUS,BUSI_ID,CASH_ID,CASH_NAME,START_DATE,CASH_TYPE2,RATE,CREATE_USER,CREATE_TIME,SVR_DATA_SOURCES,ADAPTER_ID,UPDATE_USER,UPDATE_TIME)
 		values (
 		<foreach collection="dtoList" item="item" index="index" separator=",">
 			#{item.status,jdbcType=VARCHAR} ,
@@ -139,7 +139,9 @@
 			#{item.createUser,jdbcType=VARCHAR} ,
 			#{item.createTime,jdbcType=DATE} ,
 			#{item.dataSource,jdbcType=VARCHAR},
-			#{item.adapterId,jdbcType=VARCHAR}
+			#{item.adapterId,jdbcType=VARCHAR},
+			#{item.updateUser,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=DATE}
 		</foreach>
 		)
 	</insert>
@@ -240,7 +242,7 @@
 	</select>
 	<insert id="insertOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
 		insert into REP_CASH_YIELD
-		(STATUS,BUSI_ID,CASH_ID,CASH_NAME,START_DATE,CASH_TYPE2,RATE,CREATE_USER,CREATE_TIME,SVR_DATA_SOURCES,ADAPTER_ID)
+		(STATUS,BUSI_ID,CASH_ID,CASH_NAME,START_DATE,CASH_TYPE2,RATE,CREATE_USER,CREATE_TIME,SVR_DATA_SOURCES,ADAPTER_ID,UPDATE_USER,UPDATE_TIME)
 		values (
 			#{status,jdbcType=VARCHAR} ,
 			#{busiId,jdbcType=VARCHAR} ,
@@ -252,12 +254,15 @@
 			#{createUser,jdbcType=VARCHAR} ,
 			#{createTime,jdbcType=DATE} ,
 			#{dataSource,jdbcType=VARCHAR},
-			#{adapterId,jdbcType=VARCHAR}
+			#{adapterId,jdbcType=VARCHAR},
+			#{item.updateUser,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=DATE}
 		)
     </insert>
 	<update id="updateOne" parameterType="java.util.Map">
 		update REP_CASH_YIELD set STATUS =#{status,jdbcType=VARCHAR},SVR_DATA_SOURCES=#{dataSource,jdbcType=VARCHAR},
-		RATE= #{rate,jdbcType=DECIMAL},CASH_TYPE2 =#{cashType2,jdbcType=VARCHAR},START_DATE=#{startDate,jdbcType=DATE}
+		RATE= #{rate,jdbcType=DECIMAL},CASH_TYPE2 =#{cashType2,jdbcType=VARCHAR},START_DATE=#{startDate,jdbcType=DATE},
+		UPDATE_USER =#{updateUser,jdbcType=VARCHAR},UPDATE_TIME=#{updateTime,jdbcType=DATE}
 		where
 			BUSI_ID = #{busiId,jdbcType=VARCHAR}
 			AND START_DATE = #{oldStartDateStr,jdbcType=DATE}
