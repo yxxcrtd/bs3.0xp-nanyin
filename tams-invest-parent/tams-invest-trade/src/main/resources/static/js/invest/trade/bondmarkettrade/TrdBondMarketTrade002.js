@@ -56,6 +56,7 @@
             $('#tradeMarket').val('').trigger('change');
             $('#finprodAbbr').val('').trigger('change');
             $('#appearMarketId').val('').trigger('change');
+            $('#finprodIdStr').val('').trigger('change');
             $('#appearMarketId').attr("disabled",true);
         }else{
             var data = $('#finprodId').select2('data')[0].object;
@@ -64,6 +65,9 @@
             }
             if (data != undefined && data.finprodAbbr){
                 $('#finprodAbbr').val(data.finprodAbbr).trigger('change');
+            }
+            if (data != undefined && data.finprodId){
+                $('#finprodIdStr').val(data.finprodId).trigger('change');
             }
             $('#appearMarketId').attr("disabled",false);
         }
@@ -76,6 +80,7 @@
     $('#appearMarketId').on("change", function () {
         if ($('#appearMarketId').val() == null || $('#appearMarketId').val() == '') {
             $('#appearMarketAbbr').val('').trigger('change');
+            $('#appearMarketIdStr').val('').trigger('change');
             $('#isAdded').val('').trigger('change');
         }else {
             var data = $('#appearMarketId').select2('data')[0].object;
@@ -84,7 +89,10 @@
             }
             if (data != undefined && data.isAdded){
                 $('#isAdded').val(data.isAdded).trigger('change');
-            }    
+            }
+            if (data != undefined && data.appearMarketId){
+                $('#appearMarketIdStr').val(data.appearMarketId).trigger('change');
+            }
         }
     });
     
