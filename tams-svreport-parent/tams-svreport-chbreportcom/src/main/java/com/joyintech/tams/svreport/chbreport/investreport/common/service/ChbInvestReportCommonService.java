@@ -18,6 +18,8 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service.FtpDetailService;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.service.ChbInvestOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dao.ChbInvestReportCommonMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto;
@@ -69,6 +71,12 @@ public class ChbInvestReportCommonService extends BaseService {
      */
     @Autowired
     private ChbInvestOperationService chbInvestOperationService;
+
+    /**
+     * 中招报告发送
+     */
+    @Autowired
+    private FtpDetailService ftpDetailService;
 
     /**
      * 日志
@@ -221,8 +229,18 @@ public class ChbInvestReportCommonService extends BaseService {
         if(StringUtil.isNotEmpty(endDate)){
             repReveal.setEndDate(DateUtil.parse(endDate));
         }
-        repReveal.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
-        repReveal.setRevealStatus(DictCodeListExt2.披露状态_未披露.getValue());
+        if(StringUtil.equals(DictCodeListExt1.确认类型_自动.getValue(), isConfirm)) {
+            repReveal.setConfirmStatus(DictCodeList.确认状态_已确认.getValue());
+        }
+        else {
+            repReveal.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
+        }
+        if(StringUtil.equals(DictCodeListExt1.确认类型_自动.getValue(), isReveal)) {
+            repReveal.setRevealStatus(DictCodeListExt2.披露状态_已披露.getValue());
+        }
+        else {
+            repReveal.setRevealStatus(DictCodeListExt2.披露状态_未披露.getValue());
+        }
         repReveal.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         // 系统生成确认方式和披露方式设置为手动
         repReveal.setIsConfirm(isConfirm);
@@ -263,6 +281,11 @@ public class ChbInvestReportCommonService extends BaseService {
         repInstallLogDetail.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         //更新日志表
         repInstallLogDetailMapper.insert(repInstallLogDetail);
+
+        if(StringUtil.equals(DictCodeListExt1.确认类型_自动.getValue(), isReveal)) {
+            //发送
+            return doSendReport(repReveal);
+        }
         return true;
     }
 
@@ -425,4 +448,29 @@ public class ChbInvestReportCommonService extends BaseService {
 
         return ChbInvestReportConstant.空字符;
     }
+
+
+    /**
+     * 调用发送
+     * @param repReveal
+     * @return
+     */
+    private Boolean doSendReport(RepReveal repReveal) {
+        FtpDetailDto ftpDetailDto = new FtpDetailDto();
+        ftpDetailDto.setSysFilepath(repReveal.getSysFilepath());
+        ftpDetailDto.setProdId(repReveal.getProdid());
+        ftpDetailDto.setReportId(repReveal.getRepId());
+        ftpDetailDto.setReportCategory(repReveal.getReportCategory()); // 获取ftp路径用
+        ftpDetailDto.setOption(DictCodeListExt2.披露方式_手动.getValue()); //手工操作
+        if(StringUtil.isNotEmpty(repReveal.getStartDate())) {
+            ftpDetailDto.setStatrDate(repReveal.getStartDate());
+        }
+        if(StringUtil.isNotEmpty(repReveal.getEndDate())) {
+            ftpDetailDto.setEndDate(repReveal.getEndDate());
+        }
+        ftpDetailDto.setRevealChannel(repReveal.getRevealChannel());
+        ftpDetailDto.setRevealId(repReveal.getId());
+        return ftpDetailService.doReveal(ftpDetailDto);
+    }
+
 }
