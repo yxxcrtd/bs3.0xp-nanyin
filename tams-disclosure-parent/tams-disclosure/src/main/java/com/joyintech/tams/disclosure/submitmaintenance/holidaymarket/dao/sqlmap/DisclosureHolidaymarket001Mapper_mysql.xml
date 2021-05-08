@@ -179,7 +179,7 @@
 			#{marketCalendarType} AS MARKET_CODE
 			FROM DUAL
 		</foreach> T1
-		) TEMP where not exisits (select 1 from CHB_MKT_HOLIDAY T where  T1.BUSI_DATE = T.BUSI_DATE AND T1.MARKET_CODE = T.MARKET_CODE)
+		) TEMP where not exists (select 1 from CHB_MKT_HOLIDAY T where  T1.BUSI_DATE = T.BUSI_DATE AND T1.MARKET_CODE = T.MARKET_CODE)
 		) de ;
 
 		UPDATE  CHB_MKT_HOLIDAY as A,
@@ -214,6 +214,6 @@
 		) TEMP
 		) de
 		) AS B
-		set  A.* = B.* where  exisits (select 1 from CHB_MKT_HOLIDAY T where  T2.BUSI_DATE = T.BUSI_DATE AND T2.MARKET_CODE = T.MARKET_CODE);
+		set  A.* = B.* where  exists (select 1 from CHB_MKT_HOLIDAY T where  T2.BUSI_DATE = T.BUSI_DATE AND T2.MARKET_CODE = T.MARKET_CODE);
     </insert>
 </mapper>

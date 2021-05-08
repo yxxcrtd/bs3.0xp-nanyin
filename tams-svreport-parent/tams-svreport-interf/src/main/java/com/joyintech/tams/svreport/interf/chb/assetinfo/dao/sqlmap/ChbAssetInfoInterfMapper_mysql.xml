@@ -13911,7 +13911,7 @@
 
             from dual
         </foreach>
-        ) TEMP where not exisits (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
+        ) TEMP where not exists (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE)
         ) de ;
 
         UPDATE  CHB_ASSET_INFO as A,
@@ -14330,7 +14330,7 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where not exisits (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE);
+        set  A.* = B.* where not exists (select 1 from CHB_ASSET_INFO CII where CII.ASSET_CODE = TEMP.ASSET_CODE);
     </insert>
 
     <insert id="mergeInfoListExPsbc"  parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">

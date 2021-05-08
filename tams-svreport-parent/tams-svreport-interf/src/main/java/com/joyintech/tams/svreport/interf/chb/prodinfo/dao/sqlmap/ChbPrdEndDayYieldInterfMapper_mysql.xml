@@ -200,7 +200,7 @@
 		#{item.ccy,jdbcType=VARCHAR} ccy
 		FROM  DUAL
 	</foreach>
-	) TEMP where not exisits (select 1 from CHB_PRD_PERIODYIELD CII  where CII.PROD_ID = TEMP.PROD_ID
+	) TEMP where not exists (select 1 from CHB_PRD_PERIODYIELD CII  where CII.PROD_ID = TEMP.PROD_ID
 	AND DATE_FORMAT(CII.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CHANGE_DATE,'%Y-%m-%d')
 	AND CII.CHANG_TYPE = TEMP.CHANG_TYPE)
 	) de ;
@@ -245,7 +245,7 @@
 	) TEMP
 	) de
 	) AS B
-	set  A.* = B.* where exisits (select 1 from CHB_PRD_PERIODYIELD CII where CII.PROD_ID = TEMP.PROD_ID
+	set  A.* = B.* where exists (select 1 from CHB_PRD_PERIODYIELD CII where CII.PROD_ID = TEMP.PROD_ID
 	AND DATE_FORMAT(CII.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CHANGE_DATE,'%Y-%m-%d')
 	AND CII.CHANG_TYPE = TEMP.CHANG_TYPE);
 </insert>

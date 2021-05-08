@@ -89,7 +89,7 @@
           FROM
           DUAL
       </foreach>
-      ) TEMP where not exisits (select 1 from MST_BOND_CREDIT_RATING CII where CII.O_CODE = TEMP.O_CODE
+      ) TEMP where not exists (select 1 from MST_BOND_CREDIT_RATING CII where CII.O_CODE = TEMP.O_CODE
       and CII.GRADE_ORG_ID = TEMP.GRADE_ORG_ID
       and CII.GRADE_DATE = TEMP.GRADE_DATE
       and CII.O_TYPE = TEMP.O_TYPE)
@@ -138,7 +138,7 @@
       ) TEMP
       ) de
       ) AS B
-      set  A.* = B.* where exisits (select 1 from MST_BOND_CREDIT_RATING CII where CII.O_CODE = TEMP.O_CODE
+      set  A.* = B.* where exists (select 1 from MST_BOND_CREDIT_RATING CII where CII.O_CODE = TEMP.O_CODE
       and CII.GRADE_ORG_ID = TEMP.GRADE_ORG_ID
       and CII.GRADE_DATE = TEMP.GRADE_DATE
       and CII.O_TYPE = TEMP.O_TYPE);

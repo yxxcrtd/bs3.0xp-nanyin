@@ -106,7 +106,7 @@ and  BPP.FEE_TYPE  in ('C03','C04','C05','C06','C09','C10','C18')
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE
 			FROM	DUAL
 		</foreach>
-		) TEMP where not exisits (select 1 from CHB_PRDFEE_BASIS_DATA CII where CII.PROD_ID = TEMP.PRODID
+		) TEMP where not exists (select 1 from CHB_PRDFEE_BASIS_DATA CII where CII.PROD_ID = TEMP.PRODID
 		AND CII.FPROD_ID = TEMP.FPROD_ID
 		AND CII.FEE_TYPE = TEMP.FEE_TYPE)
 		) de ;
@@ -154,7 +154,7 @@ and  BPP.FEE_TYPE  in ('C03','C04','C05','C06','C09','C10','C18')
 		) TEMP
 		) de
 		) AS B
-		set  A.* = B.* where exisits (select 1 from CHB_PRDFEE_BASIS_DATA CII where CII.PROD_ID = TEMP.PRODID
+		set  A.* = B.* where exists (select 1 from CHB_PRDFEE_BASIS_DATA CII where CII.PROD_ID = TEMP.PRODID
 		AND CII.FPROD_ID = TEMP.FPROD_ID
 		AND CII.FEE_TYPE = TEMP.FEE_TYPE );
 	</insert>

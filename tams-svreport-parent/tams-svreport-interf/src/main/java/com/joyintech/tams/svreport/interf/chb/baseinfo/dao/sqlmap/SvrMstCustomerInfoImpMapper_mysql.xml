@@ -336,7 +336,7 @@
             #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
             FROM    DUAL
         </foreach>
-        ) TEMP where not exisits (select 1 from MST_CUSTOMER_INFO CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID)
+        ) TEMP where not exists (select 1 from MST_CUSTOMER_INFO CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID)
         ) de ;
 
         UPDATE  MST_CUSTOMER_INFO as A,
@@ -388,6 +388,6 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from MST_CUSTOMER_INFO CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID);
+        set  A.* = B.* where exists (select 1 from MST_CUSTOMER_INFO CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID);
 	</insert>
 </mapper>

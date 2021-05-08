@@ -370,7 +370,7 @@
             FROM
             dual
         </foreach>
-        ) TEMP where not exisits (select 1 from REP_TRADE_INFO CII where CII.ID = TEMP.ID)
+        ) TEMP where not exists (select 1 from REP_TRADE_INFO CII where CII.ID = TEMP.ID)
         ) de ;
 
         UPDATE  REP_TRADE_INFO as A,
@@ -427,6 +427,6 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from REP_TRADE_INFO CII where CII.ID = TEMP.ID);
+        set  A.* = B.* where exists (select 1 from REP_TRADE_INFO CII where CII.ID = TEMP.ID);
     </update>
 </mapper>

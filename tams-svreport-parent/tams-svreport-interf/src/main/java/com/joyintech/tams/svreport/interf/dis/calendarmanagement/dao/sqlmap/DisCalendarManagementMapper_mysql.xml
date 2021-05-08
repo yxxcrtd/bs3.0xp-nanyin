@@ -56,7 +56,7 @@
             #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME<!--更新时间-->
             FROM    dual
         </foreach>
-        ) TEMP where not exisits (select 1 from MST_CALENDAR_INFO CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID)
+        ) TEMP where not exists (select 1 from MST_CALENDAR_INFO CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID)
         ) de ;
 
         UPDATE  MST_CALENDAR_INFO as A,
@@ -90,6 +90,6 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from MST_CALENDAR_INFO CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID);
+        set  A.* = B.* where exists (select 1 from MST_CALENDAR_INFO CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID);
     </update>
 </mapper>

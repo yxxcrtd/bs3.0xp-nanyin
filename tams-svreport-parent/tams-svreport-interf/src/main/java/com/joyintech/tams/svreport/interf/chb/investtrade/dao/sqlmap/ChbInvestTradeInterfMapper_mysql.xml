@@ -3090,7 +3090,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
             #{item.rivalPartyType,jdbcType=VARCHAR}  RIVAL_PARTY_TYPE
             from dual
         </foreach>
-        ) TEMP where not exisits (select 1 from CHB_INVEST_TRADE CII where CII.TRADE_CODE = TEMP.TRADE_CODE)
+        ) TEMP where not exists (select 1 from CHB_INVEST_TRADE CII where CII.TRADE_CODE = TEMP.TRADE_CODE)
         ) de ;
 
         UPDATE  CHB_INVEST_TRADE as A,
@@ -3182,7 +3182,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from CHB_INVEST_TRADE CII where CII.TRADE_CODE = TEMP.TRADE_CODE);
+        set  A.* = B.* where exists (select 1 from CHB_INVEST_TRADE CII where CII.TRADE_CODE = TEMP.TRADE_CODE);
     </insert>
 	<delete id="deleteBySysTime" parameterType="java.util.Map">
     delete from chb_invest_trade

@@ -250,7 +250,7 @@
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE
 			FROM DUAL
 		</foreach>
-		) TEMP where not exisits (select 1 from CHB_INTERF_ERRODATA CII where CII.DATAID = TEMP.DATAID)
+		) TEMP where not exists (select 1 from CHB_INTERF_ERRODATA CII where CII.DATAID = TEMP.DATAID)
 		) de ;
 
 		UPDATE  CHB_INTERF_ERRODATA as A,
@@ -285,7 +285,7 @@
 		) TEMP
 		) de
 		) AS B
-		set  A.* = B.* where  exisits (select 1 from CHB_INTERF_ERRODATA CII  where CII.DATAID = TEMP.DATAID);
+		set  A.* = B.* where  exists (select 1 from CHB_INTERF_ERRODATA CII  where CII.DATAID = TEMP.DATAID);
 	</insert>
 	<delete id="deleteByPrimaryKeyType" parameterType="java.util.Map" >
     delete from CHB_INTERF_ERRODATA

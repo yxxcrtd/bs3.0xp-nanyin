@@ -363,7 +363,7 @@
             ,#{item.disAssetTypethree,jdbcType=VARCHAR} DIS_ASSET_TYPETHREE<!--信披资产三级类型-->
             FROM    dual
         </foreach>
-        ) TEMP where not exisits (select 1 from REP_ASSET_INFO CII where CII.ASSET_ID = TEMP.ASSET_ID)
+        ) TEMP where not exists (select 1 from REP_ASSET_INFO CII where CII.ASSET_ID = TEMP.ASSET_ID)
         ) de ;
 
         UPDATE  REP_ASSET_INFO as A,
@@ -437,6 +437,6 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from REP_ASSET_INFO CII where CII.ASSET_ID = TEMP.ASSET_ID);
+        set  A.* = B.* where exists (select 1 from REP_ASSET_INFO CII where CII.ASSET_ID = TEMP.ASSET_ID);
     </update>
 </mapper>

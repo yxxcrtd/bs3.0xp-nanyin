@@ -53,7 +53,7 @@
             #{item.createTime,jdbcType=TIMESTAMP} AS CREATE_TIME
             FROM DUAL
         </foreach>
-        ) TEMP where not exisits (select 1 from CHB_EQUDET CII where
+        ) TEMP where not exists (select 1 from CHB_EQUDET CII where
         TEMP.BUSI_SEQNO= CII.BUSI_SEQNO AND TEMP.INDENTIFY_MARK = CII.INDENTIFY_MARK AND TEMP.REGIST_BANK_CODE = CII.REGIST_BANK_CODE)
         ) de ;
 
@@ -96,7 +96,7 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from CHB_EQUDET CII  where
+        set  A.* = B.* where exists (select 1 from CHB_EQUDET CII  where
         TEMP.BUSI_SEQNO= CII.BUSI_SEQNO
         AND TEMP.INDENTIFY_MARK = CII.INDENTIFY_MARK
         AND TEMP.REGIST_BANK_CODE = CII.REGIST_BANK_CODE

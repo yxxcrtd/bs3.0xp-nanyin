@@ -225,7 +225,7 @@ GROUP BY asset.POS_DATE,
       #{item.datasource,jdbcType=VARCHAR} DATASOURCE
       FROM DUAL
     </foreach>
-    ) TEMP where not exisits (select 1 from CHB_BOT_AST_POS CII where CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID
+    ) TEMP where not exists (select 1 from CHB_BOT_AST_POS CII where CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID
     and CII.ASSET_CODE = TEMP.ASSET_CODE
     and CII.POS_DATE = TEMP.POS_DATE)
     ) de ;

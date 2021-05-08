@@ -855,7 +855,7 @@
             #{item.fProdId,jdbcType=VARCHAR} F_PROD_ID<!--源系统金融产品代码-->
             FROM   dual
         </foreach>
-        ) TEMP where not exisits (select 1 from REP_PROD_INFO CII  where CII.PROD_ID = TEMP.PROD_ID)
+        ) TEMP where not exists (select 1 from REP_PROD_INFO CII  where CII.PROD_ID = TEMP.PROD_ID)
         ) de ;
 
         UPDATE  REP_PROD_INFO as A,
@@ -969,6 +969,6 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where not exisits (select 1 from REP_PROD_INFO CII where CII.PROD_ID = TEMP.PROD_ID);
+        set  A.* = B.* where not exists (select 1 from REP_PROD_INFO CII where CII.PROD_ID = TEMP.PROD_ID);
     </update>
 </mapper>
