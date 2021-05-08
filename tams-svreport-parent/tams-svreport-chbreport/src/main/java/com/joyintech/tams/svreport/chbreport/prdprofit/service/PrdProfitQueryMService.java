@@ -4,6 +4,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.tams.common.base.entity.PrdProfit;
@@ -166,7 +167,7 @@ public class PrdProfitQueryMService extends CommonExportService<ChbreportPrdInfo
         Map<String, Object> map = new HashMap<>();
         map.put("title", String.format("%s年%s月_利润表_%s_月报", reportDate.substring(0, 4), reportDate.substring(5, 7), prodName));
         //map.put("org",CacheUtil.getSysParam(GlobalConstant.财务报表_编制单位));
-        map.put("reportDate", reportDate);
+        map.put("reportDate", DateUtil.format(DateUtil.platDateFromCache()));
         map.put("org", "华夏银行");
         map.put("prodName", prodName);
         map.put("year", reportDate.substring(0, 4));
