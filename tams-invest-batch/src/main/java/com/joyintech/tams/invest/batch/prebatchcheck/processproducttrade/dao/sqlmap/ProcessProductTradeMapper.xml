@@ -7,11 +7,40 @@
 		WITH TEMP AS (
 			SELECT * FROM(
 				select 
-					sys_data_process_mark.*,rank() over(partition by workflow_id order by HIS_NO desc) as rank
-				from sys_data_process_mark 
-				where page_id in ('FinProductFeePay002','FinProductFeePay004','FinproductPayTheVatQuery002','FinProductQuotation002')
+						sys_data_process_mark.*,rank() over(partition by sys_data_process_mark.workflow_id order by sys_data_process_mark.HIS_NO desc) as rank
+				from sys_data_process_mark
+                inner join SYS_WFL_BUSINESS_LIST on SYS_WFL_BUSINESS_LIST.seq_no = sys_data_process_mark.workflow_id and SYS_WFL_BUSINESS_LIST.PROCESS_STATE not in ('END','NEW')
+				where sys_data_process_mark.page_id in ('FinProductFeePay002','FinProductFeePay004','FinproductPayTheVatQuery002','FinProductQuotation002')
 			) WHERE rank = 1
-		)
+		),
+        /*净值型产品存续期*/
+        TEMP1 AS(
+            SELECT A.*,
+                case 
+                    when a.profitType = '01' then replace(replace(to_char(REGEXP_SUBSTR(A.business_data,'"'||amtStr||'":"[^"]+"',1,1)),'"'||amtStr||'":"',''),'"','')
+                    when a.profitType = '03' then replace(replace(to_char(REGEXP_SUBSTR(A.business_data,'"'||amtStr||'03'||'":"[^"]+"',1,1)),'"'||amtStr||'03'||'":"',''),'"','')
+                    else null
+                end as tradeAmt
+             FROM(
+				select 
+					A.*,
+                    replace(replace(to_char(REGEXP_SUBSTR(business_data,'"profitType":"[^"]+"',1,1)),'"profitType":"',''),'"','') profitType,
+                    case 
+                        when a.business_data_pk3 = 'C1' then 'subDealAmt'
+                        when a.business_data_pk3 = 'C2' then 'purDealAmt'
+                        when a.business_data_pk3 in ('C4','C17','C18') then 'redTotalNetValue' 
+                        when a.business_data_pk3 in ('C5','C20') then 'expireDealAmt' 
+                        when a.business_data_pk3 in ('C3','C6') then 'addReduceDealAmt' 
+                        when a.business_data_pk3 = 'C9' then 'bonusCashBonusAmt'
+                        when a.business_data_pk3 = 'C10' then 'bonusCashBonusAmt'
+                        else ''
+                    end as amtStr,
+                    rank() over(partition by A.workflow_id order by A.HIS_NO desc) as rank
+				from sys_data_process_mark A
+                inner join SYS_WFL_BUSINESS_LIST B on B.seq_no = A.workflow_id and B.PROCESS_STATE not in ('END','NEW')
+				where a.page_id = 'FinNetProductDuration'
+			)A WHERE rank = 1
+        )
         SELECT
         	T.create_user as launchUser,
         	nvl(pp.PORTFOLIO_ID,fp.finprod_market_id) AS portfolioId,
@@ -23,7 +52,7 @@
         	T.CRT_DATE AS createTaskTime,
         	sd.institution_code instCode
         FROM SYS_WFL_BUSINESS_LIST T
-		INNER JOIN WFL_TRD_PRODUCT_DEAL DEAL ON deal.workflow_id = T.seq_no and T.PROCESS_STATE != 'END'
+		INNER JOIN WFL_TRD_PRODUCT_DEAL DEAL ON deal.workflow_id = T.seq_no and T.PROCESS_STATE not in ('END','NEW')
 		left join wfl_trd_fin_product_deal_total tdeal on deal.TOTLE_TRADE_ID = tdeal.TOTLE_TRADE_ID
         LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
         LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
@@ -69,7 +98,7 @@
 				T.CRT_DATE AS createTaskTime,
 				sd.institution_code instCode
 			FROM SYS_WFL_BUSINESS_LIST T 
-			INNER JOIN TEMP on T.seq_no = temp.workflow_id and T.PROCESS_STATE != 'END'
+			INNER JOIN TEMP on T.seq_no = temp.workflow_id 
 			LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
         	LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 			left join PTL_PORTFOLIO pp on 
@@ -81,5 +110,22 @@
 				end) = pp.PORTFOLIO_ID
 			WHERE T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
 		)
+        union 
+        select 
+            T.create_user as launchUser,
+			pp.PORTFOLIO_ID AS portfolioId,
+			pp.PORTFOLIO_NAME as portfolioName,
+            T.trade_id as tradeId,
+            '' totleTradeId,
+            decode(temp1.tradeAmt,'',null,temp1.tradeAmt) tradeAmt,
+            T.NEXT_USER  AS nextUser,
+		    T.CRT_DATE AS createTaskTime,
+			sd.institution_code instCode
+        from SYS_WFL_BUSINESS_LIST T 
+        INNER JOIN temp1 on T.seq_no = temp1.workflow_id 
+		LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+        LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
+		left join PTL_PORTFOLIO pp on regexp_replace(temp1.business_data_pk2,'^F16_','') = pp.PORTFOLIO_ID
+        WHERE T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
     </select>
-</mapper>
+</mapper>		
