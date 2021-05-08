@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 import com.joyintech.tams.common.base.entity.RepAssetBond;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**资产基本信息_其它资产类信息 dto
  * @author wang
@@ -60,6 +61,26 @@ public class SvrBussRepQDIIBondInfoDto extends RepAssetBond {
      * 新人行资产三级分类
      */
     private String pbcAssetType3;
+
+    private Date vdate;
+
+    private Date mdate;
+
+    public Date getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
+    }
 
     public String getPbcAssetType1() {
         return pbcAssetType1;

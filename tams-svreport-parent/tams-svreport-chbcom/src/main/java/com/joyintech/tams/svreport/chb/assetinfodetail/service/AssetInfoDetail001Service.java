@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 资产基本信息维护Service
@@ -171,41 +172,21 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 		AjaxResult webResult = new AjaxResult();
 		if (!StringUtil.isEmptyList(dataList)){
 			if (CollectionUtils.isNotEmpty(dataList)) {
-				List<String> data = new ArrayList<String>();
-				if(dataList.size()>100){
-					List<AssetInfoDetailDto> newDataList = new ArrayList();
-					newDataList.addAll(dataList);
-					int part = dataList.size() / 1000; // 分批数
-					for (int i = 0; i < part; i++ ) {
-						newDataList.subList(0, 1000).clear();
-					}
-					// 最后剩下的数据
-					if (CollectionUtils.isNotEmpty(newDataList)) {
-//						data.addAll();
-					}
-				}
-				else{
-//					data = proRegistCodeManage001Mapper.getRegistExcelList(entities,orgCode);
-				}
-				if (data != null && data.size() > 0) {
-					Map<String, List<AssetInfoDetailDto>> equityInfo001Map = dataList.stream().collect(
-							JoyinCollectors.groupingBy(
-									x -> x.getAssetCode()));
-					// Collections.sort(data, Comparator.comparing(EquityInfo001Dto::getExcelNum));
-					// 将序号放入list中
+//				    List assetCodes = dataList.stream().map(assetInfoDetailDto -> assetInfoDetailDto.getAssetCode()).collect(Collectors.toList());
+//				    Map<String,Object> map = new HashMap<>();
+//				    map.put("assetCodes",assetCodes);
+//				    List<AssetInfoDetailDto> data = assetInfoDetailMapper.selectChbInfoByParam(map);
+//					Map<String, List<AssetInfoDetailDto>> assetInfoMap = dataList.stream().collect(
+//							JoyinCollectors.groupingBy(
+//									x -> x.getAssetCode()));
+//					 Collections.sort(data, Comparator.comparing(AssetInfoDetailDto::getAssetCode));
+//					// 将序号放入list中
 					List<String> excelNumList = new ArrayList<String>();
-					List<Integer> excelNumIntList = new ArrayList<Integer>();
-					for (String string : data) {
-						List<AssetInfoDetailDto> listTemp = equityInfo001Map.get(string);
-//                        excelNumList.add(listTemp.get(0).getExcelNum());
-//						excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
-					}
-					// 将list进行排序，并转化为string
-//                    Collections.sort(excelNumList);
-					Collections.sort(excelNumIntList);
-					for (Integer rowNo : excelNumIntList) {
-						excelNumList.add(String.valueOf(rowNo));
-					}
+//					List<Integer> excelNumIntList = new ArrayList<Integer>();
+//					for (AssetInfoDetailDto dto : data) {
+//						List<AssetInfoDetailDto> listTemp = assetInfoMap.get(dto);
+//                        excelNumList.add(listTemp.get(0).getAssetCode());
+//					}
 					webResult.setMessage(
 							this.getMessage("CHB_ISCOVER_EQU",
 									StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),
@@ -220,7 +201,6 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 				// 防止在进行导入前check时进行了两次的弹框
 				webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 			}
-		}
 		return webResult;
 	}
 	public List<ExcelValidDto> importData(List<AssetInfoDetailDto> dataList){

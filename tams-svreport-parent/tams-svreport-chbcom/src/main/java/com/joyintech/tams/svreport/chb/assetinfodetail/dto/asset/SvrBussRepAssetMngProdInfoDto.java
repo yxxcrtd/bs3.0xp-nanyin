@@ -22,6 +22,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCodeList;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 资产管理计划报送信息组件Dto
@@ -161,6 +162,26 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
      * 新人行资产三级分类
      */
     private String pbcAssetType3;
+
+    private Date planSdate;
+
+    private Date planEdate;
+
+    public Date getPlanSdate() {
+        return planSdate;
+    }
+
+    public void setPlanSdate(Date planSdate) {
+        this.planSdate = planSdate;
+    }
+
+    public Date getPlanEdate() {
+        return planEdate;
+    }
+
+    public void setPlanEdate(Date planEdate) {
+        this.planEdate = planEdate;
+    }
 
     public String getPbcAssetType1() {
         return pbcAssetType1;

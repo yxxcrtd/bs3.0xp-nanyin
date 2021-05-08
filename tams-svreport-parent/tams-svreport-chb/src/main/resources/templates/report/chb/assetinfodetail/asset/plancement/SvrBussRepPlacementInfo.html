@@ -43,11 +43,9 @@
                     <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepPlacementInfo.rivalPartyCode}">交易对手代码</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_rivalPartyCode|" th:name="|${entityName}.rivalPartyCode|"
-                                data-th-data-result="${SVR_RIVAL_PARTY_TYPE}" th:initValue="${entity?.rivalPartyCode}"
-                                class="layui-input form-input input-select" placeholder="请输入内容"
-                                data-th-placeholder="#{SysCommon.placeholder}" required>
-                        </select>
+                        <input type="text" th:id="|${entityName}_rivalPartyCode|" th:name="|${entityName}.rivalPartyCode|"
+                               th:value="${entity?.rivalPartyCode}" class="layui-input form-input" maxlength="32"
+                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required/>
                     </div>
                 </div>
 

@@ -299,7 +299,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	public AjaxResult checkConfirmMsgForImportData(String fileName)  {
 		Map<String,Object> param = new HashMap<String,Object>();
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
-		param.put("dataList", assetInfoDetailUtil.convertToBean(data));
+		List<AssetInfoDetailDto> list = new ArrayList<>();
+		List<ExcelValidDto> checkResult = assetInfoDetailUtil.convertToBean(list,data);
+	    param.put("dataList",list);
 		param.put("orgCode", CommonUtil.getOrgCode());
 		param.put("deptCode", CommonUtil.getDeptCode());
 		return restTemplate.postForObject(
@@ -311,10 +313,11 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	public List<ExcelValidDto> importData(String fileName){
 		Map<String,Object> param = new HashMap<String,Object>();
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
-		List<AssetInfoDetailDto> list = assetInfoDetailUtil.convertToBean(data);
-		param.put("dataList", assetInfoDetailUtil.convertToBean(data));
-		param.put("deptCode", CommonUtil.getDeptCode());
-		param.put("orgCode", CommonUtil.getOrgCode());
+		List<AssetInfoDetailDto> list = new ArrayList<>();
+		List<ExcelValidDto> resultList = assetInfoDetailUtil.convertToBean(list,data);
+		if (!StringUtil.isEmptyList(resultList)){
+			return resultList;
+		}
 		return restTemplate.postForList(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/AssetInfoDetail/importData",
 				list,

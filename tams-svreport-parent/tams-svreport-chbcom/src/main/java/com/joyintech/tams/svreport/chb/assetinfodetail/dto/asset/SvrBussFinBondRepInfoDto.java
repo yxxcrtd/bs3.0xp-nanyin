@@ -102,7 +102,7 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
     /**
      * 银行资本补充工具
      */
-    private String RepBankCapital;
+    private String repBankCapital;
 
     /**
      * 是否专项债券
@@ -164,11 +164,11 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
     }
 
     public String getRepBankCapital() {
-        return RepBankCapital;
+        return repBankCapital;
     }
 
     public void setRepBankCapital(String repBankCapital) {
-        RepBankCapital = repBankCapital;
+        repBankCapital = repBankCapital;
     }
 
     public String getBankSecZxzq() {

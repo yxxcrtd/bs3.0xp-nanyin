@@ -117,6 +117,16 @@ public class SvrBussRepPlacementInfoDto extends RepAssetBond{
      */
     private String pbcAssetType3;
 
+    private String checkCode;
+
+    public String getCheckCode() {
+        return checkCode;
+    }
+
+    public void setCheckCode(String checkCode) {
+        this.checkCode = checkCode;
+    }
+
     public String getRivalPartyCode() {
         return rivalPartyCode;
     }

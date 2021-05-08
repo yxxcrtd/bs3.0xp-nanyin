@@ -113,8 +113,8 @@
                     <label class="layui-form-label form-label-wrap">起息日</label>
                     <div class="layui-input-inline input-inline">
 
-                        <input type="text" id="vdate" name="vdate" required
-                               data-th-value='${#dates.format(entity?.vdate,"yyyy-MM-dd")}'
+                        <input type="text" id="repVdate" name="repVdate" required
+                               data-th-value='${#dates.format(entity?.repVdate,"yyyy-MM-dd")}'
 
                                class="layui-input form-input input-dateSelect" />
                     </div>
@@ -128,8 +128,8 @@
                     <label class="layui-form-label form-label-wrap">到期日</label>
                     <div class="layui-input-inline input-inline">
 
-                        <input type="text" id="mdate" name="mdate" required
-                               data-th-value='${#dates.format(entity?.mdate,"yyyy-MM-dd")}'
+                        <input type="text" id="repMdate" name="repMdate" required
+                               data-th-value='${#dates.format(entity?.repMdate,"yyyy-MM-dd")}'
                                class="layui-input form-input input-dateSelect" />
                     </div>
                 </div>

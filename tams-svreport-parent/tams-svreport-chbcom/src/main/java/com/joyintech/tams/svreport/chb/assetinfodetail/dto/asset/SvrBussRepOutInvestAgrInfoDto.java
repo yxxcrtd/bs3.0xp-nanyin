@@ -17,6 +17,7 @@ import com.joyintech.tams.common.base.entity.RepAssetOther;
 import com.joyintech.tams.common.base.entity.RepTrustInvestMode;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 委外投资—协议方式中债报送信息组件Dto
@@ -137,6 +138,26 @@ public class SvrBussRepOutInvestAgrInfoDto extends RepAssetBond {
      * 新人行资产三级分类
      */
     private String pbcAssetType3;
+
+    private Date planSdate;
+
+    private Date planEdate;
+
+    public Date getPlanSdate() {
+        return planSdate;
+    }
+
+    public void setPlanSdate(Date planSdate) {
+        this.planSdate = planSdate;
+    }
+
+    public Date getPlanEdate() {
+        return planEdate;
+    }
+
+    public void setPlanEdate(Date planEdate) {
+        this.planEdate = planEdate;
+    }
 
     public String getPbcAssetType1() {
         return pbcAssetType1;
