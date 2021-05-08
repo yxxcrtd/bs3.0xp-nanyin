@@ -33,7 +33,7 @@ public class SFtpRevealInterf implements RevealInterf{
 		
 		List<RepFtpDetailMsg> list = null;
 		
-		if(null!=prodInfo.getMdate()){
+		//if(null!=prodInfo.getMdate()){
 			RepFtpDetailMsg msg = new RepFtpDetailMsg();
 			msg.setDetailId(detailId);
 			msg.setSendStatus(DictCodeListExt3.披露发送状态_成功.getValue());
@@ -53,7 +53,7 @@ public class SFtpRevealInterf implements RevealInterf{
 				logger.error("error",e);
 				e.printStackTrace();
 			}
-		}
+		//}
 		
 		
 		return list;

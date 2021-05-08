@@ -161,7 +161,11 @@ public class SvrInvestReportMainService extends AutoSendCBBaseService {
             try {
                 boolean flag = chbInvestReportCommonService.createReportDoc(param, isConfirm, isReveal);
                 if (!flag) {
-                    logger.error("中债报告生成批处理生成报告失败：" + repId + "：" +obj.getProdIdName() + "：" + endDate);
+                    String msg = "中债报告生成批处理生成报告失败：" + repId + "：" +obj.getProdIdName() + "：" + endDate;
+                    if (StringUtil.isNotEmpty(reportType)) {
+                        msg = msg + "：" + reportType;
+                    }
+                    logger.error(msg);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

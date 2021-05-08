@@ -159,8 +159,8 @@ public class FtpDetailService {
 		 */
 		public Boolean pushInterfServer(FtpDetailDto dto,RepFtpPath ftpPath,String DetailId){
 			Boolean flag = false;
-			//获取发送报表需要数据
-			RepProdInfo reportinfo = repProdInfoMapper.selectByPrimaryKey(dto.getProdId());
+			//获取发送报表需要数据 modify by yanya on 20210508 不取信披的产品数据信息
+			//RepProdInfo reportinfo = repProdInfoMapper.selectByPrimaryKey(dto.getProdId());
 			RepReveal repReveal = repRevealMapper.selectByPrimaryKey(dto.getRevealId());
 			
 			
@@ -178,7 +178,9 @@ public class FtpDetailService {
 				repReveal.setFilename(fileName);
 				
 				try {
-					List<RepFtpDetailMsg> list = revealInterf.sendReportfile(reportinfo, repReveal, ftpPath, DetailId);
+					//modify by yanya on 20210508 不取信披的产品数据信息
+					//List<RepFtpDetailMsg> list = revealInterf.sendReportfile(reportinfo, repReveal, ftpPath, DetailId);
+					List<RepFtpDetailMsg> list = revealInterf.sendReportfile(null, repReveal, ftpPath, DetailId);
 					
 					flag = doReveiceMsg(list,DetailId);
 				} catch (Exception e) {
