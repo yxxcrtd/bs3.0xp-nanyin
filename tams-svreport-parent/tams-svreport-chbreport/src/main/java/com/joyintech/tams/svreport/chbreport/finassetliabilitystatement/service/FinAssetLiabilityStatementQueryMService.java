@@ -12,14 +12,16 @@ import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportExportFileDto;
 import com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto;
 import com.joyintech.tams.svreport.chbreport.finassetliabilitystatement.dto.FinAssetLiabilityStatementQuery001Dto;
-import com.joyintech.tools.util.ExcelTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -179,7 +181,14 @@ public class FinAssetLiabilityStatementQueryMService extends CommonExportService
         map.put("platDate", DateUtil.format(DateUtil.platDateFromCache()));
         map.put("reportDate", reportDate);
         map.put("org", "华夏银行");
-        map.put("ccy", finAssetLiabilityList.get(0).getCcy());
+        String ccy = null;
+        for (int i = 0; i < finAssetLiabilityList.size(); i++) {
+            if (StringUtil.isNotEmpty(finAssetLiabilityList.get(i).getCcy())) {
+                ccy = finAssetLiabilityList.get(i).getCcy();
+                break;
+            }
+        }
+        map.put("ccy", ccy);
         map.put("prodName", prodName);
         map.put("year", reportDate.substring(0, 4));
         map.put("mergeList", mergeList);
