@@ -661,6 +661,7 @@
             }
         }
         generationPlanTable.removeRow(data);
+        generationPlan(true);
     });
 
     /**
