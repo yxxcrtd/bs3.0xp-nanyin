@@ -1266,8 +1266,11 @@ public class FinProductFeePay002Service extends BaseService<FinProductFeePay002D
                         // dto.setFeeName(mstFeeinfo.getFeeName());
                         // dto.setFeeType(mstFeeinfo.getFeeType());
                         // }
-                        // dto.setCalcStartDate(finProductFeePay003Dto.getCalcStartDate());
-                        // dto.setCalcEndDate(finProductFeePay003Dto.getCalcEndDate());
+//                         dto.setCalcStartDate(finProductFeePay003Dto.getCalcStartDate());
+                        // modify by jiangpeng on 20210508 start
+                        // TISHKBS-2117 【产品费用支付】-双击查看待确认的费用的计提明细 ，理论费用少计提了一天，错误
+                        dto.setCalcEndDate(finProductFeePay003Dto.getCalcEndDate());
+                        // modify by jiangpeng on 20210508 end
                         // dto.setPayAmt(dto.getActPayAmt());
                         dto.setAdjustAmt(BigDecimal.ZERO);
                         BigDecimal remainAmt = restTemplate.getForObject(
