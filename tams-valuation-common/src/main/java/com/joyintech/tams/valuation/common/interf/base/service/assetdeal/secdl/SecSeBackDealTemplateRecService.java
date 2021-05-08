@@ -384,6 +384,9 @@ public class SecSeBackDealTemplateRecService {
     	trdProductDeal.setParValue(dto.getParValue());
     	//净价总额=C.净价总额
     	trdProductDeal.setCpriceAmt(dto.getCpriceAmt());
+    	/**add by wujie on 20210508 start**/
+		trdProductDeal.setPrinAmt(dto.getCpriceAmt());
+		/**add by wujie on 20210508 end**/
     	//交易份额=C.成交数量
 
         /**modify by wujie on 20190516 start remark:交易份额 = 成交数量/100
