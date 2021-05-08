@@ -411,10 +411,10 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
                 Field field = ReflectionUtils.findField(chbInvestTrade.getClass(),
 //                  StringUtil.dealString(StringUtil.lowerCase(string), false));
                         this.subBlank(StringUtil.lowerCase(string)));
-//                if(field==null){
-//                  System.out.println(string);
-//                  continue;
-//                }
+                if(field==null){
+                  System.out.println(string);
+                  continue;
+                }
                 field.setAccessible(true);
                 Type type = field.getGenericType();
                 if ("java.math.BigDecimal".equals(type.getTypeName())) {
