@@ -55,7 +55,7 @@
 				T.CRT_DATE AS createTaskTime,
 				sd.institution_code instCode
 			FROM SYS_WFL_BUSINESS_LIST T 
-			INNER JOIN TEMP on T.seq_no = temp.workflow_id and T.PROCESS_STATE != 'END'
+			INNER JOIN TEMP on T.seq_no = temp.workflow_id and T.PROCESS_STATE not in ('END','NEW')
 			LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
         	LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 			WHERE T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
