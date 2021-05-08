@@ -644,7 +644,7 @@
              FIN_CASH_PLAN
         WHERE
             FINPROD_ID = #{finprodId}
-            AND MDATE &lt;= #{settleDate,jdbcType=DATE}
+            AND MDATE &lt; #{settleDate,jdbcType=DATE}
     </select>
     <resultMap id="finprodIdMap" type="com.joyintech.framework.select.SelectOptionDto">
         <id column="id" property="id" jdbcType="VARCHAR"/>
