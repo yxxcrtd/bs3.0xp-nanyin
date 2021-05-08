@@ -432,20 +432,18 @@
 									<div class="layui-form-item">
 										<div class=" form-inline-wrap">
 											<label class="layui-form-label form-label-wrap purSpeed"
-												   data-th-text="#{FinPlanAssetC002.purSpeed}">申购确认速度</label>
+												   data-th-text="#{FinPlanAssetC002.purSpeed1}">申购确认速度 T+</label>
 											<div class="layui-input-inline input-inline delaytime-inline-wrap">
-												<label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
-												<input type="text" id="purSpeed" name="purSpeed"  th:value="${entity?.purSpeed}" class="layui-input form-input"
+												<input type="text" id="purSpeed" name="purSpeed"  th:value="${entity?.purSpeed}" class="layui-input form-input" required="required"
 													   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
 													   style="float: left;display: inline-block; width: 90%;"/>
 											</div>
 										</div>
 										<div class=" form-inline-wrap">
 											<label class="layui-form-label form-label-wrap redSpeed"
-												   data-th-text="#{FinPlanAssetC002.redSpeed}">赎回确认速度</label>
+												   data-th-text="#{FinPlanAssetC002.redSpeed1}">赎回确认速度 T+</label>
 											<div class="layui-input-inline input-inline delaytime-inline-wrap">
-												<label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
-												<input type="text" id="redSpeed" name="redSpeed"  th:value="${entity?.redSpeed}" class="layui-input form-input"
+												<input type="text" id="redSpeed" name="redSpeed"  th:value="${entity?.redSpeed}" class="layui-input form-input" required="required"
 													   onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
 													   style="float: left;display: inline-block; width: 90%;"/>
 											</div>
