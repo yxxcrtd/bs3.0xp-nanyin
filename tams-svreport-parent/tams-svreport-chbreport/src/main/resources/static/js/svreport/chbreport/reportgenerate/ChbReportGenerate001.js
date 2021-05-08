@@ -38,7 +38,7 @@ $(function () {
 			//成立公告
 			if(repId == CHB_DISCLOSURE_REPORT_01) {
 				$('#endDateDiv').show();
-				$("#endDateLabel").html("成立日期");
+				$("#endDateLabel").html("成立日期<i class=\"must\">*</i>");
 				$('#emptyDiv').show();
 				$('#detailTableDiv').show();
 				initDetailTable();
@@ -47,7 +47,7 @@ $(function () {
 			//非标投资报告
 			if(repId == CHB_DISCLOSURE_REPORT_02) {
 				$('#endDateDiv').show();
-				$("#endDateLabel").html("变动日");
+				$("#endDateLabel").html("变动日<i class=\"must\">*</i>");
 				$('#emptyDiv').show();
 				$('#detailTableDiv').show();
 				initDetailTable();
@@ -56,7 +56,7 @@ $(function () {
 			//到期公告
 			if(repId == CHB_DISCLOSURE_REPORT_03) {
 				$('#endDateDiv').show();
-				$("#endDateLabel").html("到期日");
+				$("#endDateLabel").html("到期日<i class=\"must\">*</i>");
 				$('#emptyDiv').show();
 				$('#detailTableDiv').show();
 				initDetailTable();
@@ -71,7 +71,7 @@ $(function () {
 			//净值披露
 			if(repId == CHB_DISCLOSURE_REPORT_05){
 				$('#endDateDiv').show();
-				$("#endDateLabel").html("净值日期");
+				$("#endDateLabel").html("净值日期<i class=\"must\">*</i>");
 				$('#emptyDiv').show();
 				$('#detailTableDiv').show();
 				initDetailTable();
@@ -105,9 +105,9 @@ $(function () {
 		if(repId == CHB_DISCLOSURE_REPORT_01) {
 			cols = [
 				{field:'prodIdName', title: '产品名称（代码）', width:400},
-				{field:'endDateFmt', title: '成立日期', width:140},
+				{field:'endDateFmt', title: '成立日期', width:140, sortField: 'endDate'},
 				{field:'createStatus', title: '生成状态', width:130},
-				{field:'createTimeFmt', title: '生成时间', width:180},
+				{field:'createTimeFmt', title: '生成时间', width:180, sortField: 'createTime'},
 				{field:'prodName', title: 'prodName', sortable: false, visible:false},
 				{field:'endDate', title: 'endDate', sortable: false, visible:false},
 				{field:'prodId', title: 'prodId', sortable: false, visible:false}
@@ -117,9 +117,9 @@ $(function () {
 		else if(repId == CHB_DISCLOSURE_REPORT_02) {
 			cols = [
 				{field:'prodIdName', title: '产品名称（代码）', width:400},
-				{field:'endDateFmt', title: '变动日', width:140},
+				{field:'endDateFmt', title: '变动日', width:140, sortField: 'endDate'},
 				{field:'createStatus', title: '生成状态', width:130},
-				{field:'createTimeFmt', title: '生成时间', width:180},
+				{field:'createTimeFmt', title: '生成时间', width:180, sortField: 'createTime'},
 				{field:'prodName', title: 'prodName', sortable: false, visible:false},
 				{field:'endDate', title: 'endDate', sortable: false, visible:false},
 				{field:'prodId', title: 'prodId', sortable: false, visible:false}
@@ -129,9 +129,9 @@ $(function () {
 		else if(repId == CHB_DISCLOSURE_REPORT_03) {
 			cols = [
 				{field:'prodIdName', title: '产品名称（代码）', width:400},
-				{field:'endDateFmt', title: '到期日', width:140},
+				{field:'endDateFmt', title: '到期日', width:140, sortField: 'endDate'},
 				{field:'createStatus', title: '生成状态', width:130},
-				{field:'createTimeFmt', title: '生成时间', width:180},
+				{field:'createTimeFmt', title: '生成时间', width:180, sortField: 'createTime'},
 				{field:'prodName', title: 'prodName', sortable: false, visible:false},
 				{field:'endDate', title: 'endDate', sortable: false, visible:false},
 				{field:'prodId', title: 'prodId', sortable: false, visible:false}
@@ -145,9 +145,9 @@ $(function () {
 		else if(repId == CHB_DISCLOSURE_REPORT_05){
 			cols = [
 				{field:'prodIdName', title: '产品名称（代码）', width:400},
-				{field:'endDateFmt', title: '净值日期', width:140},
+				{field:'endDateFmt', title: '净值日期', width:140, sortField: 'endDate'},
 				{field:'createStatus', title: '生成状态', width:130},
-				{field:'createTimeFmt', title: '生成时间', width:180},
+				{field:'createTimeFmt', title: '生成时间', width:180, sortField: 'createTime'},
 				{field:'prodName', title: 'prodName', sortable: false, visible:false},
 				{field:'endDate', title: 'endDate', sortable: false, visible:false},
 				{field:'prodId', title: 'prodId', sortable: false, visible:false}
@@ -157,9 +157,9 @@ $(function () {
 		else {
 			cols = [
 				{field:'prodIdName', title: '产品名称（代码）', width:400},
-				{field:'endDateFmt', title: '日期', width:140},
+				{field:'endDateFmt', title: '日期', width:140, sortField: 'endDate'},
 				{field:'createStatus', title: '生成状态', width:130},
-				{field:'createTimeFmt', title: '生成时间', width:180},
+				{field:'createTimeFmt', title: '生成时间', width:180, sortField: 'createTime'},
 				{field:'prodName', title: 'prodName', sortable: false, visible:false},
 				{field:'endDate', title: 'endDate', sortable: false, visible:false},
 				{field:'prodId', title: 'prodId', sortable: false, visible:false}

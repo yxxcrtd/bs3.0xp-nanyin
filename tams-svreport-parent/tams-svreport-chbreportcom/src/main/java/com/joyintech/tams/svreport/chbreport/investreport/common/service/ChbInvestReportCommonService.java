@@ -281,7 +281,7 @@ public class ChbInvestReportCommonService extends BaseService {
         repInstallLogDetail.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         //更新日志表
         repInstallLogDetailMapper.insert(repInstallLogDetail);
-
+        //自动披露时，需要调用披露方法
         if(StringUtil.equals(DictCodeListExt1.确认类型_自动.getValue(), isReveal)) {
             //发送
             return doSendReport(repReveal);
@@ -291,9 +291,9 @@ public class ChbInvestReportCommonService extends BaseService {
 
     /**
      * 生成文件
-     * @param param
-     * @param isConfirm
-     * @param isReveal
+     * @param param 参数：包含产品代码、日期等
+     * @param isConfirm 自动确认还是手工确认
+     * @param isReveal 自动披露还是手工披露
      * @return
      * @throws Exception
      */
@@ -318,7 +318,11 @@ public class ChbInvestReportCommonService extends BaseService {
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_到期公告.getValue(), repId.toString())) {
 
             }
+            //定期公告里面要考虑传递进去的产品代码，区分出来净值、货币，另外还需要区分出来是否含有多份额的子产品
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
+
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
 
             }
             if(file != null) {
@@ -361,6 +365,9 @@ public class ChbInvestReportCommonService extends BaseService {
 
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
+
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
 
             }
         }
