@@ -205,11 +205,12 @@
 		a.UPDATE_USER,
 		DATE_FORMAT(a.UPDATE_TIME, '%Y-%m-%d') as updateTime,
 		a.SVR_DATA_SOURCES as dataSource,
-		DATE_FORMAT(a.START_DATE, '%Y-%m-%d') as 旧启用日期,
-		a.CASH_TYPE2 as 旧信披费用类型,
-		a.CASH_NAME,
-		a.CASH_ID,
-		a.ADAPTER_ID
+		DATE_FORMAT(a.START_DATE, '%Y-%m-%d') as oldStartDateStr,
+		a.CASH_TYPE2 as oldCashType2,
+		a.CASH_NAME as cashName,
+		a.CASH_ID as cashId,
+		a.ADAPTER_ID,
+		DATE_FORMAT(a.START_DATE,'%Y-%m-%d') as startDateStr
 		FROM
 		REP_CASH_YIELD a
 		where
@@ -254,13 +255,13 @@
 			#{adapterId,jdbcType=VARCHAR}
 		)
     </insert>
-	<update id="updateOne" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+	<update id="updateOne" parameterType="java.util.Map">
 		update REP_CASH_YIELD set STATUS =#{status,jdbcType=VARCHAR},SVR_DATA_SOURCES=#{dataSource,jdbcType=VARCHAR},
-		RATE= #{rate,jdbcType=DECIMAL}
+		RATE= #{rate,jdbcType=DECIMAL},CASH_TYPE2 =#{cashType2,jdbcType=VARCHAR},START_DATE=#{startDate,jdbcType=DATE}
 		where
 			BUSI_ID = #{busiId,jdbcType=VARCHAR}
-			AND START_DATE = #{startDate,jdbcType=DATE}
-			AND CASH_TYPE2 = #{cashType2,jdbcType=VARCHAR}
+			AND START_DATE = #{oldStartDateStr,jdbcType=DATE}
+			AND CASH_TYPE2 = #{oldCashType2,jdbcType=VARCHAR}
 	</update>
 	<update id="deleteOne" >
 		UPDATE REP_CASH_YIELD

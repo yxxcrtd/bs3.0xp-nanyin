@@ -92,8 +92,11 @@
 			DATE_FORMAT(A.VDATE,'%Y-%m-%d') vdate,
 			DATE_FORMAT(A.MDATE,'%Y-%m-%d') mdate,
 			A.INVESTOR investor,
-			A.REMARK remark
+			A.REMARK remark,
+			c.path
 		FROM CHB_PRDRESIST_CODE A
+		left join sys_upload_file_info c
+		on c.SEQ_NO=a.REG_CODE
 		<where>
 			<if test="prodList != null and prodList.size() > 0">
 				<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">

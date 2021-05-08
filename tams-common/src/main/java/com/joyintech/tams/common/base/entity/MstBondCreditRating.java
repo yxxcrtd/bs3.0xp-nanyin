@@ -31,6 +31,42 @@ public class MstBondCreditRating extends MstBondCreditRatingKey {
      * 选择项
      */
     private List<MstBondCreditRating> selectedItem;
+    private String oldGradeOrgId;
+    private String oldGradeDateStr;
+    private String oldOType;
+    private String gradeDateStr;
+
+    public String getGradeDateStr() {
+        return gradeDateStr;
+    }
+
+    public void setGradeDateStr(String gradeDateStr) {
+        this.gradeDateStr = gradeDateStr;
+    }
+
+    public String getOldGradeOrgId() {
+        return oldGradeOrgId;
+    }
+
+    public void setOldGradeOrgId(String oldGradeOrgId) {
+        this.oldGradeOrgId = oldGradeOrgId;
+    }
+
+    public String getOldOType() {
+        return oldOType;
+    }
+
+    public String getOldGradeDateStr() {
+        return oldGradeDateStr;
+    }
+
+    public void setOldGradeDateStr(String oldGradeDateStr) {
+        this.oldGradeDateStr = oldGradeDateStr;
+    }
+
+    public void setOldOType(String oldOType) {
+        this.oldOType = oldOType;
+    }
 
     public String getStatusName() {
         return statusName;

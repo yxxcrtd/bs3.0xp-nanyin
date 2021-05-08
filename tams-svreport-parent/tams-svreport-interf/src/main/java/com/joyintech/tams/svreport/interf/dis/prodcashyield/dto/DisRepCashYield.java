@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +45,9 @@ public class DisRepCashYield extends BaseEntity {
     /**
      * 产品代码
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String busiId;
+
     private String busiIdName;
 
     /**
@@ -71,6 +75,33 @@ public class DisRepCashYield extends BaseEntity {
      * 启用日
      */
     private Date startDate;
+    private String startDateStr;
+
+    public String getStartDateStr() {
+        return startDateStr;
+    }
+
+    public void setStartDateStr(String startDateStr) {
+        this.startDateStr = startDateStr;
+    }
+    private String oldStartDateStr;
+    private String oldCashType2;
+
+    public String getOldStartDateStr() {
+        return oldStartDateStr;
+    }
+
+    public void setOldStartDateStr(String oldStartDateStr) {
+        this.oldStartDateStr = oldStartDateStr;
+    }
+
+    public String getOldCashType2() {
+        return oldCashType2;
+    }
+
+    public void setOldCashType2(String oldCashType2) {
+        this.oldCashType2 = oldCashType2;
+    }
 
     /**
      * 备注

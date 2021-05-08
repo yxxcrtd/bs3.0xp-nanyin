@@ -35,9 +35,13 @@
         <div class="layui-input-inline input-inline">
           <input type="text" id="rate" name="rate" class="layui-input form-input"
                  placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" maxlength="32"
-                 data-th-value="${entity?.rate}"
+                 data-th-value="${entity?.rate}"  onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,14})?).*$/g, '$1')"
                  >
           <input type="hidden" id="type" name="type" data-th-value="${entity?.type}" class="layui-input form-input" >
+          <input type="hidden" id="oldCashType2" name="oldCashType2" data-th-value="${entity?.oldCashType2}" class="layui-input form-input" >
+          <input type="hidden" id="cashName" name="cashName" data-th-value="${entity?.cashName}" class="layui-input form-input" >
+          <input type="hidden" id="cashId" name="cashId" data-th-value="${entity?.cashId}" class="layui-input form-input" >
+          <input type="hidden" id="oldStartDateStr" name="oldStartDateStr" data-th-value="${entity?.oldStartDateStr}" class="layui-input form-input" >
         </div>
       </div>
       <div class="form-inline-wrap">
@@ -46,7 +50,7 @@
           <input id="startDate" type="text" name="startDate"
                  class="layui-input form-input input-dateSelect"
                  placeholder="请选择启用日期"
-                 data-th-value="${entity?.startDate}"/>
+                 data-th-value="${entity?.startDateStr}"/>
         </div>
       </div>
     </div>

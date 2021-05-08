@@ -130,7 +130,7 @@ public class DisRelOrg001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
     public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return disRelOrgService.checkConfirmMsgForImportData(fileName);
+        return this.disRelOrgService.checkConfirmMsgForImportData(fileName);
     }
 
     /**

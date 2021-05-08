@@ -20,7 +20,7 @@ public class DisPrdFeeRateValidator implements BeanValidator {
     public List<ValidMessage> valid(Object o) {
         ProRateInfo001Dto dto=(ProRateInfo001Dto)o;
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getCashType2(), ValidMessage.class);
+        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "DisPrdFeeRate002", null, ValidMessage.class);
         return resultList;
     }
 }

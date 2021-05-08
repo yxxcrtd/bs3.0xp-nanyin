@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.proregistcodemanage.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.dto.UploadFile;
@@ -49,10 +50,10 @@ public class ProRegistCodeManage004Controller extends BaseController {
                 //文件名称
                 String filename=uploadFile.getSrcName().substring(0,uploadFile.getSrcName().indexOf("."));
                 if(!proCodes.contains(filename)){
-                    stringBuffer.append("不存在"+filename+"的产品登记编码;");
+                    stringBuffer.append("产品登记编码"+filename+"在系统中不存在!上传失败");
                 }
             }
-            webResult.setMessage(stringBuffer.toString());
+            webResult.setMessage(stringBuffer.toString(), MessageType.错误消息);
             if(stringBuffer.length()!=0){
                 return webResult;
             }else{

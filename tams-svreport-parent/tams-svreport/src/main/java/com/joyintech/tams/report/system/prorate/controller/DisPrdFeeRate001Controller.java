@@ -207,7 +207,7 @@ public class DisPrdFeeRate001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
     public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return prorateService.checkConfirmMsgForImportData(fileName);
+        return this.prorateService.checkConfirmMsgForImportData(fileName);
     }
 
     /**

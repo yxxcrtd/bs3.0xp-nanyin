@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="MstBondCreditRating.xlsx" name="债券评级数据">
+	<Worksheet javaBean="com.joyintech.tams.common.base.entity.MstBondCreditRating">
+		<Row>
+			<Cell order="1" name="操作类型">type</Cell><!-- 操作类型 -->
+			<Cell order="2" name="债券代码">oCode</Cell><!-- 债券代码 -->
+		    <Cell order="3" name="评级机构">gradeOrgIdName</Cell><!-- 评级机构 -->
+			<Cell order="4" name="评级日期">gradeDate</Cell><!-- 评级日期 -->
+			<Cell order="5" name="评级类型">oTypeName</Cell><!-- 评级类型 -->
+			<Cell order="6" name="评级结果">gradeResultName</Cell><!-- 评级结果 -->
+		</Row>
+	</Worksheet>
+</Workbook>
