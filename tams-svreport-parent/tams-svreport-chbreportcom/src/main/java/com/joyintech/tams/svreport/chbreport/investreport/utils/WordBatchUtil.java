@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chbreport.investreport.utils;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.http.ResponseEntity;
@@ -265,10 +266,16 @@ public class WordBatchUtil {
 		Template freemarkerTemplate = configuration.getTemplate(filename);
 		File file = null;
 		try {
+			String path = FileNameUtil.createUploadFilePath("");//创建路径
+			File filepath = new File(path);
+			if(!filepath.exists()){
+				filepath.mkdirs();
+			}
 			// 调用工具类的createDoc方法生成Word文档
-			file = createDoc(map, freemarkerTemplate, newWordName);
-
-		}catch(Exception e){
+			//file = createDoc(map, freemarkerTemplate, newWordName);
+			file = createDoc(map, freemarkerTemplate, path + File.separator + newWordName);
+		}
+		catch(Exception e){
 			return null;
 		}
 		return file;
