@@ -405,6 +405,13 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
         wflTrdFinProductDealTotalMapper.insertSelective(wflTrdFinProductDealTotal);
     }
 
+    /**
+     * 生成交易编号
+     *
+     * @return String 交易编号
+     * @see
+     * @since 1.0
+     */
     public String genTradeId() {
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
@@ -423,6 +430,13 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
                     Integer.class);
     }
 
+    /**
+     * 查询发行标的当天的交易
+     *
+     * @param dto 画面参数dto
+     * @see
+     * @since 1.0
+     */
     public int selectDealNum(TrdBondMarketTradeDto dto) {
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondMarketTrade/selectDealNum", dto,
                 Integer.class);
@@ -549,6 +563,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
      * 查询是否存在当天交易数据
      *
      * @param dto 
+     * @return  int 交易条数
      * @see
      * @since 1.0
      */
@@ -559,9 +574,7 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
 
     /**
      * 提交时自动加券
-     *
      * @param dto 画面输入参数
-     * @return 加券结果
      * @see
      * @since 1.0
      */
@@ -575,7 +588,6 @@ public class TrdBondMarketTrade002Service extends BaseService<TrdBondMarketTrade
      * 设置撤销时风险需要的数据
      *
      * @param inputDto 画面输入参数
-     * @return 撤销entity
      * @see
      * @since 1.0
      */

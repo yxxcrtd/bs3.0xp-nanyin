@@ -1,10 +1,8 @@
 package com.joyintech.service.trade.bondmarkettrade.dto;
 
 
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.TrdFinProductBarterTotal;
 import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
-import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;

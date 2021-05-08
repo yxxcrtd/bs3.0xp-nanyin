@@ -1,22 +1,15 @@
 package com.joyintech.service.trade.bondmarkettrade.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.service.trade.bond.controller.TrdBondInvestTradeController;
-import com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.service.trade.bondmarkettrade.dto.TrdBondMarketTradeDto;
 import com.joyintech.service.trade.bondmarkettrade.service.TrdBondMarketTradeService;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
-
-import static com.joyintech.framework.validation.ValidUtil.commonCheck;
 
 /**
  * 债券交易微服务
@@ -133,7 +126,7 @@ public class TrdBondMarketTradeController {
     /**
      * 债券上市流通自动加券
      * @param dto
-     * @return
+     * 
      */
     @PostMapping("autoAddBond")
     public void autoAddBond(@RequestBody TrdBondMarketTradeDto dto){
@@ -144,6 +137,7 @@ public class TrdBondMarketTradeController {
      * 查询上市代码是否有其他流程中数据
      *
      * @param dto 画面参数dto
+     * @return 流程中数据条数
      * @see
      * @since 1.0
      */
@@ -155,6 +149,7 @@ public class TrdBondMarketTradeController {
     /**
      * 查询是否有当日交易数据
      * @param dto
+     * @return 当日交易数据条数
      * @return
      */
     @PostMapping("selectDealNum")
@@ -166,6 +161,7 @@ public class TrdBondMarketTradeController {
      * 查询交易是否存在流程中的撤销数据
      *
      * @param dto 画面参数dto
+     * @return 流程中的撤销数据
      * @see
      * @since 2.1.7
      */
@@ -177,6 +173,7 @@ public class TrdBondMarketTradeController {
     /**
      * 查询是否有当日以及后续交易数据
      * @param dto
+     * @return 当日以及后续交易数据条数
      * @return
      */
     @PostMapping("selectDealNums")
