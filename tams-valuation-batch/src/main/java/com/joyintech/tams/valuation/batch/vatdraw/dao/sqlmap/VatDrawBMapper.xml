@@ -433,4 +433,19 @@
     	FROM BOK_BOOKSET
     	WHERE BOOKSET_ID = #{booksetId}
     </select>
+
+    <select id="getTaxBokDetailsByOrgin" parameterType="map" resultType="java.lang.String">
+        select bdi.bok_detail_id from bok_detail_id bdi
+        left join fin_product_add fpa
+        on bdi.busi_id = concat('F01_',fpa.appear_market_id)
+        where bdi.bookset_id = #{booksetId}
+        and fpa.finprod_id =#{busiId}
+        and fpa.is_issue_asset ='Y'
+    </select>
+
+    <select id="getIsShbdByBusiId" resultType="boolean">
+        select count(1) from fin_product_add fpa
+        where fpa.finprod_id =#{busiId}
+        and fpa.appear_market_id is not null
+    </select>
 </mapper>
