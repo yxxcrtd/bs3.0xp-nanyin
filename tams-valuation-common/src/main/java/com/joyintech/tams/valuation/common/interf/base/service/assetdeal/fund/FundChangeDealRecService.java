@@ -326,6 +326,10 @@ public class FundChangeDealRecService {
         result.setShareAmt(dto.getShareAmt());
         // 交易本金 = I.交易本金
         result.setPrinAmt(dto.getPrinAmt());
+
+        /**add by wujie on 20210507 start**/
+        result.setIntAmt(dto.getIntAmt());
+        /**add by wujie on 20210507 end**/
         // 随交易支付费用 = IF  I.通道费是否随交易支付 =“是” I.交易费 + I.通道费  ELSE I.交易费
         BigDecimal chlFeeAmt = (dto.getChlFeeAmt() == null) ? BigDecimal.ZERO : dto.getChlFeeAmt();
         if(DictCodeList.是否_是.getValue().equals(dto.getIsChlFeeAmt())){
