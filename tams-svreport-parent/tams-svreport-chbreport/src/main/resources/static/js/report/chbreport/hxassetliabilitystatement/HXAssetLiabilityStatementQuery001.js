@@ -63,6 +63,33 @@ $(function () {
         });
     };
 
+    /**
+     * 获取下个月份
+     * @param addMonths
+     * @returns {string}
+     */
+    function getNextMonth(addMonths) {
+        var dd = new Date();
+        var m = dd.getMonth() + 1;
+        var y = dd.getMonth() + 1 + addMonths > 12 ? (dd.getFullYear() + 1) : dd.getFullYear();
+        if (m + addMonths == 0){
+            y = y - 1;
+            m = 12;
+        }else {
+            if (m + addMonths > 12){
+                m = '01';
+            }else {
+                m = m + 1 < 10 ? '0' + (m + addMonths) : (m + addMonths);
+            }
+        }
+        return y + "-" + m;
+    }
+
+    function initReportDate(){
+        var t = getNextMonth(-1);
+        $("#month_reportDate").val = t.format("yyyy-MM");
+    }
+
     function init() {
         layui.laydate.render({
             elem: '#month_reportDate',
@@ -72,6 +99,7 @@ $(function () {
         $("#month_reportDate").click(function (event) {
             event.stopPropagation();// 阻止事件冒泡
         });
+        initReportDate();
         // 绑定按钮事件
         $('#SvrHXAssetLiabilityStatementQuery001_btn_search').click(function () {
             table.load();
