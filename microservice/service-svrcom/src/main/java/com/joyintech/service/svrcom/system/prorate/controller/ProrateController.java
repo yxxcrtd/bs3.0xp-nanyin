@@ -99,8 +99,8 @@ public class ProrateController {
     }
 
     @PostMapping("updateOne")
-    public void updateOne(@RequestBody DisRepCashYield d) {
-        proRateInfo001Service.updateOne(d);
+    public void updateOne(@RequestBody Map<String, Object> mapOld) {
+        proRateInfo001Service.updateOne(mapOld);
         return ;
     }
 }

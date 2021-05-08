@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.mstbond.dao.MstBondCreditRating001Mapper_mysql">
+	<select id="queryForPage" resultType="com.joyintech.tams.common.base.entity.MstBondCreditRating">
+		SELECT
+		a.STATUS as status,
+		a.O_CODE as oCode,
+		a.GRADE_ORG_ID as gradeOrgId,
+		a.GRADE_DATE as gradeDate,
+		a.O_TYPE as oType,
+		a.GRADE_RESULT as gradeResult,
+		a.CREATE_USER as createUser,
+		a.CREATE_TIME as createTime,
+		a.UPDATE_USER as updateUser,
+		a.UPDATE_TIME as updateTime,
+		a.SVR_DATA_SOURCES as svrDataSources
+		FROM
+		MST_BOND_CREDIT_RATING a
+		<where>
+			<if test="selectoCode != null and selectoCode.size() > 0">
+				<foreach collection="selectoCode" item="oCode" open="AND a.O_CODE IN (" close=")" separator=",">
+					#{oCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="selectoType != null and selectoType.size() > 0">
+				<foreach collection="selectoType" item="oType" open="AND a.O_TYPE IN (" close=")" separator=",">
+					#{oType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="selectStatus != null and selectStatus.size() > 0">
+				<foreach collection="selectStatus" item="status" open="AND a.STATUS IN (" close=")" separator=",">
+					#{status,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	<select id="getoCode" resultType="com.joyintech.tams.common.base.entity.ChbAssetInfo" parameterType="java.util.Map">
+		SELECT p.ASSET_CODE,p.ASSET_NAME FROM chb_asset_info p
+		<where>
+			p.STATUS in ('E') and
+			p.ASSET_TYPE2 in('1101','1110','1109','1102','1111','1112','1113','1114','1115','1116','1117','2501','2502')
+			<if test="search != null and search !='' ">
+				AND P.ASSET_CODE LIKE concat_ws(concat_ws('%', #{search}),'%') or p.ASSET_NAME like concat_ws(concat_ws('%', #{search}),'%')
+			</if>
+		</where>
+	</select>
+	<update id="updateMstBondCreditRating" parameterType="java.util.List" >
+		UPDATE MST_BOND_CREDIT_RATING
+		set
+		STATUS = 'D'
+		where
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			O_CODE = #{item.oCode,jdbcType=VARCHAR}
+			and GRADE_ORG_ID = #{item.gradeOrgId,jdbcType=VARCHAR}
+			and GRADE_DATE= #{item.gradeDate,jdbcType=DATE}
+			and O_TYPE= #{item.oType,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<select id="queryReportList" parameterType="java.util.List" resultType="com.joyintech.tams.common.base.entity.MstBondCreditRating">
+		SELECT
+		'导出' as type,
+		a.O_CODE,a.GRADE_ORG_ID,a.GRADE_DATE,a.O_TYPE,a.GRADE_RESULT
+		FROM
+		MST_BOND_CREDIT_RATING a
+		where
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			O_CODE = #{item.oCode,jdbcType=VARCHAR}
+			and GRADE_ORG_ID = #{item.gradeOrgId,jdbcType=VARCHAR}
+			and GRADE_DATE= #{item.gradeDate,jdbcType=DATE}
+			and O_TYPE= #{item.oType,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+	<select id="selectOneDate" resultType="com.joyintech.tams.common.base.entity.MstBondCreditRating">
+		SELECT
+		a.STATUS as status,
+		a.O_CODE as oCode,
+		a.GRADE_ORG_ID as gradeOrgId,
+		a.GRADE_DATE as gradeDate,
+		a.O_TYPE as oType,
+		a.GRADE_RESULT as gradeResult,
+		a.CREATE_USER as createUser,
+		a.CREATE_TIME as createTime,
+		a.UPDATE_USER as updateUser,
+		a.UPDATE_TIME as updateTime,
+		a.SVR_DATA_SOURCES as svrDataSources,
+		DATE_FORMAT(a.GRADE_DATE,'%Y-%m-%d') as gradeDateStr,
+		a.GRADE_ORG_ID as oldGradeOrgId,
+		DATE_FORMAT(a.GRADE_DATE,'%Y-%m-%d') as oldGradeDateStr,
+		a.O_TYPE as oldOType
+		FROM
+		MST_BOND_CREDIT_RATING a
+		where
+			O_CODE = #{oCode,jdbcType=VARCHAR}
+			and GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR}
+			and GRADE_DATE= #{gradeDate,jdbcType=DATE}
+			and O_TYPE= #{oType,jdbcType=VARCHAR}
+	</select>
+	<update id="updateOne" parameterType="java.util.Map">
+		update MST_BOND_CREDIT_RATING set
+		STATUS= #{status,jdbcType=VARCHAR},SVR_DATA_SOURCES= #{svrDataSources,jdbcType=VARCHAR},
+		GRADE_ORG_ID= #{gradeOrgId,jdbcType=VARCHAR},GRADE_DATE= #{gradeDate,jdbcType=DATE},O_TYPE= #{oType,jdbcType=VARCHAR},
+		GRADE_RESULT= #{gradeResult,jdbcType=VARCHAR}
+		where
+			O_CODE = #{oCode,jdbcType=VARCHAR}
+			and GRADE_ORG_ID = #{oldGradeOrgId,jdbcType=VARCHAR}
+			and GRADE_DATE= #{oldGradeDate,jdbcType=DATE}
+			and O_TYPE= #{oldOType,jdbcType=VARCHAR}
+	</update>
+	<insert id="insertOne" parameterType="com.joyintech.tams.common.base.entity.MstBondCreditRating" >
+		insert into MST_BOND_CREDIT_RATING (O_CODE, GRADE_ORG_ID,GRADE_DATE,O_TYPE,GRADE_RESULT,
+      CREATE_USER, CREATE_DEPT, CREATE_TIME,
+      UPDATE_USER, UPDATE_TIME,SVR_DATA_SOURCES,STATUS)
+    values (#{oCode,jdbcType=VARCHAR}, #{gradeOrgId,jdbcType=VARCHAR},#{gradeDate,jdbcType=DATE},
+    	#{oType,jdbcType=VARCHAR},#{gradeResult,jdbcType=VARCHAR},
+      #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+      #{svrDataSources,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR})
+    </insert>
+	<update id="deleteOne" parameterType="java.util.Map">
+		UPDATE MST_BOND_CREDIT_RATING
+		set
+		STATUS = 'D'
+		where
+			O_CODE = #{oCode,jdbcType=VARCHAR}
+			and GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR}
+			and GRADE_DATE= #{gradeDate,jdbcType=DATE}
+			and O_TYPE= #{oType,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectChbMstCounterPartyData" resultType="java.lang.Integer" parameterType="java.util.List">
+		SELECT count(1) from (
+		SELECT 1 from CHB_MST_COUNTER_PARTY a
+		where a.STATUS in('A','E')
+		and not EXISTS (
+		SELECT 1 from 	chb_mst_counter_party_errordata b
+		WHERE b.COUNTER_ID=a.COUNTER_ID
+		and b.STATUS in('A','E')
+		) and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			a.COUNTER_ID = #{item.counterId,jdbcType=VARCHAR}
+		</foreach>
+		union all
+		SELECT 1 from chb_mst_counter_party_errordata c
+		where c.STATUS in('A','E')
+		and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			c.COUNTER_ID = #{item.counterId,jdbcType=VARCHAR}
+		</foreach>
+
+		)tmp
+
+	</select>
+	<insert id="insertMstBondCreditRatingData" parameterType="java.util.List">
+		insert into MST_BOND_CREDIT_RATING (O_CODE, GRADE_ORG_ID,GRADE_DATE,O_TYPE,GRADE_RESULT,
+		CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME,SVR_DATA_SOURCES,STATUS)
+		values (
+		<foreach collection="dtoList" item="item" index="index" separator=",">
+			#{item.oCode,jdbcType=VARCHAR}, #{item.gradeOrgId,jdbcType=VARCHAR},#{item.gradeDate,jdbcType=DATE},
+			#{item.oType,jdbcType=VARCHAR},#{item.gradeResult,jdbcType=VARCHAR},
+			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+			#{item.svrDataSources,jdbcType=VARCHAR},#{item.status,jdbcType=VARCHAR}
+		</foreach>
+		)
+	</insert>
+
+
+
+	<select id="getSysDataDict" resultType="com.joyintech.tams.systemtools.dto.SysDataDict" parameterType="java.util.Map">
+		SELECT ITEM_CODE itemCode, ITEM_VALUE itemValue FROM SYS_DATADICT_LIST
+		WHERE DICT_CODE=#{code}
+	</select>
+</mapper>

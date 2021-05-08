@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.prorate.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -88,31 +89,55 @@ public class DisPrdFeeRate002Controller extends BaseController {
         dto.setAdapterId("无");
         dtoList.add(dto);
         Map<String, Object> map=new HashMap<>();
+        Map<String, Object> mapOld=new HashMap<>();
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
         map.put("busiId",dto.getBusiId());
         map.put("cashType2",dto.getCashType2());
         String startDate = dfs.format(dto.getStartDate());
         map.put("startDate",startDate);
         List<DisRepCashYield> disRepCashYieldList =prorateService.selectOneDate(map);
-        if(null!=disRepCashYieldList && disRepCashYieldList.size()>0){
-            if(null!=dto && "add".equals(dto.getType())){
-                webResult.setMessage("已存在相同产品代码,启用日期,信披费用类型的数据");
+        if(null!=dto && "add".equals(dto.getType())){
+            if(null!=disRepCashYieldList && disRepCashYieldList.size()>0){
+                webResult.setMessage("已存在相同产品代码,启用日期,信披费用类型的数据", MessageType.错误消息);
+            }else{
+                try{
+                    prorateService.insertPrdFeeData(dtoList);
+                    webResult.setMessage("保存成功");
+                }catch (Exception e){
+                    e.printStackTrace();
+                    webResult.setMessage("保存失败");
+                }
             }
+        }
             if(null!=dto && "update".equals(dto.getType())){
-                DisRepCashYield d=disRepCashYieldList.get(0);
-                d.setRate(dto.getRate());
-                d.setStatus("E");
-                prorateService.updateOne(d);
-                webResult.setMessage("保存成功");
-            }
-        } else{
-            try{
-                prorateService.insertPrdFeeData(dtoList);
-                webResult.setMessage("保存成功");
-            }catch (Exception e){
-                e.printStackTrace();
-                webResult.setMessage("保存失败");
-            }
+                if(null!=dto.getOldCashType2() && null!=dto.getOldStartDateStr() && (!dto.getCashType2().equals(dto.getOldCashType2())
+                || !startDate.equals(dto.getOldStartDateStr())) ){
+                    if(disRepCashYieldList.size()>0){
+                        webResult.setMessage("已存在相同产品代码,启用日期,信披费用类型的数据", MessageType.错误消息);
+                    }else{
+                        mapOld.put("busiId",dto.getBusiId());
+                        mapOld.put("oldCashType2",dto.getOldCashType2());
+                        mapOld.put("oldStartDateStr",dto.getOldStartDateStr());
+                        mapOld.put("cashType2",dto.getCashType2());
+                        mapOld.put("startDate",startDate);
+                        mapOld.put("rate",dto.getRate());
+                        mapOld.put("status","E");
+                        mapOld.put("dataSource","01");
+                        prorateService.updateOne(mapOld);
+                        webResult.setMessage("保存成功");
+                    }
+                }else{
+                    mapOld.put("busiId",dto.getBusiId());
+                    mapOld.put("oldCashType2",dto.getOldCashType2());
+                    mapOld.put("oldStartDateStr",dto.getOldStartDateStr());
+                    mapOld.put("cashType2",dto.getCashType2());
+                    mapOld.put("startDate",startDate);
+                    mapOld.put("rate",dto.getRate());
+                    mapOld.put("status","E");
+                    mapOld.put("dataSource","01");
+                    prorateService.updateOne(mapOld);
+                    webResult.setMessage("保存成功");
+                }
         }
         return webResult;
     }

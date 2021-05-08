@@ -37,7 +37,7 @@ public interface ProRateInfo001Mapper {
 
     void insertOne(DisRepCashYield entity);
 
-    void updateOne(DisRepCashYield disRepCashYield);
+    void updateOne(Map<String, Object> mapOld);
 
     void deleteOne(@Param("busiId")String busiId, @Param("date")Date date, @Param("cashType2")String cashType2);
 

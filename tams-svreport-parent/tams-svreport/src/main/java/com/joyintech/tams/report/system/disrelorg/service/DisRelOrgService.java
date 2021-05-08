@@ -5,6 +5,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.system.disrelorg.dto.DisRelOrgInfo001Dto;
 import com.joyintech.tams.report.system.prorate.dto.DisPrdFeeRateInfoErrodataWithBLOBs;
@@ -61,7 +62,7 @@ public class DisRelOrgService extends BaseService<DisAssociatedInstitutions> {
         return restTemplate.postForObject(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/Disrelorg/checkConfirmMsgForImportData",
                 param,
-                AjaxResult.class);
+                SvrAjaxResult.class);
     }
     /**
      * 导入数据文件

@@ -1,5 +1,6 @@
 package com.joyintech.tams.report.system.prorate.service;
 
+import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
@@ -41,6 +42,9 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
      * 当在做导入前的check就是判断业务数据是否需要覆盖的时候在webresult的data中塞入这个值可以不会弹框两次
      */
     private static final String NO_INFO_SHOWOUT = "noInfoShowOut";
+
+    @Autowired
+    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
 
     public Page<DisRepCashYield> searchForPage(Map<String, Object> param){
         Page<DisRepCashYield> page;
@@ -163,13 +167,71 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1)) &&
-                        StringUtils.equals(dataList.get(i).get(4), dataList.get(j).get(4))){
-                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行利率名称、生效日期与"+"第"+(j+2)+"行利率名称、生效日期相同");
+                        StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))&&
+                        StringUtils.equals(dataList.get(i).get(3), dataList.get(j).get(3))){
+                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行产品代码、启用日期、信披费用类型与"+"第"+(j+2)+"行产品代码、启用日期、信披费用类型相同");
                     errorList.add(validMessage);
                 }
             }
         }
-
+        Map<String,Object> map=new HashMap<>();
+        if(errorList.size() == 0){
+            for (int i = 0; i < dataList.size(); i++ ) {
+                //操作类型
+                String type ="";
+                if(null!=dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))){
+                    type = dataList.get(i).get(0).toString();
+                }
+                //产品代码
+                String busiId ="";
+                if(null!=dataList.get(i).get(1)&& !"".equals(dataList.get(i).get(1))){
+                    busiId =dataList.get(i).get(1).toString();
+                }
+                //启用日期
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+                Date date=null;
+                if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
+                    date=new Date(dataList.get(i).get(2));
+                }
+                //信披费用类型
+                String cashType2 ="";
+                String cashType2Name ="";
+                if(null!=dataList.get(i).get(3)&& !"".equals(dataList.get(i).get(3))){
+                    String [] arr = dataList.get(i).get(3).toString().split("\\s+");
+                    cashType2=arr[0];
+                    cashType2Name=arr[1];
+                }
+                //费率
+                BigDecimal bigDecimal=null;
+                if(null!=dataList.get(i).get(4)&& !"".equals(dataList.get(i).get(4))){
+                    bigDecimal=new BigDecimal(dataList.get(0).get(4).toString());
+                }
+                ProRateInfo001Dto dto=new ProRateInfo001Dto();
+                dto.setBusiId(busiId);
+                dto.setStartDate(date);
+                dto.setCashType2(cashType2);
+                dto.setRate(bigDecimal);
+                errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, dto, "DisPrdFeeRate002", null, ValidMessage.class);
+                //if(errorList.size() == 0){
+                    map.put("busiId",busiId);
+                    map.put("startDate",date);
+                    map.put("cashType2",cashType2);
+                    List<DisRepCashYield> disRepCashYields= proRateInfo001Mapper.selectOneDate(map);
+                    if("新增".equals(type)){
+                        if(null!=disRepCashYields && disRepCashYields.size()>0){
+                            ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行已存在重复产品、启用日期、信披费用类型的数据");
+                            errorList.add(validMessage);
+                        }
+                    }
+                    if("修改".equals(type)){
+                        if(disRepCashYields.size()<=0){
+                            ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行不存在产品、启用日期、信披费用类型的数据,请核查");
+                            errorList.add(validMessage);
+                        }
+                    }
+                }
+            //}
+        }
         if(errorList.size() == 0){
             webResult.setData(NO_INFO_SHOWOUT);
         }else{
@@ -196,31 +258,31 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
                 for (int i = 0; i < dataList.size(); i++ ) {
                     //操作类型
                     String type ="";
-                    if(null!=dataList.get(i).get(0)){
+                    if(null!=dataList.get(i).get(0) && !"".equals(dataList.get(i).get(0))){
                         type = dataList.get(i).get(0).toString();
                     }
                     //产品代码
                     String busiId ="";
-                    if(null!=dataList.get(i).get(1)){
+                    if(null!=dataList.get(i).get(1)&& !"".equals(dataList.get(i).get(1))){
                         busiId =dataList.get(i).get(1).toString();
                     }
                     //启用日期
                     SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
                     Date date=null;
-                    if(null!=dataList.get(i).get(2)){
+                    if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
                         date=new Date(dataList.get(i).get(2));
                     }
                     //信披费用类型
                     String cashType2 ="";
                     String cashType2Name ="";
-                    if(null!=dataList.get(i).get(3)){
+                    if(null!=dataList.get(i).get(3)&& !"".equals(dataList.get(i).get(3))){
                         String [] arr = dataList.get(i).get(3).toString().split("\\s+");
                         cashType2=arr[0];
                         cashType2Name=arr[1];
                     }
                     //费率
                     BigDecimal bigDecimal=null;
-                    if(null!=dataList.get(i).get(4)){
+                    if(null!=dataList.get(i).get(4)&& !"".equals(dataList.get(i).get(4))){
                         bigDecimal=new BigDecimal(dataList.get(0).get(4).toString());
                     }
                     //根据产品代码，启用日期，信披费用类型 查询出数据,有数据则更新,无数据则插入
@@ -273,13 +335,19 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
     }
 
     private void updateInfo(List<DisRepCashYield> disRepCashYields,String busiId,Date date,String cashType2,String cashType2Name,BigDecimal bigDecimal,String deptCode,String userName){
+        Map<String, Object> mapOld=new HashMap<>();
         if(disRepCashYields.size()>0){
             if(!"".equals(disRepCashYields.get(0).getBusiId())){
                 DisRepCashYield disRepCashYield=disRepCashYields.get(0);
-                disRepCashYield.setRate(bigDecimal);
-                disRepCashYield.setStatus("E");
-                disRepCashYield.setDataSource("02");
-                proRateInfo001Mapper.updateOne(disRepCashYield);
+                mapOld.put("busiId",disRepCashYield.getBusiId());
+                mapOld.put("oldCashType2",disRepCashYield.getOldCashType2());
+                mapOld.put("oldStartDateStr",disRepCashYield.getOldStartDateStr());
+                mapOld.put("cashType2",cashType2);
+                mapOld.put("startDate",date);
+                mapOld.put("rate",bigDecimal);
+                mapOld.put("status","E");
+                mapOld.put("dataSource","02");
+                proRateInfo001Mapper.updateOne(mapOld);
             }
         }
         else{
@@ -339,7 +407,7 @@ public class ProRateInfo001Service extends CommonExportService<DisRepCashYield> 
         return checkResult;
     }
 
-    public void updateOne(DisRepCashYield d) {
-        proRateInfo001Mapper.updateOne(d);
+    public void updateOne(Map<String, Object> mapOld) {
+        proRateInfo001Mapper.updateOne(mapOld);
     }
 }

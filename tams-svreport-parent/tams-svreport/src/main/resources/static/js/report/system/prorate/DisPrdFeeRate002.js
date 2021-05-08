@@ -8,24 +8,6 @@
     };
     $(function() {
         init();
-        function validationNumber(e, num) {
-            var regu = /^[0-9]+\.?[0-9]*$/;
-            var index=e.lastIndexOf("\.");
-            var str=e.substring(index+1,e.length);
-            if (e != "") {
-                if (!regu.test(e)) {
-                    Joyin.error("请输入正确的数字");
-                    return;
-                } else {
-                    if (str.length>14) {
-                        Joyin.error("小数点后超过最大14位长度");
-                        return;
-                    }
-
-                }
-            }
-        }
-
         //保存点击事件
         $('#DisPrdFeeRate002_btn_save').click(function() {
             var object = $.serializeToObject('#submitForm',true);
@@ -35,7 +17,8 @@
             object.rate = $("#rate").val();
             object.startDate = $("#startDate").val();
             object.type =$("#type").val();
-            validationNumber(object.rate,14);
+            object.oldCashType2 =$("#oldCashType2").val();
+            object.oldStartDateStr =$("#oldStartDateStr").val();
             if(object.busiId==''){
                 alert("产品代码不能为空");
             }
@@ -46,13 +29,13 @@
                 alert("费率不能为空");
             }
             if(object.busiId!='' && object.cashType2!='' && object.rate!=''){
-                Joyin.ajaxJson(basePath + 'svreport/system/prorate/DisPrdFeeRate002/save', object, function(result) {
-                    /*if(result){
-                        Joyin.ajaxJson(basePath + 'svreport/system/prorate/DisPrdFeeRate002/checkAndSave',object,function(result){
+                Joyin.ajaxJson(basePath + 'svreport/system/prorate/DisPrdFeeRate002/check', object, function(result) {
+                    if(result){
+                        Joyin.ajaxJson(basePath + 'svreport/system/prorate/DisPrdFeeRate002/save',object,function(result){
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         });
-                    }*/
+                    }
                 });
             }
         });
