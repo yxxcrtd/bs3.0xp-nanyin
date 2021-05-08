@@ -63,7 +63,7 @@
         , {
             field : 'tradeAmt',
             width : "200",
-//            edit : false,
+            edit : true,
             title : 'IntDetailDuration.tradeAmt',
             type : 'money',
             sortable : false
@@ -118,10 +118,15 @@
                 }
             }
         },
-        // beforeEditCell : function(value, field, row, cell, column) {
-        // 	editCellData = _.clone(row);
-    	// 	return true;
-        // },
+         beforeEditCell : function(value, field, row, cell, column) {
+        	 if(field=='tradeAmt'){
+        		 if($("#assetType").val() == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
+              		return true;
+              	}
+        		 return false;
+        	 }
+         	
+         },
         // editCell : function(value, row, field, cell, column) {
         //     var revertFlag = false;
         //     var assetType = $("#assetType").val();
@@ -680,10 +685,13 @@
                                     }
                                     /*add by xr 加载表格前先计算净值*/
                                     var tradeAmt = $('#tradeAmt').val();
-                                    var unitCprice = JoyinMath.doDiv(tradeAmt, sumRegistShare, 12, JoyinMath.ROUND_HALF_UP);
-                                    $("#unitCprice").val(unitCprice);
-                                    $("#unitCprice").trigger("blur");
-
+                                    if($("#assetType").val() == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
+                                    	return;
+                                  	}else{
+                                  		var unitCprice = JoyinMath.doDiv(tradeAmt, sumRegistShare, 12, JoyinMath.ROUND_HALF_UP);
+                                        $("#unitCprice").val(unitCprice);
+                                        $("#unitCprice").trigger("blur");
+                                  	}
                                 }
                             });
         } else {
