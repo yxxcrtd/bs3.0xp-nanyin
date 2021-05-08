@@ -1303,6 +1303,10 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 				List<PledgeBondInfoDto> pledgeList = avaMap.get(finProduct.getFinprodMarketId());
 				if (!StringUtil.isEmptyList(pledgeList)) {
 					for (PledgeBondInfoDto avaBond : pledgeList) {
+						//优先级为0    融入券  不可以融出
+						if(StringUtil.equals("0", avaBond.getInvAimSort().toString())){
+							continue;
+						}
 						PtlSecPositionFlowDto resultDto = new PtlSecPositionFlowDto();
 						// 当前投资目的可分配券面总额
 						BigDecimal avaPrin = avaBond.getAvaPledgePrin();

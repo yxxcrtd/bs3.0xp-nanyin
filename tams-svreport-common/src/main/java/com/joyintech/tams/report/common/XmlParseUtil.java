@@ -49,12 +49,12 @@ public final class XmlParseUtil {
     /**
      *
      */
-    private static final String NODE_FIRST = "List";
+    private static final String NODE_FIRST = "body";
 
     /**
      *
      */
-    private static final String NODE_ROW = "Row";
+    private static final String NODE_ROW = "info";
 
     /**
      * 解析XML文件，以MAP的形式返回解析后的结果
@@ -233,7 +233,8 @@ public final class XmlParseUtil {
             throws SAXException {
             super.endElement(uri, localName, qName);
             // 如果为空节点，则赋值为空字符串
-            if(null != data && null == data.get(key)) {
+            //modify jinmaodong 2021-05-07 当key为null得时候就不处理了。
+            if(null != data && key!=null && null == data.get(key)) {
                 data.put(key, StringUtil.EMPTY);
             }
             key = null;

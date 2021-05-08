@@ -476,6 +476,9 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         entity.setPtlTrades(ptlTrades);
         entity.setTrdTradeFeeDetails(trdTradeFeeDetails);
 
+        // 单位面值
+        entity.setParValue(this.getUnitPrice(entity.getFinprodId(), entity.getSettleDate()));
+
         entity.getTrdBondPtlSecExerciseInfos().forEach(trdBondPtlSecExerciseInfo -> {
             BussinessCodeParameter parameter = new BussinessCodeParameter();
             parameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
@@ -514,6 +517,7 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
             deal.setAccrNum(deal.getShareAmt());
             deal.setTgBusiType(DictCodeListExt1.平安业务类型_债券类资产行权.getValue());
             deal.setInvAim(trdBondPtlSecExerciseInfo.getInvAim());
+            deal.setParValue(entity.getParValue());
             trdProductDeals.add(deal);
 
             BussTrdTransferOrderDto bussTrdTransferOrderDto =new BussTrdTransferOrderDto();
@@ -576,6 +580,23 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
             }
             trdTradeFeeDetails.add(feeDetail);
         });
+    }
+
+    /**
+     * 计算单位面值
+     * author sjj
+     * @param finprodId 金融产品代码
+     * @param settleDate 交割日
+     * @return 单位面值
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal getUnitPrice(String finprodId, Date settleDate) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("finprodId", finprodId);
+        parameters.put("settleDate", DateUtil.format(settleDate));
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getUnitPrice", parameters,
+                BigDecimal.class);
     }
 
     @Override
