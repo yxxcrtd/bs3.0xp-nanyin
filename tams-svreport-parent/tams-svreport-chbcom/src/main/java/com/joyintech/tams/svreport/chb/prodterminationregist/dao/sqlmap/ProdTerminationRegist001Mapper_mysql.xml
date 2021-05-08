@@ -73,7 +73,7 @@
       ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE)
     values (#{registSeqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{mdate,jdbcType=TIMESTAMP}, 
       #{issuePartyId,jdbcType=VARCHAR}, #{profit,jdbcType=DECIMAL}, #{customProfit,jdbcType=DECIMAL}, 
-      #{customProfitOri,jdbcType=VARCHAR}, #{customAmtOri,jdbcType=VARCHAR}, #{customAmt,jdbcType=DECIMAL}, 
+      #{customProfitOri,jdbcType=DECIMAL}, #{customAmtOri,jdbcType=DECIMAL}, #{customAmt,jdbcType=DECIMAL},
       #{customQty,jdbcType=DECIMAL}, #{cusYearYield,jdbcType=DECIMAL}, #{prdYearYield,jdbcType=DECIMAL}, 
       #{custFeeIn,jdbcType=DECIMAL}, #{manFeeIn,jdbcType=DECIMAL}, #{couFeeIn,jdbcType=DECIMAL}, 
       #{otherFeeIn,jdbcType=DECIMAL}, #{custFeeOut,jdbcType=DECIMAL}, #{manFeeOut,jdbcType=DECIMAL}, 
@@ -219,10 +219,10 @@
         #{customProfit,jdbcType=DECIMAL},
       </if>
       <if test="customProfitOri != null" >
-        #{customProfitOri,jdbcType=VARCHAR},
+        #{customProfitOri,jdbcType=DECIMAL},
       </if>
       <if test="customAmtOri != null" >
-        #{customAmtOri,jdbcType=VARCHAR},
+        #{customAmtOri,jdbcType=DECIMAL},
       </if>
       <if test="customAmt != null" >
         #{customAmt,jdbcType=DECIMAL},
@@ -332,10 +332,10 @@
         CUSTOM_PROFIT = #{customProfit,jdbcType=DECIMAL},
       </if>
       <if test="customProfitOri != null" >
-        CUSTOM_PROFIT_ORI = #{customProfitOri,jdbcType=VARCHAR},
+        CUSTOM_PROFIT_ORI = #{customProfitOri,jdbcType=DECIMAL},
       </if>
       <if test="customAmtOri != null" >
-        CUSTOM_AMT_ORI = #{customAmtOri,jdbcType=VARCHAR},
+        CUSTOM_AMT_ORI = #{customAmtOri,jdbcType=DECIMAL},
       </if>
       <if test="customAmt != null" >
         CUSTOM_AMT = #{customAmt,jdbcType=DECIMAL},
@@ -434,8 +434,8 @@
       ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
       PROFIT = #{profit,jdbcType=DECIMAL},
       CUSTOM_PROFIT = #{customProfit,jdbcType=DECIMAL},
-      CUSTOM_PROFIT_ORI = #{customProfitOri,jdbcType=VARCHAR},
-      CUSTOM_AMT_ORI = #{customAmtOri,jdbcType=VARCHAR},
+      CUSTOM_PROFIT_ORI = #{customProfitOri,jdbcType=DECIMAL},
+      CUSTOM_AMT_ORI = #{customAmtOri,jdbcType=DECIMAL},
       CUSTOM_AMT = #{customAmt,jdbcType=DECIMAL},
       CUSTOM_QTY = #{customQty,jdbcType=DECIMAL},
       CUS_YEAR_YIELD = #{cusYearYield,jdbcType=DECIMAL},
@@ -986,7 +986,7 @@
       #{item.sumitSeq,jdbcType=VARCHAR},
       #{item.registSeqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.mdate,jdbcType=TIMESTAMP},
       #{item.issuePartyId,jdbcType=VARCHAR}, #{item.profit,jdbcType=DECIMAL}, #{item.customProfit,jdbcType=DECIMAL}, 
-      #{item.customProfitOri,jdbcType=VARCHAR}, #{item.customAmtOri,jdbcType=VARCHAR}, #{item.customAmt,jdbcType=DECIMAL}, 
+      #{item.customProfitOri,jdbcType=DECIMAL}, #{item.customAmtOri,jdbcType=DECIMAL}, #{item.customAmt,jdbcType=DECIMAL},
       #{item.customQty,jdbcType=DECIMAL}, #{item.cusYearYield,jdbcType=DECIMAL}, #{item.prdYearYield,jdbcType=DECIMAL}, 
       #{item.custFeeIn,jdbcType=DECIMAL}, #{item.manFeeIn,jdbcType=DECIMAL}, #{item.couFeeIn,jdbcType=DECIMAL}, 
       #{item.otherFeeIn,jdbcType=DECIMAL}, #{item.custFeeOut,jdbcType=DECIMAL}, #{item.manFeeOut,jdbcType=DECIMAL}, 
@@ -1021,10 +1021,10 @@
         CUSTOM_PROFIT = #{item.customProfit,jdbcType=DECIMAL},
       </if>
       <if test="item.customProfitOri != null" >
-        CUSTOM_PROFIT_ORI = #{item.customProfitOri,jdbcType=VARCHAR},
+        CUSTOM_PROFIT_ORI = #{item.customProfitOri,jdbcType=DECIMAL},
       </if>
       <if test="item.customAmtOri != null" >
-        CUSTOM_AMT_ORI = #{item.customAmtOri,jdbcType=VARCHAR},
+        CUSTOM_AMT_ORI = #{item.customAmtOri,jdbcType=DECIMAL},
       </if>
       <if test="item.customAmt != null" >
         CUSTOM_AMT = #{item.customAmt,jdbcType=DECIMAL},
