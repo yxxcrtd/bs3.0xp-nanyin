@@ -443,6 +443,10 @@ public class FundCashDividendDealRecService {
         result.setCreateTime(dto.getCreateTime());
         //利息总额=实际分红金额
         result.setIntAmt(dto.getActBounsAmt());
+        /**add by wujie on 20210507 start**/
+        result.setTradeMarket(dto.getTradeMarket());
+        /**add by wujie on 20210507 end**/
+
         // 原交易编号 = 交易状态为撤销时： 原交易编号=调用共通设计->【详细设计-接口共通方法设计.xlsx】->撤销交易对应的原交易编号查询SHEET 交易状态为非撤销时：原交易编号为空
         if(result.getTradeStatus().equals(DictCodeListExt1.交易状态_撤销.getValue())){
         	result.setpTradeId(interfCommonService.getFTradeId(result));
