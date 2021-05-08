@@ -19,7 +19,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
-import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.AccountDriver;
@@ -795,6 +794,15 @@ public class VatDrawProcessorBService {
         // 定义 增值税已抵扣增值额List
         List<TaxDeductedBalance> listDeductedBalance = new ArrayList<TaxDeductedBalance>();
         for ( BookLatestInfoDto infoDto : listBookLatestInfo) {
+            //上市流通凭证中不处理上市标的
+            if(StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_公允价值损益类债券_上市流通.getValue())
+                    ||StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_上市流通.getValue())
+                    ||StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_综合收益类债券_上市流通.getValue())){
+                Boolean isShbdByBusiId = vatDrawMapper.getIsShbdByBusiId(infoDto.getBusiId());
+                if(!isShbdByBusiId){
+                    continue;
+                }
+            }
             detailConfigMap = new HashMap<>();
 
             // if (本币特殊处理基础科目性质列表 包含 账务明细（当前表）M.基础科目性质 时)
@@ -1255,6 +1263,14 @@ public class VatDrawProcessorBService {
                             List<BookLatestInfoDto> listVouchNow = listBookLatestInfo.stream().filter(
                                 item -> item.getBookId().equals(infoDto.getBookId())).collect(
                                     Collectors.toList());
+                            //上市流通交易一个凭证存在两个成本，故此处需要加上过滤，以防资产成本取错
+                            if(StringUtil.equals(listVouchNow.get(0).getTableId(),DictCodeListTableId.会计场景代码_公允价值损益类债券_上市流通.getValue())
+                                    ||StringUtil.equals(listVouchNow.get(0).getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_上市流通.getValue())
+                                    ||StringUtil.equals(listVouchNow.get(0).getTableId(),DictCodeListTableId.会计场景代码_综合收益类债券_上市流通.getValue())){
+                                listVouchNow = listVouchNow.stream().filter(
+                                        item -> item.getBokDetailId().equals(infoDto.getBokDetailId())).collect(
+                                        Collectors.toList());
+                            }
                             // 账务明细（当前表） 当前成本 = 当期凭证.filter(基础科目性质 = 占比科目性质)
                             BookLatestInfoDto costNow = listVouchNow.stream().filter(
                                 item -> configDto.getCalcSnature().equals(
@@ -1446,6 +1462,37 @@ public class VatDrawProcessorBService {
                 }
                 // 增值税账务明细List.add(增值税账务明细)
                 ValTaxBokDetails.add(taxBokDetail);
+                //上市流通交易,根据发行标的组装上市标的的计税流水
+                if(StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_公允价值损益类债券_上市流通.getValue())
+                        ||StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_上市流通.getValue())
+                        ||StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_综合收益类债券_上市流通.getValue())){
+                    //根据发行标的组装上市标的的计税流水
+                    Map<String, String> orginInfoMap = new HashMap<String, String>();
+                    orginInfoMap.put("busiId",infoDto.getBusiId());
+                    orginInfoMap.put("booksetId",infoDto.getBooksetId());
+                    String Shbdbokdetailid = vatDrawMapper.getTaxBokDetailsByOrgin(orginInfoMap);
+                    if(StringUtil.isNotBlank(Shbdbokdetailid)){
+                        TaxBokDetail taxBokDetailShbd = new TaxBokDetail();
+                        BeanUtil.copyPropertiesIgnoreNull(taxBokDetailShbd, taxBokDetail);
+                        taxBokDetailShbd.setSeqNo(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
+                        taxBokDetailShbd.setBokDetailId(Shbdbokdetailid);
+                        taxBokDetailShbd.setHappenAmt(ArithmeticUtil.multiply(taxBokDetail.getHappenAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setTaxAmt(ArithmeticUtil.multiply(taxBokDetail.getTaxAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setBalAmt(ArithmeticUtil.multiply(taxBokDetail.getBalAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setCarryAmt(ArithmeticUtil.multiply(taxBokDetail.getCarryAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setCreateTime(new Date());
+                        taxBokDetailShbd.setUpdateTime(new Date());
+                        taxBokDetailShbd.setHappenAmtB(ArithmeticUtil.multiply(taxBokDetail.getHappenAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setTaxAmtB(ArithmeticUtil.multiply(taxBokDetail.getTaxAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setBalAmtB(ArithmeticUtil.multiply(taxBokDetail.getBalAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setCarryAmtB(ArithmeticUtil.multiply(taxBokDetail.getCarryAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setIncomeAccrAmt(ArithmeticUtil.multiply(taxBokDetail.getIncomeAccrAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setIncomeCarryAmt(ArithmeticUtil.multiply(taxBokDetail.getIncomeCarryAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setIncomeAccrAmtB(ArithmeticUtil.multiply(taxBokDetail.getIncomeAccrAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setIncomeCarryAmtB(ArithmeticUtil.multiply(taxBokDetail.getIncomeCarryAmtB(), new BigDecimal(-1)));
+                        ValTaxBokDetails.add(taxBokDetailShbd);
+                    }
+                }
 
                 // IF 配置.是否处理待抵扣增值额 = 'Y'
                 if (DictCodeList.是否_是.getValue().equals(isCalcTurned)) {
