@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +17,6 @@ import org.springframework.stereotype.Service;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.base.entity.TempCheckInfo;
 import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderDTO;
@@ -240,12 +236,32 @@ public class XmlDom4jUtils {
         prdNameMap.put(TempConstant.债券应收款项转让交易, 
         		new TempCheckInfo(TempConstant.债券应收款项转让交易,"prodId","INVEST"));
 
-        prdNameMap.put(TempConstant.存款类资产存款交易, 
-        		new TempCheckInfo(TempConstant.存款类资产存款交易,"prodId","INVEST","assetId"));
-        prdNameMap.put(TempConstant.存款类资产存款存续期表, 
-        		new TempCheckInfo(TempConstant.存款类资产存款存续期表,"prodId","INVEST","assetId"));
-        prdNameMap.put(TempConstant.存款类资产应收款项转让交易, 
-        		new TempCheckInfo(TempConstant.存款类资产应收款项转让交易,"prodId","INVEST","assetId"));
+        
+        finprodTypes = DictCodeListExt1.金融产品类型_存款.getValue();
+        temp = new TempCheckInfo();
+        temp.setDtoEname(TempConstant.存款类资产存款交易);
+        temp.setColprdName("prodId");
+        temp.setInvestType("INVEST");
+        temp.setAssetId("assetId");
+        temp.setFinprodTypes(finprodTypes);
+        prdNameMap.put(TempConstant.存款类资产存款交易, temp);
+        
+        temp = new TempCheckInfo();
+        temp.setDtoEname(TempConstant.存款类资产存款存续期表);
+        temp.setColprdName("prodId");
+        temp.setInvestType("INVEST");
+        temp.setAssetId("assetId");
+        temp.setFinprodTypes(finprodTypes);
+        prdNameMap.put(TempConstant.存款类资产存款存续期表, temp);
+        
+        temp = new TempCheckInfo();
+        temp.setDtoEname(TempConstant.存款类资产应收款项转让交易);
+        temp.setColprdName("prodId");
+        temp.setInvestType("INVEST");
+        temp.setAssetId("assetId");
+        temp.setFinprodTypes(finprodTypes);
+        prdNameMap.put(TempConstant.存款类资产应收款项转让交易, temp);
+        
     	
         prdNameMap.put(TempConstant.申购申请交易, 
         		new TempCheckInfo(TempConstant.申购申请交易,"prodId","INVEST"));
