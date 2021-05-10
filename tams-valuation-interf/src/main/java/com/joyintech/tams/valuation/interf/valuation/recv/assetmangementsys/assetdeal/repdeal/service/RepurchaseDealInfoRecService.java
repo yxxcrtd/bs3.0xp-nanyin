@@ -93,6 +93,11 @@ public class RepurchaseDealInfoRecService {
             ps.add(DictCodeListExt3.交易方向_投资端_提前终止.getValue());
             ps.add(DictCodeListExt3.交易方向_投资端_逾期返售.getValue());
             /** modify by yanya on 20191111 增加提前终止、逾期返售 end**/
+
+            /**add by wujie on 20210510 start**/
+            ps.add(DictCodeList.交易方向_到期续做.getValue());
+            /**add by wujie on 20210510 end**/
+
             paramMap.put("pslist", ps);
 
             /**add by wujie on 20210506 start**/
