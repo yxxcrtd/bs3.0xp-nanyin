@@ -1285,24 +1285,16 @@
     </select>
 
     <select id="findWorkflowProcessDtos" resultType="java.lang.String">
-        select *
-        from (
-        select SYS_DATA_PROCESS_MARK.*,
-        row_number() over(PARTITION by SYS_DATA_PROCESS_MARK.WORKFLOW_ID order by SYS_DATA_PROCESS_MARK.HIS_NO desc) ro
-        from SYS_DATA_PROCESS_MARK
-        <where>
-            BUSINESS_DATA_PK1 = #{finprodId}
-            and SYS_DATA_PROCESS_MARK.PAGE_ID = #{pageId}
-            <if test="chlId != null and !chlId.isEmpty()">
-                AND BUSINESS_DATA_PK4 = #{chlId}
-            </if>
-            <if test="chlId == null or chlId.isEmpty()">
-                and BUSINESS_DATA_PK4 is null
-            </if>
-        </where>
-        )
-        where ro = 1
-        and STATUS in ('A', 'U')
+        select wtpd.totle_trade_id
+        from wfl_trd_fin_product_deal_total wtpd
+        where wtpd.finprod_id = #{finprodId}
+        and wtpd.ps =#{ps}
+        <if test="chlId != null and !chlId.isEmpty()">
+            AND wtpd.chl_id = #{chlId}
+        </if>
+        <if test="chlId == null or chlId.isEmpty()">
+            and wtpd.chl_id is null
+        </if>
     </select>
 </mapper>
                         
