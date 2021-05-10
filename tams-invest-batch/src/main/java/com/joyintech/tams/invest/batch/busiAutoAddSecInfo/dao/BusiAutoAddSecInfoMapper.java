@@ -143,4 +143,11 @@ public interface BusiAutoAddSecInfoMapper {
      * @since 1.0
      */
     List<Map<String,Object>> getSaveParam(Map<String,Object> param);
+    
+    /**
+     * 插入风险实占信息，redis初始化批会用到该数据
+     * @param param
+     * @return
+     */
+    int insertRskOccupyInfo(Map<String,Object> param);
 }
