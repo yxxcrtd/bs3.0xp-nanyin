@@ -176,4 +176,27 @@
         WHERE o_code = #{marketId,jdbcType=VARCHAR} /**市场代码**/
     </select>
 
+    <select id="getUnitPrice" resultType="java.math.BigDecimal">
+        SELECT
+        100 - NVL(SUM(NVL(PRIN_AMT, 0)), 0)
+        FROM
+        FIN_CASH_PLAN
+        WHERE
+        FINPROD_ID = #{finprodId}
+        AND MDATE &lt;= to_date(#{settleDate},'yyyy-MM-dd')
+    </select>
+
+    <select id="getSaveParam" resultType="java.util.Map">
+        select
+        nvl(DSC_COST_AMT, 0) + nvl(TDY_FLOAT_INGPL, 0) + nvl(TDY_INTINCEXP, 0) + nvl(DELAY_PAY_AMT, 0) as price,
+        t1.INV_AIM invAim,
+        t1.PORTFOLIO_ID portfolioId
+        from PTL_SEC_VALUTION t1
+        inner join FIN_PRODUCT t2 on t1.FINPROD_ID = t2.FINPROD_ID
+        where  t1.CDATE = to_date(#{tradeDate},'yyyy-MM-dd')
+        and t1.FINPROD_ID = #{finprodId,jdbcType = VARCHAR}
+        AND t1.PORTFOLIO_ID != t1.FINPROD_ID
+        and t2.FINPROD_TYPE2 ='F01'
+    </select>
+
 </mapper>
