@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -25,8 +24,6 @@ import com.joyintech.tams.common.base.entity.FinProductClass;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductValuationPara;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.CPlannedAssetBaseInfoValCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
@@ -218,8 +215,10 @@ public class CPlannedAssetBaseInfoTemplateRecService {
         fdto.setFinprodType(DictCodeListExt1.金融产品类型_计划类资产.getValue());
         // 资产类型
         fdto.setAssetType(dto.getAssetType());
+        /**modify by wujie on 20210510
         // 交易场所
         fdto.setTradeMarket(dto.getTradeMarket());
+		 **/
         //境内外
         fdto.setBlnArea(dto.getBlnArea());
         // 分类2= 调用共通核算分类查询
