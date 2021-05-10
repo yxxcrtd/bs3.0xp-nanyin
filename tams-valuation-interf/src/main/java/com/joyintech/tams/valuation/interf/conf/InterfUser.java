@@ -377,6 +377,16 @@ public class InterfUser implements User {
         return orgCode;
     }
 
+    @Override
+    public String getIbuTrader() {
+        return null;
+    }
+
+    @Override
+    public void setIbuTrader(String s) {
+
+    }
+
     /**
      * 设置 orgCode
      * 

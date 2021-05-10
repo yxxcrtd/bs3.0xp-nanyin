@@ -373,7 +373,17 @@ public class User extends BaseDto implements com.joyintech.framework.security.Us
        return orgCode;
    }
 
-   /**
+    @Override
+    public String getIbuTrader() {
+        return null;
+    }
+
+    @Override
+    public void setIbuTrader(String s) {
+
+    }
+
+    /**
     * 设置 orgCode
     * 
     * @param orgCode orgCode
