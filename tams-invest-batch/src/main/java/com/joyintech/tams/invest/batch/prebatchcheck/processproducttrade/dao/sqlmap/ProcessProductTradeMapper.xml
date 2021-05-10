@@ -4,15 +4,26 @@
 
     <select id="selectProcessProductTradeList" parameterType="java.util.Map"
             resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
-		WITH TEMP AS (
+		WITH filter as(
+            select workflow_id
+            from(
+	            select 
+		            mark.*,rank() over(partition by mark.workflow_id order by mark.HIS_NO desc) as rank
+	            from sys_data_process_mark mark
+	            inner join SYS_WFL_BUSINESS_LIST T on T.seq_no = mark.workflow_id and T.PROCESS_STATE = 'BACK'
+            )
+            where rank = 2 and STATUS = 'U'
+        ),
+        TEMP AS (
 			SELECT * FROM(
 				select 
 						sys_data_process_mark.*,rank() over(partition by sys_data_process_mark.workflow_id order by sys_data_process_mark.HIS_NO desc) as rank
 				from sys_data_process_mark
                 inner join SYS_WFL_BUSINESS_LIST on SYS_WFL_BUSINESS_LIST.seq_no = sys_data_process_mark.workflow_id and SYS_WFL_BUSINESS_LIST.PROCESS_STATE not in ('END','NEW')
-				where sys_data_process_mark.page_id in ('FinProductFeePay002','FinProductFeePay004','FinproductPayTheVatQuery002','FinProductQuotation002','FinResultsCovering002'
+				where (sys_data_process_mark.page_id in ('FinProductFeePay002','FinProductFeePay004','FinproductPayTheVatQuery002','FinProductQuotation002','FinResultsCovering002'
                     ,'FinNetProductBonusScheme002','FinNetProductBonusScheme003','FinNetProductBonusScheme004','FinNetProductBonusScheme005')
-                    or sys_data_process_mark.page_id in ('FinProductRateQuotation002','FinProductBmQuotation002','FinFloatMgtExpQuotation002')
+                    or sys_data_process_mark.page_id in ('FinProductRateQuotation002','FinProductBmQuotation002','FinFloatMgtExpQuotation002'))
+                    and sys_data_process_mark.workflow_id not in (select workflow_id from filter)
 			) WHERE rank = 1
 		),
         /*净值型产品存续期*/
@@ -40,7 +51,7 @@
                     rank() over(partition by A.workflow_id order by A.HIS_NO desc) as rank
 				from sys_data_process_mark A
                 inner join SYS_WFL_BUSINESS_LIST B on B.seq_no = A.workflow_id and B.PROCESS_STATE not in ('END','NEW')
-				where a.page_id = 'FinNetProductDuration'
+				where a.page_id = 'FinNetProductDuration' and A.workflow_id not in (select workflow_id from filter)
 			)A WHERE rank = 1
         ),
         deal as(
