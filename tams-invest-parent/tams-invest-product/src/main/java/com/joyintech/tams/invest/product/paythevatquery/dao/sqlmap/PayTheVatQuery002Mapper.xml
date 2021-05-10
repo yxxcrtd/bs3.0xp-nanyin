@@ -18,6 +18,7 @@
 	         where TPD.BUSI_TYPE = #{BUSI_TYPE_16}
 	           and TPD.Finprod_Type = #{finprodType}
 	           and TPD.Finprod_Type2 = #{finprodType2}
+			   and TPD.CHL_ID is null /* add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳*/
 	           and not exists (
 			              select 1 from TRD_PRODUCT_DEAL b where b.P_TRADE_ID = TPD.TRADE_ID  
 			          )    
@@ -72,6 +73,7 @@
 	                   and nvl(tpd.TRADE_STATUS,'01') = #{TRADE_STATUS_01}
 	                   and tpd.mdate &lt;= #{payment1}
 	                   and tpd.finprod_id = a.finprod_id
+					   and tpd.CHL_ID is null /* add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳*/
 	                   and not exists (
                         select 1 from TRD_PRODUCT_DEAL a1
                         where a1.p_trade_id = tpd.trade_id
@@ -144,7 +146,8 @@
 	                  and b1.FINPROD_ID = a.FINPROD_ID
 	                  and b1.mdate = #{payment1}
 	                  and c1.p_trade_id is null
-	                  and b1.TRADE_STATUS =#{TRADE_STATUS_01} 
+	                  and b1.TRADE_STATUS =#{TRADE_STATUS_01}
+					  AND b1.CHL_ID is null/* add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳*/
 		          )
 	         <if test="portfolioIdArr!=null and portfolioIdArr.length>0">
 	         	and b.portfolio_id in 

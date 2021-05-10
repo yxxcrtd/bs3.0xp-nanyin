@@ -373,6 +373,11 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
                 ptlCashPositionFlowDto.setCcy(dto.getCcy());
                 ptlCashPositionFlowDto.setAmount(stlpayorder.getSettleAmt().negate());
                 ptlCashPositionFlowDto.setOrderId(stlpayorder.getOrderId());
+                // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
+                if(StringUtil.isNotEmpty(dto.getChannelId())) {
+                    ptlCashPositionFlowDto.setChlFinprodId("F28_" + dto.getChannelId());
+                }
+                // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
                 ptlCashPositionFlows.add(ptlCashPositionFlowDto);
 
                 PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();
@@ -475,6 +480,9 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
 //        币种
         trdProductDeal.setCcy(entity.getCcy());
         trdProductDeal.setPortfolioId(entity.getPortfolioId());
+        // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
+        trdProductDeal.setChlId(temp.getChannelId());
+        // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
 
         return trdProductDeal;
     }
