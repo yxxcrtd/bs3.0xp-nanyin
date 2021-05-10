@@ -40,19 +40,28 @@
                 inner join SYS_WFL_BUSINESS_LIST B on B.seq_no = A.workflow_id and B.PROCESS_STATE not in ('END','NEW')
 				where a.page_id = 'FinNetProductDuration'
 			)A WHERE rank = 1
+        ),
+        deal as(
+            select * from(
+                select deal.*,rank() over(partition by deal.workflow_id order by deal.update_time desc) as rank
+            from WFL_TRD_PRODUCT_DEAL deal
+            )where rank = 1
         )
         SELECT
         	T.create_user as launchUser,
         	nvl(pp.PORTFOLIO_ID,fp.finprod_market_id) AS portfolioId,
         	nvl(pp.PORTFOLIO_NAME,fp.FINPROD_ABBR) as portfolioName,
-			deal.trade_id  tradeId,
+			t.trade_id  tradeId,
 			tdeal.TOTLE_TRADE_ID  totleTradeId,
-			decode(deal.trade_amt,'',null,deal.trade_amt) tradeAmt,
+            case 
+                when tdeal.trade_amt ='' or tdeal.trade_amt is null then decode(deal.trade_amt,'',null,deal.trade_amt)
+			    else decode(tdeal.trade_amt,'',null,tdeal.trade_amt)
+            end as tradeAmt,
         	T.NEXT_USER  AS nextUser,
         	T.CRT_DATE AS createTaskTime,
         	sd.institution_code instCode
         FROM SYS_WFL_BUSINESS_LIST T
-		INNER JOIN WFL_TRD_PRODUCT_DEAL DEAL ON deal.workflow_id = T.seq_no and T.PROCESS_STATE not in ('END','NEW')
+		INNER JOIN DEAL ON deal.workflow_id = T.seq_no and T.PROCESS_STATE not in ('END','NEW')
 		left join wfl_trd_fin_product_deal_total tdeal on deal.TOTLE_TRADE_ID = tdeal.TOTLE_TRADE_ID
         LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
         LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
@@ -76,18 +85,8 @@
 		    	T.create_user as launchUser,
 				pp.PORTFOLIO_ID AS portfolioId,
 				pp.PORTFOLIO_NAME as portfolioName,
-				case 
-					when temp.page_id = 'FinProductFeePay002' then temp.business_data_pk3
-					when temp.page_id = 'FinProductFeePay004' then T.TRADE_ID
-					when temp.page_id = 'FinproductPayTheVatQuery002' then ''
-					else ''
-				end as tradeId,
-				case 
-					when temp.page_id = 'FinProductFeePay002' then ''
-					when temp.page_id = 'FinProductFeePay004' then ''
-					when temp.page_id = 'FinproductPayTheVatQuery002' then temp.business_data_pk1
-					else ''
-				end as totleTradeId,
+                T.trade_id tradeId,
+				'' totleTradeId,
 				case 
 					when temp.page_id = 'FinProductFeePay002' then replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"actPayAmt":"[^"]+"',1,1)),'"actPayAmt":"',''),'"','')
 					when temp.page_id = 'FinProductFeePay004' then replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"ActPayAmtSum":"[^"]+"',1,1)),'"ActPayAmtSum":"',''),'"','')
@@ -127,5 +126,6 @@
         LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 		left join PTL_PORTFOLIO pp on regexp_replace(temp1.business_data_pk2,'^F16_','') = pp.PORTFOLIO_ID
         WHERE T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
+        
     </select>
 </mapper>		

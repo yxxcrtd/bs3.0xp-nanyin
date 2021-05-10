@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.batch.busiAutoAddSecInfo.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -19,12 +20,15 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dao.BusiAutoAddSecInfoMapper;
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddFinProductBaseInfoDto;
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddTradeProductDealDto;
+import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddTradeProductDealRedisDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplCond;
 import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
@@ -459,6 +463,10 @@ public class BusiAutoAddSecInfoService {
     //生成上市流通交易
     private BusiAutoAddTradeProductDealDto generationDeal(List<PtlSecPositionFlow> ptlSecPositionflowTempList,FinProduct finProduct,String secId,Date batchDate,String totalTradeId) {
         BusiAutoAddTradeProductDealDto busiAutoAddTradeProductDealDto =new BusiAutoAddTradeProductDealDto();
+        //redis处理
+        BusiAutoAddTradeProductDealRedisDto busiAutoAddTradeProductDealRedis =new BusiAutoAddTradeProductDealRedisDto();
+        List<BaseTradeInfoDto> baseTradeInfoList =new ArrayList<BaseTradeInfoDto>();
+
         List<TrdProductDeal> deals = new ArrayList<>();
         List<TrdProductDealAdd> dealAdds = new ArrayList<>();
         List<TrdFinProductBarter> dealBarters = new ArrayList<>();
@@ -543,7 +551,50 @@ public class BusiAutoAddSecInfoService {
             inputDto.setTrdProductDeal(trdProductDeal);
             inputDto.setTrdProductDealAdd(trdProductDealAdd);
             AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
+
+            //组装redis需要的信息
+            busiAutoAddTradeProductDealRedis.setPs(DictCodeList.交易方向_上市流通.getValue());
+            busiAutoAddTradeProductDealRedis.setFinprodId(finProduct.getFinprodId());
+            busiAutoAddTradeProductDealRedis.setAppearMarketId(secId);
+            busiAutoAddTradeProductDealRedis.setTradeDate(batchDate);
+
+            BaseTradeInfoDto baseTradeInfoDto =new BaseTradeInfoDto();
+            baseTradeInfoDto.setTrdProductDeal(trdProductDeal);
+            baseTradeInfoDto.setTrdProductDealAdd(trdProductDealAdd);
+            baseTradeInfoList.add(baseTradeInfoDto);
+
+            Map<String,Object> paraMap = new HashMap<>();
+            paraMap.put("finprodId",finProduct.getFinprodId());
+            paraMap.put("settleDate",DateUtil.format(batchDate));
+            //获取债券面值
+            BigDecimal UnitPrice= busiAutoAddSecInfoMapper.getUnitPrice(paraMap);
+            baseTradeInfoDto.getTrdProductDeal().setShareAmt(ptlSecPositionFlow.getAmount().multiply(UnitPrice));
+            //获取交易前一天组合持有的发行标的资产市值
+            paraMap.put("tradeDate",DateUtil.format(DateUtil.addDay(batchDate,-1)));
+            List<Map<String,Object>> saveList = busiAutoAddSecInfoMapper.getSaveParam(paraMap);
+            //循环list根据组合赋值
+            if (saveList != null && saveList.size() > 0){
+                for (Map<String, Object> stringObjectMap : saveList) {
+                    if (StringUtil.equals(stringObjectMap.get("PORTFOLIOID"),ptlSecPositionFlow.getPortfolioId())
+                            && StringUtil.equals(stringObjectMap.get("INVAIM"),ptlSecPositionFlow.getInvAim())){
+                        if (stringObjectMap.get("PRICE") != null){
+                            baseTradeInfoDto.getTrdProductDeal().setTradeAmt(new BigDecimal(stringObjectMap.get("PRICE").toString()));
+                        }
+                    }
+                }
+            }
+            //TODO
+//            if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+//                AjaxResult ar = interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
+//                        BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue(), DictCodeList.平安资产类型_债券.getValue(),
+//                        (en) -> interfRiskRdsService.sendRiskRdsData(dto, en));
+//                if (StringUtil.isNotEmpty(ar)) {
+//                    return null;
+//                }
+//            }
         }
+        busiAutoAddTradeProductDealRedis.setBaseTradeInfoDtos(baseTradeInfoList);
+
         return busiAutoAddTradeProductDealDto;
     }
 
