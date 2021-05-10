@@ -37,7 +37,7 @@ spring:
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
   activemq:
     active: false
-    systemId: tams
+    systemId: tamsyy-server
     brokerUrl: tcp://localhost:61616
     user: system
     password: manager

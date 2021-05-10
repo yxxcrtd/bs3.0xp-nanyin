@@ -10,6 +10,14 @@ spring:
   activemq:
     systemId: valuation_batch
     active: false
+    brokerUrl: tcp://localhost:61616
+    user: system
+    password: manager
+    maximumRedeliveries: 10
+    initialRedeliveryDelay: 1
+    backOffMultiplier: 2
+    useExponentialBackOff: true
+    maximumRedeliveryDelay: -1
 application:
   sysCode: VAL
 

@@ -11,7 +11,16 @@ spring:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
   activemq:
-    systemId: valuation_interf
+    systemId: VALUATION-INTERF-SERVER
+    active: false
+    brokerUrl: tcp://localhost:61616
+    user: system
+    password: manager
+    maximumRedeliveries: 10
+    initialRedeliveryDelay: 1
+    backOffMultiplier: 2
+    useExponentialBackOff: true
+    maximumRedeliveryDelay: -1
 application:
   sysCode: VAL
 interf:
