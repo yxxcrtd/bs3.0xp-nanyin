@@ -1,6 +1,6 @@
 package com.joyintech.tams.common.basicdata.marketdata.rateswapinformation.service;
 
-import com.alibaba.fastjson.JSONArray;
+//import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -8,6 +8,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
 import com.joyintech.tams.common.basicdata.marketdata.rateswapinformation.dto.ComRateSwapInformationDto;
@@ -171,7 +172,7 @@ public class ComRateSwapInformationService extends CommonExportService<ComRateSw
             return wr;
         }
         String totalMsg = "";
-        JSONArray jsonArrays = new JSONArray();
+        List<List<String >> jsonArrays = new ArrayList<>();
         // 重复数据
         int repeatNum = 0;
         if (objects.size() <= 1) {
@@ -262,7 +263,7 @@ public class ComRateSwapInformationService extends CommonExportService<ComRateSw
         if (StringUtil.isNotBlank(totalMsg)) {
             resultMap.put("confirmMsg", totalMsg);
         }
-        resultMap.put("correctData", JSONArray.toJSONString(jsonArrays));
+        resultMap.put("correctData", JsonUtils.object2Json(jsonArrays));
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
@@ -284,11 +285,12 @@ public class ComRateSwapInformationService extends CommonExportService<ComRateSw
         //报卖% 02
         List<ComRateSwapInformationDto> comRateSwapInformationDtoList02 = new ArrayList<>();
         dto.setSelectedItem(comRateSwapInformationDtoList);
-        JSONArray objects = JSONArray.parseArray(tempList);
+        List<String> objects = JsonUtils.json2Object(tempList,List.class);
 
         //报买% 01
         for (int i = 0; i < objects.size(); i++) {
-            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
+//            JSONArray rowData = JSONArray.parseArray(((JSONArray) objects.get(i)).toJSONString());
+            List<String> rowData= JsonUtils.json2Object(objects.get(i),List.class);
             //报买% 01【4】 收益率%
             if (StringUtil.isNotEmpty(rowData.get(4))){
                 ComRateSwapInformationDto valFundMarketInfo001dto01 = new ComRateSwapInformationDto();
