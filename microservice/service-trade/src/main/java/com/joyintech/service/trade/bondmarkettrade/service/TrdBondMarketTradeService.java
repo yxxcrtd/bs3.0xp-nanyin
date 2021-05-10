@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCash
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -602,6 +603,21 @@ public class TrdBondMarketTradeService extends BaseService {
         param.put("bizCode",bizCode);
         param.put("finprodId",DictCodeListExt1.金融产品类型_投管用_债券.getValue() + "_" + entity.getAppearMarketId());
         List<BaseTradeInfoDto> baseTradeInfoDtos =  trdBondMarkettTradeMapper.selectbaseTradeInfoDtos(param);
+        /*从实占信息表中获取对应数据，即去除所有*/
+        if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
+            for(BaseTradeInfoDto dto:baseTradeInfoDtos) {
+            	TrdProductDeal deal  = dto.getTrdProductDeal();
+            	if(StringUtil.isNotEmpty(deal.getTradeId())) {
+            		Map<String,Object> map = trdBondMarkettTradeMapper.getTradeData(deal.getTradeId()+DictCodeList.交易方向_买入.getValue());
+            		if(map!=null&&map.get("AMOUNT")!=null) {
+            			deal.setTradeAmt(new BigDecimal(map.get("AMOUNT").toString()));
+            		}
+            		if(map!=null&&map.get("TRADE_NUM")!=null) {
+            			deal.setShareAmt(new BigDecimal(map.get("TRADE_NUM").toString()));
+            		}
+            	}
+            }	
+        }
         entity.setBaseTradeInfoDtos(baseTradeInfoDtos);
         return entity;
     }

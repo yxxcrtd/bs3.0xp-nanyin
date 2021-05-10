@@ -431,4 +431,10 @@
            AND t1.PORTFOLIO_ID != t1.FINPROD_ID
            and t2.FINPROD_TYPE2 ='F01'
     </select>
+    
+    <select id = "getTradeData" resultType = "java.util.Map">
+    	select amount,trade_num
+    	from RSK_OCCUPY_INFO
+    	where event_id = #{EventId,jdbcType=VARCHAR} AND rownum = 1
+    </select>
 </mapper>
