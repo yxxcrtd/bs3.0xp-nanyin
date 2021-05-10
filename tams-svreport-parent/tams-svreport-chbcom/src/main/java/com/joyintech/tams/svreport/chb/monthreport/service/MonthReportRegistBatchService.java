@@ -58,12 +58,11 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
         // 批处理开始
         logInfoBatchStart();
 	    Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, 1);
-	    //        calendar.setTime(executeDate);
+	    calendar.setTime(executeDate);
 
-//        if ( calendar.get(Calendar.DATE)!=1 &&!ifTrigger) {  //每月1日生成上月的数据
-//        	return;
-//        }
+        if ( calendar.get(Calendar.DATE)!=1 &&!ifTrigger) {  //每月1日生成上月的数据
+        	return;
+        }
         
         if ( prodids==null ) {
             prodids = new ArrayList<String>();
@@ -171,10 +170,10 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
 
         
     	//生成产品端月报明细
-//    	monthReportProdService.genReport(report,ifTrigger);
-//
-//        //生成资产端月报明细
-//    	monthReportAssetService.genReport(report,ifTrigger);
+    	monthReportProdService.genReport(report,ifTrigger);
+
+        //生成资产端月报明细
+    	monthReportAssetService.genReport(report,ifTrigger);
 
     	// add by wanshiwei G06b 银行理财子公司风险资本计算表 20210428 start
         monthReportG06bAssetService.genReport(report,ifTrigger);
