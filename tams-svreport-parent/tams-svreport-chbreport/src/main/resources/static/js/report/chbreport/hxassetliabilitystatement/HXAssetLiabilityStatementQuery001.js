@@ -69,7 +69,7 @@ $(function () {
      * @returns {string}
      */
     function getNextMonth(addMonths) {
-        var dd = new Date();
+        var dd = new Date(Date.parse(platDate));
         var m = dd.getMonth() + 1;
         var y = dd.getMonth() + 1 + addMonths > 12 ? (dd.getFullYear() + 1) : dd.getFullYear();
         if (m + addMonths == 0){
