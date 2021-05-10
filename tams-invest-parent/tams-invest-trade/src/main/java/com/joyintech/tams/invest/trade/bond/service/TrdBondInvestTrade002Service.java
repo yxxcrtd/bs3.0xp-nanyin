@@ -737,7 +737,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             inputDto.setTrdProductDeal(trdProductDeal);
-            AllTradeCommonUtil.handleBeforeTradeComplete(inputDto, false);
+            AllTradeCommonUtil.handleBeforeTradeComplete(inputDto, true);
             // 调用授信共同 sjj end
 
             // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[可用]的组合持仓流水及现金流水

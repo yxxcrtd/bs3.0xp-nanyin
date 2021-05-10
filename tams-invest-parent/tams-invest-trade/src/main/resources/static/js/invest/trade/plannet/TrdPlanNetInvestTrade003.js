@@ -406,6 +406,9 @@ $(function() {
                         ,'deal':data
                     };
                 });
+                if (formTodoList) {
+                    window.BussTrdTransferOrder['bussTrdTransferOrder'].saveCalcCondition();
+                }
 //                if(entrustId != ''){
 //                    if(etrEntrust){
 //                        window.TrdInvestPersonInfo002['trdInvestPersonInfo'].setEntrust(function () {

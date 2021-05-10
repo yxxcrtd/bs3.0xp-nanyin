@@ -460,7 +460,7 @@
             portfolio_id portfolioCode,
             finprod_id assetCode,
             nvl(sum(nvl(DSC_COST_AMT,0)+nvl(TDY_FLOAT_INGPL,0)+nvl(TDY_INTINCEXP, 0)),0) amount,
-            sum(share_amt) num 
+            sum(nvl(share_amt,0)) num 
         from PTL_SEC_VALUTION 
         where cdate = (select max(cdate) from PTL_SEC_VALUTION where cdate &lt; #{valDate, jdbcType=DATE})
         <if test="condList != null and condList.size() > 0">

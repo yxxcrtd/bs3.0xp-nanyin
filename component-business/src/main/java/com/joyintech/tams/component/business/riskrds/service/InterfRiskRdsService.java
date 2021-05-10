@@ -494,6 +494,14 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
 					}
 				}
         		for(Map<String,Object> map:baseTradeInfoDtos) {
+        			//获取接口类型
+        			String infCode = v.getInfCode();
+        			if(CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占批量接口)) {
+        				infCode = BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue();
+        			}
+        			else {
+        				infCode = BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue();
+        			}
         			//获取 组合代码
         			String portfolioId = null,invAim=null,tradeId=null;
         			BigDecimal tradeAmt = BigDecimal.ZERO,shareAmt = BigDecimal.ZERO;
@@ -517,6 +525,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         			if(StringUtil.isNotEmpty(tradeId)&&StringUtil.isNotEmpty(eventDate)) {
         				//买入
         				 InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
+        				 infRiskRdsDto.setEventType(v.getEventType());
+        				 infRiskRdsDto.setCcy(BussinessDictCodeListRds.币种_人民币_CNY.getValue());
+        				 infRiskRdsDto.setInfCode(infCode);
         				 infRiskRdsDto.setEventId(tradeId);
         				 infRiskRdsDto.setEventDate(eventDate);
         				 infRiskRdsDto.setPortfolioCode(portfolioId);
@@ -534,6 +545,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         			     result.add(BeanUtil.object2Map(infRiskRdsDto));
         			     //卖出
         			     infRiskRdsDto.setAssetCode(regionFinprodId);
+        			     infRiskRdsDto.setMarketCode(regionFinprodId);
         			     infRiskRdsDto.setPs(DictCodeList.交易方向_卖出.getValue());
         			     result.add(BeanUtil.object2Map(infRiskRdsDto));
         			}

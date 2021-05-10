@@ -60,6 +60,7 @@
 		LEFT JOIN BOK_BOOKSET BB
 		    ON BB.BOOKSET_ID = DEAL.BOOKSET_ID
 		left join BOK_BOOKSET_DATE bbd on bbd.BOOKSET_ID=BB.BOOKSET_ID
+		left join fin_product_add fpa on DEAL.busi_id = fpa.finprod_id
 		WHERE BB.BOOKSET_TYPE = #{booksetType}    
             <!-- 账套代码 -->
  <!--            <if test="booksetId !=null and booksetId !='' ">
@@ -79,15 +80,8 @@
             </if>
             <!-- 资产/负债代码 -->
             <if test="busiId !=null and busiId !='' ">
-				AND (DEAL.BUSI_ID LIKE '%' || #{busiId}  || '%' OR
-					(DEAL.BUSI_ID LIKE
-					'%' || (select (nvl((select t.finprod_id
-							from fin_product_add t
-							where (t.appear_market_id LIKE
-							'%' || #{busiId}  || '%' or
-							concat('F01_',
-							t.appear_market_id) LIKE '%' || #{busiId} || '%')),' '))
-						    from dual) || '%'))
+				AND (DEAL.BUSI_ID LIKE '%' || #{busiId}  || '%'
+				OR (concat('F01_',fpa.appear_market_id) LIKE '%' || #{busiId} || '%'))
             </if>
             <!-- 记账日期 -->
             <if test="bookDateBegin != null ">

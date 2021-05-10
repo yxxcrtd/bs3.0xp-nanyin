@@ -55,7 +55,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
         }
 
         //add by wyn TISHKBS-1969 【计划类净值型标的】新建：“资产投资性质”必填项为空时，提交未校验 20210409
-        if(dto.getInvestmentAttributes() == null || dto.getInvestmentAttributes().length() <= 0 &&
+        if((dto.getInvestmentAttributes() == null || dto.getInvestmentAttributes().length() <= 0) &&
                 (StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit"))){
             errorList.add(new ValidMessage("investmentAttributes",getMessage("请输入资产投资性质")));
         }

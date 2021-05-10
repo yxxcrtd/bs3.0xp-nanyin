@@ -723,6 +723,10 @@
         // object.qty = sumQty;
         object.registShare = sumRegistShare;
         object.operateType = operateType;
+        
+        if (FileCommon) {
+            object.uploadFileList = FileCommon.getUploadFileInfo();
+        }
 //        新建打开为00
         if(object.type == '00'){
             //    净值分红除权

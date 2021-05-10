@@ -185,7 +185,7 @@
             </if>
             <if test="finprodId!=null and !''.equals(finprodId.trim())">
 
-                AND nvl(vfp.finprod_market_id,t.FINPROD_ID) in
+                AND nvl(t.FINPROD_ID,vfp.finprod_market_id) in
                 <foreach collection="finprodId.split(',')" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>

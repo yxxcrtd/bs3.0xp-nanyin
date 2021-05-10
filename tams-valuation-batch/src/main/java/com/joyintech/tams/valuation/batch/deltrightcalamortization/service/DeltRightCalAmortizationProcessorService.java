@@ -378,7 +378,7 @@ public class DeltRightCalAmortizationProcessorService {
                              //BigDecimal interestAmt = this.calcRePayAddInt(targetFinProduct,interestPayList,payRuleList,quotationList,item.getoHappenAmt(),item.getBookDate());
                              DrawBaseInfoSelectComResult acctEntityInt= new DrawBaseInfoSelectComResult();
                              BeanUtils.copyProperties(acctEntity, acctEntityInt);
-                             acctEntityInt.setHappenDate(item.getBookDate());
+                             acctEntityInt.setHappenDate(DateUtil.addDay(item.getBookDate(),-1));
                              // 调用债权类资产应计利息共通
                              AccurIntCalOutParameter accurIntCalOutParameterInt = this.getCalculate(
                                      acctEntityEx, targetFinProduct, interestPayList, quotationList,

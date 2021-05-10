@@ -58,7 +58,10 @@
                 	<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
                 		<lable class="layui-form-label form-lable" data-th-text="#{FinProductDurDeal001.confirmDate}">确认日</lable>
                 		<div class="layui-input-inline input-inline">
-                            <input type="text" id="confirmDate" name="confirmDate"
+                            <!-- modify by jiangpeng on 20210507 -->
+                            <!-- TISHKBS-2092 选择日期后，再在日期后面输入字符，弹出报错提示，建议优化 -->
+                            <!-- 编辑后判断是否合法字段并格式化的事件未触发? 再次编辑时触发 未找到修改方法,限制位数,使其不能编辑 -->
+                            <input type="text" id="confirmDate" name="confirmDate" maxlength="23"
                                 class="layui-input form-input input-dateRangeSelect" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}" >
                         </div>

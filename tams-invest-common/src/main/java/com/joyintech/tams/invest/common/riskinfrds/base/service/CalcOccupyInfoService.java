@@ -1769,7 +1769,10 @@ public class CalcOccupyInfoService {
             return StringUtil.EMPTY;
         }
         for (int i = 0; i < redisFld.length; i++ ) {
-            Object val = mapData.getOrDefault(redisFld[i], StringUtil.EMPTY);
+            Object val = mapData.getOrDefault(redisFld[i], redisFld[i] + GlobalConstant.COLON + mapData.get(EVENT_ID));
+            if (!StringUtil.isNotEmpty(val)) {
+            	val = redisFld[i] + GlobalConstant.COLON + mapData.get(EVENT_ID);
+            }
             builder.append(GlobalConstant.COMMA).append(val);
         }
         return builder.length() > 1 ? builder.substring(1) : StringUtil.EMPTY;

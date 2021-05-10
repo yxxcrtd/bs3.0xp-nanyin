@@ -27,9 +27,9 @@
     <select id="selectDeal" resultMap="trdBondInvestTradeResultMap">
         <if test="finprodId != null and finprodId != ''">
         WITH TEMP AS (
-            SELECT DISTINCT 
-                FP2.FINPROD_MARKET_ID,
-                FP.FINPROD_ID
+            SELECT DISTINCT
+                FP2.FINPROD_ID,
+                FP.FINPROD_MARKET_ID
             FROM FIN_PRODUCT FP
             LEFT JOIN FIN_PRODUCT_ADD FPA
             ON FPA.APPEAR_MARKET_ID = FP.FINPROD_MARKET_ID
@@ -70,6 +70,9 @@
                 <!-- mbvi.LAST_PERIOD endDays1,-->
                 wtpda.ASSET_RECOMMAND_ORG
               from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL wtpd
+                <if test="finprodId != null and finprodId != ''">
+                    LEFT JOIN TEMP tp ON wtpd.FINPROD_ID = tp.FINPROD_ID
+                </if>
 			  	LEFT JOIN wfl_trd_product_deal  wDeal on wDeal.TOTLE_TRADE_ID = wtpd.TOTLE_TRADE_ID
                 LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD wtpda on wtpd.TOTLE_TRADE_ID = wtpda.TOTLE_TRADE_ID
                 LEFT JOIN FIN_PRODUCT fp on fp.FINPROD_ID = wtpd.FINPROD_ID
@@ -133,7 +136,9 @@
                         AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     <if test="finprodId != null and finprodId != ''">
-                        AND fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                        AND (fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                                OR tp.FINPROD_MARKET_ID = #{finprodId}
+                            )
                     </if>
                     <if test="tradeMarket != null and tradeMarket != ''">
                         AND wtpd.TRADE_MARKET = #{tradeMarket}
@@ -181,127 +186,6 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id=#{fTradeId}
                     </if>
-                    <if test="finprodId != null and finprodId != ''">
-                        UNION
-
-                        select
-                        wtpd.f_trade_id,
-                        WTPD.TOTLE_TRADE_ID,
-                        #{VALID_STATUS_01} VALID_STATUS,
-                        wtpda.ENTRUST_ID,
-                        pp.PORTFOLIO_ID,
-                        pp.PORTFOLIO_NAME,
-                        wtpd.FINPROD_TYPE2,
-                        wtpd.FINPROD_ID,
-                        fp.FINPROD_MARKET_ID,
-                        fp.FINPROD_ABBR as FINPROD_NAME,
-                        fp1.FINPROD_NAME AS CHL_NAME,
-                        wtpd.PS,
-                        wtpd.TRADE_MARKET,
-                        wtpd.TRADE_MARKET_MODE,
-                        wtpd.TRADE_PLAT,
-                        wtpd.SHARE_AMT * 100 as TRADE_AMT,
-                        NVL(wtpda.LENDIN_SHARE_AMT, 0) * 100 integrateTradeAmt,
-                        nvl(wtpda.OUR_SHARE_AMT, wtpd.SHARE_AMT) * 100 ownTradeAmt,
-                        wtpd.CCY,
-                        wtpd.TRADE_DATE,
-                        wtpd.SETTLE_DATE,
-                        wtpd.REMARK,
-                        wtpd.WORKFLOW_ID,
-                        wtpd.WORKFLOW_STATUS,
-                        wtpda.DEVIATION,
-                        wtpd.UNIT_CPRICE,
-                        wtpda.ASSET_RECOMMAND_ORG
-                        from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL wtpd
-                        LEFT JOIN wfl_trd_product_deal  wDeal on wDeal.TOTLE_TRADE_ID = wtpd.TOTLE_TRADE_ID
-                        LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD wtpda on wtpd.TOTLE_TRADE_ID = wtpda.TOTLE_TRADE_ID
-                        LEFT JOIN FIN_PRODUCT fp on fp.FINPROD_ID = wtpd.FINPROD_ID
-                        LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = wtpd.CHL_ID
-                        LEFT JOIN PTL_PORTFOLIO PP ON wtpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
-                        where
-                        wtpd.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-                        and (wDeal.IS_CANCEL = 'Y' or wDeal.is_swap_transaction is null or wDeal.is_swap_transaction='N')
-                        AND (wtpd.IS_OVERDUE_DEAL IS NULL OR wtpd.IS_OVERDUE_DEAL != 'Y')
-                        <!-- 一体化对应etliu start -->
-                        <if test="psList != null and psList.size() > 0">
-                            AND wtpd.PS IN
-                            <foreach collection="psList" item="item" open="(" close=")" separator=",">
-                                #{item}
-                            </foreach>
-                        </if>
-                        <!-- 一体化对应etliu end -->
-                        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-                            AND (
-                            pp.PORTFOLIO_ID IN
-                            <foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-                                <if test="(index % 998) == 0">
-                                    null) OR  pp.PORTFOLIO_ID IN (
-                                </if>
-                                #{item}
-                            </foreach>
-                            OR pp.PARENT_PORTFOLIO_ID IN
-                            <foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-                                <if test="(index % 998) == 0">
-                                    null) OR pp.PARENT_PORTFOLIO_ID IN (
-                                </if>
-                                #{item}
-                            </foreach>
-                            )
-                        </if>
-                        <if test="loginUserName != null and loginUserName != ''">
-                            and (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
-                            OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
-                        </if>
-                        <if test="entrustId != null and entrustId != ''">
-                            AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
-                        </if>
-                        <if test="finprodId != null and finprodId != ''">
-                            AND fp.FINPROD_MARKET_ID =
-                            (
-                            select tp.FINPROD_MARKET_ID
-                            from
-                            temp tp
-                            where tp.FINPROD_ID = #{FINPROD_TYPE_TG_F01} || '_' || #{finprodId}
-                            )
-                        </if>
-                        <if test="tradeMarket != null and tradeMarket != ''">
-                            AND wtpd.TRADE_MARKET = #{tradeMarket}
-                        </if>
-                        <if test="tradePlat != null and tradePlat != ''">
-                            AND wtpd.TRADE_PLAT = #{tradePlat}
-                        </if>
-                        <if test="tradeMarketMode != null and tradeMarketMode != ''">
-                            AND wtpd.TRADE_MARKET_MODE = #{tradeMarketMode}
-                        </if>
-                        <if test="ps != null and ps != ''">
-                            AND wtpd.PS = #{ps}
-                        </if>
-                        <if test="tradeDateBegin != null and tradeDateBegin != ''">
-                            AND wtpd.TRADE_DATE >= to_date(#{tradeDateBegin}, 'yyyy-MM-dd')
-                        </if>
-                        <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                            AND wtpd.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
-                        </if>
-                        <!--添加查询条件登记托管机构 add by lishuping 20191010 start-->
-                        <if test="registOrg != null and registOrg != ''">
-                            AND fp.REGIST_ORG = #{registOrg}
-                        </if>
-                        <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
-                            AND (wtpd.CHL_ID IN
-                            <foreach collection="chlFinprodIdList" item="item" index="index" open="("
-                                     close=")" separator=",">
-                                <if test="(index % 998) == 0">
-                                    null) OR wtpd.CHL_ID in (
-                                </if>
-                                #{item}
-                            </foreach>
-                            )
-                        </if>
-                        and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
-                        <if test="fTradeId!=null and fTradeId!='' ">
-                            and wtpd.f_trade_id=#{fTradeId}
-                        </if> 
-                    </if>   
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_02">
                 UNION ALL
@@ -335,6 +219,9 @@
                 <!-- mbvi.LAST_PERIOD endDays1,  -->
                 wtpda.ASSET_RECOMMAND_ORG
               from TRD_FIN_PRODUCT_DEAL_TOTAL wtpd
+                <if test="finprodId != null and finprodId != ''">
+                    LEFT JOIN TEMP tp ON wtpd.FINPROD_ID = tp.FINPROD_ID
+                </if>
                 LEFT JOIN TRD_DEAL_TOTAL_ADD wtpda on wtpd.TOTLE_TRADE_ID = wtpda.TOTLE_TRADE_ID
                 LEFT JOIN FIN_PRODUCT fp on fp.FINPROD_ID = wtpd.FINPROD_ID
                 LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = wtpd.CHL_ID
@@ -393,7 +280,9 @@
                         AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     <if test="finprodId != null and finprodId != ''">
-                        AND fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                        AND (fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                            OR tp.FINPROD_MARKET_ID = #{finprodId}
+                            )
                     </if>
                     <if test="tradeMarket != null and tradeMarket != ''">
                         AND wtpd.TRADE_MARKET = #{tradeMarket}
@@ -442,121 +331,6 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id=#{fTradeId}
                     </if>
-                    <if test="finprodId != null and finprodId != ''">
-                        UNION
-
-                        select
-                        wtpd.f_trade_id,
-                        wtpd.TOTLE_TRADE_ID,
-                        #{VALID_STATUS_02} VALID_STATUS,
-                        wtpda.ENTRUST_ID,
-                        pp.PORTFOLIO_ID,
-                        pp.PORTFOLIO_NAME,
-                        wtpd.FINPROD_TYPE2,
-                        wtpd.FINPROD_ID,
-                        fp.FINPROD_MARKET_ID,
-                        fp.FINPROD_ABBR as FINPROD_NAME,
-                        fp1.FINPROD_NAME AS CHL_NAME,
-                        wtpd.PS,
-                        wtpd.TRADE_MARKET,
-                        wtpd.TRADE_MARKET_MODE,
-                        wtpd.TRADE_PLAT,
-                        wtpd.SHARE_AMT * 100 as TRADE_AMT,
-                        NVL(wtpda.LENDIN_SHARE_AMT, 0) * 100 integrateTradeAmt,
-                        nvl(wtpda.OUR_SHARE_AMT, wtpd.SHARE_AMT) * 100 ownTradeAmt,
-                        wtpd.CCY, wtpd.TRADE_DATE,
-                        wtpd.SETTLE_DATE,
-                        wtpd.REMARK,
-                        null as WORKFLOW_ID,
-                        null as WORKFLOW_STATUS,
-                        wtpda.DEVIATION,
-                        wtpd.UNIT_CPRICE,
-                        wtpda.ASSET_RECOMMAND_ORG
-                        from TRD_FIN_PRODUCT_DEAL_TOTAL wtpd
-                        LEFT JOIN TRD_DEAL_TOTAL_ADD wtpda on wtpd.TOTLE_TRADE_ID = wtpda.TOTLE_TRADE_ID
-                        LEFT JOIN FIN_PRODUCT fp on fp.FINPROD_ID = wtpd.FINPROD_ID
-                        LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = wtpd.CHL_ID
-                        LEFT JOIN PTL_PORTFOLIO PP ON wtpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
-
-                        where wtpd.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-                        AND (wtpd.IS_OVERDUE_DEAL IS NULL OR wtpd.IS_OVERDUE_DEAL != 'Y')
-                        <if test="psList != null and psList.size() > 0">
-                            AND wtpd.PS IN
-                            <foreach collection="psList" item="item" open="(" close=")" separator=",">
-                                #{item}
-                            </foreach>
-                        </if>
-                        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-                            AND (pp.PORTFOLIO_ID IN
-                            <foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-                                <if test="(index % 998) == 0">
-                                    null) OR pp.PORTFOLIO_ID IN (
-                                </if>
-                                #{item}
-                            </foreach>
-                            OR pp.PARENT_PORTFOLIO_ID IN
-                            <foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-                                <if test="(index % 998) == 0">
-                                    null) OR pp.PARENT_PORTFOLIO_ID IN (
-                                </if>
-                                #{item}
-                            </foreach>)
-                        </if>
-                        <if test="loginUserName != null and loginUserName != ''">
-                            and (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
-                            or pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
-                        </if>
-                        <if test="entrustId != null and entrustId != ''">
-                            AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
-                        </if>
-                        <if test="finprodId != null and finprodId != ''">
-                            AND fp.FINPROD_MARKET_ID =
-                            (
-                                select tp.FINPROD_MARKET_ID
-                                from
-                                temp tp
-                                where tp.FINPROD_ID = #{FINPROD_TYPE_TG_F01} || '_' || #{finprodId}
-                            )
-                        </if>
-                        <if test="tradeMarket != null and tradeMarket != ''">
-                            AND wtpd.TRADE_MARKET = #{tradeMarket}
-                        </if>
-                        <if test="tradePlat != null and tradePlat != ''">
-                            AND wtpd.TRADE_PLAT = #{tradePlat}
-                        </if>
-                        <if test="tradeMarketMode != null and tradeMarketMode != ''">
-                            AND wtpd.TRADE_MARKET_MODE = #{tradeMarketMode}
-                        </if>
-                        <if test="ps != null and ps != ''">
-                            AND wtpd.PS = #{ps}
-                        </if>
-                        <if test="tradeDateBegin != null and tradeDateBegin != ''">
-                            AND wtpd.TRADE_DATE >= to_date(#{tradeDateBegin}, 'yyyy-MM-dd')
-                        </if>
-                        <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                            AND wtpd.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
-                        </if>
-                        <!--添加查询条件登记托管机构 add by lishuping 20191010 start-->
-                        <if test="registOrg != null and registOrg != ''">
-                            AND fp.REGIST_ORG = #{registOrg}
-                        </if>
-                        <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
-                            AND (wtpd.CHL_ID IN
-                            <foreach collection="chlFinprodIdList" item="item" index="index" open="("
-                                     close=")" separator=",">
-                                <if test="(index % 998) == 0">
-                                    null) OR wtpd.CHL_ID in (
-                                </if>
-                                #{item}
-                            </foreach>
-                            )
-                        </if>
-                        and (wtpd.IS_CANCEL is null or wtpd.IS_CANCEL = #{YES_NO_NO})
-                        and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
-                        <if test="fTradeId!=null and fTradeId!='' ">
-                            and wtpd.f_trade_id=#{fTradeId}
-                        </if>
-                    </if>
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_03">
                 UNION ALL
@@ -591,6 +365,9 @@
                <!--  mbvi.LAST_PERIOD endDays1, -->
                 wtpda.ASSET_RECOMMAND_ORG
               from TRD_FIN_PRODUCT_DEAL_TOTAL wtpd
+                <if test="finprodId != null and finprodId != ''">
+                    LEFT JOIN TEMP tp ON wtpd.FINPROD_ID = tp.FINPROD_ID
+                </if>
                 left join TRD_DEAL_TOTAL_ADD wtpda on wtpd.TOTLE_TRADE_ID = wtpda.TOTLE_TRADE_ID
                 left join FIN_PRODUCT fp on fp.FINPROD_ID = wtpd.FINPROD_ID
                 LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = wtpd.CHL_ID
@@ -646,7 +423,9 @@
                         AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     <if test="finprodId != null and finprodId != ''">
-                        AND fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                        AND (fp.FINPROD_MARKET_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                            OR tp.FINPROD_MARKET_ID = #{finprodId}
+                            )
                     </if>
                     <if test="tradeMarket != null and tradeMarket != ''">
                         AND wtpd.TRADE_MARKET = #{tradeMarket}
@@ -694,117 +473,6 @@
                     and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id=#{fTradeId}
-                    </if>
-            
-                    <if test="finprodId != null and finprodId != ''">
-                        UNION
-                        select
-                        wtpd.f_trade_id,
-                        wtpd.TOTLE_TRADE_ID,
-                        #{VALID_STATUS_03} VALID_STATUS,
-                        wtpda.ENTRUST_ID,
-                        PP.PORTFOLIO_ID,
-                        pp.PORTFOLIO_NAME,
-                        wtpd.FINPROD_TYPE2,
-                        wtpd.FINPROD_ID,
-                        fp.FINPROD_MARKET_ID,
-                        fp.FINPROD_ABBR as FINPROD_NAME,
-                        fp1.FINPROD_NAME AS CHL_NAME,
-                        wtpd.PS,
-                        wtpd.TRADE_MARKET,
-                        wtpd.TRADE_MARKET_MODE,
-                        wtpd.TRADE_PLAT,
-                        wtpd.SHARE_AMT * 100 as TRADE_AMT,
-                        NVL(wtpda.LENDIN_SHARE_AMT, 0) * 100 integrateTradeAmt,
-                        nvl(wtpda.OUR_SHARE_AMT, wtpd.SHARE_AMT) * 100 ownTradeAmt,
-                        wtpd.CCY,
-                        wtpd.TRADE_DATE,
-                        wtpd.SETTLE_DATE,
-                        wtpd.REMARK,
-                        null as WORKFLOW_ID,
-                        null as WORKFLOW_STATUS,
-                        wtpda.DEVIATION,
-                        wtpd.UNIT_CPRICE,
-                        wtpda.ASSET_RECOMMAND_ORG
-                        from TRD_FIN_PRODUCT_DEAL_TOTAL wtpd
-                        left join TRD_DEAL_TOTAL_ADD wtpda on wtpd.TOTLE_TRADE_ID = wtpda.TOTLE_TRADE_ID
-                        left join FIN_PRODUCT fp on fp.FINPROD_ID = wtpd.FINPROD_ID
-                        LEFT JOIN FIN_PRODUCT fp1 on fp1.FINPROD_ID = wtpd.CHL_ID
-                        LEFT JOIN PTL_PORTFOLIO PP ON wtpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
-                        where wtpd.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-                        AND (wtpd.IS_OVERDUE_DEAL IS NULL OR wtpd.IS_OVERDUE_DEAL != 'Y')
-                        <if test="psList != null and psList.size() > 0">
-                            AND wtpd.PS IN
-                            <foreach collection="psList" item="item" open="(" close=")" separator=",">
-                                #{item}
-                            </foreach>
-                        </if>
-                        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-                            AND (
-                            PP.PORTFOLIO_ID IN
-                            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                                #{item}
-                            </foreach>
-                            OR
-                            PP.PARENT_PORTFOLIO_ID IN
-                            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                                #{item}
-                            </foreach>
-                            )
-                        </if>
-                        <if test="loginUserName != null and loginUserName != ''">
-                            and (PP.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
-                            OR PP.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
-                        </if>
-                        <if test="entrustId != null and entrustId != ''">
-                            AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
-                        </if>
-                        <if test="finprodId != null and finprodId != ''">
-                            AND fp.FINPROD_MARKET_ID =
-                            (
-                            select tp.FINPROD_MARKET_ID
-                            from
-                            temp tp
-                            where tp.FINPROD_ID = #{FINPROD_TYPE_TG_F01} || '_' || #{finprodId}
-                            )
-                        </if>
-                        <if test="tradeMarket != null and tradeMarket != ''">
-                            AND wtpd.TRADE_MARKET = #{tradeMarket}
-                        </if>
-                        <if test="tradePlat != null and tradePlat != ''">
-                            AND wtpd.TRADE_PLAT = #{tradePlat}
-                        </if>
-                        <if test="tradeMarketMode != null and tradeMarketMode != ''">
-                            AND wtpd.TRADE_MARKET_MODE = #{tradeMarketMode}
-                        </if>
-                        <if test="ps != null and ps != ''">
-                            AND wtpd.PS = #{ps}
-                        </if>
-                        <if test="tradeDateBegin != null and tradeDateBegin != ''">
-                            AND wtpd.TRADE_DATE >= to_date(#{tradeDateBegin}, 'yyyy-MM-dd')
-                        </if>
-                        <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                            AND wtpd.TRADE_DATE &lt;= to_date(#{tradeDateEnd}, 'yyyy-MM-dd')
-                        </if>
-                        <if test="registOrg != null and registOrg != ''">
-                            AND fp.REGIST_ORG = #{registOrg}
-                        </if>
-                        <if test="chlFinprodIdList != null and chlFinprodIdList.size() > 0">
-                            AND (wtpd.CHL_ID IN
-                            <foreach collection="chlFinprodIdList" item="item" index="index" open="("
-                                     close=")" separator=",">
-                                <if test="(index % 998) == 0">
-                                    null) OR wtpd.CHL_ID in (
-                                </if>
-                                #{item}
-                            </foreach>
-                            )
-                        </if>
-                        and wtpd.IS_CANCEL = #{YES_NO_YES}
-                        and wtpd.TRADE_STATUS = #{TRADE_STATUS_01}
-                        <if test="fTradeId!=null and fTradeId!='' ">
-                            and wtpd.f_trade_id=#{fTradeId}
-                        </if>
                     </if>
             </if>
         </trim>
