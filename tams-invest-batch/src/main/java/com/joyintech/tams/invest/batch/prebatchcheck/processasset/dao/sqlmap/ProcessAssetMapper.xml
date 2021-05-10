@@ -18,14 +18,24 @@
 					公募基金：FinFundTarget002
 					股票标的：FinStockInfo002
          -->
-            
-		WITH TEMP AS (
+        WITH filter as(
+            select workflow_id
+            from(
+	            select 
+		            mark.*,rank() over(partition by mark.workflow_id order by mark.HIS_NO desc) as rank
+	            from sys_data_process_mark mark
+	            inner join SYS_WFL_BUSINESS_LIST T on T.seq_no = mark.workflow_id and T.PROCESS_STATE = 'BACK'
+            )
+            where rank = 2 and STATUS = 'U'
+        ),
+        TEMP AS (
 			SELECT * FROM(
 				select 
 					sys_data_process_mark.*,rank() over(partition by workflow_id order by HIS_NO desc) as rank
 				from sys_data_process_mark 
 				where page_id in ('FinBondTargetAsset002','FinProjectTargetAsset002','FinTenderBondTargetAsset002','FinDepositTarget002',
 					'FinFundTarget002','FinStockInfo002','FinOptionTarget002','FinPlanNetAsset002','FinPlanProfitAsset002','FinPlanAssetC002')
+                    and workflow_id not in (select workflow_id from filter)
 			) WHERE rank = 1
 		)
 		select 
