@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.joyintech.service.trade.common.service.TrdAvailableCashQueryService;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -289,6 +290,11 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
             // 场内基金改造 add by renping 20191117 end
         }
         pageParam.put("psList", psList);
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         Page<TrdFundInvestTradeDto> pageDto = this.queryForPage(page, length,
             () -> trdFundInvestTradeMapper.selectDeal(pageParam));
         List<TrdFundInvestTradeDto> listDto = pageDto.getRoot();
@@ -334,6 +340,11 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
 //        if (StringUtil.isNotEmpty(param)&&!StringUtil.isNotEmpty(param.get("tradeDateVdate"))){
 //            param.put("tradeDateVdate", platformDateImpl.getSysDateStr());
 //        }
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("parentPageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return this.queryForPageForSelectReturn(page, length, () -> trdFundInvestTradeMapper.getFinprodId(param));
     }
 

@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,14 +104,14 @@ public class PlannedAssetBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> 
     @Autowired
     private AssetmanageRecvCommonService assetmanageRecvCommonService;
     //add by liupengfei for 多级法人改造 E
-	
+
 	/**
      * 标的类金融产品扩展表
      */
     @Autowired
     private ValFinProductAddBatchMapper valFinProductAddBatchMapper;
-	
-    
+
+
     @Value("${interf.properties.maxSqlNum}")
     private int maxSqlNum;
     
@@ -124,7 +126,7 @@ public class PlannedAssetBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> 
      */
     @Autowired
     private MultilevelDataAuthorityService multilevelDataAuthorityService;
-   
+
     /**
      * 更新数据 {@inheritDoc}
      */

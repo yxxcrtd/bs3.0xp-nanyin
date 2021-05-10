@@ -131,6 +131,12 @@ public class MoneyTaFloadFeeBookService {
         // 标的_业绩报酬计算规则
         List<TargetPerfRewardCalRule> targetPerfRewardCalRuleList = (List<TargetPerfRewardCalRule>)targetInfo.get(
             ValDictCodeList.标的_业绩报酬计算规则.getValue());
+        /**add by wujie on 20210507 start**/
+        if(targetPerfRewardCalRuleList.size() <= 0){
+            return null;
+        }
+        /**add by wujie on 20210507 end**/
+
         TargetPerfRewardCalRule targetPerfRewardCalRule = targetPerfRewardCalRuleList.get(
             targetPerfRewardCalRuleList.size() - 1);
 

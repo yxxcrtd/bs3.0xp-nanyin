@@ -49,10 +49,10 @@
      * 多组合指令
      */
     function showCmdDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrInvestBondInfo003'), basePath +'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/init', '98%', '95%',function(){table.reload();});
+        Joyin.dialog(JoyinUtil.getLabel('EtrInvestBondInfo003'), basePath +'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/init?parentPageId=' + pageId, '98%', '95%',function(){table.reload();});
     }
     // 导入按钮点击事件
-    $('#EtrInvestBondInfo001_btn_import').click(function() {
+    $('#'+pageId+'_btn_import').click(function() {
         Joyin.uploadFile({pageId : 'EtrInvestBondInfo004MTM'}, function(fileName) {
             Joyin.ajax(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/checkImportData', {fileName: fileName}, function(checkResult) {
                 if (checkResult) {
@@ -81,7 +81,7 @@
      * 新建
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrInvestBondInfo002'), basePath +'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init', '98%', '95%',function(){table.reload();});
+        Joyin.dialog(JoyinUtil.getLabel('EtrInvestBondInfo002'), basePath +'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init?parentPageId=' + pageId, '98%', '95%',function(){table.reload();});
     }
     /**
      * 定义数据表格
@@ -215,7 +215,7 @@
         /**
          * 查询按钮
          */
-        $('#EtrInvestBondInfo001_btn_search').click(function() {
+        $('#'+pageId+'_btn_search').click(function() {
             table.load();
             $('#EtrInvestBondInfo001_btn_close').show();
             $('#EtrInvestBondInfo001_btn_revoke').show();
@@ -223,25 +223,25 @@
         /**
          * 导出按钮
          */
-        $('#EtrInvestBondInfo001_btn_export').click(function() {
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
         /**
          * 多组合指令
          */
-        $('#EtrInvestBondInfo001_btn_cmd').click(function() {
+        $('#'+pageId+'_btn_cmd').click(function() {
             showCmdDialog();
         });
         /**
          * 新建
          */
-        $('#EtrInvestBondInfo001_btn_add').click(function() {
+        $('#'+pageId+'_btn_add').click(function() {
             showDialog();
         });
         /**
          * 关闭委托
          */
-        $('#EtrInvestBondInfo001_btn_close').click(function() {
+        $('#'+pageId+'_btn_close').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
              }
@@ -262,7 +262,7 @@
         /**
          * 撤销
          */
-        $('#EtrInvestBondInfo001_btn_revoke').click(function() {
+        $('#'+pageId+'_btn_revoke').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
              }

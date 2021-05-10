@@ -17,24 +17,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.calculation.util.ArithmeticUtil;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BokDealAccounting;
-import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.StlOrders;
-import com.joyintech.tams.common.base.entity.StlOrdersExt;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.ValInterflog;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfoDeal;
@@ -96,6 +88,14 @@ public class CPlannedAffirmPurDealTemplateRecService {
         if (listValMngMnfAffirmPurTrade == null) {
             listValMngMnfAffirmPurTrade = new ArrayList<ValMngMnfAffirmPurTrade>();
         }
+
+
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
+
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = handleValMngMnfAffirmPurTrade(listValMngMnfAffirmPurTrade,acctEntity.getResovleDate(),params,returnResult.getValInterflog());
         if (map != null) {
@@ -124,6 +124,11 @@ public class CPlannedAffirmPurDealTemplateRecService {
             // 结算指令扩展表
             List<StlOrdersExt> listStlOrdersExt = (List<StlOrdersExt>)map.get("StlOrdersExt");
             result.setListStlOrdersExt(listStlOrdersExt);
+
+            /**add by wujie on 20210501 START**/
+            result.setListValTradeFeeDetail((List<TrdTradeFeeDetail>)map.get("ValTradeFeeDetail"));
+            /**add by wujie on 20210501 END**/
+
          	// 添加日志
             result.setValInterflog((List<ValInterflog>)map.get("valInterflogList"));
         }
@@ -155,6 +160,10 @@ public class CPlannedAffirmPurDealTemplateRecService {
     	String valModel = (String)params.get(InterfCommonConstant.接口模式);
         
     	List<ValInterflog> valInterflogList =  new ArrayList<>();
+
+    	/**ADD BY WUJIE ON 20210501 START**/
+        List<TrdTradeFeeDetail> listValTradeFeeDetail = new ArrayList<TrdTradeFeeDetail>();
+        /**ADD BY WUJIE ON 20210501 END**/
     	
         for (ValMngMnfAffirmPurTrade dto : listValMngMnfAffirmPurTrade) {
         	if(StringUtil.equals(valModel, InterfCommonConstant.接口模式_指定账套) && !bookSetIds.contains(dto.getProdId())){
@@ -184,6 +193,13 @@ public class CPlannedAffirmPurDealTemplateRecService {
             TrdProductDealAdd trdProductDealExt = this.getTrdProductDealExt(dto,interfProductDealBookCommonDto.getAcctSubjectType(),trdProductDeal.getTradeId());
             trdProductDealExt.setCreateTime(resovleDate);
             listTrdProductDealExt.add(trdProductDealExt);
+
+
+            /**ADD BY WUJIE ON 20210501 START**/
+            List<TrdTradeFeeDetail> listfeeDetail = this.getValTradeFeeDetail(dto,trdProductDeal);
+            listValTradeFeeDetail.addAll(listfeeDetail);
+            /**ADD BY WUJIE ON 20210501 END**/
+
             
             Map<String, Object> map = interfCommonService.instructionGenerate(trdProductDeal,
                 dto.getProdId(), interfProductDealBookCommonDto.getAcctSubjectType(), null);
@@ -246,7 +262,11 @@ public class CPlannedAffirmPurDealTemplateRecService {
         resultMap.put("BokDetailId", listBokDetailId);
         resultMap.put("StlOrders", listStlOrders);
         resultMap.put("StlOrdersExt", listStlOrdersExt);
-        
+
+        /**ADD BY WUJIE ON 20210501 START**/
+        resultMap.put("ValTradeFeeDetail", listValTradeFeeDetail);
+        /**ADD BY WUJIE ON 20210501 END**/
+
         valInterflogList = interfCommonService.filterValInterflogList(valInterflog, bookSetIds, valModel);
     	resultMap.put("valInterflogList", valInterflogList);
 
@@ -301,12 +321,45 @@ public class CPlannedAffirmPurDealTemplateRecService {
         result.setCcy(dto.getCcy());
         //交易份额 =B.确认份额
         result.setShareAmt(dto.getCfmShare());
+
+        /**modify by wujie on 20210501 start
         //交易本金 = B.确认金额
         result.setPrinAmt(dto.getCfmAmt());
         //全价总额 =B.确认金额
         result.setFpriceAmt(dto.getCfmAmt());
         // 交易金额= B.确认金额
         result.setTradeAmt(dto.getCfmAmt());
+        **/
+        //随交易支付费用
+        BigDecimal feeAmtPay = BigDecimal.ZERO;
+
+        //不随交易支付费用
+        BigDecimal unFeeAmtPay = BigDecimal.ZERO;
+
+        //认购费、申购费
+        feeAmtPay = ArithmeticUtil.doAdd(feeAmtPay,dto.getFee());
+
+        // 随交易支付费用
+        result.setFeeAmtPay(feeAmtPay);
+
+        // 不随交易支付费用
+        result.setFeeAmtUnpay(unFeeAmtPay);
+
+        // 总交易费用 =随交易支付费用+不随交易支付费
+        result.setFeeAmt(ArithmeticUtil.doAdd(feeAmtPay,unFeeAmtPay));
+
+        // 交易本金 = B.确认份额
+        result.setPrinAmt(dto.getCfmShare());
+
+        // 交易金额 =B.确认金额+随交易支付费用
+        result.setTradeAmt(ArithmeticUtil.doAdd(dto.getCfmAmt(),feeAmtPay));
+        // 全价总额 = B.确认金额
+        result.setFpriceAmt(dto.getCfmAmt());
+
+
+        /**modify by wujie on 20210501 end**/
+
+
         // 交易方向 =数据字典：交易方向.申购
         result.setPs(DictCodeList.交易方向_申购确认.getValue());
         // 交易编号 = 调用编号生成共通方法 TODO
@@ -359,4 +412,41 @@ public class CPlannedAffirmPurDealTemplateRecService {
         return result;
     }
 
+
+    /**
+     * 接收 交易费用明细表 T5
+     *
+     * @param dto ValFundNRedAffirmN
+     * @return ValTradeFeeDetail
+     * @see
+     * @since 1.0
+     */
+    private List<TrdTradeFeeDetail> getValTradeFeeDetail(ValMngMnfAffirmPurTrade dto, TrdProductDeal deal) {
+        List<TrdTradeFeeDetail> listValTradeFeeDetail = new ArrayList<TrdTradeFeeDetail>();
+        Map<String,BigDecimal> map = new HashMap<String,BigDecimal>();
+        Map<String,String> mapIsPay = new HashMap<String,String>();
+
+        map.put(DictCodeListExt1.一次性费用类型_申购费.getValue(), dto.getFee());
+        mapIsPay.put(DictCodeListExt1.一次性费用类型_申购费.getValue(), DictCodeList.是否_是.getValue());
+
+        for (String key : map.keySet()) {
+            BigDecimal amt = map.get(key);
+            if(amt==null || BigDecimal.ZERO.compareTo(amt)==0){
+                continue;
+            }
+            TrdTradeFeeDetail valTradeFeeDetail = new TrdTradeFeeDetail();
+            // 交易编号 = T1.交易编号
+            valTradeFeeDetail.setTradeId(deal.getTradeId());
+            valTradeFeeDetail.setFeeType(key);
+            // 是否随交易支付 = 固定值：Y 是 默认随交易支付
+            valTradeFeeDetail.setIsPayWithTrade(mapIsPay.get(key));
+            // 对应金额
+            valTradeFeeDetail.setFeeAmt(amt);
+            valTradeFeeDetail.setFeeId(key);
+            // 创建时间 = 系统时间
+            valTradeFeeDetail.setCreateTime(dto.getCreateTime());
+            listValTradeFeeDetail.add(valTradeFeeDetail);
+        }
+        return listValTradeFeeDetail;
+    }
 }

@@ -94,6 +94,12 @@ public class FundChangeDealRecService {
         
         // 获取数据数量
         result.setDataNum(listValFundChangeDeal.size());
+
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
         
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = this.handleValFundChangeDeal(listValFundChangeDeal,acctEntity.getResovleDate(),params,returnResult.getValInterflog());
@@ -320,6 +326,10 @@ public class FundChangeDealRecService {
         result.setShareAmt(dto.getShareAmt());
         // 交易本金 = I.交易本金
         result.setPrinAmt(dto.getPrinAmt());
+
+        /**add by wujie on 20210507 start**/
+        result.setIntAmt(dto.getIntAmt());
+        /**add by wujie on 20210507 end**/
         // 随交易支付费用 = IF  I.通道费是否随交易支付 =“是” I.交易费 + I.通道费  ELSE I.交易费
         BigDecimal chlFeeAmt = (dto.getChlFeeAmt() == null) ? BigDecimal.ZERO : dto.getChlFeeAmt();
         /** modify by yanya on 20210207 交易费为空时用0处理 start**/

@@ -82,7 +82,21 @@ public class ValFeeDrawDeal extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal feeAmt;
-    
+
+    /**
+     * 业务类型
+     */
+    private String busiType;
+
+    public String getBusiType() {
+        return busiType;
+    }
+
+    public void setBusiType(String busiType) {
+        this.busiType = busiType;
+    }
+
+
 
     public String getDataSource() {
 		return dataSource;

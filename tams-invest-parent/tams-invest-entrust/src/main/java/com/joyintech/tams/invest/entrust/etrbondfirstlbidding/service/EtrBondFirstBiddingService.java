@@ -110,9 +110,9 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
      * @see
      * @since 1.0
      */
-    public List<SuggestDto> getfinprodId(String param) {
+    public List<SuggestDto> getfinprodId(String param, String pageId) {
         return restTemplate.getForList(ServiceApplication.ENTRUST_SERVICE_NAME
-                        + "/EtrBondFirstLBidding/getfinprodId?finprodId=" + param,
+                        + "/EtrBondFirstLBidding/getfinprodId?finprodId=" + param + "&pageId=" + pageId,
                 SuggestDto.class);
 
     }

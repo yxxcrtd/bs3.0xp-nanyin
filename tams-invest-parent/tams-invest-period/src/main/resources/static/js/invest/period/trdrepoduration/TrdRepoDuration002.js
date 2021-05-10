@@ -46,6 +46,17 @@
             $("#channelFee_div").show();
         }
 
+        //add by jiangpeng on 20210422 start TISHKBS-1803
+        $("#settleDate").change(function () {
+            if (isTodo && $("#ps").val() !== PS_TQZZ) {
+                let param = {};
+                let dateMap = {};
+                param.isOnlyOneDate = true;
+                dateMap.settleDate = $("#settleDate").val();
+                window.BussTrdTransferOrder['bussTrdTransferOrder'].updateGenerateOrders(dateMap, param);
+            }
+        });
+        //add by jiangpeng on 20210422 end TISHKBS-1803
     }
 
 
@@ -150,8 +161,9 @@
         var vDate = $("#vDate").val();
         if(terminateRate){
             // 提前终止时到期结算金额=本金金额+本金金额*提前终止利率*（终止日-起息日）/365，允许修改；
-            var fpriceAmt = JoyinMath.doAdd(theoryPrin,JoyinMath.doMul(JoyinMath.doMul(theoryPrin,JoyinMath.doDiv(terminateRate,100,2)),
-                JoyinMath.doDiv(DateUtil.daysBetween(deadDate,vDate),365,15)));
+            // modify by jiangpeng on 20210428 TISHKBS-2032 CLONE - 质押式逆回购提前终止，修改提前终止利率后，实际结算金额值不对
+            var fpriceAmt = JoyinMath.doAdd(theoryPrin,JoyinMath.doDiv(JoyinMath.doMul(JoyinMath.doMul(theoryPrin,terminateRate),
+                JoyinMath.doDiv(DateUtil.daysBetween(deadDate,vDate),365,15)),100,2));
             $("#fpriceAmt").val(fpriceAmt);
             $("#fpriceAmt").trigger("change");
         }

@@ -94,6 +94,10 @@ public class RepurchaseDealInfoRecService {
             ps.add(DictCodeListExt3.交易方向_投资端_逾期返售.getValue());
             /** modify by yanya on 20191111 增加提前终止、逾期返售 end**/
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
             
         }
 //        // 02-买断式回购派息交易

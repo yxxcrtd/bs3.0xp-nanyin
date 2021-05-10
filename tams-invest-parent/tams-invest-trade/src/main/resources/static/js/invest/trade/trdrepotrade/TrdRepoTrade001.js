@@ -153,20 +153,20 @@
             listTbl.load();
         }
         // 初始化查询
-        $('#TrdRepoTrade001_btn_search').click(function () {
+        $('#'+pageId+'_btn_search').click(function () {
             listTbl.load();
-            $('#TrdRepoTrade001_btn_revoke').show();
+            $('#'+pageId+'_btn_revoke').show();
         });
-        $('#TrdRepoTrade001_btn_export').click(function () {
+        $('#'+pageId+'_btn_export').click(function () {
             exportExcel();
         });
-        $('#TrdRepoTrade001_btn_export_mail_model').click(function () {
+        $('#'+pageId+'_btn_export_mail_model').click(function () {
             exportMailModelExcel();
         });
         // 绑定新建按钮事件
-        $('#TrdRepoTrade001_btn_add').click(function () {
+        $('#'+pageId+'_btn_add').click(function () {
             Joyin.dialog(JoyinUtil.getLabel("TrdRepoTrade002.new"), basePath
-                + "invest/trade/trdrepotrade/TrdRepoTrade002/init", "99%", "99%", {
+                + "invest/trade/trdrepotrade/TrdRepoTrade002/init?parentPageId=" + pageId, "99%", "99%", {
                 pageModel: PAGE_MODEL_NEW
             }, function () {
                 listTbl.reload();
@@ -175,14 +175,14 @@
         // 绑定多组合新建按钮事件
         $('#TrdRepoTrade003_btn_add').click(function () {
             Joyin.dialog(JoyinUtil.getLabel("TrdRepoTrade003.new"), basePath
-                + "invest/trade/trdrepotrade/TrdRepoTrade003/init", "99%", "99%", {
+                + "invest/trade/trdrepotrade/TrdRepoTrade003/init?parentPageId=" + pageId, "99%", "99%", {
                 pageModel: PAGE_MODEL_NEW
             }, function () {
                 listTbl.reload();
             });
         });
         // 绑定质押券管理按钮事件
-        $('#TrdRepoTrade001_btn_manage').click(function () {
+        $('#'+pageId+'_btn_manage').click(function () {
             Joyin.dialog(JoyinUtil.getLabel("TrdStandardBond001"), basePath
                 + "invest/trade/trdstandardbond/TrdStandardBond001/init", "99%", "99%", {
                 pageModel: PAGE_MODEL_NEW
@@ -190,7 +190,7 @@
             });
         });
         // 质押券置换按钮事件
-        $('#TrdRepoTrade001_btn_substitution').click(function () {
+        $('#'+pageId+'_btn_substitution').click(function () {
 
             if (listTbl != null && listTbl != '') {
                 var selArr = listTbl.getAllCheckedRows();
@@ -232,7 +232,7 @@
         /**
          * 撤销
          */
-        $('#TrdRepoTrade001_btn_revoke').click(function () {
+        $('#'+pageId+'_btn_revoke').click(function () {
             if (listTbl != null && listTbl != '') {
                 var selArr = listTbl.getAllCheckedRows();
             }

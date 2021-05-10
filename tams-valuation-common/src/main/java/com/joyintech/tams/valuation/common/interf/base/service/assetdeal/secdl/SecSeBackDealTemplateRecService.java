@@ -83,6 +83,13 @@ public class SecSeBackDealTemplateRecService {
         listValSeclendAssetDeal=returnResult.getT(ValSeclendAssetDeal.class);
         //获取数据数量
         result.setDataNum(listValSeclendAssetDeal.size());
+
+		/**add by wujie on 20210506 start**/
+		if(returnResult.isReadFile()){
+			result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+		}
+		/**add by wujie on 20210506 end**/
+
          // 2、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = handleValSeclendAssetDeal(listValSeclendAssetDeal,acctEntity.getResovleDate(),params,returnResult.getValInterflog());
         if(map != null){
@@ -377,6 +384,9 @@ public class SecSeBackDealTemplateRecService {
     	trdProductDeal.setParValue(dto.getParValue());
     	//净价总额=C.净价总额
     	trdProductDeal.setCpriceAmt(dto.getCpriceAmt());
+    	/**add by wujie on 20210508 start**/
+		trdProductDeal.setPrinAmt(dto.getCpriceAmt());
+		/**add by wujie on 20210508 end**/
     	//交易份额=C.成交数量
 
         /**modify by wujie on 20190516 start remark:交易份额 = 成交数量/100

@@ -24,8 +24,8 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: INV30
+    password: INV30
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -263,6 +263,7 @@ application:
       bankuplinkService: http://127.0.0.1:${server.port}/tams
       exchangeService: http://127.0.0.1:${server.port}/tams/service
       quoteService: http://127.0.0.1:${server.port}/tams/service
+      commonBasicDataService: http://127.0.0.1:${server.port}/tams
 
 # 使用服务注册中心的方式
 #  loadbalance: true
@@ -318,13 +319,13 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: INV30
+    password: INV30
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: tams30
-  sqldirpassword: tams30
+  sqldiruserName: INV30
+  sqldirpassword: INV30
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -431,35 +432,35 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: INV30
+    password: INV30
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
-  url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  username: zgtams0810
-  password: zgtams0810_123
+  url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  username: INV30
+  password: INV30
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: INV30
+    password: INV30
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: INV30
+    password: INV30
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: INV30
+    password: INV30
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: INV30
+    password: INV30
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG

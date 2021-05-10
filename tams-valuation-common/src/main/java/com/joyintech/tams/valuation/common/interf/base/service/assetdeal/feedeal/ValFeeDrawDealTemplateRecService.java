@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeListExt2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,13 @@ public class ValFeeDrawDealTemplateRecService {
         // 2、进行数据有效性的check,并生出进入日志表的数据结构
         listValFeeDrawDeal = returnResult.getT(ValFeeDrawDeal.class);
         result.setDatanum(listValFeeDrawDeal==null?0:listValFeeDrawDeal.size());
+
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
+
         // 3、根据有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = this.handleValPrdExpDeal(listValFeeDrawDeal,
             acctEntity.getResovleDate(),params,returnResult.getValInterflog());
@@ -268,7 +276,13 @@ public class ValFeeDrawDealTemplateRecService {
         // 交易编号 = 调用共通方法生成
         trdProductDeal.setTradeId(interfCommonService.getTradeid(DictCodeListExt3.交易方向_费用计提.getValue(),dto.getDrawDate(), "A"));
         // 业务类型 = 数据字典：业务类型.费用交易
-        trdProductDeal.setBusiType(DictCodeListExt3.业务类型_费用计提交易.getValue()); 
+        /**modify by wujie no 20210502 start
+        trdProductDeal.setBusiType(DictCodeListExt3.业务类型_费用计提交易.getValue());
+         **/
+        trdProductDeal.setBusiType(dto.getBusiType());
+        /**modify by wujie on 20210502 end**/
+
+
         //金融产品代码 = A.产品代码  
         trdProductDeal.setFinprodId(dto.getProdId());        
         //金融产品类型=A.产品类型 
@@ -281,8 +295,19 @@ public class ValFeeDrawDealTemplateRecService {
         trdProductDeal.setSettleDate(dto.getDrawDate());
         // 交易币种 = A.交易币种
         trdProductDeal.setCcy(dto.getCcy());
+
+        /**modify by wujie on 20210507 start
         // 全价总额 = A.计提金额
         trdProductDeal.setTradeAmt(dto.getFeeAmt());
+        **/
+        if(DictCodeListExt2.业务类型_浮动管理费挂账交易.getValue().equals(dto.getBusiType())){
+            trdProductDeal.setIntAmt(dto.getFeeAmt());
+        }else{
+            // 全价总额 = A.计提金额
+            trdProductDeal.setFpriceAmt(dto.getFeeAmt());
+        }
+        /**modify by wujie on 20210507 end**/
+
         // 交易方向 = A.交易方向
         trdProductDeal.setPs(DictCodeListExt3.交易方向_费用计提.getValue());
         // 交易状态 = A.数据动作标志--> 新增 --> 01:初始    撤销 --> 03:撤销

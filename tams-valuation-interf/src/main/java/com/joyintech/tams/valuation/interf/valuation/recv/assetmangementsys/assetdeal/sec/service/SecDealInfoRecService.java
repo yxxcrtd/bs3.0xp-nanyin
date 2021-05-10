@@ -108,6 +108,10 @@ public class SecDealInfoRecService {
             ps.add(DictCodeListExt1.交易方向_债转股.getValue());
             
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         // 02-债券存续期交易
         else if (TempConstant.债券存续期交易.equals(acctEntity.getTmpEName())) {
@@ -117,6 +121,10 @@ public class SecDealInfoRecService {
             ps.add(DictCodeList.交易方向_收息到账.getValue());
             ps.add(DictCodeList.交易方向_还本到账.getValue());
             paramMap.put("pslist", ps);//删除除这些交易方向的数据
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }
         // 03-债券应收款转让交易
         else if (TempConstant.债券应收款项转让交易.equals(acctEntity.getTmpEName())) {
@@ -126,8 +134,11 @@ public class SecDealInfoRecService {
                 ps.add(DictCodeList.交易方向_应收款项转入.getValue());
                 ps.add(DictCodeList.交易方向_应收款项转出.getValue());
                 paramMap.put("pslist", ps);
-        }
-        /** add by yanya on 20210309 添加债券行权交易 start**/
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
+        }/** add by yanya on 20210309 添加债券行权交易 start**/
         else if (TempConstant.债券行权交易.equals(acctEntity.getTmpEName())) {
             rtnResult = secExecDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
             List<String> busiTypes = new ArrayList<String>();

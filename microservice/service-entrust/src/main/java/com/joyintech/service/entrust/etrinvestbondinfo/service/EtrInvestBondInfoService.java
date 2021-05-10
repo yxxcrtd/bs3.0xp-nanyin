@@ -37,6 +37,7 @@ import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,10 +136,15 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
      * @see
      * @since 1.0
      */
-    public List<SuggestDto> getfinprodId(String param) {
+    public List<SuggestDto> getfinprodId(Map<String, Object> param) {
         Map<String, Object> map = new HashMap<>();
-        map.put("param", param);
+        map.put("param", param.get("finprodId"));
         map.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        map.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return etrInvestBondInfoMapper.getfinprodId(map);
 
     }
@@ -165,6 +171,12 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
         }
         //排除可转债委托 add by gejiaao 20191126
         param.put("PS_T04",DictCodeList.交易方向_申购.getValue());
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("pageId")));
+        param.put("defaultTradePlatFormList", PageMenuSplitUtil.getTradePlatFormList((String) param.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         Page<EtrInvestBondInfoDto> pageDto = queryForPage(page, length,
             () -> etrInvestBondInfoMapper.selectForPage(param));
 
@@ -202,6 +214,11 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
     public Page<SelectOptionDto> getfinprodIdForAdd(int page, int length,Map<String, Object> param) {
         param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("isautobond", CacheUtil.getSysParam("IS_AUTOBOND"));
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        param.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) param.get("parentPageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return this.queryForPageForSelectReturn(page, length,()->etrInvestBondInfoMapper.getfinprodIdForAdd(param));
     }
 

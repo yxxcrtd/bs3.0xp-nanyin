@@ -40,17 +40,17 @@ public class FinPlanNetAssetValidator implements BeanValidator {
     public List<ValidMessage> valid(Object value) {
         FinPlanNetAssetDto dto = (FinPlanNetAssetDto) value;
         List<ValidMessage> errorList = new ArrayList<>();
-        
+
         if (!StringUtil.equals(dto.getOperateType(), "delete")) {
             if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo()) && StringUtil.equals(dto.getBussRepAssetMngProdInfo().getRepAssetType(),"1705")) {
                 if (StringUtil.isEmpty(dto.getBussRepAssetMngProdInfo().getRepFinancialComissue()) || dto.getBussRepAssetMngProdInfo().getRepFinancialComissue() == "") {
                     errorList.add(new ValidMessage("bussRepAssetMngProdInfo.repFinancialComissue",
                             "请输入是否由金融资产投资公司发行。"));
                 }
-            }    
+            }
         }
         if(dto.getVdate()!=null && dto.getMdate()!=null && dto.getVdate().compareTo(dto.getMdate()) >= 0){
-            errorList.add(new ValidMessage("vdate",getMessage("BUSS_COM_E_0035",getMessage("FinPlanNetAsset002.vDate"), 
+            errorList.add(new ValidMessage("vdate",getMessage("BUSS_COM_E_0035",getMessage("FinPlanNetAsset002.vDate"),
                 getMessage("FinPlanNetAsset002.mDate"))));
         }
         //modify by mashukai ZGBS-32 计划类净值型标的，点击删除按钮，提示请输入发行金额 20201126 start
@@ -107,7 +107,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
 		}
 	    // 根据二级分类的值判断是否投向金融资产投资公司发行的私募资产管理产品是必填还是选填 by 赵东东 2019.10.11
 		if(StringUtil.equals(dto.getType(),DictCodeList.计划类资产二级分类_公募计划.getValue())) {
-			// 编辑时BussRepAssetMngProdInfo为空，不check by 赵东东 2019.10.14 
+			// 编辑时BussRepAssetMngProdInfo为空，不check by 赵东东 2019.10.14
 			if(StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo())) {
 			if(StringUtil.isEmpty(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag())) {
 				errorList.add(new ValidMessage("BussRepAssetMngProdInfo.repPrivateprdFlag",

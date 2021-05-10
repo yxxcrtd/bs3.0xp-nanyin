@@ -4,6 +4,12 @@
 <head>
 	<meta charset="UTF-8">
 	<title data-th-text="#{ValPublicDataImport001}">公共数据导入</title>
+	<style>
+		.input-btn-append a {
+			line-height: 22px;
+			height: 22px;
+		}
+	</style>
 	<script th:inline="javascript">
 		var sysDate = [[${sysDate}]];
 	</script>
@@ -26,11 +32,18 @@
 			<div class="joyin-form-wrap">
 				<form class="layui-form" id="proidSearchForm">
 					<div class="layui-form-item" >
-						<input type="text" id="TmpCName" name="TmpCName"
-							   class="layui-input form-input input-fuzzy-text"
-							   placeholder="输入接口名称或名称关键字"
-							   data-eventfunc="serachKey">
+						<div style="float: left;width: 75%">
+							<input type="text" id="TmpCName" name="TmpCName"
+								   class="layui-input form-input input-fuzzy-text"
+								   placeholder="输入接口名称或名称关键字"
+								   data-eventfunc="serachKey">
+						</div>
+						<div style="float: right;width: 25%;line-height: 26px;cursor: pointer;color: #007fff;"
+							 id="ValPublicDataImport001_btn_checkall">
+							&nbsp;&nbsp;全选/取消
+						</div>
 					</div>
+
 				</form>
 			</div>
 			<div class="layui-input" style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; overflow-y: scroll;" data-checkall="false"

@@ -32,6 +32,15 @@ public class TempCheckInfo {
 		this.setInvestType(investType);
 	}
 
+	/**add by wujie on 20210507 start**/
+	public TempCheckInfo(String dtoEname,String colprdName,String investType,String assetId){
+		this.setDtoEname(dtoEname);
+		this.setColprdName(colprdName);
+		this.setInvestType(investType);
+		this.setAssetId(assetId);
+	}
+	/**add by wujie on 20210507 end**/
+
 	/**
 	 * @return the dtoEname
 	 */

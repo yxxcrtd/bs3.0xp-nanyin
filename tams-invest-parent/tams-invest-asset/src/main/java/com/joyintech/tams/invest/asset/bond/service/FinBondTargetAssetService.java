@@ -269,7 +269,8 @@ implements BaseProcessService<FinBondTargetAssetDto>{
 				if (!StringUtil.isEmptyList(productBaseInfoDto.getFinCashPayRuleList())) {
 					for (FinCashPayRule finCashPayRule : productBaseInfoDto.getFinCashPayRuleList()) {
 						if (StringUtil.isBlank(finCashPayRule.getPayCycle())) {
-							finCashPayRule.setPayCycle(BussinessConstant.DEFAULT_PAY_CYCLE);
+                            //modify by jiangpeng on 20210426 TISHKBS-2051 CLONE - 贴现债数据错误
+							finCashPayRule.setPayCycle(BussinessDictCodeList.频率_到期一次.getValue());
 						}
 					}
 				}
@@ -393,7 +394,8 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                 finRateInfoList.addAll(finInterestFactorDto.getRateList());
                 List<FinCashCalcRule> finCashCalcRuleList = new ArrayList<FinCashCalcRule>();
                 finCashCalcRuleList.addAll(finInterestFactorDto.getCalcRuleList());
-                baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfoList);baseFinProductBaseInfoDto.setFinCashCalcRuleList(finCashCalcRuleList);
+                baseFinProductBaseInfoDto.setFinRateInfoList(finRateInfoList);
+                baseFinProductBaseInfoDto.setFinCashCalcRuleList(finCashCalcRuleList);
             }
         }
 

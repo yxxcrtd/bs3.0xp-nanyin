@@ -10,10 +10,7 @@
 
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.common.base.entity.BokDealAccounting;
@@ -44,7 +41,7 @@ public class ValChannelTradeValCommonResult extends BaseEntity {
 
     private int datanum;// 读取数据数
 
-    private Map<String, Object> paramMap;
+    private Map<String, Object> paramMap = new HashMap<String,Object>();
 
     /**
      * 日志

@@ -87,10 +87,26 @@
 			   B.Busi_Id as busiId/**业务明细代码**/
 		FROM BOK_STAT_DET_POSIITON B
 		INNER JOIN BOK_BOOKSET C ON B.BOOKSET_ID = C.BOOKSET_ID
-		INNER JOIN BOK_DETAIL_ID H ON B.BOK_DETAIL_ID = H.BOK_DETAIL_ID AND B.BOOKSET_ID = H.BOOKSET_ID
+		<!-- MODIFY BY WUJIE ON 20210510
+		INNER JOIN BOK_DETAIL_ID H ON B.BOK_DETAIL_ID = H.BOK_DETAIL_ID AND B.BOOKSET_ID = H.BOOKSET_ID -->
 		LEFT JOIN FIN_PRODUCT_ADD D ON C.ACCT_SUBJECT_ID = D.FINPROD_ID
 		WHERE
 		NVL(C.ACCT_SUBJECT_TYPE,'') != 'F26'
+		<!-- ADD BY WUJIE ON 20210510 START -->
+		AND EXISTS (
+	       SELECT 
+	          G.BOOKSET_ID,
+	          H.BOK_DETAIL_ID 
+	        FROM BOK_BOOKSET_CAPACCT_INFO G,BOK_DETAIL_ID H 
+	        WHERE G.BOOKSET_ID = H.BOOKSET_ID 
+	           AND G.ACCT_NO = H.BUSI_ID 
+	           AND G.ACCT_TYPE = H.BUSI_DETAIL_TYPE 
+	           AND G.CCY = H.CCY
+	           AND B.BOOKSET_ID = G.BOOKSET_ID 
+	           AND B.BOK_DETAIL_ID = H.BOK_DETAIL_ID 
+	    )
+	    <!-- ADD BY WUJIE ON 20210510 END -->
+	    
 		<if test="booksetIds != null and booksetIds.size > 0">
 			AND (B.BOOKSET_ID IN
 			<foreach collection="booksetIds" item="item" index="index" open="( " close=" )" separator=",">

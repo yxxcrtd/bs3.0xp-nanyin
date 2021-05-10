@@ -79,6 +79,11 @@ public class OtcOptTradeRecService {
             ps.add(DictCodeListExt3.交易方向_到期行权.getValue());
             
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
+
         }else{
         	rtnResult.setDataNum(0);
         }

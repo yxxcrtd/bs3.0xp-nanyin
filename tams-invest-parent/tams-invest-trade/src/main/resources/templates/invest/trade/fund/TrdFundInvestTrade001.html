@@ -8,9 +8,9 @@
 <body>
     <div layout:fragment="content">
         <div class="form-button-area">
-            <a id="TrdFundInvestTrade001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
-			<a id="TrdFundInvestTrade001_btn_dzhadd" class="layui-btn layui-btn-sm btn-create" >多组合新建</a>
-            <a id="TrdFundInvestTrade001_btn_revoke" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{SysCommon.revoke}"></a>
+            <a th:id="|${pageId}_btn_add|" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
+			<a th:id="|${pageId}_btn_dzhadd|" class="layui-btn layui-btn-sm btn-create" >多组合新建</a>
+            <a th:id="|${pageId}_btn_revoke|" class="layui-btn layui-btn-sm btn-revoke" ><i class="iconfont icon-revoke"></i><span data-th-text="#{SysCommon.revoke}"></a>
         </div>
         <div class="joyin-form-wrap joyin-filter-form condition-area">
             <form class="layui-form" id="searchForm">
@@ -43,7 +43,7 @@
                             <input type="text" id="finprodId" name="finprodId"
                                 class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
-                                data-th-data-url="@{/business/common/CommonSelect/getAssetIdFund}" data-idfield="name"
+                                data-th-data-url="@{/business/common/CommonSelect/getAssetIdFund(pageId=${pageId})}" data-idfield="name"
                                 data-keyfield="code"
                                 data-th-data-effectivefieldsalias='|{"code":"#{TrdFundInvestTrade001.finprodId}","shortName":"#{TrdFundInvestTrade001.finprodName}"}|'
                                 data-th-value="${entity?.finprodMarketId}" maxlength="60"/>

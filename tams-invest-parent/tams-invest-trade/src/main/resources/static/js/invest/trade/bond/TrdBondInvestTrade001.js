@@ -186,12 +186,12 @@
         $('#endDays1End').change(endDays1Change);
 //     添加剩余期限 add by lishuping 20191012 end
         // 绑定按钮事件
-        $('#TrdBondInvestTrade001_btn_search').click(function() {
+        $('#'+pageId+'_btn_search').click(function() {
             table.load();
             $('#TrdBondInvestTrade001_btn_revoke').show();
         });
-        
-        $('#TrdBondInvestTrade001_btn_export').click(function() {
+
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
         
@@ -204,7 +204,7 @@
             }
         });
         //更新状态
-        $("#TrdBondInvestTrade001_btn_refresh").click(function(){
+        $('#'+pageId+"_btn_refresh").click(function(){
     		if(table!=null && table!=''){
                 var arrs = table.getAllCheckedRows();//判断表格不为空，然后获取选择的数据
             }
@@ -227,10 +227,10 @@
             	table.reload();
             });
     	});
-        
-        $('#TrdBondInvestTrade001_btn_add').click(function() {
+
+        $('#'+pageId+'_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("TrdBondInvestTrade002"), basePath
-                            + "invest/trade/bond/TrdBondInvestTrade002/init", "99%", "99%", {
+                            + "invest/trade/bond/TrdBondInvestTrade002/init?parentPageId=" + pageId, "99%", "99%", {
                         pageModel : PAGE_MODEL_NEW
                     }, function() {
                         table.reload();
@@ -240,7 +240,7 @@
         // add by zhanggenglin 债券多组合 20190819 start
         $('#TrdBondInvestTrade003_btn_add').click(function() {
             Joyin.dialog('债券类资产多组合交易新建', basePath
-                            + "invest/trade/bond/TrdBondInvestTrade003/init", "99%", "99%", {
+                            + "invest/trade/bond/TrdBondInvestTrade003/init?parentPageId=" + pageId, "99%", "99%", {
                         pageModel : PAGE_MODEL_NEW
                     }, function() {
                         table.reload();
@@ -251,7 +251,7 @@
         /**
          * 撤销
          */
-        $('#TrdBondInvestTrade001_btn_revoke').click(function() {
+        $('#'+pageId+'_btn_revoke').click(function() {
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }

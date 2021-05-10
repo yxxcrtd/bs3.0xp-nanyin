@@ -20,6 +20,7 @@ import java.util.Map;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
 import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -153,6 +154,11 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
         //有回购类型查询条件是 不显示银行间的数据
         pageParam.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
         //update by zhangnian end   20200318
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         Page<TrdRepoTradeDto> queryPage = this.queryForPage(page, length,() -> this.trdRepoTradeMapper.selectForPage(pageParam));
         List<TrdRepoTradeDto> list = queryPage.getRoot();
         if (list != null && list.size() > 0) {
@@ -703,7 +709,7 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
     public String getChlId(String tradeId) {
         return trdRepoTradeMapper.getChlId(tradeId);
     }
-	
+
 	 public List<FinProduct> selectFinProduct(Map<String, Object> params) {
         return trdRepoTradeMapper.selectFinProduct(params);
     }

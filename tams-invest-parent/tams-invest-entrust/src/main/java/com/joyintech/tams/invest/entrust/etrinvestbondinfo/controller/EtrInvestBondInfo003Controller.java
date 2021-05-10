@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
@@ -169,6 +170,13 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return super.init(model);
     }
     /**

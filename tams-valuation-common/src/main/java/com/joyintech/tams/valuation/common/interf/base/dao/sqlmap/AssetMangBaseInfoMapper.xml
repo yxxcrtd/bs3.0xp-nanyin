@@ -90,6 +90,6 @@
 	    	B.FINPROD_ID,
 	    	B.FINPROD_TYPE
 	    FROM FIN_PRODUCT B
-	    WHERE B.finprod_type = 'F21'
+	    WHERE B.finprod_type IN ('F21','F07')
     </select>
 </mapper>

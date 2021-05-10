@@ -193,9 +193,9 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
      * @see
      * @since 1.0
      */
-    public List<SuggestDto> getfinprodId(String param) {
+    public List<SuggestDto> getfinprodId(String param, String pageId) {
         return restTemplate.getForList(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrInvestBondInfo/getfinprodId?finprodId=" + param,
+                                       + "/EtrInvestBondInfo/getfinprodId?finprodId=" + param + "&pageId="+pageId,
             SuggestDto.class);
 
     }

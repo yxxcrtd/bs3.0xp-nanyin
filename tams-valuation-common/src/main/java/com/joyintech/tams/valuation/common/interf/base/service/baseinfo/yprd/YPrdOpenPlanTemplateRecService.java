@@ -116,6 +116,11 @@ public class YPrdOpenPlanTemplateRecService {
 		valOpenPlan.setOpenDateEnd(dto.getOpenDateEnd());
 		// 开放周期起息日 = B.开放周期起息日
 		valOpenPlan.setOpenVdate(dto.getOpenVdate());
+
+		/**ADD BY WUJIE ON 20210430 START**/
+		valOpenPlan.setOpenDateStrUn(dto.getOpenDateStr());
+		valOpenPlan.setOpenDateEndUn(dto.getOpenDateEnd());
+		/**ADD BY WUJIE ON 20210430 END**/
 		
 		
 		//TODO  估值系统表结构改动 

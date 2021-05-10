@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -88,9 +89,12 @@ public class EtrFundController {
      * @since 1.0
      */
     @GetMapping("/getFinprodMarketId")
-    public List<SuggestDto> getFinprodMarketId(String finprodId){
-        
-        return etrFundService.getFinprodMarketId(finprodId);
+    public List<SuggestDto> getFinprodMarketId(String finprodId, String pageId){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("finprodId", finprodId);
+        map.put("pageId", pageId);
+
+        return etrFundService.getFinprodMarketId(map);
     }
     
     /**

@@ -757,5 +757,17 @@
         }else{
             $('#assetType11Div').hide();
         }
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        if (parentPageId) {
+            if(parentPageId == 'EtrFundEx001' || parentPageId == 'EtrFund001' || !parentPageId){
+                $('#trmFundAbbrDiv').show();
+                $('#trmFundTypeDiv').show();
+            }else{
+                $('#trmFundAbbrDiv').hide();
+                $('#trmFundTypeDiv').hide();
+            }
+        }
+        // add by etliu 20210501 银行间场内场外拆分 end
     });
 }());

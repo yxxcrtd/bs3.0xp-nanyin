@@ -90,7 +90,8 @@ public class FinResultsCovering002Validator implements BeanValidator {
 		}
 
 		//add by mashukai 20201209 工单号：YHZGCPB20201207002 业绩回补增加校验，同一产品同一回补日只能做一次回补交易 start
-		if (validList.size() <= 0){
+		if (validList.size() <= 0 && !StringUtil.equals("revoke", entity.getOperateType())//modify by jiangpeng on 20210425 TISHKBS-2039
+				&& !StringUtil.equals("delete", entity.getOperateType())) {// CLONE - 【业绩回补】业绩回补，手工回补交易，撤销时提示有流程中数据，但是流程中没有数据
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 			String coveringDateStr = DateUtil.format(entity.getCoveringDate());
 			dataMap.put("prodId",entity.getProdId());

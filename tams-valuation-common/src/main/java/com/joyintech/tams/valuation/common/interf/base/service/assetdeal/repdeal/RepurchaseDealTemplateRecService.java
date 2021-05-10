@@ -97,6 +97,14 @@ public class RepurchaseDealTemplateRecService {
         if (listValBotAstTrade == null) {
         	listValBotAstTrade = new ArrayList<ValRepDealSec>();
         }
+
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
+
+
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = handleValBotAstTrade(listValBotAstTrade,acctEntity.getResovleDate(),params,returnResult.getValInterflog());
 
@@ -200,7 +208,10 @@ public class RepurchaseDealTemplateRecService {
             //四级科目尾号名称 
 			dealAccounting.getBokDetailId()
 					.setDetailSubnameTail(finTradeProduct == null ? null
-							: InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_回购.getValue(),
+							/**modify by wujie on 20210506 start
+                             : InterfHelper.getDictColdeList_ItemName(DictCode.期限品种_回购.getValue(),**/
+							: InterfHelper.getDictColdeList_ItemName(DictCode.回购期限品种.getValue(),
+                            /**modify by wujie on 20210506 end**/
 									finTradeProduct.getTermType()));
             listValBokDetailId.add(dealAccounting.getBokDetailId());
             

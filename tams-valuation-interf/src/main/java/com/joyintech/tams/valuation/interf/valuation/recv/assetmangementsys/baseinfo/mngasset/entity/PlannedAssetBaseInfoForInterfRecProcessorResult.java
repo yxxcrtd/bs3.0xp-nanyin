@@ -10,6 +10,11 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.mngasset.entity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.valuation.common.interf.base.dto.PlannedAssetBaseInfoRecCommonResult;
@@ -68,12 +73,24 @@ public class PlannedAssetBaseInfoForInterfRecProcessorResult extends BaseEntity 
      * 金融产品扩展表
      */
     List<FinProductAdd> listValFinProductExt = new ArrayList<>();
-    
+
     /**
      * 日志
      */
     private List<ValInterflog> valInterflog = new ArrayList<ValInterflog>();
-    
+
+    /**add by wujie on 20210507 start**/
+    private Map<String, Object> paramMap = new HashMap<String,Object>();
+
+    public Map<String, Object> getParamMap() {
+        return paramMap;
+    }
+
+    public void setParamMap(Map<String, Object> paramMap) {
+        this.paramMap = paramMap;
+    }
+    /**add by wujie on 20210507 end**/
+
     /**
      * 重载构造方法 从valuation-common中返回的result重新赋值
      * 
@@ -94,6 +111,9 @@ public class PlannedAssetBaseInfoForInterfRecProcessorResult extends BaseEntity 
         /** 标的类金融产品扩展表 add by yanya on 20201222 start**/
         this.setListValFinProductExt(result.getListValFinProductExt());
         /** 标的类金融产品扩展表 add by yanya on 20201222 end**/
+        /**add by wujie on 20210507 start**/
+        this.setParamMap(result.getParamMap());
+        /**add by wujie on 20210507 end**/
     }
 
     /**

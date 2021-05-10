@@ -22,14 +22,91 @@
 	</properties>
 
 	<dependencies>
-		
+
+
 		<!-- 集成微服务端的代码 -->
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>tams-service-container</artifactId>
 			<version>2.1.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>service-asset</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-basicdata</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-document</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-entrust</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-interf</artifactId>
+					<groupId>com.joyintech.service</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-invest-interf</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-period</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-portfolio</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-product</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-report</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-risk</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-risk-redis</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-risk-redis-inf</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-settle</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-trade</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>component-base</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>tams-invest-common</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>service-common</artifactId>
+					<groupId>com.joyintech</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		
+
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
@@ -127,6 +204,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>tams-yunying</finalName>
@@ -148,7 +226,8 @@
                   </execution>
                </executions>
             </plugin>
-			
+
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

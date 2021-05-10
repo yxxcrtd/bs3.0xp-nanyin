@@ -371,6 +371,20 @@ $(function () {
 
 	mainTable();
 
+	var checkOrNoAll = function() {
+		var treeObj_ = $.fn.zTree.getZTreeObj("typeDatatree_tree");
+		if(treeObj_) {
+			var noCheckNodes_ = treeObj_.getCheckedNodes(false);
+			if(noCheckNodes_.length > 0) {
+				treeObj_.checkAllNodes(true);//全选
+			}
+			else {
+				treeObj_.checkAllNodes(false);//取消全选
+			}
+		}
+	}
+
+
 	var dateChange = function(){
 
 		//当前使用区间接入，取消平台日验证。
@@ -447,6 +461,12 @@ $(function () {
 		$('#eWarning-title').click(function(){
 			mainTable(this);
 		});
+
+		// 绑定全选或者取消全选宫那个
+		$('#ValTransactionDataImport_btn_checkall').click(function() {
+			checkOrNoAll();
+		});
+
 
 		var tree=$("#typeDatatree");
 		var docH= $(document).height();

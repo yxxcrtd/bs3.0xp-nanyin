@@ -28,7 +28,7 @@ import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 
 /**
  * 产品收集删除修改验证
- * 
+ *
  * @author yaozhenguo
  * @version 1.0 2019年10月11日
  * @see ProductReportRegister002Validator
@@ -135,14 +135,14 @@ public class ProductReportRegister002Validator implements BeanValidator {
 						this.getMessage("FIN_PROD_E_0001", this.getMessage("BussRepFinProductInfo.isShortTerm"))));
 			}
 		}
-		
+
 		if (!StringUtil.isNotEmpty(entity.getIsFhxgcp())
         		&& !StringUtil.equals("01", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"))) {
             validList.add(new ValidMessage("isFhxgcp", getMessage("请输入新老产品标记")));
         }
         if (!StringUtil.isNotEmpty(entity.getIsYllccp())) {
             validList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
-        }    
+        }
 
 		// 产品期次
 		if (StringUtil.isNotEmpty(entity.getRepFinprodStage())) {
@@ -172,9 +172,9 @@ public class ProductReportRegister002Validator implements BeanValidator {
 					this.getMessage("FW_E_0002", this.getMessage("ProductReportRegister001.repJizhun"))));
 		}else {*/
 			//业绩比较基准后台校验
-			Pattern pattern=Pattern.compile("^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,5})?$"); 
-			Matcher match=pattern.matcher(entity.getRepYield());   
-			if(!match.matches()){   
+			Pattern pattern=Pattern.compile("^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,5})?$");
+			Matcher match=pattern.matcher(entity.getRepYield());
+			if(!match.matches()){
 				validList.add(new ValidMessage("repYield",
 						this.getMessage("业绩比较基准:格式不正确", this.getMessage("ProductReportRegister001.repJizhun"))));
 			}
@@ -193,7 +193,7 @@ public class ProductReportRegister002Validator implements BeanValidator {
 							this.getMessage("ProductReportRegister001.repFinprodInsId.repeat")));
 				}
 			}
-			
+
 			 //add by yujiaping 2020-11-26 ZGBS-22 增加流程中的校验  行内识别码唯一 start
             WflValidInputParameter inputParam = new WflValidInputParameter();
             inputParam.setPageId("ProductReportRegister002");
@@ -426,7 +426,7 @@ public class ProductReportRegister002Validator implements BeanValidator {
 					getMessage("BUSS_COM_E_0038", getMessage("BussRepFinProductInfo.excFinSector"))));
 		}
 		//是否现金管理类 产品运作模式开放式必填
-        if (!StringUtil.isNotEmpty(entity.getRepIsCashManage()) 
+        if (!StringUtil.isNotEmpty(entity.getRepIsCashManage())
         		&& (StringUtil.equals(entity.getRepOperateMode(), "03") || StringUtil.equals(entity.getRepOperateMode(),"04") )) {
             validList.add(new ValidMessage("请输入是否现金管理类"));
         }

@@ -77,6 +77,10 @@ public class FxDealInfoRecService {
             ps.add(DictCodeList.交易方向_卖出.getValue());
             ps.add(DictCodeList.交易方向_收息到账.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, rtnResult.getParamMap()==null?null:rtnResult.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         }else{
         	rtnResult.setDataNum(0);
         }

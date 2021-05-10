@@ -61,6 +61,14 @@
                     <if test="loginUserName != null and loginUserName != ''">
                         and ee.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
                     </if>
+                    <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                    <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                        AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in
+                        <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                            #{currTradeMarket}
+                        </foreach>
+                    </if>
+                    <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                 GROUP BY BO.BID_ID,
                 ee.finprod_id,
                 fp.finprod_abbr,
@@ -129,6 +137,14 @@
                 <if test="loginUserName != null and loginUserName != ''">
                     and ee.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
                 </if>
+                    <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                    <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                        AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in
+                        <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                            #{currTradeMarket}
+                        </foreach>
+                    </if>
+                    <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                 GROUP BY BO.BID_ID,
                 BO.IS_WIN,
                 ee.finprod_id,
@@ -198,6 +214,14 @@
                 <if test="loginUserName != null and loginUserName != ''">
                     and ee.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
                 </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                 GROUP BY BO.BID_ID,
                 BO.IS_WIN,
                 ee.finprod_id,
@@ -267,6 +291,14 @@
                 <if test="loginUserName != null and loginUserName != ''">
                     and ee.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
                 </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                 GROUP BY BO.BID_ID,
                 BO.IS_WIN,
                 ee.finprod_id,

@@ -929,13 +929,8 @@ public class MonthReportAssetService {
         		}
         	}
         }
-
-		if(!CommonUtil.isBAmodel()) {
-			//汇总数据合计
-       sumDetail(assetMonthReportDetailMap);
-//        //汇总数据入库
-        insertDetail(assetMonthReportDetailMap, report.getTermid(),null);
-		}
+        
+       
         //多级法人改造。不能出汇总数据，会导致分支机构数据删除错误
 //        //汇总数据合计
 //        sumDetail(assetMonthReportDetailMap);

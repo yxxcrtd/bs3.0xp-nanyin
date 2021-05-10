@@ -12,6 +12,7 @@ package com.joyintech.service.entrust.etrinvestbondinfo.controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,9 +91,13 @@ public class EtrInvestBondInfoController {
      * @since 1.0
      */
     @GetMapping("getfinprodId")
-    public List<SuggestDto> getfinprodId(String finprodId)
+    public List<SuggestDto> getfinprodId(String finprodId, String pageId)
         throws Exception {
-        List<SuggestDto> temp = etrInvestBondInfoService.getfinprodId(finprodId);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("finprodId", finprodId);
+        map.put("pageId", pageId);
+
+        List<SuggestDto> temp = etrInvestBondInfoService.getfinprodId(map);
         return temp;
     }
     /**

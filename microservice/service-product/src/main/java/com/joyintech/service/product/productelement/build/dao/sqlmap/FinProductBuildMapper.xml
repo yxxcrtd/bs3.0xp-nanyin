@@ -554,8 +554,11 @@
 		resultType="com.joyintech.framework.select.SelectOptionDto">
 		select FINPROD_MARKET_ID id, FINPROD_NAME text,
 		<!-- 20-06-09 产品端二级法人改造 wangyang1 start -->
-		FINPROD_ID finprodId
+		FINPROD_ID finprodId,
 		<!-- 20-06-09 产品端二级法人改造 wangyang1 end -->
+		<!-- add by czj 20200420 部分画面需要取金融产品代码 start-->
+		FINPROD_ID object
+		<!-- add by czj 20200420 部分画面需要取金融产品代码 end-->
 		from
 		PA_PRD_ISSUE_SCHEDULE
 		where PROD_REGIST_CODE IS NOT NULL
@@ -568,8 +571,11 @@
 		select FIN_PRODUCT.FINPROD_MARKET_ID code,
 		FIN_PRODUCT.FINPROD_NAME shortName,
 		<!-- 20-06-09 产品端二级法人改造 wangyang1 start -->
-		FIN_PRODUCT.FINPROD_ID finprodId
+		FIN_PRODUCT.FINPROD_ID finprodId,
 		<!-- 20-06-09 产品端二级法人改造 wangyang1 end -->
+		<!-- add by czj 20200420 部分画面需要取金融产品代码 start-->
+		FIN_PRODUCT.FINPROD_ID object
+		<!-- add by czj 20200420 部分画面需要取金融产品代码 end-->
 		from FIN_PRODUCT, FIN_PRODUCT_ADD,
 		PTL_PORTFOLIO_AUTHORITY
 		where FIN_PRODUCT.FINPROD_ID =

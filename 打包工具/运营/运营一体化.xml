@@ -41,8 +41,9 @@
         <module>../../microservice/service-pbc</module>
         <module>../../microservice/service-svrcom</module>
         <module>../../microservice/service-valuation</module>
+		<module>../../microservice/service-common-basicdata</module>
         <module>../../microservice/tams-service-container</module>
-		
+
         <!-- 批处理 -->
 		<module>../../tams-disclosure-batch</module>
         <module>../../tams-valuation-batch</module>

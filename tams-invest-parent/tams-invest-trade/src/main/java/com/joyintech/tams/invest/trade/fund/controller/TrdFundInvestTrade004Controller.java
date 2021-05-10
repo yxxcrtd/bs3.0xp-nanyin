@@ -33,6 +33,7 @@ import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.trade.common.controller.TrdCommonController;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
@@ -255,6 +256,12 @@ public class TrdFundInvestTrade004Controller extends BaseController {
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
         model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         return super.init(model);
     }
 

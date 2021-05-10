@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -92,6 +93,12 @@ public class ValOtcOptTradeTemplateRecService {
         listValOtcOptTrade = returnResult.getT(ValOtcOptTrade.class);
         //获取数据数量
         result.setDataNum(listValOtcOptTrade.size());
+
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态, DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
 
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = handleValOtcOptTrade(listValOtcOptTrade,acctEntity.getResovleDate(),params,returnResult.getValInterflog());

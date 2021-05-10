@@ -257,9 +257,18 @@ public class CPrdBaseinfoTemplateRecService {
                 if(!StringUtil.isEmpty(dto.getYeildDecDigits())){
                     //7日年化收益率小数位
                     sysParas.put(ValDictCodeList.账套配置表参数项_收益率小数位位数.getValue(), dto.getYeildDecDigits());
+
+                    /**ADD BY WUJIE ON 20210421 START REMARK:本日年化收益率小数位数_估值表展示 临时处理，待后续优化**/
+                    sysParas.put(ValDictCodeList.账套配置表参数项_本日年化收益率小数位数_估值表展示.getValue(), dto.getYeildDecDigits());
+                    /**ADD BY WUJIE ON 20210421 START REMARK:本日年化收益率小数位数_估值表展示 临时处理，待后续优化**/
+
                 }
                 if(!StringUtil.isEmpty(dto.getYeildDecType())){//7日年化收益率尾数处理
                     sysParas.put(ValDictCodeList.账套配置表参数项_收益率小数位处理方式.getValue(), dto.getYeildDecType());
+
+                    /**ADD BY WUJIE ON 20210421 START REMARK:7日年化收益率小数尾数_估值表展示 临时处理，待后续优化**/
+                    sysParas.put(ValDictCodeList.账套配置表参数项_7日年化收益率小数尾数_估值表展示.getValue(), dto.getYeildDecType());
+                    /**ADD BY WUJIE ON 20210421 START REMARK:本日年化收益率小数位数_估值表展示 临时处理，待后续优化**/
                 }
 
                 if(!StringUtil.isEmpty(dto.getFloatDecDigits())){

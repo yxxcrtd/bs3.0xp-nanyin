@@ -7,7 +7,7 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   profiles:
-    active: allinone    #一体化使用yitihua-jicheng
+    active: dtx1    #一体化使用yitihua-jicheng
   thymeleaf:
     cache: false
   #数据源配置
@@ -22,13 +22,13 @@ spring:
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
-    logAbandoned: true   
+    logAbandoned: true
   activemq:
     systemId: touguan_batch
     active: false
     brokerUrl: tcp://localhost:61616
     password: manager
-#base数据源配置  
+#base数据源配置
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
@@ -41,7 +41,7 @@ base:
     removeAbandonedOnBorrow: true
     removeAbandonedOnMaintenance: true
     logAbandoned: true
-  casEnable: false        
+  casEnable: false
 #interf数据源配置
 interf:
   datasource:
@@ -162,7 +162,7 @@ application:
       pbcService: http://127.0.0.1:8080/tams
       investInterfService: http://127.0.0.1:8080/tams
       tamsServer: http://127.0.0.1:8080/tams
-      exchangeService: http://127.0.0.1:8080/tams/service
+      exchangeService: http://127.0.0.1:8080/tams
 #base数据库配置
 base:
   datasource:
@@ -170,7 +170,7 @@ base:
     username: tams30
     password: tams30
 #interf数据源配置
-interf:  
+interf:
    datasource:
      url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
      username: tams30
@@ -202,7 +202,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams214_v1203
-    password: zgtams214_v1203 
+    password: zgtams214_v1203
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -236,7 +236,7 @@ application:
       pbcService: http://127.0.0.1:8080/tams
       investInterfService: http://127.0.0.1:8080/tams
       tamsServer: http://127.0.0.1:8080/tams
-      exchangeService: http://127.0.0.1:8080/tams/service
+      exchangeService: http://127.0.0.1:8080/tams
 #base数据库配置
 base:
   datasource:
@@ -244,7 +244,7 @@ base:
     username: zgtams214_v1203
     password: zgtams214_v1203
 #interf数据源配置
-interf:  
+interf:
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams214_v1203
@@ -274,8 +274,8 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-    
-    
+
+
 ---
 spring:
   profiles: dtxls
@@ -289,7 +289,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
-    password: zgtams0702ls 
+    password: zgtams0702ls
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -330,7 +330,7 @@ base:
     username: zgtams0702ls
     password: zgtams0702ls
 #interf数据源配置
-interf:  
+interf:
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams0702ls
@@ -360,9 +360,9 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-    
-    
-    
+
+
+
 ---
 spring:
   profiles: dtx1
@@ -375,7 +375,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams1214ls
-    password: zgtams1214ls 
+    password: zgtams1214ls
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -409,6 +409,8 @@ application:
       pbcService: http://127.0.0.1:8080/tams
       investInterfService: http://127.0.0.1:8080/tams
       tamsServer: http://127.0.0.1:8080/tams
+      commonBasicDataService: http://127.0.0.1:8080/tams
+
 #base数据库配置
 base:
   datasource:
@@ -416,7 +418,7 @@ base:
     username: zgtams1214ls
     password: zgtams1214ls
 #interf数据源配置
-interf:  
+interf:
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: zgtams1214ls
@@ -446,8 +448,8 @@ tx-lcn:
   logger:
     enabled: true # 开启日志数据库记录存储
     onlyError: true
-    
-    
+
+
 ---
 spring:
   profiles: dtx2
@@ -460,7 +462,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: productLs_20210301_WY
-    password: productLs_20210301_WY 
+    password: productLs_20210301_WY
     reportSqlldrDatabaseName: 192.168.90.140:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
@@ -501,7 +503,7 @@ base:
     username: productLs_20210301_WY
     password: productLs_20210301_WY
 #interf数据源配置
-interf:  
+interf:
    datasource:
     url: jdbc:oracle:thin:@192.168.90.140:1521/orcl
     username: productLs_20210301_WY

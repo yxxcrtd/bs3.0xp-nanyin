@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.asset.bond.validator;
 
 import java.util.ArrayList;
@@ -45,12 +45,12 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  */
 @Component
 public class FinBondTargetAssetValidator implements BeanValidator{
-    
+
     @Autowired
     private CommonBusinessService commonBusinessService;
     @Autowired
     private IPlatformDate iPlatformDate;
-    
+
     @Autowired
     private FinBondTargetAssetService finBondTargetAssetService;
 
@@ -67,7 +67,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
         //选择永续时特殊条款必输
         String isSus =  dto.getIsSus();
         /*String finprodMarketId  =  dto.getFinprodMarketId();*/
-        /*String pattern = "[A-Za-z].*[0-9]|[0-9].*[A-Za-z]"; 
+        /*String pattern = "[A-Za-z].*[0-9]|[0-9].*[A-Za-z]";
         if(!Pattern.matches(pattern, finprodMarketId)){
             resultList.add(new ValidMessage("finprodMarketId",
                 getMessage("BUSS_COM_E_0044", getMessage("FinBondTargetAsset002.finprodId"))));
@@ -86,7 +86,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
             }
             //含权债
             if (DictCodeList.是否_是.getValue().equals(dto.getIsRight())) {
-            	if (dto.getBusiFinExercisePlanDto() == null 
+            	if (dto.getBusiFinExercisePlanDto() == null
             			|| dto.getBusiFinExercisePlanDto().getFinExercisePlanList() == null
             			|| dto.getBusiFinExercisePlanDto().getFinExercisePlanList().size() == 0) {
             		resultList.add(new ValidMessage(getMessage("含权债的行权计划不能为空!")));

@@ -121,12 +121,12 @@ public class ServiceApplication {
      * 交易系统接口
      */
     public static String EXCHANGE_SERVICE_NAME = "http://exchangeService";
-    
+
     /**
      * 行情系统接口
      */
     public static String QUOTE_SERVICE_NAME = "http://quoteService";
-    
+
     /**
      * 银行间上行
      */
@@ -142,6 +142,11 @@ public class ServiceApplication {
      */
     public static String SERVLET_CONTEXT_PATH = "/tams";
     // 批处理调用画面端服务增加 add by renping 2019-07-31 end
+
+    /**
+     * 接口平台接口 add by czj 20210416
+     */
+    public static String INTERF_PLACE_SERVICE_NAME = "http://interfPlaceService";
 
     @Configuration
     @ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "commonService")
@@ -175,6 +180,7 @@ public class ServiceApplication {
                 EXCHANGE_SERVICE_NAME = EXCHANGE_SERVICE_NAME + config.getExchangeService();
                 QUOTE_SERVICE_NAME = EXCHANGE_SERVICE_NAME + config.getQuoteService();
                 BANKUPLINK_SERVICE_NAME = BANKUPLINK_SERVICE_NAME + config.getBankuplinkService();
+                INTERF_PLACE_SERVICE_NAME = INTERF_PLACE_SERVICE_NAME +config.getInterfPlaceService();
             }
             else {
                 COMMON_SERVICE_NAME = config.getCommonService();
@@ -198,6 +204,8 @@ public class ServiceApplication {
                 EXCHANGE_SERVICE_NAME = config.getExchangeService();
                 QUOTE_SERVICE_NAME = config.getQuoteService();
                 BANKUPLINK_SERVICE_NAME = config.getBankuplinkService();
+                INTERF_PLACE_SERVICE_NAME = config.getInterfPlaceService();
+
             }
         }
     }
@@ -249,10 +257,20 @@ public class ServiceApplication {
         private String investInterfService;
 
         private String exchangeService;
-        
+
         private String quoteService;
-        
+
         private String bankuplinkService;
+
+        private String interfPlaceService;
+
+        public String getInterfPlaceService() {
+            return interfPlaceService;
+        }
+
+        public void setInterfPlaceService(String interfPlaceService) {
+            this.interfPlaceService = interfPlaceService;
+        }
 
         /**
          * 获取 investInterfService
@@ -469,7 +487,7 @@ public class ServiceApplication {
         public void setExchangeService(String exchangeService) {
             this.exchangeService = exchangeService;
         }
-        
+
         public String getQuoteService() {
             return quoteService;
         }

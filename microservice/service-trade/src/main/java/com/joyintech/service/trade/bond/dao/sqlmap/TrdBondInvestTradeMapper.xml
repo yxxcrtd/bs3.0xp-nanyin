@@ -169,6 +169,14 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
+                    <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                    <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                        AND fp.TRADE_MARKET in
+                        <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                            #{currTradeMarket}
+                        </foreach>
+                    </if>
+                    <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     <!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
 					<if test="'02'.equals(queryType)">
 						AND wtpd.PS != #{PS_T75}
@@ -315,6 +323,14 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND fp.TRADE_MARKET in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     <!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
 					<if test="'02'.equals(queryType)">
 						AND wtpd.PS != #{PS_T75}
@@ -459,6 +475,14 @@
                     <if test="fTradeId!=null and fTradeId!='' ">
                         and wtpd.f_trade_id like concat(concat('%',#{fTradeId}),'%')
                     </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                    AND fp.TRADE_MARKET in
+                    <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                        #{currTradeMarket}
+                    </foreach>
+                </if>
+                <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     <!-- add by yzg 是否查询资产减值清理交易为否不查询清理核销交易 start -->
 					<if test="'02'.equals(queryType)">
 						AND wtpd.PS != #{PS_T75}
@@ -1443,7 +1467,7 @@
     <select id="getType7" parameterType="com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto" resultType="java.lang.String">
         select type_7 from FIN_PRODUCT_TYPE where FINPROD_ID=#{finprodId}
     </select>
-    
+
     <select id="selectInterfTradSecdeal" resultType="com.joyintech.tams.common.base.entity.InterfTradSecdeal">
     SELECT
         <include refid="com.joyintech.tams.common.base.dao.InterfTradSecdealMapper.Base_Column_List" />

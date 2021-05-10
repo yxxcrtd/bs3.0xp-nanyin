@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.asset.plan.plancur.valid;
 
 import java.util.ArrayList;
@@ -69,9 +69,9 @@ public class FinPlanAssetCValidator implements BeanValidator {
                     errorList.add(new ValidMessage("bussRepAssetMngProdInfo.repFinancialComissue",
                             "请输入是否由金融资产投资公司发行。"));
                 }
-            }    
+            }
         }
-        
+
         if (WorkFlowUtil.isNotFromToDoList()) {
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
                 for(FinPlanAssetCDto e:dto.getSelectedItem()) {
@@ -84,13 +84,13 @@ public class FinPlanAssetCValidator implements BeanValidator {
                 }
             }
             else{
-                if(dto.getVdate() != null && dto.getMdate() != null 
+                if(dto.getVdate() != null && dto.getMdate() != null
                     && dto.getVdate().compareTo(dto.getMdate()) >= 0){
                     errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0035",
                         getMessage("FinPlanAssetC002.vDate") + DateUtil.format(dto.getVdate()),
                         getMessage("FinPlanAssetC002.mDate")+DateUtil.format(dto.getMdate()))));
                 }
-                if(dto.getBussFinIntPayDto() != null && dto.getBussFinIntPayDto().getPayCycle() != null 
+                if(dto.getBussFinIntPayDto() != null && dto.getBussFinIntPayDto().getPayCycle() != null
                     && StringUtil.equals(dto.getBussFinIntPayDto().getPayCycle(), DictCodeList.收益结转频率_按月结转.getValue())
                     && (dto.getIsCompoundInt() == null || StringUtil.equals(dto.getIsCompoundInt(), ""))){
                     errorList.add(
@@ -107,7 +107,7 @@ public class FinPlanAssetCValidator implements BeanValidator {
                         errorList.add(new ValidMessage("finprodMarketId", getMessage("FIN_ASSET_E_0007", dto.getFinprodMarketId())));
                     }
                 }
-                
+
             }
         }
         else {

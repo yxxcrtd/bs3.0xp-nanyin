@@ -11,7 +11,10 @@
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.common.base.entity.*;
 
@@ -67,6 +70,18 @@ public class PlannedAssetBaseInfoRecCommonResult extends BaseEntity {
      */
     private List<ValInterflog> valInterflog = new ArrayList<ValInterflog>();
 
+    /**add by wujie on 20210507 start**/
+    private Map<String, Object> paramMap = new HashMap<String,Object>();
+
+    public Map<String, Object> getParamMap() {
+        return paramMap;
+    }
+
+    public void setParamMap(Map<String, Object> paramMap) {
+        this.paramMap = paramMap;
+    }
+
+    /**add by wujie on 20210507 end**/
     /**
      * 标的类金融产品扩展表
      */

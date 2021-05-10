@@ -1,10 +1,10 @@
 prod:
   bussRep: 1
 server:
-  port: 8080
+  port: 8081
   address: 0.0.0.0
   maxHttpHeaderSize: 102400
-  context-path: /tams
+  context-path: /tamsyy
 listener:
   port: 8888
   length: 8
@@ -17,15 +17,15 @@ spring:
   profiles:
     active: allinone
   application:
-    name: tams-server
+    name: tamsyy-server
     dfstype: 2
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
     validationQuery: SELECT 1 FROM DUAL
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: CVR30
+    password: CVR30
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -150,7 +150,6 @@ application:
     isExceptionWhenSendTimeout: 01
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: invest/remindMain  
   menuType: hover
   sysCode: TAMS
   menuPosition: top
@@ -211,34 +210,35 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:${server.port}/tams
-      basicDataService: http://127.0.0.1:${server.port}/tams
-      documentService: http://127.0.0.1:${server.port}/tams
-      entrustService: http://127.0.0.1:${server.port}/tams
-      periodService: http://127.0.0.1:${server.port}/tams
-      assetService: http://127.0.0.1:${server.port}/tams
-      portfolioService: http://127.0.0.1:${server.port}/tams
-      productService: http://127.0.0.1:${server.port}/tams
-      quotaService: http://127.0.0.1:${server.port}/tams
-      reportService: http://127.0.0.1:${server.port}/tams
-      riskService: http://127.0.0.1:${server.port}/tams
-      riskRdsService: http://127.0.0.1:${server.port}/tams
-      riskInfService: http://127.0.0.1:${server.port}/tams
-      settleService: http://127.0.0.1:${server.port}/tams
-      tradeService: http://127.0.0.1:${server.port}/tams
-      disclosureService: http://127.0.0.1:${server.port}/tams
-      valuationService: http://127.0.0.1:${server.port}/tams
-      chbService: http://127.0.0.1:${server.port}/tams
-      chb3Service: http://127.0.0.1:${server.port}/tams
-      svrcomService: http://127.0.0.1:${server.port}/tams
-      pbcService: http://127.0.0.1:${server.port}/tams
-      channelService: http://127.0.0.1:${server.port}/tams
-      customerInterfService: http://127.0.0.1:${server.port}/tams
-      tamsServer: http://127.0.0.1:${server.port}/tams
-      investInterfService: http://127.0.0.1:${server.port}/tams
-      adapterService: http://127.0.0.1:${server.port}/tams
-      exchangeService: http://127.0.0.1:${server.port}/tams/service
-      quoteService: http://127.0.0.1:${server.port}/tams/service
+      commonService: http://127.0.0.1:${server.port}/tamsyy
+      basicDataService: http://127.0.0.1:${server.port}/tamsyy
+      documentService: http://127.0.0.1:${server.port}/tamsyy
+      entrustService: http://127.0.0.1:${server.port}/tamsyy
+      periodService: http://127.0.0.1:${server.port}/tamsyy
+      assetService: http://127.0.0.1:${server.port}/tamsyy
+      portfolioService: http://127.0.0.1:${server.port}/tamsyy
+      productService: http://127.0.0.1:${server.port}/tamsyy
+      quotaService: http://127.0.0.1:${server.port}/tamsyy
+      reportService: http://127.0.0.1:${server.port}/tamsyy
+      riskService: http://127.0.0.1:${server.port}/tamsyy
+      riskRdsService: http://127.0.0.1:${server.port}/tamsyy
+      riskInfService: http://127.0.0.1:${server.port}/tamsyy
+      settleService: http://127.0.0.1:${server.port}/tamsyy
+      tradeService: http://127.0.0.1:${server.port}/tamsyy
+      disclosureService: http://127.0.0.1:${server.port}/tamsyy
+      valuationService: http://127.0.0.1:${server.port}/tamsyy
+      chbService: http://127.0.0.1:${server.port}/tamsyy
+      chb3Service: http://127.0.0.1:${server.port}/tamsyy
+      svrcomService: http://127.0.0.1:${server.port}/tamsyy
+      pbcService: http://127.0.0.1:${server.port}/tamsyy
+      channelService: http://127.0.0.1:${server.port}/tamsyy
+      customerInterfService: http://127.0.0.1:${server.port}/tamsyy
+      tamsServer: http://127.0.0.1:${server.port}/tamsyy
+      investInterfService: http://127.0.0.1:${server.port}/tamsyy
+      adapterService: http://127.0.0.1:${server.port}/tamsyy
+      commonBasicDataService: http://127.0.0.1:${server.port}/tamsyy
+      exchangeService: http://127.0.0.1:${server.port}/tamsyy
+      quoteService: http://127.0.0.1:${server.port}/tamsyy
 # 使用服务注册中心的方式
 #  loadbalance: true
 #  micorservice:
@@ -274,8 +274,6 @@ application:
 #交易压力测试性能优化开关
 flag: false
 
-
-
 ---
 spring:
   profiles: allinone
@@ -294,13 +292,13 @@ spring:
 #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+    username: CVR30
+    password: CVR30
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: tams30
-  sqldirpassword: tams30
+  sqldiruserName: CVR30
+  sqldirpassword: CVR30
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -312,26 +310,27 @@ shiro:
     /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
     /TrdExchangeWorkflow/**,/invest/trade/api/**
+
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: CVR30
+    password: CVR30
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: CVR30
+    password: CVR30
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: CVR30
+    password: CVR30
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: tams30
-    password: tams30
+    username: CVR30
+    password: CVR30
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -406,35 +405,35 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
-    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: CVR30
+    password: CVR30
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
-  url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-  username: zgtams0810
-  password: zgtams0810_123
+  url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  username: CVR30
+  password: CVR30
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: CVR30
+    password: CVR30
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: CVR30
+    password: CVR30
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: CVR30
+    password: CVR30
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: zgtams0810
-    password: zgtams0810_123
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: CVR30
+    password: CVR30
 log:
   path: ${user.home}/tams/logs/tams
   level: DEBUG

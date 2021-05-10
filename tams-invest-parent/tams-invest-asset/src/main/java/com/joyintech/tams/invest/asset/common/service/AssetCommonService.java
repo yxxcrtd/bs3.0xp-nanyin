@@ -55,6 +55,7 @@ import com.joyintech.tams.invest.common.calculator.RepayScheduleCal;
 import com.joyintech.tams.invest.common.calculator.WeightedInterestRateCal;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -396,12 +397,14 @@ public class AssetCommonService extends BaseService{
 
         // 一体化对应etliu 现金流支付规则表，支付频率没存值，可能有问题
         if (StringUtil.isBlank(finCashPayRule.getPayCycle())) {
-			finCashPayRule.setPayCycle(BussinessConstant.DEFAULT_PAY_CYCLE);
+            //modify by jiangpeng on 20210426 TISHKBS-2051 CLONE - 贴现债数据错误
+			finCashPayRule.setPayCycle(BussinessDictCodeList.频率_到期一次.getValue());
 		}
         if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                 &&(StringUtil.equals(dto.getCouponSpecies(), DictCodeList.息票品种_零息.getValue())
                 ||StringUtil.equals(dto.getCouponSpecies(), DictCodeList.息票品种_贴现.getValue()))){
         }else if(null!=finPayInterestStdInfoDto.getFinCashPlanList()){
+            Long cashNum = 1L;
             for(FinCashPlan finCashPlanEntity:finPayInterestStdInfoDto.getFinCashPlanList()){
                 FinCashPlan finCashPlan = new FinCashPlan();
                 BeanUtil.copyPropertiesIgnoreNull(finCashPlan, finCashPlanEntity);
@@ -432,6 +435,7 @@ public class AssetCommonService extends BaseService{
                 finCashPlan.setPayType(DictCodeList.分红方式_现金分红.getValue());
                 finCashPlan.setCashUnitType(cashUnitType);
                 finCashPlan.setBranch(branch);
+                finCashPlan.setCashNum(cashNum++);
                 finCashPlanList.add(finCashPlan);
             }
         }
@@ -456,6 +460,7 @@ public class AssetCommonService extends BaseService{
             finCashPlanPrincipal.setIsPayInt(DictCodeList.是否_是.getValue());
             finCashPlanPrincipal.setCashAmt(dto.getIssueAmt());
             finCashPlanPrincipal.setCashUnitType(cashUnitType);
+            finCashPlanPrincipal.setCashNum(1L);
             finCashPlanList.add(finCashPlanPrincipal);
         }
         finCashPayRuleList.add(finCashPayRule);
@@ -536,6 +541,7 @@ public class AssetCommonService extends BaseService{
             finCashPlanPrincipal.setFinprodType(dto.getFinprodType());
             finCashPlanPrincipal.setFinprodType2(dto.getFinprodType2());
             finCashPlanPrincipal.setBranch(branch);
+            finCashPlanPrincipal.setCashNum(1L);
             finCashPlanList.add(finCashPlanPrincipal);
         }else if(null!=bussFinRepaymentDto.getFinCashPlanList()){
                 List<FinCashPlanDto> intiFinCashPlanList = bussFinRepaymentDto.getFinCashPlanList();
@@ -568,6 +574,7 @@ public class AssetCommonService extends BaseService{
                     }else{
                         finCashPlan.setCashType(DictCodeList.现金流类型_中间还本.getValue());
                     }
+                    finCashPlan.setCashNum((long) (i + 1));
                     finCashPlanList.add(finCashPlan);
                 }
         }

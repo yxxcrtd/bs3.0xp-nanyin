@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,7 +84,7 @@ public class PrdSupplementDealRecCommonResult extends BaseEntity {
     /**
      * 用于存放去重数据筛选条件
      */
-    private Map<String, Object> paramMap;
+    private Map<String, Object> paramMap = new HashMap<String,Object>();
 
     public List<TrdProductDeal> getListValFinProductDeal() {
         return listValFinProductDeal;

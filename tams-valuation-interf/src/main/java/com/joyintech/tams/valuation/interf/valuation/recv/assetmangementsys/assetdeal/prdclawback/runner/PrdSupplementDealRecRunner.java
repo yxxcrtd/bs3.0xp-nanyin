@@ -79,7 +79,7 @@ public class PrdSupplementDealRecRunner extends InterfBaseService {
         try {
             interfBuilder.init(this).batch("step1", (InterfBaseReader)step1Reader,
                 (InterfBaseProcessor)step1Processor, (InterfBaseWriter)step1Writer).builder(
-                    "nProdDealInfoRecRunner").run();
+                    "prdSupplementDealRecRunner").run();
         }
         catch (InterfException e) {
             logger.error("", e);

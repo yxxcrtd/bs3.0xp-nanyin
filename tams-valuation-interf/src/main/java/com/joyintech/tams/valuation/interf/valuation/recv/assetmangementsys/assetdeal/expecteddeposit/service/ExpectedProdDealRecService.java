@@ -80,6 +80,10 @@ public class ExpectedProdDealRecService {
             ps.add(DictCodeList.交易方向_中间付息.getValue());
             ps.add(DictCodeList.交易方向_赎回收益确认.getValue());
             paramMap.put("pslist", ps);
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         } 
         else if (TempConstant.预期型产品费用交易表.equals(acctEntity.getTmpEName())) {
             result = expectedPrdDealFeeDealTemplateRecService.execute(templateSourceFlgDTO, acctEntity);
@@ -94,6 +98,10 @@ public class ExpectedProdDealRecService {
             }**/
             paramMap.put("profitType", DictCodeList.收益类型_收益型.getValue());
             /**modify by wujie on 20190123 end**/
+
+            /**add by wujie on 20210506 start**/
+            paramMap.put(InterfCommonConstant.读取文件状态, result.getParamMap()==null?null:result.getParamMap().get(InterfCommonConstant.读取文件状态));
+            /**add by wujie on 20210506 end**/
         } else {
             result.setDatanum(0);
         }

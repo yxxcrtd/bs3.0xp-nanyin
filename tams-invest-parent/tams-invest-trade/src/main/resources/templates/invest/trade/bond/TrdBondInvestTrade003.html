@@ -167,7 +167,7 @@
                                     <div class="layui-input-inline input-inline">
                                         <select type="text" id="finprodId" name="finprodId"
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/trade/bond/TrdBondInvestTrade002/getFinprodId}"
+                                                th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/trade/bond/TrdBondInvestTrade002/getFinprodId(parentPageId=${parentPageId})}"
                                                 allowClear="true" th:initValue="${entity?.finprodId}"></select>
                                     </div>
                                 </div>
@@ -692,6 +692,10 @@
         var Collect_Type_01 = /*[[${Collect_Type_01}]]*/'';
         var GEN_PAY_ORDERS_AUTO= /*[[${GEN_PAY_ORDERS_AUTO}]]*/; // 系统参数_是否显示划款指令
         var IS_AVERAGE_DISTRIBUTION_OF_EXPENSES = /*[[${IS_AVERAGE_DISTRIBUTION_OF_EXPENSES}]]*/'';//增加费用平均分配
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        var parentPageId = /*[[${parentPageId}]]*/'';
+        // add by etliu 20210501 银行间场内场外拆分 end
     </script>
     <script data-th-src="@{/js/component/common/TradeCommon.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/component/autocoupon/AutoCoupon.js}" type="text/javascript"></script>

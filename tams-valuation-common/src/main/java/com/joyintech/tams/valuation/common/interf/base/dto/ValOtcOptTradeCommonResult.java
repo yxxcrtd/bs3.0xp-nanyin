@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.common.interf.base.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class ValOtcOptTradeCommonResult extends BaseEntity {
      */
     private List<ValInterflog> valInterflog = new ArrayList<ValInterflog>();
 
-    private Map<String,Object> paramMap;
+    private Map<String,Object> paramMap = new HashMap<String,Object>();
     
     /**
      * 读取数据数量

@@ -21,6 +21,7 @@ import java.util.Map;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -125,7 +126,7 @@ public class TrdBondInvestTradeService extends BaseService {
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         pageParam.put("PS_T75", DictCodeListExt3.交易方向_清理核销.getValue());
         pageParam.put("BUSI_TYPE_T75", DictCodeListExt3.共通业务类型_清理核销.getValue());
-        
+
         // 一体化对应etliu start
         List<String> psList = new ArrayList<String>();
         psList.add(DictCodeList.交易方向_买入.getValue());
@@ -135,6 +136,11 @@ public class TrdBondInvestTradeService extends BaseService {
         psList.add(DictCodeListExt3.交易方向_清理核销.getValue());
         pageParam.put("psList", psList);
         // 一体化对应etliu end
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+        pageParam.put("defaultTradePlatFormList", PageMenuSplitUtil.getTradePlatFormList((String) pageParam.get("pageId")));
+        // add by etliu 20210501 银行间场内场外拆分 end
 
         return this.queryForPage(page, length,
             () -> trdBondInvestTradeMapper.selectDeal(pageParam));
@@ -1006,7 +1012,7 @@ public class TrdBondInvestTradeService extends BaseService {
     public String getType7(TrdBondInvestTradeDto dto) {
         return trdBondInvestTradeMapper.getType7(dto);
     }
-	
+
 		public List<TrdTradeFeeDetail>  getAllFeeByFTradeId(Map<String, Object> map) {
 		List<TrdTradeFeeDetail>  allFee = trdBondInvestTradeMapper.getAllFeeByFTradeId(map);
 		return allFee;

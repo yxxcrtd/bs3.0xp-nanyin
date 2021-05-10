@@ -78,7 +78,7 @@
         dblclick:function(table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("EtrFund002.detail"),
-                    JoyinUtil.getRealPath("invest/entrust/etrfund/EtrFund002/init"),
+                    JoyinUtil.getRealPath("invest/entrust/etrfund/EtrFund002/init?parentPageId=" + pageId),
                     "98%", "95%", data,
                     function(){table.reload();});
         },
@@ -167,7 +167,7 @@
         data.operateType='edit'
         //Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrLendSpecInfo002/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrFund002.edit"),
-                    basePath + "invest/entrust/etrfund/EtrFund002/init",
+                    basePath + "invest/entrust/etrfund/EtrFund002/init?parentPageId=" + pageId,
                     "98%", "95%",data,
                     function(){table.reload();});
         //});
@@ -199,7 +199,7 @@
      * 新建
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrFund002'), basePath +'invest/entrust/etrfund/EtrFund002/init', '98%', '95%');
+        Joyin.dialog(JoyinUtil.getLabel('EtrFund002'), basePath +'invest/entrust/etrfund/EtrFund002/init?parentPageId=' + pageId, '98%', '95%');
     }
 
     /**
@@ -209,14 +209,14 @@
         /**
          * 查询按钮
          */
-        $('#EtrFund001_btn_search').click(function() {
+        $('#'+pageId+'_btn_search').click(function() {
             table.load();
         });
         
         /** 
          * 新建
          */
-        $('#EtrFund001_btn_add').click(function(){
+        $('#'+pageId+'_btn_add').click(function(){
         	showDialog();
         	table.reload()
         });
@@ -224,14 +224,14 @@
         /**
          * 导出按钮
          */
-        $('#EtrFund001_btn_export').click(function() {
+        $('#'+pageId+'_btn_export').click(function() {
             exportExcel();
         });
         
         /** 
          * 关闭委托
          */
-        $('#EtrFund001_btn_close').click(function(){
+        $('#'+pageId+'_btn_close').click(function(){
         	if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }
@@ -264,7 +264,7 @@
         /** 
          * 撤销委托
          */
-        $('#EtrFund001_btn_revoke').click(function(){
+        $('#'+pageId+'_btn_revoke').click(function(){
         	if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();
             }
@@ -285,7 +285,7 @@
             });
         })
         // 多对多导入
-        $('#EtrFund001_btn_import').click(function() {
+        $('#'+pageId+'_btn_import').click(function() {
                 Joyin.uploadFile({pageId:'EtrFund003MTM'},function(fileName) {
                             Joyin.ajax(basePath + 'invest/entrust/etrfund/EtrFund003/checkImportData', {fileName: fileName}, function(checkResult) {
                                 // 若是模板数据大于100条，提示重新导入，若是小于100条，进入多对多指令界面
@@ -317,5 +317,14 @@
         }else{
         	$('#assetType11Div').hide();
         }
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        //是否展示交易所相关内容
+        if(pageId == 'EtrFundEx001' || pageId == 'EtrFund001'){
+            $('#exContentDiv').show();
+        } else {
+            $('#exContentDiv').hide();
+        }
+        // add by etliu 20210501 银行间场内场外拆分 end
     });
 }());

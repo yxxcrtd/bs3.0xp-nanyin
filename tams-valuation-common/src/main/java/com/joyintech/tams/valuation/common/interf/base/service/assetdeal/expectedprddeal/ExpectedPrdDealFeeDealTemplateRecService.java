@@ -94,6 +94,13 @@ public class ExpectedPrdDealFeeDealTemplateRecService {
         if (listValPrdFeeDeal == null) {
         	listValPrdFeeDeal = new ArrayList<ValPrdFeeDeal>();
         }
+        /**add by wujie on 20210506 start**/
+        if(returnResult.isReadFile()){
+            result.getParamMap().put(InterfCommonConstant.读取文件状态,DictCodeList.是否_是.getValue());
+        }
+        /**add by wujie on 20210506 end**/
+
+
         // 3、根据有效数据，进行数据的编辑，并生成进入业务表的数据结构
         Map<String, Object> map = this.handleValPrdExpDeal(listValPrdFeeDeal,
             acctEntity.getResovleDate(),params,returnResult.getValInterflog());
@@ -336,7 +343,12 @@ public class ExpectedPrdDealFeeDealTemplateRecService {
         FinCashInfo finCashInfo = interfCommonService.queryCashInfo(paramMap);
         if(finCashInfo!=null){
             trdProductDeal.setFinprodType(finCashInfo.getCashType2());
-        }        
+        }
+        else{
+            if(DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+                trdProductDeal.setFinprodType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            }
+        }
         
         // 分支序号 = 设置全局变量(默认为0）
         /** modify by dongjun on 20181029 start **/
@@ -452,6 +464,11 @@ public class ExpectedPrdDealFeeDealTemplateRecService {
         FinCashInfo finCashInfo = interfCommonService.queryCashInfo(paramMap);
         if(finCashInfo!=null){
         	valTradeFeeDetail.setFeeType(finCashInfo.getCashType2());
+        }
+        else{
+            if(DictCodeListExt1.现金流二级类型_浮动管理费.getValue().equals(dto.getFeeId())){
+                valTradeFeeDetail.setFeeType(DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+            }
         }
         // 是否随交易支付 = 固定值：Y 是 默认随交易支付
         valTradeFeeDetail.setIsPayWithTrade(DictCodeList.是否_是.getValue());

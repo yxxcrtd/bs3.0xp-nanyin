@@ -165,7 +165,7 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
         restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdPlanNetDuration/doComplete", entity,
             String.class);
         // 除权登记生成总集复核数据
-        if (!StringUtil.equals(entity.getMode(), "revoke") && StringUtil.equals(entity.getType(), "02")) {
+        if (!(StringUtil.equals(entity.getMode(), "revoke")||StringUtil.equals(entity.getMode(), "REVOKE")) && StringUtil.equals(entity.getType(), "02")) {
             // 设置工作流代码
             entity.setWorkflowId(null);
             if (StringUtil.equals(entity.getBonusMode(), DictCodeList.分红方式_现金分红.getValue())) {

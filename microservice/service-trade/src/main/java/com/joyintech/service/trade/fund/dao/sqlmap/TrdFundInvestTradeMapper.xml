@@ -92,6 +92,14 @@
 						and (T1.is_swap_transaction is null or T1.is_swap_transaction = #{YES_NO_NO})
                         and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
                         AND T1.PS != 'T62' AND T1.PS != 'T63' AND T1.PS != 'T64'
+                        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                            AND T1.TRADE_MARKET in
+                            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                                #{currTradeMarket}
+                            </foreach>
+                        </if>
+                        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     </where>
 
                     UNION ALL
@@ -113,6 +121,14 @@
                         and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
                         AND (T1.PS = 'T01' OR T1.PS = 'T02')
 						and  (wtpd.is_swap_transaction is null or wtpd.is_swap_transaction = #{YES_NO_NO})
+                        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                            AND T1.TRADE_MARKET in
+                            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                                #{currTradeMarket}
+                            </foreach>
+                        </if>
+                        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     </where>
 
                     UNION ALL
@@ -132,6 +148,14 @@
                         (T1.IS_CANCEL is null or T1.IS_CANCEL = #{YES_NO_NO})
                         and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
                         AND (T1.PS = 'T65' OR T1.PS = 'T66')
+                        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                            AND T1.TRADE_MARKET in
+                            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                                #{currTradeMarket}
+                            </foreach>
+                        </if>
+                        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     </where>
                 </if>
                 <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_02">
@@ -159,6 +183,14 @@
                         (T1.IS_CANCEL is null or T1.IS_CANCEL = #{YES_NO_NO})
                         and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
                         AND T1.PS != 'T62' AND T1.PS != 'T63' AND T1.PS != 'T64'
+                        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                            AND T1.TRADE_MARKET in
+                            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                                #{currTradeMarket}
+                            </foreach>
+                        </if>
+                        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     </where>
 
                     UNION ALL
@@ -178,6 +210,14 @@
                         (T1.IS_CANCEL is null or T1.IS_CANCEL = #{YES_NO_NO})
                         and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
                         AND (T1.PS = 'T65' OR T1.PS = 'T66')
+                        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                            AND T1.TRADE_MARKET in
+                            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                                #{currTradeMarket}
+                            </foreach>
+                        </if>
+                        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     </where>
                 </if>
                 <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_03">
@@ -203,6 +243,14 @@
                         PP.INVEST_YESORNO = 'Y'
                         AND T1.TRADE_STATUS = #{TRADESTATUS_REVOKE}
                         AND T1.PS != 'T62' AND T1.PS != 'T63' AND T1.PS != 'T64'
+                        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                            AND T1.TRADE_MARKET in
+                            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                                #{currTradeMarket}
+                            </foreach>
+                        </if>
+                        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     </where>
 
                     UNION ALL
@@ -221,6 +269,14 @@
                     <where>
                         T1.TRADE_STATUS = #{TRADESTATUS_REVOKE}
                         AND (T1.PS = 'T65' OR T1.PS = 'T66')
+                        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+                        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                            AND T1.TRADE_MARKET in
+                            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                                #{currTradeMarket}
+                            </foreach>
+                        </if>
+                        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
                     </where>
                 </if>
             </trim>
@@ -308,6 +364,14 @@
                   OR tpd.PS NOT IN (#{PS24},#{PST19},#{PST05})
                   OR T3.TRM_FUND_TYPE IS NULL OR T3.TRM_FUND_TYPE != #{TRM_FUND_TYPE05})-->
              <!-- 场内基金改造 add by renping 20191117 end -->
+            <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+            <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+                AND fp.TRADE_MARKET in
+                <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                    #{currTradeMarket}
+                </foreach>
+            </if>
+            <!-- add by etliu 20210501 银行间场内场外拆分 end -->
         </where>
         ORDER BY tpd.TRADE_DATE DESC
     </select>
@@ -399,6 +463,14 @@
         <if test="tradeDateVdate != null and tradeDateVdate != ''">
             AND TO_DATE(#{tradeDateVdate}, 'yyyy-MM-dd') >= T1.VDATE
         </if>
+        <!-- add by etliu 20210501 银行间场内场外拆分 start -->
+        <if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+            AND T1.TRADE_MARKET in
+            <foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+                #{currTradeMarket}
+            </foreach>
+        </if>
+        <!-- add by etliu 20210501 银行间场内场外拆分 end -->
 
        <!-- union
         select interf.F_INFO_CODE id,

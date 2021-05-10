@@ -745,7 +745,7 @@ $(function () {
                 var carryAmt = $('#carryAmt').val() || 0;
                 var unitCprice = $('#unitCprice').val();
                 if (shareAmt && unitCprice) {
-                    $('#tradeAmt').val(parseFloat(shareAmt) * parseFloat(unitCprice) + parseFloat(carryAmt) - getPayWithTradeFee()).trigger('blur');
+                    $('#tradeAmt').val((parseFloat(shareAmt)+ parseFloat(carryAmt)) * parseFloat(unitCprice)  - getPayWithTradeFee()).trigger('blur');
                 }
             }
         });

@@ -11,6 +11,7 @@
 package com.joyintech.service.entrust.etrbondfirstlbidding.controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,9 +90,12 @@ public class EtrBondFirstLBiddingController {
      * @since 1.0
      */
     @GetMapping("getfinprodId")
-    public List<SuggestDto> getfinprodId(String finprodId)
+    public List<SuggestDto> getfinprodId(String finprodId, String pageId)
         throws Exception {
-        return service.getfinprodId(finprodId);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("finprodId", finprodId);
+        map.put("pageId", pageId);
+        return service.getfinprodId(map);
     }
     /**
      * 
