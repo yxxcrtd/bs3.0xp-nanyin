@@ -29,8 +29,6 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.assetdeal.repdeal.RepurchaseDealTemplateRecService;
 import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.assetdeal.repdeal.dto.RepurchaseDealInfoProcessorResult;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**
  * 批处理启动文件接收批处理 对回购交易信息接口文件系列机型处理，供给Writer使用
