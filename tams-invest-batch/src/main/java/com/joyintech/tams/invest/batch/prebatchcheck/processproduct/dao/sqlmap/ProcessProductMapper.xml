@@ -21,7 +21,7 @@
         LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
         LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
         left join fin_product fp on fp.finprod_market_id = t.TRADE_ID
-        and fp.finprod_type = 'F16'
+        and fp.finprod_type = 'F16' and fp.finprod_type2 = 'F16'
         left join ptl_portfolio pp  on pp.portfolio_id = t.TRADE_ID
         WHERE T.PROCESS_STATE  not in ('END','NEW')
         AND T.BUSINESS_TYPE in ( 'PTL01','FINPROD04')
