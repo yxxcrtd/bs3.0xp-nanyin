@@ -169,19 +169,25 @@ public class SysPrebatchResult001Service extends CommonExportService<SysPrebatch
     }
 
     private void insertIntoDataBase(List<SysBatchgrpExecInfo> infoList, List<SysPrebatchResult001Dto> resultList) {
-        if(!StringUtil.isEmptyList(infoList)){
-
-            sysPrebatchResult001Mapper.insertBatchExecList(infoList);
-
-        }
 
         if (!StringUtil.isEmptyList(resultList)){
 
-            sysPrebatchResult001Mapper.insertBatchPrebatchResultList(resultList);
+            int singleInsert = 50;
+            for(int i=0;i*singleInsert<resultList.size();i++) {
+                int endIndex = (i+1)*singleInsert;
+                if(endIndex>resultList.size()) {
+                    endIndex = resultList.size();
+                }
+                sysPrebatchResult001Mapper.insertBatchPrebatchResultList(resultList.subList(i*singleInsert, endIndex));
+            }
         }
 
+        if(!StringUtil.isEmptyList(infoList)){
+            sysPrebatchResult001Mapper.insertBatchExecList(infoList);
+        }
 
     }
+
 
     private SysBatchgrpExecInfo packageSysBatchgrpExecInfo(String seqId, String prebatchGroupId, Date plateFormDate, String userName, String instCode) {
         SysBatchgrpExecInfo sysBatchgrpExecInfo = new SysBatchgrpExecInfo();
