@@ -84,5 +84,9 @@ public interface ValAssetBookParameter002Mapper {
      * @return
      */
     ValAssetBookParameter002Dto getByKey(Map<String, Object> params);
-    
+
+    /**
+     * 检查是否存在相同的对象
+     */
+    List<ValAssetBookParameter002Dto> checkExistSameDto(ValAssetBookParameter002Dto dto);
 }

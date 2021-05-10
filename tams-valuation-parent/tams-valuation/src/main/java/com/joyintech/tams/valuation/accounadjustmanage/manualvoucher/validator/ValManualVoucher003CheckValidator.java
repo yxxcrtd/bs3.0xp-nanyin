@@ -64,6 +64,21 @@ public class ValManualVoucher003CheckValidator implements BeanValidator {
         if (StringUtils.isEmpty(dto.getSubjectNo())) {
             return errorList;
         }
+        
+        /**add by wujie on 20201111 start remark:债券、计划类收益型资产  投资目的不能为空**/
+        if(DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())
+        		|| (DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(dto.getFinprodType())
+        			&& DictCodeList.收益类型_收益型.getValue().equals(dto.getProfitType())
+        			)
+        		){
+        	 if (StringUtils.isEmpty(dto.getInvAim())) {
+        		 String msg = this.getMessage("VAL_COMMON_E_0002",
+                         this.getMessage("ValManualVoucher.invAim"));
+                     errorList.add(new ValidMessage(msg));
+        	 }
+        }
+        /**add by wujie on 20201111 end remark:债券、计划类收益型资产  投资目的不能为空**/
+        
         // 获取模板账套代码
         String booksetIdTmpl = null;
         BokBookset bokBookset = bokBooksetMapper.selectByPrimaryKey(dto.getBooksetId());
@@ -249,9 +264,12 @@ public class ValManualVoucher003CheckValidator implements BeanValidator {
             }
         }
 
-        if ((DictCodeBaseSubjectNatrue.现金.getValue().equals(boksubject.getBaseSubjectNature())
+        if (DictCodeBaseSubjectNatrue.现金.getValue().equals(boksubject.getBaseSubjectNature())
+        		/**modify by wujie on 20201116 remark:清算款科目由三级科目改为四级科目
              || DictCodeBaseSubjectNatrue.清算款.getValue().equals(
-                 boksubject.getBaseSubjectNature()))) {
+                 boksubject.getBaseSubjectNature())
+                 **/
+             ) {
             // 资金账户为空时
             if (StringUtil.isEmpty(dto.getAcctCode())) {
                 // 分支序号不能为空

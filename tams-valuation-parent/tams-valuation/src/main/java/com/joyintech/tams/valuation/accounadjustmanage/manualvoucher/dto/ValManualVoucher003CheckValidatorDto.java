@@ -118,6 +118,12 @@ public class ValManualVoucher003CheckValidatorDto extends BaseEntity {
      * 资产代码对应的业务明细类型
      */
     private String busiDetailType;
+    
+    /**
+     * 收益类型
+     */
+    private String profitType;//add by wujie on 20201111
+    
 
     /**
      * 获取 seqno
@@ -414,5 +420,15 @@ public class ValManualVoucher003CheckValidatorDto extends BaseEntity {
     public void setBusiDetailType(String busiDetailType) {
         this.busiDetailType = busiDetailType;
     }
+
+	public String getProfitType() {
+		return profitType;
+	}
+
+	public void setProfitType(String profitType) {
+		this.profitType = profitType;
+	}
+    
+    
 
 }

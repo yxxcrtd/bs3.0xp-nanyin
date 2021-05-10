@@ -10,19 +10,13 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.depositasset.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.valuation.common.interf.base.dto.DepositeAssetBaseInfoValCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.FloatingInterestRateCommonResult;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 存款类资产基础信息Processor 返回共通结果
@@ -72,9 +66,20 @@ public class DepositAssetBaseInfoProcessorResult extends BaseEntity {
     List<FinCashPlan> listValCashPlan = new ArrayList<FinCashPlan>();
 
     /**
+     * 现金流利率信息表
+     */
+    private List<FinRateInfo> listValCashIntInfo = new ArrayList<FinRateInfo>();
+
+
+    /**
      * 日志
      */
     private List<ValInterflog> valInterflog = new ArrayList<ValInterflog>();
+
+    /**
+     * 金融产品扩展表
+     */
+    List<FinProductAdd> listValFinProductExt = new ArrayList<>();
 
     /**
      * 浮动利率初始化
@@ -96,6 +101,12 @@ public class DepositAssetBaseInfoProcessorResult extends BaseEntity {
         this.setValInterflog(result.getValInterflog());
         this.setListFloatingInterestRateCommonResult(
             result.getListFloatingInterestRateCommonResult());
+        /** 标的类金融产品扩展表 add by yanya on 20210318 start**/
+        this.setListValFinProductExt(result.getListValFinProductExt());
+        /** 标的类金融产品扩展表 add by yanya on 20210318 end**/
+        /** 现金流利率信息表 add by sunshuaishuai on 20210320 start**/
+        this.setListValCashIntInfo(result.getListValCashIntInfo());
+        /** 现金流利率信息表 add by sunshuaishuai on 20210320 end**/
     }
 
     /**
@@ -258,4 +269,24 @@ public class DepositAssetBaseInfoProcessorResult extends BaseEntity {
     public void setListValFinProduct(List<FinProduct> listValFinProduct) {
         this.listValFinProduct = listValFinProduct;
     }
+
+    /** 标的类金融产品扩展表 add by yanya on 20210318 start**/
+    public List<FinProductAdd> getListValFinProductExt() {
+        return listValFinProductExt;
+    }
+
+    public void setListValFinProductExt(List<FinProductAdd> listValFinProductExt) {
+        this.listValFinProductExt = listValFinProductExt;
+    }
+    /** 标的类金融产品扩展表 add by yanya on 20210318 end**/
+
+    /** 现金流利率信息表 add by sunshuaishuai on 20210320 end**/
+    public List<FinRateInfo> getListValCashIntInfo() {
+        return listValCashIntInfo;
+    }
+
+    public void setListValCashIntInfo(List<FinRateInfo> listValCashIntInfo) {
+        this.listValCashIntInfo = listValCashIntInfo;
+    }
+    /** 现金流利率信息表 add by sunshuaishuai on 20210320 end**/
 }

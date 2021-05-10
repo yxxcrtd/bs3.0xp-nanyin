@@ -879,6 +879,22 @@ $(function() {
             obj.type = FINPROD_TYPE_TG_F18;
             AssetCommon.checkDate(obj);
         })
+		// 中债报送融资人和融资人组织机构由基础信息的融资人关联带出 by 赵东东 20200324 start
+        $('#financier,#repAssetType').change(function(){
+        	var repAssetType = $('#repAssetType').val();
+        	var e = $('#financier').val();
+        	if(repAssetType==1202||repAssetType==1203||repAssetType==1204||repAssetType==1205||repAssetType==1206||repAssetType==1207||repAssetType==1208
+        			||repAssetType==1209||repAssetType==2201){
+        		$('#bussRepAssetCreditNonstdInfoDto_repFinancier').textSelect('setValue', e);
+        		$('#bussRepAssetCreditNonstdInfoDto_repFinancier').attr("disabled",true);
+        		$('#bussRepAssetCreditNonstdInfoDto_repFinOrgCode').val($('#financier').select2('data')[0].col).attr("disabled",true).trigger("change");
+        	}else if(repAssetType==1299||repAssetType==1399||repAssetType==2299){
+        		$('#bussRepOtherInvestTargetInfoDto_repFinancier').textSelect('setValue', e);
+        		$('#bussRepOtherInvestTargetInfoDto_repFinancier').attr("disabled",true);
+        		$('#bussRepOtherInvestTargetInfoDto_repFinancierOrgCode').val($('#financier').select2('data')[0].col).attr("disabled",true).trigger("change");
+        	}
+        });
+     // 中债报送融资人和融资人组织机构由基础信息的融资人关联带出 by 赵东东 20200324 end
       //是否展示资产四五级分类
         /*if(IS_SHOW_TYPE == '01'){
         	$('#type11Div').show();
@@ -895,6 +911,6 @@ $(function() {
         $('#magnifier').click(function() {
             getInterfFundDto();
         });
-        $("#financier").change(financierChange)
+        //$("#financier").change(financierChange)
     });
 });

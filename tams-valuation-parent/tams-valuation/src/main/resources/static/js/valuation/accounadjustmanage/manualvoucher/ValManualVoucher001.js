@@ -44,7 +44,6 @@ $(function () {
            {field:'booksetId', title: '账套代码',width:140},
            {field:'booksetName', title: '账套名称',width:160},         
            {field:'bookId',title: '凭证编号',width:160},
-           {field : 'bankSerialNumber', title : '银行记账流水号',width:200}, 
            {field:'subjectNo', title: '科目号',width:160},
            {field:'subjectName', title: '科目名称',width:380},
            {field:'detailSubjectNo', title: '科目尾号',width:120},
@@ -58,42 +57,21 @@ $(function () {
            //{field:'bccyFmt', title: '记账币种', sortField:"bCcy",width:140},
            {field:'bCcy', title: '记账币种',width:140},          
            {field:'bHappenAmt', type:"money", title: '本币金额',width:200},           
-           {field:'tableIdFmt', title: '业务类型', sortField:"tableId", width:250},
+           {field:'tableIdFmt', title: '业务类别', sortField:"tableId", width:250},
            {field:'busiId', title: '资产/负债代码',width:320},
            {field:'busiName', title: '资产/负债名称',width:180},
            {field:'tradeId',title: '业务编号',width:200},
            {field:'pTradeId',title: '原始业务编号',width:120},
            {field:'offsetFlagFmt',title: '冲销标识', sortField:"offsetFlag", width:100},
            {field:'offsetFlag', title: '冲销标识',visible:false,width:100},
-           {field:'accountOrder', title: '记账顺序',width:120},
            {field:'bookRemark', title: '摘要',width:120},
            {field:'createUser', title: '制作人',width:120},
            {field:'booksetDate', title: '账套日期',visible:false,width:100},
 //           {fixed : 'right', title : '操作', align : 'center',type : 'action', buttons : [ 'edit' ] }
-            {field:'operation', title: 'SysCommon.operation', width:120, type:'action', fixed: 'right',
-	        	render:function (data, type, row, meta){
-	        		var buttons = "";
-	        		if(purviewElements.indexOf('_manual')!=-1){
-                        buttons += '<i class="iconfont icon-copy manual" title="复制"></i>';
-	        		}
-	        		return buttons;
-	        	}
-	        }
 		],
 //		loadonce:true
 	});
-
-	/**
-     * 绑定事件：一般资产估值 - 复制
-     */
-    table.bind('click', '.manual', function(data, index) {
-    debugger;
-        Joyin.dialog(JoyinUtil.getLabel("复制手工凭证（ "+ "<span style='color:red'> * </span>" + "必填）"),
-                   basePath + "valuation/accounadjustmanage/manualvoucher/ValManualVoucher003/init",
-                   "95%", "90%", {pageModel:PAGE_MODEL_NEW,tradeId:data.tradeId, operateType: "copy"},function(){
-                       table.reload();
-           });
-   });
+	
 	/**
      * 绑定编辑事件
      */
@@ -125,17 +103,6 @@ $(function () {
             });
         }
     };
-    
-    var booksetIdChange = function () {
-        var booksetType = $('#booksetType').val();
-        var object = {booksetTypes:booksetType};
-        Joyin.ajaxJson(basePath + '/valuation/accounadjustmanage/voucherquery/ValVoucherQuery001/findBooksetIds', object, function(result) {
-        	$("#booksetId").empty();
-        	$.each(result, function(index, item) {                   
-        		$('#booksetId').append(new Option(item.text,item.id));
-            });
-		}); 
-    };
 	
 	/**
      * 画面加载完成
@@ -155,7 +122,7 @@ $(function () {
                         {field:'ccyFmt', visible: true},
                         {field:'happenAmt', visible: true},
                         {field:'happenNumber', visible: true}
-                    ],true);
+                    ]);
             }
             else{
                 table.showColumns([
@@ -167,7 +134,7 @@ $(function () {
                     {field:'ccyFmt', visible: false},
                     {field:'happenAmt', visible: false},
                     {field:'happenNumber', visible: false}
-                ],true);
+                ]);
             }
             $('#ValManualVoucher001_btn_delete').show();
         });
@@ -220,9 +187,6 @@ $(function () {
         // 绑定导出事件
         $('#ValManualVoucher001_btn_export').click(function() {
             exportExcel();
-        });
-        $('#booksetType').change(function(){
-        	booksetIdChange();
         });
     });
 	

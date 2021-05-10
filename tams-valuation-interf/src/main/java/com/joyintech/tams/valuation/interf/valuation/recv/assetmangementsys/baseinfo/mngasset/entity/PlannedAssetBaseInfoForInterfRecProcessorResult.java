@@ -10,20 +10,12 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.mngasset.entity;
 
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.interf.base.dto.PlannedAssetBaseInfoRecCommonResult;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.valuation.common.interf.base.dto.PlannedAssetBaseInfoRecCommonResult;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.MstBenchmarkCompo;
-import com.joyintech.tams.common.base.entity.MstBenchmarkInfo;
-import com.joyintech.tams.common.base.entity.ValInterflog;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -71,6 +63,11 @@ public class PlannedAssetBaseInfoForInterfRecProcessorResult extends BaseEntity 
      * 基准成分表
      */
     private List<MstBenchmarkCompo> listBenchmarkCompo = new ArrayList<MstBenchmarkCompo>();
+
+    /**
+     * 金融产品扩展表
+     */
+    List<FinProductAdd> listValFinProductExt = new ArrayList<>();
     
     /**
      * 日志
@@ -94,6 +91,9 @@ public class PlannedAssetBaseInfoForInterfRecProcessorResult extends BaseEntity 
         /**add by wujie on 20180822 start**/
         this.setListValFinProductType(result.getListValFinProductType());
         /**add by wujie on 20180822 end**/
+        /** 标的类金融产品扩展表 add by yanya on 20201222 start**/
+        this.setListValFinProductExt(result.getListValFinProductExt());
+        /** 标的类金融产品扩展表 add by yanya on 20201222 end**/
     }
 
     /**
@@ -236,4 +236,14 @@ public class PlannedAssetBaseInfoForInterfRecProcessorResult extends BaseEntity 
 	}
 	/**add by wujie on 20180822 end**/
 
+	/** add by yanya on 20201222 金融产品扩展表增加 start**/
+    public List<FinProductAdd> getListValFinProductExt() {
+        return listValFinProductExt;
+    }
+
+    public void setListValFinProductExt(List<FinProductAdd> listValFinProductExt) {
+        this.listValFinProductExt = listValFinProductExt;
+    }
+
+    /** add by yanya on 20201222 金融产品扩展表增加 end**/
 }

@@ -13,6 +13,8 @@ package com.joyintech.service.asset.project.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +70,13 @@ public class FinProjectTargetAssetController {
     @DTXTransaction
     @PostMapping("insert")
     public void insert(@RequestBody FinProjectTargetAssetDto dto) throws Exception {
+        // add zhouwenqiang 2020-12-09 start
+        // 估值核算系统核算体系变更，项目类资产需要和计划类资产区分核算，对标的扩展属性增加：是否其他债权，其他资产都为空，只有项目类资产为：Y；
+        for (BaseFinProductBaseInfoDto bfbd:dto.getBaseFinProductBaseInfoList()){
+            bfbd.getFinProductAdd().setIsQtzq(DictCodeList.是否_是.getValue());
+        }
+        // add zhouwenqiang 2020-12-09 end
+
         finProjectTargetAssetService.insert(dto);
     }
     /**
@@ -81,6 +90,11 @@ public class FinProjectTargetAssetController {
     @DTXTransaction
     @PostMapping("update")
     public void update(@RequestBody FinProjectTargetAssetDto dto) throws Exception{
+    	/**add by wujie on 20210130 start remark:项目类资产修改时：扩展表.是否其他债权  = Y**/
+    	for (BaseFinProductBaseInfoDto bfbd:dto.getBaseFinProductBaseInfoList()){
+            bfbd.getFinProductAdd().setIsQtzq(DictCodeList.是否_是.getValue());
+        }
+    	/**add by wujie on 20210130 END**/
         finProjectTargetAssetService.update(dto);
     }
     

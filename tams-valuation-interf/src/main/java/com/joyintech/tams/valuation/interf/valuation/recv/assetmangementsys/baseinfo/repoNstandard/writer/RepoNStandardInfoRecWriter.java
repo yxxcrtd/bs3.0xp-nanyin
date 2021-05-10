@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.security.data.MultilevelDataAuthorityService;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.FinDealPledge;
+import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.FinProductValuationPara;
+import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.common.base.entity.FinTradeProductAdd;
+import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.FinTradeProductAddBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.FinfDealPledgeBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCommonBatchMapper;
@@ -34,12 +43,6 @@ import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValInterflogBat
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValTradeFinProductBatchMapper;
 import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
 import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.repoNstandard.entity.RepoNStandardInfoProcessorResult;
-import com.joyintech.tams.common.base.entity.FinDealPledge;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.FinProductValuationPara;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.FinTradeProductAdd;
-import com.joyintech.tams.common.base.entity.ValInterflog;
 
 /**
  * 债券质押式回购标的信息接口 Writer
@@ -84,6 +87,11 @@ public class RepoNStandardInfoRecWriter extends InterfBaseWriter<BaseEntity> {
     @Autowired
     private ValFinProductValuationParaBatchMapper valFinProductValuationParaBatchMapper;
 
+    /**
+     * 多级法人数据权限接口 add by tanxuan on 20210310 多级法人权限控制改造
+     */
+    @Autowired
+    private MultilevelDataAuthorityService multilevelDataAuthorityService;
 
     /**
      * 日志
@@ -139,17 +147,28 @@ public class RepoNStandardInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                         listInsert.clear();
                         listInsert.add(e);
                     }
-                    //add by liupengfei for 多级法人改造 S
-                    // 记录二级法人权限
-                    if(MultilevelDataAuthorityUtil.isEnabled()){
-                        assetmanageRecvCommonService.insertDataAuthInst(e.getFinprodId(),e.getBelongInstitutionCode(), DictCodeListExt3.共通业务类型_回购标的信息.getValue());
-                    }
-                    //add by liupengfei for 多级法人改造 E
+//                    //add by liupengfei for 多级法人改造 S
+//                    // 记录二级法人权限
+//                    if(MultilevelDataAuthorityUtil.isEnabled()){
+//                        assetmanageRecvCommonService.insertDataAuthInst(e.getFinprodId(),e.getBelongInstitutionCode(), DictCodeListExt3.共通业务类型_回购标的信息.getValue());
+//                    }
+//                    //add by liupengfei for 多级法人改造 E
                 }
                 // 如果循环结束，小于最大值
                 if (CollectionUtils.isNotEmpty(listInsert)) {
                 	valTradeFinProductBatchMapper.deleteBatch(listInsert);
                 	valTradeFinProductBatchMapper.insertBatch(listInsert);
+                }
+                if(DictCodeListExt3.权限模式_联社模式.getValue().equals(CacheUtil.getSysParam("AUTHORITY_TYPE"))){
+                	List<String> editOrgCodeList = new ArrayList<>();
+                	for (FinTradeProduct e : listValTradeFinProduct_QC) {
+                		editOrgCodeList.clear();
+                		if(StringUtil.isNotEmpty(e.getBelongInstitutionCode())){
+                			editOrgCodeList.add(e.getBelongInstitutionCode());
+                		}
+                		multilevelDataAuthorityService.saveForOrganization(e.getFinprodId(), null, editOrgCodeList,
+                				DictCodeListExt3.共通业务类型_回购类资产.getValue());
+                    }
                 }
 			}
 

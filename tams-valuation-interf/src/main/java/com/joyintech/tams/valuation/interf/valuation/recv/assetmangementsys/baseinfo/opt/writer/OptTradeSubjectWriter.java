@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +23,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.security.data.MultilevelDataAuthorityService;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.common.base.entity.FinTradeProductAdd;
 import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductTypeBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinTradeProductAddBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinTradeProductBatchMapper;
@@ -71,6 +73,12 @@ public class OptTradeSubjectWriter extends InterfBaseWriter<BaseEntity>{
      */
     @Autowired
     private ValInterflogBatchMapper valInterflogBatchMapper;
+    
+    /**
+     * 多级法人数据权限接口 add by tanxuan on 20210310 多级法人权限控制改造
+     */
+    @Autowired
+    private MultilevelDataAuthorityService multilevelDataAuthorityService;
     
     @Value("${interf.properties.maxSqlNum}")
     private int maxSqlNum;
@@ -115,17 +123,28 @@ public class OptTradeSubjectWriter extends InterfBaseWriter<BaseEntity>{
                         listInsert.clear();
                         listInsert.add(e);
                     }
-                    //add by liupengfei for 多级法人改造 S
-                    // 记录二级法人权限
-                    if(MultilevelDataAuthorityUtil.isEnabled()){
-                        assetmanageRecvCommonService.insertDataAuthInst(e.getFinprodId(),e.getBelongInstitutionCode(), DictCodeListExt3.共通业务类型_期权标的管理.getValue());
-                    }
-                    //add by liupengfei for 多级法人改造 E
+//                    //add by liupengfei for 多级法人改造 S
+//                    // 记录二级法人权限
+//                    if(MultilevelDataAuthorityUtil.isEnabled()){
+//                        assetmanageRecvCommonService.insertDataAuthInst(e.getFinprodId(),e.getBelongInstitutionCode(), DictCodeListExt3.共通业务类型_期权标的管理.getValue());
+//                    }
+//                    //add by liupengfei for 多级法人改造 E
                 }
                 // 如果循环结束，小于最大值
                 if (CollectionUtils.isNotEmpty(listInsert)) {
                     valFinTradeProductBatchMapper.deleteBatch(listInsert);
                     valFinTradeProductBatchMapper.insertBatch(listInsert);
+                }
+                if(DictCodeListExt3.权限模式_联社模式.getValue().equals(CacheUtil.getSysParam("AUTHORITY_TYPE"))){
+                	List<String> editOrgCodeList = new ArrayList<>();
+                	for (FinTradeProduct e : rstValFinTradeProduct) {
+                		editOrgCodeList.clear();
+                		if(StringUtil.isNotEmpty(e.getBelongInstitutionCode())){
+                			editOrgCodeList.add(e.getBelongInstitutionCode());
+                		}
+                		multilevelDataAuthorityService.saveForOrganization(e.getFinprodId(), null, editOrgCodeList,
+                    			DictCodeListExt3.共通业务类型_期权标的管理.getValue());
+                    }
                 }
             }
             

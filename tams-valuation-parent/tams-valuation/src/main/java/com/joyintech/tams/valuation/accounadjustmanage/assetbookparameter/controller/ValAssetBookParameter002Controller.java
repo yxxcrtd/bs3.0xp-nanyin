@@ -9,11 +9,15 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.assetbookparameter.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,8 +54,10 @@ public class ValAssetBookParameter002Controller extends BaseController {
      */
     @Override
     public String init(Model model) {
+        this.setSelectOptionToModel(model, DictCode.账套参数类型);
         String booksetId = this.getParam("booksetId");
         String paramCode = this.getParam("paramCode");
+        String paramType = this.getParam("paramType");
         
         ValAssetBookParameter002Dto dto = new ValAssetBookParameter002Dto();
         
@@ -62,6 +68,7 @@ public class ValAssetBookParameter002Controller extends BaseController {
         	Map<String,Object> params = new HashMap<String,Object>();
             params.put("booksetId",booksetId);
             params.put("paramCode",paramCode);
+            params.put("paramType",paramType);
         	dto = valAssetBookParameter002Service.getByKey(params);
             
         }else if (StringUtil.isNotEmpty(workflowId)) {// 流程页面
@@ -117,8 +124,15 @@ public class ValAssetBookParameter002Controller extends BaseController {
         params.setBusinessType(DictCodeList.共通业务类型_账套参数管理.getValue());
         params.setPageId(this.getPageId());
         params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
+        String comment = "";
+        if (StringUtil.equals(dto.getPageModel(),"0")){
+            comment = "账套参数新建";
+        }else if (StringUtil.equals(dto.getPageModel(),"1")){
+            comment = "账套参数修改";
+        }
         // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> WorkFlowUtil.concatComment("账套参数修改：", 
+        String finalComment = comment;
+        params.setComment(entity -> WorkFlowUtil.concatComment(finalComment,
             entity.getBooksetId()// 账套代码
         ));
 
@@ -149,6 +163,26 @@ public class ValAssetBookParameter002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check( @Valid ValAssetBookParameter002Dto dto, BindingResult result,
                             String operateType) {
+        /**
+         * 判断数据库中是否存在主键相同的数据，主键：账套id（booksetId），参数id（paramCode）
+         */
+        List<ValAssetBookParameter002Dto> resultDtos = null;
+        if (StringUtil.isNotEmpty(dto.getBooksetId()) && StringUtil.isNotEmpty(dto.getParamCode())){
+            resultDtos = valAssetBookParameter002Service.checkExistSameDto(dto);
+        }
+        if (resultDtos != null && resultDtos.size()>=2){
+            return commonCheck(result, operateType);
+        }
+        // 新建的时候进行判断，编辑的时候不用判断  0:新建，1：编辑
+        if ("0".equals(dto.getPageModel())){
+            if (resultDtos != null && resultDtos.size()>0){
+                AjaxResult ajaxResult = new AjaxResult();
+                List<ValidMessage> errorList = new ArrayList<>();
+                errorList.add(new ValidMessage("存在相同的账套："+dto.getBooksetId()+",参数："+dto.getParamCode()+"！请重新选择数据！"));
+                ajaxResult.setErrorList(errorList);
+                return ajaxResult;
+            }
+        }
         return commonCheck(result, operateType);
     }
 

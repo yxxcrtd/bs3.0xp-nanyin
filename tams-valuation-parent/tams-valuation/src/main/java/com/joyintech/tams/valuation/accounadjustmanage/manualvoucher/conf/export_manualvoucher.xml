@@ -22,9 +22,8 @@
 			<Cell order="18" name="业务编号">tradeId</Cell>
 			<Cell order="19" name="原始业务编号">pTradeId</Cell>
 			<Cell order="20" name="冲销标识">offsetFlagFmt</Cell>
-			<Cell order="21" name="记账顺序">accountOrder</Cell>
-			<Cell order="22" name="摘要">bookRemark</Cell>
-			<Cell order="23" name="制作人">createUser</Cell>
+			<Cell order="21" name="摘要">bookRemark</Cell>
+			<Cell order="22" name="制作人">createUser</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

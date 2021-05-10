@@ -76,41 +76,47 @@ $(function() {
 			sortable : false,
 			title : 'CashFlowsStatement001.project',
 			render: function (data, type, row, meta) {
-				if($("#reportDimen").val() == "0"){
-					return "<label style='color:blue;'>" + row.project + "</label>";
-				}else{
-					if(row.project=='经营活动产生的现金流量' || row.project=='投资活动产生的现金流量' || row.project=='筹资活动产生的现金流量'){
-						return '<b>' + row.project + '</b>';
-					}
-				}
+				// if($("#reportDimen").val() == "0"){
+				// 	return "<label style='color:blue;'>" + row.project + "</label>";
+				// }else{
+				// 	if(row.project=='经营活动产生的现金流量' || row.project=='投资活动产生的现金流量' || row.project=='筹资活动产生的现金流量'){
+				// 		return '<b>' + row.project + '</b>';
+				// 	}
+				// }
 			}
 		}, {
 			field : 'thisTermAmt',
-			width : 400,
+			width : 700,
 			type : "money",
 			sortable : false,
 			title : 'CashFlowsStatement001.thisTermAmt',
 			render: function (data, type, row, meta) {
-				if(row.project=='经营活动产生的现金流量' || row.project=='投资活动产生的现金流量' || row.project=='筹资活动产生的现金流量'){
+			    //modify by yanya on 20201221 特殊处理项目
+				//if(row.project=='经营活动产生的现金流量' || row.project=='投资活动产生的现金流量' || row.project=='筹资活动产生的现金流量'){
+                if(row.project.indexOf('一、经营活动产生的现金流量') >= 0
+                    || row.project.indexOf('二、投资活动产生的现金流量') >= 0
+                    || row.project.indexOf('三、筹资活动产生的现金流量') >= 0) {
 					return '';
 				} else {
 					return formatMoney(data,2);
 				}
 			}
-		}, {
-			field : 'lastTermAmt',
-			width : 400,
-			type : "money",
-			sortable : false,
-			title : 'CashFlowsStatement001.lastTermAmt',
-			render: function (data, type, row, meta) {
-				if(row.project=='经营活动产生的现金流量' || row.project=='投资活动产生的现金流量' || row.project=='筹资活动产生的现金流量'){
-					return '';
-				} else {
-					return formatMoney(data,2);
-				}
-			}
-		} ]
+		}
+		// , {
+		// 	field : 'lastTermAmt',
+		// 	width : 400,
+		// 	type : "money",
+		// 	sortable : false,
+		// 	title : 'CashFlowsStatement001.lastTermAmt',
+		// 	render: function (data, type, row, meta) {
+		// 		if(row.project=='经营活动产生的现金流量' || row.project=='投资活动产生的现金流量' || row.project=='筹资活动产生的现金流量'){
+		// 			return '';
+		// 		} else {
+		// 			return formatMoney(data,2);
+		// 		}
+		// 	}
+		// }
+		]
 	});
 	// 导出数据
 	var exportExcel = function() {

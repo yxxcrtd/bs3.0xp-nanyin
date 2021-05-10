@@ -14,12 +14,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
+
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +39,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.accounadjustmanage.cashflowsstatement.dao.CashFlowsStatement001Mapper;
-import com.joyintech.tams.valuation.accounadjustmanage.cashflowsstatement.dto.CashFlowsDto;
 import com.joyintech.tams.valuation.accounadjustmanage.cashflowsstatement.dto.CashFlowsStatement001Dto;
 import com.joyintech.tams.valuation.accounadjustmanage.valuationtablegeneration.dto.ExportFileDto;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
@@ -63,6 +61,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
     private CashFlowsStatement001Mapper cashFlowsStatement001Mapper;
     @Autowired
     private BooksetComMapper  booksetComMapper;
+	@Autowired
+    private ValAssetBook001Service valAssetBook001Service;
     /**
     * 针对weblogic部署无法获取模版问题
     */
@@ -83,19 +83,83 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
      * @since 1.0
      */
     public List<CashFlowsStatement001Dto> selectList(Map<String, Object> pageParam) {
-        
-        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/CashFlowsStatement001/findPage", pageParam, CashFlowsStatement001Dto.class);
+
+        List<CashFlowsStatement001Dto> list = restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/CashFlowsStatement001/findPage",
+                pageParam, CashFlowsStatement001Dto.class);
+        dealStyle(list, String.valueOf(pageParam.get("STYLE_TYPE")), String.valueOf(pageParam.get("reportDimen")));
+        return list;
     }
 
+    /** modify by ynaya on 20201221 指标抽象 start**/
+    private final static String 汇总指标后缀 = "活动产生的现金流量";
+    private final static String 汇总指标1 = "一、经营活动产生的现金流量";
+    private final static String 汇总指标2 = "二、投资活动产生的现金流量";
+    private final static String 汇总指标3 = "三、筹资活动产生的现金流量";
+    private final static String 汇总指标4 = "四、汇率变动对现金及现金等价物的影响";
+    private final static String 汇总指标5 = "五、现金及现金等价物净变动额";
+    private final static String 汇总指标6 = "加:期初现金及现金等价物余额";
+    private final static String 汇总指标7 = "六、期末现金及现金等价物余额";
+    private final static String 小计指标1_1 = "经营活动现金流入小计";
+    private final static String 小计指标1_2 = "经营活动现金流出小计";
+    private final static String 小计指标1_3 = "经营活动产生的现金流量净额";
+    private final static String 小计指标2_1 = "投资活动现金流入小计";
+    private final static String 小计指标2_2 = "投资活动现金流出小计";
+    private final static String 小计指标2_3 = "投资活动产生的现金流量净额";
+    private final static String 小计指标3_1 = "筹资活动现金流入小计";
+    private final static String 小计指标3_2 = "筹资活动现金流出小计";
+    private final static String 小计指标3_3 = "筹资活动产生的现金流量净额";
+    /** modify by ynaya on 20201221 指标抽象 end**/
 
+    /**
+     * 处理查询样式
+     * @param list
+     * @param type
+     * @param reportDimen
+     */
+    private void dealStyle(List<CashFlowsStatement001Dto> list, String type, String reportDimen) {
+        if(!StringUtil.isEmptyList(list)) {
+            list.stream().forEach(item -> {
+                if(StringUtil.isNotEmpty(item.getProject())) {
+                    //EXCEL 导出，不处理样式
+                    if (StringUtil.equals(type, "EXCEL")) {
 
+                    }
+                    //页面查询，处理样式
+                    else {
+                        if(judgeStrong(item.getProject())) {
+                            item.setProject("<strong>" + item.getProject() + "</strong>");
+                        }
+                        if (StringUtil.equals(reportDimen, DictCodeListExt2.批处理账套类型_账套组.getValue())) {
+                            item.setProject( "<label style='color:blue;'>" + item.getProject() + "</label>");
+                        }
+                    }
+                }
+            });
+        }
+    }
 
+    /**
+     * 判断是否需要加粗
+     * @param project
+     * @return
+     */
+    private boolean judgeStrong(Object project) {
+        if(StringUtil.isNotEmpty(project)) {
+            String objectStr = project.toString();
+            String 一级项目前缀 = "[一二三四五六].*"; // 一级项目前缀
+            String 特殊字符 = 汇总指标6;
+            if (objectStr.matches(一级项目前缀) || objectStr.indexOf(特殊字符) >= 0) {
+                return true;
+            }
+        }
+        return false;
+     }
 
     /**
      * 分析余额日期
      * 
      * @param pageParam 查询条件
-     * @param balanceType 期末、年初
+     * @param ‘balanceType’ 期末、年初
      * @return
      * @throws ParseException
      */
@@ -220,17 +284,26 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
         // 导出数据集
         List<CashFlowsStatement001Dto> dtoList = selectList(params);
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-        String prefix;
-        if (DictCodeListExt2.批处理账套类型_账套.getValue().equals(params.get("reportDimen"))) {
-        	// 单账套
-        	prefix = params.get("booksetId").toString();
-        } else {
-        	// 全账套
-        	prefix = "账套组";
+        //modify by yanya on 20201221 处理账套组导出报错问题 start
+        String fileName = null;
+        /** modify by yanya on 20210114 增加产品代码**/
+        String prefix = null;
+        if (DictCodeListExt2.批处理账套类型_账套.getValue().equals(String.valueOf(params.get("reportDimen")))) {
+            fileName = params.get("booksetId").toString() + "_" + reportDate + "_现金流量表" + ".xls";
+            prefix = params.get("booksetId").toString();
         }
-        
-        String fileName = prefix + "_" + reportDate + "_现金流量表" + ".xls";
-       // String fileName = params.get("booksetId").toString() + "_" + reportDate + "_现金流量表" + ".xls";
+        else {
+            Map<String, Object> pageParam = new HashMap<>();
+            pageParam.put("booksetGroup",params.get("booksetGroup").toString());
+            Page<SelectOptionDto> booksetGroup = valAssetBook001Service.findBooksetGroup(pageParam);
+            SelectOptionDto optionDto = new SelectOptionDto();
+            if (StringUtil.isNotEmpty(booksetGroup) && !StringUtil.isEmptyList(booksetGroup.getRoot())){
+                optionDto = booksetGroup.getRoot().get(0);
+            }
+            fileName = optionDto.getText() + "_" + reportDate + "_现金流量表" + ".xls";
+            prefix = optionDto.getText();
+        }
+        //modify by yanya on 20201221 处理账套组导出报错问题 end
         String tempName = "CashFlowsStatement.xls";
         String tplFlodPath = "accounadjustmanage/cashflowsstatement/CashFlowsStatement.xls";
         String tplPath = FileNameUtil.getTplFile(tplFlodPath);
@@ -239,6 +312,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
         ExportFileDto exportFileDto = new ExportFileDto();
         InputStream stream = null;
         Map<String, Object> map = new HashMap<>();
+        /** modify by yanya on 20210114 增加产品代码**/
+        map.put("prefix", prefix);
         //map.put("org",CacheUtil.getSysParam(GlobalConstant.财务报表_编制单位));
         //多级法人改造start add by hxy 20200612
         if(MultilevelDataAuthorityUtil.isEnabled()) {
@@ -296,8 +371,12 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                     // 部分标题加粗
                     if (StringUtil.startsWith(tplKey, "dtoList")
                         && tplKey.contains("project")
-                        && String.valueOf(value).endsWith("活动产生的现金流量")) {
+                            //判断加粗方法条件改变，modify by yanya on 20201221
+                        && judgeStrong(value)) {
                         font.setBold(true);
+                        /** modify by yanya on 20210113 统一字体格式及大小**/
+                        font.setFontName("宋体");
+                        font.setFontHeightInPoints((short) 11);
                         newStyle.setFont(font);
                         cell.setCellStyle(newStyle);
                     }
@@ -330,9 +409,10 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
      * @see
      * @since 1.0
      */
-    public List<CashFlowsStatement001Dto> selectListp(Map<String, Object> pageParam, CashFlowsStatement001Dto dto) {
+    //public List<CashFlowsStatement001Dto> selectListp(Map<String, Object> pageParam, CashFlowsStatement001Dto dto) {
+    public List<CashFlowsStatement001Dto> selectListp(Map<String, Object> pageParam) {
 
-        pageParam.put("CashFlowsStatement001Dto",dto);
+//        pageParam.put("CashFlowsStatement001Dto",dto);
 
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/CashFlowsStatement001/selectListp",
                 pageParam, CashFlowsStatement001Dto.class);

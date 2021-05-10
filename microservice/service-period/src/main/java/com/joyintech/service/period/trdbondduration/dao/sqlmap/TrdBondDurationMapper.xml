@@ -744,8 +744,13 @@
             from (SELECT
             T1.FINPROD_ID,
             T1.PORTFOLIO_ID,
-            DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT,
-            T1.INV_AIM,
+                                <!-- 增加融入券卖空 START
+                                DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT,
+                                T1.INV_AIM,
+                                -->
+                                DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1,'11', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT,
+                                DECODE(T1.INV_AIM, 'SELL', '999999', T1.INV_AIM) INV_AIM,
+                                <!--增加融入券卖空 END  -->
             T1.SEC_ACCT_ID,
             t2.vdate,
             t2.mdate,
@@ -767,7 +772,11 @@
             </if>
             <!-- 多级法人权限处理 -->
             WHERE
-            T1.AMOUNT > 0 AND T1.HODING_TYPE IN ('03', '05', '06')
+                                T1.AMOUNT > 0 
+                                <!-- 增加融入券卖空 START
+                                AND T1.HODING_TYPE IN ('03', '05', '06') -->
+                                AND T1.HODING_TYPE IN ('03', '05', '06','11')
+                                <!--增加融入券卖空 END  -->
             and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
             AND T1.SEC_ACCT_ID = #{secManageAcctId}
             AND T2.FINPROD_ID = #{finprodId} AND T2.MDATE = to_date(#{mDate}, 'yyyy-MM-dd')
@@ -1005,9 +1014,17 @@
             pp.PORTFOLIO_NAME,
             pp.INVEST_YESORNO,
             T1.FINPROD_ID,
-            T1.INV_AIM,/*债券必须有投资目的，这个用来区分融入和其他*/
-            T1.CDATE,
-            DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT,
+                <!-- 卖空[SELL] 同为999999 start 
+                T1.INV_AIM,
+                -->
+                DECODE(T1.INV_AIM,'SELL','999999',T1.INV_AIM) AS INV_AIM,
+                <!-- 卖空[SELL] 同为999999 end -->
+                /*债券必须有投资目的，这个用来区分融入和其他*/
+                T1.CDATE,
+                <!-- 持仓类型:增加融入券卖出 start
+                DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT,-->
+                DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1,'11', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT,
+                <!-- 持仓类型:增加融入券卖出 end  -->
             '${vDate}' vDate,
             '${mDate}' mDate,
             '${yield}' yield,
@@ -1025,7 +1042,11 @@
             LEFT JOIN FIN_CASH_PLAN T5 ON T1.FINPROD_ID = T5.FINPROD_ID AND T5.MDATE = #{adjustMDate}
             LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = T1.PORTFOLIO_ID
             /*检索条件 金融产品代码 = 传参.金融产品代码*/ where T1.FINPROD_ID = #{finprodId}
-            /*and 持仓类型 = 数据字典缓存.持仓类型.实际*/ AND T1.HODING_TYPE IN ('03', '05', '06')
+                /*and 持仓类型 = 数据字典缓存.持仓类型.实际*/ 
+                <!-- 持仓类型:增加融入券卖出 start
+                AND T1.HODING_TYPE IN ('03', '05', '06') --> 
+                AND T1.HODING_TYPE IN ('03', '05', '06','11')
+                <!-- 持仓类型:增加融入券卖出 end  -->
             /*and 组合持仓.日期 = 平台日*/ AND t1.CDATE &lt; #{adjustMDate}
             <!-- and 组合持仓.证券管理账户 = 传参.证券管理账户 --> AND T1.SEC_ACCT_ID = #{secAcctId}
             and T1.AMOUNT > 0
@@ -1066,7 +1087,11 @@
             T1.PORTFOLIO_ID,
             T1.FINPROD_ID,
             PP.INVEST_YESORNO,
-            T1.INV_AIM,
+                     <!-- 卖空[SELL] 同为999999 start 
+                     T1.INV_AIM,
+                     -->
+                     DECODE(T1.INV_AIM,'SELL','999999',T1.INV_AIM),
+                	 <!-- 卖空[SELL] 同为999999 end -->
             T1.CDATE,
             T1.AMOUNT,
             T1.HODING_TYPE,

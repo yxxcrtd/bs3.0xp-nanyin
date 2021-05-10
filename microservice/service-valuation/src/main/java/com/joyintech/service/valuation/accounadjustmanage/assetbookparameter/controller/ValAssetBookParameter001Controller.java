@@ -46,9 +46,7 @@ public class ValAssetBookParameter001Controller extends BaseController {
     @PostMapping("/getAllAssetbookPage/{page}/{length}")
     public Page<ValAssetBookParameter002Dto> getAllAssetbookPage(@RequestBody Map<String,Object> params,
                                                         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
-        String name = (String)params.get("name");
-        String paramCode = (String)params.get("paramCode");
-        return valAssetBookParameter001Service.getAllAssetbookPage(page,length, name, paramCode);
+        return valAssetBookParameter001Service.getAllAssetbookPage(page,length, params);
     }
     
     /**
@@ -58,9 +56,7 @@ public class ValAssetBookParameter001Controller extends BaseController {
      */
     @PostMapping("queryAllList")
     public List<ValAssetBookParameter002Dto> queryAllList(@RequestBody Map<String, Object> param){
-    	String name = (String)param.get("name");
-        String paramCode = (String)param.get("paramCode");
-        return valAssetBookParameter001Service.queryAllList(name, paramCode);
+        return valAssetBookParameter001Service.queryAllList(param);
     }
 
     /**

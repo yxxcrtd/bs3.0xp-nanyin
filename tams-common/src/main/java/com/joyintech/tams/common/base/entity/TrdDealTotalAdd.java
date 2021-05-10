@@ -200,6 +200,18 @@ public class TrdDealTotalAdd extends BaseEntity {
     private String intSettType;
 
     /**
+     * 清理应收款
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal clearRecAmt;
+
+    /**
+     * 清理减值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal clearLossAmt;
+
+    /**
      * 取得 汇总交易编号
      * @return 汇总交易编号
      */
@@ -744,5 +756,37 @@ public class TrdDealTotalAdd extends BaseEntity {
      */
     public void setIntSettType(String intSettType) {
         this.intSettType = intSettType == null ? null : intSettType.trim();
+    }
+
+    /**
+     * 取得 清理应收款
+     * @return 清理应收款
+     */
+    public BigDecimal getClearRecAmt() {
+        return clearRecAmt;
+    }
+
+    /**
+     * 设置 清理应收款
+     * @param clearRecAmt 清理应收款
+     */
+    public void setClearRecAmt(BigDecimal clearRecAmt) {
+        this.clearRecAmt = clearRecAmt;
+    }
+
+    /**
+     * 取得 清理减值
+     * @return 清理减值
+     */
+    public BigDecimal getClearLossAmt() {
+        return clearLossAmt;
+    }
+
+    /**
+     * 设置 清理减值
+     * @param clearLossAmt 清理减值
+     */
+    public void setClearLossAmt(BigDecimal clearLossAmt) {
+        this.clearLossAmt = clearLossAmt;
     }
 }

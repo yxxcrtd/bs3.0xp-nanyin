@@ -16,6 +16,8 @@
                         <input type="text" id="seqno" name="seqno" class="layui-input form-input" 
                                placeholder="提交后自动生成，无需填写" data-th-value="${entity?.seqno}" disabled="disabled">
                         <input type="hidden" id="bookId" name="bookId" data-th-value="${entity?.bookId}" >
+											
+						<input type="hidden" id="profitType" name="profitType" data-th-value="${entity?.profitType}">
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
@@ -106,17 +108,6 @@
                             data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.cashId}" >
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">
-                        <i class="iconfont must" style="display: inline;">*</i>
-                                                                        记账顺序
-                    </label>
-                    <div class="layui-input-inline input-inline" style="display: inline-block;">
-                        <input id="accountOrder" name="accountOrder" class="layui-input form-input input-select" 
-                                placeholder="请选择" data-th-initValue="${entity?.accountOrder}"
-                                data-th-data-result="${ACCOUNT_ORDER}" allowClear="true">
-                    </div>
-                </div>
                 <div class="layui-inline layui-col-md4" id="invAimDiv" style="display:none;">
                     <label class="layui-form-label form-lable">
                                                                     投资目的
@@ -130,8 +121,8 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md12">
-                    <label class="layui-form-label form-label-wrap" style="width: 12%;">摘要</label>
-                    <div class="input-inline layui-input-block" style="width: 21.8% !important;">
+                    <label class="layui-form-label form-label-wrap" style="width: 10%;">摘要</label>
+                    <div class="input-inline layui-input-block" style="width: 86.8% !important;">
                         <input type="text" id="bookRemark" name="bookRemark" class="layui-input form-input"
                             data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.bookRemark}">
                     </div>

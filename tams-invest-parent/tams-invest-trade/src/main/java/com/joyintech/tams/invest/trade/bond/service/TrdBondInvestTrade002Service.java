@@ -396,6 +396,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             deal本方.setFeeAmtPay(get费用金额(ttfdList, DictCodeList.是否_是.getValue(), 占比));
             deal本方.setFeeAmtUnpay(get费用金额(ttfdList, DictCodeList.是否_否.getValue(), 占比));
             deal本方.setTradeAmt(get交易金额(dto.getOwnFpriceAmt(), dto.getPs(), deal本方.getFeeAmtPay()));
+            deal本方.setSettleSpeed(Long.parseLong(dto.getSettleSpeedStr()));
             deals.add(deal本方);
 
             // 金融产品交易附属表Entity 构造开始----------------------------------------------------------
@@ -438,6 +439,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             deal融入.setFeeAmtUnpay(ArithmeticUtil.subtract(dto.getFeeAmtUnpay(), deal本方 == null ? null : deal本方.getFeeAmtUnpay()));
             deal融入.setTradeAmt(get交易金额(dto.getIntegrateFpriceAmt(), dto.getPs(), deal融入.getFeeAmtPay()));
             deal融入.setInvAim(DictCodeListExt1.投资目的_卖空.getValue());
+            /** modify by yanya on 20210106 融入赋值清算速度错误**/
+            //deal本方.setSettleSpeed(Long.parseLong(dto.getSettleSpeedStr()));
+            deal融入.setSettleSpeed(Long.parseLong(dto.getSettleSpeedStr()));
             deals.add(deal融入);
 
             trdTradeFeeDetails.addAll(生成交易费用明细数据(ttfdList, deal融入, null, trdTradeFeeDetails));
@@ -728,6 +732,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         wflTrdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
         wflTrdFinProductDealTotal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
         wflTrdFinProductDealTotal.setPortfolioId(entity.getActPortfolioId());
+        wflTrdFinProductDealTotal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
+        wflTrdFinProductDealTotal.setSettleSpeed(Long.parseLong(entity.getSettleSpeedStr()));
         wflTrdFinProductDealTotalMapper.insertSelective(wflTrdFinProductDealTotal);
 
         WflPaTrdFinDealTotal wflPaTrdFinDealTotal = new WflPaTrdFinDealTotal();
@@ -747,6 +753,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             wflTrdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             wflTrdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
             wflTrdProductDeal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            wflTrdProductDeal.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
             wflTrdProductDealMapper.insertSelective(wflTrdProductDeal);
 
             // 调用授信共同 sjj start
@@ -1442,7 +1449,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
             trdFinProductDealTotal.setPortfolioId(entity.getActPortfolioId());
-            trdFinProductDealTotal.setSettleSpeed(Long.valueOf(entity.getSettleSpeedStr()));
+            trdFinProductDealTotal.setSettleSpeed(Long.parseLong(entity.getSettleSpeedStr()));
             trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
 
             PaTrdFinProductDealTotal paTrdFinDealTotal = entity.getPaTrdFinProductDealTotal();

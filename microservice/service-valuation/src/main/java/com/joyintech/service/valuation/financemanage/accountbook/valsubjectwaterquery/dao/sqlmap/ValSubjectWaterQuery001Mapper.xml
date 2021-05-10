@@ -111,7 +111,7 @@
 		    B.BUSI_ID AS busiId, /**资产/负债代码（业务明细代码）**/
 		    D.FINPROD_ABBR AS finprodAbbr, /**资产/负债名称（金融产品简称）**/
 		    B.SUBJECT_NO AS subjectNo, /**科目号**/
-		    E.SUBJECT_NAME AS subjectName, /**科目名称**/
+		    B.SUBJECT_NAME AS subjectName, /**科目名称**/
 		    B.CD_FLAG AS cdFlag, /**借贷方向**/
 		    E.BAL_FLAG AS balFlag,/**余额方向**/
 		    B.CCY AS ccy, /**原币币种**/

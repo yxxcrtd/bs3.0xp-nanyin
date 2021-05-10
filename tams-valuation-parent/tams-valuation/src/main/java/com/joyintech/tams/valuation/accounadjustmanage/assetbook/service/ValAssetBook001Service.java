@@ -11,9 +11,11 @@
 package com.joyintech.tams.valuation.accounadjustmanage.assetbook.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -370,5 +372,44 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
     public List<SuggestDto> findProductGrp(Map<String, Object> params) {
 
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBook001/findProductGrp", params, SuggestDto.class);
+    }
+	
+	
+	/**
+     * 检索账套模板
+     *
+     * @param param 过滤参数
+     * @return 账套模板列表
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getBooksetIdByBooksetType(String param) {
+//        不能模糊查询，没有复用代码。（方法引用使用不当）
+//        List<SuggestDto> listDto = queryForSuggest(mapper::getBooksetIdByBooksetType, null, param);
+        String booksetType = DictCodeList.账套类别_账套模板.getValue();
+        //return mapper.getBooksetId2(booksetType, param);
+        Map<String,Object> params = new HashMap<>();
+        params.put("param",param);
+        params.put("booksetType",booksetType);
+        return restTemplate.postForList(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssetBook001/getBooksetIdByBooksetType",
+                params, SuggestDto.class);
+    }
+
+
+    /**
+     * <根据账套组查询产品id>
+     * <用于三表批量导出中通过账套组查询账套（产品）id>
+     * @param paraMap
+     * @return
+     * @see
+     * @since 1.0
+     */
+    //@DataSource(DataSourceType.OTHER)
+    public List<SuggestDto> getBooksetIdsByGroups(Map<String, Object> paraMap) {
+        //return mapper.getBooksetIdsByGroups(paraMap);
+        return restTemplate.postForList(
+                ServiceApplication.VALUATION_SERVICE_NAME + "/ValAssetBook001/getBooksetIdsByGroups",
+                paraMap, SuggestDto.class);
     }
 }

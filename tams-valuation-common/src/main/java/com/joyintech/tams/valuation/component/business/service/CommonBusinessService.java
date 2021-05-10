@@ -5,7 +5,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
-import com.joyintech.tams.valuation.component.business.dao.ValCommonBusinessMapper;
+import com.joyintech.tams.valuation.component.business.dao.ValComBusinessMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ import java.util.Date;
 public class CommonBusinessService {
 
     @Autowired(required = false)
-    private ValCommonBusinessMapper commonBusinessMapper;
+    private ValComBusinessMapper commonBusinessMapper;
 
     /**
      * FinProductMapper

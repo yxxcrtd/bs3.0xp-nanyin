@@ -17,8 +17,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.workflow.engine.WorkflowContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,12 +38,12 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.BokBooksetDateMapper;
 import com.joyintech.tams.common.base.entity.BokBooksetDate;
-import com.joyintech.tams.common.base.entity.BokDetailId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddValidatorDto;
@@ -90,7 +88,7 @@ public class ValManualVoucher003Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.会计场景代码, DictCode.币种, DictCode.冲正标识,
-            DictCode.借贷方向, DictCode.投资目的, DictCode.分录类型, DictCode.金融产品类型,DictCode.记账顺序);
+            DictCode.借贷方向, DictCode.投资目的, DictCode.分录类型, DictCode.金融产品类型);
         // 获取业务类型
         // 获取 金融产品类型 数据字典
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.金融产品类型, null);
@@ -129,8 +127,6 @@ public class ValManualVoucher003Controller extends BaseController {
         
         // 判断是修改操作还是新建操作
         String seqno = getParam("seqno");
-
-        String operateType = getParam("operateType");
         if (StringUtil.isNotEmpty(seqno)) {
             ValManualVoucher001Dto entity = valManualVoucher003Service.getBySeqno(seqno);
             model.addAttribute("entity", entity);
@@ -154,30 +150,8 @@ public class ValManualVoucher003Controller extends BaseController {
             model.addAttribute("busiId", entity.getBusiId());
             model.addAttribute("busiName", entity.getBusiName());
             model.addAttribute("busiDetailType", entity.getBusiDetailType());
-        }else if(operateType!=null&&operateType.equals("copy")){
-            String tradeId = getParam("tradeId");
-            ProcessMark processMark;
-            ValManualVoucher003Dto dto =  new ValManualVoucher003Dto();
-            try {
-                dto.setSeqno(tradeId);
-                processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
-                processMark.setPageId("ValManualVoucher003");
-                dto = valManualVoucher003Service.getBussinessEntityByPk(processMark);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            dto.setSeqno(null);
-            model.addAttribute("entity", dto);
-            model.addAttribute("offsetFlag", dto.getOffsetFlag());
-            model.addAttribute("workflowId", dto.getWorkflowId());
-
-            // 入账日期默认为系统平台日
-            model.addAttribute("sysDate",DateUtil.format(dto.getBookDate(), "yyyy-MM-dd"));
-            /** add by yanya on 20191030 增加资产代码及业务明细类型**/
-            model.addAttribute("busiId", dto.getBusiId());
-            model.addAttribute("busiName", dto.getBusiName());
-            model.addAttribute("busiDetailType", dto.getBusiDetailType());
-        }else {
+        }
+        else {
             // 冲销标志默认值
             model.addAttribute("offsetFlag", DictCodeList.冲正标识_正常交易.getValue());
             // 借贷方向设一个默认值
@@ -539,7 +513,7 @@ public class ValManualVoucher003Controller extends BaseController {
     public List<SuggestDto> getBooksetId2()
         throws Exception {
 //        String param = super.getRequest().getParameter("param");
-        return valAssetBook001Service.getBooksetIdAll(RequestUtil.getPageParam());
+        return valAssetBook001Service.getBooksetId2(RequestUtil.getPageParam());
     }
     
     /**modify by dongjun on 20181214 start **/
@@ -574,14 +548,19 @@ public class ValManualVoucher003Controller extends BaseController {
     public AjaxResult getInvAim(@RequestBody ValManualVoucher003Dto dto)
         throws Exception {
         String busiId = dto.getBusiId();
-        if (StringUtil.isNotEmpty(busiId) ) {
+        String finprodType = dto.getFinprodType();//add by wujie on 20201110
+        if (StringUtil.isNotEmpty(busiId) && (
+        		DictCodeListExt1.金融产品类型_债券.getValue().equals(finprodType)
+        		|| DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(finprodType)
+        		)) {
             AjaxResult ajaxResult = new AjaxResult();
             Map<String, Object> params = new HashMap<>();
             params.put("busiId", dto.getBusiId());
             params.put("booksetId", dto.getBooksetId());
-            params.put("busiDetailType", DictCodeListExt1.金融产品类型_债券.getValue());
+//            params.put("busiDetailType", DictCodeListExt1.金融产品类型_债券.getValue());
+            params.put("busiDetailType", finprodType);
             params.put("invAimSell",  DictCodeListExt1.投资目的_卖空.getValue());
-            BokDetailId bokDetailId = valManualVoucher003Service.getInvAim(params);
+            BokDetailIdDto bokDetailId = valManualVoucher003Service.getInvAim(params);
             if(bokDetailId != null){
                 ajaxResult.setData(bokDetailId);
             }

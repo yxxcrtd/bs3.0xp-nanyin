@@ -10,17 +10,27 @@
 		    A.PARAM_CODE AS paramCode,
 		    A.PARAM_VALUE AS paramValue,
 		    A.PARAM_NAME AS paramName,
+		    A.PARAM_TYPE AS paramType,
 		    A.REMARK AS remark
 		FROM BOK_BOOKSET_EXT A
 		LEFT JOIN BOK_BOOKSET B
 		    ON A.BOOKSET_ID = B.BOOKSET_ID
 		WHERE 1=1
-		    <if test="booksetId !=null and booksetId != ''">
-				AND	A.BOOKSET_ID=#{booksetId}
-			</if>
-			<if test="paramCode !=null and paramCode != ''">
-				AND	A.PARAM_CODE=#{paramCode}
-			</if>
+		<!-- ADD BY WUJIE ON 20210121 START REMARK:不查询模板账套的账套参数 -->
+		AND B.BOOKSET_TYPE = '02'
+		<!-- ADD BY WUJIE ON 20210121 END -->
+		<if test="booksetId !=null and booksetId != ''">
+			AND	A.BOOKSET_ID=#{booksetId}
+		</if>
+		<if test="paramCode !=null and paramCode != ''">
+			AND	A.PARAM_CODE=#{paramCode}
+		</if>
+		<if test="paramType !=null and paramType != ''">
+			AND	A.PARAM_TYPE=#{paramType}
+		</if>
+		<!-- ADD BY WUJIE ON 20210121 START REMARK:不查询模板账套的账套参数 -->
+		ORDER BY A.BOOKSET_ID,A.PARAM_CODE
+		<!-- ADD BY WUJIE ON 20210121 END REMARK:不查询模板账套的账套参数 -->
 	</select>
 
 	<!-- 下拉查询所属账套（可选账套类型，模糊查询） -->

@@ -10,8 +10,10 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.assetbookparameter.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.valuation.accounadjustmanage.assetbookparameter.validator.ValAssetBookParameter002Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
@@ -74,6 +76,12 @@ public class ValAssetBookParameter002Dto extends BaseEntity implements ProcessEn
     private String paramValue;
 
     /**
+     * 账套参数类型
+     */
+    private String paramType;
+    private String paramTypeValue;
+
+    /**
      * 参数名
      */
     private String paramName;
@@ -87,13 +95,36 @@ public class ValAssetBookParameter002Dto extends BaseEntity implements ProcessEn
      * 处理操作
      */
     private String operateType;
-    
+
+    private String pageModel;
+
+    public String getPageModel() {
+        return pageModel;
+    }
+
+    public void setPageModel(String pageModel) {
+        this.pageModel = pageModel;
+    }
+
     public String getOperateType() {
         return operateType;
     }
 
     public void setOperateType(String operateType) {
         this.operateType = operateType;
+    }
+
+    public String getParamType() {
+        return paramType;
+    }
+
+    public void setParamType(String paramType) {
+        this.paramType = paramType;
+    }
+
+    public String getParamTypeValue() {
+        paramTypeValue = SysDataUtil.getNameFromDataDict(DictCode.账套参数类型, getParamType());
+        return paramTypeValue;
     }
 
     /**

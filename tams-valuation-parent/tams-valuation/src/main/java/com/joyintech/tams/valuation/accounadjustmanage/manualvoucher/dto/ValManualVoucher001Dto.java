@@ -99,9 +99,12 @@ public class ValManualVoucher001Dto extends BaseEntity implements ProcessEntity 
      */
     private String createUser;
     /**
-     * 记账顺序人
+     * 收益类型
+     * add by wujie on 20201112
      */
-    private String accountOrder;
+    private String profitType;
+
+
     /**
      * 获取 booksetDate
      * 
@@ -646,11 +649,14 @@ public class ValManualVoucher001Dto extends BaseEntity implements ProcessEntity 
 	public void setbHappenAmt(BigDecimal bHappenAmt) {
 		this.bHappenAmt = bHappenAmt;
 	}
-	public String getAccountOrder() {
-		return accountOrder;
+
+	public String getProfitType() {
+		return profitType;
 	}
 
-	public void setAccountOrder(String accountOrder) {
-		this.accountOrder = accountOrder;
+	public void setProfitType(String profitType) {
+		this.profitType = profitType;
 	}
+	
+	
 }

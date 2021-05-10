@@ -30,8 +30,8 @@ $(function () {
 		cols: [
 		   {field:'booksetId',title:'账套',sortable: false},
 		   {field:'project', title: '指标', sortable: false},
-		   {field:'thisTermAmt', title: '本期金额', type:"money", width:400, sortable: false},
-		   {field:'lastTermAmt', title: '上期金额', type:"money", width:400, sortable: false},
+		   {field:'thisTermAmt', title: 'CashFlowsStatement001.thisTermAmt', type:"money", width:600, sortable: false},
+		   //{field:'lastTermAmt', title: '上期金额', type:"money", width:400, sortable: false},
 		]
 	});
 	
@@ -66,7 +66,8 @@ $(function () {
      */
     $(function() {
     	$("#thisTermAmt").val(formatMoney($("#thisTermAmt").val()));
-    	$("#lastTermAmt").val(formatMoney($("#lastTermAmt").val()));
+    	//modify by yanya on 20201221 去除上期金额
+    	//$("#lastTermAmt").val(formatMoney($("#lastTermAmt").val()));
     });
 });
 

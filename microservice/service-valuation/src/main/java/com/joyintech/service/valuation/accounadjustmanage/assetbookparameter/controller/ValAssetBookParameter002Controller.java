@@ -9,6 +9,7 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.assetbookparameter.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,4 +89,11 @@ public class ValAssetBookParameter002Controller extends BaseController {
   		return valAssetBookParameter002Service.getByKey(params);
   	}
 
+	/**
+	 * 检查是否存在相同的对象
+	 */
+	@RequestMapping("checkExistSameDto")
+	public List<ValAssetBookParameter002Dto> checkExistSameDto(@RequestBody ValAssetBookParameter002Dto dto){
+		return valAssetBookParameter002Service.checkExistSameDto(dto);
+	}
 }

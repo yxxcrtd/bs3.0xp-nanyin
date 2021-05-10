@@ -570,6 +570,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     减值生成方式_交易批处理(DictCode.减值生成方式,"02","交易批处理"),
     减值生成方式_减值计提批处理(DictCode.减值生成方式,"03","减值计提批处理"),
 
+    减值录入方式_按比例减值(DictCode.减值录入方式,"01","按比例减值"),
+    共通业务类型_资产减值管理(DictCode.共通业务类型,"TEDLOSS","资产减值管理"),
+    共通业务类型_项目类_计划类利率型行情信息(DictCode.共通业务类型,"FINASSET66","项目类_计划类利率型行情信息"),
 
 
     业务类型_债券交易(DictCode.业务类型, "02", "债券交易"),
@@ -682,9 +685,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_产品信息管理(DictCode.共通业务类型,"V28","产品信息管理"),
     共通业务类型_期权标的管理(DictCode.共通业务类型,"V29","期权标的管理"),
 	//add by liupengfei for 多级法人改造估值接口S
-    共通业务类型_拆借标的信息(DictCode.共通业务类型,"V30","拆借标的信息"),
-    共通业务类型_回购标的信息(DictCode.共通业务类型,"V31","回购标的信息"),
-    共通业务类型_债券借贷标的信息(DictCode.共通业务类型,"V32","债券借贷标的信息"),
+//    共通业务类型_拆借标的信息(DictCode.共通业务类型,"V30","拆借标的信息"),
+//    共通业务类型_回购标的信息(DictCode.共通业务类型,"V31","回购标的信息"),
+//    共通业务类型_债券借贷标的信息(DictCode.共通业务类型,"V32","债券借贷标的信息"),
 
 	//add by liupengfei for 多级法人改造估值接口E
     /**
@@ -1013,10 +1016,25 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     阶段_买入后风险显著提升_P2(DictCode.减值阶段,"P2","二阶段"),
     阶段_买入后出现减值_P3(DictCode.减值阶段,"P3","三阶段"),
 
+    // Added by JIAOXUJIN on 2020-10-16
+    共通业务类型_SPPI测试(DictCode.共通业务类型,"FINASSET21","SPPI测试"),
 
     交易方向_清理核销(DictCode.交易方向,"T75","清理核销"),
     交易方向_其他应收款本金清理核销(DictCode.交易方向,"T76","其他应收款本金-清理核销"),
     交易方向_其他应收款利息清理核销(DictCode.交易方向,"T77","其他应收款利息-清理核销"),
+    
+    //add by yzg sppi测试状态
+    SPPI测试状态_未测试(DictCode.SPPI测试状态,"0","未测试"),
+    SPPI测试状态_测试中(DictCode.SPPI测试状态,"1","测试中"),
+    SPPI测试状态_测试通过(DictCode.SPPI测试状态,"2","测试通过"),
+    SPPI测试状态_测试不通过(DictCode.SPPI测试状态,"3","测试不通过"),
+    //SPPI测试状态_已退回(DictCode.SPPI测试状态,"4","已退回"),
+    是否不适用_是(DictCode.是否不适用,"Y","是"),
+    是否不适用_否(DictCode.是否不适用,"N","否"),
+    是否不适用_不适用(DictCode.是否不适用,"NA","不适用"),
+
+    共通业务类型_资产减值清理(DictCode.共通业务类型,"TRD76","资产减值清理"),
+
     本位币差额处理方式_利息收入(DictCode.本位币差额处理方式,"01","利息收入"),
     本位币差额处理方式_减值准备(DictCode.本位币差额处理方式,"02","减值准备"),
 
@@ -1031,6 +1049,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     收息冲抵减值准备处理方式_金额占比(DictCode.收息冲抵减值准备处理方式,"02","金额占比"),
     收息冲抵减值准备处理方式_原金额占比(DictCode.收息冲抵减值准备处理方式,"03","原金额占比"),
 
+    平安业务类型_资产减值清理_清理核销(DictCode.平安业务类型,"180","清理核销"),
+    共通业务类型_清理核销(DictCode.共通业务类型,"TRD75","清理核销"),
     减值测算频率_年末(DictCode.减值测算频率,"01","年末"),
     减值测算频率_季末(DictCode.减值测算频率,"02","季末"),
     减值测算频率_月末(DictCode.减值测算频率,"03","月末"),
@@ -1294,6 +1314,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     平安业务类型_权益类资产_现金分红(DictCode.平安业务类型,"162","权益类资产现金分红"),
     共通业务类型_权益类资产估值行情信息(DictCode.共通业务类型,"MST30","权益类资产估值行情信息"),
     // add by etliu 2021-04-20 权益类资产功能合并 end
+    /** add by tanxuan on 20210310 多级法人权限控制改造 start**/
+    权限模式_银行模式(DictCode.权限模式,"01","银行模式"),
+    权限模式_联社模式(DictCode.权限模式,"02","联社模式"),
+    /** add by tanxuan on 20210310 多级法人权限控制改造 end**/
 
     /** add by yanya on 20210309 添加现金流一级类型-行权 start**/
     现金流一级类型_行权(DictCode.现金流一级类型,"05","行权"),
@@ -1309,18 +1333,34 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     //add by yzg 20210422 end
     /** add by yanya on 20210316 增加一次性费用赎回费（产品留存）**/
     一次性费用类型_赎回费_产品留存(DictCode.一次性费用类型, "B16", "赎回费（产品留存）"),
+	
+	/**add by yanya on 20201229 增加辅助工具类科目变更处理方式 start**/
+    科目号变更处理方式_默认(DictCode.科目号变更处理方式,"01","默认"),
+    科目号变更处理方式_批量(DictCode.科目号变更处理方式,"02","批量"),
+    /**add by yanya on 20201229 增加辅助工具类科目变更处理方式 end**/
+	
+	/** add by tanxuan on 20210315 多级法人权限控制改造 start**/
+    共通业务类型_拆借类资产(DictCode.共通业务类型,"V33","拆借类资产"),
+    共通业务类型_回购类资产(DictCode.共通业务类型,"V34","回购类资产"),
+    共通业务类型_债券借贷标的信息(DictCode.共通业务类型,"V35","债券借贷标的信息"),
+    /** add by tanxuan on 20210315 多级法人权限控制改造 end**/
+	
+     /** add by tanxuan on 20210318 新增功能费用预提配置 start**/
+    共通业务类型_预提费用配置(DictCode.共通业务类型,"V36","预提费用配置"),
+    /** add by tanxuan on 20210318 新增功能费用预提配置 end**/
+	
+	估值数据来源_手工(DictCode.估值数据来源,"01","手工"),
+    估值数据来源_Wind(DictCode.估值数据来源,"02","Wind"),
+    估值数据来源_资管系统(DictCode.估值数据来源,"03","资管系统"),
+    估值数据来源_投管系统(DictCode.估值数据来源,"04","投管系统"),
     平安业务类型_计划类资产_净值型_买入(DictCode.平安业务类型,"151","计划类资产（净值型）买入"),
     平安业务类型_计划类资产_净值型_卖出(DictCode.平安业务类型,"152","计划类资产（净值型）卖出"),
     平安业务类型_计划类资产_货币型_买入(DictCode.平安业务类型,"153","计划类资产（货币型）买入"),
     平安业务类型_计划类资产_货币型_卖出(DictCode.平安业务类型,"154","计划类资产（货币型）卖出"),
-    共通业务类型_清理核销(DictCode.共通业务类型,"TRD75","清理核销"),
-    SPPI测试状态_未测试(DictCode.SPPI测试状态,"0","未测试"),
-    SPPI测试状态_测试中(DictCode.SPPI测试状态,"1","测试中"),
-    SPPI测试状态_测试通过(DictCode.SPPI测试状态,"2","测试通过"),
-    SPPI测试状态_测试不通过(DictCode.SPPI测试状态,"3","测试不通过"),
     共通业务类型_每日债券行情信息(DictCode.共通业务类型,"MST27","每日债券行情信息"),
-	共通业务类型_每日基金行情信息(DictCode.共通业务类型,"MST28","每日基金行情信息"),
-;
+    共通业务类型_每日基金行情信息(DictCode.共通业务类型,"MST28","每日基金行情信息"),
+
+    ;
     /**
      * 对应于数据字典code
      */

@@ -70,9 +70,12 @@ public class CashFlowsStatement002Controller extends BaseController {
 		Map<String, Object> paraMap = RequestUtil.getParameters(getRequest());
 		// 报表维度为账套组
 		List<SysBatchGrpPrdlink> list = valAssetBook001Service.findAllProduct(paraMap);
-		dto.setBooksetId(
-				list.stream().map(SysBatchGrpPrdlink::getProductId).distinct().collect(Collectors.joining(",")));
-		return cashFlowsStatement001Service.selectListp(RequestUtil.getParameters(getRequest()), dto);
+		//modify by yanya on 20201221 改造传递参数
+//		dto.setBooksetId(
+//				list.stream().map(SysBatchGrpPrdlink::getProductId).distinct().collect(Collectors.joining(",")));
+		paraMap.put("booksetIds", list.stream().map(SysBatchGrpPrdlink::getProductId).distinct().collect(Collectors.joining(",")));
+		//return cashFlowsStatement001Service.selectListp(RequestUtil.getParameters(getRequest()), dto);
+		return cashFlowsStatement001Service.selectListp(paraMap);
 	}
 
 }

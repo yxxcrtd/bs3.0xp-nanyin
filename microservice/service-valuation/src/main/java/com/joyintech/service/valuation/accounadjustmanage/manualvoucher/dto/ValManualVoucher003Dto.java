@@ -70,12 +70,7 @@ public class ValManualVoucher003Dto extends BaseEntity implements ProcessEntity 
      */
     @NotEmpty(fieldName = "ValManualVoucher.recordType")
     private String recordType;
-    
-    /**
-     * 记账顺序
-     */
-    @NotEmpty(fieldName = "ValManualVoucher.accountOrder")
-    private String accountOrder;
+
     /**
      * 资产代码
      */
@@ -128,6 +123,11 @@ public class ValManualVoucher003Dto extends BaseEntity implements ProcessEntity 
      * 分支序号
      */
     private Long branch;
+    
+    /**
+     * 收益类型
+     */
+    private String profitType;
 
     /**
      * 获取 凭证流水号
@@ -416,21 +416,13 @@ public class ValManualVoucher003Dto extends BaseEntity implements ProcessEntity 
     public void setBranch(Long branch) {
         this.branch = branch;
     }
-    /**
-     * 获取 accountOrder
-     * 
-     * @return accountOrder.
-     */
-    public String getAccountOrder() {
-        return accountOrder;
-    }
 
-    /**
-     * 设置 accountOrder
-     * 
-     * @param accountOrder accountOrder
-     */
-    public void setAccountOrder(String accountOrder) {
-        this.accountOrder = accountOrder;
-    }
+	public String getProfitType() {
+		return profitType;
+	}
+
+	public void setProfitType(String profitType) {
+		this.profitType = profitType;
+	}
+
 }

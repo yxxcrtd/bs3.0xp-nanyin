@@ -33,7 +33,8 @@
 	         vfp.profit_type as profitTypeCode,    
 	         to_char(vccr.yield)*100  as currentquotation,               /*当前报价*/     
 	         decode(vfp.profit_type,'02',vccr.basis,'') as basic,     /*计息基础*/     
-	         vfp.issuer as issuer                          /*发行人*/     
+	         vfp.issuer as issuer,                          /*发行人*/
+             fsb.IS_QTZQ isQtzq /**是否其他债券**/
 	        FROM FIN_PRODUCT vfp 
 	        left join fin_product_type fpt 
 	         on vfp.finprod_id = fpt.finprod_id 
@@ -47,6 +48,9 @@
                         and cash_rule.finprod_type = vccr.finprod_type)) vccr
     		on vfp.finprod_id = vccr.finprod_id   
     		and vfp.finprod_type = vccr.finprod_type
+    		/** modify by yanya on 20201222 增加附属表是否其他债券查询**/
+            LEFT JOIN FIN_PRODUCT_ADD fsb
+                ON fsb.finprod_id = vfp.finprod_id
       	where vfp.FINPROD_TYPE = 'F17'
       		<if test="bondArr !=null and bondArr !='' " >
               AND vfp.finprod_id in

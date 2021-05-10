@@ -32,6 +32,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.valuation.accounadjustmanage.assetbook.service.ValAssetBook001Service;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto;
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003CheckValidatorDto;
@@ -40,7 +41,6 @@ import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValM
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher003Service;
 import com.joyintech.tams.common.base.dao.BokBooksetDateMapper;
 import com.joyintech.tams.common.base.entity.BokBooksetDate;
-import com.joyintech.tams.common.base.entity.BokDetailId;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
 /**
@@ -526,7 +526,7 @@ public class ValManualVoucher003Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/getInvAim")
-    public BokDetailId getInvAim(@RequestBody Map<String, Object> params)
+    public BokDetailIdDto getInvAim(@RequestBody Map<String, Object> params)
         throws Exception {
        return valManualVoucher003Service.getInvAim(params);
     }

@@ -46,8 +46,7 @@
 		    DEAL.OFFSET_FLAG AS offsetFlag,
 		    DEAL.BOOK_REMARK as bookRemark,
 		    to_char(bbd.BOOKSET_DATE,'yyyy-MM-dd') as booksetDate,
-		    DEAL.CREATE_USER as createUser,
-		    decode(DEAL.ACCOUNT_ORDER,'01','交易前','02','计提后') accountOrder
+		    DEAL.CREATE_USER as createUser
 		FROM TRD_VOUCH_DEAL DEAL
 		LEFT JOIN  TRD_VOUCH_DEAL_DETAIL DETAIL
 		    ON DEAL.TRADE_ID = DETAIL.TRADE_ID
@@ -122,8 +121,7 @@
 		    DEAL.OFFSET_FLAG,
 		    DEAL.BOOK_REMARK,
 		    bbd.BOOKSET_DATE,
-		    DEAL.CREATE_USER,
-		    DEAL.ACCOUNT_ORDER
+		    DEAL.CREATE_USER
         ORDER BY 
             DEAL.BOOK_DATE DESC,
             DEAL.BOOK_ID DESC

@@ -17,7 +17,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.joyintech.tams.constant.DictCodeListExt1;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,10 +27,6 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dao.ValManualVoucher003Mapper;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003Dto;
-import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher003Service;
 import com.joyintech.tams.common.base.dao.BokAcctLayeringInfoMapper;
 import com.joyintech.tams.common.base.dao.BokBooksetDateMapper;
 import com.joyintech.tams.common.base.dao.BokBooksetMapper;
@@ -41,8 +36,14 @@ import com.joyintech.tams.common.base.entity.BokBookset;
 import com.joyintech.tams.common.base.entity.BokBooksetDate;
 import com.joyintech.tams.common.base.entity.BokSubject;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListNatureGroup;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dao.ValManualVoucher003Mapper;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003Dto;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.service.ValManualVoucher003Service;
+import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 
 /**
  * 手工凭证新建校验
@@ -97,24 +98,39 @@ public class ValManualVoucher003Validator implements BeanValidator{
             errorList.add(new ValidMessage(msg));
             return errorList;
         } else {
+        	
+        	/**add by wujie on 20201111 start remark:债券、计划类收益型资产  投资目的不能为空**/
+            if(DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())
+            		|| (DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(dto.getFinprodType())
+            			&& DictCodeList.收益类型_收益型.getValue().equals(dto.getProfitType())
+            			)
+            		){
+            	 if (StringUtils.isEmpty(dto.getInvAim())) {
+            		 String msg = this.getMessage("VAL_COMMON_E_0002",
+                             this.getMessage("ValManualVoucher.invAim"));
+                         errorList.add(new ValidMessage(msg));
+            	 }
+            }
+            /**add by wujie on 20201111 end remark:债券、计划类收益型资产  投资目的不能为空**/
+        	
             // 基础科目性质查询-非摊余成本对应科目
             List<String> acout_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_非摊余成本对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_非摊余成本对应科目.getValue());
             // 基础科目性质查询-非公允价值对应科目
             List<String> fvtplout_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_非公允价值对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_非公允价值对应科目.getValue());
             // 基础科目性质查询-非综合收益对应科目
             List<String> fvociout_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_非综合收益对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_非综合收益对应科目.getValue());
             // 基础科目性质查询-摊余成本对应科目
             List<String> ac_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_摊余成本对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_摊余成本对应科目.getValue());
             // 基础科目性质查询-公允价值对应科目
             List<String> fvtpl_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_公允价值对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_公允价值对应科目.getValue());
             // 基础科目性质查询-综合收益对应科目
             List<String> fvoci_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_综合收益对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_综合收益对应科目.getValue());
             // 币种，用于判断币种是否相同
             String ccy = null;
             // 定义借贷金额求和变量
@@ -172,6 +188,15 @@ public class ValManualVoucher003Validator implements BeanValidator{
                         errorList.add(new ValidMessage(msg));
                         return errorList;
                     }*/
+                	
+                	// 科目尾号不为空时
+                    if (StringUtils.isEmpty(detail.getDetailSubjectNo())) {
+                        // 科目尾号不能为空
+                        String msg = "["+detail.getSubjectNo()+"]"+this.getMessage("VAL_COMMON_E_0002",
+                            this.getMessage("ValManualVoucher.detailSubjectNo"));
+                        errorList.add(new ValidMessage(msg));
+                    }
+                    
                 } else {
                     // 科目尾号不为空时
                     if (StringUtils.isNotEmpty(detail.getDetailSubjectNo())) {
@@ -331,8 +356,10 @@ public class ValManualVoucher003Validator implements BeanValidator{
                     }
                 }
                 
-                if ((DictCodeBaseSubjectNatrue.现金.getValue().equals(boksubject.getBaseSubjectNature())
-                    || DictCodeBaseSubjectNatrue.清算款.getValue().equals(boksubject.getBaseSubjectNature()))) {
+                if (DictCodeBaseSubjectNatrue.现金.getValue().equals(boksubject.getBaseSubjectNature())
+                		/**modify by wujie on 20201116 remark:清算款科目由三级科目调整为四级科目
+                    || DictCodeBaseSubjectNatrue.清算款.getValue().equals(boksubject.getBaseSubjectNature())**/
+                    ) {
                     // 资金账户为空时
                     if (StringUtil.isEmpty(detail.getAcctCode())) {
                         // 分支序号不能为空
@@ -350,9 +377,14 @@ public class ValManualVoucher003Validator implements BeanValidator{
                 }
                 
                 // 处理投资目的
-                String invAim = dto.getInvAim();;
+//                String invAim = dto.getInvAim();
+                String invAim = null;
                 // if 画面.业务类型 = “债券”
-                if(DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())){
+                if(DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())
+                		||(DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(dto.getFinprodType())
+                        		&& DictCodeList.收益类型_收益型.getValue().equals(dto.getProfitType())
+                				)
+                		){
                     // 基础科目性质 in “摊余成本类成本组”
                     if (ac_kmcx.contains(boksubject.getBaseSubjectNature())) {
                         invAim = DictCodeListExt1.投资目的_摊余成本类.getValue();
@@ -364,7 +396,7 @@ public class ValManualVoucher003Validator implements BeanValidator{
                         invAim = DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue();
                     }
                     // 设置投资目的
-                    dto.setInvAim(invAim);
+                    dto.setInvAim(dto.getInvAim()==null?invAim:dto.getInvAim());
                 }
                 
                 

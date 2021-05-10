@@ -18,10 +18,10 @@ import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto;
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003SubjectDto;
-import com.joyintech.tams.common.base.entity.BokDetailId;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.common.base.entity.SysBatchTask;
 
@@ -283,23 +283,5 @@ public interface ValManualVoucher003Mapper {
      * @see
      * @since 1.0
      */
-    BokDetailId getInvAim(Map<String, Object> params);
-    /**
-     * 获取标的类金融产品资产代码下拉列表,公共资产
-     * 
-     * @return
-     * @see
-     * @since 1.0
-     */
-    List<SuggestDto> getFinProductPub(@Param("finprodType") String finprodType,
-                                   @Param("booksetId") String booksetId);
-    /**
-     * 获取交易类金融产品资产代码下拉列表,公共资产
-     * 
-     * @return
-     * @see
-     * @since 1.0
-     */
-    List<SuggestDto> getFinTradeProductPub(@Param("finprodType") String finprodType,
-                                        @Param("booksetId") String booksetId);
+    BokDetailIdDto getInvAim(Map<String, Object> params);
 }

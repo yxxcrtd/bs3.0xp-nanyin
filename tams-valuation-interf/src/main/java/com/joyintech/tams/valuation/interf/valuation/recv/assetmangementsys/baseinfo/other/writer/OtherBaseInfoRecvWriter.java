@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.security.data.MultilevelDataAuthorityService;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.BokBooksetCapacctInfo;
+import com.joyintech.tams.common.base.entity.FinCashInfo;
+import com.joyintech.tams.common.base.entity.FinProductType;
+import com.joyintech.tams.common.base.entity.MstCalendarInfo;
+import com.joyintech.tams.common.base.entity.MstCustomerInfo;
+import com.joyintech.tams.common.base.entity.MstHoliday;
+import com.joyintech.tams.common.base.entity.MstTradeCalendar;
+import com.joyintech.tams.common.base.entity.StlCapacctInfo;
+import com.joyintech.tams.common.base.entity.StlFinProductAcct;
+import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValBooksetCapacctInfoBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCalendarInfoBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashInfoBatchMapper;
@@ -37,16 +51,6 @@ import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValMstCapacctIn
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValTradeCalendarBatchMapper;
 import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
 import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.entity.OtherBaseInfoForAssetProcessorResult;
-import com.joyintech.tams.common.base.entity.BokBooksetCapacctInfo;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.MstCalendarInfo;
-import com.joyintech.tams.common.base.entity.MstCustomerInfo;
-import com.joyintech.tams.common.base.entity.MstHoliday;
-import com.joyintech.tams.common.base.entity.MstTradeCalendar;
-import com.joyintech.tams.common.base.entity.StlCapacctInfo;
-import com.joyintech.tams.common.base.entity.StlFinProductAcct;
-import com.joyintech.tams.common.base.entity.ValInterflog;
 
 @Service
 @Scope("prototype")
@@ -99,6 +103,11 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
     @Autowired
     private ValBooksetCapacctInfoBatchMapper valBooksetCapacctInfoBatchMapper;
     
+    /**
+     * 多级法人数据权限接口 add by tanxuan on 20210310 多级法人权限控制改造
+     */
+    @Autowired
+    private MultilevelDataAuthorityService multilevelDataAuthorityService;
     
     /**
      * 现金流信息表
@@ -188,17 +197,28 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
                             listInsert.clear();
                             listInsert.add(e);
                         }
-                        //add by liupengfei for 多级法人改造 S
-                        // 记录二级法人权限
-                        if(MultilevelDataAuthorityUtil.isEnabled()){
-                            assetmanageRecvCommonService.insertDataAuthInst(e.getSeqNo(),e.getBelongInstitutionCode(), DictCodeList.共通业务类型_资金账户管理.getValue());
-                        }
-                        //add by liupengfei for 多级法人改造 E
+//                        //add by liupengfei for 多级法人改造 S
+//                        // 记录二级法人权限
+//                        if(MultilevelDataAuthorityUtil.isEnabled()){
+//                            assetmanageRecvCommonService.insertDataAuthInst(e.getSeqNo(),e.getBelongInstitutionCode(), DictCodeList.共通业务类型_资金账户管理.getValue());
+//                        }
+//                        //add by liupengfei for 多级法人改造 E
                     }
                     //如果循环结束，小于最大值
                     if(CollectionUtils.isNotEmpty(listInsert)){
                         valMstCapacctInfoBatchMapper.deleteBatch(listInsert); 
                         valMstCapacctInfoBatchMapper.insertBatch(listInsert);
+                    }
+                    if(DictCodeListExt3.权限模式_联社模式.getValue().equals(CacheUtil.getSysParam("AUTHORITY_TYPE"))){
+                    	List<String> editOrgCodeList = new ArrayList<>();
+                    	for (StlCapacctInfo e :listValMstCapacctInfoExt) {
+                    		editOrgCodeList.clear();
+                    		if(StringUtil.isNotEmpty(e.getBelongInstitutionCode())){
+                    			editOrgCodeList.add(e.getBelongInstitutionCode());
+                    		}
+                    		multilevelDataAuthorityService.saveForOrganization(e.getAcctNo(), null, editOrgCodeList,
+                        			DictCodeList.共通业务类型_资金账户管理.getValue());
+                        }
                     }
                 }
             }

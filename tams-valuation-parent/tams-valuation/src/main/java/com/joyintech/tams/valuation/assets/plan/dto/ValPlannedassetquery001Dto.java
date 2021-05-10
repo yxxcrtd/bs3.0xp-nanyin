@@ -10,12 +10,13 @@
  
 package com.joyintech.tams.valuation.assets.plan.dto;
 
-import java.math.BigDecimal;
-
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+
+import java.math.BigDecimal;
 
 /**
  * 计划类资产查询dto
@@ -236,9 +237,17 @@ public class ValPlannedassetquery001Dto extends FinProduct{
      * 应计利息
      */
     private BigDecimal yjrte;
-    
-    
-    
+
+
+    /**
+     * 是否其他债券
+     */
+    private String isQtzq;
+
+    /**
+     * 是否其他债券 显示名称
+     */
+    private String isQtzqFmt;
     
     /**
      * 获取 price
@@ -1155,5 +1164,26 @@ public class ValPlannedassetquery001Dto extends FinProduct{
 		return israte;
 	}
 
+    public String getIsQtzq() {
+        return isQtzq;
+    }
+
+    public void setIsQtzq(String isQtzq) {
+        this.isQtzq = isQtzq;
+    }
+
+    public String getIsQtzqFmt() {
+        if(StringUtil.equals(this.getProfitType(), DictCodeList.收益类型_收益型.getValue())) {
+            return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsQtzq())) ?
+                    SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsQtzq()) : DictCodeList.是否_否.getValue();
+        }
+        else {
+            return "";
+        }
+    }
+
+    public void setIsQtzqFmt(String isQtzqFmt) {
+        this.isQtzqFmt = isQtzqFmt;
+    }
   
 }

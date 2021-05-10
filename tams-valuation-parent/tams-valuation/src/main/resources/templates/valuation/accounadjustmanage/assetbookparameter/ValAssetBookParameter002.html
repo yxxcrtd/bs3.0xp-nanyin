@@ -35,7 +35,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="paramCode" name="paramCode" 
                             class="layui-input form-input input-select" data-th-data-url='@{/valuation/accounadjustmanage/assetbookparameter/ValAssetBookParameter002/findParam}' allowClear="true"
-                            data-th-placeholder="#{SysCommon.placeholder}" data-th-initvalue="${entity?.paramCode}" parentIds="booksetId,pageModel" >
+                            data-th-placeholder="#{SysCommon.placeholder}" data-th-initvalue="${entity?.paramCode}" parentIds="booksetId" >
                             <option></option>
                         </select>
                     </div>
@@ -84,6 +84,17 @@
                     <div class="layui-input-inline input-inline">
                         <input id="remark" name="remark" class="layui-input form-input" placeholder="请输入"
                             data-th-value="${entity?.remark}" >
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline layui-col-md6">
+                    <label class="layui-form-label form-lable">参数类型</label>
+                    <div class="layui-input-inline input-inline">
+                        <input id="paramType" name="paramType" type="text"
+                               class="layui-input form-input input-select" data-th-value="${entity?.paramType}"
+                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                               data-th-data-result="${BOOKSET_PARAM_TYPE}" formatoption = true>
                     </div>
                 </div>
             </div>

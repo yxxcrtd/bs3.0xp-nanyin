@@ -60,7 +60,9 @@ import com.joyintech.tams.common.base.entity.TrdVouchDealDetail;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListNatureGroup;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dao.ValManualVoucher003Mapper;
+import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
 import com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddValidatorDto;
@@ -572,10 +574,7 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         // 调用共通生成交易编号(在提交流程的ValManualVoucher003.doSave方法中已经生成交易编号，故直接赋值)
         // deal.setTradeId(interfCommonService.getTradeid("T28", dto.getBookDate(), "A"));
         deal.setTradeId(dto.getSeqno());
-        
-        //记账顺序  add by chufengjie 20190525
-        deal.setAccountOrder(dto.getAccountOrder());
-        
+
         // 账套代码
         deal.setBooksetId(dto.getBooksetId());
         // 分支序号
@@ -615,13 +614,18 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         // 投资目的
         // 基础科目性质查询-摊余成本对应科目
         List<String> ac_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_摊余成本对应科目.getValue());
+    		DictCodeListNatureGroup.分组代码_摊余成本对应科目.getValue());
         // 基础科目性质查询-公允价值对应科目
         List<String> fvtpl_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_公允价值对应科目.getValue());
+    		DictCodeListNatureGroup.分组代码_公允价值对应科目.getValue());
         // 基础科目性质查询-综合收益对应科目
         List<String> fvoci_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_综合收益对应科目.getValue());
+    		DictCodeListNatureGroup.分组代码_综合收益对应科目.getValue());
+        
+        
+        
+        
+        /**modify by wujie on 20201111 start
         String invAim = null;
         // if 画面.业务类型 = “债券”
         if (DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())) {
@@ -644,6 +648,28 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         for (ValManualVoucher003AddDto item : dto.getListAddDto()) {
             item.setInvAim(invAim);
         }
+        **/
+        for (ValManualVoucher003AddDto item : dto.getListAddDto()) {
+        	if (DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())
+            		|| (DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(dto.getFinprodType())
+                			&& DictCodeList.收益类型_收益型.getValue().equals(dto.getProfitType())
+                			)
+            		) {
+        		if (ac_kmcx.contains(item.getBaseSubjectNature())) {
+        			item.setInvAim(DictCodeListExt1.投资目的_摊余成本类.getValue());
+                }
+                else if (fvtpl_kmcx.contains(item.getBaseSubjectNature())) {
+                    item.setInvAim(DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue());
+                }
+                else if (fvoci_kmcx.contains(item.getBaseSubjectNature())) {
+                    item.setInvAim(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue());
+                }
+                else{
+                	 deal.setInvAim(dto.getInvAim()==null?item.getInvAim():dto.getInvAim());
+                }
+        	}
+        }
+        /**modify by wujie on 20201111 end**/
         // 登录
         trdVouchDealMapper.insert(deal);
         return deal;
@@ -1167,7 +1193,13 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
             busiDetailType = rstdto.getHidCode();
         }
         else {
-            if (DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())) {
+            if (DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())
+            		/**add by wujie on 20201111 start**/
+            		|| (DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(dto.getFinprodType())
+                			&& DictCodeList.收益类型_收益型.getValue().equals(dto.getProfitType())
+                			)
+                    /**add by wujie on 20201111 end**/
+            		) {
                 // 业务明细代码： 1画面.资产代码
                 busiId = dto.getBusiId();
                 // 业务明细类型：画面.隐藏的业务明细类型
@@ -1359,13 +1391,13 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         
         // 基础科目性质查询-摊余成本对应科目
         List<String> ac_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_摊余成本对应科目.getValue());
+    		DictCodeListNatureGroup.分组代码_摊余成本对应科目.getValue());
         // 基础科目性质查询-公允价值对应科目
         List<String> fvtpl_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_公允价值对应科目.getValue());
+    		DictCodeListNatureGroup.分组代码_公允价值对应科目.getValue());
         // 基础科目性质查询-综合收益对应科目
         List<String> fvoci_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_综合收益对应科目.getValue());
+    		DictCodeListNatureGroup.分组代码_综合收益对应科目.getValue());
 
         for (ValManualVoucher003AddDto detail : dto.getListAddDto()) {
 
@@ -1449,7 +1481,7 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
      * @exception Exception 异常
      * @since 1.0
      */
-    public BokDetailId getInvAim(Map<String, Object> params) {
-        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/getInvAim", params, BokDetailId.class);
+    public BokDetailIdDto getInvAim(Map<String, Object> params) {
+        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher003/getInvAim", params, BokDetailIdDto.class);
     }
 }

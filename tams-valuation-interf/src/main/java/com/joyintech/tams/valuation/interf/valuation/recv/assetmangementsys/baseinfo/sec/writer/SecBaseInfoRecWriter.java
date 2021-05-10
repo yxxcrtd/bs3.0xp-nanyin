@@ -10,36 +10,21 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.sec.writer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.*;
+import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
+import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.sec.dto.SecBaseInfoRecProcessorResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashCalcRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashPayRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashPlanBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValExercisePlanBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductTypeBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValInterflogBatchMapper;
-import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
-import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.sec.dto.SecBaseInfoRecProcessorResult;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.ValInterflog;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 基础数据接口--债券
@@ -95,11 +80,22 @@ public class SecBaseInfoRecWriter extends InterfBaseWriter<BaseEntity>{
      */
     @Autowired
     private ValInterflogBatchMapper valInterflogBatchMapper;
+
+    /**
+     * 标的类金融产品扩展表
+     */
+    @Autowired
+    private ValFinProductAddBatchMapper valFinProductAddBatchMapper;
     
     @Value("${interf.properties.maxSqlNum}")
     private int maxSqlNum;
-    
-    
+
+    /**
+     * 现金流利率信息表
+     */
+    @Autowired
+    private ValCashIntInfoBatchMapper valCashIntInfoBatchMapper;
+
     /**
      * {@inheritDoc}
      */
@@ -141,7 +137,31 @@ public class SecBaseInfoRecWriter extends InterfBaseWriter<BaseEntity>{
                     valFinProductBatchMapper.insertBatch(listInsert);
                 }
             }
-            
+
+            /** 标的类金融产品扩展表 add by yanya on 20210318 start**/
+            List<FinProductAdd> listValFinProductExt = result.getListValFinProductExt();
+            // 入库
+            if (CollectionUtils.isNotEmpty(listValFinProductExt)) {
+                //定义一个固定大小插入存放集合
+                List<FinProductAdd> listInsert =  new ArrayList<FinProductAdd>();
+                for(FinProductAdd e :listValFinProductExt){
+                    //小于最大值
+                    if(listInsert.size() < maxSqlNum){
+                        listInsert.add(e);
+                    }else if(listInsert.size() >= maxSqlNum){
+                        valFinProductAddBatchMapper.deleteBatch(listInsert);
+                        valFinProductAddBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                //如果循环结束，小于最大值
+                if(CollectionUtils.isNotEmpty(listInsert)){
+                    valFinProductAddBatchMapper.deleteBatch(listInsert);
+                    valFinProductAddBatchMapper.insertBatch(listInsert);
+                }
+            }
+            /** 标的类金融产品扩展表 add by yanya on 20210318 end**/
             
             // 金融产品分类
             List<FinProductType> listValFinProductType = result.getListValFinProductType();
@@ -355,8 +375,41 @@ public class SecBaseInfoRecWriter extends InterfBaseWriter<BaseEntity>{
                     valCashPlanBatchMapper.insertBatch(listInsert);
                 }
             }
-            
-            
+
+            /** modify by yanya on 20210318 现金流利率信息表 start**/
+            List<FinRateInfo> listValCashIntInfo = result.getListValCashIntInfo();
+            Map<String,FinRateInfo> mapValCashIntInfo = new HashMap<String, FinRateInfo>();
+            List<FinRateInfo> rstValCashIntInfo = new ArrayList<FinRateInfo>();
+            for(FinRateInfo obj :listValCashIntInfo){
+                if(mapValCashIntInfo.get(obj.getCashId()+ obj.getEffDate()) == null){
+                    rstValCashIntInfo.add(obj);
+                }
+                mapValCashIntInfo.put(obj.getCashId()+obj.getEffDate(), obj);
+            }
+            // 入库
+            if (CollectionUtils.isNotEmpty(rstValCashIntInfo)) {
+                // 定义一个固定大小插入存放集合
+                List<FinRateInfo> listInsert = new ArrayList<FinRateInfo>();
+                for (FinRateInfo e : rstValCashIntInfo) {
+                    // 小于最大值
+                    if (listInsert.size() < maxSqlNum) {
+                        listInsert.add(e);
+                    }
+                    else if (listInsert.size() >= maxSqlNum) {
+                        valCashIntInfoBatchMapper.deleteBatch(listInsert);
+                        valCashIntInfoBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                // 如果循环结束，小于最大值
+                if (CollectionUtils.isNotEmpty(listInsert)) {
+                    valCashIntInfoBatchMapper.deleteBatch(listInsert);
+                    valCashIntInfoBatchMapper.insertBatch(listInsert);
+                }
+            }
+            /** modify by yanya on 20210318 现金流利率信息表 end**/
+
             //行权计划表
             List<FinExercisePlan> listValExercisePlan = result.getListValExercisePlan();
             Map<String,FinExercisePlan> mapValExercisePlan = new HashMap<String,FinExercisePlan>();

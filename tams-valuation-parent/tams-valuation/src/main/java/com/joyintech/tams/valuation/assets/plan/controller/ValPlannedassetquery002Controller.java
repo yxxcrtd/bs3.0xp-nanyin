@@ -70,6 +70,8 @@ public class ValPlannedassetquery002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.计划类资产类型);
         this.setSelectOptionToModel(model, DictCode.申购确认速度);
         this.setSelectOptionToModel(model, DictCode.交易日历);
+        /** modify by yanya on 20201222 画面增加是否数据字典**/
+        this.setSelectOptionToModel(model, DictCode.是否);
       
       Map<String,Object> map=new HashMap<String,Object>();
       map.put("finprodId", finprodId);

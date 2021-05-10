@@ -67,6 +67,32 @@ public class BokVouchMain extends BaseEntity {
     private String bookType;
 
     /**
+     * 科目名称
+     */
+    private String subjectName;
+
+    /**
+     * 科目尾号名称
+     */
+    private String detailSubjectName;
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getDetailSubjectName() {
+        return detailSubjectName;
+    }
+
+    public void setDetailSubjectName(String detailSubjectName) {
+        this.detailSubjectName = detailSubjectName;
+    }
+
+    /**
      * 取得 凭证编号
      * @return 凭证编号
      */

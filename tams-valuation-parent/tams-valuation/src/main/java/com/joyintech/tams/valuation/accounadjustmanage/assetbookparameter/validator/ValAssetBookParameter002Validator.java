@@ -47,7 +47,7 @@ public class ValAssetBookParameter002Validator implements BeanValidator {
         validParam1.setBusinessDataPk1(dto.getBooksetId());
         validParam1.setBusinessDataPk2(dto.getParamCode());
 
-        if (mstWorkflowCommonService.isInWflProcess(validParam1)) {
+        if (StringUtil.isNotEmpty(dto.getWorkflowId()) && mstWorkflowCommonService.isInWflProcess(validParam1)) {
             booksetIds.add(dto.getBooksetId());
           validMessageList.add(new ValidMessage(getMessage("COMMON_E_0021",
           StringUtil.join(booksetIds,","),"账套当前参数已在流程中")));

@@ -227,7 +227,6 @@
 		    TASK_PRI taskPri
 		FROM SYS_BATCH_TASK
 		WHERE BEAN_NAME = #{beanName}
-		AND ROWNUM <![CDATA[<=]]> 1
     </select>
     <delete id="deleteTrdVouchDealDetail">
     	delete from TRD_VOUCH_DEAL_DETAIL where TRADE_ID = #{tradeId} and BOOKSET_ID = #{booksetId}

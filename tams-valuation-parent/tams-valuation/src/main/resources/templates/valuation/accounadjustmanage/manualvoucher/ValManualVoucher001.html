@@ -15,45 +15,30 @@
     <div class="joyin-form-wrap joyin-filter-form condition-area">
         <form class="layui-form" id="searchForm">
             <div class="layui-form-item">
-            	<div class="layui-inline layui-col-md4">
-                   <label class="layui-form-label form-lable">账套类别</label>
-                   <div class="layui-input-inline input-inline">
-                   	<select id="booksetType" name="booksetType" class="layui-input form-input input-select" 
-                           		data-th-data-url="@{/valuation/accounadjustmanage/voucherquery/ValVoucherQuery001/findBooksetType}"
-                           		
-                                 allowClear="true" placeholder="请输入内容">
-                       </select>
-                  </div>
-               </div>
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">所属账套</label>
                     <div class="layui-input-inline input-inline">
-                    	<!-- <select id="booksetId" name="booksetId" class="layui-input form-input input-select" 
+                    	<select id="booksetId" name="booksetId" class="layui-input form-input input-select" 
                             		data-th-data-url="@{/valuation/accounadjustmanage/manualvoucher/ValManualVoucher001/getBooksetId}" 
-                            		multiple="multiple"
-                                  allowClear="true" placeholder="请输入内容">
-                        </select> -->
-                        <select id="booksetId" name="booksetId" class="layui-input form-input input-select" 
-                            		
                             		multiple="multiple"
                                   allowClear="true" placeholder="请输入内容">
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">业务类型</label>
+                    <label class="layui-form-label form-lable">业务类别</label>
                     <div class="layui-input-inline input-inline" style="display: block;">
                       <input id="finprodType" name="finprodType" class="layui-input form-input input-select" placeholder="请选择" data-th-data-result="${FINPROD_TYPE}" allowClear="true">
                     </div>
-                </div>               
-            </div>
-            <div class="layui-form-item">
-            	<div class="layui-inline layui-col-md4">
+                </div>
+                <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">资产/负债代码</label>
                     <div class="layui-input-inline input-inline">
                       <input type="text" id="busiId" name="busiId" class="layui-input form-input" value="" placeholder="请输入内容">
                     </div>
                 </div>
+            </div>
+            <div class="layui-form-item">
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">记账日期</label>
                     <div class="layui-input-inline input-inline">
@@ -65,16 +50,16 @@
                     <div class="layui-input-inline input-inline">
                       <input type="text" id="tradeId" name="tradeId" class="layui-input form-input" placeholder="请输入内容" value="">
                     </div>
-                </div>                
-            </div>
-            <div class="layui-form-item">
-            	<div class="layui-inline layui-col-md4">
+                </div>
+                <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">凭证类型</label>
                     <div class="layui-input-inline input-inline" style="display: block;">
                       <input id="bookType" name="bookType" class="layui-input form-input input-select" placeholder="请选择" data-th-initValue="${bookType}"
                       data-th-data-result="${BOOK_TYPE}" allowClear="true" disabled="disabled">
                     </div>
                 </div>
+            </div>
+            <div class="layui-form-item">
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">凭证编号</label>
                     <div class="layui-input-inline input-inline">

@@ -75,7 +75,7 @@ public class CashFlowsStatement001Controller  extends BaseController {
 
     @Autowired
     private SystemToolService systemToolService;
-   
+
     @Autowired
     private BooksetCommonService booksetCommonService;
 
@@ -155,7 +155,7 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * @throws Exception
      */
     @PostMapping("/getTradeMarket")
-    public List<SelectOptionDto> getTradeMarket(Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> getTradeMarket(@RequestBody Map<String, Object> param) throws Exception {
         String reportTermType = (String) param.get("reportTermType");
 
         param.put("dict_code_parent", DictCode.报表期限类型.getValue());
@@ -181,9 +181,11 @@ public class CashFlowsStatement001Controller  extends BaseController {
      * @since 1.0
      */
     @PostMapping("/selectListp")
-    public List<CashFlowsStatement001Dto> selectListp(Map<String, Object> pageParam) throws ParseException {
-        CashFlowsStatement001Dto dto = (CashFlowsStatement001Dto) pageParam.get("CashFlowsStatement001Dto");
-        return cashFlowsStatement001Service.selectListp(pageParam,dto);
+    public List<CashFlowsStatement001Dto> selectListp(@RequestBody Map<String, Object> pageParam) throws ParseException {
+        //modify by yanya on 20201221 改造传递参数
+        //CashFlowsStatement001Dto dto = (CashFlowsStatement001Dto) pageParam.get("CashFlowsStatement001Dto");
+        //return cashFlowsStatement001Service.selectListp(pageParam,dto);
+        return cashFlowsStatement001Service.selectListp(pageParam);
     }
 
     /**

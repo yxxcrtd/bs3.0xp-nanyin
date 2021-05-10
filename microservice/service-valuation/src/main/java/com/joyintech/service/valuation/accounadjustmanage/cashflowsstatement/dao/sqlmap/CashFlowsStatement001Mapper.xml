@@ -22,8 +22,7 @@
 		T.PS,
 		SUM(NVL(T.PRIN_AMT,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) prinamt,
 		SUM(NVL(T.INT_AMT,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) intamt,
-		SUM(NVL(T.TRADE_AMT,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) tradeamt,
-		SUM(NVL(T.FEE_AMT_PAY,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) feeamtpay
+		SUM(NVL(T.TRADE_AMT,0)*DECODE(T.TRADE_STATUS,'03',-1,1)) tradeamt
 		FROM (
 		    SELECT 
 		       DEAL.FINPROD_TYPE,
@@ -35,8 +34,7 @@
                NVL(OT.SETTLE_DATE, DEAL.SETTLE_DATE) SETTLE_DATE,
                DEAL.INT_AMT,
                DEAL.TRADE_AMT,
-               DEAL.TRADE_STATUS,
-		       DEAL.FEE_AMT_PAY
+               DEAL.TRADE_STATUS
                from (SELECT A.FINPROD_TYPE,
                		 <!-- add by wujie on 20200213 start -->
                      A.BUSI_TYPE,
@@ -59,8 +57,7 @@
                             A.PRIN_AMT
                        END PRIN_AMT,
                        A.INT_AMT,
-		               DECODE(PCI.ACCT_TYPE,'A07',0,A.TRADE_AMT) TRADE_AMT,
-		               A.FEE_AMT_PAY FEE_AMT_PAY,
+                       A.TRADE_AMT,
                        A.TRADE_STATUS
 					   /**	,finTrade.EXC_PS**/
                   FROM TRD_PRODUCT_DEAL A
@@ -74,15 +71,8 @@
 							#{item}
 						</foreach>
 					</if>
-				INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA
-					ON A.TRADE_ID = TPDA.TRADE_ID
-				LEFT JOIN PTL_CAPACCT_INFO PCI
-					ON A.FINPROD_ID = PCI.ACCT_NO
-					AND TPDA.PORTFOLIO_ID = PCI.PORTFOLIO_ID
-					AND A.CCY = PCI.CCY AND PCI.ACCT_TYPE ='A07'
 				/** left join FIN_TRADE_PRODUCT finTrade
                  	on finTrade.FINPROD_TYPE2 = 'F35' and finTrade.finprod_id = A.finprod_id**/
-		        where A.IS_CANCEL='N'
 				/**UNION ALL **/
 				UNION
                 SELECT <!-- modify by wujie on 20200213
@@ -110,7 +100,6 @@
                        END PRIN_AMT,
                        D.INT_AMT,
                        D.TRADE_AMT,
-		               D.FEE_AMT_PAY,
                        D.TRADE_STATUS
 					   /**,finTrade.EXC_PS**/
 		FROM STL_ORDERS C
@@ -127,10 +116,9 @@
 					</if>
 				/**left join FIN_TRADE_PRODUCT finTrade
 				on finTrade.FINPROD_TYPE2 = 'F35' and finTrade.finprod_id = D.finprod_id **/
-				where D.IS_CANCEL='N'
-		) DEAL
-		LEFT JOIN SOTMP OT
-		ON DEAL.TRADE_ID = OT.TRADE_ID
+				) DEAL
+            LEFT JOIN SOTMP OT
+            ON DEAL.TRADE_ID = OT.TRADE_ID
         ) T
 		WHERE TO_CHAR(T.SETTLE_DATE,'yyyy-MM-dd') &gt;= #{vdate,jdbcType=VARCHAR}
 		AND	TO_CHAR(T.SETTLE_DATE,'yyyy-MM-dd') &lt;= #{mdate,jdbcType=VARCHAR}
@@ -212,7 +200,7 @@
     
     <select id="selectCashAmt" parameterType="map" resultType="java.math.BigDecimal">
     	SELECT
-    		NVL(SUM(A.B_AMT),0)
+    		NVL(SUM(A.O_AMT),0)
     	FROM BOK_BALANCE A,BOK_SUBJECT B,BOK_BOOKSET C
     	WHERE A.BOOKSET_ID = C.BOOKSET_ID
     	AND B.BOOKSET_ID = C.BOOKSET_ID_TMPL
@@ -230,7 +218,7 @@
 
 	<select id="selectCashAmtp" parameterType="map" resultType="java.math.BigDecimal">
 		SELECT
-		NVL(SUM(A.B_AMT),0)
+		NVL(SUM(A.O_AMT),0)
 		FROM BOK_BALANCE A,BOK_SUBJECT B,BOK_BOOKSET C
 		WHERE A.BOOKSET_ID = C.BOOKSET_ID
 		AND B.BOOKSET_ID = C.BOOKSET_ID_TMPL
@@ -327,8 +315,8 @@
 					inv_aim_method
 				from BOK_DEAL_ACCOUNTING acct
 				where acct.busi_no = jx.tanum
+				AND  acct.BOOKSET_ID in
 				<if test="booksetId !=null and booksetId !='' ">
-					AND  acct.BOOKSET_ID in
 					<foreach collection="booksetId.split(',')" item="item" open="(" separator="," close=")">
 						#{item}
 					</foreach>

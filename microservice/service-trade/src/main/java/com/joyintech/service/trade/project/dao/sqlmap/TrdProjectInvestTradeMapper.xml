@@ -435,7 +435,10 @@
         <!--  qiangchengxi 卖出到账流入核对 20190325 end -->
         left join FIN_PRODUCT FP on FP.FINPROD_ID = TPD.FINPROD_ID
         left join FIN_PRODUCT_TYPE FPT on FP.FINPROD_ID=FPT.FINPROD_ID
-        LEFT JOIN TRD_TRADE_FEE_DETAIL TTFD ON TPD.TRADE_ID = TTFD.TRADE_ID AND TTFD.FEE_TYPE = '06' 
+        <!--  modify by yanya on 20201229 费用类型以估值侧为准 start -->
+        <!--LEFT JOIN TRD_TRADE_FEE_DETAIL TTFD ON TPD.TRADE_ID = TTFD.TRADE_ID AND TTFD.FEE_TYPE = '06'-->
+        LEFT JOIN TRD_TRADE_FEE_DETAIL TTFD ON TPD.TRADE_ID = TTFD.TRADE_ID AND TTFD.FEE_TYPE = 'B06'
+        <!--  modify by yanya on 20201229 费用类型以估值侧为准 end -->
         LEFT JOIN TRD_TRADE_FEE_DETAIL TTFD1 ON TPD.TRADE_ID = TTFD1.TRADE_ID AND TTFD1.FEE_TYPE =  #{FEE_TYPE_B09}
         where PP.INVEST_YESORNO = 'Y'
         <if test="PAGE_DATA_STATUS01 == statusValid">

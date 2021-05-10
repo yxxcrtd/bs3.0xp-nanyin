@@ -10,6 +10,17 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.manualvoucher.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.activiti.editor.language.json.converter.util.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
@@ -17,30 +28,63 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dao.ValManualVoucher003Mapper;
-import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.*;
-import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher001Dto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddDto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003AddValidatorDto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003Dto;
+import com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.ValManualVoucher003SubjectDto;
+import com.joyintech.tams.common.base.dao.BokAcctLayeringInfoMapper;
+import com.joyintech.tams.common.base.dao.BokBookdetailAllMapper;
+import com.joyintech.tams.common.base.dao.BokBooksetMapper;
+import com.joyintech.tams.common.base.dao.BokBussDetsubMapper;
+import com.joyintech.tams.common.base.dao.BokDealAccountingDetailMapper;
+import com.joyintech.tams.common.base.dao.BokDealAccountingMapper;
+import com.joyintech.tams.common.base.dao.BokDetailIdMapper;
+import com.joyintech.tams.common.base.dao.BokVouchDetailMapper;
+import com.joyintech.tams.common.base.dao.BokVouchMainMapper;
+import com.joyintech.tams.common.base.dao.BokVouchRelMapper;
+import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
+import com.joyintech.tams.common.base.dao.TrdVouchDealDetailMapper;
+import com.joyintech.tams.common.base.dao.TrdVouchDealMapper;
+import com.joyintech.tams.common.base.entity.BokAcctLayeringInfo;
+import com.joyintech.tams.common.base.entity.BokAcctLayeringInfoKey;
+import com.joyintech.tams.common.base.entity.BokBookdetailAll;
+import com.joyintech.tams.common.base.entity.BokBookset;
+import com.joyintech.tams.common.base.entity.BokBooksetExt;
+import com.joyintech.tams.common.base.entity.BokBussDetsub;
+import com.joyintech.tams.common.base.entity.BokBussDetsubKey;
+import com.joyintech.tams.common.base.entity.BokDealAccounting;
+import com.joyintech.tams.common.base.entity.BokDealAccountingDetail;
+import com.joyintech.tams.common.base.entity.BokDealAccountingDetailKey;
+import com.joyintech.tams.common.base.entity.BokDealAccountingKey;
+import com.joyintech.tams.common.base.entity.BokDetailId;
+import com.joyintech.tams.common.base.entity.BokDetailIdKey;
+import com.joyintech.tams.common.base.entity.BokSubject;
+import com.joyintech.tams.common.base.entity.BokVouchDetail;
+import com.joyintech.tams.common.base.entity.BokVouchMain;
+import com.joyintech.tams.common.base.entity.BokVouchRel;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.FinTradeProduct;
+import com.joyintech.tams.common.base.entity.FinTradeProductKey;
+import com.joyintech.tams.common.base.entity.SysBatchTask;
+import com.joyintech.tams.common.base.entity.TrdVouchDeal;
+import com.joyintech.tams.common.base.entity.TrdVouchDealDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListNatureGroup;
 import com.joyintech.tams.systemtools.service.SystemToolService;
 import com.joyintech.tams.valuation.common.constants.DataIndexSequenceType;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.service.BookAccountCommonService;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.activiti.editor.language.json.converter.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 手工凭证新建Service
@@ -104,6 +148,12 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
 
     @Autowired
     private BokAcctLayeringInfoMapper bokAcctLayeringInfoMapper;
+    
+    @Autowired
+    private InterfCommonService interfCommonService;//add by wujie on 20201118
+    
+    @Autowired
+    private FinProductAddMapper finProductAddMapper;//add by wujie on 20201118
 
     /**
      * DBUtil
@@ -146,6 +196,7 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         // subjectdto.setCashType2Name(
         // systemToolService.getNameFromDataDict(DictCode.现金流二级类型, cashInfo.getCashType2()));
         // }
+        
         // if 画面.业务类型 IN“"债券质押式正回购",“债券质押式逆回购","债券买断式正回购","债券买断式逆回购"”
         if (DictCodeListExt1.金融产品类型_债券买断式正回购.getValue().equals(finprodType)
             || DictCodeListExt1.金融产品类型_债券买断式逆回购.getValue().equals(finprodType)
@@ -153,23 +204,42 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
             || DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue().equals(finprodType)
             || DictCodeListExt1.金融产品类型_拆入.getValue().equals(finprodType)
             || DictCodeListExt1.金融产品类型_拆出.getValue().equals(finprodType)
-            //|| DictCodeListExt1.金融产品类型_同业借款.getValue().equals(finprodType)
+            || DictCodeListExt1.金融产品类型_同业借款.getValue().equals(finprodType)
             ) {
-            // 科目尾号 = 资产代码对应的期限品种
-            FinTradeProductKey key = new FinTradeProductKey();
-            key.setFinprodId(busiId);
-            //【一体化修改】：begin========================================================================= yangjian 2018/1/4
-            //【一体化修改】：针对估值一体化变更【34：交易类金融产品表去除金融产品类型的主键】
-            //key.setFinprodType(finprodType);
-            //【一体化修改】：end========================================================================= yangjian 2018/1/4
-            key.setBranch(0L);
-            // 获取交易类标的信息
-            FinTradeProduct finTradeProduct = finTradeProductMapper.selectByPrimaryKey(key);
-            if (finTradeProduct != null) {
-                // 获取对应期限品种传入前台
-                subjectdto.setTermType(finTradeProduct.getTermType());
-            }
-            subjectdto.setTermTypeFlag(DictCodeList.是否_是.getValue());
+            boolean IS_FORSUBJECT = true;//同业借款：期限品种作为四级科目号
+            if(DictCodeListExt1.金融产品类型_同业借款.getValue().equals(finprodType)){
+        		BokBooksetExt bokBooksetExt = interfCommonService.queryBokBooksetExtbyId(ValDictCodeList.账套配置表参数项_同业借款四级科目类型.getValue(),booksetId);
+        		if(bokBooksetExt==null || "01".equals(bokBooksetExt.getParamValue())){
+        			IS_FORSUBJECT = false;
+        		}
+        	}
+        	if(DictCodeListExt1.金融产品类型_同业借款.getValue().equals(finprodType)){
+        		if(IS_FORSUBJECT){
+        			// 科目尾号 = 资产代码对应的期限品种
+                    FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(busiId);
+                    if(finProductAdd!=null){
+                    	subjectdto.setTermType(finProductAdd.getTermType());
+                    }
+                    subjectdto.setTermTypeFlag(DictCodeList.是否_是.getValue());
+        		}
+        		else{
+        			subjectdto.setTermTypeFlag(DictCodeList.是否_否.getValue());
+        		}
+                
+        	}else{
+        		// 科目尾号 = 资产代码对应的期限品种
+                FinTradeProductKey key = new FinTradeProductKey();
+                key.setFinprodId(busiId);
+                key.setBranch(0L);
+                // 获取交易类标的信息
+                FinTradeProduct finTradeProduct = finTradeProductMapper.selectByPrimaryKey(key);
+                if (finTradeProduct != null) {
+                    // 获取对应期限品种传入前台
+                    subjectdto.setTermType(finTradeProduct.getTermType());
+                }
+                subjectdto.setTermTypeFlag(DictCodeList.是否_是.getValue());
+        	}
+            
             subjectdto.setFinprodType(finprodType);
         }
         
@@ -185,13 +255,18 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         acctNoA03.add("30030601");
         acctNoA03.add("30030701");
         acctNoA03.add("30030801");
-        if(StringUtil.equals("10020101", subjectdto.getSubjectNo()) && ccy != null){
+        /**modify by wujie on 20201116 start
+       if(StringUtil.equals("10020101", subjectdto.getSubjectNo()) && ccy != null){**/
+       if(subjectdto.getSubjectNo()!=null && subjectdto.getSubjectNo().startsWith("100201") && ccy != null){
+    	/**modify by wujie on 20201116 end**/   
            String acctNo = valManualVoucher003Mapper.getAcctNo(booksetId, DictCodeListExt1.资金账户类型_产品托管户.getValue(),ccy);
            subjectdto.setAcctCode(acctNo);
-        }else if (subjectdto.getSubjectNo() != null && ccy != null && acctNoA03.contains(subjectdto.getSubjectNo())){
+        }
+        /**modify by wujie on 20201116 remark:清算款科目由三级科目改为四级科目
+        else if (subjectdto.getSubjectNo() != null && ccy != null && acctNoA03.contains(subjectdto.getSubjectNo())){
             String acctNo = valManualVoucher003Mapper.getAcctNo(booksetId, DictCodeListExt1.资金账户类型_待清算款.getValue(),ccy);
             subjectdto.setAcctCode(acctNo);
-        }     
+        }     **/
         /** modify by dongjun on 2018/12/10 end **/
         return subjectdto;
     }
@@ -294,22 +369,9 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
             || DictCodeListExt1.金融产品类型_基金.getValue().equals(finprodType)
             || DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(finprodType)
             || DictCodeListExt1.金融产品类型_同业借款.getValue().equals(finprodType)) {
-        	/* return queryForSuggest(() -> {
-        		 return valManualVoucher003Mapper.getFinProduct(finprodType, booksetId);
-             }, param, null);*/
-            
-            //多级法人改造 add by hxy start 20200618
-            List<SuggestDto> returnList = new ArrayList<SuggestDto>();
-            //公用资产
-            List<SuggestDto> ListPub = valManualVoucher003Mapper.getFinProductPub(finprodType, booksetId);
-            returnList.addAll(ListPub);
-            //非公用资产
-            List<SuggestDto> ListPrivate = valManualVoucher003Mapper.getFinProduct(finprodType, booksetId);
-            returnList.addAll(ListPrivate);
             return queryForSuggest(() -> {
-            	return returnList;
+                return valManualVoucher003Mapper.getFinProduct(finprodType, booksetId);
             }, param, null);
-            //多级法人改造 add by hxy end 20200618
         }
         else if (DictCodeListExt1.金融产品类型_拆入.getValue().equals(finprodType)
                  || DictCodeListExt1.金融产品类型_拆出.getValue().equals(finprodType)
@@ -321,40 +383,15 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
                  || DictCodeListExt1.金融产品类型_债券借贷融出.getValue().equals(finprodType)
                  || DictCodeListExt3.金融产品类型_期权.getValue().equals(finprodType)
         ) {
-           /* return queryForSuggest(() -> {
-                return valManualVoucher003Mapper.getFinTradeProduct(finprodType, booksetId);
-            }, param, null);*/
-            
-        	 //多级法人改造 add by hxy start 20200618
-            List<SuggestDto> returnList = new ArrayList<SuggestDto>();
-            //公用资产
-            List<SuggestDto> ListPub = valManualVoucher003Mapper.getFinTradeProductPub(finprodType, booksetId);
-            returnList.addAll(ListPub);
-            //非公用资产
-            List<SuggestDto> ListPrivate = valManualVoucher003Mapper.getFinTradeProduct(finprodType, booksetId);
-            returnList.addAll(ListPrivate);
             return queryForSuggest(() -> {
-            	return returnList;
+                return valManualVoucher003Mapper.getFinTradeProduct(finprodType, booksetId);
             }, param, null);
-            //多级法人改造 add by hxy end 20200618
-            
-            
-            
         }
         else if (DictCodeListExt1.金融产品类型_融入债券.getValue().equals(finprodType)) {
-           /* return queryForSuggest(() -> {
+            return queryForSuggest(() -> {
                 return valManualVoucher003Mapper.getFinProduct(DictCodeListExt1.金融产品类型_债券.getValue(),
                     booksetId);
-            }, param, null);*/
-            
-            //多级法人改造 add by hxy start 20200618
-        	return queryForSuggest(() -> {
-                return valManualVoucher003Mapper.getFinProductPub(DictCodeListExt1.金融产品类型_债券.getValue(),
-                    booksetId);
             }, param, null);
-            //多级法人改造 add by hxy end 20200618
-            
-            
         }
         else if (DictCodeListExt1.金融产品类型_税额.getValue().equals(finprodType)) {
 
@@ -403,22 +440,9 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
             BokBookset bokBookset = bokBooksetMapper.selectByPrimaryKey(booksetId);
             // if 核算方式=“收益型”
             if (DictCodeList.收益类型_收益型.getValue().equals(bokBookset.getAcctMode())) {
-                /*return queryForSuggest(() -> {
-                    return valManualVoucher003Mapper.getFinProduct(null, booksetId);
-                }, param, null);*/
-            	  //多级法人改造 add by hxy start 20200618
-                List<SuggestDto> returnList = new ArrayList<SuggestDto>();
-                //公用资产
-                List<SuggestDto> ListPub = valManualVoucher003Mapper.getFinProductPub(null, booksetId);
-                returnList.addAll(ListPub);
-                //非公用资产
-                List<SuggestDto> ListPrivate = valManualVoucher003Mapper.getFinProduct(null, booksetId);
-                returnList.addAll(ListPrivate);
                 return queryForSuggest(() -> {
-                	return returnList;
+                    return valManualVoucher003Mapper.getFinProduct(null, booksetId);
                 }, param, null);
-                //多级法人改造 add by hxy end 20200618
-                
             }
             else {
                 return queryForSuggest(() -> {
@@ -428,33 +452,12 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         }
         else if (DictCodeListExt1.金融产品类型_其他.getValue().equals(finprodType)) {
             List<SuggestDto> productList = new ArrayList<SuggestDto>();
-            //List<SuggestDto> finproduct = valManualVoucher003Mapper.getFinProduct(null, booksetId);
-            //多级法人改造 add by hxy start 20200618
-            List<SuggestDto> finproduct = new ArrayList<SuggestDto>();
-            //公用资产
-            List<SuggestDto> ListPub =  valManualVoucher003Mapper.getFinProductPub(null, booksetId);
-            finproduct.addAll(ListPub);
-            //非公用资产
-//            List<SuggestDto> ListPrivate =  valManualVoucher003Mapper.getFinProduct(null, booksetId);
-//            finproduct.addAll(ListPrivate);
-            //多级法人改造 add by hxy end 20200618
+            List<SuggestDto> finproduct = valManualVoucher003Mapper.getFinProduct(null, booksetId);
             if (CollectionUtils.isNotEmpty(finproduct)) {
                 productList.addAll(finproduct);
             }
-            
-            
-            /*List<SuggestDto> fintradproduct = valManualVoucher003Mapper.getFinTradeProduct(null,
-                booksetId);*/
-            //多级法人改造 add by hxy start 20200618
-            List<SuggestDto> fintradproduct = new ArrayList<SuggestDto>();
-            //公用资产
-            List<SuggestDto> ListtradePub = valManualVoucher003Mapper.getFinTradeProductPub(null,booksetId);
-            fintradproduct.addAll(ListtradePub);
-            //非公用资产
-//            List<SuggestDto> ListtradePrivate = valManualVoucher003Mapper.getFinTradeProduct(null,booksetId);
-//            fintradproduct.addAll(ListtradePrivate);
-            //多级法人改造 add by hxy end 20200618
-            
+            List<SuggestDto> fintradproduct = valManualVoucher003Mapper.getFinTradeProduct(null,
+                booksetId);
             if (CollectionUtils.isNotEmpty(fintradproduct)) {
                 productList.addAll(fintradproduct);
             }
@@ -534,7 +537,6 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
 //     * @see
 //     * @since 1.0
 //     */
-    @SuppressWarnings("unused")
 //    private List<SuggestDto> getCashInfoName(List<SuggestDto> fincashinfo) {
 //        if (CollectionUtils.isEmpty(fincashinfo)) {
 //            return fincashinfo;
@@ -625,10 +627,7 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         // 调用共通生成交易编号(在提交流程的ValManualVoucher003.doSave方法中已经生成交易编号，故直接赋值)
         // deal.setTradeId(interfCommonService.getTradeid("T28", dto.getBookDate(), "A"));
         deal.setTradeId(dto.getSeqno());
-        
-        //记账顺序  add by chufengjie 20190525
-        deal.setAccountOrder(dto.getAccountOrder());
-        
+
         // 账套代码
         deal.setBooksetId(dto.getBooksetId());
         // 分支序号
@@ -669,44 +668,46 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         // 投资目的
         // 基础科目性质查询-摊余成本对应科目
         List<String> ac_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_摊余成本对应科目.getValue());
+    		DictCodeListNatureGroup.分组代码_摊余成本对应科目.getValue());
         // 基础科目性质查询-公允价值对应科目
         List<String> fvtpl_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_公允价值对应科目.getValue());
+    		DictCodeListNatureGroup.分组代码_公允价值对应科目.getValue());
         // 基础科目性质查询-综合收益对应科目
         List<String> fvoci_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-            DictCodeListExt1.分组代码_综合收益对应科目.getValue());
+    		DictCodeListNatureGroup.分组代码_综合收益对应科目.getValue());
         String invAim = null;
         // if 画面.业务类型 = “债券”
-        if (DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())) {
+        if (DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType())
+        		||(DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(dto.getFinprodType())
+                		&& DictCodeList.收益类型_收益型.getValue().equals(dto.getProfitType())
+        				)
+        		) {
+        	invAim = dto.getInvAim();
             for (ValManualVoucher003AddDto item : dto.getListAddDto()) {
                 if (ac_kmcx.contains(item.getBaseSubjectNature())) {
                     invAim = DictCodeListExt1.投资目的_摊余成本类.getValue();
-                    break;
                 }
                 else if (fvtpl_kmcx.contains(item.getBaseSubjectNature())) {
                     invAim = DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue();
-                    break;
                 }
                 else if (fvoci_kmcx.contains(item.getBaseSubjectNature())) {
                     invAim = DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue();
-                    break;
                 }
                 else{
-                    invAim = dto.getInvAim();
+                	invAim = dto.getInvAim();
                 }
+                item.setInvAim(invAim);
             }
         }
         // else if 画面.业务类型=“融入债券”
         else if(DictCodeListExt1.金融产品类型_融入债券.getValue().equals(dto.getFinprodType())){
             // 投资目的=“卖空”
             invAim = DictCodeListExt1.投资目的_卖空.getValue();
+            for (ValManualVoucher003AddDto item : dto.getListAddDto()) {
+                item.setInvAim(invAim);
+            }
         }
         deal.setInvAim(invAim);
-        for (ValManualVoucher003AddDto item : dto.getListAddDto()) {
-            item.setInvAim(invAim);
-        }
-        deal.setFinprodType(dto.getFinprodType());
         // 登录
         trdVouchDealMapper.insert(deal);
         return deal;
@@ -1182,6 +1183,10 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
             }
         }
 
+        // add by zwq 2020-12-25 start
+        vouchdetail.setSubjectName(detailDto.getSubjectName());
+        vouchdetail.setDetailSubjectName(detailDto.getDetailSubjectName());
+        // add by zwq 2020-12-25 end
         // 登录
         bokVouchDetailMapper.insert(vouchdetail);
         return vouchdetail;
@@ -1229,10 +1234,10 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
         SuggestDto rstdto = null;
         // 基础科目性质=“现金” 或者 “清算款”
         if (DictCodeBaseSubjectNatrue.现金.getValue().equals(detailDto.getBaseSubjectNature())
+        		/**modify by wujie on 20201116 remark:清算款科目由三级改为四级科目
             || DictCodeBaseSubjectNatrue.清算款.getValue().equals(detailDto.getBaseSubjectNature())
-        ||DictCodeBaseSubjectNatrue.清算款.getValue().equals(detailDto.getBaseSubjectNature())
-
-        ) {
+            **/
+            ) {
             rstdto = valManualVoucher003Mapper.getFinprodType(detailDto.getAcctCode(),
                 deal.getBooksetId(), detailDto.getBranch());
             // 业务明细代码： 资金账户
@@ -1240,28 +1245,19 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
             // 业务明细类型：资金账户类型
             busiDetailType = rstdto.getHidCode();
         }
-        //add by xr “F20  对应的活期存款应计利息 时取对应账户 资金账户类型_券商资金账户
-        else if (dto.getFinprodType().equals(DictCodeListExt1.金融产品类型_资金账户.getValue())
-                || dto.getFinprodType().equals(DictCodeListExt1.资金账户类型_券商资金账户.getValue())
-                &&  (DictCodeBaseSubjectNatrue.应计利息.getValue().equals(detailDto.getBaseSubjectNature())||
-                DictCodeBaseSubjectNatrue.利息收入.getValue().equals(detailDto.getBaseSubjectNature()))
-        ){
-            rstdto = valManualVoucher003Mapper.getFinprodType(deal.getBusiId(),
-                    deal.getBooksetId(), detailDto.getBranch());
-            // 业务明细代码： 资金账户
-            busiId = deal.getBusiId();
-            // 业务明细类型：资金账户类型
-            busiDetailType = rstdto.getHidCode();
-        }
         else {
             if (DictCodeListExt1.金融产品类型_债券.getValue().equals(dto.getFinprodType()) ||
-                DictCodeListExt1.金融产品类型_融入债券.getValue().equals(dto.getFinprodType())) {
+                DictCodeListExt1.金融产品类型_融入债券.getValue().equals(dto.getFinprodType())
+                || (DictCodeListExt1.金融产品类型_计划类资产.getValue().equals(dto.getFinprodType())
+                		&& DictCodeList.收益类型_收益型.getValue().equals(dto.getProfitType()))
+            		) {
                 // 业务明细代码： 1画面.资产代码
                 busiId = dto.getBusiId();
                 // 业务明细类型：画面.隐藏的业务明细类型
                 busiDetailType = deal.getBusiDetailType();
                 // 投资目的：变量.投资目的
-                invAim = deal.getInvAim();
+//                invAim = deal.getInvAim();
+                invAim = detailDto.getInvAim()==null?deal.getInvAim():detailDto.getInvAim();
             }
             else {
                 // 业务明细代码：画面.资产代码对应的业务明细代码
@@ -1442,7 +1438,7 @@ public class ValManualVoucher003Service extends CommonExportService<ValManualVou
      * @exception Exception 异常
      * @since 1.0
      */
-    public BokDetailId getInvAim(Map<String, Object> params) {
+    public BokDetailIdDto getInvAim(Map<String, Object> params) {
         return valManualVoucher003Mapper.getInvAim(params);
     }
 }

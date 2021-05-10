@@ -351,4 +351,61 @@ public interface BussinessConstant {
      * 交易所协议回购指令画面在途回购自动刷新时间（毫秒）
      */
     String ONWAYREP_REFRESH_PERIOD = "etrAgreRepTrade_onWayRep_refresh_period";
+    /**
+     * 债券类资产SPPI测试模板配置系统参数KEY<br />
+     * Added by JIAOXUJIN on 2020-10-12
+     */
+    String BOND_SPPI_USE_TEMPLATE = "BOND_SPPI_USE_TEMPLATE";
+    /**
+     * 非标准化债权资产SPPI测试模板配置系统参数KEY<br />
+     * Added by JIAOXUJIN on 2020-10-12
+     */
+    String NOT_BOND_SPPI_USE_TEMPLATE = "NOT_BOND_SPPI_USE_TEMPLATE";
+    /**
+     * 01：债券类资产SPPI测试模板 <br />
+     * Added by JIAOXUJIN on 2020-10-16
+     */
+    String SPPI_TEMPLATE_TYPE_BOND = "01";
+    /**
+     * 02：非标准化债权资产SPPI测试模板<br />
+     * Added by JIAOXUJIN on 2020-10-16
+     */
+    String SPPI_TEMPLATE_TYPE_NOT_BOND = "02";
+
+    /**
+     * SPPI测试模板配置值-01：普华永道(PwC)<br />
+     * Added by JIAOXUJIN on 2020-10-14
+     */
+    static final String SPPI_TEMPLATE_PWC = "01";
+    /**
+     * SPPI测试模板配置值-02：德勤(DTT)<br />
+     * Added by JIAOXUJIN on 2020-10-14
+     */
+    static final String SPPI_TEMPLATE_DTT = "02";
+    /**
+     * SPPI测试模板配置值-03：毕马威(KPMG)<br />
+     * Added by JIAOXUJIN on 2020-10-14
+     */
+    static final String SPPI_TEMPLATE_KPMG = "03";
+    /**
+     * SPPI测试模板-值类型，01：下拉框<br />
+     * Added by JIAOXUJIN on 2020-10-15
+     */
+    static final String SPPI_TEMPLATE_SELECT_BOX = "01";
+    /**
+     * SPPI测试模板-值类型，02：文本框<br />
+     * Added by JIAOXUJIN on 2020-10-15
+     */
+    static final String SPPI_TEMPLATE_TEXT_BOX = "02";
+    /**
+     * SPPI测试模板-值类型，03：radioBox<br />
+     * Added by JIAOXUJIN on 2020-10-15
+     */
+    static final String SPPI_TEMPLATE_RADIO_BOX = "03";
+
+    static final String INPUT_TYPE_TEXT = "text";
+
+    static final String INPUT_TYPE_RADIO = "radio";
+
+    static final String INPUT_TYPE_CHECKBOX = "checkbox";
 }

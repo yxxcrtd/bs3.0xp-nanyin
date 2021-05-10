@@ -152,6 +152,10 @@ public class SecDealInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                 continue;
             }
             interfCommonService.dealBatchTrdFinprodDeal(result.getParamMap(),interfDate);
+
+            /** add by yanya on 20210309 行权申请交易更新 start**/
+            interfCommonService.execApplyDealUpdate(result.getListSecExecApply());
+            /** add by yanya on 20210309 行权申请交易更新 end**/
             /**modify by wujie on 20190123 end**/
             // 金融产品交易
             List<TrdProductDeal> listValFinProductDeal = result.getListValFinProductDeal();

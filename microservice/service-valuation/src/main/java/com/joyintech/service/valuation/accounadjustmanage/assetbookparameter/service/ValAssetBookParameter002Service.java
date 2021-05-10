@@ -9,6 +9,7 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.assetbookparameter.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,22 +72,28 @@ public class ValAssetBookParameter002Service extends CommonExportService<ValAsse
 			String booksetIdTmpl = mapper.getTmpl(booksetId);
 			pageParam.put("booksetId", booksetIdTmpl);
 		}
-		return mapper.getParamValue(pageParam);
+		ValAssetBookParameter002Dto tempDto = mapper.getParamValue(pageParam);
+		if (tempDto == null){
+			pageParam.put("booksetId", null);
+			return mapper.getParamValue(pageParam);
+		}
+		return tempDto;
 	}
     
 	@Override
 	public void doComplete(ValAssetBookParameter002Dto entity, OperationType type) {
 		if(OperationType.NEW.equals(type)){
-			String booksetId = entity.getBooksetId();
-			String paramValue = entity.getParamValue();
-			String remark = entity.getRemark();
-			String booksetIdTmpl = mapper.getTmpl(booksetId);
-			entity.setBooksetIdTmpl(booksetIdTmpl);
-			ValAssetBookParameter002Dto pdto = mapper.booksetparam(entity);
-			pdto.setBooksetId(booksetId);
-			pdto.setParamValue(paramValue);
-			pdto.setRemark(remark);
-			mapper.insertparam(pdto);
+//			String booksetId = entity.getBooksetId();
+//			String paramValue = entity.getParamValue();
+//			String remark = entity.getRemark();
+//			String booksetIdTmpl = mapper.getTmpl(booksetId);
+//			entity.setBooksetIdTmpl(booksetIdTmpl);
+//			ValAssetBookParameter002Dto pdto = mapper.booksetparam(entity);
+//			pdto.setBooksetId(booksetId);
+//			pdto.setParamValue(paramValue);
+//			pdto.setRemark(remark);
+//			mapper.insertparam(pdto);
+			mapper.insertparam(entity);
 		}else if(OperationType.MODIFY.equals(type)){
 			mapper.updateByBooksetId(entity);
       }
@@ -101,4 +108,10 @@ public class ValAssetBookParameter002Service extends CommonExportService<ValAsse
 		return mapper.getByKey(params);
 	}
 
+	/**
+	 * 检查是否存在相同的对象
+	 */
+	public List<ValAssetBookParameter002Dto> checkExistSameDto(ValAssetBookParameter002Dto dto){
+		return mapper.checkExistSameDto(dto);
+	}
 }

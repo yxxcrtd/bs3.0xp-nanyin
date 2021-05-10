@@ -15,9 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +49,16 @@ public class ValAssetBookParameter001Controller extends BaseController {
      */
     @Autowired
     private ValAssetBookParameter001Service valAssetBookParameter001Service;
+
+    /**
+     * 界面初始化 {@inheritDoc}
+     */
+    @Override
+    @RequestMapping(PAGE_INIT)
+    public String init(Model model) {
+        this.setSelectOptionToModel(model, DictCode.账套参数类型);
+        return super.init(model);
+    }
     
     /**
      * 获取查询结果
@@ -60,8 +72,9 @@ public class ValAssetBookParameter001Controller extends BaseController {
     @ResponseBody
     public Page<ValAssetBookParameter002Dto> search() throws Exception {
         Map<String,Object> params = new HashMap<String,Object>();
-        params.put("name",this.getParam("name"));
+        params.put("booksetId",this.getParam("booksetId"));
         params.put("paramCode",this.getParam("paramCode"));
+        params.put("paramType",this.getParam("paramType"));
         return valAssetBookParameter001Service.getAllAssetbookPage(params);
     }
 

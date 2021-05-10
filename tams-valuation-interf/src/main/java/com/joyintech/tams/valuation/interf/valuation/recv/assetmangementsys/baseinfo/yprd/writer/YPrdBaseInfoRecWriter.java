@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.yprd.writer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,12 @@ import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinTradeProduct;
 import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.security.data.MultilevelDataAuthorityService;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.BokBooksetPlanBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValAcctLayeringInfoBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValAcctSubjectInfoBatchMapper;
@@ -187,6 +193,12 @@ public class YPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
 
 	@Autowired
     private ValFinTradeProductBatchMapper valFinTradeProductBatchMapper;
+	
+    /**
+     * 多级法人数据权限接口 add by tanxuan on 20210310 多级法人权限控制改造
+     */
+    @Autowired
+    private MultilevelDataAuthorityService multilevelDataAuthorityService;
 
 	/**
 	 * 更新数据 {@inheritDoc}
@@ -666,6 +678,14 @@ public class YPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
 					if (valBokBookset != null) {
 						valBokBooksetMapper.deleteByPrimaryKey(valBokBookset.getBooksetId());
 						valBokBooksetMapper.insert(valBokBookset);
+						if(DictCodeListExt3.权限模式_联社模式.getValue().equals(CacheUtil.getSysParam("AUTHORITY_TYPE"))){
+							List<String> editOrgCodeList = null;
+	                		if(StringUtil.isNotEmpty(valBokBookset.getBelongInstitutionCode())){
+	                			editOrgCodeList = Arrays.asList(valBokBookset.getBelongInstitutionCode());
+	                		}
+	                		multilevelDataAuthorityService.saveForOrganization(valBokBookset.getBooksetId(), null, editOrgCodeList,
+	                    			DictCodeList.共通业务类型_账套管理.getValue());
+                        }
 					}
 					// 模板账套日期
 					BokBooksetDate valBokBooksetDate = booksetInitResult.getValBokBooksetDate();

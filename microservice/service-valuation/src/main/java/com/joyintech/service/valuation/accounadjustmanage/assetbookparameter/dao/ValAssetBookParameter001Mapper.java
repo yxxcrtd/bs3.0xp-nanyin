@@ -26,7 +26,7 @@ public interface ValAssetBookParameter001Mapper {
      * @param booksetId
      * @return
      */
-    List<ValAssetBookParameter002Dto> getBookSetExt(@Param("booksetId") String booksetId,@Param("paramCode") String paramCode);
+    List<ValAssetBookParameter002Dto> getBookSetExt(Map<String,Object> params);
 
     /**
      * 账套代码

@@ -10,13 +10,21 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.cprd.writer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.github.pagehelper.util.StringUtil;
+import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.data.MultilevelDataAuthorityService;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.dao.BokBooksetDateMapper;
+import com.joyintech.tams.common.base.dao.BokBooksetMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.*;
+import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
+import com.joyintech.tams.valuation.common.interf.base.dto.BooksetInitResult;
+import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
+import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.cprd.dto.CPrdBaseInfoProcessorResult;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,55 +32,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.common.base.dao.BokBooksetDateMapper;
-import com.joyintech.tams.common.base.dao.BokBooksetMapper;
-import com.joyintech.tams.common.base.entity.BokAcctLayeringInfo;
-import com.joyintech.tams.common.base.entity.BokAcctSubjectInfo;
-import com.joyintech.tams.common.base.entity.BokBookset;
-import com.joyintech.tams.common.base.entity.BokBooksetDate;
-import com.joyintech.tams.common.base.entity.BokBooksetExt;
-import com.joyintech.tams.common.base.entity.BokBooksetPlan;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.FinBaseRuleInfo;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinClawbackCalcRule;
-import com.joyintech.tams.common.base.entity.FinFloatAccrualSche;
-import com.joyintech.tams.common.base.entity.FinFloatCalcRule;
-import com.joyintech.tams.common.base.entity.FinFloatCalcRuleDetail;
-import com.joyintech.tams.common.base.entity.FinFloatCountingRule;
-import com.joyintech.tams.common.base.entity.FinOpenPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.BokBooksetPlanBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValAcctLayeringInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValAcctSubjectInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValBokBooksetExtBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValBokDetailIdBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashCalcRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashPayRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashPlanBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinBenchmarkDetailBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinClawbackCalcRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductAddBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinTradeProductBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFloatCalcRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFloatCalcRuleDetailBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFloatCountingRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValInterflogBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValOpenPlanBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValPerfRewardAccrscheBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
-import com.joyintech.tams.valuation.common.interf.base.dto.BooksetInitResult;
-import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
-import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.cprd.dto.CPrdBaseInfoProcessorResult;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 货币型产品产品信息接口 Writer 〈一句话功能简述〉 〈功能详细描述〉
@@ -225,8 +189,17 @@ public class CPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
     private ValAcctLayeringInfoBatchMapper valAcctLayeringInfoBatchMapper;
     
     
+//    @Autowired
+//    private ValFinBenchmarkDetailBatchMapper valFinBenchmarkDetailBatchMapper;
+
     @Autowired
-    private ValFinBenchmarkDetailBatchMapper valFinBenchmarkDetailBatchMapper;
+    private ValFinBaseRuleInfoBatchMapper valFinBaseRuleInfoBatchMapper;
+    
+    /**
+     * 多级法人数据权限接口 add by tanxuan on 20210310 多级法人权限控制改造
+     */
+    @Autowired
+    private MultilevelDataAuthorityService multilevelDataAuthorityService;
     
     @Value("${interf.properties.maxSqlNum}")
     private int maxSqlNum;
@@ -791,6 +764,14 @@ public class CPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                     if (valBokBookset != null) {
                         valBokBooksetMapper.deleteByPrimaryKey(valBokBookset.getBooksetId());
                         valBokBooksetMapper.insert(valBokBookset);
+                        if(DictCodeListExt3.权限模式_联社模式.getValue().equals(CacheUtil.getSysParam("AUTHORITY_TYPE"))){
+                        	List<String> editOrgCodeList = null;
+                    		if(StringUtil.isNotEmpty(valBokBookset.getBelongInstitutionCode())){
+                    			editOrgCodeList = Arrays.asList(valBokBookset.getBelongInstitutionCode());
+                    		}
+                    		multilevelDataAuthorityService.saveForOrganization(valBokBookset.getBooksetId(), null, editOrgCodeList,
+                        			DictCodeList.共通业务类型_账套管理.getValue());
+                        }
                     }
                     // 模板账套日期
                     BokBooksetDate valBokBooksetDate = booksetInitResult.getValBokBooksetDate();
@@ -1168,16 +1149,20 @@ public class CPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
                         listInsert.add(e);
                     }
                     else if (listInsert.size() >= maxSqlNum) {
-                        valFinBenchmarkDetailBatchMapper.deleteBatch(listInsert);
-                        valFinBenchmarkDetailBatchMapper.insertBatch(listInsert);
+                        //valFinBenchmarkDetailBatchMapper.deleteBatch(listInsert);
+                        //valFinBenchmarkDetailBatchMapper.insertBatch(listInsert);
+                        valFinBaseRuleInfoBatchMapper.deleteBatch(listInsert);
+                        valFinBaseRuleInfoBatchMapper.insertBatch(listInsert);
                         listInsert.clear();
                         listInsert.add(e);
                     }
                 }
                 // 如果循环结束，小于最大值
                 if (CollectionUtils.isNotEmpty(listInsert)) {
-                    valFinBenchmarkDetailBatchMapper.deleteBatch(listInsert);
-                    valFinBenchmarkDetailBatchMapper.insertBatch(listInsert);
+                    //valFinBenchmarkDetailBatchMapper.deleteBatch(listInsert);
+                    //valFinBenchmarkDetailBatchMapper.insertBatch(listInsert);
+                    valFinBaseRuleInfoBatchMapper.deleteBatch(listInsert);
+                    valFinBaseRuleInfoBatchMapper.insertBatch(listInsert);
                 }
                 
                 

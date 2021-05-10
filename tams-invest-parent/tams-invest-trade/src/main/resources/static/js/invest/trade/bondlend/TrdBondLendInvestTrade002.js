@@ -475,6 +475,7 @@ var table;
             $("#ccy").val("").trigger('change');
             $("#calendarId").val("").trigger('change');
             $("#basis").val("").trigger('change');
+            settleSpeedChangeAction();//调用清算速度，重新赋值
 
         }
     });

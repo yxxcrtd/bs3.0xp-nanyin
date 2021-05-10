@@ -260,6 +260,11 @@ public class FinProduct extends BaseEntity {
     private String sppiTestStatus;
 
     /**
+     * 上市流通代码
+     */
+    private String circulationCode;
+
+    /**
      * 取得 金融产品代码
      * @return 金融产品代码
      */
@@ -1034,13 +1039,19 @@ public class FinProduct extends BaseEntity {
         this.sppiTestStatus = sppiTestStatus == null ? null : sppiTestStatus.trim();
     }
 
-//    private String repFinprodInsId;
-//
-//    public String getRepFinprodInsId() {
-//        return repFinprodInsId;
-//    }
-//
-//    public void setRepFinprodInsId(String repFinprodInsId) {
-//        this.repFinprodInsId = repFinprodInsId;
-//    }
+    /**
+     * 取得 上市流通代码
+     * @return 上市流通代码
+     */
+    public String getCirculationCode() {
+        return circulationCode;
+    }
+
+    /**
+     * 设置 上市流通代码
+     * @param circulationCode 上市流通代码
+     */
+    public void setCirculationCode(String circulationCode) {
+        this.circulationCode = circulationCode == null ? null : circulationCode.trim();
+    }
 }

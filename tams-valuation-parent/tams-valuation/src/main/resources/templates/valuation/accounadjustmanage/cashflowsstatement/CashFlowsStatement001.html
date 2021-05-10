@@ -22,7 +22,7 @@
                                 required data-th-Value="${finprodId}">
                         </div>
                     </div>-->
-                    <div class="layui-inline layui-col-md3">
+                    <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable" >报表维度</label>
                         <div class="layui-input-inline input-inline" >
                               <input type="text" id="reportDimen" name="reportDimen" 
@@ -30,18 +30,17 @@
                                data-th-data-result="${BATCH_BOOKSET_TYPE}" data-th-initvalue="${reportDimen}" allowClear="true">
                         </div>
                     </div>
-                <div class="layui-inline layui-col-md3" id="c_booksetGroup">
+                <div class="layui-inline layui-col-md4" id="c_booksetGroup">
                     <label class="layui-form-label form-lable" >账套组</label>
                     <div class="layui-input-inline input-inline">
                           <select id="booksetGroup" name="booksetGroup"
                               class="layui-input form-input input-select" allowClear="true" formatoption = "false"
                               placeholder="请选择" required="required"
-                              multiple="true"
                               data-th-data-url='@{/valuation/accounadjustmanage/assetbook/ValAssetBook001/findBooksetGroup}'>
                           </select>
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md3" id="c_booksetId">
+                <div class="layui-inline layui-col-md4" id="c_booksetId">
                     <label class="layui-form-label form-lable" >账套</label>
                     <div class="layui-input-inline input-inline">
                           <select id="booksetId" name="booksetId"
@@ -51,7 +50,9 @@
                           </select>
                     </div>
                 </div>
-                    <div class="layui-inline layui-col-md3">
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable">筛选条件</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" class="layui-input form-input input-select" id="reportTermType"
@@ -61,7 +62,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="layui-inline layui-col-md3">
+                    <div class="layui-inline layui-col-md4">
                         <div class="layui-input-inline input-inline" id="c_year_reportDate" style="display: none;">
                             <input type="text" class="layui-input form-input" id="year_reportDate" name="reportDate"
                                 placeholder="请选择日期">
@@ -75,13 +76,11 @@
                                 placeholder="请选择日期">
                         </div>
                     </div>
-                    </div>
-                    <div class="layui-form-item">
-                    <div class="layui-inline layui-col-md3">
+                    <div class="layui-inline layui-col-md3" style="display: none;">
                         <label class="layui-form-label form-lable">上期维度</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" class="layui-input form-input input-select" id="lastDimen"
-                               name="lastDimen" placeholder="请选择上期维度" allowClear="true"
+                               name="lastDimen" placeholder="请选择上期维度" allowClear="true" data-th-initvalue="${LAST_DIMEN_01}"
                                data-th-data-result="${LAST_DIMEN}" required> 
                     	    </select>
                         </div>

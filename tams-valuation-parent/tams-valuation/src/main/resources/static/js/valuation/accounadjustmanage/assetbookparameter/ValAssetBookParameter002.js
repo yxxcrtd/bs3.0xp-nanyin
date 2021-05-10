@@ -39,6 +39,7 @@ $(function () {
 	
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm');
+        object.paramName =  $('#paramCode').find('option:selected').text();
         object.operateType = operateType;
         object.pageModel = pageModel;
         

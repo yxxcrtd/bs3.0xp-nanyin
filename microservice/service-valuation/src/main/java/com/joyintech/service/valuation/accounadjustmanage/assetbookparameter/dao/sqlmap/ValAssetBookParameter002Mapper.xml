@@ -23,7 +23,7 @@
      FROM (SELECT vbb.BOOKSET_ID,bbe.PARAM_CODE,bbe.PARAM_VALUE,bbe.PARAM_NAME,bbe.REMARK
      FROM BOK_BOOKSET vbb LEFT JOIN BOK_BOOKSET_EXT bbe ON vbb.BOOKSET_ID_TMPL = bbe.BOOKSET_ID
      WHERE vbb.BOOKSET_ID = #{booksetId}) a LEFT JOIN (SELECT * FROM BOK_BOOKSET_EXT WHERE BOOKSET_ID = #{booksetId}) b ON a.PARAM_CODE = b.PARAM_CODE
-     WHERE b.BOOKSET_ID IS NULL
+     WHERE b.BOOKSET_ID IS NOT NULL
         	<if test="search !=null and search != ''">
         	AND	(a.PARAM_CODE like concat('%',concat(#{search},'%'))
         		OR a.PARAM_NAME like concat('%',concat(#{search},'%')))
@@ -45,8 +45,13 @@
                bbe.PARAM_VALUE as paramValue, /**参数值**/
                bbe.REMARK as remark /**参数说明**/
           from BOK_BOOKSET vbb left join BOK_BOOKSET_EXT bbe on vbb.BOOKSET_ID = bbe.BOOKSET_ID
-        WHERE vbb.BOOKSET_ID = #{booksetId}
-                    AND bbe.PARAM_CODE = #{paramCode}
+        WHERE 1=1
+        <if test="booksetId != null and booksetId != ''">
+            AND vbb.BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+        </if>
+        <if test="paramCode != null and paramCode != ''">
+            AND bbe.PARAM_CODE = #{paramCode,jdbcType=VARCHAR}
+        </if>
     </select>
    
     <select id="booksetparam" resultType="com.joyintech.service.valuation.accounadjustmanage.assetbookparameter.dto.ValAssetBookParameter002Dto">
@@ -68,10 +73,11 @@
     </select>
     
     <update id="updateByBooksetId" parameterType="com.joyintech.service.valuation.accounadjustmanage.assetbookparameter.dto.ValAssetBookParameter002Dto" >
-        update BOK_BOOKSET_EXT 
+        update BOK_BOOKSET_EXT
         <set >
             <if test="paramValue != null" >
                 PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+                PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
                 REMARK = #{remark,jdbcType=VARCHAR},
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
@@ -88,6 +94,7 @@
 			  PARAM_CODE, 
 			  PARAM_VALUE, 
 			  PARAM_NAME,
+			  PARAM_TYPE,
 			  REMARK,
 			  CREATE_USER ,
 	          CREATE_DEPT ,
@@ -100,6 +107,7 @@
 			   #{paramCode,jdbcType=VARCHAR},
 			   #{paramValue,jdbcType=VARCHAR},
 			   #{paramName,jdbcType=VARCHAR},
+			   #{paramType,jdbcType=VARCHAR},
 			   #{remark,jdbcType=VARCHAR},
 			   
 			    #{createUser,jdbcType=VARCHAR},
@@ -109,14 +117,15 @@
 	            #{updateTime,jdbcType=TIMESTAMP}
 			)
     </insert>
-    
-    	<select id="getByKey" resultType="com.joyintech.service.valuation.accounadjustmanage.assetbookparameter.dto.ValAssetBookParameter002Dto">
+
+    <select id="getByKey" resultType="com.joyintech.service.valuation.accounadjustmanage.assetbookparameter.dto.ValAssetBookParameter002Dto">
 		SELECT
 			A.BOOKSET_ID AS booksetId,
 			B.BOOKSET_NAME AS booksetName,
 		    A.PARAM_CODE AS paramCode,
 		    A.PARAM_VALUE AS paramValue,
 		    A.PARAM_NAME AS paramName,
+		    A.PARAM_TYPE AS paramType,
 		    A.REMARK AS remark
 		FROM BOK_BOOKSET_EXT A
 		LEFT JOIN BOK_BOOKSET B
@@ -129,5 +138,24 @@
 				AND	A.PARAM_CODE=#{paramCode}
 			</if>
 	</select>
- 
+
+    <select id="checkExistSameDto"
+            resultType="com.joyintech.service.valuation.accounadjustmanage.assetbookparameter.dto.ValAssetBookParameter002Dto"
+            parameterType="com.joyintech.service.valuation.accounadjustmanage.assetbookparameter.dto.ValAssetBookParameter002Dto">
+        SELECT
+            A.BOOKSET_ID AS booksetId,
+		    A.PARAM_CODE AS paramCode,
+		    A.PARAM_VALUE AS paramValue,
+		    A.PARAM_NAME AS paramName,
+		    A.PARAM_TYPE AS paramType,
+		    A.REMARK AS remark
+		FROM BOK_BOOKSET_EXT A
+		WHERE 1=1
+		<if test="booksetId != null and booksetId != '' ">
+            AND	A.BOOKSET_ID=#{booksetId}
+        </if>
+        <if test="paramCode != null and paramCode != '' ">
+            AND	A.PARAM_CODE=#{paramCode}
+        </if>
+    </select>
 </mapper>

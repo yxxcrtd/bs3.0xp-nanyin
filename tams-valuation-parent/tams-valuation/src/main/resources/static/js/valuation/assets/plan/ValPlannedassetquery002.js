@@ -7,12 +7,16 @@ $(function () {
         $("#div3").show();
         $("#div4").show();
         $("#div5").show();
+        /** modify by yanya on 20201222 收益型展示是否其他债券**/
+        $("#isQtzqDiv").show();
     }else {
         $("#div1").hide();
         $("#div2").hide();
         $("#div3").hide();
         $("#div4").hide();
         $("#div5").hide();
+        /** modify by yanya on 20201222 非收益型不展示是否其他债券**/
+        $("#isQtzqDiv").hide();
     };
     var profitTypeCode2 = '03';
     if(profitTypeCode2.indexOf(initprofitType2)>=0){

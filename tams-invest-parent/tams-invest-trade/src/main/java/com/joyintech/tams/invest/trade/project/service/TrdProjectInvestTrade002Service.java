@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -198,7 +199,10 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
     }
 
     public TrdProjectInvestTrade002Dto findEffectiveData(Map<String, Object> pageParam) {
-        pageParam.put("feeType06",DictCodeList.费用品种类型_交易手续费.getValue());
+        /** modify by yanya on 20201229 项目交易资产端数据字典项变更，以估值侧为准 start**/
+        //pageParam.put("feeType06",DictCodeList.费用品种类型_交易手续费.getValue());
+        pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+        /** modify by yanya on 20201229 项目交易资产端数据字典项变更，以估值侧为准 end**/
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdProjectInvestTrade/findEffectiveData",
             pageParam, TrdProjectInvestTrade002Dto.class);
     }
@@ -1595,7 +1599,10 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
                 trdTradeFeeDetail.setFeeRate(entity.getCommissionRate().divide(new BigDecimal(100)));
             }
             trdTradeFeeDetail.setTradeId(entity.getTradeId());
-            trdTradeFeeDetail.setFeeType(DictCodeList.费用品种类型_交易手续费.getValue()); // 一次性费用类型
+            /** modify by yanya on 20201229 项目交易资产端数据字典项变更，以估值侧为准 start**/
+            //trdTradeFeeDetail.setFeeType(DictCodeList.费用品种类型_交易手续费.getValue()); // 一次性费用类型
+            trdTradeFeeDetail.setFeeType(BussinessDictCodeList.费用类型_交易手续费.getValue()); // 一次性费用类型
+            /** modify by yanya on 20201229 项目交易资产端数据字典项变更，以估值侧为准 end**/
             result.add(trdTradeFeeDetail);
         }
         if (entity.getChannelFee() != null && BigDecimal.ZERO.compareTo(entity.getChannelFee()) < 0) {

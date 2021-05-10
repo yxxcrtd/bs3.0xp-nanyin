@@ -80,8 +80,9 @@ public class CashFlowsStatement001Controller  extends BaseController {
         this.setSelectOptionToModel(model, DictCode.报表期限类型);
         this.setSelectOptionToModel(model, DictCode.上期维度);
 
-        model.addAttribute("reportDimen", DictCodeListExt2.批处理账套类型_账套.getValue());
+        model.addAttribute("reportDimen", DictCodeListExt2.批处理账套类型_账套组.getValue());
         super.setSelectOptionToModel(model, DictCode.批处理账套类型); // 账套维度
+		model.addAttribute("LAST_DIMEN_01", DictCodeListExt1.上期维度_环比.getValue());
         // 是否显示查看数据字典明细按钮，多级法人改造 add by hxy 20200623
         model.addAttribute("AUTHORITY_TYPE", CacheUtil.getSysParam("AUTHORITY_TYPE"));
       
@@ -122,7 +123,10 @@ public class CashFlowsStatement001Controller  extends BaseController {
     @RequestMapping("findPage")
     public List<CashFlowsStatement001Dto> selectCashFlowsStatement()
         throws Exception {
-        return cashFlowsStatement001Service.selectList(RequestUtil.getParameters(getRequest()));
+        //modify by yanya on 20201218 增加样式处理类型
+        Map<String, Object> param = RequestUtil.getParameters(getRequest());
+        param.put("STYLE_TYPE", "HTML");
+        return cashFlowsStatement001Service.selectList(param);
     }
     
     /**
@@ -227,6 +231,8 @@ public class CashFlowsStatement001Controller  extends BaseController {
     public ResponseEntity<byte[]> exportExcel()
         throws Exception {
         Map<String, Object> params = RequestUtil.getParameters(getRequest());
+        //modify by yanya on 20201218 增加样式处理类型
+        params.put("STYLE_TYPE", "EXCEL");
         return cashFlowsStatement001Service.exportExcel(params);
     }
     

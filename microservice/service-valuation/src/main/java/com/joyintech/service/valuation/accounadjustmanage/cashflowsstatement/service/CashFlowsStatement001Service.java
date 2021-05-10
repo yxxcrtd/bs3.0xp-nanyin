@@ -10,28 +10,6 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.cashflowsstatement.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.ParseException;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.CurrencyMarketDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance;
-import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto;
-import com.joyintech.tams.valuation.common.batch.finproduct.service.AccountingCommonBatchService;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -48,12 +26,33 @@ import com.joyintech.service.valuation.accounadjustmanage.cashflowsstatement.dao
 import com.joyintech.service.valuation.accounadjustmanage.cashflowsstatement.dto.CashFlowsDto;
 import com.joyintech.service.valuation.accounadjustmanage.cashflowsstatement.dto.CashFlowsStatement001Dto;
 import com.joyintech.tams.common.base.entity.BokBookset;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListNatureGroup;
 import com.joyintech.tams.systemtools.service.SystemToolService;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.CurrencyMarketDto;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto;
+import com.joyintech.tams.valuation.common.batch.finproduct.service.AccountingCommonBatchService;
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author QuJianZhong
@@ -96,6 +95,76 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
      */
     private Logger logger = LoggerFactory.getLogger(CashFlowsStatement001Service.class);
 
+    /** modify by ynaya on 20201221 指标抽象及计算中特定字符 start**/
+    private final static String 汇总指标后缀 = "活动产生的现金流量";
+    private final static String 汇总指标1 = "一、经营活动产生的现金流量";
+    private final static String 汇总指标2 = "二、投资活动产生的现金流量";
+    private final static String 汇总指标3 = "三、筹资活动产生的现金流量";
+    private final static String 汇总指标4 = "四、汇率变动对现金及现金等价物的影响";
+    private final static String 汇总指标5 = "五、现金及现金等价物净变动额";
+    private final static String 汇总指标6 = "加:期初现金及现金等价物余额";
+    private final static String 汇总指标7 = "六、期末现金及现金等价物余额";
+
+    private final static String 小计指标1_1 = "经营活动现金流入小计";
+    private final static String 小计指标1_2 = "经营活动现金流出小计";
+    private final static String 小计指标1_3 = "经营活动产生的现金流量净额";
+
+    private final static String 小计指标2_1 = "投资活动现金流入小计";
+    private final static String 小计指标2_2 = "投资活动现金流出小计";
+    private final static String 小计指标2_3 = "投资活动产生的现金流量净额";
+
+    private final static String 小计指标3_1 = "筹资活动现金流入小计";
+    private final static String 小计指标3_2 = "筹资活动现金流出小计";
+    private final static String 小计指标3_3 = "筹资活动产生的现金流量净额";
+
+    private  final static String 提前计算指标1 = "存款类资产交易-负值";
+    private  final static String 提前计算指标2 = "存款类资产交易-正值";
+
+    private final static String 取正 = "GT";
+    private final static String 取负 = "LT";
+    private final static String 原始 = "ORI";
+    private final static String 正标识 = "P";
+    private final static String 负标识 = "N";
+
+    private final static String 利息 = "INTAMT";
+    private final static String 本金 = "PRINAMT";
+    private final static String 交易金额 = "TRADEAMT";
+    private final static String 收息额 = "RECINT";
+    private final static String 付息 = "PAYINT";
+    private final static String 买入交易金额 = "BUYTRADEAMT";
+    private final static String 卖出端交易金额 = "SELLTRADEAMT";
+
+    private final static String 自定义现金流 = "ZDYXJL";
+    private final static String 手工凭证 = "SGPZ";
+
+    /** modify by ynaya on 20201221 指标抽象及计算中特定字符 end**/
+
+    /**
+     * 报表各项统计规则，计算各项值的通用方法会用到-计算前置条件
+     *
+     * {
+     * 项目,
+     * 父项目,
+     * 金融产品类型,交易方向,买入现金流正负标识(N-负 P-正),金额分类(PRINAMT-本金,INTAMT-利息,TRADEAMT-交易金额)  此项有多条以|分割
+     * 显示正值负值标识LT-合计值为负值显示，否则为0 GT-合计值为正值显示，否则为0 ORI-直接显示合计值
+     * }
+     */
+    private static final String[][] CAL_RULE_PRE = {
+            {提前计算指标1,
+                    "F07,T02,P,PRINAMT,03|"
+                            + "F07,T01,N,PRINAMT,03|"
+                            + "F07,T23,P,TRADEAMT,03|"
+                            + "F07,T25,N,PRINAMT,03|"
+                            + "F07,T26,P,PRINAMT,03|",
+                    取负},
+            {提前计算指标2,
+                    "F07,T02,P,PRINAMT,03|"
+                            + "F07,T01,N,PRINAMT,03|"
+                            + "F07,T23,P,TRADEAMT,03|"
+                            + "F07,T25,N,PRINAMT,03|"
+                            + "F07,T26,P,PRINAMT,03|",
+                    取正}
+    };
     /**
      * 报表各项统计规则，计算各项值的通用方法会用到
      *
@@ -107,115 +176,176 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
      * }
      */
     private static final String[][] CAL_RULE = {
-            {"经营活动产生的现金流量"},
+            /** modify by yanya on 20201221 根据最新的估值核算指引改造展示表列 start**/
+            //{"经营活动产生的现金流量"},
+            {汇总指标1},
             /**modify by wujie on 20190105 start remark:显示正值负值标识由LT 改为 GT
             {"存放同业款项净减少额","经营活动现金流入小计","F07,T01,N,PRINAMT|F07,T02,P,PRINAMT|F07,T23,P,TRADEAMT","LT"},
              **/
-            {"存放同业款项净减少额","经营活动现金流入小计",
-            	"F07,T01,N,PRINAMT,03|"
-            	+ "F07,T02,P,PRINAM,03|"
-            	+ "F07,T23,P,TRADEAMT,03|"
-            	/**add by wujie on 20200213 start**/
-            	+ "F07,T25,N,PRINAMT,03|"
-            	+ "F07,T26,P,PRINAMT,03"
-            	/**add by wujie on 20200213 end**/
-            	,"GT"},
+//            {"存放同业款项净减少额","经营活动现金流入小计",
+//            	"F07,T01,N,PRINAMT,03|"
+//            	+ "F07,T02,P,PRINAM,03|"
+//            	+ "F07,T23,P,TRADEAMT,03|"
+//            	/**add by wujie on 20200213 start**/
+//            	+ "F07,T25,N,PRINAMT,03|"
+//            	+ "F07,T26,P,PRINAMT,03"
+//            	/**add by wujie on 20200213 end**/
+//            	,"GT"},
             /**modify by wujie on 20190105 end**/
 
-            {"卖出回购金融资产款净增加额","经营活动现金流入小计",
-            		"F02,T01,P,PRINAMT|"
-            		+ "F02,T02,N,PRINAMT|"
-            		+ "F02,T07,N,PRINAMT","GT"},
+//            {"卖出回购金融资产款净增加额","经营活动现金流入小计",
+//            		"F02,T01,P,PRINAMT|"
+//            		+ "F02,T02,N,PRINAMT|"
+//            		+ "F02,T07,N,PRINAMT","GT"},
+//
+//            /** modify by wujie on 20190105 start remark:显示正值负值标识由LT 改为 GT
+//            {"买入返售金融资产净减少额","经营活动现金流入小计","F03,T01,N,PRINAMT|F03,T02,P,PRINAMT|F03,T07,P,PRINAMT","LT"},
+//             **/
+//            {"买入返售金融资产净减少额","经营活动现金流入小计",
+//            			"F03,T01,N,PRINAMT|"
+//            			+ "F03,T02,P,PRINAMT|"
+//            			+ "F03,T07,P,PRINAMT","GT"},
+//            /**modify by wujie on 20190105 end**/
+//
+//            {"收取利息的现金","经营活动现金流入小计",
+//            				"F07,T02,P,INTAMT,03|"
+//            				+ "F07,T22,P,TRADEAMT,03|"
+//            				/**add by wujie on 20200213 start**/
+//            				+ "F07,T26,P,INTAMT,03|"
+//            				/**add by wujie on 20200213 end**/
+//            				+ "F03,T02,P,INTAMT,03|"
+//            				+ "F03,T07,P,INTAMT,03","ORI"},
+            {"收取利息、手续费及佣金的现金",
+                    小计指标1_1,
+                    "F07,T02,P,INTAMT,03|"
+                            + "F07,T22,P,TRADEAMT,03|"
+            				+ "F07,T26,P,INTAMT,03|"
+                            /** modify by yanya on 20210113 增加买断式的统计 start**/
+                            + "F05,T02,P,INTAMT,05|"
+                            + "F05,T07,P,INTAMT,05|"
+                            /** modify by yanya on 20210113 增加买断式的统计 end**/
+            				+ "F03,T02,P,INTAMT,04|"
+            				+ "F03,T07,P,INTAMT,04",
+                    原始},
+            {"回购业务资金净增加额",
+                    小计指标1_1,
+                    /** modify by yanya on 20210113 增加买断式的统计 start**/
+                    "F04,T01,P,PRINAMT|"
+                            + "F04,T02,N,PRINAMT|"
+                            + "F04,T07,N,PRINAMT|"
+                            + "F05,T01,N,PRINAMT|"
+                            + "F05,T02,P,PRINAMT|"
+                            + "F05,T07,P,PRINAMT|"
+                    /** modify by yanya on 20210113 增加买断式的统计 end**/
+            		    + "F02,T01,P,PRINAMT|"
+            		    + "F02,T02,N,PRINAMT|"
+            		    + "F02,T07,N,PRINAMT|"
+                        + "F03,T01,N,PRINAMT|"
+                        + "F03,T02,P,PRINAMT|"
+                        + "F03,T07,P,PRINAMT",
+                    原始},
+            {"收到其他与经营活动有关的现金",
+                    小计指标1_1,
+                    "F09,T02,P,TRADEAMT|"
+                            + "F09,T23,P,PRINAMT|"
+                            + "F09,T22,P,INTAMT|"
+                            + "F21,T02,P,TRADEAMT,01|"
+                            + "F21,T23,P,PRINAMT,01|"
+                            + "F21,T22,P,INTAMT,01|"
+                            + "F21,T26,P,TRADEAMT,01|"
+                            + 自定义现金流 + ",T98|"
+                            + 提前计算指标1 +"|"
+                            + 手工凭证 + ",D",
+                    原始},
+            {小计指标1_1},
 
-            /** modify by wujie on 20190105 start remark:显示正值负值标识由LT 改为 GT
-            {"买入返售金融资产净减少额","经营活动现金流入小计","F03,T01,N,PRINAMT|F03,T02,P,PRINAMT|F03,T07,P,PRINAMT","LT"},
-             **/
-            {"买入返售金融资产净减少额","经营活动现金流入小计",
-            			"F03,T01,N,PRINAMT|"
-            			+ "F03,T02,P,PRINAMT|"
-            			+ "F03,T07,P,PRINAMT","GT"},
-            /**modify by wujie on 20190105 end**/
+//            /**modify by wujie on 20190105 start remark:显示正值负值标识由GT 改为 LT
+//            {"存放同业款项净增加额","经营活动现金流出小计","F07,T01,N,PRINAMT|F07,T02,P,PRINAMT|F07,T07,P,PRINAMT|F07,T23,P,PRINAMT","GT"},
+//             **/
+//            {"存放同业款项净增加额","经营活动现金流出小计",
+//            	"F07,T01,N,PRINAMT,03|"
+//            	+ "F07,T02,P,PRINAMT,03|"
+//            	+ "F07,T07,P,PRINAMT,03|"
+//            	+ "F07,T23,P,PRINAMT,03","LT"},
+//            /**modify by wujie on 20190105 end**/
+//
+//            {"卖出回购金融资产款净减少额","经营活动现金流出小计",
+//            		"F02,T01,P,PRINAMT|"
+//            		+ "F02,T02,N,PRINAMT|"
+//            		+ "F02,T07,N,PRINAMT","LT"},
+//
+//            /** modify by wujie on 20190105 start remark:显示正值负值标识由GT 改为 LT
+//            {"买入返售金融资产净增加额","经营活动现金流出小计","F03,T01,N,PRINAMT|F03,T02,P,PRINAMT|F03,T07,P,PRINAMT","GT"},
+//             **/
+//            {"买入返售金融资产净增加额","经营活动现金流出小计",
+//            			"F03,T01,N,PRINAMT|"
+//            			+ "F03,T02,P,PRINAMT|"
+//            			+ "F03,T07,P,PRINAMT","LT"},
+//            /**modify by wujie on 20190105 end**/
+//
+//            {"支付利息的现金","经营活动现金流出小计",
+//            				"F07,T01,P,INTAMT,03|"
+//            				/**add by wujie on 20200213 start**/
+//            				+ "F07,T25,P,INTAMT,03|"
+//            				/**add by wujie on 20200213 end**/
+//            				+ "F02,T02,P,INTAMT|"
+//            				+ "F02,T07,P,INTAMT","ORI"},
+//            {"支付管理人报酬、托管费、销售管理费等支付的现金","经营活动现金流出小计",
+//            					"F16,C11,P,TRADEAMT|"
+//            					+ "C03,C11,P,TRADEAMT|"
+//            					+ "C04,C11,P,TRADEAMT|"
+//            					+ "C05,C11,P,TRADEAMT|"
+//            					+ "C06,C11,P,TRADEAMT|"
+//            					+ "C09,C11,P,TRADEAMT|"
+//            					+ "C07,C12,P,TRADEAMT|"
+//            					+ "C07,C13,N,TRADEAMT|"
+//            					+ "C10,C11,P,TRADEAMT|"
+//            					+ "C11,T10,P,TRADEAMT","ORI"},
+//            {"支付其他与经营活动有关的现金","经营活动现金流出小计",
+//            						"F09,T01,P,PRINAMT|"
+//            						+ "F21,T01,P,PRINAMT,01|"
+//            						/**add by wujie on 20200213 start**/
+//            						+ "F21,T25,P,TRADEAMT,01|"
+//            						/**add by wujie on 20200213 end**/
+//            						+ "SGPZ,C","ORI"},
+            {"支付手续费及佣金支付的现金",
+                    小计指标1_2,
+                    "F16,C11,P,TRADEAMT|"
+                            + "C03,C11,P,TRADEAMT|"
+                            + "C04,C11,P,TRADEAMT|"
+                            + "C05,C11,P,TRADEAMT|"
+                            + "C06,C11,P,TRADEAMT|"
+                            + "C09,C11,P,TRADEAMT|"
+                            + "C10,C11,P,TRADEAMT|"
+                            + "C11,T10,P,TRADEAMT",
+                    原始},
+            {"支付的各项税费",
+                    小计指标1_2,
+                    "C07,C12,P,TRADEAMT|"
+                            + "C07,C13,N,TRADEAMT|",
+                    原始},
+            {"支付其他与经营活动有关的现金",
+                    小计指标1_2,
+                    "F09,T01,P,PRINAMT|"
+                            + "F21,T01,P,PRINAMT,01|"
+                            + "F21,T25,P,TRADEAMT,01|"
+                            + "F07,T01,P,INTAMT,03|"
+                            + "F07,T25,P,INTAMT,03|"
+                            /** modify by yanya on 20210113 增加买断式的统计 start**/
+                            + "F04,T02,P,INTAMT|"
+                            + "F04,T07,P,INTAMT|"
+                            /** modify by yanya on 20210113 增加买断式的统计 end**/
+                            + "F02,T02,P,INTAMT|"
+                            + "F02,T07,P,INTAMT|"
+                            + 自定义现金流 + ",T99|"
+                            + 提前计算指标2 + "|"
+                            + 手工凭证 + ",C",
+                    原始},
+            {小计指标1_2},
+            {小计指标1_3},
 
-            {"收取利息的现金","经营活动现金流入小计",
-            				"F07,T02,P,INTAMT,03|"
-            				+ "F07,T22,P,TRADEAMT,03|"
-            				/**add by wujie on 20200213 start**/
-            				+ "F07,T26,P,INTAMT,03|"	
-            				/**add by wujie on 20200213 end**/
-                            + "F03,T07,P,INTAMT,04|"
-            				+ "F03,T02,P,INTAMT,03","ORI"},
-            {"收到其他与经营活动有关的现金","经营活动现金流入小计",
-            					"F09,T02,P,TRADEAMT|"
-            					+ "F09,T23,P,PRINAMT|"
-            					+ "F09,T22,P,INTAMT|"
-            					+ "F21,T02,P,TRADEAMT,01|"
-            					+ "F21,T23,P,PRINAMT,01|"
-            					+ "F21,T22,P,INTAMT,01|"
-            					/**add by wujie on 20200213 start**/
-            					+ "F21,T26,P,TRADEAMT,01|"
-            					/**add by wujie on 20200213 start**/
-            					+ "SGPZ,D|"
-                                + "F20,T09,P,TRADEAMT,15","ORI"},
-            {"经营活动现金流入小计"},
-
-            /**modify by wujie on 20190105 start remark:显示正值负值标识由GT 改为 LT
-            {"存放同业款项净增加额","经营活动现金流出小计","F07,T01,N,PRINAMT|F07,T02,P,PRINAMT|F07,T07,P,PRINAMT|F07,T23,P,PRINAMT","GT"},
-             **/
-            {"存放同业款项净增加额","经营活动现金流出小计",
-            	"F07,T01,N,PRINAMT,03|"
-            	+ "F07,T02,P,PRINAMT,03|"
-            	+ "F07,T07,P,PRINAMT,03|"
-            	+ "F07,T23,P,PRINAMT,03","LT"},
-            /**modify by wujie on 20190105 end**/
-
-            {"卖出回购金融资产款净减少额","经营活动现金流出小计",
-            		"F02,T01,P,PRINAMT|"
-            		+ "F02,T02,N,PRINAMT|"
-            		+ "F02,T07,N,PRINAMT","LT"},
-
-            /** modify by wujie on 20190105 start remark:显示正值负值标识由GT 改为 LT
-            {"买入返售金融资产净增加额","经营活动现金流出小计","F03,T01,N,PRINAMT|F03,T02,P,PRINAMT|F03,T07,P,PRINAMT","GT"},
-             **/
-            {"买入返售金融资产净增加额","经营活动现金流出小计",
-            			"F03,T01,N,PRINAMT|"
-            			+ "F03,T02,P,PRINAMT|"
-            			+ "F03,T07,P,PRINAMT","LT"},
-            /**modify by wujie on 20190105 end**/
-
-            {"支付利息的现金","经营活动现金流出小计",
-            				"F07,T01,P,INTAMT,03|"
-            				/**add by wujie on 20200213 start**/
-            				+ "F07,T25,P,INTAMT,03|"
-            				/**add by wujie on 20200213 end**/
-            				+ "F02,T02,P,INTAMT|"
-            				+ "F02,T07,P,INTAMT","ORI"},
-            {"支付管理人报酬、托管费、销售管理费等支付的现金","经营活动现金流出小计",
-            					"F16,C11,P,TRADEAMT|"
-            					+ "C03,C11,P,TRADEAMT|"
-            					+ "C04,C11,P,TRADEAMT|"
-            					+ "C05,C11,P,TRADEAMT|"
-            					+ "C06,C11,P,TRADEAMT|"
-            					+ "C09,C11,P,TRADEAMT|"
-            					+ "C07,C12,P,TRADEAMT|"
-            					+ "C07,C13,N,TRADEAMT|"
-            					+ "C10,C11,P,TRADEAMT|"
-            					/**JSBSW-106、JSBSW-116  晋商问题 : 新增账户维护费、投资费用支付中其他费用 add by hpp 20200812 start*/
-            					+ "C20,C11,P,TRADEAMT|"
-            					+ "C11,C11,P,TRADEAMT|"
-            					/**JSBSW-106、JSBSW-116  晋商问题 : 新增账户维护费、投资费用支付中其他费用 add by hpp 20200812 end*/
-            					+ "C11,T10,P,TRADEAMT","ORI"},
-            {"支付其他与经营活动有关的现金","经营活动现金流出小计",
-            						"F09,T01,P,PRINAMT|"
-            						+ "F21,T01,P,PRINAMT,01|"
-            						/**add by wujie on 20200213 start**/		
-            						+ "F21,T25,P,TRADEAMT,01|"
-            						/**add by wujie on 20200213 end**/
-                                    + "C11,C11,P,TRADEAMT,18|"
-            						+ "SGPZ,C","ORI"},
-            {"经营活动现金流出小计"},
-            {"经营活动产生的现金流量净额"},
-
-            {"投资活动产生的现金流量"},
+            //{"投资活动产生的现金流量"},
+            {汇总指标2},
             /** modify by wujie on 20190105 start
              * remark:
              *      计划类(净值型)资产:T02 交易金额
@@ -223,10 +353,9 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             {"收回投资收到的现金","投资活动现金流入小计","F01,T23,P,TRADEAMT|F01,T02,P,PRINAMT|F01,T31,P,TRADEAMT|F01,T34,P,PRINAMT|F06,T02,P,TRADEAMT|F06,T24,P,TRADEAMT|F17,T23,P,TRADEAMT|F17,T02,P,PRINAMT","ORI"},
              **/
             {"收回投资收到的现金",
-                    "投资活动现金流入小计",
+                    小计指标2_1,
                     "F01,T23,P,TRADEAMT,02|"+
                             "F01,T02,P,PRINAMT,02|"+
-                            "F01,T02,N,FEE_AMT_PAY,02|"+
                     		/**modify by wujie on 20200213 start
                             "F01,T31,P,TRADEAMT|"+
                             "F01,T34,P,PRINAMT|"+
@@ -265,7 +394,7 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                             "F35,T02_T59_02,N,TRADEAMT|"+
                             "F35,T02_T60_02,N,TRADEAMT|"
                     ,
-                    "ORI"},
+                    原始},
             /**modify by wujie on 20190105 end**/
 
             /**modify by wujie on 20190105 start
@@ -275,7 +404,7 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             {"取得投资收益收到的现金","投资活动现金流入小计","F01,T22,P,TRADEAMT|F01,T02,P,INTAMT|F01,T28,P,TRADEAMT|F01,T34,P,INTAMT|F06,T11,P,TRADEAMT|F06,T12,P,TRADEAMT|F17,T22,P,TRADEAMT|F17,T02,P,INTAMT|F24,T07,P,TRADEAMT","ORI"},
              **/
             {"取得投资收益收到的现金",
-                    "投资活动现金流入小计",
+                    小计指标2_1,
                     "F01,T22,P,TRADEAMT,02|"
                             + "F01,T02,P,INTAMT,02|"
                     		/**modify by wujie on 20200213 start
@@ -305,10 +434,10 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                             + "F14,752,P,RECINT|"
                             + "F14,751,P,RECINT|"
                             + "F10,103,P,BUYTRADEAMT|",
-                    "ORI"},
+                    原始},
             /**modify by wujie on 20190105 end**/
 
-            {"收到的其他与投资活动有关的现金","投资活动现金流入小计",
+            {"收到的其他与投资活动有关的现金",小计指标2_1,
                     	"F01,T22,P,TRADEAMT,37|"
                     	+ "F01,T02,P,TRADEAMT,37|"
                     	+ "F17,T22,P,TRADEAMT,37|"
@@ -316,10 +445,10 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                     	+ "F07,T22,P,TRADEAMT,37|"
                     	+ "F07,T02,P,TRADEAMT,37|"
                     	+ "F21,T22,P,TRADEAMT,37|"
-                    	+ "F21,T02,P,TRADEAMT,37","ORI"},
+                    	+ "F21,T02,P,TRADEAMT,37",原始},
             
-            {"投资活动现金流入小计"},
-            {"投资支付的现金","投资活动现金流出小计",
+            {小计指标2_1},
+            {"投资支付的现金",小计指标2_2,
                     "F01,T01,P,TRADEAMT,02|" +
                     "F01,T29,P,TRADEAMT,29|" +
                     "F01,T32,P,TRADEAMT,29|" +
@@ -359,51 +488,64 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                     "F35,T01_T01,P,TRADEAMT|" +
                     "F35,T02_T01,N,TRADEAMT|"
                     ,
-                    "ORI"},
-            {"支付其他与投资活动有关的现金","投资活动现金流出小计",
+                    原始},
+            {"支付的其他与投资活动有关的现金",小计指标2_2,
                     	"F01,T01,P,TRADEAMT,37|"
                     	+ "F17,T01,P,TRADEAMT,37|"
                     	+ "F07,T01,P,TRADEAMT,37|"
-                    	+ "F21,T01,P,TRADEAMT,37","ORI"},
+                    	+ "F21,T01,P,TRADEAMT,37",原始},
             
-            {"投资活动现金流出小计"},
-            {"投资活动产生的现金流量净额"},
+            {小计指标2_2},
+            {小计指标2_3},
 
-            {"筹资活动产生的现金流量"},
-            {"募集理财资金收到的现金","筹资活动现金流入小计",
-            	"F16,C1,P,TRADEAMT|"
-            	+ "F16,C2,P,TRADEAMT|"
-            	+ "F16,C3,P,TRADEAMT|"
-                + "F22,C1,P,TRADEAMT|"
-                + "F22,C2,P,TRADEAMT|"
-                + "F22,C3,P,TRADEAMT","ORI"},
-            {"借款收到的现金","筹资活动现金流入小计",
-            		"F08,T01,P,TRADEAMT","ORI"},
-            {"收到的其他与筹资活动有关的现金","筹资活动现金流入小计","","ORI"},
-            {"筹资活动现金流入小计"},
+            //{"筹资活动产生的现金流量"},
+            {汇总指标3},
+            //{"募集理财资金收到的现金",
+            {"吸收理财资金收到的现金",
+                    小计指标3_1,
+            	    "F16,C1,P,TRADEAMT|"
+            	        + "F16,C2,P,TRADEAMT|"
+            	        + "F16,C3,P,TRADEAMT",
+                    原始},
+//            {"借款收到的现金","筹资活动现金流入小计",
+//            		"F08,T01,P,TRADEAMT","ORI"},
+            {"收到的其他与筹资活动有关的现金",
+                    小计指标3_1,
+                    "F08,T01,P,TRADEAMT",
+                    原始},
+            {小计指标3_1},
 
-            {"分配理财本金支付的现金","筹资活动现金流出小计",
+            {"理财资金赎回支付的现金",小计指标3_2,
             	"F16,C4,P,TRADEAMT|"
             	+ "F16,C5,P,TRADEAMT|"
                 +"F16,C17,P,TRADEAMT|"
                 + "F16,C18,P,TRADEAMT|"
                 + "F16,C20,P,TRADEAMT|"
-                + "F16,C6,P,TRADEAMT","ORI"},
-            {"偿还债务支付的现金","筹资活动现金流出小计","F08,T02,P,TRADEAMT|F08,T07,P,TRADEAMT","ORI"},
-            {"分配理财收益或偿付利息支付的现金","筹资活动现金流出小计",
+                + "F16,C6,P,TRADEAMT",原始},
+            //{"偿还债务支付的现金","筹资活动现金流出小计","F08,T02,P,TRADEAMT|F08,T07,P,TRADEAMT","ORI"},
+            {"分配红利支付的现金",小计指标3_2,
                     "F16,C7,P,TRADEAMT|"
                             + "F16,C9,P,TRADEAMT|"
                             + "F16,C14,P,TRADEAMT|"
                             + "F16,C15,P,TRADEAMT",/**增加赎回收益确认**/
                     "ORI"},
-            {"支付的其他与筹资活动有关的现金","筹资活动现金流出小计","","ORI"},
-            {"筹资活动现金流出小计"},
-            {"筹资活动产生的现金流量净额"},
+            {"支付的其他与筹资活动有关的现金",
+                    小计指标3_2,
+                    "F08,T02,P,TRADEAMT|"
+                            + "F08,T07,P,TRADEAMT",
+                    原始},
+            {小计指标3_2},
+            {小计指标3_3},
 
-            {"加：年初现金及现金等价物余额"},
-            {"年末现金及现金等价物余额"},
-            {"现金及现金等价物净(减少)增加额"},
-            {"汇率变动对现金及现金等价物的影响"}
+//            {"加：年初现金及现金等价物余额"},
+//            {"年末现金及现金等价物余额"},
+//            {"现金及现金等价物净(减少)增加额"},
+//            {"汇率变动对现金及现金等价物的影响"}
+            {汇总指标4},
+            {汇总指标5},
+            {汇总指标6},
+            {汇总指标7}
+            /** modify by yanya on 20201221 根据最新的估值核算指引改造展示表列 end**/
     };
 
     /**
@@ -432,16 +574,18 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             thisTermData.addAll(listThisDer);
             calValues(thisTermData, true, dtoMap, pageParam);
 
-            // 统计上期金额
-            pageParam.put("vdate", pageParam.get("lastTermVdate"));
-            pageParam.put("mdate", pageParam.get("lastTermMdate"));
-            List<CashFlowsDto> lastTermData = cashFlowsStatement001Mapper.selectCashFlowsStatement(pageParam);
-            // JX 衍生品类型
-            List<CashFlowsDto> listLastDer = this.findDerDetail((String) pageParam.get("booksetId"),
-                    (String) pageParam.get("lastTermVdate"),
-                    (String) pageParam.get("lastTermMdate"));
-            lastTermData.addAll(listLastDer);
-            calValues(lastTermData, false, dtoMap, pageParam);
+            /** modfify by yanya on 20201218 去除上期金额 start**/
+//            // 统计上期金额
+//            pageParam.put("vdate", pageParam.get("lastTermVdate"));
+//            pageParam.put("mdate", pageParam.get("lastTermMdate"));
+//            List<CashFlowsDto> lastTermData = cashFlowsStatement001Mapper.selectCashFlowsStatement(pageParam);
+//            // JX 衍生品类型
+//            List<CashFlowsDto> listLastDer = this.findDerDetail((String) pageParam.get("booksetId"),
+//                    (String) pageParam.get("lastTermVdate"),
+//                    (String) pageParam.get("lastTermMdate"));
+//            lastTermData.addAll(listLastDer);
+//            calValues(lastTermData, false, dtoMap, pageParam);
+            /** modfify by yanya on 20201218 去除上期金额 end**/
         } else {
             // 报表维度为账套组
             List<SysBatchGrpPrdlink> list = valAssetBook001Service.findAllProduct(pageParam);
@@ -451,22 +595,34 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             pageParam.put("vdate", pageParam.get("thisTermVdate"));
             pageParam.put("mdate", pageParam.get("thisTermMdate"));
             List<CashFlowsDto> thisTermData = cashFlowsStatement001Mapper.selectCashFlowsStatement(pageParam);
-            // JX 衍生品类型
-            List<CashFlowsDto> listThisDer = this.findDerDetail((String) pageParam.get("booksetId"),
-                    (String) pageParam.get("thisTermVdate"),
-                    (String) pageParam.get("thisTermMdate"));
-            thisTermData.addAll(listThisDer);
+            /** 衍生品处理方法中以单账套为模式处理，故此处进行拆分，modify by yanya on 2021015 start **/
+            String[] booksetIds = StringUtil.split((String)pageParam.get("booksetId").toString(), ",");
+            if(booksetIds != null && booksetIds.length > 0) {
+                for(String str : booksetIds) {
+                    // JX 衍生品类型
+//                List<CashFlowsDto> listThisDer = this.findDerDetail((String) pageParam.get("booksetId"),
+//                        (String) pageParam.get("thisTermVdate"),
+//                        (String) pageParam.get("thisTermMdate"));
+                    List<CashFlowsDto> listThisDer = this.findDerDetail(str,
+                            (String) pageParam.get("thisTermVdate"),
+                            (String) pageParam.get("thisTermMdate"));
+                    thisTermData.addAll(listThisDer);
+                }
+            }
+            /** 衍生品处理方法中以单账套为模式处理，故此处进行拆分，modify by yanya on 2021015 end **/
             calValues(thisTermData, true, dtoMap, pageParam);
 
-            pageParam.put("vdate", pageParam.get("lastTermVdate"));
-            pageParam.put("mdate", pageParam.get("lastTermMdate"));
-            List<CashFlowsDto> lastTermData = cashFlowsStatement001Mapper.selectCashFlowsStatement(pageParam);
-            // JX 衍生品类型
-            List<CashFlowsDto> listLastDer = this.findDerDetail((String) pageParam.get("booksetId"),
-                    (String) pageParam.get("lastTermVdate"),
-                    (String) pageParam.get("lastTermMdate"));
-            lastTermData.addAll(listLastDer);
-            calValues(lastTermData, false, dtoMap, pageParam);
+            /** modfify by yanya on 20201218 去除上期金额 start**/
+//            pageParam.put("vdate", pageParam.get("lastTermVdate"));
+//            pageParam.put("mdate", pageParam.get("lastTermMdate"));
+//            List<CashFlowsDto> lastTermData = cashFlowsStatement001Mapper.selectCashFlowsStatement(pageParam);
+//            // JX 衍生品类型
+//            List<CashFlowsDto> listLastDer = this.findDerDetail((String) pageParam.get("booksetId"),
+//                    (String) pageParam.get("lastTermVdate"),
+//                    (String) pageParam.get("lastTermMdate"));
+//            lastTermData.addAll(listLastDer);
+//            calValues(lastTermData, false, dtoMap, pageParam);
+            /** modfify by yanya on 20201218 去除上期金额 end**/
         }
         List<CashFlowsStatement001Dto> list = new ArrayList<CashFlowsStatement001Dto>();
         list.addAll(dtoMap.values());
@@ -490,24 +646,24 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
         return list;
     }
 
-    /**
-     * 处理样式
-     *
-     * @param list
-     * @param style
-     * @param reportDimen
-     *            报表维度
-     * @see
-     * @since 1.0
-     */
-    public void dealStyle(List<CashFlowsStatement001Dto> list) {
-        for (CashFlowsStatement001Dto dto : list) {
-            if (StringUtils.isNotEmpty(dto.getProject()) && dto.getThisTermAmt() != null
-                    && dto.getLastTermAmt() != null) {
-                dto.setProject("<label style='color:blue;'>" + dto.getProject() + "</label>");
-            }
-        }
-    }
+//    /**
+//     * 处理样式
+//     *
+//     * @param list
+//     * @param style
+//     * @param reportDimen
+//     *            报表维度
+//     * @see
+//     * @since 1.0
+//     */
+//    public void dealStyle(List<CashFlowsStatement001Dto> list) {
+//        for (CashFlowsStatement001Dto dto : list) {
+//            if (StringUtils.isNotEmpty(dto.getProject()) && dto.getThisTermAmt() != null
+//                    && dto.getLastTermAmt() != null) {
+//                dto.setProject("<label style='color:blue;'>" + dto.getProject() + "</label>");
+//            }
+//        }
+//    }
 
     /**
      * 查询现金流量表数据list
@@ -518,15 +674,18 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
      * @see
      * @since 1.0
      */
-    public List<CashFlowsStatement001Dto> selectListp(Map<String, Object> pageParam, CashFlowsStatement001Dto dto)
+    //public List<CashFlowsStatement001Dto> selectListp(Map<String, Object> pageParam, CashFlowsStatement001Dto dto)
+    public List<CashFlowsStatement001Dto> selectListp(Map<String, Object> pageParam)
             throws ParseException {
         changeMapData(pageParam);
         Map<String, CashFlowsStatement001Dto> dtoMap = new HashMap<String, CashFlowsStatement001Dto>();
         List<CashFlowsStatement001Dto> list1 = new ArrayList<CashFlowsStatement001Dto>();
         // 全账套
-        List<String> accountList = Arrays.asList(dto.getBooksetId().split(","));
+        //List<String> accountList = Arrays.asList(dto.getBooksetId().split(","));
+        List<String> accountList = Arrays.asList(pageParam.get("booksetIds").toString().split(","));
         // 项目名
-        String project = dto.getProject();
+        //String project = dto.getProject();
+        String project = pageParam.get("project").toString();
         Map<String, Object> mapnew = new HashMap<String, Object>();
         for (String account : accountList) {
             initData(dtoMap);
@@ -540,14 +699,21 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             pageParam.put("vdate", pageParam.get("thisTermVdate"));
             pageParam.put("mdate", pageParam.get("thisTermMdate"));
             List<CashFlowsDto> thisTermData = cashFlowsStatement001Mapper.selectCashFlowsStatement(mapnew);
+            /** modify by yanya on 20210115 衍生品的相关计算逻辑丢失修正 start**/
+            List<CashFlowsDto> listThisDer = this.findDerDetail(account,
+                    (String) pageParam.get("thisTermVdate"),
+                    (String) pageParam.get("thisTermMdate"));
+            thisTermData.addAll(listThisDer);
+            /** modify by yanya on 20210115 衍生品的相关计算逻辑丢失修正 end**/
+
             calValues(thisTermData, true, dtoMap, pageParam);
-            // 统计上期金额
-            mapnew.put("vdate", pageParam.get("lastTermVdate"));
-            mapnew.put("mdate", pageParam.get("lastTermMdate"));
-            pageParam.put("vdate", pageParam.get("lastTermVdate"));
-            pageParam.put("mdate", pageParam.get("lastTermMdate"));
-            List<CashFlowsDto> lastTermData = cashFlowsStatement001Mapper.selectCashFlowsStatement(mapnew);
-            calValues(lastTermData, false, dtoMap, pageParam);
+//            // 统计上期金额
+//            mapnew.put("vdate", pageParam.get("lastTermVdate"));
+//            mapnew.put("mdate", pageParam.get("lastTermMdate"));
+//            pageParam.put("vdate", pageParam.get("lastTermVdate"));
+//            pageParam.put("mdate", pageParam.get("lastTermMdate"));
+//            List<CashFlowsDto> lastTermData = cashFlowsStatement001Mapper.selectCashFlowsStatement(mapnew);
+//            calValues(lastTermData, false, dtoMap, pageParam);
 
             List<CashFlowsStatement001Dto> list = new ArrayList<CashFlowsStatement001Dto>();
             list.addAll(dtoMap.values());
@@ -571,6 +737,34 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
     }
 
     /**
+     * 根据获取正负值方向，返回计算出来值
+     * 与给定的方向一致则返回值，否则返回0
+     * @param value
+     * @param lgFlag
+     * @return
+     */
+    private BigDecimal getCalcValue(BigDecimal value, String lgFlag) {
+        // 项目计算小于0时展示
+        if (取负.equals(lgFlag)) {
+            if (BigDecimal.ZERO.compareTo(value) < 0) {
+                // 项目值大于0，将项目值置为0
+                value = BigDecimal.ZERO;
+            } else {
+                // 项目值小于0，显示绝对值
+                value = value.abs();
+            }
+
+        }
+        // 项目计算大于0时展示
+        if (取正.equals(lgFlag)) {
+            if (BigDecimal.ZERO.compareTo(value) > 0) {
+                // 项目值小于0，将项目值置为0
+                value = BigDecimal.ZERO;
+            }
+        }
+        return value;
+    }
+    /**
      * 根据期内交易数据，计算报表数据集各项目值
      *
      * @param termData
@@ -585,6 +779,26 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
      */
     private void calValues(List<CashFlowsDto> termData, boolean thisTermFlag,
                            Map<String, CashFlowsStatement001Dto> dtoMap, Map<String, Object> pageParam) {
+        Map<String, BigDecimal> preMap = Maps.newHashMap();
+        /** add by yanya on 20201221 增加计算前处理逻辑，因为之前的有的计算项进行合并展示，但其中需要判定正负值，所以提前先计算好 start**/
+        for (int i = 0; i < CAL_RULE_PRE.length; i++) {
+            String[] arr = CAL_RULE_PRE[i];
+            if (arr.length < 3) {
+                //长度小的不处理
+                continue;
+            }
+            // 项目值
+            BigDecimal value = BigDecimal.ZERO;
+            //要统计的金融产品类型、交易类型集合
+            String[] types = arr[1].split("\\|");
+            for (String single : types) {
+                value = value.add(calcByFinProdType(single, termData, pageParam, null));
+            }
+            value = this.getCalcValue(value, arr[2]);
+            preMap.put(arr[0], value);
+        }
+
+        /** add by yanya on 20201221 增加计算前处理逻辑，因为之前的有的计算项进行合并展示，但其中需要判定正负值，所以提前先计算好 end**/
         for (int i = 0; i < CAL_RULE.length; i++) {
             String[] arr = CAL_RULE[i];
 
@@ -604,27 +818,28 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             String lgFlag = arr[3];
             // 计算项目值
             for (String finProdType : finProdTypes) {
-                value = value.add(calcByFinProdType(finProdType, termData, pageParam));
+                value = value.add(calcByFinProdType(finProdType, termData, pageParam, preMap));
             }
 
-            // 项目计算小于0时展示
-            if ("LT".equals(lgFlag)) {
-                if (BigDecimal.ZERO.compareTo(value) < 0) {
-                    // 项目值大于0，将项目值置为0
-                    value = BigDecimal.ZERO;
-                } else {
-                    // 项目值小于0，显示绝对值
-                    value = value.abs();
-                }
-
-            }
-            // 项目计算大于0时展示
-            if ("GT".equals(lgFlag)) {
-                if (BigDecimal.ZERO.compareTo(value) > 0) {
-                    // 项目值小于0，将项目值置为0
-                    value = BigDecimal.ZERO;
-                }
-            }
+//            // 项目计算小于0时展示
+//            if ("LT".equals(lgFlag)) {
+//                if (BigDecimal.ZERO.compareTo(value) < 0) {
+//                    // 项目值大于0，将项目值置为0
+//                    value = BigDecimal.ZERO;
+//                } else {
+//                    // 项目值小于0，显示绝对值
+//                    value = value.abs();
+//                }
+//
+//            }
+//            // 项目计算大于0时展示
+//            if ("GT".equals(lgFlag)) {
+//                if (BigDecimal.ZERO.compareTo(value) > 0) {
+//                    // 项目值小于0，将项目值置为0
+//                    value = BigDecimal.ZERO;
+//                }
+//            }
+            value = getCalcValue(value, lgFlag);
 
             if (thisTermFlag) {
                 // 本期金额
@@ -642,27 +857,27 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
         }
 
         // (1) 经营活动产生的现金流量净额 = 经营活动现金流入小计 - 经营活动现金流出小计
-        String key1 = "经营活动产生的现金流量净额";
-        String key1_1 = "经营活动现金流入小计";
-        String key1_2 = "经营活动现金流出小计";
+        String key1 = 小计指标1_3;
+        String key1_1 = 小计指标1_1;
+        String key1_2 = 小计指标1_2;
         dtoMap.get(key1)
                 .setThisTermAmt(dtoMap.get(key1_1).getThisTermAmt().subtract(dtoMap.get(key1_2).getThisTermAmt()));
         dtoMap.get(key1)
                 .setLastTermAmt(dtoMap.get(key1_1).getLastTermAmt().subtract(dtoMap.get(key1_2).getLastTermAmt()));
 
         // (2) 投资活动产生的现金流量净额 = 投资活动现金流入小计 - 投资活动现金流出小计
-        String key2 = "投资活动产生的现金流量净额";
-        String key2_1 = "投资活动现金流入小计";
-        String key2_2 = "投资活动现金流出小计";
+        String key2 = 小计指标2_3;
+        String key2_1 = 小计指标2_1;
+        String key2_2 = 小计指标2_2;
         dtoMap.get(key2)
                 .setThisTermAmt(dtoMap.get(key2_1).getThisTermAmt().subtract(dtoMap.get(key2_2).getThisTermAmt()));
         dtoMap.get(key2)
                 .setLastTermAmt(dtoMap.get(key2_1).getLastTermAmt().subtract(dtoMap.get(key2_2).getLastTermAmt()));
 
         // (3) 筹资活动产生的现金流量净额 = 筹资活动现金流入小计 - 筹资活动现金流出小计
-        String key3 = "筹资活动产生的现金流量净额";
-        String key3_1 = "筹资活动现金流入小计";
-        String key3_2 = "筹资活动现金流出小计";
+        String key3 = 小计指标3_3;
+        String key3_1 = 小计指标3_1;
+        String key3_2 = 小计指标3_2;
         dtoMap.get(key3)
                 .setThisTermAmt(dtoMap.get(key3_1).getThisTermAmt().subtract(dtoMap.get(key3_2).getThisTermAmt()));
         dtoMap.get(key3)
@@ -672,7 +887,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                 // 本期
 
                 // (4) 加：年初现金及现金等价物余额
-                String key4 = "加：年初现金及现金等价物余额";
+                //String key4 = "加：年初现金及现金等价物余额";
+                String key4 = 汇总指标6;
                 Map<String, Object> queryMap = new HashMap<String, Object>();
                 int thisYear = DateUtil.getYear(pageParam.get("thisTermMdate").toString());
                 queryMap.put("mdate", thisYear + "-01-01");
@@ -681,7 +897,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                 dtoMap.get(key4).setThisTermAmt(year_start_cashamt);
 
                 // (5) 年末现金及现金等价物余额
-                String key5 = "年末现金及现金等价物余额";
+                //String key5 = "年末现金及现金等价物余额";
+                String key5 = 汇总指标7;
                 queryMap.put("mdate", pageParam.get("thisTermMdate"));
                 BigDecimal year_end_cashamt = cashFlowsStatement001Mapper.selectCashAmt(pageParam);
                 dtoMap.get(key5).setThisTermAmt(year_end_cashamt);
@@ -689,7 +906,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                 // 上期
 
                 // (4) 加：年初现金及现金等价物余额
-                String key4 = "加：年初现金及现金等价物余额";
+                //String key4 = "加：年初现金及现金等价物余额";
+                String key4 = 汇总指标6;
                 Map<String, Object> queryMap = new HashMap<String, Object>();
                 int lastYear = DateUtil.getYear(pageParam.get("lastTermMdate").toString());
                 queryMap.put("mdate", lastYear + "-01-01");
@@ -698,7 +916,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                 dtoMap.get(key4).setLastTermAmt(year_start_cashamt);
 
                 // (5) 年末现金及现金等价物余额
-                String key5 = "年末现金及现金等价物余额";
+                //String key5 = "年末现金及现金等价物余额";
+                String key5 = 汇总指标7;
                 queryMap.put("mdate", pageParam.get("lastTermMdate"));
                 BigDecimal year_end_cashamt = cashFlowsStatement001Mapper.selectCashAmt(pageParam);
                 dtoMap.get(key5).setLastTermAmt(year_end_cashamt);
@@ -708,7 +927,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                 // 账套组
                 // 本期
                 // (4) 加：年初现金及现金等价物余额
-                String key4 = "加：年初现金及现金等价物余额";
+                //String key4 = "加：年初现金及现金等价物余额";
+                String key4 = 汇总指标6;
                 Map<String, Object> queryMap = new HashMap<String, Object>();
                 int thisYear = DateUtil.getYear(pageParam.get("thisTermMdate").toString());
                 queryMap.put("mdate", thisYear + "-01-01");
@@ -717,14 +937,16 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                 dtoMap.get(key4).setThisTermAmt(year_start_cashamt);
 
                 // (5) 年末现金及现金等价物余额
-                String key5 = "年末现金及现金等价物余额";
+                //String key5 = "年末现金及现金等价物余额";
+                String key5 = 汇总指标7;
                 queryMap.put("mdate", pageParam.get("thisTermMdate"));
                 BigDecimal year_end_cashamt = cashFlowsStatement001Mapper.selectCashAmtp(pageParam);
                 dtoMap.get(key5).setThisTermAmt(year_end_cashamt);
             } else {
                 // 上期
                 // (4) 加：年初现金及现金等价物余额
-                String key4 = "加：年初现金及现金等价物余额";
+                //String key4 = "加：年初现金及现金等价物余额";
+                String key4 = 汇总指标6;
                 Map<String, Object> queryMap = new HashMap<String, Object>();
                 int lastYear = DateUtil.getYear(pageParam.get("lastTermMdate").toString());
                 queryMap.put("mdate", lastYear + "-01-01");
@@ -733,7 +955,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                 dtoMap.get(key4).setLastTermAmt(year_start_cashamt);
 
                 // (5) 年末现金及现金等价物余额
-                String key5 = "年末现金及现金等价物余额";
+                //String key5 = "年末现金及现金等价物余额";
+                String key5 = 汇总指标7;
                 queryMap.put("mdate", pageParam.get("lastTermMdate"));
                 BigDecimal year_end_cashamt = cashFlowsStatement001Mapper.selectCashAmtp(pageParam);
                 dtoMap.get(key5).setLastTermAmt(year_end_cashamt);
@@ -741,7 +964,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
         }
 
         // (6) 现金及现金等价物净(减少)增加额 = 上(1)+上(2)+上(3)
-        String key6 = "现金及现金等价物净(减少)增加额";
+        //String key6 = "现金及现金等价物净(减少)增加额";
+        String key6 = 汇总指标5;
         dtoMap.get(key6).setThisTermAmt(dtoMap.get(key1).getThisTermAmt().add(dtoMap.get(key2).getThisTermAmt())
                 .add(dtoMap.get(key3).getThisTermAmt()));
         dtoMap.get(key6).setLastTermAmt(dtoMap.get(key1).getLastTermAmt().add(dtoMap.get(key2).getLastTermAmt())
@@ -753,7 +977,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
         // +Σ【期初外币存量*（期末汇率-期初汇率）】
         List<CashFlowsDto> hlxj = termData.stream().filter(item -> "HLXJ".equals(item.getFinProdType())).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(hlxj)) {
-            String key7 = "汇率变动对现金及现金等价物的影响";
+            //String key7 = "汇率变动对现金及现金等价物的影响";
+            String key7 = 汇总指标4;
             if (thisTermFlag){
                 dtoMap.get(key7).setThisTermAmt(hlxj.get(0).getTradeamt());
             }else {
@@ -771,17 +996,31 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
      *            期内交易数据
      * @param pageParam
      *            画面传参
+     * @param preMap  提前计算的值
      * @return 筛选交易金额合计
      * @see
      * @since 1.0
      */
     private BigDecimal calcByFinProdType(String finProdType, List<CashFlowsDto> termData,
-                                         Map<String, Object> pageParam) {
+                                         Map<String, Object> pageParam, Map<String, BigDecimal> preMap) {
         BigDecimal retValue = BigDecimal.ZERO;
         String[] rules = finProdType.split(",");
-
+        //特殊处理 提前计算的值
+        if(rules.length == 1) {
+            if(preMap != null && preMap.containsKey(rules[0])) {
+                return preMap.get(rules[0]);
+            }
+        }
+        if (rules.length == 2 && 自定义现金流.equals(rules[0])) {
+            for (CashFlowsDto dto : termData) {
+                //交易方向相等
+                if(StringUtil.equals(dto.getPs(), rules[1])) {
+                    retValue = retValue.add(dto.getTradeamt());
+                }
+            }
+        }
         // 手工凭证
-        if (rules.length == 2 && "SGPZ".equals(rules[0])) {
+        if (rules.length == 2 && 手工凭证.equals(rules[0])) {
             Map<String, Object> queryMap = new HashMap<String, Object>();
             queryMap.put("booksetId", pageParam.get("booksetId"));
             queryMap.put("crdrFlg", rules[1]);
@@ -799,7 +1038,7 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             // 交易方向
             String ps = rules[1];
             // 金额方向
-            BigDecimal direction = "P".equals(rules[2]) ? BigDecimal.ONE : BigDecimal.ONE.negate();
+            BigDecimal direction = 正标识.equals(rules[2]) ? BigDecimal.ONE : BigDecimal.ONE.negate();
             // 金额类别
             String amtFlag = rules[3];
             /**add by wujie on 20200213 start**/
@@ -826,33 +1065,37 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                         )
                 		/**add by wujie on 20200213 end**/
                 		) {
-                    if ("PRINAMT".equals(amtFlag)) {
+                    //if ("PRINAMT".equals(amtFlag)) {
+                    if (本金.equals(amtFlag)) {
                         retValue = retValue.add(dto.getPrinamt().multiply(direction));
                     }
-                    if ("INTAMT".equals(amtFlag)) {
+                    //if ("INTAMT".equals(amtFlag)) {
+                    if (利息.equals(amtFlag)) {
                         retValue = retValue.add(dto.getIntamt().multiply(direction));
                     }
-                    if ("TRADEAMT".equals(amtFlag)) {
+                    //if ("TRADEAMT".equals(amtFlag)) {
+                    if (交易金额.equals(amtFlag)) {
                         retValue = retValue.add(dto.getTradeamt().multiply(direction));
                     }
-                    if ("RECINT".equals(amtFlag)) {
+                    //if ("RECINT".equals(amtFlag)) {
+                    if (收息额.equals(amtFlag)) {
                         // 收息额
                         retValue = retValue.add(dto.getRecInt().multiply(direction));
                     }
-                    if ("PAYINT".equals(amtFlag)) {
+                    //if ("PAYINT".equals(amtFlag)) {
+                    if (付息.equals(amtFlag)) {
                         // 付息
                         retValue = retValue.add(dto.getPayInt().multiply(direction));
                     }
-                    if ("BUYTRADEAMT".equals(amtFlag)) {
+                    //if ("BUYTRADEAMT".equals(amtFlag)) {
+                    if (买入交易金额.equals(amtFlag)) {
                         // 买入交易金额
                         retValue = retValue.add(dto.getBuyTradeAmt().multiply(direction));
                     }
-                    if ("SELLTRADEAMT".equals(amtFlag)) {
+                    //if ("SELLTRADEAMT".equals(amtFlag)) {
+                    if (卖出端交易金额.equals(amtFlag)) {
                         // 卖出端交易金额
                         retValue = retValue.add(dto.getSellTradeAmt().multiply(direction));
-                    }
-                    if ("FEE_AMT_PAY".equals(amtFlag)) {
-                        retValue = retValue.add(dto.getFeeamtpay().multiply(direction));
                     }
                 }
             }
@@ -878,7 +1121,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             newDto.setProject(arr[0]);
             newDto.setThisTermAmt(BigDecimal.ZERO);
             newDto.setLastTermAmt(BigDecimal.ZERO);
-            if (arr.length == 1 && arr[0].endsWith("活动产生的现金流量")) {
+            //if (arr.length == 1 && arr[0].endsWith("活动产生的现金流量")) {
+            if (arr.length == 1 && arr[0].endsWith(汇总指标后缀)) {
                 newDto.setThisTermAmt(null);
                 newDto.setLastTermAmt(null);
             }
@@ -1231,7 +1475,7 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
         // 调用共通设计->【详细设计-账务类共通方法设计.xlsx】->基础科目性质查询SHEET
         // 变量.基础科目性质List = DTO “XJL_KMCX” "QY"
         listBaseSubjectNature = accountingCommonBatchService.getValSubjectNatureListWithAcctStandardId(
-                DictCodeListExt1.分组代码_现金类对应科目查询.getValue(),
+        		DictCodeListNatureGroup.分组代码_现金类对应科目查询.getValue(),
                 DictCodeListExt2.会计准则_企业准则.getValue());
 
         // 调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
@@ -1346,22 +1590,15 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             datedto = cashFlowsStatement001Mapper.getDateInfo1(pageParam);
         }else{
             List<CashFlowsStatement001Dto> dateList = cashFlowsStatement001Mapper.getDateInfo2(pageParam);
-            if(dateList.size()>0){
-                for(CashFlowsStatement001Dto item:dateList){
-                    if(datedto.getReportDate() == null || datedto.getReportDate() == ""){
+            for(CashFlowsStatement001Dto item:dateList){
+                if(datedto.getReportDate() == null || datedto.getReportDate() == ""){
+                    datedto.setReportDate(item.getReportDate());
+                }else{
+                    if(datedto.getReportDate().compareTo(item.getReportDate()) > 0){
                         datedto.setReportDate(item.getReportDate());
-                    }else{
-                        if(datedto.getReportDate().compareTo(item.getReportDate()) > 0){
-                            datedto.setReportDate(item.getReportDate());
-                        }
                     }
                 }
-             // add by caiqun 20201026 报表维度选择全账套，配置产品组时没有选择任何产品，datedto.setReportDate取值为空下面格式日期会报错
-             // 改成为空时取平台日
-            }else{
-                datedto.setReportDate(DateUtil.getSysDate());
             }
-
         }
         if(DictCodeListExt1.报表期限类型_日报.getValue().equals(reportTermType)){
             datedto.setReportDate(DateUtil.format(DateUtil.addDate(DateUtil.parse(datedto.getReportDate()), 0, 0, -1)));

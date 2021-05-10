@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,30 +23,37 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.util.StringUtil;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashCalcRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashPayRuleBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashPlanBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductTypeBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValInterflogBatchMapper;
-import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
-import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.mngasset.entity.PlannedAssetBaseInfoForInterfRecProcessorResult;
+import com.joyintech.framework.security.data.MultilevelDataAuthorityService;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinCashInfo;
 import com.joyintech.tams.common.base.entity.FinCashPayRule;
 import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashCalcRuleBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashInfoBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashPayRuleBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashPlanBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductAddBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductTypeBatchMapper;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValInterflogBatchMapper;
+import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
+import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.mngasset.entity.PlannedAssetBaseInfoForInterfRecProcessorResult;
 
 /**
  * 计划类资产（利率型）基本信息 数据库写入
  * 
  * @author ruanhongming
  * @version 1.0 2018年6月25日
- * @see BookGenerateResultForCurrentCommonWriter
+ * @see PlannedAssetBaseInfoRecWriter
  * @since 1.0
  */
 @Service
@@ -96,6 +102,13 @@ public class PlannedAssetBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> 
     @Autowired
     private AssetmanageRecvCommonService assetmanageRecvCommonService;
     //add by liupengfei for 多级法人改造 E
+	
+	/**
+     * 标的类金融产品扩展表
+     */
+    @Autowired
+    private ValFinProductAddBatchMapper valFinProductAddBatchMapper;
+	
     
     @Value("${interf.properties.maxSqlNum}")
     private int maxSqlNum;
@@ -105,6 +118,12 @@ public class PlannedAssetBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> 
      */
     @Autowired
     private ValInterflogBatchMapper valInterflogBatchMapper;
+
+    /**
+     * 多级法人数据权限接口 add by tanxuan on 20210310 多级法人权限控制改造
+     */
+    @Autowired
+    private MultilevelDataAuthorityService multilevelDataAuthorityService;
    
     /**
      * 更新数据 {@inheritDoc}
@@ -143,17 +162,28 @@ public class PlannedAssetBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> 
                         listInsert.clear();
                         listInsert.add(e);
                     }
-                    //add by liupengfei for 多级法人改造 S
-                    // 记录二级法人权限
-                    if(MultilevelDataAuthorityUtil.isEnabled()){
-                        assetmanageRecvCommonService.insertDataAuthInst(e.getFinprodId(),e.getBelongInstitutionCode(), DictCodeList.共通业务类型_计划类资产_利率型_信息.getValue());
-                    }
-                    //add by liupengfei for 多级法人改造 E
+//                    //add by liupengfei for 多级法人改造 S
+//                    // 记录二级法人权限
+//                    if(MultilevelDataAuthorityUtil.isEnabled()){
+//                        assetmanageRecvCommonService.insertDataAuthInst(e.getFinprodId(),e.getBelongInstitutionCode(), DictCodeList.共通业务类型_计划类资产_利率型_信息.getValue());
+//                    }
+//                    //add by liupengfei for 多级法人改造 E
                 }
                 // 如果循环结束，小于最大值
                 if (CollectionUtils.isNotEmpty(listInsert)) {
                     valFinProductBatchMapper.deleteBatch(listInsert);
                     valFinProductBatchMapper.insertBatch(listInsert);
+                }
+                if(DictCodeListExt3.权限模式_联社模式.getValue().equals(CacheUtil.getSysParam("AUTHORITY_TYPE"))){
+                	List<String> editOrgCodeList = new ArrayList<>();
+                	for (FinProduct e : rstValFinProduct) {
+                		editOrgCodeList.clear();
+                		if(StringUtil.isNotEmpty(e.getBelongInstitutionCode())){
+                			editOrgCodeList.add(e.getBelongInstitutionCode());
+                		}
+                		multilevelDataAuthorityService.saveForOrganization(e.getFinprodId(), null, editOrgCodeList,
+                    			DictCodeList.共通业务类型_计划类资产_利率型_信息.getValue());
+                    }
                 }
             }
             
@@ -357,6 +387,30 @@ public class PlannedAssetBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> 
             }
             /**add by wujie on 20180822 end**/
 
+            /** 标的类金融产品扩展表 add by yanya on 20201222 start**/
+            List<FinProductAdd> listValFinProductExt = result.getListValFinProductExt();
+            // 入库
+            if (CollectionUtils.isNotEmpty(listValFinProductExt)) {
+                //定义一个固定大小插入存放集合
+                List<FinProductAdd> listInsert =  new ArrayList<FinProductAdd>();
+                for(FinProductAdd e :listValFinProductExt){
+                    //小于最大值
+                    if(listInsert.size() < maxSqlNum){
+                        listInsert.add(e);
+                    }else if(listInsert.size() >= maxSqlNum){
+                        valFinProductAddBatchMapper.deleteBatch(listInsert);
+                        valFinProductAddBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                //如果循环结束，小于最大值
+                if(CollectionUtils.isNotEmpty(listInsert)){
+                    valFinProductAddBatchMapper.deleteBatch(listInsert);
+                    valFinProductAddBatchMapper.insertBatch(listInsert);
+                }
+            }
+            /** 标的类金融产品扩展表 add by yanya on 20201222 end**/
             // 日志
             List<ValInterflog> valInterflog = result.getValInterflog();
             // 入库

@@ -52,6 +52,7 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -225,7 +226,8 @@ public class FinProjectTargetAssetService extends CommonExportService<FinProject
         ptlPortfolio.setPortfolioName(entity.getFinprodName());
         ptlPortfolio.setVdate(entity.getVdate());
         ptlPortfolio.setMdate(entity.getMdate());
-        ptlPortfolio.setProfitType(entity.getProfitType());
+        ptlPortfolio.setProfitType(StringUtils.isEmpty(entity.getProfitType()) ? DictCodeList.收益类型_收益型.getValue()
+				: entity.getProfitType());
         entity.setPtlPortfolio(ptlPortfolio);
         //add end
         if (OperationType.DELETE.equals(type)) {

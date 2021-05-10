@@ -14,10 +14,8 @@ $(function () {
 	               {field:'bdHappenAmt', title: '本币借方金额', edit: true, align: 'right', editOption:{type: 'money', pattern: '#.00'}},
 	               {field:'bcHappenAmt', title: '本币贷方金额', edit: true, align: 'right', editOption:{type: 'money', pattern: '#.00'}},
 	               {field:'happenNumber', title: '数量', edit: true, align: 'right', editOption:{type: 'money', pattern: '#.0000'}},
-	               {field:'branch', title: '分支序号', edit:true, editOption:{type: 'number'}},
+	               {field:'branch', title: '分支序号', edit:true, editOption:{type: 'textbox'}},
 	               {field:'acctCode', title: '账户代码', edit:true, editOption:{type: 'textbox'}},
-//	               {field:'branch', title: '分支序号', edit: true, visible:true, editOption:{id:'branch', type:'select', url: JoyinUtil.getRealPath('/valuation/accounadjustmanage/manualvoucher/ValManualVoucher003/getBranch'), parentIds: 'booksetId,finprodType,finprodId,subjectNo', showField: 'id'}},
-//	               {field:'acctCode', title: '账户代码', edit: true, visible:true, editOption:{id:'acctCode', type:'select', url: JoyinUtil.getRealPath('/valuation/accounadjustmanage/manualvoucher/ValManualVoucher003/getAcctId'), parentIds: 'booksetId', showField: 'id'}},
 	               {field:'baseSubjectNature', title: '基础科目属性' , visible:false},
 	               {field:'status', title: '状态' , visible:false},
 	               {field:'genDetsubFlag', title: '是否生成四级科目号' , visible:false},
@@ -63,10 +61,6 @@ $(function () {
                 if(!value || value.trim() == ''){
                     return;
                 }
-                //框架js中joyin-table-lay.js v2.1.3中，
-                //下拉框中注释（cacheData[field + 'Val'] = ids.join(','); //缓存中添加值），直接改为cacheData[field] = ids.join(','); // 修改field值
-                // 取得科目联动处理数据
-                //var object = {booksetId: $("#booksetId").val(), subjectNo: data.subjectNo, busiId: $("#busiId").val(), finprodType: $("#finprodType").val(), ccy: data.ccyVal};
                 var object = {booksetId: $("#booksetId").val(), subjectNo: data.subjectNo, busiId: $("#busiId").val(), finprodType: $("#finprodType").val(), ccy: data.ccy};
                 Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/manualvoucher/ValManualVoucher003/getSubjectNo', object, function(result){
                     if (!result.data) {
@@ -74,9 +68,8 @@ $(function () {
                     }
                     var rstdata = result.data;
                     data.subjectName = rstdata.subjectName;
-//                    data.subjectName = rstdata.subjectName;
                     data.baseSubjectNature = rstdata.baseSubjectNature;
-                    data.acctCode = rstdata.acctCode;//modify by dongjun on 20181210
+                    data.acctCode = rstdata.acctCode;
                     // 资产代码对应的业务明细类型
                     data.busiDetailType = $("#busiId_hidden").val();
                     if ("Y" == rstdata.genDetsubFlag && $("#busiId").val() != "") {
@@ -86,42 +79,25 @@ $(function () {
                             data.detailSubjectNo = rstdata.termType;
                             // 尾号名称= 资产代码对应的期限品种对应的数据字典名称
                             data.detailSubjectName = rstdata.termTypeFmt;
-//                    }
-//                    else if (result.busiId) {
-//                        data.detailSubjectNo = result.cashType2;
-//                        data.detailSubjectName = result.cashType2Name;
-                        }
-                        else if($("#finprodType").val() == FINPROD_TYPE_F35) {
-                            /** add by yanya on 20200212**/
-                            data.detailSubjectNo = $("#busiId").val();
-                            data.detailSubjectName = $("#busiId").val();
                         }
                         else{
                             data.detailSubjectNo = $("#busiId").val();
-                            //data.detailSubjectName = $("#busiId").data("id");
-                            /** modify by yanya on 20191031 增加退回修改流程赋值**/
                             data.detailSubjectName = getBusiSubjectNameVal();
+                        }
+                        if($("#finprodType").val() == FINPROD_TYPE_F35) {
+                            data.detailSubjectNo = $("#busiId").val();
+                            data.detailSubjectName = $("#busiId").val();
                         }
                         data.genDetsubFlag = 'Y';
                     } else {
                         data.genDetsubFlag = 'N';
                     }
-//                if (data.baseSubjectNature == QTYSK_BJ || data.baseSubjectNature == QTYSK_LX) {
-////                    $('[data-field="branch"]').show();
-//                    table.showColumns([{field:'branch', visible: true}]);
-//                } else {
-////                    $('[data-field="branch"]').hide();
-//                    table.showColumns([{field:'branch', visible: false}]);
-//                }
                     // 刷新表格
                     table.renderRow(data.LAY_TABLE_INDEX, data);
-//                    var allrows = table.getAllRows();
-//                    table.reload({data : allrows});
                     table.events();
                 });
             }, 10);
         },
-        /** modify by dongjun on 20181211 end **/
 		cols: tableCols,
 		loadonce:true
 	});
@@ -162,6 +138,10 @@ $(function () {
         object.booksetId = $("#booksetId").val();
         object.busiId = $("#busiId").val();
         object.finprodType = $("#finprodType").val();
+        //add by wujie on 20201116 start
+        object.invAim = $("#invAim").val();
+        object.profitType = $("#profitType").val();
+        //add by wujie on 20201116 end
         if (data.genDetsubFlag && data.genDetsubFlag == "Y") {
             if (!data.detailSubjectNo || data.detailSubjectNo == "") {
                 Joyin.confirm(JoyinUtil.getMessage("MANUAL_VOUCHER_C_001",JoyinUtil.getLabel("ValManualVoucher.detailSubjectNo")), function(){
@@ -254,7 +234,6 @@ $(function () {
 		});// 列表中的值
 		var alt = $("#busiId").attr("alt");// 当前输入的值
 		if(dataKeyArr.indexOf(alt) == -1){ // 输入不存在的值
-			//修改操作中增加是否为初始值判定 add by yanya on 20191030
 			if(BUSI_ID && BUSI_ID != null && BUSI_ID != undefined && BUSI_ID == $("#busiId").val()){
 			}
 			else{
@@ -263,7 +242,6 @@ $(function () {
 		}
     	
         var object = $.serializeToObject('#submitForm');
-        //流程ID add by yanya on 20191030
         var workflowIdNow = $("#workflowId").val();
         if(workflowIdNow != null || workflowIdNow.length > 0){
         	object.workflowId = workflowIdNow;
@@ -273,7 +251,6 @@ $(function () {
         // 业务明细类型
         object.busiDetailType = getBusiHiddenVal();
         // 初始化 业务明细代码 = 资产代码
-//        object.busiDetailId = $("#busiId").val();
         object.pageModel = pageModel;
         object.listAddDto = table.getAllRows();
         var allrows = table.getAllRows();
@@ -303,27 +280,6 @@ $(function () {
                         parent.layer.close(index);
         			});
     	});
-
-        
-        
-        
-/*        if (!false) {
-            Joyin.confirm(JoyinUtil.getMessage("MANUAL_VOUCHER_C_001",JoyinUtil.getLabel("ValManualVoucher.detailSubjectNo")), function(){
-                Joyin.ajaxJson('doSubmit', object, function(result){
-                    if(result.errorList.length==0){
-                        var index = parent.layer.getFrameIndex(window.name);
-                        parent.layer.close(index);
-                    }
-                });
-            });
-        } else {
-            Joyin.ajaxJson('doSubmit', object, function(result){
-                if(result.errorList.length==0){
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-                }
-            });
-        }*/
     });
     
     //页面全部加载完毕后
@@ -333,6 +289,11 @@ $(function () {
         if ($("#finprodType").val() == 'F01'){
         	$("#invAimDiv").show();
         }
+        //add by wujie on 20201112 start
+        else if ($("#finprodType").val() == 'F17' && $("#profitType").val() == '02'){
+        	$("#invAimDiv").show();
+        }
+        //add by wujie on 20201112 end
         else{
         	$("#invAimDiv").hide();
         }
@@ -340,21 +301,15 @@ $(function () {
         // 业务类型变更时清空资产代码
         $("#finprodType").change(function() {
             $("#busiId").val("");
-            // TODO:业务类型选择债券和计划类资产时，分支序号列显示
-//            if ($("#finprodType").val() == 'F01' || $("#finprodType").val() == 'F17') {
-//                $('[data-field="branch"]').show();
-//                table.showColumns([{field:'acctCode', visible: true}]);
-//            } else {
-//                $('[data-field="branch"]').hide();
-            	// modify by lixiaoyong 很多场景都要用存款类科目， 暂时不控制账户列隐藏   on 20180909 
-//                tabl.showColumns([{field:'acctCode', visible: false}]);
-//            }
-            // 刷新表格
-//            table.reload(table.options);
             // 业务类型为债券时，显示投资目的
             if ($("#finprodType").val() == 'F01'){
             	$("#invAimDiv").show();
             }
+            //add by wujie on 20201112 start
+            else if ($("#finprodType").val() == 'F17' && $("#profitType").val() == '02'){
+            	$("#invAimDiv").show();
+            }
+            //add by wujie on 20201112 end
             else{
             	$("#invAimDiv").hide();
             }
@@ -375,27 +330,37 @@ $(function () {
             $("#finprodType").empty();
             $("#busiId").val("");
             $("#cashId").val("");
-            $("#invAim").val("");
+            $('#invAim').val("").trigger("change");
             $("#invAimDiv").hide();
-            /*var allrows = table.getAllRows();
-            if($.isArray(allrows)) {
-                $.each(allrows, function(i, d) {
-                    table.removeRow(d);
-                });
-                for (var i=0; i<allrows.length;i++) {
-                    table.removeRow(allrows[i]);
-                }
-            }*/
+            
+            $("#profitType").val("")//add by wujie on 20201112
             table.clear();
         });
+        
         
         $("#busiId").change(function() {
         	var object = $.serializeToObject('#submitForm');
         	Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/manualvoucher/ValManualVoucher003/getInvAim', object, function(result){
+        		$("#profitType").val("");//add by wujie on 20201111
         		var data = result.data;
         		if(data && data.busiDetailType == 'F01'){
-        			$("#invAim").val(result.invAim);
+        			$('#invAim').val(data.invAim).trigger("change");
         		}
+        		//add by wujie on 20201110 start
+        		else if(data && data.busiDetailType == 'F17' && data.profitType == '02'){
+        			$("#invAimDiv").show();
+        			$('#invAim').val(data.invAim).trigger("change");
+        			$("#profitType").val(data.profitType);
+        		}
+        		else{
+        			if ($("#finprodType").val() == 'F01'){
+            			$("#invAimDiv").show();
+            		}else{
+            			$('#invAim').val("").trigger("change");
+            			$("#invAimDiv").hide();
+            		}
+        		}
+        		//add by wujie on 20201110 end
         	});
         });
     });

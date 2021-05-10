@@ -694,8 +694,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     public String getCalendarId(){
         return super.getCalendarId();
     }
-    
-    
+    @NotEmpty(fieldName = "FinProjectTargetAsset002.financier",groups={ValidateGroupEdit.class})
     public String getFinancier() {
         return super.getFinancier();
     }

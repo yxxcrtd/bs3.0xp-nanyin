@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListNatureGroup;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -99,22 +101,22 @@ public class ValManualVoucher003Validator implements BeanValidator{
         } else {
             // 基础科目性质查询-非摊余成本对应科目
             List<String> acout_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_非摊余成本对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_非摊余成本对应科目.getValue());
             // 基础科目性质查询-非公允价值对应科目
             List<String> fvtplout_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_非公允价值对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_非公允价值对应科目.getValue());
             // 基础科目性质查询-非综合收益对应科目
             List<String> fvociout_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_非综合收益对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_非综合收益对应科目.getValue());
             // 基础科目性质查询-摊余成本对应科目
             List<String> ac_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_摊余成本对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_摊余成本对应科目.getValue());
             // 基础科目性质查询-公允价值对应科目
             List<String> fvtpl_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_公允价值对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_公允价值对应科目.getValue());
             // 基础科目性质查询-综合收益对应科目
             List<String> fvoci_kmcx = valManualVoucher003Mapper.getValSubjectNatureList(
-                DictCodeListExt1.分组代码_综合收益对应科目.getValue());
+        		DictCodeListNatureGroup.分组代码_综合收益对应科目.getValue());
             // 币种，用于判断币种是否相同
             String ccy = null;
             // 定义借贷金额求和变量

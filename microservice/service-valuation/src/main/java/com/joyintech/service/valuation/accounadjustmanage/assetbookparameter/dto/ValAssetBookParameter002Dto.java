@@ -77,6 +77,11 @@ public class ValAssetBookParameter002Dto extends BaseEntity implements ProcessEn
     private String paramName;
 
     /**
+     * 账套参数类型
+     */
+    private String paramType;
+
+    /**
      * 参数说明
      */
     private String remark;
@@ -92,6 +97,15 @@ public class ValAssetBookParameter002Dto extends BaseEntity implements ProcessEn
 
     public void setOperateType(String operateType) {
         this.operateType = operateType;
+    }
+
+
+    public String getParamType() {
+        return paramType;
+    }
+
+    public void setParamType(String paramType) {
+        this.paramType = paramType;
     }
 
     /**

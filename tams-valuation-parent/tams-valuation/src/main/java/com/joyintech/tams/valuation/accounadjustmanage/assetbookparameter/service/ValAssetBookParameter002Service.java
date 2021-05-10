@@ -9,6 +9,7 @@
 
 package com.joyintech.tams.valuation.accounadjustmanage.assetbookparameter.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -76,5 +77,12 @@ public class ValAssetBookParameter002Service extends CommonExportService<ValAsse
     public ValAssetBookParameter002Dto getByKey(Map<String,Object> params) {
         return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBookParameter002/getByKey", params, ValAssetBookParameter002Dto.class);
     }
+
+	/**
+	 * 检查是否存在相同的对象
+	 */
+	public List<ValAssetBookParameter002Dto> checkExistSameDto(ValAssetBookParameter002Dto dto){
+		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBookParameter002/checkExistSameDto", dto, ValAssetBookParameter002Dto.class);
+	}
 
 }

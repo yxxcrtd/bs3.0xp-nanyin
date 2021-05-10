@@ -27,7 +27,8 @@
              decode(para.INT_ACCRUAL_MODE, '0', '01', '1', '02' , null) transactiontype,	  /*交易方式*/
              '' isExpectedprofit,                         /*是否有预期收益*/
              vccr.basis basic,                            /*计息基础*/
-             (vccr.yield)*100  ratestr       			  /*初始利率*/
+             (vccr.yield)*100  ratestr,       			  /*初始利率*/
+             NVL(ext.IS_QTZQ, 'N') isQtzq /**是否其他债券**/
                
         from FIN_PRODUCT vfp
         left join fin_CASH_CALC_RULE vccr on vfp.finprod_id = vccr.finprod_id   

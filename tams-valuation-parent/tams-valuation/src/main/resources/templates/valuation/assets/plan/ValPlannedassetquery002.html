@@ -177,6 +177,15 @@
                                            data-th-initvalue="${entity?.transactiontype}" disabled="disabled" allowClear="true" >
                                 </div>
                             </div>
+                            <div class="layui-inline layui-col-md4" id="isQtzqDiv" style="display: none;">
+                                <label class="layui-form-label form-lable">是否其他债权</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" id="isQtzq" name="isQtzq"
+                                           class="layui-input form-input input-checkbox"
+                                           data-th-data-result="${YES_OR_NO}"
+                                           data-th-initvalue="${entity?.isQtzq}" disabled="disabled" allowClear="true" >
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

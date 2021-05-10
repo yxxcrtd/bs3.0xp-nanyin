@@ -5,8 +5,9 @@ $(function() {
      */
     var getSearchParams = function() {
         return {
-            name : $.trim($('#ValAssetBookParameter001_name').val()),
+            booksetId : $.trim($('#ValAssetBookParameter001_name').val()),
             paramCode : $.trim($('#paramCode').val()),
+            paramType : $.trim($('#paramType').val())
         }
     };
 /**
@@ -35,7 +36,8 @@ $(function() {
                 {field : 'booksetName', title : '账套名称',sort : true},
                 {field : 'paramCode', title : '参数代码',sort : true},
                 {field : 'paramName', title : '参数名称',sort : true },
-                {field : 'paramValue', title : '参数值',sort : true},
+                {field : 'paramValue', title : '参数值',width:80,sort : true},
+                {field : 'paramTypeValue',sortField:'paramType', title : '参数类型',sort : true},
                 {field : 'remark', title : '参数说明',sort : true },
                 {field:'operation', title: '操 作', type:'action', 
     	        	buttons: [

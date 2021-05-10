@@ -10,13 +10,14 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.assetdeal.sec.dto;
 
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.valuation.common.interf.base.dto.AssetDealInfoValCommonResult;
+import com.joyintech.tams.valuation.common.interf.base.dto.SecExecApplyDto;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.valuation.common.interf.base.dto.AssetDealInfoValCommonResult;
 
 /**
  * 债券交易信息Processor返回共通结果
@@ -81,6 +82,11 @@ public class SecDealInfoProcessorResult extends BaseEntity {
      * 日志
      */
     private List<ValInterflog> valInterflog = new ArrayList<ValInterflog>();
+
+    /**
+     * 行权申请更新list
+     */
+    private List<SecExecApplyDto> listSecExecApply = new ArrayList<>();
     
     /**
      * 读取数据数量
@@ -95,7 +101,7 @@ public class SecDealInfoProcessorResult extends BaseEntity {
     /**
      * 重载构造方法 从valuation-common中返回的result重新赋值
      * 
-     * @param rtnResult 共通结果
+     * @param result 共通结果
      */
     public SecDealInfoProcessorResult(AssetDealInfoValCommonResult result) {
         this.setListValDealAccounting(result.getListValDealAccounting());
@@ -114,6 +120,9 @@ public class SecDealInfoProcessorResult extends BaseEntity {
         /***add by tanxuan on 20191227 start*/
         this.setListValFinTradeProduct(result.getListValFinTradeProduct());
         /***add by tanxuan on 20191227 end*/
+        /***add by yanya on 20210309 添加行权申请更新 start*/
+        this.setListSecExecApply(result.getListSecExecApply());
+        /***add by yanya on 20210309 添加行权申请更新 end*/
         this.paramMap = result.getParamMap();
     }
 
@@ -321,4 +330,11 @@ public class SecDealInfoProcessorResult extends BaseEntity {
         this.listValFinTradeProduct = listValFinTradeProduct;
     }
 
+    public List<SecExecApplyDto> getListSecExecApply() {
+        return listSecExecApply;
+    }
+
+    public void setListSecExecApply(List<SecExecApplyDto> listSecExecApply) {
+        this.listSecExecApply = listSecExecApply;
+    }
 }

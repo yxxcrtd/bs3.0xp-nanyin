@@ -13,16 +13,12 @@ package com.joyintech.tams.valuation.accounadjustmanage.manualvoucher.controller
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.TrdVouchDealMapper;
-import com.joyintech.tams.common.base.entity.TrdVouchDeal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,9 +73,7 @@ public class ValManualVoucher001Controller extends BaseController {
      */
     @Autowired
     private ValManualVoucher001Service valManualVoucher001Service;
-
-    @Autowired
-    private TrdVouchDealMapper trdVouchDealMapper;
+    
 //    /**
 //     * ValManualVoucher003Service
 //     */

@@ -139,10 +139,16 @@ public class ValChannelTradeWriter extends InterfBaseWriter<BaseEntity> {
         		jJBkCashAcctDtoList.clear();
         	}
         	//由于valuation-common无法访问几许中的dto，所以采用copy方式来定义对应的dto
-        	BeanUtil.copyPropertiesIgnoreNull(jJPortfolioDtoList, result.getjJProtfioList());
-        	frontDeskCommonService.jixuPushProductInfo(jJPortfolioDtoList);
-        	BeanUtil.copyPropertiesIgnoreNull(jJBkCashAcctDtoList, result.getjJBkCashAcctList());
-        	frontDeskCommonService.jixuPushFundAccountInfo(jJBkCashAcctDtoList);
+            /** modify by yanya on 20210207 增加为空判定 start**/
+            if(!StringUtil.isEmptyList(result.getjJProtfioList())) {
+                BeanUtil.copyPropertiesIgnoreNull(jJPortfolioDtoList, result.getjJProtfioList());
+                frontDeskCommonService.jixuPushProductInfo(jJPortfolioDtoList);
+            }
+            if(!StringUtil.isEmptyList(result.getjJBkCashAcctList())) {
+                BeanUtil.copyPropertiesIgnoreNull(jJBkCashAcctDtoList, result.getjJBkCashAcctList());
+                frontDeskCommonService.jixuPushFundAccountInfo(jJBkCashAcctDtoList);
+            }
+            /** modify by yanya on 20210207 增加为空判定 end**/
         	
             // 日志
             List<ValInterflog> valInterflog = result.getValInterflog();

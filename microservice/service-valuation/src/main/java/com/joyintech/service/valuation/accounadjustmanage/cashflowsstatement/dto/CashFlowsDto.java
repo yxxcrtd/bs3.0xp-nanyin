@@ -53,11 +53,6 @@ public class CashFlowsDto {
      */
     private BigDecimal tradeamt;
 
-    /**
-     * 费用金额
-     */
-    private BigDecimal feeamtpay;
-
 
     /**
      * 交易编号
@@ -313,13 +308,5 @@ public class CashFlowsDto {
 
     public void setExcPs(String excPs) {
         this.excPs = excPs;
-    }
-
-    public BigDecimal getFeeamtpay() {
-        return feeamtpay;
-    }
-
-    public void setFeeamtpay(BigDecimal feeamtpay) {
-        this.feeamtpay = feeamtpay;
     }
 }

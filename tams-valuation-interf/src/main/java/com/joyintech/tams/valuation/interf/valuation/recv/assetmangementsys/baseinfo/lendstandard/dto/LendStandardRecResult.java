@@ -10,13 +10,13 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.lendstandard.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.valuation.common.interf.base.dto.LendStandardCommonResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -47,6 +47,13 @@ public class LendStandardRecResult extends BaseEntity {
         /**add by chendijun on 20190429 start**/
         this.setListValFinProduct(result.getListValFinProduct());
         /**add by chendijun on 20190429 end**/
+        /** 标的类金融产品扩展表 add by sunshuaishuai on 20210322 start**/
+        this.setListValFinProductExt(result.getListValFinProductExt());
+        /** 标的类金融产品扩展表 add by sunshuaishuai on 20210322 end**/
+        /** 现金流利率信息表 add by sunshuaishuai on 20210322 start**/
+        this.setListValCashIntInfo(result.getListValCashIntInfo());
+        /** 现金流利率信息表 add by sunshuaishuai on 20210322 end**/
+
     }
     /**
      * 标的类金融产品
@@ -84,6 +91,17 @@ public class LendStandardRecResult extends BaseEntity {
      * 现金流计划表
      */
     List<FinCashPlan> listValCashPlan = new ArrayList<FinCashPlan>();
+
+    /**
+     * 现金流利率信息表
+     */
+    private List<FinRateInfo> listValCashIntInfo = new ArrayList<FinRateInfo>();
+
+    /**
+     * 金融产品扩展表
+     */
+    List<FinProductAdd> listValFinProductExt = new ArrayList<>();
+
 
     /**
      * 日志
@@ -219,4 +237,25 @@ public class LendStandardRecResult extends BaseEntity {
     }
 
     /**add by wujie on 20180823 end**/
+
+    /** 标的类金融产品扩展表 add by sunshuaishuai on 20210322 start**/
+    public List<FinProductAdd> getListValFinProductExt() {
+        return listValFinProductExt;
+    }
+
+    public void setListValFinProductExt(List<FinProductAdd> listValFinProductExt) {
+        this.listValFinProductExt = listValFinProductExt;
+    }
+    /** 标的类金融产品扩展表 add by sunshuaishuai on 20210320 end**/
+
+    /** 现金流利率信息表 add by sunshuaishuai on 20210322 start**/
+    public List<FinRateInfo> getListValCashIntInfo() {
+        return listValCashIntInfo;
+    }
+
+    public void setListValCashIntInfo(List<FinRateInfo> listValCashIntInfo) {
+        this.listValCashIntInfo = listValCashIntInfo;
+    }
+    /** 现金流利率信息表 add by sunshuaishuai on 20210322 end**/
+
 }

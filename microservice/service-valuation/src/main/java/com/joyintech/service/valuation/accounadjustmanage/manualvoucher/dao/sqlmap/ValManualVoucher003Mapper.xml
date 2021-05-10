@@ -24,6 +24,9 @@
             fpd.P_TRADE_ID AS pTradeId,
             bk.OFFSET_FLAG AS offsetFlag,
             bk.BOOK_REMARK as bookRemark
+            <!-- add by wujie on 20201112 start -->
+            ,NVL(fp.PROFIT_TYPE,'02') AS profitType
+            <!-- add by wujie on 20201112 end -->
         FROM BOK_BOOKDETAIL_CURRENT bk 
         LEFT JOIN  BOK_BOOKSET bb 
             on bk.BOOKSET_ID = bb.BOOKSET_ID
@@ -99,23 +102,7 @@
         WHERE bk.BOOK_ID = #{bookId}
     </select>
     
-    <!-- 标的类金融产品    多级法人改造 hxy 20200618-->
-	<select id='getBooksetCapacctInfo' resultType="com.joyintech.framework.select.SuggestDto">
-		SELECT
-		BCI.ACCT_NO AS code,
-		BCI.ACCT_NO AS name,
-		BCI.ACCT_NO AS shortName,
-		<if test="finprodType != null" >
-			#{finprodType} AS hidCode
-		</if>
-		<if test="finprodType == null" >
-			BCI.ACCT_NO AS hidCode
-		</if>
-		FROM BOK_BOOKSET_CAPACCT_INFO BCI
-		WHERE BCI.BOOKSET_ID = #{booksetId}
-	</select>
-
-    <!-- 交易类金融产品 多级法人改造 hxy 20200618 -->
+    <!-- 标的类金融产品 -->
     <select id='getFinProduct' resultType="com.joyintech.framework.select.SuggestDto">
     	SELECT
 		    FINPROD_ID AS code,
@@ -123,7 +110,7 @@
 		    FINPROD_ABBR AS shortName,
 		    FINPROD_TYPE AS hidCode
 		FROM FIN_PRODUCT FP
-		WHERE 1=1 and FP.FINPROD_TYPE2 not in ('F01','F06','F10')
+		WHERE 1=1
 		<if test="finprodType != null" >
 		AND FP.FINPROD_TYPE = #{finprodType}
 		</if>
@@ -131,8 +118,8 @@
         AND FP.FINPROD_TYPE IN ('F01','F06','F07','F17','F16','F21','F26') /** modify by yanya on 20200106 增加通道类型 F26 **/
         </if>
     </select>
-
-    <!-- 费用类金融产品 -->
+    
+    <!-- 交易类金融产品 -->
     <select id='getFinTradeProduct' resultType="com.joyintech.framework.select.SuggestDto">
     	SELECT distinct
 		    FP.FINPROD_ID AS code,
@@ -140,7 +127,7 @@
 		    FP.FINPROD_ID AS shortName,
 		    FP.FINPROD_TYPE AS hidCode
 		FROM FIN_TRADE_PRODUCT FP
-		WHERE 1=1 and FP.FINPROD_TYPE not in ('F01','F06','F10')
+		WHERE 1=1
 		<if test="finprodType != null" >
 	       AND FP.FINPROD_TYPE = #{finprodType}
 		</if>
@@ -149,8 +136,8 @@
         </if>
         AND (FP.BRANCH = '0' OR FP.BRANCH IS NULL)
     </select>
-
-    <!-- 现金类金融产品代码 -->
+    
+    <!-- 费用类金融产品 -->
     <select id='getFinCashInfo' resultType="com.joyintech.framework.select.SuggestDto">
     	SELECT
 		    FCI.CASH_ID AS code,
@@ -166,7 +153,18 @@
 		AND FCI.CASH_TYPE_2 = #{finprodType}
 		</if>
     </select>
-
+    
+    <!-- 现金类金融产品代码 -->
+    <select id='getBooksetCapacctInfo' resultType="com.joyintech.framework.select.SuggestDto">
+    	SELECT
+		    BCI.ACCT_NO AS code,
+		    BCI.ACCT_NO AS name,
+		    BCI.ACCT_NO AS shortName,
+		    BCI.ACCT_NO AS hidCode
+		FROM BOK_BOOKSET_CAPACCT_INFO BCI
+		WHERE BCI.BOOKSET_ID = #{booksetId}
+    </select>
+    
     <!-- 基础科目性质查询 -->
     <select id="getValSubjectNatureList" resultType="String" parameterType="java.util.Map">
     	SELECT BASE_SUBJECT_NATURE
@@ -234,7 +232,6 @@
 		    TASK_PRI taskPri
 		FROM SYS_BATCH_TASK
 		WHERE BEAN_NAME = #{beanName}
-		AND ROWNUM <![CDATA[<=]]> 1
     </select>
     <delete id="deleteTrdVouchDealDetail">
     	delete from TRD_VOUCH_DEAL_DETAIL where TRADE_ID = #{tradeId} and BOOKSET_ID = #{booksetId}
@@ -318,7 +315,8 @@
     </select>
     
     <!-- 投资目的查询 -->
-    <select id='getInvAim' resultType='com.joyintech.tams.common.base.entity.BokDetailId'>
+    <select id='getInvAim' resultType='com.joyintech.service.valuation.accounadjustmanage.manualvoucher.dto.BokDetailIdDto'>
+    <!-- select id='getInvAim' resultType='com.joyintech.tams.common.base.entity.BokDetailId'
     	SELECT 
 		  TMP.*
 		FROM(
@@ -343,39 +341,28 @@
 		    AND A.INV_AIM != #{invAimSell}
 		) TMP
 		WHERE TMP.RN = 1
-    </select>
-     <!-- 标的类金融产品 多级法人改造 hxy 20200618-->
-    <select id='getFinProductPub' resultType="com.joyintech.framework.select.SuggestDto">
-    	SELECT
-		    FINPROD_ID AS code,
-		    FINPROD_NAME AS name,
-		    FINPROD_ABBR AS shortName,
-		    FINPROD_TYPE AS hidCode
-		FROM FIN_PRODUCT FP
-		WHERE 1=1 and FP.FINPROD_TYPE2  in ('F01','F06','F10')
-		<if test="finprodType != null" >
-		AND FP.FINPROD_TYPE = #{finprodType}
-		</if>
-        <if test="finprodType == null" >
-        AND FP.FINPROD_TYPE IN ('F01','F06','F07','F17','F16','F21','F26') /** modify by yanya on 20200106 增加通道类型 F26 **/
-        </if>
-    </select>
-      <!-- 交易类金融产品 多级法人改造 hxy 20200618 -->
-    <select id='getFinTradeProductPub' resultType="com.joyintech.framework.select.SuggestDto">
-    	SELECT distinct
-		    FP.FINPROD_ID AS code,
-		    FP.FINPROD_ID AS name,
-		    FP.FINPROD_ID AS shortName,
-		    FP.FINPROD_TYPE AS hidCode
-		FROM FIN_TRADE_PRODUCT FP
-		WHERE 1=1 and FP.FINPROD_TYPE  in ('F01','F06','F10')
-		<if test="finprodType != null" >
-	       AND FP.FINPROD_TYPE = #{finprodType}
-		</if>
-        <if test="finprodType == null">
-           AND FP.FINPROD_TYPE IN ('F01','F02','F03','F04','F05','F08','F09','F23','F24','F35')
-        </if>
-        AND (FP.BRANCH = '0' OR FP.BRANCH IS NULL)
+		 -->
+		 SELECT TMP.BOOKSET_ID,
+		       P.FINPROD_ID   AS BUSI_ID,
+		       P.FINPROD_TYPE AS BUSI_DETAIL_TYPE,
+		       TMP.INV_AIM,
+		       NVL(P.PROFIT_TYPE,'02') AS PROFIT_TYPE
+		  FROM FIN_PRODUCT P
+		  LEFT JOIN (SELECT A.BOOKSET_ID,
+		                    A.BUSI_ID,
+		                    A.BUSI_DETAIL_TYPE,
+		                    A.INV_AIM,
+		                    ROW_NUMBER() OVER(PARTITION BY A.BOOKSET_ID, A.BUSI_ID, A.BUSI_DETAIL_TYPE ORDER BY A.UPDATE_TIME DESC) AS RN
+		               FROM BOK_DETAIL_ID A
+		              WHERE A.BUSI_ID = #{busiId}
+		                AND A.BUSI_DETAIL_TYPE = #{busiDetailType}
+		                AND A.BOOKSET_ID = #{booksetId}
+		                AND A.INV_AIM != #{invAimSell}) TMP
+		    ON P.FINPROD_ID = TMP.BUSI_ID
+		   AND P.FINPROD_TYPE = TMP.BUSI_DETAIL_TYPE and TMP.RN = 1
+		 WHERE P.FINPROD_ID = #{busiId}
+  		 AND P.FINPROD_TYPE = #{busiDetailType}
+		 <!-- modify by wujie on 20201111 end -->
     </select>
     
 </mapper>
