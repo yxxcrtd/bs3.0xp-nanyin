@@ -33,7 +33,6 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
@@ -374,7 +373,10 @@ public class RepurchaseDealTemplateRecService {
             valFinProductDeal.setUnitCprice(dto.getCprice());
         }
         else if ((DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
-                  || DictCodeList.交易方向_到期.getValue().equals(dto.getPs()))
+                  || DictCodeList.交易方向_到期.getValue().equals(dto.getPs())
+                  || DictCodeListExt3.交易方向_投资端_提前终止.getValue().equals(dto.getPs())
+                  || DictCodeListExt3.交易方向_投资端_逾期返售.getValue().equals(dto.getPs())
+                  || DictCodeList.交易方向_到期续做.getValue().equals(dto.getPs()))
                  && (DictCodeList.业务类型_债券买断式回购交易.getValue().equals(dto.getBusiType()))) {
             valFinProductDeal.setUnitCprice(dto.getMcprice());
         }
@@ -384,7 +386,10 @@ public class RepurchaseDealTemplateRecService {
             valFinProductDeal.setUnitFprice(dto.getFprice());
         }
         else if ((DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
-                || DictCodeList.交易方向_到期.getValue().equals(dto.getPs()))
+                || DictCodeList.交易方向_到期.getValue().equals(dto.getPs())
+                || DictCodeListExt3.交易方向_投资端_提前终止.getValue().equals(dto.getPs())
+                || DictCodeListExt3.交易方向_投资端_逾期返售.getValue().equals(dto.getPs())
+                || DictCodeList.交易方向_到期续做.getValue().equals(dto.getPs()))
                  && (DictCodeList.业务类型_债券买断式回购交易.getValue().equals(dto.getBusiType()))) {
             valFinProductDeal.setUnitFprice(dto.getMfprice());
         }
@@ -509,6 +514,7 @@ public class RepurchaseDealTemplateRecService {
                  || DictCodeListExt3.交易方向_投资端_提前终止.getValue().equals(dto.getPs())
                  || DictCodeListExt3.交易方向_投资端_逾期返售.getValue().equals(dto.getPs())
                  /**add by yanya on 20191112 增加提前终止、逾期返售 end**/
+                 || DictCodeList.交易方向_到期续做.getValue().equals(dto.getPs())
          ){
 	     	BigDecimal cashAmt = dto.getEndAmt()==null?BigDecimal.ZERO:dto.getEndAmt();
 	     	if(DictCodeListExt1.金融产品类型_债券质押式正回购.getValue().equals(valFinProductDeal.getFinprodType())
