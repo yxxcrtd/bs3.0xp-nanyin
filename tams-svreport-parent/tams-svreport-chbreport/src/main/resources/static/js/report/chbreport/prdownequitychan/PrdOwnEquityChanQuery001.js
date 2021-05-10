@@ -55,16 +55,54 @@ $(function () {
         if (table != null && table != '') {
             var selArr = table.getAllCheckedRows();
             var allArr = table.getAllRows();
+            if (!allArr || allArr.length == 0) {
+                table.load();
+                var searchObj = getSearchParams();
+                var tableDate = $.ajax({url: "searchPage", type: 'POST', async: false, data: searchObj});
+                var tableJson = JSON.parse(tableDate.responseText);
+                if (tableJson.records == 0) {
+                    Joyin.alert("无数据，无法导出!", 2);
+                } else {
+                    Joyin.exportExcel('export', {datas: JSON.stringify(tableJson.root)});
+                }
+            } else {
+                if (!selArr || selArr.length == 0) {
+                    var datas = JSON.stringify(allArr);
+                } else {
+                    var datas = JSON.stringify(selArr);
+                }
+                Joyin.exportExcel('export', {
+                    datas: datas
+                });
+            }
         }
-        if (!selArr || selArr.length == 0) {
-            var datas = JSON.stringify(allArr);
-        } else {
-            var datas = JSON.stringify(selArr);
-        }
-        Joyin.exportExcel('export', {
-            datas: datas
-        });
     };
+
+    /**
+     * 获取下个月份
+     * @param addMonths
+     * @returns {string}
+     */
+    function getNextMonth(addMonths) {
+        var dd = new Date(Date.parse(platDate));
+        var m = dd.getMonth() + 1;
+        var y = dd.getMonth() + 1 + addMonths > 12 ? (dd.getFullYear() + 1) : dd.getFullYear();
+        if (m + addMonths == 0){
+            y = y - 1;
+            m = 12;
+        }else {
+            if (m + addMonths > 12){
+                m = '01';
+            }else {
+                m = m + 1 < 10 ? '0' + (m + addMonths) : (m + addMonths);
+            }
+        }
+        return y + "-" + m;
+    }
+
+    function initReportDate(){
+        $("#month_reportDate").val(getNextMonth(-1));
+    }
 
     function init() {
         layui.laydate.render({
@@ -75,6 +113,7 @@ $(function () {
         $("#month_reportDate").click(function (event) {
             event.stopPropagation();// 阻止事件冒泡
         });
+        initReportDate();
         // 绑定按钮事件
         $('#SvrPrdOwnEquityChanQuery001_btn_search').click(function () {
             table.load();

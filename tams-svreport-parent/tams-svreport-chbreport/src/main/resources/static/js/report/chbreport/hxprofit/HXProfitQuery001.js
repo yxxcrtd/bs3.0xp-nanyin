@@ -52,15 +52,27 @@ $(function () {
         if (table != null && table != '') {
             var selArr = table.getAllCheckedRows();
             var allArr = table.getAllRows();
+            if (!allArr || allArr.length == 0) {
+                table.load();
+                var searchObj = getSearchParams();
+                var tableDate = $.ajax({url: "searchPage", type: 'POST', async: false, data: searchObj});
+                var tableJson = JSON.parse(tableDate.responseText);
+                if (tableJson.records == 0) {
+                    Joyin.alert("无数据，无法导出!", 2);
+                } else {
+                    Joyin.exportExcel('export', {datas: JSON.stringify(tableJson.root)});
+                }
+            } else {
+                if (!selArr || selArr.length == 0) {
+                    var datas = JSON.stringify(allArr);
+                } else {
+                    var datas = JSON.stringify(selArr);
+                }
+                Joyin.exportExcel('export', {
+                    datas: datas
+                });
+            }
         }
-        if (!selArr || selArr.length == 0) {
-            var datas = JSON.stringify(allArr);
-        } else {
-            var datas = JSON.stringify(selArr);
-        }
-        Joyin.exportExcel('export', {
-            datas: datas
-        });
     };
 
     /**
