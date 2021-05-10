@@ -21,7 +21,7 @@
 				from sys_data_process_mark
                 inner join SYS_WFL_BUSINESS_LIST on SYS_WFL_BUSINESS_LIST.seq_no = sys_data_process_mark.workflow_id and SYS_WFL_BUSINESS_LIST.PROCESS_STATE not in ('END','NEW')
 				where (sys_data_process_mark.page_id in ('FinProductFeePay002','FinProductFeePay004','FinproductPayTheVatQuery002','FinProductQuotation002','FinResultsCovering002'
-                    ,'FinNetProductBonusScheme002','FinNetProductBonusScheme003','FinNetProductBonusScheme004','FinNetProductBonusScheme005')
+                    ,'FinNetProductBonusScheme002','FinNetProductBonusScheme003','FinNetProductBonusScheme004','FinNetProductBonusScheme005','FinproductPayTheVatQuery003')
                     or sys_data_process_mark.page_id in ('FinProductRateQuotation002','FinProductBmQuotation002','FinFloatMgtExpQuotation002'))
                     and sys_data_process_mark.workflow_id not in (select workflow_id from filter)
 			) WHERE rank = 1
@@ -106,6 +106,7 @@
 					when temp.page_id = 'FinproductPayTheVatQuery002' then  replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"tradeAmt":"[^"]+"',1,1)),'"tradeAmt":"',''),'"','')
                     when temp.page_id = 'FinResultsCovering002' then replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"actualAmount":"[^"]+"',1,1)),'"actualAmount":"',''),'"','')
                     when temp.page_id like 'FinNetProductBonusScheme00%' then  replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"unitBonusVlu":"[^"]+"',1,1)),'"unitBonusVlu":"',''),'"','')
+                    when temp.page_id = 'FinproductPayTheVatQuery003' then replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"taxTotal":"[^"]+"',1,1)),'"taxTotal":"',''),'"','')
 					else null
 				end as tradeAmt,
 				T.NEXT_USER  AS nextUser,
@@ -113,7 +114,7 @@
 				sd.institution_code instCode
 			FROM SYS_WFL_BUSINESS_LIST T 
 			INNER JOIN TEMP on T.seq_no = temp.workflow_id and temp.page_id in ('FinProductFeePay002','FinProductFeePay004','FinproductPayTheVatQuery002','FinProductQuotation002','FinResultsCovering002',
-                    'FinNetProductBonusScheme002','FinNetProductBonusScheme003','FinNetProductBonusScheme004','FinNetProductBonusScheme005')
+                    'FinNetProductBonusScheme002','FinNetProductBonusScheme003','FinNetProductBonusScheme004','FinNetProductBonusScheme005','FinproductPayTheVatQuery003')
 			LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
         	LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 			left join PTL_PORTFOLIO pp on 
@@ -123,6 +124,7 @@
 					when temp.page_id = 'FinproductPayTheVatQuery002' then regexp_replace(temp.business_data_pk2,'^F16_','')
                     when temp.page_id = 'FinResultsCovering002' then regexp_replace(temp.business_data_pk2,'^F16_','')
                     when temp.page_id like 'FinNetProductBonusScheme00%' then regexp_replace(temp.business_data_pk2,'^F16_','')
+                    when temp.page_id = 'FinproductPayTheVatQuery003' then replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"portfolioId":"[^"]+"',1,1)),'"portfolioId":"',''),'"','')
 					else regexp_replace(temp.business_data_pk1,'^F16_','')
 				end) = pp.PORTFOLIO_ID
 			WHERE T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE}
