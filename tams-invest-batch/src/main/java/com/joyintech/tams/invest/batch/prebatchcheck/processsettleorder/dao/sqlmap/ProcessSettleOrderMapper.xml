@@ -74,7 +74,8 @@
 			LEFT JOIN FIN_PRODUCT_ADD FPA ON T4.CHL_ID = FPA.FINPROD_ID
 			LEFT JOIN WFL_ORDERS ON T4.TOTLE_TRADE_ID = WFL_ORDERS.TRADE_ID
 			left join WFL_TRD_PRODUCT_DEAL deal on deal.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID
-			where (
+			where deal.finprod_type!='F16' AND  /*过滤产品交易*/
+				(
                 (T5.PA_BUSS_TYPE IN ('01', '02', '04', '138','44','45', '46','47', '48', '49', '50','38', '39', '40', '41', '144')
 					AND (FPA.FINPROD_ID IS NULL OR FPA.PAY_TYPE = '01'))/*非通道或逐笔通道*/
                 OR (T5.PA_BUSS_TYPE = '34' AND FPA.PAY_TYPE IS NULL)
