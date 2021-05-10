@@ -2,6 +2,7 @@ package com.joyintech.tams.common.basicdata.marketdata.rateswapinformation.dto;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -9,6 +10,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.MstIrsQuotation;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.common.basicdata.marketdata.rateswapinformation.validator.ComRateSwapInformationValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -45,7 +47,9 @@ public class ComRateSwapInformationDto extends MstIrsQuotation implements Proces
      * 收益率，改为单个价格类型录入，只check收益率
      */
     private BigDecimal yield;
-    
+
+
+
 	public BigDecimal getYield() {
 		return yield;
 	}
@@ -58,6 +62,8 @@ public class ComRateSwapInformationDto extends MstIrsQuotation implements Proces
      * 利率互换行情信息列表
      */
     private List<ComRateSwapInformationDto> comRateSwapInformationDtoList;
+
+    private List<ComRateSwapInformationDto> selectedItem;
 
     public String getBusinessId() {
         return businessId;
@@ -121,7 +127,27 @@ public class ComRateSwapInformationDto extends MstIrsQuotation implements Proces
     }
 
     public String getBusCurveCode(){
-        return SysDataUtil.getNameFromDataDict(DictCode.利率互换曲线类型, super.getCurveCode());
+        if (StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.利率互换曲线类型, super.getCurveCode()))){
+            return SysDataUtil.getNameFromDataDict(DictCode.利率互换曲线类型, super.getCurveCode());
+        }else {
+            // 01 定盘曲线  02  收盘曲线
+            String busCurveCode = "";
+            if (StringUtil.equals("01",this.getCurveIntType())){
+                busCurveCode = "利率互换-定盘曲线-" +  this.getBaseIntCode();
+            }else {
+                busCurveCode = "利率互换-收盘曲线-" + this.getBaseIntCode();
+            }
+            if (StringUtil.equals(this.getPriceType(), DictCodeListExt2.价格类型_报买.getValue())){
+                busCurveCode = busCurveCode + "-报买";
+            }
+            if (StringUtil.equals(this.getPriceType(), DictCodeListExt2.价格类型_报卖.getValue())){
+                busCurveCode = busCurveCode + "-报卖";
+            }
+            if (StringUtil.equals(this.getPriceType(), DictCodeListExt2.价格类型_均值.getValue())){
+                busCurveCode = busCurveCode + "-均值";
+            }
+            return busCurveCode;
+        }
     }
 
     public String getBusCurveDate(){
@@ -137,6 +163,9 @@ public class ComRateSwapInformationDto extends MstIrsQuotation implements Proces
      * @return 报买
      */
     public String getBusBidPrice() {
+        if (StringUtil.equals(this.getPriceType(), DictCodeListExt2.价格类型_报买.getValue())){
+            super.setBidPrice(this.getYield());
+        }
         return super.getBidPrice() == null ? "" : super.getBidPrice().setScale(4).toString();
     }
 
@@ -145,6 +174,9 @@ public class ComRateSwapInformationDto extends MstIrsQuotation implements Proces
      * @return 报卖
      */
     public String getBusOfferPrice() {
+        if (StringUtil.equals(this.getPriceType(), DictCodeListExt2.价格类型_报卖.getValue())){
+            super.setOfferPrice(this.getYield());
+        }
         return super.getOfferPrice() == null ? "" : super.getOfferPrice().setScale(4).toString();
     }
 
@@ -154,6 +186,9 @@ public class ComRateSwapInformationDto extends MstIrsQuotation implements Proces
      * @return 均值
      */
     public String getBusAvgPrice() {
+        if (StringUtil.equals(this.getPriceType(), DictCodeListExt2.价格类型_均值.getValue())){
+            super.setAvgPrice(this.getYield());
+        }
         return super.getAvgPrice() == null ? "" : super.getAvgPrice().setScale(4).toString();
     }
     private String curveType;
@@ -170,6 +205,13 @@ public class ComRateSwapInformationDto extends MstIrsQuotation implements Proces
 
     public void setCurveType(String curveType) {
         this.curveType = curveType;
+    }
+    public List<ComRateSwapInformationDto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<ComRateSwapInformationDto> selectedItem) {
+        this.selectedItem = selectedItem;
     }
 
     public String getBaseIntCode() {

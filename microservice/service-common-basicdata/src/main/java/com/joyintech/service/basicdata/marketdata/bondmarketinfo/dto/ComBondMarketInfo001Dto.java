@@ -10,12 +10,9 @@
 
 package com.joyintech.service.basicdata.marketdata.bondmarketinfo.dto;
 
-import java.math.BigDecimal;
+import java.util.Date;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 
 /**
  * 每日债券行情 dto
@@ -25,242 +22,29 @@ import com.joyintech.framework.util.DateUtil;
  * @see ComBondMarketInfo001Dto
  * @since 1.0
  */
-public class ComBondMarketInfo001Dto extends BaseEntity {
+public class ComBondMarketInfo001Dto extends MstBondValuationInfo {
+
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1334757426923117768L;
-
+	private static final long serialVersionUID = 395899940154269458L;
 	/**
-	 * 资产代码
-	 */
-	private String finprodId;
-	/**
-	 * 债券简称
+	 * 金融产品简称
 	 */
 	private String finprodAbbr;
 
 	/**
-	 * 估值来源
-	 */
-	private String valueSource;
-
-	/**
-	 * 估值日
-	 */
-	private String valueDate;
-
-	/**
-	 * 剩余期限
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal lastPeriod;
-
-	/**
-	 * 收盘价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal cloPrice;
-
-	/**
-	 * 平均价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal avgPrice;
-
-	/**
-	 * 买一价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal buyOnePrice;
-
-	/**
-	 * 卖一价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal sellOnePrice;
-
-	/**
-	 * 最高阶
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal maxPrice;
-
-	/**
-	 * 最低价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal minPrice;
-	//全价和净价分开 add by lishuping 20191125 start
-	/**
-	 * 收盘价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal cloPriceFull;
-
-	/**
-	 * 平均价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal avgPriceFull;
-
-	/**
-	 * 买一价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal buyOnePriceFull;
-
-	/**
-	 * 卖一价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal sellOnePriceFull;
-
-	/**
-	 * 最高价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal maxPriceFull;
-
-	/**
-	 * 最低价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal minPriceFull;
-	
-	/**
-	 * 行号
-	 */
-	private String excelNum;
-
-	/**
-	 * 获取 cloPriceFull
-	 * @return cloPriceFull
-	 */
-	public BigDecimal getCloPriceFull() {
-		return cloPriceFull;
-	}
-
-	/**
-	 * cloPriceFull
-	 * @param cloPriceFull cloPriceFull
-	 */
-	public void setCloPriceFull(BigDecimal cloPriceFull) {
-		this.cloPriceFull = cloPriceFull;
-	}
-
-	/**
-	 * 获取 avgPriceFull
-	 * @return avgPriceFull
-	 */
-	public BigDecimal getAvgPriceFull() {
-		return avgPriceFull;
-	}
-
-	/**
-	 * avgPriceFull
-	 * @param avgPriceFull avgPriceFull
-	 */
-	public void setAvgPriceFull(BigDecimal avgPriceFull) {
-		this.avgPriceFull = avgPriceFull;
-	}
-
-	/**
-	 * 获取 buyOnePriceFull
-	 * @return buyOnePriceFull
-	 */
-	public BigDecimal getBuyOnePriceFull() {
-		return buyOnePriceFull;
-	}
-
-	/**
-	 * buyOnePriceFull
-	 * @param buyOnePriceFull buyOnePriceFull
-	 */
-	public void setBuyOnePriceFull(BigDecimal buyOnePriceFull) {
-		this.buyOnePriceFull = buyOnePriceFull;
-	}
-
-	/**
-	 * 获取 buyOnePriceFull
-	 * @return buyOnePriceFull
-	 */
-	public BigDecimal getSellOnePriceFull() {
-		return sellOnePriceFull;
-	}
-
-	/**
-	 * sellOnePriceFull
-	 * @param sellOnePriceFull sellOnePriceFull
-	 */
-	public void setSellOnePriceFull(BigDecimal sellOnePriceFull) {
-		this.sellOnePriceFull = sellOnePriceFull;
-	}
-
-	/**
-	 * 获取 maxPriceFull
-	 * @return maxPriceFull
-	 */
-	public BigDecimal getMaxPriceFull() {
-		return maxPriceFull;
-	}
-
-	/**
-	 * maxPriceFull
-	 * @param maxPriceFull maxPriceFull
-	 */
-	public void setMaxPriceFull(BigDecimal maxPriceFull) {
-		this.maxPriceFull = maxPriceFull;
-	}
-
-	/**
-	 * 获取 minPriceFull
-	 * @return minPriceFull
-	 */
-	public BigDecimal getMinPriceFull() {
-		return minPriceFull;
-	}
-
-	/**
-	 * minPriceFull
-	 * @param minPriceFull minPriceFull
-	 */
-	public void setMinPriceFull(BigDecimal minPriceFull) {
-		this.minPriceFull = minPriceFull;
-	}
-	//全价和净价分开 add by lishuping 20191125 end
-
-	/**
-	 * 获取 finprodId
+	 * 债券简称
 	 * 
-	 * @return finprodId.
-	 */
-	public String getFinprodId() {
-		return finprodId;
-	}
-
-	/**
-	 * 设置 finprodId
-	 * 
-	 * @param finprodId
-	 *            finprodId
-	 */
-	public void setFinprodId(String finprodId) {
-		this.finprodId = finprodId;
-	}
-
-	/**
-	 * 获取 finprodAbbr
-	 * 
-	 * @return finprodAbbr.
+	 * @return String
 	 */
 	public String getFinprodAbbr() {
 		return finprodAbbr;
 	}
 
 	/**
-	 * 设置 finprodAbbr
+	 * 债券简称
 	 * 
 	 * @param finprodAbbr
 	 *            finprodAbbr
@@ -268,220 +52,23 @@ public class ComBondMarketInfo001Dto extends BaseEntity {
 	public void setFinprodAbbr(String finprodAbbr) {
 		this.finprodAbbr = finprodAbbr;
 	}
-
-    /**
-     * 获取 valueSource
-     * @return valueSource.
+	 /**
+     * 导入日
      */
-    public String getValueSource() {
-        return valueSource;
-    }
-
+    private Date importDay;
     /**
-	 * 设置 估值来源
-	 * 
-	 * @param valueSource
-	 *            估值来源
-	 */
-	public void setValueSource(String valueSource) {
-		this.valueSource = valueSource == null ? null : valueSource.trim();
-	}
-
-	/**
-	 * 取得 估值日
-	 * 
-	 * @return 估值日
-	 */
-	public String getValueDate() {
-		return DateUtil.formatDateAddSplit(valueDate);
-	}
-
-	/**
-	 * 设置 估值日
-	 * 
-	 * @param valueDate
-	 *            估值日
-	 */
-	public void setValueDate(String valueDate) {
-		this.valueDate = valueDate;
-	}
-
-	/**
-	 * 取得 剩余期限
-	 * 
-	 * @return 剩余期限
-	 */
-	public BigDecimal getLastPeriod() {
-		return lastPeriod;
-	}
-
-	/**
-	 * 设置 剩余期限
-	 * 
-	 * @param lastPeriod
-	 *            剩余期限
-	 */
-	public void setLastPeriod(BigDecimal lastPeriod) {
-		this.lastPeriod = lastPeriod;
-	}
-
-	/**
-	 * 取得 收盘价
-	 * 
-	 * @return 收盘价
-	 */
-	public BigDecimal getCloPrice() {
-		return cloPrice;
-	}
-
-	/**
-	 * 设置收盘价
-	 * 
-	 * @param cloPrice
-	 */
-	public void setCloPrice(BigDecimal cloPrice) {
-		this.cloPrice = cloPrice;
-	}
-
-	/**
-	 * 取得 平均价
-	 * 
-	 * @return 平均价价
-	 */
-	public BigDecimal getAvgprice() {
-		return avgPrice;
-	}
-
-	/**
-	 * 设置平均价
-	 * 
-	 * @param avgPrice
-	 *            平均价
-	 */
-	public void setAvgprice(BigDecimal avgPrice) {
-		this.avgPrice = avgPrice;
-	}
-
-	/**
-	 * 取得 买一价
-	 * 
-	 * @return 买一价
-	 */
-	public BigDecimal getBuyOnePrice() {
-		return buyOnePrice;
-	}
-
-	/**
-	 * 设置买一价
-	 * 
-	 * @param buyOnePrice
-	 *            买一价
-	 */
-	public void setBuyOnePrice(BigDecimal buyOnePrice) {
-		this.buyOnePrice = buyOnePrice;
-	}
-
-//	/**
-//	 * 取得 卖一价
-//	 * 
-//	 * @return 卖一价
-//	 */
-//	public BigDecimal getSellOnePriceMrice() {
-//		return sellOnePrice;
-//	}
-//
-//	/**
-//	 * 设置卖一价
-//	 * 
-//	 * @param sellOnePrice
-//	 *            卖一价
-//	 */
-//	public void setSellOneMrice(BigDecimal sellOnePrice) {
-//		this.sellOnePrice = sellOnePrice;
-//	}
-
-	/**
-	 * 取得 最高阶
-	 * 
-	 * @return 最高阶
-	 */
-	public BigDecimal getMaxPrice() {
-		return maxPrice;
-	}
-
-	/**
-	 * 设置最高阶
-	 * 
-	 * @param maxPrice
-	 *            最高价
-	 */
-	public void setMaxPrice(BigDecimal maxPrice) {
-		this.maxPrice = maxPrice;
-	}
-
-	/**
-	 * 取得 最低阶
-	 * 
-	 * @return 最低阶
-	 */
-	public BigDecimal getMinPrice() {
-		return minPrice;
-	}
-
-	/**
-	 * 设置最低价阶
-	 * 
-	 * @param minPrice
-	 *            最低价
-	 */
-	public void setMinPrice(BigDecimal minPrice) {
-		this.minPrice = minPrice;
-	}
-
-	/**
-	 * 获取 avgPrice
-	 * 
-	 * @return avgPrice.
-	 */
-	public BigDecimal getAvgPrice() {
-		return avgPrice;
-	}
-
-	/**
-	 * 设置 avgPrice
-	 * 
-	 * @param avgPrice
-	 *            avgPrice
-	 */
-	public void setAvgPrice(BigDecimal avgPrice) {
-		this.avgPrice = avgPrice;
-	}
-
-	/**
-	 * 获取 sellOnePrice
-	 * 
-	 * @return sellOnePrice.
-	 */
-	public BigDecimal getSellOnePrice() {
-		return sellOnePrice;
-	}
-
-	/**
-	 * 设置 sellOnePrice
-	 * 
-	 * @param sellOnePrice
-	 *            sellOnePrice
-	 */
-	public void setSellOnePrice(BigDecimal sellOnePrice) {
-		this.sellOnePrice = sellOnePrice;
-	}
-
-	public String getExcelNum() {
-		return excelNum;
-	}
-
-	public void setExcelNum(String excelNum) {
-		this.excelNum = excelNum;
-	}	
-
+     * 获取 importDay
+     * @return importDay.
+     */
+    public Date getImportDay() {
+        return importDay;
+    }
+    
+    /**
+     * 设置 importDay
+     * @param importDay importDay
+     */
+    public void setImportDay(Date importDay) {
+        this.importDay = importDay;
+    }
 }

@@ -11,14 +11,23 @@
 package com.joyintech.tams.common.basicdata.marketdata.bondmarketinfo.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.Length;
+import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
+import com.joyintech.tams.common.basicdata.marketdata.bondmarketinfo.validator.ComBondMarketInfoValidator;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 /**
  * 每日债券行情 dto
@@ -28,464 +37,340 @@ import com.joyintech.tams.constant.DictCode;
  * @see ComBondMarketInfo001Dto
  * @since 1.0
  */
-public class ComBondMarketInfo001Dto extends BaseEntity {
+@PageId("ComBondMarketInfo001Dto")
+@ValidLogic(targetClass = ComBondMarketInfoValidator.class, groups = {ValidateGroupEdit.class,
+    ValidateGroupDelete.class})
+public class ComBondMarketInfo001Dto extends MstBondValuationInfo implements ProcessEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1334757426923117768L;
-
-	/**
-	 * 资产代码
-	 */
-	private String finprodId;
-	/**
-	 * 债券简称
-	 */
-	private String finprodAbbr;
-
-	/**
-	 * 估值来源
-	 */
-	private String valueSource;
-
-	/**
-	 * 估值日
-	 */
-	private String valueDate;
-
-	/**
-	 * 剩余期限
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal lastPeriod;
-
-	/**
-	 * 收盘价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal cloPrice;
-
-	/**
-	 * 平均价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal avgPrice;
-
-	/**
-	 * 买一价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal buyOnePrice;
-
-	/**
-	 * 卖一价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal sellOnePrice;
-
-	/**
-	 * 最高阶
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal maxPrice;
-
-	/**
-	 * 最低价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal minPrice;
-
-	//全价和净价分开 add by lishuping 20191125 start
-	/**
-	 * 收盘价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal cloPriceFull;
-
-	/**
-	 * 平均价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal avgPriceFull;
-
-	/**
-	 * 买一价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal buyOnePriceFull;
-
-	/**
-	 * 卖一价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal sellOnePriceFull;
-
-	/**
-	 * 最高价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal maxPriceFull;
-
-	/**
-	 * 最低价全价
-	 */
-	@JsonSerialize(using = BigDecimalSerializer.class)
-	private BigDecimal minPriceFull;
-
-	/**
-	 * 获取 cloPriceFull
-	 * @return cloPriceFull
-	 */
-	public BigDecimal getCloPriceFull() {
-		return cloPriceFull;
-	}
-
-	/**
-	 * cloPriceFull
-	 * @param cloPriceFull cloPriceFull
-	 */
-	public void setCloPriceFull(BigDecimal cloPriceFull) {
-		this.cloPriceFull = cloPriceFull;
-	}
-
-	/**
-	 * 获取 avgPriceFull
-	 * @return avgPriceFull
-	 */
-	public BigDecimal getAvgPriceFull() {
-		return avgPriceFull;
-	}
-
-	/**
-	 * avgPriceFull
-	 * @param avgPriceFull avgPriceFull
-	 */
-	public void setAvgPriceFull(BigDecimal avgPriceFull) {
-		this.avgPriceFull = avgPriceFull;
-	}
-
-	/**
-	 * 获取 buyOnePriceFull
-	 * @return buyOnePriceFull
-	 */
-	public BigDecimal getBuyOnePriceFull() {
-		return buyOnePriceFull;
-	}
-
-	/**
-	 * buyOnePriceFull
-	 * @param buyOnePriceFull buyOnePriceFull
-	 */
-	public void setBuyOnePriceFull(BigDecimal buyOnePriceFull) {
-		this.buyOnePriceFull = buyOnePriceFull;
-	}
-
-	/**
-	 * 获取 buyOnePriceFull
-	 * @return buyOnePriceFull
-	 */
-	public BigDecimal getSellOnePriceFull() {
-		return sellOnePriceFull;
-	}
-
-	/**
-	 * sellOnePriceFull
-	 * @param sellOnePriceFull sellOnePriceFull
-	 */
-	public void setSellOnePriceFull(BigDecimal sellOnePriceFull) {
-		this.sellOnePriceFull = sellOnePriceFull;
-	}
-
-	/**
-	 * 获取 maxPriceFull
-	 * @return maxPriceFull
-	 */
-	public BigDecimal getMaxPriceFull() {
-		return maxPriceFull;
-	}
-
-	/**
-	 * maxPriceFull
-	 * @param maxPriceFull maxPriceFull
-	 */
-	public void setMaxPriceFull(BigDecimal maxPriceFull) {
-		this.maxPriceFull = maxPriceFull;
-	}
-
-	/**
-	 * 获取 minPriceFull
-	 * @return minPriceFull
-	 */
-	public BigDecimal getMinPriceFull() {
-		return minPriceFull;
-	}
-
-	/**
-	 * minPriceFull
-	 * @param minPriceFull minPriceFull
-	 */
-	public void setMinPriceFull(BigDecimal minPriceFull) {
-		this.minPriceFull = minPriceFull;
-	}
-	//全价和净价分开 add by lishuping 20191125 end
-
-	/**
-	 * 获取 finprodId
-	 * 
-	 * @return finprodId.
-	 */
-	public String getFinprodId() {
-		return finprodId;
-	}
-
-	/**
-	 * 设置 finprodId
-	 * 
-	 * @param finprodId
-	 *            finprodId
-	 */
-	public void setFinprodId(String finprodId) {
-		this.finprodId = finprodId;
-	}
-
-	/**
-	 * 获取 finprodAbbr
-	 * 
-	 * @return finprodAbbr.
-	 */
-	public String getFinprodAbbr() {
-		return finprodAbbr;
-	}
-
-	/**
-	 * 设置 finprodAbbr
-	 * 
-	 * @param finprodAbbr
-	 *            finprodAbbr
-	 */
-	public void setFinprodAbbr(String finprodAbbr) {
-		this.finprodAbbr = finprodAbbr;
-	}
-
-	/**
-	 * 取得 估值来源
-	 * 
-	 * @return 估值来源
-	 */
-	public String getValueSourceFt() {
-		return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.估值交易市场, valueSource))
-				? SysDataUtil.getNameFromDataDict(DictCode.估值交易市场, valueSource) : valueSource;
-	}
-
-	
-	
-	
     /**
-     * 获取 valueSource
-     * @return valueSource.
+     * 序列化
      */
-    public String getValueSource() {
-        return valueSource;
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * 金融产品简称
+     */
+    @Length(fieldName = "ValBondQuotationInfo001.finprodAbbr", max = 66, groups = {
+        ValidateGroupEdit.class})
+    private String finprodAbbr;
+
+    /**
+     * 操作类型
+     */
+    private String operateType;
+
+    /**
+     * 选择数据
+     */
+    private List<ComBondMarketInfo001Dto> selectedItem;
+
+    /**
+     * 要素id
+     */
+    private String elementId;
+
+    /**
+     * 导入日
+     */
+    private Date importDay;
+
+    /**
+     * 导入日fmt
+     */
+    private String importDayFmt;
+
+    /**
+     * 获取 importDay
+     * @return importDay.
+     */
+    public Date getImportDay() {
+        return importDay;
+    }
+    
+    /**
+     * 设置 importDay
+     * @param importDay importDay
+     */
+    public void setImportDay(Date importDay) {
+        this.importDay = importDay;
     }
 
     /**
-	 * 设置 估值来源
-	 * 
-	 * @param valueSource
-	 *            估值来源
-	 */
-	public void setValueSource(String valueSource) {
-		this.valueSource = valueSource == null ? null : valueSource.trim();
-	}
+     * 获取 importDayFmt
+     * @return importDayFmt.
+     */
+    public String getImportDayFmt() {
+        return DateUtil.format(this.getImportDay());
+    }
 
-	/**
-	 * 取得 估值日
-	 * 
-	 * @return 估值日
-	 */
-	public String getValueDate() {
-		return DateUtil.formatDateAddSplit(valueDate);
-	}
+    /**
+     * 设置 importDayFmt
+     * @param importDayFmt importDayFmt
+     */
+    public void setImportDayFmt(String importDayFmt) {
+        this.importDayFmt = importDayFmt;
+    }
 
-	/**
-	 * 设置 估值日
-	 * 
-	 * @param valueDate
-	 *            估值日
-	 */
-	public void setValueDate(String valueDate) {
-		this.valueDate = valueDate;
-	}
+    /**
+     * 目的和意义以及可能会用到的地方
+     */
+    private String pageModel;
+    @PrimaryKey(Field.PK_3)
+    public String getValueSourceStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.估值来源, this.getValueSource());
+    }
+    @Override
+    @NotEmpty(fieldName = "ValBondQuotationInfo001.valueSource", groups = {ValidateGroupEdit.class})
+    public String getValueSource(){
+        return super.getValueSource();
+    }
+    public String getPageModel() {
+        return pageModel;
+    }
 
-	/**
-	 * 取得 剩余期限
-	 * 
-	 * @return 剩余期限
-	 */
-	public BigDecimal getLastPeriod() {
-		return lastPeriod;
-	}
+    public void setPageModel(String pageModel) {
+        this.pageModel = pageModel;
+    }
 
-	/**
-	 * 设置 剩余期限
-	 * 
-	 * @param lastPeriod
-	 *            剩余期限
-	 */
-	public void setLastPeriod(BigDecimal lastPeriod) {
-		this.lastPeriod = lastPeriod;
-	}
+    /**
+     * 债券代码
+     */
+    @Override
+    @NotEmpty(fieldName = "ValBondQuotationInfo001.secId", groups = {ValidateGroupEdit.class})
+    @Length(fieldName = "ValBondQuotationInfo001.secId", max = 32, groups = {
+        ValidateGroupEdit.class})
+    @PrimaryKey(value = Field.PK_1)
+    public String getSecId() {
+        return super.getSecId();
+    }
 
-	/**
-	 * 取得 收盘价
-	 * 
-	 * @return 收盘价
-	 */
-	public BigDecimal getCloPrice() {
-		return cloPrice;
-	}
+    /**
+     * 债券简称
+     * 
+     * @return String
+     */
+    // @NotEmpty(fieldName = "ValBondQuotationInfo001.finprodAbbr", groups =
+    // {ValidateGroupEdit.class})
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
 
-	/**
-	 * 设置收盘价
-	 * 
-	 * @param cloPrice
-	 */
-	public void setCloPrice(BigDecimal cloPrice) {
-		this.cloPrice = cloPrice;
-	}
+    /**
+     * 估值日
+     * 
+     * @return Date
+     */
+    @Override
+    @NotEmpty(fieldName = "ValBondQuotationInfo001.valueDate", groups = {ValidateGroupEdit.class})
+    public Date getValueDate() {
+        return super.getValueDate();
+    }
 
-	/**
-	 * 取得 平均价
-	 * 
-	 * @return 平均价价
-	 */
-	public BigDecimal getAvgprice() {
-		return avgPrice;
-	}
+    /**
+     * 估值日Str
+     * 
+     * @return String
+     */
+    @PrimaryKey(Field.PK_2)
+    public String getValueDateStr() {
+        return DateUtil.format(super.getValueDate());
+    }
 
-	/**
-	 * 设置平均价
-	 * 
-	 * @param avgPrice
-	 *            平均价
-	 */
-	public void setAvgprice(BigDecimal avgPrice) {
-		this.avgPrice = avgPrice;
-	}
+    /**
+     * 剩余期限
+     * 
+     * @return String
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.lastPeriod", max = 30, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getLastPeriod() {
+        return super.getLastPeriod();
+    }
 
-	/**
-	 * 取得 买一价
-	 * 
-	 * @return 买一价
-	 */
-	public BigDecimal getBuyOnePrice() {
-		return buyOnePrice;
-	}
+    /**
+     * 市场全价
+     * 
+     * @return String
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.price", max = 30, groups = {
+        ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ValBondQuotationInfo002.price", groups = {ValidateGroupEdit.class})
+    public BigDecimal getPrice() {
+        return super.getPrice();
+    }
 
-	/**
-	 * 设置买一价
-	 * 
-	 * @param buyOnePrice
-	 *            买一价
-	 */
-	public void setBuyOnePrice(BigDecimal buyOnePrice) {
-		this.buyOnePrice = buyOnePrice;
-	}
+    /**
+     * 市场净价
+     * 
+     * @return BigDecimal
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.netprice", max = 30, groups = {
+        ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ValBondQuotationInfo002.netprice", groups = {ValidateGroupEdit.class})
+    public BigDecimal getNetprice() {
+        return super.getNetprice();
+    }
 
-//	/**
-//	 * 取得 卖一价
-//	 * 
-//	 * @return 卖一价
-//	 */
-//	public BigDecimal getSellOnePriceMrice() {
-//		return sellOnePrice;
-//	}
-//
-//	/**
-//	 * 设置卖一价
-//	 * 
-//	 * @param sellOnePrice
-//	 *            卖一价
-//	 */
-//	public void setSellOneMrice(BigDecimal sellOnePrice) {
-//		this.sellOnePrice = sellOnePrice;
-//	}
+    /**
+     * 市场久期
+     * 
+     * @return BigDecimal
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.mDuration", max = 30, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getmDuration() {
+        return super.getmDuration();
+    }
 
-	/**
-	 * 取得 最高阶
-	 * 
-	 * @return 最高阶
-	 */
-	public BigDecimal getMaxPrice() {
-		return maxPrice;
-	}
+    /**
+     * 市场凸性
+     * 
+     * @return BigDecimal
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.mConvexity", max = 30, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getmConvexity() {
+        return super.getmConvexity();
+    }
 
-	/**
-	 * 设置最高阶
-	 * 
-	 * @param maxPrice
-	 *            最高价
-	 */
-	public void setMaxPrice(BigDecimal maxPrice) {
-		this.maxPrice = maxPrice;
-	}
+    /**
+     * 基点价值
+     * 
+     * @return BigDecimal
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.bpvalue", max = 30, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getBpvalue() {
+        return super.getBpvalue();
+    }
 
-	/**
-	 * 取得 最低阶
-	 * 
-	 * @return 最低阶
-	 */
-	public BigDecimal getMinPrice() {
-		return minPrice;
-	}
+    /**
+     * 利差久期
+     * 
+     * @return BigDecimal
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.sduration", max = 30, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getSduration() {
+        return super.getSduration();
+    }
 
-	/**
-	 * 设置最低价阶
-	 * 
-	 * @param minPrice
-	 *            最低价
-	 */
-	public void setMinPrice(BigDecimal minPrice) {
-		this.minPrice = minPrice;
-	}
+    /**
+     * 利差凸性
+     * 
+     * @return BigDecimal
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.scnvxty", max = 30, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getScnvxty() {
+        return super.getScnvxty();
+    }
 
-	/**
-	 * 获取 avgPrice
-	 * 
-	 * @return avgPrice.
-	 */
-	public BigDecimal getAvgPrice() {
-		return avgPrice;
-	}
+    /**
+     * 利率久期
+     * 
+     * @return BigDecimal
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.interestDuration", max = 30, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getInterestDuration() {
+        return super.getInterestDuration();
+    }
 
-	/**
-	 * 设置 avgPrice
-	 * 
-	 * @param avgPrice
-	 *            avgPrice
-	 */
-	public void setAvgPrice(BigDecimal avgPrice) {
-		this.avgPrice = avgPrice;
-	}
+    /**
+     * 利率凸性
+     * 
+     * @return BigDecimal
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.interestCnvxty", max = 30, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getInterestCnvxty() {
+        return super.getInterestCnvxty();
+    }
 
-	/**
-	 * 获取 sellOnePrice
-	 * 
-	 * @return sellOnePrice.
-	 */
-	public BigDecimal getSellOnePrice() {
-		return sellOnePrice;
-	}
+    /**
+     * 市场收益率
+     * 
+     * @return BigDecimal
+     */
+    @Override
+    @Length(fieldName = "ValBondQuotationInfo002.bpyield", max = 30, groups = {
+        ValidateGroupEdit.class})
+    public BigDecimal getBpyield() {
+        return super.getBpyield();
+    }
 
-	/**
-	 * 设置 sellOnePrice
-	 * 
-	 * @param sellOnePrice
-	 *            sellOnePrice
-	 */
-	public void setSellOnePrice(BigDecimal sellOnePrice) {
-		this.sellOnePrice = sellOnePrice;
-	}
+    /**
+     * 债券简称
+     * 
+     * @param finprodAbbr finprodAbbr
+     */
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
+    }
+
+    /**
+     * 操作类型
+     * 
+     * @return String
+     */
+    public String getOperateType() {
+        return operateType;
+    }
+
+    /**
+     * 操作类型
+     * 
+     * @param operateType operateType
+     */
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
+    }
+
+    /**
+     * 选择的数据
+     * 
+     * @return List
+     */
+    public List<ComBondMarketInfo001Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    /**
+     * 选择的数据
+     * 
+     * @param selectedItem selectedItem
+     */
+    public void setSelectedItem(List<ComBondMarketInfo001Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    /**
+     * 要素id
+     * 
+     * @return String
+     */
+    public String getElementId() {
+        return elementId;
+    }
+
+    /**
+     * 要素id
+     * 
+     * @param elementId elementId
+     */
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
 
 }

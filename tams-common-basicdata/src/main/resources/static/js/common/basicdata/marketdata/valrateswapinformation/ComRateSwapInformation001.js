@@ -182,13 +182,13 @@ $(function() {
      * 画面加载完成
      */
     $(function() {
-        $("#ComComRateSwapInformation001_btn_add").click(function () {
+        $("#ComRateSwapInformation001_btn_add").click(function () {
             Joyin.dialog(JoyinUtil.getLabel("利率互换行情信息新建"),
                 basePath + "common/basicdata/marketdata/valrateswapinformation/ComRateSwapInformation002/init",
                 "98%", "98%");
         });
 
-        $("#ComComRateSwapInformation001_btn_del").click(function () {
+        $("#ComRateSwapInformation001_btn_del").click(function () {
             if(table!=null && table!=''){
                 var selArr = table.getAllRows();
             }
@@ -202,13 +202,13 @@ $(function() {
             Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/valrateswapinformation/ComRateSwapInformation001/check', object, function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
                     WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/valrateswapinformation/ComRateSwapInformation001/delete', object,
-                        "ComComRateSwapInformation001_btn_del", "ComRateSwapInformation002", function () {
+                        "ComRateSwapInformation001_btn_del", "ComRateSwapInformation002", function () {
                             table.reload();
                         });
                 });
             });
         })
-        $("#ComComRateSwapInformation001_btn_edit").click(function () {
+        $("#ComRateSwapInformation001_btn_edit").click(function () {
             if(table!=null && table!=''){
                 var selArr = table.getAllRows();
             }
@@ -238,7 +238,7 @@ $(function() {
         /**
          * 查询按钮
          */
-        $('#ComComRateSwapInformation001_btn_search').click(function () {
+        $('#ComRateSwapInformation001_btn_search').click(function () {
             if ($("#curveCode").val() == ""){
                 Joyin.error(JoyinUtil.getMessage("MST_RateSwapInfo_0004"));
                 return;
@@ -252,7 +252,7 @@ $(function() {
         /**
          * 导出按钮
          */
-        $('#ComComRateSwapInformation001_btn_export').click(function () {
+        $('#ComRateSwapInformation001_btn_export').click(function () {
             if ($("#curveCode").val() == ""){
                 Joyin.error(JoyinUtil.getMessage("MST_RateSwapInfo_0004"));
                 return;
@@ -263,7 +263,57 @@ $(function() {
             }
             exportExcel();
         });
-
+        /**
+         * 导入按钮
+         */
+        $('#ComRateSwapInformation001_btn_import').click(function() {
+            Joyin.uploadFile({pageId:'ComRateSwapInformation001MTM'},function(fileName) {
+                Joyin.ajax(basePath + 'common/basicdata/marketdata/valrateswapinformation/ComRateSwapInformation001/checkImportData', {fileName: fileName}, function(checkResult) {
+                    if (checkResult) {
+                        setTimeout( function () {
+                            if(checkResult.data.errorMsg){
+                                Joyin.error(checkResult.data.errorMsg);
+                                return;
+                            }
+                            if (checkResult.data.confirmMsg) {
+                                Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                    var data = {
+                                        tempList: checkResult.data.correctData
+                                    }
+                                    Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/valrateswapinformation/ComRateSwapInformation001/importFile', data,
+                                        function (resultObj) {
+                                            if (resultObj.statuCode.toString() === '200') {
+                                                /** modify by yanya on 20210329 修正导入逻辑**/
+                                                //Joyin.alert("文件导入成功！");
+                                                table.reload();
+                                                return;
+                                            }
+                                        });
+                                }, {}, function () {
+                                    layui.layer.closeAll()
+                                    table.reload();
+                                });
+                            }else {
+                                var data = {
+                                    tempList: checkResult.data.correctData
+                                }
+                                Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/valrateswapinformation/ComRateSwapInformation001/importFile', data,
+                                    function (resultObj) {
+                                        if (resultObj.statuCode.toString() === '200') {
+                                            /** modify by yanya on 20210329 修正导入逻辑**/
+                                            //Joyin.alert("文件导入成功！");
+                                            table.reload();
+                                            return;
+                                        }
+                                    });
+                            }
+                        },1000);
+                    }
+                });
+            },function() {
+                table.reload();
+            });
+        });
         init();
         star();
     });

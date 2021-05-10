@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.joyintech.service.basicdata.marketdata.exchangerateinfo.dto.ComExchangeQuotationInfoDto;
 import com.joyintech.service.basicdata.marketdata.exchangerateinfo.service.ComExchangeQuotationInfoService;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.service.basicdata.marketdata.exchangerateinfo.service.ComExchangeRateQuotationInfoImportDataService;
+import com.joyintech.framework.util.StringUtil;
 
 /**
  * 汇率行情 〈一句话功能简述〉 〈功能详细描述〉
@@ -37,8 +38,8 @@ public class ComExchangeQuotationInfoController {
     @Autowired
     private ComExchangeQuotationInfoService comExchangeQuotationInfoService;
     
-    @Autowired
-    private ComExchangeRateQuotationInfoImportDataService comExchangeRateQuotationInfoImportDataService;
+//    @Autowired
+//    private ComExchangeRateQuotationInfoImportDataService comExchangeRateQuotationInfoImportDataService;
 
     /**
      * 汇率行情分页查询 <功能详细描述>
@@ -82,37 +83,31 @@ public class ComExchangeQuotationInfoController {
     public void doComplete(@RequestBody ComExchangeQuotationInfoDto dto) {
         comExchangeQuotationInfoService.doComplete(dto);
     }
-    
-    /**
-     * 导入数据文件之前检查数据
-     *
-     * @param param 导入的文件名
-     * @return 处理结果
-     */
-    @SuppressWarnings("unchecked")
-    @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return comExchangeRateQuotationInfoImportDataService.checkConfirmMsgForImportData(dataList);
-    }
 
 
+    // add by zwq 20210222 增加基准利率行情导入功能 start
     /**
-     * 导入数据文件
      *
-     * @param param 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * 插入数据
+     * @param equityList 参数
+     * @see
+     * @since 1.0
      */
-    @SuppressWarnings("unchecked")
-    @PostMapping("importData")
-    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-        String userName=param.get("userName")==null?null:param.get("userName").toString();
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return this.comExchangeRateQuotationInfoImportDataService.importData(dataList,tempList,userName,orgCode,deptCode);
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/mergeInfoList")
+    public void mergeInfoList(@RequestBody List<ComExchangeQuotationInfoDto> equityList){
+        for (ComExchangeQuotationInfoDto dto:equityList){
+            //设置基本币种，单位币种等
+            String exchargeCode = dto.getExchargeCode();
+            if (exchargeCode != null) {
+                List<String> splitToList = StringUtil.splitToList("/", exchargeCode);
+                dto.setBasisCyy(splitToList.get(0));
+                dto.setQuotCyy(splitToList.get(1));
+            }
+            dto.setInputType(DictCodeListExt1.录入方式_系统导入.getValue());
+        }
+        comExchangeQuotationInfoService.mergeInfoList(equityList);
     }
+    // add by zwq 20210222 增加基准利率行情导入功能 end
 }

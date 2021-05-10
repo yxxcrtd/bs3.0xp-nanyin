@@ -10,29 +10,27 @@
  
 package com.joyintech.service.basicdata.marketdata.bondmarketinfo.controller;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.service.basicdata.marketdata.bondmarketinfo.dto.ComBondMarketInfo001Dto;
-import com.joyintech.service.basicdata.marketdata.bondmarketinfo.service.ComBondMarketInfo001Service;
-import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.basicdata.marketdata.bondmarketinfo.service.ComBondMarketQuotationInfoImportDataService;
-import com.joyintech.tams.constant.DictCode;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.service.basicdata.marketdata.bondmarketinfo.dto.ComBondMarketInfo001Dto;
+import com.joyintech.service.basicdata.marketdata.bondmarketinfo.service.ComBondMarketInfo001Service;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 
 /**
  * 
@@ -45,112 +43,176 @@ import com.joyintech.tams.constant.DictCode;
 @RestController(value="serviceComBondMarketInfo001Controller")
 @RequestMapping("/ComBondMarketInfo001")
 public class ComBondMarketInfo001Controller extends BaseController {
-    
+
     /**
-     *每日债券行情service
+     *
      */
     @Autowired
     private ComBondMarketInfo001Service comBondMarketInfo001Service;
-    
-    @Autowired
-    private ComBondMarketQuotationInfoImportDataService comBondMarketQuotationInfoImportDataService;
-    
+
     /**
-     * 重写init方法，加载页面 {@inheritDoc}
+     * 债券代码下拉选择框
+     *
+     * @return list结果集
+     * @throws Exception 异常
      */
-    @Override
-    public String init(Model model) {
-        // TODO Auto-generated method stub
-        this.setSelectOptionToModel(model, DictCode.估值交易市场);// 估值来源
-//        this.setSelectOptionToModel(model, DictCode.估值来源);
-        return super.init(model);
+    @GetMapping("getSecId")
+    public List<SuggestDto> getSecIdOption(String secId)
+        throws Exception {
+        return comBondMarketInfo001Service.getSecIdOption(secId);
     }
-    
+
     /**
-     * 页面查询
-     * @return 列表信息
+     * 新建页面查询资产代码
+     *
+     * @return list
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("getSecIdToNew")
+    public List<SuggestDto> getSecIdToNew(String secId)
+        throws Exception {
+        return comBondMarketInfo001Service.getSecIdToNew(secId);
+    }
+
+    /**
+     * 债券简称的下拉框
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @GetMapping("getFinProdAbbr")
+    public List<SuggestDto> getFinProdAbbr(String finprodAbbr)
+        throws Exception {
+        return comBondMarketInfo001Service.getFinProdAbbr(finprodAbbr);
+    }
+
+    /**
+     * 画面查询方法
+     *
+     * @return 查询结果集
      * @throws Exception 异常
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<ComBondMarketInfo001Dto> queryPageList(@RequestBody Map<String, Object> params,
-                                                       @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
-//        Map<String, Object> params= this.getRequestMap();
-//        ValBondMarketInfo001SearchDto dto = (ValBondMarketInfo001SearchDto)JsonUtils.map2entity(params, ValBondMarketInfo001SearchDto.class);
-        return comBondMarketInfo001Service.queryPageList(page,length,params);
+    public Page<ComBondMarketInfo001Dto> selectAll(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
+                                                   @PathVariable("length") int length)
+        throws Exception {
+        return comBondMarketInfo001Service.selectForPage(page, length, param);
     }
-    
+
     /**
-     * 
-     * 获取页面参数 页面中有时间参数，获取参数后将时间转换成Date类型
-     * 
-     * @return paraMap
-     * @throws ParseException 
-     * @see
-     * @since 1.0
-     */
-    public Map<String, Object> getRequestMap() throws ParseException {
-        Map<String, Object> paraMap = RequestUtil.getPageParam();
-        // 估值日期区间
-        String valueDateBegin = this.getParam("valueDateBegin");
-        String valueDateEnd = this.getParam("valueDateEnd");
-        if(StringUtil.isNotEmpty(valueDateBegin)){
-            paraMap.put("valueDateBegin", DateUtil.parseDate(valueDateBegin, "yyyy-MM-dd"));
-        }else{
-            paraMap.remove("valueDateBegin");
-        }
-        if(StringUtil.isNotEmpty(valueDateEnd)){
-            paraMap.put("valueDateEnd", DateUtil.parseDate(valueDateEnd, "yyyy-MM-dd"));
-        }else{
-            paraMap.remove("valueDateEnd");
-        }
-        return paraMap;
-    }
-    
-    /**
-     * 导出数据
-     * 
-     * @return ResponseEntity<byte[]>
-     * @throws Exception ExportUtil.export
-     * @see
-     * @since 1.0
-     */
-    @PostMapping("/queryAllList")
-    public List<ComBondMarketInfo001Dto> queryAllList(@RequestBody Map<String, Object> params) throws Exception{
-            return comBondMarketInfo001Service.queryAllList(params);
-    }
-    
-    /**
-     * 导入数据文件之前检查数据
+     * 获取金融产品简称
      *
-     * @param param 导入的文件名
-     * @return 处理结果
+     * @return 查询结果集
+     * @throws Exception 异常
      */
-    @SuppressWarnings("unchecked")
-    @PostMapping("checkConfirmMsgForImportData")
-    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return comBondMarketQuotationInfoImportDataService.checkConfirmMsgForImportData(dataList);
+    @ResponseBody
+    @PostMapping("getFinprodAbbrOption/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodAbbrOption(@RequestBody Map<String, Object> map, @PathVariable("page") int page,@PathVariable("length") int length)
+        throws Exception {
+        return comBondMarketInfo001Service.getFinprodAbbrOption(map,page,length);
+    }
+
+    /**
+     * 删除
+     *
+     * @param dto 页面选中的数据
+     * @param br br
+     * @return 结果
+     * @throws Exception 异常
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("delete")
+    public int delete(@RequestBody MstBondValuationInfo dto)
+        throws Exception {
+        return comBondMarketInfo001Service.delete(dto);
+    }
+
+    /**
+     * 插入
+     *
+     * @param dto 页面选中的数据
+     * @param br br
+     * @return 结果
+     * @throws Exception 异常
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("insert")
+    public int insert(@RequestBody MstBondValuationInfo dto)
+        throws Exception {
+        return comBondMarketInfo001Service.insert(dto);
+    }
+
+    /**
+     * 更新
+     *
+     * @param dto 页面选中的数据
+     * @param br br
+     * @return 结果
+     * @throws Exception 异常
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("update")
+    public int update(@RequestBody MstBondValuationInfo dto)
+        throws Exception {
+        return comBondMarketInfo001Service.update(dto);
+    }
+
+    /**
+     * 根据债券代码查询
+     *
+     * @return MstBondValuationInfo
+     * @throws Exception 异常
+     */
+    @GetMapping("getBySecId")
+    public MstBondValuationInfo getBySecId(String secId)
+        throws Exception {
+        return comBondMarketInfo001Service.getBySecId(secId);
+    }
+
+    /**
+     * 根据债券代码查询
+     *
+     * @return MstBondValuationInfo
+     * @throws Exception 异常
+     */
+    @GetMapping("selectByKey")
+    public MstBondValuationInfo selectByKey(String secId, String valueDate, String valueSource)
+        throws Exception {
+        return comBondMarketInfo001Service.selectByKey(secId, valueDate, valueSource);
     }
 
 
     /**
-     * 导入数据文件
-     *
-     * @param param 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     * 查询所有符合条件的数据
+     * @param param
+     * @return
+     * @throws Exception
      */
-    @SuppressWarnings("unchecked")
-    @PostMapping("importData")
-    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
-        String userName=param.get("userName")==null?null:param.get("userName").toString();
-        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
-        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
-        return this.comBondMarketQuotationInfoImportDataService.importData(dataList,tempList,userName,orgCode,deptCode);
+    @PostMapping("selectAllList")
+    public List<ComBondMarketInfo001Dto> selectAllList(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return comBondMarketInfo001Service.selectAllList(param);
     }
+
+
+   /**
+    *
+    * 插入数据
+    * @param equityList 参数
+    * @see
+    * @since 1.0
+    */
+   @Transactional
+   @DTXTransaction
+   @PostMapping("/mergeInfoList")
+   public void mergeInfoList(@RequestBody List<ComBondMarketInfo001Dto> equityList){
+	   comBondMarketInfo001Service.mergeInfoList(equityList);
+   }
 
 }
 

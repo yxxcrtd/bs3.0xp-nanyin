@@ -74,8 +74,19 @@ $(function() {
     });
 
     var exportExcel = function() {
-        var paramObj = getSearchParams();
-        Joyin.exportExcel('export', paramObj);
+
+        if (table) {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length === 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
     };
 
     /**
@@ -113,18 +124,24 @@ $(function() {
              });
            });
         });
-        
-        // 导入按钮点击事件
+
+        // add by zwq 20210222  start
         $('#ComExchangeQuotationInfo001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
-                Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'common/basicdata/marketdata/exchangerateinfo/ComExchangeQuotationInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                        Joyin.ajax(basePath + 'common/basicdata/marketdata/exchangerateinfo/ComExchangeQuotationInfo001/importFile', {fileName: fileName});
+                Joyin.uploadFile({pageId:'ComExchangeQuotationInfo001MTM'},function(fileName) {
+                    Joyin.ajax(basePath +"common/basicdata/marketdata/exchangerateinfo/ComExchangeQuotationInfo001/importFile", {
+                        fileName : fileName
+                    },function(result){
+                        if(!result || !($.isArray(result) && result.length > 0)) {
+                            layui.layer.closeAll();
+                            table.reload();
+                        }
                     });
                 },function() {
                     table.reload();
                 });
             });
         });
+        // add by zwq 20210222  end
      });
 }());

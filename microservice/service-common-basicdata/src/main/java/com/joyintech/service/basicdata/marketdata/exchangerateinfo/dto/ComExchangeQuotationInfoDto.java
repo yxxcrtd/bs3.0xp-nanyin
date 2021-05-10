@@ -57,6 +57,32 @@ public class ComExchangeQuotationInfoDto extends MstExchargeQuote implements ITa
     private String elementId;
 
     /**
+     * 行情类型
+     */
+    private String marketType;
+
+    /**
+     * 期限
+     */
+    private String deadLine;
+
+    public String getMarketType() {
+        return marketType;
+    }
+
+    public void setMarketType(String marketType) {
+        this.marketType = marketType;
+    }
+
+    public String getDeadLine() {
+        return deadLine;
+    }
+
+    public void setDeadLine(String deadLine) {
+        this.deadLine = deadLine;
+    }
+
+    /**
      * 获取 selectedItem
      * @return selectedItem.
      */

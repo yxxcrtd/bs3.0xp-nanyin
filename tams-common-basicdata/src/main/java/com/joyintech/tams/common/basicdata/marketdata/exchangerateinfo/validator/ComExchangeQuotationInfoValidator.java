@@ -51,10 +51,10 @@ public class ComExchangeQuotationInfoValidator implements BeanValidator {
                 Date tradeDate = dto.getTradeDate();
                 if (tradeDate != null) {
                     if (DateUtil.compareDate(tradeDate, sysDate) < 0) {
-                        errorList.add(new ValidMessage("tradeDate",
-                            getMessage("BUSS_COM_E_0004",
-                                getMessage("ComExchangeQuotationInfo001.tradeDate"),
-                                getMessage("SysCommon.platDate"))));
+//                        errorList.add(new ValidMessage("tradeDate",
+//                            getMessage("BUSS_COM_E_0004",
+//                                getMessage("ComExchangeQuotationInfo001.tradeDate"),
+//                                getMessage("SysCommon.platDate"))));
                     }
                     String exchargeCode = dto.getExchargeCode();
                     Map<String, Object> pageParam = new HashMap<>();
@@ -73,13 +73,13 @@ public class ComExchangeQuotationInfoValidator implements BeanValidator {
             }
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
                 // 编辑时生效日小于平台日期时
-                Date tradeDate = dto.getTradeDate();
-                if (DateUtil.compareDate(tradeDate, sysDate) < 0) {
-                    errorList.add(new ValidMessage("tradeDate",
-                        getMessage("BUSS_COM_E_0018",
-                            getMessage("ComExchangeQuotationInfo001.tradeDate"),
-                            getMessage("SysCommon.platDate"))));
-                }
+//                Date tradeDate = dto.getTradeDate();
+//                if (DateUtil.compareDate(tradeDate, sysDate) < 0) {
+//                    errorList.add(new ValidMessage("tradeDate",
+//                        getMessage("BUSS_COM_E_0018",
+//                            getMessage("ComExchangeQuotationInfo001.tradeDate"),
+//                            getMessage("SysCommon.platDate"))));
+//                }
             }
 
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
@@ -89,13 +89,13 @@ public class ComExchangeQuotationInfoValidator implements BeanValidator {
                 // 判断生效日小于平台日期时，不能删除
                 List<ComExchangeQuotationInfoDto> items = dto.getSelectedItem();
                 for (ComExchangeQuotationInfoDto comExchangeQuotationInfoDto : items) {
-                    Date tradeDate = comExchangeQuotationInfoDto.getTradeDate();
-                    if (DateUtil.compareDate(tradeDate, sysDate) < 0) {
-                        errorList.add(new ValidMessage("tradeDate",
-                            getMessage("BUSS_COM_E_0015",
-                                getMessage("ComExchangeQuotationInfo001.tradeDate"),
-                                getMessage("SysCommon.platDate"))));
-                    }
+//                    Date tradeDate = comExchangeQuotationInfoDto.getTradeDate();
+//                    if (DateUtil.compareDate(tradeDate, sysDate) < 0) {
+//                        errorList.add(new ValidMessage("tradeDate",
+//                            getMessage("BUSS_COM_E_0015",
+//                                getMessage("ComExchangeQuotationInfo001.tradeDate"),
+//                                getMessage("SysCommon.platDate"))));
+//                    }
                 }
             }
         }

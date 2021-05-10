@@ -36,5 +36,20 @@ $(function() {
         $('#ComExchangeQuotationInfo002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
+
+        // 点击行情类型所触发的事件
+        $('#marketType').change(function (res) {
+            var marketType = $('#marketType').val();
+            /**
+             * 如果行情类型选择的是远期时，期限下拉框为必填项；反之则不是必填项
+             */
+            if ("01"==marketType){
+                $("#deadLine").attr("required",true);
+            }else {
+                $("#deadLine").attr("required",false);
+            }
+
+        });
     });
+
 }());

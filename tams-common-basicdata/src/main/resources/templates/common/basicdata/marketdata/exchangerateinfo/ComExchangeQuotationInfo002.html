@@ -117,6 +117,36 @@
                 <div class="layui-form-item">
                     <div >
                         <label class="layui-form-label form-lable mst-lable"
+                               data-th-text="#{ComExchangeQuotationInfo002.marketType}">行情类型</label>
+                        <div class="layui-input-inline input-inline">
+                            <select type="text" id="marketType" name="marketType"
+                                    class="layui-input form-input input-select"
+                                    data-th-data-result='${BASIC_RATE_MARKET_TYPE}' allowClear="true" placeholder="请输入内容"
+                                    data-th-initValue="${entity?.marketType}" required="required"
+                                    data-th-placeholder="#{SysCommon.placeholder}" formatoption="true">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div >
+                        <label class="layui-form-label form-lable mst-lable"
+                               data-th-text="#{ComExchangeQuotationInfo002.deadLine}">期限</label>
+                        <div class="layui-input-inline input-inline">
+                            <select type="text" id="deadLine" name="deadLine"
+                                    class="layui-input form-input input-select"
+                                    data-th-data-result='${BASIC_RATE_DEAD_LINE}' allowClear="true" placeholder="请输入内容"
+                                    data-th-initValue="${entity?.deadLine}"
+                                    data-th-placeholder="#{SysCommon.placeholder}" formatoption="true">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div >
+                        <label class="layui-form-label form-lable mst-lable"
                                data-th-text="#{ComExchangeQuotationInfo002.quotUnit}">报价单位</label>
                         <div class="layui-input-inline input-inline">
                             <input id="quotUnit" name="quotUnit" maxlength="20" type="text"

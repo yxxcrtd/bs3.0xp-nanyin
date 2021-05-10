@@ -103,4 +103,22 @@ public class ComExchangeQuotationInfoService extends BaseService<ComExchangeQuot
         }
     }
 
+    // add by zwq 20210222 增加基准汇率行情导入功能 start
+    public void mergeInfoList(List<ComExchangeQuotationInfoDto> list){
+        int batchCount = 50;// 每批commit的个数
+        int batchLastIndex = batchCount;// 每批最后一个的下标
+        for (int index = 0; index < list.size();) {
+            if (batchLastIndex > list.size() - 1) {
+                batchLastIndex = list.size();
+                comExchangeQuotationInfoMapper.mergeInfoList(list.subList(index, batchLastIndex));
+                break;// 数据插入完毕,退出循环
+            }
+            else {
+            	comExchangeQuotationInfoMapper.mergeInfoList(list.subList(index, batchLastIndex));
+                index = batchLastIndex;// 设置下一批下标
+                batchLastIndex = index + batchCount;
+            }
+        }
+    }
+    // add by zwq 20210222 增加基准利率行情导入功能 end
 }

@@ -3,6 +3,8 @@ package com.joyintech.tams.common.basicdata.marketdata.exchangerateinfo.controll
 
 
 
+import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import com.joyintech.tams.common.basicdata.marketdata.exchangerateinfo.dto.ComExchangeQuotationInfoDto;
@@ -24,9 +26,13 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -142,42 +148,41 @@ public class ComExchangeQuotationInfo001Controller extends BaseController {
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
         throws Exception {
-//        List<MstExchangeQuotationInfoDto> dtoList = mstExchangeQuotationInfoService.selectAllList(
-//            RequestUtil.getParameters(getRequest()));
-//        File outFile = mstExchangeQuotationInfoService.makeFile(
-//            "/com/joyintech/tams/invest/basicdata/exchangerateinfo/conf/export_conf.xml", dtoList);
-//        return ExportUtil.export(
-//            this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
-//                                 + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
-//                                 + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-//            outFile, true);
-        return comExchangeQuotationInfoService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
+
+        String datas = this.getParam("datas");
+        List<ComExchangeQuotationInfoDto> listdto ;
+
+        if (datas == null) {
+            listdto = comExchangeQuotationInfoService.selectAllList(RequestUtil.getPageParam());
+        }
+        else {
+            listdto = JsonUtils.json2List(datas, ComExchangeQuotationInfoDto.class);
+        }
+
+        for (int i=0;i<listdto.size();i++){
+            ComExchangeQuotationInfoDto comExchangeQuotationInfoDto = listdto.get(i);
+            comExchangeQuotationInfoDto.setTradeDateFormatStr( DateUtil.format(comExchangeQuotationInfoDto.getTradeDate(),"yyyy-MM-dd"));
+        }
+        File outFile = comExchangeQuotationInfoService.makeFile(
+                "/com/joyintech/tams/common/basicdata/marketdata/exchangerateinfo/conf/export_conf.xml",
+                listdto);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
 
     }
-    
-    /**
-     * 导入数据文件之前检查数据
-     *
-     * @param fileName 导入的文件名
-     * @return 处理结果
-     */
+
+    // add by zwq 20210222  start
+    // 添加批量导入功能
     @ResponseBody
-    @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
-    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return comExchangeQuotationInfoService.checkConfirmMsgForImportData(fileName);
+    @RequestMapping("importFile")
+    public List<ExcelValidDto> importData(String fileName)
+            throws Exception{
+        return comExchangeQuotationInfoService.importData(fileName);
     }
-
-    /**
-     * 导入数据文件
-     *
-     * @param fileName 导入的文件名
-     * @return 导入结果，包含验证内容，如果验证失败，返回message
-     */
-    @ResponseBody
-    @RequestMapping("/importFile")
-    public List<ExcelValidDto> importData(String fileName) {
-        return this.comExchangeQuotationInfoService.importData(fileName);
-
-    }
-
+    // add by zwq 20210222  end
 }

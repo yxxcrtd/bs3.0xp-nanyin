@@ -19,12 +19,14 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.basicdata.marketdata.exchangerateinfo.validator.ComExchangeQuotationInfoValidator;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 /**
@@ -58,11 +60,64 @@ public class ComExchangeQuotationInfoDto extends MstExchargeQuote implements ITa
      */
     private String pageModel;
 
-    
+    private String tradeDateFormatStr;
+
+    public String getTradeDateFormatStr() {
+        return tradeDateFormatStr;
+    }
+
+    public void setTradeDateFormatStr(String tradeDateFormatStr) {
+        this.tradeDateFormatStr = tradeDateFormatStr;
+    }
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private String elementId;
+
+    /**
+     * 数据来源的具体值
+     * **/
+    private String datasourceTypeValue;
+
+    public String getDatasourceTypeValue() {
+        return SysDataUtil.getNameFromDataDict(DictCode.估值来源,super.getDatasourceType());
+    }
+
+    /**
+     * 行情类型
+     */
+    private String marketType;
+
+    /**
+     * 期限
+     */
+    private String deadLine;
+
+    @NotEmpty(fieldName = "ValExchangeQuotationInfo002.marketType")
+    public String getMarketType() {
+        return marketType;
+    }
+
+    public void setMarketType(String marketType) {
+        this.marketType = marketType;
+    }
+
+    public String getDeadLine() {
+        return deadLine;
+    }
+
+    public void setDeadLine(String deadLine) {
+        this.deadLine = deadLine;
+    }
+
+    public String getMarketTypeValue() {
+        return SysDataUtil.getNameFromDataDict(DictCode.基准汇率行情类型,this.getMarketType());
+    }
+
+    public String getDeadLineValue() {
+        return SysDataUtil.getNameFromDataDict(DictCode.基准汇率期限,this.getDeadLine());
+    }
 
     /**
      * 获取 selectedItem

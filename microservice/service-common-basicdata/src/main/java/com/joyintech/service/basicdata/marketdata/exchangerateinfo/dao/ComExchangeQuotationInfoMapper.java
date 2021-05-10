@@ -13,6 +13,7 @@ package com.joyintech.service.basicdata.marketdata.exchangerateinfo.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.service.basicdata.marketdata.exchangerateinfo.dto.ComExchangeQuotationInfoDto;
@@ -46,6 +47,6 @@ public interface ComExchangeQuotationInfoMapper {
      * @since 1.0
      */
 
-    String getRegistExcelList( Map<String,Object> param );
+    int mergeInfoList(@Param("newDataList")List<ComExchangeQuotationInfoDto> insertList);
 
 }
