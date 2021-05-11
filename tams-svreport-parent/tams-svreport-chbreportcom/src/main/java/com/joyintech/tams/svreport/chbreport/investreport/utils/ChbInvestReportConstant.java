@@ -44,4 +44,6 @@ public class ChbInvestReportConstant {
     public static final String 日期格式化yyyyMMddHHmmss = "yyyyMMddHHmmss";
 
     public static final String 理财产品非标投资运作报告模板文件 = "ChbInvestOperation.ftl";
+    public static final String 成立公告模板文件 = "ChbEstablishOperation.ftl";
+    public static final String 到期公告模板文件 = "ChbExpireOperation.ftl";
 }
