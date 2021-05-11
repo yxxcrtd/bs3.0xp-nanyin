@@ -21,6 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service.FtpDetailService;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.service.ChbInvestOperationService;
+import com.joyintech.tams.svreport.chbreport.investreport.chbnetworthoperation.service.ChbNetWorthOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dao.ChbInvestReportCommonMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto;
 import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportConstant;
@@ -71,6 +72,12 @@ public class ChbInvestReportCommonService extends BaseService {
      */
     @Autowired
     private ChbInvestOperationService chbInvestOperationService;
+
+    /**
+     * 理财产品非标投资运作报告service
+     */
+    @Autowired
+    private ChbNetWorthOperationService chbNetWorthOperationService;
 
     /**
      * 中招报告发送
@@ -323,7 +330,10 @@ public class ChbInvestReportCommonService extends BaseService {
 
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
-
+                prodId = (String) param.get("prodId");
+                endDate = (String) param.get("endDate");
+                reportName = DictCodeListExt3.中债披露报告_产品净值披露.getCodeName();
+                file = chbNetWorthOperationService.createExcel(param, reportName);
             }
             if(file != null) {
                 UploadFile uploadFile = new UploadFile(file.getName(), IDGenerator.generate(), file);
@@ -368,7 +378,7 @@ public class ChbInvestReportCommonService extends BaseService {
 
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
-
+                return  chbNetWorthOperationService.exportExcel(param, DictCodeListExt3.中债披露报告_产品净值披露.getCodeName());
             }
         }
         return null;
