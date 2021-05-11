@@ -14,6 +14,14 @@
                     )
                     where rank = 2 and STATUS = 'U'
                 ),
+                duration as( 
+                    select distinct 
+	                    a.seq_no
+                    from sys_wfl_business_list a 
+                    inner join sys_data_process_mark b on a.seq_no = b.workflow_id and a.PROCESS_STATE !='END' and b.HIS_NO = 1
+                    inner join sys_page c on c.page_id = b.page_id
+                    where c.page_file like 'invest/period/%' 
+                ),
                 TEMP AS (
 			        SELECT * FROM(
 				        select 
@@ -35,8 +43,8 @@
                 )
                 select 
 	    			T.create_user as launchUser,
-					pp.PORTFOLIO_ID portfolioId,
-					pp.PORTFOLIO_NAME portfolioName,
+                    decode(duration.seq_no,null,pp.PORTFOLIO_ID,'') portfolioId,
+                    decode(duration.seq_no,null,pp.PORTFOLIO_NAME,'') portfolioName,
 					deal.Finprod_id finprodId, 
 					nvl(fp.Finprod_name,fp.Finprod_abbr) finprodName,
 					T.Trade_id tradeId,
@@ -57,6 +65,7 @@
     			LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
 				left join fin_product fp on fp.finprod_id = deal.finprod_id
 				left join PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = nvl(ad.PORTFOLIO_ID,total.PORTFOLIO_ID)
+                left join duration on duration.seq_no = t.seq_no
 				where deal.finprod_type2 in('F01','F02','F03','F04','F05','F06','F07','F08','F09','F10','F14','F15','F17','F18','F35')
 					and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
 					
