@@ -282,7 +282,10 @@
         @CASH_ID := tmp.CASH_ID /* 分组条件1 */
         FROM (
         /* 数据源 */
-        SELECT * FROM FIN_CASH_CALC_RULE ORDER BY EFF_DATE DESC
+        <!--MODIFY BY WUJIE ON 20210511 START
+        SELECT * FROM FIN_CASH_CALC_RULE ORDER BY EFF_DATE DESC-->
+        SELECT * FROM FIN_FLOAT_CALC_RULE ORDER BY EFF_DATE DESC
+        <!--MODIFY BY WUJIE ON 20210511 END -->
         ) tmp,
         /* 定义临时变量池 */
         (SELECT @rownum := 0,
