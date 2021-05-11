@@ -52,6 +52,70 @@ public class ValFloatCalcRuleC extends BaseEntity {
     private String calRule;
 
     /**
+     * 计费基础
+     */
+    private String chargeBase;
+
+    /**
+     * 计费基数
+     */
+    private String chargeBasis;
+
+    /**
+     * 计费基数日期类型
+     */
+    private String basisDate;
+
+    /**
+     * 取得 计费基础
+     * @return 计费基础
+     */
+    public String getChargeBase() {
+        return chargeBase;
+    }
+
+    /**
+     * 设置 计费基础
+     * @param chargeBase 计费基础
+     */
+    public void setChargeBase(String chargeBase) {
+        this.chargeBase = chargeBase == null ? null : chargeBase.trim();
+    }
+
+    /**
+     * 取得 计费基数
+     * @return 计费基数
+     */
+    public String getChargeBasis() {
+        return chargeBasis;
+    }
+
+    /**
+     * 设置 计费基数
+     * @param chargeBasis 计费基数
+     */
+    public void setChargeBasis(String chargeBasis) {
+        this.chargeBasis = chargeBasis == null ? null : chargeBasis.trim();
+    }
+
+    /**
+     * 取得 计费基数日期类型
+     * @return 计费基数日期类型
+     */
+    public String getBasisDate() {
+        return basisDate;
+    }
+
+    /**
+     * 设置 计费基数日期类型
+     * @param basisDate 计费基数日期类型
+     */
+    public void setBasisDate(String basisDate) {
+        this.basisDate = basisDate == null ? null : basisDate.trim();
+    }
+
+
+    /**
      * 取得 产品代码
      * @return 产品代码
      */
