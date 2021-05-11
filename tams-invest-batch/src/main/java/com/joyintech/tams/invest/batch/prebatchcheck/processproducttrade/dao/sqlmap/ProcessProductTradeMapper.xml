@@ -4,15 +4,18 @@
 
     <select id="selectProcessProductTradeList" parameterType="java.util.Map"
             resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
-		WITH filter as(
-            select workflow_id
-            from(
-	            select 
-		            mark.*,rank() over(partition by mark.workflow_id order by mark.HIS_NO desc) as rank
-	            from sys_data_process_mark mark
-	            inner join SYS_WFL_BUSINESS_LIST T on T.seq_no = mark.workflow_id and T.PROCESS_STATE = 'BACK'
-            )
-            where rank = 2 and STATUS = 'U'
+        with tempA as(
+	        select a.*,rank() over(partition by a.workflow_id order by a.HIS_NO desc) as rank
+	        from sys_wfl_business_node A 
+	        inner join sys_wfl_business_list B on A.workflow_id = B.workflow_id and b.process_state = 'BACK'
+        ),
+        filter as(
+	        select C.seq_no workflow_id
+	        from tempA A
+            inner join sys_wfl_business_list C on c.workflow_id = a.workflow_id
+	        where A.rank = 2 and exists(
+		        select 1 from tempA B where B.rank = 1 and B.workflow_id = A.workflow_id and b.node_id = a.node_id
+	        )
         ),
         TEMP AS (
 			SELECT * FROM(
