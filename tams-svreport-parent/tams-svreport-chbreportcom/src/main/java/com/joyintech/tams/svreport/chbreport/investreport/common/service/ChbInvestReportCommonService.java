@@ -18,7 +18,10 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto;
+import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service.FtpDetailService;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.service.ChbInvestOperationService;
+import com.joyintech.tams.svreport.chbreport.investreport.chbnetworthoperation.service.ChbNetWorthOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dao.ChbInvestReportCommonMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto;
 import com.joyintech.tams.svreport.chbreport.investreport.utils.ChbInvestReportConstant;
@@ -69,6 +72,18 @@ public class ChbInvestReportCommonService extends BaseService {
      */
     @Autowired
     private ChbInvestOperationService chbInvestOperationService;
+
+    /**
+     * 理财产品非标投资运作报告service
+     */
+    @Autowired
+    private ChbNetWorthOperationService chbNetWorthOperationService;
+
+    /**
+     * 中招报告发送
+     */
+    @Autowired
+    private FtpDetailService ftpDetailService;
 
     /**
      * 日志
@@ -221,8 +236,18 @@ public class ChbInvestReportCommonService extends BaseService {
         if(StringUtil.isNotEmpty(endDate)){
             repReveal.setEndDate(DateUtil.parse(endDate));
         }
-        repReveal.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
-        repReveal.setRevealStatus(DictCodeListExt2.披露状态_未披露.getValue());
+        if(StringUtil.equals(DictCodeListExt1.确认类型_自动.getValue(), isConfirm)) {
+            repReveal.setConfirmStatus(DictCodeList.确认状态_已确认.getValue());
+        }
+        else {
+            repReveal.setConfirmStatus(DictCodeList.确认状态_未确认.getValue());
+        }
+        if(StringUtil.equals(DictCodeListExt1.确认类型_自动.getValue(), isReveal)) {
+            repReveal.setRevealStatus(DictCodeListExt2.披露状态_已披露.getValue());
+        }
+        else {
+            repReveal.setRevealStatus(DictCodeListExt2.披露状态_未披露.getValue());
+        }
         repReveal.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         // 系统生成确认方式和披露方式设置为手动
         repReveal.setIsConfirm(isConfirm);
@@ -263,14 +288,19 @@ public class ChbInvestReportCommonService extends BaseService {
         repInstallLogDetail.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
         //更新日志表
         repInstallLogDetailMapper.insert(repInstallLogDetail);
+        //自动披露时，需要调用披露方法
+        if(StringUtil.equals(DictCodeListExt1.确认类型_自动.getValue(), isReveal)) {
+            //发送
+            return doSendReport(repReveal);
+        }
         return true;
     }
 
     /**
      * 生成文件
-     * @param param
-     * @param isConfirm
-     * @param isReveal
+     * @param param 参数：包含产品代码、日期等
+     * @param isConfirm 自动确认还是手工确认
+     * @param isReveal 自动披露还是手工披露
      * @return
      * @throws Exception
      */
@@ -295,8 +325,15 @@ public class ChbInvestReportCommonService extends BaseService {
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_到期公告.getValue(), repId.toString())) {
 
             }
+            //定期公告里面要考虑传递进去的产品代码，区分出来净值、货币，另外还需要区分出来是否含有多份额的子产品
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
 
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
+                prodId = (String) param.get("prodId");
+                endDate = (String) param.get("endDate");
+                reportName = DictCodeListExt3.中债披露报告_产品净值披露.getCodeName();
+                file = chbNetWorthOperationService.createExcel(param, reportName);
             }
             if(file != null) {
                 UploadFile uploadFile = new UploadFile(file.getName(), IDGenerator.generate(), file);
@@ -339,6 +376,9 @@ public class ChbInvestReportCommonService extends BaseService {
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
 
+            }
+            else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
+                return  chbNetWorthOperationService.exportExcel(param, DictCodeListExt3.中债披露报告_产品净值披露.getCodeName());
             }
         }
         return null;
@@ -425,4 +465,29 @@ public class ChbInvestReportCommonService extends BaseService {
 
         return ChbInvestReportConstant.空字符;
     }
+
+
+    /**
+     * 调用发送
+     * @param repReveal
+     * @return
+     */
+    private Boolean doSendReport(RepReveal repReveal) {
+        FtpDetailDto ftpDetailDto = new FtpDetailDto();
+        ftpDetailDto.setSysFilepath(repReveal.getSysFilepath());
+        ftpDetailDto.setProdId(repReveal.getProdid());
+        ftpDetailDto.setReportId(repReveal.getRepId());
+        ftpDetailDto.setReportCategory(repReveal.getReportCategory()); // 获取ftp路径用
+        ftpDetailDto.setOption(DictCodeListExt2.披露方式_手动.getValue()); //手工操作
+        if(StringUtil.isNotEmpty(repReveal.getStartDate())) {
+            ftpDetailDto.setStatrDate(repReveal.getStartDate());
+        }
+        if(StringUtil.isNotEmpty(repReveal.getEndDate())) {
+            ftpDetailDto.setEndDate(repReveal.getEndDate());
+        }
+        ftpDetailDto.setRevealChannel(repReveal.getRevealChannel());
+        ftpDetailDto.setRevealId(repReveal.getId());
+        return ftpDetailService.doReveal(ftpDetailDto);
+    }
+
 }

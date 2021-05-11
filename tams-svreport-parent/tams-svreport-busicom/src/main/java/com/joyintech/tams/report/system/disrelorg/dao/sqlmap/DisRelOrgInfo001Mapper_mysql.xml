@@ -61,8 +61,8 @@
 		insert into REP_RELORG (RELORG_ID,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ORGAN_NAME,STATUS,SVR_DATA_SOURCES)
 		values (
 		#{relorgId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
-		#{createTime,jdbcType=TIMESTAMP}, #{updateteUser,jdbcType=VARCHAR},
-		#{updateTime,jdbcType=TIMESTAMP},#{organName,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{svrDataSources,jdbcType=VARCHAR}
+		#{createTime,jdbcType=DATE}, #{updateteUser,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=DATE},#{organName,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{svrDataSources,jdbcType=VARCHAR}
 		)
     </insert>
 	<select id="selectOne" resultType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
@@ -84,7 +84,7 @@
 		UPDATE rep_relorg
 		set
 		STATUS = #{status,jdbcType=VARCHAR},SVR_DATA_SOURCES=#{svrDataSources,jdbcType=VARCHAR},
-		ORGAN_NAME= #{organName,jdbcType=VARCHAR}
+		ORGAN_NAME= #{organName,jdbcType=VARCHAR},UPDATE_USER=#{updateteUser,jdbcType=VARCHAR},UPDATE_TIME=#{updateTime,jdbcType=DATE}
 		where
 		RELORG_ID= #{relorgId,jdbcType=VARCHAR}
 	</update>

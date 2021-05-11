@@ -1,22 +1,51 @@
 package com.joyintech.tams.common.base.entity;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+
+import java.util.List;
 
 public class ChbEmployeeInfo extends BaseEntity {
+    /**
+     * 导出类型
+     */
+    private String type;
+    /**
+     * 选择项
+     */
+    private List<ChbEmployeeInfo> selectedItem;
+    /**
+     * 数据状态名称
+     */
+    private String statusName;
+
     /**
      * 从业人员类型
      */
     private String employeeType;
+    /**
+     * 从业人员类型描述
+     */
+    private String employeeTypeStr;
+    /**
+     * 旧从业人员类型
+     */
+    private String oldEmployeeType;
 
     /**
      * 姓名
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String employeeName;
 
     /**
      * 性别
      */
     private String employeeSex;
+    /**
+     * 性别描述
+     */
+    private String employeeSexStr;
 
     /**
      * 发行机构代码
@@ -27,16 +56,28 @@ public class ChbEmployeeInfo extends BaseEntity {
      * 身份证号码
      */
     private String identifyNumber;
+    /**
+     * 旧身份证号码
+     */
+    private String oldIdentifyNumber;
 
     /**
      * 所属总行或分支行
      */
     private String belongsBank;
+    /**
+     * 所属总行或分支行描述
+     */
+    private String belongsBankStr;
 
     /**
      * 所属区域
      */
     private String belongsPlace;
+    /**
+     * 所属区域描述
+     */
+    private String belongsPlaceStr;
 
     /**
      * 具体单位名称
@@ -57,11 +98,19 @@ public class ChbEmployeeInfo extends BaseEntity {
      * 学历
      */
     private String education;
+    /**
+     * 学历描述
+     */
+    private String educationStr;
 
     /**
      * 学位
      */
     private String academicDegree;
+    /**
+     * 学位描述
+     */
+    private String academicDegreeStr;
 
     /**
      * 首次参加工作时间
@@ -77,11 +126,19 @@ public class ChbEmployeeInfo extends BaseEntity {
      * 专业技术职称
      */
     private String professionalTitle;
+    /**
+     * 专业技术职称描述
+     */
+    private String professionalTitleStr;
 
     /**
      * 理财专业证书
      */
     private String finProfessionalCrtf;
+    /**
+     * 理财专业证书描述
+     */
+    private String finProfessionalCrtfStr;
 
     /**
      * 理财登记培训证书编号
@@ -112,11 +169,19 @@ public class ChbEmployeeInfo extends BaseEntity {
      * 登记业务分类
      */
     private String regBusiType;
+    /**
+     * 登记业务分类描述
+     */
+    private String regBusiTypeStr;
 
     /**
      * 登记人员类别
      */
     private String regEmployeeType;
+    /**
+     * 登记人员类别描述
+     */
+    private String regEmployeeTypeStr;
 
     /**
      * 部门代码
@@ -547,5 +612,125 @@ public class ChbEmployeeInfo extends BaseEntity {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<ChbEmployeeInfo> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<ChbEmployeeInfo> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public String getEmployeeTypeStr() {
+        return employeeTypeStr;
+    }
+
+    public void setEmployeeTypeStr(String employeeTypeStr) {
+        this.employeeTypeStr = employeeTypeStr;
+    }
+
+    public String getOldEmployeeType() {
+        return oldEmployeeType;
+    }
+
+    public void setOldEmployeeType(String oldEmployeeType) {
+        this.oldEmployeeType = oldEmployeeType;
+    }
+
+    public String getEmployeeSexStr() {
+        return employeeSexStr;
+    }
+
+    public void setEmployeeSexStr(String employeeSexStr) {
+        this.employeeSexStr = employeeSexStr;
+    }
+
+    public String getOldIdentifyNumber() {
+        return oldIdentifyNumber;
+    }
+
+    public void setOldIdentifyNumber(String oldIdentifyNumber) {
+        this.oldIdentifyNumber = oldIdentifyNumber;
+    }
+
+    public String getBelongsBankStr() {
+        return belongsBankStr;
+    }
+
+    public void setBelongsBankStr(String belongsBankStr) {
+        this.belongsBankStr = belongsBankStr;
+    }
+
+    public String getBelongsPlaceStr() {
+        return belongsPlaceStr;
+    }
+
+    public void setBelongsPlaceStr(String belongsPlaceStr) {
+        this.belongsPlaceStr = belongsPlaceStr;
+    }
+
+    public String getEducationStr() {
+        return educationStr;
+    }
+
+    public void setEducationStr(String educationStr) {
+        this.educationStr = educationStr;
+    }
+
+    public String getAcademicDegreeStr() {
+        return academicDegreeStr;
+    }
+
+    public void setAcademicDegreeStr(String academicDegreeStr) {
+        this.academicDegreeStr = academicDegreeStr;
+    }
+
+    public String getProfessionalTitleStr() {
+        return professionalTitleStr;
+    }
+
+    public void setProfessionalTitleStr(String professionalTitleStr) {
+        this.professionalTitleStr = professionalTitleStr;
+    }
+
+    public String getFinProfessionalCrtfStr() {
+        return finProfessionalCrtfStr;
+    }
+
+    public void setFinProfessionalCrtfStr(String finProfessionalCrtfStr) {
+        this.finProfessionalCrtfStr = finProfessionalCrtfStr;
+    }
+
+    public String getRegBusiTypeStr() {
+        return regBusiTypeStr;
+    }
+
+    public void setRegBusiTypeStr(String regBusiTypeStr) {
+        this.regBusiTypeStr = regBusiTypeStr;
+    }
+
+    public String getRegEmployeeTypeStr() {
+        return regEmployeeTypeStr;
+    }
+
+    public void setRegEmployeeTypeStr(String regEmployeeTypeStr) {
+        this.regEmployeeTypeStr = regEmployeeTypeStr;
     }
 }

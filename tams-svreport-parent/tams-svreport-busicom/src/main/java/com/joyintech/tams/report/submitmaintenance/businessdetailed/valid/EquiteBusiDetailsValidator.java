@@ -73,8 +73,20 @@ public class EquiteBusiDetailsValidator implements BeanValidator{
 			EquiteBusiDetails001Dto oldinfo= equityBusiDetails001Mapper.selectByPrimaryKey(dto);
 //			int monthnew = DateUtil.getMonth(DateUtil.format(dto.getEquityConfDate()));
 //        	int monthold = DateUtil.getMonth(DateUtil.format(oldinfo.getEquityConfDate()));
-			String equityConfDateNEW = DateUtil.format(dto.getEquityConfDate()).substring(0, 7);
-        	String equityConfDateOLD = DateUtil.format(oldinfo.getEquityConfDate()).substring(0, 7);
+			String equityConfDateNEW = "";
+			String equityConfDateOLD = "";
+			if(StringUtil.isNotEmpty(dto.getEquityConfDate())) {
+				equityConfDateNEW = DateUtil.format(dto.getEquityConfDate()).substring(0, 7);
+
+				if(StringUtil.isNotEmpty(oldinfo.getEquityConfDate())) {
+					equityConfDateOLD = DateUtil.format(oldinfo.getEquityConfDate()).substring(0, 7);
+				} else {
+					equityConfDateOLD = DateUtil.format(dto.getEquityConfDate()).substring(0, 7);
+				}
+			} else {
+				errorList.add(new ValidMessage("业务确认日期不能为空，请重新选择！"));
+			}
+
         	if(!StringUtil.equals(equityConfDateNEW, equityConfDateOLD)){
         		errorList.add(new ValidMessage(this.getMessage("CHB_EQUITY_EQUITYCONFDATE")));
         	}

@@ -84,6 +84,8 @@ public class DisPrdFeeRate002Controller extends BaseController {
         dto.setCashId(IDGenerator.generate());
         dto.setCreateUser(LoginUserUtil.getUserName());
         dto.setCreateTime(new Date());
+        dto.setUpdateUser(LoginUserUtil.getUserName());
+        dto.setUpdateTime(new Date());
         dto.setDataSource("01");
         dto.setStatus("E");
         dto.setAdapterId("无");
@@ -105,7 +107,7 @@ public class DisPrdFeeRate002Controller extends BaseController {
                     webResult.setMessage("保存成功");
                 }catch (Exception e){
                     e.printStackTrace();
-                    webResult.setMessage("保存失败");
+                    webResult.setMessage("保存失败", MessageType.错误消息);
                 }
             }
         }
@@ -123,6 +125,8 @@ public class DisPrdFeeRate002Controller extends BaseController {
                         mapOld.put("rate",dto.getRate());
                         mapOld.put("status","E");
                         mapOld.put("dataSource","01");
+                        mapOld.put("updateUser",LoginUserUtil.getUserName());
+                        mapOld.put("updateTime",new Date());
                         prorateService.updateOne(mapOld);
                         webResult.setMessage("保存成功");
                     }
@@ -135,6 +139,8 @@ public class DisPrdFeeRate002Controller extends BaseController {
                     mapOld.put("rate",dto.getRate());
                     mapOld.put("status","E");
                     mapOld.put("dataSource","01");
+                    mapOld.put("updateUser",LoginUserUtil.getUserName());
+                    mapOld.put("updateTime",new Date());
                     prorateService.updateOne(mapOld);
                     webResult.setMessage("保存成功");
                 }

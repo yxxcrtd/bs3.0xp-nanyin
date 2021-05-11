@@ -4,6 +4,7 @@
     <select id="selectAllData"
             resultType="com.joyintech.tams.svreport.chbreport.common.dto.ChbreportPrdInfoDto">
         SELECT
+        distinct
         profit.crt_mon reportDate,
         profit.busi_date as busiDate
         FROM hx_profit profit

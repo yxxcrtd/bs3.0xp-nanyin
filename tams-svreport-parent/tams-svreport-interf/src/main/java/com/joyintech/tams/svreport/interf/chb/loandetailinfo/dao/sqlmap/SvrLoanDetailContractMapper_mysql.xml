@@ -53,7 +53,7 @@
 		  #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE
 		  FROM  DUAL
 	  </foreach>
-	  ) TEMP where not exisits (select 1 from CHB_LOAN_DETAIL_CONTRACT CII  where CII.PROD_ID = TEMP.PROD_ID
+	  ) TEMP where not exists (select 1 from CHB_LOAN_DETAIL_CONTRACT CII  where CII.PROD_ID = TEMP.PROD_ID
 	  and CII.ASSET_CODE = TEMP.ASSET_CODE
 	  and CII.ORIG_CCY = TEMP.ORIG_CCY)
 	  ) de ;
@@ -94,7 +94,7 @@
 	  ) TEMP
 	  ) de
 	  ) AS B
-	  set  A.* = B.* where exisits (select 1 from CHB_LOAN_DETAIL_CONTRACT CII where CII.PROD_ID = TEMP.PROD_ID
+	  set  A.* = B.* where exists (select 1 from CHB_LOAN_DETAIL_CONTRACT CII where CII.PROD_ID = TEMP.PROD_ID
 	  and CII.ASSET_CODE = TEMP.ASSET_CODE
 	  and CII.ORIG_CCY = TEMP.ORIG_CCY);
 	</insert>

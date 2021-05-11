@@ -197,7 +197,7 @@
            #{item.cashType2,jdbcType=VARCHAR} as CASH_TYPE2
            from dual
        </foreach>
-       ) TEMP where not exisits (select 1 from REP_FEE_TRD CII where CII.BUSI_ID=TEMP.BUSI_ID)
+       ) TEMP where not exists (select 1 from REP_FEE_TRD CII where CII.BUSI_ID=TEMP.BUSI_ID)
        ) T ;
 
        UPDATE  REP_FEE_TRD as A,
@@ -241,7 +241,7 @@
        ) TEMP
        ) T
        ) AS B
-       set  A.* = B.* where  exisits (select 1 from REP_FEE_TRD CII where CII.BUSI_ID=TEMP.BUSI_ID);
+       set  A.* = B.* where  exists (select 1 from REP_FEE_TRD CII where CII.BUSI_ID=TEMP.BUSI_ID);
     </update>
     <select id="selectCashIdByProdidAndCashType2" parameterType="com.joyintech.tams.svreport.interf.dis.repfeetrdinterf.dto.DisRepFeeTrd"
     	resultType="com.joyintech.tams.svreport.interf.dis.repfeetrdinterf.dto.DisRepFeeTrd">

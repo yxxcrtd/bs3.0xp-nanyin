@@ -91,7 +91,7 @@
 		  FROM
 		  DUAL
 	  </foreach>
-	  ) TEMP where not exisits (select 1 from CHB_ASSETS_BASIS_DATA_CHILD CII where CII.PROD_ID = TEMP.PROD_ID
+	  ) TEMP where not exists (select 1 from CHB_ASSETS_BASIS_DATA_CHILD CII where CII.PROD_ID = TEMP.PROD_ID
 	  AND CII.ASSET_ID = TEMP.ASSET_ID
 	  AND CII.VALUE_DATE = TEMP.VALUE_DATE)
 	  ) de ;
@@ -150,7 +150,7 @@
 	  ) TEMP
 	  ) de
 	  ) AS B
-	  set  A.* = B.* where exisits (select 1 from CHB_ASSETS_BASIS_DATA_CHILD CII where CII.PROD_ID = TEMP.PROD_ID
+	  set  A.* = B.* where exists (select 1 from CHB_ASSETS_BASIS_DATA_CHILD CII where CII.PROD_ID = TEMP.PROD_ID
 	  AND CII.ASSET_ID = TEMP.ASSET_ID
 	  AND CII.VALUE_DATE = TEMP.VALUE_DATE);
 	</insert>

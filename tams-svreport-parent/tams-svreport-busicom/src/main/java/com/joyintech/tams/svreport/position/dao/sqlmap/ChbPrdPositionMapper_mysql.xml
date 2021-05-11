@@ -183,7 +183,7 @@
           resultSetType="FORWARD_ONLY" fetchSize="1000"
           resultMap="BaseResultMap" parameterType="map">
 		SELECT
-		    POS.CDATE+1 CDATE,
+	        DATE_ADD(POS.CDATE,INTERVAL 1 DAY) CDATE,
 			POS.PROD_ID,
 			POS.INDENTIFY_MARK,
 			POS.CCY,

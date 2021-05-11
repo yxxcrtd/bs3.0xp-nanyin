@@ -47,21 +47,20 @@ $(function () {
 
     /**
      * 导出
-     * flag:0 全部导出，选中导出
      */
     var exportExcel = function () {
         if (table != null && table != '') {
             var selArr = table.getAllCheckedRows();
-            var datas = JSON.stringify(selArr);
+            var allArr = table.getAllRows();
         }
         if (!selArr || selArr.length == 0) {
-            var paramObj = getSearchParams();
-            Joyin.exportExcel('export', paramObj);
+            var datas = JSON.stringify(allArr);
         } else {
-            Joyin.exportExcel('export', {
-                datas: datas
-            });
+            var datas = JSON.stringify(selArr);
         }
+        Joyin.exportExcel('export', {
+            datas: datas
+        });
     };
 
     function init() {

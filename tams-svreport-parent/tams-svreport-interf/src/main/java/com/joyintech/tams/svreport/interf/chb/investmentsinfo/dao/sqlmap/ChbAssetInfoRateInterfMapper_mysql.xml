@@ -288,7 +288,7 @@
             #{item.scino,jdbcType=VARCHAR} scino
             FROM     DUAL
         </foreach>
-        ) TEMP where not exisits (select 1 from CHB_ASSET_RATE CII where CII.ASSET_ID = TEMP.ASSET_ID
+        ) TEMP where not exists (select 1 from CHB_ASSET_RATE CII where CII.ASSET_ID = TEMP.ASSET_ID
         AND DATE_FORMAT(CII.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CHANGE_DATE,'%Y-%m-%d')
         and CII.CHANGE_TYPE = TEMP.CHANGE_TYPE
         and ((CII.TRADE_ID is not null and TEMP.TRADE_ID is not null and CII.TRADE_ID = TEMP.TRADE_ID)
@@ -346,7 +346,7 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from CHB_ASSET_RATE CII where CII.ASSET_ID = TEMP.ASSET_ID
+        set  A.* = B.* where exists (select 1 from CHB_ASSET_RATE CII where CII.ASSET_ID = TEMP.ASSET_ID
         AND DATE_FORMAT(CII.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CHANGE_DATE,'%Y-%m-%d')
         and CII.CHANGE_TYPE = TEMP.CHANGE_TYPE
         and ((CII.TRADE_ID is not null and TEMP.TRADE_ID is not null and CII.TRADE_ID = TEMP.TRADE_ID)

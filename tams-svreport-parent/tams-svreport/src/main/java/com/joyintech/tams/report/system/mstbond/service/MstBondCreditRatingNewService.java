@@ -8,6 +8,7 @@ import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.system.chbmst.dto.ChbMstCounterPartyErrodataWithBLOBs;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
@@ -65,7 +66,7 @@ public class MstBondCreditRatingNewService extends BaseService<MstBondCreditRati
         return restTemplate.postForObject(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/MstBondCreditRating/checkConfirmMsgForImportData",
                 param,
-                AjaxResult.class);
+                SvrAjaxResult.class);
     }
 
     /**

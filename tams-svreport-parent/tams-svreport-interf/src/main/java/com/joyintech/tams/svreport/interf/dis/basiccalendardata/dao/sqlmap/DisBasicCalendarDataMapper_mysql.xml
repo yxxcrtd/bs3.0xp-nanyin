@@ -44,7 +44,7 @@
             #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME<!--更新时间-->
             FROM     dual
         </foreach>
-        ) TEMP where  exisits (select 1 from MST_TRADE_CALENDAR CII where CII.TRADE_CALENDAR_ID = TEMP.TRADE_CALENDAR_ID)
+        ) TEMP where  exists (select 1 from MST_TRADE_CALENDAR CII where CII.TRADE_CALENDAR_ID = TEMP.TRADE_CALENDAR_ID)
         ) de ;
     </update>
 

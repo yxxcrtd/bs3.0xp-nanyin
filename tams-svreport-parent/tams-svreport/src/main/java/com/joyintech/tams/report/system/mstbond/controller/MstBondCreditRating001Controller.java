@@ -141,7 +141,7 @@ public class MstBondCreditRating001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
     public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-        return mstBondCreditRatingNewService.checkConfirmMsgForImportData(fileName);
+        return this.mstBondCreditRatingNewService.checkConfirmMsgForImportData(fileName);
     }
 
     /**

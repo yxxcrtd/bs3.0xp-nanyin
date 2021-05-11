@@ -21,7 +21,7 @@ public class DisRelOrgValidator implements BeanValidator {
     public List<ValidMessage> valid(Object o) {
         DisRelOrgInfo001Dto dto=(DisRelOrgInfo001Dto)o;
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getModelType(), ValidMessage.class);
+        resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, "DisRelOrg002", null, ValidMessage.class);
         return resultList;
     }
 }

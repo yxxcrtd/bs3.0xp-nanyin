@@ -1,12 +1,15 @@
 package com.joyintech.tams.common.base.entity;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+
 import java.util.Date;
 
 public class MstBondCreditRatingKey extends BaseEntity {
     /**
      * 债券代码（市场代码）
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String oCode;
 
     /**

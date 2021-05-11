@@ -110,7 +110,7 @@ public class ChbInvestReportUtil {
             fileName = prodName + ChbInvestReportConstant.左中括号 + prodId + ChbInvestReportConstant.右中括号
                     + ChbInvestReportConstant.左中括号 + dealCustomerType(customerType) + ChbInvestReportConstant.右中括号
                     + ChbInvestReportConstant.净值报告 + DateUtil.format(DateUtil.parse(endDate), DateUtil.DEFAULT_OTHER_FORMAT)
-                    + ChbInvestReportConstant.WORD文档;
+                    + ChbInvestReportConstant.XLS文档;
         }
         return fileName;
     }

@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -78,6 +79,9 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
                     DictCode.维护数据状态, item.getStatus()));
             item.setDataSourceName(SysDataUtil.getZZDictCodeAndNameNew(
                     DictCode.数据来源, item.getDataSource()));
+            if("DB".equals(item.getDataSource())){
+                item.setDataSourceName("DB");
+            }
         });
 
 
@@ -128,46 +132,64 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
     }
 
     public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
-        List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-
-
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
-        ChbMstCounterPartyDto chbMstCounterParty=new ChbMstCounterPartyDto();
+        Map<String,Object> map=new HashMap<>();
         for (int i = 0; i < dataList.size(); i++ ) {
-            //交易对手代码
-            String counterId ="";
-            if(null!=dataList.get(i).get(1)){
-                counterId =dataList.get(i).get(1).toString();
-            }
-            //交易对手名称
-            String counterName ="";
-            if(null!=dataList.get(i).get(2)){
-                counterName=dataList.get(i).get(2).toString();
-            }
-            //交易对手二级类型
-            String counterType2 ="";
-            if(null!=dataList.get(i).get(3)){
-                String [] arr = dataList.get(i).get(3).toString().split("\\s+");
-                counterType2=arr[0];
-            }
-            chbMstCounterParty.setCounterId(counterId);
-            chbMstCounterParty.setCounterName(counterName);
-            chbMstCounterParty.setCounterType2(counterType2);
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, chbMstCounterParty, "ChbMstCounterParty002", "", ValidMessage.class);
-        }
-        errorList=resultList;
-        //新建时,判断excel表中是否存在重复产品,启用日期,信披费用类型的数据
-        //更新删除时,查询数据不存在则提示 不存在数据请核查
-        /*for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(1), dataList.get(j).get(1)) &&
-                        StringUtils.equals(dataList.get(i).get(4), dataList.get(j).get(4))){
-                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行利率名称、生效日期与"+"第"+(j+2)+"行利率名称、生效日期相同");
+                        StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))&&
+                        StringUtils.equals(dataList.get(i).get(3), dataList.get(j).get(3))){
+                    ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行交易对手代码、交易对手名称、交易对手二级类型与"+"第"+(j+2)+"行交易对手代码、交易对手名称、交易对手二级类型相同");
                     errorList.add(validMessage);
                 }
             }
-        }*/
+        }
+        if(errorList.size() == 0){
+            for (int i = 0; i < dataList.size(); i++ ) {
+                //操作类型
+                String type ="";
+                if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
+                    type = dataList.get(i).get(0).toString();
+                }
+                //交易对手代码
+                String counterId ="";
+                if(null!=dataList.get(i).get(1)&& !"".equals(dataList.get(i).get(1))){
+                    counterId =dataList.get(i).get(1).toString();
+                }
+                //交易对手名称
+                String counterName ="";
+                if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
+                    counterName=dataList.get(i).get(2).toString();
+                }
+                //交易对手二级类型
+                String counterType2 ="";
+                if(null!=dataList.get(i).get(3)&& !"".equals(dataList.get(i).get(3))){
+                    String [] arr = dataList.get(i).get(3).toString().split("\\s+");
+                    counterType2=arr[0];
+                }
+                ChbMstCounterPartyDto chbMstCounterParty=new ChbMstCounterPartyDto();
+                chbMstCounterParty.setCounterId(counterId);
+                chbMstCounterParty.setCounterName(counterName);
+                chbMstCounterParty.setCounterType1(counterType2.substring(0,3));
+                chbMstCounterParty.setCounterType2(counterType2);
+                errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, chbMstCounterParty, "ChbMstCounterParty002", null, ValidMessage.class);
+                map.put("counterId",counterId);
+                List<ChbMstCounterParty> ChbMstCounterPartys= chbMstCounterParty001Mapper.selectOneDate(map);
+                if("新增".equals(type)){
+                    if(null!=ChbMstCounterPartys && ChbMstCounterPartys.size()>0){
+                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行已存在交易对手代码的数据");
+                        errorList.add(validMessage);
+                    }
+                }
+                if("修改".equals(type) || "删除".equals(type)){
+                    if(ChbMstCounterPartys.size()<=0){
+                        ValidMessage validMessage = new ValidMessage("第"+(i+2)+"行不存在该交易对手代码的数据,请核查");
+                        errorList.add(validMessage);
+                    }
+                }
+            }
+        }
 
         if(errorList.size() == 0){
             webResult.setData(NO_INFO_SHOWOUT);
@@ -194,23 +216,23 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
                 for (int i = 0; i < dataList.size(); i++ ) {
                     //操作类型
                     String type ="";
-                    if(null!=dataList.get(i).get(0)){
+                    if(null!=dataList.get(i).get(0)&& !"".equals(dataList.get(i).get(0))){
                         type = dataList.get(i).get(0).toString();
                     }
                     //交易对手代码
                     String counterId ="";
-                    if(null!=dataList.get(i).get(1)){
+                    if(null!=dataList.get(i).get(1)&& !"".equals(dataList.get(i).get(1))){
                         counterId =dataList.get(i).get(1).toString();
                     }
                     //交易对手名称
                     String counterName ="";
-                    if(null!=dataList.get(i).get(2)){
+                    if(null!=dataList.get(i).get(2)&& !"".equals(dataList.get(i).get(2))){
                         counterName=dataList.get(i).get(2).toString();
                     }
                     //交易对手二级类型
                     String counterType2 ="";
                     //String counterType2Name ="";
-                    if(null!=dataList.get(i).get(3)){
+                    if(null!=dataList.get(i).get(3)&& !"".equals(dataList.get(i).get(3))){
                         String [] arr = dataList.get(i).get(3).toString().split("\\s+");
                         counterType2=arr[0];
                         //counterType2Name=arr[1];
@@ -250,6 +272,7 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
         entity.setUpdateUser(userName);
         entity.setUpdateTime(nowDate);
         entity.setDataSource("02");
+        entity.setCounterType1(counterType2.substring(0,3));
         entity.setCounterType2(counterType2);
         entity.setStatus("E");
         chbMstCounterParty001Mapper.insertOne(entity);
@@ -263,6 +286,8 @@ public class ChbMstCounterParty001Service extends CommonExportService<ChbMstCoun
                 chbMstCounterParty.setCounterType2(counterType2);
                 chbMstCounterParty.setStatus("E");
                 chbMstCounterParty.setDataSource("02");
+                chbMstCounterParty.setUpdateUser(LoginUserUtil.getUserName());
+                chbMstCounterParty.setUpdateTime(new Date());
                 chbMstCounterParty001Mapper.updateOne(chbMstCounterParty);
             }
         }

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
 public class DisAssociatedInstitutions extends BaseEntity{	
     /**
@@ -41,6 +42,7 @@ public class DisAssociatedInstitutions extends BaseEntity{
 	/**
      * ID
      */
+	@PrimaryKey(PrimaryKey.Field.PK_1)
     private String relorgId;   
     /**
      * 创建人

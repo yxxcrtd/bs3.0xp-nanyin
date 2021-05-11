@@ -123,7 +123,7 @@
 				</if>
 			</trim>
 		</foreach>
-		) TEMP where not exisits (select 1 from CHB_MKT_HOLIDAY CII where
+		) TEMP where not exists (select 1 from CHB_MKT_HOLIDAY CII where
 		    TEMP.BUSI_DATE = CII.BUSI_DATE
 		   AND TEMP.MARKET_CODE = CII.MARKET_CODE)
 		) de ;
@@ -145,7 +145,7 @@
 		) TEMP
 		) de
 		) AS B
-		set  A.* = B.* where  exisits (select 1 from CHB_MKT_HOLIDAY CII where
+		set  A.* = B.* where  exists (select 1 from CHB_MKT_HOLIDAY CII where
 		TEMP.BUSI_DATE = CII.BUSI_DATE
 		AND TEMP.MARKET_CODE = CII.MARKET_CODE);
     </insert>

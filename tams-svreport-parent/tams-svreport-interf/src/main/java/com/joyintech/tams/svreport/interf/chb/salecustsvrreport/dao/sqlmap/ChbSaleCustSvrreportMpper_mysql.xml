@@ -130,7 +130,7 @@
             #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE
             from dual
         </foreach>
-        ) TEMP where not exisits (select 1 from SALE_CUST_SVRREPORT CII where CII.FINPROD_ID = TEMP.FINPROD_ID)
+        ) TEMP where not exists (select 1 from SALE_CUST_SVRREPORT CII where CII.FINPROD_ID = TEMP.FINPROD_ID)
         ) de ;
 
         UPDATE  SALE_CUST_SVRREPORT as A,
@@ -224,6 +224,6 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from SALE_CUST_SVRREPORT CII where CII.FINPROD_ID = TEMP.FINPROD_ID);
+        set  A.* = B.* where exists (select 1 from SALE_CUST_SVRREPORT CII where CII.FINPROD_ID = TEMP.FINPROD_ID);
     </insert>
 </mapper>

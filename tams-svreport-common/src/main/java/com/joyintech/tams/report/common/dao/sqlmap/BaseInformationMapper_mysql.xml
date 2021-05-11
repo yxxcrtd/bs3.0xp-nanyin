@@ -184,7 +184,7 @@
 			select
 			COLUMN_NAME from information_schema.COLUMNS
 			WHERE TABLE_NAME = #{tableId,jdbcType=VARCHAR}
-			AND DATA_TYPE LIKE concat_ws('', '%','decimal', '%')
+			AND (DATA_TYPE LIKE concat_ws('', '%','decimal', '%') or DATA_TYPE LIKE concat_ws('', '%','int', '%'))
 		</if>
 	</select>
 	<select id="queryDictCode" parameterType="java.util.Map" resultType="java.lang.String">

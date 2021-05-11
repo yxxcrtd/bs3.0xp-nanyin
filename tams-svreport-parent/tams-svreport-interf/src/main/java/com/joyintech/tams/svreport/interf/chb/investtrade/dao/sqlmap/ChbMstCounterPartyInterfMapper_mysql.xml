@@ -286,7 +286,7 @@
 			#{item.isCentralCounter,jdbcType=VARCHAR} isCentralCounter
 			from dual
 		</foreach>
-		) TEMP where not exisits (select 1 from CHB_MST_COUNTER_PARTY CII 过滤条件)
+		) TEMP where not exists (select 1 from CHB_MST_COUNTER_PARTY CII 过滤条件)
 		) de ;
 
 		UPDATE  CHB_MST_COUNTER_PARTY as A,
@@ -323,7 +323,7 @@
 		) TEMP
 		) de
 		) AS B
-		set  A.* = B.* where exisits (select 1 from CHB_MST_COUNTER_PARTY CII where CII.COUNTER_ID = TEMP.counterId and CII.STATUS != 'D');
+		set  A.* = B.* where exists (select 1 from CHB_MST_COUNTER_PARTY CII where CII.COUNTER_ID = TEMP.counterId and CII.STATUS != 'D');
 	</insert>
 	<!-- 根据数据状态皮量更新，传入的dto数据状态为D则更新为D否则更新为M -->
 	<update id="updateBachByStatus"

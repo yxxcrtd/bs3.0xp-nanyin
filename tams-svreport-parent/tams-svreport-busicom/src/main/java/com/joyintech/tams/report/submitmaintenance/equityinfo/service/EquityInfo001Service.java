@@ -1845,9 +1845,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         boolean success = true;
         if (CollectionUtils.isNotEmpty(equityList)) {
             monitorInfoDto.setFileDataCount(BigDecimal.valueOf(equityList.size()));
-//mysql早期改造代码合并  add by zoujiamin   2021/04/20  start
-            if (equityList.size() < 10) {
-//mysql早期改造代码合并  add by zoujiamin   2021/04/20  end
+            if (equityList.size() < 1000) {
                 try {
                     success = excuteEquityInfoByStepNew(equityList, interType, null, null, null,mapRegist,spzMap,objFiledsMap);
                 } catch (ParserConfigurationException | SAXException | IOException e) {

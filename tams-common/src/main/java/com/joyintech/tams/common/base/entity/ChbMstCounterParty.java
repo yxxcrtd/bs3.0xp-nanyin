@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
 /**
  * 描述:CHB_MST_COUNTER_PARTY表的实体类
@@ -89,6 +90,7 @@ public class ChbMstCounterParty extends BaseEntity {
     /**
      * 交易对手代码
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String counterId;
 
     /**

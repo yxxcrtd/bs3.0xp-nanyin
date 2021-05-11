@@ -73,7 +73,7 @@
       ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE)
     values (#{registSeqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{mdate,jdbcType=TIMESTAMP}, 
       #{issuePartyId,jdbcType=VARCHAR}, #{profit,jdbcType=DECIMAL}, #{customProfit,jdbcType=DECIMAL}, 
-      #{customProfitOri,jdbcType=VARCHAR}, #{customAmtOri,jdbcType=VARCHAR}, #{customAmt,jdbcType=DECIMAL}, 
+      #{customProfitOri,jdbcType=DECIMAL}, #{customAmtOri,jdbcType=DECIMAL}, #{customAmt,jdbcType=DECIMAL},
       #{customQty,jdbcType=DECIMAL}, #{cusYearYield,jdbcType=DECIMAL}, #{prdYearYield,jdbcType=DECIMAL}, 
       #{custFeeIn,jdbcType=DECIMAL}, #{manFeeIn,jdbcType=DECIMAL}, #{couFeeIn,jdbcType=DECIMAL}, 
       #{otherFeeIn,jdbcType=DECIMAL}, #{custFeeOut,jdbcType=DECIMAL}, #{manFeeOut,jdbcType=DECIMAL}, 
@@ -219,10 +219,10 @@
         #{customProfit,jdbcType=DECIMAL},
       </if>
       <if test="customProfitOri != null" >
-        #{customProfitOri,jdbcType=VARCHAR},
+        #{customProfitOri,jdbcType=DECIMAL},
       </if>
       <if test="customAmtOri != null" >
-        #{customAmtOri,jdbcType=VARCHAR},
+        #{customAmtOri,jdbcType=DECIMAL},
       </if>
       <if test="customAmt != null" >
         #{customAmt,jdbcType=DECIMAL},
@@ -332,10 +332,10 @@
         CUSTOM_PROFIT = #{customProfit,jdbcType=DECIMAL},
       </if>
       <if test="customProfitOri != null" >
-        CUSTOM_PROFIT_ORI = #{customProfitOri,jdbcType=VARCHAR},
+        CUSTOM_PROFIT_ORI = #{customProfitOri,jdbcType=DECIMAL},
       </if>
       <if test="customAmtOri != null" >
-        CUSTOM_AMT_ORI = #{customAmtOri,jdbcType=VARCHAR},
+        CUSTOM_AMT_ORI = #{customAmtOri,jdbcType=DECIMAL},
       </if>
       <if test="customAmt != null" >
         CUSTOM_AMT = #{customAmt,jdbcType=DECIMAL},
@@ -434,8 +434,8 @@
       ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
       PROFIT = #{profit,jdbcType=DECIMAL},
       CUSTOM_PROFIT = #{customProfit,jdbcType=DECIMAL},
-      CUSTOM_PROFIT_ORI = #{customProfitOri,jdbcType=VARCHAR},
-      CUSTOM_AMT_ORI = #{customAmtOri,jdbcType=VARCHAR},
+      CUSTOM_PROFIT_ORI = #{customProfitOri,jdbcType=DECIMAL},
+      CUSTOM_AMT_ORI = #{customAmtOri,jdbcType=DECIMAL},
       CUSTOM_AMT = #{customAmt,jdbcType=DECIMAL},
       CUSTOM_QTY = #{customQty,jdbcType=DECIMAL},
       CUS_YEAR_YIELD = #{cusYearYield,jdbcType=DECIMAL},
@@ -980,24 +980,26 @@
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
       ORG_CODE, DEPT_CODE
       )
-      <foreach collection="insertList" item="item" index="index" separator="union all" >
-      select 
-      #{item.prodRegistCode,jdbcType=VARCHAR},
-      #{item.sumitSeq,jdbcType=VARCHAR},
-      #{item.registSeqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.mdate,jdbcType=TIMESTAMP},
-      #{item.issuePartyId,jdbcType=VARCHAR}, #{item.profit,jdbcType=DECIMAL}, #{item.customProfit,jdbcType=DECIMAL}, 
-      #{item.customProfitOri,jdbcType=VARCHAR}, #{item.customAmtOri,jdbcType=VARCHAR}, #{item.customAmt,jdbcType=DECIMAL}, 
-      #{item.customQty,jdbcType=DECIMAL}, #{item.cusYearYield,jdbcType=DECIMAL}, #{item.prdYearYield,jdbcType=DECIMAL}, 
-      #{item.custFeeIn,jdbcType=DECIMAL}, #{item.manFeeIn,jdbcType=DECIMAL}, #{item.couFeeIn,jdbcType=DECIMAL}, 
-      #{item.otherFeeIn,jdbcType=DECIMAL}, #{item.custFeeOut,jdbcType=DECIMAL}, #{item.manFeeOut,jdbcType=DECIMAL}, 
-      #{item.couFeeOut,jdbcType=DECIMAL}, #{item.advFeeOut,jdbcType=DECIMAL}, #{item.otherFeeOut,jdbcType=DECIMAL}, 
-      #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitFeedbackStatus,jdbcType=VARCHAR}, #{item.statusDate,jdbcType=TIMESTAMP}, 
-      #{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, 
-      NOW(), #{item.updateUser,jdbcType=VARCHAR}, NOW(),
-      #{item.submitTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{item.submitDeadline,jdbcType=TIMESTAMP}, 
-      #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}
-      from dual
-      </foreach>
+      select * from (
+        <foreach collection="insertList" item="item" index="index" separator="union all" >
+        select
+        #{item.prodRegistCode,jdbcType=VARCHAR} prodRegistCode,
+        #{item.sumitSeq,jdbcType=VARCHAR} sumitSeq,
+        #{item.registSeqno,jdbcType=VARCHAR} registSeqno, #{item.prodId,jdbcType=VARCHAR} prodId, #{item.mdate,jdbcType=TIMESTAMP} mdate,
+        #{item.issuePartyId,jdbcType=VARCHAR} issuePartyId, #{item.profit,jdbcType=DECIMAL} profit, #{item.customProfit,jdbcType=DECIMAL} customProfit,
+        #{item.customProfitOri,jdbcType=DECIMAL} customProfitOri, #{item.customAmtOri,jdbcType=DECIMAL} customAmtOri, #{item.customAmt,jdbcType=DECIMAL} customAmt,
+        #{item.customQty,jdbcType=DECIMAL} customQty, #{item.cusYearYield,jdbcType=DECIMAL} cusYearYield, #{item.prdYearYield,jdbcType=DECIMAL} prdYearYield,
+        #{item.custFeeIn,jdbcType=DECIMAL} custFeeIn, #{item.manFeeIn,jdbcType=DECIMAL} manFeeIn, #{item.couFeeIn,jdbcType=DECIMAL} couFeeIn,
+        #{item.otherFeeIn,jdbcType=DECIMAL} otherFeeIn, #{item.custFeeOut,jdbcType=DECIMAL} custFeeOut, #{item.manFeeOut,jdbcType=DECIMAL} manFeeOut,
+        #{item.couFeeOut,jdbcType=DECIMAL} couFeeOut, #{item.advFeeOut,jdbcType=DECIMAL} advFeeOut, #{item.otherFeeOut,jdbcType=DECIMAL} otherFeeOut,
+        #{item.sendStatus,jdbcType=VARCHAR} sendStatus, #{item.submitFeedbackStatus,jdbcType=VARCHAR} submitFeedbackStatus, #{item.statusDate,jdbcType=TIMESTAMP} statusDate,
+        #{item.status,jdbcType=VARCHAR} status, #{item.createUser,jdbcType=VARCHAR} createUser, #{item.createDept,jdbcType=VARCHAR} createDept,
+        NOW() createTime, #{item.updateUser,jdbcType=VARCHAR} updateUser, NOW() updateTime,
+        #{item.submitTime,jdbcType=TIMESTAMP} submitTime, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP} chbSubmitDeadline, #{item.submitDeadline,jdbcType=TIMESTAMP} submitDeadline,
+        #{item.orgCode,jdbcType=VARCHAR} orgCode, #{item.deptCode,jdbcType=VARCHAR} deptCode
+        from dual
+        </foreach>
+      ) tmp
   </insert>
   
   <update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.prodterminationregist.dto.ProdTerminationRegist001Dto">
@@ -1021,10 +1023,10 @@
         CUSTOM_PROFIT = #{item.customProfit,jdbcType=DECIMAL},
       </if>
       <if test="item.customProfitOri != null" >
-        CUSTOM_PROFIT_ORI = #{item.customProfitOri,jdbcType=VARCHAR},
+        CUSTOM_PROFIT_ORI = #{item.customProfitOri,jdbcType=DECIMAL},
       </if>
       <if test="item.customAmtOri != null" >
-        CUSTOM_AMT_ORI = #{item.customAmtOri,jdbcType=VARCHAR},
+        CUSTOM_AMT_ORI = #{item.customAmtOri,jdbcType=DECIMAL},
       </if>
       <if test="item.customAmt != null" >
         CUSTOM_AMT = #{item.customAmt,jdbcType=DECIMAL},

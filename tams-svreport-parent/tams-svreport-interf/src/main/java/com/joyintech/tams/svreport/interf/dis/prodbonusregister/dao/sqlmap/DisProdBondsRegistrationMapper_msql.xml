@@ -60,7 +60,7 @@
             #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME<!--更新时间-->
             FROM      dual
         </foreach>
-        ) TEMP where not exisits (select 1 from REP_PROD_BONUS_REGISTER CII
+        ) TEMP where not exists (select 1 from REP_PROD_BONUS_REGISTER CII
         where CII.PROD_ID = TEMP.PROD_ID AND CII.BONUS_REGISTER_DATE = TEMP.BONUS_REGISTER_DATE)
         ) de ;
 
@@ -100,7 +100,7 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where not exisits (select 1 from REP_PROD_BONUS_REGISTER CII
+        set  A.* = B.* where not exists (select 1 from REP_PROD_BONUS_REGISTER CII
         where CII.PROD_ID = TEMP.PROD_ID AND CII.BONUS_REGISTER_DATE = TEMP.BONUS_REGISTER_DATE);
     </update>
 </mapper>

@@ -61,7 +61,7 @@
             #{item.updateTime ,jdbcType=TIMESTAMP } UPDATE_TIME
             from dual
         </foreach>
-        ) TEMP where not exisits (select 1 from MST_EXCHARGE_QUOTE CII where CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE)
+        ) TEMP where not exists (select 1 from MST_EXCHARGE_QUOTE CII where CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE)
         ) de ;
 
         UPDATE  MST_EXCHARGE_QUOTE as A,
@@ -109,6 +109,6 @@
         ) TEMP
         ) de
         ) AS B
-        set  A.* = B.* where exisits (select 1 from MST_EXCHARGE_QUOTE CII where CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE);
+        set  A.* = B.* where exists (select 1 from MST_EXCHARGE_QUOTE CII where CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE);
     </insert>
 </mapper>
