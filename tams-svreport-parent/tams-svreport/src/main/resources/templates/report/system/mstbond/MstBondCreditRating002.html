@@ -11,21 +11,25 @@
       <div class="form-inline-wrap">
         <label class="layui-form-label form-lable">债券代码</label>
         <div class="layui-input-inline input-inline">
-          <input type="text" id="oCode" name="oCode" data-th-value="${entity?.oCode}" class="layui-input form-input" placeholder="请输入内容">
+          <!--<input type="text" id="oCode" name="oCode" data-th-value="${entity?.oCode}" class="layui-input form-input" placeholder="请输入内容">-->
+          <select id="oCode" name="oCode"
+                  data-th-data-url='@{/svreport/system/mstbond/MstBondCreditRating001/getoCode}'
+                  data-th-data-formatoption=true data-th-data-parentids="orgCode"
+                  class="input-select" placeholder="请选择"
+                  data-th-placeholder="#{SysCommon.selectplaceholder}"
+                  allowClear="true"
+                  data-th-initValue="${entity?.oCode}"
+                  >
+          </select>
           <input type="hidden" id="type" name="type" data-th-value="${entity?.type}" class="layui-input form-input" >
           <input type="hidden" id="oldGradeOrgId" name="oldGradeOrgId" data-th-value="${entity?.oldGradeOrgId}" class="layui-input form-input" >
           <input type="hidden" id="oldGradeDateStr" name="oldGradeDateStr" data-th-value="${entity?.oldGradeDateStr}" class="layui-input form-input" >
-          <!--<input id="oldGradeDate" type="hidden" name="oldGradeDate"
-                 class="layui-input form-input input-dateSelect"
-                 placeholder="请选择启用日期"
-                 data-th-value="${entity?.oldGradeDate}"/>-->
           <input type="hidden" id="oldOType" name="oldOType" data-th-value="${entity?.oldOType}" class="layui-input form-input" >
         </div>
       </div>
       <div class="form-inline-wrap">
         <label class="layui-form-label form-lable">评级机构</label>
         <div class="layui-input-inline input-inline">
-          <!--<input type="text" id="counterName" name="counterName" data-th-value="${entity?.counterName}" class="layui-input form-input" placeholder="请输入内容">-->
           <select id="gradeOrgId" name="gradeOrgId" data-th-initValue="${entity?.gradeOrgId}"
                   data-th-data-result='${GRADE_PARTY}'
                   data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select"

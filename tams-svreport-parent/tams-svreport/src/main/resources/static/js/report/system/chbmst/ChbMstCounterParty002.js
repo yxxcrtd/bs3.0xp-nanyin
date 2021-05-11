@@ -19,7 +19,8 @@ function change(value) {
     function init(){
         $(".layui-fixbar").hide();
         if('update'==$("#type").val()){
-            document.getElementById("counterId").readOnly="readonly";
+            $("#counterId").attr("disabled","disabled")
+            //document.getElementById("counterId").readOnly="readonly";
         }
     };
 

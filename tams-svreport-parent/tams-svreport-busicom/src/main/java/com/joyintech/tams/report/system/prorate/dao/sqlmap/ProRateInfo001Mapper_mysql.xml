@@ -255,8 +255,8 @@
 			#{createTime,jdbcType=DATE} ,
 			#{dataSource,jdbcType=VARCHAR},
 			#{adapterId,jdbcType=VARCHAR},
-			#{item.updateUser,jdbcType=VARCHAR},
-			#{item.updateTime,jdbcType=DATE}
+			#{updateUser,jdbcType=VARCHAR},
+			#{updateTime,jdbcType=DATE}
 		)
     </insert>
 	<update id="updateOne" parameterType="java.util.Map">

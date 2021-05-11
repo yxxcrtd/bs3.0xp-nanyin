@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChbEmployeeInfo.xlsx" name="从业人员信息">
+	<Worksheet javaBean="com.joyintech.tams.common.base.entity.ChbEmployeeInfo">
+		<Row>
+			<Cell order="1" name="操作类型">type</Cell>
+			<Cell order="2" name="从业人员类型">employeeTypeStr</Cell>
+		    <Cell order="3" name="姓名">employeeName</Cell>
+			<Cell order="4" name="性别">employeeSexStr</Cell>
+			<Cell order="5" name="发行机构代码">issuePartyId</Cell>
+			<Cell order="6" name="身份证号码">identifyNumber</Cell>
+			<Cell order="7" name="所属总行或分支行">belongsBankStr</Cell>
+			<Cell order="8" name="所属区域">belongsPlaceStr</Cell>
+			<Cell order="9" name="具体单位名称">companyName</Cell>
+			<Cell order="10" name="所属部门">belongsDept</Cell>
+			<Cell order="11" name="职位">position</Cell>
+			<Cell order="12" name="学历">educationStr</Cell>
+			<Cell order="13" name="学位">academicDegreeStr</Cell>
+			<Cell order="14" name="首次参加工作时间">firsttime2work</Cell>
+			<Cell order="15" name="首次从事理财业务时间">firsttime2finwork</Cell>
+			<Cell order="16" name="专业技术职称">professionalTitleStr</Cell>
+			<Cell order="17" name="理财专业证书">finProfessionalCrtfStr</Cell>
+			<Cell order="18" name="理财登记培训证书编号">finTrainingNo</Cell>
+			<Cell order="19" name="所获奖励">awards</Cell>
+			<Cell order="20" name="办公电话">officeTel</Cell>
+			<Cell order="21" name="移动电话">mobileTel</Cell>
+			<Cell order="22" name="电子邮箱">mail</Cell>
+			<Cell order="23" name="登记业务分类">regBusiTypeStr</Cell>
+			<Cell order="24" name="登记人员类别">regEmployeeTypeStr</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.chbemployee.dao.ChbEmployeeInfo001Mapper_mysql">
+	<select id="queryForPage" resultType="com.joyintech.tams.common.base.entity.ChbEmployeeInfo">
+		SELECT
+		STATUS  status,
+		EMPLOYEE_TYPE  employeeType,
+		EMPLOYEE_NAME employeeName,
+		EMPLOYEE_SEX employeeSex,
+		ISSUE_PARTY_ID issuePartyId,
+		IDENTIFY_NUMBER identifyNumber,
+		BELONGS_BANK belongsBank,
+		BELONGS_PLACE belongsPlace,
+		COMPANY_NAME companyName,
+		BELONGS_DEPT belongsDept,
+		POSITION position,
+		EDUCATION education,
+		ACADEMIC_DEGREE academicDegree,
+		FIRSTTIME2WORK firsttime2work,
+		FIRSTTIME2FINWORK firsttime2finwork,
+		PROFESSIONAL_TITLE professionalTitle,
+		FIN_PROFESSIONAL_CRTF finProfessionalCrtf,
+		FIN_TRAINING_NO finTrainingNo,
+		AWARDS awards,
+		OFFICE_TEL officeTel,
+		MOBILE_TEL mobileTel,
+		MAIL mail,
+		REG_BUSI_TYPE regBusiType,
+		REG_EMPLOYEE_TYPE regEmployeeType,
+		REMARK remark
+		FROM CHB_EMPLOYEE_INFO a
+		<where>
+			<if test="selectemployeeType != null and selectemployeeType.size() > 0">
+				<foreach collection="selectemployeeType" item="employeeType" open="AND a.EMPLOYEE_TYPE IN (" close=")" separator=",">
+					#{employeeType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="selectStatus != null and selectStatus.size() > 0">
+				<foreach collection="selectStatus" item="status" open="AND a.STATUS IN (" close=")" separator=",">
+					#{status,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<update id="updateChbEmployeeInfo" parameterType="java.util.List" >
+		UPDATE CHB_EMPLOYEE_INFO
+		set
+		STATUS = 'D'
+		where
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
+			and EMPLOYEE_TYPE = #{item.employeeType,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<select id="queryReportList" parameterType="java.util.List" resultType="com.joyintech.tams.common.base.entity.ChbEmployeeInfo">
+		SELECT
+		'导出' as type,
+		EMPLOYEE_TYPE  employeeType,
+		EMPLOYEE_NAME employeeName,
+		EMPLOYEE_SEX employeeSex,
+		ISSUE_PARTY_ID issuePartyId,
+		IDENTIFY_NUMBER identifyNumber,
+		BELONGS_BANK belongsBank,
+		BELONGS_PLACE belongsPlace,
+		COMPANY_NAME companyName,
+		BELONGS_DEPT belongsDept,
+		POSITION position,
+		EDUCATION education,
+		ACADEMIC_DEGREE academicDegree,
+		FIRSTTIME2WORK firsttime2work,
+		FIRSTTIME2FINWORK firsttime2finwork,
+		PROFESSIONAL_TITLE professionalTitle,
+		FIN_PROFESSIONAL_CRTF finProfessionalCrtf,
+		FIN_TRAINING_NO finTrainingNo,
+		AWARDS awards,
+		OFFICE_TEL officeTel,
+		MOBILE_TEL mobileTel,
+		MAIL mail,
+		REG_BUSI_TYPE regBusiType,
+		REG_EMPLOYEE_TYPE regEmployeeType
+		FROM
+		CHB_EMPLOYEE_INFO a
+		where
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
+			and EMPLOYEE_TYPE = #{item.employeeType,jdbcType=VARCHAR}
+		</foreach>
+	</select>
+	<select id="selectOneDate" resultType="com.joyintech.tams.common.base.entity.ChbEmployeeInfo">
+		SELECT
+		EMPLOYEE_TYPE  employeeType,
+		EMPLOYEE_NAME employeeName,
+		EMPLOYEE_SEX employeeSex,
+		ISSUE_PARTY_ID issuePartyId,
+		IDENTIFY_NUMBER identifyNumber,
+		BELONGS_BANK belongsBank,
+		BELONGS_PLACE belongsPlace,
+		COMPANY_NAME companyName,
+		BELONGS_DEPT belongsDept,
+		POSITION position,
+		EDUCATION education,
+		ACADEMIC_DEGREE academicDegree,
+		FIRSTTIME2WORK as firsttime2work,
+		FIRSTTIME2FINWORK as firsttime2finwork,
+		PROFESSIONAL_TITLE professionalTitle,
+		FIN_PROFESSIONAL_CRTF finProfessionalCrtf,
+		FIN_TRAINING_NO finTrainingNo,
+		AWARDS awards,
+		OFFICE_TEL officeTel,
+		MOBILE_TEL mobileTel,
+		MAIL mail,
+		REG_BUSI_TYPE regBusiType,
+		REG_EMPLOYEE_TYPE regEmployeeType,
+		EMPLOYEE_TYPE  oldEmployeeType,
+		IDENTIFY_NUMBER oldIdentifyNumber,
+		REMARK remark
+		FROM
+		CHB_EMPLOYEE_INFO a
+		where
+		IDENTIFY_NUMBER = #{identifyNumber,jdbcType=VARCHAR}
+		and EMPLOYEE_TYPE = #{employeeType,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertChbEmployeeInfoData" parameterType="java.util.List">
+		insert into CHB_EMPLOYEE_INFO (STATUS,EMPLOYEE_TYPE ,EMPLOYEE_NAME ,EMPLOYEE_SEX ,ISSUE_PARTY_ID ,IDENTIFY_NUMBER ,
+		BELONGS_BANK ,BELONGS_PLACE ,COMPANY_NAME ,BELONGS_DEPT ,POSITION ,EDUCATION ,ACADEMIC_DEGREE ,FIRSTTIME2WORK ,
+		FIRSTTIME2FINWORK ,PROFESSIONAL_TITLE ,FIN_PROFESSIONAL_CRTF ,FIN_TRAINING_NO ,AWARDS ,OFFICE_TEL ,MOBILE_TEL ,
+		MAIL ,REG_BUSI_TYPE ,REG_EMPLOYEE_TYPE ,REMARK,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME )
+		values (
+		<foreach collection="dtoList" item="item" index="index" separator=",">
+			#{item.status,jdbcType=VARCHAR}, #{item.employeeType,jdbcType=VARCHAR},#{item.employeeName,jdbcType=VARCHAR},
+			#{item.employeeSex,jdbcType=VARCHAR},#{item.issuePartyId,jdbcType=VARCHAR},
+			#{item.identifyNumber,jdbcType=VARCHAR}, #{item.belongsBank,jdbcType=VARCHAR},
+			#{item.belongsPlace,jdbcType=VARCHAR},#{item.companyName,jdbcType=VARCHAR},
+			#{item.belongsDept,jdbcType=VARCHAR},#{item.position,jdbcType=VARCHAR},
+			#{item.education,jdbcType=VARCHAR},#{item.academicDegree,jdbcType=VARCHAR},
+			#{item.firsttime2work,jdbcType=VARCHAR},#{item.firsttime2finwork,jdbcType=VARCHAR},
+			#{item.professionalTitle,jdbcType=VARCHAR}, #{item.finProfessionalCrtf,jdbcType=VARCHAR},
+			#{item.finTrainingNo,jdbcType=VARCHAR},#{item.awards,jdbcType=VARCHAR},
+			#{item.officeTel,jdbcType=VARCHAR},#{item.mobileTel,jdbcType=VARCHAR},
+			#{item.regBusiType,jdbcType=VARCHAR},#{item.mail,jdbcType=VARCHAR},
+			#{item.regEmployeeType,jdbcType=VARCHAR},#{item.remark,jdbcType=VARCHAR},
+			#{item.createUser,jdbcType=VARCHAR},#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+		</foreach>
+		)
+	</insert>
+	<update id="updateOne" parameterType="java.util.Map">
+		update CHB_EMPLOYEE_INFO set
+		STATUS= #{status,jdbcType=VARCHAR},EMPLOYEE_TYPE= #{employeeType,jdbcType=VARCHAR},
+		EMPLOYEE_NAME= #{employeeName,jdbcType=VARCHAR},EMPLOYEE_SEX= #{employeeSex,jdbcType=VARCHAR},ISSUE_PARTY_ID= #{issuePartyId,jdbcType=VARCHAR},
+		IDENTIFY_NUMBER= #{identifyNumber,jdbcType=VARCHAR},BELONGS_BANK= #{belongsBank,jdbcType=VARCHAR},
+		BELONGS_PLACE= #{belongsPlace,jdbcType=VARCHAR},COMPANY_NAME= #{companyName,jdbcType=VARCHAR},
+		BELONGS_DEPT= #{belongsDept,jdbcType=VARCHAR},POSITION= #{position,jdbcType=VARCHAR},EDUCATION= #{education,jdbcType=VARCHAR},
+		ACADEMIC_DEGREE= #{academicDegree,jdbcType=VARCHAR},FIRSTTIME2WORK= #{firsttime2work,jdbcType=VARCHAR},
+		FIRSTTIME2FINWORK= #{firsttime2finwork,jdbcType=VARCHAR},PROFESSIONAL_TITLE= #{professionalTitle,jdbcType=VARCHAR},
+		FIN_PROFESSIONAL_CRTF= #{finProfessionalCrtf,jdbcType=VARCHAR},FIN_TRAINING_NO= #{finTrainingNo,jdbcType=VARCHAR},
+		AWARDS= #{awards,jdbcType=VARCHAR},
+		OFFICE_TEL= #{officeTel,jdbcType=VARCHAR},MOBILE_TEL= #{mobileTel,jdbcType=VARCHAR},
+		REG_BUSI_TYPE= #{regBusiType,jdbcType=VARCHAR},MAIL= #{mail,jdbcType=VARCHAR},
+		REG_EMPLOYEE_TYPE= #{regEmployeeType,jdbcType=VARCHAR},REMARK= #{remark,jdbcType=VARCHAR},
+		UPDATE_USER=#{updateUser,jdbcType=VARCHAR},UPDATE_TIME=#{updateTime,jdbcType=DATE}
+		where
+		IDENTIFY_NUMBER = #{oldIdentifyNumber,jdbcType=VARCHAR}
+		and EMPLOYEE_TYPE = #{oldEmployeeType,jdbcType=VARCHAR}
+	</update>
+
+
+
+
+	<insert id="insertOne" parameterType="com.joyintech.tams.common.base.entity.MstBondCreditRating" >
+		insert into MST_BOND_CREDIT_RATING (O_CODE, GRADE_ORG_ID,GRADE_DATE,O_TYPE,GRADE_RESULT,
+      CREATE_USER, CREATE_DEPT, CREATE_TIME,
+      UPDATE_USER, UPDATE_TIME,SVR_DATA_SOURCES,STATUS)
+    values (#{oCode,jdbcType=VARCHAR}, #{gradeOrgId,jdbcType=VARCHAR},#{gradeDate,jdbcType=DATE},
+    	#{oType,jdbcType=VARCHAR},#{gradeResult,jdbcType=VARCHAR},
+      #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+      #{svrDataSources,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR})
+    </insert>
+	<update id="deleteOne" parameterType="java.util.Map">
+		UPDATE MST_BOND_CREDIT_RATING
+		set
+		STATUS = 'D'
+		where
+			O_CODE = #{oCode,jdbcType=VARCHAR}
+			and GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR}
+			and GRADE_DATE= #{gradeDate,jdbcType=DATE}
+			and O_TYPE= #{oType,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectChbMstCounterPartyData" resultType="java.lang.Integer" parameterType="java.util.List">
+		SELECT count(1) from (
+		SELECT 1 from CHB_MST_COUNTER_PARTY a
+		where a.STATUS in('A','E')
+		and not EXISTS (
+		SELECT 1 from 	chb_mst_counter_party_errordata b
+		WHERE b.COUNTER_ID=a.COUNTER_ID
+		and b.STATUS in('A','E')
+		) and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			a.COUNTER_ID = #{item.counterId,jdbcType=VARCHAR}
+		</foreach>
+		union all
+		SELECT 1 from chb_mst_counter_party_errordata c
+		where c.STATUS in('A','E')
+		and
+		<foreach collection="dtoList" index="index" item="item" open="(" separator="or" close=")">
+			c.COUNTER_ID = #{item.counterId,jdbcType=VARCHAR}
+		</foreach>
+
+		)tmp
+
+	</select>
+
+	<select id="getSysDataDict" resultType="com.joyintech.tams.systemtools.dto.SysDataDict" parameterType="java.util.Map">
+		SELECT ITEM_CODE itemCode, ITEM_VALUE itemValue FROM SYS_DATADICT_LIST
+		WHERE DICT_CODE=#{code}
+	</select>
+</mapper>

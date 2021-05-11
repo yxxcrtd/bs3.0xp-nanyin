@@ -2,7 +2,8 @@
     function init(){
         $(".layui-fixbar").hide();
         if('update'==$("#type").val()){
-            document.getElementById("oCode").readOnly="readonly";
+            $("#oCode").attr("disabled","disabled")
+            //document.getElementById("oCode").readOnly="readonly";
         }
     };
 
