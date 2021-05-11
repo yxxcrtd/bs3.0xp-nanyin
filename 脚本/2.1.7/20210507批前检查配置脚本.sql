@@ -339,7 +339,7 @@ values ('88611', 'INV', '净值型产品除权日未确认分红金额', null, '
  delete from sys_prebatch_task_add  where TASK_ID  = '88611';
  insert into sys_prebatch_task_add (GROUP_ID, TASK_ID, STOP_FLAG, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
  select  a.seq_no,'88611'
- , '00', null, 'system', null, sysdate, 'system', sysdate
+ , '01', null, 'system', null, sysdate, 'system', sysdate
   from sys_batch_grp a where BATCH_NAME = '批前检查';
   
   delete from sys_batch_job where TASK_ID = '88611';
