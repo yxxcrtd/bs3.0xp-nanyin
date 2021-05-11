@@ -134,5 +134,42 @@
 		            LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
                     and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
                 )
+                union all
+                /*自动生成的基金红利再投*/
+                select 
+					launchUser,
+					portfolioId,
+					portfolioName,
+					finprodId,
+					finprodName,
+					tradeId,
+					totleTradeId,
+					decode(tradeAmt,'',null,tradeAmt) tradeAmt,
+					nextUser,
+					createTaskTime,
+					instCode,
+                    remark
+				from(
+					select 
+						T.create_user as launchUser,
+						'' portfolioId,  
+						'' portfolioName, 
+						fp.Finprod_id finprodId,  
+						nvl(fp.Finprod_name,fp.Finprod_abbr) finprodName, 
+						t.trade_id tradeId,
+						'' totleTradeId,
+						replace(replace(to_char(REGEXP_SUBSTR(mark.business_data,'"tradeAmt":"[^"]+"',1,1)),'"tradeAmt":"',''),'"','')  tradeAmt,
+						T.NEXT_USER  AS nextUser,
+						T.CRT_DATE AS createTaskTime,
+						sd.institution_code instCode,
+                        '' remark
+					from SYS_WFL_BUSINESS_LIST T
+					inner join sys_data_process_mark mark on mark.workflow_id = T.seq_no and t.PROCESS_STATE = 'NEW'
+					left join fin_product fp on fp.finprod_id = replace(replace(to_char(REGEXP_SUBSTR(mark.business_data,'"finprodId":"[^"]+"',1,1)),'"finprodId":"',''),'"','')
+					LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+					LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
+					where mark.page_id = 'TrdFundDuration002' and replace(replace(to_char(REGEXP_SUBSTR(mark.business_data,'"bonusMode":"[^"]+"',1,1)),'"bonusMode":"',''),'"','') = '02'
+					and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
+				)
     </select>
 </mapper>
