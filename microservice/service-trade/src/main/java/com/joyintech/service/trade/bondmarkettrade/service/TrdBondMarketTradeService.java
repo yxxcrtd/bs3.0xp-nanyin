@@ -583,6 +583,18 @@ public class TrdBondMarketTradeService extends BaseService {
         }
         
         if (entity!= null){
+            //删除实物表数据
+            TrdFinProductBarterTotalKey trdFinProductBarterTotalKey = new TrdFinProductBarterTotalKey();
+            trdFinProductBarterTotalKey.setFinprodId(entity.getFinprodId());
+            trdFinProductBarterTotalKey.setTradeId(bizCode);
+            trdFinProductBarterTotalMapper.deleteByPrimaryKey(trdFinProductBarterTotalKey);
+            TrdFinProductBarterKey trdFinProductBarterKey = new TrdFinProductBarterKey();
+            trdFinProductBarterKey.setFinprodId(entity.getFinprodId());
+            for(String tradeId : tradeIds){
+                trdFinProductBarterKey.setTradeId(tradeId);
+                trdFinProductBarterKey.setFinprodType(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                trdFinProductBarterMapper.deleteByPrimaryKey(trdFinProductBarterKey);    
+            }
             //更新发行代码金融产品附属表的上市代码
             entity.setAppearMarketId(null);
             trdBondMarkettTradeMapper.updateByPrimaryKey(entity);
