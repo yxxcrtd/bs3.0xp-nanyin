@@ -29,7 +29,8 @@
                 deal as(
                     select * from(
                         select deal.*,rank() over(partition by deal.workflow_id order by deal.update_time desc) as rank
-                        from WFL_TRD_PRODUCT_DEAl deal 
+                        from WFL_TRD_PRODUCT_DEAl deal
+                        where deal.workflow_id not in (select workflow_id from filter)
                     )where rank = 1
                 )
                 select 
