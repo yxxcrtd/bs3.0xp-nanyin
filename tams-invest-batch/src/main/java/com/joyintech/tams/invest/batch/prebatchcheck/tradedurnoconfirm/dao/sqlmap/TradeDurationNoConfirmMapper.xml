@@ -403,10 +403,12 @@
     <select id="selectCJDurationList"
             resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
 
-        SELECT         T1.TRADE_ID tradeId,
-        T1.TRADE_ID totleTradeId,
+        SELECT
+<!--        T1.TRADE_ID tradeId,-->
+<!--        T1.TRADE_ID totleTradeId,-->
         T3.PORTFOLIO_ID portfolioId,
         T2.PORTFOLIO_NAME portfolioName,
+        T1.TRADE_ID finprodId,
         T1.FINPROD_TYPE2 finprodType2,
         T4.MDATE,
         T1.PRIN_AMT prinAmt,
