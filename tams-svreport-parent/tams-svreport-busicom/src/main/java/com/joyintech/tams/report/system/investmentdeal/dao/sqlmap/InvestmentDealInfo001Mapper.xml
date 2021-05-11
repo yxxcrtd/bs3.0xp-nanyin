@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.investmentdeal.dao.InvestmentDealInfo001Mapper">
+	<select id="queryForPage" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+	</select>
+	<select id="queryReportList" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+	</select>
+	<select id="selectOneDate" resultType="com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto">
+	</select>
+	<insert id="insertOne" parameterType="com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto" >
+	</insert>
+	<update id="updateOne" parameterType="com.joyintech.tams.report.system.investmentdeal.dto.InvestmentDealInfoDto">
+	</update>
+	<delete id="deleteErrorDataOne" parameterType="java.util.List">
+	</delete>
+	<select id="selectInvestmentDealInfoErrordata" resultType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrordataWithBLOBs">
+	</select>
+	<select id="getProdId" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">
+	</select>
+
+	<select id="getTradeCounter" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">
+	</select>
+
+</mapper>

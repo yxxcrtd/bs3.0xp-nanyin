@@ -145,6 +145,12 @@ var QueryFunc=function(){
                 $("#issueAmt").attr("disabled",true);
                 $("#issueAmt").val('');
             }
+            if (assetTvalue=='1902'){
+                $("#svrBussRepPlacementInfoDto_checkCode").attr("required",true);
+            }else {
+                $("#svrBussRepPlacementInfoDto_checkCode").attr("required",false);
+            }
+
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
             if(repAssetType=='1112'){

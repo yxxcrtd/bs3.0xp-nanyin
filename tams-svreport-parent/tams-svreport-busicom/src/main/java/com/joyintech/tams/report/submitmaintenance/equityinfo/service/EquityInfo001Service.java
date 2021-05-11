@@ -1237,7 +1237,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())) {
                         equityInfo001Dto.setInentifyType(SysDataUtil.getNameFromDataDict(
                                 DictCode.个人证件类别, equityInfo001Dto.getPersonalIdentifyType()));
-                        if(equityInfo001Dto.getStatus().equals("有效")) {
+                        if("有效".equals(equityInfo001Dto.getStatus())) {
                             equityInfo001Dto.setInterfCheckResult(" ");
                         }
                     }
