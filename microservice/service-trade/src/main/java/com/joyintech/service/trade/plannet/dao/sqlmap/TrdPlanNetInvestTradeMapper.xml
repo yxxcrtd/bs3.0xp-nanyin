@@ -680,4 +680,11 @@
 	<select id="queryIssueAmt" resultType="BigDecimal">
 		select a.issue_amt from Fin_Product a where a.finprod_id = #{finprodId}
 	</select>
+
+	<select id="getSysDateMark" resultType="java.lang.String">
+		select t.create_user
+		from sys_data_process_mark t
+		where t.workflow_id = #{workflowId}
+		and t.his_no = 1
+	</select>
 </mapper>

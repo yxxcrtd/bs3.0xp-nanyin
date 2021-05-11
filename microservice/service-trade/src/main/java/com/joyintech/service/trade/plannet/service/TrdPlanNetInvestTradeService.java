@@ -1236,4 +1236,17 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
         map.put("finprodId", finprodId);
         return trdPlanNetInvestTradeMapper.queryIssueAmt(map);
     }
+
+    /**
+     *
+     * 获取最原始留痕表創建人
+     * <功能详细描述>
+     * @param workflowId
+     * @return 最原始留痕表創建人
+     * @see
+     * @since 1.0
+     */
+    public String getSysDateMark(String workflowId) {
+        return trdPlanNetInvestTradeMapper.getSysDateMark(workflowId);
+    }
 }

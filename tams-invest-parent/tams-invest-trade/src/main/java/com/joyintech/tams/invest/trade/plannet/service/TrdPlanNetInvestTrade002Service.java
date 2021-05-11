@@ -197,7 +197,13 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
 	                confirmDto.setTradeDate(entity.getPurCfmDate());
                     //确认交易的确认日根据申请交易的实际确认日（申请交易确认日允许修改）生成交易 add by xueying 20200723 end
 	                ProcessParameter<TrdPlanNetInvestTradeConfirmDto> workFlowPatameter = getWorkFlowPatameter(confirmDto);
-                    confirmDto.setCreateUser(entity.getCreateUser());
+//                    confirmDto.setCreateUser(dto.getTrdProductDeal().getCreateUser());
+                    //获取最原始留痕表数据
+                    String createUser = restTemplate.getForObject(
+                        ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/getSysDateMark?workflowId="+ entity.getWorkflowId(),
+                        String.class);
+                    confirmDto.setCreateUser(createUser);
+
 	                try {
 	                    WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(),"","", confirmDto.getCreateUser(),OperationType.NEW,false,confirmDto);
 	                }catch (Exception e) {
@@ -224,7 +230,7 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
 				}
            	 }
             }
-            
+
             //删除授信占用
             if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
                 riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());

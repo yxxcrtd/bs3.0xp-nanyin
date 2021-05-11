@@ -282,4 +282,6 @@ public interface TrdPlanNetInvestTradeMapper {
 	BigDecimal getPriceByTradeId(String tradeId);
 	
 	BigDecimal getPriceByWorkflowId(String workflowId);
+
+    String getSysDateMark(@Param("workflowId") String workflowId);
 }
