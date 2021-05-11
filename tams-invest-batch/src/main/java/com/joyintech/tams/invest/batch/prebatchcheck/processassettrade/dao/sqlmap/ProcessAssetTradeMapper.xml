@@ -3,8 +3,30 @@
 <mapper namespace="com.joyintech.tams.invest.batch.prebatchcheck.processassettrade.dao.ProcessAssetTradeMapper">
 
     <select id="selectProcessAssetTradeList" parameterType="java.util.Map"
-            resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
-            	with deal as(
+            resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">         	
+    	        WITH filter as(
+                    select workflow_id
+                    from(
+	                    select 
+		                    mark.*,rank() over(partition by mark.workflow_id order by mark.HIS_NO desc) as rank
+	                    from sys_data_process_mark mark
+	                    inner join SYS_WFL_BUSINESS_LIST T on T.seq_no = mark.workflow_id and T.PROCESS_STATE = 'BACK'
+                    )
+                    where rank = 2 and STATUS = 'U'
+                ),
+                TEMP AS (
+			        SELECT * FROM(
+				        select 
+						    sys_data_process_mark.*,rank() over(partition by sys_data_process_mark.workflow_id order by sys_data_process_mark.HIS_NO desc) as rank
+				        from sys_data_process_mark
+                        inner join SYS_WFL_BUSINESS_LIST on SYS_WFL_BUSINESS_LIST.seq_no = sys_data_process_mark.workflow_id and SYS_WFL_BUSINESS_LIST.PROCESS_STATE not in ('END','NEW')
+				        left join WFL_TRD_PRODUCT_DEAl deal on deal.workflow_id =  sys_data_process_mark.workflow_id
+                        where sys_data_process_mark.page_id in('TrdFundDuration002')
+                            and sys_data_process_mark.workflow_id not in (select workflow_id from filter)
+                            and deal.workflow_id is null
+			        ) WHERE rank = 1
+		        ),
+                deal as(
                     select * from(
                         select deal.*,rank() over(partition by deal.workflow_id order by deal.update_time desc) as rank
                         from WFL_TRD_PRODUCT_DEAl deal 
@@ -75,5 +97,41 @@
 					where mark.page_id = 'TrdFundInvestTrade003'
 					and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
 				)
+                /*撤销基金存续期除权登记*/
+                union all
+                select
+                    launchUser,
+		            portfolioId,
+		            portfolioName,
+		            finprodId,
+		            finprodName,
+		        	tradeId,
+		        	totleTradeId,
+		        	decode(tradeAmt,'',null,tradeAmt) tradeAmt,
+		        	nextUser,
+		        	createTaskTime,
+		        	instCode,
+                    remark
+                from(
+                    select
+                        T.create_user as launchUser,
+			            '' portfolioId,  
+		                '' portfolioName, 
+			            fp.Finprod_id finprodId,  
+			            nvl(fp.Finprod_name,fp.Finprod_abbr) finprodName, 
+			            t.trade_id tradeId,
+			            '' totleTradeId,
+			            replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"tradeAmt":"[^"]+"',1,1)),'"tradeAmt":"',''),'"','')  tradeAmt,
+			            T.NEXT_USER  AS nextUser,
+			            T.CRT_DATE AS createTaskTime,
+			            sd.institution_code instCode,
+                        '' remark 
+                    from SYS_WFL_BUSINESS_LIST T
+                    inner join temp on temp.workflow_id = T.seq_no
+                    left join fin_product fp on fp.finprod_id = replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"finprodId":"[^"]+"',1,1)),'"finprodId":"',''),'"','')
+                    LEFT JOIN SYS_USER su on T.CRT_USER =su.user_name
+		            LEFT JOIN SYS_DEPARTMENT sd ON SU.DEPT_CODE = sd.Dept_Code
+                    and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
+                )
     </select>
 </mapper>
