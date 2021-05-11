@@ -1280,7 +1280,7 @@
     			//上交所
     			$("#calendarId").textSelect('setValue', '04');
     			//默认回购类型质押式竞价回购
-            	if(pageModel!=PAGE_MODEL_REFERENCE&&pageModel!=PAGE_MODEL_EDIT){
+            	if(pageModel!=PAGE_MODEL_REFERENCE){
                     // modify by jiangpeng on 20210511 ZGBSSE-347
                     // 【质押式协议回购】新建一笔质押式协议逆回购，点击保存按钮，在待办事项中查看到该笔交易的期限品种、质押券信息丢失
                     if($("#repoType").val()!=TARGET_BACK_TYPE_H01){
