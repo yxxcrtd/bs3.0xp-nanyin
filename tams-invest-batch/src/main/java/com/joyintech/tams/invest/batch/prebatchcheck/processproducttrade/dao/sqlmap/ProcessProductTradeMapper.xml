@@ -166,7 +166,7 @@
 		    case 
 			    when temp.page_id = 'FinProductRateQuotation002' then regexp_replace(temp.business_data_pk3,'^F16_','')
 			    when temp.page_id = 'FinProductBmQuotation002' then  regexp_replace(temp.business_data_pk1,'^F16_','')
-			    when temp.page_id = 'business_data_pk1' then  regexp_replace(temp.business_data_pk1,'^F16_','')
+			    when temp.page_id = 'FinFloatMgtExpQuotation002' then  regexp_replace(temp.business_data_pk1,'^F16_','')
 			    else ''
 		    end
 	    )
