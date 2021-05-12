@@ -20,6 +20,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service.FtpDetailService;
+import com.joyintech.tams.svreport.chbreport.investreport.ChbExpireOperation.service.ChbExpireOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.chbestablishoperation.service.ChbEstablishOperationService;
 //import com.joyintech.tams.svreport.chbreport.investreport.chbexpireoperation.service.ChbExpireOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.service.ChbInvestOperationService;
@@ -87,11 +88,11 @@ public class ChbInvestReportCommonService extends BaseService {
     @Autowired
     private ChbEstablishOperationService chbEstablishOperationService;
 
-//    /**
-//     * 到期公告service
-//     */
-//    @Autowired
-//    private ChbExpireOperationService chbExpireOperationService;
+    /**
+     * 到期公告service
+     */
+    @Autowired
+    private ChbExpireOperationService chbExpireOperationService;
 
     /**
      * 中招报告发送
@@ -340,10 +341,10 @@ public class ChbInvestReportCommonService extends BaseService {
                 file = chbInvestOperationService.createDoc(param, reportName);
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_到期公告.getValue(), repId.toString())) {
-//                prodId = (String) param.get("prodId");
-//                endDate = (String) param.get("endDate");
-//                reportName = DictCodeListExt3.中债披露报告_到期公告.getCodeName();
-//                file = chbExpireOperationService.createDoc(param, reportName);
+                prodId = (String) param.get("prodId");
+                endDate = (String) param.get("endDate");
+                reportName = DictCodeListExt3.中债披露报告_到期公告.getCodeName();
+                file = chbExpireOperationService.createDoc(param, reportName);
             }
             //定期公告里面要考虑传递进去的产品代码，区分出来净值、货币，另外还需要区分出来是否含有多份额的子产品
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
@@ -392,7 +393,7 @@ public class ChbInvestReportCommonService extends BaseService {
                 return chbInvestOperationService.exportDoc(param, DictCodeListExt3.中债披露报告_理财产品非标投资运作报告.getCodeName());
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_到期公告.getValue(), repId.toString())) {
-//                return chbExpireOperationService.exportDoc(param, DictCodeListExt3.中债披露报告_到期公告.getCodeName());
+                return chbExpireOperationService.exportDoc(param, DictCodeListExt3.中债披露报告_到期公告.getCodeName());
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
 

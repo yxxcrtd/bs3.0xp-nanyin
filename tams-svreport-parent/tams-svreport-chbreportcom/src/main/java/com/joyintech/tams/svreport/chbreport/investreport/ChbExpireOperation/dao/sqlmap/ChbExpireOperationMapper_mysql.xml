@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.investreport.ChbExpireOperation.dao.ChbExpireOperationMapper_mysql">
+	<!--到期报告数据查询-->
+	<select id="getExpireinfo" resultType="com.joyintech.tams.svreport.chbreport.investreport.ChbExpireOperation.dto.ChbExpirePrdInfo">
+		select
+			p.PROD_ID AS prodId,	/** 产品代码**/
+			p.PROD_NAME AS prodName,	/** 产品名称**/
+			p.CASH_PRIN_CCY AS cashPrinCcy, /**投资及收益币种**/
+			p.VDATE AS vDate, /**产品成立日**/
+			DATE_FORMAT(r.SETTDATE_DATE, '%Y-%m-%d') AS endDate, /**产品到期日**/
+			c1.INVEST_FEE_RATE AS investFeeRate, /**固定管理费率**/
+			c2.TRU_FEE_RATE AS truFeeRate, /**托管费率**/
+			c3.SALE_FEE_RATE AS saleFeeRate, /**销售手续费率**/
+			case when p.PRODTYPE = 'N' THEN i.UNIT_VALUE
+			when p.PRODTYPE = 'M' THEN i.W_YIELD
+			else '-' end AS qtyValue, /**到期日份额净值/每万份净收益**/
+			case when p.PRODTYPE = 'N' THEN  i.UNIT_VALUE_T
+			else '-' end AS totalQtyValue, /**到期日份额累计净值**/
+		    DATE_FORMAT(DATE_ADD(p.MDATE,INTERVAL 1 DAY),'%Y年%m月%d日') AS mDate, /**报表日期**/
+			'华夏理财有限责任公司' AS managerFullName, /**管理人全称**/
+			'华夏理财' AS managerShortName, /**管理人简称**/
+			p.CUSTOMER_TYPE as customerType/** 客户类型**/
+		from
+			CHB_PRD_BASEINFO p
+			inner join (
+				select
+					distinct d.SETTDATE_DATE,
+					d.PROD_ID
+				from CHB_PRD_DEAL d
+				where
+					d.`STATUS` = 'E'
+					and d.TRADE_TYPE = '16'
+					<if test="endDate !=null and endDate != ''">
+						and  DATE_FORMAT(d.SETTDATE_DATE,'%Y-%m-%d') = #{endDate,jdbcType=VARCHAR}
+					</if>
+			) r on r.PROD_ID = p.PROD_ID
+			left join REP_REVEAL l on l.REP_ID = #{repId,jdbcType=VARCHAR}
+			and l.`STATUS` = 'E'
+			and l.PRODID = p.PROD_ID
+			and DATE_FORMAT(r.SETTDATE_DATE,'%Y-%m-%d') = DATE_FORMAT(l.END_DATE,'%Y-%m-%d')
+			left join (
+				select * from(
+				select
+					RANK() OVER(PARTITION BY PROD_ID ORDER BY VALUE_DATE DESC ) my_rank,
+					UNIT_VALUE,
+					UNIT_VALUE_T,
+					W_YIELD,
+					PROD_ID
+				from  REP_PROD_INDEX
+				)c where my_rank =1
+			) i on i.PROD_ID = p.PROD_ID
+			left join
+			(
+				select * from(
+					select
+						RANK() OVER(PARTITION BY BUSI_ID ORDER BY START_DATE DESC ) my_rank,
+						RATE AS INVEST_FEE_RATE,
+						BUSI_ID
+					from
+						REP_CASH_YIELD
+					where CASH_TYPE2= 'C03'
+				)c where my_rank =1
+			) c1 on c1.BUSI_ID = p.PROD_ID
+			left join
+			(
+				select * from(
+					select
+						RANK() OVER(PARTITION BY BUSI_ID ORDER BY START_DATE DESC ) my_rank,
+						RATE AS TRU_FEE_RATE,
+						BUSI_ID
+					from
+						REP_CASH_YIELD
+					where CASH_TYPE2= 'C05'
+				)c where my_rank =1
+			) c2 on c2.BUSI_ID = p.PROD_ID
+			left join
+			(
+			select * from(
+				select
+					RANK() OVER(PARTITION BY BUSI_ID ORDER BY START_DATE DESC ) my_rank,
+					RATE AS SALE_FEE_RATE,
+					BUSI_ID
+				from
+					REP_CASH_YIELD
+				where CASH_TYPE2= 'C06'
+				)c where my_rank =1
+			) c3 on c3.BUSI_ID = p.PROD_ID
+		where
+			p.`STATUS` = 'E'
+			<if test="prodId !=null and prodId != ''">
+				and p.PROD_ID = #{prodId,jdbcType=VARCHAR}
+			</if>
+			<if test='confirmStatusFlag != null and "Y".equals(confirmStatusFlag)'>
+				and ifnull(l.CONFIRM_STATUS, '0') = '0' /** 未确认的数据**/
+			</if>
+	</select>
+</mapper>

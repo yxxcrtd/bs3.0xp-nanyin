@@ -2,8 +2,6 @@ package com.joyintech.tams.svreport.chbreport.investreport.chbestablishoperation
 
 import com.joyintech.framework.base.BaseEntity;
 
-import java.util.Date;
-
 /**
  * @ClassName ChbEstablishPrdInfo
  * @Description: 成立公告查询及产品基本信息
