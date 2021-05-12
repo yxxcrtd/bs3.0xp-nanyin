@@ -7,6 +7,22 @@ $(function () {
      * 纳税日期
      */
     var payment2="";
+    // add by jiangpeng on 20210512 ZGBSSE-363
+    /**
+     * 纳税结束日 记录上一次点击查询时的纳税结束日,用于提交时判断是否修改了纳税结束日
+     */
+    var payTaxMDateCheck = "";
+    /**
+     * 校验是否修改了纳税结束日
+     */
+    var isPayTaxMDateChange = function (){
+        var payTaxMDate = $("#payTaxMDate").val();
+        if(payTaxMDate===payTaxMDateCheck){
+            return false;
+        }
+        return true;
+    }
+    // add by jiangpeng on 20210512 ZGBSSE-363
     $('#taxidenType').val('C12').trigger("change");
     
     // 生成指令参数保存
@@ -729,7 +745,7 @@ $(function () {
                 	 loadSubProductTable();
                 }
         	}
-
+            payTaxMDateCheck = $("#payTaxMDate").val(); // add by jiangpeng on 20210512 ZGBSSE-363
         });
         //绑定联动
         linkBind();
@@ -737,6 +753,13 @@ $(function () {
         
         //绑定提交事件
         $('#FinproductPayTheVatQuery002_btn_submit').click(function(){
+            // add by jiangpeng on 20210512 ZGBSSE-363
+            //校验是否修改了纳税结束日
+            if(isPayTaxMDateChange()) {
+                Joyin.error("纳税结束日发生调整，请重新查询!");
+                return;
+            }
+            // add by jiangpeng on 20210512 ZGBSSE-363
         	// 检查生成划款指令参数是否发生变化
             if (isCalcConditionChanged()) {
                 return;
