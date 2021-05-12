@@ -133,7 +133,14 @@ public class FinProductEstablish001Controller extends BaseController {
 		List<ValidMessage> errorList = new ArrayList<ValidMessage>();
 		// TISHKBS-1688 add by jiangpeng on 20210429 start
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("portfolioId", finProductEstablishDto.getPortfolioId());
+        String portfolioId = finProductEstablishDto.getPortfolioId();
+        if(!StringUtil.isNotEmpty(portfolioId)) {
+        	portfolioId = finProductEstablishDto.getPtlId();
+        }
+        if(!StringUtil.isNotEmpty(portfolioId)&&StringUtil.isNotEmpty(finProductEstablishDto.getFinprodId())) {
+        	portfolioId =  finProductEstablishDto.getFinprodId().substring(4);
+        }
+        paramMap.put("portfolioId", portfolioId);
         paramMap.put("ccy", finProductEstablishDto.getCcy());
         paramMap.put("capacctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
         List<StlCapacctInfo> capacctList = bussSettleOrderCommService.selectProdCapacctInfoList(paramMap);
