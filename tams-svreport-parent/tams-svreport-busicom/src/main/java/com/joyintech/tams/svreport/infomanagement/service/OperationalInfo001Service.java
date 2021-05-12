@@ -20,10 +20,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -136,7 +133,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	//投资者交易
 	private static final String CHB_PRD_DEAL = "CHB_PRD_DEAL";
 	//产品申报登记
-	private static final String CHB_PRD_DECLARE_SUB_TMP = "CHB_PRD_DECLARE_SUB_TMP";
+	private static final String CHB_PRD_DECLARE_INFO = "CHB_PRD_DECLARE_INFO";
 	//贷款明细维护
 	private static final String CHB_LOAN_DETAIL_INFO = "CHB_LOAN_DETAIL_INFO";
 	// 资产要素表表头合并单元格数据key(起始下标-结束下标) value(存值)
@@ -1792,6 +1789,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	public List<ExcelValidDto> checkConfirmMsgForImportData(String tableName, String fileName, List<List<String>> originalDataList) {
 		String sheetName=tableName;
 		List<ExcelValidDto> checkResult = new ArrayList<>();
+
+		//对中债模版进行特殊判断 把 sheet1名称为"报告模版"字样 映射为"产品申报信息表" 2021-05-12 修改
+		if(!"".equals(tableName) && "报告模版".equals(tableName)){
+			tableName="产品申报信息表";
+		}
 		//先通过tableName获取CHB_MGRTABLE_INFO中对应的MGRTABLE_ID
 		ChbMgrTableInfo chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyChiName(tableName);
 		if(null==chbMgrTableInfo){
@@ -2391,6 +2393,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		//BaseInformationDto baseInformationDto = tableInfoList.get(0);
 		//String tableId = baseInformationDto.getBaseTableId();
 
+
+		//对中债模版进行特殊判断 把 sheet1名称为"报告模版"字样 映射为"产品申报信息表" 2021-05-12 修改
+		if(!"".equals(tableName) && "报告模版".equals(tableName)){
+			tableName="产品申报信息表";
+		}
 		ChbMgrTableInfo chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyChiName(tableName);
 		String tableId = chbMgrTableInfo.getMgrTableName();
 		String headerNum=chbMgrTableInfo.getHeaderNum();
@@ -2658,14 +2665,15 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 							}
 							//针对产品申报登记导入模版不存在的字段 给与默认值 add by yushengyuan 2021-04-13
 
-							if(StringUtil.equals(CHB_PRD_DECLARE_SUB_TMP, tableName)){
+							if(StringUtil.equals(CHB_PRD_DECLARE_INFO, tableName)){
 								if(StringUtil.isEmpty(insertMap.get("STATUS"))){
 									insertMap.put("STATUS", "'" + "E" + "'");
-									insertMap.put("DATA_SOURCE","'" + "02" + "'");
+									insertMap.put("DATASOURCE","'" + "02" + "'");
 									insertMap.put("CREATE_TIME", "'" + timestamp.toString().substring(0,19) + "'");
 									insertMap.put("UPDATE_TIME", "'" + timestamp.toString().substring(0,19) + "'");
 									insertMap.put("CREATE_USER", "'" + userName + "'");
 									insertMap.put("UPDATE_USER", "'" + userName + "'");
+									insertMap.put("DECLARE_UUID", "'" + IDGenerator.generate(36) + "'");
 
 								}
 							}
