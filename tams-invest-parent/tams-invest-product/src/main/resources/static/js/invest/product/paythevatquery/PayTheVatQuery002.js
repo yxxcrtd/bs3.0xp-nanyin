@@ -150,6 +150,7 @@ $(function () {
         return obj;
     };
     var loadSubProductTable = function () {
+        var isclear = true;//add by jiangpeng on 20210512 ZGBSSE-362
     	// 校验缴税日期与产品账套日期
         Joyin.ajaxJson(basePath +'invest/product/paythevatquery/PayTheVatQuery002/checkBokDate', queryObj(), function(result) {
         			Joyin.ajax(basePath + 'invest/product/paythevatquery/PayTheVatQuery002/search',
@@ -159,13 +160,18 @@ $(function () {
         	        					     var isShowWaterTrafficTax = rows.root[0].showWaterTrafficTax;
         	        					     table.showColumns([{field:'waterTrafficTax',visible: isShowWaterTrafficTax}]); 
         	        					 }
+                                        isclear=false;//add by jiangpeng on 20210512 ZGBSSE-362
         	        					 
         					        	 table.clear(function () {
         					        		 table.addRow(rows.root);
         					              })
         				            })
-             }); 
-        
+             });
+        //add by jiangpeng on 20210512 ZGBSSE-362
+        if(isclear){
+            table.clear();
+        }
+        //add by jiangpeng on 20210512 ZGBSSE-362
     }
     var tableOption = {
 //    	    ajax: {
