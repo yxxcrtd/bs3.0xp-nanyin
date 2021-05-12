@@ -764,13 +764,6 @@ $(function () {
             if (isCalcConditionChanged()) {
                 return;
             }
-            if($("#taxClass").val() == TAX_CLASS_02) {
-                var str = $('#channelId').select2('data')[0].object.split(',');
-                var payType = str[1];//划款方式
-                if(payType == PAY_MODE_02) {
-                    buildRemark(); 
-                }
-            }
             
             if (table != null && table != '') {
             	var datas = table.getAllCheckedRows();
@@ -778,6 +771,15 @@ $(function () {
                		Joyin.alert("请选中数据进行操作!",2);
                     return; 
                	}
+                // modify by jiangpeng on 20210512 ZGBSSE-364
+                if($("#taxClass").val() == TAX_CLASS_02) {
+                    var str = $('#channelId').select2('data')[0].object.split(',');
+                    var payType = str[1];//划款方式
+                    if(payType == PAY_MODE_02) {
+                        buildRemark();
+                    }
+                }
+                // modify by jiangpeng on 20210512 ZGBSSE-364
                var object = {};
                if(datas[datas.length-1].portfolioName=='合计'){
             	   datas.splice(datas.length-1, 1);
