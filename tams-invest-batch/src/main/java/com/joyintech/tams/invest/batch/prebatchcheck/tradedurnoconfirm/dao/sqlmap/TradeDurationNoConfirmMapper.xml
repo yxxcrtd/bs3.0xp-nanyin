@@ -160,8 +160,10 @@
         to_char(T4.VDATE, 'yyyy-MM-dd') vDate ,
         to_char(T4.MDATE, 'yyyy-MM-dd') mDate ,
         T1.PRIN_AMT THEORY_PRIN ,
-        FCP.INT_AMT THEORY_INT ,
-        T1.PRIN_AMT + FCP.INT_AMT tradeAmt ,
+<!--        FCP.INT_AMT THEORY_INT ,-->
+<!--        T1.PRIN_AMT + FCP.INT_AMT tradeAmt ,-->
+        T4.M_INT_AMT THEORY_INT,
+        T1.PRIN_AMT + T4.M_INT_AMT tradeAmt ,
         T1.PS
         ,'质押式回购存续期-'||SAI.SEC_ACCT_NAME|| fp1.FINPROD_NAME remark
         FROM TRD_PRODUCT_DEAL T1
