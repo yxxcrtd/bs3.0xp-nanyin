@@ -1,13 +1,18 @@
 package com.joyintech.tams.invest.portfolio.ptlfundallocation.controller;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
+import com.joyintech.tams.invest.portfolio.ptlfundallocation.dto.PtlFundAllocation002Dto;
+import com.joyintech.tams.invest.portfolio.ptlfundallocation.dto.PtlFundAllocationImportDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -185,4 +190,76 @@ public class PtlFundAllocation001Controller extends BaseController {
             RequestUtil.getParameters(getRequest()));
 
     }
+    /* 新增导入功能 add by liuwei 20200220 start */
+    /**
+     * 导入
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     * @throws Exception 异常
+     */
+    @RequestMapping("importFile")
+    @ResponseBody
+    public AjaxResult importData(String fileName)
+            throws Exception{
+        AjaxResult result = new AjaxResult();
+        result.setStatuCode(HttpStatus.OK.value());
+        Map<String,Object> map = ptlFundAllocation001Service.importData(fileName);
+        List<ValidMessage> list = (List<ValidMessage>)map.get("errorList");
+        if(!StringUtil.isEmptyList(list)){
+            result.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            result.setErrorList(list);
+        }
+        else {
+            List<PtlFundAllocationImportDto> data = (List<PtlFundAllocationImportDto>)map.get("data");
+            result.setData(data);
+            StringBuilder confirmMsg = new StringBuilder();
+            String changeLineMark = "<br/>";
+            int index = 1;
+            for (PtlFundAllocationImportDto dto : data){
+                if(dto.getAmount().compareTo(dto.getSettleAmt()) < 0){
+                    confirmMsg.append(index+". "+dto.getCounterAcctNo()+"账户余额不足，继续交易？").append(changeLineMark);
+                    index++;
+                    if(StringUtil.equals(dto.getPayType(), BussinessDictCodeList.指令类型_银证转账_证转银.getValue())){
+                        break;
+                    }
+                }
+            }
+            if (confirmMsg.length()>0 && !"null".equals(confirmMsg.toString()) && !"".equals(confirmMsg.toString())){
+//                confirmMsg.append("请确认是否继续？");
+                result.setMessage(confirmMsg.toString(),MessageType.确认消息);
+            }
+            else {
+                confirmMsg.append("请确认是否保存？");
+                result.setMessage(confirmMsg.toString(),MessageType.确认消息);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 将导入的数据按照多组合新建创建流程
+     */
+    @RequestMapping("doImportSave")
+    @ResponseBody
+    public AjaxResult doImportSave(@RequestBody List<PtlFundAllocationImportDto> list){
+        AjaxResult result = new AjaxResult();
+        if(!StringUtil.isEmptyList(list)){
+            PtlFundAllocation002Dto dto = new PtlFundAllocation002Dto();
+            try {
+                ptlFundAllocation001Service.dealData(list,dto);
+                result.setData(dto);
+            }
+            catch (Exception e){
+                result.setMessage("保存失败！", MessageType.错误消息);
+                return result;
+            }
+            result.setMessage("保存成功！", MessageType.提示消息);
+        }
+        else {
+            result.setMessage("无需要导入的数据！", MessageType.错误消息);
+        }
+        return result;
+    }
+    /* 新增导入功能 add by liuwei 20200220 end */
 }
