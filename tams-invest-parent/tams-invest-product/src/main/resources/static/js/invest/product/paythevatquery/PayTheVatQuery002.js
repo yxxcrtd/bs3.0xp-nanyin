@@ -716,7 +716,7 @@ $(function () {
      */
 	
     $(function() {
-    	
+        $("#portfolioId").textSelect("setValue",portfolioIdOld);//add by jiangpeng on 20210512 ZGBSSE-365
         // 绑定按钮事件
         $('#FinproductPayTheVatQuery002_btn_search').click(function() { 
         	var message ="";
