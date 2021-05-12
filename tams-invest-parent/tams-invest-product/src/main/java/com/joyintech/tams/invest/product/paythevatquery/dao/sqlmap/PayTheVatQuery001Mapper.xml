@@ -112,7 +112,7 @@
          where TPD.BUSI_TYPE = #{busiType16}
            and TPD.Finprod_Type = #{finprodType}
            and TPD.Finprod_Type2 = #{finprodType2}
-           and tpd.chl_id is null
+           /*and tpd.chl_id is null*/ /*modify by jiangpeng on 20210512 ZGBSSE-367 通道户增值税,不能屏蔽通道交易*/
            and not exists (
 		              select 1 from TRD_PRODUCT_DEAL b where b.P_TRADE_ID = TPD.TRADE_ID  
 		          )
