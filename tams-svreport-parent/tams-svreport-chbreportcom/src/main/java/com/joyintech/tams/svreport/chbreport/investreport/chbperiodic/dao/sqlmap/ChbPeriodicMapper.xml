@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dao.ChbPeriodicMapper">
+
+	<select id="queryPrdInfoList" resultType="com.joyintech.framework.select.SelectOptionDto">
+	</select>
+
+	<select id="qryChbPeriodicPrdInfo" resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicPrdInfo">
+	</select>
+
+	<select id="qryChbPeriodicIndex" resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicIndex">
+	</select>
+
+	<select id="qryChbPeriodicIndexValuePercent" resultType="java.math.BigDecimal">
+	</select>
+
+	<select id="qryChbPeriodicBonusDeal"
+			resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicBonusDeal">
+	</select>
+
+	<select id="qryChbPeriodicAssetInfo" resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicAssetInfo">
+	</select>
+
+	<select id="qryChbPeriodicPosition"
+			resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicPosition">
+	</select>
+
+	<select id="qryChbPeriodicPositionTop10"
+			resultType="com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.dto.ChbPeriodicPositionTop10">
+	</select>
+
+</mapper>

@@ -14,16 +14,14 @@ import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
 import com.joyintech.tams.common.base.dao.RepInstallLogDetailMapper;
 import com.joyintech.tams.common.base.dao.RepRevealMapper;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.service.FtpDetailService;
 import com.joyintech.tams.svreport.chbreport.investreport.ChbExpireOperation.service.ChbExpireOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.chbestablishoperation.service.ChbEstablishOperationService;
 //import com.joyintech.tams.svreport.chbreport.investreport.chbexpireoperation.service.ChbExpireOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.chbinvestoperation.service.ChbInvestOperationService;
+import com.joyintech.tams.svreport.chbreport.investreport.chbperiodic.service.ChbPeriodicService;
 import com.joyintech.tams.svreport.chbreport.investreport.chbnetworthoperation.service.ChbNetWorthOperationService;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dao.ChbInvestReportCommonMapper;
 import com.joyintech.tams.svreport.chbreport.investreport.common.dto.ReportGenerate001Dto;
@@ -38,6 +36,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @ClassName ChbInvestOperationService
@@ -99,6 +98,12 @@ public class ChbInvestReportCommonService extends BaseService {
      */
     @Autowired
     private FtpDetailService ftpDetailService;
+
+    /**
+     * 定期报告service
+     */
+    @Autowired
+    private ChbPeriodicService chbPeriodicService;
 
     /**
      * 日志
@@ -348,7 +353,16 @@ public class ChbInvestReportCommonService extends BaseService {
             }
             //定期公告里面要考虑传递进去的产品代码，区分出来净值、货币，另外还需要区分出来是否含有多份额的子产品
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
-
+                prodId = (String) param.get("prodId");
+                endDate = (String) param.get("endDate");
+                String prodName = (String) param.get("prodName");
+                //查询产品名称的全称
+                ChbPrdBaseinfo chbPrdBaseinfo = chbPrdBaseinfoMapper.selectByProdid(prodId);
+                String year = StringUtil.substring(endDate, 0, 4);
+                String reportType = (String) param.get("reportType");
+                reportName = String.format("%s%s年%s报告", prodName, year,
+                        DictCodeListExt3.from(DictCode.中债定期报告类型, reportType).getCodeName());
+                file = chbPeriodicService.createDoc(param, reportName, chbPrdBaseinfo);
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
                 prodId = (String) param.get("prodId");
@@ -396,7 +410,7 @@ public class ChbInvestReportCommonService extends BaseService {
                 return chbExpireOperationService.exportDoc(param, DictCodeListExt3.中债披露报告_到期公告.getCodeName());
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品定期公告.getValue(), repId.toString())) {
-
+                return chbExpireOperationService.exportDoc(param, DictCodeListExt3.中债披露报告_产品定期公告.getCodeName());
             }
             else if (StringUtil.equals(DictCodeListExt3.中债披露报告_产品净值披露.getValue(), repId.toString())) {
                 return  chbNetWorthOperationService.exportExcel(param, DictCodeListExt3.中债披露报告_产品净值披露.getCodeName());
