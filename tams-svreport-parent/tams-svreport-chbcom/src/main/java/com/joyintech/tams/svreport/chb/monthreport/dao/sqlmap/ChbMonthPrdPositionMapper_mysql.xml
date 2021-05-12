@@ -75,7 +75,7 @@
         ,pd.DURATIONFLAG
         ,info.vdate
         ,case when info.operate_mode in ('01','02')
-        then info.mdate-info.vdate else null
+        then TIMESTAMPDIFF(DAY,info.vdate,info.mdate) else null
         end  closetermday  /**新加字段封闭式产品期限*/
         ,IFNULL(val.prod_value,1) prod_value
         ,IFNULL(val.CCY,'CNY') prod_value_ccy
@@ -554,7 +554,7 @@
         0 customeramt /*客户收益*/
         ,0  payamtsum   /**本期兑付金额*/
         ,case when prod.operate_mode in ('01','02')
-        then prod.mdate-prod.vdate else null
+        then TIMESTAMPDIFF(DAY,prod.vdate,prod.mdate) else null
         end  closetermday  /**新加字段封闭式产品期限*/
         <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
         ,pos1.FUNCTIONAL_CURRENCY
