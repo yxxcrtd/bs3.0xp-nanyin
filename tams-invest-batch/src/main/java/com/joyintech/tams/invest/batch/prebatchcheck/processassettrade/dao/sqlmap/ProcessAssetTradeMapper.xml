@@ -48,6 +48,15 @@
                             and deal.workflow_id is null
 			        ) WHERE rank = 1
 		        ),
+                amt as(
+                    SELECT workflow_id,replace(replace(to_char(REGEXP_SUBSTR(business_data,'"tradeAmt":"[^"]+"',1,1)),'"tradeAmt":"',''),'"','') tradeAmt
+                    FROM(
+				        select 
+						    sys_data_process_mark.*,rank() over(partition by sys_data_process_mark.workflow_id order by sys_data_process_mark.HIS_NO desc) as rank
+				        from sys_data_process_mark
+                        inner join SYS_WFL_BUSINESS_LIST on SYS_WFL_BUSINESS_LIST.seq_no = sys_data_process_mark.workflow_id and SYS_WFL_BUSINESS_LIST.PROCESS_STATE not in ('END','NEW')
+			        ) WHERE rank = 1
+                ),
                 deal as(
                     select * from(
                         select deal.*,rank() over(partition by deal.workflow_id order by deal.update_time desc) as rank
@@ -64,8 +73,9 @@
 					T.Trade_id tradeId,
 					deal.TOTLE_TRADE_ID totleTradeId,
                     case 
-                        when total.trade_amt is null or total.trade_amt = '' then decode(deal.trade_amt,'',null,deal.trade_amt)
-                        else decode(total.trade_amt,'',null,total.trade_amt)
+                        when total.trade_amt is not null then  decode(total.trade_amt,'',null,total.trade_amt)
+                        when deal.trade_amt is not null then decode(deal.trade_amt,'',null,deal.trade_amt)
+                        else decode(amt.tradeAmt,'',null,amt.tradeAmt)
 					end as tradeAmt,
 					T.NEXT_USER  AS nextUser,
 					T.CRT_DATE AS createTaskTime,
@@ -83,6 +93,7 @@
                 left join STL_SEC_ACCT_INFO sec on nvl(total.SEC_MANAGE_ACCT_ID,deal.SEC_MANAGE_ACCT_ID) = sec.sec_acct_id
                 left join chlid on chlId.workflow_id = T.seq_no
                 left join FIN_PRODUCT fp1 on fp1.finprod_id = nvl(nvl(total.CHL_ID,deal.CHL_ID),chlId.chlid) and fp1.IS_CHL = 'Y'
+                left join amt on amt.workflow_id = t.seq_no
 				where deal.finprod_type2 in('F01','F02','F03','F04','F05','F06','F07','F08','F09','F10','F14','F15','F17','F18','F35')
 					and T.crt_date <![CDATA[<=]]> #{checkDate,jdbcType=DATE} 
 					
