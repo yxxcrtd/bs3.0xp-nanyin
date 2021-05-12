@@ -69,17 +69,17 @@ public final class InterfMappingConstants {
 	 */
 	public static final String BS_ASSETTYPE3_C0402="C0402";
 
-	// 理财子新增 新增理财子公司月报资产头寸字段设置 start
+	// add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 start
 	/**
 	 * 对理财子公司资产类型映射关系KEY
 	 */
 	public static final String MAPPINGCODE_SUBASSETTYPE = "MAPPINGCODE_SUBASSETTYPE";
 	/**
-	 * 理财子公司资产类型映射关系-商业银行二级资本债
+	 * 理财子公司资产类型映射关系-是否二级资本债
 	 */
 	public static final String SUBASSETTYPE_SECONDBOND = "SUBASSETTYPE_SECONDBOND";
 	/**
-	 * 理财子公司资产类型映射关系-商业银行永续债
+	 * 理财子公司资产类型映射关系-是否永续债
 	 */
 	public static final String SUBASSETTYPE_CAPSEC = "SUBASSETTYPE_CAPSEC";
 	/**
@@ -90,10 +90,13 @@ public final class InterfMappingConstants {
 	 * 理财子公司资产类型映射关系-首层资产二级类型
 	 */
 	public static final String SUBASSETTYPE_SECONDASSET = "SUBASSETTYPE_SECONDASSET";
-
 	/**
-	 * 商业银行优先股
+	 * 理财子公司资产类型映射关系-是否未上市企业-政府出资产业投资基金
 	 */
-	public static final String SUBASSETTYPE_ORSTOCK = "SUBASSETTYPE_ORSTOCK";
-	// 理财子新增 新增理财子公司月报资产头寸字段设置 end
+	public static final String SUBASSETTYPE_WSSQYZFCJ = "SUBASSETTYPE_WSSQYZFCJ";
+	/**
+	 * 永续债（债性、股性）
+	 */
+	public static final String SUBASSETTYPE_SECORSTOCK = "SUBASSETTYPE_SECORSTOCK";
+	// add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 end
 }

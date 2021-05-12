@@ -1239,4 +1239,34 @@
       #{bondtostockFlag,jdbcType=VARCHAR}, #{rating,jdbcType=VARCHAR},#{assettype2,jdbcType=VARCHAR},#{oldAssetCode,jdbcType=VARCHAR}
       ,#{isFhxgcp,jdbcType=VARCHAR})
   </insert>
+
+    <select id="selectChbPrdBaseinfoByProdId" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" fetchSize="1">
+        select
+            prodInfo.PROD_ID as prodId,
+            <!-- 封闭式产品取产品到期日 -->
+            case when prodInfo.OPERATE_MODE in ('01', '02') then prodInfo.MDATE
+                <!-- 存在计划说明是定期开放 -->
+                when (
+                    select
+                    count(1) SCH_COUNT
+                    from CHB_PRD_OPENSCH
+                    where PROD_ID = #{prodId, jdbcType=VARCHAR}
+                    and STATUS in ('E', 'M')
+                ) > 0 then
+                <!-- 找不到最近的开放周期起始日则取产品到期日,否则取最近的开放周期起始日 -->
+                ifnull((
+                    select
+                        min(OPEN_START) MIN_OPEN_START
+                    from CHB_PRD_OPENSCH
+                    where PROD_ID = #{prodId, jdbcType=VARCHAR}
+                    and STATUS in ('E', 'M')
+                    and OPEN_START > #{endDate, jdbcType=DATE}
+                ), prodInfo.MDATE)
+                <!-- 不存在开放计划说明是高频开放 -->
+                else null
+            end as mdate
+        from CHB_PRD_BASEINFO prodInfo
+        where prodInfo.PROD_ID = #{prodId, jdbcType=VARCHAR}
+        and prodInfo.STATUS in ('E', 'M')
+    </select>
 </mapper>

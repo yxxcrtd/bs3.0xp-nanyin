@@ -229,7 +229,7 @@
 	with
 	/**产品存续期交易：银行实际收益之和*/
 	pp as (
-	select DATE_FORMAT(#{querydate,jdbcType=DATE},'yyyymm') termid
+	select DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y%m%d') termid
 	,sum(IFNULL(BANK_IMP_INT,0)) bank_profit1
 	from chb_prd_deal_sub d
 	left join chb_prd_baseinfo i
@@ -244,7 +244,7 @@
 	from chb_month_report_detail d
 	left join chb_month_report m
 	on d.termid = m.termid
-	where d.termid=DATE_FORMAT(#{querydate,jdbcType=DATE},'yyyymm')
+	where d.termid=DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y%m%d')
 	and d.propertycode in ( 'GMLCCP','SMLCCP')
 	group by d.termid,m.reportuuid
 	)
