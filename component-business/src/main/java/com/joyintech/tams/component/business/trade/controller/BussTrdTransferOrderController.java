@@ -147,6 +147,12 @@ public class BussTrdTransferOrderController extends BaseController {
 
             model.addAttribute("entity", entity);
         }
+        // add by jiangpeng on 20210422 TISHKBS-1803
+        String isTodo = this.getParam("isTodo");
+        if(StringUtil.isNotEmpty(isTodo)) {
+            model.addAttribute("isTodo", isTodo);
+        }
+        // add by jiangpeng on 20210422 TISHKBS-1803
 
         model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"),
             BussTrdTransferOrderService.DEFAULT_ENTITY_NAME));
