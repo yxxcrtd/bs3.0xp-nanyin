@@ -470,7 +470,7 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
                 }
                 else {
                     try {
-                        field.set(chbInvestTrade, (value == null || "".equals(value)) ? "" : value);
+                        field.set(chbInvestTrade, null);
                     } catch ( IllegalAccessException e) {
                         logger.error(e.getMessage(),e);
                         return entities;
@@ -478,6 +478,7 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
                 }
             }
             chbInvestTrade.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dataSource));
+            chbInvestTrade.setTradeType("01");
             // 以下是定制化的dto设置
             // 有效状态
 //            chbInvestTrade.setStatus(SVReportDictCodeList.维护数据状态_有效.getValue());
