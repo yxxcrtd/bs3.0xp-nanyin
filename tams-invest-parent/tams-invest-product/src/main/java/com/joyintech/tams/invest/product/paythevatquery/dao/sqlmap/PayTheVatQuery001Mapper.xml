@@ -112,7 +112,7 @@
          where TPD.BUSI_TYPE = #{busiType16}
            and TPD.Finprod_Type = #{finprodType}
            and TPD.Finprod_Type2 = #{finprodType2}
-           /*and tpd.chl_id is null*/ /*modify by jiangpeng on 20210512 ZGBSSE-367 通道户增值税,不能屏蔽通道交易*/
+           and tpd.chl_id is null
            and not exists (
 		              select 1 from TRD_PRODUCT_DEAL b where b.P_TRADE_ID = TPD.TRADE_ID  
 		          )
@@ -154,7 +154,7 @@
 		select #{taxClass_02} taxClass,
 	       portfolioId,
 	       portfolioName,
-	       '' finprodId,
+		   FINPROD_ID finprodId, /*modify by jiangpeng on 20210512 ZGBSSE-367 */
 	       '' finprodAbbr,
 	       '' finprodMarketId,
 	       channelId,
@@ -195,6 +195,7 @@
 		       stli.ACCT_NAME actName,
 		       deal.trade_amt tradeAmt,
 		       deal.ps taxidenType,
+			   fp.FINPROD_ID, /*add by jiangpeng on 20210512 ZGBSSE-367 */
 		       NVL((SELECT TFD.FEE_AMT
 		             FROM TRD_TRADE_FEE_DETAIL TFD
 		            WHERE TFD.TRADE_ID = deal.TRADE_ID
@@ -233,6 +234,10 @@
 		    on ad.trade_id = deal.trade_id
 		  left join ptl_portfolio ptl
 		    on ptl.portfolio_id = ad.portfolio_id
+		    /*add by jiangpeng on 20210512 ZGBSSE-367 */
+		  left join FIN_PRODUCT fp
+			on fp.FINPROD_MARKET_ID = ptl.portfolio_id
+			/*add by jiangpeng on 20210512 ZGBSSE-367 */
 		  left join stl_pay_orders stl
 		    on deal.TOTLE_TRADE_ID = stl.trade_id
 		  left join STL_CAPACCT_INFO stli
