@@ -108,7 +108,8 @@
 					when temp.page_id = 'FinProductFeePay004' then replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"ActPayAmtSum":"[^"]+"',1,1)),'"ActPayAmtSum":"',''),'"','')
 					when temp.page_id = 'FinproductPayTheVatQuery002' then  replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"tradeAmt":"[^"]+"',1,1)),'"tradeAmt":"',''),'"','')
                     when temp.page_id = 'FinResultsCovering002' then replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"actualAmount":"[^"]+"',1,1)),'"actualAmount":"',''),'"','')
-                    when temp.page_id like 'FinNetProductBonusScheme00%' then  replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"unitBonusVlu":"[^"]+"',1,1)),'"unitBonusVlu":"',''),'"','')
+                    when temp.page_id like 'FinNetProductBonusScheme00%' then nvl(replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"unitBonusVlu":"[^"]+"',1,1)),'"unitBonusVlu":"',''),'"',''),
+                        replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"totalAmt":"[^"]+"',1,1)),'"totalAmt":"',''),'"',''))
                     when temp.page_id = 'FinproductPayTheVatQuery003' then replace(replace(to_char(REGEXP_SUBSTR(temp.business_data,'"taxTotal":"[^"]+"',1,1)),'"taxTotal":"',''),'"','')
 					else null
 				end as tradeAmt,
