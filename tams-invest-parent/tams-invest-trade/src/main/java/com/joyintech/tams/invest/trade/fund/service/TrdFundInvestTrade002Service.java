@@ -346,6 +346,10 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
 					confirmDto.setTradeDate(entity.getPurCfmDate());
 					confirmDto.setChannelAmt(confirmDto.getFeeAmtPay());
 					confirmDto.setFeeAmtPay(null);
+					if(StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购.getValue())){
+					    //生成的申购确认记录需要带出交易份额
+                        confirmDto.setShareAmt(confirmDto.getTradeAmt());
+                    }
 					ProcessParameter<TrdFundInvestTradeConfirmDto> workFlowPatameter = getWorkFlowPatameter(confirmDto);
 					try {
                         WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(), "", "", confirmDto.getTrader(),

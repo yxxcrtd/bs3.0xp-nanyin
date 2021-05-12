@@ -813,13 +813,6 @@ $(function () {
         if (ps == ps_T66 && pageModel != PAGE_MODEL_REFERENCE) {
             calcInShareAmt();
         }
-    	//add by yujiaping ZGBSS-915 基金申购确认交易 交易份额默认值 金额/单位净值 start
-    	if($('#ps').val() == ps_T05){
-    		if($('#tradeAmt').val() && $('#unitCprice').val() ){
-    			$('#shareAmt').val($('#tradeAmt').val()/$('#unitCprice').val());
-    		}
-    	} 
-    	//add by yujiaping ZGBSS-915 基金申购确认交易 交易份额默认值 金额/单位净值 end
     };
 
     /**
