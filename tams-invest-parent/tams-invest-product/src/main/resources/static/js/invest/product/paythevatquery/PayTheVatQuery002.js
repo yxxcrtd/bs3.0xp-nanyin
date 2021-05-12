@@ -840,6 +840,8 @@ $(function () {
                 		if(!result != null){
                              //Joyin.alert("返回值为空 ",2);
                              docommit(object);
+                         } else {
+                		    table.clear(); // add by jiangpeng on 20210512 ZGBSSE-362
                          }
                      });              
             }else{
